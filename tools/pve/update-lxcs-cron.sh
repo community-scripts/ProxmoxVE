@@ -15,7 +15,7 @@ function update_container() {
   case "$os" in
   alpine) pct exec "$container" -- ash -c "apk -U upgrade" ;;
   archlinux) pct exec "$container" -- bash -c "pacman -Syyu --noconfirm" ;;
-  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "dnf -y update && dnf -y upgrade" ;;
+  fedora | centos) pct exec "$container" -- bash -c "dnf -y upgrade" ;;
   ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" dist-upgrade -y; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED" ;;
   opensuse) pct exec "$container" -- bash -c "zypper ref && zypper --non-interactive dup" ;;
   esac

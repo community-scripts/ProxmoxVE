@@ -66,7 +66,7 @@ function update_container() {
   case "$os" in
   alpine) pct exec "$container" -- ash -c "apk -U upgrade" ;;
   archlinux) pct exec "$container" -- bash -c "pacman -Syyu --noconfirm" ;;
-  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "dnf -y update && dnf -y upgrade" ;;
+  fedora | centos) pct exec "$container" -- bash -c "dnf -y upgrade" ;;
   ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update 2>/dev/null | grep 'packages.*upgraded'; apt list --upgradable && apt-get -yq dist-upgrade 2>&1; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED" ;;
   opensuse) pct exec "$container" -- bash -c "zypper ref && zypper --non-interactive dup" ;;
   esac
@@ -75,7 +75,7 @@ function update_container() {
 containers_needing_reboot=()
 header_info
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
-  if [[ " ${excluded_containers[@]} " =~ " $container " ]]; then
+  if [[ "${excluded_containers[*]}" =~ $container ]]; then
     header_info
     echo -e "${BL}[Info]${GN} Skipping ${BL}$container${CL}"
     sleep 1
