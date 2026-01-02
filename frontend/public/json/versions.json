@@ -1,13 +1,43 @@
 [
   {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.8",
-    "date": "2026-01-01T10:59:55Z"
+    "name": "alexta69/metube",
+    "version": "2026.01.01",
+    "date": "2026-01-01T21:28:41Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-05-07-r1",
+    "date": "2025-05-07T12:18:42Z"
+  },
+  {
+    "name": "MagicMirrorOrg/MagicMirror",
+    "version": "v2.34.0",
+    "date": "2026-01-01T14:48:28Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "develop-20251228",
+    "date": "2025-12-28T05:59:54Z"
   },
   {
     "name": "karakeep-app/karakeep",
-    "version": "v0.30.0",
-    "date": "2026-01-01T10:50:45Z"
+    "version": "sdk/v0.30.0",
+    "date": "2026-01-01T14:18:24Z"
+  },
+  {
+    "name": "ghostfolio/ghostfolio",
+    "version": "2.226.0",
+    "date": "2026-01-01T14:17:53Z"
+  },
+  {
+    "name": "Koenkk/zigbee2mqtt",
+    "version": "2.7.2",
+    "date": "2026-01-01T13:43:47Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.8",
+    "date": "2026-01-01T10:59:55Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -35,9 +65,9 @@
     "date": "2025-12-31T22:42:42Z"
   },
   {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-05-07-r1",
-    "date": "2025-05-07T12:18:42Z"
+    "name": "metabase/metabase",
+    "version": "v0.57.x",
+    "date": "2025-12-31T20:25:53Z"
   },
   {
     "name": "scanopy/scanopy",
@@ -48,11 +78,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.1.5-beta",
     "date": "2025-12-31T18:46:48Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.57.x",
-    "date": "2025-12-31T17:35:26Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -90,11 +115,6 @@
     "date": "2025-12-31T12:40:07Z"
   },
   {
-    "name": "ghostfolio/ghostfolio",
-    "version": "2.225.0",
-    "date": "2025-12-31T12:16:38Z"
-  },
-  {
     "name": "coollabsio/coolify",
     "version": "v4.0.0-beta.460",
     "date": "2025-12-31T10:58:42Z"
@@ -128,16 +148,6 @@
     "name": "livebook-dev/livebook",
     "version": "nightly",
     "date": "2025-12-30T23:27:09Z"
-  },
-  {
-    "name": "alexta69/metube",
-    "version": "2025.12.30",
-    "date": "2025-12-30T20:45:58Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "develop-20251228",
-    "date": "2025-12-28T05:59:54Z"
   },
   {
     "name": "meilisearch/meilisearch",
@@ -900,11 +910,6 @@
     "date": "2025-12-07T19:19:08Z"
   },
   {
-    "name": "Koenkk/zigbee2mqtt",
-    "version": "2.7.1",
-    "date": "2025-12-06T20:30:34Z"
-  },
-  {
     "name": "navidrome/navidrome",
     "version": "v0.59.0",
     "date": "2025-12-06T18:08:42Z"
@@ -1363,11 +1368,6 @@
     "name": "donetick/donetick",
     "version": "v0.1.64",
     "date": "2025-10-03T05:18:24Z"
-  },
-  {
-    "name": "MagicMirrorOrg/MagicMirror",
-    "version": "v2.33.0",
-    "date": "2025-09-30T16:18:10Z"
   },
   {
     "name": "thomiceli/opengist",
