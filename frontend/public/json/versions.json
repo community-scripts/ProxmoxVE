@@ -1,8 +1,48 @@
 [
   {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.1.5",
+    "date": "2026-01-02T09:10:15Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "develop-20251228",
+    "date": "2025-12-28T05:59:54Z"
+  },
+  {
     "name": "alexta69/metube",
-    "version": "2026.01.01",
-    "date": "2026-01-01T21:28:41Z"
+    "version": "2026.01.02",
+    "date": "2026-01-02T06:27:23Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.671",
+    "date": "2026-01-02T05:57:47Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.9",
+    "date": "2026-01-02T00:43:57Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-02T00:27:08Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-01T20:43:19Z"
   },
   {
     "name": "ZoeyVid/NPMplus",
@@ -15,9 +55,9 @@
     "date": "2026-01-01T14:48:28Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "develop-20251228",
-    "date": "2025-12-28T05:59:54Z"
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "karakeep-app/karakeep",
@@ -35,29 +75,9 @@
     "date": "2026-01-01T13:43:47Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.8",
-    "date": "2026-01-01T10:59:55Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-obsidian@0.0.8",
     "date": "2026-01-01T08:04:20Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.652",
-    "date": "2026-01-01T05:55:36Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2026-01-01T00:27:04Z"
   },
   {
     "name": "esphome/esphome",
@@ -145,11 +165,6 @@
     "date": "2025-12-31T00:37:08Z"
   },
   {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2025-12-30T23:27:09Z"
-  },
-  {
     "name": "meilisearch/meilisearch",
     "version": "prototype-v1.31.0-support-protocol-negociation-http.0",
     "date": "2025-12-30T17:56:00Z"
@@ -180,11 +195,6 @@
     "date": "2025-12-30T11:00:27Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "nickheyer/discopanel",
     "version": "v1.0.18",
     "date": "2025-12-30T05:52:02Z"
@@ -213,11 +223,6 @@
     "name": "traefik/traefik",
     "version": "v3.6.6",
     "date": "2025-12-29T15:56:09Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "ArchiveBox/ArchiveBox",
@@ -368,11 +373,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.32.1",
     "date": "2025-12-23T23:28:06Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.1.4",
-    "date": "2025-12-23T20:53:07Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
