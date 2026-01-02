@@ -8,7 +8,7 @@
 source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/build.func)
 # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
-APP="AlmaLinux"
+APP="openEuler"
 var_tags="${var_tags:-os}"
 var_cpu="${var_cpu:-3}"
 var_ram="${var_ram:-4096}"
