@@ -422,8 +422,7 @@ silent() {
     # Source explain_exit_code if needed
     if ! declare -f explain_exit_code >/dev/null 2>&1; then
       # shellcheck source=misc/error_handler.func
-      source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/error_handler.func)
-      # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+      source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
     fi
 
     local explanation
@@ -688,8 +687,7 @@ exit_script() {
 get_header() {
   local app_name=$(echo "${APP,,}" | tr -d ' ')
   local app_type=${APP_TYPE:-ct} # Default to 'ct' if not set
-  local header_url="https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/${app_type}/headers/${app_name}"
-  # local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${app_type}/headers/${app_name}"
+  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${app_type}/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
 
   mkdir -p "$(dirname "$local_header_path")"

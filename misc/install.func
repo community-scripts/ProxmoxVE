@@ -30,11 +30,9 @@
 # ==============================================================================
 
 # shellcheck source=misc/core.func
-source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/core.func)
-# source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/yugabytedb/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 # shellcheck source=misc/error_handler.func
-source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/error_handler.func)
-# source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/yugabytedb/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 load_functions
 catch_errors
 
@@ -214,8 +212,7 @@ EOF
   msg_ok "Updated Container OS"
 
   # shellcheck source=misc/tools.func
-  source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/tools.func)
-  # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 }
 
 # ==============================================================================
@@ -306,9 +303,7 @@ EOF
     systemctl daemon-reload
     systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
   fi
-  msg_debug "Creating /usr/bin/update from https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/ct/${app}.sh"
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/ct/${app}.sh)\"" >/usr/bin/update
-  # echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 
   if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then

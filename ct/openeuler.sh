@@ -5,8 +5,7 @@
 # Source: https://www.openeuler.org/
 
 # shellcheck source=misc/build.func
-source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/build.func)
-# source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
 APP="openEuler"
 var_tags="${var_tags:-os}"

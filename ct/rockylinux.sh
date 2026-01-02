@@ -5,8 +5,7 @@
 # Source: https://rockylinux.org/
 
 # shellcheck source=misc/build.func
-source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/build.func)
-# source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
 APP="RockyLinux"
 var_tags="${var_tags:-os}"
