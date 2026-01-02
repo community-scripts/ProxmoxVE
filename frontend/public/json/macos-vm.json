@@ -1,0 +1,52 @@
+{
+  "name": "macOS (Ventura/Sonoma/Sequoia)",
+  "slug": "macos-vm",
+  "categories": [
+    2
+  ],
+  "date_created": "2025-01-02",
+  "type": "vm",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/thenickdude/KVM-Opencore",
+  "website": "https://www.apple.com/macos/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/apple.webp",
+  "config_path": "",
+  "description": "macOS virtual machine with OpenCore bootloader. Supports macOS Ventura (13), Sonoma (14), and Sequoia (15). Includes fixes for Sonoma/Sequoia boot issues (DmgLoading and ScanPolicy). Requires Intel CPU with AVX2 support (Haswell or newer) and KVM ignore_msrs enabled.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "vm/macos-vm.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 8192,
+        "hdd": 80,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Requires Intel CPU with AVX2 support (Haswell or newer). AMD CPUs are not supported.",
+      "type": "warning"
+    },
+    {
+      "text": "KVM ignore_msrs must be enabled: `echo 1 > /sys/module/kvm/parameters/ignore_msrs`",
+      "type": "warning"
+    },
+    {
+      "text": "After installation, copy the EFI folder from OpenCore to the main disk's EFI partition for standalone boot.",
+      "type": "info"
+    },
+    {
+      "text": "This script downloads OpenCore from thenickdude/KVM-Opencore and Apple recovery images from Apple servers.",
+      "type": "info"
+    }
+  ]
+}
