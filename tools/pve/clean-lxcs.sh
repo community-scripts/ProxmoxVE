@@ -47,32 +47,48 @@ fi
 function run_lxc_clean() {
   local container=$1
   header_info
-  name=$(pct exec "$container" hostname)
 
-  pct exec "$container" -- bash -c '
-    BL="\033[36m"; GN="\033[1;92m"; CL="\033[m"
-    name=$(hostname)
-    if [ -e /etc/alpine-release ]; then
-      echo -e "${BL}[Info]${GN} Cleaning $name (Alpine)${CL}\n"
+  case "$os" in
+  alpine)
+    # shellcheck disable=SC2016
+    pct exec "$container" -- sh -c '
+      BL="\033[36m"; GN="\033[1;92m"; CL="\033[m"
+      echo -e "${BL}[Info]${GN} Cleaning $(hostname) (Alpine)${CL}\n"
       apk cache clean
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
-      apk update
-    else
-      echo -e "${BL}[Info]${GN} Cleaning $name (Debian/Ubuntu)${CL}\n"
-      find /var/cache -type f -delete 2>/dev/null
+    '
+    ;;
+  centos | fedora)
+    # shellcheck disable=SC2016
+    pct exec "$container" -- sh -c '
+      BL="\033[36m"; GN="\033[1;92m"; CL="\033[m"
+      echo -e "${BL}[Info]${GN} Cleaning $(hostname) (CentOS/fedora)${CL}\n"
+      dnf -y autoremove
+      dnf -y clean all
+      rm -rf ~/.cache /var/cache/yum /var/cache/dnf
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
+    '
+    ;;
+  ubuntu | debian | devuan)
+    # shellcheck disable=SC2016
+    pct exec "$container" -- sh -c '
+      BL="\033[36m"; GN="\033[1;92m"; CL="\033[m"
+      echo -e "${BL}[Info]${GN} Cleaning $(hostname) (Debian/Ubuntu)${CL}\n"
       apt-get -y --purge autoremove
       apt-get -y autoclean
       rm -rf /var/lib/apt/lists/*
-      apt-get update
-    fi
-  '
+      find /var/cache -type f -delete 2>/dev/null
+      find /var/log -type f -delete 2>/dev/null
+      find /tmp -mindepth 1 -delete 2>/dev/null
+    '
+    ;;
+  esac
 }
 
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
-  if [[ " ${excluded_containers[@]} " =~ " $container " ]]; then
+  if [[ "${excluded_containers[*]}" =~ $container ]]; then
     header_info
     echo -e "${BL}[Info]${GN} Skipping ${BL}$container${CL}"
     sleep 1
@@ -80,10 +96,11 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
   fi
 
   os=$(pct config "$container" | awk '/^ostype/ {print $2}')
-  # Supported: debian, ubuntu, alpine
-  if [ "$os" != "debian" ] && [ "$os" != "ubuntu" ] && [ "$os" != "alpine" ]; then
+  # Supported: ubuntu debian devuan centos fedora alpine
+  if ! [[ 'alpine centos debian devuan fedora ubuntu' =~ (^|[[:space:]])"$os"($|[[:space:]]) ]]; then
     header_info
-    echo -e "${BL}[Info]${GN} Skipping ${RD}$container is not Debian, Ubuntu or Alpine${CL} \n"
+    echo -e "${BL}[Info]${GN} Skipping ${RD}$container\npct ostype ($os) is not supported.\nSupported ostypes:" \
+      "\n\talpine\n\tcentos\n\tdebian\n\tdevuan\n\tfedora\n\tubuntu${CL}"
     sleep 1
     continue
   fi
