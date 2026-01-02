@@ -3207,6 +3207,12 @@ EOF
     # pick LANG (fallback if empty)
     LANG="${LANG:-en_US.UTF-8}"
 
+    # install base packages
+    pct exec "$CTID" -- sh -c "dnf upgrade -y >/dev/null && dnf install -y sudo curl mc ncurses gnupg2 gnupg jq glibc-locale-source >/dev/null" || {
+      msg_error "dnf base packages installation failed"
+      exit 1
+    }
+
     # generate locale
     pct exec "$CTID" -- localedef -i "${LANG%%.*}" -f "${LANG#*.}" "$LANG"
 
@@ -3226,12 +3232,6 @@ EOF
     else
       msg_warn "Skipping timezone setup – zone '$tz' not found in container"
     fi
-
-    # install base packages
-    pct exec "$CTID" -- sh -c "dnf upgrade -y >/dev/null && dnf install -y sudo curl mc ncurses gnupg2 gnupg jq >/dev/null" || {
-      msg_error "dnf base packages installation failed"
-      exit 1
-    }
     ;;
   alpine)
     sleep 3
