@@ -45,7 +45,7 @@
       "type": "info"
     },
     {
-      "text": "To change upload location, edit 'IMMICH_MEDIA_LOCATION' in `/opt/immich/.env`, and create the symlink 'upload' in /opt/immich/app & /opt/immich/app/machine-learning to your new upload location",
+      "text": "To change upload location, edit 'IMMICH_MEDIA_LOCATION' in `/opt/immich/.env`, retarget the symlink 'upload' in /opt/immich/app and /opt/immich/app/machine-learning to your new upload location, copy the default upload location `/opt/immich/upload` and its contents to the new upload location, confirm that the new upload location and its contents are owned by `immich:immich`, and restart the Immich server. See `https://github.com/community-scripts/ProxmoxVE/discussions/5075` for more information.",
       "type": "info"
     },
     {
