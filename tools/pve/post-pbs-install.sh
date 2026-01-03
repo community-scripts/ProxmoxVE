@@ -173,21 +173,15 @@ start_routines_4() {
     sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
     cat >/etc/apt/sources.list.d/debian.sources <<EOF
 Types: deb
-URIs: http://deb.debian.org/debian
-Suites: trixie
-Components: main contrib
+URIs: http://deb.debian.org/debian/
+Suites: trixie trixie-updates
+Components: main contrib non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
 Types: deb
-URIs: http://security.debian.org/debian-security
+URIs: http://security.debian.org/debian-security/
 Suites: trixie-security
-Components: main contrib
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-
-Types: deb
-URIs: http://deb.debian.org/debian
-Suites: trixie-updates
-Components: main contrib
+Components: main contrib non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
     msg_ok "Corrected Debian Sources"
