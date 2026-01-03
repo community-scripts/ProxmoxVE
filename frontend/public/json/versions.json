@@ -1,5 +1,45 @@
 [
   {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-core@16.4.3",
+    "date": "2026-01-03T09:38:20Z"
+  },
+  {
+    "name": "requarks/wiki",
+    "version": "v2.5.309",
+    "date": "2026-01-03T08:32:10Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.704",
+    "date": "2026-01-03T06:03:01Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.34.0",
+    "date": "2026-01-03T03:12:12Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.2.0-2",
+    "date": "2026-01-03T02:42:11Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-03T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "9001/copyparty",
     "version": "v1.20.0",
     "date": "2026-01-02T23:40:23Z"
@@ -25,9 +65,14 @@
     "date": "2026-01-02T21:19:08Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:09Z"
+    "date": "2026-01-02T19:40:19Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -90,26 +135,6 @@
     "date": "2026-01-02T06:27:23Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.671",
-    "date": "2026-01-02T05:57:47Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-02T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
     "name": "ZoeyVid/NPMplus",
     "version": "2025-05-07-r1",
     "date": "2025-05-07T12:18:42Z"
@@ -120,19 +145,9 @@
     "date": "2026-01-01T14:48:28Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.7.2",
     "date": "2026-01-01T13:43:47Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-obsidian@0.0.8",
-    "date": "2026-01-01T08:04:20Z"
   },
   {
     "name": "esphome/esphome",
@@ -193,11 +208,6 @@
     "name": "comfyanonymous/ComfyUI",
     "version": "v0.7.0",
     "date": "2025-12-31T07:50:53Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v1.2.0-1",
-    "date": "2025-12-31T04:07:38Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -833,11 +843,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.43.1",
     "date": "2025-12-11T22:45:52Z"
-  },
-  {
-    "name": "TwiN/gatus",
-    "version": "v5.33.1",
-    "date": "2025-12-11T01:59:13Z"
   },
   {
     "name": "gethomepage/homepage",
@@ -1503,11 +1508,6 @@
     "name": "swapplications/uhf-server-dist",
     "version": "1.5.1",
     "date": "2025-08-13T15:43:57Z"
-  },
-  {
-    "name": "requarks/wiki",
-    "version": "v2.5.308",
-    "date": "2025-08-13T07:09:29Z"
   },
   {
     "name": "ioBroker/ioBroker",
