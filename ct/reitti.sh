@@ -33,6 +33,8 @@ function update_script() {
     mkdir -p /var/cache/nginx/tiles
     $STD apt install -y nginx
     cat <<EOF >/etc/nginx/nginx.conf
+user www-data;
+
 events {
   worker_connections 1024;
 }
@@ -51,7 +53,8 @@ http {
   }
 }
 EOF
-    chown -R www-data:www-data /var/cache/nginx/tiles
+    chown -R www-data:www-data /var/cache/nginx
+    chmod -R 750 /var/cache/nginx
     systemctl restart nginx
     echo "reitti.ui.tiles.cache.url=http://127.0.0.1" >> /opt/reitti/application.properties
     systemctl restart reitti
