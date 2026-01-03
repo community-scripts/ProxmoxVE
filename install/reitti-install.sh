@@ -50,6 +50,8 @@ mv /opt/photon/photon-*.jar /opt/photon/photon.jar
 msg_info "Installing Nginx Tile Cache"
 mkdir -p /var/cache/nginx/tiles
 cat <<EOF >/etc/nginx/nginx.conf
+user www-data;
+
 events {
   worker_connections 1024;
 }
@@ -68,7 +70,8 @@ http {
   }
 }
 EOF
-chown -R www-data:www-data /var/cache/nginx/tiles
+chown -R www-data:www-data /var/cache/nginx
+chmod -R 750 /var/cache/nginx
 systemctl restart nginx
 msg_info "Installed Nginx Tile Cache"
 
