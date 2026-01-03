@@ -28,7 +28,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
 
 redir /admin /admin/
 
-handle_path /admin* {
+handle_path /admin/* {
     root * /opt/headscale-admin
     encode gzip zstd
 
@@ -36,14 +36,11 @@ handle_path /admin* {
         X-Content-Type-Options nosniff
     }
 
-    try_files {path} {path}/ /opt/headscale-admin/index.html
+    try_files {path} /opt/headscale-admin/index.html
     file_server
 }
 
-handle /api/* {
-    reverse_proxy localhost:8080
-}
-
+reverse_proxy localhost:8080
 EOF
   caddy fmt --overwrite /etc/caddy/Caddyfile
   systemctl start caddy
