@@ -1,6 +1,8 @@
+#!/usr/bin/env bash
+
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster)
-# Co-Author: MickLesk
+# Co-Author: MickLesk | bandogora
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 # ==============================================================================
@@ -27,12 +29,9 @@
 # SECTION 1: INITIALIZATION
 # ==============================================================================
 
-if ! command -v curl >/dev/null 2>&1; then
-  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt update >/dev/null 2>&1
-  apt install -y curl >/dev/null 2>&1
-fi
+# shellcheck source=misc/core.func
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+# shellcheck source=misc/error_handler.func
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 load_functions
 catch_errors
@@ -72,6 +71,7 @@ EOF
 # - Retries up to RETRY_NUM times with RETRY_EVERY seconds delay
 # - Removes Python EXTERNALLY-MANAGED restrictions
 # - Disables systemd-networkd-wait-online.service for faster boot
+# - Disables NetworkManager-wait-online.service for faster boot
 # - Exits with error if network unavailable after retries
 # ------------------------------------------------------------------------------
 setting_up_container() {
@@ -89,7 +89,8 @@ setting_up_container() {
     exit 1
   fi
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-  systemctl disable -q --now systemd-networkd-wait-online.service
+  systemctl disable -q --now systemd-networkd-wait-online.service || true
+  systemctl disable -q --now NetworkManager-wait-online.service || true
   msg_ok "Set up Container OS"
   #msg_custom "${CM}" "${GN}" "Network Connected: ${BL}$(hostname -I)"
   msg_ok "Network Connected: ${BL}$(hostname -I)"
@@ -179,10 +180,14 @@ network_check() {
 # - Uses $STD wrapper to suppress output unless VERBOSE=yes
 # ------------------------------------------------------------------------------
 update_os() {
+  set_std_mode
   msg_info "Updating Container OS"
-  if [[ "$CACHER" == "yes" ]]; then
-    echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
-    cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
+  msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
+  case "$PCT_OSTYPE" in
+  ubuntu | debian)
+    if [[ "$CACHER" == "yes" ]]; then
+      echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
+      cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
 #!/bin/bash
 if nc -w1 -z "${CACHER_IP}" 3142; then
   echo -n "http://${CACHER_IP}:3142"
@@ -190,13 +195,23 @@ else
   echo -n "DIRECT"
 fi
 EOF
-    chmod +x /usr/local/bin/apt-proxy-detect.sh
-  fi
-  $STD apt-get update
-  $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
-  rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+      chmod +x /usr/local/bin/apt-proxy-detect.sh
+    fi
+    $STD apt-get update
+    $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
+    rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+    ;;
+  centos | rockylinux | almalinux | fedora | openeuler)
+    $STD dnf upgrade -y
+    ;;
+  alpine)
+    $STD apk -U upgrade
+    ;;
+  # gentoo) ;;
+  esac
   msg_ok "Updated Container OS"
 
+  # shellcheck source=misc/tools.func
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 }
 
@@ -214,7 +229,7 @@ EOF
 #   * OS name and version
 #   * Hostname and IP address
 #   * GitHub repository link
-# - Disables executable flag on /etc/update-motd.d/* scripts
+# - Disables executable flag on /etc/update-motd.d/* scripts if present
 # - Enables root SSH access if SSH_ROOT=yes
 # - Configures TERM environment variable for better terminal support
 # ------------------------------------------------------------------------------
@@ -231,12 +246,34 @@ motd_ssh() {
   echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(hostname -I | awk '{print \$1}')${CL}\"" >>"$PROFILE_FILE"
 
-  # Disable default MOTD scripts
-  chmod -x /etc/update-motd.d/*
+  # Disable default MOTD scripts if they're present
+  if [ -d /etc/update-motd.d ]; then
+    chmod -x /etc/update-motd.d/*
+  fi
 
   if [[ "${SSH_ROOT}" == "yes" ]]; then
-    sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-    systemctl restart sshd
+    msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
+    case "$PCT_OSTYPE" in
+    ubuntu | debian)
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      systemctl restart sshd
+      ;;
+    centos | rockylinux | almalinux | fedora | openeuler)
+      $STD dnf install -y openssh-server
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      systemctl enable --now sshd
+      ;;
+    alpine)
+      $STD rc-update add sshd
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      $STD /etc/init.d/sshd start
+      ;;
+    # gentoo) ;;
+    *)
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      systemctl restart sshd
+      ;;
+    esac
   fi
 }
 
@@ -254,18 +291,17 @@ motd_ssh() {
 # - Sets proper permissions on SSH directories and key files
 # ------------------------------------------------------------------------------
 customize() {
+  msg_info "Customizing Container"
   if [[ "$PASSWORD" == "" ]]; then
-    msg_info "Customizing Container"
     GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
     mkdir -p $(dirname $GETTY_OVERRIDE)
     cat <<EOF >$GETTY_OVERRIDE
-  [Service]
-  ExecStart=
-  ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
 EOF
     systemctl daemon-reload
     systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
-    msg_ok "Customized Container"
   fi
   echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
@@ -276,4 +312,5 @@ EOF
     chmod 700 /root/.ssh
     chmod 600 /root/.ssh/authorized_keys
   fi
+  msg_ok "Customized Container"
 }
