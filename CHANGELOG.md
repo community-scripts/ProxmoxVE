@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Fix headscale Caddyfile to pass non-API URLs [@IlyaSemenov](https://github.com/IlyaSemenov) ([#10493](https://github.com/community-scripts/ProxmoxVE/pull/10493))
 
+### ❔ Uncategorized
+
+  - InvoiceNinja: Update database credentias information [@tremor021](https://github.com/tremor021) ([#10497](https://github.com/community-scripts/ProxmoxVE/pull/10497))
+
 ## 2026-01-02
 
 ### 🚀 Updated Scripts
