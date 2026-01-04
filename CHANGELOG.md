@@ -27,6 +27,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: Pelican Panel [@tremor021](https://github.com/tremor021) ([#10516](https://github.com/community-scripts/ProxmoxVE/pull/10516))
     - Refactor: Audiobookshelf [@tremor021](https://github.com/tremor021) ([#10519](https://github.com/community-scripts/ProxmoxVE/pull/10519))
 
+### ❔ Uncategorized
+
+  - Prowlarr: Update config_path [@tremor021](https://github.com/tremor021) ([#10504](https://github.com/community-scripts/ProxmoxVE/pull/10504))
+
 ## 2026-01-03
 
 ### 🚀 Updated Scripts
