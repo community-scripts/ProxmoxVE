@@ -2783,6 +2783,7 @@ build_container() {
   export PCT_OSTYPE="$var_os"
   export PCT_OSVERSION="$var_version"
   export PCT_DISK_SIZE="$DISK_SIZE"
+  export IPV6_METHOD="$IPV6_METHOD"
 
   # DEV_MODE exports (optional, for debugging)
   export BUILD_LOG="$BUILD_LOG"
