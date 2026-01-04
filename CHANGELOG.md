@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - MagicMirror: bump to nodejs 24 [@MickLesk](https://github.com/MickLesk) ([#10534](https://github.com/community-scripts/ProxmoxVE/pull/10534))
+
   - #### 🔧 Refactor
 
     - Refactor: Pelican Wings [@tremor021](https://github.com/tremor021) ([#10517](https://github.com/community-scripts/ProxmoxVE/pull/10517))
