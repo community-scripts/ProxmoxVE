@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: reitti: nginx [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10511](https://github.com/community-scripts/ProxmoxVE/pull/10511))
     - MagicMirror: bump to nodejs 24 [@MickLesk](https://github.com/MickLesk) ([#10534](https://github.com/community-scripts/ProxmoxVE/pull/10534))
 
   - #### 🔧 Refactor
