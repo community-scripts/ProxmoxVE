@@ -7,20 +7,20 @@
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
-#verb_ip6
+verb_ip6
 catch_errors
 setting_up_container
 network_check
 update_os
 
-#To fix Debian trixie looking for IPV6 connection
-#echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
-cat <<EOF >/etc/sysctl.d/99-disable-ipv6.conf
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-EOF
-sysctl --system
-apt update
+# #To fix Debian trixie looking for IPV6 connection
+# #echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
+# cat <<EOF >/etc/sysctl.d/99-disable-ipv6.conf
+# net.ipv6.conf.all.disable_ipv6 = 1
+# net.ipv6.conf.default.disable_ipv6 = 1
+# EOF
+# sysctl --system
+# apt update
 
 #PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
 USE_UVX="YES" setup_uv
