@@ -9,11 +9,10 @@ APP="browser-use"
 var_tags="${var_tags:-AI}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-8192}"
-var_disk="${var_disk:-20}"
+var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
-var_nvidia_passthrough="${var_nvidia_passthrough:-no}"
 
 header_info "$APP"
 variables

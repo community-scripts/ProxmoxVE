@@ -13,261 +13,128 @@ setting_up_container
 network_check
 update_os
 
+#PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
+USE_UVX="YES" setup_uv
+uv python update-shell
+#$STD update-alternatives --install /usr/bin/python3 python3 /root/.local/bin/python3.12 1
+
+export DISPLAY=:99
+echo "export DISPLAY=:99" >> ~/.bashrc
+
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
-  git \
-  python3-pip
+$STD apt-get install -y python3-pip
 msg_ok "Installed Dependencies"
 
-# pip install uv
-# uv venv --python 3.12
-PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
-uv python update-shell
-$STD update-alternatives --install /usr/bin/python3 python3 /root/.local/bin/python3.12 1
-
-msg_info "Downloading browser-use source"
-fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/app"
-msg_ok "Downloaded browser-use source"
-
-
-#From the fast dockerfile
-export BROWSERUSE_USER="browseruse"
-export DEFAULT_PUID=911
-export DEFAULT_PGID=911
-export DATA_DIR=/data
-
-# Create user and directories
-groupadd --system $BROWSERUSE_USER
-useradd --system --create-home --gid $BROWSERUSE_USER --groups audio,video $BROWSERUSE_USER
-usermod -u "$DEFAULT_PUID" "$BROWSERUSE_USER"
-groupmod -g "$DEFAULT_PGID" "$BROWSERUSE_USER"
-mkdir -p /data /home/$BROWSERUSE_USER/.config
-ln -s $DATA_DIR /home/$BROWSERUSE_USER/.config/browseruse
-mkdir -p "/home/$BROWSERUSE_USER/.config/chromium/Crash Reports/pending/"
-mkdir -p "$DATA_DIR/profiles/default"
-chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/$BROWSERUSE_USER" "$DATA_DIR"
-
-# Install browser-use
-cd /app
-uv sync --all-extras --no-dev --compile-bytecode
-
-
-motd_ssh
-customize
-
-echo "DONE!"
-
-exit
-
-#to fix missing uvx
-#pip install uv
-
-NODE_VERSION="24" setup_nodejs
-
-apt install -y chromium
-
-msg_info "Installing Browserless & Playwright"
-mkdir /opt/browserless
-$STD python3 -m pip install playwright
-$STD git clone https://github.com/browserless/chrome /opt/browserless
-$STD npm ci --include=optional --include=dev --prefix /opt/browserless
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
-$STD npm run build --prefix /opt/browserless
-$STD npm run build:function --prefix /opt/browserless
-$STD npm prune production --prefix /opt/browserless
-msg_ok "Installed Browserless & Playwright"
-
-msg_info "Installing Font Packages"
-$STD apt-get install -y \
-  fontconfig \
-  libfontconfig1 \
-  fonts-freefont-ttf \
-  fonts-gfs-neohellenic \
-  fonts-indic fonts-ipafont-gothic \
-  fonts-kacst fonts-liberation \
-  fonts-noto-cjk \
-  fonts-noto-color-emoji \
-  msttcorefonts \
-  fonts-roboto \
-  fonts-thai-tlwg \
-  fonts-wqy-zenhei
-msg_ok "Installed Font Packages"
-
-msg_info "Installing X11 Packages"
-$STD apt-get install -y \
-  libx11-6 \
-  libx11-xcb1 \
-  libxcb1 \
-  libxcomposite1 \
-  libxcursor1 \
-  libxdamage1 \
-  libxext6 \
-  libxfixes3 \
-  libxi6 \
-  libxrandr2 \
-  libxrender1 \
-  libxss1 \
-  libxtst6
-msg_ok "Installed X11 Packages"
-
-# msg_info "Downloading browser-use source"
-# fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/opt/browser-use"
-# msg_ok "Downloaded browser-use source"
-
-
-msg_info "Installing browser-use"
-
-#mkdir -p /etc/browser-use
-#cd /etc/browser-use
-#wget -qO .env https://raw.githubusercontent.com/browser-use/browser-use/refs/heads/main/.env.example
-#echo "BROWSER_USE_HEADLESS=true" >> /etc/browser-use/.env
-#echo "OPENAI_API_KEY=your-key-here" >> /etc/browser-use/.env
-
-cd /opt/browser-use/
-cp .env.example .env
-echo "BROWSER_USE_HEADLESS=true" >> /opt/browser-use/.env
-echo "OPENAI_API_KEY=your-key-here" >> /opt/browser-use/.env
-
-# # User config
-# BROWSERUSE_USER="browseruse"
-# DEFAULT_PUID=911
-# DEFAULT_PGID=911
-
-mkdir -p /opt/browser-use
-cd /opt/browser-use
-# Paths
-#CODE_DIR=/opt/browser-use
-#DATA_DIR=/data
-#VENV_DIR=/opt/browser-use/.venv
-#PATH="/app/.venv/bin:$PATH"
-
-
-# # Create non-privileged user for browseruse and chrome
-# echo "[*] Setting up $BROWSERUSE_USER user uid=${DEFAULT_PUID}..."
-# groupadd --system $BROWSERUSE_USER
-# useradd --system --create-home --gid $BROWSERUSE_USER --groups audio,video $BROWSERUSE_USER
-# usermod -u "$DEFAULT_PUID" "$BROWSERUSE_USER"
-# groupmod -g "$DEFAULT_PGID" "$BROWSERUSE_USER"
-# mkdir -p $DATA_DIR
-# mkdir -p /home/$BROWSERUSE_USER/.config
-# chown -R $BROWSERUSE_USER:$BROWSERUSE_USER /home/$BROWSERUSE_USER
-# ln -s $DATA_DIR /home/$BROWSERUSE_USER/.config/browseruse
-# #echo -e "\nBROWSERUSE_USER=$BROWSERUSE_USER PUID=$(id -u $BROWSERUSE_USER) PGID=$(id -g $BROWSERUSE_USER)\n\n" | tee -a /VERSION.txt
-# # DEFAULT_PUID and DEFAULT_PID are overridden by PUID and PGID in /bin/docker_entrypoint.sh at runtime
-# # https://docs.linuxserver.io/general/understanding-puid-and-pgid
-
-
-# Install base apt dependencies (adding backports to access more recent apt updates)
-echo "[+] Installing APT base system dependencies..."
-#     && echo 'deb https://deb.debian.org/debian bookworm-backports main contrib non-free' > /etc/apt/sources.list.d/backports.list \
-mkdir -p /etc/apt/keyrings
-apt-get update -qq
-apt-get install -qq -y --no-install-recommends apt-transport-https ca-certificates apt-utils gnupg2 unzip curl wget grep nano iputils-ping dnsutils jq
-rm -rf /var/lib/apt/lists/*
-
-
-#Should already be setup
-#pip install uv
-
-# Install Chromium browser directly from system packages
-echo "[+] Installing chromium browser from system packages..."
-apt-get update -qq
 apt-get install -y --no-install-recommends \
-        chromium \
-        fonts-unifont \
-        fonts-liberation \
-        fonts-dejavu-core \
-        fonts-freefont-ttf \
-        fonts-noto-core
-rm -rf /var/lib/apt/lists/*
-ln -s /usr/bin/chromium /usr/bin/chromium-browser
-ln -s /usr/bin/chromium /opt/browser-use/chromium-browser
-# mkdir -p "/home/${BROWSERUSE_USER}/.config/chromium/Crash Reports/pending/"
-# chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/${BROWSERUSE_USER}/.config"
+    libnss3 \
+    libnspr4 \
+    libdbus-1-3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libxkbcommon0 \
+    libasound2 \
+    libatspi2.0-0 \
+    xvfb \
+    x11vnc \
+    fontconfig
+	
+apt install chromium
 
 
-uv sync
+pip install python-dotenv
+pip install browser-use
+pip install pytest-playwright
+playwright install --with-deps
 
-#uvx browser-use install
-#----> download source directly
-
-# Install the browser-use package and all of its optional dependencies
-#RUN --mount=type=cache,target=/root/.cache,sharing=locked,id=cache-$TARGETARCH$TARGETVARIANT \
-echo "[+] Installing browser-use pip library from source..."
-uv sync --all-extras --locked --no-dev
-source .venv/bin/activate
-python3 -c "import browser_use; print('browser-use installed successfully')"
-
-
-# mkdir -p "$DATA_DIR/profiles/default"
-# chown -R $BROWSERUSE_USER:$BROWSERUSE_USER "$DATA_DIR" "$DATA_DIR"/*
-
-
-
-
-
-#########MANUAL INSTALL
-# pip install uv
-# #uv venv --python 3.12
-# #source .venv/bin/activate
-# uv pip install browser-use
+# OR:
+# uv init
+# #  We ship every day - use the latest version!
+# uv add browser-use
+# uv sync
+# # .env
+# BROWSER_USE_API_KEY=your-key
+# cat <<EOF >.env
+# OPENROUTER_API_KEY=xxxxxxxxxxxx
+# EOF
 # uvx browser-use install
+# ####uvx playwright install
 
-# mkdir -p /opt/browser-use
-# cd /opt/browser-use
-# $STD uv venv .venv
-# #uv venv --python 3.12
-# $STD source .venv/bin/activate
-# $STD uv pip install --upgrade pip
-# #$STD uv pip install --no-cache-dir -r requirements.txt
-# uv pip install browser-use
-# #uvx browser-use install
-msg_ok "Installed browser-use"
 
-mkdir -p /opt/browser-use
-cat <<EOF >/opt/browser-use/test.py
-"""
-Simple try of the agent.
 
-@dev You need to add OPENAI_API_KEY to your environment variables.
-"""
+cat <<EOF >/etc/systemd/system/xvfb.service
+[Unit]
+Description=Xvfb service
+After=network.target
 
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=Xvfb :99 -ac -screen 0 1920x1080x24 -nolisten tcp
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now xvfb
+sleep 3
+
+cat <<EOF >/etc/systemd/system/x11vnc.service
+[Unit]
+Description=X11VNC service
+After=network.target
+After=xvfb.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+#ExecStart=x11vnc -display :99 -rfbport 5900 -listen 0.0.0.0 -N -forever -shared -passwd secret
+ExecStart=x11vnc -display :99 -rfbport 5900 -listen 0.0.0.0 -N -forever -shared
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now x11vnc
+sleep 3
+
+cat <<EOF >test.py
+from browser_use import Agent, Browser, ChatOpenAI
 import asyncio
 import os
 
-from dotenv import load_dotenv
+os.environ["ANONYMIZED_TELEMETRY"] = "False"
 
-from browser_use import Agent, ChatOpenAI, Browser, BrowserProfile
+async def example():
+    browser = Browser(
+        # use_cloud=True,  # Uncomment to use a stealth browser on Browser Use Cloud
+        chromium_sandbox='False',
+    )
 
-load_dotenv()
+    llm = ChatOpenAI(
+        # model='x-ai/grok-4',
+        model='openai/gpt-5.1',
+        base_url='https://openrouter.ai/api/v1',
+        api_key=os.getenv('OPENROUTER_API_KEY'),
+    )
 
-browser_profile = BrowserProfile(
-	headless=True,
-)
+    agent = Agent(
+        task="Find the number of stars of the browser-use repo",
+        llm=llm,
+        browser=browser,
+    )
 
-# All the models are type safe from OpenAI in case you need a list of supported models
-llm = ChatOpenAI(
-	# model='x-ai/grok-4',
-	model='openai/gpt-5.1',
-	base_url='https://openrouter.ai/api/v1',
-	api_key=os.getenv('OPENROUTER_API_KEY'),
-)
-agent = Agent(
-	task='Find the number of stars of the browser-use repo',
-	llm=llm,
-	use_vision=False,
-	browser_profile=browser_profile,
-)
+    history = await agent.run()
+    return history
 
-
-async def main():
-	await agent.run(max_steps=10)
-
-
-asyncio.run(main())
+if __name__ == "__main__":
+    history = asyncio.run(example())
 EOF
 
 motd_ssh
