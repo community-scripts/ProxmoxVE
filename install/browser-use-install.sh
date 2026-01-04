@@ -13,9 +13,13 @@ setting_up_container
 network_check
 update_os
 
+#To fix Debian trixie looking for IPV6 connection
+echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/99force-ipv4
+apt update
+
 #PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
 USE_UVX="YES" setup_uv
-uv python update-shell
+$STD uv python update-shell
 #$STD update-alternatives --install /usr/bin/python3 python3 /root/.local/bin/python3.12 1
 
 export DISPLAY=:99
