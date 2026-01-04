@@ -7,7 +7,7 @@
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
-verb_ip6
+#verb_ip6
 catch_errors
 setting_up_container
 network_check
@@ -25,7 +25,7 @@ msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y python3-pip
 msg_ok "Installed Dependencies"
 
-apt-get install -y --no-install-recommends \
+$STD apt-get install -y --no-install-recommends \
     libnss3 \
     libnspr4 \
     libdbus-1-3 \
@@ -45,13 +45,13 @@ apt-get install -y --no-install-recommends \
     x11vnc \
     fontconfig
 	
-apt install chromium
+$STD apt install -y chromium
 
 
-pip install python-dotenv
-pip install browser-use
-pip install pytest-playwright
-playwright install --with-deps
+$STD pip install python-dotenv
+$STD pip install browser-use
+$STD pip install pytest-playwright
+$STD playwright install --with-deps
 
 # OR:
 # uv init
