@@ -1,8 +1,33 @@
 [
   {
+    "name": "ghostfolio/ghostfolio",
+    "version": "2.228.0",
+    "date": "2026-01-03T16:38:36Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-05-07-r1",
+    "date": "2025-05-07T12:18:42Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v2.0.2",
+    "date": "2026-01-03T14:31:18Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.49.1",
+    "date": "2026-01-03T13:13:12Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.12",
+    "date": "2026-01-03T12:40:06Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-core@16.4.3",
-    "date": "2026-01-03T09:38:20Z"
+    "version": "create-fumadocs-app@16.0.36",
+    "date": "2026-01-03T11:13:01Z"
   },
   {
     "name": "requarks/wiki",
@@ -45,11 +70,6 @@
     "date": "2026-01-02T23:40:23Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v2.0.1",
-    "date": "2026-01-02T23:08:40Z"
-  },
-  {
     "name": "karakeep-app/karakeep",
     "version": "android/v1.8.5-0",
     "date": "2026-01-02T22:35:27Z"
@@ -72,12 +92,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.49.0",
-    "date": "2026-01-02T19:22:06Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -105,11 +120,6 @@
     "date": "2026-01-02T13:42:41Z"
   },
   {
-    "name": "ghostfolio/ghostfolio",
-    "version": "2.227.0",
-    "date": "2026-01-02T13:39:24Z"
-  },
-  {
     "name": "livebook-dev/livebook",
     "version": "nightly",
     "date": "2026-01-02T12:46:49Z"
@@ -133,11 +143,6 @@
     "name": "alexta69/metube",
     "version": "2026.01.02",
     "date": "2026-01-02T06:27:23Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-05-07-r1",
-    "date": "2025-05-07T12:18:42Z"
   },
   {
     "name": "MagicMirrorOrg/MagicMirror",
@@ -273,11 +278,6 @@
     "name": "ArchiveBox/ArchiveBox",
     "version": "v0.8.6rc1",
     "date": "2025-12-29T10:58:49Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.11",
-    "date": "2025-12-28T23:39:20Z"
   },
   {
     "name": "Lidarr/Lidarr",
