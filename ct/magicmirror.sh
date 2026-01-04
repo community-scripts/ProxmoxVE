@@ -32,6 +32,8 @@ function update_script() {
     systemctl stop magicmirror
     msg_ok "Stopped Service"
 
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Backing up data"
     rm -rf /opt/magicmirror-backup
     mkdir /opt/magicmirror-backup

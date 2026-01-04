@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "magicmirror" "MagicMirrorOrg/MagicMirror" "tarball"
 
 msg_info "Configuring MagicMirror"
