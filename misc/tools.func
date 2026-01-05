@@ -2571,6 +2571,12 @@ function setup_gs() {
 #   - Some things are fetched from intel repositories due to not being in debian repositories.
 # ------------------------------------------------------------------------------
 function setup_hwaccel() {
+  # Check if user explicitly disabled GPU in advanced settings
+  if [[ "${var_gpu:-no}" == "no" ]]; then
+    msg_info "GPU acceleration disabled by user (var_gpu=no) - skipping setup"
+    return 0
+  fi
+
   # Check if GPU passthrough is enabled (device nodes must exist)
   # /dev/dri = Intel iGPU, AMD GPU (open-source drivers)
   # /dev/nvidia* = NVIDIA proprietary drivers
@@ -2583,14 +2589,14 @@ function setup_hwaccel() {
   msg_info "Setup Hardware Acceleration"
 
   if ! command -v lspci &>/dev/null; then
-    $STD apt -y update || {
-      msg_error "Failed to update package list"
-      return 1
-    }
-    $STD apt -y install pciutils || {
-      msg_error "Failed to install pciutils"
-      return 1
-    }
+    if ! $STD apt -y update; then
+      msg_warn "Failed to update package list - skipping hardware acceleration setup"
+      return 0
+    fi
+    if ! $STD apt -y install pciutils; then
+      msg_warn "Failed to install pciutils - skipping hardware acceleration setup"
+      return 0
+    fi
   fi
 
   # Detect GPU vendor (Intel, AMD, NVIDIA)
@@ -2622,34 +2628,76 @@ function setup_hwaccel() {
   case "$gpu_vendor" in
   Intel)
     # Detect Intel GPU generation for driver selection
-    # Gen 9+ (Skylake and newer) benefit from non-free drivers
+    # Gen 9+ (Skylake 2015 and newer): UHD, Iris, Arc - benefit from latest drivers
+    # Gen 7-8 (Haswell 2013-Broadwell 2014): HD 4xxx-5xxx - use repo drivers only
+    # Gen 6 and older (Sandy Bridge 2011 and earlier): HD 2xxx-3xxx - basic repo support
     local intel_gen=""
+    local use_repo_only=false
     local needs_nonfree=false
 
-    # Check for specific Intel GPU models that need non-free drivers
-    if echo "$gpu_info" | grep -Ei 'HD Graphics [56][0-9]{2}|UHD Graphics|Iris|Arc|DG[12]' &>/dev/null; then
+    # Detect older Intel GPUs (Gen 6-8: HD 2xxx through HD 5xxx series)
+    # These should ONLY use repository packages, not latest GitHub releases
+    if echo "$gpu_info" | grep -Ei 'HD Graphics [2-5][0-9]{3}' &>/dev/null; then
+      use_repo_only=true
+      intel_gen="gen6-8"
+      msg_info "Detected older Intel GPU (HD 2000-5999) - using stable repository drivers only"
+    # Detect newer Intel GPUs (Gen 9+: HD 6xxx+, UHD, Iris, Arc)
+    elif echo "$gpu_info" | grep -Ei 'HD Graphics [6-9][0-9]{2,3}|UHD Graphics|Iris|Arc|DG[12]' &>/dev/null; then
       needs_nonfree=true
       intel_gen="gen9+"
+      msg_info "Detected newer Intel GPU (Gen 9+) - installing latest drivers"
+    else
+      # Unknown Intel GPU - play it safe with repo only
+      use_repo_only=true
+      intel_gen="unknown"
+      msg_warn "Unknown Intel GPU detected - using stable repository drivers only"
     fi
 
     if [[ "$os_id" == "ubuntu" ]]; then
       # Ubuntu: Use packages from Ubuntu repos
-      $STD apt -y install \
+      if ! $STD apt -y install \
         va-driver-all \
         ocl-icd-libopencl1 \
-        intel-opencl-icd \
         vainfo \
-        libmfx-gen1.2 \
-        intel-gpu-tools || {
-        msg_error "Failed to install Intel GPU dependencies"
-        return 1
-      }
-      # Try to install intel-media-va-driver for newer GPUs
-      $STD apt -y install intel-media-va-driver 2>/dev/null || true
+        intel-gpu-tools; then
+        msg_warn "Failed to install Intel GPU dependencies - skipping hardware acceleration"
+        return 0
+      fi
+      # Try newer packages that may not be available on all versions
+      $STD apt -y install intel-opencl-icd 2>/dev/null || msg_warn "intel-opencl-icd not available, skipping"
+      $STD apt -y install libmfx-gen1.2 2>/dev/null || msg_warn "libmfx-gen1.2 not available, skipping"
+      $STD apt -y install intel-media-va-driver 2>/dev/null || msg_warn "intel-media-va-driver not available, skipping"
 
     elif [[ "$os_id" == "debian" ]]; then
-      # Debian: Check version and install appropriate drivers
-      if [[ "$needs_nonfree" == true ]]; then
+      # For older GPUs or when we want repo-only packages
+      if [[ "$use_repo_only" == true ]]; then
+        msg_info "Installing Intel GPU drivers from Debian repositories"
+
+        # Fix any broken packages first
+        $STD apt --fix-broken install -y 2>/dev/null || true
+
+        # Install base VA-API and tools (these should always work)
+        if ! $STD apt -y install \
+          va-driver-all \
+          i965-va-driver \
+          vainfo \
+          intel-gpu-tools \
+          ocl-icd-libopencl1; then
+          msg_warn "Failed to install base Intel GPU support - skipping hardware acceleration"
+          return 0
+        fi
+
+        # Try to install additional packages that might help but aren't critical
+        $STD apt -y install mesa-va-drivers 2>/dev/null || msg_warn "mesa-va-drivers not available"
+        # Skip intel-opencl-icd on Debian 12 (Bookworm) - causes dependency issues with old GPUs
+        if [[ "$os_codename" != "bookworm" ]]; then
+          $STD apt -y install intel-opencl-icd 2>/dev/null || msg_warn "OpenCL support not available from repositories"
+        fi
+
+        msg_ok "Installed Intel GPU drivers from Debian repositories (stable)"
+
+      # For newer GPUs, try non-free drivers first, then fallback
+      elif [[ "$needs_nonfree" == true ]]; then
         # Add non-free repo for intel-media-va-driver-non-free
         if [[ "$os_codename" == "bookworm" ]]; then
           # Debian 12 Bookworm
@@ -2662,16 +2710,20 @@ Components: non-free non-free-firmware
 EOF
             $STD apt update
           fi
-          $STD apt -y install \
+
+          # Try installing non-free drivers for newer Intel GPUs
+          if $STD apt -y install \
             intel-media-va-driver-non-free \
             ocl-icd-libopencl1 \
             intel-opencl-icd \
             vainfo \
             libmfx-gen1.2 \
-            intel-gpu-tools || {
-            msg_warn "Non-free driver install failed, falling back to open drivers"
-            needs_nonfree=false
-          }
+            intel-gpu-tools; then
+            msg_ok "Installed Intel non-free drivers for Gen 9+ GPU"
+          else
+            msg_warn "Non-free driver install failed, falling back to repository drivers"
+            use_repo_only=true
+          fi
 
         elif [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
           # Debian 13 Trixie / Sid
@@ -2689,7 +2741,9 @@ Components: non-free non-free-firmware
 EOF
             $STD apt update
           fi
-          $STD apt -y install \
+
+          # Try installing packages for Debian 13
+          if $STD apt -y install \
             intel-media-va-driver-non-free \
             ocl-icd-libopencl1 \
             mesa-opencl-icd \
@@ -2697,54 +2751,57 @@ EOF
             libvpl2 \
             vainfo \
             libmfx-gen1.2 \
-            intel-gpu-tools 2>/dev/null || {
-            msg_warn "Non-free driver install failed, falling back to open drivers"
-            needs_nonfree=false
-          }
+            intel-gpu-tools 2>/dev/null; then
+            msg_ok "Installed Intel drivers for Gen 9+ GPU (Debian 13)"
+          else
+            msg_warn "Advanced driver install failed, falling back to repository drivers"
+            use_repo_only=true
+          fi
+        else
+          # Unknown Debian version - use repo only
+          use_repo_only=true
         fi
       fi
 
-      # Fallback to open drivers or older Intel GPUs
-      if [[ "$needs_nonfree" == false ]]; then
-        # Fetch latest Intel drivers from GitHub for Debian
-        fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
-          msg_warn "Failed to deploy Intel IGC core 2"
-        }
-        fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
-          msg_warn "Failed to deploy Intel IGC OpenCL 2"
-        }
-        fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
-          msg_warn "Failed to deploy Intel GDGMM12"
-        }
-        fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
-          msg_warn "Failed to deploy Intel OpenCL ICD"
-        }
+      # Fallback: If we set use_repo_only during error handling above
+      if [[ "$use_repo_only" == true && "$needs_nonfree" == true ]]; then
+        msg_info "Installing fallback Intel GPU drivers from repositories"
 
-        $STD apt -y install \
+        # Fix any broken packages from failed install attempts
+        $STD apt --fix-broken install -y 2>/dev/null || true
+        $STD apt -y autoremove 2>/dev/null || true
+
+        # Remove any partially installed packages that are causing issues
+        dpkg -l | grep -E 'intel-igc|libigdgmm|intel-opencl-icd' | awk '{print $2}' | xargs -r dpkg --purge 2>/dev/null || true
+
+        # Clean install of stable repository packages
+        if ! $STD apt -y install \
           va-driver-all \
+          i965-va-driver \
           ocl-icd-libopencl1 \
           mesa-opencl-icd \
           mesa-va-drivers \
           vainfo \
-          intel-gpu-tools || {
-          msg_error "Failed to install Intel GPU dependencies"
-          return 1
-        }
+          intel-gpu-tools; then
+          msg_warn "Failed to install fallback Intel GPU dependencies - skipping hardware acceleration"
+          return 0
+        fi
+        msg_ok "Installed fallback Intel GPU drivers from repositories"
       fi
     fi
     ;;
 
   AMD)
-    $STD apt -y install \
+    if ! $STD apt -y install \
       mesa-va-drivers \
       mesa-vdpau-drivers \
       mesa-opencl-icd \
       ocl-icd-libopencl1 \
       vainfo \
-      clinfo 2>/dev/null || {
-      msg_error "Failed to install AMD GPU dependencies"
-      return 1
-    }
+      clinfo 2>/dev/null; then
+      msg_warn "Failed to install AMD GPU dependencies - skipping hardware acceleration"
+      return 0
+    fi
 
     # For AMD GPUs, firmware-amd-graphics requires non-free repositories
     if [[ "$os_id" == "debian" ]]; then
@@ -2819,19 +2876,33 @@ EOF
 
   # Set permissions for /dev/dri (only in privileged containers and if /dev/dri exists)
   if [[ "$in_ct" == "0" && -d /dev/dri ]]; then
-    chgrp video /dev/dri 2>/dev/null || true
-    chmod 755 /dev/dri 2>/dev/null || true
-    chmod 660 /dev/dri/* 2>/dev/null || true
-    $STD adduser "$(id -u -n)" video 2>/dev/null || true
-    $STD adduser "$(id -u -n)" render 2>/dev/null || true
+    # Verify /dev/dri contains actual device nodes
+    if ls /dev/dri/card* /dev/dri/renderD* &>/dev/null; then
+      chgrp video /dev/dri 2>/dev/null || true
+      chmod 755 /dev/dri 2>/dev/null || true
+      chmod 660 /dev/dri/* 2>/dev/null || true
+      $STD adduser "$(id -u -n)" video 2>/dev/null || true
+      $STD adduser "$(id -u -n)" render 2>/dev/null || true
 
-    # Sync GID for video/render groups between host and container
-    local host_video_gid host_render_gid
-    host_video_gid=$(getent group video | cut -d: -f3)
-    host_render_gid=$(getent group render | cut -d: -f3)
-    if [[ -n "$host_video_gid" && -n "$host_render_gid" ]]; then
-      sed -i "s/^video:x:[0-9]*:/video:x:$host_video_gid:/" /etc/group 2>/dev/null || true
-      sed -i "s/^render:x:[0-9]*:/render:x:$host_render_gid:/" /etc/group 2>/dev/null || true
+      # Sync GID for video/render groups between host and container
+      local host_video_gid host_render_gid
+      host_video_gid=$(getent group video | cut -d: -f3)
+      host_render_gid=$(getent group render | cut -d: -f3)
+      if [[ -n "$host_video_gid" && -n "$host_render_gid" ]]; then
+        sed -i "s/^video:x:[0-9]*:/video:x:$host_video_gid:/" /etc/group 2>/dev/null || true
+        sed -i "s/^render:x:[0-9]*:/render:x:$host_render_gid:/" /etc/group 2>/dev/null || true
+      fi
+      
+      # Basic GPU functionality test
+      if command -v vainfo &>/dev/null; then
+        if vainfo &>/dev/null; then
+          msg_info "GPU hardware acceleration verified and working"
+        else
+          msg_warn "GPU drivers installed but vainfo test failed - check host GPU passthrough configuration"
+        fi
+      fi
+    else
+      msg_warn "/dev/dri exists but contains no device nodes - GPU passthrough may not be configured correctly"
     fi
   fi
 
@@ -3264,12 +3335,12 @@ setup_mariadb() {
   # Configure tmpfiles.d to ensure /run/mysqld directory is created on boot
   # This fixes the issue where MariaDB fails to start after container reboot
   msg_info "Configuring MariaDB runtime directory persistence"
-  
+
   # Create tmpfiles.d configuration with error handling
-  if ! printf '# Ensure /run/mysqld directory exists with correct permissions for MariaDB\nd /run/mysqld 0755 mysql mysql -\n' > /etc/tmpfiles.d/mariadb.conf; then
+  if ! printf '# Ensure /run/mysqld directory exists with correct permissions for MariaDB\nd /run/mysqld 0755 mysql mysql -\n' >/etc/tmpfiles.d/mariadb.conf; then
     msg_warn "Failed to create /etc/tmpfiles.d/mariadb.conf - runtime directory may not persist on reboot"
   fi
-  
+
   # Create the directory now if it doesn't exist
   # Verify mysql user exists before attempting ownership change
   if [[ ! -d /run/mysqld ]]; then
@@ -3283,7 +3354,7 @@ setup_mariadb() {
       msg_warn "mysql user not found - directory created with correct permissions but ownership not set"
     fi
   fi
-  
+
   msg_ok "Configured MariaDB runtime directory persistence"
 
   cache_installed_version "mariadb" "$MARIADB_VERSION"
