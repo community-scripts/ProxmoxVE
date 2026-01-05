@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-05
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Upgrade evcc LXC to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10548](https://github.com/community-scripts/ProxmoxVE/pull/10548))
+
 ## 2026-01-04
 
 ### 🚀 Updated Scripts
