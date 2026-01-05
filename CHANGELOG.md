@@ -24,6 +24,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Upgrade evcc LXC to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10548](https://github.com/community-scripts/ProxmoxVE/pull/10548))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - Harden setup_hwaccel for old Intel GPUs [@MickLesk](https://github.com/MickLesk) ([#10556](https://github.com/community-scripts/ProxmoxVE/pull/10556))
+
 ### 🧰 Tools
 
   - #### 🔧 Refactor
