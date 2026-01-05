@@ -2854,6 +2854,7 @@ EOF
             ocl-icd-libopencl1 \
             intel-opencl-icd \
             vainfo \
+            libmfx-gen1.2 \
             intel-gpu-tools || {
             msg_warn "Non-free driver install failed, falling back to open drivers"
             needs_nonfree=false
@@ -2882,6 +2883,7 @@ EOF
             mesa-va-drivers \
             libvpl2 \
             vainfo \
+            libmfx-gen1.2 \
             intel-gpu-tools 2>/dev/null || {
             msg_warn "Non-free driver install failed, falling back to open drivers"
             needs_nonfree=false
@@ -3389,10 +3391,10 @@ setup_mariadb() {
       if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
         msg_ok "MariaDB repository configured via mariadb_repo_setup"
         # Extract version from configured repo
-        MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "11.4")
+        MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
       else
         msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
-        MARIADB_VERSION="11.4"
+        MARIADB_VERSION="12.2"
       fi
     else
       MARIADB_VERSION=$(curl -fsSL --max-time 15 http://mirror.mariadb.org/repo/ 2>/dev/null |
@@ -3406,10 +3408,10 @@ setup_mariadb() {
         msg_warn "Could not parse latest GA MariaDB version from mirror - trying mariadb_repo_setup"
         if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
           msg_ok "MariaDB repository configured via mariadb_repo_setup"
-          MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "11.4")
+          MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
         else
           msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
-          MARIADB_VERSION="11.4"
+          MARIADB_VERSION="12.2"
         fi
       fi
     fi
@@ -3502,6 +3504,31 @@ setup_mariadb() {
       return 1
     }
   fi
+
+  # Configure tmpfiles.d to ensure /run/mysqld directory is created on boot
+  # This fixes the issue where MariaDB fails to start after container reboot
+  msg_info "Configuring MariaDB runtime directory persistence"
+
+  # Create tmpfiles.d configuration with error handling
+  if ! printf '# Ensure /run/mysqld directory exists with correct permissions for MariaDB\nd /run/mysqld 0755 mysql mysql -\n' > /etc/tmpfiles.d/mariadb.conf; then
+    msg_warn "Failed to create /etc/tmpfiles.d/mariadb.conf - runtime directory may not persist on reboot"
+  fi
+
+  # Create the directory now if it doesn't exist
+  # Verify mysql user exists before attempting ownership change
+  if [[ ! -d /run/mysqld ]]; then
+    mkdir -p /run/mysqld
+    # Set permissions first (works regardless of user existence)
+    chmod 755 /run/mysqld
+    # Set ownership only if mysql user exists
+    if getent passwd mysql >/dev/null 2>&1; then
+      chown mysql:mysql /run/mysqld
+    else
+      msg_warn "mysql user not found - directory created with correct permissions but ownership not set"
+    fi
+  fi
+
+  msg_ok "Configured MariaDB runtime directory persistence"
 
   cache_installed_version "mariadb" "$MARIADB_VERSION"
   msg_ok "Setup MariaDB $MARIADB_VERSION"
