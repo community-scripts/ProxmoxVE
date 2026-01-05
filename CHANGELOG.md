@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - reitti: add postgis extension to PostgreSQL DB setup [@MickLesk](https://github.com/MickLesk) ([#10555](https://github.com/community-scripts/ProxmoxVE/pull/10555))
     - openWRT: separate disk attachment and resizing in VM setup [@MickLesk](https://github.com/MickLesk) ([#10557](https://github.com/community-scripts/ProxmoxVE/pull/10557))
     - paperless-ai: Set TMPDIR for pip to use disk during install [@MickLesk](https://github.com/MickLesk) ([#10559](https://github.com/community-scripts/ProxmoxVE/pull/10559))
 
