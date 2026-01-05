@@ -157,13 +157,16 @@ EOF
   [ -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg ] && rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg
   [ -f /etc/apt/sources.list.d/openresty.list ] && rm -f /etc/apt/sources.list.d/openresty.list
   [ ! -f /etc/apt/trusted.gpg.d/openresty.gpg ] && curl -fsSL https://openresty.org/package/pubkey.gpg | gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/openresty.gpg
-  [ ! -f /etc/apt/sources.list.d/openresty.sources ] && cat <<'EOF' >/etc/apt/sources.list.d/openresty.sources
+  if [ ! -f /etc/apt/sources.list.d/openresty.sources ]; then
+    DEBIAN_VERSION=$(grep -E '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)
+    cat <<EOF >/etc/apt/sources.list.d/openresty.sources
 Types: deb
 URIs: http://openresty.org/package/debian/
-Suites: bookworm
+Suites: ${DEBIAN_VERSION}
 Components: openresty
 Signed-By: /etc/apt/trusted.gpg.d/openresty.gpg
 EOF
+  fi
   $STD apt update
   $STD apt -y install openresty
   if [ -d /opt/certbot ]; then

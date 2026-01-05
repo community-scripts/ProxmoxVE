@@ -41,10 +41,11 @@ msg_ok "Set up Certbot"
 
 msg_info "Installing Openresty"
 curl -fsSL "https://openresty.org/package/pubkey.gpg" | gpg --dearmor -o /etc/apt/trusted.gpg.d/openresty.gpg
-cat <<'EOF' >/etc/apt/sources.list.d/openresty.sources
+DEBIAN_VERSION=$(grep -E '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)
+cat <<EOF >/etc/apt/sources.list.d/openresty.sources
 Types: deb
 URIs: http://openresty.org/package/debian/
-Suites: bookworm
+Suites: ${DEBIAN_VERSION}
 Components: openresty
 Signed-By: /etc/apt/trusted.gpg.d/openresty.gpg
 EOF
