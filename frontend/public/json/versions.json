@@ -1,8 +1,63 @@
 [
   {
+    "name": "theonedev/onedev",
+    "version": "v14.0.2",
+    "date": "2026-01-05T10:59:42Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v11.1.2",
+    "date": "2025-12-17T09:26:24Z"
+  },
+  {
+    "name": "maxdorninger/MediaManager",
+    "version": "v1.12.1",
+    "date": "2026-01-05T09:06:22Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "develop-20251228",
+    "date": "2025-12-28T05:59:54Z"
+  },
+  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.4",
     "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.726",
+    "date": "2026-01-05T06:02:39Z"
+  },
+  {
+    "name": "jason5ng32/MyIP",
+    "version": "v5.2.0",
+    "date": "2026-01-05T05:56:57Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.16.5",
+    "date": "2026-01-05T02:26:15Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.2",
+    "date": "2025-10-22T17:03:54Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-05T00:27:03Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -25,19 +80,9 @@
     "date": "2026-01-04T19:42:58Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.16.4",
-    "date": "2026-01-04T18:36:03Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v26.1.0",
     "date": "2026-01-04T17:07:30Z"
-  },
-  {
-    "name": "maxdorninger/MediaManager",
-    "version": "v1.12.0",
-    "date": "2026-01-04T14:04:01Z"
   },
   {
     "name": "dedicatedcode/reitti",
@@ -55,16 +100,6 @@
     "date": "2026-01-04T12:59:19Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.717",
-    "date": "2026-01-04T05:59:17Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v14.0.1",
-    "date": "2026-01-04T05:40:48Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.3.1-rc1",
     "date": "2026-01-04T04:38:01Z"
@@ -73,16 +108,6 @@
     "name": "Dispatcharr/Dispatcharr",
     "version": "v0.16.0",
     "date": "2026-01-04T01:18:19Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-04T00:27:05Z"
   },
   {
     "name": "nickheyer/discopanel",
@@ -166,8 +191,8 @@
   },
   {
     "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-02T12:46:49Z"
+    "version": "v0.18.2",
+    "date": "2025-12-15T19:17:42Z"
   },
   {
     "name": "gotify/server",
@@ -178,11 +203,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@2.1.5",
     "date": "2026-01-02T09:10:15Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "develop-20251228",
-    "date": "2025-12-28T05:59:54Z"
   },
   {
     "name": "alexta69/metube",
@@ -343,11 +363,6 @@
     "name": "kimai/kimai",
     "version": "2.45.0",
     "date": "2025-12-28T06:32:47Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "laurent22/joplin",
@@ -535,11 +550,6 @@
     "date": "2025-12-21T13:13:01Z"
   },
   {
-    "name": "jason5ng32/MyIP",
-    "version": "v5.1.1",
-    "date": "2025-12-21T12:59:32Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.35.0",
     "date": "2025-12-21T07:44:15Z"
@@ -568,11 +578,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.9.1",
     "date": "2025-12-20T09:14:25Z"
-  },
-  {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.2",
-    "date": "2025-10-22T17:03:54Z"
   },
   {
     "name": "pelican-dev/panel",
@@ -608,11 +613,6 @@
     "name": "forgejo/forgejo",
     "version": "v15.0.0-dev",
     "date": "2025-12-19T11:43:47Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v11.1.2",
-    "date": "2025-12-17T09:26:24Z"
   },
   {
     "name": "jhuckaby/Cronicle",

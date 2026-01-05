@@ -28,6 +28,15 @@ function update_script() {
     exit
   fi
 
+  # Enable PostGIS extension if not already enabled
+  if systemctl is-active --quiet postgresql; then
+    if ! sudo -u postgres psql -d reitti_db -tAc "SELECT 1 FROM pg_extension WHERE extname='postgis'" 2>/dev/null | grep -q 1; then
+      msg_info "Enabling PostGIS extension"
+      sudo -u postgres psql -d reitti_db -c "CREATE EXTENSION IF NOT EXISTS postgis;" &>/dev/null
+      msg_ok "Enabled PostGIS extension"
+    fi
+  fi
+
   if [ ! -d /var/cache/nginx/tiles ]; then
     msg_info "Installing Nginx Tile Cache"
     mkdir -p /var/cache/nginx/tiles
