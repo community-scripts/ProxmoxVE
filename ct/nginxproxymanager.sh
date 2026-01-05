@@ -177,6 +177,17 @@ EOF
   if [ -d /opt/certbot ]; then
     $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
     $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
+    
+    # Fix for Debian 13 Trixie - certbot-dns-multi needed to prevent "API isn't healthy" error
+    if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"13"* ]]; then
+      msg_info "Applying Debian 13 Certbot Fix"
+      $STD apt-get install -y golang build-essential git
+      $STD /opt/certbot/bin/pip install --no-cache-dir setuptools-golang==2.9.0
+      export CGO_ENABLED=1
+      export GO111MODULE=on
+      $STD /opt/certbot/bin/pip install --no-build-isolation --no-cache-dir certbot-dns-multi
+      msg_ok "Applied Debian 13 Certbot Fix"
+    fi
   fi
   msg_ok "Updated Certbot"
 
