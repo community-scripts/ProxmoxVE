@@ -552,10 +552,14 @@ fi
 
 qm set "$VMID" \
   -efidisk0 "${STORAGE}:0,efitype=4m,size=4M" \
-  -scsi0 "${DISK_REF},size=${DISK_SIZE}" \
+  -scsi0 "${DISK_REF}" \
   -boot order=scsi0 \
   -tags community-script >/dev/null
-msg_ok "Attached disk (${DISK_SIZE})"
+msg_ok "Attached disk"
+
+msg_info "Resizing disk to ${DISK_SIZE}"
+qm disk resize "$VMID" scsi0 "${DISK_SIZE}" >/dev/null
+msg_ok "Resized disk to ${DISK_SIZE}"
 
 DESCRIPTION=$(
   cat <<EOF
