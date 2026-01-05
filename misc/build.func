@@ -2459,6 +2459,7 @@ install_script() {
       echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
       VERBOSE="no"
       METHOD="default"
+      default_var_settings
       base_settings "$VERBOSE"
       echo_default
       defaults_target="$(ensure_global_default_vars_file)"
