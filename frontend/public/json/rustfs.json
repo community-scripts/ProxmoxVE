@@ -1,0 +1,43 @@
+{
+  "name": "RustFS",
+  "slug": "rustfs",
+  "categories": [
+    12
+  ],
+  "date_created": "2026-01-05",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 9000,
+  "documentation": "https://docs.rustfs.com/",
+  "website": "https://rustfs.com/",
+  "logo": "https://docs.rustfs.com/images/logo.svg",
+  "description": "RustFS is a high-performance, distributed object storage system developed in Rust, leveraging the language's memory safety and performance. RustFS combines simplicity with efficiency, offering an open-source, free object storage solution suitable for private cloud deployments. It is fully compatible with the S3 protocol and released under the Apache 2.0 license. Built by a global community of engineers, RustFS serves as a commercially-friendly alternative to restrictive open-source storage products.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/rustfs.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "rustfsadmin",
+    "password": "rustfsadmin"
+  },
+  "notes": [
+    {
+      "text": "You can change the default credentials /etc/default/rustfs file inside the LXC.",
+      "type": "info"
+    },
+    {
+      "text": "This script uses an external installer from rustfs.com. The installer is NOT maintained by community-scripts.",
+      "type": "warning"
+    }
+  ]
+}

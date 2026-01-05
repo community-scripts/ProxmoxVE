@@ -75,3 +75,4 @@ json/.vscode/
 .git/
 .gitignore
 .vscode/settings.json
+.idea
