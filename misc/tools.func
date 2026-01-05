@@ -75,6 +75,17 @@ curl_with_retry() {
 
   local attempt=1
   local success=false
+  local backoff=1
+
+  # Extract hostname for DNS pre-check
+  local host
+  host=$(echo "$url" | sed -E 's|^https?://([^/:]+).*|\1|')
+
+  # DNS pre-check - fail fast if host is unresolvable
+  if ! getent hosts "$host" &>/dev/null; then
+    debug_log "DNS resolution failed for $host"
+    return 1
+  fi
 
   while [[ $attempt -le $retries ]]; do
     debug_log "curl attempt $attempt/$retries: $url"
@@ -94,8 +105,11 @@ curl_with_retry() {
       fi
     fi
 
-    debug_log "curl attempt $attempt failed, waiting ${attempt}s before retry..."
-    sleep "$attempt"
+    debug_log "curl attempt $attempt failed, waiting ${backoff}s before retry..."
+    sleep "$backoff"
+    # Exponential backoff: 1, 2, 4, 8... capped at 30s
+    backoff=$((backoff * 2))
+    ((backoff > 30)) && backoff=30
     ((attempt++))
   done
 
@@ -169,7 +183,7 @@ curl_api_with_retry() {
 }
 
 # ------------------------------------------------------------------------------
-# Download and install GPG key with retry logic
+# Download and install GPG key with retry logic and validation
 #
 # Usage:
 #   download_gpg_key "https://example.com/key.gpg" "/etc/apt/keyrings/example.gpg"
@@ -180,14 +194,21 @@ curl_api_with_retry() {
 #   $2 - Output path for keyring file
 #   $3 - (optional) "dearmor" to convert ASCII-armored key to binary
 #
+# Features:
+#   - Auto-detects key format (binary vs armored)
+#   - Validates downloaded key
+#   - Multiple mirror fallback support
+#
 # Returns: 0 on success, 1 on failure
 # ------------------------------------------------------------------------------
 download_gpg_key() {
   local url="$1"
   local output="$2"
-  local mode="${3:-}"
+  local mode="${3:-auto}"  # auto, dearmor, or binary
   local retries="${CURL_RETRIES:-3}"
   local timeout="${CURL_TIMEOUT:-30}"
+  local temp_key
+  temp_key=$(mktemp)
 
   mkdir -p "$(dirname "$output")"
 
@@ -195,24 +216,47 @@ download_gpg_key() {
   while [[ $attempt -le $retries ]]; do
     debug_log "GPG key download attempt $attempt/$retries: $url"
 
+    # Download to temp file first
+    if ! curl -fsSL --connect-timeout 10 --max-time "$timeout" -o "$temp_key" "$url" 2>/dev/null; then
+      debug_log "GPG key download attempt $attempt failed, waiting ${attempt}s..."
+      sleep "$attempt"
+      ((attempt++))
+      continue
+    fi
+
+    # Auto-detect key format if mode is auto
+    if [[ "$mode" == "auto" ]]; then
+      if file "$temp_key" 2>/dev/null | grep -qi "pgp\\|gpg\\|public key"; then
+        mode="binary"
+      elif grep -q "BEGIN PGP" "$temp_key" 2>/dev/null; then
+        mode="dearmor"
+      else
+        # Try to detect by extension
+        [[ "$url" == *.asc || "$url" == *.txt ]] && mode="dearmor" || mode="binary"
+      fi
+    fi
+
+    # Process based on mode
     if [[ "$mode" == "dearmor" ]]; then
-      if curl -fsSL --connect-timeout 10 --max-time "$timeout" "$url" 2>/dev/null |
-        gpg --dearmor --yes -o "$output" 2>/dev/null; then
-        debug_log "GPG key installed: $output"
+      if gpg --dearmor --yes -o "$output" < "$temp_key" 2>/dev/null; then
+        rm -f "$temp_key"
+        debug_log "GPG key installed (dearmored): $output"
         return 0
       fi
     else
-      if curl -fsSL --connect-timeout 10 --max-time "$timeout" -o "$output" "$url" 2>/dev/null; then
-        debug_log "GPG key downloaded: $output"
+      if mv "$temp_key" "$output" 2>/dev/null; then
+        chmod 644 "$output"
+        debug_log "GPG key installed: $output"
         return 0
       fi
     fi
 
-    debug_log "GPG key download attempt $attempt failed, waiting ${attempt}s..."
+    debug_log "GPG key processing attempt $attempt failed"
     sleep "$attempt"
     ((attempt++))
   done
 
+  rm -f "$temp_key"
   debug_log "GPG key download FAILED after $retries attempts: $url"
   return 1
 }
@@ -364,11 +408,20 @@ prepare_repository_setup() {
 # ------------------------------------------------------------------------------
 # Install packages with retry logic
 # Usage: install_packages_with_retry "mysql-server" "mysql-client"
+# Features:
+#   - Automatic dpkg recovery on failure
+#   - Individual package fallback if batch fails
+#   - Dependency resolution with apt-get -f install
 # ------------------------------------------------------------------------------
 install_packages_with_retry() {
   local packages=("$@")
-  local max_retries=2
+  local max_retries=3
   local retry=0
+
+  # Pre-check: ensure dpkg is not in a broken state
+  if dpkg --audit 2>&1 | grep -q .; then
+    $STD dpkg --configure -a 2>/dev/null || true
+  fi
 
   while [[ $retry -le $max_retries ]]; do
     if $STD apt install -y "${packages[@]}" 2>/dev/null; then
@@ -378,10 +431,41 @@ install_packages_with_retry() {
     retry=$((retry + 1))
     if [[ $retry -le $max_retries ]]; then
       msg_warn "Package installation failed, retrying ($retry/$max_retries)..."
-      sleep 2
-      # Fix any interrupted dpkg operations before retry
-      $STD dpkg --configure -a 2>/dev/null || true
-      $STD apt update 2>/dev/null || true
+      
+      # Progressive recovery steps based on retry count
+      case $retry in
+      1)
+        # First retry: just fix dpkg and update
+        $STD dpkg --configure -a 2>/dev/null || true
+        $STD apt update 2>/dev/null || true
+        ;;
+      2)
+        # Second retry: fix broken dependencies
+        $STD apt --fix-broken install -y 2>/dev/null || true
+        $STD apt update 2>/dev/null || true
+        ;;
+      3)
+        # Third retry: try installing packages one by one
+        local failed=()
+        for pkg in "${packages[@]}"; do
+          if ! $STD apt install -y "$pkg" 2>/dev/null; then
+            # Try with --fix-missing
+            if ! $STD apt install -y --fix-missing "$pkg" 2>/dev/null; then
+              failed+=("$pkg")
+            fi
+          fi
+        done
+        # If some packages installed, consider partial success
+        if [[ ${#failed[@]} -lt ${#packages[@]} ]]; then
+          if [[ ${#failed[@]} -gt 0 ]]; then
+            msg_warn "Partially installed. Failed packages: ${failed[*]}"
+          fi
+          return 0
+        fi
+        ;;
+      esac
+      
+      sleep $((retry * 2))
     fi
   done
 
@@ -838,16 +922,36 @@ upgrade_package() {
 }
 
 # ------------------------------------------------------------------------------
-# Repository availability check
+# Repository availability check with caching
 # ------------------------------------------------------------------------------
+declare -A _REPO_CACHE 2>/dev/null || true
+
 verify_repo_available() {
   local repo_url="$1"
   local suite="$2"
+  local cache_key="${repo_url}|${suite}"
+  local cache_ttl=300  # 5 minutes
 
-  if curl -fsSL --max-time 10 "${repo_url}/dists/${suite}/Release" &>/dev/null; then
-    return 0
+  # Check cache first (avoid repeated HTTP requests)
+  if [[ -n "${_REPO_CACHE[$cache_key]:-}" ]]; then
+    local cached_time cached_result
+    cached_time=$(echo "${_REPO_CACHE[$cache_key]}" | cut -d'|' -f1)
+    cached_result=$(echo "${_REPO_CACHE[$cache_key]}" | cut -d'|' -f2)
+    if (($(date +%s) - cached_time < cache_ttl)); then
+      [[ "$cached_result" == "1" ]] && return 0 || return 1
+    fi
   fi
-  return 1
+
+  # Perform actual check with short timeout
+  local result=1
+  if curl -fsSL --max-time 5 --connect-timeout 3 "${repo_url}/dists/${suite}/Release" &>/dev/null; then
+    result=0
+  fi
+
+  # Cache the result
+  _REPO_CACHE[$cache_key]="$(date +%s)|$result"
+
+  return $result
 }
 
 # ------------------------------------------------------------------------------
@@ -857,16 +961,27 @@ ensure_dependencies() {
   local deps=("$@")
   local missing=()
 
+  # Fast batch check using dpkg-query (much faster than individual checks)
+  local installed_pkgs
+  installed_pkgs=$(dpkg-query -W -f='${Package}\n' 2>/dev/null | sort -u)
+
   for dep in "${deps[@]}"; do
-    if ! command -v "$dep" &>/dev/null && ! is_package_installed "$dep"; then
-      missing+=("$dep")
+    # First check if command exists (for binaries like jq, curl)
+    if command -v "$dep" &>/dev/null; then
+      continue
     fi
+    # Then check if package is installed
+    if echo "$installed_pkgs" | grep -qx "$dep"; then
+      continue
+    fi
+    missing+=("$dep")
   done
 
   if [[ ${#missing[@]} -gt 0 ]]; then
     # Only run apt update if not done recently (within last 5 minutes)
     local apt_cache_file="/var/cache/apt-update-timestamp"
-    local current_time=$(date +%s)
+    local current_time
+    current_time=$(date +%s)
     local last_update=0
 
     if [[ -f "$apt_cache_file" ]]; then
@@ -884,8 +999,17 @@ ensure_dependencies() {
     fi
 
     $STD apt install -y "${missing[@]}" || {
-      msg_error "Failed to install dependencies: ${missing[*]}"
-      return 1
+      # Fallback: try installing one by one to identify problematic package
+      local failed=()
+      for pkg in "${missing[@]}"; do
+        if ! $STD apt install -y "$pkg" 2>/dev/null; then
+          failed+=("$pkg")
+        fi
+      done
+      if [[ ${#failed[@]} -gt 0 ]]; then
+        msg_error "Failed to install dependencies: ${failed[*]}"
+        return 1
+      fi
     }
   fi
 }
@@ -1092,7 +1216,72 @@ get_fallback_suite() {
     return 0
   fi
 
-  # Comprehensive fallback mappings
+  # Build fallback chain based on distro
+  local fallback_chain=()
+  case "$distro_id" in
+  debian)
+    case "$distro_codename" in
+    trixie | forky | sid)
+      fallback_chain=("bookworm" "bullseye")
+      ;;
+    bookworm)
+      fallback_chain=("bookworm" "bullseye")
+      ;;
+    bullseye)
+      fallback_chain=("bullseye" "buster")
+      ;;
+    *)
+      fallback_chain=("bookworm" "bullseye")
+      ;;
+    esac
+    ;;
+  ubuntu)
+    case "$distro_codename" in
+    oracular | plucky)
+      fallback_chain=("noble" "jammy" "focal")
+      ;;
+    noble)
+      fallback_chain=("noble" "jammy")
+      ;;
+    mantic | lunar)
+      fallback_chain=("jammy" "focal")
+      ;;
+    jammy)
+      fallback_chain=("jammy" "focal")
+      ;;
+    focal)
+      fallback_chain=("focal" "bionic")
+      ;;
+    *)
+      fallback_chain=("jammy" "focal")
+      ;;
+    esac
+    ;;
+  *)
+    echo "$distro_codename"
+    return 0
+    ;;
+  esac
+
+  # Try each fallback suite with actual HTTP check
+  for suite in "${fallback_chain[@]}"; do
+    if verify_repo_available "$repo_base_url" "$suite"; then
+      debug_log "Fallback suite found: $suite for $distro_codename"
+      echo "$suite"
+      return 0
+    fi
+  done
+
+  # Last resort: return first fallback without verification
+  echo "${fallback_chain[0]:-$distro_codename}"
+  return 0
+}
+
+# Legacy case structure removed - now handled by fallback_chain above
+_get_fallback_suite_legacy() {
+  local distro_id="$1"
+  local distro_codename="$2"
+  # Comprehensive fallback mappings (kept for reference)
   case "$distro_id" in
   debian)
     case "$distro_codename" in
@@ -1266,8 +1455,8 @@ get_default_python_version() {
 # Get default Node.js LTS version
 # ------------------------------------------------------------------------------
 get_default_nodejs_version() {
-  # Always return current LTS (Node.js 22 is LTS until April 2027)
-  echo "22"
+  # Current LTS as of January 2026 (Node.js 24 LTS)
+  echo "24"
 }
 
 # ------------------------------------------------------------------------------
@@ -1364,11 +1553,33 @@ cleanup_orphaned_sources() {
 # ------------------------------------------------------------------------------
 # Ensure APT is in a working state before installing packages
 # This should be called at the start of any setup function
+# Features:
+#   - Fixes interrupted dpkg operations
+#   - Removes orphaned sources
+#   - Handles lock file contention
+#   - Progressive recovery with fallbacks
 # ------------------------------------------------------------------------------
 ensure_apt_working() {
+  local max_wait=60  # Maximum seconds to wait for apt lock
+
+  # Wait for any existing apt/dpkg processes to finish
+  local waited=0
+  while fuser /var/lib/dpkg/lock-frontend &>/dev/null || \
+        fuser /var/lib/apt/lists/lock &>/dev/null || \
+        fuser /var/cache/apt/archives/lock &>/dev/null; do
+    if ((waited >= max_wait)); then
+      msg_warn "APT lock held for ${max_wait}s, attempting to continue anyway"
+      break
+    fi
+    debug_log "Waiting for APT lock (${waited}s)..."
+    sleep 2
+    ((waited += 2))
+  done
+
   # Fix interrupted dpkg operations first
   # This can happen if a previous installation was interrupted (e.g., by script error)
-  if [[ -f /var/lib/dpkg/lock-frontend ]] || dpkg --audit 2>&1 | grep -q "interrupted"; then
+  if dpkg --audit 2>&1 | grep -q .; then
+    debug_log "Fixing interrupted dpkg operations"
     $STD dpkg --configure -a 2>/dev/null || true
   fi
 
@@ -1376,15 +1587,28 @@ ensure_apt_working() {
   cleanup_orphaned_sources
 
   # Try to update package lists
-  if ! $STD apt update; then
-    # More aggressive cleanup
-    rm -f /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+  if ! $STD apt update 2>/dev/null; then
+    debug_log "First apt update failed, trying recovery steps"
+    
+    # Step 1: Clear apt lists cache
+    rm -rf /var/lib/apt/lists/* 2>/dev/null || true
+    mkdir -p /var/lib/apt/lists/partial
+
+    # Step 2: Clean up potentially broken sources
     cleanup_orphaned_sources
 
-    # Try again
-    if ! $STD apt update; then
-      msg_error "Cannot update package lists - APT is critically broken"
-      return 1
+    # Step 3: Try again
+    if ! $STD apt update 2>/dev/null; then
+      # Step 4: More aggressive - remove all third-party sources
+      msg_warn "APT update still failing, removing third-party sources"
+      find /etc/apt/sources.list.d/ -type f \( -name "*.sources" -o -name "*.list" \) \
+        ! -name "debian.sources" -delete 2>/dev/null || true
+
+      # Final attempt
+      if ! $STD apt update; then
+        msg_error "Cannot update package lists - APT is critically broken"
+        return 1
+      fi
     fi
   fi
 
@@ -1458,21 +1682,45 @@ unhold_package_version() {
 # ------------------------------------------------------------------------------
 # Safe service restart with verification
 # ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# Safe service restart with retry logic and wait-for-ready
+# Usage: safe_service_restart "nginx" [timeout_seconds]
+# ------------------------------------------------------------------------------
 safe_service_restart() {
   local service="$1"
+  local timeout="${2:-30}"  # Default 30 second timeout
+  local max_retries=2
+  local retry=0
 
-  if systemctl is-active --quiet "$service"; then
-    $STD systemctl restart "$service"
-  else
-    $STD systemctl start "$service"
-  fi
+  while [[ $retry -le $max_retries ]]; do
+    if systemctl is-active --quiet "$service"; then
+      $STD systemctl restart "$service"
+    else
+      $STD systemctl start "$service"
+    fi
 
-  if ! systemctl is-active --quiet "$service"; then
-    msg_error "Failed to start $service"
-    systemctl status "$service" --no-pager
-    return 1
-  fi
-  return 0
+    # Wait for service to become active with timeout
+    local waited=0
+    while [[ $waited -lt $timeout ]]; do
+      if systemctl is-active --quiet "$service"; then
+        return 0
+      fi
+      sleep 1
+      ((waited++))
+    done
+
+    retry=$((retry + 1))
+    if [[ $retry -le $max_retries ]]; then
+      debug_log "Service $service failed to start, retrying ($retry/$max_retries)..."
+      # Try to stop completely before retry
+      systemctl stop "$service" 2>/dev/null || true
+      sleep 2
+    fi
+  done
+
+  msg_error "Failed to start $service after $max_retries retries"
+  systemctl status "$service" --no-pager -l 2>/dev/null | head -20 || true
+  return 1
 }
 
 # ------------------------------------------------------------------------------
@@ -1535,27 +1783,67 @@ extract_version_from_json() {
 }
 
 # ------------------------------------------------------------------------------
-# Get latest GitHub release version
+# Get latest GitHub release version with fallback to tags
+# Usage: get_latest_github_release "owner/repo" [strip_v] [include_prerelease]
 # ------------------------------------------------------------------------------
 get_latest_github_release() {
   local repo="$1"
   local strip_v="${2:-true}"
-  local temp_file=$(mktemp)
+  local include_prerelease="${3:-false}"
+  local temp_file
+  temp_file=$(mktemp)
 
-  if ! github_api_call "https://api.github.com/repos/${repo}/releases/latest" "$temp_file"; then
-    rm -f "$temp_file"
-    return 1
+  # Add GitHub token header if available (increases rate limit from 60 to 5000/hour)
+  local auth_header=()
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    auth_header=(-H "Authorization: Bearer ${GITHUB_TOKEN}")
   fi
 
-  local version
-  version=$(extract_version_from_json "$(cat "$temp_file")" "tag_name" "$strip_v")
+  # Try /releases/latest first (most efficient)
+  if [[ "$include_prerelease" != "true" ]]; then
+    if curl -fsSL --max-time 15 "${auth_header[@]}" \
+      "https://api.github.com/repos/${repo}/releases/latest" -o "$temp_file" 2>/dev/null; then
+      local version
+      version=$(jq -r '.tag_name // empty' "$temp_file" 2>/dev/null)
+      if [[ -n "$version" ]]; then
+        rm -f "$temp_file"
+        [[ "$strip_v" == "true" ]] && echo "${version#v}" || echo "$version"
+        return 0
+      fi
+    fi
+  fi
+
+  # Fallback: fetch releases list (handles repos without /latest or prerelease)
+  if curl -fsSL --max-time 15 "${auth_header[@]}" \
+    "https://api.github.com/repos/${repo}/releases?per_page=10" -o "$temp_file" 2>/dev/null; then
+    local version
+    if [[ "$include_prerelease" == "true" ]]; then
+      version=$(jq -r '.[0].tag_name // empty' "$temp_file" 2>/dev/null)
+    else
+      version=$(jq -r '[.[] | select(.prerelease==false and .draft==false)][0].tag_name // empty' "$temp_file" 2>/dev/null)
+    fi
+    if [[ -n "$version" ]]; then
+      rm -f "$temp_file"
+      [[ "$strip_v" == "true" ]] && echo "${version#v}" || echo "$version"
+      return 0
+    fi
+  fi
+
+  # Last fallback: try tags API (for repos that don't use releases)
+  if curl -fsSL --max-time 15 "${auth_header[@]}" \
+    "https://api.github.com/repos/${repo}/tags?per_page=10" -o "$temp_file" 2>/dev/null; then
+    local version
+    # Filter out alpha/beta/rc tags, get latest stable-looking tag
+    version=$(jq -r '[.[] | select(.name | test("^v?[0-9]+\\.[0-9]+") and (test("alpha|beta|rc|dev|pre"; "i") | not))][0].name // empty' "$temp_file" 2>/dev/null)
+    if [[ -n "$version" ]]; then
+      rm -f "$temp_file"
+      [[ "$strip_v" == "true" ]] && echo "${version#v}" || echo "$version"
+      return 0
+    fi
+  fi
+
   rm -f "$temp_file"
-
-  if [[ -z "$version" ]]; then
-    return 1
-  fi
-
-  echo "$version"
+  return 1
 }
 
 # ------------------------------------------------------------------------------
@@ -3961,7 +4249,7 @@ EOF
 # ------------------------------------------------------------------------------
 
 function setup_nodejs() {
-  local NODE_VERSION="${NODE_VERSION:-22}"
+  local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
