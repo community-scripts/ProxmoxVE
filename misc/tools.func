@@ -591,7 +591,7 @@ should_update_tool() {
   return 0 # Update needed
 }
 
-# ---------------------–----------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Unified repository management for tools
 # Handles adding, updating, and verifying tool repositories
 # Usage: manage_tool_repository "mariadb" "11.4" "https://repo..." "GPG_key_url"
@@ -809,7 +809,7 @@ EOF
   return 0
 }
 
-# ------–----------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Unified package upgrade function (with apt update caching)
 # ------------------------------------------------------------------------------
 upgrade_package() {
@@ -1266,7 +1266,7 @@ get_default_python_version() {
 # Get default Node.js LTS version
 # ------------------------------------------------------------------------------
 get_default_nodejs_version() {
-  # Always return current LTS (as of 2025)
+  # Always return current LTS (Node.js 22 is LTS until April 2027)
   echo "22"
 }
 
@@ -1559,11 +1559,9 @@ get_latest_github_release() {
 }
 
 # ------------------------------------------------------------------------------
-# Debug logging (only if DEBUG=1)
+# Debug logging - using main debug_log function (line 40)
+# Supports both TOOLS_DEBUG and DEBUG environment variables
 # ------------------------------------------------------------------------------
-debug_log() {
-  [[ "${DEBUG:-0}" == "1" ]] && echo "[DEBUG] $*" >&2
-}
 
 # ------------------------------------------------------------------------------
 # Performance timing helper
@@ -2855,6 +2853,7 @@ EOF
             intel-opencl-icd \
             vainfo \
             libmfx-gen1.2 \
+            libvpl2 \
             intel-gpu-tools || {
             msg_warn "Non-free driver install failed, falling back to open drivers"
             needs_nonfree=false
@@ -3962,7 +3961,7 @@ EOF
 # ------------------------------------------------------------------------------
 
 function setup_nodejs() {
-  local NODE_VERSION="${NODE_VERSION:-24}"
+  local NODE_VERSION="${NODE_VERSION:-22}"
   local NODE_MODULE="${NODE_MODULE:-}"
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
@@ -4456,7 +4455,8 @@ function setup_postgresql() {
   if [[ -n "$CURRENT_PG_VERSION" ]]; then
     msg_info "Upgrade PostgreSQL from $CURRENT_PG_VERSION to $PG_VERSION"
     msg_info "Creating backup of PostgreSQL $CURRENT_PG_VERSION databases..."
-    $STD runuser -u postgres -- pg_dumpall >/var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql || {
+    local PG_BACKUP_FILE="/var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+    $STD runuser -u postgres -- pg_dumpall >"$PG_BACKUP_FILE" || {
       msg_error "Failed to backup PostgreSQL databases"
       return 1
     }
@@ -4538,9 +4538,9 @@ function setup_postgresql() {
   fi
 
   # Restore database backup if we upgraded from previous version
-  if [[ -n "$CURRENT_PG_VERSION" ]]; then
+  if [[ -n "$CURRENT_PG_VERSION" && -n "${PG_BACKUP_FILE:-}" && -f "${PG_BACKUP_FILE}" ]]; then
     msg_info "Restoring PostgreSQL databases from backup..."
-    $STD runuser -u postgres -- psql </var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql 2>/dev/null || {
+    $STD runuser -u postgres -- psql <"$PG_BACKUP_FILE" 2>/dev/null || {
       msg_warn "Failed to restore database backup - this may be expected for major version upgrades"
     }
   fi
