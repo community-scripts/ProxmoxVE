@@ -204,7 +204,7 @@ curl_api_with_retry() {
 download_gpg_key() {
   local url="$1"
   local output="$2"
-  local mode="${3:-auto}"  # auto, dearmor, or binary
+  local mode="${3:-auto}" # auto, dearmor, or binary
   local retries="${CURL_RETRIES:-3}"
   local timeout="${CURL_TIMEOUT:-30}"
   local temp_key
@@ -238,7 +238,7 @@ download_gpg_key() {
 
     # Process based on mode
     if [[ "$mode" == "dearmor" ]]; then
-      if gpg --dearmor --yes -o "$output" < "$temp_key" 2>/dev/null; then
+      if gpg --dearmor --yes -o "$output" <"$temp_key" 2>/dev/null; then
         rm -f "$temp_key"
         debug_log "GPG key installed (dearmored): $output"
         return 0
@@ -431,7 +431,7 @@ install_packages_with_retry() {
     retry=$((retry + 1))
     if [[ $retry -le $max_retries ]]; then
       msg_warn "Package installation failed, retrying ($retry/$max_retries)..."
-      
+
       # Progressive recovery steps based on retry count
       case $retry in
       1)
@@ -464,7 +464,7 @@ install_packages_with_retry() {
         fi
         ;;
       esac
-      
+
       sleep $((retry * 2))
     fi
   done
@@ -930,7 +930,7 @@ verify_repo_available() {
   local repo_url="$1"
   local suite="$2"
   local cache_key="${repo_url}|${suite}"
-  local cache_ttl=300  # 5 minutes
+  local cache_ttl=300 # 5 minutes
 
   # Check cache first (avoid repeated HTTP requests)
   if [[ -n "${_REPO_CACHE[$cache_key]:-}" ]]; then
@@ -1560,13 +1560,13 @@ cleanup_orphaned_sources() {
 #   - Progressive recovery with fallbacks
 # ------------------------------------------------------------------------------
 ensure_apt_working() {
-  local max_wait=60  # Maximum seconds to wait for apt lock
+  local max_wait=60 # Maximum seconds to wait for apt lock
 
   # Wait for any existing apt/dpkg processes to finish
   local waited=0
-  while fuser /var/lib/dpkg/lock-frontend &>/dev/null || \
-        fuser /var/lib/apt/lists/lock &>/dev/null || \
-        fuser /var/cache/apt/archives/lock &>/dev/null; do
+  while fuser /var/lib/dpkg/lock-frontend &>/dev/null ||
+    fuser /var/lib/apt/lists/lock &>/dev/null ||
+    fuser /var/cache/apt/archives/lock &>/dev/null; do
     if ((waited >= max_wait)); then
       msg_warn "APT lock held for ${max_wait}s, attempting to continue anyway"
       break
@@ -1589,7 +1589,7 @@ ensure_apt_working() {
   # Try to update package lists
   if ! $STD apt update 2>/dev/null; then
     debug_log "First apt update failed, trying recovery steps"
-    
+
     # Step 1: Clear apt lists cache
     rm -rf /var/lib/apt/lists/* 2>/dev/null || true
     mkdir -p /var/lib/apt/lists/partial
@@ -1688,7 +1688,7 @@ unhold_package_version() {
 # ------------------------------------------------------------------------------
 safe_service_restart() {
   local service="$1"
-  local timeout="${2:-30}"  # Default 30 second timeout
+  local timeout="${2:-30}" # Default 30 second timeout
   local max_retries=2
   local retry=0
 
@@ -3797,7 +3797,7 @@ setup_mariadb() {
   msg_info "Configuring MariaDB runtime directory persistence"
 
   # Create tmpfiles.d configuration with error handling
-  if ! printf '# Ensure /run/mysqld directory exists with correct permissions for MariaDB\nd /run/mysqld 0755 mysql mysql -\n' > /etc/tmpfiles.d/mariadb.conf; then
+  if ! printf '# Ensure /run/mysqld directory exists with correct permissions for MariaDB\nd /run/mysqld 0755 mysql mysql -\n' >/etc/tmpfiles.d/mariadb.conf; then
     msg_warn "Failed to create /etc/tmpfiles.d/mariadb.conf - runtime directory may not persist on reboot"
   fi
 
