@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating wazuh LXC"
+  msg_info "Updating Wazuh LXC"
   $STD apt update
   $STD apt upgrade -y
   msg_ok "Updated Wazuh LXC"
