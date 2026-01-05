@@ -2711,11 +2711,34 @@ EOF
             $STD apt update
           fi
 
+          # Fetch latest Intel drivers from GitHub for Debian 12
+          # These packages are not available or outdated in Debian 12 repos
+          msg_info "Installing latest Intel drivers from GitHub releases"
+          
+          fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel IGC core 2"
+          }
+          
+          fetch_and_deploy_gh_release "intel-graphics-compiler" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-graphics-compiler_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel graphics compiler"
+          }
+          
+          fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel IGC OpenCL"
+          }
+          
+          fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel GDGMM12"
+          }
+          
+          fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel OpenCL ICD"
+          }
+
           # Try installing non-free drivers for newer Intel GPUs
           if $STD apt -y install \
             intel-media-va-driver-non-free \
             ocl-icd-libopencl1 \
-            intel-opencl-icd \
             vainfo \
             libmfx-gen1.2 \
             intel-gpu-tools; then
