@@ -2711,12 +2711,12 @@ EOF
             $STD apt update
           fi
 
-          # Fetch latest Intel drivers from GitHub for Debian 12
-          # These packages are not available or outdated in Debian 12 repos
-          msg_info "Installing latest Intel drivers from GitHub releases"
+          # Fetch Intel IGC packages from GitHub - not available in Debian 12 repos
+          # intel-opencl-icd and libigdgmm12 are available, so we install those via apt
+          msg_info "Installing Intel IGC packages from GitHub releases"
 
           fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core_*_amd64.deb" || {
-            msg_warn "Failed to deploy Intel IGC core 2"
+            msg_warn "Failed to deploy Intel IGC core"
           }
 
           fetch_and_deploy_gh_release "intel-graphics-compiler" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-graphics-compiler_*_amd64.deb" || {
@@ -2727,17 +2727,11 @@ EOF
             msg_warn "Failed to deploy Intel IGC OpenCL"
           }
 
-          fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
-            msg_warn "Failed to deploy Intel GDGMM12"
-          }
-
-          fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
-            msg_warn "Failed to deploy Intel OpenCL ICD"
-          }
-
           # Try installing non-free drivers for newer Intel GPUs
           if $STD apt -y install \
             intel-media-va-driver-non-free \
+            intel-opencl-icd \
+            libigdgmm12 \
             ocl-icd-libopencl1 \
             vainfo \
             libmfx-gen1.2 \
@@ -2765,33 +2759,30 @@ EOF
             $STD apt update
           fi
 
-          # Fetch latest Intel drivers from GitHub for Debian 13
-          # These packages are not available in Debian 13 repos
-          msg_info "Installing latest Intel drivers from GitHub releases"
-          
+          # Fetch Intel packages from GitHub - not available in Debian 13 repos
+          # libigdgmm12 is available in trixie, but intel-opencl-icd is missing
+          msg_info "Installing Intel packages from GitHub releases"
+
           fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core_*_amd64.deb" || {
-            msg_warn "Failed to deploy Intel IGC core 2"
+            msg_warn "Failed to deploy Intel IGC core"
           }
-          
+
           fetch_and_deploy_gh_release "intel-graphics-compiler" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-graphics-compiler_*_amd64.deb" || {
             msg_warn "Failed to deploy Intel graphics compiler"
           }
-          
+
           fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl_*_amd64.deb" || {
             msg_warn "Failed to deploy Intel IGC OpenCL"
           }
-          
-          fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
-            msg_warn "Failed to deploy Intel GDGMM12"
-          }
-          
+
           fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
-            msg_warn "Failed to deploy Intel OpenCL ICD"
+            msg_warn "Failed to deploy Intel OpenCL ICD (missing from trixie repos)"
           }
 
           # Try installing packages for Debian 13
           if $STD apt -y install \
             intel-media-va-driver-non-free \
+            libigdgmm12 \
             ocl-icd-libopencl1 \
             mesa-opencl-icd \
             mesa-va-drivers \
