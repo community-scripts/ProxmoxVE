@@ -37,8 +37,12 @@ msg_info "Setup Paperless-AI"
 cd /opt/paperless-ai
 $STD python3 -m venv /opt/paperless-ai/venv
 source /opt/paperless-ai/venv/bin/activate
+# TMPDIR to use container disk instead of tmpfs for large pip downloads (https://github.com/community-scripts/ProxmoxVE/issues/10338)
+export TMPDIR=/opt/paperless-ai/tmp
+mkdir -p "$TMPDIR"
 $STD pip install --upgrade pip
 $STD pip install --no-cache-dir -r requirements.txt
+rm -rf "$TMPDIR"
 mkdir -p data/chromadb
 $STD npm ci --only=production
 mkdir -p /opt/paperless-ai/data
