@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Upgrade Wazuh LXC Container to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10551](https://github.com/community-scripts/ProxmoxVE/pull/10551))
     - Upgrade evcc LXC to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10548](https://github.com/community-scripts/ProxmoxVE/pull/10548))
 
 ### 💾 Core
