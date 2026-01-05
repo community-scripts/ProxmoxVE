@@ -2714,23 +2714,23 @@ EOF
           # Fetch latest Intel drivers from GitHub for Debian 12
           # These packages are not available or outdated in Debian 12 repos
           msg_info "Installing latest Intel drivers from GitHub releases"
-          
+
           fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core_*_amd64.deb" || {
             msg_warn "Failed to deploy Intel IGC core 2"
           }
-          
+
           fetch_and_deploy_gh_release "intel-graphics-compiler" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-graphics-compiler_*_amd64.deb" || {
             msg_warn "Failed to deploy Intel graphics compiler"
           }
-          
+
           fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl_*_amd64.deb" || {
             msg_warn "Failed to deploy Intel IGC OpenCL"
           }
-          
+
           fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
             msg_warn "Failed to deploy Intel GDGMM12"
           }
-          
+
           fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
             msg_warn "Failed to deploy Intel OpenCL ICD"
           }
@@ -2764,6 +2764,30 @@ Components: non-free non-free-firmware
 EOF
             $STD apt update
           fi
+
+          # Fetch latest Intel drivers from GitHub for Debian 13
+          # These packages are not available in Debian 13 repos
+          msg_info "Installing latest Intel drivers from GitHub releases"
+          
+          fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel IGC core 2"
+          }
+          
+          fetch_and_deploy_gh_release "intel-graphics-compiler" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-graphics-compiler_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel graphics compiler"
+          }
+          
+          fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel IGC OpenCL"
+          }
+          
+          fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel GDGMM12"
+          }
+          
+          fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
+            msg_warn "Failed to deploy Intel OpenCL ICD"
+          }
 
           # Try installing packages for Debian 13
           if $STD apt -y install \
@@ -2915,7 +2939,7 @@ EOF
         sed -i "s/^video:x:[0-9]*:/video:x:$host_video_gid:/" /etc/group 2>/dev/null || true
         sed -i "s/^render:x:[0-9]*:/render:x:$host_render_gid:/" /etc/group 2>/dev/null || true
       fi
-      
+
       # Basic GPU functionality test
       if command -v vainfo &>/dev/null; then
         if vainfo &>/dev/null; then
