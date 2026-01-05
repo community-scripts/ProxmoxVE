@@ -31,7 +31,7 @@ export DISPLAY=:99
 echo "export DISPLAY=:99" >> ~/.bashrc
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y python3-pip
+$STD apt-get install -y python3-pip git
 msg_ok "Installed Dependencies"
 
 $STD apt-get install -y --no-install-recommends \
@@ -76,6 +76,26 @@ $STD playwright install --with-deps
 # ####uvx playwright install
 
 
+###### MCP Server
+
+# Clone and install
+git clone https://github.com/Saik0s/mcp-browser-use.git
+cd mcp-server-browser-use
+uv sync
+
+# Install browser
+uv run playwright install chromium
+
+uv run mcp-server-browser-use config set -k server.host -v 0.0.0.0
+uv run mcp-server-browser-use config set -k browser.chromium_sandbox -v False
+uv run mcp-server-browser-use config set -k llm.provider -v openrouter
+uv run mcp-server-browser-use config set -k llm.model_name -v openai/gpt-5.1
+uv run mcp-server-browser-use config set -k llm.api_key -v XXXXXXXXXXXX
+
+# Start the server
+#uv run mcp-server-browser-use server
+
+
 
 cat <<EOF >/etc/systemd/system/xvfb.service
 [Unit]
@@ -111,6 +131,25 @@ ExecStart=x11vnc -display :99 -rfbport 5900 -listen 0.0.0.0 -N -forever -shared
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now x11vnc
+sleep 3
+
+cat <<EOF >/etc/systemd/system/browseruse.service
+[Unit]
+Description=Browser-use MCP service
+After=network.target
+After=x11vnc.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+WorkingDirectory=/root/mcp-server-browser-use
+ExecStart=uv run mcp-server-browser-use server
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now browseruse
 sleep 3
 
 cat <<EOF >test.py
