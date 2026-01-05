@@ -157,18 +157,39 @@ EOF
   [ -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg ] && rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg
   [ -f /etc/apt/sources.list.d/openresty.list ] && rm -f /etc/apt/sources.list.d/openresty.list
   [ ! -f /etc/apt/trusted.gpg.d/openresty.gpg ] && curl -fsSL https://openresty.org/package/pubkey.gpg | gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/openresty.gpg
-  [ ! -f /etc/apt/sources.list.d/openresty.sources ] && cat <<'EOF' >/etc/apt/sources.list.d/openresty.sources
+  if [ ! -f /etc/apt/sources.list.d/openresty.sources ]; then
+    DEBIAN_VERSION=$(grep -E '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)
+    # Openresty only has bookworm, not trixie - map newer versions to bookworm
+    case "$DEBIAN_VERSION" in
+      trixie|sid) OPENRESTY_SUITE="bookworm" ;;
+      *) OPENRESTY_SUITE="$DEBIAN_VERSION" ;;
+    esac
+    cat <<EOF >/etc/apt/sources.list.d/openresty.sources
 Types: deb
 URIs: http://openresty.org/package/debian/
-Suites: bookworm
+Suites: ${OPENRESTY_SUITE}
 Components: openresty
 Signed-By: /etc/apt/trusted.gpg.d/openresty.gpg
 EOF
+  fi
   $STD apt update
   $STD apt -y install openresty
   if [ -d /opt/certbot ]; then
     $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
     $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
+    
+    # Fix for Debian 13 Trixie - certbot-dns-multi needed to prevent "API isn't healthy" error
+    if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"13"* ]]; then
+      if ! /opt/certbot/bin/pip list 2>/dev/null | grep -q certbot-dns-multi; then
+        msg_info "Applying Debian 13 Certbot Fix"
+        $STD apt-get install -y golang build-essential git
+        $STD /opt/certbot/bin/pip install --no-cache-dir setuptools-golang==2.9.0
+        export CGO_ENABLED=1
+        export GO111MODULE=on
+        $STD /opt/certbot/bin/pip install --no-build-isolation --no-cache-dir certbot-dns-multi
+        msg_ok "Applied Debian 13 Certbot Fix"
+      fi
+    fi
   fi
   msg_ok "Updated Certbot"
 
