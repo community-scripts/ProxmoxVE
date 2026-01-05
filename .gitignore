@@ -76,3 +76,4 @@ json/.vscode/
 .gitignore
 .vscode/settings.json
 .idea
+.git-setup-info
