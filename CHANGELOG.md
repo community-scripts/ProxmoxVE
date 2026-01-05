@@ -22,6 +22,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Upgrade evcc LXC to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10548](https://github.com/community-scripts/ProxmoxVE/pull/10548))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - Refactor: IP-Tag (Multiple IP / Performance / Execution Time)  [@MickLesk](https://github.com/MickLesk) ([#10558](https://github.com/community-scripts/ProxmoxVE/pull/10558))
+
 ## 2026-01-04
 
 ### 🚀 Updated Scripts
