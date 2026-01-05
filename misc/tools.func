@@ -1375,78 +1375,118 @@ is_lts_version() {
 
 # ------------------------------------------------------------------------------
 # Get optimal number of parallel jobs (cached)
+# Features:
+#   - CPU count detection
+#   - Memory-based limiting (1.5GB per job for safety)
+#   - Current load awareness
+#   - Container/VM detection for conservative limits
 # ------------------------------------------------------------------------------
 get_parallel_jobs() {
   if [[ -z "${_PARALLEL_JOBS:-}" ]]; then
-    local cpu_count=$(nproc 2>/dev/null || echo 1)
-    local mem_gb=$(free -g | awk '/^Mem:/{print $2}')
-
-    # Limit by available memory (assume 1GB per job for compilation)
-    local max_by_mem=$((mem_gb > 0 ? mem_gb : 1))
-    local max_jobs=$((cpu_count < max_by_mem ? cpu_count : max_by_mem))
-
-    # At least 1, at most cpu_count
-    export _PARALLEL_JOBS=$((max_jobs > 0 ? max_jobs : 1))
+    local cpu_count
+    cpu_count=$(nproc 2>/dev/null || grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 1)
+    
+    local mem_mb
+    mem_mb=$(free -m 2>/dev/null | awk '/^Mem:/{print $2}' || echo 1024)
+    
+    # Assume 1.5GB per compilation job for safety margin
+    local max_by_mem=$((mem_mb / 1536))
+    ((max_by_mem < 1)) && max_by_mem=1
+    
+    # Check current system load - reduce jobs if already loaded
+    local load_1m
+    load_1m=$(awk '{print int($1)}' /proc/loadavg 2>/dev/null || echo 0)
+    local available_cpus=$((cpu_count - load_1m))
+    ((available_cpus < 1)) && available_cpus=1
+    
+    # Take minimum of: available CPUs, memory-limited, and total CPUs
+    local max_jobs=$cpu_count
+    ((max_by_mem < max_jobs)) && max_jobs=$max_by_mem
+    ((available_cpus < max_jobs)) && max_jobs=$available_cpus
+    
+    # Container detection - be more conservative in containers
+    if [[ -f /.dockerenv ]] || grep -q 'lxc\|docker\|container' /proc/1/cgroup 2>/dev/null; then
+      # Reduce by 25% in containers to leave headroom
+      max_jobs=$((max_jobs * 3 / 4))
+      ((max_jobs < 1)) && max_jobs=1
+    fi
+    
+    # Final bounds check
+    ((max_jobs < 1)) && max_jobs=1
+    ((max_jobs > cpu_count)) && max_jobs=$cpu_count
+    
+    export _PARALLEL_JOBS=$max_jobs
+    debug_log "Parallel jobs: $_PARALLEL_JOBS (CPUs: $cpu_count, mem-limit: $max_by_mem, load: $load_1m)"
   fi
   echo "$_PARALLEL_JOBS"
 }
 
 # ------------------------------------------------------------------------------
 # Get default PHP version for OS
+# Updated for latest distro releases
 # ------------------------------------------------------------------------------
 get_default_php_version() {
-  local os_id=$(get_os_info id)
-  local os_version=$(get_os_version_major)
+  local os_id
+  os_id=$(get_os_info id)
+  local os_version
+  os_version=$(get_os_version_major)
 
   case "$os_id" in
   debian)
     case "$os_version" in
+    14) echo "8.4" ;; # Debian 14 (Forky) - future
     13) echo "8.3" ;; # Debian 13 (Trixie)
     12) echo "8.2" ;; # Debian 12 (Bookworm)
     11) echo "7.4" ;; # Debian 11 (Bullseye)
-    *) echo "8.2" ;;
+    *) echo "8.3" ;;  # Default to latest stable
     esac
     ;;
   ubuntu)
     case "$os_version" in
+    26) echo "8.4" ;; # Ubuntu 26.04 - future
     24) echo "8.3" ;; # Ubuntu 24.04 LTS (Noble)
     22) echo "8.1" ;; # Ubuntu 22.04 LTS (Jammy)
     20) echo "7.4" ;; # Ubuntu 20.04 LTS (Focal)
-    *) echo "8.1" ;;
+    *) echo "8.3" ;;  # Default to latest stable
     esac
     ;;
   *)
-    echo "8.2"
+    echo "8.3"
     ;;
   esac
 }
 
 # ------------------------------------------------------------------------------
 # Get default Python version for OS
+# Updated for latest distro releases
 # ------------------------------------------------------------------------------
 get_default_python_version() {
-  local os_id=$(get_os_info id)
-  local os_version=$(get_os_version_major)
+  local os_id
+  os_id=$(get_os_info id)
+  local os_version
+  os_version=$(get_os_version_major)
 
   case "$os_id" in
   debian)
     case "$os_version" in
+    14) echo "3.13" ;; # Debian 14 (Forky) - future
     13) echo "3.12" ;; # Debian 13 (Trixie)
     12) echo "3.11" ;; # Debian 12 (Bookworm)
     11) echo "3.9" ;;  # Debian 11 (Bullseye)
-    *) echo "3.11" ;;
+    *) echo "3.12" ;;  # Default to latest stable
     esac
     ;;
   ubuntu)
     case "$os_version" in
+    26) echo "3.13" ;; # Ubuntu 26.04 - future
     24) echo "3.12" ;; # Ubuntu 24.04 LTS
     22) echo "3.10" ;; # Ubuntu 22.04 LTS
     20) echo "3.8" ;;  # Ubuntu 20.04 LTS
-    *) echo "3.10" ;;
+    *) echo "3.12" ;;  # Default to latest stable
     esac
     ;;
   *)
-    echo "3.11"
+    echo "3.12"
     ;;
   esac
 }
