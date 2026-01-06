@@ -25,3 +25,15 @@ Fixes #
 - [ ] 🌍 **Website update** – Changes to website-related JSON files or metadata.
 - [ ] 🔧 **Refactoring / Code Cleanup** – Improves readability or maintainability without changing functionality.
 - [ ] 📝 **Documentation update** – Changes to `README`, `AppName.md`, `CONTRIBUTING.md`, or other docs.
+
+---
+
+## 📦 Application Requirements (for new scripts)
+
+> Required for **🆕 New script** submissions.  
+> PRs that do not meet these requirements may be closed without review.
+
+- [ ] The application is **at least 6 months old**
+- [ ] The application is **actively maintained**
+- [ ] The application has **200+ GitHub stars**
+- [ ] Official **release tarballs** are published
