@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 Community-Script ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://nginxproxymanager.com/
@@ -122,7 +122,7 @@ function update_script() {
 
   msg_info "Building Frontend"
   export NODE_OPTIONS="--max_old_space_size=2048 --openssl-legacy-provider"
-  cd /opt/nginxproxymanager/frontend
+  cd /opt/nginxproxymanager/frontend || exit
   # Replace node-sass with sass in package.json before installation
   sed -E -i 's/"node-sass" *: *"([^"]*)"/"sass": "\1"/g' package.json
   $STD yarn install --network-timeout 600000
@@ -149,7 +149,7 @@ function update_script() {
 }
 EOF
   fi
-  cd /app
+  cd /app || exit
   $STD yarn install --network-timeout 600000
   msg_ok "Initialized Backend"
 

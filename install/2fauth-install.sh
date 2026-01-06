@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: jkrgr0
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.2fauth.app/
@@ -26,7 +26,7 @@ import_local_ip
 fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth"
 
 msg_info "Setup 2FAuth"
-cd /opt/2fauth
+cd /opt/2fauth || exit
 cp .env.example .env
 sed -i -e "s|^APP_URL=.*|APP_URL=http://$LOCAL_IP|" \
   -e "s|^DB_CONNECTION=$|DB_CONNECTION=mysql|" \

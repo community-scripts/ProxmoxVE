@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.craftycontrol.com/pages/getting-started/installation/linux/
@@ -40,16 +40,16 @@ msg_ok "Setup Python3"
 
 msg_info "Installing Crafty-Controller (Patience)"
 useradd crafty -m -s /bin/bash
-cd /opt
+cd /opt || exit
 mkdir -p /opt/crafty-controller/crafty /opt/crafty-controller/server
 RELEASE=$(curl -fsSL "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
 echo "${RELEASE}" >"/opt/crafty-controller_version.txt"
 curl -fsSL "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip" -o "crafty-4-v${RELEASE}.zip"
-$STD unzip crafty-4-v${RELEASE}.zip
-cp -a crafty-4-v${RELEASE}/. /opt/crafty-controller/crafty/crafty-4/
-rm -rf crafty-4-v${RELEASE}
+$STD unzip crafty-4-v"${RELEASE}".zip
+cp -a crafty-4-v"${RELEASE}"/. /opt/crafty-controller/crafty/crafty-4/
+rm -rf crafty-4-v"${RELEASE}"
 
-cd /opt/crafty-controller/crafty
+cd /opt/crafty-controller/crafty || exit
 python3 -m venv .venv
 chown -R crafty:crafty /opt/crafty-controller/
 $STD sudo -u crafty bash -c '

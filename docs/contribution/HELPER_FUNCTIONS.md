@@ -33,58 +33,58 @@
 ### Node.js + PostgreSQL
 
 **Koel** - Music streaming with PHP + Node.js + PostgreSQL
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/koel.sh](../../ct/koel.sh) |
-| Install | [install/koel-install.sh](../../install/koel-install.sh) |
+| File              | Link                                                     |
+| ----------------- | -------------------------------------------------------- |
+| CT (update logic) | [ct/koel.sh](../../ct/koel.sh)                           |
+| Install           | [install/koel-install.sh](../../install/koel-install.sh) |
 
 **Actual Budget** - Finance app with npm global install
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/actualbudget.sh](../../ct/actualbudget.sh) |
-| Install | [install/actualbudget-install.sh](../../install/actualbudget-install.sh) |
+| File              | Link                                                                     |
+| ----------------- | ------------------------------------------------------------------------ |
+| CT (update logic) | [ct/actualbudget.sh](../../ct/actualbudget.sh)                           |
+| Install           | [install/actualbudget-install.sh](../../install/actualbudget-install.sh) |
 
 ### Python + uv
 
 **MeTube** - YouTube downloader with Python uv + Node.js + Deno
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/metube.sh](../../ct/metube.sh) |
-| Install | [install/metube-install.sh](../../install/metube-install.sh) |
+| File              | Link                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| CT (update logic) | [ct/metube.sh](../../ct/metube.sh)                           |
+| Install           | [install/metube-install.sh](../../install/metube-install.sh) |
 
 **Endurain** - Fitness tracker with Python uv + PostgreSQL/PostGIS
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/endurain.sh](../../ct/endurain.sh) |
-| Install | [install/endurain-install.sh](../../install/endurain-install.sh) |
+| File              | Link                                                             |
+| ----------------- | ---------------------------------------------------------------- |
+| CT (update logic) | [ct/endurain.sh](../../ct/endurain.sh)                           |
+| Install           | [install/endurain-install.sh](../../install/endurain-install.sh) |
 
 ### PHP + MariaDB/MySQL
 
 **Wallabag** - Read-it-later with PHP + MariaDB + Redis + Nginx
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/wallabag.sh](../../ct/wallabag.sh) |
-| Install | [install/wallabag-install.sh](../../install/wallabag-install.sh) |
+| File              | Link                                                             |
+| ----------------- | ---------------------------------------------------------------- |
+| CT (update logic) | [ct/wallabag.sh](../../ct/wallabag.sh)                           |
+| Install           | [install/wallabag-install.sh](../../install/wallabag-install.sh) |
 
 **InvoiceNinja** - Invoicing with PHP + MariaDB + Supervisor
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/invoiceninja.sh](../../ct/invoiceninja.sh) |
-| Install | [install/invoiceninja-install.sh](../../install/invoiceninja-install.sh) |
+| File              | Link                                                                     |
+| ----------------- | ------------------------------------------------------------------------ |
+| CT (update logic) | [ct/invoiceninja.sh](../../ct/invoiceninja.sh)                           |
+| Install           | [install/invoiceninja-install.sh](../../install/invoiceninja-install.sh) |
 
 **BookStack** - Wiki/Docs with PHP + MariaDB + Apache
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/bookstack.sh](../../ct/bookstack.sh) |
-| Install | [install/bookstack-install.sh](../../install/bookstack-install.sh) |
+| File              | Link                                                               |
+| ----------------- | ------------------------------------------------------------------ |
+| CT (update logic) | [ct/bookstack.sh](../../ct/bookstack.sh)                           |
+| Install           | [install/bookstack-install.sh](../../install/bookstack-install.sh) |
 
 ### PHP + SQLite (Simple)
 
 **Speedtest Tracker** - Speedtest with PHP + SQLite + Nginx
-| File | Link |
-|------|------|
-| CT (update logic) | [ct/speedtest-tracker.sh](../../ct/speedtest-tracker.sh) |
-| Install | [install/speedtest-tracker-install.sh](../../install/speedtest-tracker-install.sh) |
+| File              | Link                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| CT (update logic) | [ct/speedtest-tracker.sh](../../ct/speedtest-tracker.sh)                           |
+| Install           | [install/speedtest-tracker-install.sh](../../install/speedtest-tracker-install.sh) |
 
 ---
 
@@ -168,12 +168,12 @@ setup_php
 ```
 
 **Environment Variables:**
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PHP_VERSION` | `8.3` | PHP version to install |
-| `PHP_MODULE` | `""` | Comma-separated list of modules |
-| `PHP_FPM` | `NO` | Install PHP-FPM |
-| `PHP_APACHE` | `NO` | Install Apache module |
+| Variable      | Default | Description                     |
+| ------------- | ------- | ------------------------------- |
+| `PHP_VERSION` | `8.3`   | PHP version to install          |
+| `PHP_MODULE`  | `""`    | Comma-separated list of modules |
+| `PHP_FPM`     | `NO`    | Install PHP-FPM                 |
+| `PHP_APACHE`  | `NO`    | Install Apache module           |
 
 ### `setup_composer`
 
@@ -302,18 +302,18 @@ CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "la
 ```
 
 **Parameters:**
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `name` | required | App name (for version tracking) |
-| `repo` | required | GitHub repo (`owner/repo`) |
-| `type` | `tarball` | Release type: `tarball`, `zipball`, `prebuild`, `binary` |
-| `version` | `latest` | Version tag or `latest` |
-| `dest` | `/opt/[name]` | Destination directory |
-| `asset_pattern` | `""` | For `prebuild`: glob pattern to match asset (e.g. `app-*.tar.gz`) |
+| Parameter       | Default       | Description                                                       |
+| --------------- | ------------- | ----------------------------------------------------------------- |
+| `name`          | required      | App name (for version tracking)                                   |
+| `repo`          | required      | GitHub repo (`owner/repo`)                                        |
+| `type`          | `tarball`     | Release type: `tarball`, `zipball`, `prebuild`, `binary`          |
+| `version`       | `latest`      | Version tag or `latest`                                           |
+| `dest`          | `/opt/[name]` | Destination directory                                             |
+| `asset_pattern` | `""`          | For `prebuild`: glob pattern to match asset (e.g. `app-*.tar.gz`) |
 
 **Environment Variables:**
-| Variable | Description |
-|----------|-------------|
+| Variable          | Description                                                  |
+| ----------------- | ------------------------------------------------------------ |
 | `CLEAN_INSTALL=1` | Remove destination directory before extracting (for updates) |
 
 ### `check_for_gh_release`
@@ -347,13 +347,13 @@ fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/myap
 ````
 
 **Parameters:**
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `name` | required | App name (for version tracking) |
-| `repo` | required | GitHub repo (`owner/repo`) |
-| `type` | `tarball` | Release type: `tarball`, `zipball`, `binary` |
-| `version` | `latest` | Version tag or `latest` |
-| `dest` | `/opt/[name]` | Destination directory |
+| Parameter | Default       | Description                                  |
+| --------- | ------------- | -------------------------------------------- |
+| `name`    | required      | App name (for version tracking)              |
+| `repo`    | required      | GitHub repo (`owner/repo`)                   |
+| `type`    | `tarball`     | Release type: `tarball`, `zipball`, `binary` |
+| `version` | `latest`      | Version tag or `latest`                      |
+| `dest`    | `/opt/[name]` | Destination directory                        |
 
 ---
 
@@ -507,7 +507,7 @@ prepare_repository_setup "mariadb" "mysql"
 ```bash
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/example/myapp
@@ -574,7 +574,7 @@ cleanup_lxc
 ```bash
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/example/myapp

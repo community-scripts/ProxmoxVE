@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Copyright (c) 2025 DonPablo1010
 # Adapted for the Proxmox Backup Server - Baremetal Only
 # License: MIT

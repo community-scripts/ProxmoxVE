@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/dani-garcia/vaultwarden

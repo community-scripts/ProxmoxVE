@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://gitlab.com/crafty-controller/crafty-4
@@ -46,10 +46,10 @@ function update_script() {
 
     msg_info "Updating Crafty-Controller to v${RELEASE}"
     curl -fsSL "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip" -o $(basename "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip")
-    $STD unzip crafty-4-v${RELEASE}.zip
-    cp -a crafty-4-v${RELEASE}/. /opt/crafty-controller/crafty/crafty-4/
-    rm -rf crafty-4-v${RELEASE}
-    cd /opt/crafty-controller/crafty/crafty-4
+    $STD unzip crafty-4-v"${RELEASE}".zip
+    cp -a crafty-4-v"${RELEASE}"/. /opt/crafty-controller/crafty/crafty-4/
+    rm -rf crafty-4-v"${RELEASE}"
+    cd /opt/crafty-controller/crafty/crafty-4 || exit
     sudo -u crafty bash -c '
         source /opt/crafty-controller/crafty/.venv/bin/activate
         pip3 install --no-cache-dir -r requirements.txt
