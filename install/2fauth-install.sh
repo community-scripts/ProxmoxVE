@@ -26,7 +26,7 @@ import_local_ip
 fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth"
 
 msg_info "Setup 2FAuth"
-cd /opt/2fauth || exit
+cd /opt/2fauth
 cp .env.example .env
 sed -i -e "s|^APP_URL=.*|APP_URL=http://$LOCAL_IP|" \
   -e "s|^DB_CONNECTION=$|DB_CONNECTION=mysql|" \

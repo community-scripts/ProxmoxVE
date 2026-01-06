@@ -55,7 +55,7 @@ msg_info "Setup Apache Guacamole"
 mkdir -p /etc/guacamole/{extensions,lib}
 RELEASE_SERVER=$(curl -fsSL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
 curl -fsSL "https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${RELEASE_SERVER}" | tar -xz --strip-components=1 -C /opt/apache-guacamole/server
-cd /opt/apache-guacamole/server || exit
+cd /opt/apache-guacamole/server
 export CPPFLAGS="-Wno-error=deprecated-declarations"
 $STD autoreconf -fi
 $STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots --disable-guaclog
@@ -64,7 +64,7 @@ $STD make install
 $STD ldconfig
 RELEASE_CLIENT=$(curl -fsSL https://api.github.com/repos/apache/guacamole-client/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
 curl -fsSL "https://downloads.apache.org/guacamole/${RELEASE_CLIENT}/binary/guacamole-${RELEASE_CLIENT}.war" -o "/opt/apache-guacamole/tomcat9/webapps/guacamole.war"
-cd /root || exit
+cd /root
 curl -fsSL "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-9.3.0.tar.gz" -o "/root/mysql-connector-j-9.3.0.tar.gz"
 $STD tar -xf ~/mysql-connector-j-9.3.0.tar.gz
 mv ~/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar /etc/guacamole/lib/
@@ -87,7 +87,7 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
   echo "Database Password: $DB_PASS"
   echo "Database Name: $DB_NAME"
 } >>~/guacamole.creds
-cd guacamole-auth-jdbc-"${RELEASE_SERVER}"/mysql/schema || exit
+cd guacamole-auth-jdbc-"${RELEASE_SERVER}"/mysql/schema
 cat *.sql | mariadb -u root ${DB_NAME}
 {
   echo "mysql-hostname: 127.0.0.1"

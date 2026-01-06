@@ -40,7 +40,7 @@ msg_ok "Setup Python3"
 
 msg_info "Installing Crafty-Controller (Patience)"
 useradd crafty -m -s /bin/bash
-cd /opt || exit
+cd /opt
 mkdir -p /opt/crafty-controller/crafty /opt/crafty-controller/server
 RELEASE=$(curl -fsSL "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
 echo "${RELEASE}" >"/opt/crafty-controller_version.txt"
@@ -49,7 +49,7 @@ $STD unzip crafty-4-v"${RELEASE}".zip
 cp -a crafty-4-v"${RELEASE}"/. /opt/crafty-controller/crafty/crafty-4/
 rm -rf crafty-4-v"${RELEASE}"
 
-cd /opt/crafty-controller/crafty || exit
+cd /opt/crafty-controller/crafty
 python3 -m venv .venv
 chown -R crafty:crafty /opt/crafty-controller/
 $STD sudo -u crafty bash -c '

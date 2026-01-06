@@ -38,12 +38,12 @@ function update_script() {
     fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
 
     msg_info "Updating Watcharr"
-    cd /opt/watcharr || exit
+    cd /opt/watcharr
     export GOOS=linux
     $STD npm i
     $STD npm run build
     mv ./build ./server/ui
-    cd server || exit
+    cd server
     $STD go mod download
     $STD go build -o ./watcharr
     msg_ok "Updated Watcharr"

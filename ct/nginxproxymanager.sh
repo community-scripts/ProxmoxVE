@@ -122,7 +122,7 @@ function update_script() {
 
   msg_info "Building Frontend"
   export NODE_OPTIONS="--max_old_space_size=2048 --openssl-legacy-provider"
-  cd /opt/nginxproxymanager/frontend || exit
+  cd /opt/nginxproxymanager/frontend
   # Replace node-sass with sass in package.json before installation
   sed -E -i 's/"node-sass" *: *"([^"]*)"/"sass": "\1"/g' package.json
   $STD yarn install --network-timeout 600000

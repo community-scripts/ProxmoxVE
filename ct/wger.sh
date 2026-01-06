@@ -38,7 +38,7 @@ function update_script() {
     curl -fsSL "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz" -o "$temp_file"
     tar xzf "$temp_file"
     cp -rf wger-"$RELEASE"/* /home/wger/src
-    cd /home/wger/src || exit
+    cd /home/wger/src
     $STD pip install -r requirements_prod.txt --ignore-installed
     $STD pip install -e .
     $STD python3 manage.py migrate

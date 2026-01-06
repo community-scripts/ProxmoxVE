@@ -38,7 +38,7 @@ function update_script() {
   apt -y upgrade
   if [[ -d /etc/wgdashboard ]]; then
     sleep 2
-    cd /etc/wgdashboard/src || exit
+    cd /etc/wgdashboard/src
     ./wgd.sh update
     ./wgd.sh start
   fi

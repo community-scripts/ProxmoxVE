@@ -22,7 +22,7 @@ SECRET_KEY="$(openssl rand -base64 42 | tr -dc 'a-zA-Z0-9')"
 echo "Zipline Secret Key: ${SECRET_KEY}" >>~/zipline.creds
 
 msg_info "Installing Zipline (Patience)"
-cd /opt/zipline || exit
+cd /opt/zipline
 cat <<EOF >/opt/zipline/.env
 DATABASE_URL=postgres://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME
 CORE_SECRET=$SECRET_KEY

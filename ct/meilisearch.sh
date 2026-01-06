@@ -60,7 +60,7 @@ function update_script() {
       fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"
 
       msg_info "Configuring Meilisearch-UI"
-      cd /opt/meilisearch-ui || exit
+      cd /opt/meilisearch-ui
       sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
       mv /tmp/.env.local.bak /opt/meilisearch-ui/.env.local
       $STD pnpm install

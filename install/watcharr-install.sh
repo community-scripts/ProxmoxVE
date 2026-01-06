@@ -22,11 +22,11 @@ NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
 
 msg_info "Setup Watcharr"
-cd /opt/watcharr || exit
+cd /opt/watcharr
 $STD npm i
 $STD npm run build
 mv ./build ./server/ui
-cd server || exit
+cd server
 export CGO_ENABLED=1 GOOS=linux
 $STD go mod download
 $STD go build -o ./watcharr

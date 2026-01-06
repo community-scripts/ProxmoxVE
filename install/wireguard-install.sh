@@ -28,7 +28,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   git clone -q https://github.com/donaldzou/WGDashboard.git /etc/wgdashboard
 
   msg_info "Installing WGDashboard"
-  cd /etc/wgdashboard/src || exit
+  cd /etc/wgdashboard/src
   chmod u+x wgd.sh
   $STD ./wgd.sh install
   . /etc/os-release

@@ -49,7 +49,7 @@ function update_script() {
     msg_info "Updating VaultWarden to $VAULT (Patience)"
     cd ~ && rm -rf vaultwarden
     $STD git clone https://github.com/dani-garcia/vaultwarden
-    cd vaultwarden || exit
+    cd vaultwarden
     $STD cargo build --features "sqlite,mysql,postgresql" --release
     DIR=/usr/bin/vaultwarden
     if [ -d "$DIR" ]; then

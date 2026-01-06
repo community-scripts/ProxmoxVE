@@ -41,7 +41,7 @@ function update_script() {
 
     msg_info "Updating Livebook"
     source /opt/livebook/.env
-    cd /opt/livebook || exit
+    cd /opt/livebook
     $STD mix escript.install hex livebook --force
 
     chown -R livebook:livebook /opt/livebook /data

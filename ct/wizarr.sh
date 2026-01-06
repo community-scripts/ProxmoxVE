@@ -45,7 +45,7 @@ function update_script() {
     fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr"
 
     msg_info "Updating Wizarr"
-    cd /opt/wizarr || exit
+    cd /opt/wizarr
     $STD /usr/local/bin/uv sync --frozen
     $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
     $STD npm --prefix app/static install

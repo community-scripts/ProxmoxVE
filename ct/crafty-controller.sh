@@ -49,7 +49,7 @@ function update_script() {
     $STD unzip crafty-4-v"${RELEASE}".zip
     cp -a crafty-4-v"${RELEASE}"/. /opt/crafty-controller/crafty/crafty-4/
     rm -rf crafty-4-v"${RELEASE}"
-    cd /opt/crafty-controller/crafty/crafty-4 || exit
+    cd /opt/crafty-controller/crafty/crafty-4
     sudo -u crafty bash -c '
         source /opt/crafty-controller/crafty/.venv/bin/activate
         pip3 install --no-cache-dir -r requirements.txt

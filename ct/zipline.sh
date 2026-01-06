@@ -43,7 +43,7 @@ function update_script() {
     fetch_and_deploy_gh_release "zipline" "diced/zipline" "tarball"
 
     msg_info "Updating ${APP}"
-    cd /opt/zipline || exit
+    cd /opt/zipline
     mv /opt/.env /opt/zipline/.env
     $STD pnpm install
     $STD pnpm build

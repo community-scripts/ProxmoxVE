@@ -23,7 +23,7 @@ NODE_VERSION="22" setup_nodejs
 create_self_signed_cert
 
 msg_info "Installing Actual Budget"
-cd /opt || exit
+cd /opt
 RELEASE=$(get_latest_github_release "actualbudget/actual")
 mkdir -p /opt/actualbudget-data/{server-files,upload,migrate,user-files,migrations,config}
 chown -R root:root /opt/actualbudget-data
@@ -50,7 +50,7 @@ cat <<EOF >/opt/actualbudget-data/config.json
 }
 EOF
 mkdir -p /opt/actualbudget
-cd /opt/actualbudget || exit
+cd /opt/actualbudget
 $STD npm install --location=global @actual-app/sync-server
 echo "${RELEASE}" >~/.actualbudget
 msg_ok "Installed Actual Budget"

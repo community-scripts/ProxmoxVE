@@ -37,7 +37,7 @@ msg_ok "Installed Rust"
 
 msg_info "Building Vaultwarden ${VAULT} (Patience)"
 $STD git clone https://github.com/dani-garcia/vaultwarden
-cd vaultwarden || exit
+cd vaultwarden
 $STD cargo build --features "sqlite,mysql,postgresql" --release
 msg_ok "Built Vaultwarden ${VAULT}"
 

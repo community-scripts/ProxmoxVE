@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    cd /opt || exit
+    cd /opt
     rm -rf /opt/vikunja/vikunja
     curl -fsSL "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb" -o $(basename "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb")
     export DEBIAN_FRONTEND=noninteractive
