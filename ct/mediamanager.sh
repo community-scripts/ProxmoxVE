@@ -36,7 +36,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "MediaManager" "maxdorninger/MediaManager" "tarball" "latest" "/opt/mediamanager"
-    msg_info "Updating ${APP}"
+    msg_info "Updating MediaManager"
     MM_DIR="/opt/mm"
     export CONFIG_DIR="${MM_DIR}/config"
     export FRONTEND_FILES_DIR="${MM_DIR}/web/build"
@@ -58,7 +58,7 @@ function update_script() {
       sed -i "\|build\"$|a\export LOG_FILE=\"$CONFIG_DIR/media_manager.log\"" "$MM_DIR"/start.sh
     fi
 
-    msg_ok "Updated successfully!"
+    msg_ok "Updated MediaManager"
 
     msg_info "Starting Service"
     systemctl start mediamanager
