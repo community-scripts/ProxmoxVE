@@ -41,13 +41,13 @@ function update_script() {
 
     fetch_and_deploy_gh_release "ConvertX" "C4illin/ConvertX" "tarball" "latest" "/opt/convertx"
 
-    msg_info "Updating $APP"
+    msg_info "Updating ConvertX"
     if [[ -d /opt/data ]]; then
       mv /opt/data /opt/convertx/data
     fi
     cd /opt/convertx 
     $STD bun install
-    msg_ok "Updated successfully!"
+    msg_ok "Updated ConvertX"
 
     msg_info "Starting Service"
     systemctl start convertx
