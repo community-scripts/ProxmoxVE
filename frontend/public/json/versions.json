@@ -1,5 +1,65 @@
 [
   {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.1.0-dev.2",
+    "date": "2026-01-05T21:58:55Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-05-07-r1",
+    "date": "2025-05-07T12:18:42Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-05T18:49:45Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.133.0",
+    "date": "2026-01-05T18:31:47Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.8.1",
+    "date": "2026-01-05T18:12:51Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2026-01-04",
+    "date": "2026-01-05T17:52:56Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.31.2",
+    "date": "2026-01-05T17:26:50Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.14.1-s.1",
+    "date": "2026-01-05T16:31:29Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.12.5",
+    "date": "2025-12-29T12:55:22Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.2.3",
+    "date": "2026-01-05T15:11:22Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.0",
+    "date": "2026-01-05T15:04:03Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "theonedev/onedev",
     "version": "v14.0.2",
     "date": "2026-01-05T10:59:42Z"
@@ -8,6 +68,11 @@
     "name": "mattermost/mattermost",
     "version": "v11.1.2",
     "date": "2025-12-17T09:26:24Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.x",
+    "date": "2026-01-05T10:22:27Z"
   },
   {
     "name": "maxdorninger/MediaManager",
@@ -95,11 +160,6 @@
     "date": "2026-01-04T13:04:02Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.13",
-    "date": "2026-01-04T12:59:19Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.3.1-rc1",
     "date": "2026-01-04T04:38:01Z"
@@ -118,11 +178,6 @@
     "name": "ghostfolio/ghostfolio",
     "version": "2.228.0",
     "date": "2026-01-03T16:38:36Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-05-07-r1",
-    "date": "2025-05-07T12:18:42Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -165,14 +220,9 @@
     "date": "2026-01-02T22:20:47Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:09Z"
+    "date": "2026-01-02T19:40:19Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -185,24 +235,9 @@
     "date": "2026-01-02T16:20:33Z"
   },
   {
-    "name": "metabase/metabase",
-    "version": "v0.57.x",
-    "date": "2026-01-02T15:44:38Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "v0.18.2",
-    "date": "2025-12-15T19:17:42Z"
-  },
-  {
     "name": "gotify/server",
     "version": "v2.8.0",
     "date": "2026-01-02T11:56:16Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.1.5",
-    "date": "2026-01-02T09:10:15Z"
   },
   {
     "name": "alexta69/metube",
@@ -233,11 +268,6 @@
     "name": "wavelog/wavelog",
     "version": "2.2.2",
     "date": "2025-12-31T16:53:34Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.12.5",
-    "date": "2025-12-29T12:55:22Z"
   },
   {
     "name": "emqx/emqx",
@@ -295,11 +325,6 @@
     "date": "2025-12-30T14:21:05Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.8.0",
-    "date": "2025-12-30T12:16:28Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.40.0",
     "date": "2025-12-30T11:45:10Z"
@@ -318,11 +343,6 @@
     "name": "karlomikus/bar-assistant",
     "version": "v5.11.2",
     "date": "2025-12-29T21:09:41Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.31.1",
-    "date": "2025-12-29T16:50:03Z"
   },
   {
     "name": "traefik/traefik",
@@ -418,11 +438,6 @@
     "name": "seriousm4x/UpSnap",
     "version": "5.2.5",
     "date": "2025-12-25T09:23:10Z"
-  },
-  {
-    "name": "fosrl/pangolin",
-    "version": "1.14.1",
-    "date": "2025-12-24T21:33:56Z"
   },
   {
     "name": "FreshRSS/FreshRSS",
@@ -765,11 +780,6 @@
     "date": "2025-12-15T10:29:34Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.132.0",
-    "date": "2025-12-15T09:38:46Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.3.0.5236",
     "date": "2025-11-16T22:41:22Z"
@@ -818,11 +828,6 @@
     "name": "diced/zipline",
     "version": "v4.4.0",
     "date": "2025-12-13T22:49:07Z"
-  },
-  {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-12-14",
-    "date": "2025-12-13T16:39:17Z"
   },
   {
     "name": "WGDashboard/WGDashboard",
@@ -883,11 +888,6 @@
     "name": "valkey-io/valkey",
     "version": "9.0.1",
     "date": "2025-12-09T18:13:25Z"
-  },
-  {
-    "name": "Infisical/infisical",
-    "version": "v0.154.6",
-    "date": "2025-12-09T16:36:25Z"
   },
   {
     "name": "element-hq/synapse",
