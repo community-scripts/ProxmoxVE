@@ -24,6 +24,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - hwaccel: rewrite of GPU hardware acceleration support [@MickLesk](https://github.com/MickLesk) ([#10597](https://github.com/community-scripts/ProxmoxVE/pull/10597))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - iptag: fix syntax error in VM config file parsing [@MickLesk](https://github.com/MickLesk) ([#10598](https://github.com/community-scripts/ProxmoxVE/pull/10598))
+
 ### 📚 Documentation
 
   - chore: bump copyright to 2026 - happy new year [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10585](https://github.com/community-scripts/ProxmoxVE/pull/10585))
