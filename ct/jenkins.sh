@@ -34,7 +34,7 @@ function update_script() {
   $STD apt update
   $STD apt -y upgrade
   msg_ok "Updated Jenkins"
-  msg_ok "Update Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

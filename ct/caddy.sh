@@ -27,11 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP LXC"
+
+  msg_info "Updating Caddy LXC"
   $STD apt-get update
   $STD apt-get -y upgrade
-  msg_ok "Updated successfully!"
-  msg_ok "Updated $APP LXC"
+  msg_ok "Updated Caddy LXC"
 
   if command -v xcaddy >/dev/null 2>&1; then
     setup_go
@@ -44,8 +44,8 @@ function update_script() {
     rm -f "xcaddy_${VERSION}_linux_amd64.deb"
     $STD xcaddy build
     msg_ok "Updated xCaddy"
-    msg_ok "Updated successfully!"
   fi
+  msg_ok "Updated successfully!"
   exit
 }
 

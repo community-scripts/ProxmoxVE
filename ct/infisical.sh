@@ -46,7 +46,7 @@ function update_script() {
   msg_info "Starting service"
   infisical-ctl start
   msg_ok "Started service"
-  msg_ok "Updated successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

@@ -39,6 +39,7 @@ function update_script() {
     1)
       $STD apk -U upgrade
       rc-service vaultwarden restart -q
+      msg_ok "Updated successfully!"
       exit
       ;;
     2)

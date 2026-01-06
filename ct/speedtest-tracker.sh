@@ -69,7 +69,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start speedtest-tracker
     msg_ok "Started Service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

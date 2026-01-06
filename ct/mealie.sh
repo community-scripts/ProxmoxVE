@@ -84,7 +84,7 @@ STARTEOF
     msg_info "Starting Service"
     systemctl start mealie
     msg_ok "Started Service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

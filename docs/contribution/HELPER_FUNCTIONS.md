@@ -326,7 +326,7 @@ if check_for_gh_release "appname" "owner/repo"; then
   msg_info "Updating..."
   # Stop services, backup, update, restore, start
   CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo"
-  msg_ok "Updated successfully"
+  msg_ok "Updated successfully!"
 fi
 ```
 

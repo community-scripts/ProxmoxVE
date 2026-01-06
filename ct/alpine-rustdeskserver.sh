@@ -42,7 +42,7 @@ function update_script() {
     $STD service rustdesk-server-hbbr start
     rm -rf amd64
     rm -f $temp_file1
-    msg_ok "Updated RustDesk Server successfully"
+    msg_ok "Updated RustDesk Server"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
@@ -61,6 +61,7 @@ function update_script() {
   else
     msg_ok "No update required. RustDesk API is already at v${APIRELEASE}"
   fi
+  msg_ok "Updated successfully!"
   exit 0
 }
 

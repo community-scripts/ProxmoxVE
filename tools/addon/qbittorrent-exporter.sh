@@ -84,7 +84,7 @@ function update() {
       systemctl start qbittorrent-exporter
     fi
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
     exit
   fi
 }

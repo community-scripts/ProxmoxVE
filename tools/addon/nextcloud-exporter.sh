@@ -64,7 +64,7 @@ function update() {
     msg_info "Starting service"
     systemctl start nextcloud-exporter
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
     exit
   fi
 }
