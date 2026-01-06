@@ -38,7 +38,7 @@ function update_script() {
 
     msg_info "Updating $APP"
     $STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml --init-projections=true
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start zitadel

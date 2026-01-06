@@ -34,9 +34,9 @@ function update_script() {
     msg_info "Stopped Service"
 
     msg_info "Updating $APP"
-    cd /opt/seelf
+    cd /opt/seelf 
     $STD make build
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start seelf

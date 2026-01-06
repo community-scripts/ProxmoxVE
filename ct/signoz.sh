@@ -39,10 +39,10 @@ function update_script() {
     fetch_and_deploy_gh_release "signoz-schema-migrator" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-schema-migrator" "signoz-schema-migrator_linux_amd64.tar.gz"
 
     msg_info "Updating ${APP}"
-    cd /opt/signoz-schema-migrator/bin
+    cd /opt/signoz-schema-migrator/bin 
     $STD ./signoz-schema-migrator sync --dsn="tcp://localhost:9000?password=" --replication=true --up=
     $STD ./signoz-schema-migrator async --dsn="tcp://localhost:9000?password=" --replication=true --up=
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Services"
     systemctl start signoz-otel-collector

@@ -30,7 +30,7 @@ function update_script() {
   msg_info "Updating $APP"
   $STD apt update
   $STD apt upgrade -y lldap
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
   msg_ok "Updated successfully!"
   exit
 }

@@ -45,9 +45,9 @@ function update_script() {
     if [[ -d /opt/data ]]; then
       mv /opt/data /opt/convertx/data
     fi
-    cd /opt/convertx
+    cd /opt/convertx 
     $STD bun install
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start convertx

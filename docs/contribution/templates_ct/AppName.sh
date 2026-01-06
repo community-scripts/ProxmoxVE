@@ -68,7 +68,7 @@ function update_script() {
 
     # Optional: Run any post-update commands
     msg_info "Running Post-Update Tasks"
-    cd /opt/[appname] || exit
+    cd /opt/[appname] 
     # Examples:
     # $STD npm ci --production
     # $STD php artisan migrate --force

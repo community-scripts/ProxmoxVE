@@ -63,7 +63,7 @@ function update_script() {
       $STD /opt/cronicle/bin/control.sh start
       msg_ok "Installed Cronicle Worker"
       echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
-      exit
+      msg_ok "Updated successfully!"
     fi
   fi
 }

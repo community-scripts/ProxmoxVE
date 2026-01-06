@@ -69,7 +69,7 @@ function update_script() {
     chmod +x bitmagnet
     [ -f "/opt/.env" ] && cp "/opt/.env" /opt/bitmagnet/
     [ -f "/opt/config.yml" ] && cp "/opt/config.yml" /opt/bitmagnet/
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start bitmagnet-web

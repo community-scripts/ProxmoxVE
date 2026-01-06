@@ -56,7 +56,7 @@ function update_script() {
     [ -f "$BACKUP_DIR/.env" ] && cp "$BACKUP_DIR/.env" /opt/kimai/
     [ -f "$BACKUP_DIR/local.yaml" ] && cp "$BACKUP_DIR/local.yaml" /opt/kimai/config/packages/
     rm -rf "$BACKUP_DIR"
-    cd /opt/kimai || exit
+    cd /opt/kimai 
     sed -i '/^admin_lte:/,/^[^[:space:]]/d' config/packages/local.yaml
     $STD composer install --no-dev --optimize-autoloader
     $STD bin/console kimai:update

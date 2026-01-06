@@ -92,7 +92,7 @@ function update_copyparty() {
   msg_info "Updating $APP"
   curl -fsSL "$SRC_URL" -o "$BIN_PATH"
   chmod +x "$BIN_PATH"
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
   exit 0
 }
 

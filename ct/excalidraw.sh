@@ -39,7 +39,7 @@ function update_script() {
     msg_info "Updating $APP"
     cd /opt/excalidraw
     $STD yarn
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start excalidraw

@@ -42,7 +42,7 @@ function update_script() {
     chmod +x ./Agent
     echo $RELEASE >~/.agentdvr
     rm -rf Agent_Linux64*.zip
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting service"
     systemctl start AgentDVR

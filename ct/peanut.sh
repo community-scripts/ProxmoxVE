@@ -44,7 +44,7 @@ function update_script() {
     cp -r .next/static .next/standalone/.next/
     mkdir -p /opt/peanut/.next/standalone/config
     ln -sf /etc/peanut/settings.yml /opt/peanut/.next/standalone/config/settings.yml
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start peanut

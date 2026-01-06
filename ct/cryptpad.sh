@@ -44,7 +44,7 @@ function update_script() {
     $STD npm ci
     $STD npm run install:components
     $STD npm run build
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Restoring configuration"
     mv /opt/config.js /opt/cryptpad/config/

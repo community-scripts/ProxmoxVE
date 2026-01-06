@@ -68,18 +68,18 @@ function update_script() {
     export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
     export NEXT_TELEMETRY_DISABLED=1
     export CI="true"
-    cd /opt/karakeep/apps/web || exit
+    cd /opt/karakeep/apps/web 
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
-    cd /opt/karakeep/apps/workers || exit
+    cd /opt/karakeep/apps/workers 
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
-    cd /opt/karakeep/apps/cli || exit
+    cd /opt/karakeep/apps/cli 
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
     DATA_DIR="$(sed -n '/^DATA_DIR/p' /etc/karakeep/karakeep.env | awk -F= '{print $2}' | tr -d '="=')"
     export DATA_DIR="${DATA_DIR:-/opt/karakeep_data}"
-    cd /opt/karakeep/packages/db || exit
+    cd /opt/karakeep/packages/db 
     $STD pnpm migrate
     $STD pnpm store prune
     sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env

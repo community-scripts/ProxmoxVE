@@ -41,16 +41,16 @@ function update_script() {
     $STD tar -cf ~/autocaliweb_bkp.tar "$INSTALL_DIR"/{metadata_change_logs,dirs.json,.env,scripts/ingest_watcher.sh,scripts/auto_zipper_wrapper.sh,scripts/metadata_change_detector_wrapper.sh}
     fetch_and_deploy_gh_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
     msg_info "Updating ${APP}"
-    cd "$INSTALL_DIR"
+    cd "$INSTALL_DIR" 
     if [[ ! -d "$VIRTUAL_ENV" ]]; then
       $STD uv venv "$VIRTUAL_ENV"
     fi
     $STD uv sync --all-extras --active
-    cd "$INSTALL_DIR"/koreader/plugins
+    cd "$INSTALL_DIR"/koreader/plugins 
     PLUGIN_DIGEST="$(find acwsync.koplugin -type f -name "*.lua" -o -name "*.json" | sort | xargs sha256sum | sha256sum | cut -d' ' -f1)"
-    echo "Plugin files digest: $PLUGIN_DIGEST" >acwsync.koplugin/${PLUGIN_DIGEST}.digest
-    echo "Build date: $(date)" >>acwsync.koplugin/${PLUGIN_DIGEST}.digest
-    echo "Files included:" >>acwsync.koplugin/${PLUGIN_DIGEST}.digest
+    echo "Plugin files digest: $PLUGIN_DIGEST" >acwsync.koplugin/"${PLUGIN_DIGEST}".digest
+    echo "Build date: $(date)" >>acwsync.koplugin/"${PLUGIN_DIGEST}".digest
+    echo "Files included:" >>acwsync.koplugin/"${PLUGIN_DIGEST}".digest
     $STD zip -r koplugin.zip acwsync.koplugin/
     cp -r koplugin.zip "$INSTALL_DIR"/cps/static
     mkdir -p "$INSTALL_DIR"/metadata_temp
@@ -62,7 +62,7 @@ function update_script() {
     sed 's/^/v/' ~/.autocaliweb >"$INSTALL_DIR"/ACW_RELEASE
     chown -R acw:acw "$INSTALL_DIR"
     rm ~/autocaliweb_bkp.tar
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Services"
     systemctl start autocaliweb metadata-change-detector acw-ingest-service acw-auto-zipper

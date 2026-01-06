@@ -41,7 +41,7 @@ function update_script() {
     fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
 
     msg_info "Updating Kometa"
-    cd /opt/kometa || exit
+    cd /opt/kometa 
     $STD uv pip install -r requirements.txt --system
     mkdir -p config/assets
     cp /opt/config.yml config/config.yml

@@ -51,7 +51,7 @@ function update_script() {
     msg_ok "Restored Data"
 
     msg_info "Running Migrations"
-    cd /opt/koel || exit
+    cd /opt/koel 
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-interaction --no-dev --optimize-autoloader
     $STD php artisan migrate --force

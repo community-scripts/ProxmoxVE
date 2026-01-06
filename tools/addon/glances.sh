@@ -96,7 +96,7 @@ update_glances_debian() {
   uv pip install --upgrade "glances[web]" >/dev/null 2>&1
   deactivate
   systemctl restart glances
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
 }
 
 # uninstall on Debian/Ubuntu
@@ -163,7 +163,7 @@ update_glances_alpine() {
   uv pip install --upgrade "glances[web]" >/dev/null 2>&1
   deactivate
   rc-service glances restart
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
 }
 
 # uninstall on Alpine

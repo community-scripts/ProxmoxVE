@@ -46,7 +46,7 @@ function update_script() {
   
   if [[ -z "$CURRENT_VERSION" ]] || [[ "$KASM_VERSION" != "$CURRENT_VERSION" ]]; then
     msg_info "Updating Kasm"
-    cd /tmp || exit
+    cd /tmp 
 
     msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
     msg_warn "The following code is NOT maintained or audited by our repository."

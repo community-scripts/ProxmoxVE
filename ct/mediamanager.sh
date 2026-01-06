@@ -43,14 +43,14 @@ function update_script() {
     export PUBLIC_VERSION=""
     export PUBLIC_API_URL=""
     export BASE_PATH="/web"
-    cd /opt/mediamanager/web
+    cd /opt/mediamanager/web 
     $STD npm install --no-fund --no-audit
     $STD npm run build
     rm -rf "$FRONTEND_FILES_DIR"/build
     cp -r build "$FRONTEND_FILES_DIR"
     export BASE_PATH=""
     export VIRTUAL_ENV="/opt/${MM_DIR}/venv"
-    cd /opt/mediamanager
+    cd /opt/mediamanager 
     rm -rf "$MM_DIR"/{media_manager,alembic*}
     cp -r {media_manager,alembic*} "$MM_DIR"
     $STD /usr/local/bin/uv sync --locked --active -n -p cpython3.13 --managed-python
@@ -58,7 +58,7 @@ function update_script() {
       sed -i "\|build\"$|a\export LOG_FILE=\"$CONFIG_DIR/media_manager.log\"" "$MM_DIR"/start.sh
     fi
 
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start mediamanager

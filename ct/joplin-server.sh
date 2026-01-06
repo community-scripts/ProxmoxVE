@@ -38,7 +38,7 @@ function update_script() {
     fetch_and_deploy_gh_release "joplin-server" "laurent22/joplin" "tarball" "latest"
 
     msg_info "Updating Joplin-Server"
-    cd /opt/joplin-server || exit
+    cd /opt/joplin-server 
     sed -i "/onenote-converter/d" packages/lib/package.json
     $STD yarn config set --home enableTelemetry 0
     export BUILD_SEQUENCIAL=1

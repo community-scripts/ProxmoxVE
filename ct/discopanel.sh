@@ -49,12 +49,12 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "tarball" "latest" "/opt/discopanel"
 
     msg_info "Setting up DiscoPanel"
-    cd /opt/discopanel || exit
+    cd /opt/discopanel 
     $STD make gen
-    cd /opt/discopanel/web/discopanel || exit
+    cd /opt/discopanel/web/discopanel 
     $STD npm install
     $STD npm run build
-    cd /opt/discopanel || exit
+    cd /opt/discopanel 
     $STD go build -o discopanel cmd/discopanel/main.go
     msg_ok "Setup DiscoPanel"
 

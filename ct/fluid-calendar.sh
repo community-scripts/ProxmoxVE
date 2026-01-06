@@ -45,7 +45,7 @@ function update_script() {
     $STD npm run prisma:generate
     $STD npx prisma migrate deploy
     $STD npm run build:os
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start fluid-calendar

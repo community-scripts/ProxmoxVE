@@ -40,7 +40,7 @@ function update_script() {
     msg_ok "Updating Packages"
   fi
 
-  cd /opt/jellyseerr
+  cd /opt/jellyseerr 
   output=$(git pull --no-rebase)
 
   pnpm_current=$(pnpm --version 2>/dev/null)
@@ -65,7 +65,7 @@ function update_script() {
   systemctl stop jellyseerr
   rm -rf dist .next node_modules
   export CYPRESS_INSTALL_BINARY=0
-  cd /opt/jellyseerr
+  cd /opt/jellyseerr 
   $STD pnpm install --frozen-lockfile
   export NODE_OPTIONS="--max-old-space-size=3072"
   $STD pnpm build
@@ -88,7 +88,7 @@ EOF
 
   systemctl daemon-reload
   systemctl start jellyseerr
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
   exit
 }
 

@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   bash -c "$(curl -fsSL https://github.com/leiweibau/Pi.Alert/raw/main/install/pialert_update.sh)" -s --lxc
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
   msg_ok "Updated successfully!"
   exit
 }

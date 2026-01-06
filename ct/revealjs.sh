@@ -42,7 +42,7 @@ function update_script() {
     cp -f /opt/index.html /opt/revealjs
     sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
     rm -f /opt/index.html
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start revealjs

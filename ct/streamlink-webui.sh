@@ -47,7 +47,7 @@ function update_script() {
     $STD yarn install
     $STD yarn build
     chmod +x /opt/"${APP}"/start.sh
-    msg_ok "Updated $APP"
+    msg_ok "Updated successfully!"
 
     msg_info "Starting Service"
     systemctl start ${APP}

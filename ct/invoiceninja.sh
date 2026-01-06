@@ -51,7 +51,7 @@ function update_script() {
     msg_ok "Restored Data"
 
     msg_info "Running Migrations"
-    cd /opt/invoiceninja || exit
+    cd /opt/invoiceninja 
     $STD php artisan migrate --force
     $STD php artisan config:clear
     $STD php artisan cache:clear
