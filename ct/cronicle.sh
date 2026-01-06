@@ -64,6 +64,7 @@ function update_script() {
       msg_ok "Installed Cronicle Worker"
       echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
       msg_ok "Updated successfully!"
+      exit
     fi
   fi
 }
