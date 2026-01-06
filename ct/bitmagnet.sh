@@ -62,14 +62,14 @@ function update_script() {
     rm -rf /opt/bitmagnet
     fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Bitmagnet"
     cd /opt/bitmagnet
     VREL=v$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
     chmod +x bitmagnet
     [ -f "/opt/.env" ] && cp "/opt/.env" /opt/bitmagnet/
     [ -f "/opt/config.yml" ] && cp "/opt/config.yml" /opt/bitmagnet/
-    msg_ok "Updated successfully!"
+    msg_ok "Updated Bitmagnet"
 
     msg_info "Starting Service"
     systemctl start bitmagnet-web
