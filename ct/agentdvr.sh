@@ -35,14 +35,14 @@ function update_script() {
     systemctl stop AgentDVR
     msg_ok "Service stopped"
 
-    msg_info "Updating $APP"
+    msg_info "Updating AgentDVR"
     cd /opt/agentdvr/agent
     curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
     $STD unzip -o Agent_Linux64*.zip
     chmod +x ./Agent
     echo $RELEASE >~/.agentdvr
     rm -rf Agent_Linux64*.zip
-    msg_ok "Updated successfully!"
+    msg_ok "Updated AgentDVR"
 
     msg_info "Starting service"
     systemctl start AgentDVR
