@@ -56,7 +56,7 @@ function update_script() {
     msg_ok "pnpm is already installed and satisfies version $pnpm_desired."
   fi
 
-  msg_info "Updating $APP"
+  msg_info "Updating Jellyseerr"
   if echo "$output" | grep -q "Already up to date."; then
     msg_ok "$APP is already up to date."
     exit
@@ -88,6 +88,7 @@ EOF
 
   systemctl daemon-reload
   systemctl start jellyseerr
+  msg_ok "Updated Jellyseerr"
   msg_ok "Updated successfully!"
   exit
 }
