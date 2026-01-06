@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - InspIRCd: Fix release fetching [@tremor021](https://github.com/tremor021) ([#10578](https://github.com/community-scripts/ProxmoxVE/pull/10578))
 
+### 📚 Documentation
+
+  - chore: bump copyright to 2026 - happy new year [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10585](https://github.com/community-scripts/ProxmoxVE/pull/10585))
+
 ### 📂 Github
 
   - re-add shellcheck exclusions [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10586](https://github.com/community-scripts/ProxmoxVE/pull/10586))
