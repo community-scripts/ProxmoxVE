@@ -36,13 +36,13 @@ function update_script() {
     cp /opt/revealjs/index.html /opt
     fetch_and_deploy_gh_release "revealjs" "hakimel/reveal.js" "tarball"
 
-    msg_info "Updating $APP"
+    msg_info "Updating RevealJS"
     cd /opt/revealjs
     $STD npm install
     cp -f /opt/index.html /opt/revealjs
     sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
     rm -f /opt/index.html
-    msg_ok "Updated successfully!"
+    msg_ok "Updated RevealJS"
 
     msg_info "Starting Service"
     systemctl start revealjs
