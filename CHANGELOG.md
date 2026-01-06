@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-06
 
+### 🆕 New Scripts
+
+  - Sportarr ([#10600](https://github.com/community-scripts/ProxmoxVE/pull/10600))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
