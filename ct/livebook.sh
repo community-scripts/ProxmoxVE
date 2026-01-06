@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/build.func)
+ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: dkuku
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -41,7 +41,7 @@ function update_script() {
 
     msg_info "Updating Livebook"
     source /opt/livebook/.env
-    cd /opt/livebook
+    cd /opt/livebook || exit
     $STD mix escript.install hex livebook --force
 
     chown -R livebook:livebook /opt/livebook /data
