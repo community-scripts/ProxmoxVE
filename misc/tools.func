@@ -2825,17 +2825,22 @@ _setup_intel_arc() {
     _add_debian_nonfree "$os_codename"
 
     # Arc requires latest drivers - fetch from GitHub
+    # Order matters: libigdgmm first (dependency), then IGC, then compute-runtime
     msg_info "Fetching Intel compute-runtime for Arc support"
 
-    fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core_*_amd64.deb" || true
-    fetch_and_deploy_gh_release "intel-graphics-compiler" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-graphics-compiler_*_amd64.deb" || true
-    fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl_*_amd64.deb" || true
+    # libigdgmm - bundled in compute-runtime releases (Debian version often too old)
+    fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
+
+    # Intel Graphics Compiler (note: packages have -2 suffix)
+    fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || true
+    fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || true
+
+    # Compute Runtime (depends on IGC and gmmlib)
     fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || true
-    fetch_and_deploy_gh_release "intel-level-zero-gpu" "intel/compute-runtime" "binary" "latest" "" "intel-level-zero-gpu_*_amd64.deb" || true
+    fetch_and_deploy_gh_release "intel-level-zero-gpu" "intel/compute-runtime" "binary" "latest" "" "libze-intel-gpu1_*_amd64.deb" || true
 
     $STD apt -y install \
       intel-media-va-driver-non-free \
-      libigdgmm12 \
       ocl-icd-libopencl1 \
       libvpl2 \
       vainfo \
@@ -2869,25 +2874,30 @@ _setup_intel_modern() {
   elif [[ "$os_id" == "debian" ]]; then
     _add_debian_nonfree "$os_codename"
 
-    # Fetch IGC from GitHub for OpenCL support
-    fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core_*_amd64.deb" || true
-    fetch_and_deploy_gh_release "intel-graphics-compiler" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-graphics-compiler_*_amd64.deb" || true
-    fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl_*_amd64.deb" || true
-
+    # For Trixie/Sid: Fetch from GitHub (Debian packages too old or missing)
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
+      msg_info "Fetching Intel compute-runtime from GitHub"
+
+      # libigdgmm first (bundled in compute-runtime releases)
+      fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
+
+      # Intel Graphics Compiler (note: packages have -2 suffix)
+      fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || true
+      fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || true
+
+      # Compute Runtime
       fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || true
     fi
 
     $STD apt -y install \
       intel-media-va-driver-non-free \
-      libigdgmm12 \
       ocl-icd-libopencl1 \
       vainfo \
       libmfx-gen1.2 \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel packages failed"
 
-    # Bookworm has intel-opencl-icd in repos
-    [[ "$os_codename" == "bookworm" ]] && $STD apt -y install intel-opencl-icd 2>/dev/null || true
+    # Bookworm has intel-opencl-icd in repos (compatible version)
+    [[ "$os_codename" == "bookworm" ]] && $STD apt -y install intel-opencl-icd libigdgmm12 2>/dev/null || true
   fi
 
   msg_ok "Intel Gen 9+ GPU configured"
