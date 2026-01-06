@@ -20,6 +20,45 @@ variables
 color
 catch_errors
 
+# =============================================================================
+# NVIDIA Host-Side Configuration
+# =============================================================================
+# Detect NVIDIA GPU and offer driver pinning to maintain version sync.
+# Basic passthrough is handled natively by build.func.
+
+NVIDIA_HOST_VERSION=""
+NVIDIA_PIN_HOST="no"
+
+if [ -f /proc/driver/nvidia/version ]; then
+    NVIDIA_HOST_VERSION=$(grep "NVRM version:" /proc/driver/nvidia/version | awk '{print $8}')
+    if [ -n "$NVIDIA_HOST_VERSION" ]; then
+        msg_ok "Detected NVIDIA Host Driver: ${NVIDIA_HOST_VERSION}"
+        echo ""
+        msg_ok "Driver Pinning prevents automatic driver updates on the host."
+        echo "This keeps the host and container in sync, avoiding version mismatch errors."
+        read -r -p "Pin NVIDIA driver (${NVIDIA_HOST_VERSION}) on host to prevent updates? <y/N> " prompt
+        if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+            NVIDIA_PIN_HOST="yes"
+        fi
+    fi
+elif lspci 2>/dev/null | grep -qi "nvidia"; then
+    msg_warn "NVIDIA GPU detected, but host drivers are not installed."
+    msg_warn "NVIDIA GPU hardware encoding will not be available in Tdarr without the NVIDIA drivers."
+    msg_warn "Intel and AMD hardware encoding support may still be available via /dev/dri."
+    echo ""
+    read -r -p "Continue without NVIDIA support? (y=continue, n=quit) <y/N> " prompt
+    if [[ ! "${prompt,,}" =~ ^(y|yes)$ ]]; then
+        msg_info "Aborting. Install NVIDIA drivers on the Proxmox host, then re-run this script."
+        exit 0
+    fi
+fi
+
+if [ "$NVIDIA_PIN_HOST" == "yes" ]; then
+    msg_info "Pinning NVIDIA packages on host"
+    apt-mark hold nvidia-driver nvidia-kernel-dkms firmware-nvidia-gsp 2>/dev/null || true
+    msg_ok "Pinned host NVIDIA packages (use 'apt-mark unhold' to allow updates)"
+fi
+
 function update_script() {
   header_info
   check_container_storage
@@ -46,6 +85,14 @@ function update_script() {
 
 start
 build_container
+
+
+# =============================================================================
+# Finalization
+# =============================================================================
+# Driver detection and passthrough are handled autonomously by build.func
+# and the install script.
+
 description
 
 msg_ok "Completed Successfully!\n"
