@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - InspIRCd: Fix release fetching [@tremor021](https://github.com/tremor021) ([#10578](https://github.com/community-scripts/ProxmoxVE/pull/10578))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Dispatcharr [@tremor021](https://github.com/tremor021) ([#10599](https://github.com/community-scripts/ProxmoxVE/pull/10599))
+
 ### 💾 Core
 
   - #### ✨ New Features
