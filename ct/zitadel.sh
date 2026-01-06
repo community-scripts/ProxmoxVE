@@ -36,9 +36,9 @@ function update_script() {
     rm -f /usr/local/bin/zitadel
     fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-amd64.tar.gz"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Zitadel"
     $STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml --init-projections=true
-    msg_ok "Updated successfully!"
+    msg_ok "Updated Zitadel"
 
     msg_info "Starting Service"
     systemctl start zitadel
