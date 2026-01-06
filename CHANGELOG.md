@@ -34,6 +34,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - iptag: fix syntax error in VM config file parsing [@MickLesk](https://github.com/MickLesk) ([#10598](https://github.com/community-scripts/ProxmoxVE/pull/10598))
 
+  - #### ✨ New Features
+
+    - Update clean-lxcs.sh to support Red Hat compatible distros [@jabofh](https://github.com/jabofh) ([#10583](https://github.com/community-scripts/ProxmoxVE/pull/10583))
+
 ### 📚 Documentation
 
   - chore: bump copyright to 2026 - happy new year [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10585](https://github.com/community-scripts/ProxmoxVE/pull/10585))
