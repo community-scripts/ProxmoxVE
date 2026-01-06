@@ -842,13 +842,11 @@ update_all_tags() {
     else
         # More efficient: direct file listing instead of ls+sed
         vmids=()
-        shopt -s nullglob
         for conf in /etc/pve/qemu-server/*.conf; do
             [[ -f "$conf" ]] || continue
-            local filename="${conf##*/}"
-            vmids+=("${filename%.conf}")
+            local basename="${conf##*/}"
+            vmids+=("${basename%.conf}")
         done
-        shopt -u nullglob
     fi
     
     count=${#vmids[@]}
