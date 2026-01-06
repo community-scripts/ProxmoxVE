@@ -68,18 +68,18 @@ function update_script() {
     export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
     export NEXT_TELEMETRY_DISABLED=1
     export CI="true"
-    cd /opt/karakeep/apps/web
+    cd /opt/karakeep/apps/web || exit
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
-    cd /opt/karakeep/apps/workers
+    cd /opt/karakeep/apps/workers || exit
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
-    cd /opt/karakeep/apps/cli
+    cd /opt/karakeep/apps/cli || exit
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
     DATA_DIR="$(sed -n '/^DATA_DIR/p' /etc/karakeep/karakeep.env | awk -F= '{print $2}' | tr -d '="=')"
     export DATA_DIR="${DATA_DIR:-/opt/karakeep_data}"
-    cd /opt/karakeep/packages/db
+    cd /opt/karakeep/packages/db || exit
     $STD pnpm migrate
     $STD pnpm store prune
     sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env
@@ -88,7 +88,7 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start karakeep-browser karakeep-workers karakeep-web
     msg_ok "Started Services"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -97,7 +97,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

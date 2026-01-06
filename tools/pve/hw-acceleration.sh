@@ -112,5 +112,5 @@ fi
 sleep 1
 whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Added tools" "vainfo, execute command 'vainfo'\nintel-gpu-tools, execute command 'intel_gpu_top'" 8 58
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "Reboot container ${BL}$privileged_container${CL} to apply the new settings\n"

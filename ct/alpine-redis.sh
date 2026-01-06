@@ -67,6 +67,6 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${APP} should be reachable on port 6379.
          ${BL}redis-cli -h ${IP} -p 6379${CL} \n"

@@ -85,4 +85,4 @@ msg_info "Installing ${APP} Common Bouncer"
 apt-get install -y crowdsec-firewall-bouncer-iptables &>/dev/null
 msg_ok "Installed ${APP} Common Bouncer"
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"

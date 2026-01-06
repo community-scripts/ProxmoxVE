@@ -41,7 +41,7 @@ function update_script() {
     fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
 
     msg_info "Updating Kometa"
-    cd /opt/kometa
+    cd /opt/kometa || exit
     $STD uv pip install -r requirements.txt --system
     mkdir -p config/assets
     cp /opt/config.yml config/config.yml
@@ -50,7 +50,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start kometa
     msg_ok "Started Service"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -59,7 +59,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access the LXC at following IP address:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}${IP}${CL}"

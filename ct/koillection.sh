@@ -39,14 +39,14 @@ function update_script() {
     fetch_and_deploy_gh_release "koillection" "benjaminjonard/koillection"
 
     msg_info "Updating Koillection"
-    cd /opt/koillection
+    cd /opt/koillection || exit
     cp -r /opt/koillection-backup/.env.local /opt/koillection
     cp -r /opt/koillection-backup/public/uploads/. /opt/koillection/public/uploads/
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev -o --no-interaction --classmap-authoritative
     $STD php bin/console doctrine:migrations:migrate --no-interaction
     $STD php bin/console app:translations:dump
-    cd assets/
+    cd assets/ || exit
     $STD yarn install
     $STD yarn build
     chown -R www-data:www-data /opt/koillection/public/uploads
@@ -56,7 +56,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -65,7 +65,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

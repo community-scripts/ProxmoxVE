@@ -56,7 +56,7 @@ function update_script() {
     [ -f "$BACKUP_DIR/.env" ] && cp "$BACKUP_DIR/.env" /opt/kimai/
     [ -f "$BACKUP_DIR/local.yaml" ] && cp "$BACKUP_DIR/local.yaml" /opt/kimai/config/packages/
     rm -rf "$BACKUP_DIR"
-    cd /opt/kimai
+    cd /opt/kimai || exit
     sed -i '/^admin_lte:/,/^[^[:space:]]/d' config/packages/local.yaml
     $STD composer install --no-dev --optimize-autoloader
     $STD bin/console kimai:update
@@ -74,7 +74,7 @@ function update_script() {
     chmod -R 777 /opt/*
     rm -rf "$BACKUP_DIR"
     msg_ok "Setup Permissions"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -83,7 +83,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

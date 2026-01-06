@@ -743,7 +743,7 @@ sleep 10
 send_line_to_vm "0"
 msg_ok "Started OPNsense VM"
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 if [ "$IP_ADDR" != "" ]; then
   echo -e "${INFO}${YW} Access it using the following URL:${CL}"
   echo -e "${TAB}${GATEWAY}${BGN}http://${IP_ADDR}${CL}"

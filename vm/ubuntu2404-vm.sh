@@ -548,6 +548,6 @@ if [ "$START_VM" == "yes" ]; then
   msg_ok "Started Ubuntu 24.04 VM"
 fi
 post_update_to_api "done" "none"
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "Setup Cloud-Init before starting \n
 More info at https://github.com/community-scripts/ProxmoxVE/discussions/272 \n"

@@ -68,7 +68,7 @@ function update_script() {
 
     # Optional: Run any post-update commands
     msg_info "Running Post-Update Tasks"
-    cd /opt/[appname]
+    cd /opt/[appname] || exit
     # Examples:
     # $STD npm ci --production
     # $STD php artisan migrate --force
@@ -79,7 +79,7 @@ function update_script() {
     systemctl start [appname]
     msg_ok "Started Services"
 
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -88,7 +88,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:[PORT]${CL}"
