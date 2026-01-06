@@ -1,8 +1,98 @@
 [
   {
+    "name": "keycloak/keycloak",
+    "version": "26.5.0",
+    "date": "2026-01-06T07:42:32Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.545",
+    "date": "2026-01-06T06:42:50Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.13.1",
+    "date": "2026-01-06T06:01:39Z"
+  },
+  {
+    "name": "requarks/wiki",
+    "version": "v2.5.310",
+    "date": "2026-01-06T05:55:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.739",
+    "date": "2026-01-06T05:37:09Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v14.0.3",
+    "date": "2026-01-06T04:19:34Z"
+  },
+  {
+    "name": "transmission/transmission",
+    "version": "4.0.1-beta.1",
+    "date": "2024-12-13T00:16:24Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.14.1-s.2",
+    "date": "2026-01-06T02:46:38Z"
+  },
+  {
     "name": "chrisbenincasa/tunarr",
     "version": "v1.1.0-dev.2",
-    "date": "2026-01-05T21:58:55Z"
+    "date": "2026-01-06T02:44:18Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.1",
+    "date": "2026-01-06T02:33:13Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.2.0-3",
+    "date": "2026-01-06T02:30:54Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.8-stable.1-patch01",
+    "date": "2026-01-06T02:06:05Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.6-beta",
+    "date": "2026-01-06T00:42:11Z"
+  },
+  {
+    "name": "Whisparr/Whisparr",
+    "version": "v3.1.0.2055",
+    "date": "2026-01-06T00:31:56Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-06T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "pterodactyl/wings",
+    "version": "v1.12.0",
+    "date": "2026-01-06T00:10:54Z"
+  },
+  {
+    "name": "pterodactyl/panel",
+    "version": "v1.12.0",
+    "date": "2026-01-06T00:10:39Z"
   },
   {
     "name": "ZoeyVid/NPMplus",
@@ -35,11 +125,6 @@
     "date": "2026-01-05T17:26:50Z"
   },
   {
-    "name": "fosrl/pangolin",
-    "version": "1.14.1-s.1",
-    "date": "2026-01-05T16:31:29Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.12.5",
     "date": "2025-12-29T12:55:22Z"
@@ -48,21 +133,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@2.2.3",
     "date": "2026-01-05T15:11:22Z"
-  },
-  {
-    "name": "Infisical/infisical",
-    "version": "v0.155.0",
-    "date": "2026-01-05T15:04:03Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v14.0.2",
-    "date": "2026-01-05T10:59:42Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -85,16 +155,6 @@
     "date": "2025-12-28T05:59:54Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.726",
-    "date": "2026-01-05T06:02:39Z"
-  },
-  {
     "name": "jason5ng32/MyIP",
     "version": "v5.2.0",
     "date": "2026-01-05T05:56:57Z"
@@ -115,16 +175,6 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-05T00:27:03Z"
-  },
-  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.4.0",
     "date": "2026-01-04T21:10:51Z"
@@ -138,11 +188,6 @@
     "name": "rcourtman/Pulse",
     "version": "v5.0.11",
     "date": "2026-01-04T19:48:21Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.13.0",
-    "date": "2026-01-04T19:42:58Z"
   },
   {
     "name": "actualbudget/actual",
@@ -190,19 +235,9 @@
     "date": "2026-01-03T11:13:01Z"
   },
   {
-    "name": "requarks/wiki",
-    "version": "v2.5.309",
-    "date": "2026-01-03T08:32:10Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.34.0",
     "date": "2026-01-03T03:12:12Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v1.2.0-2",
-    "date": "2026-01-03T02:42:11Z"
   },
   {
     "name": "9001/copyparty",
@@ -222,7 +257,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -258,11 +293,6 @@
     "name": "esphome/esphome",
     "version": "2025.12.4",
     "date": "2025-12-31T22:42:42Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.1.5-beta",
-    "date": "2025-12-31T18:46:48Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -328,11 +358,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.40.0",
     "date": "2025-12-30T11:45:10Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.544",
-    "date": "2025-12-30T11:00:27Z"
   },
   {
     "name": "javedh-dev/tracktor",
@@ -528,11 +553,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.16.2944",
     "date": "2025-11-05T01:56:48Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.11.rc.1",
-    "date": "2025-12-22T16:29:28Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -963,11 +983,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.12",
     "date": "2025-12-05T15:02:01Z"
-  },
-  {
-    "name": "transmission/transmission",
-    "version": "4.0.1-beta.1",
-    "date": "2024-12-13T00:16:24Z"
   },
   {
     "name": "LibreTranslate/LibreTranslate",
@@ -1550,11 +1565,6 @@
     "date": "2025-06-24T08:29:55Z"
   },
   {
-    "name": "pterodactyl/panel",
-    "version": "v1.11.11",
-    "date": "2025-06-18T18:04:50Z"
-  },
-  {
     "name": "TriliumNext/Notes",
     "version": "v0.95.0",
     "date": "2025-06-15T21:12:04Z"
@@ -1730,11 +1740,6 @@
     "date": "2024-05-21T22:15:33Z"
   },
   {
-    "name": "pterodactyl/wings",
-    "version": "v1.11.13",
-    "date": "2024-05-08T04:20:34Z"
-  },
-  {
     "name": "thelounge/thelounge-deb",
     "version": "v4.4.3",
     "date": "2024-04-06T12:24:35Z"
@@ -1743,10 +1748,5 @@
     "name": "deepch/RTSPtoWeb",
     "version": "v2.4.3",
     "date": "2023-03-29T12:05:02Z"
-  },
-  {
-    "name": "Shinobi-Systems/Shinobi",
-    "version": "furrykitten-3",
-    "date": "2022-07-15T05:20:17Z"
   }
 ]
