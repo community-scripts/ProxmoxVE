@@ -27,7 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  msg_info "Updating PiAlert"
   bash -c "$(curl -fsSL https://github.com/leiweibau/Pi.Alert/raw/main/install/pialert_update.sh)" -s --lxc
+  msg_ok "Updated PiAlert"
   msg_ok "Updated successfully!"
   exit
 }
