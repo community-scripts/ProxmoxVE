@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-06
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - InspIRCd: Fix release fetching [@tremor021](https://github.com/tremor021) ([#10578](https://github.com/community-scripts/ProxmoxVE/pull/10578))
+
 ## 2026-01-05
 
 ### 🚀 Updated Scripts
