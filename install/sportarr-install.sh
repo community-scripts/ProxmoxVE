@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "sportarr" "Sportarr/Sportarr" "prebuild" "latest" "/opt/sportarr" "Sportarr-linux-x64-*.tar.gz"
 
-msg_info "Setting up Sportarr"
+msg_info "Creating Service"
 cat <<EOF >/opt/sportarr/.env
 Sportarr__DataPath="/opt/sportarr-data/config"
 ASPNETCORE_URLS="http://*:1867"
@@ -32,9 +32,6 @@ DOTNET_CLI_TELEMETRY_OPTOUT=1
 DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 LIBVA_DRIVER_NAME=iHD
 EOF
-msg_ok "Setup Sportarr"
-
-msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/sportarr.service
 [Unit]
 Description=Sportarr Service
