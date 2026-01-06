@@ -44,7 +44,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📚 Documentation
 
-  - chore: bump copyright to 2026 - happy new year [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10585](https://github.com/community-scripts/ProxmoxVE/pull/10585))
+  - [gh] New Script template update [@tremor021](https://github.com/tremor021) ([#10607](https://github.com/community-scripts/ProxmoxVE/pull/10607))
+- chore: bump copyright to 2026 - happy new year [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10585](https://github.com/community-scripts/ProxmoxVE/pull/10585))
 
 ### 📂 Github
 
