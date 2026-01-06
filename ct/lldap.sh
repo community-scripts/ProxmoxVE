@@ -27,10 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP"
+  msg_info "Updating lldap"
   $STD apt update
   $STD apt upgrade -y lldap
-  msg_ok "Updated successfully!"
+  msg_ok "Updated lldap"
   msg_ok "Updated successfully!"
   exit
 }
