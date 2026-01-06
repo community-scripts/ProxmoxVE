@@ -18,6 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - chore: fix update msg [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10593](https://github.com/community-scripts/ProxmoxVE/pull/10593))
+
   - #### 🐞 Bug Fixes
 
     - InspIRCd: Fix release fetching [@tremor021](https://github.com/tremor021) ([#10578](https://github.com/community-scripts/ProxmoxVE/pull/10578))
