@@ -29,15 +29,15 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating $APP"
+  msg_info "Updating OnlyOffice Document Server"
   $STD apt update
   $STD apt -y --only-upgrade install onlyoffice-documentserver
-  msg_ok "Updated successfully!"
+  msg_ok "Updated OnlyOffice Document Server"
 
   if systemctl is-enabled --quiet onlyoffice-documentserver; then
-    msg_info "Restarting $APP"
+    msg_info "Restarting OnlyOffice Document Server"
     $STD systemctl restart onlyoffice-documentserver
-    msg_ok "$APP restarted"
+    msg_ok "OnlyOffice Document Server restarted"
   fi
   msg_ok "Updated successfully!"
   exit
