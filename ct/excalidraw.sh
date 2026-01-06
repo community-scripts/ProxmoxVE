@@ -36,10 +36,10 @@ function update_script() {
     rm -rf /opt/excalidraw
     fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Excalidraw"
     cd /opt/excalidraw
     $STD yarn
-    msg_ok "Updated successfully!"
+    msg_ok "Updated Excalidraw"
 
     msg_info "Starting Service"
     systemctl start excalidraw
