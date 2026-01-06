@@ -39,12 +39,12 @@ function update_script() {
 
     fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad"
 
-    msg_info "Updating $APP"
+    msg_info "Updating CryptaPad"
     cd /opt/cryptpad
     $STD npm ci
     $STD npm run install:components
     $STD npm run build
-    msg_ok "Updated successfully!"
+    msg_ok "Updated CryptaPad"
 
     msg_info "Restoring configuration"
     mv /opt/config.js /opt/cryptpad/config/
