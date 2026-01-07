@@ -27,9 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
   msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use it."
-  
+  exit
 }
 
 start
