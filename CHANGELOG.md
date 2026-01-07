@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Explicitly state installation method [@tremor021](https://github.com/tremor021) ([#10608](https://github.com/community-scripts/ProxmoxVE/pull/10608))
 
+### 🧰 Tools
+
+  - Modify Debian sources list for trixie updates (as 4.1.0-1 config) [@maiux](https://github.com/maiux) ([#10505](https://github.com/community-scripts/ProxmoxVE/pull/10505))
+
 ## 2026-01-06
 
 ### 🆕 New Scripts
