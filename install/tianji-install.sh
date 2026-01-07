@@ -37,7 +37,7 @@ mkdir -p ./src/server/public
 cp -r ./geo ./src/server/public
 $STD pnpm build:server
 cat <<EOF >/opt/tianji/src/server/.env
-DATABASE_URL="postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?schema=public"
+DATABASE_URL="postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME?schema=public"
 OPENAI_API_KEY=""
 JWT_SECRET="$TIANJI_SECRET"
 EOF
