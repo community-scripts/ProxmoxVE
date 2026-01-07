@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-07
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Explicitly state installation method [@tremor021](https://github.com/tremor021) ([#10608](https://github.com/community-scripts/ProxmoxVE/pull/10608))
+
 ## 2026-01-06
 
 ### 🆕 New Scripts
