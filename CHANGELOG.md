@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - pve-scripts-local: fix missing exit in update [@MickLesk](https://github.com/MickLesk) ([#10630](https://github.com/community-scripts/ProxmoxVE/pull/10630))
+
   - #### ✨ New Features
 
     - Upgrade ESPHome LXC to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10624](https://github.com/community-scripts/ProxmoxVE/pull/10624))
