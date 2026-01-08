@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Monica: Fix database variable names [@tremor021](https://github.com/tremor021) ([#10634](https://github.com/community-scripts/ProxmoxVE/pull/10634))
     - Tianji: Fix PostrgreSQL vars [@tremor021](https://github.com/tremor021) ([#10633](https://github.com/community-scripts/ProxmoxVE/pull/10633))
 
   - #### 🔧 Refactor
