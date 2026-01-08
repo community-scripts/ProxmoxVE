@@ -528,16 +528,16 @@ FILE="${FILE%.*}"
 msg_ok "Extracted OpenWrt Disk Image ${CL}${BL}$FILE${CL}"
 
 msg_info "Creating OpenWrt VM"
-qm create "$VMID" -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" \
+qm create $VMID -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci --tablet 0
 if [[ "$(pvesm status | awk -v s=$STORAGE '$1==s {print $2}')" == "dir" ]]; then
-  qm set "$VMID" -efidisk0 "${STORAGE}:0,efitype=4m,size=4M"
+  qm set $VMID -efidisk0 ${STORAGE}:0,efitype=4m,size=4M
 else
-  pvesm alloc "$STORAGE" "$VMID" "vm-$VMID-disk-0" 4M >/dev/null
-  qm set "$VMID" -efidisk0 "${STORAGE}:vm-$VMID-disk-0,efitype=4m,size=4M"
+  pvesm alloc $STORAGE $VMID vm-$VMID-disk-0 4M >/dev/null
+  qm set $VMID -efidisk0 ${STORAGE}:vm-$VMID-disk-0,efitype=4m,size=4M
 fi
 
-IMPORT_OUT="$(qm importdisk "$VMID" "$FILE" "$STORAGE" --format raw 2>&1 || true)"
+IMPORT_OUT="$(qm importdisk $VMID $FILE $STORAGE --format raw 2>&1 || true)"
 DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk '\([^']\+\)'.*/\1/p")"
 
 if [[ -z "$DISK_REF" ]]; then
@@ -550,9 +550,9 @@ if [[ -z "$DISK_REF" ]]; then
   exit 1
 fi
 
-qm set "$VMID" \
-  -efidisk0 "${STORAGE}:0,efitype=4m,size=4M" \
-  -scsi0 "${DISK_REF}" \
+qm set $VMID \
+  -efidisk0 ${STORAGE}:0,efitype=4m,size=4M \
+  -scsi0 ${DISK_REF} \
   -boot order=scsi0 \
   -tags community-script >/dev/null
 msg_ok "Attached disk"
@@ -591,7 +591,7 @@ DESCRIPTION=$(
 </div>
 EOF
 )
-qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+qm set $VMID -description "$DESCRIPTION" >/dev/null
 
 msg_ok "Created OpenWrt VM ${CL}${BL}(${HN})"
 msg_info "OpenWrt is being started in order to configure the network interfaces."
@@ -636,14 +636,14 @@ done
 msg_ok "OpenWrt has shut down"
 
 msg_info "Adding bridge interfaces on Proxmox side"
-qm set "$VMID" \
-  -net0 virtio,bridge="${LAN_BRG}",macaddr="${LAN_MAC}${LAN_VLAN}${MTU}" \
-  -net1 virtio,bridge="${BRG}",macaddr="${MAC}${VLAN}${MTU}" >/dev/null
+qm set $VMID \
+  -net0 virtio,bridge=${LAN_BRG},macaddr=${LAN_MAC}${LAN_VLAN}${MTU} \
+  -net1 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} >/dev/null
 msg_ok "Bridge interfaces added"
 
 if [ "$START_VM" = "yes" ]; then
   msg_info "Starting OpenWrt VM"
-  qm start "$VMID"
+  qm start $VMID
   msg_ok "Started OpenWrt VM"
 fi
 

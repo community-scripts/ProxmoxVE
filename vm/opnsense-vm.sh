@@ -579,10 +579,10 @@ msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_info "Retrieving the URL for the OPNsense Qcow2 Disk Image"
 # Use latest stable FreeBSD amd64 qcow2 VM image (generic, not UFS/ZFS)
-RELEASE_LIST="$(curl -s https://download.freebsd.org/releases/VM-IMAGES/ \
-  | grep -Eo '[0-9]+\.[0-9]+-RELEASE' \
-  | sort -Vr \
-  | uniq)"
+RELEASE_LIST="$(curl -s https://download.freebsd.org/releases/VM-IMAGES/ |
+  grep -Eo '[0-9]+\.[0-9]+-RELEASE' |
+  sort -Vr |
+  uniq)"
 URL=""
 FREEBSD_VER=""
 for ver in $RELEASE_LIST; do
@@ -668,7 +668,7 @@ DESCRIPTION=$(
 </div>
 EOF
 )
-qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+qm set $VMID -description "$DESCRIPTION" >/dev/null
 
 msg_info "Bridge interfaces are being added."
 qm set $VMID \
@@ -686,7 +686,7 @@ if [ -n "$WAN_BRG" ]; then
   qm set $VMID \
     -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
   msg_ok "WAN interface added"
-  sleep 5  # Brief pause after adding network interface
+  sleep 5 # Brief pause after adding network interface
 fi
 send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 25.7"
 msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
