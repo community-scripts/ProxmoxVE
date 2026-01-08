@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Tianji: Fix PostrgreSQL vars [@tremor021](https://github.com/tremor021) ([#10633](https://github.com/community-scripts/ProxmoxVE/pull/10633))
 
+  - #### 🔧 Refactor
+
+    - deCONZ: Bump to Trixie base [@tremor021](https://github.com/tremor021) ([#10643](https://github.com/community-scripts/ProxmoxVE/pull/10643))
+
 ## 2026-01-07
 
 ### 🚀 Updated Scripts
