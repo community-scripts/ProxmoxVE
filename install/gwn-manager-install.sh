@@ -20,7 +20,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up GWN Manager (Patience)"
-RELEASE=$(curl -s https://www.grandstream.com/support/tools#gwntools \
+RELEASE=$(curl -fsSL https://www.grandstream.com/support/tools#gwntools \
   | grep -oP 'https://firmware\.grandstream\.com/GWN_Manager-[^"]+-Ubuntu\.tar\.gz')
 download_file "$RELEASE" "/tmp/gwnmanager.tar.gz"
 cd /tmp
