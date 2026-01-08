@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+  NODE_VERSION="22" setup_nodejs
 
   if check_for_gh_release "outline" "outline/outline"; then
     msg_info "Stopping Services"
@@ -46,7 +46,8 @@ function update_script() {
     mv /opt/.env /opt/outline
     export NODE_ENV=development
     export NODE_OPTIONS="--max-old-space-size=3584"
-    $STD yarn install --frozen-lockfile
+    $STD corepack enable
+    $STD yarn install --immutable
     export NODE_ENV=production
     $STD yarn build
     msg_ok "Updated ${APP}"

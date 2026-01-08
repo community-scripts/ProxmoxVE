@@ -20,7 +20,7 @@ $STD apt install -y \
   redis
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="outline" PG_DB_USER="outline" setup_postgresql_db
 fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
@@ -38,7 +38,8 @@ sed -i 's/redis:6379/localhost:6379/g' /opt/outline/.env
 sed -i "5s#URL=#URL=http://${LOCAL_IP}#g" /opt/outline/.env
 sed -i 's/FORCE_HTTPS=true/FORCE_HTTPS=false/g' /opt/outline/.env
 export NODE_OPTIONS="--max-old-space-size=3584"
-$STD yarn install --frozen-lockfile
+$STD corepack enable
+$STD yarn install --immutable
 export NODE_ENV=production
 sed -i 's/NODE_ENV=development/NODE_ENV=production/g' /opt/outline/.env
 $STD yarn build
