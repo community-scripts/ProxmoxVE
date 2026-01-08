@@ -18,6 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Fix line continuation for vlc-bin installation [@chinedu40](https://github.com/chinedu40) ([#10654](https://github.com/community-scripts/ProxmoxVE/pull/10654))
+
   - #### 🐞 Bug Fixes
 
     - outline: use corepack yarn module [@MickLesk](https://github.com/MickLesk) ([#10652](https://github.com/community-scripts/ProxmoxVE/pull/10652))
