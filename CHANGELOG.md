@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-08
 
+### 🆕 New Scripts
+
+  - GWN-Manager ([#10642](https://github.com/community-scripts/ProxmoxVE/pull/10642))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
