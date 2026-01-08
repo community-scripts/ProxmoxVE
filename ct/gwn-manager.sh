@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  msg_ok "Application is updated via the web interface!"
+  msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use it."
   exit
 }
 
