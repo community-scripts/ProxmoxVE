@@ -68,14 +68,11 @@ Description=Scrutiny service
 After=syslog.target network.target
 
 [Service]
-#SuccessExitStatus=143
-#User=root
-#Group=root
-
 Type=simple
-
 WorkingDirectory=/opt/scrutiny
 ExecStart=/opt/scrutiny/bin/scrutiny-web-linux-amd64 start --config /opt/scrutiny/config/scrutiny.yaml
+Restart=on-failure
+RestartSec=5min
 
 [Install]
 WantedBy=multi-user.target
