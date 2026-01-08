@@ -93,20 +93,20 @@ function get_valid_nextid() {
 }
 
 function cleanup_vmid() {
-  if qm status "$VMID" &>/dev/null; then
-    qm stop "$VMID" &>/dev/null
-    qm destroy "$VMID" &>/dev/null
+  if qm status $VMID &>/dev/null; then
+    qm stop $VMID &>/dev/null
+    qm destroy $VMID &>/dev/null
   fi
 }
 
 function cleanup() {
   popd >/dev/null
   post_update_to_api "done" "none"
-  rm -rf "$TEMP_DIR"
+  rm -rf $TEMP_DIR
 }
 
 TEMP_DIR=$(mktemp -d)
-pushd "$TEMP_DIR" >/dev/null
+pushd $TEMP_DIR >/dev/null
 if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Arch Linux VM" --yesno "This will create a New Arch Linux VM. Proceed?" 10 58; then
   :
 else
