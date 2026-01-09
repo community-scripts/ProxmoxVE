@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Jenkins: Fix application repository setup [@tremor021](https://github.com/tremor021) ([#10671](https://github.com/community-scripts/ProxmoxVE/pull/10671))
     - deCONZ: Fix sources check in update script [@tremor021](https://github.com/tremor021) ([#10664](https://github.com/community-scripts/ProxmoxVE/pull/10664))
     - Remove '--cpu' option from ExecStart command [@sethgregory](https://github.com/sethgregory) ([#10659](https://github.com/community-scripts/ProxmoxVE/pull/10659))
 
