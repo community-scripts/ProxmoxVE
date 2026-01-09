@@ -72,7 +72,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/ComfyUI
-ExecStart=/opt/ComfyUI/venv/bin/python /opt/ComfyUI/main.py --listen --port 8188 --cpu
+ExecStart=/opt/ComfyUI/venv/bin/python /opt/ComfyUI/main.py --listen --port 8188
 Restart=on-failure
 
 [Install]
