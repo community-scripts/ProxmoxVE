@@ -176,6 +176,7 @@ prepare_repository_setup() {
 
 # ------------------------------------------------------------------------------
 # Install packages with retry logic
+# Usage: install_packages_with_retry "mysql-server" "mysql-client"
 # ------------------------------------------------------------------------------
 install_packages_with_retry() {
   local packages=("$@")
@@ -205,6 +206,7 @@ install_packages_with_retry() {
 
 # ------------------------------------------------------------------------------
 # Upgrade specific packages with retry logic
+# Usage: upgrade_packages_with_retry "mariadb-server" "mariadb-client"
 # ------------------------------------------------------------------------------
 upgrade_packages_with_retry() {
   local packages=("$@")
