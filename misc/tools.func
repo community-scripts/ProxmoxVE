@@ -176,7 +176,6 @@ prepare_repository_setup() {
 
 # ------------------------------------------------------------------------------
 # Install packages with retry logic
-# Usage: install_packages_with_retry "mysql-server" "mysql-client"
 # ------------------------------------------------------------------------------
 install_packages_with_retry() {
   local packages=("$@")
@@ -184,7 +183,10 @@ install_packages_with_retry() {
   local retry=0
 
   while [[ $retry -le $max_retries ]]; do
-    if $STD apt install -y "${packages[@]}" 2>/dev/null; then
+    if DEBIAN_FRONTEND=noninteractive $STD apt install -y \
+      -o Dpkg::Options::="--force-confdef" \
+      -o Dpkg::Options::="--force-confold" \
+      "${packages[@]}" 2>/dev/null; then
       return 0
     fi
 
@@ -203,7 +205,6 @@ install_packages_with_retry() {
 
 # ------------------------------------------------------------------------------
 # Upgrade specific packages with retry logic
-# Usage: upgrade_packages_with_retry "mariadb-server" "mariadb-client"
 # ------------------------------------------------------------------------------
 upgrade_packages_with_retry() {
   local packages=("$@")
@@ -211,7 +212,10 @@ upgrade_packages_with_retry() {
   local retry=0
 
   while [[ $retry -le $max_retries ]]; do
-    if $STD apt install --only-upgrade -y "${packages[@]}" 2>/dev/null; then
+    if DEBIAN_FRONTEND=noninteractive $STD apt install --only-upgrade -y \
+      -o Dpkg::Options::="--force-confdef" \
+      -o Dpkg::Options::="--force-confold" \
+      "${packages[@]}" 2>/dev/null; then
       return 0
     fi
 
