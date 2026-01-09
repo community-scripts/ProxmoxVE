@@ -20,6 +20,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - deCONZ: Fix sources check in update script [@tremor021](https://github.com/tremor021) ([#10664](https://github.com/community-scripts/ProxmoxVE/pull/10664))
     - Remove '--cpu' option from ExecStart command [@sethgregory](https://github.com/sethgregory) ([#10659](https://github.com/community-scripts/ProxmoxVE/pull/10659))
 
+### 💾 Core
+
+  - #### 💥 Breaking Changes
+
+    - fix: setup_mariadb hangs on [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10672](https://github.com/community-scripts/ProxmoxVE/pull/10672))
+
 ## 2026-01-08
 
 ### 🆕 New Scripts
