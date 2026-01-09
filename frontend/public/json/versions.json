@@ -1,5 +1,85 @@
 [
   {
+    "name": "dedicatedcode/reitti",
+    "version": "v3.2.1",
+    "date": "2026-01-09T11:09:24Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "@fumadocs/base-ui@16.4.6",
+    "date": "2026-01-09T10:54:11Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.300.3",
+    "date": "2026-01-09T10:40:48Z"
+  },
+  {
+    "name": "Whisparr/Whisparr",
+    "version": "v3.1.0.2089",
+    "date": "2026-01-09T07:14:43Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.790",
+    "date": "2026-01-09T06:24:32Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.50",
+    "date": "2026-01-09T05:53:15Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.545",
+    "date": "2026-01-06T16:19:17Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.13-nightly",
+    "date": "2026-01-09T04:53:55Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.40.4",
+    "date": "2026-01-09T04:18:10Z"
+  },
+  {
+    "name": "9001/copyparty",
+    "version": "v1.20.1",
+    "date": "2026-01-09T01:30:37Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.9",
+    "date": "2026-01-09T01:26:51Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-09T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.0-rc0",
+    "date": "2026-01-09T00:18:59Z"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.620",
+    "date": "2026-01-09T00:17:04Z"
+  },
+  {
     "name": "ErsatzTV/ErsatzTV",
     "version": "v26.1.1",
     "date": "2026-01-08T22:02:15Z"
@@ -40,6 +120,11 @@
     "date": "2026-01-08T17:56:23Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.5.0",
+    "date": "2026-01-06T07:42:32Z"
+  },
+  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.3.0",
     "date": "2026-01-08T16:08:34Z"
@@ -58,11 +143,6 @@
     "name": "plexguide/Huntarr.io",
     "version": "8.2.11",
     "date": "2026-01-08T15:10:01Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@16.0.38",
-    "date": "2026-01-08T14:38:48Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -90,16 +170,6 @@
     "date": "2026-01-08T12:15:04Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.40.3",
-    "date": "2026-01-08T11:16:09Z"
-  },
-  {
-    "name": "dedicatedcode/reitti",
-    "version": "v3.2.0",
-    "date": "2026-01-08T11:02:38Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v13.0.4",
     "date": "2026-01-08T10:36:18Z"
@@ -125,19 +195,9 @@
     "date": "2026-01-08T09:37:31Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.49",
-    "date": "2026-01-08T07:38:10Z"
-  },
-  {
     "name": "mattermost/mattermost",
     "version": "v11.1.2",
     "date": "2025-12-17T09:26:24Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.766",
-    "date": "2026-01-08T06:14:23Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -165,16 +225,6 @@
     "date": "2026-01-08T01:19:49Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-08T00:27:11Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
     "name": "seriousm4x/UpSnap",
     "version": "5.2.7",
     "date": "2026-01-07T23:48:00Z"
@@ -200,19 +250,9 @@
     "date": "2026-01-07T18:50:28Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.12-nightly",
-    "date": "2026-01-07T18:07:32Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2026.1.0",
     "date": "2026-01-07T17:38:27Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.5.0",
-    "date": "2026-01-06T07:42:32Z"
   },
   {
     "name": "TuroYT/snowshare",
@@ -263,11 +303,6 @@
     "name": "nickheyer/discopanel",
     "version": "v1.0.20",
     "date": "2026-01-07T07:48:21Z"
-  },
-  {
-    "name": "Whisparr/Whisparr",
-    "version": "v3.1.0.2066",
-    "date": "2026-01-07T04:39:15Z"
   },
   {
     "name": "miniflux/v2",
@@ -328,11 +363,6 @@
     "name": "awawa-dev/HyperHDR",
     "version": "v22.0.0.0beta1",
     "date": "2026-01-06T16:28:03Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.545",
-    "date": "2026-01-06T16:19:17Z"
   },
   {
     "name": "esphome/esphome",
@@ -415,11 +445,6 @@
     "date": "2025-10-22T17:03:54Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.4.0",
     "date": "2026-01-04T21:10:51Z"
@@ -463,11 +488,6 @@
     "name": "TwiN/gatus",
     "version": "v5.34.0",
     "date": "2026-01-03T03:12:12Z"
-  },
-  {
-    "name": "9001/copyparty",
-    "version": "v1.20.0",
-    "date": "2026-01-02T23:40:23Z"
   },
   {
     "name": "karakeep-app/karakeep",
@@ -518,11 +538,6 @@
     "name": "emqx/emqx",
     "version": "e5.8.9",
     "date": "2025-12-31T15:06:41Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.300.2",
-    "date": "2025-12-31T15:05:51Z"
   },
   {
     "name": "pommee/goaway",
@@ -798,11 +813,6 @@
     "name": "neo4j/neo4j",
     "version": "2025.11.2",
     "date": "2025-12-18T17:08:34Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.5",
-    "date": "2025-12-18T16:39:08Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -1135,11 +1145,6 @@
     "date": "2025-11-27T03:47:38Z"
   },
   {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.8",
-    "date": "2025-11-26T22:35:03Z"
-  },
-  {
     "name": "NLnetLabs/unbound",
     "version": "release-1.24.2",
     "date": "2025-11-26T11:22:30Z"
@@ -1158,11 +1163,6 @@
     "name": "silverbulletmd/silverbullet",
     "version": "2.3.0",
     "date": "2025-11-24T09:48:32Z"
-  },
-  {
-    "name": "webmin/webmin",
-    "version": "2.610",
-    "date": "2025-11-24T04:28:30Z"
   },
   {
     "name": "Bubka/2FAuth",
