@@ -92,7 +92,7 @@ MAIL_FROM_ADDRESS="investbrain@${LOCAL_IP}"
 VITE_APP_NAME=Investbrain
 EOF
 export COMPOSER_ALLOW_SUPERUSER=1
-$STD composer install --no-interaction --no-dev --optimize-autoloader
+$STD /usr/local/bin/composer install --no-interaction --no-dev --optimize-autoloader
 $STD npm install
 $STD npm run build
 mkdir -p /opt/investbrain/storage/{framework/cache,framework/sessions,framework/views,app,logs}
