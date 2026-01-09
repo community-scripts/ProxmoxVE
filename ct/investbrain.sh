@@ -76,7 +76,7 @@ function update_script() {
     systemctl start php${PHP_VERSION}-fpm nginx
     supervisorctl start all
     msg_ok "Services Started"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
