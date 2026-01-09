@@ -1,5 +1,95 @@
 [
   {
+    "name": "ErsatzTV/ErsatzTV",
+    "version": "v26.1.1",
+    "date": "2026-01-08T22:02:15Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.53.4",
+    "date": "2026-01-08T21:52:46Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.38",
+    "date": "2025-12-31T13:38:03Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2026.01.08",
+    "date": "2026-01-08T20:15:57Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.144.0",
+    "date": "2025-12-09T16:29:00Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v5.0.0-alpha0",
+    "date": "2025-12-31T01:18:10Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.31.4",
+    "date": "2026-01-08T17:56:23Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.3.0",
+    "date": "2026-01-08T16:08:34Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.30.1-greedy-semantic-search.2",
+    "date": "2026-01-08T15:59:28Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.2.5",
+    "date": "2026-01-08T12:08:46Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.2.11",
+    "date": "2026-01-08T15:10:01Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@16.0.38",
+    "date": "2026-01-08T14:38:48Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.1",
+    "date": "2026-01-08T14:18:39Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "embedding-sdk-58-stable",
+    "date": "2026-01-08T14:12:37Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.2.0.103-2.2.0.103_canary_2026-01-08",
+    "date": "2026-01-08T12:41:37Z"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "16.3",
+    "date": "2025-11-04T12:28:47Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.11",
+    "date": "2026-01-08T12:15:04Z"
+  },
+  {
     "name": "openobserve/openobserve",
     "version": "v0.40.3",
     "date": "2026-01-08T11:16:09Z"
@@ -90,11 +180,6 @@
     "date": "2026-01-07T23:48:00Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.144.0",
-    "date": "2025-12-09T16:29:00Z"
-  },
-  {
     "name": "community-scripts/ProxmoxVE-Local",
     "version": "v0.5.3",
     "date": "2026-01-07T19:52:09Z"
@@ -120,11 +205,6 @@
     "date": "2026-01-07T18:07:32Z"
   },
   {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2026-01-07T17:49:56Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2026.1.0",
     "date": "2026-01-07T17:38:27Z"
@@ -135,11 +215,6 @@
     "date": "2026-01-06T07:42:32Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.2.4",
-    "date": "2026-01-06T15:44:26Z"
-  },
-  {
     "name": "TuroYT/snowshare",
     "version": "v1.2.7",
     "date": "2026-01-07T17:12:21Z"
@@ -148,11 +223,6 @@
     "name": "node-red/node-red",
     "version": "4.1.3",
     "date": "2026-01-07T16:24:23Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.31.0-prepare-payload-in-parallel.0",
-    "date": "2026-01-07T14:10:52Z"
   },
   {
     "name": "MDeLuise/plant-it",
@@ -230,11 +300,6 @@
     "date": "2026-01-06T21:22:20Z"
   },
   {
-    "name": "ErsatzTV/ErsatzTV",
-    "version": "v26.1.0",
-    "date": "2026-01-06T21:16:28Z"
-  },
-  {
     "name": "netbox-community/netbox",
     "version": "v4.5.0",
     "date": "2026-01-06T21:14:27Z"
@@ -285,19 +350,9 @@
     "date": "2026-01-06T13:15:16Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-twoslash@3.1.12",
-    "date": "2026-01-06T12:19:27Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.13",
     "date": "2026-01-06T12:09:32Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.2.0.3_stable_2026-01-06",
-    "date": "2026-01-06T12:05:40Z"
   },
   {
     "name": "transmission/transmission",
@@ -338,11 +393,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.133.0",
     "date": "2026-01-05T18:31:47Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.31.2",
-    "date": "2026-01-05T17:26:50Z"
   },
   {
     "name": "maxdorninger/MediaManager",
@@ -450,11 +500,6 @@
     "date": "2026-01-02T11:56:16Z"
   },
   {
-    "name": "alexta69/metube",
-    "version": "2026.01.02",
-    "date": "2026-01-02T06:27:23Z"
-  },
-  {
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.34.0",
     "date": "2026-01-01T14:48:28Z"
@@ -480,11 +525,6 @@
     "date": "2025-12-31T15:05:51Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.38",
-    "date": "2025-12-31T13:38:03Z"
-  },
-  {
     "name": "pommee/goaway",
     "version": "v0.63.4",
     "date": "2025-12-31T12:40:07Z"
@@ -498,11 +538,6 @@
     "name": "Athou/commafeed",
     "version": "5.12.1",
     "date": "2025-12-31T08:23:37Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v5.0.0-alpha0",
-    "date": "2025-12-31T01:18:10Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -543,11 +578,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.13.5",
     "date": "2025-12-28T09:15:51Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
   },
   {
     "name": "crafty-controller/crafty-4",
@@ -653,11 +683,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.16.2944",
     "date": "2025-11-05T01:56:48Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "5.1.0",
-    "date": "2025-12-22T14:59:23Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -845,11 +870,6 @@
     "date": "2025-12-15T18:25:36Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.90",
-    "date": "2025-11-11T01:00:32Z"
-  },
-  {
     "name": "prometheus/alertmanager",
     "version": "v0.30.0",
     "date": "2025-12-15T17:23:59Z"
@@ -965,11 +985,6 @@
     "date": "2025-12-09T14:30:23Z"
   },
   {
-    "name": "home-assistant/operating-system",
-    "version": "16.3",
-    "date": "2025-11-04T12:28:47Z"
-  },
-  {
     "name": "Paymenter/Paymenter",
     "version": "v1.4.7",
     "date": "2025-12-09T11:44:49Z"
@@ -1028,11 +1043,6 @@
     "name": "glpi-project/glpi",
     "version": "11.0.4",
     "date": "2025-12-04T09:26:37Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.10",
-    "date": "2025-12-03T13:58:32Z"
   },
   {
     "name": "henrygd/beszel",
@@ -1270,11 +1280,6 @@
     "date": "2025-11-07T17:05:45Z"
   },
   {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.52.0",
-    "date": "2025-11-06T22:39:26Z"
-  },
-  {
     "name": "deuxfleurs-org/garage",
     "version": "v1.99.3-internal",
     "date": "2025-11-06T17:27:21Z"
@@ -1493,11 +1498,6 @@
     "name": "Forceu/Gokapi",
     "version": "v2.1.0",
     "date": "2025-08-29T12:56:13Z"
-  },
-  {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.2.10",
-    "date": "2025-08-25T01:26:55Z"
   },
   {
     "name": "janeczku/calibre-web",
