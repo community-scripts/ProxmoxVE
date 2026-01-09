@@ -23,7 +23,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/apt/sources.list.d/deconz.list ]]; then
+  if [[ ! -f /etc/apt/sources.list.d/deconz.sources ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
