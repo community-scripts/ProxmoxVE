@@ -2926,8 +2926,15 @@ _setup_intel_legacy() {
     vainfo \
     intel-gpu-tools 2>/dev/null || msg_warn "Some Intel legacy packages failed"
 
-  # beignet provides OpenCL for older Intel GPUs (if available)
-  $STD apt -y install beignet-opencl-icd 2>/dev/null || true
+  # beignet provides OpenCL for older Intel GPUs (Sandy Bridge to Broadwell)
+  # Note: beignet-opencl-icd was removed in Debian 12+ and Ubuntu 22.04+
+  # Check if package is available before attempting installation
+  if apt-cache show beignet-opencl-icd &>/dev/null; then
+    $STD apt -y install beignet-opencl-icd 2>/dev/null || msg_warn "beignet-opencl-icd installation failed (optional)"
+  else
+    msg_warn "beignet-opencl-icd not available - OpenCL support for legacy Intel GPU limited"
+    msg_warn "Note: Hardware video encoding/decoding (VA-API) still works without OpenCL"
+  fi
 
   msg_ok "Intel Legacy GPU configured"
 }
