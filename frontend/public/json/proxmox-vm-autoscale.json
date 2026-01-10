@@ -1,0 +1,60 @@
+{
+  "name": "Proxmox VM AutoScale",
+  "slug": "proxmox-vm-autoscale",
+  "categories": [
+    1
+  ],
+  "date_created": "2026-01-10",
+  "type": "pve",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/fabriziosalmi/proxmox-vm-autoscale",
+  "website": "https://github.com/fabriziosalmi/proxmox-vm-autoscale",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
+  "config_path": "/opt/proxmox-vm-autoscale/config.yaml",
+  "description": "Proxmox VM AutoScale is a dynamic scaling service that automatically adjusts virtual machine (VM) resources (CPU cores and RAM) on your Proxmox Virtual Environment based on real-time metrics and user-defined thresholds. It supports multiple Proxmox hosts via SSH, auto-configures hotplug and NUMA, provides Gotify notifications, and includes billing support for web hosting providers.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/pve/proxmox-vm-autoscale.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Execute within the Proxmox VE shell",
+      "type": "info"
+    },
+    {
+      "text": "Requires NUMA and Hotplug to be enabled on VMs for live scaling",
+      "type": "warning"
+    },
+    {
+      "text": "VM > Hardware > Processors > Enable NUMA, VM > Options > Hotplug > CPU & Memory",
+      "type": "info"
+    },
+    {
+      "text": "Configuration file: /opt/proxmox-vm-autoscale/config.yaml",
+      "type": "info"
+    },
+    {
+      "text": "Service commands: systemctl start/stop/status vm_autoscale",
+      "type": "info"
+    },
+    {
+      "text": "Supports SSH key and password authentication for multi-host management",
+      "type": "info"
+    }
+  ]
+}

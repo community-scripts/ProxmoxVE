@@ -1,0 +1,56 @@
+{
+  "name": "Proxmox LXC AutoScale",
+  "slug": "proxmox-lxc-autoscale",
+  "categories": [
+    1
+  ],
+  "date_created": "2026-01-10",
+  "type": "pve",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/fabriziosalmi/proxmox-lxc-autoscale",
+  "website": "https://github.com/fabriziosalmi/proxmox-lxc-autoscale",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
+  "config_path": "/opt/proxmox-lxc-autoscale/config.yaml",
+  "description": "LXC AutoScale is a resource management daemon specifically designed for Proxmox environments. It automatically adjusts CPU and memory allocations for LXC containers with no downtime based on real-time usage metrics and predefined thresholds. It supports horizontal scaling (cloning), container prioritization, energy efficiency mode, automatic backups, and notifications via email or Gotify.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/pve/proxmox-lxc-autoscale.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Execute within the Proxmox VE shell",
+      "type": "info"
+    },
+    {
+      "text": "Requires LXCFS to be configured with the '-l' flag for proper loadavg retrieval",
+      "type": "warning"
+    },
+    {
+      "text": "Configuration file: /opt/proxmox-lxc-autoscale/config.yaml",
+      "type": "info"
+    },
+    {
+      "text": "Service commands: systemctl start/stop/status lxc_autoscale",
+      "type": "info"
+    },
+    {
+      "text": "Auto-config available: curl -sSL https://raw.githubusercontent.com/fabriziosalmi/proxmox-lxc-autoscale/main/lxc_autoscale/lxc_autoscale_autoconf.sh | bash",
+      "type": "info"
+    }
+  ]
+}
