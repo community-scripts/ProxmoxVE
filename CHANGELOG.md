@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-10
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: hwaccel - make beignet-opencl-icd optional for legacy Intel GPUs [@MickLesk](https://github.com/MickLesk) ([#10677](https://github.com/community-scripts/ProxmoxVE/pull/10677))
+
 ## 2026-01-09
 
 ### 🚀 Updated Scripts
