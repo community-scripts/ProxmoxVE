@@ -1,5 +1,55 @@
 [
   {
+    "name": "theonedev/onedev",
+    "version": "v14.0.7",
+    "date": "2026-01-10T10:31:47Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.35.1",
+    "date": "2026-01-10T09:23:24Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.13",
+    "date": "2026-01-10T08:35:23Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.0-rc1",
+    "date": "2026-01-10T05:09:46Z"
+  },
+  {
+    "name": "Kozea/Radicale",
+    "version": "v3.6.0",
+    "date": "2026-01-10T06:56:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.807",
+    "date": "2026-01-10T06:27:46Z"
+  },
+  {
+    "name": "Whisparr/Whisparr",
+    "version": "v3.1.0.2093",
+    "date": "2026-01-10T04:47:03Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-10T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "coder/code-server",
     "version": "v4.107.1",
     "date": "2026-01-09T19:41:18Z"
@@ -13,6 +63,11 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.2.0",
     "date": "2026-01-09T22:10:33Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-09T22:07:03Z"
   },
   {
     "name": "endurain-project/endurain",
@@ -32,7 +87,7 @@
   {
     "name": "runtipi/runtipi",
     "version": "nightly",
-    "date": "2026-01-06T19:06:59Z"
+    "date": "2026-01-09T17:26:57Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -43,6 +98,11 @@
     "name": "BerriAI/litellm",
     "version": "v1.80.13.rc.1",
     "date": "2026-01-09T19:18:51Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.5.0",
+    "date": "2026-01-06T07:42:32Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
@@ -90,16 +150,6 @@
     "date": "2026-01-09T13:05:08Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v14.0.6",
-    "date": "2026-01-09T12:34:36Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-09T12:20:22Z"
-  },
-  {
     "name": "dedicatedcode/reitti",
     "version": "v3.2.1",
     "date": "2026-01-09T11:09:24Z"
@@ -113,16 +163,6 @@
     "name": "evcc-io/evcc",
     "version": "0.300.3",
     "date": "2026-01-09T10:40:48Z"
-  },
-  {
-    "name": "Whisparr/Whisparr",
-    "version": "v3.1.0.2089",
-    "date": "2026-01-09T07:14:43Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.790",
-    "date": "2026-01-09T06:24:32Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -150,21 +190,6 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-09T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.14.0-rc0",
-    "date": "2026-01-09T00:18:59Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.620",
     "date": "2026-01-09T00:17:04Z"
@@ -180,11 +205,6 @@
     "date": "2026-01-08T21:52:46Z"
   },
   {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.144.0",
     "date": "2025-12-09T16:29:00Z"
@@ -198,11 +218,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.31.4",
     "date": "2026-01-08T17:56:23Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.5.0",
-    "date": "2026-01-06T07:42:32Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -490,11 +505,6 @@
     "date": "2026-01-04T20:32:58Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.11",
-    "date": "2026-01-04T19:48:21Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v26.1.0",
     "date": "2026-01-04T17:07:30Z"
@@ -532,7 +542,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -740,11 +750,6 @@
     "date": "2025-12-21T13:13:01Z"
   },
   {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.35.0",
-    "date": "2025-12-21T07:44:15Z"
-  },
-  {
     "name": "intri-in/manage-my-damn-life-nextjs",
     "version": "v0.8.2",
     "date": "2025-12-21T03:53:53Z"
@@ -833,11 +838,6 @@
     "name": "juanfont/headscale",
     "version": "v0.27.1",
     "date": "2025-11-11T19:32:29Z"
-  },
-  {
-    "name": "Kozea/Radicale",
-    "version": "v3.5.10",
-    "date": "2025-12-18T07:14:13Z"
   },
   {
     "name": "zabbix/zabbix",
