@@ -1,5 +1,105 @@
 [
   {
+    "name": "coder/code-server",
+    "version": "v4.107.1",
+    "date": "2026-01-09T19:41:18Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.17.0",
+    "date": "2026-01-09T22:48:21Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.2.0",
+    "date": "2026-01-09T22:10:33Z"
+  },
+  {
+    "name": "endurain-project/endurain",
+    "version": "v0.16.5",
+    "date": "2026-01-09T22:06:11Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.17",
+    "date": "2026-01-09T21:05:08Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.7.1",
+    "date": "2026-01-09T20:57:55Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2026-01-06T19:06:59Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.50.0",
+    "date": "2026-01-09T19:27:03Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.13.rc.1",
+    "date": "2026-01-09T19:18:51Z"
+  },
+  {
+    "name": "dani-garcia/vaultwarden",
+    "version": "1.35.2",
+    "date": "2026-01-09T18:37:04Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.x",
+    "date": "2026-01-09T18:12:58Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.39",
+    "date": "2026-01-09T18:06:09Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.7",
+    "date": "2026-01-09T17:45:02Z"
+  },
+  {
+    "name": "saltstack/salt",
+    "version": "v3007.11",
+    "date": "2026-01-09T17:23:23Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.50.0-rc1",
+    "date": "2026-01-09T17:04:30Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.2.4-alpha1",
+    "date": "2026-01-09T16:17:01Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.2.6",
+    "date": "2026-01-09T13:53:10Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2026.01.09",
+    "date": "2026-01-09T13:05:08Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v14.0.6",
+    "date": "2026-01-09T12:34:36Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-09T12:20:22Z"
+  },
+  {
     "name": "dedicatedcode/reitti",
     "version": "v3.2.1",
     "date": "2026-01-09T11:09:24Z"
@@ -33,16 +133,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.545",
     "date": "2026-01-06T16:19:17Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.13-nightly",
-    "date": "2026-01-09T04:53:55Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.40.4",
-    "date": "2026-01-09T04:18:10Z"
   },
   {
     "name": "9001/copyparty",
@@ -90,19 +180,9 @@
     "date": "2026-01-08T21:52:46Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.38",
-    "date": "2025-12-31T13:38:03Z"
-  },
-  {
     "name": "laurent22/joplin",
     "version": "server-v3.5.2",
     "date": "2025-12-19T21:28:55Z"
-  },
-  {
-    "name": "alexta69/metube",
-    "version": "2026.01.08",
-    "date": "2026-01-08T20:15:57Z"
   },
   {
     "name": "element-hq/synapse",
@@ -135,11 +215,6 @@
     "date": "2026-01-08T15:59:28Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.2.5",
-    "date": "2026-01-08T12:08:46Z"
-  },
-  {
     "name": "plexguide/Huntarr.io",
     "version": "8.2.11",
     "date": "2026-01-08T15:10:01Z"
@@ -148,11 +223,6 @@
     "name": "openhab/openhab-core",
     "version": "5.1.1",
     "date": "2026-01-08T14:18:39Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "embedding-sdk-58-stable",
-    "date": "2026-01-08T14:12:37Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -180,19 +250,9 @@
     "date": "2026-01-08T10:10:26Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v14.0.6",
-    "date": "2026-01-08T10:09:35Z"
-  },
-  {
     "name": "requarks/wiki",
     "version": "v2.5.311",
     "date": "2026-01-08T09:50:00Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-08T09:37:31Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -215,11 +275,6 @@
     "date": "2026-01-08T04:47:25Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.16",
-    "date": "2026-01-08T02:21:38Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.20.1",
     "date": "2026-01-08T01:19:49Z"
@@ -233,11 +288,6 @@
     "name": "community-scripts/ProxmoxVE-Local",
     "version": "v0.5.3",
     "date": "2026-01-07T19:52:09Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.2.4-alpha0",
-    "date": "2026-01-07T19:47:22Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -273,11 +323,6 @@
     "name": "cockpit-project/cockpit",
     "version": "354",
     "date": "2026-01-07T11:16:12Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.6",
-    "date": "2025-11-24T15:30:21Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -348,11 +393,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.10.3",
     "date": "2025-12-16T18:00:53Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2026-01-06T19:06:59Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -435,11 +475,6 @@
     "date": "2026-01-05T05:56:57Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.16.5",
-    "date": "2026-01-05T02:26:15Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.2",
     "date": "2025-10-22T17:03:54Z"
@@ -480,11 +515,6 @@
     "date": "2026-01-03T16:38:36Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.49.1",
-    "date": "2026-01-03T13:13:12Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.34.0",
     "date": "2026-01-03T03:12:12Z"
@@ -502,7 +532,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:09Z"
+    "date": "2026-01-02T19:40:19Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -558,11 +588,6 @@
     "name": "BookStackApp/BookStack",
     "version": "v25.12.1",
     "date": "2025-12-30T17:25:57Z"
-  },
-  {
-    "name": "dani-garcia/vaultwarden",
-    "version": "1.35.1",
-    "date": "2025-12-30T14:21:05Z"
   },
   {
     "name": "javedh-dev/tracktor",
@@ -675,11 +700,6 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
-    "name": "endurain-project/endurain",
-    "version": "v0.16.4",
-    "date": "2025-12-23T12:08:24Z"
-  },
-  {
     "name": "itsmng/itsm-ng",
     "version": "v1.6.11",
     "date": "2025-12-23T10:40:42Z"
@@ -708,11 +728,6 @@
     "name": "passbolt/passbolt_api",
     "version": "v5.8.0",
     "date": "2025-12-22T10:12:48Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.43",
-    "date": "2025-12-22T06:03:45Z"
   },
   {
     "name": "benjaminjonard/koillection",
@@ -795,16 +810,6 @@
     "date": "2025-09-27T20:59:46Z"
   },
   {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.1.5",
-    "date": "2025-12-18T20:48:01Z"
-  },
-  {
-    "name": "saltstack/salt",
-    "version": "v3007.10",
-    "date": "2025-12-18T18:14:16Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.25.3",
     "date": "2025-12-18T18:11:48Z"
@@ -843,11 +848,6 @@
     "name": "influxdata/influxdb",
     "version": "v2.8.0",
     "date": "2025-12-12T20:25:00Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.107.0",
-    "date": "2025-12-17T18:59:21Z"
   },
   {
     "name": "jupyter/notebook",
