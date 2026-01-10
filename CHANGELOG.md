@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-10
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [Endurain] Increase default RAM from 2048 to 4096 [@FutureCow](https://github.com/FutureCow) ([#10690](https://github.com/community-scripts/ProxmoxVE/pull/10690))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
