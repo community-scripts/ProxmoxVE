@@ -149,7 +149,7 @@ elif [[ ! -f "$CONFIG_FILE" ]]; then
     cp "config.yaml.example" "$CONFIG_FILE"
     msg_ok "Default configuration created from example"
   else
-    msg_ok "Using existing configuration"
+    msg_ok "No configuration file found - you'll need to create config.yaml manually"
   fi
 else
   msg_ok "Existing configuration preserved"
