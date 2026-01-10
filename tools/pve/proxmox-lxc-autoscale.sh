@@ -153,15 +153,25 @@ elif [[ -f "config.yaml" ]]; then
   CONFIG_FILE="config.yaml"
 fi
 
-# Restore backed up config if exists
-if [[ -f "/tmp/lxc_autoscale_config_backup.yaml" ]]; then
-  if [[ -n "$CONFIG_FILE" ]]; then
+# Restore backed up config if exists, and report accurate status
+if [[ -n "$CONFIG_FILE" ]]; then
+  if [[ -f "/tmp/lxc_autoscale_config_backup.yaml" ]]; then
     cp "/tmp/lxc_autoscale_config_backup.yaml" "$CONFIG_FILE"
     rm -f "/tmp/lxc_autoscale_config_backup.yaml"
     msg_ok "Previous configuration restored"
+  else
+    if [[ -f "$CONFIG_FILE" ]]; then
+      msg_ok "Default configuration created"
+    else
+      msg_error "Configuration file '$CONFIG_FILE' not found after setup"
+    fi
   fi
 else
-  msg_ok "Default configuration created"
+  if [[ -f "/tmp/lxc_autoscale_config_backup.yaml" ]]; then
+    msg_error "Found configuration backup but could not determine destination CONFIG_FILE"
+  else
+    msg_error "No configuration file could be determined"
+  fi
 fi
 
 # Determine the main Python script
