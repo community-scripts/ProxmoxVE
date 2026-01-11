@@ -1,5 +1,45 @@
 [
   {
+    "name": "OliveTin/OliveTin",
+    "version": "3000.9.0-beta.1",
+    "date": "2026-01-11T10:02:47Z"
+  },
+  {
+    "name": "karlomikus/bar-assistant",
+    "version": "v5.12.0",
+    "date": "2026-01-11T09:37:23Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.821",
+    "date": "2026-01-11T06:00:44Z"
+  },
+  {
+    "name": "Cleanuparr/Cleanuparr",
+    "version": "v2.5.1",
+    "date": "2026-01-11T00:46:17Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-11T00:27:03Z"
+  },
+  {
+    "name": "owncast/owncast",
+    "version": "v0.2.4",
+    "date": "2026-01-10T23:34:29Z"
+  },
+  {
     "name": "Ombi-app/Ombi",
     "version": "v4.53.4",
     "date": "2026-01-08T21:52:46Z"
@@ -47,7 +87,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v14.0.7",
-    "date": "2026-01-10T10:31:47Z"
+    "date": "2026-01-10T15:10:54Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
@@ -75,24 +115,9 @@
     "date": "2026-01-10T06:56:46Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.807",
-    "date": "2026-01-10T06:27:46Z"
-  },
-  {
     "name": "Whisparr/Whisparr",
     "version": "v3.1.0.2093",
     "date": "2026-01-10T04:47:03Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-10T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "coder/code-server",
@@ -300,11 +325,6 @@
     "date": "2025-12-17T09:26:24Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
-  },
-  {
     "name": "Comfy-Org/ComfyUI",
     "version": "v0.8.2",
     "date": "2026-01-08T06:00:20Z"
@@ -388,11 +408,6 @@
     "name": "miniflux/v2",
     "version": "2.2.16",
     "date": "2026-01-07T03:26:27Z"
-  },
-  {
-    "name": "Cleanuparr/Cleanuparr",
-    "version": "v2.5.0",
-    "date": "2026-01-07T01:06:23Z"
   },
   {
     "name": "kimai/kimai",
@@ -557,7 +572,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -615,11 +630,6 @@
     "date": "2025-12-30T04:42:18Z"
   },
   {
-    "name": "karlomikus/bar-assistant",
-    "version": "v5.11.2",
-    "date": "2025-12-29T21:09:41Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.6.6",
     "date": "2025-12-29T15:56:09Z"
@@ -673,11 +683,6 @@
     "name": "matze/wastebin",
     "version": "3.4.0",
     "date": "2025-12-25T16:00:55Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "3000.8.0",
-    "date": "2025-12-25T15:10:19Z"
   },
   {
     "name": "PatchMon/PatchMon",
@@ -1593,11 +1598,6 @@
     "name": "stackblitz-labs/bolt.diy",
     "version": "1.0.0",
     "date": "2025-05-12T07:39:23Z"
-  },
-  {
-    "name": "owncast/owncast",
-    "version": "v0.2.3",
-    "date": "2025-05-10T21:14:45Z"
   },
   {
     "name": "dotnetfactory/fluid-calendar",
