@@ -1,8 +1,58 @@
 [
   {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.53.4",
+    "date": "2026-01-08T21:52:46Z"
+  },
+  {
+    "name": "raydak-labs/configarr",
+    "version": "v1.20.0",
+    "date": "2026-01-10T21:25:47Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.7.2",
+    "date": "2026-01-10T21:00:12Z"
+  },
+  {
+    "name": "Athou/commafeed",
+    "version": "6.0.0",
+    "date": "2026-01-10T20:28:07Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.14",
+    "date": "2026-01-10T19:22:05Z"
+  },
+  {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.15",
+    "date": "2026-01-06T20:05:54Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.13.4",
+    "date": "2026-01-10T16:31:07Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2026.01.10",
+    "date": "2026-01-10T16:29:55Z"
+  },
+  {
     "name": "theonedev/onedev",
     "version": "v14.0.7",
     "date": "2026-01-10T10:31:47Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.1.0-dev.0",
+    "date": "2026-01-10T12:48:39Z"
   },
   {
     "name": "laurent22/joplin",
@@ -13,11 +63,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.35.1",
     "date": "2026-01-10T09:23:24Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.13",
-    "date": "2026-01-10T08:35:23Z"
   },
   {
     "name": "ollama/ollama",
@@ -73,16 +118,6 @@
     "name": "endurain-project/endurain",
     "version": "v0.16.5",
     "date": "2026-01-09T22:06:11Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.17",
-    "date": "2026-01-09T21:05:08Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.7.1",
-    "date": "2026-01-09T20:57:55Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -145,11 +180,6 @@
     "date": "2026-01-09T13:53:10Z"
   },
   {
-    "name": "alexta69/metube",
-    "version": "2026.01.09",
-    "date": "2026-01-09T13:05:08Z"
-  },
-  {
     "name": "dedicatedcode/reitti",
     "version": "v3.2.1",
     "date": "2026-01-09T11:09:24Z"
@@ -198,11 +228,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v26.1.1",
     "date": "2026-01-08T22:02:15Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.53.4",
-    "date": "2026-01-08T21:52:46Z"
   },
   {
     "name": "element-hq/synapse",
@@ -283,11 +308,6 @@
     "name": "Comfy-Org/ComfyUI",
     "version": "v0.8.2",
     "date": "2026-01-08T06:00:20Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.13.3",
-    "date": "2026-01-08T04:47:25Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -398,11 +418,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.5.0",
     "date": "2026-01-06T21:14:27Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.15",
-    "date": "2026-01-06T20:05:54Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -542,7 +557,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:09Z"
+    "date": "2026-01-02T19:40:19Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -588,11 +603,6 @@
     "name": "coollabsio/coolify",
     "version": "v4.0.0-beta.460",
     "date": "2025-12-31T10:58:42Z"
-  },
-  {
-    "name": "Athou/commafeed",
-    "version": "5.12.1",
-    "date": "2025-12-31T08:23:37Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -795,11 +805,6 @@
     "date": "2025-12-19T15:50:12Z"
   },
   {
-    "name": "raydak-labs/configarr",
-    "version": "v1.19.0",
-    "date": "2025-12-19T13:37:00Z"
-  },
-  {
     "name": "readeck/readeck",
     "version": "0.21.5",
     "date": "2025-12-19T11:51:05Z"
@@ -903,11 +908,6 @@
     "name": "AlexxIT/go2rtc",
     "version": "v1.9.13",
     "date": "2025-12-14T20:18:28Z"
-  },
-  {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "docmost/docmost",
@@ -1435,7 +1435,7 @@
     "date": "2025-09-19T22:23:28Z"
   },
   {
-    "name": "Flomp/wanderer",
+    "name": "open-wanderer/wanderer",
     "version": "v0.18.3",
     "date": "2025-09-19T16:16:11Z"
   },
