@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-11
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: Homer [@tremor021](https://github.com/tremor021) ([#10698](https://github.com/community-scripts/ProxmoxVE/pull/10698))
+
 ## 2026-01-10
 
 ### 🚀 Updated Scripts
