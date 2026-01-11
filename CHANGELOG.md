@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Infisical [@tremor021](https://github.com/tremor021) ([#10693](https://github.com/community-scripts/ProxmoxVE/pull/10693))
     - Refactor: HortusFox [@tremor021](https://github.com/tremor021) ([#10697](https://github.com/community-scripts/ProxmoxVE/pull/10697))
     - Refactor: Homer [@tremor021](https://github.com/tremor021) ([#10698](https://github.com/community-scripts/ProxmoxVE/pull/10698))
 
