@@ -106,6 +106,7 @@ $STD php artisan migrate --force
 $STD php artisan db:seed --force
 $STD php artisan ninja:post-update
 $STD php artisan optimize
+chown -R www-data:www-data /opt/invoiceninja
 msg_ok "Set up Database"
 
 msg_info "Configuring Nginx"
