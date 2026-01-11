@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Fix Invoice Ninja Error 500 by restoring file ownership after artisan commands [@Copilot](https://github.com/Copilot) ([#10709](https://github.com/community-scripts/ProxmoxVE/pull/10709))
+
   - #### 🔧 Refactor
 
     - Refactor: Infisical [@tremor021](https://github.com/tremor021) ([#10693](https://github.com/community-scripts/ProxmoxVE/pull/10693))
