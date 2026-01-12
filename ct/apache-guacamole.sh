@@ -119,7 +119,101 @@ function update_script() {
     msg_ok "MySQL Connector already up to date (${CURRENT_MYSQL_CONNECTOR})"
   fi
 
+  # Apply SQL Schema Upgrades (CRITICAL!)
+  if [[ "$CURRENT_SERVER" != "$LATEST_SERVER" ]]; then
+    msg_info "Applying MySQL Schema Upgrades"
+    cd /tmp/guacamole-auth-jdbc-"${LATEST_SERVER}"/mysql/schema/upgrade/
+    UPGRADE_FILES=($(ls -1 upgrade-pre-*.sql 2>/dev/null | sort -V))
+
+    if [[ ${#UPGRADE_FILES[@]} -gt 0 ]]; then
+      for SQL_FILE in "${UPGRADE_FILES[@]}"; do
+        FILE_VERSION=$(echo ${SQL_FILE} | grep -oP 'upgrade-pre-\K[0-9\.]+(?=\.)')
+        # Apply upgrade if file version is newer than current but older/equal to target
+        if [[ $(echo -e "${FILE_VERSION}\n${CURRENT_SERVER}" | sort -V | head -n1) == "${CURRENT_SERVER}" && "${FILE_VERSION}" != "${CURRENT_SERVER}" ]]; then
+          msg_info "Applying schema patch: ${SQL_FILE}"
+          mysql -u root guacamole_db <"${SQL_FILE}" 2>/dev/null
+          if [[ $? -eq 0 ]]; then
+            msg_ok "Applied ${SQL_FILE}"
+          else
+            msg_warn "Failed to apply ${SQL_FILE} (may already be applied)"
+          fi
+        fi
+      done
+    fi
+    msg_ok "MySQL Schema updated"
+  fi
+
+  # Check and upgrade optional extensions
+  # TOTP Extension
+  if [[ -f /etc/guacamole/extensions/guacamole-auth-totp-*.jar ]]; then
+    msg_info "Updating TOTP Extension"
+    rm -f /etc/guacamole/extensions/guacamole-auth-totp-*.jar
+    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-totp-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-totp.tar.gz"
+    $STD tar -xf /tmp/guacamole-auth-totp.tar.gz -C /tmp
+    mv /tmp/guacamole-auth-totp-"${LATEST_SERVER}"/guacamole-auth-totp-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
+    chmod 664 /etc/guacamole/extensions/guacamole-auth-totp-"${LATEST_SERVER}".jar
+    rm -rf /tmp/guacamole-auth-totp*
+    msg_ok "Updated TOTP Extension"
+  fi
+
+  # DUO Extension
+  if [[ -f /etc/guacamole/extensions/guacamole-auth-duo-*.jar ]]; then
+    msg_info "Updating DUO Extension"
+    rm -f /etc/guacamole/extensions/guacamole-auth-duo-*.jar
+    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-duo-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-duo.tar.gz"
+    $STD tar -xf /tmp/guacamole-auth-duo.tar.gz -C /tmp
+    mv /tmp/guacamole-auth-duo-"${LATEST_SERVER}"/guacamole-auth-duo-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
+    chmod 664 /etc/guacamole/extensions/guacamole-auth-duo-"${LATEST_SERVER}".jar
+    rm -rf /tmp/guacamole-auth-duo*
+    msg_ok "Updated DUO Extension"
+  fi
+
+  # LDAP Extension
+  if [[ -f /etc/guacamole/extensions/guacamole-auth-ldap-*.jar ]]; then
+    msg_info "Updating LDAP Extension"
+    rm -f /etc/guacamole/extensions/guacamole-auth-ldap-*.jar
+    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-ldap-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-ldap.tar.gz"
+    $STD tar -xf /tmp/guacamole-auth-ldap.tar.gz -C /tmp
+    mv /tmp/guacamole-auth-ldap-"${LATEST_SERVER}"/guacamole-auth-ldap-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
+    chmod 664 /etc/guacamole/extensions/guacamole-auth-ldap-"${LATEST_SERVER}".jar
+    rm -rf /tmp/guacamole-auth-ldap*
+    msg_ok "Updated LDAP Extension"
+  fi
+
+  # Quick Connect Extension
+  if [[ -f /etc/guacamole/extensions/guacamole-auth-quickconnect-*.jar ]]; then
+    msg_info "Updating Quick Connect Extension"
+    rm -f /etc/guacamole/extensions/guacamole-auth-quickconnect-*.jar
+    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-quickconnect-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-quickconnect.tar.gz"
+    $STD tar -xf /tmp/guacamole-auth-quickconnect.tar.gz -C /tmp
+    mv /tmp/guacamole-auth-quickconnect-"${LATEST_SERVER}"/guacamole-auth-quickconnect-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
+    chmod 664 /etc/guacamole/extensions/guacamole-auth-quickconnect-"${LATEST_SERVER}".jar
+    rm -rf /tmp/guacamole-auth-quickconnect*
+    msg_ok "Updated Quick Connect Extension"
+  fi
+
+  # History Recording Storage Extension
+  if [[ -f /etc/guacamole/extensions/guacamole-history-recording-storage-*.jar ]]; then
+    msg_info "Updating History Recording Storage Extension"
+    rm -f /etc/guacamole/extensions/guacamole-history-recording-storage-*.jar
+    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-history-recording-storage-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-history-recording-storage.tar.gz"
+    $STD tar -xf /tmp/guacamole-history-recording-storage.tar.gz -C /tmp
+    mv /tmp/guacamole-history-recording-storage-"${LATEST_SERVER}"/guacamole-history-recording-storage-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
+    chmod 664 /etc/guacamole/extensions/guacamole-history-recording-storage-"${LATEST_SERVER}".jar
+    rm -rf /tmp/guacamole-history-recording-storage*
+    msg_ok "Updated History Recording Storage Extension"
+  fi
+
+  # Reset permissions and prepare for service start
+  msg_info "Resetting permissions"
+  mkdir -p /var/guacamole
+  chown daemon:daemon /var/guacamole
+  mkdir -p /home/daemon/.config/freerdp
+  chown daemon:daemon /home/daemon/.config/freerdp
+  msg_ok "Permissions reset"
+
   msg_info "Starting Services"
+  systemctl daemon-reload
   systemctl start tomcat guacd
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
