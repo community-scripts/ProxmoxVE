@@ -577,7 +577,15 @@ base_settings() {
   RAM_SIZE="${final_ram}"
   VERBOSE=${var_verbose:-"${1:-no}"}
   PW=${var_pw:-""}
-  CT_ID=${var_ctid:-$NEXTID}
+  
+  # Validate and set Container ID
+  local requested_id="${var_ctid:-$NEXTID}"
+  if ! validate_container_id "$requested_id"; then
+    msg_warn "Container ID $requested_id is already in use. Using next available ID: $(get_valid_container_id "$requested_id")"
+    requested_id=$(get_valid_container_id "$requested_id")
+  fi
+  CT_ID="$requested_id"
+  
   HN=${var_hostname:-$NSAPP}
   BRG=${var_brg:-"vmbr0"}
   NET=${var_net:-"dhcp"}
