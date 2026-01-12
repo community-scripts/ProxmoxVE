@@ -18,6 +18,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Cockpit: Downgrade to Debian 12 Bookworm (45Drives Issue) [@MickLesk](https://github.com/MickLesk) ([#10717](https://github.com/community-scripts/ProxmoxVE/pull/10717))
 
+  - #### ✨ New Features
+
+    - Apache CouchDB: bump to debian 13 and add update support [@MickLesk](https://github.com/MickLesk) ([#10721](https://github.com/community-scripts/ProxmoxVE/pull/10721))
+    - Apache Cassandra: bump to debian 13 and add update support [@MickLesk](https://github.com/MickLesk) ([#10720](https://github.com/community-scripts/ProxmoxVE/pull/10720))
+
   - #### 🔧 Refactor
 
     - Bump Argus to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#10718](https://github.com/community-scripts/ProxmoxVE/pull/10718))
