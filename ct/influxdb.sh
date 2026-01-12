@@ -43,4 +43,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP} and Port 8888 for v1 or Port 8086 (v2)${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP} and Port 8888 for v1, Port 8086 for v2 or Port 8181 for v3${CL}"
