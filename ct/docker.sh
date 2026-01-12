@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,12 +29,12 @@ function update_script() {
   }
 
   msg_info "Updating base system"
-  $STD apt-get update
-  $STD apt-get -y upgrade
+  $STD apt update
+  $STD apt -y upgrade
   msg_ok "Base system updated"
 
   msg_info "Updating Docker Engine"
-  $STD apt-get install --only-upgrade -y docker-ce docker-ce-cli containerd.io
+  $STD apt install --only-upgrade -y docker-ce docker-ce-cli containerd.io
   msg_ok "Docker Engine updated"
 
   if [[ -f /usr/local/lib/docker/cli-plugins/docker-compose ]]; then
