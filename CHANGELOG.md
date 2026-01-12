@@ -30,6 +30,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - #### ✨ New Features
+
+    - core: validate container ID before pct create to prevent failures [@MickLesk](https://github.com/MickLesk) ([#10729](https://github.com/community-scripts/ProxmoxVE/pull/10729))
+
   - #### 🔧 Refactor
 
     - Enforce non-interactive apt mode in DB setup scripts [@MickLesk](https://github.com/MickLesk) ([#10714](https://github.com/community-scripts/ProxmoxVE/pull/10714))
