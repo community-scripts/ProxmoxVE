@@ -511,6 +511,12 @@ choose_and_set_storage_for_file() {
   if [[ "$count" -eq 1 ]]; then
     STORAGE_RESULT=$(pvesm status -content "$content" | awk 'NR>1{print $1; exit}')
     STORAGE_INFO=""
+
+    # Validate storage space for auto-picked container storage
+    if [[ "$class" == "container" && -n "${DISK_SIZE:-}" ]]; then
+      validate_storage_space "$STORAGE_RESULT" "$DISK_SIZE" "yes"
+      # Continue even if validation fails - user was warned
+    fi
   else
     # If the current value is preselectable, we could show it, but per your requirement we always offer selection
     select_storage "$class" || return 1
@@ -577,7 +583,7 @@ base_settings() {
   RAM_SIZE="${final_ram}"
   VERBOSE=${var_verbose:-"${1:-no}"}
   PW=${var_pw:-""}
-  
+
   # Validate and set Container ID
   local requested_id="${var_ctid:-$NEXTID}"
   if ! validate_container_id "$requested_id"; then
@@ -585,7 +591,7 @@ base_settings() {
     requested_id=$(get_valid_container_id "$requested_id")
   fi
   CT_ID="$requested_id"
-  
+
   HN=${var_hostname:-$NSAPP}
   BRG=${var_brg:-"vmbr0"}
   NET=${var_net:-"dhcp"}
@@ -1200,6 +1206,13 @@ ensure_storage_selection_for_vars_file() {
   if [[ -n "$tpl" && -n "$ct" ]]; then
     TEMPLATE_STORAGE="$tpl"
     CONTAINER_STORAGE="$ct"
+
+    # Validate storage space for loaded container storage
+    if [[ -n "${DISK_SIZE:-}" ]]; then
+      validate_storage_space "$ct" "$DISK_SIZE" "yes"
+      # Continue even if validation fails - user was warned
+    fi
+
     return 0
   fi
 
@@ -2973,6 +2986,18 @@ $PCT_OPTIONS_STRING"
   export TEMPLATE_STORAGE="${var_template_storage:-}"
   export CONTAINER_STORAGE="${var_container_storage:-}"
 
+  # Validate storage space before attempting container creation
+  msg_info "Validating storage space"
+  if ! validate_storage_space "$CONTAINER_STORAGE" "$DISK_SIZE" "no"; then
+    local free_space
+    free_space=$(pvesm status 2>/dev/null | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
+    local free_fmt
+    free_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$free_space" 2>/dev/null || echo "${free_space}KB")
+    msg_error "Not enough space on '$CONTAINER_STORAGE'. Required: ${DISK_SIZE}GB, Available: ${free_fmt}"
+    exit 214
+  fi
+  msg_ok "Storage space validated"
+
   create_lxc_container || exit $?
 
   LXC_CONFIG="/etc/pve/lxc/${CTID}.conf"
@@ -3504,9 +3529,9 @@ resolve_storage_preselect() {
     free="$(awk '{print $6}' <<<"$line")"
     local total_h used_h free_h
     if command -v numfmt >/dev/null 2>&1; then
-      total_h="$(numfmt --to=iec --suffix=B --format %.1f "$total" 2>/dev/null || echo "$total")"
-      used_h="$(numfmt --to=iec --suffix=B --format %.1f "$used" 2>/dev/null || echo "$used")"
-      free_h="$(numfmt --to=iec --suffix=B --format %.1f "$free" 2>/dev/null || echo "$free")"
+      total_h="$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$total" 2>/dev/null || echo "$total")"
+      used_h="$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$used" 2>/dev/null || echo "$used")"
+      free_h="$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$free" 2>/dev/null || echo "$free")"
       STORAGE_INFO="Free: ${free_h}  Used: ${used_h}"
     else
       STORAGE_INFO="Free: ${free}  Used: ${used}"
@@ -3622,8 +3647,8 @@ select_storage() {
   while read -r TAG TYPE _ TOTAL USED FREE _; do
     [[ -n "$TAG" && -n "$TYPE" ]] || continue
     local DISPLAY="${TAG} (${TYPE})"
-    local USED_FMT=$(numfmt --to=iec --from-unit=K --format %.1f <<<"$USED")
-    local FREE_FMT=$(numfmt --to=iec --from-unit=K --format %.1f <<<"$FREE")
+    local USED_FMT=$(numfmt --to=iec --from-unit=1024 --format %.1f <<<"$USED")
+    local FREE_FMT=$(numfmt --to=iec --from-unit=1024 --format %.1f <<<"$FREE")
     local INFO="Free: ${FREE_FMT}B  Used: ${USED_FMT}B"
     STORAGE_MAP["$DISPLAY"]="$TAG"
     MENU+=("$DISPLAY" "$INFO" "OFF")
@@ -3661,9 +3686,68 @@ select_storage() {
         break
       fi
     done
+
+    # Validate storage space for container storage
+    if [[ "$CLASS" == "container" && -n "${DISK_SIZE:-}" ]]; then
+      validate_storage_space "$STORAGE_RESULT" "$DISK_SIZE" "yes"
+      # Continue even if validation fails - user was warned
+    fi
+
     return 0
   done
 }
+
+# ------------------------------------------------------------------------------
+# validate_storage_space()
+#
+# - Validates if storage has enough free space for container
+# - Takes storage name and required size in GB
+# - Returns 0 if enough space, 1 if not enough, 2 if storage unavailable
+# - Can optionally show whiptail warning
+# - Handles all storage types: dir, lvm, lvmthin, zfs, nfs, cifs, etc.
+# ------------------------------------------------------------------------------
+validate_storage_space() {
+  local storage="$1"
+  local required_gb="${2:-8}"
+  local show_dialog="${3:-no}"
+  
+  # Get full storage line from pvesm status
+  local storage_line
+  storage_line=$(pvesm status 2>/dev/null | awk -v s="$storage" '$1 == s {print $0}')
+  
+  # Check if storage exists and is active
+  if [[ -z "$storage_line" ]]; then
+    [[ "$show_dialog" == "yes" ]] && whiptail --msgbox "⚠️  Warning: Storage '$storage' not found!\n\nThe storage may be unavailable or disabled." 10 60
+    return 2
+  fi
+  
+  # Check storage status (column 3)
+  local status
+  status=$(awk '{print $3}' <<<"$storage_line")
+  if [[ "$status" == "disabled" ]]; then
+    [[ "$show_dialog" == "yes" ]] && whiptail --msgbox "⚠️  Warning: Storage '$storage' is disabled!\n\nPlease enable the storage first." 10 60
+    return 2
+  fi
+  
+  # Get storage type and free space (column 6)
+  local storage_type storage_free
+  storage_type=$(awk '{print $2}' <<<"$storage_line")
+  storage_free=$(awk '{print $6}' <<<"$storage_line")
+  
+  # Some storage types (like PBS, iSCSI) don't report size info
+  # In these cases, skip space validation
+  if [[ -z "$storage_free" || "$storage_free" == "0" ]]; then
+    # Silent pass for storages without size info
+    return 0
+  fi
+  
+  local required_kb=$((required_gb * 1024 * 1024))
+  local free_gb_fmt
+  free_gb_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$storage_free" 2>/dev/null || echo "${storage_free}KB")
+  
+  if [[ "$storage_free" -lt "$required_kb" ]]; then
+    if [[ "$show_dialog" == "yes" ]]; then
+      whiptail --msgbox "⚠️  Warning: Storage '$storage' may not have enough space!\n\nStorage Type: ${storage_type}\nRequired: ${required_gb}GB\nAvailable: ${free_gb_fmt}\n\nYou can continue, but creation might fail." 14 70
 
 create_lxc_container() {
   # ------------------------------------------------------------------------------
@@ -3835,14 +3919,6 @@ create_lxc_container() {
     msg_warn "Template storage '$TEMPLATE_STORAGE' may not support 'vztmpl'"
   fi
   msg_ok "Template storage '$TEMPLATE_STORAGE' validated"
-
-  # Free space check
-  STORAGE_FREE=$(pvesm status | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
-  REQUIRED_KB=$((${PCT_DISK_SIZE:-8} * 1024 * 1024))
-  [[ "$STORAGE_FREE" -ge "$REQUIRED_KB" ]] || {
-    msg_error "Not enough space on '$CONTAINER_STORAGE'. Needed: ${PCT_DISK_SIZE:-8}G."
-    exit 214
-  }
 
   # Cluster quorum (if cluster)
   if [[ -f /etc/pve/corosync.conf ]]; then
