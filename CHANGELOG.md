@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-12
 
+### 🆕 New Scripts
+
+  - Jellystat ([#10628](https://github.com/community-scripts/ProxmoxVE/pull/10628))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
