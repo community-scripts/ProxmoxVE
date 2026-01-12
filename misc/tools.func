@@ -3576,6 +3576,11 @@ EOF
 setup_mariadb() {
   local MARIADB_VERSION="${MARIADB_VERSION:-latest}"
 
+  # Ensure non-interactive mode for all apt operations
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
+  export NEEDRESTART_SUSPEND=1
+
   # Resolve "latest" to actual version
   if [[ "$MARIADB_VERSION" == "latest" ]]; then
     if ! curl -fsI --max-time 10 http://mirror.mariadb.org/repo/ >/dev/null 2>&1; then
@@ -3613,6 +3618,20 @@ setup_mariadb() {
   # Get currently installed version
   local CURRENT_VERSION=""
   CURRENT_VERSION=$(is_tool_installed "mariadb" 2>/dev/null) || true
+
+  # Pre-configure debconf to prevent any interactive prompts during install/upgrade
+  local MARIADB_MAJOR_MINOR
+  MARIADB_MAJOR_MINOR=$(echo "$MARIADB_VERSION" | awk -F. '{print $1"."$2}')
+  if [[ -n "$MARIADB_MAJOR_MINOR" ]]; then
+    debconf-set-selections <<EOF
+mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/feedback boolean false
+mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/root_password password
+mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/root_password_again password
+mariadb-server mariadb-server/feedback boolean false
+mariadb-server mariadb-server/root_password password
+mariadb-server mariadb-server/root_password_again password
+EOF
+  fi
 
   # Scenario 1: Already installed at target version - just update packages
   if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
@@ -3680,15 +3699,7 @@ setup_mariadb() {
     return 1
   }
 
-  # Set debconf selections for all potential versions
-  local MARIADB_MAJOR_MINOR
-  MARIADB_MAJOR_MINOR=$(echo "$MARIADB_VERSION" | awk -F. '{print $1"."$2}')
-  if [[ -n "$MARIADB_MAJOR_MINOR" ]]; then
-    echo "mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/feedback boolean false" | debconf-set-selections
-  fi
-
   # Install packages with retry logic
-  export DEBIAN_FRONTEND=noninteractive
   if ! install_packages_with_retry "mariadb-server" "mariadb-client"; then
     # Fallback: try without specific version
     msg_warn "Failed to install MariaDB packages from upstream repo, trying distro fallback..."
@@ -3828,6 +3839,11 @@ function setup_mongodb() {
   DISTRO_ID=$(get_os_info id)
   DISTRO_CODENAME=$(get_os_info codename)
 
+  # Ensure non-interactive mode for all apt operations
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
+  export NEEDRESTART_SUSPEND=1
+
   # Check AVX support
   if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
     local major="${MONGO_VERSION%%.*}"
@@ -3946,6 +3962,11 @@ function setup_mysql() {
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
 
+  # Ensure non-interactive mode for all apt operations
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
+  export NEEDRESTART_SUSPEND=1
+
   # Get currently installed version
   local CURRENT_VERSION=""
   CURRENT_VERSION=$(is_tool_installed "mysql" 2>/dev/null) || true
@@ -4040,7 +4061,6 @@ EOF
   ensure_apt_working || return 1
 
   # Try multiple package names with retry logic
-  export DEBIAN_FRONTEND=noninteractive
   local mysql_install_success=false
 
   if apt-cache search "^mysql-server$" 2>/dev/null | grep -q . &&
@@ -4478,6 +4498,11 @@ function setup_postgresql() {
   local DISTRO_ID DISTRO_CODENAME
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+
+  # Ensure non-interactive mode for all apt operations
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
+  export NEEDRESTART_SUSPEND=1
 
   # Get currently installed version
   local CURRENT_PG_VERSION=""
@@ -4936,6 +4961,11 @@ function setup_clickhouse() {
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
 
+  # Ensure non-interactive mode for all apt operations
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
+  export NEEDRESTART_SUSPEND=1
+
   # Resolve "latest" version
   if [[ "$CLICKHOUSE_VERSION" == "latest" ]]; then
     CLICKHOUSE_VERSION=$(curl -fsSL --max-time 15 https://packages.clickhouse.com/tgz/stable/ 2>/dev/null |
@@ -4998,7 +5028,6 @@ function setup_clickhouse() {
     "main"
 
   # Install packages with retry logic
-  export DEBIAN_FRONTEND=noninteractive
   $STD apt update || {
     msg_error "APT update failed for ClickHouse repository"
     return 1
