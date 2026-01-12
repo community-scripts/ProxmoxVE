@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-12
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - Enforce non-interactive apt mode in DB setup scripts [@MickLesk](https://github.com/MickLesk) ([#10714](https://github.com/community-scripts/ProxmoxVE/pull/10714))
+
 ## 2026-01-11
 
 ### 🚀 Updated Scripts
