@@ -30,6 +30,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Booklore [@MickLesk](https://github.com/MickLesk) ([#10742](https://github.com/community-scripts/ProxmoxVE/pull/10742))
     - Bump Argus to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#10718](https://github.com/community-scripts/ProxmoxVE/pull/10718))
     - Refactor Docker/Dockge & Bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#10719](https://github.com/community-scripts/ProxmoxVE/pull/10719))
 
