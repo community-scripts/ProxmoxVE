@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-03-04",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 8080,
   "documentation": "https://cwiki.apache.org/confluence/display/TOMCAT",
@@ -23,7 +23,7 @@
         "ram": 1024,
         "hdd": 5,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
