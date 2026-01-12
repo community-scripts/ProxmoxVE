@@ -31,6 +31,7 @@ function update_script() {
   $STD apt update
   $STD apt install -y --only-upgrade cassandra cassandra-tools
   msg_ok "Updated Apache Cassandra"
+  msg_ok "Updated successfully!"
   exit
 }
 
