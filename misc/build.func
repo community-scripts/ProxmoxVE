@@ -241,22 +241,22 @@ install_ssh_keys_into_ct() {
 # ------------------------------------------------------------------------------
 validate_container_id() {
   local ctid="$1"
-  
+
   # Check if ID is numeric
   if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
     return 1
   fi
-  
+
   # Check if config file exists for VM or LXC
   if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
     return 1
   fi
-  
+
   # Check if ID is used in LVM logical volumes
   if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
     return 1
   fi
-  
+
   return 0
 }
 
@@ -270,11 +270,58 @@ validate_container_id() {
 # ------------------------------------------------------------------------------
 get_valid_container_id() {
   local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
-  
+
   while ! validate_container_id "$suggested_id"; do
     suggested_id=$((suggested_id + 1))
   done
-  
+
+  echo "$suggested_id"
+}
+
+# ------------------------------------------------------------------------------
+# validate_container_id()
+#
+# - Validates if a container ID is available for use
+# - Checks if ID is already used by VM or LXC container
+# - Checks if ID is used in LVM logical volumes
+# - Returns 0 if ID is available, 1 if already in use
+# ------------------------------------------------------------------------------
+validate_container_id() {
+  local ctid="$1"
+
+  # Check if ID is numeric
+  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
+    return 1
+  fi
+
+  # Check if config file exists for VM or LXC
+  if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
+    return 1
+  fi
+
+  # Check if ID is used in LVM logical volumes
+  if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# get_valid_container_id()
+#
+# - Returns a valid, unused container ID
+# - If provided ID is valid, returns it
+# - Otherwise increments from suggested ID until a free one is found
+# - Calls validate_container_id() to check availability
+# ------------------------------------------------------------------------------
+get_valid_container_id() {
+  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+
+  while ! validate_container_id "$suggested_id"; do
+    suggested_id=$((suggested_id + 1))
+  done
+
   echo "$suggested_id"
 }
 
@@ -530,15 +577,7 @@ base_settings() {
   RAM_SIZE="${final_ram}"
   VERBOSE=${var_verbose:-"${1:-no}"}
   PW=${var_pw:-""}
-  
-  # Validate and set Container ID
-  local requested_id="${var_ctid:-$NEXTID}"
-  if ! validate_container_id "$requested_id"; then
-    msg_warn "Container ID $requested_id is already in use. Using next available ID: $(get_valid_container_id "$requested_id")"
-    requested_id=$(get_valid_container_id "$requested_id")
-  fi
-  CT_ID="$requested_id"
-  
+  CT_ID=${var_ctid:-$NEXTID}
   HN=${var_hostname:-$NSAPP}
   BRG=${var_brg:-"vmbr0"}
   NET=${var_net:-"dhcp"}
@@ -1364,13 +1403,13 @@ advanced_settings() {
         --inputbox "\nSet Container ID" 10 58 "$_ct_id" \
         3>&1 1>&2 2>&3); then
         local input_id="${result:-$NEXTID}"
-        
+
         # Validate that ID is numeric
         if ! [[ "$input_id" =~ ^[0-9]+$ ]]; then
           whiptail --backtitle "Proxmox VE Helper Scripts" --title "Invalid ID" --msgbox "Container ID must be numeric." 8 58
           continue
         fi
-        
+
         # Check if ID is already in use
         if ! validate_container_id "$input_id"; then
           if whiptail --backtitle "Proxmox VE Helper Scripts" --title "ID Already In Use" \
