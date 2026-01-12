@@ -124,10 +124,10 @@ PASS="$(openssl rand -base64 8)"
 # Prompt user to confirm container ID
 while true; do
   CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the container ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
-  
+
   # Check if user cancelled
   [ -z "$CTID" ] && die "No Container ID selected"
-  
+
   # Validate Container ID
   if ! validate_container_id "$CTID"; then
     SUGGESTED_ID=$(get_valid_container_id "$CTID")
@@ -141,7 +141,7 @@ while true; do
   fi
 done
 # Prompt user to confirm Hostname
-  HOST_NAME=$(whiptail --backtitle "Hostname" --title "Choose the Hostname" --inputbox "Enter the containers Hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3)
+HOST_NAME=$(whiptail --backtitle "Hostname" --title "Choose the Hostname" --inputbox "Enter the containers Hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3)
 PCT_OPTIONS="
     -features keyctl=1,nesting=1
     -hostname $HOST_NAME
@@ -246,8 +246,8 @@ echo "TurnKey ${turnkey} password: ${PASS}" >>~/turnkey-${turnkey}.creds # file 
 TUN_DEVICE_REQUIRED=("openvpn") # Setup this way in case future turnkeys also need tun access
 if printf '%s\n' "${TUN_DEVICE_REQUIRED[@]}" | grep -qw "${turnkey}"; then
   info "${turnkey} requires access to /dev/net/tun on the host. Modifying the container configuration to allow this."
-  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >> /etc/pve/lxc/${CTID}.conf
-  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >> /etc/pve/lxc/${CTID}.conf
+  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>/etc/pve/lxc/${CTID}.conf
+  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >>/etc/pve/lxc/${CTID}.conf
   sleep 5
 fi
 
