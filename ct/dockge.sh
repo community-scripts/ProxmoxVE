@@ -27,6 +27,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  msg_info "Updating base system"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Base system updated"
+
   msg_info "Updating Dockge"
   cd /opt/dockge
   $STD docker compose pull
