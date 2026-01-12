@@ -41,13 +41,6 @@ EOF
 }
 
 # ==============================================================================
-# HELPER FUNCTIONS
-# ==============================================================================
-get_ip() {
-  hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1"
-}
-
-# ==============================================================================
 # OS DETECTION
 # ==============================================================================
 if [[ -f "/etc/alpine-release" ]]; then
@@ -134,21 +127,21 @@ function update() {
 # INSTALL
 # ==============================================================================
 function install() {
-  local ip
-  ip=$(get_ip)
+  local NODE_VER="22"
+  local PG_VER="17"
 
   # Setup Node.js (only installs if not present or different version)
   if command -v node &>/dev/null; then
     msg_ok "Node.js already installed ($(node -v))"
   else
-    NODE_VERSION="22" setup_nodejs
+    NODE_VERSION="${NODE_VER}" setup_nodejs
   fi
 
   # Setup PostgreSQL (only installs if not present)
   if command -v psql &>/dev/null; then
     msg_ok "PostgreSQL already installed"
   else
-    PG_VERSION="17" setup_postgresql
+    PG_VERSION="${PG_VER}" setup_postgresql
   fi
 
   # Create database and user (skip if already exists)
@@ -220,14 +213,10 @@ function install() {
 
   # Force fresh download by removing version cache
   rm -f "$HOME/.jellystat"
-  mkdir -p "$INSTALL_PATH"
   fetch_and_deploy_gh_release "jellystat" "CyferShepard/Jellystat" "tarball" "latest" "$INSTALL_PATH"
 
   msg_info "Installing dependencies"
-  cd "$INSTALL_PATH" || {
-    msg_error "Failed to enter ${INSTALL_PATH}"
-    return 1
-  }
+  cd "$INSTALL_PATH"
   $STD npm install
   msg_ok "Installed dependencies"
 
@@ -311,12 +300,12 @@ Database Password: ${DB_PASS}
 Database Name: ${DB_NAME}
 JWT Secret: ${JWT_SECRET}
 
-Web UI: http://${ip}:${DEFAULT_PORT}
+Web UI: http://${LOCAL_IP}:${DEFAULT_PORT}
 EOF
   chmod 600 "$CREDS_FILE"
 
   echo ""
-  msg_ok "${APP} is reachable at: ${BL}http://${ip}:${DEFAULT_PORT}${CL}"
+  msg_ok "${APP} is reachable at: ${BL}http://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
   msg_ok "Credentials saved to: ${BL}${CREDS_FILE}${CL}"
   echo ""
   msg_warn "On first access, you'll need to configure your Jellyfin server connection."
@@ -339,8 +328,7 @@ if [[ "${type:-}" == "update" ]]; then
 fi
 
 header_info
-
-IP=$(get_ip)
+import_local_ip
 
 # Check if already installed
 if [[ -d "$INSTALL_PATH" && -f "$INSTALL_PATH/package.json" ]]; then
@@ -366,11 +354,13 @@ if [[ -d "$INSTALL_PATH" && -f "$INSTALL_PATH/package.json" ]]; then
 fi
 
 # Fresh installation
+local NODE_VER="22"
+local PG_VER="17"
 msg_warn "${APP} is not installed."
 echo ""
 echo -e "${TAB}${INFO} This will install:"
-echo -e "${TAB}  - Node.js 22"
-echo -e "${TAB}  - PostgreSQL 17"
+echo -e "${TAB}  - Node.js ${NODE_VER}"
+echo -e "${TAB}  - PostgreSQL ${PG_VER}"
 echo -e "${TAB}  - Jellystat"
 echo ""
 
