@@ -24,7 +24,7 @@ msg_ok "Set up InfluxDB Repository"
 read -r -p "${TAB3}Which version of InfluxDB to install? (1, 2 or 3) " prompt
 if [[ $prompt == "3" ]]; then
   INFLUX="3"
-if [[ $prompt == "2" ]]; then
+elif [[ $prompt == "2" ]]; then
   INFLUX="2"
 else
   INFLUX="1"
@@ -34,7 +34,7 @@ msg_info "Installing InfluxDB v${INFLUX}"
 if [[ $INFLUX == "3" ]]; then
   $STD apt install -y influxdb3-core
   systemctl enable -q --now influxdb3-core
-if [[ $INFLUX == "2" ]]; then
+elif [[ $INFLUX == "2" ]]; then
   $STD apt install -y influxdb2
   systemctl enable -q --now influxdb
 else
