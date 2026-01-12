@@ -30,7 +30,7 @@ function update_script() {
 
   msg_info "Updating base system"
   $STD apt update
-  $STD apt -y upgrade
+  $STD apt upgrade -y
   msg_ok "Base system updated"
 
   msg_info "Updating Dockge"
