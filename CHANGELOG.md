@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Apache Guacamole: Function Bump + update_script [@MickLesk](https://github.com/MickLesk) ([#10728](https://github.com/community-scripts/ProxmoxVE/pull/10728))
     - Apache CouchDB: bump to debian 13 and add update support [@MickLesk](https://github.com/MickLesk) ([#10721](https://github.com/community-scripts/ProxmoxVE/pull/10721))
     - Apache Cassandra: bump to debian 13 and add update support [@MickLesk](https://github.com/MickLesk) ([#10720](https://github.com/community-scripts/ProxmoxVE/pull/10720))
 
