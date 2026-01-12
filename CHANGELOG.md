@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - InfluxDB: add setup for influxdb v3 [@victorlap](https://github.com/victorlap) ([#10736](https://github.com/community-scripts/ProxmoxVE/pull/10736))
     - Apache Guacamole: add schema upgrades and extension updates [@MickLesk](https://github.com/MickLesk) ([#10746](https://github.com/community-scripts/ProxmoxVE/pull/10746))
     - Apache Tomcat: update support and refactor install script + debian 13 [@MickLesk](https://github.com/MickLesk) ([#10739](https://github.com/community-scripts/ProxmoxVE/pull/10739))
     - Apache Guacamole: Function Bump + update_script [@MickLesk](https://github.com/MickLesk) ([#10728](https://github.com/community-scripts/ProxmoxVE/pull/10728))
@@ -40,7 +41,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - core: remove dupliocated pve_version in advanced installs [@MickLesk](https://github.com/MickLesk) ([#10743](https://github.com/community-scripts/ProxmoxVE/pull/10743))
+    - core: remove duplicated pve_version in advanced installs [@MickLesk](https://github.com/MickLesk) ([#10743](https://github.com/community-scripts/ProxmoxVE/pull/10743))
 
   - #### ✨ New Features
 
