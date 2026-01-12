@@ -41,39 +41,42 @@ setup_mariadb
 MARIADB_DB_NAME="guacamole_db" MARIADB_DB_USER="guacamole_user" setup_mariadb_db
 
 msg_info "Setup Apache Tomcat"
-RELEASE=$(curl -fsSL https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=href=")v[^"/]+(?=/")' | sed 's/^v//' | sort -V | tail -n1)
-mkdir -p /opt/apache-guacamole/tomcat9
-mkdir -p /opt/apache-guacamole/server
-curl -fsSL "https://dlcdn.apache.org/tomcat/tomcat-9/v${RELEASE}/bin/apache-tomcat-${RELEASE}.tar.gz" | tar -xz -C /opt/apache-guacamole/tomcat9 --strip-components=1
+TOMCAT_VERSION=$(curl -fsSL https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=href=")v[^"/]+(?=/")' | sed 's/^v//' | sort -V | tail -n1)
+mkdir -p /opt/apache-guacamole/{tomcat9,server}
+curl -fsSL "https://dlcdn.apache.org/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" | tar -xz -C /opt/apache-guacamole/tomcat9 --strip-components=1
 useradd -r -d /opt/apache-guacamole/tomcat9 -s /bin/false tomcat
 chown -R tomcat: /opt/apache-guacamole/tomcat9
 chmod -R g+r /opt/apache-guacamole/tomcat9/conf
 chmod g+x /opt/apache-guacamole/tomcat9/conf
-msg_ok "Setup Apache Tomcat"
+echo "${TOMCAT_VERSION}" >~/.guacamole_tomcat
+msg_ok "Setup Apache Tomcat ${TOMCAT_VERSION}"
 
 msg_info "Setup Apache Guacamole"
 mkdir -p /etc/guacamole/{extensions,lib}
-RELEASE_SERVER=$(curl -fsSL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
-RELEASE_CLIENT=$(curl -fsSL https://api.github.com/repos/apache/guacamole-client/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
+GUAC_SERVER_VERSION=$(curl -fsSL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
+GUAC_CLIENT_VERSION=$(curl -fsSL https://api.github.com/repos/apache/guacamole-client/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
 MYSQL_CONNECTOR_VERSION=$(curl -fsSL "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/maven-metadata.xml" | grep -oP '<latest>\K[^<]+')
-
-curl -fsSL "https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${RELEASE_SERVER}" | tar -xz --strip-components=1 -C /opt/apache-guacamole/server
+curl -fsSL "https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${GUAC_SERVER_VERSION}" | tar -xz --strip-components=1 -C /opt/apache-guacamole/server
 cd /opt/apache-guacamole/server
 export CPPFLAGS="-Wno-error=deprecated-declarations"
 $STD autoreconf -fi
-$STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots --disable-guaclog
+$STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
 $STD make
 $STD make install
 $STD ldconfig
-curl -fsSL "https://downloads.apache.org/guacamole/${RELEASE_CLIENT}/binary/guacamole-${RELEASE_CLIENT}.war" -o "/opt/apache-guacamole/tomcat9/webapps/guacamole.war"
+echo "${GUAC_SERVER_VERSION}" >~/.guacamole_server
+curl -fsSL "https://downloads.apache.org/guacamole/${GUAC_CLIENT_VERSION}/binary/guacamole-${GUAC_CLIENT_VERSION}.war" -o "/opt/apache-guacamole/tomcat9/webapps/guacamole.war"
+echo "${GUAC_CLIENT_VERSION}" >~/.guacamole_client
 curl -fsSL "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/${MYSQL_CONNECTOR_VERSION}/mysql-connector-j-${MYSQL_CONNECTOR_VERSION}.jar" -o "/etc/guacamole/lib/mysql-connector-j.jar"
-curl -fsSL "https://downloads.apache.org/guacamole/${RELEASE_SERVER}/binary/guacamole-auth-jdbc-${RELEASE_SERVER}.tar.gz" -o "/root/guacamole-auth-jdbc-${RELEASE_SERVER}.tar.gz"
-$STD tar -xf ~/guacamole-auth-jdbc-"$RELEASE_SERVER".tar.gz
-mv ~/guacamole-auth-jdbc-"$RELEASE_SERVER"/mysql/guacamole-auth-jdbc-mysql-"$RELEASE_SERVER".jar /etc/guacamole/extensions/
+echo "${MYSQL_CONNECTOR_VERSION}" >~/.guacamole_mysql_connector
+curl -fsSL "https://downloads.apache.org/guacamole/${GUAC_SERVER_VERSION}/binary/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz" -o "/root/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz"
+$STD tar -xf ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION".tar.gz
+mv ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION"/mysql/guacamole-auth-jdbc-mysql-"$GUAC_SERVER_VERSION".jar /etc/guacamole/extensions/
+echo "${GUAC_SERVER_VERSION}" >~/.guacamole_auth_jdbc
 msg_ok "Setup Apache Guacamole"
 
 msg_info "Importing Database Schema"
-cd ~/guacamole-auth-jdbc-"${RELEASE_SERVER}"/mysql/schema
+cd ~/guacamole-auth-jdbc-"${GUAC_SERVER_VERSION}"/mysql/schema
 cat *.sql | mariadb -u root ${MARIADB_DB_NAME}
 {
   echo "mysql-hostname: 127.0.0.1"
@@ -82,8 +85,7 @@ cat *.sql | mariadb -u root ${MARIADB_DB_NAME}
   echo "mysql-username: $MARIADB_DB_USER"
   echo "mysql-password: $MARIADB_DB_PASS"
 } >>/etc/guacamole/guacamole.properties
-rm -rf ~/guacamole-auth-jdbc-"$RELEASE_SERVER"{,.tar.gz}
-echo "${RELEASE_SERVER}" >/opt/apache-guacamole/.version
+rm -rf ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION"{,.tar.gz}
 msg_ok "Imported Database Schema"
 
 msg_info "Setup Service"
