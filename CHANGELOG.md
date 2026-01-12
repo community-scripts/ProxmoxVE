@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Update influxdb-install.sh [@chrnie](https://github.com/chrnie) ([#10753](https://github.com/community-scripts/ProxmoxVE/pull/10753))
     - Cockpit: Downgrade to Debian 12 Bookworm (45Drives Issue) [@MickLesk](https://github.com/MickLesk) ([#10717](https://github.com/community-scripts/ProxmoxVE/pull/10717))
 
   - #### ✨ New Features
