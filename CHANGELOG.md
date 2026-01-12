@@ -43,6 +43,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: add storage validation & fix GB/MB display [@MickLesk](https://github.com/MickLesk) ([#10745](https://github.com/community-scripts/ProxmoxVE/pull/10745))
     - core: validate container ID before pct create to prevent failures [@MickLesk](https://github.com/MickLesk) ([#10729](https://github.com/community-scripts/ProxmoxVE/pull/10729))
 
   - #### 🔧 Refactor
