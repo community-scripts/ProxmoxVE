@@ -42,6 +42,29 @@ function msg() {
   local TEXT="$1"
   echo -e "$TEXT"
 }
+function validate_container_id() {
+  local ctid="$1"
+  # Check if ID is numeric
+  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
+    return 1
+  fi
+  # Check if config file exists for VM or LXC
+  if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
+    return 1
+  fi
+  # Check if ID is used in LVM logical volumes
+  if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
+    return 1
+  fi
+  return 0
+}
+function get_valid_container_id() {
+  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+  while ! validate_container_id "$suggested_id"; do
+    suggested_id=$((suggested_id + 1))
+  done
+  echo "$suggested_id"
+}
 function cleanup_ctid() {
   if pct status $CTID &>/dev/null; then
     if [ "$(pct status $CTID | awk '{print $2}')" == "running" ]; then
@@ -99,7 +122,24 @@ turnkey=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs
 # Setup script environment
 PASS="$(openssl rand -base64 8)"
 # Prompt user to confirm container ID
-  CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the conatiner ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
+while true; do
+  CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the container ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
+  
+  # Check if user cancelled
+  [ -z "$CTID" ] && die "No Container ID selected"
+  
+  # Validate Container ID
+  if ! validate_container_id "$CTID"; then
+    SUGGESTED_ID=$(get_valid_container_id "$CTID")
+    if whiptail --backtitle "Container ID" --title "ID Already In Use" --yesno "Container/VM ID $CTID is already in use.\n\nWould you like to use the next available ID ($SUGGESTED_ID)?" 10 58; then
+      CTID="$SUGGESTED_ID"
+      break
+    fi
+    # User declined, loop back to input
+  else
+    break
+  fi
+done
 # Prompt user to confirm Hostname
   HOST_NAME=$(whiptail --backtitle "Hostname" --title "Choose the Hostname" --inputbox "Enter the containers Hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3)
 PCT_OPTIONS="
