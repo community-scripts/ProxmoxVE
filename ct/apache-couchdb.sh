@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://couchdb.apache.org/
 
-APP="Apache-CouchDB"
+APP="Apache CouchDB"
 var_tags="${var_tags:-database}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
