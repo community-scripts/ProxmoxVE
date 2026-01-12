@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 5984,
   "documentation": "https://docs.couchdb.org/en/stable/",
@@ -23,7 +23,7 @@
         "ram": 4096,
         "hdd": 10,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Show Login Credentials: `cat CouchDB.creds`",
+      "text": "Login Credentials: `cat ~/couchdb.creds`",
       "type": "info"
     }
   ]

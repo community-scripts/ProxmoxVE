@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,15 +20,19 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /etc/systemd/system/couchdb.service ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "Currently we don't provide an update function for this ${APP}."
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /usr/lib/systemd/system/couchdb.service ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating Apache CouchDB"
+  $STD apt-get update
+  $STD apt-get install -y --only-upgrade couchdb
+  msg_ok "Updated Apache CouchDB"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start
