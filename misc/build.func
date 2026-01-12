@@ -577,7 +577,7 @@ base_settings() {
   RAM_SIZE="${final_ram}"
   VERBOSE=${var_verbose:-"${1:-no}"}
   PW=${var_pw:-""}
-  
+
   # Validate and set Container ID
   local requested_id="${var_ctid:-$NEXTID}"
   if ! validate_container_id "$requested_id"; then
@@ -585,7 +585,7 @@ base_settings() {
     requested_id=$(get_valid_container_id "$requested_id")
   fi
   CT_ID="$requested_id"
-  
+
   HN=${var_hostname:-$NSAPP}
   BRG=${var_brg:-"vmbr0"}
   NET=${var_net:-"dhcp"}
@@ -2412,7 +2412,6 @@ install_script() {
     2 | advanced | ADVANCED)
       header_info
       echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Install on node $PVEHOST_NAME${CL}"
-      echo -e "${INFO}${BOLD}${DGN}PVE Version ${PVEVERSION} (Kernel: ${KERNEL_VERSION})${CL}"
       METHOD="advanced"
       base_settings
       advanced_settings
