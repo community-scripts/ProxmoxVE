@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Fladder ([#10768](https://github.com/community-scripts/ProxmoxVE/pull/10768))
+  - Investbrain ([#10774](https://github.com/community-scripts/ProxmoxVE/pull/10774))
+- Fladder ([#10768](https://github.com/community-scripts/ProxmoxVE/pull/10768))
 
 ### 🚀 Updated Scripts
 
