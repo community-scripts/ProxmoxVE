@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Openwrt: Remove default VLAN for LAN [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#10782](https://github.com/community-scripts/ProxmoxVE/pull/10782))
     - Refactor: Joplin Server [@tremor021](https://github.com/tremor021) ([#10769](https://github.com/community-scripts/ProxmoxVE/pull/10769))
     - Fix Zammad nginx configuration causing installation failure [@Copilot](https://github.com/Copilot) ([#10757](https://github.com/community-scripts/ProxmoxVE/pull/10757))
 
@@ -29,6 +30,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Backrest: Bump to Trixie [@tremor021](https://github.com/tremor021) ([#10758](https://github.com/community-scripts/ProxmoxVE/pull/10758))
     - Refactor: Caddy [@tremor021](https://github.com/tremor021) ([#10759](https://github.com/community-scripts/ProxmoxVE/pull/10759))
     - Refactor: Leantime [@tremor021](https://github.com/tremor021) ([#10760](https://github.com/community-scripts/ProxmoxVE/pull/10760))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - update_lxcs.sh: Add the option to skip stopped LXC [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#10783](https://github.com/community-scripts/ProxmoxVE/pull/10783))
 
 ## 2026-01-12
 
