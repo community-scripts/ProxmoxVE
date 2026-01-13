@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Refactor: Joplin Server [@tremor021](https://github.com/tremor021) ([#10769](https://github.com/community-scripts/ProxmoxVE/pull/10769))
     - Fix Zammad nginx configuration causing installation failure [@Copilot](https://github.com/Copilot) ([#10757](https://github.com/community-scripts/ProxmoxVE/pull/10757))
 
   - #### 🔧 Refactor
