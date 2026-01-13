@@ -33,11 +33,11 @@ setup_composer
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="investbrain" PG_DB_USER="investbrain" setup_postgresql_db
-
-fetch_and_deploy_gh_release "Investbrain" "investbrainapp/investbrain" "tarball" "latest" "/opt/investbrain"
 import_local_ip
 
-msg_info "Installing Investbrain (Patience)"
+fetch_and_deploy_gh_release "Investbrain" "investbrainapp/investbrain" "tarball" "latest" "/opt/investbrain"
+
+msg_info "Installing Investbrain"
 APP_KEY=$(openssl rand -base64 32)
 cd /opt/investbrain
 cat <<EOF >/opt/investbrain/.env
