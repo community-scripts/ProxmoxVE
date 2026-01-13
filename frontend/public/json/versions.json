@@ -1,8 +1,88 @@
 [
   {
+    "name": "LimeSurvey/LimeSurvey",
+    "version": "6.16.3+251215",
+    "date": "2026-01-13T10:36:10Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.51",
+    "date": "2026-01-12T16:26:38Z"
+  },
+  {
+    "name": "endurain-project/endurain",
+    "version": "v0.16.6",
+    "date": "2026-01-13T10:28:14Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.546",
+    "date": "2026-01-13T10:08:09Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.16-nightly",
+    "date": "2026-01-13T09:09:32Z"
+  },
+  {
+    "name": "Comfy-Org/ComfyUI",
+    "version": "v0.9.1",
+    "date": "2026-01-13T07:33:55Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.4.7",
+    "date": "2026-01-13T07:28:02Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.0-rc7",
+    "date": "2026-01-13T04:38:38Z"
+  },
+  {
+    "name": "Whisparr/Whisparr",
+    "version": "v3.1.0.2111",
+    "date": "2026-01-13T06:11:13Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.834",
+    "date": "2026-01-13T06:00:41Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.3",
+    "date": "2026-01-13T01:38:42Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-13T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2026-01-13T00:14:02Z"
+  },
+  {
     "name": "henrygd/beszel",
     "version": "v0.18.2",
     "date": "2026-01-12T23:58:00Z"
+  },
+  {
+    "name": "prometheus/alertmanager",
+    "version": "v0.30.1",
+    "date": "2026-01-12T23:30:06Z"
+  },
+  {
+    "name": "librenms/librenms",
+    "version": "26.1.1",
+    "date": "2026-01-12T23:26:02Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -10,24 +90,14 @@
     "date": "2026-01-12T23:25:10Z"
   },
   {
-    "name": "librenms/librenms",
-    "version": "26.1.1",
-    "date": "2026-01-12T23:12:41Z"
-  },
-  {
     "name": "azukaar/Cosmos-Server",
     "version": "v0.19.1",
     "date": "2026-01-12T20:20:08Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.14.0-rc1",
-    "date": "2026-01-10T05:09:46Z"
-  },
-  {
-    "name": "Infisical/infisical",
-    "version": "v0.155.2",
-    "date": "2026-01-12T21:52:20Z"
+    "name": "influxdata/influxdb",
+    "version": "v2.8.0",
+    "date": "2025-12-12T20:25:00Z"
   },
   {
     "name": "fccview/jotty",
@@ -45,11 +115,6 @@
     "date": "2026-01-12T21:02:34Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.831",
-    "date": "2026-01-12T20:54:11Z"
-  },
-  {
     "name": "gristlabs/grist-core",
     "version": "v1.7.10",
     "date": "2026-01-12T20:50:50Z"
@@ -60,14 +125,9 @@
     "date": "2026-01-12T20:18:34Z"
   },
   {
-    "name": "Whisparr/Whisparr",
-    "version": "v3.1.0.2109",
-    "date": "2026-01-12T20:09:42Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.15.dev1",
-    "date": "2026-01-12T19:58:30Z"
+    "name": "keycloak/keycloak",
+    "version": "26.5.0",
+    "date": "2026-01-06T07:42:32Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -78,11 +138,6 @@
     "name": "coder/code-server",
     "version": "v4.108.0",
     "date": "2026-01-12T19:24:55Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2026-01-12T19:00:57Z"
   },
   {
     "name": "release-argus/Argus",
@@ -103,11 +158,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.31.6",
     "date": "2026-01-12T16:47:36Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.51",
-    "date": "2026-01-12T16:26:38Z"
   },
   {
     "name": "slskd/slskd",
@@ -147,7 +197,7 @@
   {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
-    "date": "2026-01-12T09:54:36Z"
+    "date": "2026-01-09T17:45:02Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -170,16 +220,6 @@
     "date": "2026-01-12T00:37:54Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-12T00:27:04Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.5.7",
     "date": "2026-01-11T19:31:59Z"
@@ -193,11 +233,6 @@
     "name": "alexta69/metube",
     "version": "2026.01.11",
     "date": "2026-01-11T18:43:56Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.5.0",
-    "date": "2026-01-06T07:42:32Z"
   },
   {
     "name": "ghostfolio/ghostfolio",
@@ -280,11 +315,6 @@
     "date": "2025-12-15T19:17:42Z"
   },
   {
-    "name": "endurain-project/endurain",
-    "version": "v0.16.5",
-    "date": "2026-01-09T22:06:11Z"
-  },
-  {
     "name": "runtipi/runtipi",
     "version": "nightly",
     "date": "2026-01-09T17:26:57Z"
@@ -333,11 +363,6 @@
     "name": "evcc-io/evcc",
     "version": "0.300.3",
     "date": "2026-01-09T10:40:48Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.545",
-    "date": "2026-01-06T16:19:17Z"
   },
   {
     "name": "9001/copyparty",
@@ -413,11 +438,6 @@
     "name": "mattermost/mattermost",
     "version": "v11.1.2",
     "date": "2025-12-17T09:26:24Z"
-  },
-  {
-    "name": "Comfy-Org/ComfyUI",
-    "version": "v0.8.2",
-    "date": "2026-01-08T06:00:20Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -618,11 +638,6 @@
     "name": "karakeep-app/karakeep",
     "version": "android/v1.8.5-0",
     "date": "2026-01-02T22:35:27Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.4.6",
-    "date": "2026-01-02T22:20:47Z"
   },
   {
     "name": "mealie-recipes/mealie",
@@ -900,11 +915,6 @@
     "date": "2025-12-18T07:00:26Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v2.8.0",
-    "date": "2025-12-12T20:25:00Z"
-  },
-  {
     "name": "grafana/grafana",
     "version": "v12.3.1",
     "date": "2025-12-16T21:58:21Z"
@@ -923,16 +933,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.2.2",
     "date": "2025-12-15T18:25:36Z"
-  },
-  {
-    "name": "prometheus/alertmanager",
-    "version": "v0.30.0",
-    "date": "2025-12-15T17:23:59Z"
-  },
-  {
-    "name": "LimeSurvey/LimeSurvey",
-    "version": "6.16.2+251209",
-    "date": "2025-12-15T12:05:26Z"
   },
   {
     "name": "jellyfin/jellyfin",
