@@ -36,7 +36,6 @@ function update_script() {
     $STD supervisorctl stop all
     msg_ok "Services Stopped"
 
-    PHP_FPM=YES PHP_MODULE="gd,zip,intl,pdo,pgsql,pdo-pgsql,bcmath,opcache,mbstring,redis" setup_php
     setup_composer
     NODE_VERSION="22" setup_nodejs
     PG_VERSION="17" setup_postgresql
@@ -76,7 +75,7 @@ function update_script() {
     systemctl start php${PHP_VERSION}-fpm nginx
     $STD supervisorctl start all
     msg_ok "Services Started"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
