@@ -277,7 +277,7 @@ function default_settings() {
   MAC=$GEN_MAC
   LAN_MAC=$GEN_MAC_LAN
   VLAN=""
-  LAN_VLAN=",tag=999"
+  LAN_VLAN=""
   LAN_IP_ADDR="192.168.1.1"
   LAN_NETMASK="255.255.255.0"
   MTU=""
@@ -427,8 +427,8 @@ function advanced_settings() {
 
   if VLAN2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN Vlan" 8 58 999 --title "LAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $VLAN2 ]; then
-      VLAN2="999"
-      LAN_VLAN=",tag=$VLAN2"
+      VLAN2="Default"
+      LAN_VLAN=""
     else
       LAN_VLAN=",tag=$VLAN2"
     fi
