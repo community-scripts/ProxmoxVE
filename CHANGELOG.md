@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-13
 
+### 🆕 New Scripts
+
+  - Fladder ([#10768](https://github.com/community-scripts/ProxmoxVE/pull/10768))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
