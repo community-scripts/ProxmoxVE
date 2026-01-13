@@ -27,6 +27,7 @@ CL=$(echo "\033[m")
 header_info
 echo "Loading..."
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE LXC Updater" --yesno "This Will Update LXC Containers. Proceed?" 10 58
+SKIP_STOPPED=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Skip Not-Running Containers" --yesno "Do you want to skip containers that are not currently running?" 10 58 && echo "yes" || echo "no")
 NODE=$(hostname)
 EXCLUDE_MENU=()
 MSG_MAX_LENGTH=0
@@ -81,6 +82,12 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     sleep 1
   else
     status=$(pct status $container)
+    if [ "$SKIP_STOPPED" == "yes" ] && [ "$status" == "status: stopped" ]; then
+      header_info
+      echo -e "${BL}[Info]${GN} Skipping ${BL}$container${CL}${GN} (not running)${CL}"
+      sleep 1
+      continue
+    fi
     template=$(pct config $container | grep -q "template:" && echo "true" || echo "false")
     if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
       echo -e "${BL}[Info]${GN} Starting${BL} $container ${CL} \n"
