@@ -1,5 +1,140 @@
 [
   {
+    "name": "henrygd/beszel",
+    "version": "v0.18.2",
+    "date": "2026-01-12T23:58:00Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.1-stable",
+    "date": "2026-01-12T23:25:10Z"
+  },
+  {
+    "name": "librenms/librenms",
+    "version": "26.1.1",
+    "date": "2026-01-12T23:12:41Z"
+  },
+  {
+    "name": "azukaar/Cosmos-Server",
+    "version": "v0.19.1",
+    "date": "2026-01-12T20:20:08Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.0-rc1",
+    "date": "2026-01-10T05:09:46Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.2",
+    "date": "2026-01-12T21:52:20Z"
+  },
+  {
+    "name": "fccview/jotty",
+    "version": "1.17.1",
+    "date": "2026-01-12T21:34:44Z"
+  },
+  {
+    "name": "influxdata/telegraf",
+    "version": "v1.37.1",
+    "date": "2026-01-12T21:05:24Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.1.0-dev.1",
+    "date": "2026-01-12T21:02:34Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.831",
+    "date": "2026-01-12T20:54:11Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.10",
+    "date": "2026-01-12T20:50:50Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.16",
+    "date": "2026-01-12T20:18:34Z"
+  },
+  {
+    "name": "Whisparr/Whisparr",
+    "version": "v3.1.0.2109",
+    "date": "2026-01-12T20:09:42Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.15.dev1",
+    "date": "2026-01-12T19:58:30Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.2.1",
+    "date": "2026-01-12T19:44:31Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.108.0",
+    "date": "2026-01-12T19:24:55Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2026-01-12T19:00:57Z"
+  },
+  {
+    "name": "release-argus/Argus",
+    "version": "0.29.2",
+    "date": "2026-01-12T18:56:44Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.6.0-alpha.1",
+    "date": "2026-01-12T17:53:14Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.52.1",
+    "date": "2026-01-12T16:54:03Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.31.6",
+    "date": "2026-01-12T16:47:36Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.51",
+    "date": "2026-01-12T16:26:38Z"
+  },
+  {
+    "name": "slskd/slskd",
+    "version": "0.24.2",
+    "date": "2026-01-12T15:46:08Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.2.6",
+    "date": "2026-01-09T13:53:10Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2026-01-12T13:26:02Z"
+  },
+  {
+    "name": "TuroYT/snowshare",
+    "version": "v1.2.8",
+    "date": "2026-01-12T12:12:05Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2026.1.1",
     "date": "2026-01-12T10:52:35Z"
@@ -8,6 +143,11 @@
     "name": "TryGhost/Ghost-CLI",
     "version": "v1.28.4",
     "date": "2026-01-12T10:04:28Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.7",
+    "date": "2026-01-12T09:54:36Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -20,19 +160,9 @@
     "date": "2026-01-04T22:41:00Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.824",
-    "date": "2026-01-12T05:57:01Z"
-  },
-  {
     "name": "rustdesk/rustdesk-server",
     "version": "1.1.14",
     "date": "2025-01-25T12:48:28Z"
-  },
-  {
-    "name": "Whisparr/Whisparr",
-    "version": "v3.1.0.2101",
-    "date": "2026-01-12T01:57:55Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -48,16 +178,6 @@
     "name": "jeedom/core",
     "version": "4.5.2",
     "date": "2026-01-12T00:27:04Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.18.1",
-    "date": "2026-01-12T00:16:18Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.15.rc.1",
-    "date": "2026-01-11T20:13:55Z"
   },
   {
     "name": "hargata/lubelog",
@@ -80,29 +200,14 @@
     "date": "2026-01-06T07:42:32Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.31.5",
-    "date": "2026-01-11T16:26:54Z"
-  },
-  {
     "name": "ghostfolio/ghostfolio",
     "version": "2.229.0",
     "date": "2026-01-11T16:04:16Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.15",
-    "date": "2026-01-11T15:21:56Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v2.2.0",
     "date": "2026-01-11T15:01:07Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.50",
-    "date": "2026-01-11T13:37:18Z"
   },
   {
     "name": "toniebox-reverse-engineering/teddycloud",
@@ -152,17 +257,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v14.0.7",
-    "date": "2026-01-10T10:31:47Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.1.0-dev.0",
-    "date": "2026-01-10T12:48:39Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
+    "date": "2026-01-10T15:10:54Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -170,19 +265,9 @@
     "date": "2026-01-10T09:23:24Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.14.0-rc1",
-    "date": "2026-01-10T05:09:46Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.6.0",
     "date": "2026-01-10T06:56:46Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.107.1",
-    "date": "2026-01-09T19:41:18Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -190,14 +275,9 @@
     "date": "2026-01-09T22:48:21Z"
   },
   {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.2.0",
-    "date": "2026-01-09T22:10:33Z"
-  },
-  {
     "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-09T22:07:03Z"
+    "version": "v0.18.2",
+    "date": "2025-12-15T19:17:42Z"
   },
   {
     "name": "endurain-project/endurain",
@@ -220,19 +300,9 @@
     "date": "2026-01-09T18:37:04Z"
   },
   {
-    "name": "metabase/metabase",
-    "version": "v0.57.x",
-    "date": "2026-01-09T18:12:58Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.39",
     "date": "2026-01-09T18:06:09Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.7",
-    "date": "2026-01-09T17:45:02Z"
   },
   {
     "name": "saltstack/salt",
@@ -248,11 +318,6 @@
     "name": "mongodb/mongo",
     "version": "r8.2.4-alpha1",
     "date": "2026-01-09T16:17:01Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.2.6",
-    "date": "2026-01-09T13:53:10Z"
   },
   {
     "name": "dedicatedcode/reitti",
@@ -278,11 +343,6 @@
     "name": "9001/copyparty",
     "version": "v1.20.1",
     "date": "2026-01-09T01:30:37Z"
-  },
-  {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.9",
-    "date": "2026-01-09T01:26:51Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -315,11 +375,6 @@
     "date": "2026-01-08T16:08:34Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.30.1-greedy-semantic-search.2",
-    "date": "2026-01-08T15:59:28Z"
-  },
-  {
     "name": "plexguide/Huntarr.io",
     "version": "8.2.11",
     "date": "2026-01-08T15:10:01Z"
@@ -348,11 +403,6 @@
     "name": "forgejo/forgejo",
     "version": "v13.0.4",
     "date": "2026-01-08T10:36:18Z"
-  },
-  {
-    "name": "fccview/jotty",
-    "version": "1.16.1",
-    "date": "2026-01-08T10:10:26Z"
   },
   {
     "name": "requarks/wiki",
@@ -393,11 +443,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2026-01-07",
     "date": "2026-01-07T18:50:28Z"
-  },
-  {
-    "name": "TuroYT/snowshare",
-    "version": "v1.2.7",
-    "date": "2026-01-07T17:12:21Z"
   },
   {
     "name": "node-red/node-red",
@@ -455,11 +500,6 @@
     "date": "2026-01-06T23:02:46Z"
   },
   {
-    "name": "release-argus/Argus",
-    "version": "0.29.1",
-    "date": "2026-01-06T22:45:12Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.92.5",
     "date": "2026-01-06T21:22:20Z"
@@ -513,16 +553,6 @@
     "name": "fosrl/pangolin",
     "version": "1.14.1-s.2",
     "date": "2026-01-06T02:46:38Z"
-  },
-  {
-    "name": "Infisical/infisical",
-    "version": "v0.155.1",
-    "date": "2026-01-06T02:33:13Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.1.6-beta",
-    "date": "2026-01-06T00:42:11Z"
   },
   {
     "name": "pterodactyl/wings",
@@ -875,11 +905,6 @@
     "date": "2025-12-12T20:25:00Z"
   },
   {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.6.0-alpha.0",
-    "date": "2025-12-17T08:35:55Z"
-  },
-  {
     "name": "grafana/grafana",
     "version": "v12.3.1",
     "date": "2025-12-16T21:58:21Z"
@@ -888,11 +913,6 @@
     "name": "inventree/InvenTree",
     "version": "1.1.7",
     "date": "2025-12-16T21:44:58Z"
-  },
-  {
-    "name": "azukaar/Cosmos-Server",
-    "version": "v0.19.0",
-    "date": "2025-12-15T19:43:03Z"
   },
   {
     "name": "opencloud-eu/opencloud",
@@ -908,11 +928,6 @@
     "name": "prometheus/alertmanager",
     "version": "v0.30.0",
     "date": "2025-12-15T17:23:59Z"
-  },
-  {
-    "name": "librenms/librenms",
-    "version": "25.12.0",
-    "date": "2025-12-15T14:06:00Z"
   },
   {
     "name": "LimeSurvey/LimeSurvey",
@@ -1025,11 +1040,6 @@
     "date": "2025-12-08T20:37:45Z"
   },
   {
-    "name": "influxdata/telegraf",
-    "version": "v1.37.0",
-    "date": "2025-12-08T20:36:16Z"
-  },
-  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.71",
     "date": "2025-12-08T14:34:55Z"
@@ -1090,11 +1100,6 @@
     "date": "2025-12-02T17:47:52Z"
   },
   {
-    "name": "slskd/slskd",
-    "version": "0.24.1",
-    "date": "2025-12-01T19:33:30Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.5",
     "date": "2025-12-01T12:58:46Z"
@@ -1128,11 +1133,6 @@
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.6",
     "date": "2025-11-29T02:43:00Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.51.4",
-    "date": "2025-11-28T12:26:59Z"
   },
   {
     "name": "gotson/komga",
