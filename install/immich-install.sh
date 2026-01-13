@@ -99,20 +99,21 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD apt install -y --no-install-recommends patchelf
   tmp_dir=$(mktemp -d)
   $STD pushd "$tmp_dir"
-  curl -fsSLZ -O "https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17537.24/intel-igc-core_1.0.17537.24_amd64.deb" \
-    -O "https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17537.24/intel-igc-opencl_1.0.17537.24_amd64.deb" \
-    -O "https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/intel-opencl-icd-legacy1_24.35.30872.36_amd64.deb" \
-    -O "https://github.com/intel/intel-graphics-compiler/releases/download/v2.22.2/intel-igc-core-2_2.22.2+20121_amd64.deb" \
-    -O "https://github.com/intel/intel-graphics-compiler/releases/download/v2.22.2/intel-igc-opencl-2_2.22.2+20121_amd64.deb" \
-    -O "https://github.com/intel/compute-runtime/releases/download/25.44.36015.5/intel-opencl-icd_25.44.36015.5-0_amd64.deb" \
-    -O "https://github.com/intel/compute-runtime/releases/download/25.44.36015.5/libigdgmm12_22.8.2_amd64.deb"
+  curl -fsSLO https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/Dockerfile
+  readarray -t INTEL_URLS < <(
+    sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $2}'
+    sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
+  )
+  for url in "${INTEL_URLS[@]}"; do
+    curl -fsSLO "$url"
+  done
   $STD apt install -y ./libigdgmm12*.deb
   rm ./libigdgmm12*.deb
   $STD apt install -y ./*.deb
   $STD apt-mark hold libigdgmm12
   $STD popd
   rm -rf "$tmp_dir"
-  dpkg -l | grep "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
+  dpkg -l | grep -m1 "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
   msg_ok "Installed OpenVINO dependencies"
 fi
 
