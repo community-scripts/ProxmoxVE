@@ -68,7 +68,7 @@ function update_container() {
   alpine) pct exec "$container" -- ash -c "apk -U upgrade" ;;
   archlinux) pct exec "$container" -- bash -c "pacman -Syyu --noconfirm" ;;
   fedora | rocky | centos | alma) pct exec "$container" -- bash -c "dnf -y update && dnf -y upgrade" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update 2>/dev/null | grep 'packages.*upgraded'; apt list --upgradable && apt-get -yq dist-upgrade 2>&1; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update 2>/dev/null | grep 'packages.*upgraded'; apt list --upgradable && apt-get -yq dist-upgrade 2>&1; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED || true" ;;
   opensuse) pct exec "$container" -- bash -c "zypper ref && zypper --non-interactive dup" ;;
   esac
 }
