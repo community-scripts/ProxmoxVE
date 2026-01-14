@@ -1,40 +1,40 @@
 {
-    "name": "Kutt",
-    "slug": "kutt",
-    "categories": [
-        21
-    ],
-    "date_created": "2025-12-14",
-    "type": "ct",
-    "updateable": true,
-    "privileged": false,
-    "interface_port": 443,
-    "documentation": "https://github.com/thedevs-network/kutt/",
-    "config_path": "/opt/kutt/.env",
-    "website": "https://kutt.it",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kutt.webp",
-    "description": "Kutt is a modern URL shortener with support for custom domains. Create and edit links, view statistics, manage users, and more.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/kutt.sh",
-            "resources": {
-                "cpu": 1,
-                "ram": 1024,
-                "hdd": 2,
-                "os": "Debian",
-                "version": "13"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": [
-        {
-            "text": "Kutt needs so be served with an SSL certificate for its login to work. During install, you will be prompted to choose if you want to have Caddy installed for SSL termination or if you want to use your own reverse proxy (in that case point your reverse porxy to port 3000).",
-            "type": "info"
-        }
-    ]
+  "name": "Kutt",
+  "slug": "kutt",
+  "categories": [
+    21
+  ],
+  "date_created": "2026-01-14",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 443,
+  "documentation": "https://github.com/thedevs-network/kutt/",
+  "config_path": "/opt/kutt/.env",
+  "website": "https://kutt.it",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kutt.webp",
+  "description": "Kutt is a modern URL shortener with support for custom domains. Create and edit links, view statistics, manage users, and more.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/kutt.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 2,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Kutt needs so be served with an SSL certificate for its login to work. During install, you will be prompted to choose if you want to have Caddy installed for SSL termination or if you want to use your own reverse proxy (in that case point your reverse porxy to port 3000).",
+      "type": "info"
+    }
+  ]
 }
