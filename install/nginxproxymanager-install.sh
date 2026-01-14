@@ -58,7 +58,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-
   grep "tag_name" |
   awk '{print substr($2, 3, length($2)-4) }')
 
-fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}"
+fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "latest"
 
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
