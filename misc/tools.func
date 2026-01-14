@@ -3003,9 +3003,13 @@ _setup_nvidia_gpu() {
   msg_info "Installing NVIDIA GPU drivers"
 
   # Detect host driver version (passed through via /proc)
+  # Format varies by driver type:
+  #   Proprietary: "NVRM version: NVIDIA UNIX x86_64 Kernel Module  550.54.14  Thu..."
+  #   Open:        "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  590.48.01  Release..."
+  # Use regex to extract version number (###.##.## pattern)
   local nvidia_host_version=""
   if [[ -f /proc/driver/nvidia/version ]]; then
-    nvidia_host_version=$(grep "NVRM version:" /proc/driver/nvidia/version 2>/dev/null | awk '{print $8}')
+    nvidia_host_version=$(grep -oP '\d{3,}\.\d+\.\d+' /proc/driver/nvidia/version 2>/dev/null | head -1)
   fi
 
   if [[ -z "$nvidia_host_version" ]]; then
@@ -3024,53 +3028,74 @@ _setup_nvidia_gpu() {
         sed -i -E 's/Components: (.*)$/Components: \1 contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
       fi
     fi
+    $STD apt -y update 2>/dev/null || msg_warn "apt update failed - continuing anyway"
 
-    # Determine CUDA repository
-    local cuda_repo="debian12"
-    case "$os_codename" in
-    bullseye) cuda_repo="debian11" ;;
-    bookworm) cuda_repo="debian12" ;;
-    trixie | sid) cuda_repo="debian12" ;; # Forward compatible
-    esac
+    # For Debian 13 Trixie/Sid: Use Debian's own nvidia packages first (better compatibility)
+    # NVIDIA's CUDA repo targets Debian 12 and may not have amd64 packages for Trixie
+    if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
+      msg_info "Debian ${os_codename}: Using Debian's NVIDIA packages"
 
-    # Add NVIDIA CUDA repository
-    if [[ ! -f /usr/share/keyrings/cuda-archive-keyring.gpg ]]; then
-      msg_info "Adding NVIDIA CUDA repository (${cuda_repo})"
-      local cuda_keyring
-      cuda_keyring="$(mktemp)"
-      if curl -fsSL -o "$cuda_keyring" "https://developer.download.nvidia.com/compute/cuda/repos/${cuda_repo}/x86_64/cuda-keyring_1.1-1_all.deb" 2>/dev/null; then
-        $STD dpkg -i "$cuda_keyring" 2>/dev/null || true
+      # Try version-matched from Debian repos first
+      local nvidia_pkgs="libcuda1=${nvidia_host_version}* libnvcuvid1=${nvidia_host_version}* libnvidia-encode1=${nvidia_host_version}* libnvidia-ml1=${nvidia_host_version}*"
+      if $STD apt -y install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
+        msg_ok "Installed version-matched NVIDIA libraries from Debian"
       else
-        msg_warn "Failed to download NVIDIA CUDA keyring"
+        # Fallback to unversioned (whatever Debian provides)
+        if $STD apt -y install --no-install-recommends libcuda1 libnvcuvid1 libnvidia-encode1 libnvidia-ml1 2>/dev/null; then
+          msg_ok "Installed NVIDIA libraries from Debian (version may differ from host)"
+        else
+          msg_warn "NVIDIA library installation failed - GPU compute may not work"
+        fi
       fi
-      rm -f "$cuda_keyring"
-    fi
+      $STD apt -y install --no-install-recommends nvidia-smi 2>/dev/null || true
 
-    # Pin NVIDIA repo for version matching
-    cat <<'NVIDIA_PIN' >/etc/apt/preferences.d/nvidia-cuda-pin
+    else
+      # Debian 11/12: Use NVIDIA CUDA repository for version matching
+      local cuda_repo="debian12"
+      case "$os_codename" in
+      bullseye) cuda_repo="debian11" ;;
+      bookworm) cuda_repo="debian12" ;;
+      esac
+
+      # Add NVIDIA CUDA repository
+      if [[ ! -f /usr/share/keyrings/cuda-archive-keyring.gpg ]]; then
+        msg_info "Adding NVIDIA CUDA repository (${cuda_repo})"
+        local cuda_keyring
+        cuda_keyring="$(mktemp)"
+        if curl -fsSL -o "$cuda_keyring" "https://developer.download.nvidia.com/compute/cuda/repos/${cuda_repo}/x86_64/cuda-keyring_1.1-1_all.deb" 2>/dev/null; then
+          $STD dpkg -i "$cuda_keyring" 2>/dev/null || true
+        else
+          msg_warn "Failed to download NVIDIA CUDA keyring"
+        fi
+        rm -f "$cuda_keyring"
+      fi
+
+      # Pin NVIDIA repo for version matching
+      cat <<'NVIDIA_PIN' >/etc/apt/preferences.d/nvidia-cuda-pin
 Package: *
 Pin: origin developer.download.nvidia.com
 Pin-Priority: 1001
 NVIDIA_PIN
 
-    $STD apt -y update
+      $STD apt -y update 2>/dev/null || msg_warn "apt update failed - continuing anyway"
 
-    # Install version-matched NVIDIA libraries
-    local nvidia_pkgs="libcuda1=${nvidia_host_version}* libnvcuvid1=${nvidia_host_version}* libnvidia-encode1=${nvidia_host_version}* libnvidia-ml1=${nvidia_host_version}*"
+      # Install version-matched NVIDIA libraries
+      local nvidia_pkgs="libcuda1=${nvidia_host_version}* libnvcuvid1=${nvidia_host_version}* libnvidia-encode1=${nvidia_host_version}* libnvidia-ml1=${nvidia_host_version}*"
 
-    msg_info "Installing NVIDIA libraries (version ${nvidia_host_version})"
-    if $STD apt -y install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
-      msg_ok "Installed version-matched NVIDIA libraries"
-    else
-      msg_warn "Version-pinned install failed - trying unpinned"
-      if $STD apt -y install --no-install-recommends libcuda1 libnvcuvid1 libnvidia-encode1 libnvidia-ml1 2>/dev/null; then
-        msg_warn "Installed NVIDIA libraries (unpinned) - version mismatch may occur"
+      msg_info "Installing NVIDIA libraries (version ${nvidia_host_version})"
+      if $STD apt -y install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
+        msg_ok "Installed version-matched NVIDIA libraries"
       else
-        msg_warn "NVIDIA library installation failed"
+        msg_warn "Version-pinned install failed - trying unpinned"
+        if $STD apt -y install --no-install-recommends libcuda1 libnvcuvid1 libnvidia-encode1 libnvidia-ml1 2>/dev/null; then
+          msg_ok "Installed NVIDIA libraries (unpinned) - version mismatch may occur"
+        else
+          msg_warn "NVIDIA library installation failed"
+        fi
       fi
-    fi
 
-    $STD apt -y install --no-install-recommends nvidia-smi 2>/dev/null || true
+      $STD apt -y install --no-install-recommends nvidia-smi 2>/dev/null || true
+    fi
 
   elif [[ "$os_id" == "ubuntu" ]]; then
     # Ubuntu versioning
@@ -3094,7 +3119,7 @@ NVIDIA_PIN
       rm -f "$cuda_keyring"
     fi
 
-    $STD apt -y update
+    $STD apt -y update 2>/dev/null || msg_warn "apt update failed - continuing anyway"
 
     # Try version-matched install
     local nvidia_pkgs="libcuda1=${nvidia_host_version}* libnvcuvid1=${nvidia_host_version}* libnvidia-encode1=${nvidia_host_version}* libnvidia-ml1=${nvidia_host_version}*"
