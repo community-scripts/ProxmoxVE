@@ -194,7 +194,20 @@ function CommandMenu() {
         </TooltipProvider>
       </div>
 
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        filter={(value: string, search: string) => {
+          const searchLower = search.toLowerCase().trim();
+          if (!searchLower)
+            return 1;
+          const valueLower = value.toLowerCase();
+          const searchWords = searchLower.split(/\s+/).filter(Boolean);
+          // All search words must appear somewhere in the value (name + description)
+          const allWordsMatch = searchWords.every((word: string) => valueLower.includes(word));
+          return allWordsMatch ? 1 : 0;
+        }}
+      >
         <DialogTitle className="sr-only">Search scripts</DialogTitle>
         <CommandInput placeholder="Search for a script..." />
         <CommandList>
@@ -204,7 +217,7 @@ function CommandMenu() {
               {scripts.map(script => (
                 <CommandItem
                   key={`script:${script.slug}`}
-                  value={`${script.name}-${script.type}`}
+                  value={`${script.name} ${script.type} ${script.description || ""}`}
                   onSelect={() => {
                     setOpen(false);
                     router.push(`/scripts?id=${script.slug}`);
