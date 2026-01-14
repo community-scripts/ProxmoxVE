@@ -1,5 +1,80 @@
 [
   {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2026-01-14T11:24:21Z"
+  },
+  {
+    "name": "dedicatedcode/reitti",
+    "version": "v3.3.0",
+    "date": "2026-01-14T11:06:59Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.52.3",
+    "date": "2026-01-14T11:01:43Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.9.1",
+    "date": "2026-01-14T10:37:28Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v2.11.35",
+    "date": "2026-01-14T09:40:53Z"
+  },
+  {
+    "name": "cloudreve/cloudreve",
+    "version": "4.11.1",
+    "date": "2026-01-14T08:40:47Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.846",
+    "date": "2026-01-14T05:57:12Z"
+  },
+  {
+    "name": "Whisparr/Whisparr",
+    "version": "v3.1.0.2116",
+    "date": "2026-01-14T05:56:17Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.15",
+    "date": "2026-01-06T20:05:54Z"
+  },
+  {
+    "name": "NginxProxyManager/nginx-proxy-manager",
+    "version": "v2.13.6",
+    "date": "2026-01-14T05:04:11Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.2",
+    "date": "2025-10-22T17:03:54Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-14T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.4",
+    "date": "2026-01-14T00:04:13Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.0-rc11",
+    "date": "2026-01-13T23:29:47Z"
+  },
+  {
     "name": "ZoeyVid/NPMplus",
     "version": "2025-05-07-r1",
     "date": "2025-05-07T12:18:42Z"
@@ -35,19 +110,14 @@
     "date": "2026-01-13T20:39:22Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.15",
-    "date": "2026-01-06T20:05:54Z"
+    "name": "keycloak/keycloak",
+    "version": "26.5.0",
+    "date": "2026-01-06T07:42:32Z"
   },
   {
     "name": "openobserve/openobserve",
     "version": "v0.50.0-rc2",
     "date": "2026-01-13T19:27:24Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.14.0-rc10",
-    "date": "2026-01-13T19:25:31Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
@@ -85,19 +155,9 @@
     "date": "2026-01-13T16:49:51Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.30.1-greedy-semantic-search.4",
-    "date": "2026-01-13T16:18:53Z"
-  },
-  {
     "name": "msgbyte/tianji",
     "version": "v1.31.7",
     "date": "2026-01-13T16:12:12Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.52.2",
-    "date": "2026-01-13T15:43:10Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -133,31 +193,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.4.7",
     "date": "2026-01-13T07:28:02Z"
-  },
-  {
-    "name": "Whisparr/Whisparr",
-    "version": "v3.1.0.2111",
-    "date": "2026-01-13T06:11:13Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.834",
-    "date": "2026-01-13T06:00:41Z"
-  },
-  {
-    "name": "Infisical/infisical",
-    "version": "v0.155.3",
-    "date": "2026-01-13T01:38:42Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-13T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "henrygd/beszel",
@@ -210,11 +245,6 @@
     "date": "2026-01-12T20:18:34Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.5.0",
-    "date": "2026-01-06T07:42:32Z"
-  },
-  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.2.1",
     "date": "2026-01-12T19:44:31Z"
@@ -262,7 +292,7 @@
   {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
-    "date": "2026-01-12T09:54:36Z"
+    "date": "2026-01-09T17:45:02Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -400,11 +430,6 @@
     "date": "2026-01-09T16:17:01Z"
   },
   {
-    "name": "dedicatedcode/reitti",
-    "version": "v3.2.1",
-    "date": "2026-01-09T11:09:24Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "@fumadocs/base-ui@16.4.6",
     "date": "2026-01-09T10:54:11Z"
@@ -436,8 +461,8 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "v5.0.0-alpha0",
-    "date": "2025-12-31T01:18:10Z"
+    "version": "v4.14.2",
+    "date": "2026-01-08T18:45:47Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -585,11 +610,6 @@
     "date": "2026-01-06T14:46:07Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.9.0",
-    "date": "2026-01-06T13:15:16Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.13",
     "date": "2026-01-06T12:09:32Z"
@@ -625,11 +645,6 @@
     "date": "2026-01-05T05:56:57Z"
   },
   {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.2",
-    "date": "2025-10-22T17:03:54Z"
-  },
-  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.4.0",
     "date": "2026-01-04T21:10:51Z"
@@ -657,7 +672,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -713,11 +728,6 @@
     "name": "javedh-dev/tracktor",
     "version": "1.1.0",
     "date": "2025-12-30T04:42:18Z"
-  },
-  {
-    "name": "traefik/traefik",
-    "version": "v3.6.6",
-    "date": "2025-12-29T15:56:09Z"
   },
   {
     "name": "ArchiveBox/ArchiveBox",
@@ -1215,11 +1225,6 @@
     "date": "2025-11-18T15:06:37Z"
   },
   {
-    "name": "NginxProxyManager/nginx-proxy-manager",
-    "version": "v2.13.5",
-    "date": "2025-11-18T11:47:48Z"
-  },
-  {
     "name": "Hosteroid/domain-monitor",
     "version": "v1.1.1",
     "date": "2025-11-18T11:32:30Z"
@@ -1243,11 +1248,6 @@
     "name": "bastienwirtz/homer",
     "version": "v25.11.1",
     "date": "2025-11-16T13:04:21Z"
-  },
-  {
-    "name": "cloudreve/cloudreve",
-    "version": "4.10.1",
-    "date": "2025-11-15T04:36:48Z"
   },
   {
     "name": "Lissy93/domain-locker",
