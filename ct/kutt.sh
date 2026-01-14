@@ -59,7 +59,7 @@ function update_script() {
     msg_info "Starting services"
     systemctl start kutt
     msg_ok "Started services"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
