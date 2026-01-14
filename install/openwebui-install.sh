@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y ffmpeg
+$STD apt install -y \
+  ffmpeg \
+  zstd
 msg_ok "Installed Dependencies"
 
 setup_hwaccel
@@ -69,9 +71,10 @@ EOF
   msg_ok "Installed Intel® oneAPI Base Toolkit"
 
   msg_info "Installing Ollama"
-  curl -fsSLO -C - https://ollama.com/download/ollama-linux-amd64.tgz
-  tar -C /usr -xzf ollama-linux-amd64.tgz
-  rm -rf ollama-linux-amd64.tgz
+  OLLAMA_RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
+  curl -fsSLO -C - https://github.com/ollama/ollama/releases/download/${OLLAMA_RELEASE}/ollama-linux-amd64.tar.zst
+  tar --zstd -C /usr -xf ollama-linux-amd64.tar.zst
+  rm -rf ollama-linux-amd64.tar.zst
   cat <<EOF >/etc/systemd/system/ollama.service
 [Unit]
 Description=Ollama Service

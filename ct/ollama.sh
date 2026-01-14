@@ -32,17 +32,22 @@ function update_script() {
     if [[ ! -f /opt/Ollama_version.txt ]]; then
       touch /opt/Ollama_version.txt
     fi
+    if ! command -v zstd &>/dev/null; then
+      msg_info "Installing zstd"
+      $STD apt install -y zstd
+      msg_ok "Installed zstd"
+    fi
     msg_info "Stopping Services"
     systemctl stop ollama
     msg_ok "Services Stopped"
 
-    TMP_TAR=$(mktemp --suffix=.tgz)
-    curl -fL# -C - -o "${TMP_TAR}" "https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tgz"
+    TMP_TAR=$(mktemp --suffix=.tar.zst)
+    curl -fL# -C - -o "${TMP_TAR}" "https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tar.zst"
     msg_info "Updating Ollama to ${RELEASE}"
     rm -rf /usr/local/lib/ollama
     rm -rf /usr/local/bin/ollama
     mkdir -p /usr/local/lib/ollama
-    tar -xzf "${TMP_TAR}" -C /usr/local/lib/ollama
+    tar --zstd -xf "${TMP_TAR}" -C /usr/local/lib/ollama
     ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
     rm -f "${TMP_TAR}"
     echo "${RELEASE}" >/opt/Ollama_version.txt
