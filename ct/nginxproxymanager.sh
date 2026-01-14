@@ -49,11 +49,10 @@ function update_script() {
 
   NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
-  #RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
-    #grep "tag_name" |
-    #awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
+    grep "tag_name" |
+    awk '{print substr($2, 3, length($2)-4) }')
 
-  RELEASE="2.13.5"
   CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}" "/opt/nginxproxymanager"
   
   msg_info "Stopping Services"
