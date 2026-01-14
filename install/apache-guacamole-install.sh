@@ -69,6 +69,7 @@ curl -fsSL "https://downloads.apache.org/guacamole/${GUAC_CLIENT_VERSION}/binary
 echo "${GUAC_CLIENT_VERSION}" >~/.guacamole_client
 curl -fsSL "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/${MYSQL_CONNECTOR_VERSION}/mysql-connector-j-${MYSQL_CONNECTOR_VERSION}.jar" -o "/etc/guacamole/lib/mysql-connector-j.jar"
 echo "${MYSQL_CONNECTOR_VERSION}" >~/.guacamole_mysql_connector
+cd /root
 curl -fsSL "https://downloads.apache.org/guacamole/${GUAC_SERVER_VERSION}/binary/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz" -o "/root/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz"
 $STD tar -xf ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION".tar.gz
 mv ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION"/mysql/guacamole-auth-jdbc-mysql-"$GUAC_SERVER_VERSION".jar /etc/guacamole/extensions/
