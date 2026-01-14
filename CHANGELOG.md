@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-14
 
+### 🆕 New Scripts
+
+  - Kutt ([#10812](https://github.com/community-scripts/ProxmoxVE/pull/10812))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
