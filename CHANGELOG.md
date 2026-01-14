@@ -23,6 +23,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Fix whiptail dialog hanging in Proxmox web console [@comk22](https://github.com/comk22) ([#10794](https://github.com/community-scripts/ProxmoxVE/pull/10794))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Add search filtering to CommandDialog for improved script search functionality [@BramSuurdje](https://github.com/BramSuurdje) ([#10800](https://github.com/community-scripts/ProxmoxVE/pull/10800))
+
 ## 2026-01-13
 
 ### 🆕 New Scripts
