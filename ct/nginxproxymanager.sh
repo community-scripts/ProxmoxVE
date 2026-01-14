@@ -53,7 +53,7 @@ function update_script() {
     grep "tag_name" |
     awk '{print substr($2, 3, length($2)-4) }')
 
-  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "latest" "/opt/nginxproxymanager"
+  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}" "/opt/nginxproxymanager"
   
   msg_info "Stopping Services"
   systemctl stop openresty
