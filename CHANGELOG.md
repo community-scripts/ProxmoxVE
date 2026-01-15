@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-15
 
+### 🆕 New Scripts
+
+  - Qui ([#10829](https://github.com/community-scripts/ProxmoxVE/pull/10829))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
