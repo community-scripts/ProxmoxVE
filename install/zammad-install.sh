@@ -52,7 +52,7 @@ msg_ok "Installed Zammad"
 msg_info "Setup Services"
 cp /opt/zammad/contrib/nginx/zammad.conf /etc/nginx/sites-available/zammad.conf
 sed -i "s/server_name localhost;/server_name $LOCAL_IP;/g" /etc/nginx/sites-available/zammad.conf
-ln -s /etc/nginx/sites-available/zammad.conf /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/zammad.conf /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 $STD systemctl reload nginx
 msg_ok "Created Service"
