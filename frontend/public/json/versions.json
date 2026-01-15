@@ -1,5 +1,70 @@
 [
   {
+    "name": "wazuh/wazuh",
+    "version": "v4.14.2",
+    "date": "2026-01-15T11:19:35Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.10",
+    "date": "2026-01-15T10:36:07Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2026-01-15T09:49:28Z"
+  },
+  {
+    "name": "Dokploy/dokploy",
+    "version": "v0.26.4",
+    "date": "2026-01-15T08:02:02Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.107.0",
+    "date": "2026-01-15T06:50:08Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.9.1",
+    "date": "2026-01-14T10:37:28Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.14.1-s.3",
+    "date": "2026-01-15T06:09:56Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.850",
+    "date": "2026-01-15T06:01:37Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.5",
+    "date": "2026-01-15T05:25:10Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.11-stable.1",
+    "date": "2026-01-15T02:40:11Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.13.6",
+    "date": "2026-01-15T02:11:36Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-15T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "chrisbenincasa/tunarr",
     "version": "v1.1.0-dev.3",
     "date": "2026-01-14T23:18:25Z"
@@ -60,11 +125,6 @@
     "date": "2026-01-14T17:54:36Z"
   },
   {
-    "name": "scanopy/scanopy",
-    "version": "v0.13.6",
-    "date": "2026-01-14T17:38:28Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@2.3.5",
     "date": "2026-01-14T16:37:38Z"
@@ -80,9 +140,9 @@
     "date": "2026-01-14T17:14:42Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.32.1-clean-old-fids-in-parallel.7",
-    "date": "2026-01-14T16:47:10Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.6.5",
+    "date": "2025-11-14T06:59:44Z"
   },
   {
     "name": "alam00000/bentopdf",
@@ -125,19 +185,9 @@
     "date": "2026-01-14T11:06:59Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.9.1",
-    "date": "2026-01-14T10:37:28Z"
-  },
-  {
     "name": "cloudreve/cloudreve",
     "version": "4.11.1",
     "date": "2026-01-14T08:40:47Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.846",
-    "date": "2026-01-14T05:57:12Z"
   },
   {
     "name": "Whisparr/Whisparr",
@@ -158,21 +208,6 @@
     "name": "louislam/uptime-kuma",
     "version": "2.0.2",
     "date": "2025-10-22T17:03:54Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-14T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "Infisical/infisical",
-    "version": "v0.155.4",
-    "date": "2026-01-14T00:04:13Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -253,11 +288,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.546",
     "date": "2026-01-13T10:08:09Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.16-nightly",
-    "date": "2026-01-13T09:09:32Z"
   },
   {
     "name": "Comfy-Org/ComfyUI",
@@ -357,7 +387,7 @@
   {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
-    "date": "2026-01-12T09:54:36Z"
+    "date": "2026-01-09T17:45:02Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -450,11 +480,6 @@
     "date": "2026-01-09T22:48:21Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2026-01-09T17:26:57Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.50.0",
     "date": "2026-01-09T19:27:03Z"
@@ -510,11 +535,6 @@
     "date": "2026-01-08T22:02:15Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "v4.14.2-rc4",
-    "date": "2026-01-08T18:45:47Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.3.0",
     "date": "2026-01-08T16:08:34Z"
@@ -553,11 +573,6 @@
     "name": "requarks/wiki",
     "version": "v2.5.311",
     "date": "2026-01-08T09:50:00Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v11.1.2",
-    "date": "2025-12-17T09:26:24Z"
   },
   {
     "name": "seriousm4x/UpSnap",
@@ -603,11 +618,6 @@
     "name": "Radarr/Radarr",
     "version": "v6.0.4.10291",
     "date": "2025-11-16T22:39:01Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.106.0",
-    "date": "2026-01-07T08:50:09Z"
   },
   {
     "name": "nickheyer/discopanel",
@@ -660,11 +670,6 @@
     "date": "2024-12-13T00:16:24Z"
   },
   {
-    "name": "fosrl/pangolin",
-    "version": "1.14.1-s.2",
-    "date": "2026-01-06T02:46:38Z"
-  },
-  {
     "name": "pterodactyl/panel",
     "version": "v1.12.0",
     "date": "2026-01-06T00:10:39Z"
@@ -708,11 +713,6 @@
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
     "date": "2026-01-02T19:40:09Z"
-  },
-  {
-    "name": "Dokploy/dokploy",
-    "version": "v0.26.3",
-    "date": "2026-01-02T17:06:30Z"
   },
   {
     "name": "gotify/server",
