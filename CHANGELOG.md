@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-15
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Refactor: FreshRSS + Bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#10824](https://github.com/community-scripts/ProxmoxVE/pull/10824))
+
 ## 2026-01-14
 
 ### 🆕 New Scripts
