@@ -1,0 +1,35 @@
+{
+    "name": "Qui",
+    "slug": "qui",
+    "categories": [
+        7
+    ],
+    "date_created": "2026-01-13",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 7476,
+    "documentation": "https://github.com/autobrr/qui",
+    "website": "https://github.com/autobrr/qui",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/qui.webp",
+    "config_path": "/root/.config/qui/config.toml",
+    "description": "Qui is a modern, self-hosted web interface for managing multiple qBittorrent instances with support for 10k+ torrents. It provides a clean and responsive interface for monitoring and controlling your qBittorrent downloads across multiple servers.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/qui.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 10,
+                "os": "debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}
