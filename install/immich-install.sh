@@ -112,7 +112,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD apt-mark hold libigdgmm12
   $STD popd
   rm -rf "$tmp_dir"
-  dpkg -l | grep -m1 "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
+  dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
   msg_ok "Installed OpenVINO dependencies"
 fi
 

@@ -96,7 +96,7 @@ EOF
       $STD apt install -y ./*.deb
       rm ./*.deb
       $STD apt-mark hold libigdgmm12
-      dpkg -l | grep -m1 "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
+      dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
       msg_ok "Intel iGPU dependencies updated"
     fi
     rm ./Dockerfile
