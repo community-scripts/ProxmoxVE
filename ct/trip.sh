@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop trip
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "trip" "itskovacs/TRIP"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "trip" "itskovacs/TRIP" "tarball"
 
     msg_info "Updating Frontend"
     cd /opt/trip/src
