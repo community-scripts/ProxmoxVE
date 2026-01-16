@@ -1,8 +1,58 @@
 [
   {
+    "name": "coollabsio/coolify",
+    "version": "v4.0.0-beta.462",
+    "date": "2026-01-16T11:05:11Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.14.2",
+    "date": "2026-01-15T11:19:35Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.21",
+    "date": "2026-01-16T09:05:45Z"
+  },
+  {
+    "name": "garethgeorge/backrest",
+    "version": "v1.11.1",
+    "date": "2026-01-16T08:27:09Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.863",
+    "date": "2026-01-16T06:17:33Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.36.0",
+    "date": "2026-01-16T04:51:49Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.12.1",
+    "date": "2026-01-16T01:04:03Z"
+  },
+  {
     "name": "ollama/ollama",
-    "version": "v0.14.2-rc1",
-    "date": "2026-01-15T23:46:36Z"
+    "version": "v0.14.2-rc0",
+    "date": "2026-01-15T19:03:52Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-16T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "scanopy/scanopy",
@@ -30,6 +80,16 @@
     "date": "2026-01-13T16:55:47Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.8",
+    "date": "2026-01-15T13:52:29Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-15T21:03:16Z"
+  },
+  {
     "name": "azukaar/Cosmos-Server",
     "version": "v0.20.0",
     "date": "2026-01-15T20:59:44Z"
@@ -48,11 +108,6 @@
     "name": "metabase/metabase",
     "version": "v0.58.x",
     "date": "2026-01-15T19:11:48Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.14.2",
-    "date": "2026-01-15T11:19:35Z"
   },
   {
     "name": "Comfy-Org/ComfyUI",
@@ -90,11 +145,6 @@
     "date": "2026-01-15T13:55:02Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.8",
-    "date": "2026-01-15T13:52:29Z"
-  },
-  {
     "name": "readeck/readeck",
     "version": "0.21.6",
     "date": "2026-01-15T11:18:58Z"
@@ -125,11 +175,6 @@
     "date": "2026-01-15T06:09:56Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.850",
-    "date": "2026-01-15T06:01:37Z"
-  },
-  {
     "name": "Infisical/infisical",
     "version": "v0.155.5",
     "date": "2026-01-15T05:25:10Z"
@@ -140,16 +185,6 @@
     "date": "2026-01-15T02:40:11Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-15T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
     "name": "chrisbenincasa/tunarr",
     "version": "v1.1.0-dev.3",
     "date": "2026-01-14T23:18:25Z"
@@ -158,11 +193,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.95.0-pre",
     "date": "2026-01-14T22:24:18Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "v0.18.3",
-    "date": "2026-01-14T21:50:55Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -250,11 +280,6 @@
     "date": "2025-10-22T17:03:54Z"
   },
   {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.12.0",
-    "date": "2026-01-13T23:04:04Z"
-  },
-  {
     "name": "Dispatcharr/Dispatcharr",
     "version": "v0.17.0",
     "date": "2026-01-13T22:51:49Z"
@@ -268,11 +293,6 @@
     "name": "C4illin/ConvertX",
     "version": "v0.17.0",
     "date": "2026-01-13T20:47:26Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.35.1",
-    "date": "2026-01-10T09:23:24Z"
   },
   {
     "name": "pterodactyl/wings",
@@ -398,11 +418,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
     "date": "2026-01-12T09:54:36Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
   },
   {
     "name": "rustdesk/rustdesk-server",
@@ -625,11 +640,6 @@
     "date": "2025-11-16T22:39:01Z"
   },
   {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.20",
-    "date": "2026-01-07T07:48:21Z"
-  },
-  {
     "name": "miniflux/v2",
     "version": "2.2.16",
     "date": "2026-01-07T03:26:27Z"
@@ -717,7 +727,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "gotify/server",
@@ -743,11 +753,6 @@
     "name": "pommee/goaway",
     "version": "v0.63.4",
     "date": "2025-12-31T12:40:07Z"
-  },
-  {
-    "name": "coollabsio/coolify",
-    "version": "v4.0.0-beta.460",
-    "date": "2025-12-31T10:58:42Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -1343,11 +1348,6 @@
     "name": "plankanban/planka",
     "version": "planka-1.1.1",
     "date": "2025-10-31T12:38:47Z"
-  },
-  {
-    "name": "garethgeorge/backrest",
-    "version": "v1.10.1",
-    "date": "2025-10-31T08:25:57Z"
   },
   {
     "name": "sassanix/Warracker",
