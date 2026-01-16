@@ -19,9 +19,9 @@
       "type": "default",
       "script": "ct/snowshare.sh",
       "resources": {
-        "cpu": 1,
-        "ram": 1024,
-        "hdd": 5,
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 20,
         "os": "Debian",
         "version": "13"
       }
