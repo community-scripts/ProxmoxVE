@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 PYTHON_VERSION="3.12" setup_uv
-fetch_and_deploy_gh_release "trip" "itskovacs/TRIP"
+fetch_and_deploy_gh_release "trip" "itskovacs/TRIP" "tarball"
 
 msg_info "Building Frontend"
 cd /opt/trip/src
