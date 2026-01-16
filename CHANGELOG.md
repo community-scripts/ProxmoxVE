@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - pihole/unbound: create unbound config before apt install to prevent port conflicts [@MickLesk](https://github.com/MickLesk) ([#10839](https://github.com/community-scripts/ProxmoxVE/pull/10839))
     - zammad: use ln -sf to avoid failure when symlink exists [@MickLesk](https://github.com/MickLesk) ([#10840](https://github.com/community-scripts/ProxmoxVE/pull/10840))
 
+### ❔ Uncategorized
+
+  - qui: fix: category [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10847](https://github.com/community-scripts/ProxmoxVE/pull/10847))
+
 ## 2026-01-15
 
 ### 🆕 New Scripts
