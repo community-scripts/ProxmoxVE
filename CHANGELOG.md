@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Unifi OS Server ([#10856](https://github.com/community-scripts/ProxmoxVE/pull/10856))
+  - Flatnotes ([#10857](https://github.com/community-scripts/ProxmoxVE/pull/10857))
+- Unifi OS Server ([#10856](https://github.com/community-scripts/ProxmoxVE/pull/10856))
 
 ### 🚀 Updated Scripts
 
