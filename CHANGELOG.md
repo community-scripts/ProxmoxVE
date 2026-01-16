@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-16
 
+### 🆕 New Scripts
+
+  - Unifi OS Server ([#10856](https://github.com/community-scripts/ProxmoxVE/pull/10856))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
