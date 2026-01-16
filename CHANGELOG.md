@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - postgresql: name of sources file fixed (update check) [@JamborJan](https://github.com/JamborJan) ([#10854](https://github.com/community-scripts/ProxmoxVE/pull/10854))
     - immich: use dpkg-query to get intel-opencl-icd version [@MickLesk](https://github.com/MickLesk) ([#10848](https://github.com/community-scripts/ProxmoxVE/pull/10848))
     - domain-monitor: fix: cron user [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10846](https://github.com/community-scripts/ProxmoxVE/pull/10846))
     - pihole/unbound: create unbound config before apt install to prevent port conflicts [@MickLesk](https://github.com/MickLesk) ([#10839](https://github.com/community-scripts/ProxmoxVE/pull/10839))
