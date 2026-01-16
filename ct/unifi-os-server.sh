@@ -29,7 +29,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_error "UniFi OS Server updates are handled by the UniFi OS app itself."
+  msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use it."
   exit
 }
 
