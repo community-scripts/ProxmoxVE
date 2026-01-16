@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Jotty: increase RAM; cap heap size at 3GB during build [@vhsdream](https://github.com/vhsdream) ([#10868](https://github.com/community-scripts/ProxmoxVE/pull/10868))
     - SnowShare: Increase default resources [@TuroYT](https://github.com/TuroYT) ([#10865](https://github.com/community-scripts/ProxmoxVE/pull/10865))
     - postgresql: name of sources file fixed (update check) [@JamborJan](https://github.com/JamborJan) ([#10854](https://github.com/community-scripts/ProxmoxVE/pull/10854))
     - immich: use dpkg-query to get intel-opencl-icd version [@MickLesk](https://github.com/MickLesk) ([#10848](https://github.com/community-scripts/ProxmoxVE/pull/10848))
