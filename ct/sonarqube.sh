@@ -54,6 +54,11 @@ function update_script() {
     chown -R sonarqube:sonarqube /opt/sonarqube
     msg_ok "Restored Backup"
 
+    msg_info "Update Version Info"
+    echo "${RELEASE}" > ~/.sonarqube
+    msg_ok "Updated Version Info"
+
+
     msg_info "Starting Service"
     systemctl start sonarqube
     msg_ok "Service Started"
