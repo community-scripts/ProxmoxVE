@@ -43,7 +43,7 @@ sed -i -e "s|^APP_ENV=.*|APP_ENV=production|" \
   -e "s|^DB_USERNAME=.*|DB_USERNAME=$MARIADB_DB_USER|" \
   -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$MARIADB_DB_PASS|" \
   -e "s|^DB_DATABASE=.*|DB_DATABASE=$MARIADB_DB_NAME|" .env
-echo "0 0 * * * root /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >>/etc/crontab
+echo "0 0 * * * www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >>/etc/crontab
 
 cat <<EOF >/etc/apache2/sites-enabled/000-default.conf
 <VirtualHost *:80>
