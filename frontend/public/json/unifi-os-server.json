@@ -7,7 +7,7 @@
     "date_created": "2026-01-16",
     "type": "vm",
     "updateable": false,
-    "privileged": false,
+    "privileged": true,
     "interface_port": 11443,
     "documentation": "https://help.ui.com/hc/en-us",
     "website": "https://www.ui.com/",
