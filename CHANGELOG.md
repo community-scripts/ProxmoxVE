@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-16
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - zammad: use ln -sf to avoid failure when symlink exists [@MickLesk](https://github.com/MickLesk) ([#10840](https://github.com/community-scripts/ProxmoxVE/pull/10840))
+
 ## 2026-01-15
 
 ### 🆕 New Scripts
