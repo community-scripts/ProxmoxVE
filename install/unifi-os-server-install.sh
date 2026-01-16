@@ -27,8 +27,6 @@ fi
 
 msg_info "Installing dependencies"
 $STD apt install -y \
-  ca-certificates \
-  jq \
   podman \
   uidmap \
   slirp4netns
