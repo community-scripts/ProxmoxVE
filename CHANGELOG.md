@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix sonarqube update version info (#10870) [@Karlito83](https://github.com/Karlito83) ([#10871](https://github.com/community-scripts/ProxmoxVE/pull/10871))
     - WGDashboard: Update repo URL [@tremor021](https://github.com/tremor021) ([#10872](https://github.com/community-scripts/ProxmoxVE/pull/10872))
 
 ## 2026-01-16
