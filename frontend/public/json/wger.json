@@ -12,7 +12,7 @@
   "documentation": "https://wger.readthedocs.io/en/latest/index.html#",
   "website": "https://wger.de",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/wger.webp",
-  "config_path": "/opt/wikijs/config.yml",
+  "config_path": "/home/wger/src/settings/main.py",
   "description": "wger (ˈvɛɡɐ) Workout Manager is a free, open source web application that helps you manage your personal workouts, weight and diet plans and can also be used as a simple gym management utility. It offers a REST API as well, for easy integration with other projects and tools.",
   "install_methods": [
     {
@@ -21,7 +21,7 @@
       "resources": {
         "cpu": 1,
         "ram": 1024,
-        "hdd": 6,
+        "hdd": 10,
         "os": "debian",
         "version": "13"
       }
@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Enable proxy support by uncommenting this line in `/home/wger/src/settings.py` and pointing it to your URL: `# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://my.domain.example.com']`, then restart the service `systemctl restart wger`.",
+      "text": "This LXC also runs Celery and Redis to synchronize workouts and ingredients",
       "type": "info"
     }
   ]
