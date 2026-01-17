@@ -29,7 +29,7 @@ function update_script() {
   fi
   if check_for_gh_release "palmr" "kyantech/Palmr"; then
     msg_info "Stopping Services"
-    systemctl stop palmr-frontend palmr-backend
+    systemctl stop palmr-frontend palmr-backend palmr-minio
     msg_ok "Stopped Services"
 
     cp /opt/palmr/apps/server/.env /opt/palmr.env
@@ -49,16 +49,19 @@ function update_script() {
     $STD pnpm build
 
     cd /opt/palmr/apps/web
+    cat <<EOF >./.env
+API_BASE_URL=http://127.0.0.1:3333
+NEXT_PUBLIC_DEFAULT_LANGUAGE=en-US
+EOF
     export NODE_ENV=production
     export NEXT_TELEMETRY_DISABLED=1
-    mv ./.env.example ./.env
     $STD pnpm install
     $STD pnpm build
     chown -R palmr:palmr /opt/palmr_data /opt/palmr
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
-    systemctl start palmr-backend palmr-frontend
+    systemctl start palmr-minio palmr-backend palmr-frontend
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
@@ -72,4 +75,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5487${CL}"
