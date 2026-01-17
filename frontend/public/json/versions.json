@@ -1,5 +1,75 @@
 [
   {
+    "name": "metabase/metabase",
+    "version": "v0.58.2",
+    "date": "2026-01-16T22:54:44Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2026.1.2",
+    "date": "2026-01-16T21:40:31Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2026-01-16-r2",
+    "date": "2026-01-16T20:29:48Z"
+  },
+  {
+    "name": "wanetty/upgopher",
+    "version": "v1.13.0",
+    "date": "2026-01-16T20:26:34Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.2",
+    "date": "2026-01-16T00:50:51Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.50.1",
+    "date": "2026-01-16T19:27:38Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.1.0",
+    "date": "2026-01-16T18:50:05Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.3.6",
+    "date": "2026-01-16T15:00:42Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.7",
+    "date": "2026-01-12T09:54:36Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.16.dev6",
+    "date": "2026-01-16T16:38:37Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.21.1",
+    "date": "2026-01-16T16:20:21Z"
+  },
+  {
+    "name": "TuroYT/snowshare",
+    "version": "v1.2.10",
+    "date": "2026-01-16T15:18:09Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "6.0.2",
+    "date": "2026-01-16T13:52:11Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.4.1",
+    "date": "2026-01-16T12:08:28Z"
+  },
+  {
     "name": "coollabsio/coolify",
     "version": "v4.0.0-beta.462",
     "date": "2026-01-16T11:05:11Z"
@@ -40,11 +110,6 @@
     "date": "2026-01-16T01:04:03Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.14.2-rc0",
-    "date": "2026-01-15T19:03:52Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.5.2",
     "date": "2026-01-16T00:27:06Z"
@@ -58,11 +123,6 @@
     "name": "scanopy/scanopy",
     "version": "v0.13.6",
     "date": "2026-01-15T23:34:51Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-05-07-r1",
-    "date": "2025-05-07T12:18:42Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -96,8 +156,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.7.0-beta.1",
-    "date": "2026-01-15T20:00:44Z"
+    "version": "nightly",
+    "date": "2026-01-15T20:03:50Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -105,19 +165,9 @@
     "date": "2026-01-15T19:29:02Z"
   },
   {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2026-01-15T19:11:48Z"
-  },
-  {
     "name": "Comfy-Org/ComfyUI",
     "version": "v0.9.2",
     "date": "2026-01-15T17:55:40Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.3.5",
-    "date": "2026-01-14T16:37:38Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -180,16 +230,6 @@
     "date": "2026-01-15T05:25:10Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.11-stable.1",
-    "date": "2026-01-15T02:40:11Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.1.0-dev.3",
-    "date": "2026-01-14T23:18:25Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.95.0-pre",
     "date": "2026-01-14T22:24:18Z"
@@ -203,11 +243,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.9",
     "date": "2026-01-14T21:26:43Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "6.0.2-rc.1",
-    "date": "2026-01-14T19:29:02Z"
   },
   {
     "name": "ghostfolio/ghostfolio",
@@ -225,11 +260,6 @@
     "date": "2026-01-14T17:54:36Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.21.0",
-    "date": "2026-01-14T17:27:55Z"
-  },
-  {
     "name": "alam00000/bentopdf",
     "version": "v1.16.0",
     "date": "2026-01-14T16:45:03Z"
@@ -243,6 +273,11 @@
     "name": "traefik/traefik",
     "version": "v3.6.7",
     "date": "2026-01-14T14:11:45Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "2025.12.1",
+    "date": "2026-01-14T13:33:15Z"
   },
   {
     "name": "tobychui/zoraxy",
@@ -400,24 +435,9 @@
     "date": "2025-12-19T21:28:55Z"
   },
   {
-    "name": "TuroYT/snowshare",
-    "version": "v1.2.8",
-    "date": "2026-01-12T12:12:05Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2026.1.1",
-    "date": "2026-01-12T10:52:35Z"
-  },
-  {
     "name": "TryGhost/Ghost-CLI",
     "version": "v1.28.4",
     "date": "2026-01-12T10:04:28Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.7",
-    "date": "2026-01-12T09:54:36Z"
   },
   {
     "name": "rustdesk/rustdesk-server",
@@ -503,11 +523,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.17.0",
     "date": "2026-01-09T22:48:21Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.50.0",
-    "date": "2026-01-09T19:27:03Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
@@ -727,7 +742,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:09Z"
+    "date": "2026-01-02T19:40:19Z"
   },
   {
     "name": "gotify/server",
@@ -928,11 +943,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.25.3",
     "date": "2025-12-18T18:11:48Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "2025.11.2",
-    "date": "2025-12-18T17:08:34Z"
   },
   {
     "name": "docker/compose",
@@ -1205,11 +1215,6 @@
     "date": "2025-11-24T19:40:27Z"
   },
   {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.3.0",
-    "date": "2025-11-24T09:48:32Z"
-  },
-  {
     "name": "MariaDB/server",
     "version": "mariadb-12.1.2",
     "date": "2025-11-18T15:16:21Z"
@@ -1338,11 +1343,6 @@
     "name": "clusterzx/paperless-ai",
     "version": "v3.0.9",
     "date": "2025-11-04T07:28:45Z"
-  },
-  {
-    "name": "wanetty/upgopher",
-    "version": "v1.12.0",
-    "date": "2025-11-01T14:32:38Z"
   },
   {
     "name": "plankanban/planka",
