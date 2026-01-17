@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-17
 
+### 🆕 New Scripts
+
+  - TRIP ([#10864](https://github.com/community-scripts/ProxmoxVE/pull/10864))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
