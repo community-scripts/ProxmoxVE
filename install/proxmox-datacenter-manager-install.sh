@@ -36,11 +36,18 @@ setup_deb822_repo \
   "" \
   "false"
 
+cat <<'EOF' > /etc/apt/preferences.d/99-pdm-unneeded-packages
+Package: proxmox-default-kernel proxmox-kernel-* pve-firmware
+Pin: release *
+Pin-Priority: -1
+EOF
+
 DEBIAN_FRONTEND=noninteractive
 $STD apt -o Dpkg::Options::="--force-confdef" \
   -o Dpkg::Options::="--force-confold" \
   install -y proxmox-datacenter-manager \
-  proxmox-datacenter-manager-ui
+  proxmox-mail-forward \
+  proxmox-offline-mirror-helper
 msg_ok "Installed Proxmox Datacenter Manager"
 
 motd_ssh
