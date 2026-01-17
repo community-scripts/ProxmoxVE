@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "disable": false,
+  "disable": true,
   "documentation": "https://palmr.kyantech.com.br/docs/3.1-beta",
   "config_path": "/opt/palmr/apps/server/.env, /opt/palmr/apps/web/.env",
   "website": "https://palmr.kyantech.com.br/",
