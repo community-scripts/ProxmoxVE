@@ -1,5 +1,90 @@
 [
   {
+    "name": "inventree/InvenTree",
+    "version": "1.1.8",
+    "date": "2026-01-17T11:21:36Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.22",
+    "date": "2026-01-17T11:09:45Z"
+  },
+  {
+    "name": "ghostfolio/ghostfolio",
+    "version": "2.231.0",
+    "date": "2026-01-17T11:01:23Z"
+  },
+  {
+    "name": "oauth2-proxy/oauth2-proxy",
+    "version": "v7.14.0",
+    "date": "2026-01-17T10:22:42Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2026-01-17-r1",
+    "date": "2026-01-17T09:59:32Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v14.0.1",
+    "date": "2026-01-17T07:14:19Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.6",
+    "date": "2025-11-04T13:35:35Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.868",
+    "date": "2026-01-17T05:55:42Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.12.7",
+    "date": "2026-01-17T03:49:29Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.108.1",
+    "date": "2026-01-17T04:09:09Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.17-nightly",
+    "date": "2026-01-17T02:25:37Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.2",
+    "date": "2026-01-16T00:50:51Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-17T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "metabase/metabase",
     "version": "v0.58.2",
     "date": "2026-01-16T22:54:44Z"
@@ -10,24 +95,24 @@
     "date": "2026-01-16T21:40:31Z"
   },
   {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2026-01-16-r2",
-    "date": "2026-01-16T20:29:48Z"
-  },
-  {
     "name": "wanetty/upgopher",
     "version": "v1.13.0",
     "date": "2026-01-16T20:26:34Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.14.2",
-    "date": "2026-01-16T00:50:51Z"
+    "name": "keycloak/keycloak",
+    "version": "26.4.8",
+    "date": "2026-01-15T13:52:29Z"
   },
   {
     "name": "homarr-labs/homarr",
     "version": "v1.50.1",
     "date": "2026-01-16T19:27:38Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-16T19:17:16Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
@@ -43,11 +128,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
     "date": "2026-01-12T09:54:36Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.16.dev6",
-    "date": "2026-01-16T16:38:37Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -80,24 +160,9 @@
     "date": "2026-01-15T11:19:35Z"
   },
   {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.21",
-    "date": "2026-01-16T09:05:45Z"
-  },
-  {
     "name": "garethgeorge/backrest",
     "version": "v1.11.1",
     "date": "2026-01-16T08:27:09Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.863",
-    "date": "2026-01-16T06:17:33Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -108,16 +173,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.12.1",
     "date": "2026-01-16T01:04:03Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-16T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "scanopy/scanopy",
@@ -135,29 +190,14 @@
     "date": "2026-01-15T21:29:48Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.12.6",
-    "date": "2026-01-13T16:55:47Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.8",
-    "date": "2026-01-15T13:52:29Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-15T21:03:16Z"
-  },
-  {
     "name": "azukaar/Cosmos-Server",
     "version": "v0.20.0",
     "date": "2026-01-15T20:59:44Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2026-01-15T20:03:50Z"
+    "version": "v4.7.0-beta.1",
+    "date": "2026-01-15T20:00:44Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -188,11 +228,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.50.0-rc3",
     "date": "2026-01-15T13:57:37Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v14.0.0",
-    "date": "2026-01-15T13:55:02Z"
   },
   {
     "name": "readeck/readeck",
@@ -245,11 +280,6 @@
     "date": "2026-01-14T21:26:43Z"
   },
   {
-    "name": "ghostfolio/ghostfolio",
-    "version": "2.230.0",
-    "date": "2026-01-14T19:28:53Z"
-  },
-  {
     "name": "fccview/jotty",
     "version": "1.17.2",
     "date": "2026-01-14T19:06:52Z"
@@ -298,11 +328,6 @@
     "name": "Whisparr/Whisparr",
     "version": "v3.1.0.2116",
     "date": "2026-01-14T05:56:17Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.15",
-    "date": "2026-01-06T20:05:54Z"
   },
   {
     "name": "NginxProxyManager/nginx-proxy-manager",
@@ -415,11 +440,6 @@
     "date": "2026-01-12T20:18:34Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.108.0",
-    "date": "2026-01-12T19:24:55Z"
-  },
-  {
     "name": "release-argus/Argus",
     "version": "0.29.2",
     "date": "2026-01-12T18:56:44Z"
@@ -428,11 +448,6 @@
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.6.0-alpha.1",
     "date": "2026-01-12T17:53:14Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
   },
   {
     "name": "TryGhost/Ghost-CLI",
@@ -742,7 +757,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "gotify/server",
@@ -963,11 +978,6 @@
     "name": "grafana/grafana",
     "version": "v12.3.1",
     "date": "2025-12-16T21:58:21Z"
-  },
-  {
-    "name": "inventree/InvenTree",
-    "version": "1.1.7",
-    "date": "2025-12-16T21:44:58Z"
   },
   {
     "name": "opencloud-eu/opencloud",
@@ -1305,11 +1315,6 @@
     "date": "2025-11-08T14:27:27Z"
   },
   {
-    "name": "oauth2-proxy/oauth2-proxy",
-    "version": "v7.13.0",
-    "date": "2025-11-08T13:36:25Z"
-  },
-  {
     "name": "cloudflare/cloudflared",
     "version": "2025.11.1",
     "date": "2025-11-07T17:05:45Z"
@@ -1333,11 +1338,6 @@
     "name": "nicolargo/glances",
     "version": "v4.4.1",
     "date": "2025-11-05T09:08:23Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.6",
-    "date": "2025-11-04T13:35:35Z"
   },
   {
     "name": "clusterzx/paperless-ai",
