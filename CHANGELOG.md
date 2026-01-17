@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-17
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - WGDashboard: Update repo URL [@tremor021](https://github.com/tremor021) ([#10872](https://github.com/community-scripts/ProxmoxVE/pull/10872))
+
 ## 2026-01-16
 
 ### 🆕 New Scripts
