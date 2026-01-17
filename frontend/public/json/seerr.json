@@ -1,0 +1,35 @@
+{
+  "name": "Seerr",
+  "slug": "seerr",
+  "categories": [
+    14
+  ],
+  "date_created": "2026-02-27",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 5055,
+  "documentation": "https://docs.seerr.dev/",
+  "website": "https://github.com/seerr-team/seerr/",
+  "logo": "https://docs.seerr.dev/img/logo.svg",
+  "config_path": "/etc/seerr/seerr.conf",
+  "description": "Seerr is a free and open source software application for managing requests for your media library. It integrates with the media server of your choice: Jellyfin, Plex, and Emby. In addition, it integrates with your existing services, such as Sonarr, Radarr.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/seerr.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
