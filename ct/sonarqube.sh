@@ -44,6 +44,7 @@ function update_script() {
     curl -fsSL "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${RELEASE}.zip" -o $temp_file
     unzip -q "$temp_file" -d /opt
     mv /opt/sonarqube-${RELEASE} /opt/sonarqube
+    echo "${RELEASE}" > ~/.sonarqube
     msg_ok "Updated SonarQube"
 
     msg_info "Restoring Backup"
@@ -53,11 +54,6 @@ function update_script() {
     rm -rf ${BACKUP_DIR}
     chown -R sonarqube:sonarqube /opt/sonarqube
     msg_ok "Restored Backup"
-
-    msg_info "Update Version Info"
-    echo "${RELEASE}" > ~/.sonarqube
-    msg_ok "Updated Version Info"
-
 
     msg_info "Starting Service"
     systemctl start sonarqube
