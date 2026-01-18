@@ -26,7 +26,7 @@ PG_DB_NAME="thingsboard_db" PG_DB_USER="thingsboard" setup_postgresql_db
 fetch_and_deploy_gh_release "thingsboard" "thingsboard/thingsboard" "binary" "latest" "/tmp" "thingsboard-*.deb"
 
 msg_info "Configuring ThingsBoard"
-cat <<EOF >/etc/thingsboard/conf/thingsboard.conf <<EOF
+cat <<EOF >/etc/thingsboard/conf/thingsboard.conf
 # DB Configuration
 export DATABASE_TS_TYPE=sql
 export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${PG_DB_NAME}
