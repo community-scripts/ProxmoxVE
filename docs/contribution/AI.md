@@ -629,6 +629,7 @@ cleanup_lxc
 Look at these recent well-implemented applications as reference:
 
 ### Container Scripts (Latest 10)
+
 - [ct/thingsboard.sh](../ct/thingsboard.sh) - IoT platform with proper update_script
 - [ct/unifi-os-server.sh](../ct/unifi-os-server.sh) - Complex setup with podman
 - [ct/trip.sh](../ct/trip.sh) - Simple Ruby app
@@ -638,14 +639,16 @@ Look at these recent well-implemented applications as reference:
 - [ct/flatnotes.sh](../ct/flatnotes.sh) - Python notes app
 - [ct/investbrain.sh](../ct/investbrain.sh) - Finance app
 - [ct/gwn-manager.sh](../ct/gwn-manager.sh) - Network management
-- [ct/sportarr.sh](../ct/sportarr.sh) - Specialized *Arr variant
+- [ct/sportarr.sh](../ct/sportarr.sh) - Specialized \*Arr variant
 
 ### Install Scripts (Latest)
+
 - [install/unifi-os-server-install.sh](../install/unifi-os-server-install.sh) - Complex setup with API integration
 - [install/trip-install.sh](../install/trip-install.sh) - Rails application setup
 - [install/mail-archiver-install.sh](../install/mail-archiver-install.sh) - Email-related service
 
 **Key things to notice:**
+
 - Proper error handling with `catch_errors`
 - Use of `check_for_gh_release` and `fetch_and_deploy_gh_release`
 - Correct backup/restore patterns in `update_script`

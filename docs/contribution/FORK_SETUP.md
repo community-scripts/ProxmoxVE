@@ -22,9 +22,25 @@ That's it! ✅
 The `setup-fork.sh` script automatically:
 
 1. **Detects** your GitHub username from git config
-2. **Updates** 22 hardcoded links in documentation to point to your fork
-3. **Creates** `.git-setup-info` with recommended git workflows
-4. **Backs up** all modified files (*.backup)
+2. **Updates ALL hardcoded links** to point to your fork:
+   - Documentation links pointing to `community-scripts/ProxmoxVE`
+   - **Curl download URLs** in scripts (e.g., `curl ... github.com/community-scripts/ProxmoxVE/main/...`)
+3. **Creates** `.git-setup-info` with your configuration details
+4. **Backs up** all modified files (*.backup for safety)
+
+### Why Updating Curl Links Matters
+
+When you test scripts locally during development, the `curl` commands in your scripts need to pull from YOUR fork, not the upstream repository:
+
+```bash
+# During local testing, after setup-fork.sh runs:
+bash ct/myapp.sh
+# This will curl from: github.com/YOUR_USERNAME/ProxmoxVE/main
+# NOT from: github.com/community-scripts/ProxmoxVE/main
+
+# Once merged to upstream and published, users run:
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
+```
 
 ---
 
