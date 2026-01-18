@@ -123,11 +123,11 @@ git checkout -b submit/myapp upstream/main
 
 # Copy only your files
 cp ../your-work-branch/ct/myapp.sh ct/myapp.sh
-cp ../your-work-branch/install_scripts/myapp-install.sh install_scripts/myapp-install.sh
-cp ../your-work-branch/config/myapp.json config/myapp.json
+cp ../your-work-branch/install/myapp-install.sh install/myapp-install.sh
+cp ../your-work-branch/frontend/public/json/myapp.json frontend/public/json/myapp.json
 
 # Commit and verify
-git add ct/myapp.sh install_scripts/myapp-install.sh config/myapp.json
+git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
 git commit -m "feat: add MyApp"
 git diff upstream/main --name-only  # Should show ONLY your 3 files
 
@@ -142,8 +142,8 @@ Open a Pull Request from `submit/myapp` → `community-scripts/ProxmoxVE/main`.
 Verify the PR shows ONLY these 3 files:
 
 - `ct/myapp.sh`
-- `install_scripts/myapp-install.sh`
-- `config/myapp.json`
+- `install/myapp-install.sh`
+- `frontend/public/json/myapp.json`
 
 ---
 

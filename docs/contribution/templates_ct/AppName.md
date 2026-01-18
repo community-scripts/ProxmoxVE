@@ -149,7 +149,7 @@ fetch_and_deploy_gh_release "myapp" "myapp/repo" "appname.tar.gz" "latest" "/opt
 2. **Only add app-specific dependencies** - Don't add ca-certificates, curl, gnupg (handled by build.func)
 3. **Test via curl from your fork** - Push first, then: `bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/MyApp.sh)"`
 4. **Wait for GitHub to update** - Takes 10-30 seconds after git push
-5. **Cherry-pick only YOUR files** - Submit only ct/MyApp.sh, install_scripts/MyApp-install.sh, config/myapp.json (3 files)
+5. **Cherry-pick only YOUR files** - Submit only ct/MyApp.sh, install/MyApp-install.sh, frontend/public/json/myapp.json (3 files)
 6. **Verify before PR** - Run `git diff upstream/main --name-only` to confirm only your files changed
 
 ---

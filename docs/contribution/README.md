@@ -55,7 +55,7 @@ cp docs/contribution/templates_json/AppName.json frontend/public/json/myapp.json
 # Edit metadata: name, slug, categories, description, resources, etc.
 
 # 9. Test the install script (if you created one)
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/install_scripts/myapp-install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/install/myapp-install.sh)"
 # ⏱️ GitHub may take 10-30 seconds to update files - be patient!
 
 # 10. Commit ONLY your new files (see Cherry-Pick section below!)

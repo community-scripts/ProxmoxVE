@@ -53,16 +53,16 @@ git checkout -b add/my-awesome-app
 
 # 2. Create application scripts from templates
 cp docs/contribution/templates_ct/AppName.sh ct/myapp.sh
-cp docs/contribution/templates_install/AppName-install.sh install_scripts/myapp-install.sh
-cp docs/contribution/templates_json/AppName.json config/myapp.json
+cp docs/contribution/templates_install/AppName-install.sh install/myapp-install.sh
+cp docs/contribution/templates_json/AppName.json frontend/public/json/myapp.json
 
 # 3. Edit your scripts
 nano ct/myapp.sh
-nano install_scripts/myapp-install.sh
-nano config/myapp.json
+nano install/myapp-install.sh
+nano frontend/public/json/myapp.json
 
 # 4. Commit and push to your fork
-git add ct/myapp.sh install_scripts/myapp-install.sh config/myapp.json
+git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
 git commit -m "feat: add MyApp container and install scripts"
 git push origin add/my-awesome-app
 
@@ -203,7 +203,7 @@ git push origin feat/add-myapp
 
 #### Option B: Local Testing on Proxmox Host
 
-```bash
+````bash
 # 1. SSH into Proxmox host
 ssh root@192.168.1.100
 
@@ -217,15 +217,25 @@ chmod +x myapp.sh
 # Edit: curl -s https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/feat/myapp/...
 
 # 5. Run and test
+```bash
 bash myapp.sh
 
 # 6. If container created successfully, script is working!
-```
+````
 
-#### Option C: Docker Testing (Without Proxmox)
+#### Option C: Using Curl (Recommended for Real Testing)
 
 ```bash
-# You can test script syntax/functionality locally
+# Always test via curl from your fork (GitHub takes 10-30 seconds after push)
+git push origin feature/myapp
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+# This tests the actual GitHub URLs, not local files
+```
+
+#### Option D: Docker Testing (Without Proxmox)
+
+```bash
+# You can test script syntax/functionality locally (limited)
 # Note: Won't fully test (no Proxmox, no actual container)
 
 # Run ShellCheck
@@ -705,9 +715,9 @@ pct exec 100 bash
 # Verify script handles gracefully
 
 # Test 4: Update function
-# Create initial container
+# Create initial container (via curl from fork)
 # Wait for new release
-# Run update: bash ct/myapp.sh
+# Test update: bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
 # Verify it detects and applies update
 ```
 
@@ -815,7 +825,8 @@ Brief description of what this PR adds/fixes
 
 - [ ] My code follows the style guidelines
 - [ ] I have performed a self-review
-- [ ] I have tested the script locally
+- [ ] I have tested the script via curl from my fork (after git push)
+- [ ] GitHub had time to update (waited 10-30 seconds)
 - [ ] ShellCheck shows no critical warnings
 - [ ] Documentation is accurate and complete
 - [ ] I have added/updated relevant documentation

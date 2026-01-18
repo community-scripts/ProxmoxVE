@@ -1,6 +1,6 @@
 # JSON Metadata Files - Quick Reference
 
-The metadata file (`config/myapp.json`) tells the web interface how to display your application.
+The metadata file (`frontend/public/json/myapp.json`) tells the web interface how to display your application.
 
 ---
 
@@ -10,7 +10,7 @@ The metadata file (`config/myapp.json`) tells the web interface how to display y
 [https://community-scripts.github.io/ProxmoxVE/json-editor](https://community-scripts.github.io/ProxmoxVE/json-editor)
 
 1. Enter application details
-2. Generator creates `config/myapp.json`
+2. Generator creates `frontend/public/json/myapp.json`
 3. Copy the output to your contribution
 
 ---
@@ -124,9 +124,9 @@ Each installation method specifies resource requirements:
 
 See actual examples in the repo:
 
-- [config/trip.json](https://github.com/community-scripts/ProxmoxVE/blob/main/config/trip.json)
-- [config/thingsboard.json](https://github.com/community-scripts/ProxmoxVE/blob/main/config/thingsboard.json)
-- [config/unifi.json](https://github.com/community-scripts/ProxmoxVE/blob/main/config/unifi.json)
+- [frontend/public/json/trip.json](https://github.com/community-scripts/ProxmoxVE/blob/main/frontend/public/json/trip.json)
+- [frontend/public/json/thingsboard.json](https://github.com/community-scripts/ProxmoxVE/blob/main/frontend/public/json/thingsboard.json)
+- [frontend/public/json/unifi.json](https://github.com/community-scripts/ProxmoxVE/blob/main/frontend/public/json/unifi.json)
 
 ---
 

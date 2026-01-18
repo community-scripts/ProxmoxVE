@@ -16,8 +16,8 @@
 1. **Copy the Modern Template:**
 
    ```bash
-   cp templates_install/AppName-install.sh install_scripts/MyApp-install.sh
-   # Edit install_scripts/MyApp-install.sh
+   cp templates_install/AppName-install.sh install/MyApp-install.sh
+   # Edit install/MyApp-install.sh
    ```
 
 2. **Key Pattern:**
@@ -177,9 +177,9 @@ npm install --no-save
 
 See working examples:
 
-- [Trip](https://github.com/community-scripts/ProxmoxVE/blob/main/install_scripts/trip-install.sh)
-- [Thingsboard](https://github.com/community-scripts/ProxmoxVE/blob/main/install_scripts/thingsboard-install.sh)
-- [UniFi](https://github.com/community-scripts/ProxmoxVE/blob/main/install_scripts/unifi-install.sh)
+- [Trip](https://github.com/community-scripts/ProxmoxVE/blob/main/install/trip-install.sh)
+- [Thingsboard](https://github.com/community-scripts/ProxmoxVE/blob/main/install/thingsboard-install.sh)
+- [UniFi](https://github.com/community-scripts/ProxmoxVE/blob/main/install/unifi-install.sh)
 
 ---
 
