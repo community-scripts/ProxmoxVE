@@ -37,41 +37,30 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  # Check if installation exists
   if [[ ! -d /opt/[appname] ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
-  # check_for_gh_release returns 0 (true) if update available, 1 (false) if not
   if check_for_gh_release "[appname]" "[owner/repo]"; then
     msg_info "Stopping Service"
     systemctl stop [appname]
     msg_ok "Stopped Service"
 
-    # Optional: Backup important data before update
     msg_info "Backing up Data"
     cp -r /opt/[appname]/data /opt/[appname]_data_backup 2>/dev/null || true
     msg_ok "Backed up Data"
 
-    # CLEAN_INSTALL=1 removes old directory before extracting new version
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "[appname]" "[owner/repo]"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "[appname]" "[owner/repo]" "tarball" "latest" "/opt/[appname]"
 
-    # Restore configuration and data (if needed)
     msg_info "Restoring Data"
     cp -r /opt/[appname]_data_backup/. /opt/[appname]/data/ 2>/dev/null || true
     rm -rf /opt/[appname]_data_backup
     msg_ok "Restored Data"
 
-    # Optional: Run any post-update commands (npm, composer, migrations, etc.)
-    # cd /opt/[appname] && $STD npm ci --production
-    # cd /opt/[appname] && $STD composer install --no-dev
-    # cd /opt/[appname] && $STD php artisan migrate --force
-
     msg_info "Starting Service"
     systemctl start [appname]
     msg_ok "Started Service"
-
     msg_ok "Updated successfully!"
   fi
   exit

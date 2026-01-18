@@ -71,7 +71,7 @@ function update_script() {
     cp -r /opt/appname/data /opt/appname_data_backup
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/appname"
 
     # Build steps...
 
@@ -130,7 +130,7 @@ PG_VERSION="16" setup_postgresql
 setup_uv
 # etc.
 
-fetch_and_deploy_gh_release "appname" "owner/repo"
+fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/appname"
 
 msg_info "Setting up Application"
 cd /opt/appname
@@ -265,7 +265,7 @@ tar -xzf ${RELEASE}.tar.gz
 mv repo-${RELEASE} /opt/myapp
 
 # ✅ CORRECT - use our function
-fetch_and_deploy_gh_release "myapp" "owner/repo"
+fetch_and_deploy_gh_release "myapp" "owner/repo" "tarball" "latest" "/opt/myapp"
 ```
 
 ### 3. Custom Version-Check Logic
@@ -340,13 +340,13 @@ NODE_VERSION="22" setup_nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Updating Application"
-CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo"
+CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/appname"
 msg_ok "Updated Application"
 
 # ✅ CORRECT - call directly without msg wrapper
 NODE_VERSION="22" setup_nodejs
 
-CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo"
+CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/appname"
 ```
 
 **Functions with built-in messages (NEVER wrap in msg blocks):**
@@ -565,7 +565,7 @@ function update_script() {
     msg_ok "Backed up Data"
 
     # 5. Perform clean install
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/appname"
 
     # 6. Rebuild (if needed)
     cd /opt/appname
