@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-18
 
+### 🆕 New Scripts
+
+  - ThingsBoard ([#10904](https://github.com/community-scripts/ProxmoxVE/pull/10904))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
