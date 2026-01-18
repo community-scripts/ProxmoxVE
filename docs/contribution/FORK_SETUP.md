@@ -38,14 +38,17 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 ```
 
 **WITHOUT setup-fork.sh:**
+
 - Script URLs still point to `community-scripts/ProxmoxVE/main`
-- When you test `bash ct/myapp.sh` locally, it downloads from the **upstream** repo, not your changes
-- Your modifications aren't actually being tested! ❌
+- If you test locally with `bash ct/myapp.sh`, you're testing local files, but the script's curl commands would download from **upstream** repo
+- Your modifications aren't actually being tested via the curl commands! ❌
 
 **AFTER setup-fork.sh:**
+
 - Script URLs are updated to `YourUsername/ProxmoxVE/main`
-- When you test `bash ct/myapp.sh` locally, it downloads from **your fork**
-- You're actually testing your changes! ✅
+- When you test via curl from GitHub: `bash -c "$(curl ... YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"`, it downloads from **your fork**
+- The script's curl commands also point to your fork, so you're actually testing your changes! ✅
+- ⏱️ **Important:** GitHub takes 10-30 seconds to recognize pushed files - wait before testing!
 
 ```bash
 # Example: What setup-fork.sh changes

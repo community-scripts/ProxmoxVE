@@ -81,11 +81,22 @@ git clone https://github.com/yourUserName/ForkName
 git switch -c your-feature-branch
 ```
 
-### 4. Change paths in build.func install.func and AppName.sh
+### 4. Run setup-fork.sh to auto-configure your fork
 
-To be able to develop from your own branch you need to change `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main` to `https://raw.githubusercontent.com/[USER]/[REPOSITORY]/refs/heads/[BRANCH]`. You need to make this change atleast in misc/build.func misc/install.func and in your ct/AppName.sh. This change is only for testing. Before opening a Pull Request you should change this line change all this back to point to `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main`.
+```bash
+bash docs/contribution/setup-fork.sh
+```
 
-### 4. Commit changes (without build.func and install.func!)
+This script automatically:
+
+- Detects your GitHub username
+- Updates ALL curl URLs to point to your fork (for testing)
+- Creates `.git-setup-info` with your config
+- Backs up all modified files (\*.backup)
+
+**IMPORTANT**: This modifies 600+ files! Use cherry-pick when submitting your PR (see below).
+
+### 5. Commit ONLY your new application files
 
 ```bash
 git commit -m "Your commit message"
@@ -97,9 +108,42 @@ git commit -m "Your commit message"
 git push origin your-feature-branch
 ```
 
-### 6. Create a Pull Request
+### 6. Cherry-Pick: Submit Only Your Files for PR
 
-Open a Pull Request from your feature branch to the main repository branch. You must only include your **$AppName.sh**, **$AppName-install.sh** and **$AppName.json** files in the pull request.
+⚠️ **IMPORTANT**: setup-fork.sh modified 600+ files. You MUST only submit your 3 new files!
+
+See [README.md - Cherry-Pick Guide](README.md#-cherry-pick-submitting-only-your-changes) for step-by-step instructions.
+
+Quick version:
+
+```bash
+# Create clean branch from upstream
+git fetch upstream
+git checkout -b submit/myapp upstream/main
+
+# Copy only your files
+cp ../your-work-branch/ct/myapp.sh ct/myapp.sh
+cp ../your-work-branch/install_scripts/myapp-install.sh install_scripts/myapp-install.sh
+cp ../your-work-branch/config/myapp.json config/myapp.json
+
+# Commit and verify
+git add ct/myapp.sh install_scripts/myapp-install.sh config/myapp.json
+git commit -m "feat: add MyApp"
+git diff upstream/main --name-only  # Should show ONLY your 3 files
+
+# Push and create PR
+git push origin submit/myapp
+```
+
+### 7. Create a Pull Request
+
+Open a Pull Request from `submit/myapp` → `community-scripts/ProxmoxVE/main`.
+
+Verify the PR shows ONLY these 3 files:
+
+- `ct/myapp.sh`
+- `install_scripts/myapp-install.sh`
+- `config/myapp.json`
 
 ---
 

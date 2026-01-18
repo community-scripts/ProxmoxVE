@@ -168,9 +168,9 @@ cleanup_lxc
 
 ### Release Management
 
-| Function                      | Description                         | Example                                                   |
-| ----------------------------- | ----------------------------------- | --------------------------------------------------------- |
-| `fetch_and_deploy_gh_release` | Fetches and installs GitHub Release | `fetch_and_deploy_gh_release "app" "owner/repo"`          |
+| Function                      | Description                         | Example                                                       |
+| ----------------------------- | ----------------------------------- | ------------------------------------------------------------- |
+| `fetch_and_deploy_gh_release` | Fetches and installs GitHub Release | `fetch_and_deploy_gh_release "app" "owner/repo"`              |
 | `check_for_gh_release`        | Checks for new version              | `if check_for_gh_release "app" "YourUsername/YourRepo"; then` |
 
 **Modes for `fetch_and_deploy_gh_release`:**
@@ -816,7 +816,11 @@ Or no credentials:
 1. **ALWAYS search `tools.func` first** before implementing custom solutions
 2. **Use recent scripts as reference** (Thingsboard, UniFi OS, Trip, Flatnotes, etc.)
 3. **Ask when uncertain** instead of introducing wrong patterns
-4. **Test locally** - try running scripts in test containers
+4. **Test via GitHub** - push to your fork and test with curl (not local bash)
+   ```bash
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+   # Wait 10-30 seconds after pushing - GitHub takes time to update files
+   ```
 5. **Consistency > Creativity** - follow established patterns strictly
 6. **Check the templates** - they show the correct structure
 7. **Don't wrap tools.func functions** - they handle their own msg_info/msg_ok output

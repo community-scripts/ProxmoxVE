@@ -51,28 +51,29 @@ cat .git-setup-info
 # 1. Create feature branch
 git checkout -b add/my-awesome-app
 
-# 2. Create application scripts
-cp ct/example.sh ct/myapp.sh
-cp install/example-install.sh install/myapp-install.sh
+# 2. Create application scripts from templates
+cp docs/contribution/templates_ct/AppName.sh ct/myapp.sh
+cp docs/contribution/templates_install/AppName-install.sh install_scripts/myapp-install.sh
+cp docs/contribution/templates_json/AppName.json config/myapp.json
 
 # 3. Edit your scripts
 nano ct/myapp.sh
-nano install/myapp-install.sh
+nano install_scripts/myapp-install.sh
+nano config/myapp.json
 
-# 4. Test locally
-bash ct/myapp.sh  # Will prompt for container creation
-
-# 5. Commit and push
-git add ct/myapp.sh install/myapp-install.sh
-git commit -m "feat: add MyApp container"
+# 4. Commit and push to your fork
+git add ct/myapp.sh install_scripts/myapp-install.sh config/myapp.json
+git commit -m "feat: add MyApp container and install scripts"
 git push origin add/my-awesome-app
 
-# 6. Open Pull Request on GitHub
-# Click: New Pull Request (GitHub will show this automatically)
+# 5. Test via curl from your fork (GitHub may take 10-30 seconds)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
 
-# 7. Keep your fork updated
-git fetch upstream
-git rebase upstream/main
+# 6. Use cherry-pick to submit only your files (see Cherry-Pick section)
+# DO NOT submit the 600+ files modified by setup-fork.sh!
+
+# 7. Open Pull Request on GitHub
+# Create PR from: your-fork/add/my-awesome-app → community-scripts/ProxmoxVE/main
 ```
 
 **💡 Tip**: See `../FORK_SETUP.md` for detailed fork setup and troubleshooting
@@ -137,6 +138,7 @@ Examples:
 ```
 
 **Rules**:
+
 - Container script name: **Title Case** (PiHole, Docker, NextCloud)
 - Install script name: **lowercase** with **hyphens** (pihole-install, docker-install)
 - Must match: `ct/AppName.sh` ↔ `install/appname-install.sh`
@@ -156,6 +158,7 @@ Examples:
    - Ubuntu 20.04 / Debian 11+ on host
 
 2. **Git** installed
+
    ```bash
    apt-get install -y git
    ```
@@ -241,18 +244,21 @@ bash -n install/myapp-install.sh
 ### Step 1: Choose Your Template
 
 **For Simple Web Apps** (Node.js, Python, PHP):
+
 ```bash
 cp ct/example.sh ct/myapp.sh
 cp install/example-install.sh install/myapp-install.sh
 ```
 
 **For Database Apps** (PostgreSQL, MongoDB):
+
 ```bash
 cp ct/docker.sh ct/myapp.sh           # Use Docker container
 # OR manual setup for more control
 ```
 
 **For Alpine Linux Apps** (lightweight):
+
 ```bash
 # Use ct/alpine.sh as reference
 # Edit install script to use Alpine packages (apk not apt)
@@ -317,6 +323,7 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:PORT${CL}"
 ```
 
 **Checklist**:
+
 - [ ] APP variable matches filename
 - [ ] var_tags semicolon-separated (no spaces)
 - [ ] Realistic CPU/RAM/disk values
@@ -370,6 +377,7 @@ cleanup_lxc
 ```
 
 **Checklist**:
+
 - [ ] Functions loaded from `$FUNCTIONS_FILE_PATH`
 - [ ] All installation phases present (deps, tools, app, config, cleanup)
 - [ ] Using `$STD` for output suppression
@@ -774,16 +782,19 @@ Use this template:
 
 ```markdown
 ## Description
+
 Brief description of what this PR adds/fixes
 
 ## Type of Change
+
 - [ ] New application (ct/AppName.sh + install/appname-install.sh)
 - [ ] Update existing application
 - [ ] Bug fix
 - [ ] Documentation update
-- [ ] Other: _______
+- [ ] Other: **\_\_\_**
 
 ## Testing
+
 - [ ] Tested on Proxmox VE 8.x
 - [ ] Container creation successful
 - [ ] Application installation successful
@@ -792,6 +803,7 @@ Brief description of what this PR adds/fixes
 - [ ] No temporary files left after installation
 
 ## Application Details (for new apps only)
+
 - **App Name**: MyApp
 - **Source**: https://github.com/app/repo
 - **Default OS**: Debian 12
@@ -800,6 +812,7 @@ Brief description of what this PR adds/fixes
 - **Access URL**: http://IP:PORT/path
 
 ## Checklist
+
 - [ ] My code follows the style guidelines
 - [ ] I have performed a self-review
 - [ ] I have tested the script locally
@@ -811,6 +824,7 @@ Brief description of what this PR adds/fixes
 ### Step 5: Respond to Review Comments
 
 **Maintainers may request changes**:
+
 - Fix syntax/style issues
 - Add better error handling
 - Optimize resource usage
@@ -922,6 +936,7 @@ pct exec CTID netstat -tlnp | grep LISTEN
 ### Q: Can I test without a Proxmox system?
 
 **A**: Partially. You can verify syntax and ShellCheck compliance locally, but real container testing requires Proxmox. Consider using:
+
 - Proxmox in a VM (VirtualBox/KVM)
 - Test instances on Hetzner/DigitalOcean
 - Ask maintainers to test for you
@@ -929,6 +944,7 @@ pct exec CTID netstat -tlnp | grep LISTEN
 ### Q: My update function is very complex - is that OK?
 
 **A**: Yes! Update functions can be complex if needed. Just ensure:
+
 - Backup user data before updating
 - Restore user data after update
 - Test thoroughly before submitting
@@ -937,6 +953,7 @@ pct exec CTID netstat -tlnp | grep LISTEN
 ### Q: Can I add new dependencies to build.func?
 
 **A**: Generally no. build.func is the orchestrator and should remain stable. New functions should go in:
+
 - `tools.func` - Tool installation
 - `core.func` - Utility functions
 - `install.func` - Container setup
@@ -948,11 +965,13 @@ Ask in an issue first if you're unsure.
 **A**: You have options:
 
 **Option 1**: Use Advanced mode (19-step wizard)
+
 ```bash
 # Extend advanced_settings() if app needs special vars
 ```
 
 **Option 2**: Create custom setup menu
+
 ```bash
 function custom_config() {
   OPTION=$(whiptail --inputbox "Enter database name:" 8 60)
@@ -961,6 +980,7 @@ function custom_config() {
 ```
 
 **Option 3**: Leave as defaults + documentation
+
 ```bash
 # In success message:
 echo "Edit /opt/myapp/config.json to customize settings"
@@ -969,9 +989,10 @@ echo "Edit /opt/myapp/config.json to customize settings"
 ### Q: Can I contribute Windows/macOS/ARM support?
 
 **A**:
+
 - **Windows**: Not planned (ProxmoxVE is Linux/Proxmox focused)
 - **macOS**: Can contribute Docker-based alternatives
-- **ARM**: Yes! Many apps work on ARM. Add to vm/pimox-*.sh scripts
+- **ARM**: Yes! Many apps work on ARM. Add to vm/pimox-\*.sh scripts
 
 ---
 
@@ -995,6 +1016,7 @@ echo "Edit /opt/myapp/config.json to customize settings"
 ### Report Bugs
 
 When reporting bugs, include:
+
 - Which application
 - What happened (error message)
 - What you expected
@@ -1002,6 +1024,7 @@ When reporting bugs, include:
 - Container OS and version
 
 Example:
+
 ```
 Title: pihole-install.sh fails on Alpine 3.20
 
@@ -1025,6 +1048,7 @@ Error Output:
 ## Contribution Statistics
 
 **ProxmoxVE by the Numbers**:
+
 - 🎯 40+ applications supported
 - 👥 100+ contributors
 - 📊 10,000+ GitHub stars
@@ -1038,6 +1062,7 @@ Error Output:
 ## Code of Conduct
 
 By contributing, you agree to:
+
 - ✅ Be respectful and inclusive
 - ✅ Follow the style guidelines
 - ✅ Test your changes thoroughly

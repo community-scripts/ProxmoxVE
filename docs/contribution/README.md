@@ -45,17 +45,18 @@ cp docs/contribution/templates_ct/AppName.sh ct/myapp.sh
 cp docs/contribution/templates_install/AppName-install.sh install/myapp-install.sh
 # ... edit files ...
 
-# 7. Test locally (in your fork before PR)
-bash ct/myapp.sh
-# ⚠️ Important: Always use `bash ct/myapp.sh`, NOT `./ct/myapp.sh`
+# 7. Push to your fork and test via GitHub
+git push origin feature/my-awesome-app
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+# ⏱️ GitHub may take 10-30 seconds to update files - be patient!
 
 # 8. Create your JSON metadata file
 cp docs/contribution/templates_json/AppName.json frontend/public/json/myapp.json
 # Edit metadata: name, slug, categories, description, resources, etc.
 
-# 9. Test locally (in your fork before PR)
-bash ct/myapp.sh
-# ⚠️ Important: Always use `bash ct/myapp.sh`, NOT `./ct/myapp.sh`
+# 9. Test the install script (if you created one)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/install_scripts/myapp-install.sh)"
+# ⏱️ GitHub may take 10-30 seconds to update files - be patient!
 
 # 10. Commit ONLY your new files (see Cherry-Pick section below!)
 git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
@@ -84,15 +85,18 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/Proxmo
 ### Development vs. Production Execution
 
 **During Development (you, in your fork):**
-```bash
-# You test locally with your cloned files
-bash ct/myapp.sh
 
-# The script's curl commands are updated by setup-fork.sh to pull from YOUR fork
+```bash
+# You MUST test via curl from your GitHub fork (not local files!)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+
+# The script's curl commands are updated by setup-fork.sh to point to YOUR fork
 # This ensures you're testing your actual changes
+# ⏱️ Wait 10-30 seconds after pushing - GitHub updates slowly
 ```
 
 **After Merge (users, from GitHub):**
+
 ```bash
 # Users download the script from upstream via curl
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
@@ -102,8 +106,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/Proxmo
 ```
 
 **Summary:**
-- **Development**: `bash ct/myapp.sh` (local clone) → setup-fork.sh changes curl URLs to your fork
-- **Production**: `curl | bash` from upstream → curl URLs point to community-scripts repo
+
+- **Development**: Push to fork, test via curl → setup-fork.sh changes curl URLs to your fork
+- **Production**: curl | bash from upstream → curl URLs point to community-scripts repo
 
 ---
 
@@ -137,8 +142,10 @@ Without running this script, all links in your fork will still point to the upst
 
 Your fork is fully configured and ready to develop. You can:
 
-- Test changes locally with `bash ct/myapp.sh`
+- Push changes to your fork
+- Test via curl: `bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"`
 - All links will reference your fork for development
+- ⏱️ Wait 10-30 seconds after pushing - GitHub takes time to update
 - Commit and push with confidence
 - Create a PR to merge into upstream
 
@@ -185,7 +192,7 @@ All scripts and configurations must follow our coding standards to ensure consis
 - ✅ Include proper shebang: `#!/usr/bin/env bash`
 - ✅ Add copyright header with author
 - ✅ Handle errors properly with `msg_error`, `msg_ok`, etc.
-- ✅ Test before submitting PR
+- ✅ Test before submitting PR (via curl from your fork, not local bash)
 - ✅ Update documentation if needed
 
 ---
@@ -357,7 +364,11 @@ If you're using **Visual Studio Code** with an AI assistant, you can leverage ou
 - **Templates Location**: `docs/contribution/templates_ct/AppName.sh`, `templates_install/`, `templates_json/`
 - **Guidelines**: Must follow `docs/contribution/AI.md` exactly
 - **Helper Functions**: Use only functions from `misc/tools.func` - never write custom ones
-- **Testing**: Always include `bash ct/myapp.sh` testing before submission
+- **Testing**: Always test before submission via curl from your fork
+  ```bash
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+  # Wait 10-30 seconds after pushing changes
+  ```
 - **No Docker**: Container scripts must be bare-metal, not Docker-based
 
 ### Benefits
@@ -455,11 +466,12 @@ git push origin feature/my-feature
    git rebase upstream/main
    ```
 
-2. **Test your changes**
+2. **Test your changes** (via curl from your fork)
 
    ```bash
-   bash ct/my-app.sh
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/my-app.sh)"
    # Follow prompts and test the container
+   # ⏱️ Wait 10-30 seconds after pushing - GitHub takes time to update
    ```
 
 3. **Check code standards**
@@ -493,44 +505,61 @@ Before opening a PR:
 
 ## ❓ FAQ
 
-### ⚠️ Why must I use `bash ct/myapp.sh` (during development)?
+### ❌ Why can't I test with `bash ct/myapp.sh` locally?
 
-During **local development and testing** in your fork, use bash explicitly:
+You might try:
 
 ```bash
-# ✅ CORRECT (during development in your fork)
+# ❌ WRONG - This won't test your actual changes!
 bash ct/myapp.sh
-
-# ❌ WRONG - Will fail
 ./ct/myapp.sh
 sh ct/myapp.sh
-/path/to/ct/myapp.sh
+```
+
+**Why this fails:**
+
+- `bash ct/myapp.sh` uses the LOCAL clone file
+- The LOCAL file doesn't execute the curl commands - it's already on disk
+- The curl URLs INSIDE the script are modified by setup-fork.sh, but they're not executed
+- So you can't verify if your curl URLs actually work
+- Users will get the curl URL version (which may be broken)
+
+**Solution:** Always test via curl from GitHub:
+
+```bash
+# ✅ CORRECT - Tests the actual GitHub URLs
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+```
+
+### ❓ How do I test my changes?
+
+You **cannot** test locally with `bash ct/myapp.sh` from your cloned directory!
+
+You **must** push to GitHub and test via curl from your fork:
+
+```bash
+# 1. Push your changes to your fork
+git push origin feature/my-awesome-app
+
+# 2. Test via curl (this loads the script from GitHub, not local files)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/my-app.sh)"
+
+# 3. For verbose/debug output, pass environment variables
+VERBOSE=yes bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/my-app.sh)"
+DEV_MODE_LOGS=true bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/my-app.sh)"
 ```
 
 **Why?**
 
-- Scripts use bash-specific features (arrays, process substitution, etc.)
-- Permissions might not be executable on Windows/WSL
-- Source files need proper `<(curl ...)` process substitution
-- Error handling requires specific bash settings
+- Local `bash ct/myapp.sh` uses local files from your clone
+- But the script's INTERNAL curl commands have been modified by setup-fork.sh to point to your fork
+- This discrepancy means you're not actually testing the curl URLs
+- Testing via curl ensures the script downloads from YOUR fork GitHub URLs
+- ⏱️ **Important:** GitHub takes 10-30 seconds to recognize newly pushed files. Wait before testing!
 
-**⚠️ But remember:** Once merged, users will run it via `curl | bash` from GitHub, not locally!
+**What if local bash worked?**
 
-### How do I test my changes locally?
-
-```bash
-# You're on Proxmox VE host with your fork cloned
-# Test your script before PR:
-
-bash ct/my-app.sh
-
-# The setup-fork.sh script ensures curl pulls from YOUR fork, not upstream
-# So this tests your actual changes!
-
-# For advanced debugging with verbose output
-VERBOSE=yes bash ct/my-app.sh
-DEV_MODE_LOGS=true bash ct/my-app.sh
-```
+You'd be testing local files only, not the actual GitHub URLs that users will download. This means broken curl links wouldn't be caught during testing.
 
 ### What if my PR has conflicts?
 
