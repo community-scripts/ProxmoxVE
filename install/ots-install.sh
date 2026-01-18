@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Luzifer/ots
@@ -16,11 +16,11 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   redis-server \
-  nginx \
-  openssl
+  nginx
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "ots" "Luzifer/ots" "prebuild" "latest" "/opt/ots" "ots_linux_amd64.tgz"
+create_self_signed_cert
 
 msg_info "Setup OTS"
 cat <<EOF >/opt/ots/.env
@@ -30,14 +30,6 @@ SECRET_EXPIRY=604800
 STORAGE_TYPE=redis
 EOF
 msg_ok "Setup OTS"
-
-msg_info "Generating Universal SSL Certificate"
-mkdir -p /etc/ssl/ots
-$STD openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
-  -keyout /etc/ssl/ots/key.pem \
-  -out /etc/ssl/ots/cert.pem \
-  -subj "/CN=ots"
-msg_ok "Certificate Generated"
 
 msg_info "Setting up nginx"
 cat <<EOF >/etc/nginx/sites-available/ots.conf
@@ -52,8 +44,8 @@ server {
   listen [::]:443 ssl;
   server_name ots;
 
-  ssl_certificate /etc/ssl/ots/cert.pem;
-  ssl_certificate_key /etc/ssl/ots/key.pem;
+  ssl_certificate /etc/ssl/ots/ots.crt;
+  ssl_certificate_key /etc/ssl/ots/ots.key;
 
   location / {
     add_header X-Robots-Tag noindex;

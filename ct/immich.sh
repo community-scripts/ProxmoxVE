@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://immich.app
@@ -57,9 +57,12 @@ EOF
     fi
     $STD apt update
     msg_ok "Added Debian Testing repo"
-    msg_info "Installing libmimalloc3"
-    $STD apt install -t testing --no-install-recommends libmimalloc3
-    msg_ok "Installed libmimalloc3"
+  fi
+
+  if ! dpkg -l "libmimalloc3" | grep -q '3.1' || ! dpkg -l "libde265-dev" | grep -q '1.0.16'; then
+    msg_info "Installing/upgrading Testing repo packages"
+    $STD apt install -t testing libmimalloc3 libde265-dev -y
+    msg_ok "Installed/upgraded Testing repo packages"
   fi
 
   if [[ ! -f /etc/apt/sources.list.d/mise.list ]]; then
@@ -93,6 +96,7 @@ EOF
       $STD apt install -y ./*.deb
       rm ./*.deb
       $STD apt-mark hold libigdgmm12
+      dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
       msg_ok "Intel iGPU dependencies updated"
     fi
     rm ./Dockerfile
@@ -389,7 +393,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:2283${CL}"

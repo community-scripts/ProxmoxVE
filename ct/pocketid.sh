@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Snarkenfaugister
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/pocket-id/pocket-id
@@ -27,6 +27,12 @@ function update_script() {
   if [[ ! -d /opt/pocket-id ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  # Mandatory as of v2.x.x
+  ENCRYPTION_KEY=$(openssl rand -base64 32)
+  if ! grep -q '^ENCRYPTION_KEY=' /opt/pocket-id/.env; then
+    echo "ENCRYPTION_KEY=$ENCRYPTION_KEY" >> /opt/pocket-id/.env
   fi
 
   if check_for_gh_release "pocket-id" "pocket-id/pocket-id"; then
@@ -79,7 +85,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Configure your reverse proxy to point to:${BGN} ${IP}:1411${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"

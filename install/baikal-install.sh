@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://sabre.io/baikal/
@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" setup_postgresql
 PHP_APACHE="YES" PHP_MODULE="pgsql,curl" PHP_VERSION="8.3" setup_php
 setup_composer
-fetch_and_deploy_gh_release "baikal" "sabre-io/Baikal"
+fetch_and_deploy_gh_release "baikal" "sabre-io/Baikal" "tarball"
 PG_DB_NAME="baikal_db" PG_DB_USER="baikal_user" PG_DB_PASS="$(openssl rand -base64 12)" setup_postgresql_db
 
 msg_info "Configuring Baikal"

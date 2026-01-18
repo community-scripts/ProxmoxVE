@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.zigbee2mqtt.io/
@@ -37,6 +37,7 @@ function update_script() {
     case $CHOICE in
     1)
       $STD apk -U upgrade
+      msg_ok "Updated successfully!"
       exit
       ;;
     esac
@@ -47,4 +48,4 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"

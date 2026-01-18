@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MrYadro
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://recyclarr.dev/wiki/
@@ -27,7 +27,7 @@ msg_ok "Configured Recyclarr"
 msg_info "Setting up Daily Sync Cron"
 cat <<EOF >/etc/cron.d/recyclarr
 # Run recyclarr sync daily
-@daily root recyclarr sync >> /root/.config/recyclarr/sync.log 2>&1
+@daily root /usr/local/bin/recyclarr sync >> /root/.config/recyclarr/sync.log 2>&1
 EOF
 chmod 644 /etc/cron.d/recyclarr
 msg_ok "Setup Daily Sync Cron"

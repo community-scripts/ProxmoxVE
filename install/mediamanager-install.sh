@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2025 Community Scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/maxdorninger/MediaManager
@@ -49,7 +49,7 @@ export PUBLIC_VERSION=""
 export PUBLIC_API_URL=""
 export BASE_PATH="/web"
 cd /opt/mediamanager/web
-$STD npm ci --no-fund --no-audit
+$STD npm install --no-fund --no-audit
 $STD npm run build
 mkdir -p {"$MM_DIR"/web,"$MEDIA_DIR","$CONFIG_DIR"}
 cp -r build "$FRONTEND_FILES_DIR"

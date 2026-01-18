@@ -34,11 +34,11 @@
   "notes": [
     {
       "type": "warning",
-      "content": "Configure your Radarr/Sonarr instances in `/root/.config/recyclarr/recyclarr.yml` before the first sync."
+      "text": "Configure your Radarr/Sonarr instances in `/root/.config/recyclarr/recyclarr.yml` before the first sync."
     },
     {
       "type": "info",
-      "content": "Automatic daily sync is configured via `/etc/cron.d/recyclarr`. Sync logs are saved to `/root/.config/recyclarr/sync.log`."
+      "text": "Automatic daily sync is configured via `/etc/cron.d/recyclarr`. Sync logs are saved to `/root/.config/recyclarr/sync.log`."
     }
   ]
 }

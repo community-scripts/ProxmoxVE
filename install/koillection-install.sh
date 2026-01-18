@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://koillection.github.io/
@@ -32,7 +32,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
 } >>~/koillection.creds
 msg_ok "Set up PostgreSQL"
 
-fetch_and_deploy_gh_release "koillection" "benjaminjonard/koillection"
+fetch_and_deploy_gh_release "koillection" "benjaminjonard/koillection" "tarball"
 
 msg_info "Configuring Koillection"
 cd /opt/koillection

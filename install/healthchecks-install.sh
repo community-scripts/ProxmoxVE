@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://healthchecks.io/
@@ -43,7 +43,7 @@ ADMIN_PASSWORD="$PG_DB_PASS"
 } >>~/healthchecks.creds
 msg_ok "Set up Keys"
 
-fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks"
+fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks" "tarball"
 
 msg_info "Installing Healthchecks (venv)"
 cd /opt/healthchecks

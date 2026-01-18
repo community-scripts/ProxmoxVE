@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.home-assistant.io/
@@ -37,7 +37,7 @@ function update_script() {
   if [ "$UPD" == "1" ]; then
     msg_info "Updating ${APP} LXC"
     $STD apt update
-    $STD apt -y upgrade
+    $STD apt upgrade -y
     msg_ok "Updated successfully!"
 
     msg_info "Updating All Containers\n"
@@ -65,7 +65,7 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "3" ]; then
-    IP=$(hostname -I | awk '{print $1}')
+    import_local_ip
     msg_info "Installing FileBrowser"
     $STD curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
     $STD filebrowser config init -a '0.0.0.0'
@@ -74,23 +74,25 @@ function update_script() {
     msg_ok "Installed FileBrowser"
 
     msg_info "Creating Service"
-    service_path="/etc/systemd/system/filebrowser.service"
-    echo "[Unit]
-  Description=Filebrowser
-  After=network-online.target
-  [Service]
-    User=root
-    WorkingDirectory=/root/
-    ExecStart=/usr/local/bin/filebrowser -r /
-  [Install]
-    WantedBy=default.target" >$service_path
+    cat <<EOF >/etc/systemd/system/filebrowser.service
+[Unit]
+Description=Filebrowser
+After=network-online.target
 
-    $STD systemctl enable --now filebrowser
+[Service]
+User=root
+WorkingDirectory=/root/
+ExecStart=/usr/local/bin/filebrowser -r /
+
+[Install]
+WantedBy=default.target
+EOF
+    systemctl enable -q --now filebrowser
     msg_ok "Created Service"
 
-    msg_ok "Completed Successfully!\n"
+    msg_ok "Completed successfully!\n"
     echo -e "FileBrowser should be reachable by going to the following URL.
-         ${BL}http://$IP:8080${CL}   admin|helper-scripts.com\n"
+         ${BL}http://$LOCAL_IP:8080${CL}   admin|helper-scripts.com\n"
     exit
   fi
   if [ "$UPD" == "4" ]; then
@@ -99,14 +101,13 @@ function update_script() {
     msg_ok "Removed ALL Unused Images"
     exit
   fi
-
 }
 
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8123${CL}"

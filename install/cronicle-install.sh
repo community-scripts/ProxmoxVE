@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://cronicle.net/
@@ -14,7 +14,7 @@ network_check
 update_os
 
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle"
+fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle" "tarball"
 
 msg_info "Configuring Cronicle Primary Server"
 IP=$(hostname -I | awk '{print $1}')

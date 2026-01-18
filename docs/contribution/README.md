@@ -65,6 +65,7 @@ bash docs/contribution/setup-fork.sh
 ```
 
 This will:
+
 - Auto-detect your GitHub username
 - Update all documentation links to point to your fork
 - Create `.git-setup-info` with recommended git workflows
@@ -97,6 +98,8 @@ All scripts and configurations must follow our coding standards to ensure consis
 
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Essential coding standards and best practices
 - **[CODE_AUDIT.md](CODE_AUDIT.md)** - Code review checklist and audit procedures
+- **[GUIDE.md](GUIDE.md)** - Comprehensive contribution guide
+- **[HELPER_FUNCTIONS.md](HELPER_FUNCTIONS.md)** - Reference for all tools.func helper functions
 - **Container Scripts** - `/ct/` templates and guidelines
 - **Install Scripts** - `/install/` templates and guidelines
 - **JSON Configurations** - `/json/` structure and format
@@ -121,6 +124,7 @@ Before submitting a pull request, ensure your code passes our audit:
 **See**: [CODE_AUDIT.md](CODE_AUDIT.md) for complete audit checklist
 
 Key points:
+
 - Code consistency with existing scripts
 - Proper error handling
 - Correct variable naming
@@ -145,6 +149,7 @@ Key points:
 ### Community Guides
 
 See [USER_SUBMITTED_GUIDES.md](USER_SUBMITTED_GUIDES.md) for excellent community-written guides:
+
 - Home Assistant installation and configuration
 - Frigate setup on Proxmox
 - Docker and Portainer installation
@@ -156,15 +161,23 @@ See [USER_SUBMITTED_GUIDES.md](USER_SUBMITTED_GUIDES.md) for excellent community
 Use these templates when creating new scripts:
 
 ```bash
-# Container script
-cp ct/example.sh ct/my-app.sh
+# Container script template
+cp docs/contribution/templates_ct/AppName.sh ct/my-app.sh
 
-# Installation script
-cp install/example-install.sh install/my-app-install.sh
+# Installation script template
+cp docs/contribution/templates_install/AppName-install.sh install/my-app-install.sh
 
-# JSON configuration (if needed)
-cp json/example.json json/my-app.json
+# JSON configuration template
+cp docs/contribution/templates_json/AppName.json frontend/public/json/my-app.json
 ```
+
+**Template Features:**
+
+- Updated to match current codebase patterns
+- Includes all available helper functions from `tools.func`
+- Examples for Node.js, Python, PHP, Go applications
+- Database setup examples (MariaDB, PostgreSQL)
+- Proper service creation and cleanup
 
 ---
 
@@ -202,18 +215,21 @@ git push origin feature/my-feature
 ### Before Submitting PR
 
 1. **Sync with upstream**
+
    ```bash
    git fetch upstream
    git rebase upstream/main
    ```
 
 2. **Test your changes**
+
    ```bash
    bash ct/my-app.sh
    # Follow prompts and test the container
    ```
 
 3. **Check code standards**
+
    - [ ] Follows template structure
    - [ ] Proper error handling
    - [ ] Documentation updated (if needed)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: TuroYT
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/TuroYT/snowshare
@@ -16,7 +16,7 @@ update_os
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_USER="snowshare" PG_DB_NAME="snowshare" setup_postgresql_db
-fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare"
+fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
 
 msg_info "Installing SnowShare"
 cd /opt/snowshare

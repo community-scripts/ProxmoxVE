@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: BiluliB
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/plexguide/Huntarr.io
@@ -14,7 +14,7 @@ network_check
 update_os
 
 PYTHON_VERSION="3.12" setup_uv
-fetch_and_deploy_gh_release "huntarr" "plexguide/Huntarr.io"
+fetch_and_deploy_gh_release "huntarr" "plexguide/Huntarr.io" "tarball"
 
 msg_info "Configure Huntarr"
 $STD uv venv /opt/huntarr/.venv

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: jkrgr0
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.2fauth.app/
@@ -23,7 +23,7 @@ setup_composer
 setup_mariadb
 MARIADB_DB_NAME="2fauth_db" MARIADB_DB_USER="2fauth" setup_mariadb_db
 import_local_ip
-fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth"
+fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth" "tarball"
 
 msg_info "Setup 2FAuth"
 cd /opt/2fauth

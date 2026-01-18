@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://invoiceninja.com/
@@ -51,7 +51,7 @@ function update_script() {
     msg_ok "Restored Data"
 
     msg_info "Running Migrations"
-    cd /opt/invoiceninja
+    cd /opt/invoiceninja 
     $STD php artisan migrate --force
     $STD php artisan config:clear
     $STD php artisan cache:clear
@@ -64,7 +64,7 @@ function update_script() {
     systemctl start php8.4-fpm nginx supervisor
     msg_ok "Started Services"
 
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -73,7 +73,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080/setup${CL}"

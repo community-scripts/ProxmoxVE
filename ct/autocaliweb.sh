@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/gelbphoenix/autocaliweb
@@ -40,17 +40,17 @@ function update_script() {
     export VIRTUAL_ENV="${INSTALL_DIR}/venv"
     $STD tar -cf ~/autocaliweb_bkp.tar "$INSTALL_DIR"/{metadata_change_logs,dirs.json,.env,scripts/ingest_watcher.sh,scripts/auto_zipper_wrapper.sh,scripts/metadata_change_detector_wrapper.sh}
     fetch_and_deploy_gh_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
-    msg_info "Updating ${APP}"
-    cd "$INSTALL_DIR"
+    msg_info "Updating Autocaliweb"
+    cd "$INSTALL_DIR" 
     if [[ ! -d "$VIRTUAL_ENV" ]]; then
       $STD uv venv "$VIRTUAL_ENV"
     fi
     $STD uv sync --all-extras --active
-    cd "$INSTALL_DIR"/koreader/plugins
+    cd "$INSTALL_DIR"/koreader/plugins 
     PLUGIN_DIGEST="$(find acwsync.koplugin -type f -name "*.lua" -o -name "*.json" | sort | xargs sha256sum | sha256sum | cut -d' ' -f1)"
-    echo "Plugin files digest: $PLUGIN_DIGEST" >acwsync.koplugin/${PLUGIN_DIGEST}.digest
-    echo "Build date: $(date)" >>acwsync.koplugin/${PLUGIN_DIGEST}.digest
-    echo "Files included:" >>acwsync.koplugin/${PLUGIN_DIGEST}.digest
+    echo "Plugin files digest: $PLUGIN_DIGEST" >acwsync.koplugin/"${PLUGIN_DIGEST}".digest
+    echo "Build date: $(date)" >>acwsync.koplugin/"${PLUGIN_DIGEST}".digest
+    echo "Files included:" >>acwsync.koplugin/"${PLUGIN_DIGEST}".digest
     $STD zip -r koplugin.zip acwsync.koplugin/
     cp -r koplugin.zip "$INSTALL_DIR"/cps/static
     mkdir -p "$INSTALL_DIR"/metadata_temp
@@ -62,7 +62,7 @@ function update_script() {
     sed 's/^/v/' ~/.autocaliweb >"$INSTALL_DIR"/ACW_RELEASE
     chown -R acw:acw "$INSTALL_DIR"
     rm ~/autocaliweb_bkp.tar
-    msg_ok "Updated $APP"
+    msg_ok "Updated Autocaliweb"
 
     msg_info "Starting Services"
     systemctl start autocaliweb metadata-change-detector acw-ingest-service acw-auto-zipper
@@ -77,7 +77,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8083${CL}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.part-db.de/
@@ -15,39 +15,20 @@ update_os
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 PG_VERSION="16" setup_postgresql
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl,pgsql" setup_php
+PG_DB_NAME="partdb" PG_DB_USER="partdb" setup_postgresql_db
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl,pgsql" PHP_POST_MAX_SIZE="100M" PHP_UPLOAD_MAX_FILESIZE="100M" setup_php
 setup_composer
-
-msg_info "Setting up PHP"
-PHPVER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "\n";')
-sed -i "s@post_max_size = 8M@post_max_size = 100M@g" /etc/php/${PHPVER}/apache2/php.ini
-sed -i "s@upload_max_filesize = 2M@upload_max_filesize = 100M@g" /etc/php/${PHPVER}/apache2/php.ini
-msg_ok "Setting up PHP"
-
-msg_info "Setting up PostgreSQL"
-DB_NAME=partdb
-DB_USER=partdb
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-{
-  echo "Part-DB Credentials"
-  echo "Part-DB Database User: $DB_USER"
-  echo "Part-DB Database Password: $DB_PASS"
-  echo "Part-DB Database Name: $DB_NAME"
-} >>~/partdb.creds
-msg_ok "Set up PostgreSQL"
 
 msg_info "Installing Part-DB (Patience)"
 cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/Part-DB/Part-DB-server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(get_latest_github_release "Part-DB/Part-DB-server")
 curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -o "/opt/v${RELEASE}.zip"
 $STD unzip "v${RELEASE}.zip"
 mv /opt/Part-DB-server-${RELEASE}/ /opt/partdb
 
 cd /opt/partdb/
 cp .env .env.local
-sed -i "s|DATABASE_URL=\"sqlite:///%kernel.project_dir%/var/app.db\"|DATABASE_URL=\"postgresql://${DB_USER}:${DB_PASS}@127.0.0.1:5432/${DB_NAME}?serverVersion=12.19&charset=utf8\"|" .env.local
+sed -i "s|DATABASE_URL=\"sqlite:///%kernel.project_dir%/var/app.db\"|DATABASE_URL=\"postgresql://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}?serverVersion=12.19&charset=utf8\"|" .env.local
 
 export COMPOSER_ALLOW_SUPERUSER=1
 $STD composer install --no-dev -o --no-interaction
@@ -64,7 +45,7 @@ ADMIN_PASS=$(grep -oP 'The initial password for the "admin" user is: \K\w+' ~/da
 } >>~/partdb.creds
 rm -rf ~/database-migration-output
 rm -rf "/opt/v${RELEASE}.zip"
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >~/.partdb
 msg_ok "Installed Part-DB"
 
 msg_info "Creating Service"

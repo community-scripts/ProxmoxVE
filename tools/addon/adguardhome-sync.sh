@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/bakito/adguardhome-sync
@@ -111,7 +111,7 @@ function update() {
       systemctl start adguardhome-sync.service
     fi
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
     exit
   fi
 }

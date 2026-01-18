@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/PatcMmon/PatchMon
@@ -22,24 +22,9 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" setup_postgresql
-
-msg_info "Setup PostgreSQL Database"
-DB_NAME=patchmon_db
-DB_USER=patchmon_usr
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
-{
-  echo "PatchMon Credentials"
-  echo "PatchMon Database Name: $DB_NAME"
-  echo "PatchMon Database User: $DB_USER"
-  echo "PatchMon Database Password: $DB_PASS"
-} >>~/patchmon.creds
-msg_ok "Setup PostgreSQL Database"
-
+PG_DB_NAME="patchmon_db" PG_DB_USER="patchmon_usr" setup_postgresql_db
 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
+import_local_ip
 
 msg_info "Configuring PatchMon"
 cd /opt/patchmon
@@ -50,12 +35,10 @@ $STD npm install --no-audit --no-fund --no-save --ignore-scripts
 cd /opt/patchmon/frontend
 $STD npm install --include=dev --no-audit --no-fund --no-save --ignore-scripts
 $STD npm run build
-
 JWT_SECRET="$(openssl rand -base64 64 | tr -d "=+/" | cut -c1-50)"
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cat <<EOF >/opt/patchmon/backend/.env
 # Database Configuration
-DATABASE_URL="postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME"
+DATABASE_URL="postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME"
 PY_THRESHOLD=3M_DB_CONN_MAX_ATTEMPTS=30
 PM_DB_CONN_WAIT_INTERVAL=2
 
@@ -272,7 +255,6 @@ async function updateSettings() {
 
 updateSettings();
 EOF
-
 cd /opt/patchmon/backend
 $STD node update-settings.js
 msg_ok "Settings updated successfully"

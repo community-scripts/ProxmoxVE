@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
 
 # ==============================================================================
@@ -809,21 +809,15 @@ cleanup_lxc() {
   find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
   find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
 
-  # Truncate writable log files silently (permission errors ignored)
-  if command -v truncate >/dev/null 2>&1; then
-    find /var/log -type f -writable -print0 2>/dev/null |
-      xargs -0 -n1 truncate -s 0 2>/dev/null || true
-  fi
-
   # Node.js npm - directly remove cache directory
   # npm cache clean/verify can fail with ENOTEMPTY errors, so we skip them
   if command -v npm &>/dev/null; then
     rm -rf /root/.npm/_cacache /root/.npm/_logs 2>/dev/null || true
   fi
   # Node.js yarn
-  if command -v yarn &>/dev/null; then $STD yarn cache clean || true; fi
+  if command -v yarn &>/dev/null; then yarn cache clean &>/dev/null || true; fi
   # Node.js pnpm
-  if command -v pnpm &>/dev/null; then $STD pnpm store prune || true; fi
+  if command -v pnpm &>/dev/null; then pnpm store prune &>/dev/null || true; fi
   # Go
   if command -v go &>/dev/null; then $STD go clean -cache -modcache || true; fi
   # Rust cargo
@@ -831,11 +825,8 @@ cleanup_lxc() {
   # Ruby gem
   if command -v gem &>/dev/null; then $STD gem cleanup || true; fi
   # Composer (PHP)
-  if command -v composer &>/dev/null; then COMPOSER_ALLOW_SUPERUSER=1 && $STD composer clear-cache || true; fi
+  if command -v composer &>/dev/null; then COMPOSER_ALLOW_SUPERUSER=1 $STD composer clear-cache || true; fi
 
-  if command -v journalctl &>/dev/null; then
-    $STD journalctl --vacuum-time=10m || true
-  fi
   msg_ok "Cleaned"
 }
 

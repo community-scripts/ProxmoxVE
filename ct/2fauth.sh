@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: jkrgr0
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.2fauth.app/
@@ -44,7 +44,7 @@ function update_script() {
       PHP_VERSION="8.4" PHP_MODULE="common,ctype,fileinfo,mysql,cli,tokenizer,dom,redis,session,openssl" PHP_FPM="YES" setup_php
       sed -i 's/php8\.[0-9]/php8.4/g' /etc/nginx/conf.d/2fauth.conf
     fi
-    fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth"
+    fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth" "tarball"
     setup_composer
     mv "/opt/2fauth-backup/.env" "/opt/2fauth/.env"
     mv "/opt/2fauth-backup/storage" "/opt/2fauth/storage"
@@ -64,7 +64,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:80${CL}"

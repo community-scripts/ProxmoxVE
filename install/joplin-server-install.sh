@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://joplinapp.org/
@@ -20,6 +20,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
+PG_DB_NAME="joplin" PG_DB_USER="joplin" setup_postgresql_db
 NODE_VERSION=24 NODE_MODULE="yarn,npm,pm2" setup_nodejs
 mkdir -p /opt/pm2
 export PM2_HOME=/opt/pm2
@@ -27,28 +28,10 @@ $STD pm2 install pm2-logrotate
 $STD pm2 set pm2-logrotate:max_size 100MB
 $STD pm2 set pm2-logrotate:retain 5
 $STD pm2 set pm2-logrotate:compress tr
-
-msg_info "Setting up PostgreSQL Database"
-DB_NAME=joplin
-DB_USER=joplin
-DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-{
-  echo "Joplin-Credentials"
-  echo "Joplin Database User: $DB_USER"
-  echo "Joplin Database Password: $DB_PASS"
-  echo "Joplin Database Name: $DB_NAME"
-} >>~/joplin.creds
-msg_ok "Set up PostgreSQL Database"
-
-fetch_and_deploy_gh_release "joplin-server" "laurent22/joplin" "tarball" "latest"
+fetch_and_deploy_gh_release "joplin-server" "laurent22/joplin" "tarball"
+import_local_ip
 
 msg_info "Setting up Joplin Server (Patience)"
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 cd /opt/joplin-server
 sed -i "/onenote-converter/d" packages/lib/package.json
 $STD yarn config set --home enableTelemetry 0
@@ -61,9 +44,9 @@ NODE_ENV=production
 APP_BASE_URL=http://$LOCAL_IP:22300
 APP_PORT=22300
 DB_CLIENT=pg
-POSTGRES_PASSWORD=$DB_PASS
-POSTGRES_DATABASE=$DB_NAME
-POSTGRES_USER=$DB_USER
+POSTGRES_PASSWORD=$PG_DB_PASS
+POSTGRES_DATABASE=$PG_DB_NAME
+POSTGRES_USER=$PG_DB_USER
 POSTGRES_PORT=5432
 POSTGRES_HOST=localhost
 EOF

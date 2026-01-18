@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz) & vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://karakeep.app/
@@ -39,7 +39,7 @@ sed -i \
   /etc/meilisearch.toml
 msg_ok "Configured Meilisearch"
 
-fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
+fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
 cd /opt/karakeep
 MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
 NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs

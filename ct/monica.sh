@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.monicahq.com/
@@ -27,9 +27,14 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  setup_mariadb
 
+  setup_mariadb
   NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+
+  # Fix for previous versions not having cronjob
+  if ! grep -Fq 'php /opt/monica/artisan schedule:run' /etc/crontab; then
+    echo '* * * * * root php /opt/monica/artisan schedule:run >> /dev/null 2>&1' >>/etc/crontab
+  fi
 
   if check_for_gh_release "monica" "monicahq/monica"; then
     msg_info "Stopping Service"
@@ -68,7 +73,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

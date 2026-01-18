@@ -1,5 +1,5 @@
 import { CalendarPlus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -26,9 +26,15 @@ export function getDisplayValueFromType(type: string) {
   }
 }
 
-export function LatestScripts({ items }: { items: Category[] }) {
-  const [page, setPage] = useState(1);
-
+export function LatestScripts({
+  items,
+  page,
+  onPageChange,
+}: {
+  items: Category[];
+  page: number;
+  onPageChange: (page: number) => void;
+}) {
   const latestScripts = useMemo(() => {
     if (!items)
       return [];
@@ -48,12 +54,20 @@ export function LatestScripts({ items }: { items: Category[] }) {
     );
   }, [items]);
 
+  const totalPages = Math.max(1, Math.ceil(latestScripts.length / ITEMS_PER_PAGE));
+
+  useEffect(() => {
+    if (page > totalPages) {
+      onPageChange(totalPages);
+    }
+  }, [page, totalPages, onPageChange]);
+
   const goToNextPage = () => {
-    setPage(prevPage => prevPage + 1);
+    onPageChange(Math.min(totalPages, page + 1));
   };
 
   const goToPreviousPage = () => {
-    setPage(prevPage => prevPage - 1);
+    onPageChange(Math.max(1, page - 1));
   };
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE;

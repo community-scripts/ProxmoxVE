@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/bitmagnet-io/bitmagnet
@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
 setup_go
-fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"
+fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
 RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 
 msg_info "Setting up database"

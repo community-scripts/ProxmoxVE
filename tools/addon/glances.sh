@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -96,7 +96,7 @@ update_glances_debian() {
   uv pip install --upgrade "glances[web]" >/dev/null 2>&1
   deactivate
   systemctl restart glances
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
 }
 
 # uninstall on Debian/Ubuntu
@@ -163,7 +163,7 @@ update_glances_alpine() {
   uv pip install --upgrade "glances[web]" >/dev/null 2>&1
   deactivate
   rc-service glances restart
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
 }
 
 # uninstall on Alpine

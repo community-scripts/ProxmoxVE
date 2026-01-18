@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/fccview/jotty
@@ -18,6 +18,8 @@ fetch_and_deploy_gh_release "jotty" "fccview/jotty" "tarball" "latest" "/opt/jot
 
 msg_info "Installing ${APPLICATION}"
 cd /opt/jotty
+unset NODE_OPTIONS
+export NODE_OPTIONS="--max-old-space-size=3072"
 $STD yarn --frozen-lockfile
 $STD yarn next telemetry disable
 $STD yarn build
@@ -28,7 +30,7 @@ mkdir -p .next/standalone/.next
 cp -r .next/static .next/standalone/.next/
 
 mv .next/standalone /tmp/jotty_standalone
-rm -rf * .next .git .gitignore .yarn
+rm -rf ./* .next .git .gitignore .yarn
 mv /tmp/jotty_standalone/* .
 mv /tmp/jotty_standalone/.[!.]* . 2>/dev/null || true
 rm -rf /tmp/jotty_standalone

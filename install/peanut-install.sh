@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # Co-Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -18,7 +18,7 @@ msg_info "Installing NUT"
 $STD apt install -y nut-client
 msg_ok "Installed NUT"
 
-NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
 msg_info "Setup Peanut"
@@ -28,6 +28,7 @@ $STD pnpm run build:local
 cp -r .next/static .next/standalone/.next/
 mkdir -p /opt/peanut/.next/standalone/config
 mkdir -p /etc/peanut/
+ln -sf .next/standalone/server.js server.js
 cat <<EOF >/etc/peanut/settings.yml
 WEB_HOST: 0.0.0.0
 WEB_PORT: 3000
@@ -53,7 +54,7 @@ Environment="NODE_ENV=production"
 #Environment="WEB_HOST=0.0.0.0"
 #Environment="WEB_PORT=3000"
 WorkingDirectory=/opt/peanut
-ExecStart=node /opt/peanut/.next/standalone/server.js
+ExecStart=node /opt/peanut/entrypoint.mjs
 TimeoutStopSec=30
 [Install]
 WantedBy=multi-user.target

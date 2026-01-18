@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.docker.com/
@@ -13,31 +13,16 @@ setting_up_container
 network_check
 update_os
 
-get_latest_release() {
-  curl -fsSL https://api.github.com/repos/"$1"/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-}
+DOCKER_LATEST_VERSION=$(get_latest_github_release "moby/moby")
+PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
+PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
-DOCKER_LATEST_VERSION=$(get_latest_release "moby/moby")
-PORTAINER_LATEST_VERSION=$(get_latest_release "portainer/portainer")
-PORTAINER_AGENT_LATEST_VERSION=$(get_latest_release "portainer/agent")
-DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
-
-msg_info "Installing Docker $DOCKER_LATEST_VERSION"
+msg_info "Installing Docker $DOCKER_LATEST_VERSION (with Compose, Buildx)"
 DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
 mkdir -p $(dirname $DOCKER_CONFIG_PATH)
 echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
 $STD sh <(curl -fsSL https://get.docker.com)
 msg_ok "Installed Docker $DOCKER_LATEST_VERSION"
-
-read -r -p "${TAB3}Install Docker Compose v2 plugin? <y/N> " prompt_compose
-if [[ ${prompt_compose,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
-  mkdir -p /usr/local/lib/docker/cli-plugins
-  curl -fsSL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_LATEST_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
-    -o /usr/local/lib/docker/cli-plugins/docker-compose
-  chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-  msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
-fi
 
 read -r -p "${TAB3}Would you like to add Portainer (UI)? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then

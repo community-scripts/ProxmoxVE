@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck | Co-Author: havardthom | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://openwebui.com/
@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y ffmpeg
+$STD apt install -y \
+  ffmpeg \
+  zstd
 msg_ok "Installed Dependencies"
 
 setup_hwaccel
@@ -50,7 +52,18 @@ EOF
   msg_ok "Set up Intel® Repositories"
 
   msg_info "Installing Intel® Level Zero"
-  $STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || true
+  # Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
+  if is_debian && [[ "$(get_os_version_major)" -ge 13 ]]; then
+    # Use system packages on Debian 13+ (avoid conflicts with libze1)
+    $STD apt -y install libze1 libze-dev intel-level-zero-gpu 2>/dev/null || {
+      msg_warn "Failed to install some Level Zero packages, continuing anyway"
+    }
+  else
+    # Use Intel repository packages for older systems
+    $STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || {
+      msg_warn "Failed to install Intel Level Zero packages, continuing anyway"
+    }
+  fi
   msg_ok "Installed Intel® Level Zero"
 
   msg_info "Installing Intel® oneAPI Base Toolkit (Patience)"
@@ -58,9 +71,10 @@ EOF
   msg_ok "Installed Intel® oneAPI Base Toolkit"
 
   msg_info "Installing Ollama"
-  curl -fsSLO -C - https://ollama.com/download/ollama-linux-amd64.tgz
-  tar -C /usr -xzf ollama-linux-amd64.tgz
-  rm -rf ollama-linux-amd64.tgz
+  OLLAMA_RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
+  curl -fsSLO -C - https://github.com/ollama/ollama/releases/download/${OLLAMA_RELEASE}/ollama-linux-amd64.tar.zst
+  tar --zstd -C /usr -xf ollama-linux-amd64.tar.zst
+  rm -rf ollama-linux-amd64.tar.zst
   cat <<EOF >/etc/systemd/system/ollama.service
 [Unit]
 Description=Ollama Service

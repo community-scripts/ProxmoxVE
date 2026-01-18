@@ -27,19 +27,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Stopping Service"
-  systemctl stop beszel-hub
-  msg_info "Stopped Service"
 
-  msg_info "Updating $APP"
-  $STD /opt/beszel/beszel update
-  sleep 2 && chmod +x /opt/beszel/beszel
-  msg_ok "Updated $APP"
+  if check_for_gh_release "beszel" "henrygd/beszel"; then
+    msg_info "Stopping Service"
+    systemctl stop beszel-hub
+    msg_info "Stopped Service"
 
-  msg_info "Starting Service"
-  systemctl start beszel-hub
-  msg_ok "Successfully started $APP"
-  msg_ok "Updated successfully!"
+    msg_info "Updating Beszel"
+    $STD /opt/beszel/beszel update
+    sleep 2 && chmod +x /opt/beszel/beszel
+    msg_ok "Updated Beszel"
+
+    msg_info "Starting Service"
+    systemctl start beszel-hub
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
   exit
 }
 
@@ -47,7 +50,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following IP:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8090${CL}"

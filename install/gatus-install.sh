@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/TwiN/gatus
@@ -20,7 +20,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 setup_go
-fetch_and_deploy_gh_release "gatus" "TwiN/gatus"
+fetch_and_deploy_gh_release "gatus" "TwiN/gatus" "tarball"
 
 msg_info "Configuring gatus"
 cd /opt/gatus

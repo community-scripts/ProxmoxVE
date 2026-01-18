@@ -310,7 +310,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:PORT${CL}"
@@ -330,7 +330,7 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:PORT${CL}"
 
 ```bash
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT
 # Source: https://github.com/example/myapp
@@ -558,7 +558,7 @@ fi
 
 ```bash
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # Co-Author: AnotherAuthor (for collaborative work)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/jordan-dalby/ByteStash
@@ -37,7 +37,7 @@ function update_script() {
       msg_ok "Services Stopped"
 
       rm -rf /opt/bytestash
-      fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash"
+      fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
 
       msg_info "Configuring ByteStash"
       cd /opt/bytestash/server
@@ -63,7 +63,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

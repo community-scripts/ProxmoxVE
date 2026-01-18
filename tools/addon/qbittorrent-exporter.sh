@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/martabal/qbittorrent-exporter
@@ -12,8 +12,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
-
 load_functions
+
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
@@ -22,8 +22,6 @@ APP="qbittorrent-exporter"
 APP_TYPE="tools"
 INSTALL_PATH="/opt/qbittorrent-exporter"
 CONFIG_PATH="/opt/qbittorrent-exporter.env"
-header_info
-ensure_usr_local_bin_persist
 
 # ==============================================================================
 # OS DETECTION
@@ -86,7 +84,7 @@ function update() {
       systemctl start qbittorrent-exporter
     fi
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
     exit
   fi
 }

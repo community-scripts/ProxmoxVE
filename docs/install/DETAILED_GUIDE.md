@@ -85,7 +85,7 @@ RANDOM_UUID            # Session UUID for telemetry
 #!/usr/bin/env bash                          # [1] Shebang
 
 # [2] Copyright/Metadata
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT
 # Source: https://example.com
@@ -118,7 +118,7 @@ cleanup_lxc
 
 ```bash
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/application/repo

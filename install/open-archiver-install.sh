@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://openarchiver.com/
@@ -19,28 +19,12 @@ msg_ok "Installed dependendencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
+PG_DB_NAME="openarchiver_db" PG_DB_USER="openarchiver" setup_postgresql_db
 fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
 fetch_and_deploy_gh_release "openarchiver" "LogicLabs-OU/OpenArchiver" "tarball"
 JWT_KEY="$(openssl rand -hex 32)"
 SECRET_KEY="$(openssl rand -hex 32)"
-IP_ADDR=$(hostname -I | awk '{print $1}')
-
-msg_info "Setting up PostgreSQL"
-DB_NAME="openarchiver_db"
-DB_USER="openarchiver"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-18)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-{
-  echo "Open Archiver DB Credentials"
-  echo "Database Name: $DB_NAME"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-} >>~/openarchiver.creds
-msg_ok "Set up PostgreSQL"
+import_local_ip
 
 msg_info "Configuring MeiliSearch"
 curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml
@@ -76,10 +60,10 @@ mkdir -p /opt/openarchiver-data
 cd /opt/openarchiver
 cp .env.example .env
 sed -i "s|^NODE_ENV=.*|NODE_ENV=production|g" /opt/openarchiver/.env
-sed -i "s|^POSTGRES_DB=.*|POSTGRES_DB=openarchiver_db|g" /opt/openarchiver/.env
-sed -i "s|^POSTGRES_USER=.*|POSTGRES_USER=openarchiver|g" /opt/openarchiver/.env
-sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$DB_PASS|g" /opt/openarchiver/.env
-sed -i "s|^DATABASE_URL=.*|DATABASE_URL=\"postgresql://openarchiver:$DB_PASS@localhost:5432/openarchiver_db\"|g" /opt/openarchiver/.env
+sed -i "s|^POSTGRES_DB=.*|POSTGRES_DB=$PG_DB_NAME|g" /opt/openarchiver/.env
+sed -i "s|^POSTGRES_USER=.*|POSTGRES_USER=$PG_DB_USER|g" /opt/openarchiver/.env
+sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$PG_DB_PASS|g" /opt/openarchiver/.env
+sed -i "s|^DATABASE_URL=.*|DATABASE_URL=\"postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME\"|g" /opt/openarchiver/.env
 sed -i "s|^MEILI_HOST=.*|MEILI_HOST=http://localhost:7700|g" /opt/openarchiver/.env
 sed -i "s|^MEILI_MASTER_KEY=.*|MEILI_MASTER_KEY=$MASTER_KEY|g" /opt/openarchiver/.env
 sed -i "s|^REDIS_HOST=.*|REDIS_HOST=localhost|g" /opt/openarchiver/.env
@@ -88,7 +72,7 @@ sed -i "s|^STORAGE_LOCAL_ROOT_PATH=.*|STORAGE_LOCAL_ROOT_PATH=/opt/openarchiver-
 sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$JWT_KEY|g" /opt/openarchiver/.env
 sed -i "s|^ENCRYPTION_KEY=.*|ENCRYPTION_KEY=$SECRET_KEY|g" /opt/openarchiver/.env
 sed -i "s|^TIKA_URL=.*|TIKA_URL=|g" /opt/openarchiver/.env
-sed -i "s|^ORIGIN=.*|ORIGIN=http://$IP_ADDR:3000|g" /opt/openarchiver/.env
+sed -i "s|^ORIGIN=.*|ORIGIN=http://$LOCAL_IP:3000|g" /opt/openarchiver/.env
 $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
 $STD pnpm run build:oss
 $STD pnpm db:migrate

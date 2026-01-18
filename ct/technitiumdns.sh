@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://technitium.com/dns/
@@ -27,7 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
+  if [[ -f /etc/systemd/system/dns.service ]]; then
+    mv /etc/systemd/system/dns.service /etc/systemd/system/technitium.service
+    systemctl daemon-reload
+    systemctl enable -q --now technitium
+  fi
   if is_package_installed "aspnetcore-runtime-8.0"; then
     $STD apt remove -y aspnetcore-runtime-8.0
     [ -f /etc/apt/sources.list.d/microsoft-prod.list ] && rm -f /etc/apt/sources.list.d/microsoft-prod.list
@@ -42,7 +46,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
-  if [[ ! -f ~/.technitium || "${RELEASE}" != "$(cat ~/.technitium)" ]]; then
+  if [[ ! -f ~/.technitium || ${RELEASE} != "$(cat ~/.technitium)" ]]; then
     msg_info "Updating Technitium DNS"
     curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
     $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
@@ -61,7 +65,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5380${CL}"

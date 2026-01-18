@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://vikunja.io/
@@ -18,7 +18,7 @@ $STD apt install -y make
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Vikunja (Patience)"
-cd /opt || exit
+cd /opt
 RELEASE=$(curl -fsSL https://dl.vikunja.io/vikunja/ | grep -oP 'href="/vikunja/\K[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
 curl -fsSL "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb" -o vikunja-"$RELEASE"-amd64.deb
 $STD dpkg -i vikunja-"$RELEASE"-amd64.deb

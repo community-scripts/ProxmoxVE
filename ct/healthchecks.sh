@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://healthchecks.io/
@@ -39,7 +39,7 @@ function update_script() {
     cp -a /opt/healthchecks "$BACKUP"
     msg_ok "Backup created at $BACKUP"
 
-    fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks"
+    fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks" "tarball"
 
     cd /opt/healthchecks
     if [[ -d venv ]]; then
@@ -74,7 +74,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}${CL}"

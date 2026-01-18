@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/eko/pihole-exporter/
@@ -12,8 +12,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
-
 load_functions
+
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
@@ -22,9 +22,6 @@ APP="pihole-exporter"
 APP_TYPE="tools"
 INSTALL_PATH="/opt/pihole-exporter"
 CONFIG_PATH="/opt/pihole-exporter.env"
-header_info
-ensure_usr_local_bin_persist
-get_current_ip &>/dev/null
 
 # ==============================================================================
 # OS DETECTION
@@ -87,7 +84,7 @@ function update() {
       systemctl start pihole-exporter
     fi
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
     exit
   fi
 }
@@ -186,7 +183,7 @@ UPDATEEOF
 
   echo ""
   msg_ok "Pihole-Exporter installed successfully"
-  msg_ok "Metrics: ${BL}http://${CURRENT_IP}:9617/metrics${CL}"
+  msg_ok "Metrics: ${BL}http://${LOCAL_IP}:9617/metrics${CL}"
   msg_ok "Config: ${BL}${CONFIG_PATH}${CL}"
 }
 
@@ -195,7 +192,7 @@ UPDATEEOF
 # ==============================================================================
 header_info
 ensure_usr_local_bin_persist
-get_current_ip &>/dev/null
+import_local_ip
 
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then

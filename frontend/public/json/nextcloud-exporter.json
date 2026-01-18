@@ -1,0 +1,35 @@
+{
+  "name": "Nextcloud Exporter",
+  "slug": "nextcloud-exporter",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-12-27",
+  "type": "addon",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 9205,
+  "documentation": "https://github.com/xperimental/nextcloud-exporter",
+  "website": "https://github.com/xperimental/nextcloud-exporter",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nextcloud.webp",
+  "config_path": "/etc/nextcloud-exporter.env",
+  "description": "Prometheus exporter for Nextcloud servers. ",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/addon/nextcloud-exporter.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

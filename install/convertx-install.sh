@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Omar Minaya | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/C4illin/ConvertX
@@ -17,7 +17,7 @@ setup_hwaccel
 setup_imagemagick
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   assimp-utils \
   calibre \
   dcraw \

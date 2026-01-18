@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/juanfont/headscale
@@ -28,7 +28,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
 
 redir /admin /admin/
 
-handle_path /admin* {
+handle_path /admin/* {
     root * /opt/headscale-admin
     encode gzip zstd
 
@@ -36,14 +36,11 @@ handle_path /admin* {
         X-Content-Type-Options nosniff
     }
 
-    try_files {path} {path}/ /opt/headscale-admin/index.html
+    try_files {path} /opt/headscale-admin/index.html
     file_server
 }
 
-handle /api/* {
-    reverse_proxy localhost:8080
-}
-
+reverse_proxy localhost:8080
 EOF
   caddy fmt --overwrite /etc/caddy/Caddyfile
   systemctl start caddy

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://privatebin.info/
@@ -20,15 +20,8 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.2" PHP_MODULE="common,fpm" setup_php
+create_self_signed_cert
 fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
-
-msg_info "Generating Universal SSL Certificate"
-mkdir -p /etc/ssl/privatebin
-$STD openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
-    -keyout /etc/ssl/privatebin/key.pem \
-    -out /etc/ssl/privatebin/cert.pem \
-    -subj "/CN=PrivateBin"
-msg_ok "Certificate Generated"
 
 msg_info "Configuring Environment"
 mkdir -p /opt/privatebin/data
@@ -55,8 +48,8 @@ server {
     listen 443 ssl default_server;
     listen [::]:443 ssl default_server;
     
-    ssl_certificate /etc/ssl/privatebin/cert.pem;
-    ssl_certificate_key /etc/ssl/privatebin/key.pem;
+    ssl_certificate /etc/ssl/privatebin/privatebin.crt;
+    ssl_certificate_key /etc/ssl/privatebin/privatebin.key;
     
     root /opt/privatebin;
     index index.php;

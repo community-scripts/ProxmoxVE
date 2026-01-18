@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.jellyseerr.dev/
@@ -40,7 +40,7 @@ function update_script() {
     msg_ok "Updating Packages"
   fi
 
-  cd /opt/jellyseerr
+  cd /opt/jellyseerr 
   output=$(git pull --no-rebase)
 
   pnpm_current=$(pnpm --version 2>/dev/null)
@@ -56,7 +56,7 @@ function update_script() {
     msg_ok "pnpm is already installed and satisfies version $pnpm_desired."
   fi
 
-  msg_info "Updating $APP"
+  msg_info "Updating Jellyseerr"
   if echo "$output" | grep -q "Already up to date."; then
     msg_ok "$APP is already up to date."
     exit
@@ -65,7 +65,7 @@ function update_script() {
   systemctl stop jellyseerr
   rm -rf dist .next node_modules
   export CYPRESS_INSTALL_BINARY=0
-  cd /opt/jellyseerr
+  cd /opt/jellyseerr 
   $STD pnpm install --frozen-lockfile
   export NODE_OPTIONS="--max-old-space-size=3072"
   $STD pnpm build
@@ -88,7 +88,8 @@ EOF
 
   systemctl daemon-reload
   systemctl start jellyseerr
-  msg_ok "Updated $APP"
+  msg_ok "Updated Jellyseerr"
+  msg_ok "Updated successfully!"
   exit
 }
 
@@ -96,7 +97,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5055${CL}"

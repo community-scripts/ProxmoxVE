@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://podman.io/
@@ -13,12 +13,8 @@ setting_up_container
 network_check
 update_os
 
-get_latest_release() {
-  curl -fsSL https://api.github.com/repos/$1/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-}
-
-PORTAINER_LATEST_VERSION=$(get_latest_release "portainer/portainer")
-PORTAINER_AGENT_LATEST_VERSION=$(get_latest_release "portainer/agent")
+PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
+PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
 if $STD mount | grep 'on / type zfs' >null && echo "ZFS"; then
   msg_info "Enabling ZFS support."
@@ -44,8 +40,8 @@ EOF
 fi
 
 msg_info "Installing Podman"
-$STD apt -y install podman
-$STD systemctl enable --now podman.socket
+$STD apt install -y podman
+systemctl enable -q --now podman.socket
 echo -e 'unqualified-search-registries=["docker.io"]' >>/etc/containers/registries.conf
 msg_ok "Installed Podman"
 

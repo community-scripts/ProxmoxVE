@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.kimai.org/
@@ -41,7 +41,7 @@ $STD mariadb -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVIL
 } >>~/kimai.creds
 msg_ok "Set up database"
 
-fetch_and_deploy_gh_release "kimai" "kimai/kimai"
+fetch_and_deploy_gh_release "kimai" "kimai/kimai" "tarball"
 
 msg_info "Setup Kimai"
 cd /opt/kimai

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/9001/copyparty
@@ -92,7 +92,7 @@ function update_copyparty() {
   msg_info "Updating $APP"
   curl -fsSL "$SRC_URL" -o "$BIN_PATH"
   chmod +x "$BIN_PATH"
-  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
   exit 0
 }
 

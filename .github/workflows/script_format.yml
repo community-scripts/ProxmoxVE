@@ -59,7 +59,7 @@ jobs:
                 echo "Line 2 was $SECOND_LINE | Should be: source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" >> "$LOG_FILE"
                 THIRD_LINE=$(sed -n '3p' "$FILE")
                  if ! [[ "$THIRD_LINE" =~ ^#\ Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ community-scripts\ ORG$ || "$THIRD_LINE" =~ ^Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ tteck$ ]]; then
-                     echo "Line 3 was $THIRD_LINE | Should be: # Copyright (c) 2021-2025 community-scripts ORG" >> "$LOG_FILE"
+                     echo "Line 3 was $THIRD_LINE | Should be: # Copyright (c) 2021-2026 community-scripts ORG" >> "$LOG_FILE"
                  fi
 
               EXPECTED_AUTHOR="# Author:"
@@ -157,7 +157,7 @@ jobs:
 
               THIRD_LINE=$(sed -n '3p' "$FILE")
               if ! [[ "$THIRD_LINE" =~ ^#\ Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ community-scripts\ ORG$ || "$THIRD_LINE" =~ ^Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ tteck$ ]]; then
-                  echo "Line 3 was $THIRD_LINE | Should be: # Copyright (c) 2021-2025 community-scripts ORG" >> "$LOG_FILE"
+                  echo "Line 3 was $THIRD_LINE | Should be: # Copyright (c) 2021-2026 community-scripts ORG" >> "$LOG_FILE"
               fi
 
               EXPECTED_AUTHOR="# Author:"

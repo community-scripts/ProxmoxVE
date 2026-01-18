@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/excalidraw/excalidraw
@@ -34,12 +34,12 @@ function update_script() {
     msg_info "Stopped Service"
 
     rm -rf /opt/excalidraw
-    fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw"
+    fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw" "tarball"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Excalidraw"
     cd /opt/excalidraw
     $STD yarn
-    msg_ok "Updated $APP"
+    msg_ok "Updated Excalidraw"
 
     msg_info "Starting Service"
     systemctl start excalidraw
@@ -53,7 +53,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

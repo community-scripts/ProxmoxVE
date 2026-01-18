@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/pommee/goaway
+# Source: https://www.grandstream.com/products/networking-solutions/wi-fi-management/product/gwn-manager
 
-APP="GoAway"
-var_tags="${var_tags:-network}"
-var_cpu="${var_cpu:-1}"
-var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-4}"
+APP="GWN-Manager"
+var_tags="${var_tags:-network;management}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-6144}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -23,24 +23,12 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/goaway ]]; then
+  if [[ ! -d /gwn ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
-  if check_for_gh_release "goaway" "pommee/goaway"; then
-    msg_info "Stopping Services"
-    systemctl stop goaway
-    msg_ok "Stopped Services"
-
-    fetch_and_deploy_gh_release "goaway" "pommee/goaway" "prebuild" "latest" "/opt/goaway" "goaway_*_linux_amd64.tar.gz"
-
-    msg_info "Starting Services"
-    systemctl start goaway
-    msg_ok "Started Services"
-
-    msg_ok "Updated successfully!"
-  fi
+  msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use it."
   exit
 }
 
@@ -48,7 +36,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8443${CL}"

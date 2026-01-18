@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://caddyserver.com/
@@ -14,29 +14,28 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   debian-keyring \
   debian-archive-keyring \
   apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Caddy"
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' >/etc/apt/sources.list.d/caddy-stable.list
-$STD apt-get update
-$STD apt-get install -y caddy
+setup_deb822_repo \
+  "caddy" \
+  "https://dl.cloudsmith.io/public/caddy/stable/gpg.key" \
+  "https://dl.cloudsmith.io/public/caddy/stable/deb/debian" \
+  "any-version"
+$STD apt install -y caddy
 msg_ok "Installed Caddy"
 
 read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   setup_go
+  fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "binary"
+
   msg_info "Setup xCaddy"
-  $STD apt-get install -y git
-  cd /opt
-  RELEASE=$(curl -fsSL https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  curl -fsSL "https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${RELEASE:1}_linux_amd64.deb" -o "xcaddy_${RELEASE:1}_linux_amd64.deb"
-  $STD dpkg -i xcaddy_"${RELEASE:1}"_linux_amd64.deb
-  rm -rf /opt/xcaddy*
+  $STD apt install -y git
   $STD xcaddy build
   msg_ok "Setup xCaddy"
 fi

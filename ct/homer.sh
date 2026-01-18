@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/bastienwirtz/homer
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,36 +27,31 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Stopping Service"
-    systemctl stop homer
-    msg_ok "Stopped Service"
 
-    msg_info "Backing up assets directory"
-    cd ~
-    mkdir -p assets-backup
-    cp -R /opt/homer/assets/. assets-backup
-    msg_ok "Backed up assets directory"
+    if check_for_gh_release "homer" "bastienwirtz/homer"; then
+      msg_info "Stopping Service"
+      systemctl stop homer
+      msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP}"
-    rm -rf /opt/homer/*
-    cd /opt/homer
-    curl -fsSL "https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip" -o $(basename "https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip")
-    $STD unzip homer.zip
-    msg_ok "Updated ${APP}"
+      msg_info "Backing up assets directory"
+      cd ~
+      mkdir -p assets-backup
+      cp -R /opt/homer/assets/. assets-backup
+      msg_ok "Backed up assets directory"
 
-    msg_info "Restoring assets directory"
-    cd ~
-    cp -Rf assets-backup/. /opt/homer/assets/
-    msg_ok "Restored assets directory"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homer" "bastienwirtz/homer" "prebuild" "latest" "/opt/homer" "homer.zip"
 
-    msg_info "Cleaning"
-    rm -rf assets-backup /opt/homer/homer.zip
-    msg_ok "Cleaned"
-
-    msg_info "Starting Service"
-    systemctl start homer
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
+      msg_info "Restoring assets directory"
+      cd ~
+      cp -Rf assets-backup/. /opt/homer/assets/
+      rm -rf assets-backup
+      msg_ok "Restored assets directory"
+    
+      msg_info "Starting Service"
+      systemctl start homer
+      msg_ok "Started Service"
+      msg_ok "Updated successfully!"
+    fi
     exit
 }
 
@@ -64,7 +59,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8010${CL}"

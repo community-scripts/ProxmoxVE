@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://phpipam.net/
@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y fping
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="pdo,pdo-mysql,gmp,snmp,ldap,apcu" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
 
 msg_info "Installing PHP-PEAR"
 $STD apt install -y \
@@ -39,7 +39,7 @@ sed -i -e "s/\(\$disable_installer = \).*/\1true;/" \
   -e "s/\(\$db\['pass'\] = \).*/\1'$MARIADB_DB_PASS';/" \
   -e "s/\(\$db\['name'\] = \).*/\1'$MARIADB_DB_NAME';/" \
   /opt/phpipam/config.php
-sed -i '/max_execution_time/s/= .*/= 600/' /etc/php/8.3/apache2/php.ini
+sed -i '/max_execution_time/s/= .*/= 600/' /etc/php/8.4/apache2/php.ini
 msg_ok "Installed phpIPAM"
 
 msg_info "Creating Service"

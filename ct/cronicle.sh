@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://cronicle.net/
@@ -53,7 +53,7 @@ function update_script() {
       msg_ok "Installed Dependencies"
 
       NODE_VERSION="22" setup_nodejs
-      fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle"
+      fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle" "tarball"
 
       msg_info "Configuring Cronicle Worker"
       cd /opt/cronicle
@@ -63,6 +63,7 @@ function update_script() {
       $STD /opt/cronicle/bin/control.sh start
       msg_ok "Installed Cronicle Worker"
       echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
+      msg_ok "Updated successfully!"
       exit
     fi
   fi
@@ -72,7 +73,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3012${CL}"

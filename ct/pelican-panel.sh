@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/pelican-dev/panel
@@ -27,37 +27,31 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   setup_mariadb
   CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
+  setup_composer
 
   if [[ "$CURRENT_PHP" != "8.4" ]]; then
     msg_info "Migrating PHP $CURRENT_PHP to 8.4"
-    $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-    $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
-    $STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-    $STD apt update
     $STD apt remove -y php"${CURRENT_PHP//./}"*
-    $STD apt install -y \
-      php8.4 \
-      php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm} \
-      libapache2-mod-php8.4
+    PHP_VERSION="8.4" PHP_MODULE="mysql,sqlite3" PHP_APACHE="YES" PHP_FPM="YES" setup_php
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/pelican-dev/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if check_for_gh_release "pelican-panel" "pelican-dev/panel"; then
     msg_info "Stopping Service"
     cd /opt/pelican-panel
     $STD php artisan down
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
     cp -r /opt/pelican-panel/.env /opt/
     SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1>/dev/null 2>&1 && echo "true" || echo "false")
     $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/
     rm -rf * .*
-    curl -fsSL "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz" -o $(basename "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz")
-    tar -xzf "panel.tar.gz"
+    fetch_and_deploy_gh_release "pelican-panel" "pelican-dev/panel" "prebuild" "latest" "/opt/pelican-panel" "panel.tar.gz"
+
+    msg_info "Updating Pelican Panel"
     mv /opt/.env /opt/pelican-panel/
     $SQLITE_INSTALL && mv /opt/*.sqlite /opt/pelican-panel/database/
     $STD composer install --no-dev --optimize-autoloader --no-interaction
@@ -68,17 +62,13 @@ function update_script() {
     $STD php artisan migrate --seed --force
     chown -R www-data:www-data /opt/pelican-panel
     chmod -R 755 /opt/pelican-panel/storage /opt/pelican-panel/bootstrap/cache/
-    rm -rf "/opt/pelican-panel/panel.tar.gz"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated Pelican Panel"
 
     msg_info "Starting Service"
     $STD php artisan queue:restart
     $STD php artisan up
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
@@ -87,7 +77,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/installer${CL}"

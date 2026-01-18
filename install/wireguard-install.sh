@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.wireguard.com/
@@ -25,10 +25,10 @@ msg_ok "Installed WireGuard"
 
 read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  git clone -q https://github.com/donaldzou/WGDashboard.git /etc/wgdashboard
+  git clone -q https://github.com/WGDashboard/WGDashboard.git /etc/wgdashboard
 
   msg_info "Installing WGDashboard"
-  cd /etc/wgdashboard/src || exit
+  cd /etc/wgdashboard/src
   chmod u+x wgd.sh
   $STD ./wgd.sh install
   . /etc/os-release

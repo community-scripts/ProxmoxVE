@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | MickLesk | michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/branch/main/LICENSE
 
@@ -232,6 +232,100 @@ install_ssh_keys_into_ct() {
 }
 
 # ------------------------------------------------------------------------------
+# validate_container_id()
+#
+# - Validates if a container ID is available for use
+# - Checks if ID is already used by VM or LXC container
+# - Checks if ID is used in LVM logical volumes
+# - Returns 0 if ID is available, 1 if already in use
+# ------------------------------------------------------------------------------
+validate_container_id() {
+  local ctid="$1"
+
+  # Check if ID is numeric
+  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
+    return 1
+  fi
+
+  # Check if config file exists for VM or LXC
+  if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
+    return 1
+  fi
+
+  # Check if ID is used in LVM logical volumes
+  if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# get_valid_container_id()
+#
+# - Returns a valid, unused container ID
+# - If provided ID is valid, returns it
+# - Otherwise increments from suggested ID until a free one is found
+# - Calls validate_container_id() to check availability
+# ------------------------------------------------------------------------------
+get_valid_container_id() {
+  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+
+  while ! validate_container_id "$suggested_id"; do
+    suggested_id=$((suggested_id + 1))
+  done
+
+  echo "$suggested_id"
+}
+
+# ------------------------------------------------------------------------------
+# validate_container_id()
+#
+# - Validates if a container ID is available for use
+# - Checks if ID is already used by VM or LXC container
+# - Checks if ID is used in LVM logical volumes
+# - Returns 0 if ID is available, 1 if already in use
+# ------------------------------------------------------------------------------
+validate_container_id() {
+  local ctid="$1"
+
+  # Check if ID is numeric
+  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
+    return 1
+  fi
+
+  # Check if config file exists for VM or LXC
+  if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
+    return 1
+  fi
+
+  # Check if ID is used in LVM logical volumes
+  if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# get_valid_container_id()
+#
+# - Returns a valid, unused container ID
+# - If provided ID is valid, returns it
+# - Otherwise increments from suggested ID until a free one is found
+# - Calls validate_container_id() to check availability
+# ------------------------------------------------------------------------------
+get_valid_container_id() {
+  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+
+  while ! validate_container_id "$suggested_id"; do
+    suggested_id=$((suggested_id + 1))
+  done
+
+  echo "$suggested_id"
+}
+
+# ------------------------------------------------------------------------------
 # find_host_ssh_keys()
 #
 # - Scans system for available SSH keys
@@ -417,6 +511,12 @@ choose_and_set_storage_for_file() {
   if [[ "$count" -eq 1 ]]; then
     STORAGE_RESULT=$(pvesm status -content "$content" | awk 'NR>1{print $1; exit}')
     STORAGE_INFO=""
+
+    # Validate storage space for auto-picked container storage
+    if [[ "$class" == "container" && -n "${DISK_SIZE:-}" ]]; then
+      validate_storage_space "$STORAGE_RESULT" "$DISK_SIZE" "yes"
+      # Continue even if validation fails - user was warned
+    fi
   else
     # If the current value is preselectable, we could show it, but per your requirement we always offer selection
     select_storage "$class" || return 1
@@ -483,7 +583,18 @@ base_settings() {
   RAM_SIZE="${final_ram}"
   VERBOSE=${var_verbose:-"${1:-no}"}
   PW=${var_pw:-""}
-  CT_ID=${var_ctid:-$NEXTID}
+
+  # Validate and set Container ID
+  local requested_id="${var_ctid:-$NEXTID}"
+  if ! validate_container_id "$requested_id"; then
+    # Only show warning if user manually specified an ID (not auto-assigned)
+    if [[ -n "${var_ctid:-}" ]]; then
+      msg_warn "Container ID $requested_id is already in use. Using next available ID: $(get_valid_container_id "$requested_id")"
+    fi
+    requested_id=$(get_valid_container_id "$requested_id")
+  fi
+  CT_ID="$requested_id"
+
   HN=${var_hostname:-$NSAPP}
   BRG=${var_brg:-"vmbr0"}
   NET=${var_net:-"dhcp"}
@@ -1098,6 +1209,13 @@ ensure_storage_selection_for_vars_file() {
   if [[ -n "$tpl" && -n "$ct" ]]; then
     TEMPLATE_STORAGE="$tpl"
     CONTAINER_STORAGE="$ct"
+
+    # Validate storage space for loaded container storage
+    if [[ -n "${DISK_SIZE:-}" ]]; then
+      validate_storage_space "$ct" "$DISK_SIZE" "yes"
+      # Continue even if validation fails - user was warned
+    fi
+
     return 0
   fi
 
@@ -1308,7 +1426,25 @@ advanced_settings() {
         --ok-button "Next" --cancel-button "Back" \
         --inputbox "\nSet Container ID" 10 58 "$_ct_id" \
         3>&1 1>&2 2>&3); then
-        _ct_id="${result:-$NEXTID}"
+        local input_id="${result:-$NEXTID}"
+
+        # Validate that ID is numeric
+        if ! [[ "$input_id" =~ ^[0-9]+$ ]]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "Invalid ID" --msgbox "Container ID must be numeric." 8 58
+          continue
+        fi
+
+        # Check if ID is already in use
+        if ! validate_container_id "$input_id"; then
+          if whiptail --backtitle "Proxmox VE Helper Scripts" --title "ID Already In Use" \
+            --yesno "Container/VM ID $input_id is already in use.\n\nWould you like to use the next available ID ($(get_valid_container_id "$input_id"))?" 10 58; then
+            _ct_id=$(get_valid_container_id "$input_id")
+          else
+            continue
+          fi
+        else
+          _ct_id="$input_id"
+        fi
         ((STEP++))
       else
         ((STEP--))
@@ -2292,7 +2428,6 @@ install_script() {
     2 | advanced | ADVANCED)
       header_info
       echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Install on node $PVEHOST_NAME${CL}"
-      echo -e "${INFO}${BOLD}${DGN}PVE Version ${PVEVERSION} (Kernel: ${KERNEL_VERSION})${CL}"
       METHOD="advanced"
       base_settings
       advanced_settings
@@ -2783,6 +2918,8 @@ build_container() {
   export PCT_OSTYPE="$var_os"
   export PCT_OSVERSION="$var_version"
   export PCT_DISK_SIZE="$DISK_SIZE"
+  export IPV6_METHOD="$IPV6_METHOD"
+  export ENABLE_GPU="$ENABLE_GPU"
 
   # DEV_MODE exports (optional, for debugging)
   export BUILD_LOG="$BUILD_LOG"
@@ -2850,6 +2987,21 @@ $PCT_OPTIONS_STRING"
   export PCT_OPTIONS="$PCT_OPTIONS_STRING"
   export TEMPLATE_STORAGE="${var_template_storage:-}"
   export CONTAINER_STORAGE="${var_container_storage:-}"
+
+  # Validate storage space only if CONTAINER_STORAGE is already set
+  # (Storage selection happens in create_lxc_container for some modes)
+  if [[ -n "$CONTAINER_STORAGE" ]]; then
+    msg_info "Validating storage space"
+    if ! validate_storage_space "$CONTAINER_STORAGE" "$DISK_SIZE" "no"; then
+      local free_space
+      free_space=$(pvesm status 2>/dev/null | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
+      local free_fmt
+      free_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$free_space" 2>/dev/null || echo "${free_space}KB")
+      msg_error "Not enough space on '$CONTAINER_STORAGE'. Required: ${DISK_SIZE}GB, Available: ${free_fmt}"
+      exit 214
+    fi
+    msg_ok "Storage space validated"
+  fi
 
   create_lxc_container || exit $?
 
@@ -3181,7 +3333,8 @@ EOF'
     pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null"
   else
     sleep 3
-    pct exec "$CTID" -- bash -c "sed -i '/$LANG/ s/^# //' /etc/locale.gen"
+    LANG=${LANG:-en_US.UTF-8}
+    pct exec "$CTID" -- bash -c "sed -i \"/$LANG/ s/^# //\" /etc/locale.gen"
     pct exec "$CTID" -- bash -c "locale_line=\$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print \$1}' | head -n 1) && \
     echo LANG=\$locale_line >/etc/default/locale && \
     locale-gen >/dev/null && \
@@ -3381,9 +3534,9 @@ resolve_storage_preselect() {
     free="$(awk '{print $6}' <<<"$line")"
     local total_h used_h free_h
     if command -v numfmt >/dev/null 2>&1; then
-      total_h="$(numfmt --to=iec --suffix=B --format %.1f "$total" 2>/dev/null || echo "$total")"
-      used_h="$(numfmt --to=iec --suffix=B --format %.1f "$used" 2>/dev/null || echo "$used")"
-      free_h="$(numfmt --to=iec --suffix=B --format %.1f "$free" 2>/dev/null || echo "$free")"
+      total_h="$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$total" 2>/dev/null || echo "$total")"
+      used_h="$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$used" 2>/dev/null || echo "$used")"
+      free_h="$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$free" 2>/dev/null || echo "$free")"
       STORAGE_INFO="Free: ${free_h}  Used: ${used_h}"
     else
       STORAGE_INFO="Free: ${free}  Used: ${used}"
@@ -3499,8 +3652,8 @@ select_storage() {
   while read -r TAG TYPE _ TOTAL USED FREE _; do
     [[ -n "$TAG" && -n "$TYPE" ]] || continue
     local DISPLAY="${TAG} (${TYPE})"
-    local USED_FMT=$(numfmt --to=iec --from-unit=K --format %.1f <<<"$USED")
-    local FREE_FMT=$(numfmt --to=iec --from-unit=K --format %.1f <<<"$FREE")
+    local USED_FMT=$(numfmt --to=iec --from-unit=1024 --format %.1f <<<"$USED")
+    local FREE_FMT=$(numfmt --to=iec --from-unit=1024 --format %.1f <<<"$FREE")
     local INFO="Free: ${FREE_FMT}B  Used: ${USED_FMT}B"
     STORAGE_MAP["$DISPLAY"]="$TAG"
     MENU+=("$DISPLAY" "$INFO" "OFF")
@@ -3538,10 +3691,87 @@ select_storage() {
         break
       fi
     done
+
+    # Validate storage space for container storage
+    if [[ "$CLASS" == "container" && -n "${DISK_SIZE:-}" ]]; then
+      validate_storage_space "$STORAGE_RESULT" "$DISK_SIZE" "yes"
+      # Continue even if validation fails - user was warned
+    fi
+
     return 0
   done
 }
 
+# ------------------------------------------------------------------------------
+# validate_storage_space()
+#
+# - Validates if storage has enough free space for container
+# - Takes storage name and required size in GB
+# - Returns 0 if enough space, 1 if not enough, 2 if storage unavailable
+# - Can optionally show whiptail warning
+# - Handles all storage types: dir, lvm, lvmthin, zfs, nfs, cifs, etc.
+# ------------------------------------------------------------------------------
+validate_storage_space() {
+  local storage="$1"
+  local required_gb="${2:-8}"
+  local show_dialog="${3:-no}"
+
+  # Get full storage line from pvesm status
+  local storage_line
+  storage_line=$(pvesm status 2>/dev/null | awk -v s="$storage" '$1 == s {print $0}')
+
+  # Check if storage exists and is active
+  if [[ -z "$storage_line" ]]; then
+    [[ "$show_dialog" == "yes" ]] && whiptail --msgbox "⚠️  Warning: Storage '$storage' not found!\n\nThe storage may be unavailable or disabled." 10 60
+    return 2
+  fi
+
+  # Check storage status (column 3)
+  local status
+  status=$(awk '{print $3}' <<<"$storage_line")
+  if [[ "$status" == "disabled" ]]; then
+    [[ "$show_dialog" == "yes" ]] && whiptail --msgbox "⚠️  Warning: Storage '$storage' is disabled!\n\nPlease enable the storage first." 10 60
+    return 2
+  fi
+
+  # Get storage type and free space (column 6)
+  local storage_type storage_free
+  storage_type=$(awk '{print $2}' <<<"$storage_line")
+  storage_free=$(awk '{print $6}' <<<"$storage_line")
+
+  # Some storage types (like PBS, iSCSI) don't report size info
+  # In these cases, skip space validation
+  if [[ -z "$storage_free" || "$storage_free" == "0" ]]; then
+    # Silent pass for storages without size info
+    return 0
+  fi
+
+  local required_kb=$((required_gb * 1024 * 1024))
+  local free_gb_fmt
+  free_gb_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$storage_free" 2>/dev/null || echo "${storage_free}KB")
+
+  if [[ "$storage_free" -lt "$required_kb" ]]; then
+    if [[ "$show_dialog" == "yes" ]]; then
+      whiptail --msgbox "⚠️  Warning: Storage '$storage' may not have enough space!\n\nStorage Type: ${storage_type}\nRequired: ${required_gb}GB\nAvailable: ${free_gb_fmt}\n\nYou can continue, but creation might fail." 14 70
+    fi
+    return 1
+  fi
+
+  return 0
+}
+
+# ==============================================================================
+# SECTION 8: CONTAINER CREATION
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# create_lxc_container()
+#
+# - Main function for creating LXC containers
+# - Handles all phases: validation, template discovery, container creation,
+#   network config, storage, etc.
+# - Extensive error checking with detailed exit codes
+# ------------------------------------------------------------------------------
 create_lxc_container() {
   # ------------------------------------------------------------------------------
   # Optional verbose mode (debug tracing)
@@ -3713,14 +3943,6 @@ create_lxc_container() {
   fi
   msg_ok "Template storage '$TEMPLATE_STORAGE' validated"
 
-  # Free space check
-  STORAGE_FREE=$(pvesm status | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
-  REQUIRED_KB=$((${PCT_DISK_SIZE:-8} * 1024 * 1024))
-  [[ "$STORAGE_FREE" -ge "$REQUIRED_KB" ]] || {
-    msg_error "Not enough space on '$CONTAINER_STORAGE'. Needed: ${PCT_DISK_SIZE:-8}G."
-    exit 214
-  }
-
   # Cluster quorum (if cluster)
   if [[ -f /etc/pve/corosync.conf ]]; then
     msg_info "Checking cluster quorum"
@@ -3743,12 +3965,9 @@ create_lxc_container() {
 
   msg_info "Searching for template '$TEMPLATE_SEARCH'"
 
-  # Build regex patterns outside awk/grep for clarity
-  SEARCH_PATTERN="^${TEMPLATE_SEARCH}"
-
   mapfile -t LOCAL_TEMPLATES < <(
     pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
-      awk -v search="${SEARCH_PATTERN}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
+      awk -v search="${TEMPLATE_SEARCH}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
       sed 's|.*/||' | sort -t - -k 2 -V
   )
 
@@ -3757,7 +3976,7 @@ create_lxc_container() {
   msg_ok "Template search completed"
 
   set +u
-  mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "${SEARCH_PATTERN}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
+  mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
   set -u
 
   ONLINE_TEMPLATE=""
@@ -3806,13 +4025,12 @@ create_lxc_container() {
       if [[ "$choice" =~ ^[0-9]+$ ]] && [[ "$choice" -ge 1 ]] && [[ "$choice" -le ${#AVAILABLE_VERSIONS[@]} ]]; then
         PCT_OSVERSION="${AVAILABLE_VERSIONS[$((choice - 1))]}"
         TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION}"
-        SEARCH_PATTERN="^${TEMPLATE_SEARCH}-"
 
         mapfile -t ONLINE_TEMPLATES < <(
           pveam available -section system 2>/dev/null |
             grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-            awk -F'\t' '{print $1}' |
-            grep -E "${SEARCH_PATTERN}.*${TEMPLATE_PATTERN}" |
+            awk '{print $2}' |
+            grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
             sort -t - -k 2 -V 2>/dev/null || true
         )
 
@@ -3873,18 +4091,17 @@ create_lxc_container() {
 
           # Retry template search with new version
           TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
-          SEARCH_PATTERN="^${TEMPLATE_SEARCH}-"
 
           mapfile -t LOCAL_TEMPLATES < <(
             pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
-              awk -v search="${SEARCH_PATTERN}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
+              awk -v search="${TEMPLATE_SEARCH}-" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
               sed 's|.*/||' | sort -t - -k 2 -V
           )
           mapfile -t ONLINE_TEMPLATES < <(
             pveam available -section system 2>/dev/null |
               grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-              awk -F'\t' '{print $1}' |
-              grep -E "${SEARCH_PATTERN}.*${TEMPLATE_PATTERN}" |
+              awk '{print $2}' |
+              grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
               sort -t - -k 2 -V 2>/dev/null || true
           )
           ONLINE_TEMPLATE=""

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/dotnetfactory/fluid-calendar
@@ -38,7 +38,7 @@ $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
 } >>~/$APPLICATION.creds
 msg_ok "Set up Postgresql Database"
 
-fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"
+fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar" "tarball"
 
 msg_info "Configuring ${APPLICATION}"
 cat <<EOF >/opt/fluid-calendar/.env

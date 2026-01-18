@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -22,7 +22,7 @@ SECRET_KEY="$(openssl rand -base64 42 | tr -dc 'a-zA-Z0-9')"
 echo "Zipline Secret Key: ${SECRET_KEY}" >>~/zipline.creds
 
 msg_info "Installing Zipline (Patience)"
-cd /opt/zipline || exit
+cd /opt/zipline
 cat <<EOF >/opt/zipline/.env
 DATABASE_URL=postgres://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME
 CORE_SECRET=$SECRET_KEY

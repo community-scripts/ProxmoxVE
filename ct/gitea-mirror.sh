@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/RayLabsHQ/gitea-mirror
@@ -97,7 +97,7 @@ EOF
     msg_ok "Installed Bun"
 
     rm -rf /opt/gitea-mirror
-    fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"
+    fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror" "tarball"
 
     msg_info "Updating and rebuilding ${APP}"
     cd /opt/gitea-mirror
@@ -124,7 +124,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:4321${CL}"

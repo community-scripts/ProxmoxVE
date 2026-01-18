@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Kristian Skov
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu
@@ -26,11 +26,8 @@ $STD apt-get install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-msg_info "Configure Application"
 var_project_name="default"
 read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
-echo "Target assembly: '${var_project_name}'"
-msg_ok "Application Configured"
 
 msg_info "Setting up FTP Server"
 useradd ftpuser
