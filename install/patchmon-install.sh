@@ -98,9 +98,16 @@ msg_ok "Configured PatchMon"
 
 msg_info "Configuring Nginx"
 cat <<EOF >/etc/nginx/sites-available/patchmon.conf
+map $http_x_forwarded_proto $proxy_corrected_scheme {
+    default    $scheme; # Fallback to Nginx's actual connection scheme if no X-Forwarded-Proto header was set
+    https      https;   # If X-Forwarded-Proto is 'https', use 'https'
+    http       http;    # If X-Forwarded-Proto is 'http', use 'http'
+}
+
 server {
+    # Listen on both IPv4 and IPv6 (with all hostnames)
     listen 80;
-    server_name $LOCAL_IP;
+    listen [::]:80;
 
     # Security headers
     add_header X-Frame-Options DENY always;
@@ -123,7 +130,7 @@ server {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header X-Forwarded-Proto \$proxy_corrected_scheme;
         proxy_set_header X-Forwarded-Host \$host;
         proxy_set_header Cookie \$http_cookie;
         proxy_cache_bypass \$http_upgrade;
@@ -150,7 +157,7 @@ server {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header X-Forwarded-Proto \$proxy_corrected_scheme;
         proxy_cache_bypass \$http_upgrade;
         proxy_read_timeout 300s;
         proxy_connect_timeout 75s;
