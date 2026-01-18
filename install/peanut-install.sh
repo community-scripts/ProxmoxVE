@@ -28,6 +28,7 @@ $STD pnpm run build:local
 cp -r .next/static .next/standalone/.next/
 mkdir -p /opt/peanut/.next/standalone/config
 mkdir -p /etc/peanut/
+cd /opt/peanut
 ln -sf .next/standalone/server.js server.js
 cat <<EOF >/etc/peanut/settings.yml
 WEB_HOST: 0.0.0.0
