@@ -15,89 +15,120 @@ network_check
 update_os
 
 # =============================================================================
+# AVAILABLE HELPER FUNCTIONS (from tools.func)
+# =============================================================================
+#
+# LANGUAGE/RUNTIME SETUP (use these, DON'T do manual installation!):
+#   NODE_VERSION="22" setup_nodejs             # Node.js (18, 20, 22)
+#   PYTHON_VERSION="3.13" setup_uv             # Python with uv package manager
+#   GO_VERSION="1.22" setup_go                 # Go language
+#   RUST_CRATES="monolith" setup_rust          # Rust
+#   RUBY_VERSION="3.3" setup_ruby              # Ruby
+#   JAVA_VERSION="21" setup_java               # Java (17, 21)
+#   PHP_VERSION="8.4" setup_php                # PHP
+#
+# DATABASE SETUP (use these instead of manual setup!):
+#   setup_postgresql                           # PostgreSQL server
+#   PG_DB_NAME="mydb" PG_DB_USER="myuser" setup_postgresql_db   # Create DB & user
+#   setup_mariadb                              # MariaDB server
+#   MARIADB_DB_NAME="mydb" setup_mariadb_db    # Create MariaDB DB
+#   setup_mysql                                # MySQL server
+#   setup_mongodb                              # MongoDB server
+#
+# GITHUB RELEASES (PREFERRED - handles versioning automatically!):
+#   fetch_and_deploy_gh_release "appname" "owner/repo"          # Auto-detect mode
+#   fetch_and_deploy_gh_release "appname" "owner/repo" "binary" # .deb package
+#   CLEAN_INSTALL=1 fetch_and_deploy_gh_release ...             # Clean install (remove old dir first)
+#
+# UTILITIES:
+#   import_local_ip                    # Sets $LOCAL_IP variable (call early!)
+#   setup_ffmpeg                       # FFmpeg with codecs
+#   setup_imagemagick                  # ImageMagick 7
+#   setup_hwaccel                      # GPU acceleration
+#   setup_docker                       # Docker Engine
+#   setup_adminer                      # Adminer (DB web interface)
+
+# =============================================================================
 # DEPENDENCIES
 # =============================================================================
-# Only install what's actually needed - curl/sudo/mc are already in the base image
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  nginx \
-  build-essential
+  ca-certificates \
+  curl \
+  gnupg
 msg_ok "Installed Dependencies"
 
 # =============================================================================
-# HELPER FUNCTIONS FROM tools.func
-# =============================================================================
-# These functions are available via $FUNCTIONS_FILE_PATH (tools.func)
-# Call them with optional environment variables for configuration
-#
-# --- Runtime & Language Setup ---
-# NODE_VERSION="22" setup_nodejs           # Install Node.js (22, 24)
-# NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs  # With pnpm
-# PYTHON_VERSION="3.13" setup_uv           # Python with uv package manager
-# setup_go                                 # Install Go (latest)
-# setup_rust                               # Install Rust via rustup
-# setup_ruby                               # Install Ruby
-# PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="mysqli,gd" setup_php
-# PHP_VERSION="8.3" PHP_FPM="YES" PHP_APACHE="YES" PHP_MODULE="bcmath,curl,gd,intl,mbstring,mysql,xml,zip" setup_php
-# setup_composer                           # Install PHP Composer
-# JAVA_VERSION="21" setup_java             # Install Java (17, 21)
-#
-# --- Database Setup ---
-# setup_mariadb                            # Install MariaDB server
-# MARIADB_DB_NAME="mydb" MARIADB_DB_USER="myuser" setup_mariadb_db
-# setup_mysql                              # Install MySQL server
-# PG_VERSION="17" setup_postgresql         # Install PostgreSQL (16, 17)
-# PG_VERSION="17" PG_MODULES="postgis" setup_postgresql  # With extensions
-# PG_DB_NAME="mydb" PG_DB_USER="myuser" setup_postgresql_db
-# setup_mongodb                            # Install MongoDB
-#
-# --- GitHub Release (PREFERRED METHOD) ---
-# fetch_and_deploy_gh_release "appname" "owner/repo" "tarball"  # Downloads, extracts, tracks version
-# fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/appname"
-# fetch_and_deploy_gh_release "appname" "owner/repo" "prebuild" "latest" "/opt/appname" "app-*.tar.gz"
-#
-# --- Tools & Utilities ---
-# import_local_ip                          # Sets $LOCAL_IP variable (call early!)
-# setup_ffmpeg                             # Install FFmpeg with codecs
-# setup_hwaccel                            # Setup GPU hardware acceleration
-# setup_imagemagick                        # Install ImageMagick 7
-# setup_docker                             # Install Docker Engine
-# setup_adminer                            # Install Adminer for DB management
-# create_self_signed_cert                  # Creates cert in /etc/ssl/[appname]/
-
-# =============================================================================
-# EXAMPLE 1: Node.js Application with PostgreSQL
+# EXAMPLE: Node.js App with PostgreSQL
 # =============================================================================
 # NODE_VERSION="22" setup_nodejs
 # PG_VERSION="17" setup_postgresql
 # PG_DB_NAME="myapp" PG_DB_USER="myapp" setup_postgresql_db
 # import_local_ip
-# fetch_and_deploy_gh_release "myapp" "owner/myapp" "tarball" "latest" "/opt/myapp"
 #
-# msg_info "Configuring MyApp"
+# msg_info "Deploying Application"
+# fetch_and_deploy_gh_release "myapp" "owner/myapp"
+# msg_ok "Deployed Application"
+#
+# msg_info "Installing Dependencies"
 # cd /opt/myapp
-# $STD npm ci
+# $STD npm ci --production
+# msg_ok "Installed Dependencies"
+#
+# msg_info "Configuring Environment"
 # cat <<EOF >/opt/myapp/.env
 # DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost/${PG_DB_NAME}
-# HOST=${LOCAL_IP}
-# PORT=3000
+# APP_HOST=${LOCAL_IP}
+# APP_PORT=3000
+# NODE_ENV=production
 # EOF
-# msg_ok "Configured MyApp"
+# msg_ok "Configured Environment"
 
 # =============================================================================
-# EXAMPLE 2: Python Application with uv
+# EXAMPLE: Python App with uv
 # =============================================================================
 # PYTHON_VERSION="3.13" setup_uv
 # import_local_ip
-# fetch_and_deploy_gh_release "myapp" "owner/myapp" "tarball" "latest" "/opt/myapp"
+# msg_info "Deploying Application"
+# fetch_and_deploy_gh_release "myapp" "owner/myapp"
+# msg_ok "Deployed Application"
 #
-# msg_info "Setting up MyApp"
+# msg_info "Installing Dependencies"
 # cd /opt/myapp
-# $STD uv sync
+# $STD uv sync --frozen
+# msg_ok "Installed Dependencies"
+#
 # cat <<EOF >/opt/myapp/.env
 # HOST=${LOCAL_IP}
 # PORT=8000
+# DEBUG=false
+# EOF
+
+# =============================================================================
+# CREATE SYSTEMD SERVICE
+# =============================================================================
+
+msg_info "Creating Service"
+cat <<EOF >/etc/systemd/system/[appname].service
+[Unit]
+Description=[AppName] Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/[appname]
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node /opt/[appname]/server.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now [appname]
+msg_ok "Created Service"
 # EOF
 # msg_ok "Setup MyApp"
 

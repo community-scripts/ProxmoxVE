@@ -624,40 +624,33 @@ cleanup_lxc
 
 ---
 
-## 🔍 Checklist Before PR Creation
+## 📖 Reference: Good Example Scripts
 
-- [ ] No Docker installation used
-- [ ] `fetch_and_deploy_gh_release` used for GitHub releases
-- [ ] `check_for_gh_release` used for update checks
-- [ ] `setup_*` functions used for runtimes (nodejs, postgresql, etc.)
-- [ ] **`tools.func` functions NOT wrapped in msg_info/msg_ok blocks**
-- [ ] No redundant variables
-- [ ] `$STD` before all apt/npm/build commands
-- [ ] `msg_info`/`msg_ok`/`msg_error` for logging (only for custom code)
-- [ ] Correct script structure followed
-- [ ] Update function present and functional
-- [ ] Data backup implemented in update function
-- [ ] `motd_ssh`, `customize`, `cleanup_lxc` at the end
-- [ ] No custom download/version-check logic
-- [ ] JSON metadata file created in `frontend/public/json/<appname>.json`
+Look at these recent well-implemented applications as reference:
 
----
+### Container Scripts (Latest 10)
+- [ct/thingsboard.sh](../ct/thingsboard.sh) - IoT platform with proper update_script
+- [ct/unifi-os-server.sh](../ct/unifi-os-server.sh) - Complex setup with podman
+- [ct/trip.sh](../ct/trip.sh) - Simple Ruby app
+- [ct/fladder.sh](../ct/fladder.sh) - Media app with database
+- [ct/qui.sh](../ct/qui.sh) - Lightweight utility
+- [ct/kutt.sh](../ct/kutt.sh) - Node.js with PostgreSQL
+- [ct/flatnotes.sh](../ct/flatnotes.sh) - Python notes app
+- [ct/investbrain.sh](../ct/investbrain.sh) - Finance app
+- [ct/gwn-manager.sh](../ct/gwn-manager.sh) - Network management
+- [ct/sportarr.sh](../ct/sportarr.sh) - Specialized *Arr variant
 
-## 📖 Reference: Good Example (Termix)
+### Install Scripts (Latest)
+- [install/unifi-os-server-install.sh](../install/unifi-os-server-install.sh) - Complex setup with API integration
+- [install/trip-install.sh](../install/trip-install.sh) - Rails application setup
+- [install/mail-archiver-install.sh](../install/mail-archiver-install.sh) - Email-related service
 
-### CT Script: [ct/termix.sh](../ct/termix.sh)
-
-- Uses `check_for_gh_release` for version checking
-- Uses `CLEAN_INSTALL=1 fetch_and_deploy_gh_release` for clean updates
-- Backup/restore of `/opt/termix/data`
-- Correct structure with all required variables
-
-### Install Script: [install/termix-install.sh](../install/termix-install.sh)
-
-- `NODE_VERSION="22" setup_nodejs` instead of manual installation
-- `fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"` instead of wget/curl
-- Clean service configuration
-- Correct footer with `motd_ssh`, `customize`, `cleanup_lxc`
+**Key things to notice:**
+- Proper error handling with `catch_errors`
+- Use of `check_for_gh_release` and `fetch_and_deploy_gh_release`
+- Correct backup/restore patterns in `update_script`
+- Footer always ends with `motd_ssh`, `customize`, `cleanup_lxc`
+- JSON metadata files created for each app
 
 ---
 
@@ -792,19 +785,51 @@ Or no credentials:
 
 ---
 
-## �💡 Tips for AI Assistants
+## 🔍 Checklist Before PR Creation
 
-1. **Search `tools.func` first** before implementing custom solutions
-2. **Use existing scripts as reference** (e.g., `linkwarden-install.sh`, `homarr-install.sh`)
+- [ ] No Docker installation used
+- [ ] `fetch_and_deploy_gh_release` used for GitHub releases
+- [ ] `check_for_gh_release` used for update checks
+- [ ] `setup_*` functions used for runtimes (nodejs, postgresql, etc.)
+- [ ] **`tools.func` functions NOT wrapped in msg_info/msg_ok blocks**
+- [ ] No redundant variables (only when used multiple times)
+- [ ] `$STD` before all apt/npm/build commands
+- [ ] `msg_info`/`msg_ok`/`msg_error` for logging (only for custom code)
+- [ ] Correct script structure followed (see templates)
+- [ ] Update function present and functional (CT scripts)
+- [ ] Data backup implemented in update function (if applicable)
+- [ ] `motd_ssh`, `customize`, `cleanup_lxc` at the end of install scripts
+- [ ] No custom download/version-check logic
+- [ ] All links point to `community-scripts/ProxmoxVE` (not `ProxmoxVED`!)
+- [ ] JSON metadata file created in `frontend/public/json/<appname>.json`
+- [ ] Category IDs are valid (0-25)
+- [ ] Default OS version is Debian 13 or newer (unless special requirement)
+- [ ] Default resources are reasonable for the application
+
+---
+
+## 💡 Tips for AI Assistants
+
+1. **ALWAYS search `tools.func` first** before implementing custom solutions
+2. **Use recent scripts as reference** (Thingsboard, UniFi OS, Trip, Flatnotes, etc.)
 3. **Ask when uncertain** instead of introducing wrong patterns
-4. **Consistency > Creativity** - follow established patterns
-5. **Test local variables** - use `${VAR:-default}` pattern for optional values
+4. **Test locally** - try running scripts in test containers
+5. **Consistency > Creativity** - follow established patterns strictly
+6. **Check the templates** - they show the correct structure
+7. **Don't wrap tools.func functions** - they handle their own msg_info/msg_ok output
+8. **Minimal variables** - only create variables that are truly reused multiple times
+9. **Always use $STD** - ensures silent/non-interactive execution
+10. **Reference good examples** - look at recent additions in each category
 
 ---
 
 ## 📚 Further Documentation
 
-- [CONTRIBUTING.md](contribution/CONTRIBUTING.md) - General contribution guidelines
-- [GUIDE.md](contribution/GUIDE.md) - Detailed developer documentation
-- [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) - Technical details
-- [EXIT_CODES.md](EXIT_CODES.md) - Exit code reference
+- [CONTRIBUTING.md](CONTRIBUTING.md) - General contribution guidelines
+- [GUIDE.md](GUIDE.md) - Detailed developer documentation
+- [HELPER_FUNCTIONS.md](HELPER_FUNCTIONS.md) - Complete tools.func reference
+- [../TECHNICAL_REFERENCE.md](../TECHNICAL_REFERENCE.md) - Technical deep dive
+- [../EXIT_CODES.md](../EXIT_CODES.md) - Exit code reference
+- [templates_ct/](templates_ct/) - CT script templates
+- [templates_install/](templates_install/) - Install script templates
+- [templates_json/](templates_json/) - JSON metadata templates
