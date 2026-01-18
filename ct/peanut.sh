@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 
   if check_for_gh_release "peanut" "Brandawg93/PeaNUT"; then
     msg_info "Stopping Service"
@@ -36,6 +36,15 @@ function update_script() {
     msg_info "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
+
+    if ! grep -q '/opt/peanut/entrypoint.mjs' /etc/systemd/system/peanut.service; then
+      msg_info "Fixing entrypoint"
+      cd /opt/peanut
+      ln -sf .next/standalone/server.js server.js
+      sed -i 's|/opt/peanut/.next/standalone/server.js|/opt/peanut/entrypoint.mjs|' /etc/systemd/system/peanut.service
+      systemctl daemon-reload
+      msg_ok "Fixed entrypoint"
+    fi
 
     msg_info "Updating Peanut"
     cd /opt/peanut
