@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - ThingsBoard ([#10904](https://github.com/community-scripts/ProxmoxVE/pull/10904))
+  - Termix ([#10887](https://github.com/community-scripts/ProxmoxVE/pull/10887))
+- ThingsBoard ([#10904](https://github.com/community-scripts/ProxmoxVE/pull/10904))
 
 ### 🚀 Updated Scripts
 
