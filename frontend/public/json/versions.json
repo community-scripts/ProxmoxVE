@@ -1,5 +1,50 @@
 [
   {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.879",
+    "date": "2026-01-18T05:55:29Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.81.0-nightly",
+    "date": "2026-01-18T04:06:15Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-18T00:27:03Z"
+  },
+  {
+    "name": "oauth2-proxy/oauth2-proxy",
+    "version": "v7.14.2",
+    "date": "2026-01-18T00:26:09Z"
+  },
+  {
     "name": "chrisbenincasa/tunarr",
     "version": "v1.1.1",
     "date": "2026-01-17T22:35:09Z"
@@ -10,29 +55,9 @@
     "date": "2026-01-17T21:45:17Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "1.80.15-stable.1",
-    "date": "2026-01-17T19:55:30Z"
-  },
-  {
     "name": "outline/outline",
     "version": "v1.3.0",
     "date": "2026-01-17T16:28:04Z"
-  },
-  {
-    "name": "oauth2-proxy/oauth2-proxy",
-    "version": "v7.14.1",
-    "date": "2026-01-17T15:29:15Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -70,16 +95,6 @@
     "date": "2025-11-04T13:35:35Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.868",
-    "date": "2026-01-17T05:55:42Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.12.7",
     "date": "2026-01-17T03:49:29Z"
@@ -98,16 +113,6 @@
     "name": "ollama/ollama",
     "version": "v0.14.2",
     "date": "2026-01-16T00:50:51Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-17T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "metabase/metabase",
@@ -216,8 +221,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2026-01-15T20:03:50Z"
+    "version": "v4.7.0-beta.1",
+    "date": "2026-01-15T20:00:44Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -583,11 +588,6 @@
     "name": "9001/copyparty",
     "version": "v1.20.1",
     "date": "2026-01-09T01:30:37Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "webmin/webmin",
