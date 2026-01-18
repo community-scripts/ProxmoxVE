@@ -582,7 +582,22 @@ base_settings() {
   CORE_COUNT="${final_cpu}"
   RAM_SIZE="${final_ram}"
   VERBOSE=${var_verbose:-"${1:-no}"}
-  PW=${var_pw:-""}
+  PW=""
+  if [[ -n "${var_pw:-}" ]]; then
+    local _pw_raw="${var_pw}"
+    case "$_pw_raw" in
+    --password\ *) _pw_raw="${_pw_raw#--password }" ;;
+    -password\ *) _pw_raw="${_pw_raw#-password }" ;;
+    esac
+    while [[ "$_pw_raw" == -* ]]; do
+      _pw_raw="${_pw_raw#-}"
+    done
+    if [[ -z "$_pw_raw" ]]; then
+      msg_warn "Password was only dashes after cleanup; leaving empty."
+    else
+      PW="--password $_pw_raw"
+    fi
+  fi
 
   # Validate and set Container ID
   local requested_id="${var_ctid:-$NEXTID}"
@@ -1392,17 +1407,30 @@ advanced_settings() {
           ((STEP++))
         elif [[ "$PW1" == *" "* ]]; then
           whiptail --msgbox "Password cannot contain spaces." 8 58
-        elif ((${#PW1} < 5)); then
-          whiptail --msgbox "Password must be at least 5 characters." 8 58
         else
+          local _pw1_clean="$PW1"
+          while [[ "$_pw1_clean" == -* ]]; do
+            _pw1_clean="${_pw1_clean#-}"
+          done
+          if [[ -z "$_pw1_clean" ]]; then
+            whiptail --msgbox "Password cannot be only '-' characters." 8 58
+            continue
+          elif ((${#_pw1_clean} < 5)); then
+            whiptail --msgbox "Password must be at least 5 characters (after removing leading '-')." 8 70
+            continue
+          fi
           # Verify password
           if PW2=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
             --title "PASSWORD VERIFICATION" \
             --ok-button "Confirm" --cancel-button "Back" \
             --passwordbox "\nVerify Root Password" 10 58 \
             3>&1 1>&2 2>&3); then
-            if [[ "$PW1" == "$PW2" ]]; then
-              _pw="-password $PW1"
+            local _pw2_clean="$PW2"
+            while [[ "$_pw2_clean" == -* ]]; do
+              _pw2_clean="${_pw2_clean#-}"
+            done
+            if [[ "$_pw1_clean" == "$_pw2_clean" ]]; then
+              _pw="--password $_pw1_clean"
               _pw_display="********"
               ((STEP++))
             else
