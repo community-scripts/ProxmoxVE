@@ -168,9 +168,9 @@ cleanup_lxc
 
 ### Release Management
 
-| Function                      | Description                         | Example                                                       |
-| ----------------------------- | ----------------------------------- | ------------------------------------------------------------- |
-| `fetch_and_deploy_gh_release` | Fetches and installs GitHub Release | `fetch_and_deploy_gh_release "app" "YourUsername/YourRepo"`   |
+| Function                      | Description                         | Example                                                   |
+| ----------------------------- | ----------------------------------- | --------------------------------------------------------- |
+| `fetch_and_deploy_gh_release` | Fetches and installs GitHub Release | `fetch_and_deploy_gh_release "app" "owner/repo"`          |
 | `check_for_gh_release`        | Checks for new version              | `if check_for_gh_release "app" "YourUsername/YourRepo"; then` |
 
 **Modes for `fetch_and_deploy_gh_release`:**

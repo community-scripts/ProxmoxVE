@@ -72,7 +72,7 @@ function update_script() {
 
     # Step 5: Download and deploy new version
     # CLEAN_INSTALL=1 removes old directory before extracting
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "[appname]" "YourUsername/YourRepo" "tarball" "latest" "/opt/[appname]"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "[appname]" "owner/repo" "tarball" "latest" "/opt/[appname]"
 
     # Step 6: Run post-update commands (uncomment as needed)
     # These examples show common patterns - use what applies to your app:

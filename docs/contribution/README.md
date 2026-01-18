@@ -85,6 +85,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/Proxmo
 
 **During Development (you, in your fork):**
 ```bash
+# You test locally with your cloned files
 bash ct/myapp.sh
 
 # The script's curl commands are updated by setup-fork.sh to pull from YOUR fork
