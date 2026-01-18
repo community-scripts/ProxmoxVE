@@ -98,8 +98,8 @@ msg_ok "Configured PatchMon"
 
 msg_info "Configuring Nginx"
 cat <<EOF >/etc/nginx/sites-available/patchmon.conf
-map $http_x_forwarded_proto $proxy_corrected_scheme {
-    default    $scheme; # Fallback to Nginx's actual connection scheme if no X-Forwarded-Proto header was set
+map \$http_x_forwarded_proto \$proxy_corrected_scheme {
+    default    \$scheme; # Fallback to Nginx's actual connection scheme if no X-Forwarded-Proto header was set
     https      https;   # If X-Forwarded-Proto is 'https', use 'https'
     http       http;    # If X-Forwarded-Proto is 'http', use 'http'
 }
