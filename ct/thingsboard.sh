@@ -37,7 +37,7 @@ function update_script() {
 
     msg_info "Running Database Upgrade"
     $STD /usr/share/thingsboard/bin/install/upgrade.sh
-    msg_ok "Database Upgraded"
+    msg_ok "Ran Database Upgrade"
 
     msg_info "Starting Service"
     systemctl start thingsboard
