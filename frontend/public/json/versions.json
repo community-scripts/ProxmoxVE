@@ -1,13 +1,53 @@
 [
   {
-    "name": "inventree/InvenTree",
-    "version": "1.1.8",
-    "date": "2026-01-17T11:21:36Z"
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.1.1",
+    "date": "2026-01-17T22:35:09Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2026-01-17-r3",
+    "date": "2026-01-17T21:45:17Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "1.80.15-stable.1",
+    "date": "2026-01-17T19:55:30Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.3.0",
+    "date": "2026-01-17T16:28:04Z"
+  },
+  {
+    "name": "oauth2-proxy/oauth2-proxy",
+    "version": "v7.14.1",
+    "date": "2026-01-17T15:29:15Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
   },
   {
     "name": "laurent22/joplin",
     "version": "server-v3.5.2",
     "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.300.4",
+    "date": "2026-01-17T14:11:01Z"
+  },
+  {
+    "name": "LogicLabs-OU/OpenArchiver",
+    "version": "v0.4.1",
+    "date": "2026-01-17T12:24:31Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "1.1.8",
+    "date": "2026-01-17T11:21:36Z"
   },
   {
     "name": "nickheyer/discopanel",
@@ -18,21 +58,6 @@
     "name": "ghostfolio/ghostfolio",
     "version": "2.231.0",
     "date": "2026-01-17T11:01:23Z"
-  },
-  {
-    "name": "oauth2-proxy/oauth2-proxy",
-    "version": "v7.14.0",
-    "date": "2026-01-17T10:22:42Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2026-01-17-r1",
-    "date": "2026-01-17T09:59:32Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -65,9 +90,9 @@
     "date": "2026-01-17T04:09:09Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.17-nightly",
-    "date": "2026-01-17T02:25:37Z"
+    "name": "seerr-team/seerr",
+    "version": "preview-axios-config",
+    "date": "2026-01-17T02:07:56Z"
   },
   {
     "name": "ollama/ollama",
@@ -113,11 +138,6 @@
     "name": "livebook-dev/livebook",
     "version": "nightly",
     "date": "2026-01-16T19:17:16Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.1.0",
-    "date": "2026-01-16T18:50:05Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -196,8 +216,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.7.0-beta.1",
-    "date": "2026-01-15T20:00:44Z"
+    "version": "nightly",
+    "date": "2026-01-15T20:03:50Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -343,11 +363,6 @@
     "name": "Dispatcharr/Dispatcharr",
     "version": "v0.17.0",
     "date": "2026-01-13T22:51:49Z"
-  },
-  {
-    "name": "seerr-team/seerr",
-    "version": "preview-plex-4k-debug-logs",
-    "date": "2026-01-13T22:38:07Z"
   },
   {
     "name": "C4illin/ConvertX",
@@ -565,11 +580,6 @@
     "date": "2026-01-09T10:54:11Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.300.3",
-    "date": "2026-01-09T10:40:48Z"
-  },
-  {
     "name": "9001/copyparty",
     "version": "v1.20.1",
     "date": "2026-01-09T01:30:37Z"
@@ -678,11 +688,6 @@
     "name": "kimai/kimai",
     "version": "2.46.0",
     "date": "2026-01-07T00:19:31Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v1.2.0",
-    "date": "2026-01-06T23:02:46Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -1353,11 +1358,6 @@
     "name": "sassanix/Warracker",
     "version": "1.0.2",
     "date": "2025-10-30T18:23:23Z"
-  },
-  {
-    "name": "LogicLabs-OU/OpenArchiver",
-    "version": "v0.4.0",
-    "date": "2025-10-30T16:35:23Z"
   },
   {
     "name": "homebridge/homebridge",
