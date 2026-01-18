@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix Patchmon install script (escaping) [@christiaangoossens](https://github.com/christiaangoossens) ([#10920](https://github.com/community-scripts/ProxmoxVE/pull/10920))
     - refactor: peanut entrypoint [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10902](https://github.com/community-scripts/ProxmoxVE/pull/10902))
 
   - #### 💥 Breaking Changes
