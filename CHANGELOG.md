@@ -27,6 +27,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Update Patchmon default Nginx config (IPv6 and correct scheme) [@christiaangoossens](https://github.com/christiaangoossens) ([#10917](https://github.com/community-scripts/ProxmoxVE/pull/10917))
 
+  - #### 🔧 Refactor
+
+    - Refactor: FluidCalendar [@tremor021](https://github.com/tremor021) ([#10928](https://github.com/community-scripts/ProxmoxVE/pull/10928))
+
 ### 🗑️ Deleted Scripts
 
   - Remove iVentoy script [@tremor021](https://github.com/tremor021) ([#10924](https://github.com/community-scripts/ProxmoxVE/pull/10924))
