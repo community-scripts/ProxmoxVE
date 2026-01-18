@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-18
 
+### ❔ Uncategorized
+
+  - Update qui.json [@GalaxyCatD3v](https://github.com/GalaxyCatD3v) ([#10896](https://github.com/community-scripts/ProxmoxVE/pull/10896))
+
 ## 2026-01-17
 
 ### 🆕 New Scripts
