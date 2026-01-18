@@ -1,0 +1,48 @@
+{
+    "name": "ThingsBoard",
+    "slug": "thingsboard",
+    "categories": [
+        7
+    ],
+    "date_created": "2026-01-14",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8080,
+    "documentation": "https://thingsboard.io/docs/",
+    "website": "https://thingsboard.io/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/thingsboard.webp",
+    "config_path": "/etc/thingsboard/conf/thingsboard.conf",
+    "description": "ThingsBoard is an open-source IoT platform for data collection, processing, visualization, and device management. It enables device connectivity via industry standard IoT protocols - MQTT, CoAP and HTTP and supports both cloud and on-premises deployments.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/thingsboard.sh",
+            "resources": {
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 10,
+                "os": "debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "sysadmin@thingsboard.org",
+        "password": "sysadmin"
+    },
+    "notes": [
+        {
+            "text": "Please allow up to 90 seconds for the Web UI to start",
+            "type": "info"
+        },
+        {
+            "text": "Additional demo accounts: tenant@thingsboard.org / tenant and customer@thingsboard.org / customer",
+            "type": "info"
+        },
+        {
+            "text": "Change passwords for all accounts in the account profile page after first login",
+            "type": "warning"
+        }
+    ]
+}
