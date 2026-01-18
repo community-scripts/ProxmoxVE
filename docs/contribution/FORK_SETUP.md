@@ -10,7 +10,7 @@ git clone https://github.com/YOUR_USERNAME/ProxmoxVE.git
 cd ProxmoxVE
 
 # Run setup script (auto-detects your username from git)
-bash setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 That's it! ✅
@@ -67,7 +67,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/john/ProxmoxVE/main/misc/b
 ### Auto-Detect (Recommended)
 
 ```bash
-bash setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 Automatically reads your GitHub username from `git remote origin url`
@@ -75,7 +75,7 @@ Automatically reads your GitHub username from `git remote origin url`
 ### Specify Username
 
 ```bash
-bash setup-fork.sh john
+bash docs/contribution/setup-fork.sh --full john
 ```
 
 Updates links to `github.com/john/ProxmoxVE`
@@ -83,7 +83,7 @@ Updates links to `github.com/john/ProxmoxVE`
 ### Custom Repository Name
 
 ```bash
-bash setup-fork.sh john my-fork
+bash docs/contribution/setup-fork.sh --full john my-fork
 ```
 
 Updates links to `github.com/john/my-fork`
@@ -92,19 +92,12 @@ Updates links to `github.com/john/my-fork`
 
 ## What Gets Updated?
 
-The script updates these documentation files:
+The script updates hardcoded links in these areas when using `--full`:
 
-- `docs/CONTRIBUTION_GUIDE.md` (4 links)
-- `docs/README.md` (1 link)
-- `docs/INDEX.md` (3 links)
-- `docs/EXIT_CODES.md` (2 links)
-- `docs/DEFAULTS_SYSTEM_GUIDE.md` (2 links)
-- `docs/api/README.md` (1 link)
-- `docs/APP-ct.md` (1 link)
-- `docs/APP-install.md` (1 link)
-- `docs/alpine-install.func.md` (2 links)
-- `docs/install.func.md` (1 link)
-- And code examples in documentation
+- `ct/`, `install/`, `vm/` scripts
+- `misc/` function libraries
+- `docs/` (including `docs/contribution/`)
+- Code examples in documentation
 
 ---
 
@@ -132,7 +125,7 @@ The script updates these documentation files:
 
 4. **Follow the guide**
    ```bash
-   cat docs/CONTRIBUTION_GUIDE.md
+   cat docs/contribution/GUIDE.md
    ```
 
 ---
@@ -179,7 +172,7 @@ git checkout -b feature/my-feature
 # Make sure you cloned the repo first
 git clone https://github.com/YOUR_USERNAME/ProxmoxVE.git
 cd ProxmoxVE
-bash setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 ### "Could not auto-detect GitHub username"
@@ -191,15 +184,15 @@ git remote -v
 
 # Fix it:
 git remote set-url origin https://github.com/YOUR_USERNAME/ProxmoxVE.git
-bash setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 ### "Permission denied"
 
 ```bash
 # Make script executable
-chmod +x setup-fork.sh
-bash setup-fork.sh
+chmod +x docs/contribution/setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 ### Reverted Changes by Accident?
@@ -208,14 +201,15 @@ bash setup-fork.sh
 # Backups are created automatically
 git checkout docs/*.backup
 # Or just re-run setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 ---
 
 ## Next Steps
 
-1. ✅ Run `bash setup-fork.sh`
-2. 📖 Read [docs/CONTRIBUTION_GUIDE.md](docs/CONTRIBUTION_GUIDE.md)
+1. ✅ Run `bash docs/contribution/setup-fork.sh --full`
+2. 📖 Read [docs/contribution/GUIDE.md](GUIDE.md)
 3. 🍴 Choose your contribution path:
    - **Containers** → [docs/ct/README.md](docs/ct/README.md)
    - **Installation** → [docs/install/README.md](docs/install/README.md)
@@ -228,10 +222,10 @@ git checkout docs/*.backup
 ## Questions?
 
 - **Fork Setup Issues?** → See [Troubleshooting](#troubleshooting) above
-- **How to Contribute?** → [docs/CONTRIBUTION_GUIDE.md](docs/CONTRIBUTION_GUIDE.md)
+- **How to Contribute?** → [docs/contribution/GUIDE.md](GUIDE.md)
 - **Git Workflows?** → `cat .git-setup-info`
 - **Project Structure?** → [docs/README.md](docs/README.md)
 
 ---
 
-**Happy Contributing! 🚀**
+## Happy Contributing! 🚀

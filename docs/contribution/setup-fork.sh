@@ -220,7 +220,7 @@ git merge upstream/main
 
 ---
 
-For more help, see: docs/CONTRIBUTION_GUIDE.md
+For more help, see: docs/contribution/README.md
 EOF
 
   print_success "Created .git-setup-info file"
@@ -328,7 +328,7 @@ echo -e "${BLUE}Next Steps:${NC}"
 echo "  1. Review the changes: git diff"
 echo "  2. Check .git-setup-info for recommended git workflow"
 echo "  3. Start developing: git checkout -b feature/my-app"
-echo "  4. Read: docs/CONTRIBUTION_GUIDE.md"
+echo "  4. Read: docs/contribution/README.md"
 echo ""
 
 print_success "Happy contributing! 🚀"

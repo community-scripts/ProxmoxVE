@@ -102,8 +102,8 @@ function update_script() {
   check_container_resources
 
   # Use tools.func helpers:
-  check_for_gh_release "myapp" "YourUsername/ProxmoxVE"
-  fetch_and_deploy_gh_release "myapp" "app/owner" "appname.tar.gz" "latest" "/opt/myapp"
+  check_for_gh_release "myapp" "owner/repo"
+  fetch_and_deploy_gh_release "myapp" "owner/repo" "tarball" "latest" "/opt/myapp"
 }
 ```
 
@@ -111,20 +111,20 @@ function update_script() {
 
 ## Key Patterns
 
-### Check for Updates (ProxmoxVE Fork)
+### Check for Updates (App Repository)
 
-Use `check_for_gh_release` with **YOUR fork**:
+Use `check_for_gh_release` with the **app repo**:
 
 ```bash
-check_for_gh_release "myapp" "YourUsername/ProxmoxVE"
+check_for_gh_release "myapp" "owner/repo"
 ```
 
 ### Deploy External App
 
-Use `fetch_and_deploy_gh_release` with **target app repo**:
+Use `fetch_and_deploy_gh_release` with the **app repo**:
 
 ```bash
-fetch_and_deploy_gh_release "myapp" "myapp/repo" "appname.tar.gz" "latest" "/opt/myapp"
+fetch_and_deploy_gh_release "myapp" "owner/repo"
 ```
 
 ### Avoid Manual Version Checking
@@ -138,7 +138,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/myapp/myapp/releases/latest | 
 ✅ NEW (use tools.func):
 
 ```bash
-fetch_and_deploy_gh_release "myapp" "myapp/repo" "appname.tar.gz" "latest" "/opt/myapp"
+fetch_and_deploy_gh_release "myapp" "owner/repo"
 ```
 
 ---
@@ -172,10 +172,6 @@ Recent reference scripts with good update functions:
 - **[AI.md](../AI.md)** - AI-generated script guidelines
 - **[FORK_SETUP.md](../FORK_SETUP.md)** - Why setup-fork.sh is important
 - **[Slack Community](https://discord.gg/your-link)** - Ask questions
-  msg_ok "No update required. ${APP} is already at v${RELEASE}."
-  fi
-  exit
-  }
 
 ````
 

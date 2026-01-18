@@ -30,7 +30,7 @@ git clone https://github.com/YOUR_USERNAME/ProxmoxVE.git
 cd ProxmoxVE
 
 # 3. Auto-configure your fork (IMPORTANT - updates all links!)
-bash docs/contribution/setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 
 # 4. Create a feature branch
 git checkout -b feature/my-awesome-app
@@ -54,9 +54,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/
 cp docs/contribution/templates_json/AppName.json frontend/public/json/myapp.json
 # Edit metadata: name, slug, categories, description, resources, etc.
 
-# 9. Test the install script (if you created one)
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/install/myapp-install.sh)"
-# ⏱️ GitHub may take 10-30 seconds to update files - be patient!
+# 9. No direct install-script test
+# Install scripts are executed by the CT script inside the container
 
 # 10. Commit ONLY your new files (see Cherry-Pick section below!)
 git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
@@ -78,8 +77,7 @@ Once your script is merged to the main repository, users download and run it fro
 # ✅ Users run from GitHub (normal usage after PR merged)
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
 
-# For installation on existing Proxmox hosts
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/myapp-install.sh)"
+# Install scripts are called by the CT script and are not run directly by users
 ```
 
 ### Development vs. Production Execution
@@ -119,14 +117,14 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/Proxmo
 When you clone your fork, run the setup script to automatically configure everything:
 
 ```bash
-bash docs/contribution/setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 **What it does:**
 
 - Auto-detects your GitHub username from git config
 - Auto-detects your fork repository name
-- Updates **ALL** hardcoded links to point to your fork instead of the main repo
+- Updates **ALL** hardcoded links to point to your fork instead of the main repo (`--full`)
 - Creates `.git-setup-info` with your configuration
 - Allows you to develop and test independently in your fork
 
@@ -182,7 +180,7 @@ All scripts and configurations must follow our coding standards to ensure consis
 - **[HELPER_FUNCTIONS.md](HELPER_FUNCTIONS.md)** - Reference for all tools.func helper functions
 - **Container Scripts** - `/ct/` templates and guidelines
 - **Install Scripts** - `/install/` templates and guidelines
-- **JSON Configurations** - `/json/` structure and format
+- **JSON Configurations** - `frontend/public/json/` structure and format
 
 ### Quick Checklist
 
@@ -581,7 +579,7 @@ Two ways:
 **Option 1: Run setup script again**
 
 ```bash
-bash docs/contribution/setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 **Option 2: Manual sync**
@@ -633,7 +631,7 @@ See "Using AI Assistants" section above for:
 ## 🚀 Ready to Contribute?
 
 1. **Fork** the repository
-2. **Clone** your fork and **setup** with `bash docs/contribution/setup-fork.sh`
+2. **Clone** your fork and **setup** with `bash docs/contribution/setup-fork.sh --full`
 3. **Choose** your contribution type (container, installation, tools, etc.)
 4. **Read** the appropriate detailed guide
 5. **Create** your feature branch

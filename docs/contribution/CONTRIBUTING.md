@@ -84,7 +84,7 @@ git switch -c your-feature-branch
 ### 4. Run setup-fork.sh to auto-configure your fork
 
 ```bash
-bash docs/contribution/setup-fork.sh
+bash docs/contribution/setup-fork.sh --full
 ```
 
 This script automatically:

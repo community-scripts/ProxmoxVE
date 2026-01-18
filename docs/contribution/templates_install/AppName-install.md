@@ -5,7 +5,7 @@
 >
 > Current templates use:
 >
-> - `tools.func` helpers (setup_nodejs, setup_python, setup_postgresql_db, etc.)
+> - `tools.func` helpers (setup_nodejs, setup_uv, setup_postgresql_db, etc.)
 > - Automatic dependency installation via build.func
 > - Standardized environment variable patterns
 

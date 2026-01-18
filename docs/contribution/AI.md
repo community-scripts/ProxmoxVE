@@ -200,7 +200,7 @@ CLEAN_INSTALL=1 fetch_and_deploy_gh_release "appname" "owner/repo"
 | Function       | Variable(s)                   | Example                                              |
 | -------------- | ----------------------------- | ---------------------------------------------------- |
 | `setup_nodejs` | `NODE_VERSION`, `NODE_MODULE` | `NODE_VERSION="22" setup_nodejs`                     |
-| `setup_uv`     | `UV_PYTHON`                   | `UV_PYTHON="3.12" setup_uv`                          |
+| `setup_uv`     | `PYTHON_VERSION`              | `PYTHON_VERSION="3.12" setup_uv`                     |
 | `setup_go`     | `GO_VERSION`                  | `GO_VERSION="1.22" setup_go`                         |
 | `setup_rust`   | `RUST_VERSION`, `RUST_CRATES` | `RUST_CRATES="monolith" setup_rust`                  |
 | `setup_ruby`   | `RUBY_VERSION`                | `RUBY_VERSION="3.3" setup_ruby`                      |
@@ -465,7 +465,7 @@ EOF
 msg_ok "Saved Credentials"
 
 # ✅ CORRECT - credentials are stored in .env or shown in final message only
-# The .env file contains credentials, no need for separate file
+# If you use setup_postgresql_db / setup_mariadb_db, a standard ~/[appname].creds is created automatically
 ```
 
 ### 15. Wrong Footer Pattern
