@@ -22,6 +22,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Fix typo in the New Script request template [@tremor021](https://github.com/tremor021) ([#10891](https://github.com/community-scripts/ProxmoxVE/pull/10891))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - fix: preserve newest scripts pagination [@jgrubiox](https://github.com/jgrubiox) ([#10882](https://github.com/community-scripts/ProxmoxVE/pull/10882))
+
 ### ❔ Uncategorized
 
   - Update qui.json [@GalaxyCatD3v](https://github.com/GalaxyCatD3v) ([#10896](https://github.com/community-scripts/ProxmoxVE/pull/10896))
