@@ -16,6 +16,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - ThingsBoard ([#10904](https://github.com/community-scripts/ProxmoxVE/pull/10904))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - refactor: peanut entrypoint [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10902](https://github.com/community-scripts/ProxmoxVE/pull/10902))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
