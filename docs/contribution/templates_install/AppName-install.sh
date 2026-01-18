@@ -51,11 +51,11 @@ msg_ok "Installed Dependencies"
 #   "singlefile" - Single binary file
 #
 # Examples:
-#   fetch_and_deploy_gh_release "myapp" "owner/myapp" "tarball" "latest" "/opt/myapp"
-#   fetch_and_deploy_gh_release "myapp" "owner/myapp" "binary" "latest" "/tmp"
-#   fetch_and_deploy_gh_release "myapp" "owner/myapp" "prebuild" "latest" "/opt/myapp" "myapp-*.tar.gz"
+#   fetch_and_deploy_gh_release "myapp" "YourUsername/myapp" "tarball" "latest" "/opt/myapp"
+#   fetch_and_deploy_gh_release "myapp" "YourUsername/myapp" "binary" "latest" "/tmp"
+#   fetch_and_deploy_gh_release "myapp" "YourUsername/myapp" "prebuild" "latest" "/opt/myapp" "myapp-*.tar.gz"
 
-fetch_and_deploy_gh_release "[appname]" "[owner/repo]" "tarball" "latest" "/opt/[appname]"
+fetch_and_deploy_gh_release "[appname]" "YourUsername/YourRepo" "tarball" "latest" "/opt/[appname]"
 
 # =============================================================================
 # CONFIGURE APPLICATION

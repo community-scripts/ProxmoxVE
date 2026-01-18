@@ -71,23 +71,38 @@ See the **Cherry-Pick: Submitting Only Your Changes** section below to learn how
 
 ### How Users Run Scripts (After Merged)
 
-Once your script is merged to the main repository, users run it like this:
+Once your script is merged to the main repository, users download and run it from GitHub like this:
 
 ```bash
-# ✅ Users run from GitHub (normal usage)
+# ✅ Users run from GitHub (normal usage after PR merged)
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
 
 # For installation on existing Proxmox hosts
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/myapp-install.sh)"
-
-# ❌ NOT from local files (that's only for development)
-bash ct/myapp.sh                # Only works during development in your fork
 ```
 
-**Why the difference?**
-- **Development**: You test locally in your fork with `bash ct/myapp.sh`
-- **Production**: Users always download from GitHub with `curl | bash`
-- **setup-fork.sh**: Updates all your fork's links so curl pulls from YOUR fork during testing
+### Development vs. Production Execution
+
+**During Development (you, in your fork):**
+```bash
+bash ct/myapp.sh
+
+# The script's curl commands are updated by setup-fork.sh to pull from YOUR fork
+# This ensures you're testing your actual changes
+```
+
+**After Merge (users, from GitHub):**
+```bash
+# Users download the script from upstream via curl
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
+
+# The script's curl commands now point back to upstream (community-scripts)
+# This is the stable, tested version
+```
+
+**Summary:**
+- **Development**: `bash ct/myapp.sh` (local clone) → setup-fork.sh changes curl URLs to your fork
+- **Production**: `curl | bash` from upstream → curl URLs point to community-scripts repo
 
 ---
 
@@ -492,6 +507,7 @@ sh ct/myapp.sh
 ```
 
 **Why?**
+
 - Scripts use bash-specific features (arrays, process substitution, etc.)
 - Permissions might not be executable on Windows/WSL
 - Source files need proper `<(curl ...)` process substitution
@@ -533,11 +549,13 @@ git push -f origin your-branch
 Two ways:
 
 **Option 1: Run setup script again**
+
 ```bash
 bash docs/contribution/setup-fork.sh
 ```
 
 **Option 2: Manual sync**
+
 ```bash
 git fetch upstream
 git rebase upstream/main
@@ -575,6 +593,7 @@ git push -f origin main
 ### For Using AI Assistants
 
 See "Using AI Assistants" section above for:
+
 - How to structure prompts
 - What information to provide
 - How to validate AI output

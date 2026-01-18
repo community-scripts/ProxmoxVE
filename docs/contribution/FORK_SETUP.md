@@ -26,20 +26,35 @@ The `setup-fork.sh` script automatically:
    - Documentation links pointing to `community-scripts/ProxmoxVE`
    - **Curl download URLs** in scripts (e.g., `curl ... github.com/community-scripts/ProxmoxVE/main/...`)
 3. **Creates** `.git-setup-info` with your configuration details
-4. **Backs up** all modified files (*.backup for safety)
+4. **Backs up** all modified files (\*.backup for safety)
 
 ### Why Updating Curl Links Matters
 
-When you test scripts locally during development, the `curl` commands in your scripts need to pull from YOUR fork, not the upstream repository:
+Your scripts contain `curl` commands that download dependencies from GitHub (build.func, tools.func, etc.):
 
 ```bash
-# During local testing, after setup-fork.sh runs:
-bash ct/myapp.sh
-# This will curl from: github.com/YOUR_USERNAME/ProxmoxVE/main
-# NOT from: github.com/community-scripts/ProxmoxVE/main
+# First line of ct/myapp.sh
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+```
 
-# Once merged to upstream and published, users run:
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
+**WITHOUT setup-fork.sh:**
+- Script URLs still point to `community-scripts/ProxmoxVE/main`
+- When you test `bash ct/myapp.sh` locally, it downloads from the **upstream** repo, not your changes
+- Your modifications aren't actually being tested! ❌
+
+**AFTER setup-fork.sh:**
+- Script URLs are updated to `YourUsername/ProxmoxVE/main`
+- When you test `bash ct/myapp.sh` locally, it downloads from **your fork**
+- You're actually testing your changes! ✅
+
+```bash
+# Example: What setup-fork.sh changes
+
+# BEFORE (points to upstream):
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+
+# AFTER (points to your fork):
+source <(curl -fsSL https://raw.githubusercontent.com/john/ProxmoxVE/main/misc/build.func)
 ```
 
 ---
@@ -47,21 +62,27 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/Proxmo
 ## Usage
 
 ### Auto-Detect (Recommended)
+
 ```bash
 bash setup-fork.sh
 ```
+
 Automatically reads your GitHub username from `git remote origin url`
 
 ### Specify Username
+
 ```bash
 bash setup-fork.sh john
 ```
+
 Updates links to `github.com/john/ProxmoxVE`
 
 ### Custom Repository Name
+
 ```bash
 bash setup-fork.sh john my-fork
 ```
+
 Updates links to `github.com/john/my-fork`
 
 ---
@@ -69,6 +90,7 @@ Updates links to `github.com/john/my-fork`
 ## What Gets Updated?
 
 The script updates these documentation files:
+
 - `docs/CONTRIBUTION_GUIDE.md` (4 links)
 - `docs/README.md` (1 link)
 - `docs/INDEX.md` (3 links)
@@ -86,16 +108,19 @@ The script updates these documentation files:
 ## After Setup
 
 1. **Review changes**
+
    ```bash
    git diff docs/
    ```
 
 2. **Read git workflow tips**
+
    ```bash
    cat .git-setup-info
    ```
 
 3. **Start contributing**
+
    ```bash
    git checkout -b feature/my-app
    # Make your changes...
@@ -112,6 +137,7 @@ The script updates these documentation files:
 ## Common Workflows
 
 ### Keep Your Fork Updated
+
 ```bash
 # Add upstream if you haven't already
 git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
@@ -123,6 +149,7 @@ git push origin main
 ```
 
 ### Create a Feature Branch
+
 ```bash
 git checkout -b feature/docker-improvements
 # Make changes...
@@ -131,6 +158,7 @@ git push origin feature/docker-improvements
 ```
 
 ### Sync Before Contributing
+
 ```bash
 git fetch upstream
 git rebase upstream/main
@@ -143,6 +171,7 @@ git checkout -b feature/my-feature
 ## Troubleshooting
 
 ### "Git is not installed" or "not a git repository"
+
 ```bash
 # Make sure you cloned the repo first
 git clone https://github.com/YOUR_USERNAME/ProxmoxVE.git
@@ -151,6 +180,7 @@ bash setup-fork.sh
 ```
 
 ### "Could not auto-detect GitHub username"
+
 ```bash
 # Your git origin URL isn't set up correctly
 git remote -v
@@ -162,6 +192,7 @@ bash setup-fork.sh
 ```
 
 ### "Permission denied"
+
 ```bash
 # Make script executable
 chmod +x setup-fork.sh
@@ -169,6 +200,7 @@ bash setup-fork.sh
 ```
 
 ### Reverted Changes by Accident?
+
 ```bash
 # Backups are created automatically
 git checkout docs/*.backup

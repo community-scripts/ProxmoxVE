@@ -62,7 +62,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "appname" "owner/repo"; then
+  if check_for_gh_release "appname" "YourUsername/YourRepo"; then
     msg_info "Stopping Service"
     systemctl stop appname
     msg_ok "Stopped Service"
@@ -168,10 +168,10 @@ cleanup_lxc
 
 ### Release Management
 
-| Function                      | Description                         | Example                                            |
-| ----------------------------- | ----------------------------------- | -------------------------------------------------- |
-| `fetch_and_deploy_gh_release` | Fetches and installs GitHub Release | `fetch_and_deploy_gh_release "app" "owner/repo"`   |
-| `check_for_gh_release`        | Checks for new version              | `if check_for_gh_release "app" "owner/repo"; then` |
+| Function                      | Description                         | Example                                                       |
+| ----------------------------- | ----------------------------------- | ------------------------------------------------------------- |
+| `fetch_and_deploy_gh_release` | Fetches and installs GitHub Release | `fetch_and_deploy_gh_release "app" "YourUsername/YourRepo"`   |
+| `check_for_gh_release`        | Checks for new version              | `if check_for_gh_release "app" "YourUsername/YourRepo"; then` |
 
 **Modes for `fetch_and_deploy_gh_release`:**
 
@@ -259,13 +259,13 @@ cd /opt/myapp
 
 ```bash
 # ❌ WRONG - custom wget/curl logic
-RELEASE=$(curl -s https://api.github.com/repos/owner/repo/releases/latest | jq -r '.tag_name')
-wget https://github.com/owner/repo/archive/${RELEASE}.tar.gz
+RELEASE=$(curl -s https://api.github.com/repos/YourUsername/YourRepo/releases/latest | jq -r '.tag_name')
+wget https://github.com/YourUsername/YourRepo/archive/${RELEASE}.tar.gz
 tar -xzf ${RELEASE}.tar.gz
 mv repo-${RELEASE} /opt/myapp
 
 # ✅ CORRECT - use our function
-fetch_and_deploy_gh_release "myapp" "owner/repo" "tarball" "latest" "/opt/myapp"
+fetch_and_deploy_gh_release "myapp" "YourUsername/YourRepo" "tarball" "latest" "/opt/myapp"
 ```
 
 ### 3. Custom Version-Check Logic
@@ -273,13 +273,13 @@ fetch_and_deploy_gh_release "myapp" "owner/repo" "tarball" "latest" "/opt/myapp"
 ```bash
 # ❌ WRONG - custom version check
 CURRENT=$(cat /opt/myapp/version.txt)
-LATEST=$(curl -s https://api.github.com/repos/owner/repo/releases/latest | jq -r '.tag_name')
+LATEST=$(curl -s https://api.github.com/repos/YourUsername/YourRepo/releases/latest | jq -r '.tag_name')
 if [[ "$CURRENT" != "$LATEST" ]]; then
   # update...
 fi
 
 # ✅ CORRECT - use our function
-if check_for_gh_release "myapp" "owner/repo"; then
+if check_for_gh_release "myapp" "YourUsername/YourRepo"; then
   # update...
 fi
 ```
@@ -292,7 +292,7 @@ docker pull myapp/myapp:latest
 docker run -d --name myapp myapp/myapp:latest
 
 # ✅ CORRECT - Bare-Metal Installation
-fetch_and_deploy_gh_release "myapp" "owner/repo"
+fetch_and_deploy_gh_release "myapp" "YourUsername/YourRepo"
 npm install && npm run build
 ```
 
@@ -553,7 +553,7 @@ function update_script() {
   fi
 
   # 2. Check for update
-  if check_for_gh_release "appname" "owner/repo"; then
+  if check_for_gh_release "appname" "YourUsername/YourRepo"; then
     # 3. Stop service
     msg_info "Stopping Service"
     systemctl stop appname
@@ -826,11 +826,37 @@ Or no credentials:
 
 ---
 
+## 🍒 Important: Cherry-Picking Your Files for PR Submission
+
+⚠️ **CRITICAL**: When you submit your PR, you must use git cherry-pick to send ONLY your 3-4 files!
+
+Why? Because `setup-fork.sh` modifies 600+ files to update links. If you commit all changes, your PR will be impossible to merge.
+
+**See**: [README.md - Cherry-Pick Section](README.md#-cherry-pick-submitting-only-your-changes) for complete instructions on:
+
+- Creating a clean submission branch
+- Cherry-picking only your files (ct/myapp.sh, install/myapp-install.sh, frontend/public/json/myapp.json)
+- Verifying your PR has only 3 file changes (not 600+)
+
+**Quick reference**:
+
+```bash
+# Create clean branch from upstream
+git fetch upstream
+git checkout -b submit/myapp upstream/main
+
+# Cherry-pick your commit(s) or manually add your 3-4 files
+# Then push to your fork and create PR
+```
+
+---
+
 ## 📚 Further Documentation
 
 - [CONTRIBUTING.md](CONTRIBUTING.md) - General contribution guidelines
 - [GUIDE.md](GUIDE.md) - Detailed developer documentation
 - [HELPER_FUNCTIONS.md](HELPER_FUNCTIONS.md) - Complete tools.func reference
+- [README.md](README.md) - Cherry-pick guide and workflow instructions
 - [../TECHNICAL_REFERENCE.md](../TECHNICAL_REFERENCE.md) - Technical deep dive
 - [../EXIT_CODES.md](../EXIT_CODES.md) - Exit code reference
 - [templates_ct/](templates_ct/) - CT script templates
