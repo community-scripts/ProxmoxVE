@@ -29,6 +29,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - #### ✨ New Features
+
+    - core: improve password handling and validation logic [@MickLesk](https://github.com/MickLesk) ([#10925](https://github.com/community-scripts/ProxmoxVE/pull/10925))
+
   - #### 🔧 Refactor
 
     - hwaccel: improve NVIDIA version matching and GPU selection UI [@MickLesk](https://github.com/MickLesk) ([#10901](https://github.com/community-scripts/ProxmoxVE/pull/10901))
