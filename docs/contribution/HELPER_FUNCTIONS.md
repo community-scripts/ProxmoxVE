@@ -434,12 +434,12 @@ create_self_signed_cert
 
 ## Utility Functions
 
-### `import_local_ip`
+### `get_local_ip`
 
 Set the `$LOCAL_IP` variable with the container's IP address.
 
 ```bash
-import_local_ip
+get_local_ip
 echo "Container IP: $LOCAL_IP"
 
 # Use in config files
@@ -528,7 +528,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="myapp" PG_DB_USER="myapp" setup_postgresql_db
-import_local_ip
+get_local_ip
 
 # Download app using fetch_and_deploy (handles version tracking)
 fetch_and_deploy_gh_release "myapp" "example/myapp" "tarball" "latest" "/opt/myapp"
@@ -664,7 +664,7 @@ PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="bcmath,curl,gd,intl,mbstring,mysql,x
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="myapp" MARIADB_DB_USER="myapp" setup_mariadb_db
-import_local_ip
+get_local_ip
 
 # Download pre-built release (with asset pattern)
 fetch_and_deploy_gh_release "myapp" "example/myapp" "prebuild" "latest" "/opt/myapp" "myapp-*.tar.gz"

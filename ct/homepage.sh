@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  import_local_ip  
+  get_local_ip  
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
   if ! command -v jq &>/dev/null; then
     $STD msg_info "Installing jq..."
