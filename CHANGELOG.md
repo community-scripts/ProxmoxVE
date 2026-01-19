@@ -20,6 +20,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Apache-Guacamole: move jdbc cleanup after schema upgrade [@MickLesk](https://github.com/MickLesk) ([#10974](https://github.com/community-scripts/ProxmoxVE/pull/10974))
+    - Outline: prevent corepack interactive prompt blocking installation [@MickLesk](https://github.com/MickLesk) ([#10973](https://github.com/community-scripts/ProxmoxVE/pull/10973))
     - firefly: prevent nested storage directories during update (#10967) [@MickLesk](https://github.com/MickLesk) ([#10972](https://github.com/community-scripts/ProxmoxVE/pull/10972))
     - PeaNUT: change default port [@vhsdream](https://github.com/vhsdream) ([#10962](https://github.com/community-scripts/ProxmoxVE/pull/10962))
     - Update/splunk enterprise [@rcastley](https://github.com/rcastley) ([#10949](https://github.com/community-scripts/ProxmoxVE/pull/10949))
