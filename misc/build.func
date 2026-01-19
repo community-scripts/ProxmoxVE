@@ -326,6 +326,38 @@ get_valid_container_id() {
 }
 
 # ------------------------------------------------------------------------------
+# validate_hostname()
+#
+# - Validates hostname/FQDN according to RFC 1123/952
+# - Checks total length (max 253 characters for FQDN)
+# - Validates each label (max 63 chars, alphanumeric + hyphens)
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_hostname() {
+  local hostname="$1"
+
+  # Check total length (max 253 for FQDN)
+  if [[ ${#hostname} -gt 253 ]] || [[ -z "$hostname" ]]; then
+    return 1
+  fi
+
+  # Split by dots and validate each label
+  local IFS='.'
+  read -ra labels <<< "$hostname"
+  for label in "${labels[@]}"; do
+    # Each label: 1-63 chars, alphanumeric, hyphens allowed (not at start/end)
+    if [[ -z "$label" ]] || [[ ${#label} -gt 63 ]]; then
+      return 1
+    fi
+    if [[ ! "$label" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]] && [[ ! "$label" =~ ^[a-z0-9]$ ]]; then
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # find_host_ssh_keys()
 #
 # - Scans system for available SSH keys
@@ -610,7 +642,17 @@ base_settings() {
   fi
   CT_ID="$requested_id"
 
-  HN=${var_hostname:-$NSAPP}
+  # Validate and set Hostname/FQDN
+  local requested_hostname="${var_hostname:-$NSAPP}"
+  requested_hostname=$(echo "${requested_hostname,,}" | tr -d ' ')
+  if ! validate_hostname "$requested_hostname"; then
+    if [[ -n "${var_hostname:-}" ]]; then
+      msg_warn "Invalid hostname '$requested_hostname'. Using default: $NSAPP"
+    fi
+    requested_hostname="$NSAPP"
+  fi
+  HN="$requested_hostname"
+
   BRG=${var_brg:-"vmbr0"}
   NET=${var_net:-"dhcp"}
 
@@ -1486,15 +1528,16 @@ advanced_settings() {
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "HOSTNAME" \
         --ok-button "Next" --cancel-button "Back" \
-        --inputbox "\nSet Hostname (lowercase, alphanumeric, hyphens only)" 10 58 "$_hostname" \
+        --inputbox "\nSet Hostname (or FQDN, e.g. host.example.com)" 10 58 "$_hostname" \
         3>&1 1>&2 2>&3); then
         local hn_test="${result:-$NSAPP}"
         hn_test=$(echo "${hn_test,,}" | tr -d ' ')
-        if [[ "$hn_test" =~ ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$ ]]; then
+
+        if validate_hostname "$hn_test"; then
           _hostname="$hn_test"
           ((STEP++))
         else
-          whiptail --msgbox "Invalid hostname: '$hn_test'\n\nOnly lowercase letters, digits and hyphens are allowed." 10 58
+          whiptail --msgbox "Invalid hostname: '$hn_test'\n\nRules:\n- Only lowercase letters, digits, dots and hyphens\n- Labels separated by dots (max 63 chars each)\n- No leading/trailing hyphens or dots\n- No consecutive dots\n- Total max 253 characters" 14 60
         fi
       else
         ((STEP--))
