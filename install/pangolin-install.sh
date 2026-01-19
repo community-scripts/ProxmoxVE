@@ -29,6 +29,7 @@ read -rp "${TAB3}Enter your email address: " pango_email
 
 msg_info "Setup Pangolin"
 SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
+BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
 cd /opt/pangolin
 mkdir -p /opt/pangolin/config/{traefik,db,letsencrypt,logs}
 $STD npm ci
@@ -85,7 +86,7 @@ experimental:
   plugins:
     badger:
       moduleName: "github.com/fosrl/badger"
-      version: "v1.2.0"
+      version: "$BADGER_VERSION"
 
 log:
   level: "INFO"
