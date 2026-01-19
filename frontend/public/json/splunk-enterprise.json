@@ -1,48 +1,48 @@
 {
-  "name": "Splunk Enterprise",
-  "slug": "splunk-enterprise",
-  "categories": [
-    9
-  ],
-  "date_created": "2025-11-12",
-  "type": "ct",
-  "updateable": false,
-  "privileged": false,
-  "interface_port": 8000,
-  "documentation": "https://help.splunk.com",
-  "config_path": "",
-  "website": "https://www.splunk.com/en_us/download/splunk-enterprise.html",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/splunk.webp",
-  "description": "Platform for searching, monitoring, and analyzing machine-generated data at scale for operational intelligence and security.",
-  "install_methods": [
-    {
-      "type": "default",
-      "script": "ct/splunk-enterprise.sh",
-      "resources": {
-        "cpu": 4,
-        "ram": 8192,
-        "hdd": 40,
-        "os": "Ubuntu",
-        "version": "24.04"
-      }
-    }
-  ],
-  "default_credentials": {
-    "username": null,
-    "password": null
-  },
-  "notes": [
-    {
-      "text": "The credentials to login can be found in splunk.creds.",
-      "type": "info"
+    "name": "Splunk Enterprise",
+    "slug": "splunk-enterprise",
+    "categories": [
+        9
+    ],
+    "date_created": "2026-01-19",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": 8000,
+    "documentation": "https://help.splunk.com",
+    "config_path": "",
+    "website": "https://www.splunk.com/en_us/download/splunk-enterprise.html",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/splunk-light.webp",
+    "description": "Platform for searching, monitoring, and analyzing machine-generated data at scale for operational intelligence and security.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/splunk-enterprise.sh",
+            "resources": {
+                "cpu": 4,
+                "ram": 8192,
+                "hdd": 40,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
     },
-    {
-      "text": "Trial license allows indexing 500 MB/Day. After 60 days you can convert to a perpetual free license or purchase a Splunk Enterprise license to continue using the expanded functionality designed for enterprise-scale deployments.",
-      "type": "warning"
-    },
-    {
-      "text": "About Splunk Free License: https://help.splunk.com/en/splunk-enterprise/administer/admin-manual/10.0/configure-splunk-licenses/about-splunk-free",
-      "type": "info"
-    }
-  ]
+    "notes": [
+        {
+            "text": "The credentials to login can be found in splunk.creds.",
+            "type": "info"
+        },
+        {
+            "text": "Trial license allows indexing 500 MB/Day. After 60 days you can convert to a perpetual free license or purchase a Splunk Enterprise license to continue using the expanded functionality designed for enterprise-scale deployments.",
+            "type": "warning"
+        },
+        {
+            "text": "About Splunk Free License: https://help.splunk.com/en/splunk-enterprise/administer/admin-manual/10.0/configure-splunk-licenses/about-splunk-free",
+            "type": "info"
+        }
+    ]
 }
