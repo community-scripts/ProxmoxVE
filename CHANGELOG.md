@@ -28,6 +28,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Pangolin: use dynamic badger plugin version [@MickLesk](https://github.com/MickLesk) ([#10975](https://github.com/community-scripts/ProxmoxVE/pull/10975))
     - Tautulli: add version detection and add proper update script [@MickLesk](https://github.com/MickLesk) ([#10976](https://github.com/community-scripts/ProxmoxVE/pull/10976))
 
   - #### 🔧 Refactor
