@@ -38,7 +38,7 @@ load_functions() {
   icons
   default_vars
   set_std_mode
-  import_local_ip
+  get_lxc_ip
 }
 
 # ------------------------------------------------------------------------------
