@@ -40,6 +40,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: add RFC 1123/952 compliant hostname/FQDN validation [@MickLesk](https://github.com/MickLesk) ([#10977](https://github.com/community-scripts/ProxmoxVE/pull/10977))
     - [core]: Make LXC IP a global variable [@tremor021](https://github.com/tremor021) ([#10951](https://github.com/community-scripts/ProxmoxVE/pull/10951))
 
 ### 🧰 Tools
