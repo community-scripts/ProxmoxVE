@@ -895,9 +895,26 @@ function get_lxc_ip() {
 
   if [[ -z "${LOCAL_IP:-}" ]]; then
     get_current_ip() {
-      local targets=("8.8.8.8" "1.1.1.1" "192.168.1.1" "10.0.0.1" "172.16.0.1" "default")
       local ip
 
+      # Try hostname -I first (most reliable for LXC containers)
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+        if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # Fallback: Try direct interface lookup for eth0
+      ip=$(ip -4 addr show eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # Last resort: Use routing table
+      local targets=("8.8.8.8" "1.1.1.1" "default")
       for target in "${targets[@]}"; do
         if [[ "$target" == "default" ]]; then
           ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')

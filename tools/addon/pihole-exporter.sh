@@ -192,7 +192,7 @@ UPDATEEOF
 # ==============================================================================
 header_info
 ensure_usr_local_bin_persist
-get_local_ip
+get_lxc_ip
 
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
