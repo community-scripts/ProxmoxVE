@@ -1,5 +1,80 @@
 [
   {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.33.0-hannoy-better-linear-scanning.0",
+    "date": "2026-01-19T11:21:31Z"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "17.0",
+    "date": "2026-01-19T11:11:37Z"
+  },
+  {
+    "name": "TuroYT/snowshare",
+    "version": "v1.2.10",
+    "date": "2026-01-19T10:13:52Z"
+  },
+  {
+    "name": "AlexxIT/go2rtc",
+    "version": "v1.9.14",
+    "date": "2026-01-19T09:16:56Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.52.7",
+    "date": "2026-01-19T08:38:05Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.887",
+    "date": "2026-01-19T05:55:24Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.9.0",
+    "date": "2026-01-19T05:46:09Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.23",
+    "date": "2026-01-19T05:14:43Z"
+  },
+  {
+    "name": "9001/copyparty",
+    "version": "v1.20.2",
+    "date": "2026-01-19T02:20:10Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.11.6",
+    "date": "2026-01-19T01:03:03Z"
+  },
+  {
+    "name": "eclipse-mosquitto/mosquitto",
+    "version": "2.1.0rc1",
+    "date": "2026-01-19T00:48:21Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-19T00:27:05Z"
+  },
+  {
     "name": "Kareadita/Kavita",
     "version": "v0.8.9.1",
     "date": "2026-01-18T23:04:08Z"
@@ -55,21 +130,6 @@
     "date": "2026-01-18T12:12:02Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.879",
-    "date": "2026-01-18T05:55:29Z"
-  },
-  {
     "name": "BerriAI/litellm",
     "version": "v1.81.0-nightly",
     "date": "2026-01-18T04:06:15Z"
@@ -78,16 +138,6 @@
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-18T00:27:03Z"
   },
   {
     "name": "oauth2-proxy/oauth2-proxy",
@@ -123,11 +173,6 @@
     "name": "inventree/InvenTree",
     "version": "1.1.8",
     "date": "2026-01-17T11:21:36Z"
-  },
-  {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.22",
-    "date": "2026-01-17T11:09:45Z"
   },
   {
     "name": "ghostfolio/ghostfolio",
@@ -197,12 +242,7 @@
   {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
-    "date": "2026-01-12T09:54:36Z"
-  },
-  {
-    "name": "TuroYT/snowshare",
-    "version": "v1.2.10",
-    "date": "2026-01-16T15:18:09Z"
+    "date": "2026-01-09T17:45:02Z"
   },
   {
     "name": "emqx/emqx",
@@ -245,19 +285,14 @@
     "date": "2026-01-15T21:30:26Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.52.6",
-    "date": "2026-01-15T21:29:48Z"
-  },
-  {
     "name": "azukaar/Cosmos-Server",
     "version": "v0.20.0",
     "date": "2026-01-15T20:59:44Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.7.0-beta.1",
-    "date": "2026-01-15T20:00:44Z"
+    "version": "nightly",
+    "date": "2026-01-15T20:03:50Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -298,11 +333,6 @@
     "name": "mattermost/mattermost",
     "version": "v10.11.10",
     "date": "2026-01-15T10:36:07Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2026-01-15T09:49:28Z"
   },
   {
     "name": "SigNoz/signoz",
@@ -572,7 +602,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v14.0.7",
-    "date": "2026-01-10T15:10:54Z"
+    "date": "2026-01-10T10:31:47Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -610,11 +640,6 @@
     "date": "2026-01-09T10:54:11Z"
   },
   {
-    "name": "9001/copyparty",
-    "version": "v1.20.1",
-    "date": "2026-01-09T01:30:37Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.620",
     "date": "2026-01-09T00:17:04Z"
@@ -643,11 +668,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.2.0.103-2.2.0.103_canary_2026-01-08",
     "date": "2026-01-08T12:41:37Z"
-  },
-  {
-    "name": "home-assistant/operating-system",
-    "version": "16.3",
-    "date": "2025-11-04T12:28:47Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -1000,16 +1020,6 @@
     "date": "2025-12-15T18:25:36Z"
   },
   {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.11.5",
-    "date": "2025-12-15T02:44:19Z"
-  },
-  {
-    "name": "AlexxIT/go2rtc",
-    "version": "v1.9.13",
-    "date": "2025-12-14T20:18:28Z"
-  },
-  {
     "name": "docmost/docmost",
     "version": "v0.24.1",
     "date": "2025-12-14T13:49:16Z"
@@ -1058,11 +1068,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.43.1",
     "date": "2025-12-11T22:45:52Z"
-  },
-  {
-    "name": "gethomepage/homepage",
-    "version": "v1.8.0",
-    "date": "2025-12-10T16:44:33Z"
   },
   {
     "name": "rclone/rclone",
@@ -1463,11 +1468,6 @@
     "name": "open-wanderer/wanderer",
     "version": "v0.18.3",
     "date": "2025-09-19T16:16:11Z"
-  },
-  {
-    "name": "eclipse-mosquitto/mosquitto",
-    "version": "2.1.0-test1",
-    "date": "2025-09-17T18:21:45Z"
   },
   {
     "name": "Checkmk/checkmk",
