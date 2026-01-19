@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-19
 
+### 🗑️ Deleted Scripts
+
+  - Remove: phpIPAM [@MickLesk](https://github.com/MickLesk) ([#10939](https://github.com/community-scripts/ProxmoxVE/pull/10939))
+
 ## 2026-01-18
 
 ### 🆕 New Scripts
