@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Homepage [@tremor021](https://github.com/tremor021) ([#10950](https://github.com/community-scripts/ProxmoxVE/pull/10950))
     - Refactor: hev-socks5-server [@tremor021](https://github.com/tremor021) ([#10945](https://github.com/community-scripts/ProxmoxVE/pull/10945))
 
 ### 🗑️ Deleted Scripts
