@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: rcastley
-# License: MIT | https://github.com/community-scripts/ProxmoxVED/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.splunk.com/en_us/download.html
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
