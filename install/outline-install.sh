@@ -38,6 +38,7 @@ sed -i 's/redis:6379/localhost:6379/g' /opt/outline/.env
 sed -i "5s#URL=#URL=http://${LOCAL_IP}#g" /opt/outline/.env
 sed -i 's/FORCE_HTTPS=true/FORCE_HTTPS=false/g' /opt/outline/.env
 export NODE_OPTIONS="--max-old-space-size=3584"
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 $STD corepack enable
 $STD yarn install --immutable
 export NODE_ENV=production
