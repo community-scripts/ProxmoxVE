@@ -1,8 +1,58 @@
 [
   {
+    "name": "Kareadita/Kavita",
+    "version": "v0.8.9.1",
+    "date": "2026-01-18T23:04:08Z"
+  },
+  {
+    "name": "pelican-dev/panel",
+    "version": "v1.0.0-beta31",
+    "date": "2026-01-18T22:43:24Z"
+  },
+  {
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta22",
+    "date": "2026-01-18T22:38:36Z"
+  },
+  {
+    "name": "Part-DB/Part-DB-server",
+    "version": "v2.5.0",
+    "date": "2026-01-18T22:16:38Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-remonitor-sonarr-episodes",
+    "date": "2026-01-18T20:33:38Z"
+  },
+  {
     "name": "laurent22/joplin",
     "version": "server-v3.5.2",
     "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "fccview/jotty",
+    "version": "1.18.0",
+    "date": "2026-01-18T19:00:48Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.21.2",
+    "date": "2026-01-18T17:32:08Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.36.1",
+    "date": "2026-01-18T17:09:58Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.63.5",
+    "date": "2026-01-18T13:34:16Z"
+  },
+  {
+    "name": "wger-project/wger",
+    "version": "2.4",
+    "date": "2026-01-18T12:12:02Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -105,11 +155,6 @@
     "date": "2026-01-17T04:09:09Z"
   },
   {
-    "name": "seerr-team/seerr",
-    "version": "preview-axios-config",
-    "date": "2026-01-17T02:07:56Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.14.2",
     "date": "2026-01-16T00:50:51Z"
@@ -155,11 +200,6 @@
     "date": "2026-01-12T09:54:36Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.21.1",
-    "date": "2026-01-16T16:20:21Z"
-  },
-  {
     "name": "TuroYT/snowshare",
     "version": "v1.2.10",
     "date": "2026-01-16T15:18:09Z"
@@ -188,11 +228,6 @@
     "name": "garethgeorge/backrest",
     "version": "v1.11.1",
     "date": "2026-01-16T08:27:09Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.36.0",
-    "date": "2026-01-16T04:51:49Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -298,16 +333,6 @@
     "name": "icereed/paperless-gpt",
     "version": "v0.24.0",
     "date": "2026-01-14T21:28:09Z"
-  },
-  {
-    "name": "Kareadita/Kavita",
-    "version": "v0.8.9",
-    "date": "2026-01-14T21:26:43Z"
-  },
-  {
-    "name": "fccview/jotty",
-    "version": "1.17.2",
-    "date": "2026-01-14T19:06:52Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -740,11 +765,6 @@
     "date": "2026-01-05T05:56:57Z"
   },
   {
-    "name": "Part-DB/Part-DB-server",
-    "version": "v2.4.0",
-    "date": "2026-01-04T21:10:51Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v26.1.0",
     "date": "2026-01-04T17:07:30Z"
@@ -783,11 +803,6 @@
     "name": "wavelog/wavelog",
     "version": "2.2.2",
     "date": "2025-12-31T16:53:34Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.63.4",
-    "date": "2025-12-31T12:40:07Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -928,16 +943,6 @@
     "name": "TechnitiumSoftware/DnsServer",
     "version": "v14.3.0",
     "date": "2025-12-20T13:16:37Z"
-  },
-  {
-    "name": "pelican-dev/panel",
-    "version": "v1.0.0-beta30",
-    "date": "2025-12-19T23:37:07Z"
-  },
-  {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta21",
-    "date": "2025-12-19T23:04:27Z"
   },
   {
     "name": "qdrant/qdrant",
@@ -1628,11 +1633,6 @@
     "name": "StarFleetCPTN/GoMFT",
     "version": "v0.2.11",
     "date": "2025-04-12T21:13:08Z"
-  },
-  {
-    "name": "wger-project/wger",
-    "version": "2.3",
-    "date": "2025-04-05T18:05:36Z"
   },
   {
     "name": "louislam/dockge",
