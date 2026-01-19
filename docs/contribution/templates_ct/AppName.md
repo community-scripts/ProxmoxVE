@@ -1,197 +1,189 @@
-# **AppName<span></span>.sh Scripts**
+# CT Container Scripts - Quick Reference
 
- `AppName.sh` scripts found in the `/ct` directory. These scripts are responsible for the installation of the desired application. For this guide we take `/ct/snipeit.sh` as example.
-
-## Table of Contents
-
-- [**AppName.sh Scripts**](#appnamesh-scripts)
-  - [Table of Contents](#table-of-contents)
-  - [1. **File Header**](#1-file-header)
-    - [1.1 **Shebang**](#11-shebang)
-    - [1.2 **Import Functions**](#12-import-functions)
-    - [1.3 **Metadata**](#13-metadata)
-  - [2 **Variables and function import**](#2-variables-and-function-import)
-    - [2.1 **Default Values**](#21-default-values)
-  - [2.2 **📋 App output \& base settings**](#22--app-output--base-settings)
-  - [2.3 **🛠 Core functions**](#23--core-functions)
-  - [3 **Update function**](#3-update-function)
-    - [3.1 **Function Header**](#31-function-header)
-    - [3.2 **Check APP**](#32-check-app)
-    - [3.3 **Check version**](#33-check-version)
-    - [3.4 **Verbosity**](#34-verbosity)
-    - [3.5 **Backups**](#35-backups)
-    - [3.6 **Cleanup**](#36-cleanup)
-    - [3.7 **No update function**](#37-no-update-function)
-  - [4 **End of the script**](#4-end-of-the-script)
-  - [5. **Contribution checklist**](#5-contribution-checklist)
-
-## 1. **File Header**
-
-### 1.1 **Shebang**
-
-- Use `#!/usr/bin/env bash` as the shebang.
-
-```bash
-#!/usr/bin/env bash
-```
-
-### 1.2 **Import Functions**
-
-- Import the build.func file.
-- When developing your own script, change the URL to your own repository.
-
-> [!IMPORTANT]
-> You also need to change all apperances of this URL in `misc/build.func` and `misc/install.func`
-
-Example for development:
-
-```bash
-source <(curl -fsSL https://raw.githubusercontent.com/[USER]/[REPO]/refs/heads/[BRANCH]/misc/build.func)
-```
-
-Final script:
-
-```bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-```
-
-> [!CAUTION]
-> Before opening a Pull Request, change the URLs to point to the community-scripts repo.
-
-### 1.3 **Metadata**
-
-- Add clear comments for script metadata, including author, copyright, and license information.
-
-Example:
-
-```bash
-# Copyright (c) 2021-2026 community-scripts ORG
-# Author: [YourUserName]
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: [SOURCE_URL]
-```
-
-> [!NOTE]:
+> [!WARNING]
+> **This is legacy documentation.** Refer to the **modern template** at [templates_ct/AppName.sh](AppName.sh) for best practices.
 >
-> - Add your username and source URL
-> - For existing scripts, add "| Co-Author [YourUserName]" after the current author
+> Current templates use:
+>
+> - `tools.func` helpers instead of manual patterns
+> - `check_for_gh_release` and `fetch_and_deploy_gh_release` from build.func
+> - Automatic setup-fork.sh configuration
 
 ---
 
-## 2 **Variables and function import**
->
-> [!NOTE]
-> You need to have all this set in your script, otherwise it will not work!
+## Before Creating a Script
 
-### 2.1 **Default Values**
+1. **Fork & Clone:**
 
-- This section sets the default values for the container.
-- `APP` needs to be set to the application name and must be equal to the filenames of your scripts.
-- `var_tags`: You can set Tags for the CT wich show up in the Proxmox UI. Don´t overdo it!
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/ProxmoxVE.git
+   cd ProxmoxVE
+   ```
 
->[!NOTE]
->Description for all Default Values
->
->| Variable | Description | Notes |
->|----------|-------------|-------|
->| `APP` | Application name | Must match ct\AppName.sh |
->| `var_tags` | Proxmox display tags without Spaces, only ; | Limit the number |
->| `var_cpu` | CPU cores | Number of cores |
->| `var_ram` | RAM | In MB |
->| `var_disk` | Disk capacity | In GB |
->| `var_os` | Operating system | alpine, debian, ubuntu |
->| `var_version` | OS version | e.g., 3.20, 11, 12, 20.04 |
->| `var_unprivileged` | Container type | 1 = Unprivileged, 0 = Privileged |
+2. **Run setup-fork.sh** (updates all curl URLs to your fork):
 
-Example:
+   ```bash
+   bash docs/contribution/setup-fork.sh
+   ```
+
+3. **Copy the Modern Template:**
+
+   ```bash
+   cp templates_ct/AppName.sh ct/MyApp.sh
+   # Edit ct/MyApp.sh with your app details
+   ```
+
+4. **Test Your Script (via GitHub):**
+
+   ⚠️ **Important:** You must push to GitHub and test via curl, not `bash ct/MyApp.sh`!
+
+   ```bash
+   # Push your changes to your fork first
+   git push origin feature/my-awesome-app
+
+   # Then test via curl (this loads from YOUR fork, not local files)
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/MyApp.sh)"
+   ```
+
+   > 💡 **Why?** The script's curl commands are modified by setup-fork.sh, but local execution uses local files, not the updated GitHub URLs. Testing via curl ensures your script actually works.
+   >
+   > ⏱️ **Note:** GitHub sometimes takes 10-30 seconds to update files. If you don't see your changes, wait and try again.
+
+5. **Cherry-Pick for PR** (submit ONLY your 3-4 files):
+   - See [Cherry-Pick Guide](../README.md) for step-by-step git commands
+
+---
+
+## Template Structure
+
+The modern template includes:
+
+### Header
 
 ```bash
-APP="SnipeIT"
-var_tags="asset-management;foss"
+#!/usr/bin/env bash
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# (Note: setup-fork.sh changes this URL to point to YOUR fork during development)
+```
+
+### Metadata
+
+```bash
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: YourUsername
+# License: MIT
+APP="MyApp"
+var_tags="app-category;foss"
 var_cpu="2"
 var_ram="2048"
 var_disk="4"
-var_os="debian"
-var_version="12"
+var_os="alpine"
+var_version="3.20"
 var_unprivileged="1"
 ```
 
-## 2.2 **📋 App output & base settings**
+### Core Setup
 
 ```bash
 header_info "$APP"
-```
-- `header_info`: Generates ASCII header for APP
-
-## 2.3 **🛠 Core functions**
-
-```bash
 variables
 color
 catch_errors
 ```
 
-- `variables`: Processes input and prepares variables
-- `color`: Sets icons, colors, and formatting
-- `catch_errors`: Enables error handling
+### Update Function
 
----
-
-## 3 **Update function**
-
-### 3.1 **Function Header**
-
-- If applicable write a function that updates the application and the OS in the container.
-- Each update function starts with the same code:
+The modern template provides a standard update pattern:
 
 ```bash
 function update_script() {
   header_info
   check_container_storage
   check_container_resources
-```
 
-### 3.2 **Check APP**
-
-- Before doing anything update-wise, check if the app is installed in the container.
-
-Example:
-
-```bash
-if [[ ! -d /opt/snipe-it ]]; then
-    msg_error "No ${APP} Installation Found!"
-    exit
-  fi
-```
-
-### 3.3 **Check version**
-
-- Before updating, check if a new version exists.
-  - We use the `${APPLICATION}_version.txt` file created in `/opt` during the install to compare new versions against the currently installed version.
-
-Example with a Github Release:
-
-```bash
- RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Updating ${APP} to v${RELEASE}"
-    #DO UPDATE
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
-  fi
-  exit
+  # Use tools.func helpers:
+  check_for_gh_release "myapp" "owner/repo"
+  fetch_and_deploy_gh_release "myapp" "owner/repo" "tarball" "latest" "/opt/myapp"
 }
 ```
+
+---
+
+## Key Patterns
+
+### Check for Updates (App Repository)
+
+Use `check_for_gh_release` with the **app repo**:
+
+```bash
+check_for_gh_release "myapp" "owner/repo"
+```
+
+### Deploy External App
+
+Use `fetch_and_deploy_gh_release` with the **app repo**:
+
+```bash
+fetch_and_deploy_gh_release "myapp" "owner/repo"
+```
+
+### Avoid Manual Version Checking
+
+❌ OLD (manual):
+
+```bash
+RELEASE=$(curl -fsSL https://api.github.com/repos/myapp/myapp/releases/latest | grep tag_name)
+```
+
+✅ NEW (use tools.func):
+
+```bash
+fetch_and_deploy_gh_release "myapp" "owner/repo"
+```
+
+---
+
+## Best Practices
+
+1. **Use tools.func helpers** - Don't manually curl for versions
+2. **Only add app-specific dependencies** - Don't add ca-certificates, curl, gnupg (handled by build.func)
+3. **Test via curl from your fork** - Push first, then: `bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/MyApp.sh)"`
+4. **Wait for GitHub to update** - Takes 10-30 seconds after git push
+5. **Cherry-pick only YOUR files** - Submit only ct/MyApp.sh, install/MyApp-install.sh, frontend/public/json/myapp.json (3 files)
+6. **Verify before PR** - Run `git diff upstream/main --name-only` to confirm only your files changed
+
+---
+
+## Common Update Patterns
+
+See the [modern template](AppName.sh) and [AI.md](../AI.md) for complete working examples.
+
+Recent reference scripts with good update functions:
+
+- [Trip](https://github.com/community-scripts/ProxmoxVE/blob/main/ct/trip.sh)
+- [Thingsboard](https://github.com/community-scripts/ProxmoxVE/blob/main/ct/thingsboard.sh)
+- [UniFi](https://github.com/community-scripts/ProxmoxVE/blob/main/ct/unifi.sh)
+
+---
+
+## Need Help?
+
+- **[README.md](../README.md)** - Full contribution workflow
+- **[AI.md](../AI.md)** - AI-generated script guidelines
+- **[FORK_SETUP.md](../FORK_SETUP.md)** - Why setup-fork.sh is important
+- **[Slack Community](https://discord.gg/your-link)** - Ask questions
+
+````
 
 ### 3.4 **Verbosity**
 
 - Use the appropriate flag (**-q** in the examples) for a command to suppress its output.
-Example:
+  Example:
 
 ```bash
 curl -fsSL
 unzip -q
-```
+````
 
 - If a command does not come with this functionality use `$STD` to suppress it's output.
 
@@ -207,8 +199,8 @@ $STD php artisan config:clear
 - Backup user data if necessary.
 - Move all user data back in the directory when the update is finished.
 
->[!NOTE]
->This is not meant to be a permanent backup
+> [!NOTE]
+> This is not meant to be a permanent backup
 
 Example backup:
 
@@ -227,7 +219,7 @@ Example config restore:
 ### 3.6 **Cleanup**
 
 - Do not forget to remove any temporary files/folders such as zip-files or temporary backups.
-Example:
+  Example:
 
 ```bash
   rm -rf /opt/v${RELEASE}.zip
@@ -277,7 +269,7 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
 ## 5. **Contribution checklist**
 
 - [ ] Shebang is correctly set (`#!/usr/bin/env bash`).
-- [ ] Correct link to *build.func*
+- [ ] Correct link to _build.func_
 - [ ] Metadata (author, license) is included at the top.
 - [ ] Variables follow naming conventions.
 - [ ] Update function exists.

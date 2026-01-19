@@ -1,53 +1,194 @@
+# Install Scripts - Quick Reference
 
-# **AppName<span></span>-install.sh Scripts**
+> [!WARNING]
+> **This is legacy documentation.** Refer to the **modern template** at [templates_install/AppName-install.sh](AppName-install.sh) for best practices.
+>
+> Current templates use:
+>
+> - `tools.func` helpers (setup_nodejs, setup_uv, setup_postgresql_db, etc.)
+> - Automatic dependency installation via build.func
+> - Standardized environment variable patterns
 
- `AppName-install.sh` scripts found in the `/install` directory. These scripts are responsible for the installation of the application. For this guide we take `/install/snipeit-install.sh` as example.
+---
 
-## Table of Contents
+## Before Creating a Script
 
-- [**AppName-install.sh Scripts**](#appname-installsh-scripts)
-  - [Table of Contents](#table-of-contents)
-  - [1. **File header**](#1-file-header)
-    - [1.1 **Shebang**](#11-shebang)
-    - [1.2 **Comments**](#12-comments)
-    - [1.3 **Variables and function import**](#13-variables-and-function-import)
-  - [2. **Variable naming and management**](#2-variable-naming-and-management)
-    - [2.1 **Naming conventions**](#21-naming-conventions)
-  - [3. **Dependencies**](#3-dependencies)
-    - [3.1 **Install all at once**](#31-install-all-at-once)
-    - [3.2 **Collapse dependencies**](#32-collapse-dependencies)
-  - [4. **Paths to application files**](#4-paths-to-application-files)
-  - [5. **Version management**](#5-version-management)
-    - [5.1 **Install the latest release**](#51-install-the-latest-release)
-    - [5.2 **Save the version for update checks**](#52-save-the-version-for-update-checks)
-  - [6. **Input and output management**](#6-input-and-output-management)
-    - [6.1 **User feedback**](#61-user-feedback)
-    - [6.2 **Verbosity**](#62-verbosity)
-  - [7. **String/File Manipulation**](#7-stringfile-manipulation)
-    - [7.1 **File Manipulation**](#71-file-manipulation)
-  - [8. **Security practices**](#8-security-practices)
-    - [8.1 **Password generation**](#81-password-generation)
-    - [8.2 **File permissions**](#82-file-permissions)
-  - [9. **Service Configuration**](#9-service-configuration)
-    - [9.1 **Configuration files**](#91-configuration-files)
-    - [9.2 **Credential management**](#92-credential-management)
-    - [9.3 **Enviroment files**](#93-enviroment-files)
-    - [9.4 **Services**](#94-services)
-  - [10. **Cleanup**](#10-cleanup)
-    - [10.1 **Remove temporary files**](#101-remove-temporary-files)
-    - [10.2 **Autoremove and autoclean**](#102-autoremove-and-autoclean)
-  - [11. **Best Practices Checklist**](#11-best-practices-checklist)
-    - [Example: High-Level Script Flow](#example-high-level-script-flow)
+1. **Copy the Modern Template:**
 
-## 1. **File header**
+   ```bash
+   cp templates_install/AppName-install.sh install/MyApp-install.sh
+   # Edit install/MyApp-install.sh
+   ```
 
-### 1.1 **Shebang**
+2. **Key Pattern:**
+   - CT scripts source build.func and call the install script
+   - Install scripts use sourced FUNCTIONS_FILE_PATH (via build.func)
+   - Both scripts work together in the container
 
-- Use `#!/usr/bin/env bash` as the shebang.
+3. **Test via GitHub:**
+
+   ```bash
+   # Push your changes to your fork first
+   git push origin feature/my-awesome-app
+
+   # Test the CT script via curl (it will call the install script)
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/MyApp.sh)"
+   # ⏱️ Wait 10-30 seconds after pushing - GitHub takes time to update
+   ```
+
+---
+
+## Template Structure
+
+### Header
 
 ```bash
 #!/usr/bin/env bash
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)
+# (setup-fork.sh modifies this URL to point to YOUR fork during development)
 ```
+
+### Dependencies (App-Specific Only)
+
+```bash
+# Don't add: ca-certificates, curl, gnupg, wget, git, jq
+# These are handled by build.func
+msg_info "Installing dependencies"
+$STD apt-get install -y app-specific-deps
+msg_ok "Installed dependencies"
+```
+
+### Runtime Setup
+
+Use tools.func helpers instead of manual installation:
+
+```bash
+# ✅ NEW (use tools.func):
+NODE_VERSION="20"
+setup_nodejs
+# OR
+PYTHON_VERSION="3.12"
+setup_uv
+# OR
+PG_DB_NAME="myapp_db"
+PG_DB_USER="myapp"
+setup_postgresql_db
+```
+
+### Service Configuration
+
+```bash
+# Create .env file
+msg_info "Configuring MyApp"
+cat << EOF > /opt/myapp/.env
+DEBUG=false
+PORT=8080
+DATABASE_URL=postgresql://...
+EOF
+msg_ok "Configuration complete"
+
+# Create systemd service
+msg_info "Creating systemd service"
+cat << EOF > /etc/systemd/system/myapp.service
+[Unit]
+Description=MyApp
+[Service]
+ExecStart=/usr/bin/node /opt/myapp/app.js
+[Install]
+WantedBy=multi-user.target
+EOF
+msg_ok "Service created"
+```
+
+### Finalization
+
+```bash
+msg_info "Finalizing MyApp installation"
+systemctl enable --now myapp
+motd_ssh
+customize
+msg_ok "MyApp installation complete"
+cleanup_lxc
+```
+
+---
+
+## Key Patterns
+
+### Avoid Manual Version Checking
+
+❌ OLD (manual):
+
+```bash
+RELEASE=$(curl -fsSL https://api.github.com/repos/app/repo/releases/latest | grep tag_name)
+wget https://github.com/app/repo/releases/download/$RELEASE/app.tar.gz
+```
+
+✅ NEW (use tools.func via CT script's fetch_and_deploy_gh_release):
+
+```bash
+# In CT script, not install script:
+fetch_and_deploy_gh_release "myapp" "app/repo" "app.tar.gz" "latest" "/opt/myapp"
+```
+
+### Database Setup
+
+```bash
+# Use setup_postgresql_db, setup_mysql_db, etc.
+PG_DB_NAME="myapp"
+PG_DB_USER="myapp"
+setup_postgresql_db
+```
+
+### Node.js Setup
+
+```bash
+NODE_VERSION="20"
+setup_nodejs
+npm install --no-save
+```
+
+---
+
+## Best Practices
+
+1. **Only add app-specific dependencies**
+   - Don't add: ca-certificates, curl, gnupg, wget, git, jq
+   - These are handled by build.func
+
+2. **Use tools.func helpers**
+   - setup_nodejs, setup_python, setup_uv, setup_postgresql_db, setup_mysql_db, etc.
+
+3. **Don't do version checks in install script**
+   - Version checking happens in CT script's update_script()
+   - Install script just installs the latest
+
+4. **Structure:**
+   - Dependencies
+   - Runtime setup (tools.func)
+   - Deployment (fetch from CT script)
+   - Configuration files
+   - Systemd service
+   - Finalization
+
+---
+
+## Reference Scripts
+
+See working examples:
+
+- [Trip](https://github.com/community-scripts/ProxmoxVE/blob/main/install/trip-install.sh)
+- [Thingsboard](https://github.com/community-scripts/ProxmoxVE/blob/main/install/thingsboard-install.sh)
+- [UniFi](https://github.com/community-scripts/ProxmoxVE/blob/main/install/unifi-install.sh)
+
+---
+
+## Need Help?
+
+- **[Modern Template](AppName-install.sh)** - Start here
+- **[CT Template](../templates_ct/AppName.sh)** - How CT scripts work
+- **[README.md](../README.md)** - Full contribution workflow
+- **[AI.md](../AI.md)** - AI-generated script guidelines
 
 ### 1.2 **Comments**
 
@@ -189,7 +330,7 @@ msg_ok "Installed Dependencies"
 ### 6.2 **Verbosity**
 
 - Use the appropiate flag (**-q** in the examples) for a command to suppres its output
-Example:
+  Example:
 
 ```bash
 curl -fsSL
