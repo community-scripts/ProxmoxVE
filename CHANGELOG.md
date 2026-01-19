@@ -26,6 +26,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - PeaNUT: change default port [@vhsdream](https://github.com/vhsdream) ([#10962](https://github.com/community-scripts/ProxmoxVE/pull/10962))
     - Update/splunk enterprise [@rcastley](https://github.com/rcastley) ([#10949](https://github.com/community-scripts/ProxmoxVE/pull/10949))
 
+  - #### ✨ New Features
+
+    - Tautulli: add version detection and add proper update script [@MickLesk](https://github.com/MickLesk) ([#10976](https://github.com/community-scripts/ProxmoxVE/pull/10976))
+
   - #### 🔧 Refactor
 
     - Refactor: Remove custom IP fetching in scripts [@tremor021](https://github.com/tremor021) ([#10954](https://github.com/community-scripts/ProxmoxVE/pull/10954))
