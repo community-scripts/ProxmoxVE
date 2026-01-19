@@ -22,6 +22,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Remove: phpIPAM [@MickLesk](https://github.com/MickLesk) ([#10939](https://github.com/community-scripts/ProxmoxVE/pull/10939))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - Refactor: copyparty [@MickLesk](https://github.com/MickLesk) ([#10941](https://github.com/community-scripts/ProxmoxVE/pull/10941))
+
 ## 2026-01-18
 
 ### 🆕 New Scripts
