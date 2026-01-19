@@ -879,6 +879,50 @@ check_or_create_swap() {
   fi
 }
 
+# ------------------------------------------------------------------------------
+# Loads LOCAL_IP from persistent store or detects if missing.
+#
+# Description:
+#   - Loads from /run/local-ip.env or performs runtime lookup
+# ------------------------------------------------------------------------------
+
+function get_lxc_ip() {
+  local IP_FILE="/run/local-ip.env"
+  if [[ -f "$IP_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$IP_FILE"
+  fi
+
+  if [[ -z "${LOCAL_IP:-}" ]]; then
+    get_current_ip() {
+      local targets=("8.8.8.8" "1.1.1.1" "192.168.1.1" "10.0.0.1" "172.16.0.1" "default")
+      local ip
+
+      for target in "${targets[@]}"; do
+        if [[ "$target" == "default" ]]; then
+          ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        else
+          ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        fi
+        if [[ -n "$ip" ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      return 1
+    }
+
+    LOCAL_IP="$(get_current_ip || true)"
+    if [[ -z "$LOCAL_IP" ]]; then
+      msg_error "Could not determine LOCAL_IP"
+      return 1
+    fi
+  fi
+
+  export LOCAL_IP
+}
+
 # ==============================================================================
 # SIGNAL TRAPS
 # ==============================================================================
