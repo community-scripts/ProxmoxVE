@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - PeaNUT: change default port [@vhsdream](https://github.com/vhsdream) ([#10962](https://github.com/community-scripts/ProxmoxVE/pull/10962))
     - Update/splunk enterprise [@rcastley](https://github.com/rcastley) ([#10949](https://github.com/community-scripts/ProxmoxVE/pull/10949))
 
   - #### 🔧 Refactor
