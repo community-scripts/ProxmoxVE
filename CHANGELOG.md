@@ -20,6 +20,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Homepage: preserve config directory during updates [@MickLesk](https://github.com/MickLesk) ([#10993](https://github.com/community-scripts/ProxmoxVE/pull/10993))
     - DiscoPanel: add go for update build process [@miausalvaje](https://github.com/miausalvaje) ([#10991](https://github.com/community-scripts/ProxmoxVE/pull/10991))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: implement ensure_profile_loaded function [@MickLesk](https://github.com/MickLesk) ([#10999](https://github.com/community-scripts/ProxmoxVE/pull/10999))
+
 ## 2026-01-19
 
 ### 🆕 New Scripts
