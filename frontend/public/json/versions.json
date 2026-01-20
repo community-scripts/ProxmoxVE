@@ -1,8 +1,83 @@
 [
   {
+    "name": "binwiederhier/ntfy",
+    "version": "v2.16.0",
+    "date": "2026-01-19T23:40:31Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "1.1.9",
+    "date": "2026-01-19T20:51:19Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.3-rc2",
+    "date": "2026-01-19T20:48:34Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2026-01-19T18:21:04Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "11.0.16",
+    "date": "2026-01-19T18:15:05Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.20.5",
+    "date": "2026-01-19T17:55:57Z"
+  },
+  {
+    "name": "ghostfolio/ghostfolio",
+    "version": "2.232.0",
+    "date": "2026-01-19T16:58:37Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
     "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.33.0-hannoy-better-linear-scanning.0",
-    "date": "2026-01-19T11:21:31Z"
+    "version": "prototype-v1.33.0-hannoy-better-linear-scanning.4",
+    "date": "2026-01-19T16:37:18Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.6",
+    "date": "2026-01-19T16:35:03Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.7",
+    "date": "2026-01-12T09:54:36Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.31.8",
+    "date": "2026-01-19T16:13:13Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.134.0",
+    "date": "2026-01-19T13:31:08Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.8",
+    "date": "2026-01-15T13:52:29Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.7.4",
+    "date": "2025-12-04T13:56:39Z"
   },
   {
     "name": "home-assistant/operating-system",
@@ -23,11 +98,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.52.7",
     "date": "2026-01-19T08:38:05Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -100,11 +170,6 @@
     "date": "2026-01-18T20:33:38Z"
   },
   {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
-  },
-  {
     "name": "fccview/jotty",
     "version": "1.18.0",
     "date": "2026-01-18T19:00:48Z"
@@ -170,16 +235,6 @@
     "date": "2026-01-17T12:24:31Z"
   },
   {
-    "name": "inventree/InvenTree",
-    "version": "1.1.8",
-    "date": "2026-01-17T11:21:36Z"
-  },
-  {
-    "name": "ghostfolio/ghostfolio",
-    "version": "2.231.0",
-    "date": "2026-01-17T11:01:23Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v14.0.1",
     "date": "2026-01-17T07:14:19Z"
@@ -200,16 +255,6 @@
     "date": "2026-01-17T04:09:09Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.14.2",
-    "date": "2026-01-16T00:50:51Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.2",
-    "date": "2026-01-16T22:54:44Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2026.1.2",
     "date": "2026-01-16T21:40:31Z"
@@ -220,29 +265,24 @@
     "date": "2026-01-16T20:26:34Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.8",
-    "date": "2026-01-15T13:52:29Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.50.1",
     "date": "2026-01-16T19:27:38Z"
   },
   {
     "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-16T19:17:16Z"
+    "version": "v0.18.3",
+    "date": "2026-01-14T21:50:55Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2026.1.0",
+    "date": "2026-01-16T17:48:15Z"
   },
   {
     "name": "n8n-io/n8n",
     "version": "n8n@2.3.6",
     "date": "2026-01-16T15:00:42Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.7",
-    "date": "2026-01-09T17:45:02Z"
   },
   {
     "name": "emqx/emqx",
@@ -350,11 +390,6 @@
     "date": "2026-01-15T06:09:56Z"
   },
   {
-    "name": "Infisical/infisical",
-    "version": "v0.155.5",
-    "date": "2026-01-15T05:25:10Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.95.0-pre",
     "date": "2026-01-14T22:24:18Z"
@@ -435,11 +470,6 @@
     "date": "2026-01-13T20:39:22Z"
   },
   {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.20.4",
-    "date": "2026-01-13T18:52:08Z"
-  },
-  {
     "name": "community-scripts/ProxmoxVE-Local",
     "version": "v0.5.5",
     "date": "2026-01-13T17:03:32Z"
@@ -448,11 +478,6 @@
     "name": "element-hq/synapse",
     "version": "v1.145.0",
     "date": "2026-01-13T16:49:51Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.31.7",
-    "date": "2026-01-13T16:12:12Z"
   },
   {
     "name": "LimeSurvey/LimeSurvey",
@@ -768,11 +793,6 @@
     "name": "pterodactyl/panel",
     "version": "v1.12.0",
     "date": "2026-01-06T00:10:39Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.133.0",
-    "date": "2026-01-05T18:31:47Z"
   },
   {
     "name": "maxdorninger/MediaManager",
@@ -1140,19 +1160,9 @@
     "date": "2025-12-04T21:07:00Z"
   },
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.7.4",
-    "date": "2025-12-04T13:56:39Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "11.0.4",
     "date": "2025-12-04T09:26:37Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "10.1.50",
-    "date": "2025-12-02T22:59:59Z"
   },
   {
     "name": "WordPress/WordPress",
@@ -1285,11 +1295,6 @@
     "date": "2025-11-18T05:51:46Z"
   },
   {
-    "name": "binwiederhier/ntfy",
-    "version": "v2.15.0",
-    "date": "2025-11-16T18:53:49Z"
-  },
-  {
     "name": "bastienwirtz/homer",
     "version": "v25.11.1",
     "date": "2025-11-16T13:04:21Z"
@@ -1328,11 +1333,6 @@
     "name": "heiher/hev-socks5-server",
     "version": "2.11.1",
     "date": "2025-11-08T14:27:27Z"
-  },
-  {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.11.1",
-    "date": "2025-11-07T17:05:45Z"
   },
   {
     "name": "deuxfleurs-org/garage",
