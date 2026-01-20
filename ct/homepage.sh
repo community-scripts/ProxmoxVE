@@ -45,8 +45,11 @@ function update_script() {
     msg_ok "Stopped service"
 
     cp /opt/homepage/.env /opt/homepage.env
+    cp -r /opt/homepage/config /opt/homepage_config_backup
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
     mv /opt/homepage.env /opt/homepage
+    rm -rf /opt/homepage/config
+    mv /opt/homepage_config_backup /opt/homepage/config
 
     msg_info "Updating Homepage (Patience)"
     RELEASE=$(get_latest_github_release "gethomepage/homepage")
