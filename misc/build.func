@@ -358,6 +358,268 @@ validate_hostname() {
 }
 
 # ------------------------------------------------------------------------------
+# validate_mac_address()
+#
+# - Validates MAC address format (XX:XX:XX:XX:XX:XX)
+# - Empty value is allowed (auto-generated)
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_mac_address() {
+  local mac="$1"
+  [[ -z "$mac" ]] && return 0
+  if [[ ! "$mac" =~ ^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$ ]]; then
+    return 1
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_vlan_tag()
+#
+# - Validates VLAN tag (1-4094)
+# - Empty value is allowed (no VLAN)
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_vlan_tag() {
+  local vlan="$1"
+  [[ -z "$vlan" ]] && return 0
+  if ! [[ "$vlan" =~ ^[0-9]+$ ]] || ((vlan < 1 || vlan > 4094)); then
+    return 1
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_mtu()
+#
+# - Validates MTU size (576-65535, common values: 1500, 9000)
+# - Empty value is allowed (default 1500)
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_mtu() {
+  local mtu="$1"
+  [[ -z "$mtu" ]] && return 0
+  if ! [[ "$mtu" =~ ^[0-9]+$ ]] || ((mtu < 576 || mtu > 65535)); then
+    return 1
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_ipv6_address()
+#
+# - Validates IPv6 address with optional CIDR notation
+# - Supports compressed (::) and full notation
+# - Empty value is allowed
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_ipv6_address() {
+  local ipv6="$1"
+  [[ -z "$ipv6" ]] && return 0
+
+  # Extract address and CIDR
+  local addr="${ipv6%%/*}"
+  local cidr="${ipv6##*/}"
+
+  # Validate CIDR if present (1-128)
+  if [[ "$ipv6" == */* ]]; then
+    if ! [[ "$cidr" =~ ^[0-9]+$ ]] || ((cidr < 1 || cidr > 128)); then
+      return 1
+    fi
+  fi
+
+  # Basic IPv6 validation - check for valid characters and structure
+  # Must contain only hex digits and colons
+  if [[ ! "$addr" =~ ^[0-9a-fA-F:]+$ ]]; then
+    return 1
+  fi
+
+  # Must contain at least one colon
+  if [[ ! "$addr" == *:* ]]; then
+    return 1
+  fi
+
+  # Check for valid double-colon usage (only one :: allowed)
+  if [[ "$addr" == *::*::* ]]; then
+    return 1
+  fi
+
+  # Check that no segment exceeds 4 hex chars
+  local IFS=':'
+  local -a segments
+  read -ra segments <<< "$addr"
+  for seg in "${segments[@]}"; do
+    if [[ ${#seg} -gt 4 ]]; then
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_bridge()
+#
+# - Validates that network bridge exists and is active
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_bridge() {
+  local bridge="$1"
+  [[ -z "$bridge" ]] && return 1
+
+  # Check if bridge interface exists
+  if ! ip link show "$bridge" &>/dev/null; then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_gateway_in_subnet()
+#
+# - Validates that gateway IP is in the same subnet as static IP
+# - Arguments: static_ip (with CIDR), gateway_ip
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_gateway_in_subnet() {
+  local static_ip="$1"
+  local gateway="$2"
+
+  [[ -z "$static_ip" || -z "$gateway" ]] && return 0
+
+  # Extract IP and CIDR
+  local ip="${static_ip%%/*}"
+  local cidr="${static_ip##*/}"
+
+  # Convert CIDR to netmask bits
+  local mask=$((0xFFFFFFFF << (32 - cidr) & 0xFFFFFFFF))
+
+  # Convert IPs to integers
+  local IFS='.'
+  read -r i1 i2 i3 i4 <<< "$ip"
+  read -r g1 g2 g3 g4 <<< "$gateway"
+
+  local ip_int=$(( (i1 << 24) + (i2 << 16) + (i3 << 8) + i4 ))
+  local gw_int=$(( (g1 << 24) + (g2 << 16) + (g3 << 8) + g4 ))
+
+  # Check if both are in same network
+  if (( (ip_int & mask) != (gw_int & mask) )); then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_ip_address()
+#
+# - Validates IPv4 address with CIDR notation
+# - Checks each octet is 0-255
+# - Checks CIDR is 1-32
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_ip_address() {
+  local ip="$1"
+  [[ -z "$ip" ]] && return 1
+
+  # Check format with CIDR
+  if [[ ! "$ip" =~ ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/([0-9]{1,2})$ ]]; then
+    return 1
+  fi
+
+  local o1="${BASH_REMATCH[1]}"
+  local o2="${BASH_REMATCH[2]}"
+  local o3="${BASH_REMATCH[3]}"
+  local o4="${BASH_REMATCH[4]}"
+  local cidr="${BASH_REMATCH[5]}"
+
+  # Validate octets (0-255)
+  for octet in "$o1" "$o2" "$o3" "$o4"; do
+    if ((octet > 255)); then
+      return 1
+    fi
+  done
+
+  # Validate CIDR (1-32)
+  if ((cidr < 1 || cidr > 32)); then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_gateway_ip()
+#
+# - Validates gateway IPv4 address (without CIDR)
+# - Checks each octet is 0-255
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_gateway_ip() {
+  local ip="$1"
+  [[ -z "$ip" ]] && return 0
+
+  # Check format without CIDR
+  if [[ ! "$ip" =~ ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$ ]]; then
+    return 1
+  fi
+
+  local o1="${BASH_REMATCH[1]}"
+  local o2="${BASH_REMATCH[2]}"
+  local o3="${BASH_REMATCH[3]}"
+  local o4="${BASH_REMATCH[4]}"
+
+  # Validate octets (0-255)
+  for octet in "$o1" "$o2" "$o3" "$o4"; do
+    if ((octet > 255)); then
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_timezone()
+#
+# - Validates timezone string against system zoneinfo
+# - Empty value or "host" is allowed
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_timezone() {
+  local tz="$1"
+  [[ -z "$tz" || "$tz" == "host" ]] && return 0
+
+  # Check if timezone file exists
+  if [[ ! -f "/usr/share/zoneinfo/$tz" ]]; then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# validate_tags()
+#
+# - Validates Proxmox tags format
+# - Only alphanumeric, hyphens, underscores, and semicolons allowed
+# - Empty value is allowed
+# - Returns 0 if valid, 1 if invalid
+# ------------------------------------------------------------------------------
+validate_tags() {
+  local tags="$1"
+  [[ -z "$tags" ]] && return 0
+
+  # Tags can only contain alphanumeric, -, _, and ; (separator)
+  if [[ ! "$tags" =~ ^[a-zA-Z0-9_\;-]+$ ]]; then
+    return 1
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # find_host_ssh_keys()
 #
 # - Scans system for available SSH keys
@@ -1612,8 +1874,14 @@ advanced_settings() {
     # ═══════════════════════════════════════════════════════════════════════════
     8)
       if [[ ${#BRIDGE_MENU_OPTIONS[@]} -eq 0 ]]; then
-        _bridge="vmbr0"
-        ((STEP++))
+        # Validate default bridge exists
+        if validate_bridge "vmbr0"; then
+          _bridge="vmbr0"
+          ((STEP++))
+        else
+          whiptail --msgbox "Default bridge 'vmbr0' not found!\n\nPlease configure a network bridge in Proxmox first." 10 58
+          exit 1
+        fi
       else
         if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
           --title "NETWORK BRIDGE" \
@@ -1621,8 +1889,13 @@ advanced_settings() {
           --menu "\nSelect network bridge:" 16 58 6 \
           "${BRIDGE_MENU_OPTIONS[@]}" \
           3>&1 1>&2 2>&3); then
-          _bridge="${result:-vmbr0}"
-          ((STEP++))
+          local bridge_test="${result:-vmbr0}"
+          if validate_bridge "$bridge_test"; then
+            _bridge="$bridge_test"
+            ((STEP++))
+          else
+            whiptail --msgbox "Bridge '$bridge_test' is not available or not active." 8 58
+          fi
         else
           ((STEP--))
         fi
@@ -1650,7 +1923,7 @@ advanced_settings() {
             --ok-button "Next" --cancel-button "Back" \
             --inputbox "\nEnter Static IPv4 CIDR Address\n(e.g. 192.168.1.100/24)" 12 58 "" \
             3>&1 1>&2 2>&3); then
-            if [[ "$static_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
+            if validate_ip_address "$static_ip"; then
               # Get gateway
               local gateway_ip
               if gateway_ip=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
@@ -1658,16 +1931,21 @@ advanced_settings() {
                 --ok-button "Next" --cancel-button "Back" \
                 --inputbox "\nEnter Gateway IP address" 10 58 "" \
                 3>&1 1>&2 2>&3); then
-                if [[ "$gateway_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-                  _net="$static_ip"
-                  _gate=",gw=$gateway_ip"
-                  ((STEP++))
+                if validate_gateway_ip "$gateway_ip"; then
+                  # Validate gateway is in same subnet
+                  if validate_gateway_in_subnet "$static_ip" "$gateway_ip"; then
+                    _net="$static_ip"
+                    _gate=",gw=$gateway_ip"
+                    ((STEP++))
+                  else
+                    whiptail --msgbox "Gateway is not in the same subnet as the static IP.\n\nStatic IP: $static_ip\nGateway: $gateway_ip" 10 58
+                  fi
                 else
-                  whiptail --msgbox "Invalid Gateway IP format." 8 58
+                  whiptail --msgbox "Invalid Gateway IP format.\n\nEach octet must be 0-255.\nExample: 192.168.1.1" 10 58
                 fi
               fi
             else
-              whiptail --msgbox "Invalid IPv4 CIDR format.\nExample: 192.168.1.100/24" 8 58
+              whiptail --msgbox "Invalid IPv4 CIDR format.\n\nEach octet must be 0-255.\nCIDR must be 1-32.\nExample: 192.168.1.100/24" 12 58
             fi
           fi
         elif [[ "$result" == "range" ]]; then
@@ -1691,12 +1969,17 @@ advanced_settings() {
                   --ok-button "Next" --cancel-button "Back" \
                   --inputbox "\nFound free IP: $NET_RESOLVED\n\nEnter Gateway IP address" 12 58 "" \
                   3>&1 1>&2 2>&3); then
-                  if [[ "$gateway_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-                    _net="$NET_RESOLVED"
-                    _gate=",gw=$gateway_ip"
-                    ((STEP++))
+                  if validate_gateway_ip "$gateway_ip"; then
+                    # Validate gateway is in same subnet
+                    if validate_gateway_in_subnet "$NET_RESOLVED" "$gateway_ip"; then
+                      _net="$NET_RESOLVED"
+                      _gate=",gw=$gateway_ip"
+                      ((STEP++))
+                    else
+                      whiptail --msgbox "Gateway is not in the same subnet as the IP.\n\nIP: $NET_RESOLVED\nGateway: $gateway_ip" 10 58
+                    fi
                   else
-                    whiptail --msgbox "Invalid Gateway IP format." 8 58
+                    whiptail --msgbox "Invalid Gateway IP format.\n\nEach octet must be 0-255.\nExample: 192.168.1.1" 10 58
                   fi
                 fi
               else
@@ -1739,16 +2022,33 @@ advanced_settings() {
             --title "STATIC IPv6 ADDRESS" \
             --inputbox "\nEnter IPv6 CIDR address\n(e.g. 2001:db8::1/64)" 12 58 "" \
             3>&1 1>&2 2>&3); then
-            if [[ "$ipv6_addr" =~ ^([0-9a-fA-F:]+:+)+[0-9a-fA-F]+(/[0-9]{1,3})$ ]]; then
+            if validate_ipv6_address "$ipv6_addr"; then
               _ipv6_addr="$ipv6_addr"
-              # Optional gateway
-              _ipv6_gate=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
-                --title "IPv6 GATEWAY" \
-                --inputbox "\nEnter IPv6 gateway (optional, leave blank for none)" 10 58 "" \
-                3>&1 1>&2 2>&3) || true
-              ((STEP++))
+              # Optional gateway - loop until valid or empty
+              local ipv6_gw_valid=false
+              while [[ "$ipv6_gw_valid" == "false" ]]; do
+                local ipv6_gw
+                ipv6_gw=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+                  --title "IPv6 GATEWAY" \
+                  --inputbox "\nEnter IPv6 gateway (optional, leave blank for none)" 10 58 "" \
+                  3>&1 1>&2 2>&3) || true
+                # Validate gateway if provided
+                if [[ -n "$ipv6_gw" ]]; then
+                  if validate_ipv6_address "$ipv6_gw"; then
+                    _ipv6_gate="$ipv6_gw"
+                    ipv6_gw_valid=true
+                    ((STEP++))
+                  else
+                    whiptail --msgbox "Invalid IPv6 gateway format.\n\nExample: 2001:db8::1" 8 58
+                  fi
+                else
+                  _ipv6_gate=""
+                  ipv6_gw_valid=true
+                  ((STEP++))
+                fi
+              done
             else
-              whiptail --msgbox "Invalid IPv6 CIDR format." 8 58
+              whiptail --msgbox "Invalid IPv6 CIDR format.\n\nExample: 2001:db8::1/64\nCIDR must be 1-128." 10 58
             fi
           fi
           ;;
@@ -1781,10 +2081,14 @@ advanced_settings() {
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "MTU SIZE" \
         --ok-button "Next" --cancel-button "Back" \
-        --inputbox "\nSet Interface MTU Size\n(leave blank for default 1500)" 12 58 "" \
+        --inputbox "\nSet Interface MTU Size\n(leave blank for default 1500, common values: 1500, 9000)" 12 62 "" \
         3>&1 1>&2 2>&3); then
-        _mtu="$result"
-        ((STEP++))
+        if validate_mtu "$result"; then
+          _mtu="$result"
+          ((STEP++))
+        else
+          whiptail --msgbox "Invalid MTU size.\n\nMTU must be between 576 and 65535.\nCommon values: 1500 (default), 9000 (jumbo frames)" 10 58
+        fi
       else
         ((STEP--))
       fi
@@ -1829,10 +2133,14 @@ advanced_settings() {
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "MAC ADDRESS" \
         --ok-button "Next" --cancel-button "Back" \
-        --inputbox "\nSet MAC Address\n(leave blank for auto-generated)" 12 58 "" \
+        --inputbox "\nSet MAC Address\n(leave blank for auto-generated, format: XX:XX:XX:XX:XX:XX)" 12 62 "" \
         3>&1 1>&2 2>&3); then
-        _mac="$result"
-        ((STEP++))
+        if validate_mac_address "$result"; then
+          _mac="$result"
+          ((STEP++))
+        else
+          whiptail --msgbox "Invalid MAC address format.\n\nRequired format: XX:XX:XX:XX:XX:XX\nExample: 02:00:00:00:00:01" 10 58
+        fi
       else
         ((STEP--))
       fi
@@ -1845,10 +2153,14 @@ advanced_settings() {
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "VLAN TAG" \
         --ok-button "Next" --cancel-button "Back" \
-        --inputbox "\nSet VLAN Tag\n(leave blank for no VLAN)" 12 58 "" \
+        --inputbox "\nSet VLAN Tag (1-4094)\n(leave blank for no VLAN)" 12 58 "" \
         3>&1 1>&2 2>&3); then
-        _vlan="$result"
-        ((STEP++))
+        if validate_vlan_tag "$result"; then
+          _vlan="$result"
+          ((STEP++))
+        else
+          whiptail --msgbox "Invalid VLAN tag.\n\nVLAN must be a number between 1 and 4094." 8 58
+        fi
       else
         ((STEP--))
       fi
@@ -1861,11 +2173,16 @@ advanced_settings() {
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "CONTAINER TAGS" \
         --ok-button "Next" --cancel-button "Back" \
-        --inputbox "\nSet Custom Tags (semicolon-separated)\n(remove all for no tags)" 12 58 "$_tags" \
+        --inputbox "\nSet Custom Tags (semicolon-separated)\n(alphanumeric, hyphens, underscores only)" 12 58 "$_tags" \
         3>&1 1>&2 2>&3); then
-        _tags="${result:-;}"
-        _tags=$(echo "$_tags" | tr -d '[:space:]')
-        ((STEP++))
+        local tags_test="${result:-}"
+        tags_test=$(echo "$tags_test" | tr -d '[:space:]')
+        if validate_tags "$tags_test"; then
+          _tags="$tags_test"
+          ((STEP++))
+        else
+          whiptail --msgbox "Invalid tag format.\n\nTags can only contain:\n- Letters (a-z, A-Z)\n- Numbers (0-9)\n- Hyphens (-)\n- Underscores (_)\n- Semicolons (;) as separator" 14 58
+        fi
       else
         ((STEP--))
       fi
@@ -2044,9 +2361,14 @@ advanced_settings() {
         --ok-button "Next" --cancel-button "Back" \
         --inputbox "\nSet container timezone.\n\nExamples: Europe/Berlin, America/New_York, Asia/Tokyo\n\nHost timezone: ${_host_timezone:-unknown}\n\nLeave empty to inherit from host." 16 62 "$_ct_timezone" \
         3>&1 1>&2 2>&3); then
-        _ct_timezone="$result"
-        [[ "${_ct_timezone:-}" == Etc/* ]] && _ct_timezone="host" # pct doesn't accept Etc/* zones
-        ((STEP++))
+        local tz_test="$result"
+        [[ "${tz_test:-}" == Etc/* ]] && tz_test="host" # pct doesn't accept Etc/* zones
+        if validate_timezone "$tz_test"; then
+          _ct_timezone="$tz_test"
+          ((STEP++))
+        else
+          whiptail --msgbox "Invalid timezone: '$result'\n\nTimezone must exist in /usr/share/zoneinfo/\n\nExamples:\n- Europe/Berlin\n- America/New_York\n- Asia/Tokyo\n- UTC" 14 58
+        fi
       else
         ((STEP--))
       fi
