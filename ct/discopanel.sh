@@ -60,7 +60,7 @@ function update_script() {
 
     msg_info "Building DiscoPanel"
     cd /opt/discopanel 
-    $STD go build -o discopanel cmd/discopanel/main.go
+    $STD /usr/local/go/bin/go build -o discopanel cmd/discopanel/main.go
     msg_ok "Built DiscoPanel"
 
     msg_info "Restoring Data"
