@@ -54,15 +54,38 @@ function update_script() {
     cd /opt/discopanel/web/discopanel 
     $STD npm install
     $STD npm run build
+    msg_ok "Built Web Interface"
+
+    # Instalar Go
+    msg_info "Installing Go"
+    GOLANG_VERSION=$(curl -s https://go.dev/VERSION?m=text | head -n1)
+    cd /tmp
+    wget -q https://go.dev/dl/${GOLANG_VERSION}.linux-amd64.tar.gz
+    rm -rf /usr/local/go
+    tar -C /usr/local -xzf ${GOLANG_VERSION}.linux-amd64.tar.gz
+    rm ${GOLANG_VERSION}.linux-amd64.tar.gz
+    export PATH=$PATH:/usr/local/go/bin
+    msg_ok "Installed Go ${GOLANG_VERSION}"
+
+    # Compilar DiscoPanel
+    msg_info "Building DiscoPanel"
     cd /opt/discopanel 
-    $STD go build -o discopanel cmd/discopanel/main.go
-    msg_ok "Setup DiscoPanel"
+    /usr/local/go/bin/go build -o discopanel cmd/discopanel/main.go
+    msg_ok "Built DiscoPanel"
 
     msg_info "Restoring Data"
     mkdir -p /opt/discopanel/data
     cp -a /opt/discopanel_backup_temp/. /opt/discopanel/data/
     rm -rf /opt/discopanel_backup_temp
     msg_ok "Restored Data"
+
+    # Actualizar el servicio systemd para incluir Go en el PATH
+    msg_info "Updating Service Configuration"
+    if [[ -f /etc/systemd/system/discopanel.service ]]; then
+      sed -i '/\[Service\]/a Environment="PATH=/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' /etc/systemd/system/discopanel.service
+      systemctl daemon-reload
+    fi
+    msg_ok "Updated Service Configuration"
 
     msg_info "Starting Service"
     systemctl start discopanel
