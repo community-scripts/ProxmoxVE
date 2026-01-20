@@ -1034,6 +1034,119 @@ load_vars_file() {
       # Trim trailing whitespace
       var_val="${var_val%"${var_val##*[![:space:]]}"}"
 
+      # Validate values before setting (skip empty values - they use defaults)
+      if [[ -n "$var_val" ]]; then
+        case "$var_key" in
+          var_mac)
+            if ! validate_mac_address "$var_val"; then
+              msg_warn "Invalid MAC address '$var_val' in $file, ignoring"
+              continue
+            fi
+            ;;
+          var_vlan)
+            if ! validate_vlan_tag "$var_val"; then
+              msg_warn "Invalid VLAN tag '$var_val' in $file (must be 1-4094), ignoring"
+              continue
+            fi
+            ;;
+          var_mtu)
+            if ! validate_mtu "$var_val"; then
+              msg_warn "Invalid MTU '$var_val' in $file (must be 576-65535), ignoring"
+              continue
+            fi
+            ;;
+          var_tags)
+            if ! validate_tags "$var_val"; then
+              msg_warn "Invalid tags '$var_val' in $file (alphanumeric, -, _, ; only), ignoring"
+              continue
+            fi
+            ;;
+          var_timezone)
+            if ! validate_timezone "$var_val"; then
+              msg_warn "Invalid timezone '$var_val' in $file, ignoring"
+              continue
+            fi
+            ;;
+          var_brg)
+            if ! validate_bridge "$var_val"; then
+              msg_warn "Bridge '$var_val' not found in $file, ignoring"
+              continue
+            fi
+            ;;
+          var_gateway)
+            if ! validate_gateway_ip "$var_val"; then
+              msg_warn "Invalid gateway IP '$var_val' in $file, ignoring"
+              continue
+            fi
+            ;;
+          var_hostname)
+            if ! validate_hostname "$var_val"; then
+              msg_warn "Invalid hostname '$var_val' in $file, ignoring"
+              continue
+            fi
+            ;;
+          var_cpu)
+            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 1 || var_val > 128)); then
+              msg_warn "Invalid CPU count '$var_val' in $file (must be 1-128), ignoring"
+              continue
+            fi
+            ;;
+          var_ram)
+            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 128)); then
+              msg_warn "Invalid RAM '$var_val' in $file (must be >= 128 MiB), ignoring"
+              continue
+            fi
+            ;;
+          var_disk)
+            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 1)); then
+              msg_warn "Invalid disk size '$var_val' in $file (must be >= 1 GB), ignoring"
+              continue
+            fi
+            ;;
+          var_unprivileged)
+            if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
+              msg_warn "Invalid unprivileged value '$var_val' in $file (must be 0 or 1), ignoring"
+              continue
+            fi
+            ;;
+          var_nesting)
+            if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
+              msg_warn "Invalid nesting value '$var_val' in $file (must be 0 or 1), ignoring"
+              continue
+            fi
+            ;;
+          var_keyctl)
+            if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
+              msg_warn "Invalid keyctl value '$var_val' in $file (must be 0 or 1), ignoring"
+              continue
+            fi
+            ;;
+          var_net)
+            # var_net can be: dhcp, static IP/CIDR, or IP range
+            if [[ "$var_val" != "dhcp" ]]; then
+              if is_ip_range "$var_val"; then
+                : # IP range is valid, will be resolved at runtime
+              elif ! validate_ip_address "$var_val"; then
+                msg_warn "Invalid network '$var_val' in $file (must be dhcp or IP/CIDR), ignoring"
+                continue
+              fi
+            fi
+            ;;
+          var_fuse|var_tun|var_gpu|var_ssh|var_verbose|var_protection)
+            if [[ "$var_val" != "yes" && "$var_val" != "no" ]]; then
+              msg_warn "Invalid boolean '$var_val' for $var_key in $file (must be yes/no), ignoring"
+              continue
+            fi
+            ;;
+          var_ipv6_method)
+            if [[ "$var_val" != "auto" && "$var_val" != "dhcp" && "$var_val" != "static" && "$var_val" != "none" ]]; then
+              msg_warn "Invalid IPv6 method '$var_val' in $file (must be auto/dhcp/static/none), ignoring"
+              continue
+            fi
+            ;;
+        esac
+      fi
+
       # Set variable: force mode overrides existing, otherwise only set if empty
       if [[ "$force" == "yes" ]]; then
         export "${var_key}=${var_val}"
