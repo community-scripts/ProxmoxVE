@@ -1092,8 +1092,8 @@ load_vars_file() {
             fi
             ;;
           var_ram)
-            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 128)); then
-              msg_warn "Invalid RAM '$var_val' in $file (must be >= 128 MiB), ignoring"
+            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 256)); then
+              msg_warn "Invalid RAM '$var_val' in $file (must be >= 256 MiB), ignoring"
               continue
             fi
             ;;
