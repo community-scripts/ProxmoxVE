@@ -4743,50 +4743,88 @@ create_lxc_container() {
   -rootfs $CONTAINER_STORAGE:${PCT_DISK_SIZE:-8}"
   fi
 
-  # Lock by template file (avoid concurrent downloads/creates)
+  # Lock by template file (avoid concurrent template downloads/validation)
   lockfile="/tmp/template.${TEMPLATE}.lock"
+
+  # Cleanup stale lock files (older than 1 hour - likely from crashed processes)
+  if [[ -f "$lockfile" ]]; then
+    local lock_age=$(($(date +%s) - $(stat -c %Y "$lockfile" 2>/dev/null || echo 0)))
+    if [[ $lock_age -gt 3600 ]]; then
+      msg_warn "Removing stale template lock file (age: ${lock_age}s)"
+      rm -f "$lockfile"
+    fi
+  fi
+
   exec 9>"$lockfile" || {
     msg_error "Failed to create lock file '$lockfile'."
     exit 200
   }
-  flock -w 60 9 || {
-    msg_error "Timeout while waiting for template lock."
-    exit 211
-  }
+
+  # Retry logic for template lock (another container creation may be running)
+  local lock_attempts=0
+  local max_lock_attempts=10
+  local lock_wait_time=30
+
+  while ! flock -w "$lock_wait_time" 9; do
+    lock_attempts=$((lock_attempts + 1))
+    if [[ $lock_attempts -ge $max_lock_attempts ]]; then
+      msg_error "Timeout while waiting for template lock after ${max_lock_attempts} attempts."
+      msg_custom "💡" "${YW}" "Another container creation may be stuck. Check running processes or remove: $lockfile"
+      exit 211
+    fi
+    msg_custom "⏳" "${YW}" "Another container is being created with this template. Waiting... (attempt ${lock_attempts}/${max_lock_attempts})"
+  done
 
   LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
+
+  # Validate template before pct create (while holding lock)
+  if [[ ! -s "$TEMPLATE_PATH" || "$(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo 0)" -lt 1000000 ]]; then
+    msg_info "Template file missing or too small – downloading"
+    rm -f "$TEMPLATE_PATH"
+    pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1
+    msg_ok "Template downloaded"
+  elif ! tar -tf "$TEMPLATE_PATH" &>/dev/null; then
+    if [[ -n "$ONLINE_TEMPLATE" ]]; then
+      msg_info "Template appears corrupted – re-downloading"
+      rm -f "$TEMPLATE_PATH"
+      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1
+      msg_ok "Template re-downloaded"
+    else
+      msg_warn "Template appears corrupted, but no online version exists. Skipping re-download."
+    fi
+  fi
+
+  # Release lock after template validation - pct create has its own internal locking
+  exec 9>&-
 
   msg_debug "pct create command: pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} $PCT_OPTIONS"
   msg_debug "Logfile: $LOGFILE"
 
   # First attempt (PCT_OPTIONS is a multi-line string, use it directly)
   if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >"$LOGFILE" 2>&1; then
-    msg_debug "Container creation failed on ${TEMPLATE_STORAGE}. Validating template..."
+    msg_debug "Container creation failed on ${TEMPLATE_STORAGE}. Checking error..."
 
-    # Validate template file
-    if [[ ! -s "$TEMPLATE_PATH" || "$(stat -c%s "$TEMPLATE_PATH")" -lt 1000000 ]]; then
-      msg_warn "Template file too small or missing – re-downloading."
+    # Check if template issue - retry with fresh download
+    if grep -qiE 'unable to open|corrupt|invalid' "$LOGFILE"; then
+      msg_info "Template may be corrupted – re-downloading"
       rm -f "$TEMPLATE_PATH"
-      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE"
-    elif ! tar -tf "$TEMPLATE_PATH" &>/dev/null; then
-      if [[ -n "$ONLINE_TEMPLATE" ]]; then
-        msg_warn "Template appears corrupted – re-downloading."
-        rm -f "$TEMPLATE_PATH"
-        pveam download "$TEMPLATE_STORAGE" "$TEMPLATE"
-      else
-        msg_warn "Template appears corrupted, but no online version exists. Skipping re-download."
-      fi
+      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1
+      msg_ok "Template re-downloaded"
     fi
 
     # Retry after repair
     if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
       # Fallback to local storage if not already on local
       if [[ "$TEMPLATE_STORAGE" != "local" ]]; then
-        msg_info "Retrying container creation with fallback to local storage..."
+        msg_info "Retrying container creation with fallback to local storage"
         LOCAL_TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
         if [[ ! -f "$LOCAL_TEMPLATE_PATH" ]]; then
-          msg_info "Downloading template to local..."
+          msg_ok "Trying local storage fallback"
+          msg_info "Downloading template to local"
           pveam download local "$TEMPLATE" >/dev/null 2>&1
+          msg_ok "Template downloaded to local"
+        else
+          msg_ok "Trying local storage fallback"
         fi
         if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
           # Local fallback also failed - check for LXC stack version issue
