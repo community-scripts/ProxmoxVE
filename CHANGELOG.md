@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: add input validations for several functions [@MickLesk](https://github.com/MickLesk) ([#10995](https://github.com/community-scripts/ProxmoxVE/pull/10995))
     - core: implement ensure_profile_loaded function [@MickLesk](https://github.com/MickLesk) ([#10999](https://github.com/community-scripts/ProxmoxVE/pull/10999))
 
 ## 2026-01-19
