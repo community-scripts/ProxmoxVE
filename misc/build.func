@@ -4769,10 +4769,10 @@ create_lxc_container() {
     lock_attempts=$((lock_attempts + 1))
     if [[ $lock_attempts -ge $max_lock_attempts ]]; then
       msg_error "Timeout while waiting for template lock after ${max_lock_attempts} attempts."
-      msg_info "Another container creation may be stuck. Check running processes or remove: $lockfile"
+      msg_custom "💡" "${YW}" "Another container creation may be stuck. Check running processes or remove: $lockfile"
       exit 211
     fi
-    msg_info "Another container is being created with this template. Waiting... (attempt ${lock_attempts}/${max_lock_attempts})"
+    msg_custom "⏳" "${YW}" "Another container is being created with this template. Waiting... (attempt ${lock_attempts}/${max_lock_attempts})"
   done
 
   LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
@@ -4816,11 +4816,15 @@ create_lxc_container() {
     if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
       # Fallback to local storage if not already on local
       if [[ "$TEMPLATE_STORAGE" != "local" ]]; then
-        msg_info "Retrying container creation with fallback to local storage..."
+        msg_info "Retrying container creation with fallback to local storage"
         LOCAL_TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
         if [[ ! -f "$LOCAL_TEMPLATE_PATH" ]]; then
-          msg_info "Downloading template to local..."
+          msg_ok "Trying local storage fallback"
+          msg_info "Downloading template to local"
           pveam download local "$TEMPLATE" >/dev/null 2>&1
+          msg_ok "Template downloaded to local"
+        else
+          msg_ok "Trying local storage fallback"
         fi
         if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
           # Local fallback also failed - check for LXC stack version issue
