@@ -2843,6 +2843,7 @@ start() {
   elif [ ! -z ${PHS_SILENT+x} ] && [[ "${PHS_SILENT}" == "1" ]]; then
     VERBOSE="no"
     set_std_mode
+    ensure_profile_loaded
     update_script
     cleanup_lxc
   else
@@ -2868,6 +2869,7 @@ start() {
       exit
       ;;
     esac
+    ensure_profile_loaded
     update_script
     cleanup_lxc
   fi
