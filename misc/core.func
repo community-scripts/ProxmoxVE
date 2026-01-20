@@ -38,6 +38,7 @@ load_functions() {
   icons
   default_vars
   set_std_mode
+  ensure_profile_loaded  # Fix PATH for pct enter/exec users
   # Note: get_lxc_ip() is NOT called here automatically
   # Call it explicitly when you need LOCAL_IP variable
 }
@@ -127,6 +128,34 @@ icons() {
   FUSE="${TAB}🗂️${TAB}${CL}"
   GPU="${TAB}🎮${TAB}${CL}"
   HOURGLASS="${TAB}⏳${TAB}"
+}
+
+# ------------------------------------------------------------------------------
+# ensure_profile_loaded()
+#
+# - Sources /etc/profile.d/*.sh scripts if not already loaded
+# - Fixes PATH issues when running via pct enter/exec (non-login shells)
+# - Safe to call multiple times (uses guard variable)
+# - Should be called in update_script() or any script running inside LXC
+# ------------------------------------------------------------------------------
+ensure_profile_loaded() {
+  # Skip if already loaded or running on Proxmox host
+  [[ -n "${_PROFILE_LOADED:-}" ]] && return
+  command -v pveversion &>/dev/null && return
+
+  # Source all profile.d scripts to ensure PATH is complete
+  if [[ -d /etc/profile.d ]]; then
+    for script in /etc/profile.d/*.sh; do
+      [[ -r "$script" ]] && source "$script"
+    done
+  fi
+
+  # Also ensure /usr/local/bin is in PATH (common install location)
+  if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+
+  export _PROFILE_LOADED=1
 }
 
 # ------------------------------------------------------------------------------
