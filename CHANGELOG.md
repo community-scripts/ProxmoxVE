@@ -23,8 +23,6 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Revert "core: add retry logic for template lock in LXC container creation" [@MickLesk](https://github.com/MickLesk) ([#11011](https://github.com/community-scripts/ProxmoxVE/pull/11011))
-
   - #### ✨ New Features
 
     - core: add retry logic for template lock in LXC container creation [@MickLesk](https://github.com/MickLesk) ([#11002](https://github.com/community-scripts/ProxmoxVE/pull/11002))
