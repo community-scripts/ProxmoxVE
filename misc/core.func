@@ -38,9 +38,6 @@ load_functions() {
   icons
   default_vars
   set_std_mode
-  ensure_profile_loaded  # Fix PATH for pct enter/exec users
-  # Note: get_lxc_ip() is NOT called here automatically
-  # Call it explicitly when you need LOCAL_IP variable
 }
 
 # ------------------------------------------------------------------------------
