@@ -4749,10 +4749,21 @@ create_lxc_container() {
     msg_error "Failed to create lock file '$lockfile'."
     exit 200
   }
-  flock -w 60 9 || {
-    msg_error "Timeout while waiting for template lock."
-    exit 211
-  }
+
+  # Retry logic for template lock (another container creation may be running)
+  local lock_attempts=0
+  local max_lock_attempts=10
+  local lock_wait_time=30
+
+  while ! flock -w "$lock_wait_time" 9; do
+    lock_attempts=$((lock_attempts + 1))
+    if [[ $lock_attempts -ge $max_lock_attempts ]]; then
+      msg_error "Timeout while waiting for template lock after ${max_lock_attempts} attempts."
+      msg_info "Another container creation may be stuck. Check running processes or remove: $lockfile"
+      exit 211
+    fi
+    msg_info "Another container is being created with this template. Waiting... (attempt ${lock_attempts}/${max_lock_attempts})"
+  done
 
   LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
 
