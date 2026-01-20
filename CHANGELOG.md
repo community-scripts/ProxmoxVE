@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-20
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - DiscoPanel: add go for update build process [@miausalvaje](https://github.com/miausalvaje) ([#10991](https://github.com/community-scripts/ProxmoxVE/pull/10991))
+
 ## 2026-01-19
 
 ### 🆕 New Scripts
