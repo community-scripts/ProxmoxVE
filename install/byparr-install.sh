@@ -23,7 +23,7 @@ $STD apt -y install \
     ca-certificates
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr"
+fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr" "tarball" "latest"
 setup_uv
 
 msg_info "Creating Service"
