@@ -4478,37 +4478,41 @@ create_lxc_container() {
 
   msg_info "Searching for template '$TEMPLATE_SEARCH'"
 
+  # Step 1: Check local templates first (instant)
   mapfile -t LOCAL_TEMPLATES < <(
     pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
       awk -v search="${TEMPLATE_SEARCH}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
       sed 's|.*/||' | sort -t - -k 2 -V
   )
 
-  pveam update >/dev/null 2>&1 || msg_warn "Could not update template catalog (pveam update failed)."
-
-  msg_ok "Template search completed"
-
-  set +u
-  mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
-  set -u
-
-  ONLINE_TEMPLATE=""
-  [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
-
-  if [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]]; then
-    count=0
-    for idx in "${!ONLINE_TEMPLATES[@]}"; do
-      ((count++))
-      [[ $count -ge 3 ]] && break
-    done
-  fi
-
+  # Step 2: If local template found, use it immediately (skip pveam update)
   if [[ ${#LOCAL_TEMPLATES[@]} -gt 0 ]]; then
     TEMPLATE="${LOCAL_TEMPLATES[-1]}"
     TEMPLATE_SOURCE="local"
+    msg_ok "Template search completed"
   else
+    # Step 3: No local template - need to check online (this may be slow)
+    msg_info "No local template found, checking online catalog..."
+
+    # Update catalog with timeout to prevent long hangs
+    if command -v timeout &>/dev/null; then
+      if ! timeout 30 pveam update >/dev/null 2>&1; then
+        msg_warn "Template catalog update timed out (possible network/DNS issue). Run 'pveam update' manually to diagnose."
+      fi
+    else
+      pveam update >/dev/null 2>&1 || msg_warn "Could not update template catalog (pveam update failed)"
+    fi
+
+    set +u
+    mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
+    set -u
+
+    ONLINE_TEMPLATE=""
+    [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
+
     TEMPLATE="$ONLINE_TEMPLATE"
     TEMPLATE_SOURCE="online"
+    msg_ok "Template search completed"
   fi
 
   # If still no template, try to find alternatives
