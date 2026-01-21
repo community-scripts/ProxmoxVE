@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop byparr
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr" "tarball" "latest"
 
     msg_info "Starting Service"
     systemctl start byparr
