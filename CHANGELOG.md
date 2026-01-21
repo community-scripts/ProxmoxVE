@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: Snipe-IT update missing all user uploads (#11032) [@ruanmed](https://github.com/ruanmed) ([#11033](https://github.com/community-scripts/ProxmoxVE/pull/11033))
     - yubal: fix for v0.2 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11006](https://github.com/community-scripts/ProxmoxVE/pull/11006))
     - Joplin-Server: use yarn workspaces focus for faster builds [@MickLesk](https://github.com/MickLesk) ([#11027](https://github.com/community-scripts/ProxmoxVE/pull/11027))
 
