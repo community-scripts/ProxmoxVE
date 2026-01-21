@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - yubal: fix for v0.2 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11006](https://github.com/community-scripts/ProxmoxVE/pull/11006))
     - Joplin-Server: use yarn workspaces focus for faster builds [@MickLesk](https://github.com/MickLesk) ([#11027](https://github.com/community-scripts/ProxmoxVE/pull/11027))
 
 ### 💾 Core
