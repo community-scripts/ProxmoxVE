@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-21
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Joplin Server: Set disable flag to true in joplin-server.json [@tremor021](https://github.com/tremor021) ([#11008](https://github.com/community-scripts/ProxmoxVE/pull/11008))
+
 ## 2026-01-20
 
 ### 🚀 Updated Scripts
