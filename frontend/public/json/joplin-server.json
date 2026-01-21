@@ -14,7 +14,6 @@
   "website": "https://joplinapp.org/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/joplin.webp",
   "description": "Joplin - the privacy-focused note taking app with sync capabilities for Windows, macOS, Linux, Android and iOS.",
-  "disable": true,
   "install_methods": [
     {
       "type": "default",
