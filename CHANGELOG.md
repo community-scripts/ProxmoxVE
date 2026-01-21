@@ -18,6 +18,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Joplin-Server: use yarn workspaces focus for faster builds [@MickLesk](https://github.com/MickLesk) ([#11027](https://github.com/community-scripts/ProxmoxVE/pull/11027))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: allow empty tags & improve template search [@MickLesk](https://github.com/MickLesk) ([#11020](https://github.com/community-scripts/ProxmoxVE/pull/11020))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
