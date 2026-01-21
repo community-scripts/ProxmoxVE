@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-21
 
+### 🆕 New Scripts
+
+  - Byparr ([#11039](https://github.com/community-scripts/ProxmoxVE/pull/11039))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
