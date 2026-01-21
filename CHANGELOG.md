@@ -21,6 +21,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - #### ✨ New Features
+
+    - tools: add ubuntu PHP repository setup [@MickLesk](https://github.com/MickLesk) ([#11034](https://github.com/community-scripts/ProxmoxVE/pull/11034))
+
   - #### 🔧 Refactor
 
     - core: allow empty tags & improve template search [@MickLesk](https://github.com/MickLesk) ([#11020](https://github.com/community-scripts/ProxmoxVE/pull/11020))
