@@ -3442,8 +3442,13 @@ build_container() {
   export DEV_MODE_DRYRUN="${DEV_MODE_DRYRUN:-false}"
 
   # Build PCT_OPTIONS as multi-line string
-  PCT_OPTIONS_STRING="  -hostname $HN
+  PCT_OPTIONS_STRING="  -hostname $HN"
+
+  # Only add -tags if TAGS is not empty
+  if [ -n "$TAGS" ]; then
+    PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
   -tags $TAGS"
+  fi
 
   # Only add -features if FEATURES is not empty
   if [ -n "$FEATURES" ]; then
