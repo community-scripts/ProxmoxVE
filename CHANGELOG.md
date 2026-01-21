@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-21
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Joplin-Server: use yarn workspaces focus for faster builds [@MickLesk](https://github.com/MickLesk) ([#11027](https://github.com/community-scripts/ProxmoxVE/pull/11027))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
