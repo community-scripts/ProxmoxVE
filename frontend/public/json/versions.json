@@ -1,5 +1,145 @@
 [
   {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.17.0-rc5",
+    "date": "2026-01-20T23:36:16Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2026-01-20-r2",
+    "date": "2026-01-20T22:28:54Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.12.7",
+    "date": "2026-01-17T03:49:29Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.2.0-dev.1",
+    "date": "2026-01-20T21:46:14Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.108.0-rc.1",
+    "date": "2026-01-20T20:46:43Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.14.3-rc2",
+    "date": "2026-01-19T20:48:34Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.17",
+    "date": "2026-01-20T19:07:30Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.5.1",
+    "date": "2026-01-20T19:45:05Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.155.7",
+    "date": "2026-01-20T19:42:20Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-availability-sync-fix",
+    "date": "2026-01-20T19:12:59Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.24",
+    "date": "2026-01-20T18:31:20Z"
+  },
+  {
+    "name": "mysql/mysql-server",
+    "version": "mysql-cluster-8.0.45",
+    "date": "2026-01-20T18:27:03Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.145.0",
+    "date": "2026-01-13T16:49:51Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.81.0.rc.1",
+    "date": "2026-01-20T16:55:00Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.88.4",
+    "date": "2026-01-20T16:02:12Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.1-stable",
+    "date": "2026-01-12T23:25:10Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "@mattermost/client@11.3.0",
+    "date": "2026-01-20T15:26:31Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v14.0.8",
+    "date": "2026-01-20T15:10:44Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.10",
+    "date": "2026-01-20T14:55:34Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2026-01-20T14:25:19Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.23.0-rc.1",
+    "date": "2026-01-20T14:19:56Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "9.0.114",
+    "date": "2026-01-20T14:13:00Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.3.6",
+    "date": "2026-01-16T15:00:42Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.547",
+    "date": "2026-01-20T13:46:00Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v5.0.2",
+    "date": "2026-01-20T12:57:53Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.52.8",
+    "date": "2026-01-20T12:36:05Z"
+  },
+  {
+    "name": "lazy-media/Reactive-Resume",
+    "version": "v1.2.7",
+    "date": "2026-01-20T11:59:40Z"
+  },
+  {
     "name": "cloudflare/cloudflared",
     "version": "2026.1.1",
     "date": "2026-01-20T11:22:06Z"
@@ -10,24 +150,9 @@
     "date": "2026-01-20T10:34:53Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.33.0-hannoy-better-linear-scanning.5",
-    "date": "2026-01-20T09:43:41Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.17.0-rc2",
-    "date": "2026-01-13T12:08:49Z"
-  },
-  {
     "name": "Luligu/matterbridge",
     "version": "3.5.0",
     "date": "2026-01-20T08:53:52Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.10",
-    "date": "2026-01-15T10:36:07Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -40,11 +165,6 @@
     "date": "2026-01-20T07:34:31Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.547",
-    "date": "2026-01-20T06:41:48Z"
-  },
-  {
     "name": "HydroshieldMKII/Guardian",
     "version": "v1.3.4",
     "date": "2026-01-20T06:20:36Z"
@@ -55,19 +175,9 @@
     "date": "2026-01-04T22:41:00Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
-  },
-  {
     "name": "Comfy-Org/ComfyUI",
     "version": "v0.10.0",
     "date": "2026-01-20T03:40:18Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.1.2",
-    "date": "2026-01-20T02:14:31Z"
   },
   {
     "name": "diced/zipline",
@@ -95,21 +205,6 @@
     "date": "2026-01-19T20:51:19Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.14.3-rc1",
-    "date": "2026-01-17T00:34:22Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2026-01-19T18:21:04Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "11.0.16",
-    "date": "2026-01-19T18:15:05Z"
-  },
-  {
     "name": "livebook-dev/livebook",
     "version": "nightly",
     "date": "2026-01-19T18:03:38Z"
@@ -133,11 +228,6 @@
     "name": "laurent22/joplin",
     "version": "server-v3.5.2",
     "date": "2025-12-19T21:28:55Z"
-  },
-  {
-    "name": "Infisical/infisical",
-    "version": "v0.155.6",
-    "date": "2026-01-19T16:35:03Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -175,11 +265,6 @@
     "date": "2026-01-19T09:16:56Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.52.7",
-    "date": "2026-01-19T08:38:05Z"
-  },
-  {
     "name": "Jackett/Jackett",
     "version": "v0.24.887",
     "date": "2026-01-19T05:55:24Z"
@@ -188,11 +273,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.9.0",
     "date": "2026-01-19T05:46:09Z"
-  },
-  {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.23",
-    "date": "2026-01-19T05:14:43Z"
   },
   {
     "name": "9001/copyparty",
@@ -230,11 +310,6 @@
     "date": "2026-01-18T22:16:38Z"
   },
   {
-    "name": "seerr-team/seerr",
-    "version": "preview-remonitor-sonarr-episodes",
-    "date": "2026-01-18T20:33:38Z"
-  },
-  {
     "name": "fccview/jotty",
     "version": "1.18.0",
     "date": "2026-01-18T19:00:48Z"
@@ -260,11 +335,6 @@
     "date": "2026-01-18T12:12:02Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.81.0-nightly",
-    "date": "2026-01-18T04:06:15Z"
-  },
-  {
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
@@ -273,11 +343,6 @@
     "name": "oauth2-proxy/oauth2-proxy",
     "version": "v7.14.2",
     "date": "2026-01-18T00:26:09Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2026-01-17-r3",
-    "date": "2026-01-17T21:45:17Z"
   },
   {
     "name": "outline/outline",
@@ -305,11 +370,6 @@
     "date": "2025-11-04T13:35:35Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.12.7",
-    "date": "2026-01-17T03:49:29Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.108.1",
     "date": "2026-01-17T04:09:09Z"
@@ -328,11 +388,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.50.1",
     "date": "2026-01-16T19:27:38Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.3.6",
-    "date": "2026-01-16T15:00:42Z"
   },
   {
     "name": "emqx/emqx",
@@ -403,11 +458,6 @@
     "name": "readeck/readeck",
     "version": "0.21.6",
     "date": "2026-01-15T11:18:58Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.107.0",
-    "date": "2026-01-15T06:50:08Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -505,11 +555,6 @@
     "date": "2026-01-13T17:03:32Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.145.0",
-    "date": "2026-01-13T16:49:51Z"
-  },
-  {
     "name": "LimeSurvey/LimeSurvey",
     "version": "6.16.3+251215",
     "date": "2026-01-13T10:36:10Z"
@@ -535,11 +580,6 @@
     "date": "2026-01-12T23:26:02Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.1.1-stable",
-    "date": "2026-01-12T23:25:10Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v2.8.0",
     "date": "2025-12-12T20:25:00Z"
@@ -553,11 +593,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.7.10",
     "date": "2026-01-12T20:50:50Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.16",
-    "date": "2026-01-12T20:18:34Z"
   },
   {
     "name": "release-argus/Argus",
@@ -643,11 +678,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v14.0.7",
-    "date": "2026-01-10T15:10:54Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -780,11 +810,6 @@
     "date": "2026-01-07T00:19:31Z"
   },
   {
-    "name": "netbox-community/netbox",
-    "version": "v4.5.0",
-    "date": "2026-01-06T21:14:27Z"
-  },
-  {
     "name": "caddyserver/caddy",
     "version": "v2.10.2",
     "date": "2025-08-23T03:10:31Z"
@@ -895,11 +920,6 @@
     "date": "2025-12-27T20:37:54Z"
   },
   {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.22.3",
-    "date": "2025-12-26T22:31:20Z"
-  },
-  {
     "name": "matze/wastebin",
     "version": "3.4.0",
     "date": "2025-12-25T16:00:55Z"
@@ -955,11 +975,6 @@
     "date": "2025-11-05T01:56:48Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.88.2",
-    "date": "2025-12-22T14:36:59Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.7.1",
     "date": "2025-12-21T17:06:17Z"
@@ -1013,11 +1028,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.25.3",
     "date": "2025-12-18T18:11:48Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v5.0.1",
-    "date": "2025-12-18T14:22:38Z"
   },
   {
     "name": "juanfont/headscale",
@@ -1425,11 +1435,6 @@
     "date": "2025-10-06T21:31:07Z"
   },
   {
-    "name": "mysql/mysql-server",
-    "version": "mysql-cluster-7.6.36",
-    "date": "2025-10-06T15:19:49Z"
-  },
-  {
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.9",
     "date": "2025-10-06T08:34:01Z"
@@ -1443,11 +1448,6 @@
     "name": "thomiceli/opengist",
     "version": "v1.11.1",
     "date": "2025-09-30T00:24:16Z"
-  },
-  {
-    "name": "lazy-media/Reactive-Resume",
-    "version": "v1.2.6",
-    "date": "2025-09-28T18:09:21Z"
   },
   {
     "name": "Pf2eToolsOrg/Pf2eTools",
