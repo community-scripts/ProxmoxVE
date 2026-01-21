@@ -36,7 +36,9 @@ cd /opt/joplin-server
 sed -i "/onenote-converter/d" packages/lib/package.json
 $STD yarn config set --home enableTelemetry 0
 export BUILD_SEQUENCIAL=1
-$STD yarn install --inline-builds
+$STD yarn workspaces focus @joplin/server
+cd packages/server
+$STD yarn run build
 
 cat <<EOF >/opt/joplin-server/.env
 PM2_HOME=/opt/pm2
