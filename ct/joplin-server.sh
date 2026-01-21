@@ -44,7 +44,9 @@ function update_script() {
     sed -i "/onenote-converter/d" packages/lib/package.json
     $STD yarn config set --home enableTelemetry 0
     export BUILD_SEQUENCIAL=1
-    $STD yarn install --inline-builds
+    $STD yarn workspaces focus @joplin/server
+    cd packages/server
+    $STD yarn run build
     msg_ok "Updated Joplin-Server"
 
     msg_info "Starting Services"
