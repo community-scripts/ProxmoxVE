@@ -88,3 +88,4 @@ fi
 
 motd_ssh
 customize
+cleanup_lxc
