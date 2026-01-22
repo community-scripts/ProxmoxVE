@@ -2,14 +2,14 @@
   "name": "Loki",
   "slug": "loki",
   "categories": [9],
-  "date_created": "2025-12-10",
+  "date_created": "2026-01-22",
   "type": "ct",
   "updateable": true,
   "privileged": false,
   "interface_port": 3100,
   "documentation": "https://grafana.com/docs/loki/latest/",
   "website": "https://github.com/grafana/loki",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/loki.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/loki.webp",
   "config_path": "Debian: /etc/loki/config.yml | Alpine: /etc/loki/loki-local-config.yaml",
   "description": "Grafana Loki is a set of open source components that can be composed into a fully featured logging stack. A small index and highly compressed chunks simplifies the operation and significantly lowers the cost of Loki.",
   "install_methods": [
@@ -32,7 +32,7 @@
         "ram": 256,
         "hdd": 1,
         "os": "alpine",
-        "version": "3.22"
+        "version": "3.23"
       }
     }
   ],
