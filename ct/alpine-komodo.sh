@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://komo.do
 
 APP="Alpine-Komodo"
-var_tags="${var_tags:-docker,alpine}"
+var_tags="${var_tags:-docker;alpine}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-10}"
