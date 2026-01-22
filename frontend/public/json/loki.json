@@ -40,5 +40,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Promtail can be optionally installed during setup to collect and ship logs to Loki.",
+      "type": "info"
+    }
+  ]
 }
