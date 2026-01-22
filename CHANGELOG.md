@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-22
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools: use distro packages for MariaDB by default [@MickLesk](https://github.com/MickLesk) ([#11049](https://github.com/community-scripts/ProxmoxVE/pull/11049))
+
 ## 2026-01-21
 
 ### 🆕 New Scripts
