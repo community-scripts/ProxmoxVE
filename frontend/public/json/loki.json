@@ -1,7 +1,9 @@
 {
   "name": "Loki",
   "slug": "loki",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2026-01-22",
   "type": "ct",
   "updateable": true,
