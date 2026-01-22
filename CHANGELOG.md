@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-22
 
+### 🆕 New Scripts
+
+  - Loki |  Alpine-Loki ([#11048](https://github.com/community-scripts/ProxmoxVE/pull/11048))
+
 ### 💾 Core
 
   - #### ✨ New Features
