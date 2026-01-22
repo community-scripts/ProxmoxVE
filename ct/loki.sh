@@ -29,13 +29,12 @@ function update_script() {
     exit 1
   fi
 
-  LXCIP=$(hostname -I | awk '{print $1}')
   while true; do
     CHOICE=$(
       whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --menu "Select option" 11 58 3 \
         "1" "Update Loki & Promtail" \
         "2" "Allow 0.0.0.0 for listening" \
-        "3" "Allow only ${LXCIP} for listening" 3>&2 2>&1 1>&3
+        "3" "Allow only ${LOCAL_IP} for listening" 3>&2 2>&1 1>&3
     )
     exit_status=$?
     if [ $exit_status == 1 ]; then
@@ -78,11 +77,11 @@ function update_script() {
       exit
       ;;
     3)
-      msg_info "Configuring Loki to listen on ${LXCIP}"
-      sed -i "s/http_listen_address:.*/http_listen_address: $LXCIP/" /etc/loki/config.yml
+      msg_info "Configuring Loki to listen on ${LOCAL_IP}"
+      sed -i "s/http_listen_address:.*/http_listen_address: $LOCAL_IP/" /etc/loki/config.yml
       sed -i 's/http_listen_port:.*/http_listen_port: 3100/' /etc/loki/config.yml
       systemctl restart loki
-      msg_ok "Allowed listening only on ${LXCIP}!"
+      msg_ok "Allowed listening only on ${LOCAL_IP}!"
       exit
       ;;
     esac
