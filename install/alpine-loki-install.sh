@@ -16,12 +16,10 @@ update_os
 msg_info "Installing Loki"
 $STD apk add loki
 $STD sed -i '/http_addr/s/127.0.0.1/0.0.0.0/g' /etc/conf.d/loki
-
 mkdir -p /var/lib/loki/{chunks,boltdb-shipper-active,boltdb-shipper-cache}
 chown -R loki:grafana /var/lib/loki
 mkdir -p /var/log/loki
 chown -R loki:grafana /var/log/loki
-
 cat <<EOF >/etc/loki/loki-local-config.yaml
 auth_enabled: false
 
@@ -64,14 +62,11 @@ limits_config:
 ruler:
   alertmanager_url: http://localhost:9093
 EOF
-
 chown loki:grafana /etc/loki/loki-local-config.yaml
 chmod 644 /etc/loki/loki-local-config.yaml
-
 echo "output_log=\"\${output_log:-/var/log/loki/output.log}\"" >> /etc/init.d/loki
 echo "error_log=\"\${error_log:-/var/log/loki/error.log}\"" >> /etc/init.d/loki
 echo "start_stop_daemon_args=\"\${SSD_OPTS} -1 \${output_log} -2 \${error_log}\"" >> /etc/init.d/loki
-
 $STD rc-update add loki default
 $STD rc-service loki start
 msg_ok "Installed Loki"
