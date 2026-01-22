@@ -1,8 +1,93 @@
 [
   {
+    "name": "zitadel/zitadel",
+    "version": "v4.9.2",
+    "date": "2026-01-22T10:49:06Z"
+  },
+  {
+    "name": "healthchecks/healthchecks",
+    "version": "v4.0",
+    "date": "2026-01-22T10:21:35Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2026-01-22-r1",
+    "date": "2026-01-22T10:20:04Z"
+  },
+  {
+    "name": "eclipse-mosquitto/mosquitto",
+    "version": "v2.1.0rc2",
+    "date": "2026-01-22T09:42:43Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "3000.9.2",
+    "date": "2026-01-22T09:41:15Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.52.9",
+    "date": "2026-01-22T09:30:49Z"
+  },
+  {
+    "name": "juanfont/headscale",
+    "version": "v0.27.1",
+    "date": "2025-11-11T19:32:29Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v7.0.0-7",
+    "date": "2026-01-22T06:46:13Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.900",
+    "date": "2026-01-22T05:57:44Z"
+  },
+  {
+    "name": "rabbitmq/rabbitmq-server",
+    "version": "v4.2.3",
+    "date": "2026-01-22T03:57:50Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.81.0.rc.5",
+    "date": "2026-01-22T03:30:46Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.1.4",
+    "date": "2026-01-22T02:23:18Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.25.4",
+    "date": "2026-01-22T01:43:42Z"
+  },
+  {
+    "name": "Infisical/infisical",
+    "version": "v0.156.3",
+    "date": "2026-01-22T00:44:20Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-22T00:27:04Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.15.0-rc.0",
+    "date": "2026-01-21T23:54:04Z"
+  },
+  {
     "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.3.0",
-    "date": "2026-01-15T19:29:02Z"
+    "version": "v2.3.1",
+    "date": "2026-01-21T22:50:25Z"
   },
   {
     "name": "ollama/ollama",
@@ -10,19 +95,19 @@
     "date": "2026-01-20T20:20:53Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.81.0.rc.4",
-    "date": "2026-01-21T21:43:55Z"
+    "name": "influxdata/influxdb",
+    "version": "v2.8.0",
+    "date": "2025-12-12T20:25:00Z"
   },
   {
-    "name": "Infisical/infisical",
-    "version": "v0.156.2",
-    "date": "2026-01-21T21:02:11Z"
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-21T20:40:02Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2026-01-20T21:10:15Z"
+    "version": "v4.7.0-beta.1",
+    "date": "2026-01-15T20:00:44Z"
   },
   {
     "name": "Comfy-Org/ComfyUI",
@@ -38,6 +123,11 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.16",
     "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.8",
+    "date": "2026-01-15T13:52:29Z"
   },
   {
     "name": "metabase/metabase",
@@ -92,7 +182,7 @@
   {
     "name": "javedh-dev/tracktor",
     "version": "1.2.1",
-    "date": "2026-01-21T11:12:28Z"
+    "date": "2026-01-21T09:31:18Z"
   },
   {
     "name": "endurain-project/endurain",
@@ -115,16 +205,6 @@
     "date": "2026-01-21T06:45:16Z"
   },
   {
-    "name": "rabbitmq/rabbitmq-server",
-    "version": "v4.2.2",
-    "date": "2025-12-15T18:25:36Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.898",
-    "date": "2026-01-21T05:50:19Z"
-  },
-  {
     "name": "9001/copyparty",
     "version": "v1.20.3",
     "date": "2026-01-21T05:39:57Z"
@@ -140,39 +220,14 @@
     "date": "2026-01-21T03:43:09Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-21T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.20.5",
     "date": "2026-01-21T00:12:33Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.8",
-    "date": "2026-01-15T13:52:29Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2026-01-20-r2",
-    "date": "2026-01-20T22:28:54Z"
-  },
-  {
     "name": "seerr-team/seerr",
     "version": "preview-availability-sync-fix",
     "date": "2026-01-20T22:11:24Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.2.0-dev.1",
-    "date": "2026-01-20T21:46:14Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -202,7 +257,7 @@
   {
     "name": "chrisvel/tududi",
     "version": "v0.88.4",
-    "date": "2026-01-20T16:02:12Z"
+    "date": "2026-01-20T15:11:58Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -233,11 +288,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@2.3.6",
     "date": "2026-01-16T15:00:42Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.52.8",
-    "date": "2026-01-20T12:36:05Z"
   },
   {
     "name": "lazy-media/reactive-resume",
@@ -288,11 +338,6 @@
     "name": "inventree/InvenTree",
     "version": "1.1.9",
     "date": "2026-01-19T20:51:19Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-19T18:03:38Z"
   },
   {
     "name": "ghostfolio/ghostfolio",
@@ -348,11 +393,6 @@
     "name": "jellyfin/jellyfin",
     "version": "v10.11.6",
     "date": "2026-01-19T01:03:03Z"
-  },
-  {
-    "name": "eclipse-mosquitto/mosquitto",
-    "version": "2.1.0rc1",
-    "date": "2026-01-19T00:48:21Z"
   },
   {
     "name": "Kareadita/Kavita",
@@ -418,11 +458,6 @@
     "name": "forgejo/forgejo",
     "version": "v14.0.1",
     "date": "2026-01-17T07:14:19Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.6",
-    "date": "2025-11-04T13:35:35Z"
   },
   {
     "name": "coder/code-server",
@@ -498,16 +533,6 @@
     "name": "readeck/readeck",
     "version": "0.21.6",
     "date": "2026-01-15T11:18:58Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.9.1",
-    "date": "2026-01-14T10:37:28Z"
-  },
-  {
-    "name": "fosrl/pangolin",
-    "version": "1.14.1-s.3",
-    "date": "2026-01-15T06:09:56Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -605,11 +630,6 @@
     "date": "2026-01-12T23:26:02Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v2.8.0",
-    "date": "2025-12-12T20:25:00Z"
-  },
-  {
     "name": "influxdata/telegraf",
     "version": "v1.37.1",
     "date": "2026-01-12T21:05:24Z"
@@ -638,11 +658,6 @@
     "name": "rustdesk/rustdesk-server",
     "version": "1.1.15",
     "date": "2026-01-12T05:38:30Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "3000.9.0",
-    "date": "2026-01-12T00:37:54Z"
   },
   {
     "name": "hargata/lubelog",
@@ -882,7 +897,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "gotify/server",
@@ -1033,16 +1048,6 @@
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
-  },
-  {
-    "name": "go-gitea/gitea",
-    "version": "v1.25.3",
-    "date": "2025-12-18T18:11:48Z"
-  },
-  {
-    "name": "juanfont/headscale",
-    "version": "v0.27.1",
-    "date": "2025-11-11T19:32:29Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -1208,11 +1213,6 @@
     "name": "sabre-io/Baikal",
     "version": "0.11.1",
     "date": "2025-11-30T14:54:03Z"
-  },
-  {
-    "name": "healthchecks/healthchecks",
-    "version": "v3.13",
-    "date": "2025-11-30T08:52:20Z"
   },
   {
     "name": "authelia/authelia",
