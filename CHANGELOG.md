@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Jotty: Increase default disk size from 6 to 8 [@tremor021](https://github.com/tremor021) ([#11056](https://github.com/community-scripts/ProxmoxVE/pull/11056))
     - Fix tags in several scripts [@s4dmach1ne](https://github.com/s4dmach1ne) ([#11050](https://github.com/community-scripts/ProxmoxVE/pull/11050))
 
 ### 💾 Core
