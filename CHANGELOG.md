@@ -18,6 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Immich: Increase RAM to 6GB [@vhsdream](https://github.com/vhsdream) ([#10965](https://github.com/community-scripts/ProxmoxVE/pull/10965))
+
   - #### 🐞 Bug Fixes
 
     - Fix tags in several scripts [@s4dmach1ne](https://github.com/s4dmach1ne) ([#11050](https://github.com/community-scripts/ProxmoxVE/pull/11050))
