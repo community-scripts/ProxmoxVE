@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://fluidcalendar.com
 
 APP="fluid-calendar"
-var_tags="${var_tags:-calendar,tasks}"
+var_tags="${var_tags:-calendar;tasks}"
 var_cpu="${var_cpu:-3}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-7}"
