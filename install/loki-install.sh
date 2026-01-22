@@ -13,21 +13,17 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setting up Grafana Repository"
 setup_deb822_repo \
   "grafana" \
   "https://apt.grafana.com/gpg.key" \
   "https://apt.grafana.com" \
   "stable" \
   "main"
-msg_ok "Grafana Repository setup successfully"
 
 msg_info "Installing Loki"
 $STD apt install -y loki
-
 mkdir -p /var/lib/loki/{chunks,boltdb-shipper-active,boltdb-shipper-cache}
 chown -R loki /var/lib/loki
-
 cat <<EOF >/etc/loki/config.yml
 auth_enabled: false
 
@@ -70,7 +66,6 @@ limits_config:
 ruler:
   alertmanager_url: http://localhost:9093
 EOF
-
 chown loki /etc/loki/config.yml
 systemctl enable -q --now loki
 msg_ok "Installed Loki"
