@@ -52,10 +52,10 @@ function update_script() {
       msg_ok "Stopped Loki"
 
       msg_info "Updating Loki"
-      $STD apt-get update
-      $STD apt-get --only-upgrade install -y loki
+      $STD apt update
+      $STD apt install -y --only-upgrade loki
       if dpkg -s promtail >/dev/null 2>&1; then
-        $STD apt-get --only-upgrade install -y promtail
+        $STD apt install -y --only-upgrade promtail
       fi
       msg_ok "Updated Loki"
 
@@ -73,7 +73,7 @@ function update_script() {
       sed -i 's/http_listen_address:.*/http_listen_address: 0.0.0.0/' /etc/loki/config.yml
       sed -i 's/http_listen_port:.*/http_listen_port: 3100/' /etc/loki/config.yml
       systemctl restart loki
-      msg_ok "Allowed listening on all interfaces!"
+      msg_ok "Configured Loki to listen on 0.0.0.0"
       exit
       ;;
     3)
@@ -81,7 +81,7 @@ function update_script() {
       sed -i "s/http_listen_address:.*/http_listen_address: $LOCAL_IP/" /etc/loki/config.yml
       sed -i 's/http_listen_port:.*/http_listen_port: 3100/' /etc/loki/config.yml
       systemctl restart loki
-      msg_ok "Allowed listening only on ${LOCAL_IP}!"
+      msg_ok "Configured Loki to listen on ${LOCAL_IP}"
       exit
       ;;
     esac
@@ -93,9 +93,11 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${INFO}${YW} Access loki using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3100${CL}\n"
-echo -e "${INFO}${YW} Access promtail using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9080${CL}"
+if dpkg -s promtail >/dev/null 2>&1; then
+  echo -e "${INFO}${YW} Access promtail using the following URL:${CL}"
+  echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9080${CL}"
+fi
