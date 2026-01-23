@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - several scripts: bump default Alpine version to 3.23 [@MickLesk](https://github.com/MickLesk) ([#11082](https://github.com/community-scripts/ProxmoxVE/pull/11082))
     - PDM: avoid installing useless package [@LongQT-sea](https://github.com/LongQT-sea) ([#10833](https://github.com/community-scripts/ProxmoxVE/pull/10833))
 
   - #### 🔧 Refactor
