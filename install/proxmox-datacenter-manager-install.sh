@@ -46,14 +46,9 @@ DEBIAN_FRONTEND=noninteractive
 $STD apt -o Dpkg::Options::="--force-confdef" \
   -o Dpkg::Options::="--force-confold" \
   install -y proxmox-datacenter-manager \
-  proxmox-datacenter-manager-ui
-
-for pkg in proxmox-mail-forward proxmox-offline-mirror-helper; do
-  if ! dpkg -s "$pkg" >/dev/null 2>&1; then
-    $STD apt install -y "$pkg"
-  fi
-done
-
+  proxmox-datacenter-manager-ui \
+  proxmox-mail-forward \
+  proxmox-offline-mirror-helper
 msg_ok "Installed Proxmox Datacenter Manager"
 
 motd_ssh
