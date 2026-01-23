@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: homarr: more ram [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11102](https://github.com/community-scripts/ProxmoxVE/pull/11102))
     - plant-it: re-add JWT_SECRET [@MickLesk](https://github.com/MickLesk) ([#11098](https://github.com/community-scripts/ProxmoxVE/pull/11098))
     - Tautulli: fix config backup and restore logic [@MickLesk](https://github.com/MickLesk) ([#11099](https://github.com/community-scripts/ProxmoxVE/pull/11099))
     - Scanopy: remove integrated daemon script [@vhsdream](https://github.com/vhsdream) ([#11100](https://github.com/community-scripts/ProxmoxVE/pull/11100))
