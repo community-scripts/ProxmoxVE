@@ -36,7 +36,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Backing up config"
-    cp -r /opt/Tautulli/config /opt/tautulli_config_backup
+    cp /opt/Tautulli/config.ini /opt/tautulli_config.ini.backup
     msg_ok "Backed up config"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Tautulli" "Tautulli/Tautulli" "tarball"
@@ -54,8 +54,8 @@ function update_script() {
     msg_ok "Updated Tautulli"
 
     msg_info "Restoring config"
-    cp -r /opt/tautulli_config_backup/* /opt/Tautulli/config/
-    rm -rf /opt/tautulli_config_backup
+    cp /opt/tautulli_config.ini.backup /opt/Tautulli/config.ini
+    rm -f /opt/tautulli_config.ini.backup
     msg_ok "Restored config"
 
     msg_info "Starting Service"
