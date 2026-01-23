@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-23
 
+### 🆕 New Scripts
+
+  - Dawarich ([#11075](https://github.com/community-scripts/ProxmoxVE/pull/11075))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
