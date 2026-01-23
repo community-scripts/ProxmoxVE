@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-23
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Duplicati: Bump to Debian 13 [@tremor021](https://github.com/tremor021) ([#11060](https://github.com/community-scripts/ProxmoxVE/pull/11060))
+
 ## 2026-01-22
 
 ### 🆕 New Scripts
