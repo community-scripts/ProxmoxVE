@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - add: uptime-kuma: chromium [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11081](https://github.com/community-scripts/ProxmoxVE/pull/11081))
     - fix(install): Add typing_extensions to SearXNG Python dependencies [@ZarenOFF](https://github.com/ZarenOFF) ([#11074](https://github.com/community-scripts/ProxmoxVE/pull/11074))
 
   - #### ✨ New Features
