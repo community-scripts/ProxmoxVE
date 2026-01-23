@@ -28,10 +28,10 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating $APP LXC"
-  $STD apt-get update
-  $STD apt-get upgrade -y
-  msg_ok "Updated $APP LXC"
+  msg_info "Updating AudiobookShelf"
+  $STD apt update
+  $STD apt upgrade -y
+  msg_ok "Updated AudiobookShelf"
   msg_ok "Updated successfully!"
   exit
 }

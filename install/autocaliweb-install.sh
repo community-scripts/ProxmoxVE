@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y --no-install-recommends \
+$STD apt install -y --no-install-recommends \
     python3-dev \
     sqlite3 \
     build-essential \
@@ -47,16 +47,12 @@ msg_ok "Installed dependencies"
 
 fetch_and_deploy_gh_release "kepubify" "pgaskin/kepubify" "singlefile" "latest" "/usr/bin" "kepubify-linux-64bit"
 KEPUB_VERSION="$(/usr/bin/kepubify --version | awk '{print $2}')"
+fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-x86_64.txz"
 
 msg_info "Installing Calibre"
-CALIBRE_RELEASE="$(curl -s https://api.github.com/repos/kovidgoyal/calibre/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)"
-CALIBRE_VERSION=${CALIBRE_RELEASE#v}
-curl -fsSL https://github.com/kovidgoyal/calibre/releases/download/${CALIBRE_RELEASE}/calibre-${CALIBRE_VERSION}-x86_64.txz -o /tmp/calibre.txz
-mkdir -p /opt/calibre
-$STD tar -xf /tmp/calibre.txz -C /opt/calibre
-rm /tmp/calibre.txz
 $STD /opt/calibre/calibre_postinstall
-msg_ok "Calibre installed"
+CALIBRE_VERSION=$(cat ~/.calibre)
+msg_ok "Installed Calibre"
 
 setup_uv
 
