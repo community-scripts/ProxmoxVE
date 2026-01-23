@@ -31,6 +31,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Bump various scripts to Debian 13 (Trixie) [@MickLesk](https://github.com/MickLesk) ([#11093](https://github.com/community-scripts/ProxmoxVE/pull/11093))
     - several scripts: bump default Alpine version to 3.23 [@MickLesk](https://github.com/MickLesk) ([#11082](https://github.com/community-scripts/ProxmoxVE/pull/11082))
     - PDM: avoid installing useless package [@LongQT-sea](https://github.com/LongQT-sea) ([#10833](https://github.com/community-scripts/ProxmoxVE/pull/10833))
 
