@@ -23,7 +23,7 @@ NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 msg_info "Preparing Fumadocs - "
 mkdir -p /opt/fumadocs
 cd /opt/fumadocs
-msg_ok "Attention: You need to configure directly after this message!"
+msg_ok "Important: Manual configuration is required after this step."
 pnpm create fumadocs-app
 PROJECT_NAME=$(find . -maxdepth 1 -type d ! -name '.' ! -name '..' | sed 's|^\./||')
 echo "$PROJECT_NAME" >/opt/fumadocs/.projectname
