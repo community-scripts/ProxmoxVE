@@ -32,8 +32,8 @@ setup_deb822_repo \
   "timescaledb" \
   "https://packagecloud.io/timescale/timescaledb/gpgkey" \
   "https://packagecloud.io/timescale/timescaledb/debian" \
-  "$(get_os_info codename)" \
-  "main"
+  "$(get_os_info codename)"
+  
 $STD apt install -y \
     timescaledb-2-postgresql-18 \
     timescaledb-tools \
