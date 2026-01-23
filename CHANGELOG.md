@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Dawarich ([#11075](https://github.com/community-scripts/ProxmoxVE/pull/11075))
+  - Tracearr ([#11079](https://github.com/community-scripts/ProxmoxVE/pull/11079))
+- Dawarich ([#11075](https://github.com/community-scripts/ProxmoxVE/pull/11075))
 
 ### 🚀 Updated Scripts
 
