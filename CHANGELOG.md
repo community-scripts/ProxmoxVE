@@ -19,6 +19,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - FHEM: Bump to Debian 13 [@tremor021](https://github.com/tremor021) ([#11061](https://github.com/community-scripts/ProxmoxVE/pull/11061))
     - Duplicati: Bump to Debian 13 [@tremor021](https://github.com/tremor021) ([#11060](https://github.com/community-scripts/ProxmoxVE/pull/11060))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: add IPv6 fallback support to get_current_ip functions | add check for SSH_KEYS_FILE in user_defaults [@MickLesk](https://github.com/MickLesk) ([#11067](https://github.com/community-scripts/ProxmoxVE/pull/11067))
+
 ## 2026-01-22
 
 ### 🆕 New Scripts
