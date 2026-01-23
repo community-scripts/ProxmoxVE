@@ -924,14 +924,14 @@ function get_lxc_ip() {
     get_current_ip() {
       local ip
 
-      # Try direct interface lookup for eth0 FIRST (most reliable for LXC)
+      # Try direct interface lookup for eth0 FIRST (most reliable for LXC) - IPv4
       ip=$(ip -4 addr show eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
       if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         echo "$ip"
         return 0
       fi
 
-      # Fallback: Try hostname -I 
+      # Fallback: Try hostname -I (returns IPv4 first if available)
       if command -v hostname >/dev/null 2>&1; then
         ip=$(hostname -I 2>/dev/null | awk '{print $1}')
         if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -940,15 +940,41 @@ function get_lxc_ip() {
         fi
       fi
 
-      # Last resort: Use routing table
-      local targets=("8.8.8.8" "1.1.1.1" "default")
-      for target in "${targets[@]}"; do
+      # Try routing table with IPv4 targets
+      local ipv4_targets=("8.8.8.8" "1.1.1.1" "default")
+      for target in "${ipv4_targets[@]}"; do
         if [[ "$target" == "default" ]]; then
           ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
         else
           ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
         fi
         if [[ -n "$ip" ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      # IPv6 fallback: Try direct interface lookup for eth0
+      ip=$(ip -6 addr show eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" && "$ip" =~ : ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # IPv6 fallback: Try hostname -I for IPv6
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E ':' | head -n1)
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # IPv6 fallback: Use routing table with IPv6 targets
+      local ipv6_targets=("2001:4860:4860::8888" "2606:4700:4700::1111")
+      for target in "${ipv6_targets[@]}"; do
+        ip=$(ip -6 route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
           echo "$ip"
           return 0
         fi
