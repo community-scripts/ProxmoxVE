@@ -14,23 +14,24 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  lsb-release \
+$STD apt install -y \
   apt-transport-https \
   debconf-utils
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
 read -p "${TAB3}Please enter the name for your server: " servername
 
 msg_info "Installing Element Synapse"
-curl -fsSL "https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg" -o "/usr/share/keyrings/matrix-org-archive-keyring.gpg"
-echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/matrix-org.list
-$STD apt-get update
+setup_deb822_repo "matrix-org" \
+  "https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg" \
+  "https://packages.matrix.org/debian/" \
+  "$(get_os_info codename)" \
+  "main"
 echo "matrix-synapse-py3 matrix-synapse/server-name string $servername" | debconf-set-selections
 echo "matrix-synapse-py3 matrix-synapse/report-stats boolean false" | debconf-set-selections
-$STD apt-get install matrix-synapse-py3 -y
+$STD apt install matrix-synapse-py3 -y
 systemctl stop matrix-synapse
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
 sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
@@ -48,11 +49,11 @@ $STD register_new_matrix_user -a --user admin --password "$ADMIN_PASS" --config 
 systemctl stop matrix-synapse
 sed -i '34d' /etc/matrix-synapse/homeserver.yaml
 systemctl start matrix-synapse
-temp_file=$(mktemp)
-mkdir -p /opt/synapse-admin
-RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
+msg_ok "Installed Element Synapse"
+
+fetch_and_deploy_gh_release "etkecc/synapse-admin" "/opt/synapse-admin" "tarball"
+
+msg_info "Installing Synapse-Admin"
 cd /opt/synapse-admin
 $STD yarn global add serve
 $STD yarn install --ignore-engines
@@ -60,7 +61,7 @@ $STD yarn build
 mv ./dist ../ &&
   rm -rf * &&
   mv ../dist ./
-msg_ok "Installed Element Synapse"
+msg_ok "Installed Synapse-Admin"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/synapse-admin.service

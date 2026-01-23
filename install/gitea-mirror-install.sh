@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   build-essential \
   openssl \
   sqlite3 \

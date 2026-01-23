@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,15 +28,15 @@ function update_script() {
         current_version=$(cross-seed --version)
         latest_version=$(npm show cross-seed version)
         if [ "$current_version" != "$latest_version" ]; then
-            msg_info "Updating ${APP} from version v${current_version} to v${latest_version}"
+            msg_info "Updating cross-seed from version v${current_version} to v${latest_version}"
             $STD npm install -g cross-seed@latest
             systemctl restart cross-seed
             msg_ok "Updated successfully!"
         else
-            msg_ok "${APP} is already at v${current_version}"
+            msg_ok "cross-seed is already at v${current_version}"
         fi
     else
-        msg_error "No ${APP} Installation Found!"
+        msg_error "No cross-seed Installation Found!"
         exit
     fi
     exit

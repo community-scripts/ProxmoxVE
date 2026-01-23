@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   make \
   ca-certificates \
   python3-venv
@@ -42,7 +42,7 @@ Description=Grist
 After=network.target
 
 [Service]
-Type=exec
+Type=simple
 WorkingDirectory=/opt/grist 
 ExecStart=/usr/bin/yarn run start:prod
 EnvironmentFile=-/opt/grist/.env

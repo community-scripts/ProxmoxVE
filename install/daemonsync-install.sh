@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y g++-multilib
+$STD apt install -y g++-multilib
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Daemon Sync Server"
