@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: bvdberg01
-# Co-Author: SunFlowerOwl
+# Author: bvdberg01 | Co-Author: SunFlowerOwl
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
