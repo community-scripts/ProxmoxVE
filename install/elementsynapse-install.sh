@@ -51,7 +51,7 @@ sed -i '34d' /etc/matrix-synapse/homeserver.yaml
 systemctl start matrix-synapse
 msg_ok "Installed Element Synapse"
 
-fetch_and_deploy_gh_release "etkecc/synapse-admin" "/opt/synapse-admin" "tarball"
+fetch_and_deploy_gh_release "synapse-admin" "etkecc/synapse-admin" "tarball"
 
 msg_info "Installing Synapse-Admin"
 cd /opt/synapse-admin
