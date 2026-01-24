@@ -23,6 +23,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Flatnotes: Standard enforcing [@tremor021](https://github.com/tremor021) ([#11109](https://github.com/community-scripts/ProxmoxVE/pull/11109))
 
+### ❔ Uncategorized
+
+  - Byparr: Add config file path to website [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11120](https://github.com/community-scripts/ProxmoxVE/pull/11120))
+
 ## 2026-01-23
 
 ### 🆕 New Scripts
