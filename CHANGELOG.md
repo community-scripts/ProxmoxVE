@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Spoolman: move to uv [@vhsdream](https://github.com/vhsdream) ([#11121](https://github.com/community-scripts/ProxmoxVE/pull/11121))
+
   - #### 🔧 Refactor
 
     - Flatnotes: Standard enforcing [@tremor021](https://github.com/tremor021) ([#11109](https://github.com/community-scripts/ProxmoxVE/pull/11109))
