@@ -3135,13 +3135,25 @@ NVIDIA_PIN
       if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
         msg_ok "Installed version-matched NVIDIA libraries"
       else
-        # Fallback to Ubuntu repo packages
-        $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends libnvidia-decode libnvidia-encode nvidia-utils 2>/dev/null || msg_warn "NVIDIA installation failed"
+        # Fallback to Ubuntu repo packages with versioned nvidia-utils
+        msg_warn "CUDA repo install failed - trying Ubuntu native packages (nvidia-utils-${nvidia_major_version})"
+        if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends \
+          libnvidia-decode-${nvidia_major_version} libnvidia-encode-${nvidia_major_version} nvidia-utils-${nvidia_major_version} 2>/dev/null; then
+          msg_ok "Installed Ubuntu NVIDIA packages (${nvidia_major_version})"
+        else
+          msg_warn "NVIDIA driver installation failed - please install manually: apt install nvidia-utils-${nvidia_major_version}"
+        fi
       fi
     else
       msg_warn "No NVIDIA packages for version ${nvidia_major_version}.x in CUDA repo"
-      # Fallback to Ubuntu repo packages
-      $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends libnvidia-decode libnvidia-encode nvidia-utils 2>/dev/null || msg_warn "NVIDIA installation failed"
+      # Fallback to Ubuntu repo packages with versioned nvidia-utils
+      msg_info "Trying Ubuntu native packages (nvidia-utils-${nvidia_major_version})"
+      if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends \
+        libnvidia-decode-${nvidia_major_version} libnvidia-encode-${nvidia_major_version} nvidia-utils-${nvidia_major_version} 2>/dev/null; then
+        msg_ok "Installed Ubuntu NVIDIA packages (${nvidia_major_version})"
+      else
+        msg_warn "NVIDIA driver installation failed - please install manually: apt install nvidia-utils-${nvidia_major_version}"
+      fi
     fi
   fi
 
