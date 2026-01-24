@@ -1,8 +1,48 @@
 [
   {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.3.0",
+    "date": "2026-01-08T16:08:34Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.25",
+    "date": "2026-01-24T05:56:58Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.912",
+    "date": "2026-01-24T05:56:30Z"
+  },
+  {
     "name": "ollama/ollama",
-    "version": "v0.15.0-rc2",
-    "date": "2026-01-23T23:37:17Z"
+    "version": "v0.15.0-rc6",
+    "date": "2026-01-24T04:10:04Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.4.0",
+    "date": "2026-01-24T00:51:05Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-24T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "azukaar/Cosmos-Server",
+    "version": "v0.20.2",
+    "date": "2026-01-24T00:12:39Z"
   },
   {
     "name": "moghtech/komodo",
@@ -75,9 +115,9 @@
     "date": "2026-01-23T18:41:45Z"
   },
   {
-    "name": "azukaar/Cosmos-Server",
-    "version": "v0.20.1",
-    "date": "2026-01-23T17:58:18Z"
+    "name": "keycloak/keycloak",
+    "version": "26.5.2",
+    "date": "2026-01-23T14:26:58Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -93,11 +133,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.5.2",
-    "date": "2026-01-23T14:26:58Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -135,24 +170,9 @@
     "date": "2026-01-23T07:00:51Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.903",
-    "date": "2026-01-23T05:55:59Z"
-  },
-  {
     "name": "9001/copyparty",
     "version": "v1.20.4",
     "date": "2026-01-23T01:29:26Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-23T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "esphome/esphome",
@@ -161,8 +181,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2026-01-22T20:38:13Z"
+    "version": "v4.7.0",
+    "date": "2026-01-22T18:39:10Z"
   },
   {
     "name": "crafty-controller/crafty-4",
@@ -270,11 +290,6 @@
     "date": "2026-01-22T00:44:20Z"
   },
   {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.3.1",
-    "date": "2026-01-21T22:50:25Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v2.8.0",
     "date": "2025-12-12T20:25:00Z"
@@ -317,7 +332,7 @@
   {
     "name": "javedh-dev/tracktor",
     "version": "1.2.1",
-    "date": "2026-01-21T11:12:28Z"
+    "date": "2026-01-21T09:31:18Z"
   },
   {
     "name": "emqx/emqx",
@@ -365,11 +380,6 @@
     "date": "2026-01-20T19:45:05Z"
   },
   {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.24",
-    "date": "2026-01-20T18:31:20Z"
-  },
-  {
     "name": "mysql/mysql-server",
     "version": "mysql-cluster-8.0.45",
     "date": "2026-01-20T18:27:03Z"
@@ -382,7 +392,7 @@
   {
     "name": "chrisvel/tududi",
     "version": "v0.88.4",
-    "date": "2026-01-20T16:02:12Z"
+    "date": "2026-01-20T15:11:58Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -433,11 +443,6 @@
     "name": "HydroshieldMKII/Guardian",
     "version": "v1.3.4",
     "date": "2026-01-20T06:20:36Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
   },
   {
     "name": "diced/zipline",
@@ -805,11 +810,6 @@
     "date": "2026-01-08T22:02:15Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.3.0",
-    "date": "2026-01-08T16:08:34Z"
-  },
-  {
     "name": "openhab/openhab-core",
     "version": "5.1.1",
     "date": "2026-01-08T14:18:39Z"
@@ -932,7 +932,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:19Z"
+    "date": "2026-01-02T19:40:09Z"
   },
   {
     "name": "gotify/server",
