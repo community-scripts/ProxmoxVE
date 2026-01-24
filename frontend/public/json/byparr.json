@@ -12,7 +12,7 @@
     "documentation": "https://github.com/ThePhaseless/Byparr/blob/master/README.md",
     "website": "https://github.com/ThePhaseless/Byparr",
     "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/byparr.webp",
-    "config_path": "",
+    "config_path": "/etc/systemd/system/byparr.service",
     "description": "Byparr is a proxy server to bypass Cloudflare and DDoS-GUARD protection.",
     "install_methods": [
         {
