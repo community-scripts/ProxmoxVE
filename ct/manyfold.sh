@@ -73,7 +73,7 @@ function update_script() {
         msg_ok "Installed Manyfold"
 
         msg_info "Restoring Data"
-        rm -rf /opt/manyfold/app/storage /opt/manyfold/app/tmp /opt/manyfold/app/config/credentials.yml.enc /opt/manyfold/app/config/master.key
+        rm -rf /opt/manyfold/app/{storage,tmp,config/credentials.yml.enc,config/master.key}
         cp -r /opt/manyfold_storage_backup /opt/manyfold/app/storage 2>/dev/null || true
         cp -r /opt/manyfold_tmp_backup /opt/manyfold/app/tmp 2>/dev/null || true
         cp /opt/manyfold_credentials.yml.enc /opt/manyfold/app/config/credentials.yml.enc 2>/dev/null || true
