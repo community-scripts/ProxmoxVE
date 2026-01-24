@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - bump crafty-controller to debian 13 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11094](https://github.com/community-scripts/ProxmoxVE/pull/11094))
     - Netbox: Refactor [@vhsdream](https://github.com/vhsdream) ([#11126](https://github.com/community-scripts/ProxmoxVE/pull/11126))
     - Flatnotes: Standard enforcing [@tremor021](https://github.com/tremor021) ([#11109](https://github.com/community-scripts/ProxmoxVE/pull/11109))
 
@@ -33,9 +34,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - nvidia: use versioned nvidia-utils package for Ubuntu fallback [@MickLesk](https://github.com/MickLesk) ([#11139](https://github.com/community-scripts/ProxmoxVE/pull/11139))
 
-### ❔ Uncategorized
+### 🌐 Website
 
-  - Byparr: Add config file path to website [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11120](https://github.com/community-scripts/ProxmoxVE/pull/11120))
+  - #### 📝 Script Information
+
+    - Byparr: Add config file path to website [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11120](https://github.com/community-scripts/ProxmoxVE/pull/11120))
 
 ## 2026-01-23
 
