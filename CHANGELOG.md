@@ -14,7 +14,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - manyfold ([#11143](https://github.com/community-scripts/ProxmoxVE/pull/11143))
+  - Manyfold ([#11143](https://github.com/community-scripts/ProxmoxVE/pull/11143))
 
 ### 🚀 Updated Scripts
 
