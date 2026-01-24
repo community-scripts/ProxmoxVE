@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-24
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Flatnotes: Standard enforcing [@tremor021](https://github.com/tremor021) ([#11109](https://github.com/community-scripts/ProxmoxVE/pull/11109))
+
 ## 2026-01-23
 
 ### 🆕 New Scripts
