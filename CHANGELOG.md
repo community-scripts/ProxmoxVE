@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - elementsynapse: correct parameter order in fetch_and_deploy_gh_release [@MickLesk](https://github.com/MickLesk) ([#11145](https://github.com/community-scripts/ProxmoxVE/pull/11145))
     - leantime: fix backup file naming [@MickLesk](https://github.com/MickLesk) ([#11137](https://github.com/community-scripts/ProxmoxVE/pull/11137))
     - [Hotfix] Element Synapse [@vhsdream](https://github.com/vhsdream) ([#11135](https://github.com/community-scripts/ProxmoxVE/pull/11135))
     - authelia: use POSIX-safe arithmetic to avoid exit code 1 with set -e in subshells [@MickLesk](https://github.com/MickLesk) ([#11125](https://github.com/community-scripts/ProxmoxVE/pull/11125))
