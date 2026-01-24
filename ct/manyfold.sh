@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: bvdberg01
-# Co-Author: SunFlowerOwl
+# Author: bvdberg01 | Co-Author: SunFlowerOwl
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/manyfold3d/manyfold
 
