@@ -21,9 +21,6 @@ rm -rf /opt/checkmk.deb
 echo "${RELEASE}" >"/opt/checkmk_version.txt"
 msg_ok "Installed Checkmk"
 
-motd_ssh
-customize
-
 msg_info "Creating Service"
 SITE_NAME="monitoring"
 $STD omd create "$SITE_NAME"
@@ -42,3 +39,5 @@ $STD omd start "$SITE_NAME"
 msg_ok "Created Service"
 
 cleanup_lxc
+motd_ssh
+customize

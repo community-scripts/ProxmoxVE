@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,26 +29,18 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/heiher/${APP}/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+  
+  if check_for_gh_release "hev-socks5-server" "heiher/hev-socks5-server"; then
     msg_info "Stopping Service"
     systemctl stop hev-socks5-server
     msg_ok "Stopped Service"
 
-    msg_info "Updating $APP to v${RELEASE}"
-    curl -L -o "${APP}" "https://github.com/heiher/${APP}/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
-    mv ${APP} /opt/${APP}
-    chmod +x /opt/${APP}
-    msg_ok "Updated hev-socks5-server to v${RELEASE}"
+    fetch_and_deploy_gh_release "hev-socks5-server" "heiher/hev-socks5-server" "singlefile" "latest" "/opt" "hev-socks5-server-linux-x86_64"
 
     msg_info "Starting Service"
     systemctl start hev-socks5-server
     msg_ok "Started Service"
-
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

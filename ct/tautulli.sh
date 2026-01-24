@@ -27,11 +27,42 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating Tautulli"
-  $STD apt update
-  $STD apt upgrade -y
-  msg_ok "Updated Tautulli"
-  msg_ok "Updated successfully!"
+
+  if check_for_gh_release "Tautulli" "Tautulli/Tautulli"; then
+    PYTHON_VERSION="3.13" setup_uv
+
+    msg_info "Stopping Service"
+    systemctl stop tautulli
+    msg_ok "Stopped Service"
+
+    msg_info "Backing up config"
+    cp /opt/Tautulli/config.ini /opt/tautulli_config.ini.backup
+    msg_ok "Backed up config"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Tautulli" "Tautulli/Tautulli" "tarball"
+
+    msg_info "Updating Tautulli"
+    cd /opt/Tautulli
+    TAUTULLI_VERSION=$(get_latest_github_release "Tautulli/Tautulli" "false")
+    echo "${TAUTULLI_VERSION}" >/opt/Tautulli/version.txt
+    echo "master" >/opt/Tautulli/branch.txt
+    source /opt/Tautulli/.venv/bin/activate
+    $STD pip install --upgrade uv
+    $STD uv pip install -q -r requirements.txt
+    $STD uv pip install -q pyopenssl
+    deactivate
+    msg_ok "Updated Tautulli"
+
+    msg_info "Restoring config"
+    cp /opt/tautulli_config.ini.backup /opt/Tautulli/config.ini
+    rm -f /opt/tautulli_config.ini.backup
+    msg_ok "Restored config"
+
+    msg_info "Starting Service"
+    systemctl start tautulli
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
   exit
 }
 

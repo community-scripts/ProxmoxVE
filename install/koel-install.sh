@@ -21,7 +21,6 @@ $STD apt install -y \
   locales
 msg_ok "Installed Dependencies"
 
-import_local_ip
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="koel" PG_DB_USER="koel" setup_postgresql_db
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="bz2,exif,imagick,pgsql,sqlite3" setup_php

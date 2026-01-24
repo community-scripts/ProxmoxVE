@@ -325,7 +325,7 @@ if [[ "${type:-}" == "update" ]]; then
 fi
 
 header_info
-import_local_ip
+get_lxc_ip
 
 # Check if already installed
 if [[ -d "$INSTALL_PATH" && -f "$INSTALL_PATH/package.json" ]]; then

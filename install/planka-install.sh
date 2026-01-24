@@ -43,7 +43,6 @@ msg_ok "Set up PostgreSQL Database"
 fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/opt/planka" "planka-prebuild.zip"
 
 msg_info "Configuring PLANKA"
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 SECRET_KEY=$(openssl rand -hex 64)
 cd /opt/planka
 $STD npm install

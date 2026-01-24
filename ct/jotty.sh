@@ -8,8 +8,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="jotty"
 var_tags="${var_tags:-tasks;notes}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-3072}"
-var_disk="${var_disk:-6}"
+var_ram="${var_ram:-4096}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -45,6 +45,8 @@ function update_script() {
 
     msg_info "Updating jotty"
     cd /opt/jotty
+    unset NODE_OPTIONS
+    export NODE_OPTIONS="--max-old-space-size=3072"
     $STD yarn --frozen-lockfile
     $STD yarn next telemetry disable
     $STD yarn build
@@ -55,7 +57,7 @@ function update_script() {
     cp -r .next/static .next/standalone/.next/
 
     mv .next/standalone /tmp/jotty_standalone
-    rm -rf * .next .git .gitignore .yarn
+    rm -rf ./* .next .git .gitignore .yarn
     mv /tmp/jotty_standalone/* .
     mv /tmp/jotty_standalone/.[!.]* . 2>/dev/null || true
     rm -rf /tmp/jotty_standalone

@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "To configure the integrated daemon after install is complete, either use the `Create Daemon` menu in the UI, or run `/root/configure_daemon.sh` for automatic configuration",
+      "text": "To configure the integrated daemon after install is complete, use the `Create Daemon` menu in the UI and follow the instructions",
       "type": "info"
     },
     {

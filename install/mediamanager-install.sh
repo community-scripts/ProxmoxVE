@@ -61,7 +61,6 @@ $STD /usr/local/bin/uv sync --locked --active -n -p cpython3.13 --managed-python
 msg_ok "Configured MediaManager"
 
 msg_info "Creating config and start script"
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 SECRET="$(openssl rand -hex 32)"
 sed -e "s/localhost:8/$LOCAL_IP:8/g" \
   -e "s|/data/|$MEDIA_DIR/|g" \

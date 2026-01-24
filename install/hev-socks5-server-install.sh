@@ -13,36 +13,30 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup ${APPLICATION}"
-RELEASE=$(curl -fsSL https://api.github.com/repos/heiher/${APPLICATION}/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -L -o "${APPLICATION}" "https://github.com/heiher/${APPLICATION}/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
-mv ${APPLICATION} /opt/${APPLICATION}
-chmod +x /opt/${APPLICATION}
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-curl -L -o "main.yml" "https://raw.githubusercontent.com/heiher/${APPLICATION}/refs/heads/main/conf/main.yml"
-sed -i 's/^#auth:/auth:/; s/^#  file: conf\/auth.txt/  file: \/root\/hev.creds/' main.yml
-mkdir -p /etc/${APPLICATION}
-USERNAME="admin"
+fetch_and_deploy_gh_release "hev-socks5-server" "heiher/hev-socks5-server" "singlefile" "latest" "/opt" "hev-socks5-server-linux-x86_64"
+
+msg_info "Setup hev-socks5-server"
+mkdir -p /etc/hev-socks5-server
+download_file "https://raw.githubusercontent.com/heiher/hev-socks5-server/refs/heads/main/conf/main.yml" "/etc/hev-socks5-server/main.yml"
+sed -i 's/^#auth:/auth:/; s/^# file: conf\/auth.txt/  file: \/root\/hev.creds/'  /etc/hev-socks5-server/main.yml
 PASSWORD=$(openssl rand -base64 16)
-MARK="0"
-echo "$USERNAME $PASSWORD $MARK" >/root/hev.creds
-mv main.yml /etc/${APPLICATION}/main.yml
-msg_ok "Setup ${APPLICATION}"
+echo "admin $PASSWORD 0" >/root/hev.creds
+msg_ok "Setup hev-socks5-server"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/${APPLICATION}.service
+cat <<EOF >/etc/systemd/system/hev-socks5-server.service
 [Unit]
-Description=${APPLICATION} Service
+Description=hev-socks5-server Service
 After=network.target
 
 [Service]
-ExecStart=/opt/${APPLICATION} /etc/${APPLICATION}/main.yml
+ExecStart=/opt/hev-socks5-server /etc/hev-socks5-server/main.yml
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ${APPLICATION}
+systemctl enable -q --now hev-socks5-server
 msg_ok "Created Service"
 
 motd_ssh

@@ -29,8 +29,7 @@ msg_ok "Installed openziti"
 
 read -r -p "${TAB3}Would you like to go through the auto configuration now? <y/N>" prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  IPADDRESS=$(hostname -I | awk '{print $1}')
-  GEN_FQDN="controller.${IPADDRESS}.sslip.io"
+  GEN_FQDN="controller.${LOCAL_IP}.sslip.io"
   read -r -p "${TAB3}Please enter the controller FQDN [${GEN_FQDN}]: " ZITI_CTRL_ADVERTISED_ADDRESS
   ZITI_CTRL_ADVERTISED_ADDRESS=${ZITI_CTRL_ADVERTISED_ADDRESS:-$GEN_FQDN}
   read -r -p "${TAB3}Please enter the controller port [1280]: " ZITI_CTRL_ADVERTISED_PORT

@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,7 +32,7 @@ function update_script() {
     PHP_VERSION="8.3" PHP_MODULE="sqlite3,bz2" PHP_APACHE="yes" setup_php
   fi
   if check_for_gh_release "grocy" "grocy/grocy"; then
-    msg_info "Updating ${APP}"
+    msg_info "Updating grocy"
     bash /var/www/html/update.sh
     msg_ok "Updated successfully!"
   fi

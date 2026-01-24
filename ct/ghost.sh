@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -23,8 +23,8 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  setup_mariadb
 
+  setup_mariadb
   NODE_VERSION="22" setup_nodejs
 
   msg_info "Updating Ghost"

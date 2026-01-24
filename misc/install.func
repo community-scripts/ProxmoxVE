@@ -37,6 +37,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 load_functions
 catch_errors
 
+# Get LXC IP address (must be called INSIDE container, after network is up)
+get_lxc_ip
+
 # ==============================================================================
 # SECTION 2: NETWORK & CONNECTIVITY
 # ==============================================================================

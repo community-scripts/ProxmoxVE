@@ -22,6 +22,9 @@ fetch_and_deploy_gh_release "Tautulli" "Tautulli/Tautulli" "tarball"
 
 msg_info "Installing Tautulli"
 cd /opt/Tautulli
+TAUTULLI_VERSION=$(get_latest_github_release "Tautulli/Tautulli" "false")
+echo "${TAUTULLI_VERSION}" >/opt/Tautulli/version.txt
+echo "master" >/opt/Tautulli/branch.txt
 uv venv -q
 uv pip install -q -r requirements.txt
 uv pip install -q pyopenssl

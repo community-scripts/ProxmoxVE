@@ -20,7 +20,6 @@ $STD apt install -y \
   imagemagick
 msg_ok "Installed Dependencies"
 
-import_local_ip
 setup_mariadb
 MARIADB_DB_NAME="wallabag" MARIADB_DB_USER="wallabag" setup_mariadb_db
 PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="bcmath,bz2,curl,gd,imagick,intl,mbstring,mysql,redis,tidy,xml,zip" setup_php

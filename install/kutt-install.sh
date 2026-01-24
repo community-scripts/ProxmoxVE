@@ -19,7 +19,6 @@ read -rp "${TAB3}Enter your choice <i/e> (default: i): " ssl_choice
 ssl_choice=${ssl_choice:-i}
 case "${ssl_choice,,}" in
 i)
-  import_local_ip
   DEFAULT_HOST="$LOCAL_IP"
 
   msg_info "Configuring Caddy"

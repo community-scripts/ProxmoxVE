@@ -24,7 +24,7 @@ Complete alphabetical reference of all functions in tools.func with parameters, 
 - `setup_golang(VERSION)` - Install Go programming language
 
 **Databases**:
-- `setup_mariadb(VERSION)` - Install MariaDB server
+- `setup_mariadb()` - Install MariaDB server (distro packages by default)
 - `setup_postgresql(VERSION)` - Install PostgreSQL
 - `setup_mongodb(VERSION)` - Install MongoDB
 - `setup_redis(VERSION)` - Install Redis cache
@@ -238,17 +238,20 @@ setup_php "8.3"
 
 ---
 
-### setup_mariadb(VERSION)
+### setup_mariadb()
 
 Install MariaDB server and client utilities.
 
 **Signature**:
 ```bash
-setup_mariadb VERSION
+setup_mariadb                         # Uses distribution packages (recommended)
+MARIADB_VERSION="11.4" setup_mariadb  # Uses official MariaDB repository
 ```
 
-**Parameters**:
-- `VERSION` - MariaDB version (e.g., "10.6", "11.0")
+**Variables**:
+- `MARIADB_VERSION` - (optional) Specific MariaDB version
+  - Not set or `"latest"`: Uses distribution packages (most reliable, avoids mirror issues)
+  - Specific version (e.g., `"11.4"`, `"12.2"`): Uses official MariaDB repository
 
 **Returns**:
 - `0` - Installation successful
@@ -259,7 +262,11 @@ setup_mariadb VERSION
 
 **Example**:
 ```bash
-setup_mariadb "11.0"
+# Recommended: Use distribution packages (stable, no mirror issues)
+setup_mariadb
+
+# Specific version from official repository
+MARIADB_VERSION="11.4" setup_mariadb
 ```
 
 ---
@@ -441,7 +448,7 @@ source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 
 pkg_update                    # Update package lists
 setup_nodejs "20"             # Install Node.js
-setup_mariadb "11"            # Install MariaDB
+setup_mariadb                 # Install MariaDB (distribution packages)
 
 # ... application installation ...
 
@@ -460,7 +467,7 @@ source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 pkg_update
 setup_nginx
 setup_php "8.3"
-setup_mariadb "11"
+setup_mariadb  # Uses distribution packages
 setup_composer
 ```
 

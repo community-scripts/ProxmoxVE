@@ -24,7 +24,6 @@ setup_composer
 fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
 setup_mariadb
 MARIADB_DB_NAME="snipeit_db" MARIADB_DB_USER="snipeit" setup_mariadb_db
-import_local_ip
 
 msg_info "Configuring Snipe-IT"
 cd /opt/snipe-it

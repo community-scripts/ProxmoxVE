@@ -65,7 +65,6 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "3" ]; then
-    import_local_ip
     msg_info "Installing FileBrowser"
     $STD curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
     $STD filebrowser config init -a '0.0.0.0'

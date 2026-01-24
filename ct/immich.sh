@@ -9,7 +9,7 @@ APP="immich"
 var_tags="${var_tags:-photos}"
 var_disk="${var_disk:-20}"
 var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-4096}"
+var_ram="${var_ram:-6144}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -96,7 +96,7 @@ EOF
       $STD apt install -y ./*.deb
       rm ./*.deb
       $STD apt-mark hold libigdgmm12
-      dpkg -l | grep -m1 "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
+      dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
       msg_ok "Intel iGPU dependencies updated"
     fi
     rm ./Dockerfile

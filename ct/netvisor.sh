@@ -49,7 +49,6 @@ function update_script() {
   if [[ -f /opt/netvisor/oidc.toml ]]; then
     mv /opt/netvisor/oidc.toml /opt/scanopy/oidc.toml
   fi
-  LOCAL_IP="$(hostname -I | awk '{print $1}')"
   if ! grep -q "PUBLIC_URL" /opt/scanopy/.env; then
     sed -i "\|_PATH=|a\NETVISOR_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
   fi

@@ -1,0 +1,35 @@
+{
+    "name": "Flatnotes",
+    "slug": "flatnotes",
+    "categories": [
+        12
+    ],
+    "date_created": "2026-01-16",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8080,
+    "documentation": "https://github.com/dullage/flatnotes/wiki",
+    "website": "https://github.com/dullage/flatnotes",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/flatnotes.webp",
+    "config_path": "/opt/flatnotes/.env",
+    "description": "A self-hosted, database-less note-taking web app that utilises a flat folder of markdown files for storage.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/flatnotes.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
+                "os": "debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

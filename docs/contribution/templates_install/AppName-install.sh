@@ -58,7 +58,7 @@ msg_ok "Installed Dependencies"
 # fetch_and_deploy_gh_release "appname" "owner/repo" "prebuild" "latest" "/opt/appname" "app-*.tar.gz"
 #
 # --- Tools & Utilities ---
-# import_local_ip                          # Sets $LOCAL_IP variable (call early!)
+# get_lxc_ip                          # Sets $LOCAL_IP variable (call early!)
 # setup_ffmpeg                             # Install FFmpeg with codecs
 # setup_hwaccel                            # Setup GPU hardware acceleration
 # setup_imagemagick                        # Install ImageMagick 7
@@ -72,7 +72,7 @@ msg_ok "Installed Dependencies"
 # NODE_VERSION="22" setup_nodejs
 # PG_VERSION="17" setup_postgresql
 # PG_DB_NAME="myapp" PG_DB_USER="myapp" setup_postgresql_db
-# import_local_ip
+# get_lxc_ip
 # fetch_and_deploy_gh_release "myapp" "owner/myapp" "tarball" "latest" "/opt/myapp"
 #
 # msg_info "Configuring MyApp"
@@ -89,7 +89,7 @@ msg_ok "Installed Dependencies"
 # EXAMPLE 2: Python Application with uv
 # =============================================================================
 # PYTHON_VERSION="3.13" setup_uv
-# import_local_ip
+# get_lxc_ip
 # fetch_and_deploy_gh_release "myapp" "owner/myapp" "tarball" "latest" "/opt/myapp"
 #
 # msg_info "Setting up MyApp"
@@ -108,7 +108,7 @@ msg_ok "Installed Dependencies"
 # setup_composer
 # setup_mariadb
 # MARIADB_DB_NAME="myapp" MARIADB_DB_USER="myapp" setup_mariadb_db
-# import_local_ip
+# get_lxc_ip
 # fetch_and_deploy_gh_release "myapp" "owner/myapp" "prebuild" "latest" "/opt/myapp" "myapp-*.tar.gz"
 #
 # msg_info "Configuring MyApp"
@@ -126,7 +126,7 @@ msg_ok "Installed Dependencies"
 # YOUR APPLICATION INSTALLATION
 # =============================================================================
 # 1. Setup runtimes and databases FIRST
-# 2. Call import_local_ip if you need the container IP
+# 2. Call get_lxc_ip if you need the container IP
 # 3. Use fetch_and_deploy_gh_release to download the app (handles version tracking)
 # 4. Configure the application
 # 5. Create systemd service
@@ -134,7 +134,7 @@ msg_ok "Installed Dependencies"
 
 # --- Setup runtimes/databases ---
 NODE_VERSION="22" setup_nodejs
-import_local_ip
+get_lxc_ip
 
 # --- Download and install app ---
 fetch_and_deploy_gh_release "[appname]" "[owner/repo]" "tarball" "latest" "/opt/[appname]"

@@ -60,6 +60,11 @@ function update_script() {
     rm -f /opt/pangolin_config_backup.tar.gz
     msg_ok "Restored config"
 
+    msg_info "Updating Badger plugin version"
+    BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
+    sed -i "s/version: \"v[0-9.]*\"/version: \"$BADGER_VERSION\"/g" /opt/pangolin/config/traefik/traefik_config.yml
+    msg_ok "Updated Badger plugin version"
+
     msg_info "Starting Services"
     systemctl start pangolin
     systemctl start gerbil

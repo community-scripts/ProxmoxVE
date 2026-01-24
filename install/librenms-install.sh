@@ -78,11 +78,10 @@ sed -i "s/listen = \/run\/php\/php8.4-fpm.sock/listen = \/run\/php-fpm-librenms.
 msg_ok "Configured PHP-FPM"
 
 msg_info "Configure Nginx"
-IP_ADDR=$(hostname -I | awk '{print $1}')
 cat >/etc/nginx/sites-enabled/librenms <<'EOF'
 server {
  listen      80;
- server_name ${IP_ADDR};
+ server_name ${LOCAL_IP};
  root        /opt/librenms/html;
  index       index.php;
 

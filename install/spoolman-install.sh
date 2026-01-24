@@ -17,27 +17,22 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  libpq-dev
+  libpq-dev \
+  libffi-dev
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Python3"
-$STD apt install -y \
-  python3-dev \
-  python3-setuptools \
-  python3-wheel \
-  python3-pip
-msg_ok "Setup Python3"
-
 fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+PYTHON_VERSION="3.14" setup_uv
 
 msg_info "Setting up Spoolman"
 cd /opt/spoolman
-$STD pip3 install --upgrade --ignore-installed -r requirements.txt
+$STD uv sync --locked --no-install-project
+$STD uv sync --locked
 cp .env.example .env
 msg_ok "Setup Spoolman"
 
 msg_info "Creating Service"
-cat <<'EOF' >/etc/systemd/system/spoolman.service
+cat <<EOF >/etc/systemd/system/spoolman.service
 [Unit]
 Description=Spoolman
 After=network.target
@@ -46,7 +41,7 @@ After=network.target
 Type=simple
 WorkingDirectory=/opt/spoolman
 EnvironmentFile=/opt/spoolman/.env
-ExecStart=uvicorn spoolman.main:app --host "${SPOOLMAN_HOST}" --port "${SPOOLMAN_PORT}"
+ExecStart=/usr/bin/bash /opt/spoolman/scripts/start.sh
 Restart=always
 User=root
 

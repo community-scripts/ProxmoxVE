@@ -65,7 +65,7 @@ pkg_update
 
 setup_nginx
 setup_php "8.3"
-setup_mariadb "11"
+setup_mariadb  # Uses distribution packages (recommended)
 setup_composer
 
 msg_ok "Web stack installed"
@@ -388,7 +388,7 @@ pkg_install package-name
 # Chain multiple tools together
 setup_nodejs "20"
 setup_php "8.3"
-setup_mariadb "11"
+setup_mariadb  # Distribution packages (recommended)
 
 # Check command success
 if ! setup_docker; then

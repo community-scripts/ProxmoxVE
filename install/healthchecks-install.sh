@@ -54,7 +54,6 @@ $STD pip install --upgrade pip wheel
 $STD pip install gunicorn -r requirements.txt
 msg_ok "Installed Python packages"
 
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >/opt/healthchecks/hc/local_settings.py
 DEBUG = False
 

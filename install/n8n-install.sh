@@ -29,13 +29,12 @@ $STD npm install --global n8n
 msg_ok "Installed n8n"
 
 msg_info "Creating Service"
-HOST_IP=$(hostname -I | awk '{print $1}')
 mkdir -p /opt
 cat <<EOF >/opt/n8n.env
 N8N_SECURE_COOKIE=false
 N8N_PORT=5678
 N8N_PROTOCOL=http
-N8N_HOST=$HOST_IP
+N8N_HOST=${LOCAL_IP}
 EOF
 
 cat <<EOF >/etc/systemd/system/n8n.service

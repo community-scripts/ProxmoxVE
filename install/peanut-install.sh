@@ -18,7 +18,7 @@ msg_info "Installing NUT"
 $STD apt install -y nut-client
 msg_ok "Installed NUT"
 
-NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
 msg_info "Setup Peanut"
@@ -28,9 +28,10 @@ $STD pnpm run build:local
 cp -r .next/static .next/standalone/.next/
 mkdir -p /opt/peanut/.next/standalone/config
 mkdir -p /etc/peanut/
+ln -sf .next/standalone/server.js server.js
 cat <<EOF >/etc/peanut/settings.yml
 WEB_HOST: 0.0.0.0
-WEB_PORT: 3000
+WEB_PORT: 8080
 NUT_HOST: 0.0.0.0
 NUT_PORT: 3493
 EOF
@@ -51,9 +52,9 @@ Environment="NODE_ENV=production"
 #Environment="NUT_HOST=localhost"
 #Environment="NUT_PORT=3493"
 #Environment="WEB_HOST=0.0.0.0"
-#Environment="WEB_PORT=3000"
+#Environment="WEB_PORT=8080"
 WorkingDirectory=/opt/peanut
-ExecStart=node /opt/peanut/.next/standalone/server.js
+ExecStart=node /opt/peanut/entrypoint.mjs
 TimeoutStopSec=30
 [Install]
 WantedBy=multi-user.target

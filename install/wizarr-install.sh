@@ -19,8 +19,8 @@ msg_ok "Installed Dependencies"
 
 setup_uv
 NODE_VERSION="22" setup_nodejs
+
 fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr" "tarball"
-import_local_ip
 
 msg_info "Configure Wizarr"
 cd /opt/wizarr

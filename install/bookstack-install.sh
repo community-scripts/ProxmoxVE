@@ -21,8 +21,8 @@ PHP_MODULE="ldap,tidy,bz2,mysqli" PHP_FPM="YES" PHP_APACHE="YES" PHP_VERSION="8.
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="bookstack_db" MARIADB_DB_USER="bookstack_user" setup_mariadb_db
+
 fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack" "tarball"
-import_local_ip
 
 msg_info "Configuring Bookstack (Patience)"
 cd /opt/bookstack

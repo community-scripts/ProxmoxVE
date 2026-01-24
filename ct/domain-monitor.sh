@@ -29,8 +29,12 @@ function update_script() {
   fi
   setup_mariadb
 
-  if ! grep -Fq "root /usr/bin/php /opt/domain-monitor/cron/check_domains.php" /etc/crontab; then
-    echo "0 0 * * * root /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >>/etc/crontab
+  if grep -Fq "root /usr/bin/php /opt/domain-monitor/cron/check_domains.php" /etc/crontab; then
+    sed -i 's|root /usr/bin/php /opt/domain-monitor/cron/check_domains.php|www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php|' /etc/crontab
+  fi
+
+  if ! grep -Fq "www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php" /etc/crontab; then
+    echo "0 0 * * * www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >> /etc/crontab
   fi
 
   if check_for_gh_release "domain-monitor" "Hosteroid/domain-monitor"; then

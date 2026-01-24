@@ -16,12 +16,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   redis-server \
   nginx \
   lsb-release \
   libvips
-#php-{ffi,opcache,redis,zip,pdo-sqlite,bcmath,pdo,curl,dom,fpm}
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.4" PHP_FPM=YES PHP_MODULE="ffi,opcache,redis,zip,pdo-sqlite,bcmath,pdo,curl,dom,fpm" setup_php
@@ -75,7 +74,6 @@ mkdir -p /opt/bar-assistant/resources/data
 curl -fsSL https://github.com/bar-assistant/data/archive/refs/heads/v5.tar.gz | tar -xz --strip-components=1 -C /opt/bar-assistant/resources/data
 MeiliSearch_API_KEY=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorization: Bearer $MASTER_KEY" | grep -o '"key":"[^"]*"' | head -n 1 | sed 's/"key":"//;s/"//')
 MeiliSearch_API_KEY_UID=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorization: Bearer $MASTER_KEY" | grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//')
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 sed -i -e "s|^APP_URL=|APP_URL=http://${LOCAL_IP}/bar/|" \
   -e "s|^MEILISEARCH_HOST=|MEILISEARCH_HOST=http://127.0.0.1:7700|" \
   -e "s|^MEILISEARCH_KEY=|MEILISEARCH_KEY=${MASTER_KEY}|" \

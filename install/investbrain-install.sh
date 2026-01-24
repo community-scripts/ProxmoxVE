@@ -33,7 +33,6 @@ setup_composer
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="investbrain" PG_DB_USER="investbrain" setup_postgresql_db
-import_local_ip
 
 fetch_and_deploy_gh_release "Investbrain" "investbrainapp/investbrain" "tarball" "latest" "/opt/investbrain"
 

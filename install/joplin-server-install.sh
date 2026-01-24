@@ -28,16 +28,17 @@ $STD pm2 install pm2-logrotate
 $STD pm2 set pm2-logrotate:max_size 100MB
 $STD pm2 set pm2-logrotate:retain 5
 $STD pm2 set pm2-logrotate:compress tr
+
 fetch_and_deploy_gh_release "joplin-server" "laurent22/joplin" "tarball"
-import_local_ip
 
 msg_info "Setting up Joplin Server (Patience)"
 cd /opt/joplin-server
 sed -i "/onenote-converter/d" packages/lib/package.json
 $STD yarn config set --home enableTelemetry 0
 export BUILD_SEQUENCIAL=1
-$STD yarn install --inline-builds
-
+$STD yarn workspaces focus @joplin/server
+$STD yarn workspaces foreach -R --topological-dev --from @joplin/server run build
+$STD yarn workspaces foreach -R --topological-dev --from @joplin/server run tsc
 cat <<EOF >/opt/joplin-server/.env
 PM2_HOME=/opt/pm2
 NODE_ENV=production
