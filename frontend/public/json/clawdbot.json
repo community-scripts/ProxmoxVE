@@ -1,0 +1,40 @@
+{
+  "name": "Clawdbot",
+  "slug": "clawdbot",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-01-24",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/clawdbot/clawdbot",
+  "website": "https://github.com/clawdbot/clawdbot",
+  "logo": "https://raw.githubusercontent.com/clawdbot/clawdbot/main/README-header.png",
+  "config_path": "/opt/clawdbot/clawdbot.env",
+  "description": "Clawdbot is a personal AI assistant you operate on your own devices. It functions as a local-first gateway that connects to messaging platforms like WhatsApp, Telegram, Slack, Discord, Signal, and iMessage. Features include voice interaction, live canvas workspaces, and multi-channel inbox capabilities. Clawdbot supports Claude and OpenAI models for AI-powered conversations and automation.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/clawdbot.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "After installation, run `clawdbot onboard --install-daemon` inside the container to configure API keys and messaging channels.",
+      "type": "warning"
+    }
+  ]
+}
