@@ -26,10 +26,14 @@ msg_ok "Installed Dependencies"
 setup_imagemagick
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="manyfold" PG_DB_USER="manyfold" setup_postgresql_db
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+
 fetch_and_deploy_gh_release "manyfold" "manyfold3d/manyfold" "tarball" "latest" "/opt/manyfold/app"
 
-msg_info "Configuring Manyfold"
 RUBY_INSTALL_VERSION=$(cat /opt/manyfold/app/.ruby-version)
+RUBY_VERSION=${RUBY_INSTALL_VERSION} RUBY_INSTALL_RAILS="true" HOME=/home/manyfold setup_ruby
+
+msg_info "Configuring Manyfold"
 YARN_VERSION=$(grep '"packageManager":' /opt/manyfold/app/package.json | sed -E 's/.*"(yarn@[0-9\.]+)".*/\1/')
 RELEASE=$(get_latest_github_release "manyfold3d/manyfold")
 useradd -m -s /usr/bin/bash manyfold
@@ -72,9 +76,6 @@ bin/rails assets:precompile
 EOF
 $STD mkdir -p /opt/manyfold_data
 msg_ok "Configured Manyfold"
-
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-RUBY_VERSION=${RUBY_INSTALL_VERSION} RUBY_INSTALL_RAILS="true" HOME=/home/manyfold setup_ruby
 
 msg_info "Installing Manyfold"
 chown -R manyfold:manyfold /home/manyfold/.rbenv
