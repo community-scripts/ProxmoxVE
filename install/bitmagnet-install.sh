@@ -21,11 +21,11 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
+PG_DB_NAME="bitmagnet" PG_DB_USER="bitmagnet" setup_postgresql_db
 setup_go
+
 fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
 RELEASE=$(cat ~/.bitmagnet)
-
-PG_DB_NAME="bitmagnet" PG_DB_USER="postgres" setup_postgresql_db
 
 msg_info "Configuring bitmagnet"
 cd /opt/bitmagnet
@@ -34,6 +34,20 @@ chmod +x bitmagnet
 msg_ok "Configured bitmagnet"
 
 read -r -p "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey
+
+cat <<EOF >/etc/bitmagnet.env
+POSTGRES_HOST=localhost
+POSTGRES_USER=${PG_DB_USER}
+POSTGRES_NAME=${PG_DB_NAME}
+POSTGRES_PASSWORD=${PG_DB_PASS}
+EOF
+
+if [ -z "$tmdbapikey" ]; then
+  echo "TMDB_ENABLED=false" >>/etc/bitmagnet.env
+else
+  echo "TMDB_API_KEY=$tmdbapikey" >>/etc/bitmagnet.env
+fi
+
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/bitmagnet-web.service
 [Unit]
@@ -44,10 +58,8 @@ After=network-online.target
 Type=simple
 User=root
 WorkingDirectory=/opt/bitmagnet
+EnvironmentFile=/etc/bitmagnet.env
 ExecStart=/opt/bitmagnet/bitmagnet worker run --all
-Environment=POSTGRES_HOST=localhost
-Environment=POSTGRES_PASSWORD=${PG_DB_PASS}
-Environment=TMDB_API_KEY=$tmdbapikey
 Restart=on-failure
 
 [Install]
