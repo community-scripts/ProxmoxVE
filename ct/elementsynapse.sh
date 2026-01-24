@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
+
   NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
   msg_info "Updating LXC"
@@ -35,26 +35,25 @@ function update_script() {
   $STD apt -y upgrade
   msg_ok "Updated LXC"
 
-    if check_for_gh_release "synapse-admin" "etkecc/synapse-admin"; then
-      msg_info "Stopping Service"
-      systemctl stop synapse-admin
-      msg_ok "Stopped Service"
+  if check_for_gh_release "synapse-admin" "etkecc/synapse-admin"; then
+    msg_info "Stopping Service"
+    systemctl stop synapse-admin
+    msg_ok "Stopped Service"
 
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "synapse-admin" "etkecc/synapse-admin" "tarball" "latest" "/opt/synapse-admin"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "synapse-admin" "etkecc/synapse-admin" "tarball" "latest" "/opt/synapse-admin"
 
-      msg_info "Building Synapse-Admin"
-      cd /opt/synapse-admin
-      $STD yarn global add serve
-      $STD yarn install --ignore-engines
-      $STD yarn build
-      mv ./dist ../ && rm -rf * && mv ../dist ./
-      msg_ok "Built Synapse-Admin"
+    msg_info "Building Synapse-Admin"
+    cd /opt/synapse-admin
+    $STD yarn global add serve
+    $STD yarn install --ignore-engines
+    $STD yarn build
+    mv ./dist ../ && rm -rf * && mv ../dist ./
+    msg_ok "Built Synapse-Admin"
 
-      msg_info "Starting Service"
-      systemctl start synapse-admin
-      msg_ok "Started Service"
-      msg_ok "Updated Synapse-Admin to ${CHECK_UPDATE_RELEASE}"
-    fi
+    msg_info "Starting Service"
+    systemctl start synapse-admin
+    msg_ok "Started Service"
+    msg_ok "Updated Synapse-Admin to ${CHECK_UPDATE_RELEASE}"
   fi
   exit
 }
