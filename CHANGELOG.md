@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - elementsynapse: correct parameter order in fetch_and_deploy_gh_release [@MickLesk](https://github.com/MickLesk) ([#11145](https://github.com/community-scripts/ProxmoxVE/pull/11145))
     - leantime: fix backup file naming [@MickLesk](https://github.com/MickLesk) ([#11137](https://github.com/community-scripts/ProxmoxVE/pull/11137))
     - [Hotfix] Element Synapse [@vhsdream](https://github.com/vhsdream) ([#11135](https://github.com/community-scripts/ProxmoxVE/pull/11135))
     - authelia: use POSIX-safe arithmetic to avoid exit code 1 with set -e in subshells [@MickLesk](https://github.com/MickLesk) ([#11125](https://github.com/community-scripts/ProxmoxVE/pull/11125))
@@ -24,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - bump crafty-controller to debian 13 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11094](https://github.com/community-scripts/ProxmoxVE/pull/11094))
     - Netbox: Refactor [@vhsdream](https://github.com/vhsdream) ([#11126](https://github.com/community-scripts/ProxmoxVE/pull/11126))
     - Flatnotes: Standard enforcing [@tremor021](https://github.com/tremor021) ([#11109](https://github.com/community-scripts/ProxmoxVE/pull/11109))
 
@@ -33,9 +35,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - nvidia: use versioned nvidia-utils package for Ubuntu fallback [@MickLesk](https://github.com/MickLesk) ([#11139](https://github.com/community-scripts/ProxmoxVE/pull/11139))
 
-### ❔ Uncategorized
+### 🌐 Website
 
-  - Byparr: Add config file path to website [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11120](https://github.com/community-scripts/ProxmoxVE/pull/11120))
+  - #### 📝 Script Information
+
+    - Byparr: Add config file path to website [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11120](https://github.com/community-scripts/ProxmoxVE/pull/11120))
 
 ## 2026-01-23
 
