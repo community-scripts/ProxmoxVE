@@ -28,6 +28,8 @@ function update_script() {
     exit
   fi
 
+  PYTHON_VERSION="3.14" setup_uv
+
   if check_for_gh_release "spoolman" "Donkie/Spoolman"; then
     msg_info "Stopping Service"
     systemctl stop spoolman
@@ -42,8 +44,10 @@ function update_script() {
 
     msg_info "Updating Spoolman"
     cd /opt/spoolman
-    $STD pip3 install -r requirements.txt
+    $STD uv sync --locked --no-install-project
+    $STD uv sync --locked
     cp /opt/spoolman_bak/.env /opt/spoolman
+    sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/bash /opt/spoolman/scripts/start.sh|' /etc/systemd/system/spoolman.service
     msg_ok "Updated Spoolman"
 
     msg_info "Starting Service"
