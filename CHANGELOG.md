@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - leantime: fix backup file naming [@MickLesk](https://github.com/MickLesk) ([#11137](https://github.com/community-scripts/ProxmoxVE/pull/11137))
     - [Hotfix] Element Synapse [@vhsdream](https://github.com/vhsdream) ([#11135](https://github.com/community-scripts/ProxmoxVE/pull/11135))
     - authelia: use POSIX-safe arithmetic to avoid exit code 1 with set -e in subshells [@MickLesk](https://github.com/MickLesk) ([#11125](https://github.com/community-scripts/ProxmoxVE/pull/11125))
     - Bitmagnet: PostgreSQL and environment variable fixes [@tremor021](https://github.com/tremor021) ([#11119](https://github.com/community-scripts/ProxmoxVE/pull/11119))
