@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Apt-Cacher NG"
-DEBIAN_FRONTEND=noninteractive $STD apt -o Dpkg::Options::="--force-confold" install -y apt-cacher-ng
+DEBIAN_FRONTEND=noninteractive $STD apt -o Dpkg::Options::="--force-confold" install -y apt-cacher-ng avahi-daemon
 sed -i 's/# PassThroughPattern: .* # this would allow CONNECT to everything/PassThroughPattern: .*/' /etc/apt-cacher-ng/acng.conf
 cat <<EOF >/etc/apt/apt.conf.d/00aptproxy.conf
 Acquire::http::Proxy "http://localhost:3142";
