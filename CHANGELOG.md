@@ -27,6 +27,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Netbox: Refactor [@vhsdream](https://github.com/vhsdream) ([#11126](https://github.com/community-scripts/ProxmoxVE/pull/11126))
     - Flatnotes: Standard enforcing [@tremor021](https://github.com/tremor021) ([#11109](https://github.com/community-scripts/ProxmoxVE/pull/11109))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - nvidia: use versioned nvidia-utils package for Ubuntu fallback [@MickLesk](https://github.com/MickLesk) ([#11139](https://github.com/community-scripts/ProxmoxVE/pull/11139))
+
 ### ❔ Uncategorized
 
   - Byparr: Add config file path to website [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11120](https://github.com/community-scripts/ProxmoxVE/pull/11120))
