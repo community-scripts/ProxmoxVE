@@ -15,11 +15,10 @@ update_os
 
 fetch_and_deploy_gh_release "authelia" "authelia/authelia" "binary"
 
-get_lxc_ip
 MAX_ATTEMPTS=3
 attempt=0
 while true; do
-  ((attempt++))
+  attempt=$((attempt + 1))
   read -rp "${TAB3}Enter your domain or IP (ex. example.com or 192.168.1.100): " DOMAIN
   if [[ -z "$DOMAIN" ]]; then
     if ((attempt >= MAX_ATTEMPTS)); then
