@@ -23,14 +23,6 @@ $STD apt install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-msg_info "Optional Dependency"
-read -r -p "Would you like to add FFmpeg (Recommended for high-quality yt-dlp)? <y/N> " prompt
-if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_info "Installing FFmpeg"
-    $STD apt-get install -y ffmpeg
-    msg_ok "Installed FFmpeg"
-fi
-
 fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-gnu-linux-x86_64"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp-nightly-builds" "singlefile" "latest" "/usr/bin" "yt-dlp_linux"
 fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
