@@ -19,7 +19,8 @@ $STD apt install -y \
   ca-certificates \
   chromium \
   graphicsmagick \
-  ghostscript
+  ghostscript \
+  ffmpeg
 msg_ok "Installed Dependencies"
 
 msg_info "Optional Dependency"
