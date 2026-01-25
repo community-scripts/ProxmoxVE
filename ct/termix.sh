@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Termix-SSH/Termix
 
-APP="Termix"  
+APP="Termix"
 var_tags="${var_tags:-ssh;terminal;management}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-4096}"
