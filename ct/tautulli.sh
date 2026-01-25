@@ -35,9 +35,10 @@ function update_script() {
     systemctl stop tautulli
     msg_ok "Stopped Service"
 
-    msg_info "Backing up config"
+    msg_info "Backing up config and database"
     cp /opt/Tautulli/config.ini /opt/tautulli_config.ini.backup
-    msg_ok "Backed up config"
+    cp /opt/Tautulli/tautulli.db /opt/tautulli.db.backup
+    msg_ok "Backed up config and database"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Tautulli" "Tautulli/Tautulli" "tarball"
 
@@ -52,10 +53,11 @@ function update_script() {
     $STD uv pip install pyopenssl
     msg_ok "Updated Tautulli"
 
-    msg_info "Restoring config"
+    msg_info "Restoring config and database"
     cp /opt/tautulli_config.ini.backup /opt/Tautulli/config.ini
-    rm -f /opt/tautulli_config.ini.backup
-    msg_ok "Restored config"
+    cp /opt/tautulli.db.backup /opt/Tautulli/tautulli.db
+    rm -f /opt/{tautulli_config.ini.backup,tautulli.db.backup}
+    msg_ok "Restored config and database"
 
     msg_info "Starting Service"
     systemctl start tautulli
