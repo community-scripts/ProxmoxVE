@@ -23,7 +23,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/systemd/system/tracearr.service ]]; then
+  if [[ ! -f /lib/systemd/system/tracearr.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -32,6 +32,14 @@ function update_script() {
     msg_info "Stopping Services"
     systemctl stop tracearr postgresql redis
     msg_ok "Stopped Services"
+
+    if command -v node &>/dev/null; then
+      CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
+      if [[ "$CURRENT_NODE_VERSION" != "24" ]]; then
+        msg_info "Updating Node.js"
+        NODE_VERSION="24" setup_nodejs
+      fi
+    fi
 
     msg_info "Updating pnpm"
     PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/connorgallopo/Tracearr/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]' | cut -d'+' -f1)"

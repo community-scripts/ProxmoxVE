@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y redis-server
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 PG_VERSION="18" setup_postgresql
 
 msg_info "Installing pnpm"
