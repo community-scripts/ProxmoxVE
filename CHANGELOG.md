@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Deluge: correct service paths to /usr/local/bin [@MickLesk](https://github.com/MickLesk) ([#11170](https://github.com/community-scripts/ProxmoxVE/pull/11170))
     - Manyfold: fix permissions error [@vhsdream](https://github.com/vhsdream) ([#11165](https://github.com/community-scripts/ProxmoxVE/pull/11165))
 
   - #### ✨ New Features
