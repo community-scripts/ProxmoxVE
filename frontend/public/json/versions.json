@@ -1,5 +1,85 @@
 [
   {
+    "name": "ollama/ollama",
+    "version": "v0.15.0-rc6",
+    "date": "2026-01-24T04:10:04Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.7.1",
+    "date": "2026-01-24T21:03:08Z"
+  },
+  {
+    "name": "go-vikunja/vikunja",
+    "version": "v1.0.0-rc0",
+    "date": "2025-08-17T18:47:15Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.15.1",
+    "date": "2026-01-24T20:34:24Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.81.0-stable",
+    "date": "2026-01-24T19:46:15Z"
+  },
+  {
+    "name": "benzino77/tasmocompiler",
+    "version": "v13.1.0",
+    "date": "2026-01-24T17:52:54Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.18.5",
+    "date": "2026-01-24T17:15:32Z"
+  },
+  {
+    "name": "TasmoAdmin/TasmoAdmin",
+    "version": "v4.3.3",
+    "date": "2026-01-24T15:58:33Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.13",
+    "date": "2026-01-06T12:09:32Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.5.1",
+    "date": "2026-01-24T14:44:07Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.2.1-beta",
+    "date": "2026-01-24T14:38:21Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.3.1-rc3",
+    "date": "2026-01-24T14:31:01Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.12.2",
+    "date": "2026-01-24T14:01:03Z"
+  },
+  {
+    "name": "deuxfleurs-org/garage",
+    "version": "v1.3.1",
+    "date": "2026-01-24T13:50:25Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.3.0",
     "date": "2026-01-08T16:08:34Z"
@@ -20,11 +100,6 @@
     "date": "2026-01-24T05:56:30Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.15.0-rc6",
-    "date": "2026-01-24T04:10:04Z"
-  },
-  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.4.0",
     "date": "2026-01-24T00:51:05Z"
@@ -43,11 +118,6 @@
     "name": "azukaar/Cosmos-Server",
     "version": "v0.20.2",
     "date": "2026-01-24T00:12:39Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
   },
   {
     "name": "mongodb/mongo",
@@ -75,19 +145,9 @@
     "date": "2026-01-23T20:15:10Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
     "date": "2026-01-12T09:54:36Z"
-  },
-  {
-    "name": "fosrl/pangolin",
-    "version": "1.15.0",
-    "date": "2026-01-23T19:48:21Z"
   },
   {
     "name": "metabase/metabase",
@@ -103,11 +163,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.51.0",
     "date": "2026-01-23T19:29:49Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.18.3",
-    "date": "2026-01-22T23:11:30Z"
   },
   {
     "name": "ghostfolio/ghostfolio",
@@ -178,11 +233,6 @@
     "name": "esphome/esphome",
     "version": "2026.1.1",
     "date": "2026-01-22T23:19:21Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.7.0",
-    "date": "2026-01-22T18:39:10Z"
   },
   {
     "name": "crafty-controller/crafty-4",
@@ -273,11 +323,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.2.3",
     "date": "2026-01-22T03:57:50Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.81.0.rc.5",
-    "date": "2026-01-22T03:30:46Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -392,12 +437,7 @@
   {
     "name": "chrisvel/tududi",
     "version": "v0.88.4",
-    "date": "2026-01-20T15:11:58Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.1.1-stable",
-    "date": "2026-01-12T23:25:10Z"
+    "date": "2026-01-20T16:02:12Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -433,11 +473,6 @@
     "name": "passbolt/passbolt_api",
     "version": "v5.9.0-test.1",
     "date": "2026-01-20T10:34:53Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.5.0",
-    "date": "2026-01-20T08:53:52Z"
   },
   {
     "name": "HydroshieldMKII/Guardian",
@@ -638,11 +673,6 @@
     "name": "traefik/traefik",
     "version": "v3.6.7",
     "date": "2026-01-14T14:11:45Z"
-  },
-  {
-    "name": "tobychui/zoraxy",
-    "version": "v3.3.1-rc2",
-    "date": "2026-01-14T12:29:28Z"
   },
   {
     "name": "cloudreve/cloudreve",
@@ -890,11 +920,6 @@
     "date": "2026-01-06T14:46:07Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.13",
-    "date": "2026-01-06T12:09:32Z"
-  },
-  {
     "name": "transmission/transmission",
     "version": "4.0.1-beta.1",
     "date": "2024-12-13T00:16:24Z"
@@ -932,7 +957,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:09Z"
+    "date": "2026-01-02T19:40:19Z"
   },
   {
     "name": "gotify/server",
@@ -953,11 +978,6 @@
     "name": "wavelog/wavelog",
     "version": "2.2.2",
     "date": "2025-12-31T16:53:34Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.12.1",
-    "date": "2025-12-30T17:25:57Z"
   },
   {
     "name": "ArchiveBox/ArchiveBox",
@@ -1245,11 +1265,6 @@
     "date": "2025-11-28T03:52:50Z"
   },
   {
-    "name": "go-vikunja/vikunja",
-    "version": "v1.0.0-rc0",
-    "date": "2025-08-17T18:47:15Z"
-  },
-  {
     "name": "phpipam/phpipam",
     "version": "v1.7.4",
     "date": "2025-11-27T18:53:28Z"
@@ -1283,11 +1298,6 @@
     "name": "MariaDB/server",
     "version": "mariadb-12.1.2",
     "date": "2025-11-18T15:16:21Z"
-  },
-  {
-    "name": "TasmoAdmin/TasmoAdmin",
-    "version": "v4.3.2",
-    "date": "2025-10-18T12:11:00Z"
   },
   {
     "name": "nextcloud/nextcloudpi",
@@ -1360,11 +1370,6 @@
     "date": "2025-11-08T14:27:27Z"
   },
   {
-    "name": "deuxfleurs-org/garage",
-    "version": "v1.99.3-internal",
-    "date": "2025-11-06T17:27:21Z"
-  },
-  {
     "name": "Notifiarr/notifiarr",
     "version": "v0.9.1",
     "date": "2025-11-06T02:26:53Z"
@@ -1418,11 +1423,6 @@
     "name": "drakkan/sftpgo",
     "version": "v2.7.0",
     "date": "2025-10-23T17:15:07Z"
-  },
-  {
-    "name": "benzino77/tasmocompiler",
-    "version": "v13.0.0",
-    "date": "2025-10-19T10:03:18Z"
   },
   {
     "name": "minio/minio",
