@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [FIX] Tautulli: ensure virtualenv is recreated during update; backup tautulli.db [@vhsdream](https://github.com/vhsdream) ([#11182](https://github.com/community-scripts/ProxmoxVE/pull/11182))
     - [Fix] Pangolin: ensure additional JSON files are in place [@vhsdream](https://github.com/vhsdream) ([#11183](https://github.com/community-scripts/ProxmoxVE/pull/11183))
     - Manyfold: fix permissions error [@vhsdream](https://github.com/vhsdream) ([#11165](https://github.com/community-scripts/ProxmoxVE/pull/11165))
     - Termix: recreate nginx dirs and backup uploads on update [@MickLesk](https://github.com/MickLesk) ([#11169](https://github.com/community-scripts/ProxmoxVE/pull/11169))
