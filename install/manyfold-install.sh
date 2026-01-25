@@ -15,12 +15,12 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-    libarchive-dev \
-    git \
-    libmariadb-dev \
-    redis-server \
-    nginx \
-    libassimp-dev
+  libarchive-dev \
+  git \
+  libmariadb-dev \
+  redis-server \
+  nginx \
+  libassimp-dev
 msg_ok "Installed Dependencies"
 
 setup_imagemagick
@@ -78,8 +78,7 @@ $STD mkdir -p /opt/manyfold_data
 msg_ok "Configured Manyfold"
 
 msg_info "Installing Manyfold"
-chown -R manyfold:manyfold /home/manyfold/.rbenv
-chown -R manyfold:manyfold /opt/manyfold
+chown -R manyfold:manyfold {/home/manyfold,/opt/manyfold}
 chmod +x /opt/manyfold/user_setup.sh
 $STD npm install --global corepack
 $STD sudo -u manyfold bash /opt/manyfold/user_setup.sh
@@ -91,7 +90,7 @@ source /opt/manyfold/.env
 export PATH="/home/manyfold/.rbenv/shims:/home/manyfold/.rbenv/bin:$PATH"
 $STD foreman export systemd /etc/systemd/system -a manyfold -u manyfold -f /opt/manyfold/app/Procfile
 for f in /etc/systemd/system/manyfold-*.service; do
-    sed -i "s|/bin/bash -lc '|/bin/bash -lc 'source /opt/manyfold/.env \&\& |" "$f"
+  sed -i "s|/bin/bash -lc '|/bin/bash -lc 'source /opt/manyfold/.env \&\& |" "$f"
 done
 systemctl enable -q --now manyfold.target manyfold-rails.1 manyfold-default_worker.1 manyfold-performance_worker.1
 cat <<EOF >/etc/nginx/sites-available/manyfold.conf
