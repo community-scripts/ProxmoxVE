@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Karakeep: Add the FFmpeg option to the installation script [@vonhyou](https://github.com/vonhyou) ([#11157](https://github.com/community-scripts/ProxmoxVE/pull/11157))
     - apt-cacher-ng: add avahi-daemon for mDNS service discovery [@MickLesk](https://github.com/MickLesk) ([#11140](https://github.com/community-scripts/ProxmoxVE/pull/11140))
 
 ## 2026-01-24
