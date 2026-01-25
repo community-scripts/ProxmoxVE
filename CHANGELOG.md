@@ -16,9 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [Fix] Pangolin: ensure additional JSON files are in place [@vhsdream](https://github.com/vhsdream) ([#11183](https://github.com/community-scripts/ProxmoxVE/pull/11183))
+    - Manyfold: fix permissions error [@vhsdream](https://github.com/vhsdream) ([#11165](https://github.com/community-scripts/ProxmoxVE/pull/11165))
     - Termix: recreate nginx dirs and backup uploads on update [@MickLesk](https://github.com/MickLesk) ([#11169](https://github.com/community-scripts/ProxmoxVE/pull/11169))
     - Deluge: correct service paths to /usr/local/bin [@MickLesk](https://github.com/MickLesk) ([#11170](https://github.com/community-scripts/ProxmoxVE/pull/11170))
-    - Manyfold: fix permissions error [@vhsdream](https://github.com/vhsdream) ([#11165](https://github.com/community-scripts/ProxmoxVE/pull/11165))
 
   - #### ✨ New Features
 
