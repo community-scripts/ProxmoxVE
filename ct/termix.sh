@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Termix-SSH/Termix
 
-APP="Termix"
+APP="Termix"  
 var_tags="${var_tags:-ssh;terminal;management}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-4096}"
@@ -36,9 +36,18 @@ function update_script() {
 
     msg_info "Backing up Data"
     cp -r /opt/termix/data /opt/termix_data_backup
+    cp -r /opt/termix/uploads /opt/termix_uploads_backup
     msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"
+
+    msg_info "Recreating Directories"
+    mkdir -p /opt/termix/html \
+      /opt/termix/nginx \
+      /opt/termix/nginx/logs \
+      /opt/termix/nginx/cache \
+      /opt/termix/nginx/client_body
+    msg_ok "Recreated Directories"
 
     msg_info "Building Frontend"
     cd /opt/termix
@@ -60,9 +69,9 @@ function update_script() {
     msg_ok "Set up Production Dependencies"
 
     msg_info "Restoring Data"
-    mkdir -p /opt/termix/data
-    cp -r /opt/termix_data_backup/. /opt/termix/data
-    rm -rf /opt/termix_data_backup
+    cp -r /opt/termix_data_backup /opt/termix/data
+    cp -r /opt/termix_uploads_backup /opt/termix/uploads
+    rm -rf /opt/termix_data_backup /opt/termix_uploads_backup
     msg_ok "Restored Data"
 
     msg_info "Updating Frontend Files"
