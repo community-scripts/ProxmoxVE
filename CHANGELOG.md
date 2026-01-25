@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-25
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - apt-cacher-ng: add avahi-daemon for mDNS service discovery [@MickLesk](https://github.com/MickLesk) ([#11140](https://github.com/community-scripts/ProxmoxVE/pull/11140))
+
 ## 2026-01-24
 
 ### 🆕 New Scripts
