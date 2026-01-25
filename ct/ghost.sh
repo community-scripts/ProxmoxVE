@@ -26,6 +26,7 @@ function update_script() {
 
   setup_mariadb
   NODE_VERSION="22" setup_nodejs
+  ensure_dependencies git
 
   msg_info "Updating Ghost"
   if command -v ghost &>/dev/null; then

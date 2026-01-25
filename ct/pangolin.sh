@@ -53,6 +53,8 @@ function update_script() {
     cp -R .next/standalone ./
     chmod +x ./dist/cli.mjs
     cp server/db/names.json ./dist/names.json
+    cp server/db/ios_models.json ./dist/ios_models.json
+    cp server/db/mac_models.json ./dist/mac_models.json
     msg_ok "Updated Pangolin"
 
     msg_info "Restoring config"

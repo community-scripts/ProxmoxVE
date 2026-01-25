@@ -47,6 +47,8 @@ cd /opt/pangolin
 EOF
 chmod +x /usr/local/bin/pangctl ./dist/cli.mjs
 cp server/db/names.json ./dist/names.json
+cp server/db/ios_models.json ./dist/ios_models.json
+cp server/db/mac_models.json ./dist/mac_models.json
 mkdir -p /var/config
 
 cat <<EOF >/opt/pangolin/config/config.yml

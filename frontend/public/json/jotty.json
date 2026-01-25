@@ -19,9 +19,9 @@
       "type": "default",
       "script": "ct/jotty.sh",
       "resources": {
-        "cpu": 2,
-        "ram": 4096,
-        "hdd": 8,
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 5,
         "os": "debian",
         "version": "13"
       }
@@ -31,10 +31,5 @@
     "username": null,
     "password": null
   },
-  "notes": [
-    {
-      "text": "jotty was previously named rwMarkable",
-      "type": "info"
-    }
-  ]
+  "notes": []
 }

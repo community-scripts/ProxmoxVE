@@ -265,7 +265,7 @@ After=network.target postgresql.service
 [Service]
 Type=simple
 User=root
-WorkingDirectory=${INSTALL_PATH}
+WorkingDirectory=${INSTALL_PATH}/backend
 EnvironmentFile=${CONFIG_PATH}
 ExecStart=/usr/bin/node ${INSTALL_PATH}/backend/server.js
 Restart=always

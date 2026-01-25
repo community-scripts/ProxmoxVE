@@ -10,15 +10,42 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2026-01-26
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Ghost: Fix missing dependency [@tremor021](https://github.com/tremor021) ([#11196](https://github.com/community-scripts/ProxmoxVE/pull/11196))
+    - tracearr: fix install check and update node to version 24 [@durzo](https://github.com/durzo) ([#11188](https://github.com/community-scripts/ProxmoxVE/pull/11188))
+
+  - #### ✨ New Features
+
+    - jotty: full refactor / prebuild package [@MickLesk](https://github.com/MickLesk) ([#11059](https://github.com/community-scripts/ProxmoxVE/pull/11059))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: refine cleanup_lxc to safely clear caches [@MickLesk](https://github.com/MickLesk) ([#11197](https://github.com/community-scripts/ProxmoxVE/pull/11197))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - jellystat: correct WorkingDirectory to /backend [@MickLesk](https://github.com/MickLesk) ([#11201](https://github.com/community-scripts/ProxmoxVE/pull/11201))
+
 ## 2026-01-25
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - [FIX] Tautulli: ensure virtualenv is recreated during update; backup tautulli.db [@vhsdream](https://github.com/vhsdream) ([#11182](https://github.com/community-scripts/ProxmoxVE/pull/11182))
+    - [Fix] Pangolin: ensure additional JSON files are in place [@vhsdream](https://github.com/vhsdream) ([#11183](https://github.com/community-scripts/ProxmoxVE/pull/11183))
+    - Manyfold: fix permissions error [@vhsdream](https://github.com/vhsdream) ([#11165](https://github.com/community-scripts/ProxmoxVE/pull/11165))
     - Termix: recreate nginx dirs and backup uploads on update [@MickLesk](https://github.com/MickLesk) ([#11169](https://github.com/community-scripts/ProxmoxVE/pull/11169))
     - Deluge: correct service paths to /usr/local/bin [@MickLesk](https://github.com/MickLesk) ([#11170](https://github.com/community-scripts/ProxmoxVE/pull/11170))
-    - Manyfold: fix permissions error [@vhsdream](https://github.com/vhsdream) ([#11165](https://github.com/community-scripts/ProxmoxVE/pull/11165))
 
   - #### ✨ New Features
 

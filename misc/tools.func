@@ -2631,6 +2631,7 @@ function setup_hwaccel() {
   # GPU Selection - Let user choose which GPU(s) to configure
   # ═══════════════════════════════════════════════════════════════════════════
   local -a SELECTED_INDICES=()
+  local install_nvidia_drivers="yes"
 
   if [[ $gpu_count -eq 1 ]]; then
     # Single GPU - auto-select
@@ -2689,6 +2690,30 @@ function setup_hwaccel() {
       for i in "${!GPU_LIST[@]}"; do
         SELECTED_INDICES+=("$i")
       done
+    fi
+  fi
+
+  # Ask whether to install NVIDIA drivers in the container
+  local nvidia_selected="no"
+  for idx in "${SELECTED_INDICES[@]}"; do
+    if [[ "${GPU_TYPES[$idx]}" == "NVIDIA" ]]; then
+      nvidia_selected="yes"
+      break
+    fi
+  done
+
+  if [[ "$nvidia_selected" == "yes" ]]; then
+    if [[ -n "${INSTALL_NVIDIA_DRIVERS:-}" ]]; then
+      install_nvidia_drivers="${INSTALL_NVIDIA_DRIVERS}"
+    else
+      echo ""
+      msg_custom "🎮" "${GN}" "NVIDIA GPU passthrough detected"
+      local nvidia_reply=""
+      read -r -t 60 -p "${TAB3}⚙️ Install NVIDIA driver libraries in the container? [Y/n] (auto-yes in 60s): " nvidia_reply || nvidia_reply=""
+      case "${nvidia_reply,,}" in
+      n | no) install_nvidia_drivers="no" ;;
+      *) install_nvidia_drivers="yes" ;;
+      esac
     fi
   fi
 
@@ -2752,7 +2777,11 @@ function setup_hwaccel() {
     # NVIDIA GPUs
     # ─────────────────────────────────────────────────────────────────────────
     NVIDIA)
-      _setup_nvidia_gpu "$os_id" "$os_codename" "$os_version"
+      if [[ "$install_nvidia_drivers" == "yes" ]]; then
+        _setup_nvidia_gpu "$os_id" "$os_codename" "$os_version"
+      else
+        msg_warn "Skipping NVIDIA driver installation (user opted to install manually)"
+      fi
       ;;
     esac
   done

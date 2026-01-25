@@ -13,6 +13,7 @@ setting_up_container
 network_check
 update_os
 
+msg_custom "ℹ️" "${GN}" "If NVIDIA GPU passthrough is detected, you'll be asked whether to install drivers in the container"
 setup_hwaccel
 
 msg_info "Installing Jellyfin"

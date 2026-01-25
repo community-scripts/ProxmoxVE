@@ -17,7 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   nginx \
   ca-certificates \
-  libjemalloc2
+  libjemalloc2 \
+  git
 msg_ok "Installed Dependencies"
 
 setup_mariadb

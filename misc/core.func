@@ -815,11 +815,9 @@ is_verbose_mode() {
 # ------------------------------------------------------------------------------
 # cleanup_lxc()
 #
-# - Comprehensive cleanup of package managers, caches, and logs
-# - Supports Alpine (apk), Debian/Ubuntu (apt), and language package managers
-# - Cleans: Python (pip/uv), Node.js (npm/yarn/pnpm), Go, Rust, Ruby, PHP
-# - Truncates log files and vacuums systemd journal
-# - Run at end of container creation to minimize disk usage
+# - Cleans package manager and language caches (safe for installs AND updates)
+# - Supports Alpine (apk), Debian/Ubuntu (apt), Python, Node.js, Go, Rust, Ruby, PHP
+# - Uses fallback error handling to prevent cleanup failures from breaking installs
 # ------------------------------------------------------------------------------
 cleanup_lxc() {
   msg_info "Cleaning up"
@@ -828,32 +826,52 @@ cleanup_lxc() {
     $STD apk cache clean || true
     rm -rf /var/cache/apk/*
   else
-    $STD apt -y autoremove || true
-    $STD apt -y autoclean || true
-    $STD apt -y clean || true
+    $STD apt -y autoremove 2>/dev/null || msg_warn "apt autoremove failed (non-critical)"
+    $STD apt -y autoclean 2>/dev/null || msg_warn "apt autoclean failed (non-critical)"
+    $STD apt -y clean 2>/dev/null || msg_warn "apt clean failed (non-critical)"
   fi
 
-  # Clear temp artifacts (keep sockets/FIFOs; ignore errors)
   find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
   find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
 
-  # Node.js npm - directly remove cache directory
-  # npm cache clean/verify can fail with ENOTEMPTY errors, so we skip them
+  # Python
+  if command -v pip &>/dev/null; then
+    rm -rf /root/.cache/pip 2>/dev/null || true
+  fi
+  if command -v uv &>/dev/null; then
+    rm -rf /root/.cache/uv 2>/dev/null || true
+  fi
+
+  # Node.js
   if command -v npm &>/dev/null; then
     rm -rf /root/.npm/_cacache /root/.npm/_logs 2>/dev/null || true
   fi
-  # Node.js yarn
-  if command -v yarn &>/dev/null; then yarn cache clean &>/dev/null || true; fi
-  # Node.js pnpm
-  if command -v pnpm &>/dev/null; then pnpm store prune &>/dev/null || true; fi
-  # Go
-  if command -v go &>/dev/null; then $STD go clean -cache -modcache || true; fi
-  # Rust cargo
-  if command -v cargo &>/dev/null; then $STD cargo clean || true; fi
-  # Ruby gem
-  if command -v gem &>/dev/null; then $STD gem cleanup || true; fi
-  # Composer (PHP)
-  if command -v composer &>/dev/null; then COMPOSER_ALLOW_SUPERUSER=1 $STD composer clear-cache || true; fi
+  if command -v yarn &>/dev/null; then
+    rm -rf /root/.cache/yarn /root/.yarn/cache 2>/dev/null || true
+  fi
+  if command -v pnpm &>/dev/null; then
+    pnpm store prune &>/dev/null || true
+  fi
+
+  # Go (only build cache, not modules)
+  if command -v go &>/dev/null; then
+    $STD go clean -cache 2>/dev/null || true
+  fi
+
+  # Rust (only registry cache, not build artifacts)
+  if command -v cargo &>/dev/null; then
+    rm -rf /root/.cargo/registry/cache /root/.cargo/.package-cache 2>/dev/null || true
+  fi
+
+  # Ruby
+  if command -v gem &>/dev/null; then
+    rm -rf /root/.gem/cache 2>/dev/null || true
+  fi
+
+  # PHP
+  if command -v composer &>/dev/null; then
+    rm -rf /root/.composer/cache 2>/dev/null || true
+  fi
 
   msg_ok "Cleaned"
 }
