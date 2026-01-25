@@ -38,7 +38,7 @@ After=network-online.target
 [Service]
 Type=simple
 UMask=007
-ExecStart=/usr/bin/deluged -d
+ExecStart=/usr/local/bin/deluged -d
 Restart=on-failure
 TimeoutStopSec=300
 
@@ -56,7 +56,7 @@ Wants=deluged.service
 [Service]
 Type=simple
 UMask=027
-ExecStart=/usr/bin/deluge-web -d
+ExecStart=/usr/local/bin/deluge-web -d
 Restart=on-failure
 
 [Install]
