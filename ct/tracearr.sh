@@ -28,18 +28,12 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   if check_for_gh_release "tracearr" "connorgallopo/Tracearr"; then
     msg_info "Stopping Services"
     systemctl stop tracearr postgresql redis
     msg_ok "Stopped Services"
-
-    if command -v node &>/dev/null; then
-      CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
-      if [[ "$CURRENT_NODE_VERSION" != "24" ]]; then
-        msg_info "Updating Node.js"
-        NODE_VERSION="24" setup_nodejs
-      fi
-    fi
 
     msg_info "Updating pnpm"
     PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/connorgallopo/Tracearr/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]' | cut -d'+' -f1)"
