@@ -39,6 +39,7 @@
 #   * Generic/Shell errors (1, 2, 124, 126-130, 134, 137, 139, 141, 143)
 #   * curl/wget errors (6, 7, 22, 28, 35)
 #   * Package manager errors (APT, DPKG: 100-102, 255)
+#   * Systemd/Service errors (150-154)
 #   * Python/pip/uv errors (160-162)
 #   * PostgreSQL errors (170-173)
 #   * MySQL/MariaDB errors (180-183)
@@ -78,6 +79,13 @@ explain_exit_code() {
   139) echo "Segmentation fault (core dumped)" ;;
   141) echo "Broken pipe (SIGPIPE - output closed prematurely)" ;;
   143) echo "Terminated (SIGTERM)" ;;
+
+  # --- Systemd / Service errors (150-154) ---
+  150) echo "Systemd: Service failed to start" ;;
+  151) echo "Systemd: Service unit not found" ;;
+  152) echo "Permission denied (EACCES)" ;;
+  153) echo "Build/compile failed (make/gcc/cmake)" ;;
+  154) echo "Node.js: Native addon build failed (node-gyp)" ;;
 
   # --- Python / pip / uv (160-162) ---
   160) echo "Python: Virtualenv / uv environment missing or broken" ;;
