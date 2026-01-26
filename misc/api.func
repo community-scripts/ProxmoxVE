@@ -36,14 +36,15 @@
 #
 # - Maps numeric exit codes to human-readable error descriptions
 # - Supports:
-#   * Generic/Shell errors (1, 2, 126, 127, 128, 130, 137, 139, 143)
-#   * Package manager errors (APT, DPKG: 100, 101, 255)
-#   * Node.js/npm errors (243-249, 254)
+#   * Generic/Shell errors (1, 2, 124, 126-130, 134, 137, 139, 141, 143)
+#   * curl/wget errors (6, 7, 22, 28, 35)
+#   * Package manager errors (APT, DPKG: 100-102, 255)
+#   * Node.js/npm errors (243, 245-249, 254)
 #   * Python/pip/uv errors (210-212)
 #   * PostgreSQL errors (231-234)
-#   * MySQL/MariaDB errors (241-244)
-#   * MongoDB errors (251-254)
-#   * Proxmox custom codes (200-231)
+#   * MySQL/MariaDB errors (240-242, 244)
+#   * MongoDB errors (250-253)
+#   * Proxmox custom codes (200-223)
 # - Returns description string for given exit code
 # - Shared function with error_handler.func for consistency
 # ------------------------------------------------------------------------------
@@ -53,17 +54,30 @@ explain_exit_code() {
   # --- Generic / Shell ---
   1) echo "General error / Operation not permitted" ;;
   2) echo "Misuse of shell builtins (e.g. syntax error)" ;;
+  
+  # --- curl / wget errors (commonly seen in downloads) ---
+  6) echo "curl: Couldn't resolve host (DNS failure)" ;;
+  7) echo "curl: Failed to connect to host (network unreachable)" ;;
+  22) echo "curl: HTTP error returned (404, 429 rate limit, 500, etc.)" ;;
+  28) echo "curl: Operation timeout (slow network or large download)" ;;
+  35) echo "curl: SSL connect error (certificate problem)" ;;
+  
+  # --- Common shell/system errors ---
+  124) echo "Timeout: Command took too long to execute" ;;
   126) echo "Command invoked cannot execute (permission problem?)" ;;
   127) echo "Command not found" ;;
   128) echo "Invalid argument to exit" ;;
   130) echo "Terminated by Ctrl+C (SIGINT)" ;;
-  137) echo "Killed (SIGKILL / Out of memory?)" ;;
+  134) echo "SIGABRT: Process aborted (Node.js heap overflow / assertion failed)" ;;
+  137) echo "SIGKILL: Process killed (Out of memory / OOM killer)" ;;
   139) echo "Segmentation fault (core dumped)" ;;
+  141) echo "SIGPIPE: Broken pipe (write to closed connection)" ;;
   143) echo "Terminated (SIGTERM)" ;;
 
   # --- Package manager / APT / DPKG ---
   100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
   101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
+  102) echo "APT: Lock file held by another process (dpkg/apt already running)" ;;
   255) echo "DPKG: Fatal internal error" ;;
 
   # --- Node.js / npm / pnpm / yarn ---
@@ -73,7 +87,6 @@ explain_exit_code() {
   247) echo "Node.js: Fatal internal error" ;;
   248) echo "Node.js: Invalid C++ addon / N-API failure" ;;
   249) echo "Node.js: Inspector error" ;;
-  254) echo "npm/pnpm/yarn: Unknown fatal error" ;;
 
   # --- Python / pip / uv ---
   210) echo "Python: Virtualenv / uv environment missing or broken" ;;
@@ -86,17 +99,20 @@ explain_exit_code() {
   233) echo "PostgreSQL: Database does not exist" ;;
   234) echo "PostgreSQL: Fatal error in query / syntax" ;;
 
-  # --- MySQL / MariaDB ---
-  241) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
-  242) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
-  243) echo "MySQL/MariaDB: Database does not exist" ;;
+  # --- MySQL / MariaDB (using 240-244 range to avoid conflicts) ---
+  240) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
+  241) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
+  242) echo "MySQL/MariaDB: Database does not exist" ;;
   244) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
 
-  # --- MongoDB ---
-  251) echo "MongoDB: Connection failed (server not running)" ;;
-  252) echo "MongoDB: Authentication failed (bad user/password)" ;;
-  253) echo "MongoDB: Database not found" ;;
-  254) echo "MongoDB: Fatal query error" ;;
+  # --- MongoDB (using 250-253 range) ---
+  250) echo "MongoDB: Connection failed (server not running)" ;;
+  251) echo "MongoDB: Authentication failed (bad user/password)" ;;
+  252) echo "MongoDB: Database not found" ;;
+  253) echo "MongoDB: Fatal query error" ;;
+  
+  # --- npm/pnpm/yarn generic ---
+  254) echo "npm/pnpm/yarn: Unknown fatal error" ;;
 
   # --- Proxmox Custom Codes ---
   200) echo "Custom: Failed to create lock file" ;;
@@ -107,9 +123,9 @@ explain_exit_code() {
   207) echo "Custom: Password contains unescaped special characters (-, /, \\, *, etc.)" ;;
   208) echo "Custom: Invalid configuration (DNS/MAC/Network format error)" ;;
   209) echo "Custom: Container creation failed (check logs for pct create output)" ;;
-  210) echo "Custom: Cluster not quorate" ;;
-  211) echo "Custom: Timeout waiting for template lock (concurrent download in progress)" ;;
-  214) echo "Custom: Not enough storage space" ;;
+  # 210 already used by Python
+  # 211 already used by Python  
+  214) echo "Custom: Not enough storage space (ENOSPC)" ;;
   215) echo "Custom: Container created but not listed (ghost state - check /etc/pve/lxc/)" ;;
   216) echo "Custom: RootFS entry missing in config (incomplete creation)" ;;
   217) echo "Custom: Storage does not support rootdir (check storage capabilities)" ;;

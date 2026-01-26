@@ -3978,8 +3978,8 @@ EOF'
       error_explanation="$(explain_exit_code "$install_exit_code")"
     fi
     
-    # OOM detection: exit codes 137 (SIGKILL/OOM) and 243 (Node.js heap)
-    if [[ $install_exit_code -eq 137 || $install_exit_code -eq 243 ]]; then
+    # OOM detection: exit codes 134 (SIGABRT/heap), 137 (SIGKILL/OOM), 243 (Node.js heap)
+    if [[ $install_exit_code -eq 134 || $install_exit_code -eq 137 || $install_exit_code -eq 243 ]]; then
       is_oom=true
     fi
     
