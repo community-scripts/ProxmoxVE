@@ -33,6 +33,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: refine cleanup_lxc to safely clear caches [@MickLesk](https://github.com/MickLesk) ([#11197](https://github.com/community-scripts/ProxmoxVE/pull/11197))
 
+  - #### ✨ New Features
+
+    - core: add nesting warning for systemd-based distributions [@MickLesk](https://github.com/MickLesk) ([#11208](https://github.com/community-scripts/ProxmoxVE/pull/11208))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
