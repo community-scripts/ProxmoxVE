@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-26
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - tracearr: fix install check and update node to version 24 [@durzo](https://github.com/durzo) ([#11188](https://github.com/community-scripts/ProxmoxVE/pull/11188))
+
 ## 2026-01-25
 
 ### 🚀 Updated Scripts
