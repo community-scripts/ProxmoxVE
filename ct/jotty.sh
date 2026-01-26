@@ -40,7 +40,7 @@ function update_script() {
     msg_ok "Backed up configuration & data"
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "/opt/jotty" "jotty_*_prebuild.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "latest" "/opt/jotty" "jotty_*_prebuild.tar.gz"
 
     msg_info "Restoring configuration & data"
     mv /opt/app.env /opt/jotty/.env
