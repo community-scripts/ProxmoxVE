@@ -1,5 +1,55 @@
 [
   {
+    "name": "plexguide/Huntarr.io",
+    "version": "9.0.3",
+    "date": "2026-01-25T22:20:23Z"
+  },
+  {
+    "name": "TasmoAdmin/TasmoAdmin",
+    "version": "v4.3.4",
+    "date": "2026-01-25T22:16:41Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-availability-sync-single-server-resolution",
+    "date": "2026-01-25T21:05:21Z"
+  },
+  {
+    "name": "Part-DB/Part-DB-server",
+    "version": "v2.5.1",
+    "date": "2026-01-25T20:50:59Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2026.1.2",
+    "date": "2026-01-25T18:21:29Z"
+  },
+  {
+    "name": "FreshRSS/FreshRSS",
+    "version": "1.28.1",
+    "date": "2026-01-25T18:20:14Z"
+  },
+  {
+    "name": "project-zot/zot",
+    "version": "v2.1.14",
+    "date": "2026-01-25T17:14:38Z"
+  },
+  {
+    "name": "benjaminjonard/koillection",
+    "version": "1.8.0",
+    "date": "2026-01-25T13:48:30Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "@fumadocs/story@0.0.4",
+    "date": "2026-01-25T13:39:02Z"
+  },
+  {
     "name": "evcc-io/evcc",
     "version": "0.300.6",
     "date": "2026-01-25T10:37:05Z"
@@ -8,11 +58,6 @@
     "name": "Athou/commafeed",
     "version": "6.1.0",
     "date": "2026-01-25T10:24:27Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
   },
   {
     "name": "eclipse-mosquitto/mosquitto",
@@ -28,11 +73,6 @@
     "name": "mayswind/AriaNg",
     "version": "1.3.13",
     "date": "2026-01-25T07:56:27Z"
-  },
-  {
-    "name": "plexguide/Huntarr.io",
-    "version": "9.0.0",
-    "date": "2026-01-25T06:23:47Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -98,11 +138,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.18.5",
     "date": "2026-01-24T17:15:32Z"
-  },
-  {
-    "name": "TasmoAdmin/TasmoAdmin",
-    "version": "v4.3.3",
-    "date": "2026-01-24T15:58:33Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -260,11 +295,6 @@
     "date": "2026-01-23T01:29:26Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2026.1.1",
-    "date": "2026-01-22T23:19:21Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.94.1",
     "date": "2026-01-22T19:07:16Z"
@@ -420,11 +450,6 @@
     "date": "2026-01-21T00:12:33Z"
   },
   {
-    "name": "seerr-team/seerr",
-    "version": "preview-availability-sync-fix",
-    "date": "2026-01-20T22:11:24Z"
-  },
-  {
     "name": "rcourtman/Pulse",
     "version": "v5.0.17",
     "date": "2026-01-20T19:07:30Z"
@@ -553,11 +578,6 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta22",
     "date": "2026-01-18T22:38:36Z"
-  },
-  {
-    "name": "Part-DB/Part-DB-server",
-    "version": "v2.5.0",
-    "date": "2026-01-18T22:16:38Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -835,11 +855,6 @@
     "date": "2026-01-09T17:23:23Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "@fumadocs/base-ui@16.4.6",
-    "date": "2026-01-09T10:54:11Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.620",
     "date": "2026-01-09T00:17:04Z"
@@ -962,7 +977,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.2",
-    "date": "2026-01-02T19:40:09Z"
+    "date": "2026-01-02T19:40:19Z"
   },
   {
     "name": "gotify/server",
@@ -1010,11 +1025,6 @@
     "date": "2025-12-25T11:08:14Z"
   },
   {
-    "name": "FreshRSS/FreshRSS",
-    "version": "1.28.0",
-    "date": "2025-12-24T19:27:21Z"
-  },
-  {
     "name": "Dolibarr/dolibarr",
     "version": "22.0.4",
     "date": "2025-12-24T12:26:24Z"
@@ -1040,11 +1050,6 @@
     "date": "2025-12-23T10:40:42Z"
   },
   {
-    "name": "project-zot/zot",
-    "version": "v2.1.13",
-    "date": "2025-12-23T10:14:48Z"
-  },
-  {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
@@ -1053,11 +1058,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.16.2944",
     "date": "2025-11-05T01:56:48Z"
-  },
-  {
-    "name": "benjaminjonard/koillection",
-    "version": "1.7.1",
-    "date": "2025-12-21T17:06:17Z"
   },
   {
     "name": "ventoy/Ventoy",
