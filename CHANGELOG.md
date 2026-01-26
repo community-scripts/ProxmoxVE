@@ -23,6 +23,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - jotty: full refactor / prebuild package [@MickLesk](https://github.com/MickLesk) ([#11059](https://github.com/community-scripts/ProxmoxVE/pull/11059))
 
+  - #### 💥 Breaking Changes
+
+    - Fixing Nginx configuration for 1.11.0 installs [@8b1th3r0](https://github.com/8b1th3r0) ([#11207](https://github.com/community-scripts/ProxmoxVE/pull/11207))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
