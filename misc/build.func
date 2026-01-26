@@ -1134,6 +1134,10 @@ load_vars_file() {
               msg_warn "Invalid nesting value '$var_val' in $file (must be 0 or 1), ignoring"
               continue
             fi
+            # Warn about potential issues with systemd-based OS when nesting is disabled via vars file
+            if [[ "$var_val" == "0" && "${var_os:-debian}" != "alpine" ]]; then
+              msg_warn "Nesting disabled in $file - modern systemd-based distributions may require nesting for proper operation"
+            fi
             ;;
           var_keyctl)
             if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
@@ -2394,6 +2398,12 @@ advanced_settings() {
       else
         if [ $? -eq 1 ]; then
           _enable_nesting="0"
+          # Warn about potential issues with systemd-based OS when nesting is disabled
+          if [[ "$var_os" != "alpine" ]]; then
+            whiptail --backtitle "Proxmox VE Helper Scripts" \
+              --title "⚠️ NESTING WARNING" \
+              --msgbox "Modern systemd-based distributions (Debian 13+, Ubuntu 24.04+, etc.) may require nesting to be enabled for proper operation.\n\nWithout nesting, the container may start in a degraded state with failing services (error 243/CREDENTIALS).\n\nIf you experience issues, enable nesting in the container options." 14 68
+          fi
         else
           ((STEP--))
           continue
