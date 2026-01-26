@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Ghost: Fix missing dependency [@tremor021](https://github.com/tremor021) ([#11196](https://github.com/community-scripts/ProxmoxVE/pull/11196))
     - tracearr: fix install check and update node to version 24 [@durzo](https://github.com/durzo) ([#11188](https://github.com/community-scripts/ProxmoxVE/pull/11188))
 
+  - #### ✨ New Features
+
+    - jotty: full refactor / now use prebuild packages and less ressources [@MickLesk](https://github.com/MickLesk) ([#11059](https://github.com/community-scripts/ProxmoxVE/pull/11059))
+
 ## 2026-01-25
 
 ### 🚀 Updated Scripts
