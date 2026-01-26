@@ -21,7 +21,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
-    - jotty: full refactor / now use prebuild packages and less ressources [@MickLesk](https://github.com/MickLesk) ([#11059](https://github.com/community-scripts/ProxmoxVE/pull/11059))
+    - jotty: full refactor / prebuild package [@MickLesk](https://github.com/MickLesk) ([#11059](https://github.com/community-scripts/ProxmoxVE/pull/11059))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: refine cleanup_lxc to safely clear caches [@MickLesk](https://github.com/MickLesk) ([#11197](https://github.com/community-scripts/ProxmoxVE/pull/11197))
 
 ## 2026-01-25
 
