@@ -14,7 +14,7 @@ network_check
 update_os
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "/opt/jotty" "jotty_*_prebuild.tar.gz"
+fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "latest" "/opt/jotty" "jotty_*_prebuild.tar.gz"
 
 msg_info "Setup jotty"
 mkdir -p data/{users,checklists,notes}
