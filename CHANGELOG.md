@@ -407,6 +407,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Termix: use nginx.conf from upstream repo [@MickLesk](https://github.com/MickLesk) ([#11228](https://github.com/community-scripts/ProxmoxVE/pull/11228))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - feat: add NVIDIA driver install prompt for GPU-enabled containers [@devdecrux](https://github.com/devdecrux) ([#11184](https://github.com/community-scripts/ProxmoxVE/pull/11184))
+
 ### 📚 Documentation
 
   - doc setup_deb822_repo arg order [@chrnie](https://github.com/chrnie) ([#11215](https://github.com/community-scripts/ProxmoxVE/pull/11215))
