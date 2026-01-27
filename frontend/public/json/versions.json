@@ -1,5 +1,105 @@
 [
   {
+    "name": "webmin/webmin",
+    "version": "2.621",
+    "date": "2026-01-26T23:14:03Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.108.2",
+    "date": "2026-01-26T22:43:09Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.15.2",
+    "date": "2026-01-26T22:34:29Z"
+  },
+  {
+    "name": "Forceu/Gokapi",
+    "version": "v2.1.0",
+    "date": "2025-08-29T12:56:13Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.2.0-dev.3",
+    "date": "2026-01-26T21:56:05Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.10.6",
+    "date": "2026-01-26T21:31:59Z"
+  },
+  {
+    "name": "fccview/jotty",
+    "version": "1.19.1",
+    "date": "2026-01-26T21:30:39Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.81.3.rc.2",
+    "date": "2026-01-26T18:18:16Z"
+  },
+  {
+    "name": "hargata/lubelog",
+    "version": "v1.5.8",
+    "date": "2026-01-26T18:18:03Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.3.0-alpha2",
+    "date": "2026-01-26T17:21:09Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.4",
+    "date": "2025-10-09T10:27:01Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2026-01-26T16:17:09Z"
+  },
+  {
+    "name": "opencloud-eu/opencloud",
+    "version": "v5.0.0",
+    "date": "2026-01-26T15:58:00Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.4.6",
+    "date": "2026-01-23T15:32:50Z"
+  },
+  {
+    "name": "Athou/commafeed",
+    "version": "6.1.1",
+    "date": "2026-01-26T15:14:16Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "@fumadocs/ui@16.4.9",
+    "date": "2026-01-26T15:02:21Z"
+  },
+  {
+    "name": "itsmng/itsm-ng",
+    "version": "v2.1.2",
+    "date": "2026-01-26T14:57:54Z"
+  },
+  {
+    "name": "passbolt/passbolt_api",
+    "version": "v5.9.0",
+    "date": "2026-01-26T14:46:28Z"
+  },
+  {
+    "name": "jordan-dalby/ByteStash",
+    "version": "v1.5.10",
+    "date": "2026-01-26T14:07:59Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "7.1.0-alpha.2",
+    "date": "2026-01-26T12:07:12Z"
+  },
+  {
     "name": "node-red/node-red",
     "version": "4.1.4",
     "date": "2026-01-26T11:29:13Z"
@@ -100,19 +200,9 @@
     "date": "2026-01-25T13:48:30Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "@fumadocs/story@0.0.4",
-    "date": "2026-01-25T13:39:02Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.300.6",
     "date": "2026-01-25T10:37:05Z"
-  },
-  {
-    "name": "Athou/commafeed",
-    "version": "6.1.0",
-    "date": "2026-01-25T10:24:27Z"
   },
   {
     "name": "eclipse-mosquitto/mosquitto",
@@ -128,16 +218,6 @@
     "name": "mayswind/AriaNg",
     "version": "1.3.13",
     "date": "2026-01-25T07:56:27Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.81.3.rc.1",
-    "date": "2026-01-25T03:17:11Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.15.1-rc1",
-    "date": "2026-01-25T00:33:54Z"
   },
   {
     "name": "crafty-controller/crafty-4",
@@ -220,19 +300,9 @@
     "date": "2026-01-24T00:12:39Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.3.0-alpha1",
-    "date": "2026-01-23T22:42:26Z"
-  },
-  {
     "name": "endurain-project/endurain",
     "version": "v0.17.3",
     "date": "2026-01-23T22:02:05Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.2.0-dev.2",
-    "date": "2026-01-23T21:57:48Z"
   },
   {
     "name": "Donkie/Spoolman",
@@ -248,11 +318,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.7",
     "date": "2026-01-12T09:54:36Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2026-01-23T19:39:09Z"
   },
   {
     "name": "apache/tomcat",
@@ -278,16 +343,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.50.3",
     "date": "2026-01-23T16:09:10Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.4.6",
-    "date": "2026-01-23T15:32:50Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.4",
-    "date": "2025-10-09T10:27:01Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -323,11 +378,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.94.1",
     "date": "2026-01-22T19:07:16Z"
-  },
-  {
-    "name": "fccview/jotty",
-    "version": "develop",
-    "date": "2026-01-22T18:59:33Z"
   },
   {
     "name": "redis/redis",
@@ -415,11 +465,6 @@
     "date": "2025-12-12T20:25:00Z"
   },
   {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2026-01-21T20:40:02Z"
-  },
-  {
     "name": "Comfy-Org/ComfyUI",
     "version": "v0.10.0",
     "date": "2026-01-21T19:22:04Z"
@@ -442,7 +487,7 @@
   {
     "name": "javedh-dev/tracktor",
     "version": "1.2.1",
-    "date": "2026-01-21T09:31:18Z"
+    "date": "2026-01-21T11:12:28Z"
   },
   {
     "name": "docker/compose",
@@ -492,7 +537,7 @@
   {
     "name": "chrisvel/tududi",
     "version": "v0.88.4",
-    "date": "2026-01-20T15:11:58Z"
+    "date": "2026-01-20T16:02:12Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -518,11 +563,6 @@
     "name": "cloudflare/cloudflared",
     "version": "2026.1.1",
     "date": "2026-01-20T11:22:06Z"
-  },
-  {
-    "name": "passbolt/passbolt_api",
-    "version": "v5.9.0-test.1",
-    "date": "2026-01-20T10:34:53Z"
   },
   {
     "name": "HydroshieldMKII/Guardian",
@@ -628,11 +668,6 @@
     "name": "forgejo/forgejo",
     "version": "v14.0.1",
     "date": "2026-01-17T07:14:19Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.108.1",
-    "date": "2026-01-17T04:09:09Z"
   },
   {
     "name": "wanetty/upgopher",
@@ -780,11 +815,6 @@
     "date": "2026-01-12T05:38:30Z"
   },
   {
-    "name": "hargata/lubelog",
-    "version": "v1.5.7",
-    "date": "2026-01-11T19:31:59Z"
-  },
-  {
     "name": "alexta69/metube",
     "version": "2026.01.11",
     "date": "2026-01-11T18:43:56Z"
@@ -855,11 +885,6 @@
     "date": "2026-01-09T17:23:23Z"
   },
   {
-    "name": "webmin/webmin",
-    "version": "2.620",
-    "date": "2026-01-09T00:17:04Z"
-  },
-  {
     "name": "ErsatzTV/ErsatzTV",
     "version": "v26.1.1",
     "date": "2026-01-08T22:02:15Z"
@@ -873,11 +898,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.2.0.103-2.2.0.103_canary_2026-01-08",
     "date": "2026-01-08T12:41:37Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.11",
-    "date": "2026-01-08T12:15:04Z"
   },
   {
     "name": "requarks/wiki",
@@ -1045,11 +1065,6 @@
     "date": "2025-12-23T14:53:51Z"
   },
   {
-    "name": "itsmng/itsm-ng",
-    "version": "v1.6.11",
-    "date": "2025-12-23T10:40:42Z"
-  },
-  {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
@@ -1103,11 +1118,6 @@
     "name": "zabbix/zabbix",
     "version": "7.4.6",
     "date": "2025-12-18T07:00:26Z"
-  },
-  {
-    "name": "opencloud-eu/opencloud",
-    "version": "v4.1.0",
-    "date": "2025-12-15T18:53:25Z"
   },
   {
     "name": "docmost/docmost",
@@ -1445,11 +1455,6 @@
     "date": "2025-10-06T21:31:07Z"
   },
   {
-    "name": "jordan-dalby/ByteStash",
-    "version": "v1.5.9",
-    "date": "2025-10-06T08:34:01Z"
-  },
-  {
     "name": "thomiceli/opengist",
     "version": "v1.11.1",
     "date": "2025-09-30T00:24:16Z"
@@ -1518,11 +1523,6 @@
     "name": "seanmorley15/AdventureLog",
     "version": "v0.11.0",
     "date": "2025-09-01T16:19:38Z"
-  },
-  {
-    "name": "Forceu/Gokapi",
-    "version": "v2.1.0",
-    "date": "2025-08-29T12:56:13Z"
   },
   {
     "name": "janeczku/calibre-web",
