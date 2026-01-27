@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-27
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [FIX] Jotty: backup and restore custom config [@vhsdream](https://github.com/vhsdream) ([#11212](https://github.com/community-scripts/ProxmoxVE/pull/11212))
+
 ## 2026-01-26
 
 ### 🚀 Updated Scripts
