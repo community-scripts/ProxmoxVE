@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [FIX] Jotty: backup and restore custom config [@vhsdream](https://github.com/vhsdream) ([#11212](https://github.com/community-scripts/ProxmoxVE/pull/11212))
 
+### 📚 Documentation
+
+  - doc setup_deb822_repo arg order [@chrnie](https://github.com/chrnie) ([#11215](https://github.com/community-scripts/ProxmoxVE/pull/11215))
+
 ## 2026-01-26
 
 ### 🚀 Updated Scripts
