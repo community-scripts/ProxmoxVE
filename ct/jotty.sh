@@ -37,6 +37,7 @@ function update_script() {
     msg_info "Backing up configuration & data"
     cp /opt/jotty/.env /opt/app.env
     [[ -d /opt/jotty/data ]] && mv /opt/jotty/data /opt/data
+    [[ -d /opt/jotty/config ]] && mv /opt/jotty/config /opt/config
     msg_ok "Backed up configuration & data"
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
@@ -45,6 +46,7 @@ function update_script() {
     msg_info "Restoring configuration & data"
     mv /opt/app.env /opt/jotty/.env
     [[ -d /opt/data ]] && mv /opt/data /opt/jotty/data
+    [[ -d /opt/jotty/config ]] && mv /opt/config/* /opt/jotty/config
     msg_ok "Restored configuration & data"
 
     msg_info "Starting Service"
