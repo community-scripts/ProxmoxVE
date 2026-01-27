@@ -49,6 +49,7 @@ function update_script() {
     cp /opt/grist_bak/landing.db /opt/grist/landing.db
     cd /opt/grist
     $STD yarn install
+    $STD yarn run install:ee
     $STD yarn run build:prod
     $STD yarn run install:python
     msg_ok "Updated Grist"
