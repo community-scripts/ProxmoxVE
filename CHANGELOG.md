@@ -401,7 +401,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📚 Documentation
 
-  - doc setup_deb822_repo arg order [@chrnie](https://github.com/chrnie) ([#11215](https://github.com/community-scripts/ProxmoxVE/pull/11215))
+  - changelog: archive old entries to year/month files [@MickLesk](https://github.com/MickLesk) ([#11225](https://github.com/community-scripts/ProxmoxVE/pull/11225))
+- doc setup_deb822_repo arg order [@chrnie](https://github.com/chrnie) ([#11215](https://github.com/community-scripts/ProxmoxVE/pull/11215))
 
 ## 2026-01-26
 
