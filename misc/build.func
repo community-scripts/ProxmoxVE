@@ -2027,6 +2027,10 @@ advanced_settings() {
           "${BRIDGE_MENU_OPTIONS[@]}" \
           3>&1 1>&2 2>&3); then
           local bridge_test="${result:-vmbr0}"
+          # Skip separator entries (e.g., __other__) - re-display menu
+          if [[ "$bridge_test" == "__other__" || "$bridge_test" == -* ]]; then
+            continue
+          fi
           if validate_bridge "$bridge_test"; then
             _bridge="$bridge_test"
             ((STEP++))
