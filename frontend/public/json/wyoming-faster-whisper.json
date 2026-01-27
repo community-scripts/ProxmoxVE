@@ -1,0 +1,39 @@
+{
+  "name": "Wyoming Faster Whisper",
+  "slug": "wyoming-faster-whisper",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-01-26",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 10300,
+  "documentation": "https://github.com/rhasspy/wyoming-faster-whisper",
+  "website": "https://github.com/rhasspy/wyoming-faster-whisper",
+  "logo": "https://avatars.githubusercontent.com/u/59055969?s=48&v=4.png",
+  "description": "Wyoming Faster Whisper is a speech-to-text server using OpenAI's Whisper model, optimized for Home Assistant integration via the Wyoming protocol.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/wyoming-faster-whisper.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 15,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    "Service runs on tcp://IP:10300",
+    "Default model: tiny-int8, language: en",
+    "Edit /etc/systemd/system/wyoming-whisper.service to change model or language",
+    "Available models: tiny-int8, base-int8, small-int8, medium-int8, large-v3"
+  ]
+}
