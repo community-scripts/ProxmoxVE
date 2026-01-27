@@ -242,7 +242,7 @@ $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBRAW_REVISION"
 $STD autoreconf --install
-$STD ./configure
+$STD ./configure --disable-examples
 $STD make -j"$(nproc)"
 $STD make install
 ldconfig /usr/local/lib

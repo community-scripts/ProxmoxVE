@@ -337,7 +337,7 @@ function compile_libraw() {
     cd "$SOURCE"
     $STD git reset --hard "$LIBRAW_REVISION"
     $STD autoreconf --install
-    $STD ./configure
+    $STD ./configure --disable-examples
     $STD make -j"$(nproc)"
     $STD make install
     ldconfig /usr/local/lib
