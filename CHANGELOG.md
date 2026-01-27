@@ -398,7 +398,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🐞 Bug Fixes
 
     - Immich: update libraw [@vhsdream](https://github.com/vhsdream) ([#11233](https://github.com/community-scripts/ProxmoxVE/pull/11233))
-    - [FIX] Jotty: backup and restore custom config [@vhsdream](https://github.com/vhsdream) ([#11212](https://github.com/community-scripts/ProxmoxVE/pull/11212))
+
+  - #### ✨ New Features
+
+    - grist: enable optional enterprise features toggle [@MickLesk](https://github.com/MickLesk) ([#11239](https://github.com/community-scripts/ProxmoxVE/pull/11239))
 
   - #### 🔧 Refactor
 
