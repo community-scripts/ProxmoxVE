@@ -397,6 +397,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: update libraw [@vhsdream](https://github.com/vhsdream) ([#11233](https://github.com/community-scripts/ProxmoxVE/pull/11233))
     - [FIX] Jotty: backup and restore custom config [@vhsdream](https://github.com/vhsdream) ([#11212](https://github.com/community-scripts/ProxmoxVE/pull/11212))
 
   - #### 🔧 Refactor
