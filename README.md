@@ -150,6 +150,49 @@ This adds a menu to your Proxmox interface for easy script access without visiti
 
 ---
 
+## 🤖 Clawdbot
+
+<div align="center">
+
+**Clawdbot** is an automation tool for managing and automating various tasks in your homelab.
+
+### Quick Install
+
+Run this command in your **Proxmox VE Shell** (not in a container):
+
+</div>
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/clawdbot.sh)"
+```
+
+<div align="center">
+
+### Default Resources
+
+| Resource | Value |
+|----------|-------|
+| CPU | 2 cores |
+| RAM | 8192 MB |
+| Disk | 8 GB |
+| OS | Ubuntu 24.04 |
+
+### Requirements
+
+- Proxmox VE 8.x or 9.x
+- Internet connection
+- Available storage for the container
+
+### Post-Installation
+
+After installation completes, the container will be accessible via the IP address shown in the completion message.
+
+📖 **Documentation:** [molt.bot](https://molt.bot/)
+
+</div>
+
+---
+
 ## 💬 Join the Community
 
 <div align="center">
