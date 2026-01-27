@@ -399,10 +399,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [FIX] Jotty: backup and restore custom config [@vhsdream](https://github.com/vhsdream) ([#11212](https://github.com/community-scripts/ProxmoxVE/pull/11212))
 
+  - #### 🔧 Refactor
+
+    - Termix: use nginx.conf from upstream repo [@MickLesk](https://github.com/MickLesk) ([#11228](https://github.com/community-scripts/ProxmoxVE/pull/11228))
+
 ### 📚 Documentation
 
-  - changelog: archive old entries to year/month files [@MickLesk](https://github.com/MickLesk) ([#11225](https://github.com/community-scripts/ProxmoxVE/pull/11225))
-- doc setup_deb822_repo arg order [@chrnie](https://github.com/chrnie) ([#11215](https://github.com/community-scripts/ProxmoxVE/pull/11215))
+  - doc setup_deb822_repo arg order [@chrnie](https://github.com/chrnie) ([#11215](https://github.com/community-scripts/ProxmoxVE/pull/11215))
+- changelog: archive old entries to year/month files [@MickLesk](https://github.com/MickLesk) ([#11225](https://github.com/community-scripts/ProxmoxVE/pull/11225))
 
 ## 2026-01-26
 
