@@ -137,28 +137,17 @@ PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/
 NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
-msg_info "Setting up Postgresql Database"
 VCHORD_RELEASE="0.5.3"
+msg_info "Installing Vectorchord v${VCHORD_RELEASE}"
 curl -fsSL "https://github.com/tensorchord/VectorChord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
 $STD apt install -y ./vchord.deb
 rm vchord.deb
 echo "$VCHORD_RELEASE" >~/.vchord_version
-DB_NAME="immich"
-DB_USER="immich"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c18)
+msg_ok "Installed Vectorchord v${VCHORD_RELEASE}"
+
 sed -i -e "/^#shared_preload/s/^#//;/^shared_preload/s/''/'vchord.so'/" /etc/postgresql/16/main/postgresql.conf
 systemctl restart postgresql.service
-$STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
-$STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
-{
-  echo "${APPLICATION} DB Credentials"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
-} >>~/"$APPLICATION".creds
-msg_ok "Set up Postgresql Database"
+PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_GRANT_SUPERUSER="true" PG_DB_SKIP_ALTER_ROLE="true" setup_postgresql_db
 
 msg_info "Compiling Custom Photo-processing Library (extreme patience)"
 LD_LIBRARY_PATH=/usr/local/lib
@@ -296,7 +285,7 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.4.1" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.0" "$SRC_DIR"
 
 msg_info "Installing ${APPLICATION} (patience)"
 
@@ -347,8 +336,8 @@ mkdir -p "$ML_DIR" && chown -R immich:immich "$INSTALL_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 if [[ -f ~/.openvino ]]; then
   msg_info "Installing HW-accelerated machine-learning"
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active -n -p python3.11 --managed-python
-  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active -n -p python3.13 --managed-python
+  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
   msg_ok "Installed HW-accelerated machine-learning"
 else
   msg_info "Installing machine-learning"
@@ -393,6 +382,7 @@ cat <<EOF >"${INSTALL_DIR}"/.env
 TZ=$(cat /etc/timezone)
 IMMICH_VERSION=release
 NODE_ENV=production
+IMMICH_ALLOW_SETUP=true
 
 DB_HOSTNAME=127.0.0.1
 DB_USERNAME=${DB_USER}

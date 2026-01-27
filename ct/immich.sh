@@ -112,7 +112,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="2.4.1"
+  RELEASE="2.5.0"
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     msg_info "Stopping Services"
     systemctl stop immich-web
@@ -217,8 +217,8 @@ EOF
     export VIRTUAL_ENV="${ML_DIR}"/ml-venv
     if [[ -f ~/.openvino ]]; then
       msg_info "Updating HW-accelerated machine-learning"
-      $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active -n -p python3.11 --managed-python
-      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
+      $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active -n -p python3.13 --managed-python
+      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
       msg_ok "Updated HW-accelerated machine-learning"
     else
       msg_info "Updating machine-learning"
