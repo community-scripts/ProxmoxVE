@@ -1,0 +1,48 @@
+{
+  "name": "Clawdbot",
+  "slug": "clawdbot",
+  "categories": [
+    16
+  ],
+  "date_created": "2026-01-27",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3003,
+  "documentation": "https://docs.clawd.bot",
+  "website": "https://github.com/clawdbot/clawdbot",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/clawdbot.webp",
+  "config_path": "/opt/clawdbot/config.yaml",
+  "description": "Clawdbot is an AI-powered personal assistant that runs as a background daemon, bridging Claude and other LLMs to messaging platforms (Signal, Telegram, Discord, Slack, iMessage), smart home systems, and developer tools. It features multi-channel support, cron scheduling, browser automation, MCP integration, and a built-in web interface. Designed for homelabbers and power users who want an always-on AI assistant with full system access.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/clawdbot.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "After installation, edit `/opt/clawdbot/config.yaml` to add your Anthropic API key and configure messaging channels.",
+      "type": "warning"
+    },
+    {
+      "text": "View logs with: `journalctl -u clawdbot -f`",
+      "type": "info"
+    },
+    {
+      "text": "CLI commands: `clawdbot gateway status`, `clawdbot gateway restart`",
+      "type": "info"
+    }
+  ]
+}
