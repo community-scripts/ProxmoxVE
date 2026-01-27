@@ -137,15 +137,17 @@ Add repository in modern deb822 format (recommended over legacy format).
 
 **Signature**:
 ```bash
-setup_deb822_repo REPO_URL NAME DIST MAIN_URL RELEASE
+setup_deb822_repo NAME GPG_URL REPO_URL SUITE COMPONENT [ARCHITECTURES] [ENABLED]
 ```
 
 **Parameters**:
-- `REPO_URL` - URL to GPG key (e.g., https://example.com/key.gpg)
 - `NAME` - Repository name (e.g., "nodejs")
-- `DIST` - Distribution (jammy, bookworm, etc.)
-- `MAIN_URL` - Main repository URL
-- `RELEASE` - Release type (main, testing, etc.)
+- `GPG_URL` - URL to GPG key (e.g., https://example.com/key.gpg)
+- `REPO_URL` - Main repository URL (e.g., https://example.com/repo)
+- `SUITE` - Repository suite (e.g., "jammy", "bookworm")
+- `COMPONENT` - Repository component (e.g., "main", "testing")
+- `ARCHITECTURES` - Optional Comma-separated list of architectures (e.g., "amd64,arm64")
+- `ENABLED` - Optional "true" or "false" (default: "true")
 
 **Returns**:
 - `0` - Repository added successfully
@@ -154,10 +156,10 @@ setup_deb822_repo REPO_URL NAME DIST MAIN_URL RELEASE
 **Example**:
 ```bash
 setup_deb822_repo \
-  "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" \
   "nodejs" \
+  "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" \
+  "https://deb.nodesource.com/node_20.x" \  
   "jammy" \
-  "https://deb.nodesource.com/node_20.x" \
   "main"
 ```
 

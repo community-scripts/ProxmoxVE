@@ -221,10 +221,10 @@ msg_info "Setting up repository"
 
 # Add custom repository in deb822 format
 setup_deb822_repo \
-  "https://my-repo.example.com/gpg.key" \
   "my-applications" \
-  "jammy" \
+  "https://my-repo.example.com/gpg.key" \
   "https://my-repo.example.com/debian" \
+  "jammy" \
   "main"
 
 msg_ok "Repository configured"
@@ -244,18 +244,18 @@ msg_info "Setting up repositories"
 
 # Node.js repository
 setup_deb822_repo \
-  "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" \
   "nodejs" \
-  "jammy" \
+  "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" \
   "https://deb.nodesource.com/node_20.x" \
+  "jammy" \
   "main"
 
 # Docker repository
 setup_deb822_repo \
-  "https://download.docker.com/linux/ubuntu/gpg" \
   "docker" \
-  "jammy" \
+  "https://download.docker.com/linux/ubuntu/gpg" \
   "https://download.docker.com/linux/ubuntu" \
+  "jammy" \
   "stable"
 
 # Update once for all repos
