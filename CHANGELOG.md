@@ -415,6 +415,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix installer loop caused by invalid whiptail menu separator [@Mesteriis](https://github.com/Mesteriis) ([#11237](https://github.com/community-scripts/ProxmoxVE/pull/11237))
     - sed patch [@lavacano](https://github.com/lavacano) ([#11285](https://github.com/community-scripts/ProxmoxVE/pull/11285))
     - core: fix Debian 13 LXC template root ownership bug [@MickLesk](https://github.com/MickLesk) ([#11277](https://github.com/community-scripts/ProxmoxVE/pull/11277))
     - tools.func: prevent systemd-tmpfiles failure in unprivileged LXC during deb install [@MickLesk](https://github.com/MickLesk) ([#11271](https://github.com/community-scripts/ProxmoxVE/pull/11271))
