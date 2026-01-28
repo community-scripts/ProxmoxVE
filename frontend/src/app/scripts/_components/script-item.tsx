@@ -7,7 +7,7 @@ import Image from "next/image";
 import type { AppVersion, Script } from "@/lib/types";
 
 import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useVersions } from "@/hooks/use-versions";
 import { basePath } from "@/config/site-config";
 import { extractDate } from "@/lib/time";
@@ -120,14 +120,16 @@ function VersionInfo({ item }: { item: Script }) {
     <span className="font-medium text-sm flex items-center gap-1">
       {matchedVersion.version}
       {matchedVersion.pinned && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs">
-            <p>This version is pinned. We test each update for breaking changes before releasing new versions.</p>
-          </TooltipContent>
-        </Tooltip>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent className="max-w-xs">
+              <p>This version is pinned. We test each update for breaking changes before releasing new versions.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
     </span>
   );
