@@ -5126,14 +5126,13 @@ function setup_ruby() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs and configures MeiliSearch search engine.
+# Installs or updates MeiliSearch search engine.
 #
 # Description:
-#   - Downloads MeiliSearch binary via fetch_and_deploy_gh_release
-#   - Creates config file with secure defaults
-#   - Creates systemd service
-#   - Waits for service to be ready
-#   - Exports MEILISEARCH_MASTER_KEY and MEILISEARCH_API_KEY for use by caller
+#   - Fresh install: Downloads binary, creates config/service, starts
+#   - Update: Checks for new release, updates binary if available
+#   - Waits for service to be ready before returning
+#   - Exports API keys for use by caller
 #
 # Variables:
 #   MEILISEARCH_BIND     - Bind address (default: 127.0.0.1:7700)
@@ -5145,9 +5144,11 @@ function setup_ruby() {
 #   MEILISEARCH_API_KEY     - The default search API key
 #   MEILISEARCH_API_KEY_UID - The UID of the default API key
 #
-# Example:
+# Example (install script):
 #   setup_meilisearch
-#   echo "Master Key: $MEILISEARCH_MASTER_KEY"
+#
+# Example (CT update_script):
+#   setup_meilisearch
 # ------------------------------------------------------------------------------
 
 function setup_meilisearch() {
@@ -5157,17 +5158,24 @@ function setup_meilisearch() {
   local MEILISEARCH_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
   local MEILISEARCH_SNAPSHOT_DIR="${MEILISEARCH_SNAPSHOT_DIR:-/var/lib/meilisearch/snapshots}"
 
-  # Check if already installed and running
-  if systemctl is-active --quiet meilisearch 2>/dev/null; then
-    # Already running - just export existing keys
-    if [[ -f /etc/meilisearch.toml ]]; then
-      MEILISEARCH_MASTER_KEY=$(grep -E '^master_key\s*=' /etc/meilisearch.toml | sed 's/.*=\s*"\(.*\)"/\1/' | head -1)
-      export MEILISEARCH_MASTER_KEY
-      msg_ok "MeiliSearch already running"
-      return 0
+  # Get bind address for health checks
+  local MEILISEARCH_HOST="${MEILISEARCH_BIND%%:*}"
+  local MEILISEARCH_PORT="${MEILISEARCH_BIND##*:}"
+  [[ "$MEILISEARCH_HOST" == "0.0.0.0" ]] && MEILISEARCH_HOST="127.0.0.1"
+
+  # Update mode: MeiliSearch already installed
+  if [[ -f /usr/bin/meilisearch ]]; then
+    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
+      msg_info "Updating MeiliSearch"
+      systemctl stop meilisearch
+      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+      systemctl start meilisearch
+      msg_ok "Updated MeiliSearch"
     fi
+    return 0
   fi
 
+  # Fresh install
   msg_info "Setup MeiliSearch"
 
   # Install binary
@@ -5219,10 +5227,6 @@ EOF
   systemctl enable -q --now meilisearch
 
   # Wait for MeiliSearch to be ready (up to 30 seconds)
-  local MEILISEARCH_HOST="${MEILISEARCH_BIND%%:*}"
-  local MEILISEARCH_PORT="${MEILISEARCH_BIND##*:}"
-  [[ "$MEILISEARCH_HOST" == "0.0.0.0" ]] && MEILISEARCH_HOST="127.0.0.1"
-
   for i in {1..30}; do
     if curl -s -o /dev/null -w "%{http_code}" "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/health" 2>/dev/null | grep -q "200"; then
       break
