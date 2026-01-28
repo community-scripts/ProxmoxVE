@@ -412,6 +412,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: update dynamic values in LXC profile on update_motd_ip [@MickLesk](https://github.com/MickLesk) ([#11268](https://github.com/community-scripts/ProxmoxVE/pull/11268))
     - tools.func: add new function - setup_meilisearch [@MickLesk](https://github.com/MickLesk) ([#11258](https://github.com/community-scripts/ProxmoxVE/pull/11258))
 
 ### 🌐 Website
