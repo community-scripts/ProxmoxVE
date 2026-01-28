@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: fix Debian 13 LXC template root ownership bug [@MickLesk](https://github.com/MickLesk) ([#11277](https://github.com/community-scripts/ProxmoxVE/pull/11277))
     - tools.func: prevent systemd-tmpfiles failure in unprivileged LXC during deb install [@MickLesk](https://github.com/MickLesk) ([#11271](https://github.com/community-scripts/ProxmoxVE/pull/11271))
     - tools.func: fix php "wait_for" hint [@MickLesk](https://github.com/MickLesk) ([#11254](https://github.com/community-scripts/ProxmoxVE/pull/11254))
 
