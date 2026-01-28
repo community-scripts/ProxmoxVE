@@ -4528,7 +4528,8 @@ EOF
     # Ubuntu: Use ondrej/php PPA
     msg_info "Adding ondrej/php PPA for Ubuntu"
     $STD apt install -y software-properties-common
-    $STD add-apt-repository -y ppa:ondrej/php
+    # Don't use $STD for add-apt-repository as it uses background processes
+    add-apt-repository -y ppa:ondrej/php >>"$(get_active_logfile)" 2>&1
   else
     # Debian: Use Sury repository
     manage_tool_repository "php" "$PHP_VERSION" "" "https://packages.sury.org/debsuryorg-archive-keyring.deb" || {
