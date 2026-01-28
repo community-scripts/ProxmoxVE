@@ -28,16 +28,12 @@ jobs:
             const matched = patterns.some((regex) => regex.test(content));
 
             if (matched) {
-              const message = `👋 Hello!
-
-It looks like you are referencing a **container creation issue with a Debian 13 template** (e.g. \`debian-13-standard_13.x-x_amd64.tar.zst\`).
-
-We receive many similar reports about this, and it’s not related to the scripts themselves but to **a Proxmox base template bug**.
-
-Please refer to [discussion #8126](https://github.com/community-scripts/ProxmoxVE/discussions/8126) for details.  
-If your issue persists after following the guidance there, feel free to reopen this issue.
-
-_This issue was automatically closed by a bot._`;
+              const message = "👋 Hello!\n\n" +
+                "It looks like you are referencing a **container creation issue with a Debian 13 template** (e.g. `debian-13-standard_13.x-x_amd64.tar.zst`).\n\n" +
+                "We receive many similar reports about this, and it's not related to the scripts themselves but to **a Proxmox base template bug**.\n\n" +
+                "Please refer to [discussion #8126](https://github.com/community-scripts/ProxmoxVE/discussions/8126) for details.\n" +
+                "If your issue persists after following the guidance there, feel free to reopen this issue.\n\n" +
+                "_This issue was automatically closed by a bot._";
 
               await github.rest.issues.createComment({
                 ...context.repo,

@@ -1,21 +1,20 @@
-name: Update Versions from GitHub
+name: Update GitHub Versions (New)
 
 on:
   workflow_dispatch:
   schedule:
-    # Runs at 06:00 and 18:00 UTC
-    - cron: "0 6,18 * * *"
+    # Runs 4x daily: 00:00, 06:00, 12:00, 18:00 UTC
+    - cron: "0 0,6,12,18 * * *"
 
 permissions:
   contents: write
   pull-requests: write
 
 env:
-  SOURCES_FILE: frontend/public/json/version-sources.json
-  VERSIONS_FILE: frontend/public/json/versions.json
+  VERSIONS_FILE: frontend/public/json/github-versions.json
 
 jobs:
-  update-versions:
+  update-github-versions:
     if: github.repository == 'community-scripts/ProxmoxVE'
     runs-on: ubuntu-latest
 
@@ -25,437 +24,154 @@ jobs:
         with:
           ref: main
 
-      - name: Generate GitHub App Token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
-      - name: Extract version sources from install scripts
+      - name: Extract GitHub versions from install scripts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
           echo "========================================="
-          echo "  Extracting version sources from scripts"
+          echo "  Extracting GitHub versions from scripts"
           echo "========================================="
 
-          # Initialize sources array
-          sources_json="[]"
+          # Initialize versions array
+          versions_json="[]"
 
-          # Function to add a source entry
-          add_source() {
+          # Function to add a version entry
+          add_version() {
             local slug="$1"
-            local type="$2"
-            local source="$3"
-            local script="$4"
+            local repo="$2"
+            local version="$3"
+            local pinned="$4"
+            local date="$5"
 
-            # Check if slug already exists (avoid duplicates)
-            if echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
-              return
-            fi
-
-            sources_json=$(echo "$sources_json" | jq \
+            versions_json=$(echo "$versions_json" | jq \
               --arg slug "$slug" \
-              --arg type "$type" \
-              --arg source "$source" \
-              --arg script "$script" \
-              '. += [{"slug": $slug, "type": $type, "source": $source, "script": $script, "version": null, "date": null}]')
+              --arg repo "$repo" \
+              --arg version "$version" \
+              --argjson pinned "$pinned" \
+              --arg date "$date" \
+              '. += [{"slug": $slug, "repo": $repo, "version": $version, "pinned": $pinned, "date": $date}]')
           }
 
+          # Get list of slugs from JSON files
           echo ""
-          echo "=== Method 1: fetch_and_deploy_gh_release calls ==="
-          count=0
-          for script in install/*-install.sh; do
-            [[ ! -f "$script" ]] && continue
-            slug=$(basename "$script" | sed 's/-install\.sh$//')
+          echo "=== Scanning JSON files for slugs ==="
 
-            # Extract repo from fetch_and_deploy_gh_release "app" "owner/repo"
-            while IFS= read -r line; do
-              if [[ "$line" =~ fetch_and_deploy_gh_release[[:space:]]+\"[^\"]*\"[[:space:]]+\"([^\"]+)\" ]]; then
-                repo="${BASH_REMATCH[1]}"
-                add_source "$slug" "github" "$repo" "$script"
-                ((count++))
-                break  # Only first match per script
-              fi
-            done < <(grep 'fetch_and_deploy_gh_release' "$script" 2>/dev/null || true)
-          done
-          echo "Found $count scripts with fetch_and_deploy_gh_release"
+          for json_file in frontend/public/json/*.json; do
+            [[ ! -f "$json_file" ]] && continue
 
-          echo ""
-          echo "=== Method 2: GitHub URLs in scripts (fallback) ==="
-          count=0
-          for script in install/*-install.sh; do
-            [[ ! -f "$script" ]] && continue
-            slug=$(basename "$script" | sed 's/-install\.sh$//')
-
-            # Skip if already found
-            if echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
-              continue
-            fi
-
-            # Look for github.com/owner/repo patterns
-            repo=$(grep -oE 'github\.com/([a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+)' "$script" 2>/dev/null \
-              | sed 's|github\.com/||' \
-              | sed 's/\.git$//' \
-              | grep -v 'community-scripts/ProxmoxVE' \
-              | grep -v '^repos/' \
-              | head -1 || true)
-
-            if [[ -n "$repo" && "$repo" =~ ^[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+$ ]]; then
-              add_source "$slug" "github" "$repo" "$script"
-              ((count++))
-            fi
-          done
-          echo "Found $count additional scripts with GitHub URLs"
-
-          echo ""
-          echo "=== Method 3: npm packages ==="
-          # Detect npm install --global <package>
-          for script in install/*-install.sh; do
-            [[ ! -f "$script" ]] && continue
-            slug=$(basename "$script" | sed 's/-install\.sh$//')
-
-            # Skip if already found
-            if echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
-              continue
-            fi
-
-            # Look for npm install --global <package>
-            pkg=$(grep -oE 'npm install[^|;]*--global[^|;]*' "$script" 2>/dev/null \
-              | grep -oE '\s[a-z][a-z0-9_-]+(@[^\s]+)?$' \
-              | tr -d ' ' \
-              | sed 's/@.*//' \
-              | tail -1 || true)
-
-            if [[ -n "$pkg" ]]; then
-              add_source "$slug" "npm" "$pkg" "$script"
-            fi
-          done
-
-          echo ""
-          echo "=== Method 4: Docker images ==="
-          # Known Docker-based apps (from docker pull or docker run)
-          declare -A docker_mappings=(
-            ["homeassistant"]="homeassistant/home-assistant"
-            ["portainer"]="portainer/portainer-ce"
-            ["dockge"]="louislam/dockge"
-            ["immich"]="ghcr.io/immich-app/immich-server"
-            ["audiobookshelf"]="ghcr.io/advplyr/audiobookshelf"
-            ["podman-homeassistant"]="homeassistant/home-assistant"
-          )
-
-          for slug in "${!docker_mappings[@]}"; do
-            image="${docker_mappings[$slug]}"
-            if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
-              add_source "$slug" "docker" "$image" "install/${slug}-install.sh"
-            fi
-          done
-
-          echo ""
-          echo "=== Method 5: Manual GitHub mappings (apt-based apps) ==="
-          # Apps that install via apt but have GitHub releases for version tracking
-          declare -A manual_github_mappings=(
-            ["actualbudget"]="actualbudget/actual"
-            ["apache-cassandra"]="apache/cassandra"
-            ["apache-couchdb"]="apache/couchdb"
-            ["apache-guacamole"]="apache/guacamole-server"
-            ["apache-tomcat"]="apache/tomcat"
-            ["archivebox"]="ArchiveBox/ArchiveBox"
-            ["aria2"]="aria2/aria2"
-            ["asterisk"]="asterisk/asterisk"
-            ["casaos"]="IceWhaleTech/CasaOS"
-            ["checkmk"]="Checkmk/checkmk"
-            ["cloudflared"]="cloudflare/cloudflared"
-            ["coolify"]="coollabsio/coolify"
-            ["crafty-controller"]="crafty-controller/crafty-4"
-            ["cross-seed"]="cross-seed/cross-seed"
-            ["deconz"]="dresden-elektronik/deconz-rest-plugin"
-            ["deluge"]="deluge-torrent/deluge"
-            ["dokploy"]="Dokploy/dokploy"
-            ["emqx"]="emqx/emqx"
-            ["esphome"]="esphome/esphome"
-            ["flowiseai"]="FlowiseAI/Flowise"
-            ["forgejo"]="forgejo/forgejo"
-            ["garage"]="deuxfleurs-org/garage"
-            ["ghost"]="TryGhost/Ghost"
-            ["grafana"]="grafana/grafana"
-            ["graylog"]="Graylog2/graylog2-server"
-            ["homebridge"]="homebridge/homebridge"
-            ["hyperhdr"]="awawa-dev/HyperHDR"
-            ["hyperion"]="hyperion-project/hyperion.ng"
-            ["influxdb"]="influxdata/influxdb"
-            ["iobroker"]="ioBroker/ioBroker"
-            ["jenkins"]="jenkinsci/jenkins"
-            ["komodo"]="moghingold/komodo"
-            ["lazylibrarian"]="lazylibrarian/LazyLibrarian"
-            ["limesurvey"]="LimeSurvey/LimeSurvey"
-            ["mariadb"]="MariaDB/server"
-            ["mattermost"]="mattermost/mattermost"
-            ["meshcentral"]="Ylianst/MeshCentral"
-            ["metabase"]="metabase/metabase"
-            ["mongodb"]="mongodb/mongo"
-            ["mysql"]="mysql/mysql-server"
-            ["neo4j"]="neo4j/neo4j"
-            ["node-red"]="node-red/node-red"
-            ["ntfy"]="binwiederhier/ntfy"
-            ["nzbget"]="nzbgetcom/nzbget"
-            ["octoprint"]="OctoPrint/OctoPrint"
-            ["onedev"]="theonedev/onedev"
-            ["onlyoffice"]="ONLYOFFICE/DocumentServer"
-            ["openhab"]="openhab/openhab-distro"
-            ["openobserve"]="openobserve/openobserve"
-            ["openwebui"]="open-webui/open-webui"
-            ["passbolt"]="passbolt/passbolt_api"
-            ["pihole"]="pi-hole/pi-hole"
-            ["postgresql"]="postgres/postgres"
-            ["rabbitmq"]="rabbitmq/rabbitmq-server"
-            ["readarr"]="Readarr/Readarr"
-            ["redis"]="redis/redis"
-            ["runtipi"]="runtipi/runtipi"
-            ["sftpgo"]="drakkan/sftpgo"
-            ["shinobi"]="ShinobiCCTV/Shinobi"
-            ["sonarqube"]="SonarSource/sonarqube"
-            ["sonarr"]="Sonarr/Sonarr"
-            ["syncthing"]="syncthing/syncthing"
-            ["tdarr"]="HaveAGitGat/Tdarr"
-            ["technitiumdns"]="TechnitiumSoftware/DnsServer"
-            ["transmission"]="transmission/transmission"
-            ["typesense"]="typesense/typesense"
-            ["unmanic"]="Unmanic/unmanic"
-            ["valkey"]="valkey-io/valkey"
-            ["verdaccio"]="verdaccio/verdaccio"
-            ["vikunja"]="go-vikunja/vikunja"
-            ["wazuh"]="wazuh/wazuh"
-            ["wordpress"]="WordPress/WordPress"
-            ["zabbix"]="zabbix/zabbix"
-            ["zammad"]="zammad/zammad"
-            ["zerotier-one"]="zerotier/ZeroTierOne"
-            # Apps without known GitHub repos (use "-" as placeholder)
-            ["agentdvr"]="-"
-            ["apt-cacher-ng"]="-"
-            ["channels"]="-"
-            ["daemonsync"]="-"
-            ["dotnetaspwebapi"]="-"
-            ["fhem"]="-"
-            ["fileflows"]="-"
-            ["fumadocs"]="-"
-            ["infisical"]="-"
-            ["itsm-ng"]="-"
-            ["jupyternotebook"]="-"
-            ["kasm"]="-"
-            ["lyrionmusicserver"]="-"
-            ["minarca"]="-"
-            ["mqtt"]="-"
-            ["nextcloudpi"]="-"
-            ["nextpvr"]="-"
-            ["notifiarr"]="-"
-            ["nxwitness"]="-"
-            ["omada"]="-"
-            ["omv"]="-"
-            ["plex"]="-"
-            ["podman"]="-"
-            ["readeck"]="-"
-            ["resiliosync"]="-"
-            ["smokeping"]="-"
-            ["splunk-enterprise"]="-"
-            ["sqlserver2022"]="-"
-            ["swizzin"]="-"
-            ["teamspeak-server"]="-"
-            ["twingate-connector"]="-"
-            ["unifi"]="-"
-            ["urbackupserver"]="-"
-            ["yunohost"]="-"
-          )
-
-          for slug in "${!manual_github_mappings[@]}"; do
-            repo="${manual_github_mappings[$slug]}"
-            if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
-              # Skip placeholder entries in extraction, they get added in Method 8
-              [[ "$repo" == "-" ]] && continue
-              add_source "$slug" "github" "$repo" "install/${slug}-install.sh"
-            fi
-          done
-
-          echo ""
-          echo "=== Method 6: Proxmox LXC templates ==="
-          # Base OS versions from Proxmox template index
-          declare -A pveam_mappings=(
-            ["debian"]="pveam:debian"
-            ["ubuntu"]="pveam:ubuntu"
-            ["alpine"]="pveam:alpine"
-          )
-
-          for slug in "${!pveam_mappings[@]}"; do
-            template="${pveam_mappings[$slug]}"
-            if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
-              add_source "$slug" "pveam" "$template" "ct/${slug}.sh"
-            fi
-          done
-
-          echo ""
-          echo "=== Method 7: Special sources ==="
-          # Home Assistant OS VM
-          if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"haos-vm\")" > /dev/null 2>&1; then
-            add_source "haos-vm" "github" "home-assistant/operating-system" "vm/haos-vm.sh"
-          fi
-
-          echo ""
-          echo "=== Method 8: Unknown/Manual apps ==="
-          # Apps without known version sources - add with type "manual" for manual updates
-          unknown_apps=(
-            "agentdvr" "apt-cacher-ng" "channels" "daemonsync" "dotnetaspwebapi"
-            "fhem" "fileflows" "fumadocs" "infisical" "itsm-ng" "jupyternotebook"
-            "kasm" "lyrionmusicserver" "minarca" "mqtt" "nextcloudpi" "nextpvr"
-            "notifiarr" "nxwitness" "omada" "omv" "plex" "podman" "readeck"
-            "resiliosync" "smokeping" "splunk-enterprise" "sqlserver2022" "swizzin"
-            "teamspeak-server" "twingate-connector" "unifi" "urbackupserver" "yunohost"
-          )
-
-          for slug in "${unknown_apps[@]}"; do
-            if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
-              add_source "$slug" "manual" "-" "install/${slug}-install.sh"
-            fi
-          done
-
-          # Save sources file
-          echo "$sources_json" | jq --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            '{generated: $date, sources: (. | sort_by(.slug))}' > "$SOURCES_FILE"
-
-          total=$(echo "$sources_json" | jq 'length')
-          echo ""
-          echo "========================================="
-          echo "  Total sources extracted: $total"
-          echo "========================================="
-
-      - name: Fetch versions for all sources
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-        run: |
-          set -euo pipefail
-
-          echo "========================================="
-          echo "  Fetching versions from sources"
-          echo "========================================="
-
-          success=0
-          failed=0
-          manual=0
-          total=$(jq '.sources | length' "$SOURCES_FILE")
-
-          # Process each source
-          for i in $(seq 0 $((total - 1))); do
-            entry=$(jq -r ".sources[$i]" "$SOURCES_FILE")
-            slug=$(echo "$entry" | jq -r '.slug')
-            type=$(echo "$entry" | jq -r '.type')
-            source=$(echo "$entry" | jq -r '.source')
-
-            echo -n "[$((i+1))/$total] $slug ($type: $source) ... "
-
-            version=""
-            date=""
-
-            case "$type" in
-              github)
-                # Try releases first
-                response=$(gh api "repos/${source}/releases/latest" 2>/dev/null || echo '{"message": "Not Found"}')
-
-                if echo "$response" | jq -e '.tag_name' > /dev/null 2>&1; then
-                  version=$(echo "$response" | jq -r '.tag_name')
-                  date=$(echo "$response" | jq -r '.published_at // empty')
-                else
-                  # Fallback to tags
-                  version=$(gh api "repos/${source}/tags" --jq '.[0].name // empty' 2>/dev/null || echo "")
-                fi
-                ;;
-
-              npm)
-                response=$(curl -fsSL "https://registry.npmjs.org/${source}/latest" 2>/dev/null || echo '{}')
-                version=$(echo "$response" | jq -r '.version // empty')
-                ;;
-
-              docker)
-                if [[ "$source" == ghcr.io/* ]]; then
-                  # GitHub Container Registry
-                  ghcr_path="${source#ghcr.io/}"
-                  owner="${ghcr_path%%/*}"
-                  pkg="${ghcr_path##*/}"
-                  version=$(gh api "users/${owner}/packages/container/${pkg}/versions" --jq '.[0].metadata.container.tags[] | select(. != "latest")' 2>/dev/null | head -1 || echo "")
-                else
-                  # Docker Hub
-                  version=$(curl -fsSL "https://hub.docker.com/v2/repositories/${source}/tags?page_size=10&ordering=last_updated" 2>/dev/null \
-                    | jq -r '.results[] | select(.name != "latest") | .name' | head -1 || echo "")
-                fi
-                ;;
-
-              pveam)
-                # Proxmox LXC template versions from download.proxmox.com
-                os_name="${source#pveam:}"
-                # Fetch the template index and get latest version
-                version=$(curl -fsSL "http://download.proxmox.com/images/system/" 2>/dev/null \
-                  | grep -oE "${os_name}-[0-9]+\.[0-9]+-default_[0-9]+_amd64" \
-                  | sed "s/${os_name}-//" | sed 's/-default.*//' \
-                  | sort -V | tail -1 || echo "")
-                ;;
-
-              manual)
-                # Manual entries - no automatic version fetching
-                # These need to be updated manually or have their source type changed
-                version="-"
-                ((manual++))
-                echo -n "(manual) "
+            # Skip non-app JSON files
+            basename_file=$(basename "$json_file")
+            case "$basename_file" in
+              metadata.json|versions.json|github-versions.json|dependency-check.json|update-apps.json)
+                continue
                 ;;
             esac
 
-            if [[ -n "$version" && "$version" != "null" ]]; then
-              # Update the source entry with version
-              jq --arg idx "$i" --arg version "$version" --arg date "${date:-}" \
-                '.sources[$idx | tonumber].version = $version | .sources[$idx | tonumber].date = $date' \
-                "$SOURCES_FILE" > "${SOURCES_FILE}.tmp" && mv "${SOURCES_FILE}.tmp" "$SOURCES_FILE"
-              echo "✓ $version"
-              ((success++))
-            else
-              echo "⚠ no version found"
-              ((failed++))
-            fi
+            # Extract slug from JSON
+            slug=$(jq -r '.slug // empty' "$json_file" 2>/dev/null)
+            [[ -z "$slug" ]] && continue
+
+            # Find corresponding install script
+            install_script="install/${slug}-install.sh"
+            [[ ! -f "$install_script" ]] && continue
+
+            # Look for fetch_and_deploy_gh_release calls
+            # Pattern: fetch_and_deploy_gh_release "app" "owner/repo" ["mode"] ["version"]
+            while IFS= read -r line; do
+              # Skip commented lines
+              [[ "$line" =~ ^[[:space:]]*# ]] && continue
+
+              # Extract repo and version from fetch_and_deploy_gh_release
+              if [[ "$line" =~ fetch_and_deploy_gh_release[[:space:]]+\"[^\"]*\"[[:space:]]+\"([^\"]+)\"([[:space:]]+\"([^\"]+)\")?([[:space:]]+\"([^\"]+)\")? ]]; then
+                repo="${BASH_REMATCH[1]}"
+                mode="${BASH_REMATCH[3]:-tarball}"
+                pinned_version="${BASH_REMATCH[5]:-latest}"
+
+                # Check if version is pinned (not "latest" and not empty)
+                is_pinned=false
+                target_version=""
+
+                if [[ -n "$pinned_version" && "$pinned_version" != "latest" ]]; then
+                  is_pinned=true
+                  target_version="$pinned_version"
+                fi
+
+                # Fetch version from GitHub
+                if [[ "$is_pinned" == "true" ]]; then
+                  # For pinned versions, verify it exists and get date
+                  response=$(gh api "repos/${repo}/releases/tags/${target_version}" 2>/dev/null || echo '{}')
+                  if echo "$response" | jq -e '.tag_name' > /dev/null 2>&1; then
+                    version=$(echo "$response" | jq -r '.tag_name')
+                    date=$(echo "$response" | jq -r '.published_at // empty')
+                    add_version "$slug" "$repo" "$version" "true" "$date"
+                    echo "[$slug] ✓ $version (pinned)"
+                  else
+                    echo "[$slug] ⚠ pinned version $target_version not found"
+                  fi
+                else
+                  # Fetch latest release
+                  response=$(gh api "repos/${repo}/releases/latest" 2>/dev/null || echo '{}')
+                  if echo "$response" | jq -e '.tag_name' > /dev/null 2>&1; then
+                    version=$(echo "$response" | jq -r '.tag_name')
+                    date=$(echo "$response" | jq -r '.published_at // empty')
+                    add_version "$slug" "$repo" "$version" "false" "$date"
+                    echo "[$slug] ✓ $version"
+                  else
+                    # Try tags as fallback
+                    version=$(gh api "repos/${repo}/tags" --jq '.[0].name // empty' 2>/dev/null || echo "")
+                    if [[ -n "$version" ]]; then
+                      add_version "$slug" "$repo" "$version" "false" ""
+                      echo "[$slug] ✓ $version (from tags)"
+                    else
+                      echo "[$slug] ⚠ no version found"
+                    fi
+                  fi
+                fi
+
+                break  # Only first match per script
+              fi
+            done < <(grep 'fetch_and_deploy_gh_release' "$install_script" 2>/dev/null || true)
+
           done
 
+          # Save versions file
+          echo "$versions_json" | jq --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            '{generated: $date, versions: (. | sort_by(.slug))}' > "$VERSIONS_FILE"
+
+          total=$(echo "$versions_json" | jq 'length')
           echo ""
           echo "========================================="
-          echo "           SUMMARY"
+          echo "  Total versions extracted: $total"
           echo "========================================="
-          echo "Success: $success (automated)"
-          echo "Manual:  $manual (placeholder)"
-          echo "Failed:  $failed"
-          echo "Total:   $total"
-          echo "========================================="
-
-      - name: Generate versions.json for compatibility
-        run: |
-          # Convert version-sources.json to versions.json format for backward compatibility
-          jq '[.sources[] | select(.version != null) | {name: .source, version: .version, date: .date}]' \
-            "$SOURCES_FILE" > "$VERSIONS_FILE"
-
-          echo "Generated versions.json with $(jq length "$VERSIONS_FILE") entries"
 
       - name: Check for changes
         id: check-changes
         run: |
-          if git diff --quiet "$SOURCES_FILE" "$VERSIONS_FILE" 2>/dev/null; then
+          # Check if file is new (untracked) or has changes
+          if [[ ! -f "$VERSIONS_FILE" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Versions file was not created"
+          elif ! git ls-files --error-unmatch "$VERSIONS_FILE" &>/dev/null; then
+            # File exists but is not tracked - it's new
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "New file created: $VERSIONS_FILE"
+          elif git diff --quiet "$VERSIONS_FILE" 2>/dev/null; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No changes detected"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
             echo "Changes detected:"
-            git diff --stat "$SOURCES_FILE" "$VERSIONS_FILE" 2>/dev/null || true
+            git diff --stat "$VERSIONS_FILE" 2>/dev/null || true
           fi
 
       - name: Create Pull Request
         if: steps.check-changes.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH_NAME="automated/update-versions-$(date +%Y%m%d)"
+          BRANCH_NAME="automated/update-github-versions-$(date +%Y%m%d)"
 
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions[bot]"
@@ -464,12 +180,12 @@ jobs:
           git push origin --delete "$BRANCH_NAME" 2>/dev/null || true
 
           git checkout -b "$BRANCH_NAME"
-          git add "$SOURCES_FILE" "$VERSIONS_FILE"
-          git commit -m "chore: update version-sources.json and versions.json
+          git add "$VERSIONS_FILE"
+          git commit -m "chore: update github-versions.json
 
-          Sources: $(jq '.sources | length' "$SOURCES_FILE")
-          With versions: $(jq '[.sources[] | select(.version != null)] | length' "$SOURCES_FILE")
-          Generated: $(jq -r '.generated' "$SOURCES_FILE")"
+          Total versions: $(jq '.versions | length' "$VERSIONS_FILE")
+          Pinned versions: $(jq '[.versions[] | select(.pinned == true)] | length' "$VERSIONS_FILE")
+          Generated: $(jq -r '.generated' "$VERSIONS_FILE")"
 
           git push origin "$BRANCH_NAME" --force
 
@@ -480,33 +196,23 @@ jobs:
             echo "PR #$existing_pr already exists, updating..."
           else
             gh pr create \
-              --title "[Automated] Update version-sources.json" \
-              --body "This PR updates version information from multiple sources.
+              --title "[Automated] Update GitHub versions" \
+              --body "This PR updates version information from GitHub releases.
 
-          ## Sources
-          - **GitHub Releases**: Direct from \`fetch_and_deploy_gh_release\` calls
-          - **GitHub URLs**: Extracted from install scripts
-          - **npm Registry**: For Node.js based apps
-          - **Docker Hub/GHCR**: For container-based apps
+          ## How it works
+          1. Scans all JSON files in \`frontend/public/json/\` for slugs
+          2. Finds corresponding \`install/{slug}-install.sh\` scripts
+          3. Extracts \`fetch_and_deploy_gh_release\` calls
+          4. Fetches latest (or pinned) version from GitHub
 
           ## Stats
-          - Total sources: $(jq '.sources | length' "$SOURCES_FILE")
-          - With versions: $(jq '[.sources[] | select(.version != null)] | length' "$SOURCES_FILE")
+          - Total versions: $(jq '.versions | length' "$VERSIONS_FILE")
+          - Pinned versions: $(jq '[.versions[] | select(.pinned == true)] | length' "$VERSIONS_FILE")
+          - Latest versions: $(jq '[.versions[] | select(.pinned == false)] | length' "$VERSIONS_FILE")
 
           ---
           *Automatically generated from install scripts*" \
               --base main \
               --head "$BRANCH_NAME" \
               --label "automated pr"
-          fi
-
-      - name: Auto-approve PR
-        if: steps.check-changes.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          BRANCH_NAME="automated/update-versions-$(date +%Y%m%d)"
-          pr_number=$(gh pr list --head "$BRANCH_NAME" --state open --json number --jq '.[0].number')
-          if [[ -n "$pr_number" ]]; then
-            gh pr review "$pr_number" --approve
           fi
