@@ -1,5 +1,110 @@
 [
   {
+    "name": "cockpit-project/cockpit",
+    "version": "355",
+    "date": "2026-01-28T11:14:44Z"
+  },
+  {
+    "name": "go-vikunja/vikunja",
+    "version": "v1.0.0",
+    "date": "2026-01-28T11:12:59Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "11.0.5",
+    "date": "2026-01-28T10:49:10Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.60.0-rc1",
+    "date": "2026-01-28T10:38:45Z"
+  },
+  {
+    "name": "toeverything/AFFiNE",
+    "version": "v2026.1.28-canary.910",
+    "date": "2026-01-28T10:02:45Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v7.0.0-7",
+    "date": "2026-01-22T06:46:13Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.109.2",
+    "date": "2026-01-28T08:26:01Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2026-01-28T08:21:07Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.3",
+    "date": "2026-01-28T07:50:24Z"
+  },
+  {
+    "name": "cloudreve/cloudreve",
+    "version": "4.12.1",
+    "date": "2026-01-28T07:29:16Z"
+  },
+  {
+    "name": "connorgallopo/Tracearr",
+    "version": "v1.4.10",
+    "date": "2026-01-28T06:37:35Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.4",
+    "date": "2026-01-04T22:41:00Z"
+  },
+  {
+    "name": "donetick/donetick",
+    "version": "v0.1.64",
+    "date": "2025-10-03T05:18:24Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.27",
+    "date": "2026-01-28T04:32:34Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.24.0",
+    "date": "2026-01-28T04:19:22Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.81.3.rc.3",
+    "date": "2026-01-28T04:13:53Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.16",
+    "date": "2026-01-17T07:54:15Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.2.0-dev.4",
+    "date": "2026-01-28T02:15:09Z"
+  },
+  {
+    "name": "release-argus/Argus",
+    "version": "0.29.3",
+    "date": "2026-01-28T02:07:24Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.2",
+    "date": "2026-01-28T00:27:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "influxdata/influxdb",
     "version": "v2.8.0",
     "date": "2025-12-12T20:25:00Z"
@@ -8,6 +113,11 @@
     "name": "outline/outline",
     "version": "v1.4.0",
     "date": "2026-01-27T23:43:03Z"
+  },
+  {
+    "name": "transmission/transmission",
+    "version": "4.1.0",
+    "date": "2026-01-27T23:30:41Z"
   },
   {
     "name": "immich-app/immich",
@@ -23,11 +133,6 @@
     "name": "Infisical/infisical",
     "version": "v0.157.0",
     "date": "2026-01-27T21:58:06Z"
-  },
-  {
-    "name": "connorgallopo/Tracearr",
-    "version": "v1.4.9",
-    "date": "2026-01-27T21:31:48Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -60,11 +165,6 @@
     "date": "2026-01-27T20:00:09Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.16",
-    "date": "2026-01-17T07:54:15Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r8.3.0-alpha3",
     "date": "2026-01-27T19:04:43Z"
@@ -75,14 +175,14 @@
     "date": "2026-01-23T15:32:50Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.5.2",
+    "date": "2026-01-23T14:26:58Z"
+  },
+  {
     "name": "typesense/typesense",
     "version": "v30.0",
     "date": "2026-01-27T18:02:25Z"
-  },
-  {
-    "name": "go-vikunja/vikunja",
-    "version": "v1.0.0",
-    "date": "2026-01-27T17:17:34Z"
   },
   {
     "name": "Dispatcharr/Dispatcharr",
@@ -130,21 +230,6 @@
     "date": "2026-01-20T15:26:31Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.3-rc.4",
-    "date": "2026-01-27T10:25:24Z"
-  },
-  {
-    "name": "toeverything/AFFiNE",
-    "version": "v2026.1.27-canary.909",
-    "date": "2026-01-27T10:02:59Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2026-01-27T09:33:08Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v14.1.0",
     "date": "2026-01-27T08:27:01Z"
@@ -165,29 +250,9 @@
     "date": "2026-01-27T06:23:53Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.4",
-    "date": "2026-01-04T22:41:00Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.15.2",
     "date": "2026-01-27T00:52:57Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.2",
-    "date": "2026-01-27T00:27:06Z"
-  },
-  {
-    "name": "transmission/transmission",
-    "version": "4.1.0",
-    "date": "2026-01-26T23:58:07Z"
   },
   {
     "name": "webmin/webmin",
@@ -210,29 +275,14 @@
     "date": "2025-08-29T12:56:13Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.2.0-dev.3",
-    "date": "2026-01-26T21:56:05Z"
-  },
-  {
     "name": "fccview/jotty",
     "version": "1.19.1",
     "date": "2026-01-26T21:30:39Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.5.2",
-    "date": "2026-01-23T14:26:58Z"
-  },
-  {
     "name": "Sportarr/Sportarr",
     "version": "v4.0.983.1057",
     "date": "2026-01-26T18:54:50Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.81.3.rc.2",
-    "date": "2026-01-26T18:18:16Z"
   },
   {
     "name": "hargata/lubelog",
@@ -465,11 +515,6 @@
     "date": "2026-01-08T16:08:34Z"
   },
   {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.25",
-    "date": "2026-01-24T05:56:58Z"
-  },
-  {
     "name": "TomBursch/kitchenowl",
     "version": "v0.7.6",
     "date": "2026-01-24T01:21:14Z"
@@ -518,11 +563,6 @@
     "name": "ghostfolio/ghostfolio",
     "version": "2.233.0",
     "date": "2026-01-23T18:41:45Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.50.3",
-    "date": "2026-01-23T16:09:10Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -615,11 +655,6 @@
     "date": "2025-11-11T19:32:29Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v7.0.0-7",
-    "date": "2026-01-22T06:46:13Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.2.3",
     "date": "2026-01-22T03:57:50Z"
@@ -653,16 +688,6 @@
     "name": "docker/compose",
     "version": "v5.0.2",
     "date": "2026-01-21T07:42:38Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.108.0",
-    "date": "2026-01-21T06:45:16Z"
-  },
-  {
-    "name": "donetick/donetick",
-    "version": "v0.1.64",
-    "date": "2025-10-03T05:18:24Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -880,11 +905,6 @@
     "date": "2026-01-14T14:11:45Z"
   },
   {
-    "name": "cloudreve/cloudreve",
-    "version": "4.11.1",
-    "date": "2026-01-14T08:40:47Z"
-  },
-  {
     "name": "NginxProxyManager/nginx-proxy-manager",
     "version": "v2.13.6",
     "date": "2026-01-14T05:04:11Z"
@@ -928,11 +948,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.7.10",
     "date": "2026-01-12T20:50:50Z"
-  },
-  {
-    "name": "release-argus/Argus",
-    "version": "0.29.2",
-    "date": "2026-01-12T18:56:44Z"
   },
   {
     "name": "TryGhost/Ghost-CLI",
@@ -1063,11 +1078,6 @@
     "name": "MDeLuise/plant-it",
     "version": "1.0.1",
     "date": "2026-01-07T13:54:40Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "354",
-    "date": "2026-01-07T11:16:12Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -1365,11 +1375,6 @@
     "date": "2025-12-04T21:07:00Z"
   },
   {
-    "name": "glpi-project/glpi",
-    "version": "11.0.4",
-    "date": "2025-12-04T09:26:37Z"
-  },
-  {
     "name": "WordPress/WordPress",
     "version": "6.9",
     "date": "2025-12-02T18:36:17Z"
@@ -1398,11 +1403,6 @@
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.6",
     "date": "2025-11-29T02:43:00Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.23.6",
-    "date": "2025-11-28T03:52:50Z"
   },
   {
     "name": "phpipam/phpipam",
