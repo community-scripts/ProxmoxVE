@@ -63,7 +63,14 @@ export type OperatingSystem = {
 };
 
 export type AppVersion = {
-  name: string;
+  slug: string;
+  repo: string;
   version: string;
-  date: Date;
+  pinned: boolean;
+  date: string;
+};
+
+export type GitHubVersionsResponse = {
+  generated: string;
+  versions: AppVersion[];
 };

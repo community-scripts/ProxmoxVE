@@ -10,7 +10,7 @@ export async function fetchCategories() {
 }
 
 export async function fetchVersions() {
-  const response = await fetch(`/ProxmoxVE/api/versions`);
+  const response = await fetch(`/ProxmoxVE/api/github-versions`);
   if (!response.ok) {
     throw new Error(`Failed to fetch versions: ${response.statusText}`);
   }

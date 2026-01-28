@@ -6,7 +6,6 @@ import Image from "next/image";
 
 import type { AppVersion, Script } from "@/lib/types";
 
-import { cleanSlug } from "@/lib/utils/resource-utils";
 import { Separator } from "@/components/ui/separator";
 import { useVersions } from "@/hooks/use-versions";
 import { basePath } from "@/config/site-config";
@@ -108,13 +107,10 @@ function VersionInfo({ item }: { item: Script }) {
   const { data: versions = [], isLoading } = useVersions();
 
   if (isLoading || versions.length === 0) {
-    return <p className="text-sm text-muted-foreground">Loading versions...</p>;
+    return null;
   }
 
-  const matchedVersion = versions.find((v: AppVersion) => {
-    const cleanName = v.name.replace(/[^a-z0-9]/gi, "").toLowerCase();
-    return cleanName === cleanSlug(item.slug) || cleanName.includes(cleanSlug(item.slug));
-  });
+  const matchedVersion = versions.find((v: AppVersion) => v.slug === item.slug);
 
   if (!matchedVersion)
     return null;
