@@ -401,6 +401,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - #### 🐞 Bug Fixes
+
+    - tools.func: fix php "wait_for" hint [@MickLesk](https://github.com/MickLesk) ([#11254](https://github.com/community-scripts/ProxmoxVE/pull/11254))
+
   - #### ✨ New Features
 
     - tools.func: add new function - setup_meilisearch [@MickLesk](https://github.com/MickLesk) ([#11258](https://github.com/community-scripts/ProxmoxVE/pull/11258))
