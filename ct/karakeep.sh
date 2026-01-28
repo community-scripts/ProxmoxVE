@@ -90,6 +90,20 @@ function update_script() {
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
+
+  if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
+    msg_info "Stopping Meilisearch"
+    systemctl stop meilisearch
+    msg_ok "Stopped Meilisearch"
+
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+
+    msg_info "Starting Meilisearch"
+    systemctl start meilisearch
+    msg_ok "Started Meilisearch"
+    msg_ok "Updated Meilisearch successfully!"
+  fi
+
   exit
 }
 

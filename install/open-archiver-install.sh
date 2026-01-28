@@ -21,39 +21,10 @@ NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="openarchiver_db" PG_DB_USER="openarchiver" setup_postgresql_db
 
-fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+setup_meilisearch
 fetch_and_deploy_gh_release "openarchiver" "LogicLabs-OU/OpenArchiver" "tarball"
 JWT_KEY="$(openssl rand -hex 32)"
 SECRET_KEY="$(openssl rand -hex 32)"
-
-msg_info "Configuring MeiliSearch"
-curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml
-MASTER_KEY=$(openssl rand -base64 12)
-sed -i \
-  -e 's|^env =.*|env = "production"|' \
-  -e "s|^# master_key =.*|master_key = \"$MASTER_KEY\"|" \
-  -e 's|^db_path =.*|db_path = "/var/lib/meilisearch/data"|' \
-  -e 's|^dump_dir =.*|dump_dir = "/var/lib/meilisearch/dumps"|' \
-  -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
-  -e 's|^# no_analytics = true|no_analytics = true|' \
-  -e 's|^http_addr =.*|http_addr = "127.0.0.1:7700"|' \
-  /etc/meilisearch.toml
-
-cat <<EOF >/etc/systemd/system/meilisearch.service
-[Unit]
-Description=Meilisearch
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/meilisearch --config-file-path /etc/meilisearch.toml
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable -q --now meilisearch
-sleep 5
-msg_ok "Configured MeiliSearch"
 
 msg_info "Setting up Open Archiver"
 mkdir -p /opt/openarchiver-data
@@ -65,7 +36,7 @@ sed -i "s|^POSTGRES_USER=.*|POSTGRES_USER=$PG_DB_USER|g" /opt/openarchiver/.env
 sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$PG_DB_PASS|g" /opt/openarchiver/.env
 sed -i "s|^DATABASE_URL=.*|DATABASE_URL=\"postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME\"|g" /opt/openarchiver/.env
 sed -i "s|^MEILI_HOST=.*|MEILI_HOST=http://localhost:7700|g" /opt/openarchiver/.env
-sed -i "s|^MEILI_MASTER_KEY=.*|MEILI_MASTER_KEY=$MASTER_KEY|g" /opt/openarchiver/.env
+sed -i "s|^MEILI_MASTER_KEY=.*|MEILI_MASTER_KEY=$MEILISEARCH_MASTER_KEY|g" /opt/openarchiver/.env
 sed -i "s|^REDIS_HOST=.*|REDIS_HOST=localhost|g" /opt/openarchiver/.env
 sed -i "s|^REDIS_PASSWORD=.*|REDIS_PASSWORD=|g" /opt/openarchiver/.env
 sed -i "s|^STORAGE_LOCAL_ROOT_PATH=.*|STORAGE_LOCAL_ROOT_PATH=/opt/openarchiver-data|g" /opt/openarchiver/.env

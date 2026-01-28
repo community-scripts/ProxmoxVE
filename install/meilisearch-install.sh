@@ -13,21 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
-
-msg_info "Configuring ${APPLICATION}"
-curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml
-MASTER_KEY=$(openssl rand -base64 12)
-sed -i \
-  -e 's|^env =.*|env = "production"|' \
-  -e "s|^# master_key =.*|master_key = \"$MASTER_KEY\"|" \
-  -e 's|^db_path =.*|db_path = "/var/lib/meilisearch/data"|' \
-  -e 's|^dump_dir =.*|dump_dir = "/var/lib/meilisearch/dumps"|' \
-  -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
-  -e 's|^# no_analytics = true|no_analytics = true|' \
-  -e 's|^http_addr =.*|http_addr = "0.0.0.0:7700"|' \
-  /etc/meilisearch.toml
-msg_ok "Configured ${APPLICATION}"
+MEILISEARCH_BIND="0.0.0.0:7700" setup_meilisearch
 
 read -r -p "${TAB3}Do you want add meilisearch-ui? [y/n]: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
@@ -41,27 +27,11 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   cat <<EOF >/opt/meilisearch-ui/.env.local
 VITE_SINGLETON_MODE=true
 VITE_SINGLETON_HOST=http://${LOCAL_IP}:7700
-VITE_SINGLETON_API_KEY=${MASTER_KEY}
+VITE_SINGLETON_API_KEY=${MEILISEARCH_MASTER_KEY}
 EOF
   msg_ok "Configured ${APPLICATION}-ui"
-fi
 
-msg_info "Creating service"
-cat <<EOF >/etc/systemd/system/meilisearch.service
-[Unit]
-Description=Meilisearch
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/meilisearch --config-file-path /etc/meilisearch.toml
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable -q --now meilisearch
-
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  msg_info "Creating Meilisearch-UI service"
   cat <<EOF >/etc/systemd/system/meilisearch-ui.service
 [Unit]
 Description=Meilisearch UI Service
@@ -82,8 +52,8 @@ SyslogIdentifier=meilisearch-ui
 WantedBy=multi-user.target
 EOF
   systemctl enable -q --now meilisearch-ui
+  msg_ok "Created Meilisearch-UI service"
 fi
-msg_ok "Service created"
 
 motd_ssh
 customize
