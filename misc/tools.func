@@ -1845,8 +1845,9 @@ function fetch_and_deploy_gh_release() {
     }
 
     chmod 644 "$tmpdir/$filename"
-    $STD apt install -y "$tmpdir/$filename" || {
-      $STD dpkg -i "$tmpdir/$filename" || {
+    # SYSTEMD_OFFLINE=1 prevents systemd-tmpfiles failures in unprivileged LXC (Debian 13+/systemd 257+)
+    SYSTEMD_OFFLINE=1 $STD apt install -y "$tmpdir/$filename" || {
+      SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         msg_error "Both apt and dpkg installation failed"
         rm -rf "$tmpdir"
         return 1
