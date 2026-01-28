@@ -23,7 +23,7 @@
         "ram": 512,
         "hdd": 2,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
@@ -34,10 +34,6 @@
   "notes": [
     {
       "text": "Default credentials: `cat /root/hev.creds`",
-      "type": "info"
-    },
-    {
-      "text": "Config stored at `/etc/hev-socks5-server/main.yml`",
       "type": "info"
     }
   ]

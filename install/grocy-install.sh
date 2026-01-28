@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://grocy.info/
@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y apt-transport-https
+$STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.3" PHP_MODULE="sqlite3,bz2" PHP_APACHE="yes" setup_php
@@ -38,7 +38,6 @@ cat <<EOF >/etc/apache2/sites-available/grocy.conf
 </Directory>
 </VirtualHost>
 EOF
-
 $STD a2dissite 000-default.conf
 $STD a2ensite grocy.conf
 $STD a2enmod rewrite

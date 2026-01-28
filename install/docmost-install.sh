@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docmost.com/
@@ -22,8 +22,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/docmost/docmost/main/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="docmost_db" PG_DB_USER="docmost_user" setup_postgresql_db
-import_local_ip
-fetch_and_deploy_gh_release "docmost" "docmost/docmost"
+fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
 
 msg_info "Configuring Docmost (Patience)"
 cd /opt/docmost

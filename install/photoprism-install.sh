@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.photoprism.app/
@@ -12,6 +12,7 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt install -y \
@@ -28,6 +29,8 @@ $STD apt install -y \
   lsb-release
 
 echo 'export PATH=/usr/local:$PATH' >>~/.bashrc
+echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
+echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
 export PATH=/usr/local:$PATH
 msg_ok "Installed Dependencies"
 

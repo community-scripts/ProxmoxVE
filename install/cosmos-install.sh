@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://https://cosmos-cloud.io/
@@ -14,38 +14,23 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
+  ca-certificates \
+  openssl \
   snapraid \
   avahi-daemon \
-  fdisk
+  fdisk \
+  mergerfs \
+  unzip
 msg_ok "Installed Dependencies"
 
-msg_info "Install mergerfs"
-MERGERFS_VERSION="2.40.2"
-curl -fsSL "https://github.com/trapexit/mergerfs/releases/download/${MERGERFS_VERSION}/mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb" -o "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb"
-$STD dpkg -i "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb" || $STD apt-get install -f -y
-rm "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb"
-msg_ok "Installed mergerfs"
+setup_docker
+fetch_and_deploy_gh_release "cosmos" "azukaar/Cosmos-Server" "prebuild" "latest" "/opt/cosmos" "cosmos-cloud-*-amd64.zip"
 
-msg_info "Install Docker"
-curl -fsSL https://get.docker.com -o get-docker.sh
-$STD sh get-docker.sh
-rm get-docker.sh
-msg_ok "Installed Docker"
-
-msg_info "Install Cosmos"
-mkdir -p /opt/cosmos
-LATEST_RELEASE=$(curl -fsSL https://api.github.com/repos/azukaar/Cosmos-Server/releases/latest | grep "tag_name" | cut -d '"' -f 4)
-ZIP_FILE="cosmos-cloud-${LATEST_RELEASE#v}-amd64.zip"
-curl -fsSL "https://github.com/azukaar/Cosmos-Server/releases/download/${LATEST_RELEASE}/${ZIP_FILE}" -o "/opt/cosmos/${ZIP_FILE}"
+msg_info "Setting up Cosmos"
 cd /opt/cosmos
-$STD unzip -o -q "${ZIP_FILE}"
-LATEST_RELEASE_NO_V=${LATEST_RELEASE#v}
-mv /opt/cosmos/cosmos-cloud-${LATEST_RELEASE_NO_V}/* /opt/cosmos/
-rmdir /opt/cosmos/cosmos-cloud-${LATEST_RELEASE_NO_V}
 chmod +x /opt/cosmos/cosmos
-rm -f "/opt/cosmos/cosmos-cloud-${LATEST_RELEASE#v}-amd64.zip"
-msg_ok "Installed Cosmos"
+msg_ok "Set up Cosmos"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/cosmos.service

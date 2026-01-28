@@ -34,7 +34,7 @@
         "ram": 256,
         "hdd": 1,
         "os": "alpine",
-        "version": "3.22"
+        "version": "3.23"
       }
     }
   ],
@@ -44,7 +44,7 @@
   },
   "notes": [
     {
-      "text": "Wireguard and WGDashboard are not the same. More info: `https://docs.wgdashboard.dev/what-is-wireguard-what-is-wgdashboard.html`",
+      "text": "Wireguard and WGDashboard are not the same. More info: `https://wgdashboard.dev/`",
       "type": "info"
     },
     {

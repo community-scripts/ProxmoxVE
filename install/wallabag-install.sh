@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://wallabag.org/
@@ -20,7 +20,6 @@ $STD apt install -y \
   imagemagick
 msg_ok "Installed Dependencies"
 
-import_local_ip
 setup_mariadb
 MARIADB_DB_NAME="wallabag" MARIADB_DB_USER="wallabag" setup_mariadb_db
 PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="bcmath,bz2,curl,gd,imagick,intl,mbstring,mysql,redis,tidy,xml,zip" setup_php

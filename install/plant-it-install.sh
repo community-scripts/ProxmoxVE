@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://plant-it.org/
@@ -20,36 +20,21 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_mariadb
+MARIADB_DB_NAME="plantit" MARIADB_DB_USER="plantit_usr" setup_mariadb_db
 JAVA_VERSION="21" setup_java
-
-msg_info "Setting up MariaDB"
-JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
-DB_NAME=plantit
-DB_USER=plantit_usr
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-    echo "Plant-it Credentials"
-    echo "Plant-it Database User: $DB_USER"
-    echo "Plant-it Database Password: $DB_PASS"
-    echo "Plant-it Database Name: $DB_NAME"
-} >>~/plant-it.creds
-msg_ok "Set up MariaDB"
-
 USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "0.10.0" "/opt/plant-it/backend" "server.jar"
 fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "0.10.0" "/opt/plant-it/frontend" "client.tar.gz"
 
 msg_info "Configured Plant-it"
+JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
 mkdir -p /opt/plant-it-data
 cat <<EOF >/opt/plant-it/backend/server.env
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
-MYSQL_USERNAME=$DB_USER
-MYSQL_PSW=$DB_PASS
-MYSQL_DATABASE=$DB_NAME
-MYSQL_ROOT_PASSWORD=$DB_PASS
+MYSQL_USERNAME=$MARIADB_DB_USER
+MYSQL_PSW=$MARIADB_DB_PASS
+MYSQL_DATABASE=$MARIADB_DB_NAME
+MYSQL_ROOT_PASSWORD=$MARIADB_DB_PASS
 
 JWT_SECRET=$JWT_SECRET
 JWT_EXP=1
@@ -86,7 +71,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now -q plant-it
+systemctl enable -q --now plant-it
 
 cat <<EOF >/etc/nginx/nginx.conf
 events {

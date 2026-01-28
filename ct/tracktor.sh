@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://tracktor.bytedge.in/
@@ -34,38 +34,39 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Correcting Services"
-    if [ -f /opt/tracktor/app/backend/.env ]; then
-      mv /opt/tracktor/app/backend/.env /opt/tracktor.env
-      echo 'AUTH_PIN=123456' >>/opt/tracktor.env
-      sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
-      systemctl daemon-reload
-    fi
     if [ ! -d "/opt/tracktor-data/uploads" ]; then
       mkdir -p /opt/tracktor-data/{uploads,logs}
-      EXISTING_AUTH_PIN=$(grep '^AUTH_PIN=' /opt/tracktor.env 2>/dev/null | cut -d'=' -f2)
-      AUTH_PIN=${EXISTING_AUTH_PIN:-123456}
-      cat <<EOF >/opt/tracktor.env
+    fi
+    if ! grep -qxF 'BODY_SIZE_LIMIT=Infinity' /opt/tracktor.env; then
+      rm /opt/tracktor.env
+    cat <<EOF >/opt/tracktor.env
+cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
+# Set this to the path of the database file. Default - ./tracktor.db
 DB_PATH=/opt/tracktor-data/tracktor.db
+# Set this to the path of the uploads directory. Default - ./uploads
 UPLOADS_DIR="/opt/tracktor-data/uploads"
+# Set this to the path of the logs directory. Default - ./logs
 LOG_DIR="/opt/tracktor-data/logs"
-# If server host is not set by default it will run on all interfaces - 0.0.0.0
-# SERVER_HOST="" 
-SERVER_PORT=3000
-# Set this if you want to secure your endpoints otherwise default will be "*"
-CORS_ORIGINS="*"
-# Set this if you are using backend and frontend separately.
-# PUBLIC_API_BASE_URL=""
-LOG_REQUESTS=true
-LOG_LEVEL="info"
-AUTH_PIN=${AUTH_PIN}
-# PUBLIC_DEMO_MODE=false
-# FORCE_DATA_SEED=false
+# Hostname to bind the server to. Default - 0.0.0.0
+#HOST="0.0.0.0"
+# Port to bind the server to. Default - 3000
+#PORT=3000
+# Set this to remove upload size limitations. Default - 512 Kb
+BODY_SIZE_LIMIT=Infinity
+# Enable request logging. Default - true
+#LOG_REQUESTS=true
+# Set the logging level. Options - error, warn, info, verbose, debug, silly. Default - info
+#LOG_LEVEL="info"
+# Enable demo mode. Default - false
+#TRACKTOR_DEMO_MODE=false
+# Force reseeding of data on every startup. Default - false
+#FORCE_DATA_SEED=false
 EOF
     fi
     msg_ok "Corrected Services"
 
-    NODE_VERSION="22" setup_nodejs
+    NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
     msg_info "Updating tracktor"
@@ -86,7 +87,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

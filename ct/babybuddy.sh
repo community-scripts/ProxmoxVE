@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/babybuddy/babybuddy
@@ -41,7 +41,7 @@ function update_script() {
     find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf {} +
     msg_ok "Cleaned old files"
 
-    fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy"
+    fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy" "tarball"
 
     msg_info "Updating ${APP}"
     cd /opt/babybuddy
@@ -69,7 +69,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

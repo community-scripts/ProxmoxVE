@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/qdrant/qdrant
@@ -16,13 +16,12 @@ update_os
 fetch_and_deploy_gh_release "qdrant" "qdrant/qdrant" "binary" "latest" "/usr/bin/qdrant"
 
 msg_info "Creating Qdrant Configuration"
-mkdir -p /var/lib/qdrant/storage
-mkdir -p /var/lib/qdrant/snapshots
 mkdir -p /etc/qdrant
+mkdir -p /var/lib/qdrant/{storage,snapshots}
 chown -R root:root /var/lib/qdrant
 chmod -R 755 /var/lib/qdrant
 
-cat >/etc/qdrant/config.yaml <<EOF
+cat <<EOF >/etc/qdrant/config.yaml
 log_level: INFO
 
 storage:
@@ -38,7 +37,7 @@ EOF
 msg_ok "Created Qdrant Configuration"
 
 msg_info "Creating Qdrant Service"
-cat >/etc/systemd/system/qdrant.service <<EOF
+cat <<EOF >/etc/systemd/system/qdrant.service
 [Unit]
 Description=Qdrant Vector Search Engine
 After=network-online.target

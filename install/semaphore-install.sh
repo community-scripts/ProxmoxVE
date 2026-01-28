@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://semaphoreui.com/
@@ -15,22 +15,15 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y git
+setup_deb822_repo \
+  "ansible" \
+  "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" \
+  "http://ppa.launchpad.net/ansible/ansible/ubuntu" \
+  "jammy"
+$STD apt install -y ansible
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Ansible"
-curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmor -o /usr/share/keyrings/ansible-archive-keyring.gpg
-cat <<EOF >/etc/apt/sources.list.d/ansible.sources
-Types: deb
-URIs: http://ppa.launchpad.net/ansible/ansible/ubuntu
-Suites: jammy
-Components: main
-Signed-By: /usr/share/keyrings/ansible-archive-keyring.gpg
-EOF
-$STD apt update
-$STD apt install -y ansible
-msg_ok "Set up Ansible"
-
-fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary"
+fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "latest" "/opt/semaphore" "semaphore_*_linux_amd64.deb"
 
 msg_info "Configuring Semaphore"
 mkdir -p /opt/semaphore
@@ -70,7 +63,6 @@ RestartSec=10s
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now semaphore
 msg_ok "Created Service"
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rogerfar/rdt-client
@@ -41,7 +41,7 @@ function update_script() {
     cp -R /opt/rdtc-backup/appsettings.json /opt/rdtc/
     if dpkg-query -W dotnet-sdk-8.0 >/dev/null 2>&1; then
       $STD apt remove --purge -y dotnet-sdk-8.0
-      $STD apt install -y dotnet-sdk-9.0
+      $STD apt install -y aspnetcore-runtime-9.0
     fi
     rm -rf /opt/rdtc-backup
 
@@ -57,7 +57,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:6500${CL}"

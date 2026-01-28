@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://forgejo.org/
@@ -50,7 +50,7 @@ Group=git
 WorkingDirectory=/var/lib/forgejo/ 
 ExecStart=/usr/local/bin/forgejo web --config /etc/forgejo/app.ini
 Restart=always
-Environment=USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/forgejo
+Environment=USER=git HOME=/home/git FORGEJO_WORK_DIR=/var/lib/forgejo
 [Install]
 WantedBy=multi-user.target
 EOF

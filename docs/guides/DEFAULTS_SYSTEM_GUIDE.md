@@ -434,11 +434,23 @@ var_unprivileged=1     # 0=privileged, 1=unprivileged
 #### Network
 ```bash
 var_brg=vmbr0          # Bridge interface
-var_net=veth           # Network driver
-var_gateway=192.168.1.1  # Default gateway
+var_net=dhcp           # dhcp, static IP/CIDR, or IP range (see below)
+var_gateway=192.168.1.1  # Default gateway (required for static IP)
 var_mtu=1500           # MTU size
 var_vlan=100           # VLAN ID
 ```
+
+#### IP Range Scanning
+
+You can specify an IP range instead of a static IP. The system will ping each IP in the range and automatically assign the first free IP:
+
+```bash
+# Format: START_IP/CIDR-END_IP/CIDR
+var_net=192.168.1.100/24-192.168.1.200/24
+var_gateway=192.168.1.1
+```
+
+This is useful for automated deployments where you want static IPs but don't want to track which IPs are already in use.
 
 #### System
 ```bash

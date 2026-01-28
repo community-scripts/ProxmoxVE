@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: johanngrobe
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/joaovitoriasilva/endurain
@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Endurain"
 var_tags="${var_tags:-sport;social-media}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} installation found!"
     exit 1
   fi
-  if check_for_gh_release "endurain" "joaovitoriasilva/endurain"; then
+  if check_for_gh_release "endurain" "endurain-project/endurain"; then
     msg_info "Stopping Service"
     systemctl stop endurain
     msg_ok "Stopped Service"
@@ -38,7 +38,7 @@ function update_script() {
     cp /opt/endurain/frontend/app/dist/env.js /opt/endurain.env.js
     msg_ok "Created Backup"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "endurain" "joaovitoriasilva/endurain" "tarball" "latest" "/opt/endurain"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
 
     msg_info "Preparing Update"
     cd /opt/endurain
@@ -68,7 +68,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start endurain
     msg_ok "Started Service"
-    msg_ok "Update Completed Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -77,7 +77,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

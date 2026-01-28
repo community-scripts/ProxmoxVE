@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -18,7 +18,7 @@ PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="imagick,bz2,sqlite3" setup_php
 fetch_and_deploy_gh_release "wallos" "ellite/Wallos" "tarball"
 
 msg_info "Installing Wallos (Patience)"
-cd /opt/wallos || exit
+cd /opt/wallos
 mv /opt/wallos/db/wallos.empty.db /opt/wallos/db/wallos.db
 chown -R www-data:www-data /opt/wallos
 chmod -R 755 /opt/wallos

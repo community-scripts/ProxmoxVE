@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck | Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.rabbitmq.com/
@@ -29,16 +29,11 @@ function update_script() {
   fi
   if grep -q "dl.cloudsmith.io" /etc/apt/sources.list.d/rabbitmq.list; then
     rm -f /etc/apt/sources.list.d/rabbitmq.list
-    cat <<EOF >/etc/apt/sources.list.d/rabbitmq.list
-## Modern Erlang/OTP releases
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb1.rabbitmq.com/rabbitmq-erlang/debian/trixie trixie main
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb2.rabbitmq.com/rabbitmq-erlang/debian/trixie trixie main
-
-## Provides modern RabbitMQ releases
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb1.rabbitmq.com/rabbitmq-server/debian/trixie trixie main
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb2.rabbitmq.com/rabbitmq-server/debian/trixie trixie main
-EOF
-    $STD apt update
+    setup_deb822_repo \
+      "rabbitmq" \
+      "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" \
+      "https://deb1.rabbitmq.com/rabbitmq-server/debian/trixie" \
+      "trixie"
   fi
 
   msg_info "Stopping Service"
@@ -60,7 +55,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:15672${CL}"

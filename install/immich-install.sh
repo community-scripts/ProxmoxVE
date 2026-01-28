@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://immich.app
@@ -29,7 +29,6 @@ $STD apt install --no-install-recommends -y \
   libltdl-dev \
   libgdk-pixbuf-2.0-dev \
   libbrotli-dev \
-  libde265-dev \
   libexif-dev \
   libexpat1-dev \
   libglib2.0-dev \
@@ -75,12 +74,13 @@ $STD apt install -y jellyfin-ffmpeg7
 ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 
+# Set permissions for /dev/dri (only in privileged containers and if /dev/dri exists)
 if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser "$(id -u -n)" video
-  $STD adduser "$(id -u -n)" render
+  chgrp video /dev/dri 2>/dev/null || true
+  chmod 755 /dev/dri 2>/dev/null || true
+  chmod 660 /dev/dri/* 2>/dev/null || true
+  $STD adduser "$(id -u -n)" video 2>/dev/null || true
+  $STD adduser "$(id -u -n)" render 2>/dev/null || true
 fi
 msg_ok "Dependencies Installed"
 
@@ -98,15 +98,21 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD apt install -y --no-install-recommends patchelf
   tmp_dir=$(mktemp -d)
   $STD pushd "$tmp_dir"
-  curl -fsSLO https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17384.11/intel-igc-core_1.0.17384.11_amd64.deb
-  curl -fsSLO https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17384.11/intel-igc-opencl_1.0.17384.11_amd64.deb
-  curl -fsSLO https://github.com/intel/compute-runtime/releases/download/24.31.30508.7/intel-opencl-icd_24.31.30508.7_amd64.deb
-  curl -fsSLO https://github.com/intel/compute-runtime/releases/download/24.31.30508.7/libigdgmm12_22.4.1_amd64.deb
+  curl -fsSLO https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/Dockerfile
+  readarray -t INTEL_URLS < <(
+    sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $2}'
+    sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
+  )
+  for url in "${INTEL_URLS[@]}"; do
+    curl -fsSLO "$url"
+  done
+  $STD apt install -y ./libigdgmm12*.deb
+  rm ./libigdgmm12*.deb
   $STD apt install -y ./*.deb
   $STD apt-mark hold libigdgmm12
   $STD popd
   rm -rf "$tmp_dir"
-  dpkg -l | grep "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
+  dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
   msg_ok "Installed OpenVINO dependencies"
 fi
 
@@ -123,9 +129,9 @@ Pin-Priority: 450
 EOF
 $STD apt update
 msg_ok "Configured Debian Testing repo"
-msg_info "Installing libmimalloc3"
-$STD apt install -t testing --no-install-recommends -yqq libmimalloc3
-msg_ok "Installed libmimalloc3"
+msg_info "Installing packages from Debian Testing repo"
+$STD apt install -t testing --no-install-recommends -yqq libmimalloc3 libde265-dev
+msg_ok "Installed packages from Debian Testing repo"
 
 PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
 NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
@@ -236,7 +242,7 @@ $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBRAW_REVISION"
 $STD autoreconf --install
-$STD ./configure
+$STD ./configure --disable-examples
 $STD make -j"$(nproc)"
 $STD make install
 ldconfig /usr/local/lib
@@ -290,7 +296,7 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.3.1" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.4.1" "$SRC_DIR"
 
 msg_info "Installing ${APPLICATION} (patience)"
 

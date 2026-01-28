@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/wizarrrr/wizarr
@@ -19,8 +19,8 @@ msg_ok "Installed Dependencies"
 
 setup_uv
 NODE_VERSION="22" setup_nodejs
+
 fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr" "tarball"
-import_local_ip
 
 msg_info "Configure Wizarr"
 cd /opt/wizarr

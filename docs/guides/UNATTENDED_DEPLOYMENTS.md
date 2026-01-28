@@ -122,6 +122,31 @@ var_verbose=no \
 echo "✓ Container deployed successfully"
 ```
 
+### Using IP Range Scan for Automatic IP Assignment
+
+Instead of manually specifying static IPs, you can define an IP range. The system will automatically ping each IP and assign the first free one:
+
+```bash
+#!/bin/bash
+# deploy-with-ip-scan.sh - Auto-assign first free IP from range
+
+var_unprivileged=1 \
+var_cpu=4 \
+var_ram=4096 \
+var_hostname=web-server \
+var_net=192.168.1.100/24-192.168.1.150/24 \
+var_gateway=192.168.1.1 \
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/debian.sh)"
+
+# The script will:
+# 1. Ping 192.168.1.100 - if responds, skip
+# 2. Ping 192.168.1.101 - if responds, skip
+# 3. Continue until first IP that doesn't respond
+# 4. Assign that IP to the container
+```
+
+> **Note**: IP range format is `START_IP/CIDR-END_IP/CIDR`. Both sides must include the same CIDR notation.
+
 ### Using App Defaults
 
 **Step 1: Create defaults once (interactive)**

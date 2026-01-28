@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: ekke85
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Dispatcharr/Dispatcharr
@@ -12,42 +12,27 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-    build-essential \
-    python3-dev \
-    libpq-dev \
-    nginx \
-    redis-server \
-    ffmpeg \
-    procps \
-    streamlink
+  build-essential \
+  python3-dev \
+  libpq-dev \
+  nginx \
+  redis-server \
+  ffmpeg \
+  procps \
+  vlc-bin \
+  vlc-plugin-base \
+  streamlink
 msg_ok "Installed Dependencies"
 
 setup_uv
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="16" setup_postgresql
-
-msg_info "Creating PostgreSQL Database"
-DB_NAME=dispatcharr_db
-DB_USER=dispatcharr_usr
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-{
-    echo "Dispatcharr Credentials"
-    echo "Database Name: $DB_NAME"
-    echo "Database User: $DB_USER"
-    echo "Database Password: $DB_PASS"
-    echo ""
-} >>~/dispatcharr.creds
-msg_ok "Created PostgreSQL Database"
-
-fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr"
+PG_DB_NAME="dispatcharr_db" PG_DB_USER="dispatcharr_usr" setup_postgresql_db
+fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 
 msg_info "Installing Python Dependencies with uv"
 cd /opt/dispatcharr
@@ -58,24 +43,24 @@ msg_ok "Installed Python Dependencies"
 
 msg_info "Configuring Dispatcharr"
 install -d -m 755 \
-    /data/{logos,recordings,plugins,db} \
-    /data/uploads/{m3us,epgs} \
-    /data/{m3us,epgs}
+  /data/{logos,recordings,plugins,db} \
+  /data/uploads/{m3us,epgs} \
+  /data/{m3us,epgs}
 chown -R root:root /data
 DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
-export DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
-export POSTGRES_DB=$DB_NAME
-export POSTGRES_USER=$DB_USER
-export POSTGRES_PASSWORD=$DB_PASS
+export DATABASE_URL="postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}"
+export POSTGRES_DB=$PG_DB_NAME
+export POSTGRES_USER=$PG_DB_USER
+export POSTGRES_PASSWORD=$PG_DB_PASS
 export POSTGRES_HOST=localhost
 export DJANGO_SECRET_KEY=$DJANGO_SECRET
 $STD uv run python manage.py migrate --noinput
 $STD uv run python manage.py collectstatic --noinput
 cat <<EOF >/opt/dispatcharr/.env
-DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}
-POSTGRES_DB=$DB_NAME
-POSTGRES_USER=$DB_USER
-POSTGRES_PASSWORD=$DB_PASS
+DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}
+POSTGRES_DB=$PG_DB_NAME
+POSTGRES_USER=$PG_DB_USER
+POSTGRES_PASSWORD=$PG_DB_PASS
 POSTGRES_HOST=localhost
 CELERY_BROKER_URL=redis://localhost:6379/0
 DJANGO_SECRET_KEY=$DJANGO_SECRET
@@ -88,8 +73,9 @@ msg_ok "Configured Dispatcharr"
 msg_info "Configuring Nginx"
 cat <<EOF >/etc/nginx/sites-available/dispatcharr.conf
 server {
-    listen 80;
+    listen 9191;
     server_name _;
+    client_max_body_size 100M;
 
     # Serve static assets with correct MIME types
     location /assets/ {

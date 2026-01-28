@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: ekke85 | MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Dispatcharr/Dispatcharr
@@ -13,6 +13,7 @@ var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -30,6 +31,16 @@ function update_script() {
 
   setup_uv
   NODE_VERSION="24" setup_nodejs
+
+  # Fix for nginx not allowing large files
+  if ! grep -q "client_max_body_size 100M;" /etc/nginx/sites-available/dispatcharr.conf; then
+    sed -i '/server_name _;/a \    client_max_body_size 100M;' /etc/nginx/sites-available/dispatcharr.conf
+    systemctl reload nginx
+  fi
+
+  if ! dpkg -s vlc-bin vlc-plugin-base &>/dev/null; then
+    $STD apt update && $STD apt install -y vlc-bin vlc-plugin-base
+  fi
 
   if check_for_gh_release "Dispatcharr" "Dispatcharr/Dispatcharr"; then
     msg_info "Stopping Services"
@@ -68,7 +79,7 @@ function update_script() {
     $STD tar -czf "$BACKUP_FILE" -C /opt dispatcharr /tmp/dispatcharr_db_*.sql
     msg_ok "Backup created: $BACKUP_FILE"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 
     msg_info "Updating Dispatcharr Backend"
     if [[ -f /tmp/dispatcharr.env.backup ]]; then
@@ -88,8 +99,8 @@ function update_script() {
     fi
 
     if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
-        DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
-        echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >> /opt/dispatcharr/.env
+      DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+      echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >>/opt/dispatcharr/.env
     fi
 
     cd /opt/dispatcharr
@@ -132,7 +143,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

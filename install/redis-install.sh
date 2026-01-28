@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://redis.io/
@@ -14,25 +14,22 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  apt-transport-https \
-  lsb-release
+$STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Redis"
-curl -fsSL "https://packages.redis.io/gpg" | gpg --dearmor >/usr/share/keyrings/redis-archive-keyring.gpg
-cat <<EOF >/etc/apt/sources.list.d/redis.sources
-Types: deb
-URIs: https://packages.redis.io/deb
-Suites: $(lsb_release -cs)
-Components: main
-Signed-By: /usr/share/keyrings/redis-archive-keyring.gpg
-EOF
-$STD apt update
+msg_info "Setting up Redis Repository"
+setup_deb822_repo \
+  "redis" \
+  "https://packages.redis.io/gpg" \
+  "https://packages.redis.io/deb" \
+  "trixie"
+msg_ok "Setup Redis Repository"
+
+msg_info "Setting up Redis"
 $STD apt install -y redis
 sed -i 's/^bind .*/bind 0.0.0.0/' /etc/redis/redis.conf
 systemctl enable -q --now redis-server
-msg_ok "Installed Redis"
+msg_ok "Setup Redis"
 
 motd_ssh
 customize

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://gethomepage.dev/
@@ -18,16 +18,11 @@ $STD apt-get install -y jq
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
+RELEASE=$(get_latest_github_release "gethomepage/homepage")
 
-LOCAL_IP=$(hostname -I | awk '{print $1}')
-RELEASE=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-msg_info "Installing Homepage v${RELEASE} (Patience)"
-curl -fsSL "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz" -o "v${RELEASE}.tar.gz"
-$STD tar -xzf v${RELEASE}.tar.gz
-rm -rf v${RELEASE}.tar.gz
+msg_info "Installing Homepage (Patience)"
 mkdir -p /opt/homepage/config
-mv homepage-${RELEASE}/* /opt/homepage
-rm -rf homepage-${RELEASE}
 cd /opt/homepage
 cp /opt/homepage/src/skeleton/* /opt/homepage/config
 $STD pnpm install
@@ -37,8 +32,7 @@ export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepa
 export NEXT_TELEMETRY_DISABLED=1
 $STD pnpm build
 echo "HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000" >/opt/homepage/.env
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed Homepage v${RELEASE}"
+msg_ok "Installed Homepage"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/homepage.service
@@ -46,6 +40,7 @@ cat <<EOF >/etc/systemd/system/homepage.service
 Description=Homepage
 After=network.target
 StartLimitIntervalSec=0
+
 [Service]
 Type=simple
 Restart=always
@@ -53,6 +48,7 @@ RestartSec=1
 User=root
 WorkingDirectory=/opt/homepage/
 ExecStart=pnpm start
+
 [Install]
 WantedBy=multi-user.target
 EOF

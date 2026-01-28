@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: jdacode
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/comfyanonymous/ComfyUI
@@ -12,6 +12,7 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 echo
 echo "${TAB3}Choose the GPU type for ComfyUI:"
@@ -71,7 +72,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/ComfyUI
-ExecStart=/opt/ComfyUI/venv/bin/python /opt/ComfyUI/main.py --listen --port 8188 --cpu
+ExecStart=/opt/ComfyUI/venv/bin/python /opt/ComfyUI/main.py --listen --port 8188
 Restart=on-failure
 
 [Install]

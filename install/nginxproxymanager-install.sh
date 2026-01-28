@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 Community-Scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://nginxproxymanager.com/
@@ -54,12 +54,11 @@ msg_ok "Installed Openresty"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
-# RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
-#  grep "tag_name" |
-#  awk '{print substr($2, 3, length($2)-4) }')
-RELEASE="2.13.4"
+RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
+  grep "tag_name" |
+  awk '{print substr($2, 3, length($2)-4) }')
 
-fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v2.13.4"
+fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}"
 
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
@@ -117,6 +116,7 @@ cd /opt/nginxproxymanager/frontend
 # Replace node-sass with sass in package.json before installation
 sed -E -i 's/"node-sass" *: *"([^"]*)"/"sass": "\1"/g' package.json
 $STD yarn install --network-timeout 600000
+$STD yarn locale-compile
 $STD yarn build
 cp -r /opt/nginxproxymanager/frontend/dist/* /app/frontend
 cp -r /opt/nginxproxymanager/frontend/public/images/* /app/frontend/images

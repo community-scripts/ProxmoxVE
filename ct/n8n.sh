@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://n8n.io/
@@ -29,13 +29,12 @@ function update_script() {
   fi
   if [ ! -f /opt/n8n.env ]; then
     sed -i 's|^Environment="N8N_SECURE_COOKIE=false"$|EnvironmentFile=/opt/n8n.env|' /etc/systemd/system/n8n.service
-    HOST_IP=$(hostname -I | awk '{print $1}')
     mkdir -p /opt
     cat <<EOF >/opt/n8n.env
 N8N_SECURE_COOKIE=false
 N8N_PORT=5678
 N8N_PROTOCOL=http
-N8N_HOST=$HOST_IP
+N8N_HOST=$LOCAL_IP
 EOF
   fi
   NODE_VERSION="22" setup_nodejs
@@ -52,7 +51,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5678${CL}"

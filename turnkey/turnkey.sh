@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -41,6 +41,29 @@ function info() {
 function msg() {
   local TEXT="$1"
   echo -e "$TEXT"
+}
+function validate_container_id() {
+  local ctid="$1"
+  # Check if ID is numeric
+  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
+    return 1
+  fi
+  # Check if config file exists for VM or LXC
+  if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
+    return 1
+  fi
+  # Check if ID is used in LVM logical volumes
+  if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
+    return 1
+  fi
+  return 0
+}
+function get_valid_container_id() {
+  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+  while ! validate_container_id "$suggested_id"; do
+    suggested_id=$((suggested_id + 1))
+  done
+  echo "$suggested_id"
 }
 function cleanup_ctid() {
   if pct status $CTID &>/dev/null; then
@@ -99,9 +122,26 @@ turnkey=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs
 # Setup script environment
 PASS="$(openssl rand -base64 8)"
 # Prompt user to confirm container ID
-  CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the conatiner ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
+while true; do
+  CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the container ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
+
+  # Check if user cancelled
+  [ -z "$CTID" ] && die "No Container ID selected"
+
+  # Validate Container ID
+  if ! validate_container_id "$CTID"; then
+    SUGGESTED_ID=$(get_valid_container_id "$CTID")
+    if whiptail --backtitle "Container ID" --title "ID Already In Use" --yesno "Container/VM ID $CTID is already in use.\n\nWould you like to use the next available ID ($SUGGESTED_ID)?" 10 58; then
+      CTID="$SUGGESTED_ID"
+      break
+    fi
+    # User declined, loop back to input
+  else
+    break
+  fi
+done
 # Prompt user to confirm Hostname
-  HOST_NAME=$(whiptail --backtitle "Hostname" --title "Choose the Hostname" --inputbox "Enter the containers Hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3)
+HOST_NAME=$(whiptail --backtitle "Hostname" --title "Choose the Hostname" --inputbox "Enter the containers Hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3)
 PCT_OPTIONS="
     -features keyctl=1,nesting=1
     -hostname $HOST_NAME
@@ -206,8 +246,8 @@ echo "TurnKey ${turnkey} password: ${PASS}" >>~/turnkey-${turnkey}.creds # file 
 TUN_DEVICE_REQUIRED=("openvpn") # Setup this way in case future turnkeys also need tun access
 if printf '%s\n' "${TUN_DEVICE_REQUIRED[@]}" | grep -qw "${turnkey}"; then
   info "${turnkey} requires access to /dev/net/tun on the host. Modifying the container configuration to allow this."
-  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >> /etc/pve/lxc/${CTID}.conf
-  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >> /etc/pve/lxc/${CTID}.conf
+  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>/etc/pve/lxc/${CTID}.conf
+  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >>/etc/pve/lxc/${CTID}.conf
   sleep 5
 fi
 

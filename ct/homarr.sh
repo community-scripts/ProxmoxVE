@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://homarr.dev/
@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="homarr"
 var_tags="${var_tags:-arr;dashboard}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-1024}"
+var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -35,22 +35,11 @@ function update_script() {
     msg_ok "Services Stopped"
 
     if ! { grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr/.env 2>/dev/null || grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr.env 2>/dev/null; }; then
-      DEBIAN_VERSION=$(cat /etc/debian_version 2>/dev/null | cut -d'.' -f1)
-      if [[ -n "$DEBIAN_VERSION" ]] && [[ "$DEBIAN_VERSION" -lt 13 ]]; then
-        msg_warn "⚠️  COMPATIBILITY WARNING ⚠️"
-        msg_warn "You are running Debian ${DEBIAN_VERSION}. Homarr's requires Debian 13"
-        msg_warn ""
-        msg_warn "Please Upgrade to Debian 13:"
-        msg_warn "See: https://github.com/community-scripts/ProxmoxVE/discussions/7489"
-        msg_warn ""
-        exit
-      fi
       msg_info "Fixing old structure"
-      # fix musl issues because homarr compiles on alpine not debian soure: https://github.com/alexander-akhmetov/python-telegram/issues/3
-      $STD apt install -y musl-dev
-      ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
+      systemctl disable -q --now nginx
       cp /opt/homarr/.env /opt/homarr.env
       echo "REDIS_IS_EXTERNAL='true'" >> /opt/homarr.env
+      sed -i '/^\[Unit\]/a Requires=redis-server.service\nAfter=redis-server.service' /etc/systemd/system/homarr.service
       sed -i 's|^ExecStart=.*|ExecStart=/opt/homarr/run.sh|' /etc/systemd/system/homarr.service
       sed -i 's|^EnvironmentFile=.*|EnvironmentFile=-/opt/homarr.env|' /etc/systemd/system/homarr.service
       chown -R redis:redis /appdata/redis
@@ -72,7 +61,7 @@ EOF
 
     NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
     setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-amd64.tar.gz"
 
     msg_info "Updating Homarr"
     cp /opt/homarr/redis.conf /etc/redis/redis.conf
@@ -94,7 +83,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7575${CL}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.audiobookshelf.org/
@@ -14,16 +14,20 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y ffmpeg
+$STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
+setup_deb822_repo \
+  "audiobookshelf" \
+  "https://advplyr.github.io/audiobookshelf-ppa/KEY.gpg" \
+  "https://advplyr.github.io/audiobookshelf-ppa" \
+  "./"
+
 msg_info "Setup audiobookshelf"
-curl -fsSL https://advplyr.github.io/audiobookshelf-ppa/KEY.gpg >/etc/apt/trusted.gpg.d/audiobookshelf-ppa.asc
-echo "deb [signed-by=/etc/apt/trusted.gpg.d/audiobookshelf-ppa.asc] https://advplyr.github.io/audiobookshelf-ppa ./" >/etc/apt/sources.list.d/audiobookshelf.list
-$STD apt update
 $STD apt install -y audiobookshelf
 echo "FFMPEG_PATH=/usr/bin/ffmpeg" >>/etc/default/audiobookshelf
 echo "FFPROBE_PATH=/usr/bin/ffprobe" >>/etc/default/audiobookshelf
+systemctl restart audiobookshelf
 msg_ok "Setup audiobookshelf"
 
 motd_ssh

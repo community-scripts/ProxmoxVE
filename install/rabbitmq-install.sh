@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -15,51 +15,34 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  lsb-release \
-  apt-transport-https \
-  make
+$STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-msg_info "Adding RabbitMQ signing key"
-curl -fsSL "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" | gpg --dearmor >/usr/share/keyrings/com.rabbitmq.team.gpg
-msg_ok "Signing keys added"
+setup_deb822_repo \
+  "rabbitmq" \
+  "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" \
+  "https://deb1.rabbitmq.com/rabbitmq-server/debian/trixie" \
+  "trixie"
 
-msg_info "Adding RabbitMQ repository"
-cat <<EOF >/etc/apt/sources.list.d/rabbitmq.list
-## Modern Erlang/OTP releases
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb1.rabbitmq.com/rabbitmq-erlang/debian/bookworm bookworm main
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb2.rabbitmq.com/rabbitmq-erlang/debian/bookworm bookworm main
+msg_info "Setting up RabbitMQ"
+$STD apt install -y \
+  erlang-base erlang-asn1 erlang-crypto erlang-eldap erlang-ftp \
+  erlang-inets erlang-mnesia erlang-os-mon erlang-parsetools \
+  erlang-public-key erlang-runtime-tools erlang-snmp erlang-ssl \
+  erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
+$STD apt install -y --fix-missing rabbitmq-server
+msg_ok "Setup RabbitMQ "
 
-## Provides modern RabbitMQ releases
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb1.rabbitmq.com/rabbitmq-server/debian/bookworm bookworm main
-deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb2.rabbitmq.com/rabbitmq-server/debian/bookworm bookworm main
-EOF
-msg_ok "RabbitMQ repository added"
-
-msg_info "Updating package list"
-$STD apt update -y
-msg_ok "Package list updated"
-
-msg_info "Installing Erlang & RabbitMQ server"
-$STD apt install -y erlang-base \
-  erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
-  erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
-  erlang-runtime-tools erlang-snmp erlang-ssl \
-  erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl \
-  rabbitmq-server
-msg_ok "RabbitMQ server installed"
-
-msg_info "Starting RabbitMQ service"
+msg_info "Starting Service"
 systemctl enable -q --now rabbitmq-server
-msg_ok "RabbitMQ service started"
+msg_ok "Started Service"
 
-msg_info "Enabling RabbitMQ management plugin"
+msg_info "Enabling RabbitMQ Management Plugin"
 $STD rabbitmq-plugins enable rabbitmq_management
 $STD rabbitmqctl enable_feature_flag all
-msg_ok "RabbitMQ management plugin enabled"
+msg_ok "Enabled RabbitMQ Management Plugin"
 
-msg_info "Create User"
+msg_info "Creating User"
 $STD rabbitmqctl add_user proxmox proxmox
 $STD rabbitmqctl set_user_tags proxmox administrator
 $STD rabbitmqctl set_permissions -p / proxmox ".*" ".*" ".*"

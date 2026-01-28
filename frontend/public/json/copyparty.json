@@ -8,7 +8,7 @@
   "type": "addon",
   "updateable": true,
   "privileged": false,
-  "interface_port": null,
+  "interface_port": 3923,
   "documentation": "https://github.com/9001/copyparty?tab=readme-ov-file#the-browser",
   "website": "https://github.com/9001/copyparty",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/copyparty.webp",
@@ -34,6 +34,10 @@
   "notes": [
     {
       "text": "Execute within the Proxmox shell or in LXC",
+      "type": "info"
+    },
+    {
+      "text": "Update with: update_copyparty",
       "type": "info"
     }
   ]

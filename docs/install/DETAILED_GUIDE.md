@@ -85,7 +85,7 @@ RANDOM_UUID            # Session UUID for telemetry
 #!/usr/bin/env bash                          # [1] Shebang
 
 # [2] Copyright/Metadata
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT
 # Source: https://example.com
@@ -118,7 +118,7 @@ cleanup_lxc
 
 ```bash
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/application/repo
@@ -544,7 +544,8 @@ network_check
 update_os
 
 PHP_VERSION="8.4" PHP_MODULE="bcmath,curl,pdo_mysql" setup_php
-MARIADB_VERSION="11.4" setup_mariadb
+setup_mariadb  # Uses distribution packages (recommended)
+# Or for specific version: MARIADB_VERSION="11.4" setup_mariadb
 
 # Database setup
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)

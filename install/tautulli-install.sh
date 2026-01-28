@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://tautulli.com/
@@ -14,20 +14,21 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  git \
-  pip \
-  python3 \
-  python3-dev \
-  python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+$STD apt install -y git
 msg_ok "Installed Dependencies"
 
+PYTHON_VERSION="3.13" setup_uv
+fetch_and_deploy_gh_release "Tautulli" "Tautulli/Tautulli" "tarball"
+
 msg_info "Installing Tautulli"
-cd /opt
-$STD git clone https://github.com/Tautulli/Tautulli.git
-$STD pip install -q -r /opt/Tautulli/requirements.txt
-$STD pip install pyopenssl
+cd /opt/Tautulli
+TAUTULLI_VERSION=$(get_latest_github_release "Tautulli/Tautulli" "false")
+echo "${TAUTULLI_VERSION}" >/opt/Tautulli/version.txt
+echo "master" >/opt/Tautulli/branch.txt
+$STD uv venv
+$STD source /opt/Tautulli/.venv/bin/activate
+$STD uv pip install -r requirements.txt
+$STD uv pip install pyopenssl
 msg_ok "Installed Tautulli"
 
 msg_info "Creating Service"
@@ -41,7 +42,7 @@ WorkingDirectory=/opt/Tautulli/
 Restart=on-failure
 RestartSec=5
 Type=simple
-ExecStart=/usr/bin/python3 /opt/Tautulli/Tautulli.py
+ExecStart=/opt/Tautulli/.venv/bin/python3 /opt/Tautulli/Tautulli.py
 KillSignal=SIGINT
 TimeoutStopSec=20
 SyslogIdentifier=tautulli

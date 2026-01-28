@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/alexta69/metube
@@ -40,6 +40,8 @@ function update_script() {
     fi
   fi
 
+  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+
   if check_for_gh_release "metube" "alexta69/metube"; then
     msg_info "Stopping Service"
     systemctl stop metube
@@ -56,8 +58,12 @@ function update_script() {
 
     msg_info "Building Frontend"
     cd /opt/metube/ui
-    $STD npm install
-    $STD node_modules/.bin/ng build
+    if command -v corepack >/dev/null 2>&1; then
+      $STD corepack enable
+      $STD corepack prepare pnpm --activate || true
+    fi
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm run build
     msg_ok "Built Frontend"
 
     PYTHON_VERSION="3.13" setup_uv
@@ -107,7 +113,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8081${CL}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://immich.app
@@ -9,7 +9,7 @@ APP="immich"
 var_tags="${var_tags:-photos}"
 var_disk="${var_disk:-20}"
 var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-4096}"
+var_ram="${var_ram:-6144}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -57,9 +57,12 @@ EOF
     fi
     $STD apt update
     msg_ok "Added Debian Testing repo"
-    msg_info "Installing libmimalloc3"
-    $STD apt install -t testing --no-install-recommends libmimalloc3
-    msg_ok "Installed libmimalloc3"
+  fi
+
+  if ! dpkg -l "libmimalloc3" | grep -q '3.1' || ! dpkg -l "libde265-dev" | grep -q '1.0.16'; then
+    msg_info "Installing/upgrading Testing repo packages"
+    $STD apt install -t testing libmimalloc3 libde265-dev -y
+    msg_ok "Installed/upgraded Testing repo packages"
   fi
 
   if [[ ! -f /etc/apt/sources.list.d/mise.list ]]; then
@@ -74,23 +77,29 @@ EOF
   STAGING_DIR=/opt/staging
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
-  cd /root
+  cd /tmp
   if [[ -f ~/.intel_version ]]; then
-    curl -fsSLO https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/machine-learning/Dockerfile
-    readarray -t INTEL_URLS < <(sed -n "/intel/p" ./Dockerfile | awk '{print $3}')
-    INTEL_RELEASE="$(grep "intel-opencl-icd" ./Dockerfile | awk -F '_' '{print $2}')"
+    curl -fsSLO https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/Dockerfile
+    readarray -t INTEL_URLS < <(
+      sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $2}'
+      sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
+    )
+    INTEL_RELEASE="$(grep "intel-opencl-icd_" ./Dockerfile | awk -F '_' '{print $2}')"
     if [[ "$INTEL_RELEASE" != "$(cat ~/.intel_version)" ]]; then
       msg_info "Updating Intel iGPU dependencies"
       for url in "${INTEL_URLS[@]}"; do
         curl -fsSLO "$url"
       done
       $STD apt-mark unhold libigdgmm12
+      $STD apt install -y ./libigdgmm12*.deb
+      rm ./libigdgmm12*.deb
       $STD apt install -y ./*.deb
       rm ./*.deb
       $STD apt-mark hold libigdgmm12
+      dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
       msg_ok "Intel iGPU dependencies updated"
     fi
-    rm ~/Dockerfile
+    rm ./Dockerfile
   fi
   if [[ -f ~/.immich_library_revisions ]]; then
     libraries=("libjxl" "libheif" "libraw" "imagemagick" "libvips")
@@ -103,7 +112,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="2.3.1"
+  RELEASE="2.4.1"
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     msg_info "Stopping Services"
     systemctl stop immich-web
@@ -328,7 +337,7 @@ function compile_libraw() {
     cd "$SOURCE"
     $STD git reset --hard "$LIBRAW_REVISION"
     $STD autoreconf --install
-    $STD ./configure
+    $STD ./configure --disable-examples
     $STD make -j"$(nproc)"
     $STD make install
     ldconfig /usr/local/lib
@@ -384,7 +393,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:2283${CL}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://ui.com/download/unifi
@@ -17,7 +17,6 @@ msg_info "Installing Dependencies"
 $STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-JAVA_VERION="17" setup_java
 setup_deb822_repo \
   "unifi" \
   "https://dl.ui.com/unifi/unifi-repo.gpg" \
@@ -26,17 +25,22 @@ setup_deb822_repo \
   "ubiquiti" \
   "amd64"
 
-if ! grep -q -m1 'avx[^ ]*' /proc/cpuinfo; then
-  msg_warn "No AVX Support Detected. MongoDB v4.4 will be installed"
-  if ! dpkg -l | grep -q "libssl1.1"; then
-    curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u4_amd64.deb" -o "libssl1.1_1.1.1w-0+deb11u4_amd64.deb"
-    $STD dpkg -i libssl1.1_1.1.1w-0+deb11u4_amd64.deb
-  fi
-  MONGO_VERSION="4.4" setup_mongodb
+JAVA_VERSION="21" setup_java
+
+if lscpu | grep -q 'avx'; then
+  MONGO_VERSION="8.0" setup_mongodb
 else
-  MONGO_VERSION="7.0" setup_mongodb
+  msg_error "No AVX detected (CPU-Flag)! We have discontinued support for this. You are welcome to try it manually with a Debian LXC, but due to the many issues with Unifi, we currently only support AVX CPUs."
+  exit 10
 fi
-msg_ok "Installed MongoDB"
+
+if ! dpkg -l | grep -q 'libssl1.1'; then
+  msg_info "Installing libssl (if needed)"
+  curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u4_amd64.deb" -o "/tmp/libssl.deb"
+  $STD dpkg -i /tmp/libssl.deb
+  rm -f /tmp/libssl.deb
+  msg_ok "Installed libssl1.1"
+fi
 
 msg_info "Installing UniFi Network Server"
 $STD apt install -y unifi

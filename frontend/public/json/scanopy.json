@@ -1,0 +1,44 @@
+{
+  "name": "Scanopy",
+  "slug": "scanopy",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-11-13",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 60072,
+  "documentation": "https://github.com/scanopy/scanopy",
+  "config_path": "/opt/scanopy/.env, OIDC: /opt/scanopy/oidc.toml",
+  "website": "https://scanopy.net",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/scanopy.webp",
+  "description": "Automatically discover and visually document network infrastructure",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/scanopy.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 3072,
+        "hdd": 6,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "To configure the integrated daemon after install is complete, use the `Create Daemon` menu in the UI and follow the instructions",
+      "type": "info"
+    },
+    {
+      "text": "The integrated daemon config is located at `/root/.config/daemon/config.json`",
+      "type": "info"
+    }
+  ]
+}

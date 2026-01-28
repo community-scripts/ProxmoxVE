@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Stroopwafe1
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://leantime.io
@@ -15,22 +15,7 @@ update_os
 
 PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" PHP_FPM="YES" setup_php
 setup_mariadb
-
-msg_info "Setting up Database"
-DB_NAME=leantime
-DB_USER=leantime
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "Leantime Credentials"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
-} >>~/leantime.creds
-msg_ok "Set up Database"
-
+MARIADB_DB_NAME="leantime" MARIADB_DB_USER="leantime" setup_mariadb_db
 fetch_and_deploy_gh_release "leantime" "Leantime/leantime" "prebuild" "latest" "/opt/leantime" Leantime*.tar.gz
 
 msg_info "Setup Leantime"
@@ -58,9 +43,9 @@ cat <<EOF >/etc/apache2/sites-enabled/000-default.conf
 </VirtualHost>
 EOF
 mv "/opt/leantime/config/sample.env" "/opt/leantime/config/.env"
-sed -i -e "s|^LEAN_DB_DATABASE.*|LEAN_DB_DATABASE = '$DB_NAME'|" \
-  -e "s|^LEAN_DB_USER.*|LEAN_DB_USER = '$DB_USER'|" \
-  -e "s|^LEAN_DB_PASSWORD.*|LEAN_DB_PASSWORD = '$DB_PASS'|" \
+sed -i -e "s|^LEAN_DB_DATABASE.*|LEAN_DB_DATABASE = '$MARIADB_DB_NAME'|" \
+  -e "s|^LEAN_DB_USER.*|LEAN_DB_USER = '$MARIADB_DB_USER'|" \
+  -e "s|^LEAN_DB_PASSWORD.*|LEAN_DB_PASSWORD = '$MARIADB_DB_PASS'|" \
   -e "s|^LEAN_SESSION_PASSWORD.*|LEAN_SESSION_PASSWORD = '$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)'|" \
   "/opt/leantime/config/.env"
 $STD a2enmod -q proxy_fcgi setenvif rewrite

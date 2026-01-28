@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: jeroenzwart
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -50,7 +50,12 @@ function execute_in() {
   container=$1
   name=$(pct exec "$container" hostname)
   echo -e "${BL}[Info]${GN} Execute inside${BL} ${name}${GN} with output: ${CL}"
-  pct exec "$container" -- bash -c "${custom_command}" | tee
+    if !   pct exec "$container" -- bash -c "command ${custom_command} >/dev/null 2>&1"
+      then
+        echo -e "${BL}[Info]${GN} Skipping ${name} ${RD}$container has no command: ${custom_command}"
+      else
+        pct exec "$container" -- bash -c "${custom_command}" | tee
+    fi
 }
 
 for container in $(pct list | awk '{if(NR>1) print $1}'); do

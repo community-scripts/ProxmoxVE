@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -530,7 +530,7 @@ mkdir -p "$CACHE_DIR" "$(dirname "$FILE_IMG")"
 
 download_and_validate_xz "$URL" "$CACHE_FILE"
 
-qm create "$VMID" -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
+qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
   -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" -tags community-script \
   -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 
@@ -545,13 +545,13 @@ IMPORT_OUT="$("${IMPORT_CMD[@]}" "$VMID" "$FILE_IMG" "$STORAGE" --format raw 2>&
 DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*imported disk '\([^']\+\)'.*/\1/p" | tr -d "\r\"'")"
 [[ -z "$DISK_REF" ]] && DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
 
-qm set "$VMID" \
-  --efidisk0 "${STORAGE}:0,efitype=4m" \
-  --scsi0 "${DISK_REF},ssd=1,discard=on" \
+qm set $VMID \
+  --efidisk0 ${STORAGE}:0,efitype=4m \
+  --scsi0 ${DISK_REF},ssd=1,discard=on \
   --boot order=scsi0 \
   --serial0 socket >/dev/null
-qm set "$VMID" --agent enabled=1 >/dev/null
-qm resize "$VMID" scsi0 "${DISK_SIZE}" >/dev/null
+qm set $VMID --agent enabled=1 >/dev/null
+qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 
 DESCRIPTION=$(
   cat <<EOF
@@ -583,7 +583,7 @@ DESCRIPTION=$(
 </div>
 EOF
 )
-qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+qm set $VMID -description "$DESCRIPTION" >/dev/null
 
 if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Image Cache" \
   --yesno "Keep downloaded Umbrel OS image for future VMs?\n\nFile: $CACHE_FILE" 10 70; then
@@ -601,4 +601,4 @@ if [ "$START_VM" == "yes" ]; then
   msg_ok "Started Umbrel OS VM"
 fi
 post_update_to_api "done" "none"
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"

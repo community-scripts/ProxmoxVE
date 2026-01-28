@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: rrole
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://wanderer.to
@@ -32,7 +32,6 @@ msg_ok "Installed wanderer"
 msg_info "Creating Service"
 MEILI_KEY=$(openssl rand -hex 32)
 POCKETBASE_KEY=$(openssl rand -hex 16)
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 
 cat <<EOF >/opt/wanderer/.env
 ORIGIN=http://${LOCAL_IP}:3000

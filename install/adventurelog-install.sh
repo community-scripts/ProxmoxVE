@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/seanmorley15/AdventureLog
@@ -26,8 +26,8 @@ PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
 PG_DB_NAME="adventurelog_db" PG_DB_USER="adventurelog_user" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
-fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
-import_local_ip
+
+fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog" "tarball"
 
 msg_info "Installing AdventureLog (Patience)"
 SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"

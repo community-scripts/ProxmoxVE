@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01 | CanbiZ
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/karlomikus/bar-assistant
@@ -16,18 +16,17 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-    redis-server \
-    nginx \
-    lsb-release \
-    libvips
-#php-{ffi,opcache,redis,zip,pdo-sqlite,bcmath,pdo,curl,dom,fpm}
+$STD apt install -y \
+  redis-server \
+  nginx \
+  lsb-release \
+  libvips
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_FPM=YES PHP_MODULE="ffi,opcache,redis,zip,pdo-sqlite,bcmath,pdo,curl,dom,fpm" setup_php
+PHP_VERSION="8.4" PHP_FPM=YES PHP_MODULE="ffi,redis,pdo-sqlite" setup_php
 setup_composer
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+setup_meilisearch
 fetch_and_deploy_gh_release "bar-assistant" "karlomikus/bar-assistant" "tarball" "latest" "/opt/bar-assistant"
 fetch_and_deploy_gh_release "vue-salt-rim" "karlomikus/vue-salt-rim" "tarball" "latest" "/opt/vue-salt-rim"
 
@@ -37,51 +36,17 @@ sed -i.bak -E 's/^\s*;?\s*ffi\.enable\s*=.*/ffi.enable=true/' /etc/php/${PHPVER}
 $STD systemctl reload php${PHPVER}-fpm
 msg_info "configured PHP"
 
-msg_info "Configure MeiliSearch"
-curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml
-MASTER_KEY=$(openssl rand -base64 12)
-sed -i \
-    -e 's|^env =.*|env = "production"|' \
-    -e "s|^# master_key =.*|master_key = \"$MASTER_KEY\"|" \
-    -e 's|^db_path =.*|db_path = "/var/lib/meilisearch/data"|' \
-    -e 's|^dump_dir =.*|dump_dir = "/var/lib/meilisearch/dumps"|' \
-    -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
-    -e 's|^# no_analytics = true|no_analytics = true|' \
-    -e 's|^http_addr =.*|http_addr = "127.0.0.1:7700"|' \
-    /etc/meilisearch.toml
-msg_ok "Configured MeiliSearch"
-
-msg_info "Creating MeiliSearch service"
-cat <<EOF >/etc/systemd/system/meilisearch.service
-[Unit]
-Description=Meilisearch
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/meilisearch --config-file-path /etc/meilisearch.toml
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable -q --now meilisearch
-sleep 5
-msg_ok "Created Service MeiliSearch"
-
 msg_info "Installing Bar Assistant"
 cd /opt/bar-assistant
 cp /opt/bar-assistant/.env.dist /opt/bar-assistant/.env
 mkdir -p /opt/bar-assistant/resources/data
 curl -fsSL https://github.com/bar-assistant/data/archive/refs/heads/v5.tar.gz | tar -xz --strip-components=1 -C /opt/bar-assistant/resources/data
-MeiliSearch_API_KEY=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorization: Bearer $MASTER_KEY" | grep -o '"key":"[^"]*"' | head -n 1 | sed 's/"key":"//;s/"//')
-MeiliSearch_API_KEY_UID=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorization: Bearer $MASTER_KEY" | grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//')
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 sed -i -e "s|^APP_URL=|APP_URL=http://${LOCAL_IP}/bar/|" \
-    -e "s|^MEILISEARCH_HOST=|MEILISEARCH_HOST=http://127.0.0.1:7700|" \
-    -e "s|^MEILISEARCH_KEY=|MEILISEARCH_KEY=${MASTER_KEY}|" \
-    -e "s|^MEILISEARCH_API_KEY=|MEILISEARCH_API_KEY=${MeiliSearch_API_KEY}|" \
-    -e "s|^MEILISEARCH_API_KEY_UID=|MEILISEARCH_API_KEY_UID=${MeiliSearch_API_KEY_UID}|" \
-    /opt/bar-assistant/.env
+  -e "s|^MEILISEARCH_HOST=|MEILISEARCH_HOST=http://127.0.0.1:7700|" \
+  -e "s|^MEILISEARCH_KEY=|MEILISEARCH_KEY=${MEILISEARCH_MASTER_KEY}|" \
+  -e "s|^MEILISEARCH_API_KEY=|MEILISEARCH_API_KEY=${MEILISEARCH_API_KEY}|" \
+  -e "s|^MEILISEARCH_API_KEY_UID=|MEILISEARCH_API_KEY_UID=${MEILISEARCH_API_KEY_UID}|" \
+  /opt/bar-assistant/.env
 $STD composer install --no-interaction
 $STD php artisan key:generate
 touch storage/bar-assistant/database.ba3.sqlite

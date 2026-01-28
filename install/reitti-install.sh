@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/dedicatedcode/reitti
@@ -18,30 +18,13 @@ $STD apt install -y \
   redis-server \
   rabbitmq-server \
   libpq-dev \
-  zstd
+  zstd \
+  nginx
 msg_ok "Installed Dependencies"
 
-JAVA_VERSION="24" setup_java
+JAVA_VERSION="25" setup_java
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
-
-msg_info "Setting up PostgreSQL"
-DB_NAME="reitti_db"
-DB_USER="reitti"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-$STD sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS postgis;"
-$STD sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS postgis_topology;"
-{
-  echo "Reitti Credentials"
-  echo "Database Name: $DB_NAME"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-} >>~/reitti.creds
-msg_ok "PostgreSQL Setup Completed"
+PG_DB_NAME="reitti_db" PG_DB_USER="reitti" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
 
 msg_info "Configuring RabbitMQ"
 RABBIT_USER="reitti"
@@ -64,6 +47,34 @@ mv /opt/reitti/reitti-*.jar /opt/reitti/reitti.jar
 USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-0*.jar"
 mv /opt/photon/photon-*.jar /opt/photon/photon.jar
 
+msg_info "Installing Nginx Tile Cache"
+mkdir -p /var/cache/nginx/tiles
+cat <<EOF >/etc/nginx/nginx.conf
+user www-data;
+
+events {
+  worker_connections 1024;
+}
+http {
+  proxy_cache_path /var/cache/nginx/tiles levels=1:2 keys_zone=tiles:10m max_size=1g inactive=30d use_temp_path=off;
+  server {
+    listen 80;
+    location / {
+      proxy_pass https://tile.openstreetmap.org/;
+      proxy_set_header Host tile.openstreetmap.org;
+      proxy_set_header User-Agent "Reitti/1.0";
+      proxy_cache tiles;
+      proxy_cache_valid 200 30d;
+      proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+    }
+  }
+}
+EOF
+chown -R www-data:www-data /var/cache/nginx
+chmod -R 750 /var/cache/nginx
+systemctl restart nginx
+msg_info "Installed Nginx Tile Cache"
+
 msg_info "Creating Reitti Configuration-File"
 mkdir -p /opt/reitti/data
 cat <<EOF >/opt/reitti/application.properties
@@ -71,9 +82,9 @@ cat <<EOF >/opt/reitti/application.properties
 reitti.server.advertise-uri=http://127.0.0.1:8080
 
 # PostgreSQL Database Connection
-spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/$DB_NAME
-spring.datasource.username=$DB_USER
-spring.datasource.password=$DB_PASS
+spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/$PG_DB_NAME
+spring.datasource.username=$PG_DB_USER
+spring.datasource.password=$PG_DB_PASS
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # Flyway Database Migrations
@@ -110,6 +121,9 @@ PROCESSING_WORKERS_PER_QUEUE=4-16
 
 # Disable potentially dangerous features unless needed
 DANGEROUS_LIFE=false
+
+# Tiles Cache
+reitti.ui.tiles.cache.url=http://127.0.0.1
 EOF
 msg_ok "Created Configuration-File for Reitti"
 
@@ -132,7 +146,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
-cat <<'EOF' >/etc/systemd/system/photon.service
+cat <<EOF >/etc/systemd/system/photon.service
 [Unit]
 Description=Photon Geocoding Service (Germany, OpenSearch)
 After=network.target

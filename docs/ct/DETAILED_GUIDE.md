@@ -131,7 +131,7 @@ function update_script() { ... }             # [10] Update function (optional)
 start                                        # [11] Launch container creation
 build_container
 description
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 ```
 
 ---
@@ -142,7 +142,7 @@ msg_ok "Completed Successfully!\n"
 
 ```bash
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: YourUsername
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/example/project
@@ -254,7 +254,7 @@ build_container
 description
 
 # Display success message
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
@@ -386,7 +386,7 @@ function update_script() {
 start
 build_container
 description
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 ```
 
 ---

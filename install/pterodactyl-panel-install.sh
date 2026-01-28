@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/pterodactyl/panel
@@ -70,11 +70,10 @@ cd /opt/pterodactyl-panel
 curl -fsSL "https://github.com/pterodactyl/panel/releases/download/v${RELEASE}/panel.tar.gz" -o "panel.tar.gz"
 tar -xzf "panel.tar.gz"
 cp .env.example .env
-IP=$(hostname -I | awk '{print $1}')
 ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
-$STD php artisan p:environment:setup --no-interaction --author "$ADMIN_EMAIL" --url "http://$IP"
+$STD php artisan p:environment:setup --no-interaction --author "$ADMIN_EMAIL" --url "http://$LOCAL_IP"
 $STD php artisan p:environment:database --no-interaction --database $DB_NAME --username $DB_USER --password "$DB_PASS"
 $STD php artisan migrate --seed --force --no-interaction
 $STD php artisan p:user:make --no-interaction --admin=1 --email "$ADMIN_EMAIL" --password "$ADMIN_PASS" --name-first "$NAME_FIRST" --name-last "$NAME_LAST" --username "admin"

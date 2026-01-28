@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/homarr-labs/homarr
@@ -18,17 +18,14 @@ $STD apt install -y \
   redis-server \
   nginx \
   gettext \
-  openssl \
-  musl-dev
+  openssl
 msg_ok "Installed Dependencies"
 
 NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
 setup_nodejs
-fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-amd64.tar.gz"
+fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-amd64.tar.gz"
 
 msg_info "Installing Homarr"
-# fix musl issues because homarr compiles on alpine not debian soure: https://github.com/alexander-akhmetov/python-telegram/issues/3
-ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
 mkdir -p /opt/homarr_db
 touch /opt/homarr_db/db.sqlite
 SECRET_ENCRYPTION_KEY="$(openssl rand -hex 32)"
@@ -65,6 +62,8 @@ ReadWritePaths=-/appdata/redis -/var/lib/redis -/var/log/redis -/var/run/redis -
 EOF
 cat <<EOF >/etc/systemd/system/homarr.service
 [Unit]
+Requires=redis-server.service
+After=redis-server.service
 Description=Homarr Service
 After=network.target
 
@@ -79,8 +78,9 @@ WantedBy=multi-user.target
 EOF
 chmod +x /opt/homarr/run.sh
 systemctl daemon-reload
-systemctl enable -q --now redis-server && sleep 5
+systemctl enable -q --now redis-server
 systemctl enable -q --now homarr
+systemctl disable -q --now nginx 
 msg_ok "Created Services"
 
 motd_ssh

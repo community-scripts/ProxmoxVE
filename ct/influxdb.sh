@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.influxdata.com/
@@ -23,13 +23,15 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/apt/sources.list.d/influxdata.list ]]; then
+  if [[ ! -f /usr/bin/influxd ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating ${APP}"
+  
+  msg_info "Updating InfluxDB"
   $STD apt update
-  $STD apt -y upgrade
+  $STD apt upgrade -y
+  msg_ok "Updated InfluxDB"
   msg_ok "Updated successfully!"
   exit
 }
@@ -38,7 +40,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP} and Port 8888 for v1 or Port 8086 (v2)${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP} and Port 8888 for v1, Port 8086 for v2 or Port 8181 for v3${CL}"

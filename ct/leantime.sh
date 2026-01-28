@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Stroopwafe1
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://leantime.io
@@ -28,11 +28,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
+  setup_mariadb
   if check_for_gh_release "leantime" "Leantime/leantime"; then
     msg_info "Creating Backup"
-    mariadb-dump leantime >"/opt/${APP}_db_backup_$(date +%F).sql"
-    tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" "/opt/${APP}"
+    mariadb-dump leantime >"/opt/leantime_db_backup_$(date +%F).sql"
+    tar -czf "/opt/leantime_backup_$(date +%F).tar.gz" "/opt/leantime"
     mv /opt/leantime /opt/leantime_bak
     msg_ok "Backup Created"
 
@@ -56,7 +56,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/install${CL}"

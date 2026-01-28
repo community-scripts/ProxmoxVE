@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: havardthom
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -16,29 +16,20 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  par2
-
-cat <<EOF >/etc/apt/sources.list.d/non-free.list
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-EOF
-$STD apt update
-$STD apt install -y unrar
-rm /etc/apt/sources.list.d/non-free.list
+  par2 \
+  unrar-free
 msg_ok "Installed Dependencies"
 
 msg_info "Installing NZBGet"
-mkdir -p /usr/share/keyrings
-curl -fsSL https://nzbgetcom.github.io/nzbgetcom.asc | gpg --dearmor -o /usr/share/keyrings/nzbgetcom.gpg
-cat <<EOF >/etc/apt/sources.list.d/nzbgetcom.sources
-Types: deb
-URIs: https://nzbgetcom.github.io/deb
-Suites: stable
-Components: main
-Architectures: all
-Signed-By: /usr/share/keyrings/nzbgetcom.gpg
-EOF
-$STD apt update
+setup_deb822_repo \
+  "nzbgetcom" \
+  "https://nzbgetcom.github.io/nzbgetcom.asc" \
+  "https://nzbgetcom.github.io/deb" \
+  "stable"
 $STD apt install -y nzbget
+sed -i "s|UnrarCmd=unrar|UnrarCmd=unrar-free|g" /var/lib/nzbget/nzbget.conf
+sed -i "s|SevenZipCmd=7zz|SevenZipCmd=7z|g" /var/lib/nzbget/nzbget.conf
+systemctl restart nzbget
 msg_ok "Installed NZBGet"
 
 motd_ssh

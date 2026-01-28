@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -36,6 +36,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 load_functions
 catch_errors
+
+# Get LXC IP address (must be called INSIDE container, after network is up)
+get_lxc_ip
 
 # ==============================================================================
 # SECTION 2: NETWORK & CONNECTIVITY

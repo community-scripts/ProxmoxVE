@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/BookStackApp/BookStack
@@ -21,8 +21,8 @@ PHP_MODULE="ldap,tidy,bz2,mysqli" PHP_FPM="YES" PHP_APACHE="YES" PHP_VERSION="8.
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="bookstack_db" MARIADB_DB_USER="bookstack_user" setup_mariadb_db
-fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack"
-import_local_ip
+
+fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack" "tarball"
 
 msg_info "Configuring Bookstack (Patience)"
 cd /opt/bookstack

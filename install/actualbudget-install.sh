@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://actualbudget.org/
@@ -50,7 +50,7 @@ cat <<EOF >/opt/actualbudget-data/config.json
 }
 EOF
 mkdir -p /opt/actualbudget
-cd /opt/actualbudget || exit
+cd /opt/actualbudget
 $STD npm install --location=global @actual-app/sync-server
 echo "${RELEASE}" >~/.actualbudget
 msg_ok "Installed Actual Budget"

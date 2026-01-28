@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: jkrgr0
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.2fauth.app/
@@ -17,12 +17,12 @@ msg_info "Installing Dependencies"
 $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,mysql,cli,tokenizer,dom,redis,session,openssl" PHP_FPM="YES" setup_php
+PHP_VERSION="8.4" PHP_MODULE="common,ctype,fileinfo,mysql,tokenizer,dom,redis" PHP_FPM="YES" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="2fauth_db" MARIADB_DB_USER="2fauth" setup_mariadb_db
-import_local_ip
-fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth"
+
+fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth" "tarball"
 
 msg_info "Setup 2FAuth"
 cd /opt/2fauth
@@ -65,7 +65,7 @@ server {
         error_page 404 /index.php;
 
         location ~ \.php\$ {
-                fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+                fastcgi_pass unix:/var/run/php/php${PHP_VERSION}-fpm.sock;
                 fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
                 include fastcgi_params;
         }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://uptime.kuma.pet/
@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing dependencies"
+$STD apt install -y chromium
+msg_ok "Installed dependencies"
+
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "uptime-kuma" "louislam/uptime-kuma" "tarball"
 
@@ -23,6 +27,7 @@ $STD npm run download-dist
 msg_ok "Installed Uptime Kuma"
 
 msg_info "Creating Service"
+ln -s /usr/bin/chromium /opt/uptime-kuma/chromium
 cat <<EOF >/etc/systemd/system/uptime-kuma.service
 [Unit]
 Description=uptime-kuma

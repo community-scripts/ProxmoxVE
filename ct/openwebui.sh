@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck | Co-Author: havardthom | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://openwebui.com/
@@ -92,12 +92,17 @@ EOF
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
+      if ! command -v zstd &>/dev/null; then
+        msg_info "Installing zstd"
+        $STD apt install -y zstd
+        msg_ok "Installed zstd"
+      fi
       msg_info "Ollama update available: v$OLLAMA_VERSION -> v$RELEASE"
       msg_info "Downloading Ollama v$RELEASE \n"
-      curl -fS#LO https://ollama.com/download/ollama-linux-amd64.tgz
+      curl -fS#LO https://github.com/ollama/ollama/releases/download/v${RELEASE}/ollama-linux-amd64.tar.zst
       msg_ok "Download Complete"
 
-      if [ -f "ollama-linux-amd64.tgz" ]; then
+      if [ -f "ollama-linux-amd64.tar.zst" ]; then
 
         msg_info "Stopping Ollama Service"
         systemctl stop ollama
@@ -106,8 +111,8 @@ EOF
         msg_info "Installing Ollama"
         rm -rf /usr/lib/ollama
         rm -rf /usr/bin/ollama
-        tar -C /usr -xzf ollama-linux-amd64.tgz
-        rm -rf ollama-linux-amd64.tgz
+        tar --zstd -C /usr -xf ollama-linux-amd64.tar.zst
+        rm -rf ollama-linux-amd64.tar.zst
         msg_ok "Installed Ollama"
 
         msg_info "Starting Ollama Service"
@@ -136,7 +141,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

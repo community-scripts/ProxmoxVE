@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: DragoQC
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://discopanel.app/
@@ -49,14 +49,19 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "tarball" "latest" "/opt/discopanel"
 
     msg_info "Setting up DiscoPanel"
-    cd /opt/discopanel
+    cd /opt/discopanel 
     $STD make gen
-    cd /opt/discopanel/web/discopanel
+    cd /opt/discopanel/web/discopanel 
     $STD npm install
     $STD npm run build
-    cd /opt/discopanel
+    msg_ok "Built Web Interface"
+
+    setup_go
+
+    msg_info "Building DiscoPanel"
+    cd /opt/discopanel 
     $STD go build -o discopanel cmd/discopanel/main.go
-    msg_ok "Setup DiscoPanel"
+    msg_ok "Built DiscoPanel"
 
     msg_info "Restoring Data"
     mkdir -p /opt/discopanel/data
@@ -67,7 +72,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start discopanel
     msg_ok "Started Service"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -76,7 +81,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

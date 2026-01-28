@@ -2,7 +2,7 @@
   "name": "InvoiceNinja",
   "slug": "invoiceninja",
   "categories": [
-    3
+    25
   ],
   "date_created": "2025-12-12",
   "type": "ct",
@@ -37,7 +37,7 @@
       "type": "info"
     },
     {
-      "text": "Database credentials are stored in ~/invoiceninja.creds",
+      "text": "Database credentials are stored in `~/invoiceninja.creds`. Use them in the above initial configuration step.",
       "type": "info"
     },
     {

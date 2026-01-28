@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: havardthom | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://ollama.com/
@@ -16,7 +16,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  pkg-config
+  pkg-config \
+  zstd
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Intel® Repositories"
@@ -41,16 +42,22 @@ EOF
 $STD apt update
 msg_ok "Set up Intel® Repositories"
 
-msg_info "Setting Up Hardware Acceleration"
-$STD apt -y install {va-driver-all,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools,intel-level-zero-gpu,level-zero,level-zero-dev}
-if [[ "$CTTYPE" == "0" ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser $(id -u -n) video
-  $STD adduser $(id -u -n) render
+setup_hwaccel
+
+msg_info "Installing Intel® Level Zero"
+# Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
+if is_debian && [[ "$(get_os_version_major)" -ge 13 ]]; then
+  # Use system packages on Debian 13+ (avoid conflicts with libze1)
+  $STD apt -y install libze1 libze-dev intel-level-zero-gpu 2>/dev/null || {
+    msg_warn "Failed to install some Level Zero packages, continuing anyway"
+  }
+else
+  # Use Intel repository packages for older systems
+  $STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || {
+    msg_warn "Failed to install Intel Level Zero packages, continuing anyway"
+  }
 fi
-msg_ok "Set Up Hardware Acceleration"
+msg_ok "Installed Intel® Level Zero"
 
 msg_info "Installing Intel® oneAPI Base Toolkit (Patience)"
 $STD apt install -y --no-install-recommends intel-basekit-2024.1
@@ -61,11 +68,11 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest 
 OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
 BINDIR="/usr/local/bin"
 mkdir -p $OLLAMA_INSTALL_DIR
-OLLAMA_URL="https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tgz"
-TMP_TAR="/tmp/ollama.tgz"
+OLLAMA_URL="https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tar.zst"
+TMP_TAR="/tmp/ollama.tar.zst"
 echo -e "\n"
 if curl -fL# -C - -o "$TMP_TAR" "$OLLAMA_URL"; then
-  if tar -xzf "$TMP_TAR" -C "$OLLAMA_INSTALL_DIR"; then
+  if tar --zstd -xf "$TMP_TAR" -C "$OLLAMA_INSTALL_DIR"; then
     ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" "$BINDIR/ollama"
     echo "${RELEASE}" >/opt/Ollama_version.txt
     msg_ok "Installed Ollama ${RELEASE}"

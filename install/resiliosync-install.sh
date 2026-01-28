@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: David Bennett (dbinit)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.resilio.com/sync
@@ -14,16 +14,13 @@ network_check
 update_os
 
 msg_info "Setting up Resilio Sync Repository"
-curl -fsSL "https://linux-packages.resilio.com/resilio-sync/key.asc" >/usr/share/keyrings/resilio-sync-archive-keyring.asc
-cat <<EOF >/etc/apt/sources.list.d/resilio-sync.sources
-Types: deb
-URIs: http://linux-packages.resilio.com/resilio-sync/deb
-Suites: resilio-sync
-Components: non-free
-Signed-By: /usr/share/keyrings/resilio-sync-archive-keyring.asc
-EOF
-$STD apt update
-msg_ok "Resilio Sync Repository Setup"
+setup_deb822_repo \
+  "resilio" \
+  "https://linux-packages.resilio.com/resilio-sync/key.asc" \
+  "http://linux-packages.resilio.com/resilio-sync/deb" \
+  "resilio-sync" \
+  "non-free"
+msg_ok "Setup Resilio Sync Repository"
 
 msg_info "Installing Resilio Sync"
 $STD apt install -y resilio-sync

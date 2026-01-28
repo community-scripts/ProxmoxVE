@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.zabbix.com/
@@ -31,12 +31,27 @@ esac
 
 msg_info "Installing Zabbix $ZABBIX_VERSION"
 cd /tmp
-ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
-curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/zabbix-release_latest+debian13_all.deb
-$STD dpkg -i /tmp/zabbix-release_latest+debian13_all.deb
+
+if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+else
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest+debian13_all.deb"
+fi
+
+curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
+$STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
 $STD apt update
 $STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
-zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u "$PG_DB_USER" psql "$PG_DB_NAME" &>/dev/null
+
+if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
+  ZABBIX_SQL="/usr/share/zabbix-sql-scripts/postgresql/server.sql.gz"
+else
+  ZABBIX_SQL="/usr/share/zabbix/sql-scripts/postgresql/server.sql.gz"
+fi
+
+zcat "$ZABBIX_SQL" | sudo -u "$PG_DB_USER" psql "$PG_DB_NAME" &>/dev/null
 sed -i "s/^DBName=.*/DBName=$PG_DB_NAME/" /etc/zabbix/zabbix_server.conf
 sed -i "s/^DBUser=.*/DBUser=$PG_DB_USER/" /etc/zabbix/zabbix_server.conf
 sed -i "s/^# DBPassword=.*/DBPassword=$PG_DB_PASS/" /etc/zabbix/zabbix_server.conf
@@ -104,7 +119,7 @@ fi
 
 systemctl restart zabbix-server apache2
 systemctl enable -q --now zabbix-server $AGENT_SERVICE apache2
-rm -rf /tmp/zabbix-release_latest+debian13_all.deb
+rm -rf /tmp/zabbix-release_*.deb
 msg_ok "Started Services"
 
 motd_ssh

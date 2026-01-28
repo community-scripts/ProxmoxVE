@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.projectsend.org/
@@ -15,31 +15,17 @@ update_os
 
 PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="pdo,mysql,gettext,fileinfo" setup_php
 setup_mariadb
+MARIADB_DB_NAME="projectsend" MARIADB_DB_USER="projectsend" setup_mariadb_db
 fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-r*.zip"
-
-msg_info "Setting up MariaDB"
-DB_NAME=projectsend
-DB_USER=projectsend
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "projectsend-Credentials"
-  echo "projectsend Database User: $DB_USER"
-  echo "projectsend Database Password: $DB_PASS"
-  echo "projectsend Database Name: $DB_NAME"
-} >>~/projectsend.creds
-msg_ok "Set up MariaDB"
 
 msg_info "Installing ProjectSend"
 mv /opt/projectsend/includes/sys.config.sample.php /opt/projectsend/includes/sys.config.php
 chown -R www-data:www-data /opt/projectsend
 chmod -R 775 /opt/projectsend
 chmod 644 /opt/projectsend/includes/sys.config.php
-sed -i -e "s/\(define('DB_NAME', \).*/\1'$DB_NAME');/" \
-  -e "s/\(define('DB_USER', \).*/\1'$DB_USER');/" \
-  -e "s/\(define('DB_PASSWORD', \).*/\1'$DB_PASS');/" \
+sed -i -e "s/\(define('DB_NAME', \).*/\1'$MARIADB_DB_NAME');/" \
+  -e "s/\(define('DB_USER', \).*/\1'$MARIADB_DB_USER');/" \
+  -e "s/\(define('DB_PASSWORD', \).*/\1'$MARIADB_DB_PASS');/" \
   /opt/projectsend/includes/sys.config.php
 sed -i -e "s/^\(memory_limit = \).*/\1 256M/" \
   -e "s/^\(post_max_size = \).*/\1 256M/" \

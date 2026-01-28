@@ -18,6 +18,7 @@ function ScriptContent() {
   const [selectedCategory, setSelectedCategory] = useQueryState("category");
   const [links, setLinks] = useState<Category[]>([]);
   const [item, setItem] = useState<Script>();
+  const [latestPage, setLatestPage] = useState(1);
 
   useEffect(() => {
     if (selectedScript && links.length > 0) {
@@ -39,7 +40,7 @@ function ScriptContent() {
 
   return (
     <div className="mb-3">
-      <div className="mt-20 flex sm:px-4 xl:px-0">
+      <div className="mt-20 flex gap-4 sm:px-4 xl:px-0">
         <div className="hidden sm:flex">
           <Sidebar
             items={links}
@@ -49,14 +50,14 @@ function ScriptContent() {
             setSelectedCategory={setSelectedCategory}
           />
         </div>
-        <div className="mx-4 w-full sm:mx-0 sm:ml-4">
+        <div className="px-4 w-full sm:max-w-[calc(100%-350px-16px)]">
           {selectedScript && item
             ? (
                 <ScriptItem item={item} setSelectedScript={setSelectedScript} />
               )
             : (
                 <div className="flex w-full flex-col gap-5">
-                  <LatestScripts items={links} />
+                  <LatestScripts items={links} page={latestPage} onPageChange={setLatestPage} />
                   <MostViewedScripts items={links} />
                 </div>
               )}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Casvt/Kapowarr
@@ -18,7 +18,7 @@ $STD apt install -y python3-pip
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
-fetch_and_deploy_gh_release "kapowarr" "Casvt/Kapowarr"
+fetch_and_deploy_gh_release "kapowarr" "Casvt/Kapowarr" "tarball"
 
 msg_info "Setup Kapowarr"
 cd /opt/kapowarr

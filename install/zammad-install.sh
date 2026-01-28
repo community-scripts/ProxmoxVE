@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://zammad.com
@@ -19,8 +19,6 @@ $STD apt install -y \
   nginx \
   apt-transport-https
 msg_ok "Installed Dependencies"
-
-import_local_ip
 
 msg_info "Setting up Elasticsearch"
 setup_deb822_repo \
@@ -52,6 +50,8 @@ msg_ok "Installed Zammad"
 msg_info "Setup Services"
 cp /opt/zammad/contrib/nginx/zammad.conf /etc/nginx/sites-available/zammad.conf
 sed -i "s/server_name localhost;/server_name $LOCAL_IP;/g" /etc/nginx/sites-available/zammad.conf
+ln -sf /etc/nginx/sites-available/zammad.conf /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
 $STD systemctl reload nginx
 msg_ok "Created Service"
 

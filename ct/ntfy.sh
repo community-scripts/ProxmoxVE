@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://ntfy.sh/
@@ -34,21 +34,18 @@ function update_script() {
     rm -f /etc/apt/sources.list.d/archive.heckel.io.list
     rm -f /etc/apt/sources.list.d/archive.heckel.io.list.bak
     rm -f /etc/apt/sources.list.d/archive.heckel.io.sources
-    curl -fsSL -o /etc/apt/keyrings/ntfy.gpg https://archive.ntfy.sh/apt/keyring.gpg
-    cat <<'EOF' >/etc/apt/sources.list.d/ntfy.sources
-Types: deb
-URIs: https://archive.ntfy.sh/apt/
-Suites: stable
-Components: main
-Signed-By: /etc/apt/keyrings/ntfy.gpg
-EOF
+    setup_deb822_repo \
+      "ntfy" \
+      "https://archive.ntfy.sh/apt/keyring.gpg" \
+      "https://archive.ntfy.sh/apt/" \
+      "stable"
     msg_ok "Corrected old Ntfy Repository"
   fi
 
-  msg_info "Updating $APP LXC"
+  msg_info "Updating ntfy"
   $STD apt update
-  $STD apt -y upgrade
-  msg_ok "Updated $APP LXC"
+  $STD apt upgrade -y
+  msg_ok "Updated ntfy"
   msg_ok "Updated successfully!"
   exit
 }
@@ -57,7 +54,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

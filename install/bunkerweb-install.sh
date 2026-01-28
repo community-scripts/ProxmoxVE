@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.bunkerweb.io/
@@ -14,11 +14,12 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y apt-transport-https
-$STD apt-get install -y lsb-release
+$STD apt install -y \
+  apt-transport-https \
+  lsb-release
 msg_ok "Installed Dependencies"
 
-RELEASE=$(curl -fsSL https://api.github.com/repos/bunkerity/bunkerweb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(get_latest_github_release "bunkerity/bunkerweb")
 msg_warn "WARNING: This script will run an external installer from a third-party source (install-bunkerweb.sh)."
 msg_warn "The following code is NOT maintained or audited by our repository."
 msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
@@ -30,7 +31,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   exit 10
 fi
 msg_info "Installing BunkerWeb (Patience)"
-curl -fsSL -o install-bunkerweb.sh https://github.com/bunkerity/bunkerweb/raw/v${RELEASE}/misc/install-bunkerweb.sh
+curl -fsSL -o install-bunkerweb.sh "https://github.com/bunkerity/bunkerweb/raw/v${RELEASE}/misc/install-bunkerweb.sh"
 chmod +x install-bunkerweb.sh
 $STD ./install-bunkerweb.sh --yes
 $STD apt-mark unhold bunkerweb nginx
@@ -39,8 +40,8 @@ Package: bunkerweb
 Pin: version ${RELEASE}
 Pin-Priority: 1001
 EOF
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed BunkerWeb v${RELEASE}"
+echo "${RELEASE}" >~/.bunkerweb
+msg_ok "Installed BunkerWeb"
 
 motd_ssh
 customize

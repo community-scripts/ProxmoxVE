@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2025 Community Scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://tracktor.bytedge.in
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
 msg_info "Configuring Tracktor"
@@ -23,22 +23,26 @@ $STD npm run build
 mkdir -p /opt/tracktor-data/{uploads,logs}
 cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
+# Set this to the path of the database file. Default - ./tracktor.db
 DB_PATH=/opt/tracktor-data/tracktor.db
+# Set this to the path of the uploads directory. Default - ./uploads
 UPLOADS_DIR="/opt/tracktor-data/uploads"
+# Set this to the path of the logs directory. Default - ./logs
 LOG_DIR="/opt/tracktor-data/logs"
-# If server host is not set by default it will run on all interfaces - 0.0.0.0
-# SERVER_HOST="" 
-SERVER_PORT=3000
-PORT=3000
-# Set this if you want to secure your endpoints otherwise default will be "*"
-# CORS_ORIGINS="*"
-# Set this if you are using backend and frontend separately. For lxc installation this is not needed
-# PUBLIC_API_BASE_URL=""
-LOG_REQUESTS=true
-LOG_LEVEL="info"
-AUTH_PIN=123456
-# PUBLIC_DEMO_MODE=false
-# FORCE_DATA_SEED=false
+# Hostname to bind the server to. Default - 0.0.0.0
+#HOST="0.0.0.0"
+# Port to bind the server to. Default - 3000
+#PORT=3000
+# Set this to remove upload size limitations. Default - 512 Kb
+BODY_SIZE_LIMIT=Infinity
+# Enable request logging. Default - true
+#LOG_REQUESTS=true
+# Set the logging level. Options - error, warn, info, verbose, debug, silly. Default - info
+#LOG_LEVEL="info"
+# Enable demo mode. Default - false
+#TRACKTOR_DEMO_MODE=false
+# Force reseeding of data on every startup. Default - false
+#FORCE_DATA_SEED=false
 EOF
 msg_ok "Configured Tracktor"
 

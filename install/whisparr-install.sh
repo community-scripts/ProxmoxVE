@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Whisparr/Whisparr
@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Whisparr"
 mkdir -p /var/lib/whisparr/
 chmod 775 /var/lib/whisparr/
-cd /var/lib/whisparr/ || exit
+cd /var/lib/whisparr/
 $STD curl -fsSL 'https://whisparr.servarr.com/v1/update/nightly/updatefile?os=linux&runtime=netcore&arch=x64' -o whisparr.tar.gz
 $STD tar -xvzf whisparr.tar.gz
 mv Whisparr /opt

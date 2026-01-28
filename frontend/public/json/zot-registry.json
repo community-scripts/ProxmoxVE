@@ -2,7 +2,7 @@
   "name": "Zot Registry",
   "slug": "zot",
   "categories": [
-    13
+    3
   ],
   "date_created": "2025-06-06",
   "type": "ct",
@@ -20,7 +20,7 @@
       "script": "ct/zot-registry.sh",
       "resources": {
         "cpu": 1,
-        "ram": 2048,
+        "ram": 4096,
         "hdd": 5,
         "os": "Debian",
         "version": "13"
