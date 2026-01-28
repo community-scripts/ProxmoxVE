@@ -347,12 +347,12 @@ mkdir -p "$ML_DIR" && chown -R immich:immich "$INSTALL_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 if [[ -f ~/.openvino ]]; then
   msg_info "Installing HW-accelerated machine-learning"
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active -n -p python3.13 --managed-python
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active --link-mode copy --compile-bytecode -n -p /usr/bin/python3
   patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
   msg_ok "Installed HW-accelerated machine-learning"
 else
   msg_info "Installing machine-learning"
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra cpu --active -n -p python3.11 --managed-python
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra cpu --active --link-mode copy --compile-bytecode -n -p python3.11 --managed-python
   msg_ok "Installed machine-learning"
 fi
 cd "$SRC_DIR"
