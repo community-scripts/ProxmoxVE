@@ -195,9 +195,11 @@ get_current_ip() {
 #
 # - Updates /etc/motd with current container IP
 # - Removes old IP entries to avoid duplicates
+# - Regenerates /etc/profile.d/00_lxc-details.sh with dynamic OS/IP info
 # ------------------------------------------------------------------------------
 update_motd_ip() {
   MOTD_FILE="/etc/motd"
+  PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
 
   if [ -f "$MOTD_FILE" ]; then
     # Remove existing IP Address lines to prevent duplication
@@ -206,6 +208,26 @@ update_motd_ip() {
     IP=$(get_current_ip)
     # Add the new IP address
     echo -e "${TAB}${NETWORK}${YW} IP Address: ${GN}${IP}${CL}" >>"$MOTD_FILE"
+  fi
+
+  # Update dynamic LXC details profile if values changed (e.g., after OS upgrade)
+  # Only update if file exists and is from community-scripts
+  if [ -f "$PROFILE_FILE" ] && grep -q "community-scripts" "$PROFILE_FILE" 2>/dev/null; then
+    # Get current values
+    local current_os="$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"') - Version: $(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')"
+    local current_hostname="$(hostname)"
+    local current_ip="$(hostname -I | awk '{print $1}')"
+    
+    # Update only if values actually changed
+    if ! grep -q "OS:.*$current_os" "$PROFILE_FILE" 2>/dev/null; then
+      sed -i "s|OS:.*|OS: \${GN}$current_os\${CL}\\\"|" "$PROFILE_FILE"
+    fi
+    if ! grep -q "Hostname:.*$current_hostname" "$PROFILE_FILE" 2>/dev/null; then
+      sed -i "s|Hostname:.*|Hostname: \${GN}$current_hostname\${CL}\\\"|" "$PROFILE_FILE"
+    fi
+    if ! grep -q "IP Address:.*$current_ip" "$PROFILE_FILE" 2>/dev/null; then
+      sed -i "s|IP Address:.*|IP Address: \${GN}$current_ip\${CL}\\\"|" "$PROFILE_FILE"
+    fi
   fi
 }
 
