@@ -393,6 +393,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-28
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - fix: homarr: conf location [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11253](https://github.com/community-scripts/ProxmoxVE/pull/11253))
+
 ## 2026-01-27
 
 ### 🚀 Updated Scripts
