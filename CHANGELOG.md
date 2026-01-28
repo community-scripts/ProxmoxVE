@@ -393,6 +393,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-28
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - npmplus: graceful timeout for login retrieval [@MickLesk](https://github.com/MickLesk) ([#11238](https://github.com/community-scripts/ProxmoxVE/pull/11238))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
