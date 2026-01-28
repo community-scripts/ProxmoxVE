@@ -397,7 +397,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
-    - npmplus: graceful timeout for login retrieval [@MickLesk](https://github.com/MickLesk) ([#11238](https://github.com/community-scripts/ProxmoxVE/pull/11238))
+    - Refactor: NPMPlus / Default Login [@MickLesk](https://github.com/MickLesk) ([#11262](https://github.com/community-scripts/ProxmoxVE/pull/11262))
 
 ### 🌐 Website
 
