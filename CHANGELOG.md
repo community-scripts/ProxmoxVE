@@ -393,6 +393,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-28
 
+### 🆕 New Scripts
+
+  - nodecast-tv ([#11287](https://github.com/community-scripts/ProxmoxVE/pull/11287))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
