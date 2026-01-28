@@ -12,7 +12,7 @@
   "documentation": "https://homarr.dev/docs/getting-started/",
   "website": "https://homarr.dev/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/homarr.webp",
-  "config_path": "/opt/homarr/.env",
+  "config_path": "/opt/homarr.env",
   "description": "Homarr is a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
   "install_methods": [
     {
