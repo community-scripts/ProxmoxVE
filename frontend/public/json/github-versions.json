@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-28T12:56:09Z",
+  "generated": "2026-01-28T18:09:50Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -543,9 +543,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.955",
+      "version": "v0.24.957",
       "pinned": false,
-      "date": "2026-01-27T11:04:42Z"
+      "date": "2026-01-28T14:42:54Z"
     },
     {
       "slug": "joplin-server",
@@ -837,9 +837,16 @@
     {
       "slug": "nodebb",
       "repo": "NodeBB/NodeBB",
-      "version": "v4.8.0",
+      "version": "v4.8.1",
       "pinned": false,
-      "date": "2026-01-14T17:54:36Z"
+      "date": "2026-01-28T14:19:11Z"
+    },
+    {
+      "slug": "nodecast-tv",
+      "repo": "technomancer702/nodecast-tv",
+      "version": "v2.1.1",
+      "pinned": false,
+      "date": "2026-01-19T23:30:29Z"
     },
     {
       "slug": "oauth2-proxy",
@@ -1285,9 +1292,9 @@
     {
       "slug": "tandoor",
       "repo": "TandoorRecipes/recipes",
-      "version": "2.3.6",
+      "version": "2.4.0",
       "pinned": false,
-      "date": "2025-11-24T19:40:27Z"
+      "date": "2026-01-28T17:07:16Z"
     },
     {
       "slug": "tasmoadmin",
@@ -1397,9 +1404,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.6",
+      "version": "v1.1.7",
       "pinned": false,
-      "date": "2026-01-23T18:09:11Z"
+      "date": "2026-01-28T15:39:34Z"
     },
     {
       "slug": "uhf",
@@ -1467,9 +1474,9 @@
     {
       "slug": "wanderer",
       "repo": "meilisearch/meilisearch",
-      "version": "v1.34.2",
+      "version": "v1.34.3",
       "pinned": false,
-      "date": "2026-01-28T08:20:49Z"
+      "date": "2026-01-28T17:52:24Z"
     },
     {
       "slug": "warracker",
@@ -1558,9 +1565,9 @@
     {
       "slug": "zoraxy",
       "repo": "tobychui/zoraxy",
-      "version": "v3.3.1-rc3",
+      "version": "v3.3.1",
       "pinned": false,
-      "date": "2026-01-24T14:31:01Z"
+      "date": "2026-01-28T13:52:02Z"
     },
     {
       "slug": "zwave-js-ui",
@@ -1569,6 +1576,5 @@
       "pinned": false,
       "date": "2026-01-15T15:58:06Z"
     }
-  ],
-  "date_created": "2026-01-28"
+  ]
 }
