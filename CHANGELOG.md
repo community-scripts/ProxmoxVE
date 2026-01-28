@@ -395,6 +395,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - various scripts: use setup_meilisearch function [@MickLesk](https://github.com/MickLesk) ([#11259](https://github.com/community-scripts/ProxmoxVE/pull/11259))
+
   - #### 🔧 Refactor
 
     - Refactor: NPMPlus / Default Login [@MickLesk](https://github.com/MickLesk) ([#11262](https://github.com/community-scripts/ProxmoxVE/pull/11262))
