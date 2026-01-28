@@ -79,6 +79,12 @@ EOF
 # ------------------------------------------------------------------------------
 setting_up_container() {
   msg_info "Setting up Container OS"
+
+  # Fix Debian 13 LXC template bug where / is owned by nobody
+  if [[ "$(stat -c '%U' /)" != "root" ]]; then
+    chown root:root /
+  fi
+
   for ((i = RETRY_NUM; i > 0; i--)); do
     if [ "$(hostname -I)" != "" ]; then
       break
