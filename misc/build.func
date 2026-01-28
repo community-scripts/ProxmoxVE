@@ -3332,6 +3332,7 @@ start() {
     set_std_mode
     ensure_profile_loaded
     update_script
+    update_motd_ip
     cleanup_lxc
   else
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC Update/Setting" --menu \
@@ -3358,6 +3359,7 @@ start() {
     esac
     ensure_profile_loaded
     update_script
+    update_motd_ip
     cleanup_lxc
   fi
 }
