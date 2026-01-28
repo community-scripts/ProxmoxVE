@@ -167,7 +167,7 @@ EOF
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
 
-    msg_info "Updating ${APP} web and microservices"
+    msg_info "Updating Immich web and microservices"
     cd "$SRC_DIR"/server
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     export CI=1
@@ -209,7 +209,7 @@ EOF
     mkdir -p "$PLUGIN_DIR"
     cp -r ./dist "$PLUGIN_DIR"/dist
     cp ./manifest.json "$PLUGIN_DIR"
-    msg_ok "Updated ${APP} server, web, cli and plugins"
+    msg_ok "Updated Immich server, web, cli and plugins"
 
     cd "$SRC_DIR"/machine-learning
     mkdir -p "$ML_DIR" && chown -R immich:immich "$ML_DIR"
@@ -241,8 +241,8 @@ EOF
     ln -s "$GEO_DIR" "$APP_DIR"
 
     chown -R immich:immich "$INSTALL_DIR"
-    msg_ok "Updated ${APP} to v${RELEASE}"
     systemctl restart immich-ml immich-web
+    msg_ok "Updated successfully!"
   fi
   exit
 }

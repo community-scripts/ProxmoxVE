@@ -298,7 +298,7 @@ mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.0" "$SRC_DIR"
 
-msg_info "Installing ${APPLICATION} (patience)"
+msg_info "Installing Immich (patience)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -384,7 +384,7 @@ msg_ok "Installed GeoNames data"
 
 mkdir -p /var/log/immich
 touch /var/log/immich/{web.log,ml.log}
-msg_ok "Installed ${APPLICATION}"
+msg_ok "Installed Immich"
 
 msg_info "Modifying user, creating env file, scripts & services"
 usermod -aG video,render immich
