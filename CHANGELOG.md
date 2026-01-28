@@ -422,6 +422,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - #### ✨ New Features
+
+    - Frontend: use github-versions.json for version display [@MickLesk](https://github.com/MickLesk) ([#11281](https://github.com/community-scripts/ProxmoxVE/pull/11281))
+
   - #### 📝 Script Information
 
     - fix: homarr: conf location [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11253](https://github.com/community-scripts/ProxmoxVE/pull/11253))
