@@ -15,7 +15,7 @@ update_os
 
 echo ""
 echo ""
-echo -e "${BL}Immich Machine Learning Options${CL}"
+echo -e "🤖 ${BL}Immich Machine Learning Options${CL}"
 echo "─────────────────────────────────────────"
 echo "Please choose your machine-learning type:"
 echo ""
