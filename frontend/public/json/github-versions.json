@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-28T18:09:50Z",
+  "generated": "2026-01-29T00:20:09Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -403,9 +403,9 @@
     {
       "slug": "gokapi",
       "repo": "Forceu/Gokapi",
-      "version": "v2.1.0",
+      "version": "v2.2.0",
       "pinned": false,
-      "date": "2025-08-29T12:45:42Z"
+      "date": "2026-01-28T23:59:22Z"
     },
     {
       "slug": "gotify",
@@ -1117,9 +1117,9 @@
     {
       "slug": "qui",
       "repo": "autobrr/qui",
-      "version": "v1.13.0",
+      "version": "v1.13.1",
       "pinned": false,
-      "date": "2026-01-27T20:32:22Z"
+      "date": "2026-01-28T20:12:50Z"
     },
     {
       "slug": "radarr",
@@ -1362,9 +1362,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.10",
+      "version": "v1.4.12",
       "pinned": false,
-      "date": "2026-01-28T06:37:35Z"
+      "date": "2026-01-28T23:29:37Z"
     },
     {
       "slug": "tracktor",
@@ -1390,9 +1390,9 @@
     {
       "slug": "trip",
       "repo": "itskovacs/TRIP",
-      "version": "1.36.1",
+      "version": "1.37.0",
       "pinned": false,
-      "date": "2026-01-26T17:41:48Z"
+      "date": "2026-01-28T22:19:14Z"
     },
     {
       "slug": "tududi",
@@ -1404,9 +1404,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.7",
+      "version": "v1.1.8",
       "pinned": false,
-      "date": "2026-01-28T15:39:34Z"
+      "date": "2026-01-28T23:21:21Z"
     },
     {
       "slug": "uhf",
