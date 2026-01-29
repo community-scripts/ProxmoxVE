@@ -14,17 +14,52 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt -y install \
-    xauth \
-    xvfb \
-    scrot \
-    chromium \
-    chromium-driver \
-    ca-certificates
+$STD apt -y install --no-install-recommends \
+  ffmpeg \
+  libatk1.0-0 \
+  libcairo-gobject2 \
+  libcairo2 \
+  libdbus-glib-1-2 \
+  libfontconfig1 \
+  libfreetype6 \
+  libgdk-pixbuf-xlib-2.0-0 \
+  libglib2.0-0 \
+  libgtk-3-0 \
+  libpango-1.0-0 \
+  libpangocairo-1.0-0 \
+  libpangoft2-1.0-0 \
+  libx11-6 \
+  libx11-xcb1 \
+  libxcb-shm0 \
+  libxcb1 \
+  libxcomposite1 \
+  libxcursor1 \
+  libxdamage1 \
+  libxext6 \
+  libxfixes3 \
+  libxi6 \
+  libxrender1 \
+  libxt6 \
+  libxtst6 \
+  xvfb \
+  fonts-noto-color-emoji \
+  fonts-unifont \
+  xfonts-cyrillic \
+  xfonts-scalable \
+  fonts-liberation \
+  fonts-ipafont-gothic \
+  fonts-wqy-zenhei \
+  fonts-tlwg-loma-otf
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr" "tarball" "latest"
 setup_uv
+fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr" "tarball" "latest"
+
+msg_info "Configuring Byparr"
+cd /opt/Byparr
+$STD uv sync --link-mode copy
+$STD uv run camoufox fetch
+msg_ok "Configured Byparr"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/byparr.service
