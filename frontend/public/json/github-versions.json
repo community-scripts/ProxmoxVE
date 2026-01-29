@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-29T06:16:13Z",
+  "generated": "2026-01-29T12:11:08Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -179,9 +179,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.11.0",
+      "version": "v0.11.1",
       "pinned": false,
-      "date": "2026-01-27T06:23:53Z"
+      "date": "2026-01-29T07:52:21Z"
     },
     {
       "slug": "commafeed",
@@ -235,9 +235,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.27",
+      "version": "v1.0.28",
       "pinned": false,
-      "date": "2026-01-28T04:32:34Z"
+      "date": "2026-01-29T09:56:58Z"
     },
     {
       "slug": "dispatcharr",
@@ -1456,6 +1456,13 @@
       "version": "v1.134.0",
       "pinned": false,
       "date": "2026-01-19T13:29:43Z"
+    },
+    {
+      "slug": "vikunja",
+      "repo": "go-vikunja/vikunja",
+      "version": "v1.0.0",
+      "pinned": false,
+      "date": "2026-01-28T11:12:59Z"
     },
     {
       "slug": "wallabag",
