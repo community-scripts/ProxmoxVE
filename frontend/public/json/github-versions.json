@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-29T12:11:08Z",
+  "generated": "2026-01-29T18:13:28Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -137,9 +137,9 @@
     {
       "slug": "bookstack",
       "repo": "BookStackApp/BookStack",
-      "version": "v25.12.2",
+      "version": "v25.12.3",
       "pinned": false,
-      "date": "2026-01-24T14:01:03Z"
+      "date": "2026-01-29T15:29:25Z"
     },
     {
       "slug": "byparr",
@@ -515,9 +515,9 @@
     {
       "slug": "immich",
       "repo": "immich-app/immich",
-      "version": "v2.4.1",
+      "version": "v2.5.2",
       "pinned": true,
-      "date": "2025-12-19T15:50:12Z"
+      "date": "2026-01-29T15:24:34Z"
     },
     {
       "slug": "inspircd",
@@ -641,9 +641,9 @@
     {
       "slug": "leantime",
       "repo": "Leantime/leantime",
-      "version": "v3.6.1",
+      "version": "v3.6.2",
       "pinned": false,
-      "date": "2026-01-29T02:53:11Z"
+      "date": "2026-01-29T16:37:00Z"
     },
     {
       "slug": "librenms",
@@ -732,9 +732,9 @@
     {
       "slug": "manyfold",
       "repo": "manyfold3d/manyfold",
-      "version": "v0.131.0",
+      "version": "v0.132.0",
       "pinned": false,
-      "date": "2026-01-09T15:00:15Z"
+      "date": "2026-01-29T13:53:21Z"
     },
     {
       "slug": "mealie",
@@ -1096,9 +1096,9 @@
     {
       "slug": "pve-scripts-local",
       "repo": "community-scripts/ProxmoxVE-Local",
-      "version": "v0.5.5",
+      "version": "v0.5.6",
       "pinned": false,
-      "date": "2026-01-13T17:03:32Z"
+      "date": "2026-01-29T15:08:44Z"
     },
     {
       "slug": "qbittorrent",
@@ -1544,9 +1544,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.3.0",
+      "version": "v0.3.1",
       "pinned": false,
-      "date": "2026-01-26T23:05:35Z"
+      "date": "2026-01-29T12:45:35Z"
     },
     {
       "slug": "zigbee2mqtt",
