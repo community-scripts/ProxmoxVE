@@ -401,6 +401,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - jellyfin: add logrotate instead of reducing log level [@MickLesk](https://github.com/MickLesk) ([#11326](https://github.com/community-scripts/ProxmoxVE/pull/11326))
     - core: Add config file handling options | Fix Vikunja update with interactive overwrite [@MickLesk](https://github.com/MickLesk) ([#11317](https://github.com/community-scripts/ProxmoxVE/pull/11317))
 
   - #### 💥 Breaking Changes
