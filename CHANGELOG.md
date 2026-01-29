@@ -414,6 +414,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - build.func: Replace storage variable with searchdomain variable [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#11322](https://github.com/community-scripts/ProxmoxVE/pull/11322))
 
+### 📂 Github
+
+  - Add workflow to lock closed issues [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#11316](https://github.com/community-scripts/ProxmoxVE/pull/11316))
+
 ## 2026-01-28
 
 ### 🆕 New Scripts
