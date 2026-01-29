@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: vikunja v1 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11308](https://github.com/community-scripts/ProxmoxVE/pull/11308))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - build.func: Replace storage variable with searchdomain variable [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#11322](https://github.com/community-scripts/ProxmoxVE/pull/11322))
+
 ## 2026-01-28
 
 ### 🆕 New Scripts
