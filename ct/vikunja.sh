@@ -45,21 +45,21 @@ function update_script() {
     [[ "$CONFIRM2" =~ ^[yY]$ ]] || exit 0
   fi
 
-  echo ""
-  msg_warn "The package update may include config file changes."
-  echo -e "${TAB}${YW}How do you want to handle /etc/vikunja/config.yml?${CL}"
-  echo -e "${TAB}  1) Keep your current config (recommended)"
-  echo -e "${TAB}  2) Install the new package maintainer's config"
-  read -rp "  Choose [1/2] (default: 1): " -t 60 CONFIG_CHOICE || CONFIG_CHOICE="1"
-  [[ -z "$CONFIG_CHOICE" ]] && CONFIG_CHOICE="1"
-
-  if [[ "$CONFIG_CHOICE" == "2" ]]; then
-    export DPKG_FORCE_CONFNEW="1"
-  else
-    export DPKG_FORCE_CONFOLD="1"
-  fi
-
   if check_for_gh_release "vikunja" "go-vikunja/vikunja"; then
+    echo
+    msg_warn "The package update may include config file changes."
+    echo -e "${TAB}${YW}How do you want to handle /etc/vikunja/config.yml?${CL}"
+    echo -e "${TAB}  1) Keep your current config"
+    echo -e "${TAB}  2) Install the new package maintainer's config"
+    read -rp "  Choose [1/2] (default: 1): " -t 60 CONFIG_CHOICE || CONFIG_CHOICE="1"
+    [[ -z "$CONFIG_CHOICE" ]] && CONFIG_CHOICE="1"
+
+    if [[ "$CONFIG_CHOICE" == "2" ]]; then
+      export DPKG_FORCE_CONFNEW="1"
+    else
+      export DPKG_FORCE_CONFOLD="1"
+    fi
+
     msg_info "Stopping Service"
     systemctl stop vikunja
     msg_ok "Stopped Service"
