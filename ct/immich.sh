@@ -116,8 +116,10 @@ EOF
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
-      $STD bash /opt/immich/app/bin/immich-admin enable-maintenance-mode
+      cd /opt/immich/app/bin
+      $STD bash ./immich-admin enable-maintenance-mode
       export MAINT_MODE=1
+      $STD cd -
       msg_ok "Enabled Maintenance Mode"
     fi
     msg_info "Stopping Services"
@@ -250,8 +252,10 @@ EOF
     chown -R immich:immich "$INSTALL_DIR"
     if [[ "$MAINT_MODE" == 1 ]]; then
       msg_info "Disabling Maintenance Mode"
-      $STD bash /opt/immich/app/bin/immich-admin disable-maintenance-mode
+      cd /opt/immich/app/bin
+      $STD bash ./immich-admin disable-maintenance-mode
       unset MAINT_MODE
+      $STD cd -
       msg_ok "Disabled Maintenance Mode"
     fi
     systemctl restart immich-ml immich-web
