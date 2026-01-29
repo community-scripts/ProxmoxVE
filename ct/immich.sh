@@ -112,7 +112,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="2.5.0"
+  RELEASE="2.5.2"
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     msg_info "Stopping Services"
     systemctl stop immich-web
