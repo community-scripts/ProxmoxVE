@@ -414,6 +414,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: vikunja v1 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11308](https://github.com/community-scripts/ProxmoxVE/pull/11308))
 
+  - #### 🔧 Refactor
+
+    - cloudflare: Remove deprecated DNS-over-HTTPS proxy option [@MickLesk](https://github.com/MickLesk) ([#11068](https://github.com/community-scripts/ProxmoxVE/pull/11068))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
