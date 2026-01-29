@@ -990,7 +990,7 @@ base_settings() {
   fi
 
   MTU=${var_mtu:-""}
-  SD=${var_storage:-""}
+  SD=${var_searchdomain:-""}
   NS=${var_ns:-""}
   MAC=${var_mac:-""}
   VLAN=${var_vlan:-""}
