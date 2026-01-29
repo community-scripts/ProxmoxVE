@@ -395,6 +395,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - core: Add config file handling options | Fix Vikunja update with interactive overwrite [@MickLesk](https://github.com/MickLesk) ([#11317](https://github.com/community-scripts/ProxmoxVE/pull/11317))
+
   - #### 💥 Breaking Changes
 
     - fix: vikunja v1 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11308](https://github.com/community-scripts/ProxmoxVE/pull/11308))
