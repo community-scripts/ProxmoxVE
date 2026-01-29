@@ -393,6 +393,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-29
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - fix: vikunja v1 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11308](https://github.com/community-scripts/ProxmoxVE/pull/11308))
+
 ## 2026-01-28
 
 ### 🆕 New Scripts
