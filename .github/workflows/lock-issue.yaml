@@ -1,0 +1,15 @@
+name: Lock closed issues
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  lock:
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/lock-issues@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
