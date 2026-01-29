@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - [FEAT] Immich: Enable Maintenance Mode before update [@vhsdream](https://github.com/vhsdream) ([#11342](https://github.com/community-scripts/ProxmoxVE/pull/11342))
     - jellyfin: add logrotate instead of reducing log level [@MickLesk](https://github.com/MickLesk) ([#11326](https://github.com/community-scripts/ProxmoxVE/pull/11326))
     - core: Add config file handling options | Fix Vikunja update with interactive overwrite [@MickLesk](https://github.com/MickLesk) ([#11317](https://github.com/community-scripts/ProxmoxVE/pull/11317))
     - Immich: v2.5.0 [@vhsdream](https://github.com/vhsdream) ([#11240](https://github.com/community-scripts/ProxmoxVE/pull/11240))
