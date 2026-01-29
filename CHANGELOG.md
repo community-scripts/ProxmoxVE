@@ -393,11 +393,31 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-29
 
+### 🆕 New Scripts
+
+  - Alpine-Valkey [@MickLesk](https://github.com/MickLesk) ([#11320](https://github.com/community-scripts/ProxmoxVE/pull/11320))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
 
+    - jellyfin: add logrotate instead of reducing log level [@MickLesk](https://github.com/MickLesk) ([#11326](https://github.com/community-scripts/ProxmoxVE/pull/11326))
+    - core: Add config file handling options | Fix Vikunja update with interactive overwrite [@MickLesk](https://github.com/MickLesk) ([#11317](https://github.com/community-scripts/ProxmoxVE/pull/11317))
     - Immich: v2.5.0 [@vhsdream](https://github.com/vhsdream) ([#11240](https://github.com/community-scripts/ProxmoxVE/pull/11240))
+
+  - #### 💥 Breaking Changes
+
+    - fix: vikunja v1 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11308](https://github.com/community-scripts/ProxmoxVE/pull/11308))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - build.func: Replace storage variable with searchdomain variable [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#11322](https://github.com/community-scripts/ProxmoxVE/pull/11322))
+
+### 📂 Github
+
+  - Add workflow to lock closed issues [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#11316](https://github.com/community-scripts/ProxmoxVE/pull/11316))
 
 ## 2026-01-28
 
