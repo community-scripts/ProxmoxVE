@@ -31,7 +31,9 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
-
+    
+    PHP_VERSION="8.5" PHP_APACHE="YES" PHP_MODULE="apcu,ctype,dom,fileinfo,iconv,pgsql" setup_php
+    
     msg_info "Creating a backup"
     mv /opt/koillection/ /opt/koillection-backup
     msg_ok "Backup created"
