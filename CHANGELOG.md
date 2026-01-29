@@ -399,6 +399,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Notifiarr: change installation check from apt to systemd service [@MickLesk](https://github.com/MickLesk) ([#11319](https://github.com/community-scripts/ProxmoxVE/pull/11319))
+
   - #### ✨ New Features
 
     - jellyfin: add logrotate instead of reducing log level [@MickLesk](https://github.com/MickLesk) ([#11326](https://github.com/community-scripts/ProxmoxVE/pull/11326))
