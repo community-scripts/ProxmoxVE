@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-29T00:20:09Z",
+  "generated": "2026-01-29T06:16:13Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -543,9 +543,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.957",
+      "version": "v0.24.980",
       "pinned": false,
-      "date": "2026-01-28T14:42:54Z"
+      "date": "2026-01-29T05:04:22Z"
     },
     {
       "slug": "joplin-server",
@@ -641,9 +641,9 @@
     {
       "slug": "leantime",
       "repo": "Leantime/leantime",
-      "version": "v3.6.0",
+      "version": "v3.6.1",
       "pinned": false,
-      "date": "2026-01-22T15:16:00Z"
+      "date": "2026-01-29T02:53:11Z"
     },
     {
       "slug": "librenms",
@@ -760,9 +760,9 @@
     {
       "slug": "meilisearch",
       "repo": "riccox/meilisearch-ui",
-      "version": "v0.14.1",
+      "version": "v0.15.0",
       "pinned": false,
-      "date": "2025-09-22T06:44:33Z"
+      "date": "2026-01-29T03:54:27Z"
     },
     {
       "slug": "memos",
@@ -1271,9 +1271,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.4.0",
+      "version": "v2.4.1",
       "pinned": false,
-      "date": "2026-01-24T00:51:05Z"
+      "date": "2026-01-29T00:04:47Z"
     },
     {
       "slug": "streamlink-webui",
