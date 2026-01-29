@@ -15,7 +15,7 @@ update_os
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 PG_VERSION="16" setup_postgresql
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="apcu,ctype,dom,fileinfo,iconv,pgsql" setup_php
+PHP_VERSION="8.5" PHP_APACHE="YES" PHP_MODULE="apcu,ctype,dom,fileinfo,iconv,pgsql" setup_php
 setup_composer
 
 msg_info "Setting up PostgreSQL"
