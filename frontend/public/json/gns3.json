@@ -1,0 +1,39 @@
+{
+  "name": "GNS3",
+  "slug": "gns3",
+  "categories": [
+    10
+  ],
+  "date_created": "2026-01-29",
+  "type": "ct",
+  "updateable": true,
+  "privileged": true,
+  "interface_port": 3080,
+  "documentation": "https://docs.gns3.com/",
+  "website": "https://www.gns3.com/",
+  "logo": "https://raw.githubusercontent.com/GNS3/gns3-gui/master/resources/images/logo_icon_256x256.png",
+  "description": "GNS3 is a network software emulator that allows you to design and test complex network topologies using Cisco, Juniper, and other vendor equipment.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/gns3.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "ubuntu",
+        "version": "22.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    "Container must be privileged for Docker and nested virtualization support",
+    "Default server listens on port 3080",
+    "To install specific version: GNS3_VERSION=2.2.51 bash -c '$(wget -qLO - https://...)'",
+    "Connect your GNS3 GUI client to the server IP on port 3080"
+  ]
+}
