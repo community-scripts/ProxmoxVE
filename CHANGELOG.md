@@ -401,6 +401,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Kollection: Update to php 8.5 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#11315](https://github.com/community-scripts/ProxmoxVE/pull/11315))
     - Notifiarr: change installation check from apt to systemd service [@MickLesk](https://github.com/MickLesk) ([#11319](https://github.com/community-scripts/ProxmoxVE/pull/11319))
 
   - #### ✨ New Features
