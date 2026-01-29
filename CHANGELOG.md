@@ -417,6 +417,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Byparr [@vhsdream](https://github.com/vhsdream) ([#11338](https://github.com/community-scripts/ProxmoxVE/pull/11338))
     - cloudflare: Remove deprecated DNS-over-HTTPS proxy option [@MickLesk](https://github.com/MickLesk) ([#11068](https://github.com/community-scripts/ProxmoxVE/pull/11068))
 
 ### 💾 Core
