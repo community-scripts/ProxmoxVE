@@ -393,6 +393,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-29
 
+### 🆕 New Scripts
+
+  - Alpine-Valkey [@MickLesk](https://github.com/MickLesk) ([#11320](https://github.com/community-scripts/ProxmoxVE/pull/11320))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
