@@ -1846,7 +1846,11 @@ function fetch_and_deploy_gh_release() {
 
     chmod 644 "$tmpdir/$filename"
     # SYSTEMD_OFFLINE=1 prevents systemd-tmpfiles failures in unprivileged LXC (Debian 13+/systemd 257+)
-    SYSTEMD_OFFLINE=1 $STD apt install -y "$tmpdir/$filename" || {
+    # Support DPKG_CONFOLD/DPKG_CONFNEW env vars for config file handling during .deb upgrades
+    local dpkg_opts=""
+    [[ "${DPKG_FORCE_CONFOLD:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confold"
+    [[ "${DPKG_FORCE_CONFNEW:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confnew"
+    DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         msg_error "Both apt and dpkg installation failed"
         rm -rf "$tmpdir"
