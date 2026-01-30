@@ -163,7 +163,7 @@ EOF
 if [[ "$DEPLOYMENT_TYPE" == "1" ]]; then
   cat <<EOF >/etc/systemd/system/chromium.service
 [Unit]
-Description=karakeep Headless Browser
+Description=Chromium Headless Browser
 After=network.target
 
 [Service]

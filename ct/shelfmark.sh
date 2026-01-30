@@ -33,11 +33,24 @@ function update_script() {
   PYTHON_VERSION="3.12" setup_uv
 
   if check_for_gh_release "shelfmark" "calibrain/shelfmark"; then
-    msg_info "Stopping Service"
+    msg_info "Stopping Service(s)"
     systemctl stop shelfmark
     [[ -f /etc/systemd/system/chromium.service ]] && systemctl stop chromium
-    msg_ok "Stopped Service"
+    msg_ok "Stopped Service(s)"
 
+    [[ -f /etc/systemd/system/flaresolverr.service ]] && if check_for_gh_release "flaresolverr" "Flaresolverr/Flaresolverr"; then
+      msg_info "Stopping FlareSolverr service"
+      systemctl stop flaresolverr
+      msg_ok "Stopped FlareSolverr service"
+      
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
+      
+      msg_info "Starting FlareSolverr service"
+      systemctl start flaresolverr
+      msg_ok "Started FlareSolverr service
+      msg_ok "Updated FlareSolverr"
+    fi
+    
     cp /opt/shelfmark/start.sh /opt/start.sh.bak
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shelfmark" "calibrain/shelfmark" "tarball" "latest" "/opt/shelfmark"
     RELEASE_VERSION=$(cat "$HOME/.shelfmark")
@@ -58,10 +71,10 @@ function update_script() {
     mv /opt/start.sh.bak /opt/shelfmark/start.sh
     msg_ok "Updated Shelfmark"
 
-    msg_info "Starting Service"
+    msg_info "Starting Service(s)"
     systemctl start shelfmark
     [[ -f /etc/systemd/system/chromium.service ]] && systemctl start chromium
-    msg_ok "Started Service"
+    msg_ok "Started Service(s)"
     msg_ok "Updated successfully!"
   fi
   exit
