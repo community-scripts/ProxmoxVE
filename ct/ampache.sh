@@ -41,7 +41,7 @@ function update_script() {
     mv /opt/ampache /opt/ampache_backup
     msg_ok "Created Backup"
 
-    fetch_and_deploy_gh_release "Ampache" "ampache/ampache" "release" "latest" "/opt/ampache" "ampache-*_all_php8.4.zip"
+    fetch_and_deploy_gh_release "Ampache" "ampache/ampache" "prebuild" "latest" "/opt/ampache" "ampache-*_all_php8.4.zip"
 
     msg_info "Restoring Backup"
     cp /tmp/ampache.cfg.php.backup /opt/ampache/config/ampache.cfg.php
