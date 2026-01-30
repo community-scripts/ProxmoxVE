@@ -35,10 +35,6 @@
     {
       "text": "API is available at `http://<LXC_IP>:8081/v2`.",
       "type": "info"
-    },
-    {
-      "text": "Application doesn't come with n-gram data. If you wish to use that feature, please look at `https://dev.languagetool.org/finding-errors-using-n-gram-data.html`.",
-      "type": "info"
     }
   ]
 }
