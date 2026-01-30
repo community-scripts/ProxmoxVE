@@ -44,6 +44,7 @@ function update_script() {
     unzip -q /tmp/LanguageTool-stable.zip -d /opt
     mv /opt/LanguageTool-*/ /opt/LanguageTool/
     mv /opt/server.properties /opt/LanguageTool/server.properties
+    rm -f /tmp/LanguageTool-stable.zip
     echo "${RELEASE}" >~/.languagetool
     msg_ok "Updated LanguageTool"
 
