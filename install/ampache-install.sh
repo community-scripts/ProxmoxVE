@@ -43,10 +43,10 @@ chmod 664 /opt/ampache/public/rest/.htaccess /opt/ampache/public/play/.htaccess
 msg_ok "Set up Ampache"
 
 msg_info "Configuring Database Connection"
-sed -i 's|^database_hostname = .*|database_hostname = "localhost"|' /opt/ampache/config/ampache.cfg.php
-sed -i 's|^database_name = .*|database_name = "ampache"|' /opt/ampache/config/ampache.cfg.php
-sed -i 's|^database_username = .*|database_username = "ampache"|' /opt/ampache/config/ampache.cfg.php
-sed -i "s|^database_password = .*|database_password = \"${MARIADB_DB_PASS}\"|" /opt/ampache/config/ampache.cfg.php
+sed -i -e 's|^database_hostname = .*|database_hostname = "localhost"|' \
+  -e 's|^database_name = .*|database_name = "ampache"|' \
+  -e 's|^database_username = .*|database_username = "ampache"|' \
+  -e "s|^database_password = .*|database_password = \"${MARIADB_DB_PASS}\"|" /opt/ampache/config/ampache.cfg.php
 chown -R www-data:www-data /opt/ampache
 msg_ok "Configured Database Connection"
 
