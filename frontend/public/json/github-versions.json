@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-30T12:10:39Z",
+  "generated": "2026-01-30T18:12:11Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -53,9 +53,9 @@
     {
       "slug": "autobrr",
       "repo": "autobrr/autobrr",
-      "version": "v1.72.0",
+      "version": "v1.72.1",
       "pinned": false,
-      "date": "2026-01-27T20:53:54Z"
+      "date": "2026-01-30T12:57:58Z"
     },
     {
       "slug": "autocaliweb",
@@ -480,9 +480,9 @@
     {
       "slug": "homebox",
       "repo": "sysadminsmedia/homebox",
-      "version": "v0.22.3",
+      "version": "v0.23.0",
       "pinned": false,
-      "date": "2025-12-26T22:31:20Z"
+      "date": "2026-01-30T17:41:01Z"
     },
     {
       "slug": "homepage",
@@ -508,9 +508,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.1.0",
+      "version": "9.1.1",
       "pinned": false,
-      "date": "2026-01-30T09:22:10Z"
+      "date": "2026-01-30T12:30:30Z"
     },
     {
       "slug": "immich",
@@ -1236,9 +1236,9 @@
     {
       "slug": "snowshare",
       "repo": "TuroYT/snowshare",
-      "version": "v1.2.11",
+      "version": "v1.2.12",
       "pinned": false,
-      "date": "2026-01-22T13:26:11Z"
+      "date": "2026-01-30T13:35:56Z"
     },
     {
       "slug": "sonarr",
