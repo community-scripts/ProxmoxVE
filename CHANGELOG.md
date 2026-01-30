@@ -397,6 +397,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: remove redundant PHP_MODULE entries in several scripts [@MickLesk](https://github.com/MickLesk) ([#11362](https://github.com/community-scripts/ProxmoxVE/pull/11362))
     - Refactor: Koillection [@MickLesk](https://github.com/MickLesk) ([#11361](https://github.com/community-scripts/ProxmoxVE/pull/11361))
 
 ### 💾 Core
