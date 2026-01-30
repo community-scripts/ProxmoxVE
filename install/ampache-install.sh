@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
+msg_info "Installing dependencies"
 $STD apt install -y \
   flac \
   vorbis-tools \
@@ -25,7 +25,7 @@ $STD apt install -y \
   libtheora-dev \
   libvorbis-dev \
   libvpx-dev
-msg_ok "Installed Dependencies"
+msg_ok "Installed dependencies"
 
 PHP_VERSION=8.4 PHP_MODULE=bcmath,bz2,curl,gd,imagick,intl,mbstring,mysql,sqlite3,xml,xmlrpc,zip PHP_APACHE=YES setup_php
 setup_mariadb
@@ -33,7 +33,7 @@ MARIADB_DB_USER=ampache MARIADB_DB_NAME=ampache setup_mariadb_db
 
 fetch_and_deploy_gh_release "ampache" "ampache/ampache" "prebuild" "latest" "/opt/ampache" "ampache-*_all_php8.4.zip"
 
-msg_info "Setup Ampache"
+msg_info "Setting up Ampache"
 rm -rf /var/www/html
 ln -s /opt/ampache/public /var/www/html
 mv /opt/ampache/public/rest/.htaccess.dist /opt/ampache/public/rest/.htaccess
