@@ -393,6 +393,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-30
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: Koillection [@MickLesk](https://github.com/MickLesk) ([#11361](https://github.com/community-scripts/ProxmoxVE/pull/11361))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
