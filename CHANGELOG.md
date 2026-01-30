@@ -395,7 +395,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Ampache ([#11369](https://github.com/community-scripts/ProxmoxVE/pull/11369))
+  - languagetool ([#11370](https://github.com/community-scripts/ProxmoxVE/pull/11370))
+- Ampache ([#11369](https://github.com/community-scripts/ProxmoxVE/pull/11369))
 
 ### 🚀 Updated Scripts
 
