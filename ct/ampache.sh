@@ -29,39 +29,32 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "Ampache" "ampache/ampache"; then
-
-    msg_info "Stopping Apache"
+    msg_info "Stopping Service"
     systemctl stop apache2
-    msg_ok "Stopped Apache"
+    msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
+    msg_info "Creating Backup"
     cp /opt/ampache/config/ampache.cfg.php /tmp/ampache.cfg.php.backup
     cp /opt/ampache/public/rest/.htaccess /tmp/ampache_rest.htaccess.backup
     cp /opt/ampache/public/play/.htaccess /tmp/ampache_play.htaccess.backup
-    msg_ok "Backed up Configuration"
-
-    msg_info "Backup Ampache Folder"
     rm -rf /opt/ampache_backup
     mv /opt/ampache /opt/ampache_backup
-    msg_ok "Backed up Ampache"
+    msg_ok "Created Backup"
 
     fetch_and_deploy_gh_release "Ampache" "ampache/ampache" "release" "latest" "/opt/ampache" "ampache-*_all_php8.4.zip"
 
-    msg_info "Restoring Configuration"
+    msg_info "Restoring Backup"
     cp /tmp/ampache.cfg.php.backup /opt/ampache/config/ampache.cfg.php
     cp /tmp/ampache_rest.htaccess.backup /opt/ampache/public/rest/.htaccess
     cp /tmp/ampache_play.htaccess.backup /opt/ampache/public/play/.htaccess
     chmod 664 /opt/ampache/public/rest/.htaccess /opt/ampache/public/play/.htaccess
     chown -R www-data:www-data /opt/ampache
+    rm -f /tmp/ampache*.backup
     msg_ok "Restored Configuration"
 
-    msg_info "Cleaning up"
-    rm -f /tmp/ampache*.backup
-    msg_ok "Cleaned up"
-
-    msg_info "Starting Apache"
+    msg_info "Starting Service"
     systemctl start apache2
-    msg_ok "Started Apache"
+    msg_ok "Started Service"
     msg_ok "Updated successfully!"
     msg_custom "⚠️" "${YW}" "Complete database update by visiting: http://${LOCAL_IP}/update.php"
   fi
