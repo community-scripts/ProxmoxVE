@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_MODULE="sqlite3,bz2" PHP_APACHE="yes" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
 fetch_and_deploy_gh_release "grocy" "grocy/grocy" "prebuild" "latest" "/var/www/html" "grocy*.zip"
 
 msg_info "Configuring grocy"

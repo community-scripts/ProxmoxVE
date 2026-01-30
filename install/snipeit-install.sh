@@ -19,7 +19,7 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" PHP_FPM="YES" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="ldap,soap,xsl" setup_php
 setup_composer
 fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
 setup_mariadb

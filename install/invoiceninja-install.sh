@@ -35,7 +35,7 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 MARIADB_DB_NAME="invoiceninja" MARIADB_DB_USER="invoiceninja" setup_mariadb_db
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="bcmath,curl,gd,gmp,imagick,intl,mbstring,mysql,soap,xml,zip" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="soap" setup_php
 
 fetch_and_deploy_gh_release "invoiceninja" "invoiceninja/invoiceninja" "prebuild" "latest" "/opt/invoiceninja" "invoiceninja.tar.gz"
 

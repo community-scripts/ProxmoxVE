@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.3" PHP_MODULE="sqlite3" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
 fetch_and_deploy_gh_release "linkstack" "linkstackorg/linkstack" "prebuild" "latest" "/var/www/html/" "linkstack.zip"
 
 msg_info "Configuring LinkStack"

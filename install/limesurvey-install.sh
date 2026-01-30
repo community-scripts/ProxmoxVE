@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="imap,ldap,mysql" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="imap,ldap" setup_php
 setup_mariadb
 
 msg_info "Configuring MariaDB Database"

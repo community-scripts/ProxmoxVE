@@ -28,7 +28,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 export PHP_VERSION="8.4"
-PHP_FPM=YES PHP_MODULE="gd,zip,intl,pdo,pgsql,pdo-pgsql,bcmath,opcache,mbstring,redis" setup_php
+PHP_FPM="YES" PHP_MODULE="pdo-pgsql" setup_php
 setup_composer
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="17" setup_postgresql

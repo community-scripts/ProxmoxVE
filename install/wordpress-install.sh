@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="common,snmp,imap,mysql" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_APACHE="YES" PHP_MODULE="snmp,imap" setup_php
 setup_mariadb
 MARIADB_DB_NAME="wordpress_db" MARIADB_DB_USER="wordpress" setup_mariadb_db
 

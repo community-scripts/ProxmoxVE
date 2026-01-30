@@ -38,7 +38,7 @@ $STD apt install -y \
   python3-pip
 msg_ok "Installed Python Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="gmp,mysql,snmp" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="snmp" setup_php
 setup_mariadb
 setup_composer
 PYTHON_VERSION="3.13" setup_uv

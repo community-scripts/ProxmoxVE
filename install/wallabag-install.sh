@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 MARIADB_DB_NAME="wallabag" MARIADB_DB_USER="wallabag" setup_mariadb_db
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="bcmath,bz2,curl,gd,imagick,intl,mbstring,mysql,redis,tidy,xml,zip" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="tidy" setup_php
 setup_composer
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "wallabag" "wallabag/wallabag" "prebuild" "latest" "/opt/wallabag" "wallabag-*.tar.gz"

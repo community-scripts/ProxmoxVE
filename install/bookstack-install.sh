@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y make
 msg_ok "Installed Dependencies"
 
-PHP_MODULE="ldap,tidy,bz2,mysqli" PHP_FPM="YES" PHP_APACHE="YES" PHP_VERSION="8.3" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="ldap,tidy,mysqli" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="bookstack_db" MARIADB_DB_USER="bookstack_user" setup_mariadb_db

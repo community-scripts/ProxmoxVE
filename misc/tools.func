@@ -4512,7 +4512,7 @@ function setup_php() {
 
   # Base modules - essential for most PHP applications
   # Note: 'common' provides many built-in extensions
-  local BASE_MODULES="cli,common,bcmath,curl,gd,intl,mbstring,readline,xml,zip"
+  local BASE_MODULES="cli,common,bcmath,curl,dom,gd,gmp,intl,mbstring,readline,xml,zip"
 
   # Add opcache only for PHP < 8.5 (it's built-in starting from 8.5)
   if [[ "$PHP_MAJOR" -lt 8 ]] || [[ "$PHP_MAJOR" -eq 8 && "$PHP_MINOR" -lt 5 ]]; then

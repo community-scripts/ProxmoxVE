@@ -23,7 +23,7 @@ $STD apt install -y \
   libvips
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM=YES PHP_MODULE="ffi,redis,pdo-sqlite" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="pdo-sqlite" setup_php
 setup_composer
 NODE_VERSION="22" setup_nodejs
 setup_meilisearch

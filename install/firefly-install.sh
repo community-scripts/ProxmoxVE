@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="mysql" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="firefly" MARIADB_DB_USER="firefly" setup_mariadb_db
