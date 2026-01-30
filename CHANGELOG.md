@@ -399,6 +399,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: meilisearch - add data migration for version upgrades [@MickLesk](https://github.com/MickLesk) ([#11356](https://github.com/community-scripts/ProxmoxVE/pull/11356))
 
+  - #### ✨ New Features
+
+    - core: php - improve module handling and prevent installation failures [@MickLesk](https://github.com/MickLesk) ([#11358](https://github.com/community-scripts/ProxmoxVE/pull/11358))
+
 ## 2026-01-29
 
 ### 🆕 New Scripts
