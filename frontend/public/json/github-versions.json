@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-30T06:16:23Z",
+  "generated": "2026-01-30T12:10:39Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -235,9 +235,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.29",
+      "version": "v1.0.30",
       "pinned": false,
-      "date": "2026-01-30T04:58:19Z"
+      "date": "2026-01-30T10:14:14Z"
     },
     {
       "slug": "dispatcharr",
@@ -403,9 +403,9 @@
     {
       "slug": "gokapi",
       "repo": "Forceu/Gokapi",
-      "version": "v2.2.0",
+      "version": "v2.2.1",
       "pinned": false,
-      "date": "2026-01-28T23:59:22Z"
+      "date": "2026-01-30T10:26:26Z"
     },
     {
       "slug": "gotify",
@@ -508,9 +508,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.0.5",
+      "version": "9.1.0",
       "pinned": false,
-      "date": "2026-01-26T03:34:21Z"
+      "date": "2026-01-30T09:22:10Z"
     },
     {
       "slug": "immich",
@@ -1292,9 +1292,9 @@
     {
       "slug": "tandoor",
       "repo": "TandoorRecipes/recipes",
-      "version": "2.4.0",
+      "version": "2.4.1",
       "pinned": false,
-      "date": "2026-01-28T17:07:16Z"
+      "date": "2026-01-30T06:52:26Z"
     },
     {
       "slug": "tasmoadmin",
@@ -1565,9 +1565,9 @@
     {
       "slug": "zitadel",
       "repo": "zitadel/zitadel",
-      "version": "v4.10.0",
+      "version": "v4.10.1",
       "pinned": false,
-      "date": "2026-01-23T13:17:07Z"
+      "date": "2026-01-30T06:52:53Z"
     },
     {
       "slug": "zoraxy",
