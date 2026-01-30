@@ -393,6 +393,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-30
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: meilisearch - add data migration for version upgrades [@MickLesk](https://github.com/MickLesk) ([#11356](https://github.com/community-scripts/ProxmoxVE/pull/11356))
+
 ## 2026-01-29
 
 ### 🆕 New Scripts
