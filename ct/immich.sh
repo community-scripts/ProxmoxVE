@@ -52,9 +52,7 @@ Package: *
 Pin:release a=testing
 Pin-Priority: 450
 EOF
-    if [[ -f /etc/apt/preferences.d/immich ]]; then
-      rm /etc/apt/preferences.d/immich
-    fi
+    [[ -f /etc/apt/preferences.d/immich ]] && rm /etc/apt/preferences.d/immich
     $STD apt update
     msg_ok "Added Debian Testing repo"
   fi
@@ -152,7 +150,7 @@ EOF
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
 
-    cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
+    [[ -f "$ML_DIR"/ml_start.sh ]] && cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
     if grep -qs "set -a" "$APP_DIR"/bin/start.sh; then
       cp "$APP_DIR"/bin/start.sh "$INSTALL_DIR"
     else
@@ -204,8 +202,7 @@ EOF
     $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
     $STD pnpm --filter @immich/sdk --filter @immich/cli build
     $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
-    cd "$APP_DIR"
-    mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
+    [[ -f "$INSTALL_DIR"/start.sh ]] && mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
 
     # plugins
     cd "$SRC_DIR"
@@ -236,10 +233,8 @@ EOF
     fi
     cd "$SRC_DIR"
     cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-    mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
-    if [[ -f ~/.openvino ]]; then
-      sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
-    fi
+    [[ -f "$INSTALL_DIR"/ml_start.sh ]] && mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
+    [[ -f ~/.openvino ]] && sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
     ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
     cd "$APP_DIR"
     grep -rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
@@ -271,7 +266,7 @@ function compile_libjxl() {
   : "${LIBJXL_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)}"
   if [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libjxl"
-    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
     $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
     cd "$SOURCE"
     $STD git reset --hard "$LIBJXL_REVISION"
@@ -318,7 +313,7 @@ function compile_libheif() {
   : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"
   if [[ "${update:-}" ]] || [[ "$LIBHEIF_REVISION" != "$(grep 'libheif' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libheif"
-    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
     $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
     cd "$SOURCE"
     $STD git reset --hard "$LIBHEIF_REVISION"
@@ -334,7 +329,7 @@ function compile_libheif() {
       -DWITH_X265=OFF \
       -DWITH_EXAMPLES=OFF \
       ..
-    $STD make install -j "$(nproc)"
+    $STD make install -j"$(nproc)"
     ldconfig /usr/local/lib
     $STD make clean
     cd "$STAGING_DIR"
@@ -349,7 +344,7 @@ function compile_libraw() {
   : "${LIBRAW_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libraw.json)}"
   if [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libraw"
-    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
     $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
     cd "$SOURCE"
     $STD git reset --hard "$LIBRAW_REVISION"
@@ -371,7 +366,7 @@ function compile_imagemagick() {
   if [[ "$IMAGEMAGICK_REVISION" != "$(grep 'imagemagick' ~/.immich_library_revisions | awk '{print $2}')" ]] ||
     ! grep -q 'DMAGICK_LIBRAW' /usr/local/lib/ImageMagick-7*/config-Q16HDRI/configure.xml; then
     msg_info "Recompiling ImageMagick"
-    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
     $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
     cd "$SOURCE"
     $STD git reset --hard "$IMAGEMAGICK_REVISION"
@@ -391,7 +386,7 @@ function compile_libvips() {
   : "${LIBVIPS_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)}"
   if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
-    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
     $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
     cd "$SOURCE"
     $STD git reset --hard "$LIBVIPS_REVISION"

@@ -228,7 +228,7 @@ $STD cmake --preset=release-noplugins \
   -DWITH_X265=OFF \
   -DWITH_EXAMPLES=OFF \
   ..
-$STD make install -j "$(nproc)"
+$STD make install -j"$(nproc)"
 ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
@@ -293,7 +293,6 @@ APP_DIR="${INSTALL_DIR}/app"
 PLUGIN_DIR="${APP_DIR}/corePlugin"
 ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
-mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.2" "$SRC_DIR"
@@ -358,9 +357,7 @@ else
 fi
 cd "$SRC_DIR"
 cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-if [[ -f ~/.openvino ]]; then
-  sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
-fi
+[[ -f ~/.openvino ]] && sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
 ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
 
 cd "$APP_DIR"
@@ -434,9 +431,9 @@ set +a
 /usr/bin/node ${APP_DIR}/dist/main.js "\$@"
 EOF
 chmod +x "$ML_DIR"/ml_start.sh "$APP_DIR"/bin/start.sh
-cat <<EOF >/etc/systemd/system/"${APPLICATION}"-web.service
+cat <<EOF >/etc/systemd/system/immich-web.service
 [Unit]
-Description=${APPLICATION} Web Service
+Description=Immich Web Service
 After=network.target
 Requires=redis-server.service
 Requires=postgresql.service
@@ -458,9 +455,9 @@ StandardError=append:/var/log/immich/web.log
 [Install]
 WantedBy=multi-user.target
 EOF
-cat <<EOF >/etc/systemd/system/"${APPLICATION}"-ml.service
+cat <<EOF >/etc/systemd/system/immich-ml.service
 [Unit]
-Description=${APPLICATION} Machine-Learning
+Description=Immich Machine-Learning
 After=network.target
 
 [Service]
@@ -480,7 +477,7 @@ StandardError=append:/var/log/immich/ml.log
 WantedBy=multi-user.target
 EOF
 chown -R immich:immich "$INSTALL_DIR" /var/log/immich
-systemctl enable -q --now "$APPLICATION"-ml.service "$APPLICATION"-web.service
+systemctl enable -q --now immich-ml.service immich-web.service
 msg_ok "Modified user, created env file, scripts and services"
 
 motd_ssh
