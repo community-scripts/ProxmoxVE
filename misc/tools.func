@@ -4460,6 +4460,8 @@ function setup_nodejs() {
 #   - Adds Sury PHP repo if needed
 #   - Installs default and user-defined modules
 #   - Patches php.ini for CLI, Apache, and FPM as needed
+#   - Handles built-in modules gracefully (e.g., opcache in PHP 8.5+)
+#   - Skips unavailable packages without failing
 #
 # Variables:
 #   PHP_VERSION                - PHP version to install (default: 8.4)
@@ -4470,6 +4472,17 @@ function setup_nodejs() {
 #   PHP_UPLOAD_MAX_FILESIZE    - (default: 128M)
 #   PHP_POST_MAX_SIZE          - (default: 128M)
 #   PHP_MAX_EXECUTION_TIME     - (default: 300)
+#
+# Notes on modules:
+#   - Base modules (always installed): bcmath, cli, curl, gd, intl, mbstring,
+#     readline, xml, zip, common
+#   - Extended modules (commonly needed): mysql, sqlite3, pgsql, redis,
+#     imagick, bz2, ldap, soap, imap, gmp, apcu
+#   - Some modules are built-in depending on PHP version:
+#     * PHP 8.5+: opcache is built-in (no separate package)
+#     * All versions: ctype, fileinfo, iconv, tokenizer, phar, posix, etc.
+#       are part of php-common
+#   - Unavailable modules are skipped with a warning, not an error
 # ------------------------------------------------------------------------------
 
 function setup_php() {
@@ -4481,23 +4494,69 @@ function setup_php() {
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
 
-  local DEFAULT_MODULES="bcmath,cli,curl,gd,intl,mbstring,opcache,readline,xml,zip"
-  local COMBINED_MODULES
+  # Parse version for compatibility checks
+  local PHP_MAJOR="${PHP_VERSION%%.*}"
+  local PHP_MINOR="${PHP_VERSION#*.}"
+  PHP_MINOR="${PHP_MINOR%%.*}"
+
+  # Modules that are ALWAYS part of php-common (no separate package needed)
+  # These are either built-in or virtual packages provided by php-common
+  local BUILTIN_MODULES="calendar,ctype,exif,ffi,fileinfo,ftp,gettext,iconv,pdo,phar,posix,shmop,sockets,sysvmsg,sysvsem,sysvshm,tokenizer"
+
+  # Modules that became built-in in specific PHP versions
+  # PHP 8.5+: opcache is now part of the core
+  local BUILTIN_85=""
+  if [[ "$PHP_MAJOR" -gt 8 ]] || [[ "$PHP_MAJOR" -eq 8 && "$PHP_MINOR" -ge 5 ]]; then
+    BUILTIN_85="opcache"
+  fi
+
+  # Base modules - essential for most PHP applications
+  # Note: 'common' provides many built-in extensions
+  local BASE_MODULES="cli,common,bcmath,curl,gd,intl,mbstring,readline,xml,zip"
+
+  # Add opcache only for PHP < 8.5 (it's built-in starting from 8.5)
+  if [[ "$PHP_MAJOR" -lt 8 ]] || [[ "$PHP_MAJOR" -eq 8 && "$PHP_MINOR" -lt 5 ]]; then
+    BASE_MODULES="${BASE_MODULES},opcache"
+  fi
+
+  # Extended default modules - commonly needed by web applications
+  # These cover ~90% of typical use cases without bloat
+  local EXTENDED_MODULES="mysql,sqlite3,pgsql,redis,imagick,bz2,apcu"
+
+  local COMBINED_MODULES="${BASE_MODULES},${EXTENDED_MODULES}"
 
   local PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
   local PHP_UPLOAD_MAX_FILESIZE="${PHP_UPLOAD_MAX_FILESIZE:-128M}"
   local PHP_POST_MAX_SIZE="${PHP_POST_MAX_SIZE:-128M}"
   local PHP_MAX_EXECUTION_TIME="${PHP_MAX_EXECUTION_TIME:-300}"
 
-  # Merge default + user-defined modules
+  # Merge with user-defined modules
   if [[ -n "$PHP_MODULE" ]]; then
-    COMBINED_MODULES="${DEFAULT_MODULES},${PHP_MODULE}"
-  else
-    COMBINED_MODULES="${DEFAULT_MODULES}"
+    COMBINED_MODULES="${COMBINED_MODULES},${PHP_MODULE}"
   fi
 
+  # Filter out built-in modules (they don't have separate packages)
+  local FILTERED_MODULES=""
+  IFS=',' read -ra ALL_MODULES <<<"$COMBINED_MODULES"
+  for mod in "${ALL_MODULES[@]}"; do
+    mod=$(echo "$mod" | tr -d '[:space:]')
+    [[ -z "$mod" ]] && continue
+
+    # Skip if it's a known built-in module
+    if echo ",$BUILTIN_MODULES,$BUILTIN_85," | grep -qi ",$mod,"; then
+      continue
+    fi
+
+    # Add to filtered list
+    if [[ -z "$FILTERED_MODULES" ]]; then
+      FILTERED_MODULES="$mod"
+    else
+      FILTERED_MODULES="${FILTERED_MODULES},$mod"
+    fi
+  done
+
   # Deduplicate
-  COMBINED_MODULES=$(echo "$COMBINED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
+  COMBINED_MODULES=$(echo "$FILTERED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
 
   # Get current PHP-CLI version
   local CURRENT_PHP=""
@@ -4555,16 +4614,41 @@ EOF
     return 1
   fi
 
-  # Build module list - without version pinning (preferences.d handles it)
+  # Build module list - verify each package exists before adding
   local MODULE_LIST="php${PHP_VERSION}"
+  local SKIPPED_MODULES=""
 
   IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
   for mod in "${MODULES[@]}"; do
-    MODULE_LIST+=" php${PHP_VERSION}-${mod}"
+    mod=$(echo "$mod" | tr -d '[:space:]')
+    [[ -z "$mod" ]] && continue
+
+    local pkg_name="php${PHP_VERSION}-${mod}"
+
+    # Check if package exists in repository
+    if apt-cache show "$pkg_name" &>/dev/null; then
+      MODULE_LIST+=" $pkg_name"
+    else
+      # Package doesn't exist - could be built-in or renamed
+      if [[ -z "$SKIPPED_MODULES" ]]; then
+        SKIPPED_MODULES="$mod"
+      else
+        SKIPPED_MODULES="${SKIPPED_MODULES}, $mod"
+      fi
+    fi
   done
 
+  # Log skipped modules (informational, not an error)
+  if [[ -n "$SKIPPED_MODULES" ]]; then
+    msg_info "Skipping unavailable/built-in modules: $SKIPPED_MODULES"
+  fi
+
   if [[ "$PHP_FPM" == "YES" ]]; then
-    MODULE_LIST+=" php${PHP_VERSION}-fpm"
+    if apt-cache show "php${PHP_VERSION}-fpm" &>/dev/null; then
+      MODULE_LIST+=" php${PHP_VERSION}-fpm"
+    else
+      msg_warn "php${PHP_VERSION}-fpm not available"
+    fi
     # Create systemd override for PHP-FPM to fix runtime directory issues in LXC containers
     mkdir -p /etc/systemd/system/php${PHP_VERSION}-fpm.service.d/
     cat <<EOF >/etc/systemd/system/php${PHP_VERSION}-fpm.service.d/override.conf
@@ -4591,38 +4675,31 @@ EOF
 
   # Install PHP packages (pinning via preferences.d ensures correct version)
   msg_info "Installing PHP ${PHP_VERSION} packages"
-  if ! install_packages_with_retry $MODULE_LIST; then
-    msg_warn "Failed to install PHP packages, attempting individual installation"
+
+  # First attempt: Install all verified packages at once
+  if ! $STD apt install -y $MODULE_LIST 2>/dev/null; then
+    msg_warn "Bulk installation failed, attempting individual installation"
 
     # Install main package first (critical)
-    install_packages_with_retry "php${PHP_VERSION}" || {
+    if ! $STD apt install -y "php${PHP_VERSION}" 2>/dev/null; then
       msg_error "Failed to install php${PHP_VERSION}"
       return 1
-    }
+    fi
 
     # Try to install Apache module individually if requested
     if [[ "$PHP_APACHE" == "YES" ]]; then
-      install_packages_with_retry "libapache2-mod-php${PHP_VERSION}" || {
+      $STD apt install -y "libapache2-mod-php${PHP_VERSION}" 2>/dev/null || {
         msg_warn "Could not install libapache2-mod-php${PHP_VERSION}"
       }
     fi
 
-    # Try to install modules individually - skip those that don't exist
-    for pkg in "${MODULES[@]}"; do
-      if apt-cache search "^php${PHP_VERSION}-${pkg}\$" 2>/dev/null | grep -q "^php${PHP_VERSION}-${pkg}"; then
-        install_packages_with_retry "php${PHP_VERSION}-${pkg}" || {
-          msg_warn "Could not install php${PHP_VERSION}-${pkg}"
-        }
-      fi
+    # Try to install each package individually
+    for pkg in $MODULE_LIST; do
+      [[ "$pkg" == "php${PHP_VERSION}" ]] && continue  # Already installed
+      $STD apt install -y "$pkg" 2>/dev/null || {
+        msg_warn "Could not install $pkg - continuing without it"
+      }
     done
-
-    if [[ "$PHP_FPM" == "YES" ]]; then
-      if apt-cache search "^php${PHP_VERSION}-fpm\$" 2>/dev/null | grep -q "^php${PHP_VERSION}-fpm"; then
-        install_packages_with_retry "php${PHP_VERSION}-fpm" || {
-          msg_warn "Could not install php${PHP_VERSION}-fpm"
-        }
-      fi
-    fi
   fi
   cache_installed_version "php" "$PHP_VERSION"
 
