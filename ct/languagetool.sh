@@ -30,13 +30,13 @@ function update_script() {
 
   RELEASE=$(curl -fsSL https://languagetool.org/download/ | grep -oP 'LanguageTool-\K[0-9]+\.[0-9]+(\.[0-9]+)?(?=\.zip)' | sort -V | tail -n1)
   if [[ "${RELEASE}" != "$(cat ~/.languagetool 2>/dev/null)" ]] || [[ ! -f ~/.languagetool ]]; then
-    msg_info "Stopping LanguageTool"
+    msg_info "Stopping Service"
     systemctl stop language-tool
-    msg_ok "Stopped LanguageTool"
+    msg_ok "Stopped Service"
 
     msg_info "Creating Backup"
     cp /opt/LanguageTool/server.properties /opt/server.properties
-    msg_ok "Backup Created"
+    msg_ok "Created Backup"
 
     msg_info "Updating LanguageTool"
     rm -rf /opt/LanguageTool
@@ -48,9 +48,9 @@ function update_script() {
     echo "${RELEASE}" >~/.languagetool
     msg_ok "Updated LanguageTool"
 
-    msg_info "Starting LanguageTool"
+    msg_info "Starting Service"
     systemctl start language-tool
-    msg_ok "Started LanguageTool"
+    msg_ok "Started Service"
     msg_ok "Updated successfuly!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
