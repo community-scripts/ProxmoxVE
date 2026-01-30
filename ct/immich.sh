@@ -115,7 +115,7 @@ EOF
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
       cd /opt/immich/app/bin
-      $STD bash ./immich-admin enable-maintenance-mode
+      $STD ./immich-admin enable-maintenance-mode
       export MAINT_MODE=1
       $STD cd -
       msg_ok "Enabled Maintenance Mode"
@@ -246,13 +246,31 @@ EOF
     if [[ "${MAINT_MODE:-0}" == 1 ]]; then
       msg_info "Disabling Maintenance Mode"
       cd /opt/immich/app/bin
-      $STD bash ./immich-admin disable-maintenance-mode
+      $STD ./immich-admin disable-maintenance-mode
       unset MAINT_MODE
       $STD cd -
       msg_ok "Disabled Maintenance Mode"
     fi
     systemctl restart immich-ml immich-web
     msg_ok "Updated successfully!"
+    msg_info "Checking health of Immich-web & Immich-ml services"
+    sleep 5
+    if ! curl -fs localhost:2283/api/server/ping | grep -q "pong"; then
+      msg_warn "Problem detected with Immich-web service, restarting..."
+      systemctl restart immich-web && sleep 5
+      [[ ! $(curl -fs localhost:2283/api/server/ping | grep "pong") ]] && msg_error "Please check '/var/log/immich/web.log' for more details"
+      msg_ok "Immich-web service is reachable!"
+    else
+      msg_ok "Immich-web service is reachable!"
+    fi
+    if [[ $(curl -fs localhost:3003/ping) != "pong" ]]; then
+      msg_warn "Problem detected with Immich-ml service, restarting..."
+      systemctl restart immich-ml && sleep 5
+      [[ $(curl -fs localhost:3003/ping) != "pong" ]] && msg_error "Please check '/var/log/immich/ml.log' for more details"
+      msg_ok "Immich-ml service is reachable!"
+    else
+      msg_ok "Immich-ml service is reachable!"
+    fi
   fi
   exit
 }

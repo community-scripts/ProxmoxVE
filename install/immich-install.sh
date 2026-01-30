@@ -477,6 +477,25 @@ chown -R immich:immich "$INSTALL_DIR" /var/log/immich
 systemctl enable -q --now immich-ml.service immich-web.service
 msg_ok "Modified user, created env file, scripts and services"
 
+msg_info "Checking health of Immich-web & Immich-ml services"
+sleep 5
+if ! curl -fs localhost:2283/api/server/ping | grep -q "pong"; then
+  msg_warn "Problem detected with Immich-web service, restarting..."
+  systemctl restart immich-web && sleep 5
+  [[ ! $(curl -fs localhost:2283/api/server/ping | grep "pong") ]] && msg_error "Please check '/var/log/immich/web.log' for more details"
+  msg_ok "Immich-web service is reachable!"
+else
+  msg_ok "Immich-web service is reachable!"
+fi
+if [[ $(curl -fs localhost:3003/ping) != "pong" ]]; then
+  msg_warn "Problem detected with Immich-ml service, restarting..."
+  systemctl restart immich-ml && sleep 5
+  [[ $(curl -fs localhost:3003/ping) != "pong" ]] && msg_error "Please check '/var/log/immich/ml.log' for more details"
+  msg_ok "Immich-ml service is reachable!"
+else
+  msg_ok "Immich-ml service is reachable!"
+fi
+
 motd_ssh
 customize
 cleanup_lxc
