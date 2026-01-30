@@ -84,16 +84,14 @@ esac
 
 if [[ "$DEPLOYMENT_TYPE" == "2" ]]; then
   fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
-  msg_info "Installing FlareSolverr (please wait)"
+  msg_info "Installing FlareSolverr (patience)"
   $STD apt install -y xvfb
   setup_deb822_repo \
     "google-chrome" \
     "https://dl.google.com/linux/linux_signing_key.pub" \
     "https://dl.google.com/linux/chrome/deb/" \
     "stable"
-  $STD apt update
   $STD apt install -y google-chrome-stable
-  # remove google-chrome.list added by google-chrome-stable
   rm /etc/apt/sources.list.d/google-chrome.list
   sed -i -e '/BYPASSER=/s/false/true/' \
     -e 's/^# EXT_/EXT_/' \
