@@ -47,7 +47,7 @@ function update_script() {
       
       msg_info "Starting FlareSolverr service"
       systemctl start flaresolverr
-      msg_ok "Started FlareSolverr service
+      msg_ok "Started FlareSolverr service"
       msg_ok "Updated FlareSolverr"
     fi
     
