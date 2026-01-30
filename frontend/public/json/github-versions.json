@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-30T00:20:08Z",
+  "generated": "2026-01-30T06:16:23Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -235,9 +235,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.28",
+      "version": "v1.0.29",
       "pinned": false,
-      "date": "2026-01-29T09:56:58Z"
+      "date": "2026-01-30T04:58:19Z"
     },
     {
       "slug": "dispatcharr",
@@ -543,9 +543,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.980",
+      "version": "v0.24.988",
       "pinned": false,
-      "date": "2026-01-29T05:04:22Z"
+      "date": "2026-01-30T05:55:43Z"
     },
     {
       "slug": "joplin-server",
@@ -1271,9 +1271,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.4.1",
+      "version": "v2.4.2",
       "pinned": false,
-      "date": "2026-01-29T00:04:47Z"
+      "date": "2026-01-29T23:11:15Z"
     },
     {
       "slug": "streamlink-webui",
@@ -1404,9 +1404,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.9",
+      "version": "v1.1.10",
       "pinned": false,
-      "date": "2026-01-29T18:53:41Z"
+      "date": "2026-01-30T02:10:02Z"
     },
     {
       "slug": "uhf",
