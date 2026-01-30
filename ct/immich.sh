@@ -182,7 +182,7 @@ EOF
     export SHARP_FORCE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
     cp "$APP_DIR"/package.json "$APP_DIR"/bin
-    sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
+    sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
     # openapi & web build
     cd "$SRC_DIR"
@@ -239,6 +239,8 @@ EOF
     ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$APP_DIR"/upload
     ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
     ln -s "$GEO_DIR" "$APP_DIR"
+    [[ ! -f /usr/bin/immich ]] && ln -sf "$APP_DIR"/cli/bin/immich /usr/bin/immich
+    [[ ! -f /usr/bin/immich-admin ]] && ln -sf "$APP_DIR"/bin/immich-admin /usr/bin/immich-admin
 
     chown -R immich:immich "$INSTALL_DIR"
     if [[ "${MAINT_MODE:-0}" == 1 ]]; then

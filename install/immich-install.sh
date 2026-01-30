@@ -306,7 +306,7 @@ unset SHARP_IGNORE_GLOBAL_LIBVIPS
 export SHARP_FORCE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
 cp "$APP_DIR"/package.json "$APP_DIR"/bin
-sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
+sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
 # openapi & web build
 cd "$SRC_DIR"
@@ -426,6 +426,8 @@ set +a
 /usr/bin/node ${APP_DIR}/dist/main.js "\$@"
 EOF
 chmod +x "$ML_DIR"/ml_start.sh "$APP_DIR"/bin/start.sh
+ln -sf "$APP_DIR"/cli/bin/immich /usr/bin/immich
+ln -sf "$APP_DIR"/bin/immich-admin /usr/bin/immich-admin
 cat <<EOF >/etc/systemd/system/immich-web.service
 [Unit]
 Description=Immich Web Service
