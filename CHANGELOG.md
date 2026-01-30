@@ -393,6 +393,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-30
 
+### 🆕 New Scripts
+
+  - Ampache ([#11369](https://github.com/community-scripts/ProxmoxVE/pull/11369))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
