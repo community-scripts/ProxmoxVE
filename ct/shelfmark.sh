@@ -45,9 +45,9 @@ function update_script() {
       
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
       
-      msg_info "Starting FlareSolverr service"
+      msg_info "Starting FlareSolverr Service"
       systemctl start flaresolverr
-      msg_ok "Started FlareSolverr service"
+      msg_ok "Started FlareSolverr Service"
       msg_ok "Updated FlareSolverr"
     fi
     
