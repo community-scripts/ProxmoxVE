@@ -149,12 +149,7 @@ NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 VCHORD_RELEASE="0.5.3"
-msg_info "Installing Vectorchord v${VCHORD_RELEASE}"
-curl -fsSL "https://github.com/tensorchord/VectorChord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
-$STD apt install -y ./vchord.deb
-rm vchord.deb
-echo "$VCHORD_RELEASE" >~/.vchord_version
-msg_ok "Installed Vectorchord v${VCHORD_RELEASE}"
+fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
 
 sed -i -e "/^#shared_preload/s/^#//;/^shared_preload/s/''/'vchord.so'/" /etc/postgresql/16/main/postgresql.conf
 systemctl restart postgresql.service

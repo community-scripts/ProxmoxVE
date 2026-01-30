@@ -125,18 +125,14 @@ EOF
     systemctl stop immich-ml
     msg_ok "Stopped Services"
     VCHORD_RELEASE="0.5.3"
-    if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
-      msg_info "Upgrading VectorChord"
-      curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
-      $STD apt install -y ./vchord.deb
+    [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
+    if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}"; then
+      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
       systemctl restart postgresql
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
-      echo "$VCHORD_RELEASE" >~/.vchord_version
-      rm ./vchord.deb
-      msg_ok "Upgraded VectorChord to v${VCHORD_RELEASE}"
     fi
     if ! dpkg -l | grep -q ccache; then
       $STD apt install -yqq ccache
