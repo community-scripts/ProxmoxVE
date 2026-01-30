@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-29T18:13:28Z",
+  "generated": "2026-01-30T00:20:08Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -774,9 +774,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.01.11",
+      "version": "2026.01.30",
       "pinned": false,
-      "date": "2026-01-11T18:43:56Z"
+      "date": "2026-01-30T00:17:52Z"
     },
     {
       "slug": "miniflux",
@@ -1404,9 +1404,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.8",
+      "version": "v1.1.9",
       "pinned": false,
-      "date": "2026-01-28T23:21:21Z"
+      "date": "2026-01-29T18:53:41Z"
     },
     {
       "slug": "uhf",
