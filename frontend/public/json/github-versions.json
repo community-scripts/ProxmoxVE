@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-31T06:11:17Z",
+  "generated": "2026-01-31T12:08:38Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -109,9 +109,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v1.16.1",
+      "version": "v2.0.0",
       "pinned": false,
-      "date": "2026-01-26T08:27:11Z"
+      "date": "2026-01-31T10:13:47Z"
     },
     {
       "slug": "beszel",
@@ -949,9 +949,9 @@
     {
       "slug": "paperless-ngx",
       "repo": "paperless-ngx/paperless-ngx",
-      "version": "v2.20.5",
+      "version": "v2.20.6",
       "pinned": false,
-      "date": "2026-01-21T00:12:33Z"
+      "date": "2026-01-31T07:30:27Z"
     },
     {
       "slug": "patchmon",
