@@ -110,9 +110,9 @@ else
   $STD apt install -y --no-install-recommends \
     xvfb \
     ffmpeg \
-    chromium-common=143.0.7499.169-1~deb13u1 \
-    chromium=143.0.7499.169-1~deb13u1 \
-    chromium-driver=143.0.7499.169-1~deb13u1 \
+    chromium-common=${CHROME_VERSION} \
+    chromium=${CHROME_VERSION} \
+    chromium-driver=${CHROME_VERSION} \
     python3-tk
   msg_ok "Installed internal bypasser dependencies"
 fi
