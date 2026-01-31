@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-31T00:19:35Z",
+  "generated": "2026-01-31T06:11:17Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -543,16 +543,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.50",
+      "version": "v5.12.51",
       "pinned": false,
-      "date": "2026-01-26T05:28:47Z"
+      "date": "2026-01-31T03:58:30Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.988",
+      "version": "v0.24.993",
       "pinned": false,
-      "date": "2026-01-30T05:55:43Z"
+      "date": "2026-01-31T05:55:28Z"
     },
     {
       "slug": "joplin-server",
