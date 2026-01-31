@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-31T12:08:38Z",
+  "generated": "2026-01-31T18:07:59Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -760,9 +760,9 @@
     {
       "slug": "mediamtx",
       "repo": "bluenviron/mediamtx",
-      "version": "v1.15.6",
+      "version": "v1.16.0",
       "pinned": false,
-      "date": "2025-12-28T16:38:35Z"
+      "date": "2026-01-31T15:38:51Z"
     },
     {
       "slug": "meilisearch",
@@ -774,9 +774,9 @@
     {
       "slug": "memos",
       "repo": "usememos/memos",
-      "version": "v0.25.3",
+      "version": "v0.26.0",
       "pinned": false,
-      "date": "2025-11-25T15:40:41Z"
+      "date": "2026-01-31T15:28:09Z"
     },
     {
       "slug": "metube",
@@ -1397,9 +1397,9 @@
     {
       "slug": "trip",
       "repo": "itskovacs/TRIP",
-      "version": "1.37.0",
+      "version": "1.38.0",
       "pinned": false,
-      "date": "2026-01-28T22:19:14Z"
+      "date": "2026-01-31T15:56:30Z"
     },
     {
       "slug": "tududi",
