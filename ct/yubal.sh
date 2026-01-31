@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies git
+
   if check_for_gh_release "yubal" "guillevc/yubal"; then
     msg_info "Stopping Services"
     systemctl stop yubal
