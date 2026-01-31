@@ -393,6 +393,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-31
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix: yubal: add git [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11394](https://github.com/community-scripts/ProxmoxVE/pull/11394))
+
 ## 2026-01-30
 
 ### 🆕 New Scripts
