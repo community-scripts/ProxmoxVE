@@ -393,6 +393,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-31
 
+### 🆕 New Scripts
+
+  - shelfmark ([#11371](https://github.com/community-scripts/ProxmoxVE/pull/11371))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
