@@ -149,12 +149,7 @@ NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 VCHORD_RELEASE="0.5.3"
-msg_info "Installing Vectorchord v${VCHORD_RELEASE}"
-curl -fsSL "https://github.com/tensorchord/VectorChord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
-$STD apt install -y ./vchord.deb
-rm vchord.deb
-echo "$VCHORD_RELEASE" >~/.vchord_version
-msg_ok "Installed Vectorchord v${VCHORD_RELEASE}"
+fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
 
 sed -i -e "/^#shared_preload/s/^#//;/^shared_preload/s/''/'vchord.so'/" /etc/postgresql/16/main/postgresql.conf
 systemctl restart postgresql.service
@@ -228,7 +223,7 @@ $STD cmake --preset=release-noplugins \
   -DWITH_X265=OFF \
   -DWITH_EXAMPLES=OFF \
   ..
-$STD make install -j "$(nproc)"
+$STD make install -j"$(nproc)"
 ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
@@ -293,7 +288,6 @@ APP_DIR="${INSTALL_DIR}/app"
 PLUGIN_DIR="${APP_DIR}/corePlugin"
 ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
-mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.2" "$SRC_DIR"
@@ -312,7 +306,7 @@ unset SHARP_IGNORE_GLOBAL_LIBVIPS
 export SHARP_FORCE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
 cp "$APP_DIR"/package.json "$APP_DIR"/bin
-sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
+sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
 # openapi & web build
 cd "$SRC_DIR"
@@ -358,9 +352,7 @@ else
 fi
 cd "$SRC_DIR"
 cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-if [[ -f ~/.openvino ]]; then
-  sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
-fi
+[[ -f ~/.openvino ]] && sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
 ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
 
 cd "$APP_DIR"
@@ -434,9 +426,11 @@ set +a
 /usr/bin/node ${APP_DIR}/dist/main.js "\$@"
 EOF
 chmod +x "$ML_DIR"/ml_start.sh "$APP_DIR"/bin/start.sh
-cat <<EOF >/etc/systemd/system/"${APPLICATION}"-web.service
+ln -sf "$APP_DIR"/cli/bin/immich /usr/bin/immich
+ln -sf "$APP_DIR"/bin/immich-admin /usr/bin/immich-admin
+cat <<EOF >/etc/systemd/system/immich-web.service
 [Unit]
-Description=${APPLICATION} Web Service
+Description=Immich Web Service
 After=network.target
 Requires=redis-server.service
 Requires=postgresql.service
@@ -458,9 +452,9 @@ StandardError=append:/var/log/immich/web.log
 [Install]
 WantedBy=multi-user.target
 EOF
-cat <<EOF >/etc/systemd/system/"${APPLICATION}"-ml.service
+cat <<EOF >/etc/systemd/system/immich-ml.service
 [Unit]
-Description=${APPLICATION} Machine-Learning
+Description=Immich Machine-Learning
 After=network.target
 
 [Service]
@@ -480,8 +474,27 @@ StandardError=append:/var/log/immich/ml.log
 WantedBy=multi-user.target
 EOF
 chown -R immich:immich "$INSTALL_DIR" /var/log/immich
-systemctl enable -q --now "$APPLICATION"-ml.service "$APPLICATION"-web.service
+systemctl enable -q --now immich-ml.service immich-web.service
 msg_ok "Modified user, created env file, scripts and services"
+
+msg_info "Checking health of Immich-web & Immich-ml services"
+sleep 5
+if ! curl -fs localhost:2283/api/server/ping | grep -q "pong"; then
+  msg_warn "Problem detected with Immich-web service, restarting..."
+  systemctl restart immich-web && sleep 5
+  [[ ! $(curl -fs localhost:2283/api/server/ping | grep "pong") ]] && msg_error "Please check '/var/log/immich/web.log' for more details"
+  msg_ok "Immich-web service is reachable!"
+else
+  msg_ok "Immich-web service is reachable!"
+fi
+if [[ $(curl -fs localhost:3003/ping) != "pong" ]]; then
+  msg_warn "Problem detected with Immich-ml service, restarting..."
+  systemctl restart immich-ml && sleep 5
+  [[ $(curl -fs localhost:3003/ping) != "pong" ]] && msg_error "Please check '/var/log/immich/ml.log' for more details"
+  msg_ok "Immich-ml service is reachable!"
+else
+  msg_ok "Immich-ml service is reachable!"
+fi
 
 motd_ssh
 customize
