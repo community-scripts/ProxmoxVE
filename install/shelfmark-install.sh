@@ -105,6 +105,7 @@ elif [[ "$DEPLOYMENT_TYPE" == "4" ]]; then
   sed -i '/_BYPASS=/s/true/false/' /etc/shelfmark/.env
 else
   DEPLOYMENT_TYPE="1"
+  CHROME_VERSION=$(curl -fsSL https://raw.githubusercontent.com/calibrain/shelfmark/refs/heads/main/Dockerfile | sed -n '/chromium=/s/[^=]*=//p' | awk '{print $1}')
   msg_info "Installing internal bypasser dependencies"
   $STD apt install -y --no-install-recommends \
     xvfb \
