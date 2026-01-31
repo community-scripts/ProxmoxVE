@@ -19,7 +19,8 @@ $STD apt install -y \
   libssl-dev \
   libffi-dev \
   python3-dev \
-  ffmpeg
+  ffmpeg \
+  git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Bun"
