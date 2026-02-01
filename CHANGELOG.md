@@ -789,6 +789,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools.func: add codeberg functions & autocaliweb: migrate from GitHub to Codeberg [@MickLesk](https://github.com/MickLesk) ([#11440](https://github.com/community-scripts/ProxmoxVE/pull/11440))
     - Immich Refactor #2 [@vhsdream](https://github.com/vhsdream) ([#11375](https://github.com/community-scripts/ProxmoxVE/pull/11375))
 
   - #### 🔧 Refactor
