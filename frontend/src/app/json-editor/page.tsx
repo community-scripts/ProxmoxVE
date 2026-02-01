@@ -28,11 +28,14 @@ import { ScriptSchema } from "./_schemas/schemas";
 import Categories from "./_components/categories";
 import Note from "./_components/note";
 
+import { nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import SyntaxHighlighter from "react-syntax-highlighter";
+
 const initialScript: Script = {
   name: "",
   slug: "",
   categories: [],
-  date_created: "",
+  date_created: format(new Date(), "yyyy-MM-dd"),
   type: "ct",
   updateable: false,
   privileged: false,
@@ -98,13 +101,18 @@ export default function JSONGenerator() {
   }, []);
 
   const handleCopy = useCallback(() => {
+    if (!isValid) toast.warning("JSON schema is invalid. Copying anyway.");
     navigator.clipboard.writeText(JSON.stringify(script, null, 2));
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
-    toast.success("Copied metadata to clipboard");
+    if (isValid) toast.success("Copied metadata to clipboard");
   }, [script]);
 
   const handleDownload = useCallback(() => {
+    if (isValid === false) {
+      toast.error("Cannot download invalid JSON");
+      return;
+    }
     const jsonString = JSON.stringify(script, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -175,7 +183,7 @@ export default function JSONGenerator() {
           </div>
           <div>
             <Label>
-              Logo <span className="text-red-500">*</span>
+              Logo
             </Label>
             <Input
               placeholder="Full logo URL"
@@ -204,7 +212,9 @@ export default function JSONGenerator() {
           <Categories script={script} setScript={setScript} categories={categories} />
           <div className="flex gap-2">
             <div className="flex flex-col gap-2 w-full">
-              <Label>Date Created</Label>
+              <Label>
+                Date Created <span className="text-red-500">*</span>
+              </Label>
               <Popover>
                 <PopoverTrigger asChild className="flex-1">
                   <Button
@@ -220,7 +230,7 @@ export default function JSONGenerator() {
                     mode="single"
                     selected={new Date(script.date_created)}
                     onSelect={handleDateSelect}
-                    initialFocus
+                    autoFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -324,9 +334,13 @@ export default function JSONGenerator() {
             </Button>
           </div>
 
-          <pre className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll">
+          <SyntaxHighlighter
+            language="json"
+            style={nord}
+            className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll"
+          >
             {JSON.stringify(script, null, 2)}
-          </pre>
+          </SyntaxHighlighter>
         </div>
       </div>
     </div>
