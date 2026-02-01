@@ -774,6 +774,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-01
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Immich Refactor #2 [@vhsdream](https://github.com/vhsdream) ([#11375](https://github.com/community-scripts/ProxmoxVE/pull/11375))
+
 ## 2026-01-31
 
 ### 🆕 New Scripts
