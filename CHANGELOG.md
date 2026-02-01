@@ -786,6 +786,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - WordPress: Refactor [@tremor021](https://github.com/tremor021) ([#11408](https://github.com/community-scripts/ProxmoxVE/pull/11408))
     - Refactor: Whisparr [@tremor021](https://github.com/tremor021) ([#11411](https://github.com/community-scripts/ProxmoxVE/pull/11411))
 
 ### 💾 Core
