@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { Sparkles } from "lucide-react";
+import { ArrowRightIcon, Sparkles } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -21,6 +21,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 import { DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import Link from "next/link";
 
 export function formattedBadge(type: string) {
   switch (type) {
@@ -211,7 +212,27 @@ function CommandMenu() {
         <DialogTitle className="sr-only">Search scripts</DialogTitle>
         <CommandInput placeholder="Search for a script..." />
         <CommandList>
-          <CommandEmpty>{isLoading ? "Loading..." : "No scripts found."}</CommandEmpty>
+          <CommandEmpty>
+            {isLoading ? (
+              "Searching..."
+            ) : (
+              <div className="flex flex-col items-center justify-center py-6 text-center">
+                <p className="text-sm text-muted-foreground">No scripts match your search.</p>
+                <div className="mt-4">
+                  <p className="text-xs text-muted-foreground mb-2">Want to add a new script?</p>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link
+                      href={`https://github.com/community-scripts/${basePath}/tree/main/docs/contribution/GUIDE.md`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Documentation <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CommandEmpty>
           {Object.entries(uniqueScriptsByCategory).map(([categoryName, scripts]) => (
             <CommandGroup key={`category:${categoryName}`} heading={categoryName}>
               {scripts.map(script => (
