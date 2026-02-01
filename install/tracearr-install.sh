@@ -109,17 +109,33 @@ if command -v timescaledb-tune &> /dev/null; then
         || echo "Warning: timescaledb-tune failed (non-fatal)"
 fi
 # =============================================================================
-# Ensure TimescaleDB decompression limit is set (for existing databases)
+# Ensure required PostgreSQL settings for Tracearr
 # =============================================================================
-# This setting allows migrations to modify compressed hypertable data.
-# Without it, bulk UPDATEs on compressed sessions will fail with
-# "tuple decompression limit exceeded" errors.
 pg_config_file="/etc/postgresql/18/main/postgresql.conf"
 if [ -f \$pg_config_file ]; then
-    if ! grep -q "max_tuples_decompressed_per_dml_transaction" \$pg_config_file; then
+    # Ensure max_tuples_decompressed_per_dml_transaction is set
+    if grep -q "^timescaledb\.max_tuples_decompressed_per_dml_transaction" \$pg_config_file; then
+        # Setting exists (uncommented) - update if not 0
+        current_value=\$(grep "^timescaledb\.max_tuples_decompressed_per_dml_transaction" \$pg_config_file | grep -oE '[0-9]+' | head -1)
+        if [ -n "\$current_value" ] && [ "\$current_value" -ne 0 ]; then
+            sed -i "s/^timescaledb\.max_tuples_decompressed_per_dml_transaction.*/timescaledb.max_tuples_decompressed_per_dml_transaction = 0/" \$pg_config_file
+        fi
+    elif ! grep -q "^timescaledb\.max_tuples_decompressed_per_dml_transaction" \$pg_config_file; then
         echo "" >> \$pg_config_file
         echo "# Allow unlimited tuple decompression for migrations on compressed hypertables" >> \$pg_config_file
         echo "timescaledb.max_tuples_decompressed_per_dml_transaction = 0" >> \$pg_config_file
+    fi
+    # Ensure max_locks_per_transaction is set (for existing databases)
+    if grep -q "^max_locks_per_transaction" \$pg_config_file; then
+        # Setting exists (uncommented) - update if below 4096
+        current_value=\$(grep "^max_locks_per_transaction" \$pg_config_file | grep -oE '[0-9]+' | head -1)
+        if [ -n "\$current_value" ] && [ "\$current_value" -lt 4096 ]; then
+            sed -i "s/^max_locks_per_transaction.*/max_locks_per_transaction = 4096/" \$pg_config_file
+        fi
+    elif ! grep -q "^max_locks_per_transaction" \$pg_config_file; then
+        echo "" >> \$pg_config_file
+        echo "# Increase lock table size for TimescaleDB hypertables with many chunks" >> \$pg_config_file
+        echo "max_locks_per_transaction = 4096" >> \$pg_config_file
     fi
 fi
 systemctl restart postgresql

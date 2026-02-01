@@ -30,6 +30,55 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
+  msg_info "Updating prestart script"
+  cat <<EOF >/data/tracearr/prestart.sh
+#!/usr/bin/env bash
+# =============================================================================
+# Tune PostgreSQL for available resources (runs every startup)
+# =============================================================================
+# timescaledb-tune automatically optimizes PostgreSQL settings based on
+# available RAM and CPU. Safe to run repeatedly - recalculates if resources change.
+if command -v timescaledb-tune &> /dev/null; then
+    total_ram_kb=\$(grep MemTotal /proc/meminfo | awk '{print \$2}')
+    ram_for_tsdb=\$((total_ram_kb / 1024 / 2))
+    timescaledb-tune -yes -memory "\$ram_for_tsdb"MB --quiet 2>/dev/null \
+        || echo "Warning: timescaledb-tune failed (non-fatal)"
+fi
+# =============================================================================
+# Ensure required PostgreSQL settings for Tracearr
+# =============================================================================
+pg_config_file="/etc/postgresql/18/main/postgresql.conf"
+if [ -f \$pg_config_file ]; then
+    # Ensure max_tuples_decompressed_per_dml_transaction is set
+    if grep -q "^timescaledb\.max_tuples_decompressed_per_dml_transaction" \$pg_config_file; then
+        # Setting exists (uncommented) - update if not 0
+        current_value=\$(grep "^timescaledb\.max_tuples_decompressed_per_dml_transaction" \$pg_config_file | grep -oE '[0-9]+' | head -1)
+        if [ -n "\$current_value" ] && [ "\$current_value" -ne 0 ]; then
+            sed -i "s/^timescaledb\.max_tuples_decompressed_per_dml_transaction.*/timescaledb.max_tuples_decompressed_per_dml_transaction = 0/" \$pg_config_file
+        fi
+    elif ! grep -q "^timescaledb\.max_tuples_decompressed_per_dml_transaction" \$pg_config_file; then
+        echo "" >> \$pg_config_file
+        echo "# Allow unlimited tuple decompression for migrations on compressed hypertables" >> \$pg_config_file
+        echo "timescaledb.max_tuples_decompressed_per_dml_transaction = 0" >> \$pg_config_file
+    fi
+    # Ensure max_locks_per_transaction is set (for existing databases)
+    if grep -q "^max_locks_per_transaction" \$pg_config_file; then
+        # Setting exists (uncommented) - update if below 4096
+        current_value=\$(grep "^max_locks_per_transaction" \$pg_config_file | grep -oE '[0-9]+' | head -1)
+        if [ -n "\$current_value" ] && [ "\$current_value" -lt 4096 ]; then
+            sed -i "s/^max_locks_per_transaction.*/max_locks_per_transaction = 4096/" \$pg_config_file
+        fi
+    elif ! grep -q "^max_locks_per_transaction" \$pg_config_file; then
+        echo "" >> \$pg_config_file
+        echo "# Increase lock table size for TimescaleDB hypertables with many chunks" >> \$pg_config_file
+        echo "max_locks_per_transaction = 4096" >> \$pg_config_file
+    fi
+fi
+systemctl restart postgresql
+EOF
+  chmod +x /data/tracearr/prestart.sh
+  msg_ok "Updated prestart script"
+
   if check_for_gh_release "tracearr" "connorgallopo/Tracearr"; then
     msg_info "Stopping Services"
     systemctl stop tracearr postgresql redis
@@ -78,6 +127,11 @@ function update_script() {
     systemctl start postgresql redis tracearr
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
+  else
+    # no new release, just restart service to apply prestart changes
+    msg_info "Restarting Tracearr Service"
+    systemctl restart tracearr
+    msg_ok "Restarted Tracearr Service"
   fi
   exit
 }
