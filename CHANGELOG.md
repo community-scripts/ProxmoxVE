@@ -780,6 +780,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tracearr: install/update new prestart script from upstream [@durzo](https://github.com/durzo) ([#11433](https://github.com/community-scripts/ProxmoxVE/pull/11433))
     - n8n: Fix dependencies [@tremor021](https://github.com/tremor021) ([#11429](https://github.com/community-scripts/ProxmoxVE/pull/11429))
     - [Hotfix] Bunkerweb update [@vhsdream](https://github.com/vhsdream) ([#11402](https://github.com/community-scripts/ProxmoxVE/pull/11402))
     - [Hotfix] Immich: revert healthcheck feature [@vhsdream](https://github.com/vhsdream) ([#11427](https://github.com/community-scripts/ProxmoxVE/pull/11427))
