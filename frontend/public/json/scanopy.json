@@ -37,7 +37,7 @@
       "type": "info"
     },
     {
-      "text": "The integrated daemon config is located at `/root/.config/daemon/config.json`",
+      "text": "The integrated daemon config is located at `/root/.config/daemon/`",
       "type": "info"
     }
   ]
