@@ -797,6 +797,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - feat(frontend): implement UX refinements and syntax highlighting [@ls-root](https://github.com/ls-root) ([#11423](https://github.com/community-scripts/ProxmoxVE/pull/11423))
+
   - #### ✨ New Features
 
     - feat(frontend): add contribution CTA to empty search state [@ls-root](https://github.com/ls-root) ([#11412](https://github.com/community-scripts/ProxmoxVE/pull/11412))
