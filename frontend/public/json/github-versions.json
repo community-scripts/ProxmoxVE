@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-01T12:08:49Z",
+  "generated": "2026-02-01T18:07:47Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -95,16 +95,16 @@
     {
       "slug": "bar-assistant",
       "repo": "karlomikus/bar-assistant",
-      "version": "v5.12.0",
+      "version": "v5.13.0",
       "pinned": false,
-      "date": "2026-01-11T09:37:23Z"
+      "date": "2026-02-01T15:49:21Z"
     },
     {
       "slug": "bazarr",
       "repo": "morpheus65535/bazarr",
-      "version": "v1.5.4",
+      "version": "v1.5.5",
       "pinned": false,
-      "date": "2026-01-04T22:41:00Z"
+      "date": "2026-02-01T18:00:34Z"
     },
     {
       "slug": "bentopdf",
@@ -1187,9 +1187,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.13.6",
+      "version": "v0.14.0",
       "pinned": false,
-      "date": "2026-01-15T23:34:51Z"
+      "date": "2026-02-01T17:02:37Z"
     },
     {
       "slug": "scraparr",
@@ -1299,9 +1299,9 @@
     {
       "slug": "tandoor",
       "repo": "TandoorRecipes/recipes",
-      "version": "2.4.1",
+      "version": "2.4.2",
       "pinned": false,
-      "date": "2026-01-30T06:52:26Z"
+      "date": "2026-02-01T12:52:37Z"
     },
     {
       "slug": "tasmoadmin",
