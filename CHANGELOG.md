@@ -780,6 +780,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - 2fauth: export PHP_VERSION for nginx config [@MickLesk](https://github.com/MickLesk) ([#11441](https://github.com/community-scripts/ProxmoxVE/pull/11441))
     - Prometheus Paperless NGX Exporter: Set correct binary path in systemd unit file [@andygrunwald](https://github.com/andygrunwald) ([#11438](https://github.com/community-scripts/ProxmoxVE/pull/11438))
     - tracearr: install/update new prestart script from upstream [@durzo](https://github.com/durzo) ([#11433](https://github.com/community-scripts/ProxmoxVE/pull/11433))
     - n8n: Fix dependencies [@tremor021](https://github.com/tremor021) ([#11429](https://github.com/community-scripts/ProxmoxVE/pull/11429))
