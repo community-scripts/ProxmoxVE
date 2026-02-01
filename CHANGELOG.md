@@ -776,6 +776,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - fix headers [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11422](https://github.com/community-scripts/ProxmoxVE/pull/11422))
+
   - #### 🐞 Bug Fixes
 
     - [Hotfix] Bunkerweb update [@vhsdream](https://github.com/vhsdream) ([#11402](https://github.com/community-scripts/ProxmoxVE/pull/11402))
