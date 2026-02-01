@@ -123,15 +123,15 @@ EOF
     chown -R tracearr:tracearr /data/tracearr
     msg_ok "Configured Tracearr"
 
-    msg_info "Starting Services"
+    msg_info "Starting services"
     systemctl start postgresql redis tracearr
-    msg_ok "Started Services"
+    msg_ok "Started services"
     msg_ok "Updated successfully!"
   else
     # no new release, just restart service to apply prestart changes
-    msg_info "Restarting Tracearr Service"
+    msg_info "Restarting service"
     systemctl restart tracearr
-    msg_ok "Restarted Tracearr Service"
+    msg_ok "Restarted service"
   fi
   exit
 }
