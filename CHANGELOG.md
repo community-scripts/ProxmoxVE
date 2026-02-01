@@ -790,6 +790,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [tools]: Update `fetch_and_deply_from_url()` [@tremor021](https://github.com/tremor021) ([#11410](https://github.com/community-scripts/ProxmoxVE/pull/11410))
 
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - feat(frontend): add contribution CTA to empty search state [@ls-root](https://github.com/ls-root) ([#11412](https://github.com/community-scripts/ProxmoxVE/pull/11412))
+
 ## 2026-01-31
 
 ### 🆕 New Scripts
