@@ -784,6 +784,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich Refactor #2 [@vhsdream](https://github.com/vhsdream) ([#11375](https://github.com/community-scripts/ProxmoxVE/pull/11375))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Whisparr [@tremor021](https://github.com/tremor021) ([#11411](https://github.com/community-scripts/ProxmoxVE/pull/11411))
+
 ### 💾 Core
 
   - #### ✨ New Features
