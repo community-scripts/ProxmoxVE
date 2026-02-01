@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-01T06:18:49Z",
+  "generated": "2026-02-01T12:08:49Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -235,9 +235,9 @@
     {
       "slug": "dawarich",
       "repo": "Freika/dawarich",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "pinned": false,
-      "date": "2026-01-31T23:15:38Z"
+      "date": "2026-02-01T11:37:27Z"
     },
     {
       "slug": "discopanel",
@@ -1012,9 +1012,9 @@
     {
       "slug": "pocketbase",
       "repo": "pocketbase/pocketbase",
-      "version": "v0.36.1",
+      "version": "v0.36.2",
       "pinned": false,
-      "date": "2026-01-18T17:09:58Z"
+      "date": "2026-02-01T08:12:42Z"
     },
     {
       "slug": "pocketid",
