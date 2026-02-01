@@ -30,7 +30,7 @@ function update_script() {
 
   if check_for_gh_release "bunkerweb" "bunkerity/bunkerweb"; then
     msg_info "Updating BunkerWeb"
-    RELEASE=$(get_latest_github_release "bunkerweb" "bunkerity/bunkerweb")
+    RELEASE=$(get_latest_github_release "bunkerity/bunkerweb")
     cat <<EOF >/etc/apt/preferences.d/bunkerweb
 Package: bunkerweb
 Pin: version ${RELEASE}
