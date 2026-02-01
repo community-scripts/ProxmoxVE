@@ -72,15 +72,11 @@ function update_script() {
     mv ./target/release/server /usr/bin/scanopy-server
     msg_ok "Built scanopy-server"
 
-    msg_info "Building scanopy-daemon"
-    $STD cargo build --release --bin daemon
-    cp ./target/release/daemon /usr/bin/scanopy-daemon
-    msg_ok "Built scanopy-daemon"
-
     msg_info "Starting services"
     systemctl start scanopy-server
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl start scanopy-daemon
     msg_ok "Updated successfully!"
+    msg_warn "Update your integrated daemon via the UI"
   fi
   exit
 }
