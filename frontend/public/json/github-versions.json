@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-01T00:23:35Z",
+  "generated": "2026-02-01T06:18:49Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -520,13 +520,6 @@
       "date": "2026-01-31T22:55:29Z"
     },
     {
-      "slug": "immich",
-      "repo": "immich-app/immich",
-      "version": "v2.5.2",
-      "pinned": true,
-      "date": "2026-01-29T15:24:34Z"
-    },
-    {
       "slug": "inspircd",
       "repo": "inspircd/inspircd",
       "version": "v4.9.0",
@@ -543,16 +536,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.51",
+      "version": "v5.12.52",
       "pinned": false,
-      "date": "2026-01-31T03:58:30Z"
+      "date": "2026-02-01T02:08:10Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.993",
+      "version": "v0.24.1003",
       "pinned": false,
-      "date": "2026-01-31T05:55:28Z"
+      "date": "2026-02-01T05:55:30Z"
     },
     {
       "slug": "joplin-server",
