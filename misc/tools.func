@@ -820,6 +820,54 @@ github_api_call() {
   return 1
 }
 
+# ------------------------------------------------------------------------------
+# Codeberg API call with retry logic
+# ------------------------------------------------------------------------------
+codeberg_api_call() {
+  local url="$1"
+  local output_file="${2:-/dev/stdout}"
+  local max_retries=3
+  local retry_delay=2
+
+  for attempt in $(seq 1 $max_retries); do
+    local http_code
+    http_code=$(curl -fsSL -w "%{http_code}" -o "$output_file" \
+      -H "Accept: application/json" \
+      "$url" 2>/dev/null || echo "000")
+
+    case "$http_code" in
+    200)
+      return 0
+      ;;
+    403)
+      # Rate limit - retry
+      if [[ $attempt -lt $max_retries ]]; then
+        msg_warn "Codeberg API rate limit, waiting ${retry_delay}s... (attempt $attempt/$max_retries)"
+        sleep "$retry_delay"
+        retry_delay=$((retry_delay * 2))
+        continue
+      fi
+      msg_error "Codeberg API rate limit exceeded."
+      return 1
+      ;;
+    404)
+      msg_error "Codeberg API endpoint not found: $url"
+      return 1
+      ;;
+    *)
+      if [[ $attempt -lt $max_retries ]]; then
+        sleep "$retry_delay"
+        continue
+      fi
+      msg_error "Codeberg API call failed with HTTP $http_code"
+      return 1
+      ;;
+    esac
+  done
+
+  return 1
+}
+
 should_upgrade() {
   local current="$1"
   local target="$2"
@@ -1385,6 +1433,37 @@ get_latest_github_release() {
 }
 
 # ------------------------------------------------------------------------------
+# Get latest Codeberg release version
+# ------------------------------------------------------------------------------
+get_latest_codeberg_release() {
+  local repo="$1"
+  local strip_v="${2:-true}"
+  local temp_file=$(mktemp)
+
+  # Codeberg API: get all releases and pick the first non-draft/non-prerelease
+  if ! codeberg_api_call "https://codeberg.org/api/v1/repos/${repo}/releases" "$temp_file"; then
+    rm -f "$temp_file"
+    return 1
+  fi
+
+  local version
+  # Codeberg uses same JSON structure but releases endpoint returns array
+  version=$(jq -r '[.[] | select(.draft==false and .prerelease==false)][0].tag_name // empty' "$temp_file")
+
+  if [[ "$strip_v" == "true" ]]; then
+    version="${version#v}"
+  fi
+
+  rm -f "$temp_file"
+
+  if [[ -z "$version" ]]; then
+    return 1
+  fi
+
+  echo "$version"
+}
+
+# ------------------------------------------------------------------------------
 # Debug logging (only if DEBUG=1)
 # ------------------------------------------------------------------------------
 debug_log() {
@@ -1559,6 +1638,119 @@ check_for_gh_release() {
 }
 
 # ------------------------------------------------------------------------------
+# Checks for new Codeberg release (latest tag).
+#
+# Description:
+#   - Queries the Codeberg API for the latest release tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#
+# Usage:
+#     if check_for_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" [optional] "v0.11.3"; then
+#       # trigger update...
+#     fi
+#     exit 0
+#     } (end of update_script not from the function)
+#
+# Notes:
+#   - Requires `jq` (auto-installed if missing)
+#   - Does not modify anything, only checks version state
+#   - Does not support pre-releases
+# ------------------------------------------------------------------------------
+check_for_codeberg_release() {
+  local app="$1"
+  local source="$2"
+  local pinned_version_in="${3:-}" # optional
+  local app_lc="${app,,}"
+  local current_file="$HOME/.${app_lc}"
+
+  msg_info "Checking for update: ${app}"
+
+  # DNS check
+  if ! getent hosts codeberg.org >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve codeberg.org"
+    return 1
+  fi
+
+  ensure_dependencies jq
+
+  # Fetch releases from Codeberg API
+  local releases_json=""
+  releases_json=$(curl -fsSL --max-time 20 \
+    -H 'Accept: application/json' \
+    "https://codeberg.org/api/v1/repos/${source}/releases" 2>/dev/null) || {
+    msg_error "Unable to fetch releases for ${app}"
+    return 1
+  }
+
+  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  if ((${#raw_tags[@]} == 0)); then
+    msg_error "No stable releases found for ${app}"
+    return 1
+  fi
+
+  local clean_tags=()
+  for t in "${raw_tags[@]}"; do
+    clean_tags+=("${t#v}")
+  done
+
+  local latest_raw="${raw_tags[0]}"
+  local latest_clean="${clean_tags[0]}"
+
+  # current installed (stored without v)
+  local current=""
+  if [[ -f "$current_file" ]]; then
+    current="$(<"$current_file")"
+  else
+    # Migration: search for any /opt/*_version.txt
+    local legacy_files
+    mapfile -t legacy_files < <(find /opt -maxdepth 1 -type f -name "*_version.txt" 2>/dev/null)
+    if ((${#legacy_files[@]} == 1)); then
+      current="$(<"${legacy_files[0]}")"
+      echo "${current#v}" >"$current_file"
+      rm -f "${legacy_files[0]}"
+    fi
+  fi
+  current="${current#v}"
+
+  # Pinned version handling
+  if [[ -n "$pinned_version_in" ]]; then
+    local pin_clean="${pinned_version_in#v}"
+    local match_raw=""
+    for i in "${!clean_tags[@]}"; do
+      if [[ "${clean_tags[$i]}" == "$pin_clean" ]]; then
+        match_raw="${raw_tags[$i]}"
+        break
+      fi
+    done
+
+    if [[ -z "$match_raw" ]]; then
+      msg_error "Pinned version ${pinned_version_in} not found upstream"
+      return 1
+    fi
+
+    if [[ "$current" != "$pin_clean" ]]; then
+      CHECK_UPDATE_RELEASE="$match_raw"
+      msg_ok "Update available: ${app} ${current:-not installed} → ${pin_clean}"
+      return 0
+    fi
+
+    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    return 1
+  fi
+
+  # No pinning → use latest
+  if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
+    CHECK_UPDATE_RELEASE="$latest_raw"
+    msg_ok "Update available: ${app} ${current:-not installed} → ${latest_clean}"
+    return 0
+  fi
+
+  msg_ok "No update available: ${app} (${latest_clean})"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
 # Creates and installs self-signed certificates.
 #
 # Description:
@@ -1645,6 +1837,440 @@ function ensure_usr_local_bin_persist() {
     echo 'export PATH="/usr/local/bin:$PATH"' >"$PROFILE_FILE"
     chmod +x "$PROFILE_FILE"
   fi
+}
+
+# ------------------------------------------------------------------------------
+# Downloads and deploys latest Codeberg release (source, binary, tarball, asset).
+#
+# Description:
+#   - Fetches latest release metadata from Codeberg API
+#   - Supports the following modes:
+#       - tarball: Source code tarball (default if omitted)
+#       - source: Alias for tarball (same behavior)
+#       - binary: .deb package install (arch-dependent)
+#       - prebuild: Prebuilt .tar.gz archive (e.g. Go binaries)
+#       - singlefile: Standalone binary (no archive, direct chmod +x install)
+#       - tag: Direct tag download (bypasses Release API)
+#   - Handles download, extraction/installation and version tracking in ~/.<app>
+#
+# Parameters:
+#   $1   APP               - Application name (used for install path and version file)
+#   $2   REPO              - Codeberg repository in form user/repo
+#   $3   MODE              - Release type:
+#                              tarball   → source tarball (.tar.gz)
+#                              binary    → .deb file (auto-arch matched)
+#                              prebuild  → prebuilt archive (e.g. tar.gz)
+#                              singlefile→ standalone binary (chmod +x)
+#                              tag       → direct tag (bypasses Release API)
+#   $4   VERSION           - Optional release tag (default: latest)
+#   $5   TARGET_DIR        - Optional install path (default: /opt/<app>)
+#   $6   ASSET_FILENAME    - Required for:
+#                              - prebuild  → archive filename or pattern
+#                              - singlefile→ binary filename or pattern
+#
+# Examples:
+#   # 1. Minimal: Fetch and deploy source tarball
+#   fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb"
+#
+#   # 2. Binary install via .deb asset (architecture auto-detected)
+#   fetch_and_deploy_codeberg_release "myapp" "myuser/myapp" "binary"
+#
+#   # 3. Prebuilt archive (.tar.gz) with asset filename match
+#   fetch_and_deploy_codeberg_release "myapp" "myuser/myapp" "prebuild" "latest" "/opt/myapp" "myapp_Linux_x86_64.tar.gz"
+#
+#   # 4. Single binary (chmod +x)
+#   fetch_and_deploy_codeberg_release "myapp" "myuser/myapp" "singlefile" "v1.0.0" "/opt/myapp" "myapp-linux-amd64"
+#
+#   # 5. Explicit tag version
+#   fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tag" "v0.11.3" "/opt/autocaliweb"
+# ------------------------------------------------------------------------------
+
+function fetch_and_deploy_codeberg_release() {
+  local app="$1"
+  local repo="$2"
+  local mode="${3:-tarball}" # tarball | binary | prebuild | singlefile | tag
+  local version="${4:-latest}"
+  local target="${5:-/opt/$app}"
+  local asset_pattern="${6:-}"
+
+  local app_lc=$(echo "${app,,}" | tr -d ' ')
+  local version_file="$HOME/.${app_lc}"
+
+  local api_timeout="--connect-timeout 10 --max-time 60"
+  local download_timeout="--connect-timeout 15 --max-time 900"
+
+  local current_version=""
+  [[ -f "$version_file" ]] && current_version=$(<"$version_file")
+
+  ensure_dependencies jq
+
+  ### Tag Mode (bypass Release API) ###
+  if [[ "$mode" == "tag" ]]; then
+    if [[ "$version" == "latest" ]]; then
+      msg_error "Mode 'tag' requires explicit version (not 'latest')"
+      return 1
+    fi
+
+    local tag_name="$version"
+    [[ "$tag_name" =~ ^v ]] && version="${tag_name:1}" || version="$tag_name"
+
+    if [[ "$current_version" == "$version" ]]; then
+      $STD msg_ok "$app is already up-to-date (v$version)"
+      return 0
+    fi
+
+    # DNS check
+    if ! getent hosts "codeberg.org" &>/dev/null; then
+      msg_error "DNS resolution failed for codeberg.org – check /etc/resolv.conf or networking"
+      return 1
+    fi
+
+    local tmpdir
+    tmpdir=$(mktemp -d) || return 1
+
+    msg_info "Fetching Codeberg tag: $app ($tag_name)"
+
+    local safe_version="${version//@/_}"
+    safe_version="${safe_version//\//_}"
+    local filename="${app_lc}-${safe_version}.tar.gz"
+    local download_success=false
+
+    # Codeberg archive URL format: https://codeberg.org/{owner}/{repo}/archive/{tag}.tar.gz
+    local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
+    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+      download_success=true
+    fi
+
+    if [[ "$download_success" != "true" ]]; then
+      msg_error "Download failed for $app ($tag_name)"
+      rm -rf "$tmpdir"
+      return 1
+    fi
+
+    mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
+
+    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+      msg_error "Failed to extract tarball"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local unpack_dir
+    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+    shopt -s dotglob nullglob
+    cp -r "$unpack_dir"/* "$target/"
+    shopt -u dotglob nullglob
+
+    echo "$version" >"$version_file"
+    msg_ok "Deployed: $app ($version)"
+    rm -rf "$tmpdir"
+    return 0
+  fi
+
+  # Codeberg API: https://codeberg.org/api/v1/repos/{owner}/{repo}/releases
+  local api_url="https://codeberg.org/api/v1/repos/$repo/releases"
+  if [[ "$version" != "latest" ]]; then
+    # Get release by tag: /repos/{owner}/{repo}/releases/tags/{tag}
+    api_url="https://codeberg.org/api/v1/repos/$repo/releases/tags/$version"
+  fi
+
+  # dns pre check
+  if ! getent hosts "codeberg.org" &>/dev/null; then
+    msg_error "DNS resolution failed for codeberg.org – check /etc/resolv.conf or networking"
+    return 1
+  fi
+
+  local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
+
+  while ((attempt <= max_retries)); do
+    resp=$(curl $api_timeout -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
+    sleep "$retry_delay"
+    ((attempt++))
+  done
+
+  if ! $success; then
+    msg_error "Failed to fetch release metadata from $api_url after $max_retries attempts"
+    return 1
+  fi
+
+  http_code="${resp:(-3)}"
+  [[ "$http_code" != "200" ]] && {
+    msg_error "Codeberg API returned HTTP $http_code"
+    return 1
+  }
+
+  local json tag_name
+  json=$(</tmp/codeberg_rel.json)
+
+  # For "latest", the API returns an array - take the first (most recent) release
+  if [[ "$version" == "latest" ]]; then
+    json=$(echo "$json" | jq '.[0]')
+  fi
+
+  tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
+  [[ "$tag_name" =~ ^v ]] && version="${tag_name:1}" || version="$tag_name"
+
+  if [[ "$current_version" == "$version" ]]; then
+    $STD msg_ok "$app is already up-to-date (v$version)"
+    return 0
+  fi
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || return 1
+  local filename="" url=""
+
+  msg_info "Fetching Codeberg release: $app ($version)"
+
+  ### Tarball Mode ###
+  if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
+    local safe_version="${version//@/_}"
+    safe_version="${safe_version//\//_}"
+    filename="${app_lc}-${safe_version}.tar.gz"
+    local download_success=false
+
+    # Codeberg archive URL format
+    local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
+    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+      download_success=true
+    fi
+
+    if [[ "$download_success" != "true" ]]; then
+      msg_error "Download failed for $app ($tag_name)"
+      rm -rf "$tmpdir"
+      return 1
+    fi
+
+    mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
+
+    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+      msg_error "Failed to extract tarball"
+      rm -rf "$tmpdir"
+      return 1
+    }
+    local unpack_dir
+    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+    shopt -s dotglob nullglob
+    cp -r "$unpack_dir"/* "$target/"
+    shopt -u dotglob nullglob
+
+  ### Binary Mode ###
+  elif [[ "$mode" == "binary" ]]; then
+    local arch
+    arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
+    [[ "$arch" == "x86_64" ]] && arch="amd64"
+    [[ "$arch" == "aarch64" ]] && arch="arm64"
+
+    local assets url_match=""
+    # Codeberg assets are in .assets[].browser_download_url
+    assets=$(echo "$json" | jq -r '.assets[].browser_download_url')
+
+    # If explicit filename pattern is provided, match that first
+    if [[ -n "$asset_pattern" ]]; then
+      for u in $assets; do
+        case "${u##*/}" in
+        $asset_pattern)
+          url_match="$u"
+          break
+          ;;
+        esac
+      done
+    fi
+
+    # Fall back to architecture heuristic
+    if [[ -z "$url_match" ]]; then
+      for u in $assets; do
+        if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
+          url_match="$u"
+          break
+        fi
+      done
+    fi
+
+    # Fallback: any .deb file
+    if [[ -z "$url_match" ]]; then
+      for u in $assets; do
+        [[ "$u" =~ \.deb$ ]] && url_match="$u" && break
+      done
+    fi
+
+    if [[ -z "$url_match" ]]; then
+      msg_error "No suitable .deb asset found for $app"
+      rm -rf "$tmpdir"
+      return 1
+    fi
+
+    filename="${url_match##*/}"
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+      msg_error "Download failed: $url_match"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    chmod 644 "$tmpdir/$filename"
+    $STD apt install -y "$tmpdir/$filename" || {
+      $STD dpkg -i "$tmpdir/$filename" || {
+        msg_error "Both apt and dpkg installation failed"
+        rm -rf "$tmpdir"
+        return 1
+      }
+    }
+
+  ### Prebuild Mode ###
+  elif [[ "$mode" == "prebuild" ]]; then
+    local pattern="${6%\"}"
+    pattern="${pattern#\"}"
+    [[ -z "$pattern" ]] && {
+      msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local asset_url=""
+    for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
+      filename_candidate="${u##*/}"
+      case "$filename_candidate" in
+      $pattern)
+        asset_url="$u"
+        break
+        ;;
+      esac
+    done
+
+    [[ -z "$asset_url" ]] && {
+      msg_error "No asset matching '$pattern' found"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    filename="${asset_url##*/}"
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+      msg_error "Download failed: $asset_url"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local unpack_tmp
+    unpack_tmp=$(mktemp -d)
+    mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
+
+    if [[ "$filename" == *.zip ]]; then
+      ensure_dependencies unzip
+      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
+        msg_error "Failed to extract ZIP archive"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
+    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz ]]; then
+      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
+        msg_error "Failed to extract TAR archive"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
+    else
+      msg_error "Unsupported archive format: $filename"
+      rm -rf "$tmpdir" "$unpack_tmp"
+      return 1
+    fi
+
+    local top_dirs
+    top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
+    local top_entries inner_dir
+    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
+    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
+      inner_dir="$top_entries"
+      shopt -s dotglob nullglob
+      if compgen -G "$inner_dir/*" >/dev/null; then
+        cp -r "$inner_dir"/* "$target/" || {
+          msg_error "Failed to copy contents from $inner_dir to $target"
+          rm -rf "$tmpdir" "$unpack_tmp"
+          return 1
+        }
+      else
+        msg_error "Inner directory is empty: $inner_dir"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      fi
+      shopt -u dotglob nullglob
+    else
+      shopt -s dotglob nullglob
+      if compgen -G "$unpack_tmp/*" >/dev/null; then
+        cp -r "$unpack_tmp"/* "$target/" || {
+          msg_error "Failed to copy contents to $target"
+          rm -rf "$tmpdir" "$unpack_tmp"
+          return 1
+        }
+      else
+        msg_error "Unpacked archive is empty"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      fi
+      shopt -u dotglob nullglob
+    fi
+
+  ### Singlefile Mode ###
+  elif [[ "$mode" == "singlefile" ]]; then
+    local pattern="${6%\"}"
+    pattern="${pattern#\"}"
+    [[ -z "$pattern" ]] && {
+      msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local asset_url=""
+    for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
+      filename_candidate="${u##*/}"
+      case "$filename_candidate" in
+      $pattern)
+        asset_url="$u"
+        break
+        ;;
+      esac
+    done
+
+    [[ -z "$asset_url" ]] && {
+      msg_error "No asset matching '$pattern' found"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    filename="${asset_url##*/}"
+    mkdir -p "$target"
+
+    local use_filename="${USE_ORIGINAL_FILENAME:-false}"
+    local target_file="$app"
+    [[ "$use_filename" == "true" ]] && target_file="$filename"
+
+    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+      msg_error "Download failed: $asset_url"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    if [[ "$target_file" != *.jar && -f "$target/$target_file" ]]; then
+      chmod +x "$target/$target_file"
+    fi
+
+  else
+    msg_error "Unknown mode: $mode"
+    rm -rf "$tmpdir"
+    return 1
+  fi
+
+  echo "$version" >"$version_file"
+  msg_ok "Deployed: $app ($version)"
+  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------

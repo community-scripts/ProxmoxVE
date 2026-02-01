@@ -9,9 +9,9 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8083,
-  "documentation": "https://github.com/gelbphoenix/autocaliweb/wiki",
+  "documentation": "https://codeberg.org/gelbphoenix/autocaliweb/wiki",
   "config_path": "/etc/autocaliweb",
-  "website": "https://github.com/gelbphoenix/autocaliweb",
+  "website": "https://codeberg.org/gelbphoenix/autocaliweb",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/autocaliweb.webp",
   "description": "A modern web management system for eBooks, eComics and PDFs",
   "install_methods": [
