@@ -778,6 +778,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [Hotfix] Immich: revert healthcheck feature [@vhsdream](https://github.com/vhsdream) ([#11427](https://github.com/community-scripts/ProxmoxVE/pull/11427))
     - [Hotfix] Bunkerweb update [@vhsdream](https://github.com/vhsdream) ([#11402](https://github.com/community-scripts/ProxmoxVE/pull/11402))
 
   - #### ✨ New Features
