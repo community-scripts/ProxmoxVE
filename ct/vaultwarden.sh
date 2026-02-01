@@ -43,6 +43,8 @@ function update_script() {
       systemctl stop vaultwarden
       msg_ok "Stopped Service"
 
+      fetch_and_deploy_gh_release "vaultwarden" "dani-garcia/vaultwarden" "tarball" "latest" "/tmp/vaultwarden-src"
+
       msg_info "Updating VaultWarden to $VAULT (Patience)"
       cd /tmp/vaultwarden-src
       $STD cargo build --features "sqlite,mysql,postgresql" --release
@@ -70,9 +72,10 @@ function update_script() {
       systemctl stop vaultwarden
       msg_ok "Stopped Service"
 
+      fetch_and_deploy_gh_release "vaultwarden_webvault" "dani-garcia/bw_web_builds" "prebuild" "latest" "/opt/vaultwarden" "bw_web_*.tar.gz"
+
       msg_info "Updating Web-Vault to $WVRELEASE"
       rm -rf /opt/vaultwarden/web-vault
-      fetch_and_deploy_gh_release "vaultwarden_webvault" "dani-garcia/bw_web_builds" "prebuild" "latest" "/opt/vaultwarden" "bw_web_*.tar.gz"
       chown -R root:root /opt/vaultwarden/web-vault/
       msg_ok "Updated Web-Vault to ${WVRELEASE}"
 

@@ -25,8 +25,6 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_rust
-
-# Fetch vaultwarden source and build
 fetch_and_deploy_gh_release "vaultwarden" "dani-garcia/vaultwarden" "tarball" "latest" "/tmp/vaultwarden-src"
 
 msg_info "Building Vaultwarden (Patience)"
@@ -40,7 +38,6 @@ mkdir -p /opt/vaultwarden/{bin,data}
 cp target/release/vaultwarden /opt/vaultwarden/bin/
 cd ~ && rm -rf /tmp/vaultwarden-src
 
-# Fetch Web-Vault
 fetch_and_deploy_gh_release "vaultwarden_webvault" "dani-garcia/bw_web_builds" "prebuild" "latest" "/opt/vaultwarden" "bw_web_*.tar.gz"
 
 cat <<EOF >/opt/vaultwarden/.env
@@ -95,9 +92,7 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target
 EOF
-
-systemctl daemon-reload
-$STD systemctl enable --now vaultwarden
+systemctl enable --q -now vaultwarden
 msg_ok "Created Service"
 
 motd_ssh
