@@ -33,7 +33,7 @@ function update_script() {
 
   if ! dpkg -l | grep -q "^ii  chromium "; then
     msg_info "Installing System Dependencies"
-    $STD apt-get install -y chromium
+    ensure_dependencies chromium
     msg_ok "Installed System Dependencies"
   fi
 

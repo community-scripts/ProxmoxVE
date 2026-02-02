@@ -41,7 +41,7 @@ function update_script() {
 
   msg_info "Updating Jellyfin"
   if ! dpkg -s libjemalloc2 >/dev/null 2>&1; then
-    $STD apt install -y libjemalloc2
+    ensure_dependencies libjemalloc2
   fi
   if [[ ! -f /usr/lib/libjemalloc.so ]]; then
     ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so

@@ -32,7 +32,7 @@ function update_script() {
 
   msg_info "Updating ${APP}"
   $STD apt update --allow-releaseinfo-change
-  $STD apt install -y unifi
+  ensure_dependencies unifi
   msg_ok "Updated successfully!"
   exit
 }

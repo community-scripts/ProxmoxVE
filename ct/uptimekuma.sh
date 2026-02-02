@@ -32,8 +32,7 @@ function update_script() {
 
   if ! dpkg -s chromium >/dev/null 2>&1; then
     msg_info "Installing Chromium"
-    $STD apt update
-    $STD apt install -y chromium
+    ensure_dependencies chromium
     ln -s /usr/bin/chromium /opt/uptime-kuma/chromium
     msg_ok "Installed Chromium"
   fi

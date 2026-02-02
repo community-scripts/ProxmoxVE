@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
   if ! command -v memcached >/dev/null 2>&1; then
-    $STD apt update
-    $STD apt install -y memcached libmemcached-tools
+    ensure_dependencies memcached libmemcached-tools
   fi
   if check_for_gh_release "adventurelog" "seanmorley15/adventurelog"; then
     msg_info "Stopping Services"

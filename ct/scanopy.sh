@@ -43,7 +43,7 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
 
     if ! dpkg -l | grep -q "pkg-config"; then
-      $STD apt install -y pkg-config
+      ensure_dependencies pkg-config
     fi
     if ! dpkg -l | grep -q "libssl-dev"; then
       $STD apt install -y libssl-dev

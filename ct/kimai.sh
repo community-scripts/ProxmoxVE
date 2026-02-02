@@ -24,7 +24,7 @@ function update_script() {
   check_container_storage
   check_container_resources
   if ! command -v lsb_release; then
-    apt install -y lsb-release
+    ensure_dependencies lsb-release
   fi
   if [[ ! -d /opt/kimai ]]; then
     msg_error "No ${APP} Installation Found!"

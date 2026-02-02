@@ -34,7 +34,7 @@ function update_script() {
     fi
     if ! command -v zstd &>/dev/null; then
       msg_info "Installing zstd"
-      $STD apt install -y zstd
+      ensure_dependencies zstd
       msg_ok "Installed zstd"
     fi
     msg_info "Stopping Services"

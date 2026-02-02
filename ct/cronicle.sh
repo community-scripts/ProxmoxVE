@@ -44,10 +44,7 @@ function update_script() {
     NODE_VERSION="22" setup_nodejs
     if check_for_gh_release "cronicle" "jhuckaby/Cronicle"; then
       msg_info "Installing Dependencies"
-      $STD apt install -y \
-        git \
-        build-essential \
-        ca-certificates
+      ensure_dependencies git build-essential ca-certificates
       msg_ok "Installed Dependencies"
 
       NODE_VERSION="22" setup_nodejs

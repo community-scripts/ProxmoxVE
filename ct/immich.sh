@@ -135,7 +135,7 @@ EOF
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
     fi
     if ! dpkg -l | grep -q ccache; then
-      $STD apt install -yqq ccache
+      ensure_dependencies ccache
     fi
 
     INSTALL_DIR="/opt/${APP}"
@@ -305,7 +305,7 @@ function compile_libjxl() {
 function compile_libheif() {
   SOURCE=${SOURCE_DIR}/libheif
   if ! dpkg -l | grep -q libaom; then
-    $STD apt install -y libaom-dev
+    ensure_dependencies libaom-dev
     local update="required"
   fi
   : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"

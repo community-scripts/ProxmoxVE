@@ -39,7 +39,7 @@ function update_script() {
   fi
 
   if ! dpkg -s vlc-bin vlc-plugin-base &>/dev/null; then
-    $STD apt update && $STD apt install -y vlc-bin vlc-plugin-base
+    ensure_dependencies vlc-bin vlc-plugin-base
   fi
 
   if check_for_gh_release "Dispatcharr" "Dispatcharr/Dispatcharr"; then

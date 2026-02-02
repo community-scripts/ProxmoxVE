@@ -31,8 +31,7 @@ function update_script() {
 
   if ! dpkg -s libjpeg-dev >/dev/null 2>&1; then
     msg_info "Installing Dependencies"
-    $STD apt-get update
-    $STD apt-get install -y libjpeg-dev
+    ensure_dependencies libjpeg-dev
     msg_ok "Updated Dependencies"
   fi
 

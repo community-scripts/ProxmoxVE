@@ -38,7 +38,7 @@ function update_script() {
     msg_ok "Updated yt-dlp"
 
     msg_info "Prepare update"
-    $STD apt install -y graphicsmagick ghostscript
+    ensure_dependencies graphicsmagick ghostscript
     if [[ -f /opt/karakeep/.env ]] && [[ ! -f /etc/karakeep/karakeep.env ]]; then
       mkdir -p /etc/karakeep
       mv /opt/karakeep/.env /etc/karakeep/karakeep.env

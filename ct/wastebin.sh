@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
   if ! [[ $(dpkg -s zstd 2>/dev/null) ]]; then
-    $STD apt update
-    $STD apt install -y zstd
+    ensure_dependencies zstd
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/matze/wastebin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   # Dirty-Fix 03/2025 for missing APP_version.txt on old installations, set to pre-latest release
