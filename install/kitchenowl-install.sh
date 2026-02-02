@@ -45,7 +45,6 @@ fetch_and_deploy_gh_release "kitchenowl-web" "TomBursch/kitchenowl" "prebuild" "
 
 msg_info "Setting up KitchenOwl"
 cd /opt/kitchenowl/backend
-#rm -f uv.lock
 $STD uv sync --no-dev
 sed -i 's/default=True/default=False/' /opt/kitchenowl/backend/wsgi.py
 mkdir -p /nltk_data
