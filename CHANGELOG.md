@@ -789,6 +789,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Forgejo & readeck - migrate to codeberg functions [@MickLesk](https://github.com/MickLesk) ([#11460](https://github.com/community-scripts/ProxmoxVE/pull/11460))
 
+  - #### 💥 Breaking Changes
+
+    - [FIX] Scanopy: remove daemon build [@vhsdream](https://github.com/vhsdream) ([#11444](https://github.com/community-scripts/ProxmoxVE/pull/11444))
+
   - #### 🔧 Refactor
 
     - various scripts: use ensure_dependencies instead of apt [@MickLesk](https://github.com/MickLesk) ([#11463](https://github.com/community-scripts/ProxmoxVE/pull/11463))
