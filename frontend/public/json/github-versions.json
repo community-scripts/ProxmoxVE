@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-02T06:25:10Z",
+  "generated": "2026-02-02T12:12:15Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -543,9 +543,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1008",
+      "version": "v0.24.1012",
       "pinned": false,
-      "date": "2026-02-02T05:55:21Z"
+      "date": "2026-02-02T11:05:14Z"
     },
     {
       "slug": "joplin-server",
@@ -595,6 +595,13 @@
       "version": "2.48.0",
       "pinned": false,
       "date": "2026-01-31T18:10:59Z"
+    },
+    {
+      "slug": "kitchenowl",
+      "repo": "TomBursch/kitchenowl",
+      "version": "v0.7.6",
+      "pinned": false,
+      "date": "2026-01-24T01:21:14Z"
     },
     {
       "slug": "koel",
@@ -1178,6 +1185,13 @@
       "date": "2026-01-12T05:38:30Z"
     },
     {
+      "slug": "rustypaste",
+      "repo": "orhun/rustypaste",
+      "version": "v0.16.1",
+      "pinned": false,
+      "date": "2025-03-21T20:44:47Z"
+    },
+    {
       "slug": "sabnzbd",
       "repo": "sabnzbd/sabnzbd",
       "version": "4.5.5",
@@ -1488,9 +1502,9 @@
     {
       "slug": "wanderer",
       "repo": "meilisearch/meilisearch",
-      "version": "v1.34.3",
+      "version": "v1.35.0",
       "pinned": false,
-      "date": "2026-01-28T17:52:24Z"
+      "date": "2026-02-02T09:57:03Z"
     },
     {
       "slug": "warracker",
