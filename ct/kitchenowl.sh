@@ -41,6 +41,7 @@ function update_script() {
     msg_ok "Backed up KitchenOwl"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "kitchenowl" "TomBursch/kitchenowl" "tarball" "latest" "/opt/kitchenowl"
+    rm -rf /opt/kitchenowl/web
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "kitchenowl-web" "TomBursch/kitchenowl" "prebuild" "latest" "/opt/kitchenowl/web" "kitchenowl_Web.tar.gz"
 
     msg_info "Restoring KitchenOwl data"
