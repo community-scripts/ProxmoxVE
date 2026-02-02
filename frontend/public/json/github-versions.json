@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-02T00:21:20Z",
+  "generated": "2026-02-02T06:25:10Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -242,9 +242,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.33",
+      "version": "v1.0.35",
       "pinned": false,
-      "date": "2026-02-02T00:04:28Z"
+      "date": "2026-02-02T05:20:12Z"
     },
     {
       "slug": "dispatcharr",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.1.7",
+      "version": "9.1.8",
       "pinned": false,
-      "date": "2026-02-01T21:43:03Z"
+      "date": "2026-02-02T01:29:45Z"
     },
     {
       "slug": "inspircd",
@@ -543,9 +543,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1003",
+      "version": "v0.24.1008",
       "pinned": false,
-      "date": "2026-02-01T05:55:30Z"
+      "date": "2026-02-02T05:55:21Z"
     },
     {
       "slug": "joplin-server",
