@@ -785,6 +785,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Disable NPM install and update due to OpenResty SHA-1 signature issues [@MickLesk](https://github.com/MickLesk) ([#11471](https://github.com/community-scripts/ProxmoxVE/pull/11471))
 
+  - #### ✨ New Features
+
+    - Refactor: Forgejo & readeck - migrate to codeberg functions [@MickLesk](https://github.com/MickLesk) ([#11460](https://github.com/community-scripts/ProxmoxVE/pull/11460))
+
   - #### 🔧 Refactor
 
     - various scripts: use ensure_dependencies instead of apt [@MickLesk](https://github.com/MickLesk) ([#11463](https://github.com/community-scripts/ProxmoxVE/pull/11463))
