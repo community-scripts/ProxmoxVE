@@ -133,9 +133,8 @@ EOF
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
     fi
-    if ! dpkg -l | grep -q ccache; then
       ensure_dependencies ccache
-    fi
+
 
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
@@ -303,10 +302,7 @@ function compile_libjxl() {
 
 function compile_libheif() {
   SOURCE=${SOURCE_DIR}/libheif
-  if ! dpkg -l | grep -q libaom; then
-    ensure_dependencies libaom-dev
-    local update="required"
-  fi
+  ensure_dependencies libaom-dev
   : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"
   if [[ "${update:-}" ]] || [[ "$LIBHEIF_REVISION" != "$(grep 'libheif' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libheif"

@@ -86,7 +86,7 @@ function update_script() {
   if [ "$UPD" == "3" ]; then
     if NEWTOKEN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set the ADMIN_TOKEN" 10 58 3>&1 1>&2 2>&3); then
       if [[ -z "$NEWTOKEN" ]]; then exit; fi
-      if ! command -v argon2 >/dev/null 2>&1; then ensure_dependencies argon2; fi
+      ensure_dependencies argon2
       TOKEN=$(echo -n "${NEWTOKEN}" | argon2 "$(openssl rand -base64 32)" -t 2 -m 16 -p 4 -l 64 -e)
       sed -i "s|ADMIN_TOKEN=.*|ADMIN_TOKEN='${TOKEN}'|" /opt/vaultwarden/.env
       if [[ -f /opt/vaultwarden/data/config.json ]]; then

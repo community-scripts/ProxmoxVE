@@ -43,9 +43,7 @@ function update_script() {
     msg_error "Project directory does not exist: $PROJECT_DIR"
     exit
   fi
-  if ! command -v git &>/dev/null; then
-    ensure_dependencies git
-  fi
+  ensure_dependencies git
 
   msg_info "Stopping service $SERVICE_NAME"
   systemctl stop "$SERVICE_NAME"

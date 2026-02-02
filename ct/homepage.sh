@@ -30,13 +30,7 @@ function update_script() {
 
   get_lxc_ip  
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
-  if ! command -v jq &>/dev/null; then
-    $STD msg_info "Installing jq..."
-    ensure_dependencies jq || {
-      msg_error "Failed to install jq"
-      exit
-    }
-  fi
+  ensure_dependencies jq
 
   if check_for_gh_release "homepage" "gethomepage/homepage"; then
     msg_info "Stopping service"
