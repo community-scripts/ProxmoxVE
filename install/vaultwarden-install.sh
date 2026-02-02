@@ -63,7 +63,7 @@ chmod +r /opt/vaultwarden/.env
 msg_ok "Configured Vaultwarden"
 
 msg_info "Creating Service"
-cat <<'EOF' >/etc/systemd/system/vaultwarden.service
+cat <<EOF >/etc/systemd/system/vaultwarden.service
 [Unit]
 Description=Bitwarden Server (Powered by Vaultwarden)
 Documentation=https://github.com/dani-garcia/vaultwarden
