@@ -783,6 +783,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Grist: Update dependencies [@tremor021](https://github.com/tremor021) ([#11489](https://github.com/community-scripts/ProxmoxVE/pull/11489))
     - Allow "downgrade" of libigdgmm12 [@vhsdream](https://github.com/vhsdream) ([#11478](https://github.com/community-scripts/ProxmoxVE/pull/11478))
     - Disable NPM install and update due to OpenResty SHA-1 signature issues [@MickLesk](https://github.com/MickLesk) ([#11471](https://github.com/community-scripts/ProxmoxVE/pull/11471))
 
