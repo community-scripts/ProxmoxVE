@@ -802,6 +802,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - cleanup(frontend): remove unused /category-view route [@ls-root](https://github.com/ls-root) ([#11461](https://github.com/community-scripts/ProxmoxVE/pull/11461))
 
+  - #### ✨ New Features
+
+    - feat(frontend): preview tab [@ls-root](https://github.com/ls-root) ([#11475](https://github.com/community-scripts/ProxmoxVE/pull/11475))
+
 ## 2026-02-01
 
 ### 🚀 Updated Scripts
