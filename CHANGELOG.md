@@ -778,6 +778,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - KitchenOwl ([#11453](https://github.com/community-scripts/ProxmoxVE/pull/11453))
 
+### 🌐 Website
+
+  - cleanup(frontend): remove unused /category-view route [@ls-root](https://github.com/ls-root) ([#11461](https://github.com/community-scripts/ProxmoxVE/pull/11461))
+
 ## 2026-02-01
 
 ### 🚀 Updated Scripts
