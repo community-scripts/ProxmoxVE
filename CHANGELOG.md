@@ -774,6 +774,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-02
 
+### 🆕 New Scripts
+
+  - KitchenOwl ([#11453](https://github.com/community-scripts/ProxmoxVE/pull/11453))
+
 ## 2026-02-01
 
 ### 🚀 Updated Scripts
