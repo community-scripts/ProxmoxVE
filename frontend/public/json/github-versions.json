@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-01T18:07:47Z",
+  "generated": "2026-02-02T00:21:20Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -116,9 +116,9 @@
     {
       "slug": "beszel",
       "repo": "henrygd/beszel",
-      "version": "v0.18.2",
+      "version": "v0.18.3",
       "pinned": false,
-      "date": "2026-01-12T23:58:00Z"
+      "date": "2026-02-01T19:02:42Z"
     },
     {
       "slug": "bitmagnet",
@@ -242,9 +242,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.32",
+      "version": "v1.0.33",
       "pinned": false,
-      "date": "2026-01-31T22:24:53Z"
+      "date": "2026-02-02T00:04:28Z"
     },
     {
       "slug": "dispatcharr",
@@ -487,9 +487,9 @@
     {
       "slug": "homebox",
       "repo": "sysadminsmedia/homebox",
-      "version": "v0.23.0",
+      "version": "v0.23.1",
       "pinned": false,
-      "date": "2026-01-30T17:41:01Z"
+      "date": "2026-02-01T22:53:32Z"
     },
     {
       "slug": "homepage",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.1.5",
+      "version": "9.1.7",
       "pinned": false,
-      "date": "2026-01-31T22:55:29Z"
+      "date": "2026-02-01T21:43:03Z"
     },
     {
       "slug": "inspircd",
@@ -1558,9 +1558,9 @@
     {
       "slug": "zigbee2mqtt",
       "repo": "Koenkk/zigbee2mqtt",
-      "version": "2.7.2",
+      "version": "2.8.0",
       "pinned": false,
-      "date": "2026-01-01T13:43:47Z"
+      "date": "2026-02-01T19:27:25Z"
     },
     {
       "slug": "zipline",
