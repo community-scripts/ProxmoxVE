@@ -34,22 +34,22 @@ function update_script() {
     systemctl stop kitchenowl
     msg_ok "Stopped Service"
 
-    msg_info "Backing up KitchenOwl"
+    msg_info "Creating Backup"
     mkdir -p /opt/kitchenowl_backup
     cp -r /opt/kitchenowl/data /opt/kitchenowl_backup/
     cp -f /opt/kitchenowl/kitchenowl.env /opt/kitchenowl_backup/
-    msg_ok "Backed up KitchenOwl"
+    msg_ok "Created Backup"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "kitchenowl" "TomBursch/kitchenowl" "tarball" "latest" "/opt/kitchenowl"
     rm -rf /opt/kitchenowl/web
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "kitchenowl-web" "TomBursch/kitchenowl" "prebuild" "latest" "/opt/kitchenowl/web" "kitchenowl_Web.tar.gz"
 
-    msg_info "Restoring KitchenOwl data"
+    msg_info "Restoring data"
     sed -i 's/default=True/default=False/' /opt/kitchenowl/backend/wsgi.py
     cp -r /opt/kitchenowl_backup/data /opt/kitchenowl/
     cp -f /opt/kitchenowl_backup/kitchenowl.env /opt/kitchenowl/
     rm -rf /opt/kitchenowl_backup
-    msg_ok "Restored KitchenOwl data"
+    msg_ok "Restored data"
 
     msg_info "Updating KitchenOwl"
     cd /opt/kitchenowl/backend
@@ -73,7 +73,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:80${CL}"
