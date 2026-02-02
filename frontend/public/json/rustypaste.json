@@ -2,7 +2,7 @@
     "name": "RustyPaste",
     "slug": "rustypaste",
     "categories": [
-        12
+        11
     ],
     "date_created": "2025-12-22",
     "type": "ct",
@@ -34,7 +34,7 @@
                 "ram": 256,
                 "hdd": 4,
                 "os": "Alpine",
-                "version": "3.22"
+                "version": "3.23"
             }
         }
     ],
