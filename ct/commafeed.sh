@@ -36,8 +36,7 @@ function update_script() {
 
     if ! [[ $(dpkg -s rsync 2>/dev/null) ]]; then
       msg_info "Installing Dependencies"
-      $STD apt update
-      $STD apt install -y rsync
+      ensure_dependencies rsync
       msg_ok "Installed Dependencies"
     fi
 

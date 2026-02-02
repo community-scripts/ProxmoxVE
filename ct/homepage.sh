@@ -32,8 +32,7 @@ function update_script() {
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
   if ! command -v jq &>/dev/null; then
     $STD msg_info "Installing jq..."
-    $STD apt-get update -qq &>/dev/null
-    $STD apt-get install -y jq &>/dev/null || {
+    ensure_dependencies jq || {
       msg_error "Failed to install jq"
       exit
     }

@@ -44,7 +44,7 @@ function update_script() {
     exit
   fi
   if ! command -v git &>/dev/null; then
-    $STD apt install -y git
+    ensure_dependencies git
   fi
 
   msg_info "Stopping service $SERVICE_NAME"
