@@ -781,6 +781,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Disable NPM install and update due to OpenResty SHA-1 signature issues [@MickLesk](https://github.com/MickLesk) ([#11471](https://github.com/community-scripts/ProxmoxVE/pull/11471))
+
   - #### 🔧 Refactor
 
     - various scripts: use ensure_dependencies instead of apt [@MickLesk](https://github.com/MickLesk) ([#11463](https://github.com/community-scripts/ProxmoxVE/pull/11463))
