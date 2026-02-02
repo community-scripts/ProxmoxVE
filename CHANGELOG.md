@@ -796,6 +796,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Vaultwarden [@MickLesk](https://github.com/MickLesk) ([#11445](https://github.com/community-scripts/ProxmoxVE/pull/11445))
     - various scripts: use ensure_dependencies instead of apt [@MickLesk](https://github.com/MickLesk) ([#11463](https://github.com/community-scripts/ProxmoxVE/pull/11463))
 
 ### 🌐 Website
