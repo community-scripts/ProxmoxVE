@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-02T12:12:15Z",
+  "generated": "2026-02-02T18:13:02Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -109,9 +109,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.0.0",
+      "version": "v2.1.0",
       "pinned": false,
-      "date": "2026-01-31T10:13:47Z"
+      "date": "2026-02-02T14:30:55Z"
     },
     {
       "slug": "beszel",
@@ -669,9 +669,9 @@
     {
       "slug": "libretranslate",
       "repo": "LibreTranslate/LibreTranslate",
-      "version": "v1.8.3",
+      "version": "v1.8.4",
       "pinned": false,
-      "date": "2025-12-04T21:07:00Z"
+      "date": "2026-02-02T17:45:16Z"
     },
     {
       "slug": "lidarr",
@@ -1054,9 +1054,9 @@
     {
       "slug": "prometheus-alertmanager",
       "repo": "prometheus/alertmanager",
-      "version": "v0.30.1",
+      "version": "v0.31.0",
       "pinned": false,
-      "date": "2026-01-12T23:30:06Z"
+      "date": "2026-02-02T13:34:15Z"
     },
     {
       "slug": "prometheus-blackbox-exporter",
@@ -1201,9 +1201,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.0",
+      "version": "v0.14.1",
       "pinned": false,
-      "date": "2026-02-01T17:02:37Z"
+      "date": "2026-02-02T04:15:19Z"
     },
     {
       "slug": "scraparr",
@@ -1472,11 +1472,18 @@
       "date": "2025-10-22T17:03:54Z"
     },
     {
+      "slug": "vaultwarden",
+      "repo": "dani-garcia/vaultwarden",
+      "version": "1.35.2",
+      "pinned": false,
+      "date": "2026-01-09T18:37:04Z"
+    },
+    {
       "slug": "victoriametrics",
       "repo": "VictoriaMetrics/VictoriaMetrics",
-      "version": "v1.134.0",
+      "version": "v1.135.0",
       "pinned": false,
-      "date": "2026-01-19T13:29:43Z"
+      "date": "2026-02-02T14:20:15Z"
     },
     {
       "slug": "vikunja",
