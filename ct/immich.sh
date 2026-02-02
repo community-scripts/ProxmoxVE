@@ -88,7 +88,7 @@ EOF
         curl -fsSLO "$url"
       done
       $STD apt-mark unhold libigdgmm12
-      $STD apt install -y ./libigdgmm12*.deb
+      $STD apt install -y --allow-downgrades ./libigdgmm12*.deb
       rm ./libigdgmm12*.deb
       $STD apt install -y ./*.deb
       rm ./*.deb
@@ -133,8 +133,7 @@ EOF
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
     fi
-      ensure_dependencies ccache
-
+    ensure_dependencies ccache
 
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
