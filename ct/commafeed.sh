@@ -34,11 +34,7 @@ function update_script() {
     systemctl stop commafeed
     msg_ok "Stopped Service"
 
-    if ! [[ $(dpkg -s rsync 2>/dev/null) ]]; then
-      msg_info "Installing Dependencies"
-      ensure_dependencies rsync
-      msg_ok "Installed Dependencies"
-    fi
+    ensure_dependencies rsync
 
     if [ -d /opt/commafeed/data ] && [ "$(ls -A /opt/commafeed/data)" ]; then
       msg_info "Backing up existing data"
