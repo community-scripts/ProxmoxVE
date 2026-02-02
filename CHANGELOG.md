@@ -779,6 +779,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - rustypaste | Alpine-rustypaste ([#11457](https://github.com/community-scripts/ProxmoxVE/pull/11457))
 - KitchenOwl ([#11453](https://github.com/community-scripts/ProxmoxVE/pull/11453))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - various scripts: use ensure_dependencies instead of apt [@MickLesk](https://github.com/MickLesk) ([#11463](https://github.com/community-scripts/ProxmoxVE/pull/11463))
+
 ### 🌐 Website
 
   - cleanup(frontend): remove unused /category-view route [@ls-root](https://github.com/ls-root) ([#11461](https://github.com/community-scripts/ProxmoxVE/pull/11461))
