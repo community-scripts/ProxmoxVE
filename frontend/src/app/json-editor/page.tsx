@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchCategories } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,7 @@ import Note from "./_components/note";
 
 import { nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import SyntaxHighlighter from "react-syntax-highlighter";
+import { ScriptItem } from "../scripts/_components/script-item";
 
 const initialScript: Script = {
   name: "",
@@ -60,6 +62,7 @@ export default function JSONGenerator() {
   const [isCopied, setIsCopied] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [currentTab, setCurrentTab] = useState<"json" | "preview">("json");
   const [zodErrors, setZodErrors] = useState<z.ZodError | null>(null);
 
   useEffect(() => {
@@ -67,6 +70,13 @@ export default function JSONGenerator() {
       .then(setCategories)
       .catch((error) => console.error("Error fetching categories:", error));
   }, []);
+
+  useEffect(() => {
+    if (!isValid && currentTab === "preview") {
+      setCurrentTab("json");
+      toast.error("Switched to JSON tab due to invalid configuration.");
+    }
+  }, [isValid, currentTab]);
 
   const updateScript = useCallback((key: keyof Script, value: Script[keyof Script]) => {
     setScript((prev) => {
@@ -196,7 +206,7 @@ export default function JSONGenerator() {
             <Input
               placeholder="Path to config file"
               value={script.config_path || ""}
-              onChange={(e) => updateScript("config_path", e.target.value || null)}
+              onChange={(e) => updateScript("config_path", e.target.value || "")}
             />
           </div>
           <div>
@@ -323,25 +333,41 @@ export default function JSONGenerator() {
         </form>
       </div>
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
-        {validationAlert}
-        <div className="relative">
-          <div className="absolute right-2 top-2 flex gap-1">
-            <Button size="icon" variant="outline" onClick={handleCopy}>
-              {isCopied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
-            </Button>
-            <Button size="icon" variant="outline" onClick={handleDownload}>
-              <Download className="h-4 w-4" />
-            </Button>
-          </div>
+        <Tabs
+          defaultValue="json"
+          className="w-full"
+          onValueChange={(value) => setCurrentTab(value as "json" | "preview")}
+          value={currentTab}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="json">JSON</TabsTrigger>
+            <TabsTrigger disabled={!isValid} value="preview">Preview</TabsTrigger>
+          </TabsList>
+          <TabsContent value="json" className="h-full w-full">
+            {validationAlert}
+            <div className="relative">
+              <div className="absolute right-2 top-2 flex gap-1">
+                <Button size="icon" variant="outline" onClick={handleCopy}>
+                  {isCopied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
+                </Button>
+                <Button size="icon" variant="outline" onClick={handleDownload}>
+                  <Download className="h-4 w-4" />
+                </Button>
+              </div>
 
-          <SyntaxHighlighter
-            language="json"
-            style={nord}
-            className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll"
-          >
-            {JSON.stringify(script, null, 2)}
-          </SyntaxHighlighter>
-        </div>
+              <SyntaxHighlighter
+                language="json"
+                style={nord}
+                className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll"
+              >
+                {JSON.stringify(script, null, 2)}
+              </SyntaxHighlighter>
+            </div>
+          </TabsContent>
+          <TabsContent value="preview" className="h-full w-full">
+            <ScriptItem item={script} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

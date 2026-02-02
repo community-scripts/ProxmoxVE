@@ -5,7 +5,7 @@ export type Script = {
   slug: string;
   categories: number[];
   date_created: string;
-  type: "vm" | "ct" | "pve" | "addon";
+  type: "vm" | "ct" | "pve" | "addon" | "turnkey";
   updateable: boolean;
   privileged: boolean;
   interface_port: number | null;
@@ -31,12 +31,10 @@ export type Script = {
     username: string | null;
     password: string | null;
   };
-  notes: [
-    {
-      text: string;
-      type: keyof typeof AlertColors;
-    },
-  ];
+  notes: {
+    text: string;
+    type: keyof typeof AlertColors;
+  }[];
 };
 
 export type Category = {
