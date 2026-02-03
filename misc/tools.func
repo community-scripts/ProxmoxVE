@@ -1531,7 +1531,8 @@ check_for_gh_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
-  local app_lc="${app,,}"
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
   local current_file="$HOME/.${app_lc}"
 
   msg_info "Checking for update: ${app}"
