@@ -44,7 +44,7 @@ function update_script() {
 
   if [[ "$UPD" == "2" ]]; then
     if [[ ! -d /opt/immich-proxy ]]; then
-      fetch_and_deploy_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
+      fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
       msg_info "Configuring Immich Public Proxy"
       cd /opt/immich-proxy/app
       $STD npm install
@@ -158,7 +158,7 @@ EOF
   fi
 
   RELEASE="2.5.2"
-  if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
+  if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
       cd /opt/immich/app/bin
@@ -212,7 +212,7 @@ EOF
       rm -rf "${APP_DIR:?}"/*
     )
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
 
     msg_info "Updating Immich web and microservices"
     cd "$SRC_DIR"/server
@@ -297,24 +297,24 @@ EOF
       msg_ok "Disabled Maintenance Mode"
     fi
     systemctl restart immich-ml immich-web
-    if [[ -d /opt/immich-proxy ]]; then
-      if check_for_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy"; then
-        systemctl stop immich-proxy
-        msg_info "Backing up Immich Public Proxy configs"
-        cp -a /opt/immich-proxy/app/{.env,config.json} ~/
-        msg_ok "Backed up Immich Public Proxy configs"
-        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immich-public_proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
-        msg_info "Updating Immich Public Proxy"
-        cd /opt/immich-proxy
-        $STD npm ci
-        $STD npm run build
-        mv ~/{config.json,.env} /opt/immich-proxy/app
-        chown -R immich:immich /opt/immich-proxy
-        systemctl start immich-proxy
-        msg_ok "Updated Immich Public Proxy"
-      fi
-    fi
     msg_ok "Updated successfully!"
+  fi
+  if [[ -d /opt/immich-proxy ]]; then
+    if check_for_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy"; then
+      systemctl stop immich-proxy
+      msg_info "Backing up Immich Public Proxy configs"
+      cp -a /opt/immich-proxy/app/{.env,config.json} ~/
+      msg_ok "Backed up Immich Public Proxy configs"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
+      msg_info "Updating Immich Public Proxy"
+      cd /opt/immich-proxy/app
+      $STD npm install
+      $STD npm run build
+      mv ~/{config.json,.env} /opt/immich-proxy/app
+      chown -R immich:immich /opt/immich-proxy
+      systemctl start immich-proxy
+      msg_ok "Updated Immich Public Proxy Successfully!"
+    fi
   fi
   exit
 }
@@ -323,7 +323,7 @@ function compile_libjxl() {
   SOURCE=${SOURCE_DIR}/libjxl
   JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
   JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-  : "${LIBJXL_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)}"
+  : "${LIBJXL_REVISION:=$(jq -cr 'I' "$BASE_DIR"/server/sources/libjxl.json)}"
   if [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libjxl"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"

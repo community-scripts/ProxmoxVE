@@ -290,7 +290,7 @@ ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.2" "$SRC_DIR"
+fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v2.5.2" "$SRC_DIR"
 
 msg_info "Installing Immich (patience)"
 
@@ -479,7 +479,7 @@ msg_ok "Modified user, created env file, scripts and services"
 
 read -r -p "${TAB3}Install Immich Public Proxy? y/N " proxy
 if [[ "${proxy,,}" =~ (y|yes)$ ]]; then
-  fetch_and_deploy_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
+  fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
   msg_info "Configuring Immich Public Proxy"
   cd /opt/immich-proxy/app
   $STD npm install
