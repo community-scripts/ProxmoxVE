@@ -130,10 +130,43 @@ function install() {
   $STD npm run build
   msg_ok "Built ${APP}"
 
+  MAX_ATTEMPTS=3
+  attempt=0
+  while true; do
+    attempt=$((attempt + 1))
+    read -rp "${TAB3}Enter your LOCAL Immich IP or domain (ex. 192.168.1.100 or immich.local.lan): " DOMAIN
+    if [[ -z "$DOMAIN" ]]; then
+      if ((attempt >= MAX_ATTEMPTS)); then
+        DOMAIN="${LOCAL_IP:-localhost}"
+        msg_warn "Using fallback: $DOMAIN"
+        break
+      fi
+      msg_warn "Domain cannot be empty! (Attempt $attempt/$MAX_ATTEMPTS)"
+    elif [[ "$DOMAIN" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+      valid_ip=true
+      IFS='.' read -ra octets <<<"$DOMAIN"
+      for octet in "${octets[@]}"; do
+        if ((octet > 255)); then
+          valid_ip=false
+          break
+        fi
+      done
+      if $valid_ip; then
+        break
+      else
+        msg_warn "Invalid IP address!"
+      fi
+    elif [[ "$DOMAIN" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$ ]]; then
+      break
+    else
+      msg_warn "Invalid domain format!"
+    fi
+  done
+
   msg_info "Creating configuration"
   cat <<EOF >"$CONFIG_PATH"/.env
 NODE_ENV=production
-IMMICH_URL=http://localhost:3000
+IMMICH_URL=http://${DOMAIN}:3000
 EOF
   chmod 600 "$CONFIG_PATH"/.env
   msg_ok "Created configuration"
