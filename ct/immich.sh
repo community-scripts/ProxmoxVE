@@ -28,12 +28,59 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   if [[ -f /etc/apt/sources.list.d/immich.list ]]; then
     msg_error "Wrong Debian version detected!"
     msg_error "You must upgrade your LXC to Debian Trixie before updating."
     msg_error "Please visit https://github.com/community-scripts/ProxmoxVE/discussions/7726 for details."
     echo "${TAB3}  If you have upgraded your LXC to Trixie and you still see this message, please open an Issue in the Community-Scripts repo."
     exit
+  fi
+
+  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "OPTIONS" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 3 \
+    "1" "Check for updates" ON \
+    "2" "Install Immich Public Proxy" OFF \
+    3>&1 1>&2 2>&3)
+
+  if [[ "$UPD" == "2" ]]; then
+    if [[ ! -f /opt/immich-proxy ]]; then
+      fetch_and_deploy_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
+      msg_info "Configuring Immich Public Proxy"
+      cd /opt/immich-proxy/app
+      $STD npm install
+      $STD npm run build
+      cat <<EOF >/opt/immich-proxy/app/.env
+NODE_ENV=production
+IMMICH_URL=http://localhost:2283
+EOF
+      cat <<EOF >/etc/systemd/system/immich-proxy.service
+[Unit]
+Description=Immich Public Proxy
+After=network.target
+Requires=immich-web.service
+
+[Service]
+Type=simple
+User=immich
+Group=immich
+UMask=0077
+WorkingDirectory=/opt/immich-proxy/app
+EnvironmentFile=/opt/immich-proxy/app/.env
+ExecStart=/usr/bin/node /opt/immich-proxy/app/dist/index.js
+Restart=on-failure
+SyslogIdentifier=immich-proxy
+
+[Install]
+WantedBy=multi-user.target
+EOF
+      chown -R immich:immich /opt/immich-proxy
+      systemctl enable -q --now immich-proxy.service
+      msg_ok "Configured Immich Public Proxy"
+      msg_warn "Additional Immich Public Proxy config is available in '/opt/immich-proxy/app/config.json'"
+    else
+      msg_error "Immich Public Proxy is already installed"
+      exit 1
+    fi
   fi
 
   setup_uv

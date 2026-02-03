@@ -488,8 +488,6 @@ if [[ "${proxy,,}" =~ (y|yes)$ ]]; then
 NODE_ENV=production
 IMMICH_URL=http://localhost:2283
 EOF
-  chown -R immich:immich /opt/immich-proxy
-
   cat <<EOF >/etc/systemd/system/immich-proxy.service
 [Unit]
 Description=Immich Public Proxy
@@ -510,6 +508,7 @@ SyslogIdentifier=immich-proxy
 [Install]
 WantedBy=multi-user.target
 EOF
+  chown -R immich:immich /opt/immich-proxy
   systemctl enable -q --now immich-proxy.service
   msg_ok "Configured Immich Public Proxy"
   msg_warn "Additional Immich Public Proxy config is available in '/opt/immich-proxy/app/config.json'"
