@@ -94,7 +94,8 @@ const chartConfigApps = {
 export default function DataPage() {
   const [data, setData] = useState<DataModel[]>([]);
   const [summary, setSummary] = useState<SummaryData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [summaryLoading, setSummaryLoading] = useState<boolean>(true);
+  const [dataLoading, setDataLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
@@ -105,35 +106,40 @@ export default function DataPage() {
 
   const nf = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
 
+  // Fetch summary only once on mount
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    const fetchSummary = async () => {
       try {
-        const [summaryRes, dataRes] = await Promise.all([
-          fetch("https://api.htl-braunau.at/data/summary"),
-          fetch(
-            `https://api.htl-braunau.at/data/paginated?page=${currentPage}&limit=${
-              itemsPerPage === 0 ? "" : itemsPerPage
-            }`,
-          ),
-        ]);
-
+        const summaryRes = await fetch("https://api.htl-braunau.at/data/summary");
         if (!summaryRes.ok) {
           throw new Error(`Failed to fetch summary: ${summaryRes.statusText}`);
         }
+        const summaryData: SummaryData = await summaryRes.json();
+        setSummary(summaryData);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setSummaryLoading(false);
+      }
+    };
+
+    fetchSummary();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setDataLoading(true);
+      try {
+        const dataRes = await fetch(`https://api.htl-braunau.at/data/paginated?page=${currentPage}&limit=${itemsPerPage}`);
         if (!dataRes.ok) {
           throw new Error(`Failed to fetch data: ${dataRes.statusText}`);
         }
-
-        const summaryData: SummaryData = await summaryRes.json();
         const pageData: DataModel[] = await dataRes.json();
-
-        setSummary(summaryData);
         setData(pageData);
       } catch (err) {
         setError((err as Error).message);
       } finally {
-        setLoading(false);
+        setDataLoading(false);
       }
     };
 
@@ -306,7 +312,7 @@ export default function DataPage() {
             </CardHeader>
             <CardContent className="pl-2">
               <div className="h-[300px] w-full">
-                {loading ? (
+                {summaryLoading ? (
                   <div className="flex h-full w-full items-center justify-center">
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
@@ -411,7 +417,7 @@ export default function DataPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {loading ? (
+                    {dataLoading ? (
                       <TableRow>
                         <TableCell colSpan={8} className="h-24 text-center">
                           <div className="flex items-center justify-center gap-2">
@@ -478,7 +484,7 @@ export default function DataPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1 || loading}
+                  disabled={currentPage === 1 || dataLoading}
                 >
                   <ChevronLeft className="mr-2 h-4 w-4" />
                   Previous
@@ -488,7 +494,7 @@ export default function DataPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage((prev) => prev + 1)}
-                  disabled={loading || sortedData.length < itemsPerPage}
+                  disabled={dataLoading || sortedData.length < itemsPerPage}
                 >
                   Next
                   <ChevronRight className="ml-2 h-4 w-4" />
