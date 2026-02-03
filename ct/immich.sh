@@ -37,13 +37,13 @@ function update_script() {
     exit
   fi
 
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "OPTIONS" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 3 \
+  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "OPTIONS" --radiolist --cancel-button Exit-Script "Spacebar = Select" 10 50 2 \
     "1" "Check for updates" ON \
     "2" "Install Immich Public Proxy" OFF \
     3>&1 1>&2 2>&3)
 
   if [[ "$UPD" == "2" ]]; then
-    if [[ ! -f /opt/immich-proxy ]]; then
+    if [[ ! -d /opt/immich-proxy ]]; then
       fetch_and_deploy_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
       msg_info "Configuring Immich Public Proxy"
       cd /opt/immich-proxy/app
@@ -76,7 +76,8 @@ EOF
       chown -R immich:immich /opt/immich-proxy
       systemctl enable -q --now immich-proxy.service
       msg_ok "Configured Immich Public Proxy"
-      msg_warn "Additional Immich Public Proxy config is available in '/opt/immich-proxy/app/config.json'"
+      msg_warn "IPP running on port 3000"
+      msg_warn "Additional IPP config is available in '/opt/immich-proxy/app/config.json'"
     else
       msg_error "Immich Public Proxy is already installed"
       exit 1
@@ -296,21 +297,21 @@ EOF
       msg_ok "Disabled Maintenance Mode"
     fi
     systemctl restart immich-ml immich-web
-    if [[ -f /opt/immich-proxy ]]; then
+    if [[ -d /opt/immich-proxy ]]; then
       if check_for_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy"; then
         systemctl stop immich-proxy
         msg_info "Backing up Immich Public Proxy configs"
         cp -a /opt/immich-proxy/app/{.env,config.json} ~/
         msg_ok "Backed up Immich Public Proxy configs"
         CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immich-public_proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
-        msg_info "Building Immich Public Proxy"
+        msg_info "Updating Immich Public Proxy"
         cd /opt/immich-proxy
         $STD npm ci
         $STD npm run build
         mv ~/{config.json,.env} /opt/immich-proxy/app
         chown -R immich:immich /opt/immich-proxy
         systemctl start immich-proxy
-        msg_ok "Built Immich Public Proxy"
+        msg_ok "Updated Immich Public Proxy"
       fi
     fi
     msg_ok "Updated successfully!"

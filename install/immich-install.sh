@@ -511,7 +511,8 @@ EOF
   chown -R immich:immich /opt/immich-proxy
   systemctl enable -q --now immich-proxy.service
   msg_ok "Configured Immich Public Proxy"
-  msg_warn "Additional Immich Public Proxy config is available in '/opt/immich-proxy/app/config.json'"
+  msg_warn "IPP running on port 3000"
+  msg_warn "Additional IPP config is available in '/opt/immich-proxy/app/config.json'"
 fi
 
 motd_ssh
