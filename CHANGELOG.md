@@ -774,6 +774,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-03
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - fix(frontend): decouple table pagination from summary fetching [@ls-root](https://github.com/ls-root) ([#11495](https://github.com/community-scripts/ProxmoxVE/pull/11495))
+
 ## 2026-02-02
 
 ### 🆕 New Scripts
