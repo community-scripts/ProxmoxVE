@@ -774,6 +774,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-03
 
+### 🆕 New Scripts
+
+  - Wealthfolio ([#11511](https://github.com/community-scripts/ProxmoxVE/pull/11511))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
