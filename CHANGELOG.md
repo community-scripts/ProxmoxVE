@@ -788,6 +788,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [FEAT] Scanopy: automatically update integrated daemon [@vhsdream](https://github.com/vhsdream) ([#11506](https://github.com/community-scripts/ProxmoxVE/pull/11506))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - [FIX] tools.func: trim spaces in app_lc when checking for gh release [@vhsdream](https://github.com/vhsdream) ([#11512](https://github.com/community-scripts/ProxmoxVE/pull/11512))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
