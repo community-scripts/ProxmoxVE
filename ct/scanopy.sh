@@ -67,11 +67,18 @@ function update_script() {
     mv ./target/release/server /usr/bin/scanopy-server
     msg_ok "Built scanopy-server"
 
+    [[ -f /etc/systemd/system/scanopy-daemon.service ]] &&
+      fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-amd64" &&
+      rm -f /usr/bin/scanopy-daemon ~/configure_daemon.sh &&
+      sed -i -e 's|usr/bin|usr/local/bin|' \
+        -e 's/push/daemon_poll/' \
+        -e 's/pull/server_poll/' /etc/systemd/system/scanopy-daemon.service &&
+      systemctl daemon-reload
+
     msg_info "Starting services"
     systemctl start scanopy-server
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl start scanopy-daemon
     msg_ok "Updated successfully!"
-    msg_warn "Update your integrated daemon via the UI"
   fi
   exit
 }
