@@ -780,6 +780,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [FIX] Shelfmark: unpin Chromium version [@vhsdream](https://github.com/vhsdream) ([#11505](https://github.com/community-scripts/ProxmoxVE/pull/11505))
 
+  - #### ✨ New Features
+
+    - [FEAT] Scanopy: automatically update integrated daemon [@vhsdream](https://github.com/vhsdream) ([#11506](https://github.com/community-scripts/ProxmoxVE/pull/11506))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
