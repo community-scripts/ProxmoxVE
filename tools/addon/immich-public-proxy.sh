@@ -90,7 +90,7 @@ function update() {
     msg_ok "Restored configuration"
 
     msg_info "Installing dependencies"
-    cd "$INSTALL_PATH"
+    cd "$CONFIG_PATH"
     $STD npm install
     msg_ok "Installed dependencies"
 
@@ -122,7 +122,7 @@ function install() {
   fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "$INSTALL_PATH"
 
   msg_info "Installing dependencies"
-  cd "$INSTALL_PATH"
+  cd "$CONFIG_PATH"
   $STD npm install
   msg_ok "Installed dependencies"
 
