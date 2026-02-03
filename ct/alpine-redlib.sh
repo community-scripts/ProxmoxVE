@@ -14,6 +14,9 @@ var_os="${var_os:-alpine}"
 var_version="${var_version:-3.23}"
 var_unprivileged="${var_unprivileged:-1}"
 
+WEB_UI_PORT=5252
+WEB_UI_PROTOCOL="http"
+
 header_info "$APP"
 variables
 color

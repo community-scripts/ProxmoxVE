@@ -14,6 +14,9 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-0}"
 
+WEB_UI_PORT=8091
+WEB_UI_PROTOCOL="http"
+
 header_info "$APP"
 variables
 color

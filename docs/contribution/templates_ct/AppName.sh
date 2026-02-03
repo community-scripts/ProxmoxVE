@@ -15,17 +15,22 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
 
+WEB_UI_PORT=[PORT]
+WEB_UI_PROTOCOL="[http or https]"
+
 # =============================================================================
 # CONFIGURATION GUIDE
 # =============================================================================
-# APP           - Display name, title case (e.g. "Koel", "Wallabag", "Actual Budget")
-# var_tags      - Max 2 tags, semicolon separated (e.g. "music;streaming", "finance")
-# var_cpu       - CPU cores: 1-4 typical
-# var_ram       - RAM in MB: 512, 1024, 2048, 4096 typical
-# var_disk      - Disk in GB: 4, 6, 8, 10, 20 typical
-# var_os        - OS: debian, ubuntu, alpine
-# var_version   - OS version: 12/13 (debian), 22.04/24.04 (ubuntu), 3.20/3.21 (alpine)
+# APP              - Display name, title case (e.g. "Koel", "Wallabag", "Actual Budget")
+# var_tags         - Max 2 tags, semicolon separated (e.g. "music;streaming", "finance")
+# var_cpu          - CPU cores: 1-4 typical
+# var_ram          - RAM in MB: 512, 1024, 2048, 4096 typical
+# var_disk         - Disk in GB: 4, 6, 8, 10, 20 typical
+# var_os           - OS: debian, ubuntu, alpine
+# var_version      - OS version: 12/13 (debian), 22.04/24.04 (ubuntu), 3.20/3.21 (alpine)
 # var_unprivileged - 1 = unprivileged (secure, default), 0 = privileged (for docker etc.)
+# WEB_UI_PORT      - Port number for web interface
+# WEB_UI_PROTOCOL  - Protocol for web interface (http or https)
 
 header_info "$APP"
 variables

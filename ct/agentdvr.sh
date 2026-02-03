@@ -15,6 +15,9 @@ var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-0}"
 var_gpu="${var_gpu:-yes}"
 
+WEB_UI_PORT=8090
+WEB_UI_PROTOCOL="http"
+
 header_info "$APP"
 variables
 color

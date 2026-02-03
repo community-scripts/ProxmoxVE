@@ -276,6 +276,10 @@ var_os="debian"                      # OS type
 var_version="12"                     # OS version
 var_unprivileged="1"                 # Security (1=unprivileged)
 
+# Web UI Access Info (Optional)
+WEB_UI_PORT=3000                     # Default web UI port
+WEB_UI_PROTOCOL="http"               # http or https
+
 header_info "$APP"
 variables
 color
@@ -323,6 +327,7 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:PORT${CL}"
 - [ ] update_script() implemented
 - [ ] Correct OS and version
 - [ ] Success message with access URL
+- [ ] Web UI port/protocol set (if applicable)
 
 ### Step 3: Update Installation Script
 

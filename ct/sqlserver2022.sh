@@ -14,6 +14,9 @@ var_os="${var_os:-ubuntu}"
 var_version="${var_version:-22.04}"
 var_unprivileged="${var_unprivileged:-0}"
 
+WEB_UI_PORT=1433
+WEB_UI_PROTOCOL="http"
+
 header_info "$APP"
 variables
 color

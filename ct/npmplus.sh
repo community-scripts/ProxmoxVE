@@ -14,6 +14,9 @@ var_os="${var_os:-alpine}"
 var_version="${var_version:-3.23}"
 var_unprivileged="${var_unprivileged:-1}"
 
+WEB_UI_PORT=81
+WEB_UI_PROTOCOL="https"
+
 header_info "$APP"
 variables
 color
@@ -24,6 +27,9 @@ function update_script() {
     "1" "Check for Alpine Updates" OFF \
     "2" "Update NPMplus Docker Container" ON \
     3>&1 1>&2 2>&3)
+
+WEB_UI_PORT=81
+WEB_UI_PROTOCOL="https"
 
   header_info "$APP"
 

@@ -102,6 +102,8 @@ Example:
 >| `var_os` | Operating system | alpine, debian, ubuntu |
 >| `var_version` | OS version | e.g., 3.20, 11, 12, 20.04 |
 >| `var_unprivileged` | Container type | 1 = Unprivileged, 0 = Privileged |
+>| `WEB_UI_PORT` | Port for Web UI | Optional |
+>| `WEB_UI_PROTOCOL` | Protocol for Web UI | Optional |
 
 Example:
 
@@ -114,6 +116,9 @@ var_disk="4"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
+
+WEB_UI_PORT=3000
+WEB_UI_PROTOCOL="http"
 ```
 
 ## 2.2 **📋 App output & base settings**

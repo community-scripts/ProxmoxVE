@@ -14,6 +14,9 @@ var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 
+WEB_UI_PORT=80
+WEB_UI_PROTOCOL="http"
+
 header_info "$APP"
 variables
 color

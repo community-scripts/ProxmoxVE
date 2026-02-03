@@ -13,6 +13,9 @@ var_disk="${var_disk:-12}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
 
+WEB_UI_PORT=3000
+WEB_UI_PROTOCOL="http"
+
 header_info "$APP"
 variables
 color

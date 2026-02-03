@@ -15,6 +15,9 @@ var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 var_tun="${var_tun:-1}"
 
+WEB_UI_PORT=443
+WEB_UI_PROTOCOL="https"
+
 header_info "$APP"
 variables
 color

@@ -8,13 +8,14 @@ This document provides a comprehensive reference of all environment variables us
 
 ### Core Container Variables
 
-| Variable  | Description                                  | Default   | Set In      | Used In            |
-| --------- | -------------------------------------------- | --------- | ----------- | ------------------ |
-| `APP`     | Application name (e.g., "plex", "nextcloud") | -         | Environment | Throughout         |
-| `NSAPP`   | Namespace application name                   | `$APP`    | Environment | Throughout         |
-| `CTID`    | Container ID                                 | -         | Environment | Container creation |
-| `CT_TYPE` | Container type ("install" or "update")       | "install" | Environment | Entry point        |
-| `CT_NAME` | Container name                               | `$APP`    | Environment | Container creation |
+| Variable      | Description                                  | Default   | Set In      | Used In            |
+| --------------| -------------------------------------------- | --------- | ----------- | ------------------ |
+| `APP`         | Application name (e.g., "plex", "nextcloud") | -         | Environment | Throughout         |
+| `NSAPP`       | Namespace application name                   | `$APP`    | Environment | Throughout         |
+| `CTID`        | Container ID                                 | -         | Environment | Container creation |
+| `CT_TYPE`     | Container type ("install" or "update")       | "install" | Environment | Entry point        |
+| `CT_NAME`     | Container name                               | `$APP`    | Environment | Container creation |
+| `WEB_UI_PORT` | Web UI port for the application              | Optional  | Environment | Throughout         |
 
 ### Operating System Variables
 

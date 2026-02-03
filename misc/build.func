@@ -5011,6 +5011,20 @@ create_lxc_container() {
 description() {
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 
+  web_ui_block=""
+
+  if [[ -n "${WEB_UI_PORT:-}" && -n "${WEB_UI_PROTOCOL:-}" ]]; then
+    web_ui_url="${WEB_UI_PROTOCOL}://${IP}:${WEB_UI_PORT}"
+
+    web_ui_block=$(cat <<EOF
+<p style='margin: 8px 0;'>
+  <a href='${web_ui_url}' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f; font-weight: bold;'>
+      ${web_ui_url}
+  </a>
+</p>
+EOF
+)
+  fi
   # Generate LXC Description
   DESCRIPTION=$(
     cat <<EOF
@@ -5020,6 +5034,7 @@ description() {
   </a>
 
   <h2 style='font-size: 24px; margin: 20px 0;'>${APP} LXC</h2>
+  ${web_ui_block}
 
   <p style='margin: 16px 0;'>
     <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>

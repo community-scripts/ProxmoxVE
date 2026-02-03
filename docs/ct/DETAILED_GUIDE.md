@@ -64,7 +64,7 @@ Container ready with app installed
 ```
 START: bash ct/pihole.sh
   ↓
-[1] Set APP, var_*, defaults
+[1] Set APP, WEB_UI_PORT, WEB_UI_PROTOCOL, var_*, defaults
   ↓
 [2] header_info() → Display ASCII art
   ↓
@@ -169,6 +169,10 @@ var_disk="10"                  # Disk in GB
 var_os="debian"                # Options: alpine, debian, ubuntu
 var_version="12"               # Alpine: 3.20+, Debian: 11-13, Ubuntu: 20.04+
 var_unprivileged="1"           # 1=unprivileged (secure), 0=privileged (rarely needed)
+
+# Web UI Configuration (optional)
+WEB_UI_PORT="8080"             # Default web UI port
+WEB_UI_PROTOCOL="http"         # http or https
 ```
 
 **Variable Naming Convention**:
