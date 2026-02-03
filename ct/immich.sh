@@ -249,6 +249,23 @@ EOF
       msg_ok "Disabled Maintenance Mode"
     fi
     systemctl restart immich-ml immich-web
+    if [[ -f /opt/immich-proxy ]]; then
+      if check_for_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy"; then
+        systemctl stop immich-proxy
+        msg_info "Backing up Immich Public Proxy configs"
+        cp -a /opt/immich-proxy/app/{.env,config.json} ~/
+        msg_ok "Backed up Immich Public Proxy configs"
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immich-public_proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
+        msg_info "Building Immich Public Proxy"
+        cd /opt/immich-proxy
+        $STD npm ci
+        $STD npm run build
+        mv ~/{config.json,.env} /opt/immich-proxy/app
+        chown -R immich:immich /opt/immich-proxy
+        systemctl start immich-proxy
+        msg_ok "Built Immich Public Proxy"
+      fi
+    fi
     msg_ok "Updated successfully!"
   fi
   exit

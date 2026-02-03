@@ -477,6 +477,44 @@ chown -R immich:immich "$INSTALL_DIR" /var/log/immich
 systemctl enable -q --now immich-ml.service immich-web.service
 msg_ok "Modified user, created env file, scripts and services"
 
+read -r -p "${TAB3}Install Immich Public Proxy? y/N " proxy
+if [[ "${proxy,,}" =~ (y|yes)$ ]]; then
+  fetch_and_deploy_gh_release "immich-public-proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "/opt/immich-proxy"
+  msg_info "Configuring Immich Public Proxy"
+  cd /opt/immich-proxy/app
+  $STD npm install
+  $STD npm run build
+  cat <<EOF >/opt/immich-proxy/app/.env
+NODE_ENV=production
+IMMICH_URL=http://localhost:2283
+EOF
+  chown -R immich:immich /opt/immich-proxy
+
+  cat <<EOF >/etc/systemd/system/immich-proxy.service
+[Unit]
+Description=Immich Public Proxy
+After=network.target
+Requires=immich-web.service
+
+[Service]
+Type=simple
+User=immich
+Group=immich
+UMask=0077
+WorkingDirectory=/opt/immich-proxy/app
+EnvironmentFile=/opt/immich-proxy/app/.env
+ExecStart=/usr/bin/node /opt/immich-proxy/app/dist/index.js
+Restart=on-failure
+SyslogIdentifier=immich-proxy
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl enable -q --now immich-proxy.service
+  msg_ok "Configured Immich Public Proxy"
+  msg_warn "Additional Immich Public Proxy config is available in '/opt/immich-proxy/app/config.json'"
+fi
+
 motd_ssh
 customize
 cleanup_lxc
