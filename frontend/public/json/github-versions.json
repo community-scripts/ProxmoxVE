@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-02T18:13:02Z",
+  "generated": "2026-02-03T00:21:55Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -95,9 +95,9 @@
     {
       "slug": "bar-assistant",
       "repo": "karlomikus/bar-assistant",
-      "version": "v5.13.0",
+      "version": "v5.13.1",
       "pinned": false,
-      "date": "2026-02-01T15:49:21Z"
+      "date": "2026-02-02T18:47:43Z"
     },
     {
       "slug": "bazarr",
@@ -312,9 +312,9 @@
     {
       "slug": "ersatztv",
       "repo": "ErsatzTV/ErsatzTV",
-      "version": "v26.1.1",
+      "version": "v26.2.0",
       "pinned": false,
-      "date": "2026-01-08T22:02:15Z"
+      "date": "2026-02-02T20:54:26Z"
     },
     {
       "slug": "excalidraw",
@@ -746,9 +746,9 @@
     {
       "slug": "mealie",
       "repo": "mealie-recipes/mealie",
-      "version": "v3.9.2",
+      "version": "v3.10.0",
       "pinned": false,
-      "date": "2026-01-02T19:40:09Z"
+      "date": "2026-02-02T18:32:52Z"
     },
     {
       "slug": "mediamanager",
