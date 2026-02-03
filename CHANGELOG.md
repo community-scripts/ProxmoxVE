@@ -774,6 +774,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-03
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [FIX] Shelfmark: unpin Chromium version [@vhsdream](https://github.com/vhsdream) ([#11505](https://github.com/community-scripts/ProxmoxVE/pull/11505))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
