@@ -166,7 +166,7 @@ function install() {
   msg_info "Creating configuration"
   cat <<EOF >"$CONFIG_PATH"/.env
 NODE_ENV=production
-IMMICH_URL=http://${DOMAIN}:3000
+IMMICH_URL=http://${DOMAIN}:2283
 EOF
   chmod 600 "$CONFIG_PATH"/.env
   msg_ok "Created configuration"
