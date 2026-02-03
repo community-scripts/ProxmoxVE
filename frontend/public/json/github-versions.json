@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-03T12:11:38Z",
+  "generated": "2026-02-03T18:19:44Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -830,9 +830,9 @@
     {
       "slug": "netbox",
       "repo": "netbox-community/netbox",
-      "version": "v4.5.1",
+      "version": "v4.5.2",
       "pinned": false,
-      "date": "2026-01-20T19:45:05Z"
+      "date": "2026-02-03T13:54:26Z"
     },
     {
       "slug": "nocodb",
@@ -1201,9 +1201,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.1",
+      "version": "v0.14.2",
       "pinned": false,
-      "date": "2026-02-02T04:15:19Z"
+      "date": "2026-02-03T00:35:22Z"
     },
     {
       "slug": "scraparr",
@@ -1355,9 +1355,9 @@
     {
       "slug": "thingsboard",
       "repo": "thingsboard/thingsboard",
-      "version": "v4.3",
+      "version": "v4.3.0.1",
       "pinned": false,
-      "date": "2026-01-20T14:27:07Z"
+      "date": "2026-02-03T12:39:14Z"
     },
     {
       "slug": "threadfin",
@@ -1607,9 +1607,9 @@
     {
       "slug": "zwave-js-ui",
       "repo": "zwave-js/zwave-js-ui",
-      "version": "v11.10.1",
+      "version": "v11.11.0",
       "pinned": false,
-      "date": "2026-01-15T15:58:06Z"
+      "date": "2026-02-03T13:13:05Z"
     }
   ]
 }
