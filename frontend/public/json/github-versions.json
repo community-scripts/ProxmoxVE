@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-03T00:21:55Z",
+  "generated": "2026-02-03T06:19:24Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -543,9 +543,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1012",
+      "version": "v0.24.1019",
       "pinned": false,
-      "date": "2026-02-02T11:05:14Z"
+      "date": "2026-02-03T06:01:43Z"
     },
     {
       "slug": "joplin-server",
@@ -746,9 +746,9 @@
     {
       "slug": "mealie",
       "repo": "mealie-recipes/mealie",
-      "version": "v3.10.0",
+      "version": "v3.10.1",
       "pinned": false,
-      "date": "2026-02-02T18:32:52Z"
+      "date": "2026-02-03T01:04:38Z"
     },
     {
       "slug": "mediamanager",
