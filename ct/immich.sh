@@ -36,10 +36,6 @@ function update_script() {
     exit
   fi
 
-  setup_uv
-  PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
-  NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
-
   if [[ ! -f /etc/apt/preferences.d/preferences ]]; then
     msg_info "Adding Debian Testing repo"
     sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
@@ -164,7 +160,10 @@ EOF
       rm -rf "${APP_DIR:?}"/*
     )
 
+    setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
+    PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' ${SRC_DIR}/package.json)"
+    NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
     msg_info "Updating Immich web and microservices"
     cd "$SRC_DIR"/server

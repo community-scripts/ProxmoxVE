@@ -51,8 +51,6 @@ if [ -d /dev/dri ]; then
   fi
 fi
 
-setup_uv
-
 msg_info "Installing dependencies"
 $STD apt install --no-install-recommends -y \
   git \
@@ -146,8 +144,7 @@ msg_info "Installing packages from Debian Testing repo"
 $STD apt install -t testing --no-install-recommends -yqq libmimalloc3 libde265-dev
 msg_ok "Installed packages from Debian Testing repo"
 
-PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
-NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+setup_uv
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 VCHORD_RELEASE="0.5.3"
@@ -293,6 +290,8 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.3" "$SRC_DIR"
+PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' ${SRC_DIR}/package.json)"
+NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Installing Immich (patience)"
 
