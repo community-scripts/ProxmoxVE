@@ -34,10 +34,12 @@ function update_script() {
     systemctl stop wishlist
     msg_ok "Stopped Service"
 
+    msg_info "Creating Backup"
     mkdir -p /opt/wishlist-backup
     cp /opt/wishlist/.env /opt/wishlist-backup/.env
     cp -a /opt/wishlist/uploads /opt/wishlist-backup
     cp -a /opt/wishlist/data /opt/wishlist-backup
+    msg_ok "Created Backup"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wishlist" "cmintey/wishlist" "tarball"
     LATEST_APP_VERSION=$(get_latest_github_release "cmintey/wishlist")
@@ -53,10 +55,14 @@ function update_script() {
     $STD pnpm run build
     $STD pnpm prune --prod
     chmod +x /opt/wishlist/entrypoint.sh
+
+    msg_info "Restoring Backup"
     cp /opt/wishlist-backup/.env /opt/wishlist/.env
     cp -a /opt/wishlist-backup/uploads /opt/wishlist
     cp -a /opt/wishlist-backup/data /opt/wishlist
     rm -rf /opt/wishlist-backup
+    msg_ok "Restored Backup"
+    
     msg_ok "Updated Wishlist"
     msg_info "Starting Service"
     systemctl start wishlist
@@ -70,7 +76,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3280${CL}"
