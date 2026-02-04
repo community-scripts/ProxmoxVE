@@ -14,12 +14,12 @@ network_check
 update_os
 
 # Configuration variables
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ZITADEL_BINARY_ARCHIVE="${SCRIPT_DIR}/zitadel-linux-amd64.tar.gz"
-ZITADEL_LOGIN_ARCHIVE="${SCRIPT_DIR}/zitadel-login.tar.gz"
+# SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ZITADEL_BINARY_ARCHIVE="${SCRIPT_DIR}/zitadel-linux-amd64.tar.gz"
+# ZITADEL_LOGIN_ARCHIVE="${SCRIPT_DIR}/zitadel-login.tar.gz"
 INSTALL_DIR="/usr/local/bin"
 CONFIG_DIR="/opt/zitadel"
-LOGIN_DIR="/opt/zitadel/login"
+LOGIN_DIR="/opt/login"
 CREDS_FILE="${HOME}/zitadel.creds"
 RERUN_SCRIPT="${HOME}/zitadel-rerun.sh"
 
@@ -36,7 +36,7 @@ msg_ok "Installed Dependecies"
 fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${INSTALL_DIR}" "zitadel-linux-amd64.tar.gz"
 # Might need to chmod +x "$INSTALL_DIR/zitadel"
 
-fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
+fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
 # # The archive extracts to apps/login/ structure
 # if [[ -d "$LOGIN_DIR/apps/login" ]]; then
     # mv "$LOGIN_DIR/apps/login"/* "$LOGIN_DIR/" 2>/dev/null || true
@@ -136,7 +136,7 @@ DefaultInstance:
   Features:
     LoginV2:
       Required: true
-	  
+
 AssetStorage:
   Type: db
 
@@ -210,8 +210,8 @@ export ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD="$DB_ADMIN_PASS"
 export ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE=disable
 
 # Run init phase - ZITADEL will create database, user, and schemas
-zitadel init --config "$CONFIG_DIR/config.yaml"
-zitadel setup -m "$CONFIG_DIR/.masterkey" --config "$CONFIG_DIR/config.yaml" --steps "$CONFIG_DIR/config.yaml"
+$STD zitadel init --config "$CONFIG_DIR/config.yaml"
+$STD zitadel setup -m "$CONFIG_DIR/.masterkey" --config "$CONFIG_DIR/config.yaml" --steps "$CONFIG_DIR/config.yaml"
 systemctl enable -q --now zitadel
 sleep 5
 msg_ok "Zitadel initialized"
