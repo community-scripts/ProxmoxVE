@@ -106,7 +106,7 @@ EOF
   fi
 
   RELEASE="2.5.3"
-  if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
+  if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
       cd /opt/immich/app/bin
@@ -161,7 +161,7 @@ EOF
     )
 
     setup_uv
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' ${SRC_DIR}/package.json)"
     NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
