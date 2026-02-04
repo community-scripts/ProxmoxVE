@@ -47,6 +47,7 @@ function search(scripts: Script[], query: string): Script[] {
     })
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score)
+    .slice(0, 20)
     .map(({ script }) => script);
 }
 
