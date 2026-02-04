@@ -407,6 +407,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Add log directory and permissions for koillection [@shineangelic](https://github.com/shineangelic) ([#11553](https://github.com/community-scripts/ProxmoxVE/pull/11553))
+
   - #### 🐞 Bug Fixes
 
     - [FIX] Scanopy: ensure Scanopy Daemon update [@vhsdream](https://github.com/vhsdream) ([#11541](https://github.com/community-scripts/ProxmoxVE/pull/11541))
