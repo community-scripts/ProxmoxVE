@@ -14,10 +14,22 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
-header_info "$APP"
+emqx_mq_setting() {
+  if whiptail --title "EMQX MQ Configuration" \
+    --yesno "Would you like to enable EMQX MQ?" 8 60; then
+    export EMQX_MQ__ENABLE="true"
+  else
+    export EMQX_MQ__ENABLE="false"
+  fi
+}
+
+# Standard script flow
 variables
 color
 catch_errors
+
+# Call custom settings BEFORE build_container
+emqx_mq_setting
 
 function update_script() {
   header_info
@@ -44,6 +56,14 @@ function update_script() {
     DEB_FILE="/tmp/emqx-enterprise-${RELEASE}-debian12-amd64.deb"
     curl -fsSL -o "$DEB_FILE" "https://www.emqx.com/en/downloads/enterprise/v${RELEASE}/emqx-enterprise-${RELEASE}-debian12-amd64.deb"
     msg_ok "Downloaded EMQX"
+
+    if (whiptail --title "EMQX Setup" \
+        --yesno "Do you want to enable Message Queue in EMQX ?" \
+        10 58); then
+        export MY_FEATURE_ENABLED="true"
+    else
+        export MY_FEATURE_ENABLED="false"
+    fi
 
     msg_info "Installing EMQX"
     $STD apt install -y "$DEB_FILE"
