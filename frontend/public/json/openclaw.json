@@ -1,0 +1,49 @@
+{
+  "name": "OpenClaw",
+  "slug": "openclaw",
+  "categories": [
+    22,
+    20
+  ],
+  "date_created": "2026-02-03",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 18789,
+  "documentation": "https://docs.openclaw.ai",
+  "website": "https://openclaw.ai",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/openclaw.webp",
+  "config_path": "/root/.openclaw/openclaw.json",
+  "description": "OpenClaw is a personal AI assistant that runs locally and integrates with messaging platforms like WhatsApp, Telegram, Discord, and Slack.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/openclaw.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "After installation, run 'openclaw onboard' inside the container to configure AI providers.",
+      "type": "info"
+    },
+    {
+      "text": "After onboarding, start the gateway with 'systemctl start openclaw'.",
+      "type": "info"
+    },
+    {
+      "text": "The Control UI requires a secure context (HTTPS or localhost). Either use a reverse proxy with HTTPS, or connect via SSH port forwarding: ssh -L 18789:localhost:18789 root@<container-ip>, then open http://localhost:18789 in your browser.",
+      "type": "warning"
+    }
+  ]
+}
