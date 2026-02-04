@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-04T00:18:44Z",
+  "generated": "2026-02-04T06:18:03Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -186,9 +186,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.12.1",
+      "version": "v0.12.2",
       "pinned": false,
-      "date": "2026-02-03T21:27:07Z"
+      "date": "2026-02-04T06:09:31Z"
     },
     {
       "slug": "commafeed",
@@ -256,9 +256,9 @@
     {
       "slug": "docmost",
       "repo": "docmost/docmost",
-      "version": "v0.24.1",
+      "version": "v0.25.0",
       "pinned": false,
-      "date": "2025-12-14T13:49:16Z"
+      "date": "2026-02-04T00:33:45Z"
     },
     {
       "slug": "domain-locker",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.1.8",
+      "version": "9.1.9.1",
       "pinned": false,
-      "date": "2026-02-02T01:29:45Z"
+      "date": "2026-02-04T01:08:22Z"
     },
     {
       "slug": "inspircd",
@@ -536,16 +536,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.52",
+      "version": "v5.12.53",
       "pinned": false,
-      "date": "2026-02-01T02:08:10Z"
+      "date": "2026-02-04T00:52:01Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1019",
+      "version": "v0.24.1027",
       "pinned": false,
-      "date": "2026-02-03T06:01:43Z"
+      "date": "2026-02-04T05:56:22Z"
     },
     {
       "slug": "joplin-server",
@@ -767,9 +767,9 @@
     {
       "slug": "meilisearch",
       "repo": "riccox/meilisearch-ui",
-      "version": "v0.15.0",
+      "version": "v0.15.1",
       "pinned": false,
-      "date": "2026-01-29T03:54:27Z"
+      "date": "2026-02-04T03:56:59Z"
     },
     {
       "slug": "memos",
@@ -1201,9 +1201,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.2",
+      "version": "v0.14.3",
       "pinned": false,
-      "date": "2026-02-03T00:35:22Z"
+      "date": "2026-02-04T01:41:01Z"
     },
     {
       "slug": "scraparr",
