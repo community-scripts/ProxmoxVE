@@ -4,7 +4,7 @@
     "categories": [
         12
     ],
-    "date_created": "2026-01-25",
+    "date_created": "2026-02-04",
     "type": "ct",
     "updateable": true,
     "privileged": false,
@@ -33,7 +33,7 @@
     },
     "notes": [
         {
-            "text": "After installation execute `./writefreely user create --admin username:password` in the `/opt/writefreely` directory to create your user.",
+            "text": "After installation execute `writefreely user create --admin <username>:<password>` to create your user.",
             "type": "info"
         }
     ]
