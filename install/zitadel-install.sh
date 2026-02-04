@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: dave-yap
+# Author: remz1337
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://zitadel.com/
 
@@ -13,9 +13,35 @@ setting_up_container
 network_check
 update_os
 
+# Configuration variables
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ZITADEL_BINARY_ARCHIVE="${SCRIPT_DIR}/zitadel-linux-amd64.tar.gz"
+ZITADEL_LOGIN_ARCHIVE="${SCRIPT_DIR}/zitadel-login.tar.gz"
+INSTALL_DIR="/usr/local/bin"
+CONFIG_DIR="/opt/zitadel"
+LOGIN_DIR="/opt/zitadel/login"
+CREDS_FILE="${HOME}/zitadel.creds"
+RERUN_SCRIPT="${HOME}/zitadel-rerun.sh"
+
 msg_info "Installing Dependencies (Patience)"
-$STD apt install -y ca-certificates
+$STD apt install -y ca-certificates \
+    curl \
+    wget \
+    gnupg \
+    lsb-release \
+    openssl \
+    lsof
 msg_ok "Installed Dependecies"
+
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${INSTALL_DIR}" "zitadel-linux-amd64.tar.gz"
+# Might need to chmod +x "$INSTALL_DIR/zitadel"
+
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
+# # The archive extracts to apps/login/ structure
+# if [[ -d "$LOGIN_DIR/apps/login" ]]; then
+    # mv "$LOGIN_DIR/apps/login"/* "$LOGIN_DIR/" 2>/dev/null || true
+    # rm -rf "$LOGIN_DIR/apps"
+# fi
 
 PG_VERSION="17" setup_postgresql
 
@@ -23,36 +49,60 @@ msg_info "Installing Postgresql"
 DB_NAME="zitadel"
 DB_USER="zitadel"
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-DB_ADMIN_USER="root"
+DB_ADMIN_USER="postgres"
 DB_ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 systemctl start postgresql
-$STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE USER $DB_ADMIN_USER WITH PASSWORD '$DB_ADMIN_PASS' SUPERUSER;"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
+# $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
+# $STD sudo -u postgres psql -c "CREATE USER $DB_ADMIN_USER WITH PASSWORD '$DB_ADMIN_PASS' SUPERUSER;"
+# $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
+
+# Set postgres user password - ZITADEL will create the database and zitadel user automatically
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$DB_ADMIN_PASS';"
+
 {
-  echo "Application Credentials"
-  echo "DB_NAME: $DB_NAME"
-  echo "DB_USER: $DB_USER"
-  echo "DB_PASS: $DB_PASS"
-  echo "DB_ADMIN_USER: $DB_ADMIN_USER"
-  echo "DB_ADMIN_PASS: $DB_ADMIN_PASS"
-} >>~/zitadel.creds
+    echo "==================================="
+    echo "ZITADEL DATABASE CREDENTIALS"
+    echo "==================================="
+    echo "DB_NAME: $DB_NAME"
+    echo "DB_USER: $DB_USER"
+    echo "DB_PASS: $DB_PASS"
+    echo "DB_ADMIN_USER: $DB_ADMIN_USER"
+    echo "DB_ADMIN_PASS: $DB_ADMIN_PASS"
+    echo "==================================="
+    echo ""
+    echo "NOTE: ZITADEL will automatically create"
+    echo "the database and user on first run."
+    echo "==================================="
+} | tee "$CREDS_FILE"
 msg_ok "Installed PostgreSQL"
 
-fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-amd64.tar.gz"
-
 msg_info "Setting up Zitadel Environments"
-mkdir -p /opt/zitadel
-echo "/opt/zitadel/config.yaml" >"/opt/zitadel/.config"
-head -c 32 < <(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9') >"/opt/zitadel/.masterkey"
+mkdir -p "$CONFIG_DIR"
+echo "$CONFIG_DIR/config.yaml" > "$CONFIG_DIR/.config"
+head -c 32 < <(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9') > "$CONFIG_DIR/.masterkey"
 {
-  echo "Config location: $(cat "/opt/zitadel/.config")"
-  echo "Masterkey: $(cat "/opt/zitadel/.masterkey")"
-} >>~/zitadel.creds
+    echo "==================================="
+    echo "Config location: $(cat "$CONFIG_DIR/.config")"
+    echo "Masterkey: $(cat "$CONFIG_DIR/.masterkey")"
+    echo "==================================="
+} | tee -a "$CREDS_FILE"
+
+
+# Get IP address
+IP=$(ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
+if [[ -z "$IP" ]]; then
+    # Fallback to other interfaces
+    IP=$(hostname -I | awk '{print $1}')
+fi
+if [[ -z "$IP" ]]; then
+    IP="localhost"
+    msg_warn "Could not detect IP address, using localhost"
+fi
+
 cat <<EOF >/opt/zitadel/config.yaml
 Port: 8080
 ExternalPort: 8080
-ExternalDomain: localhost
+ExternalDomain: ${IP}
 ExternalSecure: false
 TLS:
   Enabled: false
@@ -85,9 +135,30 @@ Database:
 DefaultInstance:
   Features:
     LoginV2:
-      Required: false
+      Required: true
+	  
+AssetStorage:
+  Type: db
+
+Login:
+  Path: ${LOGIN_DIR}
 EOF
 msg_ok "Installed Zitadel Enviroments"
+
+# Create zitadel user
+msg_info "Creating zitadel system user"
+if ! id -u zitadel >/dev/null 2>&1; then
+    useradd --system --no-create-home --shell /usr/sbin/nologin zitadel
+    msg_ok "User 'zitadel' created"
+else
+    msg_warn "User 'zitadel' already exists"
+fi
+
+# Set permissions
+chown -R zitadel:zitadel "$CONFIG_DIR"
+chmod 600 "$CONFIG_DIR/.masterkey"
+chmod 644 "$CONFIG_DIR/config.yaml"
+msg_ok "Created zitadel system user"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/zitadel.service
@@ -100,7 +171,16 @@ Wants=postgresql.service
 Type=simple
 User=zitadel
 Group=zitadel
-ExecStart=/usr/local/bin/zitadel start --masterkeyFile "/opt/zitadel/.masterkey" --config "/opt/zitadel/config.yaml"
+# Environment="ZITADEL_DATABASE_POSTGRES_HOST=localhost"
+# Environment="ZITADEL_DATABASE_POSTGRES_PORT=5432"
+# Environment="ZITADEL_DATABASE_POSTGRES_DATABASE=${DB_NAME}"
+# Environment="ZITADEL_DATABASE_POSTGRES_USER_USERNAME=${DB_USER}"
+# Environment="ZITADEL_DATABASE_POSTGRES_USER_PASSWORD=${DB_PASS}"
+# Environment="ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE=disable"
+# Environment="ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME=${DB_ADMIN_USER}"
+# Environment="ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD=${DB_ADMIN_PASS}"
+# Environment="ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE=disable"
+ExecStart=/usr/local/bin/zitadel start -m $CONFIG_DIR/.masterkey --config $CONFIG_DIR/config.yaml
 Restart=always
 RestartSec=5
 TimeoutStartSec=0
@@ -114,31 +194,61 @@ NoNewPrivileges=true
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now zitadel
+systemctl daemon-reload
+#systemctl enable -q --now zitadel
 msg_ok "Created Services"
 
 msg_info "Zitadel initial setup"
-zitadel start-from-init --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml &>/dev/null &
-sleep 60
-kill $(lsof -i | awk '/zitadel/ {print $2}' | head -n1)
-useradd zitadel
+export ZITADEL_DATABASE_POSTGRES_HOST=localhost
+export ZITADEL_DATABASE_POSTGRES_PORT=5432
+export ZITADEL_DATABASE_POSTGRES_DATABASE="$DB_NAME"
+export ZITADEL_DATABASE_POSTGRES_USER_USERNAME="$DB_USER"
+export ZITADEL_DATABASE_POSTGRES_USER_PASSWORD="$DB_PASS"
+export ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE=disable
+export ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME="$DB_ADMIN_USER"
+export ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD="$DB_ADMIN_PASS"
+export ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE=disable
+
+# Run init phase - ZITADEL will create database, user, and schemas
+zitadel init --config "$CONFIG_DIR/config.yaml"
+zitadel setup -m "$CONFIG_DIR/.masterkey" --config "$CONFIG_DIR/config.yaml" --steps "$CONFIG_DIR/config.yaml"
+systemctl enable -q --now zitadel
+sleep 5
 msg_ok "Zitadel initialized"
 
-msg_info "Set ExternalDomain to current IP and restart Zitadel"
-IP=$(ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
-sed -i "0,/localhost/s/localhost/${IP}/" /opt/zitadel/config.yaml
-systemctl stop -q zitadel
-$STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml
-systemctl restart -q zitadel
-msg_ok "Zitadel restarted with ExternalDomain set to current IP"
+msg_info "Creating configuration rerun script"
+cat <<EOF > "$RERUN_SCRIPT"
+#!/bin/bash
+# Rerun Zitadel setup after configuration changes
 
-msg_info "Create zitadel-rerun.sh"
-cat <<EOF >~/zitadel-rerun.sh
+set -e
+
+CONFIG_DIR="/opt/zitadel"
+
+echo "Stopping Zitadel service..."
 systemctl stop zitadel
-timeout --kill-after=5s 15s zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml
-systemctl restart zitadel
+
+echo "Running Zitadel setup..."
+export ZITADEL_DATABASE_POSTGRES_HOST=localhost
+export ZITADEL_DATABASE_POSTGRES_PORT=5432
+export ZITADEL_DATABASE_POSTGRES_DATABASE=${DB_NAME}
+export ZITADEL_DATABASE_POSTGRES_USER_USERNAME=${DB_USER}
+export ZITADEL_DATABASE_POSTGRES_USER_PASSWORD=${DB_PASS}
+export ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE=disable
+export ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME=${DB_ADMIN_USER}
+export ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD=${DB_ADMIN_PASS}
+export ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE=disable
+
+zitadel setup -m "\$CONFIG_DIR/.masterkey" --config "\$CONFIG_DIR/config.yaml" --steps "\$CONFIG_DIR/config.yaml"
+sleep 5
+
+echo "Starting Zitadel service..."
+systemctl start zitadel
+
+echo "Zitadel restarted successfully!"
 EOF
-msg_ok "Bash script for rerunning Zitadel after changing Zitadel config.yaml"
+chmod +x "$RERUN_SCRIPT"
+msg_ok "Rerun script created at $RERUN_SCRIPT"
 
 motd_ssh
 customize
