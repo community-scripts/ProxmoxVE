@@ -2,12 +2,12 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/CyferShepard/Jellystat
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/error_handler.func)
 
 # Enable error handling
 set -Eeuo pipefail
@@ -282,7 +282,7 @@ EOF
   cat <<'UPDATEEOF' >/usr/local/bin/update_jellystat
 #!/usr/bin/env bash
 # Jellystat Update Script
-type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/jellystat.sh)"
+type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/tools/addon/jellystat.sh)"
 UPDATEEOF
   chmod +x /usr/local/bin/update_jellystat
   msg_ok "Created update script (/usr/local/bin/update_jellystat)"
