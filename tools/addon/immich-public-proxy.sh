@@ -81,6 +81,7 @@ function update() {
     cp "$CONFIG_PATH"/config.json /tmp/ipp.config.json.bak 2>/dev/null || true
     msg_ok "Backed up configuration"
 
+    NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "$INSTALL_PATH"
 
     msg_info "Restoring configuration"
@@ -110,12 +111,7 @@ function update() {
 # INSTALL
 # ==============================================================================
 function install() {
-  # Setup Node.js (only installs if not present or different version)
-  if command -v node &>/dev/null; then
-    msg_ok "Node.js already installed ($(node -v))"
-  else
-    NODE_VERSION="24" setup_nodejs
-  fi
+  NODE_VERSION="24" setup_nodejs
 
   # Force fresh download by removing version cache
   rm -f "$HOME/.immichpublicproxy"
