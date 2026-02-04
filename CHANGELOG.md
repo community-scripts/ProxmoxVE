@@ -409,6 +409,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [FIX] Scanopy: ensure Scanopy Daemon update [@vhsdream](https://github.com/vhsdream) ([#11541](https://github.com/community-scripts/ProxmoxVE/pull/11541))
     - Immich: pin version to 2.5.3 [@vhsdream](https://github.com/vhsdream) ([#11515](https://github.com/community-scripts/ProxmoxVE/pull/11515))
 
 ### 💾 Core
