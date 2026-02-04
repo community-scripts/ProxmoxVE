@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.traccar.org/
@@ -18,6 +18,7 @@ fetch_and_deploy_gh_release "traccar" "traccar/traccar" "prebuild" "latest" "/op
 msg_info "Configuring Traccar"
 cd /opt/traccar
 $STD ./traccar.run
+[ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
 msg_ok "Configured Traccar"
 
 msg_info "Starting service"
@@ -26,10 +27,4 @@ msg_ok "Service started"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-[ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -6,15 +6,18 @@ This project currently supports the following versions of Proxmox VE (PVE):
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 9.1.x   | :white_check_mark: |
 | 9.0.x   | :white_check_mark: |
 | 8.4.x   | :white_check_mark: |
-| 8.3.x   | :white_check_mark: |
-| 8.2.x   | :white_check_mark: |
-| 8.1.x   | :white_check_mark: |
+| 8.3.x   | Limited support* ❕ |
+| 8.2.x   | Limited support* ❕ |
+| 8.1.x   | Limited support* ❕ |
 | 8.0.x   | Limited support* ❕ |
 | < 8.0   | :x:                |
 
-*Version 8.0.x has limited support. Security updates may not be provided for all issues affecting this version.
+*Version 8.0.x  - 8.3.x has limited support. Security updates may not be provided for all issues affecting this version. 
+
+*Debian 13 Containers may fail to install. You can write var_version=12 before the bash call. 
 
 ---
 

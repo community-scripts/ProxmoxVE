@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://forgejo.org/
@@ -14,17 +14,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y git-lfs
+$STD apt install -y \
+    git \
+    git-lfs
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Forgejo"
-mkdir -p /opt/forgejo
-RELEASE=$(curl -fsSL https://codeberg.org/api/v1/repos/forgejo/forgejo/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+' | sed 's/^v//')
-curl -fsSL "https://codeberg.org/forgejo/forgejo/releases/download/v${RELEASE}/forgejo-${RELEASE}-linux-amd64" -o "/opt/forgejo/forgejo-$RELEASE-linux-amd64"
-chmod +x /opt/forgejo/forgejo-$RELEASE-linux-amd64
-ln -sf /opt/forgejo/forgejo-$RELEASE-linux-amd64 /usr/local/bin/forgejo
-msg_ok "Installed Forgejo"
+fetch_and_deploy_codeberg_release "forgejo" "forgejo/forgejo" "singlefile" "latest" "/opt/forgejo" "forgejo-*-linux-amd64"
+ln -sf /opt/forgejo/forgejo /usr/local/bin/forgejo
 
 msg_info "Setting up Forgejo"
 $STD adduser --system --shell /bin/bash --gecos 'Git Version Control' --group --disabled-password --home /home/git git
@@ -50,7 +46,7 @@ Group=git
 WorkingDirectory=/var/lib/forgejo/ 
 ExecStart=/usr/local/bin/forgejo web --config /etc/forgejo/app.ini
 Restart=always
-Environment=USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/forgejo
+Environment=USER=git HOME=/home/git FORGEJO_WORK_DIR=/var/lib/forgejo
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -59,8 +55,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

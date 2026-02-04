@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: prop4n
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.sonarsource.com/sonarqube-server
@@ -14,24 +14,11 @@ update_os
 
 JAVA_VERSION="21" setup_java
 PG_VERSION="17" setup_postgresql
+PG_DB_NAME="sonarqube" PG_DB_USER="sonarqube" setup_postgresql_db
 
-msg_info "Installing Postgresql"
-DB_NAME="sonarqube"
-DB_USER="sonarqube"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_USER;"
-{
-  echo "Application Credentials"
-  echo "DB_NAME: $DB_NAME"
-  echo "DB_USER: $DB_USER"
-  echo "DB_PASS: $DB_PASS"
-} >>~/sonarqube.creds
-msg_ok "Installed PostgreSQL"
-
-msg_info "Configuring SonarQube"
+msg_info "Setting up SonarQube"
 temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/SonarSource/sonarqube/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(get_latest_github_release "SonarSource/sonarqube")
 curl -fsSL "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${RELEASE}.zip" -o $temp_file
 unzip -q "$temp_file" -d /opt
 mv /opt/sonarqube-* /opt/sonarqube
@@ -40,9 +27,9 @@ chown -R sonarqube:sonarqube /opt/sonarqube
 chmod -R 755 /opt/sonarqube
 mkdir -p /opt/sonarqube/conf
 cat <<EOF >/opt/sonarqube/conf/sonar.properties
-sonar.jdbc.username=${DB_USER}
-sonar.jdbc.password=${DB_PASS}
-sonar.jdbc.url=jdbc:postgresql://localhost/${DB_NAME}
+sonar.jdbc.username=${PG_DB_USER}
+sonar.jdbc.password=${PG_DB_PASS}
+sonar.jdbc.url=jdbc:postgresql://localhost/${PG_DB_NAME}
 sonar.web.host=0.0.0.0
 sonar.web.port=9000
 EOF
@@ -74,9 +61,4 @@ msg_ok "Service Created"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/slskd/slskd, https://soularr.net
@@ -61,15 +61,12 @@ function update_script() {
   $STD pip install -r requirements.txt
   mv /opt/config.ini.bak /opt/soularr/config.ini
   mv /opt/run.sh.bak /opt/soularr/run.sh
+  rm -rf /tmp/main.zip
   msg_ok "Updated soularr"
 
   msg_info "Starting soularr timer"
   systemctl start soularr.timer
   msg_ok "Started soularr timer"
-
-  msg_info "Cleaning Up"
-  rm -rf /tmp/main.zip
-  msg_ok "Cleanup Completed"
   exit
 }
 
@@ -77,7 +74,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5030${CL}"

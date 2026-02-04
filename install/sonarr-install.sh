@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://sonarr.tv/
@@ -17,27 +17,23 @@ msg_info "Installing Dependencies"
 $STD apt install -y sqlite3
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Sonarr v4"
+fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-x64.tar.gz"
 mkdir -p /var/lib/sonarr/
 chmod 775 /var/lib/sonarr/
-curl -fsSL "https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64" -o "SonarrV4.tar.gz"
-tar -xzf SonarrV4.tar.gz
-mv Sonarr /opt
-rm -rf SonarrV4.tar.gz
-
-msg_ok "Installed Sonarr v4"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/sonarr.service
 [Unit]
 Description=Sonarr Daemon
 After=syslog.target network.target
+
 [Service]
 Type=simple
 ExecStart=/opt/Sonarr/Sonarr -nobrowser -data=/var/lib/sonarr/
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -46,9 +42,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

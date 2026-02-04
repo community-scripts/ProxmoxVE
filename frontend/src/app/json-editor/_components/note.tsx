@@ -105,7 +105,7 @@ function Note({
   const addNote = useCallback(() => {
     setScript({
       ...script,
-      notes: [...script.notes, { text: "", type: "" }],
+      notes: [...script.notes, { text: "", type: "info" }],
     });
   }, [script, setScript]);
 

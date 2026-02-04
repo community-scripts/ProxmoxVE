@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.jellyseerr.dev/
@@ -20,62 +20,57 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /opt/jellyseerr ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
+  if [[ ! -d /opt/jellyseerr ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
 
-    if [ "$(node -v | cut -c2-3)" -ne 22 ]; then
-        msg_info "Updating Node.js Repository"
-        echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-        msg_ok "Updating Node.js Repository"
+  if [ "$(node -v | cut -c2-3)" -ne 22 ]; then
+    msg_info "Updating Node.js Repository"
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+    msg_ok "Updating Node.js Repository"
 
-        msg_info "Updating Packages"
-        $STD apt-get update
-        $STD apt-get -y upgrade
-        msg_ok "Updating Packages"
+    msg_info "Updating Packages"
+    $STD apt-get update
+    $STD apt-get -y upgrade
+    msg_ok "Updating Packages"
+  fi
 
-        msg_info "Cleaning up"
-        apt-get -y autoremove
-        apt-get -y autoclean
-        msg_ok "Cleaning up"
-    fi
+  cd /opt/jellyseerr 
+  output=$(git pull --no-rebase)
 
-    cd /opt/jellyseerr
-    output=$(git pull --no-rebase)
+  pnpm_current=$(pnpm --version 2>/dev/null)
+  pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
 
-    pnpm_current=$(pnpm --version 2>/dev/null)
-    pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
+  if [ -z "$pnpm_current" ]; then
+    msg_error "pnpm not found. Installing version $pnpm_desired..."
+    NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
+  elif ! node -e "const semver = require('semver'); process.exit(semver.satisfies('$pnpm_current', '$pnpm_desired') ? 0 : 1)"; then
+    msg_error "Updating pnpm from version $pnpm_current to $pnpm_desired..."
+    NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
+  else
+    msg_ok "pnpm is already installed and satisfies version $pnpm_desired."
+  fi
 
-    if [ -z "$pnpm_current" ]; then
-        msg_error "pnpm not found. Installing version $pnpm_desired..."
-        NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
-    elif ! node -e "const semver = require('semver'); process.exit(semver.satisfies('$pnpm_current', '$pnpm_desired') ? 0 : 1)"; then
-        msg_error "Updating pnpm from version $pnpm_current to $pnpm_desired..."
-        NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
-    else
-        msg_ok "pnpm is already installed and satisfies version $pnpm_desired."
-    fi
+  msg_info "Updating Jellyseerr"
+  if echo "$output" | grep -q "Already up to date."; then
+    msg_ok "$APP is already up to date."
+    exit
+  fi
 
-    msg_info "Updating $APP"
-    if echo "$output" | grep -q "Already up to date."; then
-        msg_ok "$APP is already up to date."
-        exit
-    fi
+  systemctl stop jellyseerr
+  rm -rf dist .next node_modules
+  export CYPRESS_INSTALL_BINARY=0
+  cd /opt/jellyseerr 
+  $STD pnpm install --frozen-lockfile
+  export NODE_OPTIONS="--max-old-space-size=3072"
+  $STD pnpm build
 
-    systemctl stop jellyseerr
-    rm -rf dist .next node_modules
-    export CYPRESS_INSTALL_BINARY=0
-    cd /opt/jellyseerr
-    $STD pnpm install --frozen-lockfile
-    export NODE_OPTIONS="--max-old-space-size=3072"
-    $STD pnpm build
-
-    cat <<EOF >/etc/systemd/system/jellyseerr.service
+  cat <<EOF >/etc/systemd/system/jellyseerr.service
 [Unit]
 Description=jellyseerr Service
 After=network.target
@@ -91,17 +86,18 @@ ExecStart=/usr/bin/node dist/index.js
 WantedBy=multi-user.target
 EOF
 
-    systemctl daemon-reload
-    systemctl start jellyseerr
-    msg_ok "Updated $APP"
-    exit
+  systemctl daemon-reload
+  systemctl start jellyseerr
+  msg_ok "Updated Jellyseerr"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5055${CL}"

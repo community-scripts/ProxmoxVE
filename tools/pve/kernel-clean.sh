@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -33,6 +33,7 @@ if [ -z "$available_kernels" ]; then
   exit 0
 fi
 
+echo -e "${GN}Currently running kernel: ${current_kernel}${CL}"
 echo -e "${YW}Available kernels for removal:${CL}"
 echo "$available_kernels" | nl -w 2 -s '. '
 

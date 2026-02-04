@@ -103,7 +103,7 @@ jobs:
                 }
               `;
 
-              //
+              let discussionQLId;
               try {
                 const discussionResponse = await graphqlWithAuth(discussionQuery, {
                   owner,
@@ -111,7 +111,7 @@ jobs:
                   number: parseInt(discussionNumber, 10),
                 });
 
-                const discussionQLId = discussionResponse.repository.discussion.id;
+                discussionQLId = discussionResponse.repository.discussion.id;
                 if (!discussionQLId) {
                   console.log("Failed to fetch discussion GraphQL ID.");
                   return;

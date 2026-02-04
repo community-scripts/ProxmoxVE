@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Mips2648
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://jeedom.com/
@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   lsb-release \
   git
 msg_ok "Dependencies installed"
@@ -98,8 +98,5 @@ msg_ok "Installation checked, everything is successfuly installed. A reboot is r
 motd_ssh
 customize
 
-msg_info "Cleaning up"
 rm -rf /tmp/install.sh
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://emby.media/
@@ -13,16 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setting Up Hardware Acceleration"
-$STD apt-get -y install {va-driver-all,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools}
-if [[ "$CTTYPE" == "0" ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser $(id -u -n) video
-  $STD adduser $(id -u -n) render
-fi
-msg_ok "Set Up Hardware Acceleration"
+setup_hwaccel
 
 fetch_and_deploy_gh_release "emby" "MediaBrowser/Emby.Releases" "binary"
 
@@ -36,8 +27,4 @@ msg_ok "Configured Emby"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ), twingate-andrewb
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.twingate.com/docs/
@@ -29,7 +29,7 @@ done
 
 msg_info "Setup Twingate Repository"
 curl -fsSL "https://packages.twingate.com/apt/gpg.key" | gpg --dearmor -o /usr/share/keyrings/twingate-connector-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/twingate-connector-keyring.gpg] https://packages.twingate.com/apt/ /" > /etc/apt/sources.list.d/twingate.list
+echo "deb [signed-by=/usr/share/keyrings/twingate-connector-keyring.gpg] https://packages.twingate.com/apt/ /" >/etc/apt/sources.list.d/twingate.list
 $STD apt-get update
 msg_ok "Setup Twingate Repository"
 
@@ -44,7 +44,7 @@ msg_info "Configure Twingate-Connector"
   echo "TWINGATE_REFRESH_TOKEN=${refresh_token}"
   echo "TWINGATE_LABEL_HOSTNAME=$(hostname)"
   echo "TWINGATE_LABEL_DEPLOYED_BY=proxmox"
-} > /etc/twingate/connector.conf
+} >/etc/twingate/connector.conf
 chmod 600 /etc/twingate/connector.conf
 msg_ok "Configured Twingate-Connector"
 
@@ -54,8 +54,4 @@ msg_ok "Service started"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

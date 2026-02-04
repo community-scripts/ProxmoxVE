@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2025 Community Scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/gelbphoenix/autocaliweb
+# Source: https://codeberg.org/gelbphoenix/autocaliweb
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,53 +14,49 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y --no-install-recommends \
-  python3-dev \
-  sqlite3 \
-  build-essential \
-  libldap2-dev \
-  libssl-dev \
-  libsasl2-dev \
-  imagemagick \
-  ghostscript \
-  libmagic1 \
-  libxi6 \
-  libxslt1.1 \
-  libxtst6 \
-  libxrandr2 \
-  libxkbfile1 \
-  libxcomposite1 \
-  libopengl0 \
-  libnss3 \
-  libxkbcommon0 \
-  libegl1 \
-  libxdamage1 \
-  libgl1 \
-  libglx-mesa0 \
-  xz-utils \
-  xdg-utils \
-  inotify-tools \
-  binutils \
-  unrar-free \
-  zip
+$STD apt install -y --no-install-recommends \
+    python3-dev \
+    sqlite3 \
+    build-essential \
+    libldap2-dev \
+    libssl-dev \
+    libsasl2-dev \
+    imagemagick \
+    ghostscript \
+    libmagic1 \
+    libxi6 \
+    libxslt1.1 \
+    libxtst6 \
+    libxrandr2 \
+    libxkbfile1 \
+    libxcomposite1 \
+    libopengl0 \
+    libnss3 \
+    libxkbcommon0 \
+    libegl1 \
+    libxdamage1 \
+    libgl1 \
+    libglx-mesa0 \
+    xz-utils \
+    xdg-utils \
+    inotify-tools \
+    binutils \
+    unrar-free \
+    zip
 msg_ok "Installed dependencies"
 
 fetch_and_deploy_gh_release "kepubify" "pgaskin/kepubify" "singlefile" "latest" "/usr/bin" "kepubify-linux-64bit"
 KEPUB_VERSION="$(/usr/bin/kepubify --version | awk '{print $2}')"
+fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-x86_64.txz"
 
 msg_info "Installing Calibre"
-CALIBRE_RELEASE="$(curl -s https://api.github.com/repos/kovidgoyal/calibre/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)"
-CALIBRE_VERSION=${CALIBRE_RELEASE#v}
-curl -fsSL https://github.com/kovidgoyal/calibre/releases/download/${CALIBRE_RELEASE}/calibre-${CALIBRE_VERSION}-x86_64.txz -o /tmp/calibre.txz
-mkdir -p /opt/calibre
-$STD tar -xf /tmp/calibre.txz -C /opt/calibre
-rm /tmp/calibre.txz
 $STD /opt/calibre/calibre_postinstall
-msg_ok "Calibre installed"
+CALIBRE_VERSION=$(cat ~/.calibre)
+msg_ok "Installed Calibre"
 
 setup_uv
 
-fetch_and_deploy_gh_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
 
 msg_info "Configuring Autocaliweb"
 INSTALL_DIR="/opt/autocaliweb"
@@ -115,8 +111,8 @@ msg_info "Initializing databases"
 KEPUBIFY_PATH=$(command -v kepubify 2>/dev/null || echo "/usr/bin/kepubify")
 EBOOK_CONVERT_PATH=$(command -v ebook-convert 2>/dev/null || echo "/usr/bin/ebook-convert")
 CALIBRE_BIN_DIR=$(dirname "$EBOOK_CONVERT_PATH")
-curl -fsSL https://github.com/gelbphoenix/autocaliweb/raw/refs/heads/main/library/metadata.db -o "$CALIBRE_LIB_DIR"/metadata.db
-curl -fsSL https://github.com/gelbphoenix/autocaliweb/raw/refs/heads/main/library/app.db -o "$CONFIG_DIR"/app.db
+curl -fsSL https://codeberg.org/gelbphoenix/autocaliweb/raw/branch/main/library/metadata.db -o "$CALIBRE_LIB_DIR"/metadata.db
+curl -fsSL https://codeberg.org/gelbphoenix/autocaliweb/raw/branch/main/library/app.db -o "$CONFIG_DIR"/app.db
 sqlite3 "$CONFIG_DIR/app.db" <<EOS
 UPDATE settings SET
     config_kepubifypath='$KEPUBIFY_PATH',
@@ -323,8 +319,4 @@ msg_ok "Created scripts and service files"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

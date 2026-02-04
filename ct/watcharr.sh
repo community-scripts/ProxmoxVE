@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/sbondCo/Watcharr
@@ -38,12 +38,12 @@ function update_script() {
     fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
 
     msg_info "Updating Watcharr"
-    cd /opt/watcharr || exit
+    cd /opt/watcharr
     export GOOS=linux
     $STD npm i
     $STD npm run build
     mv ./build ./server/ui
-    cd server || exit
+    cd server
     $STD go mod download
     $STD go build -o ./watcharr
     msg_ok "Updated Watcharr"
@@ -60,7 +60,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3080${CL}"

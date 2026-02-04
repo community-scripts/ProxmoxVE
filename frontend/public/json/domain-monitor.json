@@ -1,0 +1,35 @@
+{
+  "name": "Domain Monitor",
+  "slug": "domain-monitor",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-11-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://github.com/Hosteroid/domain-monitor/blob/main/README.md",
+  "config_path": "/opt/domain-monitor/.env",
+  "website": "https://github.com/Hosteroid/domain-monitor",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/domain-monitor.png",
+  "description": "A self-hosted PHP domain expiration monitoring tool that tracks domain expiry dates, RDAP/WHOIS data, and SSL certificate validity. Supports alerts, multi-user setup, and cron automation. Built for developers, hosting providers, and IT admins who want full control without third-party services.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/domain-monitor.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 512,
+        "hdd": 2,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

@@ -12,7 +12,7 @@
   "interface_port": 80,
   "documentation": "https://cosmos-cloud.io/doc/1%20index/",
   "website": "https://cosmos-cloud.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/cosmos-server.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/cosmos-server.webp",
   "config_path": "/etc/sysconfig/CosmosCloud",
   "description": "Cosmos Cloud is a self-hosting platform that automates maintenance and security. It offers an app marketplace, reverse proxy management, container control, VPN integration, real-time monitoring, and disk management. Security features include SSO, anti-DDoS, and encryption. It simplifies self-hosting for all users.",
   "install_methods": [
@@ -24,7 +24,7 @@
         "ram": 2048,
         "hdd": 8,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
@@ -36,6 +36,10 @@
     {
       "type": "info",
       "text": "The file `/etc/sysconfig/CosmosCloud` is optional. If you need custom settings, you can create it yourself."
+    },
+    {
+      "type": "warning",
+      "text": "Requires FUSE support for mergerfs functionality. FUSE is enabled by default during installation."
     }
   ]
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/sbondCo/Watcharr
@@ -22,11 +22,11 @@ NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
 
 msg_info "Setup Watcharr"
-cd /opt/watcharr || exit
+cd /opt/watcharr
 $STD npm i
 $STD npm run build
 mv ./build ./server/ui
-cd server || exit
+cd server
 export CGO_ENABLED=1 GOOS=linux
 $STD go mod download
 $STD go build -o ./watcharr
@@ -52,9 +52,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

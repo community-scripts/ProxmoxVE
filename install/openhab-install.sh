@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.openhab.org/
@@ -13,35 +13,30 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-  ca-certificates \
-  apt-transport-https
-msg_ok "Installed Dependencies"
-
 JAVA_VERSION="21" setup_java
 
 msg_info "Installing openHAB"
-curl -fsSL "https://openhab.jfrog.io/artifactory/api/gpg/key/public" | gpg --dearmor -o /usr/share/keyrings/openhab.gpg
-chmod u=rw,g=r,o=r /usr/share/keyrings/openhab.gpg
-cat <<EOF >/etc/apt/sources.list.d/openhab.sources
-Types: deb
-URIs: https://openhab.jfrog.io/artifactory/openhab-linuxpkg
-Suites: stable
-Components: main
-Signed-By: /usr/share/keyrings/openhab.gpg
-EOF
-$STD apt update
-$STD apt -y install openhab
+setup_deb822_repo \
+  "openhab" \
+  "https://openhab.jfrog.io/artifactory/api/gpg/key/public" \
+  "https://openhab.jfrog.io/artifactory/openhab-linuxpkg" \
+  "stable" \
+  "main"
+$STD apt install -y openhab
+msg_ok "Installed openHAB"
+
+msg_info "Initializing openHAB directories"
+mkdir -p /var/lib/openhab/{tmp,etc,cache}
+mkdir -p /etc/openhab
+mkdir -p /var/log/openhab
+chown -R openhab:openhab /var/lib/openhab /etc/openhab /var/log/openhab
+msg_ok "Initialized openHAB directories"
+
+msg_info "Starting Service"
 systemctl daemon-reload
 systemctl enable -q --now openhab
-msg_ok "Installed openHAB"
+msg_ok "Started Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

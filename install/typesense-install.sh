@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tlissak
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://typesense.org/
@@ -19,15 +19,10 @@ cd /opt
 curl -fsSL "https://dl.typesense.org/releases/${RELEASE}/typesense-server-${RELEASE}-amd64.deb" -o "/opt/typesense-server-${RELEASE}-amd64.deb"
 $STD apt install -y /opt/typesense-server-${RELEASE}-amd64.deb
 echo 'enable-cors = true' >>/etc/typesense/typesense-server.ini
+rm -rf /opt/typesense-server-${RELEASE}-amd64.deb
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed TypeSense"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/typesense-server-${RELEASE}-amd64.deb
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -42,9 +42,15 @@
     ]
   },
   {
-    "title": "🧰 Maintenance",
+    "title": "🗑️ Deleted Scripts",
     "labels": [
-      "maintenance"
+      "delete script"
+    ]
+  },
+  {
+    "title": "💾 Core",
+    "labels": [
+      "core"
     ],
     "subCategories": [
       {
@@ -69,30 +75,86 @@
         "notes": []
       },
       {
-        "title": "📡 API",
+        "title": "🔧 Refactor",
         "labels": [
-          "api"
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
+    "title": "🧰 Tools",
+    "labels": [
+      "tools"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
         ],
         "notes": []
       },
       {
-        "title": "💾 Core",
+        "title": "✨ New Features",
         "labels": [
-          "core"
+          "feature"
         ],
         "notes": []
       },
       {
-        "title": "📂 Github",
+        "title": "💥 Breaking Changes",
         "labels": [
-          "github"
+          "breaking change"
         ],
         "notes": []
       },
       {
-        "title": "📝 Documentation",
+        "title": "🔧 Refactor",
         "labels": [
-          "maintenance"
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
+    "title": "📚 Documentation",
+    "labels": [
+      "documentation"
+    ]
+  },
+  {
+    "title": "📂 Github",
+    "labels": [
+      "github"
+    ]
+  },
+  {
+    "title": "📡 API",
+    "labels": [
+      "api"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
+        ],
+        "notes": []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": [
+          "feature"
+        ],
+        "notes": []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": [
+          "breaking change"
         ],
         "notes": []
       },
@@ -142,7 +204,9 @@
     ]
   },
   {
-    "title": "❔ Unlabelled",
-    "labels": []
+    "title": "❔ Uncategorized",
+    "labels": [
+      "needs triage"
+    ]
   }
 ]

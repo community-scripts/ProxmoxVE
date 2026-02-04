@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/danielbrendel/hortusfox-web
@@ -13,37 +13,18 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y apache2
-msg_ok "Installed Dependencies"
-
-PHP_MODULE="exif,mysql" PHP_APACHE="YES" PHP_FPM="NO" PHP_VERSION="8.3" setup_php
 setup_mariadb
+MARIADB_DB_NAME="hortusfox" MARIADB_DB_USER="hortusfox" setup_mariadb_db
+PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
 setup_composer
-
-msg_info "Setting up database"
-DB_NAME=hortusfox
-DB_USER=hortusfox
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "HortusFox Database Credentials"
-  echo "Database: $DB_NAME"
-  echo "Username: $DB_USER"
-  echo "Password: $DB_PASS"
-} >>~/hortusfox.creds
-msg_ok "Set up database"
-
-fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web"
+fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web" "tarball"
 
 msg_info "Configuring .env"
 cp /opt/hortusfox/.env.example /opt/hortusfox/.env
 sed -i "s|^DB_HOST=.*|DB_HOST=localhost|" /opt/hortusfox/.env
-sed -i "s|^DB_USER=.*|DB_USER=$DB_USER|" /opt/hortusfox/.env
-sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" /opt/hortusfox/.env
-sed -i "s|^DB_DATABASE=.*|DB_DATABASE=$DB_NAME|" /opt/hortusfox/.env
+sed -i "s|^DB_USER=.*|DB_USER=$MARIADB_DB_USER|" /opt/hortusfox/.env
+sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=$MARIADB_DB_PASS|" /opt/hortusfox/.env
+sed -i "s|^DB_DATABASE=.*|DB_DATABASE=$MARIADB_DB_NAME|" /opt/hortusfox/.env
 sed -i "s|^DB_ENABLE=.*|DB_ENABLE=true|" /opt/hortusfox/.env
 sed -i "s|^APP_TIMEZONE=.*|APP_TIMEZONE=Europe/Berlin|" /opt/hortusfox/.env
 msg_ok ".env configured"
@@ -58,20 +39,20 @@ $STD php asatru migrate:fresh
 msg_ok "Migration finished"
 
 msg_info "Setting up HortusFox"
-$STD mariadb -u root -D $DB_NAME -e "INSERT IGNORE INTO AppModel (workspace, language, created_at) VALUES ('Default Workspace', 'en', NOW());"
+$STD mariadb -u root -D $MARIADB_DB_NAME -e "INSERT IGNORE INTO AppModel (workspace, language, created_at) VALUES ('Default Workspace', 'en', NOW());"
 $STD php asatru plants:attributes
 $STD php asatru calendar:classes
 ADMIN_EMAIL="admin@example.com"
 ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)"
 ADMIN_HASH=$(php -r "echo password_hash('$ADMIN_PASS', PASSWORD_BCRYPT);")
-$STD mariadb -u root -D $DB_NAME -e "INSERT IGNORE INTO UserModel (name, email, password, admin) VALUES ('Admin', '$ADMIN_EMAIL', '$ADMIN_HASH', 1);"
+$STD mariadb -u root -D $MARIADB_DB_NAME -e "INSERT IGNORE INTO UserModel (name, email, password, admin) VALUES ('Admin', '$ADMIN_EMAIL', '$ADMIN_HASH', 1);"
 {
   echo ""
   echo "HortusFox-Admin-Creds:"
   echo "E-Mail: $ADMIN_EMAIL"
   echo "Passwort: $ADMIN_PASS"
 } >>~/hortusfox.creds
-$STD mariadb -u root -D $DB_NAME -e "INSERT IGNORE INTO LocationsModel (name, active, created_at) VALUES ('Home', 1, NOW());"
+$STD mariadb -u root -D $MARIADB_DB_NAME -e "INSERT IGNORE INTO LocationsModel (name, active, created_at) VALUES ('Home', 1, NOW());"
 msg_ok "Set up HortusFox"
 
 msg_info "Configuring Apache vHost"
@@ -97,8 +78,4 @@ msg_ok "Apache configured"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/clusterzx/paperless-ai
@@ -20,21 +20,31 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Python3"
 $STD apt install -y \
-  python3-pip
+  python3-pip \
+  python3-dev \
+  python3-venv
+mkdir -p ~/.config/pip
+cat >~/.config/pip/pip.conf <<EOF
+[global]
+break-system-packages = true
+EOF
 msg_ok "Installed Python3"
 
-setup_nodejs
+NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai" "tarball"
 
 msg_info "Setup Paperless-AI"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-$STD unzip v${RELEASE}.zip
-mv paperless-ai-${RELEASE} /opt/paperless-ai
 cd /opt/paperless-ai
+$STD python3 -m venv /opt/paperless-ai/venv
+source /opt/paperless-ai/venv/bin/activate
+# TMPDIR to use container disk instead of tmpfs for large pip downloads (https://github.com/community-scripts/ProxmoxVE/issues/10338)
+export TMPDIR=/opt/paperless-ai/tmp
+mkdir -p "$TMPDIR"
+$STD pip install --upgrade pip
 $STD pip install --no-cache-dir -r requirements.txt
+rm -rf "$TMPDIR"
 mkdir -p data/chromadb
-$STD npm install
+$STD npm ci --only=production
 mkdir -p /opt/paperless-ai/data
 cat <<EOF >/opt/paperless-ai/data/.env
 PAPERLESS_API_URL=
@@ -61,7 +71,6 @@ CUSTOM_MODEL=
 RAG_SERVICE_URL=http://localhost:8000
 RAG_SERVICE_ENABLED=true
 EOF
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Paperless-AI"
 
 msg_info "Creating Service"
@@ -73,7 +82,9 @@ Requires=paperless-rag.service
 
 [Service]
 WorkingDirectory=/opt/paperless-ai
-ExecStart=/usr/bin/npm start
+Environment="NODE_ENV=production"
+EnvironmentFile=/opt/paperless-ai/data/.env
+ExecStart=/usr/bin/node server.js
 Restart=always
 
 [Install]
@@ -87,7 +98,8 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/paperless-ai
-ExecStart=/usr/bin/python3 main.py --host 0.0.0.0 --port 8000 --initialize
+EnvironmentFile=/opt/paperless-ai/data/.env
+ExecStart=/opt/paperless-ai/venv/bin/python3 main.py --host 0.0.0.0 --port 8000 --initialize
 Restart=always
 
 [Install]
@@ -100,10 +112,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/v${RELEASE}.zip
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

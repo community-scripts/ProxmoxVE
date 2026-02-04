@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Dolibarr/dolibarr/
@@ -34,18 +34,14 @@ msg_info "Setup Dolibarr"
 BASE="https://sourceforge.net/projects/dolibarr/files/Dolibarr%20installer%20for%20Debian-Ubuntu%20(DoliDeb)/"
 RELEASE=$(curl -fsSL "$BASE" | grep -oP '(?<=/Dolibarr%20installer%20for%20Debian-Ubuntu%20%28DoliDeb%29/)\d+(\.\d+)+(?=/)' | sort -V | tail -n1)
 FILE=$(curl -fsSL "${BASE}${RELEASE}/" | grep -oP 'dolibarr_[^"]+_all.deb' | head -n1)
-curl -fsSL "https://netcologne.dl.sourceforge.net/project/dolibarr/Dolibarr%20installer%20for%20Debian-Ubuntu%20(DoliDeb)/${RELEASE}/${FILE}?viasf=1" -o ""$FILE""
+curl -fsSL "https://altushost-swe.dl.sourceforge.net/project/dolibarr/Dolibarr%20installer%20for%20Debian-Ubuntu%20(DoliDeb)/${RELEASE}/${FILE}?viasf=1" -o ""$FILE""
 echo "dolibarr dolibarr/reconfigure-webserver multiselect apache2" | debconf-set-selections
 $STD apt-get install ./$FILE -y
 $STD apt install -f
+rm -rf ~/$FILE
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Dolibarr"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf ~/$FILE
-$STD apt-get autoremove
-$STD apt-get autoclean
-msg_ok "Cleaned"
+cleanup_lxc

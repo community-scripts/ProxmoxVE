@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/wger-project/wger
@@ -36,12 +36,12 @@ chmod g+w /home/wger/db /home/wger/db/database.sqlite
 mkdir /home/wger/{static,media}
 chmod o+w /home/wger/media
 temp_dir=$(mktemp -d)
-cd "$temp_dir" || exit
+cd "$temp_dir"
 RELEASE=$(curl -fsSL https://api.github.com/repos/wger-project/wger/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
 curl -fsSL "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz" -o "$RELEASE.tar.gz"
 tar xzf "$RELEASE".tar.gz
 mv wger-"$RELEASE" /home/wger/src
-cd /home/wger/src || exit
+cd /home/wger/src
 $STD pip install -r requirements_prod.txt --ignore-installed
 $STD pip install -e .
 $STD wger create-settings --database-path /home/wger/db/database.sqlite
@@ -49,6 +49,7 @@ sed -i "s#home/wger/src/media#home/wger/media#g" /home/wger/src/settings.py
 sed -i "/MEDIA_ROOT = '\/home\/wger\/media'/a STATIC_ROOT = '/home/wger/static'" /home/wger/src/settings.py
 $STD wger bootstrap
 $STD python3 manage.py collectstatic
+rm -rf "$temp_dir"
 echo "${RELEASE}" >/opt/wger_version.txt
 msg_ok "Finished setting up wger"
 
@@ -103,13 +104,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "$temp_dir"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
-
-motd_ssh
-customize
+cleanup_lxc

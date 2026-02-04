@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/benzino77/tasmocompiler
@@ -45,16 +45,13 @@ function update_script() {
     export NODE_OPTIONS=--openssl-legacy-provider
     $STD npm i
     $STD yarn build
+    rm -r "/opt/v${RELEASE}.tar.gz"
+    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated TasmoCompiler"
 
     msg_info "Starting Service"
     systemctl start tasmocompiler
     msg_ok "Started Service"
-
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_info "Cleaning up"
-    rm -r "/opt/v${RELEASE}.tar.gz"
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
@@ -66,7 +63,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

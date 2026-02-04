@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://changedetection.io/
 
 APP="Change Detection"
 var_tags="${var_tags:-monitoring;crawler}"
-var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_cpu="${var_cpu:-4}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
@@ -29,12 +29,7 @@ function update_script() {
     exit
   fi
 
-  if ! dpkg -s libjpeg-dev >/dev/null 2>&1; then
-    msg_info "Installing Dependencies"
-    $STD apt-get update
-    $STD apt-get install -y libjpeg-dev
-    msg_ok "Updated Dependencies"
-  fi
+  ensure_dependencies libjpeg-dev
 
   NODE_VERSION="24" setup_nodejs
 
@@ -76,7 +71,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5000${CL}"

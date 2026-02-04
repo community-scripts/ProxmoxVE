@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://grafana.com/
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-256}"
 var_disk="${var_disk:-1}"
 var_os="${var_os:-alpine}"
-var_version="${var_version:-3.22}"
+var_version="${var_version:-3.23}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -64,6 +64,6 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL.
          ${BL}http://${IP}:3000${CL} \n"

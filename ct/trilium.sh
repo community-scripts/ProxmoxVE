@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/TriliumNext/Trilium
@@ -55,14 +55,8 @@ function update_script() {
     msg_info "Restoring Database"
     mkdir -p "$(dirname "${DB_RESTORE_PATH}")"
     cp -r /opt/trilium_backup/$(basename "${DB_PATH}") "${DB_RESTORE_PATH}"
-    msg_ok "Restored Database"
-
-    msg_info "Cleaning up"
     rm -rf /opt/trilium_backup
-    $STD apt -y autoremove
-    $STD apt -y autoclean
-    $STD apt -y clean
-    msg_ok "Cleaned"
+    msg_ok "Restored Database"
 
     msg_info "Starting Service"
     systemctl start trilium
@@ -77,7 +71,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

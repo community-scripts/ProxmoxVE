@@ -1,0 +1,40 @@
+{
+  "name": "Wallabag",
+  "slug": "wallabag",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-12-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "config_path": "/opt/wallabag/app/config/parameters.yml",
+  "interface_port": 8000,
+  "documentation": "https://doc.wallabag.org/",
+  "website": "https://wallabag.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/wallabag.webp",
+  "description": "Wallabag is a self-hosted read-it-later application. Save web articles to read them later, offline, in a clean and distraction-free interface. Features tagging, full-text search, and browser/mobile app integrations.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/wallabag.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 6,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Database credentials are stored in ~/wallabag.creds",
+      "type": "info"
+    }
+  ]
+}

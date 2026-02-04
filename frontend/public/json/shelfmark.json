@@ -1,0 +1,40 @@
+{
+  "name": "Shelfmark",
+  "slug": "shelfmark",
+  "categories": [
+    13
+  ],
+  "date_created": "2026-01-31",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8084,
+  "documentation": "https://github.com/calibrain/shelfmark/tree/main/docs",
+  "website": "https://github.com/calibrain/shelfmark",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/shelfmark.webp",
+  "config_path": "/etc/shelfmark",
+  "description": "Shelfmark is a unified web interface for searching and aggregating books and audiobook downloads from multiple sources - all in one place.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/shelfmark.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "The configuration at `/etc/shelfmark/.env` is for bootstrapping the initial install. Customize the configuration via the Shelfmark UI.",
+      "type": "info"
+    }
+  ]
+}

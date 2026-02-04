@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Omar Minaya
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://lyrion.org/getting-started/
@@ -38,15 +38,9 @@ function update_script() {
     curl -fsSL -o "$DEB_FILE" "$DEB_URL"
     $STD apt install "$DEB_FILE" -y
     systemctl restart lyrion
+    $STD rm -f "$DEB_FILE"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to ${RELEASE}"
-
-    msg_info "Cleaning up"
-    $STD rm -f "$DEB_FILE"
-    $STD apt -y autoremove
-    $STD apt -y autoclean
-    $STD apt -y clean
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "$APP is already up to date (${RELEASE})"
@@ -58,7 +52,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access the web interface at:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9000${CL}"

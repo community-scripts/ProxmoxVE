@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT |  https://github.com/tteck/Proxmox/raw/main/LICENSE
 # Source: https://github.com/odoo/odoo
@@ -58,6 +58,8 @@ sed -i \
   -e "s|^;*db_password *=.*|db_password = $DB_PASS|" \
   /etc/odoo/odoo.conf
 $STD sudo -u odoo odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init
+rm -f /opt/odoo.deb
+rm -f /opt/python3-lxml-html-clean.deb
 echo "${LATEST_VERSION}" >/opt/${APPLICATION}_version.txt
 msg_ok "Configured Odoo"
 
@@ -67,11 +69,4 @@ msg_ok "Restarted Odoo"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f /opt/odoo.deb
-rm -f /opt/python3-lxml-html-clean.deb
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

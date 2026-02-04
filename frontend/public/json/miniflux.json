@@ -1,0 +1,40 @@
+{
+  "name": "Miniflux",
+  "slug": "miniflux",
+  "categories": [
+    13
+  ],
+  "date_created": "2025-11-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "config_path": "/etc/miniflux.conf",
+  "interface_port": 8080,
+  "documentation": "https://miniflux.app/docs/index.html",
+  "website": "https://miniflux.app/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/miniflux-light.webp",
+  "description": "Miniflux is a minimalist and opinionated feed reader.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/miniflux.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "randomly generated during installation process"
+  },
+  "notes": [
+    {
+      "text": "Admin password available as `ADMIN_PASSWORD` in `~/miniflux.creds`",
+      "type": "info"
+    }
+  ]
+}

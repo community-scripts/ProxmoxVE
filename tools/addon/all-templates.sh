@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -42,6 +42,29 @@ function msg() {
   local TEXT="$1"
   echo -e "$TEXT"
 }
+function validate_container_id() {
+  local ctid="$1"
+  # Check if ID is numeric
+  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
+    return 1
+  fi
+  # Check if config file exists for VM or LXC
+  if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
+    return 1
+  fi
+  # Check if ID is used in LVM logical volumes
+  if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
+    return 1
+  fi
+  return 0
+}
+function get_valid_container_id() {
+  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+  while ! validate_container_id "$suggested_id"; do
+    suggested_id=$((suggested_id + 1))
+  done
+  echo "$suggested_id"
+}
 function cleanup_ctid() {
   if pct status $CTID &>/dev/null; then
     if [ "$(pct status $CTID | awk '{print $2}')" == "running" ]; then
@@ -76,7 +99,15 @@ TEMPLATE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templat
 # Setup script environment
 NAME=$(echo "$TEMPLATE" | grep -oE '^[^-]+-[^-]+')
 PASS="$(openssl rand -base64 8)"
+
+# Get valid Container ID
 CTID=$(pvesh get /cluster/nextid)
+if ! validate_container_id "$CTID"; then
+  warn "Container ID $CTID is already in use."
+  CTID=$(get_valid_container_id "$CTID")
+  info "Using next available ID: $CTID"
+fi
+
 PCT_OPTIONS="
     -features keyctl=1,nesting=1
     -hostname $NAME

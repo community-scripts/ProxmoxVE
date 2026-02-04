@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://recyclarr.dev/wiki/",
   "website": "https://recyclarr.dev/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/recyclarr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/recyclarr.webp",
   "config_path": "",
   "description": "Recyclarr is an automation tool that integrates with media management software like Sonarr and Radarr. It helps users manage and organize their media libraries by automatically searching for and adding content from indexers, based on user-defined criteria. It streamlines the process of maintaining and updating media collections without manual intervention.",
   "install_methods": [
@@ -31,5 +31,14 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "type": "warning",
+      "text": "Configure your Radarr/Sonarr instances in `/root/.config/recyclarr/recyclarr.yml` before the first sync."
+    },
+    {
+      "type": "info",
+      "text": "Automatic daily sync is configured via `/etc/cron.d/recyclarr`. Sync logs are saved to `/root/.config/recyclarr/sync.log`."
+    }
+  ]
 }

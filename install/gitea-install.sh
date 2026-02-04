@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # Co-author: Rogue-King
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -15,15 +15,16 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y sqlite3
+$STD apt install -y \
+    git \
+    sqlite3
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "gitea" "go-gitea/gitea" "singlefile" "latest" "/usr/local/bin" "gitea-*-linux-amd64"
 
 msg_info "Configuring Gitea"
 chmod +x /usr/local/bin/gitea
-adduser --system --group --disabled-password --shell /bin/bash --home /etc/gitea gitea >/dev/null
+$STD adduser --system --group --disabled-password --shell /bin/bash --home /etc/gitea gitea
 mkdir -p /var/lib/gitea/{custom,data,log}
 chown -R gitea:gitea /var/lib/gitea/
 chmod -R 750 /var/lib/gitea/
@@ -68,8 +69,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

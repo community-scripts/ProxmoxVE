@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/wger-project/wger
@@ -38,23 +38,20 @@ function update_script() {
     curl -fsSL "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz" -o "$temp_file"
     tar xzf "$temp_file"
     cp -rf wger-"$RELEASE"/* /home/wger/src
-    cd /home/wger/src || exit
+    cd /home/wger/src
     $STD pip install -r requirements_prod.txt --ignore-installed
     $STD pip install -e .
     $STD python3 manage.py migrate
     $STD python3 manage.py collectstatic --no-input
     $STD yarn install
     $STD yarn build:css:sass
+    rm -rf "$temp_file"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start wger
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf "$temp_file"
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
@@ -66,7 +63,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

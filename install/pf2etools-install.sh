@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: TheRealVira
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://pf2etools.com/
@@ -42,12 +42,6 @@ ln -s "/opt/Pf2eTools" /var/www/html
 chown -R www-data: "/opt/Pf2eTools"
 chmod -R 755 "/opt/Pf2eTools"
 msg_ok "Created Service"
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
-
+cleanup_lxc
 motd_ssh
 customize

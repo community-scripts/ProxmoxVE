@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://ui.com/download/unifi
 
 APP="Unifi"
-var_tags="${var_tags:-network;controller;unifi}"
+var_tags="${var_tags:-network;unifi}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
@@ -27,9 +27,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  JAVA_VERSION="21" setup_java
+
   msg_info "Updating ${APP}"
   $STD apt update --allow-releaseinfo-change
-  $STD apt install -y unifi
+  ensure_dependencies unifi
   msg_ok "Updated successfully!"
   exit
 }
@@ -38,7 +41,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8443${CL}"

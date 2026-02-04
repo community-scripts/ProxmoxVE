@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.paymenter.org
@@ -27,10 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
 
   CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
   if [[ "$CURRENT_PHP" != "8.3" ]]; then
-    PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="common,mysql,fpm,redis" setup_php
+    PHP_VERSION="8.3" PHP_FPM="YES" setup_php
     setup_composer
     sed -i 's|php8\.2-fpm\.sock|php8.3-fpm.sock|g' /etc/nginx/sites-available/paymenter.conf
     $STD systemctl reload nginx
@@ -50,7 +51,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:80${CL}"

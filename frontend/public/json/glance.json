@@ -2,7 +2,7 @@
   "name": "Glance",
   "slug": "glance",
   "categories": [
-    9
+    10
   ],
   "date_created": "2024-12-02",
   "type": "ct",
@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://github.com/glanceapp/glance/blob/main/docs/configuration.md",
   "website": "https://github.com/glanceapp/glance",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/glance.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/glance.webp",
   "config_path": "/opt/glance/glance.yml",
   "description": "A self-hosted dashboard that puts all your feeds in one place",
   "install_methods": [
@@ -23,7 +23,7 @@
         "ram": 512,
         "hdd": 2,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],

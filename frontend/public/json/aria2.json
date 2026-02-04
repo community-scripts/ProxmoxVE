@@ -6,12 +6,12 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 6880,
   "documentation": "https://aria2.github.io/manual/en/html/index.html",
   "website": "https://aria2.github.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/aria2.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/aria2.webp",
   "config_path": "/root/aria2.daemon",
   "description": "Aria2 is a lightweight multi-protocol & multi-source, cross platform download utility operated in command-line. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink.",
   "install_methods": [
@@ -23,7 +23,7 @@
         "ram": 1024,
         "hdd": 8,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -85,4 +85,4 @@ msg_info "Installing ${APP} Common Bouncer"
 apt-get install -y crowdsec-firewall-bouncer-iptables &>/dev/null
 msg_ok "Installed ${APP} Common Bouncer"
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"

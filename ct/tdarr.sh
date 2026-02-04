@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://home.tdarr.io/
@@ -13,6 +13,7 @@ var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -37,11 +38,8 @@ function update_script() {
   $STD unzip Tdarr_Updater.zip
   chmod +x Tdarr_Updater
   $STD ./Tdarr_Updater
-  msg_ok "Updated Tdarr"
-
-  msg_info "Cleaning up"
   rm -rf /opt/tdarr/Tdarr_Updater.zip
-  msg_ok "Cleaned up"
+  msg_ok "Updated Tdarr"
   msg_ok "Updated successfully!"
   exit
 }
@@ -50,7 +48,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8265${CL}"

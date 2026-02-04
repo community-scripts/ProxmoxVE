@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/CrazyWolf13/streamlink-webui
 
 APP="streamlink-webui"
-var_tags="${var_tags:-download,streaming}"
+var_tags="${var_tags:-download;streaming}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
@@ -31,26 +31,25 @@ function update_script() {
 
   if check_for_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"; then
     msg_info "Stopping Service"
-    systemctl stop ${APP}
+    systemctl stop streamlink-webui
     msg_info "Stopped Service"
 
-    rm -rf /opt/${APP}
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     setup_uv
-    fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui" "tarball"
 
-    msg_info "Updating $APP"
-    $STD uv venv /opt/"${APP}"/backend/src/.venv
-    source /opt/"${APP}"/backend/src/.venv/bin/activate
-    $STD uv pip install -r /opt/"${APP}"/backend/src/requirements.txt --python=/opt/"${APP}"/backend/src/.venv
-    cd /opt/"${APP}"/frontend/src
+    msg_info "Updating streamlink-webui"
+    $STD uv venv /opt/streamlink-webui/backend/src/.venv
+    source /opt/streamlink-webui/backend/src/.venv/bin/activate
+    $STD uv pip install -r /opt/streamlink-webui/backend/src/requirements.txt --python=/opt/streamlink-webui/backend/src/.venv
+    cd /opt/streamlink-webui/frontend/src
     $STD yarn install
     $STD yarn build
-    chmod +x /opt/"${APP}"/start.sh
-    msg_ok "Updated $APP"
+    chmod +x /opt/streamlink-webui/start.sh
+    msg_ok "Updated streamlink-webui"
 
     msg_info "Starting Service"
-    systemctl start ${APP}
+    systemctl start streamlink-webui
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
@@ -61,7 +60,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"

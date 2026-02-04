@@ -11,7 +11,7 @@
   "interface_port": 8096,
   "documentation": "https://jellyfin.org/docs/",
   "website": "https://jellyfin.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/jellyfin.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jellyfin.webp",
   "config_path": "/etc/jellyfin/",
   "description": "Jellyfin is a free and open-source media server and suite of multimedia applications designed to organize, manage, and share digital media files to networked devices.",
   "install_methods": [
@@ -40,8 +40,12 @@
       "text": "FFmpeg path: /usr/lib/jellyfin-ffmpeg/ffmpeg",
       "type": "info"
     },
-     {
+    {
       "text": "For NVIDIA graphics cards, you'll need to install the same drivers in the container that you did on the host. In the container, run the driver installation script and add the CLI arg --no-kernel-module",
+      "type": "info"
+    },
+    {
+      "text": "Log rotation is configured in /etc/logrotate.d/jellyfin. To reduce verbosity, change MinimumLevel in /etc/jellyfin/logging.json to Warning or Error (disables fail2ban auth logging).",
       "type": "info"
     }
   ]

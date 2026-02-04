@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -58,6 +58,13 @@ function run_lxc_clean() {
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
       apk update
+    elif [ -e /etc/redhat-release ]; then
+      echo -e "${BL}[Info]${GN} Cleaning $name (CentOS)${CL}\n"
+      yum clean all
+      find /var/log -type f -delete 2>/dev/null
+      find /tmp -mindepth 1 -delete 2>/dev/null
+      yum update
+      yum upgrade -y
     else
       echo -e "${BL}[Info]${GN} Cleaning $name (Debian/Ubuntu)${CL}\n"
       find /var/cache -type f -delete 2>/dev/null
@@ -80,10 +87,10 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
   fi
 
   os=$(pct config "$container" | awk '/^ostype/ {print $2}')
-  # Supported: debian, ubuntu, alpine
-  if [ "$os" != "debian" ] && [ "$os" != "ubuntu" ] && [ "$os" != "alpine" ]; then
+  # Supported: debian, ubuntu, alpine, centos
+  if [ "$os" != "debian" ] && [ "$os" != "ubuntu" ] && [ "$os" != "alpine" ] && [ "$os" != "centos" ]; then
     header_info
-    echo -e "${BL}[Info]${GN} Skipping ${RD}$container is not Debian, Ubuntu or Alpine${CL} \n"
+    echo -e "${BL}[Info]${GN} Skipping ${RD}$container is not Debian, Ubuntu, Alpine or Red Hat Compatible${CL} \n"
     sleep 1
     continue
   fi

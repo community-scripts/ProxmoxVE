@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # Adapted from onethree7 (https://github.com/onethree7/proxmox-lxc-privilege-converter)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE

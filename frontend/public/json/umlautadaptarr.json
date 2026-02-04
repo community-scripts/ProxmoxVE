@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 5005,
-  "documentation": null,
+  "documentation": "https://github.com/PCJones/UmlautAdaptarr/blob/master/README.md",
   "website": "https://github.com/PCJones/UmlautAdaptarr",
   "logo": "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/images/logo.png",
   "config_path": "/opt/UmlautAdaptarr/appsettings.json",

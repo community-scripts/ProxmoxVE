@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.docker.com/
@@ -13,31 +13,16 @@ setting_up_container
 network_check
 update_os
 
-get_latest_release() {
-  curl -fsSL https://api.github.com/repos/"$1"/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-}
+DOCKER_LATEST_VERSION=$(get_latest_github_release "moby/moby")
+PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
+PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
-DOCKER_LATEST_VERSION=$(get_latest_release "moby/moby")
-PORTAINER_LATEST_VERSION=$(get_latest_release "portainer/portainer")
-PORTAINER_AGENT_LATEST_VERSION=$(get_latest_release "portainer/agent")
-DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
-
-msg_info "Installing Docker $DOCKER_LATEST_VERSION"
+msg_info "Installing Docker $DOCKER_LATEST_VERSION (with Compose, Buildx)"
 DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
 mkdir -p $(dirname $DOCKER_CONFIG_PATH)
 echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
 $STD sh <(curl -fsSL https://get.docker.com)
 msg_ok "Installed Docker $DOCKER_LATEST_VERSION"
-
-read -r -p "${TAB3}Install Docker Compose v2 plugin? <y/N> " prompt_compose
-if [[ ${prompt_compose,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
-  mkdir -p /usr/local/lib/docker/cli-plugins
-  curl -fsSL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_LATEST_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
-    -o /usr/local/lib/docker/cli-plugins/docker-compose
-  chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-  msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
-fi
 
 read -r -p "${TAB3}Would you like to add Portainer (UI)? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
@@ -69,15 +54,15 @@ fi
 
 read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
 case "${socket_choice,,}" in
-  l)
-    socket="tcp://127.0.0.1:2375"
-    ;;
-  a)
-    socket="tcp://0.0.0.0:2375"
-    ;;
-  *)
-    socket=""
-    ;;
+l)
+  socket="tcp://127.0.0.1:2375"
+  ;;
+a)
+  socket="tcp://0.0.0.0:2375"
+  ;;
+*)
+  socket=""
+  ;;
 esac
 
 if [[ -n "$socket" ]]; then
@@ -85,10 +70,10 @@ if [[ -n "$socket" ]]; then
   $STD apt-get install -y jq
 
   tmpfile=$(mktemp)
-  jq --arg sock "$socket" '. + { "hosts": ["unix:///var/run/docker.sock", $sock] }' /etc/docker/daemon.json > "$tmpfile" && mv "$tmpfile" /etc/docker/daemon.json
+  jq --arg sock "$socket" '. + { "hosts": ["unix:///var/run/docker.sock", $sock] }' /etc/docker/daemon.json >"$tmpfile" && mv "$tmpfile" /etc/docker/daemon.json
 
   mkdir -p /etc/systemd/system/docker.service.d
-  cat <<EOF > /etc/systemd/system/docker.service.d/override.conf
+  cat <<EOF >/etc/systemd/system/docker.service.d/override.conf
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd
@@ -107,8 +92,4 @@ fi
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

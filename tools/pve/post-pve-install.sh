@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteckster | MickLesk (CanbiZ)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -88,14 +88,14 @@ main() {
     fi
     start_routines_8
   elif [[ "$PVE_MAJOR" == "9" ]]; then
-    if ((PVE_MINOR != 0)); then
-      msg_error "Only Proxmox 9.0 is currently supported"
+    if ((PVE_MINOR < 0 || PVE_MINOR > 1)); then
+      msg_error "Only Proxmox 9.0-9.1.x is currently supported"
       exit 1
     fi
     start_routines_9
   else
     msg_error "Unsupported Proxmox VE major version: $PVE_MAJOR"
-    echo -e "Supported: 8.0–8.9.x and 9.0"
+    echo -e "Supported: 8.0–8.9.x and 9.0–9.1.x"
     exit 1
   fi
 }
@@ -595,7 +595,7 @@ EOF
   no)
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
     msg_error "Selected no to Disabling subscription nag"
-    rm /etc/apt/apt.conf.d/no-nag-script 2>/dev/null
+    [[ -f /etc/apt/apt.conf.d/no-nag-script ]] && rm /etc/apt/apt.conf.d/no-nag-script
     ;;
   esac
   apt --reinstall install proxmox-widget-toolkit &>/dev/null || msg_error "Widget toolkit reinstall failed"

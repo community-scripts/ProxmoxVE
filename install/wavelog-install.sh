@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Don Locke (DonLocke)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/wavelog/wavelog
@@ -13,24 +13,10 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" PHP_MAX_EXECUTION_TIME="600" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MAX_EXECUTION_TIME="600" setup_php
 setup_mariadb
+MARIADB_DB_NAME="wavelog" MARIADB_DB_USER="waveloguser" setup_mariadb_db
 fetch_and_deploy_gh_release "wavelog" "wavelog/wavelog" "tarball"
-
-msg_info "Setting up Database"
-DB_NAME=wavelog
-DB_USER=waveloguser
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "Wavelog-Credentials"
-  echo "Wavelog Database User: $DB_USER"
-  echo "Wavelog Database Password: $DB_PASS"
-  echo "Wavelog Database Name: $DB_NAME"
-} >>~/wavelog.creds
-msg_ok "Set up database"
 
 msg_info "Configuring Wavelog"
 chown -R www-data:www-data /opt/wavelog/
@@ -61,9 +47,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

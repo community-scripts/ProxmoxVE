@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Kristian Skov
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.urbackup.org/
@@ -14,32 +14,22 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  coreutils \
-  debconf-utils
+$STD apt install -y debconf-utils
 msg_ok "Installed Dependencies"
 
+setup_deb822_repo \
+  "urbackup" \
+  "https://download.opensuse.org/repositories/home:uroni/Debian_13/Release.key" \
+  "http://download.opensuse.org/repositories/home:/uroni/Debian_13/" \
+  "./" \
+  ""
 
-msg_info "Installing UrBackup Server"
-curl -fsSL https://download.opensuse.org/repositories/home:uroni/Debian_12/Release.key | gpg --dearmor -o /usr/share/keyrings/home-uroni.gpg
-cat <<EOF | sudo tee /etc/apt/sources.list.d/home-uroni.sources >/dev/null
-Types: deb
-URIs: http://download.opensuse.org/repositories/home:/uroni/Debian_12/
-Suites: ./
-Components: 
-Signed-By: /usr/share/keyrings/home-uroni.gpg
-EOF
-$STD apt update
+msg_info "Setting up UrBackup Server"
 mkdir -p /opt/urbackup/backups
 echo "urbackup-server urbackup/backuppath string /opt/urbackup/backups" | debconf-set-selections
 $STD apt install -y urbackup-server
-msg_ok "Installed UrBackup Server"
+msg_ok "Setup UrBackup Server"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

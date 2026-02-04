@@ -6,12 +6,12 @@
   ],
   "date_created": "2025-03-24",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 443,
   "documentation": "https://documentation.wazuh.com/",
   "website": "https://wazuh.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wazuh.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/wazuh.webp",
   "config_path": "",
   "description": "Wazuh is an open-source security monitoring solution that provides endpoint protection, network monitoring, and log analysis capabilities.",
   "install_methods": [
@@ -23,7 +23,7 @@
         "ram": 4096,
         "hdd": 25,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],

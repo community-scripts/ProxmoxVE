@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Omar Minaya
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://lyrion.org/getting-started/
@@ -19,15 +19,10 @@ RELEASE=$(echo "$DEB_URL" | grep -oP 'lyrionmusicserver_\K[0-9.]+(?=_amd64\.deb)
 DEB_FILE="/tmp/lyrionmusicserver_${RELEASE}_amd64.deb"
 curl -fsSL -o "$DEB_FILE" "$DEB_URL"
 $STD apt install "$DEB_FILE" -y
+rm -f "$DEB_FILE"
 echo "${RELEASE}" >"/opt/lyrion_version.txt"
 msg_ok "Setup Lyrion Music Server v${RELEASE}"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD rm -f "$DEB_FILE"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

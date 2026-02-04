@@ -1,0 +1,44 @@
+{
+  "name": "Domain Locker",
+  "slug": "domain-locker",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-11-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://domain-locker.com/about",
+  "config_path": "/opt/domain-locker.env",
+  "website": "https://github.com/Lissy93/domain-locker",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/domain-locker.webp",
+  "description": "The all-in-one tool, for keeping track of your domain name portfolio. Got domain names? Get Domain Locker! ",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/domain-locker.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Show DB credentials: `cat ~/Domain-Locker.creds`",
+      "type": "info"
+    },
+    {
+      "text": "Domain-locker takes quite some time to build and a lot of ressources, RAM and Cores can be lowered after install.",
+      "type": "info"
+    }
+  ]
+}

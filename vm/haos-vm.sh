@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -143,7 +143,7 @@ function check_root() {
 }
 
 # This function checks the version of Proxmox Virtual Environment (PVE) and exits if the version is not supported.
-# Supported: Proxmox VE 8.0.x – 8.9.x and 9.0 (NOT 9.1+)
+# Supported: Proxmox VE 8.0.x – 8.9.x, 9.0 and 9.1
 pve_check() {
   local PVE_VER
   PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
@@ -159,12 +159,12 @@ pve_check() {
     return 0
   fi
 
-  # Check for Proxmox VE 9.x: allow ONLY 9.0
+  # Check for Proxmox VE 9.x: allow 9.0 and 9.1
   if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
     local MINOR="${BASH_REMATCH[1]}"
-    if ((MINOR != 0)); then
-      msg_error "This version of Proxmox VE is not yet supported."
-      msg_error "Supported: Proxmox VE version 9.0"
+    if ((MINOR < 0 || MINOR > 1)); then
+      msg_error "This version of Proxmox VE is not supported."
+      msg_error "Supported: Proxmox VE version 9.0 – 9.1"
       exit 1
     fi
     return 0
@@ -172,7 +172,7 @@ pve_check() {
 
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
-  msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0"
+  msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0 – 9.1"
   exit 1
 }
 
@@ -564,7 +564,7 @@ msg_ok "${CL}${BL}${URL}${CL}"
 download_and_validate_xz "$URL" "$CACHE_FILE"
 
 msg_info "Creating Home Assistant OS VM shell"
-qm create "$VMID" -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
+qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
   -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" -tags community-script \
   -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 msg_ok "Created VM shell"
@@ -590,16 +590,16 @@ msg_ok "Imported disk (${CL}${BL}${DISK_REF}${CL})"
 rm -f "$FILE_IMG"
 
 msg_info "Attaching EFI and root disk"
-qm set "$VMID" \
-  --efidisk0 "${STORAGE}:0,efitype=4m" \
-  --scsi0 "${DISK_REF},ssd=1,discard=on" \
+qm set $VMID \
+  --efidisk0 ${STORAGE}:0,efitype=4m \
+  --scsi0 ${DISK_REF},ssd=1,discard=on \
   --boot order=scsi0 \
   --serial0 socket >/dev/null
-qm set "$VMID" --agent enabled=1 >/dev/null
+qm set $VMID --agent enabled=1 >/dev/null
 msg_ok "Attached EFI and root disk"
 
 msg_info "Resizing disk to $DISK_SIZE"
-qm resize "$VMID" scsi0 "${DISK_SIZE}" >/dev/null
+qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 msg_ok "Resized disk"
 
 DESCRIPTION=$(
@@ -632,7 +632,7 @@ DESCRIPTION=$(
 </div>
 EOF
 )
-qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+qm set $VMID -description "$DESCRIPTION" >/dev/null
 msg_ok "Created Homeassistant OS VM ${CL}${BL}(${HN})"
 
 if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Image Cache" \
@@ -649,4 +649,4 @@ if [ "$START_VM" == "yes" ]; then
   msg_ok "Started Home Assistant OS VM"
 fi
 post_update_to_api "done" "none"
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"

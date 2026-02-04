@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # Co-Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -32,7 +32,7 @@ $STD apt install -y google-chrome-stable
 rm /etc/apt/sources.list.d/google-chrome.list
 msg_ok "Installed Chrome"
 
-fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "v3.4.3" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
+fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/flaresolverr.service
@@ -57,8 +57,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -9,10 +9,11 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
+  "disable": true,
   "documentation": "https://palmr.kyantech.com.br/docs/3.1-beta",
   "config_path": "/opt/palmr/apps/server/.env, /opt/palmr/apps/web/.env",
   "website": "https://palmr.kyantech.com.br/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/palmr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/palmr.webp",
   "description": "Palmr is a fast and secure platform for sharing files, built with performance and privacy in mind.",
   "install_methods": [
     {

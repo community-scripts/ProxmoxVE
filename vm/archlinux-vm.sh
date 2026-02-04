@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -139,7 +139,7 @@ function check_root() {
 }
 
 # This function checks the version of Proxmox Virtual Environment (PVE) and exits if the version is not supported.
-# Supported: Proxmox VE 8.0.x – 8.9.x and 9.0 (NOT 9.1+)
+# Supported: Proxmox VE 8.0.x – 8.9.x, 9.0 and 9.1
 pve_check() {
   local PVE_VER
   PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
@@ -155,12 +155,12 @@ pve_check() {
     return 0
   fi
 
-  # Check for Proxmox VE 9.x: allow ONLY 9.0
+  # Check for Proxmox VE 9.x: allow 9.0 and 9.1
   if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
     local MINOR="${BASH_REMATCH[1]}"
-    if ((MINOR != 0)); then
-      msg_error "This version of Proxmox VE is not yet supported."
-      msg_error "Supported: Proxmox VE version 9.0"
+    if ((MINOR < 0 || MINOR > 1)); then
+      msg_error "This version of Proxmox VE is not supported."
+      msg_error "Supported: Proxmox VE version 9.0 – 9.1"
       exit 1
     fi
     return 0
@@ -168,7 +168,7 @@ pve_check() {
 
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
-  msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0"
+  msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0 – 9.1"
   exit 1
 }
 
@@ -237,7 +237,7 @@ function advanced_settings() {
   METHOD="advanced"
   [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
   while true; do
-    if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $VMID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 "$VMID" --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
       if [ -z "$VMID" ]; then
         VMID=$(get_valid_nextid)
       fi
@@ -257,7 +257,7 @@ function advanced_settings() {
     "i440fx" "Machine i440fx" ON \
     "q35" "Machine q35" OFF \
     3>&1 1>&2 2>&3); then
-    if [ $MACH = q35 ]; then
+    if [ "$MACH" = q35 ]; then
       echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
       FORMAT=""
       MACHINE=" -machine q35"
@@ -289,7 +289,7 @@ function advanced_settings() {
     "0" "None (Default)" ON \
     "1" "Write Through" OFF \
     3>&1 1>&2 2>&3); then
-    if [ $DISK_CACHE = "1" ]; then
+    if [ "$DISK_CACHE" = "1" ]; then
       echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}Write Through${CL}"
       DISK_CACHE="cache=writethrough,"
     else
@@ -301,11 +301,11 @@ function advanced_settings() {
   fi
 
   if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 arch-linux --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VM_NAME ]; then
+    if [ -z "$VM_NAME" ]; then
       HN="arch-linux"
       echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     else
-      HN=$(echo ${VM_NAME,,} | tr -d ' ')
+      HN=$(echo "${VM_NAME,,}" | tr -d ' ')
       echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     fi
   else
@@ -316,7 +316,7 @@ function advanced_settings() {
     "0" "KVM64 (Default)" ON \
     "1" "Host" OFF \
     3>&1 1>&2 2>&3); then
-    if [ $CPU_TYPE1 = "1" ]; then
+    if [ "$CPU_TYPE1" = "1" ]; then
       echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
       CPU_TYPE=" -cpu host"
     else
@@ -328,7 +328,7 @@ function advanced_settings() {
   fi
 
   if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 2 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $CORE_COUNT ]; then
+    if [ -z "$CORE_COUNT" ]; then
       CORE_COUNT="2"
       echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
     else
@@ -339,7 +339,7 @@ function advanced_settings() {
   fi
 
   if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 2048 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $RAM_SIZE ]; then
+    if [ -z "$RAM_SIZE" ]; then
       RAM_SIZE="2048"
       echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
     else
@@ -350,7 +350,7 @@ function advanced_settings() {
   fi
 
   if BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $BRG ]; then
+    if [ -z "$BRG" ]; then
       BRG="vmbr0"
       echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
     else
@@ -360,8 +360,8 @@ function advanced_settings() {
     exit-script
   fi
 
-  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MAC1 ]; then
+  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 "$GEN_MAC" --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$MAC1" ]; then
       MAC="$GEN_MAC"
       echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
     else
@@ -373,7 +373,7 @@ function advanced_settings() {
   fi
 
   if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VLAN1 ]; then
+    if [ -z "$VLAN1" ]; then
       VLAN1="Default"
       VLAN=""
       echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
@@ -386,7 +386,7 @@ function advanced_settings() {
   fi
 
   if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MTU1 ]; then
+    if [ -z "$MTU1" ]; then
       MTU1="Default"
       MTU=""
       echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
@@ -436,9 +436,9 @@ post_to_api_vm
 
 msg_info "Validating Storage"
 while read -r line; do
-  TAG=$(echo $line | awk '{print $1}')
-  TYPE=$(echo $line | awk '{printf "%-10s", $2}')
-  FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
+  TAG=$(echo "$line" | awk '{print $1}')
+  TYPE=$(echo "$line" | awk '{printf "%-10s", $2}')
+  FREE=$(echo "$line" | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
   ITEM="  Type: $TYPE Free: $FREE "
   OFFSET=2
   if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
@@ -471,7 +471,7 @@ echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
-STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
+STORAGE_TYPE=$(pvesm status -storage "$STORAGE" | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
 nfs | dir | cifs)
   DISK_EXT=".qcow2"
@@ -489,8 +489,8 @@ btrfs)
 esac
 for i in {0,1}; do
   disk="DISK$i"
-  eval DISK${i}=vm-${VMID}-disk-${i}${DISK_EXT:-}
-  eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
+  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}"${DISK_EXT:-}
+  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}"${!disk}
 done
 
 msg_info "Creating a Arch Linux VM"
@@ -534,7 +534,7 @@ DESCRIPTION=$(
 </div>
 EOF
 )
-qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+qm set $VMID -description "$DESCRIPTION" >/dev/null
 if [ -n "$DISK_SIZE" ]; then
   msg_info "Resizing disk to $DISK_SIZE GB"
   qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
@@ -551,4 +551,4 @@ if [ "$START_VM" == "yes" ]; then
 fi
 post_update_to_api "done" "none"
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"

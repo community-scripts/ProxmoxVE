@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/lissy93/web-check
@@ -64,13 +64,10 @@ msg_info "Setting up Chromium"
 chmod 755 /usr/bin/chromium
 msg_ok "Setup Chromium"
 
+fetch_and_deploy_gh_release "web-check" "CrazyWolf13/web-check" "tarball"
+
 msg_info "Installing Web-Check (Patience)"
-temp_file=$(mktemp)
-RELEASE="patch-1"
-curl -fsSL "https://github.com/CrazyWolf13/web-check/archive/refs/heads/${RELEASE}.tar.gz" -o "$temp_file"
-tar xzf "$temp_file"
-mv web-check-${RELEASE} /opt/web-check
-cd /opt/web-check || exit
+cd /opt/web-check
 cat <<'EOF' >/opt/web-check/.env
 CHROME_PATH=/usr/bin/chromium
 PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
@@ -94,7 +91,6 @@ REACT_APP_API_ENDPOINT='/api'
 ENABLE_ANALYTICS='false'
 EOF
 $STD yarn install --frozen-lockfile --network-timeout 100000
-echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed Web-Check"
 
 msg_info "Building Web-Check"
@@ -141,13 +137,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "$temp_file"
-rm -rf /var/lib/apt/lists/* /app/node_modules/.cache
-$STD apt -y autoremove
-$STD apt -y autoclean
-msg_ok "Cleaned"
-
-motd_ssh
-customize
+cleanup_lxc

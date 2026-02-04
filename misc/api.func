@@ -1,7 +1,154 @@
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
 # License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
 
+# ==============================================================================
+# API.FUNC - TELEMETRY & DIAGNOSTICS API
+# ==============================================================================
+#
+# Provides functions for sending anonymous telemetry data to Community-Scripts
+# API for analytics and diagnostics purposes.
+#
+# Features:
+#   - Container/VM creation statistics
+#   - Installation success/failure tracking
+#   - Error code mapping and reporting
+#   - Privacy-respecting anonymous telemetry
+#
+# Usage:
+#   source <(curl -fsSL .../api.func)
+#   post_to_api          # Report container creation
+#   post_update_to_api   # Report installation status
+#
+# Privacy:
+#   - Only anonymous statistics (no personal data)
+#   - User can opt-out via diagnostics settings
+#   - Random UUID for session tracking only
+#
+# ==============================================================================
+
+# ==============================================================================
+# SECTION 1: ERROR CODE DESCRIPTIONS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# explain_exit_code()
+#
+# - Maps numeric exit codes to human-readable error descriptions
+# - Supports:
+#   * Generic/Shell errors (1, 2, 126, 127, 128, 130, 137, 139, 143)
+#   * Package manager errors (APT, DPKG: 100, 101, 255)
+#   * Node.js/npm errors (243-249, 254)
+#   * Python/pip/uv errors (210-212)
+#   * PostgreSQL errors (231-234)
+#   * MySQL/MariaDB errors (241-244)
+#   * MongoDB errors (251-254)
+#   * Proxmox custom codes (200-231)
+# - Returns description string for given exit code
+# - Shared function with error_handler.func for consistency
+# ------------------------------------------------------------------------------
+explain_exit_code() {
+  local code="$1"
+  case "$code" in
+  # --- Generic / Shell ---
+  1) echo "General error / Operation not permitted" ;;
+  2) echo "Misuse of shell builtins (e.g. syntax error)" ;;
+  126) echo "Command invoked cannot execute (permission problem?)" ;;
+  127) echo "Command not found" ;;
+  128) echo "Invalid argument to exit" ;;
+  130) echo "Terminated by Ctrl+C (SIGINT)" ;;
+  137) echo "Killed (SIGKILL / Out of memory?)" ;;
+  139) echo "Segmentation fault (core dumped)" ;;
+  143) echo "Terminated (SIGTERM)" ;;
+
+  # --- Package manager / APT / DPKG ---
+  100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
+  101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
+  255) echo "DPKG: Fatal internal error" ;;
+
+  # --- Node.js / npm / pnpm / yarn ---
+  243) echo "Node.js: Out of memory (JavaScript heap out of memory)" ;;
+  245) echo "Node.js: Invalid command-line option" ;;
+  246) echo "Node.js: Internal JavaScript Parse Error" ;;
+  247) echo "Node.js: Fatal internal error" ;;
+  248) echo "Node.js: Invalid C++ addon / N-API failure" ;;
+  249) echo "Node.js: Inspector error" ;;
+  254) echo "npm/pnpm/yarn: Unknown fatal error" ;;
+
+  # --- Python / pip / uv ---
+  210) echo "Python: Virtualenv / uv environment missing or broken" ;;
+  211) echo "Python: Dependency resolution failed" ;;
+  212) echo "Python: Installation aborted (permissions or EXTERNALLY-MANAGED)" ;;
+
+  # --- PostgreSQL ---
+  231) echo "PostgreSQL: Connection failed (server not running / wrong socket)" ;;
+  232) echo "PostgreSQL: Authentication failed (bad user/password)" ;;
+  233) echo "PostgreSQL: Database does not exist" ;;
+  234) echo "PostgreSQL: Fatal error in query / syntax" ;;
+
+  # --- MySQL / MariaDB ---
+  241) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
+  242) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
+  243) echo "MySQL/MariaDB: Database does not exist" ;;
+  244) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
+
+  # --- MongoDB ---
+  251) echo "MongoDB: Connection failed (server not running)" ;;
+  252) echo "MongoDB: Authentication failed (bad user/password)" ;;
+  253) echo "MongoDB: Database not found" ;;
+  254) echo "MongoDB: Fatal query error" ;;
+
+  # --- Proxmox Custom Codes ---
+  200) echo "Custom: Failed to create lock file" ;;
+  203) echo "Custom: Missing CTID variable" ;;
+  204) echo "Custom: Missing PCT_OSTYPE variable" ;;
+  205) echo "Custom: Invalid CTID (<100)" ;;
+  206) echo "Custom: CTID already in use (check 'pct list' and /etc/pve/lxc/)" ;;
+  207) echo "Custom: Password contains unescaped special characters (-, /, \\, *, etc.)" ;;
+  208) echo "Custom: Invalid configuration (DNS/MAC/Network format error)" ;;
+  209) echo "Custom: Container creation failed (check logs for pct create output)" ;;
+  210) echo "Custom: Cluster not quorate" ;;
+  211) echo "Custom: Timeout waiting for template lock (concurrent download in progress)" ;;
+  214) echo "Custom: Not enough storage space" ;;
+  215) echo "Custom: Container created but not listed (ghost state - check /etc/pve/lxc/)" ;;
+  216) echo "Custom: RootFS entry missing in config (incomplete creation)" ;;
+  217) echo "Custom: Storage does not support rootdir (check storage capabilities)" ;;
+  218) echo "Custom: Template file corrupted or incomplete download (size <1MB or invalid archive)" ;;
+  220) echo "Custom: Unable to resolve template path" ;;
+  221) echo "Custom: Template file exists but not readable (check file permissions)" ;;
+  222) echo "Custom: Template download failed after 3 attempts (network/storage issue)" ;;
+  223) echo "Custom: Template not available after download (storage sync issue)" ;;
+  225) echo "Custom: No template available for OS/Version (check 'pveam available')" ;;
+  231) echo "Custom: LXC stack upgrade/retry failed (outdated pve-container - check https://github.com/community-scripts/ProxmoxVE/discussions/8126)" ;;
+
+  # --- Default ---
+  *) echo "Unknown error" ;;
+  esac
+}
+
+# ==============================================================================
+# SECTION 2: TELEMETRY FUNCTIONS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# post_to_api()
+#
+# - Sends LXC container creation statistics to Community-Scripts API
+# - Only executes if:
+#   * curl is available
+#   * DIAGNOSTICS=yes
+#   * RANDOM_UUID is set
+# - Payload includes:
+#   * Container type, disk size, CPU cores, RAM
+#   * OS type and version
+#   * IPv6 disable status
+#   * Application name (NSAPP)
+#   * Installation method
+#   * PVE version
+#   * Status: "installing"
+#   * Random UUID for session tracking
+# - Anonymous telemetry (no personal data)
+# ------------------------------------------------------------------------------
 post_to_api() {
 
   if ! command -v curl &>/dev/null; then
@@ -30,7 +177,6 @@ post_to_api() {
     "ram_size": $RAM_SIZE,
     "os_type": "$var_os",
     "os_version": "$var_version",
-    "disableip6": "",
     "nsapp": "$NSAPP",
     "method": "$METHOD",
     "pve_version": "$pve_version",
@@ -39,14 +185,26 @@ post_to_api() {
 }
 EOF
   )
-
   if [[ "$DIAGNOSTICS" == "yes" ]]; then
     RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD") || true
   fi
+
 }
 
+# ------------------------------------------------------------------------------
+# post_to_api_vm()
+#
+# - Sends VM creation statistics to Community-Scripts API
+# - Similar to post_to_api() but for virtual machines (not containers)
+# - Reads DIAGNOSTICS from /usr/local/community-scripts/diagnostics file
+# - Payload differences:
+#   * ct_type=2 (VM instead of LXC)
+#   * type="vm"
+#   * Disk size without 'G' suffix (parsed from DISK_SIZE variable)
+# - Only executes if DIAGNOSTICS=yes and RANDOM_UUID is set
+# ------------------------------------------------------------------------------
 post_to_api_vm() {
 
   if [[ ! -f /usr/local/community-scripts/diagnostics ]]; then
@@ -81,7 +239,6 @@ post_to_api_vm() {
     "ram_size": $RAM_SIZE,
     "os_type": "$var_os",
     "os_version": "$var_version",
-    "disableip6": "",
     "nsapp": "$NSAPP",
     "method": "$METHOD",
     "pve_version": "$pve_version",
@@ -90,7 +247,6 @@ post_to_api_vm() {
 }
 EOF
   )
-
   if [[ "$DIAGNOSTICS" == "yes" ]]; then
     RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
       -H "Content-Type: application/json" \
@@ -98,19 +254,54 @@ EOF
   fi
 }
 
-POST_UPDATE_DONE=false
+# ------------------------------------------------------------------------------
+# post_update_to_api()
+#
+# - Reports installation completion status to API
+# - Prevents duplicate submissions via POST_UPDATE_DONE flag
+# - Arguments:
+#   * $1: status ("success" or "failed")
+#   * $2: exit_code (default: 1 for failed, 0 for success)
+# - Payload includes:
+#   * Final status (success/failed)
+#   * Error description via get_error_description()
+#   * Random UUID for session correlation
+# - Only executes once per session
+# - Silently returns if:
+#   * curl not available
+#   * Already reported (POST_UPDATE_DONE=true)
+#   * DIAGNOSTICS=no
+# ------------------------------------------------------------------------------
 post_update_to_api() {
 
   if ! command -v curl &>/dev/null; then
     return
   fi
 
+  # Initialize flag if not set (prevents 'unbound variable' error with set -u)
+  POST_UPDATE_DONE=${POST_UPDATE_DONE:-false}
+
   if [ "$POST_UPDATE_DONE" = true ]; then
     return 0
   fi
+  exit_code=${2:-1}
   local API_URL="http://api.community-scripts.org/upload/updatestatus"
   local status="${1:-failed}"
-  local error="${2:-No error message}"
+  if [[ "$status" == "failed" ]]; then
+    local exit_code="${2:-1}"
+  elif [[ "$status" == "success" ]]; then
+    local exit_code="${2:-0}"
+  fi
+
+  if [[ -z "$exit_code" ]]; then
+    exit_code=1
+  fi
+
+  error=$(explain_exit_code "$exit_code")
+
+  if [ -z "$error" ]; then
+    error="Unknown error"
+  fi
 
   JSON_PAYLOAD=$(
     cat <<EOF
@@ -121,7 +312,6 @@ post_update_to_api() {
 }
 EOF
   )
-
   if [[ "$DIAGNOSTICS" == "yes" ]]; then
     RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
       -H "Content-Type: application/json" \

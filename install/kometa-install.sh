@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Kometa-Team/Kometa
@@ -13,8 +13,8 @@ setting_up_container
 network_check
 update_os
 
-PYTHON_VERSION="3.12" setup_uv
-fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
+PYTHON_VERSION="3.13" setup_uv
+fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
 
 msg_info "Setup Kometa"
 cd /opt/kometa
@@ -51,8 +51,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

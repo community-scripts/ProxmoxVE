@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.zabbix.com/
@@ -46,7 +46,20 @@ function update_script() {
   systemctl stop "$AGENT_SERVICE"
   msg_ok "Stopped Services"
 
-  msg_info "Updating Zabbix"
+  read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
+  ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
+  case "$ZABBIX_CHOICE" in
+  1) ZABBIX_VERSION="7.0" ;;
+  2) ZABBIX_VERSION="7.4" ;;
+  3) ZABBIX_VERSION=$(curl -fsSL https://repo.zabbix.com/zabbix/ |
+    grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1) ;;
+  *)
+    ZABBIX_VERSION="7.4"
+    echo "Invalid choice. Defaulting to 7.4."
+    ;;
+  esac
+
+  msg_info "Updating Zabbix to $ZABBIX_VERSION"
   mkdir -p /opt/zabbix-backup/
   cp /etc/zabbix/zabbix_server.conf /opt/zabbix-backup/
   cp /etc/apache2/conf-enabled/zabbix.conf /opt/zabbix-backup/
@@ -54,11 +67,18 @@ function update_script() {
 
   rm -Rf /etc/apt/sources.list.d/zabbix.list
   cd /tmp
-  curl -fsSL "$(curl -fsSL https://repo.zabbix.com/zabbix/ |
-    grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1 |
-    xargs -I{} echo "https://repo.zabbix.com/zabbix/{}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb")" \
-    -o /tmp/zabbix-release_latest+debian13_all.deb
-  $STD dpkg -i zabbix-release_latest+debian13_all.deb
+
+  if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
+    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+    ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+  else
+    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
+    ZABBIX_DEB_FILE="zabbix-release_latest+debian13_all.deb"
+  fi
+
+  curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
+  $STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
+  rm -rf /tmp/zabbix-release_*.deb
   $STD apt update
 
   $STD apt install --only-upgrade zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
@@ -88,13 +108,6 @@ function update_script() {
   systemctl start "$AGENT_SERVICE"
   systemctl restart apache2
   msg_ok "Started Services"
-
-  msg_info "Cleaning Up"
-  rm -rf /tmp/zabbix-release_latest+debian13_all.deb
-  $STD apt -y autoremove
-  $STD apt -y autoclean
-  $STD apt -y clean
-  msg_ok "Cleaned"
   msg_ok "Updated successfully!"
   exit
 }
@@ -103,7 +116,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/zabbix${CL}"

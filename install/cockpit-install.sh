@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: havardthom
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -16,7 +16,6 @@ update_os
 
 msg_info "Installing Cockpit"
 source /etc/os-release
-
 cat <<EOF >/etc/apt/sources.list.d/debian-backports.sources
 Types: deb deb-src
 URIs: http://deb.debian.org/debian
@@ -42,26 +41,17 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   fi
   if [[ "$install_45drives" == "true" ]]; then
     msg_info "Installing 45Drives' cockpit extensions"
-    curl -fsSL https://repo.45drives.com/key/gpg.asc | gpg --pinentry-mode loopback --batch --yes --dearmor -o /usr/share/keyrings/45drives-archive-keyring.gpg
-    cat <<EOF >/etc/apt/sources.list.d/45drives-enterprise.sources
-Types: deb
-URIs: https://repo.45drives.com/enterprise/debian
-Suites: bookworm
-Components: main
-Architectures: amd64
-Signed-By: /usr/share/keyrings/45drives-archive-keyring.gpg
-EOF
-
-    $STD apt update
-    $STD apt install cockpit-file-sharing cockpit-identities cockpit-navigator -y
+    setup_deb822_repo "45drives" \
+      "https://repo.45drives.com/key/gpg.asc" \
+      "https://repo.45drives.com/enterprise/debian" \
+      "bookworm" \
+      "main" \
+      "amd64"
+    $STD apt install -y cockpit-file-sharing cockpit-identities cockpit-navigator
     msg_ok "Installed 45Drives' cockpit extensions"
   fi
 fi
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

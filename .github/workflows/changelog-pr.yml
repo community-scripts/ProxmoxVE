@@ -157,13 +157,31 @@ jobs:
 
                   let categorized = false;
                   const priorityCategories = categorizedPRs.slice();
+                  
+                  // Priority order for content-type labels (highest priority first)
+                  const subCategoryPriority = ["breaking change", "bugfix", "feature", "refactor"];
+                  
                   for (const category of priorityCategories) {
                   if (categorized) break;
                   if (category.labels.some(label => prLabels.includes(label))) {
                     if (category.subCategories && category.subCategories.length > 0) {
-                    const subCategory = category.subCategories.find(sub =>
-                      sub.labels.some(label => prLabels.includes(label))
-                    );
+                    // Find subcategory by priority order instead of first match
+                    let subCategory = null;
+                    for (const priorityLabel of subCategoryPriority) {
+                      if (prLabels.includes(priorityLabel)) {
+                        subCategory = category.subCategories.find(sub =>
+                          sub.labels.includes(priorityLabel)
+                        );
+                        if (subCategory) break;
+                      }
+                    }
+                    
+                    // Fallback: check for any other subcategory match (api, github, json, etc.)
+                    if (!subCategory) {
+                      subCategory = category.subCategories.find(sub =>
+                        sub.labels.some(label => prLabels.includes(label))
+                      );
+                    }
 
                     if (subCategory) {
                       subCategory.notes.push(prNote);
@@ -175,6 +193,15 @@ jobs:
                     }
                     categorized = true;
                   }
+                  }
+
+                  // Fallback: Add to Uncategorized if no category matched
+                  if (!categorized) {
+                    const uncategorized = categorizedPRs.find(category =>
+                      category.title.includes("Uncategorized") || category.labels.includes("needs triage"));
+                    if (uncategorized) {
+                      uncategorized.notes.push(prNote);
+                    }
                   }
                 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://tianji.msgbyte.com/
@@ -28,7 +28,6 @@ function update_script() {
   fi
 
   setup_uv
-
   if check_for_gh_release "tianji" "msgbyte/tianji"; then
     NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 
@@ -41,9 +40,9 @@ function update_script() {
     mv /opt/tianji /opt/tianji_bak
     msg_ok "Backed up data"
 
-    fetch_and_deploy_gh_release "tianji" "msgbyte/tianji"
+    fetch_and_deploy_gh_release "tianji" "msgbyte/tianji" "tarball"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Tianji"
     cd /opt/tianji
     export NODE_OPTIONS="--max_old_space_size=4096"
     $STD pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile
@@ -55,7 +54,11 @@ function update_script() {
     mv /opt/.env /opt/tianji/src/server/.env
     cd src/server
     $STD pnpm db:migrate:apply
-    msg_ok "Updated ${APP}"
+    rm -rf /opt/tianji_bak
+    rm -rf /opt/tianji/src/client
+    rm -rf /opt/tianji/website
+    rm -rf /opt/tianji/reporter
+    msg_ok "Updated Tianji"
 
     msg_info "Updating AppRise"
     $STD uv pip install apprise cryptography --system
@@ -64,13 +67,6 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start tianji
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/tianji_bak
-    rm -rf /opt/tianji/src/client
-    rm -rf /opt/tianji/website
-    rm -rf /opt/tianji/reporter
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit
@@ -80,7 +76,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:12345${CL}"

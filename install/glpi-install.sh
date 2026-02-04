@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.glpi-project.org/
@@ -132,6 +132,8 @@ EOF
 $STD a2dissite 000-default.conf
 $STD a2enmod rewrite
 $STD a2ensite glpi.conf
+rm -rf /opt/glpi/install/install.php
+rm -rf /opt/glpi-${RELEASE}.tgz
 msg_ok "Setup Service"
 
 msg_info "Setup Cronjob"
@@ -152,11 +154,4 @@ msg_ok "Update PHP Params"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/glpi/install
-rm -rf /opt/glpi-${RELEASE}.tgz
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

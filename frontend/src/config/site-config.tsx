@@ -5,7 +5,7 @@ import React from "react";
 import type { OperatingSystem } from "@/lib/types";
 
 // eslint-disable-next-line node/no-process-env
-export const basePath = process.env.BASE_PATH || "";
+export const basePath = process.env.BASE_PATH || "ProxmoxVE";
 
 export const navbarLinks = [
   {
@@ -15,7 +15,7 @@ export const navbarLinks = [
     text: "GitHub",
   },
   {
-    href: `https://discord.gg/2wvnMDgdnU`,
+    href: `https://discord.gg/3AnUqsXnmK`,
     event: "Discord",
     icon: <FaDiscord className="h-4 w-4" />,
     text: "Discord",
@@ -46,7 +46,7 @@ export const mostPopularScripts = ["post-pve-install", "docker", "homeassistant"
 
 export const analytics = {
   url: "analytics.bramsuurd.nl",
-  token: "aefee1b9-2a12-4ac2-9d82-a63113edc62e",
+  token: "f9eee289f931",
 };
 
 export const AlertColors = {

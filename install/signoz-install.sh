@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://signoz.io/
@@ -258,14 +258,10 @@ ExecStart=/opt/signoz-otel-collector/bin/signoz-otel-collector --config=/opt/sig
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now signoz-otel-collector
+rm -rf ~/zookeeper.tar.gz
+rm -rf ~/apache-zookeeper-*-bin
+msg_ok "Setup Signoz OTel Collector"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf ~/zookeeper.tar.gz
-rm -rf ~/apache-zookeeper-*-bin
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

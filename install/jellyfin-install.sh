@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://jellyfin.org/
@@ -13,25 +13,8 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setting Up Hardware Acceleration"
-if ! grep -qEi 'ubuntu' /etc/os-release; then
-  fetch_and_deploy_gh_release "intel-igc-core-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb"
-  fetch_and_deploy_gh_release "intel-igc-opencl-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb"
-  fetch_and_deploy_gh_release "intel-libgdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb"
-  fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb"
-else
-  $STD apt -y install intel-opencl-icd
-fi
-
-$STD apt -y install {va-driver-all,ocl-icd-libopencl1,vainfo,intel-gpu-tools}
-if [[ "$CTTYPE" == "0" ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser $(id -u -n) video
-  $STD adduser $(id -u -n) render
-fi
-msg_ok "Set Up Hardware Acceleration"
+msg_custom "ℹ️" "${GN}" "If NVIDIA GPU passthrough is detected, you'll be asked whether to install drivers in the container"
+setup_hwaccel
 
 msg_info "Installing Jellyfin"
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
@@ -56,8 +39,19 @@ EOF
 
 $STD apt update
 $STD apt install -y jellyfin
-sed -i 's/"MinimumLevel": "Information"/"MinimumLevel": "Error"/g' /etc/jellyfin/logging.json
-
+# Configure log rotation to prevent disk fill (keeps fail2ban compatibility) (PR: #1690 / Issue: #11224)
+cat <<EOF >/etc/logrotate.d/jellyfin
+/var/log/jellyfin/*.log {
+    daily
+    rotate 3
+    maxsize 100M
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+}
+EOF
 chown -R jellyfin:adm /etc/jellyfin
 sleep 10
 systemctl restart jellyfin
@@ -70,9 +64,4 @@ msg_ok "Installed Jellyfin"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

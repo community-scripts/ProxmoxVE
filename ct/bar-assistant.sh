@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01 | CanbiZ
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/karlomikus/bar-assistant
@@ -13,7 +13,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,6 +33,8 @@ function update_script() {
     msg_info "Stopping nginx"
     systemctl stop nginx
     msg_ok "Stopped nginx"
+
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="pdo-sqlite" setup_php
 
     msg_info "Backing up Bar Assistant"
     mv /opt/bar-assistant /opt/bar-assistant-backup
@@ -54,15 +56,12 @@ function update_script() {
     $STD php artisan route:cache
     $STD php artisan event:cache
     chown -R www-data:www-data /opt/bar-assistant
+    rm -rf /opt/bar-assistant-backup
     msg_ok "Updated Bar-Assistant"
 
     msg_info "Starting nginx"
     systemctl start nginx
     msg_ok "Started nginx"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/bar-assistant-backup
-    msg_ok "Cleaned"
   fi
 
   if check_for_gh_release "vue-salt-rim" "karlomikus/vue-salt-rim"; then
@@ -81,29 +80,16 @@ function update_script() {
     cd /opt/vue-salt-rim
     $STD npm install
     $STD npm run build
+    rm -rf /opt/vue-salt-rim-backup
     msg_ok "Updated Vue Salt Rim"
 
     msg_info "Starting nginx"
     systemctl start nginx
     msg_ok "Started nginx"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/vue-salt-rim-backup
-    msg_ok "Cleaned"
   fi
 
-  if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-    msg_info "Stopping Meilisearch"
-    systemctl stop meilisearch
-    msg_ok "Stopped Meilisearch"
+  setup_meilisearch
 
-    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
-
-    msg_info "Starting Meilisearch"
-    systemctl start meilisearch
-    msg_ok "Started Meilisearch"
-    msg_ok "Updated successfully!"
-  fi
   exit
 }
 
@@ -111,7 +97,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

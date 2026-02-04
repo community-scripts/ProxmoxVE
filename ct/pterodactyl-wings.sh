@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/pterodactyl/wings
@@ -23,29 +23,23 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /usr/local/bin/wings ]]; then
+  if [[ ! -x /usr/local/bin/wings ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/pterodactyl/wings/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
+  if check_for_gh_release "wings" "pterodactyl/wings"; then
     msg_info "Stopping Service"
     systemctl stop wings
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
     rm /usr/local/bin/wings
-    curl -fsSL "https://github.com/pterodactyl/wings/releases/download/v${RELEASE}/wings_linux_amd64" -o "/usr/local/bin/wings"
-    chmod u+x /usr/local/bin/wings
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    fetch_and_deploy_gh_release "wings" "pterodactyl/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_amd64"
 
     msg_info "Starting Service"
     systemctl start wings
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
@@ -54,5 +48,5 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"

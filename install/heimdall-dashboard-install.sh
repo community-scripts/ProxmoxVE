@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://heimdall.site/
@@ -14,27 +14,22 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y apt-transport-https
-$STD apt-get install -y composer
-$STD apt-get install -y php8.2-{bz2,curl,sqlite3,zip,xml}
+$STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-RELEASE=$(curl -fsSL "https://api.github.com/repos/linuxserver/Heimdall/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]')
-echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
-msg_info "Installing Heimdall Dashboard ${RELEASE}"
-curl -fsSL "https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz" -o "${RELEASE}".tar.gz
-tar xzf "${RELEASE}".tar.gz
-VER=$(curl -fsSL https://api.github.com/repos/linuxserver/Heimdall/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-rm -rf "${RELEASE}".tar.gz
-mv Heimdall-"${VER}" /opt/Heimdall
+PHP_VERSION="8.4" PHP_FPM="YES" setup_php
+setup_composer
+fetch_and_deploy_gh_release "Heimdall" "linuxserver/Heimdall" "tarball"
+
+msg_info "Setting up Heimdall-Dashboard"
 cd /opt/Heimdall
 cp .env.example .env
 $STD php artisan key:generate
-msg_ok "Installed Heimdall Dashboard ${RELEASE}"
+msg_ok "Setup Heimdall-Dashboard"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/heimdall.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/heimdall.service
+[Unit]
 Description=Heimdall
 After=network.target
 
@@ -44,21 +39,19 @@ RestartSec=5
 Type=simple
 User=root
 WorkingDirectory=/opt/Heimdall
-ExecStart="/usr/bin/php" artisan serve --port 7990 --host 0.0.0.0
+ExecStart=/usr/bin/php artisan serve --port 7990 --host 0.0.0.0
 TimeoutStopSec=30
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target
+EOF
 systemctl enable -q --now heimdall
 cd /opt/Heimdall
-COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload &>/dev/null
+export COMPOSER_ALLOW_SUPERUSER=1
+$STD composer dump-autoload
 systemctl restart heimdall.service
 msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

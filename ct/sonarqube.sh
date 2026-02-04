@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: prop4n
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.sonarsource.com/sonarqube-server
@@ -33,30 +33,31 @@ function update_script() {
     systemctl stop sonarqube
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
+    msg_info "Creating Backup"
     BACKUP_DIR="/opt/sonarqube-backup"
     mv /opt/sonarqube ${BACKUP_DIR}
-    msg_ok "Backup created"
+    msg_ok "Created Backup"
 
-    msg_info "Installing sonarqube"
+    msg_info "Updating SonarQube"
     temp_file=$(mktemp)
-    RELEASE=$(curl -fsSL https://api.github.com/repos/SonarSource/sonarqube/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    RELEASE=$(get_latest_github_release "SonarSource/sonarqube")
     curl -fsSL "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${RELEASE}.zip" -o $temp_file
     unzip -q "$temp_file" -d /opt
-    mv /opt/sonarqube-* /opt/sonarqube
-    msg_ok "Installed sonarqube"
+    mv /opt/sonarqube-${RELEASE} /opt/sonarqube
+    echo "${RELEASE}" > ~/.sonarqube
+    msg_ok "Updated SonarQube"
 
-    msg_info "Restoring backup"
+    msg_info "Restoring Backup"
     cp -rp ${BACKUP_DIR}/data/ /opt/sonarqube/data/
     cp -rp ${BACKUP_DIR}/extensions/ /opt/sonarqube/extensions/
     cp -p ${BACKUP_DIR}/conf/sonar.properties /opt/sonarqube/conf/sonar.properties
     rm -rf ${BACKUP_DIR}
     chown -R sonarqube:sonarqube /opt/sonarqube
-    msg_ok "Backup restored"
+    msg_ok "Restored Backup"
 
     msg_info "Starting Service"
     systemctl start sonarqube
-    msg_ok "Service started"
+    msg_ok "Service Started"
     msg_ok "Updated successfully!"
   fi
   exit
@@ -66,7 +67,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9000${CL}"

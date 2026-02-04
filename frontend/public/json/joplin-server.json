@@ -12,7 +12,7 @@
   "documentation": "https://joplinapp.org/help/",
   "config_path": "/opt/joplin-server/.env",
   "website": "https://joplinapp.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/joplin.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/joplin.webp",
   "description": "Joplin - the privacy-focused note taking app with sync capabilities for Windows, macOS, Linux, Android and iOS.",
   "install_methods": [
     {
@@ -20,10 +20,10 @@
       "script": "ct/joplin-server.sh",
       "resources": {
         "cpu": 2,
-        "ram": 4096,
+        "ram": 6144,
         "hdd": 20,
         "os": "Debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
@@ -34,6 +34,10 @@
   "notes": [
     {
       "text": "Application can take some time to build, depending on your host speed. Please be patient.",
+      "type": "info"
+    },
+    {
+      "text": "Default RAM size for LXC is set to 6GB because of Node.js building process. You can lower it after application installs",
       "type": "info"
     }
   ]

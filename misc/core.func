@@ -1,13 +1,35 @@
-# Copyright (c) 2021-2025 community-scripts ORG
+#!/usr/bin/env bash
+# Copyright (c) 2021-2026 community-scripts ORG
 # License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
 
-# ------------------------------------------------------------------------------
-# Loads core utility groups once (colors, formatting, icons, defaults).
-# ------------------------------------------------------------------------------
+# ==============================================================================
+# CORE FUNCTIONS - LXC CONTAINER UTILITIES
+# ==============================================================================
+#
+# This file provides core utility functions for LXC container management
+# including colors, formatting, validation checks, message output, and
+# execution helpers used throughout the Community-Scripts ecosystem.
+#
+# Usage:
+#   source <(curl -fsSL https://git.community-scripts.org/.../core.func)
+#   load_functions
+#
+# ==============================================================================
 
 [[ -n "${_CORE_FUNC_LOADED:-}" ]] && return
 _CORE_FUNC_LOADED=1
 
+# ==============================================================================
+# SECTION 1: INITIALIZATION & SETUP
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# load_functions()
+#
+# - Initializes all core utility groups (colors, formatting, icons, defaults)
+# - Ensures functions are loaded only once via __FUNCTIONS_LOADED flag
+# - Must be called at start of any script using these utilities
+# ------------------------------------------------------------------------------
 load_functions() {
   [[ -n "${__FUNCTIONS_LOADED:-}" ]] && return
   __FUNCTIONS_LOADED=1
@@ -16,58 +38,14 @@ load_functions() {
   icons
   default_vars
   set_std_mode
-  # add more
-}
-
-# ============================================================================
-# Error & Signal Handling – robust, universal, subshell-safe
-# ============================================================================
-
-_tool_error_hint() {
-  local cmd="$1"
-  local code="$2"
-  case "$cmd" in
-  curl)
-    case "$code" in
-    6) echo "Curl: Could not resolve host (DNS problem)" ;;
-    7) echo "Curl: Failed to connect to host (connection refused)" ;;
-    22) echo "Curl: HTTP error (404/403 etc)" ;;
-    28) echo "Curl: Operation timeout" ;;
-    *) echo "Curl: Unknown error ($code)" ;;
-    esac
-    ;;
-  wget)
-    echo "Wget failed – URL unreachable or permission denied"
-    ;;
-  systemctl)
-    echo "Systemd unit failure – check service name and permissions"
-    ;;
-  jq)
-    echo "jq parse error – malformed JSON or missing key"
-    ;;
-  mariadb | mysql)
-    echo "MySQL/MariaDB command failed – check credentials or DB"
-    ;;
-  unzip)
-    echo "unzip failed – corrupt file or missing permission"
-    ;;
-  tar)
-    echo "tar failed – invalid format or missing binary"
-    ;;
-  node | npm | pnpm | yarn)
-    echo "Node tool failed – check version compatibility or package.json"
-    ;;
-  *) echo "" ;;
-  esac
-}
-
-catch_errors() {
-  set -Eeuo pipefail
-  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
 # ------------------------------------------------------------------------------
-# Sets ANSI color codes used for styled terminal output.
+# color()
+#
+# - Sets ANSI color codes for styled terminal output
+# - Variables: YW (yellow), YWB (yellow bright), BL (blue), RD (red)
+#             GN (green), DGN (dark green), BGN (background green), CL (clear)
 # ------------------------------------------------------------------------------
 color() {
   YW=$(echo "\033[33m")
@@ -80,7 +58,14 @@ color() {
   CL=$(echo "\033[m")
 }
 
-# Special for spinner and colorized output via printf
+# ------------------------------------------------------------------------------
+# color_spinner()
+#
+# - Sets ANSI color codes specifically for spinner animation
+# - Variables: CS_YW (spinner yellow), CS_YWB (spinner yellow bright),
+#             CS_CL (spinner clear)
+# - Used by spinner() function to avoid color conflicts
+# ------------------------------------------------------------------------------
 color_spinner() {
   CS_YW=$'\033[33m'
   CS_YWB=$'\033[93m'
@@ -88,7 +73,12 @@ color_spinner() {
 }
 
 # ------------------------------------------------------------------------------
-# Defines formatting helpers like tab, bold, and line reset sequences.
+# formatting()
+#
+# - Defines formatting helpers for terminal output
+# - BFR: Backspace and clear line sequence
+# - BOLD: Bold text escape code
+# - TAB/TAB3: Indentation spacing
 # ------------------------------------------------------------------------------
 formatting() {
   BFR="\\r\\033[K"
@@ -99,7 +89,11 @@ formatting() {
 }
 
 # ------------------------------------------------------------------------------
-# Sets symbolic icons used throughout user feedback and prompts.
+# icons()
+#
+# - Sets symbolic emoji icons used throughout user feedback
+# - Provides consistent visual indicators for success, error, info, etc.
+# - Icons: CM (checkmark), CROSS (error), INFO (info), HOURGLASS (wait), etc.
 # ------------------------------------------------------------------------------
 icons() {
   CM="${TAB}✔️${TAB}"
@@ -129,22 +123,59 @@ icons() {
   CREATING="${TAB}🚀${TAB}${CL}"
   ADVANCED="${TAB}🧩${TAB}${CL}"
   FUSE="${TAB}🗂️${TAB}${CL}"
+  GPU="${TAB}🎮${TAB}${CL}"
   HOURGLASS="${TAB}⏳${TAB}"
-
 }
 
 # ------------------------------------------------------------------------------
-# Sets default retry and wait variables used for system actions.
+# ensure_profile_loaded()
+#
+# - Sources /etc/profile.d/*.sh scripts if not already loaded
+# - Fixes PATH issues when running via pct enter/exec (non-login shells)
+# - Safe to call multiple times (uses guard variable)
+# - Should be called in update_script() or any script running inside LXC
+# ------------------------------------------------------------------------------
+ensure_profile_loaded() {
+  # Skip if already loaded or running on Proxmox host
+  [[ -n "${_PROFILE_LOADED:-}" ]] && return
+  command -v pveversion &>/dev/null && return
+
+  # Source all profile.d scripts to ensure PATH is complete
+  if [[ -d /etc/profile.d ]]; then
+    for script in /etc/profile.d/*.sh; do
+      [[ -r "$script" ]] && source "$script"
+    done
+  fi
+
+  # Also ensure /usr/local/bin is in PATH (common install location)
+  if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+
+  export _PROFILE_LOADED=1
+}
+
+# ------------------------------------------------------------------------------
+# default_vars()
+#
+# - Sets default retry and wait variables used for system actions
+# - RETRY_NUM: Maximum number of retry attempts (default: 10)
+# - RETRY_EVERY: Seconds to wait between retries (default: 3)
+# - i: Counter variable initialized to RETRY_NUM
 # ------------------------------------------------------------------------------
 default_vars() {
   RETRY_NUM=10
   RETRY_EVERY=3
   i=$RETRY_NUM
-  #[[ "${VAR_OS:-}" == "unknown" ]]
 }
 
 # ------------------------------------------------------------------------------
-# Sets default verbose mode for script and os execution.
+# set_std_mode()
+#
+# - Sets default verbose mode for script and OS execution
+# - If VERBOSE=yes: STD="" (show all output)
+# - If VERBOSE=no: STD="silent" (suppress output via silent() wrapper)
+# - If DEV_MODE_TRACE=true: Enables bash tracing (set -x)
 # ------------------------------------------------------------------------------
 set_std_mode() {
   if [ "${VERBOSE:-no}" = "yes" ]; then
@@ -152,138 +183,338 @@ set_std_mode() {
   else
     STD="silent"
   fi
-}
 
-# Silent execution function
-silent() {
-  "$@" >/dev/null 2>&1
-}
-
-# Function to download & save header files
-get_header() {
-  local app_name=$(echo "${APP,,}" | tr -d ' ')
-  local app_type=${APP_TYPE:-ct}
-  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${app_type}/headers/${app_name}"
-  local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
-
-  mkdir -p "$(dirname "$local_header_path")"
-
-  if [ ! -s "$local_header_path" ]; then
-    if ! curl -fsSL "$header_url" -o "$local_header_path"; then
-      return 1
-    fi
+  # Enable bash tracing if trace mode active
+  if [[ "${DEV_MODE_TRACE:-false}" == "true" ]]; then
+    set -x
+    export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
   fi
-
-  cat "$local_header_path" 2>/dev/null || true
-}
-
-header_info() {
-  local app_name=$(echo "${APP,,}" | tr -d ' ')
-  local header_content
-
-  header_content=$(get_header "$app_name") || header_content=""
-
-  clear
-  local term_width
-  term_width=$(tput cols 2>/dev/null || echo 120)
-
-  if [ -n "$header_content" ]; then
-    echo "$header_content"
-  fi
-}
-
-ensure_tput() {
-  if ! command -v tput >/dev/null 2>&1; then
-    if grep -qi 'alpine' /etc/os-release; then
-      apk add --no-cache ncurses >/dev/null 2>&1
-    elif command -v apt-get >/dev/null 2>&1; then
-      apt-get update -qq >/dev/null
-      apt-get install -y -qq ncurses-bin >/dev/null 2>&1
-    fi
-  fi
-}
-
-is_alpine() {
-  local os_id="${var_os:-${PCT_OSTYPE:-}}"
-
-  if [[ -z "$os_id" && -f /etc/os-release ]]; then
-    os_id="$(
-      . /etc/os-release 2>/dev/null
-      echo "${ID:-}"
-    )"
-  fi
-
-  [[ "$os_id" == "alpine" ]]
-}
-
-is_verbose_mode() {
-  local verbose="${VERBOSE:-${var_verbose:-no}}"
-  local tty_status
-  if [[ -t 2 ]]; then
-    tty_status="interactive"
-  else
-    tty_status="not-a-tty"
-  fi
-  [[ "$verbose" != "no" || ! -t 2 ]]
 }
 
 # ------------------------------------------------------------------------------
-# Handles specific curl error codes and displays descriptive messages.
+# parse_dev_mode()
+#
+# - Parses comma-separated dev_mode variable (e.g., "motd,keep,trace")
+# - Sets global flags for each mode:
+#   * DEV_MODE_MOTD: Setup SSH/MOTD before installation
+#   * DEV_MODE_KEEP: Never delete container on failure
+#   * DEV_MODE_TRACE: Enable bash set -x tracing
+#   * DEV_MODE_PAUSE: Pause after each msg_info step
+#   * DEV_MODE_BREAKPOINT: Open shell on error instead of cleanup
+#   * DEV_MODE_LOGS: Persist all logs to /var/log/community-scripts/
+#   * DEV_MODE_DRYRUN: Show commands without executing
+# - Call this early in script execution
 # ------------------------------------------------------------------------------
-__curl_err_handler() {
-  local exit_code="$1"
-  local target="$2"
-  local curl_msg="$3"
+parse_dev_mode() {
+  local mode
+  # Initialize all flags to false
+  export DEV_MODE_MOTD=false
+  export DEV_MODE_KEEP=false
+  export DEV_MODE_TRACE=false
+  export DEV_MODE_PAUSE=false
+  export DEV_MODE_BREAKPOINT=false
+  export DEV_MODE_LOGS=false
+  export DEV_MODE_DRYRUN=false
 
-  case $exit_code in
-  1) msg_error "Unsupported protocol: $target" ;;
-  2) msg_error "Curl init failed: $target" ;;
-  3) msg_error "Malformed URL: $target" ;;
-  5) msg_error "Proxy resolution failed: $target" ;;
-  6) msg_error "Host resolution failed: $target" ;;
-  7) msg_error "Connection failed: $target" ;;
-  9) msg_error "Access denied: $target" ;;
-  18) msg_error "Partial file transfer: $target" ;;
-  22) msg_error "HTTP error (e.g. 400/404): $target" ;;
-  23) msg_error "Write error on local system: $target" ;;
-  26) msg_error "Read error from local file: $target" ;;
-  28) msg_error "Timeout: $target" ;;
-  35) msg_error "SSL connect error: $target" ;;
-  47) msg_error "Too many redirects: $target" ;;
-  51) msg_error "SSL cert verify failed: $target" ;;
-  52) msg_error "Empty server response: $target" ;;
-  55) msg_error "Send error: $target" ;;
-  56) msg_error "Receive error: $target" ;;
-  60) msg_error "SSL CA not trusted: $target" ;;
-  67) msg_error "Login denied by server: $target" ;;
-  78) msg_error "Remote file not found (404): $target" ;;
-  *) msg_error "Curl failed with code $exit_code: $target" ;;
-  esac
+  # Parse comma-separated modes
+  if [[ -n "${dev_mode:-}" ]]; then
+    IFS=',' read -ra MODES <<<"$dev_mode"
+    for mode in "${MODES[@]}"; do
+      mode="$(echo "$mode" | xargs)" # Trim whitespace
+      case "$mode" in
+      motd) export DEV_MODE_MOTD=true ;;
+      keep) export DEV_MODE_KEEP=true ;;
+      trace) export DEV_MODE_TRACE=true ;;
+      pause) export DEV_MODE_PAUSE=true ;;
+      breakpoint) export DEV_MODE_BREAKPOINT=true ;;
+      logs) export DEV_MODE_LOGS=true ;;
+      dryrun) export DEV_MODE_DRYRUN=true ;;
+      *)
+        if declare -f msg_warn >/dev/null 2>&1; then
+          msg_warn "Unknown dev_mode: '$mode' (ignored)"
+        else
+          echo "[WARN] Unknown dev_mode: '$mode' (ignored)" >&2
+        fi
+        ;;
+      esac
+    done
 
-  [[ -n "$curl_msg" ]] && printf "%s\n" "$curl_msg" >&2
+    # Show active dev modes
+    local active_modes=()
+    [[ $DEV_MODE_MOTD == true ]] && active_modes+=("motd")
+    [[ $DEV_MODE_KEEP == true ]] && active_modes+=("keep")
+    [[ $DEV_MODE_TRACE == true ]] && active_modes+=("trace")
+    [[ $DEV_MODE_PAUSE == true ]] && active_modes+=("pause")
+    [[ $DEV_MODE_BREAKPOINT == true ]] && active_modes+=("breakpoint")
+    [[ $DEV_MODE_LOGS == true ]] && active_modes+=("logs")
+    [[ $DEV_MODE_DRYRUN == true ]] && active_modes+=("dryrun")
+
+    if [[ ${#active_modes[@]} -gt 0 ]]; then
+      if declare -f msg_custom >/dev/null 2>&1; then
+        msg_custom "🔧" "${YWB}" "Dev modes active: ${active_modes[*]}"
+      else
+        echo "[DEV] Active modes: ${active_modes[*]}" >&2
+      fi
+    fi
+  fi
+}
+
+# ==============================================================================
+# SECTION 2: VALIDATION CHECKS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# shell_check()
+#
+# - Verifies that the script is running under Bash shell
+# - Exits with error message if different shell is detected
+# - Required because scripts use Bash-specific features
+# ------------------------------------------------------------------------------
+shell_check() {
+  if [[ "$(ps -p $$ -o comm=)" != "bash" ]]; then
+    clear
+    msg_error "Your default shell is currently not set to Bash. To use these scripts, please switch to the Bash shell."
+    echo -e "\nExiting..."
+    sleep 2
+    exit
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# root_check()
+#
+# - Verifies script is running with root privileges
+# - Detects if executed via sudo (which can cause issues)
+# - Exits with error if not running as root directly
+# ------------------------------------------------------------------------------
+root_check() {
+  if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
+    clear
+    msg_error "Please run this script as root."
+    echo -e "\nExiting..."
+    sleep 2
+    exit
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# pve_check()
+#
+# - Validates Proxmox VE version compatibility
+# - Supported: PVE 8.0-8.9 and PVE 9.0-9.1
+# - Exits with error message if unsupported version detected
+# ------------------------------------------------------------------------------
+pve_check() {
+  local PVE_VER
+  PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
+
+  # Check for Proxmox VE 8.x: allow 8.0–8.9
+  if [[ "$PVE_VER" =~ ^8\.([0-9]+) ]]; then
+    local MINOR="${BASH_REMATCH[1]}"
+    if ((MINOR < 0 || MINOR > 9)); then
+      msg_error "This version of Proxmox VE is not supported."
+      msg_error "Supported: Proxmox VE version 8.0 – 8.9"
+      exit 1
+    fi
+    return 0
+  fi
+
+  # Check for Proxmox VE 9.x: allow 9.0–9.1
+  if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
+    local MINOR="${BASH_REMATCH[1]}"
+    if ((MINOR < 0 || MINOR > 1)); then
+      msg_error "This version of Proxmox VE is not yet supported."
+      msg_error "Supported: Proxmox VE version 9.0 – 9.1"
+      exit 1
+    fi
+    return 0
+  fi
+
+  # All other unsupported versions
+  msg_error "This version of Proxmox VE is not supported."
+  msg_error "Supported versions: Proxmox VE 8.0 – 8.9 or 9.0 – 9.1"
   exit 1
 }
 
-fatal() {
-  msg_error "$1"
-  kill -INT $$
+# ------------------------------------------------------------------------------
+# arch_check()
+#
+# - Validates system architecture is amd64/x86_64
+# - Exits with error message for unsupported architectures (e.g., ARM/PiMox)
+# - Provides link to ARM64-compatible scripts
+# ------------------------------------------------------------------------------
+arch_check() {
+  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
+    echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
+    echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
+    echo -e "Exiting..."
+    sleep 2
+    exit
+  fi
 }
 
+# ------------------------------------------------------------------------------
+# ssh_check()
+#
+# - Detects if script is running over SSH connection
+# - Warns user for external SSH connections (recommends Proxmox shell)
+# - Skips warning for local/same-subnet connections
+# - Does not abort execution, only warns
+# ------------------------------------------------------------------------------
+ssh_check() {
+  if [ -n "$SSH_CLIENT" ]; then
+    local client_ip=$(awk '{print $1}' <<<"$SSH_CLIENT")
+    local host_ip=$(hostname -I | awk '{print $1}')
+
+    # Check if connection is local (Proxmox WebUI or same machine)
+    # - localhost (127.0.0.1, ::1)
+    # - same IP as host
+    # - local network range (10.x, 172.16-31.x, 192.168.x)
+    if [[ "$client_ip" == "127.0.0.1" || "$client_ip" == "::1" || "$client_ip" == "$host_ip" ]]; then
+      return
+    fi
+
+    # Check if client is in same local network (optional, safer approach)
+    local host_subnet=$(echo "$host_ip" | cut -d. -f1-3)
+    local client_subnet=$(echo "$client_ip" | cut -d. -f1-3)
+    if [[ "$host_subnet" == "$client_subnet" ]]; then
+      return
+    fi
+
+    # Only warn for truly external connections
+    msg_warn "Running via external SSH (client: $client_ip)."
+    msg_warn "For better stability, consider using the Proxmox Shell (Console) instead."
+  fi
+}
+
+# ==============================================================================
+# SECTION 3: EXECUTION HELPERS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# get_active_logfile()
+#
+# - Returns the appropriate log file based on execution context
+# - BUILD_LOG: Host operations (container creation)
+# - INSTALL_LOG: Container operations (application installation)
+# - Fallback to BUILD_LOG if neither is set
+# ------------------------------------------------------------------------------
+get_active_logfile() {
+  if [[ -n "${INSTALL_LOG:-}" ]]; then
+    echo "$INSTALL_LOG"
+  elif [[ -n "${BUILD_LOG:-}" ]]; then
+    echo "$BUILD_LOG"
+  else
+    # Fallback for legacy scripts
+    echo "/tmp/build-$(date +%Y%m%d_%H%M%S).log"
+  fi
+}
+
+# Legacy compatibility: SILENT_LOGFILE points to active log
+SILENT_LOGFILE="$(get_active_logfile)"
+
+# ------------------------------------------------------------------------------
+# silent()
+#
+# - Executes command with output redirected to active log file
+# - On error: displays last 10 lines of log and exits with original exit code
+# - Temporarily disables error trap to capture exit code correctly
+# - Sources explain_exit_code() for detailed error messages
+# ------------------------------------------------------------------------------
+silent() {
+  local cmd="$*"
+  local caller_line="${BASH_LINENO[0]:-unknown}"
+  local logfile="$(get_active_logfile)"
+
+  # Dryrun mode: Show command without executing
+  if [[ "${DEV_MODE_DRYRUN:-false}" == "true" ]]; then
+    if declare -f msg_custom >/dev/null 2>&1; then
+      msg_custom "🔍" "${BL}" "[DRYRUN] $cmd"
+    else
+      echo "[DRYRUN] $cmd" >&2
+    fi
+    return 0
+  fi
+
+  set +Eeuo pipefail
+  trap - ERR
+
+  "$@" >>"$logfile" 2>&1
+  local rc=$?
+
+  set -Eeuo pipefail
+  trap 'error_handler' ERR
+
+  if [[ $rc -ne 0 ]]; then
+    # Source explain_exit_code if needed
+    if ! declare -f explain_exit_code >/dev/null 2>&1; then
+      source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+    fi
+
+    local explanation
+    explanation="$(explain_exit_code "$rc")"
+
+    printf "\e[?25h"
+    msg_error "in line ${caller_line}: exit code ${rc} (${explanation})"
+    msg_custom "→" "${YWB}" "${cmd}"
+
+    if [[ -s "$logfile" ]]; then
+      local log_lines=$(wc -l <"$logfile")
+      echo "--- Last 10 lines of silent log ---"
+      tail -n 10 "$logfile"
+      echo "-----------------------------------"
+
+      # Show how to view full log if there are more lines
+      if [[ $log_lines -gt 10 ]]; then
+        msg_custom "📋" "${YW}" "View full log (${log_lines} lines): ${logfile}"
+      fi
+    fi
+
+    exit "$rc"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# spinner()
+#
+# - Displays animated spinner with rotating characters (⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+# - Shows SPINNER_MSG alongside animation
+# - Runs in infinite loop until killed by stop_spinner()
+# - Uses color_spinner() colors for output
+# ------------------------------------------------------------------------------
 spinner() {
   local chars=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  local msg="${SPINNER_MSG:-Processing...}"
   local i=0
   while true; do
     local index=$((i++ % ${#chars[@]}))
-    printf "\r\033[2K%s %b" "${CS_YWB}${chars[$index]}${CS_CL}" "${CS_YWB}${SPINNER_MSG:-}${CS_CL}"
+    printf "\r\033[2K%s %b" "${CS_YWB}${chars[$index]}${CS_CL}" "${CS_YWB}${msg}${CS_CL}"
     sleep 0.1
   done
 }
 
+# ------------------------------------------------------------------------------
+# clear_line()
+#
+# - Clears current terminal line using tput or ANSI escape codes
+# - Moves cursor to beginning of line (carriage return)
+# - Erases from cursor to end of line
+# - Fallback to ANSI codes if tput not available
+# ------------------------------------------------------------------------------
 clear_line() {
   tput cr 2>/dev/null || echo -en "\r"
   tput el 2>/dev/null || echo -en "\033[K"
 }
 
+# ------------------------------------------------------------------------------
+# stop_spinner()
+#
+# - Stops running spinner process by PID
+# - Reads PID from SPINNER_PID variable or /tmp/.spinner.pid file
+# - Attempts graceful kill, then forced kill if needed
+# - Cleans up temp file and resets terminal state
+# - Unsets SPINNER_PID and SPINNER_MSG variables
+# ------------------------------------------------------------------------------
 stop_spinner() {
   local pid="${SPINNER_PID:-}"
   [[ -z "$pid" && -f /tmp/.spinner.pid ]] && pid=$(</tmp/.spinner.pid)
@@ -301,6 +532,19 @@ stop_spinner() {
   stty sane 2>/dev/null || true
 }
 
+# ==============================================================================
+# SECTION 4: MESSAGE OUTPUT
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# msg_info()
+#
+# - Displays informational message with spinner animation
+# - Shows each unique message only once (tracked via MSG_INFO_SHOWN)
+# - In verbose/Alpine mode: shows hourglass icon instead of spinner
+# - Stops any existing spinner before starting new one
+# - Backgrounds spinner process and stores PID for later cleanup
+# ------------------------------------------------------------------------------
 msg_info() {
   local msg="$1"
   [[ -z "$msg" ]] && return
@@ -317,6 +561,12 @@ msg_info() {
   if is_verbose_mode || is_alpine; then
     local HOURGLASS="${TAB}⏳${TAB}"
     printf "\r\e[2K%s %b" "$HOURGLASS" "${YW}${msg}${CL}" >&2
+
+    # Pause mode: Wait for Enter after each step
+    if [[ "${DEV_MODE_PAUSE:-false}" == "true" ]]; then
+      echo -en "\n${YWB}[PAUSE]${CL} Press Enter to continue..." >&2
+      read -r
+    fi
     return
   fi
 
@@ -325,29 +575,68 @@ msg_info() {
   SPINNER_PID=$!
   echo "$SPINNER_PID" >/tmp/.spinner.pid
   disown "$SPINNER_PID" 2>/dev/null || true
+
+  # Pause mode: Stop spinner and wait
+  if [[ "${DEV_MODE_PAUSE:-false}" == "true" ]]; then
+    stop_spinner
+    echo -en "\n${YWB}[PAUSE]${CL} Press Enter to continue..." >&2
+    read -r
+  fi
 }
 
+# ------------------------------------------------------------------------------
+# msg_ok()
+#
+# - Displays success message with checkmark icon
+# - Stops spinner and clears line before output
+# - Removes message from MSG_INFO_SHOWN to allow re-display
+# - Uses green color for success indication
+# ------------------------------------------------------------------------------
 msg_ok() {
   local msg="$1"
   [[ -z "$msg" ]] && return
   stop_spinner
   clear_line
-  printf "%s %b\n" "$CM" "${GN}${msg}${CL}" >&2
+  echo -e "$CM ${GN}${msg}${CL}"
   unset MSG_INFO_SHOWN["$msg"]
 }
 
+# ------------------------------------------------------------------------------
+# msg_error()
+#
+# - Displays error message with cross/X icon
+# - Stops spinner before output
+# - Uses red color for error indication
+# - Outputs to stderr
+# ------------------------------------------------------------------------------
 msg_error() {
   stop_spinner
   local msg="$1"
-  echo -e "${BFR:-} ${CROSS:-✖️} ${RD}${msg}${CL}"
+  echo -e "${BFR:-}${CROSS:-✖️} ${RD}${msg}${CL}" >&2
 }
 
+# ------------------------------------------------------------------------------
+# msg_warn()
+#
+# - Displays warning message with info/lightbulb icon
+# - Stops spinner before output
+# - Uses bright yellow color for warning indication
+# - Outputs to stderr
+# ------------------------------------------------------------------------------
 msg_warn() {
   stop_spinner
   local msg="$1"
-  echo -e "${BFR:-} ${INFO:-ℹ️} ${YWB}${msg}${CL}"
+  echo -e "${BFR:-}${INFO:-ℹ️} ${YWB}${msg}${CL}" >&2
 }
 
+# ------------------------------------------------------------------------------
+# msg_custom()
+#
+# - Displays custom message with user-defined symbol and color
+# - Arguments: symbol, color code, message text
+# - Stops spinner before output
+# - Useful for specialized status messages
+# ------------------------------------------------------------------------------
 msg_custom() {
   local symbol="${1:-"[*]"}"
   local color="${2:-"\e[36m"}"
@@ -357,17 +646,179 @@ msg_custom() {
   echo -e "${BFR:-} ${symbol} ${color}${msg}${CL:-\e[0m}"
 }
 
-run_container_safe() {
-  local ct="$1"
-  shift
-  local cmd="$*"
-
-  lxc-attach -n "$ct" -- bash -euo pipefail -c "
-    trap 'echo Aborted in container; exit 130' SIGINT SIGTERM
-    $cmd
-  " || __handle_general_error "lxc-attach to CT $ct"
+# ------------------------------------------------------------------------------
+# msg_debug()
+#
+# - Displays debug message with timestamp when var_full_verbose=1
+# - Automatically enables var_verbose if not already set
+# - Shows date/time prefix for log correlation
+# - Uses bright yellow color for debug output
+# ------------------------------------------------------------------------------
+msg_debug() {
+  if [[ "${var_full_verbose:-0}" == "1" ]]; then
+    [[ "${var_verbose:-0}" != "1" ]] && var_verbose=1
+    echo -e "${YWB}[$(date '+%F %T')] [DEBUG]${CL} $*"
+  fi
 }
 
+# ------------------------------------------------------------------------------
+# msg_dev()
+#
+# - Display development mode messages with 🔧 icon
+# - Only shown when dev_mode is active
+# - Useful for debugging and development-specific output
+# - Format: [DEV] message with distinct formatting
+# - Usage: msg_dev "Container ready for debugging"
+# ------------------------------------------------------------------------------
+msg_dev() {
+  if [[ -n "${dev_mode:-}" ]]; then
+    echo -e "${SEARCH}${BOLD}${DGN}🔧 [DEV]${CL} $*"
+  fi
+}
+#
+# - Displays error message and immediately terminates script
+# - Sends SIGINT to current process to trigger error handler
+# - Use for unrecoverable errors that require immediate exit
+# ------------------------------------------------------------------------------
+fatal() {
+  msg_error "$1"
+  kill -INT $$
+}
+
+# ==============================================================================
+# SECTION 5: UTILITY FUNCTIONS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# exit_script()
+#
+# - Called when user cancels an action
+# - Clears screen and displays exit message
+# - Exits with default exit code
+# ------------------------------------------------------------------------------
+exit_script() {
+  clear
+  echo -e "\n${CROSS}${RD}User exited script${CL}\n"
+  exit
+}
+
+# ------------------------------------------------------------------------------
+# get_header()
+#
+# - Downloads and caches application header ASCII art
+# - Falls back to local cache if already downloaded
+# - Determines app type (ct/vm) from APP_TYPE variable
+# - Returns header content or empty string on failure
+# ------------------------------------------------------------------------------
+get_header() {
+  local app_name=$(echo "${APP,,}" | tr -d ' ')
+  local app_type=${APP_TYPE:-ct} # Default to 'ct' if not set
+  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${app_type}/headers/${app_name}"
+  local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
+
+  mkdir -p "$(dirname "$local_header_path")"
+
+  if [ ! -s "$local_header_path" ]; then
+    if ! curl -fsSL "$header_url" -o "$local_header_path"; then
+      return 1
+    fi
+  fi
+
+  cat "$local_header_path" 2>/dev/null || true
+}
+
+# ------------------------------------------------------------------------------
+# header_info()
+#
+# - Displays application header ASCII art at top of screen
+# - Clears screen before displaying header
+# - Detects terminal width for formatting
+# - Returns silently if header not available
+# ------------------------------------------------------------------------------
+header_info() {
+  local app_name=$(echo "${APP,,}" | tr -d ' ')
+  local header_content
+
+  header_content=$(get_header "$app_name") || header_content=""
+
+  clear
+  local term_width
+  term_width=$(tput cols 2>/dev/null || echo 120)
+
+  if [ -n "$header_content" ]; then
+    echo "$header_content"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# ensure_tput()
+#
+# - Ensures tput command is available for terminal control
+# - Installs ncurses-bin on Debian/Ubuntu or ncurses on Alpine
+# - Required for clear_line() and terminal width detection
+# ------------------------------------------------------------------------------
+ensure_tput() {
+  if ! command -v tput >/dev/null 2>&1; then
+    if grep -qi 'alpine' /etc/os-release; then
+      apk add --no-cache ncurses >/dev/null 2>&1
+    elif command -v apt-get >/dev/null 2>&1; then
+      apt-get update -qq >/dev/null
+      apt-get install -y -qq ncurses-bin >/dev/null 2>&1
+    fi
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# is_alpine()
+#
+# - Detects if running on Alpine Linux
+# - Checks var_os, PCT_OSTYPE, or /etc/os-release
+# - Returns 0 if Alpine, 1 otherwise
+# - Used to adjust behavior for Alpine-specific commands
+# ------------------------------------------------------------------------------
+is_alpine() {
+  local os_id="${var_os:-${PCT_OSTYPE:-}}"
+
+  if [[ -z "$os_id" && -f /etc/os-release ]]; then
+    os_id="$(
+      . /etc/os-release 2>/dev/null
+      echo "${ID:-}"
+    )"
+  fi
+
+  [[ "$os_id" == "alpine" ]]
+}
+
+# ------------------------------------------------------------------------------
+# is_verbose_mode()
+#
+# - Determines if script should run in verbose mode
+# - Checks VERBOSE and var_verbose variables
+# - Also returns true if not running in TTY (pipe/redirect scenario)
+# - Used by msg_info() to decide between spinner and static output
+# ------------------------------------------------------------------------------
+is_verbose_mode() {
+  local verbose="${VERBOSE:-${var_verbose:-no}}"
+  local tty_status
+  if [[ -t 2 ]]; then
+    tty_status="interactive"
+  else
+    tty_status="not-a-tty"
+  fi
+  [[ "$verbose" != "no" || ! -t 2 ]]
+}
+
+# ==============================================================================
+# SECTION 6: CLEANUP & MAINTENANCE
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# cleanup_lxc()
+#
+# - Cleans package manager and language caches (safe for installs AND updates)
+# - Supports Alpine (apk), Debian/Ubuntu (apt), Python, Node.js, Go, Rust, Ruby, PHP
+# - Uses fallback error handling to prevent cleanup failures from breaking installs
+# ------------------------------------------------------------------------------
 cleanup_lxc() {
   msg_info "Cleaning up"
 
@@ -375,47 +826,66 @@ cleanup_lxc() {
     $STD apk cache clean || true
     rm -rf /var/cache/apk/*
   else
-    $STD apt -y autoremove || true
-    $STD apt -y autoclean || true
-    $STD apt -y clean || true
+    $STD apt -y autoremove 2>/dev/null || msg_warn "apt autoremove failed (non-critical)"
+    $STD apt -y autoclean 2>/dev/null || msg_warn "apt autoclean failed (non-critical)"
+    $STD apt -y clean 2>/dev/null || msg_warn "apt clean failed (non-critical)"
   fi
 
-  # Clear temp artifacts (keep sockets/FIFOs; ignore errors)
   find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
   find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
 
-  # Truncate writable log files silently (permission errors ignored)
-  if command -v truncate >/dev/null 2>&1; then
-    find /var/log -type f -writable -print0 2>/dev/null |
-      xargs -0 -n1 truncate -s 0 2>/dev/null || true
+  # Python
+  if command -v pip &>/dev/null; then
+    rm -rf /root/.cache/pip 2>/dev/null || true
+  fi
+  if command -v uv &>/dev/null; then
+    rm -rf /root/.cache/uv 2>/dev/null || true
   fi
 
-  # Python pip
-  if command -v pip &>/dev/null; then $STD pip cache purge || true; fi
-  # Python uv
-  if command -v uv &>/dev/null; then $STD uv cache clear || true; fi
-  # Node.js npm
-  if command -v npm &>/dev/null; then $STD npm cache clean --force || true; fi
-  # Node.js yarn
-  if command -v yarn &>/dev/null; then $STD yarn cache clean || true; fi
-  # Node.js pnpm
-  if command -v pnpm &>/dev/null; then $STD pnpm store prune || true; fi
-  # Go
-  if command -v go &>/dev/null; then $STD go clean -cache -modcache || true; fi
-  # Rust cargo
-  if command -v cargo &>/dev/null; then $STD cargo clean || true; fi
-  # Ruby gem
-  if command -v gem &>/dev/null; then $STD gem cleanup || true; fi
-  # Composer (PHP)
-  if command -v composer &>/dev/null; then $STD composer clear-cache || true; fi
-
-  if command -v journalctl &>/dev/null; then
-    $STD journalctl --rotate || true
-    $STD journalctl --vacuum-time=10m || true
+  # Node.js
+  if command -v npm &>/dev/null; then
+    rm -rf /root/.npm/_cacache /root/.npm/_logs 2>/dev/null || true
   fi
+  if command -v yarn &>/dev/null; then
+    rm -rf /root/.cache/yarn /root/.yarn/cache 2>/dev/null || true
+  fi
+  if command -v pnpm &>/dev/null; then
+    pnpm store prune &>/dev/null || true
+  fi
+
+  # Go (only build cache, not modules)
+  if command -v go &>/dev/null; then
+    $STD go clean -cache 2>/dev/null || true
+  fi
+
+  # Rust (only registry cache, not build artifacts)
+  if command -v cargo &>/dev/null; then
+    rm -rf /root/.cargo/registry/cache /root/.cargo/.package-cache 2>/dev/null || true
+  fi
+
+  # Ruby
+  if command -v gem &>/dev/null; then
+    rm -rf /root/.gem/cache 2>/dev/null || true
+  fi
+
+  # PHP
+  if command -v composer &>/dev/null; then
+    rm -rf /root/.composer/cache 2>/dev/null || true
+  fi
+
   msg_ok "Cleaned"
 }
 
+# ------------------------------------------------------------------------------
+# check_or_create_swap()
+#
+# - Checks if swap is active on system
+# - Offers to create swap file if none exists
+# - Prompts user for swap size in MB
+# - Creates /swapfile with specified size
+# - Activates swap immediately
+# - Returns 0 if swap active or successfully created, 1 if declined/failed
+# ------------------------------------------------------------------------------
 check_or_create_swap() {
   msg_info "Checking for active swap"
 
@@ -453,5 +923,96 @@ check_or_create_swap() {
     return 1
   fi
 }
+
+# ------------------------------------------------------------------------------
+# Loads LOCAL_IP from persistent store or detects if missing.
+#
+# Description:
+#   - Loads from /run/local-ip.env or performs runtime lookup
+# ------------------------------------------------------------------------------
+
+function get_lxc_ip() {
+  local IP_FILE="/run/local-ip.env"
+  if [[ -f "$IP_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$IP_FILE"
+  fi
+
+  if [[ -z "${LOCAL_IP:-}" ]]; then
+    get_current_ip() {
+      local ip
+
+      # Try direct interface lookup for eth0 FIRST (most reliable for LXC) - IPv4
+      ip=$(ip -4 addr show eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # Fallback: Try hostname -I (returns IPv4 first if available)
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+        if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # Try routing table with IPv4 targets
+      local ipv4_targets=("8.8.8.8" "1.1.1.1" "default")
+      for target in "${ipv4_targets[@]}"; do
+        if [[ "$target" == "default" ]]; then
+          ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        else
+          ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        fi
+        if [[ -n "$ip" ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      # IPv6 fallback: Try direct interface lookup for eth0
+      ip=$(ip -6 addr show eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" && "$ip" =~ : ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # IPv6 fallback: Try hostname -I for IPv6
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E ':' | head -n1)
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # IPv6 fallback: Use routing table with IPv6 targets
+      local ipv6_targets=("2001:4860:4860::8888" "2606:4700:4700::1111")
+      for target in "${ipv6_targets[@]}"; do
+        ip=$(ip -6 route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      return 1
+    }
+
+    LOCAL_IP="$(get_current_ip || true)"
+    if [[ -z "$LOCAL_IP" ]]; then
+      msg_error "Could not determine LOCAL_IP"
+      return 1
+    fi
+  fi
+
+  export LOCAL_IP
+}
+
+# ==============================================================================
+# SIGNAL TRAPS
+# ==============================================================================
 
 trap 'stop_spinner' EXIT INT TERM

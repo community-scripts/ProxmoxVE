@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/fccview/jotty/blob/main/README.md",
   "website": "https://github.com/fccview/jotty",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/jotty.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jotty.webp",
   "config_path": "/opt/jotty/.env",
   "description": "A simple, self-hosted app for your checklists and notes. Tired of bloated, cloud-based to-do apps? jotty is a lightweight alternative for managing your personal checklists and notes. It's built with Next.js 14, is easy to deploy, and keeps all your data on your own server.",
   "install_methods": [
@@ -19,9 +19,9 @@
       "type": "default",
       "script": "ct/jotty.sh",
       "resources": {
-        "cpu": 2,
-        "ram": 4096,
-        "hdd": 6,
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 5,
         "os": "debian",
         "version": "13"
       }
@@ -31,10 +31,5 @@
     "username": null,
     "password": null
   },
-  "notes": [
-    {
-      "text": "jotty was previously named rwMarkable",
-      "type": "info"
-    }
-  ]
+  "notes": []
 }

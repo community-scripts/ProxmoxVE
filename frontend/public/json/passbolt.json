@@ -1,0 +1,44 @@
+{
+  "name": "Passbolt",
+  "slug": "passbolt",
+  "categories": [
+    6
+  ],
+  "date_created": "2025-11-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 443,
+  "documentation": "https://www.passbolt.com/docs/",
+  "config_path": "/etc/passbolt/passbolt.php",
+  "website": "https://www.passbolt.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/passbolt.webp",
+  "description": "Passbolt is a hybrid credential platform. It is built-first for modern IT teams, yet simple enough for everyone. A sovereign, battle-tested solution that delivers for a team of 5, or an organisation of 5000.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/passbolt.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 2,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Type `cat ~/passbolt.creds` to see MariaDB database credentials. You will need those to setup Passbolt.",
+      "type": "info"
+    },
+    {
+      "text": "The application uses self-signed certificates. You can also use Let's Encrypt to get a valid certificate for your domain. Please read the documentation for more information.",
+      "type": "info"
+    }
+  ]
+}

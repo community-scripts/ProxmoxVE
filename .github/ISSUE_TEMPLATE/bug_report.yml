@@ -22,6 +22,18 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: verbose_run
+    attributes:
+      label: 🔎 Did you run the script with verbose mode enabled?
+      description: "Required for debugging any script issue. A verbose log is mandatory."
+      options:
+        - ""
+        - "Yes, verbose mode was enabled and the output is included below"
+        - "No (this issue will likely be closed automatically)"
+    validations:
+      required: true
+
   - type: input
     id: script_name
     attributes:

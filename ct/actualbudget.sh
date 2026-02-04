@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://actualbudget.org/
@@ -24,33 +24,32 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /opt/actualbudget_version.txt ]]; then
+  if [[ ! -f ~/.actualbudget && ! -f /opt/actualbudget_version.txt ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   NODE_VERSION="22" setup_nodejs
-  RELEASE=$(curl -fsSL https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE=$(get_latest_github_release "actualbudget/actual")
   if [[ -f /opt/actualbudget-data/config.json ]]; then
-    if [[ ! -f /opt/actualbudget_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/actualbudget_version.txt)" ]]; then
+    if check_for_gh_release "actualbudget" "actualbudget/actual"; then
       msg_info "Stopping Service"
       systemctl stop actualbudget
       msg_ok "Stopped Service"
 
-      msg_info "Updating ${APP} to ${RELEASE}"
+      msg_info "Updating Actual Budget to ${RELEASE}"
       $STD npm update -g @actual-app/sync-server
-      echo "${RELEASE}" >/opt/actualbudget_version.txt
-      msg_ok "Updated ${APP} to ${RELEASE}"
+      echo "${RELEASE}" >~/.actualbudget
+      msg_ok "Updated Actual Budget to ${RELEASE}"
 
       msg_info "Starting Service"
       systemctl start actualbudget
       msg_ok "Started Service"
       msg_ok "Updated successfully!"
-    else
-      msg_info "${APP} is already up to date"
     fi
   else
     msg_info "Old Installation Found, you need to migrate your data and recreate to a new container"
-    msg_info "Please follow the instructions on the ${APP} website to migrate your data"
+    msg_info "Please follow the instructions on the Actual Budget website to migrate your data"
     msg_info "https://actualbudget.org/docs/backup-restore/backup"
     exit
   fi
@@ -61,7 +60,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:5006${CL}"

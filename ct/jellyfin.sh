@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://jellyfin.org/
@@ -13,6 +13,7 @@ var_disk="${var_disk:-16}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -39,9 +40,7 @@ function update_script() {
   fi
 
   msg_info "Updating Jellyfin"
-  if ! dpkg -s libjemalloc2 >/dev/null 2>&1; then
-    $STD apt install -y libjemalloc2
-  fi
+  ensure_dependencies libjemalloc2
   if [[ ! -f /usr/lib/libjemalloc.so ]]; then
     ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
   fi
@@ -57,7 +56,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8096${CL}"

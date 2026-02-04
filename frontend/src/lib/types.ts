@@ -5,7 +5,7 @@ export type Script = {
   slug: string;
   categories: number[];
   date_created: string;
-  type: "vm" | "ct" | "pve" | "addon";
+  type: "vm" | "ct" | "pve" | "addon" | "turnkey";
   updateable: boolean;
   privileged: boolean;
   interface_port: number | null;
@@ -14,6 +14,8 @@ export type Script = {
   logo: string | null;
   config_path: string;
   description: string;
+  disable?: boolean;
+  disable_description?: string;
   install_methods: {
     type: "default" | "alpine";
     script: string;
@@ -29,12 +31,10 @@ export type Script = {
     username: string | null;
     password: string | null;
   };
-  notes: [
-    {
-      text: string;
-      type: keyof typeof AlertColors;
-    },
-  ];
+  notes: {
+    text: string;
+    type: keyof typeof AlertColors;
+  }[];
 };
 
 export type Category = {
@@ -61,7 +61,14 @@ export type OperatingSystem = {
 };
 
 export type AppVersion = {
-  name: string;
+  slug: string;
+  repo: string;
   version: string;
-  date: Date;
+  pinned: boolean;
+  date: string;
+};
+
+export type GitHubVersionsResponse = {
+  generated: string;
+  versions: AppVersion[];
 };

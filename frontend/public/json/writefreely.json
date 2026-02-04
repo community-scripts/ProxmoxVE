@@ -1,0 +1,40 @@
+{
+    "name": "WriteFreely",
+    "slug": "writefreely",
+    "categories": [
+        12
+    ],
+    "date_created": "2026-02-04",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": "https://writefreely.org/docs",
+    "config_path": "/opt/writefreely/config.ini",
+    "website": "https://writefreely.org/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/writefreely-light.webp",
+    "description": "WriteFreely is free and open source software for easily publishing writing on the web with support for the ActivityPub protocol. Use it to start a personal blog — or an entire community.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/writefreely.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "After installation execute `writefreely user create --admin <username>:<password>` to create your user.",
+            "type": "info"
+        }
+    ]
+}

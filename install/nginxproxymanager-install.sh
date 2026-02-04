@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 Community-Scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://nginxproxymanager.com/
@@ -58,7 +58,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-
   grep "tag_name" |
   awk '{print substr($2, 3, length($2)-4) }')
 
-fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager"
+fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}"
 
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
@@ -116,6 +116,7 @@ cd /opt/nginxproxymanager/frontend
 # Replace node-sass with sass in package.json before installation
 sed -E -i 's/"node-sass" *: *"([^"]*)"/"sass": "\1"/g' package.json
 $STD yarn install --network-timeout 600000
+$STD yarn locale-compile
 $STD yarn build
 cp -r /opt/nginxproxymanager/frontend/dist/* /app/frontend
 cp -r /opt/nginxproxymanager/frontend/public/images/* /app/frontend/images
@@ -167,14 +168,9 @@ sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/n
 sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
 systemctl enable -q --now openresty
 systemctl enable -q --now npm
+systemctl restart openresty
 msg_ok "Started Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-systemctl restart openresty
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

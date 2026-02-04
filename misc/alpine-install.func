@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -7,32 +7,67 @@ if ! command -v curl >/dev/null 2>&1; then
   apk update && apk add curl >/dev/null 2>&1
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 load_functions
+catch_errors
+
+# Get LXC IP address (must be called INSIDE container, after network is up)
+get_lxc_ip
 
 # This function enables IPv6 if it's not disabled and sets verbose mode
 verb_ip6() {
   set_std_mode # Set STD mode based on VERBOSE
 
-  if [ "$DISABLEIPV6" == "yes" ]; then
+  if [ "${IPV6_METHOD:-}" = "disable" ]; then
+    msg_info "Disabling IPv6 (this may affect some services)"
     $STD sysctl -w net.ipv6.conf.all.disable_ipv6=1
-    echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
+    $STD sysctl -w net.ipv6.conf.default.disable_ipv6=1
+    $STD sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+    mkdir -p /etc/sysctl.d
+    $STD tee /etc/sysctl.d/99-disable-ipv6.conf >/dev/null <<EOF
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
     $STD rc-update add sysctl default
+    msg_ok "Disabled IPv6"
   fi
 }
 
-# This function catches errors and handles them with the error handler function
-catch_errors() {
-  set -Eeuo pipefail
-  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+set -Eeuo pipefail
+trap 'error_handler $? $LINENO "$BASH_COMMAND"' ERR
+trap on_exit EXIT
+trap on_interrupt INT
+trap on_terminate TERM
+
+error_handler() {
+  local exit_code="$1"
+  local line_number="$2"
+  local command="$3"
+
+  if [[ "$exit_code" -eq 0 ]]; then
+    return 0
+  fi
+
+  printf "\e[?25h"
+  echo -e "\n${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}\n"
+  exit "$exit_code"
 }
 
-# This function handles errors
-error_handler() {
+on_exit() {
   local exit_code="$?"
-  local line_number="$1"
-  local command="$2"
-  local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
-  echo -e "\n$error_message\n"
+  [[ -n "${lockfile:-}" && -e "$lockfile" ]] && rm -f "$lockfile"
+  exit "$exit_code"
+}
+
+on_interrupt() {
+  echo -e "\n${RD}Interrupted by user (SIGINT)${CL}"
+  exit 130
+}
+
+on_terminate() {
+  echo -e "\n${RD}Terminated by signal (SIGTERM)${CL}"
+  exit 143
 }
 
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
@@ -61,10 +96,10 @@ network_check() {
   set +e
   trap - ERR
   if ping -c 1 -W 1 1.1.1.1 &>/dev/null || ping -c 1 -W 1 8.8.8.8 &>/dev/null || ping -c 1 -W 1 9.9.9.9 &>/dev/null; then
-    msg_ok "Internet Connected"
+    ipv4_status="${GN}✔${CL} IPv4"
   else
-    msg_error "Internet NOT Connected"
-    read -r -p "Would you like to continue anyway? <y/N> " prompt
+    ipv4_status="${RD}✖${CL} IPv4"
+    read -r -p "Internet NOT connected. Continue anyway? <y/N> " prompt
     if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
       echo -e "${INFO}${RD}Expect Issues Without Internet${CL}"
     else
@@ -73,7 +108,11 @@ network_check() {
     fi
   fi
   RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')
-  if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
+  if [[ -z "$RESOLVEDIP" ]]; then
+    msg_error "Internet: ${ipv4_status}  DNS Failed"
+  else
+    msg_ok "Internet: ${ipv4_status}  DNS: ${BL}${RESOLVEDIP}${CL}"
+  fi
   set -e
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
@@ -89,22 +128,13 @@ update_os() {
 # This function modifies the message of the day (motd) and SSH settings
 motd_ssh() {
   echo "export TERM='xterm-256color'" >>/root/.bashrc
-  IP=$(ip -4 addr show eth0 | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1)
-
-  if [ -f "/etc/os-release" ]; then
-    OS_NAME=$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"')
-    OS_VERSION=$(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')
-  else
-    OS_NAME="Alpine Linux"
-    OS_VERSION="Unknown"
-  fi
 
   PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
   echo "echo -e \"\"" >"$PROFILE_FILE"
   echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
   echo "echo \"\"" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}\$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '\"') - Version: \$(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '\"')${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(ip -4 addr show eth0 | awk '/inet / {print \$2}' | cut -d/ -f1 | head -n 1)${CL}\"" >>"$PROFILE_FILE"
 
@@ -154,10 +184,4 @@ EOF
   echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 
-  if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then
-    mkdir -p /root/.ssh
-    echo "${SSH_AUTHORIZED_KEY}" >/root/.ssh/authorized_keys
-    chmod 700 /root/.ssh
-    chmod 600 /root/.ssh/authorized_keys
-  fi
 }

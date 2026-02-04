@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://actualbudget.org/
@@ -19,10 +19,12 @@ $STD apt install -y \
   g++
 msg_ok "Installed Dependencies"
 
+NODE_VERSION="22" setup_nodejs
+create_self_signed_cert
+
 msg_info "Installing Actual Budget"
 cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-NODE_VERSION="22" setup_nodejs
+RELEASE=$(get_latest_github_release "actualbudget/actual")
 mkdir -p /opt/actualbudget-data/{server-files,upload,migrate,user-files,migrations,config}
 chown -R root:root /opt/actualbudget-data
 chmod -R 755 /opt/actualbudget-data
@@ -42,25 +44,15 @@ cat <<EOF >/opt/actualbudget-data/config.json
     "fc00::/7"
   ],
   "https": {
-    "key": "/opt/actualbudget/selfhost.key",
-    "cert": "/opt/actualbudget/selfhost.crt"
+    "key": "/etc/ssl/actualbudget/actualbudget.key",
+    "cert": "/etc/ssl/actualbudget/actualbudget.crt"
   }
 }
 EOF
-
 mkdir -p /opt/actualbudget
-cd /opt/actualbudget || exit
+cd /opt/actualbudget
 $STD npm install --location=global @actual-app/sync-server
-$STD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfhost.key -out selfhost.crt <<EOF
-US
-California
-San Francisco
-My Organization
-My Unit
-localhost
-myemail@example.com
-EOF
-echo "${RELEASE}" >"/opt/actualbudget_version.txt"
+echo "${RELEASE}" >~/.actualbudget
 msg_ok "Installed Actual Budget"
 
 msg_info "Creating Service"
@@ -89,9 +81,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

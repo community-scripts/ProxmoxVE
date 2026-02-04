@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.monicahq.com/
@@ -13,34 +13,19 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="dom,gmp,iconv,mysqli,pdo-mysql,redis,tokenizer" setup_php
+PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="mysqli,pdo-mysql" setup_php
 setup_composer
 setup_mariadb
+MARIADB_DB_NAME="monica" MARIADB_DB_USER="monica" setup_mariadb_db
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
-
-msg_info "Setting up MariaDB"
-DB_NAME=monica
-DB_USER=monica
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "monica-Credentials"
-  echo "monica Database User: $DB_USER"
-  echo "monica Database Password: $DB_PASS"
-  echo "monica Database Name: $DB_NAME"
-} >>~/monica.creds
-msg_ok "Set up MariaDB"
-
 fetch_and_deploy_gh_release "monica" "monicahq/monica" "prebuild" "latest" "/opt/monica" "monica-v*.tar.bz2"
 
 msg_info "Configuring monica"
 cd /opt/monica
 cp /opt/monica/.env.example /opt/monica/.env
 HASH_SALT=$(openssl rand -base64 32)
-sed -i -e "s|^DB_USERNAME=.*|DB_USERNAME=${DB_USER}|" \
-  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|" \
+sed -i -e "s|^DB_USERNAME=.*|DB_USERNAME=${MARIADB_DB_USER}|" \
+  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=${MARIADB_DB_PASS}|" \
   -e "s|^HASH_SALT=.*|HASH_SALT=${HASH_SALT}|" \
   /opt/monica/.env
 $STD composer install --no-dev -o --no-interaction
@@ -51,6 +36,7 @@ $STD php artisan key:generate
 $STD php artisan setup:production --email=admin@helper-scripts.com --password=helper-scripts.com --force
 chown -R www-data:www-data /opt/monica
 chmod -R 775 /opt/monica/storage
+echo "* * * * * root php /opt/monica/artisan schedule:run >> /dev/null 2>&1" >>/etc/crontab
 msg_ok "Configured monica"
 
 msg_info "Creating Service"
@@ -76,9 +62,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

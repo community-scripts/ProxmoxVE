@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://readeck.org/en/
@@ -13,13 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Readeck"
-LATEST=$(curl -fsSL https://codeberg.org/readeck/readeck/releases/ | grep -oP '/releases/tag/\K\d+\.\d+\.\d+' | head -1)
-mkdir -p /opt/readeck
-cd /opt/readeck
-curl -fsSL "https://codeberg.org/readeck/readeck/releases/download/${LATEST}/readeck-${LATEST}-linux-amd64" -o "readeck"
-chmod a+x readeck
-msg_ok "Installed Readeck"
+fetch_and_deploy_codeberg_release "readeck" "readeck/readeck" "singlefile" "latest" "/opt/readeck" "readeck-*-linux-amd64"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/readeck.service
@@ -42,9 +36,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/CrazyWolf13/streamlink-webui
@@ -18,7 +18,7 @@ NODE_VERSION="22"
 NODE_MODULE="npm@latest,yarn@latest"
 setup_nodejs
 setup_uv
-fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"
+fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui" "tarball"
 
 msg_info "Setup ${APPLICATION}"
 mkdir -p "/opt/${APPLICATION}-download"
@@ -59,9 +59,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -267,13 +267,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **[Proxmox VE Documentation](https://pve.proxmox.com/pve-docs/)**
 - **[Community Scripts Repository](https://github.com/community-scripts/ProxmoxVE)**
-- **[Discord Community](https://discord.gg/2wvnMDgdnU)**
+- **[Discord Community](https://discord.gg/3AnUqsXnmK)**
 - **[GitHub Discussions](https://github.com/community-scripts/ProxmoxVE/discussions)**
 
 ## 🔗 Links
 
 - **🌐 Live Website**: [https://community-scripts.github.io/ProxmoxVE/](https://community-scripts.github.io/ProxmoxVE/)
-- **💬 Discord Server**: [https://discord.gg/2wvnMDgdnU](https://discord.gg/2wvnMDgdnU)
+- **💬 Discord Server**: [https://discord.gg/3AnUqsXnmK](https://discord.gg/3AnUqsXnmK)
 - **📝 Change Log**: [https://github.com/community-scripts/ProxmoxVE/blob/main/CHANGELOG.md](https://github.com/community-scripts/ProxmoxVE/blob/main/CHANGELOG.md)
 
 ---

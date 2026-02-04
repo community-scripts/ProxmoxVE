@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/plankanban/planka
@@ -43,7 +43,6 @@ msg_ok "Set up PostgreSQL Database"
 fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/opt/planka" "planka-prebuild.zip"
 
 msg_info "Configuring PLANKA"
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 SECRET_KEY=$(openssl rand -hex 64)
 cd /opt/planka
 $STD npm install
@@ -96,9 +95,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Joseph Stubberfield (stubbers)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/librespeed/speedtest-rust
@@ -30,13 +30,13 @@ function update_script() {
 
   if check_for_gh_release "librespeed-rust" "librespeed/speedtest-rust"; then
     msg_info "Stopping Services"
-    systemctl stop librespeed_rs
+    systemctl stop speedtest_rs
     msg_ok "Services Stopped"
 
     fetch_and_deploy_gh_release "librespeed-rust" "librespeed/speedtest-rust" "binary" "latest" "/opt/librespeed-rust" "librespeed-rs-x86_64-unknown-linux-gnu.deb"
 
     msg_info "Starting Service"
-    systemctl start librespeed_rs
+    systemctl start speedtest_rs
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
@@ -47,7 +47,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

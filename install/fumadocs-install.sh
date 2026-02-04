@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -13,20 +13,20 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   ca-certificates \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 
-msg_info "Installing Fumadocs"
+msg_info "Preparing Fumadocs - "
 mkdir -p /opt/fumadocs
 cd /opt/fumadocs
+msg_ok "Important: Manual configuration is required after this step."
 pnpm create fumadocs-app
 PROJECT_NAME=$(find . -maxdepth 1 -type d ! -name '.' ! -name '..' | sed 's|^\./||')
 echo "$PROJECT_NAME" >/opt/fumadocs/.projectname
-msg_ok "Installed Fumadocs"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/fumadocs_$PROJECT_NAME.service
@@ -47,8 +47,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

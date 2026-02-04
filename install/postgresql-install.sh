@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.postgresql.org/
@@ -14,7 +14,10 @@ network_check
 update_os
 
 read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18): " ver
-[[ $ver =~ ^(15|16|17|18)$ ]] || { echo "Invalid version"; exit 1; }
+[[ $ver =~ ^(15|16|17|18)$ ]] || {
+  echo "Invalid version"
+  exit 1
+}
 PG_VERSION=$ver setup_postgresql
 
 cat <<EOF >/etc/postgresql/$ver/main/pg_hba.conf
@@ -131,9 +134,4 @@ fi
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

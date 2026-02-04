@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: Proxmox Server Solution GmbH
@@ -37,6 +37,20 @@ function update_script() {
     msg_ok "Updated old sources"
   fi
 
+  if grep -q 'Debian GNU/Linux 13' /etc/os-release; then
+    if [ -f "/etc/apt/sources.list.d/pdm-test.sources" ]; then
+      if ! grep -qx "Enabled: false" "/etc/apt/sources.list.d/pdm-test.sources"; then
+          echo "Enabled: false" >> "/etc/apt/sources.list.d/pdm-test.sources"
+          setup_deb822_repo \
+            "pdm" \
+            "https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg" \
+            "http://download.proxmox.com/debian/pdm" \
+            "trixie" \
+            "pdm-no-subscription"
+      fi
+    fi
+  fi
+
   msg_info "Updating $APP LXC"
   $STD apt update
   $STD apt -y upgrade
@@ -49,7 +63,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8443${CL}"

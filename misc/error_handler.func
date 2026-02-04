@@ -1,0 +1,322 @@
+#!/usr/bin/env bash
+# ------------------------------------------------------------------------------
+# ERROR HANDLER - ERROR & SIGNAL MANAGEMENT
+# ------------------------------------------------------------------------------
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# ------------------------------------------------------------------------------
+#
+# Provides comprehensive error handling and signal management for all scripts.
+# Includes:
+#   - Exit code explanations (shell, package managers, databases, custom codes)
+#   - Error handler with detailed logging
+#   - Signal handlers (EXIT, INT, TERM)
+#   - Initialization function for trap setup
+#
+# Usage:
+#   source <(curl -fsSL .../error_handler.func)
+#   catch_errors
+#
+# ------------------------------------------------------------------------------
+
+# ==============================================================================
+# SECTION 1: EXIT CODE EXPLANATIONS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# explain_exit_code()
+#
+# - Maps numeric exit codes to human-readable error descriptions
+# - Supports:
+#   * Generic/Shell errors (1, 2, 126, 127, 128, 130, 137, 139, 143)
+#   * Package manager errors (APT, DPKG: 100, 101, 255)
+#   * Node.js/npm errors (243-249, 254)
+#   * Python/pip/uv errors (210-212)
+#   * PostgreSQL errors (231-234)
+#   * MySQL/MariaDB errors (241-244)
+#   * MongoDB errors (251-254)
+#   * Proxmox custom codes (200-231)
+# - Returns description string for given exit code
+# ------------------------------------------------------------------------------
+explain_exit_code() {
+  local code="$1"
+  case "$code" in
+  # --- Generic / Shell ---
+  1) echo "General error / Operation not permitted" ;;
+  2) echo "Misuse of shell builtins (e.g. syntax error)" ;;
+  126) echo "Command invoked cannot execute (permission problem?)" ;;
+  127) echo "Command not found" ;;
+  128) echo "Invalid argument to exit" ;;
+  130) echo "Terminated by Ctrl+C (SIGINT)" ;;
+  137) echo "Killed (SIGKILL / Out of memory?)" ;;
+  139) echo "Segmentation fault (core dumped)" ;;
+  143) echo "Terminated (SIGTERM)" ;;
+
+  # --- Package manager / APT / DPKG ---
+  100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
+  101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
+  255) echo "DPKG: Fatal internal error" ;;
+
+  # --- Node.js / npm / pnpm / yarn ---
+  243) echo "Node.js: Out of memory (JavaScript heap out of memory)" ;;
+  245) echo "Node.js: Invalid command-line option" ;;
+  246) echo "Node.js: Internal JavaScript Parse Error" ;;
+  247) echo "Node.js: Fatal internal error" ;;
+  248) echo "Node.js: Invalid C++ addon / N-API failure" ;;
+  249) echo "Node.js: Inspector error" ;;
+  254) echo "npm/pnpm/yarn: Unknown fatal error" ;;
+
+  # --- Python / pip / uv ---
+  210) echo "Python: Virtualenv / uv environment missing or broken" ;;
+  211) echo "Python: Dependency resolution failed" ;;
+  212) echo "Python: Installation aborted (permissions or EXTERNALLY-MANAGED)" ;;
+
+  # --- PostgreSQL ---
+  231) echo "PostgreSQL: Connection failed (server not running / wrong socket)" ;;
+  232) echo "PostgreSQL: Authentication failed (bad user/password)" ;;
+  233) echo "PostgreSQL: Database does not exist" ;;
+  234) echo "PostgreSQL: Fatal error in query / syntax" ;;
+
+  # --- MySQL / MariaDB ---
+  241) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
+  242) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
+  243) echo "MySQL/MariaDB: Database does not exist" ;;
+  244) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
+
+  # --- MongoDB ---
+  251) echo "MongoDB: Connection failed (server not running)" ;;
+  252) echo "MongoDB: Authentication failed (bad user/password)" ;;
+  253) echo "MongoDB: Database not found" ;;
+  254) echo "MongoDB: Fatal query error" ;;
+
+  # --- Proxmox Custom Codes ---
+  200) echo "Proxmox: Failed to create lock file" ;;
+  203) echo "Proxmox: Missing CTID variable" ;;
+  204) echo "Proxmox: Missing PCT_OSTYPE variable" ;;
+  205) echo "Proxmox: Invalid CTID (<100)" ;;
+  206) echo "Proxmox: CTID already in use" ;;
+  207) echo "Proxmox: Password contains unescaped special characters" ;;
+  208) echo "Proxmox: Invalid configuration (DNS/MAC/Network format)" ;;
+  209) echo "Proxmox: Container creation failed" ;;
+  210) echo "Proxmox: Cluster not quorate" ;;
+  211) echo "Proxmox: Timeout waiting for template lock" ;;
+  212) echo "Proxmox: Storage type 'iscsidirect' does not support containers (VMs only)" ;;
+  213) echo "Proxmox: Storage type does not support 'rootdir' content" ;;
+  214) echo "Proxmox: Not enough storage space" ;;
+  215) echo "Proxmox: Container created but not listed (ghost state)" ;;
+  216) echo "Proxmox: RootFS entry missing in config" ;;
+  217) echo "Proxmox: Storage not accessible" ;;
+  219) echo "Proxmox: CephFS does not support containers - use RBD" ;;
+  224) echo "Proxmox: PBS storage is for backups only" ;;
+  218) echo "Proxmox: Template file corrupted or incomplete" ;;
+  220) echo "Proxmox: Unable to resolve template path" ;;
+  221) echo "Proxmox: Template file not readable" ;;
+  222) echo "Proxmox: Template download failed" ;;
+  223) echo "Proxmox: Template not available after download" ;;
+  225) echo "Proxmox: No template available for OS/Version" ;;
+  231) echo "Proxmox: LXC stack upgrade failed" ;;
+
+  # --- Default ---
+  *) echo "Unknown error" ;;
+  esac
+}
+
+# ==============================================================================
+# SECTION 2: ERROR HANDLERS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# error_handler()
+#
+# - Main error handler triggered by ERR trap
+# - Arguments: exit_code, command, line_number
+# - Behavior:
+#   * Returns silently if exit_code is 0 (success)
+#   * Sources explain_exit_code() for detailed error description
+#   * Displays error message with:
+#     - Line number where error occurred
+#     - Exit code with explanation
+#     - Command that failed
+#   * Shows last 20 lines of SILENT_LOGFILE if available
+#   * Copies log to container /root for later inspection
+#   * Exits with original exit code
+# ------------------------------------------------------------------------------
+error_handler() {
+  local exit_code=${1:-$?}
+  local command=${2:-${BASH_COMMAND:-unknown}}
+  local line_number=${BASH_LINENO[0]:-unknown}
+
+  command="${command//\$STD/}"
+
+  if [[ "$exit_code" -eq 0 ]]; then
+    return 0
+  fi
+
+  local explanation
+  explanation="$(explain_exit_code "$exit_code")"
+
+  printf "\e[?25h"
+
+  # Use msg_error if available, fallback to echo
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "in line ${line_number}: exit code ${exit_code} (${explanation}): while executing command ${command}"
+  else
+    echo -e "\n${RD}[ERROR]${CL} in line ${RD}${line_number}${CL}: exit code ${RD}${exit_code}${CL} (${explanation}): while executing command ${YWB}${command}${CL}\n"
+  fi
+
+  if [[ -n "${DEBUG_LOGFILE:-}" ]]; then
+    {
+      echo "------ ERROR ------"
+      echo "Timestamp : $(date '+%Y-%m-%d %H:%M:%S')"
+      echo "Exit Code : $exit_code ($explanation)"
+      echo "Line      : $line_number"
+      echo "Command   : $command"
+      echo "-------------------"
+    } >>"$DEBUG_LOGFILE"
+  fi
+
+  # Get active log file (BUILD_LOG or INSTALL_LOG)
+  local active_log=""
+  if declare -f get_active_logfile >/dev/null 2>&1; then
+    active_log="$(get_active_logfile)"
+  elif [[ -n "${SILENT_LOGFILE:-}" ]]; then
+    active_log="$SILENT_LOGFILE"
+  fi
+
+  if [[ -n "$active_log" && -s "$active_log" ]]; then
+    echo "--- Last 20 lines of silent log ---"
+    tail -n 20 "$active_log"
+    echo "-----------------------------------"
+
+    # Detect context: Container (INSTALL_LOG set + /root exists) vs Host (BUILD_LOG)
+    if [[ -n "${INSTALL_LOG:-}" && -d /root ]]; then
+      # CONTAINER CONTEXT: Copy log and create flag file for host
+      local container_log="/root/.install-${SESSION_ID:-error}.log"
+      cp "$active_log" "$container_log" 2>/dev/null || true
+
+      # Create error flag file with exit code for host detection
+      echo "$exit_code" >"/root/.install-${SESSION_ID:-error}.failed" 2>/dev/null || true
+
+      if declare -f msg_custom >/dev/null 2>&1; then
+        msg_custom "📋" "${YW}" "Log saved to: ${container_log}"
+      else
+        echo -e "${YW}Log saved to:${CL} ${BL}${container_log}${CL}"
+      fi
+    else
+      # HOST CONTEXT: Show local log path and offer container cleanup
+      if declare -f msg_custom >/dev/null 2>&1; then
+        msg_custom "📋" "${YW}" "Full log: ${active_log}"
+      else
+        echo -e "${YW}Full log:${CL} ${BL}${active_log}${CL}"
+      fi
+
+      # Offer to remove container if it exists (build errors after container creation)
+      if [[ -n "${CTID:-}" ]] && command -v pct &>/dev/null && pct status "$CTID" &>/dev/null; then
+        echo ""
+        echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+
+        if read -t 60 -r response; then
+          if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
+            echo -e "\n${YW}Removing container ${CTID}${CL}"
+            pct stop "$CTID" &>/dev/null || true
+            pct destroy "$CTID" &>/dev/null || true
+            echo -e "${GN}✔${CL} Container ${CTID} removed"
+          elif [[ "$response" =~ ^[Nn]$ ]]; then
+            echo -e "\n${YW}Container ${CTID} kept for debugging${CL}"
+          fi
+        else
+          # Timeout - auto-remove
+          echo -e "\n${YW}No response - auto-removing container${CL}"
+          pct stop "$CTID" &>/dev/null || true
+          pct destroy "$CTID" &>/dev/null || true
+          echo -e "${GN}✔${CL} Container ${CTID} removed"
+        fi
+      fi
+    fi
+  fi
+
+  exit "$exit_code"
+}
+
+# ==============================================================================
+# SECTION 3: SIGNAL HANDLERS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# on_exit()
+#
+# - EXIT trap handler
+# - Cleans up lock files if lockfile variable is set
+# - Exits with captured exit code
+# - Always runs on script termination (success or failure)
+# ------------------------------------------------------------------------------
+on_exit() {
+  local exit_code=$?
+  [[ -n "${lockfile:-}" && -e "$lockfile" ]] && rm -f "$lockfile"
+  exit "$exit_code"
+}
+
+# ------------------------------------------------------------------------------
+# on_interrupt()
+#
+# - SIGINT (Ctrl+C) trap handler
+# - Displays "Interrupted by user" message
+# - Exits with code 130 (128 + SIGINT=2)
+# ------------------------------------------------------------------------------
+on_interrupt() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "Interrupted by user (SIGINT)"
+  else
+    echo -e "\n${RD}Interrupted by user (SIGINT)${CL}"
+  fi
+  exit 130
+}
+
+# ------------------------------------------------------------------------------
+# on_terminate()
+#
+# - SIGTERM trap handler
+# - Displays "Terminated by signal" message
+# - Exits with code 143 (128 + SIGTERM=15)
+# - Triggered by external process termination
+# ------------------------------------------------------------------------------
+on_terminate() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "Terminated by signal (SIGTERM)"
+  else
+    echo -e "\n${RD}Terminated by signal (SIGTERM)${CL}"
+  fi
+  exit 143
+}
+
+# ==============================================================================
+# SECTION 4: INITIALIZATION
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# catch_errors()
+#
+# - Initializes error handling and signal traps
+# - Enables strict error handling:
+#   * set -Ee: Exit on error, inherit ERR trap in functions
+#   * set -o pipefail: Pipeline fails if any command fails
+#   * set -u: (optional) Exit on undefined variable (if STRICT_UNSET=1)
+# - Sets up traps:
+#   * ERR → error_handler
+#   * EXIT → on_exit
+#   * INT → on_interrupt
+#   * TERM → on_terminate
+# - Call this function early in every script
+# ------------------------------------------------------------------------------
+catch_errors() {
+  set -Ee -o pipefail
+  if [ "${STRICT_UNSET:-0}" = "1" ]; then
+    set -u
+  fi
+
+  trap 'error_handler' ERR
+  trap on_exit EXIT
+  trap on_interrupt INT
+  trap on_terminate TERM
+}

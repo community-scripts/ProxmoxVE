@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2025 Community Scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/maxdorninger/MediaManager
@@ -49,7 +49,7 @@ export PUBLIC_VERSION=""
 export PUBLIC_API_URL=""
 export BASE_PATH="/web"
 cd /opt/mediamanager/web
-$STD npm ci --no-fund --no-audit
+$STD npm install --no-fund --no-audit
 $STD npm run build
 mkdir -p {"$MM_DIR"/web,"$MEDIA_DIR","$CONFIG_DIR"}
 cp -r build "$FRONTEND_FILES_DIR"
@@ -61,7 +61,6 @@ $STD /usr/local/bin/uv sync --locked --active -n -p cpython3.13 --managed-python
 msg_ok "Configured MediaManager"
 
 msg_info "Creating config and start script"
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 SECRET="$(openssl rand -hex 32)"
 sed -e "s/localhost:8/$LOCAL_IP:8/g" \
   -e "s|/data/|$MEDIA_DIR/|g" \
@@ -110,9 +109,4 @@ msg_ok "Created service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

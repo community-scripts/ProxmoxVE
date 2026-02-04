@@ -1,0 +1,35 @@
+{
+  "name": "Speedtest-Tracker",
+  "slug": "speedtest-tracker",
+  "categories": [
+    4
+  ],
+  "date_created": "2025-12-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://docs.speedtest-tracker.dev/",
+  "website": "https://github.com/alexjustesen/speedtest-tracker",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/speedtest-tracker.webp",
+  "config_path": "/opt/speedtest-tracker/.env",
+  "description": "Speedtest Tracker is a self-hosted application that runs scheduled speed tests using the Ookla Speedtest CLI and saves the results to a database for historical tracking and visualization.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/speedtest-tracker.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin@example.com",
+    "password": "password"
+  },
+  "notes": []
+}

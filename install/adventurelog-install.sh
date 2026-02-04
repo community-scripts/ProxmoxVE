@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/seanmorley15/AdventureLog
@@ -25,38 +25,20 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
+PG_DB_NAME="adventurelog_db" PG_DB_USER="adventurelog_user" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
 
-msg_info "Set up PostgreSQL Database"
-DB_NAME="adventurelog_db"
-DB_USER="adventurelog_user"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "CREATE EXTENSION IF NOT EXISTS postgis;" $DB_NAME
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-{
-  echo "AdventureLog-Credentials"
-  echo "AdventureLog Database User: $DB_USER"
-  echo "AdventureLog Database Password: $DB_PASS"
-  echo "AdventureLog Database Name: $DB_NAME"
-  echo "AdventureLog Secret: $SECRET_KEY"
-} >>~/adventurelog.creds
-msg_ok "Set up PostgreSQL"
-
-fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
+fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog" "tarball"
 
 msg_info "Installing AdventureLog (Patience)"
+SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+echo "AdventureLog Secret: $SECRET_KEY" >>~/adventurelog.creds
 DJANGO_ADMIN_USER="djangoadmin"
 DJANGO_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cat <<EOF >/opt/adventurelog/backend/server/.env
 PGHOST='localhost'
-PGDATABASE='${DB_NAME}'
-PGUSER='${DB_USER}'
-PGPASSWORD='${DB_PASS}'
+PGDATABASE='${PG_DB_NAME}'
+PGUSER='${PG_DB_USER}'
+PGPASSWORD='${PG_DB_PASS}'
 SECRET_KEY='${SECRET_KEY}'
 PUBLIC_URL='http://$LOCAL_IP:8000'
 DEBUG=True
@@ -74,7 +56,7 @@ DISABLE_REGISTRATION=False
 # EMAIL_HOST_PASSWORD='password'
 # DEFAULT_FROM_EMAIL='user@example.com'
 EOF
-cd /opt/adventurelog/backend/server || exit
+cd /opt/adventurelog/backend/server
 mkdir -p /opt/adventurelog/backend/server/media
 $STD uv venv /opt/adventurelog/backend/server/.venv
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m ensurepip --upgrade
@@ -88,13 +70,13 @@ PUBLIC_SERVER_URL=http://$LOCAL_IP:8000
 BODY_SIZE_LIMIT=Infinity
 ORIGIN='http://$LOCAL_IP:3000'
 EOF
-cd /opt/adventurelog/frontend || exit
+cd /opt/adventurelog/frontend
 $STD pnpm i
 $STD pnpm build
 msg_ok "Installed AdventureLog"
 
 msg_info "Setting up Django Admin"
-cd /opt/adventurelog/backend/server || exit
+cd /opt/adventurelog/backend/server
 $STD .venv/bin/python -m manage shell <<EOF
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
@@ -146,9 +128,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://archivebox.io/
@@ -31,11 +31,7 @@ function update_script() {
   NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
   PYTHON_VERSION="3.13" setup_uv
 
-  if ! dpkg -l | grep -q "^ii  chromium "; then
-    msg_info "Installing System Dependencies"
-    $STD apt-get install -y chromium
-    msg_ok "Installed System Dependencies"
-  fi
+  ensure_dependencies chromium
 
   msg_info "Stopping Service"
   systemctl stop archivebox
@@ -63,7 +59,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000/admin/login${CL}"

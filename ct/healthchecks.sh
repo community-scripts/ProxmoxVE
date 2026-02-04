@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://healthchecks.io/
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,27 +28,42 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   if check_for_gh_release "healthchecks" "healthchecks/healthchecks"; then
     msg_info "Stopping Services"
     systemctl stop healthchecks
     msg_ok "Stopped Services"
 
-    setup_uv
-    fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks"
+    msg_info "Backing up existing installation"
+    BACKUP="/opt/healthchecks-backup-$(date +%F-%H%M)"
+    cp -a /opt/healthchecks "$BACKUP"
+    msg_ok "Backup created at $BACKUP"
 
-    msg_info "Updating healthchecks"
+    fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks" "tarball"
+
     cd /opt/healthchecks
-    mkdir -p /opt/healthchecks/static-collected/
-    $STD uv pip install wheel gunicorn -r requirements.txt --system
-    $STD uv run -- python manage.py makemigrations
-    $STD uv run -- python manage.py migrate --noinput
-    $STD uv run -- python manage.py collectstatic --noinput
-    $STD uv run -- python manage.py compress
-    msg_ok "Updated healthchecks"
+    if [[ -d venv ]]; then
+      rm -rf venv
+    fi
+    msg_info "Recreating Python venv"
+    $STD python3 -m venv venv
+    $STD source venv/bin/activate
+    $STD pip install --upgrade pip wheel
+    msg_ok "Created venv"
+
+    msg_info "Installing requirements"
+    $STD pip install gunicorn -r requirements.txt
+    msg_ok "Installed requirements"
+
+    msg_info "Running Django migrations"
+    $STD python manage.py migrate --noinput
+    $STD python manage.py collectstatic --noinput
+    $STD python manage.py compress
+    msg_ok "Completed Django migrations and static build"
 
     msg_info "Starting Services"
     systemctl start healthchecks
-    systemctl restart caddy
+    systemctl reload caddy
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
@@ -59,7 +74,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}${CL}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Donkie/Spoolman
@@ -27,36 +27,33 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://github.com/Donkie/Spoolman/releases/latest | grep "title>Release" | cut -d " " -f 4)
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
+  PYTHON_VERSION="3.14" setup_uv
+
+  if check_for_gh_release "spoolman" "Donkie/Spoolman"; then
     msg_info "Stopping Service"
     systemctl stop spoolman
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    cd /opt
-    rm -rf spoolman_bak
-    mv spoolman spoolman_bak
-    curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip" -o $(basename "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip")
-    $STD unzip spoolman.zip -d spoolman
-    cd spoolman
-    $STD pip3 install -r requirements.txt
-    curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_info "Creating Backup"
+    [ -d /opt/spoolman_bak ] && rm -rf /opt/spoolman_bak
+    mv /opt/spoolman /opt/spoolman_bak
+    msg_ok "Created Backup"
+
+    fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+
+    msg_info "Updating Spoolman"
+    cd /opt/spoolman
+    $STD uv sync --locked --no-install-project
+    $STD uv sync --locked
+    cp /opt/spoolman_bak/.env /opt/spoolman
+    sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/bash /opt/spoolman/scripts/start.sh|' /etc/systemd/system/spoolman.service
+    msg_ok "Updated Spoolman"
 
     msg_info "Starting Service"
     systemctl start spoolman
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/spoolman.zip
-    msg_ok "Cleaned"
-
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }
@@ -65,7 +62,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7912${CL}"

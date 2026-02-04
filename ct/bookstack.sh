@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/BookStackApp/BookStack
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   if check_for_gh_release "bookstack" "BookStackApp/BookStack"; then
     msg_info "Stopping Apache2"
     systemctl stop apache2
@@ -37,8 +38,8 @@ function update_script() {
     mv /opt/bookstack /opt/bookstack-backup
     msg_ok "Backup finished"
 
-    fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack"
-    PHP_MODULE="ldap,tidy,bz2,mysqli" PHP_FPM="YES" PHP_APACHE="YES" PHP_VERSION="8.3" setup_php
+    fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack" "tarball"
+    PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="ldap,tidy,mysqli" setup_php
     setup_composer
 
     msg_info "Restoring backup"
@@ -51,21 +52,18 @@ function update_script() {
     msg_info "Configuring BookStack"
     cd /opt/bookstack
     export COMPOSER_ALLOW_SUPERUSER=1
-    $STD composer install --no-dev
+    $STD /usr/local/bin/composer install --no-dev
     $STD php artisan migrate --force
     chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
     chmod -R 640 /opt/bookstack/.env
+    rm -rf /opt/bookstack-backup
     msg_ok "Configured BookStack"
 
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/bookstack-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit
@@ -74,7 +72,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

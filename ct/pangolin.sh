@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://pangolin.net/
@@ -53,12 +53,19 @@ function update_script() {
     cp -R .next/standalone ./
     chmod +x ./dist/cli.mjs
     cp server/db/names.json ./dist/names.json
+    cp server/db/ios_models.json ./dist/ios_models.json
+    cp server/db/mac_models.json ./dist/mac_models.json
     msg_ok "Updated Pangolin"
 
     msg_info "Restoring config"
     tar -xzf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin --overwrite
     rm -f /opt/pangolin_config_backup.tar.gz
     msg_ok "Restored config"
+
+    msg_info "Updating Badger plugin version"
+    BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
+    sed -i "s/version: \"v[0-9.]*\"/version: \"$BADGER_VERSION\"/g" /opt/pangolin/config/traefik/traefik_config.yml
+    msg_ok "Updated Badger plugin version"
 
     msg_info "Starting Services"
     systemctl start pangolin
@@ -73,7 +80,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://<YOUR_PANGOLIN_URL>${CL}"

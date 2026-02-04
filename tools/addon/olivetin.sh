@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -57,6 +57,6 @@ systemctl enable --now OliveTin &>/dev/null
 rm OliveTin_linux_amd64.deb
 msg_ok "Installed ${APP} on $hostname"
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL.
          ${BL}http://$IP:1337${CL} \n"

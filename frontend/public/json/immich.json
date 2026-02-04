@@ -11,7 +11,7 @@
   "interface_port": 2283,
   "documentation": "https://immich.app/docs/overview/introduction",
   "website": "https://immich.app",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/immich.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/immich.webp",
   "config_path": "/opt/immich/.env",
   "description": "High performance self-hosted photo and video management solution.",
   "install_methods": [
@@ -20,7 +20,7 @@
       "script": "ct/immich.sh",
       "resources": {
         "cpu": 4,
-        "ram": 4096,
+        "ram": 6144,
         "hdd": 20,
         "os": "Debian",
         "version": "13"
@@ -45,7 +45,7 @@
       "type": "info"
     },
     {
-      "text": "To change upload location, edit 'IMMICH_MEDIA_LOCATION' in `/opt/immich/.env`, and create the symlink 'upload' in /opt/immich/app & /opt/immich/app/machine-learning to your new upload location",
+      "text": "To change upload location, edit 'IMMICH_MEDIA_LOCATION' in `/opt/immich/.env`, retarget the symlink 'upload' in /opt/immich/app and /opt/immich/app/machine-learning to your new upload location, copy the default upload location `/opt/immich/upload` and its contents to the new upload location, confirm that the new upload location and its contents are owned by `immich:immich`, and restart the Immich server. See `https://github.com/community-scripts/ProxmoxVE/discussions/5075` for more information.",
       "type": "info"
     },
     {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://gitlab.com/crafty-controller/crafty-4
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -46,9 +46,9 @@ function update_script() {
 
     msg_info "Updating Crafty-Controller to v${RELEASE}"
     curl -fsSL "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip" -o $(basename "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip")
-    $STD unzip crafty-4-v${RELEASE}.zip
-    cp -a crafty-4-v${RELEASE}/. /opt/crafty-controller/crafty/crafty-4/
-    rm -rf crafty-4-v${RELEASE}
+    $STD unzip crafty-4-v"${RELEASE}".zip
+    cp -a crafty-4-v"${RELEASE}"/. /opt/crafty-controller/crafty/crafty-4/
+    rm -rf crafty-4-v"${RELEASE}"
     cd /opt/crafty-controller/crafty/crafty-4
     sudo -u crafty bash -c '
         source /opt/crafty-controller/crafty/.venv/bin/activate
@@ -78,7 +78,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8443${CL}"

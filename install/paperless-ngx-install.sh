@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.paperless-ngx.com/
@@ -44,46 +44,36 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
+PG_DB_NAME="paperlessdb" PG_DB_USER="paperless" setup_postgresql_db
 PYTHON_VERSION="3.13" setup_uv
 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
 
-msg_info "Setting up PostgreSQL database"
-DB_NAME=paperlessdb
-DB_USER=paperless
-DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-{
-  echo "Paperless-ngx-Credentials"
-  echo "Paperless-ngx Database Name: $DB_NAME"
-  echo "Paperless-ngx Database User: $DB_USER"
-  echo "Paperless-ngx Database Password: $DB_PASS"
-  echo "Paperless-ngx Secret Key: $SECRET_KEY\n"
-  echo "Paperless-ngx WebUI User: admin"
-  echo "Paperless-ngx WebUI Password: $DB_PASS"
-} >>~/paperless-ngx.creds
-msg_ok "Setup PostgreSQL database"
-
 msg_info "Setup Paperless-ngx"
 cd /opt/paperless
+rm -rf /opt/paperless/docker
 $STD uv sync --all-extras
 curl -fsSL "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example" -o /opt/paperless/paperless.conf
-mkdir -p {consume,data,media,static}
+mkdir -p /opt/paperless_data/{consume,data,media,trash}
+mkdir -p /opt/paperless/static
+SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+{
+  echo ""
+  echo "Paperless-ngx Secret Key: $SECRET_KEY"
+  echo "Paperless-ngx WebUI User: admin"
+  echo "Paperless-ngx WebUI Password: $PG_DB_PASS"
+} >>~/paperless-ngx.creds
 sed -i \
   -e 's|#PAPERLESS_REDIS=redis://localhost:6379|PAPERLESS_REDIS=redis://localhost:6379|' \
-  -e "s|#PAPERLESS_CONSUMPTION_DIR=../consume|PAPERLESS_CONSUMPTION_DIR=/opt/paperless/consume|" \
-  -e "s|#PAPERLESS_DATA_DIR=../data|PAPERLESS_DATA_DIR=/opt/paperless/data|" \
-  -e "s|#PAPERLESS_MEDIA_ROOT=../media|PAPERLESS_MEDIA_ROOT=/opt/paperless/media|" \
+  -e "s|#PAPERLESS_CONSUMPTION_DIR=../consume|PAPERLESS_CONSUMPTION_DIR=/opt/paperless_data/consume|" \
+  -e "s|#PAPERLESS_DATA_DIR=../data|PAPERLESS_DATA_DIR=/opt/paperless_data/data|" \
+  -e "s|#PAPERLESS_MEDIA_ROOT=../media|PAPERLESS_MEDIA_ROOT=/opt/paperless_data/media|" \
+  -e "s|#PAPERLESS_EMPTY_TRASH_DIR=|PAPERLESS_EMPTY_TRASH_DIR=/opt/paperless_data/trash|" \
   -e "s|#PAPERLESS_STATICDIR=../static|PAPERLESS_STATICDIR=/opt/paperless/static|" \
   -e 's|#PAPERLESS_DBHOST=localhost|PAPERLESS_DBHOST=localhost|' \
   -e 's|#PAPERLESS_DBPORT=5432|PAPERLESS_DBPORT=5432|' \
-  -e "s|#PAPERLESS_DBNAME=paperless|PAPERLESS_DBNAME=$DB_NAME|" \
-  -e "s|#PAPERLESS_DBUSER=paperless|PAPERLESS_DBUSER=$DB_USER|" \
-  -e "s|#PAPERLESS_DBPASS=paperless|PAPERLESS_DBPASS=$DB_PASS|" \
+  -e "s|#PAPERLESS_DBNAME=paperless|PAPERLESS_DBNAME=$PG_DB_NAME|" \
+  -e "s|#PAPERLESS_DBUSER=paperless|PAPERLESS_DBUSER=$PG_DB_USER|" \
+  -e "s|#PAPERLESS_DBPASS=paperless|PAPERLESS_DBPASS=$PG_DB_PASS|" \
   -e "s|#PAPERLESS_SECRET_KEY=change-me|PAPERLESS_SECRET_KEY=$SECRET_KEY|" \
   /opt/paperless/paperless.conf
 cd /opt/paperless/src
@@ -97,7 +87,7 @@ msg_info "Setting up admin Paperless-ngx User & Password"
 cat <<EOF | uv run -- python /opt/paperless/src/manage.py shell
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
-user = UserModel.objects.create_user('admin', password='$DB_PASS')
+user = UserModel.objects.create_user('admin', password='$PG_DB_PASS')
 user.is_superuser = True
 user.is_staff = True
 user.save()
@@ -108,8 +98,8 @@ msg_info "Installing Natural Language Toolkit (Patience)"
 cd /opt/paperless
 $STD uv run python -m nltk.downloader -d /usr/share/nltk_data snowball_data
 $STD uv run python -m nltk.downloader -d /usr/share/nltk_data stopwords
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt_tab || \
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt
+$STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt_tab ||
+  $STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt
 for policy_file in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do
   if [[ -f "$policy_file" ]]; then
     sed -i -e 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' "$policy_file"
@@ -168,7 +158,7 @@ Requires=redis.service
 
 [Service]
 WorkingDirectory=/opt/paperless/src
-ExecStart=uv run -- granian --interface asginl --ws "paperless.asgi:application"
+ExecStart=uv run -- granian --interface asgi --ws "paperless.asgi:application"
 Environment=GRANIAN_HOST=::
 Environment=GRANIAN_PORT=8000
 Environment=GRANIAN_WORKERS=1
@@ -186,11 +176,4 @@ fi
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/paperless/docker
-rm -rf /tmp/ghostscript*
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

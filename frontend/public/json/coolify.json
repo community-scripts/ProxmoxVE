@@ -1,0 +1,52 @@
+{
+    "name": "Coolify",
+    "slug": "coolify",
+    "categories": [
+        3
+    ],
+    "date_created": "2025-12-09",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8000,
+    "documentation": "https://coolify.io/docs",
+    "config_path": "/data/coolify",
+    "website": "https://coolify.io/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/coolify.webp",
+    "description": "Coolify is an open-source & self-hostable alternative to Heroku, Netlify, and Vercel. It helps you manage your servers, applications, and databases on your own hardware with Docker. Deploy any application from Git repositories, Docker images, or use pre-built templates.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/coolify.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 30,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Initial setup will be done via the web interface on first access.",
+            "type": "info"
+        },
+        {
+            "text": "Coolify has built-in auto-updates. You can configure update frequency in Settings.",
+            "type": "info"
+        },
+        {
+            "text": "Coolify requires SSH access to manage deployments. SSH is enabled automatically.",
+            "type": "info"
+        },
+        {
+            "text": "This container uses Docker-in-Docker (nesting) for application deployments.",
+            "type": "warning"
+        }
+    ]
+}

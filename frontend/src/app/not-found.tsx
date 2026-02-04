@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { basePath } from "@/config/site-config";
 
 export default function NotFoundPage() {
   return (
@@ -12,7 +13,17 @@ export default function NotFoundPage() {
           Oops, the page you are looking for could not be found.
         </p>
       </div>
-      <Button onClick={() => window.history.back()} variant="secondary">
+      <Button
+        onClick={() => {
+          if (window.history.length > 1) {
+            window.history.back();
+          }
+          else {
+            window.location.href = `/${basePath}`;
+          }
+        }}
+        variant="secondary"
+      >
         Go Back
       </Button>
     </div>

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.kimai.org/
@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apt-transport-https \
   apache2 \
   git \
@@ -22,7 +22,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 setup_mariadb
-PHP_VERSION="8.4" PHP_MODULE="gd,mysql,mbstring,bcmath,xml,curl,zip,intl" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 setup_composer
 
 msg_info "Setting up database"
@@ -30,10 +30,9 @@ DB_NAME=kimai_db
 DB_USER=kimai
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-$STD mariadb -u root -e "SET GLOBAL sql_mode='';"
+$STD mariadb -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+$STD mariadb -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "Kimai-Credentials"
   echo "Kimai Database User: $DB_USER"
@@ -42,9 +41,9 @@ $STD mariadb -u root -e "SET GLOBAL sql_mode='';"
 } >>~/kimai.creds
 msg_ok "Set up database"
 
-fetch_and_deploy_gh_release "kimai" "kimai/kimai"
+fetch_and_deploy_gh_release "kimai" "kimai/kimai" "tarball"
 
-msg_info "Installing Kimai"
+msg_info "Setup Kimai"
 cd /opt/kimai
 echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc
 source ~/.bashrc
@@ -72,9 +71,6 @@ kimai:
                 begin: 15
                 end: 15
 
-admin_lte:
-    options:
-        default_avatar: build/apple-touch-icon.png
 EOF
 msg_ok "Installed Kimai"
 
@@ -110,9 +106,4 @@ msg_ok "Setup Permissions"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

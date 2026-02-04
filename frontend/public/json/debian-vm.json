@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": "https://www.debian.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/debian.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/debian.webp",
   "config_path": "",
   "description": "Debian Linux is a distribution that emphasizes free software. It supports many hardware platforms",
   "install_methods": [
@@ -37,7 +37,7 @@
       "type": "info"
     },
     {
-      "text": "After installation, checkout: ´https://github.com/community-scripts/ProxmoxVE/discussions/836´ for useful Debian commands",
+     "text": "For additional Debian commands and tips after installation, checkout: `https://github.com/community-scripts/ProxmoxVE/discussions/836`",
       "type": "info"
     }
   ]

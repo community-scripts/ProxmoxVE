@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://nxvms.com/download/releases/linux
@@ -12,6 +12,7 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
@@ -33,15 +34,10 @@ DOWNLOAD_URL=$(echo "$DETAIL_PAGE" | grep -oP "https://updates.networkoptix.com/
 curl -fsSL "$DOWNLOAD_URL" -o ""nxwitness-server-$RELEASE-linux_x64.deb""
 export DEBIAN_FRONTEND=noninteractive
 $STD dpkg -i nxwitness-server-$RELEASE-linux_x64.deb
+rm -f /tmp/nxwitness-server-$RELEASE-linux_x64.deb
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup Nx Witness"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f /tmp/nxwitness-server-$RELEASE-linux_x64.deb
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

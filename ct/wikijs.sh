@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://js.wiki/
@@ -54,15 +54,12 @@ function update_script() {
     msg_info "Restoring Data"
     cp -R /opt/wikijs-backup/* /opt/wikijs
     $SQLITE_INSTALL && $STD npm rebuild sqlite3
+    rm -rf /opt/wikijs-backup
     msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start wikijs
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/wikijs-backup
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit
@@ -72,7 +69,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
