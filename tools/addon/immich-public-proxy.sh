@@ -189,7 +189,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-  systemctl enable --now immich-proxy &>/dev/null
+  systemctl enable -q --now immich-proxy
   msg_ok "Created and started service"
 
   # Create update script (simple wrapper that calls this addon with type=update)
