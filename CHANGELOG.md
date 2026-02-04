@@ -429,6 +429,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix(frontend): implement weighted search scoring for command menu [@ls-root](https://github.com/ls-root) ([#11534](https://github.com/community-scripts/ProxmoxVE/pull/11534))
 
+### ❔ Uncategorized
+
+  - [FIX] Immich Public Proxy docs link [@vhsdream](https://github.com/vhsdream) ([#11543](https://github.com/community-scripts/ProxmoxVE/pull/11543))
+
 ## 2026-02-03
 
 ### 🆕 New Scripts
