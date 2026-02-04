@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": "https://github.com/alangrainger/immich-public-proxy/docs",
+  "documentation": "https://github.com/alangrainger/immich-public-proxy/tree/main/docs",
   "website": "https://github.com/alangrainger/immich-public-proxy",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/immich-public-proxy.webp",
   "config_path": "/opt/immich-proxy/app/.env",
