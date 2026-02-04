@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-03T18:19:44Z",
+  "generated": "2026-02-04T00:18:44Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -158,9 +158,9 @@
     {
       "slug": "bytestash",
       "repo": "jordan-dalby/ByteStash",
-      "version": "v1.5.10",
+      "version": "v1.5.11",
       "pinned": false,
-      "date": "2026-01-26T14:07:59Z"
+      "date": "2026-02-03T22:12:19Z"
     },
     {
       "slug": "caddy",
@@ -186,9 +186,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.12.0",
+      "version": "v0.12.1",
       "pinned": false,
-      "date": "2026-02-03T08:54:29Z"
+      "date": "2026-02-03T21:27:07Z"
     },
     {
       "slug": "commafeed",
@@ -291,9 +291,9 @@
     {
       "slug": "elementsynapse",
       "repo": "etkecc/synapse-admin",
-      "version": "v0.11.1-etke52",
+      "version": "v0.11.1-etke53",
       "pinned": false,
-      "date": "2026-01-09T08:41:29Z"
+      "date": "2026-02-03T20:38:15Z"
     },
     {
       "slug": "emby",
@@ -375,9 +375,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.234.0",
+      "version": "2.235.0",
       "pinned": false,
-      "date": "2026-01-30T19:00:22Z"
+      "date": "2026-02-03T19:27:17Z"
     },
     {
       "slug": "gitea",
@@ -781,9 +781,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.01",
+      "version": "2026.02.03",
       "pinned": false,
-      "date": "2026-02-01T00:20:00Z"
+      "date": "2026-02-03T21:49:49Z"
     },
     {
       "slug": "miniflux",
@@ -823,9 +823,9 @@
     {
       "slug": "navidrome",
       "repo": "navidrome/navidrome",
-      "version": "v0.59.0",
+      "version": "v0.60.0",
       "pinned": false,
-      "date": "2025-12-06T18:08:42Z"
+      "date": "2026-02-03T18:57:04Z"
     },
     {
       "slug": "netbox",
@@ -1271,16 +1271,16 @@
     {
       "slug": "speedtest-tracker",
       "repo": "alexjustesen/speedtest-tracker",
-      "version": "v1.13.5",
+      "version": "v1.13.6",
       "pinned": false,
-      "date": "2026-01-08T22:35:28Z"
+      "date": "2026-02-03T21:20:51Z"
     },
     {
       "slug": "spoolman",
       "repo": "Donkie/Spoolman",
-      "version": "v0.23.0",
+      "version": "v0.23.1",
       "pinned": false,
-      "date": "2026-01-23T20:42:34Z"
+      "date": "2026-02-03T19:03:55Z"
     },
     {
       "slug": "sportarr",
@@ -1425,9 +1425,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.11",
+      "version": "v1.1.12",
       "pinned": false,
-      "date": "2026-01-30T22:34:30Z"
+      "date": "2026-02-03T20:19:00Z"
     },
     {
       "slug": "uhf",
@@ -1540,6 +1540,13 @@
       "version": "2.2.2",
       "pinned": false,
       "date": "2025-12-31T16:53:34Z"
+    },
+    {
+      "slug": "wealthfolio",
+      "repo": "afadil/wealthfolio",
+      "version": "v2.1.0",
+      "pinned": false,
+      "date": "2025-12-01T21:57:36Z"
     },
     {
       "slug": "web-check",
