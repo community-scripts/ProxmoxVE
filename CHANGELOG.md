@@ -405,6 +405,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Wishlist ([#11527](https://github.com/community-scripts/ProxmoxVE/pull/11527))
 - WriteFreely ([#11524](https://github.com/community-scripts/ProxmoxVE/pull/11524))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Immich: pin version to 2.5.3 [@vhsdream](https://github.com/vhsdream) ([#11515](https://github.com/community-scripts/ProxmoxVE/pull/11515))
+
 ### 💾 Core
 
   - #### ✨ New Features
