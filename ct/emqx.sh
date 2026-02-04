@@ -27,8 +27,6 @@ emqx_mq_setting() {
 variables
 color
 catch_errors
-
-# Call custom settings BEFORE build_container
 emqx_mq_setting
 
 function update_script() {
@@ -56,14 +54,6 @@ function update_script() {
     DEB_FILE="/tmp/emqx-enterprise-${RELEASE}-debian12-amd64.deb"
     curl -fsSL -o "$DEB_FILE" "https://www.emqx.com/en/downloads/enterprise/v${RELEASE}/emqx-enterprise-${RELEASE}-debian12-amd64.deb"
     msg_ok "Downloaded EMQX"
-
-    if (whiptail --title "EMQX Setup" \
-        --yesno "Do you want to enable Message Queue in EMQX ?" \
-        10 58); then
-        export MY_FEATURE_ENABLED="true"
-    else
-        export MY_FEATURE_ENABLED="false"
-    fi
 
     msg_info "Installing EMQX"
     $STD apt install -y "$DEB_FILE"
