@@ -59,6 +59,8 @@ function update_script() {
     $STD yarn install
     $STD yarn build
     mkdir -p /opt/koillection/public/uploads
+    mkdir -p /opt/koillection/var/log
+    chown -R www-data:www-data /opt/koillection/var/log
     chown -R www-data:www-data /opt/koillection/public/uploads
     rm -r /opt/koillection-backup
     
