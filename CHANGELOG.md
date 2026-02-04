@@ -779,6 +779,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Wishlist ([#11527](https://github.com/community-scripts/ProxmoxVE/pull/11527))
 - WriteFreely ([#11524](https://github.com/community-scripts/ProxmoxVE/pull/11524))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: create vm-core.func from dev [@MickLesk](https://github.com/MickLesk) ([#11528](https://github.com/community-scripts/ProxmoxVE/pull/11528))
+
 ## 2026-02-03
 
 ### 🆕 New Scripts
