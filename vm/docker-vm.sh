@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: thost96 (thost96) | Co-Author: michelroegl-brunner | Refactored: MickLesk
+# Author: thost96 (thost96) | michelroegl-brunner | MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVED/raw/main/LICENSE
 
 # ==============================================================================
@@ -168,6 +168,11 @@ function default_settings() {
 function advanced_settings() {
   select_os
   select_cloud_init
+
+  # SSH Key selection for Cloud-Init VMs
+  if [ "$USE_CLOUD_INIT" = "yes" ]; then
+    configure_cloudinit_ssh_keys || true
+  fi
 
   METHOD="advanced"
   [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
