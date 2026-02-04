@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: Kristian Skov
+# Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.microsoft.com/en-us/sql-server/sql-server-2022
+# Source: https://www.microsoft.com/en-us/sql-server/sql-server-2025
 
-APP="SQL Server 2022"
-var_tags="${var_tags:-sql}"
-var_cpu="${var_cpu:-1}"
+APP="SQL Server 2025"
+var_tags="${var_tags:-sql;database}"
+var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-ubuntu}"
-var_version="${var_version:-22.04}"
+var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-0}"
 
 header_info "$APP"
@@ -27,7 +27,7 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Updating SQL Server 2022"
+    msg_info "Updating SQL Server 2025"
     rm -f /etc/profile.d/debuginfod.sh /etc/profile.d/debuginfod.csh
     $STD apt update
     $STD apt -y upgrade
