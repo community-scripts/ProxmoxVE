@@ -43,6 +43,10 @@ fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOG
     # rm -rf "$LOGIN_DIR/apps"
 # fi
 
+#NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
+NODE_VERSION="24" setup_nodejs
+#node apps/login/server.js
+
 PG_VERSION="17" setup_postgresql
 
 msg_info "Installing Postgresql"
@@ -132,10 +136,20 @@ Database:
         RootCert: ""
         Cert: ""
         Key: ""
+FirstInstance:
+  LoginClientPatPath: ${CONFIG_DIR}/login-client.pat
+  PatPath: ${CONFIG_DIR}/admin.pat
+  InstanceName: ZITADEL
+  DefaultLanguage: en
+  Org:
+    Human:
+      Username: zitadel-admin@zitadel.localhost
+      Password: Password1!
 DefaultInstance:
   Features:
     LoginV2:
       Required: true
+      BaseURI: http://${IP}:3000/ui/v2/login
 
 AssetStorage:
   Type: db
