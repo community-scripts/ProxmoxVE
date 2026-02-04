@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-04T06:18:03Z",
+  "generated": "2026-02-04T12:11:53Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.1.9.1",
+      "version": "9.1.11",
       "pinned": false,
-      "date": "2026-02-04T01:08:22Z"
+      "date": "2026-02-04T11:30:25Z"
     },
     {
       "slug": "inspircd",
@@ -1563,11 +1563,25 @@
       "date": "2026-01-08T09:50:00Z"
     },
     {
+      "slug": "wishlist",
+      "repo": "cmintey/wishlist",
+      "version": "v0.59.0",
+      "pinned": false,
+      "date": "2026-01-19T16:42:14Z"
+    },
+    {
       "slug": "wizarr",
       "repo": "wizarrrr/wizarr",
       "version": "v2025.12.0",
       "pinned": false,
       "date": "2025-12-09T14:30:23Z"
+    },
+    {
+      "slug": "writefreely",
+      "repo": "writefreely/writefreely",
+      "version": "v0.16.0",
+      "pinned": false,
+      "date": "2025-08-29T19:30:02Z"
     },
     {
       "slug": "yt-dlp-webui",
