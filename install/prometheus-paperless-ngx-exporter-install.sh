@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Andy Grunwald (andygrunwald)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/hansmi/prometheus-paperless-exporter
@@ -31,7 +31,7 @@ After=network-online.target
 User=root
 Restart=always
 Type=simple
-ExecStart=/usr/local/bin/prometheus-paperless-exporter \
+ExecStart=/usr/bin/prometheus-paperless-exporter \
     --paperless_url=http://paperless.example.org \
     --paperless_auth_token_file=/etc/prometheus-paperless-ngx-exporter/paperless_auth_token_file
 ExecReload=/bin/kill -HUP \$MAINPID

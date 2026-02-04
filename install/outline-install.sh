@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/outline/outline
@@ -20,11 +20,11 @@ $STD apt install -y \
   redis
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="outline" PG_DB_USER="outline" setup_postgresql_db
+
 fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
-import_local_ip
 
 msg_info "Configuring Outline (Patience)"
 SECRET_KEY="$(openssl rand -hex 32)"
@@ -33,12 +33,14 @@ cp .env.sample .env
 export NODE_ENV=development
 sed -i 's/NODE_ENV=production/NODE_ENV=development/g' /opt/outline/.env
 sed -i "s/generate_a_new_key/${SECRET_KEY}/g" /opt/outline/.env
-sed -i "s/user:pass@postgres/${DB_USER}:${DB_PASS}@localhost/g" /opt/outline/.env
+sed -i "s/user:pass@postgres/${PG_DB_USER}:${PG_DB_PASS}@localhost/g" /opt/outline/.env
 sed -i 's/redis:6379/localhost:6379/g' /opt/outline/.env
 sed -i "5s#URL=#URL=http://${LOCAL_IP}#g" /opt/outline/.env
 sed -i 's/FORCE_HTTPS=true/FORCE_HTTPS=false/g' /opt/outline/.env
 export NODE_OPTIONS="--max-old-space-size=3584"
-$STD yarn install --frozen-lockfile
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+$STD corepack enable
+$STD yarn install --immutable
 export NODE_ENV=production
 sed -i 's/NODE_ENV=development/NODE_ENV=production/g' /opt/outline/.env
 $STD yarn build

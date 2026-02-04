@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://adventurelog.app/
@@ -27,10 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v memcached >/dev/null 2>&1; then
-    $STD apt update
-    $STD apt install -y memcached libmemcached-tools
-  fi
+  ensure_dependencies memcached libmemcached-tools
   if check_for_gh_release "adventurelog" "seanmorley15/adventurelog"; then
     msg_info "Stopping Services"
     systemctl stop adventurelog-backend
@@ -42,7 +39,7 @@ function update_script() {
     rm -rf /opt/adventurelog
     msg_ok "Backup done"
 
-    fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
+    fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog" "tarball"
     PYTHON_VERSION="3.13" setup_uv
 
     msg_info "Ensuring PostgreSQL Extensions"
@@ -83,7 +80,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

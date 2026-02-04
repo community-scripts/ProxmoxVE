@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://www.librenms.org/
@@ -38,12 +38,12 @@ $STD apt install -y \
   python3-pip
 msg_ok "Installed Python Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="gmp,mysql,snmp" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="snmp" setup_php
 setup_mariadb
 setup_composer
 PYTHON_VERSION="3.13" setup_uv
 MARIADB_DB_NAME="librenms" MARIADB_DB_USER="librenms" MARIADB_DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)" setup_mariadb_db
-fetch_and_deploy_gh_release "librenms" "librenms/librenms"
+fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
 
 msg_info "Configuring LibreNMS"
 $STD useradd librenms -d /opt/librenms -M -r -s "$(which bash)"
@@ -78,11 +78,10 @@ sed -i "s/listen = \/run\/php\/php8.4-fpm.sock/listen = \/run\/php-fpm-librenms.
 msg_ok "Configured PHP-FPM"
 
 msg_info "Configure Nginx"
-IP_ADDR=$(hostname -I | awk '{print $1}')
 cat >/etc/nginx/sites-enabled/librenms <<'EOF'
 server {
  listen      80;
- server_name ${IP_ADDR};
+ server_name ${LOCAL_IP};
  root        /opt/librenms/html;
  index       index.php;
 

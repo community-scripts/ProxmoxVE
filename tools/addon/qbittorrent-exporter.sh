@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/martabal/qbittorrent-exporter
@@ -84,7 +84,7 @@ function update() {
       systemctl start qbittorrent-exporter
     fi
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
     exit
   fi
 }
@@ -185,7 +185,7 @@ UPDATEEOF
 # ==============================================================================
 header_info
 ensure_usr_local_bin_persist
-import_local_ip
+get_lxc_ip
 
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then

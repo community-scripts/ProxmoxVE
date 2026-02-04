@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "after installation, checkout: ´https://github.com/community-scripts/ProxmoxVE/discussions/272´",
+      "text": "This VM uses Cloud-init, for more information see cloud-init discussion: `https://github.com/community-scripts/ProxmoxVE/discussions/272`",
       "type": "info"
     }
   ]

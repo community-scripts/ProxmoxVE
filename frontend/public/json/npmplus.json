@@ -23,7 +23,7 @@
         "ram": 512,
         "hdd": 3,
         "os": "alpine",
-        "version": "3.22"
+        "version": "3.23"
       }
     },
     {
@@ -34,13 +34,13 @@
         "ram": 512,
         "hdd": 3,
         "os": "alpine",
-        "version": "3.22"
+        "version": "3.23"
       }
     }
   ],
   "default_credentials": {
-    "username": "admin@example.org",
-    "password": null
+    "username": "admin@local.com",
+    "password": "helper-scripts.com"
   },
   "notes": [
     {
@@ -48,11 +48,7 @@
       "type": "info"
     },
     {
-      "text": "The initial starting process can be take 1-2min. ",
-      "type": "info"
-    },
-    {
-      "text": "Application credentials: `cat /opt/.npm_pwd` - if file not exist in LXC check docker logs for password with `docker logs npmplus`",
+      "text": "The initial starting process can take 1-2min. ",
       "type": "info"
     }
   ]

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://www.paymenter.org
@@ -21,7 +21,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_mariadb
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="common,mysql,redis" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" setup_php
 setup_composer
 fetch_and_deploy_gh_release "paymenter" "paymenter/paymenter" "prebuild" "latest" "/opt/paymenter" "paymenter.tar.gz"
 chmod -R 755 /opt/paymenter/storage/* /opt/paymenter/bootstrap/cache/

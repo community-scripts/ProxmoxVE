@@ -1,0 +1,35 @@
+{
+  "name": "KitchenOwl",
+  "slug": "kitchenowl",
+  "categories": [
+    13
+  ],
+  "date_created": "2026-02-02",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://docs.kitchenowl.org/",
+  "website": "https://kitchenowl.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kitchenowl.webp",
+  "config_path": "/opt/kitchenowl/kitchenowl.env",
+  "description": "KitchenOwl is a smart self-hosted grocery list and recipe manager with real-time synchronization, recipe management, meal planning, and expense tracking.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/kitchenowl.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 2048,
+        "hdd": 6,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

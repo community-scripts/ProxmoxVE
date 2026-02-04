@@ -1,0 +1,296 @@
+name: Archive Old Changelog Entries
+
+on:
+  schedule:
+    # Run every Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  archive-changelog:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: github-action-archive-changelog
+      AUTOMATED_PR_LABEL: "automated pr"
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Generate a token for PR approval and merge
+        id: generate-token-merge
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID_APPROVE_AND_MERGE }}
+          private-key: ${{ secrets.APP_KEY_APPROVE_AND_MERGE }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Archive old changelog entries
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs').promises;
+            const path = require('path');
+            
+            const KEEP_DAYS = 30;
+            const ARCHIVE_PATH = '.github/changelogs';
+            const CHANGELOG_PATH = 'CHANGELOG.md';
+            
+            // Calculate cutoff date
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - KEEP_DAYS);
+            cutoffDate.setHours(0, 0, 0, 0);
+            
+            console.log(`Cutoff date: ${cutoffDate.toISOString().split('T')[0]}`);
+            
+            // Read changelog
+            const content = await fs.readFile(CHANGELOG_PATH, 'utf-8');
+            const lines = content.split('\n');
+            
+            // Parse entries
+            const datePattern = /^## (\d{4})-(\d{2})-(\d{2})$/;
+            let header = [];
+            let recentEntries = [];
+            let archiveData = {};
+            let currentDate = null;
+            let currentContent = [];
+            let inHeader = true;
+            
+            for (const line of lines) {
+              const match = line.match(datePattern);
+              if (match) {
+                inHeader = false;
+                
+                // Save previous entry
+                if (currentDate && currentContent.length > 0) {
+                  const entryText = currentContent.join('\n').trim();
+                  const dateObj = new Date(`${currentDate}T00:00:00Z`);
+                  
+                  // Always add to archive (by month)
+                  const year = currentDate.substring(0, 4);
+                  const month = currentDate.substring(5, 7);
+                  
+                  if (!archiveData[year]) archiveData[year] = {};
+                  if (!archiveData[year][month]) archiveData[year][month] = [];
+                  
+                  archiveData[year][month].push(`## ${currentDate}\n\n${entryText}`);
+                  
+                  // Also add to recent entries if within cutoff
+                  if (dateObj >= cutoffDate) {
+                    recentEntries.push(`## ${currentDate}\n\n${entryText}`);
+                  }
+                }
+                
+                currentDate = `${match[1]}-${match[2]}-${match[3]}`;
+                currentContent = [];
+              } else if (inHeader) {
+                header.push(line);
+              } else if (currentDate) {
+                currentContent.push(line);
+              }
+            }
+            
+            // Don't forget the last entry
+            if (currentDate && currentContent.length > 0) {
+              const entryText = currentContent.join('\n').trim();
+              const dateObj = new Date(`${currentDate}T00:00:00Z`);
+              
+              // Always add to archive (by month)
+              const year = currentDate.substring(0, 4);
+              const month = currentDate.substring(5, 7);
+              
+              if (!archiveData[year]) archiveData[year] = {};
+              if (!archiveData[year][month]) archiveData[year][month] = [];
+              
+              archiveData[year][month].push(`## ${currentDate}\n\n${entryText}`);
+              
+              // Also add to recent entries if within cutoff
+              if (dateObj >= cutoffDate) {
+                recentEntries.push(`## ${currentDate}\n\n${entryText}`);
+              }
+            }
+            
+            console.log(`Recent entries: ${recentEntries.length}`);
+            console.log(`Years to archive: ${Object.keys(archiveData).length}`);
+            
+            // Month names in English
+            const monthNames = {
+              '01': 'January', '02': 'February', '03': 'March', '04': 'April',
+              '05': 'May', '06': 'June', '07': 'July', '08': 'August',
+              '09': 'September', '10': 'October', '11': 'November', '12': 'December'
+            };
+            
+            // Create/update archive files
+            for (const year of Object.keys(archiveData).sort().reverse()) {
+              const yearPath = path.join(ARCHIVE_PATH, year);
+              
+              try {
+                await fs.mkdir(yearPath, { recursive: true });
+              } catch (e) {
+                // Directory exists
+              }
+              
+              for (const month of Object.keys(archiveData[year]).sort().reverse()) {
+                const monthPath = path.join(yearPath, `${month}.md`);
+                
+                // Read existing content if exists
+                let existingContent = '';
+                try {
+                  existingContent = await fs.readFile(monthPath, 'utf-8');
+                } catch (e) {
+                  // File doesn't exist
+                }
+                
+                // Merge new entries with existing (avoid duplicates)
+                const existingDates = new Set();
+                const existingDatePattern = /^## (\d{4}-\d{2}-\d{2})$/gm;
+                let match;
+                while ((match = existingDatePattern.exec(existingContent)) !== null) {
+                  existingDates.add(match[1]);
+                }
+                
+                const newEntries = archiveData[year][month].filter(entry => {
+                  const dateMatch = entry.match(/^## (\d{4}-\d{2}-\d{2})/);
+                  return dateMatch && !existingDates.has(dateMatch[1]);
+                });
+                
+                if (newEntries.length > 0) {
+                  const allContent = existingContent 
+                    ? existingContent + '\n\n' + newEntries.join('\n\n')
+                    : newEntries.join('\n\n');
+                  
+                  await fs.writeFile(monthPath, allContent, 'utf-8');
+                  console.log(`Updated: ${monthPath} (+${newEntries.length} entries)`);
+                }
+              }
+            }
+            
+            // Build history section
+            let historySection = [];
+            historySection.push('');
+            historySection.push('<details>');
+            historySection.push('<summary><h2>📜 History</h2></summary>');
+            historySection.push('');
+            
+            // Get all years from archive directory
+            let allYears = [];
+            try {
+              const archiveDir = await fs.readdir(ARCHIVE_PATH);
+              allYears = archiveDir.filter(f => /^\d{4}$/.test(f)).sort().reverse();
+            } catch (e) {
+              allYears = Object.keys(archiveData).sort().reverse();
+            }
+            
+            for (const year of allYears) {
+              historySection.push('');
+              historySection.push('<details>');
+              historySection.push(`<summary><h3>${year}</h3></summary>`);
+              historySection.push('');
+              
+              // Get months for this year
+              let months = [];
+              try {
+                const yearDir = await fs.readdir(path.join(ARCHIVE_PATH, year));
+                months = yearDir
+                  .filter(f => f.endsWith('.md'))
+                  .map(f => f.replace('.md', ''))
+                  .sort()
+                  .reverse();
+              } catch (e) {
+                months = Object.keys(archiveData[year] || {}).sort().reverse();
+              }
+              
+              for (const month of months) {
+                const monthName = monthNames[month] || month;
+                const monthPath = path.join(ARCHIVE_PATH, year, `${month}.md`);
+                
+                // Count entries in month file
+                let entryCount = 0;
+                try {
+                  const monthContent = await fs.readFile(monthPath, 'utf-8');
+                  entryCount = (monthContent.match(/^## \d{4}-\d{2}-\d{2}$/gm) || []).length;
+                } catch (e) {
+                  entryCount = (archiveData[year]?.[month] || []).length;
+                }
+                
+                const relativePath = `.github/changelogs/${year}/${month}.md`;
+                historySection.push('');
+                historySection.push('<details>');
+                historySection.push(`<summary><h4>${monthName} (${entryCount} entries)</h4></summary>`);
+                historySection.push('');
+                historySection.push(`[View ${monthName} ${year} Changelog](${relativePath})`);
+                historySection.push('');
+                historySection.push('</details>');
+              }
+              
+              historySection.push('');
+              historySection.push('</details>');
+            }
+            
+            historySection.push('');
+            historySection.push('</details>');
+            
+            // Build new CHANGELOG.md (History first, then recent entries)
+            const newChangelog = [
+              ...header,
+              '',
+              historySection.join('\n'),
+              '',
+              recentEntries.join('\n\n')
+            ].join('\n');
+            
+            await fs.writeFile(CHANGELOG_PATH, newChangelog, 'utf-8');
+            console.log('CHANGELOG.md updated successfully');
+
+      - name: Check for changes
+        id: verify-diff
+        run: |
+          git diff --quiet . || echo "changed=true" >> $GITHUB_ENV
+
+      - name: Commit and push changes
+        if: env.changed == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md .github/changelogs/
+          git commit -m "Archive old changelog entries"
+          git checkout -b $BRANCH_NAME || git checkout $BRANCH_NAME
+          git push origin $BRANCH_NAME --force
+
+      - name: Create pull request if not exists
+        if: env.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          PR_EXISTS=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
+          if [ -z "$PR_EXISTS" ]; then
+            gh pr create --title "[Github Action] Archive old changelog entries" \
+                         --body "This PR is auto-generated by a Github Action to archive old changelog entries (older than 14 days) to .github/changelogs/YEAR/MONTH.md" \
+                         --head $BRANCH_NAME \
+                         --base main \
+                         --label "$AUTOMATED_PR_LABEL"
+          fi
+
+      - name: Approve and merge pull request
+        if: env.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.generate-token-merge.outputs.token }}
+        run: |
+          git config --global user.name "github-actions-automege[bot]"
+          git config --global user.email "github-actions-automege[bot]@users.noreply.github.com"
+          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr review $PR_NUMBER --approve
+            gh pr merge $PR_NUMBER --squash --admin
+          fi

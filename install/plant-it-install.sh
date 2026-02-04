@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://plant-it.org/
@@ -26,6 +26,7 @@ USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/pl
 fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "0.10.0" "/opt/plant-it/frontend" "client.tar.gz"
 
 msg_info "Configured Plant-it"
+JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
 mkdir -p /opt/plant-it-data
 cat <<EOF >/opt/plant-it/backend/server.env
 MYSQL_HOST=localhost

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://heimdall.site/
@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.4" PHP_MODULE="bz2,sqlite3" PHP_FPM="YES" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" setup_php
 setup_composer
 fetch_and_deploy_gh_release "Heimdall" "linuxserver/Heimdall" "tarball"
 

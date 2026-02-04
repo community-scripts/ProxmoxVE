@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: [YourGitHubUsername]
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: [SOURCE_URL e.g. https://github.com/example/app]
@@ -68,7 +68,7 @@ function update_script() {
 
     # Optional: Run any post-update commands
     msg_info "Running Post-Update Tasks"
-    cd /opt/[appname]
+    cd /opt/[appname] 
     # Examples:
     # $STD npm ci --production
     # $STD php artisan migrate --force
@@ -79,7 +79,7 @@ function update_script() {
     systemctl start [appname]
     msg_ok "Started Services"
 
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -88,7 +88,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:[PORT]${CL}"

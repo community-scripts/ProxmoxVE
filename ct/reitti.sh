@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/dedicatedcode/reitti
@@ -28,11 +28,22 @@ function update_script() {
     exit
   fi
 
+  # Enable PostGIS extension if not already enabled
+  if systemctl is-active --quiet postgresql; then
+    if ! sudo -u postgres psql -d reitti_db -tAc "SELECT 1 FROM pg_extension WHERE extname='postgis'" 2>/dev/null | grep -q 1; then
+      msg_info "Enabling PostGIS extension"
+      sudo -u postgres psql -d reitti_db -c "CREATE EXTENSION IF NOT EXISTS postgis;" &>/dev/null
+      msg_ok "Enabled PostGIS extension"
+    fi
+  fi
+
   if [ ! -d /var/cache/nginx/tiles ]; then
     msg_info "Installing Nginx Tile Cache"
     mkdir -p /var/cache/nginx/tiles
     $STD apt install -y nginx
     cat <<EOF >/etc/nginx/nginx.conf
+user www-data;
+
 events {
   worker_connections 1024;
 }
@@ -51,7 +62,8 @@ http {
   }
 }
 EOF
-    chown -R www-data:www-data /var/cache/nginx/tiles
+    chown -R www-data:www-data /var/cache/nginx
+    chmod -R 750 /var/cache/nginx
     systemctl restart nginx
     echo "reitti.ui.tiles.cache.url=http://127.0.0.1" >> /opt/reitti/application.properties
     systemctl restart reitti
@@ -71,6 +83,9 @@ EOF
 
     msg_info "Starting Service"
     systemctl start reitti
+    chown -R www-data:www-data /var/cache/nginx
+    chmod -R 750 /var/cache/nginx
+    systemctl restart nginx
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
@@ -95,7 +110,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

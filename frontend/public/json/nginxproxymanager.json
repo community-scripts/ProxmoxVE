@@ -13,6 +13,8 @@
   "website": "https://nginxproxymanager.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nginx-proxy-manager.webp",
   "config_path": "",
+  "disable": true,
+  "disable_description": "This script is temporarily disabled due to an external issue with the OpenResty APT repository. The repository's GPG key uses SHA-1 signatures, which are no longer accepted by Debian as of February 1, 2026. This causes installation to fail with APT errors. The issue is tracked in openresty/openresty#1097. A workaround exists but requires manual configuration. The script will be re-enabled once OpenResty updates their repository signing key. For more details, see: https://github.com/community-scripts/ProxmoxVE/issues/11406",
   "description": "Nginx Proxy Manager is a tool that provides a web-based interface to manage Nginx reverse proxies. It enables users to easily and securely expose their services to the internet by providing features such as HTTPS encryption, domain mapping, and access control. It eliminates the need for manual configuration of Nginx reverse proxies, making it easy for users to quickly and securely expose their services to the public.",
   "install_methods": [
     {

@@ -30,6 +30,8 @@ body:
         required: true
       - label: "I have searched existing [discussions](https://github.com/community-scripts/ProxmoxVE/discussions?discussions_q=) and found no duplicate requests."
         required: true
+      - label: "The application requested has 600+ stars on Github (if applicable), is older than 6 months, actively maintained and has release tarballs published."
+        required: true
 - type: markdown
   attributes:
     value: "Thanks for submitting your request! The team will review it and reach out if we need more information."

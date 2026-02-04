@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/opf/openproject
@@ -21,7 +21,6 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="openproject" PG_DB_USER="openproject" setup_postgresql_db
 API_KEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 echo "OpenProject API Key: $API_KEY" >>~/openproject.creds
-import_local_ip
 
 msg_info "Setting up OpenProject Repository"
 curl -fsSL "https://dl.packager.io/srv/opf/openproject/key" | gpg --dearmor >/etc/apt/trusted.gpg.d/packager-io.gpg

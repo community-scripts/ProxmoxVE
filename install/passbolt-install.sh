@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://www.passbolt.com/
@@ -23,7 +23,7 @@ msg_ok "Installed dependencies"
 setup_mariadb
 MARIADB_DB_NAME="passboltdb" MARIADB_DB_USER="passbolt" setup_mariadb_db
 create_self_signed_cert
-import_local_ip
+
 setup_deb822_repo \
   "passbolt" \
   "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x3D1A0346C8E1802F774AEF21DE8B853FC155581D" \

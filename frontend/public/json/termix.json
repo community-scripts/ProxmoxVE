@@ -1,0 +1,35 @@
+{
+  "name": "Termix",
+  "slug": "termix",
+  "categories": [
+    6
+  ],
+  "date_created": "2026-01-18",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://docs.termix.site/",
+  "website": "https://termix.site/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/termix.webp",
+  "config_path": "",
+  "description": "Termix is an open-source, self-hosted server management platform with SSH terminal access, SSH tunneling, remote file management, Docker management, and multi-platform support.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/termix.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 10,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

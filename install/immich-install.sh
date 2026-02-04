@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://immich.app
@@ -12,6 +12,42 @@ catch_errors
 setting_up_container
 network_check
 update_os
+
+echo ""
+echo ""
+echo -e "🤖 ${BL}Immich Machine Learning Options${CL}"
+echo "─────────────────────────────────────────"
+echo "Please choose your machine-learning type:"
+echo ""
+echo " 1) CPU only (default)"
+echo " 2) Intel OpenVINO (requires GPU passthrough)"
+echo ""
+
+read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE
+ML_TYPE="${ML_TYPE:-1}"
+if [[ "$ML_TYPE" == "2" ]]; then
+  msg_info "Installing OpenVINO dependencies"
+  touch ~/.openvino
+  $STD apt install -y --no-install-recommends patchelf
+  tmp_dir=$(mktemp -d)
+  $STD pushd "$tmp_dir"
+  curl -fsSLO https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/Dockerfile
+  readarray -t INTEL_URLS < <(
+    sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $2}'
+    sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
+  )
+  for url in "${INTEL_URLS[@]}"; do
+    curl -fsSLO "$url"
+  done
+  $STD apt install -y ./libigdgmm12*.deb
+  rm ./libigdgmm12*.deb
+  $STD apt install -y ./*.deb
+  $STD apt-mark hold libigdgmm12
+  $STD popd
+  rm -rf "$tmp_dir"
+  dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
+  msg_ok "Installed OpenVINO dependencies"
+fi
 
 setup_uv
 
@@ -29,7 +65,6 @@ $STD apt install --no-install-recommends -y \
   libltdl-dev \
   libgdk-pixbuf-2.0-dev \
   libbrotli-dev \
-  libde265-dev \
   libexif-dev \
   libexpat1-dev \
   libglib2.0-dev \
@@ -87,34 +122,10 @@ msg_ok "Dependencies Installed"
 
 msg_info "Installing Mise"
 curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list
+echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
 $STD apt update
 $STD apt install -y mise
 msg_ok "Installed Mise"
-
-read -r -p "${TAB3}Install OpenVINO dependencies for Intel HW-accelerated machine-learning? y/N " prompt
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Installing OpenVINO dependencies"
-  touch ~/.openvino
-  $STD apt install -y --no-install-recommends patchelf
-  tmp_dir=$(mktemp -d)
-  $STD pushd "$tmp_dir"
-  curl -fsSLZ -O "https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17537.24/intel-igc-core_1.0.17537.24_amd64.deb" \
-    -O "https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17537.24/intel-igc-opencl_1.0.17537.24_amd64.deb" \
-    -O "https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/intel-opencl-icd-legacy1_24.35.30872.36_amd64.deb" \
-    -O "https://github.com/intel/intel-graphics-compiler/releases/download/v2.22.2/intel-igc-core-2_2.22.2+20121_amd64.deb" \
-    -O "https://github.com/intel/intel-graphics-compiler/releases/download/v2.22.2/intel-igc-opencl-2_2.22.2+20121_amd64.deb" \
-    -O "https://github.com/intel/compute-runtime/releases/download/25.44.36015.5/intel-opencl-icd_25.44.36015.5-0_amd64.deb" \
-    -O "https://github.com/intel/compute-runtime/releases/download/25.44.36015.5/libigdgmm12_22.8.2_amd64.deb"
-  $STD apt install -y ./libigdgmm12*.deb
-  rm ./libigdgmm12*.deb
-  $STD apt install -y ./*.deb
-  $STD apt-mark hold libigdgmm12
-  $STD popd
-  rm -rf "$tmp_dir"
-  dpkg -l | grep "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
-  msg_ok "Installed OpenVINO dependencies"
-fi
 
 msg_info "Configuring Debian Testing Repo"
 sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
@@ -129,36 +140,20 @@ Pin-Priority: 450
 EOF
 $STD apt update
 msg_ok "Configured Debian Testing repo"
-msg_info "Installing libmimalloc3"
-$STD apt install -t testing --no-install-recommends -yqq libmimalloc3
-msg_ok "Installed libmimalloc3"
+msg_info "Installing packages from Debian Testing repo"
+$STD apt install -t testing --no-install-recommends -yqq libmimalloc3 libde265-dev
+msg_ok "Installed packages from Debian Testing repo"
 
 PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
 NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
-msg_info "Setting up Postgresql Database"
 VCHORD_RELEASE="0.5.3"
-curl -fsSL "https://github.com/tensorchord/VectorChord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
-$STD apt install -y ./vchord.deb
-rm vchord.deb
-echo "$VCHORD_RELEASE" >~/.vchord_version
-DB_NAME="immich"
-DB_USER="immich"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c18)
+fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
+
 sed -i -e "/^#shared_preload/s/^#//;/^shared_preload/s/''/'vchord.so'/" /etc/postgresql/16/main/postgresql.conf
 systemctl restart postgresql.service
-$STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
-$STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
-{
-  echo "${APPLICATION} DB Credentials"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
-} >>~/"$APPLICATION".creds
-msg_ok "Set up Postgresql Database"
+PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_GRANT_SUPERUSER="true" PG_DB_SKIP_ALTER_ROLE="true" setup_postgresql_db
 
 msg_info "Compiling Custom Photo-processing Library (extreme patience)"
 LD_LIBRARY_PATH=/usr/local/lib
@@ -228,7 +223,7 @@ $STD cmake --preset=release-noplugins \
   -DWITH_X265=OFF \
   -DWITH_EXAMPLES=OFF \
   ..
-$STD make install -j "$(nproc)"
+$STD make install -j"$(nproc)"
 ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
@@ -242,7 +237,7 @@ $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBRAW_REVISION"
 $STD autoreconf --install
-$STD ./configure
+$STD ./configure --disable-examples
 $STD make -j"$(nproc)"
 $STD make install
 ldconfig /usr/local/lib
@@ -293,12 +288,11 @@ APP_DIR="${INSTALL_DIR}/app"
 PLUGIN_DIR="${APP_DIR}/corePlugin"
 ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
-mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.4.1" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.2" "$SRC_DIR"
 
-msg_info "Installing ${APPLICATION} (patience)"
+msg_info "Installing Immich (patience)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -312,7 +306,7 @@ unset SHARP_IGNORE_GLOBAL_LIBVIPS
 export SHARP_FORCE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
 cp "$APP_DIR"/package.json "$APP_DIR"/bin
-sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
+sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
 # openapi & web build
 cd "$SRC_DIR"
@@ -347,19 +341,18 @@ mkdir -p "$ML_DIR" && chown -R immich:immich "$INSTALL_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 if [[ -f ~/.openvino ]]; then
   msg_info "Installing HW-accelerated machine-learning"
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active -n -p python3.11 --managed-python
-  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
+  $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.20.0 --active -n -p python3.12 --managed-python
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p python3.12 --managed-python
+  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.12/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-312-x86_64-linux-gnu.so"
   msg_ok "Installed HW-accelerated machine-learning"
 else
   msg_info "Installing machine-learning"
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra cpu --active -n -p python3.11 --managed-python
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p python3.11 --managed-python
   msg_ok "Installed machine-learning"
 fi
 cd "$SRC_DIR"
 cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-if [[ -f ~/.openvino ]]; then
-  sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
-fi
+[[ -f ~/.openvino ]] && sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
 ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
 
 cd "$APP_DIR"
@@ -384,7 +377,7 @@ msg_ok "Installed GeoNames data"
 
 mkdir -p /var/log/immich
 touch /var/log/immich/{web.log,ml.log}
-msg_ok "Installed ${APPLICATION}"
+msg_ok "Installed Immich"
 
 msg_info "Modifying user, creating env file, scripts & services"
 usermod -aG video,render immich
@@ -393,11 +386,12 @@ cat <<EOF >"${INSTALL_DIR}"/.env
 TZ=$(cat /etc/timezone)
 IMMICH_VERSION=release
 NODE_ENV=production
+IMMICH_ALLOW_SETUP=true
 
 DB_HOSTNAME=127.0.0.1
-DB_USERNAME=${DB_USER}
-DB_PASSWORD=${DB_PASS}
-DB_DATABASE_NAME=${DB_NAME}
+DB_USERNAME=${PG_DB_USER}
+DB_PASSWORD=${PG_DB_PASS}
+DB_DATABASE_NAME=${PG_DB_NAME}
 DB_VECTOR_EXTENSION=vectorchord
 
 REDIS_HOSTNAME=127.0.0.1
@@ -432,9 +426,11 @@ set +a
 /usr/bin/node ${APP_DIR}/dist/main.js "\$@"
 EOF
 chmod +x "$ML_DIR"/ml_start.sh "$APP_DIR"/bin/start.sh
-cat <<EOF >/etc/systemd/system/"${APPLICATION}"-web.service
+ln -sf "$APP_DIR"/cli/bin/immich /usr/bin/immich
+ln -sf "$APP_DIR"/bin/immich-admin /usr/bin/immich-admin
+cat <<EOF >/etc/systemd/system/immich-web.service
 [Unit]
-Description=${APPLICATION} Web Service
+Description=Immich Web Service
 After=network.target
 Requires=redis-server.service
 Requires=postgresql.service
@@ -456,9 +452,9 @@ StandardError=append:/var/log/immich/web.log
 [Install]
 WantedBy=multi-user.target
 EOF
-cat <<EOF >/etc/systemd/system/"${APPLICATION}"-ml.service
+cat <<EOF >/etc/systemd/system/immich-ml.service
 [Unit]
-Description=${APPLICATION} Machine-Learning
+Description=Immich Machine-Learning
 After=network.target
 
 [Service]
@@ -478,7 +474,7 @@ StandardError=append:/var/log/immich/ml.log
 WantedBy=multi-user.target
 EOF
 chown -R immich:immich "$INSTALL_DIR" /var/log/immich
-systemctl enable -q --now "$APPLICATION"-ml.service "$APPLICATION"-web.service
+systemctl enable -q --now immich-ml.service immich-web.service
 msg_ok "Modified user, created env file, scripts and services"
 
 motd_ssh

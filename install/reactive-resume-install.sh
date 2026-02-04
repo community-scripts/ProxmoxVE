@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://rxresume.org
@@ -19,11 +19,10 @@ curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio.deb -o minio
 $STD dpkg -i minio.deb
 msg_ok "Installed Dependencies"
 
-import_local_ip
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="rxresume" PG_DB_USER="rxresume" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
-fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume"
+fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume" "tarball"
 
 msg_info "Setting up Reactive-Resume"
 MINIO_PASS=$(openssl rand -base64 48)

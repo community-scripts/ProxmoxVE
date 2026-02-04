@@ -1,0 +1,76 @@
+name: Lock closed issues
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Run daily at midnight
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lock old issues and PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const daysBeforeLock = 3;
+            const cutoffDate = new Date('2026-01-27T00:00:00Z');
+            const lockDate = new Date();
+            lockDate.setDate(lockDate.getDate() - daysBeforeLock);
+            
+            // Exclude patterns (case-insensitive)
+            const excludePatterns = [
+              /automated pr/i,
+              /\[bot\]/i,
+              /dependabot/i
+            ];
+            
+            // Search for closed, unlocked issues older than 3 days
+            const issues = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${context.repo.owner}/${context.repo.repo} is:closed is:unlocked updated:<${lockDate.toISOString().split('T')[0]}`,
+              per_page: 50
+            });
+            
+            console.log(`Found ${issues.data.items.length} issues/PRs to process`);
+            
+            for (const item of issues.data.items) {
+              // Skip excluded items
+              const shouldExclude = excludePatterns.some(pattern => pattern.test(item.title));
+              if (shouldExclude) {
+                console.log(`Skipped #${item.number}: "${item.title}" (matches exclude pattern)`);
+                continue;
+              }
+              
+              const createdAt = new Date(item.created_at);
+              const isNew = createdAt >= cutoffDate;
+              
+              try {
+                // Add comment only for new issues (created after 2026-01-27)
+                if (isNew) {
+                  const comment = item.pull_request
+                    ? 'This pull request has been automatically locked. Please open a new issue for related bugs.'
+                    : 'This issue has been automatically locked. Please open a new issue for related bugs and reference this issue if needed.';
+                  
+                  await github.rest.issues.createComment({
+                    ...context.repo,
+                    issue_number: item.number,
+                    body: comment
+                  });
+                }
+                
+                // Lock the issue/PR
+                await github.rest.issues.lock({
+                  ...context.repo,
+                  issue_number: item.number,
+                  lock_reason: 'resolved'
+                });
+                
+                console.log(`Locked #${item.number} (${item.pull_request ? 'PR' : 'Issue'})`);
+              } catch (error) {
+                console.log(`Failed to lock #${item.number}: ${error.message}`);
+              }
+            }

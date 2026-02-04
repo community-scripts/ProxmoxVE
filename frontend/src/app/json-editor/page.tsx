@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchCategories } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -28,11 +29,15 @@ import { ScriptSchema } from "./_schemas/schemas";
 import Categories from "./_components/categories";
 import Note from "./_components/note";
 
+import { nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { ScriptItem } from "../scripts/_components/script-item";
+
 const initialScript: Script = {
   name: "",
   slug: "",
   categories: [],
-  date_created: "",
+  date_created: format(new Date(), "yyyy-MM-dd"),
   type: "ct",
   updateable: false,
   privileged: false,
@@ -57,6 +62,7 @@ export default function JSONGenerator() {
   const [isCopied, setIsCopied] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [currentTab, setCurrentTab] = useState<"json" | "preview">("json");
   const [zodErrors, setZodErrors] = useState<z.ZodError | null>(null);
 
   useEffect(() => {
@@ -64,6 +70,13 @@ export default function JSONGenerator() {
       .then(setCategories)
       .catch((error) => console.error("Error fetching categories:", error));
   }, []);
+
+  useEffect(() => {
+    if (!isValid && currentTab === "preview") {
+      setCurrentTab("json");
+      toast.error("Switched to JSON tab due to invalid configuration.");
+    }
+  }, [isValid, currentTab]);
 
   const updateScript = useCallback((key: keyof Script, value: Script[keyof Script]) => {
     setScript((prev) => {
@@ -98,13 +111,18 @@ export default function JSONGenerator() {
   }, []);
 
   const handleCopy = useCallback(() => {
+    if (!isValid) toast.warning("JSON schema is invalid. Copying anyway.");
     navigator.clipboard.writeText(JSON.stringify(script, null, 2));
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
-    toast.success("Copied metadata to clipboard");
+    if (isValid) toast.success("Copied metadata to clipboard");
   }, [script]);
 
   const handleDownload = useCallback(() => {
+    if (isValid === false) {
+      toast.error("Cannot download invalid JSON");
+      return;
+    }
     const jsonString = JSON.stringify(script, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -175,7 +193,7 @@ export default function JSONGenerator() {
           </div>
           <div>
             <Label>
-              Logo <span className="text-red-500">*</span>
+              Logo
             </Label>
             <Input
               placeholder="Full logo URL"
@@ -188,7 +206,7 @@ export default function JSONGenerator() {
             <Input
               placeholder="Path to config file"
               value={script.config_path || ""}
-              onChange={(e) => updateScript("config_path", e.target.value || null)}
+              onChange={(e) => updateScript("config_path", e.target.value || "")}
             />
           </div>
           <div>
@@ -204,7 +222,9 @@ export default function JSONGenerator() {
           <Categories script={script} setScript={setScript} categories={categories} />
           <div className="flex gap-2">
             <div className="flex flex-col gap-2 w-full">
-              <Label>Date Created</Label>
+              <Label>
+                Date Created <span className="text-red-500">*</span>
+              </Label>
               <Popover>
                 <PopoverTrigger asChild className="flex-1">
                   <Button
@@ -220,7 +240,7 @@ export default function JSONGenerator() {
                     mode="single"
                     selected={new Date(script.date_created)}
                     onSelect={handleDateSelect}
-                    initialFocus
+                    autoFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -313,21 +333,41 @@ export default function JSONGenerator() {
         </form>
       </div>
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
-        {validationAlert}
-        <div className="relative">
-          <div className="absolute right-2 top-2 flex gap-1">
-            <Button size="icon" variant="outline" onClick={handleCopy}>
-              {isCopied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
-            </Button>
-            <Button size="icon" variant="outline" onClick={handleDownload}>
-              <Download className="h-4 w-4" />
-            </Button>
-          </div>
+        <Tabs
+          defaultValue="json"
+          className="w-full"
+          onValueChange={(value) => setCurrentTab(value as "json" | "preview")}
+          value={currentTab}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="json">JSON</TabsTrigger>
+            <TabsTrigger disabled={!isValid} value="preview">Preview</TabsTrigger>
+          </TabsList>
+          <TabsContent value="json" className="h-full w-full">
+            {validationAlert}
+            <div className="relative">
+              <div className="absolute right-2 top-2 flex gap-1">
+                <Button size="icon" variant="outline" onClick={handleCopy}>
+                  {isCopied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
+                </Button>
+                <Button size="icon" variant="outline" onClick={handleDownload}>
+                  <Download className="h-4 w-4" />
+                </Button>
+              </div>
 
-          <pre className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll">
-            {JSON.stringify(script, null, 2)}
-          </pre>
-        </div>
+              <SyntaxHighlighter
+                language="json"
+                style={nord}
+                className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll"
+              >
+                {JSON.stringify(script, null, 2)}
+              </SyntaxHighlighter>
+            </div>
+          </TabsContent>
+          <TabsContent value="preview" className="h-full w-full">
+            <ScriptItem item={script} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
