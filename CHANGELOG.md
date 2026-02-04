@@ -417,6 +417,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: create vm-core.func from dev [@MickLesk](https://github.com/MickLesk) ([#11528](https://github.com/community-scripts/ProxmoxVE/pull/11528))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - [ADDON] Immich Public Proxy addon [@vhsdream](https://github.com/vhsdream) ([#11518](https://github.com/community-scripts/ProxmoxVE/pull/11518))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
