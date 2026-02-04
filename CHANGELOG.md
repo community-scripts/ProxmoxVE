@@ -774,6 +774,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-04
 
+### 🆕 New Scripts
+
+  - writefreely ([#11524](https://github.com/community-scripts/ProxmoxVE/pull/11524))
+
 ## 2026-02-03
 
 ### 🆕 New Scripts
