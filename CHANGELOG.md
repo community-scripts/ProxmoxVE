@@ -785,6 +785,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: create vm-core.func from dev [@MickLesk](https://github.com/MickLesk) ([#11528](https://github.com/community-scripts/ProxmoxVE/pull/11528))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - fix(frontend): implement weighted search scoring for command menu [@ls-root](https://github.com/ls-root) ([#11534](https://github.com/community-scripts/ProxmoxVE/pull/11534))
+
 ## 2026-02-03
 
 ### 🆕 New Scripts
