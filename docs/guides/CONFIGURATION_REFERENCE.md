@@ -539,6 +539,50 @@ var_nesting=0    # Nested containers disabled
 
 ---
 
+### var_gpu
+
+**Type:** Boolean/Toggle
+**Options:** `yes` or `no`
+**Default:** `no`
+**Description:** Enable GPU passthrough for the container.
+
+```bash
+var_gpu=yes      # Enable GPU passthrough (auto-detect)
+var_gpu=no       # Disable GPU passthrough (default)
+```
+
+**Features enabled:**
+- Auto-detects Intel (QuickSync), NVIDIA, and AMD GPUs
+- Passes through `/dev/dri` and render nodes
+- Configures appropriate container permissions
+- Crucial for media servers (Plex, Jellyfin, Immich)
+
+**Prerequisites:**
+- Host drivers installed correctly
+- Hardware present and visible to Proxmox
+- IOMMU enabled (for some configurations)
+
+---
+
+### var_tun
+
+**Type:** Boolean/Toggle
+**Options:** `yes` or `no`
+**Default:** `no`
+**Description:** Enable TUN/TAP device support.
+
+```bash
+var_tun=yes      # Enable TUN/TAP support
+var_tun=no       # Disable TUN/TAP support (default)
+```
+
+**Required for:**
+- VPN software (WireGuard, OpenVPN)
+- Network tunneling (Tailscale, ZeroTier)
+- Custom network bridges
+
+---
+
 ### var_keyctl
 
 **Type:** Boolean (0 or 1)

@@ -60,13 +60,13 @@ Complete alphabetical reference of all functions in tools.func with parameters, 
 
 ## Core Functions
 
-### pkg_install()
+### install_packages_with_retry()
 
-Install one or more packages safely with automatic retry logic and error handling.
+Install one or more packages safely with automatic retry logic (3 attempts), APT refresh, and lock handling.
 
 **Signature**:
 ```bash
-pkg_install PACKAGE1 [PACKAGE2 ...]
+install_packages_with_retry PACKAGE1 [PACKAGE2 ...]
 ```
 
 **Parameters**:
@@ -74,112 +74,107 @@ pkg_install PACKAGE1 [PACKAGE2 ...]
 
 **Returns**:
 - `0` - All packages installed successfully
-- `1` - Installation failed after retries
+- `1` - Installation failed after all retries
+
+**Features**:
+- Automatically sets `DEBIAN_FRONTEND=noninteractive`
+- Handles DPKG lock errors with `dpkg --configure -a`
+- Retries on transient network or APT failures
+
+**Example**:
+```bash
+install_packages_with_retry curl wget git
+```
+
+---
+
+### upgrade_packages_with_retry()
+
+Upgrades installed packages with the same robust retry logic as the installation helper.
+
+**Signature**:
+```bash
+upgrade_packages_with_retry
+```
+
+**Returns**:
+- `0` - Upgrade successful
+- `1` - Upgrade failed
+
+---
+
+### fetch_and_deploy_gh_release()
+
+The primary tool for downloading and installing software from GitHub Releases. Supports binaries, tarballs, and Debian packages.
+
+**Signature**:
+```bash
+fetch_and_deploy_gh_release APPREPO TYPE [VERSION] [DEST] [ASSET_PATTERN]
+```
+
+**Parameters**:
+- `APPREPO`: GitHub repository (e.g., `owner/repo`)
+- `TYPE`: Asset type (`binary`, `tarball`, `prebuild`, `singlefile`, `binary_tarball`)
+- `VERSION`: Specific tag or `latest` (Default: `latest`)
+- `DEST`: Target directory (Default: `/opt/$APP`)
+- `ASSET_PATTERN`: Regex or string pattern to match the release asset
 
 **Environment Variables**:
-- `$STD` - Output suppression (`silent` or empty)
+- `CLEAN_INSTALL=1`: Removes the destination directory before extracting.
 
 **Example**:
 ```bash
-pkg_install curl wget git
+fetch_and_deploy_gh_release "muesli/duf" "binary" "latest" "/opt/duf" "duf_.*_linux_amd64.tar.gz"
 ```
 
 ---
 
-### pkg_update()
+### check_for_gh_release()
 
-Update package lists with automatic retry logic for network failures.
+Checks if a newer version is available on GitHub compared to the installed version.
 
 **Signature**:
 ```bash
-pkg_update
+check_for_gh_release APP REPO
 ```
-
-**Parameters**: None
-
-**Returns**:
-- `0` - Package lists updated
-- `1` - Failed after 3 retries
 
 **Example**:
 ```bash
-pkg_update
+if check_for_gh_release "nodejs" "nodesource/distributions"; then
+  # update logic
+fi
 ```
 
 ---
 
-### pkg_remove()
+### prepare_repository_setup()
 
-Remove packages completely including dependencies.
+Performs safe repository preparation by cleaning up old files, keyrings, and ensuring the APT system is in a working state.
 
 **Signature**:
 ```bash
-pkg_remove PACKAGE1 [PACKAGE2 ...]
+prepare_repository_setup REPO_NAME [REPO_NAME2 ...]
 ```
-
-**Parameters**:
-- `PACKAGE1, PACKAGE2, ...` - Package names to remove
-
-**Returns**:
-- `0` - Packages removed
-- `1` - Removal failed
 
 **Example**:
 ```bash
-pkg_remove old-package outdated-tool
+prepare_repository_setup "mariadb" "mysql"
 ```
 
 ---
 
-### setup_deb822_repo()
+### verify_tool_version()
 
-Add repository in modern deb822 format (recommended over legacy format).
-
-**Signature**:
-```bash
-setup_deb822_repo REPO_URL NAME DIST MAIN_URL RELEASE
-```
-
-**Parameters**:
-- `REPO_URL` - URL to GPG key (e.g., https://example.com/key.gpg)
-- `NAME` - Repository name (e.g., "nodejs")
-- `DIST` - Distribution (jammy, bookworm, etc.)
-- `MAIN_URL` - Main repository URL
-- `RELEASE` - Release type (main, testing, etc.)
-
-**Returns**:
-- `0` - Repository added successfully
-- `1` - Repository setup failed
-
-**Example**:
-```bash
-setup_deb822_repo \
-  "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" \
-  "nodejs" \
-  "jammy" \
-  "https://deb.nodesource.com/node_20.x" \
-  "main"
-```
-
----
-
-### cleanup_repo_metadata()
-
-Clean up GPG keys and old repository configurations.
+Validates if the installed major version matches the expected version.
 
 **Signature**:
 ```bash
-cleanup_repo_metadata
+verify_tool_version NAME EXPECTED INSTALLED
 ```
-
-**Parameters**: None
-
-**Returns**:
-- `0` - Cleanup complete
 
 **Example**:
 ```bash
-cleanup_repo_metadata
+verify_tool_version "nodejs" "22" "$(node -v | grep -oP '^v\K[0-9]+')"
 ```
 
 ---
