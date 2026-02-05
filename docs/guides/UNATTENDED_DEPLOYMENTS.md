@@ -220,10 +220,10 @@ done
 # batch-deploy-advanced.sh - Deploy multiple containers with individual configs
 
 declare -A CONTAINERS=(
-  ["pihole"]="2:1024:8:vmbr0:dns,network"
-  ["qui"]="4:4096:20:vmbr0:media,ui"
+  ["beszel"]="1:512:8:vmbr0:monitoring"
+  ["qui"]="2:1024:10:vmbr0:torrent,ui"
   ["thingsboard"]="6:8192:50:vmbr1:iot,industrial"
-  ["nginx"]="2:2048:10:vmbr0:webserver,proxy"
+  ["dockge"]="2:2048:10:vmbr0:docker,management"
 )
 
 for app in "${!CONTAINERS[@]}"; do

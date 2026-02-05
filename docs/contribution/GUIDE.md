@@ -433,26 +433,44 @@ $STD apt-get install -y newdependency
 # 4. Test thoroughly before committing
 ```
 
-### Step 3: Update Update Function (if applicable)
+### Step 3: The Standard Update Pattern
 
+The `update_script()` function in `ct/appname.sh` should follow a robust pattern:
+
+1. **Check for updates**: Use `check_for_gh_release` to skip logic if no new version exists.
+2. **Stop services**: Stop all relevant services (`systemctl stop appname`).
+3. **Backup existing installation**: Move the old folder (e.g., `mv /opt/app /opt/app_bak`).
+4. **Deploy new version**: Use `CLEAN_INSTALL=1 fetch_and_deploy_gh_release`.
+5. **Restore configuration**: Copy `.env` or config files back from the backup.
+6. **Rebuild/Migrate**: Run `npm install`, `composer install`, or DB migrations.
+7. **Start services**: Restart services and cleanup the backup.
+
+**Example from `ct/bookstack.sh`**:
 ```bash
-# Edit: ct/existingapp.sh → update_script()
-
-# 1. Update GitHub API URL if repo changed
-RELEASE=$(curl -fsSL https://api.github.com/repos/user/repo/releases/latest | ...)
-
-# 2. Update backup/restore logic (if structure changed)
-# 3. Update cleanup paths
-
-# 4. Test update on existing installation
-```
-
-### Step 4: Document Your Changes
-
-```bash
-# Add comment at top of script
-# Co-Author: YourUsername
-# Updated: YYYY-MM-DD - Description of changes
+function update_script() {
+  if check_for_gh_release "bookstack" "BookStackApp/BookStack"; then
+    msg_info "Stopping Services"
+    systemctl stop apache2
+    
+    msg_info "Backing up data"
+    mv /opt/bookstack /opt/bookstack-backup
+    
+    fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack" "tarball"
+    
+    msg_info "Restoring backup"
+    cp /opt/bookstack-backup/.env /opt/bookstack/.env
+    # ... restore uploads ...
+    
+    msg_info "Configuring"
+    cd /opt/bookstack
+    $STD composer install --no-dev
+    $STD php artisan migrate --force
+    
+    systemctl start apache2
+    rm -rf /opt/bookstack-backup
+    msg_ok "Updated successfully!"
+  fi
+}
 ```
 
 ---

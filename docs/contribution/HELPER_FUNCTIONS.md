@@ -60,6 +60,22 @@ Install scripts are **not** run directly by users; they are invoked by the CT sc
 | CT (update logic) | [ct/endurain.sh](../../ct/endurain.sh) |
 | Install | [install/endurain-install.sh](../../install/endurain-install.sh) |
 
+### Java + Gradle
+
+**BookLore** - Book management with Java 21 + Gradle + MariaDB + Nginx
+| File | Link |
+| ----------------- | -------------------------------------------------------------- |
+| CT (update logic) | [ct/booklore.sh](../../ct/booklore.sh) |
+| Install | [install/booklore-install.sh](../../install/booklore-install.sh) |
+
+### Pnpm + Meilisearch
+
+**KaraKeep** - Bookmark manager with Pnpm + Meilisearch + Puppeteer
+| File | Link |
+| ----------------- | -------------------------------------------------------------- |
+| CT (update logic) | [ct/karakeep.sh](../../ct/karakeep.sh) |
+| Install | [install/karakeep-install.sh](../../install/karakeep-install.sh) |
+
 ### PHP + MariaDB/MySQL
 
 **Wallabag** - Read-it-later with PHP + MariaDB + Redis + Nginx
@@ -285,6 +301,43 @@ setup_clickhouse
 
 ---
 
+## Advanced Repository Management
+
+### `setup_deb822_repo`
+
+The modern standard (Debian 12+) for adding external repositories. Automatically handles GPG keys and sources.
+
+```bash
+setup_deb822_repo \
+  "nodejs" \
+  "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" \
+  "https://deb.nodesource.com/node_22.x" \
+  "bookworm" \
+  "main"
+```
+
+### `prepare_repository_setup`
+
+A high-level helper that performs three critical tasks before adding a new repo:
+1. Cleans up old repo files matching the names provided.
+2. Removes old GPG keyrings from all standard locations.
+3. Ensures APT is in a working state (fixes locks, runs update).
+
+```bash
+# Clean up old mysql/mariadb artifacts before setup
+prepare_repository_setup "mariadb" "mysql"
+```
+
+### `cleanup_tool_keyrings`
+
+Force-removes GPG keys for specific tools from `/usr/share/keyrings/`, `/etc/apt/keyrings/`, and `/etc/apt/trusted.gpg.d/`.
+
+```bash
+cleanup_tool_keyrings "docker" "kubernetes"
+```
+
+---
+
 ## GitHub Release Helpers
 
 > **Note**: `fetch_and_deploy_gh_release` is the **preferred method** for downloading GitHub releases. It handles version tracking automatically. Only use `get_latest_github_release` if you need the version number separately.
@@ -345,25 +398,20 @@ RELEASE=$(get_latest_github_release "owner/repo")
 echo "Latest version: $RELEASE"
 ```
 
-# Examples
-
-fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack"
-fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/myapp"
-
-````
-
-**Parameters:**
-| Parameter | Default       | Description                                  |
-| --------- | ------------- | -------------------------------------------- |
-| `name`    | required      | App name (for version tracking)              |
-| `repo`    | required      | GitHub repo (`owner/repo`)                   |
-| `type`    | `tarball`     | Release type: `tarball`, `zipball`, `binary` |
-| `version` | `latest`      | Version tag or `latest`                      |
-| `dest`    | `/opt/[name]` | Destination directory                        |
-
 ---
 
 ## Tools & Utilities
+
+### `setup_meilisearch`
+
+Install Meilisearch, a lightning-fast search engine.
+
+```bash
+setup_meilisearch
+
+# Use in script
+$STD php artisan scout:sync-index-settings
+```
 
 ### `setup_yq`
 
@@ -439,6 +487,15 @@ create_self_signed_cert
 ---
 
 ## Utility Functions
+
+### `verify_tool_version`
+
+Validate that the installed major version matches the expected version. Useful during upgrades or troubleshooting.
+
+```bash
+# Verify Node.js is version 22
+verify_tool_version "nodejs" "22" "$(node -v | grep -oP '^v\K[0-9]+')"
+```
 
 ### `get_lxc_ip`
 

@@ -30,14 +30,16 @@ msg_ok "Installed Dependencies"
 # Examples (uncomment as needed):
 #
 #   NODE_VERSION="22" setup_nodejs
+#   NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs  # Installs pnpm
 #   PYTHON_VERSION="3.13" setup_uv
-#   JAVA_VERSION="17" setup_java
+#   JAVA_VERSION="21" setup_java
 #   GO_VERSION="1.22" setup_go
 #   PHP_VERSION="8.4" PHP_FPM="YES" setup_php
 #   setup_postgresql           # Server only
 #   setup_mariadb              # Server only
+#   setup_meilisearch          # Search engine
 #
-#   Then set up DB and user:
+#   Then set up DB and user (sets $[DB]_DB_PASS):
 #   PG_DB_NAME="myapp" PG_DB_USER="myapp" setup_postgresql_db
 #   MARIADB_DB_NAME="myapp" MARIADB_DB_USER="myapp" setup_mariadb_db
 

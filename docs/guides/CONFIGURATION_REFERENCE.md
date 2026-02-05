@@ -539,6 +539,25 @@ var_nesting=0    # Nested containers disabled
 
 ---
 
+### var_diagnostics
+
+**Type:** Boolean (yes or no)
+**Default:** `yes`
+**Description:** Determines if anonymous telemetry and diagnostic data is sent to Community-Scripts API.
+
+```bash
+var_diagnostics=yes      # Allow telemetry (helps us improve scripts)
+var_diagnostics=no       # Disable all telemetry
+```
+
+**Privacy & Usage:**
+- Data is strictly anonymous (random session ID)
+- Reports success/failure of installations
+- Maps error codes (e.g., APT lock, out of RAM)
+- No user-specific data, hostnames, or secret keys are ever sent
+
+---
+
 ### var_gpu
 
 **Type:** Boolean/Toggle
@@ -604,13 +623,14 @@ var_keyctl=0     # Keyctl disabled
 
 ### var_fuse
 
-**Type:** Boolean (0 or 1)
-**Default:** `0`
+**Type:** Boolean/Toggle
+**Options:** `yes` or `no`
+**Default:** `no`
 **Description:** Enable FUSE filesystem support.
 
 ```bash
-var_fuse=1       # FUSE enabled
-var_fuse=0       # FUSE disabled
+var_fuse=yes     # FUSE enabled
+var_fuse=no      # FUSE disabled
 ```
 
 **Required for:**

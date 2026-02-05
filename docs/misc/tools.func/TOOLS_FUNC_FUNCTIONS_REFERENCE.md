@@ -20,14 +20,19 @@ Complete alphabetical reference of all functions in tools.func with parameters, 
 - `setup_nodejs(VERSION)` - Install Node.js and npm
 - `setup_php(VERSION)` - Install PHP-FPM and CLI
 - `setup_python(VERSION)` - Install Python 3 with pip
+- `setup_uv()` - Install Python uv (modern & fast)
 - `setup_ruby(VERSION)` - Install Ruby with gem
 - `setup_golang(VERSION)` - Install Go programming language
+- `setup_java(VERSION)` - Install OpenJDK (Adoptium)
 
 **Databases**:
-- `setup_mariadb()` - Install MariaDB server (distro packages by default)
+- `setup_mariadb()` - Install MariaDB server
+- `setup_mariadb_db()` - Create user/db in MariaDB
 - `setup_postgresql(VERSION)` - Install PostgreSQL
+- `setup_postgresql_db()` - Create user/db in PostgreSQL
 - `setup_mongodb(VERSION)` - Install MongoDB
 - `setup_redis(VERSION)` - Install Redis cache
+- `setup_meilisearch()` - Install Meilisearch engine
 
 **Web Servers**:
 - `setup_nginx()` - Install Nginx
@@ -44,6 +49,7 @@ Complete alphabetical reference of all functions in tools.func with parameters, 
 - `setup_docker_compose()` - Install Docker Compose
 - `setup_composer()` - Install PHP Composer
 - `setup_build_tools()` - Install build-essential
+- `setup_yq()` - Install mikefarah/yq processor
 
 **Monitoring**:
 - `setup_grafana()` - Install Grafana
@@ -112,15 +118,23 @@ The primary tool for downloading and installing software from GitHub Releases. S
 fetch_and_deploy_gh_release APPREPO TYPE [VERSION] [DEST] [ASSET_PATTERN]
 ```
 
-**Parameters**:
+**Environment Variables**:
 - `APPREPO`: GitHub repository (e.g., `owner/repo`)
-- `TYPE`: Asset type (`binary`, `tarball`, `prebuild`, `singlefile`, `binary_tarball`)
+- `TYPE`: Asset type (`binary`, `tarball`, `prebuild`, `singlefile`)
 - `VERSION`: Specific tag or `latest` (Default: `latest`)
 - `DEST`: Target directory (Default: `/opt/$APP`)
-- `ASSET_PATTERN`: Regex or string pattern to match the release asset
+- `ASSET_PATTERN`: Regex or string pattern to match the release asset (Required for `prebuild` and `singlefile`)
+
+**Supported Operation Modes**:
+- `tarball`: Downloads and extracts the source tarball.
+- `binary`: Detects host architecture and installs a `.deb` package using `apt` or `dpkg`.
+- `prebuild`: Downloads and extracts a pre-built binary archive (supports `.tar.gz`, `.zip`, `.tgz`, `.txz`).
+- `singlefile`: Downloads a single binary file to the destination.
 
 **Environment Variables**:
-- `CLEAN_INSTALL=1`: Removes the destination directory before extracting.
+- `CLEAN_INSTALL=1`: Removes all contents of the destination directory before extraction.
+- `DPKG_FORCE_CONFOLD=1`: Forces `dpkg` to keep old config files during package updates.
+- `SYSTEMD_OFFLINE=1`: Used automatically for `.deb` installs to prevent systemd-tmpfiles failures in unprivileged containers.
 
 **Example**:
 ```bash
@@ -230,18 +244,239 @@ cleanup_repo_metadata
 **Example**:
 ```bash
 cleanup_repo_metadata
->>>>>>> origin/main
 ```
 
 ---
 
 ## Tool Installation Functions
 
-### setup_nodejs(VERSION)
+### setup_nodejs()
 
-Install Node.js and npm from official repositories.
+Install Node.js and npm from official repositories. Handles legacy version cleanup (nvm) automatically.
 
 **Signature**:
+```bash
+setup_nodejs
+```
+
+**Environment Variables**:
+- `NODE_VERSION`: Major version to install (e.g. "20", "22", "24"). Default: "24".
+- `NODE_MODULE`: Optional npm package to install globally during setup (e.g. "pnpm", "yarn").
+
+**Example**:
+```bash
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+```
+
+---
+
+### setup_php()
+
+Install PHP with configurable extensions and FPM/Apache integration.
+
+**Signature**:
+```bash
+setup_php
+```
+
+**Environment Variables**:
+- `PHP_VERSION`: Version to install (e.g. "8.3", "8.4"). Default: "8.4".
+- `PHP_MODULE`: Comma-separated list of additional extensions.
+- `PHP_FPM`: Set to "YES" to install php-fpm.
+- `PHP_APACHE`: Set to "YES" to install libapache2-mod-php.
+
+**Example**:
+```bash
+PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="mysql,xml,zip" setup_php
+```
+
+---
+
+### setup_mariadb_db()
+
+Creates a new MariaDB database and a dedicated user with all privileges. Automatically generates a password if not provided and saves it to a credentials file.
+
+**Environment Variables**:
+- `MARIADB_DB_NAME`: Name of the database (required)
+- `MARIADB_DB_USER`: Name of the database user (required)
+- `MARIADB_DB_PASS`: User password (optional, auto-generated if omitted)
+
+**Example**:
+```bash
+MARIADB_DB_NAME="myapp" MARIADB_DB_USER="myapp_user" setup_mariadb_db
+```
+
+---
+
+### setup_postgresql_db()
+
+Creates a new PostgreSQL database and a dedicated user/role with all privileges. Automatically generates a password if not provided and saves it to a credentials file.
+
+**Environment Variables**:
+- `PG_DB_NAME`: Name of the database (required)
+- `PG_DB_USER`: Name of the database user (required)
+- `PG_DB_PASS`: User password (optional, auto-generated if omitted)
+
+---
+
+### setup_java()
+
+Installs Temurin JDK.
+
+**Signature**:
+```bash
+JAVA_VERSION="21" setup_java
+```
+
+**Parameters**:
+- `JAVA_VERSION` - JDK version (e.g., "17", "21") (default: "21")
+
+**Example**:
+```bash
+JAVA_VERSION="17" setup_java
+```
+
+---
+
+### setup_uv()
+
+Installs `uv` (modern Python package manager).
+
+**Signature**:
+```bash
+PYTHON_VERSION="3.13" setup_uv
+```
+
+**Parameters**:
+- `PYTHON_VERSION` - Optional Python version to pre-install via uv (e.g., "3.12", "3.13")
+
+**Example**:
+```bash
+PYTHON_VERSION="3.13" setup_uv
+```
+
+---
+
+### setup_go()
+
+Installs Go programming language.
+
+**Signature**:
+```bash
+GO_VERSION="1.23" setup_go
+```
+
+**Parameters**:
+- `GO_VERSION` - Go version to install (default: "1.23")
+
+**Example**:
+```bash
+GO_VERSION="1.24" setup_go
+```
+
+---
+
+### setup_yq()
+
+Installs `yq` (YAML processor).
+
+**Signature**:
+```bash
+setup_yq
+```
+
+**Example**:
+```bash
+setup_yq
+```
+
+---
+
+### setup_composer()
+
+Installs PHP Composer.
+
+**Signature**:
+```bash
+setup_composer
+```
+
+**Example**:
+```bash
+setup_composer
+```
+
+---
+
+### setup_meilisearch()
+
+Install and configure Meilisearch search engine.
+
+**Environment Variables**:
+- `MEILISEARCH_BIND`: Address and port to bind to (Default: "127.0.0.1:7700")
+- `MEILISEARCH_ENV`: Environment mode (Default: "production")
+
+---
+
+### setup_yq()
+
+Install the `mikefarah/yq` YAML processor. Removes existing non-compliant versions.
+
+**Example**:
+```bash
+setup_yq
+yq eval '.app.version = "1.0.0"' -i config.yaml
+```
+
+---
+
+### setup_composer()
+
+Install or update the PHP Composer package manager. Handles `COMPOSER_ALLOW_SUPERUSER` automatically and performs self-updates if already installed.
+
+**Example**:
+```bash
+setup_php
+setup_composer
+$STD composer install --no-dev
+```
+
+---
+
+### setup_build_tools()
+
+Install the `build-essential` package suite for compiling software.
+
+---
+
+### setup_uv()
+
+Install the modern Python package manager `uv`. Extremely fast replacement for pip/venv.
+
+**Environment Variables**:
+- `PYTHON_VERSION`: Major.Minor version to ensure is installed.
+
+**Example**:
+```bash
+PYTHON_VERSION="3.12" setup_uv
+uv sync --locked
+```
+
+---
+
+### setup_java()
+
+Install OpenJDK via the Adoptium repository.
+
+**Environment Variables**:
+- `JAVA_VERSION`: Major version to install (e.g. "17", "21"). Default: "21".
+
+**Example**:
+```bash
+JAVA_VERSION="21" setup_java
+```
+
+---
 ```bash
 setup_nodejs VERSION
 ```

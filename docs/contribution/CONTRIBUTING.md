@@ -147,6 +147,30 @@ Verify the PR shows ONLY these 3 files:
 
 ---
 
+# 🛠️ Developer Mode & Debugging
+
+When building or testing scripts, you can use the `dev_mode` variable to enable powerful debugging features. These flags can be combined (comma-separated).
+
+**Usage**:
+```bash
+# Example: Run with trace and keep the container even if it fails
+dev_mode="trace,keep" bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
+```
+
+### Available Flags:
+
+| Flag | Description |
+| :--- | :--- |
+| `trace` | Enables `set -x` for maximum verbosity during execution. |
+| `keep` | Prevents the container from being deleted if the build fails. |
+| `pause` | Pauses execution at key points (e.g., before customization). |
+| `breakpoint` | Allows hardcoded `breakpoint` calls in scripts to drop to a shell. |
+| `logs` | Saves detailed build logs to `/var/log/community-scripts/`. |
+| `dryrun` | Bypasses actual container creation (limited support). |
+| `motd` | Forces an update of the Message of the Day (MOTD). |
+
+---
+
 ## 📚 Pages
 
 - [CT Template: AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_ct/AppName.sh)
