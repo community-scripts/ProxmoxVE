@@ -400,6 +400,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-05
 
+### 🆕 New Scripts
+
+  - New: SQL-Server 2025 | Refactor SQL-Server 2022  [@MickLesk](https://github.com/MickLesk) ([#11546](https://github.com/community-scripts/ProxmoxVE/pull/11546))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
