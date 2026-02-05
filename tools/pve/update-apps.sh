@@ -40,6 +40,9 @@ var_skip_confirm="${var_skip_confirm:-no}"
 #   Options: "yes" | "no" | "" (empty = interactive prompt)
 var_auto_reboot="${var_auto_reboot:-}"
 
+# var_tags: Optionally override the tags used for auto-detection
+#   Options: "community-script|proxmox-helper-scripts" (default)
+var_tags="${var_tags:-community-script|proxmox-helper-scripts}"
 # =============================================================================
 # JSON CONFIG EXPORT
 # Run with --export-config to output current configuration as JSON
