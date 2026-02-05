@@ -13,18 +13,30 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}Enter the hostname of your OpenCloud server (eg cloud.domain.tld): " oc_host
-if [[ "$oc_host" ]]; then
-  OC_HOST="$oc_host"
-fi
-read -r -p "${TAB3}Enter the hostname of your Collabora server (eg collabora.domain.tld): " collabora_host
-if [[ "$collabora_host" ]]; then
-  COLLABORA_HOST="$collabora_host"
-fi
-read -r -p "${TAB3}Enter the hostname of your WOPI server (eg wopiserver.domain.tld): " wopi_host
-if [[ "$wopi_host" ]]; then
-  WOPI_HOST="$wopi_host"
-fi
+MAX_ATTEMPTS=3
+servers=("opencloud" "collabora" "wopi")
+attempt=0
+for server in "${servers[@]}"; do
+  until ((attempt >= MAX_ATTEMPTS)); do
+    attempt=$((attempt + 1))
+    read -rp "${TAB3}Enter the FQDN of your ${server^} server (ATTEMPT $attempt/$MAX_ATTEMPTS) (eg $server.domain.tld): " fqdn
+    if [[ -z "$fqdn" ]]; then
+      msg_warn "Domain cannot be empty!"
+    elif [[ "$fqdn" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+      msg_warn "IP address not allowed! Please use a FQDN"
+    elif [[ "$fqdn" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$ ]]; then
+      export ${server^^}_FQDN="$fqdn"
+      attempt=0
+      break
+    else
+      msg_warn "Invalid domain format!"
+    fi
+  done
+  if ((attempt >= MAX_ATTEMPTS)); then
+    msg_error "No more attempts - aborting script!"
+    exit 1
+  fi
+done
 
 
 msg_info "Installing Collabora Online"
