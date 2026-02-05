@@ -79,6 +79,7 @@ Environment Variables:
   var_unattended      Run updates unattended (yes/no)
   var_skip_confirm    Skip initial confirmation (yes/no)
   var_auto_reboot     Auto-reboot containers if required (yes/no)
+  var_tags            Optionally override auto-detection tags ("prod|smb|community-script")
 
 Examples:
   # Run interactively
