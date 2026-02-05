@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-04T12:11:53Z",
+  "generated": "2026-02-05T00:22:14Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -256,9 +256,9 @@
     {
       "slug": "docmost",
       "repo": "docmost/docmost",
-      "version": "v0.25.0",
+      "version": "v0.25.1",
       "pinned": false,
-      "date": "2026-02-04T00:33:45Z"
+      "date": "2026-02-04T15:19:51Z"
     },
     {
       "slug": "domain-locker",
@@ -445,9 +445,9 @@
     {
       "slug": "headscale",
       "repo": "juanfont/headscale",
-      "version": "v0.27.1",
+      "version": "v0.28.0",
       "pinned": false,
-      "date": "2025-11-11T19:32:29Z"
+      "date": "2026-02-04T20:40:23Z"
     },
     {
       "slug": "healthchecks",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.1.11",
+      "version": "9.1.12",
       "pinned": false,
-      "date": "2026-02-04T11:30:25Z"
+      "date": "2026-02-04T14:28:36Z"
     },
     {
       "slug": "inspircd",
@@ -536,9 +536,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.53",
+      "version": "v5.12.54",
       "pinned": false,
-      "date": "2026-02-04T00:52:01Z"
+      "date": "2026-02-04T23:52:17Z"
     },
     {
       "slug": "jackett",
@@ -746,9 +746,9 @@
     {
       "slug": "mealie",
       "repo": "mealie-recipes/mealie",
-      "version": "v3.10.1",
+      "version": "v3.10.2",
       "pinned": false,
-      "date": "2026-02-03T01:04:38Z"
+      "date": "2026-02-04T23:32:32Z"
     },
     {
       "slug": "mediamanager",
@@ -781,9 +781,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.03",
+      "version": "2026.02.04",
       "pinned": false,
-      "date": "2026-02-03T21:49:49Z"
+      "date": "2026-02-04T20:01:18Z"
     },
     {
       "slug": "miniflux",
@@ -1096,9 +1096,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.0.17",
+      "version": "v5.1.2",
       "pinned": false,
-      "date": "2026-01-20T19:07:30Z"
+      "date": "2026-02-05T00:18:57Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1271,9 +1271,9 @@
     {
       "slug": "speedtest-tracker",
       "repo": "alexjustesen/speedtest-tracker",
-      "version": "v1.13.6",
+      "version": "v1.13.8",
       "pinned": false,
-      "date": "2026-02-03T21:20:51Z"
+      "date": "2026-02-04T19:24:23Z"
     },
     {
       "slug": "spoolman",
@@ -1369,9 +1369,9 @@
     {
       "slug": "tianji",
       "repo": "msgbyte/tianji",
-      "version": "v1.31.9",
+      "version": "v1.31.10",
       "pinned": false,
-      "date": "2026-01-31T18:22:40Z"
+      "date": "2026-02-04T17:21:04Z"
     },
     {
       "slug": "traccar",
@@ -1411,9 +1411,9 @@
     {
       "slug": "trip",
       "repo": "itskovacs/TRIP",
-      "version": "1.38.0",
+      "version": "1.38.1",
       "pinned": false,
-      "date": "2026-01-31T15:56:30Z"
+      "date": "2026-02-04T18:10:15Z"
     },
     {
       "slug": "tududi",

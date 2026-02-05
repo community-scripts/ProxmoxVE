@@ -398,6 +398,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-02-05
+
 ## 2026-02-04
 
 ### 🆕 New Scripts
@@ -405,17 +407,36 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Wishlist ([#11527](https://github.com/community-scripts/ProxmoxVE/pull/11527))
 - WriteFreely ([#11524](https://github.com/community-scripts/ProxmoxVE/pull/11524))
 
+### 🚀 Updated Scripts
+
+  - Add log directory and permissions for koillection [@shineangelic](https://github.com/shineangelic) ([#11553](https://github.com/community-scripts/ProxmoxVE/pull/11553))
+
+  - #### 🐞 Bug Fixes
+
+    - [FIX] Scanopy: ensure Scanopy Daemon update [@vhsdream](https://github.com/vhsdream) ([#11541](https://github.com/community-scripts/ProxmoxVE/pull/11541))
+    - Immich: pin version to 2.5.3 [@vhsdream](https://github.com/vhsdream) ([#11515](https://github.com/community-scripts/ProxmoxVE/pull/11515))
+
 ### 💾 Core
 
   - #### ✨ New Features
 
     - core: create vm-core.func from dev [@MickLesk](https://github.com/MickLesk) ([#11528](https://github.com/community-scripts/ProxmoxVE/pull/11528))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - [ADDON] Immich Public Proxy addon [@vhsdream](https://github.com/vhsdream) ([#11518](https://github.com/community-scripts/ProxmoxVE/pull/11518))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
 
     - fix(frontend): implement weighted search scoring for command menu [@ls-root](https://github.com/ls-root) ([#11534](https://github.com/community-scripts/ProxmoxVE/pull/11534))
+
+### ❔ Uncategorized
+
+  - [FIX] Immich Public Proxy docs link [@vhsdream](https://github.com/vhsdream) ([#11543](https://github.com/community-scripts/ProxmoxVE/pull/11543))
 
 ## 2026-02-03
 

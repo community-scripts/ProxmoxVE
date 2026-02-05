@@ -13,43 +13,43 @@ setting_up_container
 network_check
 update_os
 
-echo ""
-echo ""
-echo -e "🤖 ${BL}Immich Machine Learning Options${CL}"
-echo "─────────────────────────────────────────"
-echo "Please choose your machine-learning type:"
-echo ""
-echo " 1) CPU only (default)"
-echo " 2) Intel OpenVINO (requires GPU passthrough)"
-echo ""
+if [ -d /dev/dri ]; then
+  echo ""
+  echo ""
+  echo -e "🤖 ${BL}Immich Machine Learning Options${CL}"
+  echo "─────────────────────────────────────────"
+  echo "Please choose your machine-learning type:"
+  echo ""
+  echo " 1) CPU only (default)"
+  echo " 2) Intel OpenVINO (requires GPU passthrough)"
+  echo ""
 
-read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE
-ML_TYPE="${ML_TYPE:-1}"
-if [[ "$ML_TYPE" == "2" ]]; then
-  msg_info "Installing OpenVINO dependencies"
-  touch ~/.openvino
-  $STD apt install -y --no-install-recommends patchelf
-  tmp_dir=$(mktemp -d)
-  $STD pushd "$tmp_dir"
-  curl -fsSLO https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/Dockerfile
-  readarray -t INTEL_URLS < <(
-    sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $2}'
-    sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
-  )
-  for url in "${INTEL_URLS[@]}"; do
-    curl -fsSLO "$url"
-  done
-  $STD apt install -y ./libigdgmm12*.deb
-  rm ./libigdgmm12*.deb
-  $STD apt install -y ./*.deb
-  $STD apt-mark hold libigdgmm12
-  $STD popd
-  rm -rf "$tmp_dir"
-  dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
-  msg_ok "Installed OpenVINO dependencies"
+  read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE
+  ML_TYPE="${ML_TYPE:-1}"
+  if [[ "$ML_TYPE" == "2" ]]; then
+    msg_info "Installing OpenVINO dependencies"
+    touch ~/.openvino
+    $STD apt install -y --no-install-recommends patchelf
+    tmp_dir=$(mktemp -d)
+    $STD pushd "$tmp_dir"
+    curl -fsSLO https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/Dockerfile
+    readarray -t INTEL_URLS < <(
+      sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $2}'
+      sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
+    )
+    for url in "${INTEL_URLS[@]}"; do
+      curl -fsSLO "$url"
+    done
+    $STD apt install -y ./libigdgmm12*.deb
+    rm ./libigdgmm12*.deb
+    $STD apt install -y ./*.deb
+    $STD apt-mark hold libigdgmm12
+    $STD popd
+    rm -rf "$tmp_dir"
+    dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
+    msg_ok "Installed OpenVINO dependencies"
+  fi
 fi
-
-setup_uv
 
 msg_info "Installing dependencies"
 $STD apt install --no-install-recommends -y \
@@ -144,8 +144,7 @@ msg_info "Installing packages from Debian Testing repo"
 $STD apt install -t testing --no-install-recommends -yqq libmimalloc3 libde265-dev
 msg_ok "Installed packages from Debian Testing repo"
 
-PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
-NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+setup_uv
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 VCHORD_RELEASE="0.5.3"
@@ -290,7 +289,9 @@ ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.2" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.5.3" "$SRC_DIR"
+PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' ${SRC_DIR}/package.json)"
+NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Installing Immich (patience)"
 
