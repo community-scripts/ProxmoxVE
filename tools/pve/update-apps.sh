@@ -174,7 +174,8 @@ if [[ "$var_skip_confirm" != "yes" ]]; then
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "LXC App Update" --yesno "This will update apps in LXCs installed by Helper-Scripts. Proceed?" 10 58 || exit
 fi
 
-msg_info "Loading all possible LXC containers from Proxmox VE. This may take a few seconds..."
+tags_formatted="${var_tags//|/, }"
+msg_info "Loading all possible LXC containers from Proxmox VE with tags: ${tags_formatted}. This may take a few seconds..."
 NODE=$(hostname)
 containers=$(pct list | tail -n +2 | awk '{print $0 " " $4}')
 
