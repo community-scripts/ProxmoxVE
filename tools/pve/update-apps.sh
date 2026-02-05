@@ -185,7 +185,7 @@ fi
 
 menu_items=()
 FORMAT="%-10s %-15s %-10s"
-TAGS="community-script|proxmox-helper-scripts"
+TAGS="${var_tags:-community-script|proxmox-helper-scripts}"
 
 while read -r container; do
   container_id=$(echo $container | awk '{print $1}')
