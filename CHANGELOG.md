@@ -408,6 +408,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Wanderer: Fix repo [@tremor021](https://github.com/tremor021) ([#11567](https://github.com/community-scripts/ProxmoxVE/pull/11567))
+
   - #### ✨ New Features
 
     - Refactor: Docker-VM (Multi-OS / Cloud-Init / Stabilization)  [@MickLesk](https://github.com/MickLesk) ([#9047](https://github.com/community-scripts/ProxmoxVE/pull/9047))
