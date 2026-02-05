@@ -406,6 +406,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Docker-VM (Multi-OS / Cloud-Init / Stabilization)  [@MickLesk](https://github.com/MickLesk) ([#9047](https://github.com/community-scripts/ProxmoxVE/pull/9047))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - cloud-init: add interactive SSH key discovery and selection [@MickLesk](https://github.com/MickLesk) ([#11547](https://github.com/community-scripts/ProxmoxVE/pull/11547))
+
 ## 2026-02-04
 
 ### 🆕 New Scripts
