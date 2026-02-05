@@ -410,6 +410,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OpenCloud: pin version to 5.0.2; Collabora CSP fix [@vhsdream](https://github.com/vhsdream) ([#11585](https://github.com/community-scripts/ProxmoxVE/pull/11585))
     - Wanderer: Fix repo [@tremor021](https://github.com/tremor021) ([#11567](https://github.com/community-scripts/ProxmoxVE/pull/11567))
 
   - #### ✨ New Features
