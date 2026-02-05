@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-05T06:22:20Z",
+  "generated": "2026-02-05T12:12:20Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -186,9 +186,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.12.2",
+      "version": "v0.12.3",
       "pinned": false,
-      "date": "2026-02-04T06:09:31Z"
+      "date": "2026-02-05T07:04:07Z"
     },
     {
       "slug": "commafeed",
