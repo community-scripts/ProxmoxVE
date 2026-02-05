@@ -171,7 +171,7 @@ header_info
 
 # Skip confirmation if var_skip_confirm is set to yes
 if [[ "$var_skip_confirm" != "yes" ]]; then
-  whiptail --backtitle "Proxmox VE Helper Scripts" --title "LXC Container Update" --yesno "This will update LXC container. Proceed?" 10 58 || exit
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "LXC App Update" --yesno "This will update apps in LXCs installed by Helper-Scripts. Proceed?" 10 58 || exit
 fi
 
 msg_info "Loading all possible LXC containers from Proxmox VE. This may take a few seconds..."
