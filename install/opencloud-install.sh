@@ -63,10 +63,10 @@ msg_ok "Installed Collabora Online"
 fetch_and_deploy_gh_release "opencloud" "opencloud-eu/opencloud" "singlefile" "v5.0.2" "/usr/bin" "opencloud-*-linux-amd64"
 
 msg_info "Configuring OpenCloud"
-DATA_DIR="/var/lib/opencloud/"
+DATA_DIR="/var/lib/opencloud"
 CONFIG_DIR="/etc/opencloud"
 ENV_FILE="${CONFIG_DIR}/opencloud.env"
-mkdir -p "$DATA_DIR" "$CONFIG_DIR"/assets/apps
+mkdir -p "$DATA_DIR" "$CONFIG_DIR"/web/assets/{apps,themes}
 
 curl -fsSL https://raw.githubusercontent.com/opencloud-eu/opencloud-compose/refs/heads/main/config/opencloud/csp.yaml -o "$CONFIG_DIR"/csp.yaml
 curl -fsSL https://raw.githubusercontent.com/opencloud-eu/opencloud-compose/refs/heads/main/config/opencloud/proxy.yaml -o "$CONFIG_DIR"/proxy.yaml.bak
@@ -83,9 +83,10 @@ STORAGE_SYSTEM_OC_ROOT=${DATA_DIR}/storage/metadata
 ## Web
 WEB_ASSET_CORE_PATH=${CONFIG_DIR}/web/assets
 WEB_ASSET_APPS_PATH=${CONFIG_DIR}/web/assets/apps
-WEB_UI_CONFIG_FILE=${CONFIG_DIR}/web/config.json
-# WEB_ASSET_THEMES_PATH=${CONFIG_DIR}/web/assets/themes
+WEB_ASSET_THEMES_PATH=${CONFIG_DIR}/web/assets/themes
 # WEB_UI_THEME_PATH=
+## Uncomment below to create & modify your web UI config
+# WEB_UI_CONFIG_FILE=${CONFIG_DIR}/web/config.json
 
 ## Frontend
 FRONTEND_DISABLE_RADICALE=true
