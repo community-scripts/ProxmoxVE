@@ -422,6 +422,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - cloud-init: add interactive SSH key discovery and selection [@MickLesk](https://github.com/MickLesk) ([#11547](https://github.com/community-scripts/ProxmoxVE/pull/11547))
 
+### 📚 Documentation
+
+  - github: extend docs / contribution / templates [@MickLesk](https://github.com/MickLesk) ([#10921](https://github.com/community-scripts/ProxmoxVE/pull/10921))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
