@@ -400,6 +400,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-05
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Refactor: Docker-VM (Multi-OS / Cloud-Init / Stabilization)  [@MickLesk](https://github.com/MickLesk) ([#9047](https://github.com/community-scripts/ProxmoxVE/pull/9047))
+
 ## 2026-02-04
 
 ### 🆕 New Scripts
