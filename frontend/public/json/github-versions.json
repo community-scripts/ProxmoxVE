@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-04T18:17:33Z",
+  "generated": "2026-02-05T00:22:14Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -445,9 +445,9 @@
     {
       "slug": "headscale",
       "repo": "juanfont/headscale",
-      "version": "v0.27.1",
+      "version": "v0.28.0",
       "pinned": false,
-      "date": "2025-11-11T19:32:29Z"
+      "date": "2026-02-04T20:40:23Z"
     },
     {
       "slug": "healthchecks",
@@ -536,9 +536,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.53",
+      "version": "v5.12.54",
       "pinned": false,
-      "date": "2026-02-04T00:52:01Z"
+      "date": "2026-02-04T23:52:17Z"
     },
     {
       "slug": "jackett",
@@ -746,9 +746,9 @@
     {
       "slug": "mealie",
       "repo": "mealie-recipes/mealie",
-      "version": "v3.10.1",
+      "version": "v3.10.2",
       "pinned": false,
-      "date": "2026-02-03T01:04:38Z"
+      "date": "2026-02-04T23:32:32Z"
     },
     {
       "slug": "mediamanager",
@@ -781,9 +781,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.03",
+      "version": "2026.02.04",
       "pinned": false,
-      "date": "2026-02-03T21:49:49Z"
+      "date": "2026-02-04T20:01:18Z"
     },
     {
       "slug": "miniflux",
@@ -1096,9 +1096,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.0",
+      "version": "v5.1.2",
       "pinned": false,
-      "date": "2026-02-04T17:43:59Z"
+      "date": "2026-02-05T00:18:57Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1271,9 +1271,9 @@
     {
       "slug": "speedtest-tracker",
       "repo": "alexjustesen/speedtest-tracker",
-      "version": "v1.13.7",
+      "version": "v1.13.8",
       "pinned": false,
-      "date": "2026-02-04T16:47:42Z"
+      "date": "2026-02-04T19:24:23Z"
     },
     {
       "slug": "spoolman",
