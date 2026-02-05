@@ -400,6 +400,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-05
 
+### 🆕 New Scripts
+
+  - New: SQL-Server 2025 | Refactor SQL-Server 2022  [@MickLesk](https://github.com/MickLesk) ([#11546](https://github.com/community-scripts/ProxmoxVE/pull/11546))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
@@ -411,6 +415,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### ✨ New Features
 
     - cloud-init: add interactive SSH key discovery and selection [@MickLesk](https://github.com/MickLesk) ([#11547](https://github.com/community-scripts/ProxmoxVE/pull/11547))
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - fix(frontend): theme respective syntax highlighting [@ls-root](https://github.com/ls-root) ([#11565](https://github.com/community-scripts/ProxmoxVE/pull/11565))
 
 ## 2026-02-04
 

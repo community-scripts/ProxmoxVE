@@ -29,7 +29,7 @@ import { ScriptSchema } from "./_schemas/schemas";
 import Categories from "./_components/categories";
 import Note from "./_components/note";
 
-import { nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { githubGist, nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { ScriptItem } from "../scripts/_components/script-item";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -37,6 +37,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { search } from "@/components/command-menu";
 import { basePath } from "@/config/site-config";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 const initialScript: Script = {
   name: "",
@@ -63,6 +64,7 @@ const initialScript: Script = {
 };
 
 export default function JSONGenerator() {
+  const { theme } = useTheme();
   const [script, setScript] = useState<Script>(initialScript);
   const [isCopied, setIsCopied] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -523,7 +525,7 @@ export default function JSONGenerator() {
 
               <SyntaxHighlighter
                 language="json"
-                style={nord}
+                style={theme === "light" ? githubGist : nord}
                 className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll"
               >
                 {JSON.stringify(script, null, 2)}
