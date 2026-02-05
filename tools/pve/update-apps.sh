@@ -238,7 +238,7 @@ if [[ -n "$var_container" ]]; then
   esac
 
   if [[ -z "$CHOICE" ]]; then
-    msg_error "No containers matched the selection criteria: $var_container"
+    msg_error "No containers matched the selection criteria: $var_container ${var_tags:-community-script|proxmox-helper-scripts}"
     exit 1
   fi
   msg_ok "Selected containers: $CHOICE"
