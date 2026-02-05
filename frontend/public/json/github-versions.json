@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-05T00:22:14Z",
+  "generated": "2026-02-05T06:22:20Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -221,9 +221,9 @@
     {
       "slug": "cronicle",
       "repo": "jhuckaby/Cronicle",
-      "version": "v0.9.102",
+      "version": "v0.9.103",
       "pinned": false,
-      "date": "2025-12-19T03:45:13Z"
+      "date": "2026-02-05T03:09:04Z"
     },
     {
       "slug": "cryptpad",
@@ -494,9 +494,9 @@
     {
       "slug": "homepage",
       "repo": "gethomepage/homepage",
-      "version": "v1.9.0",
+      "version": "v1.10.0",
       "pinned": false,
-      "date": "2026-01-19T05:46:09Z"
+      "date": "2026-02-05T06:17:32Z"
     },
     {
       "slug": "homer",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.1.12",
+      "version": "9.2.0",
       "pinned": false,
-      "date": "2026-02-04T14:28:36Z"
+      "date": "2026-02-05T04:18:08Z"
     },
     {
       "slug": "inspircd",
@@ -536,16 +536,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.54",
+      "version": "v5.12.55",
       "pinned": false,
-      "date": "2026-02-04T23:52:17Z"
+      "date": "2026-02-05T01:06:15Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1027",
+      "version": "v0.24.1032",
       "pinned": false,
-      "date": "2026-02-04T05:56:22Z"
+      "date": "2026-02-05T05:55:27Z"
     },
     {
       "slug": "joplin-server",
@@ -1292,9 +1292,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.4.3",
+      "version": "v2.4.4",
       "pinned": false,
-      "date": "2026-01-31T22:19:14Z"
+      "date": "2026-02-05T00:15:53Z"
     },
     {
       "slug": "streamlink-webui",
