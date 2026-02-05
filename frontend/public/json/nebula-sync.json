@@ -1,0 +1,64 @@
+{
+    "name": "Nebula-Sync",
+    "slug": "nebula-sync",
+    "categories": [
+        5
+    ],
+    "date_created": "2025-01-27",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": "https://github.com/lovelaze/nebula-sync",
+    "website": "https://github.com/lovelaze/nebula-sync",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/pi-hole.webp",
+    "config_path": "/opt/nebula-sync/.env",
+    "description": "Nebula-Sync is a tool that synchronizes configuration of multiple Pi-hole v6.x instances. It allows you to keep multiple Pi-hole instances in sync by replicating settings, blocklists, whitelists, custom DNS entries, and other configurations from a primary instance to one or more replica instances. This is particularly useful for maintaining consistency across multiple Pi-hole servers in a network or ensuring redundancy with synchronized configurations.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/nebula-sync.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
+                "os": "debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Requires Pi-hole v6.x instances with API access enabled",
+            "type": "info"
+        },
+        {
+            "text": "You will be prompted for primary and replica Pi-hole IP addresses and API passwords during installation",
+            "type": "info"
+        },
+        {
+            "text": "IMPORTANT: Pi-hole API must have sudo permissions enabled. Set 'app_sudo = true' in /etc/pihole/pihole.toml under [webserver.api] section on all Pi-hole instances, then restart pihole-FTL service",
+            "type": "warning"
+        },
+        {
+            "text": "The API password is the Pi-hole web interface password (not an API token). Ensure API access is enabled in Pi-hole Settings → API/Web interface",
+            "type": "info"
+        },
+        {
+            "text": "By default, all settings are synchronized. You can choose custom sync options during setup",
+            "type": "info"
+        },
+        {
+            "text": "Update with: update_nebula-sync",
+            "type": "info"
+        },
+        {
+            "text": "Configuration file: /opt/nebula-sync/.env",
+            "type": "info"
+        }
+    ]
+}
