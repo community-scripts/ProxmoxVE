@@ -4,7 +4,7 @@
     "categories": [
         21
     ],
-    "date_created": "2026-02-03",
+    "date_created": "2026-02-05",
     "type": "ct",
     "updateable": true,
     "privileged": false,
@@ -28,7 +28,7 @@
         }
     ],
     "default_credentials": {
-        "username": null,
+        "username": "admin",
         "password": null
     },
     "notes": [
@@ -38,6 +38,10 @@
         },
         {
             "text": "SSL certificates can be managed automatically with Let's Encrypt integration.",
+            "type": "info"
+        },
+        {
+            "text": "Initial Login data: `cat ~/nginx-ui.creds`",
             "type": "info"
         }
     ]
