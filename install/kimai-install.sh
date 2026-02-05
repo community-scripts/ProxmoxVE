@@ -22,7 +22,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_mariadb
-PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 setup_composer
 
 msg_info "Setting up database"

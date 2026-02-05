@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,25 +28,24 @@ function update_script() {
     exit
   fi
 
+  get_lxc_ip  
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
-  if ! command -v jq &>/dev/null; then
-    $STD msg_info "Installing jq..."
-    $STD apt-get update -qq &>/dev/null
-    $STD apt-get install -y jq &>/dev/null || {
-      msg_error "Failed to install jq"
-      exit
-    }
-  fi
-  LOCAL_IP=$(hostname -I | awk '{print $1}')
-  RELEASE=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Updating Homepage to v${RELEASE} (Patience)"
+  ensure_dependencies jq
+
+  if check_for_gh_release "homepage" "gethomepage/homepage"; then
+    msg_info "Stopping service"
     systemctl stop homepage
-    curl -fsSL "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz")
-    tar -xzf v${RELEASE}.tar.gz
-    rm -rf v${RELEASE}.tar.gz
-    cp -r homepage-${RELEASE}/* /opt/homepage/
-    rm -rf homepage-${RELEASE}
+    msg_ok "Stopped service"
+
+    cp /opt/homepage/.env /opt/homepage.env
+    cp -r /opt/homepage/config /opt/homepage_config_backup
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
+    mv /opt/homepage.env /opt/homepage
+    rm -rf /opt/homepage/config
+    mv /opt/homepage_config_backup /opt/homepage/config
+
+    msg_info "Updating Homepage (Patience)"
+    RELEASE=$(get_latest_github_release "gethomepage/homepage")
     cd /opt/homepage
     $STD pnpm install
     $STD pnpm update --no-save caniuse-lite
@@ -55,14 +54,12 @@ function update_script() {
     export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | jq -r '.published_at')
     export NEXT_TELEMETRY_DISABLED=1
     $STD pnpm build
-    if [[ ! -f /opt/homepage/.env ]]; then
-      echo "HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000" >/opt/homepage/.env
-    fi
+    msg_ok "Updated Homepage"
+
+    msg_info "Starting service"
     systemctl start homepage
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+    msg_ok "Started service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

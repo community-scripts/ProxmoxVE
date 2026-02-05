@@ -14,36 +14,39 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   iproute2 \
   gcc \
   musl-dev
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
+PG_DB_NAME="bitmagnet" PG_DB_USER="bitmagnet" setup_postgresql_db
 setup_go
+
 fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
-RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(cat ~/.bitmagnet)
 
-msg_info "Setting up database"
-POSTGRES_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$POSTGRES_PASSWORD';"
-$STD sudo -u postgres psql -c "CREATE DATABASE bitmagnet;"
-{
-  echo "PostgreSQL Credentials"
-  echo ""
-  echo "postgres user password: $POSTGRES_PASSWORD"
-} >>~/postgres.creds
-msg_ok "Database set up"
-
-msg_info "Configuring bitmagnet v${RELEASE}"
+msg_info "Configuring bitmagnet"
 cd /opt/bitmagnet
-VREL=v$RELEASE
-$STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
+$STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=v${RELEASE}"
 chmod +x bitmagnet
-msg_ok "Configured bitmagnet v${RELEASE}"
+msg_ok "Configured bitmagnet"
 
 read -r -p "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey
+
+cat <<EOF >/etc/bitmagnet.env
+POSTGRES_HOST=localhost
+POSTGRES_USER=${PG_DB_USER}
+POSTGRES_NAME=${PG_DB_NAME}
+POSTGRES_PASSWORD=${PG_DB_PASS}
+EOF
+
+if [ -z "$tmdbapikey" ]; then
+  echo "TMDB_ENABLED=false" >>/etc/bitmagnet.env
+else
+  echo "TMDB_API_KEY=$tmdbapikey" >>/etc/bitmagnet.env
+fi
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/bitmagnet-web.service
@@ -55,10 +58,8 @@ After=network-online.target
 Type=simple
 User=root
 WorkingDirectory=/opt/bitmagnet
+EnvironmentFile=/etc/bitmagnet.env
 ExecStart=/opt/bitmagnet/bitmagnet worker run --all
-Environment=POSTGRES_HOST=localhost
-Environment=POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-Environment=TMDB_API_KEY=$tmdbapikey
 Restart=on-failure
 
 [Install]

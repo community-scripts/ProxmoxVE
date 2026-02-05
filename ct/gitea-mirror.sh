@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -49,14 +49,13 @@ function update_script() {
   if [[ ! -f /opt/gitea-mirror.env ]]; then
     msg_info "Detected old Enviroment, updating files"
     APP_SECRET=$(openssl rand -base64 32)
-    HOST_IP=$(hostname -I | awk '{print $1}')
     cat <<EOF >/opt/gitea-mirror.env
 # See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
 NODE_ENV=production
 HOST=0.0.0.0
 PORT=4321
 DATABASE_URL=sqlite://data/gitea-mirror.db
-BETTER_AUTH_URL=http://${HOST_IP}:4321
+BETTER_AUTH_URL=http://${LOCAL_IP}:4321
 BETTER_AUTH_SECRET=${APP_SECRET}
 npm_package_version=${APP_VERSION}
 EOF
@@ -96,8 +95,7 @@ EOF
     ln -sf /opt/bun/bin/bun /usr/local/bin/bunx
     msg_ok "Installed Bun"
 
-    rm -rf /opt/gitea-mirror
-    fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror" "tarball"
 
     msg_info "Updating and rebuilding ${APP}"
     cd /opt/gitea-mirror

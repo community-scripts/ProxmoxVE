@@ -11,6 +11,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 load_functions
 catch_errors
 
+# Get LXC IP address (must be called INSIDE container, after network is up)
+get_lxc_ip
+
 # This function enables IPv6 if it's not disabled and sets verbose mode
 verb_ip6() {
   set_std_mode # Set STD mode based on VERBOSE

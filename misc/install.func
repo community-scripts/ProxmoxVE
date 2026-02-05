@@ -37,6 +37,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 load_functions
 catch_errors
 
+# Get LXC IP address (must be called INSIDE container, after network is up)
+get_lxc_ip
+
 # ==============================================================================
 # SECTION 2: NETWORK & CONNECTIVITY
 # ==============================================================================
@@ -76,6 +79,13 @@ EOF
 # ------------------------------------------------------------------------------
 setting_up_container() {
   msg_info "Setting up Container OS"
+
+  # Fix Debian 13 LXC template bug where / is owned by nobody
+  # Only attempt in privileged containers (unprivileged cannot chown /)
+  if [[ "$(stat -c '%U' /)" != "root" ]]; then
+    (chown root:root / 2>/dev/null) || true
+  fi
+
   for ((i = RETRY_NUM; i > 0; i--)); do
     if [ "$(hostname -I)" != "" ]; then
       break

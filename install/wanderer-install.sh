@@ -32,7 +32,6 @@ msg_ok "Installed wanderer"
 msg_info "Creating Service"
 MEILI_KEY=$(openssl rand -hex 32)
 POCKETBASE_KEY=$(openssl rand -hex 16)
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 
 cat <<EOF >/opt/wanderer/.env
 ORIGIN=http://${LOCAL_IP}:3000

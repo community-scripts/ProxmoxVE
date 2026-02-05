@@ -28,7 +28,6 @@ $STD apt install -y inventree
 msg_ok "Installed InvenTree"
 
 msg_info "Configuring InvenTree"
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 if [[ -f /etc/inventree/config.yaml ]]; then
   sed -i "s|site_url:.*|site_url: http://${LOCAL_IP}|" /etc/inventree/config.yaml
 fi

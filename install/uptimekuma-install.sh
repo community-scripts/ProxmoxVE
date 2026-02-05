@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing dependencies"
+$STD apt install -y chromium
+msg_ok "Installed dependencies"
+
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "uptime-kuma" "louislam/uptime-kuma" "tarball"
 
@@ -23,6 +27,7 @@ $STD npm run download-dist
 msg_ok "Installed Uptime Kuma"
 
 msg_info "Creating Service"
+ln -s /usr/bin/chromium /opt/uptime-kuma/chromium
 cat <<EOF >/etc/systemd/system/uptime-kuma.service
 [Unit]
 Description=uptime-kuma

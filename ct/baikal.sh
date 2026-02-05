@@ -37,7 +37,7 @@ function update_script() {
     mv /opt/baikal /opt/baikal-backup
     msg_ok "Backed up data"
 
-    PHP_APACHE="YES" PHP_MODULE="pgsql,curl" PHP_VERSION="8.3" setup_php
+    PHP_APACHE="YES" PHP_VERSION="8.3" setup_php
     setup_composer
     fetch_and_deploy_gh_release "baikal" "sabre-io/Baikal" "tarball"
 

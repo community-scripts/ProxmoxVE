@@ -23,8 +23,8 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="patchmon_db" PG_DB_USER="patchmon_usr" setup_postgresql_db
+
 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
-import_local_ip
 
 msg_info "Configuring PatchMon"
 cd /opt/patchmon
@@ -98,8 +98,8 @@ msg_ok "Configured PatchMon"
 
 msg_info "Configuring Nginx"
 cat <<EOF >/etc/nginx/sites-available/patchmon.conf
-map $http_x_forwarded_proto $proxy_corrected_scheme {
-    default    $scheme; # Fallback to Nginx's actual connection scheme if no X-Forwarded-Proto header was set
+map \$http_x_forwarded_proto \$proxy_corrected_scheme {
+    default    \$scheme; # Fallback to Nginx's actual connection scheme if no X-Forwarded-Proto header was set
     https      https;   # If X-Forwarded-Proto is 'https', use 'https'
     http       http;    # If X-Forwarded-Proto is 'http', use 'http'
 }

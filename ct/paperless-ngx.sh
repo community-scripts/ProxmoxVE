@@ -69,7 +69,7 @@ function update_script() {
       if [ "$VERSION_CODENAME" = "bookworm" ]; then
         setup_gs
       else
-        $STD apt install -y ghostscript
+        ensure_dependencies ghostscript
       fi
 
       msg_info "Updating Paperless-ngx"
@@ -145,7 +145,7 @@ function update_script() {
         setup_gs
       else
         msg_info "Installing Ghostscript"
-        $STD apt install -y ghostscript
+        ensure_dependencies ghostscript
         msg_ok "Installed Ghostscript"
       fi
 

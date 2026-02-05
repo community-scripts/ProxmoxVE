@@ -15,7 +15,7 @@ update_os
 
 setup_mariadb
 MARIADB_DB_NAME="hortusfox" MARIADB_DB_USER="hortusfox" setup_mariadb_db
-PHP_MODULE="exif,mysql" PHP_APACHE="YES" PHP_FPM="NO" PHP_VERSION="8.3" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
 setup_composer
 fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web" "tarball"
 

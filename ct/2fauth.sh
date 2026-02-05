@@ -41,7 +41,7 @@ function update_script() {
     msg_ok "Backup Created"
 
     if ! dpkg -l | grep -q 'php8.4'; then
-      PHP_VERSION="8.4" PHP_MODULE="common,ctype,fileinfo,mysql,cli,tokenizer,dom,redis,session,openssl" PHP_FPM="YES" setup_php
+      PHP_VERSION="8.4" PHP_FPM="YES" setup_php
       sed -i 's/php8\.[0-9]/php8.4/g' /etc/nginx/conf.d/2fauth.conf
     fi
     fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth" "tarball"

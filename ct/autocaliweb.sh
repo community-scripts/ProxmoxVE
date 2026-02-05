@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/gelbphoenix/autocaliweb
+# Source: https://codeberg.org/gelbphoenix/autocaliweb
 
 APP="Autocaliweb"
 var_tags="${var_tags:-ebooks}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,8 +30,8 @@ function update_script() {
 
   setup_uv
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/gelbphoenix/autocaliweb/releases/latest | jq '.tag_name' | sed 's/^"v//;s/"$//')
-  if check_for_gh_release "autocaliweb" "gelbphoenix/autocaliweb"; then
+  RELEASE=$(get_latest_codeberg_release "gelbphoenix/autocaliweb")
+  if check_for_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb"; then
     msg_info "Stopping Services"
     systemctl stop autocaliweb metadata-change-detector acw-ingest-service acw-auto-zipper
     msg_ok "Stopped Services"
@@ -39,7 +39,8 @@ function update_script() {
     INSTALL_DIR="/opt/autocaliweb"
     export VIRTUAL_ENV="${INSTALL_DIR}/venv"
     $STD tar -cf ~/autocaliweb_bkp.tar "$INSTALL_DIR"/{metadata_change_logs,dirs.json,.env,scripts/ingest_watcher.sh,scripts/auto_zipper_wrapper.sh,scripts/metadata_change_detector_wrapper.sh}
-    fetch_and_deploy_gh_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+    fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+    
     msg_info "Updating Autocaliweb"
     cd "$INSTALL_DIR" 
     if [[ ! -d "$VIRTUAL_ENV" ]]; then

@@ -14,10 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   make \
   ca-certificates \
-  python3-venv
+  python3-venv \
+  git
 msg_ok "Installed Dependencies"
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
@@ -27,6 +28,7 @@ export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=2048"
 cd /opt/grist
 $STD yarn install
+$STD yarn run install:ee
 $STD yarn run build:prod
 $STD yarn run install:python
 cat <<EOF >/opt/grist/.env
@@ -42,7 +44,7 @@ Description=Grist
 After=network.target
 
 [Service]
-Type=exec
+Type=simple
 WorkingDirectory=/opt/grist 
 ExecStart=/usr/bin/yarn run start:prod
 EnvironmentFile=-/opt/grist/.env

@@ -13,6 +13,7 @@ setting_up_container
 network_check
 update_os
 
+msg_custom "ℹ️" "${GN}" "If NVIDIA GPU passthrough is detected, you'll be asked whether to install drivers in the container"
 setup_hwaccel
 
 msg_info "Installing Jellyfin"
@@ -38,8 +39,19 @@ EOF
 
 $STD apt update
 $STD apt install -y jellyfin
-sed -i 's/"MinimumLevel": "Information"/"MinimumLevel": "Error"/g' /etc/jellyfin/logging.json
-
+# Configure log rotation to prevent disk fill (keeps fail2ban compatibility) (PR: #1690 / Issue: #11224)
+cat <<EOF >/etc/logrotate.d/jellyfin
+/var/log/jellyfin/*.log {
+    daily
+    rotate 3
+    maxsize 100M
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+}
+EOF
 chown -R jellyfin:adm /etc/jellyfin
 sleep 10
 systemctl restart jellyfin

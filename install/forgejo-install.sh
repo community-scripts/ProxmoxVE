@@ -14,17 +14,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y git-lfs
+$STD apt install -y \
+    git \
+    git-lfs
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Forgejo"
-mkdir -p /opt/forgejo
-RELEASE=$(curl -fsSL https://codeberg.org/api/v1/repos/forgejo/forgejo/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+' | sed 's/^v//')
-curl -fsSL "https://codeberg.org/forgejo/forgejo/releases/download/v${RELEASE}/forgejo-${RELEASE}-linux-amd64" -o "/opt/forgejo/forgejo-$RELEASE-linux-amd64"
-chmod +x /opt/forgejo/forgejo-$RELEASE-linux-amd64
-ln -sf /opt/forgejo/forgejo-$RELEASE-linux-amd64 /usr/local/bin/forgejo
-msg_ok "Installed Forgejo"
+fetch_and_deploy_codeberg_release "forgejo" "forgejo/forgejo" "singlefile" "latest" "/opt/forgejo" "forgejo-*-linux-amd64"
+ln -sf /opt/forgejo/forgejo /usr/local/bin/forgejo
 
 msg_info "Setting up Forgejo"
 $STD adduser --system --shell /bin/bash --gecos 'Git Version Control' --group --disabled-password --home /home/git git

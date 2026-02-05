@@ -25,6 +25,17 @@
         "os": "Debian",
         "version": "13"
       }
+    },
+    {
+      "type": "alpine",
+      "script": "ct/alpine-valkey.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 1,
+        "os": "alpine",
+        "version": "3.23"
+      }
     }
   ],
   "default_credentials": {
@@ -34,6 +45,10 @@
   "notes": [
     {
       "text": "Show Login Credentials, type `cat ~/valkey.creds` in the LXC console",
+      "type": "info"
+    },
+    {
+      "text": "Alpines Valkey package is compiled without TLS support. For TLS, use the Debian-based valkey script instead.",
       "type": "info"
     }
   ]

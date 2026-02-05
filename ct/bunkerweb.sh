@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-8192}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,23 +27,20 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/bunkerity/bunkerweb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+  if check_for_gh_release "bunkerweb" "bunkerity/bunkerweb"; then
+    msg_info "Updating BunkerWeb"
+    RELEASE=$(get_latest_github_release "bunkerity/bunkerweb")
     cat <<EOF >/etc/apt/preferences.d/bunkerweb
 Package: bunkerweb
 Pin: version ${RELEASE}
 Pin-Priority: 1001
 EOF
-    apt-get update
-    apt-mark unhold bunkerweb nginx
-    apt-get install -y --allow-downgrades bunkerweb=${RELEASE}
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    $STD apt update
+    $STD apt-mark unhold bunkerweb nginx
+    $STD apt install -y --allow-downgrades bunkerweb="${RELEASE}"
+    msg_ok "Updated BunkerWeb"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

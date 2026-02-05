@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y xdg-utils
+$STD apt install -y xdg-utils
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw" "tarball"
 
 msg_info "Configuring Excalidraw"

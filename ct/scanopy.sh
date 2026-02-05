@@ -29,36 +29,27 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "scanopy" "scanopy/scanopy"; then
+  if check_for_gh_release "Scanopy" "scanopy/scanopy"; then
     msg_info "Stopping services"
-    systemctl stop scanopy-daemon scanopy-server
+    systemctl stop scanopy-server
+    [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl stop scanopy-daemon
     msg_ok "Stopped services"
 
     msg_info "Backing up configurations"
-    cp /opt/scanopy/.env /opt/scanopy.env.bak
-    if [[ -f /opt/scanopy/oidc.toml ]]; then
-      cp /opt/scanopy/oidc.toml /opt/scanopy.oidc.toml
-    fi
+    cp /opt/scanopy/.env /opt/scanopy.env
+    [[ -f /opt/scanopy/oidc.toml ]] && cp /opt/scanopy/oidc.toml /opt/scanopy.oidc.toml
     msg_ok "Backed up configurations"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
 
-    if ! dpkg -l | grep -q "pkg-config"; then
-      $STD apt install -y pkg-config
-    fi
-    if ! dpkg -l | grep -q "libssl-dev"; then
-      $STD apt install -y libssl-dev
-    fi
+    ensure_dependencies pkg-config libssl-dev
     TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
     RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
-    mv /opt/scanopy.env.bak /opt/scanopy/.env
-    if [[ -f /opt/scanopy.oidc.toml ]]; then
-      mv /opt/scanopy.oidc.toml /opt/scanopy/oidc.toml
-    fi
-    LOCAL_IP="$(hostname -I | awk '{print $1}')"
+    [[ -f /opt/scanopy.env ]] && mv /opt/scanopy.env /opt/scanopy/.env
+    [[ -f /opt/scanopy.oidc.toml ]] && mv /opt/scanopy.oidc.toml /opt/scanopy/oidc.toml
     if ! grep -q "PUBLIC_URL" /opt/scanopy/.env; then
-      sed -i "\|_PATH=|a\scanopy_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
+      sed -i "\|_PATH=|a\\scanopy_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
     fi
     sed -i 's|_TARGET=.*$|_URL=http://127.0.0.1:60072|' /opt/scanopy/.env
 
@@ -70,19 +61,26 @@ function update_script() {
     $STD npm run build
     msg_ok "Created frontend UI"
 
-    msg_info "Building scanopy-server (patience)"
+    msg_info "Building Scanopy Server (patience)"
     cd /opt/scanopy/backend
     $STD cargo build --release --bin server
     mv ./target/release/server /usr/bin/scanopy-server
-    msg_ok "Built scanopy-server"
+    msg_ok "Built Scanopy Server"
 
-    msg_info "Building scanopy-daemon"
-    $STD cargo build --release --bin daemon
-    cp ./target/release/daemon /usr/bin/scanopy-daemon
-    msg_ok "Built scanopy-daemon"
+    if [[ -f /etc/systemd/system/scanopy-daemon.service ]]; then
+      fetch_and_deploy_gh_release "Scanopy Daemon" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-amd64"
+      mv "/usr/local/bin/Scanopy Daemon" /usr/local/bin/scanopy-daemon
+      rm -f /usr/bin/scanopy-daemon ~/configure_daemon.sh
+      sed -i -e 's|usr/bin|usr/local/bin|' \
+        -e 's/push/daemon_poll/' \
+        -e 's/pull/server_poll/' /etc/systemd/system/scanopy-daemon.service
+      systemctl daemon-reload
+      msg_ok "Updated Scanopy Daemon"
+    fi
 
     msg_info "Starting services"
-    systemctl start scanopy-server scanopy-daemon
+    systemctl start scanopy-server
+    [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl start scanopy-daemon
     msg_ok "Updated successfully!"
   fi
   exit
@@ -96,4 +94,4 @@ msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:60072${CL}"
-echo -e "${INFO}${YW} Then create your account, and run the 'configure_daemon.sh' script to setup the daemon.${CL}"
+echo -e "${INFO}${YW} Then create your account, and create a daemon in the UI.${CL}"

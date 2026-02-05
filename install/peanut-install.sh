@@ -31,7 +31,7 @@ mkdir -p /etc/peanut/
 ln -sf .next/standalone/server.js server.js
 cat <<EOF >/etc/peanut/settings.yml
 WEB_HOST: 0.0.0.0
-WEB_PORT: 3000
+WEB_PORT: 8080
 NUT_HOST: 0.0.0.0
 NUT_PORT: 3493
 EOF
@@ -52,7 +52,7 @@ Environment="NODE_ENV=production"
 #Environment="NUT_HOST=localhost"
 #Environment="NUT_PORT=3493"
 #Environment="WEB_HOST=0.0.0.0"
-#Environment="WEB_PORT=3000"
+#Environment="WEB_PORT=8080"
 WorkingDirectory=/opt/peanut
 ExecStart=node /opt/peanut/entrypoint.mjs
 TimeoutStopSec=30

@@ -23,8 +23,8 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="outline" PG_DB_USER="outline" setup_postgresql_db
+
 fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
-import_local_ip
 
 msg_info "Configuring Outline (Patience)"
 SECRET_KEY="$(openssl rand -hex 32)"
@@ -38,6 +38,7 @@ sed -i 's/redis:6379/localhost:6379/g' /opt/outline/.env
 sed -i "5s#URL=#URL=http://${LOCAL_IP}#g" /opt/outline/.env
 sed -i 's/FORCE_HTTPS=true/FORCE_HTTPS=false/g' /opt/outline/.env
 export NODE_OPTIONS="--max-old-space-size=3584"
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 $STD corepack enable
 $STD yarn install --immutable
 export NODE_ENV=production

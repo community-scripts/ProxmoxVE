@@ -128,6 +128,34 @@ icons() {
 }
 
 # ------------------------------------------------------------------------------
+# ensure_profile_loaded()
+#
+# - Sources /etc/profile.d/*.sh scripts if not already loaded
+# - Fixes PATH issues when running via pct enter/exec (non-login shells)
+# - Safe to call multiple times (uses guard variable)
+# - Should be called in update_script() or any script running inside LXC
+# ------------------------------------------------------------------------------
+ensure_profile_loaded() {
+  # Skip if already loaded or running on Proxmox host
+  [[ -n "${_PROFILE_LOADED:-}" ]] && return
+  command -v pveversion &>/dev/null && return
+
+  # Source all profile.d scripts to ensure PATH is complete
+  if [[ -d /etc/profile.d ]]; then
+    for script in /etc/profile.d/*.sh; do
+      [[ -r "$script" ]] && source "$script"
+    done
+  fi
+
+  # Also ensure /usr/local/bin is in PATH (common install location)
+  if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+
+  export _PROFILE_LOADED=1
+}
+
+# ------------------------------------------------------------------------------
 # default_vars()
 #
 # - Sets default retry and wait variables used for system actions
@@ -787,11 +815,9 @@ is_verbose_mode() {
 # ------------------------------------------------------------------------------
 # cleanup_lxc()
 #
-# - Comprehensive cleanup of package managers, caches, and logs
-# - Supports Alpine (apk), Debian/Ubuntu (apt), and language package managers
-# - Cleans: Python (pip/uv), Node.js (npm/yarn/pnpm), Go, Rust, Ruby, PHP
-# - Truncates log files and vacuums systemd journal
-# - Run at end of container creation to minimize disk usage
+# - Cleans package manager and language caches (safe for installs AND updates)
+# - Supports Alpine (apk), Debian/Ubuntu (apt), Python, Node.js, Go, Rust, Ruby, PHP
+# - Uses fallback error handling to prevent cleanup failures from breaking installs
 # ------------------------------------------------------------------------------
 cleanup_lxc() {
   msg_info "Cleaning up"
@@ -800,32 +826,52 @@ cleanup_lxc() {
     $STD apk cache clean || true
     rm -rf /var/cache/apk/*
   else
-    $STD apt -y autoremove || true
-    $STD apt -y autoclean || true
-    $STD apt -y clean || true
+    $STD apt -y autoremove 2>/dev/null || msg_warn "apt autoremove failed (non-critical)"
+    $STD apt -y autoclean 2>/dev/null || msg_warn "apt autoclean failed (non-critical)"
+    $STD apt -y clean 2>/dev/null || msg_warn "apt clean failed (non-critical)"
   fi
 
-  # Clear temp artifacts (keep sockets/FIFOs; ignore errors)
   find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
   find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
 
-  # Node.js npm - directly remove cache directory
-  # npm cache clean/verify can fail with ENOTEMPTY errors, so we skip them
+  # Python
+  if command -v pip &>/dev/null; then
+    rm -rf /root/.cache/pip 2>/dev/null || true
+  fi
+  if command -v uv &>/dev/null; then
+    rm -rf /root/.cache/uv 2>/dev/null || true
+  fi
+
+  # Node.js
   if command -v npm &>/dev/null; then
     rm -rf /root/.npm/_cacache /root/.npm/_logs 2>/dev/null || true
   fi
-  # Node.js yarn
-  if command -v yarn &>/dev/null; then yarn cache clean &>/dev/null || true; fi
-  # Node.js pnpm
-  if command -v pnpm &>/dev/null; then pnpm store prune &>/dev/null || true; fi
-  # Go
-  if command -v go &>/dev/null; then $STD go clean -cache -modcache || true; fi
-  # Rust cargo
-  if command -v cargo &>/dev/null; then $STD cargo clean || true; fi
-  # Ruby gem
-  if command -v gem &>/dev/null; then $STD gem cleanup || true; fi
-  # Composer (PHP)
-  if command -v composer &>/dev/null; then COMPOSER_ALLOW_SUPERUSER=1 $STD composer clear-cache || true; fi
+  if command -v yarn &>/dev/null; then
+    rm -rf /root/.cache/yarn /root/.yarn/cache 2>/dev/null || true
+  fi
+  if command -v pnpm &>/dev/null; then
+    pnpm store prune &>/dev/null || true
+  fi
+
+  # Go (only build cache, not modules)
+  if command -v go &>/dev/null; then
+    $STD go clean -cache 2>/dev/null || true
+  fi
+
+  # Rust (only registry cache, not build artifacts)
+  if command -v cargo &>/dev/null; then
+    rm -rf /root/.cargo/registry/cache /root/.cargo/.package-cache 2>/dev/null || true
+  fi
+
+  # Ruby
+  if command -v gem &>/dev/null; then
+    rm -rf /root/.gem/cache 2>/dev/null || true
+  fi
+
+  # PHP
+  if command -v composer &>/dev/null; then
+    rm -rf /root/.composer/cache 2>/dev/null || true
+  fi
 
   msg_ok "Cleaned"
 }
@@ -876,6 +922,93 @@ check_or_create_swap() {
     msg_error "Failed to create or activate swap"
     return 1
   fi
+}
+
+# ------------------------------------------------------------------------------
+# Loads LOCAL_IP from persistent store or detects if missing.
+#
+# Description:
+#   - Loads from /run/local-ip.env or performs runtime lookup
+# ------------------------------------------------------------------------------
+
+function get_lxc_ip() {
+  local IP_FILE="/run/local-ip.env"
+  if [[ -f "$IP_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$IP_FILE"
+  fi
+
+  if [[ -z "${LOCAL_IP:-}" ]]; then
+    get_current_ip() {
+      local ip
+
+      # Try direct interface lookup for eth0 FIRST (most reliable for LXC) - IPv4
+      ip=$(ip -4 addr show eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # Fallback: Try hostname -I (returns IPv4 first if available)
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+        if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # Try routing table with IPv4 targets
+      local ipv4_targets=("8.8.8.8" "1.1.1.1" "default")
+      for target in "${ipv4_targets[@]}"; do
+        if [[ "$target" == "default" ]]; then
+          ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        else
+          ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        fi
+        if [[ -n "$ip" ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      # IPv6 fallback: Try direct interface lookup for eth0
+      ip=$(ip -6 addr show eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" && "$ip" =~ : ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # IPv6 fallback: Try hostname -I for IPv6
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E ':' | head -n1)
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # IPv6 fallback: Use routing table with IPv6 targets
+      local ipv6_targets=("2001:4860:4860::8888" "2606:4700:4700::1111")
+      for target in "${ipv6_targets[@]}"; do
+        ip=$(ip -6 route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      return 1
+    }
+
+    LOCAL_IP="$(get_current_ip || true)"
+    if [[ -z "$LOCAL_IP" ]]; then
+      msg_error "Could not determine LOCAL_IP"
+      return 1
+    fi
+  fi
+
+  export LOCAL_IP
 }
 
 # ==============================================================================

@@ -28,6 +28,8 @@ function update_script() {
     exit
   fi
 
+  setup_meilisearch
+
   if check_for_gh_release "openarchiver" "LogicLabs-OU/OpenArchiver"; then
     msg_info "Stopping Services"
     systemctl stop openarchiver
@@ -54,6 +56,7 @@ function update_script() {
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
+
   exit
 }
 

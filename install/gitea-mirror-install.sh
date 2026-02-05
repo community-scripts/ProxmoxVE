@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   build-essential \
   openssl \
   sqlite3 \
@@ -39,14 +39,13 @@ msg_ok "Installed gitea-mirror"
 msg_info "Creating Services"
 APP_SECRET=$(openssl rand -base64 32)
 APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
-HOST_IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >/opt/gitea-mirror.env
 # See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
 NODE_ENV=production
 HOST=0.0.0.0
 PORT=4321
 DATABASE_URL=sqlite://data/gitea-mirror.db
-BETTER_AUTH_URL=http://${HOST_IP}:4321
+BETTER_AUTH_URL=http://${LOCAL_IP}:4321
 BETTER_AUTH_SECRET=${APP_SECRET}
 npm_package_version=${APP_VERSION}
 EOF

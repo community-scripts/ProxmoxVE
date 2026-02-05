@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" PHP_FPM="YES" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
 setup_mariadb
 MARIADB_DB_NAME="leantime" MARIADB_DB_USER="leantime" setup_mariadb_db
 fetch_and_deploy_gh_release "leantime" "Leantime/leantime" "prebuild" "latest" "/opt/leantime" Leantime*.tar.gz

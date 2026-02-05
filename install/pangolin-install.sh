@@ -28,8 +28,8 @@ read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " p
 read -rp "${TAB3}Enter your email address: " pango_email
 
 msg_info "Setup Pangolin"
-IP_ADDR=$(hostname -I | awk '{print $1}')
 SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
+BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
 cd /opt/pangolin
 mkdir -p /opt/pangolin/config/{traefik,db,letsencrypt,logs}
 $STD npm ci
@@ -47,6 +47,8 @@ cd /opt/pangolin
 EOF
 chmod +x /usr/local/bin/pangctl ./dist/cli.mjs
 cp server/db/names.json ./dist/names.json
+cp server/db/ios_models.json ./dist/ios_models.json
+cp server/db/mac_models.json ./dist/mac_models.json
 mkdir -p /var/config
 
 cat <<EOF >/opt/pangolin/config/config.yml
@@ -77,7 +79,7 @@ api:
 
 providers:
   http:
-    endpoint: "http://$IP_ADDR:3001/api/v1/traefik-config"
+    endpoint: "http://$LOCAL_IP:3001/api/v1/traefik-config"
     pollInterval: "5s"
   file:
     filename: "/opt/pangolin/config/traefik/dynamic_config.yml"
@@ -86,7 +88,7 @@ experimental:
   plugins:
     badger:
       moduleName: "github.com/fosrl/badger"
-      version: "v1.2.0"
+      version: "$BADGER_VERSION"
 
 log:
   level: "INFO"
@@ -168,12 +170,12 @@ http:
     next-service:
       loadBalancer:
         servers:
-          - url: "http://$IP_ADDR:3002"
+          - url: "http://$LOCAL_IP:3002"
 
     api-service:
       loadBalancer:
         servers:
-          - url: "http://$IP_ADDR:3000"
+          - url: "http://$LOCAL_IP:3000"
 EOF
 $STD npm run db:sqlite:generate
 $STD npm run db:sqlite:push
@@ -218,7 +220,7 @@ Requires=pangolin.service
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/bin/gerbil --reachableAt=http://$IP_ADDR:3004 --generateAndSaveKeyTo=/var/config/key --remoteConfig=http://$IP_ADDR:3001/api/v1/
+ExecStart=/usr/bin/gerbil --reachableAt=http://$LOCAL_IP:3004 --generateAndSaveKeyTo=/var/config/key --remoteConfig=http://$LOCAL_IP:3001/api/v1/
 Restart=always
 RestartSec=10
 

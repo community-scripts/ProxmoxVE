@@ -23,7 +23,7 @@ msg_ok "Installed dependencies"
 setup_mariadb
 MARIADB_DB_NAME="passboltdb" MARIADB_DB_USER="passbolt" setup_mariadb_db
 create_self_signed_cert
-import_local_ip
+
 setup_deb822_repo \
   "passbolt" \
   "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x3D1A0346C8E1802F774AEF21DE8B853FC155581D" \

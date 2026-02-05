@@ -13,15 +13,13 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="common,snmp,imap,mysql" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_APACHE="YES" PHP_MODULE="snmp,imap" setup_php
 setup_mariadb
 MARIADB_DB_NAME="wordpress_db" MARIADB_DB_USER="wordpress" setup_mariadb_db
+fetch_and_deploy_from_url "https://wordpress.org/latest.zip" /var/www/html/wordpress
 
 msg_info "Installing Wordpress (Patience)"
-cd /var/www/html
-curl -fsSL "https://wordpress.org/latest.zip" -o "latest.zip"
-$STD unzip latest.zip
-chown -R www-data:www-data wordpress/
+chown -R www-data:www-data /var/www/html/wordpress
 cd /var/www/html/wordpress
 find . -type d -exec chmod 755 {} \;
 find . -type f -exec chmod 644 {} \;
@@ -30,7 +28,6 @@ sed -i -e "s|^define( 'DB_NAME', '.*' );|define( 'DB_NAME', '$MARIADB_DB_NAME' )
   -e "s|^define( 'DB_USER', '.*' );|define( 'DB_USER', '$MARIADB_DB_USER' );|" \
   -e "s|^define( 'DB_PASSWORD', '.*' );|define( 'DB_PASSWORD', '$MARIADB_DB_PASS' );|" \
   /var/www/html/wordpress/wp-config.php
-rm -rf /var/www/html/latest.zip
 msg_ok "Installed Wordpress"
 
 msg_info "Setup Services"

@@ -24,7 +24,7 @@ Complete alphabetical reference of all functions in tools.func with parameters, 
 - `setup_golang(VERSION)` - Install Go programming language
 
 **Databases**:
-- `setup_mariadb(VERSION)` - Install MariaDB server
+- `setup_mariadb()` - Install MariaDB server (distro packages by default)
 - `setup_postgresql(VERSION)` - Install PostgreSQL
 - `setup_mongodb(VERSION)` - Install MongoDB
 - `setup_redis(VERSION)` - Install Redis cache
@@ -179,6 +179,62 @@ verify_tool_version "nodejs" "22" "$(node -v | grep -oP '^v\K[0-9]+')"
 
 ---
 
+### setup_deb822_repo()
+
+Add repository in modern deb822 format.
+
+**Signature**:
+```bash
+setup_deb822_repo NAME GPG_URL REPO_URL SUITE COMPONENT [ARCHITECTURES] [ENABLED]
+```
+
+**Parameters**:
+- `NAME` - Repository name (e.g., "nodejs")
+- `GPG_URL` - URL to GPG key (e.g., https://example.com/key.gpg)
+- `REPO_URL` - Main repository URL (e.g., https://example.com/repo)
+- `SUITE` - Repository suite (e.g., "jammy", "bookworm")
+- `COMPONENT` - Repository component (e.g., "main", "testing")
+- `ARCHITECTURES` - Optional Comma-separated list of architectures (e.g., "amd64,arm64")
+- `ENABLED` - Optional "true" or "false" (default: "true")
+
+**Returns**:
+- `0` - Repository added successfully
+- `1` - Repository setup failed
+
+**Example**:
+```bash
+setup_deb822_repo \
+  "nodejs" \
+  "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" \
+  "https://deb.nodesource.com/node_20.x" \  
+  "jammy" \
+  "main"
+```
+
+---
+
+### cleanup_repo_metadata()
+
+Clean up GPG keys and old repository configurations.
+
+**Signature**:
+```bash
+cleanup_repo_metadata
+```
+
+**Parameters**: None
+
+**Returns**:
+- `0` - Cleanup complete
+
+**Example**:
+```bash
+cleanup_repo_metadata
+>>>>>>> origin/main
+```
+
+---
+
 ## Tool Installation Functions
 
 ### setup_nodejs(VERSION)
@@ -233,17 +289,20 @@ setup_php "8.3"
 
 ---
 
-### setup_mariadb(VERSION)
+### setup_mariadb()
 
 Install MariaDB server and client utilities.
 
 **Signature**:
 ```bash
-setup_mariadb VERSION
+setup_mariadb                         # Uses distribution packages (recommended)
+MARIADB_VERSION="11.4" setup_mariadb  # Uses official MariaDB repository
 ```
 
-**Parameters**:
-- `VERSION` - MariaDB version (e.g., "10.6", "11.0")
+**Variables**:
+- `MARIADB_VERSION` - (optional) Specific MariaDB version
+  - Not set or `"latest"`: Uses distribution packages (most reliable, avoids mirror issues)
+  - Specific version (e.g., `"11.4"`, `"12.2"`): Uses official MariaDB repository
 
 **Returns**:
 - `0` - Installation successful
@@ -254,7 +313,11 @@ setup_mariadb VERSION
 
 **Example**:
 ```bash
-setup_mariadb "11.0"
+# Recommended: Use distribution packages (stable, no mirror issues)
+setup_mariadb
+
+# Specific version from official repository
+MARIADB_VERSION="11.4" setup_mariadb
 ```
 
 ---
@@ -436,7 +499,7 @@ source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 
 pkg_update                    # Update package lists
 setup_nodejs "20"             # Install Node.js
-setup_mariadb "11"            # Install MariaDB
+setup_mariadb                 # Install MariaDB (distribution packages)
 
 # ... application installation ...
 
@@ -455,7 +518,7 @@ source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 pkg_update
 setup_nginx
 setup_php "8.3"
-setup_mariadb "11"
+setup_mariadb  # Uses distribution packages
 setup_composer
 ```
 

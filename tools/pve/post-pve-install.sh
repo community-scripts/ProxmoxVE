@@ -595,7 +595,7 @@ EOF
   no)
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
     msg_error "Selected no to Disabling subscription nag"
-    rm /etc/apt/apt.conf.d/no-nag-script 2>/dev/null
+    [[ -f /etc/apt/apt.conf.d/no-nag-script ]] && rm /etc/apt/apt.conf.d/no-nag-script
     ;;
   esac
   apt --reinstall install proxmox-widget-toolkit &>/dev/null || msg_error "Widget toolkit reinstall failed"

@@ -30,8 +30,7 @@ function update_script() {
   fi
 
   msg_info "Updating ${APP}"
-  $STD apt update
-  $STD apt install -yq twingate-connector
+  ensure_dependencies twingate-connector
   $STD systemctl restart twingate-connector
   msg_ok "Updated successfully!"
   exit

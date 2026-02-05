@@ -1,0 +1,40 @@
+{
+  "name": "Dawarich",
+  "slug": "dawarich",
+  "categories": [
+    9
+  ],
+  "date_created": "2026-01-23",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://dawarich.app/docs",
+  "website": "https://dawarich.app/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/dawarich.webp",
+  "config_path": "/opt/dawarich/.env",
+  "description": "Dawarich is a self-hosted alternative to Google Timeline (Google Maps Location History). It allows you to import your location history from Google Maps Timeline and Owntracks, view it on a map, and analyze your location data with statistics and visualizations.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/dawarich.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 15,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "demo@dawarich.app",
+    "password": "password"
+  },
+  "notes": [
+    {
+      "text": "Default credentials: demo@dawarich.app / password - Change after first login!",
+      "type": "warning"
+    }
+  ]
+}

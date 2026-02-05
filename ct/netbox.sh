@@ -28,46 +28,30 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/netbox-community/netbox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-
-    msg_info "Stopping Service"
+  if check_for_gh_release "netbox" "netbox-community/netbox"; then
+    msg_info "Stopping Services"
     systemctl stop netbox netbox-rq
-    msg_ok "Stopped Service"
+    msg_ok "Stopped Services"
 
-    msg_info "Updating $APP to v${RELEASE}"
+    msg_info "Backing up NetBox configurations"
     mv /opt/netbox/ /opt/netbox-backup
-    cd /opt
-    curl -fsSL "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip")
-    $STD unzip "v${RELEASE}.zip"
-    mv /opt/netbox-${RELEASE}/ /opt/netbox/
+    msg_ok "Backed up NetBox configurations"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netbox" "netbox-community/netbox" "tarball"
 
     cp -r /opt/netbox-backup/netbox/netbox/configuration.py /opt/netbox/netbox/netbox/
-    cp -r /opt/netbox-backup/netbox/media/ /opt/netbox/netbox/
-    cp -r /opt/netbox-backup/netbox/scripts /opt/netbox/netbox/
-    cp -r /opt/netbox-backup/netbox/reports /opt/netbox/netbox/
+    cp -r /opt/netbox-backup/netbox/{media,scripts,reports}/ /opt/netbox/netbox/
     cp -r /opt/netbox-backup/gunicorn.py /opt/netbox/
-
-    if [ -f /opt/netbox-backup/local_requirements.txt ]; then
-      cp -r /opt/netbox-backup/local_requirements.txt /opt/netbox/
-    fi
-
-    if [ -f /opt/netbox-backup/netbox/netbox/ldap_config.py ]; then
-      cp -r /opt/netbox-backup/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
-    fi
+    [[ -f /opt/netbox-backup/local_requirements.txt ]] && cp -r /opt/netbox-backup/local_requirements.txt /opt/netbox/
+    [[ -f /opt/netbox-backup/netbox/netbox/ldap_config.py ]] && cp -r /opt/netbox-backup/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
 
     $STD /opt/netbox/upgrade.sh
-    rm -r "/opt/v${RELEASE}.zip"
     rm -r /opt/netbox-backup
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
 
-    msg_info "Starting Service"
+    msg_info "Starting Services"
     systemctl start netbox netbox-rq
-    msg_ok "Started Service"
+    msg_ok "Started Services"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

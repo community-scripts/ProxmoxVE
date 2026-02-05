@@ -92,11 +92,7 @@ EOF
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
-      if ! command -v zstd &>/dev/null; then
-        msg_info "Installing zstd"
-        $STD apt install -y zstd
-        msg_ok "Installed zstd"
-      fi
+      ensure_dependencies zstd
       msg_info "Ollama update available: v$OLLAMA_VERSION -> v$RELEASE"
       msg_info "Downloading Ollama v$RELEASE \n"
       curl -fS#LO https://github.com/ollama/ollama/releases/download/v${RELEASE}/ollama-linux-amd64.tar.zst

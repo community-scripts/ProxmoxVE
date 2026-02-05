@@ -40,18 +40,15 @@ function update_script() {
 
     fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes"
 
-    msg_info "Updating Frontend"
+    msg_info "Updating Flatnotes"
     cd /opt/flatnotes/client
     $STD npm install
     $STD npm run build
-    msg_ok "Updated Frontend"
-
-    msg_info "Updating Backend"
     cd /opt/flatnotes
     rm -f uv.lock
     $STD /usr/local/bin/uvx migrate-to-uv
     $STD /usr/local/bin/uv sync
-    msg_ok "Updated Backend"
+    msg_ok "Updated Flatnotes"
 
     msg_info "Restoring Configuration and Data"
     cp /opt/flatnotes.env /opt/flatnotes/.env

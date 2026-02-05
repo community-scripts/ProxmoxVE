@@ -32,6 +32,7 @@ function update_script() {
   if check_for_gh_release "firefly" "firefly-iii/firefly-iii"; then
     systemctl stop apache2
     cp /opt/firefly/.env /opt/.env
+    rm -rf /opt/storage
     cp -r /opt/firefly/storage /opt/storage
 
     if [[ -d /opt/firefly/dataimporter ]]; then
@@ -82,6 +83,7 @@ function update_script() {
       chown -R www-data:www-data /opt/firefly/dataimporter
       msg_ok "Updated Firefly Importer"
     fi
+    rm -rf /opt/storage /opt/.env /opt/dataimporter.env
     systemctl start apache2
     msg_ok "Updated successfully!"
   fi

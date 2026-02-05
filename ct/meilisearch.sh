@@ -30,18 +30,7 @@ function update_script() {
     3>&1 1>&2 2>&3)
 
   if [ "$UPD" == "1" ]; then
-    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-      msg_info "Stopping Meilisearch"
-      systemctl stop meilisearch
-      msg_ok "Stopped Meilisearch"
-
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
-
-      msg_info "Starting Meilisearch"
-      systemctl start meilisearch
-      msg_ok "Started Meilisearch"
-      msg_ok "Updated successfully!"
-    fi
+    setup_meilisearch
     exit
   fi
 

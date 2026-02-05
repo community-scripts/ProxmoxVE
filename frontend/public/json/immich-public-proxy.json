@@ -1,0 +1,44 @@
+{
+  "name": "Immich Public Proxy",
+  "slug": "immich-public-proxy",
+  "categories": [
+    21
+  ],
+  "date_created": "2026-02-04",
+  "type": "addon",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/alangrainger/immich-public-proxy/tree/main/docs",
+  "website": "https://github.com/alangrainger/immich-public-proxy",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/immich-public-proxy.webp",
+  "config_path": "/opt/immich-proxy/app/.env",
+  "description": "Share your Immich photos and albums in a safe way without exposing your Immich instance to the public.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/addon/immich-public-proxy.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Requires Node.js 24+",
+      "type": "info"
+    },
+    {
+      "text": "Update with: update_immich-public-proxy",
+      "type": "info"
+    }
+  ]
+}

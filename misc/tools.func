@@ -574,7 +574,8 @@ EOF
       msg_error "Failed to download PHP keyring"
       return 1
     }
-    dpkg -i /tmp/debsuryorg-archive-keyring.deb >/dev/null 2>&1 || {
+    # Don't use /dev/null redirection for dpkg as it may use background processes
+    dpkg -i /tmp/debsuryorg-archive-keyring.deb >>"$(get_active_logfile)" 2>&1 || {
       msg_error "Failed to install PHP keyring"
       rm -f /tmp/debsuryorg-archive-keyring.deb
       return 1
@@ -812,6 +813,54 @@ github_api_call() {
         continue
       fi
       msg_error "GitHub API call failed with HTTP $http_code"
+      return 1
+      ;;
+    esac
+  done
+
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# Codeberg API call with retry logic
+# ------------------------------------------------------------------------------
+codeberg_api_call() {
+  local url="$1"
+  local output_file="${2:-/dev/stdout}"
+  local max_retries=3
+  local retry_delay=2
+
+  for attempt in $(seq 1 $max_retries); do
+    local http_code
+    http_code=$(curl -fsSL -w "%{http_code}" -o "$output_file" \
+      -H "Accept: application/json" \
+      "$url" 2>/dev/null || echo "000")
+
+    case "$http_code" in
+    200)
+      return 0
+      ;;
+    403)
+      # Rate limit - retry
+      if [[ $attempt -lt $max_retries ]]; then
+        msg_warn "Codeberg API rate limit, waiting ${retry_delay}s... (attempt $attempt/$max_retries)"
+        sleep "$retry_delay"
+        retry_delay=$((retry_delay * 2))
+        continue
+      fi
+      msg_error "Codeberg API rate limit exceeded."
+      return 1
+      ;;
+    404)
+      msg_error "Codeberg API endpoint not found: $url"
+      return 1
+      ;;
+    *)
+      if [[ $attempt -lt $max_retries ]]; then
+        sleep "$retry_delay"
+        continue
+      fi
+      msg_error "Codeberg API call failed with HTTP $http_code"
       return 1
       ;;
     esac
@@ -1385,6 +1434,37 @@ get_latest_github_release() {
 }
 
 # ------------------------------------------------------------------------------
+# Get latest Codeberg release version
+# ------------------------------------------------------------------------------
+get_latest_codeberg_release() {
+  local repo="$1"
+  local strip_v="${2:-true}"
+  local temp_file=$(mktemp)
+
+  # Codeberg API: get all releases and pick the first non-draft/non-prerelease
+  if ! codeberg_api_call "https://codeberg.org/api/v1/repos/${repo}/releases" "$temp_file"; then
+    rm -f "$temp_file"
+    return 1
+  fi
+
+  local version
+  # Codeberg uses same JSON structure but releases endpoint returns array
+  version=$(jq -r '[.[] | select(.draft==false and .prerelease==false)][0].tag_name // empty' "$temp_file")
+
+  if [[ "$strip_v" == "true" ]]; then
+    version="${version#v}"
+  fi
+
+  rm -f "$temp_file"
+
+  if [[ -z "$version" ]]; then
+    return 1
+  fi
+
+  echo "$version"
+}
+
+# ------------------------------------------------------------------------------
 # Debug logging (only if DEBUG=1)
 # ------------------------------------------------------------------------------
 debug_log() {
@@ -1451,7 +1531,8 @@ check_for_gh_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
-  local app_lc="${app,,}"
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
   local current_file="$HOME/.${app_lc}"
 
   msg_info "Checking for update: ${app}"
@@ -1490,6 +1571,119 @@ check_for_gh_release() {
       return 1
     }
   fi
+
+  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  if ((${#raw_tags[@]} == 0)); then
+    msg_error "No stable releases found for ${app}"
+    return 1
+  fi
+
+  local clean_tags=()
+  for t in "${raw_tags[@]}"; do
+    clean_tags+=("${t#v}")
+  done
+
+  local latest_raw="${raw_tags[0]}"
+  local latest_clean="${clean_tags[0]}"
+
+  # current installed (stored without v)
+  local current=""
+  if [[ -f "$current_file" ]]; then
+    current="$(<"$current_file")"
+  else
+    # Migration: search for any /opt/*_version.txt
+    local legacy_files
+    mapfile -t legacy_files < <(find /opt -maxdepth 1 -type f -name "*_version.txt" 2>/dev/null)
+    if ((${#legacy_files[@]} == 1)); then
+      current="$(<"${legacy_files[0]}")"
+      echo "${current#v}" >"$current_file"
+      rm -f "${legacy_files[0]}"
+    fi
+  fi
+  current="${current#v}"
+
+  # Pinned version handling
+  if [[ -n "$pinned_version_in" ]]; then
+    local pin_clean="${pinned_version_in#v}"
+    local match_raw=""
+    for i in "${!clean_tags[@]}"; do
+      if [[ "${clean_tags[$i]}" == "$pin_clean" ]]; then
+        match_raw="${raw_tags[$i]}"
+        break
+      fi
+    done
+
+    if [[ -z "$match_raw" ]]; then
+      msg_error "Pinned version ${pinned_version_in} not found upstream"
+      return 1
+    fi
+
+    if [[ "$current" != "$pin_clean" ]]; then
+      CHECK_UPDATE_RELEASE="$match_raw"
+      msg_ok "Update available: ${app} ${current:-not installed} → ${pin_clean}"
+      return 0
+    fi
+
+    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    return 1
+  fi
+
+  # No pinning → use latest
+  if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
+    CHECK_UPDATE_RELEASE="$latest_raw"
+    msg_ok "Update available: ${app} ${current:-not installed} → ${latest_clean}"
+    return 0
+  fi
+
+  msg_ok "No update available: ${app} (${latest_clean})"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# Checks for new Codeberg release (latest tag).
+#
+# Description:
+#   - Queries the Codeberg API for the latest release tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#
+# Usage:
+#     if check_for_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" [optional] "v0.11.3"; then
+#       # trigger update...
+#     fi
+#     exit 0
+#     } (end of update_script not from the function)
+#
+# Notes:
+#   - Requires `jq` (auto-installed if missing)
+#   - Does not modify anything, only checks version state
+#   - Does not support pre-releases
+# ------------------------------------------------------------------------------
+check_for_codeberg_release() {
+  local app="$1"
+  local source="$2"
+  local pinned_version_in="${3:-}" # optional
+  local app_lc="${app,,}"
+  local current_file="$HOME/.${app_lc}"
+
+  msg_info "Checking for update: ${app}"
+
+  # DNS check
+  if ! getent hosts codeberg.org >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve codeberg.org"
+    return 1
+  fi
+
+  ensure_dependencies jq
+
+  # Fetch releases from Codeberg API
+  local releases_json=""
+  releases_json=$(curl -fsSL --max-time 20 \
+    -H 'Accept: application/json' \
+    "https://codeberg.org/api/v1/repos/${source}/releases" 2>/dev/null) || {
+    msg_error "Unable to fetch releases for ${app}"
+    return 1
+  }
 
   mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
   if ((${#raw_tags[@]} == 0)); then
@@ -1645,6 +1839,440 @@ function ensure_usr_local_bin_persist() {
     echo 'export PATH="/usr/local/bin:$PATH"' >"$PROFILE_FILE"
     chmod +x "$PROFILE_FILE"
   fi
+}
+
+# ------------------------------------------------------------------------------
+# Downloads and deploys latest Codeberg release (source, binary, tarball, asset).
+#
+# Description:
+#   - Fetches latest release metadata from Codeberg API
+#   - Supports the following modes:
+#       - tarball: Source code tarball (default if omitted)
+#       - source: Alias for tarball (same behavior)
+#       - binary: .deb package install (arch-dependent)
+#       - prebuild: Prebuilt .tar.gz archive (e.g. Go binaries)
+#       - singlefile: Standalone binary (no archive, direct chmod +x install)
+#       - tag: Direct tag download (bypasses Release API)
+#   - Handles download, extraction/installation and version tracking in ~/.<app>
+#
+# Parameters:
+#   $1   APP               - Application name (used for install path and version file)
+#   $2   REPO              - Codeberg repository in form user/repo
+#   $3   MODE              - Release type:
+#                              tarball   → source tarball (.tar.gz)
+#                              binary    → .deb file (auto-arch matched)
+#                              prebuild  → prebuilt archive (e.g. tar.gz)
+#                              singlefile→ standalone binary (chmod +x)
+#                              tag       → direct tag (bypasses Release API)
+#   $4   VERSION           - Optional release tag (default: latest)
+#   $5   TARGET_DIR        - Optional install path (default: /opt/<app>)
+#   $6   ASSET_FILENAME    - Required for:
+#                              - prebuild  → archive filename or pattern
+#                              - singlefile→ binary filename or pattern
+#
+# Examples:
+#   # 1. Minimal: Fetch and deploy source tarball
+#   fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb"
+#
+#   # 2. Binary install via .deb asset (architecture auto-detected)
+#   fetch_and_deploy_codeberg_release "myapp" "myuser/myapp" "binary"
+#
+#   # 3. Prebuilt archive (.tar.gz) with asset filename match
+#   fetch_and_deploy_codeberg_release "myapp" "myuser/myapp" "prebuild" "latest" "/opt/myapp" "myapp_Linux_x86_64.tar.gz"
+#
+#   # 4. Single binary (chmod +x)
+#   fetch_and_deploy_codeberg_release "myapp" "myuser/myapp" "singlefile" "v1.0.0" "/opt/myapp" "myapp-linux-amd64"
+#
+#   # 5. Explicit tag version
+#   fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tag" "v0.11.3" "/opt/autocaliweb"
+# ------------------------------------------------------------------------------
+
+function fetch_and_deploy_codeberg_release() {
+  local app="$1"
+  local repo="$2"
+  local mode="${3:-tarball}" # tarball | binary | prebuild | singlefile | tag
+  local version="${4:-latest}"
+  local target="${5:-/opt/$app}"
+  local asset_pattern="${6:-}"
+
+  local app_lc=$(echo "${app,,}" | tr -d ' ')
+  local version_file="$HOME/.${app_lc}"
+
+  local api_timeout="--connect-timeout 10 --max-time 60"
+  local download_timeout="--connect-timeout 15 --max-time 900"
+
+  local current_version=""
+  [[ -f "$version_file" ]] && current_version=$(<"$version_file")
+
+  ensure_dependencies jq
+
+  ### Tag Mode (bypass Release API) ###
+  if [[ "$mode" == "tag" ]]; then
+    if [[ "$version" == "latest" ]]; then
+      msg_error "Mode 'tag' requires explicit version (not 'latest')"
+      return 1
+    fi
+
+    local tag_name="$version"
+    [[ "$tag_name" =~ ^v ]] && version="${tag_name:1}" || version="$tag_name"
+
+    if [[ "$current_version" == "$version" ]]; then
+      $STD msg_ok "$app is already up-to-date (v$version)"
+      return 0
+    fi
+
+    # DNS check
+    if ! getent hosts "codeberg.org" &>/dev/null; then
+      msg_error "DNS resolution failed for codeberg.org – check /etc/resolv.conf or networking"
+      return 1
+    fi
+
+    local tmpdir
+    tmpdir=$(mktemp -d) || return 1
+
+    msg_info "Fetching Codeberg tag: $app ($tag_name)"
+
+    local safe_version="${version//@/_}"
+    safe_version="${safe_version//\//_}"
+    local filename="${app_lc}-${safe_version}.tar.gz"
+    local download_success=false
+
+    # Codeberg archive URL format: https://codeberg.org/{owner}/{repo}/archive/{tag}.tar.gz
+    local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
+    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+      download_success=true
+    fi
+
+    if [[ "$download_success" != "true" ]]; then
+      msg_error "Download failed for $app ($tag_name)"
+      rm -rf "$tmpdir"
+      return 1
+    fi
+
+    mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
+
+    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+      msg_error "Failed to extract tarball"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local unpack_dir
+    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+    shopt -s dotglob nullglob
+    cp -r "$unpack_dir"/* "$target/"
+    shopt -u dotglob nullglob
+
+    echo "$version" >"$version_file"
+    msg_ok "Deployed: $app ($version)"
+    rm -rf "$tmpdir"
+    return 0
+  fi
+
+  # Codeberg API: https://codeberg.org/api/v1/repos/{owner}/{repo}/releases
+  local api_url="https://codeberg.org/api/v1/repos/$repo/releases"
+  if [[ "$version" != "latest" ]]; then
+    # Get release by tag: /repos/{owner}/{repo}/releases/tags/{tag}
+    api_url="https://codeberg.org/api/v1/repos/$repo/releases/tags/$version"
+  fi
+
+  # dns pre check
+  if ! getent hosts "codeberg.org" &>/dev/null; then
+    msg_error "DNS resolution failed for codeberg.org – check /etc/resolv.conf or networking"
+    return 1
+  fi
+
+  local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
+
+  while ((attempt <= max_retries)); do
+    resp=$(curl $api_timeout -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
+    sleep "$retry_delay"
+    ((attempt++))
+  done
+
+  if ! $success; then
+    msg_error "Failed to fetch release metadata from $api_url after $max_retries attempts"
+    return 1
+  fi
+
+  http_code="${resp:(-3)}"
+  [[ "$http_code" != "200" ]] && {
+    msg_error "Codeberg API returned HTTP $http_code"
+    return 1
+  }
+
+  local json tag_name
+  json=$(</tmp/codeberg_rel.json)
+
+  # For "latest", the API returns an array - take the first (most recent) release
+  if [[ "$version" == "latest" ]]; then
+    json=$(echo "$json" | jq '.[0]')
+  fi
+
+  tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
+  [[ "$tag_name" =~ ^v ]] && version="${tag_name:1}" || version="$tag_name"
+
+  if [[ "$current_version" == "$version" ]]; then
+    $STD msg_ok "$app is already up-to-date (v$version)"
+    return 0
+  fi
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || return 1
+  local filename="" url=""
+
+  msg_info "Fetching Codeberg release: $app ($version)"
+
+  ### Tarball Mode ###
+  if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
+    local safe_version="${version//@/_}"
+    safe_version="${safe_version//\//_}"
+    filename="${app_lc}-${safe_version}.tar.gz"
+    local download_success=false
+
+    # Codeberg archive URL format
+    local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
+    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+      download_success=true
+    fi
+
+    if [[ "$download_success" != "true" ]]; then
+      msg_error "Download failed for $app ($tag_name)"
+      rm -rf "$tmpdir"
+      return 1
+    fi
+
+    mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
+
+    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+      msg_error "Failed to extract tarball"
+      rm -rf "$tmpdir"
+      return 1
+    }
+    local unpack_dir
+    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+    shopt -s dotglob nullglob
+    cp -r "$unpack_dir"/* "$target/"
+    shopt -u dotglob nullglob
+
+  ### Binary Mode ###
+  elif [[ "$mode" == "binary" ]]; then
+    local arch
+    arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
+    [[ "$arch" == "x86_64" ]] && arch="amd64"
+    [[ "$arch" == "aarch64" ]] && arch="arm64"
+
+    local assets url_match=""
+    # Codeberg assets are in .assets[].browser_download_url
+    assets=$(echo "$json" | jq -r '.assets[].browser_download_url')
+
+    # If explicit filename pattern is provided, match that first
+    if [[ -n "$asset_pattern" ]]; then
+      for u in $assets; do
+        case "${u##*/}" in
+        $asset_pattern)
+          url_match="$u"
+          break
+          ;;
+        esac
+      done
+    fi
+
+    # Fall back to architecture heuristic
+    if [[ -z "$url_match" ]]; then
+      for u in $assets; do
+        if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
+          url_match="$u"
+          break
+        fi
+      done
+    fi
+
+    # Fallback: any .deb file
+    if [[ -z "$url_match" ]]; then
+      for u in $assets; do
+        [[ "$u" =~ \.deb$ ]] && url_match="$u" && break
+      done
+    fi
+
+    if [[ -z "$url_match" ]]; then
+      msg_error "No suitable .deb asset found for $app"
+      rm -rf "$tmpdir"
+      return 1
+    fi
+
+    filename="${url_match##*/}"
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+      msg_error "Download failed: $url_match"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    chmod 644 "$tmpdir/$filename"
+    $STD apt install -y "$tmpdir/$filename" || {
+      $STD dpkg -i "$tmpdir/$filename" || {
+        msg_error "Both apt and dpkg installation failed"
+        rm -rf "$tmpdir"
+        return 1
+      }
+    }
+
+  ### Prebuild Mode ###
+  elif [[ "$mode" == "prebuild" ]]; then
+    local pattern="${6%\"}"
+    pattern="${pattern#\"}"
+    [[ -z "$pattern" ]] && {
+      msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local asset_url=""
+    for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
+      filename_candidate="${u##*/}"
+      case "$filename_candidate" in
+      $pattern)
+        asset_url="$u"
+        break
+        ;;
+      esac
+    done
+
+    [[ -z "$asset_url" ]] && {
+      msg_error "No asset matching '$pattern' found"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    filename="${asset_url##*/}"
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+      msg_error "Download failed: $asset_url"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local unpack_tmp
+    unpack_tmp=$(mktemp -d)
+    mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
+
+    if [[ "$filename" == *.zip ]]; then
+      ensure_dependencies unzip
+      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
+        msg_error "Failed to extract ZIP archive"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
+    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz ]]; then
+      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
+        msg_error "Failed to extract TAR archive"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
+    else
+      msg_error "Unsupported archive format: $filename"
+      rm -rf "$tmpdir" "$unpack_tmp"
+      return 1
+    fi
+
+    local top_dirs
+    top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
+    local top_entries inner_dir
+    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
+    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
+      inner_dir="$top_entries"
+      shopt -s dotglob nullglob
+      if compgen -G "$inner_dir/*" >/dev/null; then
+        cp -r "$inner_dir"/* "$target/" || {
+          msg_error "Failed to copy contents from $inner_dir to $target"
+          rm -rf "$tmpdir" "$unpack_tmp"
+          return 1
+        }
+      else
+        msg_error "Inner directory is empty: $inner_dir"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      fi
+      shopt -u dotglob nullglob
+    else
+      shopt -s dotglob nullglob
+      if compgen -G "$unpack_tmp/*" >/dev/null; then
+        cp -r "$unpack_tmp"/* "$target/" || {
+          msg_error "Failed to copy contents to $target"
+          rm -rf "$tmpdir" "$unpack_tmp"
+          return 1
+        }
+      else
+        msg_error "Unpacked archive is empty"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      fi
+      shopt -u dotglob nullglob
+    fi
+
+  ### Singlefile Mode ###
+  elif [[ "$mode" == "singlefile" ]]; then
+    local pattern="${6%\"}"
+    pattern="${pattern#\"}"
+    [[ -z "$pattern" ]] && {
+      msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    local asset_url=""
+    for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
+      filename_candidate="${u##*/}"
+      case "$filename_candidate" in
+      $pattern)
+        asset_url="$u"
+        break
+        ;;
+      esac
+    done
+
+    [[ -z "$asset_url" ]] && {
+      msg_error "No asset matching '$pattern' found"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    filename="${asset_url##*/}"
+    mkdir -p "$target"
+
+    local use_filename="${USE_ORIGINAL_FILENAME:-false}"
+    local target_file="$app"
+    [[ "$use_filename" == "true" ]] && target_file="$filename"
+
+    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+      msg_error "Download failed: $asset_url"
+      rm -rf "$tmpdir"
+      return 1
+    }
+
+    if [[ "$target_file" != *.jar && -f "$target/$target_file" ]]; then
+      chmod +x "$target/$target_file"
+    fi
+
+  else
+    msg_error "Unknown mode: $mode"
+    rm -rf "$tmpdir"
+    return 1
+  fi
+
+  echo "$version" >"$version_file"
+  msg_ok "Deployed: $app ($version)"
+  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------
@@ -1844,8 +2472,13 @@ function fetch_and_deploy_gh_release() {
     }
 
     chmod 644 "$tmpdir/$filename"
-    $STD apt install -y "$tmpdir/$filename" || {
-      $STD dpkg -i "$tmpdir/$filename" || {
+    # SYSTEMD_OFFLINE=1 prevents systemd-tmpfiles failures in unprivileged LXC (Debian 13+/systemd 257+)
+    # Support DPKG_CONFOLD/DPKG_CONFNEW env vars for config file handling during .deb upgrades
+    local dpkg_opts=""
+    [[ "${DPKG_FORCE_CONFOLD:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confold"
+    [[ "${DPKG_FORCE_CONFNEW:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confnew"
+    DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
+      SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         msg_error "Both apt and dpkg installation failed"
         rm -rf "$tmpdir"
         return 1
@@ -1900,7 +2533,7 @@ function fetch_and_deploy_gh_release() {
         rm -rf "$tmpdir" "$unpack_tmp"
         return 1
       }
-    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz ]]; then
+    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
       tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
         msg_error "Failed to extract TAR archive"
         rm -rf "$tmpdir" "$unpack_tmp"
@@ -2002,50 +2635,6 @@ function fetch_and_deploy_gh_release() {
   echo "$version" >"$version_file"
   msg_ok "Deployed: $app ($version)"
   rm -rf "$tmpdir"
-}
-
-# ------------------------------------------------------------------------------
-# Loads LOCAL_IP from persistent store or detects if missing.
-#
-# Description:
-#   - Loads from /run/local-ip.env or performs runtime lookup
-# ------------------------------------------------------------------------------
-
-function import_local_ip() {
-  local IP_FILE="/run/local-ip.env"
-  if [[ -f "$IP_FILE" ]]; then
-    # shellcheck disable=SC1090
-    source "$IP_FILE"
-  fi
-
-  if [[ -z "${LOCAL_IP:-}" ]]; then
-    get_current_ip() {
-      local targets=("8.8.8.8" "1.1.1.1" "192.168.1.1" "10.0.0.1" "172.16.0.1" "default")
-      local ip
-
-      for target in "${targets[@]}"; do
-        if [[ "$target" == "default" ]]; then
-          ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
-        else
-          ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
-        fi
-        if [[ -n "$ip" ]]; then
-          echo "$ip"
-          return 0
-        fi
-      done
-
-      return 1
-    }
-
-    LOCAL_IP="$(get_current_ip || true)"
-    if [[ -z "$LOCAL_IP" ]]; then
-      msg_error "Could not determine LOCAL_IP"
-      return 1
-    fi
-  fi
-
-  export LOCAL_IP
 }
 
 # ------------------------------------------------------------------------------
@@ -2675,6 +3264,7 @@ function setup_hwaccel() {
   # GPU Selection - Let user choose which GPU(s) to configure
   # ═══════════════════════════════════════════════════════════════════════════
   local -a SELECTED_INDICES=()
+  local install_nvidia_drivers="yes"
 
   if [[ $gpu_count -eq 1 ]]; then
     # Single GPU - auto-select
@@ -2733,6 +3323,30 @@ function setup_hwaccel() {
       for i in "${!GPU_LIST[@]}"; do
         SELECTED_INDICES+=("$i")
       done
+    fi
+  fi
+
+  # Ask whether to install NVIDIA drivers in the container
+  local nvidia_selected="no"
+  for idx in "${SELECTED_INDICES[@]}"; do
+    if [[ "${GPU_TYPES[$idx]}" == "NVIDIA" ]]; then
+      nvidia_selected="yes"
+      break
+    fi
+  done
+
+  if [[ "$nvidia_selected" == "yes" ]]; then
+    if [[ -n "${INSTALL_NVIDIA_DRIVERS:-}" ]]; then
+      install_nvidia_drivers="${INSTALL_NVIDIA_DRIVERS}"
+    else
+      echo ""
+      msg_custom "🎮" "${GN}" "NVIDIA GPU passthrough detected"
+      local nvidia_reply=""
+      read -r -t 60 -p "${TAB3}⚙️ Install NVIDIA driver libraries in the container? [Y/n] (auto-yes in 60s): " nvidia_reply || nvidia_reply=""
+      case "${nvidia_reply,,}" in
+      n | no) install_nvidia_drivers="no" ;;
+      *) install_nvidia_drivers="yes" ;;
+      esac
     fi
   fi
 
@@ -2796,7 +3410,11 @@ function setup_hwaccel() {
     # NVIDIA GPUs
     # ─────────────────────────────────────────────────────────────────────────
     NVIDIA)
-      _setup_nvidia_gpu "$os_id" "$os_codename" "$os_version"
+      if [[ "$install_nvidia_drivers" == "yes" ]]; then
+        _setup_nvidia_gpu "$os_id" "$os_codename" "$os_version"
+      else
+        msg_warn "Skipping NVIDIA driver installation (user opted to install manually)"
+      fi
       ;;
     esac
   done
@@ -3179,13 +3797,25 @@ NVIDIA_PIN
       if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
         msg_ok "Installed version-matched NVIDIA libraries"
       else
-        # Fallback to Ubuntu repo packages
-        $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends libnvidia-decode libnvidia-encode nvidia-utils 2>/dev/null || msg_warn "NVIDIA installation failed"
+        # Fallback to Ubuntu repo packages with versioned nvidia-utils
+        msg_warn "CUDA repo install failed - trying Ubuntu native packages (nvidia-utils-${nvidia_major_version})"
+        if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends \
+          libnvidia-decode-${nvidia_major_version} libnvidia-encode-${nvidia_major_version} nvidia-utils-${nvidia_major_version} 2>/dev/null; then
+          msg_ok "Installed Ubuntu NVIDIA packages (${nvidia_major_version})"
+        else
+          msg_warn "NVIDIA driver installation failed - please install manually: apt install nvidia-utils-${nvidia_major_version}"
+        fi
       fi
     else
       msg_warn "No NVIDIA packages for version ${nvidia_major_version}.x in CUDA repo"
-      # Fallback to Ubuntu repo packages
-      $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends libnvidia-decode libnvidia-encode nvidia-utils 2>/dev/null || msg_warn "NVIDIA installation failed"
+      # Fallback to Ubuntu repo packages with versioned nvidia-utils
+      msg_info "Trying Ubuntu native packages (nvidia-utils-${nvidia_major_version})"
+      if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends \
+        libnvidia-decode-${nvidia_major_version} libnvidia-encode-${nvidia_major_version} nvidia-utils-${nvidia_major_version} 2>/dev/null; then
+        msg_ok "Installed Ubuntu NVIDIA packages (${nvidia_major_version})"
+      else
+        msg_warn "NVIDIA driver installation failed - please install manually: apt install nvidia-utils-${nvidia_major_version}"
+      fi
     fi
   fi
 
@@ -3592,16 +4222,34 @@ IP_FILE="/run/local-ip.env"
 mkdir -p "$(dirname "$IP_FILE")"
 
 get_current_ip() {
-    local targets=("8.8.8.8" "1.1.1.1" "192.168.1.1" "10.0.0.1" "172.16.0.1" "default")
     local ip
 
-    for target in "${targets[@]}"; do
+    # Try IPv4 targets first
+    local ipv4_targets=("8.8.8.8" "1.1.1.1" "192.168.1.1" "10.0.0.1" "172.16.0.1" "default")
+    for target in "${ipv4_targets[@]}"; do
         if [[ "$target" == "default" ]]; then
             ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
         else
             ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
         fi
         if [[ -n "$ip" ]]; then
+            echo "$ip"
+            return 0
+        fi
+    done
+
+    # IPv6 fallback: Try direct interface lookup for eth0
+    ip=$(ip -6 addr show eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
+    if [[ -n "$ip" && "$ip" =~ : ]]; then
+        echo "$ip"
+        return 0
+    fi
+
+    # IPv6 fallback: Use routing table with IPv6 targets (Google DNS, Cloudflare DNS)
+    local ipv6_targets=("2001:4860:4860::8888" "2606:4700:4700::1111")
+    for target in "${ipv6_targets[@]}"; do
+        ip=$(ip -6 route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
             echo "$ip"
             return 0
         fi
@@ -3645,57 +4293,37 @@ EOF
 }
 
 # ------------------------------------------------------------------------------
-# Installs or updates MariaDB from official repo.
+# Installs or updates MariaDB.
 #
 # Description:
+#   - Uses Debian/Ubuntu distribution packages by default (most reliable)
+#   - Only uses official MariaDB repository when a specific version is requested
 #   - Detects current MariaDB version and replaces it if necessary
 #   - Preserves existing database data
-#   - Dynamically determines latest GA version if "latest" is given
 #
 # Variables:
-#   MARIADB_VERSION - MariaDB version to install (e.g. 10.11, latest) (default: latest)
+#   MARIADB_VERSION - MariaDB version to install (optional)
+#                     - Not set or "latest": Uses distribution packages (recommended)
+#                     - Specific version (e.g. "11.4", "12.2"): Uses MariaDB official repo
 # ------------------------------------------------------------------------------
 
 setup_mariadb() {
   local MARIADB_VERSION="${MARIADB_VERSION:-latest}"
+  local USE_DISTRO_PACKAGES=false
 
   # Ensure non-interactive mode for all apt operations
   export DEBIAN_FRONTEND=noninteractive
   export NEEDRESTART_MODE=a
   export NEEDRESTART_SUSPEND=1
 
-  # Resolve "latest" to actual version
-  if [[ "$MARIADB_VERSION" == "latest" ]]; then
-    if ! curl -fsI --max-time 10 http://mirror.mariadb.org/repo/ >/dev/null 2>&1; then
-      msg_warn "MariaDB mirror not reachable - trying mariadb_repo_setup fallback"
-      # Try using official mariadb_repo_setup script as fallback
-      if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
-        msg_ok "MariaDB repository configured via mariadb_repo_setup"
-        # Extract version from configured repo
-        MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
-      else
-        msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
-        MARIADB_VERSION="12.2"
-      fi
-    else
-      MARIADB_VERSION=$(curl -fsSL --max-time 15 http://mirror.mariadb.org/repo/ 2>/dev/null |
-        grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
-        grep -vE 'rc/|rolling/' |
-        sed 's|/||' |
-        sort -Vr |
-        head -n1 || echo "")
-
-      if [[ -z "$MARIADB_VERSION" ]]; then
-        msg_warn "Could not parse latest GA MariaDB version from mirror - trying mariadb_repo_setup"
-        if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
-          msg_ok "MariaDB repository configured via mariadb_repo_setup"
-          MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
-        else
-          msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
-          MARIADB_VERSION="12.2"
-        fi
-      fi
-    fi
+  # Determine installation method:
+  # - "latest" or empty: Use distribution packages (avoids mirror issues)
+  # - Specific version: Use MariaDB official repository
+  if [[ "$MARIADB_VERSION" == "latest" || -z "$MARIADB_VERSION" ]]; then
+    USE_DISTRO_PACKAGES=true
+    msg_info "Setup MariaDB (distribution packages)"
+  else
+    msg_info "Setup MariaDB $MARIADB_VERSION (official repository)"
   fi
 
   # Get currently installed version
@@ -3703,17 +4331,105 @@ setup_mariadb() {
   CURRENT_VERSION=$(is_tool_installed "mariadb" 2>/dev/null) || true
 
   # Pre-configure debconf to prevent any interactive prompts during install/upgrade
-  local MARIADB_MAJOR_MINOR
-  MARIADB_MAJOR_MINOR=$(echo "$MARIADB_VERSION" | awk -F. '{print $1"."$2}')
-  if [[ -n "$MARIADB_MAJOR_MINOR" ]]; then
-    debconf-set-selections <<EOF
-mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/feedback boolean false
-mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/root_password password
-mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/root_password_again password
+  debconf-set-selections <<EOF
 mariadb-server mariadb-server/feedback boolean false
 mariadb-server mariadb-server/root_password password
 mariadb-server mariadb-server/root_password_again password
 EOF
+
+  # If specific version requested, also configure version-specific debconf
+  if [[ "$USE_DISTRO_PACKAGES" == "false" ]]; then
+    local MARIADB_MAJOR_MINOR
+    MARIADB_MAJOR_MINOR=$(echo "$MARIADB_VERSION" | awk -F. '{print $1"."$2}')
+    if [[ -n "$MARIADB_MAJOR_MINOR" ]]; then
+      debconf-set-selections <<EOF
+mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/feedback boolean false
+mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/root_password password
+mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/root_password_again password
+EOF
+    fi
+  fi
+
+  # ============================================================================
+  # DISTRIBUTION PACKAGES PATH (default, most reliable)
+  # ============================================================================
+  if [[ "$USE_DISTRO_PACKAGES" == "true" ]]; then
+    # Check if MariaDB was previously installed from official repo
+    local HAD_MARIADB_REPO=false
+    if [[ -f /etc/apt/sources.list.d/mariadb.sources ]] || [[ -f /etc/apt/sources.list.d/mariadb.list ]]; then
+      HAD_MARIADB_REPO=true
+      msg_info "Removing MariaDB official repository (switching to distribution packages)"
+    fi
+
+    # Clean up any existing MariaDB repository files to avoid conflicts
+    cleanup_old_repo_files "mariadb"
+
+    # If we had a repo, we need to refresh APT cache
+    if [[ "$HAD_MARIADB_REPO" == "true" ]]; then
+      $STD apt update || msg_warn "APT update had issues, continuing..."
+    fi
+
+    # Ensure APT is working
+    ensure_apt_working || return 1
+
+    # Check if installed version is from official repo and higher than distro version
+    # In this case, we keep the existing installation to avoid data issues
+    if [[ -n "$CURRENT_VERSION" ]]; then
+      # Get available distro version
+      local DISTRO_VERSION=""
+      DISTRO_VERSION=$(apt-cache policy mariadb-server 2>/dev/null | grep -E "Candidate:" | awk '{print $2}' | grep -oP '^\d+:\K\d+\.\d+\.\d+' || echo "")
+
+      if [[ -n "$DISTRO_VERSION" ]]; then
+        # Compare versions - if current is higher, keep it
+        local CURRENT_MAJOR DISTRO_MAJOR
+        CURRENT_MAJOR=$(echo "$CURRENT_VERSION" | awk -F. '{print $1}')
+        DISTRO_MAJOR=$(echo "$DISTRO_VERSION" | awk -F. '{print $1}')
+
+        if [[ "$CURRENT_MAJOR" -gt "$DISTRO_MAJOR" ]]; then
+          msg_warn "MariaDB $CURRENT_VERSION is already installed (higher than distro $DISTRO_VERSION)"
+          msg_warn "Keeping existing installation to preserve data integrity"
+          msg_warn "To use distribution packages, manually remove MariaDB first"
+          _setup_mariadb_runtime_dir
+          cache_installed_version "mariadb" "$CURRENT_VERSION"
+          msg_ok "Setup MariaDB $CURRENT_VERSION (existing installation kept)"
+          return 0
+        fi
+      fi
+    fi
+
+    # Install or upgrade MariaDB from distribution packages
+    if ! install_packages_with_retry "mariadb-server" "mariadb-client"; then
+      msg_error "Failed to install MariaDB packages from distribution"
+      return 1
+    fi
+
+    # Get installed version for caching
+    local INSTALLED_VERSION=""
+    INSTALLED_VERSION=$(mariadb --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' | head -n1 || echo "distro")
+
+    # Configure runtime directory and finish
+    _setup_mariadb_runtime_dir
+    cache_installed_version "mariadb" "$INSTALLED_VERSION"
+    msg_ok "Setup MariaDB $INSTALLED_VERSION (distribution packages)"
+    return 0
+  fi
+
+  # ============================================================================
+  # OFFICIAL REPOSITORY PATH (only when specific version requested)
+  # ============================================================================
+
+  # First, check if there's an old/broken repository that needs cleanup
+  if [[ -f /etc/apt/sources.list.d/mariadb.sources ]] || [[ -f /etc/apt/sources.list.d/mariadb.list ]]; then
+    local OLD_REPO_VERSION=""
+    OLD_REPO_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+(\.[0-9]+)?' /etc/apt/sources.list.d/mariadb.sources 2>/dev/null || \
+                       grep -oP 'repo/\K[0-9]+\.[0-9]+(\.[0-9]+)?' /etc/apt/sources.list.d/mariadb.list 2>/dev/null || echo "")
+
+    # Check if old repo points to a different version
+    if [[ -n "$OLD_REPO_VERSION" ]] && [[ "${OLD_REPO_VERSION%.*}" != "${MARIADB_VERSION%.*}" ]]; then
+      msg_info "Cleaning up old MariaDB repository (was: $OLD_REPO_VERSION, requested: $MARIADB_VERSION)"
+      cleanup_old_repo_files "mariadb"
+      $STD apt update || msg_warn "APT update had issues, continuing..."
+    fi
   fi
 
   # Scenario 1: Already installed at target version - just update packages
@@ -3754,9 +4470,7 @@ EOF
     remove_old_tool_version "mariadb"
   fi
 
-  # Scenario 3: Fresh install or version change
-  msg_info "Setup MariaDB $MARIADB_VERSION"
-
+  # Scenario 3: Fresh install or version change with specific version
   # Prepare repository (cleanup + validation)
   prepare_repository_setup "mariadb" || {
     msg_error "Failed to prepare MariaDB repository"
@@ -3784,21 +4498,37 @@ EOF
 
   # Install packages with retry logic
   if ! install_packages_with_retry "mariadb-server" "mariadb-client"; then
-    # Fallback: try without specific version
-    msg_warn "Failed to install MariaDB packages from upstream repo, trying distro fallback..."
+    # Fallback: try distribution packages
+    msg_warn "Failed to install MariaDB $MARIADB_VERSION from official repo, falling back to distribution packages..."
     cleanup_old_repo_files "mariadb"
     $STD apt update || {
       msg_warn "APT update also failed, continuing with cache"
     }
-    install_packages_with_retry "mariadb-server" "mariadb-client" || {
-      msg_error "Failed to install MariaDB packages (both upstream and distro)"
+    if install_packages_with_retry "mariadb-server" "mariadb-client"; then
+      local FALLBACK_VERSION=""
+      FALLBACK_VERSION=$(mariadb --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' | head -n1 || echo "distro")
+      msg_warn "Installed MariaDB $FALLBACK_VERSION from distribution instead of requested $MARIADB_VERSION"
+      _setup_mariadb_runtime_dir
+      cache_installed_version "mariadb" "$FALLBACK_VERSION"
+      msg_ok "Setup MariaDB $FALLBACK_VERSION (fallback to distribution packages)"
+      return 0
+    else
+      msg_error "Failed to install MariaDB packages (both official repo and distribution)"
       return 1
-    }
+    fi
   fi
 
+  _setup_mariadb_runtime_dir
+  cache_installed_version "mariadb" "$MARIADB_VERSION"
+  msg_ok "Setup MariaDB $MARIADB_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Helper function: Configure MariaDB runtime directory persistence
+# ------------------------------------------------------------------------------
+_setup_mariadb_runtime_dir() {
   # Configure tmpfiles.d to ensure /run/mysqld directory is created on boot
   # This fixes the issue where MariaDB fails to start after container reboot
-  msg_info "Configuring MariaDB runtime directory persistence"
 
   # Create tmpfiles.d configuration with error handling
   if ! printf '# Ensure /run/mysqld directory exists with correct permissions for MariaDB\nd /run/mysqld 0755 mysql mysql -\n' >/etc/tmpfiles.d/mariadb.conf; then
@@ -3818,11 +4548,6 @@ EOF
       msg_warn "mysql user not found - directory created with correct permissions but ownership not set"
     fi
   fi
-
-  msg_ok "Configured MariaDB runtime directory persistence"
-
-  cache_installed_version "mariadb" "$MARIADB_VERSION"
-  msg_ok "Setup MariaDB $MARIADB_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -4362,6 +5087,8 @@ function setup_nodejs() {
 #   - Adds Sury PHP repo if needed
 #   - Installs default and user-defined modules
 #   - Patches php.ini for CLI, Apache, and FPM as needed
+#   - Handles built-in modules gracefully (e.g., opcache in PHP 8.5+)
+#   - Skips unavailable packages without failing
 #
 # Variables:
 #   PHP_VERSION                - PHP version to install (default: 8.4)
@@ -4372,6 +5099,17 @@ function setup_nodejs() {
 #   PHP_UPLOAD_MAX_FILESIZE    - (default: 128M)
 #   PHP_POST_MAX_SIZE          - (default: 128M)
 #   PHP_MAX_EXECUTION_TIME     - (default: 300)
+#
+# Notes on modules:
+#   - Base modules (always installed): bcmath, cli, curl, gd, intl, mbstring,
+#     readline, xml, zip, common
+#   - Extended modules (commonly needed): mysql, sqlite3, pgsql, redis,
+#     imagick, bz2, ldap, soap, imap, gmp, apcu
+#   - Some modules are built-in depending on PHP version:
+#     * PHP 8.5+: opcache is built-in (no separate package)
+#     * All versions: ctype, fileinfo, iconv, tokenizer, phar, posix, etc.
+#       are part of php-common
+#   - Unavailable modules are skipped with a warning, not an error
 # ------------------------------------------------------------------------------
 
 function setup_php() {
@@ -4383,23 +5121,69 @@ function setup_php() {
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
 
-  local DEFAULT_MODULES="bcmath,cli,curl,gd,intl,mbstring,opcache,readline,xml,zip"
-  local COMBINED_MODULES
+  # Parse version for compatibility checks
+  local PHP_MAJOR="${PHP_VERSION%%.*}"
+  local PHP_MINOR="${PHP_VERSION#*.}"
+  PHP_MINOR="${PHP_MINOR%%.*}"
+
+  # Modules that are ALWAYS part of php-common (no separate package needed)
+  # These are either built-in or virtual packages provided by php-common
+  local BUILTIN_MODULES="calendar,ctype,exif,ffi,fileinfo,ftp,gettext,iconv,pdo,phar,posix,shmop,sockets,sysvmsg,sysvsem,sysvshm,tokenizer"
+
+  # Modules that became built-in in specific PHP versions
+  # PHP 8.5+: opcache is now part of the core
+  local BUILTIN_85=""
+  if [[ "$PHP_MAJOR" -gt 8 ]] || [[ "$PHP_MAJOR" -eq 8 && "$PHP_MINOR" -ge 5 ]]; then
+    BUILTIN_85="opcache"
+  fi
+
+  # Base modules - essential for most PHP applications
+  # Note: 'common' provides many built-in extensions
+  local BASE_MODULES="cli,common,bcmath,curl,dom,gd,gmp,intl,mbstring,readline,xml,zip"
+
+  # Add opcache only for PHP < 8.5 (it's built-in starting from 8.5)
+  if [[ "$PHP_MAJOR" -lt 8 ]] || [[ "$PHP_MAJOR" -eq 8 && "$PHP_MINOR" -lt 5 ]]; then
+    BASE_MODULES="${BASE_MODULES},opcache"
+  fi
+
+  # Extended default modules - commonly needed by web applications
+  # These cover ~90% of typical use cases without bloat
+  local EXTENDED_MODULES="mysql,sqlite3,pgsql,redis,imagick,bz2,apcu"
+
+  local COMBINED_MODULES="${BASE_MODULES},${EXTENDED_MODULES}"
 
   local PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
   local PHP_UPLOAD_MAX_FILESIZE="${PHP_UPLOAD_MAX_FILESIZE:-128M}"
   local PHP_POST_MAX_SIZE="${PHP_POST_MAX_SIZE:-128M}"
   local PHP_MAX_EXECUTION_TIME="${PHP_MAX_EXECUTION_TIME:-300}"
 
-  # Merge default + user-defined modules
+  # Merge with user-defined modules
   if [[ -n "$PHP_MODULE" ]]; then
-    COMBINED_MODULES="${DEFAULT_MODULES},${PHP_MODULE}"
-  else
-    COMBINED_MODULES="${DEFAULT_MODULES}"
+    COMBINED_MODULES="${COMBINED_MODULES},${PHP_MODULE}"
   fi
 
+  # Filter out built-in modules (they don't have separate packages)
+  local FILTERED_MODULES=""
+  IFS=',' read -ra ALL_MODULES <<<"$COMBINED_MODULES"
+  for mod in "${ALL_MODULES[@]}"; do
+    mod=$(echo "$mod" | tr -d '[:space:]')
+    [[ -z "$mod" ]] && continue
+
+    # Skip if it's a known built-in module
+    if echo ",$BUILTIN_MODULES,$BUILTIN_85," | grep -qi ",$mod,"; then
+      continue
+    fi
+
+    # Add to filtered list
+    if [[ -z "$FILTERED_MODULES" ]]; then
+      FILTERED_MODULES="$mod"
+    else
+      FILTERED_MODULES="${FILTERED_MODULES},$mod"
+    fi
+  done
+
   # Deduplicate
-  COMBINED_MODULES=$(echo "$COMBINED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
+  COMBINED_MODULES=$(echo "$FILTERED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
 
   # Get current PHP-CLI version
   local CURRENT_PHP=""
@@ -4431,11 +5215,20 @@ EOF
     return 1
   }
 
-  manage_tool_repository "php" "$PHP_VERSION" "" "https://packages.sury.org/debsuryorg-archive-keyring.deb" || {
-    msg_error "Failed to setup PHP repository"
-    return 1
-  }
-
+  # Use different repository based on OS
+  if [[ "$DISTRO_ID" == "ubuntu" ]]; then
+    # Ubuntu: Use ondrej/php PPA
+    msg_info "Adding ondrej/php PPA for Ubuntu"
+    $STD apt install -y software-properties-common
+    # Don't use $STD for add-apt-repository as it uses background processes
+    add-apt-repository -y ppa:ondrej/php >>"$(get_active_logfile)" 2>&1
+  else
+    # Debian: Use Sury repository
+    manage_tool_repository "php" "$PHP_VERSION" "" "https://packages.sury.org/debsuryorg-archive-keyring.deb" || {
+      msg_error "Failed to setup PHP repository"
+      return 1
+    }
+  fi
   ensure_apt_working || return 1
   $STD apt update
 
@@ -4448,16 +5241,49 @@ EOF
     return 1
   fi
 
-  # Build module list - without version pinning (preferences.d handles it)
+  # Build module list - verify each package exists before adding
   local MODULE_LIST="php${PHP_VERSION}"
+  local SKIPPED_MODULES=""
 
   IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
   for mod in "${MODULES[@]}"; do
-    MODULE_LIST+=" php${PHP_VERSION}-${mod}"
+    mod=$(echo "$mod" | tr -d '[:space:]')
+    [[ -z "$mod" ]] && continue
+
+    local pkg_name="php${PHP_VERSION}-${mod}"
+
+    # Check if package exists in repository
+    if apt-cache show "$pkg_name" &>/dev/null; then
+      MODULE_LIST+=" $pkg_name"
+    else
+      # Package doesn't exist - could be built-in or renamed
+      if [[ -z "$SKIPPED_MODULES" ]]; then
+        SKIPPED_MODULES="$mod"
+      else
+        SKIPPED_MODULES="${SKIPPED_MODULES}, $mod"
+      fi
+    fi
   done
 
+  # Log skipped modules (informational, not an error)
+  if [[ -n "$SKIPPED_MODULES" ]]; then
+    msg_info "Skipping unavailable/built-in modules: $SKIPPED_MODULES"
+  fi
+
   if [[ "$PHP_FPM" == "YES" ]]; then
-    MODULE_LIST+=" php${PHP_VERSION}-fpm"
+    if apt-cache show "php${PHP_VERSION}-fpm" &>/dev/null; then
+      MODULE_LIST+=" php${PHP_VERSION}-fpm"
+    else
+      msg_warn "php${PHP_VERSION}-fpm not available"
+    fi
+    # Create systemd override for PHP-FPM to fix runtime directory issues in LXC containers
+    mkdir -p /etc/systemd/system/php${PHP_VERSION}-fpm.service.d/
+    cat <<EOF >/etc/systemd/system/php${PHP_VERSION}-fpm.service.d/override.conf
+[Service]
+RuntimeDirectory=php
+RuntimeDirectoryMode=0755
+EOF
+    $STD systemctl daemon-reload
   fi
 
   # install apache2 with PHP support if requested
@@ -4476,38 +5302,31 @@ EOF
 
   # Install PHP packages (pinning via preferences.d ensures correct version)
   msg_info "Installing PHP ${PHP_VERSION} packages"
-  if ! install_packages_with_retry $MODULE_LIST; then
-    msg_warn "Failed to install PHP packages, attempting individual installation"
+
+  # First attempt: Install all verified packages at once
+  if ! $STD apt install -y $MODULE_LIST 2>/dev/null; then
+    msg_warn "Bulk installation failed, attempting individual installation"
 
     # Install main package first (critical)
-    install_packages_with_retry "php${PHP_VERSION}" || {
+    if ! $STD apt install -y "php${PHP_VERSION}" 2>/dev/null; then
       msg_error "Failed to install php${PHP_VERSION}"
       return 1
-    }
+    fi
 
     # Try to install Apache module individually if requested
     if [[ "$PHP_APACHE" == "YES" ]]; then
-      install_packages_with_retry "libapache2-mod-php${PHP_VERSION}" || {
+      $STD apt install -y "libapache2-mod-php${PHP_VERSION}" 2>/dev/null || {
         msg_warn "Could not install libapache2-mod-php${PHP_VERSION}"
       }
     fi
 
-    # Try to install modules individually - skip those that don't exist
-    for pkg in "${MODULES[@]}"; do
-      if apt-cache search "^php${PHP_VERSION}-${pkg}\$" 2>/dev/null | grep -q "^php${PHP_VERSION}-${pkg}"; then
-        install_packages_with_retry "php${PHP_VERSION}-${pkg}" || {
-          msg_warn "Could not install php${PHP_VERSION}-${pkg}"
-        }
-      fi
+    # Try to install each package individually
+    for pkg in $MODULE_LIST; do
+      [[ "$pkg" == "php${PHP_VERSION}" ]] && continue  # Already installed
+      $STD apt install -y "$pkg" 2>/dev/null || {
+        msg_warn "Could not install $pkg - continuing without it"
+      }
     done
-
-    if [[ "$PHP_FPM" == "YES" ]]; then
-      if apt-cache search "^php${PHP_VERSION}-fpm\$" 2>/dev/null | grep -q "^php${PHP_VERSION}-fpm"; then
-        install_packages_with_retry "php${PHP_VERSION}-fpm" || {
-          msg_warn "Could not install php${PHP_VERSION}-fpm"
-        }
-      fi
-    fi
   fi
   cache_installed_version "php" "$PHP_VERSION"
 
@@ -5023,6 +5842,306 @@ function setup_ruby() {
   rm -rf "$TMP_DIR"
   cache_installed_version "ruby" "$RUBY_VERSION"
   msg_ok "Setup Ruby $RUBY_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Installs or updates MeiliSearch search engine.
+#
+# Description:
+#   - Fresh install: Downloads binary, creates config/service, starts
+#   - Update: Checks for new release, updates binary if available
+#   - Waits for service to be ready before returning
+#   - Exports API keys for use by caller
+#
+# Variables:
+#   MEILISEARCH_BIND     - Bind address (default: 127.0.0.1:7700)
+#   MEILISEARCH_ENV      - Environment: production/development (default: production)
+#   MEILISEARCH_DB_PATH  - Database path (default: /var/lib/meilisearch/data)
+#
+# Exports:
+#   MEILISEARCH_MASTER_KEY  - The master key for admin access
+#   MEILISEARCH_API_KEY     - The default search API key
+#   MEILISEARCH_API_KEY_UID - The UID of the default API key
+#
+# Example (install script):
+#   setup_meilisearch
+#
+# Example (CT update_script):
+#   setup_meilisearch
+# ------------------------------------------------------------------------------
+
+function setup_meilisearch() {
+  local MEILISEARCH_BIND="${MEILISEARCH_BIND:-127.0.0.1:7700}"
+  local MEILISEARCH_ENV="${MEILISEARCH_ENV:-production}"
+  local MEILISEARCH_DB_PATH="${MEILISEARCH_DB_PATH:-/var/lib/meilisearch/data}"
+  local MEILISEARCH_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
+  local MEILISEARCH_SNAPSHOT_DIR="${MEILISEARCH_SNAPSHOT_DIR:-/var/lib/meilisearch/snapshots}"
+
+  # Get bind address for health checks
+  local MEILISEARCH_HOST="${MEILISEARCH_BIND%%:*}"
+  local MEILISEARCH_PORT="${MEILISEARCH_BIND##*:}"
+  [[ "$MEILISEARCH_HOST" == "0.0.0.0" ]] && MEILISEARCH_HOST="127.0.0.1"
+
+  # Update mode: MeiliSearch already installed
+  if [[ -f /usr/bin/meilisearch ]]; then
+    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
+      msg_info "Updating MeiliSearch"
+
+      # Get current and new version for compatibility check
+      local CURRENT_VERSION NEW_VERSION
+      CURRENT_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || CURRENT_VERSION="0.0.0"
+      NEW_VERSION="${CHECK_UPDATE_RELEASE#v}"
+
+      # Extract major.minor for comparison (Meilisearch requires dump/restore between minor versions)
+      local CURRENT_MAJOR_MINOR NEW_MAJOR_MINOR
+      CURRENT_MAJOR_MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f1,2)
+      NEW_MAJOR_MINOR=$(echo "$NEW_VERSION" | cut -d. -f1,2)
+
+      # Determine if migration is needed (different major.minor = incompatible DB format)
+      local NEEDS_MIGRATION=false
+      if [[ "$CURRENT_MAJOR_MINOR" != "$NEW_MAJOR_MINOR" ]]; then
+        NEEDS_MIGRATION=true
+        msg_info "MeiliSearch version change detected (${CURRENT_VERSION} → ${NEW_VERSION}), preparing data migration"
+      fi
+
+      # Read config values for dump/restore
+      local MEILI_HOST MEILI_PORT MEILI_MASTER_KEY MEILI_DUMP_DIR
+      MEILI_HOST="${MEILISEARCH_HOST:-127.0.0.1}"
+      MEILI_PORT="${MEILISEARCH_PORT:-7700}"
+      MEILI_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
+      MEILI_MASTER_KEY=$(grep -E "^master_key\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ')
+
+      # Create dump before update if migration is needed
+      local DUMP_UID=""
+      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$MEILI_MASTER_KEY" ]]; then
+        msg_info "Creating MeiliSearch data dump before upgrade"
+
+        # Trigger dump creation
+        local DUMP_RESPONSE
+        DUMP_RESPONSE=$(curl -s -X POST "http://${MEILI_HOST}:${MEILI_PORT}/dumps" \
+          -H "Authorization: Bearer ${MEILI_MASTER_KEY}" \
+          -H "Content-Type: application/json" 2>/dev/null) || true
+
+        # The initial response only contains taskUid, not dumpUid
+        # dumpUid is only available after the task completes
+        local TASK_UID
+        TASK_UID=$(echo "$DUMP_RESPONSE" | grep -oP '"taskUid":\s*\K[0-9]+' || true)
+
+        if [[ -n "$TASK_UID" ]]; then
+          msg_info "Waiting for dump task ${TASK_UID} to complete..."
+          local MAX_WAIT=120
+          local WAITED=0
+          local TASK_RESULT=""
+          
+          while [[ $WAITED -lt $MAX_WAIT ]]; do
+            TASK_RESULT=$(curl -s "http://${MEILI_HOST}:${MEILI_PORT}/tasks/${TASK_UID}" \
+              -H "Authorization: Bearer ${MEILI_MASTER_KEY}" 2>/dev/null) || true
+            
+            local TASK_STATUS
+            TASK_STATUS=$(echo "$TASK_RESULT" | grep -oP '"status":\s*"\K[^"]+' || true)
+            
+            if [[ "$TASK_STATUS" == "succeeded" ]]; then
+              # Extract dumpUid from the completed task details
+              DUMP_UID=$(echo "$TASK_RESULT" | grep -oP '"dumpUid":\s*"\K[^"]+' || true)
+              if [[ -n "$DUMP_UID" ]]; then
+                msg_ok "MeiliSearch dump created successfully: ${DUMP_UID}"
+              else
+                msg_warn "Dump task succeeded but could not extract dumpUid"
+              fi
+              break
+            elif [[ "$TASK_STATUS" == "failed" ]]; then
+              local ERROR_MSG
+              ERROR_MSG=$(echo "$TASK_RESULT" | grep -oP '"message":\s*"\K[^"]+' || echo "Unknown error")
+              msg_warn "MeiliSearch dump failed: ${ERROR_MSG}"
+              break
+            fi
+            sleep 2
+            WAITED=$((WAITED + 2))
+          done
+
+          if [[ $WAITED -ge $MAX_WAIT ]]; then
+            msg_warn "MeiliSearch dump timed out after ${MAX_WAIT}s"
+          fi
+        else
+          msg_warn "Could not trigger MeiliSearch dump (no taskUid in response)"
+          msg_info "Response was: ${DUMP_RESPONSE:-empty}"
+        fi
+      fi
+
+      # If migration is needed but dump failed, we have options:
+      # 1. Abort the update (safest, but annoying)
+      # 2. Backup data directory and proceed (allows manual recovery)
+      # 3. Just proceed and hope for the best (dangerous)
+      # We choose option 2: backup and proceed with warning
+      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
+        local MEILI_DB_PATH
+        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ')
+        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
+        
+        if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
+          local BACKUP_PATH="${MEILI_DB_PATH}.backup.$(date +%Y%m%d%H%M%S)"
+          msg_warn "Backing up MeiliSearch data to ${BACKUP_PATH}"
+          mv "$MEILI_DB_PATH" "$BACKUP_PATH"
+          mkdir -p "$MEILI_DB_PATH"
+          msg_info "Data backed up. After update, you may need to reindex your data."
+          msg_info "Old data is preserved at: ${BACKUP_PATH}"
+        fi
+      fi
+
+      # Stop service and update binary
+      systemctl stop meilisearch
+      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+
+      # If migration needed and dump was created, remove old data and import dump
+      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
+        local MEILI_DB_PATH
+        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ')
+        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
+
+        msg_info "Removing old MeiliSearch database for migration"
+        rm -rf "${MEILI_DB_PATH:?}"/*
+
+        # Import dump using CLI flag (this is the supported method)
+        local DUMP_FILE="${MEILI_DUMP_DIR}/${DUMP_UID}.dump"
+        if [[ -f "$DUMP_FILE" ]]; then
+          msg_info "Importing dump: ${DUMP_FILE}"
+          
+          # Start meilisearch with --import-dump flag
+          # This is a one-time import that happens during startup
+          /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" &
+          local MEILI_PID=$!
+          
+          # Wait for meilisearch to become healthy (import happens during startup)
+          msg_info "Waiting for MeiliSearch to import and start..."
+          local MAX_WAIT=300
+          local WAITED=0
+          while [[ $WAITED -lt $MAX_WAIT ]]; do
+            if curl -sf "http://${MEILI_HOST}:${MEILI_PORT}/health" &>/dev/null; then
+              msg_ok "MeiliSearch is healthy after import"
+              break
+            fi
+            # Check if process is still running
+            if ! kill -0 $MEILI_PID 2>/dev/null; then
+              msg_warn "MeiliSearch process exited during import"
+              break
+            fi
+            sleep 3
+            WAITED=$((WAITED + 3))
+          done
+          
+          # Stop the manual process
+          kill $MEILI_PID 2>/dev/null || true
+          sleep 2
+          
+          # Start via systemd for proper management
+          systemctl start meilisearch
+          
+          if systemctl is-active --quiet meilisearch; then
+            msg_ok "MeiliSearch migrated successfully"
+          else
+            msg_warn "MeiliSearch failed to start after migration - check logs with: journalctl -u meilisearch"
+          fi
+        else
+          msg_warn "Dump file not found: ${DUMP_FILE}"
+          systemctl start meilisearch
+        fi
+      else
+        systemctl start meilisearch
+      fi
+
+      msg_ok "Updated MeiliSearch"
+    fi
+    return 0
+  fi
+
+  # Fresh install
+  msg_info "Setup MeiliSearch"
+
+  # Install binary
+  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
+    msg_error "Failed to install MeiliSearch binary"
+    return 1
+  }
+
+  # Download default config
+  curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml || {
+    msg_error "Failed to download MeiliSearch config"
+    return 1
+  }
+
+  # Generate master key
+  MEILISEARCH_MASTER_KEY=$(openssl rand -base64 12)
+  export MEILISEARCH_MASTER_KEY
+
+  # Configure
+  sed -i \
+    -e "s|^env =.*|env = \"${MEILISEARCH_ENV}\"|" \
+    -e "s|^# master_key =.*|master_key = \"${MEILISEARCH_MASTER_KEY}\"|" \
+    -e "s|^db_path =.*|db_path = \"${MEILISEARCH_DB_PATH}\"|" \
+    -e "s|^dump_dir =.*|dump_dir = \"${MEILISEARCH_DUMP_DIR}\"|" \
+    -e "s|^snapshot_dir =.*|snapshot_dir = \"${MEILISEARCH_SNAPSHOT_DIR}\"|" \
+    -e 's|^# no_analytics = true|no_analytics = true|' \
+    -e "s|^http_addr =.*|http_addr = \"${MEILISEARCH_BIND}\"|" \
+    /etc/meilisearch.toml
+
+  # Create data directories
+  mkdir -p "${MEILISEARCH_DB_PATH}" "${MEILISEARCH_DUMP_DIR}" "${MEILISEARCH_SNAPSHOT_DIR}"
+
+  # Create systemd service
+  cat <<EOF >/etc/systemd/system/meilisearch.service
+[Unit]
+Description=Meilisearch
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/meilisearch --config-file-path /etc/meilisearch.toml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  # Enable and start service
+  systemctl daemon-reload
+  systemctl enable -q --now meilisearch
+
+  # Wait for MeiliSearch to be ready (up to 30 seconds)
+  for i in {1..30}; do
+    if curl -s -o /dev/null -w "%{http_code}" "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/health" 2>/dev/null | grep -q "200"; then
+      break
+    fi
+    sleep 1
+  done
+
+  # Verify service is running
+  if ! systemctl is-active --quiet meilisearch; then
+    msg_error "MeiliSearch service failed to start"
+    return 1
+  fi
+
+  # Get API keys with retry logic
+  MEILISEARCH_API_KEY=""
+  for i in {1..10}; do
+    MEILISEARCH_API_KEY=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
+      -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null | \
+      grep -o '"key":"[^"]*"' | head -n 1 | sed 's/"key":"//;s/"//') || true
+    [[ -n "$MEILISEARCH_API_KEY" ]] && break
+    sleep 2
+  done
+
+  MEILISEARCH_API_KEY_UID=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
+    -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null | \
+    grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//') || true
+
+  export MEILISEARCH_API_KEY
+  export MEILISEARCH_API_KEY_UID
+
+  # Cache version
+  local MEILISEARCH_VERSION
+  MEILISEARCH_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || true
+  cache_installed_version "meilisearch" "${MEILISEARCH_VERSION:-unknown}"
+
+  msg_ok "Setup MeiliSearch ${MEILISEARCH_VERSION:-}"
 }
 
 # ------------------------------------------------------------------------------
@@ -5753,4 +6872,153 @@ EOF
   fi
 
   msg_ok "Docker setup completed"
+}
+
+# ------------------------------------------------------------------------------
+# Fetch and deploy from URL
+# Downloads an archive (zip, tar.gz, or .deb) from a URL and extracts/installs it
+#
+# Usage: fetch_and_deploy_from_url "url" "directory"
+#   url       - URL to the archive (zip, tar.gz, or .deb)
+#   directory - Destination path where the archive will be extracted
+#               (not used for .deb packages)
+#
+# Examples:
+#   fetch_and_deploy_from_url "https://example.com/app.tar.gz" "/opt/myapp"
+#   fetch_and_deploy_from_url "https://example.com/app.zip" "/opt/myapp"
+#   fetch_and_deploy_from_url "https://example.com/package.deb" ""
+# ------------------------------------------------------------------------------
+function fetch_and_deploy_from_url() {
+  local url="$1"
+  local directory="$2"
+
+  if [[ -z "$url" ]]; then
+    msg_error "URL parameter is required"
+    return 1
+  fi
+
+  local filename="${url##*/}"
+
+  msg_info "Downloading from $url"
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || {
+    msg_error "Failed to create temporary directory"
+    return 1
+  }
+
+  curl -fsSL -o "$tmpdir/$filename" "$url" || {
+    msg_error "Download failed: $url"
+    rm -rf "$tmpdir"
+    return 1
+  }
+
+  # Auto-detect archive type using file description
+  local file_desc
+  file_desc=$(file -b "$tmpdir/$filename")
+  
+  local archive_type="unknown"
+  
+  if [[ "$file_desc" =~ gzip.*compressed|gzip\ compressed\ data ]]; then
+    archive_type="tar"
+  elif [[ "$file_desc" =~ Zip.*archive|ZIP\ archive ]]; then
+    archive_type="zip"
+  elif [[ "$file_desc" =~ Debian.*package|Debian\ binary\ package ]]; then
+    archive_type="deb"
+  elif [[ "$file_desc" =~ POSIX.*tar.*archive|tar\ archive ]]; then
+    archive_type="tar"
+  else
+    msg_error "Unsupported or unknown archive type: $file_desc"
+    rm -rf "$tmpdir"
+    return 1
+  fi
+
+  msg_info "Detected archive type: $archive_type (file type: $file_desc)"
+
+  if [[ "$archive_type" == "deb" ]]; then
+    msg_info "Installing .deb package"
+
+    chmod 644 "$tmpdir/$filename"
+    $STD apt install -y "$tmpdir/$filename" || {
+      $STD dpkg -i "$tmpdir/$filename" || {
+        msg_error "Both apt and dpkg installation failed"
+        rm -rf "$tmpdir"
+        return 1
+      }
+    }
+
+    rm -rf "$tmpdir"
+    msg_ok "Successfully installed .deb package"
+    return 0
+  fi
+
+  if [[ -z "$directory" ]]; then
+    msg_error "Directory parameter is required for archive extraction"
+    rm -rf "$tmpdir"
+    return 1
+  fi
+
+  msg_info "Extracting archive to $directory"
+
+  mkdir -p "$directory"
+
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    rm -rf "${directory:?}/"*
+  fi
+
+  local unpack_tmp
+  unpack_tmp=$(mktemp -d)
+
+  if [[ "$archive_type" == "zip" ]]; then
+    ensure_dependencies unzip
+    unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
+      msg_error "Failed to extract ZIP archive"
+      rm -rf "$tmpdir" "$unpack_tmp"
+      return 1
+    }
+  elif [[ "$archive_type" == "tar" ]]; then
+    tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
+      msg_error "Failed to extract TAR archive"
+      rm -rf "$tmpdir" "$unpack_tmp"
+      return 1
+    }
+  fi
+
+  local top_entries
+  top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
+
+  if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
+    local inner_dir="$top_entries"
+    shopt -s dotglob nullglob
+    if compgen -G "$inner_dir/*" >/dev/null; then
+      cp -r "$inner_dir"/* "$directory/" || {
+        msg_error "Failed to copy contents from $inner_dir to $directory"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
+    else
+      msg_error "Inner directory is empty: $inner_dir"
+      rm -rf "$tmpdir" "$unpack_tmp"
+      return 1
+    fi
+    shopt -u dotglob nullglob
+  else
+    shopt -s dotglob nullglob
+    if compgen -G "$unpack_tmp/*" >/dev/null; then
+      cp -r "$unpack_tmp"/* "$directory/" || {
+        msg_error "Failed to copy contents to $directory"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
+    else
+      msg_error "Unpacked archive is empty"
+      rm -rf "$tmpdir" "$unpack_tmp"
+      return 1
+    fi
+    shopt -u dotglob nullglob
+  fi
+
+  rm -rf "$tmpdir" "$unpack_tmp"
+  msg_ok "Successfully deployed archive to $directory"
+  return 0
 }

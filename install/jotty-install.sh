@@ -14,33 +14,16 @@ network_check
 update_os
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-fetch_and_deploy_gh_release "jotty" "fccview/jotty" "tarball" "latest" "/opt/jotty"
+fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "latest" "/opt/jotty" "jotty_*_prebuild.tar.gz"
 
-msg_info "Installing ${APPLICATION}"
-cd /opt/jotty
-unset NODE_OPTIONS
-export NODE_OPTIONS="--max-old-space-size=3072"
-$STD yarn --frozen-lockfile
-$STD yarn next telemetry disable
-$STD yarn build
-
-[ -d "public" ] && cp -r public .next/standalone/
-[ -d "howto" ] && cp -r howto .next/standalone/
-mkdir -p .next/standalone/.next
-cp -r .next/static .next/standalone/.next/
-
-mv .next/standalone /tmp/jotty_standalone
-rm -rf ./* .next .git .gitignore .yarn
-mv /tmp/jotty_standalone/* .
-mv /tmp/jotty_standalone/.[!.]* . 2>/dev/null || true
-rm -rf /tmp/jotty_standalone
-
+msg_info "Setup jotty"
 mkdir -p data/{users,checklists,notes}
 
 cat <<EOF >/opt/jotty/.env
 NODE_ENV=production
-
 # --- Uncomment to enable
+# APP_URL=https://your-jotty-domain.com
+# INTERNAL_API_URL=http://localhost:3000
 # HTTPS=true
 # SERVE_PUBLIC_IMAGES=yes
 # SERVE_PUBLIC_FILES=yes
@@ -53,12 +36,11 @@ NODE_ENV=production
 # SSO_MODE=oidc
 # OIDC_ISSUER=<your-oidc-issuer-url>
 # OIDC_CLIENT_ID=<oidc-client-id>
-# APP_URL=<https://app.domain.tld>
 # SSO_FALLBACK_LOCAL=yes
 # OIDC_CLIENT_SECRET=your_client_secret
 # OIDC_ADMIN_GROUPS=admins
 EOF
-msg_ok "Installed ${APPLICATION}"
+msg_ok "Setup jotty"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/jotty.service

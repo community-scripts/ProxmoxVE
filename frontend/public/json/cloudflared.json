@@ -33,7 +33,11 @@
   },
   "notes": [
     {
-      "text": "With an option to configure cloudflared as a DNS-over-HTTPS (DoH) proxy",
+      "text": "After install, run: cloudflared tunnel login && cloudflared tunnel create <NAME>",
+      "type": "info"
+    },
+    {
+      "text": "Or create tunnel via Cloudflare Zero Trust Dashboard",
       "type": "info"
     }
   ]

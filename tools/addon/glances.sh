@@ -30,7 +30,7 @@ function msg_info() { echo -e "${INFO} ${YW}$1...${CL}"; }
 function msg_ok() { echo -e "${CM} ${GN}$1${CL}"; }
 function msg_error() { echo -e "${CROSS} ${RD}$1${CL}"; }
 
-get_local_ip() {
+get_lxc_ip() {
   if command -v hostname >/dev/null 2>&1 && hostname -I 2>/dev/null; then
     hostname -I | awk '{print $1}'
   elif command -v ip >/dev/null 2>&1; then
@@ -39,7 +39,7 @@ get_local_ip() {
     echo "127.0.0.1"
   fi
 }
-IP=$(get_local_ip)
+IP=$(get_lxc_ip)
 
 install_glances_debian() {
   msg_info "Installing dependencies"

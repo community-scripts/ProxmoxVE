@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   ca-certificates \
   libcap2-bin
 msg_ok "Installed Dependencies"

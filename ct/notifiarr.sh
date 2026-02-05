@@ -23,7 +23,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/apt/sources.list.d/golift.list ]]; then
+  if [[ ! -f /usr/lib/systemd/system/notifiarr.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi

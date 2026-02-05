@@ -41,16 +41,17 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Outline"
     cd /opt/outline
     mv /opt/.env /opt/outline
     export NODE_ENV=development
     export NODE_OPTIONS="--max-old-space-size=3584"
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     $STD corepack enable
     $STD yarn install --immutable
     export NODE_ENV=production
     $STD yarn build
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Outline"
 
     msg_info "Starting Services"
     systemctl start outline

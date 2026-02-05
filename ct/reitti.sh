@@ -83,6 +83,9 @@ EOF
 
     msg_info "Starting Service"
     systemctl start reitti
+    chown -R www-data:www-data /var/cache/nginx
+    chmod -R 750 /var/cache/nginx
+    systemctl restart nginx
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi

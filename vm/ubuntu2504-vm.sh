@@ -213,7 +213,7 @@ function default_settings() {
   MAC="$GEN_MAC"
   VLAN=""
   MTU=""
-  START_VM="yes"
+  START_VM="no"
   METHOD="default"
   echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx${CL}"

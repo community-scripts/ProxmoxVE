@@ -21,7 +21,6 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="infisical_db" PG_DB_USER="infisical" setup_postgresql_db
-import_local_ip
 
 msg_info "Setting up Infisical Repository"
 setup_deb822_repo \

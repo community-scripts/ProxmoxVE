@@ -1,0 +1,40 @@
+{
+  "name": "Manyfold",
+  "slug": "manyfold",
+  "categories": [
+    24
+  ],
+  "date_created": "2026-01-24",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://manyfold.app/sysadmin/",
+  "website": "https://manyfold.app/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/manyfold.webp",
+  "config_path": "/opt/manyfold/.env",
+  "description": "Manyfold is an open source, self-hosted web application for managing a collection of 3d models, particularly focused on 3d printing.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/manyfold.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 15,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Setup library on first connection in /opt/manyfold/data",
+      "type": "info"
+    }
+  ]
+}

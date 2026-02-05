@@ -22,9 +22,13 @@ fetch_and_deploy_gh_release "Tautulli" "Tautulli/Tautulli" "tarball"
 
 msg_info "Installing Tautulli"
 cd /opt/Tautulli
-uv venv -q
-uv pip install -q -r requirements.txt
-uv pip install -q pyopenssl
+TAUTULLI_VERSION=$(get_latest_github_release "Tautulli/Tautulli" "false")
+echo "${TAUTULLI_VERSION}" >/opt/Tautulli/version.txt
+echo "master" >/opt/Tautulli/branch.txt
+$STD uv venv
+$STD source /opt/Tautulli/.venv/bin/activate
+$STD uv pip install -r requirements.txt
+$STD uv pip install pyopenssl
 msg_ok "Installed Tautulli"
 
 msg_info "Creating Service"

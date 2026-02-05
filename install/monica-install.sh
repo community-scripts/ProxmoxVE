@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="dom,gmp,iconv,mysqli,pdo-mysql,redis,tokenizer" setup_php
+PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="mysqli,pdo-mysql" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="monica" MARIADB_DB_USER="monica" setup_mariadb_db

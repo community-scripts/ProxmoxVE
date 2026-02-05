@@ -26,7 +26,7 @@ $STD apt install -y --no-install-recommends \
   pkg-config
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="domain_monitor" MARIADB_DB_USER="domainmonitor" setup_mariadb_db

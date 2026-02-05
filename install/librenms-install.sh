@@ -38,7 +38,7 @@ $STD apt install -y \
   python3-pip
 msg_ok "Installed Python Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="gmp,mysql,snmp" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="snmp" setup_php
 setup_mariadb
 setup_composer
 PYTHON_VERSION="3.13" setup_uv
@@ -78,11 +78,10 @@ sed -i "s/listen = \/run\/php\/php8.4-fpm.sock/listen = \/run\/php-fpm-librenms.
 msg_ok "Configured PHP-FPM"
 
 msg_info "Configure Nginx"
-IP_ADDR=$(hostname -I | awk '{print $1}')
 cat >/etc/nginx/sites-enabled/librenms <<'EOF'
 server {
  listen      80;
- server_name ${IP_ADDR};
+ server_name ${LOCAL_IP};
  root        /opt/librenms/html;
  index       index.php;
 
