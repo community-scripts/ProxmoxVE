@@ -38,7 +38,6 @@ for server in "${servers[@]}"; do
   fi
 done
 
-
 msg_info "Installing Collabora Online"
 curl -fsSL https://collaboraoffice.com/downloads/gpg/collaboraonline-release-keyring.gpg -o /etc/apt/keyrings/collaboraonline-release-keyring.gpg
 cat <<EOF >/etc/apt/sources.list.d/colloboraonline.sources
