@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-05T12:12:20Z",
+  "generated": "2026-02-05T18:19:13Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -179,9 +179,9 @@
     {
       "slug": "cloudreve",
       "repo": "cloudreve/cloudreve",
-      "version": "4.12.1",
+      "version": "4.13.0",
       "pinned": false,
-      "date": "2026-01-28T07:29:16Z"
+      "date": "2026-02-05T12:53:24Z"
     },
     {
       "slug": "comfyui",
@@ -221,9 +221,9 @@
     {
       "slug": "cronicle",
       "repo": "jhuckaby/Cronicle",
-      "version": "v0.9.103",
+      "version": "v0.9.105",
       "pinned": false,
-      "date": "2026-02-05T03:09:04Z"
+      "date": "2026-02-05T18:16:11Z"
     },
     {
       "slug": "cryptpad",
@@ -494,9 +494,9 @@
     {
       "slug": "homepage",
       "repo": "gethomepage/homepage",
-      "version": "v1.10.0",
+      "version": "v1.10.1",
       "pinned": false,
-      "date": "2026-02-05T06:17:32Z"
+      "date": "2026-02-05T15:03:45Z"
     },
     {
       "slug": "homer",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.2.0",
+      "version": "9.2.1",
       "pinned": false,
-      "date": "2026-02-05T04:18:08Z"
+      "date": "2026-02-05T16:39:35Z"
     },
     {
       "slug": "inspircd",
@@ -835,6 +835,13 @@
       "date": "2026-02-03T13:54:26Z"
     },
     {
+      "slug": "nginx-ui",
+      "repo": "0xJacky/nginx-ui",
+      "version": "v2.3.2",
+      "pinned": false,
+      "date": "2025-12-09T09:47:15Z"
+    },
+    {
       "slug": "nocodb",
       "repo": "nocodb/nocodb",
       "version": "0.301.2",
@@ -875,6 +882,13 @@
       "version": "v0.4.1",
       "pinned": false,
       "date": "2026-01-17T12:24:31Z"
+    },
+    {
+      "slug": "opencloud",
+      "repo": "opencloud-eu/opencloud",
+      "version": "v5.0.1",
+      "pinned": true,
+      "date": "2026-01-28T15:08:23Z"
     },
     {
       "slug": "opengist",
