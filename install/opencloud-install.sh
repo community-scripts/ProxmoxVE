@@ -74,7 +74,7 @@ curl -fsSL https://raw.githubusercontent.com/opencloud-eu/opencloud-compose/refs
 curl -fsSL https://raw.githubusercontent.com/opencloud-eu/opencloud-compose/refs/heads/main/config/opencloud/proxy.yaml -o "$CONFIG_DIR"/proxy.yaml.bak
 
 cat <<EOF >"$ENV_FILE"
-OC_URL=https://${OC_HOST}
+OC_URL=https://${OPENCLOUD_FQDN}
 OC_INSECURE=false
 IDM_CREATE_DEMO_USERS=false
 OC_LOG_LEVEL=warning
