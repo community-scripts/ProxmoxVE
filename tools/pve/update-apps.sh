@@ -56,7 +56,8 @@ function export_config_json() {
   "var_container": "${var_container}",
   "var_unattended": "${var_unattended}",
   "var_skip_confirm": "${var_skip_confirm}",
-  "var_auto_reboot": "${var_auto_reboot}"
+  "var_auto_reboot": "${var_auto_reboot}",
+  "var_tags": "${var_tags}"
 }
 EOF
 }
