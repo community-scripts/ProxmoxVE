@@ -192,7 +192,7 @@ while read -r container; do
   container_name=$(echo $container | awk '{print $2}')
   container_status=$(echo $container | awk '{print $3}')
   formatted_line=$(printf "$FORMAT" "$container_name" "$container_status")
-  if pct config "$container_id" | grep -qE "^tags:.*(${TAGS}).*"; then
+  if pct config "$container_id" | grep -qE "[^-][; ](${TAGS}).*"; then
     menu_items+=("$container_id" "$formatted_line" "OFF")
   fi
 done <<<"$containers"
