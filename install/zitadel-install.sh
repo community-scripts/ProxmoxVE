@@ -69,7 +69,8 @@ NODE_VERSION="22" setup_nodejs
 #node apps/login/server.js
 
 # Enable Corepack for pnpm (force to handle existing symlinks)
-corepack enable --install-directory /usr/local/bin
+#corepack enable --install-directory /usr/local/bin
+corepack enable
 
 PG_VERSION="17" setup_postgresql
 
