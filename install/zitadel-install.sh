@@ -15,6 +15,7 @@ update_os
 
 # Configuration variables
 ZITADEL_DIR="/opt/zitadel"
+#LOGIN_DIR="/opt/login"
 ZITADEL_USER="zitadel"
 ZITADEL_GROUP="zitadel"
 POSTGRES_VERSION="17"
@@ -51,18 +52,25 @@ groupadd --system "${ZITADEL_GROUP}"
 useradd --system --gid "${ZITADEL_GROUP}" --shell /bin/bash --home-dir "${ZITADEL_DIR}" "${ZITADEL_USER}"
 msg_ok "Created zitadel system user"
 
-fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "tarball" "latest"
-chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
+# fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "tarball" "latest"
+# chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
 
-#fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${INSTALL_DIR}" "zitadel-linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${INSTALL_DIR}" "zitadel-linux-amd64.tar.gz"
 # Might need to chmod +x "$INSTALL_DIR/zitadel"
 
-#fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${ZITADEL_DIR}" "zitadel-login.tar.gz"
+
+
+# fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
+# mv "$LOGIN_DIR"/* "$INSTALL_DIR/"
 # # The archive extracts to apps/login/ structure
 # if [[ -d "$LOGIN_DIR/apps/login" ]]; then
     # mv "$LOGIN_DIR/apps/login"/* "$LOGIN_DIR/" 2>/dev/null || true
     # rm -rf "$LOGIN_DIR/apps"
 # fi
+
+chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
+#chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}"
 
 #NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
 NODE_VERSION="24" setup_nodejs
@@ -70,8 +78,8 @@ NODE_VERSION="24" setup_nodejs
 
 # Enable Corepack for pnpm (force to handle existing symlinks)
 #corepack enable --install-directory /usr/local/bin
-export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-$STD corepack enable
+#export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+#$STD corepack enable
 
 PG_VERSION="17" setup_postgresql
 
@@ -84,10 +92,10 @@ msg_ok "Configured PostgreSQL"
 
 msg_info "Installing Zitadel"
 cd "${ZITADEL_DIR}"
-sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && pnpm install"
-sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run-many --target generate"
-sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run @zitadel/api:build"
-sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:\$PATH && pnpm nx run @zitadel/login:build"
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && pnpm install"
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run-many --target generate"
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run @zitadel/api:build"
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:\$PATH && pnpm nx run @zitadel/login:build"
 
 # Update prod-default.yaml for network access
 cat > "${ZITADEL_DIR}/apps/api/prod-default.yaml" <<EOF
@@ -169,17 +177,24 @@ chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/apps/login/.env"
 sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${ZITADEL_DIR}/apps/login/package.json"
 
 # Initialize database as zitadel user (no masterkey needed for init)
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
+	# ./.artifacts/bin/linux/amd64/zitadel.local init \
+	# --config apps/api/prod-default.yaml"
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	./.artifacts/bin/linux/amd64/zitadel.local init \
+	./zitadel init \
 	--config apps/api/prod-default.yaml"
 
 # Run setup phase as zitadel user (with masterkey and steps)
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
+	# ./.artifacts/bin/linux/amd64/zitadel.local setup \
+	# --config apps/api/prod-default.yaml \
+	# --steps apps/api/prod-default.yaml \
+	# --masterkey '${MASTERKEY}'"
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	./.artifacts/bin/linux/amd64/zitadel.local setup \
+	./zitadel setup \
 	--config apps/api/prod-default.yaml \
 	--steps apps/api/prod-default.yaml \
 	--masterkey '${MASTERKEY}'"
-
 
 
 # Create .env.secrets file
@@ -217,7 +232,8 @@ Group=${ZITADEL_GROUP}
 WorkingDirectory=${ZITADEL_DIR}
 EnvironmentFile=${ZITADEL_DIR}/.env.secrets
 Environment="PATH=/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin"
-ExecStart=${ZITADEL_DIR}/.artifacts/bin/linux/amd64/zitadel.local start --config ${ZITADEL_DIR}/apps/api/prod-default.yaml --masterkey \${ZITADEL_MASTERKEY}
+#ExecStart=${ZITADEL_DIR}/.artifacts/bin/linux/amd64/zitadel.local start --config ${ZITADEL_DIR}/apps/api/prod-default.yaml --masterkey \${ZITADEL_MASTERKEY}
+ExecStart=${ZITADEL_DIR}/zitadel start --config ${ZITADEL_DIR}/apps/api/prod-default.yaml --masterkey \${ZITADEL_MASTERKEY}
 Restart=always
 RestartSec=10
 StandardOutput=append:${ZITADEL_DIR}/logs/api.log
