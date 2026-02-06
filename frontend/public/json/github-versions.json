@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-06T12:11:58Z",
+  "generated": "2026-02-06T18:16:31Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -781,9 +781,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.04",
+      "version": "2026.02.06",
       "pinned": false,
-      "date": "2026-02-04T20:01:18Z"
+      "date": "2026-02-06T14:20:34Z"
     },
     {
       "slug": "miniflux",
