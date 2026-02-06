@@ -420,6 +420,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - [gh] Update to the New Script request template [@tremor021](https://github.com/tremor021) ([#11612](https://github.com/community-scripts/ProxmoxVE/pull/11612))
 
+### ❔ Uncategorized
+
+  - Opencloud: fix JSON [@vhsdream](https://github.com/vhsdream) ([#11617](https://github.com/community-scripts/ProxmoxVE/pull/11617))
+
 ## 2026-02-05
 
 ### 🆕 New Scripts
