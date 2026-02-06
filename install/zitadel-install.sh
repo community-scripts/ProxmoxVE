@@ -70,7 +70,8 @@ NODE_VERSION="24" setup_nodejs
 
 # Enable Corepack for pnpm (force to handle existing symlinks)
 #corepack enable --install-directory /usr/local/bin
-corepack enable
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+$STD corepack enable
 
 PG_VERSION="17" setup_postgresql
 
