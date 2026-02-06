@@ -64,6 +64,23 @@ type CountResponse struct {
 	NSAPPCount   map[string]int64 `json:"nsapp_count"`
 }
 
+func ensureIndexes(ctx context.Context, coll *mongo.Collection) error {
+	indexes := []mongo.IndexModel{
+		{Keys: bson.D{{Key: "random_id", Value: 1}}},
+		{Keys: bson.D{{Key: "status", Value: 1}}},
+		{Keys: bson.D{{Key: "nsapp", Value: 1}}},
+		{Keys: bson.D{{Key: "created_at", Value: 1}}},
+		{Keys: bson.D{
+			{Key: "os_type", Value: 1},
+			{Key: "os_version", Value: 1},
+		}},
+		{Keys: bson.D{{Key: "error", Value: 1}}},
+	}
+
+	_, err := coll.Indexes().CreateMany(ctx, indexes)
+	return err
+}
+
 // ConnectDatabase initializes the MongoDB connection
 func ConnectDatabase() {
 	loadEnv()
@@ -84,6 +101,11 @@ func ConnectDatabase() {
 		log.Fatal("Failed to connect to MongoDB!", err)
 	}
 	collection = client.Database(database).Collection("data_models")
+
+	if err := ensureIndexes(ctx, collection); err != nil {
+		log.Fatal("Failed creating indexes!", err)
+	}
+	log.Println("Indexes ensured")
 	fmt.Println("Connected to MongoDB on 10.10.10.18")
 }
 
