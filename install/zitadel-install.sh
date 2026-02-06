@@ -65,7 +65,7 @@ chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
 # fi
 
 #NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 #node apps/login/server.js
 
 # Enable Corepack for pnpm (force to handle existing symlinks)
