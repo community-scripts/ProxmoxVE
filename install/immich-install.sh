@@ -424,7 +424,7 @@ set -a
 . ${INSTALL_DIR}/.env
 set +a
 
-/usr/bin/node ${APP_DIR}/dist/main.js "\$@"
+/usr/bin/node --no-warnings ${APP_DIR}/dist/main.js "\$@"
 EOF
 chmod +x "$ML_DIR"/ml_start.sh "$APP_DIR"/bin/start.sh
 ln -sf "$APP_DIR"/cli/bin/immich /usr/bin/immich

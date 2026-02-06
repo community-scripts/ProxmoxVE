@@ -140,7 +140,7 @@ EOF
     GEO_DIR="${INSTALL_DIR}/geodata"
 
     [[ -f "$ML_DIR"/ml_start.sh ]] && cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
-    if grep -qs "set -a" "$APP_DIR"/bin/start.sh; then
+    if grep -qs "set -a" "$APP_DIR"/bin/start.sh && grep -qs "warnings" "$APP_DIR"/bin/start.sh; then
       cp "$APP_DIR"/bin/start.sh "$INSTALL_DIR"
     else
       cat <<EOF >"$INSTALL_DIR"/start.sh
@@ -150,7 +150,7 @@ set -a
 . ${INSTALL_DIR}/.env
 set +a
 
-/usr/bin/node ${APP_DIR}/dist/main.js "\$@"
+/usr/bin/node --no-warnings ${APP_DIR}/dist/main.js "\$@"
 EOF
       chmod +x "$INSTALL_DIR"/start.sh
     fi
