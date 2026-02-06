@@ -4,14 +4,14 @@
   "categories": [
     0
   ],
-  "date_created": "2025-01-17",
+  "date_created": "2025-02-06",
   "type": "ct",
   "updateable": true,
   "privileged": false,
   "interface_port": 1337,
   "documentation": "https://nightscout.github.io/",
   "website": "http://www.nightscout.info/",
-  "logo": "https://raw.githubusercontent.com/nightscout/cgm-remote-monitor/master/static/images/large.png",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nightscout.webp",
   "config_path": "/opt/nightscout/my.env",
   "description": "Nightscout is an open source, DIY project that allows real time access to a CGM data via personal website, smartwatch watchers, or apps and widgets available for smartphones.",
   "install_methods": [
