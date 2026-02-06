@@ -178,7 +178,6 @@ http:
         servers:
           - url: "http://$LOCAL_IP:3000"
 EOF
-$STD npm run db:generate
 $STD npm run db:sqlite:push
 
 . /etc/os-release
