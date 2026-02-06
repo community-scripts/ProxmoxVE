@@ -429,6 +429,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix(core): spinner misalignment [@ls-root](https://github.com/ls-root) ([#11627](https://github.com/community-scripts/ProxmoxVE/pull/11627))
 
+  - #### 🔧 Refactor
+
+    - [Fix] build.func: QOL grammar adjustment for Creating LXC message [@vhsdream](https://github.com/vhsdream) ([#11633](https://github.com/community-scripts/ProxmoxVE/pull/11633))
+
 ### 📚 Documentation
 
   - [gh] Update to the New Script request template [@tremor021](https://github.com/tremor021) ([#11612](https://github.com/community-scripts/ProxmoxVE/pull/11612))
