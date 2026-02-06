@@ -35,6 +35,10 @@
     {
       "text": "The configuration at `/etc/shelfmark/.env` is for bootstrapping the initial install. Customize the configuration via the Shelfmark UI.",
       "type": "info"
+    },
+    {
+      "text": "This version of the application does not support routing through Tor (the `USING_TOR` env var).",
+      "type": "info"
     }
   ]
 }
