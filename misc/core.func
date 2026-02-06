@@ -488,7 +488,7 @@ spinner() {
   local i=0
   while true; do
     local index=$((i++ % ${#chars[@]}))
-    printf "\r\033[2K%s %b" "${CS_YWB}${chars[$index]}${CS_CL}" "${CS_YWB}${msg}${CS_CL}"
+    printf "\r\033[2K%s %b" "${CS_YWB}${TAB}${chars[$index]}${TAB}${CS_CL}" "${CS_YWB}${msg}${CS_CL}"
     sleep 0.1
   done
 }
