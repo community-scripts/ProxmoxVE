@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-05T18:19:13Z",
+  "generated": "2026-02-06T00:20:24Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -375,9 +375,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.235.0",
+      "version": "2.236.0",
       "pinned": false,
-      "date": "2026-02-03T19:27:17Z"
+      "date": "2026-02-05T19:30:11Z"
     },
     {
       "slug": "gitea",
@@ -886,9 +886,9 @@
     {
       "slug": "opencloud",
       "repo": "opencloud-eu/opencloud",
-      "version": "v5.0.1",
+      "version": "v5.0.2",
       "pinned": true,
-      "date": "2026-01-28T15:08:23Z"
+      "date": "2026-02-05T16:29:01Z"
     },
     {
       "slug": "opengist",
@@ -942,9 +942,9 @@
     {
       "slug": "pangolin",
       "repo": "fosrl/pangolin",
-      "version": "1.15.1",
+      "version": "1.15.2",
       "pinned": false,
-      "date": "2026-01-24T20:34:24Z"
+      "date": "2026-02-05T19:23:58Z"
     },
     {
       "slug": "paperless-ai",
@@ -1607,9 +1607,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.3.1",
+      "version": "v4.0.0",
       "pinned": false,
-      "date": "2026-01-29T12:45:35Z"
+      "date": "2026-02-05T22:42:02Z"
     },
     {
       "slug": "zigbee2mqtt",
