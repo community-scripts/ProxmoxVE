@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-06T06:19:41Z",
+  "generated": "2026-02-06T12:11:58Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -1250,9 +1250,9 @@
     {
       "slug": "signoz",
       "repo": "SigNoz/signoz-otel-collector",
-      "version": "v0.129.13",
+      "version": "v0.142.0",
       "pinned": false,
-      "date": "2026-01-27T15:43:00Z"
+      "date": "2026-02-06T11:40:30Z"
     },
     {
       "slug": "silverbullet",
