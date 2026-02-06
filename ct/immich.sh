@@ -248,6 +248,7 @@ EOF
       msg_ok "Disabled Maintenance Mode"
     fi
     systemctl restart immich-ml immich-web
+    [[ -f /etc/systemd/system/immich-proxy.service ]] && systemctl restart immich-proxy
     msg_ok "Updated successfully!"
   fi
   exit
