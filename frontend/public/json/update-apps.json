@@ -41,7 +41,7 @@
       "type": "info"
     },
     {
-      "text": "Only containers with `community-script` or `proxmox-helper-scripts` tags are listed for update.",
+      "text": "By default, only containers with `community-script` or `proxmox-helper-scripts` tags are listed for update. You can override this by using `var_tags='custom-tag|othertag'`.",
       "type": "info"
     },
     {
