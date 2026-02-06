@@ -41,15 +41,15 @@
       "type": "info"
     },
     {
-      "text": "**Optional External Apps**: extract zip archives from App Store to `/etc/opencloud/assets/apps`",
+      "text": "**Optional External Apps**: extract zip archives from App Store to `/etc/opencloud/web/assets/apps`",
       "type": "info"
     },
     {
-      "text": "**Optional CalDAV and CardDAV**: requires separate Radicale install. Edit and rename `/opt/opencloud/proxy.yaml.bak` and change your Radicale config to use `http_x_remote_user` as the auth method",
+      "text": "**Optional CalDAV and CardDAV**: requires separate Radicale install. Edit and rename `/etc/opencloud/proxy.yaml.bak` and change your Radicale config to use `http_x_remote_user` as the auth method",
       "type": "info"
     },
     {
-      "text": "**Optional OpenID**: Authelia and PocketID supported. Uncomment relevant lines in `/opt/opencloud/opencloud.env` and consult OpenCloud GitHub discussions for configuration tips",
+      "text": "**Optional OpenID**: Authelia and PocketID supported. Uncomment relevant lines in `/etc/opencloud/opencloud.env` and consult OpenCloud GitHub discussions for configuration tips",
       "type": "info"
     },
     {
