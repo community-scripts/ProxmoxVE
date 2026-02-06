@@ -14,14 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  unrar-free
+$STD apt install -y unrar-free
 ln -sf /usr/bin/unrar-free /usr/bin/unrar
 msg_ok "Installed Dependencies"
 
 mkdir -p /etc/shelfmark
 cat <<EOF >/etc/shelfmark/.env
 DOCKERMODE=false
+URL_BASE=""
 CONFIG_DIR=/etc/shelfmark
 TMP_DIR=/tmp/shelfmark
 ENABLE_LOGGING=true
@@ -111,7 +111,6 @@ else
     ffmpeg \
     chromium-common \
     chromium \
-    chromium-driver \
     python3-tk
   msg_ok "Installed internal bypasser dependencies"
 fi
