@@ -415,6 +415,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - refactor: homepage [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11605](https://github.com/community-scripts/ProxmoxVE/pull/11605))
 
+### 📚 Documentation
+
+  - [gh] Update to the New Script request template [@tremor021](https://github.com/tremor021) ([#11612](https://github.com/community-scripts/ProxmoxVE/pull/11612))
+
 ## 2026-02-05
 
 ### 🆕 New Scripts
