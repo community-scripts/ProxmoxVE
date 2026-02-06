@@ -105,7 +105,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="2.5.3"
+  RELEASE="2.5.4"
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
