@@ -84,27 +84,10 @@ msg_ok "Configured PostgreSQL"
 
 msg_info "Installing Zitadel"
 cd "${ZITADEL_DIR}"
-
-echo "***********DEBUG #1"
-
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && corepack enable && pnpm install"
-
-echo "***********DEBUG #2"
-
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run-many --target generate"
-#sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run-many --target generate"
-
-echo "***********DEBUG #3"
-
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run @zitadel/api:build"
-#sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run @zitadel/api:build"
-
-echo "***********DEBUG #4"
-
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:\$PATH && pnpm nx run @zitadel/login:build"
-#sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:\$PATH && pnpm nx run @zitadel/login:build"
-
-echo "***********DEBUG #5"
 
 # Update prod-default.yaml for network access
 cat > "${ZITADEL_DIR}/apps/api/prod-default.yaml" <<EOF
@@ -326,34 +309,12 @@ Master Key: ${MASTERKEY}
 
 IMPORTANT: Keep these credentials secure and backup this file!
 
-SERVICE MANAGEMENT:
--------------------
-Start services:   sudo systemctl start zitadel-api zitadel-login
-Stop services:    sudo systemctl stop zitadel-login zitadel-api
-Restart services: sudo systemctl restart zitadel-api zitadel-login
-Check status:     sudo systemctl status zitadel-api zitadel-login
-
-View logs:
-  API:   sudo journalctl -u zitadel-api -f
-  Login: sudo journalctl -u zitadel-login -f
-  Or use: ${ZITADEL_DIR}/view-logs.sh [api|login]
-
-MANAGEMENT SCRIPTS:
--------------------
-${ZITADEL_DIR}/start-zitadel.sh    - Start all services
-${ZITADEL_DIR}/stop-zitadel.sh     - Stop all services
-${ZITADEL_DIR}/restart-zitadel.sh  - Restart all services
-${ZITADEL_DIR}/status-zitadel.sh   - Check service status
-${ZITADEL_DIR}/view-logs.sh        - View service logs
-
 VERIFICATION:
 -------------
 1. Check API health:
    curl http://${SERVER_IP}:${API_PORT}/debug/healthz
-
 2. Access Management Console:
    http://${SERVER_IP}:${API_PORT}/ui/console
-
 3. Login with admin credentials above
 
 DATABASE INFORMATION:
@@ -363,21 +324,6 @@ ZITADEL uses the admin credentials to create:
   - Database: ${DB_NAME}
   - User: ${DB_USER}
   - Schemas: eventstore, projections, system
-
-TROUBLESHOOTING:
-----------------
-If services fail to start:
-1. Check PostgreSQL: sudo systemctl status postgresql
-2. Check logs: sudo journalctl -u zitadel-api -n 100
-3. Verify database (after first run): PGPASSWORD=${DB_PASSWORD} psql -h localhost -U ${DB_USER} -d ${DB_NAME} -c "\\dn"
-4. Check network access: curl http://${SERVER_IP}:${API_PORT}/debug/healthz
-
-NETWORK ACCESS:
----------------
-To access from other machines:
-1. Ensure firewall allows ports ${API_PORT} and ${LOGIN_PORT}
-2. Use URLs with ${SERVER_IP} instead of localhost
-3. Configure DNS or /etc/hosts on client machines if needed
 
 PRODUCTION NOTES:
 -----------------
@@ -401,52 +347,9 @@ Database restore:
 
 ################################################################################
 EOF
-
 chmod 600 "${ZITADEL_DIR}/INSTALLATION_INFO.txt"
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/INSTALLATION_INFO.txt"
-
 msg_ok "Saved Credentials"
-
-
-echo ""
-echo "================================================================================"
-log_info "ZITADEL Installation Complete!"
-echo "================================================================================"
-echo ""
-echo -e "${GREEN}Access URLs:${NC}"
-echo "  Management Console: http://${SERVER_IP}:${API_PORT}/ui/console"
-echo "  Login V2 UI: http://${SERVER_IP}:${LOGIN_PORT}/ui/v2/login"
-echo "  API Endpoint: http://${SERVER_IP}:${API_PORT}"
-echo ""
-echo -e "${GREEN}Default Admin Credentials:${NC}"
-echo "  Username: zitadel-admin@zitadel.${SERVER_IP}"
-echo "  Password: Password1!"
-echo ""
-echo -e "${YELLOW}IMPORTANT:${NC}"
-echo "  1. Change the default admin password immediately after first login"
-echo "  2. All credentials are saved in: ${ZITADEL_DIR}/INSTALLATION_INFO.txt"
-echo "  3. Keep this file secure and backed up!"
-echo ""
-echo -e "${GREEN}Service Management:${NC}"
-echo "  Check status: sudo systemctl status zitadel-api zitadel-login"
-echo "  View logs:    sudo journalctl -u zitadel-api -f"
-echo "  Restart:      sudo systemctl restart zitadel-api zitadel-login"
-echo ""
-echo -e "${GREEN}Management Scripts:${NC}"
-echo "  ${ZITADEL_DIR}/start-zitadel.sh"
-echo "  ${ZITADEL_DIR}/stop-zitadel.sh"
-echo "  ${ZITADEL_DIR}/restart-zitadel.sh"
-echo "  ${ZITADEL_DIR}/status-zitadel.sh"
-echo "  ${ZITADEL_DIR}/view-logs.sh [api|login]"
-echo ""
-echo -e "${GREEN}Verification:${NC}"
-echo "  curl http://${SERVER_IP}:${API_PORT}/debug/healthz"
-echo ""
-echo -e "${BLUE}Note:${NC} Services may take 30-60 seconds to fully initialize."
-echo "      If the API is not responding immediately, wait and try again."
-echo ""
-echo "================================================================================"
-
 
 motd_ssh
 customize
