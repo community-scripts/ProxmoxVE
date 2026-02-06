@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: aendel
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop nightscout
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "nightscout" "nightscout/cgm-remote-monitor" "source"
+    fetch_and_deploy_gh_release "nightscout" "nightscout/cgm-remote-monitor" "tarball"
 
     msg_info "Updating Nightscout"
     cd /opt/nightscout
