@@ -258,7 +258,7 @@ Group=${ZITADEL_GROUP}
 WorkingDirectory=${ZITADEL_DIR}
 Environment="PATH=/usr/local/bin:/usr/bin:/bin"
 Environment="NODE_ENV=production"
-ExecStart=/usr/local/bin/pnpm nx run @zitadel/login:prod
+ExecStart=pnpm nx run @zitadel/login:prod
 Restart=always
 RestartSec=10
 StandardOutput=append:${ZITADEL_DIR}/logs/login.log
@@ -280,7 +280,6 @@ systemctl daemon-reload
 systemctl enable -q --now zitadel-api.service
 
 # Wait for API to start
-log_info "Waiting for API server to start..."
 sleep 10
 
 # Enable and start Login service
@@ -309,7 +308,7 @@ API Endpoint: http://${SERVER_IP}:${API_PORT}
 
 DEFAULT ADMIN CREDENTIALS:
 --------------------------
-Username: zitadel-admin@zitadel.${SERVER_IP}
+Username: zitadel-admin@zitadel.localhost
 Password: Password1!
 
 IMPORTANT: Change this password immediately after first login!
