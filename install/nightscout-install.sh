@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 MONGO_VERSION="8.0" setup_mongodb
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "nightscout" "nightscout/cgm-remote-monitor" "source"
+fetch_and_deploy_gh_release "nightscout" "nightscout/cgm-remote-monitor" "tarball"
 
 msg_info "Installing Nightscout"
 $STD npm install --prefix /opt/nightscout
