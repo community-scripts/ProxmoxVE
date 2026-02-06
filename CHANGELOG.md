@@ -404,6 +404,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [FIX] OpenCloud: path issues [@vhsdream](https://github.com/vhsdream) ([#11593](https://github.com/community-scripts/ProxmoxVE/pull/11593))
     - [FIX] Homepage: preserve public/images & public/icons if they exist [@vhsdream](https://github.com/vhsdream) ([#11594](https://github.com/community-scripts/ProxmoxVE/pull/11594))
 
 ## 2026-02-05
