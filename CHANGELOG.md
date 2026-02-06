@@ -21,7 +21,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>January - 27 entries</h4></summary>
+<summary><h4>February (4 entries)</h4></summary>
+
+[View February 2026 Changelog](.github/changelogs/2026/02.md)
+
+</details>
+
+<details>
+<summary><h4>January (31 entries)</h4></summary>
 
 [View January 2026 Changelog](.github/changelogs/2026/01.md)
 
@@ -391,386 +398,115 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-02-06
 
+### 🚀 Updated Scripts
 
-<details>
-<summary><h2>📜 History</h2></summary>
+  - #### 🐞 Bug Fixes
 
+    - [FIX] OpenCloud: path issues [@vhsdream](https://github.com/vhsdream) ([#11593](https://github.com/community-scripts/ProxmoxVE/pull/11593))
+    - [FIX] Homepage: preserve public/images & public/icons if they exist [@vhsdream](https://github.com/vhsdream) ([#11594](https://github.com/community-scripts/ProxmoxVE/pull/11594))
 
-<details>
-<summary><h3>2026</h3></summary>
+## 2026-02-05
 
+### 🆕 New Scripts
 
-<details>
-<summary><h4>January (31 entries)</h4></summary>
+  - OpenCloud ([#11538](https://github.com/community-scripts/ProxmoxVE/pull/11538))
+- Nginx-UI ([#11573](https://github.com/community-scripts/ProxmoxVE/pull/11573))
+- New: SQL-Server 2025 | Refactor SQL-Server 2022  [@MickLesk](https://github.com/MickLesk) ([#11546](https://github.com/community-scripts/ProxmoxVE/pull/11546))
 
-[View January 2026 Changelog](.github/changelogs/2026/01.md)
+### 🚀 Updated Scripts
 
-</details>
+  - #### 🐞 Bug Fixes
 
-</details>
+    - OpenCloud: pin version to 5.0.2; Collabora CSP fix [@vhsdream](https://github.com/vhsdream) ([#11585](https://github.com/community-scripts/ProxmoxVE/pull/11585))
+    - Wanderer: Fix repo [@tremor021](https://github.com/tremor021) ([#11567](https://github.com/community-scripts/ProxmoxVE/pull/11567))
 
-<details>
-<summary><h3>2025</h3></summary>
+  - #### ✨ New Features
 
+    - Refactor: Docker-VM (Multi-OS / Cloud-Init / Stabilization)  [@MickLesk](https://github.com/MickLesk) ([#9047](https://github.com/community-scripts/ProxmoxVE/pull/9047))
 
-<details>
-<summary><h4>December (31 entries)</h4></summary>
+### 💾 Core
 
-[View December 2025 Changelog](.github/changelogs/2025/12.md)
+  - #### ✨ New Features
 
-</details>
+    - cloud-init: add interactive SSH key discovery and selection [@MickLesk](https://github.com/MickLesk) ([#11547](https://github.com/community-scripts/ProxmoxVE/pull/11547))
 
-<details>
-<summary><h4>November (29 entries)</h4></summary>
+### 📚 Documentation
 
-[View November 2025 Changelog](.github/changelogs/2025/11.md)
+  - github: extend docs / contribution / templates [@MickLesk](https://github.com/MickLesk) ([#10921](https://github.com/community-scripts/ProxmoxVE/pull/10921))
 
-</details>
+### 🌐 Website
 
-<details>
-<summary><h4>October (30 entries)</h4></summary>
+  - #### 🐞 Bug Fixes
 
-[View October 2025 Changelog](.github/changelogs/2025/10.md)
+    - fix(frontend): theme respective syntax highlighting [@ls-root](https://github.com/ls-root) ([#11565](https://github.com/community-scripts/ProxmoxVE/pull/11565))
 
-</details>
+## 2026-02-04
 
-<details>
-<summary><h4>September (29 entries)</h4></summary>
+### 🆕 New Scripts
 
-[View September 2025 Changelog](.github/changelogs/2025/09.md)
+  - Wishlist ([#11527](https://github.com/community-scripts/ProxmoxVE/pull/11527))
+- WriteFreely ([#11524](https://github.com/community-scripts/ProxmoxVE/pull/11524))
 
-</details>
+### 🚀 Updated Scripts
 
-<details>
-<summary><h4>August (30 entries)</h4></summary>
+  - Add log directory and permissions for koillection [@shineangelic](https://github.com/shineangelic) ([#11553](https://github.com/community-scripts/ProxmoxVE/pull/11553))
 
-[View August 2025 Changelog](.github/changelogs/2025/08.md)
+  - #### 🐞 Bug Fixes
 
-</details>
+    - [FIX] Scanopy: ensure Scanopy Daemon update [@vhsdream](https://github.com/vhsdream) ([#11541](https://github.com/community-scripts/ProxmoxVE/pull/11541))
+    - Immich: pin version to 2.5.3 [@vhsdream](https://github.com/vhsdream) ([#11515](https://github.com/community-scripts/ProxmoxVE/pull/11515))
 
-<details>
-<summary><h4>July (29 entries)</h4></summary>
+### 💾 Core
 
-[View July 2025 Changelog](.github/changelogs/2025/07.md)
+  - #### ✨ New Features
 
-</details>
+    - core: create vm-core.func from dev [@MickLesk](https://github.com/MickLesk) ([#11528](https://github.com/community-scripts/ProxmoxVE/pull/11528))
 
-<details>
-<summary><h4>June (29 entries)</h4></summary>
+### 🧰 Tools
 
-[View June 2025 Changelog](.github/changelogs/2025/06.md)
+  - #### ✨ New Features
 
-</details>
+    - [ADDON] Immich Public Proxy addon [@vhsdream](https://github.com/vhsdream) ([#11518](https://github.com/community-scripts/ProxmoxVE/pull/11518))
 
-<details>
-<summary><h4>May (30 entries)</h4></summary>
+### 🌐 Website
 
-[View May 2025 Changelog](.github/changelogs/2025/05.md)
+  - #### 🐞 Bug Fixes
 
-</details>
+    - fix(frontend): implement weighted search scoring for command menu [@ls-root](https://github.com/ls-root) ([#11534](https://github.com/community-scripts/ProxmoxVE/pull/11534))
 
-<details>
-<summary><h4>April (25 entries)</h4></summary>
+### ❔ Uncategorized
 
-[View April 2025 Changelog](.github/changelogs/2025/04.md)
+  - [FIX] Immich Public Proxy docs link [@vhsdream](https://github.com/vhsdream) ([#11543](https://github.com/community-scripts/ProxmoxVE/pull/11543))
 
-</details>
+## 2026-02-03
 
-<details>
-<summary><h4>March (30 entries)</h4></summary>
+### 🆕 New Scripts
 
-[View March 2025 Changelog](.github/changelogs/2025/03.md)
+  - Wealthfolio ([#11511](https://github.com/community-scripts/ProxmoxVE/pull/11511))
 
-</details>
+### 🚀 Updated Scripts
 
-<details>
-<summary><h4>February (26 entries)</h4></summary>
+  - #### 🐞 Bug Fixes
 
-[View February 2025 Changelog](.github/changelogs/2025/02.md)
+    - [FIX] Shelfmark: unpin Chromium version [@vhsdream](https://github.com/vhsdream) ([#11505](https://github.com/community-scripts/ProxmoxVE/pull/11505))
 
-</details>
+  - #### ✨ New Features
 
-<details>
-<summary><h4>January (27 entries)</h4></summary>
+    - [FEAT] Scanopy: automatically update integrated daemon [@vhsdream](https://github.com/vhsdream) ([#11506](https://github.com/community-scripts/ProxmoxVE/pull/11506))
 
-[View January 2025 Changelog](.github/changelogs/2025/01.md)
+### 💾 Core
 
-</details>
+  - #### 🐞 Bug Fixes
 
-</details>
+    - [FIX] tools.func: trim spaces in app_lc when checking for gh release [@vhsdream](https://github.com/vhsdream) ([#11512](https://github.com/community-scripts/ProxmoxVE/pull/11512))
 
-<details>
-<summary><h3>2024</h3></summary>
+### 🌐 Website
 
+  - #### 🐞 Bug Fixes
 
-<details>
-<summary><h4>December (22 entries)</h4></summary>
-
-[View December 2024 Changelog](.github/changelogs/2024/12.md)
-
-</details>
-
-<details>
-<summary><h4>November (15 entries)</h4></summary>
-
-[View November 2024 Changelog](.github/changelogs/2024/11.md)
-
-</details>
-
-<details>
-<summary><h4>October (9 entries)</h4></summary>
-
-[View October 2024 Changelog](.github/changelogs/2024/10.md)
-
-</details>
-
-<details>
-<summary><h4>September (1 entries)</h4></summary>
-
-[View September 2024 Changelog](.github/changelogs/2024/09.md)
-
-</details>
-
-<details>
-<summary><h4>August (2 entries)</h4></summary>
-
-[View August 2024 Changelog](.github/changelogs/2024/08.md)
-
-</details>
-
-<details>
-<summary><h4>July (0 entries)</h4></summary>
-
-[View July 2024 Changelog](.github/changelogs/2024/07.md)
-
-</details>
-
-<details>
-<summary><h4>June (8 entries)</h4></summary>
-
-[View June 2024 Changelog](.github/changelogs/2024/06.md)
-
-</details>
-
-<details>
-<summary><h4>May (16 entries)</h4></summary>
-
-[View May 2024 Changelog](.github/changelogs/2024/05.md)
-
-</details>
-
-<details>
-<summary><h4>April (14 entries)</h4></summary>
-
-[View April 2024 Changelog](.github/changelogs/2024/04.md)
-
-</details>
-
-<details>
-<summary><h4>March (5 entries)</h4></summary>
-
-[View March 2024 Changelog](.github/changelogs/2024/03.md)
-
-</details>
-
-<details>
-<summary><h4>February (9 entries)</h4></summary>
-
-[View February 2024 Changelog](.github/changelogs/2024/02.md)
-
-</details>
-
-<details>
-<summary><h4>January (9 entries)</h4></summary>
-
-[View January 2024 Changelog](.github/changelogs/2024/01.md)
-
-</details>
-
-</details>
-
-<details>
-<summary><h3>2023</h3></summary>
-
-
-<details>
-<summary><h4>December (3 entries)</h4></summary>
-
-[View December 2023 Changelog](.github/changelogs/2023/12.md)
-
-</details>
-
-<details>
-<summary><h4>November (3 entries)</h4></summary>
-
-[View November 2023 Changelog](.github/changelogs/2023/11.md)
-
-</details>
-
-<details>
-<summary><h4>October (7 entries)</h4></summary>
-
-[View October 2023 Changelog](.github/changelogs/2023/10.md)
-
-</details>
-
-<details>
-<summary><h4>September (10 entries)</h4></summary>
-
-[View September 2023 Changelog](.github/changelogs/2023/09.md)
-
-</details>
-
-<details>
-<summary><h4>August (7 entries)</h4></summary>
-
-[View August 2023 Changelog](.github/changelogs/2023/08.md)
-
-</details>
-
-<details>
-<summary><h4>July (5 entries)</h4></summary>
-
-[View July 2023 Changelog](.github/changelogs/2023/07.md)
-
-</details>
-
-<details>
-<summary><h4>June (5 entries)</h4></summary>
-
-[View June 2023 Changelog](.github/changelogs/2023/06.md)
-
-</details>
-
-<details>
-<summary><h4>May (8 entries)</h4></summary>
-
-[View May 2023 Changelog](.github/changelogs/2023/05.md)
-
-</details>
-
-<details>
-<summary><h4>April (8 entries)</h4></summary>
-
-[View April 2023 Changelog](.github/changelogs/2023/04.md)
-
-</details>
-
-<details>
-<summary><h4>March (8 entries)</h4></summary>
-
-[View March 2023 Changelog](.github/changelogs/2023/03.md)
-
-</details>
-
-<details>
-<summary><h4>February (6 entries)</h4></summary>
-
-[View February 2023 Changelog](.github/changelogs/2023/02.md)
-
-</details>
-
-<details>
-<summary><h4>January (15 entries)</h4></summary>
-
-[View January 2023 Changelog](.github/changelogs/2023/01.md)
-
-</details>
-
-</details>
-
-<details>
-<summary><h3>2022</h3></summary>
-
-
-<details>
-<summary><h4>December (7 entries)</h4></summary>
-
-[View December 2022 Changelog](.github/changelogs/2022/12.md)
-
-</details>
-
-<details>
-<summary><h4>November (7 entries)</h4></summary>
-
-[View November 2022 Changelog](.github/changelogs/2022/11.md)
-
-</details>
-
-<details>
-<summary><h4>October (2 entries)</h4></summary>
-
-[View October 2022 Changelog](.github/changelogs/2022/10.md)
-
-</details>
-
-<details>
-<summary><h4>September (9 entries)</h4></summary>
-
-[View September 2022 Changelog](.github/changelogs/2022/09.md)
-
-</details>
-
-<details>
-<summary><h4>August (7 entries)</h4></summary>
-
-[View August 2022 Changelog](.github/changelogs/2022/08.md)
-
-</details>
-
-<details>
-<summary><h4>July (10 entries)</h4></summary>
-
-[View July 2022 Changelog](.github/changelogs/2022/07.md)
-
-</details>
-
-<details>
-<summary><h4>June (1 entries)</h4></summary>
-
-[View June 2022 Changelog](.github/changelogs/2022/06.md)
-
-</details>
-
-<details>
-<summary><h4>May (8 entries)</h4></summary>
-
-[View May 2022 Changelog](.github/changelogs/2022/05.md)
-
-</details>
-
-<details>
-<summary><h4>April (13 entries)</h4></summary>
-
-[View April 2022 Changelog](.github/changelogs/2022/04.md)
-
-</details>
-
-<details>
-<summary><h4>March (20 entries)</h4></summary>
-
-[View March 2022 Changelog](.github/changelogs/2022/03.md)
-
-</details>
-
-<details>
-<summary><h4>February (15 entries)</h4></summary>
-
-[View February 2022 Changelog](.github/changelogs/2022/02.md)
-
-</details>
-
-<details>
-<summary><h4>January (3 entries)</h4></summary>
-
-[View January 2022 Changelog](.github/changelogs/2022/01.md)
-
-</details>
-
-</details>
-
-</details>
+    - fix(frontend): decouple table pagination from summary fetching [@ls-root](https://github.com/ls-root) ([#11495](https://github.com/community-scripts/ProxmoxVE/pull/11495))
 
 ## 2026-02-02
 
@@ -783,6 +519,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Grist: Update dependencies [@tremor021](https://github.com/tremor021) ([#11489](https://github.com/community-scripts/ProxmoxVE/pull/11489))
     - Allow "downgrade" of libigdgmm12 [@vhsdream](https://github.com/vhsdream) ([#11478](https://github.com/community-scripts/ProxmoxVE/pull/11478))
     - Disable NPM install and update due to OpenResty SHA-1 signature issues [@MickLesk](https://github.com/MickLesk) ([#11471](https://github.com/community-scripts/ProxmoxVE/pull/11471))
 
@@ -1596,64 +1333,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - Refactor: IP-Tag (Multiple IP / Performance / Execution Time)  [@MickLesk](https://github.com/MickLesk) ([#10558](https://github.com/community-scripts/ProxmoxVE/pull/10558))
-
-## 2026-01-04
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - PocketID: Update PocketID for 2.x [@tremor021](https://github.com/tremor021) ([#10506](https://github.com/community-scripts/ProxmoxVE/pull/10506))
-    - fix: reitti: nginx [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10511](https://github.com/community-scripts/ProxmoxVE/pull/10511))
-    - MagicMirror: bump to nodejs 24 [@MickLesk](https://github.com/MickLesk) ([#10534](https://github.com/community-scripts/ProxmoxVE/pull/10534))
-
-  - #### 🔧 Refactor
-
-    - Refactor: SFTPGo [@tremor021](https://github.com/tremor021) ([#10518](https://github.com/community-scripts/ProxmoxVE/pull/10518))
-    - Refactor: Pelican Wings [@tremor021](https://github.com/tremor021) ([#10517](https://github.com/community-scripts/ProxmoxVE/pull/10517))
-    - Refactor: Pelican Panel [@tremor021](https://github.com/tremor021) ([#10516](https://github.com/community-scripts/ProxmoxVE/pull/10516))
-    - Refactor: Audiobookshelf [@tremor021](https://github.com/tremor021) ([#10519](https://github.com/community-scripts/ProxmoxVE/pull/10519))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - Export IPV6_METHOD to trigger verb_ip6() function [@remz1337](https://github.com/remz1337) ([#10538](https://github.com/community-scripts/ProxmoxVE/pull/10538))
-
-### 🌐 Website
-
-  - #### 📝 Script Information
-
-    - Prowlarr: Update config_path [@tremor021](https://github.com/tremor021) ([#10504](https://github.com/community-scripts/ProxmoxVE/pull/10504))
-
-## 2026-01-03
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Fix ownership and permissions for InvoiceNinja setup [@twinzdragonz](https://github.com/twinzdragonz) ([#10298](https://github.com/community-scripts/ProxmoxVE/pull/10298))
-    - Fix headscale Caddyfile to pass non-API URLs [@IlyaSemenov](https://github.com/IlyaSemenov) ([#10493](https://github.com/community-scripts/ProxmoxVE/pull/10493))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - [core]: Preserve log files [@tremor021](https://github.com/tremor021) ([#10509](https://github.com/community-scripts/ProxmoxVE/pull/10509))
-
-### ❔ Uncategorized
-
-  - Wireguard: Update WGDashboard notes URL to the new link [@tremor021](https://github.com/tremor021) ([#10496](https://github.com/community-scripts/ProxmoxVE/pull/10496))
-- InvoiceNinja: Update database credentias information [@tremor021](https://github.com/tremor021) ([#10497](https://github.com/community-scripts/ProxmoxVE/pull/10497))
-
-## 2026-01-02
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Fix Intel Level Zero package conflict on Debian 13 [@Copilot](https://github.com/Copilot) ([#10467](https://github.com/community-scripts/ProxmoxVE/pull/10467))
-
-### ❔ Uncategorized
-
-  - Extend guidance for changing the immich upload location for #10447 [@jshprentz](https://github.com/jshprentz) ([#10475](https://github.com/community-scripts/ProxmoxVE/pull/10475))

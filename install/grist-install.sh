@@ -17,7 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   make \
   ca-certificates \
-  python3-venv
+  python3-venv \
+  git
 msg_ok "Installed Dependencies"
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"

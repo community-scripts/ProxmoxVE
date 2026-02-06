@@ -18,7 +18,6 @@ jobs:
         with:
           script: |
             const daysBeforeLock = 3;
-            const cutoffDate = new Date('2026-01-27T00:00:00Z');
             const lockDate = new Date();
             lockDate.setDate(lockDate.getDate() - daysBeforeLock);
             
@@ -29,48 +28,50 @@ jobs:
               /dependabot/i
             ];
             
-            // Search for closed, unlocked issues older than 3 days
-            const issues = await github.rest.search.issuesAndPullRequests({
-              q: `repo:${context.repo.owner}/${context.repo.repo} is:closed is:unlocked updated:<${lockDate.toISOString().split('T')[0]}`,
-              per_page: 50
-            });
+            // Search for closed, unlocked issues older than 3 days (paginated, oldest first)
+            let page = 1;
+            let totalLocked = 0;
             
-            console.log(`Found ${issues.data.items.length} issues/PRs to process`);
-            
-            for (const item of issues.data.items) {
-              // Skip excluded items
-              const shouldExclude = excludePatterns.some(pattern => pattern.test(item.title));
-              if (shouldExclude) {
-                console.log(`Skipped #${item.number}: "${item.title}" (matches exclude pattern)`);
-                continue;
-              }
+            while (true) {
+              const issues = await github.rest.search.issuesAndPullRequests({
+                q: `repo:${context.repo.owner}/${context.repo.repo} is:closed is:unlocked updated:<${lockDate.toISOString().split('T')[0]}`,
+                sort: 'updated',
+                order: 'asc',
+                per_page: 100,
+                page: page
+              });
               
-              const createdAt = new Date(item.created_at);
-              const isNew = createdAt >= cutoffDate;
+              if (issues.data.items.length === 0) break;
               
-              try {
-                // Add comment only for new issues (created after 2026-01-27)
-                if (isNew) {
-                  const comment = item.pull_request
-                    ? 'This pull request has been automatically locked. Please open a new issue for related bugs.'
-                    : 'This issue has been automatically locked. Please open a new issue for related bugs and reference this issue if needed.';
-                  
-                  await github.rest.issues.createComment({
-                    ...context.repo,
-                    issue_number: item.number,
-                    body: comment
-                  });
+              console.log(`Page ${page}: ${issues.data.items.length} items (total available: ${issues.data.total_count})`);
+              
+              for (const item of issues.data.items) {
+                // Skip excluded items
+                const shouldExclude = excludePatterns.some(pattern => pattern.test(item.title));
+                if (shouldExclude) {
+                  console.log(`Skipped #${item.number}: "${item.title}" (matches exclude pattern)`);
+                  continue;
                 }
                 
-                // Lock the issue/PR
-                await github.rest.issues.lock({
-                  ...context.repo,
-                  issue_number: item.number,
-                  lock_reason: 'resolved'
-                });
-                
-                console.log(`Locked #${item.number} (${item.pull_request ? 'PR' : 'Issue'})`);
-              } catch (error) {
-                console.log(`Failed to lock #${item.number}: ${error.message}`);
+                try {
+                  // Lock the issue/PR silently
+                  await github.rest.issues.lock({
+                    ...context.repo,
+                    issue_number: item.number,
+                    lock_reason: 'resolved'
+                  });
+                  
+                  totalLocked++;
+                  console.log(`Locked #${item.number} (${item.pull_request ? 'PR' : 'Issue'})`);
+                } catch (error) {
+                  console.log(`Failed to lock #${item.number}: ${error.message}`);
+                }
               }
+              
+              page++;
+              
+              // GitHub search API limit: max 10000 results (100 pages * 100) - temporarily increased
+              if (page > 100) break;
             }
+            
+            console.log(`Total locked: ${totalLocked} issues/PRs`);

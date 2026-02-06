@@ -20,50 +20,50 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -f /opt/wanderer/start.sh ]]; then
-        msg_error "No wanderer Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "wanderer" "Flomp/wanderer"; then
-        msg_info "Stopping service"
-        systemctl stop wanderer-web
-        msg_ok "Stopped service"
-        
-				fetch_and_deploy_gh_release "wanderer" "Flomp/wanderer"  "tarball" "latest" "/opt/wanderer/source"
-				
-        msg_info "Updating wanderer"
-        cd /opt/wanderer/source/db
-        $STD go mod tidy
-       	$STD go build
-        cd /opt/wanderer/source/web
-        $STD npm ci --omit=dev
-        $STD npm run build
-        msg_ok "Updated wanderer"
-
-        msg_info "Starting service"
-        systemctl start wanderer-web
-        msg_ok "Started service"
-        msg_ok "Update Successful"
-    fi
-    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-        msg_info "Stopping service"
-        systemctl stop wanderer-web
-        msg_ok "Stopped service"
-
-        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
-        grep -q -- '--experimental-dumpless-upgrade' /opt/wanderer/start.sh || sed -i 's|meilisearch --master-key|meilisearch --experimental-dumpless-upgrade --master-key|' /opt/wanderer/start.sh
-
-        msg_info "Starting service"
-        systemctl start wanderer-web
-        msg_ok "Started service"
-        msg_ok "Update Successful"
-    fi
+  if [[ ! -f /opt/wanderer/start.sh ]]; then
+    msg_error "No wanderer Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "wanderer" "Flomp/wanderer"; then
+    msg_info "Stopping service"
+    systemctl stop wanderer-web
+    msg_ok "Stopped service"
+
+    fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
+
+    msg_info "Updating wanderer"
+    cd /opt/wanderer/source/db
+    $STD go mod tidy
+    $STD go build
+    cd /opt/wanderer/source/web
+    $STD npm ci --omit=dev
+    $STD npm run build
+    msg_ok "Updated wanderer"
+
+    msg_info "Starting service"
+    systemctl start wanderer-web
+    msg_ok "Started service"
+    msg_ok "Update Successful"
+  fi
+  if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
+    msg_info "Stopping service"
+    systemctl stop wanderer-web
+    msg_ok "Stopped service"
+
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
+    grep -q -- '--experimental-dumpless-upgrade' /opt/wanderer/start.sh || sed -i 's|meilisearch --master-key|meilisearch --experimental-dumpless-upgrade --master-key|' /opt/wanderer/start.sh
+
+    msg_info "Starting service"
+    systemctl start wanderer-web
+    msg_ok "Started service"
+    msg_ok "Update Successful"
+  fi
+  exit
 }
 
 start

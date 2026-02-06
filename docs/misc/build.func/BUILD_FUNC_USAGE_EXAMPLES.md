@@ -60,10 +60,10 @@ export var_gateway="192.168.1.1"
 export var_ip="192.168.1.101"
 export var_vlan="100"
 export var_mtu="9000"
-export var_template_storage="nfs-storage"
+export var_template_storage="ssd-storage"
 export var_container_storage="ssd-storage"
-export ENABLE_FUSE="true"
-export ENABLE_TUN="true"
+export var_fuse="yes"
+export var_tun="yes"
 export SSH="true"
 
 # Execute build.func

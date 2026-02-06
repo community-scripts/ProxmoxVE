@@ -38,8 +38,8 @@ git clone https://github.com/YOUR_USERNAME/ProxmoxVE.git
 cd ProxmoxVE
 
 # 3. Run fork setup script (automatically configures everything)
-bash setup-fork.sh
-# This auto-detects your username and updates all documentation links
+bash docs/contribution/setup-fork.sh --full
+# --full updates ct/, install/, vm/, docs/, misc/ links for fork testing
 
 # 4. Read the git workflow tips
 cat .git-setup-info
@@ -51,28 +51,29 @@ cat .git-setup-info
 # 1. Create feature branch
 git checkout -b add/my-awesome-app
 
-# 2. Create application scripts
-cp ct/example.sh ct/myapp.sh
-cp install/example-install.sh install/myapp-install.sh
+# 2. Create application scripts from templates
+cp docs/contribution/templates_ct/AppName.sh ct/myapp.sh
+cp docs/contribution/templates_install/AppName-install.sh install/myapp-install.sh
+cp docs/contribution/templates_json/AppName.json frontend/public/json/myapp.json
 
 # 3. Edit your scripts
 nano ct/myapp.sh
 nano install/myapp-install.sh
+nano frontend/public/json/myapp.json
 
-# 4. Test locally
-bash ct/myapp.sh  # Will prompt for container creation
-
-# 5. Commit and push
-git add ct/myapp.sh install/myapp-install.sh
-git commit -m "feat: add MyApp container"
+# 4. Commit and push to your fork
+git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
+git commit -m "feat: add MyApp container and install scripts"
 git push origin add/my-awesome-app
 
-# 6. Open Pull Request on GitHub
-# Click: New Pull Request (GitHub will show this automatically)
+# 5. Test via curl from your fork (GitHub may take 10-30 seconds)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
 
-# 7. Keep your fork updated
-git fetch upstream
-git rebase upstream/main
+# 6. Use cherry-pick to submit only your files (see Cherry-Pick section)
+# DO NOT submit the 600+ files modified by setup-fork.sh!
+
+# 7. Open Pull Request on GitHub
+# Create PR from: your-fork/add/my-awesome-app → community-scripts/ProxmoxVE/main
 ```
 
 **💡 Tip**: See `../FORK_SETUP.md` for detailed fork setup and troubleshooting
@@ -112,9 +113,9 @@ ProxmoxVE/
 │   └── alpine-tools.func        # Alpine tools
 │
 ├── docs/                        # 📚 Documentation
-│   ├── UPDATED_APP-ct.md        # Container script guide
-│   ├── UPDATED_APP-install.md   # Install script guide
-│   └── CONTRIBUTING.md          # (This file!)
+│   ├── ct/DETAILED_GUIDE.md     # Container script guide
+│   ├── install/DETAILED_GUIDE.md # Install script guide
+│   └── contribution/README.md   # Contribution overview
 │
 ├── tools/                       # 🔧 Proxmox management tools
 │   └── pve/
@@ -137,6 +138,7 @@ Examples:
 ```
 
 **Rules**:
+
 - Container script name: **Title Case** (PiHole, Docker, NextCloud)
 - Install script name: **lowercase** with **hyphens** (pihole-install, docker-install)
 - Must match: `ct/AppName.sh` ↔ `install/appname-install.sh`
@@ -156,6 +158,7 @@ Examples:
    - Ubuntu 20.04 / Debian 11+ on host
 
 2. **Git** installed
+
    ```bash
    apt-get install -y git
    ```
@@ -198,32 +201,33 @@ git rebase upstream/main
 git push origin feat/add-myapp
 ```
 
-#### Option B: Local Testing on Proxmox Host
+#### Option B: Testing on a Proxmox Host (still via curl)
 
 ```bash
 # 1. SSH into Proxmox host
 ssh root@192.168.1.100
 
-# 2. Download your script
-curl -O https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/feat/myapp/ct/myapp.sh
-
-# 3. Make it executable
-chmod +x myapp.sh
-
-# 4. Update URLs to your fork
-# Edit: curl -s https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/feat/myapp/...
-
-# 5. Run and test
-bash myapp.sh
-
-# 6. If container created successfully, script is working!
+# 2. Test via curl from your fork (CT script only)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+# ⏱️ Wait 10-30 seconds after pushing - GitHub takes time to update
 ```
 
-#### Option C: Docker Testing (Without Proxmox)
+> **Note:** Do not edit URLs manually or run install scripts directly. The CT script calls the install script inside the container.
+
+#### Option C: Using Curl (Recommended for Real Testing)
 
 ```bash
-# You can test script syntax/functionality locally
-# Note: Won't fully test (no Proxmox, no actual container)
+# Always test via curl from your fork (GitHub takes 10-30 seconds after push)
+git push origin feature/myapp
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+# This tests the actual GitHub URLs, not local files
+```
+
+#### Option D: Static Checks (Without Proxmox)
+
+```bash
+# You can validate syntax and linting locally (limited)
+# Note: This does NOT replace real Proxmox testing
 
 # Run ShellCheck
 shellcheck ct/myapp.sh
@@ -241,18 +245,18 @@ bash -n install/myapp-install.sh
 ### Step 1: Choose Your Template
 
 **For Simple Web Apps** (Node.js, Python, PHP):
+
 ```bash
 cp ct/example.sh ct/myapp.sh
 cp install/example-install.sh install/myapp-install.sh
 ```
 
-**For Database Apps** (PostgreSQL, MongoDB):
-```bash
-cp ct/docker.sh ct/myapp.sh           # Use Docker container
-# OR manual setup for more control
-```
+**For Database Apps** (PostgreSQL, MariaDB, MongoDB):
+
+Use the standard templates and the database helpers from `tools.func` (no Docker).
 
 **For Alpine Linux Apps** (lightweight):
+
 ```bash
 # Use ct/alpine.sh as reference
 # Edit install script to use Alpine packages (apk not apt)
@@ -264,7 +268,7 @@ cp ct/docker.sh ct/myapp.sh           # Use Docker container
 
 ```bash
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/feat/myapp/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/misc/build.func)
 
 # Update these:
 APP="MyAwesomeApp"                    # Display name
@@ -291,17 +295,19 @@ function update_script() {
     exit
   fi
 
-  # Get latest version
-  RELEASE=$(curl -fsSL https://api.github.com/repos/user/repo/releases/latest | \
-    grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
+  if check_for_gh_release "myapp" "owner/repo"; then
+    msg_info "Stopping Service"
+    systemctl stop myapp
+    msg_ok "Stopped Service"
 
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Updating ${APP} to v${RELEASE}"
-    # ... update logic ...
-    echo "${RELEASE}" > /opt/${APP}_version.txt
-    msg_ok "Updated ${APP}"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "myapp" "owner/repo" "tarball" "latest" "/opt/myapp"
+
+    # ... update logic (migrations, rebuilds, etc.) ...
+
+    msg_info "Starting Service"
+    systemctl start myapp
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -317,6 +323,7 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:PORT${CL}"
 ```
 
 **Checklist**:
+
 - [ ] APP variable matches filename
 - [ ] var_tags semicolon-separated (no spaces)
 - [ ] Realistic CPU/RAM/disk values
@@ -345,24 +352,12 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  curl \
-  wget \
-  git \
   build-essential
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Node.js"
 NODE_VERSION="22" setup_nodejs
-msg_ok "Node.js installed"
 
-msg_info "Downloading Application"
-cd /opt
-wget -q "https://github.com/user/repo/releases/download/v1.0.0/myapp.tar.gz"
-tar -xzf myapp.tar.gz
-rm -f myapp.tar.gz
-msg_ok "Application installed"
-
-echo "1.0.0" > /opt/${APP}_version.txt
+fetch_and_deploy_gh_release "myapp" "owner/repo" "tarball" "latest" "/opt/myapp"
 
 motd_ssh
 customize
@@ -370,6 +365,7 @@ cleanup_lxc
 ```
 
 **Checklist**:
+
 - [ ] Functions loaded from `$FUNCTIONS_FILE_PATH`
 - [ ] All installation phases present (deps, tools, app, config, cleanup)
 - [ ] Using `$STD` for output suppression
@@ -437,26 +433,44 @@ $STD apt-get install -y newdependency
 # 4. Test thoroughly before committing
 ```
 
-### Step 3: Update Update Function (if applicable)
+### Step 3: The Standard Update Pattern
 
+The `update_script()` function in `ct/appname.sh` should follow a robust pattern:
+
+1. **Check for updates**: Use `check_for_gh_release` to skip logic if no new version exists.
+2. **Stop services**: Stop all relevant services (`systemctl stop appname`).
+3. **Backup existing installation**: Move the old folder (e.g., `mv /opt/app /opt/app_bak`).
+4. **Deploy new version**: Use `CLEAN_INSTALL=1 fetch_and_deploy_gh_release`.
+5. **Restore configuration**: Copy `.env` or config files back from the backup.
+6. **Rebuild/Migrate**: Run `npm install`, `composer install`, or DB migrations.
+7. **Start services**: Restart services and cleanup the backup.
+
+**Example from `ct/bookstack.sh`**:
 ```bash
-# Edit: ct/existingapp.sh → update_script()
-
-# 1. Update GitHub API URL if repo changed
-RELEASE=$(curl -fsSL https://api.github.com/repos/user/repo/releases/latest | ...)
-
-# 2. Update backup/restore logic (if structure changed)
-# 3. Update cleanup paths
-
-# 4. Test update on existing installation
-```
-
-### Step 4: Document Your Changes
-
-```bash
-# Add comment at top of script
-# Co-Author: YourUsername
-# Updated: YYYY-MM-DD - Description of changes
+function update_script() {
+  if check_for_gh_release "bookstack" "BookStackApp/BookStack"; then
+    msg_info "Stopping Services"
+    systemctl stop apache2
+    
+    msg_info "Backing up data"
+    mv /opt/bookstack /opt/bookstack-backup
+    
+    fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack" "tarball"
+    
+    msg_info "Restoring backup"
+    cp /opt/bookstack-backup/.env /opt/bookstack/.env
+    # ... restore uploads ...
+    
+    msg_info "Configuring"
+    cd /opt/bookstack
+    $STD composer install --no-dev
+    $STD php artisan migrate --force
+    
+    systemctl start apache2
+    rm -rf /opt/bookstack-backup
+    msg_ok "Updated successfully!"
+  fi
+}
 ```
 
 ---
@@ -656,27 +670,19 @@ shellcheck install/myapp-install.sh
 # 1. SSH into Proxmox host
 ssh root@YOUR_PROXMOX_IP
 
-# 2. Download your script
-curl -O https://raw.githubusercontent.com/YOUR_USER/ProxmoxVE/feat/myapp/ct/myapp.sh
+# 2. Test via curl from your fork (CT script only)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
+# ⏱️ Wait 10-30 seconds after pushing - GitHub takes time to update
 
-# 3. Make executable
-chmod +x myapp.sh
-
-# 4. UPDATE URLS IN SCRIPT to point to your fork
-sed -i 's|community-scripts|YOUR_USER|g' myapp.sh
-
-# 5. Run script
-bash myapp.sh
-
-# 6. Test interaction:
+# 3. Test interaction:
 #    - Select installation mode
 #    - Confirm settings
 #    - Monitor installation
 
-# 7. Verify container created
+# 4. Verify container created
 pct list | grep myapp
 
-# 8. Log into container and verify app
+# 5. Log into container and verify app
 pct exec 100 bash
 ```
 
@@ -697,9 +703,9 @@ pct exec 100 bash
 # Verify script handles gracefully
 
 # Test 4: Update function
-# Create initial container
+# Create initial container (via curl from fork)
 # Wait for new release
-# Run update: bash ct/myapp.sh
+# Test update: bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
 # Verify it detects and applies update
 ```
 
@@ -774,16 +780,19 @@ Use this template:
 
 ```markdown
 ## Description
+
 Brief description of what this PR adds/fixes
 
 ## Type of Change
+
 - [ ] New application (ct/AppName.sh + install/appname-install.sh)
 - [ ] Update existing application
 - [ ] Bug fix
 - [ ] Documentation update
-- [ ] Other: _______
+- [ ] Other: **\_\_\_**
 
 ## Testing
+
 - [ ] Tested on Proxmox VE 8.x
 - [ ] Container creation successful
 - [ ] Application installation successful
@@ -792,6 +801,7 @@ Brief description of what this PR adds/fixes
 - [ ] No temporary files left after installation
 
 ## Application Details (for new apps only)
+
 - **App Name**: MyApp
 - **Source**: https://github.com/app/repo
 - **Default OS**: Debian 12
@@ -800,9 +810,11 @@ Brief description of what this PR adds/fixes
 - **Access URL**: http://IP:PORT/path
 
 ## Checklist
+
 - [ ] My code follows the style guidelines
 - [ ] I have performed a self-review
-- [ ] I have tested the script locally
+- [ ] I have tested the script via curl from my fork (after git push)
+- [ ] GitHub had time to update (waited 10-30 seconds)
 - [ ] ShellCheck shows no critical warnings
 - [ ] Documentation is accurate and complete
 - [ ] I have added/updated relevant documentation
@@ -811,6 +823,7 @@ Brief description of what this PR adds/fixes
 ### Step 5: Respond to Review Comments
 
 **Maintainers may request changes**:
+
 - Fix syntax/style issues
 - Add better error handling
 - Optimize resource usage
@@ -922,6 +935,7 @@ pct exec CTID netstat -tlnp | grep LISTEN
 ### Q: Can I test without a Proxmox system?
 
 **A**: Partially. You can verify syntax and ShellCheck compliance locally, but real container testing requires Proxmox. Consider using:
+
 - Proxmox in a VM (VirtualBox/KVM)
 - Test instances on Hetzner/DigitalOcean
 - Ask maintainers to test for you
@@ -929,6 +943,7 @@ pct exec CTID netstat -tlnp | grep LISTEN
 ### Q: My update function is very complex - is that OK?
 
 **A**: Yes! Update functions can be complex if needed. Just ensure:
+
 - Backup user data before updating
 - Restore user data after update
 - Test thoroughly before submitting
@@ -937,6 +952,7 @@ pct exec CTID netstat -tlnp | grep LISTEN
 ### Q: Can I add new dependencies to build.func?
 
 **A**: Generally no. build.func is the orchestrator and should remain stable. New functions should go in:
+
 - `tools.func` - Tool installation
 - `core.func` - Utility functions
 - `install.func` - Container setup
@@ -948,11 +964,13 @@ Ask in an issue first if you're unsure.
 **A**: You have options:
 
 **Option 1**: Use Advanced mode (19-step wizard)
+
 ```bash
 # Extend advanced_settings() if app needs special vars
 ```
 
 **Option 2**: Create custom setup menu
+
 ```bash
 function custom_config() {
   OPTION=$(whiptail --inputbox "Enter database name:" 8 60)
@@ -961,6 +979,7 @@ function custom_config() {
 ```
 
 **Option 3**: Leave as defaults + documentation
+
 ```bash
 # In success message:
 echo "Edit /opt/myapp/config.json to customize settings"
@@ -969,9 +988,10 @@ echo "Edit /opt/myapp/config.json to customize settings"
 ### Q: Can I contribute Windows/macOS/ARM support?
 
 **A**:
+
 - **Windows**: Not planned (ProxmoxVE is Linux/Proxmox focused)
 - **macOS**: Can contribute Docker-based alternatives
-- **ARM**: Yes! Many apps work on ARM. Add to vm/pimox-*.sh scripts
+- **ARM**: Yes! Many apps work on ARM. Add to vm/pimox-\*.sh scripts
 
 ---
 
@@ -995,6 +1015,7 @@ echo "Edit /opt/myapp/config.json to customize settings"
 ### Report Bugs
 
 When reporting bugs, include:
+
 - Which application
 - What happened (error message)
 - What you expected
@@ -1002,6 +1023,7 @@ When reporting bugs, include:
 - Container OS and version
 
 Example:
+
 ```
 Title: pihole-install.sh fails on Alpine 3.20
 
@@ -1025,6 +1047,7 @@ Error Output:
 ## Contribution Statistics
 
 **ProxmoxVE by the Numbers**:
+
 - 🎯 40+ applications supported
 - 👥 100+ contributors
 - 📊 10,000+ GitHub stars
@@ -1038,6 +1061,7 @@ Error Output:
 ## Code of Conduct
 
 By contributing, you agree to:
+
 - ✅ Be respectful and inclusive
 - ✅ Follow the style guidelines
 - ✅ Test your changes thoroughly

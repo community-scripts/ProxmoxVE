@@ -5,7 +5,6 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: [SOURCE_URL e.g. https://github.com/example/app]
 
-# Import Functions and Setup
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
@@ -15,48 +14,51 @@ network_check
 update_os
 
 # =============================================================================
-# DEPENDENCIES
+# DEPENDENCIES - Only add app-specific dependencies here!
+# Don't add: ca-certificates, curl, gnupg, git, build-essential (handled by build.func)
 # =============================================================================
-# Only install what's actually needed - curl/sudo/mc are already in the base image
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  nginx \
-  build-essential
+  libharfbuzz0b \
+  fontconfig
 msg_ok "Installed Dependencies"
 
 # =============================================================================
-# HELPER FUNCTIONS FROM tools.func
+# SETUP RUNTIMES & DATABASES (if needed)
 # =============================================================================
-# These functions are available via $FUNCTIONS_FILE_PATH (tools.func)
-# Call them with optional environment variables for configuration
+# Examples (uncomment as needed):
 #
-# --- Runtime & Language Setup ---
-# NODE_VERSION="22" setup_nodejs           # Install Node.js (22, 24)
-# NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs  # With pnpm
-# PYTHON_VERSION="3.13" setup_uv           # Python with uv package manager
-# setup_go                                 # Install Go (latest)
-# setup_rust                               # Install Rust via rustup
-# setup_ruby                               # Install Ruby
-# PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="mysqli,gd" setup_php
-# PHP_VERSION="8.3" PHP_FPM="YES" PHP_APACHE="YES" PHP_MODULE="bcmath,curl,gd,intl,mbstring,mysql,xml,zip" setup_php
-# setup_composer                           # Install PHP Composer
-# JAVA_VERSION="21" setup_java             # Install Java (17, 21)
+#   NODE_VERSION="22" setup_nodejs
+#   NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs  # Installs pnpm
+#   PYTHON_VERSION="3.13" setup_uv
+#   JAVA_VERSION="21" setup_java
+#   GO_VERSION="1.22" setup_go
+#   PHP_VERSION="8.4" PHP_FPM="YES" setup_php
+#   setup_postgresql           # Server only
+#   setup_mariadb              # Server only
+#   setup_meilisearch          # Search engine
 #
-# --- Database Setup ---
-# setup_mariadb                            # Install MariaDB server
-# MARIADB_DB_NAME="mydb" MARIADB_DB_USER="myuser" setup_mariadb_db
-# setup_mysql                              # Install MySQL server
-# PG_VERSION="17" setup_postgresql         # Install PostgreSQL (16, 17)
-# PG_VERSION="17" PG_MODULES="postgis" setup_postgresql  # With extensions
-# PG_DB_NAME="mydb" PG_DB_USER="myuser" setup_postgresql_db
-# setup_mongodb                            # Install MongoDB
+#   Then set up DB and user (sets $[DB]_DB_PASS):
+#   PG_DB_NAME="myapp" PG_DB_USER="myapp" setup_postgresql_db
+#   MARIADB_DB_NAME="myapp" MARIADB_DB_USER="myapp" setup_mariadb_db
+
+# =============================================================================
+# DOWNLOAD & DEPLOY APPLICATION
+# =============================================================================
+# fetch_and_deploy_gh_release modes:
+#   "tarball"  - Source tarball (default if omitted)
+#   "binary"   - .deb package (auto-detects amd64/arm64)
+#   "prebuild" - Pre-built archive (.tar.gz)
+#   "singlefile" - Single binary file
 #
-# --- GitHub Release (PREFERRED METHOD) ---
-# fetch_and_deploy_gh_release "appname" "owner/repo" "tarball"  # Downloads, extracts, tracks version
-# fetch_and_deploy_gh_release "appname" "owner/repo" "tarball" "latest" "/opt/appname"
-# fetch_and_deploy_gh_release "appname" "owner/repo" "prebuild" "latest" "/opt/appname" "app-*.tar.gz"
-#
+# Examples:
+#   fetch_and_deploy_gh_release "myapp" "YourUsername/myapp" "tarball" "latest" "/opt/myapp"
+#   fetch_and_deploy_gh_release "myapp" "YourUsername/myapp" "binary" "latest" "/tmp"
+#   fetch_and_deploy_gh_release "myapp" "YourUsername/myapp" "prebuild" "latest" "/opt/myapp" "myapp-*.tar.gz"
+
+fetch_and_deploy_gh_release "[appname]" "owner/repo" "tarball" "latest" "/opt/[appname]"
+
 # --- Tools & Utilities ---
 # get_lxc_ip                          # Sets $LOCAL_IP variable (call early!)
 # setup_ffmpeg                             # Install FFmpeg with codecs
@@ -67,8 +69,11 @@ msg_ok "Installed Dependencies"
 # create_self_signed_cert                  # Creates cert in /etc/ssl/[appname]/
 
 # =============================================================================
-# EXAMPLE 1: Node.js Application with PostgreSQL
+# EXAMPLES
 # =============================================================================
+#
+# EXAMPLE 1: Node.js Application with PostgreSQL
+# ---------------------------------------------
 # NODE_VERSION="22" setup_nodejs
 # PG_VERSION="17" setup_postgresql
 # PG_DB_NAME="myapp" PG_DB_USER="myapp" setup_postgresql_db
@@ -84,10 +89,9 @@ msg_ok "Installed Dependencies"
 # PORT=3000
 # EOF
 # msg_ok "Configured MyApp"
-
-# =============================================================================
+#
 # EXAMPLE 2: Python Application with uv
-# =============================================================================
+# ------------------------------------
 # PYTHON_VERSION="3.13" setup_uv
 # get_lxc_ip
 # fetch_and_deploy_gh_release "myapp" "owner/myapp" "tarball" "latest" "/opt/myapp"
@@ -141,7 +145,7 @@ fetch_and_deploy_gh_release "[appname]" "[owner/repo]" "tarball" "latest" "/opt/
 
 msg_info "Setting up [AppName]"
 cd /opt/[appname]
-$STD npm ci
+# $STD npm ci
 msg_ok "Setup [AppName]"
 
 # =============================================================================
@@ -149,14 +153,25 @@ msg_ok "Setup [AppName]"
 # =============================================================================
 
 msg_info "Configuring [AppName]"
+cd /opt/[appname]
+
+# Install application dependencies (uncomment as needed):
+# $STD npm ci --production         # Node.js apps
+# $STD uv sync --frozen            # Python apps
+# $STD composer install --no-dev   # PHP apps
+# $STD cargo build --release       # Rust apps
+
+# Create .env file if needed:
 cat <<EOF >/opt/[appname]/.env
-HOST=${LOCAL_IP}
+# Use import_local_ip to get container IP, or hardcode if building on Proxmox
+APP_URL=http://localhost
 PORT=8080
 EOF
+
 msg_ok "Configured [AppName]"
 
 # =============================================================================
-# SERVICE CREATION
+# CREATE SYSTEMD SERVICE
 # =============================================================================
 
 msg_info "Creating Service"
@@ -182,9 +197,11 @@ msg_ok "Created Service"
 # =============================================================================
 # CLEANUP & FINALIZATION
 # =============================================================================
+# These are called automatically, but shown here for clarity:
+#   motd_ssh           - Displays service info on SSH login
+#   customize          - Enables optional customizations
+#   cleanup_lxc        - Removes temp files, bash history, logs
 
 motd_ssh
 customize
-
-# cleanup_lxc handles: apt autoremove, autoclean, temp files, bash history
 cleanup_lxc

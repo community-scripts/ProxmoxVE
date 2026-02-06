@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies git
+
   if check_for_gh_release "grist" "gristlabs/grist-core"; then
     msg_info "Stopping Service"
     systemctl stop grist

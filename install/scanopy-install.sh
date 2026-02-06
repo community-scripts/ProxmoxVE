@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION=17 setup_postgresql
 NODE_VERSION="24" setup_nodejs
 PG_DB_NAME="scanopy_db" PG_DB_USER="scanopy" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
-fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
+fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
 TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
 RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
@@ -35,11 +35,11 @@ $STD npm ci --no-fund --no-audit
 $STD npm run build
 msg_ok "Created frontend UI"
 
-msg_info "Building scanopy-server (patience)"
+msg_info "Building Scanopy Server (patience)"
 cd /opt/scanopy/backend
 $STD cargo build --release --bin server
 mv ./target/release/server /usr/bin/scanopy-server
-msg_ok "Built scanopy-server"
+msg_ok "Built Scanopy Server"
 
 msg_info "Configuring server for first-run"
 cat <<EOF >/opt/scanopy/.env
