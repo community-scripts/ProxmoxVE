@@ -107,7 +107,8 @@ EOF
 
   RELEASE="2.5.5"
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}"; then
-    if [[ $(cat ~/.immich) > "2.5.1" ]]; then
+    CURRENT_VERSION=$(cat ~/.immich)
+    if printf '%s\n%s\n' "2.5.1" "$CURRENT_VERSION" | sort -V -q -r &>/dev/null && [[ "$CURRENT_VERSION" != "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
       cd /opt/immich/app/bin
       $STD ./immich-admin enable-maintenance-mode
