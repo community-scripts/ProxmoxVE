@@ -45,6 +45,11 @@ $STD apt install -y ca-certificates \
 #    postgresql-common
 msg_ok "Installed Dependecies"
 
+# Create zitadel user
+msg_info "Creating zitadel system user"
+groupadd --system "${ZITADEL_GROUP}"
+useradd --system --gid "${ZITADEL_GROUP}" --shell /bin/bash --home-dir "${ZITADEL_DIR}" "${ZITADEL_USER}"
+msg_ok "Created zitadel system user"
 
 fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "tarball" "latest"
 chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
@@ -74,13 +79,7 @@ msg_info "Configuring Postgresql"
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${POSTGRES_ADMIN_PASSWORD}';"
 msg_ok "Configured PostgreSQL"
 
-# Create zitadel user
-msg_info "Creating zitadel system user"
-groupadd --system "${ZITADEL_GROUP}"
-useradd --system --gid "${ZITADEL_GROUP}" --shell /bin/bash --home-dir "${ZITADEL_DIR}" "${ZITADEL_USER}"
-msg_ok "Created zitadel system user"
 
-# Create zitadel user
 msg_info "Installing Zitadel"
 cd "${ZITADEL_DIR}"
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && corepack enable && pnpm install"
