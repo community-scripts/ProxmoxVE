@@ -28,7 +28,6 @@ function update_script() {
     exit
   fi
 
-  get_lxc_ip  
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
   ensure_dependencies jq
 
@@ -37,12 +36,18 @@ function update_script() {
     systemctl stop homepage
     msg_ok "Stopped service"
 
+    msg_info "Creating Backup"
     cp /opt/homepage/.env /opt/homepage.env
     cp -r /opt/homepage/config /opt/homepage_config_backup
+    msg_ok "Created Backup"
+    
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
+    
+    msg_info "Restoring Backup"
     mv /opt/homepage.env /opt/homepage
     rm -rf /opt/homepage/config
     mv /opt/homepage_config_backup /opt/homepage/config
+    msg_ok "Restored Backup"
 
     msg_info "Updating Homepage (Patience)"
     RELEASE=$(get_latest_github_release "gethomepage/homepage")
