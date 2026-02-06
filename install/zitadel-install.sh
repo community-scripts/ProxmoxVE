@@ -84,7 +84,7 @@ msg_ok "Configured PostgreSQL"
 
 msg_info "Installing Zitadel"
 cd "${ZITADEL_DIR}"
-sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && corepack enable && pnpm install"
+sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && pnpm install"
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run-many --target generate"
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run @zitadel/api:build"
 sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:\$PATH && pnpm nx run @zitadel/login:build"
