@@ -402,7 +402,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - PVE LXC Apps Updater [@MickLesk](https://github.com/MickLesk) ([#11533](https://github.com/community-scripts/ProxmoxVE/pull/11533))
+  - Nightscout ([#11621](https://github.com/community-scripts/ProxmoxVE/pull/11621))
+- PVE LXC Apps Updater [@MickLesk](https://github.com/MickLesk) ([#11533](https://github.com/community-scripts/ProxmoxVE/pull/11533))
 
 ### 🚀 Updated Scripts
 
