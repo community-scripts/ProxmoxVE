@@ -161,24 +161,6 @@ DefaultInstance:
 EOF
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/apps/api/prod-default.yaml"
 
-mkdir -p ${LOGIN_DIR}/apps/login/
-
-#Read client token
-CLIENT_PAT=$(cat ${ZITADEL_DIR}/login-client.pat)
-
-# Update Login V2 .env file
-cat > "${LOGIN_DIR}/apps/login/.env" <<EOF
-NEXT_PUBLIC_BASE_PATH=/ui/v2/login
-EMAIL_VERIFICATION=false
-ZITADEL_API_URL=http://${SERVER_IP}:${API_PORT}
-ZITADEL_SERVICE_USER_TOKEN_FILE=../../login-client.pat
-ZITADEL_SERVICE_USER_TOKEN=${CLIENT_PAT}
-EOF
-
-chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}/apps/login/.env"
-
-# Update package.json to bind to 0.0.0.0 instead of 127.0.0.1
-sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${LOGIN_DIR}/apps/login/package.json"
 
 # Initialize database as zitadel user (no masterkey needed for init)
 # sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
@@ -199,6 +181,27 @@ sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/b
 	--config apps/api/prod-default.yaml \
 	--steps apps/api/prod-default.yaml \
 	--masterkey '${MASTERKEY}'"
+
+
+mkdir -p ${LOGIN_DIR}/apps/login/
+
+#Read client token
+CLIENT_PAT=$(cat ${ZITADEL_DIR}/login-client.pat)
+
+# Update Login V2 .env file
+cat > "${LOGIN_DIR}/apps/login/.env" <<EOF
+NEXT_PUBLIC_BASE_PATH=/ui/v2/login
+EMAIL_VERIFICATION=false
+ZITADEL_API_URL=http://${SERVER_IP}:${API_PORT}
+ZITADEL_SERVICE_USER_TOKEN_FILE=../../login-client.pat
+ZITADEL_SERVICE_USER_TOKEN=${CLIENT_PAT}
+EOF
+
+chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}/apps/login/.env"
+
+# Update package.json to bind to 0.0.0.0 instead of 127.0.0.1
+sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${LOGIN_DIR}/apps/login/package.json"
+
 
 
 # Create .env.secrets file
