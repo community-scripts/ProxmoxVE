@@ -43,21 +43,18 @@ pytorch_nvidia_url="https://download.pytorch.org/whl/cu130"
 pytorch_amd_url="https://download.pytorch.org/whl/rocm6.4"
 pytorch_intel_url="https://download.pytorch.org/whl/xpu"
 
-if command -v curl >/dev/null 2>&1; then
-  readme_content=$(curl -fsSL "https://raw.githubusercontent.com/comfyanonymous/ComfyUI/master/README.md" 2>/dev/null || true)
-  if [[ -n "$readme_content" ]]; then
-    # Extract NVIDIA CUDA URL (looking for stable, not nightly)
-    nvidia_url=$(echo "$readme_content" | grep -oP 'pip install.*?--extra-index-url\s+\Khttps://download\.pytorch\.org/whl/cu\d+' | head -1 || true)
-    [[ -n "$nvidia_url" ]] && pytorch_nvidia_url="$nvidia_url"
-    
-    # Extract AMD ROCm URL (stable version, not nightly)
-    amd_url=$(echo "$readme_content" | grep -oP 'pip install.*?--index-url\s+\Khttps://download\.pytorch\.org/whl/rocm[\d.]+' | grep -v 'nightly' | head -1 || true)
-    [[ -n "$amd_url" ]] && pytorch_amd_url="$amd_url"
-    
-    # Extract Intel XPU URL
-    intel_url=$(echo "$readme_content" | grep -oP 'pip install.*?--index-url\s+\Khttps://download\.pytorch\.org/whl/xpu' | head -1 || true)
-    [[ -n "$intel_url" ]] && pytorch_intel_url="$intel_url"
-  fi
+if [[ -f "/opt/ComfyUI/README.md" ]]; then
+  # Extract NVIDIA CUDA URL (looking for stable, not nightly)
+  nvidia_url=$(grep -oP 'pip install.*?--extra-index-url\s+\Khttps://download\.pytorch\.org/whl/cu\d+' /opt/ComfyUI/README.md | head -1 || true)
+  [[ -n "$nvidia_url" ]] && pytorch_nvidia_url="$nvidia_url"
+  
+  # Extract AMD ROCm URL (stable version, not nightly)
+  amd_url=$(grep -oP 'pip install.*?--index-url\s+\Khttps://download\.pytorch\.org/whl/rocm[\d.]+' /opt/ComfyUI/README.md | grep -v 'nightly' | head -1 || true)
+  [[ -n "$amd_url" ]] && pytorch_amd_url="$amd_url"
+  
+  # Extract Intel XPU URL
+  intel_url=$(grep -oP 'pip install.*?--index-url\s+\Khttps://download\.pytorch\.org/whl/xpu' /opt/ComfyUI/README.md | head -1 || true)
+  [[ -n "$intel_url" ]] && pytorch_intel_url="$intel_url"
 fi
 
 $STD uv venv "/opt/ComfyUI/venv"
