@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "nocodb" "nocodb/nocodb"; then
+  if check_for_gh_release "nocodb" "nocodb/nocodb" "0.301.1"; then
     msg_info "Stopping Service"
     systemctl stop nocodb
     msg_ok "Stopped Service"
