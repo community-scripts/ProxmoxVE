@@ -105,6 +105,7 @@ EOF
     cp -rf pnpm-lock.yaml /opt/tracearr/
     cp -rf apps/server/package.json /opt/tracearr/apps/server/
     cp -rf apps/server/dist /opt/tracearr/apps/server/dist
+    cp -rf apps/server/scripts /opt/tracearr/apps/server/scripts
     cp -rf apps/web/dist /opt/tracearr/apps/web/dist
     cp -rf packages/shared/package.json /opt/tracearr/packages/shared/
     cp -rf packages/shared/dist /opt/tracearr/packages/shared/dist
