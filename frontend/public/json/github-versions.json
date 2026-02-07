@@ -774,9 +774,9 @@
     {
       "slug": "memos",
       "repo": "usememos/memos",
-      "version": "v0.26.0",
-      "pinned": false,
-      "date": "2026-01-31T15:28:09Z"
+      "version": "v0.25.3",
+      "pinned": true,
+      "date": "2025-11-25T00:00:00Z"
     },
     {
       "slug": "metube",
