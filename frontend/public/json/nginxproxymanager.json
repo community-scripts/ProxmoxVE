@@ -25,7 +25,7 @@
         "ram": 2048,
         "hdd": 8,
         "os": "debian",
-        "version": "13"
+        "version": "12"
       }
     }
   ],
