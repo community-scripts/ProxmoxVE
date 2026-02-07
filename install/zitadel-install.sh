@@ -172,7 +172,7 @@ chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/prod-default.yaml"
 	# ./zitadel init \
 	# --config apps/api/prod-default.yaml"
 #./zitadel init --config apps/api/prod-default.yaml &>/dev/null
-./zitadel init --config ${CONFIG_DIR}/prod-default.yaml
+$STD ./zitadel init --config ${CONFIG_DIR}/prod-default.yaml
 
 
 # Run setup phase as zitadel user (with masterkey and steps)
@@ -187,7 +187,7 @@ chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/prod-default.yaml"
 	# --steps apps/api/prod-default.yaml \
 	# --masterkey '${MASTERKEY}'"
 	
-./zitadel setup --config ${CONFIG_DIR}/prod-default.yaml --steps ${CONFIG_DIR}/prod-default.yaml --masterkey "${MASTERKEY}"
+$STD ./zitadel setup --config ${CONFIG_DIR}/prod-default.yaml --steps ${CONFIG_DIR}/prod-default.yaml --masterkey "${MASTERKEY}"
 
 #mkdir -p ${LOGIN_DIR}/apps/login/
 
