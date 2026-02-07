@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "The HDD space initially allocated by the script is only a placeholder as we can't know how much space you will ever need. You should increase it to match your workload.",
+      "text": "The Disk space initially allocated by the script is only a placeholder, as we can't know how much space you will ever need. You should increase it to match your workload.",
       "type": "info"
     }
   ]
