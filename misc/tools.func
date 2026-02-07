@@ -2317,7 +2317,105 @@ function fetch_and_deploy_codeberg_release() {
 #
 #   # 4. Single binary (chmod +x) like Argus, Promtail etc.
 #   fetch_and_deploy_gh_release "argus" "release-argus/Argus" "singlefile" "0.26.3" "/opt/argus" "Argus-.*linux-amd64"
+#
+# Notes:
+#   - For binary/prebuild/singlefile modes: if the target release has no
+#     matching asset, the function scans older releases and prompts the user
+#     (60s timeout, default yes) to use a previous version that has the asset.
 # ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Scans older GitHub releases for a matching asset when the latest release
+# is missing the expected file. Used internally by fetch_and_deploy_gh_release.
+#
+# Arguments:
+#   $1 - GitHub repo (owner/repo)
+#   $2 - mode (binary|prebuild|singlefile)
+#   $3 - asset_pattern (glob pattern for asset filename)
+#   $4 - tag to skip (the already-checked release)
+#
+# Output:
+#   Prints the release JSON of the first older release that has a matching asset.
+#   Returns 0 on success, 1 if no matching release found or user declined.
+# ------------------------------------------------------------------------------
+_gh_scan_older_releases() {
+  local repo="$1"
+  local mode="$2"
+  local asset_pattern="$3"
+  local skip_tag="$4"
+
+  local header=()
+  [[ -n "${GITHUB_TOKEN:-}" ]] && header=(-H "Authorization: token $GITHUB_TOKEN")
+
+  local releases_list
+  releases_list=$(curl --connect-timeout 10 --max-time 30 -fsSL \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    "${header[@]}" \
+    "https://api.github.com/repos/${repo}/releases?per_page=15" 2>/dev/null) || return 1
+
+  local count
+  count=$(echo "$releases_list" | jq 'length')
+
+  for ((i = 0; i < count; i++)); do
+    local rel_tag rel_draft rel_prerelease
+    rel_tag=$(echo "$releases_list" | jq -r ".[$i].tag_name")
+    rel_draft=$(echo "$releases_list" | jq -r ".[$i].draft")
+    rel_prerelease=$(echo "$releases_list" | jq -r ".[$i].prerelease")
+
+    # Skip drafts, prereleases, and the tag we already checked
+    [[ "$rel_draft" == "true" || "$rel_prerelease" == "true" ]] && continue
+    [[ "$rel_tag" == "$skip_tag" ]] && continue
+
+    local has_match=false
+
+    if [[ "$mode" == "binary" ]]; then
+      local arch
+      arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
+      [[ "$arch" == "x86_64" ]] && arch="amd64"
+      [[ "$arch" == "aarch64" ]] && arch="arm64"
+
+      # Check with explicit pattern first, then arch heuristic, then any .deb
+      if [[ -n "$asset_pattern" ]]; then
+        has_match=$(echo "$releases_list" | jq -r --arg pat "$asset_pattern" ".[$i].assets[].name" | while read -r name; do
+          case "$name" in $asset_pattern) echo true; break ;; esac
+        done)
+      fi
+      if [[ "$has_match" != "true" ]]; then
+        has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE "($arch|amd64|x86_64|aarch64|arm64).*\.deb$" && echo true)
+      fi
+      if [[ "$has_match" != "true" ]]; then
+        has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE '\.deb$' && echo true)
+      fi
+
+    elif [[ "$mode" == "prebuild" || "$mode" == "singlefile" ]]; then
+      has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].name" | while read -r name; do
+        case "$name" in $asset_pattern) echo true; break ;; esac
+      done)
+    fi
+
+    if [[ "$has_match" == "true" ]]; then
+      local rel_version="$rel_tag"
+      [[ "$rel_tag" =~ ^v ]] && rel_version="${rel_tag:1}"
+
+      local use_fallback="y"
+      if [[ -t 0 ]]; then
+        msg_warn "Release ${skip_tag} has no matching asset. Previous release ${rel_tag} has a compatible asset."
+        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback || use_fallback="y"
+        use_fallback="${use_fallback:-y}"
+      fi
+
+      if [[ "${use_fallback,,}" == "y" || "${use_fallback,,}" == "yes" ]]; then
+        echo "$releases_list" | jq ".[$i]"
+        return 0
+      else
+        return 1
+      fi
+    fi
+  done
+
+  return 1
+}
 
 function fetch_and_deploy_gh_release() {
   local app="$1"
@@ -2458,6 +2556,33 @@ function fetch_and_deploy_gh_release() {
       done
     fi
 
+    # Fallback: scan older releases for a matching .deb asset
+    if [[ -z "$url_match" ]]; then
+      local fallback_json
+      if fallback_json=$(_gh_scan_older_releases "$repo" "binary" "$asset_pattern" "$tag_name"); then
+        json="$fallback_json"
+        tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
+        [[ "$tag_name" =~ ^v ]] && version="${tag_name:1}" || version="$tag_name"
+        msg_info "Fetching GitHub release: $app ($version)"
+        assets=$(echo "$json" | jq -r '.assets[].browser_download_url')
+        if [[ -n "$asset_pattern" ]]; then
+          for u in $assets; do
+            case "${u##*/}" in $asset_pattern) url_match="$u"; break ;; esac
+          done
+        fi
+        if [[ -z "$url_match" ]]; then
+          for u in $assets; do
+            if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then url_match="$u"; break; fi
+          done
+        fi
+        if [[ -z "$url_match" ]]; then
+          for u in $assets; do
+            [[ "$u" =~ \.deb$ ]] && url_match="$u" && break
+          done
+        fi
+      fi
+    fi
+
     if [[ -z "$url_match" ]]; then
       msg_error "No suitable .deb asset found for $app"
       rm -rf "$tmpdir"
@@ -2505,6 +2630,21 @@ function fetch_and_deploy_gh_release() {
         ;;
       esac
     done
+
+    # Fallback: scan older releases for a matching asset
+    if [[ -z "$asset_url" ]]; then
+      local fallback_json
+      if fallback_json=$(_gh_scan_older_releases "$repo" "prebuild" "$pattern" "$tag_name"); then
+        json="$fallback_json"
+        tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
+        [[ "$tag_name" =~ ^v ]] && version="${tag_name:1}" || version="$tag_name"
+        msg_info "Fetching GitHub release: $app ($version)"
+        for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
+          filename_candidate="${u##*/}"
+          case "$filename_candidate" in $pattern) asset_url="$u"; break ;; esac
+        done
+      fi
+    fi
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
@@ -2603,6 +2743,20 @@ function fetch_and_deploy_gh_release() {
       esac
     done
 
+    # Fallback: scan older releases for a matching asset
+    if [[ -z "$asset_url" ]]; then
+      local fallback_json
+      if fallback_json=$(_gh_scan_older_releases "$repo" "singlefile" "$pattern" "$tag_name"); then
+        json="$fallback_json"
+        tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
+        [[ "$tag_name" =~ ^v ]] && version="${tag_name:1}" || version="$tag_name"
+        msg_info "Fetching GitHub release: $app ($version)"
+        for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
+          filename_candidate="${u##*/}"
+          case "$filename_candidate" in $pattern) asset_url="$u"; break ;; esac
+        done
+      fi
+    fi
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
       rm -rf "$tmpdir"
