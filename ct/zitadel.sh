@@ -23,29 +23,32 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/systemd/system/zitadel.service ]]; then
+  if [[ ! -f /etc/systemd/system/zitadel-api.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
   if check_for_gh_release "zitadel" "zitadel/zitadel"; then
     msg_info "Stopping Service"
-    systemctl stop zitadel
+    systemctl stop zitadel-api
+	systemctl stop zitadel-login
     msg_ok "Stopped Service"
 
     msg_info "Updating Zitadel"
     rm -f /opt/zitadel/*
-	fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/opt/zitadel" "zitadel-linux-amd64.tar.gz"
+    fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/opt/zitadel" "zitadel-linux-amd64.tar.gz"
 
     rm -f /opt/login/*
-	fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
+    fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "/opt/login" "zitadel-login.tar.gz"
 
     cd /opt/zitadel
     ./zitadel setup --masterkeyFile /etc/zitadel/.masterkey --config /etc/zitadel/config.yaml --init-projections=true
 	msg_ok "Updated Zitadel"
 
     msg_info "Starting Service"
-    systemctl start zitadel
+    systemctl start zitadel-api
+    sleep 5
+    systemctl start zitadel-login
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
