@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-07T00:21:04Z",
+  "generated": "2026-02-07T06:13:57Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.2.2",
+      "version": "9.2.3",
       "pinned": false,
-      "date": "2026-02-06T22:01:36Z"
+      "date": "2026-02-07T04:44:20Z"
     },
     {
       "slug": "inspircd",
@@ -543,9 +543,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1044",
+      "version": "v0.24.1060",
       "pinned": false,
-      "date": "2026-02-06T05:55:31Z"
+      "date": "2026-02-07T05:55:27Z"
     },
     {
       "slug": "joplin-server",
@@ -1488,9 +1488,9 @@
     {
       "slug": "uptimekuma",
       "repo": "louislam/uptime-kuma",
-      "version": "2.0.2",
+      "version": "2.1.0",
       "pinned": false,
-      "date": "2025-10-22T17:03:54Z"
+      "date": "2026-02-07T02:31:49Z"
     },
     {
       "slug": "vaultwarden",
