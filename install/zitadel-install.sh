@@ -53,7 +53,7 @@ PG_VERSION="17" setup_postgresql
 setup_go
 
 msg_info "Configuring Postgresql"
-sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${POSTGRES_ADMIN_PASSWORD}';"
+$STD sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${POSTGRES_ADMIN_PASSWORD}';"
 msg_ok "Configured PostgreSQL"
 
 msg_info "Installing Zitadel"
@@ -130,7 +130,8 @@ chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/config.yaml"
 $STD ./zitadel init --config ${CONFIG_DIR}/config.yaml
 
 # Run setup phase as zitadel user (with masterkey and steps)
-$STD ./zitadel setup --config ${CONFIG_DIR}/config.yaml --steps ${CONFIG_DIR}/config.yaml --masterkey "${MASTERKEY}"
+#$STD ./zitadel setup --config ${CONFIG_DIR}/config.yaml --steps ${CONFIG_DIR}/config.yaml --masterkey "${MASTERKEY}"
+./zitadel setup --config ${CONFIG_DIR}/config.yaml --masterkey "${MASTERKEY}"
 
 #Read client token
 CLIENT_PAT=$(cat ${ZITADEL_DIR}/login-client.pat)
@@ -146,7 +147,7 @@ EOF
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/login.env"
 
 # Update package.json to bind to 0.0.0.0 instead of 127.0.0.1
-sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${LOGIN_DIR}/apps/login/package.json"
+#sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${LOGIN_DIR}/apps/login/package.json"
 
 # Create api.env file
 cat > "${CONFIG_DIR}/api.env" <<EOF
