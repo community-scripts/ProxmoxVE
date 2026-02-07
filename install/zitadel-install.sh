@@ -97,6 +97,7 @@ cd "${ZITADEL_DIR}"
 # sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run @zitadel/api:build"
 # sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:\$PATH && pnpm nx run @zitadel/login:build"
 
+mkdir -p ${ZITADEL_DIR}/apps/api/
 # Update prod-default.yaml for network access
 cat > "${ZITADEL_DIR}/apps/api/prod-default.yaml" <<EOF
 ExternalSecure: false
