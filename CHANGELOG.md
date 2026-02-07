@@ -404,6 +404,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pin Memos to v0.25.3 - last version with release binaries [@MickLesk](https://github.com/MickLesk) ([#11658](https://github.com/community-scripts/ProxmoxVE/pull/11658))
     - Downgrade: OpenProject | NginxProxyManager | Semaphore to Debian 12 due to persistent SHA1 issues  [@MickLesk](https://github.com/MickLesk) ([#11654](https://github.com/community-scripts/ProxmoxVE/pull/11654))
 
 ### 🌐 Website
