@@ -32,6 +32,11 @@ import Note from "./_components/note";
 import { githubGist, nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { ScriptItem } from "../scripts/_components/script-item";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { search } from "@/components/command-menu";
+import { basePath } from "@/config/site-config";
+import Image from "next/image";
 import { useTheme } from "next-themes";
 
 const initialScript: Script = {
@@ -65,7 +70,34 @@ export default function JSONGenerator() {
   const [isValid, setIsValid] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [currentTab, setCurrentTab] = useState<"json" | "preview">("json");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [zodErrors, setZodErrors] = useState<z.ZodError | null>(null);
+
+  const selectedCategoryObj = useMemo(
+    () => categories.find(cat => cat.id.toString() === selectedCategory),
+    [categories, selectedCategory]
+  );
+
+  const allScripts = useMemo(
+    () => categories.flatMap(cat => cat.scripts || []),
+    [categories]
+  );
+
+  const scripts = useMemo(() => {
+    const query = searchQuery.trim()
+
+    if (query) {
+      return search(allScripts, query)
+    }
+
+    if (selectedCategoryObj) {
+      return selectedCategoryObj.scripts || []
+    }
+
+    return []
+  }, [allScripts, selectedCategoryObj, searchQuery]);
 
   useEffect(() => {
     fetchCategories()
@@ -119,6 +151,53 @@ export default function JSONGenerator() {
     setTimeout(() => setIsCopied(false), 2000);
     if (isValid) toast.success("Copied metadata to clipboard");
   }, [script]);
+
+  const importScript = (script: Script) => {
+    try {
+      const result = ScriptSchema.safeParse(script);
+      if (!result.success) {
+        setIsValid(false);
+        setZodErrors(result.error);
+        toast.error("Imported JSON is invalid according to the schema.");
+        return;
+      }
+
+      setScript(result.data);
+      setIsValid(true);
+      setZodErrors(null);
+      toast.success("Imported JSON successfully");
+    } catch (error) {
+      toast.error("Failed to read or parse the JSON file.");
+    }
+
+  }
+
+  const handleFileImport = useCallback(() => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json";
+
+    input.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const content = event.target?.result as string;
+          const parsed = JSON.parse(content);
+          importScript(parsed);
+          toast.success("Imported JSON successfully");
+        } catch (error) {
+          toast.error("Failed to read the JSON file.");
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    input.click();
+  }, [setScript]);
 
   const handleDownload = useCallback(() => {
     if (isValid === false) {
@@ -177,7 +256,94 @@ export default function JSONGenerator() {
   return (
     <div className="flex h-screen mt-20">
       <div className="w-1/2 p-4 overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">JSON Generator</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold">JSON Generator</h2>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>Import</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-52" align="start">
+              <DropdownMenuGroup>
+                <DropdownMenuItem onSelect={handleFileImport}>Import local JSON file</DropdownMenuItem>
+                <Dialog
+                  open={isImportDialogOpen}
+                  onOpenChange={setIsImportDialogOpen}
+                >
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      Import existing script
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md w-full">
+                    <DialogHeader>
+                      <DialogTitle>Import existing script</DialogTitle>
+                      <DialogDescription>
+                        Select one of the puplished scripts to import its metadata.
+                      </DialogDescription>
+
+                    </DialogHeader>
+                    <div className="flex items-center gap-2">
+                      <div className="grid flex-1 gap-2">
+                        <Select
+                          value={selectedCategory}
+                          onValueChange={setSelectedCategory}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.map((category) => (
+                              <SelectItem key={category.id} value={category.id.toString()}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Input
+                          placeholder="Search for a script..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        {!selectedCategory && !searchQuery ? (
+                          <p className="text-muted-foreground text-sm text-center">
+                            Select a category or search for a script
+                          </p>
+                        ) : scripts.length === 0 ? (
+                          <p className="text-muted-foreground text-sm text-center">
+                            No scripts found
+                          </p>
+                        ) : (
+                          <div className="grid grid-cols-3 auto-rows-min h-64 overflow-y-auto gap-4">
+                            {scripts.map(script => (
+                              <div
+                                key={script.slug}
+                                className="p-2 border rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
+                                onClick={() => {
+                                  importScript(script);
+                                  setIsImportDialogOpen(false);
+                                }}
+                              >
+                                <Image
+                                  src={script.logo || `/${basePath}/logo.png`}
+                                  alt={script.name}
+                                  className="w-full h-12 object-contain mb-2"
+                                  width={16}
+                                  height={16}
+                                  unoptimized
+                                />
+                                <p className="text-sm text-center">{script.name}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <form className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>

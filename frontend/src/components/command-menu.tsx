@@ -23,7 +23,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import Link from "next/link";
 
-function search(scripts: Script[], query: string): Script[] {
+export function search(scripts: Script[], query: string): Script[] {
   const queryLower = query.toLowerCase().trim();
   const searchWords = queryLower.split(/\s+/).filter(Boolean);
 
