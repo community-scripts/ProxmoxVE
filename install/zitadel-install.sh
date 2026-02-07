@@ -59,7 +59,7 @@ fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${Z
 # Might need to chmod +x "$INSTALL_DIR/zitadel"
 
 fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
-mv "$LOGIN_DIR"/* "$INSTALL_DIR/"
+mv "$LOGIN_DIR"/* "$ZITADEL_DIR/"
 rm -rf "$LOGIN_DIR"
 # # The archive extracts to apps/login/ structure
 # if [[ -d "$LOGIN_DIR/apps/login" ]]; then
