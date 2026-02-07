@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-06T18:16:31Z",
+  "generated": "2026-02-07T00:21:04Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -256,9 +256,9 @@
     {
       "slug": "docmost",
       "repo": "docmost/docmost",
-      "version": "v0.25.1",
+      "version": "v0.25.2",
       "pinned": false,
-      "date": "2026-02-04T15:19:51Z"
+      "date": "2026-02-06T19:50:55Z"
     },
     {
       "slug": "domain-locker",
@@ -480,9 +480,9 @@
     {
       "slug": "homarr",
       "repo": "homarr-labs/homarr",
-      "version": "v1.52.0",
+      "version": "v1.53.0",
       "pinned": false,
-      "date": "2026-01-30T19:41:22Z"
+      "date": "2026-02-06T19:42:58Z"
     },
     {
       "slug": "homebox",
@@ -515,9 +515,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.2.1",
+      "version": "9.2.2",
       "pinned": false,
-      "date": "2026-02-05T16:39:35Z"
+      "date": "2026-02-06T22:01:36Z"
     },
     {
       "slug": "inspircd",
@@ -840,6 +840,13 @@
       "version": "v2.3.2",
       "pinned": false,
       "date": "2025-12-09T09:47:15Z"
+    },
+    {
+      "slug": "nightscout",
+      "repo": "nightscout/cgm-remote-monitor",
+      "version": "15.0.3",
+      "pinned": false,
+      "date": "2025-05-08T22:12:34Z"
     },
     {
       "slug": "nocodb",
@@ -1306,9 +1313,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.4.4",
+      "version": "v2.4.5",
       "pinned": false,
-      "date": "2026-02-05T00:15:53Z"
+      "date": "2026-02-06T23:12:20Z"
     },
     {
       "slug": "streamlink-webui",
@@ -1607,9 +1614,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v4.0.0",
+      "version": "v0.4.0",
       "pinned": false,
-      "date": "2026-02-05T22:42:02Z"
+      "date": "2026-02-06T21:25:24Z"
     },
     {
       "slug": "zigbee2mqtt",
