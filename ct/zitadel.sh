@@ -68,8 +68,4 @@ msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080/ui/console${CL}"
-
-echo -e "${INFO}${GN} Default Admin Credentials:${CL}"
-echo -e "${INFO}${BL} Username: zitadel-admin@zitadel.localhost${CL}"
-echo -e "${INFO}${BL} Password: Password1!${CL}"
 echo -e "${INFO} All credentials are saved in: /etc/zitadel/INSTALLATION_INFO.txt${CL}"

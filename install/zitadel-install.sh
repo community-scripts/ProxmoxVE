@@ -30,10 +30,6 @@ LOGIN_PORT="3000"
 # Detect server IP address
 SERVER_IP=$(hostname -I | awk '{print $1}')
 
-# msg_info "Installing Dependencies (Patience)"
-# $STD apt install -y ca-certificates
-# msg_ok "Installed Dependecies"
-
 # Create zitadel user
 msg_info "Creating zitadel system user"
 groupadd --system "${ZITADEL_GROUP}"
@@ -59,7 +55,9 @@ msg_ok "Configured PostgreSQL"
 msg_info "Installing Zitadel"
 cd "${ZITADEL_DIR}"
 mkdir -p ${CONFIG_DIR}
-echo "${MASTERKEY}" > ${CONFIG_DIR}/.masterkey
+echo -n "${MASTERKEY}" > ${CONFIG_DIR}/.masterkey
+chmod 600 "${CONFIG_DIR}/.masterkey"
+chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/.masterkey"
 
 # Update config.yaml for network access
 cat > "${CONFIG_DIR}/config.yaml" <<EOF
@@ -145,9 +143,6 @@ ZITADEL_SERVICE_USER_TOKEN=${CLIENT_PAT}
 EOF
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/login.env"
 
-# Update package.json to bind to 0.0.0.0 instead of 127.0.0.1
-#sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${LOGIN_DIR}/apps/login/package.json"
-
 # Create api.env file
 cat > "${CONFIG_DIR}/api.env" <<EOF
 ZITADEL_MASTERKEY=${MASTERKEY}
@@ -183,7 +178,6 @@ Group=${ZITADEL_GROUP}
 WorkingDirectory=${ZITADEL_DIR}
 EnvironmentFile=${CONFIG_DIR}/api.env
 Environment="PATH=/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin"
-#ExecStart=${ZITADEL_DIR}/zitadel start --config ${CONFIG_DIR}/config.yaml --masterkey ${MASTERKEY}
 ExecStart=${ZITADEL_DIR}/zitadel start --config ${CONFIG_DIR}/config.yaml --masterkeyFile ${CONFIG_DIR}/.masterkey
 Restart=always
 RestartSec=10
@@ -214,9 +208,6 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-
-# Reload systemd
-# systemctl daemon-reload
 
 # Enable and start API service
 systemctl enable -q --now zitadel-api.service
