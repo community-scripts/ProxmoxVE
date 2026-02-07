@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-07T06:13:57Z",
+  "generated": "2026-02-07T12:07:39Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -326,9 +326,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.4.16",
+      "version": "v6.4.17",
       "pinned": false,
-      "date": "2026-01-17T07:54:15Z"
+      "date": "2026-02-07T06:56:00Z"
     },
     {
       "slug": "fladder",
