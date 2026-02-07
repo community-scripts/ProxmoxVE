@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-07T12:07:39Z",
+  "generated": "2026-02-07T18:08:02Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -781,9 +781,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.06",
+      "version": "2026.02.07",
       "pinned": false,
-      "date": "2026-02-06T14:20:34Z"
+      "date": "2026-02-07T16:24:37Z"
     },
     {
       "slug": "miniflux",
@@ -1117,9 +1117,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.2",
+      "version": "v5.1.3",
       "pinned": false,
-      "date": "2026-02-05T00:18:57Z"
+      "date": "2026-02-07T14:59:29Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1432,9 +1432,9 @@
     {
       "slug": "trip",
       "repo": "itskovacs/TRIP",
-      "version": "1.38.1",
+      "version": "1.39.0",
       "pinned": false,
-      "date": "2026-02-04T18:10:15Z"
+      "date": "2026-02-07T16:59:51Z"
     },
     {
       "slug": "tududi",
