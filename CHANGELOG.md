@@ -400,6 +400,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-07
 
+### 🆕 New Scripts
+
+  - Bichon ([#11671](https://github.com/community-scripts/ProxmoxVE/pull/11671))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
