@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "memos" "usememos/memos"; then
+  if check_for_gh_release "memos" "usememos/memos" "v0.25.3"; then
     msg_info "Stopping service"
     systemctl stop memos
     msg_ok "Service stopped"
