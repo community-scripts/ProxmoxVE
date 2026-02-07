@@ -851,8 +851,8 @@
     {
       "slug": "nocodb",
       "repo": "nocodb/nocodb",
-      "version": "0.301.2",
-      "pinned": false,
+      "version": "0.301.1",
+      "pinned": true,
       "date": "2026-01-21T16:23:04Z"
     },
     {
