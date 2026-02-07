@@ -55,7 +55,7 @@ msg_ok "Created zitadel system user"
 # fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "tarball" "latest"
 # chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
 
-fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${INSTALL_DIR}" "zitadel-linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${ZITADEL_DIR}" "zitadel-linux-amd64.tar.gz"
 # Might need to chmod +x "$INSTALL_DIR/zitadel"
 
 fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${ZITADEL_DIR}" "zitadel-login.tar.gz"
