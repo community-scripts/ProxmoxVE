@@ -19,14 +19,11 @@ LOGIN_DIR="/opt/login"
 CONFIG_DIR="/etc/zitadel"
 ZITADEL_USER="zitadel"
 ZITADEL_GROUP="zitadel"
-POSTGRES_VERSION="17"
 DB_NAME="zitadel"
 DB_USER="zitadel"
 DB_PASSWORD="$(openssl rand -base64 32 | tr -d '=/+' | head -c 32)"
 POSTGRES_ADMIN_PASSWORD="$(openssl rand -base64 32 | tr -d '=/+' | head -c 32)"
 MASTERKEY="$(openssl rand -base64 32 | tr -d '=/+' | head -c 32)"
-#NODE_VERSION="22"
-GO_VERSION="1.24.0"
 API_PORT="8080"
 LOGIN_PORT="3000"
 
@@ -35,14 +32,6 @@ SERVER_IP=$(hostname -I | awk '{print $1}')
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt install -y ca-certificates
-    # curl \
-    # wget \
-    # git \
-    # build-essential \
-    # gnupg \
-    # lsb-release \
-    # openssl \
-    # apt-transport-https
 msg_ok "Installed Dependecies"
 
 # Create zitadel user
@@ -51,32 +40,13 @@ groupadd --system "${ZITADEL_GROUP}"
 useradd --system --gid "${ZITADEL_GROUP}" --shell /bin/bash --home-dir "${ZITADEL_DIR}" "${ZITADEL_USER}"
 msg_ok "Created zitadel system user"
 
-# fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "tarball" "latest"
-# chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
-
 fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${ZITADEL_DIR}" "zitadel-linux-amd64.tar.gz"
-# Might need to chmod +x "$ZITADEL_DIR/zitadel"
+chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
 
 fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
-#mv "$LOGIN_DIR"/* "$ZITADEL_DIR/"
-#rm -rf "$LOGIN_DIR"
-# # The archive extracts to apps/login/ structure
-# if [[ -d "$LOGIN_DIR/apps/login" ]]; then
-    # mv "$LOGIN_DIR/apps/login"/* "$LOGIN_DIR/" 2>/dev/null || true
-    # rm -rf "$LOGIN_DIR/apps"
-# fi
-
-chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
 chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}"
 
-#NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
 NODE_VERSION="24" setup_nodejs
-#node apps/login/server.js
-
-# Enable Corepack for pnpm (force to handle existing symlinks)
-#corepack enable --install-directory /usr/local/bin
-#export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-#$STD corepack enable
 
 PG_VERSION="17" setup_postgresql
 
@@ -86,20 +56,13 @@ msg_info "Configuring Postgresql"
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${POSTGRES_ADMIN_PASSWORD}';"
 msg_ok "Configured PostgreSQL"
 
-
 msg_info "Installing Zitadel"
 cd "${ZITADEL_DIR}"
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 && corepack enable && pnpm install"
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run-many --target generate"
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && pnpm nx run @zitadel/api:build"
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:\$PATH && pnpm nx run @zitadel/login:build"
-
 mkdir -p ${CONFIG_DIR}
-
 echo "${MASTERKEY}" > ${CONFIG_DIR}/.masterkey
 
-# Update prod-default.yaml for network access
-cat > "${CONFIG_DIR}/prod-default.yaml" <<EOF
+# Update config.yaml for network access
+cat > "${CONFIG_DIR}/config.yaml" <<EOF
 ExternalSecure: false
 ExternalDomain: ${SERVER_IP}
 ExternalPort: ${API_PORT}
@@ -161,57 +124,32 @@ DefaultInstance:
     LoginV2:
       BaseURI: http://${SERVER_IP}:${LOGIN_PORT}/ui/v2/login
 EOF
-chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/prod-default.yaml"
-
+chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/config.yaml"
 
 # Initialize database as zitadel user (no masterkey needed for init)
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	# ./.artifacts/bin/linux/amd64/zitadel.local init \
-	# --config apps/api/prod-default.yaml"
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	# ./zitadel init \
-	# --config apps/api/prod-default.yaml"
-#./zitadel init --config apps/api/prod-default.yaml &>/dev/null
-$STD ./zitadel init --config ${CONFIG_DIR}/prod-default.yaml
-
+$STD ./zitadel init --config ${CONFIG_DIR}/config.yaml
 
 # Run setup phase as zitadel user (with masterkey and steps)
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	# ./.artifacts/bin/linux/amd64/zitadel.local setup \
-	# --config apps/api/prod-default.yaml \
-	# --steps apps/api/prod-default.yaml \
-	# --masterkey '${MASTERKEY}'"
-# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	# ./zitadel setup \
-	# --config apps/api/prod-default.yaml \
-	# --steps apps/api/prod-default.yaml \
-	# --masterkey '${MASTERKEY}'"
-	
-$STD ./zitadel setup --config ${CONFIG_DIR}/prod-default.yaml --steps ${CONFIG_DIR}/prod-default.yaml --masterkey "${MASTERKEY}"
-
-#mkdir -p ${LOGIN_DIR}/apps/login/
+$STD ./zitadel setup --config ${CONFIG_DIR}/config.yaml --steps ${CONFIG_DIR}/config.yaml --masterkey "${MASTERKEY}"
 
 #Read client token
 CLIENT_PAT=$(cat ${ZITADEL_DIR}/login-client.pat)
 
-# Update Login V2 .env file
-cat > "${CONFIG_DIR}/.env" <<EOF
+# Update Login V2 login.env file
+cat > "${CONFIG_DIR}/login.env" <<EOF
 NEXT_PUBLIC_BASE_PATH=/ui/v2/login
 EMAIL_VERIFICATION=false
 ZITADEL_API_URL=http://${SERVER_IP}:${API_PORT}
 ZITADEL_SERVICE_USER_TOKEN_FILE=../../login-client.pat
 ZITADEL_SERVICE_USER_TOKEN=${CLIENT_PAT}
 EOF
-
-chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/.env"
+chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/login.env"
 
 # Update package.json to bind to 0.0.0.0 instead of 127.0.0.1
 sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${LOGIN_DIR}/apps/login/package.json"
 
-
-
-# Create .env.secrets file
-cat > "${CONFIG_DIR}/.env.secrets" <<EOF
+# Create api.env file
+cat > "${CONFIG_DIR}/api.env" <<EOF
 ZITADEL_MASTERKEY=${MASTERKEY}
 ZITADEL_DATABASE_POSTGRES_HOST=localhost
 ZITADEL_DATABASE_POSTGRES_PORT=5432
@@ -226,8 +164,8 @@ ZITADEL_EXTERNALSECURE=false
 EOF
 
 # Set secure permissions
-chmod 600 "${CONFIG_DIR}/.env.secrets"
-chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/.env.secrets"
+chmod 600 "${CONFIG_DIR}/api.env"
+chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/api.env"
 msg_ok "Installed Zitadel"
 
 msg_info "Creating Services"
@@ -243,14 +181,11 @@ Type=simple
 User=${ZITADEL_USER}
 Group=${ZITADEL_GROUP}
 WorkingDirectory=${ZITADEL_DIR}
-EnvironmentFile=${CONFIG_DIR}/.env.secrets
+EnvironmentFile=${CONFIG_DIR}/api.env
 Environment="PATH=/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin"
-#ExecStart=${ZITADEL_DIR}/.artifacts/bin/linux/amd64/zitadel.local start --config ${ZITADEL_DIR}/apps/api/prod-default.yaml --masterkey \${ZITADEL_MASTERKEY}
-ExecStart=${ZITADEL_DIR}/zitadel start --config ${CONFIG_DIR}/prod-default.yaml --masterkey \${ZITADEL_MASTERKEY}
+ExecStart=${ZITADEL_DIR}/zitadel start --config ${CONFIG_DIR}/config.yaml --masterkey \${ZITADEL_MASTERKEY}
 Restart=always
 RestartSec=10
-#StandardOutput=append:${ZITADEL_DIR}/logs/api.log
-#StandardError=append:${ZITADEL_DIR}/logs/api-error.log
 
 [Install]
 WantedBy=multi-user.target
@@ -268,27 +203,19 @@ Type=simple
 User=${ZITADEL_USER}
 Group=${ZITADEL_GROUP}
 WorkingDirectory=${LOGIN_DIR}/apps/login
-EnvironmentFile="${CONFIG_DIR}/.env"
+EnvironmentFile=${CONFIG_DIR}/login.env
 Environment="PATH=/usr/local/bin:/usr/bin:/bin"
 Environment="NODE_ENV=production"
-#ExecStart=pnpm nx run @zitadel/login:prod
 ExecStart=node ${LOGIN_DIR}/apps/login/server.js
 Restart=always
 RestartSec=10
-#StandardOutput=append:${ZITADEL_DIR}/logs/login.log
-#StandardError=append:${ZITADEL_DIR}/logs/login-error.log
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# Create logs directory
-#mkdir -p "${ZITADEL_DIR}/logs"
-#chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/logs"
-
 # Reload systemd
 systemctl daemon-reload
-
 
 # Enable and start API service
 systemctl enable -q --now zitadel-api.service
@@ -360,7 +287,7 @@ PRODUCTION NOTES:
 -----------------
 1. This installation uses HTTP (not HTTPS) for simplicity
 2. For production with HTTPS:
-   - Set ExternalSecure: true in prod-default.yaml
+   - Set ExternalSecure: true in config.yaml
    - Configure TLS certificates
    - Update firewall rules for port 443
 3. Change all default passwords immediately
@@ -387,7 +314,7 @@ msg_ok "Saved Credentials"
 msg_info "Create zitadel-rerun.sh"
 cat <<EOF >~/zitadel-rerun.sh
 systemctl stop zitadel
-timeout --kill-after=5s 15s zitadel setup --masterkeyFile ${CONFIG_DIR}/.masterkey --config ${CONFIG_DIR}/prod-default.yaml"
+timeout --kill-after=5s 15s zitadel setup --masterkeyFile ${CONFIG_DIR}/.masterkey --config ${CONFIG_DIR}/config.yaml"
 systemctl restart zitadel
 EOF
 msg_ok "Bash script for rerunning Zitadel after changing Zitadel config.yaml"
