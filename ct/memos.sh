@@ -32,7 +32,7 @@ function update_script() {
     systemctl stop memos
     msg_ok "Service stopped"
 
-    fetch_and_deploy_gh_release "memos" "usememos/memos" "prebuild" "latest" "/opt/memos" "memos*linux_amd64.tar.gz"
+    fetch_and_deploy_gh_release "memos" "usememos/memos" "prebuild" "v0.25.3" "/opt/memos" "memos*linux_amd64.tar.gz"
 
     msg_info "Starting service"
     systemctl start memos
