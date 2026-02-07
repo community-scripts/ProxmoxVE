@@ -19,6 +19,9 @@ $STD apt install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
+# TODO: move back to line 156 after testing
+# fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collector" "prebuild" "v0.129.14" "/opt/signoz-otel-collector" "signoz-otel-collector_linux_amd64.tar.gz"
+
 JAVA_VERSION="21" setup_java
 
 msg_info "Setting up ClickHouse"
@@ -108,7 +111,7 @@ EOF
 systemctl enable -q --now clickhouse-server
 msg_ok "Configured ClickHouse"
 
-fetch_and_deploy_gh_release "signoz-schema-migrator" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-schema-migrator" "signoz-schema-migrator_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "signoz-schema-migrator" "SigNoz/signoz-otel-collector" "prebuild" "v0.142.0" "/opt/signoz-schema-migrator" "signoz-schema-migrator_linux_amd64.tar.gz"
 
 msg_info "Running ClickHouse migrations"
 cd /opt/signoz-schema-migrator/bin
@@ -116,7 +119,7 @@ $STD ./signoz-schema-migrator sync --dsn="tcp://localhost:9000?password=" --repl
 $STD ./signoz-schema-migrator async --dsn="tcp://localhost:9000?password=" --replication=true --up=
 msg_ok "ClickHouse Migrations Completed"
 
-fetch_and_deploy_gh_release "signoz" "SigNoz/signoz" "prebuild" "latest" "/opt/signoz" "signoz-community_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "signoz" "SigNoz/signoz" "prebuild" "v0.110.1" "/opt/signoz" "signoz-community_linux_amd64.tar.gz"
 
 msg_info "Setting up SigNoz"
 mkdir -p /var/lib/signoz
@@ -153,7 +156,7 @@ EOF
 systemctl enable -q --now signoz
 msg_ok "Setup Signoz"
 
-fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-otel-collector" "signoz-otel-collector_linux_amd64.tar.gz"
+# fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collector" "prebuild" "v0.129.14" "/opt/signoz-otel-collector" "signoz-otel-collector_linux_amd64.tar.gz"
 
 msg_info "Setting up SigNoz OTel Collector"
 mkdir -p /var/lib/signoz-otel-collector
