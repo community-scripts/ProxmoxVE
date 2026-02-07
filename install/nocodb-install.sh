@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "latest" "/opt/nocodb/" "Noco-linux-x64"
+fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "0.301.1" "/opt/nocodb/" "Noco-linux-x64"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/nocodb.service
