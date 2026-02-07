@@ -130,8 +130,7 @@ chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${CONFIG_DIR}/config.yaml"
 $STD ./zitadel init --config ${CONFIG_DIR}/config.yaml
 
 # Run setup phase as zitadel user (with masterkey and steps)
-#$STD ./zitadel setup --config ${CONFIG_DIR}/config.yaml --steps ${CONFIG_DIR}/config.yaml --masterkey "${MASTERKEY}"
-./zitadel setup --config ${CONFIG_DIR}/config.yaml --masterkey "${MASTERKEY}"
+$STD ./zitadel setup --config ${CONFIG_DIR}/config.yaml --steps ${CONFIG_DIR}/config.yaml --masterkey "${MASTERKEY}"
 
 #Read client token
 CLIENT_PAT=$(cat ${ZITADEL_DIR}/login-client.pat)
