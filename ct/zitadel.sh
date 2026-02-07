@@ -7,9 +7,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/mi
 
 APP="Zitadel"
 var_tags="${var_tags:-identity-provider}"
-var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-16}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-2048}"
+var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -53,8 +53,8 @@ build_container
 description
 
 msg_info "Setting Container to Normal Resources"
-pct set $CTID -memory 2048
-pct set $CTID -cores 2
+pct set $CTID -memory 1024
+pct set $CTID -cores 1
 msg_ok "Set Container to Normal Resources"
 
 msg_ok "Completed successfully!\n"

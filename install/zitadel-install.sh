@@ -32,18 +32,16 @@ LOGIN_PORT="3000"
 # Detect server IP address
 SERVER_IP=$(hostname -I | awk '{print $1}')
 
-
 msg_info "Installing Dependencies (Patience)"
-$STD apt install -y ca-certificates \
-    curl \
-    wget \
-    git \
-    build-essential \
-    gnupg \
-    lsb-release \
-    openssl \
-    apt-transport-https
-#    postgresql-common
+$STD apt install -y ca-certificates
+    # curl \
+    # wget \
+    # git \
+    # build-essential \
+    # gnupg \
+    # lsb-release \
+    # openssl \
+    # apt-transport-https
 msg_ok "Installed Dependecies"
 
 # Create zitadel user
@@ -166,9 +164,12 @@ chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/apps/api/prod-default.y
 # sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
 	# ./.artifacts/bin/linux/amd64/zitadel.local init \
 	# --config apps/api/prod-default.yaml"
-sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	./zitadel init \
-	--config apps/api/prod-default.yaml"
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
+	# ./zitadel init \
+	# --config apps/api/prod-default.yaml"
+#./zitadel init --config apps/api/prod-default.yaml &>/dev/null
+./zitadel init --config apps/api/prod-default.yaml
+
 
 # Run setup phase as zitadel user (with masterkey and steps)
 # sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
@@ -176,11 +177,14 @@ sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/b
 	# --config apps/api/prod-default.yaml \
 	# --steps apps/api/prod-default.yaml \
 	# --masterkey '${MASTERKEY}'"
-sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
-	./zitadel setup \
-	--config apps/api/prod-default.yaml \
-	--steps apps/api/prod-default.yaml \
-	--masterkey '${MASTERKEY}'"
+# sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
+	# ./zitadel setup \
+	# --config apps/api/prod-default.yaml \
+	# --steps apps/api/prod-default.yaml \
+	# --masterkey '${MASTERKEY}'"
+	
+./zitadel setup --config apps/api/prod-default.yaml --steps apps/api/prod-default.yaml --masterkey "${MASTERKEY}"
+
 
 
 mkdir -p ${LOGIN_DIR}/apps/login/
@@ -375,6 +379,14 @@ EOF
 chmod 600 "${ZITADEL_DIR}/INSTALLATION_INFO.txt"
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/INSTALLATION_INFO.txt"
 msg_ok "Saved Credentials"
+
+msg_info "Create zitadel-rerun.sh"
+cat <<EOF >~/zitadel-rerun.sh
+systemctl stop zitadel
+timeout --kill-after=5s 15s zitadel setup --masterkeyFile ${ZITADEL_DIR}/.masterkey --config ${ZITADEL_DIR}/apps/api/prod-default.yaml"
+systemctl restart zitadel
+EOF
+msg_ok "Bash script for rerunning Zitadel after changing Zitadel config.yaml"
 
 motd_ssh
 customize
