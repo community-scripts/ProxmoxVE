@@ -400,6 +400,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-07
 
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - feat(frontend): add JSON script import functionality [@ls-root](https://github.com/ls-root) ([#11563](https://github.com/community-scripts/ProxmoxVE/pull/11563))
+
 ## 2026-02-06
 
 ### 🆕 New Scripts
