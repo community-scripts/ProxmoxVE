@@ -33,12 +33,16 @@ function update_script() {
     systemctl stop zitadel
     msg_ok "Stopped Service"
 
-    rm -f /usr/local/bin/zitadel
-    fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-amd64.tar.gz"
-
     msg_info "Updating Zitadel"
-    $STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml --init-projections=true
-    msg_ok "Updated Zitadel"
+    rm -f /opt/zitadel/*
+	fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/opt/zitadel" "zitadel-linux-amd64.tar.gz"
+
+    rm -f /opt/login/*
+	fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
+
+    cd /opt/zitadel
+    ./zitadel setup --masterkeyFile /etc/zitadel/.masterkey --config /etc/zitadel/config.yaml --init-projections=true
+	msg_ok "Updated Zitadel"
 
     msg_info "Starting Service"
     systemctl start zitadel
@@ -65,4 +69,4 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080/ui/console${CL}"
 echo -e "${INFO}${GN} Default Admin Credentials:${CL}"
 echo -e "${INFO}${BL} Username: zitadel-admin@zitadel.localhost${CL}"
 echo -e "${INFO}${BL} Password: Password1!${CL}"
-echo -e "${INFO} All credentials are saved in: /opt/zitadel/INSTALLATION_INFO.txt${CL}"
+echo -e "${INFO} All credentials are saved in: /etc/zitadel/INSTALLATION_INFO.txt${CL}"
