@@ -162,12 +162,17 @@ EOF
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/apps/api/prod-default.yaml"
 
 mkdir -p ${LOGIN_DIR}/apps/login/
+
+#Read client token
+CLIENT_PAT=$(cat ${ZITADEL_DIR}/login-client.pat)
+
 # Update Login V2 .env file
 cat > "${LOGIN_DIR}/apps/login/.env" <<EOF
 NEXT_PUBLIC_BASE_PATH=/ui/v2/login
 EMAIL_VERIFICATION=false
 ZITADEL_API_URL=http://${SERVER_IP}:${API_PORT}
 ZITADEL_SERVICE_USER_TOKEN_FILE=../../login-client.pat
+ZITADEL_SERVICE_USER_TOKEN=${CLIENT_PAT}
 EOF
 
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}/apps/login/.env"
@@ -235,8 +240,8 @@ Environment="PATH=/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin"
 ExecStart=${ZITADEL_DIR}/zitadel start --config ${ZITADEL_DIR}/apps/api/prod-default.yaml --masterkey \${ZITADEL_MASTERKEY}
 Restart=always
 RestartSec=10
-StandardOutput=append:${ZITADEL_DIR}/logs/api.log
-StandardError=append:${ZITADEL_DIR}/logs/api-error.log
+#StandardOutput=append:${ZITADEL_DIR}/logs/api.log
+#StandardError=append:${ZITADEL_DIR}/logs/api-error.log
 
 [Install]
 WantedBy=multi-user.target
@@ -258,19 +263,19 @@ EnvironmentFile="${LOGIN_DIR}/apps/login/.env"
 Environment="PATH=/usr/local/bin:/usr/bin:/bin"
 Environment="NODE_ENV=production"
 #ExecStart=pnpm nx run @zitadel/login:prod
-ExecStart=npm run start
+ExecStart=node ${LOGIN_DIR}/apps/login/server.js
 Restart=always
 RestartSec=10
-StandardOutput=append:${ZITADEL_DIR}/logs/login.log
-StandardError=append:${ZITADEL_DIR}/logs/login-error.log
+#StandardOutput=append:${ZITADEL_DIR}/logs/login.log
+#StandardError=append:${ZITADEL_DIR}/logs/login-error.log
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # Create logs directory
-mkdir -p "${ZITADEL_DIR}/logs"
-chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/logs"
+#mkdir -p "${ZITADEL_DIR}/logs"
+#chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/logs"
 
 # Reload systemd
 systemctl daemon-reload
