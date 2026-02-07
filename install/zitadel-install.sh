@@ -15,7 +15,7 @@ update_os
 
 # Configuration variables
 ZITADEL_DIR="/opt/zitadel"
-#LOGIN_DIR="/opt/login"
+LOGIN_DIR="/opt/login"
 ZITADEL_USER="zitadel"
 ZITADEL_GROUP="zitadel"
 POSTGRES_VERSION="17"
@@ -58,11 +58,9 @@ msg_ok "Created zitadel system user"
 fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${ZITADEL_DIR}" "zitadel-linux-amd64.tar.gz"
 # Might need to chmod +x "$INSTALL_DIR/zitadel"
 
-fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${ZITADEL_DIR}" "zitadel-login.tar.gz"
-
-
-# fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
-# mv "$LOGIN_DIR"/* "$INSTALL_DIR/"
+fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
+mv "$LOGIN_DIR"/* "$INSTALL_DIR/"
+rm -rf "$LOGIN_DIR"
 # # The archive extracts to apps/login/ structure
 # if [[ -d "$LOGIN_DIR/apps/login" ]]; then
     # mv "$LOGIN_DIR/apps/login"/* "$LOGIN_DIR/" 2>/dev/null || true
@@ -163,7 +161,7 @@ DefaultInstance:
 EOF
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/apps/api/prod-default.yaml"
 
-
+#mkdir -p ${ZITADEL_DIR}/apps/login/
 # Update Login V2 .env file
 cat > "${ZITADEL_DIR}/apps/login/.env" <<EOF
 NEXT_PUBLIC_BASE_PATH=/ui/v2/login
