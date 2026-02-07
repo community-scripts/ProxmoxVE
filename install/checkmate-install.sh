@@ -36,7 +36,6 @@ LOG_LEVEL="info"
 SERVER_HOST=0.0.0.0
 SERVER_PORT=52345
 EOF
-
 cat <<EOF >/opt/checkmate/client/.env.local
 VITE_APP_API_BASE_URL="/api/v1"
 UPTIME_APP_API_BASE_URL="/api/v1"
@@ -74,7 +73,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-
 cat <<EOF >/etc/systemd/system/checkmate-client.service
 [Unit]
 Description=Checkmate Client
@@ -124,10 +122,8 @@ server {
   }
 }
 EOF
-
 ln -sf /etc/nginx/sites-available/checkmate /etc/nginx/sites-enabled/checkmate
 rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
 $STD systemctl reload nginx
 msg_ok "Configured Nginx Reverse Proxy"
 
