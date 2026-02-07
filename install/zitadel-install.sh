@@ -183,7 +183,7 @@ Group=${ZITADEL_GROUP}
 WorkingDirectory=${ZITADEL_DIR}
 EnvironmentFile=${CONFIG_DIR}/api.env
 Environment="PATH=/usr/local/bin:/usr/local/go/bin:/usr/bin:/bin"
-#ExecStart=${ZITADEL_DIR}/zitadel start --config ${CONFIG_DIR}/config.yaml --masterkey ${ZITADEL_MASTERKEY}
+#ExecStart=${ZITADEL_DIR}/zitadel start --config ${CONFIG_DIR}/config.yaml --masterkey ${MASTERKEY}
 ExecStart=${ZITADEL_DIR}/zitadel start --config ${CONFIG_DIR}/config.yaml --masterkeyFile ${CONFIG_DIR}/.masterkey
 Restart=always
 RestartSec=10
