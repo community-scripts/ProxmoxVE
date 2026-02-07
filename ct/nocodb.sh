@@ -32,7 +32,7 @@ function update_script() {
     systemctl stop nocodb
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "latest" "/opt/nocodb/" "Noco-linux-x64"
+    fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "0.301.1" "/opt/nocodb/" "Noco-linux-x64"
 
     msg_info "Starting Service"
     systemctl start nocodb

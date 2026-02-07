@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Version pinned to 0.301.1 due to bug in 0.301.2 (ipaddr.js module error). See: https://github.com/nocodb/nocodb/issues/12939",
+      "type": "warning"
+    }
+  ]
 }
