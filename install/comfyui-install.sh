@@ -42,14 +42,14 @@ if [[ "${comfyui_gpu_type,,}" == "nvidia" ]]; then
     torch \
     torchvision \
     torchaudio \
-    --extra-index-url "https://download.pytorch.org/whl/cu128" \
+    --extra-index-url "https://download.pytorch.org/whl/cu130" \
     --python="/opt/ComfyUI/venv/bin/python"
 elif [[ "${comfyui_gpu_type,,}" == "amd" ]]; then
   $STD uv pip install \
     torch \
     torchvision \
     torchaudio \
-    --index-url "https://download.pytorch.org/whl/rocm6.3" \
+    --index-url "https://download.pytorch.org/whl/rocm6.4" \
     --python="/opt/ComfyUI/venv/bin/python"
 elif [[ "${comfyui_gpu_type,,}" == "intel" ]]; then
   $STD uv pip install \
