@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/slskd/slskd, https://soularr.net
+# Source: https://github.com/slskd/slskd
 
 APP="slskd"
 var_tags="${var_tags:-arr;p2p}"
@@ -24,50 +24,53 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d /opt/slskd ]] || [[ ! -d /opt/soularr ]]; then
-    msg_error "No ${APP} Installation Found!"
+  if [[ ! -d /opt/slskd ]]; then
+    msg_error "No Slskd Installation Found!"
     exit
   fi
 
-  RELEASE=$(curl -s https://api.github.com/repos/slskd/slskd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping Service"
-    systemctl stop slskd soularr.timer soularr.service
-    msg_info "Stopped Service"
+  if check_for_gh_release "Slskd" "slskd/slskd"; then
+    msg_info "Stopping Service(s)"
+    systemctl stop slskd
+    [[ -f /etc/systemd/system/soularr.service ]] && systemctl stop soularr.timer soularr.service
+    msg_ok "Stopped Service(s)"
 
-    msg_info "Updating $APP to v${RELEASE}"
-    tmp_file=$(mktemp)
-    curl -fsSL "https://github.com/slskd/slskd/releases/download/${RELEASE}/slskd-${RELEASE}-linux-x64.zip" -o $tmp_file
-    $STD unzip -oj $tmp_file slskd -d /opt/${APP}
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_info "Backing up config"
+    cp /opt/slskd/config/slskd.yml /opt/slskd.yml.bak
+    msg_ok "Backed up config"
 
-    msg_info "Starting Service"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Slskd" "slskd/slskd" "prebuild" "latest" "/opt/slskd" "slskd-*-linux-x64.zip"
+
+    msg_info "Restoring config"
+    mv /opt/slskd.yml.bak /opt/slskd/config/slskd.yml
+    msg_ok "Restored config"
+
+    msg_info "Starting Service(s)"
     systemctl start slskd
-    msg_ok "Started Service"
-    rm -rf $tmp_file
-  else
-    msg_ok "No ${APP} update required. ${APP} is already at v${RELEASE}"
+    [[ -f /etc/systemd/system/soularr.service ]] && systemctl start soularr.timer
+    msg_ok "Started Service(s)"
+    msg_ok "Updated successfully!"
   fi
-  msg_info "Updating Soularr"
-  cp /opt/soularr/config.ini /opt/config.ini.bak
-  cp /opt/soularr/run.sh /opt/run.sh.bak
-  cd /tmp
-  rm -rf /opt/soularr
-  curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
-  $STD unzip main.zip
-  mv soularr-main /opt/soularr
-  cd /opt/soularr
-  $STD pip install -r requirements.txt
-  mv /opt/config.ini.bak /opt/soularr/config.ini
-  mv /opt/run.sh.bak /opt/soularr/run.sh
-  rm -rf /tmp/main.zip
-  msg_ok "Updated soularr"
-
-  msg_info "Starting soularr timer"
-  systemctl start soularr.timer
-  msg_ok "Started soularr timer"
-  exit
+  # [[ -d /opt/soularr ]] && if check_for_gh_release "Soularr" "mrusse/soularr"; then
+  #   if systemctl is-active soularr.timer; then
+  #     msg_info "Stopping Timer and Service"
+  #     systemctl stop soularr.timer soularr.service
+  #     msg_ok "Stopped Timer and Service"
+  #   fi
+  #
+  #   msg_info "Backing up Soularr config"
+  #   cp /opt/soularr/config.ini /opt/soularr_config.ini.bak
+  #   cp /opt/soularr/run.sh /opt/soularr_run.sh.bak
+  #   $STD pip install -r requirements.txt
+  #   mv /opt/config.ini.bak /opt/soularr/config.ini
+  #   mv /opt/run.sh.bak /opt/soularr/run.sh
+  #   rm -rf /tmp/main.zip
+  #   msg_ok "Updated soularr"
+  #
+  #   msg_info "Starting soularr timer"
+  #   systemctl start soularr.timer
+  #   msg_ok "Started soularr timer"
+  # fi
 }
 
 start
