@@ -237,7 +237,6 @@ if [[ $# -gt 0 ]]; then
   # Check for --full flag
   if [[ "$1" == "--full" ]]; then
     UPDATE_ALL=true
-    AUTO_DETECT=true
     shift # Remove --full from arguments
   fi
 
@@ -250,8 +249,10 @@ if [[ $# -gt 0 ]]; then
       REPO_NAME="$2"
     fi
   fi
-else
-  # Try auto-detection
+fi
+
+# Try auto-detection
+if [[ -z "$USERNAME" ]]; then
   if username=$(detect_username); then
     USERNAME="$username"
     print_success "Detected GitHub username: $USERNAME"
@@ -261,14 +262,15 @@ else
     echo "  ./setup-fork.sh YOUR_USERNAME"
     exit 1
   fi
+fi
 
-  if repo_name=$(detect_repo_name); then
-    REPO_NAME="$repo_name"
-    if [[ "$REPO_NAME" != "ProxmoxVE" ]]; then
-      print_info "Detected custom repo name: $REPO_NAME"
-    else
-      print_success "Using default repo name: ProxmoxVE"
-    fi
+# Auto-detect repo name if needed
+if repo_name=$(detect_repo_name); then
+  REPO_NAME="$repo_name"
+  if [[ "$REPO_NAME" != "ProxmoxVE" ]]; then
+    print_info "Detected custom repo name: $REPO_NAME"
+  else
+    print_success "Using default repo name: ProxmoxVE"
   fi
 fi
 
