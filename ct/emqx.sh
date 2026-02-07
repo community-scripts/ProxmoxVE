@@ -9,15 +9,25 @@ APP="EMQX"
 var_tags="${var_tags:-mqtt}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-4}"
+var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
-header_info "$APP"
+emqx_mq_setting() {
+  if whiptail --title "EMQX MQ Configuration" \
+    --yesno "Would you like to enable EMQX MQ?" 8 60; then
+    export EMQX_MQ__ENABLE="true"
+  else
+    export EMQX_MQ__ENABLE="false"
+  fi
+}
+
+# Standard script flow
 variables
 color
 catch_errors
+emqx_mq_setting
 
 function update_script() {
   header_info
