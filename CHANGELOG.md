@@ -400,6 +400,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-07
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Downgrade: OpenProject | NginxProxyManager | Semaphore to Debian 12 due to persistent SHA1 issues  [@MickLesk](https://github.com/MickLesk) ([#11654](https://github.com/community-scripts/ProxmoxVE/pull/11654))
+
 ### 🌐 Website
 
   - #### ✨ New Features
