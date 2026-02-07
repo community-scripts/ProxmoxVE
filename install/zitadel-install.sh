@@ -56,11 +56,11 @@ msg_ok "Created zitadel system user"
 # chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
 
 fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "${ZITADEL_DIR}" "zitadel-linux-amd64.tar.gz"
-# Might need to chmod +x "$INSTALL_DIR/zitadel"
+# Might need to chmod +x "$ZITADEL_DIR/zitadel"
 
 fetch_and_deploy_gh_release "login" "zitadel/zitadel" "prebuild" "latest" "${LOGIN_DIR}" "zitadel-login.tar.gz"
-mv "$LOGIN_DIR"/* "$ZITADEL_DIR/"
-rm -rf "$LOGIN_DIR"
+#mv "$LOGIN_DIR"/* "$ZITADEL_DIR/"
+#rm -rf "$LOGIN_DIR"
 # # The archive extracts to apps/login/ structure
 # if [[ -d "$LOGIN_DIR/apps/login" ]]; then
     # mv "$LOGIN_DIR/apps/login"/* "$LOGIN_DIR/" 2>/dev/null || true
@@ -68,7 +68,7 @@ rm -rf "$LOGIN_DIR"
 # fi
 
 chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}"
-#chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}"
+chown -R "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}"
 
 #NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
 NODE_VERSION="24" setup_nodejs
@@ -161,19 +161,19 @@ DefaultInstance:
 EOF
 chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/apps/api/prod-default.yaml"
 
-#mkdir -p ${ZITADEL_DIR}/apps/login/
+mkdir -p ${LOGIN_DIR}/apps/login/
 # Update Login V2 .env file
-cat > "${ZITADEL_DIR}/apps/login/.env" <<EOF
+cat > "${LOGIN_DIR}/apps/login/.env" <<EOF
 NEXT_PUBLIC_BASE_PATH=/ui/v2/login
 EMAIL_VERIFICATION=false
 ZITADEL_API_URL=http://${SERVER_IP}:${API_PORT}
 ZITADEL_SERVICE_USER_TOKEN_FILE=../../login-client.pat
 EOF
 
-chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${ZITADEL_DIR}/apps/login/.env"
+chown "${ZITADEL_USER}:${ZITADEL_GROUP}" "${LOGIN_DIR}/apps/login/.env"
 
 # Update package.json to bind to 0.0.0.0 instead of 127.0.0.1
-sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${ZITADEL_DIR}/apps/login/package.json"
+sed -i 's/"prod": "cd \.\/\.next\/standalone && HOSTNAME=127\.0\.0\.1/"prod": "cd .\/\.next\/standalone \&\& HOSTNAME=0.0.0.0/g' "${LOGIN_DIR}/apps/login/package.json"
 
 # Initialize database as zitadel user (no masterkey needed for init)
 # sudo -u "${ZITADEL_USER}" bash -c "cd ${ZITADEL_DIR} && export PATH=/usr/local/bin:/usr/local/go/bin:\$PATH && \
@@ -253,10 +253,12 @@ Requires=zitadel-api.service
 Type=simple
 User=${ZITADEL_USER}
 Group=${ZITADEL_GROUP}
-WorkingDirectory=${ZITADEL_DIR}
+WorkingDirectory=${LOGIN_DIR}/apps/login
+EnvironmentFile="${LOGIN_DIR}/apps/login/.env"
 Environment="PATH=/usr/local/bin:/usr/bin:/bin"
 Environment="NODE_ENV=production"
-ExecStart=pnpm nx run @zitadel/login:prod
+#ExecStart=pnpm nx run @zitadel/login:prod
+ExecStart=npm run start
 Restart=always
 RestartSec=10
 StandardOutput=append:${ZITADEL_DIR}/logs/login.log
