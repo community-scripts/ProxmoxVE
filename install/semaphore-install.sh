@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git ansible
+$STD apt install -y \
+  git \
+  ansible
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "latest" "/opt/semaphore" "semaphore_*_linux_amd64.deb"
