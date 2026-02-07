@@ -402,7 +402,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Bichon ([#11671](https://github.com/community-scripts/ProxmoxVE/pull/11671))
+  - Checkmate ([#11672](https://github.com/community-scripts/ProxmoxVE/pull/11672))
+- Bichon ([#11671](https://github.com/community-scripts/ProxmoxVE/pull/11671))
 
 ### 🚀 Updated Scripts
 
