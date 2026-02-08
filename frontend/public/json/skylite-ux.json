@@ -1,0 +1,44 @@
+{
+  "name": "Skylite-UX",
+  "slug": "skylite-ux",
+  "categories": [
+    19
+  ],
+  "date_created": "2026-02-06",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/Wetzel402/Skylite-UX",
+  "website": "https://github.com/Wetzel402/Skylite-UX",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/skylite-ux.webp",
+  "config_path": "/opt/skylite-ux/.env",
+  "description": "Skylite-UX is an open-source, self-hosted family management app with calendar, todos, shopping lists, and user management.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/skylite-ux.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Database credentials: `cat ~/skylite-ux.creds`",
+      "type": "info"
+    },
+    {
+      "text": "Build process requires ~4GB RAM. Runtime usage is much lower — RAM can be reduced after installation.",
+      "type": "info"
+    }
+  ]
+}
