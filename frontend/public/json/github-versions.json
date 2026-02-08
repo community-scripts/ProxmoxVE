@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-08T00:26:48Z",
+  "generated": "2026-02-08T06:18:42Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -557,9 +557,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1060",
+      "version": "v0.24.1066",
       "pinned": false,
-      "date": "2026-02-07T05:55:27Z"
+      "date": "2026-02-08T05:59:28Z"
     },
     {
       "slug": "joplin-server",
@@ -1005,9 +1005,9 @@
     {
       "slug": "peanut",
       "repo": "Brandawg93/PeaNUT",
-      "version": "v5.21.2",
+      "version": "v5.22.0",
       "pinned": false,
-      "date": "2026-01-18T17:32:08Z"
+      "date": "2026-02-08T00:32:25Z"
     },
     {
       "slug": "pelican-panel",
@@ -1628,9 +1628,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.4.0",
+      "version": "v0.4.1",
       "pinned": false,
-      "date": "2026-02-06T21:25:24Z"
+      "date": "2026-02-08T03:18:51Z"
     },
     {
       "slug": "zigbee2mqtt",
