@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-08
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Semaphore: switch from Debian  to Ubuntu 24.04 [@MickLesk](https://github.com/MickLesk) ([#11670](https://github.com/community-scripts/ProxmoxVE/pull/11670))
+
 ## 2026-02-07
 
 ### 🆕 New Scripts
