@@ -2843,6 +2843,61 @@ EOF
   fi
 }
 
+dev_mode_menu() {
+  local motd=OFF keep=OFF trace=OFF pause=OFF breakpoint=OFF logs=OFF dryrun=OFF verbose=OFF
+
+  IFS=',' read -r -a _modes <<< "$dev_mode"
+  for m in "${_modes[@]}"; do
+    case "$m" in
+      motd) motd=ON ;;
+      keep) keep=ON ;;
+      trace) trace=ON ;;
+      pause) pause=ON ;;
+      breakpoint) breakpoint=ON ;;
+      logs) logs=ON ;;
+      dryrun) dryrun=ON ;;
+    esac
+  done
+
+  [[ "$var_verbose" == "yes" ]] && verbose=ON
+
+  local selection
+  selection=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+    --title "DEV MODE" \
+    --checklist "Choose one or more Options" 16 51 10 \
+    "motd" "Early SSH/MOTD Setup" "$motd" \
+    "keep" "Preserve Container on Failure" "$keep" \
+    "trace" "Bash Command Tracing" "$trace" \
+    "pause" "Step-by-Step Execution" "$pause" \
+    "breakpoint" "Interactive Shell on Error" "$breakpoint" \
+    "logs" "Persistent Logging" "$logs" \
+    "dryrun" "Simulation Mode" "$dryrun" \
+    "verbose" "Verbose logging" "$verbose" \
+    3>&1 1>&2 2>&3) || exit_script
+
+  dev_mode=""
+  var_verbose="no"
+  local modes_out=()
+
+  for tag in $selection; do
+    tag="${tag%\"}"
+    tag="${tag#\"}"
+    if [[ "$tag" == "verbose" ]]; then
+      var_verbose="yes"
+    else
+      modes_out+=("$tag")
+    fi
+  done
+
+  dev_mode=$(IFS=,; echo "${modes_out[*]}")
+  unset DEV_MODE_MOTD DEV_MODE_KEEP DEV_MODE_TRACE DEV_MODE_PAUSE DEV_MODE_BREAKPOINT DEV_MODE_LOGS DEV_MODE_DRYRUN
+  parse_dev_mode
+  if [[ "${DEV_MODE_LOGS:-false}" == "true" ]]; then
+    mkdir -p /var/log/community-scripts
+    BUILD_LOG="/var/log/community-scripts/create-lxc-${SESSION_ID}-$(date +%Y%m%d_%H%M%S).log"
+  fi
+}
+
 diagnostics_menu() {
   if [ "${DIAGNOSTICS:-no}" = "yes" ]; then
     if whiptail --backtitle "Proxmox VE Helper Scripts" \
@@ -3060,12 +3115,13 @@ settings_menu() {
     local settings_items=(
       "1" "Manage API-Diagnostic Setting"
       "2" "Edit Default.vars"
+      "3" "Configure dev mode"
     )
     if [ -f "$(get_app_defaults_path)" ]; then
-      settings_items+=("3" "Edit App.vars for ${APP}")
-      settings_items+=("4" "Back to Main Menu")
+      settings_items+=("4" "Edit App.vars for ${APP}")
+      settings_items+=("5" "Back to Main Menu")
     else
-      settings_items+=("3" "Back to Main Menu")
+      settings_items+=("4" "Back to Main Menu")
     fi
 
     local choice
@@ -3079,7 +3135,8 @@ settings_menu() {
     case "$choice" in
     1) diagnostics_menu ;;
     2) nano /usr/local/community-scripts/default.vars ;;
-    3)
+    3) dev_mode_menu ;;
+    4)
       if [ -f "$(get_app_defaults_path)" ]; then
         nano "$(get_app_defaults_path)"
       else
@@ -3087,7 +3144,7 @@ settings_menu() {
         return
       fi
       ;;
-    4)
+    5)
       # Back to main menu
       return
       ;;
