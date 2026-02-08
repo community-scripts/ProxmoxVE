@@ -3078,10 +3078,10 @@ settings_menu() {
 
     case "$choice" in
     1) diagnostics_menu ;;
-    2) nano /usr/local/community-scripts/default.vars ;;
+    2) ${EDITOR:-nano} /usr/local/community-scripts/default.vars ;;
     3)
       if [ -f "$(get_app_defaults_path)" ]; then
-        nano "$(get_app_defaults_path)"
+        ${EDITOR:-nano} "$(get_app_defaults_path)"
       else
         # Back was selected (no app.vars available)
         return
