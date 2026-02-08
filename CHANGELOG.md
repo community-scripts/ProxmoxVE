@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - feat(healthchecks): add sendalerts service [@Mika56](https://github.com/Mika56) ([#11694](https://github.com/community-scripts/ProxmoxVE/pull/11694))
     - ComfyUI: Dynamic Fetch PyTorch Versions [@MickLesk](https://github.com/MickLesk) ([#11657](https://github.com/community-scripts/ProxmoxVE/pull/11657))
 
   - #### 💥 Breaking Changes
