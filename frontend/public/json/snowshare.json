@@ -1,16 +1,14 @@
 {
   "name": "SnowShare",
   "slug": "snowshare",
-  "categories": [
-    11
-  ],
+  "categories": [11],
   "date_created": "2025-12-02",
   "type": "ct",
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
   "documentation": "https://github.com/TuroYT/snowshare",
-  "config_path": "/opt/snowshare/.env",
+  "config_path": "/opt/snowshare.env",
   "website": "https://github.com/TuroYT/snowshare",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/snowshare.png",
   "description": "A modern, secure file and link sharing platform built with Next.js, Prisma, and NextAuth. Share URLs, code snippets, and files with customizable expiration, privacy, and QR codes.",
