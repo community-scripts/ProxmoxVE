@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-08T12:08:29Z",
+  "generated": "2026-02-08T18:08:50Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -158,9 +158,9 @@
     {
       "slug": "byparr",
       "repo": "ThePhaseless/Byparr",
-      "version": "v2.0.1",
+      "version": "v2.1.0",
       "pinned": false,
-      "date": "2025-09-11T20:29:38Z"
+      "date": "2026-02-08T12:59:20Z"
     },
     {
       "slug": "bytestash",
@@ -249,9 +249,9 @@
     {
       "slug": "dawarich",
       "repo": "Freika/dawarich",
-      "version": "1.0.4",
+      "version": "1.1.0",
       "pinned": false,
-      "date": "2026-02-01T11:37:27Z"
+      "date": "2026-02-08T14:42:45Z"
     },
     {
       "slug": "discopanel",
@@ -389,9 +389,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.236.0",
+      "version": "2.237.0",
       "pinned": false,
-      "date": "2026-02-05T19:30:11Z"
+      "date": "2026-02-08T13:59:53Z"
     },
     {
       "slug": "gitea",
@@ -797,7 +797,7 @@
       "repo": "alexta69/metube",
       "version": "2026.02.08",
       "pinned": false,
-      "date": "2026-02-08T10:58:01Z"
+      "date": "2026-02-08T17:01:37Z"
     },
     {
       "slug": "miniflux",
@@ -1131,9 +1131,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.4",
+      "version": "v5.1.5",
       "pinned": false,
-      "date": "2026-02-07T22:47:44Z"
+      "date": "2026-02-08T12:19:53Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1348,9 +1348,9 @@
     {
       "slug": "tandoor",
       "repo": "TandoorRecipes/recipes",
-      "version": "2.4.2",
+      "version": "2.5.0",
       "pinned": false,
-      "date": "2026-02-01T12:52:37Z"
+      "date": "2026-02-08T13:23:02Z"
     },
     {
       "slug": "tasmoadmin",
