@@ -43,7 +43,7 @@ Requires=postgresql.service
 [Service]
 Type=simple
 WorkingDirectory=/opt/snowshare
-EnvironmentFile=/opt/snowshare/.env
+EnvironmentFile=/opt/snowshare.env
 ExecStart=/usr/bin/npm start
 Restart=on-failure
 RestartSec=10
