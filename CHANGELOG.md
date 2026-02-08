@@ -405,6 +405,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - ComfyUI: Dynamic Fetch PyTorch Versions [@MickLesk](https://github.com/MickLesk) ([#11657](https://github.com/community-scripts/ProxmoxVE/pull/11657))
+
   - #### 💥 Breaking Changes
 
     - Semaphore: switch from Debian  to Ubuntu 24.04 [@MickLesk](https://github.com/MickLesk) ([#11670](https://github.com/community-scripts/ProxmoxVE/pull/11670))
