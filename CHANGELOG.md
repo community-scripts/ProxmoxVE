@@ -12,6 +12,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -21,7 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>February (4 entries)</h4></summary>
+<summary><h4>February (7 entries)</h4></summary>
 
 [View February 2026 Changelog](.github/changelogs/2026/02.md)
 
@@ -41,84 +44,84 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>December - 31 entries</h4></summary>
+<summary><h4>December (31 entries)</h4></summary>
 
 [View December 2025 Changelog](.github/changelogs/2025/12.md)
 
 </details>
 
 <details>
-<summary><h4>November - 30 entries</h4></summary>
+<summary><h4>November (29 entries)</h4></summary>
 
 [View November 2025 Changelog](.github/changelogs/2025/11.md)
 
 </details>
 
 <details>
-<summary><h4>October - 31 entries</h4></summary>
+<summary><h4>October (30 entries)</h4></summary>
 
 [View October 2025 Changelog](.github/changelogs/2025/10.md)
 
 </details>
 
 <details>
-<summary><h4>September - 30 entries</h4></summary>
+<summary><h4>September (29 entries)</h4></summary>
 
 [View September 2025 Changelog](.github/changelogs/2025/09.md)
 
 </details>
 
 <details>
-<summary><h4>August - 31 entries</h4></summary>
+<summary><h4>August (30 entries)</h4></summary>
 
 [View August 2025 Changelog](.github/changelogs/2025/08.md)
 
 </details>
 
 <details>
-<summary><h4>July - 30 entries</h4></summary>
+<summary><h4>July (29 entries)</h4></summary>
 
 [View July 2025 Changelog](.github/changelogs/2025/07.md)
 
 </details>
 
 <details>
-<summary><h4>June - 30 entries</h4></summary>
+<summary><h4>June (29 entries)</h4></summary>
 
 [View June 2025 Changelog](.github/changelogs/2025/06.md)
 
 </details>
 
 <details>
-<summary><h4>May - 31 entries</h4></summary>
+<summary><h4>May (30 entries)</h4></summary>
 
 [View May 2025 Changelog](.github/changelogs/2025/05.md)
 
 </details>
 
 <details>
-<summary><h4>April - 26 entries</h4></summary>
+<summary><h4>April (25 entries)</h4></summary>
 
 [View April 2025 Changelog](.github/changelogs/2025/04.md)
 
 </details>
 
 <details>
-<summary><h4>March - 31 entries</h4></summary>
+<summary><h4>March (30 entries)</h4></summary>
 
 [View March 2025 Changelog](.github/changelogs/2025/03.md)
 
 </details>
 
 <details>
-<summary><h4>February - 27 entries</h4></summary>
+<summary><h4>February (26 entries)</h4></summary>
 
 [View February 2025 Changelog](.github/changelogs/2025/02.md)
 
 </details>
 
 <details>
-<summary><h4>January - 28 entries</h4></summary>
+<summary><h4>January (27 entries)</h4></summary>
 
 [View January 2025 Changelog](.github/changelogs/2025/01.md)
 
@@ -131,84 +134,84 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>December - 23 entries</h4></summary>
+<summary><h4>December (22 entries)</h4></summary>
 
 [View December 2024 Changelog](.github/changelogs/2024/12.md)
 
 </details>
 
 <details>
-<summary><h4>November - 16 entries</h4></summary>
+<summary><h4>November (15 entries)</h4></summary>
 
 [View November 2024 Changelog](.github/changelogs/2024/11.md)
 
 </details>
 
 <details>
-<summary><h4>October - 10 entries</h4></summary>
+<summary><h4>October (9 entries)</h4></summary>
 
 [View October 2024 Changelog](.github/changelogs/2024/10.md)
 
 </details>
 
 <details>
-<summary><h4>September - 2 entries</h4></summary>
+<summary><h4>September (1 entries)</h4></summary>
 
 [View September 2024 Changelog](.github/changelogs/2024/09.md)
 
 </details>
 
 <details>
-<summary><h4>August - 3 entries</h4></summary>
+<summary><h4>August (2 entries)</h4></summary>
 
 [View August 2024 Changelog](.github/changelogs/2024/08.md)
 
 </details>
 
 <details>
-<summary><h4>July - 1 entries</h4></summary>
+<summary><h4>July (0 entries)</h4></summary>
 
 [View July 2024 Changelog](.github/changelogs/2024/07.md)
 
 </details>
 
 <details>
-<summary><h4>June - 9 entries</h4></summary>
+<summary><h4>June (8 entries)</h4></summary>
 
 [View June 2024 Changelog](.github/changelogs/2024/06.md)
 
 </details>
 
 <details>
-<summary><h4>May - 17 entries</h4></summary>
+<summary><h4>May (16 entries)</h4></summary>
 
 [View May 2024 Changelog](.github/changelogs/2024/05.md)
 
 </details>
 
 <details>
-<summary><h4>April - 15 entries</h4></summary>
+<summary><h4>April (14 entries)</h4></summary>
 
 [View April 2024 Changelog](.github/changelogs/2024/04.md)
 
 </details>
 
 <details>
-<summary><h4>March - 6 entries</h4></summary>
+<summary><h4>March (5 entries)</h4></summary>
 
 [View March 2024 Changelog](.github/changelogs/2024/03.md)
 
 </details>
 
 <details>
-<summary><h4>February - 10 entries</h4></summary>
+<summary><h4>February (9 entries)</h4></summary>
 
 [View February 2024 Changelog](.github/changelogs/2024/02.md)
 
 </details>
 
 <details>
-<summary><h4>January - 10 entries</h4></summary>
+<summary><h4>January (9 entries)</h4></summary>
 
 [View January 2024 Changelog](.github/changelogs/2024/01.md)
 
@@ -221,84 +224,84 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>December - 4 entries</h4></summary>
+<summary><h4>December (3 entries)</h4></summary>
 
 [View December 2023 Changelog](.github/changelogs/2023/12.md)
 
 </details>
 
 <details>
-<summary><h4>November - 4 entries</h4></summary>
+<summary><h4>November (3 entries)</h4></summary>
 
 [View November 2023 Changelog](.github/changelogs/2023/11.md)
 
 </details>
 
 <details>
-<summary><h4>October - 8 entries</h4></summary>
+<summary><h4>October (7 entries)</h4></summary>
 
 [View October 2023 Changelog](.github/changelogs/2023/10.md)
 
 </details>
 
 <details>
-<summary><h4>September - 11 entries</h4></summary>
+<summary><h4>September (10 entries)</h4></summary>
 
 [View September 2023 Changelog](.github/changelogs/2023/09.md)
 
 </details>
 
 <details>
-<summary><h4>August - 8 entries</h4></summary>
+<summary><h4>August (7 entries)</h4></summary>
 
 [View August 2023 Changelog](.github/changelogs/2023/08.md)
 
 </details>
 
 <details>
-<summary><h4>July - 6 entries</h4></summary>
+<summary><h4>July (5 entries)</h4></summary>
 
 [View July 2023 Changelog](.github/changelogs/2023/07.md)
 
 </details>
 
 <details>
-<summary><h4>June - 6 entries</h4></summary>
+<summary><h4>June (5 entries)</h4></summary>
 
 [View June 2023 Changelog](.github/changelogs/2023/06.md)
 
 </details>
 
 <details>
-<summary><h4>May - 9 entries</h4></summary>
+<summary><h4>May (8 entries)</h4></summary>
 
 [View May 2023 Changelog](.github/changelogs/2023/05.md)
 
 </details>
 
 <details>
-<summary><h4>April - 9 entries</h4></summary>
+<summary><h4>April (8 entries)</h4></summary>
 
 [View April 2023 Changelog](.github/changelogs/2023/04.md)
 
 </details>
 
 <details>
-<summary><h4>March - 9 entries</h4></summary>
+<summary><h4>March (8 entries)</h4></summary>
 
 [View March 2023 Changelog](.github/changelogs/2023/03.md)
 
 </details>
 
 <details>
-<summary><h4>February - 7 entries</h4></summary>
+<summary><h4>February (6 entries)</h4></summary>
 
 [View February 2023 Changelog](.github/changelogs/2023/02.md)
 
 </details>
 
 <details>
-<summary><h4>January - 16 entries</h4></summary>
+<summary><h4>January (15 entries)</h4></summary>
 
 [View January 2023 Changelog](.github/changelogs/2023/01.md)
 
@@ -311,84 +314,84 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>December - 8 entries</h4></summary>
+<summary><h4>December (7 entries)</h4></summary>
 
 [View December 2022 Changelog](.github/changelogs/2022/12.md)
 
 </details>
 
 <details>
-<summary><h4>November - 8 entries</h4></summary>
+<summary><h4>November (7 entries)</h4></summary>
 
 [View November 2022 Changelog](.github/changelogs/2022/11.md)
 
 </details>
 
 <details>
-<summary><h4>October - 3 entries</h4></summary>
+<summary><h4>October (2 entries)</h4></summary>
 
 [View October 2022 Changelog](.github/changelogs/2022/10.md)
 
 </details>
 
 <details>
-<summary><h4>September - 10 entries</h4></summary>
+<summary><h4>September (9 entries)</h4></summary>
 
 [View September 2022 Changelog](.github/changelogs/2022/09.md)
 
 </details>
 
 <details>
-<summary><h4>August - 8 entries</h4></summary>
+<summary><h4>August (7 entries)</h4></summary>
 
 [View August 2022 Changelog](.github/changelogs/2022/08.md)
 
 </details>
 
 <details>
-<summary><h4>July - 11 entries</h4></summary>
+<summary><h4>July (10 entries)</h4></summary>
 
 [View July 2022 Changelog](.github/changelogs/2022/07.md)
 
 </details>
 
 <details>
-<summary><h4>June - 2 entries</h4></summary>
+<summary><h4>June (1 entries)</h4></summary>
 
 [View June 2022 Changelog](.github/changelogs/2022/06.md)
 
 </details>
 
 <details>
-<summary><h4>May - 9 entries</h4></summary>
+<summary><h4>May (8 entries)</h4></summary>
 
 [View May 2022 Changelog](.github/changelogs/2022/05.md)
 
 </details>
 
 <details>
-<summary><h4>April - 14 entries</h4></summary>
+<summary><h4>April (13 entries)</h4></summary>
 
 [View April 2022 Changelog](.github/changelogs/2022/04.md)
 
 </details>
 
 <details>
-<summary><h4>March - 21 entries</h4></summary>
+<summary><h4>March (20 entries)</h4></summary>
 
 [View March 2022 Changelog](.github/changelogs/2022/03.md)
 
 </details>
 
 <details>
-<summary><h4>February - 16 entries</h4></summary>
+<summary><h4>February (15 entries)</h4></summary>
 
 [View February 2022 Changelog](.github/changelogs/2022/02.md)
 
 </details>
 
 <details>
-<summary><h4>January - 4 entries</h4></summary>
+<summary><h4>January (3 entries)</h4></summary>
 
 [View January 2022 Changelog](.github/changelogs/2022/01.md)
 
@@ -1292,116 +1295,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 💥 Breaking Changes
 
     - fix: setup_mariadb hangs on [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10672](https://github.com/community-scripts/ProxmoxVE/pull/10672))
-
-## 2026-01-08
-
-### 🆕 New Scripts
-
-  - GWN-Manager ([#10642](https://github.com/community-scripts/ProxmoxVE/pull/10642))
-
-### 🚀 Updated Scripts
-
-  - Fix line continuation for vlc-bin installation [@chinedu40](https://github.com/chinedu40) ([#10654](https://github.com/community-scripts/ProxmoxVE/pull/10654))
-
-  - #### 🐞 Bug Fixes
-
-    - outline: use corepack yarn module [@MickLesk](https://github.com/MickLesk) ([#10652](https://github.com/community-scripts/ProxmoxVE/pull/10652))
-    - Remove unnecessary quotes from variable expansions in VM scripts  [@MickLesk](https://github.com/MickLesk) ([#10649](https://github.com/community-scripts/ProxmoxVE/pull/10649))
-    - Monica: Fix database variable names [@tremor021](https://github.com/tremor021) ([#10634](https://github.com/community-scripts/ProxmoxVE/pull/10634))
-    - Tianji: Fix PostrgreSQL vars [@tremor021](https://github.com/tremor021) ([#10633](https://github.com/community-scripts/ProxmoxVE/pull/10633))
-
-  - #### 🔧 Refactor
-
-    - deCONZ: Bump to Trixie base [@tremor021](https://github.com/tremor021) ([#10643](https://github.com/community-scripts/ProxmoxVE/pull/10643))
-
-## 2026-01-07
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - pve-scripts-local: fix missing exit in update [@MickLesk](https://github.com/MickLesk) ([#10630](https://github.com/community-scripts/ProxmoxVE/pull/10630))
-
-  - #### ✨ New Features
-
-    - Upgrade ESPHome LXC to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10624](https://github.com/community-scripts/ProxmoxVE/pull/10624))
-
-  - #### 🔧 Refactor
-
-    - Explicitly state installation method [@tremor021](https://github.com/tremor021) ([#10608](https://github.com/community-scripts/ProxmoxVE/pull/10608))
-
-### 🧰 Tools
-
-  - Modify Debian sources list for trixie updates (as 4.1.0-1 config) [@maiux](https://github.com/maiux) ([#10505](https://github.com/community-scripts/ProxmoxVE/pull/10505))
-
-## 2026-01-06
-
-### 🆕 New Scripts
-
-  - Sportarr ([#10600](https://github.com/community-scripts/ProxmoxVE/pull/10600))
-
-### 🚀 Updated Scripts
-
-  - chore: fix update msg [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10593](https://github.com/community-scripts/ProxmoxVE/pull/10593))
-
-  - #### 🐞 Bug Fixes
-
-    - InspIRCd: Fix release fetching [@tremor021](https://github.com/tremor021) ([#10578](https://github.com/community-scripts/ProxmoxVE/pull/10578))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Sonarr [@tremor021](https://github.com/tremor021) ([#10573](https://github.com/community-scripts/ProxmoxVE/pull/10573))
-    - Refactor: Dispatcharr [@tremor021](https://github.com/tremor021) ([#10599](https://github.com/community-scripts/ProxmoxVE/pull/10599))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - hwaccel: rewrite of GPU hardware acceleration support [@MickLesk](https://github.com/MickLesk) ([#10597](https://github.com/community-scripts/ProxmoxVE/pull/10597))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - iptag: fix syntax error in VM config file parsing [@MickLesk](https://github.com/MickLesk) ([#10598](https://github.com/community-scripts/ProxmoxVE/pull/10598))
-
-  - #### ✨ New Features
-
-    - Update clean-lxcs.sh to support Red Hat compatible distros [@jabofh](https://github.com/jabofh) ([#10583](https://github.com/community-scripts/ProxmoxVE/pull/10583))
-
-### 📚 Documentation
-
-  - [gh] New Script template update [@tremor021](https://github.com/tremor021) ([#10607](https://github.com/community-scripts/ProxmoxVE/pull/10607))
-- chore: bump copyright to 2026 - happy new year [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10585](https://github.com/community-scripts/ProxmoxVE/pull/10585))
-
-### 📂 Github
-
-  - re-add shellcheck exclusions [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10586](https://github.com/community-scripts/ProxmoxVE/pull/10586))
-
-## 2026-01-05
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - reitti: add postgis extension to PostgreSQL DB setup [@MickLesk](https://github.com/MickLesk) ([#10555](https://github.com/community-scripts/ProxmoxVE/pull/10555))
-    - openWRT: separate disk attachment and resizing in VM setup [@MickLesk](https://github.com/MickLesk) ([#10557](https://github.com/community-scripts/ProxmoxVE/pull/10557))
-    - paperless-ai: Set TMPDIR for pip to use disk during install [@MickLesk](https://github.com/MickLesk) ([#10559](https://github.com/community-scripts/ProxmoxVE/pull/10559))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Monica [@tremor021](https://github.com/tremor021) ([#10552](https://github.com/community-scripts/ProxmoxVE/pull/10552))
-    - Upgrade Wazuh LXC Container to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10551](https://github.com/community-scripts/ProxmoxVE/pull/10551))
-    - Upgrade evcc LXC to Debian 13 [@heinemannj](https://github.com/heinemannj) ([#10548](https://github.com/community-scripts/ProxmoxVE/pull/10548))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - Harden setup_hwaccel for old Intel GPUs [@MickLesk](https://github.com/MickLesk) ([#10556](https://github.com/community-scripts/ProxmoxVE/pull/10556))
-
-### 🧰 Tools
-
-  - #### 🔧 Refactor
-
-    - Refactor: IP-Tag (Multiple IP / Performance / Execution Time)  [@MickLesk](https://github.com/MickLesk) ([#10558](https://github.com/community-scripts/ProxmoxVE/pull/10558))
