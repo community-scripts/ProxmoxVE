@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-07T18:08:02Z",
+  "generated": "2026-02-08T00:26:48Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -121,6 +121,13 @@
       "date": "2026-02-01T19:02:42Z"
     },
     {
+      "slug": "bichon",
+      "repo": "rustmailer/bichon",
+      "version": "0.3.7",
+      "pinned": false,
+      "date": "2026-01-28T12:47:09Z"
+    },
+    {
       "slug": "bitmagnet",
       "repo": "bitmagnet-io/bitmagnet",
       "version": "v0.10.0",
@@ -168,6 +175,13 @@
       "version": "v0.4.5",
       "pinned": false,
       "date": "2025-07-29T16:39:18Z"
+    },
+    {
+      "slug": "checkmate",
+      "repo": "bluewave-labs/Checkmate",
+      "version": "v3.3",
+      "pinned": false,
+      "date": "2026-01-28T14:25:25Z"
     },
     {
       "slug": "cleanuparr",
@@ -760,9 +774,9 @@
     {
       "slug": "mediamtx",
       "repo": "bluenviron/mediamtx",
-      "version": "v1.16.0",
+      "version": "v1.16.1",
       "pinned": false,
-      "date": "2026-01-31T15:38:51Z"
+      "date": "2026-02-07T18:58:24Z"
     },
     {
       "slug": "meilisearch",
@@ -776,7 +790,7 @@
       "repo": "usememos/memos",
       "version": "v0.25.3",
       "pinned": true,
-      "date": "2025-11-25T00:00:00Z"
+      "date": "2025-11-25T15:40:41Z"
     },
     {
       "slug": "metube",
@@ -823,9 +837,9 @@
     {
       "slug": "navidrome",
       "repo": "navidrome/navidrome",
-      "version": "v0.60.0",
+      "version": "v0.60.2",
       "pinned": false,
-      "date": "2026-02-03T18:57:04Z"
+      "date": "2026-02-07T19:42:33Z"
     },
     {
       "slug": "netbox",
@@ -853,7 +867,7 @@
       "repo": "nocodb/nocodb",
       "version": "0.301.1",
       "pinned": true,
-      "date": "2026-01-21T16:23:04Z"
+      "date": "2026-01-14T13:13:33Z"
     },
     {
       "slug": "nodebb",
@@ -1117,9 +1131,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.3",
+      "version": "v5.1.4",
       "pinned": false,
-      "date": "2026-02-07T14:59:29Z"
+      "date": "2026-02-07T22:47:44Z"
     },
     {
       "slug": "pve-scripts-local",
