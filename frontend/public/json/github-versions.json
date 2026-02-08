@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-08T06:18:42Z",
+  "generated": "2026-02-08T12:08:29Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -340,9 +340,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.4.17",
+      "version": "v6.4.18",
       "pinned": false,
-      "date": "2026-02-07T06:56:00Z"
+      "date": "2026-02-08T07:28:00Z"
     },
     {
       "slug": "fladder",
@@ -795,9 +795,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.07",
+      "version": "2026.02.08",
       "pinned": false,
-      "date": "2026-02-07T16:24:37Z"
+      "date": "2026-02-08T10:58:01Z"
     },
     {
       "slug": "miniflux",
