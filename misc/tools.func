@@ -3595,6 +3595,7 @@ _setup_intel_arc() {
     $STD apt -y install \
       intel-media-va-driver-non-free \
       intel-opencl-icd \
+      libmfx-gen1.2 \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel Arc packages failed"
 
@@ -3621,6 +3622,7 @@ _setup_intel_arc() {
       intel-media-va-driver-non-free \
       ocl-icd-libopencl1 \
       libvpl2 \
+      libmfx-gen1.2 \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel Arc packages failed"
   fi
