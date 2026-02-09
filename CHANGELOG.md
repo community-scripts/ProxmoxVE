@@ -412,6 +412,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Nginx-UI: better User Handling | ACME [@MickLesk](https://github.com/MickLesk) ([#11715](https://github.com/community-scripts/ProxmoxVE/pull/11715))
     - NginxProxymanager: use better-sqlite3 [@MickLesk](https://github.com/MickLesk) ([#11708](https://github.com/community-scripts/ProxmoxVE/pull/11708))
 
 ### ❔ Uncategorized
