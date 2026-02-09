@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-09T06:27:10Z",
+  "generated": "2026-02-09T12:16:55Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -109,9 +109,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.1.0",
+      "version": "v2.2.0",
       "pinned": false,
-      "date": "2026-02-02T14:30:55Z"
+      "date": "2026-02-09T07:07:40Z"
     },
     {
       "slug": "beszel",
@@ -284,9 +284,9 @@
     {
       "slug": "domain-monitor",
       "repo": "Hosteroid/domain-monitor",
-      "version": "v1.1.1",
+      "version": "v1.1.2",
       "pinned": false,
-      "date": "2025-11-18T11:32:30Z"
+      "date": "2026-02-09T06:29:34Z"
     },
     {
       "slug": "donetick",
@@ -1292,9 +1292,9 @@
     {
       "slug": "snowshare",
       "repo": "TuroYT/snowshare",
-      "version": "v1.2.12",
+      "version": "v1.3.3",
       "pinned": false,
-      "date": "2026-01-30T13:35:56Z"
+      "date": "2026-02-09T10:52:12Z"
     },
     {
       "slug": "sonarr",
@@ -1523,9 +1523,9 @@
     {
       "slug": "vikunja",
       "repo": "go-vikunja/vikunja",
-      "version": "v1.0.0",
+      "version": "v1.1.0",
       "pinned": false,
-      "date": "2026-01-28T11:12:59Z"
+      "date": "2026-02-09T10:34:29Z"
     },
     {
       "slug": "wallabag",
