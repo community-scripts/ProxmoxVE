@@ -429,6 +429,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - addons: ensure curl is installed before use [@MickLesk](https://github.com/MickLesk) ([#11718](https://github.com/community-scripts/ProxmoxVE/pull/11718))
     - Netbird (addon): add systemd ordering to start after Docker [@MickLesk](https://github.com/MickLesk) ([#11716](https://github.com/community-scripts/ProxmoxVE/pull/11716))
 
 ### ❔ Uncategorized
