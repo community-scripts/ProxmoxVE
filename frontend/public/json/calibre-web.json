@@ -1,0 +1,44 @@
+{
+  "name": "Calibre-Web",
+  "slug": "calibre-web",
+  "categories": [
+    4
+  ],
+  "date_created": "2026-02-09",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8083,
+  "documentation": "https://github.com/janeczku/calibre-web/wiki",
+  "website": "https://github.com/janeczku/calibre-web",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/calibre-web.webp",
+  "config_path": "/opt/calibre-web/app.db",
+  "description": "Web app for browsing, reading and downloading eBooks from a Calibre database. Provides an attractive interface with mobile support, user management, and eBook conversion capabilities.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/calibre-web.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "admin123"
+  },
+  "notes": [
+    {
+      "text": "Default credentials: admin / admin123 - Change immediately after first login!",
+      "type": "warning"
+    },
+    {
+      "text": "Upload your Calibre library metadata.db during first setup wizard.",
+      "type": "info"
+    }
+  ]
+}
