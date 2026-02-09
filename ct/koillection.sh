@@ -33,7 +33,8 @@ function update_script() {
     msg_ok "Stopped Service"
 
     PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
-    
+    setup_composer
+
     msg_info "Creating a backup"
     mv /opt/koillection/ /opt/koillection-backup
     msg_ok "Backup created"
