@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-09T12:16:55Z",
+  "generated": "2026-02-09T18:19:59Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -718,9 +718,9 @@
     {
       "slug": "lubelogger",
       "repo": "hargata/lubelog",
-      "version": "v1.5.8",
+      "version": "v1.5.9",
       "pinned": false,
-      "date": "2026-01-26T18:18:03Z"
+      "date": "2026-02-09T17:36:13Z"
     },
     {
       "slug": "mafl",
@@ -1131,9 +1131,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.5",
+      "version": "v5.1.6",
       "pinned": false,
-      "date": "2026-02-08T12:19:53Z"
+      "date": "2026-02-09T14:43:03Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1589,6 +1589,13 @@
       "version": "1.1.0",
       "pinned": false,
       "date": "2025-11-11T14:30:28Z"
+    },
+    {
+      "slug": "wger",
+      "repo": "wger-project/wger",
+      "version": "2.4",
+      "pinned": false,
+      "date": "2026-01-18T12:12:02Z"
     },
     {
       "slug": "wikijs",
