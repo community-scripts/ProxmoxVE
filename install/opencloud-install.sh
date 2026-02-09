@@ -38,6 +38,10 @@ for server in "${servers[@]}"; do
   fi
 done
 
+msg_info "Installing dependencies"
+$STD apt install -y inotify-tools
+msg_ok "Installed dependencies"
+
 msg_info "Installing Collabora Online"
 curl -fsSL https://collaboraoffice.com/downloads/gpg/collaboraonline-release-keyring.gpg -o /etc/apt/keyrings/collaboraonline-release-keyring.gpg
 cat <<EOF >/etc/apt/sources.list.d/colloboraonline.sources
@@ -148,8 +152,15 @@ COLLABORATION_JWT_SECRET=
 # FRONTEND_FULL_TEXT_SEARCH_ENABLED=true
 # SEARCH_EXTRACTOR_TIKA_TIKA_URL=<your-tika-url>
 
-## External storage test - Only NFS v4.2+ is supported
-## User files
+## Uncomment below to enable PosixFS Collaborative Mode
+## Increase inotify watch/instance limits on your PVE host:
+### sysctl -w fs.inotify.max_user_watches=1048576
+### sysctl -w fs.inotify.max_user_instances=1024
+# STORAGE_USERS_POSIX_ENABLE_COLLABORATION=true
+# STORAGE_USERS_POSIX_WATCH_TYPE=inotifywait
+# STORAGE_USERS_POSIX_WATCH_FS=true
+# STORAGE_USERS_POSIX_WATCH_PATH=<path-to-storage-or-bind-mount>
+## User files location - experimental - use at your own risk! - ZFS, NFS v4.2+ supported - CIFS/SMB not supported
 # STORAGE_USERS_POSIX_ROOT=<path-to-your-bind_mount>
 EOF
 

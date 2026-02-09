@@ -30,7 +30,7 @@ function update_script() {
   fi
 
   RELEASE="v5.0.2"
-  if check_for_gh_release "opencloud" "opencloud-eu/opencloud" "${RELEASE}"; then
+  if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}"; then
     msg_info "Stopping services"
     systemctl stop opencloud opencloud-wopi
     msg_ok "Stopped services"
@@ -38,9 +38,23 @@ function update_script() {
     msg_info "Updating packages"
     $STD apt-get update
     $STD apt-get dist-upgrade -y
+    if ! command -v inotifywait &>/dev/null; then
+      $STD apt install -y inotify-tools
+    fi
     msg_ok "Updated packages"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "opencloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-amd64"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-amd64"
+
+    if ! grep -q 'POSIX_WATCH' /etc/opencloud/opencloud.env; then
+      sed -i '/^## External/i ## Uncomment below to enable PosixFS Collaborative Mode\
+## Increase inotify watch/instance limits on your PVE host:\
+### sysctl -w fs.inotify.max_user_watches=1048576\
+### sysctl -w fs.inotify.max_user_instances=1024\
+# STORAGE_USERS_POSIX_ENABLE_COLLABORATION=true\
+# STORAGE_USERS_POSIX_WATCH_TYPE=inotifywait\
+# STORAGE_USERS_POSIX_WATCH_FS=true\
+# STORAGE_USERS_POSIX_WATCH_PATH=<path-to-storage-or-bind-mount>' /etc/opencloud/opencloud.env
+    fi
 
     msg_info "Starting services"
     systemctl start opencloud opencloud-wopi
