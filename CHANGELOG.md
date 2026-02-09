@@ -410,6 +410,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - tracearr: prepare for next stable release [@durzo](https://github.com/durzo) ([#11673](https://github.com/community-scripts/ProxmoxVE/pull/11673))
     - PeaNUT: symlink server.js after update [@vhsdream](https://github.com/vhsdream) ([#11696](https://github.com/community-scripts/ProxmoxVE/pull/11696))
 
+  - #### ✨ New Features
+
+    - remove whiptail from update scripts for unattended update support [@MickLesk](https://github.com/MickLesk) ([#11712](https://github.com/community-scripts/ProxmoxVE/pull/11712))
+
   - #### 🔧 Refactor
 
     - Nginx-UI: better User Handling | ACME [@MickLesk](https://github.com/MickLesk) ([#11715](https://github.com/community-scripts/ProxmoxVE/pull/11715))
