@@ -28,6 +28,12 @@ function update_script() {
     exit
   fi
 
+  msg_error "This script is currently disabled due to an external issue with the OpenResty APT repository."
+  msg_error "The repository's GPG key uses SHA-1 signatures, which are no longer accepted by Debian as of February 1, 2026."
+  msg_error "The issue is tracked in openresty/openresty#1097"
+  msg_error "For more details, see: https://github.com/community-scripts/ProxmoxVE/issues/11406"
+  exit 1
+
   if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"12"* ]]; then
     msg_error "Wrong Debian version detected!"
     msg_error "Please create a snapshot first. You must upgrade your LXC to Debian Trixie before updating. Visit: https://github.com/community-scripts/ProxmoxVE/discussions/7489"
