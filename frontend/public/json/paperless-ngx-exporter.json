@@ -17,7 +17,7 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "tools/addon/paperless-ngx-exporter.sh",
+      "script": "tools/addon/prometheus-paperless-ngx-exporter.sh",
       "resources": {
         "cpu": null,
         "ram": null,
