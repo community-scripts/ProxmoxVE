@@ -407,9 +407,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Koillection: ensure setup_composer is in update script [@MickLesk](https://github.com/MickLesk) ([#11734](https://github.com/community-scripts/ProxmoxVE/pull/11734))
+    - PeaNUT: symlink server.js after update [@vhsdream](https://github.com/vhsdream) ([#11696](https://github.com/community-scripts/ProxmoxVE/pull/11696))
     - Umlautadaptarr: use release appsettings.json instead of hardcoded copy [@MickLesk](https://github.com/MickLesk) ([#11725](https://github.com/community-scripts/ProxmoxVE/pull/11725))
     - tracearr: prepare for next stable release [@durzo](https://github.com/durzo) ([#11673](https://github.com/community-scripts/ProxmoxVE/pull/11673))
-    - PeaNUT: symlink server.js after update [@vhsdream](https://github.com/vhsdream) ([#11696](https://github.com/community-scripts/ProxmoxVE/pull/11696))
 
   - #### ✨ New Features
 
