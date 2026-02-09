@@ -36,12 +36,7 @@ function update_script() {
   NODE_VERSION="24" setup_nodejs
   CLEAN_INSTALL=1 fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
 
-  if ! dpkg -l | grep -q "pkg-config"; then
-    $STD apt install -y pkg-config
-  fi
-  if ! dpkg -l | grep -q "libssl-dev"; then
-    $STD apt install -y libssl-dev
-  fi
+  ensure_dependencies pkg-config libssl-dev
   TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
   RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
@@ -49,7 +44,6 @@ function update_script() {
   if [[ -f /opt/netvisor/oidc.toml ]]; then
     mv /opt/netvisor/oidc.toml /opt/scanopy/oidc.toml
   fi
-  LOCAL_IP="$(hostname -I | awk '{print $1}')"
   if ! grep -q "PUBLIC_URL" /opt/scanopy/.env; then
     sed -i "\|_PATH=|a\NETVISOR_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
   fi

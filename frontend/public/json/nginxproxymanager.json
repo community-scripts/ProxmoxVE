@@ -13,6 +13,8 @@
   "website": "https://nginxproxymanager.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nginx-proxy-manager.webp",
   "config_path": "",
+  "disable": false,
+  "disable_description": "This script is temporarily disabled due to an external issue with the OpenResty APT repository. The repository's GPG key uses SHA-1 signatures, which are no longer accepted by Debian as of February 1, 2026. This causes installation to fail with APT errors. The issue is tracked in openresty/openresty#1097. A workaround exists but requires manual configuration. The script will be re-enabled once OpenResty updates their repository signing key. For more details, see: https://github.com/community-scripts/ProxmoxVE/issues/11406",
   "description": "Nginx Proxy Manager is a tool that provides a web-based interface to manage Nginx reverse proxies. It enables users to easily and securely expose their services to the internet by providing features such as HTTPS encryption, domain mapping, and access control. It eliminates the need for manual configuration of Nginx reverse proxies, making it easy for users to quickly and securely expose their services to the public.",
   "install_methods": [
     {
@@ -23,15 +25,19 @@
         "ram": 2048,
         "hdd": 8,
         "os": "debian",
-        "version": "13"
+        "version": "12"
       }
     }
   ],
   "default_credentials": {
-    "username": "admin@example.com",
-    "password": "changeme"
+    "username": null,
+    "password": null
   },
   "notes": [
+    {
+      "text": "On first launch, a setup wizard will guide you through creating an admin account. There are no default credentials.",
+      "type": "info"
+    },
     {
       "text": "You can install the specific one certbot you prefer, or you can Running /app/scripts/install-certbot-plugins within the Nginx Proxy Manager (NPM) LXC shell will install many common plugins. Important: This script does not install all Certbot plugins, as some require additional, external system dependencies (like specific packages for certain DNS providers). These external dependencies must be manually installed within the LXC container before you can successfully install and use the corresponding Certbot plugin. Consult the plugin's documentation for required packages.",
       "type": "info"

@@ -6,12 +6,12 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://komo.do
 
 APP="Alpine-Komodo"
-var_tags="${var_tags:-docker,alpine}"
+var_tags="${var_tags:-docker;alpine}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-alpine}"
-var_version="${var_version:-3.22}"
+var_version="${var_version:-3.23}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"

@@ -85,7 +85,8 @@ pkg_install curl wget git
 ```bash
 setup_nodejs "20"
 setup_php "8.3"
-setup_mariadb "11"
+setup_mariadb  # Uses distribution packages (recommended)
+# MARIADB_VERSION="11.4" setup_mariadb  # For specific version
 ```
 
 ### Phase 4: Application Download

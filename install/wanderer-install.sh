@@ -14,10 +14,10 @@ network_check
 update_os
 
 setup_go
-setup_nodejs
+NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
 mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data}
-fetch_and_deploy_gh_release "wanderer" "Flomp/wanderer" "tarball" "latest" "/opt/wanderer/source"
+fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
 
 msg_info "Installing wanderer (patience)"
 cd /opt/wanderer/source/db
@@ -32,7 +32,6 @@ msg_ok "Installed wanderer"
 msg_info "Creating Service"
 MEILI_KEY=$(openssl rand -hex 32)
 POCKETBASE_KEY=$(openssl rand -hex 16)
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
 
 cat <<EOF >/opt/wanderer/.env
 ORIGIN=http://${LOCAL_IP}:3000
@@ -59,7 +58,7 @@ cd /opt/wanderer/source/web && node build &
 
 wait -n
 EOF
-chmod +x  /opt/wanderer/start.sh
+chmod +x /opt/wanderer/start.sh
 
 cat <<EOF >/etc/systemd/system/wanderer-web.service
 [Unit]

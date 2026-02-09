@@ -13,24 +13,14 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies (a lot of patience)"
-$STD apt-get install -y \
-  git \
-  sed \
-  lsb-release \
-  apt-transport-https \
-  coreutils \
-  software-properties-common
-msg_ok "Installed Dependencies"
-
 msg_info "Setting up TemurinJDK"
 setup_java
-$STD apt-get install -y temurin-{8,11,17,21}-jre
+$STD apt install -y temurin-{8,11,17,21}-jre
 sudo update-alternatives --set java /usr/lib/jvm/temurin-21-jre-amd64/bin/java
 msg_ok "Installed TemurinJDK"
 
 msg_info "Setup Python3"
-$STD apt-get install -y \
+$STD apt install -y \
   python3 \
   python3-dev \
   python3-pip \
@@ -59,8 +49,8 @@ $STD sudo -u crafty bash -c '
 '
 msg_ok "Installed Craft-Controller and dependencies"
 
-msg_info "Setting up Crafty-Controller service"
-cat >/etc/systemd/system/crafty-controller.service <<'EOF'
+msg_info "Setting up service"
+cat <<EOF >/etc/systemd/system/crafty-controller.service
 [Unit]
 Description=Crafty 4
 After=network.target
@@ -83,7 +73,7 @@ sleep 10
   echo "Username: $(grep -oP '(?<="username": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
   echo "Password: $(grep -oP '(?<="password": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
 } >>~/crafty-controller.creds
-msg_ok "Crafty-Controller service started"
+msg_ok "Service started"
 
 motd_ssh
 customize

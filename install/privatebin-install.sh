@@ -19,7 +19,7 @@ $STD apt install -y \
     openssl
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.2" PHP_MODULE="common,fpm" setup_php
+PHP_VERSION="8.2" PHP_FPM="YES" setup_php
 create_self_signed_cert
 fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
 

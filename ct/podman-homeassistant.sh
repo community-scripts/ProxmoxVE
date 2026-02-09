@@ -27,12 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
-    "1" "Update system and containers" ON \
-    "2" "Install HACS" OFF \
-    "3" "Install FileBrowser" OFF \
-    "4" "Remove ALL Unused Images" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Home Assistant Update Options" \
+    "1" "Update system and containers" \
+    "2" "Install HACS" \
+    "3" "Install FileBrowser" \
+    "4" "Remove ALL Unused Images")
 
   if [ "$UPD" == "1" ]; then
     msg_info "Updating ${APP} LXC"
@@ -65,7 +64,6 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "3" ]; then
-    import_local_ip
     msg_info "Installing FileBrowser"
     $STD curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
     $STD filebrowser config init -a '0.0.0.0'

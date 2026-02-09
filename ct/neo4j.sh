@@ -27,9 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! dpkg -l | grep -q temurin-21-jre; then
-    JAVA_VERSION="21" setup_java
-  fi
+  JAVA_VERSION="21" setup_java
+
   msg_info "Updating ${APP}"
   $STD apt update
   $STD apt -y upgrade

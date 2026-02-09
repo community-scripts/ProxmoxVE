@@ -29,12 +29,7 @@ function update_script() {
     exit
   fi
 
-  if ! dpkg -s libjpeg-dev >/dev/null 2>&1; then
-    msg_info "Installing Dependencies"
-    $STD apt-get update
-    $STD apt-get install -y libjpeg-dev
-    msg_ok "Updated Dependencies"
-  fi
+  ensure_dependencies libjpeg-dev
 
   NODE_VERSION="24" setup_nodejs
 

@@ -1,0 +1,48 @@
+{
+    "name": "Ampache",
+    "slug": "ampache",
+    "categories": [
+        13
+    ],
+    "date_created": "2026-01-30",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": "https://github.com/ampache/ampache/wiki",
+    "website": "https://ampache.org/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ampache.webp",
+    "config_path": "/opt/ampache/config/ampache.cfg.php",
+    "description": "Ampache is a web-based audio streaming application and file manager that allows you to access your music & videos from anywhere. It features a powerful music catalog, multiple user support, transcoding, streaming, and more.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/ampache.sh",
+            "resources": {
+                "cpu": 4,
+                "ram": 2048,
+                "hdd": 5,
+                "os": "debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Complete the web-based setup at http://IP/install.php",
+            "type": "info"
+        },
+        {
+            "text": "Database credentials are stored in `~/ampache.creds` - use only the MySQL username and password from this file",
+            "type": "info"
+        },
+        {
+            "text": "During installation, only check 'Create Tables' - leave 'Create Database' and 'Create Database User' unchecked",
+            "type": "info"
+        }
+    ]
+}

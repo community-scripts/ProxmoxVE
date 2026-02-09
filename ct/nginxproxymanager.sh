@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-13}"
+var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -139,15 +139,17 @@ function update_script() {
   "database": {
     "engine": "knex-native",
     "knex": {
-      "client": "sqlite3",
+      "client": "better-sqlite3",
       "connection": {
         "filename": "/data/database.sqlite"
-      }
+      },
+      "useNullAsDefault": true
     }
   }
 }
 EOF
   fi
+  sed -i 's/"client": "sqlite3"/"client": "better-sqlite3"/' /app/config/production.json
   cd /app 
   $STD yarn install --network-timeout 600000
   msg_ok "Initialized Backend"

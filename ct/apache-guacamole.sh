@@ -92,7 +92,6 @@ function update_script() {
     curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-jdbc-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-jdbc.tar.gz"
     $STD tar -xf /tmp/guacamole-auth-jdbc.tar.gz -C /tmp
     mv /tmp/guacamole-auth-jdbc-"${LATEST_SERVER}"/mysql/guacamole-auth-jdbc-mysql-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
-    rm -rf /tmp/guacamole-auth-jdbc*
     echo "${LATEST_SERVER}" >~/.guacamole_auth_jdbc
     msg_ok "Updated Guacamole Auth JDBC"
   else
@@ -140,6 +139,7 @@ function update_script() {
         fi
       done
     fi
+    rm -rf /tmp/guacamole-auth-jdbc*
     msg_ok "MySQL Schema updated"
   fi
 

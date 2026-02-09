@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  PHP_VERSION="8.3" PHP_MODULE="sqlite3" PHP_APACHE="YES" setup_php
+  PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
   msg_warn "LinkStack should be updated via the user interface."
   exit
 }

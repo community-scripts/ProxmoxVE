@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,10 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP LXC"
-  $STD apt-get update
-  pip3 install deluge[all] --upgrade
-  msg_ok "Updated $APP LXC"
+  msg_info "Updating Deluge"
+  $STD apt update
+  $STD pip3 install deluge[all] --upgrade
+  msg_ok "Updated Deluge"
   msg_ok "Updated successfully!"
   exit
 }

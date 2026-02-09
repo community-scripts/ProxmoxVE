@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/rcourtman/Pulse
 
 APP="Pulse"
-var_tags="${var_tags:-monitoring,proxmox}"
+var_tags="${var_tags:-monitoring;proxmox}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"

@@ -45,7 +45,7 @@ function update_script() {
     curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-7.0-repository_latest.deb" -o "graylog-7.0-repository_latest.deb"
     $STD dpkg -i graylog-7.0-repository_latest.deb
     $STD apt update
-    $STD apt install -y graylog-server graylog-datanode
+    ensure_dependencies graylog-server graylog-datanode
     rm -f graylog-7.0-repository_latest.deb
     msg_ok "Updated Graylog"
   elif dpkg --compare-versions "$CURRENT_VERSION" ge "7.0"; then

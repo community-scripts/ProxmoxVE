@@ -1,0 +1,620 @@
+# Copyright (c) 2021-2026 community-scripts ORG
+# License: MIT | https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/LICENSE
+
+set -euo pipefail
+SPINNER_PID=""
+SPINNER_ACTIVE=0
+SPINNER_MSG=""
+declare -A MSG_INFO_SHOWN
+
+# ------------------------------------------------------------------------------
+# Loads core utility groups once (colors, formatting, icons, defaults).
+# ------------------------------------------------------------------------------
+
+[[ -n "${_CORE_FUNC_LOADED:-}" ]] && return
+_CORE_FUNC_LOADED=1
+
+load_functions() {
+  [[ -n "${__FUNCTIONS_LOADED:-}" ]] && return
+  __FUNCTIONS_LOADED=1
+  color
+  formatting
+  icons
+  default_vars
+  set_std_mode
+  shell_check
+  get_valid_nextid
+  cleanup_vmid
+  cleanup
+  check_root
+  pve_check
+  arch_check
+}
+
+# Function to download & save header files
+get_header() {
+  local app_name=$(echo "${APP,,}" | tr ' ' '-')
+  local app_type=${APP_TYPE:-vm}
+  local header_url="https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/${app_type}/headers/${app_name}"
+  local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
+
+  mkdir -p "$(dirname "$local_header_path")"
+
+  if [ ! -s "$local_header_path" ]; then
+    if ! curl -fsSL "$header_url" -o "$local_header_path"; then
+      return 1
+    fi
+  fi
+
+  cat "$local_header_path" 2>/dev/null || true
+}
+
+header_info() {
+  local app_name=$(echo "${APP,,}" | tr ' ' '-')
+  local header_content
+
+  header_content=$(get_header "$app_name") || header_content=""
+
+  clear
+  local term_width
+  term_width=$(tput cols 2>/dev/null || echo 120)
+
+  if [ -n "$header_content" ]; then
+    echo "$header_content"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Sets ANSI color codes used for styled terminal output.
+# ------------------------------------------------------------------------------
+color() {
+  YW=$(echo "\033[33m")
+  YWB=$(echo "\033[93m")
+  BL=$(echo "\033[36m")
+  RD=$(echo "\033[01;31m")
+  BGN=$(echo "\033[4;92m")
+  GN=$(echo "\033[1;92m")
+  DGN=$(echo "\033[32m")
+  CL=$(echo "\033[m")
+}
+
+# ------------------------------------------------------------------------------
+# Defines formatting helpers like tab, bold, and line reset sequences.
+# ------------------------------------------------------------------------------
+formatting() {
+  BFR="\\r\\033[K"
+  BOLD=$(echo "\033[1m")
+  HOLD=" "
+  TAB="  "
+  TAB3="      "
+}
+
+# ------------------------------------------------------------------------------
+# Sets symbolic icons used throughout user feedback and prompts.
+# ------------------------------------------------------------------------------
+icons() {
+  CM="${TAB}✔️${TAB}"
+  CROSS="${TAB}✖️${TAB}"
+  DNSOK="✔️ "
+  DNSFAIL="${TAB}✖️${TAB}"
+  INFO="${TAB}💡${TAB}${CL}"
+  OS="${TAB}🖥️${TAB}${CL}"
+  OSVERSION="${TAB}🌟${TAB}${CL}"
+  CONTAINERTYPE="${TAB}📦${TAB}${CL}"
+  DISKSIZE="${TAB}💾${TAB}${CL}"
+  CPUCORE="${TAB}🧠${TAB}${CL}"
+  RAMSIZE="${TAB}🛠️${TAB}${CL}"
+  SEARCH="${TAB}🔍${TAB}${CL}"
+  VERBOSE_CROPPED="🔍${TAB}"
+  VERIFYPW="${TAB}🔐${TAB}${CL}"
+  CONTAINERID="${TAB}🆔${TAB}${CL}"
+  HOSTNAME="${TAB}🏠${TAB}${CL}"
+  BRIDGE="${TAB}🌉${TAB}${CL}"
+  NETWORK="${TAB}📡${TAB}${CL}"
+  GATEWAY="${TAB}🌐${TAB}${CL}"
+  DISABLEIPV6="${TAB}🚫${TAB}${CL}"
+  ICON_DISABLEIPV6="${TAB}🚫${TAB}${CL}"
+  DEFAULT="${TAB}⚙️${TAB}${CL}"
+  MACADDRESS="${TAB}🔗${TAB}${CL}"
+  VLANTAG="${TAB}🏷️${TAB}${CL}"
+  ROOTSSH="${TAB}🔑${TAB}${CL}"
+  CREATING="${TAB}🚀${TAB}${CL}"
+  ADVANCED="${TAB}🧩${TAB}${CL}"
+  FUSE="${TAB}🗂️${TAB}${CL}"
+  GPU="${TAB}🎮${TAB}${CL}"
+  HOURGLASS="${TAB}⏳${TAB}"
+}
+
+# ------------------------------------------------------------------------------
+# Sets default verbose mode for script and os execution.
+# ------------------------------------------------------------------------------
+set_std_mode() {
+  if [ "${VERBOSE:-no}" = "yes" ]; then
+    STD=""
+  else
+    STD="silent"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# default_vars()
+#
+# - Sets default retry and wait variables used for system actions
+# - RETRY_NUM: Maximum number of retry attempts (default: 10)
+# - RETRY_EVERY: Seconds to wait between retries (default: 3)
+# ------------------------------------------------------------------------------
+default_vars() {
+  RETRY_NUM=10
+  RETRY_EVERY=3
+  i=$RETRY_NUM
+}
+
+# ------------------------------------------------------------------------------
+# get_active_logfile()
+#
+# - Returns the appropriate log file based on execution context
+# - BUILD_LOG: Host operations (VM creation)
+# - Fallback to /tmp/build-<timestamp>.log if not set
+# ------------------------------------------------------------------------------
+get_active_logfile() {
+  if [[ -n "${BUILD_LOG:-}" ]]; then
+    echo "$BUILD_LOG"
+  else
+    # Fallback for legacy scripts
+    echo "/tmp/build-$(date +%Y%m%d_%H%M%S).log"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# silent()
+#
+# - Executes command with output redirected to active log file
+# - On error: displays last 10 lines of log and exits with original exit code
+# - Temporarily disables error trap to capture exit code correctly
+# - Sources explain_exit_code() for detailed error messages
+# ------------------------------------------------------------------------------
+silent() {
+  local cmd="$*"
+  local caller_line="${BASH_LINENO[0]:-unknown}"
+  local logfile="$(get_active_logfile)"
+
+  set +Eeuo pipefail
+  trap - ERR
+
+  "$@" >>"$logfile" 2>&1
+  local rc=$?
+
+  set -Eeuo pipefail
+  trap 'error_handler' ERR
+
+  if [[ $rc -ne 0 ]]; then
+    # Source explain_exit_code if needed
+    if ! declare -f explain_exit_code >/dev/null 2>&1; then
+      source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/error_handler.func) 2>/dev/null || true
+    fi
+
+    local explanation=""
+    if declare -f explain_exit_code >/dev/null 2>&1; then
+      explanation="$(explain_exit_code "$rc")"
+    fi
+
+    printf "\e[?25h"
+    if [[ -n "$explanation" ]]; then
+      msg_error "in line ${caller_line}: exit code ${rc} (${explanation})"
+    else
+      msg_error "in line ${caller_line}: exit code ${rc}"
+    fi
+    msg_custom "→" "${YWB}" "${cmd}"
+
+    if [[ -s "$logfile" ]]; then
+      local log_lines=$(wc -l <"$logfile")
+      echo "--- Last 10 lines of log ---"
+      tail -n 10 "$logfile"
+      echo "----------------------------"
+
+      # Show how to view full log if there are more lines
+      if [[ $log_lines -gt 10 ]]; then
+        msg_custom "📋" "${YW}" "View full log (${log_lines} lines): ${logfile}"
+      fi
+    fi
+
+    exit "$rc"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Performs a curl request with retry logic and inline feedback.
+# ------------------------------------------------------------------------------
+
+run_curl() {
+  if [ "$VERB" = "no" ]; then
+    curl "$@" >/dev/null 2>>/tmp/curl_error.log
+  else
+    curl "$@" 2>>/tmp/curl_error.log
+  fi
+}
+
+curl_handler() {
+  local args=()
+  local url=""
+  local max_retries=0 delay=2 attempt=1
+  local exit_code has_output_file=false
+
+  for arg in "$@"; do
+    if [[ "$arg" != -* && -z "$url" ]]; then
+      url="$arg"
+    fi
+    [[ "$arg" == "-o" || "$arg" == --output ]] && has_output_file=true
+    args+=("$arg")
+  done
+
+  if [[ -z "$url" ]]; then
+    msg_error "no valid url or option entered for curl_handler"
+    exit 1
+  fi
+
+  $STD msg_info "Fetching: $url"
+
+  while :; do
+    if $has_output_file; then
+      $STD run_curl "${args[@]}"
+      exit_code=$?
+    else
+      $STD result=$(run_curl "${args[@]}")
+      exit_code=$?
+    fi
+
+    if [[ $exit_code -eq 0 ]]; then
+      stop_spinner
+      msg_ok "Fetched: $url"
+      $has_output_file || printf '%s' "$result"
+      return 0
+    fi
+
+    if ((attempt >= max_retries)); then
+      stop_spinner
+      if [ -s /tmp/curl_error.log ]; then
+        local curl_stderr
+        curl_stderr=$(</tmp/curl_error.log)
+        rm -f /tmp/curl_error.log
+      fi
+      __curl_err_handler "$exit_code" "$url" "$curl_stderr"
+      exit 1 # hard exit if exit_code is not 0
+    fi
+
+    $STD printf "\r\033[K${INFO}${YW}Retry $attempt/$max_retries in ${delay}s...${CL}" >&2
+    sleep "$delay"
+    ((attempt++))
+  done
+}
+
+# ------------------------------------------------------------------------------
+# Handles specific curl error codes and displays descriptive messages.
+# ------------------------------------------------------------------------------
+__curl_err_handler() {
+  local exit_code="$1"
+  local target="$2"
+  local curl_msg="$3"
+
+  case $exit_code in
+  1) msg_error "Unsupported protocol: $target" ;;
+  2) msg_error "Curl init failed: $target" ;;
+  3) msg_error "Malformed URL: $target" ;;
+  5) msg_error "Proxy resolution failed: $target" ;;
+  6) msg_error "Host resolution failed: $target" ;;
+  7) msg_error "Connection failed: $target" ;;
+  9) msg_error "Access denied: $target" ;;
+  18) msg_error "Partial file transfer: $target" ;;
+  22) msg_error "HTTP error (e.g. 400/404): $target" ;;
+  23) msg_error "Write error on local system: $target" ;;
+  26) msg_error "Read error from local file: $target" ;;
+  28) msg_error "Timeout: $target" ;;
+  35) msg_error "SSL connect error: $target" ;;
+  47) msg_error "Too many redirects: $target" ;;
+  51) msg_error "SSL cert verify failed: $target" ;;
+  52) msg_error "Empty server response: $target" ;;
+  55) msg_error "Send error: $target" ;;
+  56) msg_error "Receive error: $target" ;;
+  60) msg_error "SSL CA not trusted: $target" ;;
+  67) msg_error "Login denied by server: $target" ;;
+  78) msg_error "Remote file not found (404): $target" ;;
+  *) msg_error "Curl failed with code $exit_code: $target" ;;
+  esac
+
+  [[ -n "$curl_msg" ]] && printf "%s\n" "$curl_msg" >&2
+  exit 1
+}
+
+# ------------------------------------------------------------------------------
+# shell_check()
+#
+# - Verifies that the script is running under Bash shell
+# - Exits with error message if different shell is detected
+# ------------------------------------------------------------------------------
+shell_check() {
+  if [[ "$(ps -p $$ -o comm=)" != "bash" ]]; then
+    clear
+    msg_error "Your default shell is currently not set to Bash. To use these scripts, please switch to the Bash shell."
+    echo -e "\nExiting..."
+    sleep 2
+    exit
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# clear_line()
+#
+# - Clears current terminal line using tput or ANSI escape codes
+# - Moves cursor to beginning of line (carriage return)
+# - Fallback to ANSI codes if tput not available
+# ------------------------------------------------------------------------------
+clear_line() {
+  tput cr 2>/dev/null || echo -en "\r"
+  tput el 2>/dev/null || echo -en "\033[K"
+}
+
+# ------------------------------------------------------------------------------
+# is_verbose_mode()
+#
+# - Determines if script should run in verbose mode
+# - Checks VERBOSE and var_verbose variables
+# - Also returns true if not running in TTY (pipe/redirect scenario)
+# ------------------------------------------------------------------------------
+is_verbose_mode() {
+  local verbose="${VERBOSE:-${var_verbose:-no}}"
+  [[ "$verbose" != "no" || ! -t 2 ]]
+}
+
+### dev spinner ###
+SPINNER_ACTIVE=0
+SPINNER_PID=""
+SPINNER_MSG=""
+declare -A MSG_INFO_SHOWN=()
+
+# Trap cleanup on various signals
+trap 'cleanup_spinner' EXIT INT TERM HUP
+
+# Cleans up spinner process on exit
+cleanup_spinner() {
+  stop_spinner
+  # Additional cleanup if needed
+}
+
+start_spinner() {
+  local msg="${1:-Processing...}"
+  local frames=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  local spin_i=0
+  local interval=0.1
+
+  # Set message and clear current line
+  SPINNER_MSG="$msg"
+  printf "\r\e[2K" >&2
+
+  # Stop any existing spinner
+  stop_spinner
+
+  # Set active flag
+  SPINNER_ACTIVE=1
+
+  # Start spinner in background
+  {
+    while [[ "$SPINNER_ACTIVE" -eq 1 ]]; do
+      printf "\r\e[2K%s %b" "${TAB}${frames[spin_i]}${TAB}" "${YW}${SPINNER_MSG}${CL}" >&2
+      spin_i=$(((spin_i + 1) % ${#frames[@]}))
+      sleep "$interval"
+    done
+  } &
+
+  SPINNER_PID=$!
+
+  # Disown to prevent getting "Terminated" messages
+  disown "$SPINNER_PID" 2>/dev/null || true
+}
+
+stop_spinner() {
+  # Check if spinner is active and PID exists
+  if [[ "$SPINNER_ACTIVE" -eq 1 ]] && [[ -n "${SPINNER_PID}" ]]; then
+    SPINNER_ACTIVE=0
+
+    if kill -0 "$SPINNER_PID" 2>/dev/null; then
+      kill "$SPINNER_PID" 2>/dev/null
+      # Give it a moment to terminate
+      sleep 0.1
+      # Force kill if still running
+      if kill -0 "$SPINNER_PID" 2>/dev/null; then
+        kill -9 "$SPINNER_PID" 2>/dev/null
+      fi
+      # Wait for process but ignore errors
+      wait "$SPINNER_PID" 2>/dev/null || true
+    fi
+
+    # Clear spinner line
+    printf "\r\e[2K" >&2
+    SPINNER_PID=""
+  fi
+}
+
+spinner_guard() {
+  # Safely stop spinner if it's running
+  if [[ "$SPINNER_ACTIVE" -eq 1 ]] && [[ -n "${SPINNER_PID}" ]]; then
+    stop_spinner
+  fi
+}
+
+msg_info() {
+  local msg="${1:-Information message}"
+
+  # Only show each message once unless reset
+  if [[ -n "${MSG_INFO_SHOWN["$msg"]+x}" ]]; then
+    return
+  fi
+  MSG_INFO_SHOWN["$msg"]=1
+
+  spinner_guard
+  start_spinner "$msg"
+}
+
+msg_ok() {
+  local msg="${1:-Operation completed successfully}"
+  stop_spinner
+  printf "\r\e[2K%s %b\n" "${CM}" "${GN}${msg}${CL}" >&2
+
+  # Remove from shown messages to allow it to be shown again
+  local sanitized_msg
+  sanitized_msg=$(printf '%s' "$msg" | sed 's/\x1b\[[0-9;]*m//g; s/[^a-zA-Z0-9_]/_/g')
+  unset 'MSG_INFO_SHOWN['"$sanitized_msg"']' 2>/dev/null || true
+}
+
+msg_error() {
+  local msg="${1:-An error occurred}"
+  stop_spinner
+  printf "\r\e[2K%s %b\n" "${CROSS}" "${RD}${msg}${CL}" >&2
+}
+
+msg_warn() {
+  stop_spinner
+  local msg="$1"
+  echo -e "${BFR:-}${INFO:-ℹ️} ${YWB}${msg}${CL}" >&2
+}
+
+# Helper function to display a message with custom symbol and color
+msg_custom() {
+  local symbol="${1:-*}"
+  local color="${2:-$CL}"
+  local msg="${3:-Custom message}"
+  [[ -z "$msg" ]] && return
+  stop_spinner
+  printf "\r\e[2K%s %b\n" "$symbol" "${color}${msg}${CL}" >&2
+}
+
+# ------------------------------------------------------------------------------
+# msg_debug()
+#
+# - Displays debug message with timestamp when var_full_verbose=1
+# - Automatically enables var_verbose if not already set
+# - Uses bright yellow color for debug output
+# ------------------------------------------------------------------------------
+msg_debug() {
+  if [[ "${var_full_verbose:-0}" == "1" ]]; then
+    [[ "${var_verbose:-0}" != "1" ]] && var_verbose=1
+    echo -e "${YWB}[$(date '+%F %T')] [DEBUG]${CL} $*"
+  fi
+}
+
+# Displays error message and immediately terminates script
+fatal() {
+  msg_error "$1"
+  kill -INT $$
+}
+
+get_valid_nextid() {
+  local try_id
+  try_id=$(pvesh get /cluster/nextid)
+  while true; do
+    if [ -f "/etc/pve/qemu-server/${try_id}.conf" ] || [ -f "/etc/pve/lxc/${try_id}.conf" ]; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    if lvs --noheadings -o lv_name | grep -qE "(^|[-_])${try_id}($|[-_])"; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    break
+  done
+  echo "$try_id"
+}
+
+cleanup_vmid() {
+  if [[ -z "${VMID:-}" ]]; then
+    return
+  fi
+  if qm status "$VMID" &>/dev/null; then
+    qm stop "$VMID" &>/dev/null
+    qm destroy "$VMID" &>/dev/null
+  fi
+}
+
+cleanup() {
+  if [[ "$(dirs -p | wc -l)" -gt 1 ]]; then
+    popd >/dev/null || true
+  fi
+}
+
+check_root() {
+  if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
+    clear
+    msg_error "Please run this script as root."
+    echo -e "\nExiting..."
+    sleep 2
+    exit
+  fi
+}
+
+pve_check() {
+  if ! pveversion | grep -Eq "pve-manager/(8\.[1-4]|9\.[0-1])(\.[0-9]+)*"; then
+    msg_error "This version of Proxmox Virtual Environment is not supported"
+    echo -e "Requires Proxmox Virtual Environment Version 8.1 - 8.4 or 9.0 - 9.1."
+    echo -e "Exiting..."
+    sleep 2
+    exit
+  fi
+}
+
+arch_check() {
+  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
+    echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
+    echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
+    echo -e "Exiting..."
+    sleep 2
+    exit
+  fi
+}
+
+exit_script() {
+  clear
+  echo -e "\n${CROSS}${RD}User exited script${CL}\n"
+  exit
+}
+
+check_hostname_conflict() {
+  local hostname="$1"
+  if qm list | awk '{print $2}' | grep -qx "$hostname"; then
+    msg_error "Hostname $hostname already in use by another VM."
+    exit 1
+  fi
+}
+
+set_description() {
+  DESCRIPTION=$(
+    cat <<EOF
+<div align='center'>
+  <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
+    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+  </a>
+
+  <h2 style='font-size: 24px; margin: 20px 0;'>${NSAPP} VM</h2>
+
+  <p style='margin: 16px 0;'>
+    <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
+      <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
+    </a>
+  </p>
+
+  <span style='margin: 0 10px;'>
+    <i class="fa fa-github fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a>
+  </span>
+  <span style='margin: 0 10px;'>
+    <i class="fa fa-comments fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Discussions</a>
+  </span>
+  <span style='margin: 0 10px;'>
+    <i class="fa fa-exclamation-circle fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Issues</a>
+  </span>
+</div>
+EOF
+  )
+  qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+
+}

@@ -32,11 +32,7 @@ function update_script() {
     if [[ ! -f /opt/Ollama_version.txt ]]; then
       touch /opt/Ollama_version.txt
     fi
-    if ! command -v zstd &>/dev/null; then
-      msg_info "Installing zstd"
-      $STD apt install -y zstd
-      msg_ok "Installed zstd"
-    fi
+    ensure_dependencies zstd
     msg_info "Stopping Services"
     systemctl stop ollama
     msg_ok "Services Stopped"

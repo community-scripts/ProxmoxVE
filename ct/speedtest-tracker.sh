@@ -30,7 +30,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "speedtest-tracker" "alexjustesen/speedtest-tracker"; then
-    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="common,sqlite3,redis" setup_php
+    PHP_VERSION="8.4" PHP_FPM="YES" setup_php
     setup_composer
     NODE_VERSION="22" setup_nodejs
     setcap cap_net_raw+ep /bin/ping

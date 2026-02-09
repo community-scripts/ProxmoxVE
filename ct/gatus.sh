@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,14 +33,8 @@ function update_script() {
     systemctl stop gatus
     msg_ok "Stopped Service"
 
-    if [[ :$PATH: != *":/usr/local/bin:"* ]]; then
-      echo 'export PATH="/usr/local/bin:$PATH"' >>~/.bashrc
-      source ~/.bashrc
-    fi
-
     mv /opt/gatus/config/config.yaml /opt
-    rm -rf /opt/gatus
-    fetch_and_deploy_gh_release "gatus" "TwiN/gatus" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gatus" "TwiN/gatus" "tarball"
 
     msg_info "Updating Gatus"
     cd /opt/gatus

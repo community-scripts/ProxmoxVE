@@ -13,25 +13,19 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes"
-USE_UVX=YES setup_uv
-setup_nodejs
+fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes" "tarball"
+USE_UVX="YES" setup_uv
+NODE_VERSION="22" setup_nodejs
 
-msg_info "Installing Backend"
+msg_info "Setting up Flatnotes"
 cd /opt/flatnotes
 $STD /usr/local/bin/uvx migrate-to-uv
 $STD /usr/local/bin/uv sync
-mkdir /opt/flatnotes/data
-msg_ok "Installed Backend"
-
-msg_info "Installing Frontend"
+mkdir -p /opt/flatnotes/data
 cd /opt/flatnotes/client
 $STD npm install
 $STD npm run build
-msg_ok "Installed Frontend"
 
-
-msg_info "Creating Service"
 cat <<EOF >/opt/flatnotes/.env
 FLATNOTES_AUTH_TYPE='none'
 FLATNOTES_PATH='/opt/flatnotes/data/'
@@ -39,6 +33,9 @@ FLATNOTES_PATH='/opt/flatnotes/data/'
 #FLATNOTES_PASSWORD='password'
 #FLATNOTES_SECRET_KEY='secret-key'
 EOF
+msg_ok "Setup Flatnotes"
+
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/flatnotes.service
 [Unit]
 Description=Flatnotes

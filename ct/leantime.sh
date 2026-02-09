@@ -31,8 +31,8 @@ function update_script() {
   setup_mariadb
   if check_for_gh_release "leantime" "Leantime/leantime"; then
     msg_info "Creating Backup"
-    mariadb-dump leantime >"/opt/${APP}_db_backup_$(date +%F).sql"
-    tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" "/opt/${APP}"
+    mariadb-dump leantime >"/opt/leantime_db_backup_$(date +%F).sql"
+    tar -czf "/opt/leantime_backup_$(date +%F).tar.gz" "/opt/leantime"
     mv /opt/leantime /opt/leantime_bak
     msg_ok "Backup Created"
 

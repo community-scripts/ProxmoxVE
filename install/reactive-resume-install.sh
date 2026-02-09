@@ -19,7 +19,6 @@ curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio.deb -o minio
 $STD dpkg -i minio.deb
 msg_ok "Installed Dependencies"
 
-import_local_ip
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="rxresume" PG_DB_USER="rxresume" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs

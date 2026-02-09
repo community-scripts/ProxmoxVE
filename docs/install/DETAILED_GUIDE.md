@@ -544,7 +544,8 @@ network_check
 update_os
 
 PHP_VERSION="8.4" PHP_MODULE="bcmath,curl,pdo_mysql" setup_php
-MARIADB_VERSION="11.4" setup_mariadb
+setup_mariadb  # Uses distribution packages (recommended)
+# Or for specific version: MARIADB_VERSION="11.4" setup_mariadb
 
 # Database setup
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)

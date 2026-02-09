@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AlertColors } from "@/config/site-config";
 
 export const InstallMethodSchema = z.object({
   type: z.enum(["default", "alpine"], {
@@ -16,7 +17,9 @@ export const InstallMethodSchema = z.object({
 
 const NoteSchema = z.object({
   text: z.string().min(1, "Note text cannot be empty"),
-  type: z.string().min(1, "Note type cannot be empty"),
+  type: z.enum(Object.keys(AlertColors) as [keyof typeof AlertColors, ...(keyof typeof AlertColors)[]], {
+    message: `Type must be one of: ${Object.keys(AlertColors).join(", ")}`,
+  }),
 });
 
 export const ScriptSchema = z.object({
@@ -31,8 +34,8 @@ export const ScriptSchema = z.object({
   privileged: z.boolean(),
   interface_port: z.number().nullable(),
   documentation: z.string().nullable(),
-  website: z.string().url().nullable(),
-  logo: z.string().url().nullable(),
+  website: z.url().nullable(),
+  logo: z.url().nullable(),
   config_path: z.string(),
   description: z.string().min(1, "Description is required"),
   disable: z.boolean().optional(),
@@ -42,7 +45,7 @@ export const ScriptSchema = z.object({
     username: z.string().nullable(),
     password: z.string().nullable(),
   }),
-  notes: z.array(NoteSchema),
+  notes: z.array(NoteSchema).optional().default([]),
 }).refine((data) => {
   if (data.disable === true && !data.disable_description) {
     return false;

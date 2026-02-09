@@ -54,7 +54,6 @@ $STD pip install --upgrade pip wheel
 $STD pip install gunicorn -r requirements.txt
 msg_ok "Installed Python packages"
 
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >/opt/healthchecks/hc/local_settings.py
 DEBUG = False
 
@@ -109,7 +108,7 @@ ${LOCAL_IP} {
 EOF
 msg_ok "Configured Caddy"
 
-msg_info "Creating systemd service"
+msg_info "Creating systemd services"
 cat <<EOF >/etc/systemd/system/healthchecks.service
 [Unit]
 Description=Healthchecks Service
@@ -124,9 +123,23 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now healthchecks caddy
+cat <<EOF >/etc/systemd/system/healthchecks-sendalerts.service
+[Unit]
+Description=Healthchecks Sendalerts Service
+After=network.target postgresql.service healthchecks.service
+
+[Service]
+WorkingDirectory=/opt/healthchecks/
+ExecStart=/opt/healthchecks/venv/bin/python manage.py sendalerts
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable -q --now healthchecks healthchecks-sendalerts caddy
 systemctl reload caddy
-msg_ok "Created Service"
+msg_ok "Created Services"
 
 motd_ssh
 customize

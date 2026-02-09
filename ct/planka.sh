@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/plankanban/planka
 
 APP="PLANKA"
-var_tags="${var_tags:-Todo,kanban}"
+var_tags="${var_tags:-Todo;kanban}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"

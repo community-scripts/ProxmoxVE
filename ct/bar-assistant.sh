@@ -13,7 +13,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop nginx
     msg_ok "Stopped nginx"
 
-    PHP_VERSION="8.4" PHP_FPM=YES PHP_MODULE="ffi,opcache,redis,zip,pdo-sqlite,bcmath,pdo,curl,dom,fpm" setup_php
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="pdo-sqlite" setup_php
 
     msg_info "Backing up Bar Assistant"
     mv /opt/bar-assistant /opt/bar-assistant-backup
@@ -88,18 +88,8 @@ function update_script() {
     msg_ok "Started nginx"
   fi
 
-  if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-    msg_info "Stopping Meilisearch"
-    systemctl stop meilisearch
-    msg_ok "Stopped Meilisearch"
+  setup_meilisearch
 
-    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
-
-    msg_info "Starting Meilisearch"
-    systemctl start meilisearch
-    msg_ok "Started Meilisearch"
-    msg_ok "Updated successfully!"
-  fi
   exit
 }
 

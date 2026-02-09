@@ -43,14 +43,17 @@ while true; do
 done
 
 msg_info "Setup Splunk Enterprise"
-DOWNLOAD_URL=$(curl -s "https://www.splunk.com/en_us/download/splunk-enterprise.html" | grep -o 'data-link="[^"]*' | sed 's/data-link="//' | grep "https.*products/splunk/releases" | grep "\.deb$")
+DOWNLOAD_URL=$(curl -s "https://www.splunk.com/en_us/download/splunk-enterprise.html" | grep -o 'data-link="[^"]*' | sed 's/data-link="//' | grep "https.*products/splunk/releases" | grep "linux-amd64\.tgz$")
 RELEASE=$(echo "$DOWNLOAD_URL" | sed 's|.*/releases/\([^/]*\)/.*|\1|')
-$STD curl -fsSL -o "splunk-enterprise.deb" "$DOWNLOAD_URL" || {
+$STD curl -fsSL -o "splunk-enterprise.tgz" "$DOWNLOAD_URL" || {
     msg_error "Failed to download Splunk Enterprise from the provided link."
     exit 1
 }
-$STD dpkg -i "splunk-enterprise.deb"
-rm -f "splunk-enterprise.deb"
+$STD tar -xzf "splunk-enterprise.tgz" -C /opt
+rm -f "splunk-enterprise.tgz"
+addgroup --system splunk
+adduser --system --home /opt/splunk --shell /bin/bash --ingroup splunk --no-create-home splunk
+chown -R splunk:splunk /opt/splunk
 msg_ok "Setup Splunk Enterprise v${RELEASE}"
 
 msg_info "Creating Splunk admin user"
@@ -62,7 +65,7 @@ ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
     echo "Password: $ADMIN_PASS"
 } >> ~/splunk.creds
 
-cat > "/opt/splunk/etc/system/local/user-seed.conf" << EOF
+cat << EOF > "/opt/splunk/etc/system/local/user-seed.conf"
 [user_info]
 USERNAME = $ADMIN_USER
 PASSWORD = $ADMIN_PASS
@@ -70,8 +73,8 @@ EOF
 msg_ok "Created Splunk admin user"
 
 msg_info "Starting Service"
-$STD /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
-$STD /opt/splunk/bin/splunk enable boot-start
+$STD sudo -u splunk /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
+$STD /opt/splunk/bin/splunk enable boot-start -user splunk
 msg_ok "Started Service"
 
 motd_ssh

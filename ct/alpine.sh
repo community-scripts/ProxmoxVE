@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-1}"
 var_os="${var_os:-alpine}"
-var_version="${var_version:-3.22}"
+var_version="${var_version:-3.23}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,18 +20,10 @@ color
 catch_errors
 
 function update_script() {
-  UPD=$(
-    whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 1 \
-      "1" "Check for Alpine Updates" ON \
-      3>&1 1>&2 2>&3
-  )
-
   header_info
-  if [ "$UPD" == "1" ]; then
-    $STD apk -U upgrade
-    msg_ok "Updated successfully!"
-    exit 0
-  fi
+  $STD apk -U upgrade
+  msg_ok "Updated successfully!"
+  exit 0
 }
 
 start

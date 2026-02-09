@@ -30,6 +30,11 @@ function update_script() {
 
   NODE_VERSION="22" setup_nodejs
 
+  ensure_dependencies chromium
+  if [[ ! -L /opt/uptime-kuma/chromium ]]; then
+    ln -s /usr/bin/chromium /opt/uptime-kuma/chromium
+  fi
+
   if check_for_gh_release "uptime-kuma" "louislam/uptime-kuma"; then
     msg_info "Stopping Service"
     systemctl stop uptime-kuma

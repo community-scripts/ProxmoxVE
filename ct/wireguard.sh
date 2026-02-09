@@ -28,20 +28,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! dpkg -s git >/dev/null 2>&1; then
-    msg_info "Installing git"
-    $STD apt update
-    $STD apt install -y git
-    msg_ok "Installed git"
-  fi
-  apt update
-  apt -y upgrade
+  
+  ensure_dependencies git
+
+  msg_info "Updating LXC"
+  $STD apt update
+  $STD apt upgrade -y
   if [[ -d /etc/wgdashboard ]]; then
     sleep 2
     cd /etc/wgdashboard/src
-    ./wgd.sh update
-    ./wgd.sh start
+    $STD ./wgd.sh update
+    $STD ./wgd.sh start
   fi
+  msg_ok "Updated LXC"
   msg_ok "Updated successfully!"
   exit
 }

@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
+$STD apt install -y git
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
@@ -22,19 +22,18 @@ NODE_VERSION="22" setup_nodejs
 read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
-msg_info "Setup ${APPLICATION}"
+msg_info "Setup CryptPad"
 cd /opt/cryptpad
 $STD npm ci
 $STD npm run install:components
 $STD npm run build
 cp config/config.example.js config/config.js
-IP=$(hostname -I | awk '{print $1}')
-sed -i "51s/localhost/${IP}/g" /opt/cryptpad/config/config.js
+sed -i "51s/localhost/${LOCAL_IP}/g" /opt/cryptpad/config/config.js
 sed -i "80s#//httpAddress: 'localhost'#httpAddress: '0.0.0.0'#g" /opt/cryptpad/config/config.js
 if [[ "$onlyoffice" =~ ^[Yy]$ ]]; then
   $STD bash -c "./install-onlyoffice.sh --accept-license"
 fi
-msg_ok "Setup ${APPLICATION}"
+msg_ok "Setup CryptPad"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/cryptpad.service

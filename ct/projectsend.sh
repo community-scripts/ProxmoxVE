@@ -36,7 +36,7 @@ function update_script() {
 
     php_ver=$(php -v | head -n 1 | awk '{print $2}')
     if [[ ! $php_ver == "8.4"* ]]; then
-      PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="pdo,mysql,gettext,fileinfo" setup_php
+      PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
     fi
 
     mv /opt/projectsend/includes/sys.config.php /opt/sys.config.php

@@ -27,7 +27,8 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Updating ${APP} LXC"
+    msg_info "Updating SQL Server 2022"
+    rm -f /etc/profile.d/debuginfod.sh /etc/profile.d/debuginfod.csh
     $STD apt update
     $STD apt -y upgrade
     msg_ok "Updated successfully!"

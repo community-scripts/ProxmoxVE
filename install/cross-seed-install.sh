@@ -27,8 +27,9 @@ Description=Cross-Seed daemon Service
 After=network.target
 
 [Service]
-ExecStart=cross-seed daemon
-Restart=always
+ExecStart=/usr/bin/cross-seed daemon
+Restart=on-failure
+RestartSec=30
 User=root
 
 [Install]

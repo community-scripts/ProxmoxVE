@@ -11,7 +11,7 @@ var_disk="${var_disk:-4}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,23 +32,20 @@ function update_script() {
     read -rp "${TAB3}Did you make a backup via application WebUI? (y/n): " backuped
     if [[ "$backuped" =~ ^[Yy]$ ]]; then
       msg_info "Stopping Services"
-      systemctl stop bytestash-backend
-      systemctl stop bytestash-frontend
+      systemctl stop bytestash-backend bytestash-frontend
       msg_ok "Services Stopped"
 
-      rm -rf /opt/bytestash
-      fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
 
       msg_info "Configuring ByteStash"
       cd /opt/bytestash/server
       $STD npm install
       cd /opt/bytestash/client
       $STD npm install
-      msg_ok "Updated ${APP}"
+      msg_ok "Updated ByteStash"
 
       msg_info "Starting Services"
-      systemctl start bytestash-backend
-      systemctl start bytestash-frontend
+      systemctl start bytestash-backend bytestash-frontend
       msg_ok "Started Services"
     else
       msg_error "PLEASE MAKE A BACKUP FIRST!"

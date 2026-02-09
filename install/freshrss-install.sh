@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_MODULE="curl,common,xml,mbstring,intl,zip,pgsql,gmp" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="freshrss" PG_DB_USER="freshrss_usr" setup_postgresql_db
 

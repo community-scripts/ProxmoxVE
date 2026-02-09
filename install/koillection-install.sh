@@ -13,24 +13,11 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
 PG_VERSION="16" setup_postgresql
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="apcu,ctype,dom,fileinfo,iconv,pgsql" setup_php
+PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
 setup_composer
-
-msg_info "Setting up PostgreSQL"
-DB_NAME=koillection
-DB_USER=koillection
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-{
-  echo "Koillection Credentials"
-  echo "Koillection Database User: $DB_USER"
-  echo "Koillection Database Password: $DB_PASS"
-  echo "Koillection Database Name: $DB_NAME"
-} >>~/koillection.creds
-msg_ok "Set up PostgreSQL"
+PG_DB_NAME="koillection" PG_DB_USER="koillection" setup_postgresql_db
 
 fetch_and_deploy_gh_release "koillection" "benjaminjonard/koillection" "tarball"
 
@@ -41,17 +28,20 @@ APP_SECRET=$(openssl rand -base64 32)
 sed -i -e "s|^APP_ENV=.*|APP_ENV=prod|" \
   -e "s|^APP_DEBUG=.*|APP_DEBUG=0|" \
   -e "s|^APP_SECRET=.*|APP_SECRET=${APP_SECRET}|" \
-  -e "s|^DB_NAME=.*|DB_NAME=${DB_NAME}|" \
-  -e "s|^DB_USER=.*|DB_USER=${DB_USER}|" \
-  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|" \
+  -e "s|^DB_NAME=.*|DB_NAME=${PG_DB_NAME}|" \
+  -e "s|^DB_USER=.*|DB_USER=${PG_DB_USER}|" \
+  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=${PG_DB_PASS}|" \
   /opt/koillection/.env.local
+echo 'APP_RUNTIME="Symfony\Component\Runtime\SymfonyRuntime"' >> /opt/koillection/.env.local
 export COMPOSER_ALLOW_SUPERUSER=1
+export APP_RUNTIME='Symfony\Component\Runtime\SymfonyRuntime'
 $STD composer install --no-dev -o --no-interaction --classmap-authoritative
 $STD php bin/console doctrine:migrations:migrate --no-interaction
 $STD php bin/console app:translations:dump
 cd assets/
 $STD yarn install
 $STD yarn build
+mkdir -p /opt/koillection/public/uploads
 chown -R www-data:www-data /opt/koillection/public/uploads
 msg_ok "Configured Koillection"
 
@@ -60,6 +50,7 @@ cat <<EOF >/etc/apache2/sites-available/koillection.conf
 <VirtualHost *:80>
     ServerName koillection
     DocumentRoot /opt/koillection/public
+    SetEnv APP_RUNTIME "Symfony\\Component\\Runtime\\SymfonyRuntime"
     <Directory /opt/koillection/public>
         Options Indexes FollowSymLinks
         AllowOverride All

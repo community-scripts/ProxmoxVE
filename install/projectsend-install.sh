@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="pdo,mysql,gettext,fileinfo" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 setup_mariadb
 MARIADB_DB_NAME="projectsend" MARIADB_DB_USER="projectsend" setup_mariadb_db
 fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-r*.zip"

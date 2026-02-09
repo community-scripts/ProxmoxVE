@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -31,32 +31,40 @@ function update_script() {
 
   APP_VERSION=$(grep -o '"version": *"[^"]*"' /opt/gitea-mirror/package.json | cut -d'"' -f4)
   if [[ $APP_VERSION =~ ^2\. ]]; then
-    if ! whiptail --backtitle "Gitea Mirror Update" --title "⚠️  VERSION 2.x DETECTED" --yesno \
-      "WARNING: Version $APP_VERSION detected!\n\nUpdating from version 2.x will CLEAR ALL CONFIGURATION.\n\nThis includes:\n• API tokens\n• User settings\n• Repository configurations\n• All custom settings\n\nDo you want to continue with the update process?" 15 70 --defaultno; then
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      msg_warn "Version $APP_VERSION detected. Major version upgrade requires interactive confirmation, skipping."
+      exit 75
+    fi
+    msg_warn "WARNING: Version $APP_VERSION detected!"
+    msg_warn "Updating from version 2.x will CLEAR ALL CONFIGURATION."
+    msg_warn "This includes: API tokens, User settings, Repository configurations, All custom settings"
+    echo ""
+    read -r -p "Do you want to continue? (y/N): " CONFIRM
+    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
       exit 0
     fi
-
-    if ! whiptail --backtitle "Gitea Mirror Update" --title "⚠️  FINAL CONFIRMATION" --yesno \
-      "FINAL WARNING: This update WILL clear all configuration!\n\nBEFORE PROCEEDING, please:\n\n• Copy API tokens to a safe location\n• Backup any custom configurations\n• Note down repository settings\n\nThis action CANNOT be undone!" 18 70 --defaultno; then
-      whiptail --backtitle "Gitea Mirror Update" --title "Update Cancelled" --msgbox "Update process cancelled. Please backup your configuration before proceeding." 8 60
+    msg_warn "FINAL WARNING: This update WILL clear all configuration!"
+    msg_warn "Please ensure you have backed up API tokens, custom configurations, and repository settings."
+    echo ""
+    read -r -p "Final confirmation - proceed? (y/N): " CONFIRM2
+    if [[ ! "$CONFIRM2" =~ ^[Yy]$ ]]; then
+      msg_info "Update cancelled. Please backup your configuration before proceeding."
       exit 0
     fi
-    whiptail --backtitle "Gitea Mirror Update" --title "Proceeding with Update" --msgbox \
-      "Proceeding with version $APP_VERSION update.\n\nAll configuration will be cleared as warned." 8 50
+    msg_info "Proceeding with version $APP_VERSION update. All configuration will be cleared as warned."
     rm -rf /opt/gitea-mirror
   fi
 
   if [[ ! -f /opt/gitea-mirror.env ]]; then
     msg_info "Detected old Enviroment, updating files"
     APP_SECRET=$(openssl rand -base64 32)
-    HOST_IP=$(hostname -I | awk '{print $1}')
     cat <<EOF >/opt/gitea-mirror.env
 # See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
 NODE_ENV=production
 HOST=0.0.0.0
 PORT=4321
 DATABASE_URL=sqlite://data/gitea-mirror.db
-BETTER_AUTH_URL=http://${HOST_IP}:4321
+BETTER_AUTH_URL=http://${LOCAL_IP}:4321
 BETTER_AUTH_SECRET=${APP_SECRET}
 npm_package_version=${APP_VERSION}
 EOF
@@ -96,8 +104,7 @@ EOF
     ln -sf /opt/bun/bin/bun /usr/local/bin/bunx
     msg_ok "Installed Bun"
 
-    rm -rf /opt/gitea-mirror
-    fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror" "tarball"
 
     msg_info "Updating and rebuilding ${APP}"
     cd /opt/gitea-mirror

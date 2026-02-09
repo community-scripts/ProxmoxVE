@@ -20,8 +20,6 @@ $STD apt install -y \
   apt-transport-https
 msg_ok "Installed Dependencies"
 
-import_local_ip
-
 msg_info "Setting up Elasticsearch"
 setup_deb822_repo \
   "elasticsearch" \

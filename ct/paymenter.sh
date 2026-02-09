@@ -31,7 +31,7 @@ function update_script() {
 
   CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
   if [[ "$CURRENT_PHP" != "8.3" ]]; then
-    PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="common,mysql,fpm,redis" setup_php
+    PHP_VERSION="8.3" PHP_FPM="YES" setup_php
     setup_composer
     sed -i 's|php8\.2-fpm\.sock|php8.3-fpm.sock|g' /etc/nginx/sites-available/paymenter.conf
     $STD systemctl reload nginx

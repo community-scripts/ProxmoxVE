@@ -1,0 +1,40 @@
+{
+  "name": "LanguageTool",
+  "slug": "languagetool",
+  "categories": [
+    0
+  ],
+  "date_created": "2026-01-30",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8081,
+  "documentation": "https://dev.languagetool.org/",
+  "config_path": "/opt/LanguageTool/server.properties",
+  "website": "https://languagetool.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/languagetool.webp",
+  "description": "LanguageTool is an Open Source proofreading software for English, Spanish, French, German, Portuguese, Polish, Dutch, and more than 20 other languages. It finds many errors that a simple spell checker cannot detect.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/languagetool.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 16,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "API is available at `http://<LXC_IP>:8081/v2`.",
+      "type": "info"
+    }
+  ]
+}

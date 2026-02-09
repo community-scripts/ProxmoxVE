@@ -1,0 +1,84 @@
+{
+  "name": "PVE LXC Apps Updater",
+  "slug": "update-apps",
+  "categories": [
+    1
+  ],
+  "date_created": "2026-02-06",
+  "type": "pve",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/11532",
+  "website": null,
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
+  "config_path": "",
+  "description": "This script updates community-scripts managed LXC containers on a Proxmox VE node. It detects the installed service, verifies available update scripts, and applies updates interactively or unattended. Optionally, containers can be backed up before the update process. If additional build resources (CPU/RAM) are required, the script adjusts container resources temporarily and restores them after the update. Containers requiring a reboot will be listed at the end of the process.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/pve/update-apps.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Execute within the Proxmox shell.",
+      "type": "info"
+    },
+    {
+      "text": "Full Guide can be found here: `https://github.com/community-scripts/ProxmoxVE/discussions/11532`",
+      "type": "info"
+    },
+    {
+      "text": "By default, only containers with `community-script` or `proxmox-helper-scripts` tags are listed for update. You can override this by using `var_tags='custom-tag|othertag'`.",
+      "type": "info"
+    },
+    {
+      "text": "Optionally performs a vzdump backup before updating containers.",
+      "type": "warning"
+    },
+    {
+      "text": "If required, the script will temporarily increase container CPU/RAM resources for the build process and restore them after completion.",
+      "type": "info"
+    },
+    {
+      "text": "At the end of the update, containers requiring a reboot will be listed, and you may choose to reboot them directly.",
+      "type": "info"
+    },
+    {
+      "text": "Use `var_backup=yes|no` to enable/disable backup (skip prompt).",
+      "type": "info"
+    },
+    {
+      "text": "Use `var_backup_storage=<name>` to set backup storage location.",
+      "type": "info"
+    },
+    {
+      "text": "Use `var_container=all|all_running|all_stopped|101,102,...` to select containers.",
+      "type": "info"
+    },
+    {
+      "text": "Use `var_unattended=yes|no` to run updates without interaction.",
+      "type": "info"
+    },
+    {
+      "text": "Use `var_skip_confirm=yes` to skip initial confirmation dialog.",
+      "type": "info"
+    },
+    {
+      "text": "Use `var_auto_reboot=yes|no` to auto-reboot containers after update.",
+      "type": "info"
+    }
+  ]
+}

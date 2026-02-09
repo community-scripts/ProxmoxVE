@@ -27,12 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
-    "1" "Update ALL Containers" ON \
-    "2" "Remove ALL Unused Images" OFF \
-    "3" "Install HACS" OFF \
-    "4" "Install FileBrowser" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Home Assistant Update Options" \
+    "1" "Update ALL Containers" \
+    "2" "Remove ALL Unused Images" \
+    "3" "Install HACS" \
+    "4" "Install FileBrowser")
 
   if [ "$UPD" == "1" ]; then
     msg_info "Updating All Containers"
@@ -69,7 +68,6 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "4" ]; then
-    IP=$(hostname -I | awk '{print $1}')
     msg_info "Installing FileBrowser"
     RELEASE=$(curl -fsSL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -o '"tag_name": ".*"' | sed 's/"//g' | sed 's/tag_name: //g')
     $STD curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/v2.23.0/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin
@@ -95,7 +93,7 @@ WantedBy=default.target" >$service_path
 
     msg_ok "Completed successfully!\n"
     echo -e "FileBrowser should be reachable by going to the following URL.
-         ${BL}http://$IP:8080${CL}   admin|helper-scripts.com\n"
+         ${BL}http://$LOCAL_IP:8080${CL}   admin|helper-scripts.com\n"
     exit
   fi
 }

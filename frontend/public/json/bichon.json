@@ -1,0 +1,44 @@
+{
+  "name": "Bichon",
+  "slug": "bichon",
+  "categories": [
+    7
+  ],
+  "date_created": "2026-02-07",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 15630,
+  "documentation": "https://github.com/rustmailer/bichon/wiki",
+  "config_path": "/opt/bichon/bichon.env",
+  "website": "https://github.com/rustmailer/bichon",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/bichon.webp",
+  "description": "Bichon is an open-source email archiving system that synchronizes emails from IMAP servers, indexes them for full-text search, and provides a REST API for programmatic access. Unlike email clients, Bichon is designed for archiving and searching rather than sending/receiving emails. It runs as a standalone server application that continuously synchronizes configured email accounts and maintains a searchable local archive.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/bichon.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "admin@bichon"
+  },
+  "notes": [
+    {
+      "text": "The Disk space initially allocated by the script is only a placeholder, as we can't know how much space you will ever need. You should increase it to match your workload.",
+      "type": "info"
+    },
+    {
+      "text": "Please copy your `BICHON_ENCRYPT_PASSWORD` from `/opt/bichon/bichon.env` to a safe place.",
+      "type": "warning"
+    }
+  ]
+}

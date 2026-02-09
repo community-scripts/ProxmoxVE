@@ -35,7 +35,7 @@ function update_script() {
   if [[ "$CURRENT_PHP" != "8.4" ]]; then
     msg_info "Migrating PHP $CURRENT_PHP to 8.4"
     $STD apt remove -y php"${CURRENT_PHP//./}"*
-    PHP_VERSION="8.4" PHP_MODULE="mysql,sqlite3" PHP_APACHE="YES" PHP_FPM="YES" setup_php
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
 

@@ -40,7 +40,6 @@ msg_ok "Installed Python Dependencies"
 
 msg_info "Building Frontend"
 MEALIE_VERSION=$(<$HOME/.mealie)
-CONTAINER_IP=$(hostname -I | awk '{print $1}')
 export NUXT_TELEMETRY_DISABLED=1
 cd /opt/mealie/frontend
 $STD sed -i "s|https://github.com/mealie-recipes/mealie/commit/|https://github.com/mealie-recipes/mealie/releases/tag/|g" /opt/mealie/frontend/pages/admin/site-settings.vue
@@ -79,7 +78,7 @@ POSTGRES_DB=${PG_DB_NAME}
 PRODUCTION=true
 HOST=0.0.0.0
 PORT=9000
-BASE_URL=http://${CONTAINER_IP}:9000
+BASE_URL=http://${LOCAL_IP}:9000
 EOF
 msg_ok "Wrote Environment File"
 

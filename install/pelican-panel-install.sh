@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_MODULE="mysql,sqlite3" PHP_APACHE="YES" PHP_FPM="YES" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="panel" MARIADB_DB_USER="pelican" setup_mariadb_db

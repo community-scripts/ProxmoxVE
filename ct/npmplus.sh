@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-alpine}"
-var_version="${var_version:-3.22}"
+var_version="${var_version:-3.23}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,32 +20,21 @@ color
 catch_errors
 
 function update_script() {
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE MODE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 14 60 2 \
-    "1" "Check for Alpine Updates" OFF \
-    "2" "Update NPMplus Docker Container" ON \
-    3>&1 1>&2 2>&3)
-
   header_info "$APP"
 
-  case "$UPD" in
-  "1")
-    msg_info "Updating Alpine OS"
-    $STD apk -U upgrade
-    msg_ok "System updated"
-    exit
-    ;;
-  "2")
-    msg_info "Updating NPMplus Container"
-    cd /opt
-    msg_info "Pulling latest container image"
-    $STD docker compose pull
-    msg_info "Recreating container"
-    $STD docker compose up -d
-    msg_ok "Updated successfully!"
-    exit
-    ;;
-  esac
-  exit 0
+  msg_info "Updating Alpine OS"
+  $STD apk -U upgrade
+  msg_ok "System updated"
+
+  msg_info "Pulling latest NPMplus container image"
+  cd /opt
+  $STD docker compose pull
+  msg_info "Recreating container"
+  $STD docker compose up -d
+  msg_ok "Updated NPMplus container"
+
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

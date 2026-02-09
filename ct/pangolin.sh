@@ -48,17 +48,26 @@ function update_script() {
     $STD npm run set:sqlite
     $STD npm run set:oss
     rm -rf server/private
-    $STD npm run build:sqlite
+    $STD npm run db:generate
+    $STD npm run build
     $STD npm run build:cli
+    $STD npm run db:sqlite:push
     cp -R .next/standalone ./
     chmod +x ./dist/cli.mjs
     cp server/db/names.json ./dist/names.json
+    cp server/db/ios_models.json ./dist/ios_models.json
+    cp server/db/mac_models.json ./dist/mac_models.json
     msg_ok "Updated Pangolin"
 
     msg_info "Restoring config"
     tar -xzf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin --overwrite
     rm -f /opt/pangolin_config_backup.tar.gz
     msg_ok "Restored config"
+
+    msg_info "Updating Badger plugin version"
+    BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
+    sed -i "s/version: \"v[0-9.]*\"/version: \"$BADGER_VERSION\"/g" /opt/pangolin/config/traefik/traefik_config.yml
+    msg_ok "Updated Badger plugin version"
 
     msg_info "Starting Services"
     systemctl start pangolin
