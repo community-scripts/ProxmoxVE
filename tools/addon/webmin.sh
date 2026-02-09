@@ -42,7 +42,7 @@ whiptail --backtitle "Proxmox VE Helper Scripts" --title "Webmin Installer" --ye
 
 msg_info "Installing Prerequisites"
 apt update &>/dev/null
-apt-get -y install libnet-ssleay-perl libauthen-pam-perl libio-pty-perl unzip shared-mime-info &>/dev/null
+apt-get -y install libnet-ssleay-perl libauthen-pam-perl libio-pty-perl unzip shared-mime-info curl &>/dev/null
 msg_ok "Installed Prerequisites"
 
 LATEST=$(curl -fsSL https://api.github.com/repos/webmin/webmin/releases/latest | grep '"tag_name":' | cut -d'"' -f4)

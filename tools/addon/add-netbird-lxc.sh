@@ -79,6 +79,10 @@ EOF
 header_info
 msg "Installing NetBird..."
 pct exec "$CTID" -- bash -c '
+if ! command -v curl &>/dev/null; then
+  apt-get update -qq
+  apt-get install -y curl >/dev/null
+fi
 apt install -y ca-certificates gpg &>/dev/null
 curl -fsSL "https://pkgs.netbird.io/debian/public.key" | gpg --dearmor >/usr/share/keyrings/netbird-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main" >/etc/apt/sources.list.d/netbird.list

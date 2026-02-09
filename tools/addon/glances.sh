@@ -44,7 +44,7 @@ IP=$(get_lxc_ip)
 install_glances_debian() {
   msg_info "Installing dependencies"
   apt-get update >/dev/null 2>&1
-  apt-get install -y gcc lm-sensors wireless-tools >/dev/null 2>&1
+  apt-get install -y gcc lm-sensors wireless-tools curl >/dev/null 2>&1
   msg_ok "Installed dependencies"
 
   msg_info "Setting up Python + uv"
@@ -114,7 +114,7 @@ install_glances_alpine() {
   apk update >/dev/null 2>&1
   $STD apk add --no-cache \
     gcc musl-dev linux-headers python3-dev \
-    python3 py3-pip py3-virtualenv lm-sensors wireless-tools >/dev/null 2>&1
+    python3 py3-pip py3-virtualenv lm-sensors wireless-tools curl >/dev/null 2>&1
   msg_ok "Installed dependencies"
 
   msg_info "Setting up Python + uv"

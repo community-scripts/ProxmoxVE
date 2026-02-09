@@ -110,6 +110,7 @@ if [[ -f "$INSTALL_PATH" ]]; then
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
+    if ! command -v curl &>/dev/null; then $PKG_MANAGER curl &>/dev/null; fi
     curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
     chmod +x "$TMP_BIN"
     mv -f "$TMP_BIN" /usr/local/bin/filebrowser

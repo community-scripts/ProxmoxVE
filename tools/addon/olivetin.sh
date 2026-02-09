@@ -51,6 +51,10 @@ function msg_ok() {
 }
 
 msg_info "Installing ${APP}"
+if ! command -v curl &>/dev/null; then
+  apt-get update >/dev/null 2>&1
+  apt-get install -y curl >/dev/null 2>&1
+fi
 curl -fsSL "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb" -o $(basename "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb")
 dpkg -i OliveTin_linux_amd64.deb &>/dev/null
 systemctl enable --now OliveTin &>/dev/null

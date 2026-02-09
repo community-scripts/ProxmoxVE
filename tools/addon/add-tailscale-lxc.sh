@@ -89,6 +89,12 @@ if ! dig +short pkgs.tailscale.com | grep -qvE "^127\.|^0\.0\.0\.0$"; then
   echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
 fi
 
+if ! command -v curl &>/dev/null; then
+  echo "[INFO] curl not found, installing..."
+  apt-get update -qq
+  apt-get install -y curl >/dev/null
+fi
+
 curl -fsSL https://pkgs.tailscale.com/stable/${ID}/${VER}.noarmor.gpg \
   | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 

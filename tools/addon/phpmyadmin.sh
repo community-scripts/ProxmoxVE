@@ -57,6 +57,10 @@ function msg_ok() { echo -e "${CM} ${GN}${1}${CL}"; }
 function msg_error() { echo -e "${CROSS} ${RD}${1}${CL}"; }
 
 function check_internet() {
+  if ! command -v curl &>/dev/null; then
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
   msg_info "Checking Internet connectivity to GitHub"
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://github.com)
   if [[ "$HTTP_CODE" -ge 200 && "$HTTP_CODE" -lt 400 ]]; then
