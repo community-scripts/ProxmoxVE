@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-09T00:23:05Z",
+  "generated": "2026-02-09T06:27:10Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -557,9 +557,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1066",
+      "version": "v0.24.1074",
       "pinned": false,
-      "date": "2026-02-08T05:59:28Z"
+      "date": "2026-02-09T06:01:19Z"
     },
     {
       "slug": "joplin-server",
