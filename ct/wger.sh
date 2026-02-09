@@ -39,7 +39,7 @@ function update_script() {
     cp /opt/wger/.env /opt/wger_env_backup
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball" "latest" "/opt/wger"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball"
 
     msg_info "Restoring Data"
     cp -r /opt/wger_media_backup/. /opt/wger/media
