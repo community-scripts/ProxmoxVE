@@ -84,6 +84,15 @@ curl -fsSL "https://pkgs.netbird.io/debian/public.key" | gpg --dearmor >/usr/sha
 echo "deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main" >/etc/apt/sources.list.d/netbird.list
 apt-get update &>/dev/null
 apt-get install -y netbird-ui &>/dev/null
+if systemctl list-unit-files docker.service &>/dev/null; then
+  mkdir -p /etc/systemd/system/netbird.service.d
+  cat <<OVERRIDE >/etc/systemd/system/netbird.service.d/after-docker.conf
+[Unit]
+After=docker.service
+Wants=docker.service
+OVERRIDE
+  systemctl daemon-reload
+fi
 '
 msg "\e[1;32m ✔ Installed NetBird.\e[0m"
 sleep 2
