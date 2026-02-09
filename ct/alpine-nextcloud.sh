@@ -26,21 +26,29 @@ function update_script() {
   fi
 
   CHOICE=$(msg_menu "Nextcloud Options" \
-    "1" "Nextcloud Login Credentials" \
-    "2" "Renew Self-signed Certificate")
+    "1" "Update Alpine Packages" \
+    "2" "Nextcloud Login Credentials" \
+    "3" "Renew Self-signed Certificate")
 
   case $CHOICE in
   1)
-    cat nextcloud.creds
+    msg_info "Updating Alpine Packages"
+    $STD apk -U upgrade
+    msg_ok "Updated Alpine Packages"
+    msg_ok "Updated successfully!"
     exit
     ;;
   2)
+    cat nextcloud.creds
+    exit
+    ;;
+  3)
     openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/nextcloud-selfsigned.key -out /etc/ssl/certs/nextcloud-selfsigned.crt -subj "/C=US/O=Nextcloud/OU=Domain Control Validated/CN=nextcloud.local" >/dev/null 2>&1
     rc-service nginx restart
+    msg_ok "Renewed self-signed certificate"
     exit
     ;;
   esac
-  exit 0
 }
 
 start

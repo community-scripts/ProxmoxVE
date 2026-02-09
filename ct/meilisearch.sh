@@ -24,20 +24,9 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  UPD=$(msg_menu "Meilisearch Update Options" \
-    "1" "Update Meilisearch" \
-    "2" "Update Meilisearch-UI")
+  setup_meilisearch
 
-  if [ "$UPD" == "1" ]; then
-    setup_meilisearch
-    exit
-  fi
-
-  if [ "$UPD" == "2" ]; then
-    if [[ ! -d /opt/meilisearch-ui ]]; then
-      msg_error "No Meilisearch-UI Installation Found!"
-      exit
-    fi
+  if [[ -d /opt/meilisearch-ui ]]; then
     if check_for_gh_release "meilisearch-ui" "riccox/meilisearch-ui"; then
       msg_info "Stopping Meilisearch-UI"
       systemctl stop meilisearch-ui
@@ -57,10 +46,11 @@ function update_script() {
       msg_info "Starting Meilisearch-UI"
       systemctl start meilisearch-ui
       msg_ok "Started Meilisearch-UI"
-      msg_ok "Updated successfully!"
     fi
-    exit
   fi
+
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

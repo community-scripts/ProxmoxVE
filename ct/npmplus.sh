@@ -20,31 +20,21 @@ color
 catch_errors
 
 function update_script() {
-  UPD=$(msg_menu "NPMplus Update Options" \
-    "1" "Check for Alpine Updates" \
-    "2" "Update NPMplus Docker Container")
-
   header_info "$APP"
 
-  case "$UPD" in
-  "1")
-    msg_info "Updating Alpine OS"
-    $STD apk -U upgrade
-    msg_ok "System updated"
-    exit
-    ;;
-  "2")
-    msg_info "Updating NPMplus Container"
-    cd /opt
-    msg_info "Pulling latest container image"
-    $STD docker compose pull
-    msg_info "Recreating container"
-    $STD docker compose up -d
-    msg_ok "Updated successfully!"
-    exit
-    ;;
-  esac
-  exit 0
+  msg_info "Updating Alpine OS"
+  $STD apk -U upgrade
+  msg_ok "System updated"
+
+  msg_info "Pulling latest NPMplus container image"
+  cd /opt
+  $STD docker compose pull
+  msg_info "Recreating container"
+  $STD docker compose up -d
+  msg_ok "Updated NPMplus container"
+
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

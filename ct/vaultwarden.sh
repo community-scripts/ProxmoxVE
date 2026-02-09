@@ -32,9 +32,8 @@ function update_script() {
   WVRELEASE=$(get_latest_github_release "dani-garcia/bw_web_builds")
 
   UPD=$(msg_menu "Vaultwarden Update Options" \
-    "1" "VaultWarden $VAULT" \
-    "2" "Web-Vault $WVRELEASE" \
-    "3" "Set Admin Token")
+    "1" "Update VaultWarden + Web-Vault" \
+    "2" "Set Admin Token")
 
   if [ "$UPD" == "1" ]; then
     if check_for_gh_release "vaultwarden" "dani-garcia/vaultwarden"; then
@@ -58,14 +57,10 @@ function update_script() {
       msg_info "Starting Service"
       systemctl start vaultwarden
       msg_ok "Started Service"
-      msg_ok "Updated successfully!"
     else
       msg_ok "VaultWarden is already up-to-date"
     fi
-    exit
-  fi
 
-  if [ "$UPD" == "2" ]; then
     if check_for_gh_release "vaultwarden_webvault" "dani-garcia/bw_web_builds"; then
       msg_info "Stopping Service"
       systemctl stop vaultwarden
@@ -83,14 +78,15 @@ function update_script() {
       msg_info "Starting Service"
       systemctl start vaultwarden
       msg_ok "Started Service"
-      msg_ok "Updated successfully!"
     else
       msg_ok "Web-Vault is already up-to-date"
     fi
+
+    msg_ok "Updated successfully!"
     exit
   fi
 
-  if [ "$UPD" == "3" ]; then
+  if [ "$UPD" == "2" ]; then
     if [[ "${PHS_SILENT:-0}" == "1" ]]; then
       msg_warn "Set Admin Token requires interactive mode, skipping."
       exit
