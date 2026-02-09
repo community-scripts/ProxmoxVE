@@ -425,6 +425,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - hwaccel: add libmfx-gen1.2 to Intel Arc setup for QSV support [@MickLesk](https://github.com/MickLesk) ([#11707](https://github.com/community-scripts/ProxmoxVE/pull/11707))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Netbird (addon): add systemd ordering to start after Docker [@MickLesk](https://github.com/MickLesk) ([#11716](https://github.com/community-scripts/ProxmoxVE/pull/11716))
+
 ### ❔ Uncategorized
 
   - Bichon: Update website [@tremor021](https://github.com/tremor021) ([#11711](https://github.com/community-scripts/ProxmoxVE/pull/11711))
