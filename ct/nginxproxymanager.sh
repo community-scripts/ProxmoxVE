@@ -32,7 +32,7 @@ function update_script() {
   msg_error "The repository's GPG key uses SHA-1 signatures, which are no longer accepted by Debian as of February 1, 2026."
   msg_error "The issue is tracked in openresty/openresty#1097"
   msg_error "For more details, see: https://github.com/community-scripts/ProxmoxVE/issues/11406"
-  exit 1
+  exit 75
 
   if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"12"* ]]; then
     msg_error "Wrong Debian version detected!"

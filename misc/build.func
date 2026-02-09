@@ -3319,6 +3319,68 @@ configure_ssh_settings() {
 }
 
 # ------------------------------------------------------------------------------
+# msg_menu()
+#
+# - Displays a numbered menu for update_script() functions
+# - In silent mode (PHS_SILENT=1): auto-selects the default option
+# - In interactive mode: shows menu via read with 10s timeout + default fallback
+# - Usage: CHOICE=$(msg_menu "Title" "tag1" "Description 1" "tag2" "Desc 2" ...)
+# - The first item is always the default
+# - Returns the selected tag to stdout
+# - If no valid selection or timeout, returns the default (first) tag
+# ------------------------------------------------------------------------------
+msg_menu() {
+  local title="$1"
+  shift
+
+  # Parse items into parallel arrays: tags[] and descriptions[]
+  local -a tags=()
+  local -a descs=()
+  while [[ $# -ge 2 ]]; do
+    tags+=("$1")
+    descs+=("$2")
+    shift 2
+  done
+
+  local default_tag="${tags[0]}"
+  local count=${#tags[@]}
+
+  # Silent mode: return default immediately
+  if [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]]; then
+    echo "$default_tag"
+    return 0
+  fi
+
+  # Display menu
+  echo ""
+  msg_custom "📋" "${BL}" "${title}"
+  echo ""
+  for i in "${!tags[@]}"; do
+    local marker="  "
+    [[ $i -eq 0 ]] && marker="* "
+    printf "${TAB3}${marker}%s) %s\n" "${tags[$i]}" "${descs[$i]}"
+  done
+  echo ""
+
+  local selection=""
+  read -r -t 10 -p "${TAB3}Select [default=${default_tag}, timeout 10s]: " selection || true
+
+  # Validate selection
+  if [[ -n "$selection" ]]; then
+    for tag in "${tags[@]}"; do
+      if [[ "$selection" == "$tag" ]]; then
+        echo "$selection"
+        return 0
+      fi
+    done
+    msg_warn "Invalid selection '${selection}' - using default: ${default_tag}"
+  fi
+
+  echo "$default_tag"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # start()
 #
 # - Entry point of script

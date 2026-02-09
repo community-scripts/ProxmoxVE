@@ -24,32 +24,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! apk -e info newt >/dev/null 2>&1; then
-    apk add -q newt
-  fi
-  while true; do
-    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 3 \
-      "1" "Nextcloud Login Credentials" ON \
-      "2" "Renew Self-signed Certificate" OFF \
-      3>&1 1>&2 2>&3)
-    exit_status=$?
-    if [ $exit_status == 1 ]; then
-      clear
-      exit-script
-    fi
-    header_info
-    case $CHOICE in
-    1)
-      cat nextcloud.creds
-      exit
-      ;;
-    2)
-      openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/nextcloud-selfsigned.key -out /etc/ssl/certs/nextcloud-selfsigned.crt -subj "/C=US/O=Nextcloud/OU=Domain Control Validated/CN=nextcloud.local" >/dev/null 2>&1
-      rc-service nginx restart
-      exit
-      ;;
-    esac
-  done
+
+  CHOICE=$(msg_menu "Nextcloud Options" \
+    "1" "Nextcloud Login Credentials" \
+    "2" "Renew Self-signed Certificate")
+
+  case $CHOICE in
+  1)
+    cat nextcloud.creds
+    exit
+    ;;
+  2)
+    openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/nextcloud-selfsigned.key -out /etc/ssl/certs/nextcloud-selfsigned.crt -subj "/C=US/O=Nextcloud/OU=Domain Control Validated/CN=nextcloud.local" >/dev/null 2>&1
+    rc-service nginx restart
+    exit
+    ;;
+  esac
   exit 0
 }
 

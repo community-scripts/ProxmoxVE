@@ -421,6 +421,8 @@ for container in $CHOICE; do
 
   if [ $exit_code -eq 0 ]; then
     msg_ok "Updated container $container"
+  elif [ $exit_code -eq 75 ]; then
+    echo -e "${YW}[WARN]${CL} Container $container skipped (requires interactive mode)"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
     msg_info "Restoring LXC from backup"
     pct stop $container

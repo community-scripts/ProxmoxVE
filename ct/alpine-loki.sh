@@ -20,43 +20,32 @@ color
 catch_errors
 
 function update_script() {
-  if ! apk -e info newt >/dev/null 2>&1; then
-    apk add -q newt
-  fi
   LXCIP=$(ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
-  while true; do
-    CHOICE=$(
-      whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --menu "Select option" 11 58 3 \
-        "1" "Check for Loki Updates" \
-        "2" "Allow 0.0.0.0 for listening" \
-        "3" "Allow only ${LXCIP} for listening" 3>&2 2>&1 1>&3
-    )
-    exit_status=$?
-    if [ $exit_status == 1 ]; then
-      clear
-      exit-script
-    fi
-    header_info
-    case $CHOICE in
-    1)
-      $STD apk -U upgrade
-      msg_ok "Updated successfully!"
-      exit
-      ;;
-    2)
-      sed -i -e "s/cfg:server.http_addr=.*/cfg:server.http_addr=0.0.0.0/g" /etc/conf.d/loki
-      service loki restart
-      msg_ok "Allowed listening on all interfaces!"
-      exit
-      ;;
-    3)
-      sed -i -e "s/cfg:server.http_addr=.*/cfg:server.http_addr=$LXCIP/g" /etc/conf.d/loki
-      service loki restart
-      msg_ok "Allowed listening only on ${LXCIP}!"
-      exit
-      ;;
-    esac
-  done
+
+  CHOICE=$(msg_menu "Loki Update Options" \
+    "1" "Check for Loki Updates" \
+    "2" "Allow 0.0.0.0 for listening" \
+    "3" "Allow only ${LXCIP} for listening")
+
+  case $CHOICE in
+  1)
+    $STD apk -U upgrade
+    msg_ok "Updated successfully!"
+    exit
+    ;;
+  2)
+    sed -i -e "s/cfg:server.http_addr=.*/cfg:server.http_addr=0.0.0.0/g" /etc/conf.d/loki
+    service loki restart
+    msg_ok "Allowed listening on all interfaces!"
+    exit
+    ;;
+  3)
+    sed -i -e "s/cfg:server.http_addr=.*/cfg:server.http_addr=$LXCIP/g" /etc/conf.d/loki
+    service loki restart
+    msg_ok "Allowed listening only on ${LXCIP}!"
+    exit
+    ;;
+  esac
   exit 0
 }
 

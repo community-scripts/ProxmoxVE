@@ -31,11 +31,10 @@ function update_script() {
   VAULT=$(get_latest_github_release "dani-garcia/vaultwarden")
   WVRELEASE=$(get_latest_github_release "dani-garcia/bw_web_builds")
 
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 3 \
-    "1" "VaultWarden $VAULT" ON \
-    "2" "Web-Vault $WVRELEASE" OFF \
-    "3" "Set Admin Token" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Vaultwarden Update Options" \
+    "1" "VaultWarden $VAULT" \
+    "2" "Web-Vault $WVRELEASE" \
+    "3" "Set Admin Token")
 
   if [ "$UPD" == "1" ]; then
     if check_for_gh_release "vaultwarden" "dani-garcia/vaultwarden"; then
@@ -92,8 +91,13 @@ function update_script() {
   fi
 
   if [ "$UPD" == "3" ]; then
-    if NEWTOKEN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set the ADMIN_TOKEN" 10 58 3>&1 1>&2 2>&3); then
-      if [[ -z "$NEWTOKEN" ]]; then exit; fi
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      msg_warn "Set Admin Token requires interactive mode, skipping."
+      exit
+    fi
+    read -r -s -p "Set the ADMIN_TOKEN: " NEWTOKEN
+    echo ""
+    if [[ -n "$NEWTOKEN" ]]; then
       ensure_dependencies argon2
       TOKEN=$(echo -n "${NEWTOKEN}" | argon2 "$(openssl rand -base64 32)" -t 2 -m 16 -p 4 -l 64 -e)
       sed -i "s|ADMIN_TOKEN=.*|ADMIN_TOKEN='${TOKEN}'|" /opt/vaultwarden/.env

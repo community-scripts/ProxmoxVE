@@ -24,10 +24,9 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Meilisearch Update" --radiolist --cancel-button Exit-Script "Spacebar = Select" 10 58 2 \
-    "1" "Update Meilisearch" ON \
-    "2" "Update Meilisearch-UI" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Meilisearch Update Options" \
+    "1" "Update Meilisearch" \
+    "2" "Update Meilisearch-UI")
 
   if [ "$UPD" == "1" ]; then
     setup_meilisearch
