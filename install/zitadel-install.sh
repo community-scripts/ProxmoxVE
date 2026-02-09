@@ -155,7 +155,6 @@ ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE=disable
 ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME=postgres
 ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
 ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE=disable
-ZITADEL_EXTERNALSECURE=false
 EOF
 
 # Set secure permissions
@@ -306,7 +305,7 @@ msg_ok "Saved Credentials"
 msg_info "Create zitadel-rerun.sh"
 cat <<EOF >~/zitadel-rerun.sh
 systemctl stop zitadel-api zitadel-login
-timeout --kill-after=5s 15s /opt/zitadel/zitadel setup --masterkeyFile ${CONFIG_DIR}/.masterkey --config ${CONFIG_DIR}/config.yaml
+/opt/zitadel/zitadel setup --masterkeyFile ${CONFIG_DIR}/.masterkey --config ${CONFIG_DIR}/config.yaml
 systemctl restart zitadel-api zitadel-login
 EOF
 chmod +x ~/zitadel-rerun.sh
