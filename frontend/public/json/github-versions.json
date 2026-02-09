@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-08T18:08:50Z",
+  "generated": "2026-02-09T00:23:05Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -767,9 +767,9 @@
     {
       "slug": "mediamanager",
       "repo": "maxdorninger/MediaManager",
-      "version": "v1.12.1",
+      "version": "v1.12.2",
       "pinned": false,
-      "date": "2026-01-05T09:06:22Z"
+      "date": "2026-02-08T19:18:29Z"
     },
     {
       "slug": "mediamtx",
@@ -1306,9 +1306,9 @@
     {
       "slug": "speedtest-tracker",
       "repo": "alexjustesen/speedtest-tracker",
-      "version": "v1.13.8",
+      "version": "v1.13.9",
       "pinned": false,
-      "date": "2026-02-04T19:24:23Z"
+      "date": "2026-02-08T21:48:49Z"
     },
     {
       "slug": "spoolman",
@@ -1628,9 +1628,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.4.1",
+      "version": "v0.4.2",
       "pinned": false,
-      "date": "2026-02-08T03:18:51Z"
+      "date": "2026-02-08T21:35:13Z"
     },
     {
       "slug": "zigbee2mqtt",
