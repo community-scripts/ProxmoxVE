@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Umlautadaptarr: use release appsettings.json instead of hardcoded copy [@MickLesk](https://github.com/MickLesk) ([#11725](https://github.com/community-scripts/ProxmoxVE/pull/11725))
     - tracearr: prepare for next stable release [@durzo](https://github.com/durzo) ([#11673](https://github.com/community-scripts/ProxmoxVE/pull/11673))
     - PeaNUT: symlink server.js after update [@vhsdream](https://github.com/vhsdream) ([#11696](https://github.com/community-scripts/ProxmoxVE/pull/11696))
 
@@ -416,6 +417,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: FileFlows [@tremor021](https://github.com/tremor021) ([#11108](https://github.com/community-scripts/ProxmoxVE/pull/11108))
     - Refactor: wger [@MickLesk](https://github.com/MickLesk) ([#11722](https://github.com/community-scripts/ProxmoxVE/pull/11722))
     - Nginx-UI: better User Handling | ACME [@MickLesk](https://github.com/MickLesk) ([#11715](https://github.com/community-scripts/ProxmoxVE/pull/11715))
     - NginxProxymanager: use better-sqlite3 [@MickLesk](https://github.com/MickLesk) ([#11708](https://github.com/community-scripts/ProxmoxVE/pull/11708))
