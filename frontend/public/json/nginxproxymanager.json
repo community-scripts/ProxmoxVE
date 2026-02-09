@@ -30,10 +30,14 @@
     }
   ],
   "default_credentials": {
-    "username": "admin@example.com",
-    "password": "changeme"
+    "username": null,
+    "password": null
   },
   "notes": [
+    {
+      "text": "On first launch, a setup wizard will guide you through creating an admin account. There are no default credentials.",
+      "type": "warning"
+    },
     {
       "text": "You can install the specific one certbot you prefer, or you can Running /app/scripts/install-certbot-plugins within the Nginx Proxy Manager (NPM) LXC shell will install many common plugins. Important: This script does not install all Certbot plugins, as some require additional, external system dependencies (like specific packages for certain DNS providers). These external dependencies must be manually installed within the LXC container before you can successfully install and use the corresponding Certbot plugin. Consult the plugin's documentation for required packages.",
       "type": "info"

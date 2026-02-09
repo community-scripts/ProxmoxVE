@@ -130,10 +130,11 @@ if [ ! -f /app/config/production.json ]; then
   "database": {
     "engine": "knex-native",
     "knex": {
-      "client": "sqlite3",
+      "client": "better-sqlite3",
       "connection": {
         "filename": "/data/database.sqlite"
-      }
+      },
+      "useNullAsDefault": true
     }
   }
 }

@@ -145,15 +145,17 @@ function update_script() {
   "database": {
     "engine": "knex-native",
     "knex": {
-      "client": "sqlite3",
+      "client": "better-sqlite3",
       "connection": {
         "filename": "/data/database.sqlite"
-      }
+      },
+      "useNullAsDefault": true
     }
   }
 }
 EOF
   fi
+  sed -i 's/"client": "sqlite3"/"client": "better-sqlite3"/' /app/config/production.json
   cd /app 
   $STD yarn install --network-timeout 600000
   msg_ok "Initialized Backend"
