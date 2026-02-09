@@ -19,9 +19,9 @@
       "type": "default",
       "script": "ct/wger.sh",
       "resources": {
-        "cpu": 1,
-        "ram": 1024,
-        "hdd": 6,
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
         "os": "debian",
         "version": "13"
       }
@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Enable proxy support by uncommenting this line in `/home/wger/src/settings.py` and pointing it to your URL: `# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://my.domain.example.com']`, then restart the service `systemctl restart wger`.",
+      "text": "This LXC also runs Celery and Redis to synchronize workouts and ingredients",
       "type": "info"
     }
   ]
