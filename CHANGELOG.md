@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - several scripts: add --clear to uv venv calls for uv 0.10 compatibility [@MickLesk](https://github.com/MickLesk) ([#11723](https://github.com/community-scripts/ProxmoxVE/pull/11723))
     - Koillection: ensure setup_composer is in update script [@MickLesk](https://github.com/MickLesk) ([#11734](https://github.com/community-scripts/ProxmoxVE/pull/11734))
     - PeaNUT: symlink server.js after update [@vhsdream](https://github.com/vhsdream) ([#11696](https://github.com/community-scripts/ProxmoxVE/pull/11696))
     - Umlautadaptarr: use release appsettings.json instead of hardcoded copy [@MickLesk](https://github.com/MickLesk) ([#11725](https://github.com/community-scripts/ProxmoxVE/pull/11725))
