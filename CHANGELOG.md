@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-09
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - PeaNUT: symlink server.js after update [@vhsdream](https://github.com/vhsdream) ([#11696](https://github.com/community-scripts/ProxmoxVE/pull/11696))
+
 ## 2026-02-08
 
 ### 🚀 Updated Scripts
