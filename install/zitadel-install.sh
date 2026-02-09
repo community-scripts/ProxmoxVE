@@ -309,6 +309,7 @@ systemctl stop zitadel-api zitadel-login
 timeout --kill-after=5s 15s /opt/zitadel/zitadel setup --masterkeyFile ${CONFIG_DIR}/.masterkey --config ${CONFIG_DIR}/config.yaml
 systemctl restart zitadel-api zitadel-login
 EOF
+chmod +x ~/zitadel-rerun.sh
 msg_ok "Bash script for rerunning Zitadel after changing Zitadel config.yaml"
 
 motd_ssh

@@ -13,6 +13,7 @@ var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_postfix_sat="${var_postfix_sat:-yes}"
 
 header_info "$APP"
 variables
@@ -30,8 +31,7 @@ function update_script() {
 
   if check_for_gh_release "zitadel" "zitadel/zitadel"; then
     msg_info "Stopping Service"
-    systemctl stop zitadel-api
-	systemctl stop zitadel-login
+    systemctl stop zitadel-api zitadel-login
     msg_ok "Stopped Service"
 
     msg_info "Updating Zitadel"
