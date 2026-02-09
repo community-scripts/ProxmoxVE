@@ -28,20 +28,20 @@
         }
     ],
     "default_credentials": {
-        "username": "admin",
+        "username": null,
         "password": null
     },
     "notes": [
+        {
+            "text": "On first visit, the setup wizard will guide you to create an admin account and configure ACME email.",
+            "type": "warning"
+        },
         {
             "text": "Nginx runs on ports 80/443, Nginx UI management interface on port 9000.",
             "type": "info"
         },
         {
             "text": "SSL certificates can be managed automatically with Let's Encrypt integration.",
-            "type": "info"
-        },
-        {
-            "text": "Initial Login data: `cat ~/nginx-ui.creds`",
             "type": "info"
         }
     ]

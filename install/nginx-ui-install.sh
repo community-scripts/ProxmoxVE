@@ -30,29 +30,20 @@ msg_ok "Installed Nginx UI"
 msg_info "Configuring Nginx UI"
 mkdir -p /usr/local/etc/nginx-ui
 cat <<EOF >/usr/local/etc/nginx-ui/app.ini
-[server]
-HttpHost = 0.0.0.0
-HttpPort = 9000
-RunMode = release
-JwtSecret = $(openssl rand -hex 32)
-
-[nginx]
-AccessLogPath = /var/log/nginx/access.log
-ErrorLogPath = /var/log/nginx/error.log
-ConfigDir = /etc/nginx
-PIDPath = /run/nginx.pid
-TestConfigCmd = nginx -t
-ReloadCmd = nginx -s reload
-RestartCmd = systemctl restart nginx
-
 [app]
 PageSize = 10
 
+[server]
+Host = 0.0.0.0
+Port = 9000
+RunMode = release
+JwtSecret = $(openssl rand -hex 32)
+
 [cert]
-Email =
-CADir =
-RenewalInterval = 7
-RecursiveNameservers =
+HTTPChallengePort = 9180
+
+[terminal]
+StartCmd = login
 EOF
 msg_ok "Configured Nginx UI"
 
@@ -77,17 +68,6 @@ WantedBy=multi-user.target
 EOF
 systemctl daemon-reload
 msg_ok "Created Service"
-
-msg_info "Creating Initial Admin User"
-systemctl start nginx-ui
-sleep 3
-systemctl stop nginx-ui
-sleep 1
-/usr/local/bin/nginx-ui reset-password --config /usr/local/etc/nginx-ui/app.ini &>/tmp/nginx-ui-reset.log || true
-ADMIN_PASS=$(grep -oP 'Password: \K\S+' /tmp/nginx-ui-reset.log || echo "admin")
-echo -e "Nginx-UI Credentials\nUsername: admin\nPassword: $ADMIN_PASS" >~/nginx-ui.creds
-rm -f /tmp/nginx-ui-reset.log
-msg_ok "Created Initial Admin User"
 
 msg_info "Starting Service"
 systemctl enable -q --now nginx-ui
