@@ -410,6 +410,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - tracearr: prepare for next stable release [@durzo](https://github.com/durzo) ([#11673](https://github.com/community-scripts/ProxmoxVE/pull/11673))
     - PeaNUT: symlink server.js after update [@vhsdream](https://github.com/vhsdream) ([#11696](https://github.com/community-scripts/ProxmoxVE/pull/11696))
 
+  - #### 🔧 Refactor
+
+    - NginxProxymanager: use better-sqlite3 [@MickLesk](https://github.com/MickLesk) ([#11708](https://github.com/community-scripts/ProxmoxVE/pull/11708))
+
 ### ❔ Uncategorized
 
   - Bichon: Update website [@tremor021](https://github.com/tremor021) ([#11711](https://github.com/community-scripts/ProxmoxVE/pull/11711))
