@@ -25,7 +25,7 @@ function update_script() {
   fi
   while true; do
     CHOICE=$(
-      whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --menu "Select option" 11 58 1 \
+      phs_whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --menu "Select option" 11 58 1 \
         "1" "Check for Docker Updates" 3>&2 2>&1 1>&3
     )
     exit_status=$?

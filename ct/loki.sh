@@ -31,7 +31,7 @@ function update_script() {
 
   while true; do
     CHOICE=$(
-      whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --menu "Select option" 11 58 3 \
+      phs_whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --menu "Select option" 11 58 3 \
         "1" "Update Loki & Promtail" \
         "2" "Allow 0.0.0.0 for listening" \
         "3" "Allow only ${LOCAL_IP} for listening" 3>&2 2>&1 1>&3

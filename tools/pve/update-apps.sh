@@ -421,6 +421,18 @@ for container in $CHOICE; do
 
   if [ $exit_code -eq 0 ]; then
     msg_ok "Updated container $container"
+  elif [ $exit_code -eq 75 ]; then
+    # Exit code 75 (EX_TEMPFAIL) = script is disabled or skipped intentionally
+    echo -e "${YW}[WARN]${CL} Update script for container $container is currently disabled - skipping"
+    # Restore build resources if changed
+    if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ]; then
+      pct set "$container" --cores "$run_cpu" --memory "$run_ram"
+    fi
+    continue
+  elif [ "$UNATTENDED_UPDATE" == "yes" ]; then
+    # In unattended mode, log the failure and continue with next container
+    msg_error "Update failed for container $container - skipping (unattended mode)"
+    continue
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
     msg_info "Restoring LXC from backup"
     pct stop $container

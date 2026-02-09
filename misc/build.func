@@ -3326,6 +3326,112 @@ configure_ssh_settings() {
 # - In silent mode: runs update_script with automatic cleanup
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# phs_whiptail()
+#
+# Drop-in wrapper for whiptail in update_script() functions.
+# In silent/unattended mode (PHS_SILENT=1), returns the default option
+# (the one marked "ON") without showing a dialog.
+# In interactive mode, passes through to whiptail transparently.
+#
+# Usage: same as whiptail, e.g.:
+#   UPD=$(phs_whiptail --backtitle "..." --title "..." --radiolist "..." H W N \
+#     "1" "Option A" ON \
+#     "2" "Option B" OFF \
+#     3>&1 1>&2 2>&3)
+#
+# For --menu style (no ON/OFF), the first item is selected as default.
+# Returns exit code 1 if no default can be determined (script should skip).
+# ------------------------------------------------------------------------------
+phs_whiptail() {
+  if [ -z "${PHS_SILENT+x}" ] || [[ "${PHS_SILENT}" != "1" ]]; then
+    # Interactive mode: pass through to real whiptail
+    whiptail "$@"
+    return $?
+  fi
+
+  # Silent mode: extract the default selection
+  local mode="" items_start=0 i=0
+  local -a args=("$@")
+
+  # Detect dialog type (--radiolist, --menu, --yesno, --passwordbox)
+  for ((i = 0; i < ${#args[@]}; i++)); do
+    case "${args[$i]}" in
+    --radiolist)
+      mode="radiolist"
+      ;;
+    --menu)
+      mode="menu"
+      ;;
+    --yesno)
+      # In silent mode, auto-confirm (return 0 = yes)
+      return 0
+      ;;
+    --msgbox)
+      # In silent mode, skip message boxes (just acknowledge)
+      return 0
+      ;;
+    --passwordbox | --inputbox)
+      # Cannot provide input in silent mode, signal skip
+      msg_warn "Interactive input required - skipping in unattended mode"
+      return 1
+      ;;
+    esac
+  done
+
+  if [[ "$mode" == "radiolist" ]]; then
+    # radiolist items are triplets: tag description ON/OFF
+    # Find the one marked ON
+    for ((i = 0; i < ${#args[@]}; i++)); do
+      if [[ "${args[$i]}" == "ON" ]]; then
+        # The tag is 2 positions before ON
+        echo "${args[$((i - 2))]}"
+        return 0
+      fi
+    done
+    # No ON found, use first item after the height/width/count args
+    # Fall through to menu logic
+    mode="menu"
+  fi
+
+  if [[ "$mode" == "menu" ]]; then
+    # menu items are pairs: tag description
+    # Find the first tag after height/width/menuheight (3 consecutive numbers after the prompt text)
+    local h_w_n_count=0
+    local past_flags=0
+    for ((i = 0; i < ${#args[@]}; i++)); do
+      # Skip option flags and their values
+      if [[ "${args[$i]}" == --* ]]; then
+        # Some flags take a value (--title, --backtitle, etc.) - skip next arg too
+        case "${args[$i]}" in
+        --title | --backtitle | --cancel-button | --ok-button | --default-item) ((i++)) ;;
+        esac
+        continue
+      fi
+      # First non-flag string is the prompt text, skip it
+      if [[ $past_flags -eq 0 ]]; then
+        past_flags=1
+        continue
+      fi
+      # Next 3 numbers are height, width, menu-height
+      if [[ "${args[$i]}" =~ ^[0-9]+$ ]] && [[ $h_w_n_count -lt 3 ]]; then
+        ((h_w_n_count++))
+        continue
+      fi
+      # After H W N, the next arg is the first menu tag
+      if [[ $h_w_n_count -ge 3 ]]; then
+        echo "${args[$i]}"
+        return 0
+      fi
+    done
+  fi
+
+  # Fallback: could not determine default
+  msg_warn "Cannot determine default action - skipping in unattended mode"
+  return 1
+}
+
 start() {
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then

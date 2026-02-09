@@ -20,7 +20,7 @@ color
 catch_errors
 
 function update_script() {
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE MODE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 14 60 2 \
+  UPD=$(phs_whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE MODE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 14 60 2 \
     "1" "Check for Alpine Updates" OFF \
     "2" "Update NPMplus Docker Container" ON \
     3>&1 1>&2 2>&3)

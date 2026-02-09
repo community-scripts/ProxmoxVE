@@ -26,7 +26,7 @@ function update_script() {
   LXCIP=$(ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
   while true; do
     CHOICE=$(
-      whiptail --backtitle "Proxmox VE Helper Scripts" --title "Valkey Management" --menu "Select option" 11 58 3 \
+      phs_whiptail --backtitle "Proxmox VE Helper Scripts" --title "Valkey Management" --menu "Select option" 11 58 3 \
         "1" "Update Valkey" \
         "2" "Allow 0.0.0.0 for listening" \
         "3" "Allow only ${LXCIP} for listening" 3>&2 2>&1 1>&3
