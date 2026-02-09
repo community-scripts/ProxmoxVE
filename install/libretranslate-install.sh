@@ -43,7 +43,7 @@ if [[ -z "$TORCH_VERSION" ]]; then
   TORCH_VERSION="2.5.0"
 fi
 cd /opt/libretranslate
-$STD uv venv .venv --python 3.12
+$STD uv venv --clear .venv --python 3.12
 $STD source .venv/bin/activate
 $STD uv pip install --upgrade pip setuptools
 $STD uv pip install Babel==2.12.1

@@ -19,7 +19,7 @@ msg_info "Installing Prometheus Proxmox VE Exporter"
 mkdir -p /opt/prometheus-pve-exporter
 cd /opt/prometheus-pve-exporter
 
-$STD uv venv /opt/prometheus-pve-exporter/.venv
+$STD uv venv --clear /opt/prometheus-pve-exporter/.venv
 $STD /opt/prometheus-pve-exporter/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install prometheus-pve-exporter

@@ -77,7 +77,7 @@ echo "${KEPUB_VERSION#v}" >"$INSTALL_DIR"/KEPUBIFY_RELEASE
 sed 's/^/v/' ~/.autocaliweb >"$INSTALL_DIR"/ACW_RELEASE
 
 cd "$INSTALL_DIR"
-$STD uv venv "$VIRTUAL_ENV"
+$STD uv venv --clear "$VIRTUAL_ENV"
 $STD uv sync --all-extras --active
 cat <<EOF >./dirs.json
 {

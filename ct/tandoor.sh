@@ -50,7 +50,7 @@ function update_script() {
     cp -r /opt/tandoor.bak/{config,api,mediafiles,staticfiles} /opt/tandoor/
     mv /opt/tandoor.bak/.env /opt/tandoor/.env
     cd /opt/tandoor
-    $STD uv venv .venv --python=python3
+    $STD uv venv --clear .venv --python=python3
     $STD uv pip install -r requirements.txt --python .venv/bin/python
     cd /opt/tandoor/vue3
     $STD yarn install

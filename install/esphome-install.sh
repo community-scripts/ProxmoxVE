@@ -23,7 +23,7 @@ msg_info "Setting up Virtual Environment"
 mkdir -p /opt/esphome
 mkdir -p /root/config
 cd /opt/esphome
-$STD uv venv /opt/esphome/.venv
+$STD uv venv --clear /opt/esphome/.venv
 $STD /opt/esphome/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/esphome/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/esphome/.venv/bin/python -m pip install esphome tornado esptool

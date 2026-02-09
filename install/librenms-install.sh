@@ -50,7 +50,7 @@ $STD useradd librenms -d /opt/librenms -M -r -s "$(which bash)"
 mkdir -p /opt/librenms/{rrd,logs,bootstrap/cache,storage,html}
 cd /opt/librenms
 APP_KEY=$(openssl rand -base64 40 | tr -dc 'a-zA-Z0-9')
-$STD uv venv .venv
+$STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install -r requirements.txt
 cat <<EOF >/opt/librenms/.env

@@ -41,7 +41,7 @@ function update_script() {
         # Always ensure venv exists
         if [[ ! -d /opt/sabnzbd/venv ]]; then
             msg_info "Migrating SABnzbd to uv virtual environment"
-            $STD uv venv /opt/sabnzbd/venv
+            $STD uv venv --clear /opt/sabnzbd/venv
             msg_ok "Created uv venv at /opt/sabnzbd/venv"
         fi
 

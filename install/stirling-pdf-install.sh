@@ -61,7 +61,7 @@ msg_ok "Installed LibreOffice Components"
 
 msg_info "Installing Python Dependencies"
 mkdir -p /tmp/stirling-pdf
-$STD uv venv /opt/.venv
+$STD uv venv --clear /opt/.venv
 export PATH="/opt/.venv/bin:$PATH"
 source /opt/.venv/bin/activate
 $STD uv pip install --upgrade pip

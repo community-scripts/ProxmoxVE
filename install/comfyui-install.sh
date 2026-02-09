@@ -36,7 +36,7 @@ PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "ComfyUI" "comfyanonymous/ComfyUI" "tarball" "latest" "/opt/ComfyUI"
 
 msg_info "Python dependencies"
-$STD uv venv "/opt/ComfyUI/venv"
+$STD uv venv --clear "/opt/ComfyUI/venv"
 
 if [[ "${comfyui_gpu_type,,}" == "nvidia" ]]; then
   pytorch_url="https://download.pytorch.org/whl/cu130"

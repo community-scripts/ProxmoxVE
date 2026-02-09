@@ -44,7 +44,7 @@ function update_script() {
     msg_info "Updating Autocaliweb"
     cd "$INSTALL_DIR" 
     if [[ ! -d "$VIRTUAL_ENV" ]]; then
-      $STD uv venv "$VIRTUAL_ENV"
+      $STD uv venv --clear "$VIRTUAL_ENV"
     fi
     $STD uv sync --all-extras --active
     cd "$INSTALL_DIR"/koreader/plugins 

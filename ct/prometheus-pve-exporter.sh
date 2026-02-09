@@ -41,7 +41,7 @@ function update_script() {
     rm -rf "$PVE_VENV_PATH"
     mkdir -p /opt/prometheus-pve-exporter
     cd /opt/prometheus-pve-exporter
-    $STD uv venv "$PVE_VENV_PATH"
+    $STD uv venv --clear "$PVE_VENV_PATH"
     $STD "$PVE_VENV_PATH/bin/python" -m ensurepip --upgrade
     $STD "$PVE_VENV_PATH/bin/python" -m pip install --upgrade pip
     $STD "$PVE_VENV_PATH/bin/python" -m pip install prometheus-pve-exporter

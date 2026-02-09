@@ -29,7 +29,7 @@ fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
 
 msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/mylar3-data
-$STD uv venv /opt/mylar3/.venv
+$STD uv venv --clear /opt/mylar3/.venv
 $STD /opt/mylar3/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/mylar3/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/mylar3/.venv/bin/python -m pip install --no-cache-dir -r /opt/mylar3/requirements.txt

@@ -40,7 +40,7 @@ function update_script() {
     chmod 775 /opt/bazarr /var/lib/bazarr/
     # Always ensure venv exists
     if [[ ! -d /opt/bazarr/venv/ ]]; then
-      $STD uv venv /opt/bazarr/venv --python 3.12
+      $STD uv venv --clear /opt/bazarr/venv --python 3.12
     fi
     
     # Always check and fix service file if needed

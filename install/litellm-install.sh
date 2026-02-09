@@ -42,7 +42,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Setting up Virtual Environment"
 mkdir -p /opt/litellm
 cd /opt/litellm
-$STD uv venv /opt/litellm/.venv
+$STD uv venv --clear /opt/litellm/.venv
 $STD /opt/litellm/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/litellm/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/litellm/.venv/bin/python -m pip install litellm[proxy] prisma

@@ -39,7 +39,7 @@ function update_script() {
 
         msg_info "Updating Warracker"
         cd /opt/warracker/backend
-        $STD uv venv .venv
+        $STD uv venv --clear .venv
         $STD source .venv/bin/activate
         $STD uv pip install -r requirements.txt
         msg_ok "Updated Warracker"

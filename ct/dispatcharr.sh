@@ -103,7 +103,7 @@ function update_script() {
 
     cd /opt/dispatcharr
     rm -rf .venv
-    $STD uv venv
+    $STD uv venv --clear
     $STD uv pip install -r requirements.txt --index-strategy unsafe-best-match
     $STD uv pip install gunicorn gevent celery redis daphne
     msg_ok "Updated Dispatcharr Backend"

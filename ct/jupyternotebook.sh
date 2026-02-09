@@ -34,7 +34,7 @@ function update_script() {
     PYTHON_VERSION="3.12" setup_uv
     mkdir -p "$INSTALL_DIR"
     cd "$INSTALL_DIR"
-    $STD uv venv .venv
+    $STD uv venv --clear .venv
     $STD "$VENV_PYTHON" -m ensurepip --upgrade
     $STD "$VENV_PYTHON" -m pip install --upgrade pip
     $STD "$VENV_PYTHON" -m pip install jupyter

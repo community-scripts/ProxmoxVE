@@ -131,7 +131,7 @@ msg_ok "Built Shelfmark frontend"
 
 msg_info "Configuring Shelfmark"
 cd /opt/shelfmark
-$STD uv venv ./venv
+$STD uv venv --clear ./venv
 $STD source ./venv/bin/activate
 $STD uv pip install -r ./requirements-base.txt
 [[ "$DEPLOYMENT_TYPE" == "1" ]] && $STD uv pip install -r ./requirements-shelfmark.txt

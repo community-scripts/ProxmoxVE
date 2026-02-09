@@ -29,7 +29,7 @@ fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy" "tarball"
 msg_info "Installing Babybuddy"
 mkdir -p /opt/data
 cd /opt/babybuddy
-$STD uv venv .venv
+$STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install -r requirements.txt
 cp babybuddy/settings/production.example.py babybuddy/settings/production.py

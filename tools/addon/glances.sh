@@ -56,7 +56,7 @@ install_glances_debian() {
   cd /opt
   mkdir -p glances
   cd glances
-  uv venv
+  uv venv --clear
   source .venv/bin/activate >/dev/null 2>&1
   uv pip install --upgrade pip wheel setuptools >/dev/null 2>&1
   uv pip install "glances[web]" >/dev/null 2>&1
@@ -126,7 +126,7 @@ install_glances_alpine() {
   cd /opt
   mkdir -p glances
   cd glances
-  uv venv
+  uv venv --clear
   source .venv/bin/activate
   uv pip install --upgrade pip wheel setuptools >/dev/null 2>&1
   uv pip install "glances[web]" >/dev/null 2>&1

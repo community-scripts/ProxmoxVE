@@ -51,7 +51,7 @@ function update_script() {
     cp -r /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
     cd /opt/adventurelog/backend/server
     if [[ ! -x .venv/bin/python ]]; then
-      $STD uv venv .venv
+      $STD uv venv --clear .venv
       $STD .venv/bin/python -m ensurepip --upgrade
     fi
     $STD .venv/bin/python -m pip install --upgrade pip
