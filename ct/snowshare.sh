@@ -37,6 +37,7 @@ function update_script() {
 
     msg_info "Updating Snowshare"
     cd /opt/snowshare
+    $STD rm -rf node_modules src/generated
     $STD npm ci
     $STD npx prisma generate
     $STD npm run build
