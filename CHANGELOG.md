@@ -407,8 +407,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: Pin version to 2.5.6 [@vhsdream](https://github.com/vhsdream) ([#11775](https://github.com/community-scripts/ProxmoxVE/pull/11775))
     - Libretranslate: Fix setuptools [@tremor021](https://github.com/tremor021) ([#11772](https://github.com/community-scripts/ProxmoxVE/pull/11772))
     - Element Synapse: prevent systemd invoke failure during apt install [@MickLesk](https://github.com/MickLesk) ([#11758](https://github.com/community-scripts/ProxmoxVE/pull/11758))
+
+  - #### ✨ New Features
+
+    - Refactor: Slskd & Soularr [@vhsdream](https://github.com/vhsdream) ([#11674](https://github.com/community-scripts/ProxmoxVE/pull/11674))
 
 ### 🗑️ Deleted Scripts
 
