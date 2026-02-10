@@ -411,7 +411,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🗑️ Deleted Scripts
 
-  - paperless-exporter ([#11737](https://github.com/community-scripts/ProxmoxVE/pull/11737))
+  - move paperless-exporter from LXC to addon ([#11737](https://github.com/community-scripts/ProxmoxVE/pull/11737))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - feat: improve storage parsing & add guestname [@carlosmaroot](https://github.com/carlosmaroot) ([#11752](https://github.com/community-scripts/ProxmoxVE/pull/11752))
 
 ### 📂 Github
 
