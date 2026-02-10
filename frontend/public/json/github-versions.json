@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-10T06:27:22Z",
+  "generated": "2026-02-10T12:19:02Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -599,9 +599,9 @@
     {
       "slug": "keycloak",
       "repo": "keycloak/keycloak",
-      "version": "26.5.2",
+      "version": "26.5.3",
       "pinned": false,
-      "date": "2026-01-23T14:26:58Z"
+      "date": "2026-02-10T07:30:08Z"
     },
     {
       "slug": "kimai",
@@ -816,9 +816,9 @@
     {
       "slug": "myip",
       "repo": "jason5ng32/MyIP",
-      "version": "v5.2.0",
+      "version": "v5.2.1",
       "pinned": false,
-      "date": "2026-01-05T05:56:57Z"
+      "date": "2026-02-10T07:38:47Z"
     },
     {
       "slug": "mylar3",
@@ -1101,13 +1101,6 @@
       "date": "2025-12-06T13:32:18Z"
     },
     {
-      "slug": "prometheus-paperless-ngx-exporter",
-      "repo": "hansmi/prometheus-paperless-exporter",
-      "version": "v0.0.9",
-      "pinned": false,
-      "date": "2025-12-08T20:37:45Z"
-    },
-    {
       "slug": "prowlarr",
       "repo": "Prowlarr/Prowlarr",
       "version": "v2.3.0.5236",
@@ -1131,9 +1124,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.6",
+      "version": "v5.1.7",
       "pinned": false,
-      "date": "2026-02-09T14:43:03Z"
+      "date": "2026-02-10T09:59:55Z"
     },
     {
       "slug": "pve-scripts-local",
