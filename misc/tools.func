@@ -1890,7 +1890,7 @@ function fetch_and_deploy_codeberg_release() {
   local app="$1"
   local repo="$2"
   local mode="${3:-tarball}" # tarball | binary | prebuild | singlefile | tag
-  local version="${4:-latest}"
+  local version="${APPLICATION_VERSION:-${4:-latest}}"
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
 
@@ -2322,7 +2322,7 @@ function fetch_and_deploy_gh_release() {
   local app="$1"
   local repo="$2"
   local mode="${3:-tarball}" # tarball | binary | prebuild | singlefile
-  local version="${4:-latest}"
+  local version="${APPLICATION_VERSION:-${4:-latest}}"
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
 
