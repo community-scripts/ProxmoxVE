@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-09T18:19:59Z",
+  "generated": "2026-02-10T00:25:58Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -207,9 +207,9 @@
     {
       "slug": "commafeed",
       "repo": "Athou/commafeed",
-      "version": "6.1.1",
+      "version": "6.2.0",
       "pinned": false,
-      "date": "2026-01-26T15:14:16Z"
+      "date": "2026-02-09T19:44:58Z"
     },
     {
       "slug": "configarr",
@@ -256,9 +256,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.35",
+      "version": "v1.0.36",
       "pinned": false,
-      "date": "2026-02-02T05:20:12Z"
+      "date": "2026-02-09T21:15:44Z"
     },
     {
       "slug": "dispatcharr",
@@ -634,9 +634,9 @@
     {
       "slug": "kometa",
       "repo": "Kometa-Team/Kometa",
-      "version": "v2.2.2",
+      "version": "v2.3.0",
       "pinned": false,
-      "date": "2025-10-06T21:31:07Z"
+      "date": "2026-02-09T21:26:56Z"
     },
     {
       "slug": "komga",
@@ -753,9 +753,9 @@
     {
       "slug": "manyfold",
       "repo": "manyfold3d/manyfold",
-      "version": "v0.132.0",
+      "version": "v0.132.1",
       "pinned": false,
-      "date": "2026-01-29T13:53:21Z"
+      "date": "2026-02-09T22:02:28Z"
     },
     {
       "slug": "mealie",
@@ -1012,16 +1012,16 @@
     {
       "slug": "pelican-panel",
       "repo": "pelican-dev/panel",
-      "version": "v1.0.0-beta31",
+      "version": "v1.0.0-beta32",
       "pinned": false,
-      "date": "2026-01-18T22:43:24Z"
+      "date": "2026-02-09T22:15:44Z"
     },
     {
       "slug": "pelican-wings",
       "repo": "pelican-dev/wings",
-      "version": "v1.0.0-beta22",
+      "version": "v1.0.0-beta23",
       "pinned": false,
-      "date": "2026-01-18T22:38:36Z"
+      "date": "2026-02-09T22:10:26Z"
     },
     {
       "slug": "pf2etools",
@@ -1635,9 +1635,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.4.2",
+      "version": "v0.5.0",
       "pinned": false,
-      "date": "2026-02-08T21:35:13Z"
+      "date": "2026-02-09T22:11:32Z"
     },
     {
       "slug": "zigbee2mqtt",
