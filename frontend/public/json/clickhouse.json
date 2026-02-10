@@ -1,0 +1,40 @@
+{
+  "name": "ClickHouse",
+  "slug": "clickhouse",
+  "categories": [
+    8
+  ],
+  "date_created": "2026-02-10",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8123,
+  "documentation": "https://clickhouse.com/docs",
+  "website": "https://clickhouse.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/clickhouse.webp",
+  "config_path": "/etc/clickhouse-server/config.xml",
+  "description": "ClickHouse is a fast open-source column-oriented database management system for real-time analytics.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/clickhouse.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 20,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "default",
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Web interface available on port 8123. Use clickhouse-client for CLI access.",
+      "type": "info"
+    }
+  ]
+}
