@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  get_lxc_ip 
+  get_lxc_ip  
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
   ensure_dependencies jq
 
