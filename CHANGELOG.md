@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Libretranslate: Fix setuptools [@tremor021](https://github.com/tremor021) ([#11772](https://github.com/community-scripts/ProxmoxVE/pull/11772))
     - Element Synapse: prevent systemd invoke failure during apt install [@MickLesk](https://github.com/MickLesk) ([#11758](https://github.com/community-scripts/ProxmoxVE/pull/11758))
 
 ### 🗑️ Deleted Scripts
