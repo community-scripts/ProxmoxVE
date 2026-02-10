@@ -131,7 +131,7 @@ function detect_service() {
 
 function backup_container() {
   msg_info "Creating backup for container $1"
-  vzdump $1 --compress zstd --storage $STORAGE_CHOICE -notes-template "community-scripts backup updater" >/dev/null 2>&1
+  vzdump $1 --compress zstd --storage $STORAGE_CHOICE -notes-template "{{guestname}} - community-scripts backup updater" >/dev/null 2>&1
   status=$?
 
   if [ $status -eq 0 ]; then
@@ -151,11 +151,11 @@ function get_backup_storages() {
     split($0, a, ":")
     type = a[1]
     name = a[2]
-    sub(/^ +/, "", name)
+    gsub(/^[ \t]+|[ \t]+$/, "", name)
     has_content = 0
     has_backup = 0
 }
-/^ +content/ {
+/^[ \t]*content/ {
     has_content = 1
     if ($0 ~ /backup/) has_backup = 1
 }
