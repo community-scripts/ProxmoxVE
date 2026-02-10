@@ -403,6 +403,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-10
 
+### 🗑️ Deleted Scripts
+
+  - paperless-exporter ([#11737](https://github.com/community-scripts/ProxmoxVE/pull/11737))
+
 ## 2026-02-09
 
 ### 🚀 Updated Scripts
