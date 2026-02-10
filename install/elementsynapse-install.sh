@@ -31,8 +31,10 @@ setup_deb822_repo "matrix-org" \
   "main"
 echo "matrix-synapse-py3 matrix-synapse/server-name string $servername" | debconf-set-selections
 echo "matrix-synapse-py3 matrix-synapse/report-stats boolean false" | debconf-set-selections
+echo "exit 101" >/usr/sbin/policy-rc.d
+chmod +x /usr/sbin/policy-rc.d
 $STD apt install matrix-synapse-py3 -y
-systemctl stop matrix-synapse
+rm -f /usr/sbin/policy-rc.d
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
 sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
 SECRET=$(openssl rand -hex 32)
