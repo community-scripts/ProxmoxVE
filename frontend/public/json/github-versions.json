@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-10T00:25:58Z",
+  "generated": "2026-02-10T06:27:22Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -270,9 +270,9 @@
     {
       "slug": "docmost",
       "repo": "docmost/docmost",
-      "version": "v0.25.2",
+      "version": "v0.25.3",
       "pinned": false,
-      "date": "2026-02-06T19:50:55Z"
+      "date": "2026-02-10T02:58:23Z"
     },
     {
       "slug": "domain-locker",
@@ -557,9 +557,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1074",
+      "version": "v0.24.1089",
       "pinned": false,
-      "date": "2026-02-09T06:01:19Z"
+      "date": "2026-02-10T05:55:59Z"
     },
     {
       "slug": "joplin-server",
@@ -1607,9 +1607,9 @@
     {
       "slug": "wishlist",
       "repo": "cmintey/wishlist",
-      "version": "v0.59.0",
+      "version": "v0.60.0",
       "pinned": false,
-      "date": "2026-01-19T16:42:14Z"
+      "date": "2026-02-10T04:05:26Z"
     },
     {
       "slug": "wizarr",
