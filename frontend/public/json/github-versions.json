@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-10T12:19:02Z",
+  "generated": "2026-02-10T18:24:59Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -14,6 +14,13 @@
       "version": "v0.107.71",
       "pinned": false,
       "date": "2025-12-08T14:34:55Z"
+    },
+    {
+      "slug": "adguardhome-sync",
+      "repo": "bakito/adguardhome-sync",
+      "version": "v0.8.2",
+      "pinned": false,
+      "date": "2025-10-24T17:13:47Z"
     },
     {
       "slug": "adventurelog",
@@ -534,6 +541,13 @@
       "date": "2026-02-07T04:44:20Z"
     },
     {
+      "slug": "immich-public-proxy",
+      "repo": "alangrainger/immich-public-proxy",
+      "version": "v1.15.1",
+      "pinned": false,
+      "date": "2026-01-26T08:04:27Z"
+    },
+    {
       "slug": "inspircd",
       "repo": "inspircd/inspircd",
       "version": "v4.9.0",
@@ -560,6 +574,13 @@
       "version": "v0.24.1089",
       "pinned": false,
       "date": "2026-02-10T05:55:59Z"
+    },
+    {
+      "slug": "jellystat",
+      "repo": "CyferShepard/Jellystat",
+      "version": "V1.1.8",
+      "pinned": false,
+      "date": "2026-02-08T08:15:00Z"
     },
     {
       "slug": "joplin-server",
@@ -849,6 +870,13 @@
       "date": "2026-02-03T13:54:26Z"
     },
     {
+      "slug": "nextcloud-exporter",
+      "repo": "xperimental/nextcloud-exporter",
+      "version": "v0.9.0",
+      "pinned": false,
+      "date": "2025-10-12T20:03:10Z"
+    },
+    {
       "slug": "nginx-ui",
       "repo": "0xJacky/nginx-ui",
       "version": "v2.3.2",
@@ -1038,6 +1066,13 @@
       "date": "2025-12-01T05:07:31Z"
     },
     {
+      "slug": "pihole-exporter",
+      "repo": "eko/pihole-exporter",
+      "version": "v1.2.0",
+      "pinned": false,
+      "date": "2025-07-29T19:15:37Z"
+    },
+    {
       "slug": "planka",
       "repo": "plankanban/planka",
       "version": "v2.0.0-rc.4",
@@ -1101,6 +1136,13 @@
       "date": "2025-12-06T13:32:18Z"
     },
     {
+      "slug": "prometheus-paperless-ngx-exporter",
+      "repo": "hansmi/prometheus-paperless-exporter",
+      "version": "v0.0.9",
+      "pinned": false,
+      "date": "2025-12-08T20:37:45Z"
+    },
+    {
       "slug": "prowlarr",
       "repo": "Prowlarr/Prowlarr",
       "version": "v2.3.0.5236",
@@ -1141,6 +1183,13 @@
       "version": "release-5.1.4_v2.0.11",
       "pinned": false,
       "date": "2025-11-19T23:54:34Z"
+    },
+    {
+      "slug": "qbittorrent-exporter",
+      "repo": "martabal/qbittorrent-exporter",
+      "version": "v1.13.2",
+      "pinned": false,
+      "date": "2025-12-13T22:59:03Z"
     },
     {
       "slug": "qdrant",
@@ -1229,9 +1278,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.3",
+      "version": "v0.14.4",
       "pinned": false,
-      "date": "2026-02-04T01:41:01Z"
+      "date": "2026-02-10T03:57:28Z"
     },
     {
       "slug": "scraparr",
@@ -1285,9 +1334,9 @@
     {
       "slug": "snowshare",
       "repo": "TuroYT/snowshare",
-      "version": "v1.3.3",
+      "version": "v1.3.4",
       "pinned": false,
-      "date": "2026-02-09T10:52:12Z"
+      "date": "2026-02-10T14:17:26Z"
     },
     {
       "slug": "sonarr",
@@ -1411,9 +1460,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.12",
+      "version": "v1.4.13",
       "pinned": false,
-      "date": "2026-01-28T23:29:37Z"
+      "date": "2026-02-10T14:14:45Z"
     },
     {
       "slug": "tracktor",
