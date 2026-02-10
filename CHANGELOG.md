@@ -407,6 +407,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - paperless-exporter ([#11737](https://github.com/community-scripts/ProxmoxVE/pull/11737))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Snowshare: fix typo in config file path on website [@BirdMakingStuff](https://github.com/BirdMakingStuff) ([#11754](https://github.com/community-scripts/ProxmoxVE/pull/11754))
+
 ## 2026-02-09
 
 ### 🚀 Updated Scripts
