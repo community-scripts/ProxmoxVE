@@ -89,9 +89,15 @@ jobs:
             slug=$(jq -r '.slug // empty' "$json_file" 2>/dev/null)
             [[ -z "$slug" ]] && continue
 
-            # Find corresponding install script
-            install_script="install/${slug}-install.sh"
-            [[ ! -f "$install_script" ]] && continue
+            # Find corresponding script (install script or addon script)
+            install_script=""
+            if [[ -f "install/${slug}-install.sh" ]]; then
+              install_script="install/${slug}-install.sh"
+            elif [[ -f "tools/addon/${slug}.sh" ]]; then
+              install_script="tools/addon/${slug}.sh"
+            else
+              continue
+            fi
 
             # Look for fetch_and_deploy_gh_release calls
             # Pattern: fetch_and_deploy_gh_release "app" "owner/repo" ["mode"] ["version"]
