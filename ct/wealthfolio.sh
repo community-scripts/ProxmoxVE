@@ -49,7 +49,6 @@ function update_script() {
     msg_ok "Built Frontend"
 
     msg_info "Building Backend (patience)"
-    cd /opt/wealthfolio
     source ~/.cargo/env
     $STD cargo build --release --manifest-path apps/server/Cargo.toml
     cp /opt/wealthfolio/target/release/wealthfolio-server /usr/local/bin/wealthfolio-server
