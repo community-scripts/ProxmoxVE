@@ -407,6 +407,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - paperless-exporter ([#11737](https://github.com/community-scripts/ProxmoxVE/pull/11737))
 
+### 📂 Github
+
+  - Github-Version Workflow: include addon scripts in extraction [@MickLesk](https://github.com/MickLesk) ([#11757](https://github.com/community-scripts/ProxmoxVE/pull/11757))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
