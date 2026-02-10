@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-10
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Element Synapse: prevent systemd invoke failure during apt install [@MickLesk](https://github.com/MickLesk) ([#11758](https://github.com/community-scripts/ProxmoxVE/pull/11758))
+
 ### 🗑️ Deleted Scripts
 
   - paperless-exporter ([#11737](https://github.com/community-scripts/ProxmoxVE/pull/11737))
