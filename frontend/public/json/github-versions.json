@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-11T12:17:23Z",
+  "generated": "2026-02-11T18:22:25Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -242,16 +242,16 @@
     {
       "slug": "cronicle",
       "repo": "jhuckaby/Cronicle",
-      "version": "v0.9.105",
+      "version": "v0.9.106",
       "pinned": false,
-      "date": "2026-02-05T18:16:11Z"
+      "date": "2026-02-11T17:11:46Z"
     },
     {
       "slug": "cryptpad",
       "repo": "cryptpad/cryptpad",
-      "version": "2025.9.0",
+      "version": "2026.2.0",
       "pinned": false,
-      "date": "2025-10-22T10:06:29Z"
+      "date": "2026-02-11T15:39:05Z"
     },
     {
       "slug": "dawarich",
@@ -291,9 +291,9 @@
     {
       "slug": "domain-monitor",
       "repo": "Hosteroid/domain-monitor",
-      "version": "v1.1.2",
+      "version": "v1.1.3",
       "pinned": false,
-      "date": "2026-02-09T06:29:34Z"
+      "date": "2026-02-11T15:48:18Z"
     },
     {
       "slug": "donetick",
@@ -795,9 +795,9 @@
     {
       "slug": "mediamanager",
       "repo": "maxdorninger/MediaManager",
-      "version": "v1.12.2",
+      "version": "v1.12.3",
       "pinned": false,
-      "date": "2026-02-08T19:18:29Z"
+      "date": "2026-02-11T16:45:40Z"
     },
     {
       "slug": "mediamtx",
@@ -1082,9 +1082,9 @@
     {
       "slug": "planka",
       "repo": "plankanban/planka",
-      "version": "v2.0.0-rc.4",
+      "version": "v2.0.0",
       "pinned": false,
-      "date": "2025-09-04T12:41:17Z"
+      "date": "2026-02-11T13:50:10Z"
     },
     {
       "slug": "plant-it",
@@ -1173,9 +1173,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.8",
+      "version": "v5.1.9",
       "pinned": false,
-      "date": "2026-02-10T22:37:58Z"
+      "date": "2026-02-11T15:34:40Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1292,9 +1292,9 @@
     {
       "slug": "scraparr",
       "repo": "thecfu/scraparr",
-      "version": "v3.0.0",
+      "version": "v3.0.1",
       "pinned": false,
-      "date": "2026-02-10T22:30:44Z"
+      "date": "2026-02-11T17:42:23Z"
     },
     {
       "slug": "seelf",
@@ -1488,9 +1488,9 @@
     {
       "slug": "traefik",
       "repo": "traefik/traefik",
-      "version": "v3.6.7",
+      "version": "v3.6.8",
       "pinned": false,
-      "date": "2026-01-14T14:11:45Z"
+      "date": "2026-02-11T16:44:37Z"
     },
     {
       "slug": "trilium",
@@ -1628,9 +1628,9 @@
     {
       "slug": "wavelog",
       "repo": "wavelog/wavelog",
-      "version": "2.2.2",
+      "version": "2.3",
       "pinned": false,
-      "date": "2025-12-31T16:53:34Z"
+      "date": "2026-02-11T15:46:40Z"
     },
     {
       "slug": "wealthfolio",
