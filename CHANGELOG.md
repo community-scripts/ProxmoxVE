@@ -415,6 +415,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - LibreTranslate: Remove Torch [@tremor021](https://github.com/tremor021) ([#11783](https://github.com/community-scripts/ProxmoxVE/pull/11783))
     - Snowshare: fix update script [@TuroYT](https://github.com/TuroYT) ([#11726](https://github.com/community-scripts/ProxmoxVE/pull/11726))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: respect EDITOR variable for config editing [@ls-root](https://github.com/ls-root) ([#11693](https://github.com/community-scripts/ProxmoxVE/pull/11693))
+
 ### 📚 Documentation
 
   - Fix formatting in kutt.json notes section [@tiagodenoronha](https://github.com/tiagodenoronha) ([#11774](https://github.com/community-scripts/ProxmoxVE/pull/11774))
