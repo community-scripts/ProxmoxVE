@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-11
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Snowshare: fix update script [@TuroYT](https://github.com/TuroYT) ([#11726](https://github.com/community-scripts/ProxmoxVE/pull/11726))
+
 ### 📚 Documentation
 
   - Fix formatting in kutt.json notes section [@tiagodenoronha](https://github.com/tiagodenoronha) ([#11774](https://github.com/community-scripts/ProxmoxVE/pull/11774))
