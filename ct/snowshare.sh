@@ -33,11 +33,18 @@ function update_script() {
     systemctl stop snowshare
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
+    msg_info "Backing up uploads"
+    [ -d /opt/snowshare/uploads ] && cp -a /opt/snowshare/uploads /opt/.snowshare_uploads_backup
+    msg_ok "Uploads backed up"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
+
+    msg_info "Restoring uploads"
+    [ -d /opt/.snowshare_uploads_backup ] && rm -rf /opt/snowshare/uploads && cp -a /opt/.snowshare_uploads_backup /opt/snowshare/uploads
+    msg_ok "Uploads restored"
 
     msg_info "Updating Snowshare"
     cd /opt/snowshare
-    $STD rm -rf node_modules src/generated
     $STD npm ci
     $STD npx prisma generate
     $STD npm run build
