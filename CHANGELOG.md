@@ -403,6 +403,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-11
 
+### 📚 Documentation
+
+  - Fix formatting in kutt.json notes section [@tiagodenoronha](https://github.com/tiagodenoronha) ([#11774](https://github.com/community-scripts/ProxmoxVE/pull/11774))
+
 ## 2026-02-10
 
 ### 🚀 Updated Scripts
