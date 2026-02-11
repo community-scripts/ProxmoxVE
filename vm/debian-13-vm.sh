@@ -201,6 +201,17 @@ function exit-script() {
   exit
 }
 
+function select_cloud_init() {
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" \
+    --yesno "Enable Cloud-Init for VM configuration?\n\nCloud-Init allows automatic configuration of:\n- User accounts and passwords\n- SSH keys\n- Network settings (DHCP/Static)\n- DNS configuration\n\nYou can also configure these settings later in Proxmox UI.\n\nNote: Without Cloud-Init, the nocloud image will be used with console auto-login." --defaultno 18 68); then
+    CLOUD_INIT="yes"
+    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}yes${CL}"
+  else
+    CLOUD_INIT="no"
+    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
+  fi
+}
+
 function default_settings() {
   VMID=$(get_valid_nextid)
   FORMAT=",efitype=4m"
@@ -216,7 +227,6 @@ function default_settings() {
   VLAN=""
   MTU=""
   START_VM="yes"
-  CLOUD_INIT="no"
   METHOD="default"
   echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx${CL}"
@@ -230,7 +240,7 @@ function default_settings() {
   echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}${MAC}${CL}"
   echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
   echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
-  echo -e "${CLOUD}${BOLD}${DGN}Configure Cloud-init: ${BGN}no${CL}"
+  select_cloud_init
   echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
   echo -e "${CREATING}${BOLD}${DGN}Creating a Debian 13 VM using the above default settings${CL}"
 }
@@ -400,13 +410,7 @@ function advanced_settings() {
     exit-script
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" --yesno "Configure the VM with Cloud-init?" --defaultno 10 58); then
-    echo -e "${CLOUD}${BOLD}${DGN}Configure Cloud-init: ${BGN}yes${CL}"
-    CLOUD_INIT="yes"
-  else
-    echo -e "${CLOUD}${BOLD}${DGN}Configure Cloud-init: ${BGN}no${CL}"
-    CLOUD_INIT="no"
-  fi
+  select_cloud_init
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
     echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
