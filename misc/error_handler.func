@@ -29,15 +29,18 @@
 #
 # - Maps numeric exit codes to human-readable error descriptions
 # - Supports:
-#   * Generic/Shell errors (1, 2, 126, 127, 128, 130, 137, 139, 143)
-#   * Package manager errors (APT, DPKG: 100, 101, 255)
-#   * Node.js/npm errors (243-249, 254)
-#   * Python/pip/uv errors (210-212)
-#   * PostgreSQL errors (231-234)
-#   * MySQL/MariaDB errors (241-244)
-#   * MongoDB errors (251-254)
+#   * Generic/Shell errors (1, 2, 124, 126-130, 134, 137, 139, 141, 143)
+#   * curl/wget errors (6, 7, 22, 28, 35)
+#   * Package manager errors (APT, DPKG: 100-102, 255)
+#   * Systemd/Service errors (150-154)
+#   * Python/pip/uv errors (160-162)
+#   * PostgreSQL errors (170-173)
+#   * MySQL/MariaDB errors (180-183)
+#   * MongoDB errors (190-193)
 #   * Proxmox custom codes (200-231)
+#   * Node.js/npm errors (243-249)
 # - Returns description string for given exit code
+# - Shared function with api.func for consistency
 # ------------------------------------------------------------------------------
 explain_exit_code() {
   local code="$1"
@@ -45,52 +48,64 @@ explain_exit_code() {
   # --- Generic / Shell ---
   1) echo "General error / Operation not permitted" ;;
   2) echo "Misuse of shell builtins (e.g. syntax error)" ;;
+  6) echo "curl: DNS resolution failed (could not resolve host)" ;;
+  7) echo "curl: Failed to connect (network unreachable / host down)" ;;
+  22) echo "curl: HTTP error returned (404, 429, 500+)" ;;
+  28) echo "curl: Operation timeout (network slow or server not responding)" ;;
+  35) echo "curl: SSL/TLS handshake failed (certificate error)" ;;
+  100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
+  101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
+  102) echo "APT: Lock held by another process (dpkg/apt still running)" ;;
+  124) echo "Command timed out (timeout command)" ;;
   126) echo "Command invoked cannot execute (permission problem?)" ;;
   127) echo "Command not found" ;;
   128) echo "Invalid argument to exit" ;;
   130) echo "Terminated by Ctrl+C (SIGINT)" ;;
+  134) echo "Process aborted (SIGABRT - possibly Node.js heap overflow)" ;;
   137) echo "Killed (SIGKILL / Out of memory?)" ;;
   139) echo "Segmentation fault (core dumped)" ;;
+  141) echo "Broken pipe (SIGPIPE - output closed prematurely)" ;;
   143) echo "Terminated (SIGTERM)" ;;
 
-  # --- Package manager / APT / DPKG ---
-  100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
-  101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
-  255) echo "DPKG: Fatal internal error" ;;
+  # --- Systemd / Service errors (150-154) ---
+  150) echo "Systemd: Service failed to start" ;;
+  151) echo "Systemd: Service unit not found" ;;
+  152) echo "Permission denied (EACCES)" ;;
+  153) echo "Build/compile failed (make/gcc/cmake)" ;;
+  154) echo "Node.js: Native addon build failed (node-gyp)" ;;
 
-  # --- Node.js / npm / pnpm / yarn ---
+  # --- Node.js / npm / pnpm / yarn (243-249) ---
   243) echo "Node.js: Out of memory (JavaScript heap out of memory)" ;;
   245) echo "Node.js: Invalid command-line option" ;;
   246) echo "Node.js: Internal JavaScript Parse Error" ;;
   247) echo "Node.js: Fatal internal error" ;;
   248) echo "Node.js: Invalid C++ addon / N-API failure" ;;
-  249) echo "Node.js: Inspector error" ;;
-  254) echo "npm/pnpm/yarn: Unknown fatal error" ;;
+  249) echo "npm/pnpm/yarn: Unknown fatal error" ;;
 
-  # --- Python / pip / uv ---
-  210) echo "Python: Virtualenv / uv environment missing or broken" ;;
-  211) echo "Python: Dependency resolution failed" ;;
-  212) echo "Python: Installation aborted (permissions or EXTERNALLY-MANAGED)" ;;
+  # --- Python / pip / uv (160-162) ---
+  160) echo "Python: Virtualenv / uv environment missing or broken" ;;
+  161) echo "Python: Dependency resolution failed" ;;
+  162) echo "Python: Installation aborted (permissions or EXTERNALLY-MANAGED)" ;;
 
-  # --- PostgreSQL ---
-  231) echo "PostgreSQL: Connection failed (server not running / wrong socket)" ;;
-  232) echo "PostgreSQL: Authentication failed (bad user/password)" ;;
-  233) echo "PostgreSQL: Database does not exist" ;;
-  234) echo "PostgreSQL: Fatal error in query / syntax" ;;
+  # --- PostgreSQL (170-174) ---
+  170) echo "PostgreSQL: Connection failed (server not running / wrong socket)" ;;
+  171) echo "PostgreSQL: Authentication failed (bad user/password)" ;;
+  172) echo "PostgreSQL: Database does not exist" ;;
+  173) echo "PostgreSQL: Fatal error in query / syntax" ;;
 
-  # --- MySQL / MariaDB ---
-  241) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
-  242) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
-  243) echo "MySQL/MariaDB: Database does not exist" ;;
-  244) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
+  # --- MySQL / MariaDB (180-183) ---
+  180) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
+  181) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
+  182) echo "MySQL/MariaDB: Database does not exist" ;;
+  183) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
 
-  # --- MongoDB ---
-  251) echo "MongoDB: Connection failed (server not running)" ;;
-  252) echo "MongoDB: Authentication failed (bad user/password)" ;;
-  253) echo "MongoDB: Database not found" ;;
-  254) echo "MongoDB: Fatal query error" ;;
+  # --- MongoDB (190-193) ---
+  190) echo "MongoDB: Connection failed (server not running)" ;;
+  191) echo "MongoDB: Authentication failed (bad user/password)" ;;
+  192) echo "MongoDB: Database not found" ;;
+  193) echo "MongoDB: Fatal query error" ;;
 
-  # --- Proxmox Custom Codes ---
+  # --- Proxmox Custom Codes (200-231) ---
   200) echo "Proxmox: Failed to create lock file" ;;
   203) echo "Proxmox: Missing CTID variable" ;;
   204) echo "Proxmox: Missing PCT_OSTYPE variable" ;;
@@ -107,15 +122,18 @@ explain_exit_code() {
   215) echo "Proxmox: Container created but not listed (ghost state)" ;;
   216) echo "Proxmox: RootFS entry missing in config" ;;
   217) echo "Proxmox: Storage not accessible" ;;
-  219) echo "Proxmox: CephFS does not support containers - use RBD" ;;
-  224) echo "Proxmox: PBS storage is for backups only" ;;
   218) echo "Proxmox: Template file corrupted or incomplete" ;;
+  219) echo "Proxmox: CephFS does not support containers - use RBD" ;;
   220) echo "Proxmox: Unable to resolve template path" ;;
   221) echo "Proxmox: Template file not readable" ;;
   222) echo "Proxmox: Template download failed" ;;
   223) echo "Proxmox: Template not available after download" ;;
+  224) echo "Proxmox: PBS storage is for backups only" ;;
   225) echo "Proxmox: No template available for OS/Version" ;;
   231) echo "Proxmox: LXC stack upgrade failed" ;;
+
+  # --- DPKG ---
+  255) echo "DPKG: Fatal internal error" ;;
 
   # --- Default ---
   *) echo "Unknown error" ;;

@@ -4083,30 +4083,127 @@ EOF'
 
     # Prompt user for cleanup with 60s timeout (plain echo - no msg_info to avoid spinner)
     echo ""
-    echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+    
+    # Detect error type for smart recovery options
+    local is_oom=false
+    local error_explanation=""
+    if declare -f explain_exit_code >/dev/null 2>&1; then
+      error_explanation="$(explain_exit_code "$install_exit_code")"
+    fi
+    
+    # OOM detection: exit codes 134 (SIGABRT/heap), 137 (SIGKILL/OOM), 243 (Node.js heap)
+    if [[ $install_exit_code -eq 134 || $install_exit_code -eq 137 || $install_exit_code -eq 243 ]]; then
+      is_oom=true
+    fi
+    
+    # Show error explanation if available
+    if [[ -n "$error_explanation" ]]; then
+      echo -e "${TAB}${RD}Error: ${error_explanation}${CL}"
+      echo ""
+    fi
+    
+    # Build recovery menu based on error type
+    echo -e "${YW}What would you like to do?${CL}"
+    echo ""
+    echo -e "  ${GN}1)${CL} Remove container and exit"
+    echo -e "  ${GN}2)${CL} Keep container for debugging"
+    echo -e "  ${GN}3)${CL} Retry with verbose mode"
+    if [[ "$is_oom" == true ]]; then
+      local new_ram=$((RAM_SIZE * 3 / 2))
+      local new_cpu=$((CORE_COUNT + 1))
+      echo -e "  ${GN}4)${CL} Retry with more resources (RAM: ${RAM_SIZE}→${new_ram} MiB, CPU: ${CORE_COUNT}→${new_cpu} cores)"
+    fi
+    echo ""
+    echo -en "${YW}Select option [1-$([[ "$is_oom" == true ]] && echo "4" || echo "3")] (default: 1, auto-remove in 60s): ${CL}"
 
     if read -t 60 -r response; then
-      if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
-        # Remove container
-        echo -e "\n${TAB}${HOLD}${YW}Removing container ${CTID}${CL}"
-        pct stop "$CTID" &>/dev/null || true
-        pct destroy "$CTID" &>/dev/null || true
-        echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
-      elif [[ "$response" =~ ^[Nn]$ ]]; then
-        echo -e "\n${TAB}${YW}Container ${CTID} kept for debugging${CL}"
-
-        # Dev mode: Setup MOTD/SSH for debugging access to broken container
-        if [[ "${DEV_MODE_MOTD:-false}" == "true" ]]; then
-          echo -e "${TAB}${HOLD}${DGN}Setting up MOTD and SSH for debugging...${CL}"
-          if pct exec "$CTID" -- bash -c "
-            source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)
-            declare -f motd_ssh >/dev/null 2>&1 && motd_ssh || true
-          " >/dev/null 2>&1; then
-            local ct_ip=$(pct exec "$CTID" ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
-            echo -e "${BFR}${CM}${GN}MOTD/SSH ready - SSH into container: ssh root@${ct_ip}${CL}"
+      case "${response:-1}" in
+        1)
+          # Remove container
+          echo -e "\n${TAB}${HOLD}${YW}Removing container ${CTID}${CL}"
+          pct stop "$CTID" &>/dev/null || true
+          pct destroy "$CTID" &>/dev/null || true
+          echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
+          ;;
+        2)
+          echo -e "\n${TAB}${YW}Container ${CTID} kept for debugging${CL}"
+          # Dev mode: Setup MOTD/SSH for debugging access to broken container
+          if [[ "${DEV_MODE_MOTD:-false}" == "true" ]]; then
+            echo -e "${TAB}${HOLD}${DGN}Setting up MOTD and SSH for debugging...${CL}"
+            if pct exec "$CTID" -- bash -c "
+              source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)
+              declare -f motd_ssh >/dev/null 2>&1 && motd_ssh || true
+            " >/dev/null 2>&1; then
+              local ct_ip=$(pct exec "$CTID" ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
+              echo -e "${BFR}${CM}${GN}MOTD/SSH ready - SSH into container: ssh root@${ct_ip}${CL}"
+            fi
           fi
-        fi
-      fi
+          exit $install_exit_code
+          ;;
+        3)
+          # Retry with verbose mode
+          echo -e "\n${TAB}${HOLD}${YW}Removing container ${CTID} for rebuild...${CL}"
+          pct stop "$CTID" &>/dev/null || true
+          pct destroy "$CTID" &>/dev/null || true
+          echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
+          echo ""
+          # Get new container ID
+          local old_ctid="$CTID"
+          export CTID=$(get_valid_container_id "$CTID")
+          export VERBOSE="yes"
+          export var_verbose="yes"
+          
+          # Show rebuild summary
+          echo -e "${YW}Rebuilding with preserved settings:${CL}"
+          echo -e "  Container ID: ${old_ctid} → ${CTID}"
+          echo -e "  RAM: ${RAM_SIZE} MiB | CPU: ${CORE_COUNT} cores | Disk: ${DISK_SIZE} GB"
+          echo -e "  Network: ${NET:-dhcp} | Bridge: ${BRG:-vmbr0}"
+          echo -e "  Verbose: ${GN}enabled${CL}"
+          echo ""
+          msg_info "Restarting installation..."
+          # Re-run build_container
+          build_container
+          return $?
+          ;;
+        4)
+          if [[ "$is_oom" == true ]]; then
+            # Retry with more resources
+            echo -e "\n${TAB}${HOLD}${YW}Removing container ${CTID} for rebuild with more resources...${CL}"
+            pct stop "$CTID" &>/dev/null || true
+            pct destroy "$CTID" &>/dev/null || true
+            echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
+            echo ""
+            # Get new container ID and increase resources
+            local old_ctid="$CTID"
+            local old_ram="$RAM_SIZE"
+            local old_cpu="$CORE_COUNT"
+            export CTID=$(get_valid_container_id "$CTID")
+            export RAM_SIZE=$((RAM_SIZE * 3 / 2))
+            export CORE_COUNT=$((CORE_COUNT + 1))
+            export var_ram="$RAM_SIZE"
+            export var_cpu="$CORE_COUNT"
+            
+            # Show rebuild summary
+            echo -e "${YW}Rebuilding with increased resources:${CL}"
+            echo -e "  Container ID: ${old_ctid} → ${CTID}"
+            echo -e "  RAM: ${old_ram} → ${GN}${RAM_SIZE}${CL} MiB (+50%)"
+            echo -e "  CPU: ${old_cpu} → ${GN}${CORE_COUNT}${CL} cores (+1)"
+            echo -e "  Disk: ${DISK_SIZE} GB | Network: ${NET:-dhcp} | Bridge: ${BRG:-vmbr0}"
+            echo ""
+            msg_info "Restarting installation..."
+            # Re-run build_container
+            build_container
+            return $?
+          else
+            echo -e "\n${TAB}${YW}Invalid option. Container ${CTID} kept.${CL}"
+            exit $install_exit_code
+          fi
+          ;;
+        *)
+          echo -e "\n${TAB}${YW}Invalid option. Container ${CTID} kept.${CL}"
+          exit $install_exit_code
+          ;;
+      esac
     else
       # Timeout - auto-remove
       echo -e "\n${YW}No response - auto-removing container${CL}"
