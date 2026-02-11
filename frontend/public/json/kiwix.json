@@ -1,0 +1,41 @@
+{
+  "name": "Kiwix",
+  "slug": "kiwix",
+  "categories": [
+    0
+  ],
+  "date_created": "2026-02-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://wiki.kiwix.org",
+  "config_path": "",
+  "website": "https://www.kiwix.org",
+  "logo": "https://kiwix.org/wp-content/uploads/2023/08/Kiwix-horizontal-logo-1.svg",
+  "description": "Kiwix serves offline Wikipedia, Project Gutenberg, documentation, and more.",
+  "disable": false,
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/kiwix.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "This container requires a bind-mounted directory containing ZIM archive files. You will be prompted for the path during installation. Download ZIM archives from https://library.kiwix.org or https://download.kiwix.org/zim/",
+      "type": "info"
+    }
+  ]
+}
