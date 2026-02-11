@@ -403,6 +403,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-11
 
+### 🆕 New Scripts
+
+  - Draw.io ([#11788](https://github.com/community-scripts/ProxmoxVE/pull/11788))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
