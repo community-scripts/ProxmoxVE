@@ -417,6 +417,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - LibreTranslate: Remove Torch [@tremor021](https://github.com/tremor021) ([#11783](https://github.com/community-scripts/ProxmoxVE/pull/11783))
     - Snowshare: fix update script [@TuroYT](https://github.com/TuroYT) ([#11726](https://github.com/community-scripts/ProxmoxVE/pull/11726))
 
+  - #### ✨ New Features
+
+    - [Feature] OpenCloud: support PosixFS Collaborative Mode [@vhsdream](https://github.com/vhsdream) ([#11806](https://github.com/community-scripts/ProxmoxVE/pull/11806))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
