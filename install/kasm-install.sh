@@ -20,10 +20,19 @@ msg_ok "Installed Docker"
 msg_info "Detecting latest Kasm Workspaces release"
 KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' | head -n 1)
 if [[ -z "$KASM_URL" ]]; then
+  SERVICE_IMAGE_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_service_images_amd64_[0-9]+\.[0-9]+\.[0-9]+\.tar\.gz' | head -n 1)
+  if [[ -n "$SERVICE_IMAGE_URL" ]]; then
+    KASM_VERSION=$(echo "$SERVICE_IMAGE_URL" | sed -E 's/.*kasm_release_service_images_amd64_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+    KASM_URL="https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
+  fi
+else
+  KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+fi
+
+if [[ -z "$KASM_URL" ]] || [[ -z "$KASM_VERSION" ]]; then
   msg_error "Unable to detect latest Kasm release URL."
   exit 1
 fi
-KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 msg_ok "Detected Kasm Workspaces version $KASM_VERSION"
 
 msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
