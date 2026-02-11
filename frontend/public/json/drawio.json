@@ -1,0 +1,35 @@
+{
+  "name": "Draw.IO",
+  "slug": "drawio",
+  "categories": [
+    12
+  ],
+  "date_created": "2026-01-29",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://www.drawio.com/doc/",
+  "website": "https://www.drawio.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/draw-io.webp",
+  "config_path": "",
+  "description": "draw.io is a configurable diagramming and whiteboarding application, jointly owned and developed by draw.io Ltd (previously named JGraph) and draw.io AG.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/drawio.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
