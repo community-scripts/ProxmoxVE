@@ -38,9 +38,7 @@ function update_script() {
     msg_info "Updating packages"
     $STD apt-get update
     $STD apt-get dist-upgrade -y
-    if ! command -v inotifywait &>/dev/null; then
-      $STD apt install -y inotify-tools
-    fi
+    ensure_dependencies "inotify-tools"
     msg_ok "Updated packages"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-amd64"
