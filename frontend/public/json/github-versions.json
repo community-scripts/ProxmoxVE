@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-10T18:24:59Z",
+  "generated": "2026-02-11T00:26:07Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -207,9 +207,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.12.3",
+      "version": "v0.13.0",
       "pinned": false,
-      "date": "2026-02-05T07:04:07Z"
+      "date": "2026-02-10T20:27:38Z"
     },
     {
       "slug": "commafeed",
@@ -270,9 +270,9 @@
     {
       "slug": "dispatcharr",
       "repo": "Dispatcharr/Dispatcharr",
-      "version": "v0.18.1",
+      "version": "v0.19.0",
       "pinned": false,
-      "date": "2026-01-27T17:09:11Z"
+      "date": "2026-02-10T21:18:10Z"
     },
     {
       "slug": "docmost",
@@ -704,9 +704,9 @@
     {
       "slug": "libretranslate",
       "repo": "LibreTranslate/LibreTranslate",
-      "version": "v1.8.4",
+      "version": "v1.9.0",
       "pinned": false,
-      "date": "2026-02-02T17:45:16Z"
+      "date": "2026-02-10T19:05:48Z"
     },
     {
       "slug": "lidarr",
@@ -739,9 +739,9 @@
     {
       "slug": "lubelogger",
       "repo": "hargata/lubelog",
-      "version": "v1.5.9",
+      "version": "v1.6.0",
       "pinned": false,
-      "date": "2026-02-09T17:36:13Z"
+      "date": "2026-02-10T20:16:32Z"
     },
     {
       "slug": "mafl",
@@ -858,9 +858,9 @@
     {
       "slug": "navidrome",
       "repo": "navidrome/navidrome",
-      "version": "v0.60.2",
+      "version": "v0.60.3",
       "pinned": false,
-      "date": "2026-02-07T19:42:33Z"
+      "date": "2026-02-10T23:55:04Z"
     },
     {
       "slug": "netbox",
@@ -1166,9 +1166,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.7",
+      "version": "v5.1.8",
       "pinned": false,
-      "date": "2026-02-10T09:59:55Z"
+      "date": "2026-02-10T22:37:58Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1285,9 +1285,9 @@
     {
       "slug": "scraparr",
       "repo": "thecfu/scraparr",
-      "version": "v2.2.5",
+      "version": "v3.0.0",
       "pinned": false,
-      "date": "2025-10-07T12:34:31Z"
+      "date": "2026-02-10T22:30:44Z"
     },
     {
       "slug": "seelf",
@@ -1323,6 +1323,13 @@
       "version": "2.4.1",
       "pinned": false,
       "date": "2026-01-16T12:08:28Z"
+    },
+    {
+      "slug": "slskd",
+      "repo": "slskd/slskd",
+      "version": "0.24.3",
+      "pinned": false,
+      "date": "2026-01-15T14:40:15Z"
     },
     {
       "slug": "snipeit",
@@ -1460,9 +1467,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.13",
+      "version": "v1.4.16",
       "pinned": false,
-      "date": "2026-02-10T14:14:45Z"
+      "date": "2026-02-10T20:55:35Z"
     },
     {
       "slug": "tracktor",
@@ -1488,9 +1495,9 @@
     {
       "slug": "trip",
       "repo": "itskovacs/TRIP",
-      "version": "1.39.0",
+      "version": "1.40.0",
       "pinned": false,
-      "date": "2026-02-07T16:59:51Z"
+      "date": "2026-02-10T20:12:53Z"
     },
     {
       "slug": "tududi",
@@ -1551,9 +1558,9 @@
     {
       "slug": "vaultwarden",
       "repo": "dani-garcia/vaultwarden",
-      "version": "1.35.2",
+      "version": "1.35.3",
       "pinned": false,
-      "date": "2026-01-09T18:37:04Z"
+      "date": "2026-02-10T20:37:03Z"
     },
     {
       "slug": "victoriametrics",
@@ -1579,9 +1586,9 @@
     {
       "slug": "wallos",
       "repo": "ellite/Wallos",
-      "version": "v4.6.0",
+      "version": "v4.6.1",
       "pinned": false,
-      "date": "2025-12-20T15:57:51Z"
+      "date": "2026-02-10T21:06:46Z"
     },
     {
       "slug": "wanderer",
