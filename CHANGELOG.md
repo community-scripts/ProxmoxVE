@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - LibreTranslate: Remove Torch [@tremor021](https://github.com/tremor021) ([#11783](https://github.com/community-scripts/ProxmoxVE/pull/11783))
     - Snowshare: fix update script [@TuroYT](https://github.com/TuroYT) ([#11726](https://github.com/community-scripts/ProxmoxVE/pull/11726))
 
 ### 📚 Documentation
