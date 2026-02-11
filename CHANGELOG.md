@@ -411,6 +411,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - dispatcharr: include port 9191 in success-message [@MickLesk](https://github.com/MickLesk) ([#11808](https://github.com/community-scripts/ProxmoxVE/pull/11808))
     - fix: make donetick 0.1.71 compatible [@tomfrenzel](https://github.com/tomfrenzel) ([#11804](https://github.com/community-scripts/ProxmoxVE/pull/11804))
     - Kasm: Support new version URL format without hash suffix [@MickLesk](https://github.com/MickLesk) ([#11787](https://github.com/community-scripts/ProxmoxVE/pull/11787))
     - LibreTranslate: Remove Torch [@tremor021](https://github.com/tremor021) ([#11783](https://github.com/community-scripts/ProxmoxVE/pull/11783))
