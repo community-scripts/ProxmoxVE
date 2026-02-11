@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-11T06:25:53Z",
+  "generated": "2026-02-11T12:17:23Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -284,9 +284,9 @@
     {
       "slug": "domain-locker",
       "repo": "Lissy93/domain-locker",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "pinned": false,
-      "date": "2025-11-14T22:08:23Z"
+      "date": "2026-02-11T10:03:32Z"
     },
     {
       "slug": "domain-monitor",
@@ -301,6 +301,13 @@
       "version": "v0.1.71",
       "pinned": false,
       "date": "2026-02-11T06:01:13Z"
+    },
+    {
+      "slug": "drawio",
+      "repo": "jgraph/drawio",
+      "version": "v29.3.6",
+      "pinned": false,
+      "date": "2026-01-28T18:25:02Z"
     },
     {
       "slug": "duplicati",
@@ -1341,9 +1348,9 @@
     {
       "slug": "snowshare",
       "repo": "TuroYT/snowshare",
-      "version": "v1.3.4",
+      "version": "v1.3.5",
       "pinned": false,
-      "date": "2026-02-10T14:17:26Z"
+      "date": "2026-02-11T10:24:51Z"
     },
     {
       "slug": "sonarr",
