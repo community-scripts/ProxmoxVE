@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-11T00:26:07Z",
+  "generated": "2026-02-11T06:25:53Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -298,9 +298,9 @@
     {
       "slug": "donetick",
       "repo": "donetick/donetick",
-      "version": "v0.1.64",
+      "version": "v0.1.71",
       "pinned": false,
-      "date": "2025-10-03T05:18:24Z"
+      "date": "2026-02-11T06:01:13Z"
     },
     {
       "slug": "duplicati",
@@ -326,9 +326,9 @@
     {
       "slug": "endurain",
       "repo": "endurain-project/endurain",
-      "version": "v0.17.3",
+      "version": "v0.17.4",
       "pinned": false,
-      "date": "2026-01-23T22:02:05Z"
+      "date": "2026-02-11T04:54:22Z"
     },
     {
       "slug": "ersatztv",
@@ -571,9 +571,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1089",
+      "version": "v0.24.1094",
       "pinned": false,
-      "date": "2026-02-10T05:55:59Z"
+      "date": "2026-02-11T06:01:16Z"
     },
     {
       "slug": "jellystat",
@@ -760,9 +760,9 @@
     {
       "slug": "mail-archiver",
       "repo": "s1t5/mail-archiver",
-      "version": "2601.3",
+      "version": "2602.1",
       "pinned": false,
-      "date": "2026-01-25T12:52:24Z"
+      "date": "2026-02-11T06:23:11Z"
     },
     {
       "slug": "managemydamnlife",
@@ -1467,9 +1467,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.16",
+      "version": "v1.4.17",
       "pinned": false,
-      "date": "2026-02-10T20:55:35Z"
+      "date": "2026-02-11T01:33:21Z"
     },
     {
       "slug": "tracktor",
@@ -1698,9 +1698,9 @@
     {
       "slug": "zipline",
       "repo": "diced/zipline",
-      "version": "v4.4.1",
+      "version": "v4.4.2",
       "pinned": false,
-      "date": "2026-01-20T01:29:01Z"
+      "date": "2026-02-11T04:58:54Z"
     },
     {
       "slug": "zitadel",
