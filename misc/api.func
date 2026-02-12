@@ -353,6 +353,9 @@ detect_ram() {
 # - Never blocks or fails script execution
 # ------------------------------------------------------------------------------
 post_to_api() {
+  # Prevent duplicate submissions (post_to_api is called from multiple places)
+  [[ "${POST_TO_API_DONE:-}" == "true" ]] && return 0
+
   # Silent fail - telemetry should never break scripts
   command -v curl &>/dev/null || {
     [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] curl not found, skipping" >&2
@@ -440,6 +443,8 @@ EOF
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD" &>/dev/null || true
   fi
+
+  POST_TO_API_DONE=true
 }
 
 # ------------------------------------------------------------------------------
