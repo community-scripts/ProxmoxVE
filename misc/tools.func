@@ -1294,11 +1294,31 @@ setup_deb822_repo() {
     return 1
   }
 
-  # Import GPG
-  curl -fsSL "$gpg_url" | gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" || {
-    msg_error "Failed to import GPG key for ${name}"
+  # Import GPG key (auto-detect binary vs ASCII-armored format)
+  local tmp_gpg
+  tmp_gpg=$(mktemp) || return 1
+  curl -fsSL "$gpg_url" -o "$tmp_gpg" || {
+    msg_error "Failed to download GPG key for ${name}"
+    rm -f "$tmp_gpg"
     return 1
   }
+
+  if file "$tmp_gpg" | grep -qi 'PGP\|GPG\|public key'; then
+    # Already in binary GPG format — copy directly
+    cp "$tmp_gpg" "/etc/apt/keyrings/${name}.gpg" || {
+      msg_error "Failed to install GPG key for ${name}"
+      rm -f "$tmp_gpg"
+      return 1
+    }
+  else
+    # ASCII-armored — dearmor to binary
+    gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" < "$tmp_gpg" || {
+      msg_error "Failed to dearmor GPG key for ${name}"
+      rm -f "$tmp_gpg"
+      return 1
+    }
+  fi
+  rm -f "$tmp_gpg"
 
   # Write deb822
   {
