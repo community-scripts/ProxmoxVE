@@ -70,7 +70,7 @@ function error_handler() {
   local line_number="$1"
   local command="$2"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
-  post_update_to_api "failed" "${command}"
+  post_update_to_api "failed" "${exit_code}"
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
@@ -203,7 +203,6 @@ function exit-script() {
 
 function default_settings() {
   VMID=$(get_valid_nextid)
-  FORMAT=",efitype=4m"
   MACHINE=""
   DISK_SIZE="4G"
   DISK_CACHE=""
@@ -259,11 +258,9 @@ function advanced_settings() {
     3>&1 1>&2 2>&3); then
     if [ "$MACH" = q35 ]; then
       echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
-      FORMAT=""
       MACHINE=" -machine q35"
     else
       echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
-      FORMAT=",efitype=4m"
       MACHINE=""
     fi
   else
@@ -476,31 +473,45 @@ case $STORAGE_TYPE in
 nfs | dir | cifs)
   DISK_EXT=".qcow2"
   DISK_REF="$VMID/"
-  DISK_IMPORT="-format qcow2"
+  DISK_IMPORT="--format qcow2"
   THIN=""
   ;;
 btrfs)
   DISK_EXT=".raw"
   DISK_REF="$VMID/"
-  DISK_IMPORT="-format raw"
-  FORMAT=",efitype=4m"
+  DISK_IMPORT="--format raw"
   THIN=""
   ;;
+*)
+  DISK_EXT=""
+  DISK_REF=""
+  DISK_IMPORT="--format raw"
+  ;;
 esac
-for i in {0,1}; do
-  disk="DISK$i"
-  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}"${DISK_EXT:-}
-  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}"${!disk}
-done
 
 msg_info "Creating a Arch Linux VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
-pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
-qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
+
+if qm disk import --help >/dev/null 2>&1; then
+  IMPORT_CMD=(qm disk import)
+else
+  IMPORT_CMD=(qm importdisk)
+fi
+
+IMPORT_OUT="$("${IMPORT_CMD[@]}" "$VMID" "${FILE}" "$STORAGE" ${DISK_IMPORT:-} 2>&1 || true)"
+DISK_REF_IMPORTED="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk '\([^']\+\)'.*/\1/p" | tr -d "\r\"'")"
+[[ -z "$DISK_REF_IMPORTED" ]] && DISK_REF_IMPORTED="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
+[[ -z "$DISK_REF_IMPORTED" ]] && {
+  msg_error "Unable to determine imported disk reference."
+  echo "$IMPORT_OUT"
+  exit 1
+}
+msg_ok "Imported disk (${CL}${BL}${DISK_REF_IMPORTED}${CL})"
+
 qm set $VMID \
-  -efidisk0 ${DISK0_REF}${FORMAT} \
-  -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
+  -efidisk0 ${STORAGE}:0,efitype=4m \
+  -scsi0 ${DISK_REF_IMPORTED},${DISK_CACHE}${THIN%,} \
   -ide2 ${STORAGE}:cloudinit \
   -boot order=scsi0 \
   -serial0 socket >/dev/null
