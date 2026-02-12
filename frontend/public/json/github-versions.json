@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-11T18:22:25Z",
+  "generated": "2026-02-12T00:20:52Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -571,9 +571,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.55",
+      "version": "v5.12.57",
       "pinned": false,
-      "date": "2026-02-05T01:06:15Z"
+      "date": "2026-02-11T23:08:56Z"
     },
     {
       "slug": "jackett",
@@ -1131,9 +1131,9 @@
     {
       "slug": "prometheus-alertmanager",
       "repo": "prometheus/alertmanager",
-      "version": "v0.31.0",
+      "version": "v0.31.1",
       "pinned": false,
-      "date": "2026-02-02T13:34:15Z"
+      "date": "2026-02-11T21:28:26Z"
     },
     {
       "slug": "prometheus-blackbox-exporter",
