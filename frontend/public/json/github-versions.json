@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-12T12:15:15Z",
+  "generated": "2026-02-12T18:20:58Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -571,9 +571,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.57",
+      "version": "v5.12.58",
       "pinned": false,
-      "date": "2026-02-11T23:08:56Z"
+      "date": "2026-02-12T13:30:15Z"
     },
     {
       "slug": "jackett",
@@ -1026,9 +1026,9 @@
     {
       "slug": "patchmon",
       "repo": "PatchMon/PatchMon",
-      "version": "v1.3.7",
+      "version": "v1.4.0",
       "pinned": false,
-      "date": "2025-12-25T11:08:14Z"
+      "date": "2026-02-12T18:00:17Z"
     },
     {
       "slug": "paymenter",
@@ -1292,9 +1292,9 @@
     {
       "slug": "scraparr",
       "repo": "thecfu/scraparr",
-      "version": "v3.0.1",
+      "version": "v3.0.3",
       "pinned": false,
-      "date": "2026-02-11T17:42:23Z"
+      "date": "2026-02-12T14:20:56Z"
     },
     {
       "slug": "seelf",
@@ -1460,9 +1460,9 @@
     {
       "slug": "tianji",
       "repo": "msgbyte/tianji",
-      "version": "v1.31.10",
+      "version": "v1.31.11",
       "pinned": false,
-      "date": "2026-02-04T17:21:04Z"
+      "date": "2026-02-12T14:55:56Z"
     },
     {
       "slug": "traccar",
