@@ -115,7 +115,8 @@ fi
 if ! command -v curl &>/dev/null; then
   echo "[INFO] curl not found, installing..."
   apt-get update -qq
-  apt-get install -y curl >/dev/null
+ apt update -qq
+ apt install -y curl >/dev/null
 fi
 
 # Ensure keyrings directory exists
