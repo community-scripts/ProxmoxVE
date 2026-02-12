@@ -1,13 +1,13 @@
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: michelroegl-brunner
+# Author: michelroegl-brunner | MickLesk
 # License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
 
 # ==============================================================================
 # API.FUNC - TELEMETRY & DIAGNOSTICS API
 # ==============================================================================
 #
-# Provides functions for sending anonymous telemetry data to Community-Scripts
-# API for analytics and diagnostics purposes.
+# Provides functions for sending anonymous telemetry data via the community
+# telemetry ingest service at telemetry.community-scripts.org.
 #
 # Features:
 #   - Container/VM creation statistics
@@ -17,15 +17,94 @@
 #
 # Usage:
 #   source <(curl -fsSL .../api.func)
-#   post_to_api          # Report container creation
+#   post_to_api          # Report LXC container creation
+#   post_to_api_vm       # Report VM creation
 #   post_update_to_api   # Report installation status
 #
 # Privacy:
 #   - Only anonymous statistics (no personal data)
-#   - User can opt-out via diagnostics settings
+#   - User can opt-out via DIAGNOSTICS=no
 #   - Random UUID for session tracking only
+#   - Data retention: 30 days
 #
 # ==============================================================================
+
+# ==============================================================================
+# Telemetry Configuration
+# ==============================================================================
+TELEMETRY_URL="https://telemetry.community-scripts.org/telemetry"
+
+# Timeout for telemetry requests (seconds)
+TELEMETRY_TIMEOUT=5
+
+# ==============================================================================
+# SECTION 0: REPOSITORY SOURCE DETECTION
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# detect_repo_source()
+#
+# - Dynamically detects which GitHub/Gitea repo the scripts were loaded from
+# - Inspects /proc/$$/cmdline and $0 to find the source URL
+# - Maps detected repo to one of three canonical values:
+#   * "ProxmoxVE"  — official community-scripts/ProxmoxVE (production)
+#   * "ProxmoxVED" — official community-scripts/ProxmoxVED (development)
+#   * "external"   — any fork or unknown source
+# - Fallback: "ProxmoxVED" (CI sed transforms ProxmoxVED → ProxmoxVE on promotion)
+# - Sets and exports REPO_SOURCE global variable
+# - Skips detection if REPO_SOURCE is already set (e.g., by environment)
+# ------------------------------------------------------------------------------
+detect_repo_source() {
+  # Allow explicit override via environment
+  [[ -n "${REPO_SOURCE:-}" ]] && return 0
+
+  local content="" owner_repo=""
+
+  # Method 1: Read from /proc/$$/cmdline
+  # When invoked via: bash -c "$(curl -fsSL https://.../ct/app.sh)"
+  # the full CT/VM script content is in /proc/$$/cmdline (same PID through source chain)
+  if [[ -r /proc/$$/cmdline ]]; then
+    content=$(tr '\0' ' ' </proc/$$/cmdline 2>/dev/null) || true
+  fi
+
+  # Method 2: Read from the original script file (bash ct/app.sh / bash vm/app.sh)
+  if [[ -z "$content" ]] || ! echo "$content" | grep -qE 'githubusercontent\.com|community-scripts\.org' 2>/dev/null; then
+    if [[ -f "$0" ]] && [[ "$0" != *bash* ]]; then
+      content=$(head -10 "$0" 2>/dev/null) || true
+    fi
+  fi
+
+  # Extract owner/repo from URL patterns found in the script content
+  if [[ -n "$content" ]]; then
+    # GitHub raw URL: raw.githubusercontent.com/OWNER/REPO/...
+    owner_repo=$(echo "$content" | grep -oE 'raw\.githubusercontent\.com/[^/]+/[^/]+' | head -1 | sed 's|raw\.githubusercontent\.com/||') || true
+
+    # Gitea URL: git.community-scripts.org/OWNER/REPO/...
+    if [[ -z "$owner_repo" ]]; then
+      owner_repo=$(echo "$content" | grep -oE 'git\.community-scripts\.org/[^/]+/[^/]+' | head -1 | sed 's|git\.community-scripts\.org/||') || true
+    fi
+  fi
+
+  # Map detected owner/repo to canonical repo_source value
+  case "$owner_repo" in
+  community-scripts/ProxmoxVE) REPO_SOURCE="ProxmoxVE" ;;
+  community-scripts/ProxmoxVED) REPO_SOURCE="ProxmoxVED" ;;
+  "")
+    # No URL detected — use hardcoded fallback
+    # CI sed transforms this on promotion: ProxmoxVED → ProxmoxVE
+    REPO_SOURCE="ProxmoxVED"
+    ;;
+  *)
+    # Fork or unknown repo
+    REPO_SOURCE="external"
+    ;;
+  esac
+
+  export REPO_SOURCE
+}
+
+# Run detection immediately when api.func is sourced
+detect_repo_source
 
 # ==============================================================================
 # SECTION 1: ERROR CODE DESCRIPTIONS
@@ -35,17 +114,20 @@
 # explain_exit_code()
 #
 # - Maps numeric exit codes to human-readable error descriptions
+# - Canonical source of truth for ALL exit code mappings
+# - Used by both api.func (telemetry) and error_handler.func (error display)
 # - Supports:
-#   * Generic/Shell errors (1, 2, 126, 127, 128, 130, 137, 139, 143)
-#   * Package manager errors (APT, DPKG: 100, 101, 255)
-#   * Node.js/npm errors (243-249, 254)
-#   * Python/pip/uv errors (210-212)
-#   * PostgreSQL errors (231-234)
-#   * MySQL/MariaDB errors (241-244)
-#   * MongoDB errors (251-254)
+#   * Generic/Shell errors (1, 2, 124, 126-130, 134, 137, 139, 141, 143)
+#   * curl/wget errors (6, 7, 22, 28, 35)
+#   * Package manager errors (APT, DPKG: 100-102, 255)
+#   * Systemd/Service errors (150-154)
+#   * Python/pip/uv errors (160-162)
+#   * PostgreSQL errors (170-173)
+#   * MySQL/MariaDB errors (180-183)
+#   * MongoDB errors (190-193)
 #   * Proxmox custom codes (200-231)
+#   * Node.js/npm errors (243, 245-249)
 # - Returns description string for given exit code
-# - Shared function with error_handler.func for consistency
 # ------------------------------------------------------------------------------
 explain_exit_code() {
   local code="$1"
@@ -53,73 +135,98 @@ explain_exit_code() {
   # --- Generic / Shell ---
   1) echo "General error / Operation not permitted" ;;
   2) echo "Misuse of shell builtins (e.g. syntax error)" ;;
-  126) echo "Command invoked cannot execute (permission problem?)" ;;
-  127) echo "Command not found" ;;
-  128) echo "Invalid argument to exit" ;;
-  130) echo "Terminated by Ctrl+C (SIGINT)" ;;
-  137) echo "Killed (SIGKILL / Out of memory?)" ;;
-  139) echo "Segmentation fault (core dumped)" ;;
-  143) echo "Terminated (SIGTERM)" ;;
+
+  # --- curl / wget errors (commonly seen in downloads) ---
+  6) echo "curl: DNS resolution failed (could not resolve host)" ;;
+  7) echo "curl: Failed to connect (network unreachable / host down)" ;;
+  22) echo "curl: HTTP error returned (404, 429, 500+)" ;;
+  28) echo "curl: Operation timeout (network slow or server not responding)" ;;
+  35) echo "curl: SSL/TLS handshake failed (certificate error)" ;;
 
   # --- Package manager / APT / DPKG ---
   100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
   101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
-  255) echo "DPKG: Fatal internal error" ;;
+  102) echo "APT: Lock held by another process (dpkg/apt still running)" ;;
 
-  # --- Node.js / npm / pnpm / yarn ---
+  # --- Common shell/system errors ---
+  124) echo "Command timed out (timeout command)" ;;
+  126) echo "Command invoked cannot execute (permission problem?)" ;;
+  127) echo "Command not found" ;;
+  128) echo "Invalid argument to exit" ;;
+  130) echo "Terminated by Ctrl+C (SIGINT)" ;;
+  134) echo "Process aborted (SIGABRT - possibly Node.js heap overflow)" ;;
+  137) echo "Killed (SIGKILL / Out of memory?)" ;;
+  139) echo "Segmentation fault (core dumped)" ;;
+  141) echo "Broken pipe (SIGPIPE - output closed prematurely)" ;;
+  143) echo "Terminated (SIGTERM)" ;;
+
+  # --- Systemd / Service errors (150-154) ---
+  150) echo "Systemd: Service failed to start" ;;
+  151) echo "Systemd: Service unit not found" ;;
+  152) echo "Permission denied (EACCES)" ;;
+  153) echo "Build/compile failed (make/gcc/cmake)" ;;
+  154) echo "Node.js: Native addon build failed (node-gyp)" ;;
+
+  # --- Python / pip / uv (160-162) ---
+  160) echo "Python: Virtualenv / uv environment missing or broken" ;;
+  161) echo "Python: Dependency resolution failed" ;;
+  162) echo "Python: Installation aborted (permissions or EXTERNALLY-MANAGED)" ;;
+
+  # --- PostgreSQL (170-173) ---
+  170) echo "PostgreSQL: Connection failed (server not running / wrong socket)" ;;
+  171) echo "PostgreSQL: Authentication failed (bad user/password)" ;;
+  172) echo "PostgreSQL: Database does not exist" ;;
+  173) echo "PostgreSQL: Fatal error in query / syntax" ;;
+
+  # --- MySQL / MariaDB (180-183) ---
+  180) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
+  181) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
+  182) echo "MySQL/MariaDB: Database does not exist" ;;
+  183) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
+
+  # --- MongoDB (190-193) ---
+  190) echo "MongoDB: Connection failed (server not running)" ;;
+  191) echo "MongoDB: Authentication failed (bad user/password)" ;;
+  192) echo "MongoDB: Database not found" ;;
+  193) echo "MongoDB: Fatal query error" ;;
+
+  # --- Proxmox Custom Codes (200-231) ---
+  200) echo "Proxmox: Failed to create lock file" ;;
+  203) echo "Proxmox: Missing CTID variable" ;;
+  204) echo "Proxmox: Missing PCT_OSTYPE variable" ;;
+  205) echo "Proxmox: Invalid CTID (<100)" ;;
+  206) echo "Proxmox: CTID already in use" ;;
+  207) echo "Proxmox: Password contains unescaped special characters" ;;
+  208) echo "Proxmox: Invalid configuration (DNS/MAC/Network format)" ;;
+  209) echo "Proxmox: Container creation failed" ;;
+  210) echo "Proxmox: Cluster not quorate" ;;
+  211) echo "Proxmox: Timeout waiting for template lock" ;;
+  212) echo "Proxmox: Storage type 'iscsidirect' does not support containers (VMs only)" ;;
+  213) echo "Proxmox: Storage type does not support 'rootdir' content" ;;
+  214) echo "Proxmox: Not enough storage space" ;;
+  215) echo "Proxmox: Container created but not listed (ghost state)" ;;
+  216) echo "Proxmox: RootFS entry missing in config" ;;
+  217) echo "Proxmox: Storage not accessible" ;;
+  218) echo "Proxmox: Template file corrupted or incomplete" ;;
+  219) echo "Proxmox: CephFS does not support containers - use RBD" ;;
+  220) echo "Proxmox: Unable to resolve template path" ;;
+  221) echo "Proxmox: Template file not readable" ;;
+  222) echo "Proxmox: Template download failed" ;;
+  223) echo "Proxmox: Template not available after download" ;;
+  224) echo "Proxmox: PBS storage is for backups only" ;;
+  225) echo "Proxmox: No template available for OS/Version" ;;
+  231) echo "Proxmox: LXC stack upgrade failed" ;;
+
+  # --- Node.js / npm / pnpm / yarn (243-249) ---
   243) echo "Node.js: Out of memory (JavaScript heap out of memory)" ;;
   245) echo "Node.js: Invalid command-line option" ;;
   246) echo "Node.js: Internal JavaScript Parse Error" ;;
   247) echo "Node.js: Fatal internal error" ;;
   248) echo "Node.js: Invalid C++ addon / N-API failure" ;;
-  249) echo "Node.js: Inspector error" ;;
-  254) echo "npm/pnpm/yarn: Unknown fatal error" ;;
+  249) echo "npm/pnpm/yarn: Unknown fatal error" ;;
 
-  # --- Python / pip / uv ---
-  210) echo "Python: Virtualenv / uv environment missing or broken" ;;
-  211) echo "Python: Dependency resolution failed" ;;
-  212) echo "Python: Installation aborted (permissions or EXTERNALLY-MANAGED)" ;;
-
-  # --- PostgreSQL ---
-  231) echo "PostgreSQL: Connection failed (server not running / wrong socket)" ;;
-  232) echo "PostgreSQL: Authentication failed (bad user/password)" ;;
-  233) echo "PostgreSQL: Database does not exist" ;;
-  234) echo "PostgreSQL: Fatal error in query / syntax" ;;
-
-  # --- MySQL / MariaDB ---
-  241) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
-  242) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
-  243) echo "MySQL/MariaDB: Database does not exist" ;;
-  244) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
-
-  # --- MongoDB ---
-  251) echo "MongoDB: Connection failed (server not running)" ;;
-  252) echo "MongoDB: Authentication failed (bad user/password)" ;;
-  253) echo "MongoDB: Database not found" ;;
-  254) echo "MongoDB: Fatal query error" ;;
-
-  # --- Proxmox Custom Codes ---
-  200) echo "Custom: Failed to create lock file" ;;
-  203) echo "Custom: Missing CTID variable" ;;
-  204) echo "Custom: Missing PCT_OSTYPE variable" ;;
-  205) echo "Custom: Invalid CTID (<100)" ;;
-  206) echo "Custom: CTID already in use (check 'pct list' and /etc/pve/lxc/)" ;;
-  207) echo "Custom: Password contains unescaped special characters (-, /, \\, *, etc.)" ;;
-  208) echo "Custom: Invalid configuration (DNS/MAC/Network format error)" ;;
-  209) echo "Custom: Container creation failed (check logs for pct create output)" ;;
-  210) echo "Custom: Cluster not quorate" ;;
-  211) echo "Custom: Timeout waiting for template lock (concurrent download in progress)" ;;
-  214) echo "Custom: Not enough storage space" ;;
-  215) echo "Custom: Container created but not listed (ghost state - check /etc/pve/lxc/)" ;;
-  216) echo "Custom: RootFS entry missing in config (incomplete creation)" ;;
-  217) echo "Custom: Storage does not support rootdir (check storage capabilities)" ;;
-  218) echo "Custom: Template file corrupted or incomplete download (size <1MB or invalid archive)" ;;
-  220) echo "Custom: Unable to resolve template path" ;;
-  221) echo "Custom: Template file exists but not readable (check file permissions)" ;;
-  222) echo "Custom: Template download failed after 3 attempts (network/storage issue)" ;;
-  223) echo "Custom: Template not available after download (storage sync issue)" ;;
-  225) echo "Custom: No template available for OS/Version (check 'pveam available')" ;;
-  231) echo "Custom: LXC stack upgrade/retry failed (outdated pve-container - check https://github.com/community-scripts/ProxmoxVE/discussions/8126)" ;;
+  # --- DPKG ---
+  255) echo "DPKG: Fatal internal error" ;;
 
   # --- Default ---
   *) echo "Unknown error" ;;
@@ -131,9 +238,105 @@ explain_exit_code() {
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# detect_gpu()
+#
+# - Detects GPU vendor, model, and passthrough type
+# - Sets GPU_VENDOR, GPU_MODEL, and GPU_PASSTHROUGH globals
+# - Used for GPU analytics
+# ------------------------------------------------------------------------------
+detect_gpu() {
+  GPU_VENDOR="unknown"
+  GPU_MODEL=""
+  GPU_PASSTHROUGH="unknown"
+
+  local gpu_line
+  gpu_line=$(lspci 2>/dev/null | grep -iE "VGA|3D|Display" | head -1)
+
+  if [[ -n "$gpu_line" ]]; then
+    # Extract model: everything after the colon, clean up
+    GPU_MODEL=$(echo "$gpu_line" | sed 's/.*: //' | sed 's/ (rev .*)$//' | cut -c1-64)
+
+    # Detect vendor and passthrough type
+    if echo "$gpu_line" | grep -qi "Intel"; then
+      GPU_VENDOR="intel"
+      GPU_PASSTHROUGH="igpu"
+    elif echo "$gpu_line" | grep -qi "AMD\|ATI"; then
+      GPU_VENDOR="amd"
+      if echo "$gpu_line" | grep -qi "Radeon RX\|Radeon Pro"; then
+        GPU_PASSTHROUGH="dgpu"
+      else
+        GPU_PASSTHROUGH="igpu"
+      fi
+    elif echo "$gpu_line" | grep -qi "NVIDIA"; then
+      GPU_VENDOR="nvidia"
+      GPU_PASSTHROUGH="dgpu"
+    fi
+  fi
+
+  export GPU_VENDOR GPU_MODEL GPU_PASSTHROUGH
+}
+
+# ------------------------------------------------------------------------------
+# detect_cpu()
+#
+# - Detects CPU vendor and model
+# - Sets CPU_VENDOR (intel/amd/arm/unknown) and CPU_MODEL globals
+# - Used for CPU analytics
+# ------------------------------------------------------------------------------
+detect_cpu() {
+  CPU_VENDOR="unknown"
+  CPU_MODEL=""
+
+  if [[ -f /proc/cpuinfo ]]; then
+    local vendor_id
+    vendor_id=$(grep -m1 "vendor_id" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | tr -d ' ')
+
+    case "$vendor_id" in
+    GenuineIntel) CPU_VENDOR="intel" ;;
+    AuthenticAMD) CPU_VENDOR="amd" ;;
+    *)
+      # ARM doesn't have vendor_id, check for CPU implementer
+      if grep -qi "CPU implementer" /proc/cpuinfo 2>/dev/null; then
+        CPU_VENDOR="arm"
+      fi
+      ;;
+    esac
+
+    # Extract model name and clean it up
+    CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//' | sed 's/(R)//g' | sed 's/(TM)//g' | sed 's/  */ /g' | cut -c1-64)
+  fi
+
+  export CPU_VENDOR CPU_MODEL
+}
+
+# ------------------------------------------------------------------------------
+# detect_ram()
+#
+# - Detects RAM speed using dmidecode
+# - Sets RAM_SPEED global (e.g., "4800" for DDR5-4800)
+# - Requires root access for dmidecode
+# - Returns empty if not available
+# ------------------------------------------------------------------------------
+detect_ram() {
+  RAM_SPEED=""
+
+  if command -v dmidecode &>/dev/null; then
+    # Get configured memory speed (actual running speed)
+    RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Configured Memory Speed:" | grep -oE "[0-9]+" | head -1)
+
+    # Fallback to Speed: if Configured not available
+    if [[ -z "$RAM_SPEED" ]]; then
+      RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Speed:" | grep -oE "[0-9]+" | head -1)
+    fi
+  fi
+
+  export RAM_SPEED
+}
+
+# ------------------------------------------------------------------------------
 # post_to_api()
 #
-# - Sends LXC container creation statistics to Community-Scripts API
+# - Sends LXC container creation statistics to telemetry ingest service
 # - Only executes if:
 #   * curl is available
 #   * DIAGNOSTICS=yes
@@ -141,182 +344,565 @@ explain_exit_code() {
 # - Payload includes:
 #   * Container type, disk size, CPU cores, RAM
 #   * OS type and version
-#   * IPv6 disable status
 #   * Application name (NSAPP)
 #   * Installation method
 #   * PVE version
 #   * Status: "installing"
 #   * Random UUID for session tracking
 # - Anonymous telemetry (no personal data)
+# - Never blocks or fails script execution
 # ------------------------------------------------------------------------------
 post_to_api() {
+  # Silent fail - telemetry should never break scripts
+  command -v curl &>/dev/null || {
+    [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] curl not found, skipping" >&2
+    return 0
+  }
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && {
+    [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] DIAGNOSTICS=no, skipping" >&2
+    return 0
+  }
+  [[ -z "${RANDOM_UUID:-}" ]] && {
+    [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] RANDOM_UUID empty, skipping" >&2
+    return 0
+  }
 
-  if ! command -v curl &>/dev/null; then
-    return
+  [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] post_to_api() DIAGNOSTICS=$DIAGNOSTICS RANDOM_UUID=$RANDOM_UUID NSAPP=$NSAPP" >&2
+
+  # Set type for later status updates
+  TELEMETRY_TYPE="lxc"
+
+  local pve_version=""
+  if command -v pveversion &>/dev/null; then
+    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
   fi
 
-  if [ "$DIAGNOSTICS" = "no" ]; then
-    return
+  # Detect GPU if not already set
+  if [[ -z "${GPU_VENDOR:-}" ]]; then
+    detect_gpu
   fi
+  local gpu_vendor="${GPU_VENDOR:-unknown}"
+  local gpu_model="${GPU_MODEL:-}"
+  local gpu_passthrough="${GPU_PASSTHROUGH:-unknown}"
 
-  if [ -z "$RANDOM_UUID" ]; then
-    return
+  # Detect CPU if not already set
+  if [[ -z "${CPU_VENDOR:-}" ]]; then
+    detect_cpu
   fi
+  local cpu_vendor="${CPU_VENDOR:-unknown}"
+  local cpu_model="${CPU_MODEL:-}"
 
-  local API_URL="http://api.community-scripts.org/upload"
-  local pve_version="not found"
-  pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
+  # Detect RAM if not already set
+  if [[ -z "${RAM_SPEED:-}" ]]; then
+    detect_ram
+  fi
+  local ram_speed="${RAM_SPEED:-}"
 
+  local JSON_PAYLOAD
   JSON_PAYLOAD=$(
     cat <<EOF
 {
-    "ct_type": $CT_TYPE,
-    "type":"lxc",
-    "disk_size": $DISK_SIZE,
-    "core_count": $CORE_COUNT,
-    "ram_size": $RAM_SIZE,
-    "os_type": "$var_os",
-    "os_version": "$var_version",
-    "nsapp": "$NSAPP",
-    "method": "$METHOD",
-    "pve_version": "$pve_version",
+    "random_id": "${RANDOM_UUID}",
+    "type": "lxc",
+    "nsapp": "${NSAPP:-unknown}",
     "status": "installing",
-    "random_id": "$RANDOM_UUID"
+    "ct_type": ${CT_TYPE:-1},
+    "disk_size": ${DISK_SIZE:-0},
+    "core_count": ${CORE_COUNT:-0},
+    "ram_size": ${RAM_SIZE:-0},
+    "os_type": "${var_os:-}",
+    "os_version": "${var_version:-}",
+    "pve_version": "${pve_version}",
+    "method": "${METHOD:-default}",
+    "cpu_vendor": "${cpu_vendor}",
+    "cpu_model": "${cpu_model}",
+    "gpu_vendor": "${gpu_vendor}",
+    "gpu_model": "${gpu_model}",
+    "gpu_passthrough": "${gpu_passthrough}",
+    "ram_speed": "${ram_speed}",
+    "repo_source": "${REPO_SOURCE}"
 }
 EOF
   )
-  if [[ "$DIAGNOSTICS" == "yes" ]]; then
-    RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD") || true
-  fi
 
+  [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] Sending to: $TELEMETRY_URL" >&2
+  [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] Payload: $JSON_PAYLOAD" >&2
+
+  # Fire-and-forget: never block, never fail
+  local http_code
+  if [[ "${DEV_MODE:-}" == "true" ]]; then
+    http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD" -o /dev/stderr 2>&1) || true
+    echo "[DEBUG] HTTP response code: $http_code" >&2
+  else
+    curl -fsS -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD" &>/dev/null || true
+  fi
 }
 
 # ------------------------------------------------------------------------------
 # post_to_api_vm()
 #
-# - Sends VM creation statistics to Community-Scripts API
-# - Similar to post_to_api() but for virtual machines (not containers)
+# - Sends VM creation statistics to telemetry ingest service
 # - Reads DIAGNOSTICS from /usr/local/community-scripts/diagnostics file
-# - Payload differences:
+# - Payload differences from LXC:
 #   * ct_type=2 (VM instead of LXC)
 #   * type="vm"
-#   * Disk size without 'G' suffix (parsed from DISK_SIZE variable)
+#   * Disk size without 'G' suffix
 # - Only executes if DIAGNOSTICS=yes and RANDOM_UUID is set
+# - Never blocks or fails script execution
 # ------------------------------------------------------------------------------
 post_to_api_vm() {
-
-  if [[ ! -f /usr/local/community-scripts/diagnostics ]]; then
-    return
-  fi
-  DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics | awk -F'=' '{print $2}')
-  if ! command -v curl &>/dev/null; then
-    return
+  # Read diagnostics setting from file
+  if [[ -f /usr/local/community-scripts/diagnostics ]]; then
+    DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics 2>/dev/null | awk -F'=' '{print $2}') || true
   fi
 
-  if [ "$DIAGNOSTICS" = "no" ]; then
-    return
+  # Silent fail - telemetry should never break scripts
+  command -v curl &>/dev/null || return 0
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
+  [[ -z "${RANDOM_UUID:-}" ]] && return 0
+
+  # Set type for later status updates
+  TELEMETRY_TYPE="vm"
+
+  local pve_version=""
+  if command -v pveversion &>/dev/null; then
+    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
   fi
 
-  if [ -z "$RANDOM_UUID" ]; then
-    return
-  fi
+  # Remove 'G' suffix from disk size
+  local DISK_SIZE_API="${DISK_SIZE%G}"
 
-  local API_URL="http://api.community-scripts.org/upload"
-  local pve_version="not found"
-  pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
-
-  DISK_SIZE_API=${DISK_SIZE%G}
-
+  local JSON_PAYLOAD
   JSON_PAYLOAD=$(
     cat <<EOF
 {
-    "ct_type": 2,
-    "type":"vm",
-    "disk_size": $DISK_SIZE_API,
-    "core_count": $CORE_COUNT,
-    "ram_size": $RAM_SIZE,
-    "os_type": "$var_os",
-    "os_version": "$var_version",
-    "nsapp": "$NSAPP",
-    "method": "$METHOD",
-    "pve_version": "$pve_version",
+    "random_id": "${RANDOM_UUID}",
+    "type": "vm",
+    "nsapp": "${NSAPP:-unknown}",
     "status": "installing",
-    "random_id": "$RANDOM_UUID"
+    "ct_type": 2,
+    "disk_size": ${DISK_SIZE_API:-0},
+    "core_count": ${CORE_COUNT:-0},
+    "ram_size": ${RAM_SIZE:-0},
+    "os_type": "${var_os:-}",
+    "os_version": "${var_version:-}",
+    "pve_version": "${pve_version}",
+    "method": "${METHOD:-default}",
+    "repo_source": "${REPO_SOURCE}"
 }
 EOF
   )
-  if [[ "$DIAGNOSTICS" == "yes" ]]; then
-    RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD") || true
-  fi
+
+  # Fire-and-forget: never block, never fail
+  curl -fsS -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD" &>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------
 # post_update_to_api()
 #
-# - Reports installation completion status to API
+# - Reports installation completion status to telemetry ingest service
 # - Prevents duplicate submissions via POST_UPDATE_DONE flag
 # - Arguments:
-#   * $1: status ("success" or "failed")
-#   * $2: exit_code (default: 1 for failed, 0 for success)
+#   * $1: status ("done" or "failed")
+#   * $2: exit_code (numeric, default: 1 for failed, 0 for done)
 # - Payload includes:
-#   * Final status (success/failed)
-#   * Error description via get_error_description()
-#   * Random UUID for session correlation
+#   * Final status (mapped: "done"→"success", "failed"→"failed")
+#   * Error description via explain_exit_code()
+#   * Numeric exit code
 # - Only executes once per session
-# - Silently returns if:
-#   * curl not available
-#   * Already reported (POST_UPDATE_DONE=true)
-#   * DIAGNOSTICS=no
+# - Never blocks or fails script execution
 # ------------------------------------------------------------------------------
 post_update_to_api() {
+  # Silent fail - telemetry should never break scripts
+  command -v curl &>/dev/null || return 0
 
-  if ! command -v curl &>/dev/null; then
-    return
-  fi
-
-  # Initialize flag if not set (prevents 'unbound variable' error with set -u)
+  # Prevent duplicate submissions
   POST_UPDATE_DONE=${POST_UPDATE_DONE:-false}
+  [[ "$POST_UPDATE_DONE" == "true" ]] && return 0
 
-  if [ "$POST_UPDATE_DONE" = true ]; then
-    return 0
-  fi
-  exit_code=${2:-1}
-  local API_URL="http://api.community-scripts.org/upload/updatestatus"
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
+  [[ -z "${RANDOM_UUID:-}" ]] && return 0
+
   local status="${1:-failed}"
-  if [[ "$status" == "failed" ]]; then
-    local exit_code="${2:-1}"
-  elif [[ "$status" == "success" ]]; then
-    local exit_code="${2:-0}"
+  local raw_exit_code="${2:-1}"
+  local exit_code=0 error="" pb_status error_category=""
+
+  # Get GPU info (if detected)
+  local gpu_vendor="${GPU_VENDOR:-unknown}"
+  local gpu_model="${GPU_MODEL:-}"
+  local gpu_passthrough="${GPU_PASSTHROUGH:-unknown}"
+
+  # Get CPU info (if detected)
+  local cpu_vendor="${CPU_VENDOR:-unknown}"
+  local cpu_model="${CPU_MODEL:-}"
+
+  # Get RAM info (if detected)
+  local ram_speed="${RAM_SPEED:-}"
+
+  # Map status to telemetry values: installing, success, failed, unknown
+  case "$status" in
+  done | success)
+    pb_status="success"
+    exit_code=0
+    error=""
+    error_category=""
+    ;;
+  failed)
+    pb_status="failed"
+    ;;
+  *)
+    pb_status="unknown"
+    ;;
+  esac
+
+  # For failed/unknown status, resolve exit code and error description
+  if [[ "$pb_status" == "failed" ]] || [[ "$pb_status" == "unknown" ]]; then
+    if [[ "$raw_exit_code" =~ ^[0-9]+$ ]]; then
+      exit_code="$raw_exit_code"
+    else
+      exit_code=1
+    fi
+    error=$(explain_exit_code "$exit_code")
+    error_category=$(categorize_error "$exit_code")
+    [[ -z "$error" ]] && error="Unknown error"
   fi
 
-  if [[ -z "$exit_code" ]]; then
-    exit_code=1
+  # Calculate duration if timer was started
+  local duration=0
+  if [[ -n "${INSTALL_START_TIME:-}" ]]; then
+    duration=$(($(date +%s) - INSTALL_START_TIME))
   fi
 
-  error=$(explain_exit_code "$exit_code")
-
-  if [ -z "$error" ]; then
-    error="Unknown error"
+  # Get PVE version
+  local pve_version=""
+  if command -v pveversion &>/dev/null; then
+    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
   fi
 
+  # Full payload including all fields - allows record creation if initial call failed
+  # The Go service will find the record by random_id and PATCH, or create if not found
+  local JSON_PAYLOAD
   JSON_PAYLOAD=$(
     cat <<EOF
 {
-    "status": "$status",
-    "error": "$error",
-    "random_id": "$RANDOM_UUID"
+    "random_id": "${RANDOM_UUID}",
+    "type": "${TELEMETRY_TYPE:-lxc}",
+    "nsapp": "${NSAPP:-unknown}",
+    "status": "${pb_status}",
+    "ct_type": ${CT_TYPE:-1},
+    "disk_size": ${DISK_SIZE:-0},
+    "core_count": ${CORE_COUNT:-0},
+    "ram_size": ${RAM_SIZE:-0},
+    "os_type": "${var_os:-}",
+    "os_version": "${var_version:-}",
+    "pve_version": "${pve_version}",
+    "method": "${METHOD:-default}",
+    "exit_code": ${exit_code},
+    "error": "${error}",
+    "error_category": "${error_category}",
+    "install_duration": ${duration},
+    "cpu_vendor": "${cpu_vendor}",
+    "cpu_model": "${cpu_model}",
+    "gpu_vendor": "${gpu_vendor}",
+    "gpu_model": "${gpu_model}",
+    "gpu_passthrough": "${gpu_passthrough}",
+    "ram_speed": "${ram_speed}",
+    "repo_source": "${REPO_SOURCE}"
 }
 EOF
   )
-  if [[ "$DIAGNOSTICS" == "yes" ]]; then
-    RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD") || true
+
+  # Fire-and-forget: never block, never fail
+  curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD" -o /dev/null 2>&1 || true
+
+  POST_UPDATE_DONE=true
+}
+
+# ==============================================================================
+# SECTION 3: EXTENDED TELEMETRY FUNCTIONS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# categorize_error()
+#
+# - Maps exit codes to error categories for better analytics
+# - Categories: network, storage, dependency, permission, timeout, config, resource, unknown
+# - Used to group errors in dashboard
+# ------------------------------------------------------------------------------
+categorize_error() {
+  local code="$1"
+  case "$code" in
+  # Network errors
+  6 | 7 | 22 | 28 | 35) echo "network" ;;
+
+  # Storage errors
+  214 | 217 | 219) echo "storage" ;;
+
+  # Dependency/Package errors
+  100 | 101 | 102 | 127 | 160 | 161 | 162) echo "dependency" ;;
+
+  # Permission errors
+  126 | 152) echo "permission" ;;
+
+  # Timeout errors
+  124 | 28 | 211) echo "timeout" ;;
+
+  # Configuration errors
+  203 | 204 | 205 | 206 | 207 | 208) echo "config" ;;
+
+  # Resource errors (OOM, etc)
+  137 | 134) echo "resource" ;;
+
+  # Default
+  *) echo "unknown" ;;
+  esac
+}
+
+# ------------------------------------------------------------------------------
+# start_install_timer()
+#
+# - Captures start time for installation duration tracking
+# - Call at the beginning of installation
+# - Sets INSTALL_START_TIME global variable
+# ------------------------------------------------------------------------------
+start_install_timer() {
+  INSTALL_START_TIME=$(date +%s)
+  export INSTALL_START_TIME
+}
+
+# ------------------------------------------------------------------------------
+# get_install_duration()
+#
+# - Returns elapsed seconds since start_install_timer() was called
+# - Returns 0 if timer was not started
+# ------------------------------------------------------------------------------
+get_install_duration() {
+  if [[ -z "${INSTALL_START_TIME:-}" ]]; then
+    echo "0"
+    return
   fi
+  local now=$(date +%s)
+  echo $((now - INSTALL_START_TIME))
+}
+
+# ------------------------------------------------------------------------------
+# post_tool_to_api()
+#
+# - Reports tool usage to telemetry
+# - Arguments:
+#   * $1: tool_name (e.g., "microcode", "lxc-update", "post-pve-install")
+#   * $2: status ("success" or "failed")
+#   * $3: exit_code (optional, default: 0 for success, 1 for failed)
+# - For PVE host tools, not container installations
+# ------------------------------------------------------------------------------
+post_tool_to_api() {
+  command -v curl &>/dev/null || return 0
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
+
+  local tool_name="${1:-unknown}"
+  local status="${2:-success}"
+  local exit_code="${3:-0}"
+  local error="" error_category=""
+  local uuid duration
+
+  # Generate UUID for this tool execution
+  uuid=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen 2>/dev/null || echo "tool-$(date +%s)")
+  duration=$(get_install_duration)
+
+  # Map status
+  [[ "$status" == "done" ]] && status="success"
+
+  if [[ "$status" == "failed" ]]; then
+    [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
+    error=$(explain_exit_code "$exit_code")
+    error_category=$(categorize_error "$exit_code")
+  fi
+
+  local pve_version=""
+  if command -v pveversion &>/dev/null; then
+    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
+  fi
+
+  local JSON_PAYLOAD
+  JSON_PAYLOAD=$(
+    cat <<EOF
+{
+    "random_id": "${uuid}",
+    "type": "tool",
+    "nsapp": "${tool_name}",
+    "status": "${status}",
+    "exit_code": ${exit_code},
+    "error": "${error}",
+    "error_category": "${error_category}",
+    "install_duration": ${duration:-0},
+    "pve_version": "${pve_version}",
+    "repo_source": "${REPO_SOURCE}"
+}
+EOF
+  )
+
+  curl -fsS -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD" &>/dev/null || true
+}
+
+# ------------------------------------------------------------------------------
+# post_addon_to_api()
+#
+# - Reports addon installation to telemetry
+# - Arguments:
+#   * $1: addon_name (e.g., "filebrowser", "netdata")
+#   * $2: status ("success" or "failed")
+#   * $3: exit_code (optional)
+# - For addons installed inside containers
+# ------------------------------------------------------------------------------
+post_addon_to_api() {
+  command -v curl &>/dev/null || return 0
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
+
+  local addon_name="${1:-unknown}"
+  local status="${2:-success}"
+  local exit_code="${3:-0}"
+  local error="" error_category=""
+  local uuid duration
+
+  # Generate UUID for this addon installation
+  uuid=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen 2>/dev/null || echo "addon-$(date +%s)")
+  duration=$(get_install_duration)
+
+  # Map status
+  [[ "$status" == "done" ]] && status="success"
+
+  if [[ "$status" == "failed" ]]; then
+    [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
+    error=$(explain_exit_code "$exit_code")
+    error_category=$(categorize_error "$exit_code")
+  fi
+
+  # Detect OS info
+  local os_type="" os_version=""
+  if [[ -f /etc/os-release ]]; then
+    os_type=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
+    os_version=$(grep "^VERSION_ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
+  fi
+
+  local JSON_PAYLOAD
+  JSON_PAYLOAD=$(
+    cat <<EOF
+{
+    "random_id": "${uuid}",
+    "type": "addon",
+    "nsapp": "${addon_name}",
+    "status": "${status}",
+    "exit_code": ${exit_code},
+    "error": "${error}",
+    "error_category": "${error_category}",
+    "install_duration": ${duration:-0},
+    "os_type": "${os_type}",
+    "os_version": "${os_version}",
+    "repo_source": "${REPO_SOURCE}"
+}
+EOF
+  )
+
+  curl -fsS -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD" &>/dev/null || true
+}
+
+# ------------------------------------------------------------------------------
+# post_update_to_api_extended()
+#
+# - Extended version of post_update_to_api with duration, GPU, and error category
+# - Same arguments as post_update_to_api:
+#   * $1: status ("done" or "failed")
+#   * $2: exit_code (numeric)
+# - Automatically includes:
+#   * Install duration (if start_install_timer was called)
+#   * Error category (for failed status)
+#   * GPU info (if detect_gpu was called)
+# ------------------------------------------------------------------------------
+post_update_to_api_extended() {
+  # Silent fail - telemetry should never break scripts
+  command -v curl &>/dev/null || return 0
+
+  # Prevent duplicate submissions
+  POST_UPDATE_DONE=${POST_UPDATE_DONE:-false}
+  [[ "$POST_UPDATE_DONE" == "true" ]] && return 0
+
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
+  [[ -z "${RANDOM_UUID:-}" ]] && return 0
+
+  local status="${1:-failed}"
+  local raw_exit_code="${2:-1}"
+  local exit_code=0 error="" pb_status error_category=""
+  local duration gpu_vendor gpu_passthrough
+
+  # Get duration
+  duration=$(get_install_duration)
+
+  # Get GPU info (if detected)
+  gpu_vendor="${GPU_VENDOR:-}"
+  gpu_passthrough="${GPU_PASSTHROUGH:-}"
+
+  # Map status to telemetry values
+  case "$status" in
+  done | success)
+    pb_status="success"
+    exit_code=0
+    error=""
+    error_category=""
+    ;;
+  failed)
+    pb_status="failed"
+    ;;
+  *)
+    pb_status="unknown"
+    ;;
+  esac
+
+  # For failed/unknown status, resolve exit code and error description
+  if [[ "$pb_status" == "failed" ]] || [[ "$pb_status" == "unknown" ]]; then
+    if [[ "$raw_exit_code" =~ ^[0-9]+$ ]]; then
+      exit_code="$raw_exit_code"
+    else
+      exit_code=1
+    fi
+    error=$(explain_exit_code "$exit_code")
+    error_category=$(categorize_error "$exit_code")
+    [[ -z "$error" ]] && error="Unknown error"
+  fi
+
+  local JSON_PAYLOAD
+  JSON_PAYLOAD=$(
+    cat <<EOF
+{
+    "random_id": "${RANDOM_UUID}",
+    "type": "${TELEMETRY_TYPE:-lxc}",
+    "nsapp": "${NSAPP:-unknown}",
+    "status": "${pb_status}",
+    "exit_code": ${exit_code},
+    "error": "${error}",
+    "error_category": "${error_category}",
+    "install_duration": ${duration:-0},
+    "gpu_vendor": "${gpu_vendor}",
+    "gpu_passthrough": "${gpu_passthrough}",
+    "repo_source": "${REPO_SOURCE}"
+}
+EOF
+  )
+
+  curl -fsS -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD" &>/dev/null || true
 
   POST_UPDATE_DONE=true
 }
