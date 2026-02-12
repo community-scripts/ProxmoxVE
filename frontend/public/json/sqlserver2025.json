@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "SQL Server (2025) SQLPAL is incompatible with Proxmox VE 9 (Kernel 6.x) in LXC containers. Use a VM instead or the SQL-Server 2022 LXC.",
+      "text": "SQL Server (2025) SQLPAL is incompatible with Proxmox VE 9 (Kernel 6.12+) in LXC containers. Use a VM instead or the SQL-Server 2022 LXC.",
       "type": "warning"
     },
     {
