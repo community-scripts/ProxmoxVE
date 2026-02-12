@@ -14,18 +14,16 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  apache2-utils \
-  python3-pip \
-  python3-venv
+$STD apt install -y apache2-utils
 msg_ok "Installed Dependencies"
 
+PYTHON_VERSION="3.13" setup_uv
+fetch_and_deploy_gh_release "Radicale" "Kozea/Radicale" "tarball" "latest" "/opt/radicale"
+
 msg_info "Setting up Radicale"
-python3 -m venv /opt/radicale
-source /opt/radicale/bin/activate
-$STD python3 -m pip install --upgrade https://github.com/Kozea/Radicale/archive/master.tar.gz
+cd /opt/radicale
 RNDPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD htpasswd -c -b -5 /opt/radicale/users admin $RNDPASS
+$STD htpasswd -c -b -5 /opt/radicale/users admin "$RNDPASS"
 {
   echo "Radicale Credentials"
   echo "Admin User: admin"
@@ -34,22 +32,15 @@ $STD htpasswd -c -b -5 /opt/radicale/users admin $RNDPASS
 msg_ok "Done setting up Radicale"
 
 msg_info "Setup Service"
-
-cat <<EOF >/opt/radicale/start.sh
-#!/usr/bin/env bash
-source /opt/radicale/bin/activate
-python3 -m radicale --storage-filesystem-folder=/var/lib/radicale/collections --hosts 0.0.0.0:5232 --auth-type htpasswd --auth-htpasswd-filename /opt/radicale/users --auth-htpasswd-encryption sha512
-EOF
-
-chmod +x /opt/radicale/start.sh
-
 cat <<EOF >/etc/systemd/system/radicale.service
+[Unit]
 Description=A simple CalDAV (calendar) and CardDAV (contact) server
 After=network.target
 Requires=network.target
 
 [Service]
-ExecStart=/opt/radicale/start.sh
+WorkingDirectory=/opt/radicale
+ExecStart=/usr/local/bin/uv run -m radicale --storage-filesystem-folder=/var/lib/radicale/collections --hosts 0.0.0.0:5232 --auth-type htpasswd --auth-htpasswd-filename /opt/radicale/users --auth-htpasswd-encryption sha512
 Restart=on-failure
 # User=radicale
 # Deny other users access to the calendar data

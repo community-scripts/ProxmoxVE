@@ -28,16 +28,34 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
-  $STD python3 -m venv /opt/radicale
-  source /opt/radicale/bin/activate
-  $STD python3 -m pip install --upgrade https://github.com/Kozea/Radicale/archive/master.tar.gz
-  msg_ok "Updated ${APP}"
+  if check_for_gh_release "Radicale" "Kozea/Radicale"; then
+    msg_info "Stopping service"
+    systemctl stop radicale
+    msg_ok "Stopped service"
 
-  msg_info "Starting Service"
-  systemctl enable -q --now radicale
-  msg_ok "Started Service"
-  msg_ok "Updated successfully!"
+    msg_info "Backing up users file"
+    cp /opt/radicale/users /opt/radicale_users_backup
+    msg_ok "Backed up users file"
+
+    PYTHON_VERSION="3.13" setup_uv
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Radicale" "Kozea/Radicale" "tarball" "latest" "/opt/radicale"
+
+    msg_info "Restoring users file"
+    rm -f /opt/radicale/users
+    mv /opt/radicale_users_backup /opt/radicale/users
+    msg_ok "Restored users file"
+
+    if grep 'start.sh' /etc/systemd/system/radicale.service; then
+      sed -i -e '/^Description/i[Unit]' \
+        -e '\|^ExecStart|iWorkingDirectory=/opt/radicale' \
+        -e 's|^ExecStart=.*|ExecStart=/usr/local/bin/uv run -m radicale --storage-filesystem-folder=/var/lib/radicale/collections --hosts 0.0.0.0:5232 --auth-type htpasswd --auth-htpasswd-filename /opt/radicale/users --auth-htpasswd-encryption sha512|' /etc/systemd/system/radicale.service
+      systemctl daemon-reload
+    fi
+    msg_info "Starting service"
+    systemctl start radicale
+    msg_ok "Started service"
+    msg_ok "Updated Successfully!"
+  fi
   exit
 }
 
