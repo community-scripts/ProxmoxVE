@@ -3636,6 +3636,9 @@ $PCT_OPTIONS_STRING"
       exit 214
     fi
     msg_ok "Storage space validated"
+
+    # Report installation start to API (early - captures failed installs too)
+    post_to_api
   fi
 
   create_lxc_container || exit $?
@@ -4043,6 +4046,9 @@ EOF'
   if [[ $install_exit_code -ne 0 ]]; then
     msg_error "Installation failed in container ${CTID} (exit code: ${install_exit_code})"
 
+    # Report failure to telemetry API
+    post_update_to_api "failed" "$install_exit_code"
+  
     # Copy both logs from container before potential deletion
     local build_log_copied=false
     local install_log_copied=false
