@@ -420,6 +420,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools.func: auto-detect binary vs armored GPG keys in setup_deb822_repo [@MickLesk](https://github.com/MickLesk) ([#11841](https://github.com/community-scripts/ProxmoxVE/pull/11841))
     - core: remove old Go API and extend misc/api.func with new backend [@MickLesk](https://github.com/MickLesk) ([#11822](https://github.com/community-scripts/ProxmoxVE/pull/11822))
 
 ### 🧰 Tools
