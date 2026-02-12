@@ -33,6 +33,10 @@
   },
   "notes": [
     {
+      "text": "SQL Server SQLPAL is incompatible with Proxmox VE 9 (Kernel 6.x) in LXC containers. Use a VM instead.",
+      "type": "warning"
+    },
+    {
       "text": "If you choose not to run the installation setup, execute: `/opt/mssql/bin/mssql-conf setup` in LXC shell.",
       "type": "info"
     },
