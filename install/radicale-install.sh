@@ -47,9 +47,9 @@ filesystem_folder = /var/lib/radicale/collections
 [web]
 type = internal
 EOF
-msg_ok "Done setting up Radicale"
+msg_ok "Set up Radicale"
 
-msg_info "Setup Service"
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/radicale.service
 [Unit]
 Description=A simple CalDAV (calendar) and CardDAV (contact) server
