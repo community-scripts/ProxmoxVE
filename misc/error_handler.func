@@ -243,6 +243,18 @@ error_handler() {
 # ------------------------------------------------------------------------------
 on_exit() {
   local exit_code=$?
+  # Report orphaned "installing" records to telemetry API
+  # Catches ALL exit paths: errors (non-zero), signals, AND clean exits where
+  # post_to_api was called ("installing" sent) but post_update_to_api was never called
+  if [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
+    if declare -f post_update_to_api >/dev/null 2>&1; then
+      if [[ $exit_code -ne 0 ]]; then
+        post_update_to_api "failed" "$exit_code"
+      else
+        post_update_to_api "failed" "1"
+      fi
+    fi
+  fi
   [[ -n "${lockfile:-}" && -e "$lockfile" ]] && rm -f "$lockfile"
   exit "$exit_code"
 }
@@ -255,6 +267,10 @@ on_exit() {
 # - Exits with code 130 (128 + SIGINT=2)
 # ------------------------------------------------------------------------------
 on_interrupt() {
+  # Report interruption to telemetry API (prevents stuck "installing" records)
+  if declare -f post_update_to_api >/dev/null 2>&1; then
+    post_update_to_api "failed" "130"
+  fi
   if declare -f msg_error >/dev/null 2>&1; then
     msg_error "Interrupted by user (SIGINT)"
   else
@@ -272,6 +288,10 @@ on_interrupt() {
 # - Triggered by external process termination
 # ------------------------------------------------------------------------------
 on_terminate() {
+  # Report termination to telemetry API (prevents stuck "installing" records)
+  if declare -f post_update_to_api >/dev/null 2>&1; then
+    post_update_to_api "failed" "143"
+  fi
   if declare -f msg_error >/dev/null 2>&1; then
     msg_error "Terminated by signal (SIGTERM)"
   else
