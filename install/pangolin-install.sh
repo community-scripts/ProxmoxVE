@@ -36,7 +36,7 @@ $STD npm ci
 $STD npm run set:sqlite
 $STD npm run set:oss
 rm -rf server/private
-$STD npm run db:generate
+$STD npm run db:sqlite:generate
 $STD npm run build
 $STD npm run build:cli
 cp -R .next/standalone ./
