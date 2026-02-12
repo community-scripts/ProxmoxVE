@@ -29,6 +29,24 @@ $STD htpasswd -c -b -5 /opt/radicale/users admin "$RNDPASS"
   echo "Admin User: admin"
   echo "Admin Password: $RNDPASS"
 } >>~/radicale.creds
+
+mkdir -p /etc/radicale
+cat <<EOF >/etc/radicale/config
+[server]
+hosts = 0.0.0.0:5232
+
+[auth]
+type = htpasswd
+htpasswd_filename = /opt/radicale/users
+htpasswd_encryption = sha512
+
+[storage]
+type = multifilesystem
+filesystem_folder = /var/lib/radicale/collections
+
+[web]
+type = internal
+EOF
 msg_ok "Done setting up Radicale"
 
 msg_info "Setup Service"
@@ -40,7 +58,7 @@ Requires=network.target
 
 [Service]
 WorkingDirectory=/opt/radicale
-ExecStart=/usr/local/bin/uv run -m radicale --storage-filesystem-folder=/var/lib/radicale/collections --hosts 0.0.0.0:5232 --auth-type htpasswd --auth-htpasswd-filename /opt/radicale/users --auth-htpasswd-encryption sha512
+ExecStart=/usr/local/bin/uv run -m radicale --config /etc/radicale/config
 Restart=on-failure
 # User=radicale
 # Deny other users access to the calendar data

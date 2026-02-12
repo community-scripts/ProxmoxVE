@@ -45,11 +45,32 @@ function update_script() {
     mv /opt/radicale_users_backup /opt/radicale/users
     msg_ok "Restored users file"
 
-    if grep 'start.sh' /etc/systemd/system/radicale.service; then
+    if grep -q 'start.sh' /etc/systemd/system/radicale.service; then
       sed -i -e '/^Description/i[Unit]' \
         -e '\|^ExecStart|iWorkingDirectory=/opt/radicale' \
-        -e 's|^ExecStart=.*|ExecStart=/usr/local/bin/uv run -m radicale --storage-filesystem-folder=/var/lib/radicale/collections --hosts 0.0.0.0:5232 --auth-type htpasswd --auth-htpasswd-filename /opt/radicale/users --auth-htpasswd-encryption sha512|' /etc/systemd/system/radicale.service
+        -e 's|^ExecStart=.*|ExecStart=/usr/local/bin/uv run -m radicale --config /etc/radicale/config|' /etc/systemd/system/radicale.service
       systemctl daemon-reload
+    fi
+    if [[ ! -f /etc/radicale/config ]]; then
+      msg_info "Migrating to config file (/etc/radicale/config)"
+      mkdir -p /etc/radicale
+      cat <<EOF >/etc/radicale/config
+[server]
+hosts = 0.0.0.0:5232
+
+[auth]
+type = htpasswd
+htpasswd_filename = /opt/radicale/users
+htpasswd_encryption = sha512
+
+[storage]
+type = multifilesystem
+filesystem_folder = /var/lib/radicale/collections
+
+[web]
+type = internal
+EOF
+      msg_ok "Migrated to config (/etc/radicale/config)"
     fi
     msg_info "Starting service"
     systemctl start radicale
