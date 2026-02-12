@@ -129,7 +129,8 @@ echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://
   >/etc/apt/sources.list.d/tailscale.list
 
 apt-get update -qq
-apt-get install -y tailscale >/dev/null
+apt update -qq
+apt install -y tailscale >/dev/null
 
 if [[ -f /tmp/resolv.conf.backup ]]; then
   echo "[INFO] Restoring original /etc/resolv.conf"
