@@ -75,14 +75,37 @@ pct exec "$CTID" -- bash -c '
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
-ID=$(grep "^ID=" /etc/os-release | cut -d"=" -f2)
-VER=$(grep "^VERSION_CODENAME=" /etc/os-release | cut -d"=" -f2)
+# Source os-release properly (handles quoted values)
+source /etc/os-release
 
-# fallback if DNS is poisoned or blocked
+# Fallback if DNS is poisoned or blocked
 ORIG_RESOLV="/etc/resolv.conf"
 BACKUP_RESOLV="/tmp/resolv.conf.backup"
 
-if ! dig +short pkgs.tailscale.com | grep -qvE "^127\.|^0\.0\.0\.0$"; then
+# Check DNS resolution using multiple methods (dig may not be installed)
+dns_check_failed=true
+if command -v dig &>/dev/null; then
+  if dig +short pkgs.tailscale.com 2>/dev/null | grep -qvE "^127\.|^0\.0\.0\.0$|^$"; then
+    dns_check_failed=false
+  fi
+elif command -v host &>/dev/null; then
+  if host pkgs.tailscale.com 2>/dev/null | grep -q "has address"; then
+    dns_check_failed=false
+  fi
+elif command -v nslookup &>/dev/null; then
+  if nslookup pkgs.tailscale.com 2>/dev/null | grep -q "Address:"; then
+    dns_check_failed=false
+  fi
+elif command -v getent &>/dev/null; then
+  if getent hosts pkgs.tailscale.com &>/dev/null; then
+    dns_check_failed=false
+  fi
+else
+  # No DNS tools available, try curl directly and assume DNS works
+  dns_check_failed=false
+fi
+
+if $dns_check_failed; then
   echo "[INFO] DNS resolution for pkgs.tailscale.com failed (blocked or redirected)."
   echo "[INFO] Temporarily overriding /etc/resolv.conf with Cloudflare DNS (1.1.1.1)"
   cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
@@ -95,10 +118,13 @@ if ! command -v curl &>/dev/null; then
   apt-get install -y curl >/dev/null
 fi
 
-curl -fsSL https://pkgs.tailscale.com/stable/${ID}/${VER}.noarmor.gpg \
+# Ensure keyrings directory exists
+mkdir -p /usr/share/keyrings
+
+curl -fsSL "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
   | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 
-echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VER} main" \
+echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VERSION_CODENAME} main" \
   >/etc/apt/sources.list.d/tailscale.list
 
 apt-get update -qq
