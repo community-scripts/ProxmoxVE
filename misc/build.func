@@ -3486,7 +3486,6 @@ build_container() {
   export PCT_DISK_SIZE="$DISK_SIZE"
   export IPV6_METHOD="$IPV6_METHOD"
   export ENABLE_GPU="$ENABLE_GPU"
-  export APPLICATION_VERSION="${var_appversion:-}"
 
   # DEV_MODE exports (optional, for debugging)
   export BUILD_LOG="$BUILD_LOG"
