@@ -37,7 +37,7 @@ fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 msg_info "Installing Python Dependencies with uv"
 cd /opt/dispatcharr
 $STD uv venv --clear
-$STD uv pip install -r requirements.txt --index-strategy unsafe-best-match
+$STD uv sync
 $STD uv pip install gunicorn gevent celery redis daphne
 msg_ok "Installed Python Dependencies"
 
