@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - EMQX: increase disk to 6GB and add optional MQ disable prompt [@MickLesk](https://github.com/MickLesk) ([#11844](https://github.com/community-scripts/ProxmoxVE/pull/11844))
     - Increased the Grafana container default disk size. [@shtefko](https://github.com/shtefko) ([#11840](https://github.com/community-scripts/ProxmoxVE/pull/11840))
     - Pangolin: Update database generation command in install script [@tremor021](https://github.com/tremor021) ([#11825](https://github.com/community-scripts/ProxmoxVE/pull/11825))
     - Deluge: add python3-setuptools as dep [@MickLesk](https://github.com/MickLesk) ([#11833](https://github.com/community-scripts/ProxmoxVE/pull/11833))
