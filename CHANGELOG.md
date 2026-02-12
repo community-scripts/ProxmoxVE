@@ -415,6 +415,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Archlinux-VM: fix LVM/LVM-thin storage and improve error reporting | VM's add correct exit_code for analytics [@MickLesk](https://github.com/MickLesk) ([#11842](https://github.com/community-scripts/ProxmoxVE/pull/11842))
     - Debian13-VM: Optimize First Boot & add noCloud/Cloud Selection [@MickLesk](https://github.com/MickLesk) ([#11810](https://github.com/community-scripts/ProxmoxVE/pull/11810))
 
 ### 💾 Core
