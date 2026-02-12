@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-12T00:20:52Z",
+  "generated": "2026-02-12T06:25:40Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -578,9 +578,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1094",
+      "version": "v0.24.1098",
       "pinned": false,
-      "date": "2026-02-11T06:01:16Z"
+      "date": "2026-02-12T05:56:25Z"
     },
     {
       "slug": "jellystat",
@@ -998,9 +998,9 @@
     {
       "slug": "pangolin",
       "repo": "fosrl/pangolin",
-      "version": "1.15.2",
+      "version": "1.15.3",
       "pinned": false,
-      "date": "2026-02-05T19:23:58Z"
+      "date": "2026-02-12T06:10:19Z"
     },
     {
       "slug": "paperless-ai",
@@ -1229,9 +1229,9 @@
     {
       "slug": "rdtclient",
       "repo": "rogerfar/rdt-client",
-      "version": "v2.0.119",
+      "version": "v2.0.120",
       "pinned": false,
-      "date": "2025-10-13T23:15:11Z"
+      "date": "2026-02-12T02:53:51Z"
     },
     {
       "slug": "reactive-resume",
@@ -1383,9 +1383,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.4.5",
+      "version": "v2.4.6",
       "pinned": false,
-      "date": "2026-02-06T23:12:20Z"
+      "date": "2026-02-12T00:01:19Z"
     },
     {
       "slug": "streamlink-webui",
@@ -1656,9 +1656,9 @@
     {
       "slug": "wikijs",
       "repo": "requarks/wiki",
-      "version": "v2.5.311",
+      "version": "v2.5.312",
       "pinned": false,
-      "date": "2026-01-08T09:50:00Z"
+      "date": "2026-02-12T02:45:22Z"
     },
     {
       "slug": "wishlist",
