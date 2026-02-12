@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-12
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Pangolin: Update database generation command in install script [@tremor021](https://github.com/tremor021) ([#11825](https://github.com/community-scripts/ProxmoxVE/pull/11825))
+
 ### 💾 Core
 
   - #### ✨ New Features
