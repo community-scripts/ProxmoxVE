@@ -409,6 +409,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Pangolin: Update database generation command in install script [@tremor021](https://github.com/tremor021) ([#11825](https://github.com/community-scripts/ProxmoxVE/pull/11825))
 
+  - #### ✨ New Features
+
+    - Debian13-VM: Optimize First Boot & add noCloud/Cloud Selection [@MickLesk](https://github.com/MickLesk) ([#11810](https://github.com/community-scripts/ProxmoxVE/pull/11810))
+
 ### 💾 Core
 
   - #### ✨ New Features
