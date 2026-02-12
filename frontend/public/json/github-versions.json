@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-12T06:25:40Z",
+  "generated": "2026-02-12T12:15:15Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -543,9 +543,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.2.3",
+      "version": "9.2.4",
       "pinned": false,
-      "date": "2026-02-07T04:44:20Z"
+      "date": "2026-02-12T08:31:23Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -599,9 +599,9 @@
     {
       "slug": "jotty",
       "repo": "fccview/jotty",
-      "version": "1.19.1",
+      "version": "1.20.0",
       "pinned": false,
-      "date": "2026-01-26T21:30:39Z"
+      "date": "2026-02-12T09:23:30Z"
     },
     {
       "slug": "kapowarr",
