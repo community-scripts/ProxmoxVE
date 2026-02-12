@@ -30,7 +30,7 @@ msg_info "Building Frontend (patience)"
 cd /opt/wealthfolio
 export BUILD_TARGET=web
 $STD pnpm install --frozen-lockfile
-$STD pnpm build
+$STD pnpm --filter frontend... build
 msg_ok "Built Frontend"
 
 msg_info "Building Backend (patience)"
