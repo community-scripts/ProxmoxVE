@@ -42,7 +42,8 @@ function update_script() {
 
     msg_info "Restoring Configurations"
     mv /opt/selfhosted.yaml /opt/donetick/config
-    sed -i '/capacitor:\/\/localhost/d' /opt/donetick/config/selfhosted.yaml
+    grep -q 'http://localhost"$' /opt/donetick/config/selfhosted.yaml || sed -i '/https:\/\/localhost"$/a\    - "http://localhost"' /opt/donetick/config/selfhosted.yaml
+    grep -q 'capacitor://localhost' /opt/donetick/config/selfhosted.yaml || sed -i '/http:\/\/localhost"$/a\    - "capacitor://localhost"' /opt/donetick/config/selfhosted.yaml
     mv /opt/donetick.db /opt/donetick
     msg_ok "Restored Configurations"
 
