@@ -21,6 +21,13 @@ $STD apk add --no-cache \
 msg_ok "Installed dependencies"
 
 RELEASE=$(curl -fsSL https://teamspeak.com/en/downloads/#server | sed -n 's/.*teamspeak3-server_linux_amd64-\([0-9.]*[0-9]\).*/\1/p' | head -1)
+if [[ -z "${RELEASE:-}" ]]; then
+  RELEASE=$(curl -fsSL https://files.teamspeak-services.com/releases/server/ | grep -oE 'teamspeak3-server_linux_amd64-[0-9.]+\.tar\.bz2' | sed -n 's/.*-\([0-9.]*[0-9]\)\.tar\.bz2/\1/p' | head -1)
+fi
+if [[ -z "${RELEASE:-}" ]]; then
+  msg_error "Unable to determine the TeamSpeak Server release"
+  exit 1
+fi
 msg_info "Installing Teamspeak Server v${RELEASE}"
 mkdir -p /opt/teamspeak-server
 cd /opt/teamspeak-server
