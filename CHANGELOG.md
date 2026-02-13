@@ -412,6 +412,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - chore(donetick): add config entry for v0.1.73 [@tomfrenzel](https://github.com/tomfrenzel) ([#11872](https://github.com/community-scripts/ProxmoxVE/pull/11872))
     - Refactor: Radicale [@vhsdream](https://github.com/vhsdream) ([#11850](https://github.com/community-scripts/ProxmoxVE/pull/11850))
 
 ### 🌐 Website
