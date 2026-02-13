@@ -1,0 +1,35 @@
+{
+  "name": "Frigate",
+  "slug": "frigate",
+  "categories": [
+    15
+  ],
+  "date_created": "2025-07-02",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "config_path": "/opt/frigate/.env",
+  "interface_port": 3000,
+  "documentation": "https://frigate.io/",
+  "website": "https://frigate.io/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/frigate-light.webp",
+  "description": "Frigate is an open-source self-hosted application.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/frigate.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
