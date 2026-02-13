@@ -59,7 +59,7 @@ function update_script() {
     $STD npx prisma migrate deploy
     $STD npx prisma generate
     cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
-    sed -i -e 's|proxy_pass .*|proxy_pass http://127.0.0.1:3399;|' \
+    sed -i -e 's|proxy_pass .*|proxy_pass http://127.0.0.1:3001;|' \
       -e '\|try_files |i\        root /opt/patchmon/frontend/dist;' \
       -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
     ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
