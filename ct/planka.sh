@@ -61,6 +61,12 @@ function update_script() {
     rm -rf "$BK"
     msg_ok "Restored data"
 
+    msg_ok "Migrate Database"
+    cd /opt/planka
+    $STD npm run db:upgrade
+    $STD npm run db:migrate
+    msg_ok "Migrated Database"
+
     msg_info "Starting Service"
     systemctl start planka
     msg_ok "Started Service"
