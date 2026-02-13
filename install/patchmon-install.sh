@@ -85,10 +85,11 @@ TFA_MAX_REMEMBER_SESSIONS=5
 TFA_SUSPICIOUS_ACTIVITY_THRESHOLD=3
 EOF
 
+RELEASE=$(get_latest_github_release "PatchMon/PatchMon")
 cat <<EOF >/opt/patchmon/frontend/.env
 VITE_API_URL=http://$LOCAL_IP/api/v1
 VITE_APP_NAME=PatchMon
-VITE_APP_VERSION=1.3.0
+VITE_APP_VERSION=${RELEASE}
 EOF
 
 cd /opt/patchmon/backend
