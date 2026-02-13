@@ -43,19 +43,29 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
 
     msg_info "Updating PatchMon"
-    cd /opt/patchmon
+    VERSION=$(get_latest_github_release "PatchMon/PatchMon")
     export NODE_ENV=production
+    cd /opt/patchmon
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts
     cd /opt/patchmon/backend
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts
     cd /opt/patchmon/frontend
+    mv /opt/frontend.env /opt/patchmon/frontend/.env
+    sed -i "s/VERSION=.*/VERSION=$VERSION/" ./.env
     $STD npm install --include=dev --no-audit --no-fund --no-save --ignore-scripts
     $STD npm run build
     cd /opt/patchmon/backend
     mv /opt/backend.env /opt/patchmon/backend/.env
-    mv /opt/frontend.env /opt/patchmon/frontend/.env
     $STD npx prisma migrate deploy
     $STD npx prisma generate
+    cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
+    sed -i -e 's|proxy_pass .*|proxy_pass http://127.0.0.1:3399;|' \
+      -e '\|try_files |i\        root /opt/patchmon/frontend/dist;' \
+      -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
+    ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
+    rm -f /etc/nginx/sites-enabled/default
+    $STD nginx -t
+    systemctl restart nginx
     msg_ok "Updated PatchMon"
 
     msg_info "Starting Service"
