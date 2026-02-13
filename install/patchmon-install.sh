@@ -48,7 +48,9 @@ JWT_SECRET="$(openssl rand -base64 64 | tr -d "=+/[:space:]" | cut -c1-60)"
 mv /opt/patchmon/backend/env.example /opt/patchmon/backend/.env
 sed -i -e "s|DATABASE_URL=.*|DATABASE_URL=\"postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME\"|" \
   -e "/JWT_SECRET/s/[=$].*/=$JWT_SECRET/" \
-  -e "\|CORS_ORIGIN|s|localhost|$LOCAL_IP|" /opt/patchmon/backend/.env
+  -e "\|CORS_ORIGIN|s|localhost|$LOCAL_IP|" \
+  -e '/_ENV=production/aTRUST_PROXY=loopback' \
+  -e '/REDIS_USER=.*/,+1d' /opt/patchmon/backend/.env
 
 cd /opt/patchmon/backend
 $STD npx prisma migrate deploy
