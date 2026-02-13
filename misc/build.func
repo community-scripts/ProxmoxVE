@@ -38,15 +38,16 @@
 # - Captures app-declared resource defaults (CPU, RAM, Disk)
 # ------------------------------------------------------------------------------
 variables() {
-  NSAPP=$(echo "${APP,,}" | tr -d ' ')              # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
-  var_install="${NSAPP}-install"                    # sets the var_install variable by appending "-install" to the value of NSAPP.
-  INTEGER='^[0-9]+([.][0-9]+)?$'                    # it defines the INTEGER regular expression pattern.
-  PVEHOST_NAME=$(hostname)                          # gets the Proxmox Hostname and sets it to Uppercase
-  DIAGNOSTICS="yes"                                 # sets the DIAGNOSTICS variable to "yes", used for the API call.
-  METHOD="default"                                  # sets the METHOD variable to "default", used for the API call.
-  RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUID variable.
-  SESSION_ID="${RANDOM_UUID:0:8}"                   # Short session ID (first 8 chars of UUID) for log files
-  BUILD_LOG="/tmp/create-lxc-${SESSION_ID}.log"     # Host-side container creation log
+  NSAPP=$(echo "${APP,,}" | tr -d ' ')                   # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
+  var_install="${NSAPP}-install"                         # sets the var_install variable by appending "-install" to the value of NSAPP.
+  INTEGER='^[0-9]+([.][0-9]+)?$'                         # it defines the INTEGER regular expression pattern.
+  PVEHOST_NAME=$(hostname)                               # gets the Proxmox Hostname and sets it to Uppercase
+  DIAGNOSTICS="yes"                                      # sets the DIAGNOSTICS variable to "yes", used for the API call.
+  METHOD="default"                                       # sets the METHOD variable to "default", used for the API call.
+  RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"      # generates a random UUID and sets it to the RANDOM_UUID variable.
+  SESSION_ID="${RANDOM_UUID:0:8}"                        # Short session ID (first 8 chars of UUID) for log files
+  BUILD_LOG="/tmp/create-lxc-${SESSION_ID}.log"          # Host-side container creation log
+  combined_log="/tmp/install-${SESSION_ID}-combined.log" # Combined log (build + install) for failed installations
   CTTYPE="${CTTYPE:-${CT_TYPE:-1}}"
 
   # Parse dev_mode early
@@ -217,7 +218,7 @@ update_motd_ip() {
     local current_os="$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"') - Version: $(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')"
     local current_hostname="$(hostname)"
     local current_ip="$(hostname -I | awk '{print $1}')"
-    
+
     # Update only if values actually changed
     if ! grep -q "OS:.*$current_os" "$PROFILE_FILE" 2>/dev/null; then
       sed -i "s|OS:.*|OS: \${GN}$current_os\${CL}\\\"|" "$PROFILE_FILE"
@@ -385,7 +386,7 @@ validate_hostname() {
 
   # Split by dots and validate each label
   local IFS='.'
-  read -ra labels <<< "$hostname"
+  read -ra labels <<<"$hostname"
   for label in "${labels[@]}"; do
     # Each label: 1-63 chars, alphanumeric, hyphens allowed (not at start/end)
     if [[ -z "$label" ]] || [[ ${#label} -gt 63 ]]; then
@@ -489,7 +490,7 @@ validate_ipv6_address() {
   # Check that no segment exceeds 4 hex chars
   local IFS=':'
   local -a segments
-  read -ra segments <<< "$addr"
+  read -ra segments <<<"$addr"
   for seg in "${segments[@]}"; do
     if [[ ${#seg} -gt 4 ]]; then
       return 1
@@ -539,14 +540,14 @@ validate_gateway_in_subnet() {
 
   # Convert IPs to integers
   local IFS='.'
-  read -r i1 i2 i3 i4 <<< "$ip"
-  read -r g1 g2 g3 g4 <<< "$gateway"
+  read -r i1 i2 i3 i4 <<<"$ip"
+  read -r g1 g2 g3 g4 <<<"$gateway"
 
-  local ip_int=$(( (i1 << 24) + (i2 << 16) + (i3 << 8) + i4 ))
-  local gw_int=$(( (g1 << 24) + (g2 << 16) + (g3 << 8) + g4 ))
+  local ip_int=$(((i1 << 24) + (i2 << 16) + (i3 << 8) + i4))
+  local gw_int=$(((g1 << 24) + (g2 << 16) + (g3 << 8) + g4))
 
   # Check if both are in same network
-  if (( (ip_int & mask) != (gw_int & mask) )); then
+  if (((ip_int & mask) != (gw_int & mask))); then
     return 1
   fi
 
@@ -1079,117 +1080,117 @@ load_vars_file() {
       # Validate values before setting (skip empty values - they use defaults)
       if [[ -n "$var_val" ]]; then
         case "$var_key" in
-          var_mac)
-            if ! validate_mac_address "$var_val"; then
-              msg_warn "Invalid MAC address '$var_val' in $file, ignoring"
+        var_mac)
+          if ! validate_mac_address "$var_val"; then
+            msg_warn "Invalid MAC address '$var_val' in $file, ignoring"
+            continue
+          fi
+          ;;
+        var_vlan)
+          if ! validate_vlan_tag "$var_val"; then
+            msg_warn "Invalid VLAN tag '$var_val' in $file (must be 1-4094), ignoring"
+            continue
+          fi
+          ;;
+        var_mtu)
+          if ! validate_mtu "$var_val"; then
+            msg_warn "Invalid MTU '$var_val' in $file (must be 576-65535), ignoring"
+            continue
+          fi
+          ;;
+        var_tags)
+          if ! validate_tags "$var_val"; then
+            msg_warn "Invalid tags '$var_val' in $file (alphanumeric, -, _, ; only), ignoring"
+            continue
+          fi
+          ;;
+        var_timezone)
+          if ! validate_timezone "$var_val"; then
+            msg_warn "Invalid timezone '$var_val' in $file, ignoring"
+            continue
+          fi
+          ;;
+        var_brg)
+          if ! validate_bridge "$var_val"; then
+            msg_warn "Bridge '$var_val' not found in $file, ignoring"
+            continue
+          fi
+          ;;
+        var_gateway)
+          if ! validate_gateway_ip "$var_val"; then
+            msg_warn "Invalid gateway IP '$var_val' in $file, ignoring"
+            continue
+          fi
+          ;;
+        var_hostname)
+          if ! validate_hostname "$var_val"; then
+            msg_warn "Invalid hostname '$var_val' in $file, ignoring"
+            continue
+          fi
+          ;;
+        var_cpu)
+          if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 1 || var_val > 128)); then
+            msg_warn "Invalid CPU count '$var_val' in $file (must be 1-128), ignoring"
+            continue
+          fi
+          ;;
+        var_ram)
+          if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 256)); then
+            msg_warn "Invalid RAM '$var_val' in $file (must be >= 256 MiB), ignoring"
+            continue
+          fi
+          ;;
+        var_disk)
+          if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 1)); then
+            msg_warn "Invalid disk size '$var_val' in $file (must be >= 1 GB), ignoring"
+            continue
+          fi
+          ;;
+        var_unprivileged)
+          if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
+            msg_warn "Invalid unprivileged value '$var_val' in $file (must be 0 or 1), ignoring"
+            continue
+          fi
+          ;;
+        var_nesting)
+          if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
+            msg_warn "Invalid nesting value '$var_val' in $file (must be 0 or 1), ignoring"
+            continue
+          fi
+          # Warn about potential issues with systemd-based OS when nesting is disabled via vars file
+          if [[ "$var_val" == "0" && "${var_os:-debian}" != "alpine" ]]; then
+            msg_warn "Nesting disabled in $file - modern systemd-based distributions may require nesting for proper operation"
+          fi
+          ;;
+        var_keyctl)
+          if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
+            msg_warn "Invalid keyctl value '$var_val' in $file (must be 0 or 1), ignoring"
+            continue
+          fi
+          ;;
+        var_net)
+          # var_net can be: dhcp, static IP/CIDR, or IP range
+          if [[ "$var_val" != "dhcp" ]]; then
+            if is_ip_range "$var_val"; then
+              : # IP range is valid, will be resolved at runtime
+            elif ! validate_ip_address "$var_val"; then
+              msg_warn "Invalid network '$var_val' in $file (must be dhcp or IP/CIDR), ignoring"
               continue
             fi
-            ;;
-          var_vlan)
-            if ! validate_vlan_tag "$var_val"; then
-              msg_warn "Invalid VLAN tag '$var_val' in $file (must be 1-4094), ignoring"
-              continue
-            fi
-            ;;
-          var_mtu)
-            if ! validate_mtu "$var_val"; then
-              msg_warn "Invalid MTU '$var_val' in $file (must be 576-65535), ignoring"
-              continue
-            fi
-            ;;
-          var_tags)
-            if ! validate_tags "$var_val"; then
-              msg_warn "Invalid tags '$var_val' in $file (alphanumeric, -, _, ; only), ignoring"
-              continue
-            fi
-            ;;
-          var_timezone)
-            if ! validate_timezone "$var_val"; then
-              msg_warn "Invalid timezone '$var_val' in $file, ignoring"
-              continue
-            fi
-            ;;
-          var_brg)
-            if ! validate_bridge "$var_val"; then
-              msg_warn "Bridge '$var_val' not found in $file, ignoring"
-              continue
-            fi
-            ;;
-          var_gateway)
-            if ! validate_gateway_ip "$var_val"; then
-              msg_warn "Invalid gateway IP '$var_val' in $file, ignoring"
-              continue
-            fi
-            ;;
-          var_hostname)
-            if ! validate_hostname "$var_val"; then
-              msg_warn "Invalid hostname '$var_val' in $file, ignoring"
-              continue
-            fi
-            ;;
-          var_cpu)
-            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 1 || var_val > 128)); then
-              msg_warn "Invalid CPU count '$var_val' in $file (must be 1-128), ignoring"
-              continue
-            fi
-            ;;
-          var_ram)
-            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 256)); then
-              msg_warn "Invalid RAM '$var_val' in $file (must be >= 256 MiB), ignoring"
-              continue
-            fi
-            ;;
-          var_disk)
-            if ! [[ "$var_val" =~ ^[0-9]+$ ]] || ((var_val < 1)); then
-              msg_warn "Invalid disk size '$var_val' in $file (must be >= 1 GB), ignoring"
-              continue
-            fi
-            ;;
-          var_unprivileged)
-            if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
-              msg_warn "Invalid unprivileged value '$var_val' in $file (must be 0 or 1), ignoring"
-              continue
-            fi
-            ;;
-          var_nesting)
-            if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
-              msg_warn "Invalid nesting value '$var_val' in $file (must be 0 or 1), ignoring"
-              continue
-            fi
-            # Warn about potential issues with systemd-based OS when nesting is disabled via vars file
-            if [[ "$var_val" == "0" && "${var_os:-debian}" != "alpine" ]]; then
-              msg_warn "Nesting disabled in $file - modern systemd-based distributions may require nesting for proper operation"
-            fi
-            ;;
-          var_keyctl)
-            if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
-              msg_warn "Invalid keyctl value '$var_val' in $file (must be 0 or 1), ignoring"
-              continue
-            fi
-            ;;
-          var_net)
-            # var_net can be: dhcp, static IP/CIDR, or IP range
-            if [[ "$var_val" != "dhcp" ]]; then
-              if is_ip_range "$var_val"; then
-                : # IP range is valid, will be resolved at runtime
-              elif ! validate_ip_address "$var_val"; then
-                msg_warn "Invalid network '$var_val' in $file (must be dhcp or IP/CIDR), ignoring"
-                continue
-              fi
-            fi
-            ;;
-          var_fuse|var_tun|var_gpu|var_ssh|var_verbose|var_protection)
-            if [[ "$var_val" != "yes" && "$var_val" != "no" ]]; then
-              msg_warn "Invalid boolean '$var_val' for $var_key in $file (must be yes/no), ignoring"
-              continue
-            fi
-            ;;
-          var_ipv6_method)
-            if [[ "$var_val" != "auto" && "$var_val" != "dhcp" && "$var_val" != "static" && "$var_val" != "none" ]]; then
-              msg_warn "Invalid IPv6 method '$var_val' in $file (must be auto/dhcp/static/none), ignoring"
-              continue
-            fi
-            ;;
+          fi
+          ;;
+        var_fuse | var_tun | var_gpu | var_ssh | var_verbose | var_protection)
+          if [[ "$var_val" != "yes" && "$var_val" != "no" ]]; then
+            msg_warn "Invalid boolean '$var_val' for $var_key in $file (must be yes/no), ignoring"
+            continue
+          fi
+          ;;
+        var_ipv6_method)
+          if [[ "$var_val" != "auto" && "$var_val" != "dhcp" && "$var_val" != "static" && "$var_val" != "none" ]]; then
+            msg_warn "Invalid IPv6 method '$var_val' in $file (must be auto/dhcp/static/none), ignoring"
+            continue
+          fi
+          ;;
         esac
       fi
 
@@ -2764,7 +2765,7 @@ Advanced:
   [[ "$APT_CACHER" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}APT Cacher: ${BGN}$APT_CACHER_IP${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating an LXC of ${APP} using the above advanced settings${CL}"
-  
+
   # Log settings to file
   log_section "CONTAINER SETTINGS (ADVANCED) - ${APP}"
   log_msg "Application: ${APP}"
@@ -2913,7 +2914,7 @@ echo_default() {
   fi
   echo -e "${CREATING}${BOLD}${BL}Creating a ${APP} LXC using the above default settings${CL}"
   echo -e "  "
-  
+
   # Log settings to file
   log_section "CONTAINER SETTINGS - ${APP}"
   log_msg "Application: ${APP}"
@@ -4096,7 +4097,7 @@ EOF'
         echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
         echo "================================================================================"
         echo ""
-      } > "$combined_log"
+      } >"$combined_log"
 
       # Append BUILD_LOG (host-side creation log) if it exists
       if [[ -f "${BUILD_LOG}" ]]; then
@@ -4106,7 +4107,7 @@ EOF'
           echo "================================================================================"
           cat "${BUILD_LOG}"
           echo ""
-        } >> "$combined_log"
+        } >>"$combined_log"
         build_log_copied=true
       fi
 
@@ -4119,7 +4120,7 @@ EOF'
           echo "================================================================================"
           cat "$temp_install_log"
           echo ""
-        } >> "$combined_log"
+        } >>"$combined_log"
         rm -f "$temp_install_log"
         install_log_copied=true
         # Point INSTALL_LOG to combined log so get_error_text() finds it
@@ -5223,7 +5224,7 @@ ensure_log_on_host() {
         echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
         echo "================================================================================"
         echo ""
-      } > "$combined_log" 2>/dev/null || return 0
+      } >"$combined_log" 2>/dev/null || return 0
       # Append BUILD_LOG if it exists
       if [[ -f "${BUILD_LOG:-}" ]]; then
         {
@@ -5232,7 +5233,7 @@ ensure_log_on_host() {
           echo "================================================================================"
           cat "${BUILD_LOG}"
           echo ""
-        } >> "$combined_log"
+        } >>"$combined_log"
       fi
       # Pull INSTALL_LOG from container
       local temp_log="/tmp/.install-temp-${SESSION_ID}.log"
@@ -5243,7 +5244,7 @@ ensure_log_on_host() {
           echo "================================================================================"
           cat "$temp_log"
           echo ""
-        } >> "$combined_log"
+        } >>"$combined_log"
         rm -f "$temp_log"
       fi
     fi
