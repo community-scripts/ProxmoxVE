@@ -51,7 +51,7 @@ function update_script() {
     $STD npm run db:generate
     $STD npm run build
     $STD npm run build:cli
-    $STD npm run db:sqlite:push
+    $STD npm run db:push
     cp -R .next/standalone ./
     chmod +x ./dist/cli.mjs
     cp server/db/names.json ./dist/names.json
