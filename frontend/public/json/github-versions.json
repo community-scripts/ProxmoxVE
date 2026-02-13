@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-13T12:11:36Z",
+  "generated": "2026-02-13T18:13:59Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -67,9 +67,9 @@
     {
       "slug": "autobrr",
       "repo": "autobrr/autobrr",
-      "version": "v1.72.1",
+      "version": "v1.73.0",
       "pinned": false,
-      "date": "2026-01-30T12:57:58Z"
+      "date": "2026-02-13T16:37:28Z"
     },
     {
       "slug": "autocaliweb",
@@ -445,9 +445,9 @@
     {
       "slug": "gotify",
       "repo": "gotify/server",
-      "version": "v2.8.0",
+      "version": "v2.9.0",
       "pinned": false,
-      "date": "2026-01-02T11:56:16Z"
+      "date": "2026-02-13T15:22:31Z"
     },
     {
       "slug": "grist",
@@ -823,9 +823,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.12",
+      "version": "2026.02.13",
       "pinned": false,
-      "date": "2026-02-12T21:05:49Z"
+      "date": "2026-02-13T15:18:17Z"
     },
     {
       "slug": "miniflux",
@@ -1411,9 +1411,9 @@
     {
       "slug": "tandoor",
       "repo": "TandoorRecipes/recipes",
-      "version": "2.5.0",
+      "version": "2.5.1",
       "pinned": false,
-      "date": "2026-02-08T13:23:02Z"
+      "date": "2026-02-13T15:57:27Z"
     },
     {
       "slug": "tasmoadmin",
@@ -1467,9 +1467,9 @@
     {
       "slug": "tianji",
       "repo": "msgbyte/tianji",
-      "version": "v1.31.12",
+      "version": "v1.31.13",
       "pinned": false,
-      "date": "2026-02-12T19:06:14Z"
+      "date": "2026-02-13T16:30:09Z"
     },
     {
       "slug": "traccar",
@@ -1516,9 +1516,9 @@
     {
       "slug": "tududi",
       "repo": "chrisvel/tududi",
-      "version": "v0.88.4",
+      "version": "v0.88.5",
       "pinned": false,
-      "date": "2026-01-20T15:11:58Z"
+      "date": "2026-02-13T13:54:14Z"
     },
     {
       "slug": "tunarr",
@@ -1565,9 +1565,9 @@
     {
       "slug": "uptimekuma",
       "repo": "louislam/uptime-kuma",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "pinned": false,
-      "date": "2026-02-07T02:31:49Z"
+      "date": "2026-02-13T16:07:33Z"
     },
     {
       "slug": "vaultwarden",
