@@ -415,6 +415,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - chore(donetick): add config entry for v0.1.73 [@tomfrenzel](https://github.com/tomfrenzel) ([#11872](https://github.com/community-scripts/ProxmoxVE/pull/11872))
     - Refactor: Radicale [@vhsdream](https://github.com/vhsdream) ([#11850](https://github.com/community-scripts/ProxmoxVE/pull/11850))
 
+### 📡 API
+
+  - #### ✨ New Features
+
+    - error-handler: Implement json_escape and enhance error handling [@MickLesk](https://github.com/MickLesk) ([#11875](https://github.com/community-scripts/ProxmoxVE/pull/11875))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
