@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-13T00:23:29Z",
+  "generated": "2026-02-13T06:23:00Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -571,16 +571,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.58",
+      "version": "v5.12.59",
       "pinned": false,
-      "date": "2026-02-12T13:30:15Z"
+      "date": "2026-02-13T02:26:13Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1098",
+      "version": "v0.24.1103",
       "pinned": false,
-      "date": "2026-02-12T05:56:25Z"
+      "date": "2026-02-13T05:53:23Z"
     },
     {
       "slug": "jellystat",
@@ -998,9 +998,9 @@
     {
       "slug": "pangolin",
       "repo": "fosrl/pangolin",
-      "version": "1.15.3",
+      "version": "1.15.4",
       "pinned": false,
-      "date": "2026-02-12T06:10:19Z"
+      "date": "2026-02-13T00:54:02Z"
     },
     {
       "slug": "paperless-ai",
@@ -1432,9 +1432,9 @@
     {
       "slug": "termix",
       "repo": "Termix-SSH/Termix",
-      "version": "release-1.11.0-tag",
+      "version": "release-1.11.1-tag",
       "pinned": false,
-      "date": "2026-01-25T02:09:52Z"
+      "date": "2026-02-13T04:49:16Z"
     },
     {
       "slug": "the-lounge",
