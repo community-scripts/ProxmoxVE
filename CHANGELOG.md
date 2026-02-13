@@ -407,8 +407,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - Planka: add migrate step to update function [@ZimmermannLeon](https://github.com/ZimmermannLeon) ([#11877](https://github.com/community-scripts/ProxmoxVE/pull/11877))
     - OpenWebUI: pin numba constraint [@MickLesk](https://github.com/MickLesk) ([#11874](https://github.com/community-scripts/ProxmoxVE/pull/11874))
+    - Planka: add migrate step to update function [@ZimmermannLeon](https://github.com/ZimmermannLeon) ([#11877](https://github.com/community-scripts/ProxmoxVE/pull/11877))
     - Pangolin: switch sqlite-specific back to generic [@MickLesk](https://github.com/MickLesk) ([#11868](https://github.com/community-scripts/ProxmoxVE/pull/11868))
     - [Hotfix] Jotty: Copy contents of config backup into /opt/jotty/config [@vhsdream](https://github.com/vhsdream) ([#11864](https://github.com/community-scripts/ProxmoxVE/pull/11864))
 
