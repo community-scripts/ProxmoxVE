@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-12T18:20:58Z",
+  "generated": "2026-02-13T00:23:29Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -193,9 +193,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.5.1",
+      "version": "v2.6.0",
       "pinned": false,
-      "date": "2026-01-11T00:46:17Z"
+      "date": "2026-02-13T00:14:21Z"
     },
     {
       "slug": "cloudreve",
@@ -298,9 +298,9 @@
     {
       "slug": "donetick",
       "repo": "donetick/donetick",
-      "version": "v0.1.71",
+      "version": "v0.1.73",
       "pinned": false,
-      "date": "2026-02-11T06:01:13Z"
+      "date": "2026-02-12T23:42:30Z"
     },
     {
       "slug": "drawio",
@@ -403,9 +403,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.237.0",
+      "version": "2.238.0",
       "pinned": false,
-      "date": "2026-02-08T13:59:53Z"
+      "date": "2026-02-12T18:28:55Z"
     },
     {
       "slug": "gitea",
@@ -543,9 +543,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.2.4",
+      "version": "9.2.4.1",
       "pinned": false,
-      "date": "2026-02-12T08:31:23Z"
+      "date": "2026-02-12T22:17:47Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -823,9 +823,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.08",
+      "version": "2026.02.12",
       "pinned": false,
-      "date": "2026-02-08T17:01:37Z"
+      "date": "2026-02-12T21:05:49Z"
     },
     {
       "slug": "miniflux",
@@ -1026,9 +1026,9 @@
     {
       "slug": "patchmon",
       "repo": "PatchMon/PatchMon",
-      "version": "v1.4.0",
+      "version": "v1.3.7",
       "pinned": false,
-      "date": "2026-02-12T18:00:17Z"
+      "date": "2025-12-25T11:08:14Z"
     },
     {
       "slug": "paymenter",
@@ -1460,9 +1460,9 @@
     {
       "slug": "tianji",
       "repo": "msgbyte/tianji",
-      "version": "v1.31.11",
+      "version": "v1.31.12",
       "pinned": false,
-      "date": "2026-02-12T14:55:56Z"
+      "date": "2026-02-12T19:06:14Z"
     },
     {
       "slug": "traccar",
@@ -1551,9 +1551,9 @@
     {
       "slug": "upsnap",
       "repo": "seriousm4x/UpSnap",
-      "version": "5.2.7",
+      "version": "5.2.8",
       "pinned": false,
-      "date": "2026-01-07T23:48:00Z"
+      "date": "2026-02-13T00:02:37Z"
     },
     {
       "slug": "uptimekuma",
