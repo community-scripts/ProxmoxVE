@@ -410,6 +410,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Pangolin: switch sqlite-specific back to generic [@MickLesk](https://github.com/MickLesk) ([#11868](https://github.com/community-scripts/ProxmoxVE/pull/11868))
     - [Hotfix] Jotty: Copy contents of config backup into /opt/jotty/config [@vhsdream](https://github.com/vhsdream) ([#11864](https://github.com/community-scripts/ProxmoxVE/pull/11864))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Radicale [@vhsdream](https://github.com/vhsdream) ([#11850](https://github.com/community-scripts/ProxmoxVE/pull/11850))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
