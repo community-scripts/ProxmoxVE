@@ -4130,6 +4130,10 @@ EOF'
       echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
     fi
 
+    # Force one final status update attempt after cleanup
+    # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
+    post_update_to_api "failed" "$install_exit_code" "force"
+
     exit $install_exit_code
   fi
 }

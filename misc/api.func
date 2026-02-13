@@ -592,9 +592,12 @@ post_update_to_api() {
   # Silent fail - telemetry should never break scripts
   command -v curl &>/dev/null || return 0
 
-  # Prevent duplicate submissions
+  # Support "force" mode (3rd arg) to bypass duplicate check for retries after cleanup
+  local force="${3:-}"
   POST_UPDATE_DONE=${POST_UPDATE_DONE:-false}
-  [[ "$POST_UPDATE_DONE" == "true" ]] && return 0
+  if [[ "$POST_UPDATE_DONE" == "true" && "$force" != "force" ]]; then
+    return 0
+  fi
 
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
   [[ -z "${RANDOM_UUID:-}" ]] && return 0
@@ -632,6 +635,7 @@ post_update_to_api() {
   esac
 
   # For failed/unknown status, resolve exit code and error description
+  local short_error=""
   if [[ "$pb_status" == "failed" ]] || [[ "$pb_status" == "unknown" ]]; then
     if [[ "$raw_exit_code" =~ ^[0-9]+$ ]]; then
       exit_code="$raw_exit_code"
@@ -645,6 +649,7 @@ post_update_to_api() {
     else
       error=$(json_escape "$(explain_exit_code "$exit_code")")
     fi
+    short_error=$(json_escape "$(explain_exit_code "$exit_code")")
     error_category=$(categorize_error "$exit_code")
     [[ -z "$error" ]] && error="Unknown error"
   fi
@@ -661,8 +666,9 @@ post_update_to_api() {
     pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
   fi
 
-  # Full payload including all fields - allows record creation if initial call failed
-  # The Go service will find the record by random_id and PATCH, or create if not found
+  local http_code=""
+
+  # ── Attempt 1: Full payload with complete error text ──
   local JSON_PAYLOAD
   JSON_PAYLOAD=$(
     cat <<EOF
@@ -694,11 +700,80 @@ post_update_to_api() {
 EOF
   )
 
-  # Fire-and-forget: never block, never fail
+  http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
+
+  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+    POST_UPDATE_DONE=true
+    return 0
+  fi
+
+  # ── Attempt 2: Short error text (no full log) ──
+  sleep 1
+  local RETRY_PAYLOAD
+  RETRY_PAYLOAD=$(
+    cat <<EOF
+{
+    "random_id": "${RANDOM_UUID}",
+    "type": "${TELEMETRY_TYPE:-lxc}",
+    "nsapp": "${NSAPP:-unknown}",
+    "status": "${pb_status}",
+    "ct_type": ${CT_TYPE:-1},
+    "disk_size": ${DISK_SIZE:-0},
+    "core_count": ${CORE_COUNT:-0},
+    "ram_size": ${RAM_SIZE:-0},
+    "os_type": "${var_os:-}",
+    "os_version": "${var_version:-}",
+    "pve_version": "${pve_version}",
+    "method": "${METHOD:-default}",
+    "exit_code": ${exit_code},
+    "error": "${short_error}",
+    "error_category": "${error_category}",
+    "install_duration": ${duration},
+    "cpu_vendor": "${cpu_vendor}",
+    "cpu_model": "${cpu_model}",
+    "gpu_vendor": "${gpu_vendor}",
+    "gpu_model": "${gpu_model}",
+    "gpu_passthrough": "${gpu_passthrough}",
+    "ram_speed": "${ram_speed}",
+    "repo_source": "${REPO_SOURCE}"
+}
+EOF
+  )
+
+  http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
+    -H "Content-Type: application/json" \
+    -d "$RETRY_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
+
+  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+    POST_UPDATE_DONE=true
+    return 0
+  fi
+
+  # ── Attempt 3: Minimal payload (bare minimum to set status) ──
+  sleep 2
+  local MINIMAL_PAYLOAD
+  MINIMAL_PAYLOAD=$(
+    cat <<EOF
+{
+    "random_id": "${RANDOM_UUID}",
+    "type": "${TELEMETRY_TYPE:-lxc}",
+    "nsapp": "${NSAPP:-unknown}",
+    "status": "${pb_status}",
+    "exit_code": ${exit_code},
+    "error": "${short_error}",
+    "error_category": "${error_category}",
+    "install_duration": ${duration}
+}
+EOF
+  )
+
   curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
     -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD" -o /dev/null 2>&1 || true
+    -d "$MINIMAL_PAYLOAD" -o /dev/null 2>/dev/null || true
 
+  # Tried 3 times - mark as done regardless to prevent infinite loops
   POST_UPDATE_DONE=true
 }
 

@@ -222,6 +222,12 @@ error_handler() {
           pct destroy "$CTID" &>/dev/null || true
           echo -e "${GN}✔${CL} Container ${CTID} removed"
         fi
+
+        # Force one final status update attempt after cleanup
+        # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
+        if declare -f post_update_to_api &>/dev/null; then
+          post_update_to_api "failed" "$exit_code" "force"
+        fi
       fi
     fi
   fi
