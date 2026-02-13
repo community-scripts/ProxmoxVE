@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-13T06:23:00Z",
+  "generated": "2026-02-13T12:11:36Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -193,9 +193,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.6.0",
+      "version": "v2.6.1",
       "pinned": false,
-      "date": "2026-02-13T00:14:21Z"
+      "date": "2026-02-13T10:00:19Z"
     },
     {
       "slug": "cloudreve",
@@ -1026,9 +1026,9 @@
     {
       "slug": "patchmon",
       "repo": "PatchMon/PatchMon",
-      "version": "v1.3.7",
+      "version": "v1.4.0",
       "pinned": false,
-      "date": "2025-12-25T11:08:14Z"
+      "date": "2026-02-13T10:39:03Z"
     },
     {
       "slug": "paymenter",
@@ -1218,6 +1218,13 @@
       "version": "v6.0.4.10291",
       "pinned": false,
       "date": "2025-11-16T22:39:01Z"
+    },
+    {
+      "slug": "radicale",
+      "repo": "Kozea/Radicale",
+      "version": "v3.6.0",
+      "pinned": false,
+      "date": "2026-01-10T06:56:46Z"
     },
     {
       "slug": "rclone",
