@@ -153,7 +153,7 @@ explain_exit_code() {
   126) echo "Command invoked cannot execute (permission problem?)" ;;
   127) echo "Command not found" ;;
   128) echo "Invalid argument to exit" ;;
-  130) echo "Terminated by Ctrl+C (SIGINT)" ;;
+  130) echo "Aborted by user (SIGINT)" ;;
   134) echo "Process aborted (SIGABRT - possibly Node.js heap overflow)" ;;
   137) echo "Killed (SIGKILL / Out of memory?)" ;;
   139) echo "Segmentation fault (core dumped)" ;;
@@ -231,6 +231,43 @@ explain_exit_code() {
   # --- Default ---
   *) echo "Unknown error" ;;
   esac
+}
+
+# ------------------------------------------------------------------------------
+# json_escape()
+#
+# - Escapes a string for safe JSON embedding
+# - Handles backslashes, quotes, newlines, tabs, and carriage returns
+# ------------------------------------------------------------------------------
+json_escape() {
+  local s="$1"
+  s=${s//\\/\\\\}
+  s=${s//"/\\"}
+  s=${s//$'\n'/\\n}
+  s=${s//$'\r'/}
+  s=${s//$'\t'/\\t}
+  echo "$s"
+}
+
+# ------------------------------------------------------------------------------
+# get_error_text()
+#
+# - Returns last 20 lines of the active log (INSTALL_LOG or BUILD_LOG)
+# - Falls back to empty string if no log is available
+# ------------------------------------------------------------------------------
+get_error_text() {
+  local logfile=""
+  if declare -f get_active_logfile >/dev/null 2>&1; then
+    logfile=$(get_active_logfile)
+  elif [[ -n "${INSTALL_LOG:-}" ]]; then
+    logfile="$INSTALL_LOG"
+  elif [[ -n "${BUILD_LOG:-}" ]]; then
+    logfile="$BUILD_LOG"
+  fi
+
+  if [[ -n "$logfile" && -s "$logfile" ]]; then
+    tail -n 20 "$logfile" 2>/dev/null | sed 's/\r$//'
+  fi
 }
 
 # ==============================================================================
@@ -601,7 +638,13 @@ post_update_to_api() {
     else
       exit_code=1
     fi
-    error=$(explain_exit_code "$exit_code")
+    local error_text=""
+    error_text=$(get_error_text)
+    if [[ -n "$error_text" ]]; then
+      error=$(json_escape "$error_text")
+    else
+      error=$(json_escape "$(explain_exit_code "$exit_code")")
+    fi
     error_category=$(categorize_error "$exit_code")
     [[ -z "$error" ]] && error="Unknown error"
   fi
@@ -691,6 +734,9 @@ categorize_error() {
   # Configuration errors
   203 | 204 | 205 | 206 | 207 | 208) echo "config" ;;
 
+  # Aborted by user
+  130) echo "aborted" ;;
+
   # Resource errors (OOM, etc)
   137 | 134) echo "resource" ;;
 
@@ -755,7 +801,13 @@ post_tool_to_api() {
 
   if [[ "$status" == "failed" ]]; then
     [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
-    error=$(explain_exit_code "$exit_code")
+    local error_text=""
+    error_text=$(get_error_text)
+    if [[ -n "$error_text" ]]; then
+      error=$(json_escape "$error_text")
+    else
+      error=$(json_escape "$(explain_exit_code "$exit_code")")
+    fi
     error_category=$(categorize_error "$exit_code")
   fi
 
@@ -816,7 +868,13 @@ post_addon_to_api() {
 
   if [[ "$status" == "failed" ]]; then
     [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
-    error=$(explain_exit_code "$exit_code")
+    local error_text=""
+    error_text=$(get_error_text)
+    if [[ -n "$error_text" ]]; then
+      error=$(json_escape "$error_text")
+    else
+      error=$(json_escape "$(explain_exit_code "$exit_code")")
+    fi
     error_category=$(categorize_error "$exit_code")
   fi
 
@@ -909,7 +967,13 @@ post_update_to_api_extended() {
     else
       exit_code=1
     fi
-    error=$(explain_exit_code "$exit_code")
+    local error_text=""
+    error_text=$(get_error_text)
+    if [[ -n "$error_text" ]]; then
+      error=$(json_escape "$error_text")
+    else
+      error=$(json_escape "$(explain_exit_code "$exit_code")")
+    fi
     error_category=$(categorize_error "$exit_code")
     [[ -z "$error" ]] && error="Unknown error"
   fi
