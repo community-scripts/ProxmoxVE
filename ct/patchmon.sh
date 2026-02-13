@@ -47,20 +47,19 @@ function update_script() {
     export NODE_ENV=production
     cd /opt/patchmon
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts
-    cd /opt/patchmon/backend
-    $STD npm install --no-audit --no-fund --no-save --ignore-scripts
     cd /opt/patchmon/frontend
     mv /opt/frontend.env /opt/patchmon/frontend/.env
     sed -i "s/VERSION=.*/VERSION=$VERSION/" ./.env
-    $STD npm install --include=dev --no-audit --no-fund --no-save --ignore-scripts
+    $STD npm install --no-audit --no-fund --no-save --ignore-scripts --include=dev
     $STD npm run build
     cd /opt/patchmon/backend
     mv /opt/backend.env /opt/patchmon/backend/.env
+    $STD npm run db:generate
     $STD npx prisma migrate deploy
-    $STD npx prisma generate
     cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
     sed -i -e 's|proxy_pass .*|proxy_pass http://127.0.0.1:3001;|' \
       -e '\|try_files |i\        root /opt/patchmon/frontend/dist;' \
+      -e 's|alias.*|alias /opt/patchmon/frontend/dist/assets;|' \
       -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
     ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
     rm -f /etc/nginx/sites-enabled/default
@@ -69,6 +68,10 @@ function update_script() {
     msg_ok "Updated PatchMon"
 
     msg_info "Starting Service"
+    if grep -q '/usr/bin/node' /etc/systemd/system/patchmon-server.service; then
+      sed -i 's|ExecStart=.*|ExecStart=/usr/bin/npm run start|' /etc/systemd/system/patchmon-server.service
+      systemctl daemon-reload
+    fi
     systemctl start patchmon-server
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
