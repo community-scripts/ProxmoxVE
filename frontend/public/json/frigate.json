@@ -8,12 +8,12 @@
   "type": "ct",
   "updateable": false,
   "privileged": false,
-  "config_path": "/opt/frigate/.env",
-  "interface_port": 3000,
+  "config_path": "/config/config.yml",
+  "interface_port": 5000,
   "documentation": "https://frigate.io/",
   "website": "https://frigate.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/frigate-light.webp",
-  "description": "Frigate is an open-source self-hosted application.",
+  "description": "Frigate is a complete and local NVR (Network Video Recorder) with realtime AI object detection for CCTV cameras.",
   "install_methods": [
     {
       "type": "default",

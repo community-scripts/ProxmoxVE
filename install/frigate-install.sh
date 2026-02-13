@@ -42,14 +42,12 @@ Components: main contrib
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
   mv /etc/apt/sources.list /etc/apt/sources.list.bak
-  $STD apt-get update
+  $STD apt update
 fi
 msg_ok "Converted APT sources"
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  jq \
-  wget \
+$STD apt install -y \
   xz-utils \
   python3 \
   python3-dev \
@@ -57,7 +55,6 @@ $STD apt-get install -y \
   gcc \
   pkg-config \
   libhdf5-dev \
-  unzip \
   build-essential \
   automake \
   libtool \
@@ -92,24 +89,7 @@ $STD apt-get install -y \
   moreutils
 msg_ok "Installed Dependencies"
 
-msg_info "Setting Up Hardware Acceleration"
-# Use native packages for hardware acceleration
-# intel-media-va-driver-non-free was renamed to intel-media-va-driver in newer releases
-$STD apt-get install -y \
-  vainfo \
-  intel-media-va-driver \
-  intel-gpu-tools \
-  mesa-va-drivers \
-  mesa-vulkan-drivers || true
-msg_ok "Set Up Hardware Acceleration"
-
-msg_info "Configuring GPU Access"
-if [[ "$CTTYPE" == "0" ]]; then
-  sed -i -e 's/^kvm:x:104:$/render:x:104:root,frigate/' -e 's/^render:x:105:root$/kvm:x:105:/' /etc/group
-else
-  sed -i -e 's/^kvm:x:104:$/render:x:104:frigate/' -e 's/^render:x:105:$/kvm:x:105:/' /etc/group
-fi
-msg_ok "Configured GPU Access"
+setup_hwaccel
 
 export TARGETARCH="amd64"
 export CCACHE_DIR=/root/.ccache
@@ -123,7 +103,7 @@ export TRANSFORMERS_NO_ADVISORY_WARNINGS=1
 export OPENCV_FFMPEG_LOGLEVEL=8
 export HAILORT_LOGGER_PATH=NONE
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "latest" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.16.4" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -144,18 +124,16 @@ ln -sf /usr/local/tempio/bin/tempio /usr/local/bin/tempio
 msg_ok "Installed Tempio"
 
 msg_info "Building libUSB"
-cd /opt
-wget -q https://github.com/libusb/libusb/archive/v1.0.26.zip -O libusb.zip
-$STD unzip -q libusb.zip
-cd libusb-1.0.26
+fetch_and_deploy_gh_release "libusb" "libusb/libusb" "tarball" "v1.0.26" "/opt/libusb"
+cd /opt/libusb
 $STD ./bootstrap.sh
 $STD ./configure CC='ccache gcc' CCX='ccache g++' --disable-udev --enable-shared
 $STD make -j "$(nproc)"
-cd /opt/libusb-1.0.26/libusb
+cd /opt/libusb/libusb
 mkdir -p /usr/local/lib /usr/local/include/libusb-1.0 /usr/local/lib/pkgconfig
 $STD bash ../libtool --mode=install /usr/bin/install -c libusb-1.0.la /usr/local/lib
 install -c -m 644 libusb.h /usr/local/include/libusb-1.0
-cd /opt/libusb-1.0.26/
+cd /opt/libusb/
 install -c -m 644 libusb-1.0.pc /usr/local/lib/pkgconfig
 ldconfig
 msg_ok "Built libUSB"
@@ -379,7 +357,7 @@ systemctl enable -q --now nginx
 msg_ok "Created Services"
 
 msg_info "Cleaning Up"
-rm -rf /opt/libusb.zip /opt/libusb-1.0.26 /wheels /models/*.tar.gz
+rm -rf /opt/libusb /wheels /models/*.tar.gz
 msg_ok "Cleaned Up"
 
 motd_ssh
