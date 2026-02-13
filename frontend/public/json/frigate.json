@@ -4,7 +4,7 @@
   "categories": [
     15
   ],
-  "date_created": "2025-07-02",
+  "date_created": "2026-02-13",
   "type": "ct",
   "updateable": false,
   "privileged": false,
@@ -31,5 +31,14 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "SemanticSearch is not pre-installed due to high resource requirements (8+ cores, 16-24GB RAM, GPU recommended). Manual configuration required if needed.",
+      "type": "info"
+    },
+    {
+      "text": "OpenVino detector may fail on older CPUs (pre-Haswell/AVX2). If you encounter 'Illegal instruction' errors, consider using alternative detectors.",
+      "type": "warning"
+    }
+  ]
 }
