@@ -407,6 +407,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OpenWebUI: pin numba constraint [@MickLesk](https://github.com/MickLesk) ([#11874](https://github.com/community-scripts/ProxmoxVE/pull/11874))
     - Pangolin: switch sqlite-specific back to generic [@MickLesk](https://github.com/MickLesk) ([#11868](https://github.com/community-scripts/ProxmoxVE/pull/11868))
     - [Hotfix] Jotty: Copy contents of config backup into /opt/jotty/config [@vhsdream](https://github.com/vhsdream) ([#11864](https://github.com/community-scripts/ProxmoxVE/pull/11864))
 
