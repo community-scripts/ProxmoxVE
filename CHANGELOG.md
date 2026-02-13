@@ -409,6 +409,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [Hotfix] Jotty: Copy contents of config backup into /opt/jotty/config [@vhsdream](https://github.com/vhsdream) ([#11864](https://github.com/community-scripts/ProxmoxVE/pull/11864))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - SQLServer-2025: add PVE9/Kernel 6.x incompatibility warning [@MickLesk](https://github.com/MickLesk) ([#11829](https://github.com/community-scripts/ProxmoxVE/pull/11829))
+
 ## 2026-02-12
 
 ### 🚀 Updated Scripts
