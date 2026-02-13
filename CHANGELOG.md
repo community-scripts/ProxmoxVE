@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-13
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [Hotfix] Jotty: Copy contents of config backup into /opt/jotty/config [@vhsdream](https://github.com/vhsdream) ([#11864](https://github.com/community-scripts/ProxmoxVE/pull/11864))
+
 ## 2026-02-12
 
 ### 🚀 Updated Scripts
