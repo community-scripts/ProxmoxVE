@@ -253,7 +253,8 @@ json_escape() {
 # get_error_text()
 #
 # - Returns last 20 lines of the active log (INSTALL_LOG or BUILD_LOG)
-# - Falls back to empty string if no log is available
+# - Falls back to combined log or BUILD_LOG if primary is not accessible
+# - Handles container paths that don't exist on the host
 # ------------------------------------------------------------------------------
 get_error_text() {
   local logfile=""
@@ -262,6 +263,22 @@ get_error_text() {
   elif [[ -n "${INSTALL_LOG:-}" ]]; then
     logfile="$INSTALL_LOG"
   elif [[ -n "${BUILD_LOG:-}" ]]; then
+    logfile="$BUILD_LOG"
+  fi
+
+  # If logfile is inside container (e.g. /root/.install-*), try the host copy
+  if [[ -n "$logfile" && ! -s "$logfile" ]]; then
+    # Try combined log: /tmp/<app>-<CTID>-<SESSION_ID>.log
+    if [[ -n "${CTID:-}" && -n "${SESSION_ID:-}" ]]; then
+      local combined_log="/tmp/${NSAPP:-lxc}-${CTID}-${SESSION_ID}.log"
+      if [[ -s "$combined_log" ]]; then
+        logfile="$combined_log"
+      fi
+    fi
+  fi
+
+  # Also try BUILD_LOG as fallback if primary log is empty/missing
+  if [[ -z "$logfile" || ! -s "$logfile" ]] && [[ -n "${BUILD_LOG:-}" && -s "${BUILD_LOG}" ]]; then
     logfile="$BUILD_LOG"
   fi
 

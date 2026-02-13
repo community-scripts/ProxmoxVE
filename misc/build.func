@@ -2764,6 +2764,26 @@ Advanced:
   [[ "$APT_CACHER" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}APT Cacher: ${BGN}$APT_CACHER_IP${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating an LXC of ${APP} using the above advanced settings${CL}"
+  
+  # Log settings to file
+  log_section "CONTAINER SETTINGS (ADVANCED) - ${APP}"
+  log_msg "Application: ${APP}"
+  log_msg "PVE Version: ${PVEVERSION} (Kernel: ${KERNEL_VERSION})"
+  log_msg "Operating System: $var_os ($var_version)"
+  log_msg "Container Type: $([ "$CT_TYPE" == "1" ] && echo "Unprivileged" || echo "Privileged")"
+  log_msg "Container ID: $CT_ID"
+  log_msg "Hostname: $HN"
+  log_msg "Disk Size: ${DISK_SIZE} GB"
+  log_msg "CPU Cores: $CORE_COUNT"
+  log_msg "RAM Size: ${RAM_SIZE} MiB"
+  log_msg "Bridge: $BRG"
+  log_msg "IPv4: $NET"
+  log_msg "IPv6: $IPV6_METHOD"
+  log_msg "FUSE Support: ${ENABLE_FUSE:-no}"
+  log_msg "Nesting: $([ "${ENABLE_NESTING:-1}" == "1" ] && echo "Enabled" || echo "Disabled")"
+  log_msg "GPU Passthrough: ${ENABLE_GPU:-no}"
+  log_msg "Verbose Mode: $VERBOSE"
+  log_msg "Session ID: ${SESSION_ID}"
 }
 
 # ==============================================================================
@@ -2871,6 +2891,7 @@ diagnostics_menu() {
 # - Prints summary of default values (ID, OS, type, disk, RAM, CPU, etc.)
 # - Uses icons and formatting for readability
 # - Convert CT_TYPE to description
+# - Also logs settings to log file for debugging
 # ------------------------------------------------------------------------------
 echo_default() {
   CT_TYPE_DESC="Unprivileged"
@@ -2892,6 +2913,20 @@ echo_default() {
   fi
   echo -e "${CREATING}${BOLD}${BL}Creating a ${APP} LXC using the above default settings${CL}"
   echo -e "  "
+  
+  # Log settings to file
+  log_section "CONTAINER SETTINGS - ${APP}"
+  log_msg "Application: ${APP}"
+  log_msg "PVE Version: ${PVEVERSION} (Kernel: ${KERNEL_VERSION})"
+  log_msg "Container ID: ${CT_ID}"
+  log_msg "Operating System: $var_os ($var_version)"
+  log_msg "Container Type: $CT_TYPE_DESC"
+  log_msg "Disk Size: ${DISK_SIZE} GB"
+  log_msg "CPU Cores: ${CORE_COUNT}"
+  log_msg "RAM Size: ${RAM_SIZE} MiB"
+  [[ -n "${var_gpu:-}" && "${var_gpu}" == "yes" ]] && log_msg "GPU Passthrough: Enabled"
+  [[ "$VERBOSE" == "yes" ]] && log_msg "Verbose Mode: Enabled"
+  log_msg "Session ID: ${SESSION_ID}"
 }
 
 # ------------------------------------------------------------------------------
@@ -4049,30 +4084,56 @@ EOF'
     # Copy install log from container BEFORE API call so get_error_text() can read it
     local build_log_copied=false
     local install_log_copied=false
-    local host_install_log="/tmp/install-lxc-${CTID}-${SESSION_ID}.log"
+    local combined_log="/tmp/${NSAPP:-lxc}-${CTID}-${SESSION_ID}.log"
 
     if [[ -n "$CTID" && -n "${SESSION_ID:-}" ]]; then
-      # Copy BUILD_LOG (creation log) if it exists
+      # Create combined log with header
+      {
+        echo "================================================================================"
+        echo "COMBINED INSTALLATION LOG - ${APP:-LXC}"
+        echo "Container ID: ${CTID}"
+        echo "Session ID: ${SESSION_ID}"
+        echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "================================================================================"
+        echo ""
+      } > "$combined_log"
+
+      # Append BUILD_LOG (host-side creation log) if it exists
       if [[ -f "${BUILD_LOG}" ]]; then
-        cp "${BUILD_LOG}" "/tmp/create-lxc-${CTID}-${SESSION_ID}.log" 2>/dev/null && build_log_copied=true
+        {
+          echo "================================================================================"
+          echo "PHASE 1: CONTAINER CREATION (Host)"
+          echo "================================================================================"
+          cat "${BUILD_LOG}"
+          echo ""
+        } >> "$combined_log"
+        build_log_copied=true
       fi
 
-      # Copy INSTALL_LOG from container to host
-      if pct pull "$CTID" "/root/.install-${SESSION_ID}.log" "$host_install_log" 2>/dev/null; then
+      # Copy and append INSTALL_LOG from container
+      local temp_install_log="/tmp/.install-temp-${SESSION_ID}.log"
+      if pct pull "$CTID" "/root/.install-${SESSION_ID}.log" "$temp_install_log" 2>/dev/null; then
+        {
+          echo "================================================================================"
+          echo "PHASE 2: APPLICATION INSTALLATION (Container)"
+          echo "================================================================================"
+          cat "$temp_install_log"
+          echo ""
+        } >> "$combined_log"
+        rm -f "$temp_install_log"
         install_log_copied=true
-        # Point INSTALL_LOG to host copy so get_error_text() finds it
-        INSTALL_LOG="$host_install_log"
+        # Point INSTALL_LOG to combined log so get_error_text() finds it
+        INSTALL_LOG="$combined_log"
       fi
     fi
 
     # Report failure to telemetry API (now with log available on host)
     post_update_to_api "failed" "$install_exit_code"
 
-    # Show available logs
+    # Show combined log location
     if [[ -n "$CTID" && -n "${SESSION_ID:-}" ]]; then
       echo ""
-      [[ "$build_log_copied" == true ]] && echo -e "${GN}✔${CL} Container creation log: ${BL}/tmp/create-lxc-${CTID}-${SESSION_ID}.log${CL}"
-      [[ "$install_log_copied" == true ]] && echo -e "${GN}✔${CL} Installation log: ${BL}${host_install_log}${CL}"
+      echo -e "${GN}✔${CL} Installation log: ${BL}${combined_log}${CL}"
     fi
 
     # Dev mode: Keep container or open breakpoint shell
@@ -5138,6 +5199,61 @@ EOF
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# ensure_log_on_host()
+#
+# - Ensures INSTALL_LOG points to a readable file on the host
+# - If INSTALL_LOG points to a container path (e.g. /root/.install-*),
+#   tries to pull it from the container and create a combined log
+# - This allows get_error_text() to find actual error output for telemetry
+# ------------------------------------------------------------------------------
+ensure_log_on_host() {
+  # Already readable on host? Nothing to do.
+  [[ -n "${INSTALL_LOG:-}" && -s "${INSTALL_LOG}" ]] && return 0
+
+  # Try pulling from container and creating combined log
+  if [[ -n "${CTID:-}" && -n "${SESSION_ID:-}" ]] && command -v pct &>/dev/null; then
+    local combined_log="/tmp/${NSAPP:-lxc}-${CTID}-${SESSION_ID}.log"
+    if [[ ! -s "$combined_log" ]]; then
+      # Create combined log
+      {
+        echo "================================================================================"
+        echo "COMBINED INSTALLATION LOG - ${APP:-LXC}"
+        echo "Container ID: ${CTID}"
+        echo "Session ID: ${SESSION_ID}"
+        echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "================================================================================"
+        echo ""
+      } > "$combined_log" 2>/dev/null || return 0
+      # Append BUILD_LOG if it exists
+      if [[ -f "${BUILD_LOG:-}" ]]; then
+        {
+          echo "================================================================================"
+          echo "PHASE 1: CONTAINER CREATION (Host)"
+          echo "================================================================================"
+          cat "${BUILD_LOG}"
+          echo ""
+        } >> "$combined_log"
+      fi
+      # Pull INSTALL_LOG from container
+      local temp_log="/tmp/.install-temp-${SESSION_ID}.log"
+      if pct pull "$CTID" "/root/.install-${SESSION_ID}.log" "$temp_log" 2>/dev/null; then
+        {
+          echo "================================================================================"
+          echo "PHASE 2: APPLICATION INSTALLATION (Container)"
+          echo "================================================================================"
+          cat "$temp_log"
+          echo ""
+        } >> "$combined_log"
+        rm -f "$temp_log"
+      fi
+    fi
+    if [[ -s "$combined_log" ]]; then
+      INSTALL_LOG="$combined_log"
+    fi
+  fi
+}
+
+# ------------------------------------------------------------------------------
 # api_exit_script()
 #
 # - Exit trap handler for reporting to API telemetry
@@ -5149,6 +5265,7 @@ EOF
 api_exit_script() {
   exit_code=$?
   if [ $exit_code -ne 0 ]; then
+    ensure_log_on_host
     post_update_to_api "failed" "$exit_code"
   fi
 }
@@ -5156,6 +5273,6 @@ api_exit_script() {
 if command -v pveversion >/dev/null 2>&1; then
   trap 'api_exit_script' EXIT
 fi
-trap 'post_update_to_api "failed" "$?"' ERR
-trap 'post_update_to_api "failed" "130"' SIGINT
-trap 'post_update_to_api "failed" "143"' SIGTERM
+trap 'ensure_log_on_host; post_update_to_api "failed" "$?"' ERR
+trap 'ensure_log_on_host; post_update_to_api "failed" "130"' SIGINT
+trap 'ensure_log_on_host; post_update_to_api "failed" "143"' SIGTERM

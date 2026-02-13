@@ -414,6 +414,69 @@ get_active_logfile() {
 SILENT_LOGFILE="$(get_active_logfile)"
 
 # ------------------------------------------------------------------------------
+# strip_ansi()
+#
+# - Removes ANSI escape sequences from input text
+# - Used to clean colored output for log files
+# - Handles both piped input and arguments
+# ------------------------------------------------------------------------------
+strip_ansi() {
+  if [[ $# -gt 0 ]]; then
+    echo -e "$*" | sed 's/\x1b\[[0-9;]*m//g; s/\x1b\[[0-9;]*[a-zA-Z]//g'
+  else
+    sed 's/\x1b\[[0-9;]*m//g; s/\x1b\[[0-9;]*[a-zA-Z]//g'
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# log_msg()
+#
+# - Writes message to active log file without ANSI codes
+# - Adds timestamp prefix for log correlation
+# - Creates log file if it doesn't exist
+# - Arguments: message text (can include ANSI codes, will be stripped)
+# ------------------------------------------------------------------------------
+log_msg() {
+  local msg="$*"
+  local logfile
+  logfile="$(get_active_logfile)"
+  
+  [[ -z "$msg" ]] && return
+  [[ -z "$logfile" ]] && return
+  
+  # Ensure log directory exists
+  mkdir -p "$(dirname "$logfile")" 2>/dev/null || true
+  
+  # Strip ANSI codes and write with timestamp
+  local clean_msg
+  clean_msg=$(strip_ansi "$msg")
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $clean_msg" >>"$logfile"
+}
+
+# ------------------------------------------------------------------------------
+# log_section()
+#
+# - Writes a section header to the log file
+# - Used for separating different phases of installation
+# - Arguments: section name
+# ------------------------------------------------------------------------------
+log_section() {
+  local section="$1"
+  local logfile
+  logfile="$(get_active_logfile)"
+  
+  [[ -z "$logfile" ]] && return
+  mkdir -p "$(dirname "$logfile")" 2>/dev/null || true
+  
+  {
+    echo ""
+    echo "================================================================================"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $section"
+    echo "================================================================================"
+  } >>"$logfile"
+}
+
+# ------------------------------------------------------------------------------
 # silent()
 #
 # - Executes command with output redirected to active log file
@@ -555,6 +618,9 @@ msg_info() {
   [[ -n "${MSG_INFO_SHOWN["$msg"]+x}" ]] && return
   MSG_INFO_SHOWN["$msg"]=1
 
+  # Log to file
+  log_msg "[INFO] $msg"
+
   stop_spinner
   SPINNER_MSG="$msg"
 
@@ -598,6 +664,7 @@ msg_ok() {
   stop_spinner
   clear_line
   echo -e "$CM ${GN}${msg}${CL}"
+  log_msg "[OK] $msg"
   unset MSG_INFO_SHOWN["$msg"]
 }
 
@@ -613,6 +680,7 @@ msg_error() {
   stop_spinner
   local msg="$1"
   echo -e "${BFR:-}${CROSS:-✖️} ${RD}${msg}${CL}" >&2
+  log_msg "[ERROR] $msg"
 }
 
 # ------------------------------------------------------------------------------
@@ -627,6 +695,7 @@ msg_warn() {
   stop_spinner
   local msg="$1"
   echo -e "${BFR:-}${INFO:-ℹ️} ${YWB}${msg}${CL}" >&2
+  log_msg "[WARN] $msg"
 }
 
 # ------------------------------------------------------------------------------
@@ -644,6 +713,7 @@ msg_custom() {
   [[ -z "$msg" ]] && return
   stop_spinner
   echo -e "${BFR:-} ${symbol} ${color}${msg}${CL:-\e[0m}"
+  log_msg "$msg"
 }
 
 # ------------------------------------------------------------------------------
