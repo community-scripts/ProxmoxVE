@@ -287,6 +287,32 @@ get_error_text() {
   fi
 }
 
+# ------------------------------------------------------------------------------
+# build_error_string()
+#
+# - Builds a structured error string for telemetry reporting
+# - Format: "exit_code=<N> | <explanation>\n---\n<last 20 log lines>"
+# - If no log lines available, returns just the explanation
+# - Arguments:
+#   * $1: exit_code (numeric)
+#   * $2: log_text (optional, output from get_error_text)
+# - Returns structured error string via stdout
+# ------------------------------------------------------------------------------
+build_error_string() {
+  local exit_code="${1:-1}"
+  local log_text="${2:-}"
+  local explanation
+  explanation=$(explain_exit_code "$exit_code")
+
+  if [[ -n "$log_text" ]]; then
+    # Structured format: header + separator + log lines
+    printf 'exit_code=%s | %s\n---\n%s' "$exit_code" "$explanation" "$log_text"
+  else
+    # No log available - just the explanation with exit code
+    printf 'exit_code=%s | %s' "$exit_code" "$explanation"
+  fi
+}
+
 # ==============================================================================
 # SECTION 2: TELEMETRY FUNCTIONS
 # ==============================================================================
@@ -665,13 +691,12 @@ post_update_to_api() {
     else
       exit_code=1
     fi
+    # Get log lines and build structured error string
     local error_text=""
     error_text=$(get_error_text)
-    if [[ -n "$error_text" ]]; then
-      error=$(json_escape "$error_text")
-    else
-      error=$(json_escape "$(explain_exit_code "$exit_code")")
-    fi
+    local full_error
+    full_error=$(build_error_string "$exit_code" "$error_text")
+    error=$(json_escape "$full_error")
     short_error=$(json_escape "$(explain_exit_code "$exit_code")")
     error_category=$(categorize_error "$exit_code")
     [[ -z "$error" ]] && error="Unknown error"
@@ -814,31 +839,52 @@ EOF
 categorize_error() {
   local code="$1"
   case "$code" in
-  # Network errors
-  6 | 7 | 22 | 28 | 35) echo "network" ;;
+  # Network errors (curl/wget)
+  6 | 7 | 22 | 35) echo "network" ;;
 
-  # Storage errors
-  214 | 217 | 219) echo "storage" ;;
+  # Timeout errors
+  28 | 124 | 211) echo "timeout" ;;
 
-  # Dependency/Package errors
-  100 | 101 | 102 | 127 | 160 | 161 | 162) echo "dependency" ;;
+  # Storage errors (Proxmox storage)
+  214 | 217 | 219 | 224) echo "storage" ;;
+
+  # Dependency/Package errors (APT, DPKG, pip, commands)
+  100 | 101 | 102 | 127 | 160 | 161 | 162 | 255) echo "dependency" ;;
 
   # Permission errors
   126 | 152) echo "permission" ;;
 
-  # Timeout errors
-  124 | 28 | 211) echo "timeout" ;;
+  # Configuration errors (Proxmox config, invalid args)
+  128 | 203 | 204 | 205 | 206 | 207 | 208) echo "config" ;;
 
-  # Configuration errors
-  203 | 204 | 205 | 206 | 207 | 208) echo "config" ;;
+  # Proxmox container/template errors
+  200 | 209 | 210 | 212 | 213 | 215 | 216 | 218 | 220 | 221 | 222 | 223 | 225 | 231) echo "proxmox" ;;
+
+  # Service/Systemd errors
+  150 | 151 | 153 | 154) echo "service" ;;
+
+  # Database errors (PostgreSQL, MySQL, MongoDB)
+  170 | 171 | 172 | 173 | 180 | 181 | 182 | 183 | 190 | 191 | 192 | 193) echo "database" ;;
+
+  # Node.js / JavaScript runtime errors
+  243 | 245 | 246 | 247 | 248 | 249) echo "runtime" ;;
+
+  # Python environment errors
+  # (already covered: 160-162 under dependency)
 
   # Aborted by user
   130) echo "aborted" ;;
 
-  # Resource errors (OOM, etc)
-  137 | 134) echo "resource" ;;
+  # Resource errors (OOM, SIGKILL, SIGABRT)
+  134 | 137) echo "resource" ;;
 
-  # Default
+  # Signal/Process errors (SIGTERM, SIGPIPE, SIGSEGV)
+  139 | 141 | 143) echo "signal" ;;
+
+  # Shell errors (general error, syntax error)  
+  1 | 2) echo "shell" ;;
+
+  # Default - truly unknown
   *) echo "unknown" ;;
   esac
 }
@@ -901,11 +947,9 @@ post_tool_to_api() {
     [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
     local error_text=""
     error_text=$(get_error_text)
-    if [[ -n "$error_text" ]]; then
-      error=$(json_escape "$error_text")
-    else
-      error=$(json_escape "$(explain_exit_code "$exit_code")")
-    fi
+    local full_error
+    full_error=$(build_error_string "$exit_code" "$error_text")
+    error=$(json_escape "$full_error")
     error_category=$(categorize_error "$exit_code")
   fi
 
@@ -968,11 +1012,9 @@ post_addon_to_api() {
     [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
     local error_text=""
     error_text=$(get_error_text)
-    if [[ -n "$error_text" ]]; then
-      error=$(json_escape "$error_text")
-    else
-      error=$(json_escape "$(explain_exit_code "$exit_code")")
-    fi
+    local full_error
+    full_error=$(build_error_string "$exit_code" "$error_text")
+    error=$(json_escape "$full_error")
     error_category=$(categorize_error "$exit_code")
   fi
 
@@ -1067,11 +1109,9 @@ post_update_to_api_extended() {
     fi
     local error_text=""
     error_text=$(get_error_text)
-    if [[ -n "$error_text" ]]; then
-      error=$(json_escape "$error_text")
-    else
-      error=$(json_escape "$(explain_exit_code "$exit_code")")
-    fi
+    local full_error
+    full_error=$(build_error_string "$exit_code" "$error_text")
+    error=$(json_escape "$full_error")
     error_category=$(categorize_error "$exit_code")
     [[ -z "$error" ]] && error="Unknown error"
   fi
