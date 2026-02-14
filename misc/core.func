@@ -522,15 +522,9 @@ silent() {
     msg_custom "→" "${YWB}" "${cmd}"
 
     if [[ -s "$logfile" ]]; then
-      local log_lines=$(wc -l <"$logfile")
-      echo "--- Last 10 lines of silent log ---"
+      echo -e "\n${TAB}--- Last 10 lines of log ---"
       tail -n 10 "$logfile"
-      echo "-----------------------------------"
-
-      # Show how to view full log if there are more lines
-      if [[ $log_lines -gt 10 ]]; then
-        msg_custom "📋" "${YW}" "View full log (${log_lines} lines): ${logfile}"
-      fi
+      echo -e "${TAB}-----------------------------------\n"
     fi
 
     exit "$rc"

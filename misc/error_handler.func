@@ -175,9 +175,9 @@ error_handler() {
   fi
 
   if [[ -n "$active_log" && -s "$active_log" ]]; then
-    echo "--- Last 20 lines of silent log ---"
+    echo -e "\n${TAB}--- Last 20 lines of log ---"
     tail -n 20 "$active_log"
-    echo "-----------------------------------"
+    echo -e "${TAB}-----------------------------------\n"
 
     # Detect context: Container (INSTALL_LOG set + /root exists) vs Host (BUILD_LOG)
     if [[ -n "${INSTALL_LOG:-}" && -d /root ]]; then
@@ -204,23 +204,50 @@ error_handler() {
         fi
 
         echo ""
-        echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+        if declare -f msg_custom >/dev/null 2>&1; then
+          echo -en "${TAB}❓${TAB}${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+        else
+          echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+        fi
 
         if read -t 60 -r response; then
           if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
-            echo -e "\n${YW}Removing container ${CTID}${CL}"
+            echo ""
+            if declare -f msg_info >/dev/null 2>&1; then
+              msg_info "Removing container ${CTID}"
+            else
+              echo -e "${YW}Removing container ${CTID}${CL}"
+            fi
             pct stop "$CTID" &>/dev/null || true
             pct destroy "$CTID" &>/dev/null || true
-            echo -e "${GN}✔${CL} Container ${CTID} removed"
+            if declare -f msg_ok >/dev/null 2>&1; then
+              msg_ok "Container ${CTID} removed"
+            else
+              echo -e "${GN}✔${CL} Container ${CTID} removed"
+            fi
           elif [[ "$response" =~ ^[Nn]$ ]]; then
-            echo -e "\n${YW}Container ${CTID} kept for debugging${CL}"
+            echo ""
+            if declare -f msg_warn >/dev/null 2>&1; then
+              msg_warn "Container ${CTID} kept for debugging"
+            else
+              echo -e "${YW}Container ${CTID} kept for debugging${CL}"
+            fi
           fi
         else
           # Timeout - auto-remove
-          echo -e "\n${YW}No response - auto-removing container${CL}"
+          echo ""
+          if declare -f msg_info >/dev/null 2>&1; then
+            msg_info "No response - removing container ${CTID}"
+          else
+            echo -e "${YW}No response - removing container ${CTID}${CL}"
+          fi
           pct stop "$CTID" &>/dev/null || true
           pct destroy "$CTID" &>/dev/null || true
-          echo -e "${GN}✔${CL} Container ${CTID} removed"
+          if declare -f msg_ok >/dev/null 2>&1; then
+            msg_ok "Container ${CTID} removed"
+          else
+            echo -e "${GN}✔${CL} Container ${CTID} removed"
+          fi
         fi
 
         # Force one final status update attempt after cleanup

@@ -4133,8 +4133,7 @@ EOF'
 
     # Show combined log location
     if [[ -n "$CTID" && -n "${SESSION_ID:-}" ]]; then
-      echo ""
-      echo -e "${GN}✔${CL} Installation log: ${BL}${combined_log}${CL}"
+      msg_custom "📋" "${YW}" "Installation log: ${combined_log}"
     fi
 
     # Dev mode: Keep container or open breakpoint shell
@@ -4157,19 +4156,21 @@ EOF'
       exit $install_exit_code
     fi
 
-    # Prompt user for cleanup with 60s timeout (plain echo - no msg_info to avoid spinner)
+    # Prompt user for cleanup with 60s timeout
     echo ""
-    echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+    echo -en "${TAB}❓${TAB}${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
 
     if read -t 60 -r response; then
       if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
         # Remove container
-        echo -e "\n${TAB}${HOLD}${YW}Removing container ${CTID}${CL}"
+        echo ""
+        msg_info "Removing container ${CTID}"
         pct stop "$CTID" &>/dev/null || true
         pct destroy "$CTID" &>/dev/null || true
-        echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
+        msg_ok "Container ${CTID} removed"
       elif [[ "$response" =~ ^[Nn]$ ]]; then
-        echo -e "\n${TAB}${YW}Container ${CTID} kept for debugging${CL}"
+        echo ""
+        msg_warn "Container ${CTID} kept for debugging"
 
         # Dev mode: Setup MOTD/SSH for debugging access to broken container
         if [[ "${DEV_MODE_MOTD:-false}" == "true" ]]; then
@@ -4185,11 +4186,11 @@ EOF'
       fi
     else
       # Timeout - auto-remove
-      echo -e "\n${YW}No response - auto-removing container${CL}"
-      echo -e "${TAB}${HOLD}${YW}Removing container ${CTID}${CL}"
+      echo ""
+      msg_info "No response - removing container ${CTID}"
       pct stop "$CTID" &>/dev/null || true
       pct destroy "$CTID" &>/dev/null || true
-      echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
+      msg_ok "Container ${CTID} removed"
     fi
 
     # Force one final status update attempt after cleanup
