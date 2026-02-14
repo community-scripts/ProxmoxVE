@@ -402,12 +402,17 @@ detect_ram() {
 
   if command -v dmidecode &>/dev/null; then
     # Get configured memory speed (actual running speed)
-    RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Configured Memory Speed:" | grep -oE "[0-9]+" | head -1)
+    RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Configured Memory Speed:" | grep -oE "[0-9]+" | head -1 || true)
 
     # Fallback to Speed: if Configured not available
     if [[ -z "$RAM_SPEED" ]]; then
-      RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Speed:" | grep -oE "[0-9]+" | head -1)
+      RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Speed:" | grep -oE "[0-9]+" | head -1 || true)
     fi
+  fi
+
+  # Ensure RAM_SPEED is a valid integer (PocketBase stores it as integer)
+  if [[ -z "$RAM_SPEED" || ! "$RAM_SPEED" =~ ^[0-9]+$ ]]; then
+    RAM_SPEED=0
   fi
 
   export RAM_SPEED
@@ -504,7 +509,7 @@ post_to_api() {
     "gpu_vendor": "${gpu_vendor}",
     "gpu_model": "${gpu_model}",
     "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
+    "ram_speed": ${ram_speed:-0},
     "repo_source": "${REPO_SOURCE}"
 }
 EOF
@@ -608,7 +613,7 @@ post_to_api_vm() {
     "gpu_vendor": "${gpu_vendor}",
     "gpu_model": "${gpu_model}",
     "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
+    "ram_speed": ${ram_speed:-0},
     "repo_source": "${REPO_SOURCE}"
 }
 EOF
@@ -742,7 +747,7 @@ post_update_to_api() {
     "gpu_vendor": "${gpu_vendor}",
     "gpu_model": "${gpu_model}",
     "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
+    "ram_speed": ${ram_speed:-0},
     "repo_source": "${REPO_SOURCE}"
 }
 EOF
@@ -784,7 +789,7 @@ EOF
     "gpu_vendor": "${gpu_vendor}",
     "gpu_model": "${gpu_model}",
     "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
+    "ram_speed": ${ram_speed:-0},
     "repo_source": "${REPO_SOURCE}"
 }
 EOF
@@ -881,7 +886,7 @@ categorize_error() {
   # Signal/Process errors (SIGTERM, SIGPIPE, SIGSEGV)
   139 | 141 | 143) echo "signal" ;;
 
-  # Shell errors (general error, syntax error)  
+  # Shell errors (general error, syntax error)
   1 | 2) echo "shell" ;;
 
   # Default - truly unknown
