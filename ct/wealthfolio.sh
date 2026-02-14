@@ -43,16 +43,15 @@ function update_script() {
 
     msg_info "Building Frontend (patience)"
     cd /opt/wealthfolio
+    export BUILD_TARGET=web
     $STD pnpm install --frozen-lockfile
-    $STD pnpm tsc
-    $STD pnpm vite build
+    $STD pnpm --filter frontend... build
     msg_ok "Built Frontend"
 
     msg_info "Building Backend (patience)"
-    cd /opt/wealthfolio/src-server
     source ~/.cargo/env
-    $STD cargo build --release --manifest-path Cargo.toml
-    cp /opt/wealthfolio/src-server/target/release/wealthfolio-server /usr/local/bin/wealthfolio-server
+    $STD cargo build --release --manifest-path apps/server/Cargo.toml
+    cp /opt/wealthfolio/target/release/wealthfolio-server /usr/local/bin/wealthfolio-server
     chmod +x /usr/local/bin/wealthfolio-server
     msg_ok "Built Backend"
 
@@ -63,7 +62,7 @@ function update_script() {
     msg_ok "Restored Data"
 
     msg_info "Cleaning Up"
-    rm -rf /opt/wealthfolio/src-server/target
+    rm -rf /opt/wealthfolio/target
     rm -rf /root/.cargo/registry
     rm -rf /opt/wealthfolio/node_modules
     msg_ok "Cleaned Up"
