@@ -277,8 +277,9 @@ install_ssh_keys_into_ct() {
 # ------------------------------------------------------------------------------
 # validate_container_id()
 #
-# - Validates if a container ID is available for use
-# - Checks if ID is already used by VM or LXC container
+# - Validates if a container ID is available for use (CLUSTER-WIDE)
+# - Checks cluster resources via pvesh for VMs/CTs on ALL nodes
+# - Falls back to local config file check if pvesh unavailable
 # - Checks if ID is used in LVM logical volumes
 # - Returns 0 if ID is available, 1 if already in use
 # ------------------------------------------------------------------------------
@@ -290,9 +291,33 @@ validate_container_id() {
     return 1
   fi
 
-  # Check if config file exists for VM or LXC
+  # CLUSTER-WIDE CHECK: Query all VMs/CTs across all nodes
+  # This catches IDs used on other nodes in the cluster
+  # NOTE: Works on single-node too - Proxmox always has internal cluster structure
+  # Falls back gracefully if pvesh unavailable or returns empty
+  if command -v pvesh &>/dev/null; then
+    local cluster_ids
+    cluster_ids=$(pvesh get /cluster/resources --type vm --output-format json 2>/dev/null | 
+      grep -oP '"vmid":\s*\K[0-9]+' 2>/dev/null || true)
+    if [[ -n "$cluster_ids" ]] && echo "$cluster_ids" | grep -qw "$ctid"; then
+      return 1
+    fi
+  fi
+
+  # LOCAL FALLBACK: Check if config file exists for VM or LXC
+  # This handles edge cases where pvesh might not return all info
   if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
     return 1
+  fi
+
+  # Check ALL nodes in cluster for config files (handles pmxcfs sync delays)
+  # NOTE: On single-node, /etc/pve/nodes/ contains just the one node - still works
+  if [[ -d "/etc/pve/nodes" ]]; then
+    for node_dir in /etc/pve/nodes/*/; do
+      if [[ -f "${node_dir}qemu-server/${ctid}.conf" ]] || [[ -f "${node_dir}lxc/${ctid}.conf" ]]; then
+        return 1
+      fi
+    done
   fi
 
   # Check if ID is used in LVM logical volumes
@@ -306,63 +331,30 @@ validate_container_id() {
 # ------------------------------------------------------------------------------
 # get_valid_container_id()
 #
-# - Returns a valid, unused container ID
+# - Returns a valid, unused container ID (CLUSTER-AWARE)
+# - Uses pvesh /cluster/nextid as starting point (already cluster-aware)
 # - If provided ID is valid, returns it
-# - Otherwise increments from suggested ID until a free one is found
+# - Otherwise increments until a free one is found across entire cluster
 # - Calls validate_container_id() to check availability
 # ------------------------------------------------------------------------------
 get_valid_container_id() {
-  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+  local suggested_id="${1:-$(pvesh get /cluster/nextid 2>/dev/null || echo 100)}"
+
+  # Ensure we have a valid starting ID
+  if ! [[ "$suggested_id" =~ ^[0-9]+$ ]]; then
+    suggested_id=$(pvesh get /cluster/nextid 2>/dev/null || echo 100)
+  fi
+
+  local max_attempts=1000
+  local attempts=0
 
   while ! validate_container_id "$suggested_id"; do
     suggested_id=$((suggested_id + 1))
-  done
-
-  echo "$suggested_id"
-}
-
-# ------------------------------------------------------------------------------
-# validate_container_id()
-#
-# - Validates if a container ID is available for use
-# - Checks if ID is already used by VM or LXC container
-# - Checks if ID is used in LVM logical volumes
-# - Returns 0 if ID is available, 1 if already in use
-# ------------------------------------------------------------------------------
-validate_container_id() {
-  local ctid="$1"
-
-  # Check if ID is numeric
-  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
-    return 1
-  fi
-
-  # Check if config file exists for VM or LXC
-  if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
-    return 1
-  fi
-
-  # Check if ID is used in LVM logical volumes
-  if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
-    return 1
-  fi
-
-  return 0
-}
-
-# ------------------------------------------------------------------------------
-# get_valid_container_id()
-#
-# - Returns a valid, unused container ID
-# - If provided ID is valid, returns it
-# - Otherwise increments from suggested ID until a free one is found
-# - Calls validate_container_id() to check availability
-# ------------------------------------------------------------------------------
-get_valid_container_id() {
-  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
-
-  while ! validate_container_id "$suggested_id"; do
-    suggested_id=$((suggested_id + 1))
+    attempts=$((attempts + 1))
+    if [[ $attempts -ge $max_attempts ]]; then
+      msg_error "Could not find available container ID after $max_attempts attempts"
+      exit 1
+    fi
   done
 
   echo "$suggested_id"
