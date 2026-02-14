@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-13T18:13:59Z",
+  "generated": "2026-02-14T00:21:40Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -508,9 +508,9 @@
     {
       "slug": "homarr",
       "repo": "homarr-labs/homarr",
-      "version": "v1.53.0",
+      "version": "v1.53.1",
       "pinned": false,
-      "date": "2026-02-06T19:42:58Z"
+      "date": "2026-02-13T19:47:11Z"
     },
     {
       "slug": "homebox",
@@ -830,9 +830,9 @@
     {
       "slug": "miniflux",
       "repo": "miniflux/v2",
-      "version": "2.2.16",
+      "version": "2.2.17",
       "pinned": false,
-      "date": "2026-01-07T03:26:27Z"
+      "date": "2026-02-13T20:30:17Z"
     },
     {
       "slug": "monica",
@@ -1000,7 +1000,7 @@
       "repo": "fosrl/pangolin",
       "version": "1.15.4",
       "pinned": false,
-      "date": "2026-02-13T00:54:02Z"
+      "date": "2026-02-13T23:01:29Z"
     },
     {
       "slug": "paperless-ai",
@@ -1096,9 +1096,9 @@
     {
       "slug": "pocketbase",
       "repo": "pocketbase/pocketbase",
-      "version": "v0.36.2",
+      "version": "v0.36.3",
       "pinned": false,
-      "date": "2026-02-01T08:12:42Z"
+      "date": "2026-02-13T18:38:58Z"
     },
     {
       "slug": "pocketid",
@@ -1313,9 +1313,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.16.51",
+      "version": "v2.17.0",
       "pinned": false,
-      "date": "2026-01-12T16:26:38Z"
+      "date": "2026-02-13T21:08:30Z"
     },
     {
       "slug": "shelfmark",
