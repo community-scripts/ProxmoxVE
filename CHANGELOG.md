@@ -417,6 +417,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - core: improve error reporting with structured error strings and better categorization + output formatting [@MickLesk](https://github.com/MickLesk) ([#11907](https://github.com/community-scripts/ProxmoxVE/pull/11907))
     - core: unified logging system with combined logs [@MickLesk](https://github.com/MickLesk) ([#11761](https://github.com/community-scripts/ProxmoxVE/pull/11761))
 
+### 🧰 Tools
+
+  - apps-updater: update patchmon aware [@failure101](https://github.com/failure101) ([#11905](https://github.com/community-scripts/ProxmoxVE/pull/11905))
+
 ### ❔ Uncategorized
 
   - Disable UniFi script - APT packages no longer available [@Copilot](https://github.com/Copilot) ([#11898](https://github.com/community-scripts/ProxmoxVE/pull/11898))
