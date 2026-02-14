@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-14T00:21:40Z",
+  "generated": "2026-02-14T06:14:47Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -200,9 +200,9 @@
     {
       "slug": "cloudreve",
       "repo": "cloudreve/cloudreve",
-      "version": "4.13.0",
+      "version": "4.14.0",
       "pinned": false,
-      "date": "2026-02-05T12:53:24Z"
+      "date": "2026-02-14T06:05:06Z"
     },
     {
       "slug": "comfyui",
@@ -578,9 +578,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1103",
+      "version": "v0.24.1109",
       "pinned": false,
-      "date": "2026-02-13T05:53:23Z"
+      "date": "2026-02-14T05:54:26Z"
     },
     {
       "slug": "jellystat",
