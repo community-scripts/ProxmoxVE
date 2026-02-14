@@ -110,13 +110,11 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       container_hostname=$(pct exec "$container" hostname)
       containers_needing_reboot+=("$container ($container_hostname)")
     fi
-
     # check if patchmon agent is present in container and run a report if found
     if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
       echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
       pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report"
     fi
-    
   fi
 done
 wait
