@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-14
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - core: overwriteable app version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11753](https://github.com/community-scripts/ProxmoxVE/pull/11753))
+
 ### 💾 Core
 
   - #### ✨ New Features
