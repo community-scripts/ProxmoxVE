@@ -1,0 +1,46 @@
+{
+  "name": "macOS VM",
+  "slug": "macos-vm",
+  "categories": [0],
+  "date_created": "2026-02-13",
+  "type": "vm",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/lucid-fabrics/osx-proxmox-next",
+  "website": "https://github.com/lucid-fabrics/osx-proxmox-next",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/apple.webp",
+  "config_path": "",
+  "description": "This script creates a macOS Virtual Machine on Proxmox VE using the OpenCore bootloader. It downloads a recovery image directly from Apple, builds a GPT-formatted OpenCore boot disk with all required kexts and drivers, generates a unique SMBIOS identity, and configures the VM with macOS-compatible hardware settings. Supports macOS Sonoma 14, Sequoia 15, and Tahoe 26.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "vm/macos-vm.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 8192,
+        "hdd": 64,
+        "os": "macOS",
+        "version": "Sequoia 15"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Requires Intel CPU with VT-x. AMD may work but is unsupported.",
+      "type": "warning"
+    },
+    {
+      "text": "After VM boots, select 'macOS Base System' in OpenCore to begin installation.",
+      "type": "info"
+    },
+    {
+      "text": "Use Disk Utility to erase the SATA disk as APFS before installing macOS.",
+      "type": "info"
+    }
+  ]
+}
