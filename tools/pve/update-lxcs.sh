@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# https://github.com/failure101/ProxmoxVE/raw/main/LICENSE
 
 function header_info() {
   clear
@@ -109,6 +109,18 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       # Get the container's hostname and add it to the list
       container_hostname=$(pct exec "$container" hostname)
       containers_needing_reboot+=("$container ($container_hostname)")
+    fi
+
+    #check if patcmon agent is present in container and run a report if found
+    if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
+      os=$(pct config "$container" | awk '/^ostype/ {print $2}')
+      case "$os" in
+      alpine) pct exec "$container" -- ash -c "/usr/local/bin/patchmon-agent report" ;;
+      archlinux) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
+      fedora | rocky | centos | alma) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
+      ubuntu | debian | devuan) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
+      opensuse) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
+      esac
     fi
   fi
 done
