@@ -123,6 +123,7 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       opensuse) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
       esac
     fi
+    
   fi
 done
 wait
