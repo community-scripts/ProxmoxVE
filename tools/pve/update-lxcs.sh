@@ -114,14 +114,7 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     # check if patchmon agent is present in container and run a report if found
     if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
       echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
-      os=$(pct config "$container" | awk '/^ostype/ {print $2}')
-      case "$os" in
-      alpine) pct exec "$container" -- ash -c "/usr/local/bin/patchmon-agent report" ;;
-      archlinux) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
-      fedora | rocky | centos | alma) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
-      ubuntu | debian | devuan) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
-      opensuse) pct exec "$container" -- bash -c "/usr/local/bin/patchmon-agent report" ;;
-      esac
+      pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report"
     fi
     
   fi
