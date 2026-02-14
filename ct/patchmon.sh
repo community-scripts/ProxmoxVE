@@ -43,22 +43,23 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
 
     msg_info "Updating PatchMon"
+    get_lxc_ip
     VERSION=$(get_latest_github_release "PatchMon/PatchMon")
     PROTO="$(sed -n '/SERVER_PROTOCOL/s/[^=]*=//p' /opt/backend.env)"
     HOST="$(sed -n '/SERVER_HOST/s/[^=]*=//p' /opt/backend.env)"
-    [[ "$PROTO" == "http" ]] && PORT=":3001"
+    [[ "${PROTO:-http}" == "http" ]] && PORT=":3001"
+    sed -i 's/PORT=3399/PORT=3001/' /opt/backend.env
+    sed -i -e "s/VERSION=.*/VERSION=$VERSION/" \
+      -e "\|VITE_API_URL=|s|http.*|${PROTO:-http}://${HOST:-$LOCAL_IP}${PORT:-}/api/v1|" /opt/frontend.env
     export NODE_ENV=production
     cd /opt/patchmon
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts
     cd /opt/patchmon/frontend
     mv /opt/frontend.env /opt/patchmon/frontend/.env
-    sed -i -e "s/VERSION=.*/VERSION=$VERSION/" \
-      -e "\|VITE_API_URL=|s|http.*|${PROTO:-http}://${HOST:-$LOCAL_IP}${PORT:-}/api/v1|" ./.env
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts --include=dev
     $STD npm run build
     cd /opt/patchmon/backend
     mv /opt/backend.env /opt/patchmon/backend/.env
-    sed -i 's/PORT=3399/PORT=3001/' /opt/patchmon/backend/.env
     $STD npm run db:generate
     $STD npx prisma migrate deploy
     cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
