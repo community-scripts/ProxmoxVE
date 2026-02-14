@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-14T12:08:41Z",
+  "generated": "2026-02-14T18:07:29Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -116,9 +116,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.2.0",
+      "version": "v2.2.1",
       "pinned": false,
-      "date": "2026-02-09T07:07:40Z"
+      "date": "2026-02-14T16:33:47Z"
     },
     {
       "slug": "beszel",
@@ -354,9 +354,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.4.19",
+      "version": "v6.4.20",
       "pinned": false,
-      "date": "2026-02-14T11:55:40Z"
+      "date": "2026-02-14T12:39:02Z"
     },
     {
       "slug": "fladder",
@@ -578,9 +578,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1109",
+      "version": "v0.24.1113",
       "pinned": false,
-      "date": "2026-02-14T05:54:26Z"
+      "date": "2026-02-14T17:46:58Z"
     },
     {
       "slug": "jellystat",
@@ -1411,9 +1411,9 @@
     {
       "slug": "tandoor",
       "repo": "TandoorRecipes/recipes",
-      "version": "2.5.1",
+      "version": "2.5.3",
       "pinned": false,
-      "date": "2026-02-13T15:57:27Z"
+      "date": "2026-02-14T12:42:14Z"
     },
     {
       "slug": "tasmoadmin",
