@@ -403,6 +403,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-14
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Increase disk allocation for OpenWebUI and Ollama to prevent installation failures [@Copilot](https://github.com/Copilot) ([#11920](https://github.com/community-scripts/ProxmoxVE/pull/11920))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
