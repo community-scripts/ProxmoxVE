@@ -34,7 +34,7 @@ $STD npm install --no-audit --no-fund --no-save --ignore-scripts
 
 cd /opt/patchmon/frontend
 cat <<EOF >./.env
-VITE_API_URL=http://${LOCAL_IP}:3000/api/v1
+VITE_API_URL=http://${LOCAL_IP}:3001/api/v1
 VITE_APP_NAME=PatchMon
 VITE_APP_VERSION=${VERSION}
 EOF

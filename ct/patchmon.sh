@@ -44,12 +44,16 @@ function update_script() {
 
     msg_info "Updating PatchMon"
     VERSION=$(get_latest_github_release "PatchMon/PatchMon")
+    PROTO="$(sed -n '/SERVER_PROTOCOL/s/[^=]*=//p' /opt/backend.env)"
+    HOST="$(sed -n '/SERVER_HOST/s/[^=]*=//p' /opt/backend.env)"
+    [[ "$PROTO" == "http" ]] && PORT=":3001"
     export NODE_ENV=production
     cd /opt/patchmon
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts
     cd /opt/patchmon/frontend
     mv /opt/frontend.env /opt/patchmon/frontend/.env
-    sed -i "s/VERSION=.*/VERSION=$VERSION/" ./.env
+    sed -i -e "s/VERSION=.*/VERSION=$VERSION/" \
+      -e "\|VITE_API_URL=|s|http.*|${PROTO:-http}://${HOST:-$LOCAL_IP}${PORT:-}/api/v1|" ./.env
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts --include=dev
     $STD npm run build
     cd /opt/patchmon/backend
