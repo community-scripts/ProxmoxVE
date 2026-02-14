@@ -54,6 +54,7 @@ function update_script() {
     $STD npm run build
     cd /opt/patchmon/backend
     mv /opt/backend.env /opt/patchmon/backend/.env
+    sed -i 's/PORT=3399/PORT=3001/' /opt/patchmon/backend/.env
     $STD npm run db:generate
     $STD npx prisma migrate deploy
     cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
