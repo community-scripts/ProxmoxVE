@@ -1,0 +1,44 @@
+{
+  "name": "Frigate",
+  "slug": "frigate",
+  "categories": [
+    15
+  ],
+  "date_created": "2026-02-13",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "config_path": "/config/config.yml",
+  "interface_port": 5000,
+  "documentation": "https://frigate.io/",
+  "website": "https://frigate.io/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/frigate-light.webp",
+  "description": "Frigate is a complete and local NVR (Network Video Recorder) with realtime AI object detection for CCTV cameras.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/frigate.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "SemanticSearch is not pre-installed due to high resource requirements (8+ cores, 16-24GB RAM, GPU recommended). Manual configuration required if needed.",
+      "type": "info"
+    },
+    {
+      "text": "OpenVino detector may fail on older CPUs (pre-Haswell/AVX2). If you encounter 'Illegal instruction' errors, consider using alternative detectors.",
+      "type": "warning"
+    }
+  ]
+}
