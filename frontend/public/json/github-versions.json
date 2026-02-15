@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-15T06:19:05Z",
+  "generated": "2026-02-15T12:08:30Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -403,9 +403,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.238.0",
+      "version": "2.239.0",
       "pinned": false,
-      "date": "2026-02-12T18:28:55Z"
+      "date": "2026-02-15T09:51:16Z"
     },
     {
       "slug": "gitea",
