@@ -43,7 +43,6 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
 
     msg_info "Updating PatchMon"
-    get_lxc_ip
     VERSION=$(get_latest_github_release "PatchMon/PatchMon")
     PROTO="$(sed -n '/SERVER_PROTOCOL/s/[^=]*=//p' /opt/backend.env)"
     HOST="$(sed -n '/SERVER_HOST/s/[^=]*=//p' /opt/backend.env)"
