@@ -15,6 +15,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -24,7 +27,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>February (7 entries)</h4></summary>
+<summary><h4>February (14 entries)</h4></summary>
 
 [View February 2026 Changelog](.github/changelogs/2026/02.md)
 
@@ -1353,161 +1356,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 ### ❔ Uncategorized
 
   - qui: fix: category [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10847](https://github.com/community-scripts/ProxmoxVE/pull/10847))
-
-## 2026-01-15
-
-### 🆕 New Scripts
-
-  - Qui ([#10829](https://github.com/community-scripts/ProxmoxVE/pull/10829))
-
-### 🚀 Updated Scripts
-
-  - #### ✨ New Features
-
-    - Refactor: FreshRSS + Bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#10824](https://github.com/community-scripts/ProxmoxVE/pull/10824))
-
-## 2026-01-14
-
-### 🆕 New Scripts
-
-  - Kutt ([#10812](https://github.com/community-scripts/ProxmoxVE/pull/10812))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Switch Ollama install to .tar.zst and add zstd dependency [@MickLesk](https://github.com/MickLesk) ([#10814](https://github.com/community-scripts/ProxmoxVE/pull/10814))
-    - Immich: Install libde265-dev from Debian Testing [@vhsdream](https://github.com/vhsdream) ([#10810](https://github.com/community-scripts/ProxmoxVE/pull/10810))
-    - nginxproxymanager: allow updates now the build is fixed [@durzo](https://github.com/durzo) ([#10796](https://github.com/community-scripts/ProxmoxVE/pull/10796))
-    - Fixed Apache Guacamole installer [@horvatbenjamin](https://github.com/horvatbenjamin) ([#10798](https://github.com/community-scripts/ProxmoxVE/pull/10798))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - core: Improve NVIDIA GPU setup (5000x Series) [@MickLesk](https://github.com/MickLesk) ([#10807](https://github.com/community-scripts/ProxmoxVE/pull/10807))
-
-### 🧰 Tools
-
-  - Fix whiptail dialog hanging in Proxmox web console [@comk22](https://github.com/comk22) ([#10794](https://github.com/community-scripts/ProxmoxVE/pull/10794))
-
-### 🌐 Website
-
-  - #### 🐞 Bug Fixes
-
-    - Add search filtering to CommandDialog for improved script search functionality [@BramSuurdje](https://github.com/BramSuurdje) ([#10800](https://github.com/community-scripts/ProxmoxVE/pull/10800))
-
-## 2026-01-13
-
-### 🆕 New Scripts
-
-  - Investbrain ([#10774](https://github.com/community-scripts/ProxmoxVE/pull/10774))
-- Fladder ([#10768](https://github.com/community-scripts/ProxmoxVE/pull/10768))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Immich: Fix Intel version check; install legacy Intel packages during new install [@vhsdream](https://github.com/vhsdream) ([#10787](https://github.com/community-scripts/ProxmoxVE/pull/10787))
-    - Openwrt: Remove default VLAN for LAN [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#10782](https://github.com/community-scripts/ProxmoxVE/pull/10782))
-    - Refactor: Joplin Server [@tremor021](https://github.com/tremor021) ([#10769](https://github.com/community-scripts/ProxmoxVE/pull/10769))
-    - Fix Zammad nginx configuration causing installation failure [@Copilot](https://github.com/Copilot) ([#10757](https://github.com/community-scripts/ProxmoxVE/pull/10757))
-
-  - #### 🔧 Refactor
-
-    - Backrest: Bump to Trixie [@tremor021](https://github.com/tremor021) ([#10758](https://github.com/community-scripts/ProxmoxVE/pull/10758))
-    - Refactor: Caddy [@tremor021](https://github.com/tremor021) ([#10759](https://github.com/community-scripts/ProxmoxVE/pull/10759))
-    - Refactor: Leantime [@tremor021](https://github.com/tremor021) ([#10760](https://github.com/community-scripts/ProxmoxVE/pull/10760))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - update_lxcs.sh: Add the option to skip stopped LXC [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#10783](https://github.com/community-scripts/ProxmoxVE/pull/10783))
-
-## 2026-01-12
-
-### 🆕 New Scripts
-
-  - Jellystat ([#10628](https://github.com/community-scripts/ProxmoxVE/pull/10628))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - InfluxSB: fix If / fi [@chrnie](https://github.com/chrnie) ([#10753](https://github.com/community-scripts/ProxmoxVE/pull/10753))
-    - Cockpit: Downgrade to Debian 12 Bookworm (45Drives Issue) [@MickLesk](https://github.com/MickLesk) ([#10717](https://github.com/community-scripts/ProxmoxVE/pull/10717))
-
-  - #### ✨ New Features
-
-    - InfluxDB: add setup for influxdb v3 [@victorlap](https://github.com/victorlap) ([#10736](https://github.com/community-scripts/ProxmoxVE/pull/10736))
-    - Apache Guacamole: add schema upgrades and extension updates [@MickLesk](https://github.com/MickLesk) ([#10746](https://github.com/community-scripts/ProxmoxVE/pull/10746))
-    - Apache Tomcat: update support and refactor install script + debian 13 [@MickLesk](https://github.com/MickLesk) ([#10739](https://github.com/community-scripts/ProxmoxVE/pull/10739))
-    - Apache Guacamole: Function Bump + update_script [@MickLesk](https://github.com/MickLesk) ([#10728](https://github.com/community-scripts/ProxmoxVE/pull/10728))
-    - Apache CouchDB: bump to debian 13 and add update support [@MickLesk](https://github.com/MickLesk) ([#10721](https://github.com/community-scripts/ProxmoxVE/pull/10721))
-    - Apache Cassandra: bump to debian 13 and add update support [@MickLesk](https://github.com/MickLesk) ([#10720](https://github.com/community-scripts/ProxmoxVE/pull/10720))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Booklore [@MickLesk](https://github.com/MickLesk) ([#10742](https://github.com/community-scripts/ProxmoxVE/pull/10742))
-    - Bump Argus to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#10718](https://github.com/community-scripts/ProxmoxVE/pull/10718))
-    - Refactor Docker/Dockge & Bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#10719](https://github.com/community-scripts/ProxmoxVE/pull/10719))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: remove duplicated pve_version in advanced installs [@MickLesk](https://github.com/MickLesk) ([#10743](https://github.com/community-scripts/ProxmoxVE/pull/10743))
-
-  - #### ✨ New Features
-
-    - core: add storage validation & fix GB/MB display [@MickLesk](https://github.com/MickLesk) ([#10745](https://github.com/community-scripts/ProxmoxVE/pull/10745))
-    - core: validate container ID before pct create to prevent failures [@MickLesk](https://github.com/MickLesk) ([#10729](https://github.com/community-scripts/ProxmoxVE/pull/10729))
-
-  - #### 🔧 Refactor
-
-    - Enforce non-interactive apt mode in DB setup scripts [@MickLesk](https://github.com/MickLesk) ([#10714](https://github.com/community-scripts/ProxmoxVE/pull/10714))
-
-## 2026-01-11
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Fix Invoice Ninja Error 500 by restoring file ownership after artisan commands [@Copilot](https://github.com/Copilot) ([#10709](https://github.com/community-scripts/ProxmoxVE/pull/10709))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Infisical [@tremor021](https://github.com/tremor021) ([#10693](https://github.com/community-scripts/ProxmoxVE/pull/10693))
-    - Refactor: HortusFox [@tremor021](https://github.com/tremor021) ([#10697](https://github.com/community-scripts/ProxmoxVE/pull/10697))
-    - Refactor: Homer [@tremor021](https://github.com/tremor021) ([#10698](https://github.com/community-scripts/ProxmoxVE/pull/10698))
-
-## 2026-01-10
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - [Endurain] Increase default RAM from 2048 to 4096 [@FutureCow](https://github.com/FutureCow) ([#10690](https://github.com/community-scripts/ProxmoxVE/pull/10690))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - tools.func: hwaccel - make beignet-opencl-icd optional for legacy Intel GPUs [@MickLesk](https://github.com/MickLesk) ([#10677](https://github.com/community-scripts/ProxmoxVE/pull/10677))
-
-## 2026-01-09
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Jenkins: Fix application repository setup [@tremor021](https://github.com/tremor021) ([#10671](https://github.com/community-scripts/ProxmoxVE/pull/10671))
-    - deCONZ: Fix sources check in update script [@tremor021](https://github.com/tremor021) ([#10664](https://github.com/community-scripts/ProxmoxVE/pull/10664))
-    - Remove '--cpu' option from ExecStart command [@sethgregory](https://github.com/sethgregory) ([#10659](https://github.com/community-scripts/ProxmoxVE/pull/10659))
-
-### 💾 Core
-
-  - #### 💥 Breaking Changes
-
-    - fix: setup_mariadb hangs on [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10672](https://github.com/community-scripts/ProxmoxVE/pull/10672))
