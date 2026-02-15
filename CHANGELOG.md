@@ -410,6 +410,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - add: seer script and migrations [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11930](https://github.com/community-scripts/ProxmoxVE/pull/11930))
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Refactor: Patchmon [@vhsdream](https://github.com/vhsdream) ([#11888](https://github.com/community-scripts/ProxmoxVE/pull/11888))
+
 ## 2026-02-14
 
 ### 🚀 Updated Scripts
