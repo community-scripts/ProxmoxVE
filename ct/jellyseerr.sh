@@ -45,7 +45,7 @@ function update_script() {
     fi
 
     msg_info "Switching update script to Seerr"
-    sed -i 's|https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/jellyseerr.sh|https://raw.github.com/community-scripts/ProxmoxVE/main/ct/seerr.sh|g' /usr/bin/update
+    sed -i 's|https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/jellyseerr.sh|https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/seerr.sh|g' /usr/bin/update
     msg_ok "Switched update script to Seerr. Running update..."
     exec /usr/bin/update
   fi
