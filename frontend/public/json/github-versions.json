@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-15T12:08:30Z",
+  "generated": "2026-02-15T18:07:51Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -963,16 +963,9 @@
     {
       "slug": "outline",
       "repo": "outline/outline",
-      "version": "v1.4.0",
+      "version": "v1.5.0",
       "pinned": false,
-      "date": "2026-01-27T23:43:03Z"
-    },
-    {
-      "slug": "overseerr",
-      "repo": "sct/overseerr",
-      "version": "v1.34.0",
-      "pinned": false,
-      "date": "2025-03-26T08:48:34Z"
+      "date": "2026-02-15T18:04:16Z"
     },
     {
       "slug": "owncast",
@@ -1054,9 +1047,9 @@
     {
       "slug": "pelican-wings",
       "repo": "pelican-dev/wings",
-      "version": "v1.0.0-beta23",
+      "version": "v1.0.0-beta24",
       "pinned": false,
-      "date": "2026-02-09T22:10:26Z"
+      "date": "2026-02-15T16:09:56Z"
     },
     {
       "slug": "pf2etools",
@@ -1309,6 +1302,13 @@
       "version": "v2.4.2",
       "pinned": false,
       "date": "2025-03-08T10:49:04Z"
+    },
+    {
+      "slug": "seerr",
+      "repo": "seerr-team/seerr",
+      "version": "v3.0.1",
+      "pinned": false,
+      "date": "2026-02-14T19:30:24Z"
     },
     {
       "slug": "semaphore",
@@ -1698,9 +1698,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.5.0",
+      "version": "v0.6.0",
       "pinned": false,
-      "date": "2026-02-09T22:11:32Z"
+      "date": "2026-02-15T17:47:56Z"
     },
     {
       "slug": "zigbee2mqtt",
