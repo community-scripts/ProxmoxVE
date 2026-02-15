@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-15T00:21:56Z",
+  "generated": "2026-02-15T06:19:05Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -193,16 +193,16 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.6.1",
+      "version": "v2.6.2",
       "pinned": false,
-      "date": "2026-02-13T10:00:19Z"
+      "date": "2026-02-15T02:15:19Z"
     },
     {
       "slug": "cloudreve",
       "repo": "cloudreve/cloudreve",
-      "version": "4.14.0",
+      "version": "4.14.1",
       "pinned": false,
-      "date": "2026-02-14T06:05:06Z"
+      "date": "2026-02-15T01:39:24Z"
     },
     {
       "slug": "comfyui",
@@ -578,9 +578,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1113",
+      "version": "v0.24.1124",
       "pinned": false,
-      "date": "2026-02-14T17:46:58Z"
+      "date": "2026-02-15T05:54:22Z"
     },
     {
       "slug": "jellystat",
@@ -886,9 +886,9 @@
     {
       "slug": "nginx-ui",
       "repo": "0xJacky/nginx-ui",
-      "version": "v2.3.2",
+      "version": "v2.3.3",
       "pinned": false,
-      "date": "2025-12-09T09:47:15Z"
+      "date": "2026-02-15T00:58:14Z"
     },
     {
       "slug": "nightscout",
@@ -1726,9 +1726,9 @@
     {
       "slug": "zoraxy",
       "repo": "tobychui/zoraxy",
-      "version": "v3.3.1",
+      "version": "v3.3.2-rc1",
       "pinned": false,
-      "date": "2026-01-28T13:52:02Z"
+      "date": "2026-02-15T02:16:17Z"
     },
     {
       "slug": "zwave-js-ui",
