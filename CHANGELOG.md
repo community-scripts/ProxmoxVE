@@ -408,7 +408,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - add: seer script and migrations [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11930](https://github.com/community-scripts/ProxmoxVE/pull/11930))
+  - ebusd ([#11942](https://github.com/community-scripts/ProxmoxVE/pull/11942))
+- add: seer script and migrations [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11930](https://github.com/community-scripts/ProxmoxVE/pull/11930))
 
 ### 🚀 Updated Scripts
 
