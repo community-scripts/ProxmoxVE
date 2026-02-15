@@ -4,7 +4,7 @@
   "categories": [
     16
   ],
-  "date_created": "2026-01-26",
+  "date_created": "2026-02-15",
   "type": "ct",
   "updateable": true,
   "privileged": false,
@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "For required post installation actions, checkout: `https://github.com/community-scripts/ProxmoxVE/discussions/11352`", 
+      "text": "For required post installation actions, checkout: `https://github.com/community-scripts/ProxmoxVE/discussions/11352`",
       "type": "info"
     }
   ]
