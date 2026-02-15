@@ -413,6 +413,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Tautulli: Add setuptools < 81 [@tremor021](https://github.com/tremor021) ([#11943](https://github.com/community-scripts/ProxmoxVE/pull/11943))
+
   - #### 💥 Breaking Changes
 
     - Refactor: Patchmon [@vhsdream](https://github.com/vhsdream) ([#11888](https://github.com/community-scripts/ProxmoxVE/pull/11888))
