@@ -415,6 +415,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix jellyseer and overseer script replacement [@lucacome](https://github.com/lucacome) ([#11949](https://github.com/community-scripts/ProxmoxVE/pull/11949))
     - Tautulli: Add setuptools < 81 [@tremor021](https://github.com/tremor021) ([#11943](https://github.com/community-scripts/ProxmoxVE/pull/11943))
 
   - #### 💥 Breaking Changes
