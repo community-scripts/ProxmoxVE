@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-14T18:07:29Z",
+  "generated": "2026-02-15T00:21:56Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -298,9 +298,9 @@
     {
       "slug": "donetick",
       "repo": "donetick/donetick",
-      "version": "v0.1.73",
+      "version": "v0.1.74",
       "pinned": false,
-      "date": "2026-02-12T23:42:30Z"
+      "date": "2026-02-14T23:21:45Z"
     },
     {
       "slug": "drawio",
@@ -354,9 +354,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.4.20",
+      "version": "v6.4.21",
       "pinned": false,
-      "date": "2026-02-14T12:39:02Z"
+      "date": "2026-02-14T19:40:46Z"
     },
     {
       "slug": "fladder",
@@ -571,9 +571,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.59",
+      "version": "v5.12.60",
       "pinned": false,
-      "date": "2026-02-13T02:26:13Z"
+      "date": "2026-02-15T00:11:31Z"
     },
     {
       "slug": "jackett",
