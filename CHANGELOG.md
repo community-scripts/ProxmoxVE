@@ -436,6 +436,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Update OpenCloud LXC webpage to include services ports [@summoningpixels](https://github.com/summoningpixels) ([#11969](https://github.com/community-scripts/ProxmoxVE/pull/11969))
 
+### ❔ Uncategorized
+
+  - Update Wishlist LXC webpage to include reverse proxy info [@summoningpixels](https://github.com/summoningpixels) ([#11973](https://github.com/community-scripts/ProxmoxVE/pull/11973))
+
 ## 2026-02-15
 
 ### 🆕 New Scripts
