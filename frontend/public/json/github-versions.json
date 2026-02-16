@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-16T06:25:10Z",
+  "generated": "2026-02-16T12:14:16Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -557,9 +557,9 @@
     {
       "slug": "immich-public-proxy",
       "repo": "alangrainger/immich-public-proxy",
-      "version": "v1.15.1",
+      "version": "v1.15.2",
       "pinned": false,
-      "date": "2026-01-26T08:04:27Z"
+      "date": "2026-02-16T08:54:59Z"
     },
     {
       "slug": "inspircd",
@@ -585,9 +585,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1124",
+      "version": "v0.24.1127",
       "pinned": false,
-      "date": "2026-02-15T05:54:22Z"
+      "date": "2026-02-16T08:43:41Z"
     },
     {
       "slug": "jellystat",
@@ -728,6 +728,13 @@
       "version": "v3.1.0.4875",
       "pinned": false,
       "date": "2025-11-16T22:40:18Z"
+    },
+    {
+      "slug": "linkding",
+      "repo": "sissbruecker/linkding",
+      "version": "v1.45.0",
+      "pinned": false,
+      "date": "2026-01-06T20:31:04Z"
     },
     {
       "slug": "linkstack",
@@ -963,9 +970,9 @@
     {
       "slug": "ots",
       "repo": "Luzifer/ots",
-      "version": "v1.21.0",
+      "version": "v1.21.1",
       "pinned": false,
-      "date": "2026-01-19T23:21:29Z"
+      "date": "2026-02-16T12:12:23Z"
     },
     {
       "slug": "outline",
@@ -1012,9 +1019,9 @@
     {
       "slug": "paperless-gpt",
       "repo": "icereed/paperless-gpt",
-      "version": "v0.24.0",
+      "version": "v0.25.0",
       "pinned": false,
-      "date": "2026-01-14T21:28:09Z"
+      "date": "2026-02-16T08:31:48Z"
     },
     {
       "slug": "paperless-ngx",
@@ -1269,6 +1276,13 @@
       "date": "2025-03-28T13:00:23Z"
     },
     {
+      "slug": "romm",
+      "repo": "RetroAchievements/RALibretro",
+      "version": "1.8.2",
+      "pinned": false,
+      "date": "2026-01-23T17:03:31Z"
+    },
+    {
       "slug": "rustdeskserver",
       "repo": "rustdesk/rustdesk-server",
       "version": "1.1.15",
@@ -1320,9 +1334,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.0",
+      "version": "v2.17.2",
       "pinned": false,
-      "date": "2026-02-13T21:08:30Z"
+      "date": "2026-02-16T10:27:40Z"
     },
     {
       "slug": "shelfmark",
@@ -1726,9 +1740,9 @@
     {
       "slug": "zitadel",
       "repo": "zitadel/zitadel",
-      "version": "v4.10.1",
+      "version": "v4.11.0",
       "pinned": false,
-      "date": "2026-01-30T06:52:53Z"
+      "date": "2026-02-16T09:48:38Z"
     },
     {
       "slug": "zoraxy",
