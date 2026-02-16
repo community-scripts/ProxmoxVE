@@ -413,6 +413,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Opencloud: Pin version to 5.1.0 [@vhsdream](https://github.com/vhsdream) ([#12004](https://github.com/community-scripts/ProxmoxVE/pull/12004))
+
   - #### 🐞 Bug Fixes
 
     - Tududi: Fix sed command for DB_FILE configuration [@tremor021](https://github.com/tremor021) ([#11988](https://github.com/community-scripts/ProxmoxVE/pull/11988))
