@@ -412,6 +412,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - jellyseerr/overseerr: Migrate update script to Seerr; prompt rerun [@MickLesk](https://github.com/MickLesk) ([#11965](https://github.com/community-scripts/ProxmoxVE/pull/11965))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update OpenCloud LXC webpage to include services ports [@summoningpixels](https://github.com/summoningpixels) ([#11969](https://github.com/community-scripts/ProxmoxVE/pull/11969))
+
 ## 2026-02-15
 
 ### 🆕 New Scripts
