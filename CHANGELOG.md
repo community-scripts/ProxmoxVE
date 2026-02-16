@@ -418,6 +418,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Vaultwarden: export VW_VERSION as version number [@MickLesk](https://github.com/MickLesk) ([#11966](https://github.com/community-scripts/ProxmoxVE/pull/11966))
     - Zabbix: Improve zabbix-agent service detection [@MickLesk](https://github.com/MickLesk) ([#11968](https://github.com/community-scripts/ProxmoxVE/pull/11968))
 
 ### 💾 Core
