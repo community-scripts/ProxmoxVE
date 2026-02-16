@@ -408,7 +408,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - LinkDing ([#11976](https://github.com/community-scripts/ProxmoxVE/pull/11976))
+  - RomM ([#11987](https://github.com/community-scripts/ProxmoxVE/pull/11987))
+- LinkDing ([#11976](https://github.com/community-scripts/ProxmoxVE/pull/11976))
 
 ### 🚀 Updated Scripts
 
@@ -434,7 +435,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: remove duplicate error handler from alpine-install.func [@MickLesk](https://github.com/MickLesk) ([#11971](https://github.com/community-scripts/ProxmoxVE/pull/11971))
 
-### 📚 Documentation
+### 📂 Github
 
   - github: add "website" label if "json" changed [@MickLesk](https://github.com/MickLesk) ([#11975](https://github.com/community-scripts/ProxmoxVE/pull/11975))
 
