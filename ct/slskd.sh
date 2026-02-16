@@ -83,6 +83,7 @@ function update_script() {
     msg_ok "Started Soularr Timer"
     msg_ok "Updated Soularr successfully!"
   fi
+  exit
 }
 
 start
