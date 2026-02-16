@@ -418,6 +418,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - #### ✨ New Features
+
+    - tools.func: ensure /usr/local/bin PATH persists for pct enter sessions [@MickLesk](https://github.com/MickLesk) ([#11970](https://github.com/community-scripts/ProxmoxVE/pull/11970))
+
   - #### 🔧 Refactor
 
     - core: remove duplicate error handler from alpine-install.func [@MickLesk](https://github.com/MickLesk) ([#11971](https://github.com/community-scripts/ProxmoxVE/pull/11971))
