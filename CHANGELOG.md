@@ -406,6 +406,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-16
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - jellyseerr/overseerr: Migrate update script to Seerr; prompt rerun [@MickLesk](https://github.com/MickLesk) ([#11965](https://github.com/community-scripts/ProxmoxVE/pull/11965))
+
 ## 2026-02-15
 
 ### 🆕 New Scripts
