@@ -45,16 +45,18 @@ function update_script() {
     fi
 
     msg_info "Switching update script to Seerr"
-    cat <<EOF >/usr/bin/update
+    cat <<'EOF' >/usr/bin/update
+#!/usr/bin/env bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/seerr.sh)"
 EOF
     chmod +x /usr/bin/update
-    msg_ok "Switched update script to Seerr. Running update..."
-    exec /usr/bin/update
+    msg_ok "Switched update script to Seerr"
+    msg_warn "Please type 'update' again to complete the migration"
+    exit
   fi
 
   msg_info "Updating Jellyseerr"
-  cd /opt/jellyseerr 
+  cd /opt/jellyseerr
   systemctl stop jellyseerr
   output=$(git pull --no-rebase)
   pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
@@ -65,7 +67,7 @@ EOF
   fi
   rm -rf dist .next node_modules
   export CYPRESS_INSTALL_BINARY=0
-  cd /opt/jellyseerr 
+  cd /opt/jellyseerr
   $STD pnpm install --frozen-lockfile
   export NODE_OPTIONS="--max-old-space-size=3072"
   $STD pnpm build
