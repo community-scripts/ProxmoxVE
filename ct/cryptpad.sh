@@ -39,16 +39,19 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
+    msg_info "Restoring configuration"
+    mv /opt/config.js /opt/cryptpad/config/
+    msg_ok "Configuration restored"
+
     msg_info "Updating CryptaPad"
     cd /opt/cryptpad
     $STD npm ci
     $STD npm run install:components
+    if [ -f "/opt/cryptpad/install-onlyoffice.sh" ]; then
+      $STD bash /opt/cryptpad/install-onlyoffice.sh --accept-license
+    fi
     $STD npm run build
     msg_ok "Updated CryptaPad"
-
-    msg_info "Restoring configuration"
-    mv /opt/config.js /opt/cryptpad/config/
-    msg_ok "Configuration restored"
 
     msg_info "Starting Service"
     systemctl start cryptpad
