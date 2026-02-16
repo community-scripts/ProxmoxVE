@@ -1851,15 +1851,25 @@ function download_with_progress() {
 # Ensures /usr/local/bin is permanently in system PATH.
 #
 # Description:
-#   - Adds to /etc/profile.d if not present
+#   - Adds to /etc/profile.d for login shells (SSH, noVNC)
+#   - Adds to /root/.bashrc for non-login shells (pct enter)
 # ------------------------------------------------------------------------------
 
 function ensure_usr_local_bin_persist() {
-  local PROFILE_FILE="/etc/profile.d/custom_path.sh"
+  # Skip on Proxmox host
+  command -v pveversion &>/dev/null && return
 
-  if [[ ! -f "$PROFILE_FILE" ]] && ! command -v pveversion &>/dev/null; then
+  # Login shells: /etc/profile.d/
+  local PROFILE_FILE="/etc/profile.d/custom_path.sh"
+  if [[ ! -f "$PROFILE_FILE" ]]; then
     echo 'export PATH="/usr/local/bin:$PATH"' >"$PROFILE_FILE"
     chmod +x "$PROFILE_FILE"
+  fi
+
+  # Non-login shells (pct enter): /root/.bashrc
+  local BASHRC="/root/.bashrc"
+  if [[ -f "$BASHRC" ]] && ! grep -q '/usr/local/bin' "$BASHRC"; then
+    echo 'export PATH="/usr/local/bin:$PATH"' >>"$BASHRC"
   fi
 }
 
