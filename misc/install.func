@@ -172,7 +172,7 @@ network_check() {
   fi
 
   set -e
-  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+  trap 'error_handler' ERR
 }
 
 # ==============================================================================
