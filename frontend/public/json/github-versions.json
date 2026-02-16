@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-15T18:07:51Z",
+  "generated": "2026-02-16T00:22:01Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -256,9 +256,9 @@
     {
       "slug": "dawarich",
       "repo": "Freika/dawarich",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "pinned": false,
-      "date": "2026-02-08T14:42:45Z"
+      "date": "2026-02-15T22:33:56Z"
     },
     {
       "slug": "discopanel",
@@ -317,6 +317,13 @@
       "date": "2026-01-06T12:05:40Z"
     },
     {
+      "slug": "ebusd",
+      "repo": "john30/ebusd",
+      "version": "26.1",
+      "pinned": false,
+      "date": "2026-02-09T06:09:24Z"
+    },
+    {
       "slug": "elementsynapse",
       "repo": "etkecc/synapse-admin",
       "version": "v0.11.1-etke53",
@@ -354,9 +361,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.4.21",
+      "version": "v6.4.22",
       "pinned": false,
-      "date": "2026-02-14T19:40:46Z"
+      "date": "2026-02-15T18:43:08Z"
     },
     {
       "slug": "fladder",
@@ -634,9 +641,9 @@
     {
       "slug": "kimai",
       "repo": "kimai/kimai",
-      "version": "2.48.0",
+      "version": "2.49.0",
       "pinned": false,
-      "date": "2026-01-31T18:10:59Z"
+      "date": "2026-02-15T20:40:19Z"
     },
     {
       "slug": "kitchenowl",
@@ -1425,9 +1432,9 @@
     {
       "slug": "tautulli",
       "repo": "Tautulli/Tautulli",
-      "version": "v2.16.0",
+      "version": "v2.16.1",
       "pinned": false,
-      "date": "2025-09-09T01:05:45Z"
+      "date": "2026-02-15T20:40:37Z"
     },
     {
       "slug": "teddycloud",
@@ -1481,9 +1488,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.17",
+      "version": "v1.4.18",
       "pinned": false,
-      "date": "2026-02-11T01:33:21Z"
+      "date": "2026-02-15T19:55:40Z"
     },
     {
       "slug": "tracktor",
