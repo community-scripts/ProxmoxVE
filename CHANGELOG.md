@@ -414,6 +414,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - slskd: fix exit position [@MickLesk](https://github.com/MickLesk) ([#11963](https://github.com/community-scripts/ProxmoxVE/pull/11963))
+    - cryptpad: restore config earlier and run onlyoffice upgrade [@MickLesk](https://github.com/MickLesk) ([#11964](https://github.com/community-scripts/ProxmoxVE/pull/11964))
     - jellyseerr/overseerr: Migrate update script to Seerr; prompt rerun [@MickLesk](https://github.com/MickLesk) ([#11965](https://github.com/community-scripts/ProxmoxVE/pull/11965))
 
   - #### 🔧 Refactor
