@@ -45,6 +45,8 @@ function update_script() {
 
       msg_info "Updating VaultWarden to $VAULT (Patience)"
       cd /tmp/vaultwarden-src
+      VW_VERSION="$VAULT"
+      export VW_VERSION
       $STD cargo build --features "sqlite,mysql,postgresql" --release
       if [[ -f /usr/bin/vaultwarden ]]; then
         cp target/release/vaultwarden /usr/bin/
