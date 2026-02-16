@@ -36,7 +36,7 @@ $STD npm run build
 ln -sf /usr/lib/x86_64-linux-gnu/mod_icu.so /opt/linkding/libicu.so
 msg_ok "Built Frontend"
 
-msg_info "Setting up linkding"
+msg_info "Setting up LinkDing"
 rm -f bookmarks/settings/dev.py
 touch bookmarks/settings/custom.py
 $STD uv sync --no-dev --frozen
@@ -54,7 +54,7 @@ $STD /opt/linkding/.venv/bin/python manage.py migrate
 $STD /opt/linkding/.venv/bin/python manage.py enable_wal
 $STD /opt/linkding/.venv/bin/python manage.py create_initial_superuser
 $STD /opt/linkding/.venv/bin/python manage.py collectstatic --no-input
-msg_ok "Set up linkding"
+msg_ok "Set up LinkDing"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/linkding.service
