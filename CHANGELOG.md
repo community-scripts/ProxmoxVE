@@ -416,6 +416,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - jellyseerr/overseerr: Migrate update script to Seerr; prompt rerun [@MickLesk](https://github.com/MickLesk) ([#11965](https://github.com/community-scripts/ProxmoxVE/pull/11965))
 
+  - #### 🔧 Refactor
+
+    - Zabbix: Improve zabbix-agent service detection [@MickLesk](https://github.com/MickLesk) ([#11968](https://github.com/community-scripts/ProxmoxVE/pull/11968))
+
 ### 💾 Core
 
   - #### ✨ New Features
