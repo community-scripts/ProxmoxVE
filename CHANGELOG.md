@@ -426,6 +426,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: remove duplicate error handler from alpine-install.func [@MickLesk](https://github.com/MickLesk) ([#11971](https://github.com/community-scripts/ProxmoxVE/pull/11971))
 
+### 📚 Documentation
+
+  - github: add "website" label if "json" changed [@MickLesk](https://github.com/MickLesk) ([#11975](https://github.com/community-scripts/ProxmoxVE/pull/11975))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
