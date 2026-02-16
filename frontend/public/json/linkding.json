@@ -1,0 +1,40 @@
+{
+    "name": "linkding",
+    "slug": "linkding",
+    "categories": [
+        12
+    ],
+    "date_created": "2026-02-09",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 9090,
+    "documentation": "https://linkding.link/",
+    "website": "https://linkding.link/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/linkding.webp",
+    "config_path": "/opt/linkding/.env",
+    "description": "linkding is a self-hosted bookmark manager that is designed to be minimal, fast, and easy to set up. It features a clean UI, tag-based organization, bulk editing, Markdown notes, read it later functionality, sharing, REST API, and browser extensions for Firefox and Chrome.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/linkding.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Admin credentials are stored in /opt/linkding/.env",
+            "type": "info"
+        }
+    ]
+}
