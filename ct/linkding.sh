@@ -48,7 +48,7 @@ function update_script() {
     ln -sf /usr/lib/x86_64-linux-gnu/mod_icu.so /opt/linkding/libicu.so
     msg_ok "Restored Data"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating LinkDing"
     cd /opt/linkding
     rm -f bookmarks/settings/dev.py
     touch bookmarks/settings/custom.py
@@ -59,12 +59,12 @@ function update_script() {
     set -a && source /opt/linkding/.env && set +a
     $STD /opt/linkding/.venv/bin/python manage.py migrate
     $STD /opt/linkding/.venv/bin/python manage.py collectstatic --no-input
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated LinkDing"
 
     msg_info "Starting Services"
     systemctl start nginx linkding linkding-tasks
     msg_ok "Started Services"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
