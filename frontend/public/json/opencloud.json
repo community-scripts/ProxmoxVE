@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Valid TLS certificates and fully-qualified domain names behind a reverse proxy (Caddy) for 3 services - OpenCloud, Collabora, and WOPI are **REQUIRED**",
+      "text": "Valid TLS certificates and fully-qualified domain names behind a reverse proxy (Caddy) for 3 services - OpenCloud (port: 9200), Collabora (port: 9980), and WOPI (port: 9300) are **REQUIRED**",
       "type": "warning"
     },
     {
