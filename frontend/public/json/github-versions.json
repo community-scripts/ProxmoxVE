@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-16T12:14:16Z",
+  "generated": "2026-02-16T18:13:33Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -704,9 +704,9 @@
     {
       "slug": "librenms",
       "repo": "librenms/librenms",
-      "version": "26.1.1",
+      "version": "26.2.0",
       "pinned": false,
-      "date": "2026-01-12T23:26:02Z"
+      "date": "2026-02-16T12:15:13Z"
     },
     {
       "slug": "librespeed-rust",
@@ -1026,16 +1026,16 @@
     {
       "slug": "paperless-ngx",
       "repo": "paperless-ngx/paperless-ngx",
-      "version": "v2.20.6",
+      "version": "v2.20.7",
       "pinned": false,
-      "date": "2026-01-31T07:30:27Z"
+      "date": "2026-02-16T16:52:23Z"
     },
     {
       "slug": "patchmon",
       "repo": "PatchMon/PatchMon",
-      "version": "v1.4.0",
+      "version": "v1.4.1",
       "pinned": false,
-      "date": "2026-02-13T10:39:03Z"
+      "date": "2026-02-16T18:00:13Z"
     },
     {
       "slug": "paymenter",
@@ -1362,9 +1362,9 @@
     {
       "slug": "slskd",
       "repo": "slskd/slskd",
-      "version": "0.24.3",
+      "version": "0.24.4",
       "pinned": false,
-      "date": "2026-01-15T14:40:15Z"
+      "date": "2026-02-16T16:50:17Z"
     },
     {
       "slug": "snipeit",
@@ -1544,9 +1544,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.12",
+      "version": "v1.1.13",
       "pinned": false,
-      "date": "2026-02-03T20:19:00Z"
+      "date": "2026-02-16T16:16:17Z"
     },
     {
       "slug": "uhf",
@@ -1628,9 +1628,9 @@
     {
       "slug": "wanderer",
       "repo": "meilisearch/meilisearch",
-      "version": "v1.35.0",
+      "version": "v1.35.1",
       "pinned": false,
-      "date": "2026-02-02T09:57:03Z"
+      "date": "2026-02-16T17:01:17Z"
     },
     {
       "slug": "warracker",
