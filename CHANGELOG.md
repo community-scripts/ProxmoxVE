@@ -426,6 +426,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: smart recovery for failed installs | extend exit_codes  [@MickLesk](https://github.com/MickLesk) ([#11221](https://github.com/community-scripts/ProxmoxVE/pull/11221))
 
+  - #### 🔧 Refactor
+
+    - core: error-handler improvements | better exit_code handling | better tools.func source check [@MickLesk](https://github.com/MickLesk) ([#12019](https://github.com/community-scripts/ProxmoxVE/pull/12019))
+
 ### 🧰 Tools
 
   - #### 🔧 Refactor
