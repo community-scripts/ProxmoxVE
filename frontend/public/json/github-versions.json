@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-17T06:22:06Z",
+  "generated": "2026-02-17T12:14:18Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -158,9 +158,9 @@
     {
       "slug": "bookstack",
       "repo": "BookStackApp/BookStack",
-      "version": "v25.12.3",
+      "version": "v25.12.4",
       "pinned": false,
-      "date": "2026-01-29T15:29:25Z"
+      "date": "2026-02-17T11:44:48Z"
     },
     {
       "slug": "byparr",
@@ -207,9 +207,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.13.0",
+      "version": "v0.14.0",
       "pinned": false,
-      "date": "2026-02-10T20:27:38Z"
+      "date": "2026-02-17T06:29:10Z"
     },
     {
       "slug": "commafeed",
@@ -252,6 +252,13 @@
       "version": "2026.2.0",
       "pinned": false,
       "date": "2026-02-11T15:39:05Z"
+    },
+    {
+      "slug": "databasus",
+      "repo": "databasus/databasus",
+      "version": "v3.12.2",
+      "pinned": false,
+      "date": "2026-02-14T22:28:59Z"
     },
     {
       "slug": "dawarich",
@@ -550,9 +557,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.2.4.1",
+      "version": "9.3.0",
       "pinned": false,
-      "date": "2026-02-12T22:17:47Z"
+      "date": "2026-02-17T06:34:38Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -781,9 +788,9 @@
     {
       "slug": "mail-archiver",
       "repo": "s1t5/mail-archiver",
-      "version": "2602.1",
+      "version": "2602.2",
       "pinned": false,
-      "date": "2026-02-11T06:23:11Z"
+      "date": "2026-02-17T09:46:52Z"
     },
     {
       "slug": "managemydamnlife",
@@ -1103,9 +1110,9 @@
     {
       "slug": "pocketbase",
       "repo": "pocketbase/pocketbase",
-      "version": "v0.36.3",
+      "version": "v0.36.4",
       "pinned": false,
-      "date": "2026-02-13T18:38:58Z"
+      "date": "2026-02-17T08:02:51Z"
     },
     {
       "slug": "pocketid",
@@ -1481,9 +1488,9 @@
     {
       "slug": "threadfin",
       "repo": "threadfin/threadfin",
-      "version": "1.2.37",
+      "version": "delete",
       "pinned": false,
-      "date": "2025-09-11T16:13:41Z"
+      "date": ""
     },
     {
       "slug": "tianji",
