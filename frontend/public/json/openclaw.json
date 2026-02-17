@@ -1,0 +1,44 @@
+{
+  "name": "OpenClaw",
+  "slug": "openclaw",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-02-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 18789,
+  "documentation": "https://docs.openclaw.ai/",
+  "website": "https://openclaw.ai/",
+  "logo": "https://docs.openclaw.ai/favicon.ico",
+  "config_path": "/etc/systemd/system/openclaw.service",
+  "description": "OpenClaw is an AI desktop and coding assistant platform with a built-in gateway dashboard for connecting LLM providers and managing local workflows.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/openclaw.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Show the gateway token with: `cat ~/openclaw.creds`",
+      "type": "info"
+    },
+    {
+      "text": "Optional guided setup: run `openclaw onboard` from the LXC console.",
+      "type": "info"
+    }
+  ]
+}
