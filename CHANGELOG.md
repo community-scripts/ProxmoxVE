@@ -412,6 +412,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: pterodactyl-panel add symlink [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11997](https://github.com/community-scripts/ProxmoxVE/pull/11997))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: call get_lxc_ip in start() before updates [@MickLesk](https://github.com/MickLesk) ([#12015](https://github.com/community-scripts/ProxmoxVE/pull/12015))
+
 ## 2026-02-16
 
 ### 🆕 New Scripts
