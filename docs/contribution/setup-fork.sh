@@ -134,7 +134,7 @@ update_links() {
   # Find all files containing the old repo reference
   while IFS= read -r file; do
     # Count occurrences
-    local count=$(grep -c "github.com/$old_repo/$old_name" "$file" 2>/dev/null || echo 0)
+    local count=$(grep -E -c "(github.com|githubusercontent.com)/$old_repo/$old_name" "$file" 2>/dev/null || echo 0)
 
     if [[ $count -gt 0 ]]; then
       # Backup original
@@ -143,16 +143,16 @@ update_links() {
       # Replace links - use different sed syntax for BSD/macOS vs GNU sed
       if sed --version &>/dev/null 2>&1; then
         # GNU sed
-        sed -i "s|github.com/$old_repo/$old_name|github.com/$new_owner/$new_repo|g" "$file"
+        sed -E -i "s@(github.com|githubusercontent.com)/$old_repo/$old_name@\\1/$new_owner/$new_repo@g" "$file"
       else
         # BSD sed (macOS)
-        sed -i '' "s|github.com/$old_repo/$old_name|github.com/$new_owner/$new_repo|g" "$file"
+        sed -E -i '' "s@(github.com|githubusercontent.com)/$old_repo/$old_name@\\1/$new_owner/$new_repo@g" "$file"
       fi
 
       ((files_updated++))
       print_success "Updated $file ($count links)"
     fi
-  done < <(find "$search_path" -type f \( -name "*.md" -o -name "*.sh" -o -name "*.func" -o -name "*.json" \) -not -path "*/.git/*" 2>/dev/null | xargs grep -l "github.com/$old_repo/$old_name" 2>/dev/null)
+  done < <(find "$search_path" -type f \( -name "*.md" -o -name "*.sh" -o -name "*.func" -o -name "*.json" \) -not -path "*/.git/*" 2>/dev/null | xargs grep -E -l "(github.com|githubusercontent.com)/$old_repo/$old_name" 2>/dev/null)
 
   return $files_updated
 }
