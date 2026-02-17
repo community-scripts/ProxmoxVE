@@ -424,6 +424,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools/pve: add data analytics / formatting / linting [@MickLesk](https://github.com/MickLesk) ([#12034](https://github.com/community-scripts/ProxmoxVE/pull/12034))
     - core: smart recovery for failed installs | extend exit_codes  [@MickLesk](https://github.com/MickLesk) ([#11221](https://github.com/community-scripts/ProxmoxVE/pull/11221))
 
   - #### 🔧 Refactor
