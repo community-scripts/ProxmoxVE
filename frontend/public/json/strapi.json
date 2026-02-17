@@ -1,0 +1,48 @@
+{
+  "name": "Strapi",
+  "slug": "strapi",
+  "categories": [
+    12
+  ],
+  "date_created": "2026-02-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 1337,
+  "documentation": "https://docs.strapi.io/",
+  "website": "https://strapi.io/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/strapi.webp",
+  "config_path": "/opt/strapi/.env",
+  "description": "Strapi is a leading open-source headless CMS that enables developers to build powerful APIs quickly. It features a flexible content structure with customizable content types, supporting both REST and GraphQL APIs. The intuitive admin panel allows non-technical users to manage content easily, while developers can extend functionality through plugins. Built on Node.js, Strapi offers role-based access control, media library management, and internationalization support out of the box.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/strapi.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "First-time setup requires creating an admin account at http://IP:1337/admin",
+      "type": "info"
+    },
+    {
+      "text": "Default installation uses SQLite. For production use, consider configuring PostgreSQL or MySQL.",
+      "type": "info"
+    },
+    {
+      "text": "Building the admin panel requires 4GB RAM. Container may take 10-15 minutes to fully initialize.",
+      "type": "warning"
+    }
+  ]
+}
