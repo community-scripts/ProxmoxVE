@@ -414,6 +414,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [Hotfix] Cleanuparr: backup config before update [@vhsdream](https://github.com/vhsdream) ([#12039](https://github.com/community-scripts/ProxmoxVE/pull/12039))
     - fix: pterodactyl-panel add symlink [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11997](https://github.com/community-scripts/ProxmoxVE/pull/11997))
 
 ### 💾 Core
