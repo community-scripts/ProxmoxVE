@@ -438,6 +438,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich Public Proxy: centralize and fix systemd service creation [@MickLesk](https://github.com/MickLesk) ([#12025](https://github.com/community-scripts/ProxmoxVE/pull/12025))
 
+### 📚 Documentation
+
+  - fix contribution/setup-fork [@andreasabeck](https://github.com/andreasabeck) ([#12047](https://github.com/community-scripts/ProxmoxVE/pull/12047))
+
 ## 2026-02-16
 
 ### 🆕 New Scripts
