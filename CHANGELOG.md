@@ -406,6 +406,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-17
 
+### 🆕 New Scripts
+
+  - Databasus ([#12018](https://github.com/community-scripts/ProxmoxVE/pull/12018))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
