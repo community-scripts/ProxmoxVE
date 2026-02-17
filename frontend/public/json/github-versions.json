@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-17T12:14:18Z",
+  "generated": "2026-02-17T18:20:14Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -256,9 +256,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.12.2",
+      "version": "v3.14.0",
       "pinned": false,
-      "date": "2026-02-14T22:28:59Z"
+      "date": "2026-02-17T17:18:34Z"
     },
     {
       "slug": "dawarich",
@@ -557,9 +557,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.3.0",
+      "version": "9.3.1",
       "pinned": false,
-      "date": "2026-02-17T06:34:38Z"
+      "date": "2026-02-17T16:19:36Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -746,9 +746,9 @@
     {
       "slug": "linkstack",
       "repo": "linkstackorg/linkstack",
-      "version": "v4.8.4",
+      "version": "v4.8.6",
       "pinned": false,
-      "date": "2024-12-10T15:14:34Z"
+      "date": "2026-02-17T16:53:47Z"
     },
     {
       "slug": "linkwarden",
@@ -893,9 +893,9 @@
     {
       "slug": "netbox",
       "repo": "netbox-community/netbox",
-      "version": "v4.5.2",
+      "version": "v4.5.3",
       "pinned": false,
-      "date": "2026-02-03T13:54:26Z"
+      "date": "2026-02-17T15:39:18Z"
     },
     {
       "slug": "nextcloud-exporter",
@@ -1096,9 +1096,9 @@
     {
       "slug": "planka",
       "repo": "plankanban/planka",
-      "version": "v2.0.0",
+      "version": "v2.0.1",
       "pinned": false,
-      "date": "2026-02-11T13:50:10Z"
+      "date": "2026-02-17T15:26:55Z"
     },
     {
       "slug": "plant-it",
@@ -1341,9 +1341,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.2",
+      "version": "v2.17.4",
       "pinned": false,
-      "date": "2026-02-16T10:27:40Z"
+      "date": "2026-02-17T13:02:16Z"
     },
     {
       "slug": "shelfmark",
@@ -1488,9 +1488,9 @@
     {
       "slug": "threadfin",
       "repo": "threadfin/threadfin",
-      "version": "delete",
+      "version": "1.2.37",
       "pinned": false,
-      "date": ""
+      "date": "2025-09-11T16:13:41Z"
     },
     {
       "slug": "tianji",
