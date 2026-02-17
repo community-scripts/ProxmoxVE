@@ -426,6 +426,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: smart recovery for failed installs | extend exit_codes  [@MickLesk](https://github.com/MickLesk) ([#11221](https://github.com/community-scripts/ProxmoxVE/pull/11221))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - Immich Public Proxy: centralize and fix systemd service creation [@MickLesk](https://github.com/MickLesk) ([#12025](https://github.com/community-scripts/ProxmoxVE/pull/12025))
+
 ## 2026-02-16
 
 ### 🆕 New Scripts
