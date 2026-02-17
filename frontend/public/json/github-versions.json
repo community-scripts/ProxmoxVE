@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-16T18:13:33Z",
+  "generated": "2026-02-17T00:22:13Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -193,9 +193,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.6.2",
+      "version": "v2.6.3",
       "pinned": false,
-      "date": "2026-02-15T02:15:19Z"
+      "date": "2026-02-16T22:41:25Z"
     },
     {
       "slug": "cloudreve",
@@ -557,9 +557,9 @@
     {
       "slug": "immich-public-proxy",
       "repo": "alangrainger/immich-public-proxy",
-      "version": "v1.15.2",
+      "version": "v1.15.3",
       "pinned": false,
-      "date": "2026-02-16T08:54:59Z"
+      "date": "2026-02-16T22:54:27Z"
     },
     {
       "slug": "inspircd",
@@ -956,9 +956,9 @@
     {
       "slug": "opencloud",
       "repo": "opencloud-eu/opencloud",
-      "version": "v5.0.2",
+      "version": "v5.1.0",
       "pinned": true,
-      "date": "2026-02-05T16:29:01Z"
+      "date": "2026-02-16T15:04:28Z"
     },
     {
       "slug": "opengist",
@@ -1411,9 +1411,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.4.6",
+      "version": "v2.5.0",
       "pinned": false,
-      "date": "2026-02-12T00:01:19Z"
+      "date": "2026-02-16T22:58:17Z"
     },
     {
       "slug": "streamlink-webui",
