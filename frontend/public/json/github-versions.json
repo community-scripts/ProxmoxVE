@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-18T06:25:03Z",
+  "generated": "2026-02-18T12:13:31Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -256,9 +256,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.14.0",
+      "version": "v3.14.1",
       "pinned": false,
-      "date": "2026-02-17T17:18:34Z"
+      "date": "2026-02-18T10:43:45Z"
     },
     {
       "slug": "dawarich",
@@ -270,9 +270,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.36",
+      "version": "v1.0.37",
       "pinned": false,
-      "date": "2026-02-09T21:15:44Z"
+      "date": "2026-02-18T08:53:43Z"
     },
     {
       "slug": "dispatcharr",
@@ -585,9 +585,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.63",
+      "version": "v5.12.64",
       "pinned": false,
-      "date": "2026-02-18T00:32:09Z"
+      "date": "2026-02-18T07:59:44Z"
     },
     {
       "slug": "jackett",
@@ -1341,9 +1341,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.5",
+      "version": "v2.17.7",
       "pinned": false,
-      "date": "2026-02-17T18:20:38Z"
+      "date": "2026-02-18T08:10:16Z"
     },
     {
       "slug": "shelfmark",
@@ -1418,9 +1418,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.5.0",
+      "version": "v2.5.1",
       "pinned": false,
-      "date": "2026-02-16T22:58:17Z"
+      "date": "2026-02-18T11:05:34Z"
     },
     {
       "slug": "streamlink-webui",
