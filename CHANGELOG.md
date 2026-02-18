@@ -406,6 +406,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-18
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: Execution ID & Telemetry Improvements [@MickLesk](https://github.com/MickLesk) ([#12041](https://github.com/community-scripts/ProxmoxVE/pull/12041))
+
 ## 2026-02-17
 
 ### 🆕 New Scripts
