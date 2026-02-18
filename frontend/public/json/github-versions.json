@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-18T00:22:04Z",
+  "generated": "2026-02-18T06:25:03Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -207,9 +207,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.14.1",
+      "version": "v0.14.2",
       "pinned": false,
-      "date": "2026-02-17T20:31:49Z"
+      "date": "2026-02-18T06:12:02Z"
     },
     {
       "slug": "commafeed",
@@ -557,9 +557,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.3.2",
+      "version": "9.3.3",
       "pinned": false,
-      "date": "2026-02-17T22:26:29Z"
+      "date": "2026-02-18T02:35:29Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -585,16 +585,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.62",
+      "version": "v5.12.63",
       "pinned": false,
-      "date": "2026-02-17T03:23:48Z"
+      "date": "2026-02-18T00:32:09Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1140",
+      "version": "v0.24.1147",
       "pinned": false,
-      "date": "2026-02-17T05:54:25Z"
+      "date": "2026-02-18T05:54:19Z"
     },
     {
       "slug": "jellystat",
