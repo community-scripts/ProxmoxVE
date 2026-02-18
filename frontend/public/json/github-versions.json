@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-17T18:20:14Z",
+  "generated": "2026-02-18T00:22:04Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -158,9 +158,9 @@
     {
       "slug": "bookstack",
       "repo": "BookStackApp/BookStack",
-      "version": "v25.12.4",
+      "version": "v25.12.5",
       "pinned": false,
-      "date": "2026-02-17T11:44:48Z"
+      "date": "2026-02-17T18:42:47Z"
     },
     {
       "slug": "byparr",
@@ -207,9 +207,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.14.0",
+      "version": "v0.14.1",
       "pinned": false,
-      "date": "2026-02-17T06:29:10Z"
+      "date": "2026-02-17T20:31:49Z"
     },
     {
       "slug": "commafeed",
@@ -221,9 +221,9 @@
     {
       "slug": "configarr",
       "repo": "raydak-labs/configarr",
-      "version": "v1.20.0",
+      "version": "v1.21.0",
       "pinned": false,
-      "date": "2026-01-10T21:25:47Z"
+      "date": "2026-02-17T22:59:07Z"
     },
     {
       "slug": "convertx",
@@ -557,9 +557,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.3.1",
+      "version": "9.3.2",
       "pinned": false,
-      "date": "2026-02-17T16:19:36Z"
+      "date": "2026-02-17T22:26:29Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -704,9 +704,9 @@
     {
       "slug": "leantime",
       "repo": "Leantime/leantime",
-      "version": "v3.6.2",
+      "version": "v3.7.0",
       "pinned": false,
-      "date": "2026-01-29T16:37:00Z"
+      "date": "2026-02-18T00:02:31Z"
     },
     {
       "slug": "librenms",
@@ -1243,9 +1243,9 @@
     {
       "slug": "rclone",
       "repo": "rclone/rclone",
-      "version": "v1.73.0",
+      "version": "v1.73.1",
       "pinned": false,
-      "date": "2026-01-30T22:12:03Z"
+      "date": "2026-02-17T18:27:21Z"
     },
     {
       "slug": "rdtclient",
@@ -1341,9 +1341,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.4",
+      "version": "v2.17.5",
       "pinned": false,
-      "date": "2026-02-17T13:02:16Z"
+      "date": "2026-02-17T18:20:38Z"
     },
     {
       "slug": "shelfmark",
@@ -1551,9 +1551,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.13",
+      "version": "v1.1.14",
       "pinned": false,
-      "date": "2026-02-16T16:16:17Z"
+      "date": "2026-02-17T18:26:17Z"
     },
     {
       "slug": "uhf",
