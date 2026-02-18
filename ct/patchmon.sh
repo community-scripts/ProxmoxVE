@@ -46,6 +46,7 @@ function update_script() {
     VERSION=$(get_latest_github_release "PatchMon/PatchMon")
     PROTO="$(sed -n '/SERVER_PROTOCOL/s/[^=]*=//p' /opt/backend.env)"
     HOST="$(sed -n '/SERVER_HOST/s/[^=]*=//p' /opt/backend.env)"
+    SERVER_PORT="$(sed -n '/SERVER_PORT/s/[^=]*=//p' /opt/backend.env)"
     [[ "${PROTO:-http}" == "http" ]] && PORT=":3001"
     sed -i 's/PORT=3399/PORT=3001/' /opt/backend.env
     sed -i -e "s/VERSION=.*/VERSION=$VERSION/" \
@@ -66,6 +67,9 @@ function update_script() {
       -e '\|try_files |i\        root /opt/patchmon/frontend/dist;' \
       -e 's|alias.*|alias /opt/patchmon/frontend/dist/assets;|' \
       -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
+    if [[ -n "$SERVER_PORT" ]] && [[ "$SERVER_PORT" != "443" ]]; then
+      sed -i "s/listen [[:digit:]]/listen ${SERVER_PORT};/" /etc/nginx/sites-available/patchmon.conf
+    fi
     ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
     rm -f /etc/nginx/sites-enabled/default
     $STD nginx -t
