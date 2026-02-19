@@ -29,6 +29,13 @@ function update_script() {
     exit
   fi
 
+  if ! grep -q "PORT=3001" /opt/patchmon/backend/.env; then
+    msg_warn "⚠️ The next PatchMon update will include breaking changes (port changes)."
+    msg_warn "See details here: https://github.com/community-scripts/ProxmoxVE/pull/11888"
+    msg_warn "Press Enter to continue with the update, or Ctrl+C to abort..."
+    read -r
+  fi
+
   NODE_VERSION="24" setup_nodejs
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
     msg_info "Stopping Service"
