@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-19T00:22:36Z",
+  "generated": "2026-02-19T06:23:43Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -557,9 +557,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.3.5",
+      "version": "9.3.7",
       "pinned": false,
-      "date": "2026-02-18T16:25:07Z"
+      "date": "2026-02-19T01:03:53Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -592,9 +592,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1147",
+      "version": "v0.24.1157",
       "pinned": false,
-      "date": "2026-02-18T05:54:19Z"
+      "date": "2026-02-19T05:51:02Z"
     },
     {
       "slug": "jellystat",
@@ -1250,9 +1250,9 @@
     {
       "slug": "rdtclient",
       "repo": "rogerfar/rdt-client",
-      "version": "v2.0.120",
+      "version": "v2.0.121",
       "pinned": false,
-      "date": "2026-02-12T02:53:51Z"
+      "date": "2026-02-19T04:48:39Z"
     },
     {
       "slug": "reactive-resume",
@@ -1593,9 +1593,9 @@
     {
       "slug": "uptimekuma",
       "repo": "louislam/uptime-kuma",
-      "version": "2.1.1",
+      "version": "2.1.3",
       "pinned": false,
-      "date": "2026-02-13T16:07:33Z"
+      "date": "2026-02-19T05:37:30Z"
     },
     {
       "slug": "vaultwarden",
