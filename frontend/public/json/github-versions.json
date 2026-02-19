@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-18T18:17:02Z",
+  "generated": "2026-02-19T00:22:36Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -158,9 +158,9 @@
     {
       "slug": "bookstack",
       "repo": "BookStackApp/BookStack",
-      "version": "v25.12.5",
+      "version": "v25.12.6",
       "pinned": false,
-      "date": "2026-02-17T18:42:47Z"
+      "date": "2026-02-18T19:53:07Z"
     },
     {
       "slug": "byparr",
@@ -417,9 +417,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.239.0",
+      "version": "2.240.0",
       "pinned": false,
-      "date": "2026-02-15T09:51:16Z"
+      "date": "2026-02-18T20:08:56Z"
     },
     {
       "slug": "gitea",
@@ -1061,9 +1061,9 @@
     {
       "slug": "pelican-panel",
       "repo": "pelican-dev/panel",
-      "version": "v1.0.0-beta32",
+      "version": "v1.0.0-beta33",
       "pinned": false,
-      "date": "2026-02-09T22:15:44Z"
+      "date": "2026-02-18T21:37:11Z"
     },
     {
       "slug": "pelican-wings",
@@ -1313,9 +1313,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.4",
+      "version": "v0.14.6",
       "pinned": false,
-      "date": "2026-02-10T03:57:28Z"
+      "date": "2026-02-18T16:54:14Z"
     },
     {
       "slug": "scraparr",
@@ -1341,9 +1341,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.7",
+      "version": "v2.17.8",
       "pinned": false,
-      "date": "2026-02-18T08:10:16Z"
+      "date": "2026-02-18T19:46:43Z"
     },
     {
       "slug": "shelfmark",
@@ -1726,9 +1726,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.6.0",
+      "version": "v0.6.1",
       "pinned": false,
-      "date": "2026-02-15T17:47:56Z"
+      "date": "2026-02-18T23:24:16Z"
     },
     {
       "slug": "zigbee2mqtt",
