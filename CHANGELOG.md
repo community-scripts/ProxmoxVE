@@ -406,6 +406,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-19
 
+### 🆕 New Scripts
+
+  - TrueNAS-VM ([#12059](https://github.com/community-scripts/ProxmoxVE/pull/12059))
+
 ## 2026-02-18
 
 ### 🚀 Updated Scripts
