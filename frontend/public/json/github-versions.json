@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-19T06:23:43Z",
+  "generated": "2026-02-19T12:14:48Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -39,9 +39,9 @@
     {
       "slug": "ampache",
       "repo": "ampache/ampache",
-      "version": "7.8.0",
+      "version": "7.9.0",
       "pinned": false,
-      "date": "2025-12-22T04:23:45Z"
+      "date": "2026-02-19T07:01:25Z"
     },
     {
       "slug": "argus",
@@ -844,9 +844,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.14",
+      "version": "2026.02.19",
       "pinned": false,
-      "date": "2026-02-14T07:49:11Z"
+      "date": "2026-02-19T08:24:04Z"
     },
     {
       "slug": "miniflux",
@@ -1383,9 +1383,9 @@
     {
       "slug": "snowshare",
       "repo": "TuroYT/snowshare",
-      "version": "v1.3.5",
+      "version": "v1.3.6",
       "pinned": false,
-      "date": "2026-02-11T10:24:51Z"
+      "date": "2026-02-19T11:06:29Z"
     },
     {
       "slug": "sonarr",
@@ -1761,9 +1761,9 @@
     {
       "slug": "zwave-js-ui",
       "repo": "zwave-js/zwave-js-ui",
-      "version": "v11.11.0",
+      "version": "v11.12.0",
       "pinned": false,
-      "date": "2026-02-03T13:13:05Z"
+      "date": "2026-02-19T10:14:19Z"
     }
   ]
 }
