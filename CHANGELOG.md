@@ -410,6 +410,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - TrueNAS-VM ([#12059](https://github.com/community-scripts/ProxmoxVE/pull/12059))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - truenas-vm: slug fix for source code link [@juronja](https://github.com/juronja) ([#12088](https://github.com/community-scripts/ProxmoxVE/pull/12088))
+
 ## 2026-02-18
 
 ### 🚀 Updated Scripts
