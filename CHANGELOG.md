@@ -414,6 +414,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - add: patchmon breaking change msg [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12075](https://github.com/community-scripts/ProxmoxVE/pull/12075))
     - LibreNMS: Various fixes [@tremor021](https://github.com/tremor021) ([#12089](https://github.com/community-scripts/ProxmoxVE/pull/12089))
 
 ### 🌐 Website
