@@ -410,6 +410,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - TrueNAS-VM ([#12059](https://github.com/community-scripts/ProxmoxVE/pull/12059))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - LibreNMS: Various fixes [@tremor021](https://github.com/tremor021) ([#12089](https://github.com/community-scripts/ProxmoxVE/pull/12089))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
