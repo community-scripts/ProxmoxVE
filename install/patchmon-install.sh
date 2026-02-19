@@ -47,8 +47,8 @@ sed -i -e "s|DATABASE_URL=.*|DATABASE_URL=\"postgresql://$PG_DB_USER:$PG_DB_PASS
   -e "/JWT_SECRET/s/[=$].*/=$JWT_SECRET/" \
   -e "\|CORS_ORIGIN|s|localhost|$LOCAL_IP|" \
   -e "/PORT=3001/aSERVER_PROTOCOL=http \\
-    SERVER_HOST=$LOCAL_IP \\
-    SERVER_PORT=3000" \
+  SERVER_HOST=$LOCAL_IP \\
+  SERVER_PORT=3000" \
   -e '/_ENV=production/aTRUST_PROXY=1' \
   -e '/REDIS_USER=.*/,+1d' /opt/patchmon/backend/.env
 
