@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-19T12:14:48Z",
+  "generated": "2026-02-19T18:19:44Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -11,9 +11,9 @@
     {
       "slug": "adguard",
       "repo": "AdguardTeam/AdGuardHome",
-      "version": "v0.107.71",
+      "version": "v0.107.72",
       "pinned": false,
-      "date": "2025-12-08T14:34:55Z"
+      "date": "2026-02-19T15:37:49Z"
     },
     {
       "slug": "adguardhome-sync",
