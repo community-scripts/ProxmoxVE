@@ -75,7 +75,7 @@ function update_script() {
       -e 's|alias.*|alias /opt/patchmon/frontend/dist/assets;|' \
       -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
     if [[ -n "$SERVER_PORT" ]] && [[ "$SERVER_PORT" != "443" ]]; then
-      sed -i "s/listen [[:digit:]]/listen ${SERVER_PORT};/" /etc/nginx/sites-available/patchmon.conf
+      sed -i "s/listen [[:digit:]].*/listen ${SERVER_PORT};/" /etc/nginx/sites-available/patchmon.conf
     fi
     ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
     rm -f /etc/nginx/sites-enabled/default
