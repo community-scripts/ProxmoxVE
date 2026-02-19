@@ -54,7 +54,7 @@ function update_script() {
     PROTO="$(sed -n '/SERVER_PROTOCOL/s/[^=]*=//p' /opt/backend.env)"
     HOST="$(sed -n '/SERVER_HOST/s/[^=]*=//p' /opt/backend.env)"
     SERVER_PORT="$(sed -n '/SERVER_PORT/s/[^=]*=//p' /opt/backend.env)"
-    [[ "${PROTO:-http}" == "http" ]] && PORT=":3001"
+    [[ "$PROTO" == "http" ]] && PORT=":3001"
     sed -i 's/PORT=3399/PORT=3001/' /opt/backend.env
     sed -i -e "s/VERSION=.*/VERSION=$VERSION/" \
       -e "\|VITE_API_URL=|s|http.*|${PROTO:-http}://${HOST:-$LOCAL_IP}${PORT:-}/api/v1|" /opt/frontend.env
