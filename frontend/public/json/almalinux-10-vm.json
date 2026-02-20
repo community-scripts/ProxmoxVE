@@ -1,0 +1,44 @@
+{
+  "name": "AlmaLinux 10",
+  "slug": "almalinux-10-vm",
+  "categories": [
+    2
+  ],
+  "date_created": "2026-02-19",
+  "type": "vm",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://wiki.almalinux.org/",
+  "website": "https://almalinux.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/almalinux.webp",
+  "config_path": "",
+  "description": "AlmaLinux 10 (Heliotrope Lion) is a community-driven, RHEL-compatible enterprise Linux distribution. It provides a stable, production-ready platform with long-term support, making it ideal for servers, workloads, and cloud deployments.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "vm/almalinux-10-vm.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Cloud-Init is enabled by default. Configure your SSH key and credentials in the Proxmox Cloud-Init tab before starting the VM.",
+      "type": "info"
+    },
+    {
+      "text": "If you use Cloud-init, checkout cloud-init discussion: `https://github.com/community-scripts/ProxmoxVE/discussions/272`",
+      "type": "info"
+    }
+  ]
+}
