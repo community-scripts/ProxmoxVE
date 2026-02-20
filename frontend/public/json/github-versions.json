@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-20T12:12:15Z",
+  "generated": "2026-02-20T18:14:23Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -193,9 +193,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.6.3",
+      "version": "v2.6.4",
       "pinned": false,
-      "date": "2026-02-16T22:41:25Z"
+      "date": "2026-02-20T14:35:43Z"
     },
     {
       "slug": "cloudreve",
@@ -256,9 +256,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.15.0",
+      "version": "v3.15.1",
       "pinned": false,
-      "date": "2026-02-20T11:58:32Z"
+      "date": "2026-02-20T12:28:04Z"
     },
     {
       "slug": "dawarich",
@@ -312,9 +312,9 @@
     {
       "slug": "drawio",
       "repo": "jgraph/drawio",
-      "version": "v29.3.6",
+      "version": "v29.5.1",
       "pinned": false,
-      "date": "2026-01-28T18:25:02Z"
+      "date": "2026-02-20T17:22:31Z"
     },
     {
       "slug": "duplicati",
@@ -375,9 +375,9 @@
     {
       "slug": "fladder",
       "repo": "DonutWare/Fladder",
-      "version": "v0.9.0",
+      "version": "v0.10.0",
       "pinned": false,
-      "date": "2026-01-05T17:30:07Z"
+      "date": "2026-02-20T14:16:51Z"
     },
     {
       "slug": "flaresolverr",
@@ -977,9 +977,9 @@
     {
       "slug": "ots",
       "repo": "Luzifer/ots",
-      "version": "v1.21.1",
+      "version": "v1.21.2",
       "pinned": false,
-      "date": "2026-02-16T12:12:23Z"
+      "date": "2026-02-20T16:20:03Z"
     },
     {
       "slug": "outline",
@@ -1040,9 +1040,9 @@
     {
       "slug": "patchmon",
       "repo": "PatchMon/PatchMon",
-      "version": "v1.4.1",
+      "version": "v1.4.2",
       "pinned": false,
-      "date": "2026-02-16T18:00:13Z"
+      "date": "2026-02-20T13:15:31Z"
     },
     {
       "slug": "paymenter",
