@@ -525,9 +525,9 @@ fi
 
 msg_info "Finalizing image (hostname, SSH config)"
 # Set hostname and prepare for unique machine-id
-virt-customize -q -a "$WORK_FILE" --hostname "${HN}" >/dev/null 2>&1
-virt-customize -q -a "$WORK_FILE" --run-command "truncate -s 0 /etc/machine-id" >/dev/null 2>&1
-virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id" >/dev/null 2>&1
+virt-customize -q -a "$WORK_FILE" --hostname "${HN}" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "truncate -s 0 /etc/machine-id" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id" >/dev/null 2>&1 || true
 
 # Configure SSH for Cloud-Init
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
