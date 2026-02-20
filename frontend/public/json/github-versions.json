@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-20T06:19:59Z",
+  "generated": "2026-02-20T12:12:15Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -256,9 +256,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.14.1",
+      "version": "v3.15.0",
       "pinned": false,
-      "date": "2026-02-18T10:43:45Z"
+      "date": "2026-02-20T11:58:32Z"
     },
     {
       "slug": "dawarich",
@@ -368,9 +368,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.4.22",
+      "version": "v6.4.23",
       "pinned": false,
-      "date": "2026-02-15T18:43:08Z"
+      "date": "2026-02-20T07:02:05Z"
     },
     {
       "slug": "fladder",
@@ -641,9 +641,9 @@
     {
       "slug": "keycloak",
       "repo": "keycloak/keycloak",
-      "version": "26.5.3",
+      "version": "26.5.4",
       "pinned": false,
-      "date": "2026-02-10T07:30:08Z"
+      "date": "2026-02-20T09:19:45Z"
     },
     {
       "slug": "kimai",
@@ -1215,9 +1215,9 @@
     {
       "slug": "qdrant",
       "repo": "qdrant/qdrant",
-      "version": "v1.16.3",
+      "version": "v1.17.0",
       "pinned": false,
-      "date": "2025-12-19T17:45:42Z"
+      "date": "2026-02-20T11:11:50Z"
     },
     {
       "slug": "qui",
@@ -1341,9 +1341,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.8",
+      "version": "v2.17.12",
       "pinned": false,
-      "date": "2026-02-18T19:46:43Z"
+      "date": "2026-02-20T09:16:50Z"
     },
     {
       "slug": "shelfmark",
