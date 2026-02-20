@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-20T00:19:36Z",
+  "generated": "2026-02-20T06:19:59Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -592,9 +592,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1157",
+      "version": "v0.24.1167",
       "pinned": false,
-      "date": "2026-02-19T05:51:02Z"
+      "date": "2026-02-20T05:54:07Z"
     },
     {
       "slug": "jellystat",
@@ -1264,9 +1264,9 @@
     {
       "slug": "recyclarr",
       "repo": "recyclarr/recyclarr",
-      "version": "v7.5.2",
+      "version": "v8.0.1",
       "pinned": false,
-      "date": "2025-11-30T22:08:46Z"
+      "date": "2026-02-20T04:52:19Z"
     },
     {
       "slug": "reitti",
@@ -1397,9 +1397,9 @@
     {
       "slug": "speedtest-tracker",
       "repo": "alexjustesen/speedtest-tracker",
-      "version": "v1.13.9",
+      "version": "v1.13.10",
       "pinned": false,
-      "date": "2026-02-08T21:48:49Z"
+      "date": "2026-02-20T03:14:47Z"
     },
     {
       "slug": "spoolman",
