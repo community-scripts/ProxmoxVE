@@ -408,7 +408,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Calibre-Web ([#12115](https://github.com/community-scripts/ProxmoxVE/pull/12115))
+  - Sure ([#12114](https://github.com/community-scripts/ProxmoxVE/pull/12114))
+- Calibre-Web ([#12115](https://github.com/community-scripts/ProxmoxVE/pull/12115))
 
 ### 🌐 Website
 
