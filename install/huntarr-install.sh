@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt-get install -y build-essential
+msg_ok "Installed Dependencies"
+
 PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "huntarr" "plexguide/Huntarr.io" "tarball"
 
