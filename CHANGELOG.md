@@ -406,6 +406,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-20
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - fixen broken link to dawarich documentation [@RiX012](https://github.com/RiX012) ([#12103](https://github.com/community-scripts/ProxmoxVE/pull/12103))
+
 ## 2026-02-19
 
 ### 🆕 New Scripts
