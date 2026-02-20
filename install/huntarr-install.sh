@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y build-essential
+$STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
