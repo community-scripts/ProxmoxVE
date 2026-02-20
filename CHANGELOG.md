@@ -419,6 +419,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Huntarr: add build-essential for native pip dependencies [@MickLesk](https://github.com/MickLesk) ([#12126](https://github.com/community-scripts/ProxmoxVE/pull/12126))
     - Dokploy: fix update function [@vhsdream](https://github.com/vhsdream) ([#12116](https://github.com/community-scripts/ProxmoxVE/pull/12116))
 
+  - #### 🔧 Refactor
+
+    - Planka: migrate data paths to new v2 directory structure [@MickLesk](https://github.com/MickLesk) ([#12128](https://github.com/community-scripts/ProxmoxVE/pull/12128))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
