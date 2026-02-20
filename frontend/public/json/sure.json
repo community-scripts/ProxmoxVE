@@ -1,0 +1,35 @@
+{
+  "name": "Sure",
+  "slug": "sure",
+  "categories": [
+    23
+  ],
+  "date_created": "2026-02-18",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/we-promise/sure",
+  "website": "https://sure.am",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/sure-finance.webp",
+  "config_path": "/etc/sure/.env",
+  "description": "The personal finance app for everyone. NOT affiliated with or endorsed by Maybe Finance Inc..",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/sure.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 6,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
