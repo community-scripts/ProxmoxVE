@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-19T18:19:44Z",
+  "generated": "2026-02-20T00:19:36Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -158,9 +158,9 @@
     {
       "slug": "bookstack",
       "repo": "BookStackApp/BookStack",
-      "version": "v25.12.6",
+      "version": "v25.12.7",
       "pinned": false,
-      "date": "2026-02-18T19:53:07Z"
+      "date": "2026-02-19T23:36:55Z"
     },
     {
       "slug": "byparr",
@@ -1187,9 +1187,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.10",
+      "version": "v5.1.11",
       "pinned": false,
-      "date": "2026-02-18T14:00:51Z"
+      "date": "2026-02-19T20:20:44Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1551,9 +1551,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.14",
+      "version": "v1.1.15",
       "pinned": false,
-      "date": "2026-02-17T18:26:17Z"
+      "date": "2026-02-19T23:51:17Z"
     },
     {
       "slug": "uhf",
