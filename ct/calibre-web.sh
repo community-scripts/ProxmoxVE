@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "calibre-web" "janeczku/calibre-web"; then
+  if check_for_gh_release "Calibre-Web" "janeczku/calibre-web"; then
     msg_info "Stopping Service"
     systemctl stop calibre-web
     msg_ok "Stopped Service"
@@ -39,7 +39,7 @@ function update_script() {
     cp -r /opt/calibre-web/data /opt/data_backup
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "calibre-web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibre-web*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibre-web*.tar.gz"
     setup_uv
 
     msg_info "Installing Dependencies"
