@@ -30,7 +30,7 @@ function update_script() {
   fi
 
   msg_info "Updating Dokploy"
-  $STD bash <(curl -sSL https://dokploy.com/install.sh)
+  curl -sSL https://dokploy.com/install.sh | $STD bash -s update
   msg_ok "Updated Dokploy"
   msg_ok "Updated successfully!"
   exit
