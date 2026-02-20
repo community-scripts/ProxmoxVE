@@ -28,9 +28,10 @@ setup_deb822_repo \
   "stable" \
   "main"
 $STD apt install -y elasticsearch
-echo "-Xms2g" >>/etc/elasticsearch/jvm.options
-echo "-Xmx2g" >>/etc/elasticsearch/jvm.options
+sed -i 's/^-Xms.*/-Xms2g/' /etc/elasticsearch/jvm.options
+sed -i 's/^-Xmx.*/-Xmx2g/' /etc/elasticsearch/jvm.options
 $STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
+systemctl daemon-reload
 systemctl enable -q elasticsearch
 systemctl restart -q elasticsearch
 msg_ok "Setup Elasticsearch"
