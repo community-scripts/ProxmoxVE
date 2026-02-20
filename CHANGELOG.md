@@ -411,6 +411,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Sure ([#12114](https://github.com/community-scripts/ProxmoxVE/pull/12114))
 - Calibre-Web ([#12115](https://github.com/community-scripts/ProxmoxVE/pull/12115))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Dokploy: fix update function [@vhsdream](https://github.com/vhsdream) ([#12116](https://github.com/community-scripts/ProxmoxVE/pull/12116))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
