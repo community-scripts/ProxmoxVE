@@ -35,7 +35,8 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop huntarr
     msg_ok "Stopped Service"
-
+    
+    ensure_dependencies git
     fetch_and_deploy_gh_release "huntarr" "plexguide/Huntarr.io" "tarball"
 
     msg_info "Updating Huntarr"
