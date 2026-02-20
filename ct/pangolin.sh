@@ -51,7 +51,6 @@ function update_script() {
     $STD npm run db:generate
     $STD npm run build
     $STD npm run build:cli
-    $STD npm run db:push
     cp -R .next/standalone ./
     chmod +x ./dist/cli.mjs
     cp server/db/names.json ./dist/names.json
@@ -63,6 +62,11 @@ function update_script() {
     tar -xzf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin --overwrite
     rm -f /opt/pangolin_config_backup.tar.gz
     msg_ok "Restored config"
+
+    msg_info "Running database migrations"
+    cd /opt/pangolin
+    ENVIRONMENT=prod $STD npx drizzle-kit push --config drizzle.sqlite.config.ts
+    msg_ok "Ran database migrations"
 
     msg_info "Updating Badger plugin version"
     BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
