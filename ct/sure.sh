@@ -30,9 +30,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "Sure" "we-promise/sure"; then
-    msg_info "Stopping Sure"
+    msg_info "Stopping Service"
     $STD systemctl stop sure
-    msg_ok "Stopped Sure"
+    msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sure" "we-promise/sure" "tarball" "latest" "/opt/sure"
     RUBY_VERSION="$(cat /opt/sure/.ruby-version)" RUBY_INSTALL_RAILS=false setup_ruby
@@ -50,9 +50,9 @@ function update_script() {
     unset SECRET_KEY_BASE_DUMMY
     msg_ok "Updated Sure"
 
-    msg_info "Starting Sure"
+    msg_info "Starting Service"
     $STD systemctl start sure
-    msg_ok "Started Sure"
+    msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
   exit
