@@ -37,10 +37,18 @@ function update_script() {
     BK="/opt/planka-backup"
     mkdir -p "$BK"/{favicons,user-avatars,background-images,attachments}
     [ -f /opt/planka/.env ] && mv /opt/planka/.env "$BK"/
-    [ -d /opt/planka/public/favicons ] && cp -a /opt/planka/public/favicons/. "$BK/favicons/"
-    [ -d /opt/planka/public/user-avatars ] && cp -a /opt/planka/public/user-avatars/. "$BK/user-avatars/"
-    [ -d /opt/planka/public/background-images ] && cp -a /opt/planka/public/background-images/. "$BK/background-images/"
-    [ -d /opt/planka/private/attachments ] && cp -a /opt/planka/private/attachments/. "$BK/attachments/"
+    # Support both old (pre-v2) and new (v2) directory layouts
+    if [ -d /opt/planka/data/protected ]; then
+      [ -d /opt/planka/data/protected/favicons ] && cp -a /opt/planka/data/protected/favicons/. "$BK/favicons/"
+      [ -d /opt/planka/data/protected/user-avatars ] && cp -a /opt/planka/data/protected/user-avatars/. "$BK/user-avatars/"
+      [ -d /opt/planka/data/protected/background-images ] && cp -a /opt/planka/data/protected/background-images/. "$BK/background-images/"
+      [ -d /opt/planka/data/private/attachments ] && cp -a /opt/planka/data/private/attachments/. "$BK/attachments/"
+    else
+      [ -d /opt/planka/public/favicons ] && cp -a /opt/planka/public/favicons/. "$BK/favicons/"
+      [ -d /opt/planka/public/user-avatars ] && cp -a /opt/planka/public/user-avatars/. "$BK/user-avatars/"
+      [ -d /opt/planka/public/background-images ] && cp -a /opt/planka/public/background-images/. "$BK/background-images/"
+      [ -d /opt/planka/private/attachments ] && cp -a /opt/planka/private/attachments/. "$BK/attachments/"
+    fi
     rm -rf /opt/planka
     msg_ok "Backed up data"
 
@@ -53,11 +61,12 @@ function update_script() {
 
     msg_info "Restoring data"
     [ -f "$BK/.env" ] && mv "$BK/.env" /opt/planka/.env
-    mkdir -p /opt/planka/public/{favicons,user-avatars,background-images} /opt/planka/private/attachments
-    [ -d "$BK/favicons" ] && cp -a "$BK/favicons/." /opt/planka/public/favicons/
-    [ -d "$BK/user-avatars" ] && cp -a "$BK/user-avatars/." /opt/planka/public/user-avatars/
-    [ -d "$BK/background-images" ] && cp -a "$BK/background-images/." /opt/planka/public/background-images/
-    [ -d "$BK/attachments" ] && cp -a "$BK/attachments/." /opt/planka/private/attachments/
+    # Planka v2 uses unified data directory structure
+    mkdir -p /opt/planka/data/protected/{favicons,user-avatars,background-images} /opt/planka/data/private/attachments
+    [ -d "$BK/favicons" ] && cp -a "$BK/favicons/." /opt/planka/data/protected/favicons/
+    [ -d "$BK/user-avatars" ] && cp -a "$BK/user-avatars/." /opt/planka/data/protected/user-avatars/
+    [ -d "$BK/background-images" ] && cp -a "$BK/background-images/." /opt/planka/data/protected/background-images/
+    [ -d "$BK/attachments" ] && cp -a "$BK/attachments/." /opt/planka/data/private/attachments/
     rm -rf "$BK"
     msg_ok "Restored data"
 

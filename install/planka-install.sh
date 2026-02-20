@@ -50,6 +50,7 @@ cp .env.sample .env
 sed -i "s#http://localhost:1337#http://$LOCAL_IP:1337#g" /opt/planka/.env
 sed -i "s#postgres@localhost#planka:$DB_PASS@localhost#g" /opt/planka/.env
 sed -i "s#notsecretkey#$SECRET_KEY#g" /opt/planka/.env
+mkdir -p /opt/planka/data/protected/{favicons,user-avatars,background-images} /opt/planka/data/private/attachments
 $STD npm run db:init
 msg_ok "Configured PLANKA"
 
