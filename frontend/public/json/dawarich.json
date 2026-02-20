@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": "https://dawarich.app/docs",
+  "documentation": "https://dawarich.app/docs/intro",
   "website": "https://dawarich.app/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/dawarich.webp",
   "config_path": "/opt/dawarich/.env",
