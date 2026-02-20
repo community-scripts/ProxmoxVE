@@ -406,6 +406,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-20
 
+### 🆕 New Scripts
+
+  - Calibre-Web ([#12115](https://github.com/community-scripts/ProxmoxVE/pull/12115))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
