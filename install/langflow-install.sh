@@ -115,8 +115,7 @@ msg_info "Creating Service"
 cat <<'EOF2' >/etc/systemd/system/langflow.service
 [Unit]
 Description=Langflow Service
-After=network-online.target
-Wants=network-online.target
+After=network.target
 
 [Service]
 Type=simple
