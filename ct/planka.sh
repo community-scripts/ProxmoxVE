@@ -31,7 +31,7 @@ function update_script() {
   if check_for_gh_release "planka" "plankanban/planka"; then
     msg_info "Stopping Service"
     systemctl stop planka
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up data"
     BK="/opt/planka-backup"
@@ -70,7 +70,7 @@ function update_script() {
     rm -rf "$BK"
     msg_ok "Restored data"
 
-    msg_ok "Migrate Database"
+    msg_info "Migrate Database"
     cd /opt/planka
     $STD npm run db:upgrade
     $STD npm run db:migrate
