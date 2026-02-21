@@ -29,11 +29,11 @@
   ],
   "default_credentials": {
     "username": "admin",
-    "password": "langflow"
+    "password": null
   },
   "notes": [
     {
-      "text": "Use `cat ~/langflow.creds` to view default admin credentials and access URL.",
+      "text": "Use `cat ~/langflow.creds` to view generated admin credentials and access URL.",
       "type": "info"
     },
     {

@@ -65,7 +65,10 @@ get_lxc_ip
 LOCAL_IP="${LOCAL_IP:-$IP}"
 APP_NAME="Langflow"
 ADMIN_USER="admin"
-ADMIN_PASS="langflow"
+ADMIN_PASS="$(openssl rand -base64 32 | tr -dc 'A-Za-z0-9' | head -c 20)"
+if [[ ${#ADMIN_PASS} -lt 12 ]]; then
+  ADMIN_PASS="$(openssl rand -hex 16)"
+fi
 LANGFLOW_SECRET_KEY=$(openssl rand -base64 48 | tr -d '\n')
 CPU_CORES="$(nproc 2>/dev/null || echo 2)"
 if [[ "${CPU_CORES}" -ge 8 ]]; then
