@@ -962,13 +962,9 @@ get_fallback_suite() {
   local distro_codename="$2"
   local repo_base_url="$3"
 
-  # Check if current codename works
-  if verify_repo_available "$repo_base_url" "$distro_codename"; then
-    echo "$distro_codename"
-    return 0
-  fi
-
-  # Comprehensive fallback mappings
+  # Comprehensive fallback mappings (applied first for known distros to avoid
+  # repos that exist via HTTP but ship packages with broken dependencies on
+  # newer releases, e.g. Adoptium trixie → p11-kit missing on Debian 13)
   case "$distro_id" in
   debian)
     case "$distro_codename" in
