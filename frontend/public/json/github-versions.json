@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-20T18:14:23Z",
+  "generated": "2026-02-21T00:20:43Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -123,9 +123,9 @@
     {
       "slug": "beszel",
       "repo": "henrygd/beszel",
-      "version": "v0.18.3",
+      "version": "v0.18.4",
       "pinned": false,
-      "date": "2026-02-01T19:02:42Z"
+      "date": "2026-02-20T21:10:52Z"
     },
     {
       "slug": "bichon",
@@ -184,11 +184,18 @@
       "date": "2025-07-29T16:39:18Z"
     },
     {
+      "slug": "calibre-web",
+      "repo": "janeczku/calibre-web",
+      "version": "0.6.26",
+      "pinned": false,
+      "date": "2026-02-06T21:17:44Z"
+    },
+    {
       "slug": "checkmate",
       "repo": "bluewave-labs/Checkmate",
-      "version": "v3.3",
+      "version": "v3.4.0",
       "pinned": false,
-      "date": "2026-01-28T14:25:25Z"
+      "date": "2026-02-20T21:08:55Z"
     },
     {
       "slug": "cleanuparr",
@@ -221,9 +228,9 @@
     {
       "slug": "configarr",
       "repo": "raydak-labs/configarr",
-      "version": "v1.21.0",
+      "version": "v1.22.0",
       "pinned": false,
-      "date": "2026-02-17T22:59:07Z"
+      "date": "2026-02-20T21:55:46Z"
     },
     {
       "slug": "convertx",
@@ -410,9 +417,9 @@
     {
       "slug": "gatus",
       "repo": "TwiN/gatus",
-      "version": "v5.34.0",
+      "version": "v5.35.0",
       "pinned": false,
-      "date": "2026-01-03T03:12:12Z"
+      "date": "2026-02-20T20:58:03Z"
     },
     {
       "slug": "ghostfolio",
@@ -522,9 +529,9 @@
     {
       "slug": "homarr",
       "repo": "homarr-labs/homarr",
-      "version": "v1.53.1",
+      "version": "v1.53.2",
       "pinned": false,
-      "date": "2026-02-13T19:47:11Z"
+      "date": "2026-02-20T19:41:55Z"
     },
     {
       "slug": "homebox",
@@ -1187,9 +1194,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.11",
+      "version": "v5.1.12",
       "pinned": false,
-      "date": "2026-02-19T20:20:44Z"
+      "date": "2026-02-20T20:53:16Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1418,9 +1425,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.5.1",
+      "version": "v2.5.2",
       "pinned": false,
-      "date": "2026-02-18T11:05:34Z"
+      "date": "2026-02-20T23:20:20Z"
     },
     {
       "slug": "streamlink-webui",
@@ -1435,6 +1442,13 @@
       "version": "v0.17.0",
       "pinned": false,
       "date": "2025-09-19T22:23:28Z"
+    },
+    {
+      "slug": "sure",
+      "repo": "we-promise/sure",
+      "version": "chart-v0.6.8-alpha.13",
+      "pinned": false,
+      "date": "2026-02-20T11:15:15Z"
     },
     {
       "slug": "tandoor",
