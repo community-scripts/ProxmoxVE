@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-21T12:08:24Z",
+  "generated": "2026-02-21T18:07:18Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -263,9 +263,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.15.1",
+      "version": "v3.16.0",
       "pinned": false,
-      "date": "2026-02-20T12:28:04Z"
+      "date": "2026-02-21T13:16:08Z"
     },
     {
       "slug": "dawarich",
@@ -382,9 +382,9 @@
     {
       "slug": "fladder",
       "repo": "DonutWare/Fladder",
-      "version": "v0.10.0",
+      "version": "v0.10.1",
       "pinned": false,
-      "date": "2026-02-20T14:16:51Z"
+      "date": "2026-02-21T12:45:53Z"
     },
     {
       "slug": "flaresolverr",
@@ -1362,9 +1362,9 @@
     {
       "slug": "signoz",
       "repo": "SigNoz/signoz-otel-collector",
-      "version": "v0.142.0",
+      "version": "v0.142.1",
       "pinned": false,
-      "date": "2026-02-06T11:40:30Z"
+      "date": "2026-02-21T18:04:07Z"
     },
     {
       "slug": "silverbullet",
