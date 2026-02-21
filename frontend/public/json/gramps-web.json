@@ -1,0 +1,44 @@
+{
+    "name": "Gramps Web",
+    "slug": "gramps-web",
+    "categories": [
+        12
+    ],
+    "date_created": "2026-02-16",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 5000,
+    "documentation": "https://www.grampsweb.org/install_setup/setup/",
+    "website": "https://www.grampsweb.org/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/gramps.webp",
+    "config_path": "/opt/gramps-web/config/config.cfg",
+    "description": "Gramps Web is a collaborative genealogy platform for browsing, editing and sharing family trees through a modern web interface.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/gramps-web.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 20,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "On first access, create the owner account via the built-in onboarding wizard.",
+            "type": "info"
+        },
+        {
+            "text": "The initial deployment compiles the frontend and can take several minutes.",
+            "type": "warning"
+        }
+    ]
+}
