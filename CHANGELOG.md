@@ -413,6 +413,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Pangolin: restore config before db migration, use drizzle-kit push [@MickLesk](https://github.com/MickLesk) ([#12130](https://github.com/community-scripts/ProxmoxVE/pull/12130))
     - PLANKA: fix msg's [@danielalanbates](https://github.com/danielalanbates) ([#12143](https://github.com/community-scripts/ProxmoxVE/pull/12143))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - MediaManager: Update documentation URL [@tremor021](https://github.com/tremor021) ([#12154](https://github.com/community-scripts/ProxmoxVE/pull/12154))
+
 ## 2026-02-20
 
 ### 🆕 New Scripts
