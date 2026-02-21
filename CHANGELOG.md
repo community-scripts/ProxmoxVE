@@ -406,6 +406,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-21
 
+### 🚀 Updated Scripts
+
+  - Fix #12066: PLANKA: Update from 2.0.0-rc.4 to 2.0.1 - attachements are m [@danielalanbates](https://github.com/danielalanbates) ([#12143](https://github.com/community-scripts/ProxmoxVE/pull/12143))
+
 ## 2026-02-20
 
 ### 🆕 New Scripts
