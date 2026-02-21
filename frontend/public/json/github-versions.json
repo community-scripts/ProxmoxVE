@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-21T06:13:32Z",
+  "generated": "2026-02-21T12:08:24Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -116,9 +116,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.2.1",
+      "version": "v2.3.1",
       "pinned": false,
-      "date": "2026-02-14T16:33:47Z"
+      "date": "2026-02-21T09:04:27Z"
     },
     {
       "slug": "beszel",
@@ -424,9 +424,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.240.0",
+      "version": "2.241.0",
       "pinned": false,
-      "date": "2026-02-18T20:08:56Z"
+      "date": "2026-02-21T07:39:22Z"
     },
     {
       "slug": "gitea",
@@ -1117,9 +1117,9 @@
     {
       "slug": "pocketbase",
       "repo": "pocketbase/pocketbase",
-      "version": "v0.36.4",
+      "version": "v0.36.5",
       "pinned": false,
-      "date": "2026-02-17T08:02:51Z"
+      "date": "2026-02-21T11:45:32Z"
     },
     {
       "slug": "pocketid",
