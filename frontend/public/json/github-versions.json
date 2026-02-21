@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-21T00:20:43Z",
+  "generated": "2026-02-21T06:13:32Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -592,16 +592,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.64",
+      "version": "v5.12.65",
       "pinned": false,
-      "date": "2026-02-18T07:59:44Z"
+      "date": "2026-02-21T01:03:52Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1167",
+      "version": "v0.24.1174",
       "pinned": false,
-      "date": "2026-02-20T05:54:07Z"
+      "date": "2026-02-21T05:53:02Z"
     },
     {
       "slug": "jellystat",
@@ -1271,9 +1271,9 @@
     {
       "slug": "recyclarr",
       "repo": "recyclarr/recyclarr",
-      "version": "v8.0.1",
+      "version": "v8.1.0",
       "pinned": false,
-      "date": "2026-02-20T04:52:19Z"
+      "date": "2026-02-21T01:36:23Z"
     },
     {
       "slug": "reitti",
