@@ -410,6 +410,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pangolin: restore config before db migration, use drizzle-kit push [@MickLesk](https://github.com/MickLesk) ([#12130](https://github.com/community-scripts/ProxmoxVE/pull/12130))
     - PLANKA: fix msg's [@danielalanbates](https://github.com/danielalanbates) ([#12143](https://github.com/community-scripts/ProxmoxVE/pull/12143))
 
 ## 2026-02-20
