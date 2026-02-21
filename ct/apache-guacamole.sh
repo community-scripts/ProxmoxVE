@@ -51,7 +51,7 @@ function update_script() {
     exit
   fi
 
-  JAVA_VERSION="11" setup_java
+  JAVA_VERSION="17" setup_java
 
   msg_info "Stopping Services"
   systemctl stop guacd tomcat

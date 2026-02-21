@@ -36,7 +36,7 @@ $STD apt install -y \
   libavformat-dev
 msg_ok "Installed Dependencies"
 
-JAVA_VERSION="11" setup_java
+JAVA_VERSION="17" setup_java
 setup_mariadb
 MARIADB_DB_NAME="guacamole_db" MARIADB_DB_USER="guacamole_user" setup_mariadb_db
 
