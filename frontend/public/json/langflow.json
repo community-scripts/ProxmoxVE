@@ -1,0 +1,52 @@
+{
+  "name": "Langflow",
+  "slug": "langflow",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-02-21",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 7860,
+  "documentation": "https://docs.langflow.org/",
+  "website": "https://www.langflow.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/langflow.webp",
+  "config_path": "/opt/langflow/.env",
+  "description": "Langflow is an open-source visual framework for building LLM workflows and multi-agent applications with a drag-and-drop interface.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/langflow.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 12288,
+        "hdd": 16,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "langflow"
+  },
+  "notes": [
+    {
+      "text": "Use `cat ~/langflow.creds` to view default admin credentials and access URL.",
+      "type": "info"
+    },
+    {
+      "text": "Exposed port: 7860",
+      "type": "info"
+    },
+    {
+      "text": "Change the default admin password after first login.",
+      "type": "warning"
+    },
+    {
+      "text": "Installation and updates can take a long time due to large Python dependencies.",
+      "type": "warning"
+    }
+  ]
+}
