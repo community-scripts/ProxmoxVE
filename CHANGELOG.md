@@ -415,6 +415,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - [Fix] Sure: add Sidekiq service [@vhsdream](https://github.com/vhsdream) ([#12186](https://github.com/community-scripts/ProxmoxVE/pull/12186))
+
   - #### 🔧 Refactor
 
     - karakeep: bump to node 24 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12183](https://github.com/community-scripts/ProxmoxVE/pull/12183))
