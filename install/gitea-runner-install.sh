@@ -40,7 +40,7 @@ chown -R gitea:gitea /var/lib/act_runner
 msg_ok "Configured Environment"
 
 # --- Interactive Registration ---
-echo -e "\n${BOLD}${WHITE}--- Gitea Runner Registration (DEBIAN HOST) ---${OFF}"
+echo -e "\n${GN}--- Gitea Runner Registration (DEBIAN HOST) ---${CL}"
 read -p "Enter Gitea Instance URL: " GITEA_URL
 read -p "Enter Registration Token: " GITEA_TOKEN
 read -p "Enter Runner Name (default: $(hostname)): " RUNNER_NAME
@@ -90,4 +90,4 @@ customize
 cleanup_lxc
 
 msg_ok "Installation Complete!"
-echo -e "In your Gitea Actions workflow, use: ${CYAN}runs-on: debian-latest${OFF}"
+echo -e "In your Gitea Actions workflow, use: ${BL}runs-on: debian-latest${CL}"
