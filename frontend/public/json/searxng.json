@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-08-26",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 8888,
   "documentation": "https://docs.searxng.org/",
