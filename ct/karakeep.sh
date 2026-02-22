@@ -60,7 +60,7 @@ function update_script() {
       $STD corepack disable
     fi
     MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
-    NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
     setup_meilisearch
 
     msg_info "Updating Karakeep"
