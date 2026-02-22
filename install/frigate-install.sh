@@ -22,7 +22,7 @@ fi
 
 msg_info "Converting APT sources to DEB822 format"
 if [ -f /etc/apt/sources.list ]; then
-  cat > /etc/apt/sources.list.d/debian.sources <<'EOF'
+  cat >/etc/apt/sources.list.d/debian.sources <<'EOF'
 Types: deb
 URIs: http://deb.debian.org/debian
 Suites: bookworm
@@ -188,7 +188,7 @@ msg_info "Building OpenVino Model"
 cd /models
 wget -q http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 $STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
-if python3 /opt/frigate/docker/main/build_ov_model.py 2>&1; then
+if $STD python3 /opt/frigate/docker/main/build_ov_model.py; then
   cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
   cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
   wget -q https://github.com/openvinotoolkit/open_model_zoo/raw/master/data/dataset_classes/coco_91cl_bkgr.txt -O /openvino-model/coco_91cl_bkgr.txt
