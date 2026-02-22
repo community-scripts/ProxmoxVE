@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-21T18:07:18Z",
+  "generated": "2026-02-22T00:21:33Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -221,9 +221,9 @@
     {
       "slug": "commafeed",
       "repo": "Athou/commafeed",
-      "version": "6.2.0",
+      "version": "7.0.0",
       "pinned": false,
-      "date": "2026-02-09T19:44:58Z"
+      "date": "2026-02-21T21:54:15Z"
     },
     {
       "slug": "configarr",
@@ -732,9 +732,9 @@
     {
       "slug": "libretranslate",
       "repo": "LibreTranslate/LibreTranslate",
-      "version": "v1.9.0",
+      "version": "v1.9.3",
       "pinned": false,
-      "date": "2026-02-10T19:05:48Z"
+      "date": "2026-02-21T19:08:33Z"
     },
     {
       "slug": "lidarr",
@@ -1229,9 +1229,9 @@
     {
       "slug": "qui",
       "repo": "autobrr/qui",
-      "version": "v1.13.1",
+      "version": "v1.14.0",
       "pinned": false,
-      "date": "2026-01-28T20:12:50Z"
+      "date": "2026-02-21T22:23:46Z"
     },
     {
       "slug": "radarr",
@@ -1257,9 +1257,9 @@
     {
       "slug": "rdtclient",
       "repo": "rogerfar/rdt-client",
-      "version": "v2.0.121",
+      "version": "v2.0.123",
       "pinned": false,
-      "date": "2026-02-19T04:48:39Z"
+      "date": "2026-02-21T23:08:13Z"
     },
     {
       "slug": "reactive-resume",
@@ -1271,9 +1271,9 @@
     {
       "slug": "recyclarr",
       "repo": "recyclarr/recyclarr",
-      "version": "v8.1.0",
+      "version": "v8.2.0",
       "pinned": false,
-      "date": "2026-02-21T01:36:23Z"
+      "date": "2026-02-21T21:27:10Z"
     },
     {
       "slug": "reitti",
