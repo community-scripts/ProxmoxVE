@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: GitHub Copilot
+# Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.grampsweb.org/
 
@@ -81,19 +81,16 @@ PERSISTENT_CACHE_CONFIG={"CACHE_TYPE":"FileSystemCache","CACHE_DIR":"/opt/gramps
 REPORT_DIR="/opt/gramps-web/data/cache/report"
 EXPORT_DIR="/opt/gramps-web/data/cache/export"
 EOF
-
 $STD uv venv -c -p python3.12 /opt/gramps-web/venv
 source /opt/gramps-web/venv/bin/activate
 $STD uv pip install --no-cache-dir --upgrade pip setuptools wheel
 $STD uv pip install --no-cache-dir gunicorn
 $STD uv pip install --no-cache-dir /opt/gramps-web-api
-
 cd /opt/gramps-web/frontend
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 corepack enable
 $STD npm install
 $STD npm run build
-
 cd /opt/gramps-web-api
 GRAMPS_API_CONFIG=/opt/gramps-web/config/config.cfg \
   ALEMBIC_CONFIG=/opt/gramps-web-api/alembic.ini \
