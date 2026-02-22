@@ -413,6 +413,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Gramps-Web ([#12157](https://github.com/community-scripts/ProxmoxVE/pull/12157))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: add GitHub API rate-limit detection and GITHUB_TOKEN support [@MickLesk](https://github.com/MickLesk) ([#12176](https://github.com/community-scripts/ProxmoxVE/pull/12176))
+
 ### 🧰 Tools
 
   - CR*NMASTER ([#12065](https://github.com/community-scripts/ProxmoxVE/pull/12065))
@@ -420,6 +426,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - Update package management commands in clean-lxcs.sh [@heinemannj](https://github.com/heinemannj) ([#12166](https://github.com/community-scripts/ProxmoxVE/pull/12166))
+
+### ❔ Uncategorized
+
+  - calibre-web: Update logo URL [@MickLesk](https://github.com/MickLesk) ([#12178](https://github.com/community-scripts/ProxmoxVE/pull/12178))
 
 ## 2026-02-21
 
