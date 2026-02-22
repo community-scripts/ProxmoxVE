@@ -1306,7 +1306,7 @@ setup_deb822_repo() {
 
   if grep -q "BEGIN PGP" "$tmp_gpg" 2>/dev/null; then
     # ASCII-armored — dearmor to binary
-    gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" < "$tmp_gpg" || {
+    gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" <"$tmp_gpg" || {
       msg_error "Failed to dearmor GPG key for ${name}"
       rm -f "$tmp_gpg"
       return 1
@@ -1567,31 +1567,54 @@ check_for_gh_release() {
 
   ensure_dependencies jq
 
+  # Build auth header if token is available
+  local header_args=()
+  [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+
   # Try /latest endpoint for non-pinned versions (most efficient)
-  local releases_json=""
+  local releases_json="" http_code=""
 
   if [[ -z "$pinned_version_in" ]]; then
-    releases_json=$(curl -fsSL --max-time 20 \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
-      "https://api.github.com/repos/${source}/releases/latest" 2>/dev/null)
+      "${header_args[@]}" \
+      "https://api.github.com/repos/${source}/releases/latest" 2>/dev/null) || true
 
-    if [[ $? -eq 0 ]] && [[ -n "$releases_json" ]]; then
-      # Wrap single release in array for consistent processing
-      releases_json="[$releases_json]"
+    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
+      releases_json="[$(</tmp/gh_check.json)]"
+    elif [[ "$http_code" == "403" ]]; then
+      msg_error "GitHub API rate limit exceeded (HTTP 403)."
+      msg_error "To increase the limit, export a GitHub token before running the script:"
+      msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
+      rm -f /tmp/gh_check.json
+      return 1
     fi
+    rm -f /tmp/gh_check.json
   fi
 
   # If no releases yet (pinned version OR /latest failed), fetch up to 100
   if [[ -z "$releases_json" ]]; then
-    # Fetch releases and exclude drafts/prereleases
-    releases_json=$(curl -fsSL --max-time 20 \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
-      "https://api.github.com/repos/${source}/releases?per_page=100") || {
-      msg_error "Unable to fetch releases for ${app}"
+      "${header_args[@]}" \
+      "https://api.github.com/repos/${source}/releases?per_page=100" 2>/dev/null) || true
+
+    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
+      releases_json=$(</tmp/gh_check.json)
+    elif [[ "$http_code" == "403" ]]; then
+      msg_error "GitHub API rate limit exceeded (HTTP 403)."
+      msg_error "To increase the limit, export a GitHub token before running the script:"
+      msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
+      rm -f /tmp/gh_check.json
       return 1
-    }
+    else
+      msg_error "Unable to fetch releases for ${app} (HTTP ${http_code})"
+      rm -f /tmp/gh_check.json
+      return 1
+    fi
+    rm -f /tmp/gh_check.json
   fi
 
   mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
@@ -2410,7 +2433,11 @@ _gh_scan_older_releases() {
       # Check with explicit pattern first, then arch heuristic, then any .deb
       if [[ -n "$asset_pattern" ]]; then
         has_match=$(echo "$releases_list" | jq -r --arg pat "$asset_pattern" ".[$i].assets[].name" | while read -r name; do
-          case "$name" in $asset_pattern) echo true; break ;; esac
+          case "$name" in $asset_pattern)
+            echo true
+            break
+            ;;
+          esac
         done)
       fi
       if [[ "$has_match" != "true" ]]; then
@@ -2422,7 +2449,11 @@ _gh_scan_older_releases() {
 
     elif [[ "$mode" == "prebuild" || "$mode" == "singlefile" ]]; then
       has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].name" | while read -r name; do
-        case "$name" in $asset_pattern) echo true; break ;; esac
+        case "$name" in $asset_pattern)
+          echo true
+          break
+          ;;
+        esac
       done)
     fi
 
@@ -2481,24 +2512,35 @@ function fetch_and_deploy_gh_release() {
     return 1
   fi
 
-  local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
+  local max_retries=3 retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    resp=$(curl $api_timeout -fsSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url") && success=true && break
-    sleep "$retry_delay"
+    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    if [[ "$http_code" == "200" ]]; then
+      success=true
+      break
+    elif [[ "$http_code" == "403" ]]; then
+      if ((attempt < max_retries)); then
+        msg_warn "GitHub API rate limit hit, retrying in ${retry_delay}s... (attempt $attempt/$max_retries)"
+        sleep "$retry_delay"
+        retry_delay=$((retry_delay * 2))
+      fi
+    else
+      sleep "$retry_delay"
+    fi
     ((attempt++))
   done
 
   if ! $success; then
-    msg_error "Failed to fetch release metadata from $api_url after $max_retries attempts"
+    if [[ "$http_code" == "403" ]]; then
+      msg_error "GitHub API rate limit exceeded (HTTP 403)."
+      msg_error "To increase the limit, export a GitHub token before running the script:"
+      msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
+    else
+      msg_error "Failed to fetch release metadata from $api_url after $max_retries attempts (HTTP $http_code)"
+    fi
     return 1
   fi
-
-  http_code="${resp:(-3)}"
-  [[ "$http_code" != "200" ]] && {
-    msg_error "GitHub API returned HTTP $http_code"
-    return 1
-  }
 
   local json tag_name
   json=$(</tmp/gh_rel.json)
@@ -2599,12 +2641,19 @@ function fetch_and_deploy_gh_release() {
         assets=$(echo "$json" | jq -r '.assets[].browser_download_url')
         if [[ -n "$asset_pattern" ]]; then
           for u in $assets; do
-            case "${u##*/}" in $asset_pattern) url_match="$u"; break ;; esac
+            case "${u##*/}" in $asset_pattern)
+              url_match="$u"
+              break
+              ;;
+            esac
           done
         fi
         if [[ -z "$url_match" ]]; then
           for u in $assets; do
-            if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then url_match="$u"; break; fi
+            if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
+              url_match="$u"
+              break
+            fi
           done
         fi
         if [[ -z "$url_match" ]]; then
@@ -2673,7 +2722,11 @@ function fetch_and_deploy_gh_release() {
         msg_info "Fetching GitHub release: $app ($version)"
         for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
           filename_candidate="${u##*/}"
-          case "$filename_candidate" in $pattern) asset_url="$u"; break ;; esac
+          case "$filename_candidate" in $pattern)
+            asset_url="$u"
+            break
+            ;;
+          esac
         done
       fi
     fi
@@ -2785,7 +2838,11 @@ function fetch_and_deploy_gh_release() {
         msg_info "Fetching GitHub release: $app ($version)"
         for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
           filename_candidate="${u##*/}"
-          case "$filename_candidate" in $pattern) asset_url="$u"; break ;; esac
+          case "$filename_candidate" in $pattern)
+            asset_url="$u"
+            break
+            ;;
+          esac
         done
       fi
     fi
@@ -4609,8 +4666,8 @@ EOF
   # First, check if there's an old/broken repository that needs cleanup
   if [[ -f /etc/apt/sources.list.d/mariadb.sources ]] || [[ -f /etc/apt/sources.list.d/mariadb.list ]]; then
     local OLD_REPO_VERSION=""
-    OLD_REPO_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+(\.[0-9]+)?' /etc/apt/sources.list.d/mariadb.sources 2>/dev/null || \
-                       grep -oP 'repo/\K[0-9]+\.[0-9]+(\.[0-9]+)?' /etc/apt/sources.list.d/mariadb.list 2>/dev/null || echo "")
+    OLD_REPO_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+(\.[0-9]+)?' /etc/apt/sources.list.d/mariadb.sources 2>/dev/null ||
+      grep -oP 'repo/\K[0-9]+\.[0-9]+(\.[0-9]+)?' /etc/apt/sources.list.d/mariadb.list 2>/dev/null || echo "")
 
     # Check if old repo points to a different version
     if [[ -n "$OLD_REPO_VERSION" ]] && [[ "${OLD_REPO_VERSION%.*}" != "${MARIADB_VERSION%.*}" ]]; then
@@ -5510,7 +5567,7 @@ EOF
 
     # Try to install each package individually
     for pkg in $MODULE_LIST; do
-      [[ "$pkg" == "php${PHP_VERSION}" ]] && continue  # Already installed
+      [[ "$pkg" == "php${PHP_VERSION}" ]] && continue # Already installed
       $STD apt install -y "$pkg" 2>/dev/null || {
         msg_warn "Could not install $pkg - continuing without it"
       }
@@ -6120,14 +6177,14 @@ function setup_meilisearch() {
           local MAX_WAIT=120
           local WAITED=0
           local TASK_RESULT=""
-          
+
           while [[ $WAITED -lt $MAX_WAIT ]]; do
             TASK_RESULT=$(curl -s "http://${MEILI_HOST}:${MEILI_PORT}/tasks/${TASK_UID}" \
               -H "Authorization: Bearer ${MEILI_MASTER_KEY}" 2>/dev/null) || true
-            
+
             local TASK_STATUS
             TASK_STATUS=$(echo "$TASK_RESULT" | grep -oP '"status":\s*"\K[^"]+' || true)
-            
+
             if [[ "$TASK_STATUS" == "succeeded" ]]; then
               # Extract dumpUid from the completed task details
               DUMP_UID=$(echo "$TASK_RESULT" | grep -oP '"dumpUid":\s*"\K[^"]+' || true)
@@ -6165,7 +6222,7 @@ function setup_meilisearch() {
         local MEILI_DB_PATH
         MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ')
         MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
-        
+
         if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
           local BACKUP_PATH="${MEILI_DB_PATH}.backup.$(date +%Y%m%d%H%M%S)"
           msg_warn "Backing up MeiliSearch data to ${BACKUP_PATH}"
@@ -6193,12 +6250,12 @@ function setup_meilisearch() {
         local DUMP_FILE="${MEILI_DUMP_DIR}/${DUMP_UID}.dump"
         if [[ -f "$DUMP_FILE" ]]; then
           msg_info "Importing dump: ${DUMP_FILE}"
-          
+
           # Start meilisearch with --import-dump flag
           # This is a one-time import that happens during startup
           /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" &
           local MEILI_PID=$!
-          
+
           # Wait for meilisearch to become healthy (import happens during startup)
           msg_info "Waiting for MeiliSearch to import and start..."
           local MAX_WAIT=300
@@ -6216,14 +6273,14 @@ function setup_meilisearch() {
             sleep 3
             WAITED=$((WAITED + 3))
           done
-          
+
           # Stop the manual process
           kill $MEILI_PID 2>/dev/null || true
           sleep 2
-          
+
           # Start via systemd for proper management
           systemctl start meilisearch
-          
+
           if systemctl is-active --quiet meilisearch; then
             msg_ok "MeiliSearch migrated successfully"
           else
@@ -6311,14 +6368,14 @@ EOF
   MEILISEARCH_API_KEY=""
   for i in {1..10}; do
     MEILISEARCH_API_KEY=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
-      -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null | \
+      -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null |
       grep -o '"key":"[^"]*"' | head -n 1 | sed 's/"key":"//;s/"//') || true
     [[ -n "$MEILISEARCH_API_KEY" ]] && break
     sleep 2
   done
 
   MEILISEARCH_API_KEY_UID=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
-    -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null | \
+    -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null |
     grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//') || true
 
   export MEILISEARCH_API_KEY
@@ -7104,9 +7161,9 @@ function fetch_and_deploy_from_url() {
   # Auto-detect archive type using file description
   local file_desc
   file_desc=$(file -b "$tmpdir/$filename")
-  
+
   local archive_type="unknown"
-  
+
   if [[ "$file_desc" =~ gzip.*compressed|gzip\ compressed\ data ]]; then
     archive_type="tar"
   elif [[ "$file_desc" =~ Zip.*archive|ZIP\ archive ]]; then
