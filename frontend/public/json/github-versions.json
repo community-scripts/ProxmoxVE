@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-22T00:21:33Z",
+  "generated": "2026-02-22T06:17:00Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -599,9 +599,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1174",
+      "version": "v0.24.1178",
       "pinned": false,
-      "date": "2026-02-21T05:53:02Z"
+      "date": "2026-02-22T05:51:41Z"
     },
     {
       "slug": "jellystat",
@@ -711,9 +711,9 @@
     {
       "slug": "leantime",
       "repo": "Leantime/leantime",
-      "version": "v3.7.0",
+      "version": "v3.7.1",
       "pinned": false,
-      "date": "2026-02-18T00:02:31Z"
+      "date": "2026-02-22T01:25:16Z"
     },
     {
       "slug": "librenms",
@@ -851,9 +851,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.19",
+      "version": "2026.02.22",
       "pinned": false,
-      "date": "2026-02-19T08:24:04Z"
+      "date": "2026-02-22T00:58:45Z"
     },
     {
       "slug": "miniflux",
@@ -1040,9 +1040,9 @@
     {
       "slug": "paperless-ngx",
       "repo": "paperless-ngx/paperless-ngx",
-      "version": "v2.20.7",
+      "version": "v2.20.8",
       "pinned": false,
-      "date": "2026-02-16T16:52:23Z"
+      "date": "2026-02-22T01:40:54Z"
     },
     {
       "slug": "patchmon",
@@ -1516,9 +1516,9 @@
     {
       "slug": "traccar",
       "repo": "traccar/traccar",
-      "version": "v6.11.1",
+      "version": "v6.12.0",
       "pinned": false,
-      "date": "2025-12-07T19:19:08Z"
+      "date": "2026-02-22T05:20:05Z"
     },
     {
       "slug": "tracearr",
