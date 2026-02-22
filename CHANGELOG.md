@@ -413,6 +413,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Gramps-Web ([#12157](https://github.com/community-scripts/ProxmoxVE/pull/12157))
 
+### 🧰 Tools
+
+  - CR*NMASTER ([#12065](https://github.com/community-scripts/ProxmoxVE/pull/12065))
+
 ## 2026-02-21
 
 ### 🚀 Updated Scripts
