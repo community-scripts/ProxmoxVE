@@ -1,35 +1,35 @@
 {
-    "name": "CronMaster",
-    "slug": "cronmaster",
-    "categories": [
-        1
-    ],
-    "date_created": "2026-02-17",
-    "type": "pve",
-    "updateable": true,
-    "privileged": false,
-    "interface_port": 3000,
-    "documentation": "https://github.com/fccview/cronmaster",
-    "website": "https://github.com/fccview/cronmaster",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/cr-nmaster.webp",
-    "config_path": "/opt/cronmaster/.env",
-    "description": "Self-hosted cron job scheduler with web UI, live logs, auth and prebuilt binaries provided upstream.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "tools/addon/cronmaster.sh",
-            "resources": {
-                "cpu": null,
-                "ram": null,
-                "hdd": null,
-                "os": null,
-                "version": null
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  "name": "CronMaster",
+  "slug": "cronmaster",
+  "categories": [
+    1
+  ],
+  "date_created": "2026-02-22",
+  "type": "pve",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/fccview/cronmaster",
+  "website": "https://github.com/fccview/cronmaster",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/cr-nmaster.webp",
+  "config_path": "/opt/cronmaster/.env",
+  "description": "Self-hosted cron job scheduler with web UI, live logs, auth and prebuilt binaries provided upstream.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/addon/cronmaster.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
 }
