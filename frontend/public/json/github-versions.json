@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-22T12:08:41Z",
+  "generated": "2026-02-22T18:08:35Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -270,9 +270,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.16.0",
+      "version": "v3.16.1",
       "pinned": false,
-      "date": "2026-02-21T13:16:08Z"
+      "date": "2026-02-22T13:33:54Z"
     },
     {
       "slug": "dawarich",
@@ -844,9 +844,9 @@
     {
       "slug": "mediamtx",
       "repo": "bluenviron/mediamtx",
-      "version": "v1.16.1",
+      "version": "v1.16.2",
       "pinned": false,
-      "date": "2026-02-07T18:58:24Z"
+      "date": "2026-02-22T17:31:41Z"
     },
     {
       "slug": "meilisearch",
@@ -1208,9 +1208,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.12",
+      "version": "v5.1.13",
       "pinned": false,
-      "date": "2026-02-20T20:53:16Z"
+      "date": "2026-02-22T12:40:41Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1229,9 +1229,9 @@
     {
       "slug": "qbittorrent-exporter",
       "repo": "martabal/qbittorrent-exporter",
-      "version": "v1.13.2",
+      "version": "v1.13.3",
       "pinned": false,
-      "date": "2025-12-13T22:59:03Z"
+      "date": "2026-02-22T13:01:42Z"
     },
     {
       "slug": "qdrant",
