@@ -18,7 +18,8 @@ $STD apt install -y \
     curl \
     jq \
     git \
-    build-essential
+    build-essential \
+    sudo
 msg_ok "Installed Dependencies"
 
 # --- Fetch Latest Binary ---
@@ -35,28 +36,38 @@ msg_info "Configuring Environment"
 if ! getent passwd gitea >/dev/null; then
   adduser --system --group --disabled-password --shell /bin/bash --home /var/lib/act_runner gitea
 fi
+
+# Add sudo permissions for the gitea user
+echo "gitea ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/gitea
+chmod 440 /etc/sudoers.d/gitea
+
 mkdir -p /var/lib/act_runner
 chown -R gitea:gitea /var/lib/act_runner
-msg_ok "Configured Environment"
+msg_ok "Configured Environment & Sudoers"
 
 # --- Interactive Registration ---
-echo -e "\n${GN}--- Gitea Runner Registration (DEBIAN HOST) ---${CL}"
+echo -e "\n${GN}--- Gitea Runner Registration ---${CL}"
 read -p "Enter Gitea Instance URL: " GITEA_URL
 read -p "Enter Registration Token: " GITEA_TOKEN
 read -p "Enter Runner Name (default: $(hostname)): " RUNNER_NAME
 RUNNER_NAME=${RUNNER_NAME:-$(hostname)}
 
-# Create the config file first to enable host mode properly
+# --- Generate and Patch Config ---
 msg_info "Generating Config"
+cd /var/lib/act_runner
 sudo -u gitea act_runner generate-config > /var/lib/act_runner/config.yaml
 
-# Register with Debian labels
+# Patch the labels into the config file since CLI labels are ignored with -c
+sed -i 's/labels: \[\]/labels: ["debian-latest:host", "debian-12:host", "linux:host"]/' /var/lib/act_runner/config.yaml
+msg_ok "Configured Host Labels"
+
+# --- Register ---
 msg_info "Registering Runner..."
+# cd into directory to ensure .runner is created with correct permissions
 sudo -u gitea act_runner register \
   --instance "$GITEA_URL" \
   --token "$GITEA_TOKEN" \
   --name "$RUNNER_NAME" \
-  --labels "debian-latest:host,debian-12:host,linux:host" \
   --config /var/lib/act_runner/config.yaml \
   --no-interactive
 msg_ok "Runner Registered Successfully"
@@ -65,7 +76,7 @@ msg_ok "Runner Registered Successfully"
 msg_info "Creating Systemd Service"
 cat <<EOF >/etc/systemd/system/act_runner.service
 [Unit]
-Description=Gitea act_runner (Debian Host Mode)
+Description=Gitea act_runner (Host Mode)
 After=network.target
 
 [Service]
@@ -90,4 +101,5 @@ customize
 cleanup_lxc
 
 msg_ok "Installation Complete!"
-echo -e "In your Gitea Actions workflow, use: ${BL}runs-on: debian-latest${CL}"
+echo -e "Use ${BL}runs-on: debian-latest${CL} in your YAML files."
+echo -e "Actions can now use ${BL}sudo apt install ...${CL} without a password."
