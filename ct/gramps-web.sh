@@ -80,7 +80,6 @@ function update_script() {
     systemctl start gramps-web
     msg_ok "Started Service"
   fi
-
   exit
 }
 
