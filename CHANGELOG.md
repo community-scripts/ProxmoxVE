@@ -409,6 +409,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-22
 
+### 🆕 New Scripts
+
+  - Gramps-Web ([#12157](https://github.com/community-scripts/ProxmoxVE/pull/12157))
+
 ## 2026-02-21
 
 ### 🚀 Updated Scripts
