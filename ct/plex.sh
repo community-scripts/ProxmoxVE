@@ -59,8 +59,6 @@ function update_script() {
       "main"
     msg_ok "Migrated to new Plex repository (deb822)"
   fi
-
-  # Remove plexupdate if previously installed
   if [[ -f /usr/local/bin/plexupdate ]] || [[ -d /opt/plexupdate ]]; then
     msg_info "Removing legacy plexupdate"
     rm -rf /opt/plexupdate /usr/local/bin/plexupdate
@@ -68,11 +66,11 @@ function update_script() {
     msg_ok "Removed legacy plexupdate"
   fi
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating Plex Media Server"
   $STD apt update
   $STD apt install -y plexmediaserver
-  msg_ok "Updated ${APP}"
-
+  msg_ok "Updated Plex Media Server"
+  msg_ok "Updated successfully!"
   exit
 }
 
