@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-22T06:17:00Z",
+  "generated": "2026-02-22T12:08:41Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -88,9 +88,9 @@
     {
       "slug": "backrest",
       "repo": "garethgeorge/backrest",
-      "version": "v1.11.2",
+      "version": "v1.12.0",
       "pinned": false,
-      "date": "2026-01-27T06:27:56Z"
+      "date": "2026-02-22T06:49:49Z"
     },
     {
       "slug": "baikal",
@@ -254,6 +254,13 @@
       "date": "2026-02-11T17:11:46Z"
     },
     {
+      "slug": "cronmaster",
+      "repo": "fccview/cronmaster",
+      "version": "2.1.0",
+      "pinned": false,
+      "date": "2026-02-11T19:29:11Z"
+    },
+    {
       "slug": "cryptpad",
       "repo": "cryptpad/cryptpad",
       "version": "2026.2.0",
@@ -319,9 +326,9 @@
     {
       "slug": "drawio",
       "repo": "jgraph/drawio",
-      "version": "v29.5.1",
+      "version": "v29.5.2",
       "pinned": false,
-      "date": "2026-02-20T17:22:31Z"
+      "date": "2026-02-22T10:36:14Z"
     },
     {
       "slug": "duplicati",
@@ -424,9 +431,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.241.0",
+      "version": "2.242.0",
       "pinned": false,
-      "date": "2026-02-21T07:39:22Z"
+      "date": "2026-02-22T10:01:44Z"
     },
     {
       "slug": "gitea",
@@ -469,6 +476,13 @@
       "version": "v2.9.0",
       "pinned": false,
       "date": "2026-02-13T15:22:31Z"
+    },
+    {
+      "slug": "gramps-web",
+      "repo": "gramps-project/gramps-web-api",
+      "version": "v3.7.1.1",
+      "pinned": false,
+      "date": "2026-01-30T09:15:46Z"
     },
     {
       "slug": "grist",
