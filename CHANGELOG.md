@@ -417,6 +417,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - CR*NMASTER ([#12065](https://github.com/community-scripts/ProxmoxVE/pull/12065))
 
+  - #### 🔧 Refactor
+
+    - Update package management commands in clean-lxcs.sh [@heinemannj](https://github.com/heinemannj) ([#12166](https://github.com/community-scripts/ProxmoxVE/pull/12166))
+
 ## 2026-02-21
 
 ### 🚀 Updated Scripts
