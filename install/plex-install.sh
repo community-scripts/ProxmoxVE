@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2026 tteck
-# Author: tteck (tteckster)
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: tteck (tteckster) | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.plex.tv/
 
@@ -16,19 +16,16 @@ update_os
 setup_hwaccel
 
 msg_info "Setting Up Plex Media Server Repository"
-curl -fsSL https://downloads.plex.tv/plex-keys/PlexSign.key | tee /usr/share/keyrings/PlexSign.asc >/dev/null
-cat <<EOF >/etc/apt/sources.list.d/plexmediaserver.sources
-Types: deb
-URIs: https://downloads.plex.tv/repo/deb/
-Suites: public
-Components: main
-Signed-By: /usr/share/keyrings/PlexSign.asc
-EOF
+setup_deb822_repo \
+  "plexmediaserver" \
+  "https://downloads.plex.tv/plex-keys/PlexSign.v2.key" \
+  "https://repo.plex.tv/deb/" \
+  "public" \
+  "main"
 msg_ok "Set Up Plex Media Server Repository"
 
 msg_info "Installing Plex Media Server"
-$STD apt update
-$STD apt -o Dpkg::Options::="--force-confold" install -y plexmediaserver
+$STD apt install -y plexmediaserver
 if [[ "$CTTYPE" == "0" ]]; then
   sed -i -e 's/^ssl-cert:x:104:plex$/render:x:104:root,plex/' -e 's/^render:x:108:root$/ssl-cert:x:108:plex/' /etc/group
 else
