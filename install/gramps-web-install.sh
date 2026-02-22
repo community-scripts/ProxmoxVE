@@ -13,15 +13,6 @@ setting_up_container
 network_check
 update_os
 
-if apt-cache show libgirepository1.0-dev >/dev/null 2>&1; then
-  GI_DEV_PACKAGE="libgirepository1.0-dev"
-elif apt-cache show libgirepository-2.0-dev >/dev/null 2>&1; then
-  GI_DEV_PACKAGE="libgirepository-2.0-dev"
-else
-  msg_error "No supported girepository development package found!"
-  exit
-fi
-
 msg_info "Installing Dependencies"
 $STD apt install -y \
   appstream \
@@ -36,14 +27,14 @@ $STD apt install -y \
   git \
   graphviz \
   libcairo2-dev \
+  libgirepository-2.0-dev \
   libglib2.0-dev \
   libicu-dev \
   libopencv-dev \
   pkg-config \
   poppler-utils \
   python3-dev \
-  tesseract-ocr \
-  "$GI_DEV_PACKAGE"
+  tesseract-ocr
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
@@ -65,8 +56,7 @@ mkdir -p \
   /opt/gramps-web/data/media \
   /opt/gramps-web/data/users
 
-SECRET_KEY="$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")"
-
+SECRET_KEY="$(openssl rand -hex 32)"
 cat <<EOF >/opt/gramps-web/config/config.cfg
 TREE="Gramps Web"
 SECRET_KEY="${SECRET_KEY}"
@@ -88,7 +78,7 @@ $STD uv pip install --no-cache-dir gunicorn
 $STD uv pip install --no-cache-dir /opt/gramps-web-api
 cd /opt/gramps-web/frontend
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-corepack enable
+$STD corepack enable
 $STD npm install
 $STD npm run build
 cd /opt/gramps-web-api
