@@ -581,7 +581,7 @@ systemctl restart docker
 touch /root/.docker-installed
 echo "[$(date)] Docker installation completed"
 DOCKERSCRIPT
-chmod +x /root/install-docker.sh' >/dev/null 2>&1
+chmod +x /root/install-docker.sh' >/dev/null 2>&1 || true
 
   virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/systemd/system/install-docker.service << "DOCKERSERVICE"
 [Unit]
@@ -598,7 +598,7 @@ RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 DOCKERSERVICE
-systemctl enable install-docker.service' >/dev/null 2>&1
+systemctl enable install-docker.service' >/dev/null 2>&1 || true
 fi
 
 # Resize disk to target size
