@@ -413,6 +413,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Gramps-Web ([#12157](https://github.com/community-scripts/ProxmoxVE/pull/12157))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - karakeep: bump to node 24 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12183](https://github.com/community-scripts/ProxmoxVE/pull/12183))
+
 ### 💾 Core
 
   - #### ✨ New Features
