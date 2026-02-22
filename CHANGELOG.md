@@ -417,6 +417,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: Apache Guacamole - bump to Temurin JDK 17 to resolve Debian 13 (Trixie) install failure [@Copilot](https://github.com/Copilot) ([#12161](https://github.com/community-scripts/ProxmoxVE/pull/12161))
     - Docker-VM: add error handling for virt-customize finalization [@MickLesk](https://github.com/MickLesk) ([#12127](https://github.com/community-scripts/ProxmoxVE/pull/12127))
     - [Fix] Sure: add Sidekiq service [@vhsdream](https://github.com/vhsdream) ([#12186](https://github.com/community-scripts/ProxmoxVE/pull/12186))
 
