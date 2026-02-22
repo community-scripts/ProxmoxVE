@@ -13,10 +13,13 @@ fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
+load_functions
+init_tool_telemetry "" "addon"
 
 # ==============================================================================
 # CONFIGURATION
@@ -25,10 +28,8 @@ APP="CronMaster"
 APP_TYPE="addon"
 INSTALL_PATH="/opt/cronmaster"
 CONFIG_PATH="/opt/cronmaster/.env"
+SERVICE_PATH="/etc/systemd/system/cronmaster.service"
 DEFAULT_PORT=3000
-
-# Initialize all core functions (colors, formatting, icons, STD mode)
-load_functions
 
 # ==============================================================================
 # HEADER
@@ -48,14 +49,8 @@ EOF
 # ==============================================================================
 # OS DETECTION
 # ==============================================================================
-if [[ -f "/etc/alpine-release" ]]; then
-  msg_error "Alpine is not supported for ${APP}. Use Debian/Ubuntu."
-  exit 1
-elif [[ -f "/etc/debian_version" ]]; then
-  OS="Debian"
-  SERVICE_PATH="/etc/systemd/system/cronmaster.service"
-else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
+if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
+  echo -e "${CROSS} Unsupported OS detected. This script only supports Debian and Ubuntu."
   exit 1
 fi
 
@@ -69,6 +64,7 @@ function uninstall() {
   rm -rf "$INSTALL_PATH"
   rm -f "/usr/local/bin/update_cronmaster"
   rm -f "$HOME/.cronmaster"
+  rm -f "/root/cronmaster.creds"
   msg_ok "${APP} has been uninstalled"
 }
 
@@ -111,8 +107,6 @@ function install() {
     NODE_VERSION="22" setup_nodejs
   fi
 
-  # Force fresh download by removing version cache
-  rm -f "$HOME/.cronmaster"
   fetch_and_deploy_gh_release "cronmaster" "fccview/cronmaster" "prebuild" "latest" "$INSTALL_PATH" "cronmaster_*_prebuild.tar.gz"
 
   local AUTH_PASS
@@ -145,34 +139,46 @@ Restart=always
 RestartSec=10
 
 [Install]
-WantedBy=multi-target.target
+WantedBy=multi-user.target
 EOF
-  systemctl enable --now cronmaster &>/dev/null
+  systemctl enable -q --now cronmaster
   msg_ok "Created and started service"
 
   # Create update script
   msg_info "Creating update script"
-  cat <<'UPDATEEOF' >/usr/local/bin/update_cronmaster
+  ensure_usr_local_bin_persist
+  cat <<EOF >/usr/local/bin/update_cronmaster
 #!/usr/bin/env bash
 # CronMaster Update Script
 type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/cronmaster.sh)"
-UPDATEEOF
+EOF
   chmod +x /usr/local/bin/update_cronmaster
   msg_ok "Created update script (/usr/local/bin/update_cronmaster)"
 
+  # Save credentials
+  local CREDS_FILE="/root/cronmaster.creds"
+  cat <<EOF >"$CREDS_FILE"
+CronMaster Credentials
+======================
+Password: ${AUTH_PASS}
+
+Web UI: http://${LOCAL_IP}:${DEFAULT_PORT}
+EOF
   echo ""
   msg_ok "${APP} is reachable at: ${BL}http://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
-  msg_ok "Password: ${BL}${AUTH_PASS}${CL}"
+  msg_ok "Credentials saved to: ${BL}${CREDS_FILE}${CL}"
   echo ""
 }
 
 # ==============================================================================
 # MAIN
 # ==============================================================================
+header_info
+ensure_usr_local_bin_persist
+get_lxc_ip
 
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
-  header_info
   if [[ -d "$INSTALL_PATH" ]]; then
     update
   else
@@ -181,9 +187,6 @@ if [[ "${type:-}" == "update" ]]; then
   fi
   exit 0
 fi
-
-header_info
-get_lxc_ip
 
 # Check if already installed
 if [[ -d "$INSTALL_PATH" && -n "$(ls -A "$INSTALL_PATH" 2>/dev/null)" ]]; then
