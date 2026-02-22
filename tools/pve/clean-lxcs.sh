@@ -12,6 +12,7 @@ function header_info() {
  / /   / / _ \/ __ `/ __ \   / /   |   / /
 / /___/ /  __/ /_/ / / / /  / /___/   / /___
 \____/_/\___/\__,_/_/ /_/  /_____/_/|_\____/
+
 EOF
 }
 
@@ -74,10 +75,10 @@ function run_lxc_clean() {
       find /var/cache -type f -delete 2>/dev/null
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
-      apt-get -y --purge autoremove
-      apt-get -y autoclean
+      apt -y --purge autoremove
+      apt -y autoclean
       rm -rf /var/lib/apt/lists/*
-      apt-get update
+      apt update
     fi
   '
 }
