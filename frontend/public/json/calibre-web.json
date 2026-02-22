@@ -11,7 +11,7 @@
   "interface_port": 8083,
   "documentation": "https://github.com/janeczku/calibre-web/wiki",
   "website": "https://github.com/janeczku/calibre-web",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/flat/calibre-web.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/calibre-web.webp",
   "config_path": "/opt/calibre-web/app.db",
   "description": "Web app for browsing, reading and downloading eBooks from a Calibre database. Provides an attractive interface with mobile support, user management, and eBook conversion capabilities.",
   "install_methods": [
