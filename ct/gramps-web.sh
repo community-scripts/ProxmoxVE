@@ -24,57 +24,20 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d /opt/gramps-web-api ]]; then
-    msg_error "No Gramps Web API Installation Found!"
-    exit
-  fi
-
-  if [[ ! -d /opt/gramps-web/frontend ]]; then
-    msg_error "No Gramps Web Frontend Installation Found!"
-    exit
-  fi
-
-  if [[ ! -f /opt/gramps-web/config/config.cfg ]]; then
-    msg_error "No Gramps Web Configuration Found!"
+  if [[ ! -d /opt/gramps-web-api ]] || [[ ! -d /opt/gramps-web/frontend ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
   fi
 
   PYTHON_VERSION="3.12" setup_uv
   NODE_VERSION="22" setup_nodejs
 
-  UPDATE_AVAILABLE=0
   if check_for_gh_release "gramps-web-api" "gramps-project/gramps-web-api"; then
-    UPDATE_AVAILABLE=1
-  fi
-  if check_for_gh_release "gramps-web" "gramps-project/gramps-web"; then
-    UPDATE_AVAILABLE=1
-  fi
-
-  if [[ "$UPDATE_AVAILABLE" == "1" ]]; then
     msg_info "Stopping Service"
     systemctl stop gramps-web
     msg_ok "Stopped Service"
 
-    if apt-cache show libgirepository1.0-dev >/dev/null 2>&1; then
-      GI_DEV_PACKAGE="libgirepository1.0-dev"
-    elif apt-cache show libgirepository-2.0-dev >/dev/null 2>&1; then
-      GI_DEV_PACKAGE="libgirepository-2.0-dev"
-    else
-      msg_error "No supported girepository development package found!"
-      exit
-    fi
-
-    msg_info "Ensuring Build Dependencies"
-    $STD apt install -y \
-      gobject-introspection \
-      libcairo2-dev \
-      libglib2.0-dev \
-      pkg-config \
-      "$GI_DEV_PACKAGE"
-    msg_ok "Ensured Build Dependencies"
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gramps-web-api" "gramps-project/gramps-web-api" "tarball" "latest" "/opt/gramps-web-api"
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gramps-web" "gramps-project/gramps-web" "tarball" "latest" "/opt/gramps-web/frontend"
 
     msg_info "Updating Gramps Web API"
     $STD uv venv -c -p python3.12 /opt/gramps-web/venv
@@ -83,14 +46,6 @@ function update_script() {
     $STD uv pip install --no-cache-dir gunicorn
     $STD uv pip install --no-cache-dir /opt/gramps-web-api
     msg_ok "Updated Gramps Web API"
-
-    msg_info "Updating Gramps Web Frontend"
-    cd /opt/gramps-web/frontend
-    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-    corepack enable
-    $STD npm install
-    $STD npm run build
-    msg_ok "Updated Gramps Web Frontend"
 
     msg_info "Applying Database Migration"
     cd /opt/gramps-web-api
@@ -104,7 +59,26 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start gramps-web
     msg_ok "Started Service"
-    msg_ok "Updated successfully!"
+  fi
+
+  if check_for_gh_release "gramps-web" "gramps-project/gramps-web"; then
+    msg_info "Stopping Service"
+    systemctl stop gramps-web
+    msg_ok "Stopped Service"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gramps-web" "gramps-project/gramps-web" "tarball" "latest" "/opt/gramps-web/frontend"
+
+    msg_info "Updating Gramps Web Frontend"
+    cd /opt/gramps-web/frontend
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    $STD corepack enable
+    $STD npm install
+    $STD npm run build
+    msg_ok "Updated Gramps Web Frontend"
+
+    msg_info "Starting Service"
+    systemctl start gramps-web
+    msg_ok "Started Service"
   fi
 
   exit
