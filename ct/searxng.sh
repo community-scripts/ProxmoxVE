@@ -32,6 +32,7 @@ function update_script() {
      exit
   fi
 
+  msg_info "Updating ${APP} installation..."
   systemctl stop searxng
 
   $STD apt update
@@ -45,6 +46,7 @@ function update_script() {
   '
 
   systemctl start searxng
+  msg_ok "Updated successfully!"
   exit
 }
 start
