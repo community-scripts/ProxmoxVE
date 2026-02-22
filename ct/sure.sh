@@ -30,9 +30,38 @@ function update_script() {
   fi
 
   if check_for_gh_release "Sure" "we-promise/sure"; then
-    msg_info "Stopping Service"
-    $STD systemctl stop sure
-    msg_ok "Stopped Service"
+    if [[ ! -f /etc/systemd/system/sure-worker.service ]]; then
+      cat <<EOF >/etc/systemd/system/sure-worker.service
+[Unit]
+Description=Sure Background Worker (Sidekiq)
+After=network.target redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/sure
+Environment=RAILS_ENV=production
+Environment=BUNDLE_DEPLOYMENT=1
+Environment=BUNDLE_WITHOUT=development
+Environment=PATH=/root/.rbenv/shims:/root/.rbenv/bin:/usr/bin:/usr/local/bin:/sbin:/bin
+EnvironmentFile=/etc/sure/.env
+ExecStart=/opt/sure/bin/bundle exec sidekiq -e production
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+      systemctl enable -q sure-worker
+      msg_info "Stopping Service"
+      $STD systemctl stop sure
+      msg_ok "Stopped Service"
+    else
+      msg_info "Stopping services"
+      $STD systemctl stop sure-worker sure
+      msg_ok "Stopped services"
+    fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sure" "we-promise/sure" "tarball" "latest" "/opt/sure"
     RUBY_VERSION="$(cat /opt/sure/.ruby-version)" RUBY_INSTALL_RAILS=false setup_ruby
@@ -50,9 +79,9 @@ function update_script() {
     unset SECRET_KEY_BASE_DUMMY
     msg_ok "Updated Sure"
 
-    msg_info "Starting Service"
-    $STD systemctl start sure
-    msg_ok "Started Service"
+    msg_info "Starting Services"
+    $STD systemctl start sure sure-worker
+    msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
   exit

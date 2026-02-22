@@ -55,7 +55,7 @@ POSTGRES_DB=${PG_DB_NAME}/" \
   -e "s|^APP_DOMAIN=|&${LOCAL_IP}|" /etc/sure/.env
 msg_ok "Configured Sure"
 
-msg_info "Creating Service"
+msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/sure.service
 [Unit]
 Description=Sure Service
@@ -79,8 +79,31 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable -q --now sure
-msg_ok "Created Service"
+
+cat <<EOF >/etc/systemd/system/sure-worker.service
+[Unit]
+Description=Sure Background Worker (Sidekiq)
+After=network.target redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/sure
+Environment=RAILS_ENV=production
+Environment=BUNDLE_DEPLOYMENT=1
+Environment=BUNDLE_WITHOUT=development
+Environment=PATH=/root/.rbenv/shims:/root/.rbenv/bin:/usr/bin:/usr/local/bin:/sbin:/bin
+EnvironmentFile=/etc/sure/.env
+ExecStart=/opt/sure/bin/bundle exec sidekiq -e production
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+$STD systemctl enable -q --now sure sure-worker
+msg_ok "Created Services"
 
 motd_ssh
 customize
