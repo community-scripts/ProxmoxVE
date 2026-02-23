@@ -4055,8 +4055,9 @@ EOF'
   lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
   local lxc_exit=$?
 
-  set -Eeuo pipefail       # Re-enable error handling
-  trap 'error_handler' ERR # Restore ERR trap
+  # Keep error handling DISABLED during failure detection and recovery
+  # Re-enabling it here would cause any pct exec/pull failure to trigger
+  # error_handler() on the host, bypassing the recovery menu entirely
 
   # Check for error flag file in container (more reliable than lxc-attach exit code)
   local install_exit_code=0
@@ -4484,6 +4485,10 @@ EOF'
 
     exit $install_exit_code
   fi
+
+  # Re-enable error handling after successful install or recovery menu completion
+  set -Eeuo pipefail
+  trap 'error_handler' ERR
 }
 
 destroy_lxc() {

@@ -524,7 +524,8 @@ silent() {
     if [[ -s "$logfile" ]]; then
       echo -e "\n${TAB}--- Last 10 lines of log ---"
       tail -n 10 "$logfile"
-      echo -e "${TAB}-----------------------------------\n"
+      echo -e "${TAB}-----------------------------------"
+      echo -e "${TAB}📋 Full log: ${logfile}\n"
     fi
 
     exit "$rc"

@@ -236,67 +236,54 @@ error_handler() {
     active_log="$SILENT_LOGFILE"
   fi
 
+  # If active_log points to a container-internal path that doesn't exist on host,
+  # fall back to BUILD_LOG (host-side log)
+  if [[ -n "$active_log" && ! -s "$active_log" && -n "${BUILD_LOG:-}" && -s "${BUILD_LOG}" ]]; then
+    active_log="$BUILD_LOG"
+  fi
+
+  # Show last log lines if available
   if [[ -n "$active_log" && -s "$active_log" ]]; then
     echo -e "\n${TAB}--- Last 20 lines of log ---"
     tail -n 20 "$active_log"
     echo -e "${TAB}-----------------------------------\n"
+  fi
 
-    # Detect context: Container (INSTALL_LOG set + /root exists) vs Host (BUILD_LOG)
-    if [[ -n "${INSTALL_LOG:-}" && -d /root ]]; then
-      # CONTAINER CONTEXT: Copy log and create flag file for host
-      local container_log="/root/.install-${SESSION_ID:-error}.log"
-      cp "$active_log" "$container_log" 2>/dev/null || true
+  # Detect context: Container (INSTALL_LOG set + inside container /root) vs Host
+  if [[ -n "${INSTALL_LOG:-}" && -f "${INSTALL_LOG:-}" && -d /root ]]; then
+    # CONTAINER CONTEXT: Copy log and create flag file for host
+    local container_log="/root/.install-${SESSION_ID:-error}.log"
+    cp "${INSTALL_LOG}" "$container_log" 2>/dev/null || true
 
-      # Create error flag file with exit code for host detection
-      echo "$exit_code" >"/root/.install-${SESSION_ID:-error}.failed" 2>/dev/null || true
-      # Log path is shown by host as combined log - no need to show container path
-    else
-      # HOST CONTEXT: Show local log path and offer container cleanup
+    # Create error flag file with exit code for host detection
+    echo "$exit_code" >"/root/.install-${SESSION_ID:-error}.failed" 2>/dev/null || true
+    # Log path is shown by host as combined log - no need to show container path
+  else
+    # HOST CONTEXT: Show local log path and offer container cleanup
+    if [[ -n "$active_log" && -s "$active_log" ]]; then
       if declare -f msg_custom >/dev/null 2>&1; then
         msg_custom "📋" "${YW}" "Full log: ${active_log}"
       else
         echo -e "${YW}Full log:${CL} ${BL}${active_log}${CL}"
       fi
+    fi
 
-      # Offer to remove container if it exists (build errors after container creation)
-      if [[ -n "${CTID:-}" ]] && command -v pct &>/dev/null && pct status "$CTID" &>/dev/null; then
-        echo ""
-        if declare -f msg_custom >/dev/null 2>&1; then
-          echo -en "${TAB}❓${TAB}${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
-        else
-          echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
-        fi
+    # Offer to remove container if it exists (build errors after container creation)
+    if [[ -n "${CTID:-}" ]] && command -v pct &>/dev/null && pct status "$CTID" &>/dev/null; then
+      echo ""
+      if declare -f msg_custom >/dev/null 2>&1; then
+        echo -en "${TAB}❓${TAB}${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+      else
+        echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
+      fi
 
-        if read -t 60 -r response; then
-          if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
-            echo ""
-            if declare -f msg_info >/dev/null 2>&1; then
-              msg_info "Removing container ${CTID}"
-            else
-              echo -e "${YW}Removing container ${CTID}${CL}"
-            fi
-            pct stop "$CTID" &>/dev/null || true
-            pct destroy "$CTID" &>/dev/null || true
-            if declare -f msg_ok >/dev/null 2>&1; then
-              msg_ok "Container ${CTID} removed"
-            else
-              echo -e "${GN}✔${CL} Container ${CTID} removed"
-            fi
-          elif [[ "$response" =~ ^[Nn]$ ]]; then
-            echo ""
-            if declare -f msg_warn >/dev/null 2>&1; then
-              msg_warn "Container ${CTID} kept for debugging"
-            else
-              echo -e "${YW}Container ${CTID} kept for debugging${CL}"
-            fi
-          fi
-        else
-          # Timeout - auto-remove
+      if read -t 60 -r response; then
+        if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
           echo ""
           if declare -f msg_info >/dev/null 2>&1; then
-            msg_info "No response - removing container ${CTID}"
+            msg_info "Removing container ${CTID}"
           else
-            echo -e "${YW}No response - removing container ${CTID}${CL}"
+            echo -e "${YW}Removing container ${CTID}${CL}"
           fi
           pct stop "$CTID" &>/dev/null || true
           pct destroy "$CTID" &>/dev/null || true
@@ -305,13 +292,35 @@ error_handler() {
           else
             echo -e "${GN}✔${CL} Container ${CTID} removed"
           fi
+        elif [[ "$response" =~ ^[Nn]$ ]]; then
+          echo ""
+          if declare -f msg_warn >/dev/null 2>&1; then
+            msg_warn "Container ${CTID} kept for debugging"
+          else
+            echo -e "${YW}Container ${CTID} kept for debugging${CL}"
+          fi
         fi
+      else
+        # Timeout - auto-remove
+        echo ""
+        if declare -f msg_info >/dev/null 2>&1; then
+          msg_info "No response - removing container ${CTID}"
+        else
+          echo -e "${YW}No response - removing container ${CTID}${CL}"
+        fi
+        pct stop "$CTID" &>/dev/null || true
+        pct destroy "$CTID" &>/dev/null || true
+        if declare -f msg_ok >/dev/null 2>&1; then
+          msg_ok "Container ${CTID} removed"
+        else
+          echo -e "${GN}✔${CL} Container ${CTID} removed"
+        fi
+      fi
 
-        # Force one final status update attempt after cleanup
-        # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
-        if declare -f post_update_to_api &>/dev/null; then
-          post_update_to_api "failed" "$exit_code" "force"
-        fi
+      # Force one final status update attempt after cleanup
+      # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
+      if declare -f post_update_to_api &>/dev/null; then
+        post_update_to_api "failed" "$exit_code" "force"
       fi
     fi
   fi
