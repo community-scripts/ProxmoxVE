@@ -692,7 +692,7 @@ find_host_ssh_keys() {
       /^[[:space:]]*#/ {next}
       /^[[:space:]]*$/ {next}
       {print}
-    ' | grep -E -c '"$re"' || true)
+    ' | grep -E -c "$re" || true)
 
     if ((c > 0)); then
       files+=("$f")
