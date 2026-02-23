@@ -411,7 +411,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Sonobarr ([#12221](https://github.com/community-scripts/ProxmoxVE/pull/12221))
+  - SeaweedFS ([#12220](https://github.com/community-scripts/ProxmoxVE/pull/12220))
+- Sonobarr ([#12221](https://github.com/community-scripts/ProxmoxVE/pull/12221))
 - SparkyFitness ([#12185](https://github.com/community-scripts/ProxmoxVE/pull/12185))
 - Frigate v16.4 [@MickLesk](https://github.com/MickLesk) ([#11887](https://github.com/community-scripts/ProxmoxVE/pull/11887))
 
