@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-23T06:26:10Z",
+  "generated": "2026-02-23T12:14:19Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -200,9 +200,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.7.0",
+      "version": "v2.7.1",
       "pinned": false,
-      "date": "2026-02-22T18:17:27Z"
+      "date": "2026-02-23T09:58:13Z"
     },
     {
       "slug": "cloudreve",
@@ -422,6 +422,13 @@
       "date": "2026-01-25T18:20:14Z"
     },
     {
+      "slug": "frigate",
+      "repo": "blakeblackshear/frigate",
+      "version": "v0.16.4",
+      "pinned": true,
+      "date": "2026-01-29T00:42:14Z"
+    },
+    {
       "slug": "gatus",
       "repo": "TwiN/gatus",
       "version": "v5.35.0",
@@ -578,9 +585,9 @@
     {
       "slug": "huntarr",
       "repo": "plexguide/Huntarr.io",
-      "version": "9.3.7",
+      "version": "9.4.1",
       "pinned": false,
-      "date": "2026-02-19T01:03:53Z"
+      "date": "2026-02-23T08:46:37Z"
     },
     {
       "slug": "immich-public-proxy",
@@ -1663,9 +1670,9 @@
     {
       "slug": "wanderer",
       "repo": "meilisearch/meilisearch",
-      "version": "v1.35.1",
+      "version": "v1.36.0",
       "pinned": false,
-      "date": "2026-02-16T17:01:17Z"
+      "date": "2026-02-23T08:13:32Z"
     },
     {
       "slug": "warracker",
