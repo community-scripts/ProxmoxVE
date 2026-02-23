@@ -33,19 +33,19 @@ function update_script() {
   fi
 
   msg_info "Updating ${APP} installation..."
-  systemctl stop searxng
+  $STD systemctl stop searxng
 
   $STD apt update
   $STD apt -y upgrade
 
-  sudo -H -u searxng bash -c '
+  $STD sudo -H -u searxng bash -c '
     python3 -m venv /usr/local/searxng/searx-pyenv &&
     . /usr/local/searxng/searx-pyenv/bin/activate &&
     pip install -U pip setuptools wheel pyyaml lxml msgspec typing_extensions &&
     pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
   '
 
-  systemctl start searxng
+  $STD systemctl start searxng
   msg_ok "Updated successfully!"
   exit
 }
