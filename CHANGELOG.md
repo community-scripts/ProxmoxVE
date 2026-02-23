@@ -419,6 +419,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: Improve error handling and logging for LXC builds [@MickLesk](https://github.com/MickLesk) ([#12208](https://github.com/community-scripts/ProxmoxVE/pull/12208))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - calibre-web: update default credentials [@LaevaertK](https://github.com/LaevaertK) ([#12201](https://github.com/community-scripts/ProxmoxVE/pull/12201))
+
 ## 2026-02-22
 
 ### 🆕 New Scripts
