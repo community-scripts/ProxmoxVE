@@ -420,6 +420,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: Enhance signal handling, reported "status" and logs [@MickLesk](https://github.com/MickLesk) ([#12216](https://github.com/community-scripts/ProxmoxVE/pull/12216))
 
+  - #### 🔧 Refactor
+
+    - booklore v2: embed frontend, bump Java to 25, remove nginx [@MickLesk](https://github.com/MickLesk) ([#12223](https://github.com/community-scripts/ProxmoxVE/pull/12223))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
