@@ -418,6 +418,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - memos: unpin version due new release artifacts [@MickLesk](https://github.com/MickLesk) ([#12224](https://github.com/community-scripts/ProxmoxVE/pull/12224))
     - core: Enhance signal handling, reported "status" and logs [@MickLesk](https://github.com/MickLesk) ([#12216](https://github.com/community-scripts/ProxmoxVE/pull/12216))
 
   - #### 🔧 Refactor
