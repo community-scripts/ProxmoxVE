@@ -414,6 +414,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - SparkyFitness ([#12185](https://github.com/community-scripts/ProxmoxVE/pull/12185))
 - Frigate v16.4 [@MickLesk](https://github.com/MickLesk) ([#11887](https://github.com/community-scripts/ProxmoxVE/pull/11887))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - core: Enhance signal handling, reported "status" and logs [@MickLesk](https://github.com/MickLesk) ([#12216](https://github.com/community-scripts/ProxmoxVE/pull/12216))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
