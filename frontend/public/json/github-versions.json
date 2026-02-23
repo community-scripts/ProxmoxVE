@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-23T00:22:07Z",
+  "generated": "2026-02-23T06:26:10Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1178",
+      "version": "v0.24.1184",
       "pinned": false,
-      "date": "2026-02-22T05:51:41Z"
+      "date": "2026-02-23T05:55:36Z"
     },
     {
       "slug": "jellystat",
@@ -1334,9 +1334,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.6",
+      "version": "v0.14.7",
       "pinned": false,
-      "date": "2026-02-18T16:54:14Z"
+      "date": "2026-02-23T01:36:44Z"
     },
     {
       "slug": "scraparr",
