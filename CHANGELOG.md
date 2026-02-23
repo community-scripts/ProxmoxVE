@@ -424,6 +424,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - booklore v2: embed frontend, bump Java to 25, remove nginx [@MickLesk](https://github.com/MickLesk) ([#12223](https://github.com/community-scripts/ProxmoxVE/pull/12223))
 
+### 🗑️ Deleted Scripts
+
+  - Remove huntarr [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12226](https://github.com/community-scripts/ProxmoxVE/pull/12226))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
