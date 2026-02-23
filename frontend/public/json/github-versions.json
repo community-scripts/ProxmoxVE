@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-23T12:14:19Z",
+  "generated": "2026-02-23T18:26:09Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -25,9 +25,9 @@
     {
       "slug": "adventurelog",
       "repo": "seanmorley15/adventurelog",
-      "version": "v0.11.0",
+      "version": "v0.12.0",
       "pinned": false,
-      "date": "2025-09-01T16:19:38Z"
+      "date": "2026-02-23T14:06:45Z"
     },
     {
       "slug": "alpine-redlib",
@@ -151,9 +151,9 @@
     {
       "slug": "booklore",
       "repo": "booklore-app/BookLore",
-      "version": "v1.18.5",
+      "version": "v2.0.0",
       "pinned": false,
-      "date": "2026-01-24T17:15:32Z"
+      "date": "2026-02-23T17:00:00Z"
     },
     {
       "slug": "bookstack",
@@ -200,9 +200,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.7.1",
+      "version": "v2.7.3",
       "pinned": false,
-      "date": "2026-02-23T09:58:13Z"
+      "date": "2026-02-23T17:18:55Z"
     },
     {
       "slug": "cloudreve",
@@ -228,9 +228,9 @@
     {
       "slug": "configarr",
       "repo": "raydak-labs/configarr",
-      "version": "v1.22.0",
+      "version": "v1.23.0",
       "pinned": false,
-      "date": "2026-02-20T21:55:46Z"
+      "date": "2026-02-23T12:28:13Z"
     },
     {
       "slug": "convertx",
@@ -249,9 +249,9 @@
     {
       "slug": "cronicle",
       "repo": "jhuckaby/Cronicle",
-      "version": "v0.9.106",
+      "version": "v0.9.107",
       "pinned": false,
-      "date": "2026-02-11T17:11:46Z"
+      "date": "2026-02-23T17:48:27Z"
     },
     {
       "slug": "cronmaster",
@@ -583,13 +583,6 @@
       "date": "2025-12-23T14:53:51Z"
     },
     {
-      "slug": "huntarr",
-      "repo": "plexguide/Huntarr.io",
-      "version": "9.4.1",
-      "pinned": false,
-      "date": "2026-02-23T08:46:37Z"
-    },
-    {
       "slug": "immich-public-proxy",
       "repo": "alangrainger/immich-public-proxy",
       "version": "v1.15.3",
@@ -865,9 +858,9 @@
     {
       "slug": "memos",
       "repo": "usememos/memos",
-      "version": "v0.25.3",
-      "pinned": true,
-      "date": "2025-11-25T15:40:41Z"
+      "version": "v0.26.2",
+      "pinned": false,
+      "date": "2026-02-23T13:28:34Z"
     },
     {
       "slug": "metube",
@@ -1124,9 +1117,9 @@
     {
       "slug": "planka",
       "repo": "plankanban/planka",
-      "version": "v2.0.1",
+      "version": "v2.0.2",
       "pinned": false,
-      "date": "2026-02-17T15:26:55Z"
+      "date": "2026-02-23T17:47:15Z"
     },
     {
       "slug": "plant-it",
@@ -1250,9 +1243,9 @@
     {
       "slug": "qui",
       "repo": "autobrr/qui",
-      "version": "v1.14.0",
+      "version": "v1.14.1",
       "pinned": false,
-      "date": "2026-02-21T22:23:46Z"
+      "date": "2026-02-23T13:13:31Z"
     },
     {
       "slug": "radarr",
@@ -1411,9 +1404,9 @@
     {
       "slug": "snowshare",
       "repo": "TuroYT/snowshare",
-      "version": "v1.3.6",
+      "version": "v1.3.7",
       "pinned": false,
-      "date": "2026-02-19T11:06:29Z"
+      "date": "2026-02-23T15:51:39Z"
     },
     {
       "slug": "sonarr",
@@ -1421,6 +1414,13 @@
       "version": "v4.0.16.2944",
       "pinned": false,
       "date": "2025-11-05T01:56:48Z"
+    },
+    {
+      "slug": "sonobarr",
+      "repo": "Dodelidoo-Labs/sonobarr",
+      "version": "0.11.0",
+      "pinned": false,
+      "date": "2026-01-21T19:07:21Z"
     },
     {
       "slug": "speedtest-tracker",
@@ -1558,9 +1558,9 @@
     {
       "slug": "traefik",
       "repo": "traefik/traefik",
-      "version": "v3.6.8",
+      "version": "v3.6.9",
       "pinned": false,
-      "date": "2026-02-11T16:44:37Z"
+      "date": "2026-02-23T17:21:17Z"
     },
     {
       "slug": "trilium",
@@ -1572,9 +1572,9 @@
     {
       "slug": "trip",
       "repo": "itskovacs/TRIP",
-      "version": "1.40.0",
+      "version": "1.41.0",
       "pinned": false,
-      "date": "2026-02-10T20:12:53Z"
+      "date": "2026-02-23T17:57:31Z"
     },
     {
       "slug": "tududi",
