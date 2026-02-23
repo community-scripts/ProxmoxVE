@@ -432,6 +432,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - calibre-web: update default credentials [@LaevaertK](https://github.com/LaevaertK) ([#12201](https://github.com/community-scripts/ProxmoxVE/pull/12201))
 
+  - #### 📝 Script Information
+
+    - chore: update Frigate documentation and website URLs [@JohnICB](https://github.com/JohnICB) ([#12218](https://github.com/community-scripts/ProxmoxVE/pull/12218))
+
 ## 2026-02-22
 
 ### 🆕 New Scripts
