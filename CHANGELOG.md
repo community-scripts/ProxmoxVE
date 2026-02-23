@@ -413,6 +413,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Frigate v16.4 [@MickLesk](https://github.com/MickLesk) ([#11887](https://github.com/community-scripts/ProxmoxVE/pull/11887))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: Improve error handling and logging for LXC builds [@MickLesk](https://github.com/MickLesk) ([#12208](https://github.com/community-scripts/ProxmoxVE/pull/12208))
+
 ## 2026-02-22
 
 ### 🆕 New Scripts
