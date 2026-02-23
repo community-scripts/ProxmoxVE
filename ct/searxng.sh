@@ -32,22 +32,27 @@ function update_script() {
      exit
   fi
 
-  msg_info "Updating ${APP} installation..."
-  $STD systemctl stop searxng
+  msg_info "Updating SearXNG installation..."
+  
+  msg_info "Stopping Service"
+  systemctl stop searxng
+  msg_ok "Stopped Service"
 
-  $STD apt update
-  $STD apt -y upgrade
-
+  msg_info "Updating SearXNG"
   $STD sudo -H -u searxng bash -c '
     python3 -m venv /usr/local/searxng/searx-pyenv &&
     . /usr/local/searxng/searx-pyenv/bin/activate &&
     pip install -U pip setuptools wheel pyyaml lxml msgspec typing_extensions &&
     pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
   '
-
-  $STD systemctl start searxng
+  msg_ok "Updated SearXNG"
+  
+  msg_info "Starting Services"
+  systemctl start searxng
+  msg_ok "Started Services"
   msg_ok "Updated successfully!"
-  exit
+ fi
+ exit
 }
 start
 build_container
