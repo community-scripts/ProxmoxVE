@@ -409,6 +409,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-23
 
+### 🆕 New Scripts
+
+  - Frigate v16.4 [@MickLesk](https://github.com/MickLesk) ([#11887](https://github.com/community-scripts/ProxmoxVE/pull/11887))
+
 ## 2026-02-22
 
 ### 🆕 New Scripts
