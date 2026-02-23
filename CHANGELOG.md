@@ -411,7 +411,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Frigate v16.4 [@MickLesk](https://github.com/MickLesk) ([#11887](https://github.com/community-scripts/ProxmoxVE/pull/11887))
+  - SparkyFitness ([#12185](https://github.com/community-scripts/ProxmoxVE/pull/12185))
+- Frigate v16.4 [@MickLesk](https://github.com/MickLesk) ([#11887](https://github.com/community-scripts/ProxmoxVE/pull/11887))
 
 ### 💾 Core
 
