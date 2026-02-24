@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.monicahq.com/
+# Source: https://www.monicahq.com/ | Github: https://github.com/monicahq/monica
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://ipcheck.ing/
+# Source: https://ipcheck.ing/ | Github: https://github.com/jason5ng32/MyIP
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.grampsweb.org/
+# Source: https://www.grampsweb.org/ | Github: https://github.com/gramps-project/gramps-web
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

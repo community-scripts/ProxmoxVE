@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://pangolin.net/
+# Source: https://pangolin.net/ | Github: https://github.com/fosrl/pangolin
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

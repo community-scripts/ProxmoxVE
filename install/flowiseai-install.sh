@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://flowiseai.com/
+# Source: https://flowiseai.com/ | Github: https://github.com/FlowiseAI/Flowise
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
