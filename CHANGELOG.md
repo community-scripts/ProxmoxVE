@@ -423,6 +423,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Databasus: add mariadb path for mysql/mariadb backups | add mongodb database tools [@MickLesk](https://github.com/MickLesk) ([#12259](https://github.com/community-scripts/ProxmoxVE/pull/12259))
     - make searxng updateable [@shtefko](https://github.com/shtefko) ([#12207](https://github.com/community-scripts/ProxmoxVE/pull/12207))
 
   - #### 🔧 Refactor
