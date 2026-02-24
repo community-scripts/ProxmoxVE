@@ -1,0 +1,40 @@
+{
+  "name": "Arcane",
+  "slug": "arcane",
+  "categories": [
+    3
+  ],
+  "date_created": "2026-02-18",
+  "type": "addon",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3552,
+  "documentation": "https://getarcane.app/docs",
+  "website": "https://getarcane.app/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/arcane.webp",
+  "config_path": "/opt/arcane/.env",
+  "description": "Arcane is designed to be an easy and modern Docker management platform, built with everybody in mind. The goal of Arcane is to be built for and by the community to make sure nobody feels left out or behind with their specific features or processes. ",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/addon/arcane.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "arcane",
+    "password": "arcane-admin"
+  },
+  "notes": [
+    {
+      "text": "This is an addon script intended to be used on top of an existing Docker container.",
+      "type": "info"
+    }
+  ]
+}
