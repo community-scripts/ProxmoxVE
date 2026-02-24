@@ -427,6 +427,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: add get_latest_gh_tag helper function [@MickLesk](https://github.com/MickLesk) ([#12261](https://github.com/community-scripts/ProxmoxVE/pull/12261))
 
+### 🧰 Tools
+
+  - Arcane ([#12263](https://github.com/community-scripts/ProxmoxVE/pull/12263))
+
 ### 📂 Github
 
   - add: workflow to close stale PRs [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12243](https://github.com/community-scripts/ProxmoxVE/pull/12243))
