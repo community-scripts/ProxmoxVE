@@ -421,6 +421,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - make searxng updateable [@shtefko](https://github.com/shtefko) ([#12207](https://github.com/community-scripts/ProxmoxVE/pull/12207))
 
+  - #### 🔧 Refactor
+
+    - bump various scripts from Node 22 to 24 [@MickLesk](https://github.com/MickLesk) ([#12265](https://github.com/community-scripts/ProxmoxVE/pull/12265))
+
 ### 💾 Core
 
   - #### ✨ New Features
