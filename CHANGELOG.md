@@ -416,6 +416,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [Fix] PatchMon: remove VITE_API_URL from frontend env [@vhsdream](https://github.com/vhsdream) ([#12294](https://github.com/community-scripts/ProxmoxVE/pull/12294))
     - fix(searxng): remove orphaned fi causing syntax error [@mark-jeffrey](https://github.com/mark-jeffrey) ([#12283](https://github.com/community-scripts/ProxmoxVE/pull/12283))
     - Refactor n8n [@MickLesk](https://github.com/MickLesk) ([#12264](https://github.com/community-scripts/ProxmoxVE/pull/12264))
     - Firefly: PHP bump [@tremor021](https://github.com/tremor021) ([#12247](https://github.com/community-scripts/ProxmoxVE/pull/12247))
