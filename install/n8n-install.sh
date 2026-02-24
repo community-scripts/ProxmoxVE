@@ -15,17 +15,19 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
+  build-essential \
+  python3 \
+  python3-setuptools \
   graphicsmagick
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing n8n (Patience)"
 $STD npm install -g n8n
 msg_ok "Installed n8n"
 
 msg_info "Creating Service"
-mkdir -p /opt
 cat <<EOF >/opt/n8n.env
 N8N_SECURE_COOKIE=false
 N8N_PORT=5678

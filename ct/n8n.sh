@@ -27,7 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-ensure_dependencies graphicsmagick
+
+  ensure_dependencies graphicsmagick
+
+  msg_info "Updating n8n"
   if [ ! -f /opt/n8n.env ]; then
     sed -i 's|^Environment="N8N_SECURE_COOKIE=false"$|EnvironmentFile=/opt/n8n.env|' /etc/systemd/system/n8n.service
     mkdir -p /opt
@@ -37,9 +40,21 @@ N8N_PORT=5678
 N8N_PROTOCOL=http
 N8N_HOST=$LOCAL_IP
 EOF
+    systemctl daemon-reload
   fi
-  
-  NODE_VERSION="22" setup_nodejs
 
-  msg_info "Updating ${APP}"
   $STD npm update -g n8n
+  systemctl restart n8n
+  msg_ok "Updated n8n"
+  msg_ok "Updated successfully!"
+  exit
+}
+
+start
+build_container
+description
+
+msg_ok "Completed successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5678${CL}"
