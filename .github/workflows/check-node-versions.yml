@@ -1,0 +1,341 @@
+name: Check Node.js Version Drift
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs weekly on Monday at 06:00 UTC
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-node-versions:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq jq curl > /dev/null 2>&1
+
+      - name: Check upstream Node.js versions
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          echo "================================================"
+          echo "  Checking Node.js version drift in install scripts"
+          echo "================================================"
+
+          # Alpine version -> Node major cache (populated on demand)
+          declare -A ALPINE_NODE_CACHE
+
+          # Resolve Node.js major version from Alpine package registry
+          # Usage: resolve_alpine_node "3.21" => sets REPLY to major version (e.g. "22")
+          resolve_alpine_node() {
+            local alpine_ver="$1"
+            if [[ -n "${ALPINE_NODE_CACHE[$alpine_ver]+x}" ]]; then
+              REPLY="${ALPINE_NODE_CACHE[$alpine_ver]}"
+              return
+            fi
+
+            local url="https://pkgs.alpinelinux.org/package/v${alpine_ver}/main/x86_64/nodejs"
+            local page
+            page=$(curl -sf "$url" 2>/dev/null || echo "")
+            local full_ver=""
+            if [[ -n "$page" ]]; then
+              # Parse: "Version | 24.13.0-r1" or similar table row
+              full_ver=$(echo "$page" | grep -oP 'Version\s*\|\s*\K[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+              if [[ -z "$full_ver" ]]; then
+                # Fallback: look for version pattern after "Version"
+                full_ver=$(echo "$page" | grep -oP '(?<=Version</td><td>)[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+              fi
+            fi
+
+            local major=""
+            if [[ -n "$full_ver" ]]; then
+              major="${full_ver%%.*}"
+            fi
+
+            ALPINE_NODE_CACHE[$alpine_ver]="$major"
+            REPLY="$major"
+          }
+
+          # Extract Node major from a Dockerfile content
+          # Sets: DF_NODE_MAJOR, DF_SOURCE (description of where we found it)
+          extract_dockerfile_node() {
+            local content="$1"
+            DF_NODE_MAJOR=""
+            DF_SOURCE=""
+
+            # 1) FROM node:XX (e.g. node:24-alpine, node:22.9.0-bookworm-slim, node:20)
+            local node_from
+            node_from=$(echo "$content" | grep -oP '(?i)FROM\s+(--platform=[^\s]+\s+)?node:\K[0-9]+' | head -1 || echo "")
+            if [[ -n "$node_from" ]]; then
+              DF_NODE_MAJOR="$node_from"
+              DF_SOURCE="FROM node:${node_from}"
+              return
+            fi
+
+            # 2) nodesource/setup_XX.x
+            local nodesource
+            nodesource=$(echo "$content" | grep -oP 'nodesource/setup_\K[0-9]+' | head -1 || echo "")
+            if [[ -n "$nodesource" ]]; then
+              DF_NODE_MAJOR="$nodesource"
+              DF_SOURCE="nodesource/setup_${nodesource}.x"
+              return
+            fi
+
+            # 3) FROM alpine:X.Y — resolve via Alpine packages
+            local alpine_ver
+            alpine_ver=$(echo "$content" | grep -oP '(?i)FROM\s+(--platform=[^\s]+\s+)?alpine:\K[0-9]+\.[0-9]+' | head -1 || echo "")
+            if [[ -n "$alpine_ver" ]]; then
+              resolve_alpine_node "$alpine_ver"
+              if [[ -n "$REPLY" ]]; then
+                DF_NODE_MAJOR="$REPLY"
+                DF_SOURCE="alpine:${alpine_ver} (pkg: nodejs ${DF_NODE_MAJOR})"
+                return
+              fi
+            fi
+          }
+
+          # Extract Node major from engines.node in package.json
+          # Sets: ENGINES_NODE_RAW (raw string), ENGINES_MIN_MAJOR
+          extract_engines_node() {
+            local content="$1"
+            ENGINES_NODE_RAW=""
+            ENGINES_MIN_MAJOR=""
+
+            ENGINES_NODE_RAW=$(echo "$content" | jq -r '.engines.node // empty' 2>/dev/null || echo "")
+            if [[ -z "$ENGINES_NODE_RAW" ]]; then
+              return
+            fi
+
+            # Extract the first number (major) from the constraint
+            # Handles: ">=24.13.1", "^22", ">=18.0.0", ">=18.15.0 <19 || ^20", etc.
+            ENGINES_MIN_MAJOR=$(echo "$ENGINES_NODE_RAW" | grep -oP '\d+' | head -1 || echo "")
+          }
+
+          # Collect results
+          declare -a issue_scripts=()
+          declare -a report_lines=()
+          total=0
+          checked=0
+          drift_count=0
+
+          for script in install/*-install.sh; do
+            [[ ! -f "$script" ]] && continue
+            if ! grep -q 'setup_nodejs' "$script"; then
+              continue
+            fi
+
+            total=$((total + 1))
+            slug=$(basename "$script" | sed 's/-install\.sh$//')
+
+            # Extract Source URL (GitHub only)
+            source_url=$(head -20 "$script" | grep -oP '(?<=# Source: )https://github\.com/[^\s]+' | head -1 || echo "")
+            if [[ -z "$source_url" ]]; then
+              report_lines+=("| \`$slug\` | — | — | — | — | ⏭️ No GitHub source |")
+              continue
+            fi
+
+            repo=$(echo "$source_url" | sed -E 's|https://github\.com/||; s|/$||; s|\.git$||')
+            if [[ -z "$repo" || "$repo" != */* ]]; then
+              report_lines+=("| \`$slug\` | — | — | — | — | ⏭️ Invalid repo |")
+              continue
+            fi
+
+            checked=$((checked + 1))
+
+            # Extract our NODE_VERSION
+            our_version=$(grep -oP 'NODE_VERSION="(\d+)"' "$script" | head -1 | grep -oP '\d+' || echo "")
+            if [[ -z "$our_version" ]]; then
+              if grep -q 'NODE_VERSION=\$(' "$script"; then
+                our_version="dynamic"
+              else
+                our_version="unset"
+              fi
+            fi
+
+            # Fetch upstream Dockerfile
+            df_content=""
+            for branch in main master dev; do
+              df_content=$(curl -sf "https://raw.githubusercontent.com/${repo}/${branch}/Dockerfile" 2>/dev/null || echo "")
+              [[ -n "$df_content" ]] && break
+            done
+
+            DF_NODE_MAJOR=""
+            DF_SOURCE=""
+            if [[ -n "$df_content" ]]; then
+              extract_dockerfile_node "$df_content"
+            fi
+
+            # Fetch upstream package.json
+            pkg_content=""
+            for branch in main master dev; do
+              pkg_content=$(curl -sf "https://raw.githubusercontent.com/${repo}/${branch}/package.json" 2>/dev/null || echo "")
+              [[ -n "$pkg_content" ]] && break
+            done
+
+            ENGINES_NODE_RAW=""
+            ENGINES_MIN_MAJOR=""
+            if [[ -n "$pkg_content" ]]; then
+              extract_engines_node "$pkg_content"
+            fi
+
+            # Determine upstream recommended major version
+            upstream_major=""
+            upstream_hint=""
+
+            if [[ -n "$DF_NODE_MAJOR" ]]; then
+              upstream_major="$DF_NODE_MAJOR"
+              upstream_hint="$DF_SOURCE"
+            elif [[ -n "$ENGINES_MIN_MAJOR" ]]; then
+              upstream_major="$ENGINES_MIN_MAJOR"
+              upstream_hint="engines: $ENGINES_NODE_RAW"
+            fi
+
+            # Build display values
+            engines_display="${ENGINES_NODE_RAW:-—}"
+            dockerfile_display="${DF_SOURCE:-—}"
+
+            # Compare
+            status="✅"
+            if [[ "$our_version" == "dynamic" ]]; then
+              status="🔄 Dynamic"
+            elif [[ "$our_version" == "unset" ]]; then
+              status="⚠️ NODE_VERSION not set"
+              issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
+              drift_count=$((drift_count + 1))
+            elif [[ -n "$upstream_major" && "$our_version" != "$upstream_major" ]]; then
+              status="🔸 Drift → upstream=$upstream_major ($upstream_hint)"
+              issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
+              drift_count=$((drift_count + 1))
+            fi
+
+            report_lines+=("| \`$slug\` | $our_version | $engines_display | $dockerfile_display | [$repo](https://github.com/$repo) | $status |")
+
+            # Rate-limit to avoid GitHub secondary rate limits
+            sleep 0.3
+
+          done
+
+          # Print summary
+          echo ""
+          echo "========================================="
+          echo "  Total scripts with setup_nodejs: $total"
+          echo "  Checked (with GitHub source):    $checked"
+          echo "  Version drift detected:          $drift_count"
+          echo "========================================="
+
+          # Export
+          {
+            echo "drift_count=$drift_count"
+            echo "total=$total"
+            echo "checked=$checked"
+          } >> "$GITHUB_OUTPUT"
+
+          # Save issue details for next step
+          printf '%s\n' "${issue_scripts[@]}" > /tmp/drift_scripts.txt 2>/dev/null || touch /tmp/drift_scripts.txt
+
+          # Save full report
+          {
+            echo "## Node.js Version Drift Report"
+            echo ""
+            echo "**Generated:** $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "**Scripts checked:** $total | **With GitHub source:** $checked | **Drift detected:** $drift_count"
+            echo ""
+            echo "| Script | Our Version | engines.node | Dockerfile | Upstream Repo | Status |"
+            echo "|--------|-------------|-------------|------------|---------------|--------|"
+            printf '%s\n' "${report_lines[@]}" | sort
+          } > /tmp/drift_report.md
+
+          cat /tmp/drift_report.md
+
+      - name: Create or update summary issue
+        if: steps.check.outputs.drift_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          TITLE="[Automated] Node.js Version Drift Report"
+          DATE=$(date -u +%Y-%m-%d)
+          DRIFT_COUNT="${{ steps.check.outputs.drift_count }}"
+          TOTAL="${{ steps.check.outputs.total }}"
+          CHECKED="${{ steps.check.outputs.checked }}"
+
+          # Build checklist from drift data
+          CHECKLIST=""
+          while IFS='|' read -r slug our_version upstream_major upstream_hint repo; do
+            [[ -z "$slug" ]] && continue
+            CHECKLIST+="- [ ] **\`${slug}\`** — ours: \`${our_version}\` → upstream: \`${upstream_major}\` (${upstream_hint}) — [repo](https://github.com/${repo})"$'\n'
+          done < /tmp/drift_scripts.txt
+
+          # Build full report table
+          REPORT=$(cat /tmp/drift_report.md)
+
+          BODY=$(cat <<ISSUE_EOF
+          ## Node.js Version Drift Report — ${DATE}
+
+          **${DRIFT_COUNT}** script(s) with version drift detected (out of ${CHECKED} checked / ${TOTAL} total).
+
+          ### Scripts requiring investigation
+
+          ${CHECKLIST}
+
+          ### How to resolve
+
+          1. Check upstream Dockerfile / package.json to confirm the required Node.js version
+          2. Test the script with the new Node version
+          3. Update \`NODE_VERSION\` in \`install/<slug>-install.sh\`
+          4. Update \`NODE_VERSION\` in \`ct/<slug>.sh\` (update section) if applicable
+          5. Check off the item above once done
+
+          <details>
+          <summary>Full report</summary>
+
+          ${REPORT}
+
+          </details>
+
+          ---
+          *This issue is automatically created/updated weekly by the Node.js version drift check workflow.*
+          *Last updated: ${DATE}*
+          ISSUE_EOF
+          )
+
+          # Check if a matching open issue already exists
+          EXISTING=$(gh issue list --state open --label "automated,dependencies" --search "\"[Automated] Node.js Version Drift Report\"" --json number --jq '.[0].number // empty' 2>/dev/null || echo "")
+
+          if [[ -n "$EXISTING" ]]; then
+            gh issue edit "$EXISTING" --body "$BODY"
+            echo "Updated existing issue #$EXISTING"
+          else
+            gh issue create \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "automated,dependencies"
+            echo "Created new summary issue"
+          fi
+
+      - name: Close issue if no drift
+        if: steps.check.outputs.drift_count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list --state open --label "automated,dependencies" --search "\"[Automated] Node.js Version Drift Report\"" --json number --jq '.[0].number // empty' 2>/dev/null || echo "")
+          if [[ -n "$EXISTING" ]]; then
+            gh issue close "$EXISTING" --comment "All Node.js versions are in sync with upstream. Closing automatically."
+            echo "Closed issue #$EXISTING"
+          fi
