@@ -28,6 +28,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+
   if check_for_gh_release "manyfold" "manyfold3d/manyfold"; then
     msg_info "Stopping Services"
     systemctl stop manyfold.target manyfold-rails.1 manyfold-default_worker.1 manyfold-performance_worker.1

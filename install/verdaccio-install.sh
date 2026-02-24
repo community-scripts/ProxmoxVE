@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="verdaccio" setup_nodejs
 
 msg_info "Configuring Verdaccio"
 mkdir -p /opt/verdaccio/config

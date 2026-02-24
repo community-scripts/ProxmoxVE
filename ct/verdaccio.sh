@@ -33,7 +33,7 @@ function update_script() {
   $STD apt upgrade -y
   msg_ok "Updated LXC Container"
 
-  NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="verdaccio" setup_nodejs
   systemctl restart verdaccio
   msg_ok "Updated successfully!"
   exit

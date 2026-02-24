@@ -24,6 +24,8 @@ function update_script() {
     check_container_storage
     check_container_resources
 
+    NODE_VERSION="24" setup_nodejs
+
     if command -v cross-seed &>/dev/null; then
         current_version=$(cross-seed --version)
         latest_version=$(npm show cross-seed version)

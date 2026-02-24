@@ -26,7 +26,7 @@ msg_ok "Installed Dependencies"
 setup_imagemagick
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="manyfold" PG_DB_USER="manyfold" setup_postgresql_db
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
 
 fetch_and_deploy_gh_release "manyfold" "manyfold3d/manyfold" "tarball" "latest" "/opt/manyfold/app"
 
