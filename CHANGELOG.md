@@ -428,6 +428,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - #### 🐞 Bug Fixes
+
+    - core: fix broken "command not found" after err_trap [@MickLesk](https://github.com/MickLesk) ([#12280](https://github.com/community-scripts/ProxmoxVE/pull/12280))
+
   - #### ✨ New Features
 
     - tools.func: add get_latest_gh_tag helper function [@MickLesk](https://github.com/MickLesk) ([#12261](https://github.com/community-scripts/ProxmoxVE/pull/12261))
