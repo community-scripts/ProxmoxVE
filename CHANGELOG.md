@@ -421,6 +421,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - make searxng updateable [@shtefko](https://github.com/shtefko) ([#12207](https://github.com/community-scripts/ProxmoxVE/pull/12207))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: add get_latest_gh_tag helper function [@MickLesk](https://github.com/MickLesk) ([#12261](https://github.com/community-scripts/ProxmoxVE/pull/12261))
+
 ### 📂 Github
 
   - add: workflow to close stale PRs [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12243](https://github.com/community-scripts/ProxmoxVE/pull/12243))
