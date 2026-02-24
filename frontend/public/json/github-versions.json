@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-23T18:26:09Z",
+  "generated": "2026-02-24T00:22:35Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -200,9 +200,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.7.3",
+      "version": "v2.7.4",
       "pinned": false,
-      "date": "2026-02-23T17:18:55Z"
+      "date": "2026-02-23T18:41:16Z"
     },
     {
       "slug": "cloudreve",
@@ -382,9 +382,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.4.23",
+      "version": "v6.5.0",
       "pinned": false,
-      "date": "2026-02-20T07:02:05Z"
+      "date": "2026-02-23T19:19:00Z"
     },
     {
       "slug": "fladder",
@@ -438,9 +438,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.242.0",
+      "version": "2.243.0",
       "pinned": false,
-      "date": "2026-02-22T10:01:44Z"
+      "date": "2026-02-23T19:31:36Z"
     },
     {
       "slug": "gitea",
@@ -1138,9 +1138,9 @@
     {
       "slug": "pocketid",
       "repo": "pocket-id/pocket-id",
-      "version": "v2.2.0",
+      "version": "v2.3.0",
       "pinned": false,
-      "date": "2026-01-11T15:01:07Z"
+      "date": "2026-02-23T19:50:48Z"
     },
     {
       "slug": "privatebin",
@@ -1346,6 +1346,13 @@
       "date": "2026-02-12T14:20:56Z"
     },
     {
+      "slug": "seaweedfs",
+      "repo": "seaweedfs/seaweedfs",
+      "version": "4.13",
+      "pinned": false,
+      "date": "2026-02-17T01:09:45Z"
+    },
+    {
       "slug": "seelf",
       "repo": "YuukanOO/seelf",
       "version": "v2.4.2",
@@ -1397,9 +1404,9 @@
     {
       "slug": "snipeit",
       "repo": "grokability/snipe-it",
-      "version": "v8.3.7",
+      "version": "v8.4.0",
       "pinned": false,
-      "date": "2025-12-12T09:13:40Z"
+      "date": "2026-02-23T20:59:43Z"
     },
     {
       "slug": "snowshare",
@@ -1586,9 +1593,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.15",
+      "version": "v1.1.16",
       "pinned": false,
-      "date": "2026-02-19T23:51:17Z"
+      "date": "2026-02-23T21:24:47Z"
     },
     {
       "slug": "uhf",
@@ -1635,9 +1642,9 @@
     {
       "slug": "vaultwarden",
       "repo": "dani-garcia/vaultwarden",
-      "version": "1.35.3",
+      "version": "1.35.4",
       "pinned": false,
-      "date": "2026-02-10T20:37:03Z"
+      "date": "2026-02-23T21:43:25Z"
     },
     {
       "slug": "victoriametrics",
@@ -1740,9 +1747,9 @@
     {
       "slug": "wizarr",
       "repo": "wizarrrr/wizarr",
-      "version": "v2025.12.0",
+      "version": "v2026.2.0",
       "pinned": false,
-      "date": "2025-12-09T14:30:23Z"
+      "date": "2026-02-23T19:25:28Z"
     },
     {
       "slug": "writefreely",
