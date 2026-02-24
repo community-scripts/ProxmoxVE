@@ -411,6 +411,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - adds further documentation during the installation script. [@d12rio](https://github.com/d12rio) ([#12248](https://github.com/community-scripts/ProxmoxVE/pull/12248))
+
   - #### 🐞 Bug Fixes
 
     - Firefly: PHP bump [@tremor021](https://github.com/tremor021) ([#12247](https://github.com/community-scripts/ProxmoxVE/pull/12247))
