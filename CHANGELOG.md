@@ -415,6 +415,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Refactor n8n [@MickLesk](https://github.com/MickLesk) ([#12264](https://github.com/community-scripts/ProxmoxVE/pull/12264))
     - Firefly: PHP bump [@tremor021](https://github.com/tremor021) ([#12247](https://github.com/community-scripts/ProxmoxVE/pull/12247))
 
   - #### ✨ New Features
