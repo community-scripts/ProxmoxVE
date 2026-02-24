@@ -25,17 +25,11 @@ setup_go
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Database Clients"
-$STD apt install -y
-DEBIAN_ARCH=$(dpkg --print-architecture)
-if [[ "$DEBIAN_ARCH" == "amd64" ]]; then
-  MONGO_ARCH="x86_64"
-  MONGO_DIST="debian12"
-elif [[ "$DEBIAN_ARCH" == "arm64" ]]; then
-  MONGO_ARCH="arm64"
-  MONGO_DIST="ubuntu2204"
-fi
+MONGO_ARCH=$(get_system_arch uname)
+MONGO_DIST=$([[ "$(get_system_arch)" == "amd64" ]] && echo "debian12" || echo "ubuntu2204")
+MONGO_VERSION=$(curl -fsSL https://api.github.com/repos/mongodb/mongo-tools/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+' || echo "100.10.0")
 tmp_file=$(mktemp)
-wget -q "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.10.0.deb" -O "$tmp_file"
+wget -q "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-${MONGO_VERSION}.deb" -O "$tmp_file"
 $STD dpkg -i "$tmp_file" || $STD apt-get install -f -y --no-install-recommends
 rm -f "$tmp_file"
 mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin /usr/local/mongodb-database-tools/bin
