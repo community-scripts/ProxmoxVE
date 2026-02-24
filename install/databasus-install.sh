@@ -34,7 +34,7 @@ MONGO_ARCH=$(get_system_arch uname)
 [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
 tmp_file=$(mktemp)
 curl -fsSL -o "$tmp_file" "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.14.1.deb"
-$STD dpkg -i "$tmp_file" || $STD apt-get install -f -y --no-install-recommends
+$STD dpkg -i "$tmp_file" || $STD apt install -f -y --no-install-recommends
 rm -f "$tmp_file"
 mkdir -p /usr/local/mongodb-database-tools/bin
 [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
