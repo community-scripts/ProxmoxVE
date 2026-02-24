@@ -49,6 +49,7 @@ function update_script() {
     $STD /root/go/bin/swag init -g cmd/main.go -o swagger
     $STD env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o databasus ./cmd/main.go
     mv /opt/databasus/backend/databasus /opt/databasus/databasus
+    mkdir -p /opt/databasus/ui/build
     cp -r /opt/databasus/frontend/dist/* /opt/databasus/ui/build/
     cp -r /opt/databasus/backend/migrations /opt/databasus/
     chown -R postgres:postgres /opt/databasus
