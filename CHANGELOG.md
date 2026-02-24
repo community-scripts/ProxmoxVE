@@ -413,8 +413,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - make searxng updateable [@shtefko](https://github.com/shtefko) ([#12207](https://github.com/community-scripts/ProxmoxVE/pull/12207))
     - Firefly: PHP bump [@tremor021](https://github.com/tremor021) ([#12247](https://github.com/community-scripts/ProxmoxVE/pull/12247))
+
+  - #### ✨ New Features
+
+    - make searxng updateable [@shtefko](https://github.com/shtefko) ([#12207](https://github.com/community-scripts/ProxmoxVE/pull/12207))
 
 ## 2026-02-23
 
