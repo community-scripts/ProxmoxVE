@@ -426,6 +426,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Databasus: add mariadb path for mysql/mariadb backups | add mongodb database tools [@MickLesk](https://github.com/MickLesk) ([#12259](https://github.com/community-scripts/ProxmoxVE/pull/12259))
     - make searxng updateable [@shtefko](https://github.com/shtefko) ([#12207](https://github.com/community-scripts/ProxmoxVE/pull/12207))
 
+  - #### 💥 Breaking Changes
+
+    - fix: wealthfolio for v3 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11765](https://github.com/community-scripts/ProxmoxVE/pull/11765))
+
   - #### 🔧 Refactor
 
     - bump various scripts from Node 22 to 24 [@MickLesk](https://github.com/MickLesk) ([#12265](https://github.com/community-scripts/ProxmoxVE/pull/12265))
