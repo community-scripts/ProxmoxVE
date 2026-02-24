@@ -411,7 +411,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - adds further documentation during the installation script. [@d12rio](https://github.com/d12rio) ([#12248](https://github.com/community-scripts/ProxmoxVE/pull/12248))
+  - several scripts: add additional github link in source [@MickLesk](https://github.com/MickLesk) ([#12282](https://github.com/community-scripts/ProxmoxVE/pull/12282))
+- adds further documentation during the installation script. [@d12rio](https://github.com/d12rio) ([#12248](https://github.com/community-scripts/ProxmoxVE/pull/12248))
 
   - #### 🐞 Bug Fixes
 
