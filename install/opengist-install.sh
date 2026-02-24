@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Jonathan (jd-apprentice)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://opengist.io/
+# Source: https://opengist.io/ | Github: https://github.com/thomiceli/opengist
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

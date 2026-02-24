@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: quantumryuu | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://firefly-iii.org/
+# Source: https://firefly-iii.org/ | Github: https://github.com/firefly-iii/firefly-iii
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

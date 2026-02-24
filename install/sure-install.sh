@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://sure.am
+# Source: https://sure.am | Github: https://github.com/we-promise/sure
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

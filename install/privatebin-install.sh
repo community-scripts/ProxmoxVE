@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://privatebin.info/
+# Source: https://privatebin.info/ | Github: https://github.com/PrivateBin/PrivateBin
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-    nginx \
-    openssl
+  nginx \
+  openssl
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.2" PHP_FPM="YES" setup_php

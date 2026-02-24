@@ -2,7 +2,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://healthchecks.io/
+# Source: https://healthchecks.io/ | Github: https://github.com/healthchecks/healthchecks
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -24,7 +24,7 @@ $STD apt install -y \
   caddy
 
 mkdir -p ~/.config/pip
-cat > ~/.config/pip/pip.conf << EOF
+cat >~/.config/pip/pip.conf <<EOF
 [global]
 break-system-packages = true
 EOF

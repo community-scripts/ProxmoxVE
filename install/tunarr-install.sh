@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: chrisbenincasa
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tunarr.com/
+# Source: https://tunarr.com/ | Github: https://github.com/chrisbenincasa/tunarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://zoraxy.aroz.org/
+# Source: https://zoraxy.aroz.org/ | Github: https://github.com/tobychui/zoraxy
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

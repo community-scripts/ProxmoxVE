@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://ersatztv.org/
+# Source: https://ersatztv.org/ | Github: https://github.com/ErsatzTV/ErsatzTV
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

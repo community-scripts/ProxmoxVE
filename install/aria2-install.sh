@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://aria2.github.io/
+# Source: https://aria2.github.io/ | Github: https://github.com/aria2/aria2
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -26,7 +26,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_ok "Installed Dependencies"
 
   fetch_and_deploy_gh_release "ariang" "mayswind/ariang" "prebuild" "latest" "/var/www" "AriaNg-*-AllInOne.zip"
-  
+
   msg_info "Configure nginx"
   cat <<EOF >/etc/nginx/conf.d/ariang.conf
 server {

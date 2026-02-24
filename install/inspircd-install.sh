@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.inspircd.org/
+# Source: https://www.inspircd.org/ | Github: https://github.com/inspircd/inspircd
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
