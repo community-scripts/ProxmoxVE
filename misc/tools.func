@@ -1525,6 +1525,82 @@ verify_gpg_fingerprint() {
   return 1
 }
 
+# ------------------------------------------------------------------------------
+# Get latest GitHub tag for a repository.
+#
+# Description:
+#   - Queries the GitHub API for tags (not releases)
+#   - Useful for repos that only create tags, not full releases
+#   - Supports optional prefix filter and version-only extraction
+#   - Returns the latest tag name (printed to stdout)
+#
+# Usage:
+#   MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools")
+#   LATEST=$(get_latest_gh_tag "owner/repo" "v")          # only tags starting with "v"
+#   LATEST=$(get_latest_gh_tag "owner/repo" "" "true")     # strip leading "v"
+#
+# Arguments:
+#   $1 - GitHub repo (owner/repo)
+#   $2 - Tag prefix filter (optional, e.g. "v" or "100.")
+#   $3 - Strip prefix from result (optional, "true" to strip $2 prefix)
+#
+# Returns:
+#   0 on success (tag printed to stdout), 1 on failure
+#
+# Notes:
+#   - Skips tags containing "rc", "alpha", "beta", "dev", "test"
+#   - Sorts by version number (sort -V) to find the latest
+#   - Respects GITHUB_TOKEN for rate limiting
+# ------------------------------------------------------------------------------
+get_latest_gh_tag() {
+  local repo="$1"
+  local prefix="${2:-}"
+  local strip_prefix="${3:-false}"
+
+  local header_args=()
+  [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+
+  local http_code=""
+  http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_tags.json \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    "${header_args[@]}" \
+    "https://api.github.com/repos/${repo}/tags?per_page=100" 2>/dev/null) || true
+
+  if [[ "$http_code" == "403" ]]; then
+    msg_warn "GitHub API rate limit exceeded while fetching tags for ${repo}"
+    rm -f /tmp/gh_tags.json
+    return 1
+  fi
+
+  if [[ "$http_code" != "200" ]] || [[ ! -s /tmp/gh_tags.json ]]; then
+    rm -f /tmp/gh_tags.json
+    return 1
+  fi
+
+  local tags_json
+  tags_json=$(</tmp/gh_tags.json)
+  rm -f /tmp/gh_tags.json
+
+  # Extract tag names, filter by prefix, exclude pre-release patterns, sort by version
+  local latest=""
+  latest=$(echo "$tags_json" | grep -oP '"name":\s*"\K[^"]+' |
+    { [[ -n "$prefix" ]] && grep "^${prefix}" || cat; } |
+    grep -viE '(rc|alpha|beta|dev|test|preview|snapshot)' |
+    sort -V | tail -n1)
+
+  if [[ -z "$latest" ]]; then
+    return 1
+  fi
+
+  if [[ "$strip_prefix" == "true" && -n "$prefix" ]]; then
+    latest="${latest#"$prefix"}"
+  fi
+
+  echo "$latest"
+  return 0
+}
+
 # ==============================================================================
 # INSTALL FUNCTIONS
 # ==============================================================================
