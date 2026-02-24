@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Dominik Siebel (dsiebel)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://silverbullet.md
+# Source: https://silverbullet.md | Github: https://github.com/silverbulletmd/silverbullet
 
 APP="Silverbullet"
 var_tags="${var_tags:-notes}"

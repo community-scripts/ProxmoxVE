@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck | Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://homebox.software/en/
+# Source: https://github.com/sysadminsmedia/homebox
 
 APP="HomeBox"
 var_tags="${var_tags:-inventory;household}"

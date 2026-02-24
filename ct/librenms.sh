@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://librenms.org
+# Source: https://www.librenms.org/ | Github: https://github.com/librenms/librenms
 
 APP="LibreNMS"
 var_tags="${var_tags:-monitoring}"

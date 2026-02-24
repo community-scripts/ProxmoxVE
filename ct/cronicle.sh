@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://cronicle.net/
+# Source: https://cronicle.net/ | Github: https://github.com/jhuckaby/Cronicle
 
 APP="Cronicle"
 var_tags="${var_tags:-task-scheduler}"

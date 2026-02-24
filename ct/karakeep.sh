@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz) & vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://karakeep.app/
+# Source: https://karakeep.app/ | Github: https://github.com/karakeep-app/karakeep
 
 APP="karakeep"
 var_tags="${var_tags:-bookmark}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tracktor.bytedge.in/
+# Source: https://tracktor.bytedge.in | Github: https://github.com/javedh-dev/tracktor
 
 APP="tracktor"
 var_tags="${var_tags:-car;monitoring}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://thelounge.chat/
+# Source: https://thelounge.chat/ | Github: https://github.com/thelounge/thelounge
 
 APP="The-Lounge"
 var_tags="${var_tags:-irc}"

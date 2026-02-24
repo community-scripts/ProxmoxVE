@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://n8n.io/
+# Source: https://n8n.io/ | Github: https://github.com/n8n-io/n8n
 
 APP="n8n"
 var_tags="${var_tags:-automation}"

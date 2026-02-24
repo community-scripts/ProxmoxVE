@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: lucasfell
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://ghostfol.io/
+# Source: https://ghostfol.io/ | Github: https://github.com/ghostfolio/ghostfolio
 
 APP="Ghostfolio"
 var_tags="${var_tags:-finance;investment}"

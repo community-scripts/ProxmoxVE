@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://wallabag.org/
+# Source: https://wallabag.org/ | Github: https://github.com/wallabag/wallabag
 
 APP="Wallabag"
 var_tags="${var_tags:-productivity;read-it-later}"

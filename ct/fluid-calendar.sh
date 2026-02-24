@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://fluidcalendar.com
+# Source: https://github.com/dotnetfactory/fluid-calendar
 
 APP="fluid-calendar"
 var_tags="${var_tags:-calendar;tasks}"

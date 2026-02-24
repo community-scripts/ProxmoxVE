@@ -3,6 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/filebrowserspace/quantum
 
 function header_info() {
   clear

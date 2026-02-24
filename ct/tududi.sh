@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tududi.com
+# Source: https://tududi.com/ | Github: https://github.com/chrisvel/tududi
 
 APP="Tududi"
 var_tags="${var_tags:-todo-app}"

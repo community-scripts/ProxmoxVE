@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tremor021
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://radicale.org/
+# Source: https://radicale.org/ | Github: https://github.com/Kozea/Radicale
 
 APP="Radicale"
 var_tags="${var_tags:-calendar}"

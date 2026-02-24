@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: zackwithak13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.uhfapp.com/server
+# Source: https://www.uhfapp.com/server | Github: https://github.com/swapplications/uhf-server-dist
 
 APP="UHF"
 var_tags="${var_tags:-media}"

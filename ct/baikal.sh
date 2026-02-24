@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://sabre.io/baikal/
+# Source: https://sabre.io/baikal/ | Github: https://github.com/sabre-io/Baikal
 
 APP="Baikal"
 var_tags="${var_tags:-Dav}"

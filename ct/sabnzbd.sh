@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://sabnzbd.org/
+# Source: https://sabnzbd.org/ | Github: https://github.com/sabnzbd/sabnzbd
 
 APP="SABnzbd"
 var_tags="${var_tags:-downloader}"

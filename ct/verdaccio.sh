@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: BrynnJKnight
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://verdaccio.org/
+# Source: https://verdaccio.org/ | Github: https://github.com/verdaccio/verdaccio
 
 APP="Verdaccio"
 var_tags="${var_tags:-dev-tools;npm;registry}"

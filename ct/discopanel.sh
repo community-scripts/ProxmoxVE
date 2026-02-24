@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: DragoQC
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://discopanel.app/
+# Source: https://discopanel.app/ | Github: https://github.com/nickheyer/discopanel
 
 APP="DiscoPanel"
 var_tags="${var_tags:-gaming}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://docs.seerr.dev/
+# Source: https://docs.seerr.dev/ | Github: https://github.com/seerr-team/seerr
 
 APP="Seerr"
 var_tags="${var_tags:-media}"

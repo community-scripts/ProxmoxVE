@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: Rogue-King
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://about.gitea.com/
+# Source: https://about.gitea.com/ | Github: https://github.com/go-gitea/gitea
 
 APP="Gitea"
 var_tags="${var_tags:-git}"

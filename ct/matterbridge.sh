@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/Luligu/matterbridge
+# Source: https://github.com/Luligu/matterbridge/
 
 APP="Matterbridge"
 var_tags="${var_tags:-matter;smarthome}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://signoz.io/
+# Source: https://signoz.io/ | Github: https://github.com/SigNoz/signoz
 
 APP="SigNoz"
 var_tags="${var_tags:-notes}"

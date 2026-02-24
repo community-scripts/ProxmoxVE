@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://caddyserver.com/
+# Source: https://caddyserver.com/ | Github: https://github.com/caddyserver/caddy
 
 APP="Caddy"
 var_tags="${var_tags:-webserver}"

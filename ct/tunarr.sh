@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: chrisbenincasa
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tunarr.com/
+# Source: https://tunarr.com/ | Github: https://github.com/chrisbenincasa/tunarr
 
 APP="Tunarr"
 var_tags="${var_tags:-iptv}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://https://cosmos-cloud.io/
+# Source: https://cosmos-cloud.io/ | Github: https://github.com/azukaar/Cosmos-Server
 
 APP="Cosmos"
 var_tags="${var_tags:-cloud;docker}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: thost96 (thost96)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.authelia.com/
+# Source: https://www.authelia.com/ | Github: https://github.com/authelia/authelia
 
 APP="Authelia"
 var_tags="${var_tags:-authenticator}"

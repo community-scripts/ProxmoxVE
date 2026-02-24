@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck | Co-Author: havardthom
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://cockpit-project.org/
+# Source: https://github.com/cockpit-project/cockpit
 
 APP="Cockpit"
 var_tags="${var_tags:-monitoring;network}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://privatebin.info/
+# Source: https://privatebin.info/ | Github: https://github.com/PrivateBin/PrivateBin
 
 APP="PrivateBin"
 var_tags="${var_tags:-paste;secure}"

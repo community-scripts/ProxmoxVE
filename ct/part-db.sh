@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://docs.part-db.de/
+# Source: https://docs.part-db.de/ | Github: https://github.com/Part-DB/Part-DB-server
 
 APP="Part-DB"
 var_tags="${var_tags:-inventory;parts}"

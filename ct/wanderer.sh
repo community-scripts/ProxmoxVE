@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: rrole
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://wanderer.to
+# Source: https://wanderer.to | Github: https://github.com/open-wanderer/wanderer
 
 APP="Wanderer"
 var_tags="${var_tags:-travelling;sport}"

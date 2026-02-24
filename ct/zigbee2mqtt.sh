@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.zigbee2mqtt.io/
+# Source: https://www.zigbee2mqtt.io/ | Github: https://github.com/Koenkk/zigbee2mqtt
 
 APP="Zigbee2MQTT"
 var_tags="${var_tags:-smarthome;zigbee;mqtt}"

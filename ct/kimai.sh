@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.kimai.org/
+# Source: https://www.kimai.org/ | Github: https://github.com/kimai/kimai
 
 APP="Kimai"
 var_tags="${var_tags:-time-tracking}"

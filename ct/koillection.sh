@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://koillection.github.io/
+# Source: https://koillection.github.io/ | Github: https://github.com/benjaminjonard/koillection
 
 APP="Koillection"
 var_tags="${var_tags:-network}"

@@ -3,6 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://nicolargo.github.io/glances/ | Github: https://github.com/nicolargo/glances
 
 function header_info {
   clear

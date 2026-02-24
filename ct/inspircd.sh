@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.inspircd.org/
+# Source: https://www.inspircd.org/ | Github: https://github.com/inspircd/inspircd
 
 APP="InspIRCd"
 var_tags="${var_tags:-IRC}"

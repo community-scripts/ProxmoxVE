@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (MickLesk)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://linkding.link/
+# Source: https://linkding.link/ | Github: https://github.com/sissbruecker/linkding
 
 APP="linkding"
 var_tags="${var_tags:-bookmarks;management}"

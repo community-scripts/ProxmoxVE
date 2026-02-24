@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://joplinapp.org/
+# Source: https://joplinapp.org/ | Github: https://github.com/laurent22/joplin
 
 APP="Joplin-Server"
 var_tags="${var_tags:-notes}"

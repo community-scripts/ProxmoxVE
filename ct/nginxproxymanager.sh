@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://nginxproxymanager.com/
+# Source: https://nginxproxymanager.com/ | Github: https://github.com/NginxProxyManager/nginx-proxy-manager
 
 APP="Nginx Proxy Manager"
 var_tags="${var_tags:-proxy}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Stroopwafe1
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://leantime.io
+# Source: https://leantime.io | Github: https://github.com/Leantime/leantime
 
 APP="Leantime"
 var_tags="${var_tags:-productivity}"

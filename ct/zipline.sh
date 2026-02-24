@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://zipline.diced.sh/
+# Source: https://github.com/diced/zipline
 
 APP="Zipline"
 var_tags="${var_tags:-file;sharing}"

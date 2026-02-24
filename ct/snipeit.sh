@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://snipeitapp.com/
+# Source: https://snipeitapp.com/ | Github: https://github.com/grokability/snipe-it
 
 APP="SnipeIT"
 var_tags="${var_tags:-asset-management;foss}"

@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://semaphoreui.com/
+# Source: https://semaphoreui.com/ | Github: https://github.com/semaphoreui/semaphore
 
 APP="Semaphore"
 var_tags="${var_tags:-dev_ops}"
