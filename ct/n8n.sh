@@ -29,6 +29,7 @@ function update_script() {
   fi
 
   ensure_dependencies graphicsmagick
+  NODE_VERSION="24" setup_nodejs
 
   msg_info "Updating n8n"
   if [ ! -f /opt/n8n.env ]; then
