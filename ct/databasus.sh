@@ -38,6 +38,19 @@ function update_script() {
     cp /opt/databasus/.env /opt/databasus.env.bak
     msg_ok "Backed up Configuration"
 
+    msg_info "Ensuring Database Clients"
+    $STD apt-get install -y mariadb-client
+    mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin
+    for dir in /usr/local/mariadb-{10.6,12.1}/bin; do
+      ln -sf /usr/bin/mariadb-dump "$dir/mariadb-dump"
+      ln -sf /usr/bin/mariadb "$dir/mariadb"
+    done
+    for dir in /usr/local/mysql-{5.7,8.0,8.4,9}/bin; do
+      ln -sf /usr/bin/mariadb-dump "$dir/mysqldump"
+      ln -sf /usr/bin/mariadb "$dir/mysql"
+    done
+    msg_ok "Ensured Database Clients"
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest" "/opt/databasus"
 
     msg_info "Updating Databasus"
