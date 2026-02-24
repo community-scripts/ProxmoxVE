@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: tteck (tteckster) | Addon: MickLesk (CanbiZ)
+# Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://dockge.kuma.pet/
+# Source: https://runtipi.io/
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
   if [[ -f /etc/alpine-release ]]; then
@@ -26,12 +26,10 @@ trap 'error_handler' ERR
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
-APP="Dockge"
+APP="Runtipi"
 APP_TYPE="addon"
-INSTALL_PATH="/opt/dockge"
-STACKS_PATH="/opt/stacks"
-COMPOSE_FILE="${INSTALL_PATH}/compose.yaml"
-DEFAULT_PORT=5001
+INSTALL_PATH="/opt/runtipi"
+DEFAULT_PORT=80
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
@@ -42,49 +40,13 @@ load_functions
 function header_info {
   clear
   cat <<"EOF"
-    ____             __
-   / __ \____  _____/ /______ ____
-  / / / / __ \/ ___/ //_/ __ `/ _ \
- / /_/ / /_/ / /__/ ,< / /_/ /  __/
-/_____/\____/\___/_/|_|\__, /\___/
-                      /____/
+    ____              __  _      _
+   / __ \__  ______  / /_(_)__  (_)
+  / /_/ / / / / __ \/ __/ / _ \/ /
+ / _, _/ /_/ / / / / /_/ / ___/ /
+/_/ |_|\__,_/_/ /_/\__/_/_/  /_/
 
 EOF
-}
-
-# ==============================================================================
-# UNINSTALL
-# ==============================================================================
-function uninstall() {
-  msg_info "Uninstalling ${APP}"
-
-  if [[ -f "$COMPOSE_FILE" ]]; then
-    msg_info "Stopping and removing Docker containers"
-    cd "$INSTALL_PATH"
-    $STD docker compose down --remove-orphans
-    msg_ok "Stopped and removed Docker containers"
-  fi
-
-  rm -rf "$INSTALL_PATH"
-  msg_ok "${APP} has been uninstalled"
-  msg_warn "Stacks directory ${STACKS_PATH} was NOT removed. Delete manually if no longer needed."
-}
-
-# ==============================================================================
-# UPDATE
-# ==============================================================================
-function update() {
-  msg_info "Pulling latest ${APP} image"
-  cd "$INSTALL_PATH"
-  $STD docker compose pull
-  msg_ok "Pulled latest image"
-
-  msg_info "Restarting ${APP}"
-  $STD docker compose up -d --remove-orphans
-  msg_ok "Restarted ${APP}"
-
-  msg_ok "Updated successfully"
-  exit
 }
 
 # ==============================================================================
@@ -143,23 +105,78 @@ function check_or_install_docker() {
 }
 
 # ==============================================================================
+# UNINSTALL
+# ==============================================================================
+function uninstall() {
+  msg_info "Uninstalling ${APP}"
+
+  if [[ -f "${INSTALL_PATH}/runtipi-cli" ]]; then
+    msg_info "Stopping ${APP}"
+    cd "$INSTALL_PATH"
+    $STD ./runtipi-cli stop 2>/dev/null || true
+    msg_ok "Stopped ${APP}"
+  fi
+
+  if command -v docker &>/dev/null; then
+    msg_info "Removing Docker containers"
+    cd "$INSTALL_PATH" 2>/dev/null && $STD docker compose down --remove-orphans 2>/dev/null || true
+    msg_ok "Removed Docker containers"
+  fi
+
+  rm -rf "$INSTALL_PATH"
+  msg_ok "${APP} has been uninstalled"
+}
+
+# ==============================================================================
+# UPDATE
+# ==============================================================================
+function update() {
+  msg_info "Updating ${APP}"
+  cd "$INSTALL_PATH"
+  $STD ./runtipi-cli update latest
+  msg_ok "Updated ${APP}"
+
+  msg_ok "Updated successfully"
+  exit
+}
+
+# ==============================================================================
 # INSTALL
 # ==============================================================================
 function install() {
   check_or_install_docker
 
-  msg_info "Creating install directories"
-  mkdir -p "$INSTALL_PATH" "$STACKS_PATH"
-  msg_ok "Created ${INSTALL_PATH} and ${STACKS_PATH}"
+  msg_info "Installing dependencies"
+  if [[ -f /etc/alpine-release ]]; then
+    $STD apk add --no-cache openssl gcompat
+  else
+    $STD apt-get update
+    $STD apt-get install -y openssl
+  fi
+  msg_ok "Installed dependencies"
 
-  msg_info "Downloading Docker Compose file"
-  curl -fsSL "https://raw.githubusercontent.com/louislam/dockge/master/compose.yaml" -o "$COMPOSE_FILE"
-  msg_ok "Downloaded Docker Compose file"
+  msg_warn "WARNING: This will run an external installer from https://runtipi.io/"
+  msg_warn "The following code is NOT maintained or audited by our repository."
+  msg_warn "Review: https://raw.githubusercontent.com/runtipi/runtipi/master/scripts/install.sh"
+  echo ""
+  echo -n "${TAB}Do you want to continue? (y/N): "
+  read -r confirm
+  if [[ ! "${confirm,,}" =~ ^(y|yes)$ ]]; then
+    msg_warn "Installation cancelled. Exiting."
+    exit 0
+  fi
 
-  msg_info "Starting ${APP}"
-  cd "$INSTALL_PATH"
-  $STD docker compose up -d
-  msg_ok "Started ${APP}"
+  msg_info "Installing ${APP} (this pulls Docker containers)"
+  DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
+  mkdir -p "$(dirname "$DOCKER_CONFIG_PATH")"
+  [[ ! -f "$DOCKER_CONFIG_PATH" ]] && echo -e '{\n  "log-driver": "journald"\n}' >"$DOCKER_CONFIG_PATH"
+  cd /opt
+  curl -fsSL "https://raw.githubusercontent.com/runtipi/runtipi/master/scripts/install.sh" -o "install.sh"
+  chmod +x install.sh
+  $STD ./install.sh
+  chmod 666 /opt/runtipi/state/settings.json 2>/dev/null || true
+  rm -f /opt/install.sh
+  msg_ok "Installed ${APP}"
 
   echo ""
   msg_ok "${APP} is reachable at: ${BL}http://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
@@ -172,7 +189,7 @@ function install() {
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
   header_info
-  if [[ -f "$COMPOSE_FILE" ]]; then
+  if [[ -d "$INSTALL_PATH" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
@@ -186,7 +203,7 @@ check_proxmox_host
 get_lxc_ip
 
 # Check if already installed
-if [[ -f "$COMPOSE_FILE" ]]; then
+if [[ -d "$INSTALL_PATH" ]]; then
   msg_warn "${APP} is already installed."
   echo ""
 
@@ -212,7 +229,8 @@ fi
 msg_warn "${APP} is not installed."
 echo ""
 echo -e "${TAB}${INFO} This will install:"
-echo -e "${TAB}  - Dockge (via Docker Compose)"
+echo -e "${TAB}  - Runtipi (via external installer)"
+echo -e "${TAB}  - Docker (if not already installed)"
 echo ""
 
 echo -n "${TAB}Install ${APP}? (y/N): "

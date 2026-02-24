@@ -6,8 +6,13 @@
 # Source: https://dokploy.com/
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt-get update >/dev/null 2>&1
-  apt-get install -y curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -76,25 +81,73 @@ function update() {
 }
 
 # ==============================================================================
-# CHECK DOCKER
+# PROXMOX HOST CHECK
 # ==============================================================================
-function check_docker() {
-  if ! command -v docker &>/dev/null; then
-    msg_warn "Docker is not installed — Dokploy installer will set it up."
+function check_proxmox_host() {
+  if command -v pveversion &>/dev/null; then
+    msg_error "Running on the Proxmox host is NOT recommended!"
+    msg_error "This should be executed inside an LXC container."
+    echo ""
+    echo -n "${TAB}Continue anyway? (y/N): "
+    read -r confirm
+    if [[ ! "${confirm,,}" =~ ^(y|yes)$ ]]; then
+      msg_warn "Aborted. Please run this inside an LXC container."
+      exit 0
+    fi
+    msg_warn "Proceeding on Proxmox host at your own risk!"
+  fi
+}
+
+# ==============================================================================
+# CHECK / INSTALL DOCKER
+# ==============================================================================
+function check_or_install_docker() {
+  if command -v docker &>/dev/null; then
+    msg_ok "Docker $(docker --version | cut -d' ' -f3 | tr -d ',') is available"
+    if docker compose version &>/dev/null; then
+      msg_ok "Docker Compose is available"
+    else
+      msg_error "Docker Compose plugin is not available. Please install it."
+      exit 1
+    fi
     return
   fi
-  msg_ok "Docker $(docker --version | cut -d' ' -f3 | tr -d ',') is available"
+
+  msg_warn "Docker is not installed."
+  echo -n "${TAB}Install Docker now? (y/N): "
+  read -r install_docker_prompt
+  if [[ ! "${install_docker_prompt,,}" =~ ^(y|yes)$ ]]; then
+    msg_error "Docker is required for ${APP}. Exiting."
+    exit 1
+  fi
+
+  msg_info "Installing Docker"
+  if [[ -f /etc/alpine-release ]]; then
+    $STD apk add docker docker-cli-compose
+    $STD rc-service docker start
+    $STD rc-update add docker default
+  else
+    DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
+    mkdir -p "$(dirname "$DOCKER_CONFIG_PATH")"
+    echo -e '{\n  "log-driver": "journald"\n}' >"$DOCKER_CONFIG_PATH"
+    $STD sh <(curl -fsSL https://get.docker.com)
+  fi
+  msg_ok "Installed Docker"
 }
 
 # ==============================================================================
 # INSTALL
 # ==============================================================================
 function install() {
-  check_docker
+  check_or_install_docker
 
   msg_info "Installing dependencies"
-  $STD apt-get update
-  $STD apt-get install -y git openssl redis
+  if [[ -f /etc/alpine-release ]]; then
+    $STD apk add --no-cache git openssl
+  else
+    $STD apt-get update
+    $STD apt-get install -y git openssl redis
+  fi
   msg_ok "Installed dependencies"
 
   msg_warn "WARNING: This will run an external installer from https://dokploy.com/"
@@ -132,6 +185,7 @@ if [[ "${type:-}" == "update" ]]; then
 fi
 
 header_info
+check_proxmox_host
 get_lxc_ip
 
 # Check if already installed

@@ -5,25 +5,25 @@
     2
   ],
   "date_created": "2024-05-02",
-  "type": "ct",
+  "type": "addon",
   "updateable": true,
   "privileged": false,
   "interface_port": 80,
   "documentation": "https://runtipi.io/docs/introduction",
   "website": "https://runtipi.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/runtipi.webp",
-  "config_path": "opt/runtipi/state/settings.json",
+  "config_path": "/opt/runtipi/state/settings.json",
   "description": "Runtipi lets you install all your favorite self-hosted apps without the hassle of configuring and managing each service. One-click installs and updates for more than 180 popular apps.",
   "install_methods": [
     {
       "type": "default",
-      "script": "ct/runtipi.sh",
+      "script": "tools/addon/runtipi.sh",
       "resources": {
-        "cpu": 2,
-        "ram": 2048,
-        "hdd": 8,
-        "os": "debian",
-        "version": "13"
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
       }
     }
   ],
@@ -33,8 +33,16 @@
   },
   "notes": [
     {
+      "text": "This is an addon script intended to be used on top of an existing Docker container.",
+      "type": "info"
+    },
+    {
       "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
       "type": "warning"
+    },
+    {
+      "text": "To update via CLI, run the addon script again and select Update, or use: bash <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/runtipi.sh)",
+      "type": "info"
     }
   ]
 }
