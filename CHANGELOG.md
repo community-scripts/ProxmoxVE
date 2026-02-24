@@ -421,6 +421,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - make searxng updateable [@shtefko](https://github.com/shtefko) ([#12207](https://github.com/community-scripts/ProxmoxVE/pull/12207))
 
+### 📂 Github
+
+  - add: workflow to close stale PRs [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12243](https://github.com/community-scripts/ProxmoxVE/pull/12243))
+
 ## 2026-02-23
 
 ### 🆕 New Scripts
