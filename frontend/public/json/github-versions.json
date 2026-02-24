@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-24T06:23:39Z",
+  "generated": "2026-02-24T12:15:44Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -606,9 +606,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.65",
+      "version": "v5.12.66",
       "pinned": false,
-      "date": "2026-02-21T01:03:52Z"
+      "date": "2026-02-24T09:12:50Z"
     },
     {
       "slug": "jackett",
@@ -1679,7 +1679,7 @@
       "repo": "meilisearch/meilisearch",
       "version": "v1.36.0",
       "pinned": false,
-      "date": "2026-02-23T08:13:32Z"
+      "date": ""
     },
     {
       "slug": "warracker",
