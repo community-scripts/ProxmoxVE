@@ -45,12 +45,8 @@ function update_script() {
     done
     # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
     if ! command -v mongodump &>/dev/null; then
-      MONGO_ARCH=$(get_system_arch uname)
       [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-      tmp_file=$(mktemp)
-      curl -fsSL -o "$tmp_file" "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.14.1.deb"
-      $STD dpkg -i "$tmp_file" || $STD apt install -f -y --no-install-recommends
-      rm -f "$tmp_file"
+      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-100.14.1.deb"
     fi
     [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
     [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
