@@ -42,10 +42,9 @@ function update_script() {
     ensure_dependencies mariadb-client
     if ! command -v mongodump &>/dev/null; then
       MONGO_ARCH=$(get_system_arch uname)
-      MONGO_DIST=$([[ "$(get_system_arch)" == "amd64" ]] && echo "debian12" || echo "ubuntu2204")
-      MONGO_VERSION=$(curl -fsSL https://api.github.com/repos/mongodb/mongo-tools/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+' || echo "100.10.0")
+      [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
       tmp_file=$(mktemp)
-      wget -q "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-${MONGO_VERSION}.deb" -O "$tmp_file"
+      curl -fsSL -o "$tmp_file" "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.14.1.deb"
       $STD dpkg -i "$tmp_file" || $STD apt-get install -f -y --no-install-recommends
       rm -f "$tmp_file"
     fi

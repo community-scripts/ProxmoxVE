@@ -25,14 +25,22 @@ setup_go
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Database Clients"
+# Create PostgreSQL version symlinks for compatibility
+for v in 12 13 14 15 16 18; do
+  ln -sf /usr/lib/postgresql/17 /usr/lib/postgresql/$v
+done
+# Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
 MONGO_ARCH=$(get_system_arch uname)
-MONGO_DIST=$([[ "$(get_system_arch)" == "amd64" ]] && echo "debian12" || echo "ubuntu2204")
-MONGO_VERSION=$(curl -fsSL https://api.github.com/repos/mongodb/mongo-tools/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+' || echo "100.10.0")
+[[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
 tmp_file=$(mktemp)
-wget -q "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-${MONGO_VERSION}.deb" -O "$tmp_file"
+curl -fsSL -o "$tmp_file" "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.14.1.deb"
 $STD dpkg -i "$tmp_file" || $STD apt-get install -f -y --no-install-recommends
 rm -f "$tmp_file"
-mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin /usr/local/mongodb-database-tools/bin
+mkdir -p /usr/local/mongodb-database-tools/bin
+[[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
+[[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
+# Create MariaDB and MySQL client symlinks for compatibility
+mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin
 for dir in /usr/local/mariadb-{10.6,12.1}/bin; do
   ln -sf /usr/bin/mariadb-dump "$dir/mariadb-dump"
   ln -sf /usr/bin/mariadb "$dir/mariadb"
@@ -41,8 +49,6 @@ for dir in /usr/local/mysql-{5.7,8.0,8.4,9}/bin; do
   ln -sf /usr/bin/mariadb-dump "$dir/mysqldump"
   ln -sf /usr/bin/mariadb "$dir/mysql"
 done
-[[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
-[[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
 msg_ok "Installed Database Clients"
 
 fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest" "/opt/databasus"
@@ -69,10 +75,6 @@ msg_ok "Built Databasus"
 msg_info "Configuring Databasus"
 JWT_SECRET=$(openssl rand -hex 32)
 ENCRYPTION_KEY=$(openssl rand -hex 32)
-# Create PostgreSQL version symlinks for compatibility
-for v in 12 13 14 15 16 18; do
-  ln -sf /usr/lib/postgresql/17 /usr/lib/postgresql/$v
-done
 # Install goose for migrations
 $STD go install github.com/pressly/goose/v3/cmd/goose@latest
 ln -sf /root/go/bin/goose /usr/local/bin/goose
