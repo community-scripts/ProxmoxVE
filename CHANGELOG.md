@@ -438,7 +438,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📂 Github
 
-  - add: workflow to close stale PRs [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12243](https://github.com/community-scripts/ProxmoxVE/pull/12243))
+  - github: add weekly Node.js version drift check workflow [@MickLesk](https://github.com/MickLesk) ([#12267](https://github.com/community-scripts/ProxmoxVE/pull/12267))
+- add: workflow to close stale PRs [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12243](https://github.com/community-scripts/ProxmoxVE/pull/12243))
 
 ## 2026-02-23
 
