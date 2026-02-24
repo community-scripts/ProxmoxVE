@@ -20,28 +20,28 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    NODE_VERSION="24" setup_nodejs
+  NODE_VERSION="24" setup_nodejs
 
-    if command -v cross-seed &>/dev/null; then
-        current_version=$(cross-seed --version)
-        latest_version=$(npm show cross-seed version)
-        if [ "$current_version" != "$latest_version" ]; then
-            msg_info "Updating cross-seed from version v${current_version} to v${latest_version}"
-            $STD npm install -g cross-seed@latest
-            systemctl restart cross-seed
-            msg_ok "Updated successfully!"
-        else
-            msg_ok "cross-seed is already at v${current_version}"
-        fi
+  if command -v cross-seed &>/dev/null; then
+    current_version=$(cross-seed --version)
+    latest_version=$(npm show cross-seed version)
+    if [ "$current_version" != "$latest_version" ]; then
+      msg_info "Updating cross-seed from version v${current_version} to v${latest_version}"
+      $STD npm install -g cross-seed@latest
+      systemctl restart cross-seed
+      msg_ok "Updated successfully!"
     else
-        msg_error "No cross-seed Installation Found!"
-        exit
+      msg_ok "cross-seed is already at v${current_version}"
     fi
+  else
+    msg_error "No cross-seed Installation Found!"
     exit
+  fi
+  exit
 }
 
 start
