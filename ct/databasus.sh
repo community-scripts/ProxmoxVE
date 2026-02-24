@@ -39,8 +39,22 @@ function update_script() {
     msg_ok "Backed up Configuration"
 
     msg_info "Ensuring Database Clients"
-    $STD apt-get install -y mariadb-client
-    mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin
+    ensure_dependencies mariadb-client
+    if ! command -v mongodump &>/dev/null; then
+      DEBIAN_ARCH=$(dpkg --print-architecture)
+      if [[ "$DEBIAN_ARCH" == "amd64" ]]; then
+        MONGO_ARCH="x86_64"
+        MONGO_DIST="debian12"
+      elif [[ "$DEBIAN_ARCH" == "arm64" ]]; then
+        MONGO_ARCH="arm64"
+        MONGO_DIST="ubuntu2204"
+      fi
+      tmp_file=$(mktemp)
+      wget -q "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.10.0.deb" -O "$tmp_file"
+      $STD dpkg -i "$tmp_file" || $STD apt-get install -f -y --no-install-recommends
+      rm -f "$tmp_file"
+    fi
+    mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin /usr/local/mongodb-database-tools/bin
     for dir in /usr/local/mariadb-{10.6,12.1}/bin; do
       ln -sf /usr/bin/mariadb-dump "$dir/mariadb-dump"
       ln -sf /usr/bin/mariadb "$dir/mariadb"
@@ -49,6 +63,8 @@ function update_script() {
       ln -sf /usr/bin/mariadb-dump "$dir/mysqldump"
       ln -sf /usr/bin/mariadb "$dir/mysql"
     done
+    [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
+    [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
     msg_ok "Ensured Database Clients"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest" "/opt/databasus"
