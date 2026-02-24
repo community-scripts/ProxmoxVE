@@ -17,7 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   nginx \
   valkey \
-  mariadb-client
+  mariadb-client \
+  rclone
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
