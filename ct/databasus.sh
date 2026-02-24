@@ -39,15 +39,23 @@ function update_script() {
     msg_ok "Backed up Configuration"
 
     msg_info "Ensuring Database Clients"
-    ensure_dependencies mariadb-client
+    # Create PostgreSQL version symlinks for compatibility
+    for v in 12 13 14 15 16 18; do
+      ln -sf /usr/lib/postgresql/17 /usr/lib/postgresql/$v
+    done
+    # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
     if ! command -v mongodump &>/dev/null; then
       MONGO_ARCH=$(get_system_arch uname)
       [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
       tmp_file=$(mktemp)
       curl -fsSL -o "$tmp_file" "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.14.1.deb"
-      $STD dpkg -i "$tmp_file" || $STD apt-get install -f -y --no-install-recommends
+      $STD dpkg -i "$tmp_file" || $STD apt install -f -y --no-install-recommends
       rm -f "$tmp_file"
     fi
+    [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
+    [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
+    # Create MariaDB and MySQL client symlinks for compatibility
+    ensure_dependencies mariadb-client
     mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin /usr/local/mongodb-database-tools/bin
     for dir in /usr/local/mariadb-{10.6,12.1}/bin; do
       ln -sf /usr/bin/mariadb-dump "$dir/mariadb-dump"
@@ -57,8 +65,6 @@ function update_script() {
       ln -sf /usr/bin/mariadb-dump "$dir/mysqldump"
       ln -sf /usr/bin/mariadb "$dir/mysql"
     done
-    [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
-    [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
     msg_ok "Ensured Database Clients"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest" "/opt/databasus"
