@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-24T12:15:44Z",
+  "generated": "2026-02-24T18:21:46Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -200,9 +200,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.7.4",
+      "version": "v2.7.5",
       "pinned": false,
-      "date": "2026-02-23T18:41:16Z"
+      "date": "2026-02-24T17:11:50Z"
     },
     {
       "slug": "cloudreve",
@@ -361,9 +361,9 @@
     {
       "slug": "endurain",
       "repo": "endurain-project/endurain",
-      "version": "v0.17.4",
+      "version": "v0.17.5",
       "pinned": false,
-      "date": "2026-02-11T04:54:22Z"
+      "date": "2026-02-24T14:51:03Z"
     },
     {
       "slug": "ersatztv",
@@ -746,9 +746,9 @@
     {
       "slug": "libretranslate",
       "repo": "LibreTranslate/LibreTranslate",
-      "version": "v1.9.3",
+      "version": "v1.9.4",
       "pinned": false,
-      "date": "2026-02-21T19:08:33Z"
+      "date": "2026-02-24T17:06:05Z"
     },
     {
       "slug": "lidarr",
@@ -1334,9 +1334,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.7",
+      "version": "v0.14.8",
       "pinned": false,
-      "date": "2026-02-23T01:36:44Z"
+      "date": "2026-02-24T16:45:30Z"
     },
     {
       "slug": "scraparr",
@@ -1369,9 +1369,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.12",
+      "version": "v2.17.14",
       "pinned": false,
-      "date": "2026-02-20T09:16:50Z"
+      "date": "2026-02-24T14:27:03Z"
     },
     {
       "slug": "shelfmark",
@@ -1383,9 +1383,9 @@
     {
       "slug": "signoz",
       "repo": "SigNoz/signoz-otel-collector",
-      "version": "v0.142.1",
+      "version": "v0.144.0",
       "pinned": false,
-      "date": "2026-02-21T18:04:07Z"
+      "date": "2026-02-24T13:57:51Z"
     },
     {
       "slug": "silverbullet",
@@ -1679,7 +1679,7 @@
       "repo": "meilisearch/meilisearch",
       "version": "v1.36.0",
       "pinned": false,
-      "date": ""
+      "date": "2026-02-23T08:13:32Z"
     },
     {
       "slug": "warracker",
@@ -1768,9 +1768,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.6.1",
+      "version": "v0.6.2",
       "pinned": false,
-      "date": "2026-02-18T23:24:16Z"
+      "date": "2026-02-24T15:15:46Z"
     },
     {
       "slug": "zigbee2mqtt",
