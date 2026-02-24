@@ -490,6 +490,8 @@ log_section() {
 # - Executes command with output redirected to active log file
 # - On error: displays last 20 lines of log and exits with original exit code
 # - Temporarily disables error trap to capture exit code correctly
+# - Saves and restores previous error handling state (so callers that
+#   intentionally disabled error handling aren't silently re-enabled)
 # - Sources explain_exit_code() for detailed error messages
 # ------------------------------------------------------------------------------
 silent() {
@@ -507,14 +509,23 @@ silent() {
     return 0
   fi
 
+  # Save current error handling state before disabling
+  # This prevents re-enabling error handling when the caller intentionally
+  # disabled it (e.g. build_container recovery section)
+  local _restore_errexit=false
+  [[ "$-" == *e* ]] && _restore_errexit=true
+
   set +Eeuo pipefail
   trap - ERR
 
   "$@" >>"$logfile" 2>&1
   local rc=$?
 
-  set -Eeuo pipefail
-  trap 'error_handler' ERR
+  # Restore error handling ONLY if it was active before this call
+  if $_restore_errexit; then
+    set -Eeuo pipefail
+    trap 'error_handler' ERR
+  fi
 
   if [[ $rc -ne 0 ]]; then
     # Source explain_exit_code if needed

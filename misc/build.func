@@ -48,7 +48,8 @@ variables() {
   EXECUTION_ID="${RANDOM_UUID}"                          # Unique execution ID for telemetry record identification (unique-indexed in PocketBase)
   SESSION_ID="${RANDOM_UUID:0:8}"                        # Short session ID (first 8 chars of UUID) for log files
   BUILD_LOG="/tmp/create-lxc-${SESSION_ID}.log"          # Host-side container creation log
-  combined_log="/tmp/install-${SESSION_ID}-combined.log" # Combined log (build + install) for failed installations
+  # NOTE: combined_log is constructed locally in build_container() and ensure_log_on_host()
+  # as "/tmp/${NSAPP}-${CTID}-${SESSION_ID}.log" (requires CTID, not available here)
   CTTYPE="${CTTYPE:-${CT_TYPE:-1}}"
 
   # Parse dev_mode early
@@ -4174,6 +4175,13 @@ EOF'
     # Report failure to telemetry API (now with log available on host)
     post_update_to_api "failed" "$install_exit_code"
 
+    # Defense-in-depth: Ensure error handling stays disabled during recovery.
+    # Some functions (e.g. silent/$STD) unconditionally re-enable set -Eeuo pipefail
+    # and trap 'error_handler' ERR. If any code path above called such a function,
+    # the grep/sed pipelines below would trigger error_handler on non-match (exit 1).
+    set +Eeuo pipefail
+    trap - ERR
+
     # Show combined log location
     if [[ -n "$CTID" && -n "${SESSION_ID:-}" ]]; then
       msg_custom "📋" "${YW}" "Installation log: ${combined_log}"
@@ -4287,7 +4295,7 @@ EOF'
     if [[ "$is_cmd_not_found" == true ]]; then
       local missing_cmd=""
       if [[ -f "$combined_log" ]]; then
-        missing_cmd=$(grep -oiE '[a-zA-Z0-9_.-]+: command not found' "$combined_log" | tail -1 | sed 's/: command not found//')
+        missing_cmd=$(grep -oiE '[a-zA-Z0-9_.-]+: command not found' "$combined_log" 2>/dev/null | tail -1 | sed 's/: command not found//') || true
       fi
       if [[ -n "$missing_cmd" ]]; then
         echo -e "${TAB}${INFO} Missing command: ${GN}${missing_cmd}${CL}"
