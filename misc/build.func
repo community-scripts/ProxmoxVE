@@ -4181,9 +4181,9 @@ EOF'
     # NOTE: Do NOT use msg_info/spinner here — the background spinner process
     # causes SIGTSTP in non-interactive shells (bash -c "$(curl ...)"), which
     # stops the entire process group and prevents the recovery dialog from appearing.
-    echo -e "${TAB}⏳ Reporting failure to telemetry..." >&2
+    $STD echo -e "${TAB}⏳ Reporting failure to telemetry..."
     post_update_to_api "failed" "$install_exit_code"
-    echo -e "${TAB}${CM:-✔} Failure reported" >&2
+    $STD echo -e "${TAB}${CM:-✔} Failure reported"
 
     # Defense-in-depth: Ensure error handling stays disabled during recovery.
     # Some functions (e.g. silent/$STD) unconditionally re-enable set -Eeuo pipefail
@@ -4547,9 +4547,9 @@ EOF'
 
     # Force one final status update attempt after cleanup
     # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
-    echo -e "${TAB}⏳ Finalizing telemetry report..." >&2
+    $STD echo -e "${TAB}⏳ Finalizing telemetry report..."
     post_update_to_api "failed" "$install_exit_code" "force"
-    echo -e "${TAB}${CM:-✔} Telemetry finalized" >&2
+    $STD echo -e "${TAB}${CM:-✔} Telemetry finalized"
 
     # Restore default SIGTSTP handling before exit
     trap - TSTP
