@@ -4173,7 +4173,16 @@ EOF'
     fi
 
     # Report failure to telemetry API (now with log available on host)
+    # Show spinner so user knows we're still working — post_update_to_api can
+    # take up to 33 seconds worst-case (3 curl attempts × 10s timeout + sleeps).
+    # Without feedback, users think the script is stuck and press Ctrl+Z/Ctrl+C.
+    if declare -f msg_info >/dev/null 2>&1; then
+      msg_info "Reporting failure to telemetry..."
+    fi
     post_update_to_api "failed" "$install_exit_code"
+    if declare -f stop_spinner >/dev/null 2>&1; then
+      stop_spinner 2>/dev/null || true
+    fi
 
     # Defense-in-depth: Ensure error handling stays disabled during recovery.
     # Some functions (e.g. silent/$STD) unconditionally re-enable set -Eeuo pipefail
@@ -4537,7 +4546,13 @@ EOF'
 
     # Force one final status update attempt after cleanup
     # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
+    if declare -f msg_info >/dev/null 2>&1; then
+      msg_info "Finalizing telemetry report..."
+    fi
     post_update_to_api "failed" "$install_exit_code" "force"
+    if declare -f stop_spinner >/dev/null 2>&1; then
+      stop_spinner 2>/dev/null || true
+    fi
 
     exit $install_exit_code
   fi
