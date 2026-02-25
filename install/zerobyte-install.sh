@@ -41,12 +41,10 @@ ln -sf /root/.bun/bin/bun /usr/local/bin/bun
 ln -sf /root/.bun/bin/bunx /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "zerobyte" "nicotsx/zerobyte" "tarball"
 
-# Workaround for high RAM during bun run build
-NODE_VERSION="24" setup_nodejs
-
-msg_info "Building Zerobyte"
+msg_info "Building Zerobyte (Patience)"
 cd /opt/zerobyte
 export VITE_RESTIC_VERSION=$(cat ~/.restic)
 export VITE_RCLONE_VERSION=$(cat ~/.rclone)
