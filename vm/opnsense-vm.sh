@@ -288,8 +288,8 @@ function default_settings() {
   echo -e "${DGN}Using Hostname: ${BGN}${HN}${CL}"
   echo -e "${DGN}Allocated Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${DGN}Allocated RAM: ${BGN}${RAM_SIZE}${CL}"
-  if ! grep -q "^iface ${BRG}" /etc/network/interfaces; then
-    msg_error "Bridge '${BRG}' does not exist in /etc/network/interfaces"
+  if ! ip link show "${BRG}" &>/dev/null; then
+    msg_error "Bridge '${BRG}' does not exist"
     exit
   else
     echo -e "${DGN}Using LAN Bridge: ${BGN}${BRG}${CL}"
@@ -305,8 +305,8 @@ function default_settings() {
     if [ "$NETWORK_MODE" = "dual" ]; then
       echo -e "${DGN}Network Mode: ${BGN}Dual Interface (Firewall)${CL}"
       echo -e "${DGN}Using WAN MAC Address: ${BGN}${WAN_MAC}${CL}"
-      if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
-        msg_error "Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
+      if ! ip link show "${WAN_BRG}" &>/dev/null; then
+        msg_error "Bridge '${WAN_BRG}' does not exist"
         exit
       else
         echo -e "${DGN}Using WAN Bridge: ${BGN}${WAN_BRG}${CL}"
@@ -424,8 +424,8 @@ function advanced_settings() {
     if [ -z $BRG ]; then
       BRG="vmbr0"
     fi
-    if ! grep -q "^iface ${BRG}" /etc/network/interfaces; then
-      msg_error "Bridge '${BRG}' does not exist in /etc/network/interfaces"
+    if ! ip link show "${BRG}" &>/dev/null; then
+      msg_error "Bridge '${BRG}' does not exist"
       exit
     fi
     echo -e "${DGN}Using LAN Bridge: ${BGN}$BRG${CL}"
@@ -474,8 +474,8 @@ function advanced_settings() {
     if [ -z $WAN_BRG ]; then
       WAN_BRG="vmbr1"
     fi
-    if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
-      msg_error "WAN Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
+    if ! ip link show "${WAN_BRG}" &>/dev/null; then
+      msg_error "WAN Bridge '${WAN_BRG}' does not exist"
       exit
     fi
     echo -e "${DGN}Using WAN Bridge: ${BGN}$WAN_BRG${CL}"
