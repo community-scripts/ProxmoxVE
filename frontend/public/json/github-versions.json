@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-24T18:21:46Z",
+  "generated": "2026-02-25T00:23:14Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -214,9 +214,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.14.2",
+      "version": "v0.15.0",
       "pinned": false,
-      "date": "2026-02-18T06:12:02Z"
+      "date": "2026-02-24T20:56:09Z"
     },
     {
       "slug": "commafeed",
@@ -368,9 +368,9 @@
     {
       "slug": "ersatztv",
       "repo": "ErsatzTV/ErsatzTV",
-      "version": "v26.2.0",
+      "version": "v26.3.0",
       "pinned": false,
-      "date": "2026-02-02T20:54:26Z"
+      "date": "2026-02-24T21:36:34Z"
     },
     {
       "slug": "excalidraw",
@@ -977,9 +977,9 @@
     {
       "slug": "open-archiver",
       "repo": "LogicLabs-OU/OpenArchiver",
-      "version": "v0.4.1",
+      "version": "v0.4.2",
       "pinned": false,
-      "date": "2026-01-17T12:24:31Z"
+      "date": "2026-02-24T20:47:40Z"
     },
     {
       "slug": "opencloud",
@@ -1208,9 +1208,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.13",
+      "version": "v5.1.14",
       "pinned": false,
-      "date": "2026-02-22T12:40:41Z"
+      "date": "2026-02-25T00:11:58Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1285,9 +1285,9 @@
     {
       "slug": "recyclarr",
       "repo": "recyclarr/recyclarr",
-      "version": "v8.2.1",
+      "version": "v8.3.0",
       "pinned": false,
-      "date": "2026-02-22T19:19:49Z"
+      "date": "2026-02-24T20:37:48Z"
     },
     {
       "slug": "reitti",
@@ -1621,9 +1621,9 @@
     {
       "slug": "upgopher",
       "repo": "wanetty/upgopher",
-      "version": "v1.13.0",
+      "version": "v1.14.0",
       "pinned": false,
-      "date": "2026-01-16T20:26:34Z"
+      "date": "2026-02-24T22:43:34Z"
     },
     {
       "slug": "upsnap",
@@ -1712,9 +1712,9 @@
     {
       "slug": "wealthfolio",
       "repo": "afadil/wealthfolio",
-      "version": "v2.1.0",
+      "version": "v3.0.0",
       "pinned": false,
-      "date": "2025-12-01T21:57:36Z"
+      "date": "2026-02-24T22:37:05Z"
     },
     {
       "slug": "web-check",
