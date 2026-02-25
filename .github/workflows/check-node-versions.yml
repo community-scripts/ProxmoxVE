@@ -13,7 +13,7 @@ permissions:
 jobs:
   check-node-versions:
     if: github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: ubuntu-latest
+    runs-on: coolify-runner
 
     steps:
       - name: Checkout Repository
