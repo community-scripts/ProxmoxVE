@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="joplin" PG_DB_USER="joplin" setup_postgresql_db
-NODE_VERSION=24 NODE_MODULE="yarn,npm,pm2" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="yarn,npm,pm2" setup_nodejs
 mkdir -p /opt/pm2
 export PM2_HOME=/opt/pm2
 $STD pm2 install pm2-logrotate

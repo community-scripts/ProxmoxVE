@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION=24 NODE_MODULE="yarn,npm,pm2" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="yarn,npm,pm2" setup_nodejs
 
   if check_for_gh_release "joplin-server" "laurent22/joplin"; then
     msg_info "Stopping Services"

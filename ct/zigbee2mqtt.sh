@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt"; then
-    NODE_VERSION=24 NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
     msg_info "Stopping Service"
     systemctl stop zigbee2mqtt
     msg_ok "Stopped Service"
