@@ -415,6 +415,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenProject: Various fixes [@tremor021](https://github.com/tremor021) ([#12246](https://github.com/community-scripts/ProxmoxVE/pull/12246))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - Fix detection of ssh keys [@1-tempest](https://github.com/1-tempest) ([#12230](https://github.com/community-scripts/ProxmoxVE/pull/12230))
+
 ## 2026-02-24
 
 ### 🚀 Updated Scripts
