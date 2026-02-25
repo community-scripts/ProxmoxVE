@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main}"
-source <(curl -fsSL "$COMMUNITY_SCRIPTS_URL/misc/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: community-scripts
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -38,11 +37,9 @@ function update_script() {
     msg_info "Backing up Configuration"
     cp /opt/zerobyte/.env /opt/zerobyte.env.bak
     msg_ok "Backed up Configuration"
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "zerobyte" "nicotsx/zerobyte" "tarball"
-
-    # Workaround for high RAM during bun run build
+    
     NODE_VERSION="24" setup_nodejs
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "zerobyte" "nicotsx/zerobyte" "tarball"
 
     msg_info "Building Zerobyte"
     export NODE_OPTIONS="--max-old-space-size=3072"
