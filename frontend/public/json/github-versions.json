@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-25T06:25:10Z",
+  "generated": "2026-02-25T12:14:52Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -39,9 +39,9 @@
     {
       "slug": "ampache",
       "repo": "ampache/ampache",
-      "version": "7.9.0",
+      "version": "7.9.1",
       "pinned": false,
-      "date": "2026-02-19T07:01:25Z"
+      "date": "2026-02-25T08:52:58Z"
     },
     {
       "slug": "argus",
@@ -823,9 +823,9 @@
     {
       "slug": "manyfold",
       "repo": "manyfold3d/manyfold",
-      "version": "v0.132.1",
+      "version": "v0.133.0",
       "pinned": false,
-      "date": "2026-02-09T22:02:28Z"
+      "date": "2026-02-25T10:40:26Z"
     },
     {
       "slug": "mealie",
@@ -994,6 +994,13 @@
       "version": "v1.12.1",
       "pinned": false,
       "date": "2026-02-03T09:00:43Z"
+    },
+    {
+      "slug": "openproject",
+      "repo": "jemalloc/jemalloc",
+      "version": "5.3.0",
+      "pinned": false,
+      "date": "2022-05-06T19:14:21Z"
     },
     {
       "slug": "ots",
