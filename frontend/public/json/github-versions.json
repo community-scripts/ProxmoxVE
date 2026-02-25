@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-25T12:14:52Z",
+  "generated": "2026-02-25T18:24:12Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -242,9 +242,9 @@
     {
       "slug": "cosmos",
       "repo": "azukaar/Cosmos-Server",
-      "version": "v0.20.2",
+      "version": "v0.21.0",
       "pinned": false,
-      "date": "2026-01-24T00:12:39Z"
+      "date": "2026-02-25T17:26:37Z"
     },
     {
       "slug": "cronicle",
@@ -1264,9 +1264,9 @@
     {
       "slug": "radicale",
       "repo": "Kozea/Radicale",
-      "version": "v3.6.0",
+      "version": "v3.6.1",
       "pinned": false,
-      "date": "2026-01-10T06:56:46Z"
+      "date": "2026-02-24T06:36:23Z"
     },
     {
       "slug": "rclone",
@@ -1663,9 +1663,9 @@
     {
       "slug": "vikunja",
       "repo": "go-vikunja/vikunja",
-      "version": "v1.1.0",
+      "version": "v2.0.0",
       "pinned": false,
-      "date": "2026-02-09T10:34:29Z"
+      "date": "2026-02-25T13:58:47Z"
     },
     {
       "slug": "wallabag",
@@ -1778,6 +1778,13 @@
       "version": "v0.6.2",
       "pinned": false,
       "date": "2026-02-24T15:15:46Z"
+    },
+    {
+      "slug": "zerobyte",
+      "repo": "restic/restic",
+      "version": "v0.18.1",
+      "pinned": false,
+      "date": "2025-09-21T18:24:38Z"
     },
     {
       "slug": "zigbee2mqtt",
