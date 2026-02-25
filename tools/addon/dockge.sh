@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Addon: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://dockge.kuma.pet/
+# Source: https://dockge.kuma.pet/ | Github: https://github.com/louislam/dockge
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
   if [[ -f /etc/alpine-release ]]; then
