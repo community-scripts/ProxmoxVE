@@ -33,7 +33,7 @@
     },
     "notes": [
         {
-            "text": "For remote mount support (NFS, SMB, WebDAV, SFTP), enable FUSE device passthrough on the LXC container.",
+            "text": "For remote mount support (NFS, SMB, WebDAV, SFTP), enable FUSE device passthrough on the LXC container. (FUSE is pre-configured)",
             "type": "info"
         }
     ]
