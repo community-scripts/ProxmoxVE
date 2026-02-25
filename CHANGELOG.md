@@ -409,6 +409,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-25
 
+### 🆕 New Scripts
+
+  - Zerobyte ([#12321](https://github.com/community-scripts/ProxmoxVE/pull/12321))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
