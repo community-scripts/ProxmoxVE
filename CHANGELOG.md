@@ -409,6 +409,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-25
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - OpenProject: Various fixes [@tremor021](https://github.com/tremor021) ([#12246](https://github.com/community-scripts/ProxmoxVE/pull/12246))
+
 ## 2026-02-24
 
 ### 🚀 Updated Scripts
