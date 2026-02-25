@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-25T00:23:14Z",
+  "generated": "2026-02-25T06:25:10Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1193",
+      "version": "v0.24.1205",
       "pinned": false,
-      "date": "2026-02-24T05:58:04Z"
+      "date": "2026-02-25T05:49:14Z"
     },
     {
       "slug": "jellystat",
@@ -1285,9 +1285,9 @@
     {
       "slug": "recyclarr",
       "repo": "recyclarr/recyclarr",
-      "version": "v8.3.0",
+      "version": "v8.3.1",
       "pinned": false,
-      "date": "2026-02-24T20:37:48Z"
+      "date": "2026-02-25T01:01:31Z"
     },
     {
       "slug": "reitti",
@@ -1383,9 +1383,9 @@
     {
       "slug": "signoz",
       "repo": "SigNoz/signoz-otel-collector",
-      "version": "v0.144.0",
+      "version": "v0.144.1",
       "pinned": false,
-      "date": "2026-02-24T13:57:51Z"
+      "date": "2026-02-25T05:57:17Z"
     },
     {
       "slug": "silverbullet",
@@ -1747,9 +1747,9 @@
     {
       "slug": "wizarr",
       "repo": "wizarrrr/wizarr",
-      "version": "v2026.2.0",
+      "version": "v2026.2.1",
       "pinned": false,
-      "date": "2026-02-23T19:25:28Z"
+      "date": "2026-02-25T01:07:56Z"
     },
     {
       "slug": "writefreely",
@@ -1789,9 +1789,9 @@
     {
       "slug": "zitadel",
       "repo": "zitadel/zitadel",
-      "version": "v4.11.0",
+      "version": "v4.11.1",
       "pinned": false,
-      "date": "2026-02-16T09:48:38Z"
+      "date": "2026-02-25T06:13:13Z"
     },
     {
       "slug": "zoraxy",
