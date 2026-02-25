@@ -30,21 +30,10 @@ setup_deb822_repo \
 $STD apt install -y elasticsearch
 sed -i 's/^-Xms.*/-Xms2g/' /etc/elasticsearch/jvm.options
 sed -i 's/^-Xmx.*/-Xmx2g/' /etc/elasticsearch/jvm.options
-cat <<EOF >>/etc/elasticsearch/elasticsearch.yml
-discovery.type: single-node
-xpack.security.enabled: false
-bootstrap.memory_lock: false
-EOF
 $STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
 systemctl daemon-reload
 systemctl enable -q elasticsearch
 systemctl restart -q elasticsearch
-for i in $(seq 1 30); do
-  if curl -s http://localhost:9200 >/dev/null 2>&1; then
-    break
-  fi
-  sleep 2
-done
 msg_ok "Setup Elasticsearch"
 
 msg_info "Installing Zammad"
