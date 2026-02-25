@@ -37,6 +37,10 @@
       "type": "info"
     },
     {
+      "text": "Execute within an existing LXC console (Debian / Ubuntu only)",
+      "type": "info"
+    },
+    {
       "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
       "type": "warning"
     },

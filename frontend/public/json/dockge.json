@@ -37,6 +37,10 @@
       "type": "info"
     },
     {
+      "text": "Execute within an existing LXC console (Debian / Ubuntu / Alpine supported)",
+      "type": "info"
+    },
+    {
       "text": "To update, run the addon script again and select Update, or use: bash <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/dockge.sh)",
       "type": "info"
     }

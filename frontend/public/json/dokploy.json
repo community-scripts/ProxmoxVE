@@ -37,6 +37,10 @@
       "type": "info"
     },
     {
+      "text": "Execute within an existing LXC console (Debian / Ubuntu / Alpine supported)",
+      "type": "info"
+    },
+    {
       "text": "Initial setup will be done via the web interface on first access.",
       "type": "info"
     },

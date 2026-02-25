@@ -76,16 +76,10 @@ function check_or_install_docker() {
   fi
 
   msg_info "Installing Docker"
-  if [[ -f /etc/alpine-release ]]; then
-    $STD apk add docker docker-cli-compose
-    $STD rc-service docker start
-    $STD rc-update add docker default
-  else
-    DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
-    mkdir -p "$(dirname "$DOCKER_CONFIG_PATH")"
-    echo -e '{\n  "log-driver": "journald"\n}' >"$DOCKER_CONFIG_PATH"
-    $STD sh <(curl -fsSL https://get.docker.com)
-  fi
+  DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
+  mkdir -p "$(dirname "$DOCKER_CONFIG_PATH")"
+  echo -e '{\n  "log-driver": "journald"\n}' >"$DOCKER_CONFIG_PATH"
+  $STD sh <(curl -fsSL https://get.docker.com)
   msg_ok "Installed Docker"
 }
 
@@ -132,12 +126,8 @@ function install() {
   check_or_install_docker
 
   msg_info "Installing dependencies"
-  if [[ -f /etc/alpine-release ]]; then
-    $STD apk add --no-cache openssl gcompat
-  else
-    $STD apt-get update
-    $STD apt-get install -y openssl
-  fi
+  $STD apt-get update
+  $STD apt-get install -y openssl
   msg_ok "Installed dependencies"
 
   msg_warn "WARNING: This will run an external installer from https://runtipi.io/"
@@ -181,6 +171,11 @@ if [[ "${type:-}" == "update" ]]; then
     exit 1
   fi
   exit 0
+fi
+
+if [[ -f /etc/alpine-release ]]; then
+  msg_error "${APP} does not support Alpine Linux. Please use a Debian or Ubuntu based LXC."
+  exit 1
 fi
 
 header_info

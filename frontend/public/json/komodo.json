@@ -37,6 +37,10 @@
       "type": "info"
     },
     {
+      "text": "Execute within an existing LXC console (Debian / Ubuntu / Alpine supported)",
+      "type": "info"
+    },
+    {
       "text": "For admin username and password, run: cat ~/komodo.creds",
       "type": "info"
     },
