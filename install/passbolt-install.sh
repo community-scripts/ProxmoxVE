@@ -44,6 +44,8 @@ echo passbolt-ce-server passbolt/nginx-domain string $LOCAL_IP | debconf-set-sel
 echo passbolt-ce-server passbolt/nginx-certificate-file string /etc/ssl/passbolt/passbolt.crt | debconf-set-selections
 echo passbolt-ce-server passbolt/nginx-certificate-key-file string /etc/ssl/passbolt/passbolt.key | debconf-set-selections
 $STD apt install -y --no-install-recommends passbolt-ce-server
+sed -i 's/client_max_body_size[[:space:]]\+[0-9]\+M;/client_max_body_size        15M;/' /etc/nginx/sites-enabled/nginx-passbolt.conf
+systemctl reload nginx
 msg_ok "Setup Passbolt"
 
 motd_ssh
