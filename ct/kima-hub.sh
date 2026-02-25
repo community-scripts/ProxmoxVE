@@ -31,19 +31,19 @@ function update_script() {
 
   if check_for_gh_release "kima-hub" "Chevron7Locked/kima-hub"; then
     msg_info "Stopping Services"
-    systemctl stop kima-frontend kima-backend kima-analyzer kima-analyzer-clap 2>/dev/null || true
+    systemctl stop kima-frontend kima-backend kima-analyzer kima-analyzer-clap
     msg_ok "Stopped Services"
 
     msg_info "Backing up Data"
-    cp /opt/kima-hub/backend/.env /opt/kima-hub-backend-env.bak 2>/dev/null || true
-    cp /opt/kima-hub/frontend/.env /opt/kima-hub-frontend-env.bak 2>/dev/null || true
+    cp /opt/kima-hub/backend/.env /opt/kima-hub-backend-env.bak
+    cp /opt/kima-hub/frontend/.env /opt/kima-hub-frontend-env.bak
     msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "kima-hub" "Chevron7Locked/kima-hub" "tarball"
 
     msg_info "Restoring Data"
-    cp /opt/kima-hub-backend-env.bak /opt/kima-hub/backend/.env 2>/dev/null || true
-    cp /opt/kima-hub-frontend-env.bak /opt/kima-hub/frontend/.env 2>/dev/null || true
+    cp /opt/kima-hub-backend-env.bak /opt/kima-hub/backend/.env
+    cp /opt/kima-hub-frontend-env.bak /opt/kima-hub/frontend/.env
     rm -f /opt/kima-hub-backend-env.bak /opt/kima-hub-frontend-env.bak
     msg_ok "Restored Data"
 
