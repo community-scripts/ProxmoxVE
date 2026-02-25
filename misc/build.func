@@ -4098,6 +4098,11 @@ EOF'
 
   # Installation failed?
   if [[ $install_exit_code -ne 0 ]]; then
+    # Prevent SIGTSTP (Ctrl+Z) from suspending the script during recovery.
+    # In non-interactive shells (bash -c), background processes (spinner) can
+    # trigger terminal-related signals that stop the entire process group.
+    trap '' TSTP
+
     msg_error "Installation failed in container ${CTID} (exit code: ${install_exit_code})"
 
     # Copy install log from container BEFORE API call so get_error_text() can read it
@@ -4173,16 +4178,12 @@ EOF'
     fi
 
     # Report failure to telemetry API (now with log available on host)
-    # Show spinner so user knows we're still working — post_update_to_api can
-    # take up to 33 seconds worst-case (3 curl attempts × 10s timeout + sleeps).
-    # Without feedback, users think the script is stuck and press Ctrl+Z/Ctrl+C.
-    if declare -f msg_info >/dev/null 2>&1; then
-      msg_info "Reporting failure to telemetry..."
-    fi
+    # NOTE: Do NOT use msg_info/spinner here — the background spinner process
+    # causes SIGTSTP in non-interactive shells (bash -c "$(curl ...)"), which
+    # stops the entire process group and prevents the recovery dialog from appearing.
+    echo -e "${TAB}⏳ Reporting failure to telemetry..." >&2
     post_update_to_api "failed" "$install_exit_code"
-    if declare -f stop_spinner >/dev/null 2>&1; then
-      stop_spinner 2>/dev/null || true
-    fi
+    echo -e "${TAB}${CM:-✔} Failure reported" >&2
 
     # Defense-in-depth: Ensure error handling stays disabled during recovery.
     # Some functions (e.g. silent/$STD) unconditionally re-enable set -Eeuo pipefail
@@ -4546,14 +4547,12 @@ EOF'
 
     # Force one final status update attempt after cleanup
     # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
-    if declare -f msg_info >/dev/null 2>&1; then
-      msg_info "Finalizing telemetry report..."
-    fi
+    echo -e "${TAB}⏳ Finalizing telemetry report..." >&2
     post_update_to_api "failed" "$install_exit_code" "force"
-    if declare -f stop_spinner >/dev/null 2>&1; then
-      stop_spinner 2>/dev/null || true
-    fi
+    echo -e "${TAB}${CM:-✔} Telemetry finalized" >&2
 
+    # Restore default SIGTSTP handling before exit
+    trap - TSTP
     exit $install_exit_code
   fi
 
