@@ -1474,7 +1474,7 @@ get_latest_github_release() {
 
   if ! github_api_call "https://api.github.com/repos/${repo}/releases/latest" "$temp_file"; then
     rm -f "$temp_file"
-    return 1
+    return 0
   fi
 
   local version
@@ -1482,7 +1482,8 @@ get_latest_github_release() {
   rm -f "$temp_file"
 
   if [[ -z "$version" ]]; then
-    return 1
+    msg_error "Could not determine latest version for ${repo}"
+    return 0
   fi
 
   echo "$version"
@@ -1499,7 +1500,7 @@ get_latest_codeberg_release() {
   # Codeberg API: get all releases and pick the first non-draft/non-prerelease
   if ! codeberg_api_call "https://codeberg.org/api/v1/repos/${repo}/releases" "$temp_file"; then
     rm -f "$temp_file"
-    return 1
+    return 0
   fi
 
   local version
@@ -1513,7 +1514,8 @@ get_latest_codeberg_release() {
   rm -f "$temp_file"
 
   if [[ -z "$version" ]]; then
-    return 1
+    msg_error "Could not determine latest version for ${repo}"
+    return 0
   fi
 
   echo "$version"
