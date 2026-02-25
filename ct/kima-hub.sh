@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main}"
-source <(curl -fsSL "$COMMUNITY_SCRIPTS_URL/misc/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -10,7 +9,7 @@ APP="Kima-Hub"
 var_tags="${var_tags:-music;streaming;media}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-8192}"
-var_disk="${var_disk:-24}"
+var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
