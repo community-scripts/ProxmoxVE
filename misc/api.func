@@ -312,7 +312,8 @@ json_escape() {
   s=${s//$'\r'/}
   s=${s//$'\t'/\\t}
   # Remove any remaining control characters (0x00-0x1F except those already handled)
-  s=$(printf '%s' "$s" | tr -d '\000-\010\013\014\016-\037')
+  # Also remove DEL (0x7F) and invalid high bytes that break JSON parsers
+  s=$(printf '%s' "$s" | tr -d '\000-\010\013\014\016-\037\177')
   printf '%s' "$s"
 }
 
@@ -982,7 +983,7 @@ EOF
   fi
 
   # All 3 attempts failed — do NOT set POST_UPDATE_DONE=true.
-  # This allows the EXIT trap (api_exit_script) to retry with 3 fresh attempts.
+  # This allows the EXIT trap (on_exit in error_handler.func) to retry.
   # No infinite loop risk: EXIT trap fires exactly once.
 }
 

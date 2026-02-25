@@ -5608,44 +5608,21 @@ ensure_log_on_host() {
   fi
 }
 
-# ------------------------------------------------------------------------------
-# api_exit_script()
+# ==============================================================================
+# TRAP MANAGEMENT
+# ==============================================================================
+# All traps (ERR, EXIT, INT, TERM, HUP) are set by catch_errors() in
+# error_handler.func — called at the top of this file after sourcing.
 #
-# - Exit trap handler for reporting to API telemetry
-# - Captures exit code and reports to PocketBase using centralized error descriptions
-# - Uses explain_exit_code() from api.func for consistent error messages
-# - ALWAYS sends telemetry FIRST before log collection to prevent pct pull
-#   hangs from blocking status updates (container may be dead/unresponsive)
-# - For non-zero exit codes: posts "failed" status
-# - For zero exit codes where post_update_to_api was never called:
-#   catches orphaned "installing" records (e.g., script exited cleanly
-#   but description() was never reached)
-# ------------------------------------------------------------------------------
-api_exit_script() {
-  local exit_code=$?
-  if [ $exit_code -ne 0 ]; then
-    # ALWAYS send telemetry FIRST - ensure status is reported even if
-    # ensure_log_on_host hangs (e.g. pct pull on dead container)
-    post_update_to_api "failed" "$exit_code" 2>/dev/null || true
-    # Best-effort log collection (non-critical after telemetry is sent)
-    if declare -f ensure_log_on_host >/dev/null 2>&1; then
-      ensure_log_on_host 2>/dev/null || true
-    fi
-    # Stop orphaned container if we're in the install phase
-    if [[ "${CONTAINER_INSTALLING:-}" == "true" && -n "${CTID:-}" ]] && command -v pct &>/dev/null; then
-      pct stop "$CTID" 2>/dev/null || true
-    fi
-  elif [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
-    # Script exited with 0 but never sent a completion status
-    # exit_code=0 is never an error — report as success
-    post_update_to_api "done" "0"
-  fi
-}
-
-if command -v pveversion >/dev/null 2>&1; then
-  trap 'api_exit_script' EXIT
-fi
-trap 'local _ec=$?; if [[ $_ec -ne 0 ]]; then post_update_to_api "failed" "$_ec" 2>/dev/null || true; if declare -f ensure_log_on_host &>/dev/null; then ensure_log_on_host 2>/dev/null || true; fi; fi' ERR
-trap 'post_update_to_api "failed" "129" 2>/dev/null || true; if [[ -n "${CTID:-}" ]] && command -v pct &>/dev/null; then pct stop "$CTID" 2>/dev/null || true; fi; exit 129' SIGHUP
-trap 'post_update_to_api "failed" "130" 2>/dev/null || true; if [[ -n "${CTID:-}" ]] && command -v pct &>/dev/null; then pct stop "$CTID" 2>/dev/null || true; fi; exit 130' SIGINT
-trap 'post_update_to_api "failed" "143" 2>/dev/null || true; if [[ -n "${CTID:-}" ]] && command -v pct &>/dev/null; then pct stop "$CTID" 2>/dev/null || true; fi; exit 143' SIGTERM
+# Do NOT set duplicate traps here. The handlers in error_handler.func
+# (on_exit, on_interrupt, on_terminate, on_hangup, error_handler) already:
+#   - Send telemetry via post_update_to_api / _send_abort_telemetry
+#   - Stop orphaned containers via _stop_container_if_installing
+#   - Collect logs via ensure_log_on_host
+#   - Clean up lock files and spinner processes
+#
+# Previously, inline traps here overwrote catch_errors() traps, causing:
+#   - error_handler() never fired (no error output, no cleanup dialog)
+#   - on_hangup() never fired (SSH disconnect → stuck records)
+#   - Duplicated logic in two places (hard to debug)
+# ==============================================================================

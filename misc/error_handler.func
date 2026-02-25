@@ -199,10 +199,15 @@ error_handler() {
     return 0
   fi
 
+  # Stop spinner and restore cursor FIRST — before any output
+  # This prevents spinner text overlapping with error messages
+  if declare -f stop_spinner >/dev/null 2>&1; then
+    stop_spinner 2>/dev/null || true
+  fi
+  printf "\e[?25h"
+
   local explanation
   explanation="$(explain_exit_code "$exit_code")"
-
-  printf "\e[?25h"
 
   # ALWAYS report failure to API immediately - don't wait for container checks
   # This ensures we capture failures that occur before/after container exists
@@ -359,9 +364,39 @@ _send_abort_telemetry() {
   command -v curl &>/dev/null || return 0
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
   [[ -z "${RANDOM_UUID:-}" ]] && return 0
-  curl -fsS -m 5 -X POST "${TELEMETRY_URL:-https://telemetry.community-scripts.org/telemetry}" \
-    -H "Content-Type: application/json" \
-    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"${TELEMETRY_TYPE:-lxc}\",\"nsapp\":\"${NSAPP:-${app:-unknown}}\",\"status\":\"failed\",\"exit_code\":${exit_code}}" &>/dev/null || true
+
+  # Collect last 20 log lines for error diagnosis (best-effort)
+  local error_text=""
+  if [[ -n "${INSTALL_LOG:-}" && -s "${INSTALL_LOG}" ]]; then
+    error_text=$(tail -n 20 "$INSTALL_LOG" 2>/dev/null | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\\/\\\\/g; s/"/\\"/g; s/\r//g' | tr '\n' '|' | sed 's/|$//' | tr -d '\000-\010\013\014\016-\037\177') || true
+  fi
+
+  # Calculate duration if start time is available
+  local duration=""
+  if [[ -n "${DIAGNOSTICS_START_TIME:-}" ]]; then
+    duration=$(($(date +%s) - DIAGNOSTICS_START_TIME))
+  fi
+
+  # Build JSON payload with error context
+  local payload
+  payload="{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"${TELEMETRY_TYPE:-lxc}\",\"nsapp\":\"${NSAPP:-${app:-unknown}}\",\"status\":\"failed\",\"exit_code\":${exit_code}"
+  [[ -n "$error_text" ]] && payload="${payload},\"error\":\"${error_text}\""
+  [[ -n "$duration" ]] && payload="${payload},\"duration\":${duration}"
+  payload="${payload}}"
+
+  local api_url="${TELEMETRY_URL:-https://telemetry.community-scripts.org/telemetry}"
+
+  # 2 attempts (retry once on failure) — original had no retry
+  local attempt
+  for attempt in 1 2; do
+    if curl -fsS -m 5 -X POST "$api_url" \
+      -H "Content-Type: application/json" \
+      -d "$payload" &>/dev/null; then
+      return 0
+    fi
+    [[ $attempt -eq 1 ]] && sleep 1
+  done
+  return 0
 }
 
 # ------------------------------------------------------------------------------
@@ -437,6 +472,12 @@ on_exit() {
 # - Exits with code 130 (128 + SIGINT=2)
 # ------------------------------------------------------------------------------
 on_interrupt() {
+  # Stop spinner and restore cursor before any output
+  if declare -f stop_spinner >/dev/null 2>&1; then
+    stop_spinner 2>/dev/null || true
+  fi
+  printf "\e[?25h" 2>/dev/null || true
+
   _send_abort_telemetry "130"
   _stop_container_if_installing
   if declare -f msg_error >/dev/null 2>&1; then
@@ -456,6 +497,12 @@ on_interrupt() {
 # - Exits with code 143 (128 + SIGTERM=15)
 # ------------------------------------------------------------------------------
 on_terminate() {
+  # Stop spinner and restore cursor before any output
+  if declare -f stop_spinner >/dev/null 2>&1; then
+    stop_spinner 2>/dev/null || true
+  fi
+  printf "\e[?25h" 2>/dev/null || true
+
   _send_abort_telemetry "143"
   _stop_container_if_installing
   if declare -f msg_error >/dev/null 2>&1; then
@@ -478,6 +525,11 @@ on_terminate() {
 # - Exits with code 129 (128 + SIGHUP=1)
 # ------------------------------------------------------------------------------
 on_hangup() {
+  # Stop spinner (no cursor restore needed — terminal is already gone)
+  if declare -f stop_spinner >/dev/null 2>&1; then
+    stop_spinner 2>/dev/null || true
+  fi
+
   _send_abort_telemetry "129"
   _stop_container_if_installing
   exit 129
