@@ -28,7 +28,6 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 PG_DB_NAME="kima" PG_DB_USER="kima" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
-
 NODE_VERSION="20" setup_nodejs
 
 msg_info "Configuring Redis"
@@ -70,8 +69,7 @@ curl -fsSL -o voice_instrumental-msd-musicnn-1.pb "https://essentia.upf.edu/mode
 msg_ok "Downloaded Essentia ML Models"
 
 msg_info "Downloading CLAP Model"
-curl -fsSL -o /opt/kima-hub/models/music_audioset_epoch_15_esc_90.14.pt \
-  "https://huggingface.co/lukewys/laion_clap/resolve/main/music_audioset_epoch_15_esc_90.14.pt"
+curl -fsSL -o /opt/kima-hub/models/music_audioset_epoch_15_esc_90.14.pt "https://huggingface.co/lukewys/laion_clap/resolve/main/music_audioset_epoch_15_esc_90.14.pt"
 msg_ok "Downloaded CLAP Model"
 
 msg_info "Building Backend"
@@ -206,7 +204,6 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now kima-backend kima-frontend kima-analyzer kima-analyzer-clap
 msg_ok "Created Services"
 
