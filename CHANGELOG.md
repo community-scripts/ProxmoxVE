@@ -417,6 +417,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - opnsense-VM: Use ip link to verify bridge existence [@MickLesk](https://github.com/MickLesk) ([#12329](https://github.com/community-scripts/ProxmoxVE/pull/12329))
+    - wger: Use $http_host for proxy Host header [@MickLesk](https://github.com/MickLesk) ([#12327](https://github.com/community-scripts/ProxmoxVE/pull/12327))
     - Passbolt: Update Nginx config `client_max_body_size` [@tremor021](https://github.com/tremor021) ([#12313](https://github.com/community-scripts/ProxmoxVE/pull/12313))
     - Zammad: configure Elasticsearch before zammad start [@MickLesk](https://github.com/MickLesk) ([#12308](https://github.com/community-scripts/ProxmoxVE/pull/12308))
 
