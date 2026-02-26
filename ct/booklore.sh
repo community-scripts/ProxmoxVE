@@ -34,6 +34,7 @@ function update_script() {
     NODE_VERSION="22" setup_nodejs
     setup_mariadb
     setup_yq
+    ensure_dependencies ffmpeg
 
     msg_info "Stopping Service"
     systemctl stop booklore
