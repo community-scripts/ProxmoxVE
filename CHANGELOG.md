@@ -409,6 +409,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-26
 
+### 🆕 New Scripts
+
+  - Kima-Hub ([#12319](https://github.com/community-scripts/ProxmoxVE/pull/12319))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
