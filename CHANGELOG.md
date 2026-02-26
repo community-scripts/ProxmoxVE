@@ -427,6 +427,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🧰 Tools
 
+  - #### 🐞 Bug Fixes
+
+    - Improves adguardhome-sync addon when running on alpine LXCs [@Darkangeel-hd](https://github.com/Darkangeel-hd) ([#12362](https://github.com/community-scripts/ProxmoxVE/pull/12362))
+
   - #### ✨ New Features
 
     - Add Alpine support and improve Tailscale install [@MickLesk](https://github.com/MickLesk) ([#12370](https://github.com/community-scripts/ProxmoxVE/pull/12370))
