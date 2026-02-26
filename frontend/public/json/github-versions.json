@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-26T12:14:56Z",
+  "generated": "2026-02-26T18:16:20Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -830,9 +830,9 @@
     {
       "slug": "manyfold",
       "repo": "manyfold3d/manyfold",
-      "version": "v0.133.0",
+      "version": "v0.133.1",
       "pinned": false,
-      "date": "2026-02-25T10:40:26Z"
+      "date": "2026-02-26T15:50:34Z"
     },
     {
       "slug": "mealie",
@@ -970,9 +970,9 @@
     {
       "slug": "oauth2-proxy",
       "repo": "oauth2-proxy/oauth2-proxy",
-      "version": "v7.14.2",
+      "version": "v7.14.3",
       "pinned": false,
-      "date": "2026-01-18T00:26:09Z"
+      "date": "2026-02-26T14:10:21Z"
     },
     {
       "slug": "ombi",
@@ -1061,9 +1061,9 @@
     {
       "slug": "paperless-gpt",
       "repo": "icereed/paperless-gpt",
-      "version": "v0.25.0",
+      "version": "v0.25.1",
       "pinned": false,
-      "date": "2026-02-16T08:31:48Z"
+      "date": "2026-02-26T14:50:11Z"
     },
     {
       "slug": "paperless-ngx",
