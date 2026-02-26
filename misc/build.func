@@ -118,7 +118,7 @@ maxkeys_check() {
 
   # Exit if kernel parameters are unavailable
   if [[ "$per_user_maxkeys" -eq 0 || "$per_user_maxbytes" -eq 0 ]]; then
-    echo -e "${CROSS}${RD} Error: Unable to read kernel parameters. Ensure proper permissions.${CL}"
+    msg_error "Unable to read kernel key parameters. Ensure proper permissions."
     exit 1
   fi
 
@@ -135,19 +135,19 @@ maxkeys_check() {
   # Check if key or byte usage is near limits
   failure=0
   if [[ "$used_lxc_keys" -gt "$threshold_keys" ]]; then
-    echo -e "${CROSS}${RD} Warning: Key usage is near the limit (${used_lxc_keys}/${per_user_maxkeys}).${CL}"
+    msg_warn "Key usage is near the limit (${used_lxc_keys}/${per_user_maxkeys})"
     echo -e "${INFO} Suggested action: Set ${GN}kernel.keys.maxkeys=${new_limit_keys}${CL} in ${BOLD}/etc/sysctl.d/98-community-scripts.conf${CL}."
     failure=1
   fi
   if [[ "$used_lxc_bytes" -gt "$threshold_bytes" ]]; then
-    echo -e "${CROSS}${RD} Warning: Key byte usage is near the limit (${used_lxc_bytes}/${per_user_maxbytes}).${CL}"
+    msg_warn "Key byte usage is near the limit (${used_lxc_bytes}/${per_user_maxbytes})"
     echo -e "${INFO} Suggested action: Set ${GN}kernel.keys.maxbytes=${new_limit_bytes}${CL} in ${BOLD}/etc/sysctl.d/98-community-scripts.conf${CL}."
     failure=1
   fi
 
   # Provide next steps if issues are detected
   if [[ "$failure" -eq 1 ]]; then
-    echo -e "${INFO} To apply changes, run: ${BOLD}service procps force-reload${CL}"
+    msg_error "Kernel key limits exceeded - see suggestions above"
     exit 1
   fi
 
@@ -2034,6 +2034,7 @@ advanced_settings() {
           ((STEP++))
         else
           whiptail --msgbox "Default bridge 'vmbr0' not found!\n\nPlease configure a network bridge in Proxmox first." 10 58
+          msg_error "Default bridge 'vmbr0' not found"
           exit 1
         fi
       else
@@ -3049,7 +3050,7 @@ install_script() {
       CHOICE=""
       ;;
     *)
-      echo -e "${CROSS}${RD}Invalid option: $CHOICE${CL}"
+      msg_error "Invalid option: $CHOICE"
       exit 1
       ;;
     esac
@@ -3128,12 +3129,12 @@ check_container_resources() {
   current_cpu=$(nproc)
 
   if [[ "$current_ram" -lt "$var_ram" ]] || [[ "$current_cpu" -lt "$var_cpu" ]]; then
-    echo -e "\n${INFO}${HOLD} ${GN}Required: ${var_cpu} CPU, ${var_ram}MB RAM ${CL}| ${RD}Current: ${current_cpu} CPU, ${current_ram}MB RAM${CL}"
+    msg_warn "Under-provisioned: Required ${var_cpu} CPU/${var_ram}MB RAM, Current ${current_cpu} CPU/${current_ram}MB RAM"
     echo -e "${YWB}Please ensure that the ${APP} LXC is configured with at least ${var_cpu} vCPU and ${var_ram} MB RAM for the build process.${CL}\n"
     echo -ne "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  "
     read -r prompt
     if [[ ! ${prompt,,} =~ ^(yes)$ ]]; then
-      echo -e "${CROSS}${HOLD} ${YWB}Exiting based on user input.${CL}"
+      msg_error "Aborted: under-provisioned LXC (${current_cpu} CPU/${current_ram}MB RAM < ${var_cpu} CPU/${var_ram}MB RAM)"
       exit 1
     fi
   else
@@ -3152,11 +3153,11 @@ check_container_storage() {
   local used_size=$(df /boot --output=used | tail -n 1)
   usage=$((100 * used_size / total_size))
   if ((usage > 80)); then
-    echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
+    msg_warn "Storage is dangerously low (${usage}% used on /boot)"
     echo -ne "Continue anyway? <y/N>  "
     read -r prompt
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
-      echo -e "${CROSS}${HOLD}${YWB}Exiting based on user input.${CL}"
+      msg_error "Aborted: storage too low (${usage}% used)"
       exit 1
     fi
   fi
@@ -3546,10 +3547,16 @@ build_container() {
   # Build PCT_OPTIONS as string for export
   TEMP_DIR=$(mktemp -d)
   pushd "$TEMP_DIR" >/dev/null
+  local _func_url
   if [ "$var_os" == "alpine" ]; then
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func)"
+    _func_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
+    _func_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func"
+  fi
+  export FUNCTIONS_FILE_PATH="$(curl -fsSL "$_func_url")"
+  if [[ -z "$FUNCTIONS_FILE_PATH" || ${#FUNCTIONS_FILE_PATH} -lt 100 ]]; then
+    msg_error "Failed to download install functions from: $_func_url"
+    exit 1
   fi
 
   # Core exports for install.func
@@ -3920,7 +3927,9 @@ EOF
     fi
     sleep 1
     if [ "$i" -eq 10 ]; then
-      msg_error "LXC Container did not reach running state"
+      local ct_status
+      ct_status=$(pct status "$CTID" 2>/dev/null || echo "unknown")
+      msg_error "LXC Container did not reach running state (status: ${ct_status})"
       exit 1
     fi
   done
@@ -3944,7 +3953,7 @@ EOF
 
     if [ -z "$ip_in_lxc" ]; then
       msg_error "No IP assigned to CT $CTID after 20s"
-      echo -e "${YW}Troubleshooting:${CL}"
+      msg_custom "🔧" "${YW}" "Troubleshooting:"
       echo "  • Verify bridge ${BRG} exists and has connectivity"
       echo "  • Check if DHCP server is reachable (if using DHCP)"
       echo "  • Verify static IP configuration (if using static IP)"
@@ -3966,8 +3975,7 @@ EOF
     done
 
     if [ "$ping_success" = false ]; then
-      msg_warn "Network configured (IP: $ip_in_lxc) but connectivity test failed"
-      echo -e "${YW}Container may have limited internet access. Installation will continue...${CL}"
+      msg_warn "Network configured (IP: $ip_in_lxc) but connectivity test failed - installation will continue"
     else
       msg_ok "Network in LXC is reachable (ping)"
     fi
@@ -4011,7 +4019,10 @@ EOF
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-    pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null"
+    pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null" || {
+      msg_error "Failed to install base packages in Alpine container"
+      exit 1
+    }
   else
     sleep 3
     LANG=${LANG:-en_US.UTF-8}
@@ -4908,8 +4919,7 @@ create_lxc_container() {
       return 0
     fi
 
-    echo
-    echo "An update for the Proxmox LXC stack is available:"
+    msg_info "An update for the Proxmox LXC stack is available"
     echo "  pve-container: installed=${_pvec_i:-n/a}  candidate=${_pvec_c:-n/a}"
     echo "  lxc-pve     : installed=${_lxcp_i:-n/a}  candidate=${_lxcp_c:-n/a}"
     echo
@@ -4961,7 +4971,6 @@ create_lxc_container() {
     exit 205
   }
   if qm status "$CTID" &>/dev/null || pct status "$CTID" &>/dev/null; then
-    echo -e "ID '$CTID' is already in use."
     unset CTID
     msg_error "Cannot use ID that is already in use."
     exit 206
@@ -5019,17 +5028,40 @@ create_lxc_container() {
   msg_info "Validating storage '$CONTAINER_STORAGE'"
   STORAGE_TYPE=$(grep -E "^[^:]+: $CONTAINER_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1 | head -1)
 
+  if [[ -z "$STORAGE_TYPE" ]]; then
+    msg_error "Storage '$CONTAINER_STORAGE' not found in /etc/pve/storage.cfg"
+    exit 213
+  fi
+
   case "$STORAGE_TYPE" in
-  iscsidirect) exit 212 ;;
-  iscsi | zfs) exit 213 ;;
-  cephfs) exit 219 ;;
-  pbs) exit 224 ;;
+  iscsidirect)
+    msg_error "Storage '$CONTAINER_STORAGE' uses iSCSI-direct which does not support container rootfs."
+    exit 212
+    ;;
+  iscsi | zfs)
+    msg_error "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) does not support container rootdir content."
+    exit 213
+    ;;
+  cephfs)
+    msg_error "Storage '$CONTAINER_STORAGE' uses CephFS which is not supported for LXC rootfs."
+    exit 219
+    ;;
+  pbs)
+    msg_error "Storage '$CONTAINER_STORAGE' is a Proxmox Backup Server — cannot be used for containers."
+    exit 224
+    ;;
   linstor | rbd | nfs | cifs)
-    pvesm status -storage "$CONTAINER_STORAGE" &>/dev/null || exit 217
+    if ! pvesm status -storage "$CONTAINER_STORAGE" &>/dev/null; then
+      msg_error "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) is not accessible or inactive."
+      exit 217
+    fi
     ;;
   esac
 
-  pvesm status -content rootdir 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$CONTAINER_STORAGE" || exit 213
+  if ! pvesm status -content rootdir 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$CONTAINER_STORAGE"; then
+    msg_error "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) does not support 'rootdir' content."
+    exit 213
+  fi
   msg_ok "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) validated"
 
   msg_info "Validating template storage '$TEMPLATE_STORAGE'"
@@ -5102,8 +5134,7 @@ create_lxc_container() {
 
   # If still no template, try to find alternatives
   if [[ -z "$TEMPLATE" ]]; then
-    echo ""
-    echo "[DEBUG] No template found for ${PCT_OSTYPE} ${PCT_OSVERSION}, searching for alternatives..."
+    msg_warn "No template found for ${PCT_OSTYPE} ${PCT_OSVERSION}, searching for alternatives..."
 
     # Get all available versions for this OS type
     AVAILABLE_VERSIONS=()
@@ -5377,13 +5408,19 @@ create_lxc_container() {
   if [[ ! -s "$TEMPLATE_PATH" || "$(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo 0)" -lt 1000000 ]]; then
     msg_info "Template file missing or too small – downloading"
     rm -f "$TEMPLATE_PATH"
-    pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1
+    pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1 || {
+      msg_error "Failed to download template '$TEMPLATE' to storage '$TEMPLATE_STORAGE'"
+      exit 222
+    }
     msg_ok "Template downloaded"
   elif ! tar -tf "$TEMPLATE_PATH" &>/dev/null; then
     if [[ -n "$ONLINE_TEMPLATE" ]]; then
       msg_info "Template appears corrupted – re-downloading"
       rm -f "$TEMPLATE_PATH"
-      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1
+      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1 || {
+        msg_error "Failed to re-download template '$TEMPLATE'"
+        exit 222
+      }
       msg_ok "Template re-downloaded"
     else
       msg_warn "Template appears corrupted, but no online version exists. Skipping re-download."
@@ -5425,20 +5462,17 @@ create_lxc_container() {
         if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
           # Local fallback also failed - check for LXC stack version issue
           if grep -qiE 'unsupported .* version' "$LOGFILE"; then
-            echo
-            echo "pct reported 'unsupported ... version' – your LXC stack might be too old for this template."
-            echo "We can try to upgrade 'pve-container' and 'lxc-pve' now and retry automatically."
+            msg_warn "pct reported 'unsupported version' – LXC stack might be too old for this template"
             offer_lxc_stack_upgrade_and_maybe_retry "yes"
             rc=$?
             case $rc in
             0) : ;; # success - container created, continue
             2)
-              echo "Upgrade was declined. Please update and re-run:
-  apt update && apt install --only-upgrade pve-container lxc-pve"
+              msg_error "Upgrade declined. Please update and re-run: apt update && apt install --only-upgrade pve-container lxc-pve"
               exit 231
               ;;
             3)
-              echo "Upgrade and/or retry failed. Please inspect: $LOGFILE"
+              msg_error "Upgrade and/or retry failed. Please inspect: $LOGFILE"
               exit 231
               ;;
             esac
@@ -5457,20 +5491,17 @@ create_lxc_container() {
       else
         # Already on local storage and still failed - check LXC stack version
         if grep -qiE 'unsupported .* version' "$LOGFILE"; then
-          echo
-          echo "pct reported 'unsupported ... version' – your LXC stack might be too old for this template."
-          echo "We can try to upgrade 'pve-container' and 'lxc-pve' now and retry automatically."
+          msg_warn "pct reported 'unsupported version' – LXC stack might be too old for this template"
           offer_lxc_stack_upgrade_and_maybe_retry "yes"
           rc=$?
           case $rc in
           0) : ;; # success - container created, continue
           2)
-            echo "Upgrade was declined. Please update and re-run:
-  apt update && apt install --only-upgrade pve-container lxc-pve"
+            msg_error "Upgrade declined. Please update and re-run: apt update && apt install --only-upgrade pve-container lxc-pve"
             exit 231
             ;;
           3)
-            echo "Upgrade and/or retry failed. Please inspect: $LOGFILE"
+            msg_error "Upgrade and/or retry failed. Please inspect: $LOGFILE"
             exit 231
             ;;
           esac

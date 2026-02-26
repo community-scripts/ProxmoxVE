@@ -201,6 +201,7 @@ install_packages_with_retry() {
     fi
   done
 
+  msg_error "Failed to install packages after $((max_retries + 1)) attempts: ${packages[*]}"
   return 1
 }
 
@@ -231,6 +232,7 @@ upgrade_packages_with_retry() {
     fi
   done
 
+  msg_error "Failed to upgrade packages after $((max_retries + 1)) attempts: ${packages[*]}"
   return 1
 }
 
@@ -675,6 +677,7 @@ verify_repo_available() {
   if curl -fsSL --max-time 10 "${repo_url}/dists/${suite}/Release" &>/dev/null; then
     return 0
   fi
+  msg_warn "Repository not available: ${repo_url} (suite: ${suite})"
   return 1
 }
 
@@ -839,6 +842,7 @@ github_api_call() {
     esac
   done
 
+  msg_error "GitHub API call failed after ${max_retries} attempts: ${url}"
   return 1
 }
 
@@ -900,6 +904,7 @@ codeberg_api_call() {
     esac
   done
 
+  msg_error "Codeberg API call failed after ${max_retries} attempts: ${url}"
   return 1
 }
 
@@ -1369,7 +1374,9 @@ setup_deb822_repo() {
     [[ -n "$enabled" ]] && echo "Enabled: $enabled"
   } >/etc/apt/sources.list.d/${name}.sources
 
-  $STD apt update
+  $STD apt update || {
+    msg_warn "apt update failed after adding repository: ${name}"
+  }
 }
 
 # ------------------------------------------------------------------------------
@@ -1377,12 +1384,16 @@ setup_deb822_repo() {
 # ------------------------------------------------------------------------------
 hold_package_version() {
   local package="$1"
-  $STD apt-mark hold "$package"
+  $STD apt-mark hold "$package" || {
+    msg_warn "Failed to hold package version: ${package}"
+  }
 }
 
 unhold_package_version() {
   local package="$1"
-  $STD apt-mark unhold "$package"
+  $STD apt-mark unhold "$package" || {
+    msg_warn "Failed to unhold package version: ${package}"
+  }
 }
 
 # ------------------------------------------------------------------------------
@@ -1412,6 +1423,7 @@ enable_and_start_service() {
   local service="$1"
 
   if ! systemctl enable "$service" &>/dev/null; then
+    msg_error "Failed to enable service: $service"
     return 1
   fi
 
@@ -1454,6 +1466,7 @@ extract_version_from_json() {
   version=$(echo "$json" | jq -r ".${field} // empty")
 
   if [[ -z "$version" ]]; then
+    msg_warn "JSON field '${field}' is empty in API response"
     return 1
   fi
 
@@ -1473,8 +1486,9 @@ get_latest_github_release() {
   local temp_file=$(mktemp)
 
   if ! github_api_call "https://api.github.com/repos/${repo}/releases/latest" "$temp_file"; then
+    msg_warn "GitHub API call failed for ${repo}"
     rm -f "$temp_file"
-    return 0
+    return 1
   fi
 
   local version
@@ -1483,7 +1497,7 @@ get_latest_github_release() {
 
   if [[ -z "$version" ]]; then
     msg_error "Could not determine latest version for ${repo}"
-    return 0
+    return 1
   fi
 
   echo "$version"
@@ -1499,8 +1513,9 @@ get_latest_codeberg_release() {
 
   # Codeberg API: get all releases and pick the first non-draft/non-prerelease
   if ! codeberg_api_call "https://codeberg.org/api/v1/repos/${repo}/releases" "$temp_file"; then
+    msg_warn "Codeberg API call failed for ${repo}"
     rm -f "$temp_file"
-    return 0
+    return 1
   fi
 
   local version
@@ -1515,7 +1530,7 @@ get_latest_codeberg_release() {
 
   if [[ -z "$version" ]]; then
     msg_error "Could not determine latest version for ${repo}"
-    return 0
+    return 1
   fi
 
   echo "$version"
@@ -1646,6 +1661,7 @@ get_latest_gh_tag() {
     sort -V | tail -n1)
 
   if [[ -z "$latest" ]]; then
+    msg_warn "No matching tags found for ${repo}${prefix:+ (prefix: $prefix)}"
     return 1
   fi
 
@@ -1881,7 +1897,7 @@ check_for_codeberg_release() {
   releases_json=$(curl -fsSL --max-time 20 \
     -H 'Accept: application/json' \
     "https://codeberg.org/api/v1/repos/${source}/releases" 2>/dev/null) || {
-    msg_error "Unable to fetch releases for ${app}"
+    msg_error "Unable to fetch releases for ${app} (codeberg.org/api/v1/repos/${source}/releases)"
     return 1
   }
 
@@ -2014,12 +2030,12 @@ function download_with_progress() {
 
   if [[ -z "$content_length" ]]; then
     if ! curl -fL# -o "$output" "$url"; then
-      msg_error "Download failed"
+      msg_error "Download failed: $url"
       return 1
     fi
   else
     if ! curl -fsSL "$url" | pv -s "$content_length" >"$output"; then
-      msg_error "Download failed"
+      msg_error "Download failed: $url"
       return 1
     fi
   fi
@@ -2562,7 +2578,10 @@ _gh_scan_older_releases() {
     -H 'Accept: application/vnd.github+json' \
     -H 'X-GitHub-Api-Version: 2022-11-28' \
     "${header[@]}" \
-    "https://api.github.com/repos/${repo}/releases?per_page=15" 2>/dev/null) || return 1
+    "https://api.github.com/repos/${repo}/releases?per_page=15" 2>/dev/null) || {
+    msg_warn "Failed to fetch older releases for ${repo}"
+    return 1
+  }
 
   local count
   count=$(echo "$releases_list" | jq 'length')
@@ -3104,7 +3123,9 @@ function setup_composer() {
   # Scenario 1: Already installed - just self-update
   if [[ -n "$INSTALLED_VERSION" ]]; then
     msg_info "Update Composer $INSTALLED_VERSION"
-    $STD "$COMPOSER_BIN" self-update --no-interaction || true
+    $STD "$COMPOSER_BIN" self-update --no-interaction || {
+      msg_warn "Composer self-update failed, continuing with current version"
+    }
     local UPDATED_VERSION
     UPDATED_VERSION=$("$COMPOSER_BIN" --version 2>/dev/null | awk '{print $3}')
     cache_installed_version "composer" "$UPDATED_VERSION"
@@ -3140,7 +3161,9 @@ function setup_composer() {
   fi
 
   chmod +x "$COMPOSER_BIN"
-  $STD "$COMPOSER_BIN" self-update --no-interaction || true
+  $STD "$COMPOSER_BIN" self-update --no-interaction || {
+    msg_warn "Composer self-update failed after fresh install"
+  }
 
   local FINAL_VERSION
   FINAL_VERSION=$("$COMPOSER_BIN" --version 2>/dev/null | awk '{print $3}')
@@ -3891,7 +3914,7 @@ _setup_intel_arc() {
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Intel Modern GPU Setup (Gen 9+)
-# ══════════════════════════════════════════════════════════════════════════════
+# ════════════════════════════���═════════════════════════════════════════════════
 _setup_intel_modern() {
   local os_id="$1" os_codename="$2"
 
@@ -5211,7 +5234,9 @@ function setup_mysql() {
     ensure_apt_working || return 1
 
     # Perform upgrade with retry logic (non-fatal if fails)
-    upgrade_packages_with_retry "mysql-server" "mysql-client" || true
+    upgrade_packages_with_retry "mysql-server" "mysql-client" || {
+      msg_warn "MySQL package upgrade had issues, continuing with current version"
+    }
 
     cache_installed_version "mysql" "$MYSQL_VERSION"
     msg_ok "Update MySQL $MYSQL_VERSION"
@@ -5401,7 +5426,9 @@ function setup_nodejs() {
     }
 
     # Force APT cache refresh after repository setup
-    $STD apt update
+    $STD apt update || {
+      msg_warn "apt update failed after Node.js repository setup"
+    }
 
     ensure_dependencies curl ca-certificates gnupg
 
@@ -5644,7 +5671,10 @@ EOF
   if [[ "$DISTRO_ID" == "ubuntu" ]]; then
     # Ubuntu: Use ondrej/php PPA
     msg_info "Adding ondrej/php PPA for Ubuntu"
-    $STD apt install -y software-properties-common
+    $STD apt install -y software-properties-common || {
+      msg_error "Failed to install software-properties-common"
+      return 1
+    }
     # Don't use $STD for add-apt-repository as it uses background processes
     add-apt-repository -y ppa:ondrej/php >>"$(get_active_logfile)" 2>&1
   else
@@ -5655,7 +5685,9 @@ EOF
     }
   fi
   ensure_apt_working || return 1
-  $STD apt update
+  $STD apt update || {
+    msg_warn "apt update failed after PHP repository setup"
+  }
 
   # Get available PHP version from repository
   local AVAILABLE_PHP_VERSION=""
@@ -5950,7 +5982,9 @@ function setup_postgresql() {
     }
   fi
 
-  $STD systemctl enable --now postgresql 2>/dev/null || true
+  $STD systemctl enable --now postgresql 2>/dev/null || {
+    msg_warn "Failed to enable/start PostgreSQL service"
+  }
 
   # Add PostgreSQL binaries to PATH
   if ! grep -q '/usr/lib/postgresql' /etc/environment 2>/dev/null; then
@@ -5964,7 +5998,9 @@ function setup_postgresql() {
   if [[ -n "$PG_MODULES" ]]; then
     IFS=',' read -ra MODULES <<<"$PG_MODULES"
     for module in "${MODULES[@]}"; do
-      $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || true
+      $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || {
+        msg_warn "Failed to install PostgreSQL module: ${module}"
+      }
     done
   fi
 }
@@ -6623,7 +6659,9 @@ function setup_clickhouse() {
     ensure_apt_working || return 1
 
     # Perform upgrade with retry logic (non-fatal if fails)
-    upgrade_packages_with_retry "clickhouse-server" "clickhouse-client" || true
+    upgrade_packages_with_retry "clickhouse-server" "clickhouse-client" || {
+      msg_warn "ClickHouse package upgrade had issues, continuing with current version"
+    }
     cache_installed_version "clickhouse" "$CLICKHOUSE_VERSION"
     msg_ok "Update ClickHouse $CLICKHOUSE_VERSION"
     return 0
@@ -6758,7 +6796,9 @@ function setup_rust() {
     }
 
     # Update to latest patch version
-    $STD rustup update "$RUST_TOOLCHAIN" </dev/null || true
+    $STD rustup update "$RUST_TOOLCHAIN" </dev/null || {
+      msg_warn "Rust toolchain update had issues"
+    }
 
     # Ensure PATH is updated for current shell session
     export PATH="$CARGO_BIN:$PATH"
@@ -7160,7 +7200,10 @@ function setup_docker() {
         docker-ce-cli \
         containerd.io \
         docker-buildx-plugin \
-        docker-compose-plugin
+        docker-compose-plugin || {
+        msg_error "Failed to update Docker packages"
+        return 1
+      }
       msg_ok "Updated Docker to $DOCKER_LATEST_VERSION"
     else
       msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
@@ -7172,7 +7215,10 @@ function setup_docker() {
       docker-ce-cli \
       containerd.io \
       docker-buildx-plugin \
-      docker-compose-plugin
+      docker-compose-plugin || {
+      msg_error "Failed to install Docker packages"
+      return 1
+    }
 
     DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
     msg_ok "Installed Docker $DOCKER_CURRENT_VERSION"

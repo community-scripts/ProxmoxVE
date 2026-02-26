@@ -276,7 +276,7 @@ shell_check() {
     msg_error "Your default shell is currently not set to Bash. To use these scripts, please switch to the Bash shell."
     echo -e "\nExiting..."
     sleep 2
-    exit
+    exit 1
   fi
 }
 
@@ -293,7 +293,7 @@ root_check() {
     msg_error "Please run this script as root."
     echo -e "\nExiting..."
     sleep 2
-    exit
+    exit 1
   fi
 }
 
@@ -345,11 +345,10 @@ pve_check() {
 # ------------------------------------------------------------------------------
 arch_check() {
   if [ "$(dpkg --print-architecture)" != "amd64" ]; then
-    echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
-    echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
-    echo -e "Exiting..."
+    msg_error "This script will not work with PiMox (ARM architecture detected)."
+    msg_warn "Visit https://github.com/asylumexp/Proxmox for ARM64 support."
     sleep 2
-    exit
+    exit 1
   fi
 }
 
@@ -530,7 +529,9 @@ silent() {
   if [[ $rc -ne 0 ]]; then
     # Source explain_exit_code if needed
     if ! declare -f explain_exit_code >/dev/null 2>&1; then
-      source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+      if ! source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func); then
+        explain_exit_code() { echo "unknown (error_handler.func download failed)"; }
+      fi
     fi
 
     local explanation
@@ -785,8 +786,8 @@ fatal() {
 # ------------------------------------------------------------------------------
 exit_script() {
   clear
-  echo -e "\n${CROSS}${RD}User exited script${CL}\n"
-  exit
+  msg_error "User exited script"
+  exit 0
 }
 
 # ------------------------------------------------------------------------------
@@ -807,6 +808,7 @@ get_header() {
 
   if [ ! -s "$local_header_path" ]; then
     if ! curl -fsSL "$header_url" -o "$local_header_path"; then
+      msg_warn "Failed to download header: $header_url"
       return 1
     fi
   fi
@@ -847,10 +849,10 @@ header_info() {
 ensure_tput() {
   if ! command -v tput >/dev/null 2>&1; then
     if grep -qi 'alpine' /etc/os-release; then
-      apk add --no-cache ncurses >/dev/null 2>&1
+      apk add --no-cache ncurses >/dev/null 2>&1 || msg_warn "Failed to install ncurses (tput may be unavailable)"
     elif command -v apt-get >/dev/null 2>&1; then
       apt-get update -qq >/dev/null
-      apt-get install -y -qq ncurses-bin >/dev/null 2>&1
+      apt-get install -y -qq ncurses-bin >/dev/null 2>&1 || msg_warn "Failed to install ncurses-bin (tput may be unavailable)"
     fi
   fi
 }
@@ -1310,6 +1312,7 @@ prompt_select() {
 
   # Validate options
   if [[ $num_options -eq 0 ]]; then
+    msg_warn "prompt_select called with no options"
     echo "" >&2
     return 1
   fi
@@ -1552,22 +1555,30 @@ check_or_create_swap() {
   local swap_size_mb
   swap_size_mb=$(prompt_input "Enter swap size in MB (e.g., 2048 for 2GB):" "2048" 60)
   if ! [[ "$swap_size_mb" =~ ^[0-9]+$ ]]; then
-    msg_error "Invalid size input. Aborting."
+    msg_error "Invalid swap size: '${swap_size_mb}' (must be a number in MB)"
     return 1
   fi
 
   local swap_file="/swapfile"
 
   msg_info "Creating ${swap_size_mb}MB swap file at $swap_file"
-  if dd if=/dev/zero of="$swap_file" bs=1M count="$swap_size_mb" status=progress &&
-    chmod 600 "$swap_file" &&
-    mkswap "$swap_file" &&
-    swapon "$swap_file"; then
-    msg_ok "Swap file created and activated successfully"
-  else
-    msg_error "Failed to create or activate swap"
+  if ! dd if=/dev/zero of="$swap_file" bs=1M count="$swap_size_mb" status=progress; then
+    msg_error "Failed to allocate swap file (dd failed)"
     return 1
   fi
+  if ! chmod 600 "$swap_file"; then
+    msg_error "Failed to set permissions on $swap_file"
+    return 1
+  fi
+  if ! mkswap "$swap_file"; then
+    msg_error "Failed to format swap file (mkswap failed)"
+    return 1
+  fi
+  if ! swapon "$swap_file"; then
+    msg_error "Failed to activate swap (swapon failed)"
+    return 1
+  fi
+  msg_ok "Swap file created and activated successfully"
 }
 
 # ------------------------------------------------------------------------------
@@ -1649,7 +1660,7 @@ function get_lxc_ip() {
 
     LOCAL_IP="$(get_current_ip || true)"
     if [[ -z "$LOCAL_IP" ]]; then
-      msg_error "Could not determine LOCAL_IP"
+      msg_error "Could not determine LOCAL_IP (checked: eth0, hostname -I, ip route, IPv6 targets)"
       return 1
     fi
   fi
