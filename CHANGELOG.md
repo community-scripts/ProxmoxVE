@@ -415,6 +415,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - hotfix: overseer version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12366](https://github.com/community-scripts/ProxmoxVE/pull/12366))
+
   - #### ✨ New Features
 
     - [QOL] Immich: add warning regarding library compilation time [@vhsdream](https://github.com/vhsdream) ([#12345](https://github.com/community-scripts/ProxmoxVE/pull/12345))
