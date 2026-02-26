@@ -353,7 +353,11 @@ else
 fi
 cd "$SRC_DIR"
 cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-[[ -f ~/.openvino ]] && sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
+if [[ -f ~/.openvino ]]; then
+  sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
+  sed -i -e '$ a max_requests = 100' \
+    -e '$ a max_requests_jitter = 10' "$ML_DIR"/immich_ml/gunicorn_conf.py
+fi
 ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
 
 cd "$APP_DIR"
