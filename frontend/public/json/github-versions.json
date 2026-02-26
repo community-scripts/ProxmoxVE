@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-26T00:19:26Z",
+  "generated": "2026-02-26T06:22:43Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -452,9 +452,9 @@
     {
       "slug": "gitea-mirror",
       "repo": "RayLabsHQ/gitea-mirror",
-      "version": "v3.9.4",
+      "version": "v3.9.5",
       "pinned": false,
-      "date": "2026-02-24T06:17:56Z"
+      "date": "2026-02-26T05:32:12Z"
     },
     {
       "slug": "glance",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1205",
+      "version": "v0.24.1218",
       "pinned": false,
-      "date": "2026-02-25T05:49:14Z"
+      "date": "2026-02-26T05:55:11Z"
     },
     {
       "slug": "jellystat",
@@ -1166,9 +1166,9 @@
     {
       "slug": "prometheus",
       "repo": "prometheus/prometheus",
-      "version": "v3.9.1",
+      "version": "v3.10.0",
       "pinned": false,
-      "date": "2026-01-07T17:05:53Z"
+      "date": "2026-02-26T01:19:51Z"
     },
     {
       "slug": "prometheus-alertmanager",
@@ -1390,9 +1390,9 @@
     {
       "slug": "signoz",
       "repo": "SigNoz/signoz-otel-collector",
-      "version": "v0.144.1",
+      "version": "v0.144.2",
       "pinned": false,
-      "date": "2026-02-25T05:57:17Z"
+      "date": "2026-02-26T05:57:26Z"
     },
     {
       "slug": "silverbullet",
