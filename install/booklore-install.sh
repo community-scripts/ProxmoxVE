@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y ffmpeg
+$STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
 JAVA_VERSION="25" setup_java
