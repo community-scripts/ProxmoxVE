@@ -76,70 +76,90 @@ grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.e
 header_info
 msg_info "Installing Tailscale in CT $CTID"
 
-pct exec "$CTID" -- bash -c '
+pct exec "$CTID" -- sh -c '
 set -e
-export DEBIAN_FRONTEND=noninteractive
 
-# Source os-release properly (handles quoted values)
-source /etc/os-release
+# Detect OS inside container
+if [ -f /etc/alpine-release ]; then
+  # ── Alpine Linux ──
+  echo "[INFO] Alpine Linux detected, installing Tailscale via apk..."
 
-# Fallback if DNS is poisoned or blocked
-ORIG_RESOLV="/etc/resolv.conf"
-BACKUP_RESOLV="/tmp/resolv.conf.backup"
+  # Enable community repo if not already enabled
+  if ! grep -q "^[^#].*community" /etc/apk/repositories 2>/dev/null; then
+    ALPINE_VERSION=$(cat /etc/alpine-release | cut -d. -f1,2)
+    echo "https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories
+  fi
 
-# Check DNS resolution using multiple methods (dig may not be installed)
-dns_check_failed=true
-if command -v dig &>/dev/null; then
-  if dig +short pkgs.tailscale.com 2>/dev/null | grep -qvE "^127\.|^0\.0\.0\.0$|^$"; then
-    dns_check_failed=false
-  fi
-elif command -v host &>/dev/null; then
-  if host pkgs.tailscale.com 2>/dev/null | grep -q "has address"; then
-    dns_check_failed=false
-  fi
-elif command -v nslookup &>/dev/null; then
-  if nslookup pkgs.tailscale.com 2>/dev/null | grep -q "Address:"; then
-    dns_check_failed=false
-  fi
-elif command -v getent &>/dev/null; then
-  if getent hosts pkgs.tailscale.com &>/dev/null; then
-    dns_check_failed=false
-  fi
+  apk update
+  apk add --no-cache tailscale
+
+  # Enable and start Tailscale service
+  rc-update add tailscale default 2>/dev/null || true
+  rc-service tailscale start 2>/dev/null || true
+
 else
-  # No DNS tools available, try curl directly and assume DNS works
-  dns_check_failed=false
-fi
+  # ── Debian / Ubuntu ──
+  export DEBIAN_FRONTEND=noninteractive
 
-if $dns_check_failed; then
-  echo "[INFO] DNS resolution for pkgs.tailscale.com failed (blocked or redirected)."
-  echo "[INFO] Temporarily overriding /etc/resolv.conf with Cloudflare DNS (1.1.1.1)"
-  cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
-  echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
-fi
+  # Source os-release properly (handles quoted values)
+  . /etc/os-release
 
-if ! command -v curl &>/dev/null; then
-  echo "[INFO] curl not found, installing..."
+  # Fallback if DNS is poisoned or blocked
+  ORIG_RESOLV="/etc/resolv.conf"
+  BACKUP_RESOLV="/tmp/resolv.conf.backup"
+
+  # Check DNS resolution using multiple methods (dig may not be installed)
+  dns_check_failed=true
+  if command -v dig >/dev/null 2>&1; then
+    if dig +short pkgs.tailscale.com 2>/dev/null | grep -qvE "^127\.|^0\.0\.0\.0$|^$"; then
+      dns_check_failed=false
+    fi
+  elif command -v host >/dev/null 2>&1; then
+    if host pkgs.tailscale.com 2>/dev/null | grep -q "has address"; then
+      dns_check_failed=false
+    fi
+  elif command -v nslookup >/dev/null 2>&1; then
+    if nslookup pkgs.tailscale.com 2>/dev/null | grep -q "Address:"; then
+      dns_check_failed=false
+    fi
+  elif command -v getent >/dev/null 2>&1; then
+    if getent hosts pkgs.tailscale.com >/dev/null 2>&1; then
+      dns_check_failed=false
+    fi
+  else
+    # No DNS tools available, try curl directly and assume DNS works
+    dns_check_failed=false
+  fi
+
+  if $dns_check_failed; then
+    echo "[INFO] DNS resolution for pkgs.tailscale.com failed (blocked or redirected)."
+    echo "[INFO] Temporarily overriding /etc/resolv.conf with Cloudflare DNS (1.1.1.1)"
+    cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
+    echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
+  fi
+
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "[INFO] curl not found, installing..."
+    apt-get update -qq
+    apt-get install -y curl >/dev/null
+  fi
+
+  # Ensure keyrings directory exists
+  mkdir -p /usr/share/keyrings
+
+  curl -fsSL "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
+    | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+
+  echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VERSION_CODENAME} main" \
+    >/etc/apt/sources.list.d/tailscale.list
+
   apt-get update -qq
- apt update -qq
- apt install -y curl >/dev/null
-fi
+  apt-get install -y tailscale >/dev/null
 
-# Ensure keyrings directory exists
-mkdir -p /usr/share/keyrings
-
-curl -fsSL "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
-  | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
-
-echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VERSION_CODENAME} main" \
-  >/etc/apt/sources.list.d/tailscale.list
-
-apt-get update -qq
-apt update -qq
-apt install -y tailscale >/dev/null
-
-if [[ -f /tmp/resolv.conf.backup ]]; then
-  echo "[INFO] Restoring original /etc/resolv.conf"
-  mv /tmp/resolv.conf.backup /etc/resolv.conf
+  if [ -f /tmp/resolv.conf.backup ]; then
+    echo "[INFO] Restoring original /etc/resolv.conf"
+    mv /tmp/resolv.conf.backup /etc/resolv.conf
+  fi
 fi
 '
 
