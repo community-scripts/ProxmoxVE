@@ -417,6 +417,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tools.func: update glx alternatives / nvidia alternative if nvidia glx are missing [@MickLesk](https://github.com/MickLesk) ([#12372](https://github.com/community-scripts/ProxmoxVE/pull/12372))
     - hotfix: overseer version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12366](https://github.com/community-scripts/ProxmoxVE/pull/12366))
 
   - #### ✨ New Features
