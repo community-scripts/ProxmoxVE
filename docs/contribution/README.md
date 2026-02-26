@@ -175,7 +175,7 @@ All scripts and configurations must follow our coding standards to ensure consis
 ### Available Guides
 
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Essential coding standards and best practices
-- **[CODE_AUDIT.md](CODE_AUDIT.md)** - Code review checklist and audit procedures
+- **[CODE-AUDIT.md](CODE-AUDIT.md)** - Code review checklist and audit procedures
 - **[GUIDE.md](GUIDE.md)** - Comprehensive contribution guide
 - **[HELPER_FUNCTIONS.md](HELPER_FUNCTIONS.md)** - Reference for all tools.func helper functions
 - **Container Scripts** - `/ct/` templates and guidelines
