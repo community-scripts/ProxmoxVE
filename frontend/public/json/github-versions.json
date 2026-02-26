@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-26T06:22:43Z",
+  "generated": "2026-02-26T12:14:56Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -109,9 +109,9 @@
     {
       "slug": "bazarr",
       "repo": "morpheus65535/bazarr",
-      "version": "v1.5.5",
+      "version": "v1.5.6",
       "pinned": false,
-      "date": "2026-02-01T18:00:34Z"
+      "date": "2026-02-26T11:33:11Z"
     },
     {
       "slug": "bentopdf",
@@ -242,9 +242,9 @@
     {
       "slug": "cosmos",
       "repo": "azukaar/Cosmos-Server",
-      "version": "v0.21.0",
+      "version": "v0.21.2",
       "pinned": false,
-      "date": "2026-02-25T17:26:37Z"
+      "date": "2026-02-26T11:32:33Z"
     },
     {
       "slug": "cronicle",
@@ -667,6 +667,13 @@
       "date": "2026-02-20T09:19:45Z"
     },
     {
+      "slug": "kima-hub",
+      "repo": "Chevron7Locked/kima-hub",
+      "version": "v1.5.7",
+      "pinned": false,
+      "date": "2026-02-23T23:58:59Z"
+    },
+    {
       "slug": "kimai",
       "repo": "kimai/kimai",
       "version": "2.50.0",
@@ -809,9 +816,9 @@
     {
       "slug": "mail-archiver",
       "repo": "s1t5/mail-archiver",
-      "version": "2602.3",
+      "version": "2602.4",
       "pinned": false,
-      "date": "2026-02-22T20:24:18Z"
+      "date": "2026-02-26T08:43:01Z"
     },
     {
       "slug": "managemydamnlife",
