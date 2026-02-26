@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  if [[ -f "$HOME/.overseerr" ]] && [[ "$(printf '%s\n' "1.34.0" "$(cat "$HOME/.overseerr")" | sort -V | head -n1)" == "1.35.0" ]]; then
+  if [[ -f "$HOME/.overseerr" ]] && [[ "$(printf '%s\n' "1.35.0" "$(cat "$HOME/.overseerr")" | sort -V | head -n1)" == "1.35.0" ]]; then
     echo
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "Overseerr v1.34.0 detected."
