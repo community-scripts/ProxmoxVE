@@ -4237,6 +4237,18 @@ NVIDIA_PIN
   # VA-API for hybrid setups (Intel + NVIDIA)
   $STD apt-get -y install va-driver-all vainfo 2>/dev/null || true
 
+  # Fix GLX alternatives: nvidia-alternative diverts mesa libs but in LXC
+  # containers the nvidia GLX libs are typically missing, leaving libGL.so.1
+  # pointing nowhere. Fall back to mesa if nvidia GLX dir is empty/missing.
+  if command -v update-glx &>/dev/null; then
+    local nvidia_glx_dir="/usr/lib/nvidia"
+    if [[ ! -f "${nvidia_glx_dir}/libGL.so.1" ]] && [[ -d /usr/lib/mesa-diverted ]]; then
+      msg_info "NVIDIA GLX libs missing in container - falling back to mesa"
+      $STD update-glx --set glx /usr/lib/mesa-diverted 2>/dev/null || true
+      ldconfig 2>/dev/null || true
+    fi
+  fi
+
   msg_ok "NVIDIA GPU configured"
 }
 
