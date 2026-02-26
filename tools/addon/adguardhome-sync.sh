@@ -79,9 +79,6 @@ if ! command -v jq &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Installing jq \033[m' >&2
   if [[ "$OS" == "Alpine" ]]; then
     apk -U add jq >/dev/null 2>&1
-  else            
-    apt-get update >/dev/null 2>&1
-    apt-get install -y jq >/dev/null 2>&1
   fi
 fi
 
