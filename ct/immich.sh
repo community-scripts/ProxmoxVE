@@ -97,7 +97,7 @@ EOF
   if [[ -f ~/.immich_library_revisions ]]; then
     libraries=("libjxl" "libheif" "libraw" "imagemagick" "libvips")
     cd "$BASE_DIR"
-    msg_info "Checking for updates to custom image-processing libraries"
+    msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
     $STD git pull
     for library in "${libraries[@]}"; do
       compile_"$library"
