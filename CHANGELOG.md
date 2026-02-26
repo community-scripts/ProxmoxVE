@@ -409,6 +409,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-26
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - [QOL] Immich: add warning regarding library compilation time [@vhsdream](https://github.com/vhsdream) ([#12345](https://github.com/community-scripts/ProxmoxVE/pull/12345))
+
 ## 2026-02-25
 
 ### 🆕 New Scripts
