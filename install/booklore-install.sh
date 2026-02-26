@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt-get install -y ffmpeg
+msg_ok "Installed Dependencies"
+
 JAVA_VERSION="25" setup_java
 NODE_VERSION="22" setup_nodejs
 setup_mariadb
