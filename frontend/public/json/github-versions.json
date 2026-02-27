@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-27T12:11:14Z",
+  "generated": "2026-02-27T18:12:08Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -144,9 +144,9 @@
     {
       "slug": "blocky",
       "repo": "0xERR0R/blocky",
-      "version": "v0.28.2",
+      "version": "v0.29.0",
       "pinned": false,
-      "date": "2025-11-18T05:51:46Z"
+      "date": "2026-02-27T15:48:56Z"
     },
     {
       "slug": "booklore",
@@ -494,9 +494,9 @@
     {
       "slug": "grist",
       "repo": "gristlabs/grist-core",
-      "version": "v1.7.10",
+      "version": "v1.7.11",
       "pinned": false,
-      "date": "2026-01-12T20:50:50Z"
+      "date": "2026-02-27T17:13:50Z"
     },
     {
       "slug": "grocy",
@@ -718,9 +718,9 @@
     {
       "slug": "kubo",
       "repo": "ipfs/kubo",
-      "version": "v0.40.0",
+      "version": "v0.40.1",
       "pinned": false,
-      "date": "2026-02-25T23:16:17Z"
+      "date": "2026-02-27T17:58:22Z"
     },
     {
       "slug": "kutt",
@@ -1222,9 +1222,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.14",
+      "version": "v5.1.15",
       "pinned": false,
-      "date": "2026-02-25T00:11:58Z"
+      "date": "2026-02-27T15:17:24Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1376,9 +1376,9 @@
     {
       "slug": "seerr",
       "repo": "seerr-team/seerr",
-      "version": "v3.0.1",
+      "version": "v3.1.0",
       "pinned": false,
-      "date": "2026-02-14T19:30:24Z"
+      "date": "2026-02-27T17:25:29Z"
     },
     {
       "slug": "semaphore",
@@ -1558,9 +1558,9 @@
     {
       "slug": "traccar",
       "repo": "traccar/traccar",
-      "version": "v6.12.1",
+      "version": "v6.12.2",
       "pinned": false,
-      "date": "2026-02-22T18:47:37Z"
+      "date": "2026-02-27T15:08:36Z"
     },
     {
       "slug": "tracearr",
@@ -1670,9 +1670,9 @@
     {
       "slug": "vikunja",
       "repo": "go-vikunja/vikunja",
-      "version": "v2.0.0",
+      "version": "v2.1.0",
       "pinned": false,
-      "date": "2026-02-25T13:58:47Z"
+      "date": "2026-02-27T14:26:53Z"
     },
     {
       "slug": "wallabag",
