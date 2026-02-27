@@ -5372,11 +5372,14 @@ EOF
 # Variables:
 #   NODE_VERSION   - Node.js version to install (default: 24 LTS)
 #   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
+#   NPM_MIRROR     - Optional npm registry mirror URL
+#   NPM_REGISTRY   - Optional npm registry URL (fallback when NPM_MIRROR is unset)
 # ------------------------------------------------------------------------------
 
 function setup_nodejs() {
   local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
+  local NPM_REGISTRY_MIRROR="${NPM_MIRROR:-${NPM_REGISTRY:-}}"
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
   cleanup_legacy_install "nodejs"
@@ -5476,6 +5479,15 @@ function setup_nodejs() {
 
     cache_installed_version "nodejs" "$NODE_VERSION"
     msg_ok "Setup Node.js $NODE_VERSION"
+  fi
+
+  if [[ -n "$NPM_REGISTRY_MIRROR" ]] && command -v npm >/dev/null 2>&1; then
+    msg_info "Configuring npm registry mirror"
+    if $STD npm config set registry "$NPM_REGISTRY_MIRROR"; then
+      msg_ok "Configured npm registry mirror"
+    else
+      msg_warn "Failed to configure npm registry mirror: $NPM_REGISTRY_MIRROR"
+    fi
   fi
 
   export NODE_OPTIONS="--max-old-space-size=4096"
