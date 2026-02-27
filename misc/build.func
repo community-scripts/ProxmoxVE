@@ -4917,7 +4917,8 @@ create_lxc_container() {
     case "${_ans,,}" in
     y | yes)
       msg_info "Upgrading Proxmox LXC stack (pve-container, lxc-pve)"
-      if $STD apt-get update && $STD apt-get install -y --only-upgrade pve-container lxc-pve; then
+      apt_update_safe
+      if $STD apt-get install -y --only-upgrade pve-container lxc-pve; then
         msg_ok "LXC stack upgraded."
         if [[ "$do_retry" == "yes" ]]; then
           msg_info "Retrying container creation after upgrade"

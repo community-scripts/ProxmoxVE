@@ -552,6 +552,53 @@ silent() {
 }
 
 # ------------------------------------------------------------------------------
+# apt_update_safe()
+#
+# - Runs apt-get update with graceful error handling
+# - On failure: shows warning with common causes instead of aborting
+# - Logs full output to active log file
+# - Returns 0 even on failure so the caller can continue
+# - Typical cause: enterprise repos returning 401 Unauthorized
+#
+# Usage:
+#   apt_update_safe       # Warn on failure, continue without aborting
+# ------------------------------------------------------------------------------
+apt_update_safe() {
+  local logfile
+  logfile="$(get_active_logfile)"
+
+  local _restore_errexit=false
+  [[ "$-" == *e* ]] && _restore_errexit=true
+
+  set +Eeuo pipefail
+  trap - ERR
+
+  apt-get update >>"$logfile" 2>&1
+  local rc=$?
+
+  if $_restore_errexit; then
+    set -Eeuo pipefail
+    trap 'error_handler' ERR
+  fi
+
+  if [[ $rc -ne 0 ]]; then
+    msg_warn "apt-get update exited with code ${rc} — some repositories may have failed."
+
+    # Check log for common 401/403 enterprise repo issues
+    if grep -qiE '401\s*Unauthorized|403\s*Forbidden|enterprise\.proxmox\.com' "$logfile" 2>/dev/null; then
+      echo -e "${TAB}${INFO} ${YWB}Hint: Proxmox enterprise repository returned an auth error.${CL}"
+      echo -e "${TAB}       If you don't have a subscription, you can disable the enterprise"
+      echo -e "${TAB}       repo and use the no-subscription repo instead."
+    fi
+
+    echo -e "${TAB}${INFO} ${YWB}Continuing despite partial update failure — packages may still be installable.${CL}"
+    echo ""
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # spinner()
 #
 # - Displays animated spinner with rotating characters (⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)

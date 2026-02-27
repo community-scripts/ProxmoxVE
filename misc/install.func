@@ -233,7 +233,7 @@ fi
 EOF
     chmod +x /usr/local/bin/apt-proxy-detect.sh
   fi
-  $STD apt-get update
+  apt_update_safe
   $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   msg_ok "Updated Container OS"
