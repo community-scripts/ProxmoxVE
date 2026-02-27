@@ -69,6 +69,10 @@ cat <<EOF >/opt/Reactive-Resume/.env
 NODE_ENV=production
 PORT=3000
 # for use behind a reverse proxy, use your FQDN for PUBLIC_URL and STORAGE_URL
+# To avoid issues when behind a reverse proxy with downloading PDFs, ensure that the 
+# storage path is accessible via a subdomain (i.e storage.yourapp.xyz) or you set your 
+# reverse proxy to properly rewrite the subpath (/rxresume) to point to the service
+# running on port 9000 (minio).
 PUBLIC_URL=http://${LOCAL_IP}:3000
 STORAGE_URL=http://${LOCAL_IP}:9000/rxresume
 DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}?schema=public
