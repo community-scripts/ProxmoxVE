@@ -76,6 +76,20 @@ source /opt/gramps-web/venv/bin/activate
 $STD uv pip install --no-cache-dir --upgrade pip setuptools wheel
 $STD uv pip install --no-cache-dir gunicorn
 $STD uv pip install --no-cache-dir /opt/gramps-web-api
+
+GRAMPS_VERSION=$(/opt/gramps-web/venv/bin/python3 -c "import gramps.version; print('%s%s' % (gramps.version.VERSION_TUPLE[0], gramps.version.VERSION_TUPLE[1]))" 2>/dev/null || echo "60")
+GRAMPS_PLUGINS_DIR="/opt/gramps-web/data/gramps/gramps${GRAMPS_VERSION}/plugins"
+mkdir -p "$GRAMPS_PLUGINS_DIR"
+
+msg_info "Installing Gramps Addons (gramps${GRAMPS_VERSION})"
+$STD wget -q https://github.com/gramps-project/addons/archive/refs/heads/master.zip -O /tmp/gramps-addons.zip
+for addon in FilterRules JSON; do
+  unzip -p /tmp/gramps-addons.zip "addons-master/gramps${GRAMPS_VERSION}/download/${addon}.addon.tgz" | \
+    tar -xz -C "$GRAMPS_PLUGINS_DIR"
+done
+rm -f /tmp/gramps-addons.zip
+msg_ok "Installed Gramps Addons"
+
 cd /opt/gramps-web/frontend
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 $STD corepack enable
@@ -84,7 +98,7 @@ $STD npm run build
 cd /opt/gramps-web-api
 GRAMPS_API_CONFIG=/opt/gramps-web/config/config.cfg \
   ALEMBIC_CONFIG=/opt/gramps-web-api/alembic.ini \
-  GRAMPSHOME=/opt/gramps-web/data/gramps \
+  GRAMPSHOME=/opt/gramps-web/data \
   GRAMPS_DATABASE_PATH=/opt/gramps-web/data/gramps/grampsdb \
   $STD /opt/gramps-web/venv/bin/python3 -m gramps_webapi user migrate
 msg_ok "Set up Gramps Web"
@@ -100,7 +114,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/gramps-web-api
 Environment=GRAMPS_API_CONFIG=/opt/gramps-web/config/config.cfg
-Environment=GRAMPSHOME=/opt/gramps-web/data/gramps
+Environment=GRAMPSHOME=/opt/gramps-web/data
 Environment=GRAMPS_DATABASE_PATH=/opt/gramps-web/data/gramps/grampsdb
 Environment=PATH=/opt/gramps-web/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ExecStart=/opt/gramps-web/venv/bin/gunicorn -w 2 -b 0.0.0.0:5000 gramps_webapi.wsgi:app --timeout 120 --limit-request-line 8190
