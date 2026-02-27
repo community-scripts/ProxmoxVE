@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-26T18:16:20Z",
+  "generated": "2026-02-27T00:22:57Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -151,9 +151,9 @@
     {
       "slug": "booklore",
       "repo": "booklore-app/BookLore",
-      "version": "v2.0.2",
+      "version": "v2.0.3",
       "pinned": false,
-      "date": "2026-02-25T19:59:20Z"
+      "date": "2026-02-26T19:10:59Z"
     },
     {
       "slug": "bookstack",
@@ -214,9 +214,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.15.0",
+      "version": "v0.15.1",
       "pinned": false,
-      "date": "2026-02-24T20:56:09Z"
+      "date": "2026-02-26T22:01:35Z"
     },
     {
       "slug": "commafeed",
@@ -242,9 +242,9 @@
     {
       "slug": "cosmos",
       "repo": "azukaar/Cosmos-Server",
-      "version": "v0.21.2",
+      "version": "v0.21.3",
       "pinned": false,
-      "date": "2026-02-26T11:32:33Z"
+      "date": "2026-02-26T20:04:35Z"
     },
     {
       "slug": "cronicle",
@@ -291,9 +291,9 @@
     {
       "slug": "dispatcharr",
       "repo": "Dispatcharr/Dispatcharr",
-      "version": "v0.19.0",
+      "version": "v0.20.1",
       "pinned": false,
-      "date": "2026-02-10T21:18:10Z"
+      "date": "2026-02-26T21:38:19Z"
     },
     {
       "slug": "docmost",
@@ -606,9 +606,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.68",
+      "version": "v5.12.69",
       "pinned": false,
-      "date": "2026-02-25T19:38:19Z"
+      "date": "2026-02-26T22:23:32Z"
     },
     {
       "slug": "jackett",
@@ -795,9 +795,9 @@
     {
       "slug": "lubelogger",
       "repo": "hargata/lubelog",
-      "version": "v1.6.0",
+      "version": "v1.6.1",
       "pinned": false,
-      "date": "2026-02-10T20:16:32Z"
+      "date": "2026-02-26T20:01:24Z"
     },
     {
       "slug": "mafl",
@@ -1607,9 +1607,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.17",
+      "version": "v1.1.18",
       "pinned": false,
-      "date": "2026-02-25T19:56:36Z"
+      "date": "2026-02-26T22:09:44Z"
     },
     {
       "slug": "uhf",
