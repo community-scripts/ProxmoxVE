@@ -423,6 +423,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: graceful fallback for apt-get update failures [@MickLesk](https://github.com/MickLesk) ([#12386](https://github.com/community-scripts/ProxmoxVE/pull/12386))
     - core: Improve error outputs across core functions [@MickLesk](https://github.com/MickLesk) ([#12378](https://github.com/community-scripts/ProxmoxVE/pull/12378))
 
 ## 2026-02-26
