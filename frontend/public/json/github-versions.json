@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-27T00:22:57Z",
+  "generated": "2026-02-27T06:18:43Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1218",
+      "version": "v0.24.1223",
       "pinned": false,
-      "date": "2026-02-26T05:55:11Z"
+      "date": "2026-02-27T05:51:11Z"
     },
     {
       "slug": "jellystat",
@@ -669,9 +669,9 @@
     {
       "slug": "kima-hub",
       "repo": "Chevron7Locked/kima-hub",
-      "version": "v1.5.7",
+      "version": "v1.5.8",
       "pinned": false,
-      "date": "2026-02-23T23:58:59Z"
+      "date": "2026-02-27T00:46:31Z"
     },
     {
       "slug": "kimai",
@@ -1047,9 +1047,9 @@
     {
       "slug": "pangolin",
       "repo": "fosrl/pangolin",
-      "version": "1.15.4",
+      "version": "1.16.0",
       "pinned": false,
-      "date": "2026-02-13T23:01:29Z"
+      "date": "2026-02-27T05:59:58Z"
     },
     {
       "slug": "paperless-ai",
@@ -1817,9 +1817,9 @@
     {
       "slug": "zoraxy",
       "repo": "tobychui/zoraxy",
-      "version": "v3.3.2-rc1",
+      "version": "v3.3.2-rc2",
       "pinned": false,
-      "date": "2026-02-15T02:16:17Z"
+      "date": "2026-02-27T03:31:25Z"
     },
     {
       "slug": "zwave-js-ui",
