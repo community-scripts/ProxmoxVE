@@ -215,6 +215,7 @@ network_check() {
 #
 # - Updates container OS via apt-get update and dist-upgrade
 # - Configures APT cacher proxy if CACHER=yes (accelerates package downloads)
+# - Optionally rewrites Debian APT sources when APT_MIRROR is set
 # - Removes Python EXTERNALLY-MANAGED restrictions for pip
 # - Sources tools.func for additional setup functions after update
 # - Uses $STD wrapper to suppress output unless VERBOSE=yes
@@ -233,6 +234,17 @@ fi
 EOF
     chmod +x /usr/local/bin/apt-proxy-detect.sh
   fi
+
+  if [[ -n "${APT_MIRROR:-}" ]]; then
+    msg_info "Configuring APT mirror (${APT_MIRROR})"
+    sed -E -i \
+      -e "s|deb.debian.org/debian|${APT_MIRROR}/debian|g" \
+      -e "s|security.debian.org/debian-security|${APT_MIRROR}/debian-security|g" \
+      -e "s|deb.debian.org/debian-security|${APT_MIRROR}/debian-security|g" \
+      /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+    msg_ok "Configured APT mirror"
+  fi
+
   apt_update_safe
   $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
