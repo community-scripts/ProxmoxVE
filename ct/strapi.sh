@@ -36,7 +36,7 @@ function update_script() {
 
   msg_info "Updating Strapi"
   cd /opt/strapi
-  $STD npm install
+  $STD npx @strapi/upgrade minor --yes
   msg_ok "Updated Strapi"
 
   msg_info "Building Strapi"
