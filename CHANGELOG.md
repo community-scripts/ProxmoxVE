@@ -409,6 +409,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-27
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - TrueNAS VM: filter out new nightlies with MASTER [@juronja](https://github.com/juronja) ([#12355](https://github.com/community-scripts/ProxmoxVE/pull/12355))
+
 ## 2026-02-26
 
 ### 🆕 New Scripts
