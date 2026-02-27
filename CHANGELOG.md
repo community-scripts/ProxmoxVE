@@ -409,6 +409,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-27
 
+### 🆕 New Scripts
+
+  - Strapi ([#12320](https://github.com/community-scripts/ProxmoxVE/pull/12320))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
