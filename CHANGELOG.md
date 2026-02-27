@@ -419,6 +419,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - TrueNAS VM: filter out new nightlies with MASTER [@juronja](https://github.com/juronja) ([#12355](https://github.com/community-scripts/ProxmoxVE/pull/12355))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: Improve error outputs across core functions [@MickLesk](https://github.com/MickLesk) ([#12378](https://github.com/community-scripts/ProxmoxVE/pull/12378))
+
 ## 2026-02-26
 
 ### 🆕 New Scripts
