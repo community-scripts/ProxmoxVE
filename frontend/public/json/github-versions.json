@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-27T06:18:43Z",
+  "generated": "2026-02-27T12:11:14Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -116,9 +116,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.3.1",
+      "version": "v2.3.3",
       "pinned": false,
-      "date": "2026-02-21T09:04:27Z"
+      "date": "2026-02-27T08:40:05Z"
     },
     {
       "slug": "beszel",
@@ -158,9 +158,9 @@
     {
       "slug": "bookstack",
       "repo": "BookStackApp/BookStack",
-      "version": "v25.12.7",
+      "version": "v25.12.8",
       "pinned": false,
-      "date": "2026-02-19T23:36:55Z"
+      "date": "2026-02-27T10:33:14Z"
     },
     {
       "slug": "byparr",
@@ -242,9 +242,9 @@
     {
       "slug": "cosmos",
       "repo": "azukaar/Cosmos-Server",
-      "version": "v0.21.3",
+      "version": "v0.21.5",
       "pinned": false,
-      "date": "2026-02-26T20:04:35Z"
+      "date": "2026-02-27T10:07:11Z"
     },
     {
       "slug": "cronicle",
@@ -452,9 +452,9 @@
     {
       "slug": "gitea-mirror",
       "repo": "RayLabsHQ/gitea-mirror",
-      "version": "v3.9.5",
+      "version": "v3.9.6",
       "pinned": false,
-      "date": "2026-02-26T05:32:12Z"
+      "date": "2026-02-27T07:15:42Z"
     },
     {
       "slug": "glance",
@@ -872,9 +872,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.22",
+      "version": "2026.02.27",
       "pinned": false,
-      "date": "2026-02-22T00:58:45Z"
+      "date": "2026-02-27T11:47:02Z"
     },
     {
       "slug": "miniflux",
