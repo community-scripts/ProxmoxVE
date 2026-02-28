@@ -409,6 +409,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-02-28
 
+### 🗑️ Deleted Scripts
+
+  - Delete Palmr [@vhsdream](https://github.com/vhsdream) ([#12399](https://github.com/community-scripts/ProxmoxVE/pull/12399))
+
 ## 2026-02-27
 
 ### 🆕 New Scripts
