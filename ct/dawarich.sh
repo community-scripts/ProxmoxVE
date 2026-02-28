@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies libgeos++-dev libxml2-dev libxslt-dev libjemalloc-dev
+
   if check_for_gh_release "dawarich" "Freika/dawarich"; then
     msg_info "Stopping Services"
     systemctl stop dawarich-web dawarich-worker
