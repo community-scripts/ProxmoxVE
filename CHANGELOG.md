@@ -411,6 +411,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Update Reactive Resume install script with useful .env information for reverse proxy setup [@Mazianni](https://github.com/Mazianni) ([#12401](https://github.com/community-scripts/ProxmoxVE/pull/12401))
+
   - #### 🐞 Bug Fixes
 
     - gramps-web: install addons (FilterRules) for relationship diagram [@MickLesk](https://github.com/MickLesk) ([#12387](https://github.com/community-scripts/ProxmoxVE/pull/12387))
