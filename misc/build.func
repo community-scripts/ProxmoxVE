@@ -3707,10 +3707,18 @@ $PCT_OPTIONS_STRING"
     NVIDIA_DEVICES=()
 
     # Store PCI info to avoid multiple calls
-    local pci_vga_info=$(lspci -nn 2>/dev/null | grep -E "VGA|Display|3D")
+    # grep returns exit 1 when no match — use || true to prevent ERR trap
+    local pci_vga_info
+    pci_vga_info=$(lspci -nn 2>/dev/null | grep -E "VGA|Display|3D" || true)
+
+    # No GPU-related PCI devices at all? Skip silently.
+    if [[ -z "$pci_vga_info" ]]; then
+      msg_debug "No VGA/Display/3D PCI devices found"
+      return 0
+    fi
 
     # Check for Intel GPU - look for Intel vendor ID [8086]
-    if echo "$pci_vga_info" | grep -q "\[8086:"; then
+    if grep -q "\[8086:" <<<"$pci_vga_info"; then
       msg_custom "🎮" "${BL}" "Detected Intel GPU"
       if [[ -d /dev/dri ]]; then
         for d in /dev/dri/renderD* /dev/dri/card*; do
@@ -3720,7 +3728,7 @@ $PCT_OPTIONS_STRING"
     fi
 
     # Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
-    if echo "$pci_vga_info" | grep -qE "\[1002:|\[1022:"; then
+    if grep -qE "\[1002:|\[1022:" <<<"$pci_vga_info"; then
       msg_custom "🎮" "${RD}" "Detected AMD GPU"
       if [[ -d /dev/dri ]]; then
         # Only add if not already claimed by Intel
@@ -3733,7 +3741,7 @@ $PCT_OPTIONS_STRING"
     fi
 
     # Check for NVIDIA GPU - look for NVIDIA vendor ID [10de]
-    if echo "$pci_vga_info" | grep -q "\[10de:"; then
+    if grep -q "\[10de:" <<<"$pci_vga_info"; then
       msg_custom "🎮" "${GN}" "Detected NVIDIA GPU"
 
       # Simple passthrough - just bind /dev/nvidia* devices if they exist
