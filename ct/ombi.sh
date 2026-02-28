@@ -36,6 +36,7 @@ function update_script() {
     [[ -f /opt/ombi/Ombi.db ]] && mv /opt/ombi/Ombi.db /opt
     [[ -f /opt/ombi/OmbiExternal.db ]] && mv /opt/ombi/OmbiExternal.db /opt
     [[ -f /opt/ombi/OmbiSettings.db ]] && mv /opt/ombi/OmbiSettings.db /opt
+    [[ -f /opt/ombi/database.json ]] && mv /opt/ombi/database.json /opt
     msg_ok "Backup created"
 
     rm -rf /opt/ombi
@@ -43,6 +44,7 @@ function update_script() {
     [[ -f /opt/Ombi.db ]] && mv /opt/Ombi.db /opt/ombi
     [[ -f /opt/OmbiExternal.db ]] && mv /opt/OmbiExternal.db /opt/ombi
     [[ -f /opt/OmbiSettings.db ]] && mv /opt/OmbiSettings.db /opt/ombi
+    [[ -f /opt/database.json ]] && mv /opt/database.json /opt/ombi
 
     msg_info "Starting Service"
     systemctl start ombi
