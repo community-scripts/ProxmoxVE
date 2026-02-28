@@ -16,19 +16,23 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  git \
-  libpq-dev \
-  libgeos-dev \
-  libyaml-dev \
-  libffi-dev \
-  libssl-dev \
-  libjemalloc2 \
-  imagemagick \
-  libmagickwand-dev \
-  libvips-dev \
   cmake \
-  redis-server \
-  nginx
+  git \
+  imagemagick \
+  libffi-dev \
+  libgeos-dev \
+  libgeos++-dev \
+  libjemalloc2 \
+  libjemalloc-dev \
+  libmagickwand-dev \
+  libpq-dev \
+  libssl-dev \
+  libvips-dev \
+  libxml2-dev \
+  libxslt-dev \
+  libyaml-dev \
+  nginx \
+  redis-server
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" PG_MODULES="postgis-3" setup_postgresql
@@ -82,7 +86,9 @@ elif [[ -f /opt/dawarich/app/package.json ]]; then
   $STD npm install
 fi
 $STD bundle exec rake assets:precompile
-$STD bundle exec rails db:prepare
+$STD bundle exec rails db:create
+$STD bundle exec rails db:schema:load
+$STD bundle exec rails db:seed || msg_warn "Database seed failed (upstream rgeo-geojson issue), app will still work"
 $STD bundle exec rake data:migrate
 msg_ok "Installed Dawarich"
 
