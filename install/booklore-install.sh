@@ -74,7 +74,7 @@ After=network.target mariadb.service
 Type=simple
 User=root
 WorkingDirectory=/opt/booklore/dist
-ExecStart=/usr/bin/java -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompactObjectHeaders -jar /opt/booklore/dist/app.jar
+ExecStart=/usr/bin/java -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompactObjectHeaders -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -jar /opt/booklore/dist/app.jar
 EnvironmentFile=/opt/booklore_storage/.env
 SuccessExitStatus=143
 TimeoutStopSec=10

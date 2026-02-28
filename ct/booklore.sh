@@ -91,7 +91,7 @@ function update_script() {
       echo "SERVER_PORT=6060" >>/opt/booklore_storage/.env
     fi
 
-    sed -i 's|ExecStart=/usr/bin/java -jar|ExecStart=/usr/bin/java -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompactObjectHeaders -jar|' /etc/systemd/system/booklore.service
+    sed -i 's|ExecStart=.*|ExecStart=/usr/bin/java -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompactObjectHeaders -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -jar /opt/booklore/dist/app.jar|' /etc/systemd/system/booklore.service
     systemctl daemon-reload
 
     msg_info "Starting Service"
