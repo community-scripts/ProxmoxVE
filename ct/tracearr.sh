@@ -75,9 +75,38 @@ if [ -f \$pg_config_file ]; then
     fi
 fi
 systemctl restart postgresql
+sudo -u postgres psql -c "ALTER USER tracearr WITH SUPERUSER;"
 EOF
   chmod +x /data/tracearr/prestart.sh
   msg_ok "Updated prestart script"
+
+  # check if tailscale is installed, if not prompt to install
+  if command -v tailscale >/dev/null 2>&1; then
+    # Tracearr runs tailscaled in user mode, disable the service.
+    $STD systemctl disable --now tailscaled
+    $STD systemctl stop tailscaled
+    msg_ok "Tailscale already installed"
+  else
+    echo
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Tracearr supports Tailscale VPN from v1.4.19"
+    echo "You need to install the Tailscale client before using this feature."
+    echo
+    read -rp "Do you want to install Tailscale now? (y/N): " INSTALL_TAILSCALE
+    if [[ "$INSTALL_TAILSCALE" =~ ^[Yy]$ ]]; then
+      msg_info "Installing tailscale"
+      setup_deb822_repo \
+        "tailscale" \
+        "https://pkgs.tailscale.com/stable/$(get_os_info id)/$(get_os_info codename).noarmor.gpg" \
+        "https://pkgs.tailscale.com/stable/$(get_os_info id)/" \
+        "$(get_os_info codename)"
+      $STD apt install -y tailscale
+      # Tracearr runs tailscaled in user mode, disable the service.
+      $STD systemctl disable --now tailscaled
+      $STD systemctl stop tailscaled
+      msg_ok "Installed tailscale"
+    fi
+  fi
 
   if check_for_gh_release "tracearr" "connorgallopo/Tracearr"; then
     msg_info "Stopping Services"
@@ -122,6 +151,8 @@ EOF
     sed -i "s/^APP_VERSION=.*/APP_VERSION=$(cat /root/.tracearr)/" /data/tracearr/.env
     chmod 600 /data/tracearr/.env
     chown -R tracearr:tracearr /data/tracearr
+    mkdir -p /data/backup
+    chown -R tracearr:tracearr /data/backup
     msg_ok "Configured Tracearr"
 
     msg_info "Starting services"
