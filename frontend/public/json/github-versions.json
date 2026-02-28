@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-28T06:10:00Z",
+  "generated": "2026-02-28T12:08:32Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -438,9 +438,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.243.0",
+      "version": "2.244.0",
       "pinned": false,
-      "date": "2026-02-23T19:31:36Z"
+      "date": "2026-02-28T09:51:45Z"
     },
     {
       "slug": "gitea",
@@ -1038,13 +1038,6 @@
       "date": "2025-02-24T19:47:06Z"
     },
     {
-      "slug": "palmr",
-      "repo": "kyantech/Palmr",
-      "version": "v3.3.2-beta",
-      "pinned": false,
-      "date": "2025-12-10T05:42:43Z"
-    },
-    {
       "slug": "pangolin",
       "repo": "fosrl/pangolin",
       "version": "1.16.1",
@@ -1068,9 +1061,9 @@
     {
       "slug": "paperless-ngx",
       "repo": "paperless-ngx/paperless-ngx",
-      "version": "v2.20.8",
+      "version": "v2.20.9",
       "pinned": false,
-      "date": "2026-02-22T01:40:54Z"
+      "date": "2026-02-28T10:17:35Z"
     },
     {
       "slug": "patchmon",
@@ -1383,9 +1376,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.14",
+      "version": "v2.17.15",
       "pinned": false,
-      "date": "2026-02-24T14:27:03Z"
+      "date": "2026-02-28T09:04:40Z"
     },
     {
       "slug": "shelfmark",
