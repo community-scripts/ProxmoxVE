@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-28T12:08:32Z",
+  "generated": "2026-02-28T18:06:16Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -942,9 +942,9 @@
     {
       "slug": "nightscout",
       "repo": "nightscout/cgm-remote-monitor",
-      "version": "15.0.3",
+      "version": "15.0.4",
       "pinned": false,
-      "date": "2025-05-08T22:12:34Z"
+      "date": "2026-02-28T17:07:02Z"
     },
     {
       "slug": "nocodb",
@@ -1341,9 +1341,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.8",
+      "version": "v0.14.9",
       "pinned": false,
-      "date": "2026-02-24T16:45:30Z"
+      "date": "2026-02-28T02:59:32Z"
     },
     {
       "slug": "scraparr",
@@ -1481,9 +1481,9 @@
     {
       "slug": "sure",
       "repo": "we-promise/sure",
-      "version": "chart-v0.6.8-alpha.13",
+      "version": "v0.6.8",
       "pinned": false,
-      "date": "2026-02-20T11:15:15Z"
+      "date": "2026-02-28T12:55:36Z"
     },
     {
       "slug": "tandoor",
