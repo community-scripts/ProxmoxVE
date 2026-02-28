@@ -4029,7 +4029,7 @@ EOF
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-    pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null" || {
+    pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq" >>"$BUILD_LOG" 2>&1 || {
       msg_error "Failed to install base packages in Alpine container"
       install_exit_code=1
     }
@@ -4055,7 +4055,7 @@ EOF'
       msg_warn "Skipping timezone setup – zone '$tz' not found in container"
     fi
 
-    pct exec "$CTID" -- bash -c "apt-get update >/dev/null && apt-get install -y sudo curl mc gnupg2 jq >/dev/null" || {
+    pct exec "$CTID" -- bash -c "apt-get update 2>&1 && apt-get install -y sudo curl mc gnupg2 jq 2>&1" >>"$BUILD_LOG" 2>&1 || {
       msg_error "apt-get base packages installation failed"
       install_exit_code=1
     }
@@ -5338,7 +5338,7 @@ create_lxc_container() {
     [[ -f "$TEMPLATE_PATH" ]] && rm -f "$TEMPLATE_PATH"
     for attempt in {1..3}; do
       msg_info "Attempt $attempt: Downloading template $TEMPLATE to $TEMPLATE_STORAGE"
-      if pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1; then
+      if pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1; then
         msg_ok "Template download successful."
         break
       fi
@@ -5415,11 +5415,23 @@ create_lxc_container() {
 
   LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
 
+  # Helper: append pct_create log to BUILD_LOG before exit so combined log has full context
+  _flush_pct_log() {
+    if [[ -s "${LOGFILE:-}" && -n "${BUILD_LOG:-}" ]]; then
+      {
+        echo ""
+        echo "--- pct create output (${LOGFILE}) ---"
+        cat "$LOGFILE"
+        echo "--- end pct create output ---"
+      } >>"$BUILD_LOG" 2>/dev/null || true
+    fi
+  }
+
   # Validate template before pct create (while holding lock)
   if [[ ! -s "$TEMPLATE_PATH" || "$(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo 0)" -lt 1000000 ]]; then
     msg_info "Template file missing or too small – downloading"
     rm -f "$TEMPLATE_PATH"
-    pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1 || {
+    pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1 || {
       msg_error "Failed to download template '$TEMPLATE' to storage '$TEMPLATE_STORAGE'"
       exit 222
     }
@@ -5428,7 +5440,7 @@ create_lxc_container() {
     if [[ -n "$ONLINE_TEMPLATE" ]]; then
       msg_info "Template appears corrupted – re-downloading"
       rm -f "$TEMPLATE_PATH"
-      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1 || {
+      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1 || {
         msg_error "Failed to re-download template '$TEMPLATE'"
         exit 222
       }
@@ -5452,7 +5464,7 @@ create_lxc_container() {
     if grep -qiE 'unable to open|corrupt|invalid' "$LOGFILE"; then
       msg_info "Template may be corrupted – re-downloading"
       rm -f "$TEMPLATE_PATH"
-      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null 2>&1
+      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1
       msg_ok "Template re-downloaded"
     fi
 
@@ -5465,7 +5477,7 @@ create_lxc_container() {
         if [[ ! -f "$LOCAL_TEMPLATE_PATH" ]]; then
           msg_ok "Trying local storage fallback"
           msg_info "Downloading template to local"
-          pveam download local "$TEMPLATE" >/dev/null 2>&1
+          pveam download local "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1
           msg_ok "Template downloaded to local"
         else
           msg_ok "Trying local storage fallback"
@@ -5480,10 +5492,12 @@ create_lxc_container() {
             0) : ;; # success - container created, continue
             2)
               msg_error "Upgrade declined. Please update and re-run: apt update && apt install --only-upgrade pve-container lxc-pve"
+              _flush_pct_log
               exit 231
               ;;
             3)
               msg_error "Upgrade and/or retry failed. Please inspect: $LOGFILE"
+              _flush_pct_log
               exit 231
               ;;
             esac
@@ -5494,6 +5508,7 @@ create_lxc_container() {
               pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
               set +x
             fi
+            _flush_pct_log
             exit 209
           fi
         else
@@ -5509,10 +5524,12 @@ create_lxc_container() {
           0) : ;; # success - container created, continue
           2)
             msg_error "Upgrade declined. Please update and re-run: apt update && apt install --only-upgrade pve-container lxc-pve"
+            _flush_pct_log
             exit 231
             ;;
           3)
             msg_error "Upgrade and/or retry failed. Please inspect: $LOGFILE"
+            _flush_pct_log
             exit 231
             ;;
           esac
@@ -5523,6 +5540,7 @@ create_lxc_container() {
             pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
             set +x
           fi
+          _flush_pct_log
           exit 209
         fi
       fi
@@ -5534,16 +5552,28 @@ create_lxc_container() {
   # Verify container exists
   pct list | awk '{print $1}' | grep -qx "$CTID" || {
     msg_error "Container ID $CTID not listed in 'pct list'. See $LOGFILE"
+    _flush_pct_log
     exit 215
   }
 
   # Verify config rootfs
   grep -q '^rootfs:' "/etc/pve/lxc/$CTID.conf" || {
     msg_error "RootFS entry missing in container config. See $LOGFILE"
+    _flush_pct_log
     exit 216
   }
 
   msg_ok "LXC Container ${BL}$CTID${CL} ${GN}was successfully created."
+
+  # Append pct create log to BUILD_LOG for combined log visibility
+  if [[ -s "$LOGFILE" && -n "${BUILD_LOG:-}" ]]; then
+    {
+      echo ""
+      echo "--- pct create output ---"
+      cat "$LOGFILE"
+      echo "--- end pct create output ---"
+    } >>"$BUILD_LOG" 2>/dev/null || true
+  fi
 }
 
 # ==============================================================================
