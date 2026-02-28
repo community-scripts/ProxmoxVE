@@ -3132,7 +3132,7 @@ check_container_resources() {
     msg_warn "Under-provisioned: Required ${var_cpu} CPU/${var_ram}MB RAM, Current ${current_cpu} CPU/${current_ram}MB RAM"
     echo -e "${YWB}Please ensure that the ${APP} LXC is configured with at least ${var_cpu} vCPU and ${var_ram} MB RAM for the build process.${CL}\n"
     echo -ne "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  "
-    read -r prompt
+    read -r prompt </dev/tty
     if [[ ! ${prompt,,} =~ ^(yes)$ ]]; then
       msg_error "Aborted: under-provisioned LXC (${current_cpu} CPU/${current_ram}MB RAM < ${var_cpu} CPU/${var_ram}MB RAM)"
       exit 1
@@ -3155,7 +3155,7 @@ check_container_storage() {
   if ((usage > 80)); then
     msg_warn "Storage is dangerously low (${usage}% used on /boot)"
     echo -ne "Continue anyway? <y/N>  "
-    read -r prompt
+    read -r prompt </dev/tty
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
       msg_error "Aborted: storage too low (${usage}% used)"
       exit 1
@@ -3834,7 +3834,7 @@ EOF
       for gpu in "${available_gpus[@]}"; do
         echo "  - $gpu"
       done
-      read -rp "Which GPU type to passthrough? (${available_gpus[*]}): " selected_gpu
+      read -rp "Which GPU type to passthrough? (${available_gpus[*]}): " selected_gpu </dev/tty
       selected_gpu="${selected_gpu^^}"
 
       # Validate selection
@@ -4219,7 +4219,7 @@ EOF'
       pct enter "$CTID"
       echo ""
       echo -en "${YW}Container ${CTID} still running. Remove now? (y/N): ${CL}"
-      if read -r response && [[ "$response" =~ ^[Yy]$ ]]; then
+      if read -r response </dev/tty && [[ "$response" =~ ^[Yy]$ ]]; then
         pct stop "$CTID" &>/dev/null || true
         pct destroy "$CTID" &>/dev/null || true
         msg_ok "Container ${CTID} removed"
@@ -4369,7 +4369,7 @@ EOF'
     echo ""
     echo -en "${YW}Select option [1-${max_option}] (default: 1, auto-remove in 60s): ${CL}"
 
-    if read -t 60 -r response; then
+    if read -t 60 -r response </dev/tty; then
       case "${response:-1}" in
       1)
         # Remove container
@@ -4586,7 +4586,7 @@ destroy_lxc() {
   trap 'echo; msg_error "Aborted by user (SIGINT/SIGQUIT)"; return 130' INT QUIT
 
   local prompt
-  if ! read -rp "Remove this Container? <y/N> " prompt; then
+  if ! read -rp "Remove this Container? <y/N> " prompt </dev/tty; then
     # read returns non-zero on Ctrl-D/ESC
     msg_error "Aborted input (Ctrl-D/ESC)"
     return 130
@@ -4923,7 +4923,7 @@ create_lxc_container() {
     echo "  pve-container: installed=${_pvec_i:-n/a}  candidate=${_pvec_c:-n/a}"
     echo "  lxc-pve     : installed=${_lxcp_i:-n/a}  candidate=${_lxcp_c:-n/a}"
     echo
-    read -rp "Do you want to upgrade now? [y/N] " _ans
+    read -rp "Do you want to upgrade now? [y/N] " _ans </dev/tty
     case "${_ans,,}" in
     y | yes)
       msg_info "Upgrading Proxmox LXC stack (pve-container, lxc-pve)"
@@ -5155,7 +5155,7 @@ create_lxc_container() {
         echo "  [$((i + 1))] ${AVAILABLE_VERSIONS[$i]}"
       done
       echo ""
-      read -p "Select version [1-${#AVAILABLE_VERSIONS[@]}] or press Enter to cancel: " choice
+      read -p "Select version [1-${#AVAILABLE_VERSIONS[@]}] or press Enter to cancel: " choice </dev/tty
 
       if [[ "$choice" =~ ^[0-9]+$ ]] && [[ "$choice" -ge 1 ]] && [[ "$choice" -le ${#AVAILABLE_VERSIONS[@]} ]]; then
         PCT_OSVERSION="${AVAILABLE_VERSIONS[$((choice - 1))]}"
@@ -5218,7 +5218,7 @@ create_lxc_container() {
         done
 
         echo ""
-        read -p "Select version [1-${#AVAILABLE_VERSIONS[@]}] or Enter to exit: " choice
+        read -p "Select version [1-${#AVAILABLE_VERSIONS[@]}] or Enter to exit: " choice </dev/tty
 
         if [[ "$choice" =~ ^[0-9]+$ ]] && [[ "$choice" -ge 1 ]] && [[ "$choice" -le ${#AVAILABLE_VERSIONS[@]} ]]; then
           export var_version="${AVAILABLE_VERSIONS[$((choice - 1))]}"
