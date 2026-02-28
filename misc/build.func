@@ -4012,6 +4012,16 @@ EOF
   #   install_gpu_userland "NVIDIA"
   # fi
 
+  # Disable error trap for entire customization & install phase.
+  # All errors are handled explicitly — recovery menu shown on failure.
+  # Without this, customization errors (e.g. container stopped during base package
+  # install) would trigger error_handler() with a simple "Remove broken container?"
+  # prompt instead of the full recovery menu with retry/repair options.
+  set +Eeuo pipefail
+  trap - ERR
+
+  local install_exit_code=0
+
   # Continue with standard container setup
   if [ "$var_os" == "alpine" ]; then
     sleep 3
@@ -4021,7 +4031,7 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null" || {
       msg_error "Failed to install base packages in Alpine container"
-      exit 1
+      install_exit_code=1
     }
   else
     sleep 3
@@ -4047,67 +4057,67 @@ EOF'
 
     pct exec "$CTID" -- bash -c "apt-get update >/dev/null && apt-get install -y sudo curl mc gnupg2 jq >/dev/null" || {
       msg_error "apt-get base packages installation failed"
-      exit 1
+      install_exit_code=1
     }
   fi
 
-  msg_ok "Customized LXC Container"
+  # Only continue with installation if customization succeeded
+  if [[ $install_exit_code -eq 0 ]]; then
+    msg_ok "Customized LXC Container"
 
-  # Optional DNS override for retry scenarios (inside LXC, never on host)
-  if [[ "${DNS_RETRY_OVERRIDE:-false}" == "true" ]]; then
-    msg_info "Applying DNS retry override in LXC (8.8.8.8, 1.1.1.1)"
-    pct exec "$CTID" -- bash -c "printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n' >/etc/resolv.conf" >/dev/null 2>&1 || true
-    msg_ok "DNS override applied in LXC"
-  fi
-
-  # Install SSH keys
-  install_ssh_keys_into_ct
-
-  # Start timer for duration tracking
-  start_install_timer
-
-  # Run application installer
-  # Disable error trap - container errors are handled internally via flag file
-  set +Eeuo pipefail # Disable ALL error handling temporarily
-  trap - ERR         # Remove ERR trap completely
-
-  # Signal handlers use this flag to stop the container on abort (SIGHUP/SIGINT/SIGTERM)
-  # Without this, SSH disconnects leave the container running as an orphan process
-  # that sends "configuring" status AFTER the host already reported "failed"
-  export CONTAINER_INSTALLING=true
-
-  # Capture lxc-attach terminal output to host-side log via tee.
-  # This is the ONLY reliable way to get install output when:
-  #   - install.func fails to load (DNS error) → no container-side logging
-  #   - install script crashes before logging starts
-  #   - $STD/silent() not used for some commands
-  # PIPESTATUS[0] gets the real exit code from lxc-attach (not from tee).
-  local _LXC_CAPTURE_LOG="/tmp/.install-capture-${SESSION_ID}.log"
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)" 2>&1 | tee "$_LXC_CAPTURE_LOG"
-  local lxc_exit=${PIPESTATUS[0]}
-
-  unset CONTAINER_INSTALLING
-
-  # Keep error handling DISABLED during failure detection and recovery
-  # Re-enabling it here would cause any pct exec/pull failure to trigger
-  # error_handler() on the host, bypassing the recovery menu entirely
-
-  # Check for error flag file in container (more reliable than lxc-attach exit code)
-  local install_exit_code=0
-  if [[ -n "${SESSION_ID:-}" ]]; then
-    local error_flag="/root/.install-${SESSION_ID}.failed"
-    if pct exec "$CTID" -- test -f "$error_flag" 2>/dev/null; then
-      install_exit_code=$(pct exec "$CTID" -- cat "$error_flag" 2>/dev/null || echo "1")
-      pct exec "$CTID" -- rm -f "$error_flag" 2>/dev/null || true
+    # Optional DNS override for retry scenarios (inside LXC, never on host)
+    if [[ "${DNS_RETRY_OVERRIDE:-false}" == "true" ]]; then
+      msg_info "Applying DNS retry override in LXC (8.8.8.8, 1.1.1.1)"
+      pct exec "$CTID" -- bash -c "printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n' >/etc/resolv.conf" >/dev/null 2>&1 || true
+      msg_ok "DNS override applied in LXC"
     fi
-  fi
 
-  # Fallback to lxc-attach exit code if no flag file
-  if [[ $install_exit_code -eq 0 && $lxc_exit -ne 0 ]]; then
-    install_exit_code=$lxc_exit
-  fi
+    # Install SSH keys
+    install_ssh_keys_into_ct
 
-  # Installation failed?
+    # Start timer for duration tracking
+    start_install_timer
+
+    # Run application installer
+    # Error handling already disabled above (before customization phase)
+
+    # Signal handlers use this flag to stop the container on abort (SIGHUP/SIGINT/SIGTERM)
+    # Without this, SSH disconnects leave the container running as an orphan process
+    # that sends "configuring" status AFTER the host already reported "failed"
+    export CONTAINER_INSTALLING=true
+
+    # Capture lxc-attach terminal output to host-side log via tee.
+    # This is the ONLY reliable way to get install output when:
+    #   - install.func fails to load (DNS error) → no container-side logging
+    #   - install script crashes before logging starts
+    #   - $STD/silent() not used for some commands
+    # PIPESTATUS[0] gets the real exit code from lxc-attach (not from tee).
+    local _LXC_CAPTURE_LOG="/tmp/.install-capture-${SESSION_ID}.log"
+    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)" 2>&1 | tee "$_LXC_CAPTURE_LOG"
+    local lxc_exit=${PIPESTATUS[0]}
+
+    unset CONTAINER_INSTALLING
+
+    # Keep error handling DISABLED during failure detection and recovery
+    # Re-enabling it here would cause any pct exec/pull failure to trigger
+    # error_handler() on the host, bypassing the recovery menu entirely
+
+    # Check for error flag file in container (more reliable than lxc-attach exit code)
+    if [[ -n "${SESSION_ID:-}" ]]; then
+      local error_flag="/root/.install-${SESSION_ID}.failed"
+      if pct exec "$CTID" -- test -f "$error_flag" 2>/dev/null; then
+        install_exit_code=$(pct exec "$CTID" -- cat "$error_flag" 2>/dev/null || echo "1")
+        pct exec "$CTID" -- rm -f "$error_flag" 2>/dev/null || true
+      fi
+    fi
+
+    # Fallback to lxc-attach exit code if no flag file
+    if [[ $install_exit_code -eq 0 && ${lxc_exit:-0} -ne 0 ]]; then
+      install_exit_code=${lxc_exit:-0}
+    fi
+  fi # end: if [[ $install_exit_code -eq 0 ]] (customization succeeded)
+
+  # Installation or customization failed?
   if [[ $install_exit_code -ne 0 ]]; then
     # Prevent job-control signals from suspending the script during recovery.
     # In non-interactive shells (bash -c), background processes (spinner) can

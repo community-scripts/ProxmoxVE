@@ -286,7 +286,7 @@ error_handler() {
         echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
       fi
 
-      if read -t 60 -r response; then
+      if read -t 60 -r response </dev/tty; then
         if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
           echo ""
           if declare -f msg_info >/dev/null 2>&1; then
