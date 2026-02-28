@@ -32,9 +32,9 @@ if [ -d /dev/dri ]; then
     $STD apt install -y --no-install-recommends patchelf
     tmp_dir=$(mktemp -d)
     $STD pushd "$tmp_dir"
-    curl -fsSLO https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/Dockerfile
+    curl -fsSLO https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/machine-learning/Dockerfile
     readarray -t INTEL_URLS < <(
-      sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $2}'
+      sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $3}'
       sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
     )
     for url in "${INTEL_URLS[@]}"; do
@@ -342,9 +342,9 @@ mkdir -p "$ML_DIR" && chown -R immich:immich "$INSTALL_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 if [[ -f ~/.openvino ]]; then
   msg_info "Installing HW-accelerated machine-learning"
-  $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.20.0 --active -n -p python3.12 --managed-python
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p python3.12 --managed-python
-  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.12/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-312-x86_64-linux-gnu.so"
+  $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.24.1 --active -n -p python3.13 --managed-python
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p python3.13 --managed-python
+  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
   msg_ok "Installed HW-accelerated machine-learning"
 else
   msg_info "Installing machine-learning"
