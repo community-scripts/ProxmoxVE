@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-28T00:18:10Z",
+  "generated": "2026-02-28T06:10:00Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -151,9 +151,9 @@
     {
       "slug": "booklore",
       "repo": "booklore-app/BookLore",
-      "version": "v2.0.3",
+      "version": "v2.0.4",
       "pinned": false,
-      "date": "2026-02-26T19:10:59Z"
+      "date": "2026-02-28T01:54:25Z"
     },
     {
       "slug": "bookstack",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1223",
+      "version": "v0.24.1226",
       "pinned": false,
-      "date": "2026-02-27T05:51:11Z"
+      "date": "2026-02-28T05:58:51Z"
     },
     {
       "slug": "jellystat",
