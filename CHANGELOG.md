@@ -420,6 +420,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Delete Palmr [@vhsdream](https://github.com/vhsdream) ([#12399](https://github.com/community-scripts/ProxmoxVE/pull/12399))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: read from /dev/tty in all interactive prompts | fix empty or cropped logs due build process [@MickLesk](https://github.com/MickLesk) ([#12406](https://github.com/community-scripts/ProxmoxVE/pull/12406))
+
 ## 2026-02-27
 
 ### 🆕 New Scripts
