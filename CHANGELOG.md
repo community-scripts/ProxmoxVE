@@ -418,6 +418,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Dawarich: add missing build deps and handle seed failure [@MickLesk](https://github.com/MickLesk) ([#12410](https://github.com/community-scripts/ProxmoxVE/pull/12410))
     - pangolin: increase hdd to 10G [@MickLesk](https://github.com/MickLesk) ([#12409](https://github.com/community-scripts/ProxmoxVE/pull/12409))
 
+  - #### ✨ New Features
+
+    - BookLore: add additional JVM flags [@vhsdream](https://github.com/vhsdream) ([#12421](https://github.com/community-scripts/ProxmoxVE/pull/12421))
+
 ### 🗑️ Deleted Scripts
 
   - Delete Palmr [@vhsdream](https://github.com/vhsdream) ([#12399](https://github.com/community-scripts/ProxmoxVE/pull/12399))
