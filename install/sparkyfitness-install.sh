@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="25" setup_nodejs
+NODE_VERSION="25" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="18" setup_postgresql
 PG_DB_NAME="sparkyfitness" PG_DB_USER="sparky" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
@@ -50,8 +50,8 @@ msg_ok "Built Backend"
 
 msg_info "Building Frontend (Patience)"
 cd /opt/sparkyfitness/SparkyFitnessFrontend
-$STD npm install
-$STD npm run build
+$STD pnpm install
+$STD pnpm run build
 cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
 msg_ok "Built Frontend"
 

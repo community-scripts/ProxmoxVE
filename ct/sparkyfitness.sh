@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="25" setup_nodejs
+  NODE_VERSION="25" NODE_MODULE="pnpm" setup_nodejs
 
   if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
     msg_info "Stopping Services"
@@ -55,8 +55,8 @@ function update_script() {
 
     msg_info "Updating Sparky Fitness Frontend (Patience)"
     cd /opt/sparkyfitness/SparkyFitnessFrontend
-    $STD npm install
-    $STD npm run build
+    $STD pnpm install
+    $STD pnpm run build
     cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
     msg_ok "Updated Sparky Fitness Frontend"
 
