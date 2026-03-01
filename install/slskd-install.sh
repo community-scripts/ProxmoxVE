@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/slskd/slskd/, https://soularr.net
+# Source: https://github.com/slskd/slskd/, https://github.com/mrusse/soularr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,71 +13,71 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-  python3-pip
-msg_ok "Installed Dependencies"
+fetch_and_deploy_gh_release "Slskd" "slskd/slskd" "prebuild" "latest" "/opt/slskd" "slskd-*-linux-x64.zip"
 
-msg_info "Setup ${APPLICATION}"
-tmp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/slskd/slskd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/slskd/slskd/releases/download/${RELEASE}/slskd-${RELEASE}-linux-x64.zip" -o $tmp_file
-$STD unzip $tmp_file -d /opt/${APPLICATION}
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+msg_info "Configuring Slskd"
 JWT_KEY=$(openssl rand -base64 44)
 SLSKD_API_KEY=$(openssl rand -base64 44)
-cp /opt/${APPLICATION}/config/slskd.example.yml /opt/${APPLICATION}/config/slskd.yml
+cp /opt/slskd/config/slskd.example.yml /opt/slskd/config/slskd.yml
 sed -i \
-  -e "\|web:|,\|cidr|s|^#||" \
-  -e "\|https:|,\|5031|s|false|true|" \
+  -e '/web:/,/cidr/s/^# //' \
+  -e '/https:/,/port: 5031/s/false/true/' \
+  -e '/port: 5030/,/socket/s/,.*$//' \
+  -e '/content_path:/,/authentication/s/false/true/' \
   -e "\|api_keys|,\|cidr|s|<some.*$|$SLSKD_API_KEY|; \
     s|role: readonly|role: readwrite|; \
     s|0.0.0.0/0,::/0|& # Replace this with your subnet|" \
-  -e "\|soulseek|,\|write_queue|s|^#||" \
   -e "\|jwt:|,\|ttl|s|key: ~|key: $JWT_KEY|" \
-  -e "s|^   picture|#   picture|" \
-  /opt/${APPLICATION}/config/slskd.yml
-msg_ok "Setup ${APPLICATION}"
+  -e '/soulseek/,/write_queue/s/^# //' \
+  -e 's/^.*picture/#&/' /opt/slskd/config/slskd.yml
+msg_ok "Configured Slskd"
 
-msg_info "Installing Soularr"
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-cd /tmp
-curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
-$STD unzip main.zip
-mv soularr-main /opt/soularr
-cd /opt/soularr
-$STD pip install -r requirements.txt
-sed -i \
-  -e "\|[Slskd]|,\|host_url|s|yourslskdapikeygoeshere|$SLSKD_API_KEY|" \
-  -e "/host_url/s/slskd/localhost/" \
-  /opt/soularr/config.ini
-sed -i \
-  -e "/#This\|#Default\|INTERVAL/{N;d;}" \
-  -e "/while\|#Pass/d" \
-  -e "\|python|s|app|opt/soularr|; s|python|python3|" \
-  -e "/dt/,+2d" \
-  /opt/soularr/run.sh
-sed -i -E "/(soularr.py)/s/.{5}$//; /if/,/fi/s/.{4}//" /opt/soularr/run.sh
-chmod +x /opt/soularr/run.sh
-msg_ok "Installed Soularr"
+read -rp "${TAB3}Do you want to install Soularr? y/N " soularr
+if [[ ${soularr,,} =~ ^(y|yes)$ ]]; then
+  PYTHON_VERSION="3.11" setup_uv
+  fetch_and_deploy_gh_release "Soularr" "mrusse/soularr" "tarball" "latest" "/opt/soularr"
+  cd /opt/soularr
+  $STD uv venv venv
+  $STD source venv/bin/activate
+  $STD uv pip install -r requirements.txt
+  sed -i \
+    -e "\|[Slskd]|,\|host_url|s|yourslskdapikeygoeshere|$SLSKD_API_KEY|" \
+    -e "/host_url/s/slskd/localhost/" \
+    /opt/soularr/config.ini
+  cat <<EOF >/opt/soularr/run.sh
+#!/usr/bin/env bash
 
-msg_info "Creating Services"
-cat <<EOF >/etc/systemd/system/${APPLICATION}.service
+if ps aux | grep "[s]oularr.py" >/dev/null; then
+  echo "Soularr is already running. Exiting..."
+  exit 1
+else
+  source /opt/soularr/venv/bin/activate
+  uv run python3 -u /opt/soularr/soularr.py --config-dir /opt/soularr
+fi
+EOF
+  chmod +x /opt/soularr/run.sh
+  deactivate
+  msg_ok "Installed Soularr"
+fi
+
+msg_info "Creating Service"
+cat <<EOF >/etc/systemd/system/slskd.service
 [Unit]
-Description=${APPLICATION} Service
+Description=Slskd Service
 After=network.target
 Wants=network.target
 
 [Service]
-WorkingDirectory=/opt/${APPLICATION}
-ExecStart=/opt/${APPLICATION}/slskd --config /opt/${APPLICATION}/config/slskd.yml
+WorkingDirectory=/opt/slskd
+ExecStart=/opt/slskd/slskd --config /opt/slskd/config/slskd.yml
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/soularr.timer
+if [[ -d /opt/soularr ]]; then
+  cat <<EOF >/etc/systemd/system/soularr.timer
 [Unit]
 Description=Soularr service timer
 RefuseManualStart=no
@@ -85,15 +85,15 @@ RefuseManualStop=no
 
 [Timer]
 Persistent=true
-# run every 5 minutes
-OnCalendar=*-*-* *:0/5:00
+# run every 10 minutes
+OnCalendar=*-*-* *:0/10:00
 Unit=soularr.service
 
 [Install]
 WantedBy=timers.target
 EOF
 
-cat <<EOF >/etc/systemd/system/soularr.service
+  cat <<EOF >/etc/systemd/system/soularr.service
 [Unit]
 Description=Soularr service
 After=network.target slskd.service
@@ -106,10 +106,9 @@ ExecStart=/bin/bash -c /opt/soularr/run.sh
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ${APPLICATION}
-systemctl enable -q soularr.timer
-rm -rf $tmp_file
-rm -rf /tmp/main.zip
+  msg_warn "Add your Lidarr API key to Soularr in '/opt/soularr/config.ini', then run 'systemctl enable --now soularr.timer'"
+fi
+systemctl enable -q --now slskd
 msg_ok "Created Services"
 
 motd_ssh

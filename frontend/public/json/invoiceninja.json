@@ -37,7 +37,7 @@
       "type": "info"
     },
     {
-      "text": "Database credentials are stored in ~/invoiceninja.creds",
+      "text": "Database credentials are stored in `~/invoiceninja.creds`. Use them in the above initial configuration step.",
       "type": "info"
     },
     {

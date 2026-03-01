@@ -1,0 +1,56 @@
+{
+  "name": "SQL Server 2025",
+  "slug": "sqlserver2025",
+  "categories": [
+    8
+  ],
+  "date_created": "2026-02-05",
+  "type": "ct",
+  "updateable": true,
+  "privileged": true,
+  "interface_port": 1433,
+  "documentation": "https://learn.microsoft.com/en-us/sql/sql-server/?view=sql-server-ver17",
+  "website": "https://www.microsoft.com/en-us/sql-server/sql-server-2025",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/microsoft-sql-server.webp",
+  "config_path": "",
+  "description": "Script to automatically set up a SQL Server 2025 installation with Ubuntu 24.04 support.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/sqlserver2025.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": "Ubuntu",
+        "version": "24.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "SQL Server (2025) SQLPAL is incompatible with Proxmox VE 9 (Kernel 6.12+) in LXC containers. Use a VM instead or the SQL-Server 2022 LXC.",
+      "type": "warning"
+    },
+    {
+      "text": "If you choose not to run the installation setup, execute: `/opt/mssql/bin/mssql-conf setup` in LXC shell.",
+      "type": "info"
+    },
+    {
+      "text": "You can setup the admin account 'SA' during installation",
+      "type": "info"
+    },
+    {
+      "text": "Make sure you disable the SA account if you intend to use this in production!",
+      "type": "warning"
+    },
+    {
+      "text": "Ubuntu 24.04 support requires SQL Server 2025 CU1 or later",
+      "type": "info"
+    }
+  ]
+}

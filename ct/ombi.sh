@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://ombi.io/
+# Source: https://ombi.io/ | Github: https://github.com/Ombi-app/Ombi
 
 APP="Ombi"
 var_tags="${var_tags:-media}"
@@ -36,6 +36,7 @@ function update_script() {
     [[ -f /opt/ombi/Ombi.db ]] && mv /opt/ombi/Ombi.db /opt
     [[ -f /opt/ombi/OmbiExternal.db ]] && mv /opt/ombi/OmbiExternal.db /opt
     [[ -f /opt/ombi/OmbiSettings.db ]] && mv /opt/ombi/OmbiSettings.db /opt
+    [[ -f /opt/ombi/database.json ]] && mv /opt/ombi/database.json /opt
     msg_ok "Backup created"
 
     rm -rf /opt/ombi
@@ -43,6 +44,7 @@ function update_script() {
     [[ -f /opt/Ombi.db ]] && mv /opt/Ombi.db /opt/ombi
     [[ -f /opt/OmbiExternal.db ]] && mv /opt/OmbiExternal.db /opt/ombi
     [[ -f /opt/OmbiSettings.db ]] && mv /opt/OmbiSettings.db /opt/ombi
+    [[ -f /opt/database.json ]] && mv /opt/database.json /opt/ombi
 
     msg_info "Starting Service"
     systemctl start ombi
@@ -56,7 +58,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5000${CL}"

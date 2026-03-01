@@ -8,7 +8,7 @@
   "type": "ct",
   "updateable": true,
   "privileged": false,
-  "interface_port": 3000,
+  "interface_port": 8080,
   "documentation": "https://github.com/Brandawg93/PeaNUT/blob/main/README.md",
   "website": "https://github.com/Brandawg93/PeaNUT/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/peanut.webp",

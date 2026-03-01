@@ -14,6 +14,8 @@
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ubiquiti-unifi.webp",
   "config_path": "",
   "description": "UniFi Network Server is a software that helps manage and monitor UniFi networks (Wi-Fi, Ethernet, etc.) by providing an intuitive user interface and advanced features. It allows network administrators to configure, monitor, and upgrade network devices, as well as view network statistics, client devices, and historical events. The aim of the application is to make the management of UniFi networks easier and more efficient.",
+  "disable": true,
+  "disable_description": "This script is disabled because UniFi no longer delivers APT packages for Debian systems. The installation relies on APT repositories that are no longer maintained or available. For more details, see: https://github.com/community-scripts/ProxmoxVE/issues/11876",
   "install_methods": [
     {
       "type": "default",

@@ -461,7 +461,7 @@ check_api_health() {
     echo "Error description test: $test_error"
 
     # Test API connectivity (without sending data)
-    local api_url="http://api.community-scripts.org/dev/upload"
+    local api_url="https://api.community-scripts.org/dev/upload"
     if curl -s --head "$api_url" >/dev/null 2>&1; then
         echo "API endpoint is reachable"
     else

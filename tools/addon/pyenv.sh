@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://pyenv.run/ | Github: https://github.com/pyenv/pyenv
 
 set -e
 YW=$(echo "\033[33m")
@@ -28,6 +28,11 @@ function msg_error() {
   local msg="$1"
   echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
 }
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pyenv" "addon"
+
 if command -v pveversion >/dev/null 2>&1; then
   msg_error "Can't Install on Proxmox "
   exit
@@ -113,7 +118,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   cat <<EOF >/srv/esphome/start.sh
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE

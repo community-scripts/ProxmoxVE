@@ -119,7 +119,6 @@ function MobileSidebar() {
                   <p className="text-sm font-medium">Last Viewed</p>
                   <ScriptItem
                     item={lastViewedScript}
-                    setSelectedScript={isOnScriptsPage ? setSelectedScript : setTempSelectedScript}
                   />
                 </div>
               )
@@ -131,3 +130,4 @@ function MobileSidebar() {
 }
 
 export default MobileSidebar;
+

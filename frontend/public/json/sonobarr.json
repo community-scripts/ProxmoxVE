@@ -1,0 +1,40 @@
+{
+  "name": "Sonobarr",
+  "slug": "sonobarr",
+  "categories": [
+    14
+  ],
+  "date_created": "2026-02-23",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 5000,
+  "documentation": "https://github.com/Dodelidoo-Labs/sonobarr",
+  "config_path": "/etc/sonobarr/.env",
+  "website": "https://github.com/Dodelidoo-Labs/sonobarr",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/sonobarr.webp",
+  "description": "Sonobarr marries your existing Lidarr library with Last.fm’s discovery graph to surface artists you'll actually like. It runs as a Flask + Socket.IO application, ships with a polished Bootstrap UI, and includes admin tooling so folks can share a single instance safely.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/sonobarr.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Default generated admin password is in the env file (sonobarr_superadmin_password)",
+      "type": "info"
+    }
+  ]
+}

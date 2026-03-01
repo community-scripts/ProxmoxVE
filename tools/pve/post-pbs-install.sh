@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | MickLesk (CanbiZ) | thost96
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -31,6 +31,10 @@ shopt -s inherit_errexit nullglob
 msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
 msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
 msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "post-pbs-install" "pve"
 
 # ---- helpers ----
 get_pbs_codename() {
@@ -173,21 +177,15 @@ start_routines_4() {
     sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
     cat >/etc/apt/sources.list.d/debian.sources <<EOF
 Types: deb
-URIs: http://deb.debian.org/debian
-Suites: trixie
-Components: main contrib
+URIs: http://deb.debian.org/debian/
+Suites: trixie trixie-updates
+Components: main contrib non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
 Types: deb
-URIs: http://security.debian.org/debian-security
+URIs: http://security.debian.org/debian-security/
 Suites: trixie-security
-Components: main contrib
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-
-Types: deb
-URIs: http://deb.debian.org/debian
-Suites: trixie-updates
-Components: main contrib
+Components: main contrib non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
     msg_ok "Corrected Debian Sources"

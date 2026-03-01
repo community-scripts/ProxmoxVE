@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://docs.paperless-ngx.com/
+# Source: https://docs.paperless-ngx.com/ | Github: https://github.com/paperless-ngx/paperless-ngx
 
 APP="Paperless-ngx"
 var_tags="${var_tags:-document;management}"
@@ -69,7 +69,7 @@ function update_script() {
       if [ "$VERSION_CODENAME" = "bookworm" ]; then
         setup_gs
       else
-        $STD apt install -y ghostscript
+        ensure_dependencies ghostscript
       fi
 
       msg_info "Updating Paperless-ngx"
@@ -145,7 +145,7 @@ function update_script() {
         setup_gs
       else
         msg_info "Installing Ghostscript"
-        $STD apt install -y ghostscript
+        ensure_dependencies ghostscript
         msg_ok "Installed Ghostscript"
       fi
 
@@ -177,7 +177,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"

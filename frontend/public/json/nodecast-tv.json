@@ -1,0 +1,35 @@
+{
+  "name": "nodecast-tv",
+  "slug": "nodecast-tv",
+  "categories": [
+    13
+  ],
+  "date_created": "2026-01-28",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/technomancer702/nodecast-tv/blob/main/README.md",
+  "website": "https://github.com/technomancer702/nodecast-tv",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nodecast-tv.webp",
+  "config_path": "",
+  "description": "nodecast-tv is a modern, web-based IPTV player featuring Live TV, EPG, Movies (VOD), and Series support. Built with performance and user experience in mind.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/nodecast-tv.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

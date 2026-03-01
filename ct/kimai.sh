@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.kimai.org/
+# Source: https://www.kimai.org/ | Github: https://github.com/kimai/kimai
 
 APP="Kimai"
 var_tags="${var_tags:-time-tracking}"
@@ -23,16 +23,14 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if ! command -v lsb_release; then
-    apt install -y lsb-release
-  fi
+  ensure_dependencies lsb-release
   if [[ ! -d /opt/kimai ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   setup_mariadb
 
-  PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" setup_php
+  PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
   setup_composer
 
   if check_for_gh_release "kimai" "kimai/kimai"; then
@@ -49,14 +47,14 @@ function update_script() {
     [ -f /opt/kimai/config/packages/local.yaml ] && cp /opt/kimai/config/packages/local.yaml "$BACKUP_DIR/"
     msg_ok "Backup completed"
 
-    fetch_and_deploy_gh_release "kimai" "kimai/kimai"
+    fetch_and_deploy_gh_release "kimai" "kimai/kimai" "tarball"
 
     msg_info "Updating Kimai"
     [ -d "$BACKUP_DIR/var" ] && cp -r "$BACKUP_DIR/var" /opt/kimai/
     [ -f "$BACKUP_DIR/.env" ] && cp "$BACKUP_DIR/.env" /opt/kimai/
     [ -f "$BACKUP_DIR/local.yaml" ] && cp "$BACKUP_DIR/local.yaml" /opt/kimai/config/packages/
     rm -rf "$BACKUP_DIR"
-    cd /opt/kimai
+    cd /opt/kimai 
     sed -i '/^admin_lte:/,/^[^[:space:]]/d' config/packages/local.yaml
     $STD composer install --no-dev --optimize-autoloader
     $STD bin/console kimai:update
@@ -74,7 +72,7 @@ function update_script() {
     chmod -R 777 /opt/*
     rm -rf "$BACKUP_DIR"
     msg_ok "Setup Permissions"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -83,7 +81,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

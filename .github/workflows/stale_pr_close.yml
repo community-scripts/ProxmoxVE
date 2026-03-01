@@ -1,0 +1,111 @@
+name: Stale PR Management
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+  pull_request_target:
+    types:
+      - labeled
+
+jobs:
+  stale-prs:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+    steps:
+      - name: Handle stale PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date();
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            // --- When stale label is added, comment immediately ---
+            if (context.eventName === "pull_request_target" && context.payload.action === "labeled") {
+              const label = context.payload.label?.name;
+              if (label === "stale") {
+                const author = context.payload.pull_request.user.login;
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: context.payload.pull_request.number,
+                  body: `@${author} This PR has been marked as stale. It will be closed if no new commits are added in 7 days.`
+                });
+              }
+              return;
+            }
+            
+            // --- Scheduled run: check all stale PRs ---
+            const { data: prs } = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: "open",
+              per_page: 100
+            });
+            
+            for (const pr of prs) {
+              const hasStale = pr.labels.some(l => l.name === "stale");
+              if (!hasStale) continue;
+              
+              // Get timeline events to find when stale label was added
+              const { data: events } = await github.rest.issues.listEvents({
+                owner,
+                repo,
+                issue_number: pr.number,
+                per_page: 100
+              });
+              
+              // Find the most recent time the stale label was added
+              const staleLabelEvents = events
+                .filter(e => e.event === "labeled" && e.label?.name === "stale")
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+              
+              if (staleLabelEvents.length === 0) continue;
+              
+              const staleLabelDate = new Date(staleLabelEvents[0].created_at);
+              const daysSinceStale = (now - staleLabelDate) / (1000 * 60 * 60 * 24);
+              
+              // Check for new commits since stale label was added
+              const { data: commits } = await github.rest.pulls.listCommits({
+                owner,
+                repo,
+                pull_number: pr.number
+              });
+              
+              const lastCommitDate = new Date(commits[commits.length - 1].commit.author.date);
+              const author = pr.user.login;
+              
+              // If there are new commits after the stale label, remove it
+              if (lastCommitDate > staleLabelDate) {
+                await github.rest.issues.removeLabel({
+                  owner,
+                  repo,
+                  issue_number: pr.number,
+                  name: "stale"
+                });
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: pr.number,
+                  body: `@${author} Recent activity detected. Removing stale label.`
+                });
+              }
+              // If 7 days have passed since stale label, close the PR
+              else if (daysSinceStale > 7) {
+                await github.rest.pulls.update({
+                  owner,
+                  repo,
+                  pull_number: pr.number,
+                  state: "closed"
+                });
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: pr.number,
+                  body: `@${author} Closing stale PR due to inactivity (no commits for 7 days after stale label).`
+                });
+              }
+            }

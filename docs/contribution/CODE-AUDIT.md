@@ -1,14 +1,41 @@
-<div align="center">
-<img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo.png" height="100px" />
-</div>
-<h2><div align="center">Exploring the Scripts and Steps Involved in an Application LXC Installation</div></h2>
+# 🧪 Code Audit: LXC Script Flow
 
-1) [adguard.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/ct/adguard.sh): This script collects system parameters. (Also holds the function to update the application.)
-2) [build.func](https://github.com/community-scripts/ProxmoxVE/blob/main/misc/build.func): Adds user settings and integrates collected information.
-3) [create_lxc.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/misc/create_lxc.sh): Constructs the LXC container.
-4) [adguard-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/install/adguard-install.sh): Executes functions from [install.func](https://github.com/community-scripts/ProxmoxVE/blob/main/misc/install.func), and installs the application.
-5) [adguard.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/ct/adguard.sh) (again): To display the completion message.
+This guide explains the current execution flow and what to verify during reviews.
 
-The installation process uses reusable scripts: [build.func](https://github.com/community-scripts/ProxmoxVE/blob/main/misc/build.func), [create_lxc.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/misc/create_lxc.sh), and [install.func](https://github.com/community-scripts/ProxmoxVE/blob/main/misc/install.func), which are not specific to any particular application.
+## Execution Flow (CT + Install)
 
-To gain a better understanding, focus on reviewing [adguard-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/install/adguard-install.sh). This script contains the commands and configurations for installing and configuring AdGuard Home within the LXC container.
+1. `ct/appname.sh` runs on the Proxmox host and sources `misc/build.func`.
+2. `build.func` orchestrates prompts, container creation, and invokes the install script.
+3. Inside the container, `misc/install.func` exposes helper functions via `$FUNCTIONS_FILE_PATH`.
+4. `install/appname-install.sh` performs the application install.
+5. The CT script prints the completion message.
+
+## Audit Checklist
+
+### CT Script (ct/)
+
+- Sources `misc/build.func` from `community-scripts/ProxmoxVE/main` (setup-fork.sh updates for forks).
+- Uses `check_for_gh_release` + `fetch_and_deploy_gh_release` for updates.
+- No Docker-based installs.
+
+### Install Script (install/)
+
+- Sources `$FUNCTIONS_FILE_PATH`.
+- Uses `tools.func` helpers (setup\_\*).
+- Ends with `motd_ssh`, `customize`, `cleanup_lxc`.
+
+### JSON Metadata
+
+- File in `frontend/public/json/<appname>.json` matches template schema.
+
+### Testing
+
+- Test via curl from your fork (CT script only).
+- Wait 10-30 seconds after push.
+
+## References
+
+- `docs/contribution/templates_ct/AppName.sh`
+- `docs/contribution/templates_install/AppName-install.sh`
+- `docs/contribution/templates_json/AppName.json`
+- `docs/contribution/GUIDE.md`

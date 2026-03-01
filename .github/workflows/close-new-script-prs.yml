@@ -1,0 +1,119 @@
+name: Close Unauthorized New Script PRs
+
+on:
+  pull_request_target:
+    branches: ["main"]
+    types: [opened, labeled]
+
+jobs:
+  check-new-script:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: coolify-runner
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Close PR if unauthorized new script submission
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const prNumber = pr.number;
+            const author = pr.user.login;
+            const authorType = pr.user.type; // "User" or "Bot"
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // --- Only act on PRs with the "new script" label ---
+            const labels = pr.labels.map(l => l.name);
+            if (!labels.includes("new script")) {
+              core.info(`PR #${prNumber} does not have "new script" label — skipping.`);
+              return;
+            }
+
+            // --- Allow our bots ---
+            const allowedBots = [
+              "push-app-to-main[bot]",
+              "push-app-to-main",
+            ];
+
+            if (allowedBots.includes(author)) {
+              core.info(`PR #${prNumber} by allowed bot "${author}" — skipping.`);
+              return;
+            }
+
+            // --- Check if author is a member of the contributor team ---
+            const teamSlug = "contributor";
+            let isMember = false;
+
+            try {
+              const { status } = await github.rest.teams.getMembershipForUserInOrg({
+                org: owner,
+                team_slug: teamSlug,
+                username: author,
+              });
+              // status 200 means the user is a member (active or pending)
+              isMember = true;
+            } catch (error) {
+              if (error.status === 404) {
+                isMember = false;
+              } else {
+                core.warning(`Could not check team membership for ${author}: ${error.message}`);
+                // Fallback: check org membership
+                try {
+                  await github.rest.orgs.checkMembershipForUser({
+                    org: owner,
+                    username: author,
+                  });
+                  isMember = true;
+                } catch {
+                  isMember = false;
+                }
+              }
+            }
+
+            if (isMember) {
+              core.info(`PR #${prNumber} by contributor "${author}" — skipping.`);
+              return;
+            }
+
+            // --- Unauthorized: close the PR with a comment ---
+            core.info(`Closing PR #${prNumber} by "${author}" — not a contributor or allowed bot.`);
+
+            const comment = [
+              `👋 Hi @${author},`,
+              ``,
+              `Thank you for your interest in contributing a new script!`,
+              ``,
+              `However, **new scripts must first be submitted to our development repository** for testing and review before they can be merged here.`,
+              ``,
+              `> 🛑 New scripts must be submitted to [**ProxmoxVED**](https://github.com/community-scripts/ProxmoxVED) for testing.`,
+              `> PRs without prior testing will be closed.`,
+              ``,
+              `Please open your PR at **https://github.com/community-scripts/ProxmoxVED** instead.`,
+              `Once your script has been tested and approved there, it will be pushed to this repository automatically.`,
+              ``,
+              `This PR will now be closed. Thank you for understanding! 🙏`,
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: comment,
+            });
+
+            await github.rest.pulls.update({
+              owner,
+              repo,
+              pull_number: prNumber,
+              state: "closed",
+            });
+
+            // Add a label to indicate why it was closed
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: prNumber,
+              labels: ["not a script issue"],
+            });

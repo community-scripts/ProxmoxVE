@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # Adapted from onethree7 (https://github.com/onethree7/proxmox-lxc-privilege-converter)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -11,7 +11,9 @@ if ! command -v curl >/dev/null 2>&1; then
   apt-get install -y curl >/dev/null 2>&1
 fi
 source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 load_functions
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pve-privilege-converter" "pve"
 
 set -euo pipefail
 shopt -s inherit_errexit nullglob

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Dave-code-creater (Tan Dat, Ta)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://jupyter.org/
@@ -18,7 +18,7 @@ PYTHON_VERSION="3.12" setup_uv
 msg_info "Installing Jupyter"
 mkdir -p /opt/jupyter
 cd /opt/jupyter
-$STD uv venv /opt/jupyter/.venv
+$STD uv venv --clear /opt/jupyter/.venv
 $STD /opt/jupyter/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/jupyter/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/jupyter/.venv/bin/python -m pip install jupyter

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://listmonk.app/
+# Source: https://listmonk.app/ | Github: https://github.com/knadh/listmonk
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

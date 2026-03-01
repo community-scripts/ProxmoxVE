@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/clusterzx/paperless-ai
@@ -31,14 +31,18 @@ EOF
 msg_ok "Installed Python3"
 
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai"
+fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai" "tarball"
 
 msg_info "Setup Paperless-AI"
 cd /opt/paperless-ai
 $STD python3 -m venv /opt/paperless-ai/venv
 source /opt/paperless-ai/venv/bin/activate
+# TMPDIR to use container disk instead of tmpfs for large pip downloads (https://github.com/community-scripts/ProxmoxVE/issues/10338)
+export TMPDIR=/opt/paperless-ai/tmp
+mkdir -p "$TMPDIR"
 $STD pip install --upgrade pip
 $STD pip install --no-cache-dir -r requirements.txt
+rm -rf "$TMPDIR"
 mkdir -p data/chromadb
 $STD npm ci --only=production
 mkdir -p /opt/paperless-ai/data

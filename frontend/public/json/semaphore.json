@@ -22,8 +22,8 @@
         "cpu": 2,
         "ram": 2048,
         "hdd": 4,
-        "os": "debian",
-        "version": "13"
+        "os": "ubuntu",
+        "version": "24.04"
       }
     }
   ],

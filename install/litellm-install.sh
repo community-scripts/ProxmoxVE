@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: stout01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/BerriAI/litellm
@@ -42,7 +42,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Setting up Virtual Environment"
 mkdir -p /opt/litellm
 cd /opt/litellm
-$STD uv venv /opt/litellm/.venv
+$STD uv venv --clear /opt/litellm/.venv
 $STD /opt/litellm/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/litellm/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/litellm/.venv/bin/python -m pip install litellm[proxy] prisma

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: kkroboth
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://fileflows.com/
@@ -15,32 +15,31 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   ffmpeg \
-  jq \
   imagemagick
 msg_ok "Installed Dependencies"
 
 setup_hwaccel
 
 msg_info "Installing ASP.NET Core Runtime"
-curl -fsSL https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
-$STD dpkg -i packages-microsoft-prod.deb
-rm -rf packages-microsoft-prod.deb
-$STD apt-get update
-$STD apt-get install -y aspnetcore-runtime-8.0
+setup_deb822_repo \
+  "microsoft" \
+  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+  "https://packages.microsoft.com/debian/13/prod/" \
+  "trixie"
+$STD apt install -y aspnetcore-runtime-8.0
 msg_ok "Installed ASP.NET Core Runtime"
 
-msg_info "Setup ${APPLICATION}"
+fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
+
+msg_info "Setup FileFlows"
 $STD ln -svf /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 $STD ln -svf /usr/bin/ffprobe /usr/local/bin/ffprobe
-temp_file=$(mktemp)
-curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
-$STD unzip -d /opt/fileflows "$temp_file"
-(cd /opt/fileflows/Server && dotnet FileFlows.Server.dll --systemd install --root true)
+cd /opt/fileflows/Server
+dotnet FileFlows.Server.dll --systemd install --root true
 systemctl enable -q --now fileflows
-rm -f "$temp_file"
-msg_ok "Setup ${APPLICATION}"
+msg_ok "Setup FileFlows"
 
 motd_ssh
 customize

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/CrazyWolf13/streamlink-webui
@@ -18,11 +18,11 @@ NODE_VERSION="22"
 NODE_MODULE="npm@latest,yarn@latest"
 setup_nodejs
 setup_uv
-fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"
+fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui" "tarball"
 
 msg_info "Setup ${APPLICATION}"
 mkdir -p "/opt/${APPLICATION}-download"
-$STD uv venv /opt/"${APPLICATION}"/backend/src/.venv
+$STD uv venv --clear /opt/"${APPLICATION}"/backend/src/.venv
 source /opt/"${APPLICATION}"/backend/src/.venv/bin/activate
 $STD uv pip install -r /opt/streamlink-webui/backend/src/requirements.txt --python=/opt/"${APPLICATION}"/backend/src/.venv
 cd /opt/"${APPLICATION}"/frontend/src

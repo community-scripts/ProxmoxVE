@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://lidarr.audio/
+# Source: https://lidarr.audio/ | Github: https://github.com/Lidarr/Lidarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

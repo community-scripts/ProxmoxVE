@@ -1,0 +1,40 @@
+{
+  "name": "TrueNAS Community Edition",
+  "slug": "truenas-vm",
+  "categories": [
+    2
+  ],
+  "date_created": "2026-02-19",
+  "type": "vm",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://www.truenas.com/docs/",
+  "website": "https://www.truenas.com/truenas-community-edition/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/truenas-core.webp",
+  "config_path": "",
+  "description": "TrueNAS Community Edition is the world's most deployed storage software. Free, flexible and build on OpenZFS with Docker.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "vm/truenas-vm.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 8192,
+        "hdd": 16,
+        "os": "Debian",
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Once the script finishes, proceed with the OS installation via the console. For more details, please refer to this discussion: `https://github.com/community-scripts/ProxmoxVE/discussions/11344`",
+      "type": "info"
+    }
+  ]
+}

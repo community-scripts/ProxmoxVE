@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://privatebin.info/
+# Source: https://privatebin.info/ | Github: https://github.com/PrivateBin/PrivateBin
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -15,11 +15,11 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-    nginx \
-    openssl
+  nginx \
+  openssl
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.2" PHP_MODULE="common,fpm" setup_php
+PHP_VERSION="8.2" PHP_FPM="YES" setup_php
 create_self_signed_cert
 fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
 

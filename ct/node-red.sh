@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://nodered.org/
+# Source: https://nodered.org/ | Github: https://github.com/node-red/node-red
 
 APP="Node-Red"
 var_tags="${var_tags:-automation}"
@@ -27,10 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 2 \
-    "1" "Update ${APP}" ON \
-    "2" "Install Themes" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Node-Red Update Options" \
+    "1" "Update ${APP}" \
+    "2" "Install Themes")
   if [ "$UPD" == "1" ]; then
     NODE_VERSION="22" setup_nodejs
 
@@ -49,32 +48,31 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "2" ]; then
-    THEME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "NODE-RED THEMES" --radiolist --cancel-button Exit-Script "Choose Theme" 15 58 6 \
-      "aurora" "" OFF \
-      "cobalt2" "" OFF \
-      "dark" "" OFF \
-      "dracula" "" OFF \
-      "espresso-libre" "" OFF \
-      "github-dark" "" OFF \
-      "github-dark-default" "" OFF \
-      "github-dark-dimmed" "" OFF \
-      "midnight-red" "" ON \
-      "monoindustrial" "" OFF \
-      "monokai" "" OFF \
-      "monokai-dimmed" "" OFF \
-      "noctis" "" OFF \
-      "oceanic-next" "" OFF \
-      "oled" "" OFF \
-      "one-dark-pro" "" OFF \
-      "one-dark-pro-darker" "" OFF \
-      "solarized-dark" "" OFF \
-      "solarized-light" "" OFF \
-      "tokyo-night" "" OFF \
-      "tokyo-night-light" "" OFF \
-      "tokyo-night-storm" "" OFF \
-      "totallyinformation" "" OFF \
-      "zenburn" "" OFF \
-      3>&1 1>&2 2>&3)
+    THEME=$(msg_menu "Node-Red Themes" \
+      "midnight-red" "Midnight Red (default)" \
+      "aurora" "Aurora" \
+      "cobalt2" "Cobalt2" \
+      "dark" "Dark" \
+      "dracula" "Dracula" \
+      "espresso-libre" "Espresso Libre" \
+      "github-dark" "GitHub Dark" \
+      "github-dark-default" "GitHub Dark Default" \
+      "github-dark-dimmed" "GitHub Dark Dimmed" \
+      "monoindustrial" "Monoindustrial" \
+      "monokai" "Monokai" \
+      "monokai-dimmed" "Monokai Dimmed" \
+      "noctis" "Noctis" \
+      "oceanic-next" "Oceanic Next" \
+      "oled" "OLED" \
+      "one-dark-pro" "One Dark Pro" \
+      "one-dark-pro-darker" "One Dark Pro Darker" \
+      "solarized-dark" "Solarized Dark" \
+      "solarized-light" "Solarized Light" \
+      "tokyo-night" "Tokyo Night" \
+      "tokyo-night-light" "Tokyo Night Light" \
+      "tokyo-night-storm" "Tokyo Night Storm" \
+      "totallyinformation" "TotallyInformation" \
+      "zenburn" "Zenburn")
     header_info
     msg_info "Installing ${THEME} Theme"
     cd /root/.node-red
@@ -91,7 +89,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:1880${CL}"

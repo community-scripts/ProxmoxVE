@@ -1,0 +1,40 @@
+{
+  "name": "ebusd",
+  "slug": "ebusd",
+  "categories": [
+    16
+  ],
+  "date_created": "2026-02-15",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/john30/ebusd/wiki",
+  "website": "https://github.com/john30/ebusd",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ebusd.webp",
+  "config_path": "/etc/default/ebusd",
+  "description": "ebusd is a daemon for handling communication with eBUS devices connected to a 2-wire `energy bus` used by numerous heating systems.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/ebusd.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 2,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "root",
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "For required post installation actions, checkout: `https://github.com/community-scripts/ProxmoxVE/discussions/11352`",
+      "type": "info"
+    }
+  ]
+}

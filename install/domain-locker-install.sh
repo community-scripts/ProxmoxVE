@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Lissy93/domain-locker
@@ -17,7 +17,7 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="domainlocker_db" PG_DB_USER="domainlocker" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs
 
-fetch_and_deploy_gh_release "domain-locker" "Lissy93/domain-locker"
+fetch_and_deploy_gh_release "domain-locker" "Lissy93/domain-locker" "tarball"
 
 msg_info "Installing Modules (patience)"
 cd /opt/domain-locker

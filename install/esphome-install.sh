@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://esphome.io/
@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
+$STD apt install -y git
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
@@ -23,7 +23,7 @@ msg_info "Setting up Virtual Environment"
 mkdir -p /opt/esphome
 mkdir -p /root/config
 cd /opt/esphome
-$STD uv venv /opt/esphome/.venv
+$STD uv venv --clear /opt/esphome/.venv
 $STD /opt/esphome/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/esphome/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/esphome/.venv/bin/python -m pip install esphome tornado esptool

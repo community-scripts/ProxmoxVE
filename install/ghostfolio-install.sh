@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: lucasfell
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://ghostfol.io/
+# Source: https://ghostfol.io/ | Github: https://github.com/ghostfolio/ghostfolio
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

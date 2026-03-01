@@ -1,0 +1,35 @@
+{
+    "name": "Unifi OS Server",
+    "slug": "unifi-os-server",
+    "categories": [
+        4
+    ],
+    "date_created": "2026-01-16",
+    "type": "ct",
+    "updateable": true,
+    "privileged": true,
+    "interface_port": 11443,
+    "documentation": "https://help.ui.com/hc/en-us",
+    "website": "https://www.ui.com/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ubiquiti-unifi.webp",
+    "config_path": "",
+    "description": "Unifi OS Server is the operating system that powers Ubiquiti's UniFi line of network devices. It provides a centralized platform for managing and monitoring UniFi access points, switches, and security gateways, offering features such as network configuration, device provisioning, and performance analytics.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/unifi-os-server.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 20,
+                "os": "debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

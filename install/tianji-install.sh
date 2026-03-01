@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -26,7 +26,7 @@ NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="tianji_db" PG_DB_USER="tianji" setup_postgresql_db
 PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "tianji" "msgbyte/tianji"
+fetch_and_deploy_gh_release "tianji" "msgbyte/tianji" "tarball"
 
 msg_info "Setting up Tianji"
 cd /opt/tianji
@@ -37,7 +37,7 @@ mkdir -p ./src/server/public
 cp -r ./geo ./src/server/public
 $STD pnpm build:server
 cat <<EOF >/opt/tianji/src/server/.env
-DATABASE_URL="postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?schema=public"
+DATABASE_URL="postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME?schema=public"
 OPENAI_API_KEY=""
 JWT_SECRET="$TIANJI_SECRET"
 EOF

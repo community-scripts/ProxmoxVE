@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2025 Community Scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tududi.com/
+# Source: https://tududi.com/ | Github: https://github.com/chrisvel/tududi
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -38,8 +38,8 @@ SECRET="$(openssl rand -hex 64)"
 sed -e '/^NODE_ENV=/s/=.*$/=production/' \
   -e 's/^TUDUDI_USER/# TUDUDI_USER/g' \
   -e "/_SECRET=/s/=.*$/=${SECRET}/" \
-  -e "/^# DB_FILE/s/^# //; \
-    \|DB_FILE|s|/path.*$|${DB_LOCATION}/production.sqlite3|" \
+  -e '/^# DB_FILE=/s/^# //' \
+  -e "s|^DB_FILE=.*|DB_FILE=${DB_LOCATION}/production.sqlite3|" \
   -e "/^# TUDUDI_ALLOWED/s/^# //; \
     \|_ORIGINS=|s|=.*$|=<your tududi IP or FDQN>|" \
   -e "/^# TUDUDI_UPLOAD/s/^# //; \

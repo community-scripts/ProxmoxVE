@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Andy Grunwald (andygrunwald)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/prometheus-pve/prometheus-pve-exporter
@@ -19,7 +19,7 @@ msg_info "Installing Prometheus Proxmox VE Exporter"
 mkdir -p /opt/prometheus-pve-exporter
 cd /opt/prometheus-pve-exporter
 
-$STD uv venv /opt/prometheus-pve-exporter/.venv
+$STD uv venv --clear /opt/prometheus-pve-exporter/.venv
 $STD /opt/prometheus-pve-exporter/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install prometheus-pve-exporter

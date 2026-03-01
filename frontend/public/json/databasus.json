@@ -1,0 +1,44 @@
+{
+  "name": "Databasus",
+  "slug": "databasus",
+  "categories": [
+    7
+  ],
+  "date_created": "2026-02-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://github.com/databasus/databasus",
+  "website": "https://github.com/databasus/databasus",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/databasus.webp",
+  "config_path": "/opt/databasus/.env",
+  "description": "Free, open source and self-hosted solution for automated PostgreSQL backups. With multiple storage options, notifications, scheduling, and a beautiful web interface for managing database backups across multiple PostgreSQL instances.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/databasus.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin@localhost",
+    "password": "See /root/databasus.creds"
+  },
+  "notes": [
+    {
+      "text": "Supports PostgreSQL versions 12-18 with cloud and self-hosted instances",
+      "type": "info"
+    },
+    {
+      "text": "Features: Scheduled backups, multiple storage providers, notifications, encryption",
+      "type": "info"
+    }
+  ]
+}

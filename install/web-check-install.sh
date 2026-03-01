@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/lissy93/web-check
@@ -64,7 +64,7 @@ msg_info "Setting up Chromium"
 chmod 755 /usr/bin/chromium
 msg_ok "Setup Chromium"
 
-fetch_and_deploy_gh_release "web-check" "CrazyWolf13/web-check"
+fetch_and_deploy_gh_release "web-check" "CrazyWolf13/web-check" "tarball"
 
 msg_info "Installing Web-Check (Patience)"
 cd /opt/web-check

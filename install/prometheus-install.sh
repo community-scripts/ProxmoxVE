@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://prometheus.io/
+# Source: https://prometheus.io/ | Github: https://github.com/prometheus/prometheus
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.influxdata.com/
@@ -21,23 +21,29 @@ setup_deb822_repo \
   "stable"
 msg_ok "Set up InfluxDB Repository"
 
-read -r -p "${TAB3}Which version of InfluxDB to install? (1 or 2) " prompt
-if [[ $prompt == "2" ]]; then
+read -r -p "${TAB3}Which version of InfluxDB to install? (1, 2 or 3) " prompt
+if [[ $prompt == "3" ]]; then
+  INFLUX="3"
+elif [[ $prompt == "2" ]]; then
   INFLUX="2"
 else
   INFLUX="1"
 fi
 
-msg_info "Installing InfluxDB"
-if [[ $INFLUX == "2" ]]; then
+msg_info "Installing InfluxDB v${INFLUX}"
+if [[ $INFLUX == "3" ]]; then
+  $STD apt install -y influxdb3-core
+  systemctl enable -q --now influxdb3-core
+elif [[ $INFLUX == "2" ]]; then
   $STD apt install -y influxdb2
+  systemctl enable -q --now influxdb
 else
   $STD apt install -y influxdb
   download_file "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.8_amd64.deb" "${HOME}/chronograf_1.10.8_amd64.deb"
   $STD dpkg -i "${HOME}/chronograf_1.10.8_amd64.deb"
   rm -rf "${HOME}/chronograf_1.10.8_amd64.deb"
+  systemctl enable -q --now influxdb
 fi
-systemctl enable -q --now influxdb
 msg_ok "Installed InfluxDB"
 
 read -r -p "${TAB3}Would you like to add Telegraf? <y/N> " prompt

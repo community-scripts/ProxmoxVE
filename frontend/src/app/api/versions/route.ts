@@ -3,18 +3,22 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-import type { AppVersion } from "@/lib/types";
-
 export const dynamic = "force-static";
 
 const jsonDir = "public/json";
 const versionsFileName = "versions.json";
 const encoding = "utf-8";
 
+interface LegacyVersion {
+  name: string;
+  version: string;
+  date: string;
+}
+
 async function getVersions() {
   const filePath = path.resolve(jsonDir, versionsFileName);
   const fileContent = await fs.readFile(filePath, encoding);
-  const versions: AppVersion[] = JSON.parse(fileContent);
+  const versions: LegacyVersion[] = JSON.parse(fileContent);
 
   const modifiedVersions = versions.map((version) => {
     let newName = version.name;

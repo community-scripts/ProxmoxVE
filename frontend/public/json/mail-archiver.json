@@ -1,0 +1,35 @@
+{
+  "name": "Mail-Archiver",
+  "slug": "mail-archiver",
+  "categories": [
+    7
+  ],
+  "date_created": "2025-12-28",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 5000,
+  "documentation": "https://github.com/s1t5/mail-archiver/blob/main/doc/Index.md",
+  "config_path": "/opt/mail-archiver/.env, /opt/mail-archiver/appsettings.json",
+  "website": "https://github.com/s1t5/mail-archiver",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/mail-archiver.webp",
+  "description": "Mail-Archiver is a web application for archiving, searching, and exporting emails from multiple accounts. Featuring folder sync, attachment support, mailbox migration and a dashboard.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/mail-archiver.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "secure123!"
+  },
+  "notes": []
+}

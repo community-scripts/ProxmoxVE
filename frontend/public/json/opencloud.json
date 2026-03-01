@@ -1,0 +1,64 @@
+{
+  "name": "OpenCloud",
+  "slug": "opencloud",
+  "categories": [
+    11
+  ],
+  "date_created": "2026-02-05",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 443,
+  "documentation": "https://docs.opencloud.eu",
+  "config_path": "/etc/opencloud/opencloud.env, /etc/opencloud/opencloud.yaml, /etc/opencloud/csp.yaml",
+  "website": "https://opencloud.eu",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/opencloud.webp",
+  "description": "OpenCloud is the file sharing and collaboration solution of the Heinlein Group. Through intelligent file management and a strong open source community, files become valuable resources, effectively structured and usable in the long term. With flexible data rooms and intelligent access rights, teams can access and work together on data anytime, anywhere without barriers, but with a lot of productivity.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/opencloud.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "randomly generated during the installation process"
+  },
+  "notes": [
+    {
+      "text": "Valid TLS certificates and fully-qualified domain names behind a reverse proxy (Caddy) for 3 services - OpenCloud (port: 9200), Collabora (port: 9980), and WOPI (port: 9300) are **REQUIRED**",
+      "type": "warning"
+    },
+    {
+      "text": "Forgot your admin password? Check `admin_password` in the 'idm' section in `/etc/opencloud/opencloud.yaml`",
+      "type": "info"
+    },
+    {
+      "text": "**Optional External Apps**: extract zip archives from App Store to `/etc/opencloud/web/assets/apps`",
+      "type": "info"
+    },
+    {
+      "text": "**Optional CalDAV and CardDAV**: requires separate Radicale install. Edit and rename `/etc/opencloud/proxy.yaml.bak` and change your Radicale config to use `http_x_remote_user` as the auth method",
+      "type": "info"
+    },
+    {
+      "text": "**Optional OpenID**: Authelia and PocketID supported. Uncomment relevant lines in `/etc/opencloud/opencloud.env` and consult OpenCloud GitHub discussions for configuration tips",
+      "type": "info"
+    },
+    {
+      "text": "**Optional Full-text Search with Apache Tika**: requires your own Tika LXC. See `https://community-scripts.github.io/ProxmoxVE/scripts?id=apache-tika`",
+      "type": "info"
+    },
+    {
+      "text": "**Relevant services**: `opencloud.service`, `opencloud-wopi.service`, `coolwsd.service`",
+      "type": "info"
+    }
+  ]
+}

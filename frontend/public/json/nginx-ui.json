@@ -1,0 +1,48 @@
+{
+    "name": "Nginx UI",
+    "slug": "nginx-ui",
+    "categories": [
+        21
+    ],
+    "date_created": "2026-02-05",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 9000,
+    "documentation": "https://nginxui.com/guide/",
+    "website": "https://nginxui.com",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nginx-ui.webp",
+    "config_path": "/usr/local/etc/nginx-ui/app.ini",
+    "description": "Nginx UI is a comprehensive web-based interface designed to simplify the management and configuration of Nginx servers. It provides features like online statistics, ChatGPT-powered config assistant, automatic Let's Encrypt certificates, and config file editing with syntax highlighting.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/nginx-ui.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 4,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "On first visit, the setup wizard will guide you to create an admin account and configure ACME email.",
+            "type": "warning"
+        },
+        {
+            "text": "Nginx runs on ports 80/443, Nginx UI management interface on port 9000.",
+            "type": "info"
+        },
+        {
+            "text": "SSL certificates can be managed automatically with Let's Encrypt integration.",
+            "type": "info"
+        }
+    ]
+}

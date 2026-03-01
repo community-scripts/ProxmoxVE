@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: TuroYT
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/TuroYT/snowshare
 
 APP="SnowShare"
 var_tags="${var_tags:-file-sharing}"
-var_cpu="${var_cpu:-1}"
-var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-5}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-2048}"
+var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -28,12 +28,22 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   if check_for_gh_release "snowshare" "TuroYT/snowshare"; then
     msg_info "Stopping Service"
     systemctl stop snowshare
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare"
+    msg_info "Backing up uploads"
+    [ -d /opt/snowshare/uploads ] && cp -a /opt/snowshare/uploads /opt/.snowshare_uploads_backup
+    msg_ok "Uploads backed up"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
+
+    msg_info "Restoring uploads"
+    [ -d /opt/.snowshare_uploads_backup ] && rm -rf /opt/snowshare/uploads && cp -a /opt/.snowshare_uploads_backup /opt/snowshare/uploads
+    msg_ok "Uploads restored"
 
     msg_info "Updating Snowshare"
     cd /opt/snowshare
@@ -54,7 +64,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

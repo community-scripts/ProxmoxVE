@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.stirlingpdf.com/
+# Source: https://www.stirlingpdf.com/ | Github: https://github.com/Stirling-Tools/Stirling-PDF
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -61,7 +61,7 @@ msg_ok "Installed LibreOffice Components"
 
 msg_info "Installing Python Dependencies"
 mkdir -p /tmp/stirling-pdf
-$STD uv venv /opt/.venv
+$STD uv venv --clear /opt/.venv
 export PATH="/opt/.venv/bin:$PATH"
 source /opt/.venv/bin/activate
 $STD uv pip install --upgrade pip

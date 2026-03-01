@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.meilisearch.com/
+# Source: https://www.meilisearch.com/ | Github: https://github.com/meilisearch/meilisearch
 
 APP="Meilisearch"
 var_tags="${var_tags:-full-text-search}"
@@ -24,32 +24,9 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Meilisearch Update" --radiolist --cancel-button Exit-Script "Spacebar = Select" 10 58 2 \
-    "1" "Update Meilisearch" ON \
-    "2" "Update Meilisearch-UI" OFF \
-    3>&1 1>&2 2>&3)
+  setup_meilisearch
 
-  if [ "$UPD" == "1" ]; then
-    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-      msg_info "Stopping Meilisearch"
-      systemctl stop meilisearch
-      msg_ok "Stopped Meilisearch"
-
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
-
-      msg_info "Starting Meilisearch"
-      systemctl start meilisearch
-      msg_ok "Started Meilisearch"
-      msg_ok "Updated successfully!"
-    fi
-    exit
-  fi
-
-  if [ "$UPD" == "2" ]; then
-    if [[ ! -d /opt/meilisearch-ui ]]; then
-      msg_error "No Meilisearch-UI Installation Found!"
-      exit
-    fi
+  if [[ -d /opt/meilisearch-ui ]]; then
     if check_for_gh_release "meilisearch-ui" "riccox/meilisearch-ui"; then
       msg_info "Stopping Meilisearch-UI"
       systemctl stop meilisearch-ui
@@ -69,17 +46,18 @@ function update_script() {
       msg_info "Starting Meilisearch-UI"
       systemctl start meilisearch-ui
       msg_ok "Started Meilisearch-UI"
-      msg_ok "Updated successfully!"
     fi
-    exit
   fi
+
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}meilisearch: http://${IP}:7700$ | meilisearch-ui: http://${IP}:24900${CL}"

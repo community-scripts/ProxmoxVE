@@ -100,7 +100,8 @@ jobs:
               // If it's an update script PR with json changes and a content label, skip adding website/json
               // The PR should be categorized as update script with the content label
               if (!(hasUpdateScript && hasJson && hasContentLabel)) {
-                labelsToAdd.add(hasJson ? "json" : "website");
+                labelsToAdd.add("website");
+                if (hasJson) labelsToAdd.add("json");
               }
             }
 

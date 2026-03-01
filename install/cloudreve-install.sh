@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://cloudreve.org/
+# Source: https://cloudreve.org/ | Github: https://github.com/cloudreve/cloudreve
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -30,7 +30,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now cloudreve
 msg_ok "Service Setup"
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.passbolt.com/
@@ -23,7 +23,7 @@ msg_ok "Installed dependencies"
 setup_mariadb
 MARIADB_DB_NAME="passboltdb" MARIADB_DB_USER="passbolt" setup_mariadb_db
 create_self_signed_cert
-import_local_ip
+
 setup_deb822_repo \
   "passbolt" \
   "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x3D1A0346C8E1802F774AEF21DE8B853FC155581D" \
@@ -44,6 +44,8 @@ echo passbolt-ce-server passbolt/nginx-domain string $LOCAL_IP | debconf-set-sel
 echo passbolt-ce-server passbolt/nginx-certificate-file string /etc/ssl/passbolt/passbolt.crt | debconf-set-selections
 echo passbolt-ce-server passbolt/nginx-certificate-key-file string /etc/ssl/passbolt/passbolt.key | debconf-set-selections
 $STD apt install -y --no-install-recommends passbolt-ce-server
+sed -i 's/client_max_body_size[[:space:]]\+[0-9]\+M;/client_max_body_size        15M;/' /etc/nginx/sites-enabled/nginx-passbolt.conf
+systemctl reload nginx
 msg_ok "Setup Passbolt"
 
 motd_ssh

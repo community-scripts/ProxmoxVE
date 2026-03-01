@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/babybuddy/babybuddy
@@ -24,12 +24,12 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 setup_uv
-fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy"
+fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy" "tarball"
 
 msg_info "Installing Babybuddy"
 mkdir -p /opt/data
 cd /opt/babybuddy
-$STD uv venv .venv
+$STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install -r requirements.txt
 cp babybuddy/settings/production.example.py babybuddy/settings/production.py

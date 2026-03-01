@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 clear
 if command -v pveversion >/dev/null 2>&1; then
-    echo -e "⚠️  Can't Run from the Proxmox Shell"
-    exit
+  echo -e "⚠️  Can't Run from the Proxmox Shell"
+  exit
 fi
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
@@ -23,16 +23,16 @@ CM="${GN}✓${CL}"
 CROSS="${RD}✗${CL}"
 APP="Home Assistant Container"
 while true; do
-    read -p "This will restore ${APP} from a backup. Proceed(y/n)?" yn
-    case $yn in
-    [Yy]*) break ;;
-    [Nn]*) exit ;;
-    *) echo "Please answer yes or no." ;;
-    esac
+  read -p "This will restore ${APP} from a backup. Proceed(y/n)?" yn
+  case $yn in
+  [Yy]*) break ;;
+  [Nn]*) exit ;;
+  *) echo "Please answer yes or no." ;;
+  esac
 done
 clear
 function header_info {
-    cat <<"EOF"
+  cat <<"EOF"
     __  __                        ___              _      __              __              
    / / / /___  ____ ___  ___     /   |  __________(_)____/ /_____ _____  / /_   
   / /_/ / __ \/ __ `__ \/ _ \   / /| | / ___/ ___/ / ___/ __/ __ `/ __ \/ __/  
@@ -44,35 +44,39 @@ EOF
 
 header_info
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "container-restore" "pve"
+
 function msg_info() {
-    local msg="$1"
-    echo -ne " ${HOLD} ${YW}${msg}..."
+  local msg="$1"
+  echo -ne " ${HOLD} ${YW}${msg}..."
 }
 function msg_ok() {
-    local msg="$1"
-    echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
+  local msg="$1"
+  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
 }
 function msg_error() {
-    local msg="$1"
-    echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
+  local msg="$1"
+  echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
 }
 if [ -z "$(ls -A /var/lib/docker/volumes/hass_config/_data/backups/)" ]; then
-    msg_error "No backups found! \n"
-    exit 1
+  msg_error "No backups found! \n"
+  exit 1
 fi
 DIR=/var/lib/docker/volumes/hass_config/_data/restore
 if [ -d "$DIR" ]; then
-    msg_ok "Restore Directory Exists."
+  msg_ok "Restore Directory Exists."
 else
-    mkdir -p /var/lib/docker/volumes/hass_config/_data/restore
-    msg_ok "Created Restore Directory."
+  mkdir -p /var/lib/docker/volumes/hass_config/_data/restore
+  msg_ok "Created Restore Directory."
 fi
 cd /var/lib/docker/volumes/hass_config/_data/backups/
 PS3="Please enter your choice: "
 files="$(ls -A .)"
 select filename in ${files}; do
-    msg_ok "You selected ${BL}${filename}${CL}"
-    break
+  msg_ok "You selected ${BL}${filename}${CL}"
+  break
 done
 msg_info "Stopping Home Assistant"
 docker stop homeassistant &>/dev/null

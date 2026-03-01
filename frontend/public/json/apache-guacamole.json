@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-12-19",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 8080,
   "documentation": "https://guacamole.apache.org/doc/gug/",

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/wizarrrr/wizarr
@@ -42,10 +42,10 @@ function update_script() {
     rm -rf /opt/wizarr/migrations/versions/*
     msg_ok "Backup Created"
 
-    fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr"
+    fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr" "tarball"
 
     msg_info "Updating Wizarr"
-    cd /opt/wizarr || exit
+    cd /opt/wizarr
     $STD /usr/local/bin/uv sync --frozen
     $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
     $STD npm --prefix app/static install
@@ -81,7 +81,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5690${CL}"

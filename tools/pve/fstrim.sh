@@ -19,6 +19,10 @@ RD="\033[01;31m"
 GN="\033[1;92m"
 CL="\033[m"
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "fstrim" "pve"
+
 LOGFILE="/var/log/fstrim.log"
 touch "$LOGFILE"
 chmod 600 "$LOGFILE"

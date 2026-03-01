@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Omar Minaya
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.kasmweb.com/docs/latest/index.html
@@ -34,10 +34,19 @@ function update_script() {
   CURRENT_VERSION=$(readlink -f /opt/kasm/current | awk -F'/' '{print $4}')
   KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' | head -n 1)
   if [[ -z "$KASM_URL" ]]; then
+    SERVICE_IMAGE_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_service_images_amd64_[0-9]+\.[0-9]+\.[0-9]+\.tar\.gz' | head -n 1)
+    if [[ -n "$SERVICE_IMAGE_URL" ]]; then
+      KASM_VERSION=$(echo "$SERVICE_IMAGE_URL" | sed -E 's/.*kasm_release_service_images_amd64_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+      KASM_URL="https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
+    fi
+  else
+    KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+  fi
+  
+  if [[ -z "$KASM_URL" ]] || [[ -z "$KASM_VERSION" ]]; then
     msg_error "Unable to detect latest Kasm release URL."
     exit 1
   fi
-  KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
   msg_info "Checked for new version"
 
   msg_info "Removing outdated docker-compose plugin"
@@ -46,7 +55,7 @@ function update_script() {
   
   if [[ -z "$CURRENT_VERSION" ]] || [[ "$KASM_VERSION" != "$CURRENT_VERSION" ]]; then
     msg_info "Updating Kasm"
-    cd /tmp
+    cd /tmp 
 
     msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
     msg_warn "The following code is NOT maintained or audited by our repository."
@@ -61,11 +70,11 @@ function update_script() {
     curl -fsSL -o "/tmp/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
     tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
     chmod +x /tmp/kasm_release/install.sh
-    rm -f /tmp/kasm_release_${KASM_VERSION}.tar.gz
+    rm -f /tmp/kasm_release_"${KASM_VERSION}".tar.gz
   
     bash /tmp/kasm_release/upgrade.sh --proxy-port 443
     rm -rf /tmp/kasm_release
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Kasm is already at v${KASM_VERSION}"
   
@@ -77,7 +86,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}${CL}"

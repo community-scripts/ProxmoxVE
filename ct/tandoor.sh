@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tandoor.dev/
+# Source: https://tandoor.dev/ | Github: https://github.com/TandoorRecipes/recipes
 
 APP="Tandoor"
 var_tags="${var_tags:-recipes}"
@@ -50,7 +50,7 @@ function update_script() {
     cp -r /opt/tandoor.bak/{config,api,mediafiles,staticfiles} /opt/tandoor/
     mv /opt/tandoor.bak/.env /opt/tandoor/.env
     cd /opt/tandoor
-    $STD uv venv .venv --python=python3
+    $STD uv venv --clear .venv --python=python3
     $STD uv pip install -r requirements.txt --python .venv/bin/python
     cd /opt/tandoor/vue3
     $STD yarn install
@@ -80,7 +80,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8002${CL}"

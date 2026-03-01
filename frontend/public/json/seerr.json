@@ -1,0 +1,35 @@
+{
+  "name": "Seerr",
+  "slug": "seerr",
+  "categories": [
+    13
+  ],
+  "date_created": "2026-02-15",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 5055,
+  "documentation": "https://docs.seerr.dev/",
+  "website": "https://seerr.dev/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/seerr.webp",
+  "config_path": "/etc/seerr/seerr.conf",
+  "description": "Open-source media request and discovery manager for Jellyfin, Plex, and Emby. Unified version of Overseerr and Jellyseerr.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/seerr.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 12,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

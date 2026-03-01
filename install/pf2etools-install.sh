@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: TheRealVira
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://pf2etools.com/
+# Source: https://pf2etools.com/ | Github: https://github.com/Pf2eToolsOrg/Pf2eTools
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

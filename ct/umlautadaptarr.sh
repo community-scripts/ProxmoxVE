@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: elvito
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/PCJones/UmlautAdaptarr
@@ -33,7 +33,9 @@ function update_script() {
     systemctl stop umlautadaptarr
     msg_ok "Stopped Service"
 
+    cp /opt/UmlautAdaptarr/appsettings.json /opt/UmlautAdaptarr/appsettings.json.bak
     fetch_and_deploy_gh_release "UmlautAdaptarr" "PCJones/Umlautadaptarr" "prebuild" "latest" "/opt/UmlautAdaptarr" "linux-x64.zip"
+    cp /opt/UmlautAdaptarr/appsettings.json.bak /opt/UmlautAdaptarr/appsettings.json
 
     msg_info "Starting Service"
     systemctl start umlautadaptarr
@@ -46,7 +48,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5005${CL}"

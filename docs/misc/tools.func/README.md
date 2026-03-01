@@ -75,7 +75,8 @@ Complete reference of environment variables and configuration options.
 ```bash
 setup_nodejs "20"     # Install Node.js v20
 setup_php "8.2"       # Install PHP 8.2
-setup_mariadb "11"    # Install MariaDB 11
+setup_mariadb         # Install MariaDB (distribution packages)
+# MARIADB_VERSION="11.4" setup_mariadb  # Specific version from official repo
 ```
 
 ### Safe Package Operations

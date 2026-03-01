@@ -438,6 +438,34 @@ default_var_settings()  # Save global defaults
 maybe_offer_save_app_defaults()  # Save app defaults
 ```
 
+### Container Resource & ID Management
+
+#### `validate_container_id()`
+**Purpose**: Validates if a container ID is available for use.
+**Parameters**: `ctid` (Integer)
+**Returns**: `0` if available, `1` if already in use or invalid.
+**Description**: Checks for existing config files in `/etc/pve/lxc/` or `/etc/pve/qemu-server/`, and verifies LVM logical volumes.
+
+#### `get_valid_container_id()`
+**Purpose**: Returns the next available, unused container ID.
+**Parameters**: `suggested_id` (Optional)
+**Returns**: A valid container ID string.
+**Description**: If the suggested ID is taken, it increments until it finds an available one.
+
+#### `maxkeys_check()`
+**Purpose**: Ensures host kernel parameters support high numbers of keys (required for some apps).
+**Parameters**: None
+**Description**: Checks and optionally updates `kernel.keys.maxkeys` and `kernel.keys.maxbytes`.
+
+#### `get_current_ip()`
+**Purpose**: Retrieves the current IP address of the container.
+**Parameters**: `ctid` (Integer)
+**Returns**: IP address string.
+
+#### `update_motd_ip()`
+**Purpose**: Updates the Message of the Day (MOTD) file with the container's IP.
+**Parameters**: None
+
 ## Function Error Handling
 
 ### Validation Functions

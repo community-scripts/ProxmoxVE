@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://fhem.de/
@@ -14,18 +14,19 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y avahi-daemon
+$STD apt install -y avahi-daemon
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Fhem Repository"
-curl -fsSL https://debian.fhem.de/archive.key | gpg --dearmor >/etc/apt/trusted.gpg.d/debianfhemde-archive-keyring.gpg
-echo 'deb [signed-by=/etc/apt/trusted.gpg.d/debianfhemde-archive-keyring.gpg] https://debian.fhem.de/nightly/ /' >/etc/apt/sources.list.d/fhem.list
-msg_ok "Set up Fhem Repository"
+setup_deb822_repo \
+  "fhem" \
+  "https://debian.fhem.de/archive.key" \
+  "https://debian.fhem.de/nightly/" \
+  "/" \
+  " "
 
-msg_info "Installing Fhem"
-$STD apt-get update
-$STD apt-get install -y fhem
-msg_info "Installed Fhem"
+msg_info "Setting up FHEM"
+$STD apt install -y fhem
+msg_ok "Setup FHEM"
 
 motd_ssh
 customize

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Luligu/matterbridge/
@@ -15,7 +15,7 @@ update_os
 
 msg_info "Install Matterbridge"
 mkdir -p /root/Matterbridge
-NODE_VERSION="22" NODE_MODULE="matterbridge" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="matterbridge" setup_nodejs
 msg_ok "Installed Matterbridge"
 
 msg_info "Creating Service"

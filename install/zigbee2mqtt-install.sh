@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.zigbee2mqtt.io/
+# Source: https://www.zigbee2mqtt.io/ | Github: https://github.com/Koenkk/zigbee2mqtt
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

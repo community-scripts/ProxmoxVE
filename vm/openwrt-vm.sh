@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 #         Jon Spriggs (jontheniceguy)
 # License: MIT
@@ -68,13 +68,14 @@ CLOUD="${TAB}☁️${TAB}${CL}"
 set -Eeo pipefail
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
-trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
+trap 'post_update_to_api "failed" "130"' SIGINT
+trap 'post_update_to_api "failed" "143"' SIGTERM
+trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
 function error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  post_update_to_api "failed" "$command"
+  post_update_to_api "failed" "$exit_code"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   echo -e "\n$error_message\n"
   cleanup_vmid
@@ -105,7 +106,15 @@ function cleanup_vmid() {
 }
 
 function cleanup() {
+  local exit_code=$?
   popd >/dev/null
+  if [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
+    if [[ $exit_code -eq 0 ]]; then
+      post_update_to_api "done" "none"
+    else
+      post_update_to_api "failed" "$exit_code"
+    fi
+  fi
   rm -rf $TEMP_DIR
 }
 
@@ -277,7 +286,7 @@ function default_settings() {
   MAC=$GEN_MAC
   LAN_MAC=$GEN_MAC_LAN
   VLAN=""
-  LAN_VLAN=",tag=999"
+  LAN_VLAN=""
   LAN_IP_ADDR="192.168.1.1"
   LAN_NETMASK="255.255.255.0"
   MTU=""
@@ -427,8 +436,8 @@ function advanced_settings() {
 
   if VLAN2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN Vlan" 8 58 999 --title "LAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $VLAN2 ]; then
-      VLAN2="999"
-      LAN_VLAN=",tag=$VLAN2"
+      VLAN2="Default"
+      LAN_VLAN=""
     else
       LAN_VLAN=",tag=$VLAN2"
     fi
@@ -528,16 +537,16 @@ FILE="${FILE%.*}"
 msg_ok "Extracted OpenWrt Disk Image ${CL}${BL}$FILE${CL}"
 
 msg_info "Creating OpenWrt VM"
-qm create "$VMID" -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" \
+qm create $VMID -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci --tablet 0
 if [[ "$(pvesm status | awk -v s=$STORAGE '$1==s {print $2}')" == "dir" ]]; then
-  qm set "$VMID" -efidisk0 "${STORAGE}:0,efitype=4m,size=4M"
+  qm set $VMID -efidisk0 ${STORAGE}:0,efitype=4m,size=4M
 else
-  pvesm alloc "$STORAGE" "$VMID" "vm-$VMID-disk-0" 4M >/dev/null
-  qm set "$VMID" -efidisk0 "${STORAGE}:vm-$VMID-disk-0,efitype=4m,size=4M"
+  pvesm alloc $STORAGE $VMID vm-$VMID-disk-0 4M >/dev/null
+  qm set $VMID -efidisk0 ${STORAGE}:vm-$VMID-disk-0,efitype=4m,size=4M
 fi
 
-IMPORT_OUT="$(qm importdisk "$VMID" "$FILE" "$STORAGE" --format raw 2>&1 || true)"
+IMPORT_OUT="$(qm importdisk $VMID $FILE $STORAGE --format raw 2>&1 || true)"
 DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk '\([^']\+\)'.*/\1/p")"
 
 if [[ -z "$DISK_REF" ]]; then
@@ -550,12 +559,16 @@ if [[ -z "$DISK_REF" ]]; then
   exit 1
 fi
 
-qm set "$VMID" \
-  -efidisk0 "${STORAGE}:0,efitype=4m,size=4M" \
-  -scsi0 "${DISK_REF},size=${DISK_SIZE}" \
+qm set $VMID \
+  -efidisk0 ${STORAGE}:0,efitype=4m,size=4M \
+  -scsi0 ${DISK_REF} \
   -boot order=scsi0 \
   -tags community-script >/dev/null
-msg_ok "Attached disk (${DISK_SIZE})"
+msg_ok "Attached disk"
+
+msg_info "Resizing disk to ${DISK_SIZE}"
+qm disk resize "$VMID" scsi0 "${DISK_SIZE}" >/dev/null
+msg_ok "Resized disk to ${DISK_SIZE}"
 
 DESCRIPTION=$(
   cat <<EOF
@@ -587,7 +600,7 @@ DESCRIPTION=$(
 </div>
 EOF
 )
-qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+qm set $VMID -description "$DESCRIPTION" >/dev/null
 
 msg_ok "Created OpenWrt VM ${CL}${BL}(${HN})"
 msg_info "OpenWrt is being started in order to configure the network interfaces."
@@ -632,14 +645,14 @@ done
 msg_ok "OpenWrt has shut down"
 
 msg_info "Adding bridge interfaces on Proxmox side"
-qm set "$VMID" \
-  -net0 virtio,bridge="${LAN_BRG}",macaddr="${LAN_MAC}${LAN_VLAN}${MTU}" \
-  -net1 virtio,bridge="${BRG}",macaddr="${MAC}${VLAN}${MTU}" >/dev/null
+qm set $VMID \
+  -net0 virtio,bridge=${LAN_BRG},macaddr=${LAN_MAC}${LAN_VLAN}${MTU} \
+  -net1 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} >/dev/null
 msg_ok "Bridge interfaces added"
 
 if [ "$START_VM" = "yes" ]; then
   msg_info "Starting OpenWrt VM"
-  qm start "$VMID"
+  qm start $VMID
   msg_ok "Started OpenWrt VM"
 fi
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/sassanix/Warracker/
@@ -49,7 +49,7 @@ fetch_and_deploy_gh_release "warracker" "sassanix/Warracker" "tarball" "latest" 
 
 msg_info "Installing Warracker"
 cd /opt/warracker/backend
-$STD uv venv .venv
+$STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install -r requirements.txt
 mv /opt/warracker/env.example /opt/.env

@@ -1,0 +1,40 @@
+{
+    "name": "Zerobyte",
+    "slug": "zerobyte",
+    "categories": [
+        7
+    ],
+    "date_created": "2026-02-25",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 4096,
+    "documentation": "https://github.com/nicotsx/zerobyte#readme",
+    "website": "https://github.com/nicotsx/zerobyte",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/zerobyte.webp",
+    "config_path": "/opt/zerobyte/.env",
+    "description": "Zerobyte is a backup automation tool built on top of Restic that provides a modern web interface to schedule, manage, and monitor encrypted backups across multiple storage backends including NFS, SMB, WebDAV, SFTP, S3, and local directories.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/zerobyte.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 6144,
+                "hdd": 10,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "For remote mount support (NFS, SMB, WebDAV, SFTP), enable FUSE device passthrough on the LXC container. (FUSE is pre-configured)",
+            "type": "info"
+        }
+    ]
+}

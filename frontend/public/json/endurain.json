@@ -20,7 +20,7 @@
       "script": "ct/endurain.sh",
       "resources": {
         "cpu": 2,
-        "ram": 2048,
+        "ram": 4096,
         "hdd": 5,
         "os": "debian",
         "version": "13"

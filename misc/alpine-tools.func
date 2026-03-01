@@ -34,11 +34,19 @@ net_resolves() {
 }
 
 ensure_usr_local_bin_persist() {
+  # Login shells: /etc/profile.d/
   local PROFILE_FILE="/etc/profile.d/10-localbin.sh"
   if [ ! -f "$PROFILE_FILE" ]; then
     echo 'case ":$PATH:" in *:/usr/local/bin:*) ;; *) export PATH="/usr/local/bin:$PATH";; esac' >"$PROFILE_FILE"
     chmod +x "$PROFILE_FILE"
   fi
+
+  # Non-login shells (pct enter): /root/.profile and /root/.bashrc
+  for rc_file in /root/.profile /root/.bashrc; do
+    if [ -f "$rc_file" ] && ! grep -q '/usr/local/bin' "$rc_file"; then
+      echo 'export PATH="/usr/local/bin:$PATH"' >>"$rc_file"
+    fi
+  done
 }
 
 download_with_progress() {

@@ -1,0 +1,52 @@
+{
+  "name": "Nightscout",
+  "slug": "nightscout",
+  "categories": [
+    0
+  ],
+  "date_created": "2026-02-06",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 1337,
+  "documentation": "https://nightscout.github.io/",
+  "website": "http://www.nightscout.info/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nightscout.webp",
+  "config_path": "/opt/nightscout/my.env",
+  "description": "Nightscout is an open source, DIY project that allows real time access to a CGM data via personal website, smartwatch watchers, or apps and widgets available for smartphones.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/nightscout.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Nightscout requires configuring `my.env` with your Mongo connection string. API_SECRET has been generated and saved to `~/nightscout.creds`.",
+      "type": "info"
+    },
+    {
+      "text": "Edit `/opt/nightscout/my.env` to configure your CGM source (Dexcom/CareLink). Then run: `systemctl restart nightscout`",
+      "type": "info"
+    },
+    {
+      "text": "Official Configuration Guide: https://nightscout.github.io/nightscout/setup_variables/",
+      "type": "info"
+    },
+    {
+      "text": "Nightscout requires HTTPS for many features (security, tokens, PWA). Usage of a reverse proxy (e.g. Nginx Proxy Manager, Traefik, Caddy) is highly recommended.",
+      "type": "warning"
+    }
+  ]
+}

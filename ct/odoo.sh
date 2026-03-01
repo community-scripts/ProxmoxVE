@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/odoo/odoo
@@ -28,8 +28,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  ensure_dependencies python3-lxml
   if ! [[ $(dpkg -s python3-lxml-html-clean 2>/dev/null) ]]; then
-    $STD apt install python3-lxml
     curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
     $STD dpkg -i /opt/python3-lxml-html-clean.deb
     rm -f /opt/python3-lxml-html-clean.deb
@@ -68,7 +68,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8069${CL}"

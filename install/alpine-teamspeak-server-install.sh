@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tremor021 (Slaviša Arežina)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://teamspeak.com/en/
@@ -20,7 +20,7 @@ $STD apk add --no-cache \
   libc6-compat
 msg_ok "Installed dependencies"
 
-RELEASE=$(curl -fsSL https://teamspeak.com/en/downloads/#server | sed -n 's/.*teamspeak3-server_linux_amd64-\([0-9.]*[0-9]\).*/\1/p' | head -1)
+RELEASE=$(curl -fsSL https://teamspeak.com/en/downloads/#server | sed -n 's/.*teamspeak3-server_linux_amd64-\([0-9.]*[0-9]\).*/\1/p' | awk 'NR==1')
 msg_info "Installing Teamspeak Server v${RELEASE}"
 mkdir -p /opt/teamspeak-server
 cd /opt/teamspeak-server

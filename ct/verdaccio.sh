@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: BrynnJKnight
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://verdaccio.org/
+# Source: https://verdaccio.org/ | Github: https://github.com/verdaccio/verdaccio
 
 APP="Verdaccio"
 var_tags="${var_tags:-dev-tools;npm;registry}"
@@ -33,7 +33,7 @@ function update_script() {
   $STD apt upgrade -y
   msg_ok "Updated LXC Container"
 
-  NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="verdaccio" setup_nodejs
   systemctl restart verdaccio
   msg_ok "Updated successfully!"
   exit
@@ -43,7 +43,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:4873${CL}"

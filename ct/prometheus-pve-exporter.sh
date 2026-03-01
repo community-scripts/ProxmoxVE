@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Andy Grunwald (andygrunwald)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/prometheus-pve/prometheus-pve-exporter
@@ -41,7 +41,7 @@ function update_script() {
     rm -rf "$PVE_VENV_PATH"
     mkdir -p /opt/prometheus-pve-exporter
     cd /opt/prometheus-pve-exporter
-    $STD uv venv "$PVE_VENV_PATH"
+    $STD uv venv --clear "$PVE_VENV_PATH"
     $STD "$PVE_VENV_PATH/bin/python" -m ensurepip --upgrade
     $STD "$PVE_VENV_PATH/bin/python" -m pip install --upgrade pip
     $STD "$PVE_VENV_PATH/bin/python" -m pip install prometheus-pve-exporter
@@ -89,7 +89,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9221${CL}"

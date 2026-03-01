@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -36,6 +36,39 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 load_functions
 catch_errors
+
+# Persist diagnostics setting inside container (exported from build.func)
+# so addon scripts running later can find the user's choice
+if [[ ! -f /usr/local/community-scripts/diagnostics ]]; then
+  mkdir -p /usr/local/community-scripts
+  echo "DIAGNOSTICS=${DIAGNOSTICS:-no}" >/usr/local/community-scripts/diagnostics
+fi
+
+# Get LXC IP address (must be called INSIDE container, after network is up)
+get_lxc_ip
+
+# ------------------------------------------------------------------------------
+# post_progress_to_api()
+#
+# - Lightweight progress ping from inside the container
+# - Updates the existing telemetry record status
+# - Arguments:
+#   * $1: status (optional, default: "configuring")
+# - Signals that the installation is actively progressing (not stuck)
+# - Fire-and-forget: never blocks or fails the script
+# - Only executes if DIAGNOSTICS=yes and RANDOM_UUID is set
+# ------------------------------------------------------------------------------
+post_progress_to_api() {
+  command -v curl &>/dev/null || return 0
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
+  [[ -z "${RANDOM_UUID:-}" ]] && return 0
+
+  local progress_status="${1:-configuring}"
+
+  curl -fsS -m 5 -X POST "https://telemetry.community-scripts.org/telemetry" \
+    -H "Content-Type: application/json" \
+    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"lxc\",\"nsapp\":\"${app:-unknown}\",\"status\":\"${progress_status}\"}" &>/dev/null || true
+}
 
 # ==============================================================================
 # SECTION 2: NETWORK & CONNECTIVITY
@@ -76,6 +109,13 @@ EOF
 # ------------------------------------------------------------------------------
 setting_up_container() {
   msg_info "Setting up Container OS"
+
+  # Fix Debian 13 LXC template bug where / is owned by nobody
+  # Only attempt in privileged containers (unprivileged cannot chown /)
+  if [[ "$(stat -c '%U' /)" != "root" ]]; then
+    (chown root:root / 2>/dev/null) || true
+  fi
+
   for ((i = RETRY_NUM; i > 0; i--)); do
     if [ "$(hostname -I)" != "" ]; then
       break
@@ -93,6 +133,7 @@ setting_up_container() {
   msg_ok "Set up Container OS"
   #msg_custom "${CM}" "${GN}" "Network Connected: ${BL}$(hostname -I)"
   msg_ok "Network Connected: ${BL}$(hostname -I)"
+  post_progress_to_api
 }
 
 # ------------------------------------------------------------------------------
@@ -162,7 +203,7 @@ network_check() {
   fi
 
   set -e
-  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+  trap 'error_handler' ERR
 }
 
 # ==============================================================================
@@ -192,12 +233,22 @@ fi
 EOF
     chmod +x /usr/local/bin/apt-proxy-detect.sh
   fi
-  $STD apt-get update
+  apt_update_safe
   $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   msg_ok "Updated Container OS"
+  post_progress_to_api
 
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  local tools_content
+  tools_content=$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func) || {
+    msg_error "Failed to download tools.func"
+    exit 6
+  }
+  source /dev/stdin <<<"$tools_content"
+  if ! declare -f fetch_and_deploy_gh_release >/dev/null 2>&1; then
+    msg_error "tools.func loaded but incomplete — missing expected functions"
+    exit 6
+  fi
 }
 
 # ==============================================================================
@@ -238,6 +289,7 @@ motd_ssh() {
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
     systemctl restart sshd
   fi
+  post_progress_to_api
 }
 
 # ==============================================================================
@@ -276,4 +328,5 @@ EOF
     chmod 700 /root/.ssh
     chmod 600 /root/.ssh/authorized_keys
   fi
+  post_progress_to_api
 }

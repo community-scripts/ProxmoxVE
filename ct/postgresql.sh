@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.postgresql.org/
@@ -23,7 +23,7 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -f /etc/apt/sources.list.d/pgdg.list ]]; then
+    if ! command -v psql >/dev/null 2>&1; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
@@ -38,7 +38,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following IP:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}${IP}:5432${CL}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.wireguard.com/
@@ -28,20 +28,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! dpkg -s git >/dev/null 2>&1; then
-    msg_info "Installing git"
-    $STD apt update
-    $STD apt install -y git
-    msg_ok "Installed git"
-  fi
-  apt update
-  apt -y upgrade
+  
+  ensure_dependencies git
+
+  msg_info "Updating LXC"
+  $STD apt update
+  $STD apt upgrade -y
   if [[ -d /etc/wgdashboard ]]; then
     sleep 2
-    cd /etc/wgdashboard/src || exit
-    ./wgd.sh update
-    ./wgd.sh start
+    cd /etc/wgdashboard/src
+    $STD ./wgd.sh update
+    $STD ./wgd.sh start
   fi
+  msg_ok "Updated LXC"
   msg_ok "Updated successfully!"
   exit
 }
@@ -50,7 +49,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access WGDashboard (if installed) using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:10086${CL}"

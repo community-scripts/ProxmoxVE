@@ -1,5 +1,5 @@
 {
-  "name": "slskd",
+  "name": "Slskd",
   "slug": "slskd",
   "categories": [
     11
@@ -34,10 +34,6 @@
   "notes": [
     {
       "text": "See /opt/slskd/config/slskd.yml to add your Soulseek credentials",
-      "type": "info"
-    },
-    {
-      "text": "This LXC includes Soularr; it needs to be configured (/opt/soularr/config.ini) before it will work",
       "type": "info"
     }
   ]

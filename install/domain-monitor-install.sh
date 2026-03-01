@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Hosteroid/domain-monitor
@@ -26,7 +26,7 @@ $STD apt install -y --no-install-recommends \
   pkg-config
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="domain_monitor" MARIADB_DB_USER="domainmonitor" setup_mariadb_db
@@ -43,7 +43,7 @@ sed -i -e "s|^APP_ENV=.*|APP_ENV=production|" \
   -e "s|^DB_USERNAME=.*|DB_USERNAME=$MARIADB_DB_USER|" \
   -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$MARIADB_DB_PASS|" \
   -e "s|^DB_DATABASE=.*|DB_DATABASE=$MARIADB_DB_NAME|" .env
-echo "0 0 * * * root /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >>/etc/crontab
+echo "0 0 * * * www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >>/etc/crontab
 
 cat <<EOF >/etc/apache2/sites-enabled/000-default.conf
 <VirtualHost *:80>

@@ -31,5 +31,10 @@
     "username": "admin",
     "password": "admin"
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "If you want to update from v15.x to v17.x, please read `https://www.openproject.org/docs/installation-and-operations/operation/upgrading/#major-upgrades` before doing so.",
+      "type": "warning"
+    }
+  ]
 }

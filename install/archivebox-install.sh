@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://archivebox.io/
+# Source: https://archivebox.io/ | Github: https://github.com/ArchiveBox/ArchiveBox
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

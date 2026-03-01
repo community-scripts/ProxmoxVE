@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://infisical.com/
@@ -33,6 +33,7 @@ function update_script() {
   msg_ok "Service stopped"
 
   msg_info "Creating backup"
+  [[ -f /opt/infisical_backup.sql ]] && rm -f /opt/infisical_backup.sql
   DB_PASS=$(grep -Po '(?<=^Database Password:\s).*' ~/infisical.creds | head -n1)
   PGPASSWORD=$DB_PASS pg_dump -U infisical -h localhost -d infisical_db > /opt/infisical_backup.sql
   msg_ok "Created backup"
@@ -46,7 +47,7 @@ function update_script() {
   msg_info "Starting service"
   infisical-ctl start
   msg_ok "Started service"
-  msg_ok "Updated successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 
@@ -54,7 +55,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

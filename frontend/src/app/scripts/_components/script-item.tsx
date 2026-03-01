@@ -1,13 +1,14 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X, HelpCircle } from "lucide-react";
 import { Suspense } from "react";
 import Image from "next/image";
 
-import type { AppVersion, Script } from "@/lib/types";
+import type { AppVersion } from "@/lib/types";
+import type { Script } from "@/app/json-editor/_schemas/schemas";
 
-import { cleanSlug } from "@/lib/utils/resource-utils";
 import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useVersions } from "@/hooks/use-versions";
 import { basePath } from "@/config/site-config";
 import { extractDate } from "@/lib/time";
@@ -26,7 +27,6 @@ import Alerts from "./script-items/alerts";
 
 type ScriptItemProps = {
   item: Script;
-  setSelectedScript: (script: string | null) => void;
 };
 
 function ScriptHeader({ item }: { item: Script }) {
@@ -108,39 +108,37 @@ function VersionInfo({ item }: { item: Script }) {
   const { data: versions = [], isLoading } = useVersions();
 
   if (isLoading || versions.length === 0) {
-    return <p className="text-sm text-muted-foreground">Loading versions...</p>;
+    return null;
   }
 
-  const matchedVersion = versions.find((v: AppVersion) => {
-    const cleanName = v.name.replace(/[^a-z0-9]/gi, "").toLowerCase();
-    return cleanName === cleanSlug(item.slug) || cleanName.includes(cleanSlug(item.slug));
-  });
+  const matchedVersion = versions.find((v: AppVersion) => v.slug === item.slug);
 
   if (!matchedVersion)
     return null;
 
-  return <span className="font-medium text-sm">{matchedVersion.version}</span>;
+  return (
+    <span className="font-medium text-sm flex items-center gap-1">
+      {matchedVersion.version}
+      {matchedVersion.pinned && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent className="max-w-xs">
+              <p>This version is pinned. We test each update for breaking changes before releasing new versions.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+    </span>
+  );
 }
 
-export function ScriptItem({ item, setSelectedScript }: ScriptItemProps) {
-  const closeScript = () => {
-    window.history.pushState({}, document.title, window.location.pathname);
-    setSelectedScript(null);
-  };
-
+export function ScriptItem({ item }: ScriptItemProps) {
   return (
     <div className="w-full mx-auto">
       <div className="flex w-full flex-col">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground/90">Selected Script</h2>
-          <button
-            onClick={closeScript}
-            className="rounded-full p-2 text-muted-foreground hover:bg-card/50 transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
         <div className="rounded-xl border border-border bg-accent/30 backdrop-blur-sm shadow-sm">
           <div className="p-6 space-y-6">
             <Suspense fallback={<div className="animate-pulse h-32 bg-accent/20 rounded-xl" />}>
@@ -149,7 +147,7 @@ export function ScriptItem({ item, setSelectedScript }: ScriptItemProps) {
 
             {item.disable && item.disable_description && (
               <DisableDescription item={item} />
-            ) }
+            )}
 
             {!item.disable && (
               <>

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: davalanche | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/mylar3/mylar3
@@ -29,7 +29,7 @@ fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
 
 msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/mylar3-data
-$STD uv venv /opt/mylar3/.venv
+$STD uv venv --clear /opt/mylar3/.venv
 $STD /opt/mylar3/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/mylar3/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/mylar3/.venv/bin/python -m pip install --no-cache-dir -r /opt/mylar3/requirements.txt

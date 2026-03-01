@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/Luligu/matterbridge
+# Source: https://github.com/Luligu/matterbridge/
 
 APP="Matterbridge"
 var_tags="${var_tags:-matter;smarthome}"
@@ -29,7 +29,7 @@ function update_script() {
   fi
   $STD apt update
   $STD apt upgrade -y
-  NODE_VERSION="22" NODE_MODULE="matterbridge" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="matterbridge" setup_nodejs
   msg_ok "Updated successfully!"
   exit
 }
@@ -38,7 +38,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8283${CL}"

@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/bakito/adguardhome-sync
 
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f "/etc/alpine-release" ]]; then
+    apk -U add curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 
 # Enable error handling
 set -Eeuo pipefail
@@ -24,6 +34,7 @@ DEFAULT_PORT=8080
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
+init_tool_telemetry "" "addon"
 
 # ==============================================================================
 # HEADER
@@ -44,7 +55,7 @@ EOF
 # HELPER FUNCTIONS
 # ==============================================================================
 get_ip() {
-  hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1"
+ ifconfig | grep -v '127.0.0.1' | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -m1 -Eo '([0-9]*\.){3}[0-9]*' || echo "127.0.0.1"
 }
 
 # ==============================================================================
@@ -59,6 +70,16 @@ elif [[ -f "/etc/debian_version" ]]; then
 else
   msg_error "Unsupported OS detected. Exiting."
   exit 1
+fi
+
+# ==============================================================================
+# DEPENDENCY CHECK
+# ==============================================================================
+if ! command -v jq &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Installing jq \033[m' >&2
+  if [[ "$OS" == "Alpine" ]]; then
+    apk -U add jq >/dev/null 2>&1
+  fi
 fi
 
 # ==============================================================================
@@ -111,7 +132,7 @@ function update() {
       systemctl start adguardhome-sync.service
     fi
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
     exit
   fi
 }

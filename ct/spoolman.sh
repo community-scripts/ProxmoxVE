@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Donkie/Spoolman
@@ -28,6 +28,8 @@ function update_script() {
     exit
   fi
 
+  PYTHON_VERSION="3.14" setup_uv
+
   if check_for_gh_release "spoolman" "Donkie/Spoolman"; then
     msg_info "Stopping Service"
     systemctl stop spoolman
@@ -42,8 +44,10 @@ function update_script() {
 
     msg_info "Updating Spoolman"
     cd /opt/spoolman
-    $STD pip3 install -r requirements.txt
+    $STD uv sync --locked --no-install-project
+    $STD uv sync --locked
     cp /opt/spoolman_bak/.env /opt/spoolman
+    sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/bash /opt/spoolman/scripts/start.sh|' /etc/systemd/system/spoolman.service
     msg_ok "Updated Spoolman"
 
     msg_info "Starting Service"
@@ -58,7 +62,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7912${CL}"

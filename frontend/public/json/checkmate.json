@@ -1,0 +1,48 @@
+{
+    "name": "Checkmate",
+    "slug": "checkmate",
+    "categories": [
+        9
+    ],
+    "date_created": "2026-02-07",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 5173,
+    "documentation": "https://github.com/bluewave-labs/Checkmate#readme",
+    "website": "https://github.com/bluewave-labs/Checkmate",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/checkmate.webp",
+    "config_path": "/opt/checkmate/server/.env",
+    "description": "Checkmate is an open source uptime and infrastructure monitoring application that helps you track the availability and performance of your services.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/checkmate.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 10,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Create your admin account on first login via the web interface.",
+            "type": "info"
+        },
+        {
+            "text": "Server API runs on port 52345, Client UI on port 5173.",
+            "type": "info"
+        },
+        {
+            "text": "For PageSpeed monitoring, add a Google PageSpeed API key to the server .env file.",
+            "type": "info"
+        }
+    ]
+}

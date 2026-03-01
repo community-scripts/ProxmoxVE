@@ -1,0 +1,35 @@
+{
+  "name": "RomM",
+  "slug": "romm",
+  "categories": [
+    24
+  ],
+  "date_created": "2026-02-16",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://docs.romm.app/latest/",
+  "website": "https://romm.app/",
+  "config_path": "/opt/romm/.env",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/romm.webp",
+  "description": "RomM (ROM Manager) allows you to scan, enrich, browse and play your game collection with a clean and responsive interface. Support for multiple platforms, various naming schemes, and custom tags.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/romm.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 20,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

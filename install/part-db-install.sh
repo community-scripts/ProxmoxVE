@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://docs.part-db.de/
+# Source: https://docs.part-db.de/ | Github: https://github.com/Part-DB/Part-DB-server
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -16,7 +16,7 @@ update_os
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="partdb" PG_DB_USER="partdb" setup_postgresql_db
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl,pgsql" PHP_POST_MAX_SIZE="100M" PHP_UPLOAD_MAX_FILESIZE="100M" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl" PHP_POST_MAX_SIZE="100M" PHP_UPLOAD_MAX_FILESIZE="100M" setup_php
 setup_composer
 
 msg_info "Installing Part-DB (Patience)"

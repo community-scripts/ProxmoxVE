@@ -1,0 +1,40 @@
+{
+  "name": "Wishlist",
+  "slug": "wishlist",
+  "categories": [
+    12
+  ],
+  "date_created": "2026-02-04",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3280,
+  "documentation": "https://github.com/cmintey/wishlist/blob/main/README.md#getting-started",
+  "website": "https://github.com/cmintey/wishlist",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/cmintey-wishlist.webp",
+  "config_path": "/opt/wishlist/.env",
+  "description": "Wishlist is a self-hosted wishlist application that you can share with your friends and family. You no longer have to wonder what to get your family for the holidays, simply check their wishlist and claim any available item!",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/wishlist.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 5,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "When using a reverse proxy with this script, please edit the`ORIGIN` value in `/opt/wishlist/.env` to point to your new URL, otherwise creating an admin account or logging in will not work.",
+      "type": "info"
+    }
+  ]
+}

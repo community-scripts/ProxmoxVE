@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 tteck
-# Copyright (c) 2025 DonPablo1010
-# Adapted for the Proxmox Backup Server - Baremetal Only
-# License: MIT
-# This script searches for CPU microcode packages (Intel/AMD) and offers the option to install them.
-# A system reboot is required to apply the changes.
-# IMPORTANT: This script will only proceed if running on bare metal. If running in a VM, it will exit.
+
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: DonPablo1010 | Co-Author: tteck (tteckster)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
   clear
@@ -31,6 +28,10 @@ CM="${GN}✓${CL}"
 CROSS="${RD}✗${CL}"
 
 msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pbs-microcode" "pve"
 msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
 msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
 

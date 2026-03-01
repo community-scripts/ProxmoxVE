@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://pi-hole.net/
@@ -69,7 +69,7 @@ read -r -p "${TAB3}Would you like to add Unbound? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   read -r -p "${TAB3}Unbound is configured as a recursive DNS server by default, would you like it to be configured as a forwarding DNS server (using DNS-over-TLS (DoT)) instead? <y/N> " prompt
   msg_info "Installing Unbound"
-  $STD apt install -y unbound
+  mkdir -p /etc/unbound/unbound.conf.d
   cat <<EOF >/etc/unbound/unbound.conf.d/pi-hole.conf
 server:
   verbosity: 0
@@ -142,6 +142,7 @@ forward-zone:
   #forward-addr: 2620:fe::9@853#dns.quad9.net
 EOF
   fi
+  $STD apt install -y unbound
   cat <<EOF >/etc/dnsmasq.d/01-pihole.conf
 server=127.0.0.1#5335
 server=8.8.8.8
@@ -149,7 +150,7 @@ server=8.8.4.4
 EOF
 
   sed -i -E '/^\s*upstreams\s*=\s*\[/,/^\s*\]/c\  upstreams = [\n    "127.0.0.1#5335",\n    "8.8.4.4"\n  ]' /etc/pihole/pihole.toml
-  systemctl enable -q --now unbound
+  systemctl restart unbound
   systemctl restart pihole-FTL.service
   msg_ok "Installed Unbound"
 fi

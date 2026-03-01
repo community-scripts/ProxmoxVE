@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: fstof
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/donetick/donetick
@@ -35,13 +35,15 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Backing Up Configurations"
-    mv /opt/donetick/config/selfhosted.yml /opt/donetick/donetick.db /opt
+    mv /opt/donetick/config/selfhosted.yaml /opt/donetick/donetick.db /opt
     msg_ok "Backed Up Configurations"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_x86_64.tar.gz"
 
     msg_info "Restoring Configurations"
-    mv /opt/selfhosted.yml /opt/donetick/config
+    mv /opt/selfhosted.yaml /opt/donetick/config
+    grep -q 'http://localhost"$' /opt/donetick/config/selfhosted.yaml || sed -i '/https:\/\/localhost"$/a\    - "http://localhost"' /opt/donetick/config/selfhosted.yaml
+    grep -q 'capacitor://localhost' /opt/donetick/config/selfhosted.yaml || sed -i '/http:\/\/localhost"$/a\    - "capacitor://localhost"' /opt/donetick/config/selfhosted.yaml
     mv /opt/donetick.db /opt/donetick
     msg_ok "Restored Configurations"
 
@@ -57,7 +59,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:2021${CL}"

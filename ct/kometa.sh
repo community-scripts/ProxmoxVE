@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Kometa-Team/Kometa
@@ -38,10 +38,10 @@ function update_script() {
     msg_ok "Backup completed"
 
     PYTHON_VERSION="3.13" setup_uv
-    fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
+    fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
 
     msg_info "Updating Kometa"
-    cd /opt/kometa
+    cd /opt/kometa 
     $STD uv pip install -r requirements.txt --system
     mkdir -p config/assets
     cp /opt/config.yml config/config.yml
@@ -50,7 +50,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start kometa
     msg_ok "Started Service"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -59,7 +59,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access the LXC at following IP address:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}${IP}${CL}"
