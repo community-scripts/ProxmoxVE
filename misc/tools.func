@@ -1418,36 +1418,36 @@ get_parallel_jobs() {
   if [[ -z "${_PARALLEL_JOBS:-}" ]]; then
     local cpu_count
     cpu_count=$(nproc 2>/dev/null || grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 1)
-    
+
     local mem_mb
     mem_mb=$(free -m 2>/dev/null | awk '/^Mem:/{print $2}' || echo 1024)
-    
+
     # Assume 1.5GB per compilation job for safety margin
     local max_by_mem=$((mem_mb / 1536))
     ((max_by_mem < 1)) && max_by_mem=1
-    
+
     # Check current system load - reduce jobs if already loaded
     local load_1m
     load_1m=$(awk '{print int($1)}' /proc/loadavg 2>/dev/null || echo 0)
     local available_cpus=$((cpu_count - load_1m))
     ((available_cpus < 1)) && available_cpus=1
-    
+
     # Take minimum of: available CPUs, memory-limited, and total CPUs
     local max_jobs=$cpu_count
     ((max_by_mem < max_jobs)) && max_jobs=$max_by_mem
     ((available_cpus < max_jobs)) && max_jobs=$available_cpus
-    
+
     # Container detection - be more conservative in containers
     if [[ -f /.dockerenv ]] || grep -q 'lxc\|docker\|container' /proc/1/cgroup 2>/dev/null; then
       # Reduce by 25% in containers to leave headroom
       max_jobs=$((max_jobs * 3 / 4))
       ((max_jobs < 1)) && max_jobs=1
     fi
-    
+
     # Final bounds check
     ((max_jobs < 1)) && max_jobs=1
     ((max_jobs > cpu_count)) && max_jobs=$cpu_count
-    
+
     export _PARALLEL_JOBS=$max_jobs
     debug_log "Parallel jobs: $_PARALLEL_JOBS (CPUs: $cpu_count, mem-limit: $max_by_mem, load: $load_1m)"
   fi
@@ -1723,11 +1723,11 @@ setup_deb822_repo() {
     msg_error "Failed to download GPG key for ${name}"
     rm -f "$tmp_gpg"
     return 1
-    }
+  }
 
-    if grep -q "BEGIN PGP" "$tmp_gpg" 2>/dev/null; then
-      # ASCII-armored — dearmor to binary
-      gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" <"$tmp_gpg" || {
+  if grep -q "BEGIN PGP" "$tmp_gpg" 2>/dev/null; then
+    # ASCII-armored — dearmor to binary
+    gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" <"$tmp_gpg" || {
       msg_error "Failed to install GPG key for ${name}"
       rm -f "$tmp_gpg"
       return 1
