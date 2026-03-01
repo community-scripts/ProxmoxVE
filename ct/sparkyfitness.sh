@@ -29,7 +29,8 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="25" NODE_MODULE="pnpm" setup_nodejs
+  PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/package.json)"
+  NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
   if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
     msg_info "Stopping Services"

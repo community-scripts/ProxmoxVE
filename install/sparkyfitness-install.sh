@@ -17,11 +17,13 @@ msg_info "Installing Dependencies"
 $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="25" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="18" setup_postgresql
 PG_DB_NAME="sparkyfitness" PG_DB_USER="sparky" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 fetch_and_deploy_gh_release sparkyfitness "CodeWithCJ/SparkyFitness" "tarball" "latest"
+
+PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/package.json)"
+NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Configuring Sparky Fitness"
 mkdir -p "/etc/sparkyfitness" "/var/lib/sparkyfitness/uploads" "/var/lib/sparkyfitness/backup" "/var/www/sparkyfitness"
