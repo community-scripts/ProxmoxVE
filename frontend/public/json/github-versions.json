@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-01T00:23:04Z",
+  "generated": "2026-03-01T06:15:59Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -452,9 +452,9 @@
     {
       "slug": "gitea-mirror",
       "repo": "RayLabsHQ/gitea-mirror",
-      "version": "v3.9.6",
+      "version": "v3.10.1",
       "pinned": false,
-      "date": "2026-02-27T07:15:42Z"
+      "date": "2026-03-01T03:08:07Z"
     },
     {
       "slug": "glance",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1226",
+      "version": "v0.24.1234",
       "pinned": false,
-      "date": "2026-02-28T05:58:51Z"
+      "date": "2026-03-01T05:55:44Z"
     },
     {
       "slug": "jellystat",
@@ -669,9 +669,9 @@
     {
       "slug": "kima-hub",
       "repo": "Chevron7Locked/kima-hub",
-      "version": "v1.5.10",
+      "version": "v1.6.0-rc.1",
       "pinned": false,
-      "date": "2026-02-27T19:25:56Z"
+      "date": "2026-03-01T05:38:32Z"
     },
     {
       "slug": "kimai",
@@ -1404,9 +1404,9 @@
     {
       "slug": "slskd",
       "repo": "slskd/slskd",
-      "version": "0.24.4",
+      "version": "0.24.5",
       "pinned": false,
-      "date": "2026-02-16T16:50:17Z"
+      "date": "2026-03-01T04:00:42Z"
     },
     {
       "slug": "snipeit",
