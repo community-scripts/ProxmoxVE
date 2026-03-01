@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-01T06:15:59Z",
+  "generated": "2026-03-01T12:07:56Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -270,9 +270,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.16.3",
+      "version": "v3.16.4",
       "pinned": false,
-      "date": "2026-02-25T19:57:26Z"
+      "date": "2026-03-01T08:20:17Z"
     },
     {
       "slug": "dawarich",
@@ -438,9 +438,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.244.0",
+      "version": "2.245.0",
       "pinned": false,
-      "date": "2026-02-28T09:51:45Z"
+      "date": "2026-03-01T09:09:57Z"
     },
     {
       "slug": "gitea",
