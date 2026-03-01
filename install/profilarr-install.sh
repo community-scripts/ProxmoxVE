@@ -22,7 +22,6 @@ $STD apt install -y \
   git
 msg_ok "Installed Dependencies"
 
-#UV_VERSION="0.7.19"
 PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" setup_nodejs
 
@@ -31,7 +30,7 @@ mkdir -p /opt/profilarr \
   /config
 msg_ok "Created directories"
 
-fetch_and_deploy_gh_release "profilarr" "Dictionarry-Hub/profilarr"
+fetch_and_deploy_gh_release "profilarr" "Dictionarry-Hub/profilarr" "tarball"
 
 msg_info "Installing Python Dependencies"
 cd /opt/profilarr/backend
