@@ -46,25 +46,17 @@ msg_ok "Installed TimescaleDB"
 
 PG_DB_NAME="tracearr_db" PG_DB_USER="tracearr" PG_DB_EXTENSIONS="timescaledb,timescaledb_toolkit" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
-echo
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Tracearr supports Tailscale VPN from v1.4.19"
-echo "You need to install the Tailscale client before using this feature."
-echo
-read -rp "Do you want to install Tailscale now? (y/N): " INSTALL_TAILSCALE
-if [[ "$INSTALL_TAILSCALE" =~ ^[Yy]$ ]]; then
-    msg_info "Installing tailscale"
-    setup_deb822_repo \
-    "tailscale" \
-    "https://pkgs.tailscale.com/stable/$(get_os_info id)/$(get_os_info codename).noarmor.gpg" \
-    "https://pkgs.tailscale.com/stable/$(get_os_info id)/" \
-    "$(get_os_info codename)"
-    $STD apt install -y tailscale
-    # Tracearr runs tailscaled in user mode, disable the service.
-    $STD systemctl disable --now tailscaled
-    $STD systemctl stop tailscaled
-    msg_ok "Installed tailscale"
-fi
+msg_info "Installing tailscale"
+setup_deb822_repo \
+  "tailscale" \
+  "https://pkgs.tailscale.com/stable/$(get_os_info id)/$(get_os_info codename).noarmor.gpg" \
+  "https://pkgs.tailscale.com/stable/$(get_os_info id)/" \
+  "$(get_os_info codename)"
+$STD apt install -y tailscale
+# Tracearr runs tailscaled in user mode, disable the service.
+$STD systemctl disable --now tailscaled
+$STD systemctl stop tailscaled
+msg_ok "Installed tailscale"
 
 fetch_and_deploy_gh_release "tracearr" "connorgallopo/Tracearr" "tarball" "latest" "/opt/tracearr.build"
 
