@@ -412,6 +412,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-01
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - OpenArchiver: Fix installation [@tremor021](https://github.com/tremor021) ([#12447](https://github.com/community-scripts/ProxmoxVE/pull/12447))
+
 ## 2026-02-28
 
 ### 🚀 Updated Scripts
