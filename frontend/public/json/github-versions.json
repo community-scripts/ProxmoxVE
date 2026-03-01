@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-01T12:07:56Z",
+  "generated": "2026-03-01T18:07:06Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -116,9 +116,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.3.3",
+      "version": "v2.4.0",
       "pinned": false,
-      "date": "2026-02-27T08:40:05Z"
+      "date": "2026-03-01T14:25:43Z"
     },
     {
       "slug": "beszel",
@@ -151,9 +151,9 @@
     {
       "slug": "booklore",
       "repo": "booklore-app/BookLore",
-      "version": "v2.0.4",
+      "version": "v2.0.5",
       "pinned": false,
-      "date": "2026-02-28T01:54:25Z"
+      "date": "2026-03-01T16:13:13Z"
     },
     {
       "slug": "bookstack",
@@ -676,9 +676,9 @@
     {
       "slug": "kimai",
       "repo": "kimai/kimai",
-      "version": "2.50.0",
+      "version": "2.51.0",
       "pinned": false,
-      "date": "2026-02-25T20:13:51Z"
+      "date": "2026-03-01T15:56:56Z"
     },
     {
       "slug": "kitchenowl",
@@ -851,9 +851,9 @@
     {
       "slug": "mediamtx",
       "repo": "bluenviron/mediamtx",
-      "version": "v1.16.2",
+      "version": "v1.16.3",
       "pinned": false,
-      "date": "2026-02-22T17:31:41Z"
+      "date": "2026-03-01T15:49:12Z"
     },
     {
       "slug": "meilisearch",
@@ -1124,9 +1124,9 @@
     {
       "slug": "planka",
       "repo": "plankanban/planka",
-      "version": "v2.0.2",
+      "version": "v2.0.3",
       "pinned": false,
-      "date": "2026-02-23T17:47:15Z"
+      "date": "2026-03-01T16:03:23Z"
     },
     {
       "slug": "plant-it",
@@ -1789,9 +1789,9 @@
     {
       "slug": "zigbee2mqtt",
       "repo": "Koenkk/zigbee2mqtt",
-      "version": "2.8.0",
+      "version": "2.9.0",
       "pinned": false,
-      "date": "2026-02-01T19:27:25Z"
+      "date": "2026-03-01T13:58:14Z"
     },
     {
       "slug": "zipline",
