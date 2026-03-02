@@ -1,35 +1,35 @@
 {
-    "name": "Profilarr",
-    "slug": "profilarr",
-    "categories": [
-        14
-    ],
-    "date_created": "2025-06-10",
-    "type": "ct",
-    "updateable": true,
-    "privileged": false,
-    "interface_port": 6868,
-    "documentation": "https://github.com/Dictionarry-Hub/profilarr#readme",
-    "website": "https://github.com/Dictionarry-Hub/profilarr",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/profilarr.webp",
-    "config_path": "/config",
-    "description": "Profilarr is a configuration management platform for Radarr and Sonarr that simplifies importing, syncing, and managing quality profiles, custom formats, and release profiles.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/profilarr.sh",
-            "resources": {
-                "cpu": 2,
-                "ram": 2048,
-                "hdd": 8,
-                "os": "Debian",
-                "version": "13"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  "name": "Profilarr",
+  "slug": "profilarr",
+  "categories": [
+    14
+  ],
+  "date_created": "2026-03-02",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 6868,
+  "documentation": "https://github.com/Dictionarry-Hub/profilarr#readme",
+  "website": "https://github.com/Dictionarry-Hub/profilarr",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/profilarr.webp",
+  "config_path": "/config",
+  "description": "Profilarr is a configuration management platform for Radarr and Sonarr that simplifies importing, syncing, and managing quality profiles, custom formats, and release profiles.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/profilarr.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
 }
