@@ -393,6 +393,11 @@ get_error_text() {
     logfile="$BUILD_LOG"
   fi
 
+  # Try SILENT_LOGFILE as last resort (captures $STD command output)
+  if [[ -z "$logfile" || ! -s "$logfile" ]] && [[ -n "${SILENT_LOGFILE:-}" && -s "${SILENT_LOGFILE}" ]]; then
+    logfile="$SILENT_LOGFILE"
+  fi
+
   if [[ -n "$logfile" && -s "$logfile" ]]; then
     tail -n 20 "$logfile" 2>/dev/null | sed 's/\r$//' | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g'
   fi
@@ -435,6 +440,13 @@ get_full_log() {
   if [[ -z "$logfile" || ! -s "$logfile" ]]; then
     if [[ -n "${BUILD_LOG:-}" && -s "${BUILD_LOG}" ]]; then
       logfile="$BUILD_LOG"
+    fi
+  fi
+
+  # Fall back to SILENT_LOGFILE (captures $STD command output)
+  if [[ -z "$logfile" || ! -s "$logfile" ]]; then
+    if [[ -n "${SILENT_LOGFILE:-}" && -s "${SILENT_LOGFILE}" ]]; then
+      logfile="$SILENT_LOGFILE"
     fi
   fi
 
@@ -876,7 +888,7 @@ post_update_to_api() {
   esac
 
   # For failed/unknown status, resolve exit code and error description
-  local short_error=""
+  local short_error="" medium_error=""
   if [[ "$pb_status" == "failed" ]] || [[ "$pb_status" == "unknown" ]]; then
     if [[ "$raw_exit_code" =~ ^[0-9]+$ ]]; then
       exit_code="$raw_exit_code"
@@ -896,6 +908,18 @@ post_update_to_api() {
     short_error=$(json_escape "$(explain_exit_code "$exit_code")")
     error_category=$(categorize_error "$exit_code")
     [[ -z "$error" ]] && error="Unknown error"
+
+    # Build medium error for attempt 2: explanation + last 100 log lines (≤16KB)
+    # This is the critical middle ground between full 120KB log and generic-only description
+    local medium_log=""
+    medium_log=$(get_full_log 16384) || true # 16KB max
+    if [[ -z "$medium_log" ]]; then
+      medium_log=$(get_error_text) || true
+    fi
+    local medium_full
+    medium_full=$(build_error_string "$exit_code" "$medium_log")
+    medium_error=$(json_escape "$medium_full")
+    [[ -z "$medium_error" ]] && medium_error="$short_error"
   fi
 
   # Calculate duration if timer was started
@@ -954,7 +978,7 @@ EOF
     return 0
   fi
 
-  # ── Attempt 2: Short error text (no full log) ──
+  # ── Attempt 2: Medium error text (truncated log ≤16KB instead of full 120KB) ──
   sleep 1
   local RETRY_PAYLOAD
   RETRY_PAYLOAD=$(
@@ -974,7 +998,7 @@ EOF
     "pve_version": "${pve_version}",
     "method": "${METHOD:-default}",
     "exit_code": ${exit_code},
-    "error": "${short_error}",
+    "error": "${medium_error}",
     "error_category": "${error_category}",
     "install_duration": ${duration},
     "cpu_vendor": "${cpu_vendor}",
@@ -997,7 +1021,7 @@ EOF
     return 0
   fi
 
-  # ── Attempt 3: Minimal payload (bare minimum to set status) ──
+  # ── Attempt 3: Minimal payload with medium error (bare minimum to set status) ──
   sleep 2
   local MINIMAL_PAYLOAD
   MINIMAL_PAYLOAD=$(
@@ -1009,7 +1033,7 @@ EOF
     "nsapp": "${NSAPP:-unknown}",
     "status": "${pb_status}",
     "exit_code": ${exit_code},
-    "error": "${short_error}",
+    "error": "${medium_error}",
     "error_category": "${error_category}",
     "install_duration": ${duration}
 }

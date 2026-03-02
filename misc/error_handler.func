@@ -408,10 +408,29 @@ _send_abort_telemetry() {
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
   [[ -z "${RANDOM_UUID:-}" ]] && return 0
 
-  # Collect last 20 log lines for error diagnosis (best-effort)
+  # Collect last 200 log lines for error diagnosis (best-effort)
+  # Container context has no get_full_log(), so we gather as much as possible
   local error_text=""
+  local logfile=""
   if [[ -n "${INSTALL_LOG:-}" && -s "${INSTALL_LOG}" ]]; then
-    error_text=$(tail -n 20 "$INSTALL_LOG" 2>/dev/null | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\\/\\\\/g; s/"/\\"/g; s/\r//g' | tr '\n' '|' | sed 's/|$//' | tr -d '\000-\010\013\014\016-\037\177') || true
+    logfile="${INSTALL_LOG}"
+  elif [[ -n "${SILENT_LOGFILE:-}" && -s "${SILENT_LOGFILE}" ]]; then
+    logfile="${SILENT_LOGFILE}"
+  fi
+
+  if [[ -n "$logfile" ]]; then
+    error_text=$(tail -n 200 "$logfile" 2>/dev/null | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\\/\\\\/g; s/"/\\"/g; s/\r//g' | tr '\n' '|' | sed 's/|$//' | head -c 16384 | tr -d '\000-\010\013\014\016-\037\177') || true
+  fi
+
+  # Prepend exit code explanation header (like build_error_string does on host)
+  local explanation=""
+  if declare -f explain_exit_code &>/dev/null; then
+    explanation=$(explain_exit_code "$exit_code" 2>/dev/null) || true
+  fi
+  if [[ -n "$explanation" && -n "$error_text" ]]; then
+    error_text="exit_code=${exit_code} | ${explanation}|---|${error_text}"
+  elif [[ -n "$explanation" && -z "$error_text" ]]; then
+    error_text="exit_code=${exit_code} | ${explanation}"
   fi
 
   # Calculate duration if start time is available
@@ -420,10 +439,17 @@ _send_abort_telemetry() {
     duration=$(($(date +%s) - DIAGNOSTICS_START_TIME))
   fi
 
+  # Categorize error if function is available (may not be in minimal container context)
+  local error_category=""
+  if declare -f categorize_error &>/dev/null; then
+    error_category=$(categorize_error "$exit_code" 2>/dev/null) || true
+  fi
+
   # Build JSON payload with error context
   local payload
   payload="{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"${TELEMETRY_TYPE:-lxc}\",\"nsapp\":\"${NSAPP:-${app:-unknown}}\",\"status\":\"failed\",\"exit_code\":${exit_code}"
   [[ -n "$error_text" ]] && payload="${payload},\"error\":\"${error_text}\""
+  [[ -n "$error_category" ]] && payload="${payload},\"error_category\":\"${error_category}\""
   [[ -n "$duration" ]] && payload="${payload},\"duration\":${duration}"
   payload="${payload}}"
 
