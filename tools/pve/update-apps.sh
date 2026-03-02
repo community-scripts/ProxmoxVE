@@ -140,7 +140,7 @@ function backup_container() {
     msg_ok "Backup created"
   else
     msg_error "Backup failed for container $1"
-    exit 1
+    exit 235
   fi
 }
 
@@ -183,7 +183,7 @@ containers=$(pct list | tail -n +2 | awk '{print $0 " " $4}')
 
 if [ -z "$containers" ]; then
   whiptail --title "LXC Container Update" --msgbox "No LXC containers available!" 10 60
-  exit 1
+  exit 234
 fi
 
 menu_items=()
@@ -242,7 +242,7 @@ if [[ -n "$var_container" ]]; then
 
   if [[ -z "$CHOICE" ]]; then
     msg_error "No containers matched the selection criteria: $var_container ${var_tags:-community-script|proxmox-helper-scripts}"
-    exit 1
+    exit 234
   fi
   msg_ok "Selected containers: $CHOICE"
 else
@@ -253,7 +253,7 @@ else
   if [ -z "$CHOICE" ]; then
     whiptail --title "LXC Container Update" \
       --msgbox "No containers selected!" 10 60
-    exit 1
+    exit 0
   fi
 fi
 
@@ -284,7 +284,7 @@ if [ "$BACKUP_CHOICE" == "yes" ]; then
 
   if [ -z "$STORAGES" ]; then
     msg_error "No storage with 'backup' support found!"
-    exit 1
+    exit 119
   fi
 
   # Determine storage based on var_backup_storage
@@ -296,7 +296,7 @@ if [ "$BACKUP_CHOICE" == "yes" ]; then
     else
       msg_error "Specified backup storage '$var_backup_storage' not found or doesn't support backups!"
       msg_info "Available storages: $(echo $STORAGES | tr '\n' ' ')"
-      exit 1
+      exit 119
     fi
   else
     MENU_ITEMS=()
@@ -308,7 +308,7 @@ if [ "$BACKUP_CHOICE" == "yes" ]; then
 
     if [ -z "$STORAGE_CHOICE" ]; then
       msg_error "No storage selected!"
-      exit 1
+      exit 0
     fi
   fi
 fi
@@ -436,11 +436,11 @@ for container in $CHOICE; do
       msg_ok "Restored LXC from backup"
     else
       msg_error "Restored LXC from backup failed"
-      exit 1
+      exit 235
     fi
   else
     msg_error "Update failed for container $container. Exiting"
-    exit 1
+    exit "$exit_code"
   fi
 done
 
