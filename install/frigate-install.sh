@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Authors: MickLesk (CanbiZ)
-# Co-Authors: remz1337
+# Authors: MickLesk (CanbiZ) | Co-Authors: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://frigate.video/ | Github: https://github.com/blakeblackshear/frigate
 
@@ -85,6 +84,7 @@ $STD apt install -y \
   tclsh \
   libopenblas-dev \
   liblapack-dev \
+  libgomp1 \
   make \
   moreutils
 msg_ok "Installed Dependencies"
@@ -101,9 +101,16 @@ export NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
 export TOKENIZERS_PARALLELISM=true
 export TRANSFORMERS_NO_ADVISORY_WARNINGS=1
 export OPENCV_FFMPEG_LOGLEVEL=8
+export PYTHONWARNINGS="ignore:::numpy.core.getlimits"
 export HAILORT_LOGGER_PATH=NONE
+export TF_CPP_MIN_LOG_LEVEL=3
+export TF_CPP_MIN_VLOG_LEVEL=3
+export TF_ENABLE_ONEDNN_OPTS=0
+export AUTOGRAPH_VERBOSITY=0
+export GLOG_minloglevel=3
+export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.16.4" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.0" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -138,13 +145,19 @@ install -c -m 644 libusb-1.0.pc /usr/local/lib/pkgconfig
 ldconfig
 msg_ok "Built libUSB"
 
+msg_info "Bootstrapping pip"
+wget -q https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py
+sed -i 's/args.append("setuptools")/args.append("setuptools==77.0.3")/' /tmp/get-pip.py
+$STD python3 /tmp/get-pip.py "pip"
+rm -f /tmp/get-pip.py
+msg_ok "Bootstrapped pip"
+
 msg_info "Installing Python Dependencies"
 $STD pip3 install -r /opt/frigate/docker/main/requirements.txt
 msg_ok "Installed Python Dependencies"
 
 msg_info "Building Python Wheels (Patience)"
 mkdir -p /wheels
-sed -i 's|^SQLITE3_VERSION=.*|SQLITE3_VERSION="version-3.46.0"|g' /opt/frigate/docker/main/build_pysqlite3.sh
 $STD bash /opt/frigate/docker/main/build_pysqlite3.sh
 for i in {1..3}; do
   $STD pip3 wheel --wheel-dir=/wheels -r /opt/frigate/docker/main/requirements-wheels.txt --default-timeout=300 --retries=3 && break
@@ -152,7 +165,7 @@ for i in {1..3}; do
 done
 msg_ok "Built Python Wheels"
 
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="20" setup_nodejs
 
 msg_info "Downloading Inference Models"
 mkdir -p /models /openvino-model
@@ -183,6 +196,10 @@ $STD pip3 install -U /wheels/*.whl
 ldconfig
 msg_ok "Installed HailoRT Runtime"
 
+msg_info "Installing MemryX Runtime"
+$STD bash /opt/frigate/docker/main/install_memryx.sh
+msg_ok "Installed MemryX Runtime"
+
 msg_info "Installing OpenVino"
 $STD pip3 install -r /opt/frigate/docker/main/requirements-ov.txt
 msg_ok "Installed OpenVino"
@@ -209,6 +226,8 @@ $STD make version
 cd /opt/frigate/web
 $STD npm install
 $STD npm run build
+mv /opt/frigate/web/dist/BASE_PATH/monacoeditorwork/* /opt/frigate/web/dist/assets/
+rm -rf /opt/frigate/web/dist/BASE_PATH
 cp -r /opt/frigate/web/dist/* /opt/frigate/web/
 sed -i '/^s6-svc -O \.$/s/^/#/' /opt/frigate/docker/main/rootfs/etc/s6-overlay/s6-rc.d/frigate/run
 msg_ok "Built Frigate Application"
@@ -224,6 +243,19 @@ echo "tmpfs   /tmp/cache      tmpfs   defaults        0       0" >>/etc/fstab
 cat <<EOF >/etc/frigate.env
 DEFAULT_FFMPEG_VERSION="7.0"
 INCLUDED_FFMPEG_VERSIONS="7.0:5.0"
+NVIDIA_VISIBLE_DEVICES=all
+NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
+TOKENIZERS_PARALLELISM=true
+TRANSFORMERS_NO_ADVISORY_WARNINGS=1
+OPENCV_FFMPEG_LOGLEVEL=8
+PYTHONWARNINGS="ignore:::numpy.core.getlimits"
+HAILORT_LOGGER_PATH=NONE
+TF_CPP_MIN_LOG_LEVEL=3
+TF_CPP_MIN_VLOG_LEVEL=3
+TF_ENABLE_ONEDNN_OPTS=0
+AUTOGRAPH_VERBOSITY=0
+GLOG_minloglevel=3
+GLOG_logtostderr=0
 EOF
 
 cat <<EOF >/config/config.yml
@@ -237,7 +269,6 @@ cameras:
           input_args: -re -stream_loop -1 -fflags +genpts
           roles:
             - detect
-            - rtmp
     detect:
       height: 1080
       width: 1920
@@ -255,6 +286,7 @@ ffmpeg:
 detectors:
   detector01:
     type: openvino
+    device: AUTO
 model:
   width: 300
   height: 300
