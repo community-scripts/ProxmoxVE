@@ -49,7 +49,7 @@ elif grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
   SERVICE_PATH="/etc/systemd/system/copyparty.service"
 else
   msg_error "Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -318,7 +318,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

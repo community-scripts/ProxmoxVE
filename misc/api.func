@@ -132,6 +132,7 @@ detect_repo_source
 #   * MySQL/MariaDB errors (180-183)
 #   * MongoDB errors (190-193)
 #   * Proxmox custom codes (200-231)
+#   * Tools & Addon Scripts (232-238)
 #   * Node.js/npm errors (239, 243, 245-249)
 # - Returns description string for given exit code
 # ------------------------------------------------------------------------------
@@ -301,6 +302,15 @@ explain_exit_code() {
   224) echo "Proxmox: PBS storage is for backups only" ;;
   225) echo "Proxmox: No template available for OS/Version" ;;
   231) echo "Proxmox: LXC stack upgrade failed" ;;
+
+  # --- Tools & Addon Scripts (232-238) ---
+  232) echo "Tools: Wrong execution environment (run on PVE host, not inside LXC)" ;;
+  233) echo "Tools: Application not installed (update prerequisite missing)" ;;
+  234) echo "Tools: No LXC containers found or available" ;;
+  235) echo "Tools: Backup or restore operation failed" ;;
+  236) echo "Tools: Required hardware not detected" ;;
+  237) echo "Tools: Dependency package installation failed" ;;
+  238) echo "Tools: OS or distribution not supported for this addon" ;;
 
   # --- Node.js / npm / pnpm / yarn (239-249) ---
   239) echo "npm/Node.js: Unexpected runtime error or dependency failure" ;;

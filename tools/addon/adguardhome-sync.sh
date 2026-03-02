@@ -69,7 +69,7 @@ elif [[ -f "/etc/debian_version" ]]; then
   SERVICE_PATH="/etc/systemd/system/adguardhome-sync.service"
 else
   msg_error "Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -312,7 +312,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi
