@@ -2,42 +2,68 @@
 
 import type { z } from "zod";
 
+import { githubGist, nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { CalendarIcon, Check, Clipboard, Download } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { useTheme } from "next-themes";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import Image from "next/image";
 
 import type { Category } from "@/lib/types";
 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { basePath } from "@/config/site-config";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchCategories } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 import type { Script } from "./_schemas/schemas";
 
+import { ScriptItem } from "../scripts/_components/script-item";
 import InstallMethod from "./_components/install-method";
 import { ScriptSchema } from "./_schemas/schemas";
 import Categories from "./_components/categories";
 import Note from "./_components/note";
 
-import { githubGist, nord } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { ScriptItem } from "../scripts/_components/script-item";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { search } from "@/components/command-menu";
-import { basePath } from "@/config/site-config";
-import Image from "next/image";
-import { useTheme } from "next-themes";
+function search(scripts: Script[], query: string): Script[] {
+  const queryLower = query.toLowerCase().trim();
+  const searchWords = queryLower.split(/\s+/).filter(Boolean);
+
+  return scripts
+    .map((script) => {
+      const nameLower = script.name.toLowerCase();
+      const descriptionLower = (script.description || "").toLowerCase();
+
+      let score = 0;
+
+      for (const word of searchWords) {
+        if (nameLower.includes(word)) {
+          score += 10;
+        }
+        if (descriptionLower.includes(word)) {
+          score += 5;
+        }
+      }
+
+      return { script, score };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 20)
+    .map(({ script }) => script);
+}
 
 const initialScript: Script = {
   name: "",
@@ -77,32 +103,32 @@ export default function JSONGenerator() {
 
   const selectedCategoryObj = useMemo(
     () => categories.find(cat => cat.id.toString() === selectedCategory),
-    [categories, selectedCategory]
+    [categories, selectedCategory],
   );
 
   const allScripts = useMemo(
     () => categories.flatMap(cat => cat.scripts || []),
-    [categories]
+    [categories],
   );
 
   const scripts = useMemo(() => {
-    const query = searchQuery.trim()
+    const query = searchQuery.trim();
 
     if (query) {
-      return search(allScripts, query)
+      return search(allScripts, query);
     }
 
     if (selectedCategoryObj) {
-      return selectedCategoryObj.scripts || []
+      return selectedCategoryObj.scripts || [];
     }
 
-    return []
+    return [];
   }, [allScripts, selectedCategoryObj, searchQuery]);
 
   useEffect(() => {
     fetchCategories()
       .then(setCategories)
-      .catch((error) => console.error("Error fetching categories:", error));
+      .catch(error => console.error("Error fetching categories:", error));
   }, []);
 
   useEffect(() => {
@@ -122,11 +148,14 @@ export default function JSONGenerator() {
 
           if (updated.type === "pve") {
             scriptPath = `tools/pve/${updated.slug}.sh`;
-          } else if (updated.type === "addon") {
+          }
+          else if (updated.type === "addon") {
             scriptPath = `tools/addon/${updated.slug}.sh`;
-          } else if (method.type === "alpine") {
+          }
+          else if (method.type === "alpine") {
             scriptPath = `${updated.type}/alpine-${updated.slug}.sh`;
-          } else {
+          }
+          else {
             scriptPath = `${updated.type}/${updated.slug}.sh`;
           }
 
@@ -145,11 +174,13 @@ export default function JSONGenerator() {
   }, []);
 
   const handleCopy = useCallback(() => {
-    if (!isValid) toast.warning("JSON schema is invalid. Copying anyway.");
+    if (!isValid)
+      toast.warning("JSON schema is invalid. Copying anyway.");
     navigator.clipboard.writeText(JSON.stringify(script, null, 2));
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
-    if (isValid) toast.success("Copied metadata to clipboard");
+    if (isValid)
+      toast.success("Copied metadata to clipboard");
   }, [script]);
 
   const importScript = (script: Script) => {
@@ -166,11 +197,11 @@ export default function JSONGenerator() {
       setIsValid(true);
       setZodErrors(null);
       toast.success("Imported JSON successfully");
-    } catch (error) {
+    }
+    catch (error) {
       toast.error("Failed to read or parse the JSON file.");
     }
-
-  }
+  };
 
   const handleFileImport = useCallback(() => {
     const input = document.createElement("input");
@@ -180,7 +211,8 @@ export default function JSONGenerator() {
     input.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
       const file = target.files?.[0];
-      if (!file) return;
+      if (!file)
+        return;
 
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -189,7 +221,8 @@ export default function JSONGenerator() {
           const parsed = JSON.parse(content);
           importScript(parsed);
           toast.success("Imported JSON successfully");
-        } catch (error) {
+        }
+        catch (error) {
           toast.error("Failed to read the JSON file.");
         }
       };
@@ -243,7 +276,10 @@ export default function JSONGenerator() {
           <div className="mt-2 space-y-1">
             {zodErrors.issues.map((error, index) => (
               <AlertDescription key={index} className="p-1 text-red-500">
-                {error.path.join(".")} -{error.message}
+                {error.path.join(".")}
+                {" "}
+                -
+                {error.message}
               </AlertDescription>
             ))}
           </div>
@@ -270,7 +306,7 @@ export default function JSONGenerator() {
                   onOpenChange={setIsImportDialogOpen}
                 >
                   <DialogTrigger asChild>
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <DropdownMenuItem onSelect={e => e.preventDefault()}>
                       Import existing script
                     </DropdownMenuItem>
                   </DialogTrigger>
@@ -292,7 +328,7 @@ export default function JSONGenerator() {
                             <SelectValue placeholder="Category" />
                           </SelectTrigger>
                           <SelectContent>
-                            {categories.map((category) => (
+                            {categories.map(category => (
                               <SelectItem key={category.id} value={category.id.toString()}>
                                 {category.name}
                               </SelectItem>
@@ -302,40 +338,44 @@ export default function JSONGenerator() {
                         <Input
                           placeholder="Search for a script..."
                           value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
+                          onChange={e => setSearchQuery(e.target.value)}
                         />
-                        {!selectedCategory && !searchQuery ? (
-                          <p className="text-muted-foreground text-sm text-center">
-                            Select a category or search for a script
-                          </p>
-                        ) : scripts.length === 0 ? (
-                          <p className="text-muted-foreground text-sm text-center">
-                            No scripts found
-                          </p>
-                        ) : (
-                          <div className="grid grid-cols-3 auto-rows-min h-64 overflow-y-auto gap-4">
-                            {scripts.map(script => (
-                              <div
-                                key={script.slug}
-                                className="p-2 border rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
-                                onClick={() => {
-                                  importScript(script);
-                                  setIsImportDialogOpen(false);
-                                }}
-                              >
-                                <Image
-                                  src={script.logo || `/${basePath}/logo.png`}
-                                  alt={script.name}
-                                  className="w-full h-12 object-contain mb-2"
-                                  width={16}
-                                  height={16}
-                                  unoptimized
-                                />
-                                <p className="text-sm text-center">{script.name}</p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                        {!selectedCategory && !searchQuery
+                          ? (
+                              <p className="text-muted-foreground text-sm text-center">
+                                Select a category or search for a script
+                              </p>
+                            )
+                          : scripts.length === 0
+                            ? (
+                                <p className="text-muted-foreground text-sm text-center">
+                                  No scripts found
+                                </p>
+                              )
+                            : (
+                                <div className="grid grid-cols-3 auto-rows-min h-64 overflow-y-auto gap-4">
+                                  {scripts.map(script => (
+                                    <div
+                                      key={script.slug}
+                                      className="p-2 border rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
+                                      onClick={() => {
+                                        importScript(script);
+                                        setIsImportDialogOpen(false);
+                                      }}
+                                    >
+                                      <Image
+                                        src={script.logo || `/${basePath}/logo.png`}
+                                        alt={script.name}
+                                        className="w-full h-12 object-contain mb-2"
+                                        width={16}
+                                        height={16}
+                                        unoptimized
+                                      />
+                                      <p className="text-sm text-center">{script.name}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                       </div>
                     </div>
                   </DialogContent>
@@ -348,15 +388,19 @@ export default function JSONGenerator() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>
-                Name <span className="text-red-500">*</span>
+                Name
+                {" "}
+                <span className="text-red-500">*</span>
               </Label>
-              <Input placeholder="Example" value={script.name} onChange={(e) => updateScript("name", e.target.value)} />
+              <Input placeholder="Example" value={script.name} onChange={e => updateScript("name", e.target.value)} />
             </div>
             <div>
               <Label>
-                Slug <span className="text-red-500">*</span>
+                Slug
+                {" "}
+                <span className="text-red-500">*</span>
               </Label>
-              <Input placeholder="example" value={script.slug} onChange={(e) => updateScript("slug", e.target.value)} />
+              <Input placeholder="example" value={script.slug} onChange={e => updateScript("slug", e.target.value)} />
             </div>
           </div>
           <div>
@@ -366,7 +410,7 @@ export default function JSONGenerator() {
             <Input
               placeholder="Full logo URL"
               value={script.logo || ""}
-              onChange={(e) => updateScript("logo", e.target.value || null)}
+              onChange={e => updateScript("logo", e.target.value || null)}
             />
           </div>
           <div>
@@ -374,24 +418,28 @@ export default function JSONGenerator() {
             <Input
               placeholder="Path to config file"
               value={script.config_path || ""}
-              onChange={(e) => updateScript("config_path", e.target.value || "")}
+              onChange={e => updateScript("config_path", e.target.value || "")}
             />
           </div>
           <div>
             <Label>
-              Description <span className="text-red-500">*</span>
+              Description
+              {" "}
+              <span className="text-red-500">*</span>
             </Label>
             <Textarea
               placeholder="Example"
               value={script.description}
-              onChange={(e) => updateScript("description", e.target.value)}
+              onChange={e => updateScript("description", e.target.value)}
             />
           </div>
           <Categories script={script} setScript={setScript} categories={categories} />
           <div className="flex gap-2">
             <div className="flex flex-col gap-2 w-full">
               <Label>
-                Date Created <span className="text-red-500">*</span>
+                Date Created
+                {" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Popover>
                 <PopoverTrigger asChild className="flex-1">
@@ -415,7 +463,7 @@ export default function JSONGenerator() {
             </div>
             <div className="flex flex-col gap-2 w-full">
               <Label>Type</Label>
-              <Select value={script.type} onValueChange={(value) => updateScript("type", value)}>
+              <Select value={script.type} onValueChange={value => updateScript("type", value)}>
                 <SelectTrigger className="flex-1">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
@@ -430,17 +478,17 @@ export default function JSONGenerator() {
           </div>
           <div className="w-full flex gap-5">
             <div className="flex items-center space-x-2">
-              <Switch checked={script.updateable} onCheckedChange={(checked) => updateScript("updateable", checked)} />
+              <Switch checked={script.updateable} onCheckedChange={checked => updateScript("updateable", checked)} />
               <label>Updateable</label>
             </div>
             <div className="flex items-center space-x-2">
-              <Switch checked={script.privileged} onCheckedChange={(checked) => updateScript("privileged", checked)} />
+              <Switch checked={script.privileged} onCheckedChange={checked => updateScript("privileged", checked)} />
               <label>Privileged</label>
             </div>
             <div className="flex items-center space-x-2">
               <Switch
                 checked={script.disable || false}
-                onCheckedChange={(checked) => updateScript("disable", checked)}
+                onCheckedChange={checked => updateScript("disable", checked)}
               />
               <label>Disabled</label>
             </div>
@@ -448,12 +496,14 @@ export default function JSONGenerator() {
           {script.disable && (
             <div>
               <Label>
-                Disable Description <span className="text-red-500">*</span>
+                Disable Description
+                {" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Textarea
                 placeholder="Explain why this script is disabled..."
                 value={script.disable_description || ""}
-                onChange={(e) => updateScript("disable_description", e.target.value)}
+                onChange={e => updateScript("disable_description", e.target.value)}
               />
             </div>
           )}
@@ -461,18 +511,18 @@ export default function JSONGenerator() {
             placeholder="Interface Port"
             type="number"
             value={script.interface_port || ""}
-            onChange={(e) => updateScript("interface_port", e.target.value ? Number(e.target.value) : null)}
+            onChange={e => updateScript("interface_port", e.target.value ? Number(e.target.value) : null)}
           />
           <div className="flex gap-2">
             <Input
               placeholder="Website URL"
               value={script.website || ""}
-              onChange={(e) => updateScript("website", e.target.value || null)}
+              onChange={e => updateScript("website", e.target.value || null)}
             />
             <Input
               placeholder="Documentation URL"
               value={script.documentation || ""}
-              onChange={(e) => updateScript("documentation", e.target.value || null)}
+              onChange={e => updateScript("documentation", e.target.value || null)}
             />
           </div>
           <InstallMethod script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
@@ -480,22 +530,20 @@ export default function JSONGenerator() {
           <Input
             placeholder="Username"
             value={script.default_credentials.username || ""}
-            onChange={(e) =>
+            onChange={e =>
               updateScript("default_credentials", {
                 ...script.default_credentials,
                 username: e.target.value || null,
-              })
-            }
+              })}
           />
           <Input
             placeholder="Password"
             value={script.default_credentials.password || ""}
-            onChange={(e) =>
+            onChange={e =>
               updateScript("default_credentials", {
                 ...script.default_credentials,
                 password: e.target.value || null,
-              })
-            }
+              })}
           />
           <Note script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
         </form>
@@ -504,7 +552,7 @@ export default function JSONGenerator() {
         <Tabs
           defaultValue="json"
           className="w-full"
-          onValueChange={(value) => setCurrentTab(value as "json" | "preview")}
+          onValueChange={value => setCurrentTab(value as "json" | "preview")}
           value={currentTab}
         >
           <TabsList className="grid w-full grid-cols-2">
