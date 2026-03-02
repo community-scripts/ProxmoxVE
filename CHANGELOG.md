@@ -422,6 +422,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Migrate: DokPloy, Komodo, Coolify, Dockge, Runtipi to Addons [@MickLesk](https://github.com/MickLesk) ([#12275](https://github.com/community-scripts/ProxmoxVE/pull/12275))
 
+  - #### 🔧 Refactor
+
+    - ref: replace generic exit 1 with specific exit codes in ct & install [@MickLesk](https://github.com/MickLesk) ([#12475](https://github.com/community-scripts/ProxmoxVE/pull/12475))
+
 ### 💾 Core
 
   - #### ✨ New Features
