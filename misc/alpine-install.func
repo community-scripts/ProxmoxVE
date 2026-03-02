@@ -119,12 +119,12 @@ update_os() {
   local tools_content
   tools_content=$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func) || {
     msg_error "Failed to download tools.func"
-    exit 6
+    exit 115
   }
   source /dev/stdin <<<"$tools_content"
   if ! declare -f fetch_and_deploy_gh_release >/dev/null 2>&1; then
     msg_error "tools.func loaded but incomplete — missing expected functions"
-    exit 6
+    exit 115
   fi
   msg_ok "Updated Container OS"
   post_progress_to_api
