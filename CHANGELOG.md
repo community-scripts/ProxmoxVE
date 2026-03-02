@@ -412,6 +412,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-02
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Migrate: DokPloy, Komodo, Coolify, Dockge, Runtipi to Addons [@MickLesk](https://github.com/MickLesk) ([#12275](https://github.com/community-scripts/ProxmoxVE/pull/12275))
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: Improve stability with retry logic, caching, and debug mode [@MickLesk](https://github.com/MickLesk) ([#10351](https://github.com/community-scripts/ProxmoxVE/pull/10351))
+
 ## 2026-03-01
 
 ### 🚀 Updated Scripts
