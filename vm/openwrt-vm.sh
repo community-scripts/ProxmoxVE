@@ -556,7 +556,7 @@ fi
 if [[ -z "$DISK_REF" ]]; then
   msg_error "Unable to determine imported disk reference."
   echo "$IMPORT_OUT"
-  exit 1
+  exit 226
 fi
 
 qm set $VMID \
@@ -635,7 +635,7 @@ if qm status "$VMID" | grep -q "running"; then
   msg_ok "Network interfaces configured in OpenWrt"
 else
   msg_error "VM is not running"
-  exit 1
+  exit 226
 fi
 
 msg_info "Waiting for OpenWrt to shut down..."

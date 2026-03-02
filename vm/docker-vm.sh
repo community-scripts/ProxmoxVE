@@ -638,7 +638,7 @@ DISK_REF_IMPORTED="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully impo
 [[ -z "$DISK_REF_IMPORTED" ]] && {
   msg_error "Unable to determine imported disk reference."
   echo "$IMPORT_OUT"
-  exit 1
+  exit 226
 }
 
 msg_ok "Imported disk (${CL}${BL}${DISK_REF_IMPORTED}${CL})"

@@ -221,7 +221,7 @@ function ensure_pv() {
     if ! apt-get update -qq &>/dev/null || ! apt-get install -y pv &>/dev/null; then
       msg_error "Failed to install pv automatically."
       echo -e "\nPlease run manually on the Proxmox host:\n  apt install pv\n"
-      exit 1
+      exit 237
     fi
     msg_ok "Installed pv"
   fi
@@ -249,14 +249,14 @@ function download_and_validate_xz() {
   if ! curl -fSL -o "$file" "$url"; then
     msg_error "Download failed: $url"
     rm -f "$file"
-    exit 1
+    exit 115
   fi
 
   # Validate again
   if ! xz -t "$file" &>/dev/null; then
     msg_error "Downloaded file $(basename "$file") is corrupted. Please try again later."
     rm -f "$file"
-    exit 1
+    exit 115
   fi
   msg_ok "Downloaded and validated $(basename "$file")"
 }
@@ -272,7 +272,7 @@ function extract_xz_with_pv() {
   if ! xz -dc "$file" | pv -N "Extracting" >"$target"; then
     msg_error "Failed to extract $file"
     rm -f "$target"
-    exit 1
+    exit 115
   fi
   msg_ok "Decompressed to $target"
 }
@@ -592,7 +592,7 @@ DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk
 [[ -z "$DISK_REF" ]] && {
   msg_error "Unable to determine imported disk reference."
   echo "$IMPORT_OUT"
-  exit 1
+  exit 226
 }
 msg_ok "Imported disk (${CL}${BL}${DISK_REF}${CL})"
 

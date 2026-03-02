@@ -305,7 +305,7 @@ function advanced_settings() {
 
   if [ $ISO_COUNT -eq 0 ]; then
     echo "No ISOs found."
-    exit 1
+    exit 115
   fi
 
   # Identify the index of the last stable release
@@ -529,7 +529,7 @@ if [ -z "${SELECTED_ISO:-}" ]; then
 
   if [ -z "$SELECTED_ISO" ]; then
     msg_error "Could not find a stable ISO for fallback."
-    exit 1
+    exit 115
   fi
 fi
 
