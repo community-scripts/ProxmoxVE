@@ -301,6 +301,7 @@ explain_exit_code() {
   223) echo "Proxmox: Template not available after download" ;;
   224) echo "Proxmox: PBS storage is for backups only" ;;
   225) echo "Proxmox: No template available for OS/Version" ;;
+  226) echo "Proxmox: VM disk import or post-creation setup failed" ;;
   231) echo "Proxmox: LXC stack upgrade failed" ;;
 
   # --- Tools & Addon Scripts (232-238) ---
