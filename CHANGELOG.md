@@ -424,6 +424,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: Improve stability with retry logic, caching, and debug mode [@MickLesk](https://github.com/MickLesk) ([#10351](https://github.com/community-scripts/ProxmoxVE/pull/10351))
 
+### 🌐 Website
+
+  - frontend: improve detail view badges, addon texts, and HTML title [@MickLesk](https://github.com/MickLesk) ([#12461](https://github.com/community-scripts/ProxmoxVE/pull/12461))
+
 ## 2026-03-01
 
 ### 🚀 Updated Scripts
