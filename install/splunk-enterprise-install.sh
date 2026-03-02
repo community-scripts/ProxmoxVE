@@ -34,7 +34,7 @@ while true; do
         [Nn]|[Nn][Oo]|"")
             msg_error "Terms not accepted. Installation cannot proceed."
             msg_error "Please review the terms and run the script again if you wish to proceed."
-            exit 1
+            exit 254
             ;;
         *)
             msg_error "Invalid response. Please enter 'y' for yes or 'n' for no."
@@ -47,7 +47,7 @@ DOWNLOAD_URL=$(curl -s "https://www.splunk.com/en_us/download/splunk-enterprise.
 RELEASE=$(echo "$DOWNLOAD_URL" | sed 's|.*/releases/\([^/]*\)/.*|\1|')
 $STD curl -fsSL -o "splunk-enterprise.tgz" "$DOWNLOAD_URL" || {
     msg_error "Failed to download Splunk Enterprise from the provided link."
-    exit 1
+    exit 250
 }
 $STD tar -xzf "splunk-enterprise.tgz" -C /opt
 rm -f "splunk-enterprise.tgz"

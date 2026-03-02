@@ -34,7 +34,7 @@ for server in "${servers[@]}"; do
   done
   if ((attempt >= MAX_ATTEMPTS)); then
     msg_error "No more attempts - aborting script!"
-    exit 1
+    exit 254
   fi
 done
 

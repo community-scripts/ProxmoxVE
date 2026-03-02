@@ -26,7 +26,7 @@ function update_script() {
 
   if ! dpkg -s grafana >/dev/null 2>&1; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit 233
   fi
 
   if [[ -f /etc/apt/sources.list.d/grafana.list ]] || [[ ! -f /etc/apt/sources.list.d/grafana.sources ]]; then

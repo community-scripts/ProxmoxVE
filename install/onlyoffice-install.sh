@@ -59,7 +59,7 @@ EOF
 else
   msg_error "Failed to download or verify GPG key from $KEY_URL"
   [[ -f "$TMP_KEY_CONTENT" ]] && rm -f "$TMP_KEY_CONTENT"
-  exit 1
+  exit 250
 fi
 rm -f "$TMP_KEY_CONTENT"
 

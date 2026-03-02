@@ -25,7 +25,7 @@ case $version in
     ;;
   *)
     msg_error "Invalid JDK version selected. Please enter 8, 11, 17 or 21."
-    exit 1
+    exit 64
     ;;
   esac
   ;;
@@ -39,7 +39,7 @@ case $version in
     ;;
   *)
     msg_error "Invalid JDK version selected. Please enter 11, 17 or 21."
-    exit 1
+    exit 64
     ;;
   esac
   ;;
@@ -53,13 +53,13 @@ case $version in
     ;;
   *)
     msg_error "Invalid JDK version selected. Please enter 17 or 21."
-    exit 1
+    exit 64
     ;;
   esac
   ;;
 *)
   msg_error "Invalid Tomcat version selected. Please enter 9, 10.1 or 11."
-  exit 1
+  exit 64
   ;;
 esac
 

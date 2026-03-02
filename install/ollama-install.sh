@@ -78,11 +78,11 @@ if curl -fL# -C - -o "$TMP_TAR" "$OLLAMA_URL"; then
     msg_ok "Installed Ollama ${RELEASE}"
   else
     msg_error "Extraction failed – archive corrupt or incomplete"
-    exit 1
+    exit 251
   fi
 else
   msg_error "Download failed – $OLLAMA_URL not reachable"
-  exit 1
+  exit 250
 fi
 
 msg_info "Creating ollama User and Group"

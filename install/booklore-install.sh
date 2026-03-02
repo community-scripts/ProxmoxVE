@@ -59,7 +59,7 @@ mkdir -p /opt/booklore/dist
 JAR_PATH=$(find /opt/booklore/booklore-api/build/libs -maxdepth 1 -type f -name "booklore-api-*.jar" ! -name "*plain*" | head -n1)
 if [[ -z "$JAR_PATH" ]]; then
   msg_error "Backend JAR not found"
-  exit 1
+  exit 153
 fi
 cp "$JAR_PATH" /opt/booklore/dist/app.jar
 msg_ok "Built Backend"

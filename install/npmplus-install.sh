@@ -51,7 +51,7 @@ while true; do
   attempts=$((attempts + 1))
   if [[ "$attempts" -ge 3 ]]; then
     msg_error "Maximum attempts reached. Exiting."
-    exit 1
+    exit 254
   fi
 done
 
@@ -76,11 +76,11 @@ for i in {1..60}; do
     elif [[ "$STATUS" == "unhealthy" ]]; then
       msg_error "NPMplus container is unhealthy! Check logs."
       docker logs "$CONTAINER_ID"
-      exit 1
+      exit 150
     fi
   fi
   sleep 2
-  [[ $i -eq 60 ]] && msg_error "NPMplus container did not become healthy within 120s." && docker logs "$CONTAINER_ID" && exit 1
+  [[ $i -eq 60 ]] && msg_error "NPMplus container did not become healthy within 120s." && docker logs "$CONTAINER_ID" && exit 150
 done
 msg_ok "Builded and started NPMplus"
 

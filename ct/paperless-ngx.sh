@@ -44,7 +44,7 @@ function update_script() {
       echo -e "${TAB}${GATEWAY}${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/9223${CL}"
       echo -e ""
       msg_custom "⚠️" "Update aborted. Please migrate your data first."
-      exit 1
+      exit 253
     fi
   fi
 

@@ -43,7 +43,7 @@ function update_script() {
     COMPOSE_FILE=$(find /opt/komodo -maxdepth 1 -type f -name '*.compose.yaml' ! -name 'compose.env' | head -n1)
     if [[ -z "$COMPOSE_FILE" ]]; then
       msg_error "No valid compose file found in /opt/komodo!"
-      exit 1
+      exit 252
     fi
     $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env pull
     $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d

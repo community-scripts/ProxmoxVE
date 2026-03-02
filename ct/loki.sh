@@ -26,7 +26,7 @@ function update_script() {
 
   if ! dpkg -s loki >/dev/null 2>&1; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit 233
   fi
 
   CHOICE=$(msg_menu "Loki Update Options" \

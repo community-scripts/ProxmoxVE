@@ -34,14 +34,14 @@ function update_script() {
     msg_warn "This requires MANUAL config changes in /etc/vikunja/config.yml."
     msg_warn "See: https://vikunja.io/changelog/whats-new-in-vikunja-1.0.0/#config-changes"
 
-    read -rp "Continue with update? (y to proceed): " -t 30 CONFIRM1 || exit 1
+    read -rp "Continue with update? (y to proceed): " -t 30 CONFIRM1 || exit 254
     [[ "$CONFIRM1" =~ ^[yY]$ ]] || exit 0
 
     echo
     msg_warn "Vikunja may not start after the update until you manually adjust the config."
     msg_warn "Details: https://vikunja.io/changelog/whats-new-in-vikunja-1.0.0/#config-changes"
 
-    read -rp "Acknowledge and continue? (y): " -t 30 CONFIRM2 || exit 1
+    read -rp "Acknowledge and continue? (y): " -t 30 CONFIRM2 || exit 254
     [[ "$CONFIRM2" =~ ^[yY]$ ]] || exit 0
   fi
 

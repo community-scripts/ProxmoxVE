@@ -195,6 +195,14 @@ if ! declare -f explain_exit_code &>/dev/null; then
     247) echo "Node.js: Fatal internal error" ;;
     248) echo "Node.js: Invalid C++ addon / N-API failure" ;;
     249) echo "npm/pnpm/yarn: Unknown fatal error" ;;
+
+    # --- Application Install/Update Errors (250-254) ---
+    250) echo "App: Download failed or version not determined" ;;
+    251) echo "App: File extraction failed (corrupt or incomplete archive)" ;;
+    252) echo "App: Required file or resource not found" ;;
+    253) echo "App: Data migration required — update aborted" ;;
+    254) echo "App: User declined prompt or input timed out" ;;
+
     255) echo "DPKG: Fatal internal error" ;;
     *) echo "Unknown error" ;;
     esac

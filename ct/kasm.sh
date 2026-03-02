@@ -45,7 +45,7 @@ function update_script() {
   
   if [[ -z "$KASM_URL" ]] || [[ -z "$KASM_VERSION" ]]; then
     msg_error "Unable to detect latest Kasm release URL."
-    exit 1
+    exit 250
   fi
   msg_info "Checked for new version"
 

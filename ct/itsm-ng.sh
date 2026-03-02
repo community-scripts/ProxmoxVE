@@ -26,7 +26,7 @@ function update_script() {
 
   if [[ ! -f /etc/itsm-ng/config_db.php ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit 233
   fi
   setup_mariadb
 

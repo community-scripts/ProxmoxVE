@@ -21,7 +21,7 @@ msg_info "Fetching latest EMQX Enterprise version"
 LATEST_VERSION=$(curl -fsSL https://www.emqx.com/en/downloads/enterprise | grep -oP '/en/downloads/enterprise/v\K[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
 if [[ -z "$LATEST_VERSION" ]]; then
   msg_error "Failed to determine latest EMQX version"
-  exit 1
+  exit 250
 fi
 msg_ok "Latest version: v$LATEST_VERSION"
 

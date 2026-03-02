@@ -25,7 +25,7 @@ if useradd -r -m -d /opt/pulse-home -s /usr/sbin/nologin pulse; then
   msg_ok "Created User"
 else
   msg_error "User creation failed"
-  exit 1
+  exit 71
 fi
 
 mkdir -p /etc/pulse
