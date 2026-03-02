@@ -52,7 +52,7 @@ elif [[ -f "/etc/debian_version" ]]; then
   INSTALL_DIR="$INSTALL_DIR_DEBIAN"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 header_info
@@ -72,7 +72,7 @@ function check_internet() {
     msg_ok "Internet connectivity OK"
   else
     msg_error "Internet connectivity or GitHub unreachable (Status $HTTP_CODE). Exiting."
-    exit 1
+    exit 115
   fi
 }
 
@@ -105,7 +105,7 @@ function install_php_and_modules() {
       msg_info "Installing missing PHP packages: ${MISSING_PACKAGES[*]}"
       if ! apt-get update &>/dev/null || ! apt-get install -y "${MISSING_PACKAGES[@]}" &>/dev/null; then
         msg_error "Failed to install required PHP modules. Exiting."
-        exit 1
+        exit 237
       fi
       msg_ok "Installed missing PHP packages"
     else
@@ -132,7 +132,7 @@ function install_phpmyadmin() {
   msg_info "Downloading ${TARBALL_URL}"
   if ! curl -fsSL "$TARBALL_URL" -o /tmp/phpmyadmin.tar.gz; then
     msg_error "Download failed: $TARBALL_URL"
-    exit 1
+    exit 115
   fi
 
   mkdir -p "$INSTALL_DIR"
@@ -188,7 +188,7 @@ EOF
       msg_ok "Started PHP-FPM service: $PHP_FPM_SERVICE"
     else
       msg_error "Failed to start PHP-FPM service: $PHP_FPM_SERVICE"
-      exit 1
+      exit 150
     fi
 
     $STD rc-service lighttpd start
@@ -237,7 +237,7 @@ function update_phpmyadmin() {
 
   if ! curl -fsSL "$TARBALL_URL" -o /tmp/phpmyadmin.tar.gz; then
     msg_error "Download failed: $TARBALL_URL"
-    exit 1
+    exit 115
   fi
 
   BACKUP_DIR="/tmp/phpmyadmin-backup-$(date +%Y%m%d-%H%M%S)"
@@ -280,7 +280,7 @@ if is_phpmyadmin_installed; then
     ;;
   *)
     echo -e "${YW}⚠️ Invalid input. Exiting.${CL}"
-    exit 1
+    exit 112
     ;;
   esac
 else

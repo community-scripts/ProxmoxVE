@@ -32,7 +32,7 @@ header_info
 
 if ! command -v pveversion &>/dev/null; then
   msg_error "This script must be run on the Proxmox VE host (not inside an LXC container)"
-  exit 1
+  exit 232
 fi
 
 while true; do
@@ -64,7 +64,7 @@ while [[ -z "${CTID}" ]]; do
   CTID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --radiolist \
     "\nSelect a container to add Tailscale to:\n" \
     16 $((MSG_MAX_LENGTH + 23)) 6 \
-    "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || exit 1
+    "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || exit 0
 done
 
 CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"

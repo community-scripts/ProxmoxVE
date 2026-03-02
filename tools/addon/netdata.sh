@@ -58,7 +58,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 9)); then
       msg_error "This version of Proxmox VE is not supported."
       msg_error "Supported: Proxmox VE version 8.0 – 8.9"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -69,7 +69,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 1)); then
       msg_error "This version of Proxmox VE is not yet supported."
       msg_error "Supported: Proxmox VE version 9.0–9.1.x"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -77,19 +77,19 @@ pve_check() {
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
   msg_error "Supported versions: Proxmox VE 8.0 – 8.9 or 9.0–9.1.x"
-  exit 1
+  exit 105
 }
 
 detect_codename() {
   source /etc/os-release
   if [[ "$ID" != "debian" ]]; then
     msg_error "Unsupported base OS: $ID (only Proxmox VE / Debian supported)."
-    exit 1
+    exit 238
   fi
   CODENAME="${VERSION_CODENAME:-}"
   if [[ -z "$CODENAME" ]]; then
     msg_error "Could not detect Debian codename."
-    exit 1
+    exit 71
   fi
   echo "$CODENAME"
 }
@@ -124,7 +124,7 @@ install() {
   PKG=$(get_latest_repo_pkg "$REPO_URL")
   if [[ -z "$PKG" ]]; then
     msg_error "Could not find netdata-repo package for Debian $CODENAME"
-    exit 1
+    exit 237
   fi
   curl -fsSL "${REPO_URL}${PKG}" -o "$PKG"
   $STD dpkg -i "$PKG"

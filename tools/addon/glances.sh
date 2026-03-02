@@ -93,7 +93,7 @@ EOF
 update_glances_debian() {
   if [[ ! -d /opt/glances/.venv ]]; then
     msg_error "$APP is not installed"
-    exit 1
+    exit 233
   fi
   msg_info "Updating $APP"
   cd /opt/glances
@@ -160,7 +160,7 @@ EOF
 update_glances_alpine() {
   if [[ ! -d /opt/glances/.venv ]]; then
     msg_error "$APP is not installed"
-    exit 1
+    exit 233
   fi
   msg_info "Updating $APP"
   cd /opt/glances

@@ -37,7 +37,7 @@ function find_compose_file() {
   COMPOSE_FILE=$(find "$INSTALL_PATH" -maxdepth 1 -type f -name '*.compose.yaml' ! -name 'compose.env' | head -n1)
   if [[ -z "${COMPOSE_FILE:-}" ]]; then
     msg_error "No valid compose file found in ${INSTALL_PATH}!"
-    exit 1
+    exit 233
   fi
   COMPOSE_BASENAME=$(basename "$COMPOSE_FILE")
 }
@@ -48,7 +48,7 @@ function check_legacy_db() {
     echo -e "${YW}This configuration is no longer supported since Komodo v1.18.0.${CL}"
     echo -e "${YW}Please follow the migration guide:${CL}"
     echo -e "${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/5689${CL}\n"
-    exit 1
+    exit 238
   fi
 }
 
@@ -79,14 +79,14 @@ function update() {
   BACKUP_FILE="${INSTALL_PATH}/${COMPOSE_BASENAME}.bak_$(date +%Y%m%d_%H%M%S)"
   cp "$COMPOSE_FILE" "$BACKUP_FILE" || {
     msg_error "Failed to create backup of ${COMPOSE_BASENAME}!"
-    exit 1
+    exit 235
   }
 
   GITHUB_URL="https://raw.githubusercontent.com/moghtech/komodo/main/compose/${COMPOSE_BASENAME}"
   if ! curl -fsSL "$GITHUB_URL" -o "$COMPOSE_FILE"; then
     msg_error "Failed to download ${COMPOSE_BASENAME} from GitHub!"
     mv "$BACKUP_FILE" "$COMPOSE_FILE"
-    exit 1
+    exit 115
   fi
 
   if ! grep -qxF 'COMPOSE_KOMODO_BACKUPS_PATH=/etc/komodo/backups' "$COMPOSE_ENV"; then
@@ -129,7 +129,7 @@ function check_or_install_docker() {
       msg_ok "Docker Compose is available"
     else
       msg_error "Docker Compose plugin is not available. Please install it."
-      exit 1
+      exit 10
     fi
     return
   fi
@@ -139,7 +139,7 @@ function check_or_install_docker() {
   read -r install_docker_prompt
   if [[ ! "${install_docker_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_error "Docker is required for ${APP}. Exiting."
-    exit 1
+    exit 10
   fi
 
   msg_info "Installing Docker"
@@ -239,7 +239,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

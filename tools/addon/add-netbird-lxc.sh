@@ -73,7 +73,7 @@ fi
 DISTRO=$(pct exec "$CTID" -- cat /etc/os-release | grep -w "ID" | cut -d'=' -f2 | tr -d '"')
 if [[ "$DISTRO" != "debian" && "$DISTRO" != "ubuntu" ]]; then
   msg "\e[1;31m Error: This script only supports Debian or Ubuntu LXC containers. Detected: $DISTRO. Aborting...\e[0m"
-  exit 1
+  exit 238
 fi
 
 CTID_CONFIG_PATH=/etc/pve/lxc/${CTID}.conf
