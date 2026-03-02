@@ -87,11 +87,11 @@ function update() {
 function check_docker() {
   if ! command -v docker &>/dev/null; then
     msg_error "Docker is not installed. This script requires an existing Docker LXC. Exiting."
-    exit 1
+    exit 10
   fi
   if ! docker compose version &>/dev/null; then
     msg_error "Docker Compose plugin is not available. Please install it before running this script. Exiting."
-    exit 1
+    exit 10
   fi
   msg_ok "Docker $(docker --version | cut -d' ' -f3 | tr -d ',') and Docker Compose are available"
 }
@@ -171,7 +171,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

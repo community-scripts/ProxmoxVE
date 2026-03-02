@@ -52,13 +52,13 @@ EOF
 # ==============================================================================
 if [[ -f "/etc/alpine-release" ]]; then
   msg_error "Alpine is not supported for ${APP}. Use Debian/Ubuntu."
-  exit 1
+  exit 238
 elif [[ -f "/etc/debian_version" ]]; then
   OS="Debian"
   SERVICE_PATH="/etc/systemd/system/jellystat.service"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -326,7 +326,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

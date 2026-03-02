@@ -52,7 +52,7 @@ elif [[ -f "/etc/debian_version" ]]; then
   PKG_MANAGER="apt-get install -y"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 header_info

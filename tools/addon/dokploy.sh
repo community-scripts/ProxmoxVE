@@ -92,7 +92,7 @@ function check_or_install_docker() {
       msg_ok "Docker Compose is available"
     else
       msg_error "Docker Compose plugin is not available. Please install it."
-      exit 1
+      exit 10
     fi
     return
   fi
@@ -102,7 +102,7 @@ function check_or_install_docker() {
   read -r install_docker_prompt
   if [[ ! "${install_docker_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_error "Docker is required for ${APP}. Exiting."
-    exit 1
+    exit 10
   fi
 
   msg_info "Installing Docker"
@@ -163,7 +163,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi
