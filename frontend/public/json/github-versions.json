@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-02T13:48:26Z",
+  "generated": "2026-03-02T18:14:19Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -1150,6 +1150,13 @@
       "date": "2026-02-23T19:50:48Z"
     },
     {
+      "slug": "powerdns",
+      "repo": "poweradmin/poweradmin",
+      "version": "v4.0.7",
+      "pinned": false,
+      "date": "2026-02-15T20:09:48Z"
+    },
+    {
       "slug": "privatebin",
       "repo": "PrivateBin/PrivateBin",
       "version": "2.0.3",
@@ -1222,9 +1229,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.16",
+      "version": "v5.1.17",
       "pinned": false,
-      "date": "2026-03-01T23:13:09Z"
+      "date": "2026-03-02T17:52:12Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1348,9 +1355,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.10",
+      "version": "v0.14.11",
       "pinned": false,
-      "date": "2026-02-28T21:05:12Z"
+      "date": "2026-03-02T08:48:42Z"
     },
     {
       "slug": "scraparr",
