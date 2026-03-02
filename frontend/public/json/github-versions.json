@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-02T00:20:30Z",
+  "generated": "2026-03-02T06:20:15Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1234",
+      "version": "v0.24.1247",
       "pinned": false,
-      "date": "2026-03-01T05:55:44Z"
+      "date": "2026-03-02T05:56:37Z"
     },
     {
       "slug": "jellystat",
@@ -669,9 +669,9 @@
     {
       "slug": "kima-hub",
       "repo": "Chevron7Locked/kima-hub",
-      "version": "v1.6.0-rc.1",
+      "version": "v1.6.0",
       "pinned": false,
-      "date": "2026-03-01T05:38:32Z"
+      "date": "2026-03-02T05:43:31Z"
     },
     {
       "slug": "kimai",
