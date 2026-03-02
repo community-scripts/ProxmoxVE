@@ -412,6 +412,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-02
 
+### 🆕 New Scripts
+
+  - Profilarr ([#12441](https://github.com/community-scripts/ProxmoxVE/pull/12441))
+
 ### 🚀 Updated Scripts
 
   - #### 💥 Breaking Changes
