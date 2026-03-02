@@ -428,6 +428,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: Improve stability with retry logic, caching, and debug mode [@MickLesk](https://github.com/MickLesk) ([#10351](https://github.com/community-scripts/ProxmoxVE/pull/10351))
 
+  - #### 🔧 Refactor
+
+    - core: standardize exit codes and add mappings [@MickLesk](https://github.com/MickLesk) ([#12467](https://github.com/community-scripts/ProxmoxVE/pull/12467))
+
 ### 🌐 Website
 
   - frontend: improve detail view badges, addon texts, and HTML title [@MickLesk](https://github.com/MickLesk) ([#12461](https://github.com/community-scripts/ProxmoxVE/pull/12461))
