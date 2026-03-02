@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-02T12:12:21Z",
+  "generated": "2026-03-02T13:48:26Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -200,9 +200,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.7.6",
+      "version": "v2.7.7",
       "pinned": false,
-      "date": "2026-02-27T19:32:02Z"
+      "date": "2026-03-02T13:08:32Z"
     },
     {
       "slug": "cloudreve",
@@ -424,9 +424,9 @@
     {
       "slug": "frigate",
       "repo": "blakeblackshear/frigate",
-      "version": "v0.16.4",
+      "version": "v0.17.0",
       "pinned": true,
-      "date": "2026-01-29T00:42:14Z"
+      "date": "2026-02-27T03:03:01Z"
     },
     {
       "slug": "gatus",
