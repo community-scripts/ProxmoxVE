@@ -414,7 +414,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Profilarr ([#12441](https://github.com/community-scripts/ProxmoxVE/pull/12441))
+  - PowerDNS ([#12481](https://github.com/community-scripts/ProxmoxVE/pull/12481))
+- Profilarr ([#12441](https://github.com/community-scripts/ProxmoxVE/pull/12441))
 
 ### 🚀 Updated Scripts
 
