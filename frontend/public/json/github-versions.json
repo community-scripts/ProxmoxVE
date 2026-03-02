@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-01T18:07:06Z",
+  "generated": "2026-03-02T00:20:30Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -942,9 +942,9 @@
     {
       "slug": "nightscout",
       "repo": "nightscout/cgm-remote-monitor",
-      "version": "15.0.4",
+      "version": "v15.0.5",
       "pinned": false,
-      "date": "2026-02-28T17:07:02Z"
+      "date": "2026-03-01T21:22:37Z"
     },
     {
       "slug": "nocodb",
@@ -956,9 +956,9 @@
     {
       "slug": "nodebb",
       "repo": "NodeBB/NodeBB",
-      "version": "v4.9.0",
+      "version": "v4.9.1",
       "pinned": false,
-      "date": "2026-02-27T19:20:51Z"
+      "date": "2026-03-01T20:52:43Z"
     },
     {
       "slug": "nodecast-tv",
@@ -1215,9 +1215,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.15",
+      "version": "v5.1.16",
       "pinned": false,
-      "date": "2026-02-27T15:17:24Z"
+      "date": "2026-03-01T23:13:09Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1278,9 +1278,9 @@
     {
       "slug": "rdtclient",
       "repo": "rogerfar/rdt-client",
-      "version": "v2.0.124",
+      "version": "v2.0.125",
       "pinned": false,
-      "date": "2026-02-24T03:18:03Z"
+      "date": "2026-03-01T18:29:10Z"
     },
     {
       "slug": "reactive-resume",
@@ -1579,9 +1579,9 @@
     {
       "slug": "trilium",
       "repo": "TriliumNext/Trilium",
-      "version": "v0.101.3",
+      "version": "v0.102.0",
       "pinned": false,
-      "date": "2026-01-08T18:05:22Z"
+      "date": "2026-03-01T20:37:40Z"
     },
     {
       "slug": "trip",
