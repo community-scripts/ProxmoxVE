@@ -19,8 +19,9 @@ export function getDisplayValueFromType(type: string) {
     case "vm":
       return "VM";
     case "pve":
+      return "PVE";
     case "addon":
-      return "";
+      return "ADDON";
     default:
       return "";
   }
@@ -36,10 +37,9 @@ export function LatestScripts({
   onPageChange: (page: number) => void;
 }) {
   const latestScripts = useMemo(() => {
-    if (!items)
-      return [];
+    if (!items) return [];
 
-    const scripts = items.flatMap(category => category.scripts || []);
+    const scripts = items.flatMap((category) => category.scripts || []);
 
     // Filter out duplicates by slug
     const uniqueScriptsMap = new Map<string, Script>();
@@ -97,7 +97,7 @@ export function LatestScripts({
         </div>
       )}
       <div className="min-w flex w-full flex-row flex-wrap gap-4">
-        {latestScripts.slice(startIndex, endIndex).map(script => (
+        {latestScripts.slice(startIndex, endIndex).map((script) => (
           <Card key={script.slug} className="min-w-[250px] flex-1 flex-grow bg-accent/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
@@ -108,15 +108,13 @@ export function LatestScripts({
                     height={64}
                     width={64}
                     alt=""
-                    onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
+                    onError={(e) => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
                     className="h-11 w-11 object-contain"
                   />
                 </div>
                 <div className="flex flex-col">
                   <p className="text-lg line-clamp-1">
-                    {script.name}
-                    {" "}
-                    {getDisplayValueFromType(script.type)}
+                    {script.name} {getDisplayValueFromType(script.type)}
                   </p>
                   <p className="text-sm text-muted-foreground flex items-center gap-1">
                     <CalendarPlus className="h-4 w-4" />
@@ -149,7 +147,7 @@ export function LatestScripts({
 
 export function MostViewedScripts({ items }: { items: Category[] }) {
   const mostViewedScripts = items.reduce((acc: Script[], category) => {
-    const foundScripts = category.scripts.filter(script => mostPopularScripts.includes(script.slug));
+    const foundScripts = category.scripts.filter((script) => mostPopularScripts.includes(script.slug));
     return acc.concat(foundScripts);
   }, []);
 
@@ -161,7 +159,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
         </>
       )}
       <div className="min-w flex w-full flex-row flex-wrap gap-4">
-        {mostViewedScripts.map(script => (
+        {mostViewedScripts.map((script) => (
           <Card key={script.slug} className="min-w-[250px] flex-1 flex-grow bg-accent/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
@@ -172,15 +170,13 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
                     height={64}
                     width={64}
                     alt=""
-                    onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
+                    onError={(e) => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
                     className="h-11 w-11 object-contain"
                   />
                 </div>
                 <div className="flex flex-col">
                   <p className="line-clamp-1 text-lg">
-                    {script.name}
-                    {" "}
-                    {getDisplayValueFromType(script.type)}
+                    {script.name} {getDisplayValueFromType(script.type)}
                   </p>
                   <p className="flex items-center gap-1 text-sm text-muted-foreground">
                     <CalendarPlus className="h-4 w-4" />

@@ -14,6 +14,7 @@ import { basePath } from "@/config/site-config";
 import { extractDate } from "@/lib/time";
 
 import DisableDescription from "./script-items/disable-description";
+import { formattedBadge } from "@/components/command-menu";
 import { getDisplayValueFromType } from "./script-info-blocks";
 import DefaultPassword from "./script-items/default-password";
 import InstallCommand from "./script-items/install-command";
@@ -31,7 +32,7 @@ type ScriptItemProps = {
 
 function ScriptHeader({ item }: { item: Script }) {
   const defaultInstallMethod = item.install_methods?.[0];
-  const os = defaultInstallMethod?.resources?.os || "Proxmox Node";
+  const os = defaultInstallMethod?.resources?.os || (item.type === "addon" ? "Existing LXC or Proxmox Node" : "Proxmox Node");
   const version = defaultInstallMethod?.resources?.version || "";
 
   return (
@@ -55,9 +56,7 @@ function ScriptHeader({ item }: { item: Script }) {
                 <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
                   {item.name}
                   <VersionInfo item={item} />
-                  <span className="inline-flex items-center rounded-md bg-accent/30 px-2 py-1 text-sm">
-                    {getDisplayValueFromType(item.type)}
-                  </span>
+                  {formattedBadge(item.type)}
                 </h1>
                 <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
                   <span>

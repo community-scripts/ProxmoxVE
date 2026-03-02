@@ -36,17 +36,24 @@ const TooltipBadge: React.FC<TooltipProps> = ({ variant, label, content }) => (
 export default function Tooltips({ item }: { item: Script }) {
   return (
     <div className="flex items-center gap-2">
-      {item.privileged && (
+      {item.privileged && item.type !== "addon" && (
         <TooltipBadge variant="warning" label="Privileged" content="This script will be run in a privileged LXC" />
       )}
-      {item.updateable && item.type !== "pve" && (
+      {item.updateable && item.type !== "pve" && item.type !== "addon" && (
         <TooltipBadge
           variant="success"
           label="Updateable"
           content={`To Update ${item.name}, run the command below (or type update) in the LXC Console.`}
         />
       )}
-      {!item.updateable && item.type !== "pve" && <TooltipBadge variant="failure" label="Not Updateable" />}
+      {item.updateable && item.type === "addon" && (
+        <TooltipBadge
+          variant="success"
+          label="Updateable"
+          content={`Run update_${item.slug} to update or use the bash command inside the LXC.`}
+        />
+      )}
+      {!item.updateable && item.type !== "pve" && item.type !== "addon" && <TooltipBadge variant="failure" label="Not Updateable" />}
     </div>
   );
 }

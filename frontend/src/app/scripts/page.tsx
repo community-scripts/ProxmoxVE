@@ -32,6 +32,11 @@ function ScriptContent() {
         .flat()
         .find(script => script.slug === selectedScript);
       setItem(script);
+      if (script) {
+        document.title = `${script.name} | Proxmox VE Helper-Scripts`;
+      }
+    } else {
+      document.title = "Proxmox VE Helper-Scripts";
     }
   }, [selectedScript, links]);
 
