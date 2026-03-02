@@ -418,6 +418,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Tracearr: prepare for imminent v1.4.19 release [@durzo](https://github.com/durzo) ([#12413](https://github.com/community-scripts/ProxmoxVE/pull/12413))
+
   - #### ✨ New Features
 
     - Frigate: Bump to v0.17 [@MickLesk](https://github.com/MickLesk) ([#12474](https://github.com/community-scripts/ProxmoxVE/pull/12474))
