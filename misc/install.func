@@ -126,7 +126,7 @@ setting_up_container() {
   if [ "$(hostname -I)" = "" ]; then
     echo 1>&2 -e "\n${CROSS}${RD} No Network After $RETRY_NUM Tries${CL}"
     echo -e "${NETWORK}Check Network Settings"
-    exit 1
+    exit 121
   fi
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   systemctl disable -q --now systemd-networkd-wait-online.service
@@ -177,7 +177,7 @@ network_check() {
       echo -e "${INFO}${RD}Expect Issues Without Internet${CL}"
     else
       echo -e "${NETWORK}Check Network Settings"
-      exit 1
+      exit 122
     fi
   fi
 
@@ -242,12 +242,12 @@ EOF
   local tools_content
   tools_content=$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func) || {
     msg_error "Failed to download tools.func"
-    exit 6
+    exit 115
   }
   source /dev/stdin <<<"$tools_content"
   if ! declare -f fetch_and_deploy_gh_release >/dev/null 2>&1; then
     msg_error "tools.func loaded but incomplete — missing expected functions"
-    exit 6
+    exit 115
   fi
 }
 

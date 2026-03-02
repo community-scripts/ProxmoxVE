@@ -124,6 +124,7 @@ detect_repo_source
 #   * Generic/Shell errors (1-3, 10, 124-132, 134, 137, 139, 141, 143-146)
 #   * curl/wget errors (4-8, 16, 18, 22-28, 30, 32-36, 39, 44-48, 51-52, 55-57, 59, 61, 63, 75, 78-79, 92, 95)
 #   * Package manager errors (APT, DPKG: 100-102, 255)
+#   * Script Validation & Setup (103-123)
 #   * BSD sysexits (64-78)
 #   * Systemd/Service errors (150-154)
 #   * Python/pip/uv errors (160-162)
@@ -188,6 +189,29 @@ explain_exit_code() {
   100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
   101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
   102) echo "APT: Lock held by another process (dpkg/apt still running)" ;;
+
+  # --- Script Validation & Setup (103-123) ---
+  103) echo "Validation: Shell is not Bash" ;;
+  104) echo "Validation: Not running as root (or invoked via sudo)" ;;
+  105) echo "Validation: Proxmox VE version not supported" ;;
+  106) echo "Validation: Architecture not supported (ARM / PiMox)" ;;
+  107) echo "Validation: Kernel key parameters unreadable" ;;
+  108) echo "Validation: Kernel key limits exceeded" ;;
+  109) echo "Proxmox: No available container ID after max attempts" ;;
+  110) echo "Proxmox: Failed to apply default.vars" ;;
+  111) echo "Proxmox: App defaults file not available" ;;
+  112) echo "Proxmox: Invalid install menu option" ;;
+  113) echo "LXC: Under-provisioned — user aborted update" ;;
+  114) echo "LXC: Storage too low — user aborted update" ;;
+  115) echo "Download: install.func download failed or incomplete" ;;
+  116) echo "Proxmox: Default bridge vmbr0 not found" ;;
+  117) echo "LXC: Container did not reach running state" ;;
+  118) echo "LXC: No IP assigned to container after timeout" ;;
+  119) echo "Proxmox: No valid storage for rootdir content" ;;
+  120) echo "Proxmox: No valid storage for vztmpl content" ;;
+  121) echo "LXC: Container network not ready (no IP after retries)" ;;
+  122) echo "LXC: No internet connectivity — user declined to continue" ;;
+  123) echo "LXC: Local IP detection failed" ;;
 
   # --- BSD sysexits.h (64-78) ---
   64) echo "Usage error (wrong arguments)" ;;

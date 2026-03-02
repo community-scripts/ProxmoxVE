@@ -119,7 +119,7 @@ maxkeys_check() {
   # Exit if kernel parameters are unavailable
   if [[ "$per_user_maxkeys" -eq 0 || "$per_user_maxbytes" -eq 0 ]]; then
     msg_error "Unable to read kernel key parameters. Ensure proper permissions."
-    exit 1
+    exit 107
   fi
 
   # Fetch key usage for user ID 100000 (typical for containers)
@@ -148,7 +148,7 @@ maxkeys_check() {
   # Provide next steps if issues are detected
   if [[ "$failure" -eq 1 ]]; then
     msg_error "Kernel key limits exceeded - see suggestions above"
-    exit 1
+    exit 108
   fi
 
   # Silent success - only show errors if they exist
@@ -355,7 +355,7 @@ get_valid_container_id() {
     attempts=$((attempts + 1))
     if [[ $attempts -ge $max_attempts ]]; then
       msg_error "Could not find available container ID after $max_attempts attempts"
-      exit 1
+      exit 109
     fi
   done
 
@@ -2035,7 +2035,7 @@ advanced_settings() {
         else
           whiptail --msgbox "Default bridge 'vmbr0' not found!\n\nPlease configure a network bridge in Proxmox first." 10 58
           msg_error "Default bridge 'vmbr0' not found"
-          exit 1
+          exit 116
         fi
       else
         if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
@@ -3023,7 +3023,7 @@ install_script() {
     3 | mydefaults | MYDEFAULTS | userdefaults | USERDEFAULTS)
       default_var_settings || {
         msg_error "Failed to apply default.vars"
-        exit 1
+        exit 110
       }
       defaults_target="/usr/local/community-scripts/default.vars"
       break
@@ -3040,7 +3040,7 @@ install_script() {
         break
       else
         msg_error "No App Defaults available for ${APP}"
-        exit 1
+        exit 111
       fi
       ;;
     "$SETTINGS_OPTION" | settings | SETTINGS)
@@ -3051,7 +3051,7 @@ install_script() {
       ;;
     *)
       msg_error "Invalid option: $CHOICE"
-      exit 1
+      exit 112
       ;;
     esac
   done
@@ -3135,7 +3135,7 @@ check_container_resources() {
     read -r prompt </dev/tty
     if [[ ! ${prompt,,} =~ ^(yes)$ ]]; then
       msg_error "Aborted: under-provisioned LXC (${current_cpu} CPU/${current_ram}MB RAM < ${var_cpu} CPU/${var_ram}MB RAM)"
-      exit 1
+      exit 113
     fi
   else
     echo -e ""
@@ -3158,7 +3158,7 @@ check_container_storage() {
     read -r prompt </dev/tty
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
       msg_error "Aborted: storage too low (${usage}% used)"
-      exit 1
+      exit 114
     fi
   fi
 }
@@ -3446,7 +3446,7 @@ start() {
     3)
       clear
       exit_script
-      exit
+      exit 0
       ;;
     esac
     ensure_profile_loaded
@@ -3556,7 +3556,7 @@ build_container() {
   export FUNCTIONS_FILE_PATH="$(curl -fsSL "$_func_url")"
   if [[ -z "$FUNCTIONS_FILE_PATH" || ${#FUNCTIONS_FILE_PATH} -lt 100 ]]; then
     msg_error "Failed to download install functions from: $_func_url"
-    exit 1
+    exit 115
   fi
 
   # Core exports for install.func
@@ -3938,7 +3938,7 @@ EOF
       local ct_status
       ct_status=$(pct status "$CTID" 2>/dev/null || echo "unknown")
       msg_error "LXC Container did not reach running state (status: ${ct_status})"
-      exit 1
+      exit 117
     fi
   done
 
@@ -3967,7 +3967,7 @@ EOF
       echo "  • Verify static IP configuration (if using static IP)"
       echo "  • Check Proxmox firewall rules"
       echo "  • If using Tailscale: Disable MagicDNS temporarily"
-      exit 1
+      exit 118
     fi
 
     # Verify basic connectivity (ping test)
@@ -5014,11 +5014,11 @@ create_lxc_container() {
   # Storage capability check
   check_storage_support "rootdir" || {
     msg_error "No valid storage found for 'rootdir' [Container]"
-    exit 1
+    exit 119
   }
   check_storage_support "vztmpl" || {
     msg_error "No valid storage found for 'vztmpl' [Template]"
-    exit 1
+    exit 120
   }
 
   # Template storage selection
@@ -5296,7 +5296,7 @@ create_lxc_container() {
           }
         else
           msg_custom "🚫" "${YW}" "Installation cancelled"
-          exit 1
+          exit 0
         fi
       else
         msg_error "No ${PCT_OSTYPE} templates available"

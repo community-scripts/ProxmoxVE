@@ -244,7 +244,7 @@ curl_handler() {
 
   if [[ -z "$url" ]]; then
     msg_error "no valid url or option entered for curl_handler"
-    exit 1
+    exit 64
   fi
 
   $STD msg_info "Fetching: $url"
@@ -273,7 +273,7 @@ curl_handler() {
         rm -f /tmp/curl_error.log
       fi
       __curl_err_handler "$exit_code" "$url" "$curl_stderr"
-      exit 1 # hard exit if exit_code is not 0
+      exit "$exit_code"
     fi
 
     $STD printf "\r\033[K${INFO}${YW}Retry $attempt/$max_retries in ${delay}s...${CL}" >&2
@@ -316,7 +316,7 @@ __curl_err_handler() {
   esac
 
   [[ -n "$curl_msg" ]] && printf "%s\n" "$curl_msg" >&2
-  exit 1
+  exit "$exit_code"
 }
 
 # ------------------------------------------------------------------------------
@@ -331,7 +331,7 @@ shell_check() {
     msg_error "Your default shell is currently not set to Bash. To use these scripts, please switch to the Bash shell."
     echo -e "\nExiting..."
     sleep 2
-    exit
+    exit 103
   fi
 }
 
@@ -552,7 +552,7 @@ check_root() {
     msg_error "Please run this script as root."
     echo -e "\nExiting..."
     sleep 2
-    exit
+    exit 104
   fi
 }
 
@@ -562,7 +562,7 @@ pve_check() {
     echo -e "Requires Proxmox Virtual Environment Version 8.1 - 8.4 or 9.0 - 9.1."
     echo -e "Exiting..."
     sleep 2
-    exit
+    exit 105
   fi
 }
 
@@ -572,21 +572,21 @@ arch_check() {
     echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
     echo -e "Exiting..."
     sleep 2
-    exit
+    exit 106
   fi
 }
 
 exit_script() {
   clear
   echo -e "\n${CROSS}${RD}User exited script${CL}\n"
-  exit
+  exit 0
 }
 
 check_hostname_conflict() {
   local hostname="$1"
   if qm list | awk '{print $2}' | grep -qx "$hostname"; then
     msg_error "Hostname $hostname already in use by another VM."
-    exit 1
+    exit 206
   fi
 }
 

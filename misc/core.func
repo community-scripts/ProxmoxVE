@@ -276,7 +276,7 @@ shell_check() {
     msg_error "Your default shell is currently not set to Bash. To use these scripts, please switch to the Bash shell."
     echo -e "\nExiting..."
     sleep 2
-    exit 1
+    exit 103
   fi
 }
 
@@ -293,7 +293,7 @@ root_check() {
     msg_error "Please run this script as root."
     echo -e "\nExiting..."
     sleep 2
-    exit 1
+    exit 104
   fi
 }
 
@@ -314,7 +314,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 9)); then
       msg_error "This version of Proxmox VE is not supported."
       msg_error "Supported: Proxmox VE version 8.0 – 8.9"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -325,7 +325,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 1)); then
       msg_error "This version of Proxmox VE is not yet supported."
       msg_error "Supported: Proxmox VE version 9.0 – 9.1"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -333,7 +333,7 @@ pve_check() {
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
   msg_error "Supported versions: Proxmox VE 8.0 – 8.9 or 9.0 – 9.1"
-  exit 1
+  exit 105
 }
 
 # ------------------------------------------------------------------------------
@@ -348,7 +348,7 @@ arch_check() {
     msg_error "This script will not work with PiMox (ARM architecture detected)."
     msg_warn "Visit https://github.com/asylumexp/Proxmox for ARM64 support."
     sleep 2
-    exit 1
+    exit 106
   fi
 }
 

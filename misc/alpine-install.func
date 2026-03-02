@@ -79,7 +79,7 @@ setting_up_container() {
   if [ "$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)" = "" ]; then
     echo 1>&2 -e "\n${CROSS}${RD} No Network After $RETRY_NUM Tries${CL}"
     echo -e "${NETWORK}Check Network Settings"
-    exit 1
+    exit 121
   fi
   msg_ok "Set up Container OS"
   msg_ok "Network Connected: ${BL}$(ip addr show | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1 | tail -n1)${CL}"
@@ -99,7 +99,7 @@ network_check() {
       echo -e "${INFO}${RD}Expect Issues Without Internet${CL}"
     else
       echo -e "${NETWORK}Check Network Settings"
-      exit 1
+      exit 122
     fi
   fi
   RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')

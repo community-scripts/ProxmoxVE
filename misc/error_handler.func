@@ -94,6 +94,29 @@ if ! declare -f explain_exit_code &>/dev/null; then
     100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
     101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
     102) echo "APT: Lock held by another process (dpkg/apt still running)" ;;
+
+    # --- Script Validation & Setup (103-123) ---
+    103) echo "Validation: Shell is not Bash" ;;
+    104) echo "Validation: Not running as root (or invoked via sudo)" ;;
+    105) echo "Validation: Proxmox VE version not supported" ;;
+    106) echo "Validation: Architecture not supported (ARM / PiMox)" ;;
+    107) echo "Validation: Kernel key parameters unreadable" ;;
+    108) echo "Validation: Kernel key limits exceeded" ;;
+    109) echo "Proxmox: No available container ID after max attempts" ;;
+    110) echo "Proxmox: Failed to apply default.vars" ;;
+    111) echo "Proxmox: App defaults file not available" ;;
+    112) echo "Proxmox: Invalid install menu option" ;;
+    113) echo "LXC: Under-provisioned — user aborted update" ;;
+    114) echo "LXC: Storage too low — user aborted update" ;;
+    115) echo "Download: install.func download failed or incomplete" ;;
+    116) echo "Proxmox: Default bridge vmbr0 not found" ;;
+    117) echo "LXC: Container did not reach running state" ;;
+    118) echo "LXC: No IP assigned to container after timeout" ;;
+    119) echo "Proxmox: No valid storage for rootdir content" ;;
+    120) echo "Proxmox: No valid storage for vztmpl content" ;;
+    121) echo "LXC: Container network not ready (no IP after retries)" ;;
+    122) echo "LXC: No internet connectivity — user declined to continue" ;;
+    123) echo "LXC: Local IP detection failed" ;;
     124) echo "Command timed out (timeout command)" ;;
     125) echo "Command failed to start (Docker daemon or execution error)" ;;
     126) echo "Command invoked cannot execute (permission problem?)" ;;
