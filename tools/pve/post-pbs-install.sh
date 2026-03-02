@@ -83,7 +83,7 @@ main() {
 
   if command -v pveversion >/dev/null 2>&1; then
     echo -e "\n🛑  PVE Detected, Wrong Script!\n"
-    exit 1
+    exit 232
   fi
 
   local CODENAME
@@ -95,7 +95,7 @@ main() {
   *)
     msg_error "Unsupported Debian codename: $CODENAME"
     echo -e "Supported: bookworm (PBS 3.x) and trixie (PBS 4.x)"
-    exit 1
+    exit 105
     ;;
   esac
 }

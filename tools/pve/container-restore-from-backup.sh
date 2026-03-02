@@ -62,7 +62,7 @@ function msg_error() {
 }
 if [ -z "$(ls -A /var/lib/docker/volumes/hass_config/_data/backups/)" ]; then
   msg_error "No backups found! \n"
-  exit 1
+  exit 235
 fi
 DIR=/var/lib/docker/volumes/hass_config/_data/restore
 if [ -d "$DIR" ]; then

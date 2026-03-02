@@ -57,7 +57,7 @@ done
 
 if [ ${#kernels_to_remove[@]} -eq 0 ]; then
   echo -e "${RD}No valid selection made. Exiting.${CL}"
-  exit 1
+  exit 0
 fi
 
 # Confirm removal
@@ -66,7 +66,7 @@ printf "%s\n" "${kernels_to_remove[@]}"
 read -rp "Proceed with removal? (y/n): " confirm
 if [[ "$confirm" != "y" ]]; then
   echo -e "${RD}Aborted.${CL}"
-  exit 1
+  exit 0
 fi
 
 # Remove kernels

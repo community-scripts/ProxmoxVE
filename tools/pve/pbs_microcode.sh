@@ -41,7 +41,7 @@ header_info
 virt=$(systemd-detect-virt)
 if [ "$virt" != "none" ]; then
   msg_error "This script must be run on bare metal. Detected virtual environment: $virt"
-  exit 1
+  exit 232
 fi
 
 # Attempt to obtain the current loaded microcode revision

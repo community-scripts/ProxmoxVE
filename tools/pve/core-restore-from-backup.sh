@@ -62,7 +62,7 @@ function msg_error() {
 }
 if [ -z "$(ls -A /root/.homeassistant/backups/)" ]; then
   msg_error "No backups found! \n"
-  exit 1
+  exit 235
 fi
 DIR=/root/.homeassistant/restore
 if [ -d "$DIR" ]; then

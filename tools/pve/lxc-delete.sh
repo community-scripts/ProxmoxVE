@@ -51,7 +51,7 @@ containers=$(pct list | tail -n +2 | awk '{print $0 " " $4}')
 
 if [ -z "$containers" ]; then
   whiptail --title "LXC Container Delete" --msgbox "No LXC containers available!" 10 60
-  exit 1
+  exit 234
 fi
 
 menu_items=("ALL" "Delete ALL containers" "OFF") # Add as first option
@@ -72,7 +72,7 @@ CHOICES=$(whiptail --title "LXC Container Delete" \
 if [ -z "$CHOICES" ]; then
   whiptail --title "LXC Container Delete" \
     --msgbox "No containers selected!" 10 60
-  exit 1
+  exit 0
 fi
 
 read -p "Delete containers manually or automatically? (Default: manual) m/a: " DELETE_MODE
