@@ -1,0 +1,40 @@
+{
+  "name": "PowerDNS",
+  "slug": "powerdns",
+  "categories": [
+    5
+  ],
+  "date_created": "2026-02-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://doc.powerdns.com/index.html",
+  "config_path": "/opt/poweradmin/config/settings.php",
+  "website": "https://www.powerdns.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/powerdns.webp",
+  "description": "The PowerDNS Authoritative Server is a versatile nameserver which supports a large number of backends. These backends can either be plain zone files or be more dynamic in nature. PowerDNS has the concepts of ‘backends’. A backend is a datastore that the server will consult that contains DNS records (and some metadata). The backends range from database backends (MySQL, PostgreSQL) and BIND zone files to co-processes and JSON API’s.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/powerdns.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "For administrator credentials type: `cat ~/poweradmin.creds` inside LXC.",
+      "type": "info"
+    }
+  ]
+}
