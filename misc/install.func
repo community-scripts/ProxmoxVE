@@ -236,13 +236,20 @@ EOF
   fi
 
   if [[ -n "${APT_MIRROR:-}" ]]; then
-    msg_info "Configuring APT mirror (${APT_MIRROR})"
-    sed -E -i \
-      -e "s|deb.debian.org/debian|${APT_MIRROR}/debian|g" \
-      -e "s|security.debian.org/debian-security|${APT_MIRROR}/debian-security|g" \
-      -e "s|deb.debian.org/debian-security|${APT_MIRROR}/debian-security|g" \
-      /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources 2>/dev/null || true
-    msg_ok "Configured APT mirror"
+    # Validate APT_MIRROR to avoid injecting arbitrary sed commands.
+    # Only allow http/https URLs with a restricted character set.
+    if [[ ! "${APT_MIRROR}" =~ ^https?://[A-Za-z0-9._~:-/]+$ ]]; then
+      msg_error "Invalid APT_MIRROR '${APT_MIRROR}' — skipping custom mirror configuration and using defaults"
+    else
+      local SAFE_APT_MIRROR="${APT_MIRROR}"
+      msg_info "Configuring APT mirror (${SAFE_APT_MIRROR})"
+      sed -E -i \
+        -e "s|deb.debian.org/debian|${SAFE_APT_MIRROR}/debian|g" \
+        -e "s|security.debian.org/debian-security|${SAFE_APT_MIRROR}/debian-security|g" \
+        -e "s|deb.debian.org/debian-security|${SAFE_APT_MIRROR}/debian-security|g" \
+        /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+      msg_ok "Configured APT mirror"
+    fi
   fi
 
   apt_update_safe
