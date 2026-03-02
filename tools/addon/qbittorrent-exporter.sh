@@ -41,7 +41,7 @@ elif grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
   SERVICE_PATH="/etc/systemd/system/qbittorrent-exporter.service"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -200,7 +200,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "qBittorrent-Exporter is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

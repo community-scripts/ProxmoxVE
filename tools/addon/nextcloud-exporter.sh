@@ -36,7 +36,7 @@ SERVICE_PATH="/etc/systemd/system/nextcloud-exporter.service"
 # ==============================================================================
 if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
   echo -e "${CROSS} Unsupported OS detected. This script only supports Debian and Ubuntu."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -170,7 +170,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "Nextcloud-Exporter is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi
