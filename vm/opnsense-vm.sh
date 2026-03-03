@@ -513,7 +513,7 @@ function advanced_settings() {
     else
       WAN_MENU+=("$brg" "" "OFF")
     fi
-  done <<< "$WAN_BRIDGES"
+  done <<<"$WAN_BRIDGES"
 
   if WAN_BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "WAN BRIDGE" --radiolist "Select WAN Bridge" 14 58 6 \
     "${WAN_MENU[@]}" 3>&1 1>&2 2>&3); then
