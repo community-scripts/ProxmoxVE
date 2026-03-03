@@ -105,7 +105,15 @@ function check_disk_space() {
   return 0
 }
 
-TEMP_DIR=$(mktemp -d)
+# Use disk-backed temp directory to avoid tmpfs/RAM size limits in /tmp
+if [ -d "/var/tmp" ] && check_disk_space "/var/tmp" 20; then
+  TEMP_DIR=$(mktemp -d /var/tmp/opnsense-vm.XXXXXX)
+elif [ -d "/tmp" ] && check_disk_space "/tmp" 20; then
+  TEMP_DIR=$(mktemp -d)
+else
+  # Fallback: try /var/tmp anyway, disk space check will catch it later
+  TEMP_DIR=$(mktemp -d /var/tmp/opnsense-vm.XXXXXX)
+fi
 pushd $TEMP_DIR >/dev/null
 function send_line_to_vm() {
   echo -e "${DGN}Sending line: ${YW}$1${CL}"
@@ -260,6 +268,10 @@ function exit-script() {
   exit
 }
 
+function get_available_bridges() {
+  ip -o link show type bridge 2>/dev/null | awk -F': ' '{print $2}' | sort
+}
+
 function default_settings() {
   VMID=$(get_valid_nextid)
   FORMAT=",efitype=4m"
@@ -279,10 +291,16 @@ function default_settings() {
   VLAN=""
   MAC=$GEN_MAC
   WAN_MAC=$GEN_MAC_LAN
-  WAN_BRG="vmbr1"
+  WAN_BRG=""
   MTU=""
   START_VM="yes"
   METHOD="default"
+
+  # Detect available bridges
+  local AVAILABLE_BRIDGES
+  AVAILABLE_BRIDGES=$(get_available_bridges)
+  local BRIDGE_COUNT
+  BRIDGE_COUNT=$(echo "$AVAILABLE_BRIDGES" | wc -l)
 
   echo -e "${DGN}Using Virtual Machine ID: ${BGN}${VMID}${CL}"
   echo -e "${DGN}Using Hostname: ${BGN}${HN}${CL}"
@@ -297,26 +315,34 @@ function default_settings() {
   echo -e "${DGN}Using LAN VLAN: ${BGN}Default${CL}"
   echo -e "${DGN}Using LAN MAC Address: ${BGN}${MAC}${CL}"
 
-  if NETWORK_MODE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "NETWORK CONFIGURATION" --radiolist --cancel-button Exit-Script \
-    "Choose network setup mode for OPNsense:\n" 14 70 2 \
-    "dual" "Dual Interface (Traditional Firewall/Router)" ON \
-    "single" "Single Interface (Proxy/VPN/IDS Server)" OFF \
-    3>&1 1>&2 2>&3); then
-    if [ "$NETWORK_MODE" = "dual" ]; then
-      echo -e "${DGN}Network Mode: ${BGN}Dual Interface (Firewall)${CL}"
-      echo -e "${DGN}Using WAN MAC Address: ${BGN}${WAN_MAC}${CL}"
-      if ! ip link show "${WAN_BRG}" &>/dev/null; then
-        msg_error "Bridge '${WAN_BRG}' does not exist"
-        exit
-      else
+  # Determine available network modes based on bridge count
+  local DEFAULT_WAN_BRG
+  DEFAULT_WAN_BRG=$(echo "$AVAILABLE_BRIDGES" | grep -v "^${BRG}$" | head -n1)
+
+  if [ "$BRIDGE_COUNT" -ge 2 ]; then
+    # Multiple bridges available - offer dual or single mode
+    if NETWORK_MODE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "NETWORK CONFIGURATION" --radiolist --cancel-button Exit-Script \
+      "Choose network setup mode for OPNsense:\n" 14 70 2 \
+      "dual" "Dual Interface (Firewall/Router) - uses ${DEFAULT_WAN_BRG}" ON \
+      "single" "Single Interface (Proxy/VPN/IDS Server)" OFF \
+      3>&1 1>&2 2>&3); then
+      if [ "$NETWORK_MODE" = "dual" ]; then
+        WAN_BRG="$DEFAULT_WAN_BRG"
+        echo -e "${DGN}Network Mode: ${BGN}Dual Interface (Firewall)${CL}"
         echo -e "${DGN}Using WAN Bridge: ${BGN}${WAN_BRG}${CL}"
+        echo -e "${DGN}Using WAN MAC Address: ${BGN}${WAN_MAC}${CL}"
+      else
+        echo -e "${DGN}Network Mode: ${BGN}Single Interface (Proxy/VPN/IDS)${CL}"
+        WAN_BRG=""
       fi
     else
-      echo -e "${DGN}Network Mode: ${BGN}Single Interface (Proxy/VPN/IDS)${CL}"
-      WAN_BRG=""
+      exit-script
     fi
   else
-    exit-script
+    # Only one bridge available - single interface mode only
+    echo -e "${DGN}Network Mode: ${BGN}Single Interface (Proxy/VPN/IDS)${CL}"
+    echo -e "${YW}  (Only one bridge detected, dual interface requires a second bridge)${CL}"
+    WAN_BRG=""
   fi
   echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
@@ -470,13 +496,29 @@ function advanced_settings() {
     exit-script
   fi
 
-  if WAN_BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN Bridge" 8 58 vmbr1 --title "WAN BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $WAN_BRG ]; then
-      WAN_BRG="vmbr1"
+  # Build WAN bridge selection from available bridges (excluding LAN bridge)
+  local WAN_BRIDGES
+  WAN_BRIDGES=$(get_available_bridges | grep -v "^${BRG}$")
+  if [ -z "$WAN_BRIDGES" ]; then
+    msg_error "No additional bridge available for WAN. Only '${BRG}' exists."
+    msg_error "Create a second bridge (e.g. vmbr1) in Proxmox network config first."
+    exit
+  fi
+  local WAN_MENU=()
+  local first=true
+  while IFS= read -r brg; do
+    if $first; then
+      WAN_MENU+=("$brg" "" "ON")
+      first=false
+    else
+      WAN_MENU+=("$brg" "" "OFF")
     fi
-    if ! ip link show "${WAN_BRG}" &>/dev/null; then
-      msg_error "WAN Bridge '${WAN_BRG}' does not exist"
-      exit
+  done <<< "$WAN_BRIDGES"
+
+  if WAN_BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "WAN BRIDGE" --radiolist "Select WAN Bridge" 14 58 6 \
+    "${WAN_MENU[@]}" 3>&1 1>&2 2>&3); then
+    if [ -z "$WAN_BRG" ]; then
+      WAN_BRG=$(echo "$WAN_BRIDGES" | head -n1)
     fi
     echo -e "${DGN}Using WAN Bridge: ${BGN}$WAN_BRG${CL}"
   else
