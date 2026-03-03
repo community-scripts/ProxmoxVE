@@ -12,7 +12,7 @@
   "documentation": "https://docs.rxresume.org/",
   "website": "https://rxresume.org",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/reactive-resume.webp",
-  "config_path": "/opt/reactive-resume/.env",
+  "config_path": "/opt/Reactive-Resume/.env",
   "description": "A one-of-a-kind resume builder that keeps your privacy in mind. Completely secure, customizable, portable, open-source and free forever.",
   "install_methods": [
     {
