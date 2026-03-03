@@ -420,6 +420,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - cross-seed: install build-essential to resolve missing `make` error [@Copilot](https://github.com/Copilot) ([#12522](https://github.com/community-scripts/ProxmoxVE/pull/12522))
     - meshcentral: increased disk space to 4GB [@MickLesk](https://github.com/MickLesk) ([#12509](https://github.com/community-scripts/ProxmoxVE/pull/12509))
 
   - #### 🔧 Refactor
