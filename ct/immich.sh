@@ -337,7 +337,7 @@ function compile_libraw() {
   if [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libraw"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
-    $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
+    $STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
     cd "$SOURCE"
     $STD git reset --hard "$LIBRAW_REVISION"
     $STD autoreconf --install
