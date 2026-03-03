@@ -100,58 +100,508 @@ fi
 # ==============================================================================
 # SECTION 2: PRE-FLIGHT CHECKS & SYSTEM VALIDATION
 # ==============================================================================
+#
+# Runs comprehensive system checks BEFORE container creation to catch common
+# issues early. This prevents users from going through the entire configuration
+# menu only to have creation fail due to a system-level problem.
+#
+# Checks performed (via run_preflight):
+#   - Kernel: keyring limits (maxkeys/maxbytes for UID 100000)
+#   - Storage: rootdir support, vztmpl support, available space
+#   - Network: bridge availability, DNS resolution
+#   - Cluster: quorum status (if clustered)
+#   - Proxmox: LXC stack health, container ID availability
+#   - Template: download server reachability
+#
+# Design:
+#   - All checks run and results are collected (no exit on first failure)
+#   - Clear, actionable error messages with suggested fixes
+#   - Reports "aborted" status to telemetry (not "failed")
+#   - Uses existing exit codes for consistency with error_handler/api.func
+#
+# ==============================================================================
+
+# --- Preflight tracking globals ---
+PREFLIGHT_PASSED=0
+PREFLIGHT_FAILED=0
+PREFLIGHT_WARNINGS=0
+PREFLIGHT_FAILURES=()
+PREFLIGHT_EXIT_CODE=0
 
 # ------------------------------------------------------------------------------
-# maxkeys_check()
+# preflight_pass() / preflight_fail() / preflight_warn()
+#
+# - Track individual check results
+# - preflight_fail stores message + exit_code for summary
+# ------------------------------------------------------------------------------
+preflight_pass() {
+  local msg="$1"
+  ((PREFLIGHT_PASSED++)) || true
+  echo -e "  ${CM} ${GN}${msg}${CL}"
+}
+
+preflight_fail() {
+  local msg="$1"
+  local exit_code="${2:-1}"
+  ((PREFLIGHT_FAILED++)) || true
+  PREFLIGHT_FAILURES+=("${exit_code}|${msg}")
+  [[ "$PREFLIGHT_EXIT_CODE" -eq 0 ]] && PREFLIGHT_EXIT_CODE="$exit_code"
+  echo -e "  ${CROSS} ${RD}${msg}${CL}"
+}
+
+preflight_warn() {
+  local msg="$1"
+  ((PREFLIGHT_WARNINGS++)) || true
+  echo -e "  ${INFO} ${YW}${msg}${CL}"
+}
+
+# ------------------------------------------------------------------------------
+# preflight_maxkeys()
 #
 # - Reads kernel keyring limits (maxkeys, maxbytes)
 # - Checks current usage for LXC user (UID 100000)
 # - Warns if usage is close to limits and suggests sysctl tuning
-# - Exits if thresholds are exceeded
-# - https://cleveruptime.com/docs/files/proc-key-users | https://docs.kernel.org/security/keys/core.html
+# - https://cleveruptime.com/docs/files/proc-key-users
+# - https://docs.kernel.org/security/keys/core.html
 # ------------------------------------------------------------------------------
-
-maxkeys_check() {
-  # Read kernel parameters
+preflight_maxkeys() {
+  local per_user_maxkeys per_user_maxbytes
   per_user_maxkeys=$(cat /proc/sys/kernel/keys/maxkeys 2>/dev/null || echo 0)
   per_user_maxbytes=$(cat /proc/sys/kernel/keys/maxbytes 2>/dev/null || echo 0)
 
-  # Exit if kernel parameters are unavailable
   if [[ "$per_user_maxkeys" -eq 0 || "$per_user_maxbytes" -eq 0 ]]; then
-    msg_error "Unable to read kernel key parameters. Ensure proper permissions."
-    exit 107
+    preflight_fail "Unable to read kernel key parameters" 107
+    echo -e "    ${TAB}${INFO} Ensure proper permissions to /proc/sys/kernel/keys/"
+    return 0
   fi
 
-  # Fetch key usage for user ID 100000 (typical for containers)
+  local used_lxc_keys used_lxc_bytes
   used_lxc_keys=$(awk '/100000:/ {print $2}' /proc/key-users 2>/dev/null || echo 0)
   used_lxc_bytes=$(awk '/100000:/ {split($5, a, "/"); print a[1]}' /proc/key-users 2>/dev/null || echo 0)
 
-  # Calculate thresholds and suggested new limits
-  threshold_keys=$((per_user_maxkeys - 100))
-  threshold_bytes=$((per_user_maxbytes - 1000))
-  new_limit_keys=$((per_user_maxkeys * 2))
-  new_limit_bytes=$((per_user_maxbytes * 2))
+  local threshold_keys=$((per_user_maxkeys - 100))
+  local threshold_bytes=$((per_user_maxbytes - 1000))
+  local new_limit_keys=$((per_user_maxkeys * 2))
+  local new_limit_bytes=$((per_user_maxbytes * 2))
 
-  # Check if key or byte usage is near limits
-  failure=0
+  local failure=0
   if [[ "$used_lxc_keys" -gt "$threshold_keys" ]]; then
-    msg_warn "Key usage is near the limit (${used_lxc_keys}/${per_user_maxkeys})"
-    echo -e "${INFO} Suggested action: Set ${GN}kernel.keys.maxkeys=${new_limit_keys}${CL} in ${BOLD}/etc/sysctl.d/98-community-scripts.conf${CL}."
     failure=1
   fi
   if [[ "$used_lxc_bytes" -gt "$threshold_bytes" ]]; then
-    msg_warn "Key byte usage is near the limit (${used_lxc_bytes}/${per_user_maxbytes})"
-    echo -e "${INFO} Suggested action: Set ${GN}kernel.keys.maxbytes=${new_limit_bytes}${CL} in ${BOLD}/etc/sysctl.d/98-community-scripts.conf${CL}."
     failure=1
   fi
 
-  # Provide next steps if issues are detected
   if [[ "$failure" -eq 1 ]]; then
-    msg_error "Kernel key limits exceeded - see suggestions above"
-    exit 108
+    preflight_fail "Kernel key limits near threshold (keys: ${used_lxc_keys}/${per_user_maxkeys}, bytes: ${used_lxc_bytes}/${per_user_maxbytes})" 108
+    echo -e "    ${TAB}${INFO} Set ${GN}kernel.keys.maxkeys=${new_limit_keys}${CL} and ${GN}kernel.keys.maxbytes=${new_limit_bytes}${CL}"
+    echo -e "    ${TAB}${INFO} in ${BOLD}/etc/sysctl.d/98-community-scripts.conf${CL}, then run: ${GN}sysctl --system${CL}"
+    return 0
   fi
 
-  # Silent success - only show errors if they exist
+  preflight_pass "Kernel key limits OK (keys: ${used_lxc_keys}/${per_user_maxkeys})"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_storage_rootdir()
+#
+# - Verifies at least one storage supports 'rootdir' content type
+# - Without this, no LXC container can be created
+# ------------------------------------------------------------------------------
+preflight_storage_rootdir() {
+  local count
+  count=$(pvesm status -content rootdir 2>/dev/null | awk 'NR>1 {count++} END {print count+0}')
+
+  if [[ "$count" -eq 0 ]]; then
+    preflight_fail "No storage with 'rootdir' support found" 119
+    echo -e "    ${TAB}${INFO} Enable 'rootdir' content on a storage in Datacenter → Storage"
+    return 0
+  fi
+
+  preflight_pass "Storage with 'rootdir' support available (${count} storage(s))"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_storage_vztmpl()
+#
+# - Verifies at least one storage supports 'vztmpl' content type
+# - Required for downloading and storing OS templates
+# ------------------------------------------------------------------------------
+preflight_storage_vztmpl() {
+  local count
+  count=$(pvesm status -content vztmpl 2>/dev/null | awk 'NR>1 {count++} END {print count+0}')
+
+  if [[ "$count" -eq 0 ]]; then
+    preflight_fail "No storage with 'vztmpl' support found" 120
+    echo -e "    ${TAB}${INFO} Enable 'vztmpl' content on a storage in Datacenter → Storage"
+    return 0
+  fi
+
+  preflight_pass "Storage with 'vztmpl' support available (${count} storage(s))"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_storage_space()
+#
+# - Checks if any rootdir-capable storage has enough free space
+# - Uses the app-declared var_disk as minimum requirement
+# ------------------------------------------------------------------------------
+preflight_storage_space() {
+  local required_gb="${var_disk:-4}"
+  local required_kb=$((required_gb * 1024 * 1024))
+  local has_enough=0
+  local best_storage=""
+  local best_free=0
+
+  while read -r storage_name _ _ _ _ free_kb _; do
+    [[ -z "$storage_name" || -z "$free_kb" ]] && continue
+    [[ "$free_kb" == "0" ]] && continue
+
+    if [[ "$free_kb" -ge "$required_kb" ]]; then
+      has_enough=1
+      if [[ "$free_kb" -gt "$best_free" ]]; then
+        best_free="$free_kb"
+        best_storage="$storage_name"
+      fi
+    fi
+  done < <(pvesm status -content rootdir 2>/dev/null | awk 'NR>1')
+
+  if [[ "$has_enough" -eq 0 ]]; then
+    preflight_fail "No storage has enough space (need ${required_gb}GB for ${APP})" 214
+    echo -e "    ${TAB}${INFO} Free up disk space or add a new storage with sufficient capacity"
+    return 0
+  fi
+
+  local best_free_fmt
+  best_free_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$best_free" 2>/dev/null || echo "${best_free}KB")
+  preflight_pass "Sufficient storage space (${best_storage}: ${best_free_fmt} free, need ${required_gb}GB)"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_network_bridge()
+#
+# - Checks if at least one network bridge exists (vmbr*)
+# - Verifies vmbr0 specifically (default bridge used by most scripts)
+# ------------------------------------------------------------------------------
+preflight_network_bridge() {
+  local bridges
+  bridges=$(ip -o link show type bridge 2>/dev/null | grep -oE 'vmbr[0-9]+' | sort -u)
+
+  if [[ -z "$bridges" ]]; then
+    preflight_fail "No network bridge (vmbr*) found" 116
+    echo -e "    ${TAB}${INFO} Create a bridge in Network → Create → Linux Bridge"
+    return 0
+  fi
+
+  if echo "$bridges" | grep -qx "vmbr0"; then
+    preflight_pass "Default network bridge vmbr0 available"
+  else
+    local first_bridge
+    first_bridge=$(echo "$bridges" | head -1)
+    preflight_warn "Default bridge vmbr0 not found, but ${first_bridge} is available"
+    echo -e "    ${TAB}${INFO} Scripts default to vmbr0 — use Advanced Settings to select ${first_bridge}"
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_dns_resolution()
+#
+# - Tests if DNS resolution works (required for template downloads)
+# - Tries multiple hosts to avoid false positives
+# ------------------------------------------------------------------------------
+preflight_dns_resolution() {
+  local test_hosts=("download.proxmox.com" "raw.githubusercontent.com" "community-scripts.org")
+  local resolved=0
+
+  for host in "${test_hosts[@]}"; do
+    if getent hosts "$host" &>/dev/null; then
+      resolved=1
+      break
+    fi
+  done
+
+  if [[ "$resolved" -eq 0 ]]; then
+    for host in "${test_hosts[@]}"; do
+      if command -v nslookup &>/dev/null && nslookup "$host" &>/dev/null; then
+        resolved=1
+        break
+      fi
+    done
+  fi
+
+  if [[ "$resolved" -eq 0 ]]; then
+    preflight_fail "DNS resolution failed — cannot reach template servers" 222
+    echo -e "    ${TAB}${INFO} Check /etc/resolv.conf and network connectivity"
+    return 0
+  fi
+
+  preflight_pass "DNS resolution working"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_cluster_quorum()
+#
+# - Checks cluster quorum status (only if node is part of a cluster)
+# - Skipped on standalone nodes
+# ------------------------------------------------------------------------------
+preflight_cluster_quorum() {
+  if [[ ! -f /etc/pve/corosync.conf ]]; then
+    preflight_pass "Standalone node (no cluster quorum needed)"
+    return 0
+  fi
+
+  if pvecm status 2>/dev/null | awk -F':' '/^Quorate/ { exit ($2 ~ /Yes/) ? 0 : 1 }'; then
+    preflight_pass "Cluster is quorate"
+    return 0
+  fi
+
+  preflight_fail "Cluster is not quorate — container operations will fail" 210
+  echo -e "    ${TAB}${INFO} Ensure all cluster nodes are running, or configure a QDevice"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_lxc_stack()
+#
+# - Validates pve-container and lxc-pve packages are installed
+# - Checks for available updates (informational only)
+# ------------------------------------------------------------------------------
+preflight_lxc_stack() {
+  local pve_container_ver lxc_pve_ver
+
+  pve_container_ver=$(dpkg-query -W -f='${Version}\n' pve-container 2>/dev/null || echo "")
+  lxc_pve_ver=$(dpkg-query -W -f='${Version}\n' lxc-pve 2>/dev/null || echo "")
+
+  if [[ -z "$pve_container_ver" ]]; then
+    preflight_fail "Package 'pve-container' is not installed" 231
+    echo -e "    ${TAB}${INFO} Run: apt-get install pve-container"
+    return 0
+  fi
+
+  if [[ -z "$lxc_pve_ver" ]]; then
+    preflight_fail "Package 'lxc-pve' is not installed" 231
+    echo -e "    ${TAB}${INFO} Run: apt-get install lxc-pve"
+    return 0
+  fi
+
+  local pve_container_cand lxc_pve_cand
+  pve_container_cand=$(apt-cache policy pve-container 2>/dev/null | awk '/Candidate:/ {print $2}') || true
+  lxc_pve_cand=$(apt-cache policy lxc-pve 2>/dev/null | awk '/Candidate:/ {print $2}') || true
+
+  local update_available=0
+  if [[ -n "$pve_container_cand" && "$pve_container_cand" != "none" ]]; then
+    if dpkg --compare-versions "$pve_container_cand" gt "$pve_container_ver" 2>/dev/null; then
+      update_available=1
+    fi
+  fi
+  if [[ -n "$lxc_pve_cand" && "$lxc_pve_cand" != "none" ]]; then
+    if dpkg --compare-versions "$lxc_pve_cand" gt "$lxc_pve_ver" 2>/dev/null; then
+      update_available=1
+    fi
+  fi
+
+  if [[ "$update_available" -eq 1 ]]; then
+    preflight_warn "LXC stack update available (current: pve-container=${pve_container_ver}, lxc-pve=${lxc_pve_ver})"
+    echo -e "    ${TAB}${INFO} An upgrade will be offered during container creation if needed"
+  else
+    preflight_pass "LXC stack is up to date (pve-container=${pve_container_ver})"
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_container_id()
+#
+# - Verifies that container IDs can be allocated
+# - Uses pvesh /cluster/nextid (cluster-aware)
+# ------------------------------------------------------------------------------
+preflight_container_id() {
+  local nextid
+  nextid=$(pvesh get /cluster/nextid 2>/dev/null) || true
+
+  if [[ -z "$nextid" || ! "$nextid" =~ ^[0-9]+$ ]]; then
+    preflight_fail "Cannot allocate container ID (pvesh /cluster/nextid failed)" 109
+    echo -e "    ${TAB}${INFO} Check Proxmox cluster health and datacenter.cfg ID ranges"
+    return 0
+  fi
+
+  preflight_pass "Container IDs available (next: ${nextid})"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_template_connectivity()
+#
+# - Tests connectivity to the Proxmox template download server
+# - Warns but does not fail (local templates may be available)
+# ------------------------------------------------------------------------------
+preflight_template_connectivity() {
+  local http_code
+  http_code=$(curl -sS -o /dev/null -w "%{http_code}" -m 5 "http://download.proxmox.com/images/system/" 2>/dev/null) || http_code="000"
+
+  if [[ "$http_code" =~ ^2[0-9]{2}$ || "$http_code" =~ ^3[0-9]{2}$ ]]; then
+    preflight_pass "Template server reachable (download.proxmox.com)"
+    return 0
+  fi
+
+  local local_count=0
+  while read -r storage_name _; do
+    [[ -z "$storage_name" ]] && continue
+    local count
+    count=$(pveam list "$storage_name" 2>/dev/null | awk 'NR>1' | wc -l)
+    local_count=$((local_count + count))
+  done < <(pvesm status -content vztmpl 2>/dev/null | awk 'NR>1 {print $1}')
+
+  if [[ "$local_count" -gt 0 ]]; then
+    preflight_warn "Template server unreachable, but ${local_count} local template(s) available"
+    return 0
+  fi
+
+  preflight_fail "Template server unreachable and no local templates available" 222
+  echo -e "    ${TAB}${INFO} Check internet connectivity or manually upload templates"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# preflight_template_available()
+#
+# - Validates that a template exists for the configured var_os/var_version
+# - Checks both local templates and the online pveam catalog
+# - Fails if no matching template can be found anywhere
+# ------------------------------------------------------------------------------
+preflight_template_available() {
+  local os="${var_os:-}"
+  local version="${var_version:-}"
+
+  # Skip if os/version not set (e.g. Alpine scripts set them differently)
+  if [[ -z "$os" || -z "$version" ]]; then
+    preflight_pass "Template check skipped (OS/version not configured yet)"
+    return 0
+  fi
+
+  local search_pattern="${os}-${version}"
+
+  # Check local templates first
+  local local_match=0
+  while read -r storage_name _; do
+    [[ -z "$storage_name" ]] && continue
+    if pveam list "$storage_name" 2>/dev/null | awk '{print $1}' | grep -qE "^${storage_name}:vztmpl/${search_pattern}"; then
+      local_match=1
+      break
+    fi
+  done < <(pvesm status -content vztmpl 2>/dev/null | awk 'NR>1 {print $1}')
+
+  if [[ "$local_match" -eq 1 ]]; then
+    preflight_pass "Template available locally for ${os} ${version}"
+    return 0
+  fi
+
+  # Check online catalog
+  local online_match=0
+  if pveam available -section system 2>/dev/null | awk '{print $2}' | grep -qE "^${search_pattern}[.-]"; then
+    online_match=1
+  fi
+
+  if [[ "$online_match" -eq 1 ]]; then
+    preflight_pass "Template available online for ${os} ${version}"
+    return 0
+  fi
+
+  # Gather available versions for the hint
+  local available_versions
+  available_versions=$(
+    pveam available -section system 2>/dev/null |
+      awk '{print $2}' |
+      grep -oE "^${os}-[0-9]+(\.[0-9]+)?" |
+      sed "s/^${os}-//" |
+      sort -uV 2>/dev/null | tr '\n' ', ' | sed 's/,$//' | sed 's/,/, /g'
+  )
+
+  preflight_fail "No template found for ${os} ${version}" 225
+  if [[ -n "$available_versions" ]]; then
+    echo -e "    ${TAB}${INFO} Available ${os} versions: ${GN}${available_versions}${CL}"
+  fi
+  echo -e "    ${TAB}${INFO} Check var_version in your CT script or use an available version"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# run_preflight()
+#
+# - Executes all preflight checks and collects results
+# - Displays a summary with pass/fail/warn counts
+# - On failure: reports to telemetry with "aborted" status and exits cleanly
+# - On success: brief pause (2s) then returns (caller shows next screen)
+# - Called from install_script() after header_info()
+# ------------------------------------------------------------------------------
+run_preflight() {
+  # Reset counters
+  PREFLIGHT_PASSED=0
+  PREFLIGHT_FAILED=0
+  PREFLIGHT_WARNINGS=0
+  PREFLIGHT_FAILURES=()
+  PREFLIGHT_EXIT_CODE=0
+
+  echo -e "${INFO}${BOLD}${DGN} Running pre-flight checks...${CL}"
+  echo ""
+
+  # --- Kernel checks ---
+  preflight_maxkeys
+
+  # --- Storage checks ---
+  preflight_storage_rootdir
+  preflight_storage_vztmpl
+  preflight_storage_space
+
+  # --- Network checks ---
+  preflight_network_bridge
+  preflight_dns_resolution
+
+  # --- Proxmox/Cluster checks ---
+  preflight_cluster_quorum
+  preflight_lxc_stack
+  preflight_container_id
+
+  # --- Template availability ---
+  preflight_template_connectivity
+  preflight_template_available
+
+  echo ""
+
+  # --- Summary ---
+  if [[ "$PREFLIGHT_FAILED" -gt 0 ]]; then
+    echo -e "${CROSS}${BOLD}${RD} Pre-flight failed: ${PREFLIGHT_FAILED} error(s), ${PREFLIGHT_WARNINGS} warning(s), ${PREFLIGHT_PASSED} passed${CL}"
+    echo ""
+
+    echo -e "${INFO}${BOLD}${DGN} Failure details:${CL}"
+    for failure in "${PREFLIGHT_FAILURES[@]}"; do
+      local code="${failure%%|*}"
+      local msg="${failure#*|}"
+      echo -e "  ${CROSS} [Exit ${code}] ${msg}"
+    done
+    echo ""
+    echo -e "${INFO} Please resolve the above issues before creating a container."
+    echo -e "${INFO} Documentation: ${BL}https://community-scripts.github.io/ProxmoxVE/${CL}"
+
+    # Report to telemetry (if consent was given)
+    post_preflight_to_api
+
+    exit "$PREFLIGHT_EXIT_CODE"
+  fi
+
+  # Success — brief pause so user can see results, then clear for next screen
+  if [[ "$PREFLIGHT_WARNINGS" -gt 0 ]]; then
+    echo -e "${CM}${BOLD}${GN} Pre-flight passed with ${PREFLIGHT_WARNINGS} warning(s) (${PREFLIGHT_PASSED} checks passed)${CL}"
+  else
+    echo -e "${CM}${BOLD}${GN} All pre-flight checks passed (${PREFLIGHT_PASSED}/${PREFLIGHT_PASSED})${CL}"
+  fi
+  sleep 2
 }
 
 # ==============================================================================
@@ -1851,7 +2301,7 @@ advanced_settings() {
 
     # ═══════════════════════════════════════════════════════════════════════════
     # STEP 2: Root Password
-    # ════════════════════════════════════════════════════════════════════════���══
+    # ═════════════════════════════���══════════════════════════════════════════���══
     2)
       if PW1=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "ROOT PASSWORD" \
@@ -2921,7 +3371,7 @@ echo_default() {
 # install_script()
 #
 # - Main entrypoint for installation mode
-# - Runs safety checks (pve_check, root_check, maxkeys_check, diagnostics_check)
+# - Runs safety checks (pve_check, root_check, diagnostics_check, run_preflight)
 # - Builds interactive menu (Default, Verbose, Advanced, My Defaults, App Defaults, Diagnostics, Storage, Exit)
 # - Applies chosen settings and triggers container build
 # ------------------------------------------------------------------------------
@@ -2931,7 +3381,6 @@ install_script() {
   root_check
   arch_check
   ssh_check
-  maxkeys_check
   diagnostics_check
 
   if systemctl is-active -q ping-instances.service; then
@@ -2951,8 +3400,9 @@ install_script() {
   fi
   [[ "${timezone:-}" == Etc/* ]] && timezone="host" # pct doesn't accept Etc/* zones
 
-  # Show APP Header
+  # Show APP Header + run preflight checks
   header_info
+  run_preflight
 
   # --- Support CLI argument as direct preset (default, advanced, …) ---
   CHOICE="${mode:-${1:-}}"
