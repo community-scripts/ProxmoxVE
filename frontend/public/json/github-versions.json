@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-03T00:21:34Z",
+  "generated": "2026-03-03T06:17:56Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -291,9 +291,9 @@
     {
       "slug": "dispatcharr",
       "repo": "Dispatcharr/Dispatcharr",
-      "version": "v0.20.1",
+      "version": "v0.20.2",
       "pinned": false,
-      "date": "2026-02-26T21:38:19Z"
+      "date": "2026-03-03T01:40:33Z"
     },
     {
       "slug": "docmost",
@@ -382,9 +382,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.5.1",
+      "version": "v6.5.2",
       "pinned": false,
-      "date": "2026-02-27T20:55:55Z"
+      "date": "2026-03-03T05:42:27Z"
     },
     {
       "slug": "fladder",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1247",
+      "version": "v0.24.1261",
       "pinned": false,
-      "date": "2026-03-02T05:56:37Z"
+      "date": "2026-03-03T05:54:20Z"
     },
     {
       "slug": "jellystat",
@@ -1733,9 +1733,9 @@
     {
       "slug": "wealthfolio",
       "repo": "afadil/wealthfolio",
-      "version": "v3.0.0",
+      "version": "v3.0.2",
       "pinned": false,
-      "date": "2026-02-24T22:37:05Z"
+      "date": "2026-03-03T05:01:49Z"
     },
     {
       "slug": "web-check",
