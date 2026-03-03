@@ -420,6 +420,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Remove Unifi Network Server scripts (dead APT repo) [@Copilot](https://github.com/Copilot) ([#12500](https://github.com/community-scripts/ProxmoxVE/pull/12500))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: recovery - add ENOSPC disk-full detection with auto-retry using * 2 hdd [@MickLesk](https://github.com/MickLesk) ([#12511](https://github.com/community-scripts/ProxmoxVE/pull/12511))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
