@@ -1033,7 +1033,7 @@ load_vars_file() {
     var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
-    var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
+    var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
   )
 
   # Whitelist check helper
@@ -3620,13 +3620,13 @@ $PCT_OPTIONS_STRING"
   # Add storage if specified
   if [ -n "$SD" ]; then
     PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
-  $SD"
+  -searchdomain $SD"
   fi
 
   # Add nameserver if specified
   if [ -n "$NS" ]; then
     PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
-  $NS"
+  -nameserver $NS"
   fi
 
   # Network configuration
