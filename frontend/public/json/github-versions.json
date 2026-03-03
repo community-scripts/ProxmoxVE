@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-03T06:17:56Z",
+  "generated": "2026-03-03T12:12:16Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -1561,6 +1561,13 @@
       "version": "v1.31.13",
       "pinned": false,
       "date": "2026-02-13T16:30:09Z"
+    },
+    {
+      "slug": "tinyauth",
+      "repo": "steveiliop56/tinyauth",
+      "version": "v5.0.0",
+      "pinned": false,
+      "date": "2026-03-02T18:43:57Z"
     },
     {
       "slug": "traccar",
