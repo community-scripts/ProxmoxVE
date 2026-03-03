@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-03T12:12:16Z",
+  "generated": "2026-03-03T18:16:19Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -557,9 +557,9 @@
     {
       "slug": "homebox",
       "repo": "sysadminsmedia/homebox",
-      "version": "v0.23.1",
+      "version": "v0.24.0",
       "pinned": false,
-      "date": "2026-02-01T22:53:32Z"
+      "date": "2026-03-03T16:09:55Z"
     },
     {
       "slug": "homepage",
@@ -669,9 +669,9 @@
     {
       "slug": "kima-hub",
       "repo": "Chevron7Locked/kima-hub",
-      "version": "v1.6.0",
+      "version": "v1.6.1",
       "pinned": false,
-      "date": "2026-03-02T05:43:31Z"
+      "date": "2026-03-03T16:13:53Z"
     },
     {
       "slug": "kimai",
@@ -1446,9 +1446,9 @@
     {
       "slug": "sonobarr",
       "repo": "Dodelidoo-Labs/sonobarr",
-      "version": "0.11.0",
+      "version": "0.12.1",
       "pinned": false,
-      "date": "2026-01-21T19:07:21Z"
+      "date": "2026-03-03T13:43:02Z"
     },
     {
       "slug": "speedtest-tracker",
@@ -1579,9 +1579,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.19",
+      "version": "v1.4.20",
       "pinned": false,
-      "date": "2026-02-28T21:25:47Z"
+      "date": "2026-03-03T13:49:01Z"
     },
     {
       "slug": "tracktor",
@@ -1649,9 +1649,9 @@
     {
       "slug": "upgopher",
       "repo": "wanetty/upgopher",
-      "version": "v1.14.0",
+      "version": "v1.15.2",
       "pinned": false,
-      "date": "2026-02-24T22:43:34Z"
+      "date": "2026-03-03T13:40:45Z"
     },
     {
       "slug": "upsnap",
