@@ -437,6 +437,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: recovery - add ENOSPC disk-full detection with auto-retry using * 2 hdd [@MickLesk](https://github.com/MickLesk) ([#12511](https://github.com/community-scripts/ProxmoxVE/pull/12511))
 
+### 📚 Documentation
+
+  - Fix config_path casing in reactive-resume.json [@ScubyG](https://github.com/ScubyG) ([#12525](https://github.com/community-scripts/ProxmoxVE/pull/12525))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
