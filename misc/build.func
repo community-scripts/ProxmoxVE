@@ -4222,6 +4222,7 @@ EOF'
     local is_network_issue=false
     local is_apt_issue=false
     local is_cmd_not_found=false
+    local is_disk_full=false
     local error_explanation=""
     if declare -f explain_exit_code >/dev/null 2>&1; then
       error_explanation="$(explain_exit_code "$install_exit_code")"
@@ -4241,6 +4242,14 @@ EOF'
       fi
       ;;
     esac
+
+    # Disk full / ENOSPC detection: errno -28 (ENOSPC), exit 228 (custom handler), exit 23 (curl write error)
+    if [[ $install_exit_code -eq 228 || $install_exit_code -eq 23 ]]; then
+      is_disk_full=true
+    fi
+    if [[ -f "$combined_log" ]] && grep -qiE 'ENOSPC|no space left on device|No space left on device|Disk quota exceeded|errno -28' "$combined_log"; then
+      is_disk_full=true
+    fi
 
     # Command not found detection
     if [[ $install_exit_code -eq 127 ]]; then
@@ -4278,6 +4287,9 @@ EOF'
       if grep -qiE ': command not found|No such file or directory.*/s?bin/' "$combined_log"; then
         is_cmd_not_found=true
       fi
+      if grep -qiE 'ENOSPC|no space left on device|Disk quota exceeded|errno -28' "$combined_log"; then
+        is_disk_full=true
+      fi
     fi
 
     # Show error explanation if available
@@ -4296,6 +4308,12 @@ EOF'
     if [[ $install_exit_code -eq 125 || $install_exit_code -eq 126 ]]; then
       echo -e "${TAB}${INFO} The command exists but cannot be executed. This may be a ${GN}permission${CL} issue."
       echo -e "${TAB}${INFO} If using Docker, ensure the container is ${GN}privileged${CL} or has correct permissions."
+      echo ""
+    fi
+
+    if [[ "$is_disk_full" == true ]]; then
+      echo -e "${TAB}${INFO} The container ran out of disk space during installation (${GN}ENOSPC${CL})."
+      echo -e "${TAB}${INFO} Current disk size: ${GN}${DISK_SIZE} GB${CL}. A rebuild with doubled disk may resolve this."
       echo ""
     fi
 
@@ -4318,7 +4336,7 @@ EOF'
     echo -e "  ${GN}3)${CL} Retry with verbose mode (full rebuild)"
 
     local next_option=4
-    local APT_OPTION="" OOM_OPTION="" DNS_OPTION=""
+    local APT_OPTION="" OOM_OPTION="" DNS_OPTION="" DISK_OPTION=""
 
     if [[ "$is_apt_issue" == true ]]; then
       if [[ "$var_os" == "alpine" ]]; then
@@ -4340,6 +4358,18 @@ EOF'
         next_option=$((next_option + 1))
       else
         echo -e "  ${DGN}-)${CL} ${DGN}OOM retry exhausted (already retried ${recovery_attempt}x)${CL}"
+      fi
+    fi
+
+    if [[ "$is_disk_full" == true ]]; then
+      local disk_recovery_attempt="${DISK_RECOVERY_ATTEMPT:-0}"
+      if [[ $disk_recovery_attempt -lt 2 ]]; then
+        local new_disk=$((DISK_SIZE * 2))
+        echo -e "  ${GN}${next_option})${CL} Retry with more disk space (Disk: ${DISK_SIZE}→${new_disk} GB)"
+        DISK_OPTION=$next_option
+        next_option=$((next_option + 1))
+      else
+        echo -e "  ${DGN}-)${CL} ${DGN}Disk resize retry exhausted (already retried ${disk_recovery_attempt}x)${CL}"
       fi
     fi
 
@@ -4496,6 +4526,35 @@ EOF'
           echo -e "  RAM: ${old_ram} → ${GN}${RAM_SIZE}${CL} MiB (x2)"
           echo -e "  CPU: ${old_cpu} → ${GN}${CORE_COUNT}${CL} cores (x2)"
           echo -e "  Disk: ${DISK_SIZE} GB | Network: ${NET:-dhcp} | Bridge: ${BRG:-vmbr0}"
+          echo -e "  Verbose: ${GN}enabled${CL}"
+          echo ""
+          msg_info "Restarting installation..."
+          build_container
+          return $?
+        fi
+
+        if [[ -n "${DISK_OPTION}" && "${response}" == "${DISK_OPTION}" ]]; then
+          # Retry with doubled disk size
+          handled=true
+          echo -e "\n${TAB}${HOLD}${YW}Removing container ${CTID} for rebuild with more disk space...${CL}"
+          pct stop "$CTID" &>/dev/null || true
+          pct destroy "$CTID" &>/dev/null || true
+          echo -e "${BFR}${CM}${GN}Container ${CTID} removed${CL}"
+          echo ""
+          local old_ctid="$CTID"
+          local old_disk="$DISK_SIZE"
+          export CTID=$(get_valid_container_id "$CTID")
+          export DISK_SIZE=$((DISK_SIZE * 2))
+          export var_disk="$DISK_SIZE"
+          export VERBOSE="yes"
+          export var_verbose="yes"
+          export DISK_RECOVERY_ATTEMPT=$((${DISK_RECOVERY_ATTEMPT:-0} + 1))
+
+          echo -e "${YW}Rebuilding with increased disk space (attempt ${DISK_RECOVERY_ATTEMPT}/2):${CL}"
+          echo -e "  Container ID: ${old_ctid} → ${CTID}"
+          echo -e "  Disk: ${old_disk} → ${GN}${DISK_SIZE}${CL} GB (x2)"
+          echo -e "  RAM: ${RAM_SIZE} MiB | CPU: ${CORE_COUNT} cores"
+          echo -e "  Network: ${NET:-dhcp} | Bridge: ${BRG:-vmbr0}"
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Restarting installation..."
