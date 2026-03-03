@@ -35,6 +35,20 @@ function update_script() {
     $STD service tinyauth stop
     msg_ok "Service Stopped"
 
+    if [[ -f /opt/tinyauth/.env ]] && ! grep -q "^TINYAUTH_" /opt/tinyauth/.env; then
+      msg_info "Migrating .env to v5 format"
+      sed -i \
+        -e 's/^DATABASE_PATH=/TINYAUTH_DATABASE_PATH=/' \
+        -e 's/^USERS=/TINYAUTH_AUTH_USERS=/' \
+        -e "s/^USERS='/TINYAUTH_AUTH_USERS='/" \
+        -e 's/^APP_URL=/TINYAUTH_APPURL=/' \
+        -e 's/^SECRET=/TINYAUTH_AUTH_SECRET=/' \
+        -e 's/^PORT=/TINYAUTH_SERVER_PORT=/' \
+        -e 's/^ADDRESS=/TINYAUTH_SERVER_ADDRESS=/' \
+        /opt/tinyauth/.env
+      msg_ok "Migrated .env to v5 format"
+    fi
+
     msg_info "Updating Tinyauth"
     rm -f /opt/tinyauth/tinyauth
     curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth

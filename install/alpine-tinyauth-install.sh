@@ -36,9 +36,9 @@ msg_ok "Installed Tinyauth"
 read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
 
 cat <<EOF >/opt/tinyauth/.env
-DATABASE_PATH=/opt/tinyauth/database.db
-USERS='${USER}'
-APP_URL=${app_url}
+TINYAUTH_DATABASE_PATH=/opt/tinyauth/database.db
+TINYAUTH_AUTH_USERS='${USER}'
+TINYAUTH_APPURL=${app_url}
 EOF
 
 msg_info "Creating Service"
