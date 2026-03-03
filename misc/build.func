@@ -569,6 +569,79 @@ preflight_template_available() {
 }
 
 # ------------------------------------------------------------------------------
+# preflight_package_repos()
+#
+# - Tests connectivity to OS package repositories from the host
+# - Selects repos based on var_os (debian, ubuntu, alpine)
+# - Uses HTTP HEAD requests to verify the repo index is reachable
+# - Warning only (user may use local mirrors, apt-cacher-ng, etc.)
+# ------------------------------------------------------------------------------
+preflight_package_repos() {
+  local os="${var_os:-debian}"
+  local version="${var_version:-}"
+  local -a repo_urls=()
+  local repo_label=""
+
+  case "$os" in
+  debian)
+    repo_label="Debian"
+    repo_urls=(
+      "http://deb.debian.org/debian/dists/${version:-bookworm}/Release"
+      "http://security.debian.org/debian-security/dists/${version:-bookworm}-security/Release"
+    )
+    ;;
+  ubuntu)
+    repo_label="Ubuntu"
+    repo_urls=(
+      "http://archive.ubuntu.com/ubuntu/dists/${version:-jammy}/Release"
+      "http://security.ubuntu.com/ubuntu/dists/${version:-jammy}-security/Release"
+    )
+    ;;
+  alpine)
+    repo_label="Alpine"
+    # Alpine versions use x.y format (e.g. 3.20)
+    local alpine_branch="v${version:-3.20}"
+    repo_urls=(
+      "https://dl-cdn.alpinelinux.org/alpine/${alpine_branch}/main/x86_64/APKINDEX.tar.gz"
+    )
+    ;;
+  *)
+    preflight_pass "Package repo check skipped (OS: ${os})"
+    return 0
+    ;;
+  esac
+
+  local all_ok=true
+  local failed_urls=()
+
+  for url in "${repo_urls[@]}"; do
+    local http_code
+    http_code=$(curl -sS -o /dev/null -w "%{http_code}" -m 8 --head "$url" 2>/dev/null) || http_code="000"
+
+    # Accept 200, 3xx redirects, and 405 (HEAD not allowed but server is up)
+    if [[ ! "$http_code" =~ ^(2[0-9]{2}|3[0-9]{2}|405)$ ]]; then
+      all_ok=false
+      # Extract hostname for readable output
+      local host
+      host=$(echo "$url" | sed -E 's|https?://([^/]+).*|\1|')
+      failed_urls+=("${host} (HTTP ${http_code})")
+    fi
+  done
+
+  if [[ "$all_ok" == true ]]; then
+    preflight_pass "${repo_label} package repositories reachable"
+  else
+    local fail_summary
+    fail_summary=$(printf '%s, ' "${failed_urls[@]}")
+    fail_summary="${fail_summary%, }"
+    preflight_warn "${repo_label} package repository not fully reachable: ${fail_summary}"
+    echo -e "    ${TAB}${INFO} Container may fail during ${GN}apt-get update${CL} / ${GN}apk update${CL}"
+    echo -e "    ${TAB}${INFO} Check firewall rules, proxy settings, or DNS from this host"
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # run_preflight()
 #
 # - Executes all preflight checks and collects results
@@ -611,6 +684,9 @@ run_preflight() {
   # --- Template availability ---
   preflight_template_connectivity
   preflight_template_available
+
+  # --- Package repository checks ---
+  preflight_package_repos
 
   echo ""
 
