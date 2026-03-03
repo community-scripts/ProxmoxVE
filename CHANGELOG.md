@@ -412,6 +412,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-03
 
+### 🗑️ Deleted Scripts
+
+  - Remove Unifi Network Server scripts (dead APT repo) [@Copilot](https://github.com/Copilot) ([#12500](https://github.com/community-scripts/ProxmoxVE/pull/12500))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
