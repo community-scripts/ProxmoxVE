@@ -412,6 +412,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-03
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Revert #11534 PR that messed up search [@BramSuurdje](https://github.com/BramSuurdje) ([#12492](https://github.com/community-scripts/ProxmoxVE/pull/12492))
+
 ## 2026-03-02
 
 ### 🆕 New Scripts
