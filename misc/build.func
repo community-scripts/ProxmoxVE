@@ -109,6 +109,7 @@ fi
 #   - Kernel: keyring limits (maxkeys/maxbytes for UID 100000)
 #   - Storage: rootdir support, vztmpl support, available space
 #   - Network: bridge availability, DNS resolution
+#   - Repos: enterprise repo subscription validation
 #   - Cluster: quorum status (if clustered)
 #   - Proxmox: LXC stack health, container ID availability
 #   - Template: download server reachability
@@ -345,6 +346,42 @@ preflight_dns_resolution() {
 }
 
 # ------------------------------------------------------------------------------
+# preflight_repo_access()
+#
+# - Checks if Proxmox enterprise repos are enabled without a valid subscription
+# - Scans /etc/apt/sources.list.d/ for enterprise.proxmox.com entries
+# - Tests HTTP access to detect 401 Unauthorized
+# - Warning only (not a blocker — packages come from no-subscription repo)
+# ------------------------------------------------------------------------------
+preflight_repo_access() {
+  local enterprise_files
+  enterprise_files=$(grep -rlE '^\s*deb\s+https://enterprise\.proxmox\.com' /etc/apt/sources.list.d/ 2>/dev/null || true)
+
+  if [[ -z "$enterprise_files" ]]; then
+    preflight_pass "No enterprise repositories enabled"
+    return 0
+  fi
+
+  # Enterprise repo found — test if subscription is valid
+  local http_code
+  http_code=$(curl -sS -o /dev/null -w "%{http_code}" -m 5 "https://enterprise.proxmox.com/debian/pve/dists/" 2>/dev/null) || http_code="000"
+
+  if [[ "$http_code" == "401" || "$http_code" == "403" ]]; then
+    preflight_warn "Enterprise repo enabled without valid subscription (HTTP ${http_code})"
+    echo -e "    ${TAB}${INFO} apt-get update will show '401 Unauthorized' errors"
+    echo -e "    ${TAB}${INFO} Disable in ${GN}/etc/apt/sources.list.d/${CL} or add a subscription key"
+    return 0
+  fi
+
+  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+    preflight_pass "Enterprise repository accessible (subscription valid)"
+  else
+    preflight_warn "Enterprise repo check inconclusive (HTTP ${http_code})"
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # preflight_cluster_quorum()
 #
 # - Checks cluster quorum status (only if node is part of a cluster)
@@ -562,6 +599,9 @@ run_preflight() {
   # --- Network checks ---
   preflight_network_bridge
   preflight_dns_resolution
+
+  # --- Repository checks ---
+  preflight_repo_access
 
   # --- Proxmox/Cluster checks ---
   preflight_cluster_quorum
