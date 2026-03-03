@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-02T18:14:19Z",
+  "generated": "2026-03-03T00:21:34Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -585,9 +585,9 @@
     {
       "slug": "immich-public-proxy",
       "repo": "alangrainger/immich-public-proxy",
-      "version": "v1.15.3",
+      "version": "v1.15.4",
       "pinned": false,
-      "date": "2026-02-16T22:54:27Z"
+      "date": "2026-03-02T21:28:06Z"
     },
     {
       "slug": "inspircd",
@@ -872,9 +872,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.02.27",
+      "version": "2026.03.02",
       "pinned": false,
-      "date": "2026-02-27T11:47:02Z"
+      "date": "2026-03-02T19:19:10Z"
     },
     {
       "slug": "miniflux",
@@ -1231,7 +1231,7 @@
       "repo": "rcourtman/Pulse",
       "version": "v5.1.17",
       "pinned": false,
-      "date": "2026-03-02T17:52:12Z"
+      "date": "2026-03-02T20:15:31Z"
     },
     {
       "slug": "pve-scripts-local",
