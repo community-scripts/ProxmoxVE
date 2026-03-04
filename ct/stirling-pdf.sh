@@ -35,7 +35,7 @@ function update_script() {
     fi
 
     PYTHON_VERSION="3.12" setup_uv
-    JAVA_VERSION="21" setup_java
+    JAVA_VERSION="25" setup_java
 
     msg_info "Stopping Services"
     systemctl stop stirlingpdf libreoffice-listener unoserver
