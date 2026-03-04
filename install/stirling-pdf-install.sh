@@ -31,7 +31,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
-JAVA_VERSION="21" setup_java
+JAVA_VERSION="25" setup_java
 
 read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response
 response=${response,,} # Convert to lowercase
