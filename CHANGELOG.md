@@ -416,6 +416,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - update: stirling-pdf: java 25 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12552](https://github.com/community-scripts/ProxmoxVE/pull/12552))
     - Docmost: register NoopAuditService globally when EE submodule is missing [@MickLesk](https://github.com/MickLesk) ([#12551](https://github.com/community-scripts/ProxmoxVE/pull/12551))
     - jellyseer/overseer migration corrupting /usr/bin/update [@MickLesk](https://github.com/MickLesk) ([#12539](https://github.com/community-scripts/ProxmoxVE/pull/12539))
     - PowerDNS: use gsqlite3 backend instead of BIND [@MickLesk](https://github.com/MickLesk) ([#12538](https://github.com/community-scripts/ProxmoxVE/pull/12538))
