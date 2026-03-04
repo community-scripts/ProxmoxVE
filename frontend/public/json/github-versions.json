@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-04T06:16:35Z",
+  "generated": "2026-03-04T12:11:17Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -314,7 +314,7 @@
       "repo": "Hosteroid/domain-monitor",
       "version": "v1.1.4",
       "pinned": false,
-      "date": "2026-03-02T09:25:01Z"
+      "date": ""
     },
     {
       "slug": "donetick",
@@ -382,9 +382,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.5.2",
+      "version": "v6.5.3",
       "pinned": false,
-      "date": "2026-03-03T05:42:27Z"
+      "date": "2026-03-04T06:53:02Z"
     },
     {
       "slug": "fladder",
@@ -438,9 +438,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.246.0",
+      "version": "2.247.0",
       "pinned": false,
-      "date": "2026-03-03T19:37:20Z"
+      "date": "2026-03-04T07:48:00Z"
     },
     {
       "slug": "gitea",
@@ -503,7 +503,7 @@
       "repo": "grocy/grocy",
       "version": "v4.5.0",
       "pinned": false,
-      "date": "2025-03-28T19:02:22Z"
+      "date": ""
     },
     {
       "slug": "guardian",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1275",
+      "version": "v0.24.1278",
       "pinned": false,
-      "date": "2026-03-04T05:53:40Z"
+      "date": "2026-03-04T08:36:49Z"
     },
     {
       "slug": "jellystat",
@@ -690,9 +690,9 @@
     {
       "slug": "koel",
       "repo": "koel/koel",
-      "version": "v8.3.0",
+      "version": "v8.3.1",
       "pinned": false,
-      "date": "2026-01-08T21:32:58Z"
+      "date": "2026-03-04T08:22:06Z"
     },
     {
       "slug": "koillection",
@@ -1474,9 +1474,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.5.3",
+      "version": "v2.6.0",
       "pinned": false,
-      "date": "2026-02-23T23:23:39Z"
+      "date": "2026-03-03T20:46:42Z"
     },
     {
       "slug": "streamlink-webui",
@@ -1607,9 +1607,9 @@
     {
       "slug": "trip",
       "repo": "itskovacs/TRIP",
-      "version": "1.41.0",
+      "version": "1.41.1",
       "pinned": false,
-      "date": "2026-02-23T17:57:31Z"
+      "date": "2026-03-04T07:25:35Z"
     },
     {
       "slug": "tududi",
@@ -1719,9 +1719,9 @@
     {
       "slug": "watcharr",
       "repo": "sbondCo/Watcharr",
-      "version": "v2.1.1",
+      "version": "v3.0.0",
       "pinned": false,
-      "date": "2025-07-15T22:38:01Z"
+      "date": "2026-03-04T09:29:14Z"
     },
     {
       "slug": "watchyourlan",
