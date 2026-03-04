@@ -423,6 +423,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - addon migrations: /usr/bin/update replacement to prevent syntax error [@MickLesk](https://github.com/MickLesk) ([#12540](https://github.com/community-scripts/ProxmoxVE/pull/12540))
     - fix(immich): correct LibRaw clone URL to official upstream [@DenislavDenev](https://github.com/DenislavDenev) ([#12526](https://github.com/community-scripts/ProxmoxVE/pull/12526))
 
+  - #### 🔧 Refactor
+
+    - Refactor: LiteLLM [@tremor021](https://github.com/tremor021) ([#12550](https://github.com/community-scripts/ProxmoxVE/pull/12550))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
