@@ -418,6 +418,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix(immich): correct LibRaw clone URL to official upstream [@DenislavDenev](https://github.com/DenislavDenev) ([#12526](https://github.com/community-scripts/ProxmoxVE/pull/12526))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - fix: whitelist var_searchdomain and fix the handling of var_ns and va… [@tommoyer](https://github.com/tommoyer) ([#12521](https://github.com/community-scripts/ProxmoxVE/pull/12521))
+
 ## 2026-03-03
 
 ### 🆕 New Scripts
