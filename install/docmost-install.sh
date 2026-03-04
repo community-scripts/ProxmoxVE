@@ -26,6 +26,17 @@ fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
 
 msg_info "Configuring Docmost (Patience)"
 cd /opt/docmost
+
+# Fix: Docmost EE (audit logs etc.) lives in a git submodule that is NOT
+# included in GitHub tarballs.  The community NoopAuditService exists but
+# is only exported by CoreModule – child modules such as UserModule cannot
+# resolve it.  Making CoreModule @Global() exposes the token app-wide.
+if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] \
+  && ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
+  sed -i '/^  Module,$/a\  Global,' /opt/docmost/apps/server/src/core/core.module.ts
+  sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
+fi
+
 mv .env.example .env
 mkdir data
 sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)|" \

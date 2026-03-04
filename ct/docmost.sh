@@ -48,6 +48,17 @@ function update_script() {
     cd /opt/docmost
     mv /opt/.env /opt/docmost/.env
     mv /opt/data /opt/docmost/data
+
+    # Fix: Docmost EE (audit logs etc.) lives in a git submodule that is NOT
+    # included in GitHub tarballs.  The community NoopAuditService exists but
+    # is only exported by CoreModule – child modules such as UserModule cannot
+    # resolve it.  Making CoreModule @Global() exposes the token app-wide.
+    if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] \
+      && ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
+      sed -i '/^  Module,$/a\  Global,' /opt/docmost/apps/server/src/core/core.module.ts
+      sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
+    fi
+
     $STD pnpm install --force
     $STD pnpm build
     msg_ok "Updated ${APP}"
