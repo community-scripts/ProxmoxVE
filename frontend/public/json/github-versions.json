@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-03T18:16:19Z",
+  "generated": "2026-03-04T00:20:33Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -242,9 +242,9 @@
     {
       "slug": "cosmos",
       "repo": "azukaar/Cosmos-Server",
-      "version": "v0.21.6",
+      "version": "v0.21.7",
       "pinned": false,
-      "date": "2026-02-28T22:00:49Z"
+      "date": "2026-03-03T18:15:29Z"
     },
     {
       "slug": "cronicle",
@@ -298,9 +298,9 @@
     {
       "slug": "docmost",
       "repo": "docmost/docmost",
-      "version": "v0.25.3",
+      "version": "v0.70.0",
       "pinned": false,
-      "date": "2026-02-10T02:58:23Z"
+      "date": "2026-03-03T20:33:08Z"
     },
     {
       "slug": "domain-locker",
@@ -438,9 +438,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.245.0",
+      "version": "2.246.0",
       "pinned": false,
-      "date": "2026-03-01T09:09:57Z"
+      "date": "2026-03-03T19:37:20Z"
     },
     {
       "slug": "gitea",
@@ -753,9 +753,9 @@
     {
       "slug": "libretranslate",
       "repo": "LibreTranslate/LibreTranslate",
-      "version": "v1.9.4",
+      "version": "v1.9.5",
       "pinned": false,
-      "date": "2026-02-24T17:06:05Z"
+      "date": "2026-03-03T18:25:04Z"
     },
     {
       "slug": "lidarr",
@@ -872,9 +872,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.03.02",
+      "version": "2026.03.03",
       "pinned": false,
-      "date": "2026-03-02T19:19:10Z"
+      "date": "2026-03-03T19:15:55Z"
     },
     {
       "slug": "miniflux",
@@ -921,9 +921,9 @@
     {
       "slug": "netbox",
       "repo": "netbox-community/netbox",
-      "version": "v4.5.3",
+      "version": "v4.5.4",
       "pinned": false,
-      "date": "2026-02-17T15:39:18Z"
+      "date": "2026-03-03T20:32:16Z"
     },
     {
       "slug": "nextcloud-exporter",
@@ -942,9 +942,9 @@
     {
       "slug": "nightscout",
       "repo": "nightscout/cgm-remote-monitor",
-      "version": "v15.0.5",
+      "version": "v15.0.6",
       "pinned": false,
-      "date": "2026-03-01T21:22:37Z"
+      "date": "2026-03-03T23:04:35Z"
     },
     {
       "slug": "nocodb",
@@ -1229,9 +1229,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.17",
+      "version": "v5.1.18",
       "pinned": false,
-      "date": "2026-03-02T20:15:31Z"
+      "date": "2026-03-03T22:09:15Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1467,9 +1467,9 @@
     {
       "slug": "sportarr",
       "repo": "Sportarr/Sportarr",
-      "version": "v4.0.983.1057",
+      "version": "v4.0.984.1059",
       "pinned": false,
-      "date": "2026-01-26T18:54:50Z"
+      "date": "2026-03-03T23:28:08Z"
     },
     {
       "slug": "stirling-pdf",
@@ -1579,9 +1579,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.20",
+      "version": "v1.4.21",
       "pinned": false,
-      "date": "2026-03-03T13:49:01Z"
+      "date": "2026-03-03T18:43:20Z"
     },
     {
       "slug": "tracktor",
@@ -1740,9 +1740,9 @@
     {
       "slug": "wealthfolio",
       "repo": "afadil/wealthfolio",
-      "version": "v3.0.2",
+      "version": "v3.0.3",
       "pinned": false,
-      "date": "2026-03-03T05:01:49Z"
+      "date": "2026-03-03T21:47:55Z"
     },
     {
       "slug": "web-check",
