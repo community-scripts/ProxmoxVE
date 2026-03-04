@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-04T00:20:33Z",
+  "generated": "2026-03-04T06:16:35Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -452,9 +452,9 @@
     {
       "slug": "gitea-mirror",
       "repo": "RayLabsHQ/gitea-mirror",
-      "version": "v3.11.0",
+      "version": "v3.12.0",
       "pinned": false,
-      "date": "2026-03-02T10:19:59Z"
+      "date": "2026-03-04T02:53:42Z"
     },
     {
       "slug": "glance",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1261",
+      "version": "v0.24.1275",
       "pinned": false,
-      "date": "2026-03-03T05:54:20Z"
+      "date": "2026-03-04T05:53:40Z"
     },
     {
       "slug": "jellystat",
@@ -1467,9 +1467,9 @@
     {
       "slug": "sportarr",
       "repo": "Sportarr/Sportarr",
-      "version": "v4.0.984.1059",
+      "version": "v4.0.985.1060",
       "pinned": false,
-      "date": "2026-03-03T23:28:08Z"
+      "date": "2026-03-04T01:00:04Z"
     },
     {
       "slug": "stirling-pdf",
