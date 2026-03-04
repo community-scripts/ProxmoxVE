@@ -28,6 +28,7 @@ PG_DB_NAME="tianji_db" PG_DB_USER="tianji" setup_postgresql_db
 PYTHON_VERSION="3.13" setup_uv
 fetch_and_deploy_gh_release "tianji" "msgbyte/tianji" "tarball"
 TIANJI_SECRET="$(openssl rand -base64 32 | cut -c1-24)"
+echo "Tianji Secret: $TIANJI_SECRET" >>~/tianji.creds
 
 msg_info "Setting up Tianji"
 cd /opt/tianji
