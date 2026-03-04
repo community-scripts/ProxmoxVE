@@ -426,6 +426,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Fluid-Calendar: NodeJS bump [@tremor021](https://github.com/tremor021) ([#12558](https://github.com/community-scripts/ProxmoxVE/pull/12558))
     - Refactor: LiteLLM [@tremor021](https://github.com/tremor021) ([#12550](https://github.com/community-scripts/ProxmoxVE/pull/12550))
 
 ### 💾 Core
