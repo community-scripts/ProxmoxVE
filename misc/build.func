@@ -3738,6 +3738,11 @@ $PCT_OPTIONS_STRING"
           done
         fi
       fi
+      # /dev/kfd is required for AMD ROCm compute (GPU inference in Ollama, etc.)
+      if [[ -e /dev/kfd ]]; then
+        AMD_DEVICES+=("/dev/kfd")
+        msg_custom "🎮" "${RD}" "Detected /dev/kfd (ROCm compute device)"
+      fi
     fi
 
     # Check for NVIDIA GPU - look for NVIDIA vendor ID [10de]

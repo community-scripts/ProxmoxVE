@@ -4451,9 +4451,36 @@ _setup_amd_gpu() {
   fi
   # Ubuntu includes AMD firmware in linux-firmware by default
 
-  # ROCm for compute (optional - large download)
-  # Uncomment if needed:
-  # $STD apt -y install rocm-opencl-runtime 2>/dev/null || true
+  # ROCm for GPU compute (needed for AI/ML workloads like Ollama)
+  if [[ -e /dev/kfd ]]; then
+    msg_info "Installing ROCm runtime (AMD GPU compute)"
+    if [[ "$os_id" == "ubuntu" ]]; then
+      # Official AMD ROCm repo for Ubuntu
+      mkdir -p /usr/share/keyrings
+      curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /usr/share/keyrings/rocm-archive-keyring.gpg 2>/dev/null || true
+      local rocm_version="6.4.1"
+      cat <<EOF >/etc/apt/sources.list.d/rocm.sources
+Types: deb
+URIs: https://repo.radeon.com/rocm/apt/${rocm_version}
+Suites: noble
+Components: main
+Signed-By: /usr/share/keyrings/rocm-archive-keyring.gpg
+EOF
+      cat <<EOF >/etc/apt/sources.list.d/amdgpu.sources
+Types: deb
+URIs: https://repo.radeon.com/amdgpu/${rocm_version}/ubuntu
+Suites: noble
+Components: main
+Signed-By: /usr/share/keyrings/rocm-archive-keyring.gpg
+EOF
+      $STD apt update 2>/dev/null || true
+      $STD apt -y install rocm-opencl-runtime rocm-hip-runtime 2>/dev/null || msg_warn "ROCm install failed - GPU compute may not work"
+    elif [[ "$os_id" == "debian" ]]; then
+      # Debian: use distro ROCm packages if available
+      $STD apt -y install rocm-opencl-runtime 2>/dev/null || msg_warn "ROCm not available in Debian repos"
+    fi
+    msg_ok "Installed ROCm runtime"
+  fi
 
   msg_ok "AMD GPU configured"
 }
