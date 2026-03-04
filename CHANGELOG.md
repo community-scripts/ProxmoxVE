@@ -416,6 +416,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - addon migrations: /usr/bin/update replacement to prevent syntax error [@MickLesk](https://github.com/MickLesk) ([#12540](https://github.com/community-scripts/ProxmoxVE/pull/12540))
     - fix(immich): correct LibRaw clone URL to official upstream [@DenislavDenev](https://github.com/DenislavDenev) ([#12526](https://github.com/community-scripts/ProxmoxVE/pull/12526))
 
 ### 💾 Core
