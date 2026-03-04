@@ -18,7 +18,8 @@ $STD apt install -y \
   build-essential \
   openssl \
   sqlite3 \
-  unzip
+  unzip \
+  git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Bun"
