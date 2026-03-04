@@ -15,6 +15,7 @@ update_os
 
 msg_info "Installing dependencies"
 $STD apt install -y \
+  git \
   build-essential \
   openssl \
   sqlite3 \
