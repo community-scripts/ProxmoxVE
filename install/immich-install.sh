@@ -232,7 +232,7 @@ msg_ok "(2/5) Compiled libheif"
 msg_info "(3/5) Compiling libraw"
 SOURCE=${SOURCE_DIR}/libraw
 : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
-$STD git clone https://github.com/libraw/libraw.git "$SOURCE"
+$STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBRAW_REVISION"
 $STD autoreconf --install
