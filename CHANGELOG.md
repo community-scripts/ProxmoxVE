@@ -416,12 +416,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: gitea-mirror [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12549](https://github.com/community-scripts/ProxmoxVE/pull/12549))
+    - fix(immich): correct LibRaw clone URL to official upstream [@DenislavDenev](https://github.com/DenislavDenev) ([#12526](https://github.com/community-scripts/ProxmoxVE/pull/12526))
     - update: stirling-pdf: java 25 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12552](https://github.com/community-scripts/ProxmoxVE/pull/12552))
     - Docmost: register NoopAuditService globally when EE submodule is missing [@MickLesk](https://github.com/MickLesk) ([#12551](https://github.com/community-scripts/ProxmoxVE/pull/12551))
     - jellyseer/overseer migration corrupting /usr/bin/update [@MickLesk](https://github.com/MickLesk) ([#12539](https://github.com/community-scripts/ProxmoxVE/pull/12539))
     - PowerDNS: use gsqlite3 backend instead of BIND [@MickLesk](https://github.com/MickLesk) ([#12538](https://github.com/community-scripts/ProxmoxVE/pull/12538))
     - addon migrations: /usr/bin/update replacement to prevent syntax error [@MickLesk](https://github.com/MickLesk) ([#12540](https://github.com/community-scripts/ProxmoxVE/pull/12540))
-    - fix(immich): correct LibRaw clone URL to official upstream [@DenislavDenev](https://github.com/DenislavDenev) ([#12526](https://github.com/community-scripts/ProxmoxVE/pull/12526))
 
   - #### 🔧 Refactor
 
