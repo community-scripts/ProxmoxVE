@@ -47,7 +47,6 @@ function update_script() {
     msg_info "Switching update script to Seerr"
     TMP_UPDATE=$(mktemp)
     cat <<'EOF' >"$TMP_UPDATE"
-#!/usr/bin/env bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/seerr.sh)"
 EOF
     mv "$TMP_UPDATE" /usr/bin/update
