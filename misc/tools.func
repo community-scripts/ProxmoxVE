@@ -6500,14 +6500,13 @@ function setup_postgresql() {
   local SUITE
   case "$DISTRO_CODENAME" in
   trixie | forky | sid)
-
     if verify_repo_available "https://apt.postgresql.org/pub/repos/apt" "trixie-pgdg"; then
       SUITE="trixie-pgdg"
-
     else
-      SUITE="bookworm-pgdg"
+      msg_warn "PGDG repo not available for ${DISTRO_CODENAME}, falling back to distro packages"
+      USE_PGDG_REPO=false setup_postgresql
+      return $?
     fi
-
     ;;
   *)
     SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")
