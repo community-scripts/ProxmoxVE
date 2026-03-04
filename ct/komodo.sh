@@ -52,9 +52,11 @@ function update_script() {
   fi
 
   msg_info "Migrating update function"
-  cat <<'MIGRATION_EOF' >/usr/bin/update
+  TMP_UPDATE=$(mktemp)
+  cat <<'MIGRATION_EOF' >"$TMP_UPDATE"
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/komodo.sh)"
 MIGRATION_EOF
+  mv "$TMP_UPDATE" /usr/bin/update
   chmod +x /usr/bin/update
 
   ln -sf /usr/bin/update /usr/bin/update_komodo 2>/dev/null || true

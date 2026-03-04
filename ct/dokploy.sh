@@ -46,9 +46,11 @@ function update_script() {
   fi
 
   msg_info "Migrating update function"
-  cat <<'MIGRATION_EOF' >/usr/bin/update
+  TMP_UPDATE=$(mktemp)
+  cat <<'MIGRATION_EOF' >"$TMP_UPDATE"
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/dokploy.sh)"
 MIGRATION_EOF
+  mv "$TMP_UPDATE" /usr/bin/update
   chmod +x /usr/bin/update
 
   ln -sf /usr/bin/update /usr/bin/update_dokploy 2>/dev/null || true

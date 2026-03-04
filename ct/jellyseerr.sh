@@ -45,14 +45,15 @@ function update_script() {
     fi
 
     msg_info "Switching update script to Seerr"
-    cat <<'EOF' >/usr/bin/update
-#!/usr/bin/env bash
+    TMP_UPDATE=$(mktemp)
+    cat <<'EOF' >"$TMP_UPDATE"
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/seerr.sh)"
 EOF
+    mv "$TMP_UPDATE" /usr/bin/update
     chmod +x /usr/bin/update
     msg_ok "Switched update script to Seerr"
     msg_warn "Please type 'update' again to complete the migration"
-    exit
+    exit 0
   fi
 
   msg_info "Updating Jellyseerr"
