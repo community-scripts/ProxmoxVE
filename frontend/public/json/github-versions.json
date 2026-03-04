@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-04T12:11:17Z",
+  "generated": "2026-03-04T18:14:36Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -298,9 +298,9 @@
     {
       "slug": "docmost",
       "repo": "docmost/docmost",
-      "version": "v0.70.0",
+      "version": "v0.70.1",
       "pinned": false,
-      "date": "2026-03-03T20:33:08Z"
+      "date": "2026-03-04T12:54:49Z"
     },
     {
       "slug": "domain-locker",
@@ -314,7 +314,7 @@
       "repo": "Hosteroid/domain-monitor",
       "version": "v1.1.4",
       "pinned": false,
-      "date": ""
+      "date": "2026-03-02T09:25:01Z"
     },
     {
       "slug": "donetick",
@@ -503,7 +503,7 @@
       "repo": "grocy/grocy",
       "version": "v4.5.0",
       "pinned": false,
-      "date": ""
+      "date": "2025-03-28T19:02:22Z"
     },
     {
       "slug": "guardian",
@@ -1824,9 +1824,9 @@
     {
       "slug": "zitadel",
       "repo": "zitadel/zitadel",
-      "version": "v4.12.0",
+      "version": "v4.12.1",
       "pinned": false,
-      "date": "2026-03-02T08:16:10Z"
+      "date": "2026-03-04T12:40:17Z"
     },
     {
       "slug": "zoraxy",
@@ -1838,9 +1838,9 @@
     {
       "slug": "zwave-js-ui",
       "repo": "zwave-js/zwave-js-ui",
-      "version": "v11.12.0",
+      "version": "v11.13.0",
       "pinned": false,
-      "date": "2026-02-19T10:14:19Z"
+      "date": "2026-03-04T15:09:54Z"
     }
   ]
 }
