@@ -1,0 +1,56 @@
+{
+    "name": "Papra",
+    "slug": "papra",
+    "categories": [
+        12
+    ],
+    "date_created": "2025-12-30",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 1221,
+    "documentation": "https://github.com/CorentinTh/papra",
+    "website": "https://github.com/CorentinTh/papra",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/papra.webp",
+    "config_path": "/opt/papra/.env",
+    "description": "Papra is a modern, self-hosted document management system with full-text search, OCR support, and automatic document processing. Built with Node.js and featuring a clean web interface for organizing and managing your documents.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/papra.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 10,
+                "os": "debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "First visit will prompt you to create an account",
+            "type": "info"
+        },
+        {
+            "text": "Tesseract OCR is pre-installed for all languages",
+            "type": "info"
+        },
+        {
+            "text": "Documents are stored in /opt/papra/app-data/documents",
+            "type": "info"
+        },
+        {
+            "text": "Ingestion folder available at /opt/papra/ingestion for automatic document import",
+            "type": "info"
+        },
+        {
+            "text": "Email functionality runs in dry-run mode by default",
+            "type": "warning"
+        }
+    ]
+}
