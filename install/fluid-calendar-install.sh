@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y zip
+$STD apt install -y \
+  build-essential \
+  zip
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
