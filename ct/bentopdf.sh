@@ -7,7 +7,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 
 APP="BentoPDF"
 var_tags="${var_tags:-pdf-editor}"
-var_cpu="${var_cpu:-1}"
+var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
