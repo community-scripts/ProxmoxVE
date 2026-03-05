@@ -13,21 +13,18 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setting up NetBird Repository"
+msg_info "Installing NetBird"
 setup_deb822_repo \
 	"netbird" \
 	"https://pkgs.netbird.io/debian/public.key" \
 	"https://pkgs.netbird.io/debian" \
 	"stable"
-msg_ok "Set up NetBird Repository"
-
-msg_info "Installing NetBird"
 $STD apt install -y netbird
 msg_ok "Installed NetBird"
 
-msg_info "Enabling NetBird Service"
-$STD systemctl enable -q --now netbird
-msg_ok "Enabled NetBird Service"
+msg_info "Starting NetBird Service"
+systemctl enable -q --now netbird
+msg_ok "Started NetBird Service"
 
 echo ""
 echo ""
