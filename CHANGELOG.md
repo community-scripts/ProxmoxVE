@@ -412,6 +412,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-05
 
+### 🆕 New Scripts
+
+  - Papra ([#12577](https://github.com/community-scripts/ProxmoxVE/pull/12577))
+
 ## 2026-03-04
 
 ### 🚀 Updated Scripts
