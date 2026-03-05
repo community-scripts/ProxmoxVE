@@ -414,7 +414,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Netbird ([#12585](https://github.com/community-scripts/ProxmoxVE/pull/12585))
+  - ddclient ([#12587](https://github.com/community-scripts/ProxmoxVE/pull/12587))
+- Netbird ([#12585](https://github.com/community-scripts/ProxmoxVE/pull/12585))
 - Papra ([#12577](https://github.com/community-scripts/ProxmoxVE/pull/12577))
 
 ### 🚀 Updated Scripts
