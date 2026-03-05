@@ -416,6 +416,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Papra ([#12577](https://github.com/community-scripts/ProxmoxVE/pull/12577))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - PowerDNS: use 'launch=' instead of 'launch+=' for gsqlite3 backend [@MickLesk](https://github.com/MickLesk) ([#12579](https://github.com/community-scripts/ProxmoxVE/pull/12579))
+
 ## 2026-03-04
 
 ### 🚀 Updated Scripts
