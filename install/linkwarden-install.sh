@@ -48,8 +48,6 @@ if command -v corepack >/dev/null 2>&1; then
   $STD corepack prepare "yarn@${yarn_ver}" --activate || true
 fi
 $STD yarn
-$STD npx playwright install-deps
-$STD npx playwright install
 cat <<EOF >/opt/linkwarden/.env
 NEXTAUTH_SECRET=${SECRET_KEY}
 NEXTAUTH_URL=http://${LOCAL_IP}:3000

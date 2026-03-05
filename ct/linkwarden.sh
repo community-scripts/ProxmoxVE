@@ -57,8 +57,6 @@ function update_script() {
       $STD corepack prepare "yarn@${yarn_ver}" --activate || true
     fi
     $STD yarn
-    $STD npx playwright install-deps
-    $STD npx playwright install
     mv /opt/.env /opt/linkwarden/.env
     $STD yarn prisma:generate
     $STD yarn web:build
