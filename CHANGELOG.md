@@ -422,8 +422,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Refactor: BentoPDF [@vhsdream](https://github.com/vhsdream) ([#12597](https://github.com/community-scripts/ProxmoxVE/pull/12597))
     - Tianji: Fix the bug introduced by the refactor [@tremor021](https://github.com/tremor021) ([#12564](https://github.com/community-scripts/ProxmoxVE/pull/12564))
     - PowerDNS: use 'launch=' instead of 'launch+=' for gsqlite3 backend [@MickLesk](https://github.com/MickLesk) ([#12579](https://github.com/community-scripts/ProxmoxVE/pull/12579))
+
+### 🗑️ Deleted Scripts
+
+  - Suwayomi-Server: remove due to inactivity and very low usage [@MickLesk](https://github.com/MickLesk) ([#12596](https://github.com/community-scripts/ProxmoxVE/pull/12596))
 
 ### 💾 Core
 
