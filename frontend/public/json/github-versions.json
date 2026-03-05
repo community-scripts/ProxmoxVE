@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-05T06:17:38Z",
+  "generated": "2026-03-05T12:12:30Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -214,9 +214,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.15.1",
+      "version": "v0.16.0",
       "pinned": false,
-      "date": "2026-02-26T22:01:35Z"
+      "date": "2026-03-05T10:35:07Z"
     },
     {
       "slug": "commafeed",
@@ -1229,9 +1229,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.18",
+      "version": "v5.1.19",
       "pinned": false,
-      "date": "2026-03-03T22:09:15Z"
+      "date": "2026-03-05T11:14:54Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1355,9 +1355,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.11",
+      "version": "v0.14.12",
       "pinned": false,
-      "date": "2026-03-02T08:48:42Z"
+      "date": "2026-03-05T07:24:59Z"
     },
     {
       "slug": "scraparr",
@@ -1369,9 +1369,9 @@
     {
       "slug": "seaweedfs",
       "repo": "seaweedfs/seaweedfs",
-      "version": "4.14",
+      "version": "4.15",
       "pinned": false,
-      "date": "2026-03-05T04:49:27Z"
+      "date": "2026-03-05T06:30:30Z"
     },
     {
       "slug": "seelf",
