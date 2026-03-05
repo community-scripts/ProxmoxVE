@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-05T12:12:30Z",
+  "generated": "2026-03-05T18:38:08Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -214,9 +214,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.16.0",
+      "version": "v0.16.1",
       "pinned": false,
-      "date": "2026-03-05T10:35:07Z"
+      "date": "2026-03-05T17:07:27Z"
     },
     {
       "slug": "commafeed",
@@ -662,9 +662,9 @@
     {
       "slug": "keycloak",
       "repo": "keycloak/keycloak",
-      "version": "26.5.4",
+      "version": "26.5.5",
       "pinned": false,
-      "date": "2026-02-20T09:19:45Z"
+      "date": "2026-03-05T15:40:30Z"
     },
     {
       "slug": "kima-hub",
@@ -1390,9 +1390,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.15",
+      "version": "v2.17.16",
       "pinned": false,
-      "date": "2026-02-28T09:04:40Z"
+      "date": "2026-03-05T12:39:05Z"
     },
     {
       "slug": "shelfmark",
@@ -1411,9 +1411,9 @@
     {
       "slug": "silverbullet",
       "repo": "silverbulletmd/silverbullet",
-      "version": "2.4.1",
+      "version": "2.5.1",
       "pinned": false,
-      "date": "2026-01-16T12:08:28Z"
+      "date": "2026-03-05T15:13:22Z"
     },
     {
       "slug": "slskd",
