@@ -41,7 +41,7 @@ $STD apt install -y \
 sed -i 's/^launch=$/# launch=/' /etc/powerdns/pdns.conf
 rm -f /etc/powerdns/pdns.d/bind.conf
 cat <<EOF >/etc/powerdns/pdns.d/gsqlite3.conf
-launch+=gsqlite3
+launch=gsqlite3
 gsqlite3-database=/opt/poweradmin/powerdns.db
 EOF
 msg_ok "Setup PowerDNS"
