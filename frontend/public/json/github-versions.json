@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-04T18:14:36Z",
+  "generated": "2026-03-05T00:21:58Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -193,9 +193,9 @@
     {
       "slug": "checkmate",
       "repo": "bluewave-labs/Checkmate",
-      "version": "v3.4.0",
+      "version": "v3.5.0",
       "pinned": false,
-      "date": "2026-02-20T21:08:55Z"
+      "date": "2026-03-04T19:51:22Z"
     },
     {
       "slug": "cleanuparr",
@@ -473,9 +473,9 @@
     {
       "slug": "gokapi",
       "repo": "Forceu/Gokapi",
-      "version": "v2.2.2",
+      "version": "v2.2.3",
       "pinned": false,
-      "date": "2026-01-31T21:11:27Z"
+      "date": "2026-03-04T21:29:16Z"
     },
     {
       "slug": "gotify",
@@ -1061,9 +1061,9 @@
     {
       "slug": "paperless-ngx",
       "repo": "paperless-ngx/paperless-ngx",
-      "version": "v2.20.9",
+      "version": "v2.20.10",
       "pinned": false,
-      "date": "2026-02-28T10:17:35Z"
+      "date": "2026-03-04T19:20:57Z"
     },
     {
       "slug": "patchmon",
@@ -1565,9 +1565,9 @@
     {
       "slug": "tinyauth",
       "repo": "steveiliop56/tinyauth",
-      "version": "v5.0.0",
+      "version": "v5.0.1",
       "pinned": false,
-      "date": "2026-03-02T18:43:57Z"
+      "date": "2026-03-04T21:05:05Z"
     },
     {
       "slug": "traccar",
