@@ -422,6 +422,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fluid-calendar: add build-essential to install and update dependencies [@Copilot](https://github.com/Copilot) ([#12602](https://github.com/community-scripts/ProxmoxVE/pull/12602))
     - Refactor: BentoPDF [@vhsdream](https://github.com/vhsdream) ([#12597](https://github.com/community-scripts/ProxmoxVE/pull/12597))
     - Tianji: Fix the bug introduced by the refactor [@tremor021](https://github.com/tremor021) ([#12564](https://github.com/community-scripts/ProxmoxVE/pull/12564))
     - PowerDNS: use 'launch=' instead of 'launch+=' for gsqlite3 backend [@MickLesk](https://github.com/MickLesk) ([#12579](https://github.com/community-scripts/ProxmoxVE/pull/12579))
