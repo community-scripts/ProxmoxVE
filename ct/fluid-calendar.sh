@@ -29,6 +29,7 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies build-essential
   NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"; then
