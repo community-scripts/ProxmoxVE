@@ -23,31 +23,37 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+
   if [[ ! -d /opt/papra ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/papra-hq/papra/releases | grep -oP '"tag_name":\s*"\K@papra/app@[^"]+' | head -n1)
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt 2>/dev/null)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+
+  if check_for_gh_release "papra" "papra-hq/papra"; then
     msg_info "Stopping Service"
     systemctl stop papra
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Backing up Configuration"
+    cp /opt/papra/apps/papra-server/.env /opt/papra_env.bak
+    msg_ok "Backed up Configuration"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "papra" "papra-hq/papra" "tarball"
+
+    msg_info "Building Application"
     cd /opt/papra
-    fetch_and_deploy_gh_release "papra" "papra-hq/papra" "tarball" "${RELEASE}" "/opt/papra"
+    cp /opt/papra_env.bak /opt/papra/apps/papra-server/.env
     $STD pnpm install --frozen-lockfile
     $STD pnpm --filter "@papra/app-client..." run build
     $STD pnpm --filter "@papra/app-server..." run build
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    ln -sf /opt/papra/apps/papra-client/dist /opt/papra/apps/papra-server/public
+    rm -f /opt/papra_env.bak
+    msg_ok "Built Application"
 
     msg_info "Starting Service"
     systemctl start papra
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }
