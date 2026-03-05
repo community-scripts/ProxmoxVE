@@ -40,11 +40,21 @@ function update_script() {
     msg_info "Updating BentoPDF"
     cd /opt/bentopdf
     $STD npm ci --no-audit --no-fund
+    $STD npm install http-server -g
+    cp ./.env.example ./.env.production
+    export NODE_OPTIONS="--max-old-space-size=3072"
     export SIMPLE_MODE=true
-    $STD npm run build -- --mode production
+    export VITE_USE_CDN=true
+    $STD npm run build:all
     msg_ok "Updated BentoPDF"
 
     msg_info "Starting Service"
+    if grep -q '8080' /etc/systemd/system/bentopdf.service; then
+      sed -i -e 's|/bentopdf|/bentopdf/dist|' \
+        -e 's|npx.*|npx http-server -g -b -d false -r --no-dotfiles|' \
+        /etc/systemd/system/bentopdf.service
+      systemctl daemon-reload
+    fi
     systemctl start bentopdf
     msg_ok "Started Service"
     msg_ok "Updated successfully!"

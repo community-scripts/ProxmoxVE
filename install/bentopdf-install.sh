@@ -19,8 +19,12 @@ fetch_and_deploy_gh_release "bentopdf" "alam00000/bentopdf" "tarball" "latest" "
 msg_info "Setup BentoPDF"
 cd /opt/bentopdf
 $STD npm ci --no-audit --no-fund
+$STD npm install http-server -g
+cp ./.env.example ./.env.production
+export NODE_OPTIONS="--max-old-space-size=3072"
 export SIMPLE_MODE=true
-$STD npm run build -- --mode production
+export VITE_USE_CDN=true
+$STD npm run build:all
 msg_ok "Setup BentoPDF"
 
 msg_info "Creating Service"
@@ -31,8 +35,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/bentopdf
-ExecStart=/usr/bin/npx serve dist -p 8080
+WorkingDirectory=/opt/bentopdf/dist
+ExecStart=/usr/bin/npx http-server -g -b -d false -r --no-dotfiles
 Restart=always
 RestartSec=10
 
