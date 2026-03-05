@@ -1032,8 +1032,8 @@ load_vars_file() {
   local VAR_WHITELIST=(
     var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
-    var_net var_nesting var_ns var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
-    var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
+    var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
+    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
   )
 
   # Whitelist check helper
@@ -1214,8 +1214,8 @@ default_var_settings() {
   local VAR_WHITELIST=(
     var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
-    var_net var_nesting var_ns var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
-    var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
+    var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
+    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
   )
 
   # Snapshot: environment variables (highest precedence)
@@ -1376,8 +1376,8 @@ if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   declare -ag VAR_WHITELIST=(
     var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu
     var_gateway var_hostname var_ipv6_method var_mac var_mtu
-    var_net var_ns var_pw var_ram var_tags var_tun var_unprivileged
-    var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
+    var_net var_ns var_os var_pw var_ram var_tags var_tun var_unprivileged
+    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
   )
 fi
 
@@ -1549,6 +1549,8 @@ _build_current_app_vars_tmp() {
     echo "# Generated on $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
     echo
 
+    echo "var_os=$(_sanitize_value "${var_os:-}")"
+    echo "var_version=$(_sanitize_value "${var_version:-}")"
     echo "var_unprivileged=$(_sanitize_value "$_unpriv")"
     echo "var_cpu=$(_sanitize_value "$_cpu")"
     echo "var_ram=$(_sanitize_value "$_ram")"
