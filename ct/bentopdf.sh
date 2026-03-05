@@ -35,13 +35,19 @@ function update_script() {
     systemctl stop bentopdf
     msg_ok "Stopped Service"
 
+    [[ -f /opt/bentopdf/.env.production ]] && cp /opt/bentopdf/.env.production /opt/production.env
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bentopdf" "alam00000/bentopdf" "tarball" "latest" "/opt/bentopdf"
 
     msg_info "Updating BentoPDF"
     cd /opt/bentopdf
     $STD npm ci --no-audit --no-fund
     $STD npm install http-server -g
-    cp ./.env.example ./.env.production
+    if [[ -f /opt/production.env ]]; then
+      mv /opt/production.env ./.env.production
+    else
+      cp ./.env.example ./.env.production
+    fi
     export NODE_OPTIONS="--max-old-space-size=3072"
     export SIMPLE_MODE=true
     export VITE_USE_CDN=true
