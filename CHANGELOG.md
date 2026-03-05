@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - PowerDNS: use 'launch=' instead of 'launch+=' for gsqlite3 backend [@MickLesk](https://github.com/MickLesk) ([#12579](https://github.com/community-scripts/ProxmoxVE/pull/12579))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: add var_os / var_version to whitelist for app.vars [@MickLesk](https://github.com/MickLesk) ([#12576](https://github.com/community-scripts/ProxmoxVE/pull/12576))
+
 ## 2026-03-04
 
 ### 🚀 Updated Scripts
