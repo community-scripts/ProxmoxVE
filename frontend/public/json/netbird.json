@@ -1,0 +1,50 @@
+{
+  "name": "NetBird",
+  "slug": "netbird",
+  "categories": [4],
+  "date_created": "2025-12-02",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://docs.netbird.io/",
+  "website": "https://netbird.io/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/netbird.webp",
+  "config_path": "/etc/netbird/config.json",
+  "description": "NetBird is an open source VPN management platform that creates secure peer-to-peer networks using WireGuard. It enables secure connectivity between devices anywhere in the world without complex firewall configurations or port forwarding. NetBird offers features like zero-configuration networking, SSO integration, access control policies, and a centralized management dashboard. It's designed to be simple to deploy and manage, making it ideal for connecting remote teams, securing IoT devices, or building secure infrastructure networks.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/netbird.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 4,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "The NetBird client (agent) allows a peer to join a pre-existing NetBird deployment. If a NetBird deployment is not yet available, there are both managed and self-hosted options available.",
+      "type": "info"
+    },
+    {
+      "text": "After installation, enter the container and run `netbird` to view the commands.",
+      "type": "info"
+    },
+    {
+      "text": "Use a Setup Key from your NetBird dashboard or SSO login to authenticate during setup or in the container.",
+      "type": "info"
+    },
+    {
+      "text": "Check connection status with `netbird status`.",
+      "type": "info"
+    }
+  ]
+}
