@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-05T00:21:58Z",
+  "generated": "2026-03-05T06:17:38Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -39,9 +39,9 @@
     {
       "slug": "ampache",
       "repo": "ampache/ampache",
-      "version": "7.9.1",
+      "version": "7.9.2",
       "pinned": false,
-      "date": "2026-02-25T08:52:58Z"
+      "date": "2026-03-05T03:54:03Z"
     },
     {
       "slug": "argus",
@@ -452,9 +452,9 @@
     {
       "slug": "gitea-mirror",
       "repo": "RayLabsHQ/gitea-mirror",
-      "version": "v3.12.0",
+      "version": "v3.12.2",
       "pinned": false,
-      "date": "2026-03-04T02:53:42Z"
+      "date": "2026-03-05T04:26:50Z"
     },
     {
       "slug": "glance",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1278",
+      "version": "v0.24.1287",
       "pinned": false,
-      "date": "2026-03-04T08:36:49Z"
+      "date": "2026-03-05T05:49:33Z"
     },
     {
       "slug": "jellystat",
@@ -669,9 +669,9 @@
     {
       "slug": "kima-hub",
       "repo": "Chevron7Locked/kima-hub",
-      "version": "v1.6.1",
+      "version": "v1.6.2",
       "pinned": false,
-      "date": "2026-03-03T16:13:53Z"
+      "date": "2026-03-05T05:38:02Z"
     },
     {
       "slug": "kimai",
@@ -1369,9 +1369,9 @@
     {
       "slug": "seaweedfs",
       "repo": "seaweedfs/seaweedfs",
-      "version": "4.13",
+      "version": "4.14",
       "pinned": false,
-      "date": "2026-02-17T01:09:45Z"
+      "date": "2026-03-05T04:49:27Z"
     },
     {
       "slug": "seelf",
@@ -1663,9 +1663,9 @@
     {
       "slug": "uptimekuma",
       "repo": "louislam/uptime-kuma",
-      "version": "2.1.3",
+      "version": "2.2.0",
       "pinned": false,
-      "date": "2026-02-19T05:37:30Z"
+      "date": "2026-03-05T02:08:14Z"
     },
     {
       "slug": "vaultwarden",
