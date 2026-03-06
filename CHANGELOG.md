@@ -425,6 +425,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - RustDesk Server: Switch to updated repository [@tremor021](https://github.com/tremor021) ([#12083](https://github.com/community-scripts/ProxmoxVE/pull/12083))
 
+  - #### 💥 Breaking Changes
+
+    - Semaphore: Move from BoltDB to SQLite [@tremor021](https://github.com/tremor021) ([#12624](https://github.com/community-scripts/ProxmoxVE/pull/12624))
+
 ## 2026-03-05
 
 ### 🆕 New Scripts
