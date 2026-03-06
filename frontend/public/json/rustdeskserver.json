@@ -54,6 +54,10 @@
     {
       "text": "To see admin password on Alpine, type `cat ~/rustdesk.creds` inside LXC.",
       "type": "info"
+    },
+    {
+      "text": "This script uses hbbs/hbbr builds from `lejianwen/rustdesk-server` (instead of the official repo) for full compatibility with the RustDesk API (SSO/OAuth). See `https://github.com/community-scripts/ProxmoxVE/issues/12079`.",
+      "type": "info"
     }
   ]
 }
