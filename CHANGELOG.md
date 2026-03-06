@@ -416,6 +416,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - wealthfolio: update cors [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12617](https://github.com/community-scripts/ProxmoxVE/pull/12617))
     - CryptPad: Better update handling [@tremor021](https://github.com/tremor021) ([#12611](https://github.com/community-scripts/ProxmoxVE/pull/12611))
 
   - #### ✨ New Features
