@@ -51,8 +51,8 @@ WF_DB_PATH=/opt/wealthfolio_data/wealthfolio.db
 WF_SECRET_KEY=${SECRET_KEY}
 WF_AUTH_PASSWORD_HASH=${WF_PASSWORD_HASH}
 WF_STATIC_DIR=/opt/wealthfolio/dist
-WF_CORS_ALLOW_ORIGINS=*
 WF_REQUEST_TIMEOUT_MS=30000
+WF_CORS_ALLOW_ORIGINS=http://${LOCAL_IP}:8080
 EOF
 echo "WF_PASSWORD=${WF_PASSWORD}" >~/wealthfolio.creds
 msg_ok "Configured Wealthfolio"
