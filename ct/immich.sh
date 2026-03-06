@@ -36,9 +36,13 @@ function update_script() {
     exit
   fi
 
-  if [[ ! -f /etc/apt/preferences.d/preferences ]]; then
+  if ! grep -qE '(^|[[:space:]])testing([[:space:]]|$)' /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
     msg_info "Adding Debian Testing repo"
-    sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+    if grep -q "trixie-updates" /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
+      sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+    else
+      sed -i '/^[[:space:]]*Suites:.*trixie/ s/$/ testing/' /etc/apt/sources.list.d/debian.sources
+    fi
     cat <<EOF >/etc/apt/preferences.d/preferences
 Package: *
 Pin: release a=unstable
