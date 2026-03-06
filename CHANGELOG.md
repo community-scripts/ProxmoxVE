@@ -412,6 +412,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-06
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - RustDesk Server: Switch to updated repository [@tremor021](https://github.com/tremor021) ([#12083](https://github.com/community-scripts/ProxmoxVE/pull/12083))
+
 ## 2026-03-05
 
 ### 🆕 New Scripts
