@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-06T00:25:18Z",
+  "generated": "2026-03-06T06:16:24Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -452,9 +452,9 @@
     {
       "slug": "gitea-mirror",
       "repo": "RayLabsHQ/gitea-mirror",
-      "version": "v3.12.2",
+      "version": "v3.12.4",
       "pinned": false,
-      "date": "2026-03-05T04:26:50Z"
+      "date": "2026-03-06T05:02:40Z"
     },
     {
       "slug": "glance",
@@ -606,16 +606,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.69",
+      "version": "v5.12.70",
       "pinned": false,
-      "date": "2026-02-26T22:23:32Z"
+      "date": "2026-03-06T01:53:38Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1287",
+      "version": "v0.24.1292",
       "pinned": false,
-      "date": "2026-03-05T05:49:33Z"
+      "date": "2026-03-06T05:57:21Z"
     },
     {
       "slug": "jellystat",
@@ -1229,9 +1229,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.19",
+      "version": "v5.1.20",
       "pinned": false,
-      "date": "2026-03-05T11:14:54Z"
+      "date": "2026-03-06T00:30:32Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1306,9 +1306,9 @@
     {
       "slug": "recyclarr",
       "repo": "recyclarr/recyclarr",
-      "version": "v8.3.2",
+      "version": "v8.4.0",
       "pinned": false,
-      "date": "2026-02-25T22:39:51Z"
+      "date": "2026-03-06T01:25:59Z"
     },
     {
       "slug": "reitti",
@@ -1467,9 +1467,9 @@
     {
       "slug": "sportarr",
       "repo": "Sportarr/Sportarr",
-      "version": "v4.0.985.1060",
+      "version": "v4.0.986.1061",
       "pinned": false,
-      "date": "2026-03-04T01:00:04Z"
+      "date": "2026-03-06T01:04:24Z"
     },
     {
       "slug": "stirling-pdf",
