@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-05T18:38:08Z",
+  "generated": "2026-03-06T00:25:18Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -214,9 +214,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.16.1",
+      "version": "v0.16.3",
       "pinned": false,
-      "date": "2026-03-05T17:07:27Z"
+      "date": "2026-03-05T23:18:25Z"
     },
     {
       "slug": "commafeed",
@@ -1110,9 +1110,9 @@
     {
       "slug": "photoprism",
       "repo": "photoprism/photoprism",
-      "version": "251130-b3068414c",
+      "version": "260305-fad9d5395",
       "pinned": false,
-      "date": "2025-12-01T05:07:31Z"
+      "date": "2026-03-05T20:25:12Z"
     },
     {
       "slug": "pihole-exporter",
@@ -1698,9 +1698,9 @@
     {
       "slug": "wallos",
       "repo": "ellite/Wallos",
-      "version": "v4.6.1",
+      "version": "v4.6.2",
       "pinned": false,
-      "date": "2026-02-10T21:06:46Z"
+      "date": "2026-03-05T22:18:06Z"
     },
     {
       "slug": "wanderer",
@@ -1740,9 +1740,9 @@
     {
       "slug": "wealthfolio",
       "repo": "afadil/wealthfolio",
-      "version": "v3.0.3",
+      "version": "v3.0.4",
       "pinned": false,
-      "date": "2026-03-03T21:47:55Z"
+      "date": "2026-03-05T19:58:24Z"
     },
     {
       "slug": "web-check",
