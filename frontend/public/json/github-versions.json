@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-06T12:10:39Z",
+  "generated": "2026-03-06T18:13:12Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -501,9 +501,9 @@
     {
       "slug": "grocy",
       "repo": "grocy/grocy",
-      "version": "v4.5.0",
+      "version": "v4.6.0",
       "pinned": false,
-      "date": "2025-03-28T19:02:22Z"
+      "date": "2026-03-06T17:35:19Z"
     },
     {
       "slug": "guardian",
@@ -641,9 +641,9 @@
     {
       "slug": "kapowarr",
       "repo": "Casvt/Kapowarr",
-      "version": "V1.2.0",
+      "version": "V1.3.0",
       "pinned": false,
-      "date": "2025-04-16T14:55:28Z"
+      "date": "2026-03-06T16:38:21Z"
     },
     {
       "slug": "karakeep",
@@ -872,9 +872,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.03.03",
+      "version": "2026.03.06",
       "pinned": false,
-      "date": "2026-03-03T19:15:55Z"
+      "date": "2026-03-06T13:52:56Z"
     },
     {
       "slug": "miniflux",
@@ -1229,9 +1229,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.20",
+      "version": "v5.1.21",
       "pinned": false,
-      "date": "2026-03-06T00:30:32Z"
+      "date": "2026-03-06T12:13:08Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1411,9 +1411,9 @@
     {
       "slug": "silverbullet",
       "repo": "silverbulletmd/silverbullet",
-      "version": "2.5.1",
+      "version": "2.5.2",
       "pinned": false,
-      "date": "2026-03-05T15:13:22Z"
+      "date": "2026-03-06T12:20:58Z"
     },
     {
       "slug": "slskd",
@@ -1474,9 +1474,9 @@
     {
       "slug": "stirling-pdf",
       "repo": "Stirling-Tools/Stirling-PDF",
-      "version": "v2.6.0",
+      "version": "v2.7.0",
       "pinned": false,
-      "date": "2026-03-03T20:46:42Z"
+      "date": "2026-03-06T11:21:47Z"
     },
     {
       "slug": "streamlink-webui",
@@ -1593,9 +1593,9 @@
     {
       "slug": "traefik",
       "repo": "traefik/traefik",
-      "version": "v3.6.9",
+      "version": "v3.6.10",
       "pinned": false,
-      "date": "2026-02-23T17:21:17Z"
+      "date": "2026-03-06T15:08:35Z"
     },
     {
       "slug": "trilium",
@@ -1740,9 +1740,9 @@
     {
       "slug": "wealthfolio",
       "repo": "afadil/wealthfolio",
-      "version": "v3.0.4",
-      "pinned": false,
-      "date": "2026-03-05T19:58:24Z"
+      "version": "v3.0.3",
+      "pinned": true,
+      "date": "2026-03-03T21:47:55Z"
     },
     {
       "slug": "web-check",
