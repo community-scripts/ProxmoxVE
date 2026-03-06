@@ -29,6 +29,10 @@ function update_script() {
     exit
   fi
 
+  if grep -q '^WF_CORS_ALLOW_ORIGINS=\*$' /opt/wealthfolio/.env; then
+    sed -i "s|^WF_CORS_ALLOW_ORIGINS=\*$|WF_CORS_ALLOW_ORIGINS=http://${LOCAL_IP}:8080|" /opt/wealthfolio/.env
+  fi
+
   if check_for_gh_release "wealthfolio" "afadil/wealthfolio"; then
     msg_info "Stopping Service"
     systemctl stop wealthfolio
