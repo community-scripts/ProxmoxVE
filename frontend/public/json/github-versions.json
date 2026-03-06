@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-06T06:16:24Z",
+  "generated": "2026-03-06T12:10:39Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -270,9 +270,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.16.4",
+      "version": "v3.17.0",
       "pinned": false,
-      "date": "2026-03-01T08:20:17Z"
+      "date": "2026-03-06T07:07:22Z"
     },
     {
       "slug": "dawarich",
@@ -284,9 +284,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v1.0.37",
+      "version": "v2.0.0",
       "pinned": false,
-      "date": "2026-02-18T08:53:43Z"
+      "date": "2026-03-06T08:19:39Z"
     },
     {
       "slug": "dispatcharr",
@@ -326,9 +326,9 @@
     {
       "slug": "drawio",
       "repo": "jgraph/drawio",
-      "version": "v29.5.2",
+      "version": "v29.6.1",
       "pinned": false,
-      "date": "2026-02-22T10:36:14Z"
+      "date": "2026-03-06T09:14:17Z"
     },
     {
       "slug": "duplicati",
@@ -382,9 +382,9 @@
     {
       "slug": "firefly",
       "repo": "firefly-iii/firefly-iii",
-      "version": "v6.5.3",
+      "version": "v6.5.4",
       "pinned": false,
-      "date": "2026-03-04T06:53:02Z"
+      "date": "2026-03-06T09:07:56Z"
     },
     {
       "slug": "fladder",
@@ -1138,9 +1138,9 @@
     {
       "slug": "pocketbase",
       "repo": "pocketbase/pocketbase",
-      "version": "v0.36.5",
+      "version": "v0.36.6",
       "pinned": false,
-      "date": "2026-02-21T11:45:32Z"
+      "date": "2026-03-06T08:07:09Z"
     },
     {
       "slug": "pocketid",
@@ -1333,10 +1333,10 @@
     },
     {
       "slug": "rustdeskserver",
-      "repo": "rustdesk/rustdesk-server",
-      "version": "1.1.15",
+      "repo": "lejianwen/rustdesk-server",
+      "version": "v0.1.2",
       "pinned": false,
-      "date": "2026-01-12T05:38:30Z"
+      "date": "2025-09-01T02:52:30Z"
     },
     {
       "slug": "rustypaste",
@@ -1355,9 +1355,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.12",
+      "version": "v0.14.14",
       "pinned": false,
-      "date": "2026-03-05T07:24:59Z"
+      "date": "2026-03-06T06:50:38Z"
     },
     {
       "slug": "scraparr",
@@ -1838,9 +1838,9 @@
     {
       "slug": "zwave-js-ui",
       "repo": "zwave-js/zwave-js-ui",
-      "version": "v11.13.0",
+      "version": "v11.14.0",
       "pinned": false,
-      "date": "2026-03-04T15:09:54Z"
+      "date": "2026-03-06T09:34:32Z"
     }
   ]
 }
