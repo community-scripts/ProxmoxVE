@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8080,
-  "documentation": null,
+  "documentation": "https://immichframe.dev/docs/overview",
   "config_path": "/opt/immichframe/Config/Settings.yml",
   "website": "https://immichframe.dev/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/immich-frame.webp",
