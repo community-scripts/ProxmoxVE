@@ -20,7 +20,7 @@ setup_deb822_repo \
   "https://packages.microsoft.com/debian/13/prod/" \
   "trixie" \
   "main"
-$STD apt-get install -y \
+$STD apt install -y \
   libicu-dev \
   libssl-dev \
   gettext-base \
@@ -47,8 +47,8 @@ cp -r build/* /opt/immichframe/wwwroot
 msg_ok "Application Built"
 
 msg_info "Removing Build Dependencies"
-$STD apt-get remove -y dotnet-sdk-8.0
-$STD apt-get autoremove -y
+$STD apt remove -y dotnet-sdk-8.0
+$STD apt autoremove -y
 rm -rf /tmp/immichframe
 msg_ok "Removed Build Dependencies"
 
