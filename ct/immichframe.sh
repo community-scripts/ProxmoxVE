@@ -34,6 +34,10 @@ function update_script() {
     systemctl stop immichframe
     msg_ok "Stopped Service"
 
+    msg_info "Backing up Configuration"
+    cp -r /opt/immichframe/Config /tmp/immichframe_config.bak
+    msg_ok "Backed up Configuration"
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immichframe" "immichFrame/ImmichFrame" "tarball" "latest" "/tmp/immichframe"
 
     msg_info "Building Application"
@@ -50,6 +54,12 @@ function update_script() {
     rm -rf /opt/immichframe/wwwroot/*
     cp -r build/* /opt/immichframe/wwwroot
     rm -rf /tmp/immichframe
+
+    msg_info "Restoring Configuration"
+    cp -r /tmp/immichframe_config.bak/* /opt/immichframe/Config/
+    rm -rf /tmp/immichframe_config.bak
+    msg_ok "Restored Configuration"
+
     chown -R immichframe:immichframe /opt/immichframe
     msg_ok "Application Built"
 
