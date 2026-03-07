@@ -12,7 +12,7 @@
   "documentation": null,
   "config_path": "/opt/immichframe/Config/Settings.yml",
   "website": "https://immichframe.dev/",
-  "logo": "https://github.com/selfhst/icons/blob/main/webp/immich-frame.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/immich-frame.webp",
   "description": "ImmichFrame is a digital photo frame web application that connects to your Immich server and displays your photos as a fullscreen slideshow.",
   "install_methods": [
     {
