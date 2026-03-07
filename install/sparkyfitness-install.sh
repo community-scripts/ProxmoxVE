@@ -118,6 +118,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
   systemctl enable -q --now sparkyfitness-garmin
+  systemctl restart sparkyfitness-server
   msg_ok "Setup Garmin microservice"
 fi
 
