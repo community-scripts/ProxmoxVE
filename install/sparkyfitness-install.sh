@@ -92,6 +92,34 @@ $STD systemctl enable -q --now nginx
 $STD systemctl reload nginx
 msg_ok "Configured Nginx"
 
+read -r -p "${TAB3}Would you like to install the Garmin microservice? <y/N> " prompt
+if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+  PYTHON_VERSION="3.13" setup_uv
+  msg_info "Setting up Garmin microservice"
+  cd /opt/sparkyfitness/SparkyFitnessGarmin
+  $STD uv venv --clear /opt/sparkyfitness/SparkyFitnessGarmin/.venv
+  $STD uv pip install -r /opt/sparkyfitness/SparkyFitnessGarmin/requirements.txt
+  cat <<EOF >/etc/systemd/system/sparkyfitness-garmin.service
+[Unit]
+Description=SparkyFitness Garmin Microservice
+After=network.target sparkyfitness-server.service
+Requires=sparkyfitness-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/sparkyfitness/SparkyFitnessGarmin
+EnvironmentFile=/etc/sparkyfitness/.env
+ExecStart=/opt/sparkyfitness/SparkyFitnessGarmin/.venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl enable -q --now sparkyfitness-garmin
+  msg_ok "Setup Garmin microservice"
+fi
+
 motd_ssh
 customize
 cleanup_lxc

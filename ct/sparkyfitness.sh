@@ -30,8 +30,17 @@ function update_script() {
   fi
 
   if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
+    INSTALL_GARMIN=0
+    if [[ -d /opt/sparkyfitness/SparkyFitnessGarmin/.venv ]]; then
+      INSTALL_GARMIN=1
+    fi
+
     msg_info "Stopping Services"
-    systemctl stop sparkyfitness-server nginx
+    if [[ "${INSTALL_GARMIN}" == "1" ]]; then
+      systemctl stop sparkyfitness-server sparkyfitness-garmin nginx
+    else
+      systemctl stop sparkyfitness-server nginx
+    fi
     msg_ok "Stopped Services"
 
     msg_info "Backing up data"
@@ -61,13 +70,26 @@ function update_script() {
     cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
     msg_ok "Updated Sparky Fitness Frontend"
 
+    if [[ "${INSTALL_GARMIN}" == "1" ]]; then
+      PYTHON_VERSION="3.13" setup_uv
+      msg_info "Updating Sparky Fitness Garmin Service"
+      cd /opt/sparkyfitness/SparkyFitnessGarmin
+      $STD uv venv --clear "/opt/sparkyfitness/SparkyFitnessGarmin/.venv"
+      $STD uv pip install -r requirements.txt --python /opt/sparkyfitness/SparkyFitnessGarmin/.venv/bin/python3
+      msg_ok "Updated Sparky Fitness Garmin Service"
+    fi
+
     msg_info "Restoring data"
     cp -r /opt/sparkyfitness_backup/. /opt/sparkyfitness/SparkyFitnessServer/
     rm -rf /opt/sparkyfitness_backup
     msg_ok "Restored data"
 
     msg_info "Starting Services"
-    $STD systemctl start sparkyfitness-server nginx
+    if [[ "${INSTALL_GARMIN}" == "1" ]]; then
+      $STD systemctl start sparkyfitness-server sparkyfitness-garmin nginx
+    else
+      $STD systemctl start sparkyfitness-server nginx
+    fi
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
