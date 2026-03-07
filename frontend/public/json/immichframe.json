@@ -34,7 +34,7 @@
   "notes": [
     {
       "text": "After installation, edit `/opt/immichframe/Config/Settings.yml` and set ImmichServerUrl and ApiKey. Then restart the service with `systemctl restart immichframe`.",
-      "type": "info"
+      "type": "warning"
     }
   ]
 }
