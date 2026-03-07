@@ -32,7 +32,7 @@ NODE_VERSION="22" setup_nodejs
 
 fetch_and_deploy_gh_release "immichframe" "immichFrame/ImmichFrame" "tarball" "latest" "/tmp/immichframe"
 
-msg_info "Building Application"
+msg_info "Setting up ImmichFrame"
 mkdir -p /opt/immichframe
 cd /tmp/immichframe
 $STD dotnet publish ImmichFrame.WebApi/ImmichFrame.WebApi.csproj \
@@ -44,27 +44,17 @@ cd /tmp/immichframe/immichFrame.Web
 $STD npm ci
 $STD npm run build
 cp -r build/* /opt/immichframe/wwwroot
-msg_ok "Application Built"
-
-msg_info "Removing Build Dependencies"
 $STD apt remove -y dotnet-sdk-8.0
 $STD apt autoremove -y
 rm -rf /tmp/immichframe
-msg_ok "Removed Build Dependencies"
-
-msg_info "Configuring ImmichFrame"
 mkdir -p /opt/immichframe/Config
-curl -fsSL "https://raw.githubusercontent.com/immichFrame/ImmichFrame/main/docker/Settings.example.yml" \
-  -o /opt/immichframe/Config/Settings.yml
-msg_ok "Configured ImmichFrame"
-
-msg_info "Creating immichframe User"
+curl -fsSL "https://raw.githubusercontent.com/immichFrame/ImmichFrame/main/docker/Settings.example.yml" -o /opt/immichframe/Config/Settings.yml
 useradd -r -s /sbin/nologin -d /opt/immichframe -M immichframe 2>/dev/null
 chown -R immichframe:immichframe /opt/immichframe
-msg_ok "User immichframe Created"
+msg_ok "Setup ImmichFrame"
 
 msg_info "Creating Service"
-cat <<'EOF' >/etc/systemd/system/immichframe.service
+cat <<EOF >/etc/systemd/system/immichframe.service
 [Unit]
 Description=ImmichFrame Digital Photo Frame
 After=network.target
@@ -73,17 +63,13 @@ After=network.target
 Type=simple
 User=immichframe
 Group=immichframe
-
 WorkingDirectory=/opt/immichframe
 ExecStart=/usr/bin/dotnet /opt/immichframe/ImmichFrame.WebApi.dll
-
 Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
 Environment=ASPNETCORE_ENVIRONMENT=Production
 Environment=DOTNET_CONTENTROOT=/opt/immichframe
-
 Restart=always
 RestartSec=5
-
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=immichframe
