@@ -49,7 +49,7 @@ $STD apt autoremove -y
 rm -rf /tmp/immichframe
 mkdir -p /opt/immichframe/Config
 curl -fsSL "https://raw.githubusercontent.com/immichFrame/ImmichFrame/main/docker/Settings.example.yml" -o /opt/immichframe/Config/Settings.yml
-useradd -r -s /sbin/nologin -d /opt/immichframe -M immichframe 2>/dev/null
+useradd -r -s /sbin/nologin -d /opt/immichframe -M immichframe
 chown -R immichframe:immichframe /opt/immichframe
 msg_ok "Setup ImmichFrame"
 
