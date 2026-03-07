@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-06T18:13:12Z",
+  "generated": "2026-03-07T00:19:56Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -151,9 +151,9 @@
     {
       "slug": "booklore",
       "repo": "booklore-app/BookLore",
-      "version": "v2.0.5",
+      "version": "v2.0.6",
       "pinned": false,
-      "date": "2026-03-01T16:13:13Z"
+      "date": "2026-03-06T19:16:29Z"
     },
     {
       "slug": "bookstack",
@@ -193,9 +193,9 @@
     {
       "slug": "checkmate",
       "repo": "bluewave-labs/Checkmate",
-      "version": "v3.5.0",
+      "version": "v3.5.1",
       "pinned": false,
-      "date": "2026-03-04T19:51:22Z"
+      "date": "2026-03-06T21:18:36Z"
     },
     {
       "slug": "cleanuparr",
@@ -550,9 +550,9 @@
     {
       "slug": "homarr",
       "repo": "homarr-labs/homarr",
-      "version": "v1.54.0",
+      "version": "v1.55.0",
       "pinned": false,
-      "date": "2026-02-27T19:38:50Z"
+      "date": "2026-03-06T19:40:16Z"
     },
     {
       "slug": "homebox",
@@ -1285,9 +1285,9 @@
     {
       "slug": "rclone",
       "repo": "rclone/rclone",
-      "version": "v1.73.1",
+      "version": "v1.73.2",
       "pinned": false,
-      "date": "2026-02-17T18:27:21Z"
+      "date": "2026-03-06T20:42:26Z"
     },
     {
       "slug": "rdtclient",
