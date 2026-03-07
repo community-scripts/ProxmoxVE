@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "The Garmin microservice can be optionally installed. It is needed for connecting Garmin accounts to SparkyFitness.",
+      "type": "info"
+    }
+  ]
 }
