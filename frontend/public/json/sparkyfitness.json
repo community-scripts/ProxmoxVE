@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "The Garmin micorservice can be optionally installed. Its port is statically set to 8000.",
+      "text": "The Garmin microservice can be optionally installed. Its port will be statically set to 8000.",
       "type": "info"
     }
   ]
