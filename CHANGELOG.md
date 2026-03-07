@@ -412,6 +412,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-07
 
+### 🆕 New Scripts
+
+  - ImmichFrame ([#12653](https://github.com/community-scripts/ProxmoxVE/pull/12653))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
