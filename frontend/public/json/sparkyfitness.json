@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "The Garmin micorservice can be optionally installed. Its port is statically set to 8000.",
+      "type": "info"
+    }
+  ]
 }
