@@ -37,13 +37,10 @@ function update_script() {
   if [[ "${GARMIN_INSTALLED}" == "0" ]]; then
     CHOICE=$(msg_menu "SparkyFitness Update Options" \
       "1" "Update SparkyFitness" \
-      "2" "Install Garmin Microservice")
-  else
-    CHOICE=$(msg_menu "SparkyFitness Update Options" \
-      "1" "Update SparkyFitness")
+      "2" "Install SparkyFitness Garmin Microservice")
   fi
 
-  case $CHOICE in
+  case "${CHOICE:=1}" in
   1)
     if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
 
@@ -70,25 +67,25 @@ function update_script() {
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/package.json)"
     NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
-    msg_info "Updating Sparky Fitness Backend"
+    msg_info "Updating SparkyFitness Backend"
     cd /opt/sparkyfitness/SparkyFitnessServer
     $STD npm install
-    msg_ok "Updated Sparky Fitness Backend"
+    msg_ok "Updated SparkyFitness Backend"
 
-    msg_info "Updating Sparky Fitness Frontend (Patience)"
+    msg_info "Updating SparkyFitness Frontend (Patience)"
     cd /opt/sparkyfitness/SparkyFitnessFrontend
     $STD pnpm install
     $STD pnpm run build
     cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
-    msg_ok "Updated Sparky Fitness Frontend"
+    msg_ok "Updated SparkyFitness Frontend"
 
     if [[ "${GARMIN_INSTALLED}" == "1" ]]; then
       PYTHON_VERSION="3.13" setup_uv
-      msg_info "Updating Sparky Fitness Garmin Service"
+      msg_info "Updating SparkyFitness Garmin Service"
       cd /opt/sparkyfitness/SparkyFitnessGarmin
       $STD uv venv --clear "/opt/sparkyfitness/SparkyFitnessGarmin/.venv"
       $STD uv pip install -r requirements.txt --python /opt/sparkyfitness/SparkyFitnessGarmin/.venv/bin/python3
-      msg_ok "Updated Sparky Fitness Garmin Service"
+      msg_ok "Updated SparkyFitness Garmin Service"
     fi
 
     msg_info "Restoring data"
@@ -109,7 +106,7 @@ function update_script() {
     ;;
   2)
     PYTHON_VERSION="3.13" setup_uv
-    msg_info "Setting up Garmin microservice"
+    msg_info "Setting up SparkyFitness Garmin microservice"
     cd /opt/sparkyfitness/SparkyFitnessGarmin
     $STD uv venv --clear /opt/sparkyfitness/SparkyFitnessGarmin/.venv
     $STD uv pip install -r /opt/sparkyfitness/SparkyFitnessGarmin/requirements.txt
@@ -133,7 +130,7 @@ WantedBy=multi-user.target
 EOF
     systemctl enable -q --now sparkyfitness-garmin
     systemctl restart sparkyfitness-server
-    msg_ok "Setup Garmin microservice"
+    msg_ok "Setup SparkyFitness Garmin microservice"
     exit
     ;;
   esac

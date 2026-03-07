@@ -92,10 +92,10 @@ $STD systemctl enable -q --now nginx
 $STD systemctl reload nginx
 msg_ok "Configured Nginx"
 
-read -r -p "${TAB3}Would you like to install the Garmin microservice? <y/N> " prompt
+read -r -p "${TAB3}Would you like to install the SparkyFitness Garmin microservice? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   PYTHON_VERSION="3.13" setup_uv
-  msg_info "Setting up Garmin microservice"
+  msg_info "Setting up SparkyFitness Garmin microservice"
   cd /opt/sparkyfitness/SparkyFitnessGarmin
   $STD uv venv --clear /opt/sparkyfitness/SparkyFitnessGarmin/.venv
   $STD uv pip install -r /opt/sparkyfitness/SparkyFitnessGarmin/requirements.txt
@@ -119,7 +119,7 @@ WantedBy=multi-user.target
 EOF
   systemctl enable -q --now sparkyfitness-garmin
   systemctl restart sparkyfitness-server
-  msg_ok "Setup Garmin microservice"
+  msg_ok "Setup SparkyFitness Garmin microservice"
 fi
 
 motd_ssh
