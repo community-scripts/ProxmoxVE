@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-07T00:19:56Z",
+  "generated": "2026-03-07T06:10:20Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -284,9 +284,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v2.0.0",
+      "version": "v2.0.1",
       "pinned": false,
-      "date": "2026-03-06T08:19:39Z"
+      "date": "2026-03-07T02:43:33Z"
     },
     {
       "slug": "dispatcharr",
@@ -452,9 +452,9 @@
     {
       "slug": "gitea-mirror",
       "repo": "RayLabsHQ/gitea-mirror",
-      "version": "v3.12.4",
+      "version": "v3.12.5",
       "pinned": false,
-      "date": "2026-03-06T05:02:40Z"
+      "date": "2026-03-07T01:30:40Z"
     },
     {
       "slug": "glance",
@@ -613,9 +613,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1292",
+      "version": "v0.24.1307",
       "pinned": false,
-      "date": "2026-03-06T05:57:21Z"
+      "date": "2026-03-07T05:55:30Z"
     },
     {
       "slug": "jellystat",
@@ -1355,9 +1355,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.14",
+      "version": "v0.14.15",
       "pinned": false,
-      "date": "2026-03-06T06:50:38Z"
+      "date": "2026-03-06T23:06:01Z"
     },
     {
       "slug": "scraparr",
@@ -1467,9 +1467,9 @@
     {
       "slug": "sportarr",
       "repo": "Sportarr/Sportarr",
-      "version": "v4.0.986.1061",
+      "version": "v4.0.987.1062",
       "pinned": false,
-      "date": "2026-03-06T01:04:24Z"
+      "date": "2026-03-07T05:01:48Z"
     },
     {
       "slug": "stirling-pdf",
@@ -1796,9 +1796,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.6.2",
+      "version": "v0.6.3",
       "pinned": false,
-      "date": "2026-02-24T15:15:46Z"
+      "date": "2026-03-07T03:24:05Z"
     },
     {
       "slug": "zerobyte",
