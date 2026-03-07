@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-07T12:08:02Z",
+  "generated": "2026-03-07T18:06:42Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -438,9 +438,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.247.0",
+      "version": "2.248.0",
       "pinned": false,
-      "date": "2026-03-04T07:48:00Z"
+      "date": "2026-03-07T17:24:24Z"
     },
     {
       "slug": "gitea",
@@ -557,9 +557,9 @@
     {
       "slug": "homebox",
       "repo": "sysadminsmedia/homebox",
-      "version": "v0.24.0",
+      "version": "v0.24.1",
       "pinned": false,
-      "date": "2026-03-03T16:09:55Z"
+      "date": "2026-03-07T15:41:21Z"
     },
     {
       "slug": "homepage",
@@ -872,9 +872,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.03.06",
+      "version": "2026.03.07",
       "pinned": false,
-      "date": "2026-03-06T13:52:56Z"
+      "date": "2026-03-07T14:14:57Z"
     },
     {
       "slug": "miniflux",
@@ -1145,9 +1145,9 @@
     {
       "slug": "pocketid",
       "repo": "pocket-id/pocket-id",
-      "version": "v2.3.0",
+      "version": "v2.4.0",
       "pinned": false,
-      "date": "2026-02-23T19:50:48Z"
+      "date": "2026-03-07T17:51:41Z"
     },
     {
       "slug": "powerdns",
@@ -1467,9 +1467,9 @@
     {
       "slug": "sportarr",
       "repo": "Sportarr/Sportarr",
-      "version": "v4.0.987.1062",
+      "version": "v4.0.988.1063",
       "pinned": false,
-      "date": "2026-03-07T05:01:48Z"
+      "date": "2026-03-07T12:15:33Z"
     },
     {
       "slug": "stirling-pdf",
