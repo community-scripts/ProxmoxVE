@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-07T06:10:20Z",
+  "generated": "2026-03-07T12:08:02Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -116,9 +116,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.4.0",
+      "version": "v2.4.1",
       "pinned": false,
-      "date": "2026-03-01T14:25:43Z"
+      "date": "2026-03-07T09:14:39Z"
     },
     {
       "slug": "beszel",
