@@ -99,6 +99,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   cd /opt/sparkyfitness/SparkyFitnessGarmin
   $STD uv venv --clear /opt/sparkyfitness/SparkyFitnessGarmin/.venv
   $STD uv pip install -r /opt/sparkyfitness/SparkyFitnessGarmin/requirements.txt
+  sed -i -e "s|^#\?GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" "/etc/sparkyfitness/.env"
   cat <<EOF >/etc/systemd/system/sparkyfitness-garmin.service
 [Unit]
 Description=SparkyFitness Garmin Microservice
