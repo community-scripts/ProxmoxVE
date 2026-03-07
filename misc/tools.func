@@ -1080,6 +1080,44 @@ is_package_installed() {
 }
 
 # ------------------------------------------------------------------------------
+# Prompt user to enter a GitHub Personal Access Token (PAT) interactively
+# Returns 0 if a valid token was provided, 1 otherwise
+# ------------------------------------------------------------------------------
+prompt_for_github_token() {
+  if [[ ! -t 0 ]]; then
+    return 1
+  fi
+
+  local reply
+  read -rp "${TAB}Would you like to enter a GitHub Personal Access Token (PAT)? [y/N]: " reply
+  reply="${reply:-n}"
+
+  if [[ ! "${reply,,}" =~ ^(y|yes)$ ]]; then
+    return 1
+  fi
+
+  local token
+  while true; do
+    read -rp "${TAB}Enter your GitHub PAT: " token
+    # Trim leading/trailing whitespace
+    token="$(echo "$token" | xargs)"
+    if [[ -z "$token" ]]; then
+      msg_warn "Token cannot be empty. Please try again."
+      continue
+    fi
+    if [[ "$token" =~ [[:space:]] ]]; then
+      msg_warn "Token must not contain spaces. Please try again."
+      continue
+    fi
+    break
+  done
+
+  export GITHUB_TOKEN="$token"
+  msg_ok "GitHub token has been set."
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # GitHub API call with authentication and rate limit handling
 # ------------------------------------------------------------------------------
 github_api_call() {
@@ -1091,7 +1129,8 @@ github_api_call() {
   local header_args=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
 
-  for attempt in $(seq 1 $max_retries); do
+  local attempt=1
+  while ((attempt <= max_retries)); do
     local http_code
     http_code=$(curl -sSL -w "%{http_code}" -o "$output_file" \
       -H "Accept: application/vnd.github+json" \
@@ -1108,7 +1147,11 @@ github_api_call() {
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
         msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
       else
-        msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
+        msg_error "The repository may require authentication."
+      fi
+      if prompt_for_github_token; then
+        header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+        continue
       fi
       return 1
       ;;
@@ -1118,9 +1161,16 @@ github_api_call() {
         msg_warn "GitHub API rate limit, waiting ${retry_delay}s... (attempt $attempt/$max_retries)"
         sleep "$retry_delay"
         retry_delay=$((retry_delay * 2))
+        ((attempt++))
         continue
       fi
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
+      if prompt_for_github_token; then
+        header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+        retry_delay=2
+        attempt=1
+        continue
+      fi
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
       return 1
@@ -1132,6 +1182,7 @@ github_api_call() {
     000 | "")
       if [[ $attempt -lt $max_retries ]]; then
         sleep "$retry_delay"
+        ((attempt++))
         continue
       fi
       msg_error "GitHub API connection failed (no response)."
@@ -1141,12 +1192,14 @@ github_api_call() {
     *)
       if [[ $attempt -lt $max_retries ]]; then
         sleep "$retry_delay"
+        ((attempt++))
         continue
       fi
       msg_error "GitHub API call failed (HTTP $http_code)."
       return 1
       ;;
     esac
+    ((attempt++))
   done
 
   msg_error "GitHub API call failed after ${max_retries} attempts: ${url}"
@@ -3123,11 +3176,30 @@ function fetch_and_deploy_gh_release() {
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
+    elif [[ "$http_code" == "401" ]]; then
+      msg_error "GitHub API authentication failed (HTTP 401)."
+      if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+        msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
+      else
+        msg_error "The repository may require authentication."
+      fi
+      if prompt_for_github_token; then
+        header=(-H "Authorization: token $GITHUB_TOKEN")
+        continue
+      fi
+      break
     elif [[ "$http_code" == "403" ]]; then
       if ((attempt < max_retries)); then
         msg_warn "GitHub API rate limit hit, retrying in ${retry_delay}s... (attempt $attempt/$max_retries)"
         sleep "$retry_delay"
         retry_delay=$((retry_delay * 2))
+      else
+        msg_error "GitHub API rate limit exceeded (HTTP 403)."
+        if prompt_for_github_token; then
+          header=(-H "Authorization: token $GITHUB_TOKEN")
+          retry_delay=2
+          attempt=0
+        fi
       fi
     else
       sleep "$retry_delay"
@@ -3136,21 +3208,10 @@ function fetch_and_deploy_gh_release() {
   done
 
   if ! $success; then
-    if [[ "$http_code" == "401" ]]; then
-      msg_error "GitHub API authentication failed (HTTP 401)."
-      if [[ -n "${GITHUB_TOKEN:-}" ]]; then
-        msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
-      else
-        msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
-      fi
-    elif [[ "$http_code" == "403" ]]; then
-      msg_error "GitHub API rate limit exceeded (HTTP 403)."
-      msg_error "To increase the limit, export a GitHub token before running the script:"
-      msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-    elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
+    if [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitHub API connection failed (no response)."
       msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
-    else
+    elif [[ "$http_code" != "401" ]]; then
       msg_error "Failed to fetch release metadata (HTTP $http_code)"
     fi
     return 1
