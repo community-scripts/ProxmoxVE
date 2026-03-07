@@ -420,6 +420,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Update Rdtclient to dotnet 10.0 [@asylumexp](https://github.com/asylumexp) ([#12638](https://github.com/community-scripts/ProxmoxVE/pull/12638))
     - fix(immich): fix update script failing to add Debian testing repo when preferences file already exists [@Copilot](https://github.com/Copilot) ([#12631](https://github.com/community-scripts/ProxmoxVE/pull/12631))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Papra: update repository URL to papra-hq/papra [@MickLesk](https://github.com/MickLesk) ([#12650](https://github.com/community-scripts/ProxmoxVE/pull/12650))
+
 ## 2026-03-06
 
 ### 🚀 Updated Scripts
