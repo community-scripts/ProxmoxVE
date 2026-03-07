@@ -29,7 +29,6 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
-
 fetch_and_deploy_gh_release "immichframe" "immichFrame/ImmichFrame" "tarball" "latest" "/tmp/immichframe"
 
 msg_info "Setting up ImmichFrame"
