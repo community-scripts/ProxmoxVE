@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-07T18:06:42Z",
+  "generated": "2026-03-08T00:21:23Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -214,9 +214,9 @@
     {
       "slug": "comfyui",
       "repo": "comfyanonymous/ComfyUI",
-      "version": "v0.16.3",
+      "version": "v0.16.4",
       "pinned": false,
-      "date": "2026-03-05T23:18:25Z"
+      "date": "2026-03-07T22:37:49Z"
     },
     {
       "slug": "commafeed",
@@ -590,6 +590,13 @@
       "date": "2026-03-02T21:28:06Z"
     },
     {
+      "slug": "immichframe",
+      "repo": "immichFrame/ImmichFrame",
+      "version": "v1.0.32.0",
+      "pinned": false,
+      "date": "2026-03-02T22:56:06Z"
+    },
+    {
       "slug": "inspircd",
       "repo": "inspircd/inspircd",
       "version": "v4.9.0",
@@ -837,9 +844,9 @@
     {
       "slug": "mealie",
       "repo": "mealie-recipes/mealie",
-      "version": "v3.11.0",
+      "version": "v3.12.0",
       "pinned": false,
-      "date": "2026-02-17T04:13:35Z"
+      "date": "2026-03-07T21:59:11Z"
     },
     {
       "slug": "mediamanager",
@@ -1327,9 +1334,9 @@
     {
       "slug": "romm",
       "repo": "RetroAchievements/RALibretro",
-      "version": "1.8.2",
+      "version": "1.8.3",
       "pinned": false,
-      "date": "2026-01-23T17:03:31Z"
+      "date": "2026-03-07T23:41:29Z"
     },
     {
       "slug": "rustdeskserver",
