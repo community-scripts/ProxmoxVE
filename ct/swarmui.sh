@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-unscripted/ProxmoxVED/main/misc/build.func)
+COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/refs/heads/main}"
+source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/build.func)
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: community-scripts
+# Author: BillyOutlast
 # License: MIT | https://github.com/community-unscripted/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/mcmonkeyprojects/SwarmUI
 
