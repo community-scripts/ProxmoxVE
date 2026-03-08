@@ -24,6 +24,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -31,6 +34,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 <details>
 <summary><h3>2026</h3></summary>
 
+
+<details>
+<summary><h4>March (7 entries)</h4></summary>
+
+[View March 2026 Changelog](.github/changelogs/2026/03.md)
+
+</details>
 
 <details>
 <summary><h4>February (28 entries)</h4></summary>
@@ -1319,216 +1329,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 ### ❔ Uncategorized
 
   - Opencloud: fix JSON [@vhsdream](https://github.com/vhsdream) ([#11617](https://github.com/community-scripts/ProxmoxVE/pull/11617))
-
-## 2026-02-05
-
-### 🆕 New Scripts
-
-  - OpenCloud ([#11538](https://github.com/community-scripts/ProxmoxVE/pull/11538))
-- Nginx-UI ([#11573](https://github.com/community-scripts/ProxmoxVE/pull/11573))
-- New: SQL-Server 2025 | Refactor SQL-Server 2022  [@MickLesk](https://github.com/MickLesk) ([#11546](https://github.com/community-scripts/ProxmoxVE/pull/11546))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - OpenCloud: pin version to 5.0.2; Collabora CSP fix [@vhsdream](https://github.com/vhsdream) ([#11585](https://github.com/community-scripts/ProxmoxVE/pull/11585))
-    - Wanderer: Fix repo [@tremor021](https://github.com/tremor021) ([#11567](https://github.com/community-scripts/ProxmoxVE/pull/11567))
-
-  - #### ✨ New Features
-
-    - Refactor: Docker-VM (Multi-OS / Cloud-Init / Stabilization)  [@MickLesk](https://github.com/MickLesk) ([#9047](https://github.com/community-scripts/ProxmoxVE/pull/9047))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - cloud-init: add interactive SSH key discovery and selection [@MickLesk](https://github.com/MickLesk) ([#11547](https://github.com/community-scripts/ProxmoxVE/pull/11547))
-
-### 📚 Documentation
-
-  - github: extend docs / contribution / templates [@MickLesk](https://github.com/MickLesk) ([#10921](https://github.com/community-scripts/ProxmoxVE/pull/10921))
-
-### 🌐 Website
-
-  - #### 🐞 Bug Fixes
-
-    - fix(frontend): theme respective syntax highlighting [@ls-root](https://github.com/ls-root) ([#11565](https://github.com/community-scripts/ProxmoxVE/pull/11565))
-
-## 2026-02-04
-
-### 🆕 New Scripts
-
-  - Wishlist ([#11527](https://github.com/community-scripts/ProxmoxVE/pull/11527))
-- WriteFreely ([#11524](https://github.com/community-scripts/ProxmoxVE/pull/11524))
-
-### 🚀 Updated Scripts
-
-  - Add log directory and permissions for koillection [@shineangelic](https://github.com/shineangelic) ([#11553](https://github.com/community-scripts/ProxmoxVE/pull/11553))
-
-  - #### 🐞 Bug Fixes
-
-    - [FIX] Scanopy: ensure Scanopy Daemon update [@vhsdream](https://github.com/vhsdream) ([#11541](https://github.com/community-scripts/ProxmoxVE/pull/11541))
-    - Immich: pin version to 2.5.3 [@vhsdream](https://github.com/vhsdream) ([#11515](https://github.com/community-scripts/ProxmoxVE/pull/11515))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - core: create vm-core.func from dev [@MickLesk](https://github.com/MickLesk) ([#11528](https://github.com/community-scripts/ProxmoxVE/pull/11528))
-
-### 🧰 Tools
-
-  - #### ✨ New Features
-
-    - [ADDON] Immich Public Proxy addon [@vhsdream](https://github.com/vhsdream) ([#11518](https://github.com/community-scripts/ProxmoxVE/pull/11518))
-
-### 🌐 Website
-
-  - #### 🐞 Bug Fixes
-
-    - fix(frontend): implement weighted search scoring for command menu [@ls-root](https://github.com/ls-root) ([#11534](https://github.com/community-scripts/ProxmoxVE/pull/11534))
-
-### ❔ Uncategorized
-
-  - [FIX] Immich Public Proxy docs link [@vhsdream](https://github.com/vhsdream) ([#11543](https://github.com/community-scripts/ProxmoxVE/pull/11543))
-
-## 2026-02-03
-
-### 🆕 New Scripts
-
-  - Wealthfolio ([#11511](https://github.com/community-scripts/ProxmoxVE/pull/11511))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - [FIX] Shelfmark: unpin Chromium version [@vhsdream](https://github.com/vhsdream) ([#11505](https://github.com/community-scripts/ProxmoxVE/pull/11505))
-
-  - #### ✨ New Features
-
-    - [FEAT] Scanopy: automatically update integrated daemon [@vhsdream](https://github.com/vhsdream) ([#11506](https://github.com/community-scripts/ProxmoxVE/pull/11506))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - [FIX] tools.func: trim spaces in app_lc when checking for gh release [@vhsdream](https://github.com/vhsdream) ([#11512](https://github.com/community-scripts/ProxmoxVE/pull/11512))
-
-### 🌐 Website
-
-  - #### 🐞 Bug Fixes
-
-    - fix(frontend): decouple table pagination from summary fetching [@ls-root](https://github.com/ls-root) ([#11495](https://github.com/community-scripts/ProxmoxVE/pull/11495))
-
-## 2026-02-02
-
-### 🆕 New Scripts
-
-  - rustypaste | Alpine-rustypaste ([#11457](https://github.com/community-scripts/ProxmoxVE/pull/11457))
-- KitchenOwl ([#11453](https://github.com/community-scripts/ProxmoxVE/pull/11453))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Grist: Update dependencies [@tremor021](https://github.com/tremor021) ([#11489](https://github.com/community-scripts/ProxmoxVE/pull/11489))
-    - Allow "downgrade" of libigdgmm12 [@vhsdream](https://github.com/vhsdream) ([#11478](https://github.com/community-scripts/ProxmoxVE/pull/11478))
-    - Disable NPM install and update due to OpenResty SHA-1 signature issues [@MickLesk](https://github.com/MickLesk) ([#11471](https://github.com/community-scripts/ProxmoxVE/pull/11471))
-
-  - #### ✨ New Features
-
-    - Refactor: Forgejo & readeck - migrate to codeberg functions [@MickLesk](https://github.com/MickLesk) ([#11460](https://github.com/community-scripts/ProxmoxVE/pull/11460))
-
-  - #### 💥 Breaking Changes
-
-    - [FIX] Scanopy: remove daemon build [@vhsdream](https://github.com/vhsdream) ([#11444](https://github.com/community-scripts/ProxmoxVE/pull/11444))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Vaultwarden [@MickLesk](https://github.com/MickLesk) ([#11445](https://github.com/community-scripts/ProxmoxVE/pull/11445))
-    - various scripts: use ensure_dependencies instead of apt [@MickLesk](https://github.com/MickLesk) ([#11463](https://github.com/community-scripts/ProxmoxVE/pull/11463))
-
-### 🌐 Website
-
-  - cleanup(frontend): remove unused /category-view route [@ls-root](https://github.com/ls-root) ([#11461](https://github.com/community-scripts/ProxmoxVE/pull/11461))
-
-  - #### ✨ New Features
-
-    - feat(frontend): preview tab [@ls-root](https://github.com/ls-root) ([#11475](https://github.com/community-scripts/ProxmoxVE/pull/11475))
-
-## 2026-02-01
-
-### 🚀 Updated Scripts
-
-  - fix headers [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11422](https://github.com/community-scripts/ProxmoxVE/pull/11422))
-
-  - #### 🐞 Bug Fixes
-
-    - 2fauth: export PHP_VERSION for nginx config [@MickLesk](https://github.com/MickLesk) ([#11441](https://github.com/community-scripts/ProxmoxVE/pull/11441))
-    - Prometheus Paperless NGX Exporter: Set correct binary path in systemd unit file [@andygrunwald](https://github.com/andygrunwald) ([#11438](https://github.com/community-scripts/ProxmoxVE/pull/11438))
-    - tracearr: install/update new prestart script from upstream [@durzo](https://github.com/durzo) ([#11433](https://github.com/community-scripts/ProxmoxVE/pull/11433))
-    - n8n: Fix dependencies [@tremor021](https://github.com/tremor021) ([#11429](https://github.com/community-scripts/ProxmoxVE/pull/11429))
-    - [Hotfix] Bunkerweb update [@vhsdream](https://github.com/vhsdream) ([#11402](https://github.com/community-scripts/ProxmoxVE/pull/11402))
-    - [Hotfix] Immich: revert healthcheck feature [@vhsdream](https://github.com/vhsdream) ([#11427](https://github.com/community-scripts/ProxmoxVE/pull/11427))
-
-  - #### ✨ New Features
-
-    - tools.func: add codeberg functions & autocaliweb: migrate from GitHub to Codeberg [@MickLesk](https://github.com/MickLesk) ([#11440](https://github.com/community-scripts/ProxmoxVE/pull/11440))
-    - Immich Refactor #2 [@vhsdream](https://github.com/vhsdream) ([#11375](https://github.com/community-scripts/ProxmoxVE/pull/11375))
-
-  - #### 🔧 Refactor
-
-    - WordPress: Refactor [@tremor021](https://github.com/tremor021) ([#11408](https://github.com/community-scripts/ProxmoxVE/pull/11408))
-    - Refactor: Whisparr [@tremor021](https://github.com/tremor021) ([#11411](https://github.com/community-scripts/ProxmoxVE/pull/11411))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - [tools]: Update `fetch_and_deply_from_url()` [@tremor021](https://github.com/tremor021) ([#11410](https://github.com/community-scripts/ProxmoxVE/pull/11410))
-
-### 🌐 Website
-
-  - feat(frontend): implement UX refinements and syntax highlighting [@ls-root](https://github.com/ls-root) ([#11423](https://github.com/community-scripts/ProxmoxVE/pull/11423))
-
-  - #### ✨ New Features
-
-    - feat(frontend): add contribution CTA to empty search state [@ls-root](https://github.com/ls-root) ([#11412](https://github.com/community-scripts/ProxmoxVE/pull/11412))
-
-## 2026-01-31
-
-### 🆕 New Scripts
-
-  - shelfmark ([#11371](https://github.com/community-scripts/ProxmoxVE/pull/11371))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix: yubal: add git [@CrazyWolf13](https://github.com/CrazyWolf13) ([#11394](https://github.com/community-scripts/ProxmoxVE/pull/11394))
-
-## 2026-01-30
-
-### 🆕 New Scripts
-
-  - languagetool ([#11370](https://github.com/community-scripts/ProxmoxVE/pull/11370))
-- Ampache ([#11369](https://github.com/community-scripts/ProxmoxVE/pull/11369))
-
-### 🚀 Updated Scripts
-
-  - #### 🔧 Refactor
-
-    - Refactor: remove redundant PHP_MODULE entries in several scripts [@MickLesk](https://github.com/MickLesk) ([#11362](https://github.com/community-scripts/ProxmoxVE/pull/11362))
-    - Refactor: Koillection [@MickLesk](https://github.com/MickLesk) ([#11361](https://github.com/community-scripts/ProxmoxVE/pull/11361))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: meilisearch - add data migration for version upgrades [@MickLesk](https://github.com/MickLesk) ([#11356](https://github.com/community-scripts/ProxmoxVE/pull/11356))
-
-  - #### ✨ New Features
-
-    - [tools] Add `fetch_and_deploy_from_url()` [@tremor021](https://github.com/tremor021) ([#11376](https://github.com/community-scripts/ProxmoxVE/pull/11376))
-    - core: php - improve module handling and prevent installation failures [@MickLesk](https://github.com/MickLesk) ([#11358](https://github.com/community-scripts/ProxmoxVE/pull/11358))
