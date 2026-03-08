@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-08
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - NZBGet: Fixes for RAR5 handling [@tremor021](https://github.com/tremor021) ([#12675](https://github.com/community-scripts/ProxmoxVE/pull/12675))
+
 ## 2026-03-07
 
 ### 🆕 New Scripts
