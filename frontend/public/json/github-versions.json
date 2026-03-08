@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-08T06:13:59Z",
+  "generated": "2026-03-08T12:08:10Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -102,9 +102,9 @@
     {
       "slug": "bar-assistant",
       "repo": "karlomikus/bar-assistant",
-      "version": "v5.13.1",
+      "version": "v5.13.2",
       "pinned": false,
-      "date": "2026-02-02T18:47:43Z"
+      "date": "2026-03-08T10:47:13Z"
     },
     {
       "slug": "bazarr",
@@ -1362,9 +1362,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.15",
+      "version": "v0.14.16",
       "pinned": false,
-      "date": "2026-03-06T23:06:01Z"
+      "date": "2026-03-08T06:39:25Z"
     },
     {
       "slug": "scraparr",
@@ -1607,9 +1607,9 @@
     {
       "slug": "trilium",
       "repo": "TriliumNext/Trilium",
-      "version": "v0.102.0",
+      "version": "v0.102.1",
       "pinned": false,
-      "date": "2026-03-01T20:37:40Z"
+      "date": "2026-03-08T09:11:01Z"
     },
     {
       "slug": "trip",
