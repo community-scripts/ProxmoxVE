@@ -426,6 +426,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: rustdeskserver: use correct repo string [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12682](https://github.com/community-scripts/ProxmoxVE/pull/12682))
     - NZBGet: Fixes for RAR5 handling [@tremor021](https://github.com/tremor021) ([#12675](https://github.com/community-scripts/ProxmoxVE/pull/12675))
 
 ## 2026-03-07
