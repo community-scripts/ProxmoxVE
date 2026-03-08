@@ -9,7 +9,7 @@
     "interface_port": 7171,
     "documentation": "https://agregarr.org/docs/",
     "website": "https://github.com/agregarr/agregarr",
-    "logo": "https://raw.githubusercontent.com/agregarr/agregarr/main/public/logo_full.svg",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/agregarr.webp",
     "config_path": "/opt/agregarr/config",
     "description": "Agregarr keeps your Plex Home and Recommended fresh by frequently updating it with Collections from various sources, including Trakt, IMDb, TMDB, Letterboxd, MDBList, FlixPatrol, AniList and MyAnimeList.",
     "install_methods": [
