@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-08T12:08:10Z",
+  "generated": "2026-03-08T18:07:22Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -347,9 +347,9 @@
     {
       "slug": "elementsynapse",
       "repo": "etkecc/synapse-admin",
-      "version": "v0.11.1-etke53",
+      "version": "v0.11.4-etke54",
       "pinned": false,
-      "date": "2026-02-03T20:38:15Z"
+      "date": "2026-03-08T12:37:07Z"
     },
     {
       "slug": "emby",
@@ -389,9 +389,9 @@
     {
       "slug": "fladder",
       "repo": "DonutWare/Fladder",
-      "version": "v0.10.1",
+      "version": "v0.10.2",
       "pinned": false,
-      "date": "2026-02-21T12:45:53Z"
+      "date": "2026-03-08T15:28:11Z"
     },
     {
       "slug": "flaresolverr",
@@ -1236,9 +1236,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.21",
+      "version": "v5.1.22",
       "pinned": false,
-      "date": "2026-03-06T12:13:08Z"
+      "date": "2026-03-08T12:24:34Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1572,9 +1572,9 @@
     {
       "slug": "tinyauth",
       "repo": "steveiliop56/tinyauth",
-      "version": "v5.0.1",
+      "version": "v5.0.2",
       "pinned": false,
-      "date": "2026-03-04T21:05:05Z"
+      "date": "2026-03-08T15:46:59Z"
     },
     {
       "slug": "traccar",
@@ -1803,9 +1803,9 @@
     {
       "slug": "yubal",
       "repo": "guillevc/yubal",
-      "version": "v0.6.3",
+      "version": "v0.7.0",
       "pinned": false,
-      "date": "2026-03-07T03:24:05Z"
+      "date": "2026-03-08T13:37:49Z"
     },
     {
       "slug": "zerobyte",
