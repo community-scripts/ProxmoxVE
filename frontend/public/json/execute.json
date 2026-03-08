@@ -1,6 +1,6 @@
 {
   "name": "PVE LXC Execute Command",
-  "slug": "lxc-execute",
+  "slug": "execute",
   "categories": [
     1
   ],
