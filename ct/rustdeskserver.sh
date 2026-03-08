@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "rustdesk-api"; then
+  if check_for_gh_release "lejianwen/rustdesk-api"; then
     msg_info "Stopping Service"
     systemctl stop rustdesk-hbbr
     systemctl stop rustdesk-hbbs
