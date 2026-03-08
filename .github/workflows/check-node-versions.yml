@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   check-node-versions:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'community-unscripted/ProxmoxVE'
     runs-on: coolify-runner
 
     steps:
