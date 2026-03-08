@@ -429,6 +429,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix: rustdeskserver: use correct repo string [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12682](https://github.com/community-scripts/ProxmoxVE/pull/12682))
     - NZBGet: Fixes for RAR5 handling [@tremor021](https://github.com/tremor021) ([#12675](https://github.com/community-scripts/ProxmoxVE/pull/12675))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - LXC-Execute: Fix slug [@tremor021](https://github.com/tremor021) ([#12681](https://github.com/community-scripts/ProxmoxVE/pull/12681))
+
 ## 2026-03-07
 
 ### 🆕 New Scripts
