@@ -213,7 +213,8 @@ EOF
     msg_ok "Updated Immich server, web, cli and plugins"
 
     cd "$SRC_DIR"/machine-learning
-    mkdir -p "$ML_DIR" && chown -R immich:immich "$ML_DIR"
+    mkdir -p "$ML_DIR"
+    chown -R immich:immich "$INSTALL_DIR"
     chown immich:immich ./uv.lock
     export VIRTUAL_ENV="${ML_DIR}"/ml-venv
     if [[ -f ~/.openvino ]]; then
