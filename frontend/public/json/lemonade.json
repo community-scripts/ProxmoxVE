@@ -12,7 +12,7 @@
   "documentation": "https://lemonade-server.ai/docs/",
   "config_path": "/etc/lemonade/lemonade.conf",
   "website": "https://lemonade-server.ai/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/lemonade-ai.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/lemonade.webp",
   "description": "Lemonade is a lightweight LLM inference server with OpenAI-compatible APIs, supporting multiple backends including CPU, Vulkan, and ROCm.",
   "install_methods": [
     {
