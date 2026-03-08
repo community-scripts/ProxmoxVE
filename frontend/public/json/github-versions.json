@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-08T00:21:23Z",
+  "generated": "2026-03-08T06:13:59Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -620,9 +620,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1307",
+      "version": "v0.24.1316",
       "pinned": false,
-      "date": "2026-03-07T05:55:30Z"
+      "date": "2026-03-08T05:59:08Z"
     },
     {
       "slug": "jellystat",
