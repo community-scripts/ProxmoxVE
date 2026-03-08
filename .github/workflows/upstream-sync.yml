@@ -1,0 +1,59 @@
+name: Sync Upstream (Ignore Specific Folders)
+
+on:
+  schedule:
+    # Runs automatically every day at 2:00 AM UTC. Adjust as needed.
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows you to run this manually from the Actions tab
+
+permissions:
+  contents: write # Required to allow the GitHub Actions bot to push commits
+
+jobs:
+  sync-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all history for all branches and tags
+          # If your default branch is not 'main', change it here:
+          ref: main 
+
+      - name: Sync upstream and restore ignored directories
+        run: |
+          # 1. Configure Git for the Actions bot
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 2. Add the upstream repository
+          git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
+          git fetch upstream main
+          
+          # 3. Attempt to merge without committing (ignore failures temporarily for conflicts)
+          git merge upstream/main --no-commit --no-ff || true
+          
+          # 4. Completely wipe the ignored folders to remove any new files upstream may have added
+          rm -rf install ct frontend
+          git rm -rf --cached install ct frontend || true
+          
+          # 5. Restore the folders EXACTLY as they are in your fork's HEAD
+          git checkout HEAD -- install ct frontend
+          git add install ct frontend
+          
+          # 6. Check if there are unresolved conflicts in other files
+          if git ls-files --unmerged | grep -q .; then
+            echo "Merge conflict detected in non-ignored files. Aborting."
+            git merge --abort
+            exit 1
+          fi
+          
+          # 7. Check if there is anything left to commit
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-sync upstream main, ignoring changes to install/, ct/, and frontend/"
+            git push origin main
+            echo "Successfully synced and pushed."
+          else
+            echo "No new changes to sync after restoring ignored directories."
+            git merge --abort || true
+          fi
