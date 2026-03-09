@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Set the base URL for development/fork - must be set before sourcing build.func
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/Hermes-Agent}"
+COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/refs/heads/main}"
 source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/build.func)
 
 # Copyright (c) 2021-2026 community-scripts ORG
