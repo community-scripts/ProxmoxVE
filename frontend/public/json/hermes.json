@@ -1,0 +1,42 @@
+{
+    "name": "Hermes",
+    "slug": "hermes",
+    "categories": [20],
+    "date_created": "2026-03-09",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8000,
+    "documentation": "https://hermes-agent.nousresearch.com/docs/",
+    "website": "https://hermes-agent.nousresearch.com/",
+    "logo": "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/assets/banner.png",
+    "config_path": "/opt/hermes-agent/.env",
+    "description": "Self-improving AI agent with built-in learning loop. Creates skills from experience, improves them during use, and builds a deepening model of user preferences across sessions. Supports multiple LLM providers and messaging platforms.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/hermes.sh",
+            "resources": {
+                "cpu": 8,
+                "ram": 16384,
+                "hdd": 50,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Run '/opt/hermes-agent/.venv/bin/hermes setup' after installation to configure your LLM provider.",
+            "type": "info"
+        },
+        {
+            "text": "Requires API key from OpenAI, OpenRouter, or Nous Portal.",
+            "type": "warning"
+        }
+    ]
+}
