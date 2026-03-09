@@ -1,7 +1,9 @@
 {
   "name": "SwarmUI",
   "slug": "swarmui",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2026-03-08",
   "type": "ct",
   "updateable": true,
@@ -17,8 +19,8 @@
       "type": "default",
       "script": "ct/swarmui.sh",
       "resources": {
-        "cpu": 4,
-        "ram": 8192,
+        "cpu": 8,
+        "ram": 16384,
         "hdd": 50,
         "os": "Debian",
         "version": "13"

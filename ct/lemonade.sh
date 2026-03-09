@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/refs/heads/main}"
-source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/build.func)
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: BillyOutlast
 # License: MIT | https://github.com/community-unscripted/ProxmoxVE/raw/main/LICENSE
@@ -13,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"

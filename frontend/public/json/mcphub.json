@@ -22,7 +22,7 @@
         "cpu": 2,
         "ram": 2048,
         "hdd": 8,
-        "os": "debian",
+        "os": "Debian",
         "version": "13"
       }
     }
@@ -32,5 +32,17 @@
     "password": "CHANGE_ME"
   },
   "notes": [
+    {
+      "text": "Configuration file is located at /opt/mcphub/mcp_settings.json",
+      "type": "info"
+    },
+    {
+      "text": "Default credentials are set in the configuration file. Change them after first login.",
+      "type": "warning"
+    },
+    {
+      "text": "MCPHub requires Node.js 22 which is installed automatically.",
+      "type": "info"
+    }
   ]
 }
