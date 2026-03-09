@@ -27,6 +27,9 @@ WebUI\Password_PBKDF2="@ByteArray(amjeuVrF3xRbgzqWQmes5A==:XK3/Ra9jUmqUc4RwzCtrh
 WebUI\Port=8090
 WebUI\UseUPnP=false
 WebUI\Username=admin
+
+[Network]
+PortForwardingEnabled=false
 EOF
 msg_ok "Setup qBittorrent-nox"
 
