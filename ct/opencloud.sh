@@ -41,7 +41,9 @@ function update_script() {
     ensure_dependencies "inotify-tools"
     msg_ok "Updated packages"
 
+    rm -f /usr/bin/{OpenCloud,opencloud}
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-amd64"
+    mv /usr/bin/OpenCloud /usr/bin/opencloud
 
     if ! grep -q 'POSIX_WATCH' /etc/opencloud/opencloud.env; then
       sed -i '/^## External/i ## Uncomment below to enable PosixFS Collaborative Mode\
