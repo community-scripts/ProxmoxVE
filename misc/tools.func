@@ -4576,7 +4576,7 @@ _setup_rocm() {
 
   msg_info "Installing ROCm ${ROCM_VERSION} compute stack"
 
-  # ROCm main repository
+  # ROCm main repository (userspace only — kernel driver runs on host)
   setup_deb822_repo \
     "rocm" \
     "https://repo.radeon.com/rocm/rocm.gpg.key" \
@@ -4588,17 +4588,6 @@ _setup_rocm() {
     return 0
   }
 
-  # AMDGPU driver repository (append to same keyring)
-  {
-    echo ""
-    echo "Types: deb"
-    echo "URIs: https://repo.radeon.com/amdgpu/${ROCM_VERSION}/ubuntu"
-    echo "Suites: ${ROCM_REPO_CODENAME}"
-    echo "Components: main"
-    echo "Architectures: amd64"
-    echo "Signed-By: /etc/apt/keyrings/rocm.gpg"
-  } >>/etc/apt/sources.list.d/rocm.sources
-
   # Pin ROCm packages to prefer radeon repo
   cat <<EOF >/etc/apt/preferences.d/rocm-pin-600
 Package: *
@@ -4606,10 +4595,10 @@ Pin: release o=repo.radeon.com
 Pin-Priority: 600
 EOF
 
-  $STD apt-get update
-  $STD apt-get install -y rocm 2>/dev/null || {
+  $STD apt update
+  $STD apt install -y rocm 2>/dev/null || {
     msg_warn "ROCm meta-package install failed — trying minimal set"
-    $STD apt-get install -y rocm-opencl-runtime rocm-smi-lib 2>/dev/null || msg_warn "ROCm minimal install also failed"
+    $STD apt install -y rocm-opencl-runtime rocm-smi-lib 2>/dev/null || msg_warn "ROCm minimal install also failed"
   }
 
   # Group membership for GPU access
