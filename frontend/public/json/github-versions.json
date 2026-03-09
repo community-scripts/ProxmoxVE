@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-09T12:12:17Z",
+  "generated": "2026-03-09T18:17:48Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -228,9 +228,9 @@
     {
       "slug": "configarr",
       "repo": "raydak-labs/configarr",
-      "version": "v1.23.0",
+      "version": "v1.24.0",
       "pinned": false,
-      "date": "2026-02-23T12:28:13Z"
+      "date": "2026-03-09T15:16:08Z"
     },
     {
       "slug": "convertx",
@@ -837,9 +837,9 @@
     {
       "slug": "manyfold",
       "repo": "manyfold3d/manyfold",
-      "version": "v0.133.1",
+      "version": "v0.134.0",
       "pinned": false,
-      "date": "2026-02-26T15:50:34Z"
+      "date": "2026-03-09T13:20:45Z"
     },
     {
       "slug": "mealie",
@@ -998,9 +998,9 @@
     {
       "slug": "opencloud",
       "repo": "opencloud-eu/opencloud",
-      "version": "v5.1.0",
+      "version": "v5.2.0",
       "pinned": true,
-      "date": "2026-02-16T15:04:28Z"
+      "date": "2026-03-09T13:32:31Z"
     },
     {
       "slug": "opengist",
@@ -1362,9 +1362,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.16",
+      "version": "v0.14.17",
       "pinned": false,
-      "date": "2026-03-08T06:39:25Z"
+      "date": "2026-03-09T05:04:49Z"
     },
     {
       "slug": "scraparr",
@@ -1586,9 +1586,9 @@
     {
       "slug": "tracearr",
       "repo": "connorgallopo/Tracearr",
-      "version": "v1.4.21",
+      "version": "v1.4.22",
       "pinned": false,
-      "date": "2026-03-03T18:43:20Z"
+      "date": "2026-03-09T17:39:52Z"
     },
     {
       "slug": "tracktor",
@@ -1838,9 +1838,9 @@
     {
       "slug": "zoraxy",
       "repo": "tobychui/zoraxy",
-      "version": "v3.3.2-rc2",
+      "version": "v3.3.2-rc3",
       "pinned": false,
-      "date": "2026-02-27T03:31:25Z"
+      "date": "2026-03-09T13:56:45Z"
     },
     {
       "slug": "zwave-js-ui",
