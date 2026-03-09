@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-09
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - RustDesk Server: Fix check_for_gh_release function call [@tremor021](https://github.com/tremor021) ([#12694](https://github.com/community-scripts/ProxmoxVE/pull/12694))
+
 ## 2026-03-08
 
 ### 🚀 Updated Scripts
