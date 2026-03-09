@@ -969,13 +969,43 @@ verify_repo_available() {
 }
 
 # ------------------------------------------------------------------------------
-# Ensure dependencies are installed (with apt update caching)
+# Ensure dependencies are installed (with apt/apk update caching)
+# Supports both Debian (apt/dpkg) and Alpine (apk) systems
 # ------------------------------------------------------------------------------
 ensure_dependencies() {
   local deps=("$@")
   local missing=()
 
-  # Fast batch check using dpkg-query (much faster than individual checks)
+  # Detect Alpine Linux
+  if [[ -f /etc/alpine-release ]]; then
+    for dep in "${deps[@]}"; do
+      if command -v "$dep" &>/dev/null; then
+        continue
+      fi
+      if apk info -e "$dep" &>/dev/null; then
+        continue
+      fi
+      missing+=("$dep")
+    done
+
+    if [[ ${#missing[@]} -gt 0 ]]; then
+      $STD apk add --no-cache "${missing[@]}" || {
+        local failed=()
+        for pkg in "${missing[@]}"; do
+          if ! $STD apk add --no-cache "$pkg" 2>/dev/null; then
+            failed+=("$pkg")
+          fi
+        done
+        if [[ ${#failed[@]} -gt 0 ]]; then
+          msg_error "Failed to install dependencies: ${failed[*]}"
+          return 1
+        fi
+      }
+    fi
+    return 0
+  fi
+
+  # Debian/Ubuntu: Fast batch check using dpkg-query
   local installed_pkgs
   installed_pkgs=$(dpkg-query -W -f='${Package}\n' 2>/dev/null | sort -u)
 
@@ -1072,11 +1102,15 @@ create_temp_dir() {
 }
 
 # ------------------------------------------------------------------------------
-# Check if package is installed (faster than dpkg -l | grep)
+# Check if package is installed (supports both Debian and Alpine)
 # ------------------------------------------------------------------------------
 is_package_installed() {
   local package="$1"
-  dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "^install ok installed$"
+  if [[ -f /etc/alpine-release ]]; then
+    apk info -e "$package" &>/dev/null
+  else
+    dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "^install ok installed$"
+  fi
 }
 
 # ------------------------------------------------------------------------------
