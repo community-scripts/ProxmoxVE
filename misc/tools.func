@@ -4606,10 +4606,10 @@ Pin: release o=repo.radeon.com
 Pin-Priority: 600
 EOF
 
-  $STD apt-get update
-  $STD apt-get install -y rocm 2>/dev/null || {
+  $STD apt update
+  $STD apt install -y rocm 2>/dev/null || {
     msg_warn "ROCm meta-package install failed — trying minimal set"
-    $STD apt-get install -y rocm-opencl-runtime rocm-smi-lib 2>/dev/null || msg_warn "ROCm minimal install also failed"
+    $STD apt install -y rocm-opencl-runtime rocm-smi-lib 2>/dev/null || msg_warn "ROCm minimal install also failed"
   }
 
   # Group membership for GPU access
