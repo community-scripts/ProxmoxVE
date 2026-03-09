@@ -422,6 +422,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-09
 
+### 🆕 New Scripts
+
+  - hermes [@proxmoxved-migration-bot[bot]](https://github.com/proxmoxved-migration-bot[bot]) ([#6](https://github.com/community-unscripted/ProxmoxVE/pull/6))
+
 ## 2026-03-08
 
 ### 🚀 Updated Scripts
