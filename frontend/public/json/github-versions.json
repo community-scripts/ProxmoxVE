@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-09T06:22:44Z",
+  "generated": "2026-03-09T12:12:17Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -1305,10 +1305,10 @@
     },
     {
       "slug": "reactive-resume",
-      "repo": "lazy-media/Reactive-Resume",
-      "version": "v1.2.7",
+      "repo": "amruthpillai/reactive-resume",
+      "version": "v5.0.11",
       "pinned": false,
-      "date": "2026-01-20T11:59:40Z"
+      "date": "2026-03-04T20:39:11Z"
     },
     {
       "slug": "recyclarr",
@@ -1397,9 +1397,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.17",
+      "version": "v2.17.21",
       "pinned": false,
-      "date": "2026-03-08T21:42:11Z"
+      "date": "2026-03-09T09:33:06Z"
     },
     {
       "slug": "shelfmark",
@@ -1712,9 +1712,9 @@
     {
       "slug": "wanderer",
       "repo": "meilisearch/meilisearch",
-      "version": "v1.37.0",
+      "version": "v1.38.0",
       "pinned": false,
-      "date": "2026-03-02T09:16:36Z"
+      "date": "2026-03-09T08:06:29Z"
     },
     {
       "slug": "warracker",
@@ -1726,9 +1726,9 @@
     {
       "slug": "watcharr",
       "repo": "sbondCo/Watcharr",
-      "version": "v3.0.0",
+      "version": "v3.0.1",
       "pinned": false,
-      "date": "2026-03-04T09:29:14Z"
+      "date": "2026-03-09T11:33:44Z"
     },
     {
       "slug": "watchyourlan",
