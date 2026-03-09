@@ -15,7 +15,7 @@ update_os
 
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="reactive_resume" PG_DB_USER="reactive_resume" setup_postgresql_db
-NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 
 msg_info "Installing Dependencies"
 $STD apt install -y chromium
@@ -25,10 +25,14 @@ fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "ta
 
 msg_info "Building Reactive Resume (Patience)"
 cd /opt/reactive-resume
-export NODE_ENV="production"
 export CI="true"
-$STD pnpm install --frozen-lockfile
+rm -f pnpm-lock.yaml
+$STD pnpm install
 $STD pnpm run build
+# Workaround: Vite/Rolldown bundles tslib CJS→ESM with broken .default destructure
+# see https://github.com/amruthpillai/reactive-resume/issues/2773
+find .output/server -name '*.mjs' -exec \
+  sed -i 's/__toESM(require_tslib())).default/__toESM(require_tslib()))/g' {} +
 mkdir -p /opt/reactive-resume/data
 msg_ok "Built Reactive Resume"
 

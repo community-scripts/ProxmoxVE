@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: vhsdream | Rewrite: MickLesk (CanbiZ)
+# Author: vhsdream | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://rxresume.org | Github: https://github.com/amruthpillai/reactive-resume
 
@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped services"
 
     cp /opt/reactive-resume/.env /opt/reactive-resume.env.bak
-    fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball" "latest" "/opt/reactive-resume"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball" "latest" "/opt/reactive-resume"
 
     msg_info "Updating Reactive Resume (Patience)"
     cd /opt/reactive-resume
