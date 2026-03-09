@@ -430,6 +430,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Change cronjob setup to use www-data user [@opastorello](https://github.com/opastorello) ([#12695](https://github.com/community-scripts/ProxmoxVE/pull/12695))
     - RustDesk Server: Fix check_for_gh_release function call [@tremor021](https://github.com/tremor021) ([#12694](https://github.com/community-scripts/ProxmoxVE/pull/12694))
 
+  - #### ✨ New Features
+
+    - feat: improve zigbee2mqtt backup handler [@MickLesk](https://github.com/MickLesk) ([#12714](https://github.com/community-scripts/ProxmoxVE/pull/12714))
+
   - #### 💥 Breaking Changes
 
     - Reactive Resume: rewrite for v5 using original repo amruthpilla/reactive-resume [@MickLesk](https://github.com/MickLesk) ([#12705](https://github.com/community-scripts/ProxmoxVE/pull/12705))
