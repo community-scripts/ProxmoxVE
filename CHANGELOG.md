@@ -433,6 +433,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Reactive Resume: rewrite for v5 using original repo amruthpilla/reactive-resume [@MickLesk](https://github.com/MickLesk) ([#12705](https://github.com/community-scripts/ProxmoxVE/pull/12705))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: extend hwaccel with ROCm  [@MickLesk](https://github.com/MickLesk) ([#12707](https://github.com/community-scripts/ProxmoxVE/pull/12707))
+
 ## 2026-03-08
 
 ### 🚀 Updated Scripts
