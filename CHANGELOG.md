@@ -426,6 +426,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - openwebui: Ensure required dependencies [@MickLesk](https://github.com/MickLesk) ([#12717](https://github.com/community-scripts/ProxmoxVE/pull/12717))
     - Frigate: try an OpenVino model build fallback [@MickLesk](https://github.com/MickLesk) ([#12704](https://github.com/community-scripts/ProxmoxVE/pull/12704))
     - Change cronjob setup to use www-data user [@opastorello](https://github.com/opastorello) ([#12695](https://github.com/community-scripts/ProxmoxVE/pull/12695))
     - RustDesk Server: Fix check_for_gh_release function call [@tremor021](https://github.com/tremor021) ([#12694](https://github.com/community-scripts/ProxmoxVE/pull/12694))
