@@ -428,6 +428,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [Quickfix] Opencloud: ensure correct case for binary [@vhsdream](https://github.com/vhsdream) ([#12729](https://github.com/community-scripts/ProxmoxVE/pull/12729))
     - Omada: Bump libssl [@MickLesk](https://github.com/MickLesk) ([#12724](https://github.com/community-scripts/ProxmoxVE/pull/12724))
     - openwebui: Ensure required dependencies [@MickLesk](https://github.com/MickLesk) ([#12717](https://github.com/community-scripts/ProxmoxVE/pull/12717))
     - Frigate: try an OpenVino model build fallback [@MickLesk](https://github.com/MickLesk) ([#12704](https://github.com/community-scripts/ProxmoxVE/pull/12704))
