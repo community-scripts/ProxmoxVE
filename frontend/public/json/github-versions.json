@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-08T18:07:22Z",
+  "generated": "2026-03-09T00:21:26Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -67,9 +67,9 @@
     {
       "slug": "autobrr",
       "repo": "autobrr/autobrr",
-      "version": "v1.73.0",
+      "version": "v1.74.0",
       "pinned": false,
-      "date": "2026-02-13T16:37:28Z"
+      "date": "2026-03-08T21:45:41Z"
     },
     {
       "slug": "autocaliweb",
@@ -151,9 +151,9 @@
     {
       "slug": "booklore",
       "repo": "booklore-app/BookLore",
-      "version": "v2.0.6",
+      "version": "v2.1.0",
       "pinned": false,
-      "date": "2026-03-06T19:16:29Z"
+      "date": "2026-03-08T20:27:24Z"
     },
     {
       "slug": "bookstack",
@@ -270,16 +270,16 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.17.0",
+      "version": "v3.18.0",
       "pinned": false,
-      "date": "2026-03-06T07:07:22Z"
+      "date": "2026-03-08T20:19:15Z"
     },
     {
       "slug": "dawarich",
       "repo": "Freika/dawarich",
-      "version": "1.3.1",
+      "version": "1.3.2",
       "pinned": false,
-      "date": "2026-02-27T19:47:40Z"
+      "date": "2026-03-08T20:37:50Z"
     },
     {
       "slug": "discopanel",
@@ -312,9 +312,9 @@
     {
       "slug": "domain-monitor",
       "repo": "Hosteroid/domain-monitor",
-      "version": "v1.1.4",
+      "version": "v1.1.5",
       "pinned": false,
-      "date": "2026-03-02T09:25:01Z"
+      "date": "2026-03-08T19:17:09Z"
     },
     {
       "slug": "donetick",
@@ -879,9 +879,9 @@
     {
       "slug": "metube",
       "repo": "alexta69/metube",
-      "version": "2026.03.07",
+      "version": "2026.03.08",
       "pinned": false,
-      "date": "2026-03-07T14:14:57Z"
+      "date": "2026-03-08T20:28:19Z"
     },
     {
       "slug": "miniflux",
@@ -1397,9 +1397,9 @@
     {
       "slug": "semaphore",
       "repo": "semaphoreui/semaphore",
-      "version": "v2.17.16",
+      "version": "v2.17.17",
       "pinned": false,
-      "date": "2026-03-05T12:39:05Z"
+      "date": "2026-03-08T21:42:11Z"
     },
     {
       "slug": "shelfmark",
@@ -1537,9 +1537,9 @@
     {
       "slug": "termix",
       "repo": "Termix-SSH/Termix",
-      "version": "release-1.11.1-tag",
+      "version": "release-1.11.2-tag",
       "pinned": false,
-      "date": "2026-02-13T04:49:16Z"
+      "date": "2026-03-08T23:27:30Z"
     },
     {
       "slug": "the-lounge",
