@@ -9,8 +9,8 @@ source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/build.func)
 
 APP="SwarmUI"
 var_tags="${var_tags:-ai}"
-var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-8192}"
+var_cpu="${var_cpu:-8}"
+var_ram="${var_ram:-16384}"
 var_disk="${var_disk:-50}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
