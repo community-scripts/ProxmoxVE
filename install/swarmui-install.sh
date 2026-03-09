@@ -34,7 +34,7 @@ msg_ok "Installed Dependencies"
 msg_info "Cloning SwarmUI"
 mkdir -p /opt/swarmui
 $STD git clone https://github.com/mcmonkeyprojects/SwarmUI.git /opt/swarmui
-cd /opt/swarmui
+cd /opt/swarmui || exit
 msg_ok "Cloned SwarmUI"
 
 msg_info "Building SwarmUI"
