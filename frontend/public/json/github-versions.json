@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-09T00:21:26Z",
+  "generated": "2026-03-09T06:22:44Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -284,9 +284,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v2.0.1",
+      "version": "v2.0.2",
       "pinned": false,
-      "date": "2026-03-07T02:43:33Z"
+      "date": "2026-03-09T03:38:49Z"
     },
     {
       "slug": "dispatcharr",
@@ -620,9 +620,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1316",
+      "version": "v0.24.1323",
       "pinned": false,
-      "date": "2026-03-08T05:59:08Z"
+      "date": "2026-03-09T05:55:36Z"
     },
     {
       "slug": "jellystat",
