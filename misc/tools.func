@@ -4512,9 +4512,8 @@ _setup_amd_gpu() {
   fi
   # Ubuntu includes AMD firmware in linux-firmware by default
 
-  # ROCm for compute (optional - large download)
-  # Uncomment if needed:
-  # $STD apt -y install rocm-opencl-runtime 2>/dev/null || true
+  # ROCm compute stack (OpenCL + HIP)
+  _setup_rocm "$os_id" "$os_codename"
 
   msg_ok "AMD GPU configured"
 }
@@ -4539,7 +4538,100 @@ _setup_amd_apu() {
     $STD apt -y install firmware-amd-graphics 2>/dev/null || true
   fi
 
+  # ROCm compute stack (OpenCL + HIP) - also works for many APUs
+  _setup_rocm "$os_id" "$os_codename"
+
   msg_ok "AMD APU configured"
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# AMD ROCm Compute Setup
+# Adds ROCm repository and installs the ROCm compute stack for AMD GPUs/APUs.
+# Provides: OpenCL, HIP, rocm-smi, rocminfo
+# Supported: Debian 12/13, Ubuntu 22.04/24.04 (amd64 only)
+# ══════════════════════════════════════════════════════════════════════════════
+_setup_rocm() {
+  local os_id="$1" os_codename="$2"
+
+  # Only amd64 is supported
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" != "amd64" ]]; then
+    msg_warn "ROCm is only available for amd64 — skipping"
+    return 0
+  fi
+
+  local ROCM_VERSION="7.2"
+  local ROCM_REPO_CODENAME
+
+  # Map OS codename to ROCm repository codename (Ubuntu-based repos)
+  case "${os_id}-${os_codename}" in
+  debian-bookworm) ROCM_REPO_CODENAME="jammy" ;;
+  debian-trixie | debian-sid) ROCM_REPO_CODENAME="noble" ;;
+  ubuntu-jammy) ROCM_REPO_CODENAME="jammy" ;;
+  ubuntu-noble) ROCM_REPO_CODENAME="noble" ;;
+  *)
+    msg_warn "ROCm not supported on ${os_id} ${os_codename} — skipping"
+    return 0
+    ;;
+  esac
+
+  msg_info "Installing ROCm ${ROCM_VERSION} compute stack"
+
+  # ROCm main repository
+  setup_deb822_repo \
+    "rocm" \
+    "https://repo.radeon.com/rocm/rocm.gpg.key" \
+    "https://repo.radeon.com/rocm/apt/${ROCM_VERSION}" \
+    "${ROCM_REPO_CODENAME}" \
+    "main" \
+    "amd64" || {
+    msg_warn "Failed to add ROCm repository — skipping ROCm"
+    return 0
+  }
+
+  # AMDGPU driver repository (append to same keyring)
+  {
+    echo ""
+    echo "Types: deb"
+    echo "URIs: https://repo.radeon.com/amdgpu/${ROCM_VERSION}/ubuntu"
+    echo "Suites: ${ROCM_REPO_CODENAME}"
+    echo "Components: main"
+    echo "Architectures: amd64"
+    echo "Signed-By: /etc/apt/keyrings/rocm.gpg"
+  } >>/etc/apt/sources.list.d/rocm.sources
+
+  # Pin ROCm packages to prefer radeon repo
+  cat <<EOF >/etc/apt/preferences.d/rocm-pin-600
+Package: *
+Pin: release o=repo.radeon.com
+Pin-Priority: 600
+EOF
+
+  $STD apt-get update
+  $STD apt-get install -y rocm 2>/dev/null || {
+    msg_warn "ROCm meta-package install failed — trying minimal set"
+    $STD apt-get install -y rocm-opencl-runtime rocm-smi-lib 2>/dev/null || msg_warn "ROCm minimal install also failed"
+  }
+
+  # Group membership for GPU access
+  usermod -aG render,video root 2>/dev/null || true
+
+  # Environment (PATH + LD_LIBRARY_PATH)
+  if [[ -d /opt/rocm ]]; then
+    cat <<'ENVEOF' >/etc/profile.d/rocm.sh
+export PATH="\$PATH:/opt/rocm/bin"
+export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/opt/rocm/lib"
+ENVEOF
+    chmod +x /etc/profile.d/rocm.sh
+    # Also make available for current session / systemd services
+    echo "/opt/rocm/lib" >/etc/ld.so.conf.d/rocm.conf
+    ldconfig 2>/dev/null || true
+  fi
+
+  if [[ -x /opt/rocm/bin/rocminfo ]]; then
+    msg_ok "ROCm ${ROCM_VERSION} installed"
+  else
+    msg_warn "ROCm installed but rocminfo not found — GPU may not be available in container"
+  fi
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
