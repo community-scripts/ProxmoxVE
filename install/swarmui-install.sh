@@ -41,60 +41,10 @@ msg_info "Building SwarmUI"
 $STD dotnet build src/SwarmUI.csproj --configuration Release -o ./bin
 msg_ok "Built SwarmUI"
 
-msg_info "Setting up ComfyUI Backend"
-mkdir -p /opt/swarmui/dlbackend
-cd /opt/swarmui/dlbackend
-$STD git clone https://github.com/comfyanonymous/ComfyUI.git comfy
-cd comfy
-$STD python3 -m venv /opt/swarmui/dlbackend/comfy/venv
-source /opt/swarmui/dlbackend/comfy/venv/bin/activate
-
-PYTORCH_INDEX="https://download.pytorch.org/whl/cpu"
-if command -v nvidia-smi &>/dev/null && nvidia-smi &>/dev/null; then
-  PYTORCH_INDEX="https://download.pytorch.org/whl/cu128"
-  msg_info "NVIDIA GPU detected - installing PyTorch with CUDA 12.8 support"
-elif [[ -d /dev/dri ]] && ls /dev/dri/render* &>/dev/null; then
-  PYTORCH_INDEX="https://download.pytorch.org/whl/rocm7.1"
-  msg_info "AMD GPU detected - installing PyTorch with ROCm 7.1 support"
-else
-  msg_info "No GPU detected - installing PyTorch CPU version"
-fi
-$STD pip install torch torchvision torchaudio --index-url "$PYTORCH_INDEX"
-$STD pip install -r requirements.txt
-deactivate
-msg_ok "Set up ComfyUI Backend"
-
 msg_info "Creating Directories"
-mkdir -p /opt/swarmui/Data
 mkdir -p /opt/swarmui/Models
 mkdir -p /opt/swarmui/Output
 msg_ok "Created Directories"
-
-msg_info "Configuring SwarmUI"
-cat <<EOF >/opt/swarmui/Data/Settings.yaml
-# SwarmUI Configuration
-# For full documentation, see: https://github.com/mcmonkeyprojects/SwarmUI
-
-# Network Settings
-host: 0.0.0.0
-port: 7801
-
-# Paths
-data_path: Data
-model_path: Models
-output_path: Output
-
-# Backend Settings
-backends:
-  - type: comfyui
-    name: local_comfyui
-    path: dlbackend/comfy
-    enabled: true
-
-# Environment
-environment: production
-EOF
-msg_ok "Configured SwarmUI"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/swarmui.service
