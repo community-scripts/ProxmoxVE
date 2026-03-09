@@ -451,6 +451,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - tools: add Alpine (apk) support to ensure_dependencies and is_package_installed [@MickLesk](https://github.com/MickLesk) ([#12703](https://github.com/community-scripts/ProxmoxVE/pull/12703))
     - tools.func: extend hwaccel with ROCm  [@MickLesk](https://github.com/MickLesk) ([#12707](https://github.com/community-scripts/ProxmoxVE/pull/12707))
 
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - feat: add CopycatWarningToast component for user warnings [@BramSuurdje](https://github.com/BramSuurdje) ([#12733](https://github.com/community-scripts/ProxmoxVE/pull/12733))
+
 ## 2026-03-08
 
 ### 🚀 Updated Scripts
