@@ -1,0 +1,15 @@
+{
+  "name": "Alcopac",
+  "category": "media",
+  "description": "Alcopac is a fork of Lampac, a media server.",
+  "url": "https://dev.alcopa.cc/",
+  "logo": "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/frontend/public/images/lampac.png",
+  "scripts": [
+    {
+      "name": "Alcopac",
+      "script": "bash -c \"$(wget -qLO - https://raw.githubusercontent.com/Hlushok/ProxmoxVE/feature/lampac/ct/lampac.sh)\""
+    }
+  ],
+  "author": "Hlushok",
+  "date": "2026-03-09"
+}
