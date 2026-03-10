@@ -18,6 +18,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
+  git \
   nginx \
   build-essential \
   pkg-config \
