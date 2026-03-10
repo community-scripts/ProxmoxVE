@@ -50,7 +50,7 @@ function Navbar() {
             </div>
             <div className="flex sm:gap-2">
               <CommandMenu />
-              <GitHubStarsButton username="community-scripts" repo="ProxmoxVE" className="hidden md:flex" />
+              <GitHubStarsButton username="community-unscripted" repo="ProxmoxVE" className="hidden md:flex" />
               {navbarLinks.map(({ href, event, icon, text, mobileHidden }) => (
                 <TooltipProvider key={event}>
                   <Tooltip delayDuration={100}>

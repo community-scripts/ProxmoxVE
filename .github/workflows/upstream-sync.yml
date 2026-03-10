@@ -1,0 +1,151 @@
+name: Sync Upstream (Ignore Specific Folders)
+
+on:
+  schedule:
+    # Runs automatically every day at 2:00 AM UTC. Adjust as needed.
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows you to run this manually from the Actions tab
+
+permissions:
+  contents: write # Required to allow the GitHub Actions bot to push commits
+  pull-requests: write # Required to create pull requests
+
+jobs:
+  sync-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all history for all branches and tags
+          # If your default branch is not 'main', change it here:
+          ref: main 
+          token: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream and restore ignored directories
+        run: |
+          # 1. Configure Git for the Actions bot
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 2. Add the upstream repository
+          git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
+          git fetch upstream main
+          
+          # 3. Backup ignored directories and files BEFORE merge
+          echo "Backing up ignored directories and files..."
+          mkdir -p /tmp/backup
+          cp -r install /tmp/backup/
+          cp -r ct /tmp/backup/
+          cp -r frontend /tmp/backup/
+          cp -r .github/workflows /tmp/backup/workflows
+          cp CHANGELOG.md /tmp/backup/
+          cp README.md /tmp/backup/
+          
+          # 4. Attempt to merge with upstream
+          # Use --strategy-option=theirs to prefer upstream changes for conflicts
+          # We'll restore our fork-specific files afterwards
+          git merge upstream/main --no-commit --no-ff -X theirs || MERGE_CONFLICTS=1
+          
+          # 5. Restore backed up ignored directories (overwriting any upstream changes)
+          echo "Restoring fork-specific directories and files..."
+          rm -rf install ct frontend
+          cp -r /tmp/backup/install .
+          cp -r /tmp/backup/ct .
+          cp -r /tmp/backup/frontend .
+          rm -rf .github/workflows
+          cp -r /tmp/backup/workflows .github/workflows
+          cp /tmp/backup/CHANGELOG.md .
+          cp /tmp/backup/README.md .
+          
+          # 6. Stage all restored files
+          git add install ct frontend .github/workflows CHANGELOG.md README.md
+          
+          # 7. Check if there are unresolved conflicts in other files
+          if [ "${MERGE_CONFLICTS:-0}" = "1" ]; then
+            # Check for remaining conflicts in non-ignored files
+            REMAINING_CONFLICTS=$(git ls-files --unmerged | grep -v 'install/' | grep -v 'ct/' | grep -v 'frontend/' | grep -v '.github/workflows/' | grep -v 'CHANGELOG.md' | grep -v 'README.md' || true)
+            if [ -n "$REMAINING_CONFLICTS" ]; then
+              echo "Merge conflict detected in non-ignored files that cannot be auto-resolved:"
+              echo "$REMAINING_CONFLICTS"
+              git merge --abort
+              exit 1
+            fi
+          fi
+          
+          # 8. Check if there are workflow file changes from upstream (before we restored)
+          WORKFLOW_CHANGES=$(git diff upstream/main HEAD --name-only 2>/dev/null | grep '^\.github/workflows/' || true)
+          
+          # 9. Check if there is anything left to commit
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-sync upstream main, preserving fork-specific files (install/, ct/, frontend/, workflows/, CHANGELOG.md, README.md)"
+            git push origin main
+            echo "Successfully synced and pushed to main."
+          else
+            echo "No new changes to sync after restoring ignored directories."
+            git merge --abort 2>/dev/null || true
+          fi
+          
+          # 10. If upstream had workflow changes, create a PR for review
+          if [ -n "$WORKFLOW_CHANGES" ]; then
+            echo "Upstream workflow changes detected. Creating PR for review..."
+            
+            # Create a branch from upstream for workflow changes
+            BRANCH_NAME="upstream-workflow-sync-$(date +%Y%m%d-%H%M%S)"
+            git checkout -b "$BRANCH_NAME" upstream/main
+            
+            # Restore fork-specific files on this branch too
+            rm -rf install ct frontend .github/workflows
+            cp -r /tmp/backup/install .
+            cp -r /tmp/backup/ct .
+            cp -r /tmp/backup/frontend .
+            mkdir -p .github
+            cp -r /tmp/backup/workflows .github/workflows
+            cp /tmp/backup/CHANGELOG.md .
+            cp /tmp/backup/README.md .
+            
+            # Stage and commit
+            git add install ct frontend .github/workflows CHANGELOG.md README.md
+            git commit -m "Upstream workflow sync - preserving fork-specific customizations" || true
+            
+            # Push the branch
+            git push origin HEAD --force
+          
+            # Create PR using GitHub CLI
+            gh pr create \
+              --title "🔄 Upstream Workflow Sync - Review Required" \
+              --body "This PR contains workflow file changes from upstream that need manual review before merging.
+
+          ## Changed Workflow Files
+          \`\`\`
+          $WORKFLOW_CHANGES
+          \`\`\`
+
+          ## ⚠️ Important
+          Before merging, ensure all fork-specific references are preserved:
+          - \`community-unscripted\` repository references
+          - Fork-specific workflow files
+          - Custom workflow configurations
+
+          ## Fork-Specific Files Preserved
+          - \`install/\` directory
+          - \`ct/\` directory  
+          - \`frontend/\` directory
+          - \`.github/workflows/\` directory
+          - \`CHANGELOG.md\`
+          - \`README.md\`
+
+          ---
+          *This PR was automatically created by the upstream-sync workflow.*" \
+              --base main \
+              --head "$BRANCH_NAME" || echo "PR may already exist or no changes to PR"
+            
+            echo "PR created for workflow changes review."
+            
+            # Switch back to main
+            git checkout main
+          else
+            echo "No upstream workflow changes detected."
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

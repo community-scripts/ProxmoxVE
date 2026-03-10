@@ -9,7 +9,7 @@ export const basePath = process.env.BASE_PATH || "ProxmoxVE";
 
 export const navbarLinks = [
   {
-    href: `https://github.com/community-scripts/${basePath}`,
+    href: `https://github.com/community-unscripted/${basePath}`,
     event: "GitHub",
     icon: <FaGithub className="h-4 w-4" />,
     text: "GitHub",
@@ -21,14 +21,14 @@ export const navbarLinks = [
     text: "Discord",
   },
   {
-    href: `https://github.com/community-scripts/${basePath}/blob/main/CHANGELOG.md`,
+    href: `https://github.com/community-unscripted/${basePath}/blob/main/CHANGELOG.md`,
     event: "Changelog",
     icon: <Scroll className="h-4 w-4" />,
     text: "Changelog",
     mobileHidden: true,
   },
   {
-    href: `https://github.com/community-scripts/${basePath}/discussions`,
+    href: `https://github.com/community-unscripted/${basePath}/discussions`,
     event: "Discussions",
     icon: <MessagesSquare className="h-4 w-4" />,
     text: "Discussions",
@@ -45,8 +45,8 @@ export const navbarLinks = [
 export const mostPopularScripts = ["post-pve-install", "docker", "homeassistant"];
 
 export const analytics = {
-  url: "analytics.community-scripts.org",
-  token: "e9f14e1e7232",
+  url: "analytics.bramsuurd.nl",
+  token: "f9eee289f931",
 };
 
 export const AlertColors = {
