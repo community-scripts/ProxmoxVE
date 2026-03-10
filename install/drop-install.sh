@@ -39,13 +39,13 @@ PG_DB_NAME="drop" PG_DB_USER="drop" setup_postgresql_db
 get_lxc_ip
 
 # =============================================================================
-# INSTALL RUST
+# INSTALL RUST (nightly required for torrential)
 # =============================================================================
 
-msg_info "Installing Rust"
-$STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+msg_info "Installing Rust (nightly)"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
 export PATH="/root/.cargo/bin:$PATH"
-msg_ok "Installed Rust"
+msg_ok "Installed Rust (nightly)"
 
 # =============================================================================
 # DOWNLOAD & BUILD APPLICATION
@@ -70,7 +70,7 @@ $STD pnpm run build
 msg_ok "Built Drop Application"
 
 # =============================================================================
-# BUILD TORRENTIAL (Rust component)
+# BUILD TORRENTIAL (Rust component - requires nightly)
 # =============================================================================
 
 msg_info "Building Torrential"
