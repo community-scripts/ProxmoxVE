@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-10T00:18:38Z",
+  "generated": "2026-03-10T06:15:43Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -613,16 +613,16 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.12.70",
+      "version": "v5.13.0",
       "pinned": false,
-      "date": "2026-03-06T01:53:38Z"
+      "date": "2026-03-10T03:33:02Z"
     },
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1323",
+      "version": "v0.24.1332",
       "pinned": false,
-      "date": "2026-03-09T05:55:36Z"
+      "date": "2026-03-10T05:50:35Z"
     },
     {
       "slug": "jellystat",
@@ -1376,9 +1376,9 @@
     {
       "slug": "seaweedfs",
       "repo": "seaweedfs/seaweedfs",
-      "version": "4.15",
+      "version": "4.16",
       "pinned": false,
-      "date": "2026-03-05T06:30:30Z"
+      "date": "2026-03-10T06:11:05Z"
     },
     {
       "slug": "seelf",
@@ -1670,9 +1670,9 @@
     {
       "slug": "uptimekuma",
       "repo": "louislam/uptime-kuma",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "pinned": false,
-      "date": "2026-03-05T02:08:14Z"
+      "date": "2026-03-10T02:25:33Z"
     },
     {
       "slug": "vaultwarden",
