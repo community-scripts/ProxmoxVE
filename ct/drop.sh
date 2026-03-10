@@ -47,7 +47,6 @@ function update_script() {
 
   msg_info "Stopping Services"
   systemctl stop drop
-  systemctl stop nginx
   msg_ok "Stopped Services"
 
   msg_info "Backing up Configuration"
@@ -91,7 +90,6 @@ function update_script() {
   msg_ok "Restored Configuration"
 
   msg_info "Starting Services"
-  systemctl start nginx
   systemctl start drop
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
@@ -104,5 +102,19 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+
+# Wait for service to start and extract setup URL from logs
+msg_info "Waiting for Drop service to start"
+sleep 5
+SETUP_URL=$(journalctl -u drop --no-pager -n 50 2>/dev/null | grep -oP 'Setup URL: \K.*' | tail -1)
+msg_ok "Drop service started"
+
+if [[ -n "$SETUP_URL" ]]; then
+  # Replace localhost with the LXC IP address
+  SETUP_URL="${SETUP_URL//localhost/${IP}}"
+  echo -e "${INFO}${YW} Setup URL:${CL}"
+  echo -e "${TAB}${GATEWAY}${BGN}${SETUP_URL}${CL}"
+else
+  echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+  echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+fi

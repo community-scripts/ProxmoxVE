@@ -19,7 +19,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   git \
-  nginx \
   build-essential \
   pkg-config \
   libssl-dev \
@@ -123,37 +122,12 @@ $STD pnpm exec prisma migrate deploy
 msg_ok "Ran Database Migrations"
 
 # =============================================================================
-# NGINX CONFIGURATION
+# NGINX CONFIGURATION (for Drop's internal nginx service)
 # =============================================================================
 
-msg_info "Configuring NGINX"
+msg_info "Configuring Drop NGINX"
 cp /opt/drop/build/nginx.conf /opt/drop/nginx.conf
-
-cat <<EOF >/etc/nginx/sites-available/drop
-server {
-    listen 3000;
-    server_name _;
-
-    client_max_body_size 0;
-
-    location / {
-        proxy_pass http://127.0.0.1:4000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
-        proxy_read_timeout 86400;
-    }
-}
-EOF
-
-$STD rm -f /etc/nginx/sites-enabled/default
-$STD ln -sf /etc/nginx/sites-available/drop /etc/nginx/sites-enabled/drop
-msg_ok "Configured NGINX"
+msg_ok "Configured Drop NGINX"
 
 # =============================================================================
 # CREATE SYSTEMD SERVICE
@@ -181,14 +155,6 @@ WantedBy=multi-user.target
 EOF
 systemctl enable -q --now drop
 msg_ok "Created Service"
-
-# =============================================================================
-# START NGINX
-# =============================================================================
-
-msg_info "Starting NGINX"
-systemctl enable -q --now nginx
-msg_ok "Started NGINX"
 
 # =============================================================================
 # CLEANUP & FINALIZATION
