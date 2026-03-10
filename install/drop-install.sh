@@ -43,9 +43,8 @@ get_lxc_ip
 # =============================================================================
 
 msg_info "Installing Rust"
-$STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-# Source the cargo environment to make cargo available in current shell
-source /root/.cargo/env
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+export PATH="/root/.cargo/bin:$PATH"
 msg_ok "Installed Rust"
 
 # =============================================================================
@@ -76,6 +75,7 @@ msg_ok "Built Drop Application"
 
 msg_info "Building Torrential"
 cd /opt/drop/torrential || exit
+export PATH="/root/.cargo/bin:$PATH"
 $STD cargo build --release
 msg_ok "Built Torrential"
 
