@@ -41,20 +41,9 @@ get_lxc_ip
 # DOWNLOAD & DEPLOY APPLICATION
 # =============================================================================
 
-fetch_and_deploy_gh_release "drop" "Drop-OSS/drop" "tarball" "latest" "/opt/drop"
-
-# =============================================================================
-# INITIALIZE GIT REPO (required for postinstall script)
-# =============================================================================
-
-msg_info "Initializing Git Repository"
-cd /opt/drop || exit
-$STD git init
-$STD git config user.email "noreply@localhost"
-$STD git config user.name "Build"
-$STD git add -A
-$STD git commit -m "Initial commit"
-msg_ok "Initialized Git Repository"
+msg_info "Cloning Drop Repository"
+$STD git clone --branch develop --depth 1 https://github.com/Drop-OSS/drop.git /opt/drop
+msg_ok "Cloned Drop Repository"
 
 # =============================================================================
 # BUILD APPLICATION

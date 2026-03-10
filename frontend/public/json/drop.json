@@ -33,6 +33,10 @@
   },
   "notes": [
     {
+      "text": "Installs from the develop branch of the Drop repository.",
+      "type": "info"
+    },
+    {
       "text": "Requires PostgreSQL database which is automatically configured during installation.",
       "type": "info"
     },

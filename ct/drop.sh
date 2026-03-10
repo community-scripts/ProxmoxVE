@@ -29,56 +29,64 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "drop" "Drop-OSS/drop"; then
-    msg_info "Stopping Services"
-    systemctl stop drop
-    systemctl stop nginx
-    msg_ok "Stopped Services"
-
-    msg_info "Backing up Configuration"
-    cp /opt/drop/.env /opt/drop_env_backup 2>/dev/null || true
-    msg_ok "Backed up Configuration"
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "drop" "Drop-OSS/drop" "tarball" "latest" "/opt/drop"
-
-    msg_info "Initializing Git Repository"
-    cd /opt/drop || exit
-    $STD git init
-    $STD git config user.email "noreply@localhost"
-    $STD git config user.name "Build"
-    $STD git add -A
-    $STD git commit -m "Initial commit"
-    msg_ok "Initialized Git Repository"
-
-    msg_info "Installing Dependencies"
-    cd /opt/drop || exit
-    export PNPM_HOME="/root/.local/share/pnpm"
-    export PATH="$PNPM_HOME:$PATH"
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm prisma generate
-    msg_ok "Installed Dependencies"
-
-    msg_info "Running Database Migrations"
-    cd /opt/drop || exit
-    $STD pnpm prisma migrate deploy
-    msg_ok "Ran Database Migrations"
-
-    msg_info "Building Application"
-    cd /opt/drop || exit
-    $STD pnpm build
-    msg_ok "Built Application"
-
-    msg_info "Restoring Configuration"
-    cp /opt/drop_env_backup /opt/drop/.env 2>/dev/null || true
-    rm -f /opt/drop_env_backup
-    msg_ok "Restored Configuration"
-
-    msg_info "Starting Services"
-    systemctl start nginx
-    systemctl start drop
-    msg_ok "Started Services"
-    msg_ok "Updated successfully!"
+  if [[ ! -d /opt/drop/.git ]]; then
+    msg_error "No ${APP} Git Repository Found! Cannot update."
+    exit
   fi
+
+  msg_info "Checking for Updates"
+  cd /opt/drop || exit
+  CURRENT_COMMIT=$(git rev-parse HEAD)
+  $STD git fetch origin develop
+  LATEST_COMMIT=$(git rev-parse origin/develop)
+
+  if [[ "$CURRENT_COMMIT" == "$LATEST_COMMIT" ]]; then
+    msg_ok "No update required. Already at latest version."
+    exit
+  fi
+
+  msg_info "Stopping Services"
+  systemctl stop drop
+  systemctl stop nginx
+  msg_ok "Stopped Services"
+
+  msg_info "Backing up Configuration"
+  cp /opt/drop/.env /opt/drop_env_backup 2>/dev/null || true
+  msg_ok "Backed up Configuration"
+
+  msg_info "Updating Drop"
+  cd /opt/drop || exit
+  $STD git reset --hard origin/develop
+  msg_ok "Updated Drop"
+
+  msg_info "Installing Dependencies"
+  cd /opt/drop || exit
+  export PNPM_HOME="/root/.local/share/pnpm"
+  export PATH="$PNPM_HOME:$PATH"
+  $STD pnpm install --frozen-lockfile
+  $STD pnpm prisma generate
+  msg_ok "Installed Dependencies"
+
+  msg_info "Running Database Migrations"
+  cd /opt/drop || exit
+  $STD pnpm prisma migrate deploy
+  msg_ok "Ran Database Migrations"
+
+  msg_info "Building Application"
+  cd /opt/drop || exit
+  $STD pnpm build
+  msg_ok "Built Application"
+
+  msg_info "Restoring Configuration"
+  cp /opt/drop_env_backup /opt/drop/.env 2>/dev/null || true
+  rm -f /opt/drop_env_backup
+  msg_ok "Restored Configuration"
+
+  msg_info "Starting Services"
+  systemctl start nginx
+  systemctl start drop
+  msg_ok "Started Services"
+  msg_ok "Updated successfully!"
   exit
 }
 
