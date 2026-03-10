@@ -80,9 +80,9 @@ function update_script() {
 
   msg_info "Running Database Migrations"
   cd /opt/drop || exit
-  $STD npm install prisma@7.3.0 dotenv
+  $STD pnpm add prisma@7.3.0 dotenv
   source /opt/drop/.env
-  $STD npx prisma migrate deploy
+  $STD pnpm exec prisma migrate deploy
   msg_ok "Ran Database Migrations"
 
   msg_info "Restoring Configuration"

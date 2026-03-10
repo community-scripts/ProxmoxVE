@@ -117,8 +117,8 @@ msg_ok "Configured Drop"
 
 msg_info "Running Database Migrations"
 cd /opt/drop || exit
-$STD npm install prisma@7.3.0 dotenv
-$STD DATABASE_URL="postgresql://drop:${PG_DB_PASS}@localhost:5432/drop" npx prisma migrate deploy
+$STD pnpm add prisma@7.3.0 dotenv
+$STD DATABASE_URL="postgresql://drop:${PG_DB_PASS}@localhost:5432/drop" pnpm exec prisma migrate deploy
 msg_ok "Ran Database Migrations"
 
 # =============================================================================
