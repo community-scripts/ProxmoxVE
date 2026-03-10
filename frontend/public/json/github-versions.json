@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-10T06:15:43Z",
+  "generated": "2026-03-10T12:12:38Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -116,9 +116,9 @@
     {
       "slug": "bentopdf",
       "repo": "alam00000/bentopdf",
-      "version": "v2.4.1",
+      "version": "v2.5.0",
       "pinned": false,
-      "date": "2026-03-07T09:14:39Z"
+      "date": "2026-03-10T08:40:54Z"
     },
     {
       "slug": "beszel",
@@ -823,9 +823,9 @@
     {
       "slug": "mail-archiver",
       "repo": "s1t5/mail-archiver",
-      "version": "2602.4",
+      "version": "2603.1",
       "pinned": false,
-      "date": "2026-02-26T08:43:01Z"
+      "date": "2026-03-10T11:51:08Z"
     },
     {
       "slug": "managemydamnlife",
@@ -1551,9 +1551,9 @@
     {
       "slug": "thingsboard",
       "repo": "thingsboard/thingsboard",
-      "version": "v4.3.0.1",
+      "version": "v4.3.1",
       "pinned": false,
-      "date": "2026-02-03T12:39:14Z"
+      "date": "2026-03-10T09:25:25Z"
     },
     {
       "slug": "threadfin",
