@@ -44,6 +44,19 @@ get_lxc_ip
 fetch_and_deploy_gh_release "drop" "Drop-OSS/drop" "tarball" "latest" "/opt/drop"
 
 # =============================================================================
+# INITIALIZE GIT REPO (required for postinstall script)
+# =============================================================================
+
+msg_info "Initializing Git Repository"
+cd /opt/drop || exit
+$STD git init
+$STD git config user.email "noreply@localhost"
+$STD git config user.name "Build"
+$STD git add -A
+$STD git commit -m "Initial commit"
+msg_ok "Initialized Git Repository"
+
+# =============================================================================
 # BUILD APPLICATION
 # =============================================================================
 

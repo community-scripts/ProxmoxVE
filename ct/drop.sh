@@ -41,6 +41,15 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "drop" "Drop-OSS/drop" "tarball" "latest" "/opt/drop"
 
+    msg_info "Initializing Git Repository"
+    cd /opt/drop || exit
+    $STD git init
+    $STD git config user.email "noreply@localhost"
+    $STD git config user.name "Build"
+    $STD git add -A
+    $STD git commit -m "Initial commit"
+    msg_ok "Initialized Git Repository"
+
     msg_info "Installing Dependencies"
     cd /opt/drop || exit
     export PNPM_HOME="/root/.local/share/pnpm"
