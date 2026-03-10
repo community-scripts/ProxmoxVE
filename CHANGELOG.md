@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-10
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [Fix] Immich: Pin libvips to 8.17.3 [@vhsdream](https://github.com/vhsdream) ([#12744](https://github.com/community-scripts/ProxmoxVE/pull/12744))
+
 ## 2026-03-09
 
 ### 🚀 Updated Scripts
