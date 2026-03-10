@@ -38,29 +38,40 @@ PG_DB_NAME="drop" PG_DB_USER="drop" setup_postgresql_db
 get_lxc_ip
 
 # =============================================================================
-# DOWNLOAD & DEPLOY APPLICATION
+# DOWNLOAD & BUILD APPLICATION
 # =============================================================================
 
 msg_info "Cloning Drop Repository"
-$STD git clone --branch develop --depth 1 https://github.com/Drop-OSS/drop.git /opt/drop
+$STD git clone --branch develop --recurse-submodules https://github.com/Drop-OSS/drop.git /opt/drop
+cd /opt/drop || exit
+$STD git submodule update --init --recursive
 msg_ok "Cloned Drop Repository"
-
-# =============================================================================
-# BUILD APPLICATION
-# =============================================================================
 
 msg_info "Installing Application Dependencies"
 cd /opt/drop || exit
 export PNPM_HOME="/root/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
-$STD pnpm install --frozen-lockfile
-$STD pnpm prisma generate
+$STD pnpm install
 msg_ok "Installed Application Dependencies"
 
-msg_info "Building Application"
+msg_info "Building Drop Application"
 cd /opt/drop || exit
-$STD pnpm build
-msg_ok "Built Application"
+$STD pnpm run build
+msg_ok "Built Drop Application"
+
+# =============================================================================
+# BUILD TORRENTIAL (Rust component)
+# =============================================================================
+
+msg_info "Installing Rust"
+$STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+export PATH="/root/.cargo/bin:$PATH"
+msg_ok "Installed Rust"
+
+msg_info "Building Torrential"
+cd /opt/drop/torrential || exit
+$STD cargo build --release
+msg_ok "Built Torrential"
 
 # =============================================================================
 # CONFIGURATION
@@ -79,12 +90,16 @@ DATABASE_URL="postgresql://drop:${PG_DB_PASS}@localhost:5432/drop"
 # Server Configuration
 HOST="0.0.0.0"
 PORT=4000
+EXTERNAL_URL="http://${LOCAL_IP}:3000"
+
+# NGINX Configuration
+NGINX_CONFIG=./nginx.conf
+
+# Data Directory
+DATA=./data
 
 # Security
 NUXT_SESSION_PASSWORD="${SECRET_KEY}"
-
-# Optional: External URL (uncomment and configure if needed)
-# NUXT_PUBLIC_URL="http://${LOCAL_IP}:3000"
 EOF
 
 msg_ok "Configured Drop"
@@ -95,7 +110,8 @@ msg_ok "Configured Drop"
 
 msg_info "Running Database Migrations"
 cd /opt/drop || exit
-$STD pnpm prisma migrate deploy
+$STD npm install prisma@7.3.0 dotenv
+$STD DATABASE_URL="postgresql://drop:${PG_DB_PASS}@localhost:5432/drop" npx prisma migrate deploy
 msg_ok "Ran Database Migrations"
 
 # =============================================================================
@@ -103,6 +119,8 @@ msg_ok "Ran Database Migrations"
 # =============================================================================
 
 msg_info "Configuring NGINX"
+cp /opt/drop/build/nginx.conf /opt/drop/nginx.conf
+
 cat <<EOF >/etc/nginx/sites-available/drop
 server {
     listen 3000;
@@ -144,8 +162,9 @@ Type=simple
 User=root
 WorkingDirectory=/opt/drop
 Environment="PNPM_HOME=/root/.local/share/pnpm"
-Environment="PATH=/root/.local/share/pnpm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-ExecStart=/root/.local/share/pnpm/pnpm run start
+Environment="PATH=/root/.cargo/bin:/root/.local/share/pnpm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+EnvironmentFile=/opt/drop/.env
+ExecStart=/usr/bin/node ./.output/server/index.mjs
 Restart=on-failure
 RestartSec=5
 

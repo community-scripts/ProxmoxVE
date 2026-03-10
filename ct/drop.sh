@@ -57,25 +57,35 @@ function update_script() {
   msg_info "Updating Drop"
   cd /opt/drop || exit
   $STD git reset --hard origin/develop
+  $STD git submodule update --init --recursive
   msg_ok "Updated Drop"
 
   msg_info "Installing Dependencies"
   cd /opt/drop || exit
   export PNPM_HOME="/root/.local/share/pnpm"
-  export PATH="$PNPM_HOME:$PATH"
-  $STD pnpm install --frozen-lockfile
-  $STD pnpm prisma generate
+  export PATH="/root/.cargo/bin:$PNPM_HOME:$PATH"
+  $STD pnpm install
   msg_ok "Installed Dependencies"
-
-  msg_info "Running Database Migrations"
-  cd /opt/drop || exit
-  $STD pnpm prisma migrate deploy
-  msg_ok "Ran Database Migrations"
 
   msg_info "Building Application"
   cd /opt/drop || exit
-  $STD pnpm build
+  $STD pnpm run build
   msg_ok "Built Application"
+
+  msg_info "Building Torrential"
+  cd /opt/drop/torrential || exit
+  export PATH="/root/.cargo/bin:$PATH"
+  $STD cargo build --release
+  msg_ok "Built Torrential"
+
+  msg_info "Running Database Migrations"
+  cd /opt/drop || exit
+  export PNPM_HOME="/root/.local/share/pnpm"
+  export PATH="/root/.cargo/bin:$PNPM_HOME:$PATH"
+  $STD npm install prisma@7.3.0 dotenv
+  source /opt/drop/.env
+  $STD npx prisma migrate deploy
+  msg_ok "Ran Database Migrations"
 
   msg_info "Restoring Configuration"
   cp /opt/drop_env_backup /opt/drop/.env 2>/dev/null || true
