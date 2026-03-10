@@ -24,7 +24,8 @@ $STD apt install -y \
   pkg-config \
   libssl-dev \
   libpq-dev \
-  curl
+  curl \
+  protobuf-compiler
 msg_ok "Installed Dependencies"
 
 # =============================================================================
@@ -43,7 +44,7 @@ get_lxc_ip
 # =============================================================================
 
 msg_info "Installing Rust (nightly)"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
+$STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
 export PATH="/root/.cargo/bin:$PATH"
 msg_ok "Installed Rust (nightly)"
 
