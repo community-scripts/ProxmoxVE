@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://docs-next.droposs.org/",
   "website": "https://github.com/Drop-OSS/drop",
-  "logo": "https://raw.githubusercontent.com/Drop-OSS/drop/main/packages/docs/public/logo.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/drop.webp",
   "config_path": "/opt/drop/.env",
   "description": "Drop is an open-source game distribution platform similar to Steam/GameVault. Manage your game library, track playtime, and organize your collection with a modern web interface.",
   "install_methods": [
