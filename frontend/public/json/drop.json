@@ -47,6 +47,10 @@
     {
       "text": "Access the web interface on port 3000. The Node.js backend runs on port 4000 internally.",
       "type": "info"
+    },
+    {
+      "text": "To retrieve the setup URL after installation, run: journalctl -u drop --no-pager -n 50 | grep -oP 'Open \\Khttps?://[^\\s]+'",
+      "type": "info"
     }
   ]
 }
