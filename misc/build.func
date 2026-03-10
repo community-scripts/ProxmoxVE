@@ -5457,7 +5457,7 @@ create_lxc_container() {
       exit 221
     elif [[ "$(stat -c%s "$TEMPLATE_PATH")" -lt 1000000 ]]; then
       if [[ -n "$ONLINE_TEMPLATE" ]]; then
-        msg_warn "Template file too small (<1MB) – re-downloading."
+        msg_warn "Template file too small (<1MB), re-downloading."
         NEED_DOWNLOAD=1
       else
         msg_warn "Template looks too small, but no online version exists. Keeping local file."
