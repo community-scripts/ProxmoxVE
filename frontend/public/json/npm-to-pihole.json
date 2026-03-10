@@ -1,0 +1,52 @@
+{
+  "name": "NPM to Pi-Hole",
+  "slug": "npm-to-pihole",
+  "categories": [
+    5
+  ],
+  "date_created": "2026-03-10",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/CypriotUnknown/npm-to-pihole",
+  "website": "https://github.com/community-scripts/ProxmoxVE",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nginx-proxy-manager.webp",
+  "config_path": "/opt/npm-to-pihole/config",
+  "description": "NPM-to-PiHole is a lightweight sync daemon that automatically keeps Pi-hole local DNS records in sync with Nginx Proxy Manager (NPM) proxy hosts. It reads NPM's proxy host configuration files, extracts server_name entries, and adds or removes the corresponding DNS A records in Pi-hole. This eliminates the need to manually create Pi-hole DNS entries every time a new reverse proxy host is added in NPM. Supports Pi-hole v6 (REST API) and v5 (custom.list).",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/npm-to-pihole.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 2,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "After installation, edit `/opt/npm-to-pihole/config` with your NPM proxy host path, Pi-hole URL, Pi-hole password, and target IP, then run `systemctl restart npm-to-pihole`.",
+      "type": "info"
+    },
+    {
+      "text": "The NPM proxy_host directory must be accessible inside this LXC. For NPM in another LXC on the same Proxmox host, add a bind mount in the LXC config: `mp0: /path/to/npm/data/nginx/proxy_host,mp=/mnt/npm/proxy_host`.",
+      "type": "info"
+    },
+    {
+      "text": "For Pi-hole v5, set `PIHOLE_VERSION=5` in the config and bind-mount Pi-hole's `/etc/pihole/custom.list` into this LXC.",
+      "type": "info"
+    },
+    {
+      "text": "The service communicates with Pi-hole over HTTP/HTTPS and accepts self-signed certificates. Only deploy on a trusted internal network.",
+      "type": "warning"
+    }
+  ]
+}
