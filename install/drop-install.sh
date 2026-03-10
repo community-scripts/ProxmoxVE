@@ -23,7 +23,8 @@ $STD apt install -y \
   build-essential \
   pkg-config \
   libssl-dev \
-  libpq-dev
+  libpq-dev \
+  curl
 msg_ok "Installed Dependencies"
 
 # =============================================================================
@@ -36,6 +37,16 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="drop" PG_DB_USER="drop" setup_postgresql_db
 
 get_lxc_ip
+
+# =============================================================================
+# INSTALL RUST
+# =============================================================================
+
+msg_info "Installing Rust"
+$STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+# Source the cargo environment to make cargo available in current shell
+source /root/.cargo/env
+msg_ok "Installed Rust"
 
 # =============================================================================
 # DOWNLOAD & BUILD APPLICATION
@@ -62,11 +73,6 @@ msg_ok "Built Drop Application"
 # =============================================================================
 # BUILD TORRENTIAL (Rust component)
 # =============================================================================
-
-msg_info "Installing Rust"
-$STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-export PATH="/root/.cargo/bin:$PATH"
-msg_ok "Installed Rust"
 
 msg_info "Building Torrential"
 cd /opt/drop/torrential || exit

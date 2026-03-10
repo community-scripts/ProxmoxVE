@@ -63,7 +63,8 @@ function update_script() {
   msg_info "Installing Dependencies"
   cd /opt/drop || exit
   export PNPM_HOME="/root/.local/share/pnpm"
-  export PATH="/root/.cargo/bin:$PNPM_HOME:$PATH"
+  export PATH="$PNPM_HOME:$PATH"
+  source /root/.cargo/env
   $STD pnpm install
   msg_ok "Installed Dependencies"
 
@@ -74,14 +75,11 @@ function update_script() {
 
   msg_info "Building Torrential"
   cd /opt/drop/torrential || exit
-  export PATH="/root/.cargo/bin:$PATH"
   $STD cargo build --release
   msg_ok "Built Torrential"
 
   msg_info "Running Database Migrations"
   cd /opt/drop || exit
-  export PNPM_HOME="/root/.local/share/pnpm"
-  export PATH="/root/.cargo/bin:$PNPM_HOME:$PATH"
   $STD npm install prisma@7.3.0 dotenv
   source /opt/drop/.env
   $STD npx prisma migrate deploy
