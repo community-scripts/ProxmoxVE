@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-09T06:44:31Z",
+  "generated": "2026-03-10T18:31:46Z",
   "versions": [
     {
       "slug": "agregarr",
@@ -7,6 +7,13 @@
       "version": "v2.4.1",
       "pinned": false,
       "date": "2026-03-05T06:43:40Z"
+    },
+    {
+      "slug": "drop",
+      "repo": "Drop-OSS/drop",
+      "version": "v0.3.5",
+      "pinned": false,
+      "date": "2025-12-04T10:22:29Z"
     },
     {
       "slug": "lemonade",
