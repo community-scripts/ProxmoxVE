@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-10T12:12:38Z",
+  "generated": "2026-03-10T18:17:10Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -11,9 +11,9 @@
     {
       "slug": "adguard",
       "repo": "AdguardTeam/AdGuardHome",
-      "version": "v0.107.72",
+      "version": "v0.107.73",
       "pinned": false,
-      "date": "2026-02-19T15:37:49Z"
+      "date": "2026-03-10T17:23:23Z"
     },
     {
       "slug": "adguardhome-sync",
@@ -200,9 +200,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.7.7",
+      "version": "v2.7.8",
       "pinned": false,
-      "date": "2026-03-02T13:08:32Z"
+      "date": "2026-03-10T16:03:47Z"
     },
     {
       "slug": "cloudreve",
@@ -473,9 +473,9 @@
     {
       "slug": "gokapi",
       "repo": "Forceu/Gokapi",
-      "version": "v2.2.3",
+      "version": "v2.2.4",
       "pinned": false,
-      "date": "2026-03-04T21:29:16Z"
+      "date": "2026-03-10T15:44:19Z"
     },
     {
       "slug": "gotify",
