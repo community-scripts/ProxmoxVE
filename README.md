@@ -1,11 +1,11 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
   
-  <h1>Proxmox VE Helper-Scripts</h1>
+  <h1>Proxmox VE Helpful-Scripts</h1>
   <p><em>A Community Legacy in Memory of @tteck</em></p>
 
   <p>
-    <a href="https://helper-scripts.com">
+    <a href="https://helpful-scripts.com">
       <img src="https://img.shields.io/badge/🌐_Website-Visit-4c9b3f?style=for-the-badge&labelColor=2d3748" alt="Website" />
     </a>
     <a href="https://discord.gg/3AnUqsXnmK">
@@ -130,7 +130,7 @@ Choose your preferred installation method:
 
 The fastest way to get started:
 
-1. Visit **[helper-scripts.com](https://helper-scripts.com/)** 🌐
+1. Visit **[helpful-scripts.com](https://helpful-scripts.com/)** 🌐
 2. Search for your desired script (e.g., "Home Assistant", "Docker")
 3. Copy the bash command displayed on the script page
 4. Open your **Proxmox Shell** and paste the command

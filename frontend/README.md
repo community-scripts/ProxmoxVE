@@ -1,8 +1,8 @@
-# Proxmox VE Helper-Scripts Frontend
+# Proxmox VE Helpful-Scripts Frontend
 
-> 🚀 **Modern frontend for the Community-Unscripted Proxmox VE Helper-Scripts repository**
+> 🚀 **Modern frontend for the Community-Unscripted Proxmox VE Helpful-Scripts repository**
 
-A comprehensive, user-friendly interface built with Next.js that provides access to 300+ automation scripts for Proxmox Virtual Environment management. This frontend serves as the official website for the Community-Unscripted organization's Proxmox VE Helper-Scripts repository.
+A comprehensive, user-friendly interface built with Next.js that provides access to 300+ automation scripts for Proxmox Virtual Environment management. This frontend serves as the official website for the Community-Unscripted organization's Proxmox VE Helpful-Scripts repository.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15.2.4-black?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.0.0-blue?style=flat-square&logo=react)
