@@ -420,11 +420,47 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-10
+
 ## 2026-03-09
 
 ### 🆕 New Scripts
 
   - hermes [@proxmoxved-migration-bot[bot]](https://github.com/proxmoxved-migration-bot[bot]) ([#6](https://github.com/community-unscripted/ProxmoxVE/pull/6))
+### 🚀 Updated Scripts
+
+  - Pin Opencloud to 5.2.0 [@vhsdream](https://github.com/vhsdream) ([#12721](https://github.com/community-scripts/ProxmoxVE/pull/12721))
+
+  - #### 🐞 Bug Fixes
+
+    - [Hotfix] qBittorrent: Disable UPnP port forwarding by default [@vhsdream](https://github.com/vhsdream) ([#12728](https://github.com/community-scripts/ProxmoxVE/pull/12728))
+    - [Quickfix] Opencloud: ensure correct case for binary [@vhsdream](https://github.com/vhsdream) ([#12729](https://github.com/community-scripts/ProxmoxVE/pull/12729))
+    - Omada: Bump libssl [@MickLesk](https://github.com/MickLesk) ([#12724](https://github.com/community-scripts/ProxmoxVE/pull/12724))
+    - openwebui: Ensure required dependencies [@MickLesk](https://github.com/MickLesk) ([#12717](https://github.com/community-scripts/ProxmoxVE/pull/12717))
+    - Frigate: try an OpenVino model build fallback [@MickLesk](https://github.com/MickLesk) ([#12704](https://github.com/community-scripts/ProxmoxVE/pull/12704))
+    - Change cronjob setup to use www-data user [@opastorello](https://github.com/opastorello) ([#12695](https://github.com/community-scripts/ProxmoxVE/pull/12695))
+    - RustDesk Server: Fix check_for_gh_release function call [@tremor021](https://github.com/tremor021) ([#12694](https://github.com/community-scripts/ProxmoxVE/pull/12694))
+
+  - #### ✨ New Features
+
+    - feat: improve zigbee2mqtt backup handler [@MickLesk](https://github.com/MickLesk) ([#12714](https://github.com/community-scripts/ProxmoxVE/pull/12714))
+
+  - #### 💥 Breaking Changes
+
+    - Reactive Resume: rewrite for v5 using original repo amruthpilla/reactive-resume [@MickLesk](https://github.com/MickLesk) ([#12705](https://github.com/community-scripts/ProxmoxVE/pull/12705))
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools: add Alpine (apk) support to ensure_dependencies and is_package_installed [@MickLesk](https://github.com/MickLesk) ([#12703](https://github.com/community-scripts/ProxmoxVE/pull/12703))
+    - tools.func: extend hwaccel with ROCm  [@MickLesk](https://github.com/MickLesk) ([#12707](https://github.com/community-scripts/ProxmoxVE/pull/12707))
+
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - feat: add CopycatWarningToast component for user warnings [@BramSuurdje](https://github.com/BramSuurdje) ([#12733](https://github.com/community-scripts/ProxmoxVE/pull/12733))
 
 ## 2026-03-08
 
