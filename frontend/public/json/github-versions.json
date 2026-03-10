@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-09T18:17:48Z",
+  "generated": "2026-03-10T00:18:38Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -557,9 +557,9 @@
     {
       "slug": "homebox",
       "repo": "sysadminsmedia/homebox",
-      "version": "v0.24.1",
+      "version": "v0.24.2",
       "pinned": false,
-      "date": "2026-03-07T15:41:21Z"
+      "date": "2026-03-09T19:54:02Z"
     },
     {
       "slug": "homepage",
@@ -1236,9 +1236,9 @@
     {
       "slug": "pulse",
       "repo": "rcourtman/Pulse",
-      "version": "v5.1.22",
+      "version": "v5.1.23",
       "pinned": false,
-      "date": "2026-03-08T12:24:34Z"
+      "date": "2026-03-09T22:22:12Z"
     },
     {
       "slug": "pve-scripts-local",
@@ -1516,9 +1516,9 @@
     {
       "slug": "tasmoadmin",
       "repo": "TasmoAdmin/TasmoAdmin",
-      "version": "v4.3.4",
+      "version": "v5.0.0",
       "pinned": false,
-      "date": "2026-01-25T22:16:41Z"
+      "date": "2026-03-09T20:51:03Z"
     },
     {
       "slug": "tautulli",
