@@ -43,7 +43,7 @@ get_lxc_ip
 # =============================================================================
 
 msg_info "Installing Rust"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+$STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 export PATH="/root/.cargo/bin:$PATH"
 msg_ok "Installed Rust"
 
