@@ -41,6 +41,10 @@ jobs:
           git checkout HEAD -- install ct frontend
           git add install ct frontend
           
+          # 5b. Also restore fork-specific workflow files that reference community-unscripted
+          git checkout HEAD -- .github/workflows/close_issue_in_dev.yaml || true
+          git add .github/workflows/close_issue_in_dev.yaml || true
+          
           # 6. Check if there are unresolved conflicts in other files
           if git ls-files --unmerged | grep -q .; then
             echo "Merge conflict detected in non-ignored files. Aborting."
@@ -50,7 +54,7 @@ jobs:
           
           # 7. Check if there is anything left to commit
           if ! git diff --staged --quiet; then
-            git commit -m "Auto-sync upstream main, ignoring changes to install/, ct/, and frontend/"
+            git commit -m "Auto-sync upstream main, ignoring changes to install/, ct/, frontend/, and fork-specific workflows"
             git push origin main
             echo "Successfully synced and pushed."
           else
