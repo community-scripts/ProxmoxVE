@@ -209,26 +209,11 @@ cd /models
 wget -q http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 $STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
 if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
-  cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
-  cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
-  wget -q https://github.com/openvinotoolkit/open_model_zoo/raw/master/data/dataset_classes/coco_91cl_bkgr.txt -O /openvino-model/coco_91cl_bkgr.txt
-  sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
-  msg_ok "Built OpenVino Model"
-else
-  msg_warn "OpenVino build failed (CPU may not support required instructions). Frigate will use CPU model."
-fi
-
-msg_info "Building OpenVino Model"
-cd /models
-wget -q http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
-$STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
-if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
   mkdir -p /openvino-model
   cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
   cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
   
-  # Project Standard Fix: Link the labelmap from the python site-packages to /openvino-model
-  # We use a direct python call to avoid hardcoding version-specific paths (3.11 vs 3.12)
+  # Link the labelmap from the python site-packages to /openvino-model
   $STD ln -sf $(python3 -c "import omz_tools; import os; print(os.path.join(omz_tools.__path__[0], 'data/dataset_classes/coco_91cl_bkgr.txt'))") /openvino-model/coco_91cl_bkgr.txt
   
   sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
