@@ -105,8 +105,8 @@ echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 
 # Wait for service to start and extract setup URL from logs
 msg_info "Waiting for Drop service to start"
-sleep 5
-SETUP_URL=$(journalctl -u drop --no-pager -n 50 2>/dev/null | grep -oP 'Setup URL: \K.*' | tail -1)
+sleep 10
+SETUP_URL=$(journalctl -u drop --no-pager -n 50 2>/dev/null | grep -oP 'Setup URL: \K.*' | tail -1) || true
 msg_ok "Drop service started"
 
 if [[ -n "$SETUP_URL" ]]; then
