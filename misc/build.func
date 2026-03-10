@@ -5453,7 +5453,7 @@ create_lxc_container() {
       msg_info "Template not present locally – will download."
       NEED_DOWNLOAD=1
     elif [[ ! -r "$TEMPLATE_PATH" ]]; then
-      msg_error "Template file exists but is not readable – check permissions."
+      msg_error "Template file exists but is not readable, check permissions."
       exit 221
     elif [[ "$(stat -c%s "$TEMPLATE_PATH")" -lt 1000000 ]]; then
       if [[ -n "$ONLINE_TEMPLATE" ]]; then
