@@ -32,43 +32,58 @@ jobs:
           git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
           git fetch upstream main
           
-          # 3. Attempt to merge without committing (ignore failures temporarily for conflicts)
-          git merge upstream/main --no-commit --no-ff || true
+          # 3. Backup ignored directories and files BEFORE merge
+          echo "Backing up ignored directories and files..."
+          mkdir -p /tmp/backup
+          cp -r install /tmp/backup/
+          cp -r ct /tmp/backup/
+          cp -r frontend /tmp/backup/
+          cp -r .github/workflows /tmp/backup/workflows
+          cp CHANGELOG.md /tmp/backup/
+          cp README.md /tmp/backup/
           
-          # 4. Completely wipe the ignored folders to remove any new files upstream may have added
+          # 4. Attempt to merge with upstream
+          # Use --strategy-option=theirs to prefer upstream changes for conflicts
+          # We'll restore our fork-specific files afterwards
+          git merge upstream/main --no-commit --no-ff -X theirs || MERGE_CONFLICTS=1
+          
+          # 5. Restore backed up ignored directories (overwriting any upstream changes)
+          echo "Restoring fork-specific directories and files..."
           rm -rf install ct frontend
-          git rm -rf --cached install ct frontend || true
+          cp -r /tmp/backup/install .
+          cp -r /tmp/backup/ct .
+          cp -r /tmp/backup/frontend .
+          rm -rf .github/workflows
+          cp -r /tmp/backup/workflows .github/workflows
+          cp /tmp/backup/CHANGELOG.md .
+          cp /tmp/backup/README.md .
           
-          # 5. Restore the folders EXACTLY as they are in your fork's HEAD
-          git checkout HEAD -- install ct frontend
-          git add install ct frontend
+          # 6. Stage all restored files
+          git add install ct frontend .github/workflows CHANGELOG.md README.md
           
-          # 5b. Restore fork-specific documentation files
-          git checkout HEAD -- CHANGELOG.md README.md || true
-          git add CHANGELOG.md README.md || true
-          
-          # 6. Check if there are unresolved conflicts in other files
-          if git ls-files --unmerged | grep -q .; then
-            echo "Merge conflict detected in non-ignored files. Aborting."
-            git merge --abort
-            exit 1
+          # 7. Check if there are unresolved conflicts in other files
+          if [ "${MERGE_CONFLICTS:-0}" = "1" ]; then
+            # Check for remaining conflicts in non-ignored files
+            REMAINING_CONFLICTS=$(git ls-files --unmerged | grep -v 'install/' | grep -v 'ct/' | grep -v 'frontend/' | grep -v '.github/workflows/' | grep -v 'CHANGELOG.md' | grep -v 'README.md' || true)
+            if [ -n "$REMAINING_CONFLICTS" ]; then
+              echo "Merge conflict detected in non-ignored files that cannot be auto-resolved:"
+              echo "$REMAINING_CONFLICTS"
+              git merge --abort
+              exit 1
+            fi
           fi
           
-          # 7. Check if there are workflow file changes from upstream
-          WORKFLOW_CHANGES=$(git diff --staged --name-only | grep '^\.github/workflows/' || true)
+          # 8. Check if there are workflow file changes from upstream (before we restored)
+          WORKFLOW_CHANGES=$(git diff upstream/main HEAD --name-only 2>/dev/null | grep '^\.github/workflows/' || true)
           
-          # 8. Restore ALL workflow files to preserve fork-specific references
-          git checkout HEAD -- .github/workflows/
-          git add .github/workflows/
-          
-          # 9. Check if there is anything left to commit (non-workflow files only)
+          # 9. Check if there is anything left to commit
           if ! git diff --staged --quiet; then
-            git commit -m "Auto-sync upstream main, ignoring changes to install/, ct/, frontend/, and workflow files"
+            git commit -m "Auto-sync upstream main, preserving fork-specific files (install/, ct/, frontend/, workflows/, CHANGELOG.md, README.md)"
             git push origin main
-            echo "Successfully synced non-workflow files and pushed to main."
+            echo "Successfully synced and pushed to main."
           else
-            echo "No new changes to sync after restoring ignored directories and workflow files."
-            git merge --abort || true
+            echo "No new changes to sync after restoring ignored directories."
+            git merge --abort 2>/dev/null || true
           fi
           
           # 10. If upstream had workflow changes, create a PR for review
@@ -80,13 +95,17 @@ jobs:
             git checkout -b "$BRANCH_NAME" upstream/main
             
             # Restore fork-specific files on this branch too
-            git checkout main -- install ct frontend
-            git add install ct frontend
+            rm -rf install ct frontend .github/workflows
+            cp -r /tmp/backup/install .
+            cp -r /tmp/backup/ct .
+            cp -r /tmp/backup/frontend .
+            mkdir -p .github
+            cp -r /tmp/backup/workflows .github/workflows
+            cp /tmp/backup/CHANGELOG.md .
+            cp /tmp/backup/README.md .
             
-            git checkout main -- CHANGELOG.md README.md
-            git add CHANGELOG.md README.md
-            
-            # Commit the sync with fork-specific files preserved
+            # Stage and commit
+            git add install ct frontend .github/workflows CHANGELOG.md README.md
             git commit -m "Upstream workflow sync - preserving fork-specific customizations" || true
             
             # Push the branch
@@ -112,6 +131,7 @@ jobs:
           - \`install/\` directory
           - \`ct/\` directory  
           - \`frontend/\` directory
+          - \`.github/workflows/\` directory
           - \`CHANGELOG.md\`
           - \`README.md\`
 
