@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2026 community-scripts ORG
-# Author: BillyOutlast
 # License: MIT | https://github.com/community-unscripted/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/agregarr/agregarr
 
