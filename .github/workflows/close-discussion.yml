@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   close-discussion:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'Heretek-AI/ProxmoxVE'
     runs-on: ubuntu-latest
 
     steps:

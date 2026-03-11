@@ -17,7 +17,7 @@ env:
 
 jobs:
   update-github-versions:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'Heretek-AI/ProxmoxVE'
     runs-on: ubuntu-latest
 
     steps:

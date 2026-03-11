@@ -83,12 +83,12 @@ export default function Page() {
                     >
                       <FaGithub className="mr-2 h-4 w-4" />
                       {" "}
-                      Tteck&apos;s GitHub
+                      Tteck's GitHub
                     </a>
                   </Button>
                   <Button className="w-full" asChild>
                     <a
-                      href={`https://github.com/community-scripts/${basePath}`}
+                      href={`https://github.com/Heretek-AI/${basePath}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center"
@@ -104,18 +104,25 @@ export default function Page() {
 
             <div className="flex flex-col gap-4">
               <h1 className="max-w-2xl text-center text-3xl font-semibold tracking-tighter md:text-7xl">
-                Make managing your Homelab a breeze
+                Heretek-AI
               </h1>
               <div className="max-w-2xl gap-2 flex flex-col text-center sm:text-lg text-sm leading-relaxed tracking-tight text-muted-foreground md:text-xl">
                 <p>
-                  We are a community-driven initiative that simplifies the setup of Proxmox Virtual Environment (VE).
+                  <b>Uncompliant scripts, made quicker.</b>
                 </p>
                 <p>
-                  With 400+ scripts to help you manage your
+                  Scripts that don't meet the strict guidelines of the official
                   {" "}
-                  <b>Proxmox VE</b>
-                  , whether you&#39;re a seasoned user or a
-                  newcomer, we&#39;ve got you covered.
+                  <a
+                    href="https://github.com/community-scripts/ProxmoxVE"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary transition-colors"
+                  >
+                    Community-Scripts
+                  </a>
+                  {" "}
+                  repository, but are updated faster and built with flexibility in mind.
                 </p>
               </div>
             </div>

@@ -4,63 +4,67 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 220.9 39.3% 11%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 224 71.4% 4.1%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* Heretek Light Theme - Worn Metal */
+    --background: 30 15% 12%;
+    --foreground: 35 20% 85%;
+    --card: 30 12% 10%;
+    --card-foreground: 35 20% 85%;
+    --popover: 30 15% 8%;
+    --popover-foreground: 35 20% 85%;
+    --primary: 28 80% 45%;
+    --primary-foreground: 30 15% 8%;
+    --secondary: 35 30% 25%;
+    --secondary-foreground: 35 20% 85%;
+    --muted: 30 20% 20%;
+    --muted-foreground: 35 15% 55%;
+    --accent: 145 65% 35%;
+    --accent-foreground: 145 10% 95%;
+    --destructive: 0 75% 45%;
+    --destructive-foreground: 0 10% 95%;
+    --border: 30 25% 22%;
+    --input: 30 25% 18%;
+    --ring: 28 80% 45%;
+    --radius: 0.25rem;
+    /* Heretek Chart Colors - Rust & Corruption */
+    --chart-1: 28 75% 45%;
+    --chart-2: 35 60% 40%;
+    --chart-3: 145 55% 35%;
+    --chart-4: 180 40% 30%;
+    --chart-5: 0 60% 40%;
   }
 
   ::selection {
     background-color: hsl(var(--accent));
-    color: hsl(var(--foreground));
+    color: hsl(var(--accent-foreground));
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 210 20% 98%;
-    --primary-foreground: 220.9 39.3% 11%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Heretek Dark Theme - Corrupted Forge */
+    --background: 30 20% 4%;
+    --foreground: 35 15% 80%;
+    --card: 30 18% 6%;
+    --card-foreground: 35 15% 80%;
+    --popover: 30 20% 3%;
+    --popover-foreground: 35 15% 80%;
+    --primary: 28 85% 50%;
+    --primary-foreground: 30 25% 5%;
+    --secondary: 35 25% 15%;
+    --secondary-foreground: 35 15% 80%;
+    --muted: 30 20% 12%;
+    --muted-foreground: 35 12% 50%;
+    --accent: 145 70% 40%;
+    --accent-foreground: 145 15% 95%;
+    --destructive: 0 70% 40%;
+    --destructive-foreground: 0 15% 95%;
+    --border: 30 30% 18%;
+    --input: 30 25% 12%;
+    --ring: 28 85% 50%;
+    /* Heretek Chart Colors - Corruption Spread */
+    --chart-1: 28 80% 50%;
+    --chart-2: 35 55% 35%;
+    --chart-3: 145 60% 38%;
+    --chart-4: 60 45% 30%;
+    --chart-5: 0 65% 42%;
   }
 }
 
@@ -68,27 +72,232 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "liga" 1, "calt" 1;
   }
 }
+
 * {
   -ms-overflow-style: none;
 }
 
+/* Heretek Scrollbar - Corrupted Metal */
 ::-webkit-scrollbar {
-  width: 9px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background-color: rgba(155, 155, 155, 0.25);
-  border-radius: 20px;
-  border: transparent;
+  width: 10px;
 }
 
+::-webkit-scrollbar-track {
+  background: hsl(30 20% 8%);
+  border-left: 1px solid hsl(30 30% 18%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+      hsl(28 70% 35%) 0%,
+      hsl(35 50% 25%) 50%,
+      hsl(28 70% 35%) 100%);
+  border-radius: 4px;
+  border: 1px solid hsl(30 30% 20%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg,
+      hsl(28 80% 42%) 0%,
+      hsl(35 60% 32%) 50%,
+      hsl(28 80% 42%) 100%);
+}
+
+/* Glass Effect - Corrupted Viewport */
 .glass {
-  backdrop-filter: blur(15px) saturate(100%);
-  -webkit-backdrop-filter: blur(15px) saturate(100%);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  background: linear-gradient(135deg,
+      hsl(30 20% 8% / 0.85) 0%,
+      hsl(30 25% 12% / 0.75) 100%);
+  border: 1px solid hsl(30 30% 18% / 0.6);
+}
+
+/* Heretek Corruption Effects */
+@layer utilities {
+
+  /* Noise Texture Overlay */
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  /* Rust Border Effect */
+  .rust-border {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(hsl(30 20% 6%), hsl(30 20% 6%)) padding-box,
+      linear-gradient(135deg,
+        hsl(28 70% 30%) 0%,
+        hsl(35 40% 20%) 25%,
+        hsl(28 60% 25%) 50%,
+        hsl(35 35% 18%) 75%,
+        hsl(28 70% 30%) 100%) border-box;
+  }
+
+  /* Corruption Glow */
+  .corruption-glow {
+    box-shadow:
+      0 0 20px hsl(145 60% 30% / 0.15),
+      0 0 40px hsl(145 50% 25% / 0.1),
+      inset 0 0 20px hsl(145 40% 20% / 0.05);
+  }
+
+  /* Brass Text Effect */
+  .brass-text {
+    background: linear-gradient(180deg,
+        hsl(43 70% 55%) 0%,
+        hsl(35 60% 40%) 50%,
+        hsl(43 65% 45%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Copper Accent */
+  .copper-accent {
+    background: linear-gradient(135deg,
+        hsl(28 75% 45%) 0%,
+        hsl(25 65% 35%) 50%,
+        hsl(28 70% 40%) 100%);
+  }
+
+  /* Glitch Animation */
+  .glitch {
+    animation: glitch 4s infinite;
+  }
+
+  @keyframes glitch {
+
+    0%,
+    90%,
+    100% {
+      transform: translate(0);
+      filter: none;
+    }
+
+    91% {
+      transform: translate(-1px, 1px);
+      filter: hue-rotate(90deg);
+    }
+
+    92% {
+      transform: translate(1px, -1px);
+      filter: hue-rotate(-90deg);
+    }
+
+    93% {
+      transform: translate(-1px, -1px);
+      filter: hue-rotate(45deg);
+    }
+
+    94% {
+      transform: translate(1px, 1px);
+      filter: none;
+    }
+  }
+
+  /* Scan Line Effect */
+  .scan-lines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 2px,
+        hsl(30 20% 2% / 0.3) 2px,
+        hsl(30 20% 2% / 0.3) 4px);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* Flicker Animation */
+  .flicker {
+    animation: flicker 8s infinite;
+  }
+
+  @keyframes flicker {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    92% {
+      opacity: 1;
+    }
+
+    93% {
+      opacity: 0.8;
+    }
+
+    94% {
+      opacity: 1;
+    }
+
+    96% {
+      opacity: 0.9;
+    }
+
+    97% {
+      opacity: 1;
+    }
+  }
+
+  /* Corrupted Pulse */
+  .corrupted-pulse {
+    animation: corrupted-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes corrupted-pulse {
+
+    0%,
+    100% {
+      box-shadow:
+        0 0 10px hsl(145 50% 25% / 0.2),
+        0 0 20px hsl(145 40% 20% / 0.1);
+    }
+
+    50% {
+      box-shadow:
+        0 0 15px hsl(145 60% 30% / 0.3),
+        0 0 30px hsl(145 50% 25% / 0.15),
+        0 0 45px hsl(145 40% 20% / 0.1);
+    }
+  }
+
+  /* Metal Surface Gradient */
+  .metal-surface {
+    background:
+      linear-gradient(145deg,
+        hsl(30 15% 15%) 0%,
+        hsl(30 20% 10%) 50%,
+        hsl(30 15% 12%) 100%);
+    box-shadow:
+      inset 1px 1px 0 hsl(30 20% 20%),
+      inset -1px -1px 0 hsl(30 25% 5%);
+  }
+
+  /* Tech Heresy Warning */
+  .heresy-warning {
+    border-left: 3px solid hsl(0 70% 40%);
+    background: linear-gradient(90deg,
+        hsl(0 50% 10% / 0.3) 0%,
+        transparent 100%);
+  }
 }

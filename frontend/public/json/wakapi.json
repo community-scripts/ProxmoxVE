@@ -1,0 +1,60 @@
+{
+  "name": "Wakapi",
+  "slug": "wakapi",
+  "categories": [
+    0
+  ],
+  "date_created": "2026-03-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/muety/wakapi#readme",
+  "website": "https://wakapi.dev",
+  "logo": "https://raw.githubusercontent.com/muety/wakapi/master/static/assets/images/logo-gh.svg",
+  "config_path": "/opt/wakapi/config.yml",
+  "description": "Wakapi is a minimalist, self-hosted WakaTime-compatible backend for coding statistics. Track your coding time across projects, languages, and editors with detailed statistics and visualizations. Features public leaderboards, weekly email reports, REST API, and Prometheus metrics.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/wakapi.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Access the web interface at http://<IP>:3000",
+      "type": "info"
+    },
+    {
+      "text": "Create your account on first access - no default credentials",
+      "type": "warning"
+    },
+    {
+      "text": "Configuration file: /opt/wakapi/config.yml",
+      "type": "info"
+    },
+    {
+      "text": "Database: /opt/wakapi/data/wakapi.db (SQLite)",
+      "type": "info"
+    },
+    {
+      "text": "Configure WakaTime client: Edit ~/.wakatime.cfg with api_url and api_key",
+      "type": "info"
+    },
+    {
+      "text": "API documentation available at http://<IP>:3000/swagger-ui",
+      "type": "info"
+    }
+  ]
+}

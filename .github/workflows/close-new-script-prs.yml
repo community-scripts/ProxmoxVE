@@ -7,7 +7,7 @@ on:
 
 jobs:
   check-new-script:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'Heretek-AI/ProxmoxVE'
     runs-on: self-hosted
     permissions:
       pull-requests: write
@@ -87,10 +87,10 @@ jobs:
               ``,
               `However, **new scripts must first be submitted to our development repository** for testing and review before they can be merged here.`,
               ``,
-              `> 🛑 New scripts must be submitted to [**ProxmoxVED**](https://github.com/community-scripts/ProxmoxVED) for testing.`,
+              `> 🛑 New scripts must be submitted to [**ProxmoxVED**](https://github.com/Heretek-AI/ProxmoxVED) for testing.`,
               `> PRs without prior testing will be closed.`,
               ``,
-              `Please open your PR at **https://github.com/community-scripts/ProxmoxVED** instead.`,
+              `Please open your PR at **https://github.com/Heretek-AI/ProxmoxVED** instead.`,
               `Once your script has been tested and approved there, it will be pushed to this repository automatically.`,
               ``,
               `This PR will now be closed. Thank you for understanding! 🙏`,

@@ -10,8 +10,8 @@ import { basePath } from "@/config/site-config";
 import { getDisplayValueFromType } from "../script-info-blocks";
 
 function getInstallCommand(scriptPath = "", isAlpine = false, useGitea = false) {
-  const githubUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main/${scriptPath}`;
-  const giteaUrl = `https://git.community-scripts.org/community-scripts/${basePath}/raw/branch/main/${scriptPath}`;
+  const githubUrl = `https://raw.githubusercontent.com/Heretek-AI/${basePath}/main/${scriptPath}`;
+  const giteaUrl = `https://git.community-scripts.org/Heretek-AI/${basePath}/raw/branch/main/${scriptPath}`;
   const url = useGitea ? giteaUrl : githubUrl;
   return isAlpine ? `bash -c "$(curl -fsSL ${url})"` : `bash -c "$(curl -fsSL ${url})"`;
 }

@@ -8,7 +8,7 @@ on:
 
 jobs:
   archive-changelog:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'Heretek-AI/ProxmoxVE'
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: github-action-archive-changelog

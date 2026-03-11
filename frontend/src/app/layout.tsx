@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Inter } from "next/font/google";
+import { Cinzel, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import React from "react";
 
-import { CopycatWarningToast } from "@/components/copycat-warning-toast";
 import { ThemeProvider } from "@/components/theme-provider";
 import { analytics, basePath } from "@/config/site-config";
 import QueryProvider from "@/components/query-provider";
@@ -14,19 +13,31 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import "@/styles/globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+// Heretek Fonts - Cinzel for headings (gothic/medieval), JetBrains Mono for body (industrial/tech)
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  variable: "--font-cinzel",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Proxmox VE Helper-Scripts",
+  title: "Heretek AI - Proxmox VE Scripts",
   description:
-    "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 400+ scripts to help you manage your Proxmox Virtual Environment.",
-  applicationName: "Proxmox VE Helper-Scripts",
+    "The Heretek AI repository for Proxmox VE Helper-Scripts. Embrace the machine spirit with over 400+ scripts to manage your Proxmox Virtual Environment. Tech-heresy made manifest.",
+  applicationName: "Heretek AI",
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
   keywords: [
     "Proxmox VE",
     "Helper-Scripts",
-    "tteck",
+    "Heretek",
+    "Heretek AI",
     "helper",
     "scripts",
     "proxmox",
@@ -35,16 +46,19 @@ export const metadata: Metadata = {
     "containers",
     "LXC",
     "VM",
+    "machine spirit",
+    "tech-heresy",
+    "Warhammer 40K",
   ],
   authors: [
     { name: "Bram Suurd", url: "https://github.com/BramSuurdje" },
-    { name: "Community Scripts", url: "https://github.com/Community-Scripts" },
+    { name: "Heretek AI", url: "https://github.com/Heretek-AI" },
   ],
   creator: "Bram Suurd",
-  publisher: "Community Scripts",
-  metadataBase: new URL(`https://community-scripts.github.io/${basePath}/`),
+  publisher: "Heretek AI",
+  metadataBase: new URL(`https://Heretek-AI.github.io/${basePath}/`),
   alternates: {
-    canonical: `https://community-scripts.github.io/${basePath}/`,
+    canonical: `https://Heretek-AI.github.io/${basePath}/`,
   },
   viewport: {
     width: "device-width",
@@ -57,17 +71,17 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "Proxmox VE Helper-Scripts",
+    title: "Heretek AI - Proxmox VE Scripts",
     description:
-      "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 400+ scripts to help you manage your Proxmox Virtual Environment.",
-    url: `https://community-scripts.github.io/${basePath}/`,
-    siteName: "Proxmox VE Helper-Scripts",
+      "The Heretek AI repository for Proxmox VE Helper-Scripts. Embrace the machine spirit with over 400+ scripts to manage your Proxmox Virtual Environment.",
+    url: `https://Heretek-AI.github.io/${basePath}/`,
+    siteName: "Heretek AI",
     images: [
       {
-        url: `https://community-scripts.github.io/${basePath}/defaultimg.png`,
+        url: `https://Heretek-AI.github.io/${basePath}/defaultimg.png`,
         width: 1200,
         height: 630,
-        alt: "Proxmox VE Helper-Scripts",
+        alt: "Heretek AI - Proxmox VE Scripts",
       },
     ],
     locale: "en_US",
@@ -75,17 +89,17 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Proxmox VE Helper-Scripts",
+    title: "Heretek AI - Proxmox VE Scripts",
     creator: "@BramSuurdje",
     description:
-      "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 400+ scripts to help you manage your Proxmox Virtual Environment.",
-    images: [`https://community-scripts.github.io/${basePath}/defaultimg.png`],
+      "The Heretek AI repository for Proxmox VE Helper-Scripts. Embrace the machine spirit with over 400+ scripts to manage your Proxmox Virtual Environment.",
+    images: [`https://Heretek-AI.github.io/${basePath}/defaultimg.png`],
   },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Proxmox VE Helper-Scripts",
+    title: "Heretek AI",
   },
 };
 
@@ -95,13 +109,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${cinzel.variable} ${jetbrainsMono.variable}`}>
       <head>
         <link rel="canonical" href={metadata.metadataBase?.href} />
         <link rel="manifest" href="manifest.webmanifest" />
         <link rel="preconnect" href="https://api.github.com" />
       </head>
-      <body className={inter.className}>
+      <body className={`${jetbrainsMono.className} antialiased`}>
         <Script
           src={`https://${analytics.url}/api/script.js`}
           data-site-id={analytics.token}
@@ -117,7 +131,6 @@ export default function RootLayout({
                     <div className="w-full max-w-[1440px] ">
                       {children}
                       <Toaster richColors />
-                      <CopycatWarningToast />
                     </div>
                   </div>
                   <Footer />

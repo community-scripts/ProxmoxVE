@@ -1,0 +1,2 @@
+# This file ensures Git tracks this directory even when empty
+# JSON files will be generated/populated by other workflows

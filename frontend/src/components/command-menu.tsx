@@ -224,7 +224,7 @@ function CommandMenu() {
                       <p className="text-xs text-muted-foreground mb-2">Want to add a new script?</p>
                       <Button variant="outline" size="sm" asChild>
                         <Link
-                          href={`https://github.com/community-scripts/${basePath}/tree/main/docs/contribution/GUIDE.md`}
+                          href={`https://github.com/Heretek-AI/${basePath}/tree/main/docs/contribution/GUIDE.md`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >

@@ -7,7 +7,7 @@ on:
   
 jobs:
   create-daily-release:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'Heretek-AI/ProxmoxVE'
     runs-on: ubuntu-latest
     permissions:
       contents: write

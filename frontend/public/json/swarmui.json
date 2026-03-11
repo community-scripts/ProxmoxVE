@@ -1,0 +1,56 @@
+{
+  "name": "SwarmUI",
+  "slug": "swarmui",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-03-08",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 7801,
+  "documentation": "https://github.com/mcmonkeyprojects/SwarmUI/blob/master/README.md",
+  "website": "https://github.com/mcmonkeyprojects/SwarmUI",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/swarmui.webp",
+  "config_path": "/opt/swarmui/Data/Settings.yaml",
+  "description": "SwarmUI is a powerful Stable Diffusion WebUI with built-in ComfyUI integration for AI image generation. It provides a modern web interface for generating images using various AI models.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/swarmui.sh",
+      "resources": {
+        "cpu": 8,
+        "ram": 16384,
+        "hdd": 50,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "GPU passthrough must be enabled in Proxmox container configuration for image generation.",
+      "type": "warning"
+    },
+    {
+      "text": "For NVIDIA GPUs, ensure nvidia-container-toolkit is installed on the Proxmox host.",
+      "type": "info"
+    },
+    {
+      "text": "For AMD GPUs, ensure ROCm drivers are installed on the Proxmox host.",
+      "type": "info"
+    },
+    {
+      "text": "First run will download default AI models (~5GB). Additional models can be added to /opt/swarmui/Models",
+      "type": "info"
+    },
+    {
+      "text": "Configuration file is located at /opt/swarmui/Data/Settings.yaml",
+      "type": "info"
+    }
+  ]
+}

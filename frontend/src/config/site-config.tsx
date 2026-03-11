@@ -9,7 +9,7 @@ export const basePath = process.env.BASE_PATH || "ProxmoxVE";
 
 export const navbarLinks = [
   {
-    href: `https://github.com/community-scripts/${basePath}`,
+    href: `https://github.com/Heretek-AI/${basePath}`,
     event: "GitHub",
     icon: <FaGithub className="h-4 w-4" />,
     text: "GitHub",
@@ -21,14 +21,14 @@ export const navbarLinks = [
     text: "Discord",
   },
   {
-    href: `https://github.com/community-scripts/${basePath}/blob/main/CHANGELOG.md`,
+    href: `https://github.com/Heretek-AI/${basePath}/blob/main/CHANGELOG.md`,
     event: "Changelog",
     icon: <Scroll className="h-4 w-4" />,
     text: "Changelog",
     mobileHidden: true,
   },
   {
-    href: `https://github.com/community-scripts/${basePath}/discussions`,
+    href: `https://github.com/Heretek-AI/${basePath}/discussions`,
     event: "Discussions",
     icon: <MessagesSquare className="h-4 w-4" />,
     text: "Discussions",
@@ -45,13 +45,16 @@ export const navbarLinks = [
 export const mostPopularScripts = ["post-pve-install", "docker", "homeassistant"];
 
 export const analytics = {
-  url: "analytics.community-scripts.org",
-  token: "e9f14e1e7232",
+  url: "analytics.bramsuurd.nl",
+  token: "f9eee289f931",
 };
 
+// Heretek Alert Colors - Rust & Corruption themed
 export const AlertColors = {
-  warning: "border-red-500/25 bg-destructive/25",
-  info: "border-cyan-500/25 bg-cyan-50 dark:border-cyan-900 dark:bg-cyan-900/25",
+  warning: "border-rust-500/25 bg-destructive/25",
+  info: "border-corruption-400/25 bg-corruption-900/25",
+  success: "border-corruption-500/25 bg-corruption-800/25",
+  danger: "border-rust-600/25 bg-rust-900/25",
 };
 
 export const OperatingSystems: OperatingSystem[] = [

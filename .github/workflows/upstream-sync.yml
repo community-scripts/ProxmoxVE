@@ -1,0 +1,146 @@
+name: Sync Upstream (Create Pull Request)
+
+on:
+  schedule:
+    # Runs automatically every day at 2:00 AM UTC. Adjust as needed.
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows you to run this manually from the Actions tab
+
+permissions:
+  contents: write # Required to allow the GitHub Actions bot to push commits
+  pull-requests: write # Required to create pull requests
+
+jobs:
+  sync-and-create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all history for all branches and tags
+          # If your default branch is not 'main', change it here:
+          ref: main
+          token: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream and create pull request
+        run: |
+          # 1. Configure Git for the Actions bot
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 2. Add the upstream repository
+          git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
+          git fetch upstream main
+          
+          # 3. Check if there are any new commits from upstream
+          UPSTREAM_COMMITS=$(git log HEAD..upstream/main --oneline 2>/dev/null | wc -l)
+          if [ "$UPSTREAM_COMMITS" -eq 0 ]; then
+            echo "No new commits from upstream. Nothing to sync."
+            exit 0
+          fi
+          
+          echo "Found $UPSTREAM_COMMITS new commits from upstream."
+          
+          # 4. Backup ignored directories and files BEFORE creating sync branch
+          echo "Backing up fork-specific directories and files..."
+          mkdir -p /tmp/backup
+          cp -r install /tmp/backup/
+          cp -r ct /tmp/backup/
+          cp -r frontend /tmp/backup/
+          cp -r misc/images /tmp/backup/images
+          cp -r .github/workflows /tmp/backup/workflows
+          cp CHANGELOG.md /tmp/backup/
+          cp README.md /tmp/backup/
+          
+          # 5. Create a new branch from upstream/main for the PR
+          BRANCH_NAME="upstream-sync-$(date +%Y%m%d-%H%M%S)"
+          echo "Creating sync branch: $BRANCH_NAME"
+          git checkout -b "$BRANCH_NAME" upstream/main
+          
+          # 6. Restore fork-specific files on this branch
+          echo "Restoring fork-specific directories and files..."
+          rm -rf install ct frontend misc/images
+          cp -r /tmp/backup/install .
+          cp -r /tmp/backup/ct .
+          cp -r /tmp/backup/frontend .
+          mkdir -p misc
+          cp -r /tmp/backup/images misc/images
+          rm -rf .github/workflows
+          mkdir -p .github
+          cp -r /tmp/backup/workflows .github/workflows
+          cp /tmp/backup/CHANGELOG.md .
+          cp /tmp/backup/README.md .
+          
+          # 7. Stage all restored files
+          git add install ct frontend misc/images .github/workflows CHANGELOG.md README.md
+          
+          # 8. Check for any merge conflicts in other files
+          # Since we're creating from upstream/main, we need to check against main
+          git fetch origin main
+          CONFLICT_FILES=$(git diff --name-only origin/main HEAD | head -50)
+          
+          # 9. Commit the sync with preserved files
+          if ! git diff --staged --quiet; then
+            git commit -m "Sync from upstream - preserving fork-specific customizations"
+          fi
+          
+          # Get list of changed files for PR description
+          CHANGED_FILES=$(git diff --name-only origin/main HEAD | head -100)
+          UPSTREAM_LOG=$(git log origin/main..HEAD --oneline | head -20)
+          
+          # 10. Push the branch
+          git push origin HEAD --force
+          
+          # 11. Create PR using GitHub CLI
+          echo "Creating pull request for upstream sync..."
+          gh pr create \
+            --title "🔄 Upstream Sync - $(date +%Y-%m-%d)" \
+            --body "This PR syncs the latest changes from upstream [\`community-scripts/ProxmoxVE\`](https://github.com/community-scripts/ProxmoxVE) while preserving fork-specific customizations.
+
+          ## 📋 Upstream Commits Included
+          \`\`\`
+          $UPSTREAM_LOG
+          \`\`\`
+
+          ## 📁 Changed Files
+          <details>
+          <summary>Click to expand</summary>
+
+          \`\`\`
+          $CHANGED_FILES
+          \`\`\`
+          </details>
+
+          ## ⚠️ Important
+          Before merging, ensure all fork-specific references are preserved:
+          - \`Heretek-AI\` repository references
+          - Fork-specific workflow files
+          - Custom workflow configurations
+
+          ## 🔒 Fork-Specific Files Preserved
+          The following files/directories are preserved from the fork and NOT overwritten by upstream:
+          - \`install/\` directory
+          - \`ct/\` directory
+          - \`frontend/\` directory
+          - \`misc/images/\` directory
+          - \`.github/workflows/\` directory
+          - \`CHANGELOG.md\`
+          - \`README.md\`
+
+          ## ✅ Checklist Before Merge
+          - [ ] Review all changed files for unexpected modifications
+          - [ ] Verify fork-specific files are intact
+          - [ ] Check for any new upstream files that might conflict with fork customizations
+          - [ ] Test any new scripts or features from upstream
+
+          ---
+          *This PR was automatically created by the [upstream-sync workflow](https://github.com/Heretek-AI/ProxmoxVE/blob/main/.github/workflows/upstream-sync.yml).*" \
+            --base main \
+            --head "$BRANCH_NAME" || echo "PR may already exist or no changes to PR"
+          
+          echo "✅ Pull request created successfully for upstream sync."
+          
+          # Switch back to main
+          git checkout main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -5,15 +5,15 @@ on:
       - closed
 jobs:
   close_issue:
-    if: github.event.pull_request.merged == true && github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: self-hosted
-
+    if: github.event.pull_request.merged == true && github.repository == 'Heretek-AI/ProxmoxVE'
+    runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout target repo (merge commit)
+      - name: Checkout target repo (main)
         uses: actions/checkout@v4
         with:
-          repository: community-scripts/ProxmoxVE
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          repository: Heretek-AI/ProxmoxVE
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract and Process PR Title
@@ -23,45 +23,12 @@ jobs:
           echo "Processed Title: $title"
           echo "title=$title" >> $GITHUB_ENV
 
-      - name: Get slugs from merged PR
-        id: get_slugs
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pr_files=$(gh pr view ${{ github.event.pull_request.number }} --repo community-scripts/ProxmoxVE --json files -q '.files[].path' 2>/dev/null || true)
-          slugs=""
-          for path in $pr_files; do
-            [[ -f "$path" ]] || continue
-            if [[ "$path" == frontend/public/json/*.json ]]; then
-              s=$(jq -r '.slug // empty' "$path" 2>/dev/null)
-              [[ -n "$s" ]] && slugs="$slugs $s"
-            elif [[ "$path" == ct/*.sh ]] || [[ "$path" == install/*.sh ]] || [[ "$path" == tools/*.sh ]] || [[ "$path" == turnkey/*.sh ]] || [[ "$path" == vm/*.sh ]]; then
-              base=$(basename "$path" .sh)
-              if [[ "$path" == install/* && "$base" == *-install ]]; then
-                s="${base%-install}"
-              else
-                s="$base"
-              fi
-              [[ -n "$s" ]] && slugs="$slugs $s"
-            fi
-          done
-          slugs=$(echo $slugs | xargs -n1 | sort -u | tr '\n' ' ')
-          if [[ -z "$slugs" && -n "$title" ]]; then
-            slugs="$title"
-          fi
-          if [[ -z "$slugs" ]]; then
-            echo "count=0" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "$slugs" > pocketbase_slugs.txt
-          echo "count=$(echo $slugs | wc -w)" >> "$GITHUB_OUTPUT"
-
       - name: Search for Issues with Similar Titles
         id: find_issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          issues=$(gh issue list --repo community-scripts/ProxmoxVED --json number,title --jq '.[] | {number, title}')
+          issues=$(gh issue list --repo Heretek-AI/ProxmoxVED --json number,title --jq '.[] | {number, title}')
           
           best_match_score=0
           best_match_number=0
@@ -94,106 +61,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAT_MICHEL }}
         run: |
-          gh issue comment $issue_number --repo community-scripts/ProxmoxVED --body "Merged with #${{ github.event.pull_request.number }} in ProxmoxVE"
-          gh issue close $issue_number --repo community-scripts/ProxmoxVED
-
-      - name: Set is_dev to false in PocketBase
-        if: steps.get_slugs.outputs.count != '0'
-        env:
-          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
-          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
-          POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
-          POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
-          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
-        run: |
-          node << 'ENDSCRIPT'
-          (async function() {
-            const fs = require('fs');
-            const https = require('https');
-            const http = require('http');
-            const url = require('url');
-
-            function request(fullUrl, opts) {
-              return new Promise(function(resolve, reject) {
-                const u = url.parse(fullUrl);
-                const isHttps = u.protocol === 'https:';
-                const body = opts.body;
-                const options = {
-                  hostname: u.hostname,
-                  port: u.port || (isHttps ? 443 : 80),
-                  path: u.path,
-                  method: opts.method || 'GET',
-                  headers: opts.headers || {}
-                };
-                if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
-                const lib = isHttps ? https : http;
-                const req = lib.request(options, function(res) {
-                  let data = '';
-                  res.on('data', function(chunk) { data += chunk; });
-                  res.on('end', function() {
-                    resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, statusCode: res.statusCode, body: data });
-                  });
-                });
-                req.on('error', reject);
-                if (body) req.write(body);
-                req.end();
-              });
-            }
-
-            const raw = process.env.POCKETBASE_URL.replace(/\/$/, '');
-            const apiBase = /\/api$/i.test(raw) ? raw : raw + '/api';
-            const coll = process.env.POCKETBASE_COLLECTION;
-            const slugsText = fs.readFileSync('pocketbase_slugs.txt', 'utf8').trim();
-            const slugs = slugsText ? slugsText.split(/\s+/).filter(Boolean) : [];
-            if (slugs.length === 0) {
-              console.log('No slugs to update.');
-              return;
-            }
-
-            const authUrl = apiBase + '/collections/users/auth-with-password';
-            const authBody = JSON.stringify({
-              identity: process.env.POCKETBASE_ADMIN_EMAIL,
-              password: process.env.POCKETBASE_ADMIN_PASSWORD
-            });
-            const authRes = await request(authUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: authBody
-            });
-            if (!authRes.ok) {
-              throw new Error('Auth failed: ' + authRes.body);
-            }
-            const token = JSON.parse(authRes.body).token;
-            const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
-            const prUrl = process.env.PR_URL || '';
-
-            for (const slug of slugs) {
-              const filter = "(slug='" + slug.replace(/'/g, "''") + "')";
-              const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1', {
-                headers: { 'Authorization': token }
-              });
-              const list = JSON.parse(listRes.body);
-              const record = list.items && list.items[0];
-              if (!record) {
-                console.log('Slug not in DB, skipping: ' + slug);
-                continue;
-              }
-              const patchRes = await request(recordsUrl + '/' + record.id, {
-                method: 'PATCH',
-                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  name: record.name || record.slug,
-                  last_update_commit: prUrl,
-                  is_dev: false
-                })
-              });
-              if (!patchRes.ok) {
-                console.warn('PATCH failed for slug ' + slug + ': ' + patchRes.body);
-                continue;
-              }
-              console.log('Set is_dev=false for slug: ' + slug);
-            }
-            console.log('Done.');
-          })().catch(e => { console.error(e); process.exit(1); });
-          ENDSCRIPT
-        shell: bash
+          gh issue comment $issue_number --repo Heretek-AI/ProxmoxVED --body "Merged with #${{ github.event.pull_request.number }} in ProxmoxVE"
+          gh issue close $issue_number --repo Heretek-AI/ProxmoxVED

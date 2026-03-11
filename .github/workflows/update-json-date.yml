@@ -10,7 +10,7 @@ on:
 
 jobs:
   update-app-files:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'Heretek-AI/ProxmoxVE'
     runs-on: ubuntu-latest
 
     permissions:

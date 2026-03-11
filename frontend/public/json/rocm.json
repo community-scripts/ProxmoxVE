@@ -1,0 +1,62 @@
+{
+  "name": "AMD ROCm",
+  "slug": "rocm",
+  "categories": [0],
+  "date_created": "2026-03-06",
+  "type": "addon",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://rocm.docs.amd.com/",
+  "website": "https://rocm.docs.amd.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/amd.webp",
+  "config_path": "/etc/profile.d/rocm.sh",
+  "description": "AMD ROCm (Radeon Open Compute) is a software stack for GPU programming on AMD GPUs. It provides a comprehensive development platform for high-performance computing and machine learning applications.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/addon/rocm.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Execute within an existing LXC Console",
+      "type": "info"
+    },
+    {
+      "text": "Supported OS: Debian 12, Debian 13, Ubuntu 22.04, Ubuntu 24.04",
+      "type": "info"
+    },
+    {
+      "text": "Requires GPU passthrough to the LXC container before installation",
+      "type": "warning"
+    },
+    {
+      "text": "GPU passthrough: Find the GID from 'ls -la /dev/dri/renderD128' on host, then add to as a new device to /etc/pve/lxc/<CTID>.conf: dev<#>: /dev/kfd,gid=<GID>",
+      "type": "warning"
+    },
+    {
+      "text": "After installation, run 'source /etc/profile.d/rocm.sh' or log out/in to update PATH",
+      "type": "info"
+    },
+    {
+      "text": "Verify installation with: rocminfo and rocm-smi commands",
+      "type": "info"
+    },
+    {
+      "text": "If rocminfo shows 'Unable to open /dev/kfd', GPU passthrough is not configured correctly",
+      "type": "warning"
+    }
+  ]
+}

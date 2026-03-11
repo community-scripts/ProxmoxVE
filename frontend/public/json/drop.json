@@ -1,0 +1,56 @@
+{
+  "name": "Drop",
+  "slug": "drop",
+  "categories": [
+    24
+  ],
+  "date_created": "2026-03-10",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://docs-next.droposs.org/",
+  "website": "https://github.com/Drop-OSS/drop",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/drop.webp",
+  "config_path": "/opt/drop/.env",
+  "description": "Drop is an open-source game distribution platform similar to Steam/GameVault. Manage your game library, track playtime, and organize your collection with a modern web interface.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/drop.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 12,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Installs from the develop branch of the Drop repository.",
+      "type": "info"
+    },
+    {
+      "text": "Requires PostgreSQL database which is automatically configured during installation.",
+      "type": "info"
+    },
+    {
+      "text": "Builds torrential (Rust component) for torrent support.",
+      "type": "info"
+    },
+    {
+      "text": "Access the web interface on port 3000. The Node.js backend runs on port 4000 internally.",
+      "type": "info"
+    },
+    {
+      "text": "To retrieve the setup URL after installation, run: journalctl -u drop -b0 --no-pager | grep -oP 'Open \\Khttps?://[^\\s]+'",
+      "type": "info"
+    }
+  ]
+}

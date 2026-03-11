@@ -33,10 +33,10 @@ function ScriptContent() {
         .find(script => script.slug === selectedScript);
       setItem(script);
       if (script) {
-        document.title = `${script.name} | Proxmox VE Helper-Scripts`;
+        document.title = `${script.name} | Heretek AI`;
       }
     } else {
-      document.title = "Proxmox VE Helper-Scripts";
+      document.title = "Heretek AI";
     }
   }, [selectedScript, links]);
 
@@ -63,25 +63,25 @@ function ScriptContent() {
         <div className="px-4 w-full sm:max-w-[calc(100%-350px-16px)]">
           {selectedScript && item
             ? (
-                <div className="flex w-full flex-col">
-                  <div className="mb-3 flex items-center justify-between">
-                    <h2 className="text-2xl font-semibold tracking-tight text-foreground/90">Selected Script</h2>
-                    <button
-                      onClick={closeScript}
-                      className="rounded-full p-2 text-muted-foreground hover:bg-card/50 transition-colors"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-                  <ScriptItem item={item} />
+              <div className="flex w-full flex-col">
+                <div className="mb-3 flex items-center justify-between">
+                  <h2 className="text-2xl font-semibold tracking-tight text-foreground/90">Selected Script</h2>
+                  <button
+                    onClick={closeScript}
+                    className="rounded-full p-2 text-muted-foreground hover:bg-card/50 transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
                 </div>
-              )
+                <ScriptItem item={item} />
+              </div>
+            )
             : (
-                <div className="flex w-full flex-col gap-5">
-                  <LatestScripts items={links} page={latestPage} onPageChange={setLatestPage} />
-                  <MostViewedScripts items={links} />
-                </div>
-              )}
+              <div className="flex w-full flex-col gap-5">
+                <LatestScripts items={links} page={latestPage} onPageChange={setLatestPage} />
+                <MostViewedScripts items={links} />
+              </div>
+            )}
         </div>
       </div>
     </div>

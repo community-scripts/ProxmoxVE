@@ -5,7 +5,7 @@ import { basePath } from "@/config/site-config";
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const domain = "community-scripts.github.io";
+  const domain = "Heretek-AI.github.io";
   const protocol = "https";
   return [
     {

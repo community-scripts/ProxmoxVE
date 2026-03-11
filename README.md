@@ -1,52 +1,96 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
+  <img src="https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/images/logo.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
   
-  <h1>Proxmox VE Helper-Scripts</h1>
-  <p><em>A Community Legacy in Memory of @tteck</em></p>
+  <h1>Proxmox VE Heretek-Scripts</h1>
+  <p><em>A Heretek Forge of Proxmox VE Scripts</em></p>
+  <p><strong>Experimental scripts beyond the orthodox canon</strong></p>
 
   <p>
-    <a href="https://helper-scripts.com">
-      <img src="https://img.shields.io/badge/🌐_Website-Visit-4c9b3f?style=for-the-badge&labelColor=2d3748" alt="Website" />
+    <a href="https://github.com/Heretek-AI/ProxmoxVE">
+      <img src="https://img.shields.io/badge/🔧_Repository-Heretek_Forge-9b59b6?style=for-the-badge&labelColor=2d3748" alt="Repository" />
+    </a>
+    <a href="https://github.com/community-scripts/ProxmoxVE">
+      <img src="https://img.shields.io/badge/🏛️_Orthodox-Upstream-4c9b3f?style=for-the-badge&labelColor=2d3748" alt="Upstream" />
     </a>
     <a href="https://discord.gg/3AnUqsXnmK">
       <img src="https://img.shields.io/badge/💬_Discord-Join-7289da?style=for-the-badge&labelColor=2d3748" alt="Discord" />
     </a>
-    <a href="https://ko-fi.com/community_scripts">
-      <img src="https://img.shields.io/badge/❤️_Support-Donate-FF5F5F?style=for-the-badge&labelColor=2d3748" alt="Donate" />
-    </a>
   </p>
 
   <p>
-    <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/README.md">
+    <a href="https://github.com/Heretek-AI/ProxmoxVE/blob/main/docs/contribution/README.md">
       <img src="https://img.shields.io/badge/🤝_Contribute-Guidelines-ff4785?style=for-the-badge&labelColor=2d3748" alt="Contribute" />
     </a>
-    <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/USER_SUBMITTED_GUIDES.md">
+    <a href="https://github.com/Heretek-AI/ProxmoxVE/blob/main/docs/contribution/USER_SUBMITTED_GUIDES.md">
       <img src="https://img.shields.io/badge/📚_Guides-Read-0077b5?style=for-the-badge&labelColor=2d3748" alt="Guides" />
     </a>
-    <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/CHANGELOG.md">
+    <a href="https://github.com/Heretek-AI/ProxmoxVE/blob/main/CHANGELOG.md">
       <img src="https://img.shields.io/badge/📋_Changelog-View-6c5ce7?style=for-the-badge&labelColor=2d3748" alt="Changelog" />
     </a>
   </p>
 
   <br />
 
- **Simplify your Proxmox VE setup with community-driven automation scripts**  
- Originally created by tteck, now maintained and expanded by the community
+  **Experimental AI/ML and specialized scripts for Proxmox VE**  
+  Originally created by tteck, maintained by the community, extended by hereteks
 
 </div>
 
 <br />
 
-<div align="center">
-  <sub>🙌 <strong>Shoutout to</strong></sub>
-  <br />
-  <br />
-  <a href="https://selfh.st/">
-    <img src="https://img.shields.io/badge/selfh.st-Icons_for_Self--Hosted-2563eb?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMCAxOGMtNC40MSAwLTgtMy41OS04LThzMy41OS04IDgtOCA4IDMuNTkgOCA4LTMuNTkgOC04IDh6IiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==&labelColor=1e3a8a" alt="selfh.st Icons" />
-  </a>
-  <br />
-  <sub><a href="https://github.com/selfhst/icons">View on GitHub</a> • Consistent, beautiful icons for 5000+ self-hosted apps</sub>
-</div>
+---
+
+## ⚙️ The Heretek's Forge
+
+> *"The Omnissiah guides our scripts, but innovation demands we venture beyond established doctrine."*
+
+While the orthodox **[community-scripts/ProxmoxVE](https://github.com/community-scripts/ProxmoxVE)** maintains the sacred canon of stable, community-vetted scripts, this **Heretek repository** serves as a forge for experimental and specialized tools that may one day prove worthy of the main temple.
+
+**What makes this a Heretek forge:**
+
+- 🧪 **Experimental AI/ML Scripts** — Cutting-edge AI tooling before mainstream adoption
+- 🔧 **Niche Applications** — Specialized tools for specific use cases
+- ⚡ **Rapid Iteration** — Faster release cycles for emerging technologies
+- 🔄 **Upstream Path** — Successful scripts may ascend to the orthodox repository
+
+---
+
+## 🏛️ Relationship to the Orthodox Repository
+
+This fork maintains synchronization with **[community-scripts/ProxmoxVE](https://github.com/community-scripts/ProxmoxVE)** while adding experimental scripts that may not yet meet the stability requirements for upstream inclusion.
+
+| Aspect | Orthodox (Upstream) | Heretek (This Fork) |
+|--------|---------------------|---------------------|
+| Stability | Production-ready | Experimental/Bleeding-edge |
+| Focus | Broad community needs | AI/ML & specialized tools |
+| Release Cycle | Stable & tested | Rapid iteration |
+| Best For | General users | Early adopters |
+
+Scripts that prove stable and gain community interest may be submitted upstream to join the orthodox canon.
+
+---
+
+## 🧪 Heretek Scripts
+
+These scripts are exclusive to this forge, focusing on AI/ML workloads and specialized applications:
+
+### AI & Machine Learning
+
+| Script | Description | Resources |
+|--------|-------------|-----------|
+| **[MCPHub](https://github.com/samanhappy/mcphub)** | Model Context Protocol Hub for AI tooling integration | 2 CPU / 2GB RAM |
+| **[Hermes](https://github.com/NousResearch/hermes-agent)** | Nous Research Hermes AI Agent | 8 CPU / 16GB RAM |
+| **[Lemonade](https://lemonade-server.ai)** | Local AI inference server with GPU support | 2 CPU / 4GB RAM + GPU |
+| **[SwarmUI](https://github.com/mcmonkeyprojects/SwarmUI)** | Stable Diffusion Swarm interface | 8 CPU / 16GB RAM + GPU |
+
+### Media & Gaming
+
+| Script | Description | Resources |
+|--------|-------------|-----------|
+| **[Agregarr](https://github.com/agregarr/agregarr)** | Media aggregation and streaming | 2 CPU / 4GB RAM |
+| **[Drop](https://github.com/Drop-OSS/drop)** | Gaming and media server | 2 CPU / 4GB RAM |
+
+> ⚠️ **Note:** Heretek scripts may require more resources or additional configuration. Check individual script documentation for requirements.
 
 ---
 
@@ -130,18 +174,27 @@ Choose your preferred installation method:
 
 The fastest way to get started:
 
-1. Visit **[helper-scripts.com](https://helper-scripts.com/)** 🌐
-2. Search for your desired script (e.g., "Home Assistant", "Docker")
+1. Visit **[helpful-scripts.com](https://helpful-scripts.com/)** 🌐
+2. Search for your desired script (e.g., "MCPHub", "Hermes", "Lemonade")
 3. Copy the bash command displayed on the script page
 4. Open your **Proxmox Shell** and paste the command
 5. Press Enter and follow the interactive prompts
 
-### Method 2: PVEScripts-Local
+### Method 2: Direct Script Execution
+
+For Heretek scripts, use the `Heretek-AI` repository:
+
+```bash
+# Example: Install MCPHub
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/ct/mcphub.sh)"
+```
+
+### Method 3: PVEScripts-Local
 
 Install a convenient script manager directly in your Proxmox UI:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/pve-scripts-local.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/ct/pve-scripts-local.sh)"
 ```
 
 This adds a menu to your Proxmox interface for easy script access without visiting the website.
@@ -166,14 +219,14 @@ This adds a menu to your Proxmox interface for easy script access without visiti
     <td align="center" width="33%">
       <h3>💭 Discussions</h3>
       <p>Feature requests, Q&A, and ideas</p>
-      <a href="https://github.com/community-scripts/ProxmoxVE/discussions">
+      <a href="https://github.com/Heretek-AI/ProxmoxVE/discussions">
         <img src="https://img.shields.io/badge/Discuss-238636?style=for-the-badge&logo=github&logoColor=white" alt="Discussions" />
       </a>
     </td>
     <td align="center" width="33%">
       <h3>🐛 Issues</h3>
       <p>Bug reports and issue tracking</p>
-      <a href="https://github.com/community-scripts/ProxmoxVE/issues">
+      <a href="https://github.com/Heretek-AI/ProxmoxVE/issues">
         <img src="https://img.shields.io/badge/Report-d73a4a?style=for-the-badge&logo=github&logoColor=white" alt="Issues" />
       </a>
     </td>
@@ -214,7 +267,7 @@ This adds a menu to your Proxmox interface for easy script access without visiti
 <div align="center">
   <br />
   
-  👉 Check our **[Contributing Guidelines](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/README.md)** to get started
+  👉 Check our **[Contributing Guidelines](https://github.com/Heretek-AI/ProxmoxVE/blob/main/docs/contribution/README.md)** to get started
   
 </div>
 
@@ -249,19 +302,19 @@ This project is maintained by volunteers in memory of tteck. Your support helps 
 </p>
 
 <p align="center">
-  <a href="https://star-history.com/#community-scripts/ProxmoxVE&Date">
+  <a href="https://star-history.com/#Heretek-AI/ProxmoxVE&Date">
     <picture>
       <source
         media="(prefers-color-scheme: dark)"
-        srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date&theme=dark"
+        srcset="https://api.star-history.com/svg?repos=Heretek-AI/ProxmoxVE&type=Date&theme=dark"
       />
       <source
         media="(prefers-color-scheme: light)"
-        srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date"
+        srcset="https://api.star-history.com/svg?repos=Heretek-AI/ProxmoxVE&type=Date"
       />
       <img
         alt="Star History Chart"
-        src="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date"
+        src="https://api.star-history.com/svg?repos=Heretek-AI/ProxmoxVE&type=Date"
         width="650"
       />
     </picture>
@@ -272,12 +325,14 @@ This project is maintained by volunteers in memory of tteck. Your support helps 
 
 ## 📜 License
 
-This project is licensed under the **[MIT License](LICENSE)** - feel free to use, modify, and distribute.
+This project is licensed under the **[MIT License](LICENSE)** — feel free to use, modify, and distribute.
 
 ---
 
 <div align="center">
-  <sub>Made with ❤️ by the Proxmox community in memory of tteck</sub>
+  <sub>Forged with ⚙️ by the Heretek community</sub>
+  <br />
+  <sub><i>In memory of tteck, whose scripts lit the way</i></sub>
   <br />
   <sub><i>Proxmox® is a registered trademark of <a href="https://www.proxmox.com/en/about/company">Proxmox Server Solutions GmbH</a></i></sub>
 </div>

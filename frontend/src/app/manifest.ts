@@ -8,12 +8,12 @@ export function generateStaticParams() {
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Proxmox VE Helper-Scripts",
-    short_name: "Proxmox VE Helper-Scripts",
+    name: "Heretek AI",
+    short_name: "Heretek AI",
     description:
-      "A redesigned front-end for the Proxmox VE Helper-Scripts repository. Featuring over 300+ scripts to help you manage your Proxmox Virtual Environment.",
-    theme_color: "#030712",
-    background_color: "#030712",
+      "The Heretek AI repository for Proxmox VE Helper-Scripts. Embrace the machine spirit with over 400+ scripts to manage your Proxmox Virtual Environment.",
+    theme_color: "#1a1410",
+    background_color: "#0d0a08",
     display: "standalone",
     orientation: "portrait",
     scope: `${basePath}`,
