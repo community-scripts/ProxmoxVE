@@ -90,7 +90,6 @@ VERSION=$(curl -fsSL https://api.github.com/repos/coder/code-server/releases/lat
 
 msg_info "Installing Code-Server v${VERSION}"
 
-
 if [ -f ~/.config/code-server/config.yaml ]; then
   existing_config = true
 fi
