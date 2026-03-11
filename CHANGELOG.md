@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-11
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - Coder-Code-Server: Check if config file exists [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12758](https://github.com/community-scripts/ProxmoxVE/pull/12758))
+
 ## 2026-03-10
 
 ### 🚀 Updated Scripts
