@@ -24,7 +24,8 @@ $STD apt install -y \
   libssl-dev \
   libpq-dev \
   curl \
-  protobuf-compiler
+  protobuf-compiler \
+  nginx
 msg_ok "Installed Dependencies"
 
 # =============================================================================
