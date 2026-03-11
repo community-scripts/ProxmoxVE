@@ -107,7 +107,7 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
 
 msg_info "Waiting for setup URL to be available"
 sleep 5
-SETUP_URL=$(journalctl -u drop -b0 --no-pager | grep -oP 'Open \Khttps?://[^\s]+' | tail -n1)
+SETUP_URL=$(journalctl -u drop -b0 --no-pager 2>/dev/null | grep -oP 'Open \Khttps?://[^\s]+' | tail -n1 || true)
 if [[ -n "$SETUP_URL" ]]; then
   msg_ok "Setup URL retrieved"
   echo -e "${INFO}${YW} Setup URL:${CL}"
