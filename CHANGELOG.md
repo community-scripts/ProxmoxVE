@@ -426,6 +426,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: Init telemetry in addon scripts [@MickLesk](https://github.com/MickLesk) ([#12777](https://github.com/community-scripts/ProxmoxVE/pull/12777))
     - Tracearr:  Increase default disk variable from 5 to 10 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12762](https://github.com/community-scripts/ProxmoxVE/pull/12762))
     - Fix Wireguard Dashboard update [@odin568](https://github.com/odin568) ([#12767](https://github.com/community-scripts/ProxmoxVE/pull/12767))
 
