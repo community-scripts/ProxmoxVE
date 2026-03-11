@@ -24,47 +24,12 @@ $STD apt-get install -y \
   pciutils
 msg_ok "Installed Dependencies"
 
-# Detect GPU type for proper configuration
-msg_info "Detecting GPU Hardware"
-GPU_TYPE="vulkan"
-GPU_VENDOR="unknown"
-
-# Check for NVIDIA GPU
-if command -v nvidia-smi &>/dev/null 2>&1; then
-  GPU_VENDOR="nvidia"
-  GPU_TYPE="cuda"
-  msg_ok "NVIDIA GPU detected - will use CUDA build"
-elif lspci 2>/dev/null | grep -qi "vga.*nvidia\|3d.*nvidia"; then
-  GPU_VENDOR="nvidia"
-  msg_ok "NVIDIA GPU detected (drivers not installed) - will use Vulkan build"
-# Check for AMD GPU
-elif lspci 2>/dev/null | grep -qi "vga.*amd\|3d.*amd\|vga.*radeon\|3d.*radeon"; then
-  GPU_VENDOR="amd"
-  msg_ok "AMD GPU detected - will use Vulkan build"
-# Check for Intel GPU
-elif lspci 2>/dev/null | grep -qi "vga.*intel\|3d.*intel"; then
-  GPU_VENDOR="intel"
-  msg_ok "Intel GPU detected - will use Vulkan build"
-else
-  msg_ok "No dedicated GPU detected - will use Vulkan build (CPU fallback)"
-fi
-
 # Create directories
 mkdir -p /opt/llamacpp/bin
 mkdir -p /opt/llamacpp/models
 
-# Store GPU info for later use
-cat <<EOF >/opt/llamacpp/gpu_info.conf
-GPU_VENDOR=${GPU_VENDOR}
-GPU_TYPE=${GPU_TYPE}
-EOF
-
-# Download llama.cpp using fetch_and_deploy_gh_release
-if [[ "$GPU_TYPE" == "cuda" ]]; then
-  fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-cuda-x64.tar.gz"
-else
-  fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-vulkan-x64.tar.gz"
-fi
+# Download llama.cpp using fetch_and_deploy_gh_release (Vulkan build)
+fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-vulkan-x64.tar.gz"
 
 # Create symlinks for easy access
 ln -sf /opt/llamacpp/bin/llama-server /usr/local/bin/llama-server
@@ -130,8 +95,6 @@ cat <<EOF >/opt/llamacpp/GPU_PASSTHROUGH.md
 # GPU Passthrough Configuration for llama.cpp
 
 This container has been configured for GPU acceleration using Vulkan.
-
-## Detected GPU Type: ${GPU_VENDOR} (${GPU_TYPE})
 
 ## Required Proxmox Configuration
 

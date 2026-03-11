@@ -39,18 +39,7 @@ function update_script() {
     cp /etc/systemd/system/llamacpp.service /tmp/llamacpp.service.backup
     msg_ok "Backed up Configuration"
 
-    # Determine GPU type for appropriate build
-    GPU_TYPE="vulkan"
-    if [[ -f /opt/llamacpp/gpu_info.conf ]]; then
-      source /opt/llamacpp/gpu_info.conf
-    fi
-
-    # Download appropriate build using fetch_and_deploy_gh_release
-    if [[ "$GPU_TYPE" == "cuda" ]]; then
-      fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-cuda-x64.tar.gz"
-    else
-      fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-vulkan-x64.tar.gz"
-    fi
+    fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-vulkan-x64.tar.gz"
 
     # Create symlinks
     ln -sf /opt/llamacpp/bin/llama-server /usr/local/bin/llama-server 2>/dev/null || true
