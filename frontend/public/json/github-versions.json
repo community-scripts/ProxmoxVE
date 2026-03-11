@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-10T18:17:10Z",
+  "generated": "2026-03-11T00:18:26Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -200,9 +200,9 @@
     {
       "slug": "cleanuparr",
       "repo": "Cleanuparr/Cleanuparr",
-      "version": "v2.7.8",
+      "version": "v2.7.9",
       "pinned": false,
-      "date": "2026-03-10T16:03:47Z"
+      "date": "2026-03-10T18:51:23Z"
     },
     {
       "slug": "cloudreve",
@@ -438,9 +438,9 @@
     {
       "slug": "ghostfolio",
       "repo": "ghostfolio/ghostfolio",
-      "version": "2.248.0",
+      "version": "2.249.0",
       "pinned": false,
-      "date": "2026-03-07T17:24:24Z"
+      "date": "2026-03-10T19:26:50Z"
     },
     {
       "slug": "gitea",
@@ -613,9 +613,9 @@
     {
       "slug": "invoiceninja",
       "repo": "invoiceninja/invoiceninja",
-      "version": "v5.13.0",
+      "version": "v5.13.1",
       "pinned": false,
-      "date": "2026-03-10T03:33:02Z"
+      "date": "2026-03-10T23:45:05Z"
     },
     {
       "slug": "jackett",
@@ -676,9 +676,9 @@
     {
       "slug": "kima-hub",
       "repo": "Chevron7Locked/kima-hub",
-      "version": "v1.6.2",
+      "version": "v1.6.3",
       "pinned": false,
-      "date": "2026-03-05T05:38:02Z"
+      "date": "2026-03-10T22:26:12Z"
     },
     {
       "slug": "kimai",
