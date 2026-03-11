@@ -26,13 +26,43 @@ msg_ok "Installed Dependencies"
 # Create directories
 mkdir -p /opt/llamacpp/bin
 mkdir -p /opt/llamacpp/models
+mkdir -p /opt/llamacpp/lib
 
 # Download llama.cpp using fetch_and_deploy_gh_release (Vulkan build)
+# Note: The prebuilt Vulkan binaries use GGML_BACKEND_DL=ON, which means
+# CPU and Vulkan backends are separate dynamic libraries (.so files)
 fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-vulkan-x64.tar.gz"
+
+# Move backend libraries to lib directory and binaries to bin
+# The tarball contains: llama-server, llama-cli, libggml-cpu.so, libggml-vulkan.so
+msg_info "Organizing backend libraries"
+for lib in /opt/llamacpp/bin/libggml-*.so; do
+  if [[ -f "$lib" ]]; then
+    mv "$lib" /opt/llamacpp/lib/
+  fi
+done
+msg_ok "Organized backend libraries"
 
 # Create symlinks for easy access
 ln -sf /opt/llamacpp/bin/llama-server /usr/local/bin/llama-server
 ln -sf /opt/llamacpp/bin/llama-cli /usr/local/bin/llama-cli
+
+# Create wrapper scripts that set LD_LIBRARY_PATH for the backend libraries
+msg_info "Creating wrapper scripts"
+cat <<'WRAPPER' >/opt/llamacpp/bin/llama-server-wrapper.sh
+#!/bin/bash
+export LD_LIBRARY_PATH="/opt/llamacpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /opt/llamacpp/bin/llama-server "$@"
+WRAPPER
+chmod +x /opt/llamacpp/bin/llama-server-wrapper.sh
+
+cat <<'WRAPPER' >/opt/llamacpp/bin/llama-cli-wrapper.sh
+#!/bin/bash
+export LD_LIBRARY_PATH="/opt/llamacpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec /opt/llamacpp/bin/llama-cli "$@"
+WRAPPER
+chmod +x /opt/llamacpp/bin/llama-cli-wrapper.sh
+msg_ok "Created wrapper scripts"
 
 msg_info "Creating Directories"
 mkdir -p /var/log/llamacpp
@@ -49,6 +79,8 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/llamacpp
+# Set LD_LIBRARY_PATH to find backend libraries (libggml-cpu.so, libggml-vulkan.so)
+Environment="LD_LIBRARY_PATH=/opt/llamacpp/lib"
 ExecStart=/opt/llamacpp/bin/llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0 --host 0.0.0.0 --port 8080 --ctx-size 8192 --n-gpu-layers -1
 Restart=always
 RestartSec=10
@@ -125,7 +157,7 @@ lxc.cgroup2.devices.allow: c 509:* rwm
 
 Run these commands inside the container:
 - vulkaninfo (check Vulkan support)
-- /opt/llamacpp/bin/llama-cli --help (verify binary works)
+- /opt/llamacpp/bin/llama-cli-wrapper.sh --help (verify binary works)
 
 ## Change Model
 
@@ -140,6 +172,13 @@ Examples:
 After changing:
 systemctl daemon-reload
 systemctl restart llamacpp
+
+## Troubleshooting
+
+If you see "no CPU backend found" error:
+1. Ensure libggml-cpu.so and libggml-vulkan.so are in /opt/llamacpp/lib/
+2. Check LD_LIBRARY_PATH is set correctly: echo \$LD_LIBRARY_PATH
+3. Verify libraries exist: ls -la /opt/llamacpp/lib/
 EOF
 
 motd_ssh
