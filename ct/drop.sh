@@ -93,6 +93,7 @@ function update_script() {
   systemctl start drop
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
+
   exit
 }
 
@@ -103,5 +104,15 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
-echo -e "${INFO}${YW} To retrieve the setup URL run in LXC:${CL}"
-echo -e "${TAB}journalctl -u drop -b0 --no-pager | grep -oP 'Open \Khttps?://[^\s]+'${CL}"
+
+msg_info "Waiting for setup URL to be available"
+sleep 5
+SETUP_URL=$(journalctl -u drop -b0 --no-pager | grep -oP 'Open \Khttps?://[^\s]+' | tail -n1)
+if [[ -n "$SETUP_URL" ]]; then
+  msg_ok "Setup URL retrieved"
+  echo -e "${INFO}${YW} Setup URL:${CL}"
+  echo -e "${TAB}${GATEWAY}${BGN}${SETUP_URL}${CL}"
+else
+  echo -e "${INFO}${YW} To retrieve the setup URL run in LXC:${CL}"
+  echo -e "${TAB}journalctl -u drop -b0 --no-pager | grep -oP 'Open \Khttps?://[^\s]+'${CL}"
+fi
