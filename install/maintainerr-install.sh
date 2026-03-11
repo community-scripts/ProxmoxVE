@@ -24,10 +24,10 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 
-fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/maintainerr"
+fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/app"
 
 msg_info "Enabling Corepack for Yarn"
-cd /opt/maintainerr || exit
+cd /opt/app || exit
 $STD corepack enable
 $STD corepack prepare yarn@4.11.0 --activate
 msg_ok "Enabled Corepack"
@@ -58,7 +58,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/opt/maintainerr
+WorkingDirectory=/opt/app
 Environment=NODE_ENV=production
 Environment=DATA_DIR=/opt/data
 Environment=UI_PORT=6246

@@ -24,7 +24,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d /opt/maintainerr ]]; then
+  if [[ ! -d /opt/app ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -38,10 +38,10 @@ function update_script() {
     cp -r /opt/data /opt/maintainerr_data_backup
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/maintainerr"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/app"
 
     msg_info "Installing Dependencies"
-    cd /opt/maintainerr || exit
+    cd /opt/app || exit
     $STD corepack enable
     $STD corepack prepare yarn@4.11.0 --activate
     $STD yarn install --network-timeout 99999999
