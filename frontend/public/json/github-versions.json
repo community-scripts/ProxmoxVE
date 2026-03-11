@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-11T00:53:35Z",
+  "generated": "2026-03-11T06:35:14Z",
   "versions": [
     {
       "slug": "agregarr",
@@ -14,6 +14,27 @@
       "version": "v9.4.1",
       "pinned": false,
       "date": "2026-02-27T21:39:15Z"
+    },
+    {
+      "slug": "llamacpp",
+      "repo": "ggml-org/llama.cpp",
+      "version": "b8263",
+      "pinned": false,
+      "date": "2026-03-11T01:34:43Z"
+    },
+    {
+      "slug": "pegaprox",
+      "repo": "PegaProx/project-pegaprox",
+      "version": "v0.9.1.1",
+      "pinned": false,
+      "date": "2026-03-09T23:17:45Z"
+    },
+    {
+      "slug": "wakapi",
+      "repo": "muety/wakapi",
+      "version": "2.17.2",
+      "pinned": false,
+      "date": "2026-03-01T08:35:49Z"
     }
   ]
 }
