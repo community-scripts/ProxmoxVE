@@ -20,7 +20,6 @@ $STD apt-get install -y \
   vulkan-tools \
   libvulkan1 \
   mesa-vulkan-drivers \
-  firmware-misc-nonfree \
   pciutils
 msg_ok "Installed Dependencies"
 
