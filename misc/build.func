@@ -5464,7 +5464,7 @@ create_lxc_container() {
       fi
     elif ! tar -tf "$TEMPLATE_PATH" &>/dev/null; then
       if [[ -n "$ONLINE_TEMPLATE" ]]; then
-        msg_warn "Template appears corrupted – re-downloading."
+        msg_warn "Template appears corrupted, re-downloading."
         NEED_DOWNLOAD=1
       else
         msg_warn "Template appears corrupted, but no online version exists. Keeping local file."
