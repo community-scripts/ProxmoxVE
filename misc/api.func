@@ -196,7 +196,7 @@ explain_exit_code() {
   103) echo "Validation: Shell is not Bash" ;;
   104) echo "Validation: Not running as root (or invoked via sudo)" ;;
   105) echo "Validation: Proxmox VE version not supported" ;;
-  106) echo "Validation: Architecture not supported (ARM / PiMox)" ;;
+  106) echo "Validation: Unsupported architecture (requires amd64 or arm64)" ;;
   107) echo "Validation: Kernel key parameters unreadable" ;;
   108) echo "Validation: Kernel key limits exceeded" ;;
   109) echo "Proxmox: No available container ID after max attempts" ;;
@@ -348,10 +348,10 @@ explain_exit_code() {
 json_escape() {
   # Escape a string for safe JSON embedding using awk (handles any input size).
   # Pipeline: strip ANSI → remove control chars → escape \ " TAB → join lines with \n
-  printf '%s' "$1" \
-    | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' \
-    | tr -d '\000-\010\013\014\016-\037\177\r' \
-    | awk '
+  printf '%s' "$1" |
+    sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+    tr -d '\000-\010\013\014\016-\037\177\r' |
+    awk '
         BEGIN { ORS = "" }
         {
           gsub(/\\/, "\\\\")   # backslash → \\

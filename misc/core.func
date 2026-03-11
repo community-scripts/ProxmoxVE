@@ -351,6 +351,11 @@ arch_check() {
     sleep 2
     exit 106
   fi
+  if [[ "$arch" == "arm64" && "${var_arm64:-}" != "yes" ]]; then
+    msg_error "This script does not yet support arm64."
+    sleep 2
+    exit 106
+  fi
 }
 
 # ------------------------------------------------------------------------------

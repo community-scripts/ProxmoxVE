@@ -235,7 +235,6 @@ EOF
   fi
   apt_update_safe
   $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
-	$STD apt-get install -y sudo curl mc gnupg2 openssh-server wget gcc
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   msg_ok "Updated Container OS"
   post_progress_to_api
