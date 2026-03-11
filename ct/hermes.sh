@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-# Set the base URL for development/fork - must be set before sourcing build.func
 COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/refs/heads/main}"
-source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/build.func)
-
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
 # Author: BillyOutlast
 # License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/NousResearch/hermes-agent
@@ -45,7 +43,7 @@ function update_script() {
   msg_ok "Backed up Configuration"
 
   msg_info "Updating Hermes Agent"
-  cd /opt/hermes-agent
+  cd /opt/hermes-agent || exit
   export VIRTUAL_ENV="/opt/hermes-agent/.venv"
   $STD /opt/hermes-agent/.venv/bin/hermes update
   msg_ok "Updated Hermes Agent"
