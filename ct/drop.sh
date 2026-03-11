@@ -101,20 +101,7 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
-echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-
-# Wait for service to start and extract setup URL from logs
-msg_info "Waiting for Drop service to start"
-sleep 10
-SETUP_URL=$(journalctl -u drop --no-pager -n 50 2>/dev/null | grep -oP 'Open \Khttps?://[^\s]+' | tail -1) || true
-msg_ok "Drop service started"
-
-if [[ -n "$SETUP_URL" ]]; then
-  # Replace localhost with the LXC IP address
-  SETUP_URL="${SETUP_URL//localhost/${IP}}"
-  echo -e "${INFO}${YW} Setup URL:${CL}"
-  echo -e "${TAB}${GATEWAY}${BGN}${SETUP_URL}${CL}"
-else
-  echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-  echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
-fi
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW} To retrieve the setup URL run in LXC:${CL}"
+echo -e "${TAB}journalctl -u drop -b0 --no-pager | grep -oP 'Open \Khttps?://[^\s]+'${CL}"
