@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://github.com/ggml-org/llama.cpp/tree/master/tools/server",
   "website": "https://github.com/ggml-org/llama.cpp",
-  "logo": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/media/llama_cpp_icon.png",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/llama-cpp.webp",
   "config_path": "/opt/llamacpp/models",
   "description": "llama.cpp is a high-performance LLM inference server with OpenAI-compatible API. This installation uses the Vulkan backend for GPU acceleration across AMD, Intel, and NVIDIA GPUs. Features automatic model downloading from HuggingFace, built-in web UI, and supports multiple concurrent requests.",
   "install_methods": [

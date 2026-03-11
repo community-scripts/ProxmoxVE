@@ -529,7 +529,7 @@ silent() {
   if [[ $rc -ne 0 ]]; then
     # Source explain_exit_code if needed
     if ! declare -f explain_exit_code >/dev/null 2>&1; then
-      if ! source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func); then
+      if ! source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/error_handler.func); then
         explain_exit_code() { echo "unknown (error_handler.func download failed)"; }
       fi
     fi
@@ -850,7 +850,7 @@ get_header() {
   local app_type=${APP_TYPE:-ct} # Default to 'ct' if not set
   local header_dir="${app_type}"
   [[ "$app_type" == "addon" ]] && header_dir="tools"
-  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${header_dir}/headers/${app_name}"
+  local header_url="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/${header_dir}/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
 
   mkdir -p "$(dirname "$local_header_path")"
