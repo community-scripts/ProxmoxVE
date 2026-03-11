@@ -145,13 +145,3 @@ EOF
 motd_ssh
 customize
 cleanup_lxc
-
-echo -e "${TAB}${GN}llama.cpp Server has been installed successfully!${CL}"
-echo -e "${TAB}${YW}Default Model: unsloth/Qwen3.5-9B-GGUF:Q8_0${CL}"
-echo -e "${TAB}${YW}The model will be downloaded automatically on first start.${CL}"
-echo ""
-echo -e "${TAB}${YW}GPU Passthrough:${CL}"
-echo -e "${TAB}${YW}See /opt/llamacpp/GPU_PASSTHROUGH.md for configuration details.${CL}"
-echo ""
-echo -e "${TAB}${YW}Access the Web UI at: http://${IP}:8080${CL}"
-echo -e "${TAB}${YW}OpenAI-Compatible API: http://${IP}:8080/v1/chat/completions${CL}"
