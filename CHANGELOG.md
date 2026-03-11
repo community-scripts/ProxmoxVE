@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-11
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix Wireguard Dashboard update [@odin568](https://github.com/odin568) ([#12767](https://github.com/community-scripts/ProxmoxVE/pull/12767))
+
 ### 🧰 Tools
 
   - #### ✨ New Features
