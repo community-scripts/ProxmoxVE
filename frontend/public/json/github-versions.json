@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-11T12:12:40Z",
+  "generated": "2026-03-11T18:18:46Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -151,9 +151,9 @@
     {
       "slug": "booklore",
       "repo": "booklore-app/BookLore",
-      "version": "v2.1.0",
+      "version": "v2.2.0",
       "pinned": false,
-      "date": "2026-03-08T20:27:24Z"
+      "date": "2026-03-11T14:49:57Z"
     },
     {
       "slug": "bookstack",
@@ -270,9 +270,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.19.1",
+      "version": "v3.19.2",
       "pinned": false,
-      "date": "2026-03-11T10:25:28Z"
+      "date": "2026-03-11T13:05:10Z"
     },
     {
       "slug": "dawarich",
@@ -319,9 +319,9 @@
     {
       "slug": "donetick",
       "repo": "donetick/donetick",
-      "version": "v0.1.75-beta.3",
+      "version": "v0.1.74",
       "pinned": false,
-      "date": ""
+      "date": "2026-02-14T23:21:45Z"
     },
     {
       "slug": "drawio",
@@ -963,9 +963,9 @@
     {
       "slug": "nodebb",
       "repo": "NodeBB/NodeBB",
-      "version": "v4.9.1",
+      "version": "v4.9.2",
       "pinned": false,
-      "date": "2026-03-01T20:52:43Z"
+      "date": "2026-03-11T15:17:32Z"
     },
     {
       "slug": "nodecast-tv",
@@ -1362,9 +1362,9 @@
     {
       "slug": "scanopy",
       "repo": "scanopy/scanopy",
-      "version": "v0.14.17",
+      "version": "v0.14.18",
       "pinned": false,
-      "date": "2026-03-09T05:04:49Z"
+      "date": "2026-03-11T06:05:15Z"
     },
     {
       "slug": "scraparr",
@@ -1460,9 +1460,9 @@
     {
       "slug": "speedtest-tracker",
       "repo": "alexjustesen/speedtest-tracker",
-      "version": "v1.13.10",
+      "version": "v1.13.11",
       "pinned": false,
-      "date": "2026-02-20T03:14:47Z"
+      "date": "2026-03-11T14:06:00Z"
     },
     {
       "slug": "spoolman",
@@ -1572,9 +1572,9 @@
     {
       "slug": "tinyauth",
       "repo": "steveiliop56/tinyauth",
-      "version": "v5.0.2",
+      "version": "v5.0.3",
       "pinned": false,
-      "date": "2026-03-08T15:46:59Z"
+      "date": "2026-03-11T17:34:46Z"
     },
     {
       "slug": "traccar",
