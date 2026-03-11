@@ -5,6 +5,7 @@ import { Cinzel, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import React from "react";
 
+import { CopycatWarningToast } from "@/components/copycat-warning-toast";
 import { ThemeProvider } from "@/components/theme-provider";
 import { analytics, basePath } from "@/config/site-config";
 import QueryProvider from "@/components/query-provider";
@@ -131,6 +132,7 @@ export default function RootLayout({
                     <div className="w-full max-w-[1440px] ">
                       {children}
                       <Toaster richColors />
+                      <CopycatWarningToast />
                     </div>
                   </div>
                   <Footer />
