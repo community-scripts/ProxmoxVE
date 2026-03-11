@@ -20,7 +20,8 @@ $STD apt-get install -y \
   vulkan-tools \
   libvulkan1 \
   mesa-vulkan-drivers \
-  pciutils
+  pciutils \
+  libgomp1
 msg_ok "Installed Dependencies"
 
 # Create directories
@@ -174,6 +175,13 @@ systemctl daemon-reload
 systemctl restart llamacpp
 
 ## Troubleshooting
+
+If you see "no CPU backend found" error:
+1. Ensure libgomp1 is installed: apt-get install -y libgomp1
+2. Verify CPU backend libraries load: ldd /opt/llamacpp/bin/libggml-cpu-haswell.so
+3. Check all libraries are present: ls -la /opt/llamacpp/bin/libggml-*.so
+4. Backend libraries MUST be in the same directory as the executable
+5. See: https://github.com/ggml-org/llama.cpp/issues/17491
 
 If you see "no backends are loaded" error:
 1. Backend libraries MUST be in the same directory as the executable
