@@ -1,0 +1,52 @@
+{
+  "name": "PegaProx",
+  "slug": "pegaprox",
+  "categories": [
+    1
+  ],
+  "date_created": "2026-03-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 5000,
+  "documentation": "https://docs.pegaprox.com/",
+  "website": "https://pegaprox.com/",
+  "logo": "https://pegaprox.com/pictures/pegaprox-logo.png",
+  "config_path": "/opt/PegaProx/config/pegaprox.db",
+  "description": "PegaProx is a powerful web-based management interface for Proxmox VE and XCP-ng clusters. Manage multiple clusters from a single dashboard with live monitoring, VM management, cross-cluster migrations, load balancing, and more.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/pegaprox.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "pegaprox",
+    "password": "admin"
+  },
+  "notes": [
+    {
+      "text": "Access the web interface at https://<IP>:5000",
+      "type": "info"
+    },
+    {
+      "text": "Change the default password after first login!",
+      "type": "warning"
+    },
+    {
+      "text": "Supports Proxmox VE 8.0+ and XCP-ng 8.2+",
+      "type": "info"
+    },
+    {
+      "text": "Configuration and database are stored in /opt/PegaProx/config/",
+      "type": "info"
+    }
+  ]
+}
