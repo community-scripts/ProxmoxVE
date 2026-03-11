@@ -167,6 +167,33 @@ function check_virtualization() {
   fi
 }
 
+function configure_kvm() {
+  # Configure KVM for macOS VMs
+  # macOS requires ignoring certain MSRs to avoid kernel panics
+  local KVM_CONF="/etc/modprobe.d/kvm.conf"
+  
+  msg_info "Configuring KVM for macOS"
+  
+  # Check if already configured
+  if grep -q "ignore_msrs=Y" "$KVM_CONF" 2>/dev/null; then
+    msg_ok "KVM already configured for macOS"
+    return 0
+  fi
+  
+  # Add KVM configuration
+  echo "options kvm ignore_msrs=Y" >> "$KVM_CONF"
+  
+  # Update initramfs to apply the change
+  if ! update-initramfs -k all -u >>"$LOG_FILE" 2>&1; then
+    msg_error "Failed to update initramfs"
+    msg_error "You may need to run: echo 'options kvm ignore_msrs=Y' >> /etc/modprobe.d/kvm.conf && update-initramfs -k all -u"
+    exit 140
+  fi
+  
+  msg_ok "KVM configured for macOS (ignore_msrs=Y)"
+  echo -e "${INFO}${YW}Note: A system reboot may be required for KVM changes to take effect.${CL}"
+}
+
 function install_dependencies() {
   msg_info "Installing dependencies"
   
@@ -175,12 +202,12 @@ function install_dependencies() {
     exit 110
   fi
   
-  if ! $STD apt-get install -y git python3 python3-venv python3-pip; then
+  if ! $STD apt-get install -y git python3 python3-venv python3-pip dmg2img; then
     msg_error "Failed to install required packages"
     exit 111
   fi
   
-  msg_ok "Installed dependencies (git, python3, python3-venv, python3-pip)"
+  msg_ok "Installed dependencies (git, python3, python3-venv, python3-pip, dmg2img)"
 }
 
 function sync_repository() {
@@ -354,6 +381,9 @@ function main() {
   check_arch
   check_pve_version
   check_virtualization
+  
+  # Configure KVM for macOS
+  configure_kvm
   
   # Post telemetry start
   post_to_api_vm
