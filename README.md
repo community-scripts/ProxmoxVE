@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/main/misc/images/logo-81x112.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
+  <img src="https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/main/misc/images/logo.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
   
   <h1>Proxmox VE Heretek-Scripts</h1>
   <p><em>A Heretek Forge of Proxmox VE Scripts</em></p>
