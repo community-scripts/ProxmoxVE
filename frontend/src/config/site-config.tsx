@@ -49,9 +49,12 @@ export const analytics = {
   token: "f9eee289f931",
 };
 
+// Heretek Alert Colors - Rust & Corruption themed
 export const AlertColors = {
-  warning: "border-red-500/25 bg-destructive/25",
-  info: "border-cyan-500/25 bg-cyan-50 dark:border-cyan-900 dark:bg-cyan-900/25",
+  warning: "border-rust-500/25 bg-destructive/25",
+  info: "border-corruption-400/25 bg-corruption-900/25",
+  success: "border-corruption-500/25 bg-corruption-800/25",
+  danger: "border-rust-600/25 bg-rust-900/25",
 };
 
 export const OperatingSystems: OperatingSystem[] = [
