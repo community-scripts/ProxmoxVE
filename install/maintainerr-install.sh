@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+# Author: BillyOutlast
+# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/Maintainerr/Maintainerr
+
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
+setting_up_container
+network_check
+update_os
+
+msg_info "Installing Dependencies"
+$STD apt-get install -y \
+  build-essential \
+  ca-certificates \
+  curl \
+  git \
+  python3 \
+  sqlite3
+msg_ok "Installed Dependencies"
+
+NODE_VERSION="22" setup_nodejs
+
+msg_info "Creating Directories"
+mkdir -p /opt/maintainerr
+mkdir -p /opt/maintainerr/data
+msg_ok "Created Directories"
+
+msg_info "Cloning Maintainerr Repository"
+cd /opt/maintainerr || exit
+$STD git clone https://github.com/Maintainerr/Maintainerr.git .
+msg_ok "Cloned Maintainerr Repository"
+
+msg_info "Enabling Corepack for Yarn"
+$STD corepack enable
+$STD corepack prepare yarn@4.11.0 --activate
+msg_ok "Enabled Corepack"
+
+msg_info "Installing Dependencies"
+$STD yarn install --network-timeout 99999999
+msg_ok "Installed Dependencies"
+
+msg_info "Building Application"
+$STD yarn turbo build
+msg_ok "Built Application"
+
+msg_info "Installing Production Dependencies"
+$STD yarn workspaces focus --all --production
+msg_ok "Installed Production Dependencies"
+
+msg_info "Creating Service"
+cat <<EOF >/etc/systemd/system/maintainerr.service
+[Unit]
+Description=Maintainerr - Media Collection Manager
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/maintainerr
+Environment=NODE_ENV=production
+Environment=DATA_DIR=/opt/maintainerr/data
+Environment=UI_PORT=6246
+Environment=UI_HOSTNAME=0.0.0.0
+ExecStart=/usr/bin/node apps/server/dist/main.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now maintainerr
+msg_ok "Created Service"
+
+motd_ssh
+customize
+cleanup_lxc
