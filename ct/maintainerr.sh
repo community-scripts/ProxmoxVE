@@ -29,16 +29,7 @@ function update_script() {
     exit
   fi
 
-  cd /opt/maintainerr
-  LOCAL_VERSION=$(git rev-parse HEAD 2>/dev/null || echo "")
-  REMOTE_VERSION=$(git ls-remote origin HEAD 2>/dev/null | awk '{print $1}')
-
-  if [[ -z "$LOCAL_VERSION" ]] || [[ -z "$REMOTE_VERSION" ]]; then
-    msg_error "Could not determine version information!"
-    exit
-  fi
-
-  if [[ "$LOCAL_VERSION" != "$REMOTE_VERSION" ]]; then
+  if check_for_gh_release "maintainerr" "Maintainerr/Maintainerr"; then
     msg_info "Stopping Service"
     systemctl stop maintainerr
     msg_ok "Stopped Service"
@@ -47,12 +38,12 @@ function update_script() {
     cp -r /opt/maintainerr/data /opt/maintainerr_data_backup
     msg_ok "Backed up Data"
 
-    msg_info "Updating Maintainerr"
-    $STD git fetch origin
-    $STD git reset --hard origin/main
-    msg_ok "Updated Maintainerr"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/maintainerr"
 
     msg_info "Installing Dependencies"
+    cd /opt/maintainerr || exit
+    $STD corepack enable
+    $STD corepack prepare yarn@4.11.0 --activate
     $STD yarn install --network-timeout 99999999
     msg_ok "Installed Dependencies"
 
@@ -73,8 +64,6 @@ function update_script() {
     systemctl start maintainerr
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_info "No update required. ${APP} is already up to date."
   fi
   exit
 }

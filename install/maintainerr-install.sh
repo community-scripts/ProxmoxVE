@@ -24,17 +24,10 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 
-msg_info "Creating Directories"
-mkdir -p /opt/maintainerr
-mkdir -p /opt/maintainerr/data
-msg_ok "Created Directories"
-
-msg_info "Cloning Maintainerr Repository"
-cd /opt/maintainerr || exit
-$STD git clone https://github.com/Maintainerr/Maintainerr.git .
-msg_ok "Cloned Maintainerr Repository"
+fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/maintainerr"
 
 msg_info "Enabling Corepack for Yarn"
+cd /opt/maintainerr || exit
 $STD corepack enable
 $STD corepack prepare yarn@4.11.0 --activate
 msg_ok "Enabled Corepack"
@@ -50,6 +43,10 @@ msg_ok "Built Application"
 msg_info "Installing Production Dependencies"
 $STD yarn workspaces focus --all --production
 msg_ok "Installed Production Dependencies"
+
+msg_info "Creating Data Directory"
+mkdir -p /opt/maintainerr/data
+msg_ok "Created Data Directory"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/maintainerr.service
