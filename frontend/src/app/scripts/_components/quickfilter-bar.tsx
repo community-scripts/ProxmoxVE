@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useQueryState } from "nuqs";
+import React, { useState } from "react";
 import { Filter } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,8 @@ interface QuickfilterBarProps {
   devCount?: number;
   selectedCategory?: string | null;
   onCategoryClick?: () => void;
+  activeFilter?: QuickfilterType;
+  onFilterChange?: (filter: QuickfilterType) => void;
 }
 
 const filters: { id: QuickfilterType; label: string; description: string }[] = [
@@ -33,10 +34,16 @@ export function QuickfilterBar({
   devCount = 0,
   selectedCategory,
   onCategoryClick,
+  activeFilter: externalActiveFilter,
+  onFilterChange,
 }: QuickfilterBarProps) {
-  const [activeFilter, setActiveFilter] = useQueryState<QuickfilterType>("filter", {
-    defaultValue: "all",
-  });
+  const [internalActiveFilter, setInternalActiveFilter] = useState<QuickfilterType>("all");
+
+  const activeFilter = externalActiveFilter ?? internalActiveFilter;
+  const setActiveFilter = (filter: QuickfilterType) => {
+    setInternalActiveFilter(filter);
+    onFilterChange?.(filter);
+  };
 
   const counts: Record<QuickfilterType, number | undefined> = {
     all: totalScripts,
@@ -44,6 +51,14 @@ export function QuickfilterBar({
     new: newCount,
     updated: updatedCount,
     dev: devCount,
+  };
+
+  const handleFilterClick = (filterId: QuickfilterType) => {
+    if (filterId === "category" && onCategoryClick) {
+      onCategoryClick();
+    } else {
+      setActiveFilter(filterId);
+    }
   };
 
   return (
@@ -62,13 +77,7 @@ export function QuickfilterBar({
               key={filter.id}
               variant={isActive ? "default" : "outline"}
               size="sm"
-              onClick={() => {
-                if (filter.id === "category" && onCategoryClick) {
-                  onCategoryClick();
-                } else {
-                  setActiveFilter(filter.id);
-                }
-              }}
+              onClick={() => handleFilterClick(filter.id)}
               className={cn(
                 "transition-all",
                 isActive && "bg-primary text-primary-foreground",
