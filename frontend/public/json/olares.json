@@ -1,0 +1,63 @@
+{
+  "name": "Olares",
+  "slug": "olares",
+  "categories": [
+    1,
+    3,
+    16,
+    20
+  ],
+  "date_created": "2026-03-11",
+  "type": "vm",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://docs.olares.com/",
+  "website": "https://olares.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/olares.webp",
+  "config_path": "",
+  "description": "Olares is an open-source personal cloud operating system for self-hosting AI models, applications, and data with enterprise-grade security. Run local LLMs, sync files, stream media, and manage your digital life.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "vm/olares-vm.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 8192,
+        "hdd": 160,
+        "os": "Ubuntu",
+        "version": "24.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Requires activation via LarePass mobile app after installation.",
+      "type": "info"
+    },
+    {
+      "text": "Minimum 150GB SSD storage required - HDD installations will fail.",
+      "type": "warning"
+    },
+    {
+      "text": "x86-64 architecture only - ARM processors are not supported.",
+      "type": "warning"
+    },
+    {
+      "text": "For GPU support (AI workloads), NVIDIA Turing or newer required.",
+      "type": "info"
+    },
+    {
+      "text": "After VM creation, wait 5-10 minutes for Olares installation to complete.",
+      "type": "info"
+    },
+    {
+      "text": "Access Olares at https://desktop.{your-id}.olares.com after activation.",
+      "type": "info"
+    }
+  ]
+}
