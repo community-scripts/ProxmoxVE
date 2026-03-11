@@ -5,7 +5,7 @@ source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
 # License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ggml-org/llama.cpp
 
-APP="llama.cpp"
+APP="llamacpp"
 var_tags="${var_tags:-ai;llm;inference}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-8192}"
