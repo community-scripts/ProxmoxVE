@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-11T00:18:26Z",
+  "generated": "2026-03-11T06:17:37Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -88,9 +88,9 @@
     {
       "slug": "backrest",
       "repo": "garethgeorge/backrest",
-      "version": "v1.12.0",
+      "version": "v1.12.1",
       "pinned": false,
-      "date": "2026-02-22T06:49:49Z"
+      "date": "2026-03-11T06:16:22Z"
     },
     {
       "slug": "baikal",
@@ -620,9 +620,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1332",
+      "version": "v0.24.1341",
       "pinned": false,
-      "date": "2026-03-10T05:50:35Z"
+      "date": "2026-03-11T05:55:00Z"
     },
     {
       "slug": "jellystat",
@@ -1628,9 +1628,9 @@
     {
       "slug": "tunarr",
       "repo": "chrisbenincasa/tunarr",
-      "version": "v1.1.18",
+      "version": "v1.1.19",
       "pinned": false,
-      "date": "2026-02-26T22:09:44Z"
+      "date": "2026-03-11T02:21:06Z"
     },
     {
       "slug": "uhf",
