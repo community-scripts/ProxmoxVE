@@ -51,14 +51,14 @@ ln -sf /opt/llamacpp/bin/llama-cli /usr/local/bin/llama-cli
 msg_info "Creating wrapper scripts"
 cat <<'WRAPPER' >/opt/llamacpp/bin/llama-server-wrapper.sh
 #!/bin/bash
-export LD_LIBRARY_PATH="/opt/llamacpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="/opt/llamacpp/lib:/opt/llamacpp/bin${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec /opt/llamacpp/bin/llama-server "$@"
 WRAPPER
 chmod +x /opt/llamacpp/bin/llama-server-wrapper.sh
 
 cat <<'WRAPPER' >/opt/llamacpp/bin/llama-cli-wrapper.sh
 #!/bin/bash
-export LD_LIBRARY_PATH="/opt/llamacpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="/opt/llamacpp/lib:/opt/llamacpp/bin${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec /opt/llamacpp/bin/llama-cli "$@"
 WRAPPER
 chmod +x /opt/llamacpp/bin/llama-cli-wrapper.sh
@@ -79,8 +79,8 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/llamacpp
-# Set LD_LIBRARY_PATH to find backend libraries (libggml-cpu.so, libggml-vulkan.so)
-Environment="LD_LIBRARY_PATH=/opt/llamacpp/lib"
+# Set LD_LIBRARY_PATH to find both core libraries (bin) and backend libraries (lib)
+Environment="LD_LIBRARY_PATH=/opt/llamacpp/lib:/opt/llamacpp/bin"
 ExecStart=/opt/llamacpp/bin/llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0 --host 0.0.0.0 --port 8080 --ctx-size 8192 --n-gpu-layers -1
 Restart=always
 RestartSec=10
@@ -175,10 +175,11 @@ systemctl restart llamacpp
 
 ## Troubleshooting
 
-If you see "no CPU backend found" error:
-1. Ensure libggml-cpu.so and libggml-vulkan.so are in /opt/llamacpp/lib/
-2. Check LD_LIBRARY_PATH is set correctly: echo \$LD_LIBRARY_PATH
-3. Verify libraries exist: ls -la /opt/llamacpp/lib/
+If you see "no backends are loaded" error:
+1. Ensure backend libraries are in /opt/llamacpp/lib/ (libggml-cpu-*.so, libggml-vulkan.so)
+2. Ensure core libraries are in /opt/llamacpp/bin/ (libggml.so, libggml-base.so, libllama.so)
+3. Check LD_LIBRARY_PATH includes both: echo \$LD_LIBRARY_PATH
+4. Verify libraries exist: ls -la /opt/llamacpp/lib/ /opt/llamacpp/bin/
 EOF
 
 motd_ssh
