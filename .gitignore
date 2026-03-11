@@ -75,3 +75,7 @@ json/.vscode/
 .git/
 .gitignore
 .vscode/settings.json
+
+
+#ignore plan artifacts
+plans/
