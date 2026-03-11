@@ -26,39 +26,37 @@ msg_ok "Installed Dependencies"
 # Create directories
 mkdir -p /opt/llamacpp/bin
 mkdir -p /opt/llamacpp/models
-mkdir -p /opt/llamacpp/lib
 
 # Download llama.cpp using fetch_and_deploy_gh_release (Vulkan build)
 # Note: The prebuilt Vulkan binaries use GGML_BACKEND_DL=ON, which means
 # CPU and Vulkan backends are separate dynamic libraries (.so files)
+# IMPORTANT: Backend libraries (libggml-*.so) MUST stay in the same directory
+# as the executable because ggml_backend_load_best() searches for them there,
+# NOT via LD_LIBRARY_PATH. See: https://github.com/ggml-org/llama.cpp/issues/17491
 fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-vulkan-x64.tar.gz"
 
-# Move backend libraries to lib directory and binaries to bin
-# The tarball contains: llama-server, llama-cli, libggml-cpu.so, libggml-vulkan.so
-msg_info "Organizing backend libraries"
-for lib in /opt/llamacpp/bin/libggml-*.so; do
-  if [[ -f "$lib" ]]; then
-    mv "$lib" /opt/llamacpp/lib/
-  fi
-done
-msg_ok "Organized backend libraries"
+# List all extracted files for debugging
+msg_info "Verifying installation"
+ls -la /opt/llamacpp/bin/
+msg_ok "Installation verified"
 
 # Create symlinks for easy access
 ln -sf /opt/llamacpp/bin/llama-server /usr/local/bin/llama-server
 ln -sf /opt/llamacpp/bin/llama-cli /usr/local/bin/llama-cli
 
-# Create wrapper scripts that set LD_LIBRARY_PATH for the backend libraries
+# Create wrapper scripts that set library path for core libraries
+# Note: Backend libraries are loaded from the executable's directory, not LD_LIBRARY_PATH
 msg_info "Creating wrapper scripts"
 cat <<'WRAPPER' >/opt/llamacpp/bin/llama-server-wrapper.sh
 #!/bin/bash
-export LD_LIBRARY_PATH="/opt/llamacpp/lib:/opt/llamacpp/bin${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="/opt/llamacpp/bin${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec /opt/llamacpp/bin/llama-server "$@"
 WRAPPER
 chmod +x /opt/llamacpp/bin/llama-server-wrapper.sh
 
 cat <<'WRAPPER' >/opt/llamacpp/bin/llama-cli-wrapper.sh
 #!/bin/bash
-export LD_LIBRARY_PATH="/opt/llamacpp/lib:/opt/llamacpp/bin${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="/opt/llamacpp/bin${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec /opt/llamacpp/bin/llama-cli "$@"
 WRAPPER
 chmod +x /opt/llamacpp/bin/llama-cli-wrapper.sh
@@ -79,8 +77,10 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/llamacpp
-# Set LD_LIBRARY_PATH to find both core libraries (bin) and backend libraries (lib)
-Environment="LD_LIBRARY_PATH=/opt/llamacpp/lib:/opt/llamacpp/bin"
+# Set LD_LIBRARY_PATH for core libraries (libggml.so, libllama.so, etc.)
+# Note: Backend libraries (libggml-cpu-*.so, libggml-vulkan.so) are loaded from
+# the executable's directory by ggml_backend_load_best(), not via LD_LIBRARY_PATH
+Environment="LD_LIBRARY_PATH=/opt/llamacpp/bin"
 ExecStart=/opt/llamacpp/bin/llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0 --host 0.0.0.0 --port 8080 --ctx-size 8192 --n-gpu-layers -1
 Restart=always
 RestartSec=10
@@ -176,10 +176,10 @@ systemctl restart llamacpp
 ## Troubleshooting
 
 If you see "no backends are loaded" error:
-1. Ensure backend libraries are in /opt/llamacpp/lib/ (libggml-cpu-*.so, libggml-vulkan.so)
-2. Ensure core libraries are in /opt/llamacpp/bin/ (libggml.so, libggml-base.so, libllama.so)
-3. Check LD_LIBRARY_PATH includes both: echo \$LD_LIBRARY_PATH
-4. Verify libraries exist: ls -la /opt/llamacpp/lib/ /opt/llamacpp/bin/
+1. Backend libraries MUST be in the same directory as the executable
+2. Check all libraries are present: ls -la /opt/llamacpp/bin/*.so
+3. Verify the service runs from /opt/llamacpp directory
+4. See: https://github.com/ggml-org/llama.cpp/issues/17491
 EOF
 
 motd_ssh
