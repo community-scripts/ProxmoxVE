@@ -44,6 +44,10 @@ msg_info "Installing Production Dependencies"
 $STD yarn workspaces focus --all --production
 msg_ok "Installed Production Dependencies"
 
+msg_info "Copying UI Files to Server"
+cp -r /opt/app/apps/ui/dist /opt/app/apps/server/dist/ui
+msg_ok "Copied UI Files"
+
 msg_info "Creating Data Directory"
 mkdir -p /opt/data/logs
 msg_ok "Created Data Directory"
