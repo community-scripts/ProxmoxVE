@@ -5038,7 +5038,7 @@ create_lxc_container() {
   }
 
   # Downloads an ARM64 LXC rootfs template to $1.
-  # Debian: fetches latest release from asylumexp/debian-ifupdown2-lxc on GitHub.
+  # Debian: fetches latest release from community-scripts/debian-arm64-lxc on GitHub.
   # Others: fetches from jenkins.linuxcontainers.org.
   download_arm64_template() {
     local dest="$1" url
@@ -5049,7 +5049,7 @@ create_lxc_container() {
     }
 
     if [[ "$PCT_OSTYPE" == "debian" ]]; then
-      url=$(curl -fsSL "https://api.github.com/repos/asylumexp/debian-ifupdown2-lxc/releases/latest" |
+      url=$(curl -fsSL "https://api.github.com/repos/community-scripts/debian-arm64-lxc/releases/latest" |
         grep -Eo "https://[^\"]*debian-${CUSTOM_TEMPLATE_VARIANT}-arm64-rootfs\.tar\.xz" | head -n1)
       [[ -n "$url" ]] || {
         msg_error "Could not find Debian ${CUSTOM_TEMPLATE_VARIANT} ARM64 template URL."
