@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Set the base URL for development/fork - must be set before sourcing build.func
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/refs/heads/main}"
+COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/refs/heads/main}"
 source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/build.func)
 
 # Author: BillyOutlast
-# License: MIT | https://github.com/community-unscripted/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/NousResearch/hermes-agent
 
 APP="Hermes"

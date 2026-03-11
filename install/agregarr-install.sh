@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# License: MIT | https://github.com/community-unscripted/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/agregarr/agregarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

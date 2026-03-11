@@ -88,7 +88,7 @@ export default function Page() {
                   </Button>
                   <Button className="w-full" asChild>
                     <a
-                      href={`https://github.com/community-unscripted/${basePath}`}
+                      href={`https://github.com/Heretek-AI/${basePath}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center"
@@ -104,7 +104,7 @@ export default function Page() {
 
             <div className="flex flex-col gap-4">
               <h1 className="max-w-2xl text-center text-3xl font-semibold tracking-tighter md:text-7xl">
-                Community-Unscripted
+                Heretek-AI
               </h1>
               <div className="max-w-2xl gap-2 flex flex-col text-center sm:text-lg text-sm leading-relaxed tracking-tight text-muted-foreground md:text-xl">
                 <p>

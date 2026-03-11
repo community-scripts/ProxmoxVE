@@ -128,7 +128,7 @@ jobs:
 
           ## ⚠️ Important
           Before merging, ensure all fork-specific references are preserved:
-          - \`community-unscripted\` repository references
+          - \`Heretek-AI\` repository references
           - Fork-specific workflow files
           - Custom workflow configurations
 

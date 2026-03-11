@@ -1,8 +1,8 @@
 # Proxmox VE Helpful-Scripts Frontend
 
-> 🚀 **Modern frontend for the Community-Unscripted Proxmox VE Helpful-Scripts repository**
+> 🚀 **Modern frontend for the Heretek-AI Proxmox VE Helpful-Scripts repository**
 
-A comprehensive, user-friendly interface built with Next.js that provides access to 300+ automation scripts for Proxmox Virtual Environment management. This frontend serves as the official website for the Community-Unscripted organization's Proxmox VE Helpful-Scripts repository.
+A comprehensive, user-friendly interface built with Next.js that provides access to 300+ automation scripts for Proxmox Virtual Environment management. This frontend serves as the official website for the Heretek-AI organization's Proxmox VE Helpful-Scripts repository.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15.2.4-black?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.0.0-blue?style=flat-square&logo=react)
@@ -78,7 +78,7 @@ A comprehensive, user-friendly interface built with Next.js that provides access
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/community-unscripted/ProxmoxVE.git
+   git clone https://github.com/Heretek-AI/ProxmoxVE.git
    cd ProxmoxVE/frontend
    ```
 
@@ -259,23 +259,23 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **[tteck](https://github.com/tteck)** - Original creator of the Proxmox VE Helper-Scripts
-- **[Community-Unscripted Organization](https://github.com/community-unscripted)** - Maintaining and expanding the project
+- **[Heretek-AI Organization](https://github.com/Heretek-AI)** - Maintaining and expanding the project
 - **[Proxmox Community](https://forum.proxmox.com/)** - For continuous feedback and support
 - **All Contributors** - Thank you for your valuable contributions!
 
 ## 📚 Additional Resources
 
 - **[Proxmox VE Documentation](https://pve.proxmox.com/pve-docs/)**
-- **[Community Scripts Repository](https://github.com/community-unscripted/ProxmoxVE)**
+- **[Community Scripts Repository](https://github.com/Heretek-AI/ProxmoxVE)**
 - **[Discord Community](https://discord.gg/3AnUqsXnmK)**
-- **[GitHub Discussions](https://github.com/community-unscripted/ProxmoxVE/discussions)**
+- **[GitHub Discussions](https://github.com/Heretek-AI/ProxmoxVE/discussions)**
 
 ## 🔗 Links
 
-- **🌐 Live Website**: [https://community-unscripted.github.io/ProxmoxVE/](https://community-unscripted.github.io/ProxmoxVE/)
+- **🌐 Live Website**: [https://Heretek-AI.github.io/ProxmoxVE/](https://Heretek-AI.github.io/ProxmoxVE/)
 - **💬 Discord Server**: [https://discord.gg/3AnUqsXnmK](https://discord.gg/3AnUqsXnmK)
-- **📝 Change Log**: [https://github.com/community-unscripted/ProxmoxVE/blob/main/CHANGELOG.md](https://github.com/community-unscripted/ProxmoxVE/blob/main/CHANGELOG.md)
+- **📝 Change Log**: [https://github.com/Heretek-AI/ProxmoxVE/blob/main/CHANGELOG.md](https://github.com/Heretek-AI/ProxmoxVE/blob/main/CHANGELOG.md)
 
 ---
 
-**Made with ❤️ by the Community-Unscripted team and contributors**
+**Made with ❤️ by the Heretek-AI team and contributors**

@@ -37,13 +37,13 @@ export const metadata: Metadata = {
   ],
   authors: [
     { name: "Bram Suurd", url: "https://github.com/BramSuurdje" },
-    { name: "Community Unscripted", url: "https://github.com/community-unscripted" },
+    { name: "Community Unscripted", url: "https://github.com/Heretek-AI" },
   ],
   creator: "Bram Suurd",
   publisher: "Community Unscripted",
-  metadataBase: new URL(`https://community-unscripted.github.io/${basePath}/`),
+  metadataBase: new URL(`https://Heretek-AI.github.io/${basePath}/`),
   alternates: {
-    canonical: `https://community-unscripted.github.io/${basePath}/`,
+    canonical: `https://Heretek-AI.github.io/${basePath}/`,
   },
   viewport: {
     width: "device-width",
@@ -59,11 +59,11 @@ export const metadata: Metadata = {
     title: "Proxmox VE Helper-Scripts",
     description:
       "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 400+ scripts to help you manage your Proxmox Virtual Environment.",
-    url: `https://community-unscripted.github.io/${basePath}/`,
+    url: `https://Heretek-AI.github.io/${basePath}/`,
     siteName: "Proxmox VE Helper-Scripts",
     images: [
       {
-        url: `https://community-unscripted.github.io/${basePath}/defaultimg.png`,
+        url: `https://Heretek-AI.github.io/${basePath}/defaultimg.png`,
         width: 1200,
         height: 630,
         alt: "Proxmox VE Helper-Scripts",
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     creator: "@BramSuurdje",
     description:
       "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 400+ scripts to help you manage your Proxmox Virtual Environment.",
-    images: [`https://community-unscripted.github.io/${basePath}/defaultimg.png`],
+    images: [`https://Heretek-AI.github.io/${basePath}/defaultimg.png`],
   },
   manifest: "/manifest.webmanifest",
   appleWebApp: {

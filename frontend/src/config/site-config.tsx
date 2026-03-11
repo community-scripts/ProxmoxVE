@@ -9,7 +9,7 @@ export const basePath = process.env.BASE_PATH || "ProxmoxVE";
 
 export const navbarLinks = [
   {
-    href: `https://github.com/community-unscripted/${basePath}`,
+    href: `https://github.com/Heretek-AI/${basePath}`,
     event: "GitHub",
     icon: <FaGithub className="h-4 w-4" />,
     text: "GitHub",
@@ -21,14 +21,14 @@ export const navbarLinks = [
     text: "Discord",
   },
   {
-    href: `https://github.com/community-unscripted/${basePath}/blob/main/CHANGELOG.md`,
+    href: `https://github.com/Heretek-AI/${basePath}/blob/main/CHANGELOG.md`,
     event: "Changelog",
     icon: <Scroll className="h-4 w-4" />,
     text: "Changelog",
     mobileHidden: true,
   },
   {
-    href: `https://github.com/community-unscripted/${basePath}/discussions`,
+    href: `https://github.com/Heretek-AI/${basePath}/discussions`,
     event: "Discussions",
     icon: <MessagesSquare className="h-4 w-4" />,
     text: "Discussions",

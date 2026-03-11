@@ -1,12 +1,12 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/main/misc/images/logo.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
+  <img src="https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/images/logo.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
   
   <h1>Proxmox VE Heretek-Scripts</h1>
   <p><em>A Heretek Forge of Proxmox VE Scripts</em></p>
   <p><strong>Experimental scripts beyond the orthodox canon</strong></p>
 
   <p>
-    <a href="https://github.com/community-unscripted/ProxmoxVE">
+    <a href="https://github.com/Heretek-AI/ProxmoxVE">
       <img src="https://img.shields.io/badge/🔧_Repository-Heretek_Forge-9b59b6?style=for-the-badge&labelColor=2d3748" alt="Repository" />
     </a>
     <a href="https://github.com/community-scripts/ProxmoxVE">
@@ -18,13 +18,13 @@
   </p>
 
   <p>
-    <a href="https://github.com/community-unscripted/ProxmoxVE/blob/main/docs/contribution/README.md">
+    <a href="https://github.com/Heretek-AI/ProxmoxVE/blob/main/docs/contribution/README.md">
       <img src="https://img.shields.io/badge/🤝_Contribute-Guidelines-ff4785?style=for-the-badge&labelColor=2d3748" alt="Contribute" />
     </a>
-    <a href="https://github.com/community-unscripted/ProxmoxVE/blob/main/docs/contribution/USER_SUBMITTED_GUIDES.md">
+    <a href="https://github.com/Heretek-AI/ProxmoxVE/blob/main/docs/contribution/USER_SUBMITTED_GUIDES.md">
       <img src="https://img.shields.io/badge/📚_Guides-Read-0077b5?style=for-the-badge&labelColor=2d3748" alt="Guides" />
     </a>
-    <a href="https://github.com/community-unscripted/ProxmoxVE/blob/main/CHANGELOG.md">
+    <a href="https://github.com/Heretek-AI/ProxmoxVE/blob/main/CHANGELOG.md">
       <img src="https://img.shields.io/badge/📋_Changelog-View-6c5ce7?style=for-the-badge&labelColor=2d3748" alt="Changelog" />
     </a>
   </p>
@@ -182,11 +182,11 @@ The fastest way to get started:
 
 ### Method 2: Direct Script Execution
 
-For Heretek scripts, use the `community-unscripted` repository:
+For Heretek scripts, use the `Heretek-AI` repository:
 
 ```bash
 # Example: Install MCPHub
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/main/ct/mcphub.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/ct/mcphub.sh)"
 ```
 
 ### Method 3: PVEScripts-Local
@@ -194,7 +194,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-unscripted/Pro
 Install a convenient script manager directly in your Proxmox UI:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-unscripted/ProxmoxVE/main/ct/pve-scripts-local.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/ct/pve-scripts-local.sh)"
 ```
 
 This adds a menu to your Proxmox interface for easy script access without visiting the website.
@@ -219,14 +219,14 @@ This adds a menu to your Proxmox interface for easy script access without visiti
     <td align="center" width="33%">
       <h3>💭 Discussions</h3>
       <p>Feature requests, Q&A, and ideas</p>
-      <a href="https://github.com/community-unscripted/ProxmoxVE/discussions">
+      <a href="https://github.com/Heretek-AI/ProxmoxVE/discussions">
         <img src="https://img.shields.io/badge/Discuss-238636?style=for-the-badge&logo=github&logoColor=white" alt="Discussions" />
       </a>
     </td>
     <td align="center" width="33%">
       <h3>🐛 Issues</h3>
       <p>Bug reports and issue tracking</p>
-      <a href="https://github.com/community-unscripted/ProxmoxVE/issues">
+      <a href="https://github.com/Heretek-AI/ProxmoxVE/issues">
         <img src="https://img.shields.io/badge/Report-d73a4a?style=for-the-badge&logo=github&logoColor=white" alt="Issues" />
       </a>
     </td>
@@ -267,7 +267,7 @@ This adds a menu to your Proxmox interface for easy script access without visiti
 <div align="center">
   <br />
   
-  👉 Check our **[Contributing Guidelines](https://github.com/community-unscripted/ProxmoxVE/blob/main/docs/contribution/README.md)** to get started
+  👉 Check our **[Contributing Guidelines](https://github.com/Heretek-AI/ProxmoxVE/blob/main/docs/contribution/README.md)** to get started
   
 </div>
 
@@ -302,19 +302,19 @@ This project is maintained by volunteers in memory of tteck. Your support helps 
 </p>
 
 <p align="center">
-  <a href="https://star-history.com/#community-unscripted/ProxmoxVE&Date">
+  <a href="https://star-history.com/#Heretek-AI/ProxmoxVE&Date">
     <picture>
       <source
         media="(prefers-color-scheme: dark)"
-        srcset="https://api.star-history.com/svg?repos=community-unscripted/ProxmoxVE&type=Date&theme=dark"
+        srcset="https://api.star-history.com/svg?repos=Heretek-AI/ProxmoxVE&type=Date&theme=dark"
       />
       <source
         media="(prefers-color-scheme: light)"
-        srcset="https://api.star-history.com/svg?repos=community-unscripted/ProxmoxVE&type=Date"
+        srcset="https://api.star-history.com/svg?repos=Heretek-AI/ProxmoxVE&type=Date"
       />
       <img
         alt="Star History Chart"
-        src="https://api.star-history.com/svg?repos=community-unscripted/ProxmoxVE&type=Date"
+        src="https://api.star-history.com/svg?repos=Heretek-AI/ProxmoxVE&type=Date"
         width="650"
       />
     </picture>

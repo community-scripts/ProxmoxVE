@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: community-scripts
-# License: MIT | https://github.com/community-unscripted/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://rocm.docs.amd.com
 
 # ==============================================================================

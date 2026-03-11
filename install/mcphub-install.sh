@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Author: BillyOutlast
-# License: MIT | https://github.com/community-unscripted/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/samanhappy/mcphub | Docs: https://docs.mcphubx.com/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
