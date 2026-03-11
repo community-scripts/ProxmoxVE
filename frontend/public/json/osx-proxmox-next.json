@@ -32,6 +32,10 @@
   },
   "notes": [
     {
+      "text": "In order to run this tool, you need to run the following command: echo 'options kvm ignore_msrs=Y' >> /etc/modprobe.d/kvm.conf && update-initramfs -k all -u",
+      "type": "warning"
+    },
+    {
       "text": "Requires Proxmox VE 9.x for full compatibility (8.x supported with warning)",
       "type": "info"
     },
