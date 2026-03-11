@@ -46,6 +46,10 @@ REPO_BRANCH="${OSX_NEXT_BRANCH:-main}"
 VENV_DIR="${OSX_NEXT_VENV_DIR:-$REPO_DIR/.venv}"
 LOG_FILE="${OSX_NEXT_LOG_FILE:-/var/log/osx-proxmox-next-install.log}"
 
+# STD mode for command execution (empty = verbose, "silent" = suppress output)
+# Must be defined before 'set -u' to avoid unbound variable error
+STD=""
+
 # Telemetry
 APP="osx-proxmox-next"
 var_os="tool"
