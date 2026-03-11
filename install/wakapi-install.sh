@@ -24,7 +24,7 @@ mkdir -p /opt/wakapi/data
 msg_ok "Created Directories"
 
 msg_info "Downloading Wakapi"
-fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi/bin" "wakapi_linux_*.tar.gz"
+fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi/bin" "wakapi_linux_*.zip"
 msg_ok "Downloaded Wakapi"
 
 msg_info "Verifying Installation"

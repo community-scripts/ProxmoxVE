@@ -39,7 +39,7 @@ function update_script() {
     msg_ok "Backed up Configuration"
 
     msg_info "Updating Wakapi"
-    fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi/bin" "wakapi_linux_*.tar.gz"
+    fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi/bin" "wakapi_linux_*.zip"
     msg_ok "Updated Wakapi"
 
     msg_info "Restoring Configuration"
