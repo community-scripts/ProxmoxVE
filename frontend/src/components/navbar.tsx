@@ -1,4 +1,5 @@
 "use client";
+
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,6 +29,7 @@ function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   return (
     <>
       <div
@@ -48,10 +50,29 @@ function Navbar() {
                 <MobileSidebar />
               </Suspense>
             </div>
+            <div className="hidden sm:flex items-center gap-2">
+              {navbarLinks.filter(link => !link.external).map(({ href, event, icon, text }) => (
+                <TooltipProvider key={event}>
+                  <Tooltip delayDuration={100}>
+                    <TooltipTrigger>
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link href={href} data-umami-event={event}>
+                          {icon}
+                          <span className="ml-2 hidden lg:inline">{text}</span>
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">
+                      {text}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ))}
+            </div>
             <div className="flex sm:gap-2">
               <CommandMenu />
               <GitHubStarsButton username="Heretek-AI" repo="ProxmoxVE" className="hidden md:flex" />
-              {navbarLinks.map(({ href, event, icon, text, mobileHidden }) => (
+              {navbarLinks.filter(link => link.external).map(({ href, event, icon, text, mobileHidden }) => (
                 <TooltipProvider key={event}>
                   <Tooltip delayDuration={100}>
                     <TooltipTrigger className={mobileHidden ? "hidden lg:block" : ""}>

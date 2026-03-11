@@ -1,4 +1,5 @@
 "use client";
+
 import { ArrowRightIcon, ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
@@ -21,6 +22,8 @@ import { Button } from "@/components/ui/button";
 import { basePath } from "@/config/site-config";
 import FAQ from "@/components/faq";
 import { cn } from "@/lib/utils";
+import { FeatureCards } from "@/components/feature-cards";
+import { NewsHighlight } from "@/components/news-highlight";
 
 function CustomArrowRightIcon() {
   return <ArrowRightIcon className="h-4 w-4" width={1} />;
@@ -40,7 +43,7 @@ export default function Page() {
       <div className="w-full mt-16">
         <Particles className="absolute inset-0 -z-40" quantity={100} ease={80} color={color} refresh />
         <div className="container mx-auto">
-          <div className="flex h-[80vh] flex-col items-center justify-center gap-4 py-20 lg:py-40">
+          <div className="flex h-[60vh] flex-col items-center justify-center gap-4 py-20 lg:py-32">
             <Dialog>
               <DialogTrigger>
                 <div>
@@ -138,7 +141,25 @@ export default function Page() {
                   View Scripts
                 </Button>
               </Link>
+              <Link href="/categories">
+                <Button
+                  size="lg"
+                  variant="outline"
+                >
+                  Browse Categories
+                </Button>
+              </Link>
             </div>
+          </div>
+
+          {/* Feature Cards Section */}
+          <div className="py-12 px-4">
+            <FeatureCards />
+          </div>
+
+          {/* News Section */}
+          <div className="py-12 px-4">
+            <NewsHighlight />
           </div>
 
           {/* FAQ Section */}
