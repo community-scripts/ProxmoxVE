@@ -11,8 +11,8 @@
   "interface_port": 6246,
   "documentation": "https://docs.maintainerr.info/",
   "website": "https://github.com/Maintainerr/Maintainerr",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/maintainerr.webp",
-  "config_path": "/opt/maintainerr/data",
+  "logo": "https://raw.githubusercontent.com/Maintainerr/Maintainerr/main/apps/ui/public/assets/logo_icon.svg",
+  "config_path": "/opt/data",
   "description": "Maintainerr is a tool to automatically manage media collections in Plex, Jellyfin, and Emby by syncing with Radarr and Sonarr. It helps keep your media libraries organized by automatically adding and removing media based on your configured rules.",
   "install_methods": [
     {
@@ -41,7 +41,7 @@
       "type": "info"
     },
     {
-      "text": "Data directory: /opt/maintainerr/data",
+      "text": "Data directory: /opt/data",
       "type": "info"
     },
     {

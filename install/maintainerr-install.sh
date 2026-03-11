@@ -45,7 +45,7 @@ $STD yarn workspaces focus --all --production
 msg_ok "Installed Production Dependencies"
 
 msg_info "Creating Data Directory"
-mkdir -p /opt/maintainerr/data
+mkdir -p /opt/data/logs
 msg_ok "Created Data Directory"
 
 msg_info "Creating Service"
@@ -60,7 +60,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/maintainerr
 Environment=NODE_ENV=production
-Environment=DATA_DIR=/opt/maintainerr/data
+Environment=DATA_DIR=/opt/data
 Environment=UI_PORT=6246
 Environment=UI_HOSTNAME=0.0.0.0
 ExecStart=/usr/bin/node apps/server/dist/main.js

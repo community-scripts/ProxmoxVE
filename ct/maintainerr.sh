@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Backing up Data"
-    cp -r /opt/maintainerr/data /opt/maintainerr_data_backup
+    cp -r /opt/data /opt/maintainerr_data_backup
     msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/maintainerr"
@@ -56,7 +56,7 @@ function update_script() {
     msg_ok "Installed Production Dependencies"
 
     msg_info "Restoring Data"
-    cp -r /opt/maintainerr_data_backup/. /opt/maintainerr/data/
+    cp -r /opt/maintainerr_data_backup/. /opt/data/
     rm -rf /opt/maintainerr_data_backup
     msg_ok "Restored Data"
 
