@@ -5024,14 +5024,14 @@ create_lxc_container() {
     case "$1" in
     debian)
       case "$2" in
-      11 | 11.*) echo "bullseye" ;; 12 | 12.*) echo "bookworm" ;;
-      13 | 13.*) echo "trixie" ;;   *) echo "trixie" ;;
+      12 | 12.*) echo "bookworm" ;; 13 | 13.*) echo "trixie" ;;
+      *) echo "trixie" ;;
       esac ;;
     alpine) echo "3.22" ;;
     ubuntu)
       case "$2" in
-      20.04* | focal) echo "focal" ;;     24.04* | noble) echo "noble" ;;
-      24.10* | oracular) echo "oracular" ;; *) echo "jammy" ;;
+      24.04* | noble) echo "noble" ;;     24.10* | oracular) echo "oracular" ;;
+      *) echo "jammy" ;;
       esac ;;
     *) return 1 ;;
     esac
