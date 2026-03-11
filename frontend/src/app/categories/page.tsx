@@ -75,7 +75,7 @@ function CategoriesContent() {
               return (
                 <Link
                   key={category.id}
-                  href={`/scripts?category=${category.slug}`}
+                  href={`/scripts?category=${category.id}`}
                   className="group"
                 >
                   <Card className="h-full transition-all hover:border-primary/50 hover:shadow-md cursor-pointer">
