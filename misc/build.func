@@ -4105,13 +4105,6 @@ EOF'
 
     local _install_script
     _install_script="$(curl -fsSL "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh")"
-    if [[ "$ARCH" == "arm64" ]]; then
-      local _arm_script
-      _arm_script="$(curl -fsSL "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/arm/${var_install}.sh" 2>/dev/null || true)"
-      if [[ -n "$_arm_script" ]]; then
-        _install_script="${_arm_script}"$'\n'"${_install_script}"
-      fi
-    fi
     lxc-attach -n "$CTID" -- bash -c "$_install_script"
     local lxc_exit=$?
 
@@ -4492,13 +4485,6 @@ EOF'
           trap - ERR
           local _install_script
           _install_script="$(curl -fsSL "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh")"
-          if [[ "$ARCH" == "arm64" ]]; then
-            local _arm_script
-            _arm_script="$(curl -fsSL "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/arm/${var_install}.sh" 2>/dev/null || true)"
-            if [[ -n "$_arm_script" ]]; then
-              _install_script="${_arm_script}"$'\n'"${_install_script}"
-            fi
-          fi
           lxc-attach -n "$CTID" -- bash -c "$_install_script"
           local apt_retry_exit=$?
           set -Eeuo pipefail
