@@ -208,7 +208,7 @@ msg_info "Building OpenVino Model"
 cd /models
 wget -q http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 $STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
-if $STD python3 /opt/frigate/docker/main/build_ov_model.py; then
+if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
   cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
   cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
   wget -q https://github.com/openvinotoolkit/open_model_zoo/raw/master/data/dataset_classes/coco_91cl_bkgr.txt -O /openvino-model/coco_91cl_bkgr.txt

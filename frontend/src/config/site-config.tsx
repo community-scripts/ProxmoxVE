@@ -45,8 +45,8 @@ export const navbarLinks = [
 export const mostPopularScripts = ["post-pve-install", "docker", "homeassistant"];
 
 export const analytics = {
-  url: "analytics.bramsuurd.nl",
-  token: "f9eee289f931",
+  url: "analytics.community-scripts.org",
+  token: "e9f14e1e7232",
 };
 
 export const AlertColors = {

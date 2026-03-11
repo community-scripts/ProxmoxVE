@@ -28,8 +28,8 @@ function update_script() {
     exit
   fi
   php_ver=$(php -v | head -n 1 | awk '{print $2}')
-  if [[ ! $php_ver == "8.3"* ]]; then
-    PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
+  if [[ ! $php_ver == "8.5"* ]]; then
+    PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
   fi
   if check_for_gh_release "grocy" "grocy/grocy"; then
     msg_info "Updating grocy"

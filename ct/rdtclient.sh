@@ -39,9 +39,9 @@ function update_script() {
 
     fetch_and_deploy_gh_release "rdt-client" "rogerfar/rdt-client" "prebuild" "latest" "/opt/rdtc" "RealDebridClient.zip"
     cp -R /opt/rdtc-backup/appsettings.json /opt/rdtc/
-    if dpkg-query -W dotnet-sdk-8.0 >/dev/null 2>&1; then
-      $STD apt remove --purge -y dotnet-sdk-8.0
-      ensure_dependencies aspnetcore-runtime-9.0
+    if dpkg-query -W aspnetcore-runtime-9.0 >/dev/null 2>&1; then
+      $STD apt remove --purge -y aspnetcore-runtime-9.0
+      ensure_dependencies aspnetcore-runtime-10.0
     fi
     rm -rf /opt/rdtc-backup
 

@@ -37,7 +37,7 @@ function update_script() {
   if [[ -d /etc/wgdashboard ]]; then
     sleep 2
     cd /etc/wgdashboard/src
-    $STD ./wgd.sh update
+    $STD ./wgd.sh update -y
     $STD ./wgd.sh start
   fi
   msg_ok "Updated LXC"

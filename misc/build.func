@@ -3925,6 +3925,17 @@ EOF
   configure_gpu_passthrough
   configure_additional_devices
 
+  # Increase disk size for AMD ROCm runtime (~4GB extra needed)
+  if [[ "${GPU_TYPE:-}" == "AMD" ]]; then
+    local rocm_extra=4
+    local new_disk_size=$((PCT_DISK_SIZE + rocm_extra))
+    if pct resize "$CTID" rootfs "${new_disk_size}G" >/dev/null 2>&1; then
+      msg_ok "Disk resized ${PCT_DISK_SIZE}GB → ${new_disk_size}GB for ROCm"
+    else
+      msg_warn "Failed to resize disk for ROCm — installation may fail if space is insufficient"
+    fi
+  fi
+
   # ============================================================================
   # START CONTAINER AND INSTALL USERLAND
   # ============================================================================

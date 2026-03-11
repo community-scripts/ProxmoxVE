@@ -35,13 +35,16 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Creating Backup"
-    rm -rf /opt/${APP}_backup*.tar.gz
-    mkdir -p /opt/z2m_backup
-    $STD tar -czf /opt/z2m_backup/${APP}_backup_$(date +%Y%m%d%H%M%S).tar.gz -C /opt zigbee2mqtt
-    mv /opt/zigbee2mqtt/data /opt/z2m_backup
-    msg_ok "Backup Created"
+    ensure_dependencies zstd
+    mkdir -p /opt/{backups,z2m_backup}
+    BACKUP_VERSION="$(<"$HOME/.zigbee2mqtt")"
+    BACKUP_FILE="/opt/backups/${APP}_backup_${BACKUP_VERSION}.tar.zst"
+    $STD tar -cf - -C /opt zigbee2mqtt | zstd -q -o "$BACKUP_FILE"
+    ls -t /opt/backups/${APP}_backup_*.tar.zst 2>/dev/null | tail -n +6 | xargs -r rm -f
+    mv /opt/zigbee2mqtt/data /opt/z2m_backup/data
+    msg_ok "Backup Created (${BACKUP_VERSION})"
 
-    fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
     msg_info "Updating Zigbee2MQTT"
     rm -rf /opt/zigbee2mqtt/data

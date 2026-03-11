@@ -36,9 +36,13 @@ function update_script() {
     exit
   fi
 
-  if [[ ! -f /etc/apt/preferences.d/preferences ]]; then
+  if ! grep -qE '(^|[[:space:]])testing([[:space:]]|$)' /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
     msg_info "Adding Debian Testing repo"
-    sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+    if grep -q "trixie-updates" /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
+      sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+    else
+      sed -i '/^[[:space:]]*Suites:.*trixie/ s/$/ testing/' /etc/apt/sources.list.d/debian.sources
+    fi
     cat <<EOF >/etc/apt/preferences.d/preferences
 Package: *
 Pin: release a=unstable
@@ -209,7 +213,8 @@ EOF
     msg_ok "Updated Immich server, web, cli and plugins"
 
     cd "$SRC_DIR"/machine-learning
-    mkdir -p "$ML_DIR" && chown -R immich:immich "$ML_DIR"
+    mkdir -p "$ML_DIR"
+    chown -R immich:immich "$INSTALL_DIR"
     chown immich:immich ./uv.lock
     export VIRTUAL_ENV="${ML_DIR}"/ml-venv
     if [[ -f ~/.openvino ]]; then
@@ -375,7 +380,7 @@ function compile_imagemagick() {
 
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
-  : "${LIBVIPS_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)}"
+  LIBVIPS_REVISION="0c9151a4f416d2f8ae20a755db218f6637050eec"
   if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"

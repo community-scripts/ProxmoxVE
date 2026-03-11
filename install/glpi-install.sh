@@ -137,7 +137,7 @@ rm -rf /opt/glpi-${RELEASE}.tgz
 msg_ok "Setup Service"
 
 msg_info "Setup Cronjob"
-echo "* * * * * php /opt/glpi/front/cron.php" | crontab -
+echo "* * * * * php /opt/glpi/front/cron.php" | crontab -u www-data -
 msg_ok "Setup Cronjob"
 
 msg_info "Update PHP Params"
