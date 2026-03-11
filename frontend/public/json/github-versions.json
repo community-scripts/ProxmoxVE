@@ -1,12 +1,12 @@
 {
-  "generated": "2026-03-11T06:17:37Z",
+  "generated": "2026-03-11T12:12:40Z",
   "versions": [
     {
       "slug": "2fauth",
       "repo": "Bubka/2FAuth",
-      "version": "v6.0.0",
+      "version": "v6.1.0",
       "pinned": false,
-      "date": "2026-01-14T16:00:58Z"
+      "date": "2026-03-11T07:48:27Z"
     },
     {
       "slug": "adguard",
@@ -270,9 +270,9 @@
     {
       "slug": "databasus",
       "repo": "databasus/databasus",
-      "version": "v3.18.0",
+      "version": "v3.19.1",
       "pinned": false,
-      "date": "2026-03-08T20:19:15Z"
+      "date": "2026-03-11T10:25:28Z"
     },
     {
       "slug": "dawarich",
@@ -284,9 +284,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v2.0.2",
+      "version": "v2.0.3",
       "pinned": false,
-      "date": "2026-03-09T03:38:49Z"
+      "date": "2026-03-11T07:29:10Z"
     },
     {
       "slug": "dispatcharr",
@@ -319,9 +319,9 @@
     {
       "slug": "donetick",
       "repo": "donetick/donetick",
-      "version": "v0.1.74",
+      "version": "v0.1.75-beta.3",
       "pinned": false,
-      "date": "2026-02-14T23:21:45Z"
+      "date": ""
     },
     {
       "slug": "drawio",
@@ -1327,9 +1327,9 @@
     {
       "slug": "revealjs",
       "repo": "hakimel/reveal.js",
-      "version": "5.2.1",
+      "version": "6.0.0",
       "pinned": false,
-      "date": "2025-03-28T13:00:23Z"
+      "date": "2026-03-11T11:54:59Z"
     },
     {
       "slug": "romm",
@@ -1376,9 +1376,9 @@
     {
       "slug": "seaweedfs",
       "repo": "seaweedfs/seaweedfs",
-      "version": "4.16",
+      "version": "4.17",
       "pinned": false,
-      "date": "2026-03-10T06:11:05Z"
+      "date": "2026-03-11T09:30:38Z"
     },
     {
       "slug": "seelf",
@@ -1712,9 +1712,9 @@
     {
       "slug": "wanderer",
       "repo": "meilisearch/meilisearch",
-      "version": "v1.38.0",
+      "version": "v1.38.2",
       "pinned": false,
-      "date": "2026-03-09T08:06:29Z"
+      "date": "2026-03-11T11:36:01Z"
     },
     {
       "slug": "warracker",
@@ -1831,9 +1831,9 @@
     {
       "slug": "zitadel",
       "repo": "zitadel/zitadel",
-      "version": "v4.12.1",
+      "version": "v4.12.2",
       "pinned": false,
-      "date": "2026-03-04T12:40:17Z"
+      "date": "2026-03-11T07:50:10Z"
     },
     {
       "slug": "zoraxy",
