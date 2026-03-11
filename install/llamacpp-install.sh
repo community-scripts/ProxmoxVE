@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Author: Heretek-AI
+# Author: BillyOutlast
 # License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ggml-org/llama.cpp
 
@@ -49,45 +49,33 @@ else
   msg_ok "No dedicated GPU detected - will use Vulkan build (CPU fallback)"
 fi
 
-# Store GPU info for later use
-echo "GPU_VENDOR=${GPU_VENDOR}" > /opt/llamacpp/gpu_info.conf
-echo "GPU_TYPE=${GPU_TYPE}" >> /opt/llamacpp/gpu_info.conf
-
-msg_info "Fetching Latest llama.cpp Release"
-LATEST_RELEASE=$(curl -fsSL https://api.github.com/repos/ggml-org/llama.cpp/releases/latest 2>/dev/null | grep "tag_name" | awk -F'"' '{print $4}')
-
-if [[ -z "$LATEST_RELEASE" ]]; then
-  # Fallback to a known good release
-  LATEST_RELEASE="b8263"
-  msg_warn "Could not fetch latest release, using fallback: ${LATEST_RELEASE}"
-fi
-msg_ok "Latest release: ${LATEST_RELEASE}"
-
-msg_info "Downloading llama.cpp ${LATEST_RELEASE} (${GPU_TYPE} build)"
+# Create directories
 mkdir -p /opt/llamacpp/bin
 mkdir -p /opt/llamacpp/models
 
-TMP_TAR=$(mktemp --suffix=.tar.gz)
-DOWNLOAD_URL="https://github.com/ggml-org/llama.cpp/releases/download/${LATEST_RELEASE}/llama-${LATEST_RELEASE}-bin-ubuntu-vulkan-x64.tar.gz"
-curl -fL# -C - -o "${TMP_TAR}" "${DOWNLOAD_URL}"
+# Store GPU info for later use
+cat <<EOF >/opt/llamacpp/gpu_info.conf
+GPU_VENDOR=${GPU_VENDOR}
+GPU_TYPE=${GPU_TYPE}
+EOF
 
-tar -xzf "${TMP_TAR}" -C /opt/llamacpp/bin --strip-components=1
-rm -f "${TMP_TAR}"
-msg_ok "Downloaded and extracted llama.cpp"
+# Download llama.cpp using fetch_and_deploy_gh_release
+if [[ "$GPU_TYPE" == "cuda" ]]; then
+  fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-cuda-x64.tar.gz"
+else
+  fetch_and_deploy_gh_release "llamacpp" "ggml-org/llama.cpp" "prebuild" "latest" "/opt/llamacpp/bin" "llama-*-bin-ubuntu-vulkan-x64.tar.gz"
+fi
 
 # Create symlinks for easy access
 ln -sf /opt/llamacpp/bin/llama-server /usr/local/bin/llama-server
 ln -sf /opt/llamacpp/bin/llama-cli /usr/local/bin/llama-cli
-
-# Store version
-echo "${LATEST_RELEASE}" > /opt/llamacpp/version.txt
 
 msg_info "Creating Directories"
 mkdir -p /var/log/llamacpp
 chmod 755 /var/log/llamacpp
 msg_ok "Created Directories"
 
-msg_info "Creating Systemd Service"
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/llamacpp.service
 [Unit]
 Description=llama.cpp Server - OpenAI-Compatible LLM Inference
@@ -113,8 +101,8 @@ TimeoutStopSec=30
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
-msg_ok "Created Systemd Service"
+systemctl enable -q --now llamacpp
+msg_ok "Created Service"
 
 msg_info "Configuring GPU Permissions"
 # Add render and video groups for GPU access
@@ -136,10 +124,6 @@ if [[ -d /dev/dri ]]; then
   done
 fi
 msg_ok "Configured GPU Permissions"
-
-msg_info "Enabling and Starting Service"
-systemctl enable -q llamacpp
-msg_ok "Service enabled"
 
 # Create GPU passthrough info file
 cat <<EOF >/opt/llamacpp/GPU_PASSTHROUGH.md
@@ -200,13 +184,12 @@ motd_ssh
 customize
 cleanup_lxc
 
-msg_ok "Installation Complete!\n"
 echo -e "${TAB}${GN}llama.cpp Server has been installed successfully!${CL}"
 echo -e "${TAB}${YW}Default Model: unsloth/Qwen3.5-9B-GGUF:Q8_0${CL}"
 echo -e "${TAB}${YW}The model will be downloaded automatically on first start.${CL}"
-echo -e ""
+echo ""
 echo -e "${TAB}${YW}GPU Passthrough:${CL}"
 echo -e "${TAB}${YW}See /opt/llamacpp/GPU_PASSTHROUGH.md for configuration details.${CL}"
-echo -e ""
+echo ""
 echo -e "${TAB}${YW}Access the Web UI at: http://${IP}:8080${CL}"
 echo -e "${TAB}${YW}OpenAI-Compatible API: http://${IP}:8080/v1/chat/completions${CL}"
