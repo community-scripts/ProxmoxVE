@@ -33,8 +33,8 @@ chmod +x /opt/wakapi/bin/wakapi
 msg_ok "Verified Installation"
 
 msg_info "Generating Configuration"
-# Generate a random password salt
-PASSWORD_SALT=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+# Generate a random password salt (avoid SIGPIPE by using openssl)
+PASSWORD_SALT=$(openssl rand -hex 16 2>/dev/null || head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 32)
 
 cat <<EOF >/opt/wakapi/config.yml
 env: production
