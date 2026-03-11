@@ -1,4 +1,4 @@
-name: Sync Upstream (Ignore Specific Folders)
+name: Sync Upstream (Create Pull Request)
 
 on:
   schedule:
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write # Required to create pull requests
 
 jobs:
-  sync-and-merge:
+  sync-and-create-pr:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -19,10 +19,10 @@ jobs:
         with:
           fetch-depth: 0 # Fetches all history for all branches and tags
           # If your default branch is not 'main', change it here:
-          ref: main 
+          ref: main
           token: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
 
-      - name: Sync upstream and restore ignored directories
+      - name: Sync upstream and create pull request
         run: |
           # 1. Configure Git for the Actions bot
           git config user.name "github-actions[bot]"
@@ -32,8 +32,17 @@ jobs:
           git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
           git fetch upstream main
           
-          # 3. Backup ignored directories and files BEFORE merge
-          echo "Backing up ignored directories and files..."
+          # 3. Check if there are any new commits from upstream
+          UPSTREAM_COMMITS=$(git log HEAD..upstream/main --oneline 2>/dev/null | wc -l)
+          if [ "$UPSTREAM_COMMITS" -eq 0 ]; then
+            echo "No new commits from upstream. Nothing to sync."
+            exit 0
+          fi
+          
+          echo "Found $UPSTREAM_COMMITS new commits from upstream."
+          
+          # 4. Backup ignored directories and files BEFORE creating sync branch
+          echo "Backing up fork-specific directories and files..."
           mkdir -p /tmp/backup
           cp -r install /tmp/backup/
           cp -r ct /tmp/backup/
@@ -43,12 +52,12 @@ jobs:
           cp CHANGELOG.md /tmp/backup/
           cp README.md /tmp/backup/
           
-          # 4. Attempt to merge with upstream
-          # Use --strategy-option=theirs to prefer upstream changes for conflicts
-          # We'll restore our fork-specific files afterwards
-          git merge upstream/main --no-commit --no-ff -X theirs || MERGE_CONFLICTS=1
+          # 5. Create a new branch from upstream/main for the PR
+          BRANCH_NAME="upstream-sync-$(date +%Y%m%d-%H%M%S)"
+          echo "Creating sync branch: $BRANCH_NAME"
+          git checkout -b "$BRANCH_NAME" upstream/main
           
-          # 5. Restore backed up ignored directories (overwriting any upstream changes)
+          # 6. Restore fork-specific files on this branch
           echo "Restoring fork-specific directories and files..."
           rm -rf install ct frontend misc/images
           cp -r /tmp/backup/install .
@@ -57,74 +66,50 @@ jobs:
           mkdir -p misc
           cp -r /tmp/backup/images misc/images
           rm -rf .github/workflows
+          mkdir -p .github
           cp -r /tmp/backup/workflows .github/workflows
           cp /tmp/backup/CHANGELOG.md .
           cp /tmp/backup/README.md .
           
-          # 6. Stage all restored files
+          # 7. Stage all restored files
           git add install ct frontend misc/images .github/workflows CHANGELOG.md README.md
           
-          # 7. Check if there are unresolved conflicts in other files
-          if [ "${MERGE_CONFLICTS:-0}" = "1" ]; then
-            # Check for remaining conflicts in non-ignored files
-            REMAINING_CONFLICTS=$(git ls-files --unmerged | grep -v 'install/' | grep -v 'ct/' | grep -v 'frontend/' | grep -v 'misc/images/' | grep -v '.github/workflows/' | grep -v 'CHANGELOG.md' | grep -v 'README.md' || true)
-            if [ -n "$REMAINING_CONFLICTS" ]; then
-              echo "Merge conflict detected in non-ignored files that cannot be auto-resolved:"
-              echo "$REMAINING_CONFLICTS"
-              git merge --abort
-              exit 1
-            fi
-          fi
+          # 8. Check for any merge conflicts in other files
+          # Since we're creating from upstream/main, we need to check against main
+          git fetch origin main
+          CONFLICT_FILES=$(git diff --name-only origin/main HEAD | head -50)
           
-          # 8. Check if there are workflow file changes from upstream (before we restored)
-          WORKFLOW_CHANGES=$(git diff upstream/main HEAD --name-only 2>/dev/null | grep '^\.github/workflows/' || true)
-          
-          # 9. Check if there is anything left to commit
+          # 9. Commit the sync with preserved files
           if ! git diff --staged --quiet; then
-            git commit -m "Auto-sync upstream main, preserving fork-specific files (install/, ct/, frontend/, misc/images/, workflows/, CHANGELOG.md, README.md)"
-            git push origin main
-            echo "Successfully synced and pushed to main."
-          else
-            echo "No new changes to sync after restoring ignored directories."
-            git merge --abort 2>/dev/null || true
+            git commit -m "Sync from upstream - preserving fork-specific customizations"
           fi
           
-          # 10. If upstream had workflow changes, create a PR for review
-          if [ -n "$WORKFLOW_CHANGES" ]; then
-            echo "Upstream workflow changes detected. Creating PR for review..."
-            
-            # Create a branch from upstream for workflow changes
-            BRANCH_NAME="upstream-workflow-sync-$(date +%Y%m%d-%H%M%S)"
-            git checkout -b "$BRANCH_NAME" upstream/main
-            
-            # Restore fork-specific files on this branch too
-            rm -rf install ct frontend misc/images .github/workflows
-            cp -r /tmp/backup/install .
-            cp -r /tmp/backup/ct .
-            cp -r /tmp/backup/frontend .
-            mkdir -p misc
-            cp -r /tmp/backup/images misc/images
-            mkdir -p .github
-            cp -r /tmp/backup/workflows .github/workflows
-            cp /tmp/backup/CHANGELOG.md .
-            cp /tmp/backup/README.md .
-            
-            # Stage and commit
-            git add install ct frontend misc/images .github/workflows CHANGELOG.md README.md
-            git commit -m "Upstream workflow sync - preserving fork-specific customizations" || true
-            
-            # Push the branch
-            git push origin HEAD --force
+          # Get list of changed files for PR description
+          CHANGED_FILES=$(git diff --name-only origin/main HEAD | head -100)
+          UPSTREAM_LOG=$(git log origin/main..HEAD --oneline | head -20)
           
-            # Create PR using GitHub CLI
-            gh pr create \
-              --title "🔄 Upstream Workflow Sync - Review Required" \
-              --body "This PR contains workflow file changes from upstream that need manual review before merging.
+          # 10. Push the branch
+          git push origin HEAD --force
+          
+          # 11. Create PR using GitHub CLI
+          echo "Creating pull request for upstream sync..."
+          gh pr create \
+            --title "🔄 Upstream Sync - $(date +%Y-%m-%d)" \
+            --body "This PR syncs the latest changes from upstream [\`community-scripts/ProxmoxVE\`](https://github.com/community-scripts/ProxmoxVE) while preserving fork-specific customizations.
 
-          ## Changed Workflow Files
+          ## 📋 Upstream Commits Included
           \`\`\`
-          $WORKFLOW_CHANGES
+          $UPSTREAM_LOG
           \`\`\`
+
+          ## 📁 Changed Files
+          <details>
+          <summary>Click to expand</summary>
+
+          \`\`\`
+          $CHANGED_FILES
+          \`\`\`
+          </details>
 
           ## ⚠️ Important
           Before merging, ensure all fork-specific references are preserved:
@@ -132,7 +117,8 @@ jobs:
           - Fork-specific workflow files
           - Custom workflow configurations
 
-          ## Fork-Specific Files Preserved
+          ## 🔒 Fork-Specific Files Preserved
+          The following files/directories are preserved from the fork and NOT overwritten by upstream:
           - \`install/\` directory
           - \`ct/\` directory
           - \`frontend/\` directory
@@ -141,17 +127,20 @@ jobs:
           - \`CHANGELOG.md\`
           - \`README.md\`
 
+          ## ✅ Checklist Before Merge
+          - [ ] Review all changed files for unexpected modifications
+          - [ ] Verify fork-specific files are intact
+          - [ ] Check for any new upstream files that might conflict with fork customizations
+          - [ ] Test any new scripts or features from upstream
+
           ---
-          *This PR was automatically created by the upstream-sync workflow.*" \
-              --base main \
-              --head "$BRANCH_NAME" || echo "PR may already exist or no changes to PR"
-            
-            echo "PR created for workflow changes review."
-            
-            # Switch back to main
-            git checkout main
-          else
-            echo "No upstream workflow changes detected."
-          fi
+          *This PR was automatically created by the [upstream-sync workflow](https://github.com/Heretek-AI/ProxmoxVE/blob/main/.github/workflows/upstream-sync.yml).*" \
+            --base main \
+            --head "$BRANCH_NAME" || echo "PR may already exist or no changes to PR"
+          
+          echo "✅ Pull request created successfully for upstream sync."
+          
+          # Switch back to main
+          git checkout main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
