@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-12T06:19:33Z",
+  "generated": "2026-03-12T12:11:02Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -158,9 +158,9 @@
     {
       "slug": "bookstack",
       "repo": "BookStackApp/BookStack",
-      "version": "v25.12.8",
+      "version": "v25.12.9",
       "pinned": false,
-      "date": "2026-02-27T10:33:14Z"
+      "date": "2026-03-12T11:04:45Z"
     },
     {
       "slug": "byparr",
@@ -284,9 +284,9 @@
     {
       "slug": "discopanel",
       "repo": "nickheyer/discopanel",
-      "version": "v2.0.3",
+      "version": "v2.0.4",
       "pinned": false,
-      "date": "2026-03-11T07:29:10Z"
+      "date": "2026-03-12T07:10:41Z"
     },
     {
       "slug": "dispatcharr",
@@ -1621,9 +1621,9 @@
     {
       "slug": "tududi",
       "repo": "chrisvel/tududi",
-      "version": "v0.88.5",
+      "version": "v0.89.0",
       "pinned": false,
-      "date": "2026-02-13T13:54:14Z"
+      "date": "2026-03-12T09:36:27Z"
     },
     {
       "slug": "tunarr",
