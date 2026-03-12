@@ -82,6 +82,8 @@ These scripts are exclusive to this forge, focusing on AI/ML workloads and speci
 | **[Hermes](https://github.com/NousResearch/hermes-agent)** | Nous Research Hermes AI Agent | 8 CPU / 16GB RAM |
 | **[Lemonade](https://lemonade-server.ai)** | Local AI inference server with GPU support | 2 CPU / 4GB RAM + GPU |
 | **[SwarmUI](https://github.com/mcmonkeyprojects/SwarmUI)** | Stable Diffusion Swarm interface | 8 CPU / 16GB RAM + GPU |
+| **[LlamaCPP](https://github.com/ggml-org/llama.cpp)** | High-performance LLM inference engine with GPU acceleration | 4 CPU / 8GB RAM + GPU |
+| **[OpenClaw](https://github.com/openclaw/openclaw)** | AI-powered assistant and automation platform | 2 CPU / 4GB RAM |
 
 ### Media & Gaming
 
@@ -89,6 +91,57 @@ These scripts are exclusive to this forge, focusing on AI/ML workloads and speci
 |--------|-------------|-----------|
 | **[Agregarr](https://github.com/agregarr/agregarr)** | Media aggregation and streaming | 2 CPU / 4GB RAM |
 | **[Drop](https://github.com/Drop-OSS/drop)** | Gaming and media server | 2 CPU / 4GB RAM |
+| **[Maintainerr](https://github.com/Maintainerr/Maintainerr)** | Media library management for Plex/Jellyfin/Emby | 2 CPU / 4GB RAM |
+
+### Productivity & Tools
+
+| Script | Description | Resources |
+|--------|-------------|-----------|
+| **[Wakapi](https://github.com/muety/wakapi)** | Self-hosted coding time tracking and analytics | 2 CPU / 2GB RAM |
+| **[PegaProx](https://pegaprox.com)** | Proxmox cluster management and monitoring | 2 CPU / 2GB RAM |
+
+---
+
+## 🖥️ Virtual Machine Scripts
+
+Complete VM deployment scripts for various operating systems and specialized appliances:
+
+### Operating Systems
+
+| Script | Description |
+|--------|-------------|
+| **[Arch Linux VM](./vm/archlinux-vm.sh)** | Arch Linux virtual machine |
+| **[Debian 12 VM](./vm/debian-vm.sh)** | Debian 12 (Bookworm) virtual machine |
+| **[Debian 13 VM](./vm/debian-13-vm.sh)** | Debian 13 (Trixie) virtual machine |
+| **[Ubuntu 22.04 VM](./vm/ubuntu2204-vm.sh)** | Ubuntu 22.04 LTS (Jammy Jellyfish) virtual machine |
+| **[Ubuntu 24.04 VM](./vm/ubuntu2404-vm.sh)** | Ubuntu 24.04 LTS (Noble Numbat) virtual machine |
+| **[Ubuntu 25.04 VM](./vm/ubuntu2504-vm.sh)** | Ubuntu 25.04 (Plucky Puffin) virtual machine |
+
+### Network & Security
+
+| Script | Description |
+|--------|-------------|
+| **[OPNsense VM](./vm/opnsense-vm.sh)** | OPNsense firewall and router |
+| **[OpenWrt VM](./vm/openwrt-vm.sh)** | OpenWrt wireless router platform |
+| **[MikroTik RouterOS VM](./vm/mikrotik-routeros.sh)** | MikroTik RouterOS virtual router |
+
+### Storage & Cloud
+
+| Script | Description |
+|--------|-------------|
+| **[TrueNAS VM](./vm/truenas-vm.sh)** | TrueNAS Community Edition storage server |
+| **[Nextcloud VM](./vm/nextcloud-vm.sh)** | Nextcloud self-hosted cloud platform |
+| **[ownCloud VM](./vm/owncloud-vm.sh)** | ownCloud file sync and share platform |
+| **[Olares VM](./vm/olares-vm.sh)** | Olares personal cloud OS with AI capabilities |
+| **[Umbrel OS VM](./vm/umbrel-os-vm.sh)** | Umbrel personal server OS |
+
+### Home Automation & Docker
+
+| Script | Description |
+|--------|-------------|
+| **[Home Assistant OS VM](./vm/haos-vm.sh)** | Home Assistant Operating System |
+| **[Pimox HAOS VM](./vm/pimox-haos-vm.sh)** | Home Assistant OS for Raspberry Pi (Pimox) |
+| **[Docker VM](./vm/docker-vm.sh)** | Docker-ready virtual machine |
 
 > ⚠️ **Note:** Heretek scripts may require more resources or additional configuration. Check individual script documentation for requirements.
 
