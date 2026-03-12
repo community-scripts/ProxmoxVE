@@ -428,6 +428,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: correct PATH escaping in ROCm profile script [@MickLesk](https://github.com/MickLesk) ([#12793](https://github.com/community-scripts/ProxmoxVE/pull/12793))
 
+  - #### 🔧 Refactor
+
+    - tools.func: support older NVIDIA driver versions with 2 segments (xxx.xxx) [@MickLesk](https://github.com/MickLesk) ([#12796](https://github.com/community-scripts/ProxmoxVE/pull/12796))
+
 ## 2026-03-11
 
 ### 🚀 Updated Scripts
