@@ -55,7 +55,7 @@ msg_info "Generating Secure Configuration"
 # Generate random passwords and salts
 POSTGRES_PASSWORD=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32)
 COOKIE_SALT=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32)
-INSTALLATION_ID=$(uuidgen)
+INSTALLATION_ID=$(cat /proc/sys/kernel/random/uuid)
 
 # Create .env file from template
 cp /opt/pentagi/.env.example /opt/pentagi/.env
@@ -86,8 +86,8 @@ LANGFUSE_NEXTAUTH_SECRET=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -
 LANGFUSE_S3_ACCESS_KEY_ID=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9' | head -c 16)
 LANGFUSE_S3_SECRET_ACCESS_KEY=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32)
 LANGFUSE_INIT_USER_PASSWORD=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9' | head -c 16)
-LANGFUSE_INIT_PROJECT_PUBLIC_KEY="pk-lf-$(uuidgen | tr -d '-')"
-LANGFUSE_INIT_PROJECT_SECRET_KEY="sk-lf-$(uuidgen | tr -d '-')"
+LANGFUSE_INIT_PROJECT_PUBLIC_KEY="pk-lf-$(cat /proc/sys/kernel/random/uuid | tr -d '-')"
+LANGFUSE_INIT_PROJECT_SECRET_KEY="sk-lf-$(cat /proc/sys/kernel/random/uuid | tr -d '-')"
 
 sed -i "s/^LANGFUSE_POSTGRES_PASSWORD=.*/LANGFUSE_POSTGRES_PASSWORD=${LANGFUSE_POSTGRES_PASSWORD}/" /opt/pentagi/.env
 sed -i "s/^LANGFUSE_REDIS_AUTH=.*/LANGFUSE_REDIS_AUTH=${LANGFUSE_REDIS_AUTH}/" /opt/pentagi/.env
@@ -131,7 +131,7 @@ systemctl enable -q pentagi
 msg_ok "Created Systemd Service"
 
 msg_info "Pulling Docker Images"
-cd /opt/pentagi
+cd /opt/pentagi || exit
 $STD docker compose pull
 msg_ok "Pulled Docker Images"
 
