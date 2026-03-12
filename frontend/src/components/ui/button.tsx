@@ -34,6 +34,17 @@ const buttonVariants = cva(
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-left after:scale-x-100 hover:after:origin-bottom-right hover:after:scale-x-0 after:transition-transform after:ease-in-out after:duration-300",
         linkHover2:
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-right after:scale-x-0 hover:after:origin-bottom-left hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300",
+        // Mechanicus-themed variants
+        mechanicus:
+          "bg-gradient-to-r from-rust-600 to-rust-700 text-rust-100 border border-brass-500/30 hover:from-rust-500 hover:to-rust-600 hover:border-brass-400/50 hover:shadow-[0_0_15px_hsl(28_70%_45%_/_0.3)] transition-all duration-300",
+        brass:
+          "bg-gradient-to-r from-brass-500 to-brass-600 text-brass-100 border border-brass-400/30 hover:from-brass-400 hover:to-brass-500 hover:shadow-[0_0_15px_hsl(43_70%_50%_/_0.3)] transition-all duration-300",
+        corruption:
+          "bg-gradient-to-r from-corruption-600 to-corruption-700 text-corruption-100 border border-corruption-500/30 hover:from-corruption-500 hover:to-corruption-600 hover:shadow-[0_0_15px_hsl(145_60%_40%_/_0.3)] hover:animate-corrupted-pulse transition-all duration-300",
+        forge:
+          "bg-gradient-to-r from-copper-600 to-copper-700 text-copper-100 border border-copper-500/30 hover:from-copper-500 hover:to-copper-600 hover:shadow-[0_0_20px_hsl(25_70%_45%_/_0.4)] transition-all duration-300",
+        iron:
+          "bg-gradient-to-r from-iron-700 to-iron-800 text-iron-100 border border-iron-500/30 hover:from-iron-600 hover:to-iron-700 hover:shadow-[0_0_10px_hsl(30_20%_30%_/_0.3)] transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",

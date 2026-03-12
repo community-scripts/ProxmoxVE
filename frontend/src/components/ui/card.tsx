@@ -2,16 +2,27 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+type CardVariant = "default" | "rust" | "corruption" | "mechanicus" | "forge";
+
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: CardVariant;
+}
+
+const cardVariants: Record<CardVariant, string> = {
+  default: "rounded-lg border text-card-foreground shadow-sm",
+  rust: "rounded-lg border text-card-foreground shadow-sm rust-border metal-surface",
+  corruption: "rounded-lg border text-card-foreground shadow-sm noosphere-border corrupted-pulse",
+  mechanicus: "rounded-lg border text-card-foreground shadow-sm rust-border metal-surface hover:shadow-[0_0_20px_hsl(28_70%_45%_/_0.2)] transition-all duration-300",
+  forge: "rounded-lg border text-card-foreground shadow-sm border-copper-500/30 bg-gradient-to-br from-iron-900/50 to-iron-950/50 hover:border-copper-400/50 hover:shadow-[0_0_15px_hsl(25_70%_45%_/_0.3)] transition-all duration-300",
+};
+
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+  CardProps
+>(({ className, variant = "default", ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "rounded-lg border text-card-foreground shadow-sm",
-      className,
-    )}
+    className={cn(cardVariants[variant], className)}
     {...props}
   />
 ));
@@ -36,7 +47,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-2xl font-semibold leading-none tracking-tight font-[family-name:var(--font-cinzel)]",
       className,
     )}
     {...props}

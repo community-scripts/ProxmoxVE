@@ -286,6 +286,41 @@ const config = {
             "filter": "brightness(1.1) saturate(1.2)",
           },
         },
+        // New Mechanicus Animations
+        "binary-flicker": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.95" },
+          "52%": { opacity: "1" },
+          "54%": { opacity: "0.97" },
+        },
+        "circuit-flow": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        "spirit-pulse": {
+          "0%, 100%": { opacity: "0.3", transform: "scale(1)" },
+          "50%": { opacity: "0.6", transform: "scale(1.02)" },
+        },
+        "stream-scroll": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(20px)" },
+        },
+        "forge-pulse": {
+          "0%, 100%": {
+            "box-shadow": "0 0 10px hsl(28 70% 45% / 0.3), 0 0 20px hsl(28 60% 35% / 0.2)",
+          },
+          "50%": {
+            "box-shadow": "0 0 15px hsl(28 80% 50% / 0.4), 0 0 30px hsl(28 70% 40% / 0.3), 0 0 45px hsl(28 60% 35% / 0.2)",
+          },
+        },
+        "rust-drift": {
+          "0%": { transform: "translateY(0) rotate(0deg)" },
+          "100%": { transform: "translateY(-100px) rotate(360deg)" },
+        },
+        "mechanicus-shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -301,6 +336,14 @@ const config = {
         "rust-fall": "rust-fall 10s linear infinite",
         "metal-shine": "metal-shine 3s ease-in-out infinite",
         "heretic-glow": "heretic-glow 4s ease-in-out infinite",
+        // New Mechanicus Animations
+        "binary-flicker": "binary-flicker 5s infinite",
+        "circuit-flow": "circuit-flow 3s linear infinite",
+        "spirit-pulse": "spirit-pulse 4s ease-in-out infinite",
+        "stream-scroll": "stream-scroll 20s linear infinite",
+        "forge-pulse": "forge-pulse 3s ease-in-out infinite",
+        "rust-drift": "rust-drift 30s linear infinite",
+        "mechanicus-shimmer": "mechanicus-shimmer 3s ease-in-out infinite",
       },
       backgroundImage: {
         // Heretek Background Patterns

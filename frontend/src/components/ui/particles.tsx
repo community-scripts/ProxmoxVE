@@ -30,6 +30,9 @@ function MousePosition(): MousePosition {
   return mousePosition;
 }
 
+// Mechanicus-themed particle presets
+type ParticleTheme = "default" | "rust" | "corruption" | "brass" | "mechanicus";
+
 type ParticlesProps = {
   className?: string;
   quantity?: number;
@@ -40,7 +43,33 @@ type ParticlesProps = {
   color?: string;
   vx?: number;
   vy?: number;
+  theme?: ParticleTheme;
 };
+
+// Mechanicus color presets
+const MECHANICUS_THEMES: Record<ParticleTheme, { colors: string[]; defaultColor: string }> = {
+  default: {
+    colors: ["#ffffff"],
+    defaultColor: "#ffffff",
+  },
+  rust: {
+    colors: ["#b45309", "#92400e", "#78350f", "#a16207"],
+    defaultColor: "#b45309",
+  },
+  corruption: {
+    colors: ["#15803d", "#166534", "#14532d", "#22c55e"],
+    defaultColor: "#15803d",
+  },
+  brass: {
+    colors: ["#ca8a04", "#a16207", "#854d0e", "#eab308"],
+    defaultColor: "#ca8a04",
+  },
+  mechanicus: {
+    colors: ["#b45309", "#15803d", "#ca8a04", "#92400e", "#166534"],
+    defaultColor: "#b45309",
+  },
+};
+
 function hexToRgb(hex: string): number[] {
   hex = hex.replace("#", "");
 
@@ -65,9 +94,10 @@ const Particles: React.FC<ParticlesProps> = ({
   ease = 50,
   size = 0.4,
   refresh = false,
-  color = "#ffffff",
+  color,
   vx = 0,
   vy = 0,
+  theme = "default",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -77,6 +107,10 @@ const Particles: React.FC<ParticlesProps> = ({
   const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
+
+  // Get theme-based colors
+  const themeColors = MECHANICUS_THEMES[theme];
+  const particleColor = color || themeColors.defaultColor;
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -89,7 +123,7 @@ const Particles: React.FC<ParticlesProps> = ({
     return () => {
       window.removeEventListener("resize", initCanvas);
     };
-  }, [color]);
+  }, [particleColor]);
 
   useEffect(() => {
     onMouseMove();
@@ -169,7 +203,7 @@ const Particles: React.FC<ParticlesProps> = ({
     };
   };
 
-  const rgb = hexToRgb(color);
+  const rgb = hexToRgb(particleColor);
 
   const drawCircle = (circle: Circle, update = false) => {
     if (context.current) {
@@ -246,10 +280,10 @@ const Particles: React.FC<ParticlesProps> = ({
       circle.y += circle.dy + vy;
       circle.translateX
         += (mouse.current.x / (staticity / circle.magnetism) - circle.translateX)
-          / ease;
+        / ease;
       circle.translateY
         += (mouse.current.y / (staticity / circle.magnetism) - circle.translateY)
-          / ease;
+        / ease;
 
       drawCircle(circle, true);
 

@@ -44,13 +44,19 @@ export function FeatureCards() {
           rel={feature.external ? "noopener noreferrer" : undefined}
           className="group"
         >
-          <Card className="h-full transition-all hover:border-primary/50 hover:shadow-md">
+          <Card className="h-full transition-all duration-300 hover:border-rust-500/50 hover:shadow-lg hover:shadow-rust-500/10 rust-border">
             <CardHeader>
-              <div className="mb-2 text-primary">{feature.icon}</div>
-              <CardTitle className="text-lg">{feature.title}</CardTitle>
+              <div className="mb-2 text-rust-400 group-hover:text-rust-300 transition-colors duration-300 group-hover:animate-heretic-glow">
+                {feature.icon}
+              </div>
+              <CardTitle className="text-lg font-[family-name:var(--font-cinzel)] group-hover:text-brass-400 transition-colors duration-300">
+                {feature.title}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <CardDescription>{feature.description}</CardDescription>
+              <CardDescription className="text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                {feature.description}
+              </CardDescription>
             </CardContent>
           </Card>
         </Link>

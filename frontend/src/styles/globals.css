@@ -300,4 +300,310 @@
         hsl(0 50% 10% / 0.3) 0%,
         transparent 100%);
   }
+
+  /* ===== NEW MECHANICUS EFFECTS ===== */
+
+  /* Pulsing Circuit Lines */
+  .circuit-pulse {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .circuit-pulse::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        hsl(145 60% 35% / 0.15) 50%,
+        transparent 100%);
+    animation: circuit-flow 3s linear infinite;
+  }
+
+  @keyframes circuit-flow {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Rusted Metal Texture */
+  .rusted-metal {
+    background:
+      linear-gradient(145deg,
+        hsl(30 15% 12%) 0%,
+        hsl(28 20% 8%) 50%,
+        hsl(30 12% 10%) 100%);
+    box-shadow:
+      inset 2px 2px 4px hsl(30 20% 18%),
+      inset -2px -2px 4px hsl(30 25% 5%);
+  }
+
+  /* Tech-Priest Data Stream Effect */
+  .data-stream {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .data-stream::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 2px,
+        hsl(145 50% 30% / 0.05) 2px,
+        hsl(145 50% 30% / 0.05) 4px);
+    animation: stream-scroll 20s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes stream-scroll {
+    0% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(20px);
+    }
+  }
+
+  /* Omnissiah's Blessing - Machine Spirit Glow */
+  .machine-spirit {
+    position: relative;
+  }
+
+  .machine-spirit::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg,
+        hsl(28 80% 50% / 0.1),
+        hsl(43 70% 50% / 0.1),
+        hsl(28 80% 50% / 0.1));
+    border-radius: inherit;
+    animation: spirit-pulse 4s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  @keyframes spirit-pulse {
+
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.6;
+      transform: scale(1.02);
+    }
+  }
+
+  /* Binary Choir Text Effect */
+  .binary-choir {
+    text-shadow:
+      0 0 10px hsl(145 70% 40% / 0.5),
+      0 0 20px hsl(145 60% 30% / 0.3);
+    animation: binary-flicker 5s infinite;
+  }
+
+  @keyframes binary-flicker {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.95;
+    }
+
+    52% {
+      opacity: 1;
+    }
+
+    54% {
+      opacity: 0.97;
+    }
+  }
+
+  /* Noosphere Connection Effect */
+  .noosphere-border {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(hsl(30 20% 6%), hsl(30 20% 6%)) padding-box,
+      linear-gradient(135deg,
+        hsl(145 60% 35%) 0%,
+        hsl(28 70% 40%) 25%,
+        hsl(43 60% 35%) 50%,
+        hsl(28 70% 40%) 75%,
+        hsl(145 60% 35%) 100%) border-box;
+  }
+
+  /* Mechanicus Panel */
+  .mechanicus-panel {
+    background: linear-gradient(145deg,
+        hsl(30 18% 8%) 0%,
+        hsl(30 22% 6%) 50%,
+        hsl(30 18% 10%) 100%);
+    border: 1px solid hsl(28 50% 20% / 0.5);
+    box-shadow:
+      inset 0 1px 0 hsl(30 25% 15%),
+      inset 0 -1px 0 hsl(30 20% 5%),
+      0 4px 20px hsl(30 20% 5% / 0.3);
+  }
+
+  /* Sacred Machine Icon */
+  .machine-icon {
+    filter: drop-shadow(0 0 8px hsl(28 70% 45% / 0.4));
+    transition: filter 0.3s ease;
+  }
+
+  .machine-icon:hover {
+    filter: drop-shadow(0 0 12px hsl(28 80% 50% / 0.6));
+  }
+
+  /* Heretek Input Focus */
+  .heretek-focus:focus {
+    outline: none;
+    box-shadow:
+      0 0 0 2px hsl(28 70% 40%),
+      0 0 15px hsl(28 60% 35% / 0.3);
+  }
+
+  /* Corrupted Text Glitch */
+  .text-glitch {
+    position: relative;
+  }
+
+  .text-glitch::before,
+  .text-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .text-glitch::before {
+    color: hsl(145 70% 40%);
+    animation: glitch-1 2s infinite linear alternate-reverse;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  }
+
+  .text-glitch::after {
+    color: hsl(0 70% 45%);
+    animation: glitch-2 2s infinite linear alternate-reverse;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitch-1 {
+
+    0%,
+    100% {
+      transform: translate(0);
+    }
+
+    20% {
+      transform: translate(-2px, 2px);
+    }
+
+    40% {
+      transform: translate(2px, -2px);
+    }
+
+    60% {
+      transform: translate(-1px, 1px);
+    }
+
+    80% {
+      transform: translate(1px, -1px);
+    }
+  }
+
+  @keyframes glitch-2 {
+
+    0%,
+    100% {
+      transform: translate(0);
+    }
+
+    20% {
+      transform: translate(2px, -2px);
+    }
+
+    40% {
+      transform: translate(-2px, 2px);
+    }
+
+    60% {
+      transform: translate(1px, -1px);
+    }
+
+    80% {
+      transform: translate(-1px, 1px);
+    }
+  }
+
+  /* Forge Glow - for active elements */
+  .forge-glow {
+    box-shadow:
+      0 0 10px hsl(28 70% 45% / 0.3),
+      0 0 20px hsl(28 60% 35% / 0.2),
+      inset 0 0 10px hsl(28 50% 25% / 0.1);
+  }
+
+  /* Sacred Scroll Effect */
+  .sacred-scroll {
+    background:
+      linear-gradient(180deg,
+        hsl(30 20% 6%) 0%,
+        hsl(30 18% 8%) 10%,
+        hsl(30 20% 8%) 90%,
+        hsl(30 20% 6%) 100%);
+    border-top: 1px solid hsl(43 40% 25% / 0.3);
+    border-bottom: 1px solid hsl(43 40% 25% / 0.3);
+  }
+
+  /* Circuit Board Pattern */
+  .circuit-board {
+    background-image:
+      linear-gradient(90deg, hsl(145 40% 20% / 0.1) 1px, transparent 1px),
+      linear-gradient(180deg, hsl(145 40% 20% / 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Rust Particle Animation */
+  .rust-particles {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rust-particles::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, hsl(28 60% 40% / 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 80% 70%, hsl(35 50% 35% / 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, hsl(28 70% 45% / 0.2) 1px, transparent 1px);
+    background-size: 100px 100px;
+    animation: rust-drift 30s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes rust-drift {
+    0% {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    100% {
+      transform: translateY(-100px) rotate(360deg);
+    }
+  }
 }

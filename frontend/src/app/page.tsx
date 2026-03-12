@@ -35,14 +35,28 @@ export default function Page() {
   const [color, setColor] = useState("#000000");
 
   useEffect(() => {
-    setColor(theme === "dark" ? "#ffffff" : "#000000");
+    // Use Mechanicus-themed colors for particles
+    setColor(theme === "dark" ? "#b45309" : "#92400e");
   }, [theme]);
 
   return (
     <>
-      <div className="w-full mt-16">
-        <Particles className="absolute inset-0 -z-40" quantity={100} ease={80} color={color} refresh />
-        <div className="container mx-auto">
+      <div className="w-full mt-16 relative overflow-hidden">
+        {/* Mechanicus Background Effects */}
+        <div className="pointer-events-none absolute inset-0 scan-lines opacity-5" />
+        <div className="pointer-events-none absolute inset-0 noise-overlay" />
+
+        {/* Themed Particles */}
+        <Particles
+          className="absolute inset-0 -z-40"
+          quantity={100}
+          ease={80}
+          color={color}
+          theme="mechanicus"
+          refresh
+        />
+
+        <div className="container mx-auto relative z-10">
           <div className="flex h-[60vh] flex-col items-center justify-center gap-4 py-20 lg:py-32">
             <Dialog>
               <DialogTrigger>
@@ -50,16 +64,16 @@ export default function Page() {
                   <AnimatedGradientText>
                     <div
                       className={cn(
-                        `absolute inset-0 block size-full animate-gradient bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:var(--bg-size)_100%] [border-radius:inherit] [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]`,
+                        `absolute inset-0 block size-full animate-gradient bg-gradient-to-r from-rust-500/50 via-corruption-500/50 to-brass-500/50 bg-[length:var(--bg-size)_100%] [border-radius:inherit] [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]`,
                         `p-px ![mask-composite:subtract]`,
                       )}
                     />
-                    ❤️
+                    ⚙️
                     {" "}
                     <Separator className="mx-2 h-4" orientation="vertical" />
                     <span
                       className={cn(
-                        `animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
+                        `animate-gradient bg-gradient-to-r from-rust-400 via-corruption-400 to-brass-400 bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
                         `inline`,
                       )}
                     >
@@ -68,16 +82,18 @@ export default function Page() {
                   </AnimatedGradientText>
                 </div>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="mechanicus-panel">
                 <DialogHeader>
-                  <DialogTitle>Thank You!</DialogTitle>
+                  <DialogTitle className="font-[family-name:var(--font-cinzel)] brass-text">
+                    Praise the Omnissiah!
+                  </DialogTitle>
                   <DialogDescription>
                     A big thank you to tteck and the many contributors who have made this project possible. Your hard
                     work is truly appreciated by the entire Proxmox community!
                   </DialogDescription>
                 </DialogHeader>
                 <CardFooter className="flex flex-col gap-2">
-                  <Button className="w-full" variant="outline" asChild>
+                  <Button className="w-full" variant="mechanicus" asChild>
                     <a
                       href="https://github.com/tteck"
                       target="_blank"
@@ -89,7 +105,7 @@ export default function Page() {
                       Tteck's GitHub
                     </a>
                   </Button>
-                  <Button className="w-full" asChild>
+                  <Button className="w-full" variant="forge" asChild>
                     <a
                       href={`https://github.com/Heretek-AI/${basePath}`}
                       target="_blank"
@@ -106,12 +122,12 @@ export default function Page() {
             </Dialog>
 
             <div className="flex flex-col gap-4">
-              <h1 className="max-w-2xl text-center text-3xl font-semibold tracking-tighter md:text-7xl">
-                Heretek-AI
+              <h1 className="max-w-2xl text-center text-3xl font-semibold tracking-tighter md:text-7xl font-[family-name:var(--font-cinzel)]">
+                <span className="brass-text">Heretek-AI</span>
               </h1>
               <div className="max-w-2xl gap-2 flex flex-col text-center sm:text-lg text-sm leading-relaxed tracking-tight text-muted-foreground md:text-xl">
-                <p>
-                  <b>Uncompliant scripts, made quicker.</b>
+                <p className="text-rust-300 font-semibold">
+                  Uncompliant scripts, made quicker.
                 </p>
                 <p>
                   Scripts that don't meet the strict guidelines of the official
@@ -120,7 +136,7 @@ export default function Page() {
                     href="https://github.com/community-scripts/ProxmoxVE"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:text-primary transition-colors"
+                    className="underline text-corruption-400 hover:text-corruption-300 transition-colors"
                   >
                     Community-Scripts
                   </a>
@@ -133,10 +149,9 @@ export default function Page() {
               <Link href="/scripts">
                 <Button
                   size="lg"
-                  variant="expandIcon"
+                  variant="mechanicus"
                   Icon={CustomArrowRightIcon}
                   iconPlacement="right"
-                  className="hover:"
                 >
                   View Scripts
                 </Button>
@@ -145,6 +160,7 @@ export default function Page() {
                 <Button
                   size="lg"
                   variant="outline"
+                  className="border-rust-500/50 hover:border-rust-400 hover:bg-rust-500/10"
                 >
                   Browse Categories
                 </Button>
@@ -166,7 +182,9 @@ export default function Page() {
           <div className="py-20" id="faq">
             <div className="max-w-4xl mx-auto px-4">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-5xl mb-4">Frequently Asked Questions</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-5xl mb-4 font-[family-name:var(--font-cinzel)]">
+                  <span className="brass-text">Frequently Asked Questions</span>
+                </h2>
                 <p className="text-muted-foreground text-lg">
                   Find answers to common questions about our Proxmox VE scripts
                 </p>
