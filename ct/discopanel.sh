@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: DragoQC
+# Author: DragoQC | Co-Author: nickheyer
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://discopanel.app/ | Github: https://github.com/nickheyer/discopanel
 
@@ -38,34 +38,15 @@ function update_script() {
 
     msg_info "Creating Backup"
     mkdir -p /opt/discopanel_backup_temp
-    cp -r /opt/discopanel/data/discopanel.db \
-      /opt/discopanel/data/.recovery_key \
-      /opt/discopanel_backup_temp/
-    if [[ -d /opt/discopanel/data/servers ]]; then
-      cp -r /opt/discopanel/data/servers /opt/discopanel_backup_temp/
-    fi
+    cp /opt/discopanel/data/discopanel.db /opt/discopanel_backup_temp/discopanel.db
     msg_ok "Created Backup"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "tarball" "latest" "/opt/discopanel"
-
-    msg_info "Setting up DiscoPanel"
-    cd /opt/discopanel 
-    $STD make gen
-    cd /opt/discopanel/web/discopanel 
-    $STD npm install
-    $STD npm run build
-    msg_ok "Built Web Interface"
-
-    setup_go
-
-    msg_info "Building DiscoPanel"
-    cd /opt/discopanel 
-    $STD go build -o discopanel cmd/discopanel/main.go
-    msg_ok "Built DiscoPanel"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-amd64.tar.gz"
+    ln -sf /opt/discopanel/discopanel-linux-amd64 /opt/discopanel/discopanel
 
     msg_info "Restoring Data"
     mkdir -p /opt/discopanel/data
-    cp -a /opt/discopanel_backup_temp/. /opt/discopanel/data/
+    mv /opt/discopanel_backup_temp/discopanel.db /opt/discopanel/data/discopanel.db
     rm -rf /opt/discopanel_backup_temp
     msg_ok "Restored Data"
 
