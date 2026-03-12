@@ -168,6 +168,10 @@ function create_kali_container() {
   export TEMPLATE="${KALI_TEMPLATE}"
   export TEMPLATE_SOURCE="local"
   
+  # CTID must be set before calling create_lxc_container
+  # This is normally done in build_container, but we're calling create_lxc_container directly
+  export CTID="${CT_ID}"
+  
   # Now call the original create_lxc_container
   create_lxc_container
 }
