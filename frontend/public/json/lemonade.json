@@ -1,0 +1,56 @@
+{
+  "name": "Lemonade",
+  "slug": "lemonade",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-03-06",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8000,
+  "documentation": "https://lemonade-server.ai/docs/",
+  "config_path": "/etc/lemonade/lemonade.conf",
+  "website": "https://lemonade-server.ai/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/lemonade-ai.webp",
+  "description": "Lemonade is a lightweight LLM inference server with OpenAI-compatible APIs, supporting multiple backends including CPU, Vulkan, and ROCm.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/lemonade.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 10,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Lemonade Server provides an OpenAI-compatible API for LLM inference.",
+      "type": "info"
+    },
+    {
+      "text": "Server listens on local IP by default - accessible from your network.",
+      "type": "info"
+    },
+    {
+      "text": "Configuration file: /etc/lemonade/lemonade.conf - customize host and port settings.",
+      "type": "info"
+    },
+    {
+      "text": "API keys are stored in /etc/lemonade/secrets.conf - add your API keys there and restart the service.",
+      "type": "info"
+    },
+    {
+      "text": "Supports CPU and Vulkan backends currently; ROCm support for AMD GPUs is planned.",
+      "type": "info"
+    }
+  ]
+}

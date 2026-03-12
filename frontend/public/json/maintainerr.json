@@ -1,0 +1,52 @@
+{
+  "name": "Maintainerr",
+  "slug": "maintainerr",
+  "categories": [
+    14
+  ],
+  "date_created": "2026-03-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 6246,
+  "documentation": "https://docs.maintainerr.info/",
+  "website": "https://github.com/Maintainerr/Maintainerr",
+  "logo": "https://raw.githubusercontent.com/Maintainerr/Maintainerr/main/apps/ui/public/assets/logo_icon.svg",
+  "config_path": "/opt/data",
+  "description": "Maintainerr is a tool to automatically manage media collections in Plex, Jellyfin, and Emby by syncing with Radarr and Sonarr. It helps keep your media libraries organized by automatically adding and removing media based on your configured rules.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/maintainerr.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Access the web interface at http://<IP>:6246",
+      "type": "info"
+    },
+    {
+      "text": "Configure your Plex/Jellyfin/Emby and Radarr/Sonarr connections after first login",
+      "type": "info"
+    },
+    {
+      "text": "Data directory: /opt/data",
+      "type": "info"
+    },
+    {
+      "text": "Configuration is stored in SQLite database within the data directory",
+      "type": "info"
+    }
+  ]
+}

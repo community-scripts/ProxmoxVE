@@ -1,0 +1,76 @@
+{
+  "name": "llama.cpp Server",
+  "slug": "llamacpp",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-03-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://github.com/ggml-org/llama.cpp/tree/master/tools/server",
+  "website": "https://github.com/ggml-org/llama.cpp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/llama-cpp.webp",
+  "config_path": "/opt/llamacpp/models",
+  "description": "llama.cpp is a high-performance LLM inference server with OpenAI-compatible API. This installation uses the Vulkan backend for GPU acceleration across AMD, Intel, and NVIDIA GPUs. Features automatic model downloading from HuggingFace, built-in web UI, and supports multiple concurrent requests.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/llamacpp.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 8192,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Access the Web UI at http://<IP>:8080",
+      "type": "info"
+    },
+    {
+      "text": "OpenAI-Compatible API: http://<IP>:8080/v1/chat/completions",
+      "type": "info"
+    },
+    {
+      "text": "Default model: unsloth/Qwen3.5-9B-GGUF:Q8_0 (auto-downloaded on first start)",
+      "type": "info"
+    },
+    {
+      "text": "Requires GPU passthrough - configure in Proxmox before starting container",
+      "type": "warning"
+    },
+    {
+      "text": "AMD GPU: Add 'dev0: /dev/kfd,gid=104' and 'dev1: /dev/dri/renderD128,gid=104' to container config",
+      "type": "warning"
+    },
+    {
+      "text": "Intel GPU: Add 'dev0: /dev/dri/renderD128,gid=104' to container config",
+      "type": "warning"
+    },
+    {
+      "text": "NVIDIA GPU: Requires nvidia-container-toolkit on host",
+      "type": "warning"
+    },
+    {
+      "text": "Models are stored in /opt/llamacpp/models/",
+      "type": "info"
+    },
+    {
+      "text": "Change model: Edit /etc/systemd/system/llamacpp.service and restart",
+      "type": "info"
+    },
+    {
+      "text": "GPU passthrough guide: /opt/llamacpp/GPU_PASSTHROUGH.md",
+      "type": "info"
+    }
+  ]
+}

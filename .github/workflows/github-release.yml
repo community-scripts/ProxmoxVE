@@ -7,13 +7,15 @@ on:
   
 jobs:
   create-daily-release:
-    if: github.repository == 'community-scripts/ProxmoxVE'
+    if: github.repository == 'Heretek-AI/ProxmoxVE'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clean CHANGELOG (remove HTML header)
         run: sed -n '/^## /,$p' CHANGELOG.md > changelog_cleaned.md

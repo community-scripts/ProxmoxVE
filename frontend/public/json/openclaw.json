@@ -1,0 +1,64 @@
+{
+  "name": "OpenClaw",
+  "slug": "openclaw",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-03-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 18789,
+  "documentation": "https://docs.openclaw.ai",
+  "website": "https://openclaw.ai",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/openclaw.webp",
+  "config_path": "/root/.openclaw/openclaw.json",
+  "description": "OpenClaw is a personal AI assistant that runs on your own devices. It supports multiple messaging channels including WhatsApp, Telegram, Slack, Discord, Signal, iMessage, IRC, Microsoft Teams, Matrix, and more. Features voice wake mode, live canvas, browser control, skills platform, and a Gateway WebSocket control plane.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/openclaw.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 10,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Access the Gateway at http://<IP>:18789",
+      "type": "info"
+    },
+    {
+      "text": "WebSocket endpoint: ws://<IP>:18789",
+      "type": "info"
+    },
+    {
+      "text": "Requires Node.js 22+ (installed automatically)",
+      "type": "info"
+    },
+    {
+      "text": "Run 'openclaw onboard' after installation to configure channels and AI providers",
+      "type": "info"
+    },
+    {
+      "text": "Configuration stored in /root/.openclaw/",
+      "type": "info"
+    },
+    {
+      "text": "Supports OpenAI, Anthropic, and other AI providers - API keys required",
+      "type": "warning"
+    },
+    {
+      "text": "Can work with local models via Ollama for offline operation",
+      "type": "info"
+    }
+  ]
+}

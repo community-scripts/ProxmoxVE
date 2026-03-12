@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "json/**"
+      - "frontend/public/json/**"
 
 jobs:
   push-json:
@@ -19,7 +19,7 @@ jobs:
       - name: Get changed JSON files with slug
         id: changed
         run: |
-          changed=$(git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" -- json/ | grep '\.json$' || true)
+          changed=$(git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" -- frontend/public/json/ | grep '\.json$' || true)
           with_slug=""
           for f in $changed; do
             [[ -f "$f" ]] || continue
@@ -96,7 +96,7 @@ jobs:
           const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
           let categoryIdToName = {};
           try {
-            const metadata = JSON.parse(fs.readFileSync('json/metadata.json', 'utf8'));
+            const metadata = JSON.parse(fs.readFileSync('frontend/public/json/metadata.json', 'utf8'));
             (metadata.categories || []).forEach(function(cat) { categoryIdToName[cat.id] = cat.name; });
           } catch (e) { console.warn('Could not load metadata.json:', e.message); }
           let typeValueToId = {};

@@ -1,0 +1,48 @@
+{
+  "name": "MCPHub",
+  "slug": "mcphub",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-03-02",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://docs.mcphubx.com/",
+  "website": "https://github.com/samanhappy/mcphub",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/mcphub.webp",
+  "config_path": "/opt/mcphub/mcp_settings.json",
+  "description": "MCPHub is a unified hub for centrally managing and routing multiple Model Context Protocol (MCP) servers through a single dashboard and API endpoint.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/mcphub.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "admin123"
+  },
+  "notes": [
+    {
+      "text": "Configuration file is located at /opt/mcphub/mcp_settings.json",
+      "type": "info"
+    },
+    {
+      "text": "Default credentials are set in the configuration file. Change them after first login.",
+      "type": "warning"
+    },
+    {
+      "text": "MCPHub requires Node.js 22 which is installed automatically.",
+      "type": "info"
+    }
+  ]
+}

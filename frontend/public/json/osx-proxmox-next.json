@@ -1,0 +1,55 @@
+{
+  "name": "OSX-Proxmox-Next",
+  "slug": "osx-proxmox-next",
+  "categories": [
+    1
+  ],
+  "date_created": "2026-03-11",
+  "type": "tool",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://github.com/lucid-fabrics/osx-proxmox-next#readme",
+  "website": "https://github.com/lucid-fabrics/osx-proxmox-next",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/apple.webp",
+  "config_path": "",
+  "description": "Automated macOS VM creation for Proxmox VE with TUI wizard. Supports Ventura 13, Sonoma 14, Sequoia 15, and Tahoe 26. Features auto-detection of CPU vendor (Intel/AMD), OpenCore bootloader setup, and SMBIOS generation for Apple services.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/pve/osx-proxmox-next.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "In order to run this tool, you need to run the following command: echo 'options kvm ignore_msrs=Y' >> /etc/modprobe.d/kvm.conf && update-initramfs -k all -u",
+      "type": "warning"
+    },
+    {
+      "text": "Requires Proxmox VE 9.x for full compatibility (8.x supported with warning)",
+      "type": "info"
+    },
+    {
+      "text": "Intel and AMD CPUs are supported (auto-detected)",
+      "type": "info"
+    },
+    {
+      "text": "Apple ID sign-in works best on Sonoma 14 or earlier (Sequoia/Tahoe have hardware attestation requirements)",
+      "type": "warning"
+    },
+    {
+      "text": "This tool creates VMs - it does not run as a service",
+      "type": "info"
+    }
+  ]
+}

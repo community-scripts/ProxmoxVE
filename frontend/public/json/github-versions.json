@@ -1,0 +1,47 @@
+{
+  "generated": "2026-03-11T18:36:22Z",
+  "versions": [
+    {
+      "slug": "agregarr",
+      "repo": "agregarr/agregarr",
+      "version": "v2.4.1",
+      "pinned": false,
+      "date": "2026-03-05T06:43:40Z"
+    },
+    {
+      "slug": "lemonade",
+      "repo": "lemonade-sdk/lemonade",
+      "version": "v10.0.0",
+      "pinned": false,
+      "date": "2026-03-11T15:41:09Z"
+    },
+    {
+      "slug": "llamacpp",
+      "repo": "ggml-org/llama.cpp",
+      "version": "b8272",
+      "pinned": false,
+      "date": "2026-03-11T14:00:43Z"
+    },
+    {
+      "slug": "maintainerr",
+      "repo": "Maintainerr/Maintainerr",
+      "version": "v3.1.0",
+      "pinned": false,
+      "date": "2026-03-10T14:58:59Z"
+    },
+    {
+      "slug": "pegaprox",
+      "repo": "PegaProx/project-pegaprox",
+      "version": "v0.9.1.1",
+      "pinned": false,
+      "date": "2026-03-09T23:17:45Z"
+    },
+    {
+      "slug": "wakapi",
+      "repo": "muety/wakapi",
+      "version": "2.17.2",
+      "pinned": false,
+      "date": "2026-03-01T08:35:49Z"
+    }
+  ]
+}

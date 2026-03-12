@@ -1,0 +1,609 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Heretek Light Theme - Worn Metal */
+    --background: 30 15% 12%;
+    --foreground: 35 20% 85%;
+    --card: 30 12% 10%;
+    --card-foreground: 35 20% 85%;
+    --popover: 30 15% 8%;
+    --popover-foreground: 35 20% 85%;
+    --primary: 28 80% 45%;
+    --primary-foreground: 30 15% 8%;
+    --secondary: 35 30% 25%;
+    --secondary-foreground: 35 20% 85%;
+    --muted: 30 20% 20%;
+    --muted-foreground: 35 15% 55%;
+    --accent: 145 65% 35%;
+    --accent-foreground: 145 10% 95%;
+    --destructive: 0 75% 45%;
+    --destructive-foreground: 0 10% 95%;
+    --border: 30 25% 22%;
+    --input: 30 25% 18%;
+    --ring: 28 80% 45%;
+    --radius: 0.25rem;
+    /* Heretek Chart Colors - Rust & Corruption */
+    --chart-1: 28 75% 45%;
+    --chart-2: 35 60% 40%;
+    --chart-3: 145 55% 35%;
+    --chart-4: 180 40% 30%;
+    --chart-5: 0 60% 40%;
+  }
+
+  ::selection {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  .dark {
+    /* Heretek Dark Theme - Corrupted Forge */
+    --background: 30 20% 4%;
+    --foreground: 35 15% 80%;
+    --card: 30 18% 6%;
+    --card-foreground: 35 15% 80%;
+    --popover: 30 20% 3%;
+    --popover-foreground: 35 15% 80%;
+    --primary: 28 85% 50%;
+    --primary-foreground: 30 25% 5%;
+    --secondary: 35 25% 15%;
+    --secondary-foreground: 35 15% 80%;
+    --muted: 30 20% 12%;
+    --muted-foreground: 35 12% 50%;
+    --accent: 145 70% 40%;
+    --accent-foreground: 145 15% 95%;
+    --destructive: 0 70% 40%;
+    --destructive-foreground: 0 15% 95%;
+    --border: 30 30% 18%;
+    --input: 30 25% 12%;
+    --ring: 28 85% 50%;
+    /* Heretek Chart Colors - Corruption Spread */
+    --chart-1: 28 80% 50%;
+    --chart-2: 35 55% 35%;
+    --chart-3: 145 60% 38%;
+    --chart-4: 60 45% 30%;
+    --chart-5: 0 65% 42%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "liga" 1, "calt" 1;
+  }
+}
+
+* {
+  -ms-overflow-style: none;
+}
+
+/* Heretek Scrollbar - Corrupted Metal */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(30 20% 8%);
+  border-left: 1px solid hsl(30 30% 18%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+      hsl(28 70% 35%) 0%,
+      hsl(35 50% 25%) 50%,
+      hsl(28 70% 35%) 100%);
+  border-radius: 4px;
+  border: 1px solid hsl(30 30% 20%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg,
+      hsl(28 80% 42%) 0%,
+      hsl(35 60% 32%) 50%,
+      hsl(28 80% 42%) 100%);
+}
+
+/* Glass Effect - Corrupted Viewport */
+.glass {
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  background: linear-gradient(135deg,
+      hsl(30 20% 8% / 0.85) 0%,
+      hsl(30 25% 12% / 0.75) 100%);
+  border: 1px solid hsl(30 30% 18% / 0.6);
+}
+
+/* Heretek Corruption Effects */
+@layer utilities {
+
+  /* Noise Texture Overlay */
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  /* Rust Border Effect */
+  .rust-border {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(hsl(30 20% 6%), hsl(30 20% 6%)) padding-box,
+      linear-gradient(135deg,
+        hsl(28 70% 30%) 0%,
+        hsl(35 40% 20%) 25%,
+        hsl(28 60% 25%) 50%,
+        hsl(35 35% 18%) 75%,
+        hsl(28 70% 30%) 100%) border-box;
+  }
+
+  /* Corruption Glow */
+  .corruption-glow {
+    box-shadow:
+      0 0 20px hsl(145 60% 30% / 0.15),
+      0 0 40px hsl(145 50% 25% / 0.1),
+      inset 0 0 20px hsl(145 40% 20% / 0.05);
+  }
+
+  /* Brass Text Effect */
+  .brass-text {
+    background: linear-gradient(180deg,
+        hsl(43 70% 55%) 0%,
+        hsl(35 60% 40%) 50%,
+        hsl(43 65% 45%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Copper Accent */
+  .copper-accent {
+    background: linear-gradient(135deg,
+        hsl(28 75% 45%) 0%,
+        hsl(25 65% 35%) 50%,
+        hsl(28 70% 40%) 100%);
+  }
+
+  /* Glitch Animation */
+  .glitch {
+    animation: glitch 4s infinite;
+  }
+
+  @keyframes glitch {
+
+    0%,
+    90%,
+    100% {
+      transform: translate(0);
+      filter: none;
+    }
+
+    91% {
+      transform: translate(-1px, 1px);
+      filter: hue-rotate(90deg);
+    }
+
+    92% {
+      transform: translate(1px, -1px);
+      filter: hue-rotate(-90deg);
+    }
+
+    93% {
+      transform: translate(-1px, -1px);
+      filter: hue-rotate(45deg);
+    }
+
+    94% {
+      transform: translate(1px, 1px);
+      filter: none;
+    }
+  }
+
+  /* Scan Line Effect */
+  .scan-lines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 2px,
+        hsl(30 20% 2% / 0.3) 2px,
+        hsl(30 20% 2% / 0.3) 4px);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* Flicker Animation */
+  .flicker {
+    animation: flicker 8s infinite;
+  }
+
+  @keyframes flicker {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    92% {
+      opacity: 1;
+    }
+
+    93% {
+      opacity: 0.8;
+    }
+
+    94% {
+      opacity: 1;
+    }
+
+    96% {
+      opacity: 0.9;
+    }
+
+    97% {
+      opacity: 1;
+    }
+  }
+
+  /* Corrupted Pulse */
+  .corrupted-pulse {
+    animation: corrupted-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes corrupted-pulse {
+
+    0%,
+    100% {
+      box-shadow:
+        0 0 10px hsl(145 50% 25% / 0.2),
+        0 0 20px hsl(145 40% 20% / 0.1);
+    }
+
+    50% {
+      box-shadow:
+        0 0 15px hsl(145 60% 30% / 0.3),
+        0 0 30px hsl(145 50% 25% / 0.15),
+        0 0 45px hsl(145 40% 20% / 0.1);
+    }
+  }
+
+  /* Metal Surface Gradient */
+  .metal-surface {
+    background:
+      linear-gradient(145deg,
+        hsl(30 15% 15%) 0%,
+        hsl(30 20% 10%) 50%,
+        hsl(30 15% 12%) 100%);
+    box-shadow:
+      inset 1px 1px 0 hsl(30 20% 20%),
+      inset -1px -1px 0 hsl(30 25% 5%);
+  }
+
+  /* Tech Heresy Warning */
+  .heresy-warning {
+    border-left: 3px solid hsl(0 70% 40%);
+    background: linear-gradient(90deg,
+        hsl(0 50% 10% / 0.3) 0%,
+        transparent 100%);
+  }
+
+  /* ===== NEW MECHANICUS EFFECTS ===== */
+
+  /* Pulsing Circuit Lines */
+  .circuit-pulse {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .circuit-pulse::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        hsl(145 60% 35% / 0.15) 50%,
+        transparent 100%);
+    animation: circuit-flow 3s linear infinite;
+  }
+
+  @keyframes circuit-flow {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Rusted Metal Texture */
+  .rusted-metal {
+    background:
+      linear-gradient(145deg,
+        hsl(30 15% 12%) 0%,
+        hsl(28 20% 8%) 50%,
+        hsl(30 12% 10%) 100%);
+    box-shadow:
+      inset 2px 2px 4px hsl(30 20% 18%),
+      inset -2px -2px 4px hsl(30 25% 5%);
+  }
+
+  /* Tech-Priest Data Stream Effect */
+  .data-stream {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .data-stream::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 2px,
+        hsl(145 50% 30% / 0.05) 2px,
+        hsl(145 50% 30% / 0.05) 4px);
+    animation: stream-scroll 20s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes stream-scroll {
+    0% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(20px);
+    }
+  }
+
+  /* Omnissiah's Blessing - Machine Spirit Glow */
+  .machine-spirit {
+    position: relative;
+  }
+
+  .machine-spirit::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg,
+        hsl(28 80% 50% / 0.1),
+        hsl(43 70% 50% / 0.1),
+        hsl(28 80% 50% / 0.1));
+    border-radius: inherit;
+    animation: spirit-pulse 4s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  @keyframes spirit-pulse {
+
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.6;
+      transform: scale(1.02);
+    }
+  }
+
+  /* Binary Choir Text Effect */
+  .binary-choir {
+    text-shadow:
+      0 0 10px hsl(145 70% 40% / 0.5),
+      0 0 20px hsl(145 60% 30% / 0.3);
+    animation: binary-flicker 5s infinite;
+  }
+
+  @keyframes binary-flicker {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.95;
+    }
+
+    52% {
+      opacity: 1;
+    }
+
+    54% {
+      opacity: 0.97;
+    }
+  }
+
+  /* Noosphere Connection Effect */
+  .noosphere-border {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(hsl(30 20% 6%), hsl(30 20% 6%)) padding-box,
+      linear-gradient(135deg,
+        hsl(145 60% 35%) 0%,
+        hsl(28 70% 40%) 25%,
+        hsl(43 60% 35%) 50%,
+        hsl(28 70% 40%) 75%,
+        hsl(145 60% 35%) 100%) border-box;
+  }
+
+  /* Mechanicus Panel */
+  .mechanicus-panel {
+    background: linear-gradient(145deg,
+        hsl(30 18% 8%) 0%,
+        hsl(30 22% 6%) 50%,
+        hsl(30 18% 10%) 100%);
+    border: 1px solid hsl(28 50% 20% / 0.5);
+    box-shadow:
+      inset 0 1px 0 hsl(30 25% 15%),
+      inset 0 -1px 0 hsl(30 20% 5%),
+      0 4px 20px hsl(30 20% 5% / 0.3);
+  }
+
+  /* Sacred Machine Icon */
+  .machine-icon {
+    filter: drop-shadow(0 0 8px hsl(28 70% 45% / 0.4));
+    transition: filter 0.3s ease;
+  }
+
+  .machine-icon:hover {
+    filter: drop-shadow(0 0 12px hsl(28 80% 50% / 0.6));
+  }
+
+  /* Heretek Input Focus */
+  .heretek-focus:focus {
+    outline: none;
+    box-shadow:
+      0 0 0 2px hsl(28 70% 40%),
+      0 0 15px hsl(28 60% 35% / 0.3);
+  }
+
+  /* Corrupted Text Glitch */
+  .text-glitch {
+    position: relative;
+  }
+
+  .text-glitch::before,
+  .text-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .text-glitch::before {
+    color: hsl(145 70% 40%);
+    animation: glitch-1 2s infinite linear alternate-reverse;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  }
+
+  .text-glitch::after {
+    color: hsl(0 70% 45%);
+    animation: glitch-2 2s infinite linear alternate-reverse;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitch-1 {
+
+    0%,
+    100% {
+      transform: translate(0);
+    }
+
+    20% {
+      transform: translate(-2px, 2px);
+    }
+
+    40% {
+      transform: translate(2px, -2px);
+    }
+
+    60% {
+      transform: translate(-1px, 1px);
+    }
+
+    80% {
+      transform: translate(1px, -1px);
+    }
+  }
+
+  @keyframes glitch-2 {
+
+    0%,
+    100% {
+      transform: translate(0);
+    }
+
+    20% {
+      transform: translate(2px, -2px);
+    }
+
+    40% {
+      transform: translate(-2px, 2px);
+    }
+
+    60% {
+      transform: translate(1px, -1px);
+    }
+
+    80% {
+      transform: translate(-1px, 1px);
+    }
+  }
+
+  /* Forge Glow - for active elements */
+  .forge-glow {
+    box-shadow:
+      0 0 10px hsl(28 70% 45% / 0.3),
+      0 0 20px hsl(28 60% 35% / 0.2),
+      inset 0 0 10px hsl(28 50% 25% / 0.1);
+  }
+
+  /* Sacred Scroll Effect */
+  .sacred-scroll {
+    background:
+      linear-gradient(180deg,
+        hsl(30 20% 6%) 0%,
+        hsl(30 18% 8%) 10%,
+        hsl(30 20% 8%) 90%,
+        hsl(30 20% 6%) 100%);
+    border-top: 1px solid hsl(43 40% 25% / 0.3);
+    border-bottom: 1px solid hsl(43 40% 25% / 0.3);
+  }
+
+  /* Circuit Board Pattern */
+  .circuit-board {
+    background-image:
+      linear-gradient(90deg, hsl(145 40% 20% / 0.1) 1px, transparent 1px),
+      linear-gradient(180deg, hsl(145 40% 20% / 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Rust Particle Animation */
+  .rust-particles {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rust-particles::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, hsl(28 60% 40% / 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 80% 70%, hsl(35 50% 35% / 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, hsl(28 70% 45% / 0.2) 1px, transparent 1px);
+    background-size: 100px 100px;
+    animation: rust-drift 30s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes rust-drift {
+    0% {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    100% {
+      transform: translateY(-100px) rotate(360deg);
+    }
+  }
+}
