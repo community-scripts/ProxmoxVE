@@ -14,6 +14,12 @@ update_os
 
 msg_info "Installing Kali Linux Essential Tools"
 
+# Pre-configure debconf to avoid interactive prompts
+export DEBIAN_FRONTEND=noninteractive
+
+# Pre-answer wireshark-common prompt about non-root packet capture
+echo "wireshark-common wireshark-common/install-setuid boolean false" | debconf-set-selections 2>/dev/null || true
+
 # Install essential Kali security tools (minimal footprint)
 $STD apt-get install -y \
   nmap \
@@ -26,12 +32,14 @@ $STD apt-get install -y \
   whois \
   netcat-openbsd \
   tcpdump \
-  wireshark-common \
   john \
   hashcat \
-  hydra \
-  metasploit-framework \
-  kali-tools-top10 2>/dev/null || true
+  hydra
+
+# Install optional larger packages (may fail in minimal environment)
+$STD apt-get install -y wireshark-common 2>/dev/null || true
+$STD apt-get install -y metasploit-framework 2>/dev/null || true
+$STD apt-get install -y kali-tools-top10 2>/dev/null || true
 
 msg_ok "Installed Kali Linux Essential Tools"
 
