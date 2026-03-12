@@ -70,7 +70,7 @@ jobs:
       - name: Checkout standalone repository
         uses: actions/checkout@v4
         with:
-          repository: Heretek-AI/Heretek-Proxmox-Scripts
+          repository: Heretek-AI/Heretek-ProxmoxVE
           token: ${{ secrets.PAT_STANDALONE }}
           path: standalone
 
