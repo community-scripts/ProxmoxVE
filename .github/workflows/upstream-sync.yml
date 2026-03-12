@@ -49,6 +49,7 @@ jobs:
           cp -r frontend /tmp/backup/
           cp -r misc/images /tmp/backup/images
           cp -r .github/workflows /tmp/backup/workflows
+          cp -r tools/addon /tmp/backup/addon
           cp CHANGELOG.md /tmp/backup/
           cp README.md /tmp/backup/
           
@@ -68,11 +69,14 @@ jobs:
           rm -rf .github/workflows
           mkdir -p .github
           cp -r /tmp/backup/workflows .github/workflows
+          rm -rf tools/addon
+          mkdir -p tools
+          cp -r /tmp/backup/addon tools/addon
           cp /tmp/backup/CHANGELOG.md .
           cp /tmp/backup/README.md .
           
           # 7. Stage all restored files
-          git add install ct frontend misc/images .github/workflows CHANGELOG.md README.md
+          git add install ct frontend misc/images .github/workflows tools/addon CHANGELOG.md README.md
           
           # 8. Check for any merge conflicts in other files
           # Since we're creating from upstream/main, we need to check against main
@@ -124,6 +128,7 @@ jobs:
           - \`frontend/\` directory
           - \`misc/images/\` directory
           - \`.github/workflows/\` directory
+          - \`tools/addon/\` directory
           - \`CHANGELOG.md\`
           - \`README.md\`
 
