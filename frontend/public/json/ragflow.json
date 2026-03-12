@@ -1,0 +1,78 @@
+{
+  "name": "RAGFlow",
+  "slug": "ragflow",
+  "categories": [20],
+  "date_created": "2026-03-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://ragflow.io/docs/dev/",
+  "website": "https://ragflow.io/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ragflow.webp",
+  "config_path": "/opt/ragflow/conf/service_conf.yaml",
+  "description": "RAGFlow is an open-source RAG (Retrieval-Augmented Generation) engine with deep document understanding. It provides a streamlined RAG workflow for businesses of any scale, combining LLM capabilities to provide truthful question-answering with well-founded citations from various complex formatted data.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/ragflow.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 16384,
+        "hdd": 50,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Access the Web UI at http://<IP>:80",
+      "type": "info"
+    },
+    {
+      "text": "API endpoint: http://<IP>:9380",
+      "type": "info"
+    },
+    {
+      "text": "MinIO Console: http://<IP>:9001",
+      "type": "info"
+    },
+    {
+      "text": "Credentials saved to ~/ragflow.creds after installation",
+      "type": "info"
+    },
+    {
+      "text": "Configure your LLM API key in Settings after first login",
+      "type": "warning"
+    },
+    {
+      "text": "Requires vm.max_map_count >= 262144 (configured automatically)",
+      "type": "warning"
+    },
+    {
+      "text": "Elasticsearch may take 1-2 minutes to fully initialize on first start",
+      "type": "info"
+    },
+    {
+      "text": "Default installation uses CPU for document processing",
+      "type": "info"
+    },
+    {
+      "text": "For GPU acceleration, additional configuration is required",
+      "type": "info"
+    },
+    {
+      "text": "Services: MySQL, Elasticsearch, Redis/Valkey, MinIO, RAGFlow Backend",
+      "type": "info"
+    },
+    {
+      "text": "Minimum 16GB RAM recommended for production workloads",
+      "type": "warning"
+    }
+  ]
+}
