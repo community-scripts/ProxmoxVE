@@ -4653,8 +4653,8 @@ EOF
   # Environment (PATH + LD_LIBRARY_PATH)
   if [[ -d /opt/rocm ]]; then
     cat <<'ENVEOF' >/etc/profile.d/rocm.sh
-export PATH="\$PATH:/opt/rocm/bin"
-export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/opt/rocm/lib"
+export PATH="$PATH:/opt/rocm/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/rocm/lib"
 ENVEOF
     chmod +x /etc/profile.d/rocm.sh
     # Also make available for current session / systemd services
