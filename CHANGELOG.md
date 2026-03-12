@@ -438,6 +438,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: add mode=generated for unattended frontend installs [@MickLesk](https://github.com/MickLesk) ([#12807](https://github.com/community-scripts/ProxmoxVE/pull/12807))
     - core: validate storage availability when loading defaults [@MickLesk](https://github.com/MickLesk) ([#12794](https://github.com/community-scripts/ProxmoxVE/pull/12794))
 
   - #### 🔧 Refactor
