@@ -55,8 +55,9 @@ function update_script() {
     msg_ok "Updated Sparky Fitness Backend"
 
     msg_info "Updating Sparky Fitness Frontend (Patience)"
-    cd /opt/sparkyfitness/SparkyFitnessFrontend
+    cd /opt/sparkyfitness
     $STD pnpm install
+    cd /opt/sparkyfitness/SparkyFitnessFrontend
     $STD pnpm run build
     cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
     msg_ok "Updated Sparky Fitness Frontend"

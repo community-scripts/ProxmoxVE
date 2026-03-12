@@ -51,8 +51,9 @@ $STD npm install
 msg_ok "Built Backend"
 
 msg_info "Building Frontend (Patience)"
-cd /opt/sparkyfitness/SparkyFitnessFrontend
+cd /opt/sparkyfitness
 $STD pnpm install
+cd /opt/sparkyfitness/SparkyFitnessFrontend
 $STD pnpm run build
 cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
 msg_ok "Built Frontend"
