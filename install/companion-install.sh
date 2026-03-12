@@ -27,7 +27,7 @@ if [[ -z "$ASSET_URL" ]]; then
   msg_error "Could not locate a Linux x64 release from the Bitfocus API."
   exit 1
 fi
-msg_ok "Found ${APP} ${RELEASE}"
+msg_ok "Found Companion ${RELEASE}"
 
 msg_info "Downloading Bitfocus Companion ${RELEASE}"
 mkdir -p /opt/companion
