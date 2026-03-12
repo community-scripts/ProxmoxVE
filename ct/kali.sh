@@ -47,8 +47,8 @@ function fetch_kali_template() {
     TEMPLATE_DIR="/var/lib/vz/template/cache"
   else
     # Get path from Proxmox storage config
-    TEMPLATE_DIR=$(grep -E "^[^:]+: ${STORAGE}$" /etc/pve/storage.cfg -A10 | grep "path" | awk '{print $2}')
-    [[ -z "$TEMPLATE_DIR" ]] && TEMPLATE_DIR="/var/lib/vz/template/cache"
+    TEMPLATE_DIR=$(grep -E "^[^:]+: ${STORAGE}$" /etc/pve/storage.cfg -A10 2>/dev/null | grep "path" | awk '{print $2}')
+    [[ -z "$TEMPLATE_DIR" ]] && TEMPLATE_DIR="/var/lib/vz"
     TEMPLATE_DIR="${TEMPLATE_DIR}/template/cache"
   fi
   
@@ -56,12 +56,12 @@ function fetch_kali_template() {
   mkdir -p "${TEMPLATE_DIR}"
   
   # Kali template URL from images.linuxcontainers.org
-  # Format: https://images.linuxcontainers.org/images/kali/current/amd64/default/[timestamp].tar.xz
+  # Structure: https://images.linuxcontainers.org/images/kali/current/amd64/default/YYYYMMDD_HH:MM/rootfs.tar.xz
   local KALI_BASE_URL="https://images.linuxcontainers.org/images/kali/current/amd64/default/"
   
   msg_info "Fetching latest Kali template from images.linuxcontainers.org"
   
-  # Get the directory listing and find the latest tar.xz file
+  # Get the directory listing to find the latest date folder
   local PAGE_CONTENT
   PAGE_CONTENT=$(curl -fsSL "${KALI_BASE_URL}" 2>/dev/null)
   
@@ -71,43 +71,53 @@ function fetch_kali_template() {
     exit 225
   fi
   
-  # Parse the page to find the latest template (format: YYYYMMDD_HHMMSS.tar.xz)
-  local LATEST_TEMPLATE
-  LATEST_TEMPLATE=$(echo "$PAGE_CONTENT" | \
-    grep -oP 'href="\K[0-9_]+\.tar\.xz(?=")' | \
-    sort -r | head -1)
+  # Parse the page to find the latest date directory
+  # Format: [YYYYMMDD_HH:MM/] with trailing slash
+  local LATEST_DIR
+  LATEST_DIR=$(echo "$PAGE_CONTENT" | \
+    grep -oE 'href="[0-9]{8}_[0-9]{2}:[0-9]{2}/"' | \
+    sed 's/href="//;s/"//' | \
+    sort -r | head -n 1)
   
-  # Alternative parsing if the above doesn't work
-  if [[ -z "$LATEST_TEMPLATE" ]]; then
-    LATEST_TEMPLATE=$(echo "$PAGE_CONTENT" | \
-      grep -oP '[0-9]{8}_[0-9]{6}\.tar\.xz' | \
-      sort -r | head -1)
+  # Alternative: try without quotes
+  if [[ -z "$LATEST_DIR" ]]; then
+    LATEST_DIR=$(echo "$PAGE_CONTENT" | \
+      grep -oE '[0-9]{8}_[0-9]{2}:[0-9]{2}/' | \
+      sort -r | head -n 1)
   fi
   
-  # Final fallback: try to find any .tar.xz file
-  if [[ -z "$LATEST_TEMPLATE" ]]; then
-    LATEST_TEMPLATE=$(echo "$PAGE_CONTENT" | \
-      grep -oP '[^"<>]+\.tar\.xz' | \
-      grep -v "sha256" | \
-      sort -r | head -1)
+  # Another alternative: look for directory pattern
+  if [[ -z "$LATEST_DIR" ]]; then
+    LATEST_DIR=$(echo "$PAGE_CONTENT" | \
+      grep -oE '>[0-9]{8}_[0-9]{2}:[0-9]{2}/<' | \
+      sed 's/>//;s/<//' | \
+      sort -r | head -n 1)
   fi
   
-  if [[ -z "$LATEST_TEMPLATE" ]]; then
-    msg_error "Could not find Kali template in the listing"
+  if [[ -z "$LATEST_DIR" ]]; then
+    msg_error "Could not find Kali template directory in the listing"
     msg_error "Please visit ${KALI_BASE_URL} manually"
     exit 225
   fi
   
-  local TEMPLATE_URL="${KALI_BASE_URL}${LATEST_TEMPLATE}"
-  local TEMPLATE_PATH="${TEMPLATE_DIR}/${LATEST_TEMPLATE}"
+  # Remove trailing slash if present
+  LATEST_DIR="${LATEST_DIR%/}"
+  
+  # Construct the full URL to rootfs.tar.xz
+  local TEMPLATE_URL="${KALI_BASE_URL}${LATEST_DIR}/rootfs.tar.xz"
+  
+  # Create a friendly template name for Proxmox
+  local DATE_PART="${LATEST_DIR//[:]/-}"  # Replace : with - for filename compatibility
+  local TEMPLATE_NAME="kali-current-amd64-default-${DATE_PART}.tar.xz"
+  local TEMPLATE_PATH="${TEMPLATE_DIR}/${TEMPLATE_NAME}"
   
   # Check if template already exists and is valid
   if [[ -f "$TEMPLATE_PATH" ]]; then
     local FILE_SIZE
     FILE_SIZE=$(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo 0)
     if [[ $FILE_SIZE -gt 100000000 ]]; then
-      msg_ok "Kali template already downloaded: ${LATEST_TEMPLATE}"
-      echo "${LATEST_TEMPLATE}"
+      msg_ok "Kali template already downloaded: ${TEMPLATE_NAME}"
+      echo "${TEMPLATE_NAME}"
       return 0
     else
       msg_warn "Existing template file too small, re-downloading"
@@ -115,7 +125,7 @@ function fetch_kali_template() {
     fi
   fi
   
-  msg_info "Downloading Kali template: ${LATEST_TEMPLATE}"
+  msg_info "Downloading Kali template: ${TEMPLATE_NAME}"
   msg_info "URL: ${TEMPLATE_URL}"
   msg_info "Target: ${TEMPLATE_PATH}"
   
@@ -150,10 +160,10 @@ function fetch_kali_template() {
     exit 222
   fi
   
-  msg_ok "Successfully downloaded Kali template: ${LATEST_TEMPLATE} ($(numfmt --to=iec --from-unit=1024 --format %.1f "${DOWNLOADED_SIZE}" 2>/dev/null || echo "${DOWNLOADED_SIZE}")B)"
+  msg_ok "Successfully downloaded Kali template: ${TEMPLATE_NAME} ($(numfmt --to=iec --from-unit=1024 --format %.1f "${DOWNLOADED_SIZE}" 2>/dev/null || echo "${DOWNLOADED_SIZE}")B)"
   
   # Return the template name for use by build_container
-  echo "${LATEST_TEMPLATE}"
+  echo "${TEMPLATE_NAME}"
 }
 
 # Override create_lxc_container to handle Kali template download
