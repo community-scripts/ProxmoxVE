@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/refs/heads/main}"
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
+# Author: Heretek-AI
+# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
+# Source: https://images.linuxcontainers.org/
+
+APP="Kali"
+var_tags="${var_tags:-security;pentest;kali;linux}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-4096}"
+var_disk="${var_disk:-20}"
+var_os="${var_os:-kali}"
+var_version="${var_version:-current}"
+var_unprivileged="${var_unprivileged:-1}"
+
+header_info "$APP"
+variables
+color
+catch_errors
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -f /etc/os-release ]] || ! grep -qi "kali" /etc/os-release 2>/dev/null; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  msg_info "Updating ${APP} LXC Container"
+  $STD apt-get update
+  $STD apt-get upgrade -y
+  msg_ok "Updated ${APP} LXC Container"
+  exit
+}
+
+# Download Kali template from images.linuxcontainers.org
+# This runs BEFORE build_container to ensure template is available
+function fetch_kali_template() {
+  local STORAGE="${var_template_storage:-local}"
+  local TEMPLATE_DIR
+  
+  # Get template directory based on storage
+  if [[ "$STORAGE" == "local" ]]; then
+    TEMPLATE_DIR="/var/lib/vz/template/cache"
+  else
+    # Get path from Proxmox storage config
+    TEMPLATE_DIR=$(grep -E "^[^:]+: ${STORAGE}$" /etc/pve/storage.cfg -A10 | grep "path" | awk '{print $2}')
+    [[ -z "$TEMPLATE_DIR" ]] && TEMPLATE_DIR="/var/lib/vz/template/cache"
+    TEMPLATE_DIR="${TEMPLATE_DIR}/template/cache"
+  fi
+  
+  # Create directory if it doesn't exist
+  mkdir -p "${TEMPLATE_DIR}"
+  
+  # Kali template URL from images.linuxcontainers.org
+  # Format: https://images.linuxcontainers.org/images/kali/current/amd64/default/[timestamp].tar.xz
+  local KALI_BASE_URL="https://images.linuxcontainers.org/images/kali/current/amd64/default/"
+  
+  msg_info "Fetching latest Kali template from images.linuxcontainers.org"
+  
+  # Get the directory listing and find the latest tar.xz file
+  local PAGE_CONTENT
+  PAGE_CONTENT=$(curl -fsSL "${KALI_BASE_URL}" 2>/dev/null)
+  
+  if [[ -z "$PAGE_CONTENT" ]]; then
+    msg_error "Failed to fetch Kali template listing from ${KALI_BASE_URL}"
+    msg_error "Please check your network connection and try again"
+    exit 225
+  fi
+  
+  # Parse the page to find the latest template (format: YYYYMMDD_HHMMSS.tar.xz)
+  local LATEST_TEMPLATE
+  LATEST_TEMPLATE=$(echo "$PAGE_CONTENT" | \
+    grep -oP 'href="\K[0-9_]+\.tar\.xz(?=")' | \
+    sort -r | head -1)
+  
+  # Alternative parsing if the above doesn't work
+  if [[ -z "$LATEST_TEMPLATE" ]]; then
+    LATEST_TEMPLATE=$(echo "$PAGE_CONTENT" | \
+      grep -oP '[0-9]{8}_[0-9]{6}\.tar\.xz' | \
+      sort -r | head -1)
+  fi
+  
+  # Final fallback: try to find any .tar.xz file
+  if [[ -z "$LATEST_TEMPLATE" ]]; then
+    LATEST_TEMPLATE=$(echo "$PAGE_CONTENT" | \
+      grep -oP '[^"<>]+\.tar\.xz' | \
+      grep -v "sha256" | \
+      sort -r | head -1)
+  fi
+  
+  if [[ -z "$LATEST_TEMPLATE" ]]; then
+    msg_error "Could not find Kali template in the listing"
+    msg_error "Please visit ${KALI_BASE_URL} manually"
+    exit 225
+  fi
+  
+  local TEMPLATE_URL="${KALI_BASE_URL}${LATEST_TEMPLATE}"
+  local TEMPLATE_PATH="${TEMPLATE_DIR}/${LATEST_TEMPLATE}"
+  
+  # Check if template already exists and is valid
+  if [[ -f "$TEMPLATE_PATH" ]]; then
+    local FILE_SIZE
+    FILE_SIZE=$(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo 0)
+    if [[ $FILE_SIZE -gt 100000000 ]]; then
+      msg_ok "Kali template already downloaded: ${LATEST_TEMPLATE}"
+      echo "${LATEST_TEMPLATE}"
+      return 0
+    else
+      msg_warn "Existing template file too small, re-downloading"
+      rm -f "$TEMPLATE_PATH"
+    fi
+  fi
+  
+  msg_info "Downloading Kali template: ${LATEST_TEMPLATE}"
+  msg_info "URL: ${TEMPLATE_URL}"
+  msg_info "Target: ${TEMPLATE_PATH}"
+  
+  # Download with progress
+  local DOWNLOAD_STATUS=0
+  if command -v wget &>/dev/null; then
+    if wget --progress=bar:force -O "${TEMPLATE_PATH}" "${TEMPLATE_URL}" 2>&1; then
+      DOWNLOAD_STATUS=1
+    fi
+  elif command -v curl &>/dev/null; then
+    if curl -L --progress-bar -o "${TEMPLATE_PATH}" "${TEMPLATE_URL}" 2>&1; then
+      DOWNLOAD_STATUS=1
+    fi
+  else
+    msg_error "Neither wget nor curl available for download"
+    exit 222
+  fi
+  
+  if [[ $DOWNLOAD_STATUS -eq 0 ]]; then
+    msg_error "Failed to download Kali template"
+    rm -f "${TEMPLATE_PATH}"
+    exit 222
+  fi
+  
+  # Verify download
+  local DOWNLOADED_SIZE
+  DOWNLOADED_SIZE=$(stat -c%s "${TEMPLATE_PATH}" 2>/dev/null || echo 0)
+  if [[ $DOWNLOADED_SIZE -lt 100000000 ]]; then
+    msg_error "Downloaded template is too small (${DOWNLOADED_SIZE} bytes)"
+    msg_error "Expected at least 100MB for a valid Kali template"
+    rm -f "${TEMPLATE_PATH}"
+    exit 222
+  fi
+  
+  msg_ok "Successfully downloaded Kali template: ${LATEST_TEMPLATE} ($(numfmt --to=iec --from-unit=1024 --format %.1f "${DOWNLOADED_SIZE}" 2>/dev/null || echo "${DOWNLOADED_SIZE}")B)"
+  
+  # Return the template name for use by build_container
+  echo "${LATEST_TEMPLATE}"
+}
+
+# Override create_lxc_container to handle Kali template download
+# This is needed because Kali templates are not in pveam catalog
+function create_kali_container() {
+  # Download template first
+  local KALI_TEMPLATE
+  KALI_TEMPLATE=$(fetch_kali_template)
+  
+  # Set template for build_container
+  export TEMPLATE="${KALI_TEMPLATE}"
+  export TEMPLATE_SOURCE="local"
+  
+  # Now call the original create_lxc_container
+  create_lxc_container
+}
+
+start
+create_kali_container
+description
+
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} LXC has been successfully created!${CL}"
+echo -e "${INFO}${YW} Access it using: ${BGN}pct enter ${CTID}${CL}"
+echo -e "${INFO}${YW} Or SSH: ${BGN}ssh root@${IP}${CL}"
