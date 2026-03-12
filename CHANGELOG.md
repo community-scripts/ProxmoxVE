@@ -452,7 +452,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📂 Github
 
-  - Cleanup workflows [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12818](https://github.com/community-scripts/ProxmoxVE/pull/12818))
+  - Cleanup: remove old workflow files [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12818](https://github.com/community-scripts/ProxmoxVE/pull/12818))
 - Cleanup: remove frontend, move JSONs to json/ top-level [@MickLesk](https://github.com/MickLesk) ([#12813](https://github.com/community-scripts/ProxmoxVE/pull/12813))
 
 ## 2026-03-11
