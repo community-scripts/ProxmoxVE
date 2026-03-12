@@ -24,13 +24,6 @@ venv/
 env/
 *.env
 
-# Node.js dependencies (frontend folder was excluded, but keeping this rule for reference)
-frontend/node_modules/
-frontend/.svelte-kit/
-frontend/.turbo/
-frontend/.vite/
-frontend/build/
-
 # API and Backend specific exclusions
 api/.env
 api/__pycache__/
