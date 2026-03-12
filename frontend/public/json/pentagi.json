@@ -1,0 +1,76 @@
+{
+  "name": "PentAGI",
+  "slug": "pentagi",
+  "categories": [
+    20
+  ],
+  "date_created": "2026-03-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8443,
+  "documentation": "https://github.com/vxcontrol/pentagi",
+  "website": "https://github.com/vxcontrol/pentagi",
+  "logo": null,
+  "config_path": "/opt/pentagi/.env",
+  "description": "PentAGI is an AI-powered autonomous penetration testing system that leverages multiple LLM providers (OpenAI, Anthropic, Gemini, Bedrock, Ollama, DeepSeek, GLM, Kimi, Qwen) for security testing. Features include knowledge graph integration (Graphiti/Neo4j), LLM observability (Langfuse), 20+ professional pentesting tools in sandboxed Docker containers, and comprehensive REST/GraphQL APIs. Docker is installed inside the container.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/pentagi.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 8192,
+        "hdd": 50,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin@pentagi.com",
+    "password": "admin"
+  },
+  "notes": [
+    {
+      "text": "Access the Web UI at https://<IP>:8443 (note: HTTPS)",
+      "type": "info"
+    },
+    {
+      "text": "Docker is installed inside the container - no host socket passthrough required",
+      "type": "info"
+    },
+    {
+      "text": "Configure at least one LLM provider API key before use (OpenAI, Anthropic, Gemini, etc.)",
+      "type": "warning"
+    },
+    {
+      "text": "Configuration file: /opt/pentagi/.env",
+      "type": "info"
+    },
+    {
+      "text": "Credentials stored in: /opt/pentagi/CREDENTIALS.txt",
+      "type": "info"
+    },
+    {
+      "text": "Configuration guide: /opt/pentagi/CONFIGURATION.md",
+      "type": "info"
+    },
+    {
+      "text": "Optional: Enable Graphiti knowledge graph with docker-compose-graphiti.yml",
+      "type": "info"
+    },
+    {
+      "text": "Optional: Enable Langfuse observability with docker-compose-langfuse.yml",
+      "type": "info"
+    },
+    {
+      "text": "Optional: Enable monitoring stack with docker-compose-observability.yml",
+      "type": "info"
+    },
+    {
+      "text": "Change default password immediately after first login",
+      "type": "warning"
+    }
+  ]
+}
