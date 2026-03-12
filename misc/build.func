@@ -3428,6 +3428,9 @@ start() {
     set_std_mode
     ensure_profile_loaded
     get_lxc_ip
+    if [[ "$(dpkg --print-architecture)" == "arm64" ]] && declare -f update_script_arm64 >/dev/null 2>&1; then
+      update_script_arm64
+    fi
     update_script
     update_motd_ip
     cleanup_lxc
@@ -3456,6 +3459,9 @@ start() {
     esac
     ensure_profile_loaded
     get_lxc_ip
+    if [[ "$(dpkg --print-architecture)" == "arm64" ]] && declare -f update_script_arm64 >/dev/null 2>&1; then
+      update_script_arm64
+    fi
     update_script
     update_motd_ip
     cleanup_lxc
