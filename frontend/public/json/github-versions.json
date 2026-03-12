@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-12T06:37:25Z",
+  "generated": "2026-03-12T18:35:13Z",
   "versions": [
     {
       "slug": "agregarr",
@@ -18,9 +18,9 @@
     {
       "slug": "llamacpp",
       "repo": "ggml-org/llama.cpp",
-      "version": "b8281",
+      "version": "b8292",
       "pinned": false,
-      "date": "2026-03-12T03:40:09Z"
+      "date": "2026-03-12T17:48:22Z"
     },
     {
       "slug": "maintainerr",
