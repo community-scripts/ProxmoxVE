@@ -157,9 +157,9 @@ function fetch_kali_template() {
   echo "${TEMPLATE_NAME}"
 }
 
-# Override create_lxc_container to handle Kali template download
-# This is needed because Kali templates are not in pveam catalog
-function create_kali_container() {
+# Build function override to handle Kali template download
+# This runs before build_container to set up the template
+function build_kali_container() {
   # Download template first
   local KALI_TEMPLATE
   KALI_TEMPLATE=$(fetch_kali_template)
@@ -168,18 +168,13 @@ function create_kali_container() {
   export TEMPLATE="${KALI_TEMPLATE}"
   export TEMPLATE_SOURCE="local"
   
-  # Required variables normally set in build_container
-  # CTID and PCT_OSTYPE are required by create_lxc_container
-  export CTID="${CT_ID}"
-  export PCT_OSTYPE="${var_os}"
-  export PCT_OSVERSION="${var_version}"
-  
-  # Now call the original create_lxc_container
-  create_lxc_container
+  # Now call the standard build_container which sets up PCT_OPTIONS
+  # and calls create_lxc_container internally
+  build_container
 }
 
 start
-create_kali_container
+build_kali_container
 description
 
 msg_ok "Completed Successfully!\n"
