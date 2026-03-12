@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-12
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: correct PATH escaping in ROCm profile script [@MickLesk](https://github.com/MickLesk) ([#12793](https://github.com/community-scripts/ProxmoxVE/pull/12793))
+
 ## 2026-03-11
 
 ### 🚀 Updated Scripts
