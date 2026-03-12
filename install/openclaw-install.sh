@@ -18,7 +18,8 @@ $STD apt-get install -y \
   wget \
   ca-certificates \
   build-essential \
-  python3
+  python3 \
+  git
 msg_ok "Installed Dependencies"
 
 # Setup Node.js 22 (required by OpenClaw)
