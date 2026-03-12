@@ -4653,8 +4653,8 @@ EOF
   # Environment (PATH + LD_LIBRARY_PATH)
   if [[ -d /opt/rocm ]]; then
     cat <<'ENVEOF' >/etc/profile.d/rocm.sh
-export PATH="\$PATH:/opt/rocm/bin"
-export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH:+\$LD_LIBRARY_PATH:}/opt/rocm/lib"
+export PATH="$PATH:/opt/rocm/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/rocm/lib"
 ENVEOF
     chmod +x /etc/profile.d/rocm.sh
     # Also make available for current session / systemd services
@@ -4685,10 +4685,10 @@ _setup_nvidia_gpu() {
   # Format varies by driver type:
   #   Proprietary: "NVRM version: NVIDIA UNIX x86_64 Kernel Module  550.54.14  Thu..."
   #   Open:        "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  590.48.01  Release..."
-  # Use regex to extract version number (###.##.## pattern)
+  # Use regex to extract version number (###.##.## or ###.## pattern)
   local nvidia_host_version=""
   if [[ -f /proc/driver/nvidia/version ]]; then
-    nvidia_host_version=$(grep -oP '\d{3,}\.\d+\.\d+' /proc/driver/nvidia/version 2>/dev/null | head -1)
+    nvidia_host_version=$(grep -oP '\d{3,}\.\d+(\.\d+)?' /proc/driver/nvidia/version 2>/dev/null | head -1)
   fi
 
   if [[ -z "$nvidia_host_version" ]]; then
