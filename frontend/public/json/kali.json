@@ -1,0 +1,52 @@
+{
+  "name": "Kali Linux",
+  "slug": "kali",
+  "categories": [
+    6
+  ],
+  "date_created": "2026-03-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://www.kali.org/docs/",
+  "website": "https://www.kali.org/",
+  "logo": "https://www.kali.org/images/kali-dragon-icon.svg",
+  "config_path": null,
+  "description": "Kali Linux is an open-source, Debian-based Linux distribution geared towards various information security testing tasks. Includes essential security tools like nmap, wireshark, john, hashcat, hydra, and metasploit-framework.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/kali.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 20,
+        "os": "kali",
+        "version": "current"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Install additional Kali tools with: apt install kali-tools-<category>",
+      "type": "info"
+    },
+    {
+      "text": "Available categories: kali-tools-top10, kali-tools-information-gathering, kali-tools-vulnerability, kali-tools-web, kali-tools-password, kali-tools-wireless, kali-tools-exploitation, kali-tools-forensic, kali-tools-reporting",
+      "type": "info"
+    },
+    {
+      "text": "Full installation: apt install kali-linux-everything",
+      "type": "info"
+    },
+    {
+      "text": "Template downloaded from images.linuxcontainers.org (not pveam)",
+      "type": "warning"
+    }
+  ]
+}
