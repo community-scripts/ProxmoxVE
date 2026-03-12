@@ -426,6 +426,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - n8n: add build-essential to update dependencies [@MickLesk](https://github.com/MickLesk) ([#12795](https://github.com/community-scripts/ProxmoxVE/pull/12795))
     - Frigate openvino labelmap patch [@semtex1987](https://github.com/semtex1987) ([#12751](https://github.com/community-scripts/ProxmoxVE/pull/12751))
 
 ### 💾 Core
