@@ -134,13 +134,19 @@ TimeoutStopSec=120
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q pentagi
 msg_ok "Created Systemd Service"
 
 msg_info "Pulling Docker Images"
 cd /opt/pentagi || exit
 $STD docker compose pull
 msg_ok "Pulled Docker Images"
+
+msg_info "Starting PentAGI Service"
+systemctl daemon-reload
+systemctl enable -q pentagi
+systemctl start pentagi
+msg_ok "Started PentAGI Service"
+
 
 # Store credentials for user reference
 cat <<EOF >/opt/pentagi/CREDENTIALS.txt
