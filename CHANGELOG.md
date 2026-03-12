@@ -424,14 +424,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - manyfold: fix incorrect port in upstream requests by forwarding original host [@anlopo](https://github.com/anlopo) ([#12812](https://github.com/community-scripts/ProxmoxVE/pull/12812))
-- Pin Patchmon to 1.4.2 [@vhsdream](https://github.com/vhsdream) ([#12789](https://github.com/community-scripts/ProxmoxVE/pull/12789))
-
   - #### 🐞 Bug Fixes
 
+    - manyfold: fix incorrect port in upstream requests by forwarding original host [@anlopo](https://github.com/anlopo) ([#12812](https://github.com/community-scripts/ProxmoxVE/pull/12812))
     - SparkyFitness: install pnpm dependencies from workspace root [@MickLesk](https://github.com/MickLesk) ([#12792](https://github.com/community-scripts/ProxmoxVE/pull/12792))
     - n8n: add build-essential to update dependencies [@MickLesk](https://github.com/MickLesk) ([#12795](https://github.com/community-scripts/ProxmoxVE/pull/12795))
     - Frigate openvino labelmap patch [@semtex1987](https://github.com/semtex1987) ([#12751](https://github.com/community-scripts/ProxmoxVE/pull/12751))
+
+  - #### 🔧 Refactor
+
+    - Pin Patchmon to 1.4.2 [@vhsdream](https://github.com/vhsdream) ([#12789](https://github.com/community-scripts/ProxmoxVE/pull/12789))
 
 ### 💾 Core
 
@@ -450,7 +452,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📂 Github
 
-  - Cleanup: remove frontend, move JSONs to json/ top-level [@MickLesk](https://github.com/MickLesk) ([#12813](https://github.com/community-scripts/ProxmoxVE/pull/12813))
+  - Cleanup workflows [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12818](https://github.com/community-scripts/ProxmoxVE/pull/12818))
+- Cleanup: remove frontend, move JSONs to json/ top-level [@MickLesk](https://github.com/MickLesk) ([#12813](https://github.com/community-scripts/ProxmoxVE/pull/12813))
 
 ## 2026-03-11
 
