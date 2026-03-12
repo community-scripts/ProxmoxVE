@@ -4,13 +4,15 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG DOCKER_VERSION=27.5.1
 ARG BUILDX_VERSION=0.20.1
-ARG RUNNER_ARCH="x64"
 
+# Map TARGETARCH to RUNNER_ARCH (amd64 -> x64, arm64 -> arm64)
 RUN apt update -y && apt install sudo curl unzip -y
 
 WORKDIR /actions-runner
 
+# Download and extract GitHub Actions runner
 RUN RUNNER_VERSION=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | grep "tag_name" | head -n 1 | awk '{print substr($2, 3, length($2)-4)}') \
+    && if [ "$TARGETARCH" = "amd64" ]; then RUNNER_ARCH=x64; else RUNNER_ARCH=$TARGETARCH; fi \
     && curl -f -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./runner.tar.gz \
     && rm runner.tar.gz
@@ -20,9 +22,7 @@ RUN RUNNER_CONTAINER_HOOKS_VERSION=$(curl -s https://api.github.com/repos/action
     && unzip ./runner-container-hooks.zip -d ./k8s \
     && rm runner-container-hooks.zip
 
-RUN export RUNNER_ARCH=${TARGETARCH} \
-    && if [ "$RUNNER_ARCH" = "amd64" ]; then export DOCKER_ARCH=x86_64 ; fi \
-    && if [ "$RUNNER_ARCH" = "arm64" ]; then export DOCKER_ARCH=aarch64 ; fi \
+RUN if [ "$TARGETARCH" = "amd64" ]; then DOCKER_ARCH=x86_64; elif [ "$TARGETARCH" = "arm64" ]; then DOCKER_ARCH=aarch64; else DOCKER_ARCH=$TARGETARCH; fi \
     && curl -fLo docker.tgz https://download.docker.com/${TARGETOS}/static/stable/${DOCKER_ARCH}/docker-${DOCKER_VERSION}.tgz \
     && tar zxvf docker.tgz \
     && rm -rf docker.tgz \
