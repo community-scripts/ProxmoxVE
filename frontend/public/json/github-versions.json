@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-12T00:18:31Z",
+  "generated": "2026-03-12T06:19:33Z",
   "versions": [
     {
       "slug": "2fauth",
@@ -620,9 +620,9 @@
     {
       "slug": "jackett",
       "repo": "Jackett/Jackett",
-      "version": "v0.24.1341",
+      "version": "v0.24.1350",
       "pinned": false,
-      "date": "2026-03-11T05:55:00Z"
+      "date": "2026-03-12T06:03:33Z"
     },
     {
       "slug": "jellystat",
@@ -739,9 +739,9 @@
     {
       "slug": "leantime",
       "repo": "Leantime/leantime",
-      "version": "v3.7.1",
+      "version": "v3.7.3",
       "pinned": false,
-      "date": "2026-02-22T01:25:16Z"
+      "date": "2026-03-12T01:53:56Z"
     },
     {
       "slug": "librenms",
