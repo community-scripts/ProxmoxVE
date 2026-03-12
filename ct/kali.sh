@@ -101,15 +101,16 @@ function fetch_kali_template() {
   local TEMPLATE_PATH="${TEMPLATE_DIR}/${TEMPLATE_NAME}"
   
   # Check if template already exists and is valid
+  # Kali minimal templates can be as small as 50MB when compressed
   if [[ -f "$TEMPLATE_PATH" ]]; then
     local FILE_SIZE
     FILE_SIZE=$(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo 0)
-    if [[ $FILE_SIZE -gt 100000000 ]]; then
+    if [[ $FILE_SIZE -gt 50000000 ]]; then
       msg_ok "Kali template already downloaded: ${TEMPLATE_NAME}"
       echo "${TEMPLATE_NAME}"
       return 0
     else
-      msg_warn "Existing template file too small, re-downloading"
+      msg_warn "Existing template file too small (${FILE_SIZE} bytes), re-downloading"
       rm -f "$TEMPLATE_PATH"
     fi
   fi
@@ -140,11 +141,12 @@ function fetch_kali_template() {
   fi
   
   # Verify download
+  # Kali minimal templates can be as small as 50MB when compressed
   local DOWNLOADED_SIZE
   DOWNLOADED_SIZE=$(stat -c%s "${TEMPLATE_PATH}" 2>/dev/null || echo 0)
-  if [[ $DOWNLOADED_SIZE -lt 100000000 ]]; then
+  if [[ $DOWNLOADED_SIZE -lt 50000000 ]]; then
     msg_error "Downloaded template is too small (${DOWNLOADED_SIZE} bytes)"
-    msg_error "Expected at least 100MB for a valid Kali template"
+    msg_error "Expected at least 50MB for a valid Kali template"
     rm -f "${TEMPLATE_PATH}"
     exit 222
   fi
