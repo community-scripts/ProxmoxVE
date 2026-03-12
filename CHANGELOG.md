@@ -450,6 +450,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: support older NVIDIA driver versions with 2 segments (xxx.xxx) [@MickLesk](https://github.com/MickLesk) ([#12796](https://github.com/community-scripts/ProxmoxVE/pull/12796))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Fix PBS microcode naming [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12834](https://github.com/community-scripts/ProxmoxVE/pull/12834))
+
 ### 📂 Github
 
   - Cleanup: remove old workflow files [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12818](https://github.com/community-scripts/ProxmoxVE/pull/12818))
