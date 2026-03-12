@@ -72,27 +72,14 @@ function fetch_kali_template() {
   fi
   
   # Parse the page to find the latest date directory
-  # Format: [YYYYMMDD_HH:MM/] with trailing slash
+  # The page format is: [YYYYMMDD_HH:MM/](url) with date
+  # We need to extract the directory names like 20260311_17:14
+  
   local LATEST_DIR
-  LATEST_DIR=$(echo "$PAGE_CONTENT" | \
-    grep -oE 'href="[0-9]{8}_[0-9]{2}:[0-9]{2}/"' | \
-    sed 's/href="//;s/"//' | \
-    sort -r | head -n 1)
   
-  # Alternative: try without quotes
-  if [[ -z "$LATEST_DIR" ]]; then
-    LATEST_DIR=$(echo "$PAGE_CONTENT" | \
-      grep -oE '[0-9]{8}_[0-9]{2}:[0-9]{2}/' | \
-      sort -r | head -n 1)
-  fi
-  
-  # Another alternative: look for directory pattern
-  if [[ -z "$LATEST_DIR" ]]; then
-    LATEST_DIR=$(echo "$PAGE_CONTENT" | \
-      grep -oE '>[0-9]{8}_[0-9]{2}:[0-9]{2}/<' | \
-      sed 's/>//;s/<//' | \
-      sort -r | head -n 1)
-  fi
+  # Simple approach: use grep to find all date patterns and sort them
+  # Pattern: 8 digits, underscore, 2 digits, colon, 2 digits
+  LATEST_DIR=$(echo "$PAGE_CONTENT" | grep -o '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9]:[0-9][0-9]' | sort -r | head -n 1)
   
   if [[ -z "$LATEST_DIR" ]]; then
     msg_error "Could not find Kali template directory in the listing"
@@ -103,11 +90,13 @@ function fetch_kali_template() {
   # Remove trailing slash if present
   LATEST_DIR="${LATEST_DIR%/}"
   
+  msg_info "Found latest Kali template directory: ${LATEST_DIR}"
+  
   # Construct the full URL to rootfs.tar.xz
   local TEMPLATE_URL="${KALI_BASE_URL}${LATEST_DIR}/rootfs.tar.xz"
   
-  # Create a friendly template name for Proxmox
-  local DATE_PART="${LATEST_DIR//[:]/-}"  # Replace : with - for filename compatibility
+  # Create a friendly template name for Proxmox (replace : with - for compatibility)
+  local DATE_PART="${LATEST_DIR//:/-}"
   local TEMPLATE_NAME="kali-current-amd64-default-${DATE_PART}.tar.xz"
   local TEMPLATE_PATH="${TEMPLATE_DIR}/${TEMPLATE_NAME}"
   
