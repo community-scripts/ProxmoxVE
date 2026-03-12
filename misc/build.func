@@ -3063,6 +3063,15 @@ install_script() {
       header_info
       CHOICE=""
       ;;
+    generated | GENERATED)
+      header_info
+      echo -e "${DEFAULT}${BOLD}${BL}Using Generated Settings on node $PVEHOST_NAME${CL}"
+      VERBOSE="no"
+      METHOD="generated"
+      base_settings "$VERBOSE"
+      echo_default
+      break
+      ;;
     *)
       msg_error "Invalid option: $CHOICE"
       exit 112
