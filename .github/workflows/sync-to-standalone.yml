@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  repositories: write
 
 jobs:
   sync:
