@@ -424,7 +424,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Pin Patchmon to 1.4.2 [@vhsdream](https://github.com/vhsdream) ([#12789](https://github.com/community-scripts/ProxmoxVE/pull/12789))
+  - manyfold: fix incorrect port in upstream requests by forwarding original host [@anlopo](https://github.com/anlopo) ([#12812](https://github.com/community-scripts/ProxmoxVE/pull/12812))
+- Pin Patchmon to 1.4.2 [@vhsdream](https://github.com/vhsdream) ([#12789](https://github.com/community-scripts/ProxmoxVE/pull/12789))
 
   - #### 🐞 Bug Fixes
 
