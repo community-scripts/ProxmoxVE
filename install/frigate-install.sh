@@ -188,7 +188,6 @@ cp -a /opt/frigate/docker/main/rootfs/. /
 sed -i '/^.*unset DEBIAN_FRONTEND.*$/d' /opt/frigate/docker/main/install_deps.sh
 echo "libedgetpu1-max libedgetpu/accepted-eula boolean true" | debconf-set-selections
 echo "libedgetpu1-max libedgetpu/install-confirm-max boolean true" | debconf-set-selections
-# Allow Frigate's Intel media packages to overwrite files from system GPU driver packages
 echo 'force-overwrite' >/etc/dpkg/dpkg.cfg.d/force-overwrite
 $STD bash /opt/frigate/docker/main/install_deps.sh
 rm -f /etc/dpkg/dpkg.cfg.d/force-overwrite
@@ -212,10 +211,7 @@ if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
   mkdir -p /openvino-model
   cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
   cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
-  
-  # Link the labelmap from the python site-packages to /openvino-model
   $STD ln -sf $(python3 -c "import omz_tools; import os; print(os.path.join(omz_tools.__path__[0], 'data/dataset_classes/coco_91cl_bkgr.txt'))") /openvino-model/coco_91cl_bkgr.txt
-  
   sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
   msg_ok "Built OpenVino Model"
 else
