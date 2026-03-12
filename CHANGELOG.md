@@ -422,10 +422,6 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-12
 
-### 🆕 New Scripts
-
-  - test ([#12823](https://github.com/community-scripts/ProxmoxVE/pull/12823))
-
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
