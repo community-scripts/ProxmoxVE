@@ -4,55 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      # Container scripts
-      - 'ct/agregarr.sh'
-      - 'ct/drop.sh'
-      - 'ct/hermes.sh'
-      - 'ct/lemonade.sh'
-      - 'ct/llamacpp.sh'
-      - 'ct/maintainerr.sh'
-      - 'ct/mcphub.sh'
-      - 'ct/openclaw.sh'
-      - 'ct/pegaprox.sh'
-      - 'ct/swarmui.sh'
-      - 'ct/wakapi.sh'
-      # Install scripts
-      - 'install/agregarr-install.sh'
-      - 'install/drop-install.sh'
-      - 'install/hermes-install.sh'
-      - 'install/lemonade-install.sh'
-      - 'install/llamacpp-install.sh'
-      - 'install/maintainerr-install.sh'
-      - 'install/mcphub-install.sh'
-      - 'install/openclaw-install.sh'
-      - 'install/pegaprox-install.sh'
-      - 'install/swarmui-install.sh'
-      - 'install/wakapi-install.sh'
-      # Header files
-      - 'ct/headers/agregarr'
-      - 'ct/headers/drop'
-      - 'ct/headers/hermes'
-      - 'ct/headers/lemonade'
-      - 'ct/headers/llamacpp'
-      - 'ct/headers/maintainerr'
-      - 'ct/headers/mcphub'
-      - 'ct/headers/openclaw'
-      - 'ct/headers/pegaprox'
-      - 'ct/headers/swarmui'
-      - 'ct/headers/wakapi'
-      # JSON metadata
-      - 'frontend/public/json/agregarr.json'
-      - 'frontend/public/json/drop.json'
-      - 'frontend/public/json/hermes.json'
-      - 'frontend/public/json/lemonade.json'
-      - 'frontend/public/json/llamacpp.json'
-      - 'frontend/public/json/maintainerr.json'
-      - 'frontend/public/json/mcphub.json'
-      - 'frontend/public/json/openclaw.json'
-      - 'frontend/public/json/pegaprox.json'
-      - 'frontend/public/json/swarmui.json'
-      - 'frontend/public/json/wakapi.json'
+    paths-ignore:
+      - 'README.md'
   workflow_dispatch:
 
 permissions:
@@ -74,43 +27,13 @@ jobs:
           token: ${{ secrets.PAT_STANDALONE }}
           path: standalone
 
-      - name: Sync custom scripts
+      - name: Sync entire codebase (excluding README.md)
         run: |
-          # Define custom scripts
-          SCRIPTS=("agregarr" "drop" "hermes" "lemonade" "llamacpp" "maintainerr" "mcphub" "openclaw" "pegaprox" "swarmui" "wakapi")
-          
-          # Sync each script
-          for script in "${SCRIPTS[@]}"; do
-            echo "Syncing $script..."
-            
-            # Copy ct script
-            if [ -f "ct/$script.sh" ]; then
-              mkdir -p standalone/ct
-              cp "ct/$script.sh" "standalone/ct/"
-              echo "  ✓ ct/$script.sh"
-            fi
-            
-            # Copy install script
-            if [ -f "install/$script-install.sh" ]; then
-              mkdir -p standalone/install
-              cp "install/$script-install.sh" "standalone/install/"
-              echo "  ✓ install/$script-install.sh"
-            fi
-            
-            # Copy header file
-            if [ -f "ct/headers/$script" ]; then
-              mkdir -p standalone/ct/headers
-              cp "ct/headers/$script" "standalone/ct/headers/"
-              echo "  ✓ ct/headers/$script"
-            fi
-            
-            # Copy JSON metadata
-            if [ -f "frontend/public/json/$script.json" ]; then
-              mkdir -p standalone/frontend/public/json
-              cp "frontend/public/json/$script.json" "standalone/frontend/public/json/"
-              echo "  ✓ frontend/public/json/$script.json"
-            fi
-          done
+          # Sync all files except README.md using rsync
+          rsync -av --delete \
+            --exclude='.git/' \
+            --exclude='README.md' \
+            ./ standalone/
           
           echo "Sync complete!"
 
