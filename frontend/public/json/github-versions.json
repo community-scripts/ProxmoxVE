@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-11T06:35:14Z",
+  "generated": "2026-03-11T18:36:22Z",
   "versions": [
     {
       "slug": "agregarr",
@@ -11,16 +11,23 @@
     {
       "slug": "lemonade",
       "repo": "lemonade-sdk/lemonade",
-      "version": "v9.4.1",
+      "version": "v10.0.0",
       "pinned": false,
-      "date": "2026-02-27T21:39:15Z"
+      "date": "2026-03-11T15:41:09Z"
     },
     {
       "slug": "llamacpp",
       "repo": "ggml-org/llama.cpp",
-      "version": "b8263",
+      "version": "b8272",
       "pinned": false,
-      "date": "2026-03-11T01:34:43Z"
+      "date": "2026-03-11T14:00:43Z"
+    },
+    {
+      "slug": "maintainerr",
+      "repo": "Maintainerr/Maintainerr",
+      "version": "v3.1.0",
+      "pinned": false,
+      "date": "2026-03-10T14:58:59Z"
     },
     {
       "slug": "pegaprox",
