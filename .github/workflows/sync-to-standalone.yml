@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'README.md'
   workflow_dispatch:
 
 permissions:
   contents: read
+  repositories: write
 
 jobs:
   sync:
@@ -26,16 +25,21 @@ jobs:
           repository: Heretek-AI/Heretek-ProxmoxVE
           token: ${{ secrets.PAT_STANDALONE }}
           path: standalone
+          fetch-depth: 0
 
       - name: Sync entire codebase (excluding README.md)
         run: |
           # Sync all files except README.md using rsync
+          # --delete removes files in target that don't exist in source
+          # --exclude patterns prevent syncing .git and README.md
           rsync -av --delete \
             --exclude='.git/' \
             --exclude='README.md' \
             ./ standalone/
           
           echo "Sync complete!"
+          echo "Files synced:"
+          ls -la standalone/
 
       - name: Commit and push to standalone
         run: |
@@ -43,7 +47,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          if git diff --quiet && git diff --staged --quiet; then
+          # Check if there are any changes (including untracked files)
+          if [ -z "$(git status --porcelain)" ]; then
             echo "No changes to commit"
           else
             git add -A
