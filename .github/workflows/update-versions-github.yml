@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 env:
-  VERSIONS_FILE: frontend/public/json/github-versions.json
+  VERSIONS_FILE: json/github-versions.json
   BRANCH_NAME: automated/update-github-versions
   AUTOMATED_PR_LABEL: "automated pr"
 
@@ -74,7 +74,7 @@ jobs:
           echo ""
           echo "=== Scanning JSON files for slugs ==="
 
-          for json_file in frontend/public/json/*.json; do
+          for json_file in json/*.json; do
             [[ ! -f "$json_file" ]] && continue
 
             # Skip non-app JSON files

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "frontend/public/json/**"
+      - "json/**"
       - "vm/**"
       - "tools/**"
       - "turnkey/**"
@@ -29,7 +29,7 @@ jobs:
           slugs=""
 
           # Deleted JSON files: get slug from previous commit
-          deleted_json=$(git diff --name-only --diff-filter=D "$BEFORE" "$AFTER" -- frontend/public/json/ | grep '\.json$' || true)
+          deleted_json=$(git diff --name-only --diff-filter=D "$BEFORE" "$AFTER" -- json/ | grep '\.json$' || true)
           for f in $deleted_json; do
             [[ -z "$f" ]] && continue
             s=$(git show "$BEFORE:$f" 2>/dev/null | jq -r '.slug // empty' 2>/dev/null || true)
