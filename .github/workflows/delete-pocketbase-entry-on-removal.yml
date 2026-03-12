@@ -52,15 +52,15 @@ jobs:
 
           slugs=$(echo $slugs | xargs -n1 | sort -u | tr '\n' ' ')
           if [[ -z "$slugs" ]]; then
-            echo "No deleted JSON or script files to remove from PocketBase."
+            echo "No deleted JSON or script files to mark as deleted in PocketBase."
             echo "count=0" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           echo "$slugs" > slugs_to_delete.txt
           echo "count=$(echo $slugs | wc -w)" >> "$GITHUB_OUTPUT"
-          echo "Slugs to delete: $slugs"
+          echo "Slugs to mark as deleted: $slugs"
 
-      - name: Delete from PocketBase
+      - name: Mark as deleted in PocketBase
         if: steps.slugs.outputs.count != '0'
         env:
           POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
@@ -123,6 +123,8 @@ jobs:
             const token = JSON.parse(authRes.body).token;
             const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
 
+            const patchBody = JSON.stringify({ is_deleted: true });
+
             for (const slug of slugs) {
               const filter = "(slug='" + slug + "')";
               const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1', {
@@ -134,14 +136,15 @@ jobs:
                 console.log('No PocketBase record for slug "' + slug + '", skipping.');
                 continue;
               }
-              const delRes = await request(recordsUrl + '/' + existingId, {
-                method: 'DELETE',
-                headers: { 'Authorization': token }
+              const patchRes = await request(recordsUrl + '/' + existingId, {
+                method: 'PATCH',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: patchBody
               });
-              if (delRes.ok) {
-                console.log('Deleted PocketBase record for slug "' + slug + '" (id=' + existingId + ').');
+              if (patchRes.ok) {
+                console.log('Set is_deleted=true for slug "' + slug + '" (id=' + existingId + ').');
               } else {
-                console.warn('DELETE failed for slug "' + slug + '": ' + delRes.statusCode + ' ' + delRes.body);
+                console.warn('PATCH failed for slug "' + slug + '": ' + patchRes.statusCode + ' ' + patchRes.body);
               }
             }
             console.log('Done.');
