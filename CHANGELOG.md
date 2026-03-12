@@ -422,6 +422,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-12
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Frigate openvino labelmap patch [@semtex1987](https://github.com/semtex1987) ([#12751](https://github.com/community-scripts/ProxmoxVE/pull/12751))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
