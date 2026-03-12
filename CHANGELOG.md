@@ -424,6 +424,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Pin Patchmon to 1.4.2 [@vhsdream](https://github.com/vhsdream) ([#12789](https://github.com/community-scripts/ProxmoxVE/pull/12789))
+
   - #### 🐞 Bug Fixes
 
     - SparkyFitness: install pnpm dependencies from workspace root [@MickLesk](https://github.com/MickLesk) ([#12792](https://github.com/community-scripts/ProxmoxVE/pull/12792))
