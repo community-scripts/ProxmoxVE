@@ -420,6 +420,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-13
+
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Discopanel: V2 Support + Script rewrite [@nickheyer](https://github.com/nickheyer) ([#12763](https://github.com/community-scripts/ProxmoxVE/pull/12763))
+
 ## 2026-03-12
 
 ### 🚀 Updated Scripts
