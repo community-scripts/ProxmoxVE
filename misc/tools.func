@@ -5962,44 +5962,19 @@ function setup_mysql() {
     return 1
   }
 
-  # Debian 13+ Fix: MySQL 8.0 incompatible with libaio1t64, use 8.4 LTS
+  # Debian 13+ Fix: MySQL repo has expired GPG key (as of 2025-10-22), use MariaDB
+  # See: https://bugs.mysql.com/bug.php?id=119212
   if [[ "$DISTRO_ID" == "debian" && "$DISTRO_CODENAME" =~ ^(trixie|forky|sid)$ ]]; then
-    msg_info "Debian ${DISTRO_CODENAME} detected → using MySQL 8.4 LTS (libaio1t64 compatible)"
+    msg_info "Debian ${DISTRO_CODENAME} detected → using MariaDB (MySQL repo GPG key expired)"
 
-    if ! download_gpg_key "https://repo.mysql.com/RPM-GPG-KEY-mysql-2025" "/etc/apt/keyrings/mysql.gpg" "dearmor"; then
-      msg_error "Failed to import MySQL GPG key"
-      return 1
-    fi
-
-    cat >/etc/apt/sources.list.d/mysql.sources <<EOF
-Types: deb
-URIs: https://repo.mysql.com/apt/debian/
-Suites: bookworm
-Components: mysql-8.4-lts
-Architectures: $(dpkg --print-architecture)
-Signed-By: /etc/apt/keyrings/mysql.gpg
-EOF
-
-    $STD apt update || {
-      msg_error "Failed to update APT for MySQL 8.4 LTS"
+    # Use distro's MariaDB directly - no external repo needed
+    install_packages_with_retry "mariadb-server" "mariadb-client" || {
+      msg_error "Failed to install MariaDB on Debian ${DISTRO_CODENAME}"
       return 1
     }
 
-    # Install with retry logic
-    if ! install_packages_with_retry "mysql-community-server" "mysql-community-client"; then
-      msg_warn "MySQL 8.4 LTS installation failed – falling back to MariaDB"
-      cleanup_old_repo_files "mysql"
-      $STD apt update
-      install_packages_with_retry "mariadb-server" "mariadb-client" || {
-        msg_error "Failed to install database engine (MySQL/MariaDB fallback)"
-        return 1
-      }
-      msg_ok "Setup Database Engine (MariaDB fallback on Debian ${DISTRO_CODENAME})"
-      return 0
-    fi
-
-    cache_installed_version "mysql" "8.4"
-    msg_ok "Setup MySQL 8.4 LTS (Debian ${DISTRO_CODENAME})"
+    cache_installed_version "mysql" "mariadb"
+    msg_ok "Setup MariaDB (MySQL-compatible, Debian ${DISTRO_CODENAME})"
     return 0
   fi
 
