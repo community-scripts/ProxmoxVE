@@ -436,6 +436,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - update-apps: fix restore path, add PBS support and improve restore messages [@omertahaoztop](https://github.com/omertahaoztop) ([#12528](https://github.com/community-scripts/ProxmoxVE/pull/12528))
 
+  - #### 🐞 Bug Fixes
+
+    - fix(pve-privilege-converter): handle already stopped container in manage_states [@liuqitoday](https://github.com/liuqitoday) ([#12765](https://github.com/community-scripts/ProxmoxVE/pull/12765))
+
 ### 📚 Documentation
 
   - Update: Docs/website metadata workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#12858](https://github.com/community-scripts/ProxmoxVE/pull/12858))
