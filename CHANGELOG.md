@@ -424,6 +424,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Hotfix: Removed clean install usage from original script. [@nickheyer](https://github.com/nickheyer) ([#12870](https://github.com/community-scripts/ProxmoxVE/pull/12870))
+
   - #### 🔧 Refactor
 
     - Discopanel: V2 Support + Script rewrite [@nickheyer](https://github.com/nickheyer) ([#12763](https://github.com/community-scripts/ProxmoxVE/pull/12763))
