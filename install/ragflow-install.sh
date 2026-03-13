@@ -305,12 +305,13 @@ if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
   msg_ok "Fixed graspologic dependency"
 fi
 
-# Fix: Limit Python version to avoid dependency resolution for future Python versions
+# Fix: Limit Python version to avoid dependency resolution issues
+# infinity-sdk requires Python >=3.11, so we need to exclude Python 3.10
 # RAGFlow's dependencies have conflicts when resolving for Python 3.14+
 if grep -q 'requires-python' pyproject.toml 2>/dev/null; then
-  sed -i 's/requires-python.*/requires-python = ">=3.10,<3.13"/' pyproject.toml
+  sed -i 's/requires-python.*/requires-python = ">=3.11,<3.13"/' pyproject.toml
 else
-  sed -i '/^\[project\]/a requires-python = ">=3.10,<3.13"' pyproject.toml
+  sed -i '/^\[project\]/a requires-python = ">=3.11,<3.13"' pyproject.toml
 fi
 
 # Add uv environments configuration to limit to Linux x86_64 only
