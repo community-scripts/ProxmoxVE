@@ -24,9 +24,9 @@ This guide explains the current execution flow and what to verify during reviews
 - Uses `tools.func` helpers (setup\_\*).
 - Ends with `motd_ssh`, `customize`, `cleanup_lxc`.
 
-### JSON Metadata
+### Website Metadata
 
-- File in `frontend/public/json/<appname>.json` matches template schema.
+- Website metadata for new/updated scripts is requested via the website (Report issue on script page) where applicable.
 
 ### Testing
 
