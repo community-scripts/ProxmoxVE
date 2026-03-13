@@ -16,7 +16,7 @@ update_os
 # RAGFlow Bare-Metal Installation Script
 # ==============================================================================
 # This script installs RAGFlow with all dependencies directly on the LXC container:
-# - MySQL 8.0 (metadata storage)
+# - MariaDB (MySQL-compatible, metadata storage)
 # - Elasticsearch 8.11 (document/vector search)
 # - Redis/Valkey (caching)
 # - MinIO (object storage)
@@ -91,12 +91,15 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 # ==============================================================================
-# MYSQL INSTALLATION
+# MARIADB INSTALLATION (MySQL-compatible)
 # ==============================================================================
+# Using MariaDB instead of MySQL to avoid expired GPG key issues on Debian 13+
+# MariaDB is fully MySQL-compatible and works with RAGFlow
 
-MYSQL_VERSION="8.0" setup_mysql
+msg_info "Installing MariaDB (MySQL-compatible)"
+$STD apt-get install -y mariadb-server mariadb-client
 
-# Wait for MySQL to be ready
+# Wait for MariaDB to be ready
 for i in {1..30}; do
   if mysqladmin ping -h localhost --silent 2>/dev/null; then
     break
@@ -104,12 +107,12 @@ for i in {1..30}; do
   sleep 1
 done
 
-# Generate MySQL credentials
+# Generate MariaDB credentials
 MYSQL_RAGFLOW_USER="rag_flow"
 MYSQL_RAGFLOW_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 MYSQL_RAGFLOW_DB="rag_flow"
 
-msg_info "Creating MySQL Database and User"
+msg_info "Creating MariaDB Database and User"
 $STD mysql -u root -e "CREATE DATABASE \`${MYSQL_RAGFLOW_DB}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 $STD mysql -u root -e "CREATE USER '${MYSQL_RAGFLOW_USER}'@'localhost' IDENTIFIED BY '${MYSQL_RAGFLOW_PASS}';"
 $STD mysql -u root -e "GRANT ALL PRIVILEGES ON \`${MYSQL_RAGFLOW_DB}\`.* TO '${MYSQL_RAGFLOW_USER}'@'localhost';"
@@ -117,15 +120,15 @@ $STD mysql -u root -e "FLUSH PRIVILEGES;"
 
 # Increase max_allowed_packet for large documents
 $STD mysql -u root -e "SET GLOBAL max_allowed_packet=1073741824;"
-cat <<EOF >/etc/mysql/mysql.conf.d/ragflow.cnf
+cat <<EOF >/etc/mysql/mariadb.conf.d/ragflow.cnf
 [mysqld]
 max_allowed_packet=1073741824
 max_connections=900
 character-set-server=utf8mb4
 collation-server=utf8mb4_unicode_ci
 EOF
-systemctl restart mysql
-msg_ok "MySQL Configured"
+systemctl restart mariadb
+msg_ok "MariaDB Configured"
 
 # ==============================================================================
 # REDIS/VALKEY INSTALLATION
@@ -291,15 +294,15 @@ $STD apt-get install -y libjemalloc-dev
 # Clone RAGFlow repository
 msg_info "Cloning RAGFlow Repository"
 cd /opt || exit
-$STD gi || exitt clone --depth 1 https://github.com/infiniflow/ragflow.git ragflow
+$STD git clone --depth 1 https://github.com/infiniflow/ragflow.git ragflow
 cd /opt/ragflow || exit
-git describe -- || exittags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || echo "v0.24.0" > /opt/ragflow/version.txt
+git describe --tags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || echo "v0.24.0" > /opt/ragflow/version.txt
 msg_ok "Cloned RAGFlow Repository"
 
 # Install Python dependencies
 msg_info "Installing Python Dependencies"
 cd /opt/ragflow || exit
-export UV_SYSTE || exitM_PYTHON=1
+export UV_SYSTEM_PYTHON=1
 $STD /root/.local/bin/uv sync --python 3.12
 $STD /root/.local/bin/uv run download_deps.py
 msg_ok "Installed Python Dependencies"
@@ -395,8 +398,8 @@ msg_info "Creating Systemd Services"
 cat <<EOF >/etc/systemd/system/ragflow-server.service
 [Unit]
 Description=RAGFlow Backend Server
-After=network.target mysql.service elasticsearch.service valkey.service minio.service
-Requires=mysql.service elasticsearch.service valkey.service minio.service
+After=network.target mariadb.service elasticsearch.service valkey.service minio.service
+Requires=mariadb.service elasticsearch.service valkey.service minio.service
 
 [Service]
 Type=simple
@@ -420,8 +423,8 @@ EOF
 cat <<EOF >/etc/systemd/system/ragflow-task-executor.service
 [Unit]
 Description=RAGFlow Task Executor
-After=network.target mysql.service elasticsearch.service valkey.service minio.service ragflow-server.service
-Requires=mysql.service elasticsearch.service valkey.service minio.service
+After=network.target mariadb.service elasticsearch.service valkey.service minio.service ragflow-server.service
+Requires=mariadb.service elasticsearch.service valkey.service minio.service
 
 [Service]
 Type=simple
@@ -538,9 +541,9 @@ msg_info "Saving Credentials"
 cat <<EOF >~/ragflow.creds
 RAGFlow Credentials
 ===================
-MySQL Database: ${MYSQL_RAGFLOW_DB}
-MySQL User: ${MYSQL_RAGFLOW_USER}
-MySQL Password: ${MYSQL_RAGFLOW_PASS}
+MariaDB Database: ${MYSQL_RAGFLOW_DB}
+MariaDB User: ${MYSQL_RAGFLOW_USER}
+MariaDB Password: ${MYSQL_RAGFLOW_PASS}
 
 Elasticsearch User: elastic
 Elasticsearch Password: ${ES_PASS}
