@@ -289,9 +289,9 @@ cleanup_tool_keyrings() {
   local tool_patterns=("$@")
 
   for pattern in "${tool_patterns[@]}"; do
-    rm -f /usr/share/keyrings/${pattern}*.gpg \
-      /etc/apt/keyrings/${pattern}*.gpg \
-      /etc/apt/trusted.gpg.d/${pattern}*.gpg 2>/dev/null || true
+    rm -f /usr/share/keyrings/"${pattern}"*.gpg \
+      /etc/apt/keyrings/"${pattern}"*.gpg \
+      /etc/apt/trusted.gpg.d/"${pattern}"*.gpg 2>/dev/null || true
   done
 }
 
@@ -791,7 +791,7 @@ manage_tool_repository() {
     repo_component="main"
     [[ "$distro_id" == "ubuntu" ]] && repo_component="multiverse"
 
-    cat <<EOF >/etc/apt/sources.list.d/mongodb-org-${version}.sources
+    cat <<EOF >/etc/apt/sources.list.d/mongodb-org-"${version}".sources
 Types: deb
 URIs: ${repo_url}
 Suites: ${suite}/mongodb-org/${version}
@@ -1371,7 +1371,7 @@ download_file() {
   local curl_opts=(-fsSL)
   [[ "$show_progress" == "true" ]] && curl_opts=(-fL#)
 
-  for attempt in $(seq 1 $max_retries); do
+  for attempt in $(seq 1 "$max_retries"); do
     if curl "${curl_opts[@]}" -o "$output" "$url"; then
       return 0
     fi
@@ -1846,7 +1846,7 @@ setup_deb822_repo() {
     [[ -n "$architectures" ]] && echo "Architectures: $architectures"
     echo "Signed-By: /etc/apt/keyrings/${name}.gpg"
     [[ -n "$enabled" ]] && echo "Enabled: $enabled"
-  } >/etc/apt/sources.list.d/${name}.sources
+  } >/etc/apt/sources.list.d/"${name}".sources
 
   $STD apt update || {
     msg_warn "apt update failed after adding repository: ${name}"
@@ -2672,7 +2672,7 @@ function fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format: https://codeberg.org/{owner}/{repo}/archive/{tag}.tar.gz
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+    if curl "$download_timeout" -fsSL -o "$tmpdir/$filename" "$archive_url"; then
       download_success=true
     fi
 
@@ -2722,7 +2722,7 @@ function fetch_and_deploy_codeberg_release() {
   local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
 
   while ((attempt <= max_retries)); do
-    resp=$(curl $api_timeout -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
+    resp=$(curl "$api_timeout" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
     sleep "$retry_delay"
     ((attempt++))
   done
@@ -2769,7 +2769,7 @@ function fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+    if curl "$download_timeout" -fsSL -o "$tmpdir/$filename" "$archive_url"; then
       download_success=true
     fi
 
@@ -2843,7 +2843,7 @@ function fetch_and_deploy_codeberg_release() {
     fi
 
     filename="${url_match##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+    curl "$download_timeout" -fsSL -o "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
       rm -rf "$tmpdir"
       return 1
@@ -2886,7 +2886,7 @@ function fetch_and_deploy_codeberg_release() {
     }
 
     filename="${asset_url##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+    curl "$download_timeout" -fsSL -o "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -2987,7 +2987,7 @@ function fetch_and_deploy_codeberg_release() {
     local target_file="$app"
     [[ "$use_filename" == "true" ]] && target_file="$filename"
 
-    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+    curl "$download_timeout" -fsSL -o "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -3206,7 +3206,7 @@ function fetch_and_deploy_gh_release() {
   local max_retries=3 retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl "$api_timeout" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -3280,7 +3280,7 @@ function fetch_and_deploy_gh_release() {
     local direct_tarball_url="https://github.com/$repo/archive/refs/tags/$tag_name.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$direct_tarball_url" || {
+    curl "$download_timeout" -fsSL -o "$tmpdir/$filename" "$direct_tarball_url" || {
       msg_error "Download failed: $direct_tarball_url"
       rm -rf "$tmpdir"
       return 1
@@ -3383,7 +3383,7 @@ function fetch_and_deploy_gh_release() {
     fi
 
     filename="${url_match##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+    curl "$download_timeout" -fsSL -o "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
       rm -rf "$tmpdir"
       return 1
@@ -3395,7 +3395,7 @@ function fetch_and_deploy_gh_release() {
     local dpkg_opts=""
     [[ "${DPKG_FORCE_CONFOLD:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confold"
     [[ "${DPKG_FORCE_CONFNEW:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confnew"
-    DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
+    DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y "$dpkg_opts" "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         msg_error "Both apt and dpkg installation failed"
         rm -rf "$tmpdir"
@@ -3450,7 +3450,7 @@ function fetch_and_deploy_gh_release() {
     }
 
     filename="${asset_url##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+    curl "$download_timeout" -fsSL -o "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -3571,7 +3571,7 @@ function fetch_and_deploy_gh_release() {
     local target_file="$app"
     [[ "$use_filename" == "true" ]] && target_file="$filename"
 
-    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+    curl "$download_timeout" -fsSL -o "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -4724,7 +4724,7 @@ _setup_nvidia_gpu() {
       if [[ -n "$available_version" ]]; then
         msg_info "Found available NVIDIA version: ${available_version}"
         local nvidia_pkgs="libcuda1=${available_version} libnvcuvid1=${available_version} libnvidia-encode1=${available_version} libnvidia-ml1=${available_version}"
-        if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
+        if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends "$nvidia_pkgs" 2>/dev/null; then
           msg_ok "Installed NVIDIA libraries (${available_version})"
         else
           msg_warn "Failed to install NVIDIA ${available_version} - trying unversioned"
@@ -4788,7 +4788,7 @@ NVIDIA_PIN
       if [[ -n "$available_version" ]]; then
         msg_info "Installing NVIDIA libraries (version ${available_version})"
         local nvidia_pkgs="libcuda1=${available_version} libnvcuvid1=${available_version} libnvidia-encode1=${available_version} libnvidia-ml1=${available_version}"
-        if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
+        if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends "$nvidia_pkgs" 2>/dev/null; then
           msg_ok "Installed version-matched NVIDIA libraries"
         else
           msg_warn "Version-pinned install failed - trying unpinned"
@@ -4851,13 +4851,13 @@ NVIDIA_PIN
     if [[ -n "$available_version" ]]; then
       msg_info "Installing NVIDIA libraries (version ${available_version})"
       local nvidia_pkgs="libcuda1=${available_version} libnvcuvid1=${available_version} libnvidia-encode1=${available_version} libnvidia-ml1=${available_version}"
-      if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends $nvidia_pkgs 2>/dev/null; then
+      if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends "$nvidia_pkgs" 2>/dev/null; then
         msg_ok "Installed version-matched NVIDIA libraries"
       else
         # Fallback to Ubuntu repo packages with versioned nvidia-utils
         msg_warn "CUDA repo install failed - trying Ubuntu native packages (nvidia-utils-${nvidia_major_version})"
         if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends \
-          libnvidia-decode-${nvidia_major_version} libnvidia-encode-${nvidia_major_version} nvidia-utils-${nvidia_major_version} 2>/dev/null; then
+          libnvidia-decode-"${nvidia_major_version}" libnvidia-encode-"${nvidia_major_version}" nvidia-utils-"${nvidia_major_version}" 2>/dev/null; then
           msg_ok "Installed Ubuntu NVIDIA packages (${nvidia_major_version})"
         else
           msg_warn "NVIDIA driver installation failed - please install manually: apt install nvidia-utils-${nvidia_major_version}"
@@ -4868,7 +4868,7 @@ NVIDIA_PIN
       # Fallback to Ubuntu repo packages with versioned nvidia-utils
       msg_info "Trying Ubuntu native packages (nvidia-utils-${nvidia_major_version})"
       if $STD apt-get -y -o Dpkg::Options::="--force-confold" install --no-install-recommends \
-        libnvidia-decode-${nvidia_major_version} libnvidia-encode-${nvidia_major_version} nvidia-utils-${nvidia_major_version} 2>/dev/null; then
+        libnvidia-decode-"${nvidia_major_version}" libnvidia-encode-"${nvidia_major_version}" nvidia-utils-"${nvidia_major_version}" 2>/dev/null; then
         msg_ok "Installed Ubuntu NVIDIA packages (${nvidia_major_version})"
       else
         msg_warn "NVIDIA driver installation failed - please install manually: apt install nvidia-utils-${nvidia_major_version}"
@@ -5966,7 +5966,7 @@ function setup_mysql() {
   if [[ "$DISTRO_ID" == "debian" && "$DISTRO_CODENAME" =~ ^(trixie|forky|sid)$ ]]; then
     msg_info "Debian ${DISTRO_CODENAME} detected → using MySQL 8.4 LTS (libaio1t64 compatible)"
 
-    if ! download_gpg_key "https://repo.mysql.com/RPM-GPG-KEY-mysql-2023" "/etc/apt/keyrings/mysql.gpg" "dearmor"; then
+    if ! download_gpg_key "https://repo.mysql.com/RPM-GPG-KEY-mysql-2025" "/etc/apt/keyrings/mysql.gpg" "dearmor"; then
       msg_error "Failed to import MySQL GPG key"
       return 1
     fi
@@ -6016,7 +6016,7 @@ EOF
 
   # Setup repository
   manage_tool_repository "mysql" "$MYSQL_VERSION" "https://repo.mysql.com/apt/${DISTRO_ID}" \
-    "https://repo.mysql.com/RPM-GPG-KEY-mysql-2023" || {
+    "https://repo.mysql.com/RPM-GPG-KEY-mysql-2025" || {
     msg_error "Failed to setup MySQL repository"
     return 1
   }
@@ -6439,8 +6439,8 @@ EOF
       msg_warn "php${PHP_VERSION}-fpm not available"
     fi
     # Create systemd override for PHP-FPM to fix runtime directory issues in LXC containers
-    mkdir -p /etc/systemd/system/php${PHP_VERSION}-fpm.service.d/
-    cat <<EOF >/etc/systemd/system/php${PHP_VERSION}-fpm.service.d/override.conf
+    mkdir -p /etc/systemd/system/php"${PHP_VERSION}"-fpm.service.d/
+    cat <<EOF >/etc/systemd/system/php"${PHP_VERSION}"-fpm.service.d/override.conf
 [Service]
 RuntimeDirectory=php
 RuntimeDirectoryMode=0755
@@ -6466,7 +6466,7 @@ EOF
   msg_info "Installing PHP ${PHP_VERSION} packages"
 
   # First attempt: Install all verified packages at once
-  if ! $STD apt install -y $MODULE_LIST 2>/dev/null; then
+  if ! $STD apt install -y "$MODULE_LIST" 2>/dev/null; then
     msg_warn "Bulk installation failed, attempting individual installation"
 
     # Install main package first (critical)
@@ -6520,8 +6520,8 @@ EOF
   # Enable and restart PHP-FPM if requested
   if [[ "$PHP_FPM" == "YES" ]]; then
     if systemctl list-unit-files | grep -q "php${PHP_VERSION}-fpm.service"; then
-      $STD systemctl enable php${PHP_VERSION}-fpm
-      safe_service_restart php${PHP_VERSION}-fpm
+      $STD systemctl enable php"${PHP_VERSION}"-fpm
+      safe_service_restart php"${PHP_VERSION}"-fpm
     fi
   fi
 
