@@ -300,8 +300,10 @@ msg_ok "Cloned RAGFlow Repository"
 msg_info "Installing Python Dependencies"
 cd /opt/ragflow || exit
 export UV_SYSTEM_PYTHON=1
-$STD /usr/local/bin/uv sync --python 3.12
-$STD /usr/local/bin/uv run download_deps.py
+# Use --index-strategy unsafe-best-match to handle multiple PyPI indexes
+# and avoid dependency resolution issues with mirrors
+$STD /usr/local/bin/uv sync --python 3.12 --index-strategy unsafe-best-match
+$STD /usr/local/bin/uv run --index-strategy unsafe-best-match download_deps.py
 msg_ok "Installed Python Dependencies"
 
 # ==============================================================================
@@ -406,7 +408,7 @@ Environment=PYTHONPATH=/opt/ragflow
 Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 Environment=NLTK_DATA=/opt/ragflow/nltk_data
 ExecStartPre=/bin/sleep 10
-ExecStart=/usr/local/bin/uv run python api/ragflow_server.py
+ExecStart=/usr/local/bin/uv run --index-strategy unsafe-best-match python api/ragflow_server.py
 Restart=on-failure
 RestartSec=10
 TimeoutStartSec=300
@@ -430,7 +432,7 @@ WorkingDirectory=/opt/ragflow
 Environment=PYTHONPATH=/opt/ragflow
 Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 Environment=NLTK_DATA=/opt/ragflow/nltk_data
-ExecStart=/usr/local/bin/uv run python rag/svr/task_executor.py 0
+ExecStart=/usr/local/bin/uv run --index-strategy unsafe-best-match python rag/svr/task_executor.py 0
 Restart=on-failure
 RestartSec=10
 TimeoutStartSec=300
