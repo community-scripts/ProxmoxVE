@@ -59,11 +59,39 @@ function update_script() {
   $STD git describe --tags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || true
   msg_ok "Updated ${APP}"
 
+  # Fix: Replace gitee.com graspologic dependency with GitHub version
+  # RAGFlow's pyproject.toml references a gitee.com fork that requires authentication
+  # We replace it with the GitHub mirror which is publicly accessible
+  if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
+    msg_info "Replacing gitee.com graspologic dependency with GitHub version"
+    sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' pyproject.toml
+    msg_ok "Fixed graspologic dependency"
+  fi
+
+  # Fix: Limit Python version to avoid dependency resolution for future Python versions
+  # RAGFlow's dependencies have conflicts when resolving for Python 3.14+
+  if grep -q 'requires-python' pyproject.toml 2>/dev/null; then
+    sed -i 's/requires-python.*/requires-python = ">=3.10,<3.13"/' pyproject.toml
+  else
+    sed -i '/^\[project\]/a requires-python = ">=3.10,<3.13"' pyproject.toml
+  fi
+
+  # Fix: Add uv environments configuration to limit to Linux x86_64 only
+  # This avoids dependency resolution conflicts on macOS/Darwin and ARM64
+  # where some packages (zhipuai, mcp) have conflicting PyJWT requirements
+  if ! grep -q 'tool.uv.environments' pyproject.toml 2>/dev/null; then
+    cat >> pyproject.toml << 'UVENV'
+
+[tool.uv]
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+UVENV
+  fi
+
   msg_info "Reinstalling Python Dependencies"
   cd /opt/ragflow
   export UV_SYSTEM_PYTHON=1
-  $STD /root/.local/bin/uv sync --python 3.12
-  $STD /root/.local/bin/uv run download_deps.py
+  $STD /root/.local/bin/uv sync --python 3.12 --index-strategy unsafe-best-match
+  $STD /root/.local/bin/uv run --index-strategy unsafe-best-match download_deps.py
   msg_ok "Reinstalled Python Dependencies"
 
   msg_info "Restoring Configuration"
