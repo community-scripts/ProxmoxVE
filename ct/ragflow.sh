@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  cd /opt/ragflow
+  cd /opt/ragflow || exit
   LOCAL_VERSION=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
   REMOTE_VERSION=$(git ls-remote origin HEAD 2>/dev/null | awk '{print $1}' || echo "unknown")
 
@@ -104,7 +104,7 @@ OVERRIDE
   fi
 
   msg_info "Reinstalling Python Dependencies"
-  cd /opt/ragflow
+  cd /opt/ragflow || exit
   export UV_SYSTEM_PYTHON=1
   $STD /root/.local/bin/uv sync --python 3.12 --index-strategy unsafe-best-match
   $STD /root/.local/bin/uv run --index-strategy unsafe-best-match download_deps.py
