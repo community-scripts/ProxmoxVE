@@ -328,15 +328,21 @@ fi
 # mcp>=1.23.0 requires pyjwt[crypto]>=2.10.1
 # These constraints are mutually exclusive, so we override PyJWT to satisfy mcp
 # Reference: https://github.com/infiniflow/ragflow/issues/4499
-if ! grep -q 'tool.uv.override-dependencies' pyproject.toml 2>/dev/null; then
+if ! grep -q 'override-dependencies' pyproject.toml 2>/dev/null; then
   msg_info "Adding dependency overrides for PyJWT conflict resolution"
-  cat >> pyproject.toml << 'OVERRIDE'
+  # Note: override-dependencies must be an array, not a table
+  # Format: override-dependencies = ["package>=version"]
+  if grep -q '^\[tool\.uv\]' pyproject.toml 2>/dev/null; then
+    # Append to existing [tool.uv] section
+    sed -i '/^\[tool\.uv\]/a override-dependencies = ["pyjwt>=2.10.1"]' pyproject.toml
+  else
+    # Create new [tool.uv] section with override-dependencies as array
+    cat >> pyproject.toml << 'OVERRIDE'
 
-[tool.uv.override-dependencies]
-# Force PyJWT version that satisfies mcp's requirement (>=2.10.1)
-# zhipuai's constraint (<2.9.dev0) is overly restrictive and works with newer PyJWT
-pyjwt = ">=2.10.1"
+[tool.uv]
+override-dependencies = ["pyjwt>=2.10.1"]
 OVERRIDE
+  fi
   msg_ok "Added dependency overrides"
 fi
 
