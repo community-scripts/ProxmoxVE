@@ -300,8 +300,8 @@ msg_ok "Cloned RAGFlow Repository"
 msg_info "Installing Python Dependencies"
 cd /opt/ragflow || exit
 export UV_SYSTEM_PYTHON=1
-$STD /root/.local/bin/uv sync --python 3.12
-$STD /root/.local/bin/uv run download_deps.py
+$STD /usr/local/bin/uv sync --python 3.12
+$STD /usr/local/bin/uv run download_deps.py
 msg_ok "Installed Python Dependencies"
 
 # ==============================================================================
@@ -406,7 +406,7 @@ Environment=PYTHONPATH=/opt/ragflow
 Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 Environment=NLTK_DATA=/opt/ragflow/nltk_data
 ExecStartPre=/bin/sleep 10
-ExecStart=/root/.local/bin/uv run python api/ragflow_server.py
+ExecStart=/usr/local/bin/uv run python api/ragflow_server.py
 Restart=on-failure
 RestartSec=10
 TimeoutStartSec=300
@@ -430,7 +430,7 @@ WorkingDirectory=/opt/ragflow
 Environment=PYTHONPATH=/opt/ragflow
 Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 Environment=NLTK_DATA=/opt/ragflow/nltk_data
-ExecStart=/root/.local/bin/uv run python rag/svr/task_executor.py 0
+ExecStart=/usr/local/bin/uv run python rag/svr/task_executor.py 0
 Restart=on-failure
 RestartSec=10
 TimeoutStartSec=300
