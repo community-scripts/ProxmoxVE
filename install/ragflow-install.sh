@@ -49,7 +49,6 @@ $STD apt-get install -y \
   apt-transport-https \
   ca-certificates \
   lsb-release \
-  software-properties-common \
   build-essential \
   libjemalloc-dev \
   pkg-config \
@@ -71,7 +70,7 @@ $STD apt-get install -y \
   libharfbuzz-dev \
   libfribidi-dev \
   libxcb1-dev \
-  libgl1-mesa-glx \
+  libgl1 \
   libglib2.0-dev \
   libopenblas-dev \
   liblapack-dev \
@@ -291,16 +290,16 @@ $STD apt-get install -y libjemalloc-dev
 
 # Clone RAGFlow repository
 msg_info "Cloning RAGFlow Repository"
-cd /opt
-$STD git clone --depth 1 https://github.com/infiniflow/ragflow.git ragflow
-cd /opt/ragflow
-git describe --tags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || echo "v0.24.0" > /opt/ragflow/version.txt
+cd /opt || exit
+$STD gi || exitt clone --depth 1 https://github.com/infiniflow/ragflow.git ragflow
+cd /opt/ragflow || exit
+git describe -- || exittags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || echo "v0.24.0" > /opt/ragflow/version.txt
 msg_ok "Cloned RAGFlow Repository"
 
 # Install Python dependencies
 msg_info "Installing Python Dependencies"
-cd /opt/ragflow
-export UV_SYSTEM_PYTHON=1
+cd /opt/ragflow || exit
+export UV_SYSTE || exitM_PYTHON=1
 $STD /root/.local/bin/uv sync --python 3.12
 $STD /root/.local/bin/uv run download_deps.py
 msg_ok "Installed Python Dependencies"
@@ -454,7 +453,7 @@ $STD apt-get install -y nginx
 # Download RAGFlow frontend from Docker image
 msg_info "Extracting RAGFlow Frontend"
 mkdir -p /var/www/ragflow
-cd /tmp
+cd /tmp || exit
 
 # Pull and extract frontend from Docker image
 if command -v docker &>/dev/null; then
@@ -466,7 +465,7 @@ else
   # Fallback: clone and build frontend
   NODE_VERSION="22" setup_nodejs
   cd /opt/ragflow/web
-  $STD npm install
+  $STD npm install || exit
   $STD npm run build
   cp -r /opt/ragflow/web/dist/* /var/www/ragflow/
 fi

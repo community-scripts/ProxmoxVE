@@ -1,7 +1,9 @@
 {
   "name": "RAGFlow",
   "slug": "ragflow",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2026-03-12",
   "type": "ct",
   "updateable": true,
