@@ -78,13 +78,29 @@ function update_script() {
 
   # Fix: Add uv environments configuration to limit to Linux x86_64 only
   # This avoids dependency resolution conflicts on macOS/Darwin and ARM64
-  # where some packages (zhipuai, mcp) have conflicting PyJWT requirements
   if ! grep -q 'tool.uv.environments' pyproject.toml 2>/dev/null; then
     cat >> pyproject.toml << 'UVENV'
 
 [tool.uv]
 environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
 UVENV
+  fi
+
+  # Fix: Resolve PyJWT dependency conflict between zhipuai and mcp
+  # zhipuai==2.0.1 requires pyjwt>=2.8.0,<2.9.dev0
+  # mcp>=1.23.0 requires pyjwt[crypto]>=2.10.1
+  # These constraints are mutually exclusive, so we override PyJWT to satisfy mcp
+  # Reference: https://github.com/infiniflow/ragflow/issues/4499
+  if ! grep -q 'tool.uv.override-dependencies' pyproject.toml 2>/dev/null; then
+    msg_info "Adding dependency overrides for PyJWT conflict resolution"
+    cat >> pyproject.toml << 'OVERRIDE'
+
+[tool.uv.override-dependencies]
+# Force PyJWT version that satisfies mcp's requirement (>=2.10.1)
+# zhipuai's constraint (<2.9.dev0) is overly restrictive and works with newer PyJWT
+pyjwt = ">=2.10.1"
+OVERRIDE
+    msg_ok "Added dependency overrides"
   fi
 
   msg_info "Reinstalling Python Dependencies"
