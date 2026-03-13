@@ -296,12 +296,12 @@ cd /opt/ragflow || exit
 git describe --tags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || echo "v0.24.0" > /opt/ragflow/version.txt
 msg_ok "Cloned RAGFlow Repository"
 
-# Fix: Replace gitee.com graspologic dependency with official PyPI version
+# Fix: Replace gitee.com graspologic dependency with GitHub version
 # RAGFlow's pyproject.toml references a gitee.com fork that requires authentication
-# We replace it with the official graspologic from PyPI
+# We replace it with the GitHub mirror which is publicly accessible
 if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
-  msg_info "Replacing gitee.com graspologic dependency with PyPI version"
-  sed -i 's|graspologic @ git+https://gitee.com/infiniflow/graspologic.git@.*|graspologic>=3.4.1,<4.0.0|g' pyproject.toml
+  msg_info "Replacing gitee.com graspologic dependency with GitHub version"
+  sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' pyproject.toml
   msg_ok "Fixed graspologic dependency"
 fi
 
