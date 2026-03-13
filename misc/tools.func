@@ -5948,22 +5948,9 @@ function setup_mysql() {
     return 0
   fi
 
-  # Scenario 2: Different version installed - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
-    msg_info "Upgrade MySQL from $CURRENT_VERSION to $MYSQL_VERSION"
-    remove_old_tool_version "mysql"
-  else
-    msg_info "Setup MySQL $MYSQL_VERSION"
-  fi
-
-  # Prepare repository (cleanup + validation)
-  prepare_repository_setup "mysql" || {
-    msg_error "Failed to prepare MySQL repository"
-    return 1
-  }
-
   # Debian 13+ Fix: MySQL repo has expired GPG key (as of 2025-10-22), use MariaDB
   # See: https://bugs.mysql.com/bug.php?id=119212
+  # This check MUST be before prepare_repository_setup to avoid adding broken repo
   if [[ "$DISTRO_ID" == "debian" && "$DISTRO_CODENAME" =~ ^(trixie|forky|sid)$ ]]; then
     msg_info "Debian ${DISTRO_CODENAME} detected → using MariaDB (MySQL repo GPG key expired)"
 
@@ -5977,6 +5964,20 @@ function setup_mysql() {
     msg_ok "Setup MariaDB (MySQL-compatible, Debian ${DISTRO_CODENAME})"
     return 0
   fi
+
+  # Scenario 2: Different version installed - clean upgrade
+  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
+    msg_info "Upgrade MySQL from $CURRENT_VERSION to $MYSQL_VERSION"
+    remove_old_tool_version "mysql"
+  else
+    msg_info "Setup MySQL $MYSQL_VERSION"
+  fi
+
+  # Prepare repository (cleanup + validation)
+  prepare_repository_setup "mysql" || {
+    msg_error "Failed to prepare MySQL repository"
+    return 1
+  }
 
   # Standard setup for other distributions
   local SUITE
