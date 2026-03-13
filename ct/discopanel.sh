@@ -41,7 +41,7 @@ function update_script() {
     cp /opt/discopanel/data/discopanel.db /opt/discopanel_backup_temp/discopanel.db
     msg_ok "Created Backup"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-amd64.tar.gz"
+    fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-amd64.tar.gz"
     ln -sf /opt/discopanel/discopanel-linux-amd64 /opt/discopanel/discopanel
 
     msg_info "Restoring Data"
