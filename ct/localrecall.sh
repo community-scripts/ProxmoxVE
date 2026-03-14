@@ -38,7 +38,16 @@ function update_script() {
     cp -r /opt/localrecall/data /opt/localrecall_data_backup 2>/dev/null || true
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "localrecall" "mudler/LocalRecall" "singlefile" "latest" "/usr/local/bin" "localrecall-linux-*"
+    msg_info "Updating LocalRecall"
+    cd /tmp
+    rm -rf LocalRecall
+    $STD git clone https://github.com/mudler/LocalRecall.git
+    cd LocalRecall
+    $STD go build -o localrecall .
+    mv localrecall /usr/local/bin/localrecall
+    cd /tmp
+    rm -rf LocalRecall
+    msg_ok "Updated LocalRecall"
 
     msg_info "Restoring Data"
     cp -r /opt/localrecall_data_backup/. /opt/localrecall/data 2>/dev/null || true

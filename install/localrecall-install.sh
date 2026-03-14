@@ -13,10 +13,20 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl ca-certificates
+$STD apt-get install -y curl ca-certificates git
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "localrecall" "mudler/LocalRecall" "singlefile" "latest" "/usr/local/bin" "localrecall-linux-*"
+GO_VERSION="1.24" setup_go
+
+msg_info "Building LocalRecall from Source"
+cd /tmp
+$STD git clone https://github.com/mudler/LocalRecall.git
+cd LocalRecall
+$STD go build -o localrecall .
+mv localrecall /usr/local/bin/localrecall
+cd /tmp
+rm -rf LocalRecall
+msg_ok "Built LocalRecall from Source"
 
 msg_info "Setting Up Application"
 mkdir -p /opt/localrecall/data
