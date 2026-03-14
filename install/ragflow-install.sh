@@ -340,10 +340,13 @@ else
 fi
 
 # Fix: Update zhipuai to a version compatible with newer pyjwt
-# zhipuai>=2.0.2 supports pyjwt>=2.10.1 which is compatible with mcp>=1.23.0
+# zhipuai 2.0.1 has pyjwt<2.9.dev0 which conflicts with mcp>=1.23.0 (needs pyjwt>=2.10.1)
+# zhipuai>=2.1.0 has relaxed pyjwt requirements compatible with mcp
 if grep -q 'zhipuai' pyproject.toml 2>/dev/null; then
   msg_info "Updating zhipuai version constraint for pyjwt compatibility"
-  sed -i 's/zhipuai\s*=\s*"[^"]*"/zhipuai = ">=2.0.2"/' pyproject.toml
+  # Match both "zhipuai==2.0.1" and "zhipuai = "2.0.1"" formats
+  sed -i 's/"zhipuai==[^"]*"/"zhipuai>=2.1.0"/g' pyproject.toml
+  sed -i 's/zhipuai\s*=\s*"[^"]*"/zhipuai = ">=2.1.0"/g' pyproject.toml
   msg_ok "Updated zhipuai version constraint"
 fi
 
