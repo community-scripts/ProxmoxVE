@@ -475,25 +475,15 @@ msg_ok "Created Systemd Services"
 msg_info "Setting up Nginx Frontend"
 $STD apt-get install -y nginx
 
-# Download RAGFlow frontend from Docker image
-msg_info "Extracting RAGFlow Frontend"
+# Build RAGFlow frontend from source (no Docker)
+msg_info "Building RAGFlow Frontend"
 mkdir -p /var/www/ragflow
-cd /tmp || exit
-
-# Pull and extract frontend from Docker image
-if command -v docker &>/dev/null; then
-  $STD docker pull infiniflow/ragflow:v0.24.0
-  $STD docker create --name ragflow-temp infiniflow/ragflow:v0.24.0
-  $STD docker cp ragflow-temp:/ragflow/web /var/www/ragflow/
-  $STD docker rm ragflow-temp
-else
-  # Fallback: clone and build frontend
-  NODE_VERSION="22" setup_nodejs
-  cd /opt/ragflow/web || exit
-  $STD npm install || exit
-  $STD npm run build
-  cp -r /opt/ragflow/web/dist/* /var/www/ragflow/
-fi
+NODE_VERSION="22" setup_nodejs
+cd /opt/ragflow/web || exit
+$STD npm install
+$STD npm run build
+cp -r /opt/ragflow/web/dist/* /var/www/ragflow/
+msg_ok "Built RAGFlow Frontend"
 
 # Configure Nginx
 cat <<EOF >/etc/nginx/sites-available/ragflow.conf
