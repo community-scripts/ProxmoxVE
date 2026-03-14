@@ -59,10 +59,14 @@ function update_script() {
   $STD git describe --tags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || true
   msg_ok "Updated ${APP}"
 
-  # Fix: Replace gitee.com URLs in uv.lock with GitHub URLs
-  # RAGFlow's uv.lock may reference gitee.com which requires authentication
+  # Fix: Replace gitee.com URLs with GitHub URLs
+  # RAGFlow's pyproject.toml and uv.lock may reference gitee.com which requires authentication
   # We replace with GitHub mirror which is publicly accessible
-  # Note: We modify uv.lock, not pyproject.toml, to preserve the lock file integrity
+  if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
+    msg_info "Replacing gitee.com URLs in pyproject.toml with GitHub"
+    sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' pyproject.toml
+    msg_ok "Fixed graspologic URLs in pyproject.toml"
+  fi
   if grep -q "gitee.com/infiniflow/graspologic" uv.lock 2>/dev/null; then
     msg_info "Replacing gitee.com URLs in uv.lock with GitHub"
     sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' uv.lock
