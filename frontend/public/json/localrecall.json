@@ -1,0 +1,42 @@
+{
+  "name": "LocalRecall",
+  "slug": "localrecall",
+  "categories": [20],
+  "date_created": "2026-03-14",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://github.com/mudler/LocalRecall#readme",
+  "website": "https://github.com/mudler/LocalRecall",
+  "logo": "https://raw.githubusercontent.com/mudler/LocalRecall/main/static/logo.png",
+  "config_path": "/opt/localrecall/.env",
+  "description": "A lightweight RESTful API for managing knowledge bases and files stored in vector databases. No GPU, internet, or cloud services required. Integrates with LocalAI for embeddings.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/localrecall.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Requires an embedding service (like LocalAI) for full functionality. Set OPENAI_BASE_URL environment variable to point to your embedding service.",
+      "type": "info"
+    },
+    {
+      "text": "Default configuration uses Chromem as the vector database engine. For PostgreSQL support, set VECTOR_ENGINE=postgres and DATABASE_URL environment variables.",
+      "type": "info"
+    }
+  ]
+}
