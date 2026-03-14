@@ -86,6 +86,19 @@ function update_script() {
     msg_ok "Fixed PyPI index URL in lock file"
   fi
 
+  # Fix: Limit Python version to avoid dependency resolution issues
+  # zhipuai==2.0.1 has pyjwt<2.9.dev0 but mcp>=1.23.0 needs pyjwt>=2.10.1
+  # These are incompatible, but only for Python 3.14+ on macOS
+  # Limit requires-python to exclude Python 3.14+ to avoid this conflict
+  if grep -q 'requires-python.*3.14' pyproject.toml 2>/dev/null || grep -q 'requires-python.*>=3.10' pyproject.toml 2>/dev/null; then
+    msg_info "Limiting Python version range to avoid dependency conflicts"
+    # Replace broad Python version with specific range that excludes 3.14+
+    sed -i 's/requires-python\s*=\s*">=3\.10"/requires-python = ">=3.10,<3.14"/g' pyproject.toml
+    sed -i 's/requires-python\s*=\s*">=3\.11"/requires-python = ">=3.11,<3.14"/g' pyproject.toml
+    sed -i 's/requires-python\s*=\s*">=3\.12"/requires-python = ">=3.12,<3.14"/g' pyproject.toml
+    msg_ok "Limited Python version range in pyproject.toml"
+  fi
+
   msg_info "Reinstalling Python Dependencies"
   cd /opt/ragflow || exit
   export UV_SYSTEM_PYTHON=1
