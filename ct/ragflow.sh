@@ -100,6 +100,15 @@ function update_script() {
     fi
   fi
 
+  # Remove the ragflow_sdk package from pyproject.toml since we only need the
+  # server components. The SDK is a client library for connecting to RAGFlow
+  # from external applications, which is not needed for server-only installations.
+  if grep -q "sdk.python.ragflow_sdk" pyproject.toml 2>/dev/null; then
+    msg_info "Excluding SDK Package from Installation"
+    sed -i '/sdk.python.ragflow_sdk/d' pyproject.toml
+    msg_ok "Excluded ragflow_sdk from installation"
+  fi
+
   # Note: We do NOT remove zhipuai or agentrun-sdk from pyproject.toml
   # These are resolved correctly in the upstream uv.lock file
   # Removing them would require regenerating the lock file, which causes issues
