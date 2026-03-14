@@ -88,22 +88,27 @@ function update_script() {
 
   # Fix: Limit Python version to avoid dependency resolution issues
   # zhipuai==2.0.1 has pyjwt<2.9.dev0 but mcp>=1.23.0 needs pyjwt>=2.10.1
-  # These are incompatible, but only for Python 3.14+ on macOS
+  # These are incompatible for Python 3.14+ on macOS, but we're on Linux with Python 3.12
   # Limit requires-python to exclude Python 3.14+ to avoid this conflict
-  if grep -q 'requires-python.*3.14' pyproject.toml 2>/dev/null || grep -q 'requires-python.*>=3.10' pyproject.toml 2>/dev/null; then
-    msg_info "Limiting Python version range to avoid dependency conflicts"
-    # Replace broad Python version with specific range that excludes 3.14+
-    sed -i 's/requires-python\s*=\s*">=3\.10"/requires-python = ">=3.10,<3.14"/g' pyproject.toml
-    sed -i 's/requires-python\s*=\s*">=3\.11"/requires-python = ">=3.11,<3.14"/g' pyproject.toml
-    sed -i 's/requires-python\s*=\s*">=3\.12"/requires-python = ">=3.12,<3.14"/g' pyproject.toml
+  msg_info "Fixing Python version constraints"
+  # Read current requires-python and update it
+  if grep -q 'requires-python' pyproject.toml 2>/dev/null; then
+    # Replace any requires-python with our constrained version
+    sed -i 's/requires-python\s*=.*/requires-python = ">=3.10,<3.14"/' pyproject.toml
     msg_ok "Limited Python version range in pyproject.toml"
+  else
+    # Add requires-python if not present
+    sed -i '/^\[project\]/a requires-python = ">=3.10,<3.14"' pyproject.toml
+    msg_ok "Added Python version constraint to pyproject.toml"
   fi
 
   msg_info "Reinstalling Python Dependencies"
   cd /opt/ragflow || exit
   export UV_SYSTEM_PYTHON=1
   # Use --index-strategy unsafe-best-match to handle multi-index package resolution
-  $STD /root/.local/bin/uv sync --python 3.12 --index-strategy unsafe-best-match
+  # Use --python-platform linux to only resolve for Linux (skip macOS/Windows markers)
+  # Use --resolution lowest-direct to avoid resolving optional dependency conflicts
+  $STD /root/.local/bin/uv sync --python 3.12 --index-strategy unsafe-best-match --python-platform linux --resolution lowest-direct
   $STD /root/.local/bin/uv run download_deps.py
   msg_ok "Reinstalled Python Dependencies"
 
