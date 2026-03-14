@@ -60,17 +60,12 @@ function update_script() {
   msg_ok "Updated ${APP}"
 
   # Fix: Replace gitee.com URLs with GitHub URLs
-  # RAGFlow's pyproject.toml and uv.lock may reference gitee.com which requires authentication
+  # RAGFlow's pyproject.toml may reference gitee.com which requires authentication
   # We replace with GitHub mirror which is publicly accessible
   if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
     msg_info "Replacing gitee.com URLs in pyproject.toml with GitHub"
     sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' pyproject.toml
     msg_ok "Fixed graspologic URLs in pyproject.toml"
-  fi
-  if grep -q "gitee.com/infiniflow/graspologic" uv.lock 2>/dev/null; then
-    msg_info "Replacing gitee.com URLs in uv.lock with GitHub"
-    sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' uv.lock
-    msg_ok "Fixed graspologic URLs in lock file"
   fi
 
   # Fix: Replace Chinese PyPI mirror with standard PyPI
@@ -80,18 +75,19 @@ function update_script() {
     sed -i 's|pypi.tuna.tsinghua.edu.cn/simple|pypi.org/simple|g' pyproject.toml
     msg_ok "Fixed PyPI index URL in pyproject.toml"
   fi
-  if grep -q "pypi.tuna.tsinghua.edu.cn" uv.lock 2>/dev/null; then
-    msg_info "Replacing Chinese PyPI mirror in uv.lock with standard PyPI"
-    sed -i 's|pypi.tuna.tsinghua.edu.cn/simple|pypi.org/simple|g' uv.lock
-    msg_ok "Fixed PyPI index URL in lock file"
-  fi
+
+  # Regenerate lock file with new index URL
+  # The original uv.lock contains cached URLs to the Chinese mirror
+  # We must regenerate it to use the standard PyPI
+  msg_info "Regenerating lock file with standard PyPI"
+  rm -f uv.lock
+  $STD /root/.local/bin/uv lock --python 3.12
+  msg_ok "Regenerated lock file"
 
   msg_info "Reinstalling Python Dependencies"
   cd /opt/ragflow || exit
   export UV_SYSTEM_PYTHON=1
-  # Use --frozen to use pre-resolved versions from uv.lock
-  # This is how the official Dockerfile handles dependencies
-  $STD /root/.local/bin/uv sync --python 3.12 --frozen
+  $STD /root/.local/bin/uv sync --python 3.12
   $STD /root/.local/bin/uv run download_deps.py
   msg_ok "Reinstalled Python Dependencies"
 

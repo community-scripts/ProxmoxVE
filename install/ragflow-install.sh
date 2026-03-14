@@ -304,11 +304,6 @@ if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
   sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' pyproject.toml
   msg_ok "Fixed graspologic URLs in pyproject.toml"
 fi
-if grep -q "gitee.com/infiniflow/graspologic" uv.lock 2>/dev/null; then
-  msg_info "Replacing gitee.com URLs in uv.lock with GitHub"
-  sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' uv.lock
-  msg_ok "Fixed graspologic URLs in lock file"
-fi
 
 # Fix: Replace Chinese PyPI mirror with standard PyPI
 # RAGFlow uses pypi.tuna.tsinghua.edu.cn which may not have all packages
@@ -317,21 +312,20 @@ if grep -q "pypi.tuna.tsinghua.edu.cn" pyproject.toml 2>/dev/null; then
   sed -i 's|pypi.tuna.tsinghua.edu.cn/simple|pypi.org/simple|g' pyproject.toml
   msg_ok "Fixed PyPI index URL in pyproject.toml"
 fi
-if grep -q "pypi.tuna.tsinghua.edu.cn" uv.lock 2>/dev/null; then
-  msg_info "Replacing Chinese PyPI mirror in uv.lock with standard PyPI"
-  sed -i 's|pypi.tuna.tsinghua.edu.cn/simple|pypi.org/simple|g' uv.lock
-  msg_ok "Fixed PyPI index URL in lock file"
-fi
 
-# Install Python dependencies using the lock file
-# The --frozen flag tells uv to use exact versions from uv.lock without re-resolving
-# This avoids dependency conflicts that occur during fresh resolution
+# Regenerate lock file with new index URL
+# The original uv.lock contains cached URLs to the Chinese mirror
+# We must regenerate it to use the standard PyPI
+msg_info "Regenerating lock file with standard PyPI"
+rm -f uv.lock
+$STD /usr/local/bin/uv lock --python 3.12
+msg_ok "Regenerated lock file"
+
+# Install Python dependencies
 msg_info "Installing Python Dependencies"
 cd /opt/ragflow || exit
 export UV_SYSTEM_PYTHON=1
-# Use --frozen to use pre-resolved versions from uv.lock
-# This is how the official Dockerfile handles dependencies
-$STD /usr/local/bin/uv sync --python 3.12 --frozen
+$STD /usr/local/bin/uv sync --python 3.12
 $STD /usr/local/bin/uv run download_deps.py
 msg_ok "Installed Python Dependencies"
 
