@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-13T12:28:01Z",
+  "generated": "2026-03-14T06:30:27Z",
   "versions": [
     {
       "slug": "agregarr",
@@ -18,9 +18,23 @@
     {
       "slug": "llamacpp",
       "repo": "ggml-org/llama.cpp",
-      "version": "b8308",
+      "version": "b8329",
       "pinned": false,
-      "date": "2026-03-13T10:57:46Z"
+      "date": "2026-03-14T04:58:36Z"
+    },
+    {
+      "slug": "localai",
+      "repo": "mudler/LocalAI",
+      "version": "v3.12.1",
+      "pinned": false,
+      "date": "2026-02-21T13:49:24Z"
+    },
+    {
+      "slug": "localrecall",
+      "repo": "mudler/LocalRecall",
+      "version": "v0.5.5",
+      "pinned": false,
+      "date": "2026-02-16T22:38:06Z"
     },
     {
       "slug": "maintainerr",
