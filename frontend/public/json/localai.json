@@ -1,0 +1,31 @@
+{
+  "name": "LocalAI",
+  "slug": "localai",
+  "categories": ["ai"],
+  "description": "Free, Open Source OpenAI alternative for local AI inferencing. Self-hosted and local-first. Drop-in replacement, running on consumer-grade hardware. No GPU required. Runs gguf, transformers, diffusers and many more.",
+  "logo": "localai.png",
+  "website": "https://localai.io",
+  "documentation": "https://localai.io/basics/getting_started/",
+  "default_credentials": {
+    "username": "",
+    "password": ""
+  },
+  "notes": [
+    {
+      "text": "Access the WebUI at http://SERVER_IP:8080",
+      "type": "info"
+    },
+    {
+      "text": "Models are stored in /opt/localai/models",
+      "type": "info"
+    },
+    {
+      "text": "OpenAI-compatible API endpoint available at http://SERVER_IP:8080/v1",
+      "type": "info"
+    },
+    {
+      "text": "GPU support is auto-detected at runtime (NVIDIA, AMD, Intel)",
+      "type": "info"
+    }
+  ]
+}
