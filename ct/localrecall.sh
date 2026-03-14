@@ -39,17 +39,18 @@ function update_script() {
     msg_ok "Backed up Data"
 
     msg_info "Updating LocalRecall"
-    cd /tmp
-    rm -rf LocalRecall
-    $STD git clone https://github.com/mudler/LocalRecall.git
-    cd LocalRecall
+    GO_VERSION="1.24" setup_go
+    fetch_and_deploy_gh_release "localrecall" "mudler/LocalRecall" "tarball" "latest" "/opt/localrecall"
+    cd /opt/localrecall || exit
     $STD go build -o localrecall .
     mv localrecall /usr/local/bin/localrecall
-    cd /tmp
-    rm -rf LocalRecall
+    cd / || exit
+    rm -rf /opt/localrecall
     msg_ok "Updated LocalRecall"
 
     msg_info "Restoring Data"
+    mkdir -p /opt/localrecall/data
+    mkdir -p /opt/localrecall/assets
     cp -r /opt/localrecall_data_backup/. /opt/localrecall/data 2>/dev/null || true
     rm -rf /opt/localrecall_data_backup
     msg_ok "Restored Data"
