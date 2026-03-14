@@ -112,6 +112,16 @@ function update_script() {
     msg_ok "Removed zhipuai dependency"
   fi
 
+  # Fix: Remove agentrun-sdk dependency - it's incompatible with crawl4ai
+  # agentrun-sdk requires alibabacloud-tea-openapi which needs cryptography<45.0.0
+  # but crawl4ai requires pyopenssl>=25.3.0 which needs cryptography>=45.0.7
+  # agentrun-sdk is only needed for Alibaba Cloud AgentRun, which is optional
+  if grep -q 'agentrun-sdk' pyproject.toml 2>/dev/null; then
+    msg_info "Removing incompatible agentrun-sdk dependency"
+    sed -i '/agentrun-sdk/d' pyproject.toml
+    msg_ok "Removed agentrun-sdk dependency"
+  fi
+
   # Remove the lock file to force fresh dependency resolution
   # This avoids issues with platform-specific markers in the existing lock
   if [ -f "uv.lock" ]; then
