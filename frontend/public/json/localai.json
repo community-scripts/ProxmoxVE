@@ -1,7 +1,9 @@
 {
   "name": "LocalAI",
   "slug": "localai",
-  "categories": ["ai"],
+  "categories": [
+    "ai"
+  ],
   "description": "Free, Open Source OpenAI alternative for local AI inferencing. Self-hosted and local-first. Drop-in replacement, running on consumer-grade hardware. No GPU required. Runs gguf, transformers, diffusers and many more.",
   "logo": "localai.png",
   "website": "https://localai.io",
@@ -27,5 +29,6 @@
       "text": "GPU support is auto-detected at runtime (NVIDIA, AMD, Intel)",
       "type": "info"
     }
-  ]
+  ],
+  "date_created": "2026-03-14"
 }
