@@ -420,6 +420,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-14
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: don't abort on AMD repo apt update failure [@MickLesk](https://github.com/MickLesk) ([#12890](https://github.com/community-scripts/ProxmoxVE/pull/12890))
+
 ## 2026-03-13
 
 ### 🚀 Updated Scripts
