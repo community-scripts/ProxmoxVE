@@ -339,14 +339,29 @@ else
   msg_ok "Added Python version constraint to pyproject.toml"
 fi
 
+# Fix: Update zhipuai to a version compatible with newer pyjwt
+# zhipuai>=2.0.2 supports pyjwt>=2.10.1 which is compatible with mcp>=1.23.0
+if grep -q 'zhipuai' pyproject.toml 2>/dev/null; then
+  msg_info "Updating zhipuai version constraint for pyjwt compatibility"
+  sed -i 's/zhipuai\s*=\s*"[^"]*"/zhipuai = ">=2.0.2"/' pyproject.toml
+  msg_ok "Updated zhipuai version constraint"
+fi
+
+# Remove the lock file to force fresh dependency resolution
+# This avoids issues with platform-specific markers in the existing lock
+if [ -f "uv.lock" ]; then
+  msg_info "Removing existing lock file for fresh resolution"
+  rm -f uv.lock
+  msg_ok "Removed lock file"
+fi
+
 # Install Python dependencies
 # Use --index-strategy unsafe-best-match to handle multi-index package resolution
-# Use --resolution lowest-direct to avoid resolving optional dependency conflicts
 # Use --python-platform linux to only resolve for Linux (skip macOS/Windows markers)
 msg_info "Installing Python Dependencies"
 cd /opt/ragflow || exit
 export UV_SYSTEM_PYTHON=1
-$STD /usr/local/bin/uv sync --python 3.12 --index-strategy unsafe-best-match --python-platform linux --resolution lowest-direct
+$STD /usr/local/bin/uv sync --python 3.12 --index-strategy unsafe-best-match --python-platform linux
 $STD /usr/local/bin/uv run download_deps.py
 msg_ok "Installed Python Dependencies"
 
