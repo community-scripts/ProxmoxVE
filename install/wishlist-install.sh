@@ -30,7 +30,7 @@ cp .env.example .env
 sed -i "s|^ORIGIN=.*|ORIGIN=http://${LOCAL_IP}:3280|" /opt/wishlist/.env
 echo "" >>/opt/wishlist/.env
 echo "NODE_ENV=production" >>/opt/wishlist/.env
-$STD pnpm install
+$STD pnpm install --frozen-lockfile
 $STD pnpm svelte-kit sync
 $STD pnpm prisma generate
 sed -i 's|/usr/src/app/|/opt/wishlist/|g' $(grep -rl '/usr/src/app/' /opt/wishlist)
