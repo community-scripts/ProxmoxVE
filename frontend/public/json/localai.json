@@ -46,5 +46,6 @@
       "text": "GPU support is auto-detected at runtime (NVIDIA, AMD, Intel)",
       "type": "info"
     }
-  ]
+  ],
+  "date_created": "2026-03-14"
 }
