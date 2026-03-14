@@ -211,7 +211,17 @@ if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
   mkdir -p /openvino-model
   cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
   cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
-  $STD ln -sf $(python3 -c "import omz_tools; import os; print(os.path.join(omz_tools.__path__[0], 'data/dataset_classes/coco_91cl_bkgr.txt'))") /openvino-model/coco_91cl_bkgr.txt
+  OV_LABELS=$(python3 -c "import omz_tools; import os; print(os.path.join(omz_tools.__path__[0], 'data/dataset_classes/coco_91cl_bkgr.txt'))" 2>/dev/null)
+  if [[ -n "$OV_LABELS" && -f "$OV_LABELS" ]]; then
+    ln -sf "$OV_LABELS" /openvino-model/coco_91cl_bkgr.txt
+  else
+    OV_LABELS=$(find /usr/local/lib -name "coco_91cl_bkgr.txt" 2>/dev/null | head -1)
+    if [[ -n "$OV_LABELS" ]]; then
+      ln -sf "$OV_LABELS" /openvino-model/coco_91cl_bkgr.txt
+    else
+      wget -q "https://raw.githubusercontent.com/openvinotoolkit/open_model_zoo/master/data/dataset_classes/coco_91cl_bkgr.txt" -O /openvino-model/coco_91cl_bkgr.txt
+    fi
+  fi
   sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
   msg_ok "Built OpenVino Model"
 else
