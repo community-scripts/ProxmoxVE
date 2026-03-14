@@ -46,7 +46,7 @@ function update_script() {
 
     msg_info "Updating Wishlist"
     cd /opt/wishlist
-    $STD pnpm install
+    $STD pnpm install --frozen-lockfile
     $STD pnpm svelte-kit sync
     $STD pnpm prisma generate
     sed -i 's|/usr/src/app/|/opt/wishlist/|g' $(grep -rl '/usr/src/app/' /opt/wishlist)
