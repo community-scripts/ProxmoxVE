@@ -2822,10 +2822,13 @@ function fetch_and_deploy_codeberg_release() {
     # Fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
-        if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
-          url_match="$u"
-          break
+        if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+          [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
+        elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+          [[ "$u" =~ (arm64|aarch64).*\.deb$ ]] || continue
         fi
+        url_match="$u"
+        break
       done
     fi
 
@@ -3122,7 +3125,11 @@ _gh_scan_older_releases() {
         done)
       fi
       if [[ "$has_match" != "true" ]]; then
-        has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE "($arch|amd64|x86_64|aarch64|arm64).*\.deb$" && echo true)
+        if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+          has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE '(amd64|x86_64).*\.deb$' && echo true)
+        elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+          has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE '(arm64|aarch64).*\.deb$' && echo true)
+        fi
       fi
       if [[ "$has_match" != "true" ]]; then
         has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE '\.deb$' && echo true)
@@ -3328,10 +3335,13 @@ function fetch_and_deploy_gh_release() {
     # If no match via explicit pattern, fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
-        if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
-          url_match="$u"
-          break
+        if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+          [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
+        elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+          [[ "$u" =~ (arm64|aarch64).*\.deb$ ]] || continue
         fi
+        url_match="$u"
+        break
       done
     fi
 
@@ -3362,10 +3372,13 @@ function fetch_and_deploy_gh_release() {
         fi
         if [[ -z "$url_match" ]]; then
           for u in $assets; do
-            if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
-              url_match="$u"
-              break
+            if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+              [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
+            elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+              [[ "$u" =~ (arm64|aarch64).*\.deb$ ]] || continue
             fi
+            url_match="$u"
+            break
           done
         fi
         if [[ -z "$url_match" ]]; then
@@ -3733,7 +3746,12 @@ function setup_ffmpeg() {
 
   # Binary fallback mode
   if [[ "$TYPE" == "binary" ]]; then
-    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
+    local ffmpeg_arch
+    case "$(dpkg --print-architecture 2>/dev/null || echo amd64)" in
+    arm64) ffmpeg_arch="arm64" ;;
+    *) ffmpeg_arch="amd64" ;;
+    esac
+    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-${ffmpeg_arch}-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg binary"
       rm -rf "$TMP_DIR"
       return 1
@@ -3815,7 +3833,12 @@ function setup_ffmpeg() {
   # If no source download (either VERSION empty or download failed), use binary
   if [[ -z "$VERSION" ]]; then
     msg_info "Setup FFmpeg from pre-built binary"
-    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
+    local ffmpeg_arch
+    case "$(dpkg --print-architecture 2>/dev/null || echo amd64)" in
+    arm64) ffmpeg_arch="arm64" ;;
+    *) ffmpeg_arch="amd64" ;;
+    esac
+    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-${ffmpeg_arch}-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg pre-built binary"
       rm -rf "$TMP_DIR"
       return 1
@@ -7881,7 +7904,12 @@ function setup_yq() {
     msg_info "Setup yq $LATEST_VERSION"
   fi
 
-  if ! curl_with_retry "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" "$TMP_DIR/yq"; then
+  local yq_arch
+  case "$(dpkg --print-architecture 2>/dev/null || echo amd64)" in
+  arm64) yq_arch="arm64" ;;
+  *) yq_arch="amd64" ;;
+  esac
+  if ! curl_with_retry "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_${yq_arch}" "$TMP_DIR/yq"; then
     msg_error "Failed to download yq"
     rm -rf "$TMP_DIR"
     return 1

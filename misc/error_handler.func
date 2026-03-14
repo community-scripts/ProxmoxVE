@@ -99,7 +99,7 @@ if ! declare -f explain_exit_code &>/dev/null; then
     103) echo "Validation: Shell is not Bash" ;;
     104) echo "Validation: Not running as root (or invoked via sudo)" ;;
     105) echo "Validation: Proxmox VE version not supported" ;;
-    106) echo "Validation: Architecture not supported (ARM / PiMox)" ;;
+    106) echo "Validation: Unsupported architecture (requires amd64 or arm64)" ;;
     107) echo "Validation: Kernel key parameters unreadable" ;;
     108) echo "Validation: Kernel key limits exceeded" ;;
     109) echo "Proxmox: No available container ID after max attempts" ;;
