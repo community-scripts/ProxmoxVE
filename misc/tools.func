@@ -4640,7 +4640,7 @@ Pin: release o=repo.radeon.com
 Pin-Priority: 600
 EOF
 
-  $STD apt update
+  $STD apt update || msg_warn "apt update failed (AMD repo may be temporarily unavailable) — continuing anyway"
   # Install only runtime packages — full 'rocm' meta-package includes 15GB+ dev tools
   $STD apt install -y rocm-opencl-runtime rocm-hip-runtime rocm-smi-lib 2>/dev/null || {
     msg_warn "ROCm runtime install failed — trying minimal set"
