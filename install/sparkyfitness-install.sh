@@ -47,7 +47,7 @@ msg_ok "Configured Sparky Fitness"
 
 msg_info "Building Backend"
 cd /opt/sparkyfitness/SparkyFitnessServer
-$STD npm install
+$STD npm install --legacy-peer-deps
 msg_ok "Built Backend"
 
 msg_info "Building Frontend (Patience)"

@@ -51,7 +51,7 @@ function update_script() {
 
     msg_info "Updating Sparky Fitness Backend"
     cd /opt/sparkyfitness/SparkyFitnessServer
-    $STD npm install
+    $STD npm install --legacy-peer-deps
     msg_ok "Updated Sparky Fitness Backend"
 
     msg_info "Updating Sparky Fitness Frontend (Patience)"
