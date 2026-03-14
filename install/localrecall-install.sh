@@ -16,7 +16,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y curl ca-certificates
 msg_ok "Installed Dependencies"
 
-GO_VERSION="1.23" setup_go
+setup_go
 
 fetch_and_deploy_gh_release "localrecall" "mudler/LocalRecall" "tarball" "latest" "/opt/localrecall"
 
