@@ -105,11 +105,13 @@ curl_with_retry() {
       fi
     fi
 
-    debug_log "curl attempt $attempt failed, waiting ${backoff}s before retry..."
+    debug_log "curl attempt $attempt failed (timeout=${timeout}s), waiting ${backoff}s before retry..."
     sleep "$backoff"
     # Exponential backoff: 1, 2, 4, 8... capped at 30s
     backoff=$((backoff * 2))
     ((backoff > 30)) && backoff=30
+    # Double --max-time on each retry so slow connections can finish
+    timeout=$((timeout * 2))
     ((attempt++))
   done
 
@@ -172,8 +174,10 @@ curl_api_with_retry() {
       return 0
     fi
 
-    debug_log "curl API attempt $attempt failed (HTTP $http_code), waiting ${attempt}s..."
+    debug_log "curl API attempt $attempt failed (HTTP $http_code, timeout=${timeout}s), waiting ${attempt}s..."
     sleep "$attempt"
+    # Double --max-time on each retry so slow connections can finish
+    timeout=$((timeout * 2))
     ((attempt++))
   done
 
@@ -2575,6 +2579,30 @@ function ensure_usr_local_bin_persist() {
 }
 
 # ------------------------------------------------------------------------------
+# curl_download - Downloads a file with automatic retry and exponential backoff.
+#
+# Usage: curl_download <output_file> <url>
+#
+# Retries up to 5 times with increasing --max-time (60/120/240/480/960s).
+# Returns 0 on success, 1 if all attempts fail.
+# ------------------------------------------------------------------------------
+function curl_download() {
+  local output="$1"
+  local url="$2"
+  local timeouts=(60 120 240 480 960)
+
+  for i in "${!timeouts[@]}"; do
+    if curl --connect-timeout 15 --max-time "${timeouts[$i]}" -fsSL -o "$output" "$url"; then
+      return 0
+    fi
+    if ((i < ${#timeouts[@]} - 1)); then
+      msg_warn "Download timed out after ${timeouts[$i]}s, retrying... (attempt $((i + 2))/${#timeouts[@]})"
+    fi
+  done
+  return 1
+}
+
+# ------------------------------------------------------------------------------
 # Downloads and deploys latest Codeberg release (source, binary, tarball, asset).
 #
 # Description:
@@ -2631,8 +2659,7 @@ function fetch_and_deploy_codeberg_release() {
   local app_lc=$(echo "${app,,}" | tr -d ' ')
   local version_file="$HOME/.${app_lc}"
 
-  local api_timeout="--connect-timeout 10 --max-time 60"
-  local download_timeout="--connect-timeout 15 --max-time 900"
+  local api_timeouts=(60 120 240)
 
   local current_version=""
   [[ -f "$version_file" ]] && current_version=$(<"$version_file")
@@ -2672,7 +2699,7 @@ function fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format: https://codeberg.org/{owner}/{repo}/archive/{tag}.tar.gz
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+    if curl_download "$tmpdir/$filename" "$archive_url"; then
       download_success=true
     fi
 
@@ -2719,16 +2746,18 @@ function fetch_and_deploy_codeberg_release() {
     return 1
   fi
 
-  local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
+  local attempt=0 success=false resp http_code
 
-  while ((attempt <= max_retries)); do
-    resp=$(curl $api_timeout -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
-    sleep "$retry_delay"
+  while ((attempt < ${#api_timeouts[@]})); do
+    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
     ((attempt++))
+    if ((attempt < ${#api_timeouts[@]})); then
+      msg_warn "API request timed out after ${api_timeouts[$((attempt-1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
+    fi
   done
 
   if ! $success; then
-    msg_error "Failed to fetch release metadata from $api_url after $max_retries attempts"
+    msg_error "Failed to fetch release metadata from $api_url after ${#api_timeouts[@]} attempts"
     return 1
   fi
 
@@ -2769,7 +2798,7 @@ function fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+    if curl_download "$tmpdir/$filename" "$archive_url"; then
       download_success=true
     fi
 
@@ -2843,7 +2872,7 @@ function fetch_and_deploy_codeberg_release() {
     fi
 
     filename="${url_match##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+    curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
       rm -rf "$tmpdir"
       return 1
@@ -2886,7 +2915,7 @@ function fetch_and_deploy_codeberg_release() {
     }
 
     filename="${asset_url##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+    curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -2987,7 +3016,7 @@ function fetch_and_deploy_codeberg_release() {
     local target_file="$app"
     [[ "$use_filename" == "true" ]] && target_file="$filename"
 
-    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+    curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -3182,8 +3211,7 @@ function fetch_and_deploy_gh_release() {
   local app_lc=$(echo "${app,,}" | tr -d ' ')
   local version_file="$HOME/.${app_lc}"
 
-  local api_timeout="--connect-timeout 10 --max-time 60"
-  local download_timeout="--connect-timeout 15 --max-time 900"
+  local api_timeouts=(60 120 240)
 
   local current_version=""
   [[ -f "$version_file" ]] && current_version=$(<"$version_file")
@@ -3203,10 +3231,10 @@ function fetch_and_deploy_gh_release() {
     return 1
   fi
 
-  local max_retries=3 retry_delay=2 attempt=1 success=false http_code
+  local max_retries=${#api_timeouts[@]} retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt-1))]:-240}" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -3280,7 +3308,7 @@ function fetch_and_deploy_gh_release() {
     local direct_tarball_url="https://github.com/$repo/archive/refs/tags/$tag_name.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$direct_tarball_url" || {
+    curl_download "$tmpdir/$filename" "$direct_tarball_url" || {
       msg_error "Download failed: $direct_tarball_url"
       rm -rf "$tmpdir"
       return 1
@@ -3383,7 +3411,7 @@ function fetch_and_deploy_gh_release() {
     fi
 
     filename="${url_match##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+    curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
       rm -rf "$tmpdir"
       return 1
@@ -3450,7 +3478,7 @@ function fetch_and_deploy_gh_release() {
     }
 
     filename="${asset_url##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+    curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -3571,7 +3599,7 @@ function fetch_and_deploy_gh_release() {
     local target_file="$app"
     [[ "$use_filename" == "true" ]] && target_file="$filename"
 
-    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+    curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
