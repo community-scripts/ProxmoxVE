@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "localai" "mudler/LocalAI" "prebuild" "local-ai"
+fetch_and_deploy_gh_release "localai" "mudler/LocalAI" "singlefile" "latest" "/usr/local/bin" "local-ai-Linux-*"
 
 msg_info "Setting Up Service"
 mkdir -p /opt/localai/models

@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop localai
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "localai" "mudler/LocalAI" "prebuild" "local-ai"
+    fetch_and_deploy_gh_release "localai" "mudler/LocalAI" "singlefile" "latest" "/usr/local/bin" "local-ai-Linux-*"
 
     msg_info "Starting Service"
     systemctl start localai
