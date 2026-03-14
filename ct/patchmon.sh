@@ -37,7 +37,7 @@ function update_script() {
   fi
 
   NODE_VERSION="24" setup_nodejs
-  if check_for_gh_release "PatchMon" "PatchMon/PatchMon" "v1.4.2"; then
+  if check_for_gh_release "PatchMon" "PatchMon/PatchMon" "1.4.2"; then
     msg_info "Stopping Service"
     systemctl stop patchmon-server
     msg_ok "Stopped Service"
