@@ -1,35 +1,26 @@
 #!/usr/bin/env bash
+
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: BillyOutlast
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/mudler/LocalAI
 
-APP="localai"
-GH_REPO="mudler/LocalAI"
-BINARY="local-ai"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
+setting_up_container
+network_check
+update_os
 
-# Header
-header_info "$APP"
-
-# Setup
-BASE_DIR="/opt/localai"
-MODELS_DIR="$BASE_DIR/models"
-
-# Install dependencies
-msg_info "Installing dependencies"
-$STD apt-get update
+msg_info "Installing Dependencies"
 $STD apt-get install -y curl
-msg_ok "Installed dependencies"
+msg_ok "Installed Dependencies"
 
-# Download and install LocalAI binary
-msg_info "Downloading $APP binary"
-fetch_and_deploy_gh_release "$GH_REPO" "prebuild" "$BINARY"
-msg_ok "Downloaded $APP binary"
+fetch_and_deploy_gh_release "local-ai" "mudler/LocalAI" "singlefile" "latest" "/usr/local/bin" "local-ai-v*-linux-*"
 
-# Create directories
-msg_info "Setting up directories"
-mkdir -p "$MODELS_DIR"
-msg_ok "Created directories"
-
-# Create systemd service
-msg_info "Creating systemd service"
+msg_info "Setting Up Service"
+mkdir -p /opt/localai/models
 cat <<EOF >/etc/systemd/system/localai.service
 [Unit]
 Description=LocalAI - OpenAI-compatible local inference server
@@ -41,20 +32,14 @@ Type=simple
 ExecStart=/usr/local/bin/local-ai
 Restart=on-failure
 RestartSec=5
-Environment=LOCALAI_MODELS_PATH=$MODELS_DIR
+Environment=LOCALAI_MODELS_PATH=/opt/localai/models
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
-msg_ok "Created systemd service"
+systemctl enable -q --now localai
+msg_ok "Set Up Service"
 
-# Enable and start service
-msg_info "Starting $APP service"
-systemctl enable --now localai
-msg_ok "Started $APP service"
-
-# Footer
 motd_ssh
 customize
 cleanup_lxc
