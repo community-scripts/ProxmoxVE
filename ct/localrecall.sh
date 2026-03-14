@@ -39,7 +39,7 @@ function update_script() {
     msg_ok "Backed up Data"
 
     msg_info "Updating LocalRecall"
-    GO_VERSION="1.24" setup_go
+    GO_VERSION="1.23" setup_go
     fetch_and_deploy_gh_release "localrecall" "mudler/LocalRecall" "tarball" "latest" "/opt/localrecall"
     cd /opt/localrecall || exit
     $STD go build -o localrecall .
