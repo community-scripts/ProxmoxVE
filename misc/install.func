@@ -52,6 +52,47 @@ fi
 get_lxc_ip
 
 # ------------------------------------------------------------------------------
+# detect_os()
+#
+# - Detects the operating system type, version, and family
+# - Sets global variables: OS_TYPE, OS_VERSION, OS_FAMILY, OS_CODENAME
+# - Used by addon scripts to determine OS-specific configuration
+# - Returns: 0 on success, 1 on failure
+# ------------------------------------------------------------------------------
+detect_os() {
+  # Check if /etc/os-release exists
+  if [[ ! -f /etc/os-release ]]; then
+    msg_error "Cannot detect OS: /etc/os-release not found"
+    return 1
+  fi
+
+  # Source os-release to get variables
+  . /etc/os-release
+
+  # Set OS_TYPE (lowercase ID)
+  OS_TYPE="${ID,,}"
+  
+  # Set OS_VERSION (VERSION_ID without quotes)
+  OS_VERSION="${VERSION_ID}"
+  
+  # Set OS_CODENAME (VERSION_CODENAME)
+  OS_CODENAME="${VERSION_CODENAME:-}"
+  
+  # Set OS_FAMILY based on ID_LIKE or ID
+  if [[ -n "${ID_LIKE:-}" ]]; then
+    OS_FAMILY="${ID_LIKE,,}"
+  else
+    OS_FAMILY="${OS_TYPE}"
+  fi
+
+  # Export variables for use by other scripts
+  export OS_TYPE OS_VERSION OS_FAMILY OS_CODENAME
+
+  msg_ok "Detected OS: ${OS_TYPE} ${OS_VERSION} (${OS_CODENAME:-unknown codename})"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # post_progress_to_api()
 #
 # - Lightweight progress ping from inside the container
