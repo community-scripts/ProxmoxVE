@@ -311,6 +311,8 @@ if grep -q "gitee.com/infiniflow/graspologic" uv.lock 2>/dev/null; then
 fi
 
 # Fix: Replace Chinese PyPI mirror with standard PyPI
+# https://github.com/astral-sh/uv/issues/10462
+# uv records index url into uv.lock but doesn't failover among multiple indexes
 # RAGFlow uses pypi.tuna.tsinghua.edu.cn which may not have all packages
 if grep -q "pypi.tuna.tsinghua.edu.cn" pyproject.toml 2>/dev/null; then
   msg_info "Replacing Chinese PyPI mirror with standard PyPI"
