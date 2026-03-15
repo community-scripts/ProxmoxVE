@@ -433,6 +433,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Wishlist: use --frozen-lockfile for pnpm install [@MickLesk](https://github.com/MickLesk) ([#12892](https://github.com/community-scripts/ProxmoxVE/pull/12892))
     - Frigate: add fallback for OpenVino labelmap file [@MickLesk](https://github.com/MickLesk) ([#12889](https://github.com/community-scripts/ProxmoxVE/pull/12889))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: retry downloads with exponential backoff [@MickLesk](https://github.com/MickLesk) ([#12896](https://github.com/community-scripts/ProxmoxVE/pull/12896))
+
 ## 2026-03-14
 
 ### 🚀 Updated Scripts
