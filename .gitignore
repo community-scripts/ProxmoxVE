@@ -70,5 +70,11 @@ json/.vscode/
 .vscode/settings.json
 
 
+# Frontend dependencies (installed by CI/CD)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
 #ignore plan artifacts
-plans/
+plans/*
+plans/frontend-update-plan.md
