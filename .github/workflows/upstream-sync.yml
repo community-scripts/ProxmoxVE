@@ -29,12 +29,20 @@ jobs:
       has_changes: ${{ steps.check.outputs.has_changes }}
       commit_count: ${{ steps.check.outputs.commit_count }}
     steps:
+      - name: Validate PAT_WORKFLOW secret
+        run: |
+          if [ -z "${{ secrets.PAT_WORKFLOW }}" ]; then
+            echo "::error::PAT_WORKFLOW secret is not set. Please create a Personal Access Token with 'repo' scope and add it as a repository secret named PAT_WORKFLOW."
+            echo "See: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.FORK_BRANCH }}
-          token: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_WORKFLOW }}
 
       - name: Configure Git
         run: |
@@ -82,12 +90,20 @@ jobs:
     if: needs.check-and-sync.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Validate PAT_WORKFLOW secret
+        run: |
+          if [ -z "${{ secrets.PAT_WORKFLOW }}" ]; then
+            echo "::error::PAT_WORKFLOW secret is not set. Please create a Personal Access Token with 'repo' scope and add it as a repository secret named PAT_WORKFLOW."
+            echo "See: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.FORK_BRANCH }}
-          token: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_WORKFLOW }}
 
       - name: Configure Git with merge driver
         run: |
@@ -191,7 +207,7 @@ jobs:
 
       - name: Create Pull Request
         env:
-          GH_TOKEN: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_WORKFLOW }}
         run: |
           BRANCH="${{ steps.branch.outputs.branch_name }}"
           HAS_CONFLICTS="${{ steps.merge.outputs.has_conflicts }}"
