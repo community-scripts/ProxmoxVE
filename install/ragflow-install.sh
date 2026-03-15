@@ -95,6 +95,9 @@ msg_ok "Installed Dependencies"
 # DATABASE SETUP (MariaDB)
 # ==============================================================================
 
+# Install MariaDB server first
+setup_mariadb
+
 MARIADB_DB_NAME="rag_flow"
 MARIADB_DB_USER="rag_flow"
 setup_mariadb_db
