@@ -29,111 +29,48 @@ function update_script() {
     exit
   fi
 
-  cd /opt/ragflow || exit
-  LOCAL_VERSION=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
-  REMOTE_VERSION=$(git ls-remote origin HEAD 2>/dev/null | awk '{print $1}' || echo "unknown")
+  if check_for_gh_release "ragflow" "infiniflow/ragflow"; then
+    msg_info "Stopping Services"
+    systemctl stop ragflow-task-executor || true
+    systemctl stop ragflow-server || true
+    msg_ok "Stopped Services"
 
-  if [[ "$LOCAL_VERSION" == "$REMOTE_VERSION" ]] || [[ "$REMOTE_VERSION" == "unknown" ]]; then
-    if [[ "$REMOTE_VERSION" == "unknown" ]]; then
-      msg_info "Unable to check for updates. Checking local version..."
-      CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "unknown")
-      msg_info "Current version: ${CURRENT_TAG}"
-    fi
-    msg_info "No update required. ${APP} is already up to date."
-    exit 0
+    msg_info "Backing up Data"
+    cp -r /opt/ragflow/conf /opt/ragflow_conf_backup
+    cp -r /opt/ragflow/data /opt/ragflow_data_backup 2>/dev/null || true
+    cp /opt/ragflow/.env /opt/ragflow_env_backup 2>/dev/null || true
+    msg_ok "Backed up Data"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "latest" "/opt/ragflow"
+
+    msg_info "Reinstalling Python Dependencies"
+    cd /opt/ragflow || exit
+    export UV_SYSTEM_PYTHON=1
+    $STD /usr/local/bin/uv sync --python 3.12 --frozen --index-strategy unsafe-best-match
+    $STD /usr/local/bin/uv run download_deps.py
+    msg_ok "Reinstalled Python Dependencies"
+
+    msg_info "Rebuilding Frontend"
+    cd /opt/ragflow/web || exit
+    $STD npm install
+    $STD npm run build
+    cp -r /opt/ragflow/web/dist/* /var/www/ragflow/
+    msg_ok "Rebuilt Frontend"
+
+    msg_info "Restoring Configuration"
+    cp -r /opt/ragflow_conf_backup/. /opt/ragflow/conf/
+    cp -r /opt/ragflow_data_backup/. /opt/ragflow/data/ 2>/dev/null || true
+    cp /opt/ragflow_env_backup /opt/ragflow/.env 2>/dev/null || true
+    rm -rf /opt/ragflow_conf_backup /opt/ragflow_data_backup /opt/ragflow_env_backup
+    msg_ok "Restored Configuration"
+
+    msg_info "Starting Services"
+    systemctl start ragflow-server
+    sleep 5
+    systemctl start ragflow-task-executor
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
   fi
-
-  msg_info "Stopping Services"
-  systemctl stop ragflow-task-executor || true
-  systemctl stop ragflow-server || true
-  msg_ok "Stopped Services"
-
-  msg_info "Backing up Data"
-  cp -r /opt/ragflow/conf /opt/ragflow_conf_backup
-  cp -r /opt/ragflow/data /opt/ragflow_data_backup 2>/dev/null || true
-  msg_ok "Backed up Data"
-
-  msg_info "Updating ${APP}"
-  $STD git fetch origin
-  $STD git reset --hard origin/main
-  $STD git describe --tags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || true
-  msg_ok "Updated ${APP}"
-
-  # Fix: Replace gitee.com URLs with GitHub URLs
-  # RAGFlow's pyproject.toml and uv.lock may reference gitee.com which requires authentication
-  # We replace with GitHub mirror which is publicly accessible
-  if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
-    msg_info "Replacing gitee.com URLs in pyproject.toml with GitHub"
-    sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' pyproject.toml
-    msg_ok "Fixed graspologic URLs in pyproject.toml"
-  fi
-  if grep -q "gitee.com/infiniflow/graspologic" uv.lock 2>/dev/null; then
-    msg_info "Replacing gitee.com URLs in uv.lock with GitHub"
-    sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' uv.lock
-    msg_ok "Fixed graspologic URLs in lock file"
-  fi
-
-  # Fix: Replace Chinese PyPI mirror with standard PyPI
-  # https://github.com/astral-sh/uv/issues/10462
-  # uv records index url into uv.lock but doesn't failover among multiple indexes
-  # RAGFlow uses pypi.tuna.tsinghua.edu.cn which may not have all packages
-  if grep -q "pypi.tuna.tsinghua.edu.cn" pyproject.toml 2>/dev/null; then
-    msg_info "Replacing Chinese PyPI mirror with standard PyPI"
-    sed -i 's|pypi.tuna.tsinghua.edu.cn|pypi.org|g' pyproject.toml
-    msg_ok "Fixed PyPI index URL in pyproject.toml"
-  fi
-  if grep -q "pypi.tuna.tsinghua.edu.cn" uv.lock 2>/dev/null; then
-    msg_info "Replacing Chinese PyPI mirror in uv.lock with standard PyPI"
-    sed -i 's|pypi.tuna.tsinghua.edu.cn|pypi.org|g' uv.lock
-    msg_ok "Fixed PyPI index URL in lock file"
-  fi
-
-  # Remove the ragflow_sdk package from pyproject.toml since we only need the
-  # server components. The SDK is a client library for connecting to RAGFlow
-  # from external applications, which is not needed for server-only installations.
-  if grep -q "sdk.python.ragflow_sdk" pyproject.toml 2>/dev/null; then
-    msg_info "Excluding SDK Package from Installation"
-    sed -i '/sdk.python.ragflow_sdk/d' pyproject.toml
-    msg_ok "Excluded ragflow_sdk from installation"
-  fi
-
-  # Fix: Pin MCP version to avoid pyjwt conflict with zhipuai
-  # zhipuai requires pyjwt>=2.8.0,<2.9.0 but mcp>=1.23.0 requires pyjwt>=2.10.1
-  # These constraints are incompatible. However, mcp==1.19.0 doesn't require pyjwt>=2.10.1
-  # By pinning MCP to 1.19.0 (matching upstream's uv.lock), we preserve ZhipuAI functionality
-  # See: https://github.com/MetaGLM/zhipuai-sdk-python-v4/issues/103
-  if grep -q 'mcp>=' pyproject.toml 2>/dev/null; then
-    msg_info "Pinning MCP version to 1.19.0 to preserve ZhipuAI compatibility"
-    sed -i 's/mcp>=1.23.0/mcp==1.19.0/' pyproject.toml
-    msg_ok "Pinned MCP to version 1.19.0"
-  fi
-
-  # Note: We do NOT remove agentrun-sdk from pyproject.toml
-  # These are resolved correctly in the upstream uv.lock file
-  # Removing them would require regenerating the lock file, which causes issues
-
-  # Install Python dependencies using the upstream lock file
-  # The --frozen flag tells uv to use the lock file as-is without re-resolution
-  # This is the official RAGFlow installation method from their documentation
-  # Reference: https://ragflow.io/docs/launch_ragflow_from_source
-  msg_info "Reinstalling Python Dependencies"
-  cd /opt/ragflow || exit
-  export UV_SYSTEM_PYTHON=1
-  $STD /root/.local/bin/uv sync --python 3.12 --frozen --index-strategy unsafe-best-match
-  $STD /root/.local/bin/uv run download_deps.py
-  msg_ok "Reinstalled Python Dependencies"
-
-  msg_info "Restoring Configuration"
-  cp -r /opt/ragflow_conf_backup/. /opt/ragflow/conf/
-  rm -rf /opt/ragflow_conf_backup /opt/ragflow_data_backup
-  msg_ok "Restored Configuration"
-
-  msg_info "Starting Services"
-  systemctl start ragflow-server
-  systemctl start ragflow-task-executor
-  msg_ok "Started Services"
-
-  msg_ok "Updated successfully!"
   exit
 }
 

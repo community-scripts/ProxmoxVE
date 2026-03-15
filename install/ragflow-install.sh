@@ -18,9 +18,10 @@ update_os
 # This script installs RAGFlow with all dependencies directly on the LXC container:
 # - MariaDB (MySQL-compatible, metadata storage)
 # - Elasticsearch 8.11 (document/vector search)
-# - Redis/Valkey (caching)
+# - Redis (caching)
 # - MinIO (object storage)
 # - Python 3.12 (backend)
+# - Node.js 22 (frontend build)
 # - Nginx (frontend reverse proxy)
 # ==============================================================================
 
@@ -91,56 +92,35 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 # ==============================================================================
-# MARIADB INSTALLATION (MySQL-compatible)
+# DATABASE SETUP (MariaDB)
 # ==============================================================================
-# Using MariaDB instead of MySQL to avoid expired GPG key issues on Debian 13+
-# MariaDB is fully MySQL-compatible and works with RAGFlow
 
-msg_info "Installing MariaDB (MySQL-compatible)"
-$STD apt-get install -y mariadb-server mariadb-client
+MARIADB_DB_NAME="rag_flow"
+MARIADB_DB_USER="rag_flow"
+setup_mariadb_db
 
-# Wait for MariaDB to be ready
-for i in {1..30}; do
-  if mysqladmin ping -h localhost --silent 2>/dev/null; then
-    break
-  fi
-  sleep 1
-done
-
-# Generate MariaDB credentials
-MYSQL_RAGFLOW_USER="rag_flow"
-MYSQL_RAGFLOW_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
-MYSQL_RAGFLOW_DB="rag_flow"
-
-msg_info "Creating MariaDB Database and User"
-$STD mysql -u root -e "CREATE DATABASE \`${MYSQL_RAGFLOW_DB}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-$STD mysql -u root -e "CREATE USER '${MYSQL_RAGFLOW_USER}'@'localhost' IDENTIFIED BY '${MYSQL_RAGFLOW_PASS}';"
-$STD mysql -u root -e "GRANT ALL PRIVILEGES ON \`${MYSQL_RAGFLOW_DB}\`.* TO '${MYSQL_RAGFLOW_USER}'@'localhost';"
-$STD mysql -u root -e "FLUSH PRIVILEGES;"
-
-# Increase max_allowed_packet for large documents
+# Configure MariaDB for RAGFlow
+msg_info "Configuring MariaDB for RAGFlow"
 $STD mysql -u root -e "SET GLOBAL max_allowed_packet=1073741824;"
 cat <<EOF >/etc/mysql/mariadb.conf.d/ragflow.cnf
-[mysqld]
+[mariadb]
 max_allowed_packet=1073741824
 max_connections=900
 character-set-server=utf8mb4
 collation-server=utf8mb4_unicode_ci
 EOF
 systemctl restart mariadb
-msg_ok "MariaDB Configured"
+msg_ok "Configured MariaDB"
 
 # ==============================================================================
 # REDIS INSTALLATION
 # ==============================================================================
-# Using Redis from Debian repos instead of Valkey to avoid external repo issues
 
 msg_info "Installing Redis"
 REDIS_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 
 $STD apt-get install -y redis-server
 
-# Configure Redis
 cat <<EOF >/etc/redis/redis.conf
 bind 127.0.0.1
 port 6379
@@ -229,19 +209,16 @@ msg_ok "Elasticsearch Installed"
 # ==============================================================================
 
 msg_info "Installing MinIO"
-MINIO_USER="rag_flow"
 MINIO_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 
 # Download MinIO binary
 curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio -o /usr/local/bin/minio
 chmod +x /usr/local/bin/minio
 
-# Create MinIO user and directories
-useradd -r -s /bin/false minio-user 2>/dev/null || true
+# Create MinIO directories
 mkdir -p /var/lib/minio/data
-chown -R minio-user:minio-user /var/lib/minio
 
-# Create MinIO service
+# Create MinIO service (run as root in LXC)
 cat <<EOF >/etc/systemd/system/minio.service
 [Unit]
 Description=MinIO Object Storage
@@ -250,9 +227,7 @@ Wants=network-online.target
 
 [Service]
 Type=notify
-User=minio-user
-Group=minio-user
-Environment="MINIO_ROOT_USER=${MINIO_USER}"
+Environment="MINIO_ROOT_USER=rag_flow"
 Environment="MINIO_ROOT_PASSWORD=${MINIO_PASS}"
 Environment="MINIO_BROWSER=on"
 ExecStart=/usr/local/bin/minio server /var/lib/minio/data --console-address ":9001"
@@ -264,7 +239,6 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
 systemctl enable -q --now minio
 
 # Wait for MinIO to be ready
@@ -274,10 +248,15 @@ for i in {1..30}; do
   fi
   sleep 1
 done
-
-# Create bucket for RAGFlow
-$STD curl -s -X PUT "http://localhost:9000/minio/health/live" || true
 msg_ok "MinIO Installed"
+
+# ==============================================================================
+# RAGFLOW INSTALLATION
+# ==============================================================================
+
+msg_info "Downloading RAGFlow"
+fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "v0.24.0" "/opt/ragflow"
+msg_ok "Downloaded RAGFlow"
 
 # ==============================================================================
 # PYTHON ENVIRONMENT
@@ -285,80 +264,6 @@ msg_ok "MinIO Installed"
 
 PYTHON_VERSION="3.12" setup_uv
 
-# Install jemalloc for memory management
-$STD apt-get install -y libjemalloc-dev
-
-# Clone RAGFlow repository
-msg_info "Cloning RAGFlow Repository"
-cd /opt || exit
-$STD git clone --depth 1 https://github.com/infiniflow/ragflow.git ragflow
-cd /opt/ragflow || exit
-git describe --tags --abbrev=0 > /opt/ragflow/version.txt 2>/dev/null || echo "v0.24.0" > /opt/ragflow/version.txt
-msg_ok "Cloned RAGFlow Repository"
-
-# Fix: Replace gitee.com URLs with GitHub URLs
-# RAGFlow's pyproject.toml and uv.lock may reference gitee.com which requires authentication
-# We replace with GitHub mirror which is publicly accessible
-if grep -q "gitee.com/infiniflow/graspologic" pyproject.toml 2>/dev/null; then
-  msg_info "Replacing gitee.com URLs in pyproject.toml with GitHub"
-  sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' pyproject.toml
-  msg_ok "Fixed graspologic URLs in pyproject.toml"
-fi
-if grep -q "gitee.com/infiniflow/graspologic" uv.lock 2>/dev/null; then
-  msg_info "Replacing gitee.com URLs in uv.lock with GitHub"
-  sed -i 's|gitee.com/infiniflow/graspologic|github.com/infiniflow/graspologic|g' uv.lock
-  msg_ok "Fixed graspologic URLs in lock file"
-fi
-
-# Fix: Replace Chinese PyPI mirror with standard PyPI
-# https://github.com/astral-sh/uv/issues/10462
-# uv records index url into uv.lock but doesn't failover among multiple indexes
-# RAGFlow uses pypi.tuna.tsinghua.edu.cn which may not have all packages
-if grep -q "pypi.tuna.tsinghua.edu.cn" pyproject.toml 2>/dev/null; then
-  msg_info "Replacing Chinese PyPI mirror with standard PyPI"
-  sed -i 's|pypi.tuna.tsinghua.edu.cn|pypi.org|g' pyproject.toml
-  msg_ok "Fixed PyPI index URL in pyproject.toml"
-fi
-if grep -q "pypi.tuna.tsinghua.edu.cn" uv.lock 2>/dev/null; then
-  msg_info "Replacing Chinese PyPI mirror in uv.lock with standard PyPI"
-  sed -i 's|pypi.tuna.tsinghua.edu.cn|pypi.org|g' uv.lock
-  msg_ok "Fixed PyPI index URL in lock file"
-fi
-
-# ==============================================================================
-# SDK EXCLUSION
-# ==============================================================================
-# Remove the ragflow_sdk package from pyproject.toml since we only need the
-# server components. The SDK is a client library for connecting to RAGFlow
-# from external applications, which is not needed for server-only installations.
-
-msg_info "Excluding SDK Package from Installation"
-if grep -q "sdk.python.ragflow_sdk" pyproject.toml 2>/dev/null; then
-  sed -i '/sdk.python.ragflow_sdk/d' pyproject.toml
-  msg_ok "Excluded ragflow_sdk from installation"
-else
-  msg_ok "SDK package not found in pyproject.toml (already excluded or not present)"
-fi
-
-# Fix: Pin MCP version to avoid pyjwt conflict with zhipuai
-# zhipuai requires pyjwt>=2.8.0,<2.9.0 but mcp>=1.23.0 requires pyjwt>=2.10.1
-# These constraints are incompatible. However, mcp==1.19.0 doesn't require pyjwt>=2.10.1
-# By pinning MCP to 1.19.0 (matching upstream's uv.lock), we preserve ZhipuAI functionality
-# See: https://github.com/MetaGLM/zhipuai-sdk-python-v4/issues/103
-if grep -q 'mcp>=' pyproject.toml 2>/dev/null; then
-  msg_info "Pinning MCP version to 1.19.0 to preserve ZhipuAI compatibility"
-  sed -i 's/mcp>=1.23.0/mcp==1.19.0/' pyproject.toml
-  msg_ok "Pinned MCP to version 1.19.0"
-fi
-
-# Note: We do NOT remove agentrun-sdk from pyproject.toml
-# These are resolved correctly in the upstream uv.lock file
-# Removing them would require regenerating the lock file, which causes issues
-
-# Install Python dependencies using the upstream lock file
-# The --frozen flag tells uv to use the lock file as-is without re-resolution
-# This is the official RAGFlow installation method from their documentation
-# Reference: https://ragflow.io/docs/launch_ragflow_from_source
 msg_info "Installing Python Dependencies"
 cd /opt/ragflow || exit
 export UV_SYSTEM_PYTHON=1
@@ -372,10 +277,8 @@ msg_ok "Installed Python Dependencies"
 
 msg_info "Creating RAGFlow Configuration"
 
-# Create configuration directory
 mkdir -p /opt/ragflow/conf /opt/ragflow/data /opt/ragflow/logs
 
-# Create service configuration
 cat <<EOF >/opt/ragflow/conf/service_conf.yaml
 ragflow:
   host: 0.0.0.0
@@ -384,16 +287,16 @@ admin:
   host: 0.0.0.0
   http_port: 9381
 mysql:
-  name: '${MYSQL_RAGFLOW_DB}'
-  user: '${MYSQL_RAGFLOW_USER}'
-  password: '${MYSQL_RAGFLOW_PASS}'
+  name: 'rag_flow'
+  user: 'rag_flow'
+  password: '${MARIADB_DB_PASS}'
   host: 'localhost'
   port: 3306
   max_connections: 900
   stale_timeout: 300
   max_allowed_packet: 1073741824
 minio:
-  user: '${MINIO_USER}'
+  user: 'rag_flow'
   password: '${MINIO_PASS}'
   host: 'localhost:9000'
   bucket: 'ragflow'
@@ -414,7 +317,6 @@ user_default_llm:
       base_url: 'http://localhost:6380'
 EOF
 
-# Create environment file
 cat <<EOF >/opt/ragflow/.env
 DOC_ENGINE=elasticsearch
 DEVICE=cpu
@@ -423,13 +325,13 @@ STACK_VERSION=8.11.3
 ES_HOST=localhost
 ES_PORT=9200
 ELASTIC_PASSWORD=${ES_PASS}
-MYSQL_PASSWORD=${MYSQL_RAGFLOW_PASS}
+MYSQL_PASSWORD=${MARIADB_DB_PASS}
 MYSQL_HOST=localhost
-MYSQL_DBNAME=${MYSQL_RAGFLOW_DB}
+MYSQL_DBNAME=rag_flow
 MYSQL_PORT=3306
 MINIO_HOST=localhost
 MINIO_PORT=9000
-MINIO_USER=${MINIO_USER}
+MINIO_USER=rag_flow
 MINIO_PASSWORD=${MINIO_PASS}
 REDIS_HOST=localhost
 REDIS_PORT=6379
@@ -453,7 +355,6 @@ msg_ok "Created RAGFlow Configuration"
 
 msg_info "Creating Systemd Services"
 
-# RAGFlow Backend Server
 cat <<EOF >/etc/systemd/system/ragflow-server.service
 [Unit]
 Description=RAGFlow Backend Server
@@ -462,7 +363,6 @@ Requires=mariadb.service elasticsearch.service redis-server.service minio.servic
 
 [Service]
 Type=simple
-User=root
 WorkingDirectory=/opt/ragflow
 Environment=PYTHONPATH=/opt/ragflow
 Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
@@ -478,7 +378,6 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 EOF
 
-# RAGFlow Task Executor
 cat <<EOF >/etc/systemd/system/ragflow-task-executor.service
 [Unit]
 Description=RAGFlow Task Executor
@@ -487,7 +386,6 @@ Requires=mariadb.service elasticsearch.service redis-server.service minio.servic
 
 [Service]
 Type=simple
-User=root
 WorkingDirectory=/opt/ragflow
 Environment=PYTHONPATH=/opt/ragflow
 Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
@@ -502,7 +400,6 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
 msg_ok "Created Systemd Services"
 
 # ==============================================================================
@@ -512,17 +409,16 @@ msg_ok "Created Systemd Services"
 msg_info "Setting up Nginx Frontend"
 $STD apt-get install -y nginx
 
-# Build RAGFlow frontend from source (no Docker)
+NODE_VERSION="22" setup_nodejs
+
 msg_info "Building RAGFlow Frontend"
 mkdir -p /var/www/ragflow
-NODE_VERSION="22" setup_nodejs
 cd /opt/ragflow/web || exit
 $STD npm install
 $STD npm run build
 cp -r /opt/ragflow/web/dist/* /var/www/ragflow/
 msg_ok "Built RAGFlow Frontend"
 
-# Configure Nginx
 cat <<EOF >/etc/nginx/sites-available/ragflow.conf
 server {
     listen 80 default_server;
@@ -583,36 +479,6 @@ $STD systemctl enable -q --now nginx
 msg_ok "Nginx Frontend Configured"
 
 # ==============================================================================
-# SAVE CREDENTIALS
-# ==============================================================================
-
-msg_info "Saving Credentials"
-cat <<EOF >~/ragflow.creds
-RAGFlow Credentials
-===================
-MariaDB Database: ${MYSQL_RAGFLOW_DB}
-MariaDB User: ${MYSQL_RAGFLOW_USER}
-MariaDB Password: ${MYSQL_RAGFLOW_PASS}
-
-Elasticsearch User: elastic
-Elasticsearch Password: ${ES_PASS}
-
-Redis Password: ${REDIS_PASS}
-
-MinIO User: ${MINIO_USER}
-MinIO Password: ${MINIO_PASS}
-
-Web Interface: http://<IP>:80
-API Endpoint: http://<IP>:9380
-MinIO Console: http://<IP>:9001
-
-Configuration: /opt/ragflow/conf/service_conf.yaml
-Environment: /opt/ragflow/.env
-EOF
-chmod 600 ~/ragflow.creds
-msg_ok "Saved Credentials"
-
-# ==============================================================================
 # START SERVICES
 # ==============================================================================
 
@@ -637,7 +503,18 @@ echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${LOCAL_IP}:80${CL}"
 echo -e "${INFO}${YW} API endpoint: http://${LOCAL_IP}:9380${CL}"
 echo -e "${INFO}${YW} MinIO Console: http://${LOCAL_IP}:9001${CL}"
-echo -e "${INFO}${YW} Credentials saved to: ~/ragflow.creds${CL}"
+echo -e ""
+echo -e "${INFO}${YW} Credentials:${CL}"
+echo -e "${TAB}- MariaDB User: rag_flow"
+echo -e "${TAB}- MariaDB Password: ${MARIADB_DB_PASS}"
+echo -e "${TAB}- Elasticsearch Password: ${ES_PASS}"
+echo -e "${TAB}- Redis Password: ${REDIS_PASS}"
+echo -e "${TAB}- MinIO User: rag_flow"
+echo -e "${TAB}- MinIO Password: ${MINIO_PASS}"
+echo -e ""
+echo -e "${INFO}${YW} Configuration files:${CL}"
+echo -e "${TAB}- /opt/ragflow/conf/service_conf.yaml"
+echo -e "${TAB}- /opt/ragflow/.env"
 echo -e ""
 echo -e "${INFO}${YW} Important Notes:${CL}"
 echo -e "${TAB}- Configure your LLM API key in the web interface"
