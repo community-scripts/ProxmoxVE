@@ -354,7 +354,18 @@ else
   msg_ok "SDK package not found in pyproject.toml (already excluded or not present)"
 fi
 
-# Note: We do NOT remove zhipuai or agentrun-sdk from pyproject.toml
+# Fix: Remove zhipuai from dependencies due to pyjwt version conflict
+# zhipuai requires pyjwt>=2.8.0,<2.9.0 but mcp requires pyjwt>=2.10.1
+# These constraints are incompatible, so we remove zhipuai
+# zhipuai is only needed for ZhipuAI LLM integration (optional feature)
+# See: https://github.com/MetaGLM/zhipuai-sdk-python-v4/issues/103
+if grep -q "zhipuai" pyproject.toml 2>/dev/null; then
+  msg_info "Removing zhipuai dependency due to pyjwt conflict with mcp"
+  sed -i '/zhipuai/d' pyproject.toml
+  msg_ok "Removed zhipuai from pyproject.toml"
+fi
+
+# Note: We do NOT remove agentrun-sdk from pyproject.toml
 # These are resolved correctly in the upstream uv.lock file
 # Removing them would require regenerating the lock file, which causes issues
 
