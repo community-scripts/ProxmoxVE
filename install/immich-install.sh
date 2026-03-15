@@ -154,6 +154,12 @@ sed -i "s/^#shared_preload.*/shared_preload_libraries = 'vchord.so'/" /etc/postg
 systemctl restart postgresql.service
 PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_GRANT_SUPERUSER="true" PG_DB_SKIP_ALTER_ROLE="true" setup_postgresql_db
 
+msg_info "Installing GCC-13 (workaround for GCC-14 ICE on Trixie)"
+$STD apt install -y gcc-13 g++-13
+export CC=gcc-13
+export CXX=g++-13
+msg_ok "Installed GCC-13"
+
 msg_warn "Compiling Custom Photo-processing Libraries (can take anywhere from 15min to 2h)"
 LD_LIBRARY_PATH=/usr/local/lib
 export LD_RUN_PATH=/usr/local/lib
@@ -341,14 +347,28 @@ $STD useradd -U -s /usr/sbin/nologin -r -M -d "$INSTALL_DIR" immich
 mkdir -p "$ML_DIR" && chown -R immich:immich "$INSTALL_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 if [[ -f ~/.openvino ]]; then
+  ML_PYTHON="python3.13"
+  msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
+  for attempt in $(seq 1 3); do
+    $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
+    [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
+  done
+  msg_ok "Pre-installed Python ${ML_PYTHON}"
   msg_info "Installing HW-accelerated machine-learning"
-  $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.24.1 --active -n -p python3.13 --managed-python
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p python3.13 --managed-python
+  $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.24.1 --active -n -p "${ML_PYTHON}" --managed-python
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python
   patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
   msg_ok "Installed HW-accelerated machine-learning"
 else
+  ML_PYTHON="python3.11"
+  msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
+  for attempt in $(seq 1 3); do
+    $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
+    [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
+  done
+  msg_ok "Pre-installed Python ${ML_PYTHON}"
   msg_info "Installing machine-learning"
-  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p python3.11 --managed-python
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python
   msg_ok "Installed machine-learning"
 fi
 cd "$SRC_DIR"
