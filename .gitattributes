@@ -1,38 +1,65 @@
-# ---------------------------------------
-# Treat Shell files as first-class code
-# ---------------------------------------
-*.sh linguist-detectable=true
-*.bash linguist-language=Shell
-*.func linguist-language=Shell
-*.install linguist-language=Shell
+# Git Attributes for Heretek-AI/ProxmoxVE Fork
+# These attributes configure how git handles merges from upstream
+# Files with 'merge=ours' will always keep the fork version during merges
 
-# ---------------------------------------
-# Treat Golang files as Go (for /api/)
-api/**/*.go linguist-language=Go
+# =============================================================================
+# CUSTOM SCRIPT DIRECTORIES - Always preserve fork versions
+# =============================================================================
 
-# ---------------------------------------
-# Treat frontend as JavaScript/TypeScript (optional)
-frontend/**/*.ts linguist-language=TypeScript
-frontend/**/*.js linguist-language=JavaScript
+# Custom install scripts
+install/ merge=ours
+install/*.sh merge=ours
 
-# ---------------------------------------
-# Exclude documentation from stats
-*.md linguist-documentation
-docs/** linguist-documentation
-README.md linguist-documentation
-CONTRIBUTING.md linguist-documentation
-SECURITY.md linguist-documentation
+# Custom container scripts  
+ct/ merge=ours
+ct/*.sh merge=ours
+ct/headers/ merge=ours
+ct/headers/* merge=ours
 
-# ---------------------------------------
-# Exclude generated/config files
-*.json linguist-generated
-frontend/public/json/*.json linguist-generated=false
-*.lock linguist-generated
-*.yml linguist-generated
-*.yaml linguist-generated
-.github/** linguist-generated
-.vscode/** linguist-generated
+# Custom frontend (entire directory)
+frontend/ merge=ours
+frontend/** merge=ours
 
-# ---------------------------------------
-# Standard text handling
-* text=auto eol=lf
+# Custom images
+misc/images/ merge=ours
+misc/images/* merge=ours
+
+# Custom addon tools
+tools/addon/ merge=ours
+tools/addon/* merge=ours
+
+# =============================================================================
+# WORKFLOW CONFIGURATION - Preserve fork-specific CI/CD
+# =============================================================================
+
+# Custom GitHub Actions workflows
+.github/workflows/ merge=ours
+.github/workflows/* merge=ours
+
+# Custom runner configurations
+.github/runner/ merge=ours
+.github/runner/** merge=ours
+
+# =============================================================================
+# DOCUMENTATION - Preserve fork-specific branding
+# =============================================================================
+
+# Custom README with fork branding
+README.md merge=ours
+
+# Custom CHANGELOG
+CHANGELOG.md merge=ours
+
+# =============================================================================
+# DEFAULT ATTRIBUTES
+# =============================================================================
+
+# Auto-detect text files and perform LF normalization
+* text=auto
+
+# Shell scripts should always have LF line endings
+*.sh text eol=lf
+
+# GitHub Actions workflows should have LF line endings
+*.yml text eol=lf
+*.yaml text eol=lf

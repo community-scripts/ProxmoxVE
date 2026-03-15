@@ -1,155 +1,291 @@
-name: Sync Upstream (Create Pull Request)
+name: Sync Upstream (Git Merge Strategy)
 
 on:
   schedule:
-    # Runs automatically every day at 2:00 AM UTC. Adjust as needed.
+    # Runs automatically every day at 2:00 AM UTC
     - cron: '0 2 * * *'
-  workflow_dispatch: # Allows you to run this manually from the Actions tab
+  workflow_dispatch:
+    # Allows manual trigger from the Actions tab
+    inputs:
+      force_sync:
+        description: 'Force sync even if no new commits detected'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
-  contents: write # Required to allow the GitHub Actions bot to push commits
-  pull-requests: write # Required to create pull requests
+  contents: write
+  pull-requests: write
+
+env:
+  UPSTREAM_REPO: community-scripts/ProxmoxVE
+  UPSTREAM_BRANCH: main
+  FORK_BRANCH: main
 
 jobs:
+  check-and-sync:
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.check.outputs.has_changes }}
+      commit_count: ${{ steps.check.outputs.commit_count }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.FORK_BRANCH }}
+          token: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Configure the 'ours' merge driver for fork-specific files
+          # This tells git to use our version for files marked with merge=ours in .gitattributes
+          git config merge.ours.name "ours merge driver"
+          git config merge.ours.driver "true"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git || true
+          git fetch upstream ${{ env.UPSTREAM_BRANCH }}
+
+      - name: Check for new upstream commits
+        id: check
+        run: |
+          # Get the merge base between fork and upstream
+          MERGE_BASE=$(git merge-base HEAD upstream/${{ env.UPSTREAM_BRANCH }} 2>/dev/null || echo "")
+          
+          if [ -z "$MERGE_BASE" ]; then
+            echo "No common ancestor found - this may be a fresh sync"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "commit_count=unknown" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Count commits in upstream that are not in fork
+          UPSTREAM_COMMITS=$(git rev-list $MERGE_BASE..upstream/${{ env.UPSTREAM_BRANCH }} --count 2>/dev/null || echo "0")
+          
+          if [ "$UPSTREAM_COMMITS" -eq 0 ] && [ "${{ github.event.inputs.force_sync }}" != "true" ]; then
+            echo "No new commits from upstream. Nothing to sync."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "commit_count=0" >> $GITHUB_OUTPUT
+          else
+            echo "Found $UPSTREAM_COMMITS new commits from upstream."
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "commit_count=$UPSTREAM_COMMITS" >> $GITHUB_OUTPUT
+          fi
+
   sync-and-create-pr:
+    needs: check-and-sync
+    if: needs.check-and-sync.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetches all history for all branches and tags
-          # If your default branch is not 'main', change it here:
-          ref: main
+          fetch-depth: 0
+          ref: ${{ env.FORK_BRANCH }}
           token: ${{ secrets.PAT_WORKFLOW || secrets.GITHUB_TOKEN }}
 
-      - name: Sync upstream and create pull request
+      - name: Configure Git with merge driver
         run: |
-          # 1. Configure Git for the Actions bot
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # 2. Add the upstream repository
-          git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
-          git fetch upstream main
-          
-          # 3. Check if there are any new commits from upstream
-          UPSTREAM_COMMITS=$(git log HEAD..upstream/main --oneline 2>/dev/null | wc -l)
-          if [ "$UPSTREAM_COMMITS" -eq 0 ]; then
-            echo "No new commits from upstream. Nothing to sync."
-            exit 0
-          fi
-          
-          echo "Found $UPSTREAM_COMMITS new commits from upstream."
-          
-          # 4. Backup ignored directories and files BEFORE creating sync branch
-          echo "Backing up fork-specific directories and files..."
-          mkdir -p /tmp/backup
-          cp -r install /tmp/backup/
-          cp -r ct /tmp/backup/
-          cp -r frontend /tmp/backup/
-          cp -r misc/images /tmp/backup/images
-          cp -r .github/workflows /tmp/backup/workflows
-          cp -r .github/runner /tmp/backup/runner
-          cp -r tools/addon /tmp/backup/addon
-          cp CHANGELOG.md /tmp/backup/
-          cp README.md /tmp/backup/
-          
-          # 5. Create a new branch from upstream/main for the PR
+          # Configure the 'ours' merge driver
+          # Files with merge=ours in .gitattributes will automatically keep fork version
+          git config merge.ours.name "ours merge driver"
+          git config merge.ours.driver "true"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git || true
+          git fetch upstream ${{ env.UPSTREAM_BRANCH }}
+
+      - name: Create sync branch
+        id: branch
+        run: |
           BRANCH_NAME="upstream-sync-$(date +%Y%m%d-%H%M%S)"
-          echo "Creating sync branch: $BRANCH_NAME"
-          git checkout -b "$BRANCH_NAME" upstream/main
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Merge upstream with fork preservation
+        id: merge
+        run: |
+          echo "Starting merge from upstream/${{ env.UPSTREAM_BRANCH }}..."
           
-          # 6. Restore fork-specific files on this branch
-          echo "Restoring fork-specific directories and files..."
-          rm -rf install ct frontend misc/images
-          cp -r /tmp/backup/install .
-          cp -r /tmp/backup/ct .
-          cp -r /tmp/backup/frontend .
-          mkdir -p misc
-          cp -r /tmp/backup/images misc/images
-          rm -rf .github/workflows
-          mkdir -p .github
-          cp -r /tmp/backup/workflows .github/workflows
-          rm -rf .github/runner
-          cp -r /tmp/backup/runner .github/runner
-          rm -rf tools/addon
-          mkdir -p tools
-          cp -r /tmp/backup/addon tools/addon
-          cp /tmp/backup/CHANGELOG.md .
-          cp /tmp/backup/README.md .
+          # Attempt merge with the 'ours' strategy for conflicts
+          # The .gitattributes file configures which files use merge=ours
+          git merge upstream/${{ env.UPSTREAM_BRANCH }} \
+            --no-edit \
+            -m "Merge upstream ${{ env.UPSTREAM_REPO }} into ${{ env.FORK_BRANCH }}" \
+            2>&1 || MERGE_STATUS=$?
           
-          # 7. Stage all restored files
-          git add install ct frontend misc/images .github/workflows .github/runner tools/addon CHANGELOG.md README.md
-          
-          # 8. Check for any merge conflicts in other files
-          # Since we're creating from upstream/main, we need to check against main
-          git fetch origin main
-          CONFLICT_FILES=$(git diff --name-only origin/main HEAD | head -50)
-          
-          # 9. Commit the sync with preserved files
-          if ! git diff --staged --quiet; then
-            git commit -m "Sync from upstream - preserving fork-specific customizations"
+          if [ "${MERGE_STATUS:-0}" -eq 0 ]; then
+            echo "Merge completed successfully with no conflicts."
+            echo "merge_status=success" >> $GITHUB_OUTPUT
+            echo "has_conflicts=false" >> $GITHUB_OUTPUT
+          elif [ "${MERGE_STATUS:-0}" -eq 1 ]; then
+            echo "Merge has conflicts that need resolution."
+            echo "merge_status=conflicts" >> $GITHUB_OUTPUT
+            echo "has_conflicts=true" >> $GITHUB_OUTPUT
+            
+            # List conflicted files
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null || echo "")
+            echo "conflicted_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$CONFLICTS" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            
+            # Check if conflicts are only in fork-specific files
+            # These should have been handled by merge=ours, but check anyway
+            FORK_FILES=$(git diff --name-only --diff-filter=U \
+              -- 'install/' 'ct/' 'frontend/' 'misc/images/' '.github/workflows/' '.github/runner/' 'tools/addon/' 'README.md' 'CHANGELOG.md' 2>/dev/null || echo "")
+            
+            if [ -n "$FORK_FILES" ]; then
+              echo "Warning: Fork-specific files have unexpected conflicts:"
+              echo "$FORK_FILES"
+              # For fork files, always take our version
+              for file in $FORK_FILES; do
+                git checkout --ours "$file" 2>/dev/null || true
+                git add "$file" 2>/dev/null || true
+              done
+            fi
+            
+            # For other conflicts, we leave them for manual resolution in the PR
+            # This allows reviewers to see what needs attention
+          else
+            echo "Merge failed with status: ${MERGE_STATUS}"
+            echo "merge_status=failed" >> $GITHUB_OUTPUT
+            exit 1
           fi
+
+      - name: Get upstream changes summary
+        id: summary
+        run: |
+          # Get list of upstream commits being merged
+          echo "upstream_commits<<EOF" >> $GITHUB_OUTPUT
+          git log HEAD..upstream/${{ env.UPSTREAM_BRANCH }} --oneline --no-merges | head -30 >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
           
-          # Get list of changed files for PR description
-          CHANGED_FILES=$(git diff --name-only origin/main HEAD | head -100)
-          UPSTREAM_LOG=$(git log origin/main..HEAD --oneline | head -20)
+          # Get changed files summary
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          git diff --name-only HEAD upstream/${{ env.UPSTREAM_BRANCH }} | head -50 >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
           
-          # 10. Push the branch
-          git push origin HEAD --force
-          
-          # 11. Create PR using GitHub CLI
-          echo "Creating pull request for upstream sync..."
-          gh pr create \
-            --title "🔄 Upstream Sync - $(date +%Y-%m-%d)" \
-            --body "This PR syncs the latest changes from upstream [\`community-scripts/ProxmoxVE\`](https://github.com/community-scripts/ProxmoxVE) while preserving fork-specific customizations.
+          # Count files by category
+          TOTAL_CHANGED=$(git diff --name-only HEAD upstream/${{ env.UPSTREAM_BRANCH }} | wc -l)
+          echo "total_changed=$TOTAL_CHANGED" >> $GITHUB_OUTPUT
 
-          ## 📋 Upstream Commits Included
-          \`\`\`
-          $UPSTREAM_LOG
-          \`\`\`
+      - name: Commit merge result
+        if: steps.merge.outputs.merge_status == 'conflicts'
+        run: |
+          # Commit the merge with resolved fork-specific conflicts
+          # Remaining conflicts will be visible in the PR for review
+          git commit -m "Merge upstream with partial conflict resolution
 
-          ## 📁 Changed Files
-          <details>
-          <summary>Click to expand</summary>
+Fork-specific files (install/, ct/, frontend/, etc.) have been preserved.
+Other conflicts may require manual review before merging." || true
 
-          \`\`\`
-          $CHANGED_FILES
-          \`\`\`
-          </details>
+      - name: Push sync branch
+        run: |
+          git push origin ${{ steps.branch.outputs.branch_name }} --force
 
-          ## ⚠️ Important
-          Before merging, ensure all fork-specific references are preserved:
-          - \`Heretek-AI\` repository references
-          - Fork-specific workflow files
-          - Custom workflow configurations
-
-          ## 🔒 Fork-Specific Files Preserved
-          The following files/directories are preserved from the fork and NOT overwritten by upstream:
-          - \`install/\` directory
-          - \`ct/\` directory
-          - \`frontend/\` directory
-          - \`misc/images/\` directory
-          - \`.github/workflows/\` directory
-          - \`.github/runner/\` directory
-          - \`tools/addon/\` directory
-          - \`CHANGELOG.md\`
-          - \`README.md\`
-
-          ## ✅ Checklist Before Merge
-          - [ ] Review all changed files for unexpected modifications
-          - [ ] Verify fork-specific files are intact
-          - [ ] Check for any new upstream files that might conflict with fork customizations
-          - [ ] Test any new scripts or features from upstream
-
-          ---
-          *This PR was automatically created by the [upstream-sync workflow](https://github.com/Heretek-AI/ProxmoxVE/blob/main/.github/workflows/upstream-sync.yml).*" \
-            --base main \
-            --head "$BRANCH_NAME" || echo "PR may already exist or no changes to PR"
-          
-          echo "✅ Pull request created successfully for upstream sync."
-          
-          # Switch back to main
-          git checkout main
+      - name: Create Pull Request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ steps.branch.outputs.branch_name }}"
+          HAS_CONFLICTS="${{ steps.merge.outputs.has_conflicts }}"
+          CONFLICTED_FILES="${{ steps.merge.outputs.conflicted_files }}"
+          
+          # Build PR body
+          PR_BODY="## 🔄 Upstream Sync Summary
+          
+          This PR syncs the latest changes from upstream [\`${{ env.UPSTREAM_REPO }}\`](https://github.com/${{ env.UPSTREAM_REPO }}) while preserving fork-specific customizations.
+
+          ### 📊 Sync Statistics
+          - **Upstream commits:** ${{ needs.check-and-sync.outputs.commit_count }}
+          - **Files changed:** ${{ steps.summary.outputs.total_changed }}
+          - **Merge conflicts:** ${HAS_CONFLICTS:-none}
+          
+          ### 📋 Upstream Commits (last 30)
+          \`\`\`
+          ${{ steps.summary.outputs.upstream_commits }}
+          \`\`\`
+          
+          ### 📁 Changed Files
+          <details>
+          <summary>Click to view changed files</summary>
+          
+          \`\`\`
+          ${{ steps.summary.outputs.changed_files }}
+          \`\`\`
+          </details>
+          "
+          
+          # Add conflict warning if needed
+          if [ "$HAS_CONFLICTS" = "true" ]; then
+            PR_BODY="$PR_BODY
+          ### ⚠️ Merge Conflicts Detected
+          
+          The following files have conflicts that need manual review:
+          \`\`\`
+          $CONFLICTED_FILES
+          \`\`\`
+          
+          **Note:** Fork-specific files have been automatically preserved using the \`merge=ours\` strategy configured in \`.gitattributes\`.
+          "
+          else
+            PR_BODY="$PR_BODY
+          ### ✅ Clean Merge
+          
+          No conflicts detected. Fork-specific files were automatically preserved using the \`merge=ours\` strategy.
+          "
+          fi
+          
+          # Add preserved files section
+          PR_BODY="$PR_BODY
+          ### 🔒 Fork-Specific Files Preserved
+          
+          The following files/directories are configured in \`.gitattributes\` to always keep the fork version:
+          - \`install/\` - Custom install scripts
+          - \`ct/\` - Custom container scripts
+          - \`frontend/\` - Custom frontend
+          - \`misc/images/\` - Custom images
+          - \`.github/workflows/\` - Custom CI/CD workflows
+          - \`.github/runner/\` - Custom runner configurations
+          - \`tools/addon/\` - Custom addon tools
+          - \`README.md\` - Fork-specific documentation
+          - \`CHANGELOG.md\` - Fork-specific changelog
+          
+          ### ✅ Pre-Merge Checklist
+          - [ ] Review all changed files for unexpected modifications
+          - [ ] Verify fork-specific files are intact
+          - [ ] Resolve any remaining merge conflicts
+          - [ ] Test any new scripts or features from upstream
+          
+          ---
+          *This PR was automatically created by the [upstream-sync workflow](https://github.com/${{ github.repository }}/blob/main/.github/workflows/upstream-sync.yml).*
+          "
+          
+          # Create PR title with conflict indicator
+          if [ "$HAS_CONFLICTS" = "true" ]; then
+            TITLE="🔄 Upstream Sync - $(date +%Y-%m-%d) ⚠️ CONFLICTS"
+          else
+            TITLE="🔄 Upstream Sync - $(date +%Y-%m-%d)"
+          fi
+          
+          # Create the PR
+          gh pr create \
+            --title "$TITLE" \
+            --body "$PR_BODY" \
+            --base "${{ env.FORK_BRANCH }}" \
+            --head "$BRANCH" \
+            --label "upstream-sync,automated" || echo "PR may already exist"
+
+      - name: Cleanup
+        run: |
+          git checkout ${{ env.FORK_BRANCH }}
+          git branch -D ${{ steps.branch.outputs.branch_name }} 2>/dev/null || true
