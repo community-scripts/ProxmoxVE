@@ -124,6 +124,10 @@ REDIS_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 
 $STD apt-get install -y redis-server
 
+# Stop Redis if running to apply new configuration
+systemctl stop redis-server 2>/dev/null || true
+
+# Write Redis configuration with password
 cat <<EOF >/etc/redis/redis.conf
 bind 127.0.0.1
 port 6379
@@ -139,7 +143,17 @@ EOF
 mkdir -p /var/log/redis
 chown -R redis:redis /var/log/redis /var/lib/redis
 
-systemctl enable -q --now redis-server
+# Enable and start Redis with new configuration
+systemctl enable -q redis-server
+systemctl start redis-server
+
+# Wait for Redis to be ready and verify password works
+for i in {1..30}; do
+  if redis-cli -a "${REDIS_PASS}" ping 2>/dev/null | grep -q "PONG"; then
+    break
+  fi
+  sleep 1
+done
 msg_ok "Redis Installed"
 
 # ==============================================================================
