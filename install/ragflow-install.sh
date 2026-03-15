@@ -634,11 +634,12 @@ customize
 cleanup_lxc
 
 msg_ok "Completed Successfully!\n"
+LOCAL_IP=$(hostname -I | awk '{print $1}')
 echo -e "${CREATING}${GN}RAGFlow has been successfully installed!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:80${CL}"
-echo -e "${INFO}${YW} API endpoint: http://${IP}:9380${CL}"
-echo -e "${INFO}${YW} MinIO Console: http://${IP}:9001${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${LOCAL_IP}:80${CL}"
+echo -e "${INFO}${YW} API endpoint: http://${LOCAL_IP}:9380${CL}"
+echo -e "${INFO}${YW} MinIO Console: http://${LOCAL_IP}:9001${CL}"
 echo -e "${INFO}${YW} Credentials saved to: ~/ragflow.creds${CL}"
 echo -e ""
 echo -e "${INFO}${YW} Important Notes:${CL}"
