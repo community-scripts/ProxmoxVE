@@ -429,9 +429,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - SparkyFitness: use --legacy-peer-deps for npm install [@MickLesk](https://github.com/MickLesk) ([#12888](https://github.com/community-scripts/ProxmoxVE/pull/12888))
     - Wishlist: use --frozen-lockfile for pnpm install [@MickLesk](https://github.com/MickLesk) ([#12892](https://github.com/community-scripts/ProxmoxVE/pull/12892))
+    - SparkyFitness: use --legacy-peer-deps for npm install [@MickLesk](https://github.com/MickLesk) ([#12888](https://github.com/community-scripts/ProxmoxVE/pull/12888))
     - Frigate: add fallback for OpenVino labelmap file [@MickLesk](https://github.com/MickLesk) ([#12889](https://github.com/community-scripts/ProxmoxVE/pull/12889))
+
+  - #### 🔧 Refactor
+
+    - core: unify RELEASE variable for check_for_gh_release and fetch_and_deploy [@MickLesk](https://github.com/MickLesk) ([#12917](https://github.com/community-scripts/ProxmoxVE/pull/12917))
+    - Standardize NSAPP names across VM scripts [@MickLesk](https://github.com/MickLesk) ([#12924](https://github.com/community-scripts/ProxmoxVE/pull/12924))
 
 ### 💾 Core
 
