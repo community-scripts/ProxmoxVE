@@ -316,12 +316,12 @@ fi
 # RAGFlow uses pypi.tuna.tsinghua.edu.cn which may not have all packages
 if grep -q "pypi.tuna.tsinghua.edu.cn" pyproject.toml 2>/dev/null; then
   msg_info "Replacing Chinese PyPI mirror with standard PyPI"
-  sed -i 's|pypi.tuna.tsinghua.edu.cn/simple|pypi.org/simple|g' pyproject.toml
+  sed -i 's|pypi.tuna.tsinghua.edu.cn|pypi.org|g' pyproject.toml
   msg_ok "Fixed PyPI index URL in pyproject.toml"
 fi
 if grep -q "pypi.tuna.tsinghua.edu.cn" uv.lock 2>/dev/null; then
   msg_info "Replacing Chinese PyPI mirror in uv.lock with standard PyPI"
-  sed -i 's|pypi.tuna.tsinghua.edu.cn/simple|pypi.org/simple|g' uv.lock
+  sed -i 's|pypi.tuna.tsinghua.edu.cn|pypi.org|g' uv.lock
   msg_ok "Fixed PyPI index URL in lock file"
 fi
 
