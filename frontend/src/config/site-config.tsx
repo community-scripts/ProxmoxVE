@@ -1,4 +1,4 @@
-import { MessagesSquare, Scroll, FolderOpen, FileCode } from "lucide-react";
+import { MessagesSquare, Scroll, FolderOpen, FileCode, Terminal } from "lucide-react";
 import { FaDiscord, FaGithub } from "react-icons/fa";
 import React from "react";
 
@@ -19,6 +19,12 @@ export const navbarLinks = [
     event: "Categories",
     icon: <FolderOpen className="h-4 w-4" />,
     text: "Categories",
+  },
+  {
+    href: "/generator",
+    event: "Generator",
+    icon: <Terminal className="h-4 w-4" />,
+    text: "Generator",
   },
   {
     href: "/community",
