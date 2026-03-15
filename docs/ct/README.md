@@ -61,7 +61,7 @@ To understand how to create a container script:
 
 ## Common Tasks
 
-- **Add new container application** → [CONTRIBUTION_GUIDE.md](../CONTRIBUTION_GUIDE.md)
+- **Add new container application** → [contribution/README.md](../contribution/README.md)
 - **Debug container creation** → [EXIT_CODES.md](../EXIT_CODES.md)
 - **Understand build.func** → [misc/build.func/](../misc/build.func/)
 - **Development mode debugging** → [DEV_MODE.md](../DEV_MODE.md)

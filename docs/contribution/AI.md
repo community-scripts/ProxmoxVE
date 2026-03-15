@@ -1,4 +1,4 @@
-# 🤖 AI Contribution Guidelines for ProxmoxVE
+﻿# 🤖 AI Contribution Guidelines for ProxmoxVE
 
 > **This documentation is intended for all AI assistants (GitHub Copilot, Claude, ChatGPT, etc.) contributing to this project.**
 
@@ -653,15 +653,15 @@ Look at these recent well-implemented applications as reference:
 - Use of `check_for_gh_release` and `fetch_and_deploy_gh_release`
 - Correct backup/restore patterns in `update_script`
 - Footer always ends with `motd_ssh`, `customize`, `cleanup_lxc`
-- JSON metadata files created for each app
+- Website metadata requested via the website (Report issue on script page) if needed
 
 ---
 
-## � JSON Metadata Files
+## Website Metadata (Reference)
 
-Every application requires a JSON metadata file in `frontend/public/json/<appname>.json`.
+Website metadata (name, slug, description, logo, categories, etc.) is **not** added as files in the repo. Contributors request or update it via the **website**: go to the script's page and use the **Report issue** button; the flow will guide you. The structure below is a **reference** for what metadata exists (e.g. for the form or when describing what you need).
 
-### JSON Structure
+### JSON Structure (Reference)
 
 ```json
 {
@@ -804,7 +804,7 @@ Or no credentials:
 - [ ] `motd_ssh`, `customize`, `cleanup_lxc` at the end of install scripts
 - [ ] No custom download/version-check logic
 - [ ] All links point to `community-scripts/ProxmoxVE` (not `ProxmoxVED`!)
-- [ ] JSON metadata file created in `frontend/public/json/<appname>.json`
+- [ ] Website metadata requested via the website (Report issue) if needed
 - [ ] Category IDs are valid (0-25)
 - [ ] Default OS version is Debian 13 or newer (unless special requirement)
 - [ ] Default resources are reasonable for the application
@@ -832,15 +832,15 @@ Or no credentials:
 
 ## 🍒 Important: Cherry-Picking Your Files for PR Submission
 
-⚠️ **CRITICAL**: When you submit your PR, you must use git cherry-pick to send ONLY your 3-4 files!
+⚠️ **CRITICAL**: When you submit your PR, you must use git cherry-pick to send ONLY your 2 files!
 
 Why? Because `setup-fork.sh` modifies 600+ files to update links. If you commit all changes, your PR will be impossible to merge.
 
 **See**: [README.md - Cherry-Pick Section](README.md#-cherry-pick-submitting-only-your-changes) for complete instructions on:
 
 - Creating a clean submission branch
-- Cherry-picking only your files (ct/myapp.sh, install/myapp-install.sh, frontend/public/json/myapp.json)
-- Verifying your PR has only 3 file changes (not 600+)
+- Cherry-picking only your files (ct/myapp.sh, install/myapp-install.sh)
+- Verifying your PR has only 2 file changes (not 600+)
 
 **Quick reference**:
 
@@ -849,7 +849,7 @@ Why? Because `setup-fork.sh` modifies 600+ files to update links. If you commit 
 git fetch upstream
 git checkout -b submit/myapp upstream/main
 
-# Cherry-pick your commit(s) or manually add your 3-4 files
+# Cherry-pick your commit(s) or manually add your 2 files
 # Then push to your fork and create PR
 ```
 
@@ -865,4 +865,4 @@ git checkout -b submit/myapp upstream/main
 - [../EXIT_CODES.md](../EXIT_CODES.md) - Exit code reference
 - [templates_ct/](templates_ct/) - CT script templates
 - [templates_install/](templates_install/) - Install script templates
-- [templates_json/](templates_json/) - JSON metadata templates
+- [templates_json/](templates_json/) - Metadata structure reference; submit via website
