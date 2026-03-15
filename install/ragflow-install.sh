@@ -325,20 +325,6 @@ if grep -q "pypi.tuna.tsinghua.edu.cn" uv.lock 2>/dev/null; then
   msg_ok "Fixed PyPI index URL in lock file"
 fi
 
-# Fix: Ensure Python version constraint matches upstream
-# RAGFlow upstream uses requires-python = ">=3.12,<3.15"
-# infinity-sdk requires Python >=3.11,<3.14
-# The intersection is >=3.12,<3.14, but we keep upstream's constraint
-# and rely on the lock file for correct resolution
-if grep -q 'requires-python' pyproject.toml 2>/dev/null; then
-  # Only update if it doesn't match upstream
-  if ! grep -q 'requires-python = ">=3.12,<3.15"' pyproject.toml 2>/dev/null; then
-    msg_info "Updating Python version constraint to match upstream"
-    sed -i 's/requires-python\s*=.*/requires-python = ">=3.12,<3.15"/' pyproject.toml
-    msg_ok "Updated Python version constraint"
-  fi
-fi
-
 # ==============================================================================
 # SDK EXCLUSION
 # ==============================================================================

@@ -88,20 +88,6 @@ function update_script() {
     msg_ok "Fixed PyPI index URL in lock file"
   fi
 
-  # Fix: Ensure Python version constraint matches upstream
-  # RAGFlow upstream uses requires-python = ">=3.12,<3.15"
-  # infinity-sdk requires Python >=3.11,<3.14
-  # The intersection is >=3.12,<3.14, but we keep upstream's constraint
-  # and rely on the lock file for correct resolution
-  if grep -q 'requires-python' pyproject.toml 2>/dev/null; then
-    # Only update if it doesn't match upstream
-    if ! grep -q 'requires-python = ">=3.12,<3.15"' pyproject.toml 2>/dev/null; then
-      msg_info "Updating Python version constraint to match upstream"
-      sed -i 's/requires-python\s*=.*/requires-python = ">=3.12,<3.15"/' pyproject.toml
-      msg_ok "Updated Python version constraint"
-    fi
-  fi
-
   # Remove the ragflow_sdk package from pyproject.toml since we only need the
   # server components. The SDK is a client library for connecting to RAGFlow
   # from external applications, which is not needed for server-only installations.
