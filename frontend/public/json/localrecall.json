@@ -1,7 +1,9 @@
 {
-  "name": "LocalRecall (In Testing - Borked)",
+  "name": "LocalRecall",
   "slug": "localrecall",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2026-03-14",
   "type": "ct",
   "updateable": true,
