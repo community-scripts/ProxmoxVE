@@ -122,7 +122,7 @@ function update_script() {
   msg_info "Reinstalling Python Dependencies"
   cd /opt/ragflow || exit
   export UV_SYSTEM_PYTHON=1
-  $STD /root/.local/bin/uv sync --python 3.12 --frozen
+  $STD /root/.local/bin/uv sync --python 3.12 --frozen --index-strategy unsafe-best-match
   $STD /root/.local/bin/uv run download_deps.py
   msg_ok "Reinstalled Python Dependencies"
 

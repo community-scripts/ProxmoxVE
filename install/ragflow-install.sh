@@ -365,7 +365,7 @@ fi
 msg_info "Installing Python Dependencies"
 cd /opt/ragflow || exit
 export UV_SYSTEM_PYTHON=1
-$STD /usr/local/bin/uv sync --python 3.12 --frozen
+$STD /usr/local/bin/uv sync --python 3.12 --frozen --index-strategy unsafe-best-match
 $STD /usr/local/bin/uv run download_deps.py
 msg_ok "Installed Python Dependencies"
 
