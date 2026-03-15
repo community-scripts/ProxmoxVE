@@ -403,3 +403,5 @@ else
   msg_warn "Installation cancelled. Exiting."
   exit 0
 fi
+
+exit 0
