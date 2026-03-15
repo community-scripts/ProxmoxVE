@@ -98,6 +98,9 @@ jobs:
             exit 1
           fi
           echo "PAT_WORKFLOW secret is configured."
+          echo "Note: For fine-grained PATs, ensure these permissions are set:"
+          echo "  - Contents: Read and write"
+          echo "  - Pull requests: Read and write"
 
       - name: Checkout repository
         uses: actions/checkout@v4
