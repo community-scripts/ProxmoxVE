@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2026 community-scripts ORG
-# Author: community-scripts
+# Author: BillyOutlast
 # License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://rocm.docs.amd.com
 
@@ -10,19 +9,23 @@
 # Supports: Debian 12, Debian 13, Ubuntu 22.04, Ubuntu 24.04
 # ==============================================================================
 
-ensure_dependencies curl
-
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)
+# Source function files FIRST (before calling any functions)
+source <(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/install.func)
 
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
 load_functions
-init_tool_telemetry "" "addon"
+
+# Initialize telemetry AFTER load_functions
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "" "addon"
+
+# Now we can use ensure_dependencies (from tools.func)
+ensure_dependencies curl
 
 function header_info {
   clear
