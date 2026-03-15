@@ -36,8 +36,9 @@ function update_script() {
     read -r
   fi
 
+  RELEASE="v1.4.2"
   NODE_VERSION="24" setup_nodejs
-  if check_for_gh_release "PatchMon" "PatchMon/PatchMon" "1.4.2"; then
+  if check_for_gh_release "PatchMon" "PatchMon/PatchMon" "${RELEASE}"; then
     msg_info "Stopping Service"
     systemctl stop patchmon-server
     msg_ok "Stopped Service"
@@ -47,7 +48,7 @@ function update_script() {
     cp /opt/patchmon/frontend/.env /opt/frontend.env
     msg_ok "Backup Created"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "v1.4.2" "/opt/patchmon"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "${RELEASE}" "/opt/patchmon"
 
     msg_info "Updating PatchMon"
     VERSION=$(get_latest_github_release "PatchMon/PatchMon")

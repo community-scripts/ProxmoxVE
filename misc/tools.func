@@ -2223,6 +2223,35 @@ check_for_gh_release() {
   # Try /latest endpoint for non-pinned versions (most efficient)
   local releases_json="" http_code=""
 
+  # For pinned versions, query the specific release tag directly
+  if [[ -n "$pinned_version_in" ]]; then
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+      -H 'Accept: application/vnd.github+json' \
+      -H 'X-GitHub-Api-Version: 2022-11-28' \
+      "${header_args[@]}" \
+      "https://api.github.com/repos/${source}/releases/tags/${pinned_version_in}" 2>/dev/null) || true
+
+    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
+      releases_json="[$(</tmp/gh_check.json)]"
+    elif [[ "$http_code" == "401" ]]; then
+      msg_error "GitHub API authentication failed (HTTP 401)."
+      if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+        msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
+      else
+        msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
+      fi
+      rm -f /tmp/gh_check.json
+      return 1
+    elif [[ "$http_code" == "403" ]]; then
+      msg_error "GitHub API rate limit exceeded (HTTP 403)."
+      msg_error "To increase the limit, export a GitHub token before running the script:"
+      msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
+      rm -f /tmp/gh_check.json
+      return 1
+    fi
+    rm -f /tmp/gh_check.json
+  fi
+
   if [[ -z "$pinned_version_in" ]]; then
     http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
       -H 'Accept: application/vnd.github+json' \
@@ -2752,7 +2781,7 @@ function fetch_and_deploy_codeberg_release() {
     resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
     ((attempt++))
     if ((attempt < ${#api_timeouts[@]})); then
-      msg_warn "API request timed out after ${api_timeouts[$((attempt-1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
+      msg_warn "API request timed out after ${api_timeouts[$((attempt - 1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
     fi
   done
 
@@ -3234,7 +3263,7 @@ function fetch_and_deploy_gh_release() {
   local max_retries=${#api_timeouts[@]} retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt-1))]:-240}" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
