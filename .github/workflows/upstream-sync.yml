@@ -10,7 +10,7 @@ on:
       force_sync:
         description: 'Force sync even if no new commits detected'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 permissions:
@@ -183,10 +183,7 @@ jobs:
         run: |
           # Commit the merge with resolved fork-specific conflicts
           # Remaining conflicts will be visible in the PR for review
-          git commit -m "Merge upstream with partial conflict resolution
-
-Fork-specific files (install/, ct/, frontend/, etc.) have been preserved.
-Other conflicts may require manual review before merging." || true
+          git commit -m "Merge upstream with partial conflict resolution" -m "Fork-specific files preserved, other conflicts need review" || true
 
       - name: Push sync branch
         run: |
