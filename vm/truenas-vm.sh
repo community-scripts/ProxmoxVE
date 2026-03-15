@@ -23,6 +23,7 @@ echo -e "\n Loading..."
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
+NSAPP="truenas-vm"
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
