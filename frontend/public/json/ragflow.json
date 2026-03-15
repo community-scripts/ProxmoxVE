@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://ragflow.io/docs/dev/",
   "website": "https://ragflow.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ragflow.webp",
+  "logo": "https://raw.githubusercontent.com/infiniflow/ragflow/refs/heads/main/web/public/logo.svg",
   "config_path": "/opt/ragflow/conf/service_conf.yaml",
   "description": "RAGFlow is an open-source RAG (Retrieval-Augmented Generation) engine with deep document understanding. It provides a streamlined RAG workflow for businesses of any scale, combining LLM capabilities to provide truthful question-answering with well-founded citations from various complex formatted data.",
   "install_methods": [
