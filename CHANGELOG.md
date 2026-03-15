@@ -425,6 +425,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-15
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Frigate: add fallback for OpenVino labelmap file [@MickLesk](https://github.com/MickLesk) ([#12889](https://github.com/community-scripts/ProxmoxVE/pull/12889))
+
 ## 2026-03-14
 
 ### 🚀 Updated Scripts
