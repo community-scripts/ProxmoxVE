@@ -429,6 +429,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - SparkyFitness: use --legacy-peer-deps for npm install [@MickLesk](https://github.com/MickLesk) ([#12888](https://github.com/community-scripts/ProxmoxVE/pull/12888))
     - Wishlist: use --frozen-lockfile for pnpm install [@MickLesk](https://github.com/MickLesk) ([#12892](https://github.com/community-scripts/ProxmoxVE/pull/12892))
     - Frigate: add fallback for OpenVino labelmap file [@MickLesk](https://github.com/MickLesk) ([#12889](https://github.com/community-scripts/ProxmoxVE/pull/12889))
 
