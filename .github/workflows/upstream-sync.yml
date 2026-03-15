@@ -283,6 +283,9 @@ jobs:
             --label "upstream-sync,automated" || echo "PR may already exist"
 
       - name: Cleanup
+        if: always()
         run: |
+          # Abort any pending merge to clean up git state
+          git merge --abort 2>/dev/null || true
           git checkout ${{ env.FORK_BRANCH }}
           git branch -D ${{ steps.branch.outputs.branch_name }} 2>/dev/null || true
