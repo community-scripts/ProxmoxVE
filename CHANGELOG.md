@@ -449,6 +449,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: retry downloads with exponential backoff [@MickLesk](https://github.com/MickLesk) ([#12896](https://github.com/community-scripts/ProxmoxVE/pull/12896))
 
+### ❔ Uncategorized
+
+  - [go2rtc] Add ffmpeg dependency to install script [@Copilot](https://github.com/Copilot) ([#12944](https://github.com/community-scripts/ProxmoxVE/pull/12944))
+
 ## 2026-03-14
 
 ### 🚀 Updated Scripts
