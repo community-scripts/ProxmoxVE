@@ -35,6 +35,10 @@ msg_info "Installing ZTNet"
 curl -s http://install.ztnet.network | bash
 msg_ok "Installed ZTNet"
 
+msg_info "Enabling ZTNet Service"
+$STD systemctl enable --now ztnet
+msg_ok "Started ZTNet"
+
 motd_ssh
 customize
 cleanup_lxc
