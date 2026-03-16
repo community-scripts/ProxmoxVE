@@ -4629,9 +4629,6 @@ _setup_amd_apu() {
     $STD apt -y install firmware-amd-graphics 2>/dev/null || true
   fi
 
-  # ROCm compute stack (OpenCL + HIP) - also works for many APUs
-  _setup_rocm "$os_id" "$os_codename"
-
   msg_ok "AMD APU configured"
 }
 
