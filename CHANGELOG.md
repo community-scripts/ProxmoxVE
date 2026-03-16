@@ -425,6 +425,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-16
 
+### 🆕 New Scripts
+
+  - Anytype-Server ([#12974](https://github.com/community-scripts/ProxmoxVE/pull/12974))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
