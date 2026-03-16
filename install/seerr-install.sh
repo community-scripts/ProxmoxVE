@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y build-essential
+$STD apt-get install -y \
+  build-essential \
+  python3-setuptools
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "seerr" "seerr-team/seerr" "tarball"
