@@ -129,7 +129,7 @@ EOF
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "seerr" "seerr-team/seerr" "tarball"
 
     msg_info "Installing Build Dependencies"
-    $STD apt-get install -y build-essential python3-setuptools
+    $STD apt install -y build-essential python3-setuptools
     msg_ok "Installed Build Dependencies"
 
     msg_info "Updating PNPM Version"
