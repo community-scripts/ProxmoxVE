@@ -19,6 +19,7 @@ $STD apt-get install -y \
   git \
   openssl \
   gnupg \
+  lsb-release \
   postgresql \
   postgresql-contrib
 msg_ok "Installed Dependencies"
