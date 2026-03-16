@@ -311,17 +311,22 @@ function advanced_settings() {
   else
     if [ $exitstatus = 0 ]; then echo -e "${DGN}Using Bridge: ${BGN}$BRG${CL}"; fi
   fi
-  MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
-  exitstatus=$?
-  if [ -z $MAC1 ]; then
-    MAC="$GEN_MAC"
-    echo -e "${DGN}Using MAC Address: ${BGN}$MAC${CL}"
-  else
-    if [ $exitstatus = 0 ]; then
+  while true; do
+    MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus -ne 0 ]; then exit-script; fi
+    if [ -z "$MAC1" ]; then
+      MAC="$GEN_MAC"
+      echo -e "${DGN}Using MAC Address: ${BGN}$MAC${CL}"
+      break
+    fi
+    if [[ "$MAC1" =~ ^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$ ]]; then
       MAC="$MAC1"
       echo -e "${DGN}Using MAC Address: ${BGN}$MAC1${CL}"
+      break
     fi
-  fi
+    whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid MAC address format. Use XX:XX:XX:XX:XX:XX (e.g., AA:BB:CC:DD:EE:FF)." 8 58
+  done
   while true; do
     VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
     exitstatus=$?
