@@ -421,7 +421,10 @@ function advanced_settings() {
     if [ -z "$VM_NAME" ]; then
       HN="OPNsense"
     else
-      HN=$(echo ${VM_NAME,,} | tr -d ' ')
+      HN=$(echo "${VM_NAME,,}" | tr -cs 'a-z0-9-' '-' | sed 's/^-//;s/-$//')
+      if [ "$HN" != "${VM_NAME,,}" ]; then
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "HOSTNAME ADJUSTED" --msgbox "Invalid characters detected. Hostname has been adjusted to:\n\n  $HN" 10 58
+      fi
     fi
     echo -e "${DGN}Using Hostname: ${BGN}$HN${CL}"
   else
