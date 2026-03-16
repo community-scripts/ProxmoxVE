@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-15T12:22:39Z",
+  "generated": "2026-03-15T18:20:18Z",
   "versions": [
     {
       "slug": "agregarr",
@@ -18,9 +18,9 @@
     {
       "slug": "llamacpp",
       "repo": "ggml-org/llama.cpp",
-      "version": "b8354",
+      "version": "b8355",
       "pinned": false,
-      "date": "2026-03-15T10:06:38Z"
+      "date": "2026-03-15T16:39:26Z"
     },
     {
       "slug": "localai",
