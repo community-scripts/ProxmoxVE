@@ -29,6 +29,7 @@ function update_script() {
   fi
 
   NODE_VERSION="22" setup_nodejs
+  hash -r 2>/dev/null || true
 
   if check_for_gh_release "tududi" "chrisvel/tududi"; then
     msg_info "Stopping Service"
