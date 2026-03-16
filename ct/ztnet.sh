@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2026 community-scripts ORG
-# Author: community-scripts
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/refs/heads/main}"
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
+# Author: BillyOutlast
+# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://ztnet.network
 
 APP="ZTNet"
