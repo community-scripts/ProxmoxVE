@@ -429,6 +429,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: use gcc-13 for compilation & add uv python pre-install with retry logic [@MickLesk](https://github.com/MickLesk) ([#12935](https://github.com/community-scripts/ProxmoxVE/pull/12935))
     - Tautulli: add setuptools<81 constraint to update script [@MickLesk](https://github.com/MickLesk) ([#12959](https://github.com/community-scripts/ProxmoxVE/pull/12959))
     - Seerr: add missing build deps [@MickLesk](https://github.com/MickLesk) ([#12960](https://github.com/community-scripts/ProxmoxVE/pull/12960))
     - fix: yubal update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12961](https://github.com/community-scripts/ProxmoxVE/pull/12961))
