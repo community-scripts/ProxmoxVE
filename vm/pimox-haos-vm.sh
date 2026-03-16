@@ -339,17 +339,23 @@ function advanced_settings() {
     fi
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "VLAN must be a number between 1 and 4094, or leave blank for default." 8 58
   done
-  MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
-  exitstatus=$?
-  if [ $exitstatus = 0 ]; then
-    if [ -z $MTU1 ]; then
-      MTU1="Default" MTU=""
+  while true; do
+    MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus -ne 0 ]; then exit-script; fi
+    if [ -z "$MTU1" ]; then
+      MTU1="Default"
+      MTU=""
       echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
-    else
+      break
+    fi
+    if [[ "$MTU1" =~ ^[0-9]+$ ]] && [ "$MTU1" -ge 576 ] && [ "$MTU1" -le 65520 ]; then
       MTU=",mtu=$MTU1"
       echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
+      break
     fi
-  fi
+    whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "MTU Size must be a number between 576 and 65520, or leave blank for default." 8 58
+  done
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
     echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
     START_VM="yes"

@@ -451,18 +451,24 @@ function advanced_settings() {
     fi
   done
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MTU1 ]; then
-      MTU1="Default"
-      MTU=""
-      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+  while true; do
+    if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$MTU1" ]; then
+        MTU1="Default"
+        MTU=""
+        echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      if [[ "$MTU1" =~ ^[0-9]+$ ]] && [ "$MTU1" -ge 576 ] && [ "$MTU1" -le 65520 ]; then
+        MTU=",mtu=$MTU1"
+        echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "MTU Size must be a number between 576 and 65520, or leave blank for default." 8 58
     else
-      MTU=",mtu=$MTU1"
-      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+      exit-script
     fi
-  else
-    exit-script
-  fi
+  done
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "IMPORT ONBOARD DISKS" --yesno "Would you like to import onboard disks?" 10 58); then
     echo -e "${DISK}${BOLD}${DGN}Import onboard disks: ${BGN}yes${CL}"

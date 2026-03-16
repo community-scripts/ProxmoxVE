@@ -471,17 +471,24 @@ function advanced_settings() {
     fi
   done
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MTU1 ]; then
-      MTU1="Default"
-      MTU=""
+  while true; do
+    if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$MTU1" ]; then
+        MTU1="Default"
+        MTU=""
+        echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      if [[ "$MTU1" =~ ^[0-9]+$ ]] && [ "$MTU1" -ge 576 ] && [ "$MTU1" -le 65520 ]; then
+        MTU=",mtu=$MTU1"
+        echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "MTU Size must be a number between 576 and 65520, or leave blank for default." 8 58
     else
-      MTU=",mtu=$MTU1"
+      exit-script
     fi
-    echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
-  else
-    exit-script
-  fi
+  done
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
     START_VM="yes"
