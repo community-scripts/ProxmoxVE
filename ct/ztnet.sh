@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/refs/heads/main}"
-source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
-# Author: BillyOutlast
-# License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: community-scripts
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://ztnet.network
 
 APP="ZTNet"
@@ -29,45 +29,29 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "ztnet" "sinamics/ztnet"; then
-    msg_info "Stopping Service"
-    systemctl stop ztnet
-    msg_ok "Stopped Service"
+  msg_info "Stopping Service"
+  systemctl stop ztnet
+  msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/ztnet/data /opt/ztnet_data_backup 2>/dev/null || true
-    cp /opt/ztnet/.env /opt/ztnet_env_backup 2>/dev/null || true
-    msg_ok "Backed up Data"
+  msg_info "Backing up Data"
+  cp -r /opt/ztnet/data /opt/ztnet_data_backup 2>/dev/null || true
+  cp /opt/ztnet/.env /opt/ztnet_env_backup 2>/dev/null || true
+  msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ztnet" "sinamics/ztnet" "tarball" "latest" "/opt/ztnet"
+  msg_info "Updating ZTNet"
+  curl -s http://install.ztnet.network | bash
+  msg_ok "Updated ZTNet"
 
-    msg_info "Installing Dependencies"
-    cd /opt/ztnet || exit
-    export NODE_OPTIONS=--dns-result-order=ipv4first
-    $STD npm install
-    msg_ok "Installed Dependencies"
+  msg_info "Restoring Data"
+  cp -r /opt/ztnet_data_backup/. /opt/ztnet/data 2>/dev/null || true
+  cp /opt/ztnet_env_backup /opt/ztnet/.env 2>/dev/null || true
+  rm -rf /opt/ztnet_data_backup /opt/ztnet_env_backup
+  msg_ok "Restored Data"
 
-    msg_info "Running Database Migrations"
-    export DATABASE_URL=$(grep DATABASE_URL /opt/ztnet_env_backup | cut -d'=' -f2-)
-    $STD npx prisma migrate deploy
-    $STD npx prisma db seed
-    msg_ok "Database Migrations Complete"
-
-    msg_info "Building Application"
-    $STD npm run build
-    msg_ok "Built Application"
-
-    msg_info "Restoring Data"
-    cp -r /opt/ztnet_data_backup/. /opt/ztnet/data 2>/dev/null || true
-    cp /opt/ztnet_env_backup /opt/ztnet/.env 2>/dev/null || true
-    rm -rf /opt/ztnet_data_backup /opt/ztnet_env_backup
-    msg_ok "Restored Data"
-
-    msg_info "Starting Service"
-    systemctl start ztnet
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  fi
+  msg_info "Starting Service"
+  systemctl start ztnet
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
   exit
 }
 
