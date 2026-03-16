@@ -322,17 +322,23 @@ function advanced_settings() {
       echo -e "${DGN}Using MAC Address: ${BGN}$MAC1${CL}"
     fi
   fi
-  VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
-  exitstatus=$?
-  if [ $exitstatus = 0 ]; then
-    if [ -z $VLAN1 ]; then
-      VLAN1="Default" VLAN=""
+  while true; do
+    VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
+    exitstatus=$?
+    if [ $exitstatus -ne 0 ]; then exit-script; fi
+    if [ -z "$VLAN1" ]; then
+      VLAN1="Default"
+      VLAN=""
       echo -e "${DGN}Using Vlan: ${BGN}$VLAN1${CL}"
-    else
+      break
+    fi
+    if [[ "$VLAN1" =~ ^[0-9]+$ ]] && [ "$VLAN1" -ge 1 ] && [ "$VLAN1" -le 4094 ]; then
       VLAN=",tag=$VLAN1"
       echo -e "${DGN}Using Vlan: ${BGN}$VLAN1${CL}"
+      break
     fi
-  fi
+    whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "VLAN must be a number between 1 and 4094, or leave blank for default." 8 58
+  done
   MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then

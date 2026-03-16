@@ -433,29 +433,43 @@ function advanced_settings() {
     exit-script
   fi
 
-  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN Vlan (leave blank for default)" 8 58 --title "WAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VLAN1 ]; then
-      VLAN1="Default"
-      VLAN=""
+  while true; do
+    if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN Vlan (leave blank for default)" 8 58 --title "WAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$VLAN1" ]; then
+        VLAN1="Default"
+        VLAN=""
+        echo -e "${DGN}Using WAN Vlan: ${BGN}$VLAN1${CL}"
+        break
+      fi
+      if [[ "$VLAN1" =~ ^[0-9]+$ ]] && [ "$VLAN1" -ge 1 ] && [ "$VLAN1" -le 4094 ]; then
+        VLAN=",tag=$VLAN1"
+        echo -e "${DGN}Using WAN Vlan: ${BGN}$VLAN1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "VLAN must be a number between 1 and 4094, or leave blank for default." 8 58
     else
-      VLAN=",tag=$VLAN1"
+      exit-script
     fi
-    echo -e "${DGN}Using WAN Vlan: ${BGN}$VLAN1${CL}"
-  else
-    exit-script
-  fi
+  done
 
-  if VLAN2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN Vlan" 8 58 999 --title "LAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VLAN2 ]; then
-      VLAN2="Default"
-      LAN_VLAN=""
+  while true; do
+    if VLAN2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN Vlan" 8 58 999 --title "LAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$VLAN2" ]; then
+        VLAN2="Default"
+        LAN_VLAN=""
+        echo -e "${DGN}Using LAN Vlan: ${BGN}$VLAN2${CL}"
+        break
+      fi
+      if [[ "$VLAN2" =~ ^[0-9]+$ ]] && [ "$VLAN2" -ge 1 ] && [ "$VLAN2" -le 4094 ]; then
+        LAN_VLAN=",tag=$VLAN2"
+        echo -e "${DGN}Using LAN Vlan: ${BGN}$VLAN2${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "VLAN must be a number between 1 and 4094, or leave blank for default." 8 58
     else
-      LAN_VLAN=",tag=$VLAN2"
+      exit-script
     fi
-    echo -e "${DGN}Using LAN Vlan: ${BGN}$VLAN2${CL}"
-  else
-    exit-script
-  fi
+  done
 
   if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $MTU1 ]; then
