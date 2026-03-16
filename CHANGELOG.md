@@ -429,7 +429,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Tautulli: add setuptools<81 constraint to update script [@MickLesk](https://github.com/MickLesk) ([#12959](https://github.com/community-scripts/ProxmoxVE/pull/12959))
+    - Seerr: add missing build deps [@MickLesk](https://github.com/MickLesk) ([#12960](https://github.com/community-scripts/ProxmoxVE/pull/12960))
     - fix: yubal update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12961](https://github.com/community-scripts/ProxmoxVE/pull/12961))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - hwaccel: remove ROCm install from AMD APU setup [@MickLesk](https://github.com/MickLesk) ([#12958](https://github.com/community-scripts/ProxmoxVE/pull/12958))
 
 ## 2026-03-15
 
