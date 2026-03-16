@@ -427,7 +427,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Anytype-Server ([#12974](https://github.com/community-scripts/ProxmoxVE/pull/12974))
+  - Gluetun ([#12976](https://github.com/community-scripts/ProxmoxVE/pull/12976))
+- Anytype-Server ([#12974](https://github.com/community-scripts/ProxmoxVE/pull/12974))
 
 ### 🚀 Updated Scripts
 
