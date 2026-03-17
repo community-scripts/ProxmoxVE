@@ -2184,7 +2184,7 @@ get_latest_gh_tag() {
 #
 # Usage:
 #     if check_for_gh_tag "guacd" "apache/guacamole-server"; then
-#       # trigger update using $CHECK_UPDATE_RELEASE ...
+#       fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "/opt/guacamole-server"
 #     fi
 #
 # Notes:
@@ -2216,7 +2216,6 @@ check_for_gh_tag() {
   msg_ok "No update available: ${app} (${latest})"
   return 1
 }
-
 
 # ==============================================================================
 # INSTALL FUNCTIONS
