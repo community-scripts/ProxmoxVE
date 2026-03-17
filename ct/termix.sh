@@ -56,7 +56,7 @@ function update_script() {
       libavformat-dev
 
     msg_info "Updating Guacamole Server (guacd)"
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "/opt/guacamole-server"
+    fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "${CHECK_UPDATE_RELEASE}" "/opt/guacamole-server"
     cd /opt/guacamole-server
     export CPPFLAGS="-Wno-error=deprecated-declarations"
     $STD autoreconf -fi

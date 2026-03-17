@@ -42,9 +42,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Building Guacamole Server (guacd)"
-GUAC_SERVER_VERSION=$(get_latest_gh_tag "apache/guacamole-server")
-CHECK_UPDATE_RELEASE="$GUAC_SERVER_VERSION"
-CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "/opt/guacamole-server"
+fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "latest" "/opt/guacamole-server"
 cd /opt/guacamole-server
 export CPPFLAGS="-Wno-error=deprecated-declarations"
 $STD autoreconf -fi
@@ -54,7 +52,7 @@ $STD make install
 $STD ldconfig
 cd /opt
 rm -rf /opt/guacamole-server
-msg_ok "Built Guacamole Server (guacd) ${GUAC_SERVER_VERSION}"
+msg_ok "Built Guacamole Server (guacd)"
 
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"
