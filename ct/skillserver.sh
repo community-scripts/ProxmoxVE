@@ -38,7 +38,7 @@ function update_script() {
     cp -r /opt/skillserver/skills /opt/skillserver_skills_backup
     msg_ok "Backed up Data"
 
-    GO_VERSION="1.25" setup_go
+    setup_go
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "skillserver" "mudler/skillserver" "tarball" "latest" "/opt/skillserver"
 
