@@ -56,10 +56,7 @@ function update_script() {
       libavformat-dev
 
     msg_info "Updating Guacamole Server (guacd)"
-    mkdir -p /opt/guacamole-server
-    download_file "https://github.com/apache/guacamole-server/archive/refs/tags/${CHECK_UPDATE_RELEASE}.tar.gz" "/tmp/guacamole-server.tar.gz"
-    tar -xzf /tmp/guacamole-server.tar.gz --strip-components=1 -C /opt/guacamole-server
-    rm -f /tmp/guacamole-server.tar.gz
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "/opt/guacamole-server"
     cd /opt/guacamole-server
     export CPPFLAGS="-Wno-error=deprecated-declarations"
     $STD autoreconf -fi
@@ -67,7 +64,6 @@ function update_script() {
     $STD make
     $STD make install
     $STD ldconfig
-    echo "${CHECK_UPDATE_RELEASE}" >~/.guacd
     cd /opt
     rm -rf /opt/guacamole-server
     msg_ok "Updated Guacamole Server (guacd) to ${CHECK_UPDATE_RELEASE}"

@@ -43,10 +43,8 @@ msg_ok "Installed Dependencies"
 
 msg_info "Building Guacamole Server (guacd)"
 GUAC_SERVER_VERSION=$(get_latest_gh_tag "apache/guacamole-server")
-mkdir -p /opt/guacamole-server
-download_file "https://github.com/apache/guacamole-server/archive/refs/tags/${GUAC_SERVER_VERSION}.tar.gz" "/tmp/guacamole-server.tar.gz"
-tar -xzf /tmp/guacamole-server.tar.gz --strip-components=1 -C /opt/guacamole-server
-rm -f /tmp/guacamole-server.tar.gz
+CHECK_UPDATE_RELEASE="$GUAC_SERVER_VERSION"
+CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "/opt/guacamole-server"
 cd /opt/guacamole-server
 export CPPFLAGS="-Wno-error=deprecated-declarations"
 $STD autoreconf -fi
@@ -54,7 +52,6 @@ $STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
 $STD make
 $STD make install
 $STD ldconfig
-echo "${GUAC_SERVER_VERSION}" >~/.guacd
 cd /opt
 rm -rf /opt/guacamole-server
 msg_ok "Built Guacamole Server (guacd) ${GUAC_SERVER_VERSION}"
