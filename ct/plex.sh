@@ -79,6 +79,11 @@ function update_script() {
   $STD apt update
   $STD apt install -y plexmediaserver
   msg_ok "Updated Plex Media Server"
+
+  msg_info "Restarting Plex Media Server"
+  systemctl restart plexmediaserver
+  msg_ok "Restarted Plex Media Server"
+
   msg_ok "Updated successfully!"
   exit
 }
