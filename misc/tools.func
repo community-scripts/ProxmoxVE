@@ -2174,6 +2174,50 @@ get_latest_gh_tag() {
   return 0
 }
 
+# ------------------------------------------------------------------------------
+# Checks for new GitHub tag (for repos without releases).
+#
+# Description:
+#   - Uses get_latest_gh_tag to fetch the latest tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#
+# Usage:
+#     if check_for_gh_tag "guacd" "apache/guacamole-server"; then
+#       # trigger update using $CHECK_UPDATE_RELEASE ...
+#     fi
+#
+# Notes:
+#   - For repos that only publish tags, not GitHub Releases
+#   - Same interface as check_for_gh_release
+# ------------------------------------------------------------------------------
+check_for_gh_tag() {
+  local app="$1"
+  local repo="$2"
+  local prefix="${3:-}"
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local current_file="$HOME/.${app_lc}"
+
+  msg_info "Checking for update: ${app}"
+
+  local latest=""
+  latest=$(get_latest_gh_tag "$repo" "$prefix") || return 1
+
+  local current=""
+  [[ -f "$current_file" ]] && current="$(<"$current_file")"
+
+  if [[ -z "$current" || "$current" != "$latest" ]]; then
+    CHECK_UPDATE_RELEASE="$latest"
+    msg_ok "Update available: ${app} ${current:-not installed} → ${latest}"
+    return 0
+  fi
+
+  msg_ok "No update available: ${app} (${latest})"
+  return 1
+}
+
+
 # ==============================================================================
 # INSTALL FUNCTIONS
 # ==============================================================================
