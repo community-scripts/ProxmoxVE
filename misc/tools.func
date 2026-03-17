@@ -2077,100 +2077,85 @@ verify_gpg_fingerprint() {
 }
 
 # ------------------------------------------------------------------------------
-# Get latest GitHub tag for a repository.
+# Fetches and deploys a GitHub tag-based source tarball.
 #
 # Description:
-#   - Queries the GitHub API for tags (not releases)
-#   - Useful for repos that only create tags, not full releases
-#   - Supports optional prefix filter and version-only extraction
-#   - Returns the latest tag name (printed to stdout)
+#   - Downloads the source tarball for a given tag from GitHub
+#   - Extracts to the target directory
+#   - Writes the version to ~/.<app>
 #
 # Usage:
-#   MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools")
-#   LATEST=$(get_latest_gh_tag "owner/repo" "v")          # only tags starting with "v"
-#   LATEST=$(get_latest_gh_tag "owner/repo" "" "true")     # strip leading "v"
+#     fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server"
+#     fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "latest" "/opt/guacamole-server"
 #
 # Arguments:
-#   $1 - GitHub repo (owner/repo)
-#   $2 - Tag prefix filter (optional, e.g. "v" or "100.")
-#   $3 - Strip prefix from result (optional, "true" to strip $2 prefix)
-#
-# Returns:
-#   0 on success (tag printed to stdout), 1 on failure
+#   $1 - App name (used for version file ~/.<app>)
+#   $2 - GitHub repo (owner/repo)
+#   $3 - Tag version (default: "latest" → auto-detect via get_latest_gh_tag)
+#   $4 - Target directory (default: /opt/$app)
 #
 # Notes:
-#   - Skips tags containing "rc", "alpha", "beta", "dev", "test"
-#   - Sorts by version number (sort -V) to find the latest
-#   - Respects GITHUB_TOKEN for rate limiting
+#   - Supports CLEAN_INSTALL=1 to wipe target before extracting
+#   - For repos that only publish tags, not GitHub Releases
 # ------------------------------------------------------------------------------
-get_latest_gh_tag() {
-  local repo="$1"
-  local prefix="${2:-}"
-  local strip_prefix="${3:-false}"
+fetch_and_deploy_gh_tag() {
+  local app="$1"
+  local repo="$2"
+  local version="${3:-latest}"
+  local target="${4:-/opt/$app}"
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local version_file="$HOME/.${app_lc}"
 
-  local header_args=()
-  [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+  if [[ "$version" == "latest" ]]; then
+    version=$(get_latest_gh_tag "$repo") || {
+      msg_error "Failed to determine latest tag for ${repo}"
+      return 1
+    }
+  fi
 
-  local http_code=""
-  http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_tags.json \
-    -H 'Accept: application/vnd.github+json' \
-    -H 'X-GitHub-Api-Version: 2022-11-28' \
-    "${header_args[@]}" \
-    "https://api.github.com/repos/${repo}/tags?per_page=100" 2>/dev/null) || true
+  local current_version=""
+  [[ -f "$version_file" ]] && current_version=$(<"$version_file")
 
-  if [[ "$http_code" == "401" ]]; then
-    msg_error "GitHub API authentication failed (HTTP 401)."
-    if [[ -n "${GITHUB_TOKEN:-}" ]]; then
-      msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
-    else
-      msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
-    fi
-    rm -f /tmp/gh_tags.json
+  if [[ "$current_version" == "$version" ]]; then
+    msg_ok "$app is already up-to-date ($version)"
+    return 0
+  fi
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || return 1
+  local tarball_url="https://github.com/${repo}/archive/refs/tags/${version}.tar.gz"
+  local filename="${app_lc}-${version}.tar.gz"
+
+  msg_info "Fetching GitHub tag: ${app} (${version})"
+
+  download_file "$tarball_url" "$tmpdir/$filename" || {
+    msg_error "Download failed: $tarball_url"
+    rm -rf "$tmpdir"
     return 1
+  }
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    rm -rf "${target:?}/"*
   fi
 
-  if [[ "$http_code" == "403" ]]; then
-    msg_error "GitHub API rate limit exceeded (HTTP 403)."
-    msg_error "To increase the limit, export a GitHub token before running the script:"
-    msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-    rm -f /tmp/gh_tags.json
+  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+    msg_error "Failed to extract tarball"
+    rm -rf "$tmpdir"
     return 1
-  fi
+  }
 
-  if [[ "$http_code" == "000" || -z "$http_code" ]]; then
-    msg_error "GitHub API connection failed (no response)."
-    msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
-    rm -f /tmp/gh_tags.json
-    return 1
-  fi
+  local unpack_dir
+  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
 
-  if [[ "$http_code" != "200" ]] || [[ ! -s /tmp/gh_tags.json ]]; then
-    msg_error "Unable to fetch tags for ${repo} (HTTP ${http_code})"
-    rm -f /tmp/gh_tags.json
-    return 1
-  fi
+  shopt -s dotglob nullglob
+  cp -r "$unpack_dir"/* "$target/"
+  shopt -u dotglob nullglob
 
-  local tags_json
-  tags_json=$(</tmp/gh_tags.json)
-  rm -f /tmp/gh_tags.json
-
-  # Extract tag names, filter by prefix, exclude pre-release patterns, sort by version
-  local latest=""
-  latest=$(echo "$tags_json" | grep -oP '"name":\s*"\K[^"]+' |
-    { [[ -n "$prefix" ]] && grep "^${prefix}" || cat; } |
-    grep -viE '(rc|alpha|beta|dev|test|preview|snapshot)' |
-    sort -V | tail -n1)
-
-  if [[ -z "$latest" ]]; then
-    msg_warn "No matching tags found for ${repo}${prefix:+ (prefix: $prefix)}"
-    return 1
-  fi
-
-  if [[ "$strip_prefix" == "true" && -n "$prefix" ]]; then
-    latest="${latest#"$prefix"}"
-  fi
-
-  echo "$latest"
+  rm -rf "$tmpdir"
+  echo "$version" >"$version_file"
+  msg_ok "Deployed ${app} ${version} to ${target}"
   return 0
 }
 
