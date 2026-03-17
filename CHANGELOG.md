@@ -425,6 +425,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-17
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - tools.func: Update `create_self_signed_cert()` [@tremor021](https://github.com/tremor021) ([#13008](https://github.com/community-scripts/ProxmoxVE/pull/13008))
+
 ## 2026-03-16
 
 ### 🆕 New Scripts
