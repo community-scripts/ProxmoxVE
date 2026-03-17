@@ -1,0 +1,50 @@
+{
+  "name": "SkillServer",
+  "slug": "skillserver",
+  "categories": [20],
+  "date_created": "2026-03-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://github.com/mudler/skillserver",
+  "website": "https://github.com/mudler/skillserver",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/skillserver.webp",
+  "config_path": "",
+  "description": "An MCP/REST server with WebUI serving as a centralized skills database for AI Agents. Manages 'Skills' (directory-based with SKILL.md files) stored locally, following the Agent Skills specification. Features MCP server integration, web interface for skill management, Git synchronization, and full-text search.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/skillserver.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Access the WebUI at http://SERVER_IP:8080",
+      "type": "info"
+    },
+    {
+      "text": "Skills are stored in /opt/skillserver/skills",
+      "type": "info"
+    },
+    {
+      "text": "Configure Git repositories to sync skills via SKILLSERVER_GIT_REPOS environment variable",
+      "type": "info"
+    },
+    {
+      "text": "MCP server runs over stdio for integration with AI clients",
+      "type": "info"
+    }
+  ]
+}
