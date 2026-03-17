@@ -2174,6 +2174,79 @@ get_latest_gh_tag() {
   return 0
 }
 
+# ------------------------------------------------------------------------------
+# Fetches and deploys a GitHub tag-based source tarball.
+#
+# Description:
+#   - Downloads the source tarball for a given tag from GitHub
+#   - Extracts to the target directory
+#   - Writes the version to ~/.<app>
+#
+# Usage:
+#     fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server"
+#     fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "/opt/guacamole-server"
+#
+# Arguments:
+#   $1 - App name (used for version file ~/.<app>)
+#   $2 - GitHub repo (owner/repo)
+#   $3 - Target directory (default: /opt/$app)
+#
+# Notes:
+#   - Expects CHECK_UPDATE_RELEASE to be set (by check_for_gh_tag)
+#   - Supports CLEAN_INSTALL=1 to wipe target before extracting
+#   - For repos that only publish tags, not GitHub Releases
+# ------------------------------------------------------------------------------
+fetch_and_deploy_gh_tag() {
+  local app="$1"
+  local repo="$2"
+  local target="${3:-/opt/$app}"
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local version_file="$HOME/.${app_lc}"
+  local tag="${CHECK_UPDATE_RELEASE:-}"
+
+  if [[ -z "$tag" ]]; then
+    msg_error "fetch_and_deploy_gh_tag: CHECK_UPDATE_RELEASE is not set. Run check_for_gh_tag first."
+    return 1
+  fi
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || return 1
+  local tarball_url="https://github.com/${repo}/archive/refs/tags/${tag}.tar.gz"
+  local filename="${app_lc}-${tag}.tar.gz"
+
+  msg_info "Fetching GitHub tag: ${app} (${tag})"
+
+  download_file "$tarball_url" "$tmpdir/$filename" || {
+    msg_error "Download failed: $tarball_url"
+    rm -rf "$tmpdir"
+    return 1
+  }
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    rm -rf "${target:?}/"*
+  fi
+
+  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+    msg_error "Failed to extract tarball"
+    rm -rf "$tmpdir"
+    return 1
+  }
+
+  local unpack_dir
+  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+  shopt -s dotglob nullglob
+  cp -r "$unpack_dir"/* "$target/"
+  shopt -u dotglob nullglob
+
+  rm -rf "$tmpdir"
+  echo "$tag" >"$version_file"
+  msg_ok "Deployed ${app} ${tag} to ${target}"
+  return 0
+}
+
 # ==============================================================================
 # INSTALL FUNCTIONS
 # ==============================================================================
