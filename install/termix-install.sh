@@ -19,8 +19,45 @@ $STD apt install -y \
   python3 \
   nginx \
   openssl \
-  gettext-base
+  gettext-base \
+  libcairo2-dev \
+  libjpeg62-turbo-dev \
+  libpng-dev \
+  libtool-bin \
+  uuid-dev \
+  libvncserver-dev \
+  freerdp3-dev \
+  libssh2-1-dev \
+  libtelnet-dev \
+  libwebsockets-dev \
+  libpulse-dev \
+  libvorbis-dev \
+  libwebp-dev \
+  libssl-dev \
+  libpango1.0-dev \
+  libswscale-dev \
+  libavcodec-dev \
+  libavutil-dev \
+  libavformat-dev
 msg_ok "Installed Dependencies"
+
+msg_info "Building Guacamole Server (guacd)"
+GUAC_SERVER_VERSION=$(get_latest_gh_tag "apache/guacamole-server")
+mkdir -p /opt/guacamole-server
+download_file "https://github.com/apache/guacamole-server/archive/refs/tags/${GUAC_SERVER_VERSION}.tar.gz" "/tmp/guacamole-server.tar.gz"
+tar -xzf /tmp/guacamole-server.tar.gz --strip-components=1 -C /opt/guacamole-server
+rm -f /tmp/guacamole-server.tar.gz
+cd /opt/guacamole-server
+export CPPFLAGS="-Wno-error=deprecated-declarations"
+$STD autoreconf -fi
+$STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
+$STD make
+$STD make install
+$STD ldconfig
+echo "${GUAC_SERVER_VERSION}" >~/.guacd
+cd /opt
+rm -rf /opt/guacamole-server
+msg_ok "Built Guacamole Server (guacd) ${GUAC_SERVER_VERSION}"
 
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"
@@ -74,10 +111,36 @@ systemctl reload nginx
 msg_ok "Configured Nginx"
 
 msg_info "Creating Service"
+mkdir -p /etc/guacamole
+cat <<EOF >/etc/guacamole/guacd.conf
+[server]
+bind_host = 127.0.0.1
+bind_port = 4822
+EOF
+
+cat <<EOF >/etc/systemd/system/guacd.service
+[Unit]
+Description=Guacamole Proxy Daemon (guacd)
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/etc/init.d/guacd start
+ExecStop=/etc/init.d/guacd stop
+ExecReload=/etc/init.d/guacd restart
+PIDFile=/var/run/guacd.pid
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat <<EOF >/etc/systemd/system/termix.service
 [Unit]
 Description=Termix Backend
-After=network.target
+After=network.target guacd.service
+Wants=guacd.service
 
 [Service]
 Type=simple
@@ -92,7 +155,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now termix
+systemctl enable -q --now guacd termix
 msg_ok "Created Service"
 
 motd_ssh
