@@ -4215,6 +4215,8 @@ function setup_gs() {
 #   - NVIDIA requires matching host driver version
 # ------------------------------------------------------------------------------
 function setup_hwaccel() {
+  local service_user="${1:-}"
+
   # Check if user explicitly disabled GPU in advanced settings
   # ENABLE_GPU is exported from build.func
   if [[ "${ENABLE_GPU:-no}" == "no" ]]; then
@@ -4466,7 +4468,7 @@ function setup_hwaccel() {
   # ═══════════════════════════════════════════════════════════════════════════
   # Device Permissions
   # ═══════════════════════════════════════════════════════════════════════════
-  _setup_gpu_permissions "$in_ct"
+  _setup_gpu_permissions "$in_ct" "$service_user"
 
   cache_installed_version "hwaccel" "1.0"
   msg_ok "Setup Hardware Acceleration"
@@ -5100,6 +5102,7 @@ EOF
 # ══════════════════════════════════════════════════════════════════════════════
 _setup_gpu_permissions() {
   local in_ct="$1"
+  local service_user="${2:-}"
 
   # /dev/dri permissions (Intel/AMD)
   if [[ "$in_ct" == "0" && -d /dev/dri ]]; then
@@ -5165,6 +5168,12 @@ _setup_gpu_permissions() {
   if [[ -e /dev/kfd ]]; then
     chmod 666 /dev/kfd 2>/dev/null || true
     msg_info "AMD ROCm compute device configured"
+  fi
+
+  # Add service user to render and video groups for GPU hardware acceleration
+  if [[ -n "$service_user" ]]; then
+    $STD usermod -aG render "$service_user" 2>/dev/null || true
+    $STD usermod -aG video "$service_user" 2>/dev/null || true
   fi
 }
 

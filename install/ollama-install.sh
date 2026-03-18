@@ -42,7 +42,7 @@ EOF
 $STD apt update
 msg_ok "Set up Intel® Repositories"
 
-setup_hwaccel
+setup_hwaccel "ollama"
 
 msg_info "Installing Intel® Level Zero"
 # Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
@@ -89,8 +89,6 @@ msg_info "Creating ollama User and Group"
 if ! id ollama >/dev/null 2>&1; then
   useradd -r -s /usr/sbin/nologin -U -m -d /usr/share/ollama ollama
 fi
-$STD usermod -aG render ollama || true
-$STD usermod -aG video ollama || true
 $STD usermod -aG ollama $(id -u -n)
 msg_ok "Created ollama User and adjusted Groups"
 
