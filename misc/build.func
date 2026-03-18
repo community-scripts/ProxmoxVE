@@ -4538,7 +4538,7 @@ EOF'
             post_update_to_api "done" "0" "force"
             return 0
           else
-            msg_error "Installation still failed after APT repair (exit code: ${apt_retry_code})"
+            msg_error "Installation still failed after APT repair exit code: ${apt_retry_code})"
             install_exit_code=$apt_retry_code
           fi
         fi
