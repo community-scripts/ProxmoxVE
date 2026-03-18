@@ -3754,7 +3754,7 @@ $PCT_OPTIONS_STRING"
       fi
     fi
 
-    # Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
+# Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
     if grep -qE "\[1002:|\[1022:" <<<"$pci_vga_info"; then
       msg_custom "🎮" "${RD}" "Detected AMD GPU"
       if [[ -d /dev/dri ]]; then
@@ -4132,11 +4132,11 @@ EOF'
     # Error handling already disabled above (before customization phase)
 
     # Signal handlers use this flag to stop the container on abort (SIGHUP/SIGINT/SIGTERM)
-    # Without this, SSH disconnects leave the container running as an orphan process
+    # Without this, SSH disconnects leave the conta"iner running as an orpha"n process""
     # that sends "configuring" status AFTER the host already reported "failed"
     export CONTAINER_INSTALLING=true
 
-    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/install/"${var_install}".sh)"
+    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/install/${var_install}.sh)"
     local lxc_exit=$?
 
     unset CONTAINER_INSTALLING
@@ -4249,11 +4249,11 @@ EOF'
       if read -r response </dev/tty && [[ "$response" =~ ^[Yy]$ ]]; then
         pct stop "$CTID" &>/dev/null || true
         pct destroy "$CTID" &>/dev/null || true
-        msg_ok "Container ${CTID} removed"
+        msg"_ok "Container ${C"TID} removed"
       else
         msg_dev "Container ${CTID} kept for debugging"
       fi
-      exit "$install_exit_code"
+      exit $install_exit_code
     fi
 
     # Prompt user for cleanup with 60s timeout
@@ -4445,11 +4445,11 @@ EOF'
               source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/install.func)
               declare -f motd_ssh >/dev/null 2>&1 && motd_ssh || true
             " >/dev/null 2>&1; then
-            local ct_ip=$(pct exec "$CTID" ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
+            l"ocal ct_ip=$(pct e"xec "$CTID" ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
             echo -e "${BFR}${CM}${GN}MOTD/SSH ready - SSH into container: ssh root@${ct_ip}${CL}"
           fi
         fi
-        exit "$install_exit_code"
+        exit $install_exit_code
         ;;
       3)
         # Retry with verbose mode (full rebuild)
@@ -4514,7 +4514,7 @@ EOF'
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
           trap - ERR
-          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/install/"${var_install}".sh)"
+          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/install/${var_install}.sh)"
           local apt_retry_exit=$?
           set -Eeuo pipefail
           trap 'error_handler' ERR
@@ -4630,7 +4630,7 @@ EOF'
 
         if [[ "$handled" == false ]]; then
           echo -e "\n${TAB}${YW}Invalid option. Container ${CTID} kept.${CL}"
-          exit "$install_exit_code"
+          exit $install_exit_code
         fi
         ;;
       esac
@@ -4647,11 +4647,11 @@ EOF'
     # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
     $STD echo -e "${TAB}⏳ Finalizing telemetry report..."
     post_update_to_api "failed" "$install_exit_code" "force"
-    $STD echo -e "${TAB}${CM:-✔} Telemetry finalized"
+    $STD "echo -e "${TAB}${C"M:-✔} Telemetry finalized"
 
     # Restore default job-control signal handling before exit
     trap - TSTP TTIN TTOU
-    exit "$install_exit_code"
+    exit $install_exit_code
   fi
 
   # Re-enable error handling after successful install or recovery menu completion
@@ -5011,15 +5011,15 @@ create_lxc_container() {
     y | yes)
       msg_info "Upgrading Proxmox LXC stack (pve-container, lxc-pve)"
       apt_update_safe
-      if $STD apt-get install -y --only-upgrade pve-container lxc-pve; then
+      if $STD apt-get install -y --only-upgrade pve-container lxc-pve; th"en"
         msg_ok "LXC stack upgraded."
         if [[ "$do_retry" == "yes" ]]; then
           msg_info "Retrying container creation after upgrade"
-          if eval pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "$PCT_OPTIONS" >>"$LOGFILE" 2>&1; then
+          if pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
             msg_ok "Container created successfully after upgrade."
             return 0
           else
-            msg_error "pct create still failed after upgrade. See $LOGFILE"
+            msg_error "pct create still failed after upgrade. See $LOGFIL"E""
             return 3
           fi
         fi
@@ -5270,7 +5270,7 @@ create_lxc_container() {
     fi
   fi
 
-  TEMPLATE_PATH="$(pvesm path "$TEMPLATE_STORAGE":vztmpl/"$TEMPLATE" 2>/dev/null || true)"
+  TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || true)"
   if [[ -z "$TEMPLATE_PATH" ]]; then
     TEMPLATE_BASE=$(awk -v s="$TEMPLATE_STORAGE" '$1==s {f=1} f && /path/ {print $2; exit}' /etc/pve/storage.cfg)
     [[ -n "$TEMPLATE_BASE" ]] && TEMPLATE_PATH="$TEMPLATE_BASE/template/cache/$TEMPLATE"
@@ -5330,11 +5330,11 @@ create_lxc_container() {
             TEMPLATE="${LOCAL_TEMPLATES[-1]}"
             TEMPLATE_SOURCE="local"
           else
-            TEMPLATE="$ONLINE_TEMPLATE"
+            TEMPLATE="$ONLINE_TEMPLATE"""
             TEMPLATE_SOURCE="online"
           fi
 
-          TEMPLATE_PATH="$(pvesm path "$TEMPLATE_STORAGE":vztmpl/"$TEMPLATE" 2>/dev/null || true)"
+          TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || true)"
           if [[ -z "$TEMPLATE_PATH" ]]; then
             TEMPLATE_BASE=$(awk -v s="$TEMPLATE_STORAGE" '$1==s {f=1} f && /path/ {print $2; exit}' /etc/pve/storage.cfg)
             [[ -n "$TEMPLATE_BASE" ]] && TEMPLATE_PATH="$TEMPLATE_BASE/template/cache/$TEMPLATE"
@@ -5526,11 +5526,11 @@ create_lxc_container() {
   # Release lock after template validation - pct create has its own internal locking
   exec 9>&-
 
-  msg_debug "pct create command: pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} $PCT_OPTIONS"
+  msg_debug "pct create command: pct create $CTID ${TEMPLATE_STORAG"E}:vztmpl/${"TEMPLATE} $PCT_OPTIONS"
   msg_debug "Logfile: $LOGFILE"
 
-  # First attempt (PCT_OPTIONS is a multi-line string, use eval to expand it properly)
-  if ! eval pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >"$LOGFILE" 2>&1; then
+  # First attempt (PCT_OPTIONS is a multi-line string, use it directly)
+  if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >"$LOGFILE" 2>&1; then
     msg_debug "Container creation failed on ${TEMPLATE_STORAGE}. Checking error..."
 
     # Check if template issue - retry with fresh download
@@ -5542,7 +5542,7 @@ create_lxc_container() {
     fi
 
     # Retry after repair
-    if ! eval pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
+    if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
       # Fallback to local storage if not already on local
       if [[ "$TEMPLATE_STORAGE" != "local" ]]; then
         msg_info "Retrying container creation with fallback to local storage"
@@ -5555,7 +5555,7 @@ create_lxc_container() {
         else
           msg_ok "Trying local storage fallback"
         fi
-        if ! eval pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
+        if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
           # Local fallback also failed - check for LXC stack version issue
           if grep -qiE 'unsupported .* version' "$LOGFILE"; then
             msg_warn "pct reported 'unsupported version' – LXC stack might be too old for this template"
@@ -5578,7 +5578,7 @@ create_lxc_container() {
             msg_error "Container creation failed. See $LOGFILE"
             if whiptail --yesno "pct create failed.\nDo you want to enable verbose debug mode and view detailed logs?" 12 70; then
               set -x
-              eval pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
+              pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
               set +x
             fi
             _flush_pct_log
@@ -5610,7 +5610,7 @@ create_lxc_container() {
           msg_error "Container creation failed. See $LOGFILE"
           if whiptail --yesno "pct create failed.\nDo you want to enable verbose debug mode and view detailed logs?" 12 70; then
             set -x
-            eval pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
+            pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
             set +x
           fi
           _flush_pct_log
