@@ -101,7 +101,7 @@ function install() {
   PYTHON_VERSION="3.13" setup_uv
   fetch_and_deploy_gh_release "sparkyfitness-garmin" "CodeWithCJ/SparkyFitness" "tarball" "latest" $INSTALL_PATH
 
-  msg_info "Setting up SparkyFitness Garmin microservice"
+  msg_info "Setting up ${APP}"
   mkdir -p "/etc/sparkyfitness-garmin"
   cp "/opt/sparkyfitness-garmin/docker/.env.example" $CONFIG_PATH
   cd $INSTALL_PATH/SparkyFitnessGarmin
@@ -110,7 +110,7 @@ function install() {
   sed -i -e "s|^#\?GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" $CONFIG_PATH
   cat <<EOF >/etc/systemd/system/sparkyfitness-garmin.service
 [Unit]
-Description=SparkyFitness Garmin Microservice
+Description=${APP}
 After=network.target sparkyfitness-server.service
 Requires=sparkyfitness-server.service
 
@@ -127,11 +127,7 @@ WantedBy=multi-user.target
 EOF
   systemctl enable -q --now sparkyfitness-garmin
   systemctl restart sparkyfitness-server
-  msg_ok "Setup SparkyFitness Garmin microservice"
-EOF
-  echo ""
-  msg_ok "${APP} got installed"
-  echo ""
+  msg_ok "Set up ${APP}"
 }
 
 # ==============================================================================
