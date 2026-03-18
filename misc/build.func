@@ -5664,33 +5664,33 @@ create_lxc_container() {
 description() {
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 
-  # Generate LXC Description
+  # Generate LXC Description - Heretek-AI themed
   DESCRIPTION=$(
     cat <<EOF
 <div align='center'>
-  <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
-    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+  <a href='https://github.com/Heretek-AI/ProxmoxVE' target='_blank' rel='noopener noreferrer'>
+    <img src='https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Heretek-AI Logo' style='width:81px;height:112px;'/>
   </a>
 
-  <h2 style='font-size: 24px; margin: 20px 0;'>${APP} LXC</h2>
+  <h2 style='font-size: 24px; margin: 20px 0; color: #dc2626;'>${APP} LXC</h2>
 
   <p style='margin: 16px 0;'>
-    <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
-      <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
+    <a href='https://discord.gg/3AnUqsXnmK' target='_blank' rel='noopener noreferrer'>
+      <img src='https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white' alt='Discord' />
     </a>
   </p>
 
   <span style='margin: 0 10px;'>
-    <i class="fa fa-github fa-fw" style="color: #f5f5f5;"></i>
-    <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a>
+    <i class="fa fa-github fa-fw" style="color: #dc2626;"></i>
+    <a href='https://github.com/Heretek-AI/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #dc2626;'>GitHub</a>
   </span>
   <span style='margin: 0 10px;'>
-    <i class="fa fa-comments fa-fw" style="color: #f5f5f5;"></i>
-    <a href='https://github.com/community-scripts/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Discussions</a>
+    <i class="fa fa-comments fa-fw" style="color: #dc2626;"></i>
+    <a href='https://github.com/Heretek-AI/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #dc2626;'>Discussions</a>
   </span>
   <span style='margin: 0 10px;'>
-    <i class="fa fa-exclamation-circle fa-fw" style="color: #f5f5f5;"></i>
-    <a href='https://github.com/community-scripts/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Issues</a>
+    <i class="fa fa-exclamation-circle fa-fw" style="color: #dc2626;"></i>
+    <a href='https://github.com/Heretek-AI/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #dc2626;'>Issues</a>
   </span>
 </div>
 EOF
