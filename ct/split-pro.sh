@@ -38,7 +38,7 @@ function update_script() {
     cp /opt/split-pro/.env /opt/split-pro.env
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "split-pro" "oss-apps/split-pro" "tarball" "latest" "/opt/split-pro"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "split-pro" "oss-apps/split-pro" "tarball"
 
     msg_info "Building Application"
     cd /opt/split-pro
