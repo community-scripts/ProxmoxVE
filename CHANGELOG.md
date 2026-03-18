@@ -438,6 +438,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools: centralize GPU group setup via setup_hwaccel [@MickLesk](https://github.com/MickLesk) ([#13044](https://github.com/community-scripts/ProxmoxVE/pull/13044))
     - Termix: add guacd build and systemd integration [@MickLesk](https://github.com/MickLesk) ([#12999](https://github.com/community-scripts/ProxmoxVE/pull/12999))
 
   - #### 🔧 Refactor
