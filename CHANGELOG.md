@@ -427,6 +427,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Plex: restart service after update to apply new version [@MickLesk](https://github.com/MickLesk) ([#13017](https://github.com/community-scripts/ProxmoxVE/pull/13017))
+
   - #### 🔧 Refactor
 
     - pve-scripts-local: Increase default disk size from 4GB to 10GB [@MickLesk](https://github.com/MickLesk) ([#13009](https://github.com/community-scripts/ProxmoxVE/pull/13009))
