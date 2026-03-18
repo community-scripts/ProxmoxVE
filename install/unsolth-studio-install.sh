@@ -39,11 +39,40 @@ $STD uv venv --python 3.12
 source .venv/bin/activate
 msg_ok "Created Virtual Environment"
 
-msg_info "Installing PyTorch with CUDA Support"
-# Install PyTorch with CUDA 12.4 support (required by unsloth for GPU acceleration)
-# CUDA 12.4 is compatible with NVIDIA drivers >= 550
-$STD uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
-msg_ok "Installed PyTorch with CUDA Support"
+msg_info "Detecting GPU Type for PyTorch Installation"
+# Detect GPU type and install appropriate PyTorch version
+GPU_TYPE="cpu"
+if command -v nvidia-smi &>/dev/null && nvidia-smi &>/dev/null; then
+  GPU_TYPE="nvidia"
+  msg_info "NVIDIA GPU detected - installing PyTorch with CUDA support"
+elif command -v rocminfo &>/dev/null && rocminfo &>/dev/null; then
+  GPU_TYPE="amd"
+  msg_info "AMD GPU detected - installing PyTorch with ROCm support"
+elif [ -d /dev/dri ] && ls /dev/dri/renderD* &>/dev/null; then
+  # Check for AMD GPU in render devices
+  for render_dev in /dev/dri/renderD*; do
+    if udevadm info -q property "$render_dev" 2>/dev/null | grep -q "AMD"; then
+      GPU_TYPE="amd"
+      msg_info "AMD GPU detected via render device - installing PyTorch with ROCm support"
+      break
+    fi
+  done
+fi
+
+if [ "$GPU_TYPE" = "nvidia" ]; then
+  # NVIDIA GPU - install PyTorch with CUDA 12.4 support
+  $STD uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+  msg_ok "Installed PyTorch with CUDA Support"
+elif [ "$GPU_TYPE" = "amd" ]; then
+  # AMD GPU - install PyTorch with ROCm 6.2 support
+  $STD uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
+  msg_ok "Installed PyTorch with ROCm Support"
+else
+  # No GPU detected - install CPU version
+  msg_info "No GPU detected - installing PyTorch CPU version"
+  $STD uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+  msg_ok "Installed PyTorch (CPU version)"
+fi
 
 msg_info "Installing Unsloth"
 # Install unsloth and its dependencies
