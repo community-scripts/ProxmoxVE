@@ -21,7 +21,7 @@ $STD apt install -y openssl
 msg_ok "Installed Dependencies"
 
 PG_DB_NAME="splitpro" PG_DB_USER="splitpro" PG_DB_EXTENSIONS="pg_cron" setup_postgresql_db
-fetch_and_deploy_gh_release "split-pro" "oss-apps/split-pro" "tarball" "latest" "/opt/split-pro"
+fetch_and_deploy_gh_release "split-pro" "oss-apps/split-pro" "tarball"
 
 msg_info "Installing Dependencies"
 cd /opt/split-pro
