@@ -100,6 +100,7 @@ EOF
 
     msg_info "Starting Service"
     systemctl start photon
+    systemctl restart nginx
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
