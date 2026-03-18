@@ -116,18 +116,12 @@ export default function Page() {
                 <span className="steel-text glitch">Heretek-AI</span>
               </h1>
               <div className="max-w-2xl gap-2 flex flex-col text-center sm:text-lg text-sm leading-relaxed tracking-tight text-muted-foreground md:text-xl">
-                <p className="text-blood-400 font-semibold animate-pulse">Uncompliant scripts, made quicker.</p>
+                <p className="text-blood-400 font-semibold animate-pulse">Forbidden scripts, forged in innovation.</p>
                 <p>
-                  Scripts that don't meet the strict guidelines of the official{" "}
-                  <a
-                    href="https://github.com/community-scripts/ProxmoxVE"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline text-blood-400 hover:text-blood-300 transition-colors"
-                  >
-                    Community-Scripts
-                  </a>{" "}
-                  repository, but are updated faster and built with flexibility in mind.
+                  Scripts that embrace the heretical path—beyond the rigid dogma of the orthodox repositories. Updated
+                  with
+                  <span className="text-corruption-400"> relentless speed</span>, built for those who dare to
+                  <span className="text-blood-400"> innovate</span>.
                 </p>
               </div>
             </div>
