@@ -95,7 +95,7 @@ EOF
     msg_ok "Stopped Service"
 
     rm -f /opt/photon/photon.jar
-    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-0*.jar"
+    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-*.jar"
     mv /opt/photon/photon-*.jar /opt/photon/photon.jar
 
     msg_info "Starting Service"
