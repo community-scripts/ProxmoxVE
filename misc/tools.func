@@ -6729,30 +6729,7 @@ _configure_pg_cron_preload() {
   fi
 }
 
-# ------------------------------------------------------------------------------
-# Installs or upgrades PostgreSQL and optional extensions/modules.
-#
-# Description:
-#   - By default uses distro repository (Debian/Ubuntu apt) for stability
-#   - Optionally uses official PGDG repository for specific versions
-#   - Detects existing PostgreSQL version
-#   - Dumps all databases before upgrade
-#   - Installs optional PG_MODULES (e.g. postgis, contrib)
-#   - Restores dumped data post-upgrade
-#
-# Variables:
-#   USE_PGDG_REPO  - Set to "true" to use official PGDG repository
-#                    (default: false, uses distro packages)
-#   PG_VERSION    - Major PostgreSQL version (e.g. 15, 16) (default: 16)
-#   PG_MODULES    - Comma-separated list of modules (e.g. "postgis,contrib")
-#
-# Examples:
-#   setup_postgresql                              # Uses distro package (recommended)
-#   USE_PGDG_REPO=true setup_postgresql           # Uses official PGDG repo
-#   USE_PGDG_REPO=true PG_VERSION="17" setup_postgresql  # Specific version from PGDG
-#   PG_VERSION="17" PG_MODULES="cron" setup_postgresql   # With pg_cron module
-# ------------------------------------------------------------------------------
-function setup_postgresql() {
+setup_postgresql() {
   local PG_VERSION="${PG_VERSION:-16}"
   local PG_MODULES="${PG_MODULES:-}"
   local USE_PGDG_REPO="${USE_PGDG_REPO:-false}"
