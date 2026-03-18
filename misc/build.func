@@ -86,16 +86,16 @@ variables() {
 # Set default URL if not already defined by the calling script
 COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}"
 
-source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/api.func)
+source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/api.func)
 
 if command -v curl >/dev/null 2>&1; then
-  source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/core.func)
-  source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/error_handler.func)
+  source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/core.func)
+  source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/error_handler.func)
   load_functions
   catch_errors
 elif command -v wget >/dev/null 2>&1; then
-  source <(wget -qO- "${COMMUNITY_SCRIPTS_URL}"/misc/core.func)
-  source <(wget -qO- "${COMMUNITY_SCRIPTS_URL}"/misc/error_handler.func)
+  source <(wget -qO- ${COMMUNITY_SCRIPTS_URL}/misc/core.func)
+  source <(wget -qO- ${COMMUNITY_SCRIPTS_URL}/misc/error_handler.func)
   load_functions
   catch_errors
 fi
@@ -1489,7 +1489,7 @@ _build_vars_diff() {
 
 # Build a temporary <app>.vars file from current advanced settings
 _build_current_app_vars_tmp() {
-  tmpf="$(mktemp /tmp/"${NSAPP:-app}".vars.new.XXXXXX)"
+  tmpf="$(mktemp /tmp/${NSAPP:-app}.vars.new.XXXXXX)"
 
   # NET/GW
   _net="${NET:-}"
@@ -3440,7 +3440,7 @@ msg_menu() {
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 start() {
-  source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/tools.func)
+  source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
     install_script || return 0
     return 0
@@ -3754,7 +3754,7 @@ $PCT_OPTIONS_STRING"
       fi
     fi
 
-# Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
+    # Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
     if grep -qE "\[1002:|\[1022:" <<<"$pci_vga_info"; then
       msg_custom "🎮" "${RD}" "Detected AMD GPU"
       if [[ -d /dev/dri ]]; then
@@ -4132,7 +4132,7 @@ EOF'
     # Error handling already disabled above (before customization phase)
 
     # Signal handlers use this flag to stop the container on abort (SIGHUP/SIGINT/SIGTERM)
-    # Without this, SSH disconnects leave the conta"iner running as an orpha"n process""
+    # Without this, SSH disconnects leave the container running as an orphan process
     # that sends "configuring" status AFTER the host already reported "failed"
     export CONTAINER_INSTALLING=true
 
@@ -4249,7 +4249,7 @@ EOF'
       if read -r response </dev/tty && [[ "$response" =~ ^[Yy]$ ]]; then
         pct stop "$CTID" &>/dev/null || true
         pct destroy "$CTID" &>/dev/null || true
-        msg"_ok "Container ${C"TID} removed"
+        msg_ok "Container ${CTID} removed"
       else
         msg_dev "Container ${CTID} kept for debugging"
       fi
@@ -4445,7 +4445,7 @@ EOF'
               source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/install.func)
               declare -f motd_ssh >/dev/null 2>&1 && motd_ssh || true
             " >/dev/null 2>&1; then
-            l"ocal ct_ip=$(pct e"xec "$CTID" ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
+            local ct_ip=$(pct exec "$CTID" ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
             echo -e "${BFR}${CM}${GN}MOTD/SSH ready - SSH into container: ssh root@${ct_ip}${CL}"
           fi
         fi
@@ -4538,7 +4538,7 @@ EOF'
             post_update_to_api "done" "0" "force"
             return 0
           else
-            msg_error "Installation still failed after APT repair exit code: ${apt_retry_code})"
+            msg_error "Installation still failed after APT repair (exit code: ${apt_retry_code})"
             install_exit_code=$apt_retry_code
           fi
         fi
@@ -4647,7 +4647,7 @@ EOF'
     # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
     $STD echo -e "${TAB}⏳ Finalizing telemetry report..."
     post_update_to_api "failed" "$install_exit_code" "force"
-    $STD "echo -e "${TAB}${C"M:-✔} Telemetry finalized"
+    $STD echo -e "${TAB}${CM:-✔} Telemetry finalized"
 
     # Restore default job-control signal handling before exit
     trap - TSTP TTIN TTOU
@@ -5011,7 +5011,7 @@ create_lxc_container() {
     y | yes)
       msg_info "Upgrading Proxmox LXC stack (pve-container, lxc-pve)"
       apt_update_safe
-      if $STD apt-get install -y --only-upgrade pve-container lxc-pve; th"en"
+      if $STD apt-get install -y --only-upgrade pve-container lxc-pve; then
         msg_ok "LXC stack upgraded."
         if [[ "$do_retry" == "yes" ]]; then
           msg_info "Retrying container creation after upgrade"
@@ -5019,7 +5019,7 @@ create_lxc_container() {
             msg_ok "Container created successfully after upgrade."
             return 0
           else
-            msg_error "pct create still failed after upgrade. See $LOGFIL"E""
+            msg_error "pct create still failed after upgrade. See $LOGFILE"
             return 3
           fi
         fi
@@ -5330,7 +5330,7 @@ create_lxc_container() {
             TEMPLATE="${LOCAL_TEMPLATES[-1]}"
             TEMPLATE_SOURCE="local"
           else
-            TEMPLATE="$ONLINE_TEMPLATE"""
+            TEMPLATE="$ONLINE_TEMPLATE"
             TEMPLATE_SOURCE="online"
           fi
 
@@ -5526,7 +5526,7 @@ create_lxc_container() {
   # Release lock after template validation - pct create has its own internal locking
   exec 9>&-
 
-  msg_debug "pct create command: pct create $CTID ${TEMPLATE_STORAG"E}:vztmpl/${"TEMPLATE} $PCT_OPTIONS"
+  msg_debug "pct create command: pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} $PCT_OPTIONS"
   msg_debug "Logfile: $LOGFILE"
 
   # First attempt (PCT_OPTIONS is a multi-line string, use it directly)
@@ -5668,33 +5668,33 @@ create_lxc_container() {
 description() {
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 
-  # Generate LXC Description - Heretek-AI themed
+  # Generate LXC Description
   DESCRIPTION=$(
     cat <<EOF
 <div align='center'>
-  <a href='https://github.com/Heretek-AI/ProxmoxVE' target='_blank' rel='noopener noreferrer'>
-    <img src='https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Heretek-AI Logo' style='width:81px;height:112px;'/>
+  <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
+    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
-  <h2 style='font-size: 24px; margin: 20px 0; color: #dc2626;'>${APP} LXC</h2>
+  <h2 style='font-size: 24px; margin: 20px 0;'>${APP} LXC</h2>
 
   <p style='margin: 16px 0;'>
-    <a href='https://discord.gg/3AnUqsXnmK' target='_blank' rel='noopener noreferrer'>
-      <img src='https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white' alt='Discord' />
+    <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
+      <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
     </a>
   </p>
 
   <span style='margin: 0 10px;'>
-    <i class="fa fa-github fa-fw" style="color: #dc2626;"></i>
-    <a href='https://github.com/Heretek-AI/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #dc2626;'>GitHub</a>
+    <i class="fa fa-github fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a>
   </span>
   <span style='margin: 0 10px;'>
-    <i class="fa fa-comments fa-fw" style="color: #dc2626;"></i>
-    <a href='https://github.com/Heretek-AI/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #dc2626;'>Discussions</a>
+    <i class="fa fa-comments fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Discussions</a>
   </span>
   <span style='margin: 0 10px;'>
-    <i class="fa fa-exclamation-circle fa-fw" style="color: #dc2626;"></i>
-    <a href='https://github.com/Heretek-AI/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #dc2626;'>Issues</a>
+    <i class="fa fa-exclamation-circle fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Issues</a>
   </span>
 </div>
 EOF
