@@ -46,7 +46,8 @@ msg_ok "Installed Unsloth"
 
 msg_info "Running Unsloth Studio Setup"
 # Run the unsloth studio setup command to compile llama.cpp
-$STD unsloth studio setup
+# Use full path to ensure command is found regardless of environment
+$STD /opt/unsolth-studio/.venv/bin/unsloth studio setup
 msg_ok "Completed Unsloth Studio Setup"
 
 msg_info "Creating Directories"
