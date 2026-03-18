@@ -443,6 +443,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Podman: replace deprecated commands with Quadlets [@MickLesk](https://github.com/MickLesk) ([#13052](https://github.com/community-scripts/ProxmoxVE/pull/13052))
     - Refactor: Jellyfin repo, ffmpeg package and symlinks [@MickLesk](https://github.com/MickLesk) ([#13045](https://github.com/community-scripts/ProxmoxVE/pull/13045))
     - pve-scripts-local: Increase default disk size from 4GB to 10GB [@MickLesk](https://github.com/MickLesk) ([#13009](https://github.com/community-scripts/ProxmoxVE/pull/13009))
 
