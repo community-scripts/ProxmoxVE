@@ -427,7 +427,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - split-pro ([#12975](https://github.com/community-scripts/ProxmoxVE/pull/12975))
+  - Split-Pro ([#12975](https://github.com/community-scripts/ProxmoxVE/pull/12975))
 
 ### 🚀 Updated Scripts
 
@@ -435,6 +435,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Paperless-NGX: increase default RAM to 3GB [@MickLesk](https://github.com/MickLesk) ([#13018](https://github.com/community-scripts/ProxmoxVE/pull/13018))
     - Plex: restart service after update to apply new version [@MickLesk](https://github.com/MickLesk) ([#13017](https://github.com/community-scripts/ProxmoxVE/pull/13017))
+
+  - #### ✨ New Features
+
+    - Termix: add guacd build and systemd integration [@MickLesk](https://github.com/MickLesk) ([#12999](https://github.com/community-scripts/ProxmoxVE/pull/12999))
 
   - #### 🔧 Refactor
 
