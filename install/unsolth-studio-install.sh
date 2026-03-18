@@ -41,7 +41,8 @@ msg_ok "Created Virtual Environment"
 
 msg_info "Installing Unsloth"
 # Install unsloth with torch backend auto-detection (GPU drivers must be installed first)
-$STD uv pip install unsloth --torch-backend=auto
+# Also install packaging module which unsloth requires but doesn't declare as dependency
+$STD uv pip install unsloth packaging --torch-backend=auto
 msg_ok "Installed Unsloth"
 
 msg_info "Running Unsloth Studio Setup"
