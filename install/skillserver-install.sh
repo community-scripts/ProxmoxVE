@@ -39,7 +39,12 @@ Wants=network-online.target
 Type=simple
 User=root
 WorkingDirectory=/opt/skillserver
-ExecStart=/usr/local/bin/skillserver
+# Use tail -f /dev/null to keep stdin open for the MCP stdio server
+# skillserver runs both MCP stdio (main thread) and web server (goroutine)
+# The MCP server needs stdin to stay open, otherwise it exits immediately
+ExecStart=/bin/sh -c 'tail -f /dev/null | /usr/local/bin/skillserver --enable-logging'
+StandardOutput=journal
+StandardError=journal
 Restart=on-failure
 RestartSec=5
 Environment=SKILLSERVER_DIR=/opt/skillserver/skills
