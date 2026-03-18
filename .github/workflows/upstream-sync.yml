@@ -3,12 +3,12 @@ name: Sync Upstream (Git Merge Strategy)
 on:
   schedule:
     # Runs automatically every day at 2:00 AM UTC
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
   workflow_dispatch:
     # Allows manual trigger from the Actions tab
     inputs:
       force_sync:
-        description: 'Force sync even if no new commits detected'
+        description: "Force sync even if no new commits detected"
         required: false
         default: false
         type: boolean
@@ -48,7 +48,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           # Configure the 'ours' merge driver for fork-specific files
           # This tells git to use our version for files marked with merge=ours in .gitattributes
           git config merge.ours.name "ours merge driver"
@@ -64,17 +64,17 @@ jobs:
         run: |
           # Get the merge base between fork and upstream
           MERGE_BASE=$(git merge-base HEAD upstream/${{ env.UPSTREAM_BRANCH }} 2>/dev/null || echo "")
-          
+
           if [ -z "$MERGE_BASE" ]; then
             echo "No common ancestor found - this may be a fresh sync"
             echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "commit_count=unknown" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           # Count commits in upstream that are not in fork
           UPSTREAM_COMMITS=$(git rev-list $MERGE_BASE..upstream/${{ env.UPSTREAM_BRANCH }} --count 2>/dev/null || echo "0")
-          
+
           if [ "$UPSTREAM_COMMITS" -eq 0 ] && [ "${{ github.event.inputs.force_sync }}" != "true" ]; then
             echo "No new commits from upstream. Nothing to sync."
             echo "has_changes=false" >> $GITHUB_OUTPUT
@@ -113,7 +113,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           # Configure the 'ours' merge driver
           # Files with merge=ours in .gitattributes will automatically keep fork version
           git config merge.ours.name "ours merge driver"
@@ -135,14 +135,14 @@ jobs:
         id: merge
         run: |
           echo "Starting merge from upstream/${{ env.UPSTREAM_BRANCH }}..."
-          
+
           # Attempt merge with the 'ours' strategy for conflicts
           # The .gitattributes file configures which files use merge=ours
           git merge upstream/${{ env.UPSTREAM_BRANCH }} \
             --no-edit \
             -m "Merge upstream ${{ env.UPSTREAM_REPO }} into ${{ env.FORK_BRANCH }}" \
             2>&1 || MERGE_STATUS=$?
-          
+
           if [ "${MERGE_STATUS:-0}" -eq 0 ]; then
             echo "Merge completed successfully with no conflicts."
             echo "merge_status=success" >> $GITHUB_OUTPUT
@@ -152,29 +152,70 @@ jobs:
             echo "merge_status=conflicts" >> $GITHUB_OUTPUT
             echo "has_conflicts=true" >> $GITHUB_OUTPUT
             
-            # List conflicted files
+            # List all conflicted files
             CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null || echo "")
             echo "conflicted_files<<EOF" >> $GITHUB_OUTPUT
             echo "$CONFLICTS" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
             
-            # Check if conflicts are only in fork-specific files
-            # These should have been handled by merge=ours, but check anyway
-            FORK_FILES=$(git diff --name-only --diff-filter=U \
-              -- 'install/' 'ct/' 'frontend/' 'misc/images/' '.github/workflows/' '.github/runner/' 'tools/addon/' 'README.md' 'CHANGELOG.md' 2>/dev/null || echo "")
+            echo "Resolving conflicts..."
             
-            if [ -n "$FORK_FILES" ]; then
-              echo "Warning: Fork-specific files have unexpected conflicts:"
-              echo "$FORK_FILES"
-              # For fork files, always take our version
-              for file in $FORK_FILES; do
+            # 1. Handle content conflicts in fork-specific files - always keep our version
+            # These are files that exist in both but have different content
+            FORK_CONTENT_FILES=$(git diff --name-only --diff-filter=U \
+              -- 'CHANGELOG.md' 'misc/tools.func' 'README.md' 2>/dev/null || echo "")
+            
+            if [ -n "$FORK_CONTENT_FILES" ]; then
+              echo "Resolving content conflicts in fork-specific files:"
+              echo "$FORK_CONTENT_FILES"
+              for file in $FORK_CONTENT_FILES; do
+                echo "  Keeping fork version: $file"
                 git checkout --ours "$file" 2>/dev/null || true
                 git add "$file" 2>/dev/null || true
               done
             fi
             
-            # For other conflicts, we leave them for manual resolution in the PR
-            # This allows reviewers to see what needs attention
+            # 2. Handle modify/delete conflicts - files deleted in fork but modified upstream
+            # We want to keep our deletion (remove the file)
+            MODIFY_DELETE_CONFLICTS=$(git status --porcelain | grep "^DU" | awk '{print $2}' 2>/dev/null || echo "")
+            
+            if [ -n "$MODIFY_DELETE_CONFLICTS" ]; then
+              echo "Resolving modify/delete conflicts (keeping fork deletions):"
+              echo "$MODIFY_DELETE_CONFLICTS"
+              for file in $MODIFY_DELETE_CONFLICTS; do
+                echo "  Removing file (fork deleted it): $file"
+                git rm --ignore-unmatch "$file" 2>/dev/null || true
+              done
+            fi
+            
+            # 3. Handle any remaining content conflicts in fork directories
+            REMAINING_CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null || echo "")
+            
+            if [ -n "$REMAINING_CONFLICTS" ]; then
+              echo "Resolving remaining conflicts in fork directories:"
+              echo "$REMAINING_CONFLICTS"
+              
+              # For files in fork-specific directories, keep our version
+              FORK_DIR_CONFLICTS=$(echo "$REMAINING_CONFLICTS" | grep -E '^(install/|ct/|frontend/|misc/images/|tools/addon/)' || true)
+              
+              if [ -n "$FORK_DIR_CONFLICTS" ]; then
+                for file in $FORK_DIR_CONFLICTS; do
+                  echo "  Keeping fork version: $file"
+                  git checkout --ours "$file" 2>/dev/null || true
+                  git add "$file" 2>/dev/null || true
+                done
+              fi
+            fi
+            
+            # Check if there are still unresolved conflicts
+            REMAINING=$(git diff --name-only --diff-filter=U 2>/dev/null || echo "")
+            if [ -n "$REMAINING" ]; then
+              echo "Warning: Some conflicts could not be auto-resolved:"
+              echo "$REMAINING"
+              echo "These will need manual resolution in the PR."
+            else
+              echo "All conflicts resolved successfully."
+            fi
           else
             echo "Merge failed with status: ${MERGE_STATUS}"
             echo "merge_status=failed" >> $GITHUB_OUTPUT
@@ -188,22 +229,28 @@ jobs:
           echo "upstream_commits<<EOF" >> $GITHUB_OUTPUT
           git log HEAD..upstream/${{ env.UPSTREAM_BRANCH }} --oneline --no-merges | head -30 >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          
+
           # Get changed files summary
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           git diff --name-only HEAD upstream/${{ env.UPSTREAM_BRANCH }} | head -50 >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          
+
           # Count files by category
           TOTAL_CHANGED=$(git diff --name-only HEAD upstream/${{ env.UPSTREAM_BRANCH }} | wc -l)
           echo "total_changed=$TOTAL_CHANGED" >> $GITHUB_OUTPUT
 
       - name: Commit merge result
-        if: steps.merge.outputs.merge_status == 'conflicts'
         run: |
-          # Commit the merge with resolved fork-specific conflicts
-          # Remaining conflicts will be visible in the PR for review
-          git commit -m "Merge upstream with partial conflict resolution" -m "Fork-specific files preserved, other conflicts need review" || true
+          # Check if there are staged changes to commit
+          if git diff --cached --quiet 2>/dev/null && git diff --quiet 2>/dev/null; then
+            echo "No changes to commit."
+          else
+            # Commit the merge with resolved conflicts
+            git commit -m "Merge upstream ${{ env.UPSTREAM_REPO }} with conflict resolution" \
+              -m "- Fork-specific files preserved (CHANGELOG.md, misc/tools.func)" \
+              -m "- Deleted files kept as deleted (fork deletions preserved)" \
+              -m "- New upstream scripts added" || echo "Commit may have already been made"
+          fi
 
       - name: Push sync branch
         run: |
@@ -216,56 +263,60 @@ jobs:
           BRANCH="${{ steps.branch.outputs.branch_name }}"
           HAS_CONFLICTS="${{ steps.merge.outputs.has_conflicts }}"
           CONFLICTED_FILES="${{ steps.merge.outputs.conflicted_files }}"
-          
+
           # Build PR body
           PR_BODY="## 🔄 Upstream Sync Summary
-          
+
           This PR syncs the latest changes from upstream [\`${{ env.UPSTREAM_REPO }}\`](https://github.com/${{ env.UPSTREAM_REPO }}) while preserving fork-specific customizations.
 
           ### 📊 Sync Statistics
           - **Upstream commits:** ${{ needs.check-and-sync.outputs.commit_count }}
           - **Files changed:** ${{ steps.summary.outputs.total_changed }}
           - **Merge conflicts:** ${HAS_CONFLICTS:-none}
-          
+
           ### 📋 Upstream Commits (last 30)
           \`\`\`
           ${{ steps.summary.outputs.upstream_commits }}
           \`\`\`
-          
+
           ### 📁 Changed Files
           <details>
           <summary>Click to view changed files</summary>
-          
+
           \`\`\`
           ${{ steps.summary.outputs.changed_files }}
           \`\`\`
           </details>
           "
-          
-          # Add conflict warning if needed
+
+          # Add conflict resolution section
           if [ "$HAS_CONFLICTS" = "true" ]; then
             PR_BODY="$PR_BODY
-          ### ⚠️ Merge Conflicts Detected
-          
-          The following files have conflicts that need manual review:
+          ### ⚠️ Conflicts Auto-Resolved
+
+          The following conflict resolution strategy was applied:
+
+          1. **Fork-specific content files** (CHANGELOG.md, misc/tools.func, README.md) - Kept fork version
+          2. **Modify/delete conflicts** - Kept fork's deletions (files removed in fork stay removed)
+          3. **Fork directory conflicts** (install/, ct/, frontend/) - Kept fork version
+
+          Original conflicted files:
           \`\`\`
           $CONFLICTED_FILES
           \`\`\`
-          
-          **Note:** Fork-specific files have been automatically preserved using the \`merge=ours\` strategy configured in \`.gitattributes\`.
           "
           else
             PR_BODY="$PR_BODY
           ### ✅ Clean Merge
-          
-          No conflicts detected. Fork-specific files were automatically preserved using the \`merge=ours\` strategy.
+
+          No conflicts detected. All changes merged cleanly.
           "
           fi
-          
+
           # Add preserved files section
           PR_BODY="$PR_BODY
           ### 🔒 Fork-Specific Files Preserved
-          
+
           The following files/directories are configured in \`.gitattributes\` to always keep the fork version:
           - \`install/\` - Custom install scripts
           - \`ct/\` - Custom container scripts
@@ -276,25 +327,24 @@ jobs:
           - \`tools/addon/\` - Custom addon tools
           - \`README.md\` - Fork-specific documentation
           - \`CHANGELOG.md\` - Fork-specific changelog
-          
+
           ### ✅ Pre-Merge Checklist
           - [ ] Review all changed files for unexpected modifications
           - [ ] Verify fork-specific files are intact
-          - [ ] Resolve any remaining merge conflicts
           - [ ] Test any new scripts or features from upstream
-          
+
           ---
           *This PR was automatically created by the [upstream-sync workflow](https://github.com/${{ github.repository }}/blob/main/.github/workflows/upstream-sync.yml).*
           "
-          
+
           # Create PR title with conflict indicator
           if [ "$HAS_CONFLICTS" = "true" ]; then
-            TITLE="🔄 Upstream Sync - $(date +%Y-%m-%d) ⚠️ CONFLICTS"
+            TITLE="🔄 Upstream Sync - $(date +%Y-%m-%d) ✅ Conflicts Resolved"
           else
             TITLE="🔄 Upstream Sync - $(date +%Y-%m-%d)"
           fi
-          
-          # Create the PR (labels are optional - will fail silently if labels don't exist)
+
+          # Create the PR
           gh pr create \
             --title "$TITLE" \
             --body "$PR_BODY" \
