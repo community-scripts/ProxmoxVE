@@ -6732,7 +6732,7 @@ _configure_pg_cron_preload() {
 setup_postgresql() {
   local PG_VERSION="${PG_VERSION:-16}"
   local PG_MODULES="${PG_MODULES:-}"
-  local USE_PGDG_REPO="${USE_PGDG_REPO:-false}"
+  local USE_PGDG_REPO="${USE_PGDG_REPO:-true}"
   local DISTRO_ID DISTRO_CODENAME
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
@@ -6858,7 +6858,9 @@ setup_postgresql() {
       SUITE="trixie-pgdg"
 
     else
-      SUITE="bookworm-pgdg"
+      msg_warn "PGDG repo not available for ${DISTRO_CODENAME}, falling back to distro packages"
+      USE_PGDG_REPO=false setup_postgresql
+      return $?
     fi
 
     ;;
