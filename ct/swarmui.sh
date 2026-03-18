@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/Heretek-AI/ProxmoxVE/refs/heads/main}"
-source <(curl -fsSL ""${COMMUNITY_SCRIPTS_URL"}"/misc/build.func)
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
 # Author: BillyOutlast
 # License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/mcmonkeyprojects/SwarmUI
