@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    /* Heretek Light Theme - Worn Metal */
-    --background: 30 15% 12%;
-    --foreground: 35 20% 85%;
-    --card: 30 12% 10%;
-    --card-foreground: 35 20% 85%;
-    --popover: 30 15% 8%;
-    --popover-foreground: 35 20% 85%;
-    --primary: 28 80% 45%;
-    --primary-foreground: 30 15% 8%;
-    --secondary: 35 30% 25%;
-    --secondary-foreground: 35 20% 85%;
-    --muted: 30 20% 20%;
-    --muted-foreground: 35 15% 55%;
-    --accent: 145 65% 35%;
-    --accent-foreground: 145 10% 95%;
-    --destructive: 0 75% 45%;
-    --destructive-foreground: 0 10% 95%;
-    --border: 30 25% 22%;
-    --input: 30 25% 18%;
-    --ring: 28 80% 45%;
+    /* Heretek Light Theme - Dark Metal with Red Accents */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 88%;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 88%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 0 75% 50%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 10% 18%;
+    --secondary-foreground: 0 0% 85%;
+    --muted: 0 8% 14%;
+    --muted-foreground: 0 5% 55%;
+    --accent: 0 70% 45%;
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 0 12% 20%;
+    --input: 0 10% 12%;
+    --ring: 0 75% 50%;
     --radius: 0.25rem;
-    /* Heretek Chart Colors - Rust & Corruption */
-    --chart-1: 28 75% 45%;
-    --chart-2: 35 60% 40%;
-    --chart-3: 145 55% 35%;
-    --chart-4: 180 40% 30%;
-    --chart-5: 0 60% 40%;
+    /* Heretek Chart Colors - Blood & Steel */
+    --chart-1: 0 75% 50%;
+    --chart-2: 0 60% 35%;
+    --chart-3: 0 50% 45%;
+    --chart-4: 0 40% 30%;
+    --chart-5: 0 65% 40%;
   }
 
   ::selection {
@@ -39,32 +39,32 @@
   }
 
   .dark {
-    /* Heretek Dark Theme - Corrupted Forge */
-    --background: 30 20% 4%;
-    --foreground: 35 15% 80%;
-    --card: 30 18% 6%;
-    --card-foreground: 35 15% 80%;
-    --popover: 30 20% 3%;
-    --popover-foreground: 35 15% 80%;
-    --primary: 28 85% 50%;
-    --primary-foreground: 30 25% 5%;
-    --secondary: 35 25% 15%;
-    --secondary-foreground: 35 15% 80%;
-    --muted: 30 20% 12%;
-    --muted-foreground: 35 12% 50%;
-    --accent: 145 70% 40%;
-    --accent-foreground: 145 15% 95%;
-    --destructive: 0 70% 40%;
-    --destructive-foreground: 0 15% 95%;
-    --border: 30 30% 18%;
-    --input: 30 25% 12%;
-    --ring: 28 85% 50%;
-    /* Heretek Chart Colors - Corruption Spread */
-    --chart-1: 28 80% 50%;
-    --chart-2: 35 55% 35%;
-    --chart-3: 145 60% 38%;
-    --chart-4: 60 45% 30%;
-    --chart-5: 0 65% 42%;
+    /* Heretek Dark Theme - The Void Stares Back */
+    --background: 0 0% 3%;
+    --foreground: 0 0% 85%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 85%;
+    --popover: 0 0% 2%;
+    --popover-foreground: 0 0% 85%;
+    --primary: 0 80% 55%;
+    --primary-foreground: 0 0% 3%;
+    --secondary: 0 8% 12%;
+    --secondary-foreground: 0 0% 82%;
+    --muted: 0 6% 10%;
+    --muted-foreground: 0 5% 50%;
+    --accent: 0 75% 50%;
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 0 15% 15%;
+    --input: 0 10% 8%;
+    --ring: 0 80% 55%;
+    /* Heretek Chart Colors - Corruption Spreads */
+    --chart-1: 0 80% 55%;
+    --chart-2: 0 65% 40%;
+    --chart-3: 0 55% 45%;
+    --chart-4: 0 45% 35%;
+    --chart-5: 0 70% 45%;
   }
 }
 
@@ -75,7 +75,9 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "liga" 1, "calt" 1;
+    font-feature-settings:
+      "liga" 1,
+      "calt" 1;
   }
 }
 
@@ -83,45 +85,36 @@
   -ms-overflow-style: none;
 }
 
-/* Heretek Scrollbar - Corrupted Metal */
+/* Heretek Scrollbar - Dark Steel */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(30 20% 8%);
-  border-left: 1px solid hsl(30 30% 18%);
+  background: hsl(0 0% 4%);
+  border-left: 1px solid hsl(0 15% 12%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg,
-      hsl(28 70% 35%) 0%,
-      hsl(35 50% 25%) 50%,
-      hsl(28 70% 35%) 100%);
+  background: linear-gradient(180deg, hsl(0 60% 30%) 0%, hsl(0 40% 20%) 50%, hsl(0 60% 30%) 100%);
   border-radius: 4px;
-  border: 1px solid hsl(30 30% 20%);
+  border: 1px solid hsl(0 20% 15%);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg,
-      hsl(28 80% 42%) 0%,
-      hsl(35 60% 32%) 50%,
-      hsl(28 80% 42%) 100%);
+  background: linear-gradient(180deg, hsl(0 70% 40%) 0%, hsl(0 50% 28%) 50%, hsl(0 70% 40%) 100%);
 }
 
 /* Glass Effect - Corrupted Viewport */
 .glass {
   backdrop-filter: blur(12px) saturate(120%);
   -webkit-backdrop-filter: blur(12px) saturate(120%);
-  background: linear-gradient(135deg,
-      hsl(30 20% 8% / 0.85) 0%,
-      hsl(30 25% 12% / 0.75) 100%);
-  border: 1px solid hsl(30 30% 18% / 0.6);
+  background: linear-gradient(135deg, hsl(0 0% 5% / 0.9) 0%, hsl(0 5% 8% / 0.8) 100%);
+  border: 1px solid hsl(0 20% 15% / 0.6);
 }
 
 /* Heretek Corruption Effects */
 @layer utilities {
-
   /* Noise Texture Overlay */
   .noise-overlay {
     position: relative;
@@ -132,82 +125,88 @@
     position: absolute;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.03;
+    opacity: 0.04;
     pointer-events: none;
     mix-blend-mode: overlay;
   }
 
-  /* Rust Border Effect */
-  .rust-border {
+  /* Blood Border Effect */
+  .blood-border {
     border: 1px solid transparent;
     background:
-      linear-gradient(hsl(30 20% 6%), hsl(30 20% 6%)) padding-box,
-      linear-gradient(135deg,
-        hsl(28 70% 30%) 0%,
-        hsl(35 40% 20%) 25%,
-        hsl(28 60% 25%) 50%,
-        hsl(35 35% 18%) 75%,
-        hsl(28 70% 30%) 100%) border-box;
+      linear-gradient(hsl(0 0% 5%), hsl(0 0% 5%)) padding-box,
+      linear-gradient(
+          135deg,
+          hsl(0 70% 35%) 0%,
+          hsl(0 50% 20%) 25%,
+          hsl(0 60% 30%) 50%,
+          hsl(0 40% 18%) 75%,
+          hsl(0 70% 35%) 100%
+        )
+        border-box;
   }
 
-  /* Corruption Glow */
+  /* Corruption Glow - Red */
   .corruption-glow {
     box-shadow:
-      0 0 20px hsl(145 60% 30% / 0.15),
-      0 0 40px hsl(145 50% 25% / 0.1),
-      inset 0 0 20px hsl(145 40% 20% / 0.05);
+      0 0 20px hsl(0 70% 40% / 0.2),
+      0 0 40px hsl(0 60% 30% / 0.15),
+      inset 0 0 20px hsl(0 50% 25% / 0.08);
   }
 
-  /* Brass Text Effect */
-  .brass-text {
-    background: linear-gradient(180deg,
-        hsl(43 70% 55%) 0%,
-        hsl(35 60% 40%) 50%,
-        hsl(43 65% 45%) 100%);
+  /* Steel Text Effect */
+  .steel-text {
+    background: linear-gradient(180deg, hsl(0 0% 75%) 0%, hsl(0 5% 55%) 50%, hsl(0 0% 65%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  /* Copper Accent */
-  .copper-accent {
-    background: linear-gradient(135deg,
-        hsl(28 75% 45%) 0%,
-        hsl(25 65% 35%) 50%,
-        hsl(28 70% 40%) 100%);
+  /* Blood Accent */
+  .blood-accent {
+    background: linear-gradient(135deg, hsl(0 75% 50%) 0%, hsl(0 65% 40%) 50%, hsl(0 75% 45%) 100%);
   }
 
-  /* Glitch Animation */
+  /* Enhanced Glitch Animation */
   .glitch {
-    animation: glitch 4s infinite;
+    animation: glitch 3s infinite;
   }
 
   @keyframes glitch {
-
     0%,
-    90%,
+    88%,
     100% {
       transform: translate(0);
       filter: none;
     }
 
+    89% {
+      transform: translate(-2px, 1px);
+      filter: hue-rotate(90deg) saturate(1.5);
+    }
+
+    90% {
+      transform: translate(2px, -1px);
+      filter: hue-rotate(-90deg) saturate(1.5);
+    }
+
     91% {
-      transform: translate(-1px, 1px);
-      filter: hue-rotate(90deg);
+      transform: translate(-1px, -1px);
+      filter: hue-rotate(45deg) brightness(1.2);
     }
 
     92% {
-      transform: translate(1px, -1px);
-      filter: hue-rotate(-90deg);
+      transform: translate(1px, 1px);
+      filter: none;
     }
 
     93% {
-      transform: translate(-1px, -1px);
-      filter: hue-rotate(45deg);
+      transform: translate(-2px, 2px);
+      filter: hue-rotate(-45deg) saturate(1.3);
     }
 
     94% {
-      transform: translate(1px, 1px);
+      transform: translate(2px, -2px);
       filter: none;
     }
   }
@@ -217,25 +216,34 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(0deg,
-        transparent,
-        transparent 2px,
-        hsl(30 20% 2% / 0.3) 2px,
-        hsl(30 20% 2% / 0.3) 4px);
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(0 0% 2% / 0.4) 2px,
+      hsl(0 0% 2% / 0.4) 4px
+    );
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.6;
   }
 
   /* Flicker Animation */
   .flicker {
-    animation: flicker 8s infinite;
+    animation: flicker 6s infinite;
   }
 
   @keyframes flicker {
-
     0%,
     100% {
       opacity: 1;
+    }
+
+    90% {
+      opacity: 1;
+    }
+
+    91% {
+      opacity: 0.7;
     }
 
     92% {
@@ -243,67 +251,60 @@
     }
 
     93% {
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     94% {
       opacity: 1;
     }
 
-    96% {
+    95% {
       opacity: 0.9;
     }
 
-    97% {
+    96% {
       opacity: 1;
     }
   }
 
-  /* Corrupted Pulse */
+  /* Corrupted Pulse - Red */
   .corrupted-pulse {
-    animation: corrupted-pulse 3s ease-in-out infinite;
+    animation: corrupted-pulse 2.5s ease-in-out infinite;
   }
 
   @keyframes corrupted-pulse {
-
     0%,
     100% {
       box-shadow:
-        0 0 10px hsl(145 50% 25% / 0.2),
-        0 0 20px hsl(145 40% 20% / 0.1);
+        0 0 10px hsl(0 65% 40% / 0.25),
+        0 0 20px hsl(0 55% 30% / 0.15);
     }
 
     50% {
       box-shadow:
-        0 0 15px hsl(145 60% 30% / 0.3),
-        0 0 30px hsl(145 50% 25% / 0.15),
-        0 0 45px hsl(145 40% 20% / 0.1);
+        0 0 15px hsl(0 75% 45% / 0.35),
+        0 0 30px hsl(0 65% 35% / 0.2),
+        0 0 45px hsl(0 55% 25% / 0.1);
     }
   }
 
-  /* Metal Surface Gradient */
+  /* Dark Metal Surface Gradient */
   .metal-surface {
-    background:
-      linear-gradient(145deg,
-        hsl(30 15% 15%) 0%,
-        hsl(30 20% 10%) 50%,
-        hsl(30 15% 12%) 100%);
+    background: linear-gradient(145deg, hsl(0 0% 10%) 0%, hsl(0 5% 6%) 50%, hsl(0 0% 8%) 100%);
     box-shadow:
-      inset 1px 1px 0 hsl(30 20% 20%),
-      inset -1px -1px 0 hsl(30 25% 5%);
+      inset 1px 1px 0 hsl(0 10% 15%),
+      inset -1px -1px 0 hsl(0 15% 3%);
   }
 
-  /* Tech Heresy Warning */
+  /* Heresy Warning - Enhanced */
   .heresy-warning {
-    border-left: 3px solid hsl(0 70% 40%);
-    background: linear-gradient(90deg,
-        hsl(0 50% 10% / 0.3) 0%,
-        transparent 100%);
+    border-left: 3px solid hsl(0 80% 50%);
+    background: linear-gradient(90deg, hsl(0 60% 15% / 0.4) 0%, transparent 100%);
   }
 
-  /* ===== NEW MECHANICUS EFFECTS ===== */
+  /* ===== ENHANCED HERETEK EFFECTS ===== */
 
-  /* Pulsing Circuit Lines */
+  /* Pulsing Circuit Lines - Red */
   .circuit-pulse {
     position: relative;
     overflow: hidden;
@@ -313,11 +314,8 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg,
-        transparent 0%,
-        hsl(145 60% 35% / 0.15) 50%,
-        transparent 100%);
-    animation: circuit-flow 3s linear infinite;
+    background: linear-gradient(90deg, transparent 0%, hsl(0 70% 45% / 0.2) 50%, transparent 100%);
+    animation: circuit-flow 2.5s linear infinite;
   }
 
   @keyframes circuit-flow {
@@ -330,19 +328,15 @@
     }
   }
 
-  /* Rusted Metal Texture */
-  .rusted-metal {
-    background:
-      linear-gradient(145deg,
-        hsl(30 15% 12%) 0%,
-        hsl(28 20% 8%) 50%,
-        hsl(30 12% 10%) 100%);
+  /* Dark Steel Texture */
+  .dark-steel {
+    background: linear-gradient(145deg, hsl(0 0% 8%) 0%, hsl(0 5% 5%) 50%, hsl(0 0% 6%) 100%);
     box-shadow:
-      inset 2px 2px 4px hsl(30 20% 18%),
-      inset -2px -2px 4px hsl(30 25% 5%);
+      inset 2px 2px 4px hsl(0 10% 12%),
+      inset -2px -2px 4px hsl(0 15% 2%);
   }
 
-  /* Tech-Priest Data Stream Effect */
+  /* Data Stream Effect - Red */
   .data-stream {
     position: relative;
     overflow: hidden;
@@ -352,12 +346,14 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(0deg,
-        transparent,
-        transparent 2px,
-        hsl(145 50% 30% / 0.05) 2px,
-        hsl(145 50% 30% / 0.05) 4px);
-    animation: stream-scroll 20s linear infinite;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(0 60% 40% / 0.06) 2px,
+      hsl(0 60% 40% / 0.06) 4px
+    );
+    animation: stream-scroll 15s linear infinite;
     pointer-events: none;
   }
 
@@ -371,7 +367,7 @@
     }
   }
 
-  /* Omnissiah's Blessing - Machine Spirit Glow */
+  /* Machine Spirit Glow - Red */
   .machine-spirit {
     position: relative;
   }
@@ -380,39 +376,34 @@
     content: "";
     position: absolute;
     inset: -2px;
-    background: linear-gradient(45deg,
-        hsl(28 80% 50% / 0.1),
-        hsl(43 70% 50% / 0.1),
-        hsl(28 80% 50% / 0.1));
+    background: linear-gradient(45deg, hsl(0 80% 50% / 0.15), hsl(0 70% 40% / 0.1), hsl(0 80% 50% / 0.15));
     border-radius: inherit;
-    animation: spirit-pulse 4s ease-in-out infinite;
+    animation: spirit-pulse 3s ease-in-out infinite;
     z-index: -1;
   }
 
   @keyframes spirit-pulse {
-
     0%,
     100% {
-      opacity: 0.3;
+      opacity: 0.4;
       transform: scale(1);
     }
 
     50% {
-      opacity: 0.6;
+      opacity: 0.7;
       transform: scale(1.02);
     }
   }
 
-  /* Binary Choir Text Effect */
+  /* Binary Choir Text Effect - Red */
   .binary-choir {
     text-shadow:
-      0 0 10px hsl(145 70% 40% / 0.5),
-      0 0 20px hsl(145 60% 30% / 0.3);
-    animation: binary-flicker 5s infinite;
+      0 0 10px hsl(0 75% 50% / 0.6),
+      0 0 20px hsl(0 65% 40% / 0.4);
+    animation: binary-flicker 4s infinite;
   }
 
   @keyframes binary-flicker {
-
     0%,
     100% {
       opacity: 1;
@@ -431,51 +422,51 @@
     }
   }
 
-  /* Noosphere Connection Effect */
+  /* Noosphere Border - Red/Black */
   .noosphere-border {
     border: 1px solid transparent;
     background:
-      linear-gradient(hsl(30 20% 6%), hsl(30 20% 6%)) padding-box,
-      linear-gradient(135deg,
-        hsl(145 60% 35%) 0%,
-        hsl(28 70% 40%) 25%,
-        hsl(43 60% 35%) 50%,
-        hsl(28 70% 40%) 75%,
-        hsl(145 60% 35%) 100%) border-box;
+      linear-gradient(hsl(0 0% 5%), hsl(0 0% 5%)) padding-box,
+      linear-gradient(
+          135deg,
+          hsl(0 70% 45%) 0%,
+          hsl(0 50% 30%) 25%,
+          hsl(0 60% 35%) 50%,
+          hsl(0 50% 25%) 75%,
+          hsl(0 70% 45%) 100%
+        )
+        border-box;
   }
 
-  /* Mechanicus Panel */
-  .mechanicus-panel {
-    background: linear-gradient(145deg,
-        hsl(30 18% 8%) 0%,
-        hsl(30 22% 6%) 50%,
-        hsl(30 18% 10%) 100%);
-    border: 1px solid hsl(28 50% 20% / 0.5);
+  /* Heretek Panel */
+  .heretek-panel {
+    background: linear-gradient(145deg, hsl(0 5% 6%) 0%, hsl(0 8% 4%) 50%, hsl(0 5% 7%) 100%);
+    border: 1px solid hsl(0 40% 18% / 0.6);
     box-shadow:
-      inset 0 1px 0 hsl(30 25% 15%),
-      inset 0 -1px 0 hsl(30 20% 5%),
-      0 4px 20px hsl(30 20% 5% / 0.3);
+      inset 0 1px 0 hsl(0 15% 12%),
+      inset 0 -1px 0 hsl(0 10% 3%),
+      0 4px 20px hsl(0 0% 3% / 0.4);
   }
 
-  /* Sacred Machine Icon */
+  /* Sacred Machine Icon - Red */
   .machine-icon {
-    filter: drop-shadow(0 0 8px hsl(28 70% 45% / 0.4));
+    filter: drop-shadow(0 0 8px hsl(0 70% 50% / 0.5));
     transition: filter 0.3s ease;
   }
 
   .machine-icon:hover {
-    filter: drop-shadow(0 0 12px hsl(28 80% 50% / 0.6));
+    filter: drop-shadow(0 0 12px hsl(0 80% 55% / 0.7));
   }
 
-  /* Heretek Input Focus */
+  /* Heretek Focus - Red */
   .heretek-focus:focus {
     outline: none;
     box-shadow:
-      0 0 0 2px hsl(28 70% 40%),
-      0 0 15px hsl(28 60% 35% / 0.3);
+      0 0 0 2px hsl(0 70% 45%),
+      0 0 15px hsl(0 60% 40% / 0.4);
   }
 
-  /* Corrupted Text Glitch */
+  /* Corrupted Text Glitch - Enhanced */
   .text-glitch {
     position: relative;
   }
@@ -491,113 +482,106 @@
   }
 
   .text-glitch::before {
-    color: hsl(145 70% 40%);
-    animation: glitch-1 2s infinite linear alternate-reverse;
+    color: hsl(0 75% 50%);
+    animation: glitch-1 1.5s infinite linear alternate-reverse;
     clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
   }
 
   .text-glitch::after {
-    color: hsl(0 70% 45%);
-    animation: glitch-2 2s infinite linear alternate-reverse;
+    color: hsl(0 85% 55%);
+    animation: glitch-2 1.5s infinite linear alternate-reverse;
     clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   }
 
   @keyframes glitch-1 {
-
     0%,
     100% {
       transform: translate(0);
     }
 
     20% {
-      transform: translate(-2px, 2px);
+      transform: translate(-3px, 2px);
     }
 
     40% {
-      transform: translate(2px, -2px);
+      transform: translate(3px, -2px);
     }
 
     60% {
-      transform: translate(-1px, 1px);
+      transform: translate(-2px, 1px);
     }
 
     80% {
-      transform: translate(1px, -1px);
+      transform: translate(2px, -1px);
     }
   }
 
   @keyframes glitch-2 {
-
     0%,
     100% {
       transform: translate(0);
     }
 
     20% {
-      transform: translate(2px, -2px);
+      transform: translate(3px, -2px);
     }
 
     40% {
-      transform: translate(-2px, 2px);
+      transform: translate(-3px, 2px);
     }
 
     60% {
-      transform: translate(1px, -1px);
+      transform: translate(2px, -1px);
     }
 
     80% {
-      transform: translate(-1px, 1px);
+      transform: translate(-2px, 1px);
     }
   }
 
-  /* Forge Glow - for active elements */
+  /* Forge Glow - Red */
   .forge-glow {
     box-shadow:
-      0 0 10px hsl(28 70% 45% / 0.3),
-      0 0 20px hsl(28 60% 35% / 0.2),
-      inset 0 0 10px hsl(28 50% 25% / 0.1);
+      0 0 10px hsl(0 70% 50% / 0.35),
+      0 0 20px hsl(0 60% 40% / 0.25),
+      inset 0 0 10px hsl(0 50% 30% / 0.15);
   }
 
   /* Sacred Scroll Effect */
   .sacred-scroll {
-    background:
-      linear-gradient(180deg,
-        hsl(30 20% 6%) 0%,
-        hsl(30 18% 8%) 10%,
-        hsl(30 20% 8%) 90%,
-        hsl(30 20% 6%) 100%);
-    border-top: 1px solid hsl(43 40% 25% / 0.3);
-    border-bottom: 1px solid hsl(43 40% 25% / 0.3);
+    background: linear-gradient(180deg, hsl(0 0% 4%) 0%, hsl(0 5% 6%) 10%, hsl(0 0% 5%) 90%, hsl(0 0% 4%) 100%);
+    border-top: 1px solid hsl(0 30% 20% / 0.4);
+    border-bottom: 1px solid hsl(0 30% 20% / 0.4);
   }
 
-  /* Circuit Board Pattern */
+  /* Circuit Board Pattern - Red */
   .circuit-board {
     background-image:
-      linear-gradient(90deg, hsl(145 40% 20% / 0.1) 1px, transparent 1px),
-      linear-gradient(180deg, hsl(145 40% 20% / 0.1) 1px, transparent 1px);
+      linear-gradient(90deg, hsl(0 50% 25% / 0.12) 1px, transparent 1px),
+      linear-gradient(180deg, hsl(0 50% 25% / 0.12) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
-  /* Rust Particle Animation */
-  .rust-particles {
+  /* Blood Particle Animation */
+  .blood-particles {
     position: relative;
     overflow: hidden;
   }
 
-  .rust-particles::after {
+  .blood-particles::after {
     content: "";
     position: absolute;
     inset: 0;
     background-image:
-      radial-gradient(circle at 20% 30%, hsl(28 60% 40% / 0.3) 1px, transparent 1px),
-      radial-gradient(circle at 80% 70%, hsl(35 50% 35% / 0.3) 1px, transparent 1px),
-      radial-gradient(circle at 50% 50%, hsl(28 70% 45% / 0.2) 1px, transparent 1px);
+      radial-gradient(circle at 20% 30%, hsl(0 70% 45% / 0.35) 1px, transparent 1px),
+      radial-gradient(circle at 80% 70%, hsl(0 60% 40% / 0.35) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, hsl(0 75% 50% / 0.25) 1px, transparent 1px);
     background-size: 100px 100px;
-    animation: rust-drift 30s linear infinite;
+    animation: blood-drift 25s linear infinite;
     pointer-events: none;
   }
 
-  @keyframes rust-drift {
+  @keyframes blood-drift {
     0% {
       transform: translateY(0) rotate(0deg);
     }
@@ -605,5 +589,233 @@
     100% {
       transform: translateY(-100px) rotate(360deg);
     }
+  }
+
+  /* Heretek Glitch Text - Advanced */
+  .heretek-glitch {
+    position: relative;
+    animation: heretek-glitch 4s infinite;
+  }
+
+  .heretek-glitch::before,
+  .heretek-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+
+  .heretek-glitch::before {
+    color: hsl(0 80% 50%);
+    animation: heretek-glitch-1 0.3s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(-2px, -2px);
+  }
+
+  .heretek-glitch::after {
+    color: hsl(0 90% 60%);
+    animation: heretek-glitch-2 0.3s infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    transform: translate(2px, 2px);
+  }
+
+  @keyframes heretek-glitch {
+    0%,
+    85%,
+    100% {
+      transform: translate(0);
+    }
+    86% {
+      transform: translate(-2px, 1px);
+    }
+    87% {
+      transform: translate(2px, -1px);
+    }
+    88% {
+      transform: translate(-1px, -1px);
+    }
+    89% {
+      transform: translate(1px, 1px);
+    }
+  }
+
+  @keyframes heretek-glitch-1 {
+    0%,
+    100% {
+      transform: translate(-2px, -2px);
+    }
+    50% {
+      transform: translate(2px, 2px);
+    }
+  }
+
+  @keyframes heretek-glitch-2 {
+    0%,
+    100% {
+      transform: translate(2px, 2px);
+    }
+    50% {
+      transform: translate(-2px, -2px);
+    }
+  }
+
+  /* Void Background */
+  .void-bg {
+    background: radial-gradient(ellipse at center, hsl(0 0% 5%) 0%, hsl(0 0% 3%) 50%, hsl(0 0% 1%) 100%);
+  }
+
+  /* Blood Drip Effect */
+  .blood-drip {
+    position: relative;
+  }
+
+  .blood-drip::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 0;
+    background: linear-gradient(180deg, hsl(0 80% 50%), hsl(0 70% 40%), transparent);
+    animation: blood-drip 3s ease-in-out infinite;
+    transform: translateX(-50%);
+  }
+
+  @keyframes blood-drip {
+    0%,
+    100% {
+      height: 0;
+      opacity: 0;
+    }
+    50% {
+      height: 10px;
+      opacity: 1;
+    }
+    80% {
+      height: 15px;
+      opacity: 0.5;
+    }
+  }
+
+  /* Static Noise Effect */
+  .static-noise {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .static-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0;
+    animation: static-flash 8s infinite;
+    pointer-events: none;
+  }
+
+  @keyframes static-flash {
+    0%,
+    95%,
+    100% {
+      opacity: 0;
+    }
+    96% {
+      opacity: 0.08;
+    }
+    97% {
+      opacity: 0;
+    }
+    98% {
+      opacity: 0.05;
+    }
+    99% {
+      opacity: 0;
+    }
+  }
+
+  /* Chromatic Aberration */
+  .chromatic-aberration {
+    position: relative;
+  }
+
+  .chromatic-aberration::before,
+  .chromatic-aberration::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .chromatic-aberration::before {
+    background: inherit;
+    transform: translate(-2px, 0);
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    filter: hue-rotate(90deg);
+  }
+
+  .chromatic-aberration::after {
+    background: inherit;
+    transform: translate(2px, 0);
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    filter: hue-rotate(-90deg);
+  }
+
+  /* Terminal Text Effect */
+  .terminal-text {
+    font-family: "Courier New", monospace;
+    text-shadow:
+      0 0 5px hsl(0 70% 50% / 0.8),
+      0 0 10px hsl(0 60% 40% / 0.5);
+    animation: terminal-flicker 0.1s infinite;
+  }
+
+  @keyframes terminal-flicker {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.98;
+    }
+  }
+
+  /* Heretek Card */
+  .heretek-card {
+    background: linear-gradient(145deg, hsl(0 5% 7%) 0%, hsl(0 8% 5%) 50%, hsl(0 5% 8%) 100%);
+    border: 1px solid hsl(0 30% 18%);
+    transition: all 0.3s ease;
+  }
+
+  .heretek-card:hover {
+    border-color: hsl(0 60% 35%);
+    box-shadow:
+      0 0 15px hsl(0 70% 40% / 0.2),
+      0 0 30px hsl(0 60% 30% / 0.1),
+      inset 0 0 10px hsl(0 50% 20% / 0.05);
+  }
+
+  /* Corruption Spread */
+  .corruption-spread {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .corruption-spread::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), hsl(0 70% 40% / 0.15) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .corruption-spread:hover::before {
+    opacity: 1;
   }
 }

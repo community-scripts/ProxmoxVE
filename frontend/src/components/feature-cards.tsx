@@ -36,7 +36,7 @@ const features = [
 export function FeatureCards() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {features.map(feature => (
+      {features.map((feature) => (
         <Link
           key={feature.title}
           href={feature.href}
@@ -44,20 +44,37 @@ export function FeatureCards() {
           rel={feature.external ? "noopener noreferrer" : undefined}
           className="group"
         >
-          <Card className="h-full transition-all duration-300 hover:border-rust-500/50 hover:shadow-lg hover:shadow-rust-500/10 rust-border">
-            <CardHeader>
-              <div className="mb-2 text-rust-400 group-hover:text-rust-300 transition-colors duration-300 group-hover:animate-heretic-glow">
+          <Card className="h-full transition-all duration-300 hover:border-blood-500/60 hover:shadow-lg hover:shadow-blood-500/20 heretek-card glitch relative overflow-hidden">
+            {/* Glitch overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blood-500/5 via-transparent to-blood-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            {/* Scan line effect */}
+            <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blood-500/5 to-transparent animate-scan-line" />
+            </div>
+
+            <CardHeader className="relative z-10">
+              <div className="mb-2 text-blood-400 group-hover:text-blood-300 transition-colors duration-300 group-hover:animate-heretic-glow">
                 {feature.icon}
               </div>
-              <CardTitle className="text-lg font-[family-name:var(--font-cinzel)] group-hover:text-brass-400 transition-colors duration-300">
-                {feature.title}
+              <CardTitle className="text-lg font-[family-name:var(--font-cinzel)] group-hover:text-blood-400 transition-colors duration-300 relative">
+                <span className="relative inline-block">
+                  {feature.title}
+                  {/* Underline glitch effect */}
+                  <span className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blood-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                </span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               <CardDescription className="text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
                 {feature.description}
               </CardDescription>
             </CardContent>
+
+            {/* Corner accent */}
+            <div className="absolute top-0 right-0 w-8 h-8 overflow-hidden">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blood-500/20 to-transparent transform rotate-45 translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-300" />
+            </div>
           </Card>
         </Link>
       ))}

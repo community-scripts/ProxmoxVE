@@ -32,10 +32,9 @@ function Navbar() {
   return (
     <>
       <div
-        className={`fixed left-0 top-0 z-50 flex w-screen justify-center px-4 xl:px-0 transition-all duration-300 ${isScrolled
-          ? "glass rust-border border-b bg-background/50"
-          : ""
-          }`}
+        className={`fixed left-0 top-0 z-50 flex w-screen justify-center px-4 xl:px-0 transition-all duration-300 ${
+          isScrolled ? "glass blood-border border-b bg-background/50" : ""
+        }`}
       >
         <div className="flex h-20 w-full max-w-[1440px] items-center justify-between sm:flex-row">
           <Link
@@ -45,7 +44,7 @@ function Navbar() {
             <div className="relative machine-icon">
               <Image height={18} unoptimized width={18} alt="logo" src="/ProxmoxVE/logo.png" className="" />
             </div>
-            <span className="font-[family-name:var(--font-cinzel)] tracking-wide text-foreground group-hover:text-rust-400 transition-colors duration-300">
+            <span className="font-[family-name:var(--font-cinzel)] tracking-wide text-foreground group-hover:text-blood-400 transition-colors duration-300 glitch">
               Heretek AI
             </span>
           </Link>
@@ -56,38 +55,42 @@ function Navbar() {
               </Suspense>
             </div>
             <div className="hidden sm:flex items-center gap-2">
-              {navbarLinks.filter(link => !link.external).map(({ href, event, icon, text }) => (
-                <Button
-                  key={event}
-                  variant="ghost"
-                  size="sm"
-                  asChild
-                  className="text-muted-foreground hover:text-rust-400 hover:bg-rust-500/10 transition-colors duration-300"
-                >
-                  <Link href={href} data-umami-event={event}>
-                    {icon}
-                    <span className="ml-2 hidden lg:inline">{text}</span>
-                  </Link>
-                </Button>
-              ))}
+              {navbarLinks
+                .filter((link) => !link.external)
+                .map(({ href, event, icon, text }) => (
+                  <Button
+                    key={event}
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="text-muted-foreground hover:text-blood-400 hover:bg-blood-500/10 transition-colors duration-300"
+                  >
+                    <Link href={href} data-umami-event={event}>
+                      {icon}
+                      <span className="ml-2 hidden lg:inline">{text}</span>
+                    </Link>
+                  </Button>
+                ))}
             </div>
             <div className="flex sm:gap-2">
               <CommandMenu />
               <GitHubStarsButton username="Heretek-AI" repo="ProxmoxVE" className="hidden md:flex" />
-              {navbarLinks.filter(link => link.external).map(({ href, event, icon, text, mobileHidden }) => (
-                <Button
-                  key={event}
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className={`text-muted-foreground hover:text-rust-400 hover:bg-rust-500/10 transition-colors duration-300 ${mobileHidden ? "hidden lg:flex" : ""}`}
-                >
-                  <Link target="_blank" href={href} data-umami-event={event}>
-                    {icon}
-                    <span className="sr-only">{text}</span>
-                  </Link>
-                </Button>
-              ))}
+              {navbarLinks
+                .filter((link) => link.external)
+                .map(({ href, event, icon, text, mobileHidden }) => (
+                  <Button
+                    key={event}
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    className={`text-muted-foreground hover:text-blood-400 hover:bg-blood-500/10 transition-colors duration-300 ${mobileHidden ? "hidden lg:flex" : ""}`}
+                  >
+                    <Link target="_blank" href={href} data-umami-event={event}>
+                      {icon}
+                      <span className="sr-only">{text}</span>
+                    </Link>
+                  </Button>
+                ))}
               <ThemeToggle />
             </div>
           </div>

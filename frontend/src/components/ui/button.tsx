@@ -12,16 +12,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        expandIcon:
-          "group relative text-primary-foreground bg-primary hover:bg-primary/90",
+        expandIcon: "group relative text-primary-foreground bg-primary hover:bg-primary/90",
         ringHover:
           "bg-primary text-primary-foreground transition-all duration-300 hover:bg-primary/90 hover:ring-2 hover:ring-primary/90 hover:ring-offset-2",
         shine:
@@ -34,17 +30,23 @@ const buttonVariants = cva(
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-left after:scale-x-100 hover:after:origin-bottom-right hover:after:scale-x-0 after:transition-transform after:ease-in-out after:duration-300",
         linkHover2:
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-right after:scale-x-0 hover:after:origin-bottom-left hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300",
-        // Mechanicus-themed variants
-        mechanicus:
-          "bg-gradient-to-r from-rust-600 to-rust-700 text-rust-100 border border-brass-500/30 hover:from-rust-500 hover:to-rust-600 hover:border-brass-400/50 hover:shadow-[0_0_15px_hsl(28_70%_45%_/_0.3)] transition-all duration-300",
-        brass:
-          "bg-gradient-to-r from-brass-500 to-brass-600 text-brass-100 border border-brass-400/30 hover:from-brass-400 hover:to-brass-500 hover:shadow-[0_0_15px_hsl(43_70%_50%_/_0.3)] transition-all duration-300",
+        // Heretek-themed variants - Blood & Steel
+        heretek:
+          "bg-gradient-to-r from-blood-600 to-blood-700 text-blood-100 border border-blood-500/30 hover:from-blood-500 hover:to-blood-600 hover:border-blood-400/50 hover:shadow-[0_0_15px_hsl(0_80%_50%_/_0.4)] transition-all duration-300",
+        blood:
+          "bg-gradient-to-r from-blood-500 to-blood-600 text-blood-100 border border-blood-400/30 hover:from-blood-400 hover:to-blood-500 hover:shadow-[0_0_20px_hsl(0_85%_55%_/_0.5)] transition-all duration-300",
+        void: "bg-gradient-to-r from-void-700 to-void-800 text-void-100 border border-void-500/30 hover:from-void-600 hover:to-void-700 hover:shadow-[0_0_15px_hsl(0_0%_20%_/_0.4)] transition-all duration-300",
+        steel:
+          "bg-gradient-to-r from-steel-600 to-steel-700 text-steel-100 border border-steel-500/30 hover:from-steel-500 hover:to-steel-600 hover:shadow-[0_0_10px_hsl(0_15%_35%_/_0.3)] transition-all duration-300",
         corruption:
-          "bg-gradient-to-r from-corruption-600 to-corruption-700 text-corruption-100 border border-corruption-500/30 hover:from-corruption-500 hover:to-corruption-600 hover:shadow-[0_0_15px_hsl(145_60%_40%_/_0.3)] hover:animate-corrupted-pulse transition-all duration-300",
+          "bg-gradient-to-r from-corruption-600 to-corruption-700 text-corruption-100 border border-corruption-500/30 hover:from-corruption-500 hover:to-corruption-600 hover:shadow-[0_0_15px_hsl(0_70%_45%_/_0.4)] hover:animate-corrupted-pulse transition-all duration-300",
+        glitch:
+          "bg-gradient-to-r from-blood-600 to-void-700 text-void-100 border border-blood-500/30 hover:from-blood-500 hover:to-void-600 hover:border-blood-400/50 hover:shadow-[0_0_20px_hsl(0_80%_50%_/_0.5)] animate-glitch transition-all duration-300",
+        mechanicus:
+          "bg-gradient-to-r from-blood-600 to-blood-700 text-blood-100 border border-blood-500/30 hover:from-blood-500 hover:to-blood-600 hover:border-blood-400/50 hover:shadow-[0_0_15px_hsl(0_80%_50%_/_0.4)] transition-all duration-300",
         forge:
-          "bg-gradient-to-r from-copper-600 to-copper-700 text-copper-100 border border-copper-500/30 hover:from-copper-500 hover:to-copper-600 hover:shadow-[0_0_20px_hsl(25_70%_45%_/_0.4)] transition-all duration-300",
-        iron:
-          "bg-gradient-to-r from-iron-700 to-iron-800 text-iron-100 border border-iron-500/30 hover:from-iron-600 hover:to-iron-700 hover:shadow-[0_0_10px_hsl(30_20%_30%_/_0.3)] transition-all duration-300",
+          "bg-gradient-to-r from-steel-600 to-blood-700 text-steel-100 border border-steel-500/30 hover:from-steel-500 hover:to-blood-600 hover:shadow-[0_0_20px_hsl(0_70%_45%_/_0.5)] transition-all duration-300",
+        iron: "bg-gradient-to-r from-iron-700 to-iron-800 text-iron-100 border border-iron-500/30 hover:from-iron-600 hover:to-iron-700 hover:shadow-[0_0_10px_hsl(0_10%_30%_/_0.3)] transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -73,33 +75,16 @@ type IconRefProps = {
 
 export type ButtonProps = {
   asChild?: boolean;
-} & React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>;
+} & React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants>;
 
 export type ButtonIconProps = IconProps | IconRefProps;
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & ButtonIconProps
->(
-  (
-    {
-      className,
-      variant,
-      size,
-      asChild = false,
-      Icon,
-      iconPlacement,
-      ...props
-    },
-    ref,
-  ) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps>(
+  ({ className, variant, size, asChild = false, Icon, iconPlacement, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      >
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
         {Icon && iconPlacement === "left" && (
           <div className="group-hover:translate-x-100 w-0 translate-x-[0%] pr-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:pr-2 group-hover:opacity-100">
             <Icon />
