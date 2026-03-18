@@ -6927,6 +6927,263 @@ function setup_postgresql() {
 }
 
 # ------------------------------------------------------------------------------
+# Installs or upgrades PostgreSQL and optional extensions/modules.
+#
+# Description:
+#   - By default uses distro repository (Debian/Ubuntu apt) for stability
+#   - Optionally uses official PGDG repository for specific versions
+#   - Detects existing PostgreSQL version
+#   - Dumps all databases before upgrade
+#   - Installs optional PG_MODULES (e.g. postgis, contrib)
+#   - Restores dumped data post-upgrade
+#
+# Variables:
+#   USE_PGDG_REPO  - Set to "true" to use official PGDG repository
+#                    (default: false, uses distro packages)
+#   PG_VERSION    - Major PostgreSQL version (e.g. 15, 16) (default: 16)
+#   PG_MODULES    - Comma-separated list of modules (e.g. "postgis,contrib")
+#
+# Examples:
+#   setup_postgresql                              # Uses distro package (recommended)
+#   USE_PGDG_REPO=true setup_postgresql           # Uses official PGDG repo
+#   USE_PGDG_REPO=true PG_VERSION="17" setup_postgresql  # Specific version from PGDG
+#   PG_VERSION="17" PG_MODULES="cron" setup_postgresql   # With pg_cron module
+# ------------------------------------------------------------------------------
+
+# Internal helper: Configure shared_preload_libraries for pg_cron
+_configure_pg_cron_preload() {
+  local modules="${1:-}"
+  [[ -z "$modules" ]] && return 0
+  if [[ ",$modules," == *",cron,"* ]]; then
+    local current_libs
+    current_libs=$(sudo -u postgres psql -tAc "SHOW shared_preload_libraries;" 2>/dev/null || echo "")
+    if [[ "$current_libs" != *"pg_cron"* ]]; then
+      local new_libs="${current_libs:+${current_libs},}pg_cron"
+      $STD sudo -u postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = '${new_libs}';"
+      $STD systemctl restart postgresql
+    fi
+  fi
+}
+
+function setup_postgresql() {
+  local PG_VERSION="${PG_VERSION:-16}"
+  local PG_MODULES="${PG_MODULES:-}"
+  local USE_PGDG_REPO="${USE_PGDG_REPO:-false}"
+  local DISTRO_ID DISTRO_CODENAME
+  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
+  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+
+  # Ensure non-interactive mode for all apt operations
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
+  export NEEDRESTART_SUSPEND=1
+
+  # Get currently installed version
+  local CURRENT_PG_VERSION=""
+  if command -v psql >/dev/null; then
+    CURRENT_PG_VERSION="$(psql -V 2>/dev/null | awk '{print $3}' | cut -d. -f1)"
+  fi
+
+  # Scenario 1: Use distro repository (default, most stable)
+  if [[ "$USE_PGDG_REPO" != "true" && "$USE_PGDG_REPO" != "TRUE" && "$USE_PGDG_REPO" != "1" ]]; then
+    msg_info "Setup PostgreSQL (distro package)"
+
+    # If already installed, just update
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      msg_info "Update PostgreSQL $CURRENT_PG_VERSION"
+      ensure_apt_working || return 1
+      upgrade_packages_with_retry "postgresql" "postgresql-client" || true
+      cache_installed_version "postgresql" "$CURRENT_PG_VERSION"
+      msg_ok "Update PostgreSQL $CURRENT_PG_VERSION"
+
+      # Still install modules if specified
+      if [[ -n "$PG_MODULES" ]]; then
+        IFS=',' read -ra MODULES <<<"$PG_MODULES"
+        for module in "${MODULES[@]}"; do
+          $STD apt install -y "postgresql-${CURRENT_PG_VERSION}-${module}" 2>/dev/null || true
+        done
+      fi
+      _configure_pg_cron_preload "$PG_MODULES"
+      return 0
+    fi
+
+    # Fresh install from distro repo
+    ensure_apt_working || return 1
+
+    export DEBIAN_FRONTEND=noninteractive
+    install_packages_with_retry "postgresql" "postgresql-client" || {
+      msg_error "Failed to install PostgreSQL from distro repository"
+      return 1
+    }
+
+    # Get installed version
+    local INSTALLED_VERSION=""
+    if command -v psql >/dev/null; then
+      INSTALLED_VERSION="$(psql -V 2>/dev/null | awk '{print $3}' | cut -d. -f1)"
+    fi
+
+    $STD systemctl enable --now postgresql 2>/dev/null || true
+
+    # Add PostgreSQL binaries to PATH
+    if [[ -n "$INSTALLED_VERSION" ]] && ! grep -q '/usr/lib/postgresql' /etc/environment 2>/dev/null; then
+      echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/'"${INSTALLED_VERSION}"'/bin"' >/etc/environment
+    fi
+
+    cache_installed_version "postgresql" "${INSTALLED_VERSION:-distro}"
+    msg_ok "Setup PostgreSQL ${INSTALLED_VERSION:-from distro}"
+
+    # Install optional modules
+    if [[ -n "$PG_MODULES" && -n "$INSTALLED_VERSION" ]]; then
+      IFS=',' read -ra MODULES <<<"$PG_MODULES"
+      for module in "${MODULES[@]}"; do
+        $STD apt install -y "postgresql-${INSTALLED_VERSION}-${module}" 2>/dev/null || true
+      done
+    fi
+    _configure_pg_cron_preload "$PG_MODULES"
+    return 0
+  fi
+
+  # Scenario 2: Use official PGDG repository (USE_PGDG_REPO=true)
+  # Scenario 2a: Already at correct version
+  if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
+    msg_info "Update PostgreSQL $PG_VERSION"
+    ensure_apt_working || return 1
+
+    # Perform upgrade with retry logic (non-fatal if fails)
+    upgrade_packages_with_retry "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}" 2>/dev/null || true
+    cache_installed_version "postgresql" "$PG_VERSION"
+    msg_ok "Update PostgreSQL $PG_VERSION"
+
+    # Still install modules if specified
+    if [[ -n "$PG_MODULES" ]]; then
+      IFS=',' read -ra MODULES <<<"$PG_MODULES"
+      for module in "${MODULES[@]}"; do
+        $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || true
+      done
+    fi
+    _configure_pg_cron_preload "$PG_MODULES"
+    return 0
+  fi
+
+  # Scenario 2: Different version - backup, remove old, install new
+  if [[ -n "$CURRENT_PG_VERSION" ]]; then
+    msg_info "Upgrade PostgreSQL from $CURRENT_PG_VERSION to $PG_VERSION"
+    msg_info "Creating backup of PostgreSQL $CURRENT_PG_VERSION databases..."
+    local PG_BACKUP_FILE="/var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+    $STD runuser -u postgres -- pg_dumpall >"$PG_BACKUP_FILE" || {
+      msg_error "Failed to backup PostgreSQL databases"
+      return 1
+    }
+    $STD systemctl stop postgresql || true
+    $STD apt purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" 2>/dev/null || true
+  else
+    msg_info "Setup PostgreSQL $PG_VERSION"
+  fi
+
+  # Scenario 3: Fresh install or after removal - setup repo and install
+  prepare_repository_setup "pgdg" "postgresql" || {
+    msg_error "Failed to prepare PostgreSQL repository"
+    return 1
+  }
+
+  local SUITE
+  case "$DISTRO_CODENAME" in
+  trixie | forky | sid)
+
+    if verify_repo_available "https://apt.postgresql.org/pub/repos/apt" "trixie-pgdg"; then
+      SUITE="trixie-pgdg"
+
+    else
+      SUITE="bookworm-pgdg"
+    fi
+
+    ;;
+  *)
+    SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")
+    SUITE="${SUITE}-pgdg"
+    ;;
+  esac
+
+  setup_deb822_repo \
+    "pgdg" \
+    "https://www.postgresql.org/media/keys/ACCC4CF8.asc" \
+    "https://apt.postgresql.org/pub/repos/apt" \
+    "$SUITE" \
+    "main"
+
+  if ! $STD apt update; then
+    msg_error "APT update failed for PostgreSQL repository"
+    return 1
+  fi
+
+  # Install ssl-cert dependency if available
+  if apt-cache search "^ssl-cert$" 2>/dev/null | grep -q .; then
+    $STD apt install -y ssl-cert 2>/dev/null || true
+  fi
+
+  # Try multiple PostgreSQL package patterns with retry logic
+  local pg_install_success=false
+
+  if apt-cache search "^postgresql-${PG_VERSION}$" 2>/dev/null | grep -q . &&
+    install_packages_with_retry "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"; then
+    pg_install_success=true
+  fi
+
+  if [[ "$pg_install_success" == false ]] &&
+    apt-cache search "^postgresql-server-${PG_VERSION}$" 2>/dev/null | grep -q . &&
+    $STD apt install -y "postgresql-server-${PG_VERSION}" "postgresql-client-${PG_VERSION}" 2>/dev/null; then
+    pg_install_success=true
+  fi
+
+  if [[ "$pg_install_success" == false ]] &&
+    apt-cache search "^postgresql$" 2>/dev/null | grep -q . &&
+    $STD apt install -y postgresql postgresql-client 2>/dev/null; then
+    pg_install_success=true
+  fi
+
+  if [[ "$pg_install_success" == false ]]; then
+    msg_error "PostgreSQL package not available for suite ${SUITE}"
+    return 1
+  fi
+
+  if ! command -v psql >/dev/null 2>&1; then
+    msg_error "PostgreSQL installed but psql command not found"
+    return 1
+  fi
+
+  # Restore database backup if we upgraded from previous version
+  if [[ -n "$CURRENT_PG_VERSION" && -n "${PG_BACKUP_FILE:-}" && -f "${PG_BACKUP_FILE}" ]]; then
+    msg_info "Restoring PostgreSQL databases from backup..."
+    $STD runuser -u postgres -- psql <"$PG_BACKUP_FILE" 2>/dev/null || {
+      msg_warn "Failed to restore database backup - this may be expected for major version upgrades"
+    }
+  fi
+
+  $STD systemctl enable --now postgresql 2>/dev/null || {
+    msg_warn "Failed to enable/start PostgreSQL service"
+  }
+
+  # Add PostgreSQL binaries to PATH
+  if ! grep -q '/usr/lib/postgresql' /etc/environment 2>/dev/null; then
+    echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/'"${PG_VERSION}"'/bin"' >/etc/environment
+  fi
+
+  cache_installed_version "postgresql" "$PG_VERSION"
+  msg_ok "Setup PostgreSQL $PG_VERSION"
+
+  # Install optional modules
+  if [[ -n "$PG_MODULES" ]]; then
+    IFS=',' read -ra MODULES <<<"$PG_MODULES"
+    for module in "${MODULES[@]}"; do
+      $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || {
+        msg_warn "Failed to install PostgreSQL module: ${module}"
+      }
+    done
+  fi
+  _configure_pg_cron_preload "$PG_MODULES"
+}
+
+# ------------------------------------------------------------------------------
 # Creates PostgreSQL database with user and optional extensions
 #
 # Description:
@@ -6942,6 +7199,7 @@ function setup_postgresql() {
 #   PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_EXTENSIONS="pgvector" setup_postgresql_db
 #   PG_DB_NAME="ghostfolio" PG_DB_USER="ghostfolio" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 #   PG_DB_NAME="adventurelog" PG_DB_USER="adventurelog" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
+#   PG_DB_NAME="splitpro" PG_DB_USER="splitpro" PG_DB_EXTENSIONS="pg_cron" setup_postgresql_db
 #
 # Variables:
 #   PG_DB_NAME             - Database name (required)
@@ -6973,6 +7231,13 @@ function setup_postgresql_db() {
   $STD sudo -u postgres psql -c "CREATE ROLE $PG_DB_USER WITH LOGIN PASSWORD '$PG_DB_PASS';"
   $STD sudo -u postgres psql -c "CREATE DATABASE $PG_DB_NAME WITH OWNER $PG_DB_USER ENCODING 'UTF8' TEMPLATE template0;"
 
+  # Configure pg_cron database BEFORE creating the extension (must be set before pg_cron loads)
+  if [[ -n "${PG_DB_EXTENSIONS:-}" ]] && [[ ",${PG_DB_EXTENSIONS//[[:space:]]/}," == *",pg_cron,"* ]]; then
+    $STD sudo -u postgres psql -c "ALTER SYSTEM SET cron.database_name = '${PG_DB_NAME}';"
+    $STD sudo -u postgres psql -c "ALTER SYSTEM SET cron.timezone = 'UTC';"
+    $STD systemctl restart postgresql
+  fi
+
   # Install extensions (comma-separated)
   if [[ -n "${PG_DB_EXTENSIONS:-}" ]]; then
     IFS=',' read -ra EXT_LIST <<<"${PG_DB_EXTENSIONS:-}"
@@ -6980,6 +7245,12 @@ function setup_postgresql_db() {
       ext=$(echo "$ext" | xargs) # Trim whitespace
       $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS $ext;"
     done
+  fi
+
+  # Grant pg_cron schema permissions to DB user
+  if [[ -n "${PG_DB_EXTENSIONS:-}" ]] && [[ ",${PG_DB_EXTENSIONS//[[:space:]]/}," == *",pg_cron,"* ]]; then
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "GRANT USAGE ON SCHEMA cron TO ${PG_DB_USER};"
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "GRANT ALL ON ALL TABLES IN SCHEMA cron TO ${PG_DB_USER};"
   fi
 
   # ALTER ROLE settings for Django/Rails compatibility (unless skipped)
@@ -7023,7 +7294,6 @@ function setup_postgresql_db() {
   export PG_DB_USER
   export PG_DB_PASS
 }
-
 # ------------------------------------------------------------------------------
 # Installs rbenv and ruby-build, installs Ruby and optionally Rails.
 #
