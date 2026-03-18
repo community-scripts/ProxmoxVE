@@ -91,17 +91,18 @@ msg_info "Running Unsloth Studio Setup"
 # This requires GPU access - set up environment for ROCm if installed
 
 # Set up ROCm environment if available
+# Use ${VAR:-} to handle unset variables (set -u causes errors otherwise)
 if [ -d "/opt/rocm" ]; then
   export PATH="/opt/rocm/bin:$PATH"
-  export LD_LIBRARY_PATH="/opt/rocm/lib:$LD_LIBRARY_PATH"
+  export LD_LIBRARY_PATH="/opt/rocm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   export ROCM_PATH="/opt/rocm"
 elif [ -d "/opt/rocm-7.2" ]; then
   export PATH="/opt/rocm-7.2/bin:$PATH"
-  export LD_LIBRARY_PATH="/opt/rocm-7.2/lib:$LD_LIBRARY_PATH"
+  export LD_LIBRARY_PATH="/opt/rocm-7.2/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   export ROCM_PATH="/opt/rocm-7.2"
 elif [ -d "/opt/rocm-6.2" ]; then
   export PATH="/opt/rocm-6.2/bin:$PATH"
-  export LD_LIBRARY_PATH="/opt/rocm-6.2/lib:$LD_LIBRARY_PATH"
+  export LD_LIBRARY_PATH="/opt/rocm-6.2/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   export ROCM_PATH="/opt/rocm-6.2"
 fi
 
