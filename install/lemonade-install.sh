@@ -14,7 +14,7 @@ update_os
 
 # Setup GPU hardware acceleration (detects GPU, installs drivers, configures permissions)
 # This handles NVIDIA, AMD/ROCm, and Intel GPU detection and driver installation
-setup_hardware_acceleration
+setup_hwaccel
 
 fetch_and_deploy_gh_release "lemonade" "lemonade-sdk/lemonade" "binary"
 

@@ -103,7 +103,7 @@ msg_ok "Created Service"
 
 # Setup GPU hardware acceleration (detects GPU, installs drivers, configures permissions)
 # This handles NVIDIA, AMD/ROCm, and Intel GPU detection and driver installation
-setup_hardware_acceleration
+setup_hwaccel
 
 # Create GPU passthrough info file
 cat <<EOF >/opt/llamacpp/GPU_PASSTHROUGH.md

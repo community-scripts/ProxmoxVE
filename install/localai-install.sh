@@ -15,7 +15,7 @@ update_os
 
 # Setup GPU hardware acceleration (detects GPU, installs drivers, configures permissions)
 # This handles NVIDIA, AMD/ROCm, and Intel GPU detection and driver installation
-setup_hardware_acceleration
+setup_hwaccel
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y curl

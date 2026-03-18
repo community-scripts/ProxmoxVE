@@ -27,7 +27,7 @@ msg_ok "Installed Dependencies"
 
 # Setup GPU hardware acceleration FIRST (detects GPU, installs drivers, configures permissions)
 # This must run before installing unsloth/torch so PyTorch can detect the GPU
-setup_hardware_acceleration
+setup_hwaccel
 
 # Setup Python virtual environment with uv (fast Python package manager)
 PYTHON_VERSION="3.12" setup_uv
