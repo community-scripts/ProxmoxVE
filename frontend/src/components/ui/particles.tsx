@@ -31,7 +31,7 @@ function MousePosition(): MousePosition {
 }
 
 // Mechanicus-themed particle presets
-type ParticleTheme = "default" | "rust" | "corruption" | "brass" | "mechanicus";
+type ParticleTheme = "default" | "rust" | "corruption" | "brass" | "mechanicus" | "heretek";
 
 type ParticlesProps = {
   className?: string;
@@ -68,6 +68,10 @@ const MECHANICUS_THEMES: Record<ParticleTheme, { colors: string[]; defaultColor:
     colors: ["#b45309", "#15803d", "#ca8a04", "#92400e", "#166534"],
     defaultColor: "#b45309",
   },
+  heretek: {
+    colors: ["#7f1d1d", "#991b1b", "#dc2626", "#450a0a", "#1e3a5f"],
+    defaultColor: "#dc2626",
+  },
 };
 
 function hexToRgb(hex: string): number[] {
@@ -76,7 +80,7 @@ function hexToRgb(hex: string): number[] {
   if (hex.length === 3) {
     hex = hex
       .split("")
-      .map(char => char + char)
+      .map((char) => char + char)
       .join("");
   }
 
@@ -223,12 +227,7 @@ const Particles: React.FC<ParticlesProps> = ({
 
   const clearContext = () => {
     if (context.current) {
-      context.current.clearRect(
-        0,
-        0,
-        canvasSize.current.w,
-        canvasSize.current.h,
-      );
+      context.current.clearRect(0, 0, canvasSize.current.w, canvasSize.current.h);
     }
   };
 
@@ -241,15 +240,8 @@ const Particles: React.FC<ParticlesProps> = ({
     }
   };
 
-  const remapValue = (
-    value: number,
-    start1: number,
-    end1: number,
-    start2: number,
-    end2: number,
-  ): number => {
-    const remapped
-      = ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
+  const remapValue = (value: number, start1: number, end1: number, start2: number, end2: number): number => {
+    const remapped = ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
     return remapped > 0 ? remapped : 0;
   };
 
@@ -264,35 +256,28 @@ const Particles: React.FC<ParticlesProps> = ({
         canvasSize.current.h - circle.y - circle.translateY - circle.size, // distance from bottom edge
       ];
       const closestEdge = edge.reduce((a, b) => Math.min(a, b));
-      const remapClosestEdge = Number.parseFloat(
-        remapValue(closestEdge, 0, 20, 0, 1).toFixed(2),
-      );
+      const remapClosestEdge = Number.parseFloat(remapValue(closestEdge, 0, 20, 0, 1).toFixed(2));
       if (remapClosestEdge > 1) {
         circle.alpha += 0.02;
         if (circle.alpha > circle.targetAlpha) {
           circle.alpha = circle.targetAlpha;
         }
-      }
-      else {
+      } else {
         circle.alpha = circle.targetAlpha * remapClosestEdge;
       }
       circle.x += circle.dx + vx;
       circle.y += circle.dy + vy;
-      circle.translateX
-        += (mouse.current.x / (staticity / circle.magnetism) - circle.translateX)
-        / ease;
-      circle.translateY
-        += (mouse.current.y / (staticity / circle.magnetism) - circle.translateY)
-        / ease;
+      circle.translateX += (mouse.current.x / (staticity / circle.magnetism) - circle.translateX) / ease;
+      circle.translateY += (mouse.current.y / (staticity / circle.magnetism) - circle.translateY) / ease;
 
       drawCircle(circle, true);
 
       // circle gets out of the canvas
       if (
-        circle.x < -circle.size
-        || circle.x > canvasSize.current.w + circle.size
-        || circle.y < -circle.size
-        || circle.y > canvasSize.current.h + circle.size
+        circle.x < -circle.size ||
+        circle.x > canvasSize.current.w + circle.size ||
+        circle.y < -circle.size ||
+        circle.y > canvasSize.current.h + circle.size
       ) {
         // remove the circle from the array
         circles.current.splice(i, 1);
@@ -306,11 +291,7 @@ const Particles: React.FC<ParticlesProps> = ({
   };
 
   return (
-    <div
-      className={cn("pointer-events-none", className)}
-      ref={canvasContainerRef}
-      aria-hidden="true"
-    >
+    <div className={cn("pointer-events-none", className)} ref={canvasContainerRef} aria-hidden="true">
       <canvas ref={canvasRef} className="size-full" />
     </div>
   );
