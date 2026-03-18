@@ -48,7 +48,8 @@ jobs:
           const https = require('https');
           const http = require('http');
           const url = require('url');
-          function request(fullUrl, opts) {
+          function request(fullUrl, opts, redirectCount) {
+            redirectCount = redirectCount || 0;
             return new Promise(function(resolve, reject) {
               const u = url.parse(fullUrl);
               const isHttps = u.protocol === 'https:';
@@ -63,6 +64,13 @@ jobs:
               if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
               const lib = isHttps ? https : http;
               const req = lib.request(options, function(res) {
+                if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                  if (redirectCount >= 5) return reject(new Error('Too many redirects from ' + fullUrl));
+                  const redirectUrl = url.resolve(fullUrl, res.headers.location);
+                  res.resume();
+                  resolve(request(redirectUrl, opts, redirectCount + 1));
+                  return;
+                }
                 let data = '';
                 res.on('data', function(chunk) { data += chunk; });
                 res.on('end', function() {
@@ -125,15 +133,15 @@ jobs:
           var osVersionToId = {};
           try {
             const res = await request(apiBase + '/collections/z_ref_note_types/records?perPage=500', { headers: { 'Authorization': token } });
-            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.type != null) noteTypeToId[item.type] = item.id; });
+            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.type != null) { noteTypeToId[item.type] = item.id; noteTypeToId[item.type.toLowerCase()] = item.id; } });
           } catch (e) { console.warn('z_ref_note_types:', e.message); }
           try {
             const res = await request(apiBase + '/collections/z_ref_install_method_types/records?perPage=500', { headers: { 'Authorization': token } });
-            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.type != null) installMethodTypeToId[item.type] = item.id; });
+            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.type != null) { installMethodTypeToId[item.type] = item.id; installMethodTypeToId[item.type.toLowerCase()] = item.id; } });
           } catch (e) { console.warn('z_ref_install_method_types:', e.message); }
           try {
             const res = await request(apiBase + '/collections/z_ref_os/records?perPage=500', { headers: { 'Authorization': token } });
-            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.os != null) osToId[item.os] = item.id; });
+            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.os != null) { osToId[item.os] = item.id; osToId[item.os.toLowerCase()] = item.id; } });
           } catch (e) { console.warn('z_ref_os:', e.message); }
           try {
             const res = await request(apiBase + '/collections/z_ref_os_version/records?perPage=500&expand=os', { headers: { 'Authorization': token } });
@@ -154,7 +162,7 @@ jobs:
               name: data.name,
               slug: data.slug,
               script_created: data.date_created || data.script_created,
-              script_updated: data.date_created || data.script_updated,
+              script_updated: new Date().toISOString().split('T')[0],
               updateable: data.updateable,
               privileged: data.privileged,
               port: data.interface_port != null ? data.interface_port : data.port,
@@ -163,8 +171,8 @@ jobs:
               logo: data.logo,
               description: data.description,
               config_path: data.config_path,
-              default_user: (data.default_credentials && data.default_credentials.username) || data.default_user,
-              default_passwd: (data.default_credentials && data.default_credentials.password) || data.default_passwd,
+              default_user: (data.default_credentials && data.default_credentials.username) || data.default_user || null,
+              default_passwd: (data.default_credentials && data.default_credentials.password) || data.default_passwd || null,
               is_dev: false
             };
             var resolvedType = typeValueToId[data.type];
@@ -190,7 +198,7 @@ jobs:
                 var postRes = await request(notesCollUrl, {
                   method: 'POST',
                   headers: { 'Authorization': token, 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ text: note.text || '', type: typeId })
+                  body: JSON.stringify({ text: note.text || '', type: typeId, script: scriptId })
                 });
                 if (postRes.ok) noteIds.push(JSON.parse(postRes.body).id);
               }
