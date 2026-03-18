@@ -425,6 +425,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-18
 
+### 🆕 New Scripts
+
+  - split-pro ([#12975](https://github.com/community-scripts/ProxmoxVE/pull/12975))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
