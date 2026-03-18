@@ -108,7 +108,9 @@ fi
 
 # Check if GPU is available (works for both CUDA and ROCm)
 if /opt/unsolth-studio/.venv/bin/python -c "import torch; exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
-  $STD /opt/unsolth-studio/.venv/bin/python -m unsloth studio setup
+  # Use the unsloth CLI entry point instead of python -m unsloth
+  # The package installs a 'unsloth' command that provides the studio subcommand
+  $STD /opt/unsolth-studio/.venv/bin/unsloth studio setup
   msg_ok "Completed Unsloth Studio Setup"
 else
   msg_info "GPU not detected via torch.cuda - skipping Unsloth Studio setup"
@@ -167,7 +169,7 @@ Type=simple
 WorkingDirectory=/opt/unsolth-studio
 Environment="PATH=/opt/unsolth-studio/.venv/bin:/usr/local/bin:/usr/bin:/bin"
 EnvironmentFile=/opt/unsolth-studio/environment.sh
-ExecStart=/opt/unsolth-studio/.venv/bin/python -m unsloth studio -H 0.0.0.0 -p 8888
+ExecStart=/opt/unsolth-studio/.venv/bin/unsloth studio -H 0.0.0.0 -p 8888
 Restart=on-failure
 RestartSec=10
 StandardOutput=journal
