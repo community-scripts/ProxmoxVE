@@ -427,7 +427,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Split-Pro ([#12975](https://github.com/community-scripts/ProxmoxVE/pull/12975))
+  - Alpine-Ntfy [@MickLesk](https://github.com/MickLesk) ([#13048](https://github.com/community-scripts/ProxmoxVE/pull/13048))
+- Split-Pro ([#12975](https://github.com/community-scripts/ProxmoxVE/pull/12975))
 
 ### 🚀 Updated Scripts
 
