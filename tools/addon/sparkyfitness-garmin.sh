@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: Tom Frenzel (tomfrenzel)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/CodeWithCJ/SparkyFitness
+
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  apt-get update >/dev/null 2>&1
+  apt-get install -y curl >/dev/null 2>&1
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
+load_functions
+init_tool_telemetry "" "addon"
+
+# ==============================================================================
+# CONFIGURATION
+# ==============================================================================
+APP="SparkyFitness Garmin Microservice"
+APP_TYPE="addon"
+INSTALL_PATH="/opt/sparkyfitness-garmin"
+CONFIG_PATH="/etc/sparkyfitness-garmin/.env"
+SERVICE_PATH="/etc/systemd/system/sparkyfitness-garmin.service"
+DEFAULT_PORT=3000
+
+# ==============================================================================
+# HEADER
+# ==============================================================================
+function header_info {
+  clear
+  cat <<"EOF"
+   _____                  __         _______ __                          ______                     _          __  ____                                      _         
+  / ___/____  ____ ______/ /____  __/ ____(_) /_____  ___  __________   / ____/___ __________ ___  (_)___     /  |/  (_)_____________  ________  ______   __(_)_______ 
+  \__ \/ __ \/ __ `/ ___/ //_/ / / / /_  / / __/ __ \/ _ \/ ___/ ___/  / / __/ __ `/ ___/ __ `__ \/ / __ \   / /|_/ / / ___/ ___/ __ \/ ___/ _ \/ ___/ | / / / ___/ _ \
+ ___/ / /_/ / /_/ / /  / ,< / /_/ / __/ / / /_/ / / /  __(__  |__  )  / /_/ / /_/ / /  / / / / / / / / / /  / /  / / / /__/ /  / /_/ (__  )  __/ /   | |/ / / /__/  __/
+/____/ .___/\__,_/_/  /_/|_|\__, /_/   /_/\__/_/ /_/\___/____/____/   \____/\__,_/_/  /_/ /_/ /_/_/_/ /_/  /_/  /_/_/\___/_/   \____/____/\___/_/    |___/_/\___/\___/ 
+    /_/                    /____/                                                                                                                                      
+
+EOF
+}
+
+# ==============================================================================
+# OS DETECTION
+# ==============================================================================
+if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
+  echo -e "${CROSS} Unsupported OS detected. This script only supports Debian and Ubuntu."
+  exit 238
+fi
+
+# ==============================================================================
+# SparkyFitness LXC DETECTION
+# ==============================================================================
+if [[ ! -d /opt/sparkyfitness ]]; then
+  echo -e "${CROSS} No SparkyFitness installation detected. This addon must be installed within a container that already has SparkyFitness installed."
+  exit 238
+fi
+
+# ==============================================================================
+# UNINSTALL
+# ==============================================================================
+function uninstall() {
+  msg_info "Uninstalling ${APP}"
+  systemctl disable --now sparkyfitness-garmin.service &>/dev/null || true
+  rm -f "$SERVICE_PATH"
+  msg_ok "${APP} has been uninstalled"
+}
+
+# ==============================================================================
+# UPDATE
+# ==============================================================================
+function update() {
+  if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
+    PYTHON_VERSION="3.13" setup_uv
+
+    msg_info "Stopping service"
+    systemctl stop sparkyfitness-garmin.service &>/dev/null || true
+    msg_ok "Stopped service"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "sparkyfitness-garmin" "CodeWithCJ/SparkyFitness" "tarball" "latest" $INSTALL_PATH
+
+    msg_info "Starting service"
+    systemctl start sparkyfitness-garmin
+    msg_ok "Started service"
+    msg_ok "Updated successfully"
+    exit
+  fi
+}
+
+# ==============================================================================
+# INSTALL
+# ==============================================================================
+function install() {
+  PYTHON_VERSION="3.13" setup_uv
+  fetch_and_deploy_gh_release "sparkyfitness-garmin" "CodeWithCJ/SparkyFitness" "tarball" "latest" $INSTALL_PATH
+
+  msg_info "Setting up SparkyFitness Garmin microservice"
+  mkdir -p "/etc/sparkyfitness-garmin"
+  cp "/opt/sparkyfitness-garmin/docker/.env.example" $CONFIG_PATH
+  cd $INSTALL_PATH/SparkyFitnessGarmin
+  $STD uv venv --clear .venv
+  $STD uv pip install -r requirements.txt
+  sed -i -e "s|^#\?GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" $CONFIG_PATH
+  cat <<EOF >/etc/systemd/system/sparkyfitness-garmin.service
+[Unit]
+Description=SparkyFitness Garmin Microservice
+After=network.target sparkyfitness-server.service
+Requires=sparkyfitness-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=$INSTALL_PATH/SparkyFitnessGarmin
+EnvironmentFile=$CONFIG_PATH
+ExecStart=$INSTALL_PATH/SparkyFitnessGarmin/.venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl enable -q --now sparkyfitness-garmin
+  systemctl restart sparkyfitness-server
+  msg_ok "Setup SparkyFitness Garmin microservice"
+EOF
+  echo ""
+  msg_ok "${APP} got installed"
+  echo ""
+}
+
+# ==============================================================================
+# MAIN
+# ==============================================================================
+header_info
+ensure_usr_local_bin_persist
+get_lxc_ip
+
+# Handle type=update (called from update script)
+if [[ "${type:-}" == "update" ]]; then
+  if [[ -d "$INSTALL_PATH" ]]; then
+    update
+  else
+    msg_error "${APP} is not installed. Nothing to update."
+    exit 233
+  fi
+  exit 0
+fi
+
+# Check if already installed
+if [[ -d "$INSTALL_PATH" && -n "$(ls -A "$INSTALL_PATH" 2>/dev/null)" ]]; then
+  msg_warn "${APP} is already installed."
+  echo ""
+
+  echo -n "${TAB}Uninstall ${APP}? (y/N): "
+  read -r uninstall_prompt
+  if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+    uninstall
+    exit 0
+  fi
+
+  echo -n "${TAB}Update ${APP}? (y/N): "
+  read -r update_prompt
+  if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
+    update
+    exit 0
+  fi
+
+  msg_warn "No action selected. Exiting."
+  exit 0
+fi
+
+# Fresh installation
+msg_warn "${APP} is not installed."
+echo ""
+echo -e "${TAB}${INFO} This will install:"
+echo -e "${TAB}  - UV (Python Version Manager)"
+echo -e "${TAB}  - SparkyFitnessGarmin microservice"
+echo ""
+
+echo -n "${TAB}Install ${APP}? (y/N): "
+read -r install_prompt
+if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
+  install
+else
+  msg_warn "Installation cancelled. Exiting."
+  exit 0
+fi
