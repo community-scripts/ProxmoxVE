@@ -23,7 +23,7 @@ GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 VERSIONS=(stable beta dev)
 METHOD=""
-NSAPP="homeassistant-os"
+NSAPP="haos-vm"
 var_os="homeassistant"
 DISK_SIZE="32G"
 

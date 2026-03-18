@@ -23,7 +23,7 @@ echo -e "Loading..."
 GEN_MAC=$(echo '00 60 2f'$(od -An -N3 -t xC /dev/urandom) | sed -e 's/ /:/g' | tr '[:lower:]' '[:upper:]')
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
-NSAPP="mikrotik-router-os"
+NSAPP="mikrotik-routeros"
 var_os="mikrotik"
 var_version=" "
 DISK_SIZE="1G"
