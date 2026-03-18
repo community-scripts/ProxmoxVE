@@ -40,20 +40,26 @@ source .venv/bin/activate
 msg_ok "Created Virtual Environment"
 
 msg_info "Detecting GPU Type for PyTorch Installation"
-# Detect GPU type and install appropriate PyTorch version
+# Detect GPU type based on what setup_hwaccel installed
+# setup_hwaccel runs before this and installs NVIDIA drivers or ROCm
+
 GPU_TYPE="cpu"
+
+# Check for NVIDIA GPU (nvidia-smi installed by setup_hwaccel)
 if command -v nvidia-smi &>/dev/null && nvidia-smi &>/dev/null; then
   GPU_TYPE="nvidia"
   msg_info "NVIDIA GPU detected - installing PyTorch with CUDA support"
-elif command -v rocminfo &>/dev/null && rocminfo &>/dev/null; then
+# Check for AMD GPU (ROCm installed by setup_hwaccel at /opt/rocm)
+elif [ -d "/opt/rocm" ] || [ -d "/opt/rocm-7.2" ] || [ -d "/opt/rocm-6.2" ]; then
   GPU_TYPE="amd"
-  msg_info "AMD GPU detected - installing PyTorch with ROCm support"
-elif [ -d /dev/dri ] && ls /dev/dri/renderD* &>/dev/null; then
-  # Check for AMD GPU in render devices
+  msg_info "AMD GPU detected (ROCm installed) - installing PyTorch with ROCm support"
+# Check for AMD render devices (GPU passthrough configured)
+elif ls /dev/dri/renderD* &>/dev/null 2>&1; then
+  # Check if any render device is AMD
   for render_dev in /dev/dri/renderD*; do
-    if udevadm info -q property "$render_dev" 2>/dev/null | grep -q "AMD"; then
+    if [ -e "$render_dev" ]; then
       GPU_TYPE="amd"
-      msg_info "AMD GPU detected via render device - installing PyTorch with ROCm support"
+      msg_info "AMD GPU detected (render device) - installing PyTorch with ROCm support"
       break
     fi
   done
@@ -65,6 +71,7 @@ if [ "$GPU_TYPE" = "nvidia" ]; then
   msg_ok "Installed PyTorch with CUDA Support"
 elif [ "$GPU_TYPE" = "amd" ]; then
   # AMD GPU - install PyTorch with ROCm 6.2 support
+  # ROCm 6.2 is compatible with ROCm 7.x runtime
   $STD uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2
   msg_ok "Installed PyTorch with ROCm Support"
 else
