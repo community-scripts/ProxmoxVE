@@ -46,8 +46,8 @@ msg_ok "Installed Unsloth"
 
 msg_info "Running Unsloth Studio Setup"
 # Run the unsloth studio setup command to compile llama.cpp
-# Use full path to ensure command is found regardless of environment
-$STD /opt/unsolth-studio/.venv/bin/unsloth studio setup
+# Use Python module invocation since uv pip install doesn't create entry points
+$STD /opt/unsolth-studio/.venv/bin/python -m unsloth studio setup
 msg_ok "Completed Unsloth Studio Setup"
 
 msg_info "Creating Directories"
@@ -68,7 +68,7 @@ Wants=network-online.target
 Type=simple
 WorkingDirectory=/opt/unsolth-studio
 Environment="PATH=/opt/unsolth-studio/.venv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/bin/sh -c 'source /opt/unsolth-studio/.venv/bin/activate && unsloth studio -H 0.0.0.0 -p 8888'
+ExecStart=/opt/unsolth-studio/.venv/bin/python -m unsloth studio -H 0.0.0.0 -p 8888
 Restart=on-failure
 RestartSec=10
 StandardOutput=journal
