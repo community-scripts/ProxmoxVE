@@ -39,13 +39,13 @@ function update_script() {
     msg_ok "Updated Intel Dependencies"
   fi
 
-  msg_info "Ensuring Jellyfin Repository"
+  msg_info "Setting up Jellyfin Repository"
   setup_deb822_repo \
     "jellyfin" \
     "https://repo.jellyfin.org/jellyfin_team.gpg.key" \
     "https://repo.jellyfin.org/$(get_os_info id)" \
     "$(get_os_info codename)"
-  msg_ok "Ensured Jellyfin Repository"
+  msg_ok "Set up Jellyfin Repository"
 
   msg_info "Updating Jellyfin"
   ensure_dependencies libjemalloc2
