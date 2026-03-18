@@ -450,6 +450,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools.func Implement pg_cron setup for setup_postgresql [@MickLesk](https://github.com/MickLesk) ([#13053](https://github.com/community-scripts/ProxmoxVE/pull/13053))
     - tools.func: Implement check_for_gh_tag function [@MickLesk](https://github.com/MickLesk) ([#12998](https://github.com/community-scripts/ProxmoxVE/pull/12998))
     - tools.func: Implement fetch_and_deploy_gh_tag function [@MickLesk](https://github.com/MickLesk) ([#13000](https://github.com/community-scripts/ProxmoxVE/pull/13000))
 
