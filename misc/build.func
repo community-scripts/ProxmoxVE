@@ -3586,6 +3586,7 @@ build_container() {
   fi
 
   # Core exports for install.func
+  export COMMUNITY_SCRIPTS_URL="$COMMUNITY_SCRIPTS_URL"
   export DIAGNOSTICS="$DIAGNOSTICS"
   export RANDOM_UUID="$RANDOM_UUID"
   export EXECUTION_ID="$EXECUTION_ID"
