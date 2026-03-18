@@ -433,6 +433,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - reitti: fix: v4 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13039](https://github.com/community-scripts/ProxmoxVE/pull/13039))
     - Paperless-NGX: increase default RAM to 3GB [@MickLesk](https://github.com/MickLesk) ([#13018](https://github.com/community-scripts/ProxmoxVE/pull/13018))
     - Plex: restart service after update to apply new version [@MickLesk](https://github.com/MickLesk) ([#13017](https://github.com/community-scripts/ProxmoxVE/pull/13017))
 
