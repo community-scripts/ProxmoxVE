@@ -101,26 +101,9 @@ EOF
 systemctl enable -q --now llamacpp
 msg_ok "Created Service"
 
-msg_info "Configuring GPU Permissions"
-# Add render and video groups for GPU access
-usermod -aG render,video root 2>/dev/null || true
-
-# Configure /dev/kfd and /dev/dri permissions for AMD
-if [[ -e /dev/kfd ]]; then
-  chgrp render /dev/kfd 2>/dev/null || true
-  chmod 660 /dev/kfd 2>/dev/null || true
-fi
-
-if [[ -d /dev/dri ]]; then
-  chmod 755 /dev/dri 2>/dev/null || true
-  for render_dev in /dev/dri/renderD*; do
-    if [[ -e "$render_dev" ]]; then
-      chgrp render "$render_dev" 2>/dev/null || true
-      chmod 660 "$render_dev" 2>/dev/null || true
-    fi
-  done
-fi
-msg_ok "Configured GPU Permissions"
+# Setup GPU hardware acceleration (detects GPU, installs drivers, configures permissions)
+# This handles NVIDIA, AMD/ROCm, and Intel GPU detection and driver installation
+setup_hardware_acceleration
 
 # Create GPU passthrough info file
 cat <<EOF >/opt/llamacpp/GPU_PASSTHROUGH.md
