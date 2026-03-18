@@ -44,7 +44,7 @@ msg_ok "Configured RabbitMQ"
 
 USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "reitti" "dedicatedcode/reitti" "singlefile" "latest" "/opt/reitti" "reitti-app.jar"
 mv /opt/reitti/reitti-*.jar /opt/reitti/reitti.jar
-USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-0*.jar"
+USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-*.jar"
 mv /opt/photon/photon-*.jar /opt/photon/photon.jar
 
 msg_info "Installing Nginx Tile Cache"
