@@ -1,0 +1,50 @@
+{
+  "name": "Unsloth Studio",
+  "slug": "unsolth-studio",
+  "categories": [20],
+  "date_created": "2026-03-18",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8888,
+  "documentation": "https://unsloth.ai/docs/new/studio/start",
+  "website": "https://unsloth.ai/",
+  "logo": "https://unsloth.ai/favicon.ico",
+  "config_path": "/opt/unsolth-studio/.env",
+  "description": "Local, browser-based GUI for fine-tuning LLMs without writing code. Supports QLoRA, LoRA, and full fine-tuning with live training monitoring, GPU stats, and model export to GGUF/Safetensors.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/unsolth-studio.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 16384,
+        "hdd": 50,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Requires GPU passthrough for training. NVIDIA, AMD (ROCm), and Intel GPUs are supported.",
+      "type": "info"
+    },
+    {
+      "text": "First launch takes 5-10 minutes to compile llama.cpp binaries.",
+      "type": "warning"
+    },
+    {
+      "text": "Minimum 16GB RAM recommended for training models up to 7B parameters.",
+      "type": "info"
+    },
+    {
+      "text": "For AMD GPUs, ensure ROCm is properly configured on the host.",
+      "type": "info"
+    }
+  ]
+}
