@@ -86,16 +86,16 @@ variables() {
 # Set default URL if not already defined by the calling script
 COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}"
 
-source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/api.func)
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/api.func)
 
 if command -v curl >/dev/null 2>&1; then
-  source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/core.func)
-  source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/error_handler.func)
+  source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/core.func)
+  source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/error_handler.func)
   load_functions
   catch_errors
 elif command -v wget >/dev/null 2>&1; then
-  source <(wget -qO- ${COMMUNITY_SCRIPTS_URL}/misc/core.func)
-  source <(wget -qO- ${COMMUNITY_SCRIPTS_URL}/misc/error_handler.func)
+  source <(wget -qO- "${COMMUNITY_SCRIPTS_URL}"/misc/core.func)
+  source <(wget -qO- "${COMMUNITY_SCRIPTS_URL}"/misc/error_handler.func)
   load_functions
   catch_errors
 fi
@@ -1489,7 +1489,7 @@ _build_vars_diff() {
 
 # Build a temporary <app>.vars file from current advanced settings
 _build_current_app_vars_tmp() {
-  tmpf="$(mktemp /tmp/${NSAPP:-app}.vars.new.XXXXXX)"
+  tmpf="$(mktemp /tmp/"${NSAPP:-app}".vars.new.XXXXXX)"
 
   # NET/GW
   _net="${NET:-}"
@@ -3440,7 +3440,7 @@ msg_menu() {
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 start() {
-  source <(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/misc/tools.func)
+  source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
     install_script || return 0
     return 0
@@ -3764,6 +3764,10 @@ $PCT_OPTIONS_STRING"
             [[ -e "$d" ]] && AMD_DEVICES+=("$d")
           done
         fi
+      fi
+      # Add /dev/kfd for AMD ROCm compute support
+      if [[ -e /dev/kfd ]]; then
+        AMD_DEVICES+=("/dev/kfd")
       fi
     fi
 
@@ -4132,7 +4136,7 @@ EOF'
     # that sends "configuring" status AFTER the host already reported "failed"
     export CONTAINER_INSTALLING=true
 
-    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/install/${var_install}.sh)"
+    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/install/"${var_install}".sh)"
     local lxc_exit=$?
 
     unset CONTAINER_INSTALLING
@@ -4249,7 +4253,7 @@ EOF'
       else
         msg_dev "Container ${CTID} kept for debugging"
       fi
-      exit $install_exit_code
+      exit "$install_exit_code"
     fi
 
     # Prompt user for cleanup with 60s timeout
@@ -4445,7 +4449,7 @@ EOF'
             echo -e "${BFR}${CM}${GN}MOTD/SSH ready - SSH into container: ssh root@${ct_ip}${CL}"
           fi
         fi
-        exit $install_exit_code
+        exit "$install_exit_code"
         ;;
       3)
         # Retry with verbose mode (full rebuild)
@@ -4510,7 +4514,7 @@ EOF'
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
           trap - ERR
-          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${COMMUNITY_SCRIPTS_URL}/install/${var_install}.sh)"
+          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/install/"${var_install}".sh)"
           local apt_retry_exit=$?
           set -Eeuo pipefail
           trap 'error_handler' ERR
@@ -4626,7 +4630,7 @@ EOF'
 
         if [[ "$handled" == false ]]; then
           echo -e "\n${TAB}${YW}Invalid option. Container ${CTID} kept.${CL}"
-          exit $install_exit_code
+          exit "$install_exit_code"
         fi
         ;;
       esac
@@ -4647,7 +4651,7 @@ EOF'
 
     # Restore default job-control signal handling before exit
     trap - TSTP TTIN TTOU
-    exit $install_exit_code
+    exit "$install_exit_code"
   fi
 
   # Re-enable error handling after successful install or recovery menu completion
@@ -5011,7 +5015,7 @@ create_lxc_container() {
         msg_ok "LXC stack upgraded."
         if [[ "$do_retry" == "yes" ]]; then
           msg_info "Retrying container creation after upgrade"
-          if pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
+          if pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "$PCT_OPTIONS" >>"$LOGFILE" 2>&1; then
             msg_ok "Container created successfully after upgrade."
             return 0
           else
@@ -5266,7 +5270,7 @@ create_lxc_container() {
     fi
   fi
 
-  TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || true)"
+  TEMPLATE_PATH="$(pvesm path "$TEMPLATE_STORAGE":vztmpl/"$TEMPLATE" 2>/dev/null || true)"
   if [[ -z "$TEMPLATE_PATH" ]]; then
     TEMPLATE_BASE=$(awk -v s="$TEMPLATE_STORAGE" '$1==s {f=1} f && /path/ {print $2; exit}' /etc/pve/storage.cfg)
     [[ -n "$TEMPLATE_BASE" ]] && TEMPLATE_PATH="$TEMPLATE_BASE/template/cache/$TEMPLATE"
@@ -5330,7 +5334,7 @@ create_lxc_container() {
             TEMPLATE_SOURCE="online"
           fi
 
-          TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || true)"
+          TEMPLATE_PATH="$(pvesm path "$TEMPLATE_STORAGE":vztmpl/"$TEMPLATE" 2>/dev/null || true)"
           if [[ -z "$TEMPLATE_PATH" ]]; then
             TEMPLATE_BASE=$(awk -v s="$TEMPLATE_STORAGE" '$1==s {f=1} f && /path/ {print $2; exit}' /etc/pve/storage.cfg)
             [[ -n "$TEMPLATE_BASE" ]] && TEMPLATE_PATH="$TEMPLATE_BASE/template/cache/$TEMPLATE"
@@ -5526,7 +5530,7 @@ create_lxc_container() {
   msg_debug "Logfile: $LOGFILE"
 
   # First attempt (PCT_OPTIONS is a multi-line string, use it directly)
-  if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >"$LOGFILE" 2>&1; then
+  if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "$PCT_OPTIONS" >"$LOGFILE" 2>&1; then
     msg_debug "Container creation failed on ${TEMPLATE_STORAGE}. Checking error..."
 
     # Check if template issue - retry with fresh download
@@ -5538,7 +5542,7 @@ create_lxc_container() {
     fi
 
     # Retry after repair
-    if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
+    if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "$PCT_OPTIONS" >>"$LOGFILE" 2>&1; then
       # Fallback to local storage if not already on local
       if [[ "$TEMPLATE_STORAGE" != "local" ]]; then
         msg_info "Retrying container creation with fallback to local storage"
@@ -5551,7 +5555,7 @@ create_lxc_container() {
         else
           msg_ok "Trying local storage fallback"
         fi
-        if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
+        if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" "$PCT_OPTIONS" >>"$LOGFILE" 2>&1; then
           # Local fallback also failed - check for LXC stack version issue
           if grep -qiE 'unsupported .* version' "$LOGFILE"; then
             msg_warn "pct reported 'unsupported version' – LXC stack might be too old for this template"
@@ -5574,7 +5578,7 @@ create_lxc_container() {
             msg_error "Container creation failed. See $LOGFILE"
             if whiptail --yesno "pct create failed.\nDo you want to enable verbose debug mode and view detailed logs?" 12 70; then
               set -x
-              pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
+              pct create "$CTID" "local:vztmpl/${TEMPLATE}" "$PCT_OPTIONS" 2>&1 | tee -a "$LOGFILE"
               set +x
             fi
             _flush_pct_log
@@ -5606,7 +5610,7 @@ create_lxc_container() {
           msg_error "Container creation failed. See $LOGFILE"
           if whiptail --yesno "pct create failed.\nDo you want to enable verbose debug mode and view detailed logs?" 12 70; then
             set -x
-            pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
+            pct create "$CTID" "local:vztmpl/${TEMPLATE}" "$PCT_OPTIONS" 2>&1 | tee -a "$LOGFILE"
             set +x
           fi
           _flush_pct_log
