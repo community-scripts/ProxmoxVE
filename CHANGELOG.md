@@ -423,6 +423,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-18
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: Implement fetch_and_deploy_gh_tag function [@MickLesk](https://github.com/MickLesk) ([#13000](https://github.com/community-scripts/ProxmoxVE/pull/13000))
+
 ## 2026-03-17
 
 ### 🚀 Updated Scripts
