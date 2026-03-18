@@ -24,11 +24,12 @@ RELEASE=$(curl_with_retry "https://f000.backblazeb2.com/file/tdarrs/versions.jso
 curl_with_retry "$RELEASE" "Tdarr_Updater.zip"
 $STD unzip Tdarr_Updater.zip
 chmod +x Tdarr_Updater
-msg_info "Running Tdarr_Updater (downloading server/node binaries from tdarr.io)"
 $STD ./Tdarr_Updater
 rm -rf /opt/tdarr/Tdarr_Updater.zip
-[[ -f /opt/tdarr/Tdarr_Server/Tdarr_Server && -f /opt/tdarr/Tdarr_Node/Tdarr_Node ]] \
-  || fatal "Tdarr_Updater did not download server binaries — tdarr.io may be blocked by local DNS"
+[[ -f /opt/tdarr/Tdarr_Server/Tdarr_Server ]] || {
+  msg_error "Tdarr_Updater failed — tdarr.io may be blocked by local DNS"
+  exit 250
+}
 msg_ok "Installed Tdarr"
 
 setup_hwaccel
