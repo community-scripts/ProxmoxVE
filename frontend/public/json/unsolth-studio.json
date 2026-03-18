@@ -26,10 +26,14 @@
     }
   ],
   "default_credentials": {
-    "username": null,
-    "password": null
+    "username": "unsloth",
+    "password": "Check logs for generated password"
   },
   "notes": [
+    {
+      "text": "Default credentials: username 'unsloth', password is randomly generated and shown in logs. Run 'journalctl -u unsolth-studio | grep password' to find it.",
+      "type": "warning"
+    },
     {
       "text": "Requires GPU passthrough for training. NVIDIA, AMD (ROCm), and Intel GPUs are supported.",
       "type": "info"
