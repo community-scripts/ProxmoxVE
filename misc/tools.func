@@ -6698,20 +6698,36 @@ EOF
 #   - Optionally uses official PGDG repository for specific versions
 #   - Detects existing PostgreSQL version
 #   - Dumps all databases before upgrade
-#   - Installs optional PG_MODULES (e.g. postgis, contrib)
+#   - Installs optional PG_MODULES (e.g. postgis, contrib, cron)
 #   - Restores dumped data post-upgrade
 #
 # Variables:
 #   USE_PGDG_REPO  - Use official PGDG repository (default: true)
 #                    Set to "false" to use distro packages instead
 #   PG_VERSION    - Major PostgreSQL version (e.g. 15, 16) (default: 16)
-#   PG_MODULES    - Comma-separated list of modules (e.g. "postgis,contrib")
+#   PG_MODULES    - Comma-separated list of modules (e.g. "postgis,contrib,cron")
 #
 # Examples:
-#   setup_postgresql                              # Uses PGDG repo, PG 16
-#   PG_VERSION="17" setup_postgresql               # Specific version from PGDG
-#   USE_PGDG_REPO=false setup_postgresql           # Uses distro package instead
+#   setup_postgresql                                          # Uses PGDG repo, PG 16
+#   PG_VERSION="17" setup_postgresql                          # Specific version from PGDG
+#   USE_PGDG_REPO=false setup_postgresql                      # Uses distro package instead
+#   PG_VERSION="17" PG_MODULES="cron" setup_postgresql        # With pg_cron module
 # ------------------------------------------------------------------------------
+
+# Internal helper: Configure shared_preload_libraries for pg_cron
+_configure_pg_cron_preload() {
+  local modules="${1:-}"
+  [[ -z "$modules" ]] && return 0
+  if [[ ",$modules," == *",cron,"* ]]; then
+    local current_libs
+    current_libs=$(sudo -u postgres psql -tAc "SHOW shared_preload_libraries;" 2>/dev/null || echo "")
+    if [[ "$current_libs" != *"pg_cron"* ]]; then
+      local new_libs="${current_libs:+${current_libs},}pg_cron"
+      $STD sudo -u postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = '${new_libs}';"
+      $STD systemctl restart postgresql
+    fi
+  fi
+}
 
 function setup_postgresql() {
   local PG_VERSION="${PG_VERSION:-16}"
