@@ -49,6 +49,10 @@
     {
       "text": "For AMD GPUs, ensure ROCm is properly configured on the host.",
       "type": "info"
+    },
+    {
+      "text": "ROCm support for Unsloth Studio is not yet implemented. See https://github.com/unslothai/unsloth/pull/4390 for progress.",
+      "type": "warning"
     }
   ]
 }
