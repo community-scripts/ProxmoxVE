@@ -69,7 +69,7 @@ fi
 function uninstall() {
   msg_info "Uninstalling ${APP}"
   systemctl disable --now sparkyfitness-garmin.service &>/dev/null || true
-  rm -rf "$SERVICE_PATH" "$CONFIG_PATH" "$INSTALL_PATH"
+  rm -rf "$SERVICE_PATH" "$CONFIG_PATH" "$INSTALL_PATH" ~/.sparkyfitness-garmin
   msg_ok "${APP} has been uninstalled"
 }
 
@@ -176,7 +176,7 @@ msg_warn "${APP} is not installed."
 echo ""
 echo -e "${TAB}${INFO} This will install:"
 echo -e "${TAB}  - UV (Python Version Manager)"
-echo -e "${TAB}  - SparkyFitnessGarmin microservice"
+echo -e "${TAB}  - SparkyFitness Garmin Microservice"
 echo ""
 
 echo -n "${TAB}Install ${APP}? (y/N): "
