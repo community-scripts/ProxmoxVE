@@ -2271,6 +2271,7 @@ check_for_gh_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
+  local pin_reason="${4:-}"        # optional reason shown to user
   local app_lc=""
   app_lc="$(echo "${app,,}" | tr -d ' ')"
   local current_file="$HOME/.${app_lc}"
@@ -2444,7 +2445,11 @@ check_for_gh_release() {
       return 0
     fi
 
-    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    if [[ -n "$pin_reason" ]]; then
+      msg_ok "No update available: ${app} (${current}) - update held back: ${pin_reason}"
+    else
+      msg_ok "No update available: ${app} (${current}) - update temporarily held back due to issues with newer releases"
+    fi
     return 1
   fi
 
@@ -2483,6 +2488,7 @@ check_for_codeberg_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
+  local pin_reason="${4:-}"        # optional reason shown to user
   local app_lc="${app,,}"
   local current_file="$HOME/.${app_lc}"
 
@@ -2562,7 +2568,11 @@ check_for_codeberg_release() {
       return 0
     fi
 
-    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    if [[ -n "$pin_reason" ]]; then
+      msg_ok "No update available: ${app} (${current}) - update held back: ${pin_reason}"
+    else
+      msg_ok "No update available: ${app} (${current}) - update temporarily held back due to issues with newer releases"
+    fi
     return 1
   fi
 
