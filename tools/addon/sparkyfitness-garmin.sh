@@ -69,7 +69,7 @@ fi
 function uninstall() {
   msg_info "Uninstalling ${APP}"
   systemctl disable --now sparkyfitness-garmin.service &>/dev/null || true
-  rm -f "$SERVICE_PATH"
+  rm -rf "$SERVICE_PATH" "$CONFIG_PATH" "$INSTALL_PATH"
   msg_ok "${APP} has been uninstalled"
 }
 
