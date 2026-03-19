@@ -13,8 +13,6 @@ setting_up_container
 network_check
 update_os
 
-setup_hwaccel "plex"
-
 msg_info "Setting Up Plex Media Server Repository"
 setup_deb822_repo \
   "plexmediaserver" \
@@ -27,6 +25,8 @@ msg_ok "Set Up Plex Media Server Repository"
 msg_info "Installing Plex Media Server"
 $STD apt install -y plexmediaserver
 msg_ok "Installed Plex Media Server"
+
+setup_hwaccel "plex"
 
 motd_ssh
 customize

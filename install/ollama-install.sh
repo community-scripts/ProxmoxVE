@@ -42,8 +42,6 @@ EOF
 $STD apt update
 msg_ok "Set up Intel® Repositories"
 
-setup_hwaccel "ollama"
-
 msg_info "Installing Intel® Level Zero"
 # Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
 if is_debian && [[ "$(get_os_version_major)" -ge 13 ]]; then
@@ -91,6 +89,8 @@ if ! id ollama >/dev/null 2>&1; then
 fi
 $STD usermod -aG ollama $(id -u -n)
 msg_ok "Created ollama User and adjusted Groups"
+
+setup_hwaccel "ollama"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/ollama.service

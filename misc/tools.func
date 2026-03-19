@@ -5213,8 +5213,8 @@ _setup_gpu_permissions() {
 
   # Add service user to render and video groups for GPU hardware acceleration
   if [[ -n "$service_user" ]]; then
-    $STD usermod -aG render "$service_user" 2>/dev/null || true
-    $STD usermod -aG video "$service_user" 2>/dev/null || true
+    usermod -aG render "$service_user" 2>/dev/null || true
+    usermod -aG video "$service_user" 2>/dev/null || true
   fi
 }
 

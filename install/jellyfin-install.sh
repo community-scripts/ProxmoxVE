@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_custom "ℹ️" "${GN}" "If NVIDIA GPU passthrough is detected, you'll be asked whether to install drivers in the container"
-setup_hwaccel "jellyfin"
 
 msg_info "Installing Dependencies"
 ensure_dependencies libjemalloc2
@@ -36,6 +35,8 @@ $STD apt install -y jellyfin jellyfin-ffmpeg7
 ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 msg_ok "Installed Jellyfin"
+
+setup_hwaccel "jellyfin"
 
 msg_info "Configuring Jellyfin"
 # Configure log rotation to prevent disk fill (keeps fail2ban compatibility) (PR: #1690 / Issue: #11224)

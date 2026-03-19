@@ -13,9 +13,9 @@ setting_up_container
 network_check
 update_os
 
-setup_hwaccel "emby"
-
 fetch_and_deploy_gh_release "emby" "MediaBrowser/Emby.Releases" "binary"
+
+setup_hwaccel "emby"
 
 motd_ssh
 customize
