@@ -232,6 +232,10 @@ MINIO_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio -o /usr/local/bin/minio
 chmod +x /usr/local/bin/minio
 
+# Download MinIO Client (mc) for bucket management
+curl -fsSL https://dl.min.io/client/mc/release/linux-amd64/mc -o /usr/local/bin/mc
+chmod +x /usr/local/bin/mc
+
 # Create MinIO directories
 mkdir -p /var/lib/minio/data
 
@@ -265,6 +269,18 @@ for i in {1..30}; do
   fi
   sleep 1
 done
+
+# Create ragflow bucket using MinIO Client
+msg_info "Creating MinIO Bucket"
+for i in {1..30}; do
+  if /usr/local/bin/mc alias set local http://localhost:9000 rag_flow "${MINIO_PASS}" 2>/dev/null; then
+    break
+  fi
+  sleep 1
+done
+/usr/local/bin/mc mb local/ragflow --ignore-existing 2>/dev/null || true
+msg_ok "Created MinIO Bucket"
+
 msg_ok "MinIO Installed"
 
 # ==============================================================================

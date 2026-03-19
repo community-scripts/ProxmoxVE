@@ -180,6 +180,15 @@ function update_script() {
       msg_ok "Restarted MCP Server"
     fi
     
+    # Verify MinIO bucket exists (fixes NoSuchBucket errors)
+    msg_info "Verifying MinIO Bucket"
+    MINIO_PASS=$(grep -oP 'MINIO_PASSWORD=\K[^"]+' /opt/ragflow/.env 2>/dev/null || grep -oP 'password: \K[^"]+' /opt/ragflow/conf/service_conf.yaml 2>/dev/null | head -1)
+    if [[ -n "$MINIO_PASS" ]] && [[ -x /usr/local/bin/mc ]]; then
+      /usr/local/bin/mc alias set local http://localhost:9000 rag_flow "${MINIO_PASS}" 2>/dev/null || true
+      /usr/local/bin/mc mb local/ragflow --ignore-existing 2>/dev/null || true
+    fi
+    msg_ok "Verified MinIO Bucket"
+    
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
