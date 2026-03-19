@@ -29,7 +29,7 @@ APP_TYPE="addon"
 INSTALL_PATH="/opt/sparkyfitness-garmin"
 CONFIG_PATH="/etc/sparkyfitness-garmin/.env"
 SERVICE_PATH="/etc/systemd/system/sparkyfitness-garmin.service"
-DEFAULT_PORT=3000
+DEFAULT_PORT=8000
 
 # ==============================================================================
 # HEADER
@@ -107,7 +107,7 @@ function install() {
   cd $INSTALL_PATH/SparkyFitnessGarmin
   $STD uv venv --clear .venv
   $STD uv pip install -r requirements.txt
-  sed -i -e "s|^#\?GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" $CONFIG_PATH
+  sed -i -e "s|^#\?GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:${DEFAULT_PORT}|" $CONFIG_PATH
   cat <<EOF >/etc/systemd/system/sparkyfitness-garmin.service
 [Unit]
 Description=${APP}
@@ -118,7 +118,7 @@ Requires=sparkyfitness-server.service
 Type=simple
 WorkingDirectory=$INSTALL_PATH/SparkyFitnessGarmin
 EnvironmentFile=$CONFIG_PATH
-ExecStart=$INSTALL_PATH/SparkyFitnessGarmin/.venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+ExecStart=$INSTALL_PATH/SparkyFitnessGarmin/.venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port ${DEFAULT_PORT}
 Restart=always
 RestartSec=5
 
@@ -127,8 +127,8 @@ WantedBy=multi-user.target
 EOF
   systemctl enable -q --now sparkyfitness-garmin
   systemctl restart sparkyfitness-server
-  msg_ok "Set up ${APP} - reachable at http://${LOCAL_IP}:8000"
-  msg_info "You might need to update the GARMIN_MICROSERVICE_URL in your SparkyFitness .env file to http://${LOCAL_IP}:8000"
+  msg_ok "Set up ${APP} - reachable at http://${LOCAL_IP}:${DEFAULT_PORT}"
+  msg_info "You might need to update the GARMIN_MICROSERVICE_URL in your SparkyFitness .env file to http://${LOCAL_IP}:${DEFAULT_PORT}"
 }
 
 # ==============================================================================
