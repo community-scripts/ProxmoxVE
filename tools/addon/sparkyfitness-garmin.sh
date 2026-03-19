@@ -77,7 +77,7 @@ function uninstall() {
 # UPDATE
 # ==============================================================================
 function update() {
-  if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
+  if check_for_gh_release "sparkyfitness-garmin" "CodeWithCJ/SparkyFitness"; then
     PYTHON_VERSION="3.13" setup_uv
 
     msg_info "Stopping service"
