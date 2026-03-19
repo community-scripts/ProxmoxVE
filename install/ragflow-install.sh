@@ -272,7 +272,52 @@ msg_ok "MinIO Installed"
 # ==============================================================================
 
 msg_info "Downloading RAGFlow"
-fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "latest" "/opt/ragflow"
+
+# Pre-check GitHub API connectivity
+if ! getent hosts api.github.com >/dev/null 2>&1; then
+  msg_error "Cannot resolve api.github.com - check DNS settings"
+  msg_error "Try: echo 'nameserver 8.8.8.8' >> /etc/resolv.conf"
+  exit 1
+fi
+
+# Test GitHub API connectivity before downloading
+GITHUB_API_TEST=""
+for i in 1 2 3; do
+  GITHUB_API_TEST=$(curl -sSL --connect-timeout 10 --max-time 30 -o /dev/null -w "%{http_code}" "https://api.github.com/rate_limit" 2>/dev/null) || true
+  if [[ "$GITHUB_API_TEST" =~ ^[23][0-9]{2}$ ]]; then
+    break
+  fi
+  msg_warn "GitHub API connectivity test failed (attempt $i/3), retrying..."
+  sleep 2
+done
+
+if [[ ! "$GITHUB_API_TEST" =~ ^[23][0-9]{2}$ ]]; then
+  msg_error "GitHub API is unreachable (HTTP: $GITHUB_API_TEST)"
+  msg_error "This could be due to:"
+  msg_error "  1. GitHub API rate limit exceeded (60 requests/hour for anonymous users)"
+  msg_error "  2. Network firewall blocking api.github.com"
+  msg_error "  3. DNS resolution issues"
+  msg_error ""
+  msg_error "Solutions:"
+  msg_error "  1. Wait 1 hour and try again (rate limit resets)"
+  msg_error "  2. Set GITHUB_TOKEN: export GITHUB_TOKEN='ghp_your_token_here'"
+  msg_error "  3. Check network: curl -sSL https://api.github.com/rate_limit"
+  exit 1
+fi
+
+# Check rate limit status
+RATE_LIMIT_REMAINING=$(curl -sSL "https://api.github.com/rate_limit" 2>/dev/null | grep -o '"remaining":[[:space:]]*[0-9]*' | head -1 | grep -o '[0-9]*' || echo "unknown")
+if [[ "$RATE_LIMIT_REMAINING" != "unknown" && "$RATE_LIMIT_REMAINING" -lt 5 ]]; then
+  msg_warn "GitHub API rate limit low: $RATE_LIMIT_REMAINING requests remaining"
+  msg_warn "Consider setting GITHUB_TOKEN for higher limits"
+fi
+
+# Download RAGFlow
+if ! fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "latest" "/opt/ragflow"; then
+  msg_error "Failed to download RAGFlow from GitHub"
+  msg_error "If rate limited, try: export GITHUB_TOKEN='ghp_your_token_here'"
+  exit 1
+fi
 msg_ok "Downloaded RAGFlow"
 
 # ==============================================================================

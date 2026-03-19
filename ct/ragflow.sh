@@ -29,6 +29,12 @@ function update_script() {
     exit
   fi
 
+  # Pre-check GitHub API connectivity
+  if ! getent hosts api.github.com >/dev/null 2>&1; then
+    msg_error "Cannot resolve api.github.com - check DNS settings"
+    exit 1
+  fi
+
   if check_for_gh_release "ragflow" "infiniflow/ragflow"; then
     msg_info "Stopping Services"
     systemctl stop ragflow-task-executor || true
