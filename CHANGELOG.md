@@ -441,6 +441,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - NocoDB: Unpin Version to latest [@MickLesk](https://github.com/MickLesk) ([#13094](https://github.com/community-scripts/ProxmoxVE/pull/13094))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: use dpkg-query for reliable JDK version detection [@MickLesk](https://github.com/MickLesk) ([#13101](https://github.com/community-scripts/ProxmoxVE/pull/13101))
+
 ### 📚 Documentation
 
   - Update link from helper-scripts.com to community-scripts.org [@adnanvaldes](https://github.com/adnanvaldes) ([#13098](https://github.com/community-scripts/ProxmoxVE/pull/13098))
