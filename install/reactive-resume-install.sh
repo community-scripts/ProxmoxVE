@@ -15,7 +15,7 @@ update_os
 
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="reactive_resume" PG_DB_USER="reactive_resume" setup_postgresql_db
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Dependencies"
 $STD apt install -y chromium
@@ -25,6 +25,9 @@ fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "ta
 
 msg_info "Building Reactive Resume (Patience)"
 cd /opt/reactive-resume
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+corepack enable
+corepack prepare --activate
 export NODE_ENV="production"
 export CI="true"
 $STD pnpm install --frozen-lockfile

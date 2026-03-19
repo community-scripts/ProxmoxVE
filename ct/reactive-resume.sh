@@ -34,10 +34,14 @@ function update_script() {
     msg_ok "Stopped services"
 
     cp /opt/reactive-resume/.env /opt/reactive-resume.env.bak
+    NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball" "latest" "/opt/reactive-resume"
 
     msg_info "Updating Reactive Resume (Patience)"
     cd /opt/reactive-resume
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    corepack enable
+    corepack prepare --activate
     export CI="true"
     export NODE_ENV="production"
     $STD pnpm install --frozen-lockfile
