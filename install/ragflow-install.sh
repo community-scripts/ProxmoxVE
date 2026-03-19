@@ -115,12 +115,8 @@ collation-server=utf8mb4_unicode_ci
 wait_timeout=28800
 interactive_timeout=28800
 connect_timeout=60
-# Thread pool for better connection handling
-thread_pool_mode=pool
-thread_pool_size=16
 # Buffer pool for performance
 innodb_buffer_pool_size=2G
-innodb_buffer_pool_instances=4
 # Connection queue
 back_log=900
 EOF
