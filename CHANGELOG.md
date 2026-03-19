@@ -431,6 +431,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: remove extra backslash to match single quoted here-doc [@Zelnes](https://github.com/Zelnes) ([#13108](https://github.com/community-scripts/ProxmoxVE/pull/13108))
     - Reactive-Resume: Upgrade Node to 24 and enable Corepack [@MickLesk](https://github.com/MickLesk) ([#13093](https://github.com/community-scripts/ProxmoxVE/pull/13093))
     - Increase Tracearr RAM; derive APP_VERSION [@MickLesk](https://github.com/MickLesk) ([#13087](https://github.com/community-scripts/ProxmoxVE/pull/13087))
     - ProjectSend: Update application access URL [@tremor021](https://github.com/tremor021) ([#13078](https://github.com/community-scripts/ProxmoxVE/pull/13078))
