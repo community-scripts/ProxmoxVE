@@ -440,8 +440,7 @@ redis:
   db: 1
   username: ''
   password: '${REDIS_PASS}'
-  host: 'localhost'
-  port: 6379
+  host: 'localhost:6379'
 user_default_llm:
   default_models:
     embedding_model:
