@@ -1,0 +1,675 @@
+name: PocketBase Bot
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  pocketbase-bot:
+    runs-on: self-hosted
+
+    # Only act on /pocketbase commands
+    if: startsWith(github.event.comment.body, '/pocketbase')
+
+    steps:
+      - name: Execute PocketBase bot command
+        env:
+          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
+          POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
+          POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          ACTOR: ${{ github.event.comment.user.login }}
+          ACTOR_ASSOCIATION: ${{ github.event.comment.author_association }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node << 'ENDSCRIPT'
+          (async function () {
+            const https = require('https');
+            const http = require('http');
+            const url = require('url');
+
+            // ── HTTP helper with redirect following ────────────────────────────
+            function request(fullUrl, opts, redirectCount) {
+              redirectCount = redirectCount || 0;
+              return new Promise(function (resolve, reject) {
+                const u = url.parse(fullUrl);
+                const isHttps = u.protocol === 'https:';
+                const body = opts.body;
+                const options = {
+                  hostname: u.hostname,
+                  port: u.port || (isHttps ? 443 : 80),
+                  path: u.path,
+                  method: opts.method || 'GET',
+                  headers: opts.headers || {}
+                };
+                if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
+                const lib = isHttps ? https : http;
+                const req = lib.request(options, function (res) {
+                  if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                    if (redirectCount >= 5) return reject(new Error('Too many redirects from ' + fullUrl));
+                    const redirectUrl = url.resolve(fullUrl, res.headers.location);
+                    res.resume();
+                    resolve(request(redirectUrl, opts, redirectCount + 1));
+                    return;
+                  }
+                  let data = '';
+                  res.on('data', function (chunk) { data += chunk; });
+                  res.on('end', function () {
+                    resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, statusCode: res.statusCode, body: data });
+                  });
+                });
+                req.on('error', reject);
+                if (body) req.write(body);
+                req.end();
+              });
+            }
+
+            // ── GitHub API helpers ─────────────────────────────────────────────
+            const owner = process.env.REPO_OWNER;
+            const repo = process.env.REPO_NAME;
+            const issueNumber = parseInt(process.env.ISSUE_NUMBER, 10);
+            const commentId = parseInt(process.env.COMMENT_ID, 10);
+            const actor = process.env.ACTOR;
+
+            function ghRequest(path, method, body) {
+              const headers = {
+                'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'User-Agent': 'PocketBase-Bot'
+              };
+              const bodyStr = body ? JSON.stringify(body) : undefined;
+              if (bodyStr) headers['Content-Type'] = 'application/json';
+              return request('https://api.github.com' + path, { method: method || 'GET', headers, body: bodyStr });
+            }
+
+            async function addReaction(content) {
+              try {
+                await ghRequest(
+                  '/repos/' + owner + '/' + repo + '/issues/comments/' + commentId + '/reactions',
+                  'POST', { content }
+                );
+              } catch (e) {
+                console.warn('Could not add reaction:', e.message);
+              }
+            }
+
+            async function postComment(text) {
+              const res = await ghRequest(
+                '/repos/' + owner + '/' + repo + '/issues/' + issueNumber + '/comments',
+                'POST', { body: text }
+              );
+              if (!res.ok) console.warn('Could not post comment:', res.body);
+            }
+
+            // ── Permission check ───────────────────────────────────────────────
+            // author_association: OWNER = repo/org owner, MEMBER = org member (includes Contributors team)
+            const association = process.env.ACTOR_ASSOCIATION;
+            if (association !== 'OWNER' && association !== 'MEMBER') {
+              await addReaction('-1');
+              await postComment(
+                '❌ **PocketBase Bot**: @' + actor + ' is not authorized to use this command.\n' +
+                'Only org members (Contributors team) can use `/pocketbase`.'
+              );
+              process.exit(0);
+            }
+
+            // ── Acknowledge ────────────────────────────────────────────────────
+            await addReaction('eyes');
+
+            // ── Parse command ──────────────────────────────────────────────────
+            // Formats (first line of comment):
+            //   /pocketbase <slug> field=value [field=value ...]    ← field updates (simple values)
+            //   /pocketbase <slug> set <field>                       ← value from code block below
+            //   /pocketbase <slug> note list|add|edit|remove ...     ← note management
+            //   /pocketbase <slug> method list                        ← list install methods
+            //   /pocketbase <slug> method <type> cpu=N ram=N hdd=N   ← edit install method resources
+            const commentBody = process.env.COMMENT_BODY || '';
+            const lines = commentBody.trim().split('\n');
+            const firstLine = lines[0].trim();
+            const withoutCmd = firstLine.replace(/^\/pocketbase\s+/, '').trim();
+
+            // Extract code block content from comment body (```...``` or ```lang\n...```)
+            function extractCodeBlock(body) {
+              const m = body.match(/```[^\n]*\n([\s\S]*?)```/);
+              return m ? m[1].trim() : null;
+            }
+            const codeBlockValue = extractCodeBlock(commentBody);
+
+            const HELP_TEXT =
+              '**Field update (simple):** `/pocketbase <slug> field=value [field=value ...]`\n\n' +
+              '**Field update (HTML/multiline) — value from code block:**\n' +
+              '````\n' +
+              '/pocketbase <slug> set description\n' +
+              '```html\n' +
+              '<p>Your <b>HTML</b> or multi-line content here</p>\n' +
+              '```\n' +
+              '````\n\n' +
+              '**Note management:**\n' +
+              '```\n' +
+              '/pocketbase <slug> note list\n' +
+              '/pocketbase <slug> note add <type> "<text>"\n' +
+              '/pocketbase <slug> note edit <type> "<old text>" "<new text>"\n' +
+              '/pocketbase <slug> note remove <type> "<text>"\n' +
+              '```\n\n' +
+              '**Install method resources:**\n' +
+              '```\n' +
+              '/pocketbase <slug> method list\n' +
+              '/pocketbase <slug> method <type> hdd=10\n' +
+              '/pocketbase <slug> method <type> cpu=4 ram=2048 hdd=20\n' +
+              '```\n\n' +
+              '**Editable fields:** `name` `description` `logo` `documentation` `website` `project_url` `github` ' +
+              '`config_path` `port` `default_user` `default_passwd` ' +
+              '`updateable` `privileged` `has_arm` `is_dev` ' +
+              '`is_disabled` `disable_message` `is_deleted` `deleted_message`';
+
+            if (!withoutCmd) {
+              await addReaction('-1');
+              await postComment('❌ **PocketBase Bot**: No slug or command specified.\n\n' + HELP_TEXT);
+              process.exit(0);
+            }
+
+            const spaceIdx = withoutCmd.indexOf(' ');
+            const slug = (spaceIdx === -1 ? withoutCmd : withoutCmd.substring(0, spaceIdx)).trim();
+            const rest = spaceIdx === -1 ? '' : withoutCmd.substring(spaceIdx + 1).trim();
+
+            if (!rest) {
+              await addReaction('-1');
+              await postComment('❌ **PocketBase Bot**: No command specified for slug `' + slug + '`.\n\n' + HELP_TEXT);
+              process.exit(0);
+            }
+
+            // ── Allowed fields and their types ─────────────────────────────────
+            // ── PocketBase: authenticate (shared by all paths) ─────────────────
+            const raw = process.env.POCKETBASE_URL.replace(/\/$/, '');
+            const apiBase = /\/api$/i.test(raw) ? raw : raw + '/api';
+            const coll = process.env.POCKETBASE_COLLECTION;
+
+            const authRes = await request(apiBase + '/collections/users/auth-with-password', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                identity: process.env.POCKETBASE_ADMIN_EMAIL,
+                password: process.env.POCKETBASE_ADMIN_PASSWORD
+              })
+            });
+            if (!authRes.ok) {
+              await addReaction('-1');
+              await postComment('❌ **PocketBase Bot**: PocketBase authentication failed. CC @' + owner + '/maintainers');
+              process.exit(1);
+            }
+            const token = JSON.parse(authRes.body).token;
+
+            // ── PocketBase: find record by slug (shared by all paths) ──────────
+            const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
+            const filter = "(slug='" + slug.replace(/'/g, "''") + "')";
+            const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1', {
+              headers: { 'Authorization': token }
+            });
+            const list = JSON.parse(listRes.body);
+            const record = list.items && list.items[0];
+
+            if (!record) {
+              await addReaction('-1');
+              await postComment(
+                '❌ **PocketBase Bot**: No record found for slug `' + slug + '`.\n\n' +
+                'Make sure the script was already pushed to PocketBase (JSON must exist and have been synced).'
+              );
+              process.exit(0);
+            }
+
+            // ── Route: dispatch to subcommand handler ──────────────────────────
+            const noteMatch   = rest.match(/^note\s+(list|add|edit|remove)\b/i);
+            const methodMatch = rest.match(/^method\b/i);
+            const setMatch    = rest.match(/^set\s+(\S+)/i);
+
+            if (noteMatch) {
+              // ── NOTE SUBCOMMAND (reads/writes notes_json on script record) ────
+              const noteAction  = noteMatch[1].toLowerCase();
+              const noteArgsStr = rest.substring(noteMatch[0].length).trim();
+
+              // Parse notes_json from the already-fetched script record
+              // PocketBase may return JSON fields as already-parsed objects
+              let notesArr = [];
+              try {
+                const rawNotes = record.notes_json;
+                notesArr = Array.isArray(rawNotes) ? rawNotes : JSON.parse(rawNotes || '[]');
+              } catch (e) { notesArr = []; }
+
+              // Token parser: unquoted-word OR "quoted string" (supports \" escapes)
+              function parseNoteTokens(str) {
+                const tokens = [];
+                let pos = 0;
+                while (pos < str.length) {
+                  while (pos < str.length && /\s/.test(str[pos])) pos++;
+                  if (pos >= str.length) break;
+                  if (str[pos] === '"') {
+                    pos++;
+                    let start = pos;
+                    while (pos < str.length && str[pos] !== '"') {
+                      if (str[pos] === '\\') pos++;
+                      pos++;
+                    }
+                    tokens.push(str.substring(start, pos).replace(/\\"/g, '"'));
+                    if (pos < str.length) pos++;
+                  } else {
+                    let start = pos;
+                    while (pos < str.length && !/\s/.test(str[pos])) pos++;
+                    tokens.push(str.substring(start, pos));
+                  }
+                }
+                return tokens;
+              }
+
+              function formatNotesList(arr) {
+                if (arr.length === 0) return '*None*';
+                return arr.map(function (n, i) {
+                  return (i + 1) + '. **`' + (n.type || '?') + '`**: ' + (n.text || '');
+                }).join('\n');
+              }
+
+              async function patchNotesJson(arr) {
+                const res = await request(recordsUrl + '/' + record.id, {
+                  method: 'PATCH',
+                  headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ notes_json: JSON.stringify(arr) })
+                });
+                if (!res.ok) {
+                  await addReaction('-1');
+                  await postComment('❌ **PocketBase Bot**: Failed to update `notes_json`:\n```\n' + res.body + '\n```');
+                  process.exit(1);
+                }
+              }
+
+              if (noteAction === 'list') {
+                await addReaction('+1');
+                await postComment(
+                  'ℹ️ **PocketBase Bot**: Notes for **`' + slug + '`** (' + notesArr.length + ' total)\n\n' +
+                  formatNotesList(notesArr)
+                );
+
+              } else if (noteAction === 'add') {
+                const tokens = parseNoteTokens(noteArgsStr);
+                if (tokens.length < 2) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: `note add` requires `<type>` and `"<text>"`.\n\n' +
+                    '**Usage:** `/pocketbase ' + slug + ' note add <type> "<text>"`'
+                  );
+                  process.exit(0);
+                }
+                const noteType = tokens[0].toLowerCase();
+                const noteText = tokens.slice(1).join(' ');
+                notesArr.push({ type: noteType, text: noteText });
+                await patchNotesJson(notesArr);
+                await addReaction('+1');
+                await postComment(
+                  '✅ **PocketBase Bot**: Added note to **`' + slug + '`**\n\n' +
+                  '- **Type:** `' + noteType + '`\n' +
+                  '- **Text:** ' + noteText + '\n\n' +
+                  '*Executed by @' + actor + '*'
+                );
+
+              } else if (noteAction === 'edit') {
+                const tokens = parseNoteTokens(noteArgsStr);
+                if (tokens.length < 3) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: `note edit` requires `<type>`, `"<old text>"`, and `"<new text>"`.\n\n' +
+                    '**Usage:** `/pocketbase ' + slug + ' note edit <type> "<old text>" "<new text>"`\n\n' +
+                    'Use `/pocketbase ' + slug + ' note list` to see current notes.'
+                  );
+                  process.exit(0);
+                }
+                const noteType = tokens[0].toLowerCase();
+                const oldText  = tokens[1];
+                const newText  = tokens[2];
+                const idx = notesArr.findIndex(function (n) {
+                  return n.type.toLowerCase() === noteType && n.text === oldText;
+                });
+                if (idx === -1) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: No `' + noteType + '` note found with that exact text.\n\n' +
+                    '**Current notes for `' + slug + '`:**\n' + formatNotesList(notesArr)
+                  );
+                  process.exit(0);
+                }
+                notesArr[idx].text = newText;
+                await patchNotesJson(notesArr);
+                await addReaction('+1');
+                await postComment(
+                  '✅ **PocketBase Bot**: Edited note in **`' + slug + '`**\n\n' +
+                  '- **Type:** `' + noteType + '`\n' +
+                  '- **Old:** ' + oldText + '\n' +
+                  '- **New:** ' + newText + '\n\n' +
+                  '*Executed by @' + actor + '*'
+                );
+
+              } else if (noteAction === 'remove') {
+                const tokens = parseNoteTokens(noteArgsStr);
+                if (tokens.length < 2) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: `note remove` requires `<type>` and `"<text>"`.\n\n' +
+                    '**Usage:** `/pocketbase ' + slug + ' note remove <type> "<text>"`\n\n' +
+                    'Use `/pocketbase ' + slug + ' note list` to see current notes.'
+                  );
+                  process.exit(0);
+                }
+                const noteType = tokens[0].toLowerCase();
+                const noteText = tokens[1];
+                const before   = notesArr.length;
+                notesArr = notesArr.filter(function (n) {
+                  return !(n.type.toLowerCase() === noteType && n.text === noteText);
+                });
+                if (notesArr.length === before) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: No `' + noteType + '` note found with that exact text.\n\n' +
+                    '**Current notes for `' + slug + '`:**\n' + formatNotesList(notesArr)
+                  );
+                  process.exit(0);
+                }
+                await patchNotesJson(notesArr);
+                await addReaction('+1');
+                await postComment(
+                  '✅ **PocketBase Bot**: Removed note from **`' + slug + '`**\n\n' +
+                  '- **Type:** `' + noteType + '`\n' +
+                  '- **Text:** ' + noteText + '\n\n' +
+                  '*Executed by @' + actor + '*'
+                );
+              }
+
+            } else if (methodMatch) {
+              // ── METHOD SUBCOMMAND (reads/writes install_methods_json on script record) ──
+              const methodArgs     = rest.replace(/^method\s*/i, '').trim();
+              const methodListMode = !methodArgs || methodArgs.toLowerCase() === 'list';
+
+              // Parse install_methods_json from the already-fetched script record
+              // PocketBase may return JSON fields as already-parsed objects
+              let methodsArr = [];
+              try {
+                const rawMethods = record.install_methods_json;
+                methodsArr = Array.isArray(rawMethods) ? rawMethods : JSON.parse(rawMethods || '[]');
+              } catch (e) { methodsArr = []; }
+
+              function formatMethodsList(arr) {
+                if (arr.length === 0) return '*None*';
+                return arr.map(function (im, i) {
+                  const r = im.resources || {};
+                  return (i + 1) + '. **`' + (im.type || '?') + '`** — CPU: `' + (r.cpu != null ? r.cpu : '?') +
+                    '` · RAM: `' + (r.ram != null ? r.ram : '?') + ' MB` · HDD: `' + (r.hdd != null ? r.hdd : '?') + ' GB`';
+                }).join('\n');
+              }
+
+              async function patchInstallMethodsJson(arr) {
+                const res = await request(recordsUrl + '/' + record.id, {
+                  method: 'PATCH',
+                  headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ install_methods_json: JSON.stringify(arr) })
+                });
+                if (!res.ok) {
+                  await addReaction('-1');
+                  await postComment('❌ **PocketBase Bot**: Failed to update `install_methods_json`:\n```\n' + res.body + '\n```');
+                  process.exit(1);
+                }
+              }
+
+              if (methodListMode) {
+                await addReaction('+1');
+                await postComment(
+                  'ℹ️ **PocketBase Bot**: Install methods for **`' + slug + '`** (' + methodsArr.length + ' total)\n\n' +
+                  formatMethodsList(methodsArr)
+                );
+              } else {
+                // Parse: <type> cpu=N ram=N hdd=N
+                const methodParts = methodArgs.match(/^(\S+)\s+(.+)$/);
+                if (!methodParts) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: Invalid `method` syntax.\n\n' +
+                    '**Usage:**\n```\n/pocketbase ' + slug + ' method list\n/pocketbase ' + slug + ' method <type> hdd=10\n/pocketbase ' + slug + ' method <type> cpu=4 ram=2048 hdd=20\n```'
+                  );
+                  process.exit(0);
+                }
+                const targetType   = methodParts[1].toLowerCase();
+                const resourcesStr = methodParts[2];
+
+                // Parse resource fields (only cpu/ram/hdd allowed)
+                const RESOURCE_FIELDS = { cpu: true, ram: true, hdd: true };
+                const resourceChanges = {};
+                const rePairs = /([a-z]+)=(\d+)/gi;
+                let m;
+                while ((m = rePairs.exec(resourcesStr)) !== null) {
+                  const key = m[1].toLowerCase();
+                  if (RESOURCE_FIELDS[key]) resourceChanges[key] = parseInt(m[2], 10);
+                }
+                if (Object.keys(resourceChanges).length === 0) {
+                  await addReaction('-1');
+                  await postComment('❌ **PocketBase Bot**: No valid resource fields found. Use `cpu=N`, `ram=N`, `hdd=N`.');
+                  process.exit(0);
+                }
+
+                // Find matching method by type name (case-insensitive)
+                const idx = methodsArr.findIndex(function (im) {
+                  return (im.type || '').toLowerCase() === targetType;
+                });
+                if (idx === -1) {
+                  await addReaction('-1');
+                  const availableTypes = methodsArr.map(function (im) { return im.type || '?'; });
+                  await postComment(
+                    '❌ **PocketBase Bot**: No install method with type `' + targetType + '` found for `' + slug + '`.\n\n' +
+                    '**Available types:** `' + (availableTypes.length ? availableTypes.join('`, `') : '(none)') + '`\n\n' +
+                    'Use `/pocketbase ' + slug + ' method list` to see all methods.'
+                  );
+                  process.exit(0);
+                }
+
+                if (!methodsArr[idx].resources) methodsArr[idx].resources = {};
+                if (resourceChanges.cpu != null) methodsArr[idx].resources.cpu = resourceChanges.cpu;
+                if (resourceChanges.ram != null) methodsArr[idx].resources.ram = resourceChanges.ram;
+                if (resourceChanges.hdd != null) methodsArr[idx].resources.hdd = resourceChanges.hdd;
+
+                await patchInstallMethodsJson(methodsArr);
+
+                const changesLines = Object.entries(resourceChanges)
+                  .map(function ([k, v]) { return '- `' + k + '` → `' + v + (k === 'ram' ? ' MB' : k === 'hdd' ? ' GB' : '') + '`'; })
+                  .join('\n');
+                await addReaction('+1');
+                await postComment(
+                  '✅ **PocketBase Bot**: Updated install method **`' + methodsArr[idx].type + '`** for **`' + slug + '`**\n\n' +
+                  '**Changes applied:**\n' + changesLines + '\n\n' +
+                  '*Executed by @' + actor + '*'
+                );
+              }
+
+            } else if (setMatch) {
+              // ── SET SUBCOMMAND (multi-line / HTML / special chars via code block) ──
+              const fieldName = setMatch[1].toLowerCase();
+              const SET_ALLOWED = {
+                name: 'string', description: 'string', logo: 'string',
+                documentation: 'string', website: 'string', project_url: 'string', github: 'string',
+                config_path: 'string', disable_message: 'string', deleted_message: 'string'
+              };
+              if (!SET_ALLOWED[fieldName]) {
+                await addReaction('-1');
+                await postComment(
+                  '❌ **PocketBase Bot**: `set` only supports text fields.\n\n' +
+                  '**Allowed:** `' + Object.keys(SET_ALLOWED).join('`, `') + '`\n\n' +
+                  'For boolean/number fields use `field=value` syntax instead.'
+                );
+                process.exit(0);
+              }
+              if (!codeBlockValue) {
+                await addReaction('-1');
+                await postComment(
+                  '❌ **PocketBase Bot**: `set` requires a code block with the value.\n\n' +
+                  '**Usage:**\n````\n/pocketbase ' + slug + ' set ' + fieldName + '\n```\nYour content here (HTML, multiline, special chars all fine)\n```\n````'
+                );
+                process.exit(0);
+              }
+              const setPayload = {};
+              setPayload[fieldName] = codeBlockValue;
+              const setPatchRes = await request(recordsUrl + '/' + record.id, {
+                method: 'PATCH',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify(setPayload)
+              });
+              if (!setPatchRes.ok) {
+                await addReaction('-1');
+                await postComment('❌ **PocketBase Bot**: PATCH failed for `' + slug + '`:\n```\n' + setPatchRes.body + '\n```');
+                process.exit(1);
+              }
+              const preview = codeBlockValue.length > 300 ? codeBlockValue.substring(0, 300) + '…' : codeBlockValue;
+              await addReaction('+1');
+              await postComment(
+                '✅ **PocketBase Bot**: Set `' + fieldName + '` for **`' + slug + '`**\n\n' +
+                '**Value set:**\n```\n' + preview + '\n```\n\n' +
+                '*Executed by @' + actor + '*'
+              );
+
+            } else {
+              // ── FIELD=VALUE PATH ─────────────────────────────────────────────
+              const fieldsStr = rest;
+
+              // Skipped: slug, script_created/updated, created (auto), categories/
+              // install_methods/notes/type (relations), github_data/install_methods_json/
+              // notes_json (auto-generated), execute_in (select relation), last_update_commit (auto)
+              const ALLOWED_FIELDS = {
+                name:             'string',
+                description:      'string',
+                logo:             'string',
+                documentation:    'string',
+                website:          'string',
+                project_url:      'string',
+                github:           'string',
+                config_path:      'string',
+                port:             'number',
+                default_user:     'nullable_string',
+                default_passwd:   'nullable_string',
+                updateable:       'boolean',
+                privileged:       'boolean',
+                has_arm:          'boolean',
+                is_dev:           'boolean',
+                is_disabled:      'boolean',
+                disable_message:  'string',
+                is_deleted:       'boolean',
+                deleted_message:  'string',
+              };
+
+              // Field=value parser (handles quoted values and empty=null)
+              function parseFields(str) {
+                const fields = {};
+                let pos = 0;
+                while (pos < str.length) {
+                  while (pos < str.length && /\s/.test(str[pos])) pos++;
+                  if (pos >= str.length) break;
+                  let keyStart = pos;
+                  while (pos < str.length && str[pos] !== '=' && !/\s/.test(str[pos])) pos++;
+                  const key = str.substring(keyStart, pos).trim();
+                  if (!key || pos >= str.length || str[pos] !== '=') { pos++; continue; }
+                  pos++;
+                  let value;
+                  if (str[pos] === '"') {
+                    pos++;
+                    let valStart = pos;
+                    while (pos < str.length && str[pos] !== '"') {
+                      if (str[pos] === '\\') pos++;
+                      pos++;
+                    }
+                    value = str.substring(valStart, pos).replace(/\\"/g, '"');
+                    if (pos < str.length) pos++;
+                  } else {
+                    let valStart = pos;
+                    while (pos < str.length && !/\s/.test(str[pos])) pos++;
+                    value = str.substring(valStart, pos);
+                  }
+                  fields[key] = value;
+                }
+                return fields;
+              }
+
+              const parsedFields = parseFields(fieldsStr);
+
+              const unknownFields = Object.keys(parsedFields).filter(function (f) { return !ALLOWED_FIELDS[f]; });
+              if (unknownFields.length > 0) {
+                await addReaction('-1');
+                await postComment(
+                  '❌ **PocketBase Bot**: Unknown field(s): `' + unknownFields.join('`, `') + '`\n\n' +
+                  '**Allowed fields:** `' + Object.keys(ALLOWED_FIELDS).join('`, `') + '`'
+                );
+                process.exit(0);
+              }
+
+              if (Object.keys(parsedFields).length === 0) {
+                await addReaction('-1');
+                await postComment('❌ **PocketBase Bot**: Could not parse any valid `field=value` pairs.\n\n' + HELP_TEXT);
+                process.exit(0);
+              }
+
+              // Cast values to correct types
+              const payload = {};
+              for (const [key, rawVal] of Object.entries(parsedFields)) {
+                const type = ALLOWED_FIELDS[key];
+                if (type === 'boolean') {
+                  if (rawVal === 'true') payload[key] = true;
+                  else if (rawVal === 'false') payload[key] = false;
+                  else {
+                    await addReaction('-1');
+                    await postComment('❌ **PocketBase Bot**: `' + key + '` must be `true` or `false`, got: `' + rawVal + '`');
+                    process.exit(0);
+                  }
+                } else if (type === 'number') {
+                  const n = parseInt(rawVal, 10);
+                  if (isNaN(n)) {
+                    await addReaction('-1');
+                    await postComment('❌ **PocketBase Bot**: `' + key + '` must be a number, got: `' + rawVal + '`');
+                    process.exit(0);
+                  }
+                  payload[key] = n;
+                } else if (type === 'nullable_string') {
+                  payload[key] = rawVal === '' ? null : rawVal;
+                } else {
+                  payload[key] = rawVal;
+                }
+              }
+
+              const patchRes = await request(recordsUrl + '/' + record.id, {
+                method: 'PATCH',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              if (!patchRes.ok) {
+                await addReaction('-1');
+                await postComment('❌ **PocketBase Bot**: PATCH failed for `' + slug + '`:\n```\n' + patchRes.body + '\n```');
+                process.exit(1);
+              }
+              await addReaction('+1');
+              const changesLines = Object.entries(payload)
+                .map(function ([k, v]) { return '- `' + k + '` → `' + JSON.stringify(v) + '`'; })
+                .join('\n');
+              await postComment(
+                '✅ **PocketBase Bot**: Updated **`' + slug + '`** successfully!\n\n' +
+                '**Changes applied:**\n' + changesLines + '\n\n' +
+                '*Executed by @' + actor + '*'
+              );
+            }
+
+            console.log('Done.');
+          })().catch(function (e) {
+            console.error('Fatal error:', e.message || e);
+            process.exit(1);
+          });
+          ENDSCRIPT
+        shell: bash
