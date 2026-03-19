@@ -1,12 +1,12 @@
 {
-  "generated": "2026-03-16T18:42:54Z",
+  "generated": "2026-03-19T01:01:11Z",
   "versions": [
     {
       "slug": "agregarr",
       "repo": "agregarr/agregarr",
-      "version": "v2.4.1",
+      "version": "v2.4.2",
       "pinned": false,
-      "date": "2026-03-05T06:43:40Z"
+      "date": "2026-03-17T08:57:42Z"
     },
     {
       "slug": "lemonade",
@@ -18,9 +18,9 @@
     {
       "slug": "llamacpp",
       "repo": "ggml-org/llama.cpp",
-      "version": "b8373",
+      "version": "b8416",
       "pinned": false,
-      "date": "2026-03-16T10:55:12Z"
+      "date": "2026-03-18T23:16:16Z"
     },
     {
       "slug": "localai",
@@ -56,6 +56,13 @@
       "version": "v0.24.0",
       "pinned": true,
       "date": "2026-02-10T09:27:14Z"
+    },
+    {
+      "slug": "skillserver",
+      "repo": "mudler/skillserver",
+      "version": "v0.0.4",
+      "pinned": false,
+      "date": "2026-01-28T10:30:17Z"
     },
     {
       "slug": "wakapi",
