@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
   setup_mariadb
-  if check_for_gh_release "plant-it" "MDeLuise/plant-it" "${RELEASE}"; then
+  if check_for_gh_release "plant-it" "MDeLuise/plant-it" "${RELEASE}" "last version that includes the web frontend"; then
     msg_info "Stopping Service"
     systemctl stop plant-it
     msg_info "Stopped Service"
