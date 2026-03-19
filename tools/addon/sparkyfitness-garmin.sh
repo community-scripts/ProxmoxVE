@@ -128,7 +128,7 @@ EOF
   systemctl enable -q --now sparkyfitness-garmin
   systemctl restart sparkyfitness-server
   msg_ok "Set up ${APP} - reachable at http://${LOCAL_IP}:8000"
-  msg_info "You might need to update the GARMIN_MICROSERVICE_URL in your SparkyFitness .env file to http://${LOCAL_IP}:8000
+  msg_info "You might need to update the GARMIN_MICROSERVICE_URL in your SparkyFitness .env file to http://${LOCAL_IP}:8000"
 }
 
 # ==============================================================================
