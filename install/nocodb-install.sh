@@ -17,7 +17,7 @@ fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "latest" "/opt
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/nocodb.service
-echo "[Unit]
+[Unit]
 Description=nocodb
 
 [Service]
