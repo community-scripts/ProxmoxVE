@@ -111,6 +111,18 @@ max_allowed_packet=1073741824
 max_connections=900
 character-set-server=utf8mb4
 collation-server=utf8mb4_unicode_ci
+# Connection handling optimizations
+wait_timeout=28800
+interactive_timeout=28800
+connect_timeout=60
+# Thread pool for better connection handling
+thread_pool_mode=pool
+thread_pool_size=16
+# Buffer pool for performance
+innodb_buffer_pool_size=2G
+innodb_buffer_pool_instances=4
+# Connection queue
+back_log=900
 EOF
 systemctl restart mariadb
 msg_ok "Configured MariaDB"
@@ -418,6 +430,12 @@ mysql:
   max_connections: 900
   stale_timeout: 300
   max_allowed_packet: 1073741824
+  # Connection pool settings for stability
+  connect_timeout: 30
+  read_timeout: 60
+  write_timeout: 60
+  pool_recycle: 3600
+  pool_pre_ping: true
 minio:
   user: 'rag_flow'
   password: '${MINIO_PASS}'
@@ -483,6 +501,7 @@ cat <<EOF >/etc/systemd/system/ragflow-server.service
 Description=RAGFlow Backend Server
 After=network.target mariadb.service elasticsearch.service redis-server.service minio.service
 Requires=mariadb.service elasticsearch.service redis-server.service minio.service
+Wants=network-online.target
 
 [Service]
 Type=simple
@@ -490,7 +509,10 @@ WorkingDirectory=/opt/ragflow
 Environment=PYTHONPATH=/opt/ragflow
 Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 Environment=NLTK_DATA=/opt/ragflow/nltk_data
-ExecStartPre=/bin/sleep 10
+# Wait for services to be fully ready
+ExecStartPre=/bin/sleep 15
+# Health check for MariaDB
+ExecStartPre=/bin/bash -c 'for i in {1..30}; do mysqladmin ping -h localhost --silent && break; sleep 1; done'
 ExecStart=/usr/local/bin/uv run --index-strategy unsafe-best-match python api/ragflow_server.py
 Restart=on-failure
 RestartSec=10
