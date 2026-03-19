@@ -30,6 +30,14 @@ function update_script() {
     exit
   fi
 
+  # Source the activation script to set up GPU environment
+  if [[ -f /opt/unsolth-studio/activate.sh ]]; then
+    source /opt/unsolth-studio/activate.sh
+  else
+    # Fallback: activate venv directly
+    source /opt/unsolth-studio/.venv/bin/activate
+  fi
+
   if command -v unsloth &>/dev/null; then
     CURRENT_VERSION=$(pip show unsloth 2>/dev/null | grep -i version | awk '{print $2}' || echo "unknown")
     msg_info "Current version: ${CURRENT_VERSION}"

@@ -130,34 +130,76 @@ chmod 755 /var/log/unsolth-studio
 msg_ok "Created Directories"
 
 msg_info "Creating Service"
-# Create environment file for ROCm/CUDA paths
-cat <<EOF >/opt/unsolth-studio/environment.sh
+# Detect ROCm version and create environment file
+ROCM_PATH=""
+HSA_GFX_VERSION=""
+
+# Find ROCm installation
+if [ -d "/opt/rocm" ]; then
+  ROCM_PATH="/opt/rocm"
+elif [ -d "/opt/rocm-7.2" ]; then
+  ROCM_PATH="/opt/rocm-7.2"
+elif [ -d "/opt/rocm-6.2" ]; then
+  ROCM_PATH="/opt/rocm-6.2"
+fi
+
+# Detect GPU architecture for HSA_OVERRIDE_GFX_VERSION (needed for consumer AMD GPUs)
+if [ -n "$ROCM_PATH" ] && [ -x "$ROCM_PATH/bin/rocminfo" ]; then
+  GFX_ARCH=$("$ROCM_PATH/bin/rocminfo" 2>/dev/null | grep -oP 'gfx\w+' | head -1 || true)
+  if [ -n "$GFX_ARCH" ]; then
+    HSA_GFX_VERSION="$GFX_ARCH"
+    msg_info "Detected AMD GPU architecture: $GFX_ARCH"
+  fi
+fi
+
+# Create a shell wrapper script for manual commands
+cat <<'EOF' >/opt/unsolth-studio/activate.sh
 #!/bin/bash
-# Set up GPU environment for Unsloth Studio
+# Activate script for Unsloth Studio with GPU support
+# Source this file before running unsloth commands manually
+
+# Activate virtual environment
+source /opt/unsolth-studio/.venv/bin/activate
 
 # ROCm environment (AMD GPUs)
 if [ -d "/opt/rocm" ]; then
-  export PATH="/opt/rocm/bin:\$PATH"
-  export LD_LIBRARY_PATH="/opt/rocm/lib:\$LD_LIBRARY_PATH"
+  export PATH="/opt/rocm/bin:$PATH"
+  export LD_LIBRARY_PATH="/opt/rocm/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   export ROCM_PATH="/opt/rocm"
 elif [ -d "/opt/rocm-7.2" ]; then
-  export PATH="/opt/rocm-7.2/bin:\$PATH"
-  export LD_LIBRARY_PATH="/opt/rocm-7.2/lib:\$LD_LIBRARY_PATH"
+  export PATH="/opt/rocm-7.2/bin:$PATH"
+  export LD_LIBRARY_PATH="/opt/rocm-7.2/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   export ROCM_PATH="/opt/rocm-7.2"
 elif [ -d "/opt/rocm-6.2" ]; then
-  export PATH="/opt/rocm-6.2/bin:\$PATH"
-  export LD_LIBRARY_PATH="/opt/rocm-6.2/lib:\$LD_LIBRARY_PATH"
+  export PATH="/opt/rocm-6.2/bin:$PATH"
+  export LD_LIBRARY_PATH="/opt/rocm-6.2/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   export ROCM_PATH="/opt/rocm-6.2"
 fi
 
 # NVIDIA CUDA environment
 if [ -d "/usr/local/cuda" ]; then
-  export PATH="/usr/local/cuda/bin:\$PATH"
-  export LD_LIBRARY_PATH="/usr/local/cuda/lib64:\$LD_LIBRARY_PATH"
+  export PATH="/usr/local/cuda/bin:$PATH"
+  export LD_LIBRARY_PATH="/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
-EOF
-chmod +x /opt/unsolth-studio/environment.sh
 
+# Detect GPU architecture for HSA_OVERRIDE_GFX_VERSION
+if [ -n "$ROCM_PATH" ] && [ -x "$ROCM_PATH/bin/rocminfo" ]; then
+  GFX_ARCH=$("$ROCM_PATH/bin/rocminfo" 2>/dev/null | grep -oP 'gfx\w+' | head -1 || true)
+  if [ -n "$GFX_ARCH" ]; then
+    export HSA_OVERRIDE_GFX_VERSION="$GFX_ARCH"
+    echo "GPU architecture detected: $GFX_ARCH"
+  fi
+fi
+
+# Make GPU visible
+export HIP_VISIBLE_DEVICES=0
+
+echo "Environment activated. GPU ready for use."
+EOF
+chmod +x /opt/unsolth-studio/activate.sh
+
+# Create systemd service with proper GPU environment
+# Note: systemd Environment doesn't support shell expansion, so we use static paths
 cat <<EOF >/etc/systemd/system/unsolth-studio.service
 [Unit]
 Description=Unsloth Studio - Local LLM Fine-tuning Web UI
@@ -167,8 +209,19 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/unsolth-studio
-Environment="PATH=/opt/unsolth-studio/.venv/bin:/usr/local/bin:/usr/bin:/bin"
-EnvironmentFile=/opt/unsolth-studio/environment.sh
+Environment="PATH=/opt/unsolth-studio/.venv/bin:/opt/rocm/bin:/opt/rocm-7.2/bin:/opt/rocm-6.2/bin:/usr/local/cuda/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm-7.2/lib:/opt/rocm-6.2/lib:/usr/local/cuda/lib64"
+Environment="ROCM_PATH=/opt/rocm"
+Environment="HIP_VISIBLE_DEVICES=0"
+EOF
+
+# Add HSA_OVERRIDE_GFX_VERSION if detected
+if [ -n "$HSA_GFX_VERSION" ]; then
+  echo "Environment=\"HSA_OVERRIDE_GFX_VERSION=$HSA_GFX_VERSION\"" >>/etc/systemd/system/unsolth-studio.service
+fi
+
+# Complete the service file
+cat <<EOF >>/etc/systemd/system/unsolth-studio.service
 ExecStart=/opt/unsolth-studio/.venv/bin/unsloth studio -H 0.0.0.0 -p 8888
 Restart=on-failure
 RestartSec=10
@@ -192,6 +245,14 @@ echo ""
 echo -e "${GN}Note: The unsolth-studio service is enabled but not started.${CL}"
 echo -e "${GN}Configure GPU passthrough first, then start with:${CL}"
 echo -e "${GN}  systemctl start unsolth-studio${CL}"
+echo ""
+if [ -n "$HSA_GFX_VERSION" ]; then
+  echo -e "${YW}AMD GPU detected with architecture: $HSA_GFX_VERSION${CL}"
+  echo -e "${YW}HSA_OVERRIDE_GFX_VERSION has been set in the systemd service.${CL}"
+  echo ""
+fi
+echo -e "${GN}For manual commands, activate the environment first:${CL}"
+echo -e "${GN}  source /opt/unsolth-studio/activate.sh${CL}"
 echo ""
 
 # Create GPU passthrough info file
@@ -234,8 +295,30 @@ lxc.cgroup2.devices.allow: c 226:128 rwm
 
 Run these commands inside the container:
 - nvidia-smi (NVIDIA GPUs)
-- rocminfo (AMD GPUs)
+- rocm-smi or rocminfo (AMD GPUs)
 - python -c "import torch; print(torch.cuda.is_available())"
+
+## AMD GPU Configuration
+
+For AMD consumer GPUs (Radeon RX series), the HSA_OVERRIDE_GFX_VERSION environment
+variable is automatically set during installation based on your GPU architecture.
+
+If torch.cuda.is_available() returns False, you may need to manually set it:
+\`\`\`
+# Find your GPU architecture
+rocminfo | grep -oP 'gfx\\w+' | head -1
+
+# Set the override (example for RX 7900 XT - gfx1100)
+export HSA_OVERRIDE_GFX_VERSION=gfx1100
+\`\`\`
+
+## Manual Environment Activation
+
+For running unsloth commands manually, activate the environment first:
+\`\`\`
+source /opt/unsolth-studio/activate.sh
+unsloth studio setup
+\`\`\`
 
 ## Usage
 
