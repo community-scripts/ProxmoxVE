@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Tracearr"
 var_tags="${var_tags:-media}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -140,7 +140,7 @@ EOF
     msg_ok "Built Tracearr"
 
     msg_info "Configuring Tracearr"
-    sed -i "s/^APP_VERSION=.*/APP_VERSION=$(cat /root/.tracearr)/" /data/tracearr/.env
+    sed -i "s|^APP_VERSION=.*|APP_VERSION=${CHECK_UPDATE_RELEASE#v}|" /data/tracearr/.env
     chmod 600 /data/tracearr/.env
     chown -R tracearr:tracearr /data/tracearr
     mkdir -p /data/backup
