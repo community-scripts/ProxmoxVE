@@ -272,7 +272,7 @@ msg_ok "MinIO Installed"
 # ==============================================================================
 
 msg_info "Downloading RAGFlow"
-fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "v0.24.0" "/opt/ragflow"
+fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "latest" "/opt/ragflow"
 msg_ok "Downloaded RAGFlow"
 
 # ==============================================================================
@@ -358,7 +358,7 @@ SVR_WEB_HTTPS_PORT=443
 SVR_HTTP_PORT=9380
 ADMIN_SVR_HTTP_PORT=9381
 SVR_MCP_PORT=9382
-RAGFLOW_IMAGE=infiniflow/ragflow:v0.24.0
+RAGFLOW_IMAGE=infiniflow/ragflow:latest
 TZ=UTC
 REGISTER_ENABLED=1
 THREAD_POOL_MAX_WORKERS=128
