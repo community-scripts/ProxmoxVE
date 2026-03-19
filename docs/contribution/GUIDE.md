@@ -54,15 +54,13 @@ git checkout -b add/my-awesome-app
 # 2. Create application scripts from templates
 cp docs/contribution/templates_ct/AppName.sh ct/myapp.sh
 cp docs/contribution/templates_install/AppName-install.sh install/myapp-install.sh
-cp docs/contribution/templates_json/AppName.json frontend/public/json/myapp.json
 
 # 3. Edit your scripts
 nano ct/myapp.sh
 nano install/myapp-install.sh
-nano frontend/public/json/myapp.json
 
 # 4. Commit and push to your fork
-git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
+git add ct/myapp.sh install/myapp-install.sh
 git commit -m "feat: add MyApp container and install scripts"
 git push origin add/my-awesome-app
 
@@ -74,6 +72,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/
 
 # 7. Open Pull Request on GitHub
 # Create PR from: your-fork/add/my-awesome-app → community-scripts/ProxmoxVE/main
+
+# To add or change website metadata (description, logo, etc.), use the Report issue button on the script's page on the website.
 ```
 
 **💡 Tip**: See `../FORK_SETUP.md` for detailed fork setup and troubleshooting

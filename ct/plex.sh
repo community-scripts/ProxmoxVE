@@ -46,11 +46,11 @@ function update_script() {
         "main"
       msg_ok "Migrated to new Plex repository"
     fi
-  elif [[ -f /etc/apt/sources.list.d/plexmediaserver.list ]]; then
+  elif compgen -G "/etc/apt/sources.list.d/plex*.list" >/dev/null; then
     msg_info "Migrating to new Plex repository (deb822)"
-    rm -f /etc/apt/sources.list.d/plexmediaserver.list
-    rm -f /etc/apt/sources.list.d/plex*
+    rm -f /etc/apt/sources.list.d/plex*.list
     rm -f /usr/share/keyrings/PlexSign.asc
+    rm -f /usr/share/keyrings/plexmediaserver.v2.gpg
     setup_deb822_repo \
       "plexmediaserver" \
       "https://downloads.plex.tv/plex-keys/PlexSign.v2.key" \
@@ -58,6 +58,15 @@ function update_script() {
       "public" \
       "main"
     msg_ok "Migrated to new Plex repository (deb822)"
+  elif [[ ! -f /etc/apt/sources.list.d/plexmediaserver.sources ]]; then
+    msg_info "Setting up Plex repository"
+    setup_deb822_repo \
+      "plexmediaserver" \
+      "https://downloads.plex.tv/plex-keys/PlexSign.v2.key" \
+      "https://repo.plex.tv/deb/" \
+      "public" \
+      "main"
+    msg_ok "Set up Plex repository"
   fi
   if [[ -f /usr/local/bin/plexupdate ]] || [[ -d /opt/plexupdate ]]; then
     msg_info "Removing legacy plexupdate"
@@ -70,6 +79,11 @@ function update_script() {
   $STD apt update
   $STD apt install -y plexmediaserver
   msg_ok "Updated Plex Media Server"
+
+  msg_info "Restarting Plex Media Server"
+  systemctl restart plexmediaserver
+  msg_ok "Restarted Plex Media Server"
+
   msg_ok "Updated successfully!"
   exit
 }

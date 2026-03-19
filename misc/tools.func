@@ -105,11 +105,13 @@ curl_with_retry() {
       fi
     fi
 
-    debug_log "curl attempt $attempt failed, waiting ${backoff}s before retry..."
+    debug_log "curl attempt $attempt failed (timeout=${timeout}s), waiting ${backoff}s before retry..."
     sleep "$backoff"
     # Exponential backoff: 1, 2, 4, 8... capped at 30s
     backoff=$((backoff * 2))
     ((backoff > 30)) && backoff=30
+    # Double --max-time on each retry so slow connections can finish
+    timeout=$((timeout * 2))
     ((attempt++))
   done
 
@@ -172,8 +174,10 @@ curl_api_with_retry() {
       return 0
     fi
 
-    debug_log "curl API attempt $attempt failed (HTTP $http_code), waiting ${attempt}s..."
+    debug_log "curl API attempt $attempt failed (HTTP $http_code, timeout=${timeout}s), waiting ${attempt}s..."
     sleep "$attempt"
+    # Double --max-time on each retry so slow connections can finish
+    timeout=$((timeout * 2))
     ((attempt++))
   done
 
@@ -969,13 +973,43 @@ verify_repo_available() {
 }
 
 # ------------------------------------------------------------------------------
-# Ensure dependencies are installed (with apt update caching)
+# Ensure dependencies are installed (with apt/apk update caching)
+# Supports both Debian (apt/dpkg) and Alpine (apk) systems
 # ------------------------------------------------------------------------------
 ensure_dependencies() {
   local deps=("$@")
   local missing=()
 
-  # Fast batch check using dpkg-query (much faster than individual checks)
+  # Detect Alpine Linux
+  if [[ -f /etc/alpine-release ]]; then
+    for dep in "${deps[@]}"; do
+      if command -v "$dep" &>/dev/null; then
+        continue
+      fi
+      if apk info -e "$dep" &>/dev/null; then
+        continue
+      fi
+      missing+=("$dep")
+    done
+
+    if [[ ${#missing[@]} -gt 0 ]]; then
+      $STD apk add --no-cache "${missing[@]}" || {
+        local failed=()
+        for pkg in "${missing[@]}"; do
+          if ! $STD apk add --no-cache "$pkg" 2>/dev/null; then
+            failed+=("$pkg")
+          fi
+        done
+        if [[ ${#failed[@]} -gt 0 ]]; then
+          msg_error "Failed to install dependencies: ${failed[*]}"
+          return 1
+        fi
+      }
+    fi
+    return 0
+  fi
+
+  # Debian/Ubuntu: Fast batch check using dpkg-query
   local installed_pkgs
   installed_pkgs=$(dpkg-query -W -f='${Package}\n' 2>/dev/null | sort -u)
 
@@ -1072,11 +1106,53 @@ create_temp_dir() {
 }
 
 # ------------------------------------------------------------------------------
-# Check if package is installed (faster than dpkg -l | grep)
+# Check if package is installed (supports both Debian and Alpine)
 # ------------------------------------------------------------------------------
 is_package_installed() {
   local package="$1"
-  dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "^install ok installed$"
+  if [[ -f /etc/alpine-release ]]; then
+    apk info -e "$package" &>/dev/null
+  else
+    dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "^install ok installed$"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Prompt user to enter a GitHub Personal Access Token (PAT) interactively
+# Returns 0 if a valid token was provided, 1 otherwise
+# ------------------------------------------------------------------------------
+prompt_for_github_token() {
+  if [[ ! -t 0 ]]; then
+    return 1
+  fi
+
+  local reply
+  read -rp "${TAB}Would you like to enter a GitHub Personal Access Token (PAT)? [y/N]: " reply
+  reply="${reply:-n}"
+
+  if [[ ! "${reply,,}" =~ ^(y|yes)$ ]]; then
+    return 1
+  fi
+
+  local token
+  while true; do
+    read -rp "${TAB}Enter your GitHub PAT: " token
+    # Trim leading/trailing whitespace
+    token="$(echo "$token" | xargs)"
+    if [[ -z "$token" ]]; then
+      msg_warn "Token cannot be empty. Please try again."
+      continue
+    fi
+    if [[ "$token" =~ [[:space:]] ]]; then
+      msg_warn "Token must not contain spaces. Please try again."
+      continue
+    fi
+    break
+  done
+
+  export GITHUB_TOKEN="$token"
+  msg_ok "GitHub token has been set."
+  return 0
 }
 
 # ------------------------------------------------------------------------------
@@ -1091,7 +1167,8 @@ github_api_call() {
   local header_args=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
 
-  for attempt in $(seq 1 $max_retries); do
+  local attempt=1
+  while ((attempt <= max_retries)); do
     local http_code
     http_code=$(curl -sSL -w "%{http_code}" -o "$output_file" \
       -H "Accept: application/vnd.github+json" \
@@ -1108,7 +1185,11 @@ github_api_call() {
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
         msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
       else
-        msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
+        msg_error "The repository may require authentication."
+      fi
+      if prompt_for_github_token; then
+        header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+        continue
       fi
       return 1
       ;;
@@ -1118,9 +1199,16 @@ github_api_call() {
         msg_warn "GitHub API rate limit, waiting ${retry_delay}s... (attempt $attempt/$max_retries)"
         sleep "$retry_delay"
         retry_delay=$((retry_delay * 2))
+        ((attempt++))
         continue
       fi
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
+      if prompt_for_github_token; then
+        header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+        retry_delay=2
+        attempt=1
+        continue
+      fi
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
       return 1
@@ -1132,6 +1220,7 @@ github_api_call() {
     000 | "")
       if [[ $attempt -lt $max_retries ]]; then
         sleep "$retry_delay"
+        ((attempt++))
         continue
       fi
       msg_error "GitHub API connection failed (no response)."
@@ -1141,12 +1230,14 @@ github_api_call() {
     *)
       if [[ $attempt -lt $max_retries ]]; then
         sleep "$retry_delay"
+        ((attempt++))
         continue
       fi
       msg_error "GitHub API call failed (HTTP $http_code)."
       return 1
       ;;
     esac
+    ((attempt++))
   done
 
   msg_error "GitHub API call failed after ${max_retries} attempts: ${url}"
@@ -1889,6 +1980,47 @@ extract_version_from_json() {
 }
 
 # ------------------------------------------------------------------------------
+# Get latest GitHub tag (for repos that only publish tags, not releases).
+#
+# Usage:
+#   get_latest_gh_tag "owner/repo" [prefix]
+#
+# Arguments:
+#   $1 - GitHub repo (owner/repo)
+#   $2 - Optional prefix filter (e.g., "v" to only match tags starting with "v")
+#
+# Returns:
+#   Latest tag name (stdout), or returns 1 on failure
+# ------------------------------------------------------------------------------
+get_latest_gh_tag() {
+  local repo="$1"
+  local prefix="${2:-}"
+  local temp_file
+  temp_file=$(mktemp)
+
+  if ! github_api_call "https://api.github.com/repos/${repo}/tags?per_page=50" "$temp_file"; then
+    rm -f "$temp_file"
+    return 1
+  fi
+
+  local tag=""
+  if [[ -n "$prefix" ]]; then
+    tag=$(jq -r --arg p "$prefix" '[.[] | select(.name | startswith($p))][0].name // empty' "$temp_file")
+  else
+    tag=$(jq -r '.[0].name // empty' "$temp_file")
+  fi
+
+  rm -f "$temp_file"
+
+  if [[ -z "$tag" ]]; then
+    msg_error "No tags found for ${repo}"
+    return 1
+  fi
+
+  echo "$tag"
+}
+
+# ------------------------------------------------------------------------------
 # Get latest GitHub release version with fallback to tags
 # Usage: get_latest_github_release "owner/repo" [strip_v] [include_prerelease]
 # ------------------------------------------------------------------------------
@@ -1986,101 +2118,129 @@ verify_gpg_fingerprint() {
 }
 
 # ------------------------------------------------------------------------------
-# Get latest GitHub tag for a repository.
+# Fetches and deploys a GitHub tag-based source tarball.
 #
 # Description:
-#   - Queries the GitHub API for tags (not releases)
-#   - Useful for repos that only create tags, not full releases
-#   - Supports optional prefix filter and version-only extraction
-#   - Returns the latest tag name (printed to stdout)
+#   - Downloads the source tarball for a given tag from GitHub
+#   - Extracts to the target directory
+#   - Writes the version to ~/.<app>
 #
 # Usage:
-#   MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools")
-#   LATEST=$(get_latest_gh_tag "owner/repo" "v")          # only tags starting with "v"
-#   LATEST=$(get_latest_gh_tag "owner/repo" "" "true")     # strip leading "v"
+#     fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server"
+#     fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "latest" "/opt/guacamole-server"
 #
 # Arguments:
-#   $1 - GitHub repo (owner/repo)
-#   $2 - Tag prefix filter (optional, e.g. "v" or "100.")
-#   $3 - Strip prefix from result (optional, "true" to strip $2 prefix)
-#
-# Returns:
-#   0 on success (tag printed to stdout), 1 on failure
+#   $1 - App name (used for version file ~/.<app>)
+#   $2 - GitHub repo (owner/repo)
+#   $3 - Tag version (default: "latest" → auto-detect via get_latest_gh_tag)
+#   $4 - Target directory (default: /opt/$app)
 #
 # Notes:
-#   - Skips tags containing "rc", "alpha", "beta", "dev", "test"
-#   - Sorts by version number (sort -V) to find the latest
-#   - Respects GITHUB_TOKEN for rate limiting
+#   - Supports CLEAN_INSTALL=1 to wipe target before extracting
+#   - For repos that only publish tags, not GitHub Releases
 # ------------------------------------------------------------------------------
-get_latest_gh_tag() {
-  local repo="$1"
-  local prefix="${2:-}"
-  local strip_prefix="${3:-false}"
+fetch_and_deploy_gh_tag() {
+  local app="$1"
+  local repo="$2"
+  local version="${3:-latest}"
+  local target="${4:-/opt/$app}"
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local version_file="$HOME/.${app_lc}"
 
-  local header_args=()
-  [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
+  if [[ "$version" == "latest" ]]; then
+    version=$(get_latest_gh_tag "$repo") || {
+      msg_error "Failed to determine latest tag for ${repo}"
+      return 1
+    }
+  fi
 
-  local http_code=""
-  http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_tags.json \
-    -H 'Accept: application/vnd.github+json' \
-    -H 'X-GitHub-Api-Version: 2022-11-28' \
-    "${header_args[@]}" \
-    "https://api.github.com/repos/${repo}/tags?per_page=100" 2>/dev/null) || true
+  local current_version=""
+  [[ -f "$version_file" ]] && current_version=$(<"$version_file")
 
-  if [[ "$http_code" == "401" ]]; then
-    msg_error "GitHub API authentication failed (HTTP 401)."
-    if [[ -n "${GITHUB_TOKEN:-}" ]]; then
-      msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
-    else
-      msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
-    fi
-    rm -f /tmp/gh_tags.json
+  if [[ "$current_version" == "$version" ]]; then
+    msg_ok "$app is already up-to-date ($version)"
+    return 0
+  fi
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || return 1
+  local tarball_url="https://github.com/${repo}/archive/refs/tags/${version}.tar.gz"
+  local filename="${app_lc}-${version}.tar.gz"
+
+  msg_info "Fetching GitHub tag: ${app} (${version})"
+
+  download_file "$tarball_url" "$tmpdir/$filename" || {
+    msg_error "Download failed: $tarball_url"
+    rm -rf "$tmpdir"
     return 1
+  }
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    rm -rf "${target:?}/"*
   fi
 
-  if [[ "$http_code" == "403" ]]; then
-    msg_error "GitHub API rate limit exceeded (HTTP 403)."
-    msg_error "To increase the limit, export a GitHub token before running the script:"
-    msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-    rm -f /tmp/gh_tags.json
+  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+    msg_error "Failed to extract tarball"
+    rm -rf "$tmpdir"
     return 1
-  fi
+  }
 
-  if [[ "$http_code" == "000" || -z "$http_code" ]]; then
-    msg_error "GitHub API connection failed (no response)."
-    msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
-    rm -f /tmp/gh_tags.json
-    return 1
-  fi
+  local unpack_dir
+  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
 
-  if [[ "$http_code" != "200" ]] || [[ ! -s /tmp/gh_tags.json ]]; then
-    msg_error "Unable to fetch tags for ${repo} (HTTP ${http_code})"
-    rm -f /tmp/gh_tags.json
-    return 1
-  fi
+  shopt -s dotglob nullglob
+  cp -r "$unpack_dir"/* "$target/"
+  shopt -u dotglob nullglob
 
-  local tags_json
-  tags_json=$(</tmp/gh_tags.json)
-  rm -f /tmp/gh_tags.json
-
-  # Extract tag names, filter by prefix, exclude pre-release patterns, sort by version
-  local latest=""
-  latest=$(echo "$tags_json" | grep -oP '"name":\s*"\K[^"]+' |
-    { [[ -n "$prefix" ]] && grep "^${prefix}" || cat; } |
-    grep -viE '(rc|alpha|beta|dev|test|preview|snapshot)' |
-    sort -V | tail -n1)
-
-  if [[ -z "$latest" ]]; then
-    msg_warn "No matching tags found for ${repo}${prefix:+ (prefix: $prefix)}"
-    return 1
-  fi
-
-  if [[ "$strip_prefix" == "true" && -n "$prefix" ]]; then
-    latest="${latest#"$prefix"}"
-  fi
-
-  echo "$latest"
+  rm -rf "$tmpdir"
+  echo "$version" >"$version_file"
+  msg_ok "Deployed ${app} ${version} to ${target}"
   return 0
+}
+
+# ------------------------------------------------------------------------------
+# Checks for new GitHub tag (for repos without releases).
+#
+# Description:
+#   - Uses get_latest_gh_tag to fetch the latest tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#
+# Usage:
+#     if check_for_gh_tag "guacd" "apache/guacamole-server"; then
+#       fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "/opt/guacamole-server"
+#     fi
+#
+# Notes:
+#   - For repos that only publish tags, not GitHub Releases
+#   - Same interface as check_for_gh_release
+# ------------------------------------------------------------------------------
+check_for_gh_tag() {
+  local app="$1"
+  local repo="$2"
+  local prefix="${3:-}"
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local current_file="$HOME/.${app_lc}"
+
+  msg_info "Checking for update: ${app}"
+
+  local latest=""
+  latest=$(get_latest_gh_tag "$repo" "$prefix") || return 1
+
+  local current=""
+  [[ -f "$current_file" ]] && current="$(<"$current_file")"
+
+  if [[ -z "$current" || "$current" != "$latest" ]]; then
+    CHECK_UPDATE_RELEASE="$latest"
+    msg_ok "Update available: ${app} ${current:-not installed} → ${latest}"
+    return 0
+  fi
+
+  msg_ok "No update available: ${app} (${latest})"
+  return 1
 }
 
 # ==============================================================================
@@ -2131,6 +2291,35 @@ check_for_gh_release() {
 
   # Try /latest endpoint for non-pinned versions (most efficient)
   local releases_json="" http_code=""
+
+  # For pinned versions, query the specific release tag directly
+  if [[ -n "$pinned_version_in" ]]; then
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+      -H 'Accept: application/vnd.github+json' \
+      -H 'X-GitHub-Api-Version: 2022-11-28' \
+      "${header_args[@]}" \
+      "https://api.github.com/repos/${source}/releases/tags/${pinned_version_in}" 2>/dev/null) || true
+
+    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
+      releases_json="[$(</tmp/gh_check.json)]"
+    elif [[ "$http_code" == "401" ]]; then
+      msg_error "GitHub API authentication failed (HTTP 401)."
+      if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+        msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
+      else
+        msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
+      fi
+      rm -f /tmp/gh_check.json
+      return 1
+    elif [[ "$http_code" == "403" ]]; then
+      msg_error "GitHub API rate limit exceeded (HTTP 403)."
+      msg_error "To increase the limit, export a GitHub token before running the script:"
+      msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
+      rm -f /tmp/gh_check.json
+      return 1
+    fi
+    rm -f /tmp/gh_check.json
+  fi
 
   if [[ -z "$pinned_version_in" ]]; then
     http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
@@ -2399,6 +2588,8 @@ check_for_codeberg_release() {
 # ------------------------------------------------------------------------------
 create_self_signed_cert() {
   local APP_NAME="${1:-${APPLICATION}}"
+  local HOSTNAME="$(hostname -f)"
+  local IP="$(hostname -I | awk '{print $1}')"
   local APP_NAME_LC=$(echo "${APP_NAME,,}" | tr -d ' ')
   local CERT_DIR="/etc/ssl/${APP_NAME_LC}"
   local CERT_KEY="${CERT_DIR}/${APP_NAME_LC}.key"
@@ -2416,8 +2607,8 @@ create_self_signed_cert() {
 
   mkdir -p "$CERT_DIR"
   $STD openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 \
-    -subj "/CN=${APP_NAME}" \
-    -addext "subjectAltName=DNS:${APP_NAME}" \
+    -subj "/CN=${HOSTNAME}" \
+    -addext "subjectAltName=DNS:${HOSTNAME},DNS:localhost,IP:${IP},IP:127.0.0.1" \
     -keyout "$CERT_KEY" \
     -out "$CERT_CRT" || {
     msg_error "Failed to create self-signed certificate"
@@ -2488,6 +2679,30 @@ function ensure_usr_local_bin_persist() {
 }
 
 # ------------------------------------------------------------------------------
+# curl_download - Downloads a file with automatic retry and exponential backoff.
+#
+# Usage: curl_download <output_file> <url>
+#
+# Retries up to 5 times with increasing --max-time (60/120/240/480/960s).
+# Returns 0 on success, 1 if all attempts fail.
+# ------------------------------------------------------------------------------
+function curl_download() {
+  local output="$1"
+  local url="$2"
+  local timeouts=(60 120 240 480 960)
+
+  for i in "${!timeouts[@]}"; do
+    if curl --connect-timeout 15 --max-time "${timeouts[$i]}" -fsSL -o "$output" "$url"; then
+      return 0
+    fi
+    if ((i < ${#timeouts[@]} - 1)); then
+      msg_warn "Download timed out after ${timeouts[$i]}s, retrying... (attempt $((i + 2))/${#timeouts[@]})"
+    fi
+  done
+  return 1
+}
+
+# ------------------------------------------------------------------------------
 # Downloads and deploys latest Codeberg release (source, binary, tarball, asset).
 #
 # Description:
@@ -2544,8 +2759,7 @@ function fetch_and_deploy_codeberg_release() {
   local app_lc=$(echo "${app,,}" | tr -d ' ')
   local version_file="$HOME/.${app_lc}"
 
-  local api_timeout="--connect-timeout 10 --max-time 60"
-  local download_timeout="--connect-timeout 15 --max-time 900"
+  local api_timeouts=(60 120 240)
 
   local current_version=""
   [[ -f "$version_file" ]] && current_version=$(<"$version_file")
@@ -2585,7 +2799,7 @@ function fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format: https://codeberg.org/{owner}/{repo}/archive/{tag}.tar.gz
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+    if curl_download "$tmpdir/$filename" "$archive_url"; then
       download_success=true
     fi
 
@@ -2632,16 +2846,18 @@ function fetch_and_deploy_codeberg_release() {
     return 1
   fi
 
-  local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
+  local attempt=0 success=false resp http_code
 
-  while ((attempt <= max_retries)); do
-    resp=$(curl $api_timeout -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
-    sleep "$retry_delay"
+  while ((attempt < ${#api_timeouts[@]})); do
+    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
     ((attempt++))
+    if ((attempt < ${#api_timeouts[@]})); then
+      msg_warn "API request timed out after ${api_timeouts[$((attempt - 1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
+    fi
   done
 
   if ! $success; then
-    msg_error "Failed to fetch release metadata from $api_url after $max_retries attempts"
+    msg_error "Failed to fetch release metadata from $api_url after ${#api_timeouts[@]} attempts"
     return 1
   fi
 
@@ -2682,7 +2898,7 @@ function fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl $download_timeout -fsSL -o "$tmpdir/$filename" "$archive_url"; then
+    if curl_download "$tmpdir/$filename" "$archive_url"; then
       download_success=true
     fi
 
@@ -2756,7 +2972,7 @@ function fetch_and_deploy_codeberg_release() {
     fi
 
     filename="${url_match##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+    curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
       rm -rf "$tmpdir"
       return 1
@@ -2799,7 +3015,7 @@ function fetch_and_deploy_codeberg_release() {
     }
 
     filename="${asset_url##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+    curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -2900,7 +3116,7 @@ function fetch_and_deploy_codeberg_release() {
     local target_file="$app"
     [[ "$use_filename" == "true" ]] && target_file="$filename"
 
-    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+    curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -3095,8 +3311,7 @@ function fetch_and_deploy_gh_release() {
   local app_lc=$(echo "${app,,}" | tr -d ' ')
   local version_file="$HOME/.${app_lc}"
 
-  local api_timeout="--connect-timeout 10 --max-time 60"
-  local download_timeout="--connect-timeout 15 --max-time 900"
+  local api_timeouts=(60 120 240)
 
   local current_version=""
   [[ -f "$version_file" ]] && current_version=$(<"$version_file")
@@ -3116,18 +3331,37 @@ function fetch_and_deploy_gh_release() {
     return 1
   fi
 
-  local max_retries=3 retry_delay=2 attempt=1 success=false http_code
+  local max_retries=${#api_timeouts[@]} retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
+      break
+    elif [[ "$http_code" == "401" ]]; then
+      msg_error "GitHub API authentication failed (HTTP 401)."
+      if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+        msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
+      else
+        msg_error "The repository may require authentication."
+      fi
+      if prompt_for_github_token; then
+        header=(-H "Authorization: token $GITHUB_TOKEN")
+        continue
+      fi
       break
     elif [[ "$http_code" == "403" ]]; then
       if ((attempt < max_retries)); then
         msg_warn "GitHub API rate limit hit, retrying in ${retry_delay}s... (attempt $attempt/$max_retries)"
         sleep "$retry_delay"
         retry_delay=$((retry_delay * 2))
+      else
+        msg_error "GitHub API rate limit exceeded (HTTP 403)."
+        if prompt_for_github_token; then
+          header=(-H "Authorization: token $GITHUB_TOKEN")
+          retry_delay=2
+          attempt=0
+        fi
       fi
     else
       sleep "$retry_delay"
@@ -3136,21 +3370,10 @@ function fetch_and_deploy_gh_release() {
   done
 
   if ! $success; then
-    if [[ "$http_code" == "401" ]]; then
-      msg_error "GitHub API authentication failed (HTTP 401)."
-      if [[ -n "${GITHUB_TOKEN:-}" ]]; then
-        msg_error "Your GITHUB_TOKEN appears to be invalid or expired."
-      else
-        msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
-      fi
-    elif [[ "$http_code" == "403" ]]; then
-      msg_error "GitHub API rate limit exceeded (HTTP 403)."
-      msg_error "To increase the limit, export a GitHub token before running the script:"
-      msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-    elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
+    if [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitHub API connection failed (no response)."
       msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
-    else
+    elif [[ "$http_code" != "401" ]]; then
       msg_error "Failed to fetch release metadata (HTTP $http_code)"
     fi
     return 1
@@ -3185,7 +3408,7 @@ function fetch_and_deploy_gh_release() {
     local direct_tarball_url="https://github.com/$repo/archive/refs/tags/$tag_name.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$direct_tarball_url" || {
+    curl_download "$tmpdir/$filename" "$direct_tarball_url" || {
       msg_error "Download failed: $direct_tarball_url"
       rm -rf "$tmpdir"
       return 1
@@ -3288,7 +3511,7 @@ function fetch_and_deploy_gh_release() {
     fi
 
     filename="${url_match##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+    curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
       rm -rf "$tmpdir"
       return 1
@@ -3355,7 +3578,7 @@ function fetch_and_deploy_gh_release() {
     }
 
     filename="${asset_url##*/}"
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+    curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -3476,7 +3699,7 @@ function fetch_and_deploy_gh_release() {
     local target_file="$app"
     [[ "$use_filename" == "true" ]] && target_file="$filename"
 
-    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
+    curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -4033,6 +4256,8 @@ function setup_gs() {
 #   - NVIDIA requires matching host driver version
 # ------------------------------------------------------------------------------
 function setup_hwaccel() {
+  local service_user="${1:-}"
+
   # Check if user explicitly disabled GPU in advanced settings
   # ENABLE_GPU is exported from build.func
   if [[ "${ENABLE_GPU:-no}" == "no" ]]; then
@@ -4284,7 +4509,7 @@ function setup_hwaccel() {
   # ═══════════════════════════════════════════════════════════════════════════
   # Device Permissions
   # ═══════════════════════════════════════════════════════════════════════════
-  _setup_gpu_permissions "$in_ct"
+  _setup_gpu_permissions "$in_ct" "$service_user"
 
   cache_installed_version "hwaccel" "1.0"
   msg_ok "Setup Hardware Acceleration"
@@ -4451,9 +4676,8 @@ _setup_amd_gpu() {
   fi
   # Ubuntu includes AMD firmware in linux-firmware by default
 
-  # ROCm for compute (optional - large download)
-  # Uncomment if needed:
-  # $STD apt -y install rocm-opencl-runtime 2>/dev/null || true
+  # ROCm compute stack (OpenCL + HIP)
+  _setup_rocm "$os_id" "$os_codename"
 
   msg_ok "AMD GPU configured"
 }
@@ -4482,6 +4706,109 @@ _setup_amd_apu() {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
+# AMD ROCm Compute Setup
+# Adds ROCm repository and installs the ROCm compute stack for AMD GPUs/APUs.
+# Provides: OpenCL, HIP, rocm-smi, rocminfo
+# Supported: Debian 12/13, Ubuntu 22.04/24.04 (amd64 only)
+# ══════════════════════════════════════════════════════════════════════════════
+_setup_rocm() {
+  local os_id="$1" os_codename="$2"
+
+  # Only amd64 is supported
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" != "amd64" ]]; then
+    msg_warn "ROCm is only available for amd64 — skipping"
+    return 0
+  fi
+
+  local ROCM_VERSION="7.2"
+  local ROCM_REPO_CODENAME
+
+  # Map OS codename to ROCm repository codename (Ubuntu-based repos)
+  case "${os_id}-${os_codename}" in
+  debian-bookworm) ROCM_REPO_CODENAME="jammy" ;;
+  debian-trixie | debian-sid) ROCM_REPO_CODENAME="noble" ;;
+  ubuntu-jammy) ROCM_REPO_CODENAME="jammy" ;;
+  ubuntu-noble) ROCM_REPO_CODENAME="noble" ;;
+  *)
+    msg_warn "ROCm not supported on ${os_id} ${os_codename} — skipping"
+    return 0
+    ;;
+  esac
+
+  msg_info "Installing ROCm ${ROCM_VERSION} compute stack"
+
+  # ROCm main repository (userspace compute libs)
+  setup_deb822_repo \
+    "rocm" \
+    "https://repo.radeon.com/rocm/rocm.gpg.key" \
+    "https://repo.radeon.com/rocm/apt/${ROCM_VERSION}" \
+    "${ROCM_REPO_CODENAME}" \
+    "main" \
+    "amd64" || {
+    msg_warn "Failed to add ROCm repository — skipping ROCm"
+    return 0
+  }
+
+  # Note: The amdgpu/latest/ubuntu repo (kernel driver packages) is intentionally
+  # omitted — kernel drivers are managed by the Proxmox host, not the LXC container.
+  # Only the ROCm userspace compute stack is needed inside the container.
+
+  # Pin ROCm packages to prefer radeon repo
+  cat <<EOF >/etc/apt/preferences.d/rocm-pin-600
+Package: *
+Pin: release o=repo.radeon.com
+Pin-Priority: 600
+EOF
+
+  # apt update with retry — repo.radeon.com CDN can be mid-sync (transient size mismatches).
+  # Run with ERR trap disabled so a transient failure does not abort the entire install.
+  local _apt_ok=0
+  for _attempt in 1 2 3; do
+    if (
+      set +e
+      apt-get update -qq 2>&1
+      exit $?
+    ) 2>/dev/null; then
+      _apt_ok=1
+      break
+    fi
+    msg_warn "apt update failed (attempt ${_attempt}/3) — AMD repo may be temporarily unavailable, retrying in 30s…"
+    sleep 30
+  done
+  if [[ $_apt_ok -eq 0 ]]; then
+    msg_warn "apt update still failing after 3 attempts — skipping ROCm install"
+    return 0
+  fi
+
+  # Install only runtime packages — full 'rocm' meta-package includes 15GB+ dev tools
+  $STD apt install -y rocm-opencl-runtime rocm-hip-runtime rocm-smi-lib 2>/dev/null || {
+    msg_warn "ROCm runtime install failed — trying minimal set"
+    $STD apt install -y rocm-opencl-runtime rocm-smi-lib 2>/dev/null || msg_warn "ROCm minimal install also failed"
+  }
+
+  # Group membership for GPU access
+  usermod -aG render,video root 2>/dev/null || true
+
+  # Environment (PATH + LD_LIBRARY_PATH)
+  if [[ -d /opt/rocm ]]; then
+    cat <<'ENVEOF' >/etc/profile.d/rocm.sh
+export PATH="$PATH:/opt/rocm/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/rocm/lib"
+ENVEOF
+    chmod +x /etc/profile.d/rocm.sh
+    # Also make available for current session / systemd services
+    echo "/opt/rocm/lib" >/etc/ld.so.conf.d/rocm.conf
+    ldconfig 2>/dev/null || true
+  fi
+
+  if [[ -x /opt/rocm/bin/rocminfo ]]; then
+    msg_ok "ROCm ${ROCM_VERSION} installed"
+  else
+    msg_warn "ROCm installed but rocminfo not found — GPU may not be available in container"
+  fi
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
 # NVIDIA GPU Setup
 # ══════════════════════════════════════════════════════════════════════════════
 _setup_nvidia_gpu() {
@@ -4497,10 +4824,10 @@ _setup_nvidia_gpu() {
   # Format varies by driver type:
   #   Proprietary: "NVRM version: NVIDIA UNIX x86_64 Kernel Module  550.54.14  Thu..."
   #   Open:        "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  590.48.01  Release..."
-  # Use regex to extract version number (###.##.## pattern)
+  # Use regex to extract version number (###.##.## or ###.## pattern)
   local nvidia_host_version=""
   if [[ -f /proc/driver/nvidia/version ]]; then
-    nvidia_host_version=$(grep -oP '\d{3,}\.\d+\.\d+' /proc/driver/nvidia/version 2>/dev/null | head -1)
+    nvidia_host_version=$(grep -oP '\d{3,}\.\d+(\.\d+)?' /proc/driver/nvidia/version 2>/dev/null | head -1)
   fi
 
   if [[ -z "$nvidia_host_version" ]]; then
@@ -4816,6 +5143,7 @@ EOF
 # ══════════════════════════════════════════════════════════════════════════════
 _setup_gpu_permissions() {
   local in_ct="$1"
+  local service_user="${2:-}"
 
   # /dev/dri permissions (Intel/AMD)
   if [[ "$in_ct" == "0" && -d /dev/dri ]]; then
@@ -4881,6 +5209,12 @@ _setup_gpu_permissions() {
   if [[ -e /dev/kfd ]]; then
     chmod 666 /dev/kfd 2>/dev/null || true
     msg_info "AMD ROCm compute device configured"
+  fi
+
+  # Add service user to render and video groups for GPU hardware acceleration
+  if [[ -n "$service_user" ]]; then
+    usermod -aG render "$service_user" 2>/dev/null || true
+    usermod -aG video "$service_user" 2>/dev/null || true
   fi
 }
 
@@ -6364,22 +6698,38 @@ EOF
 #   - Optionally uses official PGDG repository for specific versions
 #   - Detects existing PostgreSQL version
 #   - Dumps all databases before upgrade
-#   - Installs optional PG_MODULES (e.g. postgis, contrib)
+#   - Installs optional PG_MODULES (e.g. postgis, contrib, cron)
 #   - Restores dumped data post-upgrade
 #
 # Variables:
 #   USE_PGDG_REPO  - Use official PGDG repository (default: true)
 #                    Set to "false" to use distro packages instead
 #   PG_VERSION    - Major PostgreSQL version (e.g. 15, 16) (default: 16)
-#   PG_MODULES    - Comma-separated list of modules (e.g. "postgis,contrib")
+#   PG_MODULES    - Comma-separated list of modules (e.g. "postgis,contrib,cron")
 #
 # Examples:
-#   setup_postgresql                              # Uses PGDG repo, PG 16
-#   PG_VERSION="17" setup_postgresql               # Specific version from PGDG
-#   USE_PGDG_REPO=false setup_postgresql           # Uses distro package instead
+#   setup_postgresql                                          # Uses PGDG repo, PG 16
+#   PG_VERSION="17" setup_postgresql                          # Specific version from PGDG
+#   USE_PGDG_REPO=false setup_postgresql                      # Uses distro package instead
+#   PG_VERSION="17" PG_MODULES="cron" setup_postgresql        # With pg_cron module
 # ------------------------------------------------------------------------------
 
-function setup_postgresql() {
+# Internal helper: Configure shared_preload_libraries for pg_cron
+_configure_pg_cron_preload() {
+  local modules="${1:-}"
+  [[ -z "$modules" ]] && return 0
+  if [[ ",$modules," == *",cron,"* ]]; then
+    local current_libs
+    current_libs=$(sudo -u postgres psql -tAc "SHOW shared_preload_libraries;" 2>/dev/null || echo "")
+    if [[ "$current_libs" != *"pg_cron"* ]]; then
+      local new_libs="${current_libs:+${current_libs},}pg_cron"
+      $STD sudo -u postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = '${new_libs}';"
+      $STD systemctl restart postgresql
+    fi
+  fi
+}
+
+setup_postgresql() {
   local PG_VERSION="${PG_VERSION:-16}"
   local PG_MODULES="${PG_MODULES:-}"
   local USE_PGDG_REPO="${USE_PGDG_REPO:-true}"
@@ -6417,6 +6767,7 @@ function setup_postgresql() {
           $STD apt install -y "postgresql-${CURRENT_PG_VERSION}-${module}" 2>/dev/null || true
         done
       fi
+      _configure_pg_cron_preload "$PG_MODULES"
       return 0
     fi
 
@@ -6452,6 +6803,7 @@ function setup_postgresql() {
         $STD apt install -y "postgresql-${INSTALLED_VERSION}-${module}" 2>/dev/null || true
       done
     fi
+    _configure_pg_cron_preload "$PG_MODULES"
     return 0
   fi
 
@@ -6473,6 +6825,7 @@ function setup_postgresql() {
         $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || true
       done
     fi
+    _configure_pg_cron_preload "$PG_MODULES"
     return 0
   fi
 
@@ -6500,13 +6853,16 @@ function setup_postgresql() {
   local SUITE
   case "$DISTRO_CODENAME" in
   trixie | forky | sid)
+
     if verify_repo_available "https://apt.postgresql.org/pub/repos/apt" "trixie-pgdg"; then
       SUITE="trixie-pgdg"
+
     else
       msg_warn "PGDG repo not available for ${DISTRO_CODENAME}, falling back to distro packages"
       USE_PGDG_REPO=false setup_postgresql
       return $?
     fi
+
     ;;
   *)
     SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")
@@ -6590,6 +6946,7 @@ function setup_postgresql() {
       }
     done
   fi
+  _configure_pg_cron_preload "$PG_MODULES"
 }
 
 # ------------------------------------------------------------------------------
@@ -6608,6 +6965,7 @@ function setup_postgresql() {
 #   PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_EXTENSIONS="pgvector" setup_postgresql_db
 #   PG_DB_NAME="ghostfolio" PG_DB_USER="ghostfolio" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 #   PG_DB_NAME="adventurelog" PG_DB_USER="adventurelog" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
+#   PG_DB_NAME="splitpro" PG_DB_USER="splitpro" PG_DB_EXTENSIONS="pg_cron" setup_postgresql_db
 #
 # Variables:
 #   PG_DB_NAME             - Database name (required)
@@ -6639,6 +6997,13 @@ function setup_postgresql_db() {
   $STD sudo -u postgres psql -c "CREATE ROLE $PG_DB_USER WITH LOGIN PASSWORD '$PG_DB_PASS';"
   $STD sudo -u postgres psql -c "CREATE DATABASE $PG_DB_NAME WITH OWNER $PG_DB_USER ENCODING 'UTF8' TEMPLATE template0;"
 
+  # Configure pg_cron database BEFORE creating the extension (must be set before pg_cron loads)
+  if [[ -n "${PG_DB_EXTENSIONS:-}" ]] && [[ ",${PG_DB_EXTENSIONS//[[:space:]]/}," == *",pg_cron,"* ]]; then
+    $STD sudo -u postgres psql -c "ALTER SYSTEM SET cron.database_name = '${PG_DB_NAME}';"
+    $STD sudo -u postgres psql -c "ALTER SYSTEM SET cron.timezone = 'UTC';"
+    $STD systemctl restart postgresql
+  fi
+
   # Install extensions (comma-separated)
   if [[ -n "${PG_DB_EXTENSIONS:-}" ]]; then
     IFS=',' read -ra EXT_LIST <<<"${PG_DB_EXTENSIONS:-}"
@@ -6646,6 +7011,12 @@ function setup_postgresql_db() {
       ext=$(echo "$ext" | xargs) # Trim whitespace
       $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS $ext;"
     done
+  fi
+
+  # Grant pg_cron schema permissions to DB user
+  if [[ -n "${PG_DB_EXTENSIONS:-}" ]] && [[ ",${PG_DB_EXTENSIONS//[[:space:]]/}," == *",pg_cron,"* ]]; then
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "GRANT USAGE ON SCHEMA cron TO ${PG_DB_USER};"
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "GRANT ALL ON ALL TABLES IN SCHEMA cron TO ${PG_DB_USER};"
   fi
 
   # ALTER ROLE settings for Django/Rails compatibility (unless skipped)
@@ -6689,7 +7060,6 @@ function setup_postgresql_db() {
   export PG_DB_USER
   export PG_DB_PASS
 }
-
 # ------------------------------------------------------------------------------
 # Installs rbenv and ruby-build, installs Ruby and optionally Rails.
 #
@@ -8129,5 +8499,25 @@ function fetch_and_deploy_from_url() {
 
   rm -rf "$tmpdir" "$unpack_tmp"
   msg_ok "Successfully deployed archive to $directory"
+  return 0
+}
+
+setup_nonfree() {
+  local sources_file="/etc/apt/sources.list.d/debian-nonfree.sources"
+
+  if [ ! -f "$sources_file" ]; then
+    cat <<EOF >$sources_file
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie trixie-updates
+Components: main contrib non-free non-free-firmware
+
+Types: deb
+URIs: http://security.debian.org/debian-security
+Suites: trixie-security
+Components: main contrib non-free non-free-firmware
+EOF
+  fi
+  $STD apt update
   return 0
 }

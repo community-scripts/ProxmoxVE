@@ -29,27 +29,9 @@ function update_script() {
     exit
   fi
 
-  GARMIN_INSTALLED=0
-  if [[ -d /opt/sparkyfitness/SparkyFitnessGarmin/.venv ]]; then
-    GARMIN_INSTALLED=1
-  fi
-
-  if [[ "${GARMIN_INSTALLED}" == "0" ]]; then
-    CHOICE=$(msg_menu "SparkyFitness Update Options" \
-      "1" "Update SparkyFitness" \
-      "2" "Install SparkyFitness Garmin Microservice")
-  fi
-
-  case "${CHOICE:=1}" in
-  1)
-    if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
-
+  if check_for_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness"; then
     msg_info "Stopping Services"
-    if [[ "${GARMIN_INSTALLED}" == "1" ]]; then
-      systemctl stop sparkyfitness-server sparkyfitness-garmin nginx
-    else
-      systemctl stop sparkyfitness-server nginx
-    fi
+    systemctl stop sparkyfitness-server nginx
     msg_ok "Stopped Services"
 
     msg_info "Backing up data"
@@ -67,26 +49,39 @@ function update_script() {
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/package.json)"
     NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
-    msg_info "Updating SparkyFitness Backend"
+    msg_info "Updating Sparky Fitness Backend"
     cd /opt/sparkyfitness/SparkyFitnessServer
-    $STD npm install
-    msg_ok "Updated SparkyFitness Backend"
-
-    msg_info "Updating SparkyFitness Frontend (Patience)"
-    cd /opt/sparkyfitness/SparkyFitnessFrontend
     $STD pnpm install
+    msg_ok "Updated Sparky Fitness Backend"
+
+    msg_info "Updating Sparky Fitness Frontend (Patience)"
+    cd /opt/sparkyfitness
+    $STD pnpm install
+    cd /opt/sparkyfitness/SparkyFitnessFrontend
     $STD pnpm run build
     cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
-    msg_ok "Updated SparkyFitness Frontend"
+    msg_ok "Updated Sparky Fitness Frontend"
 
-    if [[ "${GARMIN_INSTALLED}" == "1" ]]; then
-      PYTHON_VERSION="3.13" setup_uv
-      msg_info "Updating SparkyFitness Garmin Service"
-      cd /opt/sparkyfitness/SparkyFitnessGarmin
-      $STD uv venv --clear "/opt/sparkyfitness/SparkyFitnessGarmin/.venv"
-      $STD uv pip install -r requirements.txt --python /opt/sparkyfitness/SparkyFitnessGarmin/.venv/bin/python3
-      msg_ok "Updated SparkyFitness Garmin Service"
-    fi
+    msg_info "Refreshing SparkyFitness Service"
+    cat <<EOF >/etc/systemd/system/sparkyfitness-server.service
+  [Unit]
+  Description=SparkyFitness Backend Service
+  After=network.target postgresql.service
+  Requires=postgresql.service
+
+  [Service]
+  Type=simple
+  WorkingDirectory=/opt/sparkyfitness/SparkyFitnessServer
+  EnvironmentFile=/etc/sparkyfitness/.env
+  ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx SparkyFitnessServer.js
+  Restart=always
+  RestartSec=5
+
+  [Install]
+  WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    msg_ok "Refreshed SparkyFitness Service"
 
     msg_info "Restoring data"
     cp -r /opt/sparkyfitness_backup/. /opt/sparkyfitness/SparkyFitnessServer/
@@ -94,46 +89,11 @@ function update_script() {
     msg_ok "Restored data"
 
     msg_info "Starting Services"
-    if [[ "${GARMIN_INSTALLED}" == "1" ]]; then
-      $STD systemctl start sparkyfitness-server sparkyfitness-garmin nginx
-    else
-      $STD systemctl start sparkyfitness-server nginx
-    fi
+    $STD systemctl start sparkyfitness-server nginx
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
-    exit
-    ;;
-  2)
-    PYTHON_VERSION="3.13" setup_uv
-    msg_info "Setting up SparkyFitness Garmin microservice"
-    cd /opt/sparkyfitness/SparkyFitnessGarmin
-    $STD uv venv --clear /opt/sparkyfitness/SparkyFitnessGarmin/.venv
-    $STD uv pip install -r /opt/sparkyfitness/SparkyFitnessGarmin/requirements.txt
-    sed -i -e "s|^#\?GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" "/etc/sparkyfitness/.env"
-    cat <<EOF >/etc/systemd/system/sparkyfitness-garmin.service
-[Unit]
-Description=SparkyFitness Garmin Microservice
-After=network.target sparkyfitness-server.service
-Requires=sparkyfitness-server.service
-
-[Service]
-Type=simple
-WorkingDirectory=/opt/sparkyfitness/SparkyFitnessGarmin
-EnvironmentFile=/etc/sparkyfitness/.env
-ExecStart=/opt/sparkyfitness/SparkyFitnessGarmin/.venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    systemctl enable -q --now sparkyfitness-garmin
-    systemctl restart sparkyfitness-server
-    msg_ok "Setup SparkyFitness Garmin microservice"
-    exit
-    ;;
-  esac
+  exit
 }
 
 start

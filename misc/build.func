@@ -1185,6 +1185,18 @@ load_vars_file() {
             continue
           fi
           ;;
+        var_container_storage | var_template_storage)
+          # Validate that the storage exists and is active on the current node
+          local _storage_status
+          _storage_status=$(pvesm status 2>/dev/null | awk -v s="$var_val" '$1 == s { print $3 }')
+          if [[ -z "$_storage_status" ]]; then
+            msg_warn "Storage '$var_val' from $file not found on this node, ignoring"
+            continue
+          elif [[ "$_storage_status" == "disabled" ]]; then
+            msg_warn "Storage '$var_val' from $file is disabled on this node, ignoring"
+            continue
+          fi
+          ;;
         esac
       fi
 
@@ -1853,7 +1865,7 @@ advanced_settings() {
 
     # ═══════════════════════════════════════════════════════════════════════════
     # STEP 2: Root Password
-    # ════════════════════════════════════════════════════════════════════════���══
+    # ════════════════════════════════════════���═══════════════════════════════���══
     2)
       if PW1=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "ROOT PASSWORD" \
@@ -3051,6 +3063,15 @@ install_script() {
       header_info
       CHOICE=""
       ;;
+    generated | GENERATED)
+      header_info
+      echo -e "${DEFAULT}${BOLD}${BL}Using Generated Settings on node $PVEHOST_NAME${CL}"
+      VERBOSE="no"
+      METHOD="generated"
+      base_settings "$VERBOSE"
+      echo_default
+      break
+      ;;
     *)
       msg_error "Invalid option: $CHOICE"
       exit 112
@@ -3921,6 +3942,17 @@ EOF
   configure_usb_passthrough
   configure_gpu_passthrough
   configure_additional_devices
+
+  # Increase disk size for AMD ROCm runtime (~4GB extra needed)
+  if [[ "${GPU_TYPE:-}" == "AMD" ]]; then
+    local rocm_extra=4
+    local new_disk_size=$((PCT_DISK_SIZE + rocm_extra))
+    if pct resize "$CTID" rootfs "${new_disk_size}G" >/dev/null 2>&1; then
+      msg_ok "Disk resized ${PCT_DISK_SIZE}GB → ${new_disk_size}GB for ROCm"
+    else
+      msg_warn "Failed to resize disk for ROCm — installation may fail if space is insufficient"
+    fi
+  fi
 
   # ============================================================================
   # START CONTAINER AND INSTALL USERLAND

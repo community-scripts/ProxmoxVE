@@ -22,7 +22,7 @@ echo -e "\n Loading..."
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
-NSAPP="turnkey-owncloud-vm"
+NSAPP="owncloud-vm"
 var_os="owncloud"
 var_version="18.0"
 APP="TurnKey ownCloud VM"

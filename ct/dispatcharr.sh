@@ -110,7 +110,9 @@ function update_script() {
 
     msg_info "Building Frontend"
     cd /opt/dispatcharr/frontend
-    $STD npm install --legacy-peer-deps
+    node -e "const p=require('./package.json');p.overrides=p.overrides||{};p.overrides['webworkify-webpack']='2.1.3';require('fs').writeFileSync('package.json',JSON.stringify(p,null,2));"
+    rm -f package-lock.json
+    $STD npm install --no-audit --progress=false
     $STD npm run build
     msg_ok "Built Frontend"
 

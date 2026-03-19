@@ -1,21 +1,20 @@
-# JSON Metadata Files - Quick Reference
+# Website Metadata - Quick Reference
 
-The metadata file (`frontend/public/json/myapp.json`) tells the web interface how to display your application.
-
----
-
-## Quick Start
-
-**Use the JSON Generator Tool:**
-[https://community-scripts.github.io/ProxmoxVE/json-editor](https://community-scripts.github.io/ProxmoxVE/json-editor)
-
-1. Enter application details
-2. Generator creates `frontend/public/json/myapp.json`
-3. Copy the output to your contribution
+Metadata (name, slug, description, logo, categories, etc.) controls how your application appears on the website. You do **not** add JSON files to the repo — you request changes via the website.
 
 ---
 
-## File Structure
+## How to Request or Update Metadata
+
+1. **Go to the script on the website** — Open the [ProxmoxVE website](https://community-scripts.github.io/ProxmoxVE/), find your script (or the script you want to update).
+2. **Press the "Report issue" button** on that script’s page.
+3. **Follow the guide** — The flow will walk you through submitting or updating metadata.
+
+---
+
+## Metadata Structure (Reference)
+
+The following describes the structure of script metadata used by the website. Use it as reference when filling out the form or describing what you need.
 
 ```json
 {
@@ -148,18 +147,14 @@ Each installation method specifies resource requirements:
 
 ---
 
-## Reference Examples
+## See Examples on the Website
 
-See actual examples in the repo:
-
-- [frontend/public/json/trip.json](https://github.com/community-scripts/ProxmoxVE/blob/main/frontend/public/json/trip.json)
-- [frontend/public/json/thingsboard.json](https://github.com/community-scripts/ProxmoxVE/blob/main/frontend/public/json/thingsboard.json)
-- [frontend/public/json/unifi.json](https://github.com/community-scripts/ProxmoxVE/blob/main/frontend/public/json/unifi.json)
+View script pages on the [ProxmoxVE website](https://community-scripts.github.io/ProxmoxVE/) to see how metadata is displayed for existing scripts.
 
 ---
 
 ## Need Help?
 
-- **[JSON Generator](https://community-scripts.github.io/ProxmoxVE/json-editor)** - Interactive tool
+- **Request metadata** — Use the Report issue button on the script’s page on the website (see [How to Request or Update Metadata](#how-to-request-or-update-metadata) above).
+- **[JSON Generator](https://community-scripts.github.io/ProxmoxVE/json-editor)** - Reference only; structure validation
 - **[README.md](../README.md)** - Full contribution workflow
-- **[Quick Start](../README.md)** - Step-by-step guide

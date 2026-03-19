@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  ensure_dependencies graphicsmagick
+  ensure_dependencies build-essential python3-setuptools graphicsmagick
   NODE_VERSION="24" setup_nodejs
 
   msg_info "Updating n8n"

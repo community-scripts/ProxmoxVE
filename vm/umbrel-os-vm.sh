@@ -504,6 +504,7 @@ pve_check
 ssh_check
 ensure_pv
 start_script
+post_to_api_vm
 
 msg_info "Validating Storage"
 STORAGE_MENU=()

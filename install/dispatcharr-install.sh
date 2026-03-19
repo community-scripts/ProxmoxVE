@@ -66,7 +66,9 @@ CELERY_BROKER_URL=redis://localhost:6379/0
 DJANGO_SECRET_KEY=$DJANGO_SECRET
 EOF
 cd /opt/dispatcharr/frontend
-$STD npm install --legacy-peer-deps
+node -e "const p=require('./package.json');p.overrides=p.overrides||{};p.overrides['webworkify-webpack']='2.1.3';require('fs').writeFileSync('package.json',JSON.stringify(p,null,2));"
+rm -f package-lock.json
+$STD npm install --no-audit --progress=false
 $STD npm run build
 msg_ok "Configured Dispatcharr"
 

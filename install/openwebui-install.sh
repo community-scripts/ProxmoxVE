@@ -16,7 +16,9 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   ffmpeg \
-  zstd
+  zstd \
+  build-essential \
+  libmariadb-dev
 msg_ok "Installed Dependencies"
 
 setup_hwaccel

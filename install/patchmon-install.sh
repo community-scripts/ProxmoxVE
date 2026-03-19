@@ -24,7 +24,7 @@ NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="patchmon_db" PG_DB_USER="patchmon_usr" setup_postgresql_db
 
-fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
+fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "v1.4.2" "/opt/patchmon"
 
 msg_info "Configuring PatchMon"
 VERSION=$(get_latest_github_release "PatchMon/PatchMon")

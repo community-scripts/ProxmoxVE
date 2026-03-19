@@ -426,16 +426,23 @@ for container in $CHOICE; do
   elif [ $exit_code -eq 75 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (requires interactive mode)"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
-    msg_info "Restoring LXC from backup"
+    msg_error "Update failed for container $container (exit code: $exit_code) — attempting restore"
+    msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
     pct stop $container
     LXC_STORAGE=$(pct config $container | awk -F '[:,]' '/rootfs/ {print $2}')
-    pct restore $container /var/lib/vz/dump/vzdump-lxc-${container}-*.tar.zst --storage $LXC_STORAGE --force >/dev/null 2>&1
-    pct start $container
+    BACKUP_ENTRY=$(pvesm list "$STORAGE_CHOICE" 2>/dev/null | awk -v ctid="$container" '$1 ~ "vzdump-lxc-"ctid"-" || $1 ~ "/ct/"ctid"/" {print $1}' | sort -r | head -n1)
+    if [ -z "$BACKUP_ENTRY" ]; then
+      msg_error "No backup found in storage $STORAGE_CHOICE for container $container"
+      exit 235
+    fi
+    msg_info "Restoring from: $BACKUP_ENTRY"
+    pct restore $container "$BACKUP_ENTRY" --storage $LXC_STORAGE --force >/dev/null 2>&1
     restorestatus=$?
     if [ $restorestatus -eq 0 ]; then
-      msg_ok "Restored LXC from backup"
+      pct start $container
+      msg_ok "Container $container successfully restored from backup"
     else
-      msg_error "Restored LXC from backup failed"
+      msg_error "Restore failed for container $container"
       exit 235
     fi
   else

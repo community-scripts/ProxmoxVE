@@ -50,15 +50,14 @@ git push origin feature/my-awesome-app
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/ProxmoxVE/main/ct/myapp.sh)"
 # ⏱️ GitHub may take 10-30 seconds to update files - be patient!
 
-# 8. Create your JSON metadata file
-cp docs/contribution/templates_json/AppName.json frontend/public/json/myapp.json
-# Edit metadata: name, slug, categories, description, resources, etc.
+# 8. Request website metadata via the website
+# Go to the script's page on the website, use the "Report issue" button — it will guide you.
 
 # 9. No direct install-script test
 # Install scripts are executed by the CT script inside the container
 
 # 10. Commit ONLY your new files (see Cherry-Pick section below!)
-git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
+git add ct/myapp.sh install/myapp-install.sh
 git commit -m "feat: add MyApp container and install scripts"
 git push origin feature/my-awesome-app
 
@@ -67,7 +66,7 @@ git push origin feature/my-awesome-app
 
 ⚠️ **IMPORTANT: After setup-fork.sh, many files are modified!**
 
-See the **Cherry-Pick: Submitting Only Your Changes** section below to learn how to push ONLY your 3-4 files instead of 600+ modified files!
+See the **Cherry-Pick: Submitting Only Your Changes** section below to learn how to push ONLY your 2 files instead of 600+ modified files!
 
 ### How Users Run Scripts (After Merged)
 
@@ -180,7 +179,7 @@ All scripts and configurations must follow our coding standards to ensure consis
 - **[HELPER_FUNCTIONS.md](HELPER_FUNCTIONS.md)** - Reference for all tools.func helper functions
 - **Container Scripts** - `/ct/` templates and guidelines
 - **Install Scripts** - `/install/` templates and guidelines
-- **JSON Configurations** - `frontend/public/json/` structure and format
+- **Website metadata** – Request via the website (Report issue on the script page); see [templates_json/AppName.md](templates_json/AppName.md)
 
 ### Quick Checklist
 
@@ -213,7 +212,7 @@ Key points:
 
 ## 🍒 Cherry-Pick: Submitting Only Your Changes
 
-**Problem**: `setup-fork.sh` modifies 600+ files to update links. You don't want to submit all of those changes - only your new 3-4 files!
+**Problem**: `setup-fork.sh` modifies 600+ files to update links. You don't want to submit all of those changes - only your new 2 files!
 
 **Solution**: Use git cherry-pick to select only YOUR files.
 
@@ -226,7 +225,7 @@ Key points:
 git status
 
 # Verify your files are there
-git status | grep -E "ct/myapp|install/myapp|json/myapp"
+git status | grep -E "ct/myapp|install/myapp"
 ```
 
 #### 2. Create a clean feature branch for submission
@@ -252,15 +251,13 @@ git cherry-pick <commit-hash-of-your-files>
 # From your work branch, get the file contents
 git show feature/my-awesome-app:ct/myapp.sh > /tmp/myapp.sh
 git show feature/my-awesome-app:install/myapp-install.sh > /tmp/myapp-install.sh
-git show feature/my-awesome-app:frontend/public/json/myapp.json > /tmp/myapp.json
 
 # Add them to the clean branch
 cp /tmp/myapp.sh ct/myapp.sh
 cp /tmp/myapp-install.sh install/myapp-install.sh
-cp /tmp/myapp.json frontend/public/json/myapp.json
 
 # Commit
-git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
+git add ct/myapp.sh install/myapp-install.sh
 git commit -m "feat: add MyApp"
 ```
 
@@ -272,7 +269,6 @@ git diff upstream/main --name-only
 # Should show ONLY:
 #   ct/myapp.sh
 #   install/myapp-install.sh
-#   frontend/public/json/myapp.json
 ```
 
 #### 5. Push and create PR
@@ -345,7 +341,8 @@ If you're using **Visual Studio Code** with an AI assistant, you can leverage ou
    Please follow the guidelines in docs/contribution/AI.md to create:
    1. ct/myapp.sh (container script)
    2. install/myapp-install.sh (installation script)
-   3. frontend/public/json/myapp.json (metadata)
+
+   Website listing/metadata is requested separately via the website (Report issue on the script page).
    ```
 
 4. **AI Will Generate**
@@ -356,6 +353,8 @@ If you're using **Visual Studio Code** with an AI assistant, you can leverage ou
    - Include proper error handling and messages
    - Have correct update mechanisms
    - Are ready to submit as a PR
+
+   Website listing/metadata is requested separately via the website (Report issue on the script page).
 
 ### Key Points for AI Assistants
 
@@ -409,10 +408,9 @@ cp docs/contribution/templates_ct/AppName.sh ct/my-app.sh
 
 # Installation script template
 cp docs/contribution/templates_install/AppName-install.sh install/my-app-install.sh
-
-# JSON configuration template
-cp docs/contribution/templates_json/AppName.json frontend/public/json/my-app.json
 ```
+
+For website metadata (description, logo, etc.), use the Report issue button on the script's page on the website.
 
 **Template Features:**
 

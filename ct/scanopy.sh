@@ -53,6 +53,13 @@ function update_script() {
     fi
     sed -i 's|_TARGET=.*$|_URL=http://127.0.0.1:60072|' /opt/scanopy/.env
 
+    msg_info "Building Scanopy Server (patience)"
+    cd /opt/scanopy/backend
+    $STD cargo build --release --bin server --bin generate-fixtures
+    $STD ./target/release/generate-fixtures --output-dir /opt/scanopy/ui/src/lib/data
+    mv ./target/release/server /usr/bin/scanopy-server
+    msg_ok "Built Scanopy Server"
+
     msg_info "Creating frontend UI"
     export PUBLIC_SERVER_HOSTNAME=default
     export PUBLIC_SERVER_PORT=""
@@ -60,12 +67,6 @@ function update_script() {
     $STD npm ci --no-fund --no-audit
     $STD npm run build
     msg_ok "Created frontend UI"
-
-    msg_info "Building Scanopy Server (patience)"
-    cd /opt/scanopy/backend
-    $STD cargo build --release --bin server
-    mv ./target/release/server /usr/bin/scanopy-server
-    msg_ok "Built Scanopy Server"
 
     if [[ -f /etc/systemd/system/scanopy-daemon.service ]]; then
       fetch_and_deploy_gh_release "Scanopy Daemon" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-amd64"

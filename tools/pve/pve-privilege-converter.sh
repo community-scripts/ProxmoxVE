@@ -134,16 +134,20 @@ manage_states() {
   read -rp "Shutdown source and start new container? [Y/n]: " answer
   answer=${answer:-Y}
   if [[ $answer =~ ^[Yy] ]]; then
-    pct shutdown "$CONTAINER_ID"
-    for i in {1..36}; do
-      sleep 5
-      ! pct status "$CONTAINER_ID" | grep -q running && break
-    done
     if pct status "$CONTAINER_ID" | grep -q running; then
-      read -rp "Timeout reached. Force shutdown? [Y/n]: " force
-      if [[ ${force:-Y} =~ ^[Yy] ]]; then
-        pkill -9 -f "lxc-start -F -n $CONTAINER_ID"
+      pct shutdown "$CONTAINER_ID"
+      for i in {1..36}; do
+        sleep 5
+        ! pct status "$CONTAINER_ID" | grep -q running && break
+      done
+      if pct status "$CONTAINER_ID" | grep -q running; then
+        read -rp "Timeout reached. Force shutdown? [Y/n]: " force
+        if [[ ${force:-Y} =~ ^[Yy] ]]; then
+          pkill -9 -f "lxc-start -F -n $CONTAINER_ID"
+        fi
       fi
+    else
+      msg_custom "ℹ️" "\e[36m" "Source container $CONTAINER_ID is already stopped"
     fi
     pct start "$NEW_CONTAINER_ID"
     msg_ok "New container started"

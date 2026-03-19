@@ -39,14 +39,23 @@ function update_script() {
     msg_ok "Updated Intel Dependencies"
   fi
 
+  msg_info "Setting up Jellyfin Repository"
+  setup_deb822_repo \
+    "jellyfin" \
+    "https://repo.jellyfin.org/jellyfin_team.gpg.key" \
+    "https://repo.jellyfin.org/$(get_os_info id)" \
+    "$(get_os_info codename)"
+  msg_ok "Set up Jellyfin Repository"
+
   msg_info "Updating Jellyfin"
   ensure_dependencies libjemalloc2
   if [[ ! -f /usr/lib/libjemalloc.so ]]; then
     ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
   fi
-  $STD apt update
   $STD apt -y upgrade
-  $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server
+  $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server jellyfin-ffmpeg7
+  ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
+  ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
   msg_ok "Updated Jellyfin"
   msg_ok "Updated successfully!"
   exit

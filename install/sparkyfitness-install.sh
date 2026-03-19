@@ -47,12 +47,13 @@ msg_ok "Configured Sparky Fitness"
 
 msg_info "Building Backend"
 cd /opt/sparkyfitness/SparkyFitnessServer
-$STD npm install
+$STD pnpm install
 msg_ok "Built Backend"
 
 msg_info "Building Frontend (Patience)"
-cd /opt/sparkyfitness/SparkyFitnessFrontend
+cd /opt/sparkyfitness
 $STD pnpm install
+cd /opt/sparkyfitness/SparkyFitnessFrontend
 $STD pnpm run build
 cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
 msg_ok "Built Frontend"
@@ -68,7 +69,7 @@ Requires=postgresql.service
 Type=simple
 WorkingDirectory=/opt/sparkyfitness/SparkyFitnessServer
 EnvironmentFile=/etc/sparkyfitness/.env
-ExecStart=/usr/bin/node SparkyFitnessServer.js
+ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx SparkyFitnessServer.js
 Restart=always
 RestartSec=5
 
@@ -91,36 +92,6 @@ $STD nginx -t
 $STD systemctl enable -q --now nginx
 $STD systemctl reload nginx
 msg_ok "Configured Nginx"
-
-read -r -p "${TAB3}Would you like to install the SparkyFitness Garmin microservice? <y/N> " prompt
-if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  PYTHON_VERSION="3.13" setup_uv
-  msg_info "Setting up SparkyFitness Garmin microservice"
-  cd /opt/sparkyfitness/SparkyFitnessGarmin
-  $STD uv venv --clear /opt/sparkyfitness/SparkyFitnessGarmin/.venv
-  $STD uv pip install -r /opt/sparkyfitness/SparkyFitnessGarmin/requirements.txt
-  sed -i -e "s|^#\?GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" "/etc/sparkyfitness/.env"
-  cat <<EOF >/etc/systemd/system/sparkyfitness-garmin.service
-[Unit]
-Description=SparkyFitness Garmin Microservice
-After=network.target sparkyfitness-server.service
-Requires=sparkyfitness-server.service
-
-[Service]
-Type=simple
-WorkingDirectory=/opt/sparkyfitness/SparkyFitnessGarmin
-EnvironmentFile=/etc/sparkyfitness/.env
-ExecStart=/opt/sparkyfitness/SparkyFitnessGarmin/.venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-  systemctl enable -q --now sparkyfitness-garmin
-  systemctl restart sparkyfitness-server
-  msg_ok "Setup SparkyFitness Garmin microservice"
-fi
 
 motd_ssh
 customize

@@ -25,6 +25,8 @@ function update_script() {
   check_container_storage
   check_container_resources
 
+  ensure_dependencies zstd build-essential libmariadb-dev
+
   if [[ -d /opt/open-webui ]]; then
     msg_warn "Legacy installation detected — migrating to uv based install..."
     msg_info "Stopping Service"
@@ -92,7 +94,6 @@ EOF
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
-      ensure_dependencies zstd
       msg_info "Ollama update available: v$OLLAMA_VERSION -> v$RELEASE"
       msg_info "Downloading Ollama v$RELEASE \n"
       curl -fS#LO https://github.com/ollama/ollama/releases/download/v${RELEASE}/ollama-linux-amd64.tar.zst

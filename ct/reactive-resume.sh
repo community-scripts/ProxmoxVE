@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: vhsdream
+# Author: vhsdream | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://rxresume.org | Github: https://github.com/lazy-media/Reactive-Resume
+# Source: https://rxresume.org | Github: https://github.com/amruthpillai/reactive-resume
 
 APP="Reactive-Resume"
 var_tags="${var_tags:-documents}"
@@ -24,62 +24,29 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /etc/systemd/system/Reactive-Resume.service ]]; then
+  if [[ ! -f /etc/systemd/system/reactive-resume.service ]]; then
     msg_error "No $APP Installation Found!"
     exit
   fi
-  if check_for_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume"; then
+  if check_for_gh_release "reactive-resume" "amruthpillai/reactive-resume"; then
     msg_info "Stopping services"
-    systemctl stop Reactive-Resume
+    systemctl stop reactive-resume
     msg_ok "Stopped services"
 
-    cp /opt/Reactive-Resume/.env /opt/rxresume.env
-    fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume" "tarball" "latest" "/opt/Reactive-Resume"
+    cp /opt/reactive-resume/.env /opt/reactive-resume.env.bak
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball" "latest" "/opt/reactive-resume"
 
-    msg_info "Updating Reactive-Resume"
-    cd /opt/Reactive-Resume
-    export PUPPETEER_SKIP_DOWNLOAD="true"
-    export NEXT_TELEMETRY_DISABLED=1
+    msg_info "Updating Reactive Resume (Patience)"
+    cd /opt/reactive-resume
     export CI="true"
     export NODE_ENV="production"
     $STD pnpm install --frozen-lockfile
     $STD pnpm run build
-    $STD pnpm run prisma:generate
-    mv /opt/rxresume.env /opt/Reactive-Resume/.env
-    msg_ok "Updated Reactive-Resume"
-
-    msg_info "Updating Minio"
-    systemctl stop minio
-    cd /tmp
-    curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio.deb -o minio.deb
-    $STD dpkg -i minio.deb
-    rm -f /tmp/minio.deb
-    msg_ok "Updated Minio"
-
-    msg_info "Updating Browserless (Patience)"
-    systemctl stop browserless
-    cp /opt/browserless/.env /opt/browserless.env
-    rm -rf /opt/browserless
-    brwsr_tmp=$(mktemp)
-    TAG=$(curl -fsSL https://api.github.com/repos/browserless/browserless/tags?per_page=1 | grep "name" | awk '{print substr($2, 3, length($2)-4) }')
-    curl -fsSL https://github.com/browserless/browserless/archive/refs/tags/v"$TAG".zip -o "$brwsr_tmp"
-    $STD unzip "$brwsr_tmp"
-    mv browserless-"$TAG"/ /opt/browserless
-    cd /opt/browserless
-    $STD npm install typescript
-    $STD npm install esbuild
-    $STD npm install
-    rm -rf src/routes/{chrome,edge,firefox,webkit}
-    $STD node_modules/playwright-core/cli.js install --with-deps chromium
-    $STD npm run build
-    $STD npm run build:function
-    $STD npm prune production
-    mv /opt/browserless.env /opt/browserless/.env
-    rm -f "$brwsr_tmp"
-    msg_ok "Updated Browserless"
+    mv /opt/reactive-resume.env.bak /opt/reactive-resume/.env
+    msg_ok "Updated Reactive Resume"
 
     msg_info "Restarting services"
-    systemctl start minio Reactive-Resume browserless
+    systemctl start chromium-printer reactive-resume
     msg_ok "Restarted services"
     msg_ok "Updated successfully!"
   fi

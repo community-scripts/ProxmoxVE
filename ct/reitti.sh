@@ -89,17 +89,49 @@ EOF
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
+  
   if check_for_gh_release "photon" "komoot/photon"; then
+    if [[ -f "$HOME/.photon" ]] && [[ "$(cat "$HOME/.photon")" == 0.7 ]]; then
+      CURRENT_VERSION="$(<"$HOME/.photon")"
+      echo
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      echo "Photon v1 upgrade detected (breaking change)"
+      echo
+      echo "Your current version: $CURRENT_VERSION"
+      echo
+      echo "Photon v1 requires a manual migration before updating."
+      echo
+      echo "You need to:"
+      echo "  1. Remove existing geocoding data (not actual reitti data):"
+      echo "     rm -rf /opt/photon_data"
+      echo
+      echo "  2. Follow the inial setup guide again:"
+      echo "     https://github.com/community-scripts/ProxmoxVE/discussions/8737"
+      echo
+      echo "  3. Re-download and import Photon data for v1"
+      echo
+      read -rp "Do you want to continue anyway? (y/N): " CONTINUE
+      echo
+        
+      if [[ ! "$CONTINUE" =~ ^[Yy]$ ]]; then
+        msg_info "Migration required. Update cancelled."
+        exit 0
+      fi
+        
+      msg_warn "Continuing without migration may break Photon in the future!"
+    fi
+  
     msg_info "Stopping Service"
     systemctl stop photon
     msg_ok "Stopped Service"
 
     rm -f /opt/photon/photon.jar
-    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-0*.jar"
+    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-*.jar"
     mv /opt/photon/photon-*.jar /opt/photon/photon.jar
 
     msg_info "Starting Service"
     systemctl start photon
+    systemctl restart nginx
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi

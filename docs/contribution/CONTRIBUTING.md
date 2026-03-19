@@ -19,7 +19,7 @@ These documents cover the coding standards for the following types of files in o
 
 - **`install/$AppName-install.sh` Scripts**: These scripts are responsible for the installation of applications.
 - **`ct/$AppName.sh` Scripts**: These scripts handle the creation and updating of containers.
-- **`json/$AppName.json`**: These files store structured data and are used for the website.
+- **Website metadata**: Display data (name, description, logo, etc.) is requested via the website (Report issue on the script page), not via files in the repo.
 
 Each section provides detailed guidelines on various aspects of coding, including shebang usage, comments, variable naming, function naming, indentation, error handling, command substitution, quoting, script structure, and logging. Additionally, examples are provided to illustrate the application of these standards.
 
@@ -110,7 +110,7 @@ git push origin your-feature-branch
 
 ### 6. Cherry-Pick: Submit Only Your Files for PR
 
-⚠️ **IMPORTANT**: setup-fork.sh modified 600+ files. You MUST only submit your 3 new files!
+⚠️ **IMPORTANT**: setup-fork.sh modified 600+ files. You MUST only submit your 2 new files!
 
 See [README.md - Cherry-Pick Guide](README.md#-cherry-pick-submitting-only-your-changes) for step-by-step instructions.
 
@@ -124,12 +124,11 @@ git checkout -b submit/myapp upstream/main
 # Copy only your files
 cp ../your-work-branch/ct/myapp.sh ct/myapp.sh
 cp ../your-work-branch/install/myapp-install.sh install/myapp-install.sh
-cp ../your-work-branch/frontend/public/json/myapp.json frontend/public/json/myapp.json
 
 # Commit and verify
-git add ct/myapp.sh install/myapp-install.sh frontend/public/json/myapp.json
+git add ct/myapp.sh install/myapp-install.sh
 git commit -m "feat: add MyApp"
-git diff upstream/main --name-only  # Should show ONLY your 3 files
+git diff upstream/main --name-only  # Should show ONLY your 2 files
 
 # Push and create PR
 git push origin submit/myapp
@@ -139,11 +138,10 @@ git push origin submit/myapp
 
 Open a Pull Request from `submit/myapp` → `community-scripts/ProxmoxVE/main`.
 
-Verify the PR shows ONLY these 3 files:
+Verify the PR shows ONLY these 2 files:
 
 - `ct/myapp.sh`
 - `install/myapp-install.sh`
-- `frontend/public/json/myapp.json`
 
 ---
 
@@ -175,4 +173,4 @@ dev_mode="trace,keep" bash -c "$(curl -fsSL https://raw.githubusercontent.com/co
 
 - [CT Template: AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_ct/AppName.sh)
 - [Install Template: AppName-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_install/AppName-install.sh)
-- [JSON Template: AppName.json](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_json/AppName.json)
+- [JSON Template: AppName.json](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_json/AppName.json) — metadata structure reference; submit via the website (Report issue on script page)

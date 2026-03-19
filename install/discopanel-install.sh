@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: DragoQC
+# Author: DragoQC | Co-Author: nickheyer
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://discopanel.app/ | Github: https://github.com/nickheyer/discopanel
 
@@ -12,24 +12,8 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y build-essential
-msg_ok "Installed Dependencies"
-
-NODE_VERSION="22" setup_nodejs
-setup_go
-fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "tarball" "latest" "/opt/discopanel"
+fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-amd64.tar.gz"
 setup_docker
-
-msg_info "Setting up DiscoPanel"
-cd /opt/discopanel
-$STD make gen
-cd /opt/discopanel/web/discopanel
-$STD npm install
-$STD npm run build
-cd /opt/discopanel
-$STD go build -o discopanel cmd/discopanel/main.go
-msg_ok "Setup DiscoPanel"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/discopanel.service
@@ -39,7 +23,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/discopanel
-ExecStart=/opt/discopanel/discopanel
+ExecStart=/opt/discopanel/discopanel-linux-amd64
 Restart=always
 
 [Install]
