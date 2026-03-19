@@ -427,6 +427,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Owncast: increase default disk size from 2GB to 10GB [@Copilot](https://github.com/Copilot) ([#13079](https://github.com/community-scripts/ProxmoxVE/pull/13079))
+
   - #### 🐞 Bug Fixes
 
     - Dispatcharr: use npm install --no-audit --progress=false [@MickLesk](https://github.com/MickLesk) ([#13074](https://github.com/community-scripts/ProxmoxVE/pull/13074))
