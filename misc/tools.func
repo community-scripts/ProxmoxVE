@@ -282,7 +282,7 @@ get_cached_version() {
     cat "/var/cache/app-versions/${app}_version.txt"
     return 0
   fi
-  return 0
+  return 1
 }
 
 # ------------------------------------------------------------------------------
@@ -5351,26 +5351,9 @@ function setup_java() {
       "main"
   fi
 
-  # Get currently installed version
+  # Get currently installed version (use dpkg-query to avoid column truncation)
   local INSTALLED_VERSION=""
-  if dpkg -l | grep -q "temurin-.*-jdk" 2>/dev/null; then
-    INSTALLED_VERSION=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | grep -oP 'temurin-\K[0-9]+' | head -n1 || echo "")
-  fi
-
-  # Validate INSTALLED_VERSION is not empty if JDK package found
-  local JDK_COUNT=0
-  JDK_COUNT=$(dpkg -l 2>/dev/null | grep -c "temurin-.*-jdk" || true)
-  if [[ -z "$INSTALLED_VERSION" && "${JDK_COUNT:-0}" -gt 0 ]]; then
-    msg_warn "Found Temurin JDK but cannot determine version - attempting reinstall"
-    # Try to get actual package name for purge
-    local OLD_PACKAGE
-    OLD_PACKAGE=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | head -n1 || echo "")
-    if [[ -n "$OLD_PACKAGE" ]]; then
-      msg_info "Removing existing package: $OLD_PACKAGE"
-      $STD apt purge -y "$OLD_PACKAGE" || true
-    fi
-    INSTALLED_VERSION="" # Reset to trigger fresh install
-  fi
+  INSTALLED_VERSION=$(dpkg-query -W -f '${Package}\n' 2>/dev/null | grep -oP '^temurin-\K[0-9]+(?=-jdk$)' | head -n1 || echo "")
 
   # Scenario 1: Already at correct version
   if [[ "$INSTALLED_VERSION" == "$JAVA_VERSION" ]]; then
@@ -7849,8 +7832,8 @@ function setup_uv() {
   local TMP_DIR=$(mktemp -d)
   local CACHED_VERSION
 
-  # trap for TMP Cleanup
-  trap "rm -rf '$TMP_DIR'" EXIT
+  # trap for TMP Cleanup (RETURN instead of EXIT to avoid overwriting global traps)
+  trap "rm -rf '$TMP_DIR'" RETURN
 
   CACHED_VERSION=$(get_cached_version "uv")
 
@@ -8120,6 +8103,8 @@ function setup_docker() {
   local docker_installed=false
   local portainer_installed=false
   local USE_DOCKER_REPO="${USE_DOCKER_REPO:-false}"
+  local DOCKER_CURRENT_VERSION=""
+  local DOCKER_LATEST_VERSION=""
 
   # Check if Docker is already installed
   if command -v docker &>/dev/null; then
