@@ -423,15 +423,9 @@ mysql:
   password: '${MARIADB_DB_PASS}'
   host: 'localhost'
   port: 3306
-  max_connections: 900
-  stale_timeout: 300
+  max_connections: 100
+  stale_timeout: 60
   max_allowed_packet: 1073741824
-  # Connection pool settings for stability
-  connect_timeout: 30
-  read_timeout: 60
-  write_timeout: 60
-  pool_recycle: 3600
-  pool_pre_ping: true
 minio:
   user: 'rag_flow'
   password: '${MINIO_PASS}'
