@@ -130,7 +130,7 @@ Choose your preferred installation method:
 
 The fastest way to get started:
 
-1. Visit **[helper-scripts.com](https://helper-scripts.com/)** 🌐
+1. Visit **[community-scripts.org](https://community-scripts.org/)** 🌐
 2. Search for your desired script (e.g., "Home Assistant", "Docker")
 3. Copy the bash command displayed on the script page
 4. Open your **Proxmox Shell** and paste the command
