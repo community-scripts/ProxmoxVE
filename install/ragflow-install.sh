@@ -507,6 +507,43 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 EOF
 
+# ==============================================================================
+# OPTIONAL: MCP SERVER SERVICE
+# ==============================================================================
+# The MCP (Model Context Protocol) server is optional and provides integration
+# with AI assistants like Claude Desktop. It runs on port 9382 by default.
+# To enable: systemctl enable --now ragflow-mcp.service
+
+msg_info "Creating Optional MCP Server Service"
+
+cat <<EOF >/etc/systemd/system/ragflow-mcp.service
+[Unit]
+Description=RAGFlow MCP Server (Model Context Protocol)
+After=network.target mariadb.service elasticsearch.service redis-server.service minio.service ragflow-server.service
+Requires=mariadb.service elasticsearch.service redis-server.service minio.service ragflow-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/ragflow
+Environment=PYTHONPATH=/opt/ragflow
+Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
+Environment=NLTK_DATA=/opt/ragflow/nltk_data
+ExecStartPre=/bin/sleep 15
+ExecStart=/usr/local/bin/uv run --index-strategy unsafe-best-match python mcp/server/server.py --host=0.0.0.0 --port=9382 --base-url=http://127.0.0.1:9380
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=300
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# MCP service is disabled by default - users must opt-in
+systemctl disable ragflow-mcp.service 2>/dev/null || true
+
+msg_ok "Created Optional MCP Server Service (disabled by default)"
+
 msg_ok "Created Systemd Services"
 
 # ==============================================================================
@@ -596,8 +633,18 @@ systemctl start ragflow-task-executor
 msg_ok "Started RAGFlow Services"
 
 # ==============================================================================
+# Reloading Nginx and services after installation
+# ==============================================================================
+
+msg_info "Reloading Nginx and Services"
+systemctl reload nginx
+systemctl restart nginx
+msg_ok "Reloaded Nginx"
+
+# ==============================================================================
 # FINALIZATION
 # ==============================================================================
+
 
 motd_ssh
 customize
@@ -628,3 +675,8 @@ echo -e "${TAB}- Configure your LLM API key in the web interface"
 echo -e "${TAB}- Default uses CPU for document processing"
 echo -e "${TAB}- For GPU acceleration, additional configuration required"
 echo -e "${TAB}- Elasticsearch may take 1-2 minutes to fully initialize"
+echo -e ""
+echo -e "${INFO}${YW} Optional MCP Server (for AI assistant integration):${CL}"
+echo -e "${TAB}- MCP endpoint: http://${LOCAL_IP}:9382"
+echo -e "${TAB}- Enable with: systemctl enable --now ragflow-mcp.service"
+echo -e "${TAB}- Requires RAGFlow API key from web interface"

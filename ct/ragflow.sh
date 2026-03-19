@@ -112,7 +112,14 @@ function update_script() {
   fi
 
   if [[ "$UPDATE_AVAILABLE" == "true" ]]; then
+    # Check if MCP service is enabled before stopping
+    MCP_WAS_ENABLED=false
+    if systemctl is-enabled ragflow-mcp.service 2>/dev/null | grep -q "enabled"; then
+      MCP_WAS_ENABLED=true
+    fi
+
     msg_info "Stopping Services"
+    systemctl stop ragflow-mcp || true
     systemctl stop ragflow-task-executor || true
     systemctl stop ragflow-server || true
     msg_ok "Stopped Services"
@@ -165,6 +172,14 @@ function update_script() {
     systemctl start ragflow-server
     sleep 5
     systemctl start ragflow-task-executor
+    
+    # Restart MCP service if it was enabled before update
+    if [[ "$MCP_WAS_ENABLED" == "true" ]]; then
+      msg_info "Restarting MCP Server"
+      systemctl start ragflow-mcp || true
+      msg_ok "Restarted MCP Server"
+    fi
+    
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
@@ -180,3 +195,8 @@ echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:80${CL}"
 echo -e "${INFO}${YW} API endpoint: http://${IP}:9380${CL}"
+echo -e ""
+echo -e "${INFO}${YW} Optional MCP Server (for AI assistant integration):${CL}"
+echo -e "${TAB}- MCP endpoint: http://${IP}:9382"
+echo -e "${TAB}- Enable with: systemctl enable --now ragflow-mcp.service"
+echo -e "${TAB}- Requires RAGFlow API key from web interface"
