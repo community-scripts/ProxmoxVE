@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: BillyOutlast
 # License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/infiniflow/ragflow
@@ -296,97 +297,7 @@ msg_ok "MinIO Installed"
 # ==============================================================================
 
 msg_info "Downloading RAGFlow"
-
-# Function to download RAGFlow directly from GitHub (bypasses API)
-download_ragflow_direct() {
-  local target_dir="/opt/ragflow"
-  local tmpdir
-  tmpdir=$(mktemp -d) || return 1
-
-  # Get latest release tag from GitHub redirects
-  local latest_tag=""
-  latest_tag=$(curl -fsSLI --connect-timeout 10 --max-time 30 "https://github.com/infiniflow/ragflow/releases/latest" 2>/dev/null | grep -i "location:" | tail -1 | sed 's/.*\/tag\/\([^ ]*\).*/\1/' | tr -d '\r\n')
-
-  if [[ -z "$latest_tag" ]]; then
-    msg_warn "Could not determine latest release tag, trying v0.17.0"
-    latest_tag="v0.17.0"
-  fi
-
-  msg_info "Found RAGFlow release: $latest_tag"
-
-  # Download tarball directly from GitHub
-  local tarball_url="https://github.com/infiniflow/ragflow/archive/refs/tags/${latest_tag}.tar.gz"
-  local filename="ragflow-${latest_tag}.tar.gz"
-
-  if ! curl -fsSL --connect-timeout 15 --max-time 600 -o "$tmpdir/$filename" "$tarball_url"; then
-    msg_error "Failed to download from $tarball_url"
-    rm -rf "$tmpdir"
-    return 1
-  fi
-
-  # Extract
-  mkdir -p "$target_dir"
-  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    rm -rf "${target_dir:?}/"*
-  fi
-
-  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-    msg_error "Failed to extract tarball"
-    rm -rf "$tmpdir"
-    return 1
-  }
-
-  # Find extracted directory and copy contents
-  local unpack_dir
-  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-  shopt -s dotglob nullglob
-  cp -r "$unpack_dir"/* "$target_dir/"
-  shopt -u dotglob nullglob
-
-  # Store version
-  local version="${latest_tag#v}"
-  echo "$version" > "$HOME/.ragflow"
-
-  rm -rf "$tmpdir"
-  return 0
-}
-
-# Try API-based download first, fall back to direct download
-DOWNLOAD_SUCCESS=false
-
-# Pre-check GitHub connectivity (both API and direct)
-if getent hosts api.github.com >/dev/null 2>&1 || getent hosts github.com >/dev/null 2>&1; then
-  # Try fetch_and_deploy_gh_release first (uses API)
-  if fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "latest" "/opt/ragflow" 2>/dev/null; then
-    DOWNLOAD_SUCCESS=true
-  fi
-fi
-
-# If API method failed, try direct download
-if [[ "$DOWNLOAD_SUCCESS" != "true" ]]; then
-  msg_warn "GitHub API method failed, trying direct download..."
-  if download_ragflow_direct; then
-    DOWNLOAD_SUCCESS=true
-  fi
-fi
-
-# If both methods failed, show error
-if [[ "$DOWNLOAD_SUCCESS" != "true" ]]; then
-  msg_error "Failed to download RAGFlow from GitHub"
-  msg_error ""
-  msg_error "This could be due to:"
-  msg_error "  1. GitHub API rate limit exceeded (60 requests/hour for anonymous users)"
-  msg_error "  2. Network firewall blocking github.com"
-  msg_error "  3. DNS resolution issues in LXC container"
-  msg_error ""
-  msg_error "Solutions:"
-  msg_error "  1. Set GITHUB_TOKEN: export GITHUB_TOKEN='ghp_your_token_here'"
-  msg_error "  2. Check DNS: echo 'nameserver 8.8.8.8' >> /etc/resolv.conf"
-  msg_error "  3. Test connectivity: curl -sSL https://github.com/infiniflow/ragflow/releases/latest"
-  exit 1
-fi
-
+fetch_and_deploy_gh_release "ragflow" "infiniflow/ragflow" "tarball" "latest" "/opt/ragflow"
 msg_ok "Downloaded RAGFlow"
 
 # ==============================================================================
@@ -655,9 +566,12 @@ msg_ok "Nginx Frontend Configured"
 # ==============================================================================
 
 msg_info "Starting RAGFlow Services"
+systemctl enable -q ragflow-server
 systemctl start ragflow-server
 sleep 5
+systemctl enable -q ragflow-task-executor
 systemctl start ragflow-task-executor
+
 msg_ok "Started RAGFlow Services"
 
 # ==============================================================================
@@ -672,7 +586,6 @@ msg_ok "Reloaded Nginx"
 # ==============================================================================
 # FINALIZATION
 # ==============================================================================
-
 
 motd_ssh
 customize
