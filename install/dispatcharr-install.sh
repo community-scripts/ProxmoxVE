@@ -66,7 +66,7 @@ CELERY_BROKER_URL=redis://localhost:6379/0
 DJANGO_SECRET_KEY=$DJANGO_SECRET
 EOF
 cd /opt/dispatcharr/frontend
-$STD npm install --legacy-peer-deps
+$STD npm install --no-audit --progress=false
 $STD npm run build
 msg_ok "Configured Dispatcharr"
 

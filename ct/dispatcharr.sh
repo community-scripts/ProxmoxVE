@@ -110,7 +110,7 @@ function update_script() {
 
     msg_info "Building Frontend"
     cd /opt/dispatcharr/frontend
-    $STD npm install --legacy-peer-deps
+    $STD npm install --no-audit --progress=false
     $STD npm run build
     msg_ok "Built Frontend"
 
