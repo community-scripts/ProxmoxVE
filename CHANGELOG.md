@@ -429,6 +429,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Dispatcharr: use npm install --no-audit --progress=false [@MickLesk](https://github.com/MickLesk) ([#13074](https://github.com/community-scripts/ProxmoxVE/pull/13074))
     - core: reorder hwaccel setup and adjust GPU group usermod [@MickLesk](https://github.com/MickLesk) ([#13072](https://github.com/community-scripts/ProxmoxVE/pull/13072))
 
 ### 📚 Documentation
