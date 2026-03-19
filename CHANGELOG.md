@@ -438,7 +438,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📚 Documentation
 
-  - github: add PocketBase bot workflow [@MickLesk](https://github.com/MickLesk) ([#13075](https://github.com/community-scripts/ProxmoxVE/pull/13075))
+  - Update link from helper-scripts.com to community-scripts.org [@adnanvaldes](https://github.com/adnanvaldes) ([#13098](https://github.com/community-scripts/ProxmoxVE/pull/13098))
+- github: add PocketBase bot workflow [@MickLesk](https://github.com/MickLesk) ([#13075](https://github.com/community-scripts/ProxmoxVE/pull/13075))
 
 ## 2026-03-18
 
