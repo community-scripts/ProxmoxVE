@@ -1100,8 +1100,9 @@ get_system_arch() {
 # ------------------------------------------------------------------------------
 create_temp_dir() {
   local tmp_dir=$(mktemp -d)
-  # Set trap to cleanup on EXIT, ERR, INT, TERM
-  trap "rm -rf '$tmp_dir'" EXIT ERR INT TERM
+  # Callers should handle their own cleanup (rm -rf "$tmpdir")
+  # Do NOT set trap here — it would overwrite global traps and only fire
+  # when create_temp_dir() itself returns, not the calling function
   echo "$tmp_dir"
 }
 
