@@ -439,6 +439,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools.func: display pin reason in release-check messages [@MickLesk](https://github.com/MickLesk) ([#13095](https://github.com/community-scripts/ProxmoxVE/pull/13095))
     - NocoDB: Unpin Version to latest [@MickLesk](https://github.com/MickLesk) ([#13094](https://github.com/community-scripts/ProxmoxVE/pull/13094))
 
 ### 💾 Core
