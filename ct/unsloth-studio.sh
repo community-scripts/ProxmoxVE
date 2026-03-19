@@ -5,7 +5,7 @@ source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL}"/misc/build.func)
 # License: MIT | https://github.com/Heretek-AI/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/unslothai/unsloth
 
-APP="unsolth-studio"
+APP="unsloth-studio"
 var_tags="${var_tags:-ai;llm;fine-tuning;training}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-16384}"
@@ -25,17 +25,17 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d /opt/unsolth-studio ]]; then
+  if [[ ! -d /opt/unsloth-studio ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
   # Source the activation script to set up GPU environment
-  if [[ -f /opt/unsolth-studio/activate.sh ]]; then
-    source /opt/unsolth-studio/activate.sh
+  if [[ -f /opt/unsloth-studio/activate.sh ]]; then
+    source /opt/unsloth-studio/activate.sh
   else
     # Fallback: activate venv directly
-    source /opt/unsolth-studio/.venv/bin/activate
+    source /opt/unsloth-studio/.venv/bin/activate
   fi
 
   if command -v unsloth &>/dev/null; then

@@ -1,6 +1,6 @@
 {
   "name": "Unsloth Studio",
-  "slug": "unsolth-studio",
+  "slug": "unsloth-studio",
   "categories": [20],
   "date_created": "2026-03-18",
   "type": "ct",
@@ -10,12 +10,12 @@
   "documentation": "https://unsloth.ai/docs/new/studio/start",
   "website": "https://unsloth.ai/",
   "logo": "https://unsloth.ai/favicon.ico",
-  "config_path": "/opt/unsolth-studio/.env",
+  "config_path": "/opt/unsloth-studio/.env",
   "description": "Local, browser-based GUI for fine-tuning LLMs without writing code. Supports QLoRA, LoRA, and full fine-tuning with live training monitoring, GPU stats, and model export to GGUF/Safetensors.",
   "install_methods": [
     {
       "type": "default",
-      "script": "ct/unsolth-studio.sh",
+      "script": "ct/unsloth-studio.sh",
       "resources": {
         "cpu": 4,
         "ram": 16384,
@@ -31,7 +31,7 @@
   },
   "notes": [
     {
-      "text": "Default credentials: username 'unsloth', password is randomly generated and shown in logs. Run 'journalctl -u unsolth-studio | grep password' to find it.",
+      "text": "Default credentials: username 'unsloth', password is randomly generated and shown in logs. Run 'journalctl -u unsloth-studio | grep password' to find it.",
       "type": "warning"
     },
     {

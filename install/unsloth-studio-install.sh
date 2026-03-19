@@ -33,8 +33,8 @@ setup_hwaccel
 PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Creating Virtual Environment"
-mkdir -p /opt/unsolth-studio
-cd /opt/unsolth-studio || exit
+mkdir -p /opt/unsloth-studio
+cd /opt/unsloth-studio || exit
 $STD uv venv --python 3.13
 source .venv/bin/activate
 msg_ok "Created Virtual Environment"
@@ -107,10 +107,10 @@ elif [ -d "/opt/rocm-6.2" ]; then
 fi
 
 # Check if GPU is available (works for both CUDA and ROCm)
-if /opt/unsolth-studio/.venv/bin/python -c "import torch; exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
+if /opt/unsloth-studio/.venv/bin/python -c "import torch; exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
   # Use the unsloth CLI entry point instead of python -m unsloth
   # The package installs a 'unsloth' command that provides the studio subcommand
-  $STD /opt/unsolth-studio/.venv/bin/unsloth studio setup
+  $STD /opt/unsloth-studio/.venv/bin/unsloth studio setup
   msg_ok "Completed Unsloth Studio Setup"
 else
   msg_info "GPU not detected via torch.cuda - skipping Unsloth Studio setup"
@@ -118,15 +118,15 @@ else
   echo ""
   echo -e "${GN}Note: If you have GPU passthrough configured, try:${CL}"
   echo -e "${GN}  1. Restart the container: pct stop <CTID> && pct start <CTID>${CL}"
-  echo -e "${GN}  2. Then run: source /opt/unsolth-studio/.venv/bin/activate && unsloth studio setup${CL}"
+  echo -e "${GN}  2. Then run: source /opt/unsloth-studio/.venv/bin/activate && unsloth studio setup${CL}"
   echo ""
 fi
 
 msg_info "Creating Directories"
-mkdir -p /opt/unsolth-studio/models
-mkdir -p /opt/unsolth-studio/datasets
-mkdir -p /var/log/unsolth-studio
-chmod 755 /var/log/unsolth-studio
+mkdir -p /opt/unsloth-studio/models
+mkdir -p /opt/unsloth-studio/datasets
+mkdir -p /var/log/unsloth-studio
+chmod 755 /var/log/unsloth-studio
 msg_ok "Created Directories"
 
 msg_info "Creating Service"
@@ -153,13 +153,13 @@ if [ -n "$ROCM_PATH" ] && [ -x "$ROCM_PATH/bin/rocminfo" ]; then
 fi
 
 # Create a shell wrapper script for manual commands
-cat <<'EOF' >/opt/unsolth-studio/activate.sh
+cat <<'EOF' >/opt/unsloth-studio/activate.sh
 #!/bin/bash
 # Activate script for Unsloth Studio with GPU support
 # Source this file before running unsloth commands manually
 
 # Activate virtual environment
-source /opt/unsolth-studio/.venv/bin/activate
+source /opt/unsloth-studio/.venv/bin/activate
 
 # ROCm environment (AMD GPUs)
 if [ -d "/opt/rocm" ]; then
@@ -196,11 +196,11 @@ export HIP_VISIBLE_DEVICES=0
 
 echo "Environment activated. GPU ready for use."
 EOF
-chmod +x /opt/unsolth-studio/activate.sh
+chmod +x /opt/unsloth-studio/activate.sh
 
 # Create systemd service with proper GPU environment
 # Note: systemd Environment doesn't support shell expansion, so we use static paths
-cat <<EOF >/etc/systemd/system/unsolth-studio.service
+cat <<EOF >/etc/systemd/system/unsloth-studio.service
 [Unit]
 Description=Unsloth Studio - Local LLM Fine-tuning Web UI
 After=network.target network-online.target
@@ -208,8 +208,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/unsolth-studio
-Environment="PATH=/opt/unsolth-studio/.venv/bin:/opt/rocm/bin:/opt/rocm-7.2/bin:/opt/rocm-6.2/bin:/usr/local/cuda/bin:/usr/local/bin:/usr/bin:/bin"
+WorkingDirectory=/opt/unsloth-studio
+Environment="PATH=/opt/unsloth-studio/.venv/bin:/opt/rocm/bin:/opt/rocm-7.2/bin:/opt/rocm-6.2/bin:/usr/local/cuda/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm-7.2/lib:/opt/rocm-6.2/lib:/usr/local/cuda/lib64"
 Environment="ROCM_PATH=/opt/rocm"
 Environment="HIP_VISIBLE_DEVICES=0"
@@ -217,17 +217,17 @@ EOF
 
 # Add HSA_OVERRIDE_GFX_VERSION if detected
 if [ -n "$HSA_GFX_VERSION" ]; then
-  echo "Environment=\"HSA_OVERRIDE_GFX_VERSION=$HSA_GFX_VERSION\"" >>/etc/systemd/system/unsolth-studio.service
+  echo "Environment=\"HSA_OVERRIDE_GFX_VERSION=$HSA_GFX_VERSION\"" >>/etc/systemd/system/unsloth-studio.service
 fi
 
 # Complete the service file
-cat <<EOF >>/etc/systemd/system/unsolth-studio.service
-ExecStart=/opt/unsolth-studio/.venv/bin/unsloth studio -H 0.0.0.0 -p 8888
+cat <<EOF >>/etc/systemd/system/unsloth-studio.service
+ExecStart=/opt/unsloth-studio/.venv/bin/unsloth studio -H 0.0.0.0 -p 8888
 Restart=on-failure
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=unsolth-studio
+SyslogIdentifier=unsloth-studio
 
 # Resource limits
 LimitNOFILE=65535
@@ -239,12 +239,12 @@ WantedBy=multi-user.target
 EOF
 # Don't auto-start the service since GPU passthrough may not be configured yet
 # User needs to configure GPU passthrough first, then start the service manually
-systemctl enable -q unsolth-studio
+systemctl enable -q unsloth-studio
 msg_ok "Created Service"
 echo ""
-echo -e "${GN}Note: The unsolth-studio service is enabled but not started.${CL}"
+echo -e "${GN}Note: The unsloth-studio service is enabled but not started.${CL}"
 echo -e "${GN}Configure GPU passthrough first, then start with:${CL}"
-echo -e "${GN}  systemctl start unsolth-studio${CL}"
+echo -e "${GN}  systemctl start unsloth-studio${CL}"
 echo ""
 if [ -n "$HSA_GFX_VERSION" ]; then
   echo -e "${YW}AMD GPU detected with architecture: $HSA_GFX_VERSION${CL}"
@@ -252,11 +252,11 @@ if [ -n "$HSA_GFX_VERSION" ]; then
   echo ""
 fi
 echo -e "${GN}For manual commands, activate the environment first:${CL}"
-echo -e "${GN}  source /opt/unsolth-studio/activate.sh${CL}"
+echo -e "${GN}  source /opt/unsloth-studio/activate.sh${CL}"
 echo ""
 
 # Create GPU passthrough info file
-cat <<EOF >/opt/unsolth-studio/GPU_PASSTHROUGH.md
+cat <<EOF >/opt/unsloth-studio/GPU_PASSTHROUGH.md
 # GPU Passthrough Configuration for Unsloth Studio
 
 This container has been configured for GPU acceleration for LLM fine-tuning.
@@ -316,7 +316,7 @@ export HSA_OVERRIDE_GFX_VERSION=gfx1100
 
 For running unsloth commands manually, activate the environment first:
 \`\`\`
-source /opt/unsolth-studio/activate.sh
+source /opt/unsloth-studio/activate.sh
 unsloth studio setup
 \`\`\`
 
