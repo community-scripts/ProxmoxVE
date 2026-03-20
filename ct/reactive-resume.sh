@@ -33,6 +33,8 @@ function update_script() {
     systemctl stop reactive-resume
     msg_ok "Stopped services"
 
+    ensure_dependencies git
+
     cp /opt/reactive-resume/.env /opt/reactive-resume.env.bak
     NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball" "latest" "/opt/reactive-resume"
