@@ -9,10 +9,11 @@ APP="MCPHub"
 var_tags="${var_tags:-ai;automation;tooling}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
-var_disk="${var_disk:-8}"
+var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_database="${var_database:-postgresql}"
 
 header_info "$APP"
 variables
