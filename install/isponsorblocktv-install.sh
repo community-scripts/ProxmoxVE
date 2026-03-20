@@ -42,7 +42,7 @@ systemctl enable -q isponsorblocktv
 msg_ok "Created Service"
 
 msg_info "Creating CLI wrapper"
-cat <<EOF >/usr/local/bin/iSponsorBlockTV
+cat <<'EOF' >/usr/local/bin/iSponsorBlockTV
 #!/usr/bin/env bash
 export iSPBTV_data_dir="/var/lib/isponsorblocktv"
 
