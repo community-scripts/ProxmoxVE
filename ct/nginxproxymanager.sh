@@ -154,19 +154,55 @@ EOF
   $STD yarn install --network-timeout 600000
   msg_ok "Initialized Backend"
 
-  msg_info "Updating Certbot"
-  [ -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg ] && rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg
-  [ -f /etc/apt/sources.list.d/openresty.list ] && rm -f /etc/apt/sources.list.d/openresty.list
-  [ ! -f /etc/apt/trusted.gpg.d/openresty.gpg ] && curl -fsSL https://openresty.org/package/pubkey.gpg | gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/openresty.gpg
-  [ ! -f /etc/apt/sources.list.d/openresty.sources ] && cat <<'EOF' >/etc/apt/sources.list.d/openresty.sources
-Types: deb
-URIs: http://openresty.org/package/debian/
-Suites: bookworm
-Components: openresty
-Signed-By: /etc/apt/trusted.gpg.d/openresty.gpg
+  msg_info "Cleaning old OpenResty apt repo"
+  rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg /etc/apt/trusted.gpg.d/openresty.gpg
+  rm -f /etc/apt/sources.list.d/openresty.list /etc/apt/sources.list.d/openresty.sources
+  if dpkg -l openresty &>/dev/null; then
+    $STD apt remove -y openresty
+    $STD apt autoremove -y
+  fi
+  $STD apt install -y build-essential libpcre3-dev libssl-dev zlib1g-dev
+  msg_ok "Cleaned old OpenResty apt repo"
+
+  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
+
+  msg_info "Building OpenResty"
+  cd /opt/openresty
+  $STD ./configure \
+    --with-http_v2_module \
+    --with-http_realip_module \
+    --with-http_stub_status_module \
+    --with-http_ssl_module \
+    --with-pcre-jit \
+    --with-stream \
+    --with-stream_ssl_module
+  $STD make -j"$(nproc)"
+  $STD make install
+  rm -rf /opt/openresty
+  if [ ! -f /lib/systemd/system/openresty.service ]; then
+    cat <<'EOF' >/lib/systemd/system/openresty.service
+[Unit]
+Description=The OpenResty Application Platform
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/usr/local/openresty/nginx/logs/nginx.pid
+ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
+ExecStart=/usr/local/openresty/nginx/sbin/nginx
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
 EOF
-  $STD apt update
-  $STD apt -y install openresty
+    systemctl daemon-reload
+  fi
+  msg_ok "Built OpenResty"
+
+  msg_info "Updating Certbot"
   if [ -d /opt/certbot ]; then
     $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
     $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
