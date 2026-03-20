@@ -433,6 +433,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Reactive-Resume: add git dependency for v5.0.13+ [@MickLesk](https://github.com/MickLesk) ([#13133](https://github.com/community-scripts/ProxmoxVE/pull/13133))
+    - Scanopy: increase default CPU, RAM, and HDD to prevent OOM during Rust build [@Copilot](https://github.com/Copilot) ([#13130](https://github.com/community-scripts/ProxmoxVE/pull/13130))
+
   - #### ✨ New Features
 
     - Immich: v2.6.1 [@vhsdream](https://github.com/vhsdream) ([#13111](https://github.com/community-scripts/ProxmoxVE/pull/13111))
