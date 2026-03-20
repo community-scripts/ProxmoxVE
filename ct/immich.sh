@@ -83,7 +83,7 @@ EOF
     )
     INTEL_RELEASE="$(grep "intel-opencl-icd_" ./Dockerfile | awk -F '_' '{print $2}')"
     if [[ "$INTEL_RELEASE" != "$(cat ~/.intel_version)" ]]; then
-      msg_info "Updating Intel iGPU dependencies"
+      msg_info "Updating Intel OpenVINO dependencies"
       for url in "${INTEL_URLS[@]}"; do
         curl_with_retry "$url" "$(basename "$url")"
       done
@@ -94,10 +94,10 @@ EOF
       rm ./*.deb
       $STD apt-mark hold libigdgmm12
       dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
-      msg_ok "Intel iGPU dependencies updated"
+      msg_ok "Updated Intel OpenVINO dependencies"
     fi
-    rm ./Dockerfile
   fi
+  rm ./Dockerfile
   if [[ -f ~/.immich_library_revisions ]]; then
     libraries=("libjxl" "libheif" "libraw" "imagemagick" "libvips")
     cd "$BASE_DIR"
@@ -226,14 +226,13 @@ EOF
         [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
       done
       msg_ok "Pre-installed Python ${ML_PYTHON}"
-      msg_info "Updating HW-accelerated machine-learning"
-      $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.24.1 --active -n -p "${ML_PYTHON}" --managed-python
+      msg_info "Updating Intel OpenVINO machine-learning"
       for attempt in $(seq 1 3); do
         $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
       patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
-      msg_ok "Updated HW-accelerated machine-learning"
+      msg_ok "Updated Intel OpenVINO machine-learning"
     else
       ML_PYTHON="python3.11"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"

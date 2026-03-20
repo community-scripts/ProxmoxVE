@@ -13,41 +13,43 @@ setting_up_container
 network_check
 update_os
 
-if [ -d /dev/dri ]; then
+if lscpu | grep -q 'GenuineIntel'; then
   echo ""
   echo ""
-  echo -e "🤖 ${BL}Immich Machine Learning Options${CL}"
+  echo -e "🤖 ${BL}Immich Machine-Learning Options${CL}"
   echo "─────────────────────────────────────────"
   echo "Please choose your machine-learning type:"
   echo ""
   echo " 1) CPU only (default)"
-  echo " 2) Intel OpenVINO (requires GPU passthrough)"
+  echo " 2) **NEW** Intel OpenVINO CPU or iGPU"
   echo ""
 
   read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE
   ML_TYPE="${ML_TYPE:-1}"
   if [[ "$ML_TYPE" == "2" ]]; then
-    msg_info "Installing OpenVINO dependencies"
     touch ~/.openvino
     $STD apt install -y --no-install-recommends patchelf
-    tmp_dir=$(mktemp -d)
-    $STD pushd "$tmp_dir"
-    curl_with_retry "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/machine-learning/Dockerfile" "Dockerfile"
-    readarray -t INTEL_URLS < <(
-      sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $3}'
-      sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
-    )
-    for url in "${INTEL_URLS[@]}"; do
-      curl_with_retry "$url" "$(basename "$url")"
-    done
-    $STD apt install -y ./libigdgmm12*.deb
-    rm ./libigdgmm12*.deb
-    $STD apt install -y ./*.deb
-    $STD apt-mark hold libigdgmm12
-    $STD popd
-    rm -rf "$tmp_dir"
-    dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
-    msg_ok "Installed OpenVINO dependencies"
+    if [[ -d /dev/dri ]]; then
+      msg_info "Installing Intel OpenVINO dependencies"
+      tmp_dir=$(mktemp -d)
+      $STD pushd "$tmp_dir"
+      curl_with_retry "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/machine-learning/Dockerfile" "Dockerfile"
+      readarray -t INTEL_URLS < <(
+        sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $3}'
+        sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
+      )
+      for url in "${INTEL_URLS[@]}"; do
+        curl_with_retry "$url" "$(basename "$url")"
+      done
+      $STD apt install -y ./libigdgmm12*.deb
+      rm ./libigdgmm12*.deb
+      $STD apt install -y ./*.deb
+      $STD apt-mark hold libigdgmm12
+      $STD popd
+      rm -rf "$tmp_dir"
+      dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
+      msg_ok "Installed Intel OpenVINO dependencies"
+    fi
   fi
 fi
 
@@ -353,14 +355,13 @@ if [[ -f ~/.openvino ]]; then
     [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
   done
   msg_ok "Pre-installed Python ${ML_PYTHON}"
-  msg_info "Installing HW-accelerated machine-learning"
-  $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.24.1 --active -n -p "${ML_PYTHON}" --managed-python
+  msg_info "Installing Intel OpenVINO machine-learning"
   for attempt in $(seq 1 3); do
     $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
     [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
   done
   patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
-  msg_ok "Installed HW-accelerated machine-learning"
+  msg_ok "Installed Intel OpenVINO machine-learning"
 else
   ML_PYTHON="python3.11"
   msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
