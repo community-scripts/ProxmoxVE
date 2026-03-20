@@ -438,6 +438,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Immich: v2.6.1 [@vhsdream](https://github.com/vhsdream) ([#13111](https://github.com/community-scripts/ProxmoxVE/pull/13111))
     - VM's: add input validation and hostname sanitization to all VM scripts [@MickLesk](https://github.com/MickLesk) ([#12973](https://github.com/community-scripts/ProxmoxVE/pull/12973))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - Harden code-server addon install script [@MickLesk](https://github.com/MickLesk) ([#13116](https://github.com/community-scripts/ProxmoxVE/pull/13116))
+
 ## 2026-03-19
 
 ### 🚀 Updated Scripts
