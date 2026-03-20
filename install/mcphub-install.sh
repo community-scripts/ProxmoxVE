@@ -19,7 +19,7 @@ update_os
 NODE_VERSION="22" setup_nodejs
 
 # PostgreSQL with pgvector for smart routing
-PG_VERSION="18" setup_postgresql
+PG_VERSION="17" setup_postgresql
 PG_DB_NAME="mcphub" PG_DB_USER="mcphub" PG_DB_EXTENSIONS="pgvector" setup_postgresql_db
 
 # =============================================================================
