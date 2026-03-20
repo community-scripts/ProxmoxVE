@@ -3058,6 +3058,44 @@ function fetch_and_deploy_codeberg_release() {
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
+# Wait for HTTPS connectivity to be ready
+# This is needed because DNS resolution and ping can work before HTTPS is ready
+# during container startup (race condition with network stack initialization)
+#
+# Arguments:
+#   $1 - URL to test (default: https://api.github.com/rate_limit)
+#   $2 - Max wait time in seconds (default: 30)
+#
+# Returns: 0 if HTTPS is ready, 1 if timeout
+# ------------------------------------------------------------------------------
+wait_for_https_readiness() {
+  local test_url="${1:-https://api.github.com/rate_limit}"
+  local max_wait="${2:-30}"
+  local waited=0
+  local interval=1
+
+  # Check if we're in a container (need longer warmup)
+  if [[ -f /.dockerenv ]] || grep -q 'lxc\|docker\|container' /proc/1/cgroup 2>/dev/null; then
+    # Container detected - start with 2 second delay for network stack to stabilize
+    debug_log "Container detected, waiting 2s for network stack initialization"
+    sleep 2
+  fi
+
+  while ((waited < max_wait)); do
+    if curl -fsSL --connect-timeout 2 --max-time 5 "$test_url" &>/dev/null; then
+      debug_log "HTTPS connectivity ready after ${waited}s"
+      return 0
+    fi
+    debug_log "Waiting for HTTPS connectivity... (${waited}s/${max_wait}s)"
+    sleep $interval
+    ((waited += interval))
+  done
+
+  debug_log "HTTPS connectivity NOT ready after ${max_wait}s timeout"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
 # Scans older GitHub releases for a matching asset when the latest release
 # is missing the expected file. Used internally by fetch_and_deploy_gh_release.
 #
@@ -3195,11 +3233,20 @@ function fetch_and_deploy_gh_release() {
   local header=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header=(-H "Authorization: token $GITHUB_TOKEN")
 
-  # dns pre check
+  # DNS pre-check
   local gh_host
   gh_host=$(awk -F/ '{print $3}' <<<"$api_url")
   if ! getent hosts "$gh_host" &>/dev/null; then
     msg_error "DNS resolution failed for $gh_host – check /etc/resolv.conf or networking"
+    return 1
+  fi
+
+  # Wait for HTTPS connectivity to be ready before making API calls
+  # This prevents "no response" errors during container startup when network
+  # stack isn't fully initialized yet (DNS and ping work before HTTPS is ready)
+  if ! wait_for_https_readiness "https://api.github.com/rate_limit" 30; then
+    msg_error "HTTPS connectivity not available after 30 seconds"
+    msg_error "Check your network configuration and firewall rules"
     return 1
   fi
 
@@ -3234,6 +3281,17 @@ function fetch_and_deploy_gh_release() {
           retry_delay=2
           attempt=0
         fi
+      fi
+    elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
+      # Network failure - use exponential backoff
+      if ((attempt < max_retries)); then
+        msg_warn "Network failure (no response), retrying in ${retry_delay}s... (attempt $attempt/$max_retries)"
+        sleep "$retry_delay"
+        retry_delay=$((retry_delay * 2))
+        ((retry_delay > 30)) && retry_delay=30
+      else
+        msg_error "GitHub API connection failed (no response after $max_retries attempts)."
+        msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
       fi
     else
       sleep "$retry_delay"
