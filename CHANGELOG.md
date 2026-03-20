@@ -429,6 +429,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - teleport ([#13086](https://github.com/community-scripts/ProxmoxVE/pull/13086))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - VM's: add input validation and hostname sanitization to all VM scripts [@MickLesk](https://github.com/MickLesk) ([#12973](https://github.com/community-scripts/ProxmoxVE/pull/12973))
+
 ## 2026-03-19
 
 ### 🚀 Updated Scripts
