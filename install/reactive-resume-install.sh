@@ -18,7 +18,9 @@ PG_DB_NAME="reactive_resume" PG_DB_USER="reactive_resume" setup_postgresql_db
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Dependencies"
-$STD apt install -y chromium
+$STD apt install -y \
+  chromium \
+  git
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball"
