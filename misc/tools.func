@@ -2198,6 +2198,7 @@ check_for_gh_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
+  local pin_reason="${4:-}"        # optional reason shown to user
   local app_lc=""
   app_lc="$(echo "${app,,}" | tr -d ' ')"
   local current_file="$HOME/.${app_lc}"
@@ -2342,7 +2343,11 @@ check_for_gh_release() {
       return 0
     fi
 
-    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    if [[ -n "$pin_reason" ]]; then
+      msg_ok "No update available: ${app} (${current}) - update held back: ${pin_reason}"
+    else
+      msg_ok "No update available: ${app} (${current}) - update temporarily held back due to issues with newer releases"
+    fi
     return 1
   fi
 
@@ -2381,6 +2386,7 @@ check_for_codeberg_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
+  local pin_reason="${4:-}"        # optional reason shown to user
   local app_lc="${app,,}"
   local current_file="$HOME/.${app_lc}"
 
@@ -2460,7 +2466,11 @@ check_for_codeberg_release() {
       return 0
     fi
 
-    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    if [[ -n "$pin_reason" ]]; then
+      msg_ok "No update available: ${app} (${current}) - update held back: ${pin_reason}"
+    else
+      msg_ok "No update available: ${app} (${current}) - update temporarily held back due to issues with newer releases"
+    fi
     return 1
   fi
 
@@ -5265,24 +5275,7 @@ function setup_java() {
 
   # Get currently installed version
   local INSTALLED_VERSION=""
-  if dpkg -l | grep -q "temurin-.*-jdk" 2>/dev/null; then
-    INSTALLED_VERSION=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | grep -oP 'temurin-\K[0-9]+' | head -n1 || echo "")
-  fi
-
-  # Validate INSTALLED_VERSION is not empty if JDK package found
-  local JDK_COUNT=0
-  JDK_COUNT=$(dpkg -l 2>/dev/null | grep -c "temurin-.*-jdk" || true)
-  if [[ -z "$INSTALLED_VERSION" && "${JDK_COUNT:-0}" -gt 0 ]]; then
-    msg_warn "Found Temurin JDK but cannot determine version - attempting reinstall"
-    # Try to get actual package name for purge
-    local OLD_PACKAGE
-    OLD_PACKAGE=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | head -n1 || echo "")
-    if [[ -n "$OLD_PACKAGE" ]]; then
-      msg_info "Removing existing package: $OLD_PACKAGE"
-      $STD apt purge -y "$OLD_PACKAGE" || true
-    fi
-    INSTALLED_VERSION="" # Reset to trigger fresh install
-  fi
+  INSTALLED_VERSION=$(dpkg-query -W -f '${Package}\n' 2>/dev/null | grep -oP '^temurin-\K[0-9]+(?=-jdk$)' | head -n1 || echo "")
 
   # Scenario 1: Already at correct version
   if [[ "$INSTALLED_VERSION" == "$JAVA_VERSION" ]]; then
