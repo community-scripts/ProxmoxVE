@@ -14,8 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get update
-$STD apt -y install \
+$STD apt install -y \
   ca-certificates \
   apache2-utils \
   logrotate \
