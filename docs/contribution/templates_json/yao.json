@@ -1,0 +1,46 @@
+{
+  "name": "Yao (In Development)",
+  "slug": "yao",
+  "categories": [20],
+  "date_created": "2026-03-20",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 5099,
+  "documentation": "https://yaoapps.com/docs",
+  "website": "https://yaoapps.com",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/yao.webp",
+  "config_path": "/opt/yao/.env",
+  "description": "Yao is an open-source engine for autonomous agents - event-driven, proactive, and self-scheduling. Build agents that work like real team members with three trigger modes: Clock (scheduled), Human (email/message), and Event (webhook/database).",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/yao.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 10,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "After installation, create a new project: mkdir -p /opt/yao/myapp && cd /opt/yao/myapp && yao start",
+      "type": "info"
+    },
+    {
+      "text": "Access the web interface at http://IP:5099",
+      "type": "info"
+    },
+    {
+      "text": "Yao includes built-in SQLite database, V8 JavaScript engine, and TypeScript runtime - no additional dependencies required.",
+      "type": "info"
+    }
+  ]
+}
