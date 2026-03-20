@@ -427,7 +427,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Alpine-Wakapi ([#13119](https://github.com/community-scripts/ProxmoxVE/pull/13119))
+  - iSponsorBlockTV ([#13123](https://github.com/community-scripts/ProxmoxVE/pull/13123))
+- Alpine-Wakapi ([#13119](https://github.com/community-scripts/ProxmoxVE/pull/13119))
 - teleport ([#13086](https://github.com/community-scripts/ProxmoxVE/pull/13086))
 
 ### 🚀 Updated Scripts
