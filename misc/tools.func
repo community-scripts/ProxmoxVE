@@ -5192,7 +5192,7 @@ _setup_gpu_permissions() {
     for nvidia_dev in /dev/nvidia*; do
       [[ -e "$nvidia_dev" ]] && {
         chgrp video "$nvidia_dev" 2>/dev/null || true
-        chmod 666 "$nvidia_dev" 2>/dev/null || true
+        chmod 660 "$nvidia_dev" 2>/dev/null || true
       }
     done
     if [[ -d /dev/nvidia-caps ]]; then
@@ -5200,7 +5200,7 @@ _setup_gpu_permissions() {
       for caps_dev in /dev/nvidia-caps/*; do
         [[ -e "$caps_dev" ]] && {
           chgrp video "$caps_dev" 2>/dev/null || true
-          chmod 666 "$caps_dev" 2>/dev/null || true
+          chmod 660 "$caps_dev" 2>/dev/null || true
         }
       done
     fi
@@ -5217,7 +5217,8 @@ _setup_gpu_permissions() {
 
   # /dev/kfd permissions (AMD ROCm)
   if [[ -e /dev/kfd ]]; then
-    chmod 666 /dev/kfd 2>/dev/null || true
+    chgrp render /dev/kfd 2>/dev/null || true
+    chmod 660 /dev/kfd 2>/dev/null || true
     msg_info "AMD ROCm compute device configured"
   fi
 

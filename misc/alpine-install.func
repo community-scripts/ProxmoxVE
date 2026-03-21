@@ -67,6 +67,7 @@ EOF
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
 setting_up_container() {
   msg_info "Setting up Container OS"
+  i=$RETRY_NUM
   while [ $i -gt 0 ]; do
     if [ "$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)" != "" ]; then
       break
