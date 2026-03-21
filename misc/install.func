@@ -309,14 +309,14 @@ customize() {
   if [[ "$PASSWORD" == "" ]]; then
     msg_info "Customizing Container"
     GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
-    mkdir -p $(dirname $GETTY_OVERRIDE)
+    mkdir -p "$(dirname "$GETTY_OVERRIDE")"
     cat <<EOF >$GETTY_OVERRIDE
   [Service]
   ExecStart=
   ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
 EOF
     systemctl daemon-reload
-    systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
+    systemctl restart "$(basename "$(dirname "$GETTY_OVERRIDE")" | sed 's/\.d//')"
     msg_ok "Customized Container"
   fi
   echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
