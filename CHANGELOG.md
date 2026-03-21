@@ -432,6 +432,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - iSponsorBlockTV: Fix release fetching  [@tremor021](https://github.com/tremor021) ([#13157](https://github.com/community-scripts/ProxmoxVE/pull/13157))
     - Isponsorblocktv: use quoted heredoc to prevent unbound variable error during CLI wrapper creation [@Copilot](https://github.com/Copilot) ([#13146](https://github.com/community-scripts/ProxmoxVE/pull/13146))
 
+  - #### ✨ New Features
+
+    - Headscale: Enable TUN [@tremor021](https://github.com/tremor021) ([#13158](https://github.com/community-scripts/ProxmoxVE/pull/13158))
+
 ## 2026-03-20
 
 ### 🆕 New Scripts
