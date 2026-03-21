@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: tteck (tteckster) | Co-Author: CrazyWolf13
+# Author: tteck (tteckster) | Co-Author: CrazyWolf13, MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://nginxproxymanager.com/ | Github: https://github.com/NginxProxyManager/nginx-proxy-manager
 
@@ -38,8 +38,8 @@ function update_script() {
     CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
     if [[ "$CURRENT_NODE_VERSION" != "22" ]]; then
       systemctl stop openresty
-      apt-get purge -y nodejs npm
-      apt-get autoremove -y
+      $STD apt purge -y nodejs npm
+      $STD apt autoremove -y
       rm -rf /usr/local/bin/node /usr/local/bin/npm
       rm -rf /usr/local/lib/node_modules
       rm -rf ~/.npm
@@ -49,12 +49,10 @@ function update_script() {
 
   NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
-    grep "tag_name" |
-    awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE=$(get_latest_github_release "NginxProxyManager/nginx-proxy-manager")
 
   CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}" "/opt/nginxproxymanager"
-  
+
   msg_info "Stopping Services"
   systemctl stop openresty
   systemctl stop npm
@@ -69,12 +67,56 @@ function update_script() {
     /var/cache/nginx
   msg_ok "Cleaned old files"
 
+  msg_info "Migrating to OpenResty from source"
+  rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg /etc/apt/trusted.gpg.d/openresty.gpg
+  rm -f /etc/apt/sources.list.d/openresty.list /etc/apt/sources.list.d/openresty.sources
+  if dpkg -l openresty &>/dev/null; then
+    $STD apt remove -y openresty
+    $STD apt autoremove -y
+  fi
+  $STD apt install -y build-essential libpcre3-dev libssl-dev zlib1g-dev
+  msg_ok "Migrated to OpenResty from source"
+
+  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
+
+  msg_info "Building OpenResty"
+  cd /opt/openresty
+  $STD ./configure \
+    --with-http_v2_module \
+    --with-http_realip_module \
+    --with-http_stub_status_module \
+    --with-http_ssl_module \
+    --with-http_sub_module \
+    --with-http_auth_request_module \
+    --with-pcre-jit \
+    --with-stream \
+    --with-stream_ssl_module
+  $STD make -j"$(nproc)"
+  $STD make install
+  rm -rf /opt/openresty
+  cat <<'EOF' >/lib/systemd/system/openresty.service
+[Unit]
+Description=The OpenResty Application Platform
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
+ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+  msg_ok "Built OpenResty"
+
   msg_info "Setting up Environment"
   ln -sf /usr/bin/python3 /usr/bin/python
   ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
   ln -sf /usr/local/openresty/nginx/ /etc/nginx
-  sed -i "s|\"version\": \"2.0.0\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/backend/package.json
-  sed -i "s|\"version\": \"2.0.0\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/frontend/package.json
+  sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/backend/package.json
+  sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/frontend/package.json
   sed -i 's+^daemon+#daemon+g' /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf
   NGINX_CONFS=$(find /opt/nginxproxymanager -type f -name "*.conf")
   for NGINX_CONF in $NGINX_CONFS; do
@@ -150,57 +192,9 @@ function update_script() {
 EOF
   fi
   sed -i 's/"client": "sqlite3"/"client": "better-sqlite3"/' /app/config/production.json
-  cd /app 
+  cd /app
   $STD yarn install --network-timeout 600000
   msg_ok "Initialized Backend"
-
-  msg_info "Cleaning old OpenResty apt repo"
-  rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg /etc/apt/trusted.gpg.d/openresty.gpg
-  rm -f /etc/apt/sources.list.d/openresty.list /etc/apt/sources.list.d/openresty.sources
-  if dpkg -l openresty &>/dev/null; then
-    $STD apt remove -y openresty
-    $STD apt autoremove -y
-  fi
-  $STD apt install -y build-essential libpcre3-dev libssl-dev zlib1g-dev
-  msg_ok "Cleaned old OpenResty apt repo"
-
-  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
-
-  msg_info "Building OpenResty"
-  cd /opt/openresty
-  $STD ./configure \
-    --with-http_v2_module \
-    --with-http_realip_module \
-    --with-http_stub_status_module \
-    --with-http_ssl_module \
-    --with-pcre-jit \
-    --with-stream \
-    --with-stream_ssl_module
-  $STD make -j"$(nproc)"
-  $STD make install
-  rm -rf /opt/openresty
-  if [ ! -f /lib/systemd/system/openresty.service ]; then
-    cat <<'EOF' >/lib/systemd/system/openresty.service
-[Unit]
-Description=The OpenResty Application Platform
-After=syslog.target network-online.target remote-fs.target nss-lookup.target
-Wants=network-online.target
-
-[Service]
-Type=forking
-PIDFile=/usr/local/openresty/nginx/logs/nginx.pid
-ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
-ExecStart=/usr/local/openresty/nginx/sbin/nginx
-ExecReload=/bin/kill -s HUP $MAINPID
-ExecStop=/bin/kill -s QUIT $MAINPID
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    systemctl daemon-reload
-  fi
-  msg_ok "Built OpenResty"
 
   msg_info "Updating Certbot"
   if [ -d /opt/certbot ]; then
@@ -212,9 +206,9 @@ EOF
   msg_info "Starting Services"
   sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
   sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
+  systemctl daemon-reload
   systemctl enable -q --now openresty
   systemctl enable -q --now npm
-  systemctl restart openresty
   msg_ok "Started Services"
 
   msg_ok "Updated successfully!"

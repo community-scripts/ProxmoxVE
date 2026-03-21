@@ -15,24 +15,19 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  ca-certificates \
   apache2-utils \
   logrotate \
   build-essential \
   libpcre3-dev \
   libssl-dev \
   zlib1g-dev \
-  git
-msg_ok "Installed Dependencies"
-
-msg_info "Installing Python Dependencies"
-$STD apt install -y \
+  git \
   python3 \
   python3-dev \
   python3-pip \
   python3-venv \
   python3-cffi
-msg_ok "Installed Python Dependencies"
+msg_ok "Installed Dependencies"
 
 msg_info "Setting up Certbot"
 $STD python3 -m venv /opt/certbot
@@ -50,6 +45,8 @@ $STD ./configure \
   --with-http_realip_module \
   --with-http_stub_status_module \
   --with-http_ssl_module \
+  --with-http_sub_module \
+  --with-http_auth_request_module \
   --with-pcre-jit \
   --with-stream \
   --with-stream_ssl_module
@@ -64,34 +61,25 @@ After=syslog.target network-online.target remote-fs.target nss-lookup.target
 Wants=network-online.target
 
 [Service]
-Type=forking
-PIDFile=/usr/local/openresty/nginx/logs/nginx.pid
+Type=simple
 ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
-ExecStart=/usr/local/openresty/nginx/sbin/nginx
-ExecReload=/bin/kill -s HUP $MAINPID
-ExecStop=/bin/kill -s QUIT $MAINPID
-PrivateTmp=true
+ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
 msg_ok "Built OpenResty"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-
-RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
-  grep "tag_name" |
-  awk '{print substr($2, 3, length($2)-4) }')
-
+RELEASE=$(get_latest_github_release "NginxProxyManager/nginx-proxy-manager")
 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}"
 
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
 ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
 ln -sf /usr/local/openresty/nginx/ /etc/nginx
-sed -i "s|\"version\": \"2.0.0\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/backend/package.json
-sed -i "s|\"version\": \"2.0.0\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/frontend/package.json
+sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/backend/package.json
+sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/frontend/package.json
 sed -i 's+^daemon+#daemon+g' /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf
 NGINX_CONFS=$(find /opt/nginxproxymanager -type f -name "*.conf")
 for NGINX_CONF in $NGINX_CONFS; do
@@ -195,7 +183,6 @@ sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/n
 sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
 systemctl enable -q --now openresty
 systemctl enable -q --now npm
-systemctl restart openresty
 msg_ok "Started Services"
 
 motd_ssh
