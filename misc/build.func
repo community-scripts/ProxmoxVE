@@ -985,8 +985,10 @@ base_settings() {
   fi
 
   MTU=${var_mtu:-""}
-  SD=${var_searchdomain:-""}
-  NS=${var_ns:-""}
+  _sd_val="${var_searchdomain:-""}"
+  [[ -n "$_sd_val" ]] && SD="-searchdomain=$_sd_val" || SD=""
+  _ns_val="${var_ns:-""}"
+  [[ -n "$_ns_val" ]] && NS="-nameserver=$_ns_val" || NS=""
   MAC=${var_mac:-""}
   VLAN=${var_vlan:-""}
   SSH=${var_ssh:-"no"}
