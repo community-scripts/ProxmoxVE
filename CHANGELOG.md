@@ -429,6 +429,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Frigate: use correct CPU model fallback path [@MickLesk](https://github.com/MickLesk) ([#13164](https://github.com/community-scripts/ProxmoxVE/pull/13164))
     - iSponsorBlockTV: Fix release fetching  [@tremor021](https://github.com/tremor021) ([#13157](https://github.com/community-scripts/ProxmoxVE/pull/13157))
     - Isponsorblocktv: use quoted heredoc to prevent unbound variable error during CLI wrapper creation [@Copilot](https://github.com/Copilot) ([#13146](https://github.com/community-scripts/ProxmoxVE/pull/13146))
 
