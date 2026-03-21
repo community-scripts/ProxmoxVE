@@ -83,6 +83,17 @@ function update_container() {
   esac
 }
 
+function restart_container_service() {
+  service=$1
+  container=$2
+  custom_command_1="systemctl is-enabled $service"
+  custom_command_2="systemctl restart $service && systemctl status $service"
+  if pct exec "$container" -- bash -c "command ${custom_command_1} >/dev/null 2>&1"; then
+    echo -e "\n${BL}[Info]${GN} Restarting $service inside${BL} ${name}${GN} with output: ${CL}\n"
+    pct exec "$container" -- bash -c "${custom_command_2}" 2>&1
+  fi
+}
+
 containers_needing_reboot=()
 header_info
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
@@ -105,10 +116,12 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       echo -e "${BL}[Info]${GN} Waiting For${BL} $container${CL}${GN} To Start ${CL} \n"
       sleep 5
       update_container $container
+      restart_container_service "patchmon-agent.service" $container
       echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
       pct shutdown $container &
     elif [ "$status" == "status: running" ]; then
       update_container $container
+      restart_container_service "patchmon-agent.service" $container
     fi
     if pct exec "$container" -- [ -e "/var/run/reboot-required" ]; then
       # Get the container's hostname and add it to the list
