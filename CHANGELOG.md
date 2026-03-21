@@ -437,6 +437,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Headscale: Enable TUN [@tremor021](https://github.com/tremor021) ([#13158](https://github.com/community-scripts/ProxmoxVE/pull/13158))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: add missing -searchdomain/-nameserver prefix in base_settings [@MickLesk](https://github.com/MickLesk) ([#13166](https://github.com/community-scripts/ProxmoxVE/pull/13166))
+
 ## 2026-03-20
 
 ### 🆕 New Scripts
