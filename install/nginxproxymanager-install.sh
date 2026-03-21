@@ -14,12 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt update
-$STD apt -y install \
+$STD apt install -y \
   ca-certificates \
   apache2-utils \
   logrotate \
   build-essential \
+  libpcre3-dev \
+  libssl-dev \
+  zlib1g-dev \
   git
 msg_ok "Installed Dependencies"
 
@@ -39,18 +41,42 @@ $STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
 ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
 msg_ok "Set up Certbot"
 
-msg_info "Installing Openresty"
-curl -fsSL "https://openresty.org/package/pubkey.gpg" | gpg --dearmor -o /etc/apt/trusted.gpg.d/openresty.gpg
-cat <<'EOF' >/etc/apt/sources.list.d/openresty.sources
-Types: deb
-URIs: http://openresty.org/package/debian/
-Suites: bookworm
-Components: openresty
-Signed-By: /etc/apt/trusted.gpg.d/openresty.gpg
+fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
+
+msg_info "Building OpenResty"
+cd /opt/openresty
+$STD ./configure \
+  --with-http_v2_module \
+  --with-http_realip_module \
+  --with-http_stub_status_module \
+  --with-http_ssl_module \
+  --with-pcre-jit \
+  --with-stream \
+  --with-stream_ssl_module
+$STD make -j"$(nproc)"
+$STD make install
+rm -rf /opt/openresty
+
+cat <<'EOF' >/lib/systemd/system/openresty.service
+[Unit]
+Description=The OpenResty Application Platform
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/usr/local/openresty/nginx/logs/nginx.pid
+ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
+ExecStart=/usr/local/openresty/nginx/sbin/nginx
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
 EOF
-$STD apt update
-$STD apt -y install openresty
-msg_ok "Installed Openresty"
+systemctl daemon-reload
+msg_ok "Built OpenResty"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
