@@ -22,7 +22,12 @@ replication:
   replSetName: "rs0"
 EOF
 systemctl restart mongod
-sleep 3
+for i in $(seq 1 30); do
+  if mongosh --quiet --eval "db.adminCommand('ping')" &>/dev/null; then
+    break
+  fi
+  sleep 2
+done
 $STD mongosh --eval 'rs.initiate({_id: "rs0", members: [{_id: 0, host: "127.0.0.1:27017"}]})'
 msg_ok "Configured MongoDB Replica Set"
 
