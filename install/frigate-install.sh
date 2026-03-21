@@ -200,7 +200,8 @@ $STD bash /opt/frigate/docker/main/install_memryx.sh
 msg_ok "Installed MemryX Runtime"
 
 msg_info "Installing OpenVino"
-$STD pip3 install -r /opt/frigate/docker/main/requirements-ov.txt
+#$STD pip3 install -r /opt/frigate/docker/main/requirements-ov.txt
+$STD pip3 install numpy openvino-dev[tensorflow]>=2024.0.0
 msg_ok "Installed OpenVino"
 
 msg_info "Building OpenVino Model"
