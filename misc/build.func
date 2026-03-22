@@ -3544,8 +3544,10 @@ build_container() {
   auto) NET_STRING="$NET_STRING,ip6=auto" ;;
   dhcp) NET_STRING="$NET_STRING,ip6=dhcp" ;;
   static)
-    NET_STRING="$NET_STRING,ip6=$IPV6_ADDR"
-    [ -n "$IPV6_GATE" ] && NET_STRING="$NET_STRING,gw6=$IPV6_GATE"
+    if [[ -n "$IPV6_ADDR" ]]; then
+      NET_STRING="$NET_STRING,ip6=$IPV6_ADDR"
+      [ -n "$IPV6_GATE" ] && NET_STRING="$NET_STRING,gw6=$IPV6_GATE"
+    fi
     ;;
   none) ;;
   esac
