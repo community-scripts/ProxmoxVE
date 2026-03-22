@@ -263,6 +263,16 @@ EOF
     [[ ! -f /usr/bin/immich ]] && ln -sf "$APP_DIR"/cli/bin/immich /usr/bin/immich
     [[ ! -f /usr/bin/immich-admin ]] && ln -sf "$APP_DIR"/bin/immich-admin /usr/bin/immich-admin
 
+    if ! grep -q '^DB_HOSTNAME=' "$INSTALL_DIR"/.env; then
+      sed -i '/^DB_DATABASE_NAME/a DB_HOSTNAME=127.0.0.1' "$INSTALL_DIR"/.env
+    fi
+
+    if grep -q 'ExecStart=/usr/bin/node' /etc/systemd/system/immich-web.service; then
+      sed -i '/^EnvironmentFile=/d' /etc/systemd/system/immich-web.service
+      sed -i "s|^ExecStart=.*|ExecStart=${APP_DIR}/bin/start.sh|" /etc/systemd/system/immich-web.service
+      systemctl daemon-reload
+    fi
+
     chown -R immich:immich "$INSTALL_DIR"
     if [[ "${MAINT_MODE:-0}" == 1 ]]; then
       msg_info "Disabling Maintenance Mode"
