@@ -428,6 +428,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-22
 
+### 🆕 New Scripts
+
+  - versitygw ([#13180](https://github.com/community-scripts/ProxmoxVE/pull/13180))
+
 ## 2026-03-21
 
 ### 🚀 Updated Scripts
