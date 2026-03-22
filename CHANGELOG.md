@@ -434,6 +434,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - ConvertX: add libreoffice-writer for ODT/document conversions [@MickLesk](https://github.com/MickLesk) ([#13196](https://github.com/community-scripts/ProxmoxVE/pull/13196))
+
   - #### 🔧 Refactor
 
     - iSponsorblockTV: add AVX CPU check before installation [@MickLesk](https://github.com/MickLesk) ([#13197](https://github.com/community-scripts/ProxmoxVE/pull/13197))
