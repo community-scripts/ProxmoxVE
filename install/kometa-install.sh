@@ -23,12 +23,19 @@ mkdir -p config/assets
 cp config/config.yml.template config/config.yml
 msg_ok "Setup Kometa"
 
-read -p "${TAB3}Enter your TMDb API key: " TMDBKEY
-read -p "${TAB3}Enter your Plex URL: " PLEXURL
-read -p "${TAB3}Enter your Plex token: " PLEXTOKEN
-sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL #g" /opt/kometa/config/config.yml
-sed -i -e "s/token: ####################/token: $PLEXTOKEN/g" /opt/kometa/config/config.yml
-sed -i -e "s/apikey: ################################/apikey: $TMDBKEY/g" /opt/kometa/config/config.yml
+read -r -p "${TAB3}Enter your TMDb API key: " TMDBKEY
+read -r -p "${TAB3}Enter your Plex URL: " PLEXURL
+read -r -p "${TAB3}Enter your Plex token: " PLEXTOKEN
+sed -i '/^plex:/,/^[^ ]/{s|  url:.*|  url: '"$PLEXURL"'|}' /opt/kometa/config/config.yml
+sed -i '/^plex:/,/^[^ ]/{s|  token:.*|  token: '"$PLEXTOKEN"'|}' /opt/kometa/config/config.yml
+sed -i '/^tmdb:/,/^[^ ]/{s|  apikey:.*|  apikey: '"$TMDBKEY"'|}' /opt/kometa/config/config.yml
+
+msg_info "Installing Kometa Quickstart"
+fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"
+cd /opt/kometa-quickstart
+$STD uv venv /opt/kometa-quickstart/.venv
+$STD /opt/kometa-quickstart/.venv/bin/python -m pip install -r requirements.txt
+msg_ok "Installed Kometa Quickstart"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/kometa.service
@@ -46,7 +53,23 @@ RestartSec=30
 [Install]
 WantedBy=multi-user.target
 EOF
+cat <<EOF >/etc/systemd/system/kometa-quickstart.service
+[Unit]
+Description=Kometa Quickstart
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/kometa-quickstart
+ExecStart=/opt/kometa-quickstart/.venv/bin/python quickstart.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
 systemctl enable -q --now kometa
+systemctl enable -q --now kometa-quickstart
 msg_ok "Created Service"
 
 motd_ssh
