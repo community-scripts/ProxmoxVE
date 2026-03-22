@@ -30,7 +30,7 @@ sed -i '/^plex:/,/^[^ ]/{s|  url:.*|  url: '"$PLEXURL"'|}' /opt/kometa/config/co
 sed -i '/^plex:/,/^[^ ]/{s|  token:.*|  token: '"$PLEXTOKEN"'|}' /opt/kometa/config/config.yml
 sed -i '/^tmdb:/,/^[^ ]/{s|  apikey:.*|  apikey: '"$TMDBKEY"'|}' /opt/kometa/config/config.yml
 
-fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"
+fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart" "tarball"
 
 msg_info "Installing Kometa Quickstart"
 cd /opt/kometa-quickstart
