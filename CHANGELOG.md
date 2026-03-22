@@ -434,6 +434,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Adventurelog: pin DRF <3.15 to fix coreapi module removal [@MickLesk](https://github.com/MickLesk) ([#13194](https://github.com/community-scripts/ProxmoxVE/pull/13194))
+
   - #### ✨ New Features
 
     - ConvertX: add libreoffice-writer for ODT/document conversions [@MickLesk](https://github.com/MickLesk) ([#13196](https://github.com/community-scripts/ProxmoxVE/pull/13196))
