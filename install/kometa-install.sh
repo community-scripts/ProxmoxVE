@@ -30,8 +30,9 @@ sed -i '/^plex:/,/^[^ ]/{s|  url:.*|  url: '"$PLEXURL"'|}' /opt/kometa/config/co
 sed -i '/^plex:/,/^[^ ]/{s|  token:.*|  token: '"$PLEXTOKEN"'|}' /opt/kometa/config/config.yml
 sed -i '/^tmdb:/,/^[^ ]/{s|  apikey:.*|  apikey: '"$TMDBKEY"'|}' /opt/kometa/config/config.yml
 
-msg_info "Installing Kometa Quickstart"
 fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"
+
+msg_info "Installing Kometa Quickstart"
 cd /opt/kometa-quickstart
 $STD uv venv /opt/kometa-quickstart/.venv
 $STD /opt/kometa-quickstart/.venv/bin/python -m pip install -r requirements.txt
@@ -68,8 +69,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now kometa
-systemctl enable -q --now kometa-quickstart
+systemctl enable -q --now kometa kometa-quickstart
 msg_ok "Created Service"
 
 motd_ssh
