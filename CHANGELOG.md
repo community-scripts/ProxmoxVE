@@ -432,6 +432,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - versitygw ([#13180](https://github.com/community-scripts/ProxmoxVE/pull/13180))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - iSponsorblockTV: add AVX CPU check before installation [@MickLesk](https://github.com/MickLesk) ([#13197](https://github.com/community-scripts/ProxmoxVE/pull/13197))
+
 ## 2026-03-21
 
 ### 🚀 Updated Scripts
