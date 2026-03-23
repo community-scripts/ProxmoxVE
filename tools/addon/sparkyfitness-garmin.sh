@@ -66,7 +66,7 @@ fi
 # ==============================================================================
 # UNINSTALL
 # ==============================================================================
-function uninstall() {
+function uninstall_addon() {
   msg_info "Uninstalling ${APP}"
   systemctl disable --now sparkyfitness-garmin.service &>/dev/null || true
   rm -rf "$SERVICE_PATH" "$CONFIG_PATH" "$INSTALL_PATH" ~/.sparkyfitness-garmin
@@ -76,7 +76,7 @@ function uninstall() {
 # ==============================================================================
 # UPDATE
 # ==============================================================================
-function update() {
+function update_addon() {
   if check_for_gh_release "sparkyfitness-garmin" "CodeWithCJ/SparkyFitness"; then
     PYTHON_VERSION="3.13" setup_uv
 
@@ -97,7 +97,7 @@ function update() {
 # ==============================================================================
 # INSTALL
 # ==============================================================================
-function install() {
+function install_addon() {
   PYTHON_VERSION="3.13" setup_uv
   fetch_and_deploy_gh_release "sparkyfitness-garmin" "CodeWithCJ/SparkyFitness" "tarball" "latest" $INSTALL_PATH
 
@@ -140,7 +140,7 @@ get_lxc_ip
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
   if [[ -d "$INSTALL_PATH" ]]; then
-    update
+    update_addon
   else
     msg_error "${APP} is not installed. Nothing to update."
     exit 233
@@ -156,14 +156,14 @@ if [[ -d "$INSTALL_PATH" && -n "$(ls -A "$INSTALL_PATH" 2>/dev/null)" ]]; then
   echo -n "${TAB}Uninstall ${APP}? (y/N): "
   read -r uninstall_prompt
   if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
-    uninstall
+    uninstall_addon
     exit 0
   fi
 
   echo -n "${TAB}Update ${APP}? (y/N): "
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
-    update
+    update_addon
     exit 0
   fi
 
@@ -182,7 +182,7 @@ echo ""
 echo -n "${TAB}Install ${APP}? (y/N): "
 read -r install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
-  install
+  install_addon
 else
   msg_warn "Installation cancelled. Exiting."
   exit 0
