@@ -18,13 +18,12 @@ PG_DB_NAME="partdb" PG_DB_USER="partdb" setup_postgresql_db
 PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl" PHP_POST_MAX_SIZE="100M" PHP_UPLOAD_MAX_FILESIZE="100M" setup_php
 setup_composer
 
-msg_info "Installing Part-DB (Patience)"
 fetch_and_deploy_gh_release "partdb" "Part-DB/Part-DB-server" "prebuild" "latest" "/opt/partdb" "partdb_with_assets.zip"
 
+msg_info "Installing Part-DB"
 cd /opt/partdb/
 cp .env .env.local
 sed -i "s|DATABASE_URL=\"sqlite:///%kernel.project_dir%/var/app.db\"|DATABASE_URL=\"postgresql://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}?serverVersion=12.19&charset=utf8\"|" .env.local
-
 export COMPOSER_ALLOW_SUPERUSER=1
 $STD composer install --no-dev -o --no-interaction
 $STD php bin/console cache:clear
