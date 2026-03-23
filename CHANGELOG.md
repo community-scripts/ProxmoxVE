@@ -430,6 +430,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - NginxProxyManager: build OpenResty from source via GitHub releases [@MickLesk](https://github.com/MickLesk) ([#13134](https://github.com/community-scripts/ProxmoxVE/pull/13134))
+
   - #### ✨ New Features
 
     - Kometa: optimize config.yml sed patterns, add Quickstart integration [@MickLesk](https://github.com/MickLesk) ([#13198](https://github.com/community-scripts/ProxmoxVE/pull/13198))
