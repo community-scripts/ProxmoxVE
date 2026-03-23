@@ -33,23 +33,21 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Updating $APP to v${CHECK_UPDATE_RELEASE}"
-    cd /opt
     mv /opt/partdb/ /opt/partdb-backup
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "partdb" "Part-DB/Part-DB-server" "prebuild" "latest" "/opt/partdb" "partdb_with_assets.zip"
 
+    msg_info "Updating Part-DB"
     cd /opt/partdb/
     cp -r /opt/partdb-backup/.env.local /opt/partdb/
     cp -r /opt/partdb-backup/public/media /opt/partdb/public/
     cp -r /opt/partdb-backup/config/banner.md /opt/partdb/config/
-
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev -o --no-interaction
     $STD php bin/console cache:clear
     $STD php bin/console doctrine:migrations:migrate -n
     chown -R www-data:www-data /opt/partdb
     rm -r /opt/partdb-backup
-    msg_ok "Updated $APP to v${CHECK_UPDATE_RELEASE}"
+    msg_ok "Updated Part-DB"
 
     msg_info "Starting Service"
     systemctl start apache2
