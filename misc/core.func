@@ -1688,7 +1688,10 @@ function get_lxc_ip() {
         local -a _ips6
         read -ra _ips6 <<<"$(hostname -I 2>/dev/null)"
         for ip in "${_ips6[@]}"; do
-          [[ "$ip" == *:* ]] && { echo "$ip"; return 0; }
+          [[ "$ip" == *:* ]] && {
+            echo "$ip"
+            return 0
+          }
         done
       fi
 

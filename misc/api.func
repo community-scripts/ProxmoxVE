@@ -348,10 +348,10 @@ explain_exit_code() {
 json_escape() {
   # Escape a string for safe JSON embedding using awk (handles any input size).
   # Pipeline: strip ANSI → remove control chars → escape \ " TAB → join lines with \n
-  printf '%s' "$1" \
-    | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' \
-    | tr -d '\000-\010\013\014\016-\037\177\r' \
-    | awk '
+  printf '%s' "$1" |
+    sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+    tr -d '\000-\010\013\014\016-\037\177\r' |
+    awk '
         BEGIN { ORS = "" }
         {
           gsub(/\\/, "\\\\")   # backslash → \\
@@ -1333,10 +1333,10 @@ post_addon_to_api() {
     while IFS='=' read -r _k _v; do
       _v="${_v//\"/}"
       case "$_k" in
-        ID) os_type="$_v" ;;
-        VERSION_ID) os_version="$_v" ;;
+      ID) os_type="$_v" ;;
+      VERSION_ID) os_version="$_v" ;;
       esac
-    done < /etc/os-release
+    done </etc/os-release
   fi
 
   local JSON_PAYLOAD
