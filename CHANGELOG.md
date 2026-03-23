@@ -428,6 +428,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-23
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - core: harden shell scripts against injection and insecure permissions [@MickLesk](https://github.com/MickLesk) ([#13239](https://github.com/community-scripts/ProxmoxVE/pull/13239))
+
 ## 2026-03-22
 
 ### 🆕 New Scripts
