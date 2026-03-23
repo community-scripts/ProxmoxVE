@@ -5,7 +5,7 @@
   <p><em>A Community Legacy in Memory of @tteck</em></p>
 
   <p>
-    <a href="https://helper-scripts.com">
+    <a href="https://community-scripts.com">
       <img src="https://img.shields.io/badge/🌐_Website-Visit-4c9b3f?style=for-the-badge&labelColor=2d3748" alt="Website" />
     </a>
     <a href="https://discord.gg/3AnUqsXnmK">

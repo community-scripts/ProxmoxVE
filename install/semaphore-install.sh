@@ -40,7 +40,7 @@ cat <<EOF >/opt/semaphore/config.json
   "access_key_encryption": "${SEM_KEY}"
 }
 EOF
-$STD semaphore user add --admin --login admin --email admin@helper-scripts.com --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
+$STD semaphore user add --admin --login admin --email admin@community-scripts.com --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
 echo "${SEM_PW}" >~/semaphore.creds
 msg_ok "Setup Semaphore"
 

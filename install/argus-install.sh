@@ -58,7 +58,7 @@ service:
       use_prerelease: false
     dashboard:
       icon: https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/images/logo.png
-      icon_link_to: https://helper-scripts.com/
+      icon_link_to: https://community-scripts.com/
       web_url: https://github.com/community-scripts/ProxmoxVE/releases
 EOF
 msg_ok "Setup Config"
