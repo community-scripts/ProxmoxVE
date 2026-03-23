@@ -529,6 +529,10 @@ validate_gateway_in_subnet() {
   local ip="${static_ip%%/*}"
   local cidr="${static_ip##*/}"
 
+  # /31 and /32 are valid point-to-point / zero-trust DMZ configurations
+  # where the gateway is technically outside the subnet — skip validation
+  ((cidr >= 31)) && return 0
+
   # Convert CIDR to netmask bits
   local mask=$((0xFFFFFFFF << (32 - cidr) & 0xFFFFFFFF))
 
