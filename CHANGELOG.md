@@ -446,6 +446,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: nginxproxymanager update and OpenResty flow [@MickLesk](https://github.com/MickLesk) ([#13216](https://github.com/community-scripts/ProxmoxVE/pull/13216))
     - Refactor: PartDB [@MickLesk](https://github.com/MickLesk) ([#13229](https://github.com/community-scripts/ProxmoxVE/pull/13229))
 
 ### 💾 Core
