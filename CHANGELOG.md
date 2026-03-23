@@ -444,6 +444,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Kometa: optimize config.yml sed patterns, add Quickstart integration [@MickLesk](https://github.com/MickLesk) ([#13198](https://github.com/community-scripts/ProxmoxVE/pull/13198))
 
+  - #### 🔧 Refactor
+
+    - Refactor: PartDB [@MickLesk](https://github.com/MickLesk) ([#13229](https://github.com/community-scripts/ProxmoxVE/pull/13229))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
