@@ -152,7 +152,13 @@ fi
 pve_check
 shell_check
 root_check
-diagnostics_check
+
+# Read diagnostics preference (same logic as build.func diagnostics_check)
+DIAG_CONFIG="/usr/local/community-scripts/diagnostics"
+if [[ -f "$DIAG_CONFIG" ]]; then
+  DIAGNOSTICS=$(awk -F '=' '/^DIAGNOSTICS/ {print $2}' "$DIAG_CONFIG") || true
+  DIAGNOSTICS="${DIAGNOSTICS:-no}"
+fi
 
 header_info
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --yesno \
