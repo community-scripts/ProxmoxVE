@@ -873,10 +873,10 @@ choose_and_set_storage_for_file() {
   local content="rootdir"
   [[ "$class" == "template" ]] && content="vztmpl"
   local count
-  count=$(pvesm status -content "$content" | awk 'NR>1{print $1}' | wc -l)
+  count=$(pvesm_status_cached -content "$content" | awk 'NR>1{print $1}' | wc -l)
 
   if [[ "$count" -eq 1 ]]; then
-    STORAGE_RESULT=$(pvesm status -content "$content" | awk 'NR>1{print $1; exit}')
+    STORAGE_RESULT=$(pvesm_status_cached -content "$content" | awk 'NR>1{print $1; exit}')
     STORAGE_INFO=""
 
     # Validate storage space for auto-picked container storage
@@ -1213,7 +1213,7 @@ load_vars_file() {
         var_container_storage | var_template_storage)
           # Validate that the storage exists and is active on the current node
           local _storage_status
-          _storage_status=$(pvesm status 2>/dev/null | awk -v s="$var_val" '$1 == s { print $3 }')
+          _storage_status=$(pvesm_status_cached | awk -v s="$var_val" '$1 == s { print $3 }')
           if [[ -z "$_storage_status" ]]; then
             msg_warn "Storage '$var_val' from $file not found on this node, ignoring"
             continue
@@ -3496,6 +3496,237 @@ start() {
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# GPU/USB PASSTHROUGH CONFIGURATION (extracted from build_container for reuse)
+# These functions reference globals: LXC_CONFIG, CT_TYPE, CTID, ENABLE_TUN,
+# GPU_TYPE, var_gpu, ENABLE_FUSE — all set before invocation in build_container.
+# ------------------------------------------------------------------------------
+
+# Check if GPU passthrough is enabled
+# Returns true only if var_gpu is explicitly set to "yes"
+is_gpu_app() {
+  [[ "${var_gpu:-no}" == "yes" ]] && return 0
+  return 1
+}
+
+# Detect all available GPU devices
+detect_gpu_devices() {
+  INTEL_DEVICES=()
+  AMD_DEVICES=()
+  NVIDIA_DEVICES=()
+
+  local pci_vga_info
+  pci_vga_info=$(lspci -nn 2>/dev/null | grep -E "VGA|Display|3D" || true)
+
+  if [[ -z "$pci_vga_info" ]]; then
+    msg_debug "No VGA/Display/3D PCI devices found"
+    return 0
+  fi
+
+  if grep -q "\[8086:" <<<"$pci_vga_info"; then
+    msg_custom "🎮" "${BL}" "Detected Intel GPU"
+    if [[ -d /dev/dri ]]; then
+      for d in /dev/dri/renderD* /dev/dri/card*; do
+        [[ -e "$d" ]] && INTEL_DEVICES+=("$d")
+      done
+    fi
+  fi
+
+  if grep -qE "\[1002:|\[1022:" <<<"$pci_vga_info"; then
+    msg_custom "🎮" "${RD}" "Detected AMD GPU"
+    if [[ -d /dev/dri ]]; then
+      if [[ ${#INTEL_DEVICES[@]} -eq 0 ]]; then
+        for d in /dev/dri/renderD* /dev/dri/card*; do
+          [[ -e "$d" ]] && AMD_DEVICES+=("$d")
+        done
+      fi
+    fi
+  fi
+
+  if grep -q "\[10de:" <<<"$pci_vga_info"; then
+    msg_custom "🎮" "${GN}" "Detected NVIDIA GPU"
+    for d in /dev/nvidia*; do
+      [[ -c "$d" ]] && NVIDIA_DEVICES+=("$d")
+    done
+    if [[ -d /dev/nvidia-caps ]]; then
+      for d in /dev/nvidia-caps/*; do
+        [[ -c "$d" ]] && NVIDIA_DEVICES+=("$d")
+      done
+    fi
+
+    if [[ ${#NVIDIA_DEVICES[@]} -gt 0 ]]; then
+      msg_custom "🎮" "${GN}" "Found ${#NVIDIA_DEVICES[@]} NVIDIA device(s) for passthrough"
+    else
+      msg_warn "NVIDIA GPU detected via PCI but no /dev/nvidia* devices found"
+      msg_custom "ℹ️" "${YW}" "Skipping NVIDIA passthrough (host drivers may not be loaded)"
+    fi
+  fi
+
+  msg_debug "Intel devices: ${INTEL_DEVICES[*]}"
+  msg_debug "AMD devices: ${AMD_DEVICES[*]}"
+  msg_debug "NVIDIA devices: ${NVIDIA_DEVICES[*]}"
+}
+
+# Configure USB passthrough for privileged containers
+configure_usb_passthrough() {
+  if [[ "$CT_TYPE" != "0" ]]; then
+    return 0
+  fi
+
+  msg_info "Configuring automatic USB passthrough (privileged container)"
+  cat <<EOF >>"$LXC_CONFIG"
+# Automatic USB passthrough (privileged container)
+lxc.cgroup2.devices.allow: a
+lxc.cap.drop:
+lxc.cgroup2.devices.allow: c 188:* rwm
+lxc.cgroup2.devices.allow: c 189:* rwm
+lxc.mount.entry: /dev/serial/by-id  dev/serial/by-id  none bind,optional,create=dir
+lxc.mount.entry: /dev/ttyUSB0       dev/ttyUSB0       none bind,optional,create=file
+lxc.mount.entry: /dev/ttyUSB1       dev/ttyUSB1       none bind,optional,create=file
+lxc.mount.entry: /dev/ttyACM0       dev/ttyACM0       none bind,optional,create=file
+lxc.mount.entry: /dev/ttyACM1       dev/ttyACM1       none bind,optional,create=file
+EOF
+  msg_ok "USB passthrough configured"
+}
+
+# Configure GPU passthrough
+configure_gpu_passthrough() {
+  if ! is_gpu_app "$APP"; then
+    return 0
+  fi
+
+  detect_gpu_devices
+
+  local gpu_count=0
+  local available_gpus=()
+
+  if [[ ${#INTEL_DEVICES[@]} -gt 0 ]]; then
+    available_gpus+=("INTEL")
+    gpu_count=$((gpu_count + 1))
+  fi
+
+  if [[ ${#AMD_DEVICES[@]} -gt 0 ]]; then
+    available_gpus+=("AMD")
+    gpu_count=$((gpu_count + 1))
+  fi
+
+  if [[ ${#NVIDIA_DEVICES[@]} -gt 0 ]]; then
+    available_gpus+=("NVIDIA")
+    gpu_count=$((gpu_count + 1))
+  fi
+
+  if [[ $gpu_count -eq 0 ]]; then
+    msg_custom "ℹ️" "${YW}" "No GPU devices found for passthrough"
+    return 0
+  fi
+
+  local selected_gpu=""
+
+  if [[ $gpu_count -eq 1 ]]; then
+    selected_gpu="${available_gpus[0]}"
+    msg_ok "Automatically configuring ${selected_gpu} GPU passthrough"
+  else
+    echo -e "\n${INFO} Multiple GPU types detected:"
+    for gpu in "${available_gpus[@]}"; do
+      echo "  - $gpu"
+    done
+    if ! read -t 30 -rp "Which GPU type to passthrough? (${available_gpus[*]}) [timeout 30s]: " selected_gpu </dev/tty; then
+      selected_gpu="${available_gpus[0]}"
+      msg_warn "No response — auto-selecting ${selected_gpu}"
+    fi
+    selected_gpu="${selected_gpu^^}"
+
+    local valid=0
+    for gpu in "${available_gpus[@]}"; do
+      [[ "$selected_gpu" == "$gpu" ]] && valid=1
+    done
+
+    if [[ $valid -eq 0 ]]; then
+      msg_warn "Invalid selection '${selected_gpu}'. Skipping GPU passthrough."
+      return 0
+    fi
+  fi
+
+  local dev_idx=0
+
+  case "$selected_gpu" in
+  INTEL | AMD)
+    local devices=()
+    [[ "$selected_gpu" == "INTEL" ]] && devices=("${INTEL_DEVICES[@]}")
+    [[ "$selected_gpu" == "AMD" ]] && devices=("${AMD_DEVICES[@]}")
+
+    local dev_index=0
+    for dev in "${devices[@]}"; do
+      echo "dev${dev_index}: ${dev},gid=44" >>"$LXC_CONFIG"
+      dev_index=$((dev_index + 1))
+    done
+
+    export GPU_TYPE="$selected_gpu"
+    msg_ok "${selected_gpu} GPU passthrough configured (${#devices[@]} devices)"
+    ;;
+
+  NVIDIA)
+    if [[ ${#NVIDIA_DEVICES[@]} -eq 0 ]]; then
+      msg_warn "No NVIDIA devices available for passthrough"
+      return 0
+    fi
+
+    local dev_index=0
+    for dev in "${NVIDIA_DEVICES[@]}"; do
+      echo "dev${dev_index}: ${dev},gid=44" >>"$LXC_CONFIG"
+      dev_index=$((dev_index + 1))
+    done
+
+    export GPU_TYPE="NVIDIA"
+    msg_ok "NVIDIA GPU passthrough configured (${#NVIDIA_DEVICES[@]} devices) - install drivers in container if needed"
+    ;;
+  esac
+}
+
+# Additional device passthrough
+configure_additional_devices() {
+  if [ "$ENABLE_TUN" == "yes" ]; then
+    cat <<EOF >>"$LXC_CONFIG"
+lxc.cgroup2.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+EOF
+  fi
+
+  if [[ -e /dev/apex_0 ]]; then
+    msg_custom "🔌" "${BL}" "Detected Coral TPU - configuring passthrough"
+    echo "lxc.mount.entry: /dev/apex_0 dev/apex_0 none bind,optional,create=file" >>"$LXC_CONFIG"
+  fi
+}
+
+# Get correct GID inside container
+get_container_gid() {
+  local group="$1"
+  local gid=$(pct exec "$CTID" -- getent group "$group" 2>/dev/null | cut -d: -f3)
+  echo "${gid:-44}"
+}
+
+# ------------------------------------------------------------------------------
+# pvesm_status_cached()
+#
+# - Caches `pvesm status` output per invocation to avoid repeated subprocess calls
+# - Supports -content and -storage filters matching pvesm status syntax
+# - Cache key is derived from arguments; cache lifetime is the current shell session
+# - Invalidate by unsetting _PVESM_CACHE_* variables
+# ------------------------------------------------------------------------------
+declare -A _PVESM_CACHE=()
+
+pvesm_status_cached() {
+  local cache_key="pvesm_${*// /_}"
+  if [[ -n "${_PVESM_CACHE[$cache_key]+x}" ]]; then
+    echo "${_PVESM_CACHE[$cache_key]}"
+    return 0
+  fi
+  local result
+  result=$(pvesm status "$@" 2>/dev/null) || return $?
+  _PVESM_CACHE["$cache_key"]="$result"
+  echo "$result"
+}
+
+# ------------------------------------------------------------------------------
 # build_container()
 #
 # - Main function for creating and configuring LXC container
@@ -3509,6 +3740,13 @@ start() {
 # - Posts installation telemetry to API if diagnostics enabled
 # ------------------------------------------------------------------------------
 build_container() {
+  # Recursion guard: prevent infinite retry loops (OOM→retry→OOM→retry→...)
+  export _BUILD_DEPTH=$(( ${_BUILD_DEPTH:-0} + 1 ))
+  if (( _BUILD_DEPTH > 3 )); then
+    msg_error "Maximum recovery depth reached (${_BUILD_DEPTH}). Aborting to prevent infinite retry loop."
+    exit 250
+  fi
+
   #  if [ "$VERBOSE" == "yes" ]; then set -x; fi
 
   NET_STRING="-net0 name=eth0,bridge=${BRG:-vmbr0}"
@@ -3704,7 +3942,7 @@ $PCT_OPTIONS_STRING"
     msg_info "Validating storage space"
     if ! validate_storage_space "$CONTAINER_STORAGE" "$DISK_SIZE" "no"; then
       local free_space
-      free_space=$(pvesm status 2>/dev/null | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
+      free_space=$(pvesm_status_cached | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
       local free_fmt
       free_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$free_space" 2>/dev/null || echo "${free_space}KB")
       msg_error "Not enough space on '$CONTAINER_STORAGE'. Required: ${DISK_SIZE}GB, Available: ${free_fmt}"
@@ -3722,234 +3960,8 @@ $PCT_OPTIONS_STRING"
 
   # ============================================================================
   # GPU/USB PASSTHROUGH CONFIGURATION
+  # (Functions defined above build_container for reuse across retries)
   # ============================================================================
-
-  # Check if GPU passthrough is enabled
-  # Returns true only if var_gpu is explicitly set to "yes"
-  # Can be set via:
-  #   - Environment variable: var_gpu=yes bash -c "..."
-  #   - CT script default: var_gpu="${var_gpu:-no}"
-  #   - Advanced settings wizard
-  #   - App defaults file: /usr/local/community-scripts/defaults/<app>.vars
-  is_gpu_app() {
-    [[ "${var_gpu:-no}" == "yes" ]] && return 0
-    return 1
-  }
-
-  # Detect all available GPU devices
-  detect_gpu_devices() {
-    INTEL_DEVICES=()
-    AMD_DEVICES=()
-    NVIDIA_DEVICES=()
-
-    # Store PCI info to avoid multiple calls
-    # grep returns exit 1 when no match — use || true to prevent ERR trap
-    local pci_vga_info
-    pci_vga_info=$(lspci -nn 2>/dev/null | grep -E "VGA|Display|3D" || true)
-
-    # No GPU-related PCI devices at all? Skip silently.
-    if [[ -z "$pci_vga_info" ]]; then
-      msg_debug "No VGA/Display/3D PCI devices found"
-      return 0
-    fi
-
-    # Check for Intel GPU - look for Intel vendor ID [8086]
-    if grep -q "\[8086:" <<<"$pci_vga_info"; then
-      msg_custom "🎮" "${BL}" "Detected Intel GPU"
-      if [[ -d /dev/dri ]]; then
-        for d in /dev/dri/renderD* /dev/dri/card*; do
-          [[ -e "$d" ]] && INTEL_DEVICES+=("$d")
-        done
-      fi
-    fi
-
-    # Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
-    if grep -qE "\[1002:|\[1022:" <<<"$pci_vga_info"; then
-      msg_custom "🎮" "${RD}" "Detected AMD GPU"
-      if [[ -d /dev/dri ]]; then
-        # Only add if not already claimed by Intel
-        if [[ ${#INTEL_DEVICES[@]} -eq 0 ]]; then
-          for d in /dev/dri/renderD* /dev/dri/card*; do
-            [[ -e "$d" ]] && AMD_DEVICES+=("$d")
-          done
-        fi
-      fi
-    fi
-
-    # Check for NVIDIA GPU - look for NVIDIA vendor ID [10de]
-    if grep -q "\[10de:" <<<"$pci_vga_info"; then
-      msg_custom "🎮" "${GN}" "Detected NVIDIA GPU"
-
-      # Simple passthrough - just bind /dev/nvidia* devices if they exist
-      # Only include character devices (-c), skip directories like /dev/nvidia-caps
-      for d in /dev/nvidia*; do
-        [[ -c "$d" ]] && NVIDIA_DEVICES+=("$d")
-      done
-      # Also check for devices inside /dev/nvidia-caps/ directory
-      if [[ -d /dev/nvidia-caps ]]; then
-        for d in /dev/nvidia-caps/*; do
-          [[ -c "$d" ]] && NVIDIA_DEVICES+=("$d")
-        done
-      fi
-
-      if [[ ${#NVIDIA_DEVICES[@]} -gt 0 ]]; then
-        msg_custom "🎮" "${GN}" "Found ${#NVIDIA_DEVICES[@]} NVIDIA device(s) for passthrough"
-      else
-        msg_warn "NVIDIA GPU detected via PCI but no /dev/nvidia* devices found"
-        msg_custom "ℹ️" "${YW}" "Skipping NVIDIA passthrough (host drivers may not be loaded)"
-      fi
-    fi
-
-    # Debug output
-    msg_debug "Intel devices: ${INTEL_DEVICES[*]}"
-    msg_debug "AMD devices: ${AMD_DEVICES[*]}"
-    msg_debug "NVIDIA devices: ${NVIDIA_DEVICES[*]}"
-  }
-
-  # Configure USB passthrough for privileged containers
-  configure_usb_passthrough() {
-    if [[ "$CT_TYPE" != "0" ]]; then
-      return 0
-    fi
-
-    msg_info "Configuring automatic USB passthrough (privileged container)"
-    cat <<EOF >>"$LXC_CONFIG"
-# Automatic USB passthrough (privileged container)
-lxc.cgroup2.devices.allow: a
-lxc.cap.drop:
-lxc.cgroup2.devices.allow: c 188:* rwm
-lxc.cgroup2.devices.allow: c 189:* rwm
-lxc.mount.entry: /dev/serial/by-id  dev/serial/by-id  none bind,optional,create=dir
-lxc.mount.entry: /dev/ttyUSB0       dev/ttyUSB0       none bind,optional,create=file
-lxc.mount.entry: /dev/ttyUSB1       dev/ttyUSB1       none bind,optional,create=file
-lxc.mount.entry: /dev/ttyACM0       dev/ttyACM0       none bind,optional,create=file
-lxc.mount.entry: /dev/ttyACM1       dev/ttyACM1       none bind,optional,create=file
-EOF
-    msg_ok "USB passthrough configured"
-  }
-
-  # Configure GPU passthrough
-  configure_gpu_passthrough() {
-    # Skip if:
-    # GPU passthrough is enabled when var_gpu="yes":
-    # - Set via environment variable: var_gpu=yes bash -c "..."
-    # - Set in CT script: var_gpu="${var_gpu:-no}"
-    # - Enabled in advanced_settings wizard
-    # - Configured in app defaults file
-    if ! is_gpu_app "$APP"; then
-      return 0
-    fi
-
-    detect_gpu_devices
-
-    # Count available GPU types
-    local gpu_count=0
-    local available_gpus=()
-
-    if [[ ${#INTEL_DEVICES[@]} -gt 0 ]]; then
-      available_gpus+=("INTEL")
-      gpu_count=$((gpu_count + 1))
-    fi
-
-    if [[ ${#AMD_DEVICES[@]} -gt 0 ]]; then
-      available_gpus+=("AMD")
-      gpu_count=$((gpu_count + 1))
-    fi
-
-    if [[ ${#NVIDIA_DEVICES[@]} -gt 0 ]]; then
-      available_gpus+=("NVIDIA")
-      gpu_count=$((gpu_count + 1))
-    fi
-
-    if [[ $gpu_count -eq 0 ]]; then
-      msg_custom "ℹ️" "${YW}" "No GPU devices found for passthrough"
-      return 0
-    fi
-
-    local selected_gpu=""
-
-    if [[ $gpu_count -eq 1 ]]; then
-      # Automatic selection for single GPU
-      selected_gpu="${available_gpus[0]}"
-      msg_ok "Automatically configuring ${selected_gpu} GPU passthrough"
-    else
-      # Multiple GPUs - ask user
-      echo -e "\n${INFO} Multiple GPU types detected:"
-      for gpu in "${available_gpus[@]}"; do
-        echo "  - $gpu"
-      done
-      read -rp "Which GPU type to passthrough? (${available_gpus[*]}): " selected_gpu </dev/tty
-      selected_gpu="${selected_gpu^^}"
-
-      # Validate selection
-      local valid=0
-      for gpu in "${available_gpus[@]}"; do
-        [[ "$selected_gpu" == "$gpu" ]] && valid=1
-      done
-
-      if [[ $valid -eq 0 ]]; then
-        msg_warn "Invalid selection. Skipping GPU passthrough."
-        return 0
-      fi
-    fi
-
-    # Apply passthrough configuration based on selection
-    local dev_idx=0
-
-    case "$selected_gpu" in
-    INTEL | AMD)
-      local devices=()
-      [[ "$selected_gpu" == "INTEL" ]] && devices=("${INTEL_DEVICES[@]}")
-      [[ "$selected_gpu" == "AMD" ]] && devices=("${AMD_DEVICES[@]}")
-
-      # Use pct set to add devices with proper dev0/dev1 format
-      # GIDs will be detected and set after container starts
-      local dev_index=0
-      for dev in "${devices[@]}"; do
-        # Add to config using pct set (will be visible in GUI)
-        echo "dev${dev_index}: ${dev},gid=44" >>"$LXC_CONFIG"
-        dev_index=$((dev_index + 1))
-      done
-
-      export GPU_TYPE="$selected_gpu"
-      msg_ok "${selected_gpu} GPU passthrough configured (${#devices[@]} devices)"
-      ;;
-
-    NVIDIA)
-      if [[ ${#NVIDIA_DEVICES[@]} -eq 0 ]]; then
-        msg_warn "No NVIDIA devices available for passthrough"
-        return 0
-      fi
-
-      # Use pct set for NVIDIA devices
-      local dev_index=0
-      for dev in "${NVIDIA_DEVICES[@]}"; do
-        echo "dev${dev_index}: ${dev},gid=44" >>"$LXC_CONFIG"
-        dev_index=$((dev_index + 1))
-      done
-
-      export GPU_TYPE="NVIDIA"
-      msg_ok "NVIDIA GPU passthrough configured (${#NVIDIA_DEVICES[@]} devices) - install drivers in container if needed"
-      ;;
-    esac
-  }
-
-  # Additional device passthrough
-  configure_additional_devices() {
-    # TUN device passthrough
-    if [ "$ENABLE_TUN" == "yes" ]; then
-      cat <<EOF >>"$LXC_CONFIG"
-lxc.cgroup2.devices.allow: c 10:200 rwm
-lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
-EOF
-    fi
-
-    # Coral TPU passthrough
-    if [[ -e /dev/apex_0 ]]; then
-      msg_custom "🔌" "${BL}" "Detected Coral TPU - configuring passthrough"
-      echo "lxc.mount.entry: /dev/apex_0 dev/apex_0 none bind,optional,create=file" >>"$LXC_CONFIG"
-    fi
-  }
 
   # Execute pre-start configurations
   configure_usb_passthrough
@@ -4062,12 +4074,6 @@ EOF
       msg_ok "Network in LXC is reachable (ping)"
     fi
   fi
-  # Function to get correct GID inside container
-  get_container_gid() {
-    local group="$1"
-    local gid=$(pct exec "$CTID" -- getent group "$group" 2>/dev/null | cut -d: -f3)
-    echo "${gid:-44}" # Default to 44 if not found
-  }
 
   fix_gpu_gids
 
@@ -4736,13 +4742,13 @@ resolve_storage_preselect() {
   *) return 1 ;;
   esac
   [[ -z "$preselect" ]] && return 1
-  if ! pvesm status -content "$required_content" | awk 'NR>1{print $1}' | grep -qx -- "$preselect"; then
+  if ! pvesm_status_cached -content "$required_content" | awk 'NR>1{print $1}' | grep -qx -- "$preselect"; then
     msg_warn "Preselected storage '${preselect}' does not support content '${required_content}' (or not found)"
     return 1
   fi
 
   local line total used free
-  line="$(pvesm status | awk -v s="$preselect" 'NR>1 && $1==s {print $0}')"
+  line="$(pvesm_status_cached | awk -v s="$preselect" 'NR>1 && $1==s {print $0}')"
   if [[ -z "$line" ]]; then
     STORAGE_INFO="n/a"
   else
@@ -4848,13 +4854,8 @@ fix_gpu_gids() {
 }
 
 check_storage_support() {
-  local CONTENT="$1" VALID=0
-  while IFS= read -r line; do
-    local STORAGE_NAME
-    STORAGE_NAME=$(awk '{print $1}' <<<"$line")
-    [[ -n "$STORAGE_NAME" ]] && VALID=1
-  done < <(pvesm status -content "$CONTENT" 2>/dev/null | awk 'NR>1')
-  [[ $VALID -eq 1 ]]
+  local CONTENT="$1"
+  pvesm_status_cached -content "$CONTENT" | awk 'NR>1{print $1; exit}' | grep -q . 2>/dev/null
 }
 
 select_storage() {
@@ -4903,7 +4904,7 @@ select_storage() {
     STORAGE_MAP["$DISPLAY"]="$TAG"
     MENU+=("$DISPLAY" "$INFO" "OFF")
     ((${#DISPLAY} > COL_WIDTH)) && COL_WIDTH=${#DISPLAY}
-  done < <(pvesm status -content "$CONTENT" | awk 'NR>1')
+  done < <(pvesm_status_cached -content "$CONTENT" | awk 'NR>1')
 
   if [[ ${#MENU[@]} -eq 0 ]]; then
     msg_error "No storage found for content type '$CONTENT'."
@@ -4961,9 +4962,9 @@ validate_storage_space() {
   local required_gb="${2:-8}"
   local show_dialog="${3:-no}"
 
-  # Get full storage line from pvesm status
+  # Get full storage line from pvesm status (cached)
   local storage_line
-  storage_line=$(pvesm status 2>/dev/null | awk -v s="$storage" '$1 == s {print $0}')
+  storage_line=$(pvesm_status_cached | awk -v s="$storage" '$1 == s {print $0}')
 
   # Check if storage exists and is active
   if [[ -z "$storage_line" ]]; then
@@ -5202,7 +5203,7 @@ create_lxc_container() {
     ;;
   esac
 
-  if ! pvesm status -content rootdir 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$CONTAINER_STORAGE"; then
+  if ! pvesm_status_cached -content rootdir | awk 'NR>1{print $1}' | grep -qx "$CONTAINER_STORAGE"; then
     msg_error "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) does not support 'rootdir' content."
     exit 213
   fi
@@ -5211,7 +5212,7 @@ create_lxc_container() {
   msg_info "Validating template storage '$TEMPLATE_STORAGE'"
   TEMPLATE_TYPE=$(grep -E "^[^:]+: $TEMPLATE_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1)
 
-  if ! pvesm status -content vztmpl 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$TEMPLATE_STORAGE"; then
+  if ! pvesm_status_cached -content vztmpl | awk 'NR>1{print $1}' | grep -qx "$TEMPLATE_STORAGE"; then
     msg_warn "Template storage '$TEMPLATE_STORAGE' may not support 'vztmpl'"
   fi
   msg_ok "Template storage '$TEMPLATE_STORAGE' validated"
