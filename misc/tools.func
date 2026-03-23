@@ -700,7 +700,7 @@ manage_tool_repository() {
   local gpg_key_url="${4:-}"
   local distro_id repo_component suite
 
-  distro_id=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
+  distro_id=$(get_os_info id)
 
   case "$tool_name" in
   mariadb)
@@ -714,7 +714,7 @@ manage_tool_repository() {
 
     # Get suite for fallback handling
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
     suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url/$distro_id")
 
     # Setup new repository using deb822 format
@@ -745,7 +745,7 @@ manage_tool_repository() {
 
     # Setup repository
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
 
     # Suite mapping with fallback for newer releases not yet supported by upstream
     if [[ "$distro_id" == "debian" ]]; then
@@ -816,7 +816,7 @@ EOF
 
     # NodeSource uses deb822 format with GPG from repo
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
 
     # Download GPG key from NodeSource with retry logic
     if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/nodesource.gpg" "dearmor"; then
@@ -858,7 +858,7 @@ EOF
 
     # Setup repository
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
     cat <<EOF >/etc/apt/sources.list.d/php.sources
 Types: deb
 URIs: https://packages.sury.org/php
@@ -886,7 +886,7 @@ EOF
 
     # Setup repository
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
     cat <<EOF >/etc/apt/sources.list.d/postgresql.sources
 Types: deb
 URIs: http://apt.postgresql.org/pub/repos/apt
@@ -1323,10 +1323,16 @@ get_os_info() {
 
   # Cache OS info to avoid repeated file reads
   if [[ -z "${_OS_ID:-}" ]]; then
-    export _OS_ID=$(awk -F= '/^ID=/{gsub(/"/,"",$2); print $2}' /etc/os-release)
-    export _OS_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{gsub(/"/,"",$2); print $2}' /etc/os-release)
-    export _OS_VERSION=$(awk -F= '/^VERSION_ID=/{gsub(/"/,"",$2); print $2}' /etc/os-release)
-    export _OS_VERSION_FULL=$(awk -F= '/^VERSION=/{gsub(/"/,"",$2); print $2}' /etc/os-release)
+    local _line
+    while IFS='=' read -r _key _val; do
+      _val="${_val//\"/}"
+      case "$_key" in
+      ID) export _OS_ID="$_val" ;;
+      VERSION_CODENAME) export _OS_CODENAME="$_val" ;;
+      VERSION_ID) export _OS_VERSION="$_val" ;;
+      VERSION) export _OS_VERSION_FULL="$_val" ;;
+      esac
+    done </etc/os-release
   fi
 
   case "$field" in
@@ -2144,8 +2150,8 @@ fetch_and_deploy_gh_tag() {
   local repo="$2"
   local version="${3:-latest}"
   local target="${4:-/opt/$app}"
-  local app_lc=""
-  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local app_lc="${app,,}"
+  app_lc="${app_lc// /}"
   local version_file="$HOME/.${app_lc}"
 
   if [[ "$version" == "latest" ]]; then
@@ -2221,8 +2227,8 @@ check_for_gh_tag() {
   local app="$1"
   local repo="$2"
   local prefix="${3:-}"
-  local app_lc=""
-  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local app_lc="${app,,}"
+  app_lc="${app_lc// /}"
   local current_file="$HOME/.${app_lc}"
 
   msg_info "Checking for update: ${app}"
@@ -2272,8 +2278,8 @@ check_for_gh_release() {
   local source="$2"
   local pinned_version_in="${3:-}" # optional
   local pin_reason="${4:-}"        # optional reason shown to user
-  local app_lc=""
-  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local app_lc="${app,,}"
+  app_lc="${app_lc// /}"
   local current_file="$HOME/.${app_lc}"
 
   msg_info "Checking for update: ${app}"
@@ -2600,7 +2606,8 @@ create_self_signed_cert() {
   local APP_NAME="${1:-${APPLICATION}}"
   local HOSTNAME="$(hostname -f)"
   local IP="$(hostname -I | awk '{print $1}')"
-  local APP_NAME_LC=$(echo "${APP_NAME,,}" | tr -d ' ')
+  local APP_NAME_LC="${APP_NAME,,}"
+  APP_NAME_LC="${APP_NAME_LC// /}"
   local CERT_DIR="/etc/ssl/${APP_NAME_LC}"
   local CERT_KEY="${CERT_DIR}/${APP_NAME_LC}.key"
   local CERT_CRT="${CERT_DIR}/${APP_NAME_LC}.crt"
@@ -2647,7 +2654,7 @@ function download_with_progress() {
 
   # Content-Length aus HTTP-Header holen
   local content_length
-  content_length=$(curl -fsSLI "$url" | awk '/Content-Length/ {print $2}' | tr -d '\r' || true)
+  content_length=$(curl -fsSLI "$url" | awk '/Content-Length/ {gsub(/\r/,""); print $2}' || true)
 
   if [[ -z "$content_length" ]]; then
     if ! curl -fL# -o "$output" "$url"; then
@@ -2766,7 +2773,8 @@ function fetch_and_deploy_codeberg_release() {
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
 
-  local app_lc=$(echo "${app,,}" | tr -d ' ')
+  local app_lc="${app,,}"
+  app_lc="${app_lc// /}"
   local version_file="$HOME/.${app_lc}"
 
   local api_timeouts=(60 120 240)
@@ -3318,7 +3326,8 @@ function fetch_and_deploy_gh_release() {
     fi
   fi
 
-  local app_lc=$(echo "${app,,}" | tr -d ' ')
+  local app_lc="${app,,}"
+  app_lc="${app_lc// /}"
   local version_file="$HOME/.${app_lc}"
 
   local api_timeouts=(60 120 240)
@@ -4409,7 +4418,7 @@ function setup_hwaccel() {
       # Parse comma-separated numbers
       IFS=',' read -ra nums <<<"$selection"
       for num in "${nums[@]}"; do
-        num=$(echo "$num" | tr -d ' ')
+        num="${num// /}"
         if [[ "$num" =~ ^[0-9]+$ ]] && ((num >= 1 && num <= gpu_count)); then
           SELECTED_INDICES+=("$((num - 1))")
         fi
@@ -4451,9 +4460,9 @@ function setup_hwaccel() {
   # OS Detection
   # ═══════════════════════════════════════════════════════════════════════════
   local os_id os_codename os_version
-  os_id=$(grep -oP '(?<=^ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "debian")
-  os_codename=$(grep -oP '(?<=^VERSION_CODENAME=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "unknown")
-  os_version=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "")
+  os_id=$(get_os_info id)
+  os_codename=$(get_os_info codename)
+  os_version=$(get_os_info version)
   [[ -z "$os_id" ]] && os_id="debian"
 
   local in_ct="${CTTYPE:-0}"
@@ -5339,8 +5348,8 @@ function setup_imagemagick() {
 function setup_java() {
   local JAVA_VERSION="${JAVA_VERSION:-21}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
   local DESIRED_PACKAGE="temurin-${JAVA_VERSION}-jdk"
 
   # Prepare repository (cleanup + validation)
@@ -5595,7 +5604,7 @@ EOF
     if [[ -n "$CURRENT_VERSION" ]]; then
       # Get available distro version
       local DISTRO_VERSION=""
-      DISTRO_VERSION=$(apt-cache policy mariadb-server 2>/dev/null | grep -E "Candidate:" | awk '{print $2}' | grep -oP '^\d+:\K\d+\.\d+\.\d+' || echo "")
+      DISTRO_VERSION=$(apt-cache policy mariadb-server 2>/dev/null | awk '/Candidate:/ {sub(/^[0-9]+:/, "", $2); print $2}' || echo "")
 
       if [[ -n "$DISTRO_VERSION" ]]; then
         # Compare versions - if current is higher, keep it
@@ -5996,8 +6005,8 @@ function setup_mysql() {
   local MYSQL_VERSION="${MYSQL_VERSION:-8.0}"
   local USE_MYSQL_REPO="${USE_MYSQL_REPO:-true}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
 
   # Ensure non-interactive mode for all apt operations
   export DEBIAN_FRONTEND=noninteractive
@@ -6343,7 +6352,7 @@ function setup_nodejs() {
 
       # Check if the module is already installed
       if $STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep -q "$MODULE_NAME@"; then
-        MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
+        MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | awk -F@ -v mod="$MODULE_NAME" '$0 ~ mod"@" {gsub(/[[:space:]]/, "", $2); print $2}' || echo '')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
           msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
           if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
@@ -6414,8 +6423,8 @@ function setup_php() {
   local PHP_APACHE="${PHP_APACHE:-NO}"
   local PHP_FPM="${PHP_FPM:-NO}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
 
   # Parse version for compatibility checks
   local PHP_MAJOR="${PHP_VERSION%%.*}"
@@ -6462,7 +6471,7 @@ function setup_php() {
   local FILTERED_MODULES=""
   IFS=',' read -ra ALL_MODULES <<<"$COMBINED_MODULES"
   for mod in "${ALL_MODULES[@]}"; do
-    mod=$(echo "$mod" | tr -d '[:space:]')
+    mod="${mod//[[:space:]]/}"
     [[ -z "$mod" ]] && continue
 
     # Skip if it's a known built-in module
@@ -6479,7 +6488,7 @@ function setup_php() {
   done
 
   # Deduplicate
-  COMBINED_MODULES=$(echo "$FILTERED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
+  COMBINED_MODULES=$(awk -v RS=',' '!seen[$0]++{printf "%s%s", sep, $0; sep=","}' <<<"$FILTERED_MODULES")
 
   # Get current PHP-CLI version
   local CURRENT_PHP=""
@@ -6548,7 +6557,7 @@ EOF
 
   IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
   for mod in "${MODULES[@]}"; do
-    mod=$(echo "$mod" | tr -d '[:space:]')
+    mod="${mod//[[:space:]]/}"
     [[ -z "$mod" ]] && continue
 
     local pkg_name="php${PHP_VERSION}-${mod}"
@@ -6727,8 +6736,8 @@ setup_postgresql() {
   local PG_MODULES="${PG_MODULES:-}"
   local USE_PGDG_REPO="${USE_PGDG_REPO:-true}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
 
   # Ensure non-interactive mode for all apt operations
   export DEBIAN_FRONTEND=noninteractive
@@ -7571,8 +7580,8 @@ EOF
 function setup_clickhouse() {
   local CLICKHOUSE_VERSION="${CLICKHOUSE_VERSION:-latest}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
 
   # Ensure non-interactive mode for all apt operations
   export DEBIAN_FRONTEND=noninteractive
@@ -7786,7 +7795,7 @@ function setup_rust() {
 
       # Check if already installed
       if echo "$CRATE_LIST" | grep -q "^${NAME} "; then
-        INSTALLED_VER=$(echo "$CRATE_LIST" | grep "^${NAME} " | head -1 | awk '{print $2}' 2>/dev/null | tr -d 'v:' || echo '')
+        INSTALLED_VER=$(echo "$CRATE_LIST" | grep "^${NAME} " | head -1 | awk '{gsub(/[v:]/, "", $2); print $2}' || echo '')
 
         if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
           msg_info "Upgrading $NAME from v$INSTALLED_VER to v$VER"

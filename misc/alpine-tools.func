@@ -53,7 +53,7 @@ download_with_progress() {
   # $1 url, $2 dest
   local url="$1" out="$2" cl
   need_tool curl pv || return 1
-  cl=$(curl -fsSLI "$url" 2>/dev/null | awk 'tolower($0) ~ /^content-length:/ {print $2}' | tr -d '\r')
+  cl=$(curl -fsSLI "$url" 2>/dev/null | awk 'tolower($0) ~ /^content-length:/ {gsub(/\r/,""); print $2}')
   if [ -n "$cl" ]; then
     curl -fsSL "$url" | pv -s "$cl" >"$out" || {
       msg_error "Download failed: $url"
