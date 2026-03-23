@@ -150,7 +150,7 @@ function install() {
   curl -fsSL "https://raw.githubusercontent.com/runtipi/runtipi/master/scripts/install.sh" -o "install.sh"
   chmod +x install.sh
   $STD ./install.sh
-  chmod 666 /opt/runtipi/state/settings.json 2>/dev/null || true
+  chmod 660 /opt/runtipi/state/settings.json 2>/dev/null || true
   rm -f /opt/install.sh
   msg_ok "Installed ${APP}"
 

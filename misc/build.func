@@ -221,6 +221,11 @@ update_motd_ip() {
     local current_hostname="$(hostname)"
     local current_ip="$(hostname -I | awk '{print $1}')"
 
+    # Escape sed special chars in replacement strings (& \ |)
+    current_os="${current_os//\\/\\\\}"; current_os="${current_os//&/\\&}"
+    current_hostname="${current_hostname//\\/\\\\}"; current_hostname="${current_hostname//&/\\&}"
+    current_ip="${current_ip//\\/\\\\}"; current_ip="${current_ip//&/\\&}"
+
     # Update only if values actually changed
     if ! grep -q "OS:.*$current_os" "$PROFILE_FILE" 2>/dev/null; then
       sed -i "s|OS:.*|OS: \${GN}$current_os\${CL}\\\"|" "$PROFILE_FILE"
@@ -4076,8 +4081,8 @@ EOF
   if [ "$var_os" == "alpine" ]; then
     sleep 3
     pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+https://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq" >>"$BUILD_LOG" 2>&1 || {
       msg_error "Failed to install base packages in Alpine container"
@@ -4086,7 +4091,9 @@ EOF'
   else
     sleep 3
     LANG=${LANG:-en_US.UTF-8}
-    pct exec "$CTID" -- bash -c "sed -i \"/$LANG/ s/^# //\" /etc/locale.gen"
+    local LANG_ESC="${LANG//./\\.}"
+    LANG_ESC="${LANG_ESC//|/\\|}"
+    pct exec "$CTID" -- bash -c "sed -i \"/$LANG_ESC/ s/^# //\" /etc/locale.gen"
     pct exec "$CTID" -- bash -c "locale_line=\$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print \$1}' | head -n 1) && \
     echo LANG=\$locale_line >/etc/default/locale && \
     locale-gen >/dev/null && \
@@ -4758,6 +4765,10 @@ fix_gpu_gids() {
   # Stop container to update config
   pct stop "$CTID" >/dev/null 2>&1
   sleep 1
+
+  # Validate GIDs are numeric before sed
+  [[ "$render_gid" =~ ^[0-9]+$ ]] || render_gid="104"
+  [[ "$video_gid" =~ ^[0-9]+$ ]] || video_gid="44"
 
   # Update dev entries with correct GIDs
   sed -i.bak -E "s|(dev[0-9]+: /dev/dri/renderD[0-9]+),gid=[0-9]+|\1,gid=${render_gid}|g" "$LXC_CONFIG"
