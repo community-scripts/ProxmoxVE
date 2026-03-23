@@ -34,7 +34,6 @@ function update_script() {
     exit
   fi
 
-  # ── Node.js upgrade if needed ──────────────────────────────────────────
   if command -v node &>/dev/null; then
     CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
     if [[ "$CURRENT_NODE_VERSION" != "22" ]]; then
@@ -50,7 +49,6 @@ function update_script() {
 
   NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
-  # ── Migrate from deb-packaged OpenResty to source-compiled ─────────────
   if dpkg -s openresty &>/dev/null 2>&1; then
     msg_info "Migrating from packaged OpenResty to source"
     rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg /etc/apt/trusted.gpg.d/openresty.gpg
@@ -61,14 +59,12 @@ function update_script() {
     msg_ok "Migrated from packaged OpenResty to source"
   fi
 
-  # ── OpenResty: build dependencies (Debian 13+ needs libpcre2-dev) ──────
   local pcre_pkg="libpcre3-dev"
   if grep -qE 'VERSION_ID="1[3-9]"' /etc/os-release 2>/dev/null; then
     pcre_pkg="libpcre2-dev"
   fi
   $STD apt install -y build-essential "$pcre_pkg" libssl-dev zlib1g-dev
 
-  # ── OpenResty: check & update ──────────────────────────────────────────
   if check_for_gh_release "openresty" "openresty/openresty"; then
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "${CHECK_UPDATE_RELEASE}" "/opt/openresty" "openresty-*.tar.gz"
 
@@ -106,7 +102,6 @@ EOF
     msg_ok "Built OpenResty"
   fi
 
-  # ── Certbot: always update ─────────────────────────────────────────────
   if [ -d /opt/certbot ]; then
     msg_info "Updating Certbot"
     $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
@@ -114,7 +109,6 @@ EOF
     msg_ok "Updated Certbot"
   fi
 
-  # ── NPM: check & update ───────────────────────────────────────────────
   if check_for_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager"; then
     msg_info "Stopping Services"
     systemctl stop openresty
@@ -224,7 +218,6 @@ EOF
     systemctl enable -q --now openresty
     systemctl enable -q --now npm
     msg_ok "Started Services"
-
     msg_ok "Updated successfully!"
   fi
 
