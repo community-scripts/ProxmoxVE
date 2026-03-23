@@ -38,7 +38,7 @@
 # - Captures app-declared resource defaults (CPU, RAM, Disk)
 # ------------------------------------------------------------------------------
 variables() {
-  NSAPP=$(echo "${APP,,}" | tr -d ' ')              # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
+  NSAPP="${APP,,}"; NSAPP="${NSAPP// /}"            # Lowercase + strip spaces (pure bash, no subprocesses)
   var_install="${NSAPP}-install"                    # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'                    # it defines the INTEGER regular expression pattern.
   PVEHOST_NAME=$(hostname)                          # gets the Proxmox Hostname and sets it to Uppercase
@@ -989,7 +989,7 @@ base_settings() {
 
   # Validate and set Hostname/FQDN
   local requested_hostname="${var_hostname:-$NSAPP}"
-  requested_hostname=$(echo "${requested_hostname,,}" | tr -d ' ')
+  requested_hostname="${requested_hostname,,}"; requested_hostname="${requested_hostname// /}"
   if ! validate_hostname "$requested_hostname"; then
     if [[ -n "${var_hostname:-}" ]]; then
       msg_warn "Invalid hostname '$requested_hostname'. Using default: $NSAPP"
@@ -1509,12 +1509,10 @@ _build_vars_diff() {
 _build_current_app_vars_tmp() {
   tmpf="$(mktemp /tmp/${NSAPP:-app}.vars.new.XXXXXX)"
 
-  # NET/GW
+  # NET/GW — pure bash parameter expansion (no subprocess forks)
   _net="${NET:-}"
-  _gate=""
-  case "${GATE:-}" in
-  ,gw=*) _gate=$(echo "$GATE" | sed 's/^,gw=//') ;;
-  esac
+  _gate="${GATE#,gw=}"
+  [[ "$_gate" == "${GATE:-}" ]] && _gate=""
 
   # IPv6
   _ipv6_method="${IPV6_METHOD:-auto}"
@@ -1526,28 +1524,18 @@ _build_current_app_vars_tmp() {
   fi
 
   # MTU/VLAN/MAC
-  _mtu=""
-  _vlan=""
-  _mac=""
-  case "${MTU:-}" in
-  ,mtu=*) _mtu=$(echo "$MTU" | sed 's/^,mtu=//') ;;
-  esac
-  case "${VLAN:-}" in
-  ,tag=*) _vlan=$(echo "$VLAN" | sed 's/^,tag=//') ;;
-  esac
-  case "${MAC:-}" in
-  ,hwaddr=*) _mac=$(echo "$MAC" | sed 's/^,hwaddr=//') ;;
-  esac
+  _mtu="${MTU#,mtu=}"
+  [[ "$_mtu" == "${MTU:-}" ]] && _mtu=""
+  _vlan="${VLAN#,tag=}"
+  [[ "$_vlan" == "${VLAN:-}" ]] && _vlan=""
+  _mac="${MAC#,hwaddr=}"
+  [[ "$_mac" == "${MAC:-}" ]] && _mac=""
 
   # DNS / Searchdomain
-  _ns=""
-  _searchdomain=""
-  case "${NS:-}" in
-  -nameserver=*) _ns=$(echo "$NS" | sed 's/^-nameserver=//') ;;
-  esac
-  case "${SD:-}" in
-  -searchdomain=*) _searchdomain=$(echo "$SD" | sed 's/^-searchdomain=//') ;;
-  esac
+  _ns="${NS#-nameserver=}"
+  [[ "$_ns" == "${NS:-}" ]] && _ns=""
+  _searchdomain="${SD#-searchdomain=}"
+  [[ "$_searchdomain" == "${SD:-}" ]] && _searchdomain=""
 
   # SSH / APT / Features
   _ssh="${SSH:-no}"
@@ -1709,10 +1697,14 @@ maybe_offer_save_app_defaults() {
 ensure_storage_selection_for_vars_file() {
   local vf="$1"
 
-  # Read stored values (if any)
-  local tpl ct
-  tpl=$(grep -E '^var_template_storage=' "$vf" | cut -d= -f2-)
-  ct=$(grep -E '^var_container_storage=' "$vf" | cut -d= -f2-)
+  # Read stored values (single file read)
+  local tpl="" ct="" _line
+  while IFS='=' read -r _key _val; do
+    case "$_key" in
+      var_template_storage) tpl="$_val" ;;
+      var_container_storage) ct="$_val" ;;
+    esac
+  done < "$vf"
 
   if [[ -n "$tpl" && -n "$ct" ]]; then
     TEMPLATE_STORAGE="$tpl"
@@ -1982,7 +1974,7 @@ advanced_settings() {
         --inputbox "\nSet Hostname (or FQDN, e.g. host.example.com)" 10 58 "$_hostname" \
         3>&1 1>&2 2>&3); then
         local hn_test="${result:-$NSAPP}"
-        hn_test=$(echo "${hn_test,,}" | tr -d ' ')
+        hn_test="${hn_test,,}"; hn_test="${hn_test// /}"
 
         if validate_hostname "$hn_test"; then
           _hostname="$hn_test"
@@ -2370,7 +2362,7 @@ advanced_settings() {
         --inputbox "\nSet Custom Tags (semicolon-separated)\n(alphanumeric, hyphens, underscores only)" 12 58 "$_tags" \
         3>&1 1>&2 2>&3); then
         local tags_test="${result:-}"
-        tags_test=$(echo "$tags_test" | tr -d '[:space:]')
+        tags_test="${tags_test//[[:space:]]/}"
         if validate_tags "$tags_test"; then
           _tags="$tags_test"
           ((STEP++))
@@ -5310,7 +5302,7 @@ create_lxc_container() {
     fi
 
     ONLINE_TEMPLATES=()
-    mapfile -t ONLINE_TEMPLATES < <(pveam_cached available -section system | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
+    mapfile -t ONLINE_TEMPLATES < <(pveam_cached available -section system | awk -v s="^${TEMPLATE_SEARCH}" -v p="${TEMPLATE_PATTERN}" '$2 ~ /\.(tar\.zst|tar\.xz|tar\.gz)$/ && $2 ~ s && $2 ~ p {print $2}' | sort -t - -k 2 -V 2>/dev/null || true)
     [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
 
     TEMPLATE="$ONLINE_TEMPLATE"
@@ -5326,10 +5318,7 @@ create_lxc_container() {
     AVAILABLE_VERSIONS=()
     mapfile -t AVAILABLE_VERSIONS < <(
       pveam_cached available -section system |
-        grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-        awk -F'\t' '{print $1}' |
-        grep "^${PCT_OSTYPE}-" |
-        sed -E "s/.*${PCT_OSTYPE}-([0-9]+(\.[0-9]+)?).*/\1/" |
+        awk -F'\t' -v os="${PCT_OSTYPE}" '$2 ~ /\.(tar\.zst|tar\.xz|tar\.gz)$/ && $1 ~ "^"os"-" { sub(".*"os"-", "", $1); sub(/[^0-9.].*/,"",$1); if($1~/^[0-9]/) print $1 }' |
         sort -u -V 2>/dev/null
     )
 
@@ -5349,9 +5338,7 @@ create_lxc_container() {
         ONLINE_TEMPLATES=()
         mapfile -t ONLINE_TEMPLATES < <(
           pveam_cached available -section system |
-            grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-            awk '{print $2}' |
-            grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
+            awk -v s="^${TEMPLATE_SEARCH}-" -v p="${TEMPLATE_PATTERN}" '$2 ~ /\.(tar\.zst|tar\.xz|tar\.gz)$/ && $2 ~ s && $2 ~ p {print $2}' |
             sort -t - -k 2 -V 2>/dev/null || true
         )
 
@@ -5390,9 +5377,7 @@ create_lxc_container() {
       # Get available versions
       mapfile -t AVAILABLE_VERSIONS < <(
         pveam_cached available -section system |
-          grep "^${PCT_OSTYPE}-" |
-          sed -E 's/.*'"${PCT_OSTYPE}"'-([0-9]+\.[0-9]+).*/\1/' |
-          grep -E '^[0-9]+\.[0-9]+$' |
+          awk -v os="${PCT_OSTYPE}" '$1 ~ "^"os"-" { sub(".*"os"-", "", $1); sub(/[^0-9.].*/,"",$1); if($1~/^[0-9]+\.[0-9]+$/) print $1 }' |
           sort -u -V 2>/dev/null || sort -u
       )
 
@@ -5420,9 +5405,7 @@ create_lxc_container() {
           )
           mapfile -t ONLINE_TEMPLATES < <(
             pveam_cached available -section system |
-              grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-              awk '{print $2}' |
-              grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
+              awk -v s="^${TEMPLATE_SEARCH}-" -v p="${TEMPLATE_PATTERN}" '$2 ~ /\.(tar\.zst|tar\.xz|tar\.gz)$/ && $2 ~ s && $2 ~ p {print $2}' |
               sort -t - -k 2 -V 2>/dev/null || true
           )
           ONLINE_TEMPLATE=""
