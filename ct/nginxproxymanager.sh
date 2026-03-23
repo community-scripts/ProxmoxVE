@@ -102,6 +102,7 @@ EOF
     msg_ok "Built OpenResty"
   fi
 
+  cd /root
   if [ -d /opt/certbot ]; then
     msg_info "Updating Certbot"
     $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
