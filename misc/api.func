@@ -401,7 +401,7 @@ get_error_text() {
   fi
 
   if [[ -n "$logfile" && -s "$logfile" ]]; then
-    tail -n 20 "$logfile" 2>/dev/null | sed 's/\r$//' | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g'
+    tail -n 20 "$logfile" 2>/dev/null | sed -E 's/\r$//; s/\x1b\[[0-9;]*[a-zA-Z]//g'
   fi
 }
 
@@ -508,7 +508,8 @@ detect_gpu() {
 
   if [[ -n "$gpu_line" ]]; then
     # Extract model: everything after the colon, clean up
-    GPU_MODEL=$(echo "$gpu_line" | sed 's/.*: //' | sed 's/ (rev .*)$//' | cut -c1-64)
+    GPU_MODEL=$(echo "$gpu_line" | sed -E 's/.*: //; s/ \(rev .*\)$//')
+    GPU_MODEL="${GPU_MODEL:0:64}"
 
     # Detect vendor and passthrough type
     if echo "$gpu_line" | grep -qi "Intel"; then
@@ -557,7 +558,8 @@ detect_cpu() {
     esac
 
     # Extract model name and clean it up
-    CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//' | sed 's/(R)//g' | sed 's/(TM)//g' | sed 's/  */ /g' | cut -c1-64)
+    CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed -E 's/^ *//; s/\(R\)//g; s/\(TM\)//g; s/  +/ /g')
+    CPU_MODEL="${CPU_MODEL:0:64}"
   fi
 
   export CPU_VENDOR CPU_MODEL
@@ -1325,11 +1327,16 @@ post_addon_to_api() {
     error_category=$(categorize_error "$exit_code")
   fi
 
-  # Detect OS info
+  # Detect OS info (single read)
   local os_type="" os_version=""
   if [[ -f /etc/os-release ]]; then
-    os_type=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
-    os_version=$(grep "^VERSION_ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
+    while IFS='=' read -r _k _v; do
+      _v="${_v//\"/}"
+      case "$_k" in
+        ID) os_type="$_v" ;;
+        VERSION_ID) os_version="$_v" ;;
+      esac
+    done < /etc/os-release
   fi
 
   local JSON_PAYLOAD

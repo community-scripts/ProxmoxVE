@@ -67,22 +67,22 @@ EOF
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
 setting_up_container() {
   msg_info "Setting up Container OS"
+  local _ip=""
   while [ $i -gt 0 ]; do
-    if [ "$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)" != "" ]; then
-      break
-    fi
+    _ip=$(ip -4 addr show 2>/dev/null | awk '/inet [0-9]/ && !/127\.0\.0\.1/ {sub(/\/.*/, "", $2); print $2; exit}')
+    [[ -n "$_ip" ]] && break
     echo 1>&2 -en "${CROSS}${RD} No Network! "
     sleep $RETRY_EVERY
     i=$((i - 1))
   done
 
-  if [ "$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)" = "" ]; then
+  if [[ -z "$_ip" ]]; then
     echo 1>&2 -e "\n${CROSS}${RD} No Network After $RETRY_NUM Tries${CL}"
     echo -e "${NETWORK}Check Network Settings"
     exit 121
   fi
   msg_ok "Set up Container OS"
-  msg_ok "Network Connected: ${BL}$(ip addr show | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1 | tail -n1)${CL}"
+  msg_ok "Network Connected: ${BL}${_ip}${CL}"
   post_progress_to_api
 }
 

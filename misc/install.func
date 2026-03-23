@@ -116,14 +116,14 @@ setting_up_container() {
     (chown root:root / 2>/dev/null) || true
   fi
 
+  local _host_ip=""
   for ((i = RETRY_NUM; i > 0; i--)); do
-    if [ "$(hostname -I)" != "" ]; then
-      break
-    fi
+    _host_ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+    [[ -n "$_host_ip" ]] && break
     echo 1>&2 -en "${CROSS}${RD} No Network! "
     sleep $RETRY_EVERY
   done
-  if [ "$(hostname -I)" = "" ]; then
+  if [[ -z "$_host_ip" ]]; then
     echo 1>&2 -e "\n${CROSS}${RD} No Network After $RETRY_NUM Tries${CL}"
     echo -e "${NETWORK}Check Network Settings"
     exit 121
@@ -131,8 +131,7 @@ setting_up_container() {
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   systemctl disable -q --now systemd-networkd-wait-online.service
   msg_ok "Set up Container OS"
-  #msg_custom "${CM}" "${GN}" "Network Connected: ${BL}$(hostname -I)"
-  msg_ok "Network Connected: ${BL}$(hostname -I)"
+  msg_ok "Network Connected: ${BL}${_host_ip}"
   post_progress_to_api
 }
 
