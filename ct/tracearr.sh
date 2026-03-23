@@ -102,7 +102,7 @@ EOF
 
   if check_for_gh_release "tracearr" "connorgallopo/Tracearr"; then
     msg_info "Stopping Services"
-    systemctl stop tracearr postgresql redis
+    systemctl stop tracearr postgresql redis-server
     msg_ok "Stopped Services"
 
     msg_info "Updating pnpm"
@@ -148,7 +148,7 @@ EOF
     msg_ok "Configured Tracearr"
 
     msg_info "Starting services"
-    systemctl start postgresql redis tracearr
+    systemctl start postgresql redis-server tracearr
     msg_ok "Started services"
     msg_ok "Updated successfully!"
   else
