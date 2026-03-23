@@ -172,11 +172,22 @@ get_current_ip() {
   if [ -f /etc/os-release ]; then
     # Check for Debian/Ubuntu (uses hostname -I)
     if grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
-      # Try IPv4 first
-      CURRENT_IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
-      # Fallback to IPv6 if no IPv4
+      local -a _ips
+      read -ra _ips <<<"$(hostname -I 2>/dev/null)"
+      # Try IPv4 first, then fallback to IPv6
+      for _ip in "${_ips[@]}"; do
+        if [[ $_ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          CURRENT_IP="$_ip"
+          break
+        fi
+      done
       if [[ -z "$CURRENT_IP" ]]; then
-        CURRENT_IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E ':' | head -n1)
+        for _ip in "${_ips[@]}"; do
+          [[ $_ip == *:* ]] && {
+            CURRENT_IP="$_ip"
+            break
+          }
+        done
       fi
     # Check for Alpine (uses ip command)
     elif grep -q 'ID=alpine' /etc/os-release; then
@@ -216,21 +227,20 @@ update_motd_ip() {
   # Update dynamic LXC details profile if values changed (e.g., after OS upgrade)
   # Only update if file exists and is from community-scripts
   if [ -f "$PROFILE_FILE" ] && grep -q "community-scripts" "$PROFILE_FILE" 2>/dev/null; then
-    # Get current values
-    local current_os="$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"') - Version: $(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')"
+    # Get current values (read os-release once)
+    local _name _ver
+    _name=$(sed -n 's/^NAME=//p' /etc/os-release | tr -d '"')
+    _ver=$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '"')
+    local current_os="$_name - Version: $_ver"
     local current_hostname="$(hostname)"
     local current_ip="$(hostname -I | awk '{print $1}')"
 
-    # Update only if values actually changed
-    if ! grep -q "OS:.*$current_os" "$PROFILE_FILE" 2>/dev/null; then
-      sed -i "s|OS:.*|OS: \${GN}$current_os\${CL}\\\"|" "$PROFILE_FILE"
-    fi
-    if ! grep -q "Hostname:.*$current_hostname" "$PROFILE_FILE" 2>/dev/null; then
-      sed -i "s|Hostname:.*|Hostname: \${GN}$current_hostname\${CL}\\\"|" "$PROFILE_FILE"
-    fi
-    if ! grep -q "IP Address:.*$current_ip" "$PROFILE_FILE" 2>/dev/null; then
-      sed -i "s|IP Address:.*|IP Address: \${GN}$current_ip\${CL}\\\"|" "$PROFILE_FILE"
-    fi
+    # Single sed pass for all three substitutions (only rewrites file once)
+    sed -i \
+      -e "s|OS:.*|OS: \${GN}$current_os\${CL}\\\"|" \
+      -e "s|Hostname:.*|Hostname: \${GN}$current_hostname\${CL}\\\"|" \
+      -e "s|IP Address:.*|IP Address: \${GN}$current_ip\${CL}\\\"|" \
+      "$PROFILE_FILE"
   fi
 }
 
@@ -3727,6 +3737,29 @@ pvesm_status_cached() {
 }
 
 # ------------------------------------------------------------------------------
+# pveam_cached()
+#
+# - Caches `pveam available` and `pveam list` output to avoid repeated calls
+# - pveam available -section system is particularly slow (network + catalog)
+# - Usage: pveam_cached available -section system
+#          pveam_cached list <storage>
+# - Cache lifetime is the current shell session
+# ------------------------------------------------------------------------------
+declare -A _PVEAM_CACHE=()
+
+pveam_cached() {
+  local cache_key="pveam_${*// /_}"
+  if [[ -n "${_PVEAM_CACHE[$cache_key]+x}" ]]; then
+    echo "${_PVEAM_CACHE[$cache_key]}"
+    return 0
+  fi
+  local result
+  result=$(pveam "$@" 2>/dev/null) || return $?
+  _PVEAM_CACHE["$cache_key"]="$result"
+  echo "$result"
+}
+
+# ------------------------------------------------------------------------------
 # build_container()
 #
 # - Main function for creating and configuring LXC container
@@ -3741,8 +3774,8 @@ pvesm_status_cached() {
 # ------------------------------------------------------------------------------
 build_container() {
   # Recursion guard: prevent infinite retry loops (OOM→retry→OOM→retry→...)
-  export _BUILD_DEPTH=$(( ${_BUILD_DEPTH:-0} + 1 ))
-  if (( _BUILD_DEPTH > 3 )); then
+  export _BUILD_DEPTH=$((${_BUILD_DEPTH:-0} + 1))
+  if ((_BUILD_DEPTH > 3)); then
     msg_error "Maximum recovery depth reached (${_BUILD_DEPTH}). Aborting to prevent infinite retry loop."
     exit 250
   fi
@@ -5025,6 +5058,14 @@ create_lxc_container() {
   if [[ "${CREATE_LXC_VERBOSE:-no}" == "yes" ]]; then set -x; fi
 
   # ------------------------------------------------------------------------------
+  # Pre-warm caches: fetch pvesm status (all, rootdir, vztmpl) in one shot
+  # so subsequent pvesm_status_cached calls never fork a subprocess
+  # ------------------------------------------------------------------------------
+  pvesm_status_cached >/dev/null 2>&1 || true
+  pvesm_status_cached -content rootdir >/dev/null 2>&1 || true
+  pvesm_status_cached -content vztmpl >/dev/null 2>&1 || true
+
+  # ------------------------------------------------------------------------------
   # Helpers (dynamic versioning / template parsing)
   # ------------------------------------------------------------------------------
   pkg_ver() { dpkg-query -W -f='${Version}\n' "$1" 2>/dev/null || echo ""; }
@@ -5245,7 +5286,7 @@ create_lxc_container() {
 
   # Step 1: Check local templates first (instant)
   mapfile -t LOCAL_TEMPLATES < <(
-    pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
+    pveam_cached list "$TEMPLATE_STORAGE" |
       awk -v search="${TEMPLATE_SEARCH}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
       sed 's|.*/||' | sort -t - -k 2 -V
   )
@@ -5269,7 +5310,7 @@ create_lxc_container() {
     fi
 
     ONLINE_TEMPLATES=()
-    mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
+    mapfile -t ONLINE_TEMPLATES < <(pveam_cached available -section system | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
     [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
 
     TEMPLATE="$ONLINE_TEMPLATE"
@@ -5284,7 +5325,7 @@ create_lxc_container() {
     # Get all available versions for this OS type
     AVAILABLE_VERSIONS=()
     mapfile -t AVAILABLE_VERSIONS < <(
-      pveam available -section system 2>/dev/null |
+      pveam_cached available -section system |
         grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
         awk -F'\t' '{print $1}' |
         grep "^${PCT_OSTYPE}-" |
@@ -5307,7 +5348,7 @@ create_lxc_container() {
 
         ONLINE_TEMPLATES=()
         mapfile -t ONLINE_TEMPLATES < <(
-          pveam available -section system 2>/dev/null |
+          pveam_cached available -section system |
             grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
             awk '{print $2}' |
             grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
@@ -5348,7 +5389,7 @@ create_lxc_container() {
 
       # Get available versions
       mapfile -t AVAILABLE_VERSIONS < <(
-        pveam available -section system 2>/dev/null |
+        pveam_cached available -section system |
           grep "^${PCT_OSTYPE}-" |
           sed -E 's/.*'"${PCT_OSTYPE}"'-([0-9]+\.[0-9]+).*/\1/' |
           grep -E '^[0-9]+\.[0-9]+$' |
@@ -5373,12 +5414,12 @@ create_lxc_container() {
           TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
 
           mapfile -t LOCAL_TEMPLATES < <(
-            pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
+            pveam_cached list "$TEMPLATE_STORAGE" |
               awk -v search="${TEMPLATE_SEARCH}-" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
               sed 's|.*/||' | sort -t - -k 2 -V
           )
           mapfile -t ONLINE_TEMPLATES < <(
-            pveam available -section system 2>/dev/null |
+            pveam_cached available -section system |
               grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
               awk '{print $2}' |
               grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
@@ -5474,6 +5515,8 @@ create_lxc_container() {
       msg_info "Attempt $attempt: Downloading template $TEMPLATE to $TEMPLATE_STORAGE"
       if pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1; then
         msg_ok "Template download successful."
+        # Invalidate pveam list cache after download so post-check uses fresh data
+        unset '_PVEAM_CACHE[pveam_list_'"$TEMPLATE_STORAGE"']'
         break
       fi
       if [[ $attempt -eq 3 ]]; then
