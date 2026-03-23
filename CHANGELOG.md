@@ -428,6 +428,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-23
 
+### 🆕 New Scripts
+
+  - Alpine-Borgbackup-Server ([#13219](https://github.com/community-scripts/ProxmoxVE/pull/13219))
+
 ### 🚀 Updated Scripts
 
   - NginxProxyManager: build OpenResty from source via GitHub releases [@MickLesk](https://github.com/MickLesk) ([#13134](https://github.com/community-scripts/ProxmoxVE/pull/13134))
