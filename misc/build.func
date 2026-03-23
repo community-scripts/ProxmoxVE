@@ -765,16 +765,52 @@ resolve_ip_from_range() {
   local start_int=$(ip_to_int "$ip1")
   local end_int=$(ip_to_int "$ip2")
 
-  for ((ip_int = start_int; ip_int <= end_int; ip_int++)); do
-    local ip=$(int_to_ip $ip_int)
-    msg_info "Checking IP: $ip"
-    if ! ping -c 1 -W 1 "$ip" >/dev/null 2>&1; then
-      NET_RESOLVED="$ip/$cidr"
-      msg_ok "Found free IP: ${BGN}$NET_RESOLVED${CL}"
-      return 0
-    fi
+  # Validate: start must not exceed end
+  if ((start_int > end_int)); then
+    msg_error "Invalid IP range: start ($ip1) is greater than end ($ip2)"
+    NET_RESOLVED=""
+    return 1
+  fi
+
+  # Cap scan at 254 IPs to prevent excessive scanning
+  local range_size=$((end_int - start_int + 1))
+  if ((range_size > 254)); then
+    msg_warn "IP range too large (${range_size} IPs). Limiting scan to first 254."
+    end_int=$((start_int + 253))
+    range_size=254
+  fi
+
+  msg_info "Scanning IP range (${range_size} addresses)..."
+
+  # Parallel ping in batches of 10 for significantly faster scanning
+  local batch_size=10
+  local tmpdir
+  tmpdir=$(mktemp -d)
+
+  for ((ip_int = start_int; ip_int <= end_int; ip_int += batch_size)); do
+    local batch_end=$((ip_int + batch_size - 1))
+    ((batch_end > end_int)) && batch_end=$end_int
+
+    # Launch batch of pings concurrently — free IPs create marker files
+    for ((j = ip_int; j <= batch_end; j++)); do
+      local ip=$(int_to_ip $j)
+      (ping -c 1 -W 1 "$ip" >/dev/null 2>&1 || touch "${tmpdir}/${ip}") &
+    done
+    wait
+
+    # Check for free IPs in this batch (preserving order)
+    for ((j = ip_int; j <= batch_end; j++)); do
+      local ip=$(int_to_ip $j)
+      if [[ -f "${tmpdir}/${ip}" ]]; then
+        NET_RESOLVED="$ip/$cidr"
+        rm -rf "$tmpdir"
+        msg_ok "Found free IP: ${BGN}$NET_RESOLVED${CL}"
+        return 0
+      fi
+    done
   done
 
+  rm -rf "$tmpdir"
   NET_RESOLVED=""
   msg_error "No free IP found in range $range"
   return 1
@@ -1030,20 +1066,7 @@ load_vars_file() {
   [ -f "$file" ] || return 0
   msg_info "Loading defaults from ${file}"
 
-  # Allowed var_* keys
-  local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
-    var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
-    var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
-    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
-  )
-
-  # Whitelist check helper
-  _is_whitelisted() {
-    local k="$1" w
-    for w in "${VAR_WHITELIST[@]}"; do [ "$k" = "$w" ] && return 0; done
-    return 1
-  }
+  # Uses global VAR_WHITELIST and _is_whitelisted_key() defined above
 
   local line key val
   while IFS= read -r line || [ -n "$line" ]; do
@@ -1055,7 +1078,7 @@ load_vars_file() {
       local var_val="${BASH_REMATCH[2]}"
 
       [[ "$var_key" != var_* ]] && continue
-      _is_whitelisted "$var_key" || continue
+      _is_whitelisted_key "$var_key" || continue
 
       # Strip inline comments (anything after unquoted #)
       # Only strip if not inside quotes
@@ -1223,14 +1246,7 @@ load_vars_file() {
 # - Calls base_settings "$VERBOSE" and echo_default
 # ------------------------------------------------------------------------------
 default_var_settings() {
-  # Allowed var_* keys (alphabetically sorted)
-  # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
-  local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
-    var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
-    var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
-    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
-  )
+  # Uses global VAR_WHITELIST declared above
 
   # Snapshot: environment variables (highest precedence)
   declare -A _HARD_ENV=()
@@ -1329,14 +1345,7 @@ EOF
     # Silent creation - no output message
   }
 
-  # Whitelist check
-  local _is_whitelisted_key
-  _is_whitelisted_key() {
-    local k="$1"
-    local w
-    for w in "${VAR_WHITELIST[@]}"; do [ "$k" = "$w" ] && return 0; done
-    return 1
-  }
+  # Uses global _is_whitelisted_key() defined above
 
   # 1) Ensure file exists
   _ensure_default_vars
@@ -1388,10 +1397,10 @@ get_app_defaults_path() {
 if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   declare -ag VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu
-    var_gateway var_hostname var_ipv6_method var_mac var_mtu
-    var_net var_ns var_os var_pw var_ram var_tags var_tun var_unprivileged
-    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
+    var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
+    var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
+    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
   )
 fi
 
@@ -1801,34 +1810,34 @@ advanced_settings() {
   local BRIDGES=""
   local BRIDGE_MENU_OPTIONS=()
   _detect_bridges() {
-    IFACE_FILEPATH_LIST="/etc/network/interfaces"$'\n'$(find "/etc/network/interfaces.d/" -type f 2>/dev/null)
     BRIDGES=""
-    local OLD_IFS=$IFS
-    IFS=$'\n'
-    for iface_filepath in ${IFACE_FILEPATH_LIST}; do
-      local iface_indexes_tmpfile=$(mktemp -q -u '.iface-XXXX')
-      (grep -Pn '^\s*iface' "${iface_filepath}" 2>/dev/null | cut -d':' -f1 && wc -l "${iface_filepath}" 2>/dev/null | cut -d' ' -f1) | awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' >"${iface_indexes_tmpfile}" 2>/dev/null || true
-      if [ -f "${iface_indexes_tmpfile}" ]; then
-        while read -r pair; do
-          local start=$(echo "${pair}" | cut -d':' -f1)
-          local end=$(echo "${pair}" | cut -d':' -f2)
-          if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" 2>/dev/null | grep -qP '^\s*(bridge[-_](ports|stp|fd|vlan-aware|vids)|ovs_type\s+OVSBridge)\b'; then
-            local iface_name=$(sed "${start}q;d" "${iface_filepath}" | awk '{print $2}')
-            BRIDGES="${iface_name}"$'\n'"${BRIDGES}"
-          fi
-        done <"${iface_indexes_tmpfile}"
-        rm -f "${iface_indexes_tmpfile}"
-      fi
-    done
-    IFS=$OLD_IFS
-    BRIDGES=$(echo "$BRIDGES" | grep -v '^\s*$' | sort | uniq)
+
+    # Detect Linux bridges via sysfs (instant, no parsing needed)
+    local linux_bridges
+    linux_bridges=$(ls -d /sys/class/net/*/bridge 2>/dev/null | awk -F/ '{print $5}')
+    [[ -n "$linux_bridges" ]] && BRIDGES="$linux_bridges"
+
+    # Detect OVS bridges if ovs-vsctl is available
+    if command -v ovs-vsctl &>/dev/null; then
+      local ovs_bridges
+      ovs_bridges=$(ovs-vsctl list-br 2>/dev/null || true)
+      [[ -n "$ovs_bridges" ]] && BRIDGES="${BRIDGES:+${BRIDGES}$'\n'}${ovs_bridges}"
+    fi
+
+    BRIDGES=$(echo "$BRIDGES" | grep -v '^\s*$' | sort -u)
 
     # Build bridge menu
     BRIDGE_MENU_OPTIONS=()
     if [[ -n "$BRIDGES" ]]; then
       while IFS= read -r bridge; do
         if [[ -n "$bridge" ]]; then
-          local description=$(grep -A 10 "iface $bridge" /etc/network/interfaces 2>/dev/null | grep '^#' | head -n1 | sed 's/^#\s*//;s/^[- ]*//')
+          local description=""
+          # Look for description comment in interface config files
+          for cfg in /etc/network/interfaces /etc/network/interfaces.d/*; do
+            [[ -f "$cfg" ]] || continue
+            description=$(grep -A 10 "iface $bridge" "$cfg" 2>/dev/null | grep '^#' | head -n1 | sed 's/^#\s*//;s/^[- ]*//')
+            [[ -n "$description" ]] && break
+          done
           BRIDGE_MENU_OPTIONS+=("$bridge" "${description:- }")
         fi
       done <<<"$BRIDGES"
@@ -3958,6 +3967,33 @@ EOF
     fi
   fi
 
+  # Pre-start GPU GID correction: read GIDs from rootfs before first start
+  # to avoid the expensive stop → edit config → start cycle in fix_gpu_gids()
+  if [[ -n "${GPU_TYPE:-}" ]]; then
+    msg_info "Setting GPU group IDs from template rootfs"
+    local _prestart_gid_ok=false
+    if pct mount "$CTID" >/dev/null 2>&1; then
+      local _rootfs_mnt="/var/lib/lxc/${CTID}/rootfs"
+      local _group_file="${_rootfs_mnt}/etc/group"
+      if [[ -f "$_group_file" ]]; then
+        local _pre_video_gid _pre_render_gid
+        _pre_video_gid=$(awk -F: '/^video:/ {print $3}' "$_group_file")
+        _pre_render_gid=$(awk -F: '/^render:/ {print $3}' "$_group_file")
+        _pre_video_gid="${_pre_video_gid:-44}"
+        _pre_render_gid="${_pre_render_gid:-104}"
+        sed -i -E "s|(dev[0-9]+: /dev/dri/renderD[0-9]+),gid=[0-9]+|\1,gid=${_pre_render_gid}|g" "$LXC_CONFIG"
+        sed -i -E "s|(dev[0-9]+: /dev/dri/card[0-9]+),gid=[0-9]+|\1,gid=${_pre_video_gid}|g" "$LXC_CONFIG"
+        msg_ok "GPU GIDs set from template (video:${_pre_video_gid}, render:${_pre_render_gid})"
+        _prestart_gid_ok=true
+      fi
+      pct unmount "$CTID" >/dev/null 2>&1 || true
+    fi
+    if [[ "$_prestart_gid_ok" != true ]]; then
+      msg_debug "Pre-start GID mount failed — will fix after start via fix_gpu_gids()"
+    fi
+    export _PRESTART_GID_OK="$_prestart_gid_ok"
+  fi
+
   # ============================================================================
   # START CONTAINER AND INSTALL USERLAND
   # ============================================================================
@@ -4729,6 +4765,34 @@ resolve_storage_preselect() {
 
 fix_gpu_gids() {
   if [[ -z "${GPU_TYPE:-}" ]]; then
+    return 0
+  fi
+
+  # Skip stop/start cycle if pre-start already set correct GIDs from template rootfs
+  if [[ "${_PRESTART_GID_OK:-false}" == "true" ]]; then
+    msg_debug "GPU GIDs already set during pre-start mount — skipping stop/start cycle"
+    # Still fix permissions for privileged containers (container is already running)
+    if [[ "$CT_TYPE" == "0" ]]; then
+      local video_gid render_gid
+      video_gid=$(pct exec "$CTID" -- sh -c "getent group video 2>/dev/null | cut -d: -f3")
+      render_gid=$(pct exec "$CTID" -- sh -c "getent group render 2>/dev/null | cut -d: -f3")
+      video_gid="${video_gid:-44}"
+      render_gid="${render_gid:-104}"
+      pct exec "$CTID" -- sh -c "
+        if [ -d /dev/dri ]; then
+          for dev in /dev/dri/*; do
+            if [ -e \"\$dev\" ]; then
+              case \"\$dev\" in
+                *renderD*) chgrp ${render_gid} \"\$dev\" 2>/dev/null || true ;;
+                *)         chgrp ${video_gid} \"\$dev\" 2>/dev/null || true ;;
+              esac
+              chmod 660 \"\$dev\" 2>/dev/null || true
+            fi
+          done
+        fi
+      " >/dev/null 2>&1
+    fi
+    msg_ok "GPU passthrough ready"
     return 0
   fi
 
@@ -5662,7 +5726,11 @@ create_lxc_container() {
 # - Posts final "done" status to API telemetry
 # ------------------------------------------------------------------------------
 description() {
-  IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+  # Try IPv4 first, fallback to IPv6 for IPv6-only containers
+  IP=$(pct exec "$CTID" ip -4 a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
+  if [[ -z "$IP" ]]; then
+    IP=$(pct exec "$CTID" ip -6 a s dev eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
+  fi
 
   # Generate LXC Description
   DESCRIPTION=$(
