@@ -440,6 +440,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Kometa: optimize config.yml sed patterns, add Quickstart integration [@MickLesk](https://github.com/MickLesk) ([#13198](https://github.com/community-scripts/ProxmoxVE/pull/13198))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: allow /31 and /32 CIDR with out-of-subnet gateway [@MickLesk](https://github.com/MickLesk) ([#13231](https://github.com/community-scripts/ProxmoxVE/pull/13231))
+
 ## 2026-03-22
 
 ### 🆕 New Scripts
