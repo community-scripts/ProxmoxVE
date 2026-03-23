@@ -452,6 +452,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - core: alpine - Improve network connectivity and DNS checks [@MickLesk](https://github.com/MickLesk) ([#13222](https://github.com/community-scripts/ProxmoxVE/pull/13222))
     - core: allow /31 and /32 CIDR with out-of-subnet gateway [@MickLesk](https://github.com/MickLesk) ([#13231](https://github.com/community-scripts/ProxmoxVE/pull/13231))
 
 ## 2026-03-22
