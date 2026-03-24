@@ -35,7 +35,7 @@ fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart" "tarbal
 msg_info "Installing Kometa Quickstart"
 cd /opt/kometa-quickstart
 $STD uv venv /opt/kometa-quickstart/.venv
-$STD /opt/kometa-quickstart/.venv/bin/python -m pip install -r requirements.txt
+$STD uv pip install -r requirements.txt -p /opt/kometa-quickstart/.venv/bin/python
 msg_ok "Installed Kometa Quickstart"
 
 msg_info "Creating Service"

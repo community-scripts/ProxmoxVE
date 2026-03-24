@@ -507,14 +507,23 @@ _stop_container_if_installing() {
 on_exit() {
   local exit_code=$?
 
-  # Report orphaned "installing" records to telemetry API
-  # Catches ALL exit paths: errors, signals, AND clean exits where
-  # post_to_api was called but post_update_to_api was never called
-  if [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
-    if [[ $exit_code -ne 0 ]]; then
-      _send_abort_telemetry "$exit_code"
-    elif declare -f post_update_to_api >/dev/null 2>&1; then
-      post_update_to_api "done" "0" 2>/dev/null || true
+  # Report orphaned telemetry records
+  # Two scenarios handled:
+  # 1. POST_TO_API_DONE=true but POST_UPDATE_DONE=false: Record was created but
+  #    never got a final status update → send abort/done now.
+  # 2. POST_TO_API_DONE=false but DIAGNOSTICS=yes: Initial post failed (server
+  #    unreachable/timeout), but the server has fallback create-on-update logic,
+  #    so a status update can still create the record. Worth one last try.
+  if [[ "${POST_UPDATE_DONE:-}" != "true" ]]; then
+    if [[ "${POST_TO_API_DONE:-}" == "true" || "${DIAGNOSTICS:-no}" == "yes" ]]; then
+      if [[ $exit_code -ne 0 ]]; then
+        _send_abort_telemetry "$exit_code"
+      elif [[ "${INSTALL_COMPLETE:-}" == "true" ]] && declare -f post_update_to_api >/dev/null 2>&1; then
+        # Only report success if the install was explicitly marked complete.
+        # Without this guard, early bailouts (e.g. user cancelled) with exit 0
+        # would be falsely reported as successful installations.
+        post_update_to_api "done" "0" 2>/dev/null || true
+      fi
     fi
   fi
 

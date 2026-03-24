@@ -426,35 +426,20 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
-## 2026-03-23
+## 2026-03-24
 
 ### 🆕 New Scripts
 
-  - Alpine-Borgbackup-Server ([#13219](https://github.com/community-scripts/ProxmoxVE/pull/13219))
+  - Homebrew (Addon) ([#13249](https://github.com/community-scripts/ProxmoxVE/pull/13249))
+- NextExplorer ([#13252](https://github.com/community-scripts/ProxmoxVE/pull/13252))
+
+## 2026-03-23
 
 ### 🚀 Updated Scripts
 
-  - NginxProxyManager: build OpenResty from source via GitHub releases [@MickLesk](https://github.com/MickLesk) ([#13134](https://github.com/community-scripts/ProxmoxVE/pull/13134))
-
-  - #### 🐞 Bug Fixes
-
-    - Tracearr: modify service restart and modify build ressources [@MickLesk](https://github.com/MickLesk) ([#13230](https://github.com/community-scripts/ProxmoxVE/pull/13230))
-
-  - #### ✨ New Features
-
-    - Kometa: optimize config.yml sed patterns, add Quickstart integration [@MickLesk](https://github.com/MickLesk) ([#13198](https://github.com/community-scripts/ProxmoxVE/pull/13198))
-
   - #### 🔧 Refactor
 
-    - Refactor: nginxproxymanager update and OpenResty flow [@MickLesk](https://github.com/MickLesk) ([#13216](https://github.com/community-scripts/ProxmoxVE/pull/13216))
-    - Refactor: PartDB [@MickLesk](https://github.com/MickLesk) ([#13229](https://github.com/community-scripts/ProxmoxVE/pull/13229))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - core: alpine - Improve network connectivity and DNS checks [@MickLesk](https://github.com/MickLesk) ([#13222](https://github.com/community-scripts/ProxmoxVE/pull/13222))
-    - core: allow /31 and /32 CIDR with out-of-subnet gateway [@MickLesk](https://github.com/MickLesk) ([#13231](https://github.com/community-scripts/ProxmoxVE/pull/13231))
+    - core: harden shell scripts against injection and insecure permissions [@MickLesk](https://github.com/MickLesk) ([#13239](https://github.com/community-scripts/ProxmoxVE/pull/13239))
 
 ## 2026-03-22
 
