@@ -164,49 +164,55 @@ header_info
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --yesno \
   "This will allow for the creation of one of the many TurnKey LXC Containers. Proceed?" 10 68 || exit_script
 
-# Build TurnKey selection menu
+# Update template catalog early so the menu reflects the latest available templates
+msg_info "Updating LXC template list"
+pveam update >/dev/null
+msg_ok "Updated LXC template list"
+
+# Build TurnKey selection menu dynamically from available templates
+declare -A TURNKEY_TEMPLATES
 TURNKEY_MENU=()
 MSG_MAX_LENGTH=0
-while read -r TAG ITEM; do
+while IFS=$'\t' read -r TEMPLATE_FILE TAG ITEM; do
+  TURNKEY_TEMPLATES["$TAG"]="$TEMPLATE_FILE"
   OFFSET=2
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
   TURNKEY_MENU+=("$TAG" "$ITEM " "OFF")
-done < <(
-  cat <<EOF
-ansible Ansible
-bookstack BookStack
-core Core
-faveo-helpdesk Faveo Helpdesk
-fileserver File Server
-gallery Gallery
-gameserver Game Server
-gitea Gitea
-gitlab GitLab
-invoice-ninja Invoice Ninja
-mediaserver Media Server
-nextcloud Nextcloud
-observium Observium
-odoo Odoo
-openldap OpenLDAP
-openvpn OpenVPN
-owncloud ownCloud
-phpbb phpBB
-torrentserver Torrent Server
-wireguard WireGuard
-wordpress Wordpress
-zoneminder ZoneMinder
-EOF
-)
+done < <(pveam available -section turnkeylinux | awk '{
+  tpl = $2
+  if (match(tpl, /debian-([0-9]+)-turnkey-([^_]+)_([^_]+)_/, m)) {
+    app = m[2]; deb = m[1]; ver = m[3]
+    display = app
+    gsub(/-/, " ", display)
+    n = split(display, words, " ")
+    display = ""
+    for (i = 1; i <= n; i++) {
+      words[i] = toupper(substr(words[i], 1, 1)) substr(words[i], 2)
+      display = display (i > 1 ? " " : "") words[i]
+    }
+    tag = app "-" deb
+    printf "%s\t%s\t%s | Debian %s | %s\n", tpl, tag, display, deb, ver
+  }
+}' | sort -t$'\t' -k2,2)
 
-turnkey=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --radiolist \
-  "\nSelect a TurnKey LXC to create:\n" 16 $((MSG_MAX_LENGTH + 58)) 6 \
+if [[ ${#TURNKEY_MENU[@]} -eq 0 ]]; then
+  msg_error "No TurnKey templates found. Check your internet connection or template repository."
+  exit 1
+fi
+
+selected=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --radiolist \
+  "\nSelect a TurnKey LXC to create:\n" 20 $((MSG_MAX_LENGTH + 58)) 12 \
   "${TURNKEY_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit_script
 
-if [[ -z "$turnkey" ]]; then
+if [[ -z "$selected" ]]; then
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "No TurnKey LXC Selected" \
     --msgbox "It appears that no TurnKey LXC container was selected" 10 68
   exit_script
 fi
+
+# Extract template filename and app name from selection
+TEMPLATE="${TURNKEY_TEMPLATES[$selected]}"
+turnkey="${selected%-*}"
 
 # Generate random password
 PASS="$(openssl rand -base64 8)"
@@ -264,19 +270,6 @@ CONTAINER_STORAGE=$(select_storage container) || {
   exit 1
 }
 msg_ok "Using '${BL}${CONTAINER_STORAGE}${CL}' for container storage"
-
-# Update template catalog
-msg_info "Updating LXC template list"
-pveam update >/dev/null
-msg_ok "Updated LXC template list"
-
-# Find latest TurnKey template
-mapfile -t TEMPLATES < <(pveam available -section turnkeylinux | awk -v tk="${turnkey}" '$0 ~ tk {print $2}' | sort -t - -k 2 -V)
-if [[ ${#TEMPLATES[@]} -eq 0 ]]; then
-  msg_error "Unable to find a template when searching for '${turnkey}'"
-  exit 1
-fi
-TEMPLATE="${TEMPLATES[-1]}"
 
 # Download template if not already cached
 if ! pveam list "$TEMPLATE_STORAGE" | grep -q "$TEMPLATE"; then
