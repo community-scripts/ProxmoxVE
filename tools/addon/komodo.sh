@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://komo.do/ | Github: https://github.com/mbecker20/komodo
+# Source: https://komo.do/ | Github: https://github.com/moghtech/komodo
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
   apt-get update >/dev/null 2>&1 || apk update >/dev/null 2>&1
@@ -82,6 +82,7 @@ function update() {
     msg_error "Failed to create backup of ${COMPOSE_BASENAME}!"
     exit 235
   }
+  cp "$COMPOSE_ENV" "${COMPOSE_ENV}.bak_$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
 
   GITHUB_URL="https://raw.githubusercontent.com/moghtech/komodo/main/compose/${COMPOSE_BASENAME}"
   if ! curl -fsSL "$GITHUB_URL" -o "$COMPOSE_FILE"; then
@@ -90,8 +91,29 @@ function update() {
     exit 115
   fi
 
-  if ! grep -qxF 'COMPOSE_KOMODO_BACKUPS_PATH=/etc/komodo/backups' "$COMPOSE_ENV"; then
-    sed -i '/^COMPOSE_KOMODO_IMAGE_TAG=latest$/a COMPOSE_KOMODO_BACKUPS_PATH=/etc/komodo/backups' "$COMPOSE_ENV"
+  # === v2 migration: image tag (latest is deprecated) ===
+  if grep -q '^COMPOSE_KOMODO_IMAGE_TAG=latest' "$COMPOSE_ENV"; then
+    msg_info "Migrating to Komodo v2 image tag"
+    sed -i 's/^COMPOSE_KOMODO_IMAGE_TAG=latest/COMPOSE_KOMODO_IMAGE_TAG=2/' "$COMPOSE_ENV"
+    msg_ok "Migrated image tag to :2"
+  fi
+
+  # === v2 migration: DB credential variable names ===
+  if grep -q '^KOMODO_DB_USERNAME=' "$COMPOSE_ENV"; then
+    msg_info "Migrating database credential variables"
+    sed -i 's/^KOMODO_DB_USERNAME=/KOMODO_DATABASE_USERNAME=/' "$COMPOSE_ENV"
+    sed -i 's/^KOMODO_DB_PASSWORD=/KOMODO_DATABASE_PASSWORD=/' "$COMPOSE_ENV"
+    msg_ok "Migrated DB credential variables"
+  fi
+
+  # === v2 migration: remove deprecated passkey (replaced by PKI) ===
+  if grep -q '^KOMODO_PASSKEY=' "$COMPOSE_ENV"; then
+    sed -i '/^KOMODO_PASSKEY=/d' "$COMPOSE_ENV"
+  fi
+
+  # === ensure backups path is set ===
+  if ! grep -q 'COMPOSE_KOMODO_BACKUPS_PATH=' "$COMPOSE_ENV"; then
+    echo 'COMPOSE_KOMODO_BACKUPS_PATH=/etc/komodo/backups' >>"$COMPOSE_ENV"
   fi
 
   $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file "$COMPOSE_ENV" pull
@@ -192,14 +214,12 @@ function install() {
 
   DB_PASSWORD=$(openssl rand -base64 16 | tr -d '/+=')
   ADMIN_PASSWORD=$(openssl rand -base64 8 | tr -d '/+=')
-  PASSKEY=$(openssl rand -base64 24 | tr -d '/+=')
   WEBHOOK_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
   JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
 
-  sed -i "s/^KOMODO_DB_USERNAME=.*/KOMODO_DB_USERNAME=komodo_admin/" "$COMPOSE_ENV"
-  sed -i "s/^KOMODO_DB_PASSWORD=.*/KOMODO_DB_PASSWORD=${DB_PASSWORD}/" "$COMPOSE_ENV"
+  sed -i "s/^KOMODO_DATABASE_USERNAME=.*/KOMODO_DATABASE_USERNAME=komodo_admin/" "$COMPOSE_ENV"
+  sed -i "s/^KOMODO_DATABASE_PASSWORD=.*/KOMODO_DATABASE_PASSWORD=${DB_PASSWORD}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_INIT_ADMIN_PASSWORD=changeme/KOMODO_INIT_ADMIN_PASSWORD=${ADMIN_PASSWORD}/" "$COMPOSE_ENV"
-  sed -i "s/^KOMODO_PASSKEY=.*/KOMODO_PASSKEY=${PASSKEY}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_WEBHOOK_SECRET=.*/KOMODO_WEBHOOK_SECRET=${WEBHOOK_SECRET}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_JWT_SECRET=.*/KOMODO_JWT_SECRET=${JWT_SECRET}/" "$COMPOSE_ENV"
   msg_ok "Configured environment"
