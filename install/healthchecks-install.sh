@@ -35,7 +35,7 @@ PG_DB_NAME="healthchecks_db" PG_DB_USER="hc_user" PG_DB_PASS=$(openssl rand -bas
 
 msg_info "Setup Keys (Admin / Secret)"
 SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
-ADMIN_EMAIL="admin@helper-scripts.local"
+ADMIN_EMAIL="admin@community-scripts.com"
 ADMIN_PASSWORD="$PG_DB_PASS"
 {
   echo "healthchecks Admin Email: $ADMIN_EMAIL"
