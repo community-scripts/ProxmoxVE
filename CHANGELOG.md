@@ -433,6 +433,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Homebrew (Addon) ([#13249](https://github.com/community-scripts/ProxmoxVE/pull/13249))
 - NextExplorer ([#13252](https://github.com/community-scripts/ProxmoxVE/pull/13252))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Turnkey: modernize turnkey.sh with shared libraries  [@MickLesk](https://github.com/MickLesk) ([#13242](https://github.com/community-scripts/ProxmoxVE/pull/13242))
+
 ## 2026-03-23
 
 ### 🚀 Updated Scripts
