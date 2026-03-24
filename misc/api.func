@@ -627,8 +627,8 @@ post_to_api() {
 
   [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] post_to_api() DIAGNOSTICS=$DIAGNOSTICS RANDOM_UUID=$RANDOM_UUID NSAPP=$NSAPP" >&2
 
-  # Set type for later status updates
-  TELEMETRY_TYPE="lxc"
+  # Set type for later status updates (respect pre-set value, e.g. "turnkey")
+  TELEMETRY_TYPE="${TELEMETRY_TYPE:-lxc}"
 
   local pve_version=""
   if command -v pveversion &>/dev/null; then
@@ -664,7 +664,7 @@ post_to_api() {
 {
     "random_id": "${RANDOM_UUID}",
     "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "lxc",
+    "type": "${TELEMETRY_TYPE}",
     "nsapp": "${NSAPP:-unknown}",
     "status": "installing",
     "ct_type": ${CT_TYPE:-1},

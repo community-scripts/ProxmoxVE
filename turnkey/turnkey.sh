@@ -132,11 +132,18 @@ select_storage() {
 # MAIN
 # ==============================================================================
 
-# Cleanup on error: destroy container and restart monitor
+# Cleanup on error: destroy container, report telemetry, and restart monitor
 turnkey_cleanup() {
   local exit_code=$?
-  if [[ $exit_code -ne 0 ]] && [[ -n "${CTID:-}" ]]; then
-    cleanup_ctid 2>/dev/null || true
+  if [[ $exit_code -ne 0 ]]; then
+    # Report failure to telemetry
+    if [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
+      post_update_to_api "failed" "$exit_code" 2>/dev/null || true
+    fi
+    # Destroy failed container
+    if [[ -n "${CTID:-}" ]]; then
+      cleanup_ctid 2>/dev/null || true
+    fi
   fi
   if [[ -f /etc/systemd/system/ping-instances.service ]]; then
     systemctl start ping-instances.service 2>/dev/null || true
@@ -285,6 +292,7 @@ fi
 [[ " ${PCT_OPTIONS[*]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs "${CONTAINER_STORAGE}:${PCT_DISK_SIZE:-8}")
 
 # Set telemetry variables for the selected turnkey
+TELEMETRY_TYPE="turnkey"
 NSAPP="turnkey-${turnkey}"
 CT_TYPE=1
 DISK_SIZE="${PCT_DISK_SIZE:-8}"
