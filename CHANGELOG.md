@@ -430,7 +430,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - NextExplorer ([#13252](https://github.com/community-scripts/ProxmoxVE/pull/13252))
+  - Homebrew (Addon) ([#13249](https://github.com/community-scripts/ProxmoxVE/pull/13249))
+- NextExplorer ([#13252](https://github.com/community-scripts/ProxmoxVE/pull/13252))
 
 ## 2026-03-23
 
