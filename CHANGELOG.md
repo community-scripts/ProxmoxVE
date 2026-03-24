@@ -439,6 +439,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Turnkey: modernize turnkey.sh with shared libraries  [@MickLesk](https://github.com/MickLesk) ([#13242](https://github.com/community-scripts/ProxmoxVE/pull/13242))
 
+  - #### 🔧 Refactor
+
+    - chore: replace helper-scripts.com with community-scripts.com [@MickLesk](https://github.com/MickLesk) ([#13244](https://github.com/community-scripts/ProxmoxVE/pull/13244))
+
 ### 🗑️ Deleted Scripts
 
   - Remove: Booklore [@MickLesk](https://github.com/MickLesk) ([#13265](https://github.com/community-scripts/ProxmoxVE/pull/13265))
