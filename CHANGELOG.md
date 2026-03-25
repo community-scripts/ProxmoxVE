@@ -426,6 +426,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-25
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Komodo v2: migrate env vars to v2 and update source [@MickLesk](https://github.com/MickLesk) ([#13262](https://github.com/community-scripts/ProxmoxVE/pull/13262))
+
 ## 2026-03-24
 
 ### 🆕 New Scripts
