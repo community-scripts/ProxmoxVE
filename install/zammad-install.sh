@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://zammad.com
@@ -14,44 +14,59 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   nginx \
   apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Elasticsearch"
-curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list >/dev/null
-$STD apt-get update
-$STD apt-get -y install elasticsearch
-echo "-Xms2g" >>/etc/elasticsearch/jvm.options
-echo "-Xmx2g" >>/etc/elasticsearch/jvm.options
+setup_deb822_repo \
+  "elasticsearch" \
+  "https://artifacts.elastic.co/GPG-KEY-elasticsearch" \
+  "https://artifacts.elastic.co/packages/7.x/apt" \
+  "stable" \
+  "main"
+$STD apt install -y elasticsearch
+sed -i 's/^#\{0,2\} *-Xms[0-9]*g.*/-Xms2g/' /etc/elasticsearch/jvm.options
+sed -i 's/^#\{0,2\} *-Xmx[0-9]*g.*/-Xmx2g/' /etc/elasticsearch/jvm.options
+cat <<EOF >>/etc/elasticsearch/elasticsearch.yml
+discovery.type: single-node
+xpack.security.enabled: false
+bootstrap.memory_lock: false
+EOF
 $STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
+systemctl daemon-reload
 systemctl enable -q elasticsearch
 systemctl restart -q elasticsearch
+for i in $(seq 1 30); do
+  if curl -s http://localhost:9200 >/dev/null 2>&1; then
+    break
+  fi
+  sleep 2
+done
 msg_ok "Setup Elasticsearch"
 
 msg_info "Installing Zammad"
-curl -fsSL https://dl.packager.io/srv/zammad/zammad/key | gpg --dearmor | sudo tee /etc/apt/keyrings/pkgr-zammad.gpg >/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/pkgr-zammad.gpg] https://dl.packager.io/srv/deb/zammad/zammad/stable/debian 12 main" | sudo tee /etc/apt/sources.list.d/zammad.list >/dev/null
-$STD apt-get update
-$STD apt-get -y install zammad
+setup_deb822_repo \
+  "zammad" \
+  "https://dl.packager.io/srv/zammad/zammad/key" \
+  "https://dl.packager.io/srv/deb/zammad/zammad/stable/debian" \
+  "$(get_os_info version_id)" \
+  "main"
+$STD apt install -y zammad
 $STD zammad run rails r "Setting.set('es_url', 'http://localhost:9200')"
 $STD zammad run rake zammad:searchindex:rebuild
 msg_ok "Installed Zammad"
 
 msg_info "Setup Services"
 cp /opt/zammad/contrib/nginx/zammad.conf /etc/nginx/sites-available/zammad.conf
-IPADDRESS=$(hostname -I | awk '{print $1}')
-sed -i "s/server_name localhost;/server_name $IPADDRESS;/g" /etc/nginx/sites-available/zammad.conf
+sed -i "s/server_name localhost;/server_name $LOCAL_IP;/g" /etc/nginx/sites-available/zammad.conf
+ln -sf /etc/nginx/sites-available/zammad.conf /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
 $STD systemctl reload nginx
 msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

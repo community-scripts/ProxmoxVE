@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Omar Minaya | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/C4illin/ConvertX
@@ -11,8 +11,9 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -23,15 +24,16 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /var ]]; then
+  if [[ ! -d /opt/convertx ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/C4illin/ConvertX/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.convertx 2>/dev/null)" ]] || [[ ! -f ~/.convertx ]]; then
-    msg_info "Stopping $APP"
+  if check_for_gh_release "ConvertX" "C4illin/ConvertX"; then
+    msg_info "Stopping Service"
     systemctl stop convertx
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
+
+    ensure_dependencies libreoffice-writer
 
     msg_info "Move data-Folder"
     if [[ -d /opt/convertx/data ]]; then
@@ -41,30 +43,26 @@ function update_script() {
 
     fetch_and_deploy_gh_release "ConvertX" "C4illin/ConvertX" "tarball" "latest" "/opt/convertx"
 
-    msg_info "Updating $APP to v${RELEASE}"
+    msg_info "Updating ConvertX"
     if [[ -d /opt/data ]]; then
       mv /opt/data /opt/convertx/data
     fi
-    cd /opt/convertx
+    cd /opt/convertx 
     $STD bun install
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated ConvertX"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start convertx
-    msg_ok "Started $APP"
-
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
-
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
-# Author: rcourtman
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: rcourtman & vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rcourtman/Pulse
 
@@ -15,42 +15,29 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   diffutils \
-  policykit-1
+  polkitd
 msg_ok "Installed Dependencies"
 
-msg_info "Creating dedicated user pulse..."
-if useradd -r -m -d /opt/pulse-home -s /bin/bash pulse; then
-  msg_ok "User created."
+msg_info "Creating User"
+if useradd -r -m -d /opt/pulse-home -s /usr/sbin/nologin pulse; then
+  msg_ok "Created User"
 else
-  msg_error "User creation failed."
-  exit 1
+  msg_error "User creation failed"
+  exit 71
 fi
 
-NODE_VERSION="20" setup_nodejs
-
-msg_info "Setup Pulse"
-RELEASE=$(curl -fsSL https://api.github.com/repos/rcourtman/Pulse/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-temp_file=$(mktemp)
-mkdir -p /opt/pulse
-curl -fsSL "https://github.com/rcourtman/Pulse/releases/download/v${RELEASE}/pulse-v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf "$temp_file" --strip-components=1 -C /opt/pulse
-touch /opt/pulse/.env
-chown pulse:pulse /opt/pulse/.env
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+mkdir -p /etc/pulse
+fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-amd64.tar.gz"
+ln -sf /opt/pulse/bin/pulse /usr/local/bin/pulse
+chown -R pulse:pulse /etc/pulse /opt/pulse
 msg_ok "Installed Pulse"
-
-msg_info "Setting permissions for /opt/pulse..."
-chown -R pulse:pulse "/opt/pulse"
-find "/opt/pulse" -type d -exec chmod 755 {} \;
-find "/opt/pulse" -type f -exec chmod 644 {} \;
-msg_ok "Set permissions."
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/pulse.service
 [Unit]
-Description=Pulse Monitoring Application
+Description=Pulse Monitoring Server
 After=network.target
 
 [Service]
@@ -58,12 +45,13 @@ Type=simple
 User=pulse
 Group=pulse
 WorkingDirectory=/opt/pulse
-EnvironmentFile=/opt/pulse/.env
-ExecStart=/usr/bin/npm run start
-Restart=on-failure
-RestartSec=5
+ExecStart=/opt/pulse/bin/pulse
+Restart=always
+RestartSec=3
 StandardOutput=journal
 StandardError=journal
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="PULSE_DATA_DIR=/etc/pulse"
 
 [Install]
 WantedBy=multi-user.target
@@ -73,9 +61,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f "$temp_file"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

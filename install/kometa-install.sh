@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Kometa-Team/Kometa
@@ -13,30 +13,30 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup Python 3"
-$STD apt-get install python3-pip -y
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python 3"
+PYTHON_VERSION="3.13" setup_uv
+fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
 
 msg_info "Setup Kometa"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o """$temp_file"""
-tar -xzf "$temp_file"
-mv Kometa-"${RELEASE}" /opt/kometa
 cd /opt/kometa
-$STD pip install -r requirements.txt --ignore-installed
+$STD uv pip install -r requirements.txt --system
 mkdir -p config/assets
 cp config/config.yml.template config/config.yml
-echo "${RELEASE}" >/opt/kometa_version.txt
 msg_ok "Setup Kometa"
 
-read -p "${TAB3}nter your TMDb API key: " TMDBKEY
-read -p "${TAB3}Enter your Plex URL: " PLEXURL
-read -p "${TAB3}Enter your Plex token: " PLEXTOKEN
-sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL #g" /opt/kometa/config/config.yml
-sed -i -e "s/token: ####################/token: $PLEXTOKEN/g" /opt/kometa/config/config.yml
-sed -i -e "s/apikey: ################################/apikey: $TMDBKEY/g" /opt/kometa/config/config.yml
+read -r -p "${TAB3}Enter your TMDb API key: " TMDBKEY
+read -r -p "${TAB3}Enter your Plex URL: " PLEXURL
+read -r -p "${TAB3}Enter your Plex token: " PLEXTOKEN
+sed -i '/^plex:/,/^[^ ]/{s|  url:.*|  url: '"$PLEXURL"'|}' /opt/kometa/config/config.yml
+sed -i '/^plex:/,/^[^ ]/{s|  token:.*|  token: '"$PLEXTOKEN"'|}' /opt/kometa/config/config.yml
+sed -i '/^tmdb:/,/^[^ ]/{s|  apikey:.*|  apikey: '"$TMDBKEY"'|}' /opt/kometa/config/config.yml
+
+fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart" "tarball"
+
+msg_info "Installing Kometa Quickstart"
+cd /opt/kometa-quickstart
+$STD uv venv /opt/kometa-quickstart/.venv
+$STD uv pip install -r requirements.txt -p /opt/kometa-quickstart/.venv/bin/python
+msg_ok "Installed Kometa Quickstart"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/kometa.service
@@ -54,14 +54,24 @@ RestartSec=30
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now -q kometa
+cat <<EOF >/etc/systemd/system/kometa-quickstart.service
+[Unit]
+Description=Kometa Quickstart
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/kometa-quickstart
+ExecStart=/opt/kometa-quickstart/.venv/bin/python quickstart.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now kometa kometa-quickstart
 msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f "$temp_file"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

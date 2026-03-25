@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -15,6 +15,10 @@ cat <<"EOF"
 
 EOF
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "monitor-all" "pve"
+
 add() {
   echo -e "\n IMPORTANT: Tag-Based Monitoring Enabled"
   echo "Only VMs and containers with the tag 'mon-restart' will be automatically restarted by this service."
@@ -28,9 +32,9 @@ add() {
   while true; do
     read -p "This script will add Monitor All to Proxmox VE. Proceed (y/n)? " yn
     case $yn in
-      [Yy]*) break ;;
-      [Nn]*) exit ;;
-      *) echo "Please answer yes or no." ;;
+    [Yy]*) break ;;
+    [Nn]*) exit ;;
+    *) echo "Please answer yes or no." ;;
     esac
   done
 
@@ -93,7 +97,7 @@ while true; do
       fi
     else
       # Container: get IP and ping
-      IP=$(pct exec $instance ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+      IP=$(pct exec $instance ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
       if ! ping -c 1 $IP >/dev/null 2>&1; then
         echo "$(date): CT $instance is not responding, restarting..."
         pct stop $instance >/dev/null 2>&1
@@ -175,5 +179,8 @@ CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Monitor-All f
 case $CHOICE in
 "Add") add ;;
 "Remove") remove ;;
-*) echo "Exiting..."; exit 0 ;;
+*)
+  echo "Exiting..."
+  exit 0
+  ;;
 esac

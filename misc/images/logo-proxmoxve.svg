@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg height="100%" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" width="100%" version="1.1" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <desc>Proxmox VE Helper-Scripts</desc>
+  <title>ProxmoxVE</title>
+  <defs>
+    <bx:grid x="0" y="0" width="15" height="15"/>
+  </defs>
+  <g transform="matrix(0, -1.333333, 1.333333, 0, 7.499997, 52.499993)" style="transform-origin: 67.5px 22.5px;">
+    <g transform="matrix(1, 0, 0, 1, 0, 5.823999)">
+      <path d="M 75 -20.824 L 120 24.176 L 105 24.176 L 75 -5.824 L 45 24.176 L 30 24.176 L 75 -20.824 Z" style="fill: rgb(0, 128, 196);"/>
+      <path d="M 60 54.176 L 105 9.176 L 90 9.176 L 60 39.176 L 30 9.176 L 15 9.176 L 60 54.176 Z" style="stroke-width: 1; fill: rgb(140, 154, 154);"/>
+      <path d="M 75 -20.824 L 75 -5.824 L 45 24.176 L 30 24.176 L 75 -20.824 Z" style="fill: rgb(0, 128, 196);"/>
+      <path d="M 30 24.176 L 33.75 12.926 L 37.5 16.676 L 33.75 20.426 L 30 24.176 Z" style="fill: rgb(84, 91, 90);"/>
+    </g>
+    <path d="M 105 15 L 101.25 26.25 L 97.5 22.5 L 101.25 18.75 L 105 15 Z" style="fill: rgb(18, 85, 112);"/>
+  </g>
+</svg>

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.traccar.org/
+# Source: https://www.traccar.org/ | Github: https://github.com/traccar/traccar
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,19 +13,18 @@ setting_up_container
 network_check
 update_os
 
-RELEASE=$(curl -fsSL https://api.github.com/repos/traccar/traccar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-msg_info "Installing Traccar v${RELEASE}"
-curl -fsSL "https://github.com/traccar/traccar/releases/download/v${RELEASE}/traccar-linux-64-${RELEASE}.zip" -o "traccar-linux-64-${RELEASE}.zip"
-$STD unzip traccar-linux-64-${RELEASE}.zip
+fetch_and_deploy_gh_release "traccar" "traccar/traccar" "prebuild" "latest" "/opt/traccar" "traccar-linux-64*.zip"
+
+msg_info "Configuring Traccar"
+cd /opt/traccar
 $STD ./traccar.run
+[ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
+msg_ok "Configured Traccar"
+
+msg_info "Starting service"
 systemctl enable -q --now traccar
-rm -rf README.txt traccar-linux-64-${RELEASE}.zip traccar.run
-msg_ok "Installed Traccar v${RELEASE}"
+msg_ok "Service started"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

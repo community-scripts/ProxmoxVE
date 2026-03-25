@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
-# Author: MickLesk
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://komo.do
+# Source: https://komo.do/
 
 APP="Komodo"
 var_tags="${var_tags:-docker}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -19,45 +19,51 @@ variables
 color
 catch_errors
 
+ADDON_SCRIPT="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/komodo.sh"
+
 function update_script() {
   header_info
   check_container_storage
   check_container_resources
 
-  [[ -d /opt/komodo ]] || {
+  if [[ ! -d /opt/komodo ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
-  }
-
-  msg_info "Updating ${APP}"
-  COMPOSE_FILE=$(find /opt/komodo -maxdepth 1 -type f -name '*.compose.yaml' ! -name 'compose.env' | head -n1)
-  if [[ -z "$COMPOSE_FILE" ]]; then
-    msg_error "No valid compose file found in /opt/komodo!"
-    exit 1
-  fi
-  COMPOSE_BASENAME=$(basename "$COMPOSE_FILE")
-
-  if [[ "$COMPOSE_BASENAME" == "sqlite.compose.yaml" || "$COMPOSE_BASENAME" == "postgres.compose.yaml" ]]; then
-    msg_error "❌ Detected outdated Komodo setup using SQLite or PostgreSQL (FerretDB v1)."
-    echo -e "${YW}This configuration is no longer supported since Komodo v1.18.0.${CL}"
-    echo -e "${YW}Please follow the migration guide:${CL}"
-    echo -e "${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/5689${CL}\n"
-    exit 1
+    exit
   fi
 
-  BACKUP_FILE="/opt/komodo/${COMPOSE_BASENAME}.bak_$(date +%Y%m%d_%H%M%S)"
-  cp "$COMPOSE_FILE" "$BACKUP_FILE" || {
-    msg_error "Failed to create backup of ${COMPOSE_BASENAME}!"
-    exit 1
-  }
-  GITHUB_URL="https://raw.githubusercontent.com/moghtech/komodo/main/compose/${COMPOSE_BASENAME}"
-  if ! curl -fsSL "$GITHUB_URL" -o "$COMPOSE_FILE"; then
-    msg_error "Failed to download ${COMPOSE_BASENAME} from GitHub!"
-    mv "$BACKUP_FILE" "$COMPOSE_FILE"
-    exit 1
+  msg_warn "⚠️  ${APP} has been migrated to an addon script."
+  echo ""
+  msg_info "This is a one-time migration. After this, you can update ${APP} anytime with:"
+  echo -e "${TAB}${TAB}${GN}update_komodo${CL}  or  ${GN}bash <(curl -fsSL ${ADDON_SCRIPT})${CL}"
+  echo ""
+  read -r -p "${TAB}Migrate update function now? [y/N]: " CONFIRM
+  if [[ ! "${CONFIRM,,}" =~ ^(y|yes)$ ]]; then
+    msg_warn "Migration skipped. The old update will continue to work for now."
+    msg_info "Updating ${APP} (legacy)"
+    COMPOSE_FILE=$(find /opt/komodo -maxdepth 1 -type f -name '*.compose.yaml' ! -name 'compose.env' | head -n1)
+    if [[ -z "$COMPOSE_FILE" ]]; then
+      msg_error "No valid compose file found in /opt/komodo!"
+      exit 252
+    fi
+    $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env pull
+    $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
+    msg_ok "Updated ${APP}"
+    exit
   fi
-  $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
-  msg_ok "Updated ${APP}"
+
+  msg_info "Migrating update function"
+  TMP_UPDATE=$(mktemp)
+  cat <<'MIGRATION_EOF' >"$TMP_UPDATE"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/komodo.sh)"
+MIGRATION_EOF
+  mv "$TMP_UPDATE" /usr/bin/update
+  chmod +x /usr/bin/update
+
+  ln -sf /usr/bin/update /usr/bin/update_komodo 2>/dev/null || true
+  msg_ok "Migration complete"
+
+  msg_info "Running addon update"
+  type=update bash <(curl -fsSL "${ADDON_SCRIPT}")
   exit
 }
 
@@ -65,7 +71,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9120${CL}"

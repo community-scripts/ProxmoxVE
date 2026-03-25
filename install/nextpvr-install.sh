@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 communtiy-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://nextpvr.com/
@@ -12,9 +12,10 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   mediainfo \
   libmediainfo-dev \
   libc6 \
@@ -31,13 +32,9 @@ msg_info "Setup NextPVR (Patience)"
 cd /opt
 curl -fsSL "https://nextpvr.com/nextpvr-helper.deb" -o "/opt/nextpvr-helper.deb"
 $STD dpkg -i nextpvr-helper.deb
+rm -rf /opt/nextpvr-helper.deb
 msg_ok "Installed NextPVR"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/nextpvr-helper.deb
-$STD apt-get autoremove
-$STD apt-get autoclean
-msg_ok "Cleaned"
+cleanup_lxc

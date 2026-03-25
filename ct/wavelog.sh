@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Don Locke (DonLocke)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.wavelog.org/
+# Source: https://github.com/wavelog/wavelog
 
 APP="Wavelog"
 var_tags="${var_tags:-radio-logging}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,23 +27,25 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/wavelog/wavelog/releases/latest | grep "tag_name" | cut -d '"' -f 4)
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  setup_mariadb
+  if check_for_gh_release "wavelog" "wavelog/wavelog"; then
     msg_info "Stopping Services"
     systemctl stop apache2
     msg_ok "Services Stopped"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Creating backup"
     cp /opt/wavelog/application/config/config.php /opt/config.php
     cp /opt/wavelog/application/config/database.php /opt/database.php
     cp -r /opt/wavelog/userdata /opt/userdata
     if [[ -f /opt/wavelog/assets/js/sections/custom.js ]]; then
       cp /opt/wavelog/assets/js/sections/custom.js /opt/custom.js
     fi
-    curl -fsSL "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip")
-    $STD unzip ${RELEASE}.zip
+    msg_ok "Backup created"
+
     rm -rf /opt/wavelog
-    mv wavelog-${RELEASE}/ /opt/wavelog
+    fetch_and_deploy_gh_release "wavelog" "wavelog/wavelog" "tarball"
+
+    msg_info "Updating Wavelog"
     rm -rf /opt/wavelog/install
     mv /opt/config.php /opt/wavelog/application/config/config.php
     mv /opt/database.php /opt/wavelog/application/config/database.php
@@ -55,19 +57,12 @@ function update_script() {
     chown -R www-data:www-data /opt/wavelog/
     find /opt/wavelog/ -type d -exec chmod 755 {} \;
     find /opt/wavelog/ -type f -exec chmod 664 {} \;
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Wavelog"
 
     msg_info "Starting Services"
     systemctl start apache2
     msg_ok "Started Services"
-
-    msg_info "Cleaning Up"
-    rm -rf ${RELEASE}.zip
-    msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -76,7 +71,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

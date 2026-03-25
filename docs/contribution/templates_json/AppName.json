@@ -1,0 +1,40 @@
+{
+  "name": "AppName",
+  "slug": "appname",
+  "categories": [
+    0
+  ],
+  "date_created": "2026-01-18",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://docs.example.com/",
+  "website": "https://example.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/appname.webp",
+  "config_path": "/opt/appname/.env",
+  "description": "Short description of what AppName does and its main features.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/appname.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Change the default password after first login!",
+      "type": "warning"
+    }
+  ]
+}

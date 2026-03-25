@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://changedetection.io/
+# Source: https://changedetection.io/ | Github: https://github.com/dgtlmoon/changedetection.io
 
 APP="Change Detection"
 var_tags="${var_tags:-monitoring;crawler}"
-var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_cpu="${var_cpu:-4}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
@@ -29,12 +29,9 @@ function update_script() {
     exit
   fi
 
-  if ! dpkg -s libjpeg-dev >/dev/null 2>&1; then
-    msg_info "Installing Dependencies"
-    $STD apt-get update
-    $STD apt-get install -y libjpeg-dev
-    msg_ok "Updated Dependencies"
-  fi
+  ensure_dependencies libjpeg-dev
+
+  NODE_VERSION="24" setup_nodejs
 
   msg_info "Updating ${APP}"
   $STD pip3 install changedetection.io --upgrade
@@ -49,11 +46,13 @@ function update_script() {
     $STD git -C /opt/browserless/ fetch --all
     $STD git -C /opt/browserless/ reset --hard origin/main
     $STD npm update --prefix /opt/browserless
+    $STD npm ci --include=optional --include=dev --prefix /opt/browserless
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps
     # Update Chrome separately, as it has to be done with the force option. Otherwise the installation of other browsers will not be done if Chrome is already installed.
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
     $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit
+    $STD npm install --prefix /opt/browserless esbuild typescript ts-node @types/node --save-dev
     $STD npm run build --prefix /opt/browserless
     $STD npm run build:function --prefix /opt/browserless
     $STD npm prune production --prefix /opt/browserless
@@ -64,7 +63,7 @@ function update_script() {
   fi
 
   systemctl restart changedetection
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 
@@ -72,7 +71,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5000${CL}"

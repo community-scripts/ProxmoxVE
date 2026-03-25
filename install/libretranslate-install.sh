@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/LibreTranslate/LibreTranslate
@@ -12,33 +12,38 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing dependencies"
-$STD apt-get install -y --no-install-recommends \
+$STD apt install -y \
   pkg-config \
-  gcc \
+  build-essential \
   g++ \
+  cmake \
+  libprotobuf-dev \
+  protobuf-compiler \
+  libsentencepiece-dev \
   libicu-dev
 msg_ok "Installed dependencies"
 
 msg_info "Setup Python3"
-$STD apt-get install -y \
+$STD apt install -y \
   python3-pip \
   python3-dev \
   python3-icu
 msg_ok "Setup Python3"
 
-setup_uv
-fetch_and_deploy_gh_release "libretranslate" "LibreTranslate/LibreTranslate"
+PYTHON_VERSION="3.12" setup_uv
+fetch_and_deploy_gh_release "libretranslate" "LibreTranslate/LibreTranslate" "tarball"
 
 msg_info "Setup LibreTranslate (Patience)"
 cd /opt/libretranslate
-$STD uv venv .venv
+$STD uv venv --clear .venv --python 3.12
 $STD source .venv/bin/activate
-$STD uv pip install --upgrade pip setuptools
+$STD uv pip install --upgrade pip
+$STD uv pip install "setuptools<81"
 $STD uv pip install Babel==2.12.1
 $STD .venv/bin/python scripts/compile_locales.py
-$STD uv pip install torch==2.2.0 --extra-index-url https://download.pytorch.org/whl/cpu
 $STD uv pip install "numpy<2"
 $STD uv pip install .
 $STD uv pip install libretranslate
@@ -74,8 +79,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

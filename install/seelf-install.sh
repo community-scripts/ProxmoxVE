@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/YuukanOO/seelf
@@ -14,14 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   make \
   gcc
 msg_ok "Installed Dependencies"
 
 setup_go
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "seelf" "YuukanOO/seelf"
+fetch_and_deploy_gh_release "seelf" "YuukanOO/seelf" "tarball"
 
 msg_info "Setting up seelf. Patience"
 cd /opt/seelf
@@ -61,8 +61,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

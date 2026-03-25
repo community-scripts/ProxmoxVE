@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.bazarr.media/
+# Source: https://www.bazarr.media/ | Github: https://github.com/morpheus65535/bazarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,20 +13,15 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
+fetch_and_deploy_gh_release "bazarr" "morpheus65535/bazarr" "prebuild" "latest" "/opt/bazarr" "bazarr.zip"
 
 msg_info "Installing Bazarr"
 mkdir -p /var/lib/bazarr/
-curl -fsSL "https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip" -o "bazarr.zip"
-$STD unzip bazarr -d /opt/bazarr
 chmod 775 /opt/bazarr /var/lib/bazarr/
-$STD python3 -m pip install -q -r /opt/bazarr/requirements.txt
+sed -i.bak 's/--only-binary=Pillow//g' /opt/bazarr/requirements.txt
+$STD uv venv --clear /opt/bazarr/venv --python 3.12
+$STD uv pip install -r /opt/bazarr/requirements.txt --python /opt/bazarr/venv/bin/python3
 msg_ok "Installed Bazarr"
 
 msg_info "Creating Service"
@@ -41,7 +36,7 @@ UMask=0002
 Restart=on-failure
 RestartSec=5
 Type=simple
-ExecStart=/usr/bin/python3 /opt/bazarr/bazarr.py
+ExecStart=/opt/bazarr/venv/bin/python3 /opt/bazarr/bazarr.py
 KillSignal=SIGINT
 TimeoutStopSec=20
 SyslogIdentifier=bazarr
@@ -54,9 +49,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf bazarr.zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

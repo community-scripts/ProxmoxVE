@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://magicmirror.builders/
+# Source: https://magicmirror.builders/ | Github: https://github.com/MagicMirrorOrg/MagicMirror
 
 APP="MagicMirror"
 var_tags="${var_tags:-smarthome}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,15 +27,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/MagicMirrorOrg/MagicMirror/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ ! -f ~/.magicmirror ]] || [[ "${RELEASE}" != "$(cat ~/.magicmirror)" ]]; then
+  if check_for_gh_release "magicmirror" "MagicMirrorOrg/MagicMirror"; then
     msg_info "Stopping Service"
     systemctl stop magicmirror
     msg_ok "Stopped Service"
+
+    NODE_VERSION="24" setup_nodejs
 
     msg_info "Backing up data"
     rm -rf /opt/magicmirror-backup
@@ -62,10 +59,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start magicmirror
     msg_ok "Started Service"
-
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -74,7 +68,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

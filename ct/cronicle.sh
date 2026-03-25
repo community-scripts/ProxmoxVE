@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://cronicle.net/
+# Source: https://cronicle.net/ | Github: https://github.com/jhuckaby/Cronicle
 
 APP="Cronicle"
 var_tags="${var_tags:-task-scheduler}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -23,62 +23,43 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 2 \
-    "1" "Update ${APP}" ON \
-    "2" "Install ${APP} Worker" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Cronicle Update Options" \
+    "1" "Update ${APP}" \
+    "2" "Install ${APP} Worker")
 
   if [ "$UPD" == "1" ]; then
     if [[ ! -d /opt/cronicle ]]; then
       msg_error "No ${APP} Installation Found!"
       exit
     fi
-    if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-      if ! command -v npm >/dev/null 2>&1; then
-        echo "Installing NPM..."
-        $STD apt-get install -y npm
-        echo "Installed NPM..."
-      fi
-    fi
-    msg_info "Updating ${APP}"
+    NODE_VERSION="22" setup_nodejs
+
+    msg_info "Updating Cronicle"
     $STD /opt/cronicle/bin/control.sh upgrade
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Cronicle"
     exit
   fi
   if [ "$UPD" == "2" ]; then
-    if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-      if ! command -v npm >/dev/null 2>&1; then
-        echo "Installing NPM..."
-        $STD apt-get install -y npm
-        echo "Installed NPM..."
-      fi
-    fi
-    LATEST=$(curl -fsSL https://api.github.com/repos/jhuckaby/Cronicle/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-    IP=$(hostname -I | awk '{print $1}')
-    msg_info "Installing Dependencies"
-    $STD apt-get install -y \
-      git \
-      build-essential \
-      ca-certificates \
-      gnupg2
-    msg_ok "Installed Dependencies"
-
     NODE_VERSION="22" setup_nodejs
-    fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle"
+    if check_for_gh_release "cronicle" "jhuckaby/Cronicle"; then
+      msg_info "Installing Dependencies"
+      ensure_dependencies git build-essential ca-certificates
+      msg_ok "Installed Dependencies"
 
-    msg_info "Configuring Cronicle Worker"
-    cd /opt/cronicle
-    $STD npm install
-    $STD node bin/build.js dist
-    sed -i "s/localhost:3012/${IP}:3012/g" /opt/cronicle/conf/config.json
-    $STD /opt/cronicle/bin/control.sh start
-    $STD cp /opt/cronicle/bin/cronicled.init /etc/init.d/cronicled
-    chmod 775 /etc/init.d/cronicled
-    $STD update-rc.d cronicled defaults
-    msg_ok "Installed Cronicle Worker"
-    
-    echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
-    exit
+      NODE_VERSION="22" setup_nodejs
+      fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle" "tarball"
+
+      msg_info "Configuring Cronicle Worker"
+      cd /opt/cronicle
+      $STD npm install
+      $STD node bin/build.js dist
+      sed -i "s/localhost:3012/${LOCAL_IP}:3012/g" /opt/cronicle/conf/config.json
+      $STD /opt/cronicle/bin/control.sh start
+      msg_ok "Installed Cronicle Worker"
+      echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
+      msg_ok "Updated successfully!"
+      exit
+    fi
   fi
 }
 
@@ -86,7 +67,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3012${CL}"

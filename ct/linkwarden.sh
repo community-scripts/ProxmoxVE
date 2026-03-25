@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://linkwarden.app/
+# Source: https://linkwarden.app/ | Github: https://github.com/linkwarden/linkwarden
 
 APP="Linkwarden"
 var_tags="${var_tags:-bookmark}"
@@ -26,43 +26,53 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat /opt/linkwarden_version.txt)" ]] || [[ ! -f /opt/linkwarden_version.txt ]]; then
+  if check_for_gh_release "linkwarden" "linkwarden/linkwarden"; then
     NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop linkwarden
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     RUST_CRATES="monolith" setup_rust
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Backing up data"
     mv /opt/linkwarden/.env /opt/.env
     [ -d /opt/linkwarden/data ] && mv /opt/linkwarden/data /opt/data.bak
     rm -rf /opt/linkwarden
-    fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
+    msg_ok "Backed up data"
+
+    fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden" "tarball"
+
+    msg_info "Updating Linkwarden"
     cd /opt/linkwarden
+    yarn_ver="4.12.0"
+    if [[ -f package.json ]]; then
+      pkg_manager=$(jq -r '.packageManager // empty' package.json 2>/dev/null || true)
+      if [[ -n "$pkg_manager" && "$pkg_manager" == yarn@* ]]; then
+        yarn_spec="${pkg_manager#yarn@}"
+        yarn_ver="${yarn_spec%%+*}"
+      fi
+    fi
+    if command -v corepack >/dev/null 2>&1; then
+      $STD corepack enable
+      $STD corepack prepare "yarn@${yarn_ver}" --activate || true
+    fi
     $STD yarn
     $STD npx playwright install-deps
-    $STD yarn playwright install
+    $STD npx playwright install
     mv /opt/.env /opt/linkwarden/.env
     $STD yarn prisma:generate
     $STD yarn web:build
     $STD yarn prisma:deploy
     [ -d /opt/data.bak ] && mv /opt/data.bak /opt/linkwarden/data
-    msg_ok "Updated ${APP} to ${RELEASE}"
-
-    msg_info "Starting ${APP}"
-    systemctl start linkwarden
-    msg_ok "Started ${APP}"
-
-    msg_info "Cleaning up"
-    rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache ~/.rustup
+    rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache
     rm -rf /root/.cache/yarn
     rm -rf /opt/linkwarden/.next/cache
-    msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required.  ${APP} is already at ${RELEASE}."
+    msg_ok "Updated Linkwarden"
+
+    msg_info "Starting Service"
+    systemctl start linkwarden
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -71,7 +81,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

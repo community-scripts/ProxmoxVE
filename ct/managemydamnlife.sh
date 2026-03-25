@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/intri-in/manage-my-damn-life-nextjs
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,24 +28,23 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/intri-in/manage-my-damn-life-nextjs/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.mmdl)" ]] || [[ ! -f ~/.mmdl ]]; then
+  setup_mariadb
+  if check_for_gh_release "mmdl" "intri-in/manage-my-damn-life-nextjs"; then
     msg_info "Stopping service"
     systemctl stop mmdl
     msg_ok "Stopped service"
 
     msg_info "Creating Backup"
     cp /opt/mmdl/.env /opt/mmdl.env
+    rm -rf /opt/mmdl
     msg_ok "Backup Created"
 
     fetch_and_deploy_gh_release "mmdl" "intri-in/manage-my-damn-life-nextjs" "tarball"
+    NODE_VERSION="22" setup_nodejs
 
     msg_info "Configuring ${APP}"
     cd /opt/mmdl
+    export NEXT_TELEMETRY_DISABLED=1
     $STD npm install
     $STD npm run migrate
     $STD npm run build
@@ -54,10 +53,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start mmdl
     msg_ok "Started service"
-
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -66,7 +62,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

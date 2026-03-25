@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/RayLabsHQ/gitea-mirror
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -31,33 +31,72 @@ function update_script() {
 
   APP_VERSION=$(grep -o '"version": *"[^"]*"' /opt/gitea-mirror/package.json | cut -d'"' -f4)
   if [[ $APP_VERSION =~ ^2\. ]]; then
-    if ! whiptail --backtitle "Gitea Mirror Update" --title "⚠️  VERSION 2.x DETECTED" --yesno \
-      "WARNING: Version $APP_VERSION detected!\n\nUpdating from version 2.x will CLEAR ALL CONFIGURATION.\n\nThis includes:\n• API tokens\n• User settings\n• Repository configurations\n• All custom settings\n\nDo you want to continue with the update process?" 15 70 --defaultno
-    then
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      msg_warn "Version $APP_VERSION detected. Major version upgrade requires interactive confirmation, skipping."
+      exit 75
+    fi
+    msg_warn "WARNING: Version $APP_VERSION detected!"
+    msg_warn "Updating from version 2.x will CLEAR ALL CONFIGURATION."
+    msg_warn "This includes: API tokens, User settings, Repository configurations, All custom settings"
+    echo ""
+    read -r -p "Do you want to continue? (y/N): " CONFIRM
+    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
       exit 0
     fi
-
-    if ! whiptail --backtitle "Gitea Mirror Update" --title "⚠️  FINAL CONFIRMATION" --yesno \
-        "FINAL WARNING: This update WILL clear all configuration!\n\nBEFORE PROCEEDING, please:\n\n• Copy API tokens to a safe location\n• Backup any custom configurations\n• Note down repository settings\n\nThis action CANNOT be undone!" 18 70 --defaultno 
-    then
-        whiptail --backtitle "Gitea Mirror Update" --title "Update Cancelled" --msgbox "Update process cancelled. Please backup your configuration before proceeding." 8 60
-        exit 0
+    msg_warn "FINAL WARNING: This update WILL clear all configuration!"
+    msg_warn "Please ensure you have backed up API tokens, custom configurations, and repository settings."
+    echo ""
+    read -r -p "Final confirmation - proceed? (y/N): " CONFIRM2
+    if [[ ! "$CONFIRM2" =~ ^[Yy]$ ]]; then
+      msg_info "Update cancelled. Please backup your configuration before proceeding."
+      exit 0
     fi
-    whiptail --backtitle "Gitea Mirror Update" --title "Proceeding with Update" --msgbox \
-        "Proceeding with version $APP_VERSION update.\n\nAll configuration will be cleared as warned." 8 50
+    msg_info "Proceeding with version $APP_VERSION update. All configuration will be cleared as warned."
     rm -rf /opt/gitea-mirror
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/RayLabsHQ/gitea-mirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.${APP} 2>/dev/null || cat /opt/${APP}_version.txt 2>/dev/null)" ]]; then
 
+  if [[ ! -f /opt/gitea-mirror.env ]]; then
+    msg_info "Detected old Enviroment, updating files"
+    APP_SECRET=$(openssl rand -base64 32)
+    cat <<EOF >/opt/gitea-mirror.env
+# See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
+NODE_ENV=production
+HOST=0.0.0.0
+PORT=4321
+DATABASE_URL=sqlite://data/gitea-mirror.db
+BETTER_AUTH_URL=http://${LOCAL_IP}:4321
+BETTER_AUTH_SECRET=${APP_SECRET}
+npm_package_version=${APP_VERSION}
+EOF
+    rm /etc/systemd/system/gitea-mirror.service
+    cat <<EOF >/etc/systemd/system/gitea-mirror.service
+[Unit]
+Description=Gitea Mirror
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=/opt/gitea-mirror
+ExecStart=/usr/local/bin/bun dist/server/entry.mjs
+Restart=on-failure
+RestartSec=10
+EnvironmentFile=/opt/gitea-mirror.env
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    msg_ok "Old Enviroment fixed"
+  fi
+
+  ensure_dependencies git
+
+  if check_for_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"; then
     msg_info "Stopping Services"
     systemctl stop gitea-mirror
     msg_ok "Services Stopped"
 
     msg_info "Backup Data"
     mkdir -p /opt/gitea-mirror-backup/data
-    cp /opt/gitea-mirror/data/* /opt/gitea-mirror-backup/data/
+    cp -r /opt/gitea-mirror/data/* /opt/gitea-mirror-backup/data/
     msg_ok "Backup Data"
 
     msg_info "Installing Bun"
@@ -67,28 +106,24 @@ function update_script() {
     ln -sf /opt/bun/bin/bun /usr/local/bin/bunx
     msg_ok "Installed Bun"
 
-    rm -rf /opt/gitea-mirror
-    fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror" "tarball"
 
-    msg_info "Updating and rebuilding ${APP} to v${RELEASE}"
+    msg_info "Updating and rebuilding ${APP}"
     cd /opt/gitea-mirror
     $STD bun run setup
     $STD bun run build
     APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
-    sudo sed -i.bak "s|^Environment=npm_package_version=.*|Environment=npm_package_version=${APP_VERSION}|" /etc/systemd/system/gitea-mirror.service
-    msg_ok "Updated and rebuilt ${APP} to v${RELEASE}"
+    sed -i.bak "s|^npm_package_version=.*|npm_package_version=${APP_VERSION}|" /opt/gitea-mirror.env
+    msg_ok "Updated and rebuilt ${APP}"
 
     msg_info "Restoring Data"
-    cp /opt/gitea-mirror-backup/data/* /opt/gitea-mirror/data
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+    cp -r /opt/gitea-mirror-backup/data/* /opt/gitea-mirror/data
     msg_ok "Restored Data"
 
     msg_info "Starting Service"
-    systemctl daemon-reload
     systemctl start gitea-mirror
     msg_ok "Service Started"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -97,7 +132,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:4321${CL}"

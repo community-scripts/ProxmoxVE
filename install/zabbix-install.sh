@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.zabbix.com/
@@ -13,50 +13,115 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Zabbix"
-cd /tmp
-curl -fsSL "$(curl -fsSL https://repo.zabbix.com/zabbix/ |
-  grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1 |
-  xargs -I{} echo "https://repo.zabbix.com/zabbix/{}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb")" \
-  -o /tmp/zabbix-release_latest+debian12_all.deb
-$STD dpkg -i /tmp/zabbix-release_latest+debian12_all.deb
-$STD apt-get update
-$STD apt-get install -y zabbix-server-pgsql zabbix-frontend-php php8.2-pgsql zabbix-apache-conf zabbix-sql-scripts
-$STD apt-get install -y zabbix-agent2 zabbix-agent2-plugin-*
-msg_ok "Installed Zabbix"
+PG_VERSION="17" setup_postgresql
+PG_DB_NAME="zabbixdb" PG_DB_USER="zabbix" setup_postgresql_db
 
-msg_info "Setting up PostgreSQL"
-$STD apt-get install -y postgresql
-DB_NAME=zabbixdb
-DB_USER=zabbix
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u $DB_USER psql $DB_NAME &>/dev/null
-sed -i "s/^DBName=.*/DBName=$DB_NAME/" /etc/zabbix/zabbix_server.conf
-sed -i "s/^DBUser=.*/DBUser=$DB_USER/" /etc/zabbix/zabbix_server.conf
-sed -i "s/^# DBPassword=.*/DBPassword=$DB_PASS/" /etc/zabbix/zabbix_server.conf
-echo "" >~/zabbix.creds
-echo "zabbix Database Credentials" >>~/zabbix.creds
-echo "" >>~/zabbix.creds
-echo -e "zabbix Database User: \e[32m$DB_USER\e[0m" >>~/zabbix.creds
-echo -e "zabbix Database Password: \e[32m$DB_PASS\e[0m" >>~/zabbix.creds
-echo -e "zabbix Database Name: \e[32m$DB_NAME\e[0m" >>~/zabbix.creds
-msg_ok "Set up PostgreSQL"
+read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
+ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
+case "$ZABBIX_CHOICE" in
+1) ZABBIX_VERSION="7.0" ;;
+2) ZABBIX_VERSION="7.4" ;;
+3) ZABBIX_VERSION=$(curl -fsSL https://repo.zabbix.com/zabbix/ |
+  grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1) ;;
+*)
+  ZABBIX_VERSION="7.4"
+  echo "Invalid choice. Defaulting to 7.4."
+  ;;
+esac
+
+msg_info "Installing Zabbix $ZABBIX_VERSION"
+cd /tmp
+
+if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+else
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest+debian13_all.deb"
+fi
+
+curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
+$STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
+$STD apt update
+$STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
+
+if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
+  ZABBIX_SQL="/usr/share/zabbix-sql-scripts/postgresql/server.sql.gz"
+else
+  ZABBIX_SQL="/usr/share/zabbix/sql-scripts/postgresql/server.sql.gz"
+fi
+
+zcat "$ZABBIX_SQL" | sudo -u "$PG_DB_USER" psql "$PG_DB_NAME" &>/dev/null
+sed -i "s/^DBName=.*/DBName=$PG_DB_NAME/" /etc/zabbix/zabbix_server.conf
+sed -i "s/^DBUser=.*/DBUser=$PG_DB_USER/" /etc/zabbix/zabbix_server.conf
+sed -i "s/^# DBPassword=.*/DBPassword=$PG_DB_PASS/" /etc/zabbix/zabbix_server.conf
+msg_ok "Installed Zabbix $ZABBIX_VERSION"
+
+while true; do
+  read -rp "Which agent do you want to install? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE
+  case "$AGENT_CHOICE" in
+  2)
+    AGENT_PKG="zabbix-agent2"
+    break
+    ;;
+  "" | 1)
+    AGENT_PKG="zabbix-agent"
+    break
+    ;;
+  *)
+    echo "Invalid choice. Please enter 1 or 2."
+    ;;
+  esac
+done
+msg_ok "Selected $AGENT_PKG"
+
+if [ "$AGENT_PKG" = "zabbix-agent2" ]; then
+  echo "Choose plugins for Zabbix Agent2:"
+  echo "1) PostgreSQL only (default, recommended)"
+  echo "2) All plugins (may cause issues)"
+  read -rp "Choose option [1-2]: " PLUGIN_CHOICE
+
+  case "$PLUGIN_CHOICE" in
+  2)
+    $STD apt install -y zabbix-agent2 zabbix-agent2-plugin-*
+    ;;
+  *)
+    $STD apt install -y zabbix-agent2 zabbix-agent2-plugin-postgresql
+    ;;
+  esac
+
+  if [ -f /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf ]; then
+    sed -i 's|^Plugins.NVIDIA.System.Path=.*|# Plugins.NVIDIA.System.Path=/usr/libexec/zabbix/zabbix-agent2-plugin-nvidia-gpu|' \
+      /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf
+  fi
+else
+  $STD apt install -y zabbix-agent
+fi
+
+msg_info "Configuring Fping"
+if command -v fping >/dev/null 2>&1; then
+  FPING_PATH=$(command -v fping)
+  sed -i "s|^#\?FpingLocation=.*|FpingLocation=$FPING_PATH|" /etc/zabbix/zabbix_server.conf
+fi
+
+if command -v fping6 >/dev/null 2>&1; then
+  FPING6_PATH=$(command -v fping6)
+  sed -i "s|^#\?Fping6Location=.*|Fping6Location=$FPING6_PATH|" /etc/zabbix/zabbix_server.conf
+fi
+msg_ok "Configured Fping"
 
 msg_info "Starting Services"
-systemctl restart zabbix-server zabbix-agent2 apache2
-systemctl enable -q --now zabbix-server zabbix-agent2 apache2
+if [ "$AGENT_PKG" = "zabbix-agent2" ]; then
+  AGENT_SERVICE="zabbix-agent2"
+else
+  AGENT_SERVICE="zabbix-agent"
+fi
+
+systemctl restart zabbix-server apache2
+systemctl enable -q --now zabbix-server $AGENT_SERVICE apache2
+rm -rf /tmp/zabbix-release_*.deb
 msg_ok "Started Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /tmp/zabbix-release_latest+debian12_all.deb
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

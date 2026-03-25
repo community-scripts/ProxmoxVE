@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/saltstack/salt
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,22 +29,21 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/saltstack/salt/releases/latest | jq -r .tag_name | sed 's/^v//')
-  if [[ ! -f /~.salt ]] || [[ "${RELEASE}" != "$(cat /~.salt)" ]]; then
-    msg_info "Updating $APP to ${RELEASE}"
+  RELEASE=$(get_latest_github_release "saltstack/salt")
+  if check_for_gh_release "salt" "saltstack/salt"; then
+    msg_info "Updating Salt"
     sed -i "s/^\(Pin: version \).*/\1${RELEASE}/" /etc/apt/preferences.d/salt-pin-1001
-    $STD apt-get update
-    $STD apt-get upgrade -y
+    $STD apt update
+    $STD apt upgrade -y
     echo "${RELEASE}" >/~.salt
-    msg_ok "Updated ${APP} to ${RELEASE}"
-  else
-    msg_ok "${APP} is already up to date (${RELEASE})"
+    msg_ok "Updated successfully!"
   fi
+  exit
 }
 
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"

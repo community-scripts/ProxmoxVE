@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.qbittorrent.org/
+# Source: https://www.qbittorrent.org/ | Github: https://github.com/qbittorrent/qBittorrent
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,14 +13,12 @@ setting_up_container
 network_check
 update_os
 
+fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "x86_64-qbittorrent-nox"
+
 msg_info "Setup qBittorrent-nox"
-FULLRELEASE=$(curl -fsSL https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-RELEASE=$(echo $FULLRELEASE | cut -c 9-13)
-mkdir -p /opt/qbittorrent
-curl -fsSL "https://github.com/userdocs/qbittorrent-nox-static/releases/download/${FULLRELEASE}/x86_64-qbittorrent-nox" -o /opt/qbittorrent/qbittorrent-nox
-chmod +x /opt/qbittorrent/qbittorrent-nox
-mkdir -p $HOME/.config/qBittorrent/
-cat <<EOF >$HOME/.config/qBittorrent/qBittorrent.conf
+mv /opt/qbittorrent/qbittorrent /opt/qbittorrent/qbittorrent-nox
+mkdir -p ~/.config/qBittorrent/
+cat <<EOF >~/.config/qBittorrent/qBittorrent.conf
 [LegalNotice]
 Accepted=true
 
@@ -29,8 +27,10 @@ WebUI\Password_PBKDF2="@ByteArray(amjeuVrF3xRbgzqWQmes5A==:XK3/Ra9jUmqUc4RwzCtrh
 WebUI\Port=8090
 WebUI\UseUPnP=false
 WebUI\Username=admin
+
+[Network]
+PortForwardingEnabled=false
 EOF
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup qBittorrent-nox"
 
 msg_info "Creating Service"
@@ -53,8 +53,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.postgresql.org/
@@ -13,9 +13,12 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing PostgreSQL"
-$STD apk add --no-cache postgresql16 postgresql16-contrib postgresql16-openrc sudo
-msg_ok "Installed PostgreSQL"
+read -r -p "${TAB3}Enter PostgreSQL version (15/16/17): " ver
+[[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 64; }
+
+msg_info "Installing PostgreSQL ${ver}"
+$STD apk add --no-cache postgresql${ver} postgresql${ver}-contrib postgresql${ver}-openrc sudo
+msg_ok "Installed PostgreSQL ${ver}"
 
 msg_info "Enabling PostgreSQL Service"
 $STD rc-update add postgresql default
@@ -26,8 +29,8 @@ $STD rc-service postgresql start
 msg_ok "Started PostgreSQL"
 
 msg_info "Configuring PostgreSQL for External Access"
-conf_file="/etc/postgresql16/postgresql.conf"
-hba_file="/etc/postgresql16/pg_hba.conf"
+conf_file="/etc/postgresql${ver}/postgresql.conf"
+hba_file="/etc/postgresql${ver}/pg_hba.conf"
 sed -i 's/^#listen_addresses =.*/listen_addresses = '\''*'\''/' "$conf_file"
 sed -i '/^host\s\+all\s\+all\s\+127.0.0.1\/32\s\+md5/ s/.*/host all all 0.0.0.0\/0 md5/' "$hba_file"
 $STD rc-service postgresql restart
@@ -53,6 +56,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     jq
 
   sed -i 's|# *include "mod_fastcgi.conf"|include "mod_fastcgi.conf"|' /etc/lighttpd/lighttpd.conf
+  sed -i 's|/usr/bin/php-cgi|/usr/bin/php-cgi83|g' /etc/lighttpd/mod_fastcgi.conf
   mkdir -p /var/www/localhost/htdocs
   ADMINER_VERSION=$(curl -fsSL https://api.github.com/repos/vrana/adminer/releases/latest | jq -r '.tag_name' | sed 's/^v//')
   curl -fsSL "https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}.php" -o /var/www/localhost/htdocs/adminer.php

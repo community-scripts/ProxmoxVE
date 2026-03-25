@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://couchdb.apache.org/
@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y apt-transport-https
-msg_ok "Installed Dependencies"
-
 msg_info "Installing Apache CouchDB"
 ERLANG_COOKIE=$(openssl rand -base64 32)
 ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
@@ -25,19 +21,20 @@ debconf-set-selections <<<"couchdb couchdb/mode select standalone"
 debconf-set-selections <<<"couchdb couchdb/bindaddress string 0.0.0.0"
 debconf-set-selections <<<"couchdb couchdb/adminpass password $ADMIN_PASS"
 debconf-set-selections <<<"couchdb couchdb/adminpass_again password $ADMIN_PASS"
-curl -fsSL https://couchdb.apache.org/repo/keys.asc | gpg --dearmor -o /usr/share/keyrings/couchdb-archive-keyring.gpg
-VERSION_CODENAME="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ ${VERSION_CODENAME} main" >/etc/apt/sources.list.d/couchdb.sources.list
-$STD apt-get update
-$STD apt-get install -y couchdb
-echo -e "CouchDB Erlang Cookie: \e[32m$ERLANG_COOKIE\e[0m" >>~/CouchDB.creds
-echo -e "CouchDB Admin Password: \e[32m$ADMIN_PASS\e[0m" >>~/CouchDB.creds
-msg_ok "Installed Apache CouchDB."
+setup_deb822_repo \
+  "couchdb" \
+  "https://couchdb.apache.org/repo/keys.asc" \
+  "https://apache.jfrog.io/artifactory/couchdb-deb" \
+  "$(get_os_info codename)" \
+  "main"
+$STD apt install -y couchdb
+{
+  echo "CouchDB Credentials"
+  echo "CouchDB Erlang Cookie: $ERLANG_COOKIE"
+  echo "CouchDB Admin Password: $ADMIN_PASS"
+} >>~/couchdb.creds
+msg_ok "Installed Apache CouchDB"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

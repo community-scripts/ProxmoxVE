@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.stirlingpdf.com/
+# Source: https://www.stirlingpdf.com/ | Github: https://github.com/Stirling-Tools/Stirling-PDF
 
 APP="Stirling-PDF"
 var_tags="${var_tags:-pdf-editor}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,15 +27,15 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Stirling-Tools/Stirling-PDF/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.stirling-pdf 2>/dev/null)" ]] || [[ ! -f ~/.stirling-pdf ]]; then
+
+  if check_for_gh_release "stirling-pdf" "Stirling-Tools/Stirling-PDF"; then
     if [[ ! -f /etc/systemd/system/unoserver.service ]]; then
       msg_custom "⚠️ " "\e[33m" "Legacy installation detected – please recreate the container using the latest install script."
       exit 0
     fi
 
     PYTHON_VERSION="3.12" setup_uv
-    JAVA_VERSION="21" setup_java
+    JAVA_VERSION="25" setup_java
 
     msg_info "Stopping Services"
     systemctl stop stirlingpdf libreoffice-listener unoserver
@@ -55,10 +55,7 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start stirlingpdf libreoffice-listener unoserver
     msg_ok "Started Services"
-
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -66,7 +63,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

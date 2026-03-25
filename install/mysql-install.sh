@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   lsb-release
 msg_ok "Installed Dependencies"
 
@@ -30,13 +30,25 @@ fi
 msg_info "Installing MySQL"
 curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor -o /usr/share/keyrings/mysql.gpg
 if [ "$(lsb_release -si)" = "Debian" ]; then
-  echo "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/debian $(lsb_release -sc) ${RELEASE_REPO}" >/etc/apt/sources.list.d/mysql.list
+  cat <<EOF >/etc/apt/sources.list.d/mysql.sources
+Types: deb
+URIs: http://repo.mysql.com/apt/debian
+Suites: $(lsb_release -sc)
+Components: ${RELEASE_REPO}
+Signed-By: /usr/share/keyrings/mysql.gpg
+EOF
 else
-  echo "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/ubuntu $(lsb_release -sc) ${RELEASE_REPO}" >/etc/apt/sources.list.d/mysql.list
+  cat <<EOF >/etc/apt/sources.list.d/mysql.sources
+Types: deb
+URIs: http://repo.mysql.com/apt/ubuntu
+Suites: $(lsb_release -sc)
+Components: ${RELEASE_REPO}
+Signed-By: /usr/share/keyrings/mysql.gpg
+EOF
 fi
-$STD apt-get update
+$STD apt update
 export DEBIAN_FRONTEND=noninteractive
-$STD apt-get install -y \
+$STD apt install -y \
   mysql-community-client \
   mysql-community-server
 msg_ok "Installed MySQL"
@@ -51,27 +63,7 @@ msg_ok "MySQL Server configured"
 
 read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Installing phpMyAdmin"
-  $STD apt-get install -y \
-    apache2 \
-    php \
-    php-mysqli \
-    php-mbstring \
-    php-zip \
-    php-gd \
-    php-json \
-    php-curl
-
-  curl -fsSL "https://files.phpmyadmin.net/phpMyAdmin/5.2.2/phpMyAdmin-5.2.2-all-languages.tar.gz" -o "phpMyAdmin-5.2.2-all-languages.tar.gz"
-  mkdir -p /var/www/html/phpMyAdmin
-  tar xf phpMyAdmin-5.2.2-all-languages.tar.gz --strip-components=1 -C /var/www/html/phpMyAdmin
-  cp /var/www/html/phpMyAdmin/config.sample.inc.php /var/www/html/phpMyAdmin/config.inc.php
-  SECRET=$(openssl rand -base64 24)
-  sed -i "s#\$cfg\['blowfish_secret'\] = '';#\$cfg['blowfish_secret'] = '${SECRET}';#" /var/www/html/phpMyAdmin/config.inc.php
-  chmod 660 /var/www/html/phpMyAdmin/config.inc.php
-  chown -R www-data:www-data /var/www/html/phpMyAdmin
-  systemctl restart apache2
-  msg_ok "Installed phpMyAdmin"
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/phpmyadmin.sh)"
 fi
 
 msg_info "Start Service"
@@ -80,8 +72,4 @@ msg_ok "Service started"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

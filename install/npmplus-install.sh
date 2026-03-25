@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ZoeyVid/NPMplus
@@ -51,7 +51,7 @@ while true; do
   attempts=$((attempts + 1))
   if [[ "$attempts" -ge 3 ]]; then
     msg_error "Maximum attempts reached. Exiting."
-    exit 1
+    exit 254
   fi
 done
 
@@ -59,8 +59,8 @@ read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT
 
 yq -i "
   .services.npmplus.environment |=
-    (map(select(. != \"TZ=*\" and . != \"ACME_EMAIL=*\")) +
-    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\"])
+    (map(select(. != \"TZ=*\" and . != \"ACME_EMAIL=*\" and . != \"INITIAL_ADMIN_EMAIL=*\" and . != \"INITIAL_ADMIN_PASSWORD=*\")) +
+    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=community-scripts.com\"])
 " /opt/compose.yaml
 
 msg_info "Building and Starting NPMplus (Patience)"
@@ -76,32 +76,13 @@ for i in {1..60}; do
     elif [[ "$STATUS" == "unhealthy" ]]; then
       msg_error "NPMplus container is unhealthy! Check logs."
       docker logs "$CONTAINER_ID"
-      exit 1
+      exit 150
     fi
   fi
   sleep 2
-  [[ $i -eq 60 ]] && msg_error "NPMplus container did not become healthy within 120s." && docker logs "$CONTAINER_ID" && exit 1
+  [[ $i -eq 60 ]] && msg_error "NPMplus container did not become healthy within 120s." && docker logs "$CONTAINER_ID" && exit 150
 done
 msg_ok "Builded and started NPMplus"
 
 motd_ssh
 customize
-
-msg_info "Retrieving Default Login (Patience)"
-PASSWORD_FOUND=0
-for i in {1..60}; do
-  PASSWORD_LINE=$(docker logs "$CONTAINER_ID" 2>&1 | awk '/Creating a new user:/ { print; exit }')
-  if [[ -n "$PASSWORD_LINE" ]]; then
-    PASSWORD=$(echo "$PASSWORD_LINE" | awk -F 'password: ' '{print $2}')
-    echo -e "username: admin@example.org\npassword: $PASSWORD" >/opt/.npm_pwd
-    msg_ok "Saved default login to /opt/.npm_pwd"
-    PASSWORD_FOUND=1
-    break
-  fi
-  sleep 2
-done
-
-if [[ $PASSWORD_FOUND -eq 0 ]]; then
-  msg_error "Could not retrieve default login after 60 seconds."
-  echo -e "\nYou can manually check the container logs with:\n  docker logs $CONTAINER_ID | grep 'Creating a new user:'\n"
-fi

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://traefik.io/
+# Source: https://traefik.io/ | Github: https://github.com/traefik/traefik
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,18 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y apt-transport-https
+$STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-RELEASE=$(curl -fsSL https://api.github.com/repos/traefik/traefik/releases | grep -oP '"tag_name":\s*"v\K[\d.]+?(?=")' | sort -V | tail -n 1)
-msg_info "Installing Traefik v${RELEASE}"
+fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"
 mkdir -p /etc/traefik/{conf.d,ssl}
-curl -fsSL "https://github.com/traefik/traefik/releases/download/v${RELEASE}/traefik_v${RELEASE}_linux_amd64.tar.gz" -o "traefik_v${RELEASE}_linux_amd64.tar.gz"
-tar -C /tmp -xzf traefik*.tar.gz
-mv /tmp/traefik /usr/bin/
-rm -rf traefik*.tar.gz
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed Traefik v${RELEASE}"
 
 msg_info "Creating Traefik configuration"
 cat <<EOF >/etc/traefik/traefik.yaml
@@ -84,7 +77,7 @@ EOF
 msg_ok "Created Traefik configuration"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/traefik.service
+cat <<'EOF' >/etc/systemd/system/traefik.service
 [Unit]
 Description=Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience
 
@@ -97,14 +90,9 @@ ExecReload=/bin/kill -USR1 \$MAINPID
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now traefik
 msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

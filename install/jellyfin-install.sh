@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://jellyfin.org/
 
@@ -13,52 +13,50 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setting Up Hardware Acceleration"
-$STD apt-get -y install {va-driver-all,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools}
-if [[ "$CTTYPE" == "0" ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser $(id -u -n) video
-  $STD adduser $(id -u -n) render
+msg_custom "ℹ️" "${GN}" "If NVIDIA GPU passthrough is detected, you'll be asked whether to install drivers in the container"
+
+msg_info "Installing Dependencies"
+ensure_dependencies libjemalloc2
+if [[ ! -f /usr/lib/libjemalloc.so ]]; then
+  ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
 fi
-msg_ok "Set Up Hardware Acceleration"
+msg_ok "Installed Dependencies"
+
+msg_info "Setting up Jellyfin Repository"
+setup_deb822_repo \
+  "jellyfin" \
+  "https://repo.jellyfin.org/jellyfin_team.gpg.key" \
+  "https://repo.jellyfin.org/$(get_os_info id)" \
+  "$(get_os_info codename)"
+msg_ok "Set up Jellyfin Repository"
 
 msg_info "Installing Jellyfin"
-VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-# If the keyring directory is absent, create it
-if [[ ! -d /etc/apt/keyrings ]]; then
-  mkdir -p /etc/apt/keyrings
-fi
-# Download the repository signing key and install it to the keyring directory
-curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key | gpg --dearmor --yes --output /etc/apt/keyrings/jellyfin.gpg
-# Install the Deb822 format jellyfin.sources entry
-cat <<EOF >/etc/apt/sources.list.d/jellyfin.sources
-Types: deb
-URIs: https://repo.jellyfin.org/${PCT_OSTYPE}
-Suites: ${VERSION}
-Components: main
-Architectures: amd64
-Signed-By: /etc/apt/keyrings/jellyfin.gpg
+$STD apt install -y jellyfin jellyfin-ffmpeg7
+ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
+ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
+msg_ok "Installed Jellyfin"
+
+setup_hwaccel "jellyfin"
+
+msg_info "Configuring Jellyfin"
+# Configure log rotation to prevent disk fill (keeps fail2ban compatibility) (PR: #1690 / Issue: #11224)
+cat <<EOF >/etc/logrotate.d/jellyfin
+/var/log/jellyfin/*.log {
+    daily
+    rotate 3
+    maxsize 100M
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+}
 EOF
-# Install Jellyfin using the metapackage (which will fetch jellyfin-server, jellyfin-web, and jellyfin-ffmpeg5)
-$STD apt-get update
-$STD apt-get install -y jellyfin
-sed -i 's/"MinimumLevel": "Information"/"MinimumLevel": "Error"/g' /etc/jellyfin/logging.json
 chown -R jellyfin:adm /etc/jellyfin
 sleep 10
 systemctl restart jellyfin
-if [[ "$CTTYPE" == "0" ]]; then
-  sed -i -e 's/^ssl-cert:x:104:$/render:x:104:root,jellyfin/' -e 's/^render:x:108:root,jellyfin$/ssl-cert:x:108:/' /etc/group
-else
-  sed -i -e 's/^ssl-cert:x:104:$/render:x:104:jellyfin/' -e 's/^render:x:108:jellyfin$/ssl-cert:x:108:/' /etc/group
-fi
-msg_ok "Installed Jellyfin"
+msg_ok "Configured Jellyfin"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

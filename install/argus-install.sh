@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://release-argus.io/
+# Source: https://release-argus.io/ | Github: https://github.com/release-argus/Argus
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -58,7 +58,7 @@ service:
       use_prerelease: false
     dashboard:
       icon: https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/images/logo.png
-      icon_link_to: https://helper-scripts.com/
+      icon_link_to: https://community-scripts.com/
       web_url: https://github.com/community-scripts/ProxmoxVE/releases
 EOF
 msg_ok "Setup Config"
@@ -82,8 +82,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

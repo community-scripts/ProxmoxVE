@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://sabre.io/baikal/
+# Source: https://sabre.io/baikal/ | Github: https://github.com/sabre-io/Baikal
 
 APP="Baikal"
 var_tags="${var_tags:-Dav}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/sabre-io/Baikal/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.baikal 2>/dev/null)" ]] || [[ ! -f ~/.baikal ]]; then
+  if check_for_gh_release "baikal" "sabre-io/Baikal"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
@@ -38,8 +37,9 @@ function update_script() {
     mv /opt/baikal /opt/baikal-backup
     msg_ok "Backed up data"
 
-    fetch_and_deploy_gh_release "baikal" "sabre-io/Baikal"
+    PHP_APACHE="YES" PHP_VERSION="8.3" setup_php
     setup_composer
+    fetch_and_deploy_gh_release "baikal" "sabre-io/Baikal" "tarball"
 
     msg_info "Configuring Baikal"
     cp -r /opt/baikal-backup/config/baikal.yaml /opt/baikal/config/
@@ -48,18 +48,13 @@ function update_script() {
     chmod -R 755 /opt/baikal/
     cd /opt/baikal
     $STD composer install
+    rm -rf /opt/baikal-backup
     msg_ok "Configured Baikal"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/baikal-backup
-    msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -68,7 +63,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

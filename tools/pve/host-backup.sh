@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -15,6 +15,10 @@ function header_info {
                                            /_/
 EOF
 }
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "host-backup" "pve"
 
 # Function to perform backup
 function perform_backup {
@@ -41,6 +45,7 @@ function perform_backup {
 
   # Build a list of directories for backup
   local CTID_MENU=()
+  CTID_MENU=("ALL" "Backup all folders" "OFF")
   while read -r dir; do
     CTID_MENU+=("$(basename "$dir")" "$dir " "OFF")
   done < <(ls -d "${DIR}"*)
@@ -52,7 +57,13 @@ function perform_backup {
       "\nSelect what files/directories to backup:\n" 16 $(((${#DIRNAME} + 2) + 88)) 6 "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || return
 
     for selected_dir in ${HOST_BACKUP//\"/}; do
-      selected_directories+=("${DIR}$selected_dir")
+      if [[ "$selected_dir" == "ALL" ]]; then
+        # if ALL was chosen, secure all folders
+        selected_directories=("${DIR}"*/)
+        break
+      else
+        selected_directories+=("${DIR}$selected_dir")
+      fi
     done
   done
 
@@ -62,7 +73,7 @@ function perform_backup {
   read -p "Press ENTER to continue..."
   header_info
   echo "Working..."
-  tar -czf "$BACKUP_PATH$BACKUP_FILE-$(date +%Y_%m_%d).tar.gz" --absolute-names "${selected_directories[@]}"
+  tar -czf "$BACKUP_PATH$BACKUP_FILE-$(date +%Y_%m_%dT%H_%M).tar.gz" --absolute-names "${selected_directories[@]}"
   header_info
   echo -e "\nFinished"
   echo -e "\e[1;33m \nA backup is rendered ineffective when it remains stored on the host.\n \e[0m"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/benzino77/tasmocompiler
@@ -15,12 +15,9 @@ update_os
 
 msg_info "Installing Dependencies. Patience"
 $STD apt-get install -y \
-  git
+  git \
+  python3-venv
 msg_ok "Installed Dependencies"
-
-msg_info "Setup Python3"
-$STD apt-get install -y python3-venv
-msg_ok "Setup Python3"
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
@@ -45,6 +42,7 @@ mkdir -p /usr/local/bin
 ln -s ~/.platformio/penv/bin/platformio /usr/local/bin/platformio
 ln -s ~/.platformio/penv/bin/pio /usr/local/bin/pio
 ln -s ~/.platformio/penv/bin/piodebuggdb /usr/local/bin/piodebuggdb
+rm -f /tmp/v${RELEASE}.tar.gz
 echo "${RELEASE}" >"/opt/tasmocompiler_version.txt"
 msg_ok "Setup TasmoCompiler"
 
@@ -67,9 +65,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f /tmp/v${RELEASE}.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

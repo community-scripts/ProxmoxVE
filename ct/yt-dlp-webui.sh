@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/marcopiovanello/yt-dlp-web-ui
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,44 +20,39 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -f /usr/local/bin/yt-dlp-webui ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /usr/local/bin/yt-dlp-webui ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
 
-   msg_info "Updating yt-dlp"
-   $STD yt-dlp -U
-   msg_ok "Updated yt-dlp"
-   RELEASE=$(curl -fsSL https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-   if [[ "${RELEASE}" != "$(cat /opt/yt-dlp-webui_version.txt)" ]] || [[ ! -f /opt/yt-dlp-webui_version.txt ]]; then
+  if check_for_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui"; then
+    msg_info "Stopping Service"
+    systemctl stop yt-dlp-webui
+    msg_ok "Stopped Service"
 
-      msg_info "Stopping $APP"
-      systemctl stop yt-dlp-webui
-      msg_ok "Stopped $APP"
+    msg_info "Updating yt-dlp"
+    $STD yt-dlp -U
+    msg_ok "Updated yt-dlp"
 
-      msg_info "Updating $APP to v${RELEASE}"
-      rm -rf /usr/local/bin/yt-dlp-webui
-curl -fsSL "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -o "/usr/local/bin/yt-dlp-webui"
-      chmod +x /usr/local/bin/yt-dlp-webui
-      msg_ok "Updated $APP LXC"
+    rm -rf /usr/local/bin/yt-dlp-webui
+    fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-amd64"
 
-      msg_info "Starting $APP"
-      systemctl start yt-dlp-webui
-      msg_ok "Started $APP"
-   else
-      msg_ok "No update required. ${APP} is already at v${RELEASE}"
-   fi
-   exit
+    msg_info "Starting Service"
+    systemctl start yt-dlp-webui
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3033${CL}"

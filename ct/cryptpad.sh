@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/cryptpad/cryptpad
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,36 +28,41 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/cryptpad/cryptpad/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.cryptpad 2>/dev/null)" ]] || [[ ! -f ~/.cryptpad ]]; then
-    msg_info "Stopping $APP"
+  if check_for_gh_release "cryptpad" "cryptpad/cryptpad"; then
+    msg_info "Stopping Service"
     systemctl stop cryptpad
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
-    msg_info "Backing up configuration"
+    msg_info "Creating backup"
     [ -f /opt/cryptpad/config/config.js ] && mv /opt/cryptpad/config/config.js /opt/
-    msg_ok "Backed up configuration"
+    for dir in blob block customize data datastore www/common/onlyoffice/dist onlyoffice-conf; do
+      [ -d "/opt/cryptpad/${dir}" ] && mv "/opt/cryptpad/${dir}" "/tmp/cryptpad_${dir//\//_}"
+    done
+    msg_ok "Created backup"
 
-    fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
-    msg_info "Updating $APP to ${RELEASE}"
+    msg_info "Restoring backup"
+    mv /opt/config.js /opt/cryptpad/config/
+    for dir in blob block customize data datastore www/common/onlyoffice/dist onlyoffice-conf; do
+      [ -d "/tmp/cryptpad_${dir//\//_}" ] && mv "/tmp/cryptpad_${dir//\//_}" "/opt/cryptpad/${dir}"
+    done
+    msg_ok "Restored backup"
+
+    msg_info "Updating CryptPad"
     cd /opt/cryptpad
     $STD npm ci
     $STD npm run install:components
+    if [ -f "/opt/cryptpad/install-onlyoffice.sh" ]; then
+      $STD bash /opt/cryptpad/install-onlyoffice.sh --accept-license
+    fi
     $STD npm run build
-    msg_ok "Updated $APP to ${RELEASE}"
+    msg_ok "Updated CryptaPad"
 
-    msg_info "Restoring configuration"
-    mv /opt/config.js /opt/cryptpad/config/
-    msg_ok "Configuration restored"
-
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start cryptpad
-    msg_ok "Started $APP"
-
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -66,7 +71,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

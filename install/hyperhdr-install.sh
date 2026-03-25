@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.hyperhdr.eu/
@@ -12,13 +12,15 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing HyperHDR"
-curl -fsSL https://awawa-dev.github.io/hyperhdr.public.apt.gpg.key >/usr/share/keyrings/hyperhdr.public.apt.gpg.key
-chmod go+r /usr/share/keyrings/hyperhdr.public.apt.gpg.key
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hyperhdr.public.apt.gpg.key] https://awawa-dev.github.io $(awk -F= '/VERSION_CODENAME/ {print $2}' /etc/os-release) main" >/etc/apt/sources.list.d/hyperhdr.list
-$STD apt-get update
-$STD apt-get install -y hyperhdr
+setup_deb822_repo \
+  "hyperhdr" \
+  "https://awawa-dev.github.io/hyperhdr.public.apt.gpg.key" \
+  "https://awawa-dev.github.io" \
+  "$(get_os_info codename)"
+$STD apt install -y hyperhdr
 msg_ok "Installed HyperHDR"
 
 msg_info "Creating Service"
@@ -41,8 +43,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

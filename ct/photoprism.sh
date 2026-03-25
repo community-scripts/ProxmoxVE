@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.photoprism.app/
+# Source: https://www.photoprism.app/ | Github: https://github.com/photoprism/photoprism
 
 APP="PhotoPrism"
 var_tags="${var_tags:-media;photo}"
@@ -11,8 +11,9 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -27,19 +28,24 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/photoprism/photoprism/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.photoprism 2>/dev/null)" ]] || [[ ! -f ~/.photoprism ]]; then
+  if check_for_gh_release "photoprism" "photoprism/photoprism"; then
     msg_info "Stopping PhotoPrism"
     systemctl stop photoprism
     msg_ok "Stopped PhotoPrism"
 
+    if ! grep -q "photoprism/config/.env" ~/.bashrc 2>/dev/null; then
+      msg_info "Adding environment export for CLI tools"
+      echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
+      echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
+      msg_ok "Added environment export"
+    fi
+
     fetch_and_deploy_gh_release "photoprism" "photoprism/photoprism" "prebuild" "latest" "/opt/photoprism" "*linux-amd64.tar.gz"
 
-    LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-$(lsb_release -cs)-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
+    LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-bookworm-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
     if [[ "${LIBHEIF_URL}" != "$(cat ~/.photoprism_libheif 2>/dev/null)" ]] || [[ ! -f ~/.photoprism_libheif ]]; then
       msg_info "Updating PhotoPrism LibHeif"
-      $STD apt-get install -y libvips42
+      ensure_dependencies libvips42
       curl -fsSL "https://dl.photoprism.app/dist/libheif/$LIBHEIF_URL" -o /tmp/libheif.tar.gz
       tar -xzf /tmp/libheif.tar.gz -C /usr/local
       ldconfig
@@ -50,17 +56,16 @@ function update_script() {
     msg_info "Starting PhotoPrism"
     systemctl start photoprism
     msg_ok "Started PhotoPrism"
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
+
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:2342${CL}"

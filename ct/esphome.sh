@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://esphome.io/
@@ -9,9 +9,9 @@ APP="ESPHome"
 var_tags="${var_tags:-automation}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-4}"
+var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -25,12 +25,12 @@ function update_script() {
   check_container_resources
   if [[ ! -f /etc/systemd/system/esphomeDashboard.service ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
-  msg_info "Stopping ${APP}"
+  msg_info "Stopping Service"
   systemctl stop esphomeDashboard
-  msg_ok "Stopped ${APP}"
+  msg_ok "Stopped Service"
 
   VENV_PATH="/opt/esphome/.venv"
   ESPHOME_BIN="${VENV_PATH}/bin/esphome"
@@ -42,7 +42,7 @@ function update_script() {
     rm -rf "$VENV_PATH"
     mkdir -p /opt/esphome
     cd /opt/esphome
-    $STD uv venv "$VENV_PATH"
+    $STD uv venv --clear "$VENV_PATH"
     $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
     $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
     $STD "$VENV_PATH/bin/python" -m pip install esphome tornado esptool
@@ -78,10 +78,10 @@ EOF
   ln -s /opt/esphome/.venv/bin/esphome /usr/local/bin/esphome
   msg_ok "Linked esphome binary"
 
-  msg_info "Starting ${APP}"
+  msg_info "Starting Service"
   systemctl start esphomeDashboard
-  msg_ok "Started ${APP}"
-  msg_ok "Updated Successfully"
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
   exit
 }
 
@@ -89,7 +89,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:6052${CL}"

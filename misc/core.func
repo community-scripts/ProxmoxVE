@@ -1,13 +1,35 @@
-# Copyright (c) 2021-2025 community-scripts ORG
+#!/usr/bin/env bash
+# Copyright (c) 2021-2026 community-scripts ORG
 # License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
 
-# ------------------------------------------------------------------------------
-# Loads core utility groups once (colors, formatting, icons, defaults).
-# ------------------------------------------------------------------------------
+# ==============================================================================
+# CORE FUNCTIONS - LXC CONTAINER UTILITIES
+# ==============================================================================
+#
+# This file provides core utility functions for LXC container management
+# including colors, formatting, validation checks, message output, and
+# execution helpers used throughout the Community-Scripts ecosystem.
+#
+# Usage:
+#   source <(curl -fsSL https://git.community-scripts.org/.../core.func)
+#   load_functions
+#
+# ==============================================================================
 
 [[ -n "${_CORE_FUNC_LOADED:-}" ]] && return
 _CORE_FUNC_LOADED=1
 
+# ==============================================================================
+# SECTION 1: INITIALIZATION & SETUP
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# load_functions()
+#
+# - Initializes all core utility groups (colors, formatting, icons, defaults)
+# - Ensures functions are loaded only once via __FUNCTIONS_LOADED flag
+# - Must be called at start of any script using these utilities
+# ------------------------------------------------------------------------------
 load_functions() {
   [[ -n "${__FUNCTIONS_LOADED:-}" ]] && return
   __FUNCTIONS_LOADED=1
@@ -16,58 +38,14 @@ load_functions() {
   icons
   default_vars
   set_std_mode
-  # add more
-}
-
-# ============================================================================
-# Error & Signal Handling – robust, universal, subshell-safe
-# ============================================================================
-
-_tool_error_hint() {
-  local cmd="$1"
-  local code="$2"
-  case "$cmd" in
-  curl)
-    case "$code" in
-    6) echo "Curl: Could not resolve host (DNS problem)" ;;
-    7) echo "Curl: Failed to connect to host (connection refused)" ;;
-    22) echo "Curl: HTTP error (404/403 etc)" ;;
-    28) echo "Curl: Operation timeout" ;;
-    *) echo "Curl: Unknown error ($code)" ;;
-    esac
-    ;;
-  wget)
-    echo "Wget failed – URL unreachable or permission denied"
-    ;;
-  systemctl)
-    echo "Systemd unit failure – check service name and permissions"
-    ;;
-  jq)
-    echo "jq parse error – malformed JSON or missing key"
-    ;;
-  mariadb | mysql)
-    echo "MySQL/MariaDB command failed – check credentials or DB"
-    ;;
-  unzip)
-    echo "unzip failed – corrupt file or missing permission"
-    ;;
-  tar)
-    echo "tar failed – invalid format or missing binary"
-    ;;
-  node | npm | pnpm | yarn)
-    echo "Node tool failed – check version compatibility or package.json"
-    ;;
-  *) echo "" ;;
-  esac
-}
-
-catch_errors() {
-  set -Eeuo pipefail
-  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
 # ------------------------------------------------------------------------------
-# Sets ANSI color codes used for styled terminal output.
+# color()
+#
+# - Sets ANSI color codes for styled terminal output
+# - Variables: YW (yellow), YWB (yellow bright), BL (blue), RD (red)
+#             GN (green), DGN (dark green), BGN (background green), CL (clear)
 # ------------------------------------------------------------------------------
 color() {
   YW=$(echo "\033[33m")
@@ -80,7 +58,14 @@ color() {
   CL=$(echo "\033[m")
 }
 
-# Special for spinner and colorized output via printf
+# ------------------------------------------------------------------------------
+# color_spinner()
+#
+# - Sets ANSI color codes specifically for spinner animation
+# - Variables: CS_YW (spinner yellow), CS_YWB (spinner yellow bright),
+#             CS_CL (spinner clear)
+# - Used by spinner() function to avoid color conflicts
+# ------------------------------------------------------------------------------
 color_spinner() {
   CS_YW=$'\033[33m'
   CS_YWB=$'\033[93m'
@@ -88,7 +73,12 @@ color_spinner() {
 }
 
 # ------------------------------------------------------------------------------
-# Defines formatting helpers like tab, bold, and line reset sequences.
+# formatting()
+#
+# - Defines formatting helpers for terminal output
+# - BFR: Backspace and clear line sequence
+# - BOLD: Bold text escape code
+# - TAB/TAB3: Indentation spacing
 # ------------------------------------------------------------------------------
 formatting() {
   BFR="\\r\\033[K"
@@ -99,7 +89,11 @@ formatting() {
 }
 
 # ------------------------------------------------------------------------------
-# Sets symbolic icons used throughout user feedback and prompts.
+# icons()
+#
+# - Sets symbolic emoji icons used throughout user feedback
+# - Provides consistent visual indicators for success, error, info, etc.
+# - Icons: CM (checkmark), CROSS (error), INFO (info), HOURGLASS (wait), etc.
 # ------------------------------------------------------------------------------
 icons() {
   CM="${TAB}✔️${TAB}"
@@ -121,7 +115,7 @@ icons() {
   BRIDGE="${TAB}🌉${TAB}${CL}"
   NETWORK="${TAB}📡${TAB}${CL}"
   GATEWAY="${TAB}🌐${TAB}${CL}"
-  DISABLEIPV6="${TAB}🚫${TAB}${CL}"
+  ICON_DISABLEIPV6="${TAB}🚫${TAB}${CL}"
   DEFAULT="${TAB}⚙️${TAB}${CL}"
   MACADDRESS="${TAB}🔗${TAB}${CL}"
   VLANTAG="${TAB}🏷️${TAB}${CL}"
@@ -129,22 +123,59 @@ icons() {
   CREATING="${TAB}🚀${TAB}${CL}"
   ADVANCED="${TAB}🧩${TAB}${CL}"
   FUSE="${TAB}🗂️${TAB}${CL}"
+  GPU="${TAB}🎮${TAB}${CL}"
   HOURGLASS="${TAB}⏳${TAB}"
-
 }
 
 # ------------------------------------------------------------------------------
-# Sets default retry and wait variables used for system actions.
+# ensure_profile_loaded()
+#
+# - Sources /etc/profile.d/*.sh scripts if not already loaded
+# - Fixes PATH issues when running via pct enter/exec (non-login shells)
+# - Safe to call multiple times (uses guard variable)
+# - Should be called in update_script() or any script running inside LXC
+# ------------------------------------------------------------------------------
+ensure_profile_loaded() {
+  # Skip if already loaded or running on Proxmox host
+  [[ -n "${_PROFILE_LOADED:-}" ]] && return
+  command -v pveversion &>/dev/null && return
+
+  # Source all profile.d scripts to ensure PATH is complete
+  if [[ -d /etc/profile.d ]]; then
+    for script in /etc/profile.d/*.sh; do
+      [[ -r "$script" ]] && source "$script"
+    done
+  fi
+
+  # Also ensure /usr/local/bin is in PATH (common install location)
+  if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+
+  export _PROFILE_LOADED=1
+}
+
+# ------------------------------------------------------------------------------
+# default_vars()
+#
+# - Sets default retry and wait variables used for system actions
+# - RETRY_NUM: Maximum number of retry attempts (default: 10)
+# - RETRY_EVERY: Seconds to wait between retries (default: 3)
+# - i: Counter variable initialized to RETRY_NUM
 # ------------------------------------------------------------------------------
 default_vars() {
   RETRY_NUM=10
   RETRY_EVERY=3
   i=$RETRY_NUM
-  #[[ "${VAR_OS:-}" == "unknown" ]]
 }
 
 # ------------------------------------------------------------------------------
-# Sets default verbose mode for script and os execution.
+# set_std_mode()
+#
+# - Sets default verbose mode for script and OS execution
+# - If VERBOSE=yes: STD="" (show all output)
+# - If VERBOSE=no: STD="silent" (suppress output via silent() wrapper)
+# - If DEV_MODE_TRACE=true: Enables bash tracing (set -x)
 # ------------------------------------------------------------------------------
 set_std_mode() {
   if [ "${VERBOSE:-no}" = "yes" ]; then
@@ -152,138 +183,463 @@ set_std_mode() {
   else
     STD="silent"
   fi
+
+  # Enable bash tracing if trace mode active
+  if [[ "${DEV_MODE_TRACE:-false}" == "true" ]]; then
+    set -x
+    export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+  fi
 }
 
-# Silent execution function
-silent() {
-  "$@" >/dev/null 2>&1
-}
+# ------------------------------------------------------------------------------
+# parse_dev_mode()
+#
+# - Parses comma-separated dev_mode variable (e.g., "motd,keep,trace")
+# - Sets global flags for each mode:
+#   * DEV_MODE_MOTD: Setup SSH/MOTD before installation
+#   * DEV_MODE_KEEP: Never delete container on failure
+#   * DEV_MODE_TRACE: Enable bash set -x tracing
+#   * DEV_MODE_PAUSE: Pause after each msg_info step
+#   * DEV_MODE_BREAKPOINT: Open shell on error instead of cleanup
+#   * DEV_MODE_LOGS: Persist all logs to /var/log/community-scripts/
+#   * DEV_MODE_DRYRUN: Show commands without executing
+# - Call this early in script execution
+# ------------------------------------------------------------------------------
+parse_dev_mode() {
+  local mode
+  # Initialize all flags to false
+  export DEV_MODE_MOTD=false
+  export DEV_MODE_KEEP=false
+  export DEV_MODE_TRACE=false
+  export DEV_MODE_PAUSE=false
+  export DEV_MODE_BREAKPOINT=false
+  export DEV_MODE_LOGS=false
+  export DEV_MODE_DRYRUN=false
 
-# Function to download & save header files
-get_header() {
-  local app_name=$(echo "${APP,,}" | tr -d ' ')
-  local app_type=${APP_TYPE:-ct}
-  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${app_type}/headers/${app_name}"
-  local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
+  # Parse comma-separated modes
+  if [[ -n "${dev_mode:-}" ]]; then
+    IFS=',' read -ra MODES <<<"$dev_mode"
+    for mode in "${MODES[@]}"; do
+      mode="$(echo "$mode" | xargs)" # Trim whitespace
+      case "$mode" in
+      motd) export DEV_MODE_MOTD=true ;;
+      keep) export DEV_MODE_KEEP=true ;;
+      trace) export DEV_MODE_TRACE=true ;;
+      pause) export DEV_MODE_PAUSE=true ;;
+      breakpoint) export DEV_MODE_BREAKPOINT=true ;;
+      logs) export DEV_MODE_LOGS=true ;;
+      dryrun) export DEV_MODE_DRYRUN=true ;;
+      *)
+        if declare -f msg_warn >/dev/null 2>&1; then
+          msg_warn "Unknown dev_mode: '$mode' (ignored)"
+        else
+          echo "[WARN] Unknown dev_mode: '$mode' (ignored)" >&2
+        fi
+        ;;
+      esac
+    done
 
-  mkdir -p "$(dirname "$local_header_path")"
+    # Show active dev modes
+    local active_modes=()
+    [[ $DEV_MODE_MOTD == true ]] && active_modes+=("motd")
+    [[ $DEV_MODE_KEEP == true ]] && active_modes+=("keep")
+    [[ $DEV_MODE_TRACE == true ]] && active_modes+=("trace")
+    [[ $DEV_MODE_PAUSE == true ]] && active_modes+=("pause")
+    [[ $DEV_MODE_BREAKPOINT == true ]] && active_modes+=("breakpoint")
+    [[ $DEV_MODE_LOGS == true ]] && active_modes+=("logs")
+    [[ $DEV_MODE_DRYRUN == true ]] && active_modes+=("dryrun")
 
-  if [ ! -s "$local_header_path" ]; then
-    if ! curl -fsSL "$header_url" -o "$local_header_path"; then
-      return 1
+    if [[ ${#active_modes[@]} -gt 0 ]]; then
+      if declare -f msg_custom >/dev/null 2>&1; then
+        msg_custom "🔧" "${YWB}" "Dev modes active: ${active_modes[*]}"
+      else
+        echo "[DEV] Active modes: ${active_modes[*]}" >&2
+      fi
     fi
   fi
-
-  cat "$local_header_path" 2>/dev/null || true
 }
 
-header_info() {
-  local app_name=$(echo "${APP,,}" | tr -d ' ')
-  local header_content
+# ==============================================================================
+# SECTION 2: VALIDATION CHECKS
+# ==============================================================================
 
-  header_content=$(get_header "$app_name") || header_content=""
-
-  clear
-  local term_width
-  term_width=$(tput cols 2>/dev/null || echo 120)
-
-  if [ -n "$header_content" ]; then
-    echo "$header_content"
+# ------------------------------------------------------------------------------
+# shell_check()
+#
+# - Verifies that the script is running under Bash shell
+# - Exits with error message if different shell is detected
+# - Required because scripts use Bash-specific features
+# ------------------------------------------------------------------------------
+shell_check() {
+  if [[ "$(ps -p $$ -o comm=)" != "bash" ]]; then
+    clear
+    msg_error "Your default shell is currently not set to Bash. To use these scripts, please switch to the Bash shell."
+    echo -e "\nExiting..."
+    sleep 2
+    exit 103
   fi
 }
 
-ensure_tput() {
-  if ! command -v tput >/dev/null 2>&1; then
-    if grep -qi 'alpine' /etc/os-release; then
-      apk add --no-cache ncurses >/dev/null 2>&1
-    elif command -v apt-get >/dev/null 2>&1; then
-      apt-get update -qq >/dev/null
-      apt-get install -y -qq ncurses-bin >/dev/null 2>&1
+# ------------------------------------------------------------------------------
+# root_check()
+#
+# - Verifies script is running with root privileges
+# - Detects if executed via sudo (which can cause issues)
+# - Exits with error if not running as root directly
+# ------------------------------------------------------------------------------
+root_check() {
+  if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
+    clear
+    msg_error "Please run this script as root."
+    echo -e "\nExiting..."
+    sleep 2
+    exit 104
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# pve_check()
+#
+# - Validates Proxmox VE version compatibility
+# - Supported: PVE 8.0-8.9 and PVE 9.0-9.1
+# - Exits with error message if unsupported version detected
+# ------------------------------------------------------------------------------
+pve_check() {
+  local PVE_VER
+  PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
+
+  # Check for Proxmox VE 8.x: allow 8.0–8.9
+  if [[ "$PVE_VER" =~ ^8\.([0-9]+) ]]; then
+    local MINOR="${BASH_REMATCH[1]}"
+    if ((MINOR < 0 || MINOR > 9)); then
+      msg_error "This version of Proxmox VE is not supported."
+      msg_error "Supported: Proxmox VE version 8.0 – 8.9"
+      exit 105
     fi
+    return 0
+  fi
+
+  # Check for Proxmox VE 9.x: allow 9.0–9.1
+  if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
+    local MINOR="${BASH_REMATCH[1]}"
+    if ((MINOR < 0 || MINOR > 1)); then
+      msg_error "This version of Proxmox VE is not yet supported."
+      msg_error "Supported: Proxmox VE version 9.0 – 9.1"
+      exit 105
+    fi
+    return 0
+  fi
+
+  # All other unsupported versions
+  msg_error "This version of Proxmox VE is not supported."
+  msg_error "Supported versions: Proxmox VE 8.0 – 8.9 or 9.0 – 9.1"
+  exit 105
+}
+
+# ------------------------------------------------------------------------------
+# arch_check()
+#
+# - Validates system architecture is amd64/x86_64
+# - Exits with error message for unsupported architectures (e.g., ARM/PiMox)
+# - Provides link to ARM64-compatible scripts
+# ------------------------------------------------------------------------------
+arch_check() {
+  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
+    msg_error "This script will not work with PiMox (ARM architecture detected)."
+    msg_warn "Visit https://github.com/asylumexp/Proxmox for ARM64 support."
+    sleep 2
+    exit 106
   fi
 }
 
-is_alpine() {
-  local os_id="${var_os:-${PCT_OSTYPE:-}}"
+# ------------------------------------------------------------------------------
+# ssh_check()
+#
+# - Detects if script is running over SSH connection
+# - Warns user for external SSH connections (recommends Proxmox shell)
+# - Skips warning for local/same-subnet connections
+# - Does not abort execution, only warns
+# ------------------------------------------------------------------------------
+ssh_check() {
+  if [ -n "$SSH_CLIENT" ]; then
+    local client_ip=$(awk '{print $1}' <<<"$SSH_CLIENT")
+    local host_ip=$(hostname -I | awk '{print $1}')
 
-  if [[ -z "$os_id" && -f /etc/os-release ]]; then
-    os_id="$(
-      . /etc/os-release 2>/dev/null
-      echo "${ID:-}"
-    )"
+    # Check if connection is local (Proxmox WebUI or same machine)
+    # - localhost (127.0.0.1, ::1)
+    # - same IP as host
+    # - local network range (10.x, 172.16-31.x, 192.168.x)
+    if [[ "$client_ip" == "127.0.0.1" || "$client_ip" == "::1" || "$client_ip" == "$host_ip" ]]; then
+      return
+    fi
+
+    # Check if client is in same local network (optional, safer approach)
+    local host_subnet=$(echo "$host_ip" | cut -d. -f1-3)
+    local client_subnet=$(echo "$client_ip" | cut -d. -f1-3)
+    if [[ "$host_subnet" == "$client_subnet" ]]; then
+      return
+    fi
+
+    # Only warn for truly external connections
+    msg_warn "Running via external SSH (client: $client_ip)."
+    msg_warn "For better stability, consider using the Proxmox Shell (Console) instead."
   fi
-
-  [[ "$os_id" == "alpine" ]]
 }
 
-is_verbose_mode() {
-  local verbose="${VERBOSE:-${var_verbose:-no}}"
-  local tty_status
-  if [[ -t 2 ]]; then
-    tty_status="interactive"
+# ==============================================================================
+# SECTION 3: EXECUTION HELPERS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# get_active_logfile()
+#
+# - Returns the appropriate log file based on execution context
+# - _HOST_LOGFILE: Override for host context (keeps host logging on BUILD_LOG
+#   even after INSTALL_LOG is exported for the container)
+# - INSTALL_LOG: Container operations (application installation)
+# - BUILD_LOG: Host operations (container creation)
+# - Fallback to BUILD_LOG if neither is set
+# ------------------------------------------------------------------------------
+get_active_logfile() {
+  # Host override: _HOST_LOGFILE is set (not exported) in build.func to keep
+  # host-side logging in BUILD_LOG after INSTALL_LOG is exported for the container.
+  # Without this, all host msg_info/msg_ok/msg_error would write to
+  # /root/.install-SESSION.log (a container path) instead of BUILD_LOG.
+  if [[ -n "${_HOST_LOGFILE:-}" ]]; then
+    echo "$_HOST_LOGFILE"
+  elif [[ -n "${INSTALL_LOG:-}" ]]; then
+    echo "$INSTALL_LOG"
+  elif [[ -n "${BUILD_LOG:-}" ]]; then
+    echo "$BUILD_LOG"
   else
-    tty_status="not-a-tty"
+    # Fallback for legacy scripts
+    echo "/tmp/build-$(date +%Y%m%d_%H%M%S).log"
   fi
-  [[ "$verbose" != "no" || ! -t 2 ]]
+}
+
+# Legacy compatibility: SILENT_LOGFILE points to active log
+SILENT_LOGFILE="$(get_active_logfile)"
+
+# ------------------------------------------------------------------------------
+# strip_ansi()
+#
+# - Removes ANSI escape sequences from input text
+# - Used to clean colored output for log files
+# - Handles both piped input and arguments
+# ------------------------------------------------------------------------------
+strip_ansi() {
+  if [[ $# -gt 0 ]]; then
+    echo -e "$*" | sed 's/\x1b\[[0-9;]*m//g; s/\x1b\[[0-9;]*[a-zA-Z]//g'
+  else
+    sed 's/\x1b\[[0-9;]*m//g; s/\x1b\[[0-9;]*[a-zA-Z]//g'
+  fi
 }
 
 # ------------------------------------------------------------------------------
-# Handles specific curl error codes and displays descriptive messages.
+# log_msg()
+#
+# - Writes message to active log file without ANSI codes
+# - Adds timestamp prefix for log correlation
+# - Creates log file if it doesn't exist
+# - Arguments: message text (can include ANSI codes, will be stripped)
 # ------------------------------------------------------------------------------
-__curl_err_handler() {
-  local exit_code="$1"
-  local target="$2"
-  local curl_msg="$3"
+log_msg() {
+  local msg="$*"
+  local logfile
+  logfile="$(get_active_logfile)"
 
-  case $exit_code in
-  1) msg_error "Unsupported protocol: $target" ;;
-  2) msg_error "Curl init failed: $target" ;;
-  3) msg_error "Malformed URL: $target" ;;
-  5) msg_error "Proxy resolution failed: $target" ;;
-  6) msg_error "Host resolution failed: $target" ;;
-  7) msg_error "Connection failed: $target" ;;
-  9) msg_error "Access denied: $target" ;;
-  18) msg_error "Partial file transfer: $target" ;;
-  22) msg_error "HTTP error (e.g. 400/404): $target" ;;
-  23) msg_error "Write error on local system: $target" ;;
-  26) msg_error "Read error from local file: $target" ;;
-  28) msg_error "Timeout: $target" ;;
-  35) msg_error "SSL connect error: $target" ;;
-  47) msg_error "Too many redirects: $target" ;;
-  51) msg_error "SSL cert verify failed: $target" ;;
-  52) msg_error "Empty server response: $target" ;;
-  55) msg_error "Send error: $target" ;;
-  56) msg_error "Receive error: $target" ;;
-  60) msg_error "SSL CA not trusted: $target" ;;
-  67) msg_error "Login denied by server: $target" ;;
-  78) msg_error "Remote file not found (404): $target" ;;
-  *) msg_error "Curl failed with code $exit_code: $target" ;;
-  esac
+  [[ -z "$msg" ]] && return
+  [[ -z "$logfile" ]] && return
 
-  [[ -n "$curl_msg" ]] && printf "%s\n" "$curl_msg" >&2
-  exit 1
+  # Ensure log directory exists
+  mkdir -p "$(dirname "$logfile")" 2>/dev/null || true
+
+  # Strip ANSI codes and write with timestamp
+  local clean_msg
+  clean_msg=$(strip_ansi "$msg")
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $clean_msg" >>"$logfile"
 }
 
-fatal() {
-  msg_error "$1"
-  kill -INT $$
+# ------------------------------------------------------------------------------
+# log_section()
+#
+# - Writes a section header to the log file
+# - Used for separating different phases of installation
+# - Arguments: section name
+# ------------------------------------------------------------------------------
+log_section() {
+  local section="$1"
+  local logfile
+  logfile="$(get_active_logfile)"
+
+  [[ -z "$logfile" ]] && return
+  mkdir -p "$(dirname "$logfile")" 2>/dev/null || true
+
+  {
+    echo ""
+    echo "================================================================================"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $section"
+    echo "================================================================================"
+  } >>"$logfile"
 }
 
+# ------------------------------------------------------------------------------
+# silent()
+#
+# - Executes command with output redirected to active log file
+# - On error: displays last 20 lines of log and exits with original exit code
+# - Temporarily disables error trap to capture exit code correctly
+# - Saves and restores previous error handling state (so callers that
+#   intentionally disabled error handling aren't silently re-enabled)
+# - Sources explain_exit_code() for detailed error messages
+# ------------------------------------------------------------------------------
+silent() {
+  local cmd="$*"
+  local caller_line="${BASH_LINENO[0]:-unknown}"
+  local logfile="$(get_active_logfile)"
+
+  # Dryrun mode: Show command without executing
+  if [[ "${DEV_MODE_DRYRUN:-false}" == "true" ]]; then
+    if declare -f msg_custom >/dev/null 2>&1; then
+      msg_custom "🔍" "${BL}" "[DRYRUN] $cmd"
+    else
+      echo "[DRYRUN] $cmd" >&2
+    fi
+    return 0
+  fi
+
+  # Save current error handling state before disabling
+  # This prevents re-enabling error handling when the caller intentionally
+  # disabled it (e.g. build_container recovery section)
+  local _restore_errexit=false
+  [[ "$-" == *e* ]] && _restore_errexit=true
+
+  set +Eeuo pipefail
+  trap - ERR
+
+  "$@" >>"$logfile" 2>&1
+  local rc=$?
+
+  # Restore error handling ONLY if it was active before this call
+  if $_restore_errexit; then
+    set -Eeuo pipefail
+    trap 'error_handler' ERR
+  fi
+
+  if [[ $rc -ne 0 ]]; then
+    # Source explain_exit_code if needed
+    if ! declare -f explain_exit_code >/dev/null 2>&1; then
+      if ! source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func); then
+        explain_exit_code() { echo "unknown (error_handler.func download failed)"; }
+      fi
+    fi
+
+    local explanation
+    explanation="$(explain_exit_code "$rc")"
+
+    printf "\e[?25h"
+    msg_error "in line ${caller_line}: exit code ${rc} (${explanation})"
+    msg_custom "→" "${YWB}" "${cmd}"
+
+    if [[ -s "$logfile" ]]; then
+      echo -e "\n${TAB}--- Last 20 lines of log ---"
+      tail -n 20 "$logfile"
+      echo -e "${TAB}-----------------------------------"
+      echo -e "${TAB}📋 Full log: ${logfile}\n"
+    fi
+
+    exit "$rc"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# apt_update_safe()
+#
+# - Runs apt-get update with graceful error handling
+# - On failure: shows warning with common causes instead of aborting
+# - Logs full output to active log file
+# - Returns 0 even on failure so the caller can continue
+# - Typical cause: enterprise repos returning 401 Unauthorized
+#
+# Usage:
+#   apt_update_safe       # Warn on failure, continue without aborting
+# ------------------------------------------------------------------------------
+apt_update_safe() {
+  local logfile
+  logfile="$(get_active_logfile)"
+
+  local _restore_errexit=false
+  [[ "$-" == *e* ]] && _restore_errexit=true
+
+  set +Eeuo pipefail
+  trap - ERR
+
+  apt-get update >>"$logfile" 2>&1
+  local rc=$?
+
+  if $_restore_errexit; then
+    set -Eeuo pipefail
+    trap 'error_handler' ERR
+  fi
+
+  if [[ $rc -ne 0 ]]; then
+    msg_warn "apt-get update exited with code ${rc} — some repositories may have failed."
+
+    # Check log for common 401/403 enterprise repo issues
+    if grep -qiE '401\s*Unauthorized|403\s*Forbidden|enterprise\.proxmox\.com' "$logfile" 2>/dev/null; then
+      echo -e "${TAB}${INFO} ${YWB}Hint: Proxmox enterprise repository returned an auth error.${CL}"
+      echo -e "${TAB}       If you don't have a subscription, you can disable the enterprise"
+      echo -e "${TAB}       repo and use the no-subscription repo instead."
+    fi
+
+    echo -e "${TAB}${INFO} ${YWB}Continuing despite partial update failure — packages may still be installable.${CL}"
+    echo ""
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# spinner()
+#
+# - Displays animated spinner with rotating characters (⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+# - Shows SPINNER_MSG alongside animation
+# - Runs in infinite loop until killed by stop_spinner()
+# - Uses color_spinner() colors for output
+# ------------------------------------------------------------------------------
 spinner() {
   local chars=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  local msg="${SPINNER_MSG:-Processing...}"
   local i=0
   while true; do
     local index=$((i++ % ${#chars[@]}))
-    printf "\r\033[2K%s %b" "${CS_YWB}${chars[$index]}${CS_CL}" "${CS_YWB}${SPINNER_MSG:-}${CS_CL}"
+    printf "\r\033[2K%s %b" "${CS_YWB}${chars[$index]}${CS_CL}" "${CS_YWB}${msg}${CS_CL}"
     sleep 0.1
   done
 }
 
+# ------------------------------------------------------------------------------
+# clear_line()
+#
+# - Clears current terminal line using tput or ANSI escape codes
+# - Moves cursor to beginning of line (carriage return)
+# - Erases from cursor to end of line
+# - Fallback to ANSI codes if tput not available
+# ------------------------------------------------------------------------------
 clear_line() {
   tput cr 2>/dev/null || echo -en "\r"
   tput el 2>/dev/null || echo -en "\033[K"
 }
 
+# ------------------------------------------------------------------------------
+# stop_spinner()
+#
+# - Stops running spinner process by PID
+# - Reads PID from SPINNER_PID variable or /tmp/.spinner.pid file
+# - Attempts graceful kill, then forced kill if needed
+# - Cleans up temp file and resets terminal state
+# - Unsets SPINNER_PID and SPINNER_MSG variables
+# ------------------------------------------------------------------------------
 stop_spinner() {
   local pid="${SPINNER_PID:-}"
   [[ -z "$pid" && -f /tmp/.spinner.pid ]] && pid=$(</tmp/.spinner.pid)
@@ -299,8 +655,22 @@ stop_spinner() {
 
   unset SPINNER_PID SPINNER_MSG
   stty sane 2>/dev/null || true
+  stty -tostop 2>/dev/null || true
 }
 
+# ==============================================================================
+# SECTION 4: MESSAGE OUTPUT
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# msg_info()
+#
+# - Displays informational message with spinner animation
+# - Shows each unique message only once (tracked via MSG_INFO_SHOWN)
+# - In verbose/Alpine mode: shows hourglass icon instead of spinner
+# - Stops any existing spinner before starting new one
+# - Backgrounds spinner process and stores PID for later cleanup
+# ------------------------------------------------------------------------------
 msg_info() {
   local msg="$1"
   [[ -z "$msg" ]] && return
@@ -311,12 +681,21 @@ msg_info() {
   [[ -n "${MSG_INFO_SHOWN["$msg"]+x}" ]] && return
   MSG_INFO_SHOWN["$msg"]=1
 
+  # Log to file
+  log_msg "[INFO] $msg"
+
   stop_spinner
   SPINNER_MSG="$msg"
 
   if is_verbose_mode || is_alpine; then
     local HOURGLASS="${TAB}⏳${TAB}"
     printf "\r\e[2K%s %b" "$HOURGLASS" "${YW}${msg}${CL}" >&2
+
+    # Pause mode: Wait for Enter after each step
+    if [[ "${DEV_MODE_PAUSE:-false}" == "true" ]]; then
+      echo -en "\n${YWB}[PAUSE]${CL} Press Enter to continue..." >&2
+      read -r
+    fi
     return
   fi
 
@@ -325,29 +704,73 @@ msg_info() {
   SPINNER_PID=$!
   echo "$SPINNER_PID" >/tmp/.spinner.pid
   disown "$SPINNER_PID" 2>/dev/null || true
+
+  # Pause mode: Stop spinner and wait
+  if [[ "${DEV_MODE_PAUSE:-false}" == "true" ]]; then
+    stop_spinner
+    echo -en "\n${YWB}[PAUSE]${CL} Press Enter to continue..." >&2
+    read -r
+  fi
 }
 
+# ------------------------------------------------------------------------------
+# msg_ok()
+#
+# - Displays success message with checkmark icon
+# - Stops spinner and clears line before output
+# - Removes message from MSG_INFO_SHOWN to allow re-display
+# - Uses green color for success indication
+# ------------------------------------------------------------------------------
 msg_ok() {
   local msg="$1"
   [[ -z "$msg" ]] && return
   stop_spinner
   clear_line
-  printf "%s %b\n" "$CM" "${GN}${msg}${CL}" >&2
-  unset MSG_INFO_SHOWN["$msg"]
+  echo -e "$CM ${GN}${msg}${CL}"
+  log_msg "[OK] $msg"
+  local sanitized_msg
+  sanitized_msg=$(printf '%s' "$msg" | sed 's/\x1b\[[0-9;]*m//g; s/[^a-zA-Z0-9_]/_/g')
+  unset 'MSG_INFO_SHOWN['"$sanitized_msg"']' 2>/dev/null || true
 }
 
+# ------------------------------------------------------------------------------
+# msg_error()
+#
+# - Displays error message with cross/X icon
+# - Stops spinner before output
+# - Uses red color for error indication
+# - Outputs to stderr
+# ------------------------------------------------------------------------------
 msg_error() {
   stop_spinner
   local msg="$1"
-  echo -e "${BFR:-} ${CROSS:-✖️} ${RD}${msg}${CL}"
+  echo -e "${BFR:-}${CROSS:-✖️} ${RD}${msg}${CL}" >&2
+  log_msg "[ERROR] $msg"
 }
 
+# ------------------------------------------------------------------------------
+# msg_warn()
+#
+# - Displays warning message with info/lightbulb icon
+# - Stops spinner before output
+# - Uses bright yellow color for warning indication
+# - Outputs to stderr
+# ------------------------------------------------------------------------------
 msg_warn() {
   stop_spinner
   local msg="$1"
-  echo -e "${BFR:-} ${INFO:-ℹ️} ${YWB}${msg}${CL}"
+  echo -e "${BFR:-}${INFO:-ℹ️} ${YWB}${msg}${CL}" >&2
+  log_msg "[WARN] $msg"
 }
 
+# ------------------------------------------------------------------------------
+# msg_custom()
+#
+# - Displays custom message with user-defined symbol and color
+# - Arguments: symbol, color code, message text
+# - Stops spinner before output
+# - Useful for specialized status messages
+# ------------------------------------------------------------------------------
 msg_custom() {
   local symbol="${1:-"[*]"}"
   local color="${2:-"\e[36m"}"
@@ -355,19 +778,809 @@ msg_custom() {
   [[ -z "$msg" ]] && return
   stop_spinner
   echo -e "${BFR:-} ${symbol} ${color}${msg}${CL:-\e[0m}"
+  log_msg "$msg"
 }
 
-run_container_safe() {
-  local ct="$1"
-  shift
-  local cmd="$*"
-
-  lxc-attach -n "$ct" -- bash -euo pipefail -c "
-    trap 'echo Aborted in container; exit 130' SIGINT SIGTERM
-    $cmd
-  " || __handle_general_error "lxc-attach to CT $ct"
+# ------------------------------------------------------------------------------
+# msg_debug()
+#
+# - Displays debug message with timestamp when var_full_verbose=1
+# - Automatically enables var_verbose if not already set
+# - Shows date/time prefix for log correlation
+# - Uses bright yellow color for debug output
+# ------------------------------------------------------------------------------
+msg_debug() {
+  if [[ "${var_full_verbose:-0}" == "1" ]]; then
+    [[ "${var_verbose:-0}" != "1" ]] && var_verbose=1
+    echo -e "${YWB}[$(date '+%F %T')] [DEBUG]${CL} $*"
+  fi
 }
 
+# ------------------------------------------------------------------------------
+# msg_dev()
+#
+# - Display development mode messages with 🔧 icon
+# - Only shown when dev_mode is active
+# - Useful for debugging and development-specific output
+# - Format: [DEV] message with distinct formatting
+# - Usage: msg_dev "Container ready for debugging"
+# ------------------------------------------------------------------------------
+msg_dev() {
+  if [[ -n "${dev_mode:-}" ]]; then
+    echo -e "${SEARCH}${BOLD}${DGN}🔧 [DEV]${CL} $*"
+  fi
+}
+#
+# - Displays error message and immediately terminates script
+# - Sends SIGINT to current process to trigger error handler
+# - Use for unrecoverable errors that require immediate exit
+# ------------------------------------------------------------------------------
+fatal() {
+  msg_error "$1"
+  kill -INT $$
+}
+
+# ==============================================================================
+# SECTION 5: UTILITY FUNCTIONS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# exit_script()
+#
+# - Called when user cancels an action
+# - Clears screen and displays exit message
+# - Exits with default exit code
+# ------------------------------------------------------------------------------
+exit_script() {
+  clear
+  msg_error "User exited script"
+  exit 0
+}
+
+# ------------------------------------------------------------------------------
+# get_header()
+#
+# - Downloads and caches application header ASCII art
+# - Falls back to local cache if already downloaded
+# - Determines app type (ct/vm) from APP_TYPE variable
+# - Returns header content or empty string on failure
+# ------------------------------------------------------------------------------
+get_header() {
+  local app_name=$(echo "${APP,,}" | tr -d ' ')
+  local app_type=${APP_TYPE:-ct} # Default to 'ct' if not set
+  local header_dir="${app_type}"
+  [[ "$app_type" == "addon" ]] && header_dir="tools"
+  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${header_dir}/headers/${app_name}"
+  local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
+
+  mkdir -p "$(dirname "$local_header_path")"
+
+  if [ ! -s "$local_header_path" ]; then
+    if ! curl -fsSL "$header_url" -o "$local_header_path"; then
+      msg_warn "Failed to download header: $header_url"
+      return 1
+    fi
+  fi
+
+  cat "$local_header_path" 2>/dev/null || true
+}
+
+# ------------------------------------------------------------------------------
+# header_info()
+#
+# - Displays application header ASCII art at top of screen
+# - Clears screen before displaying header
+# - Detects terminal width for formatting
+# - Returns silently if header not available
+# ------------------------------------------------------------------------------
+header_info() {
+  local app_name=$(echo "${APP,,}" | tr -d ' ')
+  local header_content
+
+  header_content=$(get_header "$app_name") || header_content=""
+
+  clear
+  local term_width
+  term_width=$(tput cols 2>/dev/null || echo 120)
+
+  if [ -n "$header_content" ]; then
+    echo "$header_content"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# ensure_tput()
+#
+# - Ensures tput command is available for terminal control
+# - Installs ncurses-bin on Debian/Ubuntu or ncurses on Alpine
+# - Required for clear_line() and terminal width detection
+# ------------------------------------------------------------------------------
+ensure_tput() {
+  if ! command -v tput >/dev/null 2>&1; then
+    if grep -qi 'alpine' /etc/os-release; then
+      apk add --no-cache ncurses >/dev/null 2>&1 || msg_warn "Failed to install ncurses (tput may be unavailable)"
+    elif command -v apt-get >/dev/null 2>&1; then
+      apt-get update -qq >/dev/null
+      apt-get install -y -qq ncurses-bin >/dev/null 2>&1 || msg_warn "Failed to install ncurses-bin (tput may be unavailable)"
+    fi
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# is_alpine()
+#
+# - Detects if running on Alpine Linux
+# - Checks var_os, PCT_OSTYPE, or /etc/os-release
+# - Returns 0 if Alpine, 1 otherwise
+# - Used to adjust behavior for Alpine-specific commands
+# ------------------------------------------------------------------------------
+is_alpine() {
+  local os_id="${var_os:-${PCT_OSTYPE:-}}"
+
+  if [[ -z "$os_id" && -f /etc/os-release ]]; then
+    os_id="$(
+      . /etc/os-release 2>/dev/null
+      echo "${ID:-}"
+    )"
+  fi
+
+  [[ "$os_id" == "alpine" ]]
+}
+
+# ------------------------------------------------------------------------------
+# is_verbose_mode()
+#
+# - Determines if script should run in verbose mode
+# - Checks VERBOSE and var_verbose variables
+# - Used by msg_info() to decide between spinner and static output
+# - Note: Non-TTY (pipe) scenarios are handled separately in msg_info()
+#   to allow spinner output to pass through pipes (e.g. lxc-attach | tee)
+# ------------------------------------------------------------------------------
+is_verbose_mode() {
+  local verbose="${VERBOSE:-${var_verbose:-no}}"
+  [[ "$verbose" != "no" ]]
+}
+
+# ------------------------------------------------------------------------------
+# is_unattended()
+#
+# - Detects if script is running in unattended/non-interactive mode
+# - Checks MODE variable first (primary method)
+# - Falls back to legacy flags (PHS_SILENT, var_unattended)
+# - Returns 0 (true) if unattended, 1 (false) otherwise
+# - Used by prompt functions to auto-apply defaults
+#
+# Modes that are unattended:
+#   - default (1)      : Use script defaults, no prompts
+#   - mydefaults (3)   : Use user's default.vars, no prompts
+#   - appdefaults (4)  : Use app-specific defaults, no prompts
+#
+# Modes that are interactive:
+#   - advanced (2)     : Full wizard with all options
+#
+# Note: Even in advanced mode, install scripts run unattended because
+#       all values are already collected during the wizard phase.
+# ------------------------------------------------------------------------------
+is_unattended() {
+  # Primary: Check MODE variable (case-insensitive)
+  local mode="${MODE:-${mode:-}}"
+  mode="${mode,,}" # lowercase
+
+  case "$mode" in
+  default | 1)
+    return 0
+    ;;
+  mydefaults | userdefaults | 3)
+    return 0
+    ;;
+  appdefaults | 4)
+    return 0
+    ;;
+  advanced | 2)
+    # Advanced mode is interactive ONLY during wizard
+    # Inside container (install scripts), it should be unattended
+    # Check if we're inside a container (no pveversion command)
+    if ! command -v pveversion &>/dev/null; then
+      # We're inside the container - all values already collected
+      return 0
+    fi
+    # On host during wizard - interactive
+    return 1
+    ;;
+  esac
+
+  # Legacy fallbacks for compatibility
+  [[ "${PHS_SILENT:-0}" == "1" ]] && return 0
+  [[ "${var_unattended:-}" =~ ^(yes|true|1)$ ]] && return 0
+  [[ "${UNATTENDED:-}" =~ ^(yes|true|1)$ ]] && return 0
+
+  # No TTY available = unattended
+  [[ ! -t 0 ]] && return 0
+
+  # Default: interactive
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# show_missing_values_warning()
+#
+# - Displays a summary of required values that used fallback defaults
+# - Should be called at the end of install scripts
+# - Only shows warning if MISSING_REQUIRED_VALUES array has entries
+# - Provides clear guidance on what needs manual configuration
+#
+# Global:
+#   MISSING_REQUIRED_VALUES - Array of variable names that need configuration
+#
+# Example:
+#   # At end of install script:
+#   show_missing_values_warning
+# ------------------------------------------------------------------------------
+show_missing_values_warning() {
+  if [[ ${#MISSING_REQUIRED_VALUES[@]} -gt 0 ]]; then
+    echo ""
+    echo -e "${YW}╔════════════════════════════════════════════════════════════╗${CL}"
+    echo -e "${YW}║  ⚠️  MANUAL CONFIGURATION REQUIRED                          ║${CL}"
+    echo -e "${YW}╠════════════════════════════════════════════════════════════╣${CL}"
+    echo -e "${YW}║  The following values were not provided and need to be     ║${CL}"
+    echo -e "${YW}║  configured manually for the service to work properly:     ║${CL}"
+    echo -e "${YW}╟────────────────────────────────────────────────────────────╢${CL}"
+    for val in "${MISSING_REQUIRED_VALUES[@]}"; do
+      printf "${YW}║${CL}  • %-56s ${YW}║${CL}\n" "$val"
+    done
+    echo -e "${YW}╟────────────────────────────────────────────────────────────╢${CL}"
+    echo -e "${YW}║  Check the service configuration files or environment      ║${CL}"
+    echo -e "${YW}║  variables and update the placeholder values.              ║${CL}"
+    echo -e "${YW}╚════════════════════════════════════════════════════════════╝${CL}"
+    echo ""
+    return 1
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# prompt_confirm()
+#
+# - Prompts user for yes/no confirmation with timeout and unattended support
+# - In unattended mode: immediately returns default value
+# - In interactive mode: waits for user input with configurable timeout
+# - After timeout: auto-applies default value
+#
+# Arguments:
+#   $1 - Prompt message (required)
+#   $2 - Default value: "y" or "n" (optional, default: "n")
+#   $3 - Timeout in seconds (optional, default: 60)
+#
+# Returns:
+#   0 - User confirmed (yes)
+#   1 - User declined (no) or timeout with default "n"
+#
+# Example:
+#   if prompt_confirm "Proceed with installation?" "y" 30; then
+#     echo "Installing..."
+#   fi
+#
+#   # Unattended: prompt_confirm will use default without waiting
+#   var_unattended=yes
+#   prompt_confirm "Delete files?" "n" && echo "Deleting" || echo "Skipped"
+# ------------------------------------------------------------------------------
+prompt_confirm() {
+  local message="${1:-Confirm?}"
+  local default="${2:-n}"
+  local timeout="${3:-60}"
+  local response
+
+  # Normalize default to lowercase
+  default="${default,,}"
+  [[ "$default" != "y" ]] && default="n"
+
+  # Build prompt hint
+  local hint
+  if [[ "$default" == "y" ]]; then
+    hint="[Y/n]"
+  else
+    hint="[y/N]"
+  fi
+
+  # Unattended mode: apply default immediately
+  if is_unattended; then
+    if [[ "$default" == "y" ]]; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+
+  # Check if running in a TTY
+  if [[ ! -t 0 ]]; then
+    # Not a TTY, use default
+    if [[ "$default" == "y" ]]; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+
+  # Interactive prompt with timeout
+  echo -en "${YW}${message} ${hint} (auto-${default} in ${timeout}s): ${CL}"
+
+  if read -t "$timeout" -r response; then
+    # User provided input
+    response="${response,,}" # lowercase
+    case "$response" in
+    y | yes)
+      return 0
+      ;;
+    n | no)
+      return 1
+      ;;
+    "")
+      # Empty response, use default
+      if [[ "$default" == "y" ]]; then
+        return 0
+      else
+        return 1
+      fi
+      ;;
+    *)
+      # Invalid input, use default
+      echo -e "${YW}Invalid response, using default: ${default}${CL}"
+      if [[ "$default" == "y" ]]; then
+        return 0
+      else
+        return 1
+      fi
+      ;;
+    esac
+  else
+    # Timeout occurred
+    echo "" # Newline after timeout
+    echo -e "${YW}Timeout - auto-selecting: ${default}${CL}"
+    if [[ "$default" == "y" ]]; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# prompt_input()
+#
+# - Prompts user for text input with timeout and unattended support
+# - In unattended mode: immediately returns default value
+# - In interactive mode: waits for user input with configurable timeout
+# - After timeout: auto-applies default value
+#
+# Arguments:
+#   $1 - Prompt message (required)
+#   $2 - Default value (optional, default: "")
+#   $3 - Timeout in seconds (optional, default: 60)
+#
+# Output:
+#   Prints the user input or default value to stdout
+#
+# Example:
+#   username=$(prompt_input "Enter username:" "admin" 30)
+#   echo "Using username: $username"
+#
+#   # With validation
+#   while true; do
+#     port=$(prompt_input "Enter port:" "8080" 30)
+#     [[ "$port" =~ ^[0-9]+$ ]] && break
+#     echo "Invalid port number"
+#   done
+# ------------------------------------------------------------------------------
+prompt_input() {
+  local message="${1:-Enter value:}"
+  local default="${2:-}"
+  local timeout="${3:-60}"
+  local response
+
+  # Build display default hint
+  local hint=""
+  [[ -n "$default" ]] && hint=" (default: ${default})"
+
+  # Unattended mode: return default immediately
+  if is_unattended; then
+    echo "$default"
+    return 0
+  fi
+
+  # Check if running in a TTY
+  if [[ ! -t 0 ]]; then
+    # Not a TTY, use default
+    echo "$default"
+    return 0
+  fi
+
+  # Interactive prompt with timeout
+  echo -en "${YW}${message}${hint} (auto-default in ${timeout}s): ${CL}" >&2
+
+  if read -t "$timeout" -r response; then
+    # User provided input (or pressed Enter for empty)
+    if [[ -n "$response" ]]; then
+      echo "$response"
+    else
+      echo "$default"
+    fi
+  else
+    # Timeout occurred
+    echo "" >&2 # Newline after timeout
+    echo -e "${YW}Timeout - using default: ${default}${CL}" >&2
+    echo "$default"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# prompt_input_required()
+#
+# - Prompts user for REQUIRED text input with fallback support
+# - In unattended mode: Uses fallback value if no env var set (with warning)
+# - In interactive mode: loops until user provides non-empty input
+# - Tracks missing required values for end-of-script summary
+#
+# Arguments:
+#   $1 - Prompt message (required)
+#   $2 - Fallback/example value for unattended mode (optional)
+#   $3 - Timeout in seconds (optional, default: 120)
+#   $4 - Environment variable name hint for error messages (optional)
+#
+# Output:
+#   Prints the user input or fallback value to stdout
+#
+# Returns:
+#   0 - Success (value provided or fallback used)
+#   1 - Failed (interactive timeout without input)
+#
+# Global:
+#   MISSING_REQUIRED_VALUES - Array tracking fields that used fallbacks
+#
+# Example:
+#   # With fallback - script continues even in unattended mode
+#   token=$(prompt_input_required "Enter API Token:" "YOUR_TOKEN_HERE" 60 "var_api_token")
+#
+#   # Check at end of script if any values need manual configuration
+#   if [[ ${#MISSING_REQUIRED_VALUES[@]} -gt 0 ]]; then
+#     msg_warn "Please configure: ${MISSING_REQUIRED_VALUES[*]}"
+#   fi
+# ------------------------------------------------------------------------------
+# Global array to track missing required values
+declare -g -a MISSING_REQUIRED_VALUES=()
+
+prompt_input_required() {
+  local message="${1:-Enter required value:}"
+  local fallback="${2:-CHANGE_ME}"
+  local timeout="${3:-120}"
+  local env_var_hint="${4:-}"
+  local response=""
+
+  # Check if value is already set via environment variable (if hint provided)
+  if [[ -n "$env_var_hint" ]]; then
+    local env_value="${!env_var_hint:-}"
+    if [[ -n "$env_value" ]]; then
+      echo "$env_value"
+      return 0
+    fi
+  fi
+
+  # Unattended mode: use fallback with warning
+  if is_unattended; then
+    if [[ -n "$env_var_hint" ]]; then
+      echo -e "${YW}⚠ Required value '${env_var_hint}' not set - using fallback: ${fallback}${CL}" >&2
+      MISSING_REQUIRED_VALUES+=("$env_var_hint")
+    else
+      echo -e "${YW}⚠ Required value not provided - using fallback: ${fallback}${CL}" >&2
+      MISSING_REQUIRED_VALUES+=("(unnamed)")
+    fi
+    echo "$fallback"
+    return 0
+  fi
+
+  # Check if running in a TTY
+  if [[ ! -t 0 ]]; then
+    echo -e "${YW}⚠ Not interactive - using fallback: ${fallback}${CL}" >&2
+    MISSING_REQUIRED_VALUES+=("${env_var_hint:-unnamed}")
+    echo "$fallback"
+    return 0
+  fi
+
+  # Interactive prompt - loop until non-empty input or use fallback on timeout
+  local attempts=0
+  while [[ -z "$response" ]]; do
+    attempts=$((attempts + 1))
+
+    if [[ $attempts -gt 3 ]]; then
+      echo -e "${YW}Too many empty inputs - using fallback: ${fallback}${CL}" >&2
+      MISSING_REQUIRED_VALUES+=("${env_var_hint:-manual_input}")
+      echo "$fallback"
+      return 0
+    fi
+
+    echo -en "${YW}${message} (required, timeout ${timeout}s): ${CL}" >&2
+
+    if read -t "$timeout" -r response; then
+      if [[ -z "$response" ]]; then
+        echo -e "${YW}This field is required. Please enter a value. (attempt ${attempts}/3)${CL}" >&2
+      fi
+    else
+      # Timeout occurred - use fallback
+      echo "" >&2
+      echo -e "${YW}Timeout - using fallback value: ${fallback}${CL}" >&2
+      MISSING_REQUIRED_VALUES+=("${env_var_hint:-timeout}")
+      echo "$fallback"
+      return 0
+    fi
+  done
+
+  echo "$response"
+}
+
+# ------------------------------------------------------------------------------
+# prompt_select()
+#
+# - Prompts user to select from a list of options with timeout support
+# - In unattended mode: immediately returns default selection
+# - In interactive mode: displays numbered menu and waits for choice
+# - After timeout: auto-applies default selection
+#
+# Arguments:
+#   $1 - Prompt message (required)
+#   $2 - Default option number, 1-based (optional, default: 1)
+#   $3 - Timeout in seconds (optional, default: 60)
+#   $4+ - Options to display (required, at least 2)
+#
+# Output:
+#   Prints the selected option value to stdout
+#
+# Returns:
+#   0 - Success
+#   1 - No options provided or invalid state
+#
+# Example:
+#   choice=$(prompt_select "Select database:" 1 30 "PostgreSQL" "MySQL" "SQLite")
+#   echo "Selected: $choice"
+#
+#   # With array
+#   options=("Option A" "Option B" "Option C")
+#   selected=$(prompt_select "Choose:" 2 60 "${options[@]}")
+# ------------------------------------------------------------------------------
+prompt_select() {
+  local message="${1:-Select option:}"
+  local default="${2:-1}"
+  local timeout="${3:-60}"
+  shift 3
+
+  local options=("$@")
+  local num_options=${#options[@]}
+
+  # Validate options
+  if [[ $num_options -eq 0 ]]; then
+    msg_warn "prompt_select called with no options"
+    echo "" >&2
+    return 1
+  fi
+
+  # Validate default
+  if [[ ! "$default" =~ ^[0-9]+$ ]] || [[ "$default" -lt 1 ]] || [[ "$default" -gt "$num_options" ]]; then
+    default=1
+  fi
+
+  # Unattended mode: return default immediately
+  if is_unattended; then
+    echo "${options[$((default - 1))]}"
+    return 0
+  fi
+
+  # Check if running in a TTY
+  if [[ ! -t 0 ]]; then
+    echo "${options[$((default - 1))]}"
+    return 0
+  fi
+
+  # Display menu
+  echo -e "${YW}${message}${CL}" >&2
+  local i
+  for i in "${!options[@]}"; do
+    local num=$((i + 1))
+    if [[ $num -eq $default ]]; then
+      echo -e "  ${GN}${num})${CL} ${options[$i]} ${YW}(default)${CL}" >&2
+    else
+      echo -e "  ${GN}${num})${CL} ${options[$i]}" >&2
+    fi
+  done
+
+  # Interactive prompt with timeout
+  echo -en "${YW}Select [1-${num_options}] (auto-select ${default} in ${timeout}s): ${CL}" >&2
+
+  local response
+  if read -t "$timeout" -r response; then
+    if [[ -z "$response" ]]; then
+      # Empty response, use default
+      echo "${options[$((default - 1))]}"
+    elif [[ "$response" =~ ^[0-9]+$ ]] && [[ "$response" -ge 1 ]] && [[ "$response" -le "$num_options" ]]; then
+      # Valid selection
+      echo "${options[$((response - 1))]}"
+    else
+      # Invalid input, use default
+      echo -e "${YW}Invalid selection, using default: ${options[$((default - 1))]}${CL}" >&2
+      echo "${options[$((default - 1))]}"
+    fi
+  else
+    # Timeout occurred
+    echo "" >&2 # Newline after timeout
+    echo -e "${YW}Timeout - auto-selecting: ${options[$((default - 1))]}${CL}" >&2
+    echo "${options[$((default - 1))]}"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# prompt_password()
+#
+# - Prompts user for password input with hidden characters
+# - In unattended mode: returns default or generates random password
+# - Supports auto-generation of secure passwords
+# - After timeout: generates random password if allowed
+#
+# Arguments:
+#   $1 - Prompt message (required)
+#   $2 - Default value or "generate" for auto-generation (optional)
+#   $3 - Timeout in seconds (optional, default: 60)
+#   $4 - Minimum length for validation (optional, default: 0 = no minimum)
+#
+# Output:
+#   Prints the password to stdout
+#
+# Example:
+#   password=$(prompt_password "Enter password:" "generate" 30 8)
+#   echo "Password set"
+#
+#   # Require user input (no default)
+#   db_pass=$(prompt_password "Database password:" "" 60 12)
+# ------------------------------------------------------------------------------
+prompt_password() {
+  local message="${1:-Enter password:}"
+  local default="${2:-}"
+  local timeout="${3:-60}"
+  local min_length="${4:-0}"
+  local response
+
+  # Generate random password if requested
+  local generated=""
+  if [[ "$default" == "generate" ]]; then
+    generated=$(openssl rand -base64 16 2>/dev/null | tr -dc 'a-zA-Z0-9' | head -c 16)
+    [[ -z "$generated" ]] && generated=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 16)
+    default="$generated"
+  fi
+
+  # Unattended mode: return default immediately
+  if is_unattended; then
+    echo "$default"
+    return 0
+  fi
+
+  # Check if running in a TTY
+  if [[ ! -t 0 ]]; then
+    echo "$default"
+    return 0
+  fi
+
+  # Build hint
+  local hint=""
+  if [[ -n "$generated" ]]; then
+    hint=" (Enter for auto-generated)"
+  elif [[ -n "$default" ]]; then
+    hint=" (Enter for default)"
+  fi
+  [[ "$min_length" -gt 0 ]] && hint="${hint} [min ${min_length} chars]"
+
+  # Interactive prompt with timeout (silent input)
+  echo -en "${YW}${message}${hint} (timeout ${timeout}s): ${CL}" >&2
+
+  if read -t "$timeout" -rs response; then
+    echo "" >&2 # Newline after hidden input
+    if [[ -n "$response" ]]; then
+      # Validate minimum length
+      if [[ "$min_length" -gt 0 ]] && [[ ${#response} -lt "$min_length" ]]; then
+        echo -e "${YW}Password too short (min ${min_length}), using default${CL}" >&2
+        echo "$default"
+      else
+        echo "$response"
+      fi
+    else
+      echo "$default"
+    fi
+  else
+    # Timeout occurred
+    echo "" >&2 # Newline after timeout
+    echo -e "${YW}Timeout - using generated password${CL}" >&2
+    echo "$default"
+  fi
+}
+
+# ==============================================================================
+# SECTION 6: CLEANUP & MAINTENANCE
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# cleanup_lxc()
+#
+# - Cleans package manager and language caches (safe for installs AND updates)
+# - Supports Alpine (apk), Debian/Ubuntu (apt), Python, Node.js, Go, Rust, Ruby, PHP
+# - Uses fallback error handling to prevent cleanup failures from breaking installs
+# ------------------------------------------------------------------------------
+cleanup_lxc() {
+  msg_info "Cleaning up"
+
+  if is_alpine; then
+    $STD apk cache clean || true
+    rm -rf /var/cache/apk/*
+  else
+    $STD apt -y autoremove 2>/dev/null || msg_warn "apt autoremove failed (non-critical)"
+    $STD apt -y autoclean 2>/dev/null || msg_warn "apt autoclean failed (non-critical)"
+    $STD apt -y clean 2>/dev/null || msg_warn "apt clean failed (non-critical)"
+  fi
+
+  find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
+  find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
+
+  # Python
+  if command -v pip &>/dev/null; then
+    rm -rf /root/.cache/pip 2>/dev/null || true
+  fi
+  if command -v uv &>/dev/null; then
+    rm -rf /root/.cache/uv 2>/dev/null || true
+  fi
+
+  # Node.js
+  if command -v npm &>/dev/null; then
+    rm -rf /root/.npm/_cacache /root/.npm/_logs 2>/dev/null || true
+  fi
+  if command -v yarn &>/dev/null; then
+    rm -rf /root/.cache/yarn /root/.yarn/cache 2>/dev/null || true
+  fi
+  if command -v pnpm &>/dev/null; then
+    pnpm store prune &>/dev/null || true
+  fi
+
+  # Go (only build cache, not modules)
+  if command -v go &>/dev/null; then
+    $STD go clean -cache 2>/dev/null || true
+  fi
+
+  # Rust (only registry cache, not build artifacts)
+  if command -v cargo &>/dev/null; then
+    rm -rf /root/.cargo/registry/cache /root/.cargo/.package-cache 2>/dev/null || true
+  fi
+
+  # Ruby
+  if command -v gem &>/dev/null; then
+    rm -rf /root/.gem/cache 2>/dev/null || true
+  fi
+
+  # PHP
+  if command -v composer &>/dev/null; then
+    rm -rf /root/.composer/cache 2>/dev/null || true
+  fi
+
+  msg_ok "Cleaned"
+
+  # Send progress ping if available (defined in install.func)
+  if declare -f post_progress_to_api &>/dev/null; then
+    post_progress_to_api
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# check_or_create_swap()
+#
+# - Checks if swap is active on system
+# - Offers to create swap file if none exists
+# - Prompts user for swap size in MB
+# - Creates /swapfile with specified size
+# - Activates swap immediately
+# - Returns 0 if swap active or successfully created, 1 if declined/failed
+# ------------------------------------------------------------------------------
 check_or_create_swap() {
   msg_info "Checking for active swap"
 
@@ -378,32 +1591,129 @@ check_or_create_swap() {
 
   msg_error "No active swap detected"
 
-  read -p "Do you want to create a swap file? [y/N]: " create_swap
-  create_swap="${create_swap,,}" # to lowercase
-
-  if [[ "$create_swap" != "y" && "$create_swap" != "yes" ]]; then
+  if ! prompt_confirm "Do you want to create a swap file?" "n" 60; then
     msg_info "Skipping swap file creation"
     return 1
   fi
 
-  read -p "Enter swap size in MB (e.g., 2048 for 2GB): " swap_size_mb
+  local swap_size_mb
+  swap_size_mb=$(prompt_input "Enter swap size in MB (e.g., 2048 for 2GB):" "2048" 60)
   if ! [[ "$swap_size_mb" =~ ^[0-9]+$ ]]; then
-    msg_error "Invalid size input. Aborting."
+    msg_error "Invalid swap size: '${swap_size_mb}' (must be a number in MB)"
     return 1
   fi
 
   local swap_file="/swapfile"
 
   msg_info "Creating ${swap_size_mb}MB swap file at $swap_file"
-  if dd if=/dev/zero of="$swap_file" bs=1M count="$swap_size_mb" status=progress &&
-    chmod 600 "$swap_file" &&
-    mkswap "$swap_file" &&
-    swapon "$swap_file"; then
-    msg_ok "Swap file created and activated successfully"
-  else
-    msg_error "Failed to create or activate swap"
+  if ! dd if=/dev/zero of="$swap_file" bs=1M count="$swap_size_mb" status=progress; then
+    msg_error "Failed to allocate swap file (dd failed)"
     return 1
   fi
+  if ! chmod 600 "$swap_file"; then
+    msg_error "Failed to set permissions on $swap_file"
+    return 1
+  fi
+  if ! mkswap "$swap_file"; then
+    msg_error "Failed to format swap file (mkswap failed)"
+    return 1
+  fi
+  if ! swapon "$swap_file"; then
+    msg_error "Failed to activate swap (swapon failed)"
+    return 1
+  fi
+  msg_ok "Swap file created and activated successfully"
 }
+
+# ------------------------------------------------------------------------------
+# Loads LOCAL_IP from persistent store or detects if missing.
+#
+# Description:
+#   - Loads from /run/local-ip.env or performs runtime lookup
+# ------------------------------------------------------------------------------
+
+function get_lxc_ip() {
+  local IP_FILE="/run/local-ip.env"
+  if [[ -f "$IP_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$IP_FILE"
+  fi
+
+  if [[ -z "${LOCAL_IP:-}" ]]; then
+    get_current_ip() {
+      local ip
+
+      # Try direct interface lookup for eth0 FIRST (most reliable for LXC) - IPv4
+      ip=$(ip -4 addr show eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # Fallback: Try hostname -I (returns IPv4 first if available)
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+        if [[ -n "$ip" && "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # Try routing table with IPv4 targets
+      local ipv4_targets=("8.8.8.8" "1.1.1.1" "default")
+      for target in "${ipv4_targets[@]}"; do
+        if [[ "$target" == "default" ]]; then
+          ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        else
+          ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        fi
+        if [[ -n "$ip" ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      # IPv6 fallback: Try direct interface lookup for eth0
+      ip=$(ip -6 addr show eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
+      if [[ -n "$ip" && "$ip" =~ : ]]; then
+        echo "$ip"
+        return 0
+      fi
+
+      # IPv6 fallback: Try hostname -I for IPv6
+      if command -v hostname >/dev/null 2>&1; then
+        ip=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E ':' | head -n1)
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
+          echo "$ip"
+          return 0
+        fi
+      fi
+
+      # IPv6 fallback: Use routing table with IPv6 targets
+      local ipv6_targets=("2001:4860:4860::8888" "2606:4700:4700::1111")
+      for target in "${ipv6_targets[@]}"; do
+        ip=$(ip -6 route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        if [[ -n "$ip" && "$ip" =~ : ]]; then
+          echo "$ip"
+          return 0
+        fi
+      done
+
+      return 1
+    }
+
+    LOCAL_IP="$(get_current_ip || true)"
+    if [[ -z "$LOCAL_IP" ]]; then
+      msg_error "Could not determine LOCAL_IP (checked: eth0, hostname -I, ip route, IPv6 targets)"
+      return 1
+    fi
+  fi
+
+  export LOCAL_IP
+}
+
+# ==============================================================================
+# SIGNAL TRAPS
+# ==============================================================================
 
 trap 'stop_spinner' EXIT INT TERM

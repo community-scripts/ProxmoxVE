@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://gethomepage.dev/
+# Source: https://gethomepage.dev/ | Github: https://github.com/gethomepage/homepage
 
 APP="Homepage"
 var_tags="${var_tags:-dashboard}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,26 +29,30 @@ function update_script() {
   fi
 
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+  ensure_dependencies jq
 
-  # ensure that jq is installed
-  if ! command -v jq &>/dev/null; then
-    $STD msg_info "Installing jq..."
-    $STD apt-get update -qq &>/dev/null
-    $STD apt-get install -y jq &>/dev/null || {
-      msg_error "Failed to install jq"
-      exit
-    }
-  fi
-  LOCAL_IP=$(hostname -I | awk '{print $1}')
-  RELEASE=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Updating Homepage to v${RELEASE} (Patience)"
+  if check_for_gh_release "homepage" "gethomepage/homepage"; then
+    msg_info "Stopping service"
     systemctl stop homepage
-    curl -fsSL "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz")
-    tar -xzf v${RELEASE}.tar.gz
-    rm -rf v${RELEASE}.tar.gz
-    cp -r homepage-${RELEASE}/* /opt/homepage/
-    rm -rf homepage-${RELEASE}
+    msg_ok "Stopped service"
+
+    msg_info "Creating Backup"
+    cp /opt/homepage/.env /opt/homepage.env
+    cp -r /opt/homepage/config /opt/homepage_config_backup
+    [[ -d /opt/homepage/public/images ]] && cp -r /opt/homepage/public/images /opt/homepage_images_backup
+    [[ -d /opt/homepage/public/icons ]] && cp -r /opt/homepage/public/icons /opt/homepage_icons_backup
+    msg_ok "Created Backup"
+    
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
+    
+    msg_info "Restoring Backup"
+    mv /opt/homepage.env /opt/homepage
+    rm -rf /opt/homepage/config
+    mv /opt/homepage_config_backup /opt/homepage/config
+    msg_ok "Restored Backup"
+
+    msg_info "Updating Homepage (Patience)"
+    RELEASE=$(get_latest_github_release "gethomepage/homepage")
     cd /opt/homepage
     $STD pnpm install
     $STD pnpm update --no-save caniuse-lite
@@ -57,14 +61,14 @@ function update_script() {
     export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | jq -r '.published_at')
     export NEXT_TELEMETRY_DISABLED=1
     $STD pnpm build
-    if [[ ! -f /opt/homepage/.env ]]; then
-      echo "HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000" >/opt/homepage/.env
-    fi
+    [[ -d /opt/homepage_images_backup ]] && mv /opt/homepage_images_backup /opt/homepage/public/images
+    [[ -d /opt/homepage_icons_backup ]] && mv /opt/homepage_icons_backup /opt/homepage/public/icons
+    msg_ok "Updated Homepage"
+
+    msg_info "Starting service"
     systemctl start homepage
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated Homepage to v${RELEASE}"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Started service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -73,7 +77,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.postgresql.org/
@@ -13,9 +13,14 @@ setting_up_container
 network_check
 update_os
 
-PG_VERSION="17" setup_postgresql
+read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18): " ver
+[[ $ver =~ ^(15|16|17|18)$ ]] || {
+  echo "Invalid version"
+  exit 64
+}
+PG_VERSION=$ver setup_postgresql
 
-cat <<EOF >/etc/postgresql/17/main/pg_hba.conf
+cat <<EOF >/etc/postgresql/$ver/main/pg_hba.conf
 # PostgreSQL Client Authentication Configuration File
 local   all             postgres                                peer
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
@@ -34,7 +39,7 @@ host    replication     all             127.0.0.1/32            scram-sha-256
 host    replication     all             ::1/128                 scram-sha-256
 EOF
 
-cat <<EOF >/etc/postgresql/17/main/postgresql.conf
+cat <<EOF >/etc/postgresql/$ver/main/postgresql.conf
 # -----------------------------
 # PostgreSQL configuration file
 # -----------------------------
@@ -43,10 +48,10 @@ cat <<EOF >/etc/postgresql/17/main/postgresql.conf
 # FILE LOCATIONS
 #------------------------------------------------------------------------------
 
-data_directory = '/var/lib/postgresql/17/main'       
-hba_file = '/etc/postgresql/17/main/pg_hba.conf'     
-ident_file = '/etc/postgresql/17/main/pg_ident.conf'   
-external_pid_file = '/var/run/postgresql/17-main.pid'                   
+data_directory = '/var/lib/postgresql/$ver/main'       
+hba_file = '/etc/postgresql/$ver/main/pg_hba.conf'     
+ident_file = '/etc/postgresql/$ver/main/pg_ident.conf'   
+external_pid_file = '/var/run/postgresql/$ver-main.pid'                   
 
 #------------------------------------------------------------------------------
 # CONNECTIONS AND AUTHENTICATION
@@ -92,7 +97,7 @@ log_timezone = 'Etc/UTC'
 # PROCESS TITLE
 #------------------------------------------------------------------------------
 
-cluster_name = '17/main'                
+cluster_name = '$ver/main'                
 
 #------------------------------------------------------------------------------
 # CLIENT CONNECTION DEFAULTS
@@ -129,8 +134,4 @@ fi
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

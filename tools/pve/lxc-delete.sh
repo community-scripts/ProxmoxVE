@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -38,6 +38,10 @@ CL=$(echo "\033[m")
 TAB="  "
 CM="${TAB}✔️${TAB}${CL}"
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "lxc-delete" "pve"
+
 header_info
 echo "Loading..."
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE LXC Deletion" --yesno "This will delete LXC containers. Proceed?" 10 58
@@ -47,7 +51,7 @@ containers=$(pct list | tail -n +2 | awk '{print $0 " " $4}')
 
 if [ -z "$containers" ]; then
   whiptail --title "LXC Container Delete" --msgbox "No LXC containers available!" 10 60
-  exit 1
+  exit 234
 fi
 
 menu_items=("ALL" "Delete ALL containers" "OFF") # Add as first option
@@ -68,7 +72,7 @@ CHOICES=$(whiptail --title "LXC Container Delete" \
 if [ -z "$CHOICES" ]; then
   whiptail --title "LXC Container Delete" \
     --msgbox "No containers selected!" 10 60
-  exit 1
+  exit 0
 fi
 
 read -p "Delete containers manually or automatically? (Default: manual) m/a: " DELETE_MODE

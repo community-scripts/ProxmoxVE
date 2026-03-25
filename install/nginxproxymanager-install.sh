@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: tteck (tteckster) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://nginxproxymanager.com/
+# Source: https://nginxproxymanager.com/ | Github: https://github.com/NginxProxyManager/nginx-proxy-manager
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,87 +14,83 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get update
-$STD apt-get -y install \
-  ca-certificates \
+$STD apt install -y \
   apache2-utils \
   logrotate \
   build-essential \
-  git
-msg_ok "Installed Dependencies"
-
-msg_info "Installing Python Dependencies"
-$STD apt-get install -y \
+  libpcre3-dev \
+  libssl-dev \
+  zlib1g-dev \
+  git \
   python3 \
   python3-dev \
   python3-pip \
   python3-venv \
-  python3-cffi \
-  python3-certbot \
-  python3-certbot-dns-cloudflare
-$STD pip3 install --break-system-packages certbot-dns-multi
-$STD python3 -m venv /opt/certbot/
-msg_ok "Installed Python Dependencies"
+  python3-cffi
+msg_ok "Installed Dependencies"
 
-VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
+msg_info "Setting up Certbot"
+$STD python3 -m venv /opt/certbot
+$STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
+$STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
+ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
+msg_ok "Set up Certbot"
 
-msg_info "Installing Openresty"
-curl -fsSL "https://openresty.org/package/pubkey.gpg" | gpg --dearmor -o /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg
-echo -e "deb http://openresty.org/package/debian bullseye openresty" >/etc/apt/sources.list.d/openresty.list
-$STD apt-get update
-$STD apt-get -y install openresty
-msg_ok "Installed Openresty"
+fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
 
-msg_info "Installing Node.js"
-$STD bash <(curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh)
-source ~/.bashrc
-$STD nvm install 16.20.2
-ln -sf /root/.nvm/versions/node/v16.20.2/bin/node /usr/bin/node
-msg_ok "Installed Node.js"
+msg_info "Building OpenResty"
+cd /opt/openresty
+$STD ./configure \
+  --with-http_v2_module \
+  --with-http_realip_module \
+  --with-http_stub_status_module \
+  --with-http_ssl_module \
+  --with-http_sub_module \
+  --with-http_auth_request_module \
+  --with-pcre-jit \
+  --with-stream \
+  --with-stream_ssl_module
+$STD make -j"$(nproc)"
+$STD make install
+rm -rf /opt/openresty
 
-msg_info "Installing pnpm"
-$STD npm install -g pnpm@8.15
-msg_ok "Installed pnpm"
+cat <<'EOF' >/lib/systemd/system/openresty.service
+[Unit]
+Description=The OpenResty Application Platform
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
 
-RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
-  grep "tag_name" |
-  awk '{print substr($2, 3, length($2)-4) }')
+[Service]
+Type=simple
+ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
+ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
 
-read -r -p "${TAB3}Would you like to install an older version (v2.10.4)? <y/N> " prompt
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Downloading Nginx Proxy Manager v2.10.4"
-  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v2.10.4" | tar -xz
-  cd ./nginx-proxy-manager-2.10.4
-  msg_ok "Downloaded Nginx Proxy Manager v2.10.4"
-else
-  msg_info "Downloading Nginx Proxy Manager v${RELEASE}"
-  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE}" | tar -xz
-  cd ./nginx-proxy-manager-"${RELEASE}"
-  msg_ok "Downloaded Nginx Proxy Manager v${RELEASE}"
-fi
+[Install]
+WantedBy=multi-user.target
+EOF
+msg_ok "Built OpenResty"
+
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+RELEASE=$(get_latest_github_release "NginxProxyManager/nginx-proxy-manager")
+fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}"
+
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
-ln -sf /usr/bin/certbot /opt/certbot/bin/certbot
 ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
 ln -sf /usr/local/openresty/nginx/ /etc/nginx
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  sed -i "s|\"version\": \"0.0.0\"|\"version\": \"2.10.4\"|" backend/package.json
-  sed -i "s|\"version\": \"0.0.0\"|\"version\": \"2.10.4\"|" frontend/package.json
-else
-  sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" backend/package.json
-  sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" frontend/package.json
-fi
-sed -i 's+^daemon+#daemon+g' docker/rootfs/etc/nginx/nginx.conf
-NGINX_CONFS=$(find "$(pwd)" -type f -name "*.conf")
+sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/backend/package.json
+sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/frontend/package.json
+sed -i 's+^daemon+#daemon+g' /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf
+NGINX_CONFS=$(find /opt/nginxproxymanager -type f -name "*.conf")
 for NGINX_CONF in $NGINX_CONFS; do
   sed -i 's+include conf.d+include /etc/nginx/conf.d+g' "$NGINX_CONF"
 done
 
 mkdir -p /var/www/html /etc/nginx/logs
-cp -r docker/rootfs/var/www/html/* /var/www/html/
-cp -r docker/rootfs/etc/nginx/* /etc/nginx/
-cp docker/rootfs/etc/letsencrypt.ini /etc/letsencrypt.ini
-cp docker/rootfs/etc/logrotate.d/nginx-proxy-manager /etc/logrotate.d/nginx-proxy-manager
+cp -r /opt/nginxproxymanager/docker/rootfs/var/www/html/* /var/www/html/
+cp -r /opt/nginxproxymanager/docker/rootfs/etc/nginx/* /etc/nginx/
+cp /opt/nginxproxymanager/docker/rootfs/etc/letsencrypt.ini /etc/letsencrypt.ini
+cp /opt/nginxproxymanager/docker/rootfs/etc/logrotate.d/nginx-proxy-manager /etc/logrotate.d/nginx-proxy-manager
 ln -sf /etc/nginx/nginx.conf /etc/nginx/conf/nginx.conf
 rm -f /etc/nginx/conf.d/dev.conf
 
@@ -121,21 +117,23 @@ chown root /tmp/nginx
 echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" {print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf);" >/etc/nginx/conf.d/include/resolvers.conf
 
 if [ ! -f /data/nginx/dummycert.pem ] || [ ! -f /data/nginx/dummykey.pem ]; then
-  openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/O=Nginx Proxy Manager/OU=Dummy Certificate/CN=localhost" -keyout /data/nginx/dummykey.pem -out /data/nginx/dummycert.pem &>/dev/null
+  $STD openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/O=Nginx Proxy Manager/OU=Dummy Certificate/CN=localhost" -keyout /data/nginx/dummykey.pem -out /data/nginx/dummycert.pem
 fi
 
-mkdir -p /app/global /app/frontend/images
-cp -r backend/* /app
-cp -r global/* /app/global
+mkdir -p /app/frontend/images
+cp -r /opt/nginxproxymanager/backend/* /app
 msg_ok "Set up Environment"
 
 msg_info "Building Frontend"
-cd ./frontend
-$STD pnpm install
-$STD pnpm upgrade
-$STD pnpm run build
-cp -r dist/* /app/frontend
-cp -r app-images/* /app/frontend/images
+export NODE_OPTIONS="--max_old_space_size=2048 --openssl-legacy-provider"
+cd /opt/nginxproxymanager/frontend
+# Replace node-sass with sass in package.json before installation
+sed -E -i 's/"node-sass" *: *"([^"]*)"/"sass": "\1"/g' package.json
+$STD yarn install --network-timeout 600000
+$STD yarn locale-compile
+$STD yarn build
+cp -r /opt/nginxproxymanager/frontend/dist/* /app/frontend
+cp -r /opt/nginxproxymanager/frontend/public/images/* /app/frontend/images
 msg_ok "Built Frontend"
 
 msg_info "Initializing Backend"
@@ -146,17 +144,18 @@ if [ ! -f /app/config/production.json ]; then
   "database": {
     "engine": "knex-native",
     "knex": {
-      "client": "sqlite3",
+      "client": "better-sqlite3",
       "connection": {
         "filename": "/data/database.sqlite"
-      }
+      },
+      "useNullAsDefault": true
     }
   }
 }
 EOF
 fi
 cd /app
-$STD pnpm install
+$STD yarn install --network-timeout 600000
 msg_ok "Initialized Backend"
 
 msg_info "Creating Service"
@@ -179,20 +178,13 @@ WantedBy=multi-user.target
 EOF
 msg_ok "Created Service"
 
-motd_ssh
-customize
-
 msg_info "Starting Services"
 sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
 sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
-sed -i 's/include-system-site-packages = false/include-system-site-packages = true/g' /opt/certbot/pyvenv.cfg
 systemctl enable -q --now openresty
 systemctl enable -q --now npm
 msg_ok "Started Services"
 
-msg_info "Cleaning up"
-rm -rf ../nginx-proxy-manager-*
-systemctl restart openresty
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+motd_ssh
+customize
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: havardthom
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -14,30 +14,25 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  par2
+setup_nonfree
 
-cat <<EOF >/etc/apt/sources.list.d/non-free.list
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-EOF
-$STD apt-get update
-$STD apt-get install -y unrar
-rm /etc/apt/sources.list.d/non-free.list
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  par2 \
+  unrar
 msg_ok "Installed Dependencies"
 
 msg_info "Installing NZBGet"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://nzbgetcom.github.io/nzbgetcom.asc | gpg --dearmor -o /etc/apt/keyrings/nzbgetcom.gpg
-echo "deb [arch=all signed-by=/etc/apt/keyrings/nzbgetcom.gpg] https://nzbgetcom.github.io/deb stable main" >/etc/apt/sources.list.d/nzbgetcom.list
-$STD apt-get update
-$STD apt-get install -y nzbget
+setup_deb822_repo \
+  "nzbgetcom" \
+  "https://nzbgetcom.github.io/nzbgetcom.asc" \
+  "https://nzbgetcom.github.io/deb" \
+  "stable"
+$STD apt install -y nzbget
+sed -i "s|SevenZipCmd=7zz|SevenZipCmd=7z|g" /var/lib/nzbget/nzbget.conf
+systemctl restart nzbget
 msg_ok "Installed NZBGet"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

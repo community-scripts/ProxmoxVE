@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -14,25 +14,14 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  apache2 \
-  libapache2-mod-php \
-  php8.2-{mbstring,gd,curl,intl,imagick,bz2,sqlite3,zip,xml}
-msg_ok "Installed Dependencies"
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
+fetch_and_deploy_gh_release "wallos" "ellite/Wallos" "tarball"
 
 msg_info "Installing Wallos (Patience)"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/ellite/Wallos/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-$STD unzip v${RELEASE}.zip
-mv Wallos-${RELEASE} /opt/wallos
 cd /opt/wallos
 mv /opt/wallos/db/wallos.empty.db /opt/wallos/db/wallos.db
 chown -R www-data:www-data /opt/wallos
 chmod -R 755 /opt/wallos
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-
 cat <<EOF >/etc/apache2/sites-available/wallos.conf
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
@@ -71,9 +60,4 @@ msg_ok "Crontabs setup"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/v${RELEASE}.zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

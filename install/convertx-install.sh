@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Omar Minaya | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/C4illin/ConvertX
@@ -12,17 +12,19 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 setup_imagemagick
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   assimp-utils \
   calibre \
   dcraw \
   dvisvgm \
   ffmpeg \
   inkscape \
+  libreoffice-writer \
   libva2 \
   libvips-tools \
   lmodern \
@@ -38,7 +40,7 @@ $STD apt-get install -y \
   texlive-xetex
 msg_ok "Installed Dependencies"
 
-NODE_VERSION=22 NODE_MODULE="bun" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="bun" setup_nodejs
 fetch_and_deploy_gh_release "ConvertX" "C4illin/ConvertX" "tarball" "latest" "/opt/convertx"
 
 msg_info "Installing ConvertX"
@@ -75,8 +77,4 @@ msg_ok "Service Created"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/outline/outline
@@ -11,7 +11,7 @@ var_disk="${var_disk:-8}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,8 +28,9 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.outline ]] || [[ "${RELEASE}" != "$(cat ~/.outline)" ]]; then
+  NODE_VERSION="22" setup_nodejs
+
+  if check_for_gh_release "outline" "outline/outline"; then
     msg_info "Stopping Services"
     systemctl stop outline
     msg_ok "Services Stopped"
@@ -38,24 +39,24 @@ function update_script() {
     cp /opt/outline/.env /opt
     msg_ok "Backup created"
 
-    fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating Outline"
     cd /opt/outline
+    mv /opt/.env /opt/outline
     export NODE_ENV=development
     export NODE_OPTIONS="--max-old-space-size=3584"
-    $STD yarn install --frozen-lockfile
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    $STD corepack enable
+    $STD yarn install --immutable
+    export NODE_ENV=production
     $STD yarn build
-    mv /opt/.env /opt/outline
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Outline"
 
     msg_info "Starting Services"
     systemctl start outline
     msg_ok "Started Services"
-
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -64,7 +65,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

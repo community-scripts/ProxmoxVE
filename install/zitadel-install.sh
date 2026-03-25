@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: dave-yap
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://zitadel.com/
+# Source: https://zitadel.com/ | Github: https://github.com/zitadel/zitadel
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y ca-certificates
+$STD apt install -y ca-certificates
 msg_ok "Installed Dependecies"
 
-PG_VERSION="17" PG_MODULES="common" setup_postgresql
+PG_VERSION="17" setup_postgresql
 
 msg_info "Installing Postgresql"
 DB_NAME="zitadel"
@@ -39,11 +39,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
 } >>~/zitadel.creds
 msg_ok "Installed PostgreSQL"
 
-msg_info "Installing Zitadel"
-RELEASE=$(curl -fsSL https://api.github.com/repos/zitadel/zitadel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/zitadel/zitadel/releases/download/v$RELEASE/zitadel-linux-amd64.tar.gz" | tar -xz
-mv zitadel-linux-amd64/zitadel /usr/local/bin
-msg_ok "Installed Zitadel"
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-amd64.tar.gz"
 
 msg_info "Setting up Zitadel Environments"
 mkdir -p /opt/zitadel
@@ -86,6 +82,10 @@ Database:
         RootCert: ""
         Cert: ""
         Key: ""
+DefaultInstance:
+  Features:
+    LoginV2:
+      Required: false
 EOF
 msg_ok "Installed Zitadel Enviroments"
 
@@ -114,7 +114,7 @@ NoNewPrivileges=true
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q zitadel.service
+systemctl enable -q --now zitadel
 msg_ok "Created Services"
 
 msg_info "Zitadel initial setup"
@@ -122,30 +122,24 @@ zitadel start-from-init --masterkeyFile /opt/zitadel/.masterkey --config /opt/zi
 sleep 60
 kill $(lsof -i | awk '/zitadel/ {print $2}' | head -n1)
 useradd zitadel
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Zitadel initialized"
 
 msg_info "Set ExternalDomain to current IP and restart Zitadel"
 IP=$(ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 sed -i "0,/localhost/s/localhost/${IP}/" /opt/zitadel/config.yaml
-systemctl stop -q zitadel.service
-zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml &>/dev/null
-systemctl restart -q zitadel.service
+systemctl stop -q zitadel
+$STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml
+systemctl restart -q zitadel
 msg_ok "Zitadel restarted with ExternalDomain set to current IP"
 
 msg_info "Create zitadel-rerun.sh"
 cat <<EOF >~/zitadel-rerun.sh
-systemctl stop zitadel.service
+systemctl stop zitadel
 timeout --kill-after=5s 15s zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml
-systemctl restart zitadel.service
+systemctl restart zitadel
 EOF
 msg_ok "Bash script for rerunning Zitadel after changing Zitadel config.yaml"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf ~/zitadel-linux-amd64
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

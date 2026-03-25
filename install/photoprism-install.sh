@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.photoprism.app/
+# Source: https://www.photoprism.app/ | Github: https://github.com/photoprism/photoprism
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -12,9 +12,10 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   exiftool \
   ffmpeg \
   libheif1 \
@@ -28,6 +29,8 @@ $STD apt-get install -y \
   lsb-release
 
 echo 'export PATH=/usr/local:$PATH' >>~/.bashrc
+echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
+echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
 export PATH=/usr/local:$PATH
 msg_ok "Installed Dependencies"
 
@@ -37,7 +40,7 @@ msg_info "Installing PhotoPrism (Patience)"
 mkdir -p /opt/photoprism/{cache,config,photos,storage,temp}
 mkdir -p /opt/photoprism/photos/{originals,import}
 mkdir -p /opt/photoprism_backups
-LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-$(lsb_release -cs)-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
+LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-bookworm-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
 curl -fsSL "https://dl.photoprism.app/dist/libheif/$LIBHEIF_URL" -o /tmp/libheif.tar.gz
 tar -xzf /tmp/libheif.tar.gz -C /usr/local
 ldconfig
@@ -96,7 +99,7 @@ PHOTOPRISM_DEBUG='false'
 PHOTOPRISM_LOG_LEVEL='info'
 
 # Site Info
-PHOTOPRISM_SITE_CAPTION='https://Helper-Scripts.com'
+PHOTOPRISM_SITE_CAPTION='https://community-scripts.com'
 PHOTOPRISM_SITE_DESCRIPTION=''
 PHOTOPRISM_SITE_AUTHOR=''
 EOF
@@ -154,8 +157,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

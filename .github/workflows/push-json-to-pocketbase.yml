@@ -1,0 +1,263 @@
+name: Push JSON changes to PocketBase
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "json/**"
+
+jobs:
+  push-json:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed JSON files with slug
+        id: changed
+        run: |
+          changed=$(git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" -- json/ | grep '\.json$' || true)
+          with_slug=""
+          for f in $changed; do
+            [[ -f "$f" ]] || continue
+            jq -e '.slug' "$f" >/dev/null 2>&1 && with_slug="$with_slug $f"
+          done
+          with_slug=$(echo $with_slug | xargs -n1)
+          if [[ -z "$with_slug" ]]; then
+            echo "No app JSON files changed (or no files with slug)."
+            echo "count=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "$with_slug" > changed_app_jsons.txt
+          echo "count=$(echo "$with_slug" | wc -w)" >> "$GITHUB_OUTPUT"
+
+      - name: Push to PocketBase
+        if: steps.changed.outputs.count != '0'
+        env:
+          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
+          POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
+          POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
+        run: |
+          node << 'ENDSCRIPT'
+          (async function() {
+          const fs = require('fs');
+          const https = require('https');
+          const http = require('http');
+          const url = require('url');
+          function request(fullUrl, opts, redirectCount) {
+            redirectCount = redirectCount || 0;
+            return new Promise(function(resolve, reject) {
+              const u = url.parse(fullUrl);
+              const isHttps = u.protocol === 'https:';
+              const body = opts.body;
+              const options = {
+                hostname: u.hostname,
+                port: u.port || (isHttps ? 443 : 80),
+                path: u.path,
+                method: opts.method || 'GET',
+                headers: opts.headers || {}
+              };
+              if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
+              const lib = isHttps ? https : http;
+              const req = lib.request(options, function(res) {
+                if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                  if (redirectCount >= 5) return reject(new Error('Too many redirects from ' + fullUrl));
+                  const redirectUrl = url.resolve(fullUrl, res.headers.location);
+                  res.resume();
+                  resolve(request(redirectUrl, opts, redirectCount + 1));
+                  return;
+                }
+                let data = '';
+                res.on('data', function(chunk) { data += chunk; });
+                res.on('end', function() {
+                  resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, statusCode: res.statusCode, body: data });
+                });
+              });
+              req.on('error', reject);
+              if (body) req.write(body);
+              req.end();
+            });
+          }
+          const raw = process.env.POCKETBASE_URL.replace(/\/$/, '');
+          const apiBase = /\/api$/i.test(raw) ? raw : raw + '/api';
+          const coll = process.env.POCKETBASE_COLLECTION;
+          const files = fs.readFileSync('changed_app_jsons.txt', 'utf8').trim().split(/\s+/).filter(Boolean);
+          const authUrl = apiBase + '/collections/users/auth-with-password';
+          console.log('Auth URL: ' + authUrl);
+          const authBody = JSON.stringify({
+            identity: process.env.POCKETBASE_ADMIN_EMAIL,
+            password: process.env.POCKETBASE_ADMIN_PASSWORD
+          });
+          const authRes = await request(authUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: authBody
+          });
+          if (!authRes.ok) {
+            throw new Error('Auth failed. Tried: ' + authUrl + ' - Verify POST to that URL with body {"identity":"...","password":"..."} works. Response: ' + authRes.body);
+          }
+          const token = JSON.parse(authRes.body).token;
+          const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
+          let categoryIdToName = {};
+          try {
+            const metadata = JSON.parse(fs.readFileSync('json/metadata.json', 'utf8'));
+            (metadata.categories || []).forEach(function(cat) { categoryIdToName[cat.id] = cat.name; });
+          } catch (e) { console.warn('Could not load metadata.json:', e.message); }
+          let typeValueToId = {};
+          let categoryNameToPbId = {};
+          try {
+            const typesRes = await request(apiBase + '/collections/z_ref_script_types/records?perPage=500', { headers: { 'Authorization': token } });
+            if (typesRes.ok) {
+              const typesData = JSON.parse(typesRes.body);
+              (typesData.items || []).forEach(function(item) {
+                if (item.type != null) typeValueToId[item.type] = item.id;
+                if (item.name != null) typeValueToId[item.name] = item.id;
+                if (item.value != null) typeValueToId[item.value] = item.id;
+              });
+            }
+          } catch (e) { console.warn('Could not fetch z_ref_script_types:', e.message); }
+          try {
+            const catRes = await request(apiBase + '/collections/script_categories/records?perPage=500', { headers: { 'Authorization': token } });
+            if (catRes.ok) {
+              const catData = JSON.parse(catRes.body);
+              (catData.items || []).forEach(function(item) { if (item.name) categoryNameToPbId[item.name] = item.id; });
+            }
+          } catch (e) { console.warn('Could not fetch script_categories:', e.message); }
+          var noteTypeToId = {};
+          var installMethodTypeToId = {};
+          var osToId = {};
+          var osVersionToId = {};
+          try {
+            const res = await request(apiBase + '/collections/z_ref_note_types/records?perPage=500', { headers: { 'Authorization': token } });
+            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.type != null) { noteTypeToId[item.type] = item.id; noteTypeToId[item.type.toLowerCase()] = item.id; } });
+          } catch (e) { console.warn('z_ref_note_types:', e.message); }
+          try {
+            const res = await request(apiBase + '/collections/z_ref_install_method_types/records?perPage=500', { headers: { 'Authorization': token } });
+            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.type != null) { installMethodTypeToId[item.type] = item.id; installMethodTypeToId[item.type.toLowerCase()] = item.id; } });
+          } catch (e) { console.warn('z_ref_install_method_types:', e.message); }
+          try {
+            const res = await request(apiBase + '/collections/z_ref_os/records?perPage=500', { headers: { 'Authorization': token } });
+            if (res.ok) JSON.parse(res.body).items?.forEach(function(item) { if (item.os != null) { osToId[item.os] = item.id; osToId[item.os.toLowerCase()] = item.id; } });
+          } catch (e) { console.warn('z_ref_os:', e.message); }
+          try {
+            const res = await request(apiBase + '/collections/z_ref_os_version/records?perPage=500&expand=os', { headers: { 'Authorization': token } });
+            if (res.ok) {
+              (JSON.parse(res.body).items || []).forEach(function(item) {
+                var osName = item.expand && item.expand.os && item.expand.os.os != null ? item.expand.os.os : null;
+                if (osName != null && item.version != null) osVersionToId[osName + '|' + item.version] = item.id;
+              });
+            }
+          } catch (e) { console.warn('z_ref_os_version:', e.message); }
+          var notesCollUrl = apiBase + '/collections/script_notes/records';
+          var installMethodsCollUrl = apiBase + '/collections/script_install_methods/records';
+          for (const file of files) {
+            if (!fs.existsSync(file)) continue;
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (!data.slug) { console.log('Skipping', file, '(no slug)'); continue; }
+            var payload = {
+              name: data.name,
+              slug: data.slug,
+              script_created: data.date_created || data.script_created,
+              script_updated: new Date().toISOString().split('T')[0],
+              updateable: data.updateable,
+              privileged: data.privileged,
+              port: data.interface_port != null ? data.interface_port : data.port,
+              documentation: data.documentation,
+              website: data.website,
+              logo: data.logo,
+              description: data.description,
+              config_path: data.config_path,
+              default_user: (data.default_credentials && data.default_credentials.username) || data.default_user || null,
+              default_passwd: (data.default_credentials && data.default_credentials.password) || data.default_passwd || null,
+              is_dev: false
+            };
+            var resolvedType = typeValueToId[data.type];
+            if (resolvedType == null && data.type === 'ct') resolvedType = typeValueToId['lxc'];
+            if (resolvedType) payload.type = resolvedType;
+            var resolvedCats = (data.categories || []).map(function(n) { return categoryNameToPbId[categoryIdToName[n]]; }).filter(Boolean);
+            if (resolvedCats.length) payload.categories = resolvedCats;
+            if (data.version !== undefined) payload.version = data.version;
+            if (data.changelog !== undefined) payload.changelog = data.changelog;
+            if (data.screenshots !== undefined) payload.screenshots = data.screenshots;
+            const filter = "(slug='" + data.slug + "')";
+            const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1', {
+              headers: { 'Authorization': token }
+            });
+            const list = JSON.parse(listRes.body);
+            const existingId = list.items && list.items[0] && list.items[0].id;
+            async function resolveNotesAndInstallMethods(scriptId) {
+              var noteIds = [];
+              for (var i = 0; i < (data.notes || []).length; i++) {
+                var note = data.notes[i];
+                var typeId = noteTypeToId[note.type];
+                if (typeId == null) continue;
+                var postRes = await request(notesCollUrl, {
+                  method: 'POST',
+                  headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ text: note.text || '', type: typeId, script: scriptId })
+                });
+                if (postRes.ok) noteIds.push(JSON.parse(postRes.body).id);
+              }
+              var installMethodIds = [];
+              for (var j = 0; j < (data.install_methods || []).length; j++) {
+                var im = data.install_methods[j];
+                var typeId = installMethodTypeToId[im.type];
+                var res = im.resources || {};
+                var osId = osToId[res.os];
+                var osVersionKey = (res.os != null && res.version != null) ? res.os + '|' + res.version : null;
+                var osVersionId = osVersionKey ? osVersionToId[osVersionKey] : null;
+                var imBody = {
+                  script: scriptId,
+                  resources_cpu: res.cpu != null ? res.cpu : 0,
+                  resources_ram: res.ram != null ? res.ram : 0,
+                  resources_hdd: res.hdd != null ? res.hdd : 0
+                };
+                if (typeId) imBody.type = typeId;
+                if (osId) imBody.os = osId;
+                if (osVersionId) imBody.os_version = osVersionId;
+                var imPostRes = await request(installMethodsCollUrl, {
+                  method: 'POST',
+                  headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                  body: JSON.stringify(imBody)
+                });
+                if (imPostRes.ok) installMethodIds.push(JSON.parse(imPostRes.body).id);
+              }
+              return { noteIds: noteIds, installMethodIds: installMethodIds };
+            }
+            if (existingId) {
+              var resolved = await resolveNotesAndInstallMethods(existingId);
+              payload.notes = resolved.noteIds;
+              payload.install_methods = resolved.installMethodIds;
+              console.log('Updating', file, '(slug=' + data.slug + ')');
+              const r = await request(recordsUrl + '/' + existingId, {
+                method: 'PATCH',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              if (!r.ok) throw new Error('PATCH failed: ' + r.body);
+            } else {
+              console.log('Creating', file, '(slug=' + data.slug + ')');
+              const r = await request(recordsUrl, {
+                method: 'POST',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              if (!r.ok) throw new Error('POST failed: ' + r.body);
+              var scriptId = JSON.parse(r.body).id;
+              var resolved = await resolveNotesAndInstallMethods(scriptId);
+              var patchRes = await request(recordsUrl + '/' + scriptId, {
+                method: 'PATCH',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ install_methods: resolved.installMethodIds, notes: resolved.noteIds })
+              });
+              if (!patchRes.ok) throw new Error('PATCH relations failed: ' + patchRes.body);
+            }
+          }
+          console.log('Done.');
+          })().catch(e => { console.error(e); process.exit(1); });
+          ENDSCRIPT
+        shell: bash

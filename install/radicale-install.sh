@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://radicale.org/
+# Source: https://radicale.org/ | Github: https://github.com/Kozea/Radicale
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,42 +14,51 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  apache2-utils \
-  python3-pip \
-  python3.11-venv
+$STD apt install -y apache2-utils
 msg_ok "Installed Dependencies"
 
+PYTHON_VERSION="3.13" setup_uv
+fetch_and_deploy_gh_release "Radicale" "Kozea/Radicale" "tarball" "latest" "/opt/radicale"
+
 msg_info "Setting up Radicale"
-python3 -m venv /opt/radicale
-source /opt/radicale/bin/activate
-$STD python3 -m pip install --upgrade https://github.com/Kozea/Radicale/archive/master.tar.gz
+cd /opt/radicale
 RNDPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD htpasswd -c -b -5 /opt/radicale/users admin $RNDPASS
+$STD htpasswd -c -b -5 /opt/radicale/users admin "$RNDPASS"
 {
   echo "Radicale Credentials"
   echo "Admin User: admin"
   echo "Admin Password: $RNDPASS"
 } >>~/radicale.creds
-msg_ok "Done setting up Radicale"
 
-msg_info "Setup Service"
+mkdir -p /etc/radicale
+cat <<EOF >/etc/radicale/config
+[server]
+hosts = 0.0.0.0:5232
 
-cat <<EOF >/opt/radicale/start.sh
-#!/usr/bin/env bash
-source /opt/radicale/bin/activate
-python3 -m radicale --storage-filesystem-folder=/var/lib/radicale/collections --hosts 0.0.0.0:5232 --auth-type htpasswd --auth-htpasswd-filename /opt/radicale/users --auth-htpasswd-encryption sha512
+[auth]
+type = htpasswd
+htpasswd_filename = /opt/radicale/users
+htpasswd_encryption = sha512
+
+[storage]
+type = multifilesystem
+filesystem_folder = /var/lib/radicale/collections
+
+[web]
+type = internal
 EOF
+msg_ok "Set up Radicale"
 
-chmod +x /opt/radicale/start.sh
-
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/radicale.service
+[Unit]
 Description=A simple CalDAV (calendar) and CardDAV (contact) server
 After=network.target
 Requires=network.target
 
 [Service]
-ExecStart=/opt/radicale/start.sh
+WorkingDirectory=/opt/radicale
+ExecStart=/usr/local/bin/uv run -m radicale --config /etc/radicale/config
 Restart=on-failure
 # User=radicale
 # Deny other users access to the calendar data
@@ -63,8 +72,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

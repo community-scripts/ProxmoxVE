@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: liecno
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/FunkeyFlo/ps5-mqtt/
@@ -14,25 +14,18 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   jq \
   ca-certificates
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="playactor" setup_nodejs
+fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
 
-msg_info "Installing PS5-MQTT"
-RELEASE=$(curl -fsSL https://api.github.com/repos/FunkeyFlo/ps5-mqtt/releases/latest | jq -r '.tag_name')
-curl -fsSL https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz -o /tmp/${RELEASE}.tar.gz
-tar zxf /tmp/${RELEASE}.tar.gz -C /opt
-mv /opt/ps5-mqtt-* /opt/ps5-mqtt
+msg_info "Configuring PS5-MQTT"
 cd /opt/ps5-mqtt/ps5-mqtt/
 $STD npm install
 $STD npm run build
-echo ${RELEASE} >/opt/ps5-mqtt_version.txt
-msg_ok "Installed PS5-MQTT"
-
-msg_info "Creating Service"
 mkdir -p /opt/.config/ps5-mqtt/
 mkdir -p /opt/.config/ps5-mqtt/playactor
 cat <<EOF >/opt/.config/ps5-mqtt/config.json
@@ -64,6 +57,9 @@ cat <<EOF >/opt/.config/ps5-mqtt/config.json
   "frontendPort": "8645"
 }
 EOF
+msg_ok "Configured PS5-MQTT"
+
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/ps5-mqtt.service
 [Unit]
 Description=PS5-MQTT Daemon
@@ -88,9 +84,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-rm /tmp/${RELEASE}.tar.gz
-msg_ok "Cleaned"
+cleanup_lxc

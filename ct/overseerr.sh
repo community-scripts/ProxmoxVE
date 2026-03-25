@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://overseerr.dev/
@@ -8,10 +8,10 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Overseerr"
 var_tags="${var_tags:-media}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,10 +27,36 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/sct/overseerr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.overseerr ]] || [[ "${RELEASE}" != "$(cat ~/.overseerr)" ]]; then
-    msg_info "Stopping ${APP} service"
+
+  if [[ -f "$HOME/.overseerr" ]] && [[ "$(printf '%s\n' "1.35.0" "$(cat "$HOME/.overseerr")" | sort -V | head -n1)" == "1.35.0" ]]; then
+    echo
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Overseerr v1.34.0 detected."
+    echo
+    echo "Seerr is the new unified Jellyseerr and Overseerr."
+    echo "More info: https://docs.seerr.dev/blog/seerr-release"
+    echo
+    read -rp "Do you want to migrate to Seerr now? (y/N): " MIGRATE
+    echo
+    if [[ ! "$MIGRATE" =~ ^[Yy]$ ]]; then
+      msg_info "Migration cancelled. Exiting."
+      exit 0
+    fi
+
+    msg_info "Switching update script to Seerr"
+    TMP_UPDATE=$(mktemp)
+    cat <<'EOF' >"$TMP_UPDATE"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/seerr.sh)"
+EOF
+    mv "$TMP_UPDATE" /usr/bin/update
+    chmod +x /usr/bin/update
+    msg_ok "Switched update script to Seerr"
+    msg_warn "Please type 'update' again to complete the migration"
+    exit 0
+  fi
+
+  if check_for_gh_release "overseerr" "sct/overseerr"; then
+    msg_info "Stopping Service"
     systemctl stop overseerr
     msg_ok "Service stopped"
 
@@ -48,13 +74,10 @@ function update_script() {
     mv /opt/config_backup /opt/overseerr/config
     msg_ok "Configured ${APP}"
 
-    msg_info "Starting ${APP} service"
+    msg_info "Starting Service"
     systemctl start overseerr
-    msg_ok "Started ${APP} service"
-
+    msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }
@@ -63,7 +86,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5055${CL}"

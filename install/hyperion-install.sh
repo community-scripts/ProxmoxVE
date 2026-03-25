@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://hyperion-project.org/forum/
@@ -12,26 +12,21 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y lsb-release
-$STD apt-get install -y apt-transport-https
-$STD apt-get install -y libpython3.11
-
-msg_ok "Installed Dependencies"
+msg_info "Setting up Hyperion repository"
+setup_deb822_repo \
+  "hyperion" \
+  "https://releases.hyperion-project.org/hyperion.pub.key" \
+  "https://apt.releases.hyperion-project.org" \
+  "$(get_os_info codename)"
+msg_ok "Set up Hyperion repository"
 
 msg_info "Installing Hyperion"
-curl -fsSL "https://releases.hyperion-project.org/hyperion.pub.key" | gpg --dearmor -o /usr/share/keyrings/hyperion.pub.gpg
-echo "deb [signed-by=/usr/share/keyrings/hyperion.pub.gpg] https://apt.releases.hyperion-project.org/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/hyperion.list
-$STD apt-get update
-$STD apt-get install -y hyperion
-$STD systemctl enable --now hyperion@root
+$STD apt install -y hyperion
+systemctl enable -q --now hyperion@root
 msg_ok "Installed Hyperion"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get autoremove >/dev/null
-$STD apt-get autoclean >/dev/null
-msg_ok "Cleaned"
+cleanup_lxc

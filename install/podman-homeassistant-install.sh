@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.home-assistant.io/
@@ -13,12 +13,8 @@ setting_up_container
 network_check
 update_os
 
-get_latest_release() {
-  curl -fsSL https://api.github.com/repos/$1/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-}
-
-PORTAINER_LATEST_VERSION=$(get_latest_release "portainer/portainer")
-PORTAINER_AGENT_LATEST_VERSION=$(get_latest_release "portainer/agent")
+PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
+PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
 if $STD mount | grep 'on / type zfs' >null && echo "ZFS"; then
   msg_info "Enabling ZFS support."
@@ -44,37 +40,63 @@ EOF
 fi
 
 msg_info "Installing Podman"
-$STD apt-get -y install podman
-$STD systemctl enable --now podman.socket
+$STD apt install -y podman
+systemctl enable -q --now podman.socket
 echo -e 'unqualified-search-registries=["docker.io"]' >>/etc/containers/registries.conf
 msg_ok "Installed Podman"
+
+mkdir -p /etc/containers/systemd
 
 read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
-  $STD podman run -d \
-    -p 8000:8000 \
-    -p 9443:9443 \
-    --name=portainer \
-    --restart=always \
-    -v /run/podman/podman.sock:/var/run/docker.sock \
-    -v portainer_data:/data \
-    portainer/portainer-ce:latest
+  cat <<EOF >/etc/containers/systemd/portainer.container
+[Unit]
+Description=Portainer Container
+After=network-online.target
+
+[Container]
+Image=docker.io/portainer/portainer-ce:latest
+ContainerName=portainer
+PublishPort=8000:8000
+PublishPort=9443:9443
+Volume=/run/podman/podman.sock:/var/run/docker.sock
+Volume=portainer_data:/data
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target multi-user.target
+EOF
+  systemctl daemon-reload
+  $STD systemctl start portainer
   msg_ok "Installed Portainer $PORTAINER_LATEST_VERSION"
 else
   read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
-    podman volume create temp >/dev/null
-    podman volume remove temp >/dev/null
-    $STD podman run -d \
-      -p 9001:9001 \
-      --name portainer_agent \
-      --restart=always \
-      -v /run/podman/podman.sock:/var/run/docker.sock \
-      -v /var/lib/containers/storage/volumes:/var/lib/docker/volumes \
-      portainer/agent
+    cat <<EOF >/etc/containers/systemd/portainer-agent.container
+[Unit]
+Description=Portainer Agent Container
+After=network-online.target
+
+[Container]
+Image=docker.io/portainer/agent:latest
+ContainerName=portainer_agent
+PublishPort=9001:9001
+Volume=/run/podman/podman.sock:/var/run/docker.sock
+Volume=/var/lib/containers/storage/volumes:/var/lib/docker/volumes
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target multi-user.target
+EOF
+    systemctl daemon-reload
+    $STD systemctl start portainer-agent
     msg_ok "Installed Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"
   fi
 fi
@@ -85,25 +107,31 @@ msg_ok "Pulled Home Assistant Image"
 
 msg_info "Installing Home Assistant"
 $STD podman volume create hass_config
-$STD podman run -d \
-  --name homeassistant \
-  --restart unless-stopped \
-  -v /dev:/dev \
-  -v hass_config:/config \
-  -v /etc/localtime:/etc/localtime:ro \
-  -v /etc/timezone:/etc/timezone:ro \
-  --net=host \
-  homeassistant/home-assistant:stable
-podman generate systemd \
-  --new --name homeassistant \
-  >/etc/systemd/system/homeassistant.service
-$STD systemctl enable --now homeassistant
+cat <<EOF >/etc/containers/systemd/homeassistant.container
+[Unit]
+Description=Home Assistant Container
+After=network-online.target
+
+[Container]
+Image=docker.io/homeassistant/home-assistant:stable
+ContainerName=homeassistant
+Volume=/dev:/dev
+Volume=hass_config:/config
+Volume=/etc/localtime:/etc/localtime:ro
+Volume=/etc/timezone:/etc/timezone:ro
+Network=host
+
+[Service]
+Restart=always
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target multi-user.target
+EOF
+systemctl daemon-reload
+$STD systemctl start homeassistant
 msg_ok "Installed Home Assistant"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

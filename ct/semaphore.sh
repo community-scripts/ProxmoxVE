@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://semaphoreui.com/
+# Source: https://semaphoreui.com/ | Github: https://github.com/semaphoreui/semaphore
 
 APP="Semaphore"
 var_tags="${var_tags:-dev_ops}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
-var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_os="${var_os:-ubuntu}"
+var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,29 +28,45 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
+  if [[ -f /opt/semaphore/semaphore_db.bolt ]]; then
+    msg_warn "WARNING: Due to bugs with BoltDB database, update script will move your application"
+    msg_warn "to use SQLite database instead. Unfortunately, this will reset your application and make it a fresh"
+    msg_warn "installation. All your data will be lost!"
+    echo ""
+    read -r -p "${TAB3}Do you want to continue? (y/N): " CONFIRM
+    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+      exit 0
+    else
+      msg_info "Moving from BoltDB to SQLite"
+      systemctl stop semaphore
+      rm -rf /opt/semaphore/semaphore_db.bolt
+      sed -i \
+        -e 's|"bolt": {|"sqlite": {|' \
+        -e 's|/semaphore_db.bolt"|/database.sqlite"|' \
+        -e '/semaphore_db.bolt/d' \
+        -e '/"dialect"/d' \
+        -e '/^  },$/a\  "dialect": "sqlite",' \
+        /opt/semaphore/config.json
+      SEM_PW=$(cat ~/semaphore.creds)
+      systemctl start semaphore
+      $STD semaphore user add --admin --login admin --email admin@community-scripts.com --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
+
+      msg_ok "Moved from BoltDB to SQLite"
+    fi
+  fi
+
+  if check_for_gh_release "semaphore" "semaphoreui/semaphore"; then
     msg_info "Stopping Service"
     systemctl stop semaphore
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb" -o $(basename "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb")
-    $STD dpkg -i semaphore_${RELEASE}_linux_amd64.deb
-    echo "${RELEASE}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "latest" "/opt/semaphore" "semaphore_*_linux_amd64.deb"
 
     msg_info "Starting Service"
     systemctl start semaphore
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/semaphore_${RELEASE}_linux_amd64.deb
-    msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -59,7 +75,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

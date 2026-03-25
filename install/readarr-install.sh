@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://readarr.com/
@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y sqlite3
+$STD apt install -y sqlite3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Readarr"
@@ -25,6 +25,7 @@ $STD curl -fsSL 'https://readarr.servarr.com/v1/update/develop/updatefile?os=lin
 $STD tar -xvzf readarr.tar.gz
 mv Readarr /opt
 chmod 775 /opt/Readarr
+rm -rf Readarr.develop.*.tar.gz
 msg_ok "Installed Readarr"
 
 msg_info "Creating Service"
@@ -48,9 +49,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf Readarr.develop.*.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

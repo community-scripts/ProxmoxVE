@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -22,6 +22,10 @@ GN="\033[1;92m"
 RD="\033[01;31m"
 CL="\033[m"
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "kernel-clean" "pve"
+
 # Detect current kernel
 current_kernel=$(uname -r)
 available_kernels=$(dpkg --list | grep 'kernel-.*-pve' | awk '{print $2}' | grep -v "$current_kernel" | sort -V)
@@ -33,6 +37,7 @@ if [ -z "$available_kernels" ]; then
   exit 0
 fi
 
+echo -e "${GN}Currently running kernel: ${current_kernel}${CL}"
 echo -e "${YW}Available kernels for removal:${CL}"
 echo "$available_kernels" | nl -w 2 -s '. '
 
@@ -52,7 +57,7 @@ done
 
 if [ ${#kernels_to_remove[@]} -eq 0 ]; then
   echo -e "${RD}No valid selection made. Exiting.${CL}"
-  exit 1
+  exit 0
 fi
 
 # Confirm removal
@@ -61,7 +66,7 @@ printf "%s\n" "${kernels_to_remove[@]}"
 read -rp "Proceed with removal? (y/n): " confirm
 if [[ "$confirm" != "y" ]]; then
   echo -e "${RD}Aborted.${CL}"
-  exit 1
+  exit 0
 fi
 
 # Remove kernels

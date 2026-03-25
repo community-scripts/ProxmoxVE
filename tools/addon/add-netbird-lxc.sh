@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # Co-Author: MickLesk (Canbiz)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://netbird.io/ | Github: https://github.com/netbirdio/netbird
 
 function header_info {
   clear
@@ -19,6 +19,11 @@ EOF
 }
 header_info
 set -e
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-netbird-lxc" "addon"
+
 while true; do
   read -p "This will add NetBird to an existing LXC Container ONLY. Proceed(y/n)?" yn
   case $yn in
@@ -68,7 +73,7 @@ fi
 DISTRO=$(pct exec "$CTID" -- cat /etc/os-release | grep -w "ID" | cut -d'=' -f2 | tr -d '"')
 if [[ "$DISTRO" != "debian" && "$DISTRO" != "ubuntu" ]]; then
   msg "\e[1;31m Error: This script only supports Debian or Ubuntu LXC containers. Detected: $DISTRO. Aborting...\e[0m"
-  exit 1
+  exit 238
 fi
 
 CTID_CONFIG_PATH=/etc/pve/lxc/${CTID}.conf
@@ -79,11 +84,24 @@ EOF
 header_info
 msg "Installing NetBird..."
 pct exec "$CTID" -- bash -c '
+if ! command -v curl &>/dev/null; then
+  apt-get update -qq
+  apt-get install -y curl >/dev/null
+fi
 apt install -y ca-certificates gpg &>/dev/null
 curl -fsSL "https://pkgs.netbird.io/debian/public.key" | gpg --dearmor >/usr/share/keyrings/netbird-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main" >/etc/apt/sources.list.d/netbird.list
 apt-get update &>/dev/null
 apt-get install -y netbird-ui &>/dev/null
+if systemctl list-unit-files docker.service &>/dev/null; then
+  mkdir -p /etc/systemd/system/netbird.service.d
+  cat <<OVERRIDE >/etc/systemd/system/netbird.service.d/after-docker.conf
+[Unit]
+After=docker.service
+Wants=docker.service
+OVERRIDE
+  systemctl daemon-reload
+fi
 '
 msg "\e[1;32m ✔ Installed NetBird.\e[0m"
 sleep 2

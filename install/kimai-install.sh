@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.kimai.org/
+# Source: https://www.kimai.org/ | Github: https://github.com/kimai/kimai
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,40 +14,25 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apt-transport-https \
   apache2 \
   git \
-  expect \
-  composer \
-  lsb-release
+  expect
 msg_ok "Installed Dependencies"
 
-setup_mysql
-
-msg_info "Adding PHP8.4 Repository"
-$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-$STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
-$STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-$STD apt-get update
-msg_ok "Added PHP8.4 Repository"
-
-msg_info "Installing PHP"
-$STD apt-get remove -y php8.2*
-$STD apt-get install -y \
-  php8.4 \
-  php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl} \
-  libapache2-mod-php8.4
-msg_ok "Installed PHP"
+setup_mariadb
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
+setup_composer
 
 msg_info "Setting up database"
 DB_NAME=kimai_db
 DB_USER=kimai
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-MYSQL_VERSION=$(mysql --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+$STD mariadb -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+$STD mariadb -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "Kimai-Credentials"
   echo "Kimai Database User: $DB_USER"
@@ -56,26 +41,24 @@ $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 } >>~/kimai.creds
 msg_ok "Set up database"
 
-msg_info "Installing Kimai (Patience)"
-RELEASE=$(curl -fsSL https://api.github.com/repos/kimai/kimai/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}".zip
-$STD unzip "${RELEASE}".zip
-mv kimai-"${RELEASE}" /opt/kimai
+fetch_and_deploy_gh_release "kimai" "kimai/kimai" "tarball"
+
+msg_info "Setup Kimai"
 cd /opt/kimai
 echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc
 source ~/.bashrc
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 cp .env.dist .env
-sed -i "/^DATABASE_URL=/c\DATABASE_URL=mysql://$DB_USER:$DB_PASS@127.0.0.1:3306/$DB_NAME?charset=utf8mb4&serverVersion=$MYSQL_VERSION" /opt/kimai/.env
+sed -i "/^DATABASE_URL=/c\DATABASE_URL=mysql://$DB_USER:$DB_PASS@127.0.0.1:3306/$DB_NAME?charset=utf8mb4&serverVersion=mariadb-$MYSQL_VERSION" /opt/kimai/.env
 $STD bin/console kimai:install -n
 $STD expect <<EOF
 set timeout -1
 log_user 0
 
-spawn bin/console kimai:user:create admin admin@helper-scripts.com ROLE_SUPER_ADMIN
+spawn bin/console kimai:user:create admin admin@community-scripts.com ROLE_SUPER_ADMIN
 
 expect "Please enter the password:"
-send "helper-scripts.com\r"
+send "community-scripts.com\r"
 
 expect eof
 EOF
@@ -88,12 +71,7 @@ kimai:
                 begin: 15
                 end: 15
 
-admin_lte:
-    options:
-        default_avatar: build/apple-touch-icon.png
 EOF
-
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Kimai"
 
 msg_info "Creating Service"
@@ -128,9 +106,4 @@ msg_ok "Setup Permissions"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "${RELEASE}".zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

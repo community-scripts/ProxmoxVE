@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/plankanban/planka
 
 APP="PLANKA"
-var_tags="${var_tags:-Todo,kanban}"
+var_tags="${var_tags:-Todo;kanban}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,41 +28,58 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/plankanban/planka/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.planka 2>/dev/null)" ]] || [[ ! -f ~/.planka ]]; then
-    msg_info "Stopping $APP"
+  if check_for_gh_release "planka" "plankanban/planka"; then
+    msg_info "Stopping Service"
     systemctl stop planka
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up data"
-    mkdir -p /opt/planka-backup/{favicons,user-avatars,background-images,attachments}
-    mv /opt/planka/.env /opt/planka-backup
-    [ -d /opt/planka/public/favicons ] && find /opt/planka/public/favicons -maxdepth 1 -type f -exec mv -t /opt/planka-backup/favicons {} +
-    [ -d /opt/planka/public/user-avatars ] && find /opt/planka/public/user-avatars -maxdepth 1 -type f -exec mv -t /opt/planka-backup/user-avatars {} +
-    [ -d /opt/planka/public/background-images ] && find /opt/planka/public/background-images -maxdepth 1 -type f -exec mv -t /opt/planka-backup/background-images {} +
-    [ -d /opt/planka/private/attachments ] && find /opt/planka/private/attachments -maxdepth 1 -type f -exec mv -t /opt/planka-backup/attachments {} +
+    BK="/opt/planka-backup"
+    mkdir -p "$BK"/{favicons,user-avatars,background-images,attachments}
+    [ -f /opt/planka/.env ] && mv /opt/planka/.env "$BK"/
+    # Support both old (pre-v2) and new (v2) directory layouts
+    if [ -d /opt/planka/data/protected ]; then
+      [ -d /opt/planka/data/protected/favicons ] && cp -a /opt/planka/data/protected/favicons/. "$BK/favicons/"
+      [ -d /opt/planka/data/protected/user-avatars ] && cp -a /opt/planka/data/protected/user-avatars/. "$BK/user-avatars/"
+      [ -d /opt/planka/data/protected/background-images ] && cp -a /opt/planka/data/protected/background-images/. "$BK/background-images/"
+      [ -d /opt/planka/data/private/attachments ] && cp -a /opt/planka/data/private/attachments/. "$BK/attachments/"
+    else
+      [ -d /opt/planka/public/favicons ] && cp -a /opt/planka/public/favicons/. "$BK/favicons/"
+      [ -d /opt/planka/public/user-avatars ] && cp -a /opt/planka/public/user-avatars/. "$BK/user-avatars/"
+      [ -d /opt/planka/public/background-images ] && cp -a /opt/planka/public/background-images/. "$BK/background-images/"
+      [ -d /opt/planka/private/attachments ] && cp -a /opt/planka/private/attachments/. "$BK/attachments/"
+    fi
     rm -rf /opt/planka
     msg_ok "Backed up data"
 
     fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/opt/planka" "planka-prebuild.zip"
+
+    msg_info "Update Frontend"
     cd /opt/planka
     $STD npm install
-    
+    msg_ok "Updated Frontend"
+
     msg_info "Restoring data"
-    mv /opt/planka-backup/.env /opt/planka/
-    [ -d /opt/planka-backup/favicons ] && find /opt/planka-backup/favicons -maxdepth 1 -type f -exec mv -t /opt/planka/public/favicons {} +
-    [ -d /opt/planka-backup/user-avatars ] && find /opt/planka-backup/user-avatars -maxdepth 1 -type f -exec mv -t /opt/planka/public/user-avatars {} +
-    [ -d /opt/planka-backup/background-images ] && find /opt/planka-backup/background-images -maxdepth 1 -type f -exec mv -t /opt/planka/public/background-images {} +
-    [ -d /opt/planka-backup/attachments ] && find /opt/planka-backup/attachments -maxdepth 1 -type f -exec mv -t /opt/planka/private/attachments {} +
+    [ -f "$BK/.env" ] && mv "$BK/.env" /opt/planka/.env
+    # Planka v2 uses unified data directory structure
+    mkdir -p /opt/planka/data/protected/{favicons,user-avatars,background-images} /opt/planka/data/private/attachments
+    [ -d "$BK/favicons" ] && cp -a "$BK/favicons/." /opt/planka/data/protected/favicons/
+    [ -d "$BK/user-avatars" ] && cp -a "$BK/user-avatars/." /opt/planka/data/protected/user-avatars/
+    [ -d "$BK/background-images" ] && cp -a "$BK/background-images/." /opt/planka/data/protected/background-images/
+    [ -d "$BK/attachments" ] && cp -a "$BK/attachments/." /opt/planka/data/private/attachments/
+    rm -rf "$BK"
     msg_ok "Restored data"
 
-    msg_info "Starting $APP"
-    systemctl start planka
-    msg_ok "Started $APP"
+    msg_info "Migrate Database"
+    cd /opt/planka
+    $STD npm run db:upgrade
+    $STD npm run db:migrate
+    msg_ok "Migrated Database"
 
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_info "Starting Service"
+    systemctl start planka
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -71,7 +88,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:1337${CL}"

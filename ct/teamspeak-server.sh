@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tremor021 (Slaviša Arežina)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://teamspeak.com/en/
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,19 +34,18 @@ function update_script() {
     systemctl stop teamspeak-server
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Teamspeak Server"
     curl -fsSL "https://files.teamspeak-services.com/releases/server/${RELEASE}/teamspeak3-server_linux_amd64-${RELEASE}.tar.bz2" -o ts3server.tar.bz2
     tar -xf ./ts3server.tar.bz2
     cp -ru teamspeak3-server_linux_amd64/* /opt/teamspeak-server/
     rm -f ~/ts3server.tar.bz*
     echo "${RELEASE}" >~/.teamspeak-server
-    msg_ok "Updated $APP"
+    msg_ok "Updated Teamspeak Server"
 
     msg_info "Starting Service"
     systemctl start teamspeak-server
     msg_ok "Started Service"
-
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "Already up to date"
   fi
@@ -57,7 +56,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}${IP}:9987${CL}"

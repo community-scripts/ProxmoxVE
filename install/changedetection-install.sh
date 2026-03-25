@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://changedetection.io/
+# Source: https://changedetection.io/ | Github: https://github.com/dgtlmoon/changedetection.io
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -51,7 +51,7 @@ $STD apt-get install -y \
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Change Detection"
 mkdir /opt/changedetection
@@ -62,7 +62,7 @@ msg_info "Installing Browserless & Playwright"
 mkdir /opt/browserless
 $STD python3 -m pip install playwright
 $STD git clone https://github.com/browserless/chrome /opt/browserless
-$STD npm install --prefix /opt/browserless
+$STD npm ci --include=optional --include=dev --prefix /opt/browserless
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
 $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
@@ -141,8 +141,4 @@ msg_ok "Created Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

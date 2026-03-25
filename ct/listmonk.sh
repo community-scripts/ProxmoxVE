@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://listmonk.app/
+# Source: https://listmonk.app/ | Github: https://github.com/knadh/listmonk
 
 APP="listmonk"
 var_tags="${var_tags:-newsletter}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,15 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/knadh/listmonk/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.listmonk)" ]] || [[ ! -f ~/.listmonk ]]; then
-    msg_info "Stopping ${APP}"
+  if check_for_gh_release "listmonk" "knadh/listmonk"; then
+    msg_info "Stopping Service"
     systemctl stop listmonk
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up data"
     mv /opt/listmonk/ /opt/listmonk-backup
@@ -47,19 +42,13 @@ function update_script() {
     mv /opt/listmonk-backup/config.toml /opt/listmonk/config.toml
     mv /opt/listmonk-backup/uploads /opt/listmonk/uploads
     $STD /opt/listmonk/listmonk --upgrade --yes --config /opt/listmonk/config.toml
+    rm -rf /opt/listmonk-backup/
     msg_ok "Configured listmonk"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start listmonk
-    msg_ok "Started ${APP}"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/listmonk-backup/
-    msg_ok "Cleaned"
-
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -68,7 +57,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9000${CL}"

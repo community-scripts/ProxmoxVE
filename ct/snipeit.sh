@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://snipeitapp.com/
+# Source: https://snipeitapp.com/ | Github: https://github.com/grokability/snipe-it
 
 APP="SnipeIT"
 var_tags="${var_tags:-asset-management;foss}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,23 +27,31 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  setup_mariadb
+  if ! grep -q "client_max_body_size[[:space:]]\+100M;" /etc/nginx/conf.d/snipeit.conf; then
+    sed -i '/index index.php;/i \        client_max_body_size 100M;' /etc/nginx/conf.d/snipeit.conf
+  fi
+
+  if check_for_gh_release "snipe-it" "grokability/snipe-it"; then
     msg_info "Stopping Services"
     systemctl stop nginx
     msg_ok "Services Stopped"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    $STD apt-get update
-    $STD apt-get -y upgrade
+    msg_info "Creating Backup"
     mv /opt/snipe-it /opt/snipe-it-backup
-    temp_file=$(mktemp)
-    curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-    tar zxf "$temp_file"
-    mv "snipe-it-${RELEASE}" /opt/snipe-it
+    msg_ok "Created Backup"
+
+    fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
+    [[ "$(php -v 2>/dev/null)" == PHP\ 8.2* ]] && PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="ldap,soap,xsl" setup_php
+    sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/snipeit.conf
+    setup_composer
+
+    msg_info "Updating Snipe-IT"
+    $STD apt update
+    $STD apt -y upgrade
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
-    cp -r /opt/snipe-it-backup/public/uploads/ /opt/snipe-it/public/uploads/
-    cp -r /opt/snipe-it-backup/storage/private_uploads /opt/snipe-it/storage/private_uploads
+    cp -r /opt/snipe-it-backup/public/uploads/. /opt/snipe-it/public/uploads/
+    cp -r /opt/snipe-it-backup/storage/private_uploads/. /opt/snipe-it/storage/private_uploads/
     cd /opt/snipe-it/
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --optimize-autoloader --no-interaction
@@ -55,15 +63,13 @@ function update_script() {
     $STD php artisan view:clear
     chown -R www-data: /opt/snipe-it
     chmod -R 755 /opt/snipe-it
-    rm -rf "$temp_file"
     rm -rf /opt/snipe-it-backup
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Snipe-IT"
 
     msg_info "Starting Service"
     systemctl start nginx
     msg_ok "Started Service"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -72,7 +78,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"

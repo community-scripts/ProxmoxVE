@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.projectsend.org/
+# Source: https://www.projectsend.org/ | Github: https://github.com/projectsend/projectsend
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,50 +13,25 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  apache2 \
-  libapache2-mod-php \
-  php8.2-{pdo,mysql,mbstring,gettext,fileinfo,gd,xml,zip}
-msg_ok "Installed Dependencies"
-
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 setup_mariadb
+MARIADB_DB_NAME="projectsend" MARIADB_DB_USER="projectsend" setup_mariadb_db
+fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-r*.zip"
 
-msg_info "Setting up MariaDB"
-DB_NAME=projectsend
-DB_USER=projectsend
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "projectsend-Credentials"
-  echo "projectsend Database User: $DB_USER"
-  echo "projectsend Database Password: $DB_PASS"
-  echo "projectsend Database Name: $DB_NAME"
-} >>~/projectsend.creds
-msg_ok "Set up MariaDB"
-
-msg_info "Installing projectsend"
-RELEASE=$(curl -fsSL https://api.github.com/repos/projectsend/projectsend/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-cd /opt
-curl -fsSL "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip" -o "projectsend-r${RELEASE}.zip"
-mkdir projectsend
-$STD unzip "projectsend-r${RELEASE}.zip" -d projectsend
+msg_info "Installing ProjectSend"
 mv /opt/projectsend/includes/sys.config.sample.php /opt/projectsend/includes/sys.config.php
 chown -R www-data:www-data /opt/projectsend
 chmod -R 775 /opt/projectsend
 chmod 644 /opt/projectsend/includes/sys.config.php
-sed -i -e "s/\(define('DB_NAME', \).*/\1'$DB_NAME');/" \
-  -e "s/\(define('DB_USER', \).*/\1'$DB_USER');/" \
-  -e "s/\(define('DB_PASSWORD', \).*/\1'$DB_PASS');/" \
+sed -i -e "s/\(define('DB_NAME', \).*/\1'$MARIADB_DB_NAME');/" \
+  -e "s/\(define('DB_USER', \).*/\1'$MARIADB_DB_USER');/" \
+  -e "s/\(define('DB_PASSWORD', \).*/\1'$MARIADB_DB_PASS');/" \
   /opt/projectsend/includes/sys.config.php
 sed -i -e "s/^\(memory_limit = \).*/\1 256M/" \
   -e "s/^\(post_max_size = \).*/\1 256M/" \
   -e "s/^\(upload_max_filesize = \).*/\1 256M/" \
   -e "s/^\(max_execution_time = \).*/\1 300/" \
-  /etc/php/8.2/apache2/php.ini
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+  /etc/php/8.4/apache2/php.ini
 msg_ok "Installed projectsend"
 
 msg_info "Creating Service"
@@ -82,9 +57,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "/opt/projectsend-r${RELEASE}.zip"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

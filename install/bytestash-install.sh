@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/jordan-dalby/ByteStash
@@ -14,7 +14,7 @@ network_check
 update_os
 
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash"
+fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
 
 msg_info "Installing ByteStash"
 JWT_SECRET=$(openssl rand -base64 32 | tr -d '/+=')
@@ -66,8 +66,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

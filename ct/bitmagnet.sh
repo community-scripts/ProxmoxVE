@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/bitmagnet/bitmagnet
+# Source: https://github.com/bitmagnet-io/bitmagnet
 
 APP="Bitmagnet"
 var_tags="${var_tags:-os}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,8 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.bitmagnet 2>/dev/null)" ]] || [[ ! -f ~/.bitmagnet ]]; then
+  if check_for_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"; then
     msg_info "Stopping Service"
     systemctl stop bitmagnet-web
     msg_ok "Stopped Service"
@@ -61,24 +60,21 @@ function update_script() {
     msg_ok "Data backed up"
 
     rm -rf /opt/bitmagnet
-    fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"
+    fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
+    msg_info "Updating Bitmagnet"
     cd /opt/bitmagnet
-    VREL=v$RELEASE
+    VREL=v$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
     chmod +x bitmagnet
     [ -f "/opt/.env" ] && cp "/opt/.env" /opt/bitmagnet/
     [ -f "/opt/config.yml" ] && cp "/opt/config.yml" /opt/bitmagnet/
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated Bitmagnet"
 
     msg_info "Starting Service"
     systemctl start bitmagnet-web
     msg_ok "Started Service"
-
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
@@ -87,7 +83,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3333${CL}"

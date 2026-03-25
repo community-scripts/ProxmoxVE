@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.home-assistant.io/
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -23,22 +23,21 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/systemd/system/homeassistant.service ]]; then
+  if [[ ! -f /etc/containers/systemd/homeassistant.container ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
-    "1" "Update system and containers" ON \
-    "2" "Install HACS" OFF \
-    "3" "Install FileBrowser" OFF \
-    "4" "Remove ALL Unused Images" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Home Assistant Update Options" \
+    "1" "Update system and containers" \
+    "2" "Install HACS" \
+    "3" "Install FileBrowser" \
+    "4" "Remove ALL Unused Images")
 
   if [ "$UPD" == "1" ]; then
     msg_info "Updating ${APP} LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated Successfully"
+    $STD apt update
+    $STD apt upgrade -y
+    msg_ok "Updated successfully!"
 
     msg_info "Updating All Containers\n"
     CONTAINER_LIST="${1:-$(podman ps -q)}"
@@ -65,32 +64,33 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "3" ]; then
-    IP=$(hostname -I | awk '{print $1}')
     msg_info "Installing FileBrowser"
     $STD curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
     $STD filebrowser config init -a '0.0.0.0'
     $STD filebrowser config set -a '0.0.0.0'
-    $STD filebrowser users add admin helper-scripts.com --perm.admin
+    $STD filebrowser users add admin community-scripts.com --perm.admin
     msg_ok "Installed FileBrowser"
 
     msg_info "Creating Service"
-    service_path="/etc/systemd/system/filebrowser.service"
-    echo "[Unit]
-  Description=Filebrowser
-  After=network-online.target
-  [Service]
-    User=root
-    WorkingDirectory=/root/
-    ExecStart=/usr/local/bin/filebrowser -r /
-  [Install]
-    WantedBy=default.target" >$service_path
+    cat <<EOF >/etc/systemd/system/filebrowser.service
+[Unit]
+Description=Filebrowser
+After=network-online.target
 
-    $STD systemctl enable --now filebrowser
+[Service]
+User=root
+WorkingDirectory=/root/
+ExecStart=/usr/local/bin/filebrowser -r /
+
+[Install]
+WantedBy=default.target
+EOF
+    systemctl enable -q --now filebrowser
     msg_ok "Created Service"
 
-    msg_ok "Completed Successfully!\n"
+    msg_ok "Completed successfully!\n"
     echo -e "FileBrowser should be reachable by going to the following URL.
-         ${BL}http://$IP:8080${CL}   admin|helper-scripts.com\n"
+         ${BL}http://$LOCAL_IP:8080${CL}   admin|community-scripts.com\n"
     exit
   fi
   if [ "$UPD" == "4" ]; then
@@ -99,14 +99,13 @@ function update_script() {
     msg_ok "Removed ALL Unused Images"
     exit
   fi
-
 }
 
 start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8123${CL}"

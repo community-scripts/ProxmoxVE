@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://redis.io/
@@ -14,23 +14,23 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y apt-transport-https
-$STD apt-get install -y lsb-release
+$STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Redis"
-curl -fsSL "https://packages.redis.io/gpg" | gpg --dearmor >/usr/share/keyrings/redis-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" >/etc/apt/sources.list.d/redis.list
-$STD apt-get update
-$STD apt-get install -y redis
+msg_info "Setting up Redis Repository"
+setup_deb822_repo \
+  "redis" \
+  "https://packages.redis.io/gpg" \
+  "https://packages.redis.io/deb" \
+  "trixie"
+msg_ok "Setup Redis Repository"
+
+msg_info "Setting up Redis"
+$STD apt install -y redis
 sed -i 's/^bind .*/bind 0.0.0.0/' /etc/redis/redis.conf
 systemctl enable -q --now redis-server
-msg_ok "Installed Redis"
+msg_ok "Setup Redis"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

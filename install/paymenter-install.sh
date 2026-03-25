@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.paymenter.org
+# Source: https://www.paymenter.org | Github: https://github.com/paymenter/paymenter
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,50 +14,23 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
-  software-properties-common \
-  apt-transport-https \
-  ca-certificates \
   nginx \
   redis-server
 msg_ok "Installed Dependencies"
 
 setup_mariadb
-
-msg_info "Adding PHP Repository"
-$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-$STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
-$STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-$STD apt-get update
-msg_ok "Added PHP Repository"
-
-msg_info "Installing PHP"
-$STD apt-get remove -y php8.2*
-$STD apt-get install -y \
-  php8.3 \
-  php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm,redis}
-msg_info "Installed PHP"
-
-msg_info "Installing Composer"
-$STD curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-msg_ok "Installed Composer"
-
-msg_info "Installing Paymenter"
-RELEASE=$(curl -fsSL https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
-echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
-mkdir -p /opt/paymenter
-cd /opt/paymenter
-curl -fsSL "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz" -o paymenter.tar.gz
-$STD tar -xzvf paymenter.tar.gz
-chmod -R 755 storage/* bootstrap/cache/
-msg_ok "Installed Paymenter"
+PHP_VERSION="8.3" PHP_FPM="YES" setup_php
+setup_composer
+fetch_and_deploy_gh_release "paymenter" "paymenter/paymenter" "prebuild" "latest" "/opt/paymenter" "paymenter.tar.gz"
+chmod -R 755 /opt/paymenter/storage/* /opt/paymenter/bootstrap/cache/
 
 msg_info "Setting up database"
 DB_NAME=paymenter
 DB_USER=paymenter
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql
+mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
@@ -67,6 +40,7 @@ $STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'local
   echo "Username: $DB_USER"
   echo "Password: $DB_PASS"
 } >>~/paymenter_db.creds
+cd /opt/paymenter
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
@@ -134,15 +108,10 @@ RestartSec=5s
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now paymenter
-systemctl enable --now redis-server
+systemctl enable -q --now paymenter
+systemctl enable -q --now redis-server
 msg_ok "Setup Service"
-
-msg_info "Cleaning up"
-rm -rf /opt/paymenter/paymenter.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
 
 motd_ssh
 customize
+cleanup_lxc

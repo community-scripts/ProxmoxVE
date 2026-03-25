@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: Mips2648
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://jeedom.com/
@@ -14,10 +14,21 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   lsb-release \
   git
 msg_ok "Dependencies installed"
+
+msg_warn "WARNING: This script will run an external installer from a third-party source (https://github.com/jeedom/)."
+msg_warn "The following code is NOT maintained or audited by our repository."
+msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
+msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  https://raw.githubusercontent.com/jeedom/core/master/install/install.sh"
+echo
+read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
+if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+  msg_error "Aborted by user. No changes have been made."
+  exit 10
+fi
 
 DEFAULT_BRANCH="master"
 REPO_URL="https://github.com/jeedom/core.git"
@@ -87,8 +98,5 @@ msg_ok "Installation checked, everything is successfuly installed. A reboot is r
 motd_ssh
 customize
 
-msg_info "Cleaning up"
 rm -rf /tmp/install.sh
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

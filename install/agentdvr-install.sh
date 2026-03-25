@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.ispyconnect.com/
@@ -12,9 +12,10 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apt-transport-https \
   alsa-utils \
   libxext-dev \
@@ -29,6 +30,8 @@ cd /opt/agentdvr/agent
 curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
 $STD unzip Agent_Linux64*.zip
 chmod +x ./Agent
+echo $RELEASE >~/.agentdvr
+rm -rf Agent_Linux64*.zip
 msg_ok "Installed AgentDVR"
 
 msg_info "Creating Service"
@@ -52,9 +55,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf Agent_Linux64*.zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://prowlarr.com/
+# Source: https://prowlarr.com/ | Github: https://github.com/Prowlarr/Prowlarr
 
 APP="Prowlarr"
 var_tags="${var_tags:-arr}"
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -23,25 +23,24 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-
   if [[ ! -d /var/lib/prowlarr/ ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if check_for_gh_release "prowlarr" "Prowlarr/Prowlarr"; then
+    msg_info "Stopping Service"
+    systemctl stop prowlarr
+    msg_ok "Stopped Service"
 
-  msg_info "Updating $APP LXC"
-  temp_file="$(mktemp)"
-  rm -rf /opt/Prowlarr
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Prowlarr/Prowlarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  curl -fsSL "https://github.com/Prowlarr/Prowlarr/releases/download/v${RELEASE}/Prowlarr.master.${RELEASE}.linux-core-x64.tar.gz" -o "$temp_file"
-  $STD tar -xvzf "$temp_file"
-  mv Prowlarr /opt
-  chmod 775 /opt/Prowlarr
-  msg_ok "Updated $APP LXC"
+    rm -rf /opt/Prowlarr
+    fetch_and_deploy_gh_release "prowlarr" "Prowlarr/Prowlarr" "prebuild" "latest" "/opt/Prowlarr" "Prowlarr.master*linux-core-x64.tar.gz"
+    chmod 775 /opt/Prowlarr
 
-  msg_info "Cleaning up"
-  rm -f "$temp_file"
-  msg_ok "Cleaned up"
+    msg_info "Starting Service"
+    systemctl start prowlarr
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
   exit
 }
 
@@ -49,7 +48,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9696${CL}"

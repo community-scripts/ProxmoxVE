@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/TriliumNext/Trilium
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/TriliumNext/Trilium/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.Trilium 2>/dev/null)" ]] || [[ ! -f ~/.Trilium ]]; then
-
+  if check_for_gh_release "Trilium" "TriliumNext/Trilium"; then
     if [[ -d /opt/trilium/db ]]; then
       DB_PATH="/opt/trilium/db"
       DB_RESTORE_PATH="/opt/trilium/db"
@@ -38,13 +36,13 @@ function update_script() {
       DB_RESTORE_PATH="/opt/trilium/assets/db"
     else
       msg_error "Database not found in either /opt/trilium/db or /opt/trilium/assets/db"
-      exit 1
+      exit
     fi
 
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop trilium
     sleep 1
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up Database"
     mkdir -p /opt/trilium_backup
@@ -57,21 +55,15 @@ function update_script() {
     msg_info "Restoring Database"
     mkdir -p "$(dirname "${DB_RESTORE_PATH}")"
     cp -r /opt/trilium_backup/$(basename "${DB_PATH}") "${DB_RESTORE_PATH}"
+    rm -rf /opt/trilium_backup
     msg_ok "Restored Database"
 
-    msg_info "Cleaning up"
-    rm -rf /opt/trilium_backup
-    msg_ok "Cleaned"
-
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start trilium
     sleep 1
-    msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
-
   exit
 }
 
@@ -79,7 +71,7 @@ start
 build_container
 description
 
-msg_ok "Completed Successfully!\n"
+msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

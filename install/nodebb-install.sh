@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   build-essential \
   redis-server \
   expect \
@@ -91,16 +91,16 @@ expect "Format: mongodb://*" {
     send "$MONGO_CONNECTION_STRING\r"
 }
 expect "Administrator username" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect "Administrator email address" {
-    send "helper-scripts@local.com\r"
+    send "admin@community-scripts.com\r"
 }
 expect "Password" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect "Confirm Password" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect eof
 EOF
@@ -130,8 +130,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.zigbee2mqtt.io/
+# Source: https://www.zigbee2mqtt.io/ | Github: https://github.com/Koenkk/zigbee2mqtt
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,32 +14,28 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
-  make \
-  g++ \
-  gcc \
-  ca-certificates \
-  jq
+  build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
-
 fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
 msg_info "Setting up Zigbee2MQTT"
-cd /opt/zigbee2mqtt/data
-mv configuration.example.yaml configuration.yaml
+mv /opt/zigbee2mqtt/data/configuration.example.yaml /opt/zigbee2mqtt/data/configuration.yaml
 cd /opt/zigbee2mqtt
+echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
 $STD pnpm install --no-frozen-lockfile
 $STD pnpm build
-msg_ok "Installed Zigbee2MQTT"
+msg_ok "Setup Zigbee2MQTT"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/zigbee2mqtt.service
 [Unit]
 Description=zigbee2mqtt
 After=network.target
+
 [Service]
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/pnpm start
@@ -48,6 +44,7 @@ StandardOutput=inherit
 StandardError=inherit
 Restart=always
 User=root
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -56,8 +53,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

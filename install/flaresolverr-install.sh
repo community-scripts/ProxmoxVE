@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # Co-Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -21,10 +21,15 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Chrome"
-curl -fsSL "https://dl.google.com/linux/linux_signing_key.pub" | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >/etc/apt/sources.list.d/google-chrome.list
+setup_deb822_repo \
+  "google-chrome" \
+  "https://dl.google.com/linux/linux_signing_key.pub" \
+  "https://dl.google.com/linux/chrome/deb/" \
+  "stable"
 $STD apt update
 $STD apt install -y google-chrome-stable
+# remove google-chrome.list added by google-chrome-stable
+rm /etc/apt/sources.list.d/google-chrome.list
 msg_ok "Installed Chrome"
 
 fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
@@ -52,8 +57,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

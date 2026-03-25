@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MrYadro
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://recyclarr.dev/wiki/
+# Source: https://recyclarr.dev/wiki/ | Github: https://github.com/recyclarr/recyclarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,21 +14,24 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
+$STD apt install -y git
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Recyclarr"
-curl -fsSL "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)" -o $(basename "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)")
-tar -C /usr/local/bin -xJf recyclarr*.tar.xz
-mkdir -p /root/.config/recyclarr
-recyclarr config create
-msg_ok "Installed Recyclarr"
+fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
+
+msg_info "Configuring Recyclarr"
+mkdir -p /root/.config/recyclarr/{configs,includes}
+$STD recyclarr config create
+msg_ok "Configured Recyclarr"
+
+msg_info "Setting up Daily Sync Cron"
+cat <<EOF >/etc/cron.d/recyclarr
+# Run recyclarr sync daily
+@daily root /usr/local/bin/recyclarr sync >> /root/.config/recyclarr/sync.log 2>&1
+EOF
+chmod 644 /etc/cron.d/recyclarr
+msg_ok "Setup Daily Sync Cron"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf recyclarr*.tar.xz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
