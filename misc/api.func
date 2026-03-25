@@ -504,7 +504,7 @@ detect_gpu() {
   GPU_PASSTHROUGH="unknown"
 
   local gpu_line
-  gpu_line=$(lspci 2>/dev/null | grep -iE "VGA|3D|Display" | head -1)
+  gpu_line=$(lspci 2>/dev/null | grep -iE "VGA|3D|Display" | head -1 || true)
 
   if [[ -n "$gpu_line" ]]; then
     # Extract model: everything after the colon, clean up
@@ -543,7 +543,7 @@ detect_cpu() {
 
   if [[ -f /proc/cpuinfo ]]; then
     local vendor_id
-    vendor_id=$(grep -m1 "vendor_id" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | tr -d ' ')
+    vendor_id=$(grep -m1 "vendor_id" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | tr -d ' ' || true)
 
     case "$vendor_id" in
     GenuineIntel) CPU_VENDOR="intel" ;;
@@ -557,7 +557,7 @@ detect_cpu() {
     esac
 
     # Extract model name and clean it up
-    CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//' | sed 's/(R)//g' | sed 's/(TM)//g' | sed 's/  */ /g' | cut -c1-64)
+    CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//' | sed 's/(R)//g' | sed 's/(TM)//g' | sed 's/  */ /g' | cut -c1-64 || true)
   fi
 
   export CPU_VENDOR CPU_MODEL
@@ -1347,8 +1347,8 @@ post_addon_to_api() {
   # Detect OS info
   local os_type="" os_version=""
   if [[ -f /etc/os-release ]]; then
-    os_type=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
-    os_version=$(grep "^VERSION_ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
+    os_type=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"' || true)
+    os_version=$(grep "^VERSION_ID=" /etc/os-release | cut -d= -f2 | tr -d '"' || true)
   fi
 
   local JSON_PAYLOAD
