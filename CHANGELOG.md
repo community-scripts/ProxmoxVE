@@ -444,6 +444,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: use /usr/bin/install to prevent function shadowing [@MickLesk](https://github.com/MickLesk) ([#13299](https://github.com/community-scripts/ProxmoxVE/pull/13299))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - SparkyFitness: add garmin microservice [@tomfrenzel](https://github.com/tomfrenzel) ([#12642](https://github.com/community-scripts/ProxmoxVE/pull/12642))
+
 ## 2026-03-25
 
 ### 🚀 Updated Scripts
