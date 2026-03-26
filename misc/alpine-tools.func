@@ -304,7 +304,7 @@ setup_yq() {
   url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${arch}"
   tmp="$(mktemp)"
   download_with_progress "$url" "$tmp" || return 1
-  install -m 0755 "$tmp" /usr/local/bin/yq
+  /usr/bin/install -m 0755 "$tmp" /usr/local/bin/yq
   rm -f "$tmp"
   msg_ok "Setup yq ($(yq --version 2>/dev/null))"
 }
@@ -376,10 +376,10 @@ setup_uv() {
 
   # tar contains ./uv
   if [ -x "$tmpd/uv" ]; then
-    install -m 0755 "$tmpd/uv" "$UV_BIN"
+    /usr/bin/install -m 0755 "$tmpd/uv" "$UV_BIN"
   else
     # fallback: in subfolder
-    install -m 0755 "$tmpd"/*/uv "$UV_BIN" 2>/dev/null || {
+    /usr/bin/install -m 0755 "$tmpd"/*/uv "$UV_BIN" 2>/dev/null || {
       msg_error "uv binary not found in tar"
       rm -rf "$tmpd"
       return 1
