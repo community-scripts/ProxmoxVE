@@ -24,7 +24,7 @@ load_functions
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
-APP="SparkyFitness Garmin Microservice"
+APP="SparkyFitness-Garmin"
 APP_TYPE="addon"
 INSTALL_PATH="/opt/sparkyfitness-garmin"
 CONFIG_PATH="/etc/sparkyfitness-garmin/.env"
