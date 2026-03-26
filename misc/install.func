@@ -307,7 +307,7 @@ apt_update_safe() {
   others_pick=$(printf '%s\n' $others_ok | shuf | head -3 | xargs)
 
   for mirror in $others_pick; do
-    msg_info "Attempting mirror: ${mirror}"
+    msg_custom "${INFO}" "${YW}" "Attempting mirror: ${mirror}"
     if _try_apt_mirror "$mirror"; then
       apt_ok=true
       break
@@ -323,7 +323,7 @@ apt_update_safe() {
       primary="ftp.debian.org"
     fi
     if timeout 2 bash -c "echo >/dev/tcp/$primary/80" 2>/dev/null; then
-      msg_info "Attempting mirror: ${primary}"
+      msg_custom "${INFO}" "${YW}" "Attempting mirror: ${primary}"
       if _try_apt_mirror "$primary"; then
         apt_ok=true
       fi
@@ -338,7 +338,7 @@ apt_update_safe() {
     regional_pick=$(printf '%s\n' $regional_ok | shuf | head -3 | xargs)
 
     for mirror in $regional_pick; do
-      msg_info "Attempting mirror: ${mirror}"
+      msg_custom "${INFO}" "${YW}" "Attempting mirror: ${mirror}"
       if _try_apt_mirror "$mirror"; then
         apt_ok=true
         break
@@ -350,9 +350,9 @@ apt_update_safe() {
   if [[ "$apt_ok" != true ]]; then
     msg_warn "Multiple mirrors failed (possible CDN synchronization issue)."
     if [[ "$distro" == "ubuntu" ]]; then
-      msg_info "Find Ubuntu mirrors at: https://launchpad.net/ubuntu/+archivemirrors"
+      msg_warn "Find Ubuntu mirrors at: https://launchpad.net/ubuntu/+archivemirrors"
     else
-      msg_info "Find Debian mirrors at: https://www.debian.org/mirror/list"
+      msg_warn "Find Debian mirrors at: https://www.debian.org/mirror/list"
     fi
     local custom_mirror
     while true; do

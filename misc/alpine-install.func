@@ -144,7 +144,7 @@ update_os() {
     local apk_ok=false
     for m in $(printf '%s\n' $alpine_mirrors | shuf); do
       if timeout 2 bash -c "echo >/dev/tcp/$m/80" 2>/dev/null; then
-        msg_info "Attempting mirror: ${m}"
+        msg_custom "${INFO}" "${YW}" "Attempting mirror: ${m}"
         cat <<EOF >/etc/apk/repositories
 http://$m/alpine/latest-stable/main
 http://$m/alpine/latest-stable/community

@@ -4242,9 +4242,9 @@ EOF
       if [[ $mirror_exit -eq 2 ]]; then
         msg_warn "Multiple mirrors failed (possible CDN synchronization issue)."
         if [[ "$var_os" == "ubuntu" ]]; then
-          msg_info "Find Ubuntu mirrors at: https://launchpad.net/ubuntu/+archivemirrors"
+          msg_warn "Find Ubuntu mirrors at: https://launchpad.net/ubuntu/+archivemirrors"
         else
-          msg_info "Find Debian mirrors at: https://www.debian.org/mirror/list"
+          msg_warn "Find Debian mirrors at: https://www.debian.org/mirror/list"
         fi
         local custom_mirror=""
         while true; do
