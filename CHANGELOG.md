@@ -447,6 +447,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: APT/APK Mirror Fallback for CDN Failures [@MickLesk](https://github.com/MickLesk) ([#13316](https://github.com/community-scripts/ProxmoxVE/pull/13316))
     - core/tools: replace generic return 1 exit_codes with more specific exit_codes [@MickLesk](https://github.com/MickLesk) ([#13311](https://github.com/community-scripts/ProxmoxVE/pull/13311))
 
   - #### 🔧 Refactor
