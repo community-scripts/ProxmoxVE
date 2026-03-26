@@ -110,7 +110,7 @@ export AUTOGRAPH_VERBOSITY=0
 export GLOG_minloglevel=3
 export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.0" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.1" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -182,23 +182,6 @@ cp /opt/frigate/audio-labelmap.txt /audio-labelmap.txt
 rm -f /tmp/yamnet.tar.gz
 msg_ok "Downloaded Audio Model"
 
-msg_info "Installing HailoRT Runtime"
-$STD bash /opt/frigate/docker/main/install_hailort.sh
-cp -a /opt/frigate/docker/main/rootfs/. /
-sed -i '/^.*unset DEBIAN_FRONTEND.*$/d' /opt/frigate/docker/main/install_deps.sh
-echo "libedgetpu1-max libedgetpu/accepted-eula boolean true" | debconf-set-selections
-echo "libedgetpu1-max libedgetpu/install-confirm-max boolean true" | debconf-set-selections
-echo 'force-overwrite' >/etc/dpkg/dpkg.cfg.d/force-overwrite
-$STD bash /opt/frigate/docker/main/install_deps.sh
-rm -f /etc/dpkg/dpkg.cfg.d/force-overwrite
-$STD pip3 install -U /wheels/*.whl
-ldconfig
-msg_ok "Installed HailoRT Runtime"
-
-msg_info "Installing MemryX Runtime"
-$STD bash /opt/frigate/docker/main/install_memryx.sh
-msg_ok "Installed MemryX Runtime"
-
 msg_info "Installing OpenVino"
 $STD pip3 install -r /opt/frigate/docker/main/requirements-ov.txt
 msg_ok "Installed OpenVino"
@@ -227,6 +210,23 @@ if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
 else
   msg_warn "OpenVino build failed (CPU may not support required instructions). Frigate will use CPU model."
 fi
+
+msg_info "Installing HailoRT Runtime"
+$STD bash /opt/frigate/docker/main/install_hailort.sh
+cp -a /opt/frigate/docker/main/rootfs/. /
+sed -i '/^.*unset DEBIAN_FRONTEND.*$/d' /opt/frigate/docker/main/install_deps.sh
+echo "libedgetpu1-max libedgetpu/accepted-eula boolean true" | debconf-set-selections
+echo "libedgetpu1-max libedgetpu/install-confirm-max boolean true" | debconf-set-selections
+echo 'force-overwrite' >/etc/dpkg/dpkg.cfg.d/force-overwrite
+$STD bash /opt/frigate/docker/main/install_deps.sh
+rm -f /etc/dpkg/dpkg.cfg.d/force-overwrite
+$STD pip3 install -U /wheels/*.whl
+ldconfig
+msg_ok "Installed HailoRT Runtime"
+
+msg_info "Installing MemryX Runtime"
+$STD bash /opt/frigate/docker/main/install_memryx.sh
+msg_ok "Installed MemryX Runtime"
 
 msg_info "Building Frigate Application (Patience)"
 cd /opt/frigate
