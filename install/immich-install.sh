@@ -295,7 +295,7 @@ ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v2.6.1" "$SRC_DIR"
+fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v2.6.2" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
@@ -344,7 +344,11 @@ msg_ok "Installed Immich Server, Web and Plugin Components"
 
 cd "$SRC_DIR"/machine-learning
 $STD useradd -U -s /usr/sbin/nologin -r -M -d "$INSTALL_DIR" immich
-mkdir -p "$ML_DIR" && chown -R immich:immich "$INSTALL_DIR"
+mkdir -p "$ML_DIR"
+# chown excluding upload dir contents (may be a mount with restricted permissions)
+chown immich:immich "$INSTALL_DIR"
+find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
+chown immich:immich "$UPLOAD_DIR" 2>/dev/null || true
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 export UV_HTTP_TIMEOUT=300
 if [[ -f ~/.openvino ]]; then
@@ -499,7 +503,11 @@ StandardError=append:/var/log/immich/ml.log
 [Install]
 WantedBy=multi-user.target
 EOF
-chown -R immich:immich "$INSTALL_DIR" /var/log/immich
+chown -R immich:immich /var/log/immich
+# chown excluding upload dir contents (may be a mount with restricted permissions)
+chown immich:immich "$INSTALL_DIR"
+find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
+chown immich:immich "$UPLOAD_DIR" 2>/dev/null || true
 systemctl enable -q --now immich-ml.service immich-web.service
 msg_ok "Modified user, created env file, scripts and services"
 

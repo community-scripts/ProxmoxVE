@@ -109,7 +109,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="v2.6.1"
+  RELEASE="v2.6.2"
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
@@ -214,7 +214,10 @@ EOF
 
     cd "$SRC_DIR"/machine-learning
     mkdir -p "$ML_DIR"
-    chown -R immich:immich "$INSTALL_DIR"
+    # chown excluding upload dir contents (may be a mount with restricted permissions)
+    chown immich:immich "$INSTALL_DIR"
+    find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
+    chown immich:immich "${UPLOAD_DIR:-$INSTALL_DIR/upload}" 2>/dev/null || true
     chown immich:immich ./uv.lock
     export VIRTUAL_ENV="${ML_DIR}"/ml-venv
     export UV_HTTP_TIMEOUT=300
@@ -273,7 +276,10 @@ EOF
       systemctl daemon-reload
     fi
 
-    chown -R immich:immich "$INSTALL_DIR"
+    # chown excluding upload dir contents (may be a mount with restricted permissions)
+    chown immich:immich "$INSTALL_DIR"
+    find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
+    chown immich:immich "${UPLOAD_DIR:-$INSTALL_DIR/upload}" 2>/dev/null || true
     if [[ "${MAINT_MODE:-0}" == 1 ]]; then
       msg_info "Disabling Maintenance Mode"
       cd /opt/immich/app/bin
