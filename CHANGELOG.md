@@ -434,6 +434,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: Bump to 2.6.2 | use start.sh in service, ensure DB_HOSTNAME in .env | Fix Rights Issue with ZFS Shares [@MickLesk](https://github.com/MickLesk) ([#13199](https://github.com/community-scripts/ProxmoxVE/pull/13199))
 
+  - #### ✨ New Features
+
+    - SparkyFitness: add garmin microservice as addon [@tomfrenzel](https://github.com/tomfrenzel) ([#12642](https://github.com/community-scripts/ProxmoxVE/pull/12642))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
@@ -443,12 +447,6 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - core: use /usr/bin/install to prevent function shadowing [@MickLesk](https://github.com/MickLesk) ([#13299](https://github.com/community-scripts/ProxmoxVE/pull/13299))
-
-### 🧰 Tools
-
-  - #### ✨ New Features
-
-    - SparkyFitness: add garmin microservice [@tomfrenzel](https://github.com/tomfrenzel) ([#12642](https://github.com/community-scripts/ProxmoxVE/pull/12642))
 
 ## 2026-03-25
 
