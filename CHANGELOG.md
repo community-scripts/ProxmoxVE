@@ -428,6 +428,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-26
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: pin npm to 11.11.0 to work around Node.js 22.22.2 regression [@MickLesk](https://github.com/MickLesk) ([#13296](https://github.com/community-scripts/ProxmoxVE/pull/13296))
+
 ## 2026-03-25
 
 ### 🚀 Updated Scripts
