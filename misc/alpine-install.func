@@ -135,10 +135,34 @@ network_check() {
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
-# This function updates the Container OS by running apt-get update and upgrade
+# This function updates the Container OS by running apk upgrade with mirror fallback
 update_os() {
   msg_info "Updating Container OS"
-  $STD apk -U upgrade
+  if ! $STD apk -U upgrade; then
+    msg_warn "apk update failed (dl-cdn.alpinelinux.org), trying alternate mirrors..."
+    local alpine_mirrors="mirror.init7.net ftp.halifax.rwth-aachen.de mirrors.edge.kernel.org alpine.mirror.wearetriple.com mirror.leaseweb.com uk.alpinelinux.org dl-2.alpinelinux.org dl-4.alpinelinux.org"
+    local apk_ok=false
+    for m in $(printf '%s\n' $alpine_mirrors | shuf); do
+      if timeout 2 bash -c "echo >/dev/tcp/$m/80" 2>/dev/null; then
+        msg_info "Attempting mirror: ${m}"
+        cat <<EOF >/etc/apk/repositories
+http://$m/alpine/latest-stable/main
+http://$m/alpine/latest-stable/community
+EOF
+        if $STD apk -U upgrade; then
+          msg_ok "CDN set to ${m}: tests passed"
+          apk_ok=true
+          break
+        else
+          msg_warn "Mirror ${m} failed"
+        fi
+      fi
+    done
+    if [[ "$apk_ok" != true ]]; then
+      msg_error "All Alpine mirrors failed. Check network or try again later."
+      exit 1
+    fi
+  fi
   local tools_content
   tools_content=$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func) || {
     msg_error "Failed to download tools.func"

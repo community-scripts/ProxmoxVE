@@ -211,6 +211,173 @@ network_check() {
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# apt_update_safe()
+#
+# - Runs apt-get update with CDN mirror fallback
+# - On failure, detects distro (Debian/Ubuntu) and tries alternate mirrors
+# - Three-phase approach: global mirrors → primary mirror → regional mirrors
+# - Falls back to manual user prompt if all auto mirrors fail
+# - Detects hash mismatch, SSL errors, and generic apt failures
+# ------------------------------------------------------------------------------
+apt_update_safe() {
+  if $STD apt-get update; then
+    return 0
+  fi
+
+  local failed_mirror
+  failed_mirror=$(grep -m1 -oP '(?<=URIs: https?://)[^/]+' /etc/apt/sources.list.d/debian.sources 2>/dev/null || grep -m1 -oP '(?<=deb https?://)[^/]+' /etc/apt/sources.list 2>/dev/null || echo "unknown")
+  msg_warn "apt-get update failed (${failed_mirror}), trying alternate mirrors..."
+
+  local distro
+  distro=$(. /etc/os-release 2>/dev/null && echo "$ID" || echo "debian")
+
+  local eu_mirrors us_mirrors ap_mirrors
+  if [[ "$distro" == "ubuntu" ]]; then
+    eu_mirrors="de.archive.ubuntu.com fr.archive.ubuntu.com se.archive.ubuntu.com nl.archive.ubuntu.com it.archive.ubuntu.com ch.archive.ubuntu.com mirrors.xtom.de"
+    us_mirrors="us.archive.ubuntu.com archive.ubuntu.com mirrors.edge.kernel.org mirror.csclub.uwaterloo.ca mirrors.ocf.berkeley.edu mirror.math.princeton.edu"
+    ap_mirrors="au.archive.ubuntu.com jp.archive.ubuntu.com kr.archive.ubuntu.com tw.archive.ubuntu.com mirror.aarnet.edu.au"
+  else
+    eu_mirrors="ftp.de.debian.org ftp.fr.debian.org ftp.nl.debian.org ftp.uk.debian.org ftp.ch.debian.org ftp.se.debian.org ftp.it.debian.org ftp.fau.de ftp.halifax.rwth-aachen.de debian.mirror.lrz.de mirror.init7.net debian.ethz.ch mirrors.dotsrc.org debian.mirrors.ovh.net"
+    us_mirrors="ftp.us.debian.org ftp.ca.debian.org debian.csail.mit.edu mirrors.ocf.berkeley.edu mirrors.wikimedia.org debian.osuosl.org mirror.cogentco.com"
+    ap_mirrors="ftp.au.debian.org ftp.jp.debian.org ftp.tw.debian.org ftp.kr.debian.org ftp.hk.debian.org ftp.sg.debian.org mirror.aarnet.edu.au mirror.nitc.ac.in"
+  fi
+
+  local tz regional others
+  tz=$(cat /etc/timezone 2>/dev/null || echo "UTC")
+  case "$tz" in
+  Europe/* | Arctic/*)
+    regional="$eu_mirrors"
+    others="$us_mirrors $ap_mirrors"
+    ;;
+  America/*)
+    regional="$us_mirrors"
+    others="$eu_mirrors $ap_mirrors"
+    ;;
+  Asia/* | Australia/* | Pacific/*)
+    regional="$ap_mirrors"
+    others="$eu_mirrors $us_mirrors"
+    ;;
+  *)
+    regional=""
+    others="$eu_mirrors $us_mirrors $ap_mirrors"
+    ;;
+  esac
+
+  echo 'Acquire::By-Hash "no";' >/etc/apt/apt.conf.d/99no-by-hash
+
+  _try_apt_mirror() {
+    local m=$1
+    for src in /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list; do
+      [[ -f "$src" ]] && sed -i "s|URIs: http[s]*://[^/]*/|URIs: http://${m}/|g; s|deb http[s]*://[^/]*/|deb http://${m}/|g" "$src"
+    done
+    rm -rf /var/lib/apt/lists/*
+    local out
+    out=$(apt-get update 2>&1)
+    if echo "$out" | grep -qi "hashsum\|hash sum"; then
+      msg_warn "Mirror ${m} failed (hash mismatch)"
+      return 1
+    elif echo "$out" | grep -qi "SSL\|certificate"; then
+      msg_warn "Mirror ${m} failed (SSL/certificate error)"
+      return 1
+    elif echo "$out" | grep -q "^E:"; then
+      msg_warn "Mirror ${m} failed (apt-get update error)"
+      return 1
+    else
+      msg_ok "CDN set to ${m}: tests passed"
+      return 0
+    fi
+  }
+
+  _scan_reachable() {
+    local result=""
+    for m in $1; do
+      if timeout 2 bash -c "echo >/dev/tcp/$m/80" 2>/dev/null; then
+        result="$result $m"
+      fi
+    done
+    echo "$result" | xargs
+  }
+
+  local apt_ok=false
+
+  # Phase 1: Scan global mirrors first (independent of local CDN issues)
+  local others_ok
+  others_ok=$(_scan_reachable "$others")
+  local others_pick
+  others_pick=$(printf '%s\n' $others_ok | shuf | head -3 | xargs)
+
+  for mirror in $others_pick; do
+    msg_info "Attempting mirror: ${mirror}"
+    if _try_apt_mirror "$mirror"; then
+      apt_ok=true
+      break
+    fi
+  done
+
+  # Phase 2: Try primary mirror
+  if [[ "$apt_ok" != true ]]; then
+    local primary
+    if [[ "$distro" == "ubuntu" ]]; then
+      primary="archive.ubuntu.com"
+    else
+      primary="ftp.debian.org"
+    fi
+    if timeout 2 bash -c "echo >/dev/tcp/$primary/80" 2>/dev/null; then
+      msg_info "Attempting mirror: ${primary}"
+      if _try_apt_mirror "$primary"; then
+        apt_ok=true
+      fi
+    fi
+  fi
+
+  # Phase 3: Fall back to regional mirrors
+  if [[ "$apt_ok" != true ]]; then
+    local regional_ok
+    regional_ok=$(_scan_reachable "$regional")
+    local regional_pick
+    regional_pick=$(printf '%s\n' $regional_ok | shuf | head -3 | xargs)
+
+    for mirror in $regional_pick; do
+      msg_info "Attempting mirror: ${mirror}"
+      if _try_apt_mirror "$mirror"; then
+        apt_ok=true
+        break
+      fi
+    done
+  fi
+
+  # Phase 4: All auto mirrors failed, prompt user
+  if [[ "$apt_ok" != true ]]; then
+    msg_warn "Multiple mirrors failed (possible CDN synchronization issue)."
+    if [[ "$distro" == "ubuntu" ]]; then
+      msg_info "Find Ubuntu mirrors at: https://launchpad.net/ubuntu/+archivemirrors"
+    else
+      msg_info "Find Debian mirrors at: https://www.debian.org/mirror/list"
+    fi
+    local custom_mirror
+    while true; do
+      read -rp "  Enter a mirror hostname (or 'skip' to abort): " custom_mirror </dev/tty
+      [[ -z "$custom_mirror" ]] && continue
+      [[ "$custom_mirror" == "skip" ]] && break
+      [[ ! "$custom_mirror" =~ ^[a-zA-Z0-9._-]+$ ]] && {
+        msg_warn "Invalid hostname format."
+        continue
+      }
+      if _try_apt_mirror "$custom_mirror"; then
+        apt_ok=true
+        break
+      fi
+      msg_warn "Mirror '${custom_mirror}' also failed. Try another or type 'skip'."
+    done
+  fi
+
+  if [[ "$apt_ok" != true ]]; then
+    msg_error "All mirrors failed. Check network or try again later."
+    return 1
+  fi
+}
+
+# ------------------------------------------------------------------------------
 # update_os()
 #
 # - Updates container OS via apt-get update and dist-upgrade
