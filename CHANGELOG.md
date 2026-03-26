@@ -440,8 +440,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
-    - Frigate: bump to v0.17.1 & change build order [@MickLesk](https://github.com/MickLesk) ([#13304](https://github.com/community-scripts/ProxmoxVE/pull/13304))
     - SparkyFitness: add garmin microservice as addon [@tomfrenzel](https://github.com/tomfrenzel) ([#12642](https://github.com/community-scripts/ProxmoxVE/pull/12642))
+    - Frigate: bump to v0.17.1 & change build order [@MickLesk](https://github.com/MickLesk) ([#13304](https://github.com/community-scripts/ProxmoxVE/pull/13304))
 
 ### 💾 Core
 
@@ -457,6 +457,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - core: use /usr/bin/install to prevent function shadowing [@MickLesk](https://github.com/MickLesk) ([#13299](https://github.com/community-scripts/ProxmoxVE/pull/13299))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - SparkyFitness-Garmin: fix app name [@tomfrenzel](https://github.com/tomfrenzel) ([#13325](https://github.com/community-scripts/ProxmoxVE/pull/13325))
 
 ## 2026-03-25
 
