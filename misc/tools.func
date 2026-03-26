@@ -6233,8 +6233,8 @@ function setup_nodejs() {
 
     ensure_apt_working || return 1
 
-    # Just update npm to latest
-    $STD npm install -g npm@latest 2>/dev/null || true
+    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
+    $STD npm install -g npm@11.11.0 2>/dev/null || true
 
     cache_installed_version "nodejs" "$NODE_VERSION"
     msg_ok "Update Node.js $NODE_VERSION"
@@ -6298,12 +6298,12 @@ function setup_nodejs() {
       return 1
     fi
 
-    # Update to latest npm (with version check to avoid incompatibility)
+    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
     local NPM_VERSION
     NPM_VERSION=$(npm -v 2>/dev/null || echo "0")
     if [[ "$NPM_VERSION" != "0" ]]; then
-      $STD npm install -g npm@latest 2>/dev/null || {
-        msg_warn "Failed to update npm to latest version (continuing with bundled npm $NPM_VERSION)"
+      $STD npm install -g npm@11.11.0 2>/dev/null || {
+        msg_warn "Failed to update npm to 11.11.0 (continuing with bundled npm $NPM_VERSION)"
       }
     fi
 
