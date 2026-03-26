@@ -858,7 +858,7 @@ get_header() {
   if [ ! -s "$local_header_path" ]; then
     if ! curl -fsSL "$header_url" -o "$local_header_path"; then
       msg_warn "Failed to download header: $header_url"
-      return 1
+      return 250
     fi
   fi
 
@@ -1358,7 +1358,7 @@ prompt_select() {
   if [[ $num_options -eq 0 ]]; then
     msg_warn "prompt_select called with no options"
     echo "" >&2
-    return 1
+    return 65
   fi
 
   # Validate default
@@ -1600,7 +1600,7 @@ check_or_create_swap() {
   swap_size_mb=$(prompt_input "Enter swap size in MB (e.g., 2048 for 2GB):" "2048" 60)
   if ! [[ "$swap_size_mb" =~ ^[0-9]+$ ]]; then
     msg_error "Invalid swap size: '${swap_size_mb}' (must be a number in MB)"
-    return 1
+    return 65
   fi
 
   local swap_file="/swapfile"
@@ -1608,19 +1608,19 @@ check_or_create_swap() {
   msg_info "Creating ${swap_size_mb}MB swap file at $swap_file"
   if ! dd if=/dev/zero of="$swap_file" bs=1M count="$swap_size_mb" status=progress; then
     msg_error "Failed to allocate swap file (dd failed)"
-    return 1
+    return 150
   fi
   if ! chmod 600 "$swap_file"; then
     msg_error "Failed to set permissions on $swap_file"
-    return 1
+    return 150
   fi
   if ! mkswap "$swap_file"; then
     msg_error "Failed to format swap file (mkswap failed)"
-    return 1
+    return 150
   fi
   if ! swapon "$swap_file"; then
     msg_error "Failed to activate swap (swapon failed)"
-    return 1
+    return 150
   fi
   msg_ok "Swap file created and activated successfully"
 }
@@ -1699,13 +1699,13 @@ function get_lxc_ip() {
         fi
       done
 
-      return 1
+      return 6
     }
 
     LOCAL_IP="$(get_current_ip || true)"
     if [[ -z "$LOCAL_IP" ]]; then
       msg_error "Could not determine LOCAL_IP (checked: eth0, hostname -I, ip route, IPv6 targets)"
-      return 1
+      return 6
     fi
   fi
 

@@ -42,7 +42,7 @@ get_header() {
 
   if [ ! -s "$local_header_path" ]; then
     if ! curl -fsSL "$header_url" -o "$local_header_path"; then
-      return 1
+      return 250
     fi
   fi
 

@@ -267,12 +267,12 @@ install_ssh_keys_into_ct() {
     msg_info "Installing selected SSH keys into CT ${CTID}"
     pct exec "$CTID" -- sh -c 'mkdir -p /root/.ssh && chmod 700 /root/.ssh' || {
       msg_error "prepare /root/.ssh failed"
-      return 1
+      return 252
     }
     pct push "$CTID" "$SSH_KEYS_FILE" /root/.ssh/authorized_keys >/dev/null 2>&1 ||
       pct exec "$CTID" -- sh -c "cat > /root/.ssh/authorized_keys" <"$SSH_KEYS_FILE" || {
       msg_error "write authorized_keys failed"
-      return 1
+      return 252
     }
     pct exec "$CTID" -- sh -c 'chmod 600 /root/.ssh/authorized_keys' || true
     msg_ok "Installed SSH keys into CT ${CTID}"
@@ -839,7 +839,7 @@ choose_and_set_storage_for_file() {
   template) key="var_template_storage" ;;
   *)
     msg_error "Unknown storage class: $class"
-    return 1
+    return 65
     ;;
   esac
 
@@ -862,7 +862,7 @@ choose_and_set_storage_for_file() {
     fi
   else
     # If the current value is preselectable, we could show it, but per your requirement we always offer selection
-    select_storage "$class" || return 1
+    select_storage "$class" || return 150
   fi
 
   _write_storage_to_vars "$vf" "$key" "$STORAGE_RESULT"
@@ -1264,7 +1264,7 @@ default_var_settings() {
         return 0
       }
     done
-    return 1
+    return 252
   }
   # Allow override of storages via env (for non-interactive use cases)
   [ -n "${var_template_storage:-}" ] && TEMPLATE_STORAGE="$var_template_storage"
@@ -1357,7 +1357,7 @@ EOF
   local dv
   dv="$(_find_default_vars)" || {
     msg_error "default.vars not found after ensure step"
-    return 1
+    return 252
   }
   load_vars_file "$dv"
 
@@ -4690,7 +4690,7 @@ EOF'
 destroy_lxc() {
   if [[ -z "$CT_ID" ]]; then
     msg_error "No CT_ID found. Nothing to remove."
-    return 1
+    return 65
   fi
 
   # Abort on Ctrl-C / Ctrl-D / ESC
@@ -4729,12 +4729,12 @@ resolve_storage_preselect() {
   case "$class" in
   template) required_content="vztmpl" ;;
   container) required_content="rootdir" ;;
-  *) return 1 ;;
+  *) return 65 ;;
   esac
   [[ -z "$preselect" ]] && return 1
   if ! pvesm status -content "$required_content" | awk 'NR>1{print $1}' | grep -qx -- "$preselect"; then
     msg_warn "Preselected storage '${preselect}' does not support content '${required_content}' (or not found)"
-    return 1
+    return 238
   fi
 
   local line total used free
@@ -4858,7 +4858,7 @@ select_storage() {
     ;;
   *)
     msg_error "Invalid storage class '$CLASS'"
-    return 1
+    return 65
     ;;
   esac
 
@@ -4940,7 +4940,7 @@ validate_storage_space() {
   # Check if storage exists and is active
   if [[ -z "$storage_line" ]]; then
     [[ "$show_dialog" == "yes" ]] && whiptail --msgbox "⚠️  Warning: Storage '$storage' not found!\n\nThe storage may be unavailable or disabled." 10 60
-    return 2
+    return 236
   fi
 
   # Check storage status (column 3)
@@ -4948,7 +4948,7 @@ validate_storage_space() {
   status=$(awk '{print $3}' <<<"$storage_line")
   if [[ "$status" == "disabled" ]]; then
     [[ "$show_dialog" == "yes" ]] && whiptail --msgbox "⚠️  Warning: Storage '$storage' is disabled!\n\nPlease enable the storage first." 10 60
-    return 2
+    return 236
   fi
 
   # Get storage type and free space (column 6)
@@ -4971,7 +4971,7 @@ validate_storage_space() {
     if [[ "$show_dialog" == "yes" ]]; then
       whiptail --msgbox "⚠️  Warning: Storage '$storage' may not have enough space!\n\nStorage Type: ${storage_type}\nRequired: ${required_gb}GB\nAvailable: ${free_gb_fmt}\n\nYou can continue, but creation might fail." 14 70
     fi
-    return 1
+    return 236
   fi
 
   return 0

@@ -20,7 +20,7 @@ need_tool() {
     msg_info "Installing tools: $*"
     apk add --no-cache "$@" >/dev/null 2>&1 || {
       msg_error "apk add failed for: $*"
-      return 1
+      return 100
     }
     msg_ok "Tools ready: $*"
   fi
@@ -52,17 +52,17 @@ ensure_usr_local_bin_persist() {
 download_with_progress() {
   # $1 url, $2 dest
   local url="$1" out="$2" cl
-  need_tool curl pv || return 1
+  need_tool curl pv || return 127
   cl=$(curl -fsSLI "$url" 2>/dev/null | awk 'tolower($0) ~ /^content-length:/ {print $2}' | tr -d '\r')
   if [ -n "$cl" ]; then
     curl -fsSL "$url" | pv -s "$cl" >"$out" || {
       msg_error "Download failed: $url"
-      return 1
+      return 250
     }
   else
     curl -fL# -o "$out" "$url" || {
       msg_error "Download failed: $url"
-      return 1
+      return 250
     }
   fi
 }
@@ -82,14 +82,14 @@ check_for_gh_release() {
 
   net_resolves api.github.com || {
     msg_error "DNS/network error: api.github.com"
-    return 1
+    return 6
   }
-  need_tool curl jq || return 1
+  need_tool curl jq || return 127
 
   tag=$(curl -fsSL "https://api.github.com/repos/${source}/releases/latest" | jq -r '.tag_name // empty')
   [ -z "$tag" ] && {
     msg_error "Unable to fetch latest tag for $app"
-    return 1
+    return 22
   }
   release="${tag#v}"
 
@@ -133,12 +133,12 @@ fetch_and_deploy_gh() {
 
   net_resolves api.github.com || {
     msg_error "DNS/network error"
-    return 1
+    return 6
   }
-  need_tool curl jq tar || return 1
+  need_tool curl jq tar || return 127
   [ "$mode" = "prebuild" ] || [ "$mode" = "singlefile" ] && need_tool unzip >/dev/null 2>&1 || true
 
-  tmpd="$(mktemp -d)" || return 1
+  tmpd="$(mktemp -d)" || return 252
   mkdir -p "$target"
 
   # Release JSON
@@ -146,13 +146,13 @@ fetch_and_deploy_gh() {
     json="$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest")" || {
       msg_error "GitHub API failed"
       rm -rf "$tmpd"
-      return 1
+      return 22
     }
   else
     json="$(curl -fsSL "https://api.github.com/repos/$repo/releases/tags/$version")" || {
       msg_error "GitHub API failed"
       rm -rf "$tmpd"
-      return 1
+      return 22
     }
   fi
 
@@ -163,7 +163,7 @@ fetch_and_deploy_gh() {
   [ -z "$version" ] && {
     msg_error "No tag in release json"
     rm -rf "$tmpd"
-    return 1
+    return 65
   }
 
   case "$mode" in
@@ -173,26 +173,26 @@ fetch_and_deploy_gh() {
     filename="${app_lc}-${version}.tar.gz"
     download_with_progress "$url" "$tmpd/$filename" || {
       rm -rf "$tmpd"
-      return 1
+      return 250
     }
     tar -xzf "$tmpd/$filename" -C "$tmpd" || {
       msg_error "tar extract failed"
       rm -rf "$tmpd"
-      return 1
+      return 251
     }
     unpack="$(find "$tmpd" -mindepth 1 -maxdepth 1 -type d | head -n1)"
     # copy content of unpack to target
     (cd "$unpack" && tar -cf - .) | (cd "$target" && tar -xf -) || {
       msg_error "copy failed"
       rm -rf "$tmpd"
-      return 1
+      return 252
     }
     ;;
   prebuild)
     [ -n "$pattern" ] || {
       msg_error "prebuild requires asset pattern"
       rm -rf "$tmpd"
-      return 1
+      return 65
     }
     url="$(printf '%s' "$json" | jq -r '.assets[].browser_download_url' | awk -v p="$pattern" '
         BEGIN{IGNORECASE=1}
@@ -201,19 +201,19 @@ fetch_and_deploy_gh() {
     [ -z "$url" ] && {
       msg_error "asset not found for pattern: $pattern"
       rm -rf "$tmpd"
-      return 1
+      return 250
     }
     filename="${url##*/}"
     download_with_progress "$url" "$tmpd/$filename" || {
       rm -rf "$tmpd"
-      return 1
+      return 250
     }
     # unpack archive (Zip or tarball)
     case "$filename" in
     *.zip)
       need_tool unzip || {
         rm -rf "$tmpd"
-        return 1
+        return 127
       }
       mkdir -p "$tmpd/unp"
       unzip -q "$tmpd/$filename" -d "$tmpd/unp"
@@ -225,7 +225,7 @@ fetch_and_deploy_gh() {
     *)
       msg_error "unsupported archive: $filename"
       rm -rf "$tmpd"
-      return 1
+      return 251
       ;;
     esac
     # top-level folder strippen
@@ -234,13 +234,13 @@ fetch_and_deploy_gh() {
       (cd "$unpack" && tar -cf - .) | (cd "$target" && tar -xf -) || {
         msg_error "copy failed"
         rm -rf "$tmpd"
-        return 1
+        return 252
       }
     else
       (cd "$tmpd/unp" && tar -cf - .) | (cd "$target" && tar -xf -) || {
         msg_error "copy failed"
         rm -rf "$tmpd"
-        return 1
+        return 252
       }
     fi
     ;;
@@ -248,7 +248,7 @@ fetch_and_deploy_gh() {
     [ -n "$pattern" ] || {
       msg_error "singlefile requires asset pattern"
       rm -rf "$tmpd"
-      return 1
+      return 65
     }
     url="$(printf '%s' "$json" | jq -r '.assets[].browser_download_url' | awk -v p="$pattern" '
         BEGIN{IGNORECASE=1}
@@ -257,19 +257,19 @@ fetch_and_deploy_gh() {
     [ -z "$url" ] && {
       msg_error "asset not found for pattern: $pattern"
       rm -rf "$tmpd"
-      return 1
+      return 250
     }
     filename="${url##*/}"
     download_with_progress "$url" "$target/$app" || {
       rm -rf "$tmpd"
-      return 1
+      return 250
     }
     chmod +x "$target/$app"
     ;;
   *)
     msg_error "Unknown mode: $mode"
     rm -rf "$tmpd"
-    return 1
+    return 65
     ;;
   esac
 
@@ -291,19 +291,19 @@ setup_yq() {
     return 0
   fi
 
-  need_tool curl || return 1
+  need_tool curl || return 127
   local arch bin url tmp
   case "$(uname -m)" in
   x86_64) arch="amd64" ;;
   aarch64) arch="arm64" ;;
   *)
     msg_error "Unsupported arch for yq: $(uname -m)"
-    return 1
+    return 238
     ;;
   esac
   url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${arch}"
   tmp="$(mktemp)"
-  download_with_progress "$url" "$tmp" || return 1
+  download_with_progress "$url" "$tmp" || return 250
   /usr/bin/install -m 0755 "$tmp" /usr/local/bin/yq
   rm -f "$tmp"
   msg_ok "Setup yq ($(yq --version 2>/dev/null))"
@@ -313,13 +313,13 @@ setup_yq() {
 # Adminer – Alpine
 # ------------------------------
 setup_adminer() {
-  need_tool curl || return 1
+  need_tool curl || return 127
   msg_info "Setup Adminer (Alpine)"
   mkdir -p /var/www/localhost/htdocs/adminer
   curl -fsSL https://github.com/vrana/adminer/releases/latest/download/adminer.php \
     -o /var/www/localhost/htdocs/adminer/index.php || {
     msg_error "Adminer download failed"
-    return 1
+    return 250
   }
   msg_ok "Adminer at /adminer (served by your webserver)"
 }
@@ -329,7 +329,7 @@ setup_adminer() {
 # optional: PYTHON_VERSION="3.12"
 # ------------------------------
 setup_uv() {
-  need_tool curl tar || return 1
+  need_tool curl tar || return 127
   local UV_BIN="/usr/local/bin/uv"
   local arch tarball url tmpd ver installed
 
@@ -338,7 +338,7 @@ setup_uv() {
   aarch64) arch="aarch64-unknown-linux-musl" ;;
   *)
     msg_error "Unsupported arch for uv: $(uname -m)"
-    return 1
+    return 238
     ;;
   esac
 
@@ -346,7 +346,7 @@ setup_uv() {
   ver="${ver#v}"
   [ -z "$ver" ] && {
     msg_error "uv: cannot determine latest version"
-    return 1
+    return 250
   }
 
   if has "$UV_BIN"; then
@@ -360,18 +360,18 @@ setup_uv() {
     msg_info "Setup uv $ver"
   fi
 
-  tmpd="$(mktemp -d)" || return 1
+  tmpd="$(mktemp -d)" || return 252
   tarball="uv-${arch}.tar.gz"
   url="https://github.com/astral-sh/uv/releases/download/v${ver}/${tarball}"
 
   download_with_progress "$url" "$tmpd/uv.tar.gz" || {
     rm -rf "$tmpd"
-    return 1
+    return 250
   }
   tar -xzf "$tmpd/uv.tar.gz" -C "$tmpd" || {
     msg_error "uv: extract failed"
     rm -rf "$tmpd"
-    return 1
+    return 251
   }
 
   # tar contains ./uv
@@ -382,7 +382,7 @@ setup_uv() {
     /usr/bin/install -m 0755 "$tmpd"/*/uv "$UV_BIN" 2>/dev/null || {
       msg_error "uv binary not found in tar"
       rm -rf "$tmpd"
-      return 1
+      return 252
     }
   fi
   rm -rf "$tmpd"
@@ -395,13 +395,13 @@ setup_uv() {
       $0 ~ "^cpython-"maj"\\." { print $0 }' | awk -F- '{print $2}' | sort -V | tail -n1)"
     [ -z "$match" ] && {
       msg_error "No matching Python for $PYTHON_VERSION"
-      return 1
+      return 250
     }
     if ! uv python list | grep -q "cpython-${match}-linux"; then
       msg_info "Installing Python $match via uv"
       uv python install "$match" || {
         msg_error "uv python install failed"
-        return 1
+        return 150
       }
       msg_ok "Python $match installed (uv)"
     fi
@@ -421,7 +421,7 @@ setup_java() {
   msg_info "Setup Java (OpenJDK $JAVA_VERSION)"
   apk add --no-cache "$pkg" >/dev/null 2>&1 || {
     msg_error "apk add $pkg failed"
-    return 1
+    return 100
   }
   # set JAVA_HOME
   local prof="/etc/profile.d/20-java.sh"
@@ -441,32 +441,32 @@ setup_go() {
     msg_info "Setup Go (apk)"
     apk add --no-cache go >/dev/null 2>&1 || {
       msg_error "apk add go failed"
-      return 1
+      return 100
     }
     msg_ok "Go ready: $(go version 2>/dev/null)"
     return 0
   fi
 
-  need_tool curl tar || return 1
+  need_tool curl tar || return 127
   local ARCH TARBALL URL TMP
   case "$(uname -m)" in
   x86_64) ARCH="amd64" ;;
   aarch64) ARCH="arm64" ;;
   *)
     msg_error "Unsupported arch for Go: $(uname -m)"
-    return 1
+    return 238
     ;;
   esac
   TARBALL="go${GO_VERSION}.linux-${ARCH}.tar.gz"
   URL="https://go.dev/dl/${TARBALL}"
   msg_info "Setup Go $GO_VERSION (tarball)"
   TMP="$(mktemp)"
-  download_with_progress "$URL" "$TMP" || return 1
+  download_with_progress "$URL" "$TMP" || return 250
   rm -rf /usr/local/go
   tar -C /usr/local -xzf "$TMP" || {
     msg_error "extract go failed"
     rm -f "$TMP"
-    return 1
+    return 251
   }
   rm -f "$TMP"
   ln -sf /usr/local/go/bin/go /usr/local/bin/go
@@ -488,7 +488,7 @@ setup_composer() {
       # Fallback to generic php if 83 not available
       apk add --no-cache php-cli php-openssl php-phar php-iconv >/dev/null 2>&1 || {
         msg_error "Failed to install php-cli for composer"
-        return 1
+        return 100
       }
     }
     msg_ok "PHP CLI ready: $(php -v | head -n1)"
@@ -500,14 +500,14 @@ setup_composer() {
     msg_info "Setup Composer"
   fi
 
-  need_tool curl || return 1
+  need_tool curl || return 127
   curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php || {
     msg_error "composer installer download failed"
-    return 1
+    return 250
   }
   php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null 2>&1 || {
     msg_error "composer install failed"
-    return 1
+    return 150
   }
   rm -f /tmp/composer-setup.php
   ensure_usr_local_bin_persist
