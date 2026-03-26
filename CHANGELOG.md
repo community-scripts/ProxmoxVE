@@ -445,6 +445,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: pin npm to 11.11.0 to work around Node.js 22.22.2 regression [@MickLesk](https://github.com/MickLesk) ([#13296](https://github.com/community-scripts/ProxmoxVE/pull/13296))
 
+  - #### ✨ New Features
+
+    - core/tools: replace generic return 1 exit_codes with more specific exit_codes [@MickLesk](https://github.com/MickLesk) ([#13311](https://github.com/community-scripts/ProxmoxVE/pull/13311))
+
   - #### 🔧 Refactor
 
     - core: use /usr/bin/install to prevent function shadowing [@MickLesk](https://github.com/MickLesk) ([#13299](https://github.com/community-scripts/ProxmoxVE/pull/13299))
