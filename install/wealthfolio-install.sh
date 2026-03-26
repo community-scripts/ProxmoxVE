@@ -23,7 +23,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_rust
-NODE_VERSION="20" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 fetch_and_deploy_gh_release "wealthfolio" "afadil/wealthfolio" "tarball" "v3.0.3"
 
 msg_info "Building Frontend (patience)"
