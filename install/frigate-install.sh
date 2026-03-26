@@ -310,7 +310,7 @@ else
 ffmpeg:
   hwaccel_args: auto
 model:
-  path: /cpu_model.tflite
+  path: /models/cpu_model.tflite
 EOF
 fi
 msg_ok "Configured Frigate"

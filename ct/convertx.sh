@@ -24,7 +24,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /var ]]; then
+  if [[ ! -d /opt/convertx ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -32,6 +32,8 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop convertx
     msg_info "Stopped Service"
+
+    ensure_dependencies libreoffice-writer
 
     msg_info "Move data-Folder"
     if [[ -d /opt/convertx/data ]]; then

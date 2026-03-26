@@ -50,7 +50,7 @@ function update_script() {
         /opt/semaphore/config.json
       SEM_PW=$(cat ~/semaphore.creds)
       systemctl start semaphore
-      $STD semaphore user add --admin --login admin --email admin@helper-scripts.com --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
+      $STD semaphore user add --admin --login admin --email admin@community-scripts.org --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
 
       msg_ok "Moved from BoltDB to SQLite"
     fi

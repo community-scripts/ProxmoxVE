@@ -201,9 +201,9 @@ server:
             - neverWatchPath: "/lost+found"
 auth:
   adminUsername: admin
-  adminPassword: helper-scripts.com
+  adminPassword: community-scripts.org
 EOF
-  msg_ok "Configured with default admin (admin / helper-scripts.com)"
+  msg_ok "Configured with default admin (admin / community-scripts.org)"
 fi
 
 msg_info "Creating service"

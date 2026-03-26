@@ -91,16 +91,16 @@ expect "Format: mongodb://*" {
     send "$MONGO_CONNECTION_STRING\r"
 }
 expect "Administrator username" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect "Administrator email address" {
-    send "helper-scripts@local.com\r"
+    send "admin@community-scripts.org\r"
 }
 expect "Password" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect "Confirm Password" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect eof
 EOF

@@ -14,23 +14,20 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt update
-$STD apt -y install \
-  ca-certificates \
+$STD apt install -y \
   apache2-utils \
   logrotate \
   build-essential \
-  git
-msg_ok "Installed Dependencies"
-
-msg_info "Installing Python Dependencies"
-$STD apt install -y \
+  libpcre3-dev \
+  libssl-dev \
+  zlib1g-dev \
+  git \
   python3 \
   python3-dev \
   python3-pip \
   python3-venv \
   python3-cffi
-msg_ok "Installed Python Dependencies"
+msg_ok "Installed Dependencies"
 
 msg_info "Setting up Certbot"
 $STD python3 -m venv /opt/certbot
@@ -39,33 +36,50 @@ $STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
 ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
 msg_ok "Set up Certbot"
 
-msg_info "Installing Openresty"
-curl -fsSL "https://openresty.org/package/pubkey.gpg" | gpg --dearmor -o /etc/apt/trusted.gpg.d/openresty.gpg
-cat <<'EOF' >/etc/apt/sources.list.d/openresty.sources
-Types: deb
-URIs: http://openresty.org/package/debian/
-Suites: bookworm
-Components: openresty
-Signed-By: /etc/apt/trusted.gpg.d/openresty.gpg
+fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
+
+msg_info "Building OpenResty"
+cd /opt/openresty
+$STD ./configure \
+  --with-http_v2_module \
+  --with-http_realip_module \
+  --with-http_stub_status_module \
+  --with-http_ssl_module \
+  --with-http_sub_module \
+  --with-http_auth_request_module \
+  --with-pcre-jit \
+  --with-stream \
+  --with-stream_ssl_module
+$STD make -j"$(nproc)"
+$STD make install
+rm -rf /opt/openresty
+
+cat <<'EOF' >/lib/systemd/system/openresty.service
+[Unit]
+Description=The OpenResty Application Platform
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
+ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
+
+[Install]
+WantedBy=multi-user.target
 EOF
-$STD apt update
-$STD apt -y install openresty
-msg_ok "Installed Openresty"
+msg_ok "Built OpenResty"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-
-RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
-  grep "tag_name" |
-  awk '{print substr($2, 3, length($2)-4) }')
-
+RELEASE=$(get_latest_github_release "NginxProxyManager/nginx-proxy-manager")
 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}"
 
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
 ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
 ln -sf /usr/local/openresty/nginx/ /etc/nginx
-sed -i "s|\"version\": \"2.0.0\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/backend/package.json
-sed -i "s|\"version\": \"2.0.0\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/frontend/package.json
+sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/backend/package.json
+sed -i "0,/\"version\": \"[^\"]*\"/s|\"version\": \"[^\"]*\"|\"version\": \"$RELEASE\"|" /opt/nginxproxymanager/frontend/package.json
 sed -i 's+^daemon+#daemon+g' /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf
 NGINX_CONFS=$(find /opt/nginxproxymanager -type f -name "*.conf")
 for NGINX_CONF in $NGINX_CONFS; do
@@ -169,7 +183,6 @@ sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/n
 sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
 systemctl enable -q --now openresty
 systemctl enable -q --now npm
-systemctl restart openresty
 msg_ok "Started Services"
 
 motd_ssh

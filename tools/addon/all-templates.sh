@@ -116,7 +116,7 @@ fi
 PCT_OPTIONS="
     -features keyctl=1,nesting=1
     -hostname $NAME
-    -tags proxmox-helper-scripts
+    -tags community-script
     -onboot 0
     -cores 2
     -memory 2048

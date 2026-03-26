@@ -1,10 +1,23 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2026 tteck
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-function header_info {
+# Source shared libraries
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+load_functions
+catch_errors
+
+APP="TurnKey LXC"
+NSAPP="turnkey"
+DIAGNOSTICS="no"
+METHOD="default"
+RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
+EXECUTION_ID="${RANDOM_UUID}"
+
+header_info() {
   clear
   cat <<"EOF"
  ______              __ __           __   _  _______
@@ -15,281 +28,345 @@ function header_info {
 EOF
 }
 
-set -euo pipefail
-shopt -s expand_aliases
-alias die='EXIT=$? LINE=$LINENO error_exit'
-trap die ERR
-function error_exit() {
-  trap - ERR
-  local DEFAULT='Unknown failure occured.'
-  local REASON="\e[97m${1:-$DEFAULT}\e[39m"
-  local FLAG="\e[91m[ERROR] \e[93m$EXIT@$LINE"
-  msg "$FLAG $REASON" 1>&2
-  [ ! -z ${CTID-} ] && cleanup_ctid
-  exit $EXIT
-}
-function warn() {
-  local REASON="\e[97m$1\e[39m"
-  local FLAG="\e[93m[WARNING]\e[39m"
-  msg "$FLAG $REASON"
-}
-function info() {
-  local REASON="$1"
-  local FLAG="\e[36m[INFO]\e[39m"
-  msg "$FLAG $REASON"
-}
-function msg() {
-  local TEXT="$1"
-  echo -e "$TEXT"
-}
-function validate_container_id() {
+# Validate if a container ID is available (cluster-aware)
+validate_container_id() {
   local ctid="$1"
-  # Check if ID is numeric
-  if ! [[ "$ctid" =~ ^[0-9]+$ ]]; then
-    return 1
+  [[ "$ctid" =~ ^[0-9]+$ ]] || return 1
+
+  # Cluster-wide check via pvesh
+  if command -v pvesh &>/dev/null; then
+    local cluster_ids
+    cluster_ids=$(pvesh get /cluster/resources --type vm --output-format json 2>/dev/null |
+      grep -oP '"vmid":\s*\K[0-9]+' 2>/dev/null || true)
+    if [[ -n "$cluster_ids" ]] && echo "$cluster_ids" | grep -qw "$ctid"; then
+      return 1
+    fi
   fi
-  # Check if config file exists for VM or LXC
+
+  # Local fallback
   if [[ -f "/etc/pve/qemu-server/${ctid}.conf" ]] || [[ -f "/etc/pve/lxc/${ctid}.conf" ]]; then
     return 1
   fi
-  # Check if ID is used in LVM logical volumes
+
+  # Check all cluster nodes
+  if [[ -d "/etc/pve/nodes" ]]; then
+    for node_dir in /etc/pve/nodes/*/; do
+      if [[ -f "${node_dir}qemu-server/${ctid}.conf" ]] || [[ -f "${node_dir}lxc/${ctid}.conf" ]]; then
+        return 1
+      fi
+    done
+  fi
+
+  # Check LVM volumes
   if lvs --noheadings -o lv_name 2>/dev/null | grep -qE "(^|[-_])${ctid}($|[-_])"; then
     return 1
   fi
   return 0
 }
-function get_valid_container_id() {
-  local suggested_id="${1:-$(pvesh get /cluster/nextid)}"
+
+get_valid_container_id() {
+  local suggested_id="${1:-$(pvesh get /cluster/nextid 2>/dev/null || echo 100)}"
   while ! validate_container_id "$suggested_id"; do
     suggested_id=$((suggested_id + 1))
   done
   echo "$suggested_id"
 }
-function cleanup_ctid() {
-  if pct status $CTID &>/dev/null; then
-    if [ "$(pct status $CTID | awk '{print $2}')" == "running" ]; then
-      pct stop $CTID
+
+cleanup_ctid() {
+  if pct status "$CTID" &>/dev/null; then
+    if [[ "$(pct status "$CTID" | awk '{print $2}')" == "running" ]]; then
+      pct stop "$CTID"
     fi
-    pct destroy $CTID
+    pct destroy "$CTID"
   fi
 }
+
+select_storage() {
+  local class="$1" content content_label
+  case "$class" in
+  container)
+    content='rootdir'
+    content_label='Container'
+    ;;
+  template)
+    content='vztmpl'
+    content_label='Container template'
+    ;;
+  *)
+    msg_error "Invalid storage class '$class'"
+    return 1
+    ;;
+  esac
+
+  local -a MENU=()
+  local MSG_MAX_LENGTH=0
+
+  while read -r line; do
+    local TAG TYPE FREE ITEM OFFSET=2
+    TAG=$(echo "$line" | awk '{print $1}')
+    TYPE=$(echo "$line" | awk '{printf "%-10s", $2}')
+    FREE=$(echo "$line" | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
+    ITEM="  Type: $TYPE Free: $FREE "
+    ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
+    MENU+=("$TAG" "$ITEM" "OFF")
+  done < <(pvesm status -content "$content" | awk 'NR>1')
+
+  if [[ $((${#MENU[@]} / 3)) -eq 0 ]]; then
+    msg_error "'$content_label' needs to be selected for at least one storage location."
+    return 1
+  elif [[ $((${#MENU[@]} / 3)) -eq 1 ]]; then
+    printf '%s' "${MENU[0]}"
+  else
+    local STORAGE
+    while [[ -z "${STORAGE:+x}" ]]; do
+      STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
+        "Which storage pool for the ${content_label,,}?\n\n" \
+        16 $((MSG_MAX_LENGTH + 23)) 6 \
+        "${MENU[@]}" 3>&1 1>&2 2>&3) || exit_script
+    done
+    printf '%s' "$STORAGE"
+  fi
+}
+
+# ==============================================================================
+# MAIN
+# ==============================================================================
+
+# Cleanup on error: destroy container, report telemetry, and restart monitor
+turnkey_cleanup() {
+  local exit_code=$?
+  if [[ $exit_code -ne 0 ]]; then
+    # Report failure to telemetry
+    if [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
+      post_update_to_api "failed" "$exit_code" 2>/dev/null || true
+    fi
+    # Destroy failed container
+    if [[ -n "${CTID:-}" ]]; then
+      cleanup_ctid 2>/dev/null || true
+    fi
+  fi
+  if [[ -f /etc/systemd/system/ping-instances.service ]]; then
+    systemctl start ping-instances.service 2>/dev/null || true
+  fi
+}
+trap turnkey_cleanup EXIT
 
 # Stop Proxmox VE Monitor-All if running
 if systemctl is-active -q ping-instances.service; then
   systemctl stop ping-instances.service
 fi
+
+pve_check
+shell_check
+root_check
+
+# Read diagnostics preference (same logic as build.func diagnostics_check)
+DIAG_CONFIG="/usr/local/community-scripts/diagnostics"
+if [[ -f "$DIAG_CONFIG" ]]; then
+  DIAGNOSTICS=$(awk -F '=' '/^DIAGNOSTICS/ {print $2}' "$DIAG_CONFIG") || true
+  DIAGNOSTICS="${DIAGNOSTICS:-no}"
+fi
+
 header_info
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --yesno "This will allow for the creation of one of the many TurnKey LXC Containers. Proceed?" 10 68
+whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --yesno \
+  "This will allow for the creation of one of the many TurnKey LXC Containers. Proceed?" 10 68 || exit_script
+
+# Update template catalog early so the menu reflects the latest available templates
+msg_info "Updating LXC template list"
+pveam update >/dev/null
+msg_ok "Updated LXC template list"
+
+# Build TurnKey selection menu dynamically from available templates
+# Requires gawk for regex capture groups in match()
+command -v gawk &>/dev/null || apt-get install -y gawk &>/dev/null
+declare -A TURNKEY_TEMPLATES
 TURNKEY_MENU=()
 MSG_MAX_LENGTH=0
-while read -r TAG ITEM; do
+while IFS=$'\t' read -r TEMPLATE_FILE TAG ITEM; do
+  TURNKEY_TEMPLATES["$TAG"]="$TEMPLATE_FILE"
   OFFSET=2
-  ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET
+  ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
   TURNKEY_MENU+=("$TAG" "$ITEM " "OFF")
-done < <(
-  cat <<EOF
-ansible Ansible
-bookstack BookStack
-core Core
-faveo-helpdesk Faveo Helpdesk
-fileserver File Server
-gallery Gallery
-gameserver Game Server
-gitea Gitea
-gitlab GitLab
-invoice-ninja Invoice Ninja
-mediaserver Media Server
-nextcloud Nextcloud
-observium Observium
-odoo Odoo
-openldap OpenLDAP
-openvpn OpenVPN
-owncloud ownCloud
-phpbb phpBB
-torrentserver Torrent Server
-wireguard WireGuard
-wordpress Wordpress
-zoneminder ZoneMinder
-EOF
-)
-turnkey=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --radiolist "\nSelect a TurnKey LXC to create:\n" 16 $((MSG_MAX_LENGTH + 58)) 6 "${TURNKEY_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"')
-[ -z "$turnkey" ] && {
-  whiptail --backtitle "Proxmox VE Helper Scripts" --title "No TurnKey LXC Selected" --msgbox "It appears that no TurnKey LXC container was selected" 10 68
-  msg "Done"
-  exit
-}
+done < <(pveam available -section turnkeylinux | gawk '{
+  tpl = $2
+  if (match(tpl, /debian-([0-9]+)-turnkey-([^_]+)_([^_]+)_/, m)) {
+    app = m[2]; deb = m[1]; ver = m[3]
+    display = app
+    gsub(/-/, " ", display)
+    n = split(display, words, " ")
+    display = ""
+    for (i = 1; i <= n; i++) {
+      words[i] = toupper(substr(words[i], 1, 1)) substr(words[i], 2)
+      display = display (i > 1 ? " " : "") words[i]
+    }
+    tag = app "-" deb
+    printf "%s\t%s\t%s | Debian %s | %s\n", tpl, tag, display, deb, ver
+  }
+}' | sort -t$'\t' -k2,2)
 
-# Setup script environment
+if [[ ${#TURNKEY_MENU[@]} -eq 0 ]]; then
+  msg_error "No TurnKey templates found. Check your internet connection or template repository."
+  exit 1
+fi
+
+selected=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs" --radiolist \
+  "\nSelect a TurnKey LXC to create:\n" 20 $((MSG_MAX_LENGTH + 58)) 12 \
+  "${TURNKEY_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit_script
+
+if [[ -z "$selected" ]]; then
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "No TurnKey LXC Selected" \
+    --msgbox "It appears that no TurnKey LXC container was selected" 10 68
+  exit_script
+fi
+
+# Extract template filename and app name from selection
+TEMPLATE="${TURNKEY_TEMPLATES[$selected]}"
+turnkey="${selected%-*}"
+
+# Generate random password
 PASS="$(openssl rand -base64 8)"
-# Prompt user to confirm container ID
+
+# Prompt for Container ID
+NEXT_ID=$(pvesh get /cluster/nextid 2>/dev/null || echo 100)
 while true; do
-  CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the container ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
+  CTID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Container ID" \
+    --inputbox "Enter the container ID..." 8 40 "$NEXT_ID" 3>&1 1>&2 2>&3) || exit_script
 
-  # Check if user cancelled
-  [ -z "$CTID" ] && die "No Container ID selected"
+  if [[ -z "$CTID" ]]; then
+    msg_error "No Container ID selected"
+    exit_script
+  fi
 
-  # Validate Container ID
   if ! validate_container_id "$CTID"; then
     SUGGESTED_ID=$(get_valid_container_id "$CTID")
-    if whiptail --backtitle "Container ID" --title "ID Already In Use" --yesno "Container/VM ID $CTID is already in use.\n\nWould you like to use the next available ID ($SUGGESTED_ID)?" 10 58; then
+    if whiptail --backtitle "Proxmox VE Helper Scripts" --title "ID Already In Use" --yesno \
+      "Container/VM ID $CTID is already in use.\n\nWould you like to use the next available ID ($SUGGESTED_ID)?" 10 58; then
       CTID="$SUGGESTED_ID"
       break
     fi
-    # User declined, loop back to input
   else
     break
   fi
 done
-# Prompt user to confirm Hostname
-HOST_NAME=$(whiptail --backtitle "Hostname" --title "Choose the Hostname" --inputbox "Enter the containers Hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3)
-PCT_OPTIONS="
-    -features keyctl=1,nesting=1
-    -hostname $HOST_NAME
-    -tags community-script
-    -onboot 1
-    -cores 2
-    -memory 2048
-    -password $PASS
-    -net0 name=eth0,bridge=vmbr0,ip=dhcp
-    -unprivileged 1
-  "
-DEFAULT_PCT_OPTIONS=(
-  -arch $(dpkg --print-architecture)
+
+# Prompt for Hostname
+HOST_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Hostname" \
+  --inputbox "Enter the container hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3) || exit_script
+
+# Container options
+PCT_OPTIONS=(
+  -features keyctl=1,nesting=1
+  -hostname "$HOST_NAME"
+  -tags community-script
+  -onboot 1
+  -cores 2
+  -memory 2048
+  -password "$PASS"
+  -net0 name=eth0,bridge=vmbr0,ip=dhcp
+  -unprivileged 1
+  -arch "$(dpkg --print-architecture)"
 )
 
-# Set the CONTENT and CONTENT_LABEL variables
-function select_storage() {
-  local CLASS=$1
-  local CONTENT
-  local CONTENT_LABEL
-  case $CLASS in
-  container)
-    CONTENT='rootdir'
-    CONTENT_LABEL='Container'
-    ;;
-  template)
-    CONTENT='vztmpl'
-    CONTENT_LABEL='Container template'
-    ;;
-  *) false || die "Invalid storage class." ;;
-  esac
-
-  # Query all storage locations
-  local -a MENU
-  while read -r line; do
-    local TAG=$(echo $line | awk '{print $1}')
-    local TYPE=$(echo $line | awk '{printf "%-10s", $2}')
-    local FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
-    local ITEM="  Type: $TYPE Free: $FREE "
-    local OFFSET=2
-    if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
-      local MSG_MAX_LENGTH=$((${#ITEM} + $OFFSET))
-    fi
-    MENU+=("$TAG" "$ITEM" "OFF")
-  done < <(pvesm status -content $CONTENT | awk 'NR>1')
-
-  # Select storage location
-  if [ $((${#MENU[@]} / 3)) -eq 0 ]; then
-    warn "'$CONTENT_LABEL' needs to be selected for at least one storage location."
-    die "Unable to detect valid storage location."
-  elif [ $((${#MENU[@]} / 3)) -eq 1 ]; then
-    printf ${MENU[0]}
-  else
-    local STORAGE
-    while [ -z "${STORAGE:+x}" ]; do
-      STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
-        "Which storage pool would you like to use for the ${CONTENT_LABEL,,}?\n\n" \
-        16 $(($MSG_MAX_LENGTH + 23)) 6 \
-        "${MENU[@]}" 3>&1 1>&2 2>&3) || die "Menu aborted."
-    done
-    printf $STORAGE
-  fi
+# Storage selection
+TEMPLATE_STORAGE=$(select_storage template) || {
+  msg_error "Failed to select template storage"
+  exit 1
 }
+msg_ok "Using '${BL}${TEMPLATE_STORAGE}${CL}' for template storage"
 
-# Get template storage
-TEMPLATE_STORAGE=$(select_storage template)
-info "Using '$TEMPLATE_STORAGE' for template storage."
+CONTAINER_STORAGE=$(select_storage container) || {
+  msg_error "Failed to select container storage"
+  exit 1
+}
+msg_ok "Using '${BL}${CONTAINER_STORAGE}${CL}' for container storage"
 
-# Get container storage
-CONTAINER_STORAGE=$(select_storage container)
-info "Using '$CONTAINER_STORAGE' for container storage."
-
-# Update LXC template list
-msg "Updating LXC template list..."
-pveam update >/dev/null
-
-# Get LXC template string
-mapfile -t TEMPLATES < <(pveam available -section turnkeylinux | awk -v turnkey="${turnkey}" '$0 ~ turnkey {print $2}' | sort -t - -k 2 -V)
-[ ${#TEMPLATES[@]} -gt 0 ] || die "Unable to find a template when searching for '${turnkey}'."
-TEMPLATE="${TEMPLATES[-1]}"
-
-# Download LXC template
-if ! pveam list $TEMPLATE_STORAGE | grep -q $TEMPLATE; then
-  msg "Downloading LXC template (Patience)..."
-  pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null ||
-    die "A problem occured while downloading the LXC template."
+# Download template if not already cached
+if ! pveam list "$TEMPLATE_STORAGE" | grep -q "$TEMPLATE"; then
+  msg_info "Downloading LXC template"
+  pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null || {
+    msg_error "Failed to download LXC template '${TEMPLATE}'"
+    exit 1
+  }
+  msg_ok "Downloaded LXC template"
 fi
 
-# Create variable for 'pct' options
-PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
-[[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs $CONTAINER_STORAGE:${PCT_DISK_SIZE:-8})
+# Add rootfs if not specified
+[[ " ${PCT_OPTIONS[*]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs "${CONTAINER_STORAGE}:${PCT_DISK_SIZE:-8}")
 
-# Create LXC
-msg "Creating LXC container..."
-pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/null ||
-  die "A problem occured while trying to create container."
+# Set telemetry variables for the selected turnkey
+TELEMETRY_TYPE="turnkey"
+NSAPP="turnkey-${turnkey}"
+CT_TYPE=1
+DISK_SIZE="${PCT_DISK_SIZE:-8}"
+CORE_COUNT=2
+RAM_SIZE=2048
+var_os="turnkey"
+var_version="${turnkey}"
 
-# Save password
-echo "TurnKey ${turnkey} password: ${PASS}" >>~/turnkey-${turnkey}.creds # file is located in the Proxmox root directory
+# Report installation start to telemetry
+post_to_api
 
-# If turnkey is "OpenVPN", add access to the tun device
-TUN_DEVICE_REQUIRED=("openvpn") # Setup this way in case future turnkeys also need tun access
+# Create LXC container
+msg_info "Creating LXC container"
+pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" >/dev/null || {
+  msg_error "Failed to create container"
+  exit 1
+}
+msg_ok "Created LXC container (ID: ${BL}${CTID}${CL})"
+
+# Save credentials securely
+CREDS_FILE=~/turnkey-${turnkey}.creds
+echo "TurnKey ${turnkey} password: ${PASS}" >>"$CREDS_FILE"
+chmod 600 "$CREDS_FILE"
+
+# Configure TUN device access for VPN-based turnkeys
+TUN_DEVICE_REQUIRED=("openvpn")
 if printf '%s\n' "${TUN_DEVICE_REQUIRED[@]}" | grep -qw "${turnkey}"; then
-  info "${turnkey} requires access to /dev/net/tun on the host. Modifying the container configuration to allow this."
-  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>/etc/pve/lxc/${CTID}.conf
-  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >>/etc/pve/lxc/${CTID}.conf
+  msg_info "Configuring TUN device access for ${turnkey}"
+  {
+    echo "lxc.cgroup2.devices.allow: c 10:200 rwm"
+    echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0"
+  } >>"/etc/pve/lxc/${CTID}.conf"
+  msg_ok "TUN device access configured"
   sleep 5
 fi
 
 # Start container
-msg "Starting LXC Container..."
+msg_info "Starting LXC container"
 pct start "$CTID"
+msg_ok "Started LXC container"
 sleep 10
 
-# Get container IP
-set +euo pipefail # Turn off error checking
-max_attempts=5
-attempt=1
+# Detect container IP
+msg_info "Detecting IP address"
 IP=""
-while [[ $attempt -le $max_attempts ]]; do
-  IP=$(pct exec $CTID ip a show dev eth0 | grep -oP 'inet \K[^/]+')
-  if [[ -n $IP ]]; then
+for attempt in $(seq 1 5); do
+  IP=$(pct exec "$CTID" -- ip -4 a show dev eth0 2>/dev/null | grep -oP 'inet \K[^/]+' || true)
+  if [[ -n "$IP" ]]; then
     break
-  else
-    warn "Attempt $attempt: IP address not found. Pausing for 5 seconds..."
-    sleep 5
-    ((attempt++))
   fi
+  [[ $attempt -lt 5 ]] && sleep 5
 done
 
-if [[ -z $IP ]]; then
-  warn "Maximum number of attempts reached. IP address not found."
+if [[ -z "$IP" ]]; then
+  msg_warn "IP address not found after 5 attempts"
   IP="NOT FOUND"
+else
+  msg_ok "IP address: ${BL}${IP}${CL}"
 fi
 
-# Start Proxmox VE Monitor-All if available
-if [[ -f /etc/systemd/system/ping-instances.service ]]; then
-  systemctl start ping-instances.service
-fi
+# Report success to telemetry
+post_update_to_api "done" "none"
 
-# Success message
+# Success summary
 header_info
 echo
-info "LXC container '$CTID' was successfully created, and its IP address is ${IP}."
+msg_ok "TurnKey ${BL}${turnkey}${CL} LXC container '${BL}${CTID}${CL}' was successfully created."
 echo
-info "Proceed to the LXC console to complete the setup."
+echo -e "  ${TAB}${YW}IP Address:${CL}  ${BL}${IP}${CL}"
+echo -e "  ${TAB}${YW}Login:${CL}       ${GN}root${CL}"
+echo -e "  ${TAB}${YW}Password:${CL}    ${GN}${PASS}${CL}"
 echo
-info "login: root"
-info "password: $PASS"
-info "(credentials also stored in the root user's root directory in the 'turnkey-${turnkey}.creds' file.)"
+echo -e "  ${TAB}Proceed to the LXC console to complete the TurnKey setup."
+echo -e "  ${TAB}Credentials stored in: ${BL}~/turnkey-${turnkey}.creds${CL}"
 echo

@@ -33,7 +33,7 @@ $STD yarn config set ignore-engines true
 $STD yarn install
 $STD yarn run production
 $STD php artisan key:generate
-$STD php artisan setup:production --email=admin@helper-scripts.com --password=helper-scripts.com --force
+$STD php artisan setup:production --email=admin@community-scripts.org --password=community-scripts.org --force
 chown -R www-data:www-data /opt/monica
 chmod -R 775 /opt/monica/storage
 echo "* * * * * root php /opt/monica/artisan schedule:run >> /dev/null 2>&1" >>/etc/crontab

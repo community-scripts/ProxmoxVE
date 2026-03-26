@@ -155,13 +155,21 @@ jobs:
                 console.log('Slug not in DB, skipping: ' + slug);
                 continue;
               }
+              const today = new Date().toISOString().split('T')[0];
+              const patchBody = {
+                script_updated: today,
+                last_update_commit: process.env.PR_URL || process.env.COMMIT_URL || ''
+              };
+              // When a dev script is merged into main, promote it to production
+              if (record.is_dev === true) {
+                patchBody.is_dev = false;
+                patchBody.script_created = today;
+                console.log('Promoting dev script to production: ' + slug);
+              }
               const patchRes = await request(recordsUrl + '/' + record.id, {
                 method: 'PATCH',
                 headers: { 'Authorization': token, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  script_updated: new Date().toISOString().split('T')[0],
-                  last_update_commit: process.env.PR_URL || process.env.COMMIT_URL || ''
-                })
+                body: JSON.stringify(patchBody)
               });
               if (!patchRes.ok) {
                 console.warn('PATCH failed for slug ' + slug + ': ' + patchRes.body);

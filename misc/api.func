@@ -348,10 +348,10 @@ explain_exit_code() {
 json_escape() {
   # Escape a string for safe JSON embedding using awk (handles any input size).
   # Pipeline: strip ANSI → remove control chars → escape \ " TAB → join lines with \n
-  printf '%s' "$1" \
-    | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' \
-    | tr -d '\000-\010\013\014\016-\037\177\r' \
-    | awk '
+  printf '%s' "$1" |
+    sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+    tr -d '\000-\010\013\014\016-\037\177\r' |
+    awk '
         BEGIN { ORS = "" }
         {
           gsub(/\\/, "\\\\")   # backslash → \\
@@ -504,7 +504,7 @@ detect_gpu() {
   GPU_PASSTHROUGH="unknown"
 
   local gpu_line
-  gpu_line=$(lspci 2>/dev/null | grep -iE "VGA|3D|Display" | head -1)
+  gpu_line=$(lspci 2>/dev/null | grep -iE "VGA|3D|Display" | head -1 || true)
 
   if [[ -n "$gpu_line" ]]; then
     # Extract model: everything after the colon, clean up
@@ -543,7 +543,7 @@ detect_cpu() {
 
   if [[ -f /proc/cpuinfo ]]; then
     local vendor_id
-    vendor_id=$(grep -m1 "vendor_id" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | tr -d ' ')
+    vendor_id=$(grep -m1 "vendor_id" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | tr -d ' ' || true)
 
     case "$vendor_id" in
     GenuineIntel) CPU_VENDOR="intel" ;;
@@ -557,7 +557,7 @@ detect_cpu() {
     esac
 
     # Extract model name and clean it up
-    CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//' | sed 's/(R)//g' | sed 's/(TM)//g' | sed 's/  */ /g' | cut -c1-64)
+    CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//' | sed 's/(R)//g' | sed 's/(TM)//g' | sed 's/  */ /g' | cut -c1-64 || true)
   fi
 
   export CPU_VENDOR CPU_MODEL
@@ -627,8 +627,8 @@ post_to_api() {
 
   [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] post_to_api() DIAGNOSTICS=$DIAGNOSTICS RANDOM_UUID=$RANDOM_UUID NSAPP=$NSAPP" >&2
 
-  # Set type for later status updates
-  TELEMETRY_TYPE="lxc"
+  # Set type for later status updates (preserve if already set, e.g. turnkey)
+  TELEMETRY_TYPE="${TELEMETRY_TYPE:-lxc}"
 
   local pve_version=""
   if command -v pveversion &>/dev/null; then
@@ -664,7 +664,7 @@ post_to_api() {
 {
     "random_id": "${RANDOM_UUID}",
     "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "lxc",
+    "type": "${TELEMETRY_TYPE}",
     "nsapp": "${NSAPP:-unknown}",
     "status": "installing",
     "ct_type": ${CT_TYPE:-1},
@@ -692,6 +692,7 @@ EOF
   # Send initial "installing" record with retry.
   # This record MUST exist for all subsequent updates to succeed.
   local http_code="" attempt
+  local _post_success=false
   for attempt in 1 2 3; do
     if [[ "${DEV_MODE:-}" == "true" ]]; then
       http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
@@ -703,11 +704,19 @@ EOF
         -H "Content-Type: application/json" \
         -d "$JSON_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
     fi
-    [[ "$http_code" =~ ^2[0-9]{2}$ ]] && break
+    if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+      _post_success=true
+      break
+    fi
     [[ "$attempt" -lt 3 ]] && sleep 1
   done
 
-  POST_TO_API_DONE=true
+  # Only mark done if at least one attempt succeeded.
+  # If all 3 failed, POST_TO_API_DONE stays false so post_update_to_api
+  # and on_exit() know the initial record was never created.
+  # The server has fallback logic to create a new record on status updates,
+  # so subsequent calls can still succeed even without the initial record.
+  POST_TO_API_DONE=${_post_success}
 }
 
 # ------------------------------------------------------------------------------
@@ -798,15 +807,19 @@ EOF
 
   # Send initial "installing" record with retry (must succeed for updates to work)
   local http_code="" attempt
+  local _post_success=false
   for attempt in 1 2 3; do
     http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
-    [[ "$http_code" =~ ^2[0-9]{2}$ ]] && break
+    if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+      _post_success=true
+      break
+    fi
     [[ "$attempt" -lt 3 ]] && sleep 1
   done
 
-  POST_TO_API_DONE=true
+  POST_TO_API_DONE=${_post_success}
 }
 
 # ------------------------------------------------------------------------------
@@ -1083,6 +1096,12 @@ EOF
 # - Used to group errors in dashboard
 # ------------------------------------------------------------------------------
 categorize_error() {
+  # Allow build.func to override category based on log analysis (exit code 1 subclassification)
+  if [[ -n "${ERROR_CATEGORY_OVERRIDE:-}" ]]; then
+    echo "$ERROR_CATEGORY_OVERRIDE"
+    return
+  fi
+
   local code="$1"
   case "$code" in
   # Network errors (curl/wget)
@@ -1328,8 +1347,8 @@ post_addon_to_api() {
   # Detect OS info
   local os_type="" os_version=""
   if [[ -f /etc/os-release ]]; then
-    os_type=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
-    os_version=$(grep "^VERSION_ID=" /etc/os-release | cut -d= -f2 | tr -d '"')
+    os_type=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"' || true)
+    os_version=$(grep "^VERSION_ID=" /etc/os-release | cut -d= -f2 | tr -d '"' || true)
   fi
 
   local JSON_PAYLOAD

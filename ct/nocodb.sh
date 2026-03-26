@@ -23,17 +23,18 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  RELEASE="0.301.1"
+  #RELEASE="0.301.1"
   if [[ ! -f /etc/systemd/system/nocodb.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "nocodb" "nocodb/nocodb" "${RELEASE}"; then
+  #if check_for_gh_release "nocodb" "nocodb/nocodb" "${RELEASE}"; then
+  if check_for_gh_release "nocodb" "nocodb/nocodb"; then
     msg_info "Stopping Service"
     systemctl stop nocodb
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "${RELEASE}" "/opt/nocodb/" "Noco-linux-x64"
+    fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "latest" "/opt/nocodb/" "Noco-linux-x64"
 
     msg_info "Starting Service"
     systemctl start nocodb

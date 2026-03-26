@@ -242,7 +242,7 @@ download_gpg_key() {
 
     # Process based on mode
     if [[ "$mode" == "dearmor" ]]; then
-      if gpg --dearmor --yes -o "$output" <"$temp_key" 2>/dev/null; then
+      if gpg --dearmor --yes -o "$output" <"$temp_key" 2>/dev/null && [[ -s "$output" ]]; then
         rm -f "$temp_key"
         debug_log "GPG key installed (dearmored): $output"
         return 0
@@ -524,12 +524,12 @@ is_tool_installed() {
   case "$tool_name" in
   mariadb)
     if command -v mariadb >/dev/null 2>&1; then
-      installed_version=$(mariadb --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+      installed_version=$(mariadb --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)
     fi
     ;;
   mysql)
     if command -v mysql >/dev/null 2>&1; then
-      installed_version=$(mysql --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+      installed_version=$(mysql --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)
     fi
     ;;
   mongodb | mongod)
@@ -539,7 +539,7 @@ is_tool_installed() {
     ;;
   node | nodejs)
     if command -v node >/dev/null 2>&1; then
-      installed_version=$(node -v 2>/dev/null | grep -oP '^v\K[0-9]+')
+      installed_version=$(node -v 2>/dev/null | grep -oP '^v\K[0-9]+' || true)
     fi
     ;;
   php)
@@ -2271,6 +2271,7 @@ check_for_gh_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
+  local pin_reason="${4:-}"        # optional reason shown to user
   local app_lc=""
   app_lc="$(echo "${app,,}" | tr -d ' ')"
   local current_file="$HOME/.${app_lc}"
@@ -2444,7 +2445,11 @@ check_for_gh_release() {
       return 0
     fi
 
-    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    if [[ -n "$pin_reason" ]]; then
+      msg_ok "No update available: ${app} (${current}) - update held back: ${pin_reason}"
+    else
+      msg_ok "No update available: ${app} (${current}) - update temporarily held back due to issues with newer releases"
+    fi
     return 1
   fi
 
@@ -2483,6 +2488,7 @@ check_for_codeberg_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
+  local pin_reason="${4:-}"        # optional reason shown to user
   local app_lc="${app,,}"
   local current_file="$HOME/.${app_lc}"
 
@@ -2562,7 +2568,11 @@ check_for_codeberg_release() {
       return 0
     fi
 
-    msg_ok "No update available: ${app} is already on pinned version (${current})"
+    if [[ -n "$pin_reason" ]]; then
+      msg_ok "No update available: ${app} (${current}) - update held back: ${pin_reason}"
+    else
+      msg_ok "No update available: ${app} (${current}) - update temporarily held back due to issues with newer releases"
+    fi
     return 1
   fi
 
@@ -4827,7 +4837,7 @@ _setup_nvidia_gpu() {
   # Use regex to extract version number (###.##.## or ###.## pattern)
   local nvidia_host_version=""
   if [[ -f /proc/driver/nvidia/version ]]; then
-    nvidia_host_version=$(grep -oP '\d{3,}\.\d+(\.\d+)?' /proc/driver/nvidia/version 2>/dev/null | head -1)
+    nvidia_host_version=$(grep -oP '\d{3,}\.\d+(\.\d+)?' /proc/driver/nvidia/version 2>/dev/null | head -1 || true)
   fi
 
   if [[ -z "$nvidia_host_version" ]]; then
@@ -5182,7 +5192,7 @@ _setup_gpu_permissions() {
     for nvidia_dev in /dev/nvidia*; do
       [[ -e "$nvidia_dev" ]] && {
         chgrp video "$nvidia_dev" 2>/dev/null || true
-        chmod 666 "$nvidia_dev" 2>/dev/null || true
+        chmod 660 "$nvidia_dev" 2>/dev/null || true
       }
     done
     if [[ -d /dev/nvidia-caps ]]; then
@@ -5190,7 +5200,7 @@ _setup_gpu_permissions() {
       for caps_dev in /dev/nvidia-caps/*; do
         [[ -e "$caps_dev" ]] && {
           chgrp video "$caps_dev" 2>/dev/null || true
-          chmod 666 "$caps_dev" 2>/dev/null || true
+          chmod 660 "$caps_dev" 2>/dev/null || true
         }
       done
     fi
@@ -5207,7 +5217,8 @@ _setup_gpu_permissions() {
 
   # /dev/kfd permissions (AMD ROCm)
   if [[ -e /dev/kfd ]]; then
-    chmod 666 /dev/kfd 2>/dev/null || true
+    chgrp render /dev/kfd 2>/dev/null || true
+    chmod 660 /dev/kfd 2>/dev/null || true
     msg_info "AMD ROCm compute device configured"
   fi
 
@@ -5353,24 +5364,7 @@ function setup_java() {
 
   # Get currently installed version
   local INSTALLED_VERSION=""
-  if dpkg -l | grep -q "temurin-.*-jdk" 2>/dev/null; then
-    INSTALLED_VERSION=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | grep -oP 'temurin-\K[0-9]+' | head -n1 || echo "")
-  fi
-
-  # Validate INSTALLED_VERSION is not empty if JDK package found
-  local JDK_COUNT=0
-  JDK_COUNT=$(dpkg -l 2>/dev/null | grep -c "temurin-.*-jdk" || true)
-  if [[ -z "$INSTALLED_VERSION" && "${JDK_COUNT:-0}" -gt 0 ]]; then
-    msg_warn "Found Temurin JDK but cannot determine version - attempting reinstall"
-    # Try to get actual package name for purge
-    local OLD_PACKAGE
-    OLD_PACKAGE=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | head -n1 || echo "")
-    if [[ -n "$OLD_PACKAGE" ]]; then
-      msg_info "Removing existing package: $OLD_PACKAGE"
-      $STD apt purge -y "$OLD_PACKAGE" || true
-    fi
-    INSTALLED_VERSION="" # Reset to trigger fresh install
-  fi
+  INSTALLED_VERSION=$(dpkg-query -W -f '${Package}\n' 2>/dev/null | grep -oP '^temurin-\K[0-9]+(?=-jdk$)' | head -n1 || echo "")
 
   # Scenario 1: Already at correct version
   if [[ "$INSTALLED_VERSION" == "$JAVA_VERSION" ]]; then
@@ -6239,8 +6233,8 @@ function setup_nodejs() {
 
     ensure_apt_working || return 1
 
-    # Just update npm to latest
-    $STD npm install -g npm@latest 2>/dev/null || true
+    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
+    $STD npm install -g npm@11.11.0 2>/dev/null || true
 
     cache_installed_version "nodejs" "$NODE_VERSION"
     msg_ok "Update Node.js $NODE_VERSION"
@@ -6304,12 +6298,12 @@ function setup_nodejs() {
       return 1
     fi
 
-    # Update to latest npm (with version check to avoid incompatibility)
+    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
     local NPM_VERSION
     NPM_VERSION=$(npm -v 2>/dev/null || echo "0")
     if [[ "$NPM_VERSION" != "0" ]]; then
-      $STD npm install -g npm@latest 2>/dev/null || {
-        msg_warn "Failed to update npm to latest version (continuing with bundled npm $NPM_VERSION)"
+      $STD npm install -g npm@11.11.0 2>/dev/null || {
+        msg_warn "Failed to update npm to 11.11.0 (continuing with bundled npm $NPM_VERSION)"
       }
     fi
 
@@ -7327,7 +7321,7 @@ function setup_meilisearch() {
       MEILI_HOST="${MEILISEARCH_HOST:-127.0.0.1}"
       MEILI_PORT="${MEILISEARCH_PORT:-7700}"
       MEILI_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
-      MEILI_MASTER_KEY=$(grep -E "^master_key\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ')
+      MEILI_MASTER_KEY=$(grep -E "^master_key\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
 
       # Create dump before update if migration is needed
       local DUMP_UID=""
@@ -7393,7 +7387,7 @@ function setup_meilisearch() {
       # We choose option 2: backup and proceed with warning
       if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
         local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ')
+        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
         MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
 
         if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
@@ -7413,7 +7407,7 @@ function setup_meilisearch() {
       # If migration needed and dump was created, remove old data and import dump
       if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
         local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ')
+        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
         MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
 
         msg_info "Removing old MeiliSearch database for migration"
@@ -7948,7 +7942,7 @@ function setup_uv() {
     return 1
   fi
 
-  $STD install -m 755 "$UV_BINARY" "$UV_BIN" || {
+  $STD /usr/bin/install -m 755 "$UV_BINARY" "$UV_BIN" || {
     msg_error "Failed to install uv binary"
     return 1
   }

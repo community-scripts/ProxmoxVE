@@ -83,7 +83,7 @@ EOF
     )
     INTEL_RELEASE="$(grep "intel-opencl-icd_" ./Dockerfile | awk -F '_' '{print $2}')"
     if [[ "$INTEL_RELEASE" != "$(cat ~/.intel_version)" ]]; then
-      msg_info "Updating Intel iGPU dependencies"
+      msg_info "Updating Intel OpenVINO dependencies"
       for url in "${INTEL_URLS[@]}"; do
         curl_with_retry "$url" "$(basename "$url")"
       done
@@ -94,9 +94,9 @@ EOF
       rm ./*.deb
       $STD apt-mark hold libigdgmm12
       dpkg-query -W -f='${Version}\n' intel-opencl-icd >~/.intel_version
-      msg_ok "Intel iGPU dependencies updated"
+      rm -f ./Dockerfile
+      msg_ok "Updated Intel OpenVINO dependencies"
     fi
-    rm ./Dockerfile
   fi
   if [[ -f ~/.immich_library_revisions ]]; then
     libraries=("libjxl" "libheif" "libraw" "imagemagick" "libvips")
@@ -109,8 +109,8 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="v2.5.6"
-  if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}"; then
+  RELEASE="v2.6.1"
+  if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
       cd /opt/immich/app/bin
@@ -125,7 +125,7 @@ EOF
     msg_ok "Stopped Services"
     VCHORD_RELEASE="0.5.3"
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
-    if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}"; then
+    if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
       fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
       systemctl restart postgresql
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
@@ -226,14 +226,13 @@ EOF
         [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
       done
       msg_ok "Pre-installed Python ${ML_PYTHON}"
-      msg_info "Updating HW-accelerated machine-learning"
-      $STD uv add --no-sync --optional openvino onnxruntime-openvino==1.24.1 --active -n -p "${ML_PYTHON}" --managed-python
+      msg_info "Updating Intel OpenVINO machine-learning"
       for attempt in $(seq 1 3); do
         $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
       patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
-      msg_ok "Updated HW-accelerated machine-learning"
+      msg_ok "Updated Intel OpenVINO machine-learning"
     else
       ML_PYTHON="python3.11"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"

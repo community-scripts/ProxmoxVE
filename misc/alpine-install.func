@@ -90,11 +90,18 @@ setting_up_container() {
 network_check() {
   set +e
   trap - ERR
+  ipv4_connected=false
+
+  # Check IPv4 connectivity to Cloudflare, Google & Quad9 DNS servers
   if ping -c 1 -W 1 1.1.1.1 &>/dev/null || ping -c 1 -W 1 8.8.8.8 &>/dev/null || ping -c 1 -W 1 9.9.9.9 &>/dev/null; then
-    ipv4_status="${GN}✔${CL} IPv4"
+    msg_ok "IPv4 Internet Connected"
+    ipv4_connected=true
   else
-    ipv4_status="${RD}✖${CL} IPv4"
-    read -r -p "Internet NOT connected. Continue anyway? <y/N> " prompt
+    msg_error "IPv4 Internet Not Connected"
+  fi
+
+  if [[ $ipv4_connected == false ]]; then
+    read -r -p "No Internet detected, would you like to continue anyway? <y/N> " prompt
     if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
       echo -e "${INFO}${RD}Expect Issues Without Internet${CL}"
     else
@@ -102,12 +109,28 @@ network_check() {
       exit 122
     fi
   fi
-  RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')
-  if [[ -z "$RESOLVEDIP" ]]; then
-    msg_error "Internet: ${ipv4_status}  DNS Failed"
+
+  # DNS resolution checks for GitHub-related domains
+  GIT_HOSTS=("github.com" "raw.githubusercontent.com" "api.github.com" "git.community-scripts.org")
+  GIT_STATUS="Git DNS:"
+  DNS_FAILED=false
+
+  for HOST in "${GIT_HOSTS[@]}"; do
+    RESOLVEDIP=$(getent hosts "$HOST" | awk '{ print $1 }' | grep -E '(^([0-9]{1,3}\.){3}[0-9]{1,3}$)|(^[a-fA-F0-9:]+$)' | head -n1)
+    if [[ -z "$RESOLVEDIP" ]]; then
+      GIT_STATUS+="$HOST:($DNSFAIL)"
+      DNS_FAILED=true
+    else
+      GIT_STATUS+=" $HOST:($DNSOK)"
+    fi
+  done
+
+  if [[ "$DNS_FAILED" == true ]]; then
+    fatal "$GIT_STATUS"
   else
-    msg_ok "Internet: ${ipv4_status}  DNS: ${BL}${RESOLVEDIP}${CL}"
+    msg_ok "$GIT_STATUS"
   fi
+
   set -e
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }

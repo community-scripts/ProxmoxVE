@@ -165,9 +165,9 @@ function install() {
   else
     read -rp "${TAB}Set admin username [admin]: " admin_user
     admin_user=${admin_user:-admin}
-    read -rsp "${TAB}Set admin password [helper-scripts.com]: " admin_pass
+    read -rsp "${TAB}Set admin password [community-scripts.org]: " admin_pass
     echo ""
-    admin_pass=${admin_pass:-helper-scripts.com}
+    admin_pass=${admin_pass:-community-scripts.org}
     msg_ok "Configured with admin user: ${admin_user}"
   fi
 

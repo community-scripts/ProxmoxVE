@@ -173,10 +173,10 @@ get_current_ip() {
     # Check for Debian/Ubuntu (uses hostname -I)
     if grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
       # Try IPv4 first
-      CURRENT_IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+      CURRENT_IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 || true)
       # Fallback to IPv6 if no IPv4
       if [[ -z "$CURRENT_IP" ]]; then
-        CURRENT_IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E ':' | head -n1)
+        CURRENT_IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E ':' | head -n1 || true)
       fi
     # Check for Alpine (uses ip command)
     elif grep -q 'ID=alpine' /etc/os-release; then
@@ -220,6 +220,14 @@ update_motd_ip() {
     local current_os="$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"') - Version: $(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')"
     local current_hostname="$(hostname)"
     local current_ip="$(hostname -I | awk '{print $1}')"
+
+    # Escape sed special chars in replacement strings (& \ |)
+    current_os="${current_os//\\/\\\\}"
+    current_os="${current_os//&/\\&}"
+    current_hostname="${current_hostname//\\/\\\\}"
+    current_hostname="${current_hostname//&/\\&}"
+    current_ip="${current_ip//\\/\\\\}"
+    current_ip="${current_ip//&/\\&}"
 
     # Update only if values actually changed
     if ! grep -q "OS:.*$current_os" "$PROFILE_FILE" 2>/dev/null; then
@@ -528,6 +536,10 @@ validate_gateway_in_subnet() {
   # Extract IP and CIDR
   local ip="${static_ip%%/*}"
   local cidr="${static_ip##*/}"
+
+  # /31 and /32 are valid point-to-point / zero-trust DMZ configurations
+  # where the gateway is technically outside the subnet — skip validation
+  ((cidr >= 31)) && return 0
 
   # Convert CIDR to netmask bits
   local mask=$((0xFFFFFFFF << (32 - cidr) & 0xFFFFFFFF))
@@ -985,8 +997,10 @@ base_settings() {
   fi
 
   MTU=${var_mtu:-""}
-  SD=${var_searchdomain:-""}
-  NS=${var_ns:-""}
+  _sd_val="${var_searchdomain:-""}"
+  [[ -n "$_sd_val" ]] && SD="-searchdomain=$_sd_val" || SD=""
+  _ns_val="${var_ns:-""}"
+  [[ -n "$_ns_val" ]] && NS="-nameserver=$_ns_val" || NS=""
   MAC=${var_mac:-""}
   VLAN=${var_vlan:-""}
   SSH=${var_ssh:-"no"}
@@ -1628,7 +1642,7 @@ maybe_offer_save_app_defaults() {
     if whiptail --backtitle "Proxmox VE Helper Scripts" \
       --yesno "Save these advanced settings as defaults for ${APP}?\n\nThis will create:\n${app_vars_path}" 12 72; then
       mkdir -p "$(dirname "$app_vars_path")"
-      install -m 0644 "$new_tmp" "$app_vars_path"
+      /usr/bin/install -m 0644 "$new_tmp" "$app_vars_path"
       msg_ok "Saved app defaults: ${app_vars_path}"
     fi
     rm -f "$new_tmp" "$diff_tmp"
@@ -1662,7 +1676,7 @@ maybe_offer_save_app_defaults() {
 
     case "$sel" in
     "Update Defaults")
-      install -m 0644 "$new_tmp" "$app_vars_path"
+      /usr/bin/install -m 0644 "$new_tmp" "$app_vars_path"
       msg_ok "Updated app defaults: ${app_vars_path}"
       break
       ;;
@@ -1690,8 +1704,8 @@ ensure_storage_selection_for_vars_file() {
 
   # Read stored values (if any)
   local tpl ct
-  tpl=$(grep -E '^var_template_storage=' "$vf" | cut -d= -f2-)
-  ct=$(grep -E '^var_container_storage=' "$vf" | cut -d= -f2-)
+  tpl=$(grep -E '^var_template_storage=' "$vf" | cut -d= -f2- || true)
+  ct=$(grep -E '^var_container_storage=' "$vf" | cut -d= -f2- || true)
 
   if [[ -n "$tpl" && -n "$ct" ]]; then
     TEMPLATE_STORAGE="$tpl"
@@ -1826,7 +1840,7 @@ advanced_settings() {
     if [[ -n "$BRIDGES" ]]; then
       while IFS= read -r bridge; do
         if [[ -n "$bridge" ]]; then
-          local description=$(grep -A 10 "iface $bridge" /etc/network/interfaces 2>/dev/null | grep '^#' | head -n1 | sed 's/^#\s*//;s/^[- ]*//')
+          local description=$(grep -A 10 "iface $bridge" /etc/network/interfaces 2>/dev/null | grep '^#' | head -n1 | sed 's/^#\s*//;s/^[- ]*//' || true)
           BRIDGE_MENU_OPTIONS+=("$bridge" "${description:- }")
         fi
       done <<<"$BRIDGES"
@@ -3308,7 +3322,7 @@ configure_ssh_settings() {
       tag="${tag%\"}"
       tag="${tag#\"}"
       local line
-      line=$(grep -E "^${tag}\|" "$MAPFILE" | head -n1 | cut -d'|' -f2-)
+      line=$(grep -E "^${tag}\|" "$MAPFILE" | head -n1 | cut -d'|' -f2- || true)
       [[ -n "$line" ]] && printf '%s\n' "$line" >>"$SSH_KEYS_FILE"
     done
     ;;
@@ -3335,7 +3349,7 @@ configure_ssh_settings() {
             tag="${tag%\"}"
             tag="${tag#\"}"
             local line
-            line=$(grep -E "^${tag}\|" "$MAPFILE" | head -n1 | cut -d'|' -f2-)
+            line=$(grep -E "^${tag}\|" "$MAPFILE" | head -n1 | cut -d'|' -f2- || true)
             [[ -n "$line" ]] && printf '%s\n' "$line" >>"$SSH_KEYS_FILE"
           done
         else
@@ -3542,8 +3556,10 @@ build_container() {
   auto) NET_STRING="$NET_STRING,ip6=auto" ;;
   dhcp) NET_STRING="$NET_STRING,ip6=dhcp" ;;
   static)
-    NET_STRING="$NET_STRING,ip6=$IPV6_ADDR"
-    [ -n "$IPV6_GATE" ] && NET_STRING="$NET_STRING,gw6=$IPV6_GATE"
+    if [[ -n "$IPV6_ADDR" ]]; then
+      NET_STRING="$NET_STRING,ip6=$IPV6_ADDR"
+      [ -n "$IPV6_GATE" ] && NET_STRING="$NET_STRING,gw6=$IPV6_GATE"
+    fi
     ;;
   none) ;;
   esac
@@ -4034,7 +4050,7 @@ EOF
   # Fix Debian 13 LXC template bug where / is owned by nobody:nogroup
   # This must be done from the host as unprivileged containers cannot chown /
   local rootfs
-  rootfs=$(pct config "$CTID" | grep -E '^rootfs:' | sed 's/rootfs: //' | cut -d',' -f1)
+  rootfs=$(pct config "$CTID" | grep -E '^rootfs:' | sed 's/rootfs: //' | cut -d',' -f1 || true)
   if [[ -n "$rootfs" ]]; then
     local mount_point="/var/lib/lxc/${CTID}/rootfs"
     if [[ -d "$mount_point" ]] && [[ "$(stat -c '%U' "$mount_point")" != "root" ]]; then
@@ -4068,8 +4084,8 @@ EOF
   if [ "$var_os" == "alpine" ]; then
     sleep 3
     pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+https://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq" >>"$BUILD_LOG" 2>&1 || {
       msg_error "Failed to install base packages in Alpine container"
@@ -4078,7 +4094,9 @@ EOF'
   else
     sleep 3
     LANG=${LANG:-en_US.UTF-8}
-    pct exec "$CTID" -- bash -c "sed -i \"/$LANG/ s/^# //\" /etc/locale.gen"
+    local LANG_ESC="${LANG//./\\.}"
+    LANG_ESC="${LANG_ESC//|/\\|}"
+    pct exec "$CTID" -- bash -c "sed -i \"/$LANG_ESC/ s/^# //\" /etc/locale.gen"
     pct exec "$CTID" -- bash -c "locale_line=\$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print \$1}' | head -n 1) && \
     echo LANG=\$locale_line >/etc/default/locale && \
     locale-gen >/dev/null && \
@@ -4208,6 +4226,53 @@ EOF'
       fi
     fi
 
+    # Defense-in-depth: Ensure error handling stays disabled during recovery.
+    # Some functions (e.g. silent/$STD) unconditionally re-enable set -Eeuo pipefail
+    # and trap 'error_handler' ERR. If any code path above called such a function,
+    # the grep/sed pipelines below would trigger error_handler on non-match (exit 1).
+    set +Eeuo pipefail
+    trap - ERR
+
+    # --- Exit code 1 subclassification: analyze logs BEFORE telemetry call ---
+    # Exit code 1 is generic ("General error"). Analyze logs to determine the
+    # real error category so telemetry gets a useful classification instead of "shell".
+    local is_oom=false
+    local is_network_issue=false
+    local is_apt_issue=false
+    local is_cmd_not_found=false
+    local is_disk_full=false
+
+    if [[ $install_exit_code -eq 1 && -f "$combined_log" ]]; then
+      if grep -qiE 'E: Unable to|E: Package|E: Failed to fetch|dpkg.*error|broken packages|unmet dependencies|dpkg --configure -a' "$combined_log"; then
+        is_apt_issue=true
+      fi
+      if grep -qiE 'Cannot allocate memory|Out of memory|oom-killer|Killed process|JavaScript heap' "$combined_log"; then
+        is_oom=true
+      fi
+      if grep -qiE 'Could not resolve|DNS|Connection refused|Network is unreachable|No route to host|Temporary failure resolving|Failed to fetch' "$combined_log"; then
+        is_network_issue=true
+      fi
+      if grep -qiE ': command not found|No such file or directory.*/s?bin/' "$combined_log"; then
+        is_cmd_not_found=true
+      fi
+      if grep -qiE 'ENOSPC|no space left on device|Disk quota exceeded|errno -28' "$combined_log"; then
+        is_disk_full=true
+      fi
+    fi
+
+    # Set override for categorize_error() so telemetry gets the real category
+    if [[ "$is_apt_issue" == true ]]; then
+      export ERROR_CATEGORY_OVERRIDE="dependency"
+    elif [[ "$is_oom" == true ]]; then
+      export ERROR_CATEGORY_OVERRIDE="resource"
+    elif [[ "$is_network_issue" == true ]]; then
+      export ERROR_CATEGORY_OVERRIDE="network"
+    elif [[ "$is_disk_full" == true ]]; then
+      export ERROR_CATEGORY_OVERRIDE="storage"
+    elif [[ "$is_cmd_not_found" == true ]]; then
+      export ERROR_CATEGORY_OVERRIDE="dependency"
+    fi
+
     # Report failure to telemetry API (now with log available on host)
     # NOTE: Do NOT use msg_info/spinner here — the background spinner process
     # causes SIGTSTP in non-interactive shells (bash -c "$(curl ...)"), which
@@ -4215,13 +4280,6 @@ EOF'
     $STD echo -e "${TAB}⏳ Reporting failure to telemetry..."
     post_update_to_api "failed" "$install_exit_code"
     $STD echo -e "${TAB}${CM:-✔} Failure reported"
-
-    # Defense-in-depth: Ensure error handling stays disabled during recovery.
-    # Some functions (e.g. silent/$STD) unconditionally re-enable set -Eeuo pipefail
-    # and trap 'error_handler' ERR. If any code path above called such a function,
-    # the grep/sed pipelines below would trigger error_handler on non-match (exit 1).
-    set +Eeuo pipefail
-    trap - ERR
 
     # Show combined log location
     if [[ -n "$CTID" && -n "${SESSION_ID:-}" ]]; then
@@ -4251,12 +4309,9 @@ EOF'
     # Prompt user for cleanup with 60s timeout
     echo ""
 
-    # Detect error type for smart recovery options
-    local is_oom=false
-    local is_network_issue=false
-    local is_apt_issue=false
-    local is_cmd_not_found=false
-    local is_disk_full=false
+    # Extend error detection for non-exit-1 codes (exit 1 was already analyzed above)
+    # The is_* flags were set above for exit code 1 log analysis; here we add
+    # exit-code-specific detections for other codes.
     local error_explanation=""
     if declare -f explain_exit_code >/dev/null 2>&1; then
       error_explanation="$(explain_exit_code "$install_exit_code")"
@@ -4305,26 +4360,6 @@ EOF'
       fi
       ;;
     esac
-
-    # Exit 1 subclassification: analyze logs to identify actual root cause
-    # Many exit 1 errors are actually APT, OOM, network, or command-not-found issues
-    if [[ $install_exit_code -eq 1 && -f "$combined_log" ]]; then
-      if grep -qiE 'E: Unable to|E: Package|E: Failed to fetch|dpkg.*error|broken packages|unmet dependencies|dpkg --configure -a' "$combined_log"; then
-        is_apt_issue=true
-      fi
-      if grep -qiE 'Cannot allocate memory|Out of memory|oom-killer|Killed process|JavaScript heap' "$combined_log"; then
-        is_oom=true
-      fi
-      if grep -qiE 'Could not resolve|DNS|Connection refused|Network is unreachable|No route to host|Temporary failure resolving|Failed to fetch' "$combined_log"; then
-        is_network_issue=true
-      fi
-      if grep -qiE ': command not found|No such file or directory.*/s?bin/' "$combined_log"; then
-        is_cmd_not_found=true
-      fi
-      if grep -qiE 'ENOSPC|no space left on device|Disk quota exceeded|errno -28' "$combined_log"; then
-        is_disk_full=true
-      fi
-    fi
 
     # Show error explanation if available
     if [[ -n "$error_explanation" ]]; then
@@ -4527,6 +4562,7 @@ EOF'
 
           if [[ $apt_retry_code -eq 0 ]]; then
             msg_ok "Installation completed successfully after APT repair!"
+            INSTALL_COMPLETE=true
             post_update_to_api "done" "0" "force"
             return 0
           else
@@ -4750,6 +4786,10 @@ fix_gpu_gids() {
   # Stop container to update config
   pct stop "$CTID" >/dev/null 2>&1
   sleep 1
+
+  # Validate GIDs are numeric before sed
+  [[ "$render_gid" =~ ^[0-9]+$ ]] || render_gid="104"
+  [[ "$video_gid" =~ ^[0-9]+$ ]] || video_gid="44"
 
   # Update dev entries with correct GIDs
   sed -i.bak -E "s|(dev[0-9]+: /dev/dri/renderD[0-9]+),gid=[0-9]+|\1,gid=${render_gid}|g" "$LXC_CONFIG"
@@ -4994,7 +5034,7 @@ create_lxc_container() {
       return 0
     fi
 
-    msg_info "An update for the Proxmox LXC stack is available"
+    msg_warn "An update for the Proxmox LXC stack is available"
     echo "  pve-container: installed=${_pvec_i:-n/a}  candidate=${_pvec_c:-n/a}"
     echo "  lxc-pve     : installed=${_lxcp_i:-n/a}  candidate=${_lxcp_c:-n/a}"
     echo
@@ -5102,7 +5142,7 @@ create_lxc_container() {
   fi
 
   msg_info "Validating storage '$CONTAINER_STORAGE'"
-  STORAGE_TYPE=$(grep -E "^[^:]+: $CONTAINER_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1 | head -1)
+  STORAGE_TYPE=$(grep -E "^[^:]+: $CONTAINER_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1 | head -1 || true)
 
   if [[ -z "$STORAGE_TYPE" ]]; then
     msg_error "Storage '$CONTAINER_STORAGE' not found in /etc/pve/storage.cfg"
@@ -5141,7 +5181,7 @@ create_lxc_container() {
   msg_ok "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) validated"
 
   msg_info "Validating template storage '$TEMPLATE_STORAGE'"
-  TEMPLATE_TYPE=$(grep -E "^[^:]+: $TEMPLATE_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1)
+  TEMPLATE_TYPE=$(grep -E "^[^:]+: $TEMPLATE_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1 || true)
 
   if ! pvesm status -content vztmpl 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$TEMPLATE_STORAGE"; then
     msg_warn "Template storage '$TEMPLATE_STORAGE' may not support 'vztmpl'"
@@ -5664,7 +5704,7 @@ description() {
   DESCRIPTION=$(
     cat <<EOF
 <div align='center'>
-  <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
+  <a href='https://community-scripts.org' target='_blank' rel='noopener noreferrer'>
     <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
@@ -5697,6 +5737,7 @@ EOF
     systemctl start ping-instances.service
   fi
 
+  INSTALL_COMPLETE=true
   post_update_to_api "done" "none"
 }
 

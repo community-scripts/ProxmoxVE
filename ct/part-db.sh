@@ -27,36 +27,27 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(get_latest_github_release "Part-DB/Part-DB-server")
+
   if check_for_gh_release "partdb" "Part-DB/Part-DB-server"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Updating $APP to v${RELEASE}"
-    cd /opt
     mv /opt/partdb/ /opt/partdb-backup
-    curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -o "/opt/v${RELEASE}.zip"
-    $STD unzip "v${RELEASE}.zip"
-    mv /opt/Part-DB-server-${RELEASE}/ /opt/partdb
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "partdb" "Part-DB/Part-DB-server" "prebuild" "latest" "/opt/partdb" "partdb_with_assets.zip"
 
+    msg_info "Updating Part-DB"
     cd /opt/partdb/
-    cp -r "/opt/partdb-backup/.env.local" /opt/partdb/
-    cp -r "/opt/partdb-backup/public/media" /opt/partdb/public/
-    cp -r "/opt/partdb-backup/config/banner.md" /opt/partdb/config/
-
+    cp -r /opt/partdb-backup/.env.local /opt/partdb/
+    cp -r /opt/partdb-backup/public/media /opt/partdb/public/
+    cp -r /opt/partdb-backup/config/banner.md /opt/partdb/config/
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev -o --no-interaction
-    $STD yarn install
-    $STD yarn build
     $STD php bin/console cache:clear
     $STD php bin/console doctrine:migrations:migrate -n
     chown -R www-data:www-data /opt/partdb
-    rm -r "/opt/v${RELEASE}.zip"
     rm -r /opt/partdb-backup
-    echo "${RELEASE}" >~/.partdb
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated Part-DB"
 
     msg_info "Starting Service"
     systemctl start apache2
