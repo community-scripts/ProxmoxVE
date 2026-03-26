@@ -21,6 +21,17 @@ function update_container() {
   esac
 }
 
+function restart_container_service() {
+  service=$1
+  container=$2
+  custom_command_1="systemctl is-enabled $service"
+  custom_command_2="systemctl restart $service && systemctl status $service"
+  if pct exec "$container" -- bash -c "command ${custom_command_1} >/dev/null 2>&1"; then
+    echo -e "\n${BL}[Info]${GN} Restarting $service inside${BL} ${name}${GN} with output: ${CL}\n"
+    pct exec "$container" -- bash -c "${custom_command_2}" 2>&1
+  fi
+}
+
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   excluded=false
   for excluded_container in "${excluded_containers[@]}"; do
@@ -40,10 +51,12 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       pct start "$container"
       sleep 5
       update_container "$container"
+      restart_container_service "patchmon-agent.service" $container
       echo -e "[Info] Shutting down $container"
       pct shutdown "$container" &
     elif [ "$status" == "status: running" ]; then
       update_container "$container"
+      restart_container_service "patchmon-agent.service" $container
     fi
   fi
 done
