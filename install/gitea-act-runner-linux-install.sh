@@ -62,8 +62,13 @@ msg_info "Generating config"
 /opt/act_runner/act_runner generate-config > /opt/act_runner/config.yaml
 msg_ok "Config generated"
 
+msg_info "Patching config for host mode (no Docker)"
+sed -i 's|  docker_host: ""|  docker_host: "-"|' /opt/act_runner/config.yaml
+sed -i 's|  network: ""|  network: "host"|' /opt/act_runner/config.yaml
+msg_ok "Config patched"
+
 msg_info "Registering runner with Gitea"
-/opt/act_runner/act_runner register \
+cd /opt/act_runner && /opt/act_runner/act_runner register \
   --no-interactive \
   --instance "${GITEA_URL}" \
   --token "${RUNNER_TOKEN}" \
