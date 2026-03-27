@@ -428,6 +428,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-27
 
+### 🆕 New Scripts
+
+  - GeoPulse ([#13320](https://github.com/community-scripts/ProxmoxVE/pull/13320))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
