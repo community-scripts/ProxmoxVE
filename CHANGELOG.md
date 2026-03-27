@@ -426,6 +426,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-27
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - RevealJS: Switch from gulp to vite [@tremor021](https://github.com/tremor021) ([#13336](https://github.com/community-scripts/ProxmoxVE/pull/13336))
+
 ## 2026-03-26
 
 ### 🆕 New Scripts
