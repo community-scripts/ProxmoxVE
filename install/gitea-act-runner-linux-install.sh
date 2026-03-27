@@ -21,6 +21,10 @@ apt-get install -y --no-install-recommends \
   sudo &>/dev/null
 msg_ok "Installed Dependencies"
 
+msg_info "Installing Docker"
+curl -fsSL https://get.docker.com | sh &>/dev/null
+msg_ok "Installed Docker"
+
 msg_info "Fetching latest act_runner release"
 RELEASE=$(curl -s https://gitea.com/api/v1/repos/gitea/act_runner/releases/latest \
   | grep -o '"tag_name":"[^"]*"' | cut -d'"' -f4)
@@ -61,11 +65,6 @@ echo ""
 msg_info "Generating config"
 /opt/act_runner/act_runner generate-config > /opt/act_runner/config.yaml
 msg_ok "Config generated"
-
-msg_info "Patching config for host mode (no Docker)"
-sed -i 's|  docker_host: ""|  docker_host: "-"|' /opt/act_runner/config.yaml
-sed -i 's|  network: ""|  network: "host"|' /opt/act_runner/config.yaml
-msg_ok "Config patched"
 
 msg_info "Registering runner with Gitea"
 cd /opt/act_runner && /opt/act_runner/act_runner register \
