@@ -442,6 +442,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: bump to v2.6.3 [@MickLesk](https://github.com/MickLesk) ([#13324](https://github.com/community-scripts/ProxmoxVE/pull/13324))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - Refactor/Feature-Bump/Security: Update-Cron-LXCs (Now Local Mode!) [@MickLesk](https://github.com/MickLesk) ([#13339](https://github.com/community-scripts/ProxmoxVE/pull/13339))
+
 ## 2026-03-26
 
 ### 🆕 New Scripts
