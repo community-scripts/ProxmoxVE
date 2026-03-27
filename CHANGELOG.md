@@ -430,7 +430,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - GeoPulse ([#13320](https://github.com/community-scripts/ProxmoxVE/pull/13320))
+  - Matter-Server ([#13355](https://github.com/community-scripts/ProxmoxVE/pull/13355))
+- GeoPulse ([#13320](https://github.com/community-scripts/ProxmoxVE/pull/13320))
 
 ### 🚀 Updated Scripts
 
