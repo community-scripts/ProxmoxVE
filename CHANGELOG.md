@@ -440,6 +440,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Dispatcharr add custom Postgres port support for upgrade [@MickLesk](https://github.com/MickLesk) ([#13347](https://github.com/community-scripts/ProxmoxVE/pull/13347))
     - Immich: bump to v2.6.3 [@MickLesk](https://github.com/MickLesk) ([#13324](https://github.com/community-scripts/ProxmoxVE/pull/13324))
 
 ### 🧰 Tools
