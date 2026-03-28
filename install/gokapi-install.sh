@@ -17,7 +17,7 @@ fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/g
 
 msg_info "Configuring Gokapi"
 mkdir -p /opt/gokapi/{data,config}
-chmod +x /opt/gokapi/gokapi-linux_amd64
+chmod +x /opt/gokapi/gokapi
 msg_ok "Configured Gokapi"
 
 msg_info "Creating Service"
@@ -29,7 +29,7 @@ Description=gokapi
 Type=simple
 Environment=GOKAPI_DATA_DIR=/opt/gokapi/data
 Environment=GOKAPI_CONFIG_DIR=/opt/gokapi/config
-ExecStart=/opt/gokapi/gokapi-linux_amd64
+ExecStart=/opt/gokapi/gokapi
 
 [Install]
 WantedBy=multi-user.target

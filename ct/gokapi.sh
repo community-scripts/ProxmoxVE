@@ -34,6 +34,15 @@ function update_script() {
 
     fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "*linux*amd64.zip"
 
+    # Migrate from pre-v2.2.4 binary name (gokapi-linux_amd64 → gokapi)
+    if [[ -f /opt/gokapi/gokapi-linux_amd64 ]]; then
+      rm -f /opt/gokapi/gokapi-linux_amd64
+    fi
+    if grep -q "gokapi-linux_amd64" /etc/systemd/system/gokapi.service 2>/dev/null; then
+      sed -i 's|gokapi-linux_amd64|gokapi|g' /etc/systemd/system/gokapi.service
+      systemctl daemon-reload
+    fi
+
     msg_info "Starting Service"
     systemctl start gokapi
     msg_ok "Started Service"
