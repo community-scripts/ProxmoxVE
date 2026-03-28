@@ -430,6 +430,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Fix: update gokapi asset matching for v2.2.4+ naming convention [@krazos](https://github.com/krazos) ([#13369](https://github.com/community-scripts/ProxmoxVE/pull/13369))
+
   - #### 🐞 Bug Fixes
 
     - Tandoor Recipes: Add missing env variable [@tremor021](https://github.com/tremor021) ([#13365](https://github.com/community-scripts/ProxmoxVE/pull/13365))
