@@ -426,6 +426,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-28
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Tandoor Recipes: Add missing env variable [@tremor021](https://github.com/tremor021) ([#13365](https://github.com/community-scripts/ProxmoxVE/pull/13365))
+
 ## 2026-03-27
 
 ### 🆕 New Scripts
