@@ -32,7 +32,7 @@ function update_script() {
     systemctl stop gokapi
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "gokapi-linux_amd64.zip"
+    fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "*linux*amd64.zip"
 
     msg_info "Starting Service"
     systemctl start gokapi
