@@ -79,6 +79,15 @@ function cleanup_vmid() {
     qm stop $VMID &>/dev/null
     qm destroy $VMID &>/dev/null
   fi
+  # Remove disk images left by a failed run after pvesm alloc / importdisk (qm destroy does not remove them)
+  if [ -n "${STORAGE:-}" ] && [ -n "${VMID:-}" ]; then
+    if [ -n "${DISK0_REF:-}" ] && [ -n "${DISK0:-}" ] && pvesm list "$STORAGE" 2>/dev/null | grep -qF "${DISK0}"; then
+      pvesm free "${DISK0_REF}" &>/dev/null || true
+    fi
+    if [ -n "${DISK1_REF:-}" ] && [ -n "${DISK1:-}" ] && pvesm list "$STORAGE" 2>/dev/null | grep -qF "${DISK1}"; then
+      pvesm free "${DISK1_REF}" &>/dev/null || true
+    fi
+  fi
 }
 
 function cleanup() {
@@ -738,8 +747,17 @@ done
 msg_info "Creating a OPNsense VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
-pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
-qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
+# Drop orphan volumes from a previous failed run (alloc/import leaves ZFS/qcow2 behind; qm destroy does not remove them)
+if pvesm list "$STORAGE" 2>/dev/null | grep -qF "${DISK0}"; then
+  msg_info "Removing leftover disk ${DISK0} from a previous run"
+  pvesm free "${DISK0_REF}" || true
+fi
+if pvesm list "$STORAGE" 2>/dev/null | grep -qF "${DISK1}"; then
+  msg_info "Removing leftover disk ${DISK1} from a previous run"
+  pvesm free "${DISK1_REF}" || true
+fi
+pvesm alloc $STORAGE $VMID $DISK0 4M
+qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-}
 qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=2G \
