@@ -283,7 +283,7 @@ EOF
     if [[ "${MAINT_MODE:-0}" == 1 ]]; then
       msg_info "Disabling Maintenance Mode"
       cd /opt/immich/app/bin
-      $STD ./immich-admin disable-maintenance-mode
+      $STD ./immich-admin disable-maintenance-mode || true
       unset MAINT_MODE
       $STD cd -
       msg_ok "Disabled Maintenance Mode"
