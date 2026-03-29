@@ -431,6 +431,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-03-29
 
+### 🆕 New Scripts
+
+  - YOURLS ([#13379](https://github.com/community-scripts/ProxmoxVE/pull/13379))
+
 ## 2026-03-28
 
 ### 🚀 Updated Scripts
