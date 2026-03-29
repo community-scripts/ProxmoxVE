@@ -439,6 +439,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: ignore Redis connection error on maintenance mode disable [@MickLesk](https://github.com/MickLesk) ([#13398](https://github.com/community-scripts/ProxmoxVE/pull/13398))
     - NPM: unmask openresty after migration from package [@MickLesk](https://github.com/MickLesk) ([#13399](https://github.com/community-scripts/ProxmoxVE/pull/13399))
 
 ## 2026-03-28
