@@ -93,6 +93,7 @@ ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
 WantedBy=multi-user.target
 EOF
     systemctl daemon-reload
+    systemctl unmask openresty 2>/dev/null || true
     systemctl restart openresty
     msg_ok "Built OpenResty"
   fi
