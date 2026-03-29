@@ -435,6 +435,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - YOURLS ([#13379](https://github.com/community-scripts/ProxmoxVE/pull/13379))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - NPM: unmask openresty after migration from package [@MickLesk](https://github.com/MickLesk) ([#13399](https://github.com/community-scripts/ProxmoxVE/pull/13399))
+
 ## 2026-03-28
 
 ### 🚀 Updated Scripts
