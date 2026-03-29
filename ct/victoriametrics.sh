@@ -34,24 +34,26 @@ function update_script() {
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl stop victoriametrics-logs
     msg_ok "Stopped Service"
 
-    victoriametrics_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest" |
-      jq -r '.assets[].name' |
-      grep -E '^victoria-metrics-linux-amd64-v[0-9.]+\.tar\.gz$')
-    vmutils_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest" |
-      jq -r '.assets[].name' |
-      grep -E '^vmutils-linux-amd64-v[0-9.]+\.tar\.gz$')
+    victoriametrics_release=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases" |
+      jq -r '.[] | select(.assets[].name | match("^victoria-metrics-linux-amd64-v[0-9.]+.tar.gz$")) | .tag_name' |
+      head -n 1)
 
-    fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "$victoriametrics_filename"
-    fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "$vmutils_filename"
+    msg_debug "Using release $victoriametrics_release"
+
+    victoriametrics_filename="victoria-metrics-linux-amd64-${victoriametrics_release}.tar.gz"
+    vmutils_filename="vmutils-linux-amd64-${victoriametrics_release}.tar.gz"
+
+    fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$victoriametrics_filename"
+    fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$vmutils_filename"
 
     if [[ -f /etc/systemd/system/victoriametrics-logs.service ]]; then
       vmlogs_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
         jq -r '.assets[].name' |
-        grep -E '^victoria-logs-linux-amd64-v[0-9.]+\.tar\.gz$')  
+        grep -E '^victoria-logs-linux-amd64-v[0-9.]+\.tar\.gz$')
       vlutils_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
         jq -r '.assets[].name' |
         grep -E '^vlutils-linux-amd64-v[0-9.]+\.tar\.gz$')
-        
+
       fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vmlogs_filename"
       fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vlutils_filename"
     fi
