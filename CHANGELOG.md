@@ -429,6 +429,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-30
+
+### ❔ Uncategorized
+
+  - Rename: BirdNET > BirdNET-Go [@MickLesk](https://github.com/MickLesk) ([#13410](https://github.com/community-scripts/ProxmoxVE/pull/13410))
+
 ## 2026-03-29
 
 ### 🆕 New Scripts
