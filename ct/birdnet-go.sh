@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/tphakala/birdnet-go
 
-APP="BirdNET"
+APP="BirdNET-Go"
 var_tags="${var_tags:-monitoring;ai;nature}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-2048}"
