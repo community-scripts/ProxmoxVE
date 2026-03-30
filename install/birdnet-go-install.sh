@@ -23,13 +23,13 @@ msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "birdnet" "tphakala/birdnet-go" "prebuild" "latest" "/opt/birdnet" "birdnet-go-linux-amd64.tar.gz"
 
-msg_info "Setting up BirdNET"
+msg_info "Setting up BirdNET-Go"
 cp /opt/birdnet/birdnet-go /usr/local/bin/birdnet-go
 chmod +x /usr/local/bin/birdnet-go
 cp -r /opt/birdnet/libtensorflowlite_c.so /usr/local/lib/ || true
 ldconfig
 mkdir -p /opt/birdnet/data/clips
-msg_ok "Set up BirdNET"
+msg_ok "Set up BirdNET-Go"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/birdnet.service
