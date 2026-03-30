@@ -435,9 +435,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Bambuddy ([#13411](https://github.com/community-scripts/ProxmoxVE/pull/13411))
 
-### ❔ Uncategorized
+### 🚀 Updated Scripts
 
-  - Rename: BirdNET > BirdNET-Go [@MickLesk](https://github.com/MickLesk) ([#13410](https://github.com/community-scripts/ProxmoxVE/pull/13410))
+  - #### 💥 Breaking Changes
+
+    - Rename: BirdNET > BirdNET-Go [@MickLesk](https://github.com/MickLesk) ([#13410](https://github.com/community-scripts/ProxmoxVE/pull/13410))
 
 ## 2026-03-29
 
