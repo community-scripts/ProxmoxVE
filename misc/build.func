@@ -3530,6 +3530,7 @@ build_container() {
   # Gateway
   if [[ -n "$GATE" ]]; then
     case "$GATE" in
+    ,gw=) ;;
     ,gw=*) NET_STRING+="$GATE" ;;
     *) NET_STRING+=",gw=$GATE" ;;
     esac
