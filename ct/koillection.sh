@@ -48,7 +48,9 @@ function update_script() {
     
     # Ensure APP_RUNTIME is in .env.local for CLI commands (upgrades from older versions)
     if ! grep -q "APP_RUNTIME" /opt/koillection/.env.local 2>/dev/null; then
-      echo 'APP_RUNTIME="Symfony\Component\Runtime\SymfonyRuntime"' >> /opt/koillection/.env.local
+      # Ensure file ends with newline before appending to avoid concatenation
+      [[ -s /opt/koillection/.env.local && -n "$(tail -c 1 /opt/koillection/.env.local)" ]] && echo "" >>/opt/koillection/.env.local
+      echo 'APP_RUNTIME="Symfony\Component\Runtime\SymfonyRuntime"' >>/opt/koillection/.env.local
     fi
     
     export COMPOSER_ALLOW_SUPERUSER=1
