@@ -429,6 +429,21 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-31
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Graylog: set vm.max_map_count on host for OpenSearch [@MickLesk](https://github.com/MickLesk) ([#13441](https://github.com/community-scripts/ProxmoxVE/pull/13441))
+    - Koillection: ensure newline before appending to .env.local [@MickLesk](https://github.com/MickLesk) ([#13440](https://github.com/community-scripts/ProxmoxVE/pull/13440))
+
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: skip empty gateway value in network config [@MickLesk](https://github.com/MickLesk) ([#13442](https://github.com/community-scripts/ProxmoxVE/pull/13442))
+
 ## 2026-03-30
 
 ### 🆕 New Scripts
