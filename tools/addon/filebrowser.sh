@@ -131,9 +131,10 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     cd /usr/local/community-scripts
     filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
     filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-    filebrowser config init --auth.method=noauth &>/dev/null
-    filebrowser config set --auth.method=noauth &>/dev/null
-    filebrowser users add ID 1 --perm.admin &>/dev/null
+    filebrowser config set --auth.method=noauth --database "$DB_PATH" &>/dev/null
+    if ! filebrowser users update 1 --perm.admin --database "$DB_PATH" &>/dev/null; then
+      filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH" &>/dev/null
+    fi
     msg_ok "No Authentication configured"
   else
     msg_info "Setting up default authentication"
