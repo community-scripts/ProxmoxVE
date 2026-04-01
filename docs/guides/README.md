@@ -39,6 +39,18 @@ Automating container deployments without user interaction.
 - Scripted installations
 - Pre-configured templates
 
+### [Core Runtime Sourcing Guide](CORE_RUNTIME_SOURCING_GUIDE.md)
+
+How local-first loading, remote fallback, and ref/base pinning work for core runtime modules.
+
+**Topics covered:**
+
+- Local-first module resolution (`misc/*.func`)
+- Branch/tag/commit pinning with `COMMUNITY_SCRIPTS_REF`
+- Custom remote base URLs (`COMMUNITY_SCRIPTS_REMOTE_BASE`, `COMMUNITY_SCRIPTS_INSTALL_BASE`, `COMMUNITY_SCRIPTS_CT_BASE`)
+- CT update behavior (`/usr/bin/update` source resolution)
+- Production hardening and troubleshooting
+
 ## 🔗 Related Documentation
 
 - **[CT Scripts Guide](../ct/)** - Container script structure and usage
@@ -52,6 +64,8 @@ Automating container deployments without user interaction.
 For most users, start with the **Unattended Deployments** guide to learn how to automate your container setups.
 
 For advanced configuration options, refer to the **Configuration Reference**.
+
+For runtime source hardening and pinning, read the **Core Runtime Sourcing Guide**.
 
 ## 🤝 Contributing
 

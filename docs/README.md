@@ -27,6 +27,9 @@ Complete guide to all ProxmoxVE documentation - quickly find what you need.
 **Deploy containers automatically**
 → Read: [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md)
 
+**Pin runtime source loading (branch/tag/commit)**
+→ Read: [guides/CORE_RUNTIME_SOURCING_GUIDE.md](guides/CORE_RUNTIME_SOURCING_GUIDE.md)
+
 **Develop a function library**
 → Study: [misc/](misc/) documentation
 
@@ -93,71 +96,84 @@ ProxmoxVE/
 
 ### Core Documentation
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| [contribution/README.md](contribution/README.md) | How to contribute | Contributors |
-| [ct/DETAILED_GUIDE.md](ct/DETAILED_GUIDE.md) | Create ct scripts | Container developers |
-| [install/DETAILED_GUIDE.md](install/DETAILED_GUIDE.md) | Create install scripts | Installation developers |
-| [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) | Architecture deep-dive | Architects, advanced users |
-| [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md) | Configuration system | Operators, power users |
-| [guides/CONFIGURATION_REFERENCE.md](guides/CONFIGURATION_REFERENCE.md) | Configuration options reference | Advanced users |
-| [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md) | Automated deployments | DevOps, automation |
-| [EXIT_CODES.md](EXIT_CODES.md) | Exit code reference | Troubleshooters |
-| [DEV_MODE.md](DEV_MODE.md) | Debugging tools | Developers |
+| Document                                                                       | Purpose                         | Audience                   |
+| ------------------------------------------------------------------------------ | ------------------------------- | -------------------------- |
+| [contribution/README.md](contribution/README.md)                               | How to contribute               | Contributors               |
+| [ct/DETAILED_GUIDE.md](ct/DETAILED_GUIDE.md)                                   | Create ct scripts               | Container developers       |
+| [install/DETAILED_GUIDE.md](install/DETAILED_GUIDE.md)                         | Create install scripts          | Installation developers    |
+| [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md)                               | Architecture deep-dive          | Architects, advanced users |
+| [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md)             | Configuration system            | Operators, power users     |
+| [guides/CONFIGURATION_REFERENCE.md](guides/CONFIGURATION_REFERENCE.md)         | Configuration options reference | Advanced users             |
+| [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md)           | Automated deployments           | DevOps, automation         |
+| [guides/CORE_RUNTIME_SOURCING_GUIDE.md](guides/CORE_RUNTIME_SOURCING_GUIDE.md) | Runtime local-first + pinning   | Operators, maintainers     |
+| [EXIT_CODES.md](EXIT_CODES.md)                                                 | Exit code reference             | Troubleshooters            |
+| [DEV_MODE.md](DEV_MODE.md)                                                     | Debugging tools                 | Developers                 |
 
 ---
 
 ## 📂 **Directory Guide**
 
 ### [ct/](ct/) - Container Scripts
+
 Documentation for `/ct` - Container creation scripts that run on the Proxmox host.
 
 **Includes**:
+
 - Overview of container creation process
 - Deep dive: [DETAILED_GUIDE.md](ct/DETAILED_GUIDE.md) - Complete reference with examples
 - Reference to [misc/build.func/](misc/build.func/)
 - Quick start for creating new containers
 
 ### [install/](install/) - Installation Scripts
+
 Documentation for `/install` - Scripts that run inside containers to install applications.
 
 **Includes**:
+
 - Overview of 10-phase installation pattern
 - Deep dive: [DETAILED_GUIDE.md](install/DETAILED_GUIDE.md) - Complete reference with examples
 - Reference to [misc/tools.func/](misc/tools.func/)
 - Alpine vs Debian differences
 
 ### [vm/](vm/) - Virtual Machine Scripts
+
 Documentation for `/vm` - VM creation scripts using cloud-init provisioning.
 
 **Includes**:
+
 - Overview of VM provisioning
 - Link to [misc/cloud-init.func/](misc/cloud-init.func/)
 - VM vs Container comparison
 - Cloud-init examples
 
 ### [tools/](tools/) - Tools & Utilities
+
 Documentation for `/tools` - Management tools and add-ons.
 
 **Includes**:
+
 - Overview of tools structure
 - Integration points
 - Contributing new tools
 - Common operations
 
 ### [api/](api/) - API Integration
+
 Documentation for `/api` - Telemetry and API backend.
 
 **Includes**:
+
 - API overview
 - Integration methods
 - API endpoints
 - Privacy information
 
 ### [misc/](misc/) - Function Libraries
+
 Documentation for `/misc` - 9 core function libraries with complete references.
 
 **Contains**:
+
 - **build.func/** - Container orchestration (7 files)
 - **core.func/** - Utilities and messaging (5 files)
 - **error_handler.func/** - Error handling (5 files)
@@ -212,22 +228,23 @@ Documentation for `/misc` - 9 core function libraries with complete references.
 
 ## 📊 **By the Numbers**
 
-| Metric | Count |
-|--------|:---:|
-| **Documentation Files** | 63 |
-| **Total Lines** | 15,000+ |
-| **Function Libraries** | 9 |
-| **Functions Documented** | 150+ |
-| **Code Examples** | 50+ |
-| **Flowcharts** | 15+ |
-| **Do/Don't Sections** | 20+ |
-| **Real-World Examples** | 30+ |
+| Metric                   |  Count  |
+| ------------------------ | :-----: |
+| **Documentation Files**  |   63    |
+| **Total Lines**          | 15,000+ |
+| **Function Libraries**   |    9    |
+| **Functions Documented** |  150+   |
+| **Code Examples**        |   50+   |
+| **Flowcharts**           |   15+   |
+| **Do/Don't Sections**    |   20+   |
+| **Real-World Examples**  |   30+   |
 
 ---
 
 ## 🔍 **Find It Fast**
 
 ### By Feature
+
 - **How do I create a container?** → [ct/DETAILED_GUIDE.md](ct/DETAILED_GUIDE.md)
 - **How do I create an install script?** → [install/DETAILED_GUIDE.md](install/DETAILED_GUIDE.md)
 - **How do I create a VM?** → [vm/README.md](vm/README.md)
@@ -235,11 +252,13 @@ Documentation for `/misc` - 9 core function libraries with complete references.
 - **How do I debug?** → [DEV_MODE.md](DEV_MODE.md)
 
 ### By Error
+
 - **Exit code 206?** → [EXIT_CODES.md](EXIT_CODES.md)
 - **Network failed?** → [misc/install.func/](misc/install.func/)
 - **Package error?** → [misc/tools.func/](misc/tools.func/)
 
 ### By Role
+
 - **Contributor** → [contribution/README.md](contribution/README.md)
 - **Operator** → [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md)
 - **Automation** → [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md)

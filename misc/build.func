@@ -83,16 +83,70 @@ variables() {
   fi
 }
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+REMOTE_CORE_REF="${COMMUNITY_SCRIPTS_REF:-main}"
+REMOTE_CORE_BASE="${COMMUNITY_SCRIPTS_REMOTE_BASE:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/${REMOTE_CORE_REF}/misc}"
+REMOTE_INSTALL_BASE="${COMMUNITY_SCRIPTS_INSTALL_BASE:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/${REMOTE_CORE_REF}/install}"
+
+_fetch_core_file_content() {
+  local file="$1"
+  local local_candidates=(
+    "$(dirname "${BASH_SOURCE[0]}")/${file}"
+    "/opt/community-scripts/misc/${file}"
+    "/usr/local/share/community-scripts/misc/${file}"
+    "/usr/local/community-scripts/misc/${file}"
+  )
+  local candidate
+  for candidate in "${local_candidates[@]}"; do
+    if [[ -r "$candidate" ]]; then
+      cat "$candidate"
+      return 0
+    fi
+  done
+
+  local url="${REMOTE_CORE_BASE}/${file}"
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL --connect-timeout 10 --max-time 45 "$url"
+    return $?
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO- "$url"
+    return $?
+  fi
+
+  return 1
+}
+
+_source_core_file() {
+  local file="$1"
+  local content
+  content="$(_fetch_core_file_content "$file")" || return 1
+  source /dev/stdin <<<"$content"
+}
+
+_source_core_file "api.func" || {
+  echo "Failed to load api.func" >&2
+  exit 115
+}
 
 if command -v curl >/dev/null 2>&1; then
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+  _source_core_file "core.func" || {
+    echo "Failed to load core.func" >&2
+    exit 115
+  }
+  _source_core_file "error_handler.func" || {
+    echo "Failed to load error_handler.func" >&2
+    exit 115
+  }
   load_functions
   catch_errors
 elif command -v wget >/dev/null 2>&1; then
-  source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+  _source_core_file "core.func" || {
+    echo "Failed to load core.func" >&2
+    exit 115
+  }
+  _source_core_file "error_handler.func" || {
+    echo "Failed to load error_handler.func" >&2
+    exit 115
+  }
   load_functions
   catch_errors
 fi
@@ -2953,6 +3007,50 @@ echo_default() {
 # - Builds interactive menu (Default, Verbose, Advanced, My Defaults, App Defaults, Diagnostics, Storage, Exit)
 # - Applies chosen settings and triggers container build
 # ------------------------------------------------------------------------------
+check_upstream_drift() {
+  # Skip check for pinned refs (tags/commits/branches != main)
+  if [[ "${COMMUNITY_SCRIPTS_REF:-main}" != "main" ]]; then
+    return 0
+  fi
+
+  local repo_root
+  repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd)"
+  [[ -z "$repo_root" ]] && return 0
+
+  # Preferred: Compare local HEAD with origin/main (git worktree)
+  if command -v git >/dev/null 2>&1 && git -C "$repo_root" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    local local_head upstream_head branch
+    branch="$(git -C "$repo_root" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")"
+    local_head="$(git -C "$repo_root" rev-parse HEAD 2>/dev/null || true)"
+    upstream_head="$(git -C "$repo_root" ls-remote --heads origin main 2>/dev/null | awk '{print $1}' | head -n1)"
+
+    if [[ -n "$local_head" && -n "$upstream_head" && "$local_head" != "$upstream_head" ]]; then
+      msg_warn "Upstream changed: local ${branch} is behind/diverged from origin/main"
+      msg_custom "ℹ️" "${YW}" "Local: ${local_head:0:8}  Upstream: ${upstream_head:0:8}"
+      msg_custom "ℹ️" "${YW}" "Run a sync/rebase to avoid outdated runtime variants."
+    fi
+    return 0
+  fi
+
+  # Fallback (non-git): check latest upstream main SHA via API and compare with cache
+  if command -v curl >/dev/null 2>&1; then
+    local api_url="https://api.github.com/repos/community-scripts/ProxmoxVE/commits/main"
+    local remote_sha cache_dir cache_file old_sha
+    remote_sha="$(curl -fsSL --connect-timeout 5 --max-time 10 "$api_url" 2>/dev/null | grep -oE '"sha"\s*:\s*"[a-f0-9]{40}"' | head -n1 | cut -d'"' -f4)"
+    if [[ -n "$remote_sha" ]]; then
+      cache_dir="/var/cache/community-scripts"
+      cache_file="${cache_dir}/upstream-main.sha"
+      mkdir -p "$cache_dir" 2>/dev/null || true
+      old_sha="$(cat "$cache_file" 2>/dev/null || true)"
+      if [[ -n "$old_sha" && "$old_sha" != "$remote_sha" ]]; then
+        msg_warn "Upstream main changed since last run (${old_sha:0:8} -> ${remote_sha:0:8})"
+        msg_custom "ℹ️" "${YW}" "Consider updating local scripts to avoid stale variants."
+      fi
+      echo "$remote_sha" >"$cache_file" 2>/dev/null || true
+    fi
+  fi
+}
+
 install_script() {
   pve_check
   shell_check
@@ -2960,6 +3058,7 @@ install_script() {
   arch_check
   ssh_check
   maxkeys_check
+  check_upstream_drift
   diagnostics_check
 
   if systemctl is-active -q ping-instances.service; then
@@ -3451,7 +3550,10 @@ msg_menu() {
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 start() {
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  _source_core_file "tools.func" || {
+    msg_error "Failed to load tools.func"
+    exit 115
+  }
   if command -v pveversion >/dev/null 2>&1; then
     install_script || return 0
     return 0
@@ -3587,15 +3689,15 @@ build_container() {
   # Build PCT_OPTIONS as string for export
   TEMP_DIR=$(mktemp -d)
   pushd "$TEMP_DIR" >/dev/null
-  local _func_url
+  local _func_file
   if [ "$var_os" == "alpine" ]; then
-    _func_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func"
+    _func_file="alpine-install.func"
   else
-    _func_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func"
+    _func_file="install.func"
   fi
-  export FUNCTIONS_FILE_PATH="$(curl -fsSL "$_func_url")"
+  export FUNCTIONS_FILE_PATH="$(_fetch_core_file_content "$_func_file")"
   if [[ -z "$FUNCTIONS_FILE_PATH" || ${#FUNCTIONS_FILE_PATH} -lt 100 ]]; then
-    msg_error "Failed to download install functions from: $_func_url"
+    msg_error "Failed to load install functions: ${_func_file}"
     exit 115
   fi
 
@@ -4301,7 +4403,7 @@ EOF
     # that sends "configuring" status AFTER the host already reported "failed"
     export CONTAINER_INSTALLING=true
 
-    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${REMOTE_INSTALL_BASE}/${var_install}.sh)"
     local lxc_exit=$?
 
     unset CONTAINER_INSTALLING
@@ -4624,7 +4726,7 @@ EOF
         if [[ "${DEV_MODE_MOTD:-false}" == "true" ]]; then
           echo -e "${TAB}${HOLD}${DGN}Setting up MOTD and SSH for debugging...${CL}"
           if pct exec "$CTID" -- bash -c "
-              source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)
+              source <(curl -fsSL ${REMOTE_CORE_BASE}/install.func)
               declare -f motd_ssh >/dev/null 2>&1 && motd_ssh || true
             " >/dev/null 2>&1; then
             local ct_ip=$(pct exec "$CTID" ip a s dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
@@ -4696,7 +4798,7 @@ EOF
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
           trap - ERR
-          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${REMOTE_INSTALL_BASE}/${var_install}.sh)"
           local apt_retry_exit=$?
           set -Eeuo pipefail
           trap 'error_handler' ERR
