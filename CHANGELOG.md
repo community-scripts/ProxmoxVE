@@ -435,6 +435,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - DrawDB ([#13454](https://github.com/community-scripts/ProxmoxVE/pull/13454))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Filebrowser: make noauth setup use correct database [@MickLesk](https://github.com/MickLesk) ([#13457](https://github.com/community-scripts/ProxmoxVE/pull/13457))
+
 ## 2026-03-31
 
 ### 🚀 Updated Scripts
