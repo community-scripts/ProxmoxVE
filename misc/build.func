@@ -1209,6 +1209,13 @@ load_vars_file() {
             continue
           fi
           ;;
+        var_apt_cacher_ip)
+          # Allow: plain IP/hostname, http://host, https://host:port
+          if [[ -n "$var_val" ]] && ! [[ "$var_val" =~ ^(https?://)?[a-zA-Z0-9._-]+(:[0-9]+)?(/.*)?$ ]]; then
+            msg_warn "Invalid APT Cacher address '$var_val' in $file, ignoring"
+            continue
+          fi
+          ;;
         var_container_storage | var_template_storage)
           # Validate that the storage exists and is active on the current node
           local _storage_status
@@ -1321,9 +1328,11 @@ var_ipv6_method=none
 var_ssh=no
 # var_ssh_authorized_key=
 
-# APT cacher (optional - with example)
+# APT cacher (optional - IP or URL)
 # var_apt_cacher=yes
 # var_apt_cacher_ip=192.168.1.10
+# var_apt_cacher_ip=http://proxy.local
+# var_apt_cacher_ip=https://proxy.local:443
 
 # Features/Tags/verbosity
 var_fuse=no
