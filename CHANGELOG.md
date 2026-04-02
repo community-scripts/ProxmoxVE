@@ -435,6 +435,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Grist: Guard backup restore for empty docs/db files [@MickLesk](https://github.com/MickLesk) ([#13472](https://github.com/community-scripts/ProxmoxVE/pull/13472))
     - fix(zigbee2mqtt): suppress grep error when pnpm-workspace.yaml is absent on update [@Copilot](https://github.com/Copilot) ([#13476](https://github.com/community-scripts/ProxmoxVE/pull/13476))
 
 ## 2026-04-01
