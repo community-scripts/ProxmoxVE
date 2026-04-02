@@ -46,9 +46,11 @@ function update_script() {
     msg_info "Updating Grist"
     mkdir -p /opt/grist/docs
     cp -n /opt/grist_bak/.env /opt/grist/.env
-    cp -r /opt/grist_bak/docs/* /opt/grist/docs/
-    cp /opt/grist_bak/grist-sessions.db /opt/grist/grist-sessions.db
-    cp /opt/grist_bak/landing.db /opt/grist/landing.db
+    if ls /opt/grist_bak/docs/* &>/dev/null; then
+      cp -r /opt/grist_bak/docs/* /opt/grist/docs/
+    fi
+    [[ -f /opt/grist_bak/grist-sessions.db ]] && cp /opt/grist_bak/grist-sessions.db /opt/grist/grist-sessions.db
+    [[ -f /opt/grist_bak/landing.db ]] && cp /opt/grist_bak/landing.db /opt/grist/landing.db
     cd /opt/grist
     $STD yarn install
     $STD yarn run install:ee
