@@ -7,6 +7,9 @@
 # This script is installed locally by cron-update-lxcs.sh and executed
 # by cron. It updates all LXC containers using their native package manager.
 
+# Ensure full PATH when running via cron (pct lives in /usr/sbin)
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 CONF_FILE="/etc/update-lxcs.conf"
 
 echo -e "\n $(date)"
