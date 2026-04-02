@@ -390,10 +390,24 @@ update_os() {
   msg_info "Updating Container OS"
   if [[ "$CACHER" == "yes" ]]; then
     echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
+    local _proxy_raw="${CACHER_IP}"
+    local _proxy_host _proxy_port _proxy_url
+    # Parse host and port from URL or plain IP/hostname
+    _proxy_host=$(echo "$_proxy_raw" | sed -e 's|https\?://||' -e 's|/.*||' | cut -d: -f1)
+    _proxy_port=$(echo "$_proxy_raw" | sed -e 's|https\?://||' -e 's|/.*||' | cut -s -d: -f2)
+    if [[ "$_proxy_raw" =~ ^https?:// ]]; then
+      # Full URL provided — use as-is for proxy output, extract port for nc check
+      _proxy_url="$_proxy_raw"
+      _proxy_port="${_proxy_port:-80}"
+    else
+      # Legacy: plain IP or hostname — default to http + port 3142
+      _proxy_port="${_proxy_port:-3142}"
+      _proxy_url="http://${_proxy_raw}:${_proxy_port}"
+    fi
     cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
 #!/bin/bash
-if nc -w1 -z "${CACHER_IP}" 3142; then
-  echo -n "http://${CACHER_IP}:3142"
+if nc -w1 -z "${_proxy_host}" ${_proxy_port}; then
+  echo -n "${_proxy_url}"
 else
   echo -n "DIRECT"
 fi

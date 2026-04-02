@@ -986,13 +986,23 @@ base_settings() {
 
   # Runtime check: Verify APT cacher is reachable if configured
   if [[ -n "$APT_CACHER_IP" && "$APT_CACHER" == "yes" ]]; then
-    if ! curl -s --connect-timeout 2 "http://${APT_CACHER_IP}:3142" >/dev/null 2>&1; then
-      msg_warn "APT Cacher configured but not reachable at ${APT_CACHER_IP}:3142"
+    local _check_host _check_port _check_url
+    _check_host=$(echo "$APT_CACHER_IP" | sed -e 's|https\?://||' -e 's|/.*||' | cut -d: -f1)
+    _check_port=$(echo "$APT_CACHER_IP" | sed -e 's|https\?://||' -e 's|/.*||' | cut -s -d: -f2)
+    if [[ "$APT_CACHER_IP" =~ ^https?:// ]]; then
+      _check_url="$APT_CACHER_IP"
+      _check_port="${_check_port:-80}"
+    else
+      _check_port="${_check_port:-3142}"
+      _check_url="http://${APT_CACHER_IP}:${_check_port}"
+    fi
+    if ! curl -s --connect-timeout 2 "${_check_url}" >/dev/null 2>&1; then
+      msg_warn "APT Cacher configured but not reachable at ${_check_url}"
       msg_custom "⚠️" "${YW}" "Disabling APT Cacher for this installation"
       APT_CACHER=""
       APT_CACHER_IP=""
     else
-      msg_ok "APT Cacher verified at ${APT_CACHER_IP}:3142"
+      msg_ok "APT Cacher verified at ${_check_url}"
     fi
   fi
 
@@ -2526,7 +2536,7 @@ advanced_settings() {
         # Ask for IP if enabled
         if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
           --title "APT CACHER IP" \
-          --inputbox "\nEnter APT Cacher-NG server IP address:" 10 58 "$_apt_cacher_ip" \
+          --inputbox "\nEnter APT Cacher-NG IP or URL:\n(e.g. 192.168.1.10, http://host, https://host:443)" 12 62 "$_apt_cacher_ip" \
           3>&1 1>&2 2>&3); then
           _apt_cacher_ip="$result"
         fi
