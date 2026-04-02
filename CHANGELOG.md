@@ -438,6 +438,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Grist: Guard backup restore for empty docs/db files [@MickLesk](https://github.com/MickLesk) ([#13472](https://github.com/community-scripts/ProxmoxVE/pull/13472))
     - fix(zigbee2mqtt): suppress grep error when pnpm-workspace.yaml is absent on update [@Copilot](https://github.com/Copilot) ([#13476](https://github.com/community-scripts/ProxmoxVE/pull/13476))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Cron LXC Updater: Add full PATH for cron environment [@MickLesk](https://github.com/MickLesk) ([#13473](https://github.com/community-scripts/ProxmoxVE/pull/13473))
+
 ## 2026-04-01
 
 ### 🆕 New Scripts
