@@ -452,6 +452,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core.func: prevent profile.d scripts from aborting on non-zero exit [@MickLesk](https://github.com/MickLesk) ([#13503](https://github.com/community-scripts/ProxmoxVE/pull/13503))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - PVE LXC-Updater: pipe apt list through cat to prevent pager hang [@MickLesk](https://github.com/MickLesk) ([#13501](https://github.com/community-scripts/ProxmoxVE/pull/13501))
+
 ## 2026-04-02
 
 ### 🚀 Updated Scripts
