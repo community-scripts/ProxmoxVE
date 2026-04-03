@@ -663,7 +663,7 @@ if qm status "$VMID" | grep -q "running"; then
   send_line_to_vm "uci set network.lan.ipaddr=${LAN_IP_ADDR}"
   send_line_to_vm "uci set network.lan.netmask=${LAN_NETMASK}"
   send_line_to_vm "uci commit"
-  send_line_to_vm "halt"
+  send_line_to_vm "poweroff"
   msg_ok "Network interfaces configured in OpenWrt"
 else
   msg_error "VM is not running"
