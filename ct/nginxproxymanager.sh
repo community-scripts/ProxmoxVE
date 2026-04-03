@@ -92,6 +92,7 @@ ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
 [Install]
 WantedBy=multi-user.target
 EOF
+    sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     systemctl daemon-reload
     systemctl unmask openresty 2>/dev/null || true
     systemctl restart openresty
