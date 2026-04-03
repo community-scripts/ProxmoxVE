@@ -437,6 +437,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - NginxProxyManager: fix openresty restart by setting user root before reload [@MickLesk](https://github.com/MickLesk) ([#13500](https://github.com/community-scripts/ProxmoxVE/pull/13500))
+
   - #### ✨ New Features
 
     - Wealthfolio: update to v3.2.1 and Node.js 24 [@afadil](https://github.com/afadil) ([#13486](https://github.com/community-scripts/ProxmoxVE/pull/13486))
