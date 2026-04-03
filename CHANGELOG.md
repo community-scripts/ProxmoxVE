@@ -435,6 +435,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - netboot.xyz ([#13480](https://github.com/community-scripts/ProxmoxVE/pull/13480))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Wealthfolio: update to v3.2.1 and Node.js 24 [@afadil](https://github.com/afadil) ([#13486](https://github.com/community-scripts/ProxmoxVE/pull/13486))
+
 ## 2026-04-02
 
 ### 🚀 Updated Scripts
