@@ -452,6 +452,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core.func: prevent profile.d scripts from aborting on non-zero exit [@MickLesk](https://github.com/MickLesk) ([#13503](https://github.com/community-scripts/ProxmoxVE/pull/13503))
 
+  - #### ✨ New Features
+
+    - APT Proxy: Support full URLs (http/https with custom ports) [@MickLesk](https://github.com/MickLesk) ([#13474](https://github.com/community-scripts/ProxmoxVE/pull/13474))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
