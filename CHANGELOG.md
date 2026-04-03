@@ -443,7 +443,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Crafty Controller: add Java 25 for Minecraft 1.26.1+ [@MickLesk](https://github.com/MickLesk) ([#13502](https://github.com/community-scripts/ProxmoxVE/pull/13502))
     - Wealthfolio: update to v3.2.1 and Node.js 24 [@afadil](https://github.com/afadil) ([#13486](https://github.com/community-scripts/ProxmoxVE/pull/13486))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core.func: prevent profile.d scripts from aborting on non-zero exit [@MickLesk](https://github.com/MickLesk) ([#13503](https://github.com/community-scripts/ProxmoxVE/pull/13503))
 
 ## 2026-04-02
 
