@@ -15,8 +15,8 @@ update_os
 
 msg_info "Setting up TemurinJDK"
 setup_java
-$STD apt install -y temurin-{8,11,17,21}-jre
-sudo update-alternatives --set java /usr/lib/jvm/temurin-21-jre-amd64/bin/java
+$STD apt install -y temurin-{8,11,17,21,25}-jre
+sudo update-alternatives --set java /usr/lib/jvm/temurin-25-jre-amd64/bin/java
 msg_ok "Installed TemurinJDK"
 
 msg_info "Setup Python3"
@@ -59,7 +59,7 @@ After=network.target
 Type=simple
 User=crafty
 WorkingDirectory=/opt/crafty-controller/crafty/crafty-4
-Environment=PATH=/usr/lib/jvm/temurin-21-jre-amd64/bin:/opt/crafty-controller/crafty/.venv/bin:$PATH
+Environment=PATH=/usr/lib/jvm/temurin-25-jre-amd64/bin:/opt/crafty-controller/crafty/.venv/bin:$PATH
 ExecStart=/opt/crafty-controller/crafty/.venv/bin/python3 main.py -d
 Restart=on-failure
 
