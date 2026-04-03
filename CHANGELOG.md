@@ -429,6 +429,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-03
+
+### 🆕 New Scripts
+
+  - netboot.xyz ([#13480](https://github.com/community-scripts/ProxmoxVE/pull/13480))
+
 ## 2026-04-02
 
 ### 🚀 Updated Scripts
