@@ -62,6 +62,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
+ExecStartPre=-/bin/mkdir -p /tmp/nginx/body /run/nginx
 ExecStartPre=/usr/local/openresty/nginx/sbin/nginx -t
 ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
 
