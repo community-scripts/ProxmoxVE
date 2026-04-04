@@ -188,32 +188,18 @@ silent() {
   trap 'error_handler' ERR
 
   if [[ $rc -ne 0 ]]; then
-    # Source explain_exit_code if needed
-    if ! declare -f explain_exit_code >/dev/null 2>&1; then
-      source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/error_handler.func) 2>/dev/null || true
-    fi
+    # Return instead of exit so that callers can use `$STD cmd || true`
+    # When no || is used, set -e + ERR trap catches it via error_handler()
+    export _SILENT_FAILED_RC="$rc"
+    export _SILENT_FAILED_CMD="$cmd"
+    export _SILENT_FAILED_LINE="$caller_line"
+    export _SILENT_FAILED_LOG="$logfile"
 
-    local explanation=""
-    if declare -f explain_exit_code >/dev/null 2>&1; then
-      explanation="$(explain_exit_code "$rc")"
-    fi
-
-    printf "\e[?25h"
-    if [[ -n "$explanation" ]]; then
-      msg_error "in line ${caller_line}: exit code ${rc} (${explanation})"
-    else
-      msg_error "in line ${caller_line}: exit code ${rc}"
-    fi
-    msg_custom "→" "${YWB}" "${cmd}"
-
-    if [[ -s "$logfile" ]]; then
-      echo -e "\n${TAB}--- Last 20 lines of log ---"
-      tail -n 20 "$logfile"
-      echo -e "${TAB}----------------------------\n"
-    fi
-
-    exit "$rc"
+    return "$rc"
   fi
+
+  # Clear stale flags on success
+  unset _SILENT_FAILED_RC _SILENT_FAILED_CMD _SILENT_FAILED_LINE _SILENT_FAILED_LOG 2>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------
