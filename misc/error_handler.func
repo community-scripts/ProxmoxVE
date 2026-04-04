@@ -236,6 +236,16 @@ error_handler() {
 
   command="${command//\$STD/}"
 
+  # If error originated from silent(), use its captured metadata
+  # This provides the actual command and line number instead of "silent ..."
+  if [[ -n "${_SILENT_FAILED_RC:-}" ]]; then
+    exit_code="$_SILENT_FAILED_RC"
+    command="$_SILENT_FAILED_CMD"
+    line_number="$_SILENT_FAILED_LINE"
+    # Clear flags to prevent stale data on subsequent errors
+    unset _SILENT_FAILED_RC _SILENT_FAILED_CMD _SILENT_FAILED_LINE
+  fi
+
   if [[ "$exit_code" -eq 0 ]]; then
     return 0
   fi
@@ -279,8 +289,12 @@ error_handler() {
   fi
 
   # Get active log file (BUILD_LOG or INSTALL_LOG)
+  # Prefer silent()'s logfile when available (contains the actual command output)
   local active_log=""
-  if declare -f get_active_logfile >/dev/null 2>&1; then
+  if [[ -n "${_SILENT_FAILED_LOG:-}" && -s "${_SILENT_FAILED_LOG}" ]]; then
+    active_log="$_SILENT_FAILED_LOG"
+    unset _SILENT_FAILED_LOG
+  elif declare -f get_active_logfile >/dev/null 2>&1; then
     active_log="$(get_active_logfile)"
   elif [[ -n "${SILENT_LOGFILE:-}" ]]; then
     active_log="$SILENT_LOGFILE"
