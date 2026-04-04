@@ -429,6 +429,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-04
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - komodo: set `PERIPHERY_CORE_PUBLIC_KEYS` to default value if absent [@4ndv](https://github.com/4ndv) ([#13519](https://github.com/community-scripts/ProxmoxVE/pull/13519))
+
 ## 2026-04-03
 
 ### 🆕 New Scripts
