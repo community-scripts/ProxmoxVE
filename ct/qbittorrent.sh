@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if [[ ! -f ~/.qbittorrent ]]; then
+  if [[ -f ~/.qbittorrent ]]; then
     msg_error "Please create new qBittorrent LXC. Updating from v4.x to v5.x is not supported!"
     exit
   fi
