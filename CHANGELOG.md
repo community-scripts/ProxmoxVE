@@ -445,6 +445,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Grist: remove install:ee step (private repo, not needed for grist-core) [@MickLesk](https://github.com/MickLesk) ([#13526](https://github.com/community-scripts/ProxmoxVE/pull/13526))
     - Nginx Proxy Manager: ensure /tmp/nginx/body exists via openresty service  [@MickLesk](https://github.com/MickLesk) ([#13528](https://github.com/community-scripts/ProxmoxVE/pull/13528))
     - MotionEye: run as root to enable SMB share support [@MickLesk](https://github.com/MickLesk) ([#13527](https://github.com/community-scripts/ProxmoxVE/pull/13527))
 
