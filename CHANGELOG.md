@@ -441,6 +441,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-05
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: silent() function - use return instead of exit to allow || true error handling [@MickLesk](https://github.com/MickLesk) ([#13529](https://github.com/community-scripts/ProxmoxVE/pull/13529))
+
 ## 2026-04-04
 
 ### 🧰 Tools
