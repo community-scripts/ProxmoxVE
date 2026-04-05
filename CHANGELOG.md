@@ -441,6 +441,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-05
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - MotionEye: run as root to enable SMB share support [@MickLesk](https://github.com/MickLesk) ([#13527](https://github.com/community-scripts/ProxmoxVE/pull/13527))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
