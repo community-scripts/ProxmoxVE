@@ -1,0 +1,48 @@
+{
+  "name": "Mailcow",
+  "slug": "mailcow",
+  "categories": [
+    1
+  ],
+  "date_created": "2026-04-06",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 443,
+  "documentation": "https://docs.mailcow.email/",
+  "website": "https://mailcow.email/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/mailcow.webp",
+  "config_path": "/opt/mailcow-dockerized/mailcow.conf",
+  "description": "Mailcow is a Docker-based open source groupware/email suite providing a full-featured mail server with web administration, webmail (SOGo), antispam (Rspamd), antivirus (ClamAV), and more.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/mailcow.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 8192,
+        "hdd": 30,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "moohoo"
+  },
+  "notes": [
+    {
+      "text": "Requires a valid FQDN with proper DNS records (A, MX, SPF, DKIM, DMARC) pointing to the container IP.",
+      "type": "warning"
+    },
+    {
+      "text": "Change the default admin password immediately after first login!",
+      "type": "warning"
+    },
+    {
+      "text": "Ensure ports 25, 80, 143, 443, 465, 587, 993, 995, 4190 are not blocked by your firewall.",
+      "type": "info"
+    }
+  ]
+}
