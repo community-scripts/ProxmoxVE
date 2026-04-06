@@ -34,11 +34,11 @@ function update_script() {
   NODE_VERSION="24" setup_nodejs
 
   msg_info "Updating ${APP}"
-  $STD pip3 install changedetection.io --upgrade
+  $STD pip3 install changedetection.io --upgrade --break-system-packages --ignore-installed typing_extensions
   msg_ok "Updated ${APP}"
 
   msg_info "Updating Playwright"
-  $STD pip3 install playwright --upgrade
+  $STD pip3 install playwright --upgrade --break-system-packages
   msg_ok "Updated Playwright"
 
   if [[ -f /etc/systemd/system/browserless.service ]]; then
