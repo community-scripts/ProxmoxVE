@@ -441,6 +441,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-06
 
+### 🆕 New Scripts
+
+  - Homelable ([#13539](https://github.com/community-scripts/ProxmoxVE/pull/13539))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
