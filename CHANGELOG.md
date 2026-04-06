@@ -443,7 +443,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Homelable ([#13539](https://github.com/community-scripts/ProxmoxVE/pull/13539))
+  - OpenThread Border Router ([#13536](https://github.com/community-scripts/ProxmoxVE/pull/13536))
+- Homelable ([#13539](https://github.com/community-scripts/ProxmoxVE/pull/13539))
 
 ### 🚀 Updated Scripts
 
