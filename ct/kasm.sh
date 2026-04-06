@@ -15,6 +15,7 @@ var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-0}"
 var_fuse="${var_fuse:-yes}"
 var_tun="${var_tun:-yes}"
+var_kasm_version="${var_kasm_version:-}"
 
 header_info "$APP"
 variables
@@ -46,6 +47,13 @@ function update_script() {
   if [[ -z "$KASM_URL" ]] || [[ -z "$KASM_VERSION" ]]; then
     msg_error "Unable to detect latest Kasm release URL."
     exit 250
+  fi
+
+  # Manual override (if var_kasm_version is set)
+  if [[ -n "$var_kasm_version" ]]; then
+    msg_info "Overriding detected version with user-defined version: $var_kasm_version"
+    KASM_VERSION="$var_kasm_version"
+    KASM_URL="https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
   fi
   msg_info "Checked for new version"
 
