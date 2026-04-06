@@ -450,6 +450,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Papra: check env before copy [@MickLesk](https://github.com/MickLesk) ([#13553](https://github.com/community-scripts/ProxmoxVE/pull/13553))
     - changedetection: fix: typing_extensions error [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13548](https://github.com/community-scripts/ProxmoxVE/pull/13548))
     - kasm: fix: fetch latest version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13547](https://github.com/community-scripts/ProxmoxVE/pull/13547))
 
