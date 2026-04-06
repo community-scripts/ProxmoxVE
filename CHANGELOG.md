@@ -439,6 +439,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-06
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - kasm: fix: fetch latest version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13547](https://github.com/community-scripts/ProxmoxVE/pull/13547))
+
 ## 2026-04-05
 
 ### 🚀 Updated Scripts
