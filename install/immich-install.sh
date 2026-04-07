@@ -295,7 +295,7 @@ ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v2.7.0" "$SRC_DIR"
+fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v2.7.1" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
@@ -324,9 +324,6 @@ export SHARP_IGNORE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter @immich/sdk --filter immich-web build
 cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
-sed -i -e "s/eval\"/eval'\"/" \
-  -e "s/'data:'/data:/" \
-  -e "s/'blob:'/blob:/" "$APP_DIR"/helmet.json
 
 # cli build
 $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install

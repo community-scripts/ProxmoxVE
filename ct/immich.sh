@@ -109,7 +109,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="v2.7.0"
+  RELEASE="v2.7.1"
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
@@ -193,9 +193,6 @@ EOF
     $STD pnpm --filter @immich/sdk --filter immich-web build
     cp -a web/build "$APP_DIR"/www
     cp LICENSE "$APP_DIR"
-    sed -i -e "s/eval\"/eval'\"/" \
-      -e "s/'data:'/data:/" \
-      -e "s/'blob:'/blob:/" "$APP_DIR"/helmet.json
 
     # cli build
     $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
