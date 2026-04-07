@@ -28,8 +28,9 @@ setup_deb822_repo \
   "stable"
 $STD apt update
 $STD apt install -y google-chrome-stable
-# remove google-chrome.list added by google-chrome-stable
-rm /etc/apt/sources.list.d/google-chrome.list
+# remove google-chrome.list added by google-chrome-stable (skipped on Debian 13 Trixie,
+# where postinst detects the pre-existing .sources file and does not write the legacy .list)
+rm -f /etc/apt/sources.list.d/google-chrome.list
 msg_ok "Installed Chrome"
 
 fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
