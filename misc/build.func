@@ -4018,7 +4018,7 @@ EOF
 
     # Wait for IP assignment (IPv4 or IPv6)
     local ip_in_lxc=""
-    for i in {1..20}; do
+    for i in {1..60}; do
       # Try IPv4 first
       ip_in_lxc=$(pct exec "$CTID" -- ip -4 addr show dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
       # Fallback to IPv6 if IPv4 not available
@@ -4026,11 +4026,18 @@ EOF
         ip_in_lxc=$(pct exec "$CTID" -- ip -6 addr show dev eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
       fi
       [ -n "$ip_in_lxc" ] && break
-      sleep 1
+      # Progressive backoff: 1s for first 20, 2s for next 20, 3s for last 20
+      if [ "$i" -le 20 ]; then
+        sleep 1
+      elif [ "$i" -le 40 ]; then
+        sleep 2
+      else
+        sleep 3
+      fi
     done
 
     if [ -z "$ip_in_lxc" ]; then
-      msg_error "No IP assigned to CT $CTID after 20s"
+      msg_error "No IP assigned to CT $CTID after 60 attempts"
       msg_custom "🔧" "${YW}" "Troubleshooting:"
       echo "  • Verify bridge ${BRG} exists and has connectivity"
       echo "  • Check if DHCP server is reachable (if using DHCP)"
@@ -5261,9 +5268,10 @@ create_lxc_container() {
     exit 205
   }
   if qm status "$CTID" &>/dev/null || pct status "$CTID" &>/dev/null; then
-    unset CTID
-    msg_error "Cannot use ID that is already in use."
-    exit 206
+    msg_warn "Container/VM ID $CTID is already in use (detected late). Reassigning..."
+    CTID=$(get_valid_container_id "$((CTID + 1))")
+    export CTID
+    msg_ok "Reassigned to container ID $CTID"
   fi
 
   # Report installation start to API early - captures failures in storage/template/create
@@ -5739,30 +5747,77 @@ create_lxc_container() {
   if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >"$LOGFILE" 2>&1; then
     msg_debug "Container creation failed on ${TEMPLATE_STORAGE}. Checking error..."
 
-    # Check if template issue - retry with fresh download
-    if grep -qiE 'unable to open|corrupt|invalid' "$LOGFILE"; then
-      msg_info "Template may be corrupted – re-downloading"
-      rm -f "$TEMPLATE_PATH"
-      pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1
-      msg_ok "Template re-downloaded"
-    fi
+    # Check if CTID collision (race condition: ID claimed between validation and creation)
+    if grep -qiE 'already exists|already in use' "$LOGFILE"; then
+      local old_ctid="$CTID"
+      CTID=$(get_valid_container_id "$((CTID + 1))")
+      export CTID
+      msg_warn "Container ID $old_ctid was claimed by another process. Retrying with ID $CTID"
+      LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
+      if pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >"$LOGFILE" 2>&1; then
+        msg_ok "Container successfully created with new ID $CTID"
+      else
+        msg_error "Container creation failed even with new ID $CTID. See $LOGFILE"
+        _flush_pct_log
+        exit 209
+      fi
+    else
+      # Not a CTID collision - check if template issue and retry with fresh download
+      if grep -qiE 'unable to open|corrupt|invalid' "$LOGFILE"; then
+        msg_info "Template may be corrupted – re-downloading"
+        rm -f "$TEMPLATE_PATH"
+        pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1
+        msg_ok "Template re-downloaded"
+      fi
 
-    # Retry after repair
-    if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
-      # Fallback to local storage if not already on local
-      if [[ "$TEMPLATE_STORAGE" != "local" ]]; then
-        msg_info "Retrying container creation with fallback to local storage"
-        LOCAL_TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
-        if [[ ! -f "$LOCAL_TEMPLATE_PATH" ]]; then
-          msg_ok "Trying local storage fallback"
-          msg_info "Downloading template to local"
-          pveam download local "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1
-          msg_ok "Template downloaded to local"
+      # Retry after repair
+      if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
+        # Fallback to local storage if not already on local
+        if [[ "$TEMPLATE_STORAGE" != "local" ]]; then
+          msg_info "Retrying container creation with fallback to local storage"
+          LOCAL_TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
+          if [[ ! -f "$LOCAL_TEMPLATE_PATH" ]]; then
+            msg_ok "Trying local storage fallback"
+            msg_info "Downloading template to local"
+            pveam download local "$TEMPLATE" >>"${BUILD_LOG:-/dev/null}" 2>&1
+            msg_ok "Template downloaded to local"
+          else
+            msg_ok "Trying local storage fallback"
+          fi
+          if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
+            # Local fallback also failed - check for LXC stack version issue
+            if grep -qiE 'unsupported .* version' "$LOGFILE"; then
+              msg_warn "pct reported 'unsupported version' – LXC stack might be too old for this template"
+              offer_lxc_stack_upgrade_and_maybe_retry "yes"
+              rc=$?
+              case $rc in
+              0) : ;; # success - container created, continue
+              2)
+                msg_error "Upgrade declined. Please update and re-run: apt update && apt install --only-upgrade pve-container lxc-pve"
+                _flush_pct_log
+                exit 231
+                ;;
+              3)
+                msg_error "Upgrade and/or retry failed. Please inspect: $LOGFILE"
+                _flush_pct_log
+                exit 231
+                ;;
+              esac
+            else
+              msg_error "Container creation failed. See $LOGFILE"
+              if whiptail --yesno "pct create failed.\nDo you want to enable verbose debug mode and view detailed logs?" 12 70; then
+                set -x
+                pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
+                set +x
+              fi
+              _flush_pct_log
+              exit 209
+            fi
+          else
+            msg_ok "Container successfully created using local fallback."
+          fi
         else
-          msg_ok "Trying local storage fallback"
-        fi
-        if ! pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS >>"$LOGFILE" 2>&1; then
-          # Local fallback also failed - check for LXC stack version issue
+          # Already on local storage and still failed - check LXC stack version
           if grep -qiE 'unsupported .* version' "$LOGFILE"; then
             msg_warn "pct reported 'unsupported version' – LXC stack might be too old for this template"
             offer_lxc_stack_upgrade_and_maybe_retry "yes"
@@ -5790,50 +5845,28 @@ create_lxc_container() {
             _flush_pct_log
             exit 209
           fi
-        else
-          msg_ok "Container successfully created using local fallback."
         fi
       else
-        # Already on local storage and still failed - check LXC stack version
-        if grep -qiE 'unsupported .* version' "$LOGFILE"; then
-          msg_warn "pct reported 'unsupported version' – LXC stack might be too old for this template"
-          offer_lxc_stack_upgrade_and_maybe_retry "yes"
-          rc=$?
-          case $rc in
-          0) : ;; # success - container created, continue
-          2)
-            msg_error "Upgrade declined. Please update and re-run: apt update && apt install --only-upgrade pve-container lxc-pve"
-            _flush_pct_log
-            exit 231
-            ;;
-          3)
-            msg_error "Upgrade and/or retry failed. Please inspect: $LOGFILE"
-            _flush_pct_log
-            exit 231
-            ;;
-          esac
-        else
-          msg_error "Container creation failed. See $LOGFILE"
-          if whiptail --yesno "pct create failed.\nDo you want to enable verbose debug mode and view detailed logs?" 12 70; then
-            set -x
-            pct create "$CTID" "local:vztmpl/${TEMPLATE}" $PCT_OPTIONS 2>&1 | tee -a "$LOGFILE"
-            set +x
-          fi
-          _flush_pct_log
-          exit 209
-        fi
+        msg_ok "Container successfully created after template repair."
       fi
-    else
-      msg_ok "Container successfully created after template repair."
-    fi
+    fi # close CTID collision else-branch
   fi
 
-  # Verify container exists
-  pct list | awk '{print $1}' | grep -qx "$CTID" || {
-    msg_error "Container ID $CTID not listed in 'pct list'. See $LOGFILE"
+  # Verify container exists (allow up to 10s for pmxcfs sync in clusters)
+  local _pct_visible=false
+  for _pct_check in {1..10}; do
+    if pct list | awk '{print $1}' | grep -qx "$CTID"; then
+      _pct_visible=true
+      break
+    fi
+    sleep 1
+  done
+  if [[ "$_pct_visible" != true ]]; then
+    msg_error "Container ID $CTID not listed in 'pct list' after 10s. See $LOGFILE"
+    msg_custom "🔧" "${YW}" "This can happen in clusters with pmxcfs sync delays."
     _flush_pct_log
     exit 215
-  }
+  fi
 
   # Verify config rootfs
   grep -q '^rootfs:' "/etc/pve/lxc/$CTID.conf" || {
