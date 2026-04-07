@@ -445,6 +445,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Remove low-install-count CT scripts and installers [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#13570](https://github.com/community-scripts/ProxmoxVE/pull/13570))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: improve resilience for top Proxmox error codes (209, 215, 118, 206) [@MickLesk](https://github.com/MickLesk) ([#13575](https://github.com/community-scripts/ProxmoxVE/pull/13575))
+
 ## 2026-04-06
 
 ### 🆕 New Scripts
