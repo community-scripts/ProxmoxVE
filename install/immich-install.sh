@@ -324,6 +324,9 @@ export SHARP_IGNORE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter @immich/sdk --filter immich-web build
 cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
+sed -i -e "s/eval\"/eval'\"/" \
+  -e "s/'data:'/data:/" \
+  -e "s/'blob:'/blob:/" "$APP_DIR"/helmet.json
 
 # cli build
 $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install

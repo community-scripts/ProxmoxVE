@@ -193,6 +193,9 @@ EOF
     $STD pnpm --filter @immich/sdk --filter immich-web build
     cp -a web/build "$APP_DIR"/www
     cp LICENSE "$APP_DIR"
+    sed -i -e "s/eval\"/eval'\"/" \
+      -e "s/'data:'/data:/" \
+      -e "s/'blob:'/blob:/" "$APP_DIR"/helmet.json
 
     # cli build
     $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
@@ -268,6 +271,9 @@ EOF
 
     if ! grep -q '^DB_HOSTNAME=' "$INSTALL_DIR"/.env; then
       sed -i '/^DB_DATABASE_NAME/a DB_HOSTNAME=127.0.0.1' "$INSTALL_DIR"/.env
+    fi
+    if ! grep -q 'HELMET_FILE' "$INSTALL_DIR"/.env; then
+      echo "IMMICH_HELMET_FILE=true" >>"$INSTALL_DIR"/.env
     fi
 
     if grep -q 'ExecStart=/usr/bin/node' /etc/systemd/system/immich-web.service; then
