@@ -439,6 +439,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-07
+
+### 🗑️ Deleted Scripts
+
+  - Remove low-install-count CT scripts and installers [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#13570](https://github.com/community-scripts/ProxmoxVE/pull/13570))
+
 ## 2026-04-06
 
 ### 🆕 New Scripts
