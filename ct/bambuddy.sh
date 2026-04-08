@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies ffmpeg
+
   if check_for_gh_release "bambuddy" "maziggy/bambuddy"; then
     msg_info "Stopping Service"
     systemctl stop bambuddy
@@ -54,6 +56,7 @@ function update_script() {
     msg_ok "Rebuilt Frontend"
 
     msg_info "Restoring Configuration and Data"
+    mkdir -p /opt/bambuddy/data
     cp /opt/bambuddy.env.bak /opt/bambuddy/.env
     cp -r /opt/bambuddy_data_bak/. /opt/bambuddy/data/
     rm -f /opt/bambuddy.env.bak

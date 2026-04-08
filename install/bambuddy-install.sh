@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y libglib2.0-0
+$STD apt install -y libglib2.0-0 ffmpeg
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.13" setup_uv
