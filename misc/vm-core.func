@@ -577,6 +577,13 @@ check_hostname_conflict() {
 }
 
 set_description() {
+  local app_name script_slug script_url donate_url
+  app_name=$(echo "${APP,,}" | tr ' ' '-')
+  script_slug="${SCRIPT_SLUG:-${app_name}}"
+  script_slug="$(echo "$script_slug" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+  script_url="https://community-scripts.org/scripts/${script_slug}"
+  donate_url="https://community-scripts.org/donate"
+
   DESCRIPTION=$(
     cat <<EOF
 <div align='center'>
@@ -587,8 +594,14 @@ set_description() {
   <h2 style='font-size: 24px; margin: 20px 0;'>${NSAPP} VM</h2>
 
   <p style='margin: 16px 0;'>
-    <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
-      <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
+    <a href='${donate_url}' target='_blank' rel='noopener noreferrer'>
+      <img src='https://img.shields.io/badge/❤️-Sponsoring%20%26%20Donations-FF5E5B' alt='Sponsoring and donations' />
+    </a>
+  </p>
+
+  <p style='margin: 12px 0;'>
+    <a href='${script_url}' target='_blank' rel='noopener noreferrer'>
+      <img src='https://img.shields.io/badge/📦-Open%20Script%20Page-00617f' alt='Open script page' />
     </a>
   </p>
 
