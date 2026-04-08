@@ -449,6 +449,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - immich: disable upgrade-insecure-requests CSP directive [@MickLesk](https://github.com/MickLesk) ([#13600](https://github.com/community-scripts/ProxmoxVE/pull/13600))
     - Immich: v2.7.2 [@vhsdream](https://github.com/vhsdream) ([#13579](https://github.com/community-scripts/ProxmoxVE/pull/13579))
     - Update flaresolverr-install.sh [@maztheman](https://github.com/maztheman) ([#13584](https://github.com/community-scripts/ProxmoxVE/pull/13584))
 
