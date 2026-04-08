@@ -441,6 +441,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-08
 
+### 🆕 New Scripts
+
+  - IronClaw | Alpine-IronClaw ([#13591](https://github.com/community-scripts/ProxmoxVE/pull/13591))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
