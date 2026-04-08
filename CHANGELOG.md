@@ -457,6 +457,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - feat: update UHF Server script to use setup_ffmpeg [@zackwithak13](https://github.com/zackwithak13) ([#13564](https://github.com/community-scripts/ProxmoxVE/pull/13564))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: add script page badges to descriptions | change donate URL [@MickLesk](https://github.com/MickLesk) ([#13596](https://github.com/community-scripts/ProxmoxVE/pull/13596))
+
 ## 2026-04-07
 
 ### 🗑️ Deleted Scripts
