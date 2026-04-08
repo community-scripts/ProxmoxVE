@@ -439,6 +439,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-08
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Immich: v2.7.2 [@vhsdream](https://github.com/vhsdream) ([#13579](https://github.com/community-scripts/ProxmoxVE/pull/13579))
+
 ## 2026-04-07
 
 ### 🗑️ Deleted Scripts
