@@ -24,7 +24,7 @@ RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="opnsense-vm"
 var_os="opnsense"
-var_version="25.7"
+var_version="26.1"
 #
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 GEN_MAC_LAN=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
@@ -797,7 +797,7 @@ if [ -n "$WAN_BRG" ]; then
   msg_ok "WAN interface added"
   sleep 5 # Brief pause after adding network interface
 fi
-send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 25.7"
+send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 26.1"
 msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
 #We need to wait for the OPNsense build proccess to finish, this takes a few minutes
 sleep 1000
