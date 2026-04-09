@@ -13,13 +13,17 @@ setting_up_container
 network_check
 update_os
 
+
+msg_info "Installing Dependencies"
+$STD apt install nginx -y
+msg_ok "Installed Dependencies"
+
 NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "bentopdf" "alam00000/bentopdf" "tarball" "latest" "/opt/bentopdf"
 
 msg_info "Setup BentoPDF"
 cd /opt/bentopdf
 $STD npm ci --no-audit --no-fund
-ensure_dependencies nginx
 cp ./.env.example ./.env.production
 export NODE_OPTIONS="--max-old-space-size=3072"
 export SIMPLE_MODE=true
