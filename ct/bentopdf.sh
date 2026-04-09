@@ -42,7 +42,6 @@ function update_script() {
     msg_info "Updating BentoPDF"
     cd /opt/bentopdf
     $STD npm ci --no-audit --no-fund
-    $STD npm install http-server -g
     if [[ -f /opt/production.env ]]; then
       mv /opt/production.env ./.env.production
     else
@@ -55,10 +54,47 @@ function update_script() {
     msg_ok "Updated BentoPDF"
 
     msg_info "Starting Service"
-    if grep -q '8080' /etc/systemd/system/bentopdf.service; then
-      sed -i -e 's|/bentopdf|/bentopdf/dist|' \
-        -e 's|npx.*|npx http-server -g -b -d false -r --no-dotfiles|' \
-        /etc/systemd/system/bentopdf.service
+    if ! command -v nginx &>/dev/null; then
+      ensure_dependencies nginx
+      cat <<'EOF' >/etc/nginx/sites-available/bentopdf
+server {
+    listen 8080;
+    server_name _;
+    root /opt/bentopdf/dist;
+    index index.html;
+
+    # Required for LibreOffice WASM (Word/Excel/PowerPoint to PDF via SharedArrayBuffer)
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Embedder-Policy "require-corp" always;
+    add_header Cross-Origin-Resource-Policy "cross-origin" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+
+    gzip_static on;
+
+    location / {
+        try_files $uri $uri/ $uri.html =404;
+    }
+
+    error_page 404 /404.html;
+}
+EOF
+      rm -f /etc/nginx/sites-enabled/default
+      ln -sf /etc/nginx/sites-available/bentopdf /etc/nginx/sites-enabled/bentopdf
+      cat <<'EOF' >/etc/systemd/system/bentopdf.service
+[Unit]
+Description=BentoPDF Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/nginx -g "daemon off;"
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
       systemctl daemon-reload
     fi
     systemctl start bentopdf
