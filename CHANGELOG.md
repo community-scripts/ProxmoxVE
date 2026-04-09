@@ -449,6 +449,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Update OPNsense version from 25.7 to 26.1 [@tdn131](https://github.com/tdn131) ([#13626](https://github.com/community-scripts/ProxmoxVE/pull/13626))
     - CheckMK: Bump Default OS to 13 (trixie) + dynamic codename + fix RELEASE-Tag Fetching [@MickLesk](https://github.com/MickLesk) ([#13610](https://github.com/community-scripts/ProxmoxVE/pull/13610))
 
 ## 2026-04-08
