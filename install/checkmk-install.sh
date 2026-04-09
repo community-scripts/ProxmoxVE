@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Install Checkmk"
-RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
+RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags?per_page=50 | jq -r '.[].name' | sed 's/^v//' | grep -Ev 'rc|b' | sort -V | tail -n 1)
 RELEASE="${RELEASE%%+*}"
 curl -fsSL "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.$(get_os_info codename)_amd64.deb" -o "/opt/checkmk.deb"
 $STD apt-get install -y /opt/checkmk.deb

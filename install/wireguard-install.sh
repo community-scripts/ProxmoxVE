@@ -31,8 +31,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   cd /etc/wgdashboard/src
   chmod u+x wgd.sh
   $STD ./wgd.sh install
-  . /etc/os-release
-  if [ "$VERSION_CODENAME" = "trixie" ]; then
+  if [ "$(get_os_info codename)" = "trixie" ]; then
     echo "net.ipv4.ip_forward=1" >>/etc/sysctl.d/sysctl.conf
     $STD sysctl -p /etc/sysctl.d/sysctl.conf
   else

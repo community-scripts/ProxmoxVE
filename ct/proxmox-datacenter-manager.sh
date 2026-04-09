@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  if grep -q 'Debian GNU/Linux 12' /etc/os-release && [ -f /etc/apt/sources.list.d/proxmox-release-bookworm.list ] && [ -f /etc/apt/sources.list.d/pdm-test.list ]; then
+  if [[ "$(get_os_version_major)" == "12" ]] && [ -f /etc/apt/sources.list.d/proxmox-release-bookworm.list ] && [ -f /etc/apt/sources.list.d/pdm-test.list ]; then
     msg_info "Updating outdated outdated source formats"
     echo "deb [signed-by=/usr/share/keyrings/proxmox-archive-keyring.gpg] http://download.proxmox.com/debian/pdm bookworm pdm-test" >/etc/apt/sources.list.d/pdm-test.list
     curl -fsSL https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg -o /usr/share/keyrings/proxmox-archive-keyring.gpg
@@ -37,7 +37,7 @@ function update_script() {
     msg_ok "Updated old sources"
   fi
 
-  if grep -q 'Debian GNU/Linux 13' /etc/os-release; then
+  if [[ "$(get_os_version_major)" == "13" ]]; then
     if [ -f "/etc/apt/sources.list.d/pdm-test.sources" ]; then
       if ! grep -qx "Enabled: false" "/etc/apt/sources.list.d/pdm-test.sources"; then
           echo "Enabled: false" >> "/etc/apt/sources.list.d/pdm-test.sources"

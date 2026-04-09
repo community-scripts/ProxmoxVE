@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
+  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags?per_page=50 | jq -r '.[].name' | sed 's/^v//' | grep -Ev 'rc|b' | sort -V | tail -n 1)
   RELEASE="${RELEASE%%+*}"
   msg_info "Updating ${APP} to v${RELEASE}"
   $STD omd stop monitoring

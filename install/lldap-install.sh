@@ -15,17 +15,17 @@ network_check
 update_os
 
 msg_info "Installing lldap"
-source /etc/os-release
-os=$ID
-if [ "$os" == "ubuntu" ]; then
+OS_ID=$(get_os_info id)
+OS_VERSION=$(get_os_info version)
+if [ "$OS_ID" == "ubuntu" ]; then
   DISTRO="xUbuntu"
 else
-  DISTRO="${os^}"
+  DISTRO="${OS_ID^}"
 fi
-curl -fsSL https://download.opensuse.org/repositories/home:Masgalor:LLDAP/${DISTRO}_${VERSION_ID}/Release.key | gpg --dearmor >/usr/share/keyrings/home_Masgalor_LLDAP.gpg
+curl -fsSL https://download.opensuse.org/repositories/home:Masgalor:LLDAP/${DISTRO}_${OS_VERSION}/Release.key | gpg --dearmor >/usr/share/keyrings/home_Masgalor_LLDAP.gpg
 cat <<EOF >/etc/apt/sources.list.d/home:Masgalor:LLDAP.sources
 Types: deb
-URIs: http://download.opensuse.org/repositories/home:/Masgalor:/LLDAP/${DISTRO}_${VERSION_ID}/
+URIs: http://download.opensuse.org/repositories/home:/Masgalor:/LLDAP/${DISTRO}_${OS_VERSION}/
 Suites: /
 Signed-By: /usr/share/keyrings/home_Masgalor_LLDAP.gpg
 EOF

@@ -182,8 +182,7 @@ http:
 EOF
 $STD npm run db:push
 
-. /etc/os-release
-if [ "$VERSION_CODENAME" = "trixie" ]; then
+if [ "$(get_os_info codename)" = "trixie" ]; then
   echo "net.ipv4.ip_forward=1" >>/etc/sysctl.d/sysctl.conf
   $STD sysctl -p /etc/sysctl.d/sysctl.conf
 else

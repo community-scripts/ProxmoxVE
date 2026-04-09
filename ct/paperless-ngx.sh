@@ -65,8 +65,7 @@ function update_script() {
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 
-      . /etc/os-release
-      if [ "$VERSION_CODENAME" = "bookworm" ]; then
+      if [ "$(get_os_info codename)" = "bookworm" ]; then
         setup_gs
       else
         ensure_dependencies ghostscript
@@ -140,8 +139,7 @@ function update_script() {
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 
-      . /etc/os-release
-      if [ "$VERSION_CODENAME" = "bookworm" ]; then
+      if [ "$(get_os_info codename)" = "bookworm" ]; then
         setup_gs
       else
         msg_info "Installing Ghostscript"

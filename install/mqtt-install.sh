@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Mosquitto MQTT Broker"
-source /etc/os-release
 $STD apt update
 $STD apt -y install mosquitto mosquitto-clients
 

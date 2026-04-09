@@ -29,9 +29,8 @@ function update_script() {
     exit
   fi
 
-  . /etc/os-release
-  if [ "$VERSION_CODENAME" != "trixie" ]; then
-    msg_error "Unsupported Debian version: $VERSION_CODENAME – please upgrade to Debian 13 (Trixie) before updating Zabbix."
+  if [ "$(get_os_info codename)" != "trixie" ]; then
+    msg_error "Unsupported Debian version: $(get_os_info codename) – please upgrade to Debian 13 (Trixie) before updating Zabbix."
     exit
   fi
 

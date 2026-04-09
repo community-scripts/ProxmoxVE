@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"12"* ]]; then
+  if [[ "$(get_os_version_major)" == "12" ]]; then
     msg_error "Wrong Debian version detected!"
     msg_error "You must upgrade your LXC to Debian Trixie before updating."
     exit
