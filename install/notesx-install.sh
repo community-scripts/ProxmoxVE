@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Hotfirenet
-# License: MIT | https://github.com/Hotfirenet/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/note-sx/server
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
@@ -14,10 +14,12 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y build-essential
+$STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
+
+get_lxc_ip
 
 fetch_and_deploy_gh_release "notesx" "note-sx/server" "tarball" "latest" "/opt/notesx"
 
@@ -30,7 +32,7 @@ msg_ok "Built NoteSX"
 msg_info "Configuring NoteSX"
 HASH_SALT=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c32)
 cat <<EOF >/opt/notesx/app/.env
-BASE_WEB_URL=http://localhost:3000
+BASE_WEB_URL=http://${LOCAL_IP}:3000
 HASH_SALT=${HASH_SALT}
 MAXIMUM_UPLOAD_SIZE_MB=5
 FOLDER_PREFIX=0
