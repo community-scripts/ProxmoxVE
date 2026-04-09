@@ -2,11 +2,11 @@
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Hotfirenet
-# License: MIT | https://github.com/Hotfirenet/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/note-sx/server
 
 APP="NoteSX"
-var_tags="${var_tags:-notes;obsidian;sharing}"
+var_tags="${var_tags:-notes;sharing}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
