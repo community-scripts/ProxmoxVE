@@ -40,13 +40,13 @@ function update_script() {
   if [[ "$(get_os_version_major)" == "13" ]]; then
     if [ -f "/etc/apt/sources.list.d/pdm-test.sources" ]; then
       if ! grep -qx "Enabled: false" "/etc/apt/sources.list.d/pdm-test.sources"; then
-          echo "Enabled: false" >> "/etc/apt/sources.list.d/pdm-test.sources"
-          setup_deb822_repo \
-            "pdm" \
-            "https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg" \
-            "http://download.proxmox.com/debian/pdm" \
-            "trixie" \
-            "pdm-no-subscription"
+        echo "Enabled: false" >>"/etc/apt/sources.list.d/pdm-test.sources"
+        setup_deb822_repo \
+          "pdm" \
+          "https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg" \
+          "http://download.proxmox.com/debian/pdm" \
+          "trixie" \
+          "pdm-no-subscription"
       fi
     fi
   fi
