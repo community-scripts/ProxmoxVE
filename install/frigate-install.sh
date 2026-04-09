@@ -13,8 +13,7 @@ setting_up_container
 network_check
 update_os
 
-source /etc/os-release
-if [[ "$VERSION_ID" != "12" ]]; then
+if [[ "$(get_os_version_major)" != "12" ]]; then
   msg_error "Frigate requires Debian 12 (Bookworm) due to Python 3.11 dependencies"
   exit 238
 fi

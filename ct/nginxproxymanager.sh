@@ -55,7 +55,7 @@ function update_script() {
   fi
 
   local pcre_pkg="libpcre3-dev"
-  if grep -qE 'VERSION_ID="1[3-9]"' /etc/os-release 2>/dev/null; then
+  if [[ "$(get_os_version_major)" -ge 13 ]]; then
     pcre_pkg="libpcre2-dev"
   fi
   $STD apt install -y build-essential "$pcre_pkg" libssl-dev zlib1g-dev

@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  if ! grep -qE "^ID=(ubuntu)$" /etc/os-release; then
+  if [[ "$(get_os_info id)" != "ubuntu" ]]; then
     msg_error "Unsupported OS. InvenTree requires Ubuntu (20.04/22.04/24.04)."
     exit
   fi

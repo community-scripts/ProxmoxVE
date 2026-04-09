@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  if ! grep -qEi 'ubuntu' /etc/os-release; then
+  if [[ "$(get_os_info id)" != "ubuntu" ]]; then
     msg_info "Updating Intel Dependencies"
     rm -f ~/.intel-* || true
     fetch_and_deploy_gh_release "intel-igc-core-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb"
