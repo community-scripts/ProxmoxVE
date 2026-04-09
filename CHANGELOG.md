@@ -443,6 +443,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - boostack: add: git [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13620](https://github.com/community-scripts/ProxmoxVE/pull/13620))
+
   - #### ✨ New Features
 
     - CheckMK: Bump Default OS to 13 (trixie) + dynamic codename + fix RELEASE-Tag Fetching [@MickLesk](https://github.com/MickLesk) ([#13610](https://github.com/community-scripts/ProxmoxVE/pull/13610))
