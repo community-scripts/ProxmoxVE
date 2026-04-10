@@ -455,6 +455,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: prevent script crash when entering GitHub token after rate limit [@MickLesk](https://github.com/MickLesk) ([#13638](https://github.com/community-scripts/ProxmoxVE/pull/13638))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - addons: Filebrowser & Filebrowser-Quantum get warning if host install [@MickLesk](https://github.com/MickLesk) ([#13639](https://github.com/community-scripts/ProxmoxVE/pull/13639))
+
 ## 2026-04-09
 
 ### 🚀 Updated Scripts
