@@ -32,13 +32,11 @@ EOF
 msg_ok "Setup BentoPDF"
 
 msg_info "Creating Service"
-if [[ ! -f /etc/ssl/private/bentopdf-selfsigned.key || ! -f /etc/ssl/certs/bentopdf-selfsigned.crt ]]; then
-  CERT_CN="$(hostname -I | awk '{print $1}')"
-  $STD openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
+CERT_CN="$(hostname -I | awk '{print $1}')"
+$STD openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
     -keyout /etc/ssl/private/bentopdf-selfsigned.key \
     -out /etc/ssl/certs/bentopdf-selfsigned.crt \
     -subj "/CN=${CERT_CN}"
-fi
 
 cat <<'EOF' >/etc/nginx/sites-available/bentopdf
 server {
