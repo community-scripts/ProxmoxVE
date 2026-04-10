@@ -47,6 +47,7 @@ mkdir -p /appdata/redis
 chown -R redis:redis /appdata/redis
 chmod 744 /appdata/redis
 cp /opt/homarr/redis.conf /etc/redis/redis.conf
+sed -i -e '$a\' /etc/redis/redis.conf
 grep -q '^bind 127.0.0.1 -::1$' /etc/redis/redis.conf || echo "bind 127.0.0.1 -::1" >>/etc/redis/redis.conf
 rm /etc/nginx/nginx.conf
 mkdir -p /etc/nginx/templates
