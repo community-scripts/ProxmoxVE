@@ -45,16 +45,16 @@ IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n
 
 # Proxmox Host Warning
 if [[ -d "/etc/pve" ]]; then
-  echo -e "${RD}⚠️  WARNING: You are running this on a Proxmox host!${CL}"
-  echo -e "${YW}   The recommended installation method is via LXC:${CL}"
-  echo -e "${YW}   https://community-scripts.github.io/ProxmoxVE/scripts?id=filebrowser-quantum${CL}"
-  echo -e "${YW}   Installing directly on the host can cause incorrect size calculations${CL}"
-  echo -e "${YW}   and indexing issues. Proceed at your own risk.${CL}"
+  echo -e "${RD}⚠️  Warning: Running this addon directly on the Proxmox host is not recommended!${CL}"
+  echo -e "${YW}   Only the boot disk will be visible — passthrough drives will not be indexed.${CL}"
+  echo -e "${YW}   This causes incorrect disk usage stats and incomplete file browsing.${CL}"
+  echo -e "${YW}   Please use the dedicated LXC installer instead and mount your drives there:${CL}"
+  echo -e "${YW}   https://community-scripts.org/scripts/filebrowser-quantum${CL}"
   echo ""
-  echo -n "Continue installation on the Proxmox host anyway? (y/N): "
+  echo -n "Continue anyway on the Proxmox host? (y/N): "
   read -r host_confirm
   if [[ ! "${host_confirm,,}" =~ ^(y|yes)$ ]]; then
-    echo -e "${YW}Aborted. Please use the LXC installer instead.${CL}"
+    echo -e "${YW}Aborted.${CL}"
     exit 0
   fi
 fi
