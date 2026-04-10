@@ -54,9 +54,8 @@ function update_script() {
     msg_ok "Updated BentoPDF"
 
     msg_info "Starting Service"
-    if ! command -v nginx &>/dev/null; then
-      ensure_dependencies nginx
-      cat <<'EOF' >/etc/nginx/sites-available/bentopdf
+    ensure_dependencies nginx
+    cat <<'EOF' >/etc/nginx/sites-available/bentopdf
 server {
     listen 8080;
     server_name _;
@@ -72,6 +71,33 @@ server {
 
     gzip_static on;
 
+    location ~* /libreoffice-wasm/soffice\.wasm\.gz$ {
+      gzip off;
+      types {} default_type application/wasm;
+      add_header Content-Encoding gzip;
+      add_header Vary "Accept-Encoding";
+      add_header Cache-Control "public, immutable";
+    }
+
+    location ~* /libreoffice-wasm/soffice\.data\.gz$ {
+      gzip off;
+      types {} default_type application/octet-stream;
+      add_header Content-Encoding gzip;
+      add_header Vary "Accept-Encoding";
+      add_header Cache-Control "public, immutable";
+    }
+
+    location ~* \.wasm$ {
+      types {} default_type application/wasm;
+      expires 1y;
+      add_header Cache-Control "public, immutable";
+    }
+
+    location ~* \.(wasm\.gz|data\.gz|data)$ {
+      expires 1y;
+      add_header Cache-Control "public, immutable";
+    }
+
     location / {
         try_files $uri $uri/ $uri.html =404;
     }
@@ -79,9 +105,9 @@ server {
     error_page 404 /404.html;
 }
 EOF
-      rm -f /etc/nginx/sites-enabled/default
-      ln -sf /etc/nginx/sites-available/bentopdf /etc/nginx/sites-enabled/bentopdf
-      cat <<'EOF' >/etc/systemd/system/bentopdf.service
+    rm -f /etc/nginx/sites-enabled/default
+    ln -sf /etc/nginx/sites-available/bentopdf /etc/nginx/sites-enabled/bentopdf
+    cat <<'EOF' >/etc/systemd/system/bentopdf.service
 [Unit]
 Description=BentoPDF Service
 After=network.target
@@ -95,8 +121,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-      systemctl daemon-reload
-    fi
+    systemctl daemon-reload
     systemctl start bentopdf
     msg_ok "Started Service"
     msg_ok "Updated successfully!"

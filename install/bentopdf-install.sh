@@ -13,7 +13,6 @@ setting_up_container
 network_check
 update_os
 
-
 msg_info "Installing Dependencies"
 $STD apt install nginx -y
 msg_ok "Installed Dependencies"
@@ -47,6 +46,33 @@ server {
     add_header X-Frame-Options "SAMEORIGIN" always;
 
     gzip_static on;
+
+    location ~* /libreoffice-wasm/soffice\.wasm\.gz$ {
+        gzip off;
+        types {} default_type application/wasm;
+        add_header Content-Encoding gzip;
+        add_header Vary "Accept-Encoding";
+        add_header Cache-Control "public, immutable";
+    }
+
+    location ~* /libreoffice-wasm/soffice\.data\.gz$ {
+        gzip off;
+        types {} default_type application/octet-stream;
+        add_header Content-Encoding gzip;
+        add_header Vary "Accept-Encoding";
+        add_header Cache-Control "public, immutable";
+    }
+
+    location ~* \.wasm$ {
+        types {} default_type application/wasm;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location ~* \.(wasm\.gz|data\.gz|data)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
 
     location / {
         try_files $uri $uri/ $uri.html =404;
