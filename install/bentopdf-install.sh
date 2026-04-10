@@ -26,6 +26,11 @@ export NODE_OPTIONS="--max-old-space-size=3072"
 export SIMPLE_MODE=true
 export VITE_USE_CDN=true
 $STD npm run build:all
+if [[ ! -f /opt/bentopdf/dist/config.json ]]; then
+    cat <<'EOF' >/opt/bentopdf/dist/config.json
+{}
+EOF
+fi
 msg_ok "Setup BentoPDF"
 
 msg_info "Creating Service"

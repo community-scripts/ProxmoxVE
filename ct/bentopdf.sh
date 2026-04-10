@@ -51,6 +51,11 @@ function update_script() {
     export SIMPLE_MODE=true
     export VITE_USE_CDN=true
     $STD npm run build:all
+    if [[ ! -f /opt/bentopdf/dist/config.json ]]; then
+      cat <<'EOF' >/opt/bentopdf/dist/config.json
+{}
+EOF
+    fi
     msg_ok "Updated BentoPDF"
 
     msg_info "Starting Service"
