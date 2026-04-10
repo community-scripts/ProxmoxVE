@@ -449,6 +449,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Homarr: bind Redis to localhost only [@MickLesk](https://github.com/MickLesk) ([#13552](https://github.com/community-scripts/ProxmoxVE/pull/13552))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: prevent script crash when entering GitHub token after rate limit [@MickLesk](https://github.com/MickLesk) ([#13638](https://github.com/community-scripts/ProxmoxVE/pull/13638))
+
 ## 2026-04-09
 
 ### 🚀 Updated Scripts
