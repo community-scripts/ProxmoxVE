@@ -2860,7 +2860,7 @@ function fetch_and_deploy_codeberg_release() {
 
   while ((attempt < ${#api_timeouts[@]})); do
     resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
-    ((attempt++))
+    attempt=$((attempt + 1))
     if ((attempt < ${#api_timeouts[@]})); then
       msg_warn "API request timed out after ${api_timeouts[$((attempt - 1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
     fi
@@ -3370,7 +3370,8 @@ function fetch_and_deploy_gh_release() {
         if prompt_for_github_token; then
           header=(-H "Authorization: token $GITHUB_TOKEN")
           retry_delay=2
-          attempt=0
+          attempt=1
+          continue
         fi
       fi
     else
