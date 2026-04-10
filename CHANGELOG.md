@@ -461,6 +461,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - addons: Filebrowser & Filebrowser-Quantum get warning if host install [@MickLesk](https://github.com/MickLesk) ([#13639](https://github.com/community-scripts/ProxmoxVE/pull/13639))
 
+### ❔ Uncategorized
+
+  - fix: ensure trailing newline in redis.conf before appending bind directive [@Copilot](https://github.com/Copilot) ([#13647](https://github.com/community-scripts/ProxmoxVE/pull/13647))
+
 ## 2026-04-09
 
 ### 🚀 Updated Scripts
