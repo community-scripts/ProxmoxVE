@@ -48,8 +48,7 @@ if [[ -d "/etc/pve" ]]; then
   echo -e "${RD}⚠️  Warning: Running this addon directly on the Proxmox host is not recommended!${CL}"
   echo -e "${YW}   Only the boot disk will be visible — passthrough drives will not be indexed.${CL}"
   echo -e "${YW}   This causes incorrect disk usage stats and incomplete file browsing.${CL}"
-  echo -e "${YW}   Please use the dedicated LXC installer instead and mount your drives there:${CL}"
-  echo -e "${YW}   https://community-scripts.org/scripts/filebrowser-quantum${CL}"
+  echo -e "${YW}   Run this addon inside an LXC or VM instead and mount your drives there.${CL}"
   echo ""
   echo -n "Continue anyway on the Proxmox host? (y/N): "
   read -r host_confirm
