@@ -13,9 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install nginx -y
-msg_ok "Installed Dependencies"
+ensure_dependencies nginx openssl
 
 NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "bentopdf" "alam00000/bentopdf" "tarball" "latest" "/opt/bentopdf"
@@ -31,10 +29,26 @@ $STD npm run build:all
 msg_ok "Setup BentoPDF"
 
 msg_info "Creating Service"
+if [[ ! -f /etc/ssl/private/bentopdf-selfsigned.key || ! -f /etc/ssl/certs/bentopdf-selfsigned.crt ]]; then
+  CERT_CN="$(hostname -I | awk '{print $1}')"
+  $STD openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
+    -keyout /etc/ssl/private/bentopdf-selfsigned.key \
+    -out /etc/ssl/certs/bentopdf-selfsigned.crt \
+    -subj "/CN=${CERT_CN}"
+fi
+
 cat <<'EOF' >/etc/nginx/sites-available/bentopdf
 server {
     listen 8080;
     server_name _;
+    return 301 https://$host:8443$request_uri;
+}
+
+server {
+    listen 8443 ssl;
+    server_name _;
+    ssl_certificate /etc/ssl/certs/bentopdf-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/bentopdf-selfsigned.key;
     root /opt/bentopdf/dist;
     index index.html;
 

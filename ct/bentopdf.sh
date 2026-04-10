@@ -54,11 +54,26 @@ function update_script() {
     msg_ok "Updated BentoPDF"
 
     msg_info "Starting Service"
-    ensure_dependencies nginx
+    ensure_dependencies nginx openssl
+    if [[ ! -f /etc/ssl/private/bentopdf-selfsigned.key || ! -f /etc/ssl/certs/bentopdf-selfsigned.crt ]]; then
+      CERT_CN="$(hostname -I | awk '{print $1}')"
+      $STD openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
+      -keyout /etc/ssl/private/bentopdf-selfsigned.key \
+      -out /etc/ssl/certs/bentopdf-selfsigned.crt \
+      -subj "/CN=${CERT_CN}"
+    fi
     cat <<'EOF' >/etc/nginx/sites-available/bentopdf
 server {
     listen 8080;
     server_name _;
+    return 301 https://$host:8443$request_uri;
+  }
+
+  server {
+    listen 8443 ssl;
+    server_name _;
+    ssl_certificate /etc/ssl/certs/bentopdf-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/bentopdf-selfsigned.key;
     root /opt/bentopdf/dist;
     index index.html;
 
@@ -136,4 +151,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8443${CL}"
