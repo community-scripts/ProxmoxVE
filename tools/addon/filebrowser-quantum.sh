@@ -43,6 +43,22 @@ IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n
 [[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
 [[ -z "$IP" ]] && IP="127.0.0.1"
 
+# Proxmox Host Warning
+if [[ -d "/etc/pve" ]]; then
+  echo -e "${RD}⚠️  WARNING: You are running this on a Proxmox host!${CL}"
+  echo -e "${YW}   The recommended installation method is via LXC:${CL}"
+  echo -e "${YW}   https://community-scripts.github.io/ProxmoxVE/scripts?id=filebrowser-quantum${CL}"
+  echo -e "${YW}   Installing directly on the host can cause incorrect size calculations${CL}"
+  echo -e "${YW}   and indexing issues. Proceed at your own risk.${CL}"
+  echo ""
+  echo -n "Continue installation on the Proxmox host anyway? (y/N): "
+  read -r host_confirm
+  if [[ ! "${host_confirm,,}" =~ ^(y|yes)$ ]]; then
+    echo -e "${YW}Aborted. Please use the LXC installer instead.${CL}"
+    exit 0
+  fi
+fi
+
 # OS Detection
 if [[ -f "/etc/alpine-release" ]]; then
   OS="Alpine"
