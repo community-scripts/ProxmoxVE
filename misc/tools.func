@@ -1118,12 +1118,84 @@ is_package_installed() {
 }
 
 # ------------------------------------------------------------------------------
+# validate_github_token()
+# Checks a GitHub token via the /user endpoint.
+# Prints a status message and returns:
+#   0 - token is valid
+#   1 - token is invalid / expired (HTTP 401)
+#   2 - token has no public repo scope (HTTP 200 but missing scope)
+#   3 - network/API error
+# Also reports expiry date if the token carries an x-oauth-expiry header.
+# ------------------------------------------------------------------------------
+validate_github_token() {
+  local token="${1:-${GITHUB_TOKEN:-}}"
+  [[ -z "$token" ]] && return 3
+
+  local response headers http_code expiry_date scopes
+  headers=$(mktemp)
+  response=$(curl -sSL -w "%{http_code}" \
+    -D "$headers" \
+    -o /dev/null \
+    -H "Authorization: Bearer $token" \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "https://api.github.com/user" 2>/dev/null) || { rm -f "$headers"; return 3; }
+  http_code="$response"
+
+  # Read expiry header (fine-grained PATs carry this)
+  expiry_date=$(grep -i '^github-authentication-token-expiration:' "$headers" \
+    | sed 's/.*: *//' | tr -d '\r\n' || true)
+  # Read token scopes (classic PATs)
+  scopes=$(grep -i '^x-oauth-scopes:' "$headers" \
+    | sed 's/.*: *//' | tr -d '\r\n' || true)
+  rm -f "$headers"
+
+  case "$http_code" in
+    200)
+      if [[ -n "$expiry_date" ]]; then
+        msg_ok "GitHub token is valid (expires: $expiry_date)."
+      else
+        msg_ok "GitHub token is valid (no expiry / fine-grained PAT)."
+      fi
+      # Warn if classic PAT has no public_repo scope
+      if [[ -n "$scopes" && "$scopes" != *"public_repo"* && "$scopes" != *"repo"* ]]; then
+        msg_warn "Token has no 'public_repo' scope - private repos and some release APIs may fail."
+        return 2
+      fi
+      return 0
+      ;;
+    401)
+      msg_error "GitHub token is invalid or expired (HTTP 401)."
+      return 1
+      ;;
+    *)
+      msg_warn "GitHub token validation returned HTTP $http_code - treating as valid."
+      return 0
+      ;;
+  esac
+}
+
+# ------------------------------------------------------------------------------
 # Prompt user to enter a GitHub Personal Access Token (PAT) interactively
 # Returns 0 if a valid token was provided, 1 otherwise
 # ------------------------------------------------------------------------------
 prompt_for_github_token() {
   if [[ ! -t 0 ]]; then
+    # Non-interactive: pick up var_github_token if set (from default.vars / app.vars / env)
+    if [[ -z "${GITHUB_TOKEN:-}" && -n "${var_github_token:-}" ]]; then
+      export GITHUB_TOKEN="${var_github_token}"
+      msg_ok "GitHub token loaded from var_github_token."
+      return 0
+    fi
     return 1
+  fi
+
+  # Prefer var_github_token when already set and no interactive override needed
+  if [[ -z "${GITHUB_TOKEN:-}" && -n "${var_github_token:-}" ]]; then
+    export GITHUB_TOKEN="${var_github_token}"
+    msg_ok "GitHub token loaded from var_github_token."
+    validate_github_token || true
+    return 0
   fi
 
   local reply
@@ -1147,10 +1219,16 @@ prompt_for_github_token() {
       msg_warn "Token must not contain spaces. Please try again."
       continue
     fi
-    break
+    # Validate before accepting
+    export GITHUB_TOKEN="$token"
+    if validate_github_token "$token"; then
+      break
+    else
+      msg_warn "Please enter a valid token, or press Ctrl+C to abort."
+      unset GITHUB_TOKEN
+    fi
   done
 
-  export GITHUB_TOKEN="$token"
   msg_ok "GitHub token has been set."
   return 0
 }

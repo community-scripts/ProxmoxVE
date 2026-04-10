@@ -1054,7 +1054,7 @@ load_vars_file() {
 
   # Allowed var_* keys
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
@@ -1255,7 +1255,7 @@ default_var_settings() {
   # Allowed var_* keys (alphabetically sorted)
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
@@ -1350,6 +1350,10 @@ var_verbose=no
 
 # Security (root PW) – empty => autologin
 # var_pw=
+
+# GitHub Personal Access Token (optional – avoids API rate limits during installs)
+# Create at https://github.com/settings/tokens – read-only public access is sufficient
+# var_github_token=ghp_your_token_here
 EOF
 
     # Now choose storages (always prompt unless just one exists)
@@ -1387,6 +1391,11 @@ EOF
     VERBOSE="no"
   fi
 
+  # 4) Map var_github_token → GITHUB_TOKEN (only if not already set in environment)
+  if [[ -z "${GITHUB_TOKEN:-}" && -n "${var_github_token:-}" ]]; then
+    export GITHUB_TOKEN="${var_github_token}"
+  fi
+
   # 4) Apply base settings and show summary
   METHOD="mydefaults-global"
   base_settings "$VERBOSE"
@@ -1419,7 +1428,7 @@ get_app_defaults_path() {
 if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   declare -ag VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu
     var_gateway var_hostname var_ipv6_method var_mac var_mtu
     var_net var_ns var_os var_pw var_ram var_tags var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
