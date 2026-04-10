@@ -445,6 +445,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Immich: Pin version to 2.7.3 [@vhsdream](https://github.com/vhsdream) ([#13631](https://github.com/community-scripts/ProxmoxVE/pull/13631))
 
+  - #### ✨ New Features
+
+    - Homarr: bind Redis to localhost only [@MickLesk](https://github.com/MickLesk) ([#13552](https://github.com/community-scripts/ProxmoxVE/pull/13552))
+
 ## 2026-04-09
 
 ### 🚀 Updated Scripts
