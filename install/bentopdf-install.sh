@@ -13,7 +13,11 @@ setting_up_container
 network_check
 update_os
 
-ensure_dependencies nginx openssl
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  nginx \
+  openssl
+msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "bentopdf" "alam00000/bentopdf" "tarball" "latest" "/opt/bentopdf"
