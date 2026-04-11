@@ -276,6 +276,7 @@ EOF
       sed -i '/^DB_DATABASE_NAME/a DB_HOSTNAME=127.0.0.1' "$INSTALL_DIR"/.env
     fi
     if ! grep -q 'HELMET_FILE' "$INSTALL_DIR"/.env; then
+      sed -i -e '$a\' "$INSTALL_DIR"/.env
       echo "IMMICH_HELMET_FILE=true" >>"$INSTALL_DIR"/.env
     fi
 
