@@ -62,6 +62,7 @@ function update_script() {
       $STD corepack enable
       $STD corepack prepare pnpm --activate || true
     fi
+    echo 'onlyBuiltDependencies=*' >> .npmrc
     $STD pnpm install --frozen-lockfile
     $STD pnpm run build
     msg_ok "Built Frontend"
