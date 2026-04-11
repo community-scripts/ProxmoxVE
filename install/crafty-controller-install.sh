@@ -67,12 +67,18 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 $STD systemctl enable -q --now crafty-controller
-sleep 10
-{
-  echo "Crafty-Controller-Credentials"
-  echo "Username: $(grep -oP '(?<="username": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
-  echo "Password: $(grep -oP '(?<="password": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
-} >>~/crafty-controller.creds
+CREDS_FILE="/opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt"
+for i in $(seq 1 30); do
+  [[ -f "$CREDS_FILE" ]] && break
+  sleep 2
+done
+if [[ -f "$CREDS_FILE" ]]; then
+  {
+    echo "Crafty-Controller-Credentials"
+    echo "Username: $(grep -oP '(?<="username": ")[^"]*' "$CREDS_FILE")"
+    echo "Password: $(grep -oP '(?<="password": ")[^"]*' "$CREDS_FILE")"
+  } >>~/crafty-controller.creds
+fi
 msg_ok "Service started"
 
 motd_ssh
