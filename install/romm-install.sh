@@ -176,8 +176,10 @@ $STD npm run build
 cp -rf /opt/romm/frontend/assets/* /opt/romm/frontend/dist/assets/
 
 mkdir -p /opt/romm/frontend/dist/assets/romm
-ln -sfn /var/lib/romm/resources /opt/romm/frontend/dist/assets/romm/resources
-ln -sfn /var/lib/romm/assets /opt/romm/frontend/dist/assets/romm/assets
+ROMM_BASE=$(grep '^ROMM_BASE_PATH=' /opt/romm/.env | cut -d'=' -f2)
+ROMM_BASE=${ROMM_BASE:-/var/lib/romm}
+ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
+ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
 msg_ok "Set up RomM Frontend"
 
 msg_info "Configuring Nginx"
@@ -251,6 +253,7 @@ server {
 }
 EOF
 
+sed -i "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
 rm -f /etc/nginx/sites-enabled/default
 ln -sf /etc/nginx/sites-available/romm /etc/nginx/sites-enabled/romm
 systemctl restart nginx
