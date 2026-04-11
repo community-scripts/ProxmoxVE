@@ -449,6 +449,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Crafty Controller: Wait for credentials file instead of fixed sleep [@MickLesk](https://github.com/MickLesk) ([#13670](https://github.com/community-scripts/ProxmoxVE/pull/13670))
     - Refactor: Alpine-Wakapi [@tremor021](https://github.com/tremor021) ([#13656](https://github.com/community-scripts/ProxmoxVE/pull/13656))
 
 ## 2026-04-10
