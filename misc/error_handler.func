@@ -410,6 +410,7 @@ error_handler() {
 # - Arguments: $1 = exit_code
 # ------------------------------------------------------------------------------
 _send_abort_telemetry() {
+  return
   local exit_code="${1:-1}"
   # Try full API function first (host context - api.func sourced)
   if declare -f post_update_to_api &>/dev/null; then

@@ -33,6 +33,7 @@ get_lxc_ip
 # - Only executes if DIAGNOSTICS=yes and RANDOM_UUID is set
 # ------------------------------------------------------------------------------
 post_progress_to_api() {
+  return
   command -v curl &>/dev/null || return 0
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
   [[ -z "${RANDOM_UUID:-}" ]] && return 0
