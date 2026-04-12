@@ -2,10 +2,10 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: juronja
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://www.truenas.com/truenas-community-edition/
 
-source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/api.func)
 
 function header_info() {
   clear
@@ -611,7 +611,7 @@ DESCRIPTION=$(
   cat <<EOF
 <div align='center'>
   <a href='https://community-scripts.org' target='_blank' rel='noopener noreferrer'>
-    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+    <img src='https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
   <h2 style='font-size: 24px; margin: 20px 0;'>TrueNAS Community Edition</h2>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://healthchecks.io/ | Github: https://github.com/healthchecks/healthchecks
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

@@ -2,7 +2,7 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Joerg Heinemann (heinemannj)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/john30/ebusd
 
 APP="ebusd"

@@ -2,7 +2,7 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: zackwithak13
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://www.uhfapp.com/server | Github: https://github.com/swapplications/uhf-server-dist
 
 APP="UHF"

@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: thost96 (thost96)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://www.authelia.com/ | Github: https://github.com/authelia/authelia
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

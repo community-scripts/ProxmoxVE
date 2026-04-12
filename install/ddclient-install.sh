@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 mitchscobell
 # Author: mitchscobell
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://ddclient.net/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

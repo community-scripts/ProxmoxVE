@@ -164,7 +164,7 @@ EOF
     fi
   fi
   local tools_content
-  tools_content=$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func) || {
+  tools_content=$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/tools.func) || {
     msg_error "Failed to download tools.func"
     exit 115
   }

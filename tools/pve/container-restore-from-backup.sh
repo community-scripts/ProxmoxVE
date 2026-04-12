@@ -45,7 +45,7 @@ EOF
 header_info
 
 # Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "container-restore" "pve"
 
 function msg_info() {

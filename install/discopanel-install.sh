@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: DragoQC | Co-Author: nickheyer
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://discopanel.app/ | Github: https://github.com/nickheyer/discopanel
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

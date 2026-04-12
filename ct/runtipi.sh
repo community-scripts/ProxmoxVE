@@ -2,7 +2,7 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Migration: MickLesk (CanbiZ)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://runtipi.io/
 
 APP="Runtipi"
@@ -19,7 +19,7 @@ variables
 color
 catch_errors
 
-ADDON_SCRIPT="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/runtipi.sh"
+ADDON_SCRIPT="https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/tools/addon/runtipi.sh"
 
 function update_script() {
   header_info
@@ -48,7 +48,7 @@ function update_script() {
   msg_info "Migrating update function"
   TMP_UPDATE=$(mktemp)
   cat <<'MIGRATION_EOF' >"$TMP_UPDATE"
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/runtipi.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/tools/addon/runtipi.sh)"
 MIGRATION_EOF
   mv "$TMP_UPDATE" /usr/bin/update
   chmod +x /usr/bin/update

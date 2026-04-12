@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | MickLesk (CanbiZ)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://nicolargo.github.io/glances/ | Github: https://github.com/nicolargo/glances
 
 function header_info {
@@ -32,7 +32,7 @@ function msg_ok() { echo -e "${CM} ${GN}$1${CL}"; }
 function msg_error() { echo -e "${CROSS} ${RD}$1${CL}"; }
 
 # Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "glances" "addon"
 
 get_lxc_ip() {

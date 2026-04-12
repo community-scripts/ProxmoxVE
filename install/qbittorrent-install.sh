@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: Slaviša Arežina (tremor021)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://www.qbittorrent.org/ | Github: https://github.com/qbittorrent/qBittorrent
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

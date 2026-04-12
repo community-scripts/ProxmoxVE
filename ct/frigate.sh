@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Authors: MickLesk (CanbiZ) | Co-Author: remz1337
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://frigate.video/ | Github: https://github.com/blakeblackshear/frigate
 
 APP="Frigate"

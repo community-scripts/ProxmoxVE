@@ -46,7 +46,7 @@ function update_script() {
     msg_info "Switching update script to Seerr"
     TMP_UPDATE=$(mktemp)
     cat <<'EOF' >"$TMP_UPDATE"
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/seerr.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/ct/seerr.sh)"
 EOF
     mv "$TMP_UPDATE" /usr/bin/update
     chmod +x /usr/bin/update

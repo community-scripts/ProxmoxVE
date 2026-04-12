@@ -1,6 +1,6 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner | MickLesk
-# License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
+# License: MIT | https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/LICENSE
 
 # ==============================================================================
 # API.FUNC - TELEMETRY & DIAGNOSTICS API
@@ -608,6 +608,7 @@ detect_ram() {
 # - Never blocks or fails script execution
 # ------------------------------------------------------------------------------
 post_to_api() {
+  return
   # Prevent duplicate submissions (post_to_api is called from multiple places)
   [[ "${POST_TO_API_DONE:-}" == "true" ]] && return 0
 
@@ -733,6 +734,7 @@ EOF
 # - Never blocks or fails script execution
 # ------------------------------------------------------------------------------
 post_to_api_vm() {
+  return
   # Read diagnostics setting from file
   if [[ -f /usr/local/community-scripts/diagnostics ]]; then
     DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics 2>/dev/null | awk -F'=' '{print $2}') || true
@@ -836,6 +838,7 @@ EOF
 # - Can be called multiple times safely
 # ------------------------------------------------------------------------------
 post_progress_to_api() {
+  return
   command -v curl &>/dev/null || return 0
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
   [[ -z "${RANDOM_UUID:-}" ]] && return 0
@@ -865,6 +868,7 @@ post_progress_to_api() {
 # - Never blocks or fails script execution
 # ------------------------------------------------------------------------------
 post_update_to_api() {
+  return
   # Silent fail - telemetry should never break scripts
   command -v curl &>/dev/null || return 0
 
@@ -1252,6 +1256,7 @@ init_tool_telemetry() {
 # - For PVE host tools, not container installations
 # ------------------------------------------------------------------------------
 post_tool_to_api() {
+  return
   command -v curl &>/dev/null || return 0
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
 
@@ -1318,6 +1323,7 @@ EOF
 # - For addons installed inside containers
 # ------------------------------------------------------------------------------
 post_addon_to_api() {
+  return
   command -v curl &>/dev/null || return 0
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
 
@@ -1389,6 +1395,7 @@ EOF
 #   * GPU info (if detect_gpu was called)
 # ------------------------------------------------------------------------------
 post_update_to_api_extended() {
+  return
   # Silent fail - telemetry should never break scripts
   command -v curl &>/dev/null || return 0
 

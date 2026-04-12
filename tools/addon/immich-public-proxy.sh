@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/alangrainger/immich-public-proxy
 
 if ! command -v curl &>/dev/null; then
@@ -10,10 +10,10 @@ if ! command -v curl &>/dev/null; then
   apt-get update >/dev/null 2>&1
   apt-get install -y curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "immich-public-proxy" "addon"
 
 # Enable error handling
@@ -209,7 +209,7 @@ EOF
   cat <<'UPDATEEOF' >/usr/local/bin/update_immich-public-proxy
 #!/usr/bin/env bash
 # Immich Public Proxy Update Script
-type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/immich-public-proxy.sh)"
+type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/tools/addon/immich-public-proxy.sh)"
 UPDATEEOF
   chmod +x /usr/local/bin/update_immich-public-proxy
   msg_ok "Created update script (/usr/local/bin/update_immich-public-proxy)"

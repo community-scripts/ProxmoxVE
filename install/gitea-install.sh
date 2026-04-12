@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # Co-author: Rogue-King
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://about.gitea.com/ | Github: https://github.com/go-gitea/gitea
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
