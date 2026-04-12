@@ -47,9 +47,12 @@ msg_error() {
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "post-pmg-install" "pve"
 
-if ! grep -q "Proxmox Mail Gateway" /etc/issue 2>/dev/null && \
-   ! grep -qE '^ID=(pmg|proxmox-mail-gateway)' /etc/os-release 2>/dev/null && \
-   ! grep -qE '^PRETTY_NAME=.*Proxmox Mail Gateway' /etc/os-release 2>/dev/null; then
+if ! grep -q "Proxmox Mail Gateway" /etc/issue 2>/dev/null &&
+  ! grep -qE '^ID=(pmg|proxmox-mail-gateway)' /etc/os-release 2>/dev/null &&
+  ! grep -qE '^PRETTY_NAME=.*Proxmox Mail Gateway' /etc/os-release 2>/dev/null &&
+  ! dpkg -s proxmox-mailgateway-container >/dev/null 2>&1 &&
+  ! dpkg -s proxmox-mailgateway >/dev/null 2>&1 &&
+  ! systemctl list-unit-files 'pmg*.service' 2>/dev/null | grep -q '^pmg.*\.service'; then
   msg_error "This script is only intended for Proxmox Mail Gateway"
   exit 232
 fi
