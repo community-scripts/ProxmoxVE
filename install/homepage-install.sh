@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://gethomepage.dev/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://gethomepage.dev/ | Github: https://github.com/gethomepage/homepage
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

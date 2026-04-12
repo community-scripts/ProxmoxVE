@@ -18,7 +18,7 @@ fetch_and_deploy_gh_release "scrappar" "thecfu/scraparr" "tarball" "latest" "/op
 
 msg_info "Installing Scraparr"
 cd /opt/scraparr
-$STD uv venv /opt/scraparr/.venv
+$STD uv venv --clear /opt/scraparr/.venv
 $STD /opt/scraparr/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/scraparr/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/scraparr/.venv/bin/python -m pip install -r /opt/scraparr/src/scraparr/requirements.txt

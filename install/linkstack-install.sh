@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Omar Minaya | MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://linkstack.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://linkstack.org/ | Github: https://github.com/linkstackorg/linkstack
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

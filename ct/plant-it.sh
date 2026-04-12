@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://plant-it.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://plant-it.org/ | Github: https://github.com/MDeLuise/plant-it
 
 APP="Plant-it"
 var_tags="${var_tags:-plants;garden}"
@@ -23,18 +23,19 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+  RELEASE="0.10.0"
   if [[ ! -d /opt/plant-it ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   setup_mariadb
-  if check_for_gh_release "plant-it" "MDeLuise/plant-it"; then
+  if check_for_gh_release "plant-it" "MDeLuise/plant-it" "${RELEASE}" "last version that includes the web frontend"; then
     msg_info "Stopping Service"
     systemctl stop plant-it
     msg_info "Stopped Service"
 
-    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "0.10.0" "/opt/plant-it/backend" "server.jar"
-    fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "0.10.0" "/opt/plant-it/frontend" "client.tar.gz"
+    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "${RELEASE}" "/opt/plant-it/backend" "server.jar"
+    fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "${RELEASE}" "/opt/plant-it/frontend" "client.tar.gz"
     msg_warn "Application is updated to latest Web version (v0.10.0). There will be no more updates available."
     msg_warn "Please read: https://github.com/MDeLuise/plant-it/releases/tag/1.0.0"
 

@@ -62,14 +62,15 @@ THIN="discard=on,ssd=1,"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
-trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
+trap 'post_update_to_api "failed" "130"' SIGINT
+trap 'post_update_to_api "failed" "143"' SIGTERM
+trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
 function error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
-  post_update_to_api "failed" "${command}"
+  post_update_to_api "failed" "${exit_code}"
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
@@ -99,8 +100,15 @@ function cleanup_vmid() {
 }
 
 function cleanup() {
+  local exit_code=$?
   popd >/dev/null
-  post_update_to_api "done" "none"
+  if [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
+    if [[ $exit_code -eq 0 ]]; then
+      post_update_to_api "done" "none"
+    else
+      post_update_to_api "failed" "$exit_code"
+    fi
+  fi
   rm -rf $TEMP_DIR
 }
 
@@ -149,7 +157,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 9)); then
       msg_error "This version of Proxmox VE is not supported."
       msg_error "Supported: Proxmox VE version 8.0 – 8.9"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -160,7 +168,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 1)); then
       msg_error "This version of Proxmox VE is not supported."
       msg_error "Supported: Proxmox VE version 9.0 – 9.1"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -168,7 +176,7 @@ pve_check() {
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
   msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0 – 9.1"
-  exit 1
+  exit 105
 }
 
 function arch_check() {
@@ -207,7 +215,7 @@ function ensure_pv() {
     if ! apt-get update -qq &>/dev/null || ! apt-get install -y pv &>/dev/null; then
       msg_error "Failed to install pv automatically."
       echo -e "\nPlease run manually on the Proxmox host:\n  apt install pv\n"
-      exit 1
+      exit 237
     fi
     msg_ok "Installed pv"
   fi
@@ -235,14 +243,14 @@ function download_and_validate_xz() {
   if ! curl -fSL -o "$file" "$url"; then
     msg_error "Download failed: $url"
     rm -f "$file"
-    exit 1
+    exit 115
   fi
 
   # Validate again
   if ! xz -t "$file" &>/dev/null; then
     msg_error "Downloaded file $(basename "$file") is corrupted. Please try again later."
     rm -f "$file"
-    exit 1
+    exit 115
   fi
   msg_ok "Downloaded and validated $(basename "$file")"
 }
@@ -258,7 +266,7 @@ function extract_xz_with_pv() {
   if ! xz -dc "$file" | pv -N "Extracting" >"$target"; then
     msg_error "Failed to extract $file"
     rm -f "$target"
-    exit 1
+    exit 115
   fi
   msg_ok "Decompressed to $target"
 }
@@ -365,7 +373,10 @@ function advanced_settings() {
       HN="umbrelos"
       echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     else
-      HN=$(echo ${VM_NAME,,} | tr -d ' ')
+      HN=$(echo "${VM_NAME,,}" | tr -cs 'a-z0-9-' '-' | sed 's/^-//;s/-$//')
+      if [ "$HN" != "${VM_NAME,,}" ]; then
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "HOSTNAME ADJUSTED" --msgbox "Invalid characters detected. Hostname has been adjusted to:\n\n  $HN" 10 58
+      fi
       echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     fi
   else
@@ -390,27 +401,31 @@ function advanced_settings() {
     exit-script
   fi
 
-  if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 2 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $CORE_COUNT ]; then
-      CORE_COUNT="2"
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+  while true; do
+    if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 2 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$CORE_COUNT" ]; then CORE_COUNT="2"; fi
+      if [[ "$CORE_COUNT" =~ ^[1-9][0-9]*$ ]]; then
+        echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "CPU Cores must be a positive integer (e.g., 2)." 8 58
     else
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+      exit-script
     fi
-  else
-    exit-script
-  fi
+  done
 
-  if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 2048 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $RAM_SIZE ]; then
-      RAM_SIZE="2048"
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
+  while true; do
+    if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 2048 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$RAM_SIZE" ]; then RAM_SIZE="2048"; fi
+      if [[ "$RAM_SIZE" =~ ^[1-9][0-9]*$ ]]; then
+        echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "RAM Size must be a positive integer in MiB (e.g., 2048)." 8 58
     else
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
+      exit-script
     fi
-  else
-    exit-script
-  fi
+  done
 
   if BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $BRG ]; then
@@ -423,43 +438,61 @@ function advanced_settings() {
     exit-script
   fi
 
-  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MAC1 ]; then
-      MAC="$GEN_MAC"
-      echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
+  while true; do
+    if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$MAC1" ]; then
+        MAC="$GEN_MAC"
+        echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
+        break
+      fi
+      if [[ "$MAC1" =~ ^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$ ]]; then
+        MAC="$MAC1"
+        echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid MAC address format. Use XX:XX:XX:XX:XX:XX (e.g., AA:BB:CC:DD:EE:FF)." 8 58
     else
-      MAC="$MAC1"
-      echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC1${CL}"
+      exit-script
     fi
-  else
-    exit-script
-  fi
+  done
 
-  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VLAN1 ]; then
-      VLAN1="Default"
-      VLAN=""
-      echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
+  while true; do
+    if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$VLAN1" ]; then
+        VLAN1="Default"
+        VLAN=""
+        echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
+        break
+      fi
+      if [[ "$VLAN1" =~ ^[0-9]+$ ]] && [ "$VLAN1" -ge 1 ] && [ "$VLAN1" -le 4094 ]; then
+        VLAN=",tag=$VLAN1"
+        echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "VLAN must be a number between 1 and 4094, or leave blank for default." 8 58
     else
-      VLAN=",tag=$VLAN1"
-      echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
+      exit-script
     fi
-  else
-    exit-script
-  fi
+  done
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MTU1 ]; then
-      MTU1="Default"
-      MTU=""
-      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+  while true; do
+    if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$MTU1" ]; then
+        MTU1="Default"
+        MTU=""
+        echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      if [[ "$MTU1" =~ ^[0-9]+$ ]] && [ "$MTU1" -ge 576 ] && [ "$MTU1" -le 65520 ]; then
+        MTU=",mtu=$MTU1"
+        echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "MTU Size must be a number between 576 and 65520, or leave blank for default." 8 58
     else
-      MTU=",mtu=$MTU1"
-      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+      exit-script
     fi
-  else
-    exit-script
-  fi
+  done
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
     echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
@@ -496,6 +529,7 @@ pve_check
 ssh_check
 ensure_pv
 start_script
+post_to_api_vm
 
 msg_info "Validating Storage"
 STORAGE_MENU=()
@@ -506,7 +540,7 @@ done < <(pvesm status -content images | awk 'NR>1 {printf "%s %s %s\n", $1, $2, 
 
 if [ ${#STORAGE_MENU[@]} -eq 0 ]; then
   msg_error "Unable to detect a valid storage location."
-  exit 1
+  exit 119
 elif [ $((${#STORAGE_MENU[@]} / 3)) -eq 1 ]; then
   STORAGE=${STORAGE_MENU[0]}
 else
@@ -556,8 +590,8 @@ qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 DESCRIPTION=$(
   cat <<EOF
 <div align='center'>
-  <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
-    <img src='https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+  <a href='https://community-scripts.org' target='_blank' rel='noopener noreferrer'>
+    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
   <h2 style='font-size: 24px; margin: 20px 0;'>Umbrel OS VM</h2>

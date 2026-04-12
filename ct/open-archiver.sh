@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://openarchiver.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://openarchiver.com/ | Github: https://github.com/LogicLabs-OU/OpenArchiver
 
 APP="Open-Archiver"
 var_tags="${var_tags:-os}"

@@ -21,6 +21,8 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
+echo "${TAB3}It is important to choose the name for your server before you install Synapse, because it cannot be changed later."
+echo "${TAB3}The server name determines the “domain” part of user-ids for users on your server: these will all be of the format @user:my.domain.name. It also determines how other matrix servers will reach yours for federation."
 read -p "${TAB3}Please enter the name for your server: " servername
 
 msg_info "Installing Element Synapse"
@@ -31,14 +33,34 @@ setup_deb822_repo "matrix-org" \
   "main"
 echo "matrix-synapse-py3 matrix-synapse/server-name string $servername" | debconf-set-selections
 echo "matrix-synapse-py3 matrix-synapse/report-stats boolean false" | debconf-set-selections
+echo "exit 101" >/usr/sbin/policy-rc.d
+chmod +x /usr/sbin/policy-rc.d
 $STD apt install matrix-synapse-py3 -y
-systemctl stop matrix-synapse
+rm -f /usr/sbin/policy-rc.d
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
 sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
 SECRET=$(openssl rand -hex 32)
 ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
 echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
 echo "registration_shared_secret: ${SECRET}" >>/etc/matrix-synapse/homeserver.yaml
+
+cat <<EOF >>/etc/matrix-synapse/homeserver.yaml
+
+# MatrixRTC / Element Call configuration
+experimental_features:
+  msc3266_enabled: true
+  msc4222_enabled: true
+
+max_event_delay_duration: 24h
+
+rc_message:
+  per_second: 0.5
+  burst_count: 30
+
+rc_delayed_event_mgmt:
+  per_second: 1
+  burst_count: 20
+EOF
 systemctl enable -q --now matrix-synapse
 $STD register_new_matrix_user -a --user admin --password "$ADMIN_PASS" --config /etc/matrix-synapse/homeserver.yaml
 {

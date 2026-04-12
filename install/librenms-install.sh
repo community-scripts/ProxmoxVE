@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.librenms.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.librenms.org/ | Github: https://github.com/librenms/librenms
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -35,10 +35,12 @@ $STD apt install -y \
   python3-redis \
   python3-setuptools \
   python3-systemd \
-  python3-pip
+  python3-pip \
+  python3-psutil \
+  python3-command-runner
 msg_ok "Installed Python Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="snmp" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="cli,snmp,gmp" setup_php
 setup_mariadb
 setup_composer
 PYTHON_VERSION="3.13" setup_uv
@@ -50,7 +52,7 @@ $STD useradd librenms -d /opt/librenms -M -r -s "$(which bash)"
 mkdir -p /opt/librenms/{rrd,logs,bootstrap/cache,storage,html}
 cd /opt/librenms
 APP_KEY=$(openssl rand -base64 40 | tr -dc 'a-zA-Z0-9')
-$STD uv venv .venv
+$STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install -r requirements.txt
 cat <<EOF >/opt/librenms/.env
@@ -78,7 +80,7 @@ sed -i "s/listen = \/run\/php\/php8.4-fpm.sock/listen = \/run\/php-fpm-librenms.
 msg_ok "Configured PHP-FPM"
 
 msg_info "Configure Nginx"
-cat >/etc/nginx/sites-enabled/librenms <<'EOF'
+cat <<EOF >/etc/nginx/sites-enabled/librenms
 server {
  listen      80;
  server_name ${LOCAL_IP};
@@ -89,7 +91,7 @@ server {
  gzip on;
  gzip_types text/css application/javascript text/javascript application/x-javascript image/svg+xml text/plain text/xsd text/xsl text/xml image/x-icon;
  location / {
-  try_files $uri $uri/ /index.php?$query_string;
+  try_files \$uri \$uri/ /index.php?\$query_string;
  }
  location ~ [^/]\.php(/|$) {
   fastcgi_pass unix:/run/php-fpm-librenms.sock;

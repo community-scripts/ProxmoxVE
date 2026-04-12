@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://gitlab.com/crafty-controller/crafty-4
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://docs.craftycontrol.com/pages/getting-started/installation/linux/
 
 APP="Crafty-Controller"
 var_tags="${var_tags:-gaming}"

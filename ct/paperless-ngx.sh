@@ -2,13 +2,13 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://docs.paperless-ngx.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://docs.paperless-ngx.com/ | Github: https://github.com/paperless-ngx/paperless-ngx
 
 APP="Paperless-ngx"
 var_tags="${var_tags:-document;management}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -44,7 +44,7 @@ function update_script() {
       echo -e "${TAB}${GATEWAY}${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/9223${CL}"
       echo -e ""
       msg_custom "⚠️" "Update aborted. Please migrate your data first."
-      exit 1
+      exit 253
     fi
   fi
 

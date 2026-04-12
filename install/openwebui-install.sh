@@ -16,7 +16,9 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   ffmpeg \
-  zstd
+  zstd \
+  build-essential \
+  libmariadb-dev
 msg_ok "Installed Dependencies"
 
 setup_hwaccel
@@ -24,7 +26,7 @@ setup_hwaccel
 PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Open WebUI"
-$STD uv tool install --python 3.12 open-webui[all]
+$STD uv tool install --python 3.12 --constraint <(echo "numba>=0.60") open-webui[all]
 msg_ok "Installed Open WebUI"
 
 read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt

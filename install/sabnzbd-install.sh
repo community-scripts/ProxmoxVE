@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://sabnzbd.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://sabnzbd.org/ | Github: https://github.com/sabnzbd/sabnzbd
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -36,7 +36,7 @@ msg_ok "Setup Unrar"
 fetch_and_deploy_gh_release "sabnzbd-org" "sabnzbd/sabnzbd" "prebuild" "latest" "/opt/sabnzbd" "SABnzbd-*-src.tar.gz"
 
 msg_info "Installing SABnzbd"
-$STD uv venv /opt/sabnzbd/venv
+$STD uv venv --clear /opt/sabnzbd/venv
 $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
 msg_ok "Installed SABnzbd"
 

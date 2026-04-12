@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.stirlingpdf.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.stirlingpdf.com/ | Github: https://github.com/Stirling-Tools/Stirling-PDF
 
 APP="Stirling-PDF"
 var_tags="${var_tags:-pdf-editor}"
@@ -35,7 +35,7 @@ function update_script() {
     fi
 
     PYTHON_VERSION="3.12" setup_uv
-    JAVA_VERSION="21" setup_java
+    JAVA_VERSION="25" setup_java
 
     msg_info "Stopping Services"
     systemctl stop stirlingpdf libreoffice-listener unoserver

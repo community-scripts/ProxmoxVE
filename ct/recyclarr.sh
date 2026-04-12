@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MrYadro
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://recyclarr.dev/wiki/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://recyclarr.dev/wiki/ | Github: https://github.com/recyclarr/recyclarr
 
 APP="Recyclarr"
 var_tags="${var_tags:-arr}"
@@ -23,7 +23,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /root/.config/recyclarr/recyclarr.yml ]]; then
+  if [[ ! -f /root/.config/recyclarr/recyclarr.yml ]] && [[ ! -d /root/.config/recyclarr/configs ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -32,6 +32,20 @@ function update_script() {
     msg_info "Updating ${APP}"
 
     fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
+
+    # Migrate includes from configs/ to includes/ (recyclarr v8)
+    RECYCLARR_DIR="/root/.config/recyclarr"
+    mkdir -p "$RECYCLARR_DIR/includes"
+    if [[ -d "$RECYCLARR_DIR/configs" ]]; then
+      for item in "$RECYCLARR_DIR/configs"/*/; do
+        [[ -d "$item" ]] || continue
+        dir_name=$(basename "$item")
+        # Only move subdirs that look like include dirs (not the configs themselves)
+        if [[ "$dir_name" != "configs" ]] && [[ ! -d "$RECYCLARR_DIR/includes/$dir_name" ]]; then
+          mv "$item" "$RECYCLARR_DIR/includes/"
+        fi
+      done
+    fi
 
     msg_ok "Updated successfully!"
   fi

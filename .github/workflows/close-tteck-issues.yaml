@@ -21,7 +21,7 @@ jobs:
               const message = `Hello, it looks like you are referencing the **old tteck repo**.
 
             This repository is no longer used for active scripts.
-            **Please update your bookmarks** and use: [https://helper-scripts.com](https://helper-scripts.com)
+            **Please update your bookmarks** and use: [https://community-scripts.com](https://community-scripts.com)
                     
             Also make sure your Bash command starts with:
             \`\`\`bash

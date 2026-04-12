@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: zackwithak13
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.uhfapp.com/server
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.uhfapp.com/server | Github: https://github.com/swapplications/uhf-server-dist
 
 APP="UHF"
 var_tags="${var_tags:-media}"
@@ -38,8 +38,14 @@ function update_script() {
     $STD apt -y upgrade
     msg_ok "Updated LXC"
 
+    msg_info "Updating UHF Server"
+    if dpkg -l ffmpeg 2>&1 | grep -q "ii"; then
+      apt remove ffmpeg -y && apt autoremove -y
+    fi
+    setup_ffmpeg
     fetch_and_deploy_gh_release "comskip" "swapplications/comskip" "prebuild" "latest" "/opt/comskip" "comskip-x64-*.zip"
     fetch_and_deploy_gh_release "uhf-server" "swapplications/uhf-server-dist" "prebuild" "latest" "/opt/uhf-server" "UHF.Server-linux-x64-*.zip"
+    msg_ok "Updated UHF Server"
 
     msg_info "Starting Service"
     systemctl start uhf-server

@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://docs.paperless-ngx.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://docs.paperless-ngx.com/ | Github: https://github.com/paperless-ngx/paperless-ngx
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

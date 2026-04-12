@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck | Co-Author: MickLesk (Canbiz)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://homebox.software/en/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/sysadminsmedia/homebox
 
 APP="HomeBox"
 var_tags="${var_tags:-inventory;household}"

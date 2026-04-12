@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Jakub Matraszek (jmatraszek)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.cross-seed.org
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.cross-seed.org | Github: https://github.com/cross-seed/cross-seed
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,11 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" setup_nodejs
+msg_info "Installing Dependencies"
+$STD apt install -y build-essential
+msg_ok "Installed Dependencies"
+
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Setup Cross-Seed"
 $STD npm install cross-seed@latest -g

@@ -37,18 +37,13 @@ PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "libretranslate" "LibreTranslate/LibreTranslate" "tarball"
 
 msg_info "Setup LibreTranslate (Patience)"
-TORCH_VERSION=$(grep -Eo '"torch ==[0-9]+\.[0-9]+\.[0-9]+' /opt/libretranslate/pyproject.toml |
-  tail -n1 | sed 's/.*==//')
-if [[ -z "$TORCH_VERSION" ]]; then
-  TORCH_VERSION="2.5.0"
-fi
 cd /opt/libretranslate
-$STD uv venv .venv --python 3.12
+$STD uv venv --clear .venv --python 3.12
 $STD source .venv/bin/activate
-$STD uv pip install --upgrade pip setuptools
+$STD uv pip install --upgrade pip
+$STD uv pip install "setuptools<81"
 $STD uv pip install Babel==2.12.1
 $STD .venv/bin/python scripts/compile_locales.py
-$STD uv pip install "torch==${TORCH_VERSION}" --extra-index-url https://download.pytorch.org/whl/cpu
 $STD uv pip install "numpy<2"
 $STD uv pip install .
 $STD uv pip install libretranslate

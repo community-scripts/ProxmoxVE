@@ -14,24 +14,32 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  coreutils
+$STD apt install -y coreutils
 msg_ok "Installed Dependencies"
 
-msg_info "Setup SQL Server 2022"
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc >/dev/null
-curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server-2022.list >/dev/null
-$STD apt-get update -y
-$STD apt-get install -y mssql-server
-msg_ok "Setup Server 2022"
+msg_info "Setting up SQL Server 2022 Repository"
+setup_deb822_repo \
+  "mssql-server-2022" \
+  "https://packages.microsoft.com/keys/microsoft.asc" \
+  "https://packages.microsoft.com/ubuntu/22.04/mssql-server-2022" \
+  "jammy" \
+  "main"
+msg_ok "Repository configured"
+
+msg_info "Installing SQL Server 2022"
+$STD apt install -y mssql-server
+msg_ok "Installed SQL Server 2022"
 
 msg_info "Installing SQL Server Tools"
 export DEBIAN_FRONTEND=noninteractive
 export ACCEPT_EULA=Y
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc >/dev/null
-curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list >/dev/null
-$STD apt-get update
-$STD apt-get install -y -qq \
+setup_deb822_repo \
+  "mssql-release" \
+  "https://packages.microsoft.com/keys/microsoft.asc" \
+  "https://packages.microsoft.com/ubuntu/22.04/prod" \
+  "jammy" \
+  "main"
+$STD apt-get install -y \
   mssql-tools18 \
   unixodbc-dev
 echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >>~/.bash_profile
@@ -48,6 +56,11 @@ fi
 msg_info "Start Service"
 systemctl enable -q --now mssql-server
 msg_ok "Service started"
+
+msg_info "Cleaning up"
+rm -f /etc/profile.d/debuginfod.sh
+rm -f /etc/profile.d/debuginfod.csh
+msg_ok "Cleaned up"
 
 motd_ssh
 customize

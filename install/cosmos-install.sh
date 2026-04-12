@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://https://cosmos-cloud.io/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://cosmos-cloud.io/ | Github: https://github.com/azukaar/Cosmos-Server
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

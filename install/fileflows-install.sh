@@ -15,32 +15,43 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   ffmpeg \
-  jq \
   imagemagick
 msg_ok "Installed Dependencies"
 
 setup_hwaccel
 
 msg_info "Installing ASP.NET Core Runtime"
-curl -fsSL https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
-$STD dpkg -i packages-microsoft-prod.deb
-rm -rf packages-microsoft-prod.deb
-$STD apt-get update
-$STD apt-get install -y aspnetcore-runtime-8.0
+setup_deb822_repo \
+  "microsoft" \
+  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+  "https://packages.microsoft.com/debian/13/prod/" \
+  "trixie"
+$STD apt install -y aspnetcore-runtime-8.0
 msg_ok "Installed ASP.NET Core Runtime"
 
-msg_info "Setup FileFlows"
+fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
+
 $STD ln -svf /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 $STD ln -svf /usr/bin/ffprobe /usr/local/bin/ffprobe
-temp_file=$(mktemp)
-curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
-$STD unzip -d /opt/fileflows "$temp_file"
-$STD bash -c "cd /opt/fileflows/Server && dotnet FileFlows.Server.dll --systemd install --root true"
-systemctl enable -q --now fileflows
-rm -f "$temp_file"
-msg_ok "Setup FileFlows"
+
+read -r -p "${TAB3}Do you want to install FileFlows Server or Node? (S/N): " install_server
+
+if [[ "$install_server" =~ ^[Ss]$ ]]; then
+  msg_info "Installing FileFlows Server"
+  cd /opt/fileflows/Server
+  $STD dotnet FileFlows.Server.dll --systemd install --root true
+  systemctl enable -q --now fileflows
+  msg_ok "Installed FileFlows Server"
+else
+  msg_info "Installing FileFlows Node"
+  cd /opt/fileflows/Node
+  $STD dotnet FileFlows.Node.dll
+  $STD dotnet FileFlows.Node.dll --systemd install --root true
+  systemctl enable -q --now fileflows-node
+  msg_ok "Installed FileFlows Node"
+fi
 
 motd_ssh
 customize

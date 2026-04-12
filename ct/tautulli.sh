@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://tautulli.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://tautulli.com/ | Github: https://github.com/Tautulli/Tautulli
 
 APP="Tautulli"
 var_tags="${var_tags:-media}"
@@ -51,6 +51,7 @@ function update_script() {
     $STD source /opt/Tautulli/.venv/bin/activate
     $STD uv pip install -r requirements.txt
     $STD uv pip install pyopenssl
+    $STD uv pip install "setuptools<81"
     msg_ok "Updated Tautulli"
 
     msg_info "Restoring config and database"

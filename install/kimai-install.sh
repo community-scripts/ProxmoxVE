@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.kimai.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.kimai.org/ | Github: https://github.com/kimai/kimai
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -55,10 +55,10 @@ $STD expect <<EOF
 set timeout -1
 log_user 0
 
-spawn bin/console kimai:user:create admin admin@helper-scripts.com ROLE_SUPER_ADMIN
+spawn bin/console kimai:user:create admin admin@community-scripts.org ROLE_SUPER_ADMIN
 
 expect "Please enter the password:"
-send "helper-scripts.com\r"
+send "community-scripts.org\r"
 
 expect eof
 EOF

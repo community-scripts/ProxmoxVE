@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://archivebox.io/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://archivebox.io/ | Github: https://github.com/ArchiveBox/ArchiveBox
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -62,10 +62,10 @@ expect "Email address"
 send "\r"
 
 expect "Password"
-send "helper-scripts.com\r"
+send "community-scripts.org\r"
 
 expect "Password (again)"
-send "helper-scripts.com\r"
+send "community-scripts.org\r"
 
 expect eof
 EOF

@@ -14,14 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  unrar-free
+$STD apt install -y unrar-free
 ln -sf /usr/bin/unrar-free /usr/bin/unrar
 msg_ok "Installed Dependencies"
 
 mkdir -p /etc/shelfmark
 cat <<EOF >/etc/shelfmark/.env
 DOCKERMODE=false
+URL_BASE=""
 CONFIG_DIR=/etc/shelfmark
 TMP_DIR=/tmp/shelfmark
 ENABLE_LOGGING=true
@@ -105,14 +105,12 @@ elif [[ "$DEPLOYMENT_TYPE" == "4" ]]; then
   sed -i '/_BYPASS=/s/true/false/' /etc/shelfmark/.env
 else
   DEPLOYMENT_TYPE="1"
-  CHROME_VERSION=$(curl -fsSL https://raw.githubusercontent.com/calibrain/shelfmark/refs/heads/main/Dockerfile | sed -n '/chromium=/s/[^=]*=//p' | awk '{print $1}')
   msg_info "Installing internal bypasser dependencies"
   $STD apt install -y --no-install-recommends \
     xvfb \
     ffmpeg \
-    chromium-common=${CHROME_VERSION} \
-    chromium=${CHROME_VERSION} \
-    chromium-driver=${CHROME_VERSION} \
+    chromium-common \
+    chromium \
     python3-tk
   msg_ok "Installed internal bypasser dependencies"
 fi
@@ -133,7 +131,7 @@ msg_ok "Built Shelfmark frontend"
 
 msg_info "Configuring Shelfmark"
 cd /opt/shelfmark
-$STD uv venv ./venv
+$STD uv venv --clear ./venv
 $STD source ./venv/bin/activate
 $STD uv pip install -r ./requirements-base.txt
 [[ "$DEPLOYMENT_TYPE" == "1" ]] && $STD uv pip install -r ./requirements-shelfmark.txt

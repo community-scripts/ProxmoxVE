@@ -40,14 +40,15 @@ vm/OsName-vm.sh (host-side)
 
 See `/vm` directory for all VM creation scripts. Examples:
 
-- `ubuntu2404-vm.sh` - Ubuntu 24.04 VM
-- `ubuntu2204-vm.sh` - Ubuntu 22.04 VM
-- `debian-vm.sh` - Debian VM
-- `debian-13-vm.sh` - Debian 13 VM
-- `opnsense-vm.sh` - OPNsense firewall
+- `ubuntu2504-vm.sh` - Ubuntu 25.04 VM (Latest)
+- `ubuntu2404-vm.sh` - Ubuntu 24.04 VM (LTS)
+- `debian-13-vm.sh` - Debian 13 VM (Trixie)
+- `archlinux-vm.sh` - Arch Linux VM
 - `haos-vm.sh` - Home Assistant OS
-- `unifi-os-vm.sh` - Unifi Dream Machine
-- `k3s-vm.sh` - Kubernetes lightweight
+- `mikrotik-routeros.sh` - MikroTik RouterOS
+- `openwrt-vm.sh` - OpenWrt VM
+- `opnsense-vm.sh` - OPNsense firewall
+- `umbrel-os-vm.sh` - Umbrel OS VM
 - And 10+ more...
 
 ## VM vs Container

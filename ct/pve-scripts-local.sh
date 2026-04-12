@@ -2,14 +2,14 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.debian.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/community-scripts/ProxmoxVE-Local
 
 APP="PVE-Scripts-Local"
 var_tags="${var_tags:-pve-scripts-local}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-4}"
+var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"

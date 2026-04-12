@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://ombi.io/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://ombi.io/ | Github: https://github.com/Ombi-app/Ombi
 
 APP="Ombi"
 var_tags="${var_tags:-media}"
@@ -36,6 +36,7 @@ function update_script() {
     [[ -f /opt/ombi/Ombi.db ]] && mv /opt/ombi/Ombi.db /opt
     [[ -f /opt/ombi/OmbiExternal.db ]] && mv /opt/ombi/OmbiExternal.db /opt
     [[ -f /opt/ombi/OmbiSettings.db ]] && mv /opt/ombi/OmbiSettings.db /opt
+    [[ -f /opt/ombi/database.json ]] && mv /opt/ombi/database.json /opt
     msg_ok "Backup created"
 
     rm -rf /opt/ombi
@@ -43,6 +44,7 @@ function update_script() {
     [[ -f /opt/Ombi.db ]] && mv /opt/Ombi.db /opt/ombi
     [[ -f /opt/OmbiExternal.db ]] && mv /opt/OmbiExternal.db /opt/ombi
     [[ -f /opt/OmbiSettings.db ]] && mv /opt/OmbiSettings.db /opt/ombi
+    [[ -f /opt/database.json ]] && mv /opt/database.json /opt/ombi
 
     msg_info "Starting Service"
     systemctl start ombi

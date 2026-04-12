@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://wallabag.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://wallabag.org/ | Github: https://github.com/wallabag/wallabag
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://plant-it.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://plant-it.org/ | Github: https://github.com/MDeLuise/plant-it
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-    redis \
-    nginx
+  redis \
+  nginx
 msg_ok "Installed Dependencies"
 
 setup_mariadb

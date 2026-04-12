@@ -49,7 +49,7 @@ fetch_and_deploy_gh_release "warracker" "sassanix/Warracker" "tarball" "latest" 
 
 msg_info "Installing Warracker"
 cd /opt/warracker/backend
-$STD uv venv .venv
+$STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install -r requirements.txt
 mv /opt/warracker/env.example /opt/.env

@@ -29,28 +29,23 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
+
   update_available=$(curl -fsSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' | jq .UpdateAvailable)
   if [[ "${update_available}" == "true" ]]; then
     msg_info "Stopping Service"
-    systemctl stop fileflows
+    systemctl stop fileflows*
     msg_info "Stopped Service"
 
     msg_info "Creating Backup"
+    ls /opt/*.tar.gz &>/dev/null && rm -f /opt/*.tar.gz
     backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
     tar -czf "$backup_filename" -C /opt/fileflows Data
     msg_ok "Backup Created"
 
-    msg_info "Updating $APP to latest version"
-    temp_file=$(mktemp)
-    curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
-    $STD unzip -o -d /opt/fileflows "$temp_file"
-    rm -rf "$temp_file"
-    rm -rf "$backup_filename"
-    msg_ok "Updated $APP to latest version"
+    fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
 
     msg_info "Starting Service"
-    systemctl start fileflows
+    systemctl start fileflows*
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   else

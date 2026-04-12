@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://adventurelog.app/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/seanmorley15/AdventureLog
 
 APP="AdventureLog"
 var_tags="${var_tags:-traveling}"
@@ -51,11 +51,12 @@ function update_script() {
     cp -r /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
     cd /opt/adventurelog/backend/server
     if [[ ! -x .venv/bin/python ]]; then
-      $STD uv venv .venv
+      $STD uv venv --clear .venv
       $STD .venv/bin/python -m ensurepip --upgrade
     fi
     $STD .venv/bin/python -m pip install --upgrade pip
     $STD .venv/bin/python -m pip install -r requirements.txt
+    $STD .venv/bin/python -m pip install 'djangorestframework<3.15'
     $STD .venv/bin/python -m manage collectstatic --noinput
     $STD .venv/bin/python -m manage migrate
 

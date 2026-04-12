@@ -86,7 +86,7 @@ $STD uv tool update-shell
 export PATH="/root/.local/bin:$PATH"
 $STD poetry self add poetry-plugin-export
 $STD poetry export -f requirements.txt --output requirements.txt --without-hashes
-$STD uv venv
+$STD uv venv --clear
 $STD uv pip install -r requirements.txt
 msg_ok "Setup Backend"
 

@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://gethomepage.dev/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://gethomepage.dev/ | Github: https://github.com/gethomepage/homepage
 
 APP="Homepage"
 var_tags="${var_tags:-dashboard}"
@@ -28,7 +28,6 @@ function update_script() {
     exit
   fi
 
-  get_lxc_ip  
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
   ensure_dependencies jq
 
@@ -37,12 +36,20 @@ function update_script() {
     systemctl stop homepage
     msg_ok "Stopped service"
 
+    msg_info "Creating Backup"
     cp /opt/homepage/.env /opt/homepage.env
     cp -r /opt/homepage/config /opt/homepage_config_backup
+    [[ -d /opt/homepage/public/images ]] && cp -r /opt/homepage/public/images /opt/homepage_images_backup
+    [[ -d /opt/homepage/public/icons ]] && cp -r /opt/homepage/public/icons /opt/homepage_icons_backup
+    msg_ok "Created Backup"
+    
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
+    
+    msg_info "Restoring Backup"
     mv /opt/homepage.env /opt/homepage
     rm -rf /opt/homepage/config
     mv /opt/homepage_config_backup /opt/homepage/config
+    msg_ok "Restored Backup"
 
     msg_info "Updating Homepage (Patience)"
     RELEASE=$(get_latest_github_release "gethomepage/homepage")
@@ -54,6 +61,8 @@ function update_script() {
     export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | jq -r '.published_at')
     export NEXT_TELEMETRY_DISABLED=1
     $STD pnpm build
+    [[ -d /opt/homepage_images_backup ]] && mv /opt/homepage_images_backup /opt/homepage/public/images
+    [[ -d /opt/homepage_icons_backup ]] && mv /opt/homepage_icons_backup /opt/homepage/public/icons
     msg_ok "Updated Homepage"
 
     msg_info "Starting service"

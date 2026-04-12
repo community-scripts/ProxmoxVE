@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://sabnzbd.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://sabnzbd.org/ | Github: https://github.com/sabnzbd/sabnzbd
 
 APP="SABnzbd"
 var_tags="${var_tags:-downloader}"
@@ -41,7 +41,7 @@ function update_script() {
         # Always ensure venv exists
         if [[ ! -d /opt/sabnzbd/venv ]]; then
             msg_info "Migrating SABnzbd to uv virtual environment"
-            $STD uv venv /opt/sabnzbd/venv
+            $STD uv venv --clear /opt/sabnzbd/venv
             msg_ok "Created uv venv at /opt/sabnzbd/venv"
         fi
 

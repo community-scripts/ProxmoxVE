@@ -33,22 +33,31 @@ function update_script() {
     systemctl stop cryptpad
     msg_info "Stopped Service"
 
-    msg_info "Backing up configuration"
+    msg_info "Creating backup"
     [ -f /opt/cryptpad/config/config.js ] && mv /opt/cryptpad/config/config.js /opt/
-    msg_ok "Backed up configuration"
+    for dir in blob block customize data datastore www/common/onlyoffice/dist onlyoffice-conf; do
+      [ -d "/opt/cryptpad/${dir}" ] && mv "/opt/cryptpad/${dir}" "/tmp/cryptpad_${dir//\//_}"
+    done
+    msg_ok "Created backup"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
-    msg_info "Updating CryptaPad"
+    msg_info "Restoring backup"
+    mv /opt/config.js /opt/cryptpad/config/
+    for dir in blob block customize data datastore www/common/onlyoffice/dist onlyoffice-conf; do
+      [ -d "/tmp/cryptpad_${dir//\//_}" ] && mv "/tmp/cryptpad_${dir//\//_}" "/opt/cryptpad/${dir}"
+    done
+    msg_ok "Restored backup"
+
+    msg_info "Updating CryptPad"
     cd /opt/cryptpad
     $STD npm ci
     $STD npm run install:components
+    if [ -f "/opt/cryptpad/install-onlyoffice.sh" ]; then
+      $STD bash /opt/cryptpad/install-onlyoffice.sh --accept-license
+    fi
     $STD npm run build
     msg_ok "Updated CryptaPad"
-
-    msg_info "Restoring configuration"
-    mv /opt/config.js /opt/cryptpad/config/
-    msg_ok "Configuration restored"
 
     msg_info "Starting Service"
     systemctl start cryptpad

@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.monicahq.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.monicahq.com/ | Github: https://github.com/monicahq/monica
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -33,7 +33,7 @@ $STD yarn config set ignore-engines true
 $STD yarn install
 $STD yarn run production
 $STD php artisan key:generate
-$STD php artisan setup:production --email=admin@helper-scripts.com --password=helper-scripts.com --force
+$STD php artisan setup:production --email=admin@community-scripts.org --password=community-scripts.org --force
 chown -R www-data:www-data /opt/monica
 chmod -R 775 /opt/monica/storage
 echo "* * * * * root php /opt/monica/artisan schedule:run >> /dev/null 2>&1" >>/etc/crontab

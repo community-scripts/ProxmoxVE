@@ -61,5 +61,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access the LXC at following IP address:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}${IP}${CL}"
+echo -e "${INFO}${YW} Access Kometa Quickstart:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7171${CL}"

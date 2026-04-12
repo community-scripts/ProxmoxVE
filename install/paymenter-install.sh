@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.paymenter.org
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.paymenter.org | Github: https://github.com/paymenter/paymenter
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

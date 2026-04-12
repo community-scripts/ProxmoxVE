@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Jakub Matraszek (jmatraszek)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.cross-seed.org
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.cross-seed.org | Github: https://github.com/cross-seed/cross-seed
 
 APP="cross-seed"
 var_tags="${var_tags:-arr}"
@@ -20,26 +20,29 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if command -v cross-seed &>/dev/null; then
-        current_version=$(cross-seed --version)
-        latest_version=$(npm show cross-seed version)
-        if [ "$current_version" != "$latest_version" ]; then
-            msg_info "Updating cross-seed from version v${current_version} to v${latest_version}"
-            $STD npm install -g cross-seed@latest
-            systemctl restart cross-seed
-            msg_ok "Updated successfully!"
-        else
-            msg_ok "cross-seed is already at v${current_version}"
-        fi
+  NODE_VERSION="24" setup_nodejs
+  ensure_dependencies build-essential
+
+  if command -v cross-seed &>/dev/null; then
+    current_version=$(cross-seed --version)
+    latest_version=$(npm show cross-seed version)
+    if [ "$current_version" != "$latest_version" ]; then
+      msg_info "Updating cross-seed from version v${current_version} to v${latest_version}"
+      $STD npm install -g cross-seed@latest
+      systemctl restart cross-seed
+      msg_ok "Updated successfully!"
     else
-        msg_error "No cross-seed Installation Found!"
-        exit
+      msg_ok "cross-seed is already at v${current_version}"
     fi
+  else
+    msg_error "No cross-seed Installation Found!"
     exit
+  fi
+  exit
 }
 
 start

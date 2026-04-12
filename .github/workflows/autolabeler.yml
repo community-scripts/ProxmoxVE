@@ -93,14 +93,15 @@ jobs:
             const websiteRegex = new RegExp(`- \\[(x|X)\\]\\s*${escapedWebsite}`, "i");
 
             if (websiteRegex.test(prBody)) {
-              const hasJson = prFiles.some((f) => f.filename.startsWith("frontend/public/json/"));
+              const hasJson = prFiles.some((f) => f.filename.startsWith("json/"));
               const hasUpdateScript = labelsToAdd.has("update script");
               const hasContentLabel = ["bugfix", "feature", "refactor"].some((l) => labelsToAdd.has(l));
 
               // If it's an update script PR with json changes and a content label, skip adding website/json
               // The PR should be categorized as update script with the content label
               if (!(hasUpdateScript && hasJson && hasContentLabel)) {
-                labelsToAdd.add(hasJson ? "json" : "website");
+                labelsToAdd.add("website");
+                if (hasJson) labelsToAdd.add("json");
               }
             }
 

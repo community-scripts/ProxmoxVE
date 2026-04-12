@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://cloudreve.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://cloudreve.org/ | Github: https://github.com/cloudreve/cloudreve
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

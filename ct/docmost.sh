@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://docmost.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://docmost.com/ | Github: https://github.com/docmost/docmost
 
 APP="Docmost"
 var_tags="${var_tags:-documents}"
@@ -48,6 +48,17 @@ function update_script() {
     cd /opt/docmost
     mv /opt/.env /opt/docmost/.env
     mv /opt/data /opt/docmost/data
+
+    # Fix: Docmost EE (audit logs etc.) lives in a git submodule that is NOT
+    # included in GitHub tarballs.  The community NoopAuditService exists but
+    # is only exported by CoreModule – child modules such as UserModule cannot
+    # resolve it.  Making CoreModule @Global() exposes the token app-wide.
+    if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] \
+      && ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
+      sed -i '/^  Module,$/a\  Global,' /opt/docmost/apps/server/src/core/core.module.ts
+      sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
+    fi
+
     $STD pnpm install --force
     $STD pnpm build
     msg_ok "Updated ${APP}"

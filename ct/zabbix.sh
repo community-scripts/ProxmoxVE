@@ -35,15 +35,18 @@ function update_script() {
     exit
   fi
 
-  if systemctl list-unit-files | grep -q zabbix-agent2.service; then
+  if systemctl cat zabbix-agent2.service &>/dev/null; then
     AGENT_SERVICE="zabbix-agent2"
-  else
+  elif systemctl cat zabbix-agent.service &>/dev/null; then
     AGENT_SERVICE="zabbix-agent"
+  else
+    AGENT_SERVICE=""
+    msg_warn "No Zabbix Agent service found, skipping agent actions"
   fi
 
   msg_info "Stopping Services"
   systemctl stop zabbix-server
-  systemctl stop "$AGENT_SERVICE"
+  [[ -n "$AGENT_SERVICE" ]] && systemctl stop "$AGENT_SERVICE"
   msg_ok "Stopped Services"
 
   read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
@@ -83,13 +86,13 @@ function update_script() {
 
   $STD apt install --only-upgrade zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
 
-  if [ "$AGENT_SERVICE" = "zabbix-agent2" ]; then
+  if [[ "$AGENT_SERVICE" == "zabbix-agent2" ]]; then
     $STD apt install --only-upgrade zabbix-agent2 zabbix-agent2-plugin-postgresql
     if [ -f /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf ]; then
       sed -i 's|^Plugins.NVIDIA.System.Path=.*|# Plugins.NVIDIA.System.Path=/usr/libexec/zabbix/zabbix-agent2-plugin-nvidia-gpu|' \
         /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf
     fi
-  else
+  elif [[ "$AGENT_SERVICE" == "zabbix-agent" ]]; then
     $STD apt install --only-upgrade zabbix-agent
   fi
 
@@ -105,7 +108,7 @@ function update_script() {
 
   msg_info "Starting Services"
   systemctl start zabbix-server
-  systemctl start "$AGENT_SERVICE"
+  [[ -n "$AGENT_SERVICE" ]] && systemctl start "$AGENT_SERVICE"
   systemctl restart apache2
   msg_ok "Started Services"
   msg_ok "Updated successfully!"

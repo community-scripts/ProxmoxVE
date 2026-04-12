@@ -14,16 +14,16 @@ network_check
 update_os
 
 msg_info "Getting latest version of VictoriaMetrics"
-victoriametrics_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest" |
-  jq -r '.assets[].name' |
-  grep -E '^victoria-metrics-linux-amd64-v[0-9.]+\.tar\.gz$')
-vmutils_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest" |
-  jq -r '.assets[].name' |
-  grep -E '^vmutils-linux-amd64-v[0-9.]+\.tar\.gz$')
-msg_ok "Got latest version of VictoriaMetrics"
 
-fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "$victoriametrics_filename"
-fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "$vmutils_filename"
+victoriametrics_release=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases" |
+  jq -r '.[] | select(.assets[].name | match("^victoria-metrics-linux-amd64-v[0-9.]+.tar.gz$")) | .tag_name' |
+  head -n 1)
+victoriametrics_filename="victoria-metrics-linux-amd64-${victoriametrics_release}.tar.gz"
+vmutils_filename="vmutils-linux-amd64-${victoriametrics_release}.tar.gz"
+msg_ok "Got version $victoriametrics_release of VictoriaMetrics"
+
+fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$victoriametrics_filename"
+fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$vmutils_filename"
 
 read -r -p "${TAB3}Would you like to add VictoriaLogs? <y/N> " prompt
 

@@ -12,6 +12,7 @@ function header_info() {
  / /   / / _ \/ __ `/ __ \   / /   |   / /
 / /___/ /  __/ /_/ / / / /  / /___/   / /___
 \____/_/\___/\__,_/_/ /_/  /_____/_/|_\____/
+
 EOF
 }
 
@@ -21,6 +22,10 @@ RD="\033[01;31m"
 CM='\xE2\x9C\x94\033'
 GN="\033[1;92m"
 CL="\033[m"
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "clean-lxcs" "pve"
 
 header_info
 echo "Loading..."
@@ -70,10 +75,10 @@ function run_lxc_clean() {
       find /var/cache -type f -delete 2>/dev/null
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
-      apt-get -y --purge autoremove
-      apt-get -y autoclean
+      apt -y --purge autoremove
+      apt -y autoclean
       rm -rf /var/lib/apt/lists/*
-      apt-get update
+      apt update
     fi
   '
 }

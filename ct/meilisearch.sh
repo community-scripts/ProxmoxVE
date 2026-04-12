@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.meilisearch.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.meilisearch.com/ | Github: https://github.com/meilisearch/meilisearch
 
 APP="Meilisearch"
 var_tags="${var_tags:-full-text-search}"
@@ -24,21 +24,9 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Meilisearch Update" --radiolist --cancel-button Exit-Script "Spacebar = Select" 10 58 2 \
-    "1" "Update Meilisearch" ON \
-    "2" "Update Meilisearch-UI" OFF \
-    3>&1 1>&2 2>&3)
+  setup_meilisearch
 
-  if [ "$UPD" == "1" ]; then
-    setup_meilisearch
-    exit
-  fi
-
-  if [ "$UPD" == "2" ]; then
-    if [[ ! -d /opt/meilisearch-ui ]]; then
-      msg_error "No Meilisearch-UI Installation Found!"
-      exit
-    fi
+  if [[ -d /opt/meilisearch-ui ]]; then
     if check_for_gh_release "meilisearch-ui" "riccox/meilisearch-ui"; then
       msg_info "Stopping Meilisearch-UI"
       systemctl stop meilisearch-ui
@@ -58,10 +46,11 @@ function update_script() {
       msg_info "Starting Meilisearch-UI"
       systemctl start meilisearch-ui
       msg_ok "Started Meilisearch-UI"
-      msg_ok "Updated successfully!"
     fi
-    exit
   fi
+
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

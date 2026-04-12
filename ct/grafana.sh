@@ -9,7 +9,7 @@ APP="Grafana"
 var_tags="${var_tags:-monitoring;visualization}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
-var_disk="${var_disk:-2}"
+var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -26,7 +26,7 @@ function update_script() {
 
   if ! dpkg -s grafana >/dev/null 2>&1; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit 233
   fi
 
   if [[ -f /etc/apt/sources.list.d/grafana.list ]] || [[ ! -f /etc/apt/sources.list.d/grafana.sources ]]; then

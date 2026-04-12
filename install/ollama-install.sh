@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setting up Intel® Repositories"
 mkdir -p /usr/share/keyrings
-curl -fsSL https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor -o /usr/share/keyrings/intel-graphics.gpg
+curl -fsSL https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor -o /usr/share/keyrings/intel-graphics.gpg 2>/dev/null || true
 cat <<EOF >/etc/apt/sources.list.d/intel-gpu.sources
 Types: deb
 URIs: https://repositories.intel.com/gpu/ubuntu
@@ -31,7 +31,7 @@ Components: client
 Architectures: amd64 i386
 Signed-By: /usr/share/keyrings/intel-graphics.gpg
 EOF
-curl -fsSL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor -o /usr/share/keyrings/oneapi-archive-keyring.gpg
+curl -fsSL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor -o /usr/share/keyrings/oneapi-archive-keyring.gpg 2>/dev/null || true
 cat <<EOF >/etc/apt/sources.list.d/oneAPI.sources
 Types: deb
 URIs: https://apt.repos.intel.com/oneapi
@@ -41,8 +41,6 @@ Signed-By: /usr/share/keyrings/oneapi-archive-keyring.gpg
 EOF
 $STD apt update
 msg_ok "Set up Intel® Repositories"
-
-setup_hwaccel
 
 msg_info "Installing Intel® Level Zero"
 # Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
@@ -78,21 +76,21 @@ if curl -fL# -C - -o "$TMP_TAR" "$OLLAMA_URL"; then
     msg_ok "Installed Ollama ${RELEASE}"
   else
     msg_error "Extraction failed – archive corrupt or incomplete"
-    exit 1
+    exit 251
   fi
 else
   msg_error "Download failed – $OLLAMA_URL not reachable"
-  exit 1
+  exit 250
 fi
 
 msg_info "Creating ollama User and Group"
 if ! id ollama >/dev/null 2>&1; then
   useradd -r -s /usr/sbin/nologin -U -m -d /usr/share/ollama ollama
 fi
-$STD usermod -aG render ollama || true
-$STD usermod -aG video ollama || true
 $STD usermod -aG ollama $(id -u -n)
 msg_ok "Created ollama User and adjusted Groups"
+
+setup_hwaccel "ollama"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/ollama.service

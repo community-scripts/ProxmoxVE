@@ -5,9 +5,16 @@
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/9001/copyparty
 
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/error_handler.func)
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  apt-get update >/dev/null 2>&1
+  apt-get install -y curl >/dev/null 2>&1
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "copyparty" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
@@ -42,7 +49,7 @@ elif grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
   SERVICE_PATH="/etc/systemd/system/copyparty.service"
 else
   msg_error "Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -158,9 +165,9 @@ function install() {
   else
     read -rp "${TAB}Set admin username [admin]: " admin_user
     admin_user=${admin_user:-admin}
-    read -rsp "${TAB}Set admin password [helper-scripts.com]: " admin_pass
+    read -rsp "${TAB}Set admin password [community-scripts.org]: " admin_pass
     echo ""
-    admin_pass=${admin_pass:-helper-scripts.com}
+    admin_pass=${admin_pass:-community-scripts.org}
     msg_ok "Configured with admin user: ${admin_user}"
   fi
 
@@ -311,7 +318,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

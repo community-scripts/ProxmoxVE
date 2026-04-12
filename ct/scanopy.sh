@@ -7,9 +7,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/mi
 
 APP="Scanopy"
 var_tags="${var_tags:-analytics}"
-var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-3072}"
-var_disk="${var_disk:-6}"
+var_cpu="${var_cpu:-4}"
+var_ram="${var_ram:-4096}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "scanopy" "scanopy/scanopy"; then
+  if check_for_gh_release "Scanopy" "scanopy/scanopy"; then
     msg_info "Stopping services"
     systemctl stop scanopy-server
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl stop scanopy-daemon
@@ -40,7 +40,7 @@ function update_script() {
     [[ -f /opt/scanopy/oidc.toml ]] && cp /opt/scanopy/oidc.toml /opt/scanopy.oidc.toml
     msg_ok "Backed up configurations"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
 
     ensure_dependencies pkg-config libssl-dev
     TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
@@ -53,6 +53,13 @@ function update_script() {
     fi
     sed -i 's|_TARGET=.*$|_URL=http://127.0.0.1:60072|' /opt/scanopy/.env
 
+    msg_info "Building Scanopy Server (patience)"
+    cd /opt/scanopy/backend
+    $STD cargo build --release --bin server --bin generate-fixtures
+    $STD ./target/release/generate-fixtures --output-dir /opt/scanopy/ui/src/lib/data
+    mv ./target/release/server /usr/bin/scanopy-server
+    msg_ok "Built Scanopy Server"
+
     msg_info "Creating frontend UI"
     export PUBLIC_SERVER_HOSTNAME=default
     export PUBLIC_SERVER_PORT=""
@@ -61,17 +68,21 @@ function update_script() {
     $STD npm run build
     msg_ok "Created frontend UI"
 
-    msg_info "Building scanopy-server (patience)"
-    cd /opt/scanopy/backend
-    $STD cargo build --release --bin server
-    mv ./target/release/server /usr/bin/scanopy-server
-    msg_ok "Built scanopy-server"
+    if [[ -f /etc/systemd/system/scanopy-daemon.service ]]; then
+      fetch_and_deploy_gh_release "Scanopy Daemon" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-amd64"
+      mv "/usr/local/bin/Scanopy Daemon" /usr/local/bin/scanopy-daemon
+      rm -f /usr/bin/scanopy-daemon ~/configure_daemon.sh
+      sed -i -e 's|usr/bin|usr/local/bin|' \
+        -e 's/push/daemon_poll/' \
+        -e 's/pull/server_poll/' /etc/systemd/system/scanopy-daemon.service
+      systemctl daemon-reload
+      msg_ok "Updated Scanopy Daemon"
+    fi
 
     msg_info "Starting services"
     systemctl start scanopy-server
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl start scanopy-daemon
     msg_ok "Updated successfully!"
-    msg_warn "Update your integrated daemon via the UI"
   fi
   exit
 }

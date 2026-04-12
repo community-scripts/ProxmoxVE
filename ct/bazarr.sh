@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.bazarr.media/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.bazarr.media/ | Github: https://github.com/morpheus65535/bazarr
 
 APP="Bazarr"
 var_tags="${var_tags:-arr}"
@@ -42,7 +42,7 @@ function update_script() {
     chmod 775 /opt/bazarr /var/lib/bazarr/
     # Always ensure venv exists
     if [[ ! -d /opt/bazarr/venv/ ]]; then
-      $STD uv venv /opt/bazarr/venv --python 3.12
+      $STD uv venv --clear /opt/bazarr/venv --python 3.12
     fi
     
     # Always check and fix service file if needed

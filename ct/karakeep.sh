@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz) & vhsdream
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://karakeep.app/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://karakeep.app/ | Github: https://github.com/karakeep-app/karakeep
 
 APP="karakeep"
 var_tags="${var_tags:-bookmark}"
@@ -60,7 +60,7 @@ function update_script() {
       $STD corepack disable
     fi
     MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
-    NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
     setup_meilisearch
 
     msg_info "Updating Karakeep"

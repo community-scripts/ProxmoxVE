@@ -56,7 +56,7 @@ get_error_description 255   # "Unknown critical error, often due to missing perm
 - `DIAGNOSTICS` must be set to "yes"
 - `RANDOM_UUID` must be set and not empty
 
-**API Endpoint**: `http://api.community-scripts.org/dev/upload`
+**API Endpoint**: `https://api.community-scripts.org/dev/upload`
 
 **JSON Payload Structure**:
 ```json
@@ -110,7 +110,7 @@ post_to_api
 - `curl` command must be available
 - `RANDOM_UUID` must be set and not empty
 
-**API Endpoint**: `http://api.community-scripts.org/dev/upload`
+**API Endpoint**: `https://api.community-scripts.org/dev/upload`
 
 **JSON Payload Structure**:
 ```json
@@ -167,7 +167,7 @@ post_to_api_vm
 - `RANDOM_UUID` must be set and not empty
 - POST_UPDATE_DONE must be false (prevents duplicates)
 
-**API Endpoint**: `http://api.community-scripts.org/dev/upload/updatestatus`
+**API Endpoint**: `https://api.community-scripts.org/dev/upload/updatestatus`
 
 **JSON Payload Structure**:
 ```json

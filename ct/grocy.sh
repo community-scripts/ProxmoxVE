@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://grocy.info/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://grocy.info/ | Github: https://github.com/grocy/grocy
 
 APP="grocy"
 var_tags="${var_tags:-grocery;household}"
@@ -28,8 +28,8 @@ function update_script() {
     exit
   fi
   php_ver=$(php -v | head -n 1 | awk '{print $2}')
-  if [[ ! $php_ver == "8.3"* ]]; then
-    PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
+  if [[ ! $php_ver == "8.5"* ]]; then
+    PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
   fi
   if check_for_gh_release "grocy" "grocy/grocy"; then
     msg_info "Updating grocy"

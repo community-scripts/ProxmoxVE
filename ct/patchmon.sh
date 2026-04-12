@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://github.com/PatchMon/PatchMon
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/PatcMmon/PatchMon
 
 APP="PatchMon"
 var_tags="${var_tags:-monitoring}"
@@ -29,8 +29,16 @@ function update_script() {
     exit
   fi
 
+  if ! grep -q "PORT=3001" /opt/patchmon/backend/.env; then
+    msg_warn "⚠️ The next PatchMon update will include breaking changes (port changes)."
+    msg_warn "See details here: https://github.com/community-scripts/ProxmoxVE/pull/11888"
+    msg_warn "Press Enter to continue with the update, or Ctrl+C to abort..."
+    read -r
+  fi
+
+  RELEASE="v1.4.2"
   NODE_VERSION="24" setup_nodejs
-  if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
+  if check_for_gh_release "PatchMon" "PatchMon/PatchMon" "${RELEASE}"; then
     msg_info "Stopping Service"
     systemctl stop patchmon-server
     msg_ok "Stopped Service"
@@ -40,25 +48,44 @@ function update_script() {
     cp /opt/patchmon/frontend/.env /opt/frontend.env
     msg_ok "Backup Created"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "${RELEASE}" "/opt/patchmon"
 
     msg_info "Updating PatchMon"
-    cd /opt/patchmon
+    VERSION=$(get_latest_github_release "PatchMon/PatchMon")
+    SERVER_PORT="$(sed -n '/SERVER_PORT/s/[^=]*=//p' /opt/backend.env)"
+    sed -i 's/PORT=3399/PORT=3001/' /opt/backend.env
+    sed -i -e "s/VERSION=.*/VERSION=$VERSION/" \
+      -e '/^VITE_API_URL/d' /opt/frontend.env
     export NODE_ENV=production
-    $STD npm install --no-audit --no-fund --no-save --ignore-scripts
-    cd /opt/patchmon/backend
+    cd /opt/patchmon
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts
     cd /opt/patchmon/frontend
-    $STD npm install --include=dev --no-audit --no-fund --no-save --ignore-scripts
+    mv /opt/frontend.env /opt/patchmon/frontend/.env
+    $STD npm install --no-audit --no-fund --no-save --ignore-scripts --include=dev
     $STD npm run build
     cd /opt/patchmon/backend
     mv /opt/backend.env /opt/patchmon/backend/.env
-    mv /opt/frontend.env /opt/patchmon/frontend/.env
+    $STD npm run db:generate
     $STD npx prisma migrate deploy
-    $STD npx prisma generate
+    cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
+    sed -i -e 's|proxy_pass .*|proxy_pass http://127.0.0.1:3001;|' \
+      -e '\|try_files |i\        root /opt/patchmon/frontend/dist;' \
+      -e 's|alias.*|alias /opt/patchmon/frontend/dist/assets;|' \
+      -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
+    if [[ -n "$SERVER_PORT" ]] && [[ "$SERVER_PORT" != "443" ]]; then
+      sed -i "s/listen [[:digit:]].*/listen ${SERVER_PORT};/" /etc/nginx/sites-available/patchmon.conf
+    fi
+    ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
+    rm -f /etc/nginx/sites-enabled/default
+    $STD nginx -t
+    systemctl restart nginx
     msg_ok "Updated PatchMon"
 
     msg_info "Starting Service"
+    if grep -q '/usr/bin/node' /etc/systemd/system/patchmon-server.service; then
+      sed -i 's|ExecStart=.*|ExecStart=/usr/bin/npm run start|' /etc/systemd/system/patchmon-server.service
+      systemctl daemon-reload
+    fi
     systemctl start patchmon-server
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
@@ -73,4 +100,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

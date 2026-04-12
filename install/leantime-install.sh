@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Stroopwafe1
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://leantime.io
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://leantime.io | Github: https://github.com/Leantime/leantime
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

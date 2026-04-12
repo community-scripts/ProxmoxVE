@@ -42,16 +42,19 @@ function update_script() {
       msg_info "Stopping FlareSolverr service"
       systemctl stop flaresolverr
       msg_ok "Stopped FlareSolverr service"
-      
+
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
-      
+
       msg_info "Starting FlareSolverr Service"
       systemctl start flaresolverr
       msg_ok "Started FlareSolverr Service"
       msg_ok "Updated FlareSolverr"
     fi
-    
+
     cp /opt/shelfmark/start.sh /opt/start.sh.bak
+    if command -v chromedriver &>/dev/null; then
+      $STD apt remove -y chromium-driver
+    fi
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shelfmark" "calibrain/shelfmark" "tarball" "latest" "/opt/shelfmark"
     RELEASE_VERSION=$(cat "$HOME/.shelfmark")
 

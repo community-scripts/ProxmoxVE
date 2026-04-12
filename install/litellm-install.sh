@@ -20,29 +20,13 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
-PYTHON_VERSION="3.13" setup_uv
-
-msg_info "Setting up PostgreSQL"
-DB_NAME="litellm_db"
-DB_USER="litellm"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-{
-  echo "${APPLICATION} Credentials"
-  echo "Database Name: $DB_NAME"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-} >>~/litellm.creds
-msg_ok "Set up PostgreSQL"
+PG_DB_NAME="litellm_db" PG_DB_USER="litellm" setup_postgresql_db
+PYTHON_VERSION="3.13" USE_UVX="YES" setup_uv
 
 msg_info "Setting up Virtual Environment"
 mkdir -p /opt/litellm
 cd /opt/litellm
-$STD uv venv /opt/litellm/.venv
+$STD uv venv --clear /opt/litellm/.venv
 $STD /opt/litellm/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/litellm/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/litellm/.venv/bin/python -m pip install litellm[proxy] prisma
@@ -53,10 +37,9 @@ mkdir -p /opt
 cat <<EOF >/opt/litellm/litellm.yaml
 general_settings:
   master_key: sk-1234
-  database_url: postgresql://$DB_USER:$DB_PASS@127.0.0.1:5432/$DB_NAME
+  database_url: postgresql://$PG_DB_USER:$PG_DB_PASS@127.0.0.1:5432/$PG_DB_NAME
   store_model_in_db: true
 EOF
-
 uv --directory=/opt/litellm run litellm --config /opt/litellm/litellm.yaml --use_prisma_db_push --skip_server_startup
 msg_ok "Configured LiteLLM"
 
@@ -73,7 +56,6 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now litellm
 msg_ok "Created Service"
 

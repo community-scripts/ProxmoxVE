@@ -44,11 +44,25 @@ $STD timescaledb-tune -yes -memory "$ram_for_tsdb"MB
 $STD systemctl restart postgresql
 msg_ok "Installed TimescaleDB"
 
-PG_DB_NAME="tracearr_db" PG_DB_USER="tracearr" PG_DB_EXTENSIONS="timescaledb,timescaledb_toolkit" setup_postgresql_db
+PG_DB_NAME="tracearr_db" PG_DB_USER="tracearr" PG_DB_EXTENSIONS="timescaledb,timescaledb_toolkit" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
+
+msg_info "Installing tailscale"
+setup_deb822_repo \
+  "tailscale" \
+  "https://pkgs.tailscale.com/stable/$(get_os_info id)/$(get_os_info codename).noarmor.gpg" \
+  "https://pkgs.tailscale.com/stable/$(get_os_info id)/" \
+  "$(get_os_info codename)"
+$STD apt install -y tailscale
+# Tracearr runs tailscaled in user mode, disable the service.
+$STD systemctl disable --now tailscaled
+$STD systemctl stop tailscaled
+msg_ok "Installed tailscale"
+
 fetch_and_deploy_gh_release "tracearr" "connorgallopo/Tracearr" "tarball" "latest" "/opt/tracearr.build"
 
 msg_info "Building Tracearr"
 export TZ=$(cat /etc/timezone)
+export NODE_OPTIONS="--max-old-space-size=4096"
 cd /opt/tracearr.build
 $STD pnpm install --frozen-lockfile --force
 $STD pnpm turbo telemetry disable
@@ -59,6 +73,7 @@ cp -rf pnpm-workspace.yaml /opt/tracearr/
 cp -rf pnpm-lock.yaml /opt/tracearr/
 cp -rf apps/server/package.json /opt/tracearr/apps/server/
 cp -rf apps/server/dist /opt/tracearr/apps/server/dist
+cp -rf apps/server/scripts /opt/tracearr/apps/server/scripts
 cp -rf apps/web/dist /opt/tracearr/apps/web/dist
 cp -rf packages/shared/package.json /opt/tracearr/packages/shared/
 cp -rf packages/shared/dist /opt/tracearr/packages/shared/dist
@@ -74,6 +89,7 @@ msg_info "Configuring Tracearr"
 $STD useradd -r -s /bin/false -U tracearr
 $STD chown -R tracearr:tracearr /opt/tracearr
 install -d -m 750 -o tracearr -g tracearr /data/tracearr
+install -d -m 750 -o tracearr -g tracearr /data/backup
 export JWT_SECRET=$(openssl rand -hex 32)
 export COOKIE_SECRET=$(openssl rand -hex 32)
 cat <<EOF >/data/tracearr/.env
@@ -88,7 +104,6 @@ JWT_SECRET=$JWT_SECRET
 COOKIE_SECRET=$COOKIE_SECRET
 APP_VERSION=$(cat /root/.tracearr)
 #CORS_ORIGIN=http://localhost:5173
-#MOBILE_BETA_MODE=true
 EOF
 chmod 600 /data/tracearr/.env
 chown -R tracearr:tracearr /data/tracearr
@@ -139,6 +154,7 @@ if [ -f \$pg_config_file ]; then
     fi
 fi
 systemctl restart postgresql
+sudo -u postgres psql -c "ALTER USER tracearr WITH SUPERUSER;"
 EOF
 chmod +x /data/tracearr/prestart.sh
 cat <<EOF >/lib/systemd/system/tracearr.service

@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT
-# https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.crowdsec.net/ | Github: https://github.com/crowdsecurity/crowdsec
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
@@ -17,6 +17,11 @@ HOLD="-"
 CM="${GN}✓${CL}"
 APP="CrowdSec"
 hostname="$(hostname)"
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "crowdsec" "addon"
+
 set -o errexit
 set -o errtrace
 set -o nounset

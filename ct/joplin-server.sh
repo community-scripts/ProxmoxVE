@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://joplinapp.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://joplinapp.org/ | Github: https://github.com/laurent22/joplin
 
 APP="Joplin-Server"
 var_tags="${var_tags:-notes}"
@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION=24 NODE_MODULE="yarn,npm,pm2" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="yarn,npm,pm2" setup_nodejs
 
   if check_for_gh_release "joplin-server" "laurent22/joplin"; then
     msg_info "Stopping Services"

@@ -16,7 +16,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   python3-pip \
-  python3-libtorrent
+  python3-libtorrent \
+  python3-setuptools
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Deluge"

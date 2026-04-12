@@ -5,9 +5,16 @@
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/martabal/qbittorrent-exporter
 
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/error_handler.func)
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  apt-get update >/dev/null 2>&1
+  apt-get install -y curl >/dev/null 2>&1
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "qbittorrent-exporter" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
@@ -34,7 +41,7 @@ elif grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
   SERVICE_PATH="/etc/systemd/system/qbittorrent-exporter.service"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -193,7 +200,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "qBittorrent-Exporter is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

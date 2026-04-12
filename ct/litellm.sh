@@ -34,7 +34,7 @@ function update_script() {
   msg_ok "Stopped Service"
 
   VENV_PATH="/opt/litellm/.venv"
-  PYTHON_VERSION="3.13" setup_uv
+  PYTHON_VERSION="3.13" USE_UVX="YES" setup_uv
 
   msg_info "Updating LiteLLM"
   $STD "$VENV_PATH/bin/python" -m pip install --upgrade litellm[proxy] prisma

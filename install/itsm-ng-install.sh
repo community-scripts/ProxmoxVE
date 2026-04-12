@@ -14,39 +14,31 @@ network_check
 update_os
 
 setup_mariadb
-
-msg_info "Setting up database"
-DB_NAME=itsmng_db
-DB_USER=itsmng
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+msg_info "Loading timezone data"
 mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
-mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
-mariadb -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "ITSM-NG Database Credentials"
-  echo "Database: $DB_NAME"
-  echo "Username: $DB_USER"
-  echo "Password: $DB_PASS"
-} >>~/itsmng_db.creds
-msg_ok "Set up database"
+msg_ok "Loaded timezone data"
+MARIADB_DB_NAME="itsmng_db" MARIADB_DB_USER="itsmng" MARIADB_DB_EXTRA_GRANTS="GRANT SELECT ON \`mysql\`.\`time_zone_name\`" setup_mariadb_db
 
-msg_info "Setup ITSM-NG Repository"
+msg_info "Installing ITSM-NG"
 setup_deb822_repo \
   "itsm-ng" \
   "http://deb.itsm-ng.org/pubkey.gpg" \
   "http://deb.itsm-ng.org/$(get_os_info id)/" \
   "$(get_os_info codename)"
-msg_ok "Setup ITSM-NG Repository"
-
-msg_info "Installing ITSM-NG"
 $STD apt install -y itsm-ng
 cd /usr/share/itsm-ng
-$STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
+$STD php bin/console db:install --db-name="$MARIADB_DB_NAME" --db-user="$MARIADB_DB_USER" --db-password="$MARIADB_DB_PASS" --no-interaction
 $STD a2dissite 000-default.conf
-echo "* * * * * php /usr/share/itsm-ng/front/cron.php" | crontab -
+echo "* * * * * www-data php /usr/share/itsm-ng/front/cron.php" | crontab -
 msg_ok "Installed ITSM-NG"
+
+msg_info "Setting permissions"
+chown -R www-data:www-data /var/lib/itsm-ng
+mkdir -p /usr/share/itsm-ng/css/palettes
+chown -R www-data:www-data /usr/share/itsm-ng/css
+chown -R www-data:www-data /usr/share/itsm-ng/css_compiled
+chown www-data:www-data /etc/itsm-ng/config_db.php
+msg_ok "Set permissions"
 
 msg_info "Configuring PHP"
 PHP_VERSION=$(ls /etc/php/ | grep -E '^[0-9]+\.[0-9]+$' | head -n 1)

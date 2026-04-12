@@ -42,7 +42,7 @@ function update_script() {
     rm -rf "$VENV_PATH"
     mkdir -p /opt/esphome
     cd /opt/esphome
-    $STD uv venv "$VENV_PATH"
+    $STD uv venv --clear "$VENV_PATH"
     $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
     $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
     $STD "$VENV_PATH/bin/python" -m pip install esphome tornado esptool

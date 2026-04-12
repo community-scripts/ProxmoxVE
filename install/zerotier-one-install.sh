@@ -31,7 +31,7 @@ if gpg --verify /tmp/zerotier-install.sh >/dev/null 2>&1; then
   $STD bash /tmp/zerotier-install.sh
 else
   msg_warn "Could not verify signature of Zerotier-One install script. Exiting..."
-  exit 1
+  exit 250
 fi
 msg_ok "Setup Zerotier-One"
 

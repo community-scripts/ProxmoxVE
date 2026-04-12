@@ -5,9 +5,20 @@
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 # Source: https://github.com/bakito/adguardhome-sync
 
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/error_handler.func)
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f "/etc/alpine-release" ]]; then
+    apk -U add curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "adguardhome-sync" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
@@ -44,7 +55,7 @@ EOF
 # HELPER FUNCTIONS
 # ==============================================================================
 get_ip() {
-  hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1"
+ ifconfig | grep -v '127.0.0.1' | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -m1 -Eo '([0-9]*\.){3}[0-9]*' || echo "127.0.0.1"
 }
 
 # ==============================================================================
@@ -58,7 +69,17 @@ elif [[ -f "/etc/debian_version" ]]; then
   SERVICE_PATH="/etc/systemd/system/adguardhome-sync.service"
 else
   msg_error "Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
+fi
+
+# ==============================================================================
+# DEPENDENCY CHECK
+# ==============================================================================
+if ! command -v jq &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Installing jq \033[m' >&2
+  if [[ "$OS" == "Alpine" ]]; then
+    apk -U add jq >/dev/null 2>&1
+  fi
 fi
 
 # ==============================================================================
@@ -291,7 +312,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

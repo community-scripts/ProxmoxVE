@@ -80,6 +80,7 @@ $STD php artisan p:user:make --no-interaction --admin=1 --email "$ADMIN_EMAIL" -
 echo "* * * * * php /opt/pterodactyl-panel/artisan schedule:run >> /dev/null 2>&1" | crontab -u www-data -
 chown -R www-data:www-data /opt/pterodactyl-panel/*
 chmod -R 755 /opt/pterodactyl-panel/storage/* /opt/pterodactyl-panel/bootstrap/cache/
+ln -s /opt/pterodactyl-panel /var/www/pterodactyl
 {
   echo ""
   echo "pterodactyl Admin Username: admin"

@@ -19,8 +19,40 @@ $STD apt install -y \
   python3 \
   nginx \
   openssl \
-  gettext-base
+  gettext-base \
+  libcairo2-dev \
+  libjpeg62-turbo-dev \
+  libpng-dev \
+  libtool-bin \
+  uuid-dev \
+  libvncserver-dev \
+  freerdp3-dev \
+  libssh2-1-dev \
+  libtelnet-dev \
+  libwebsockets-dev \
+  libpulse-dev \
+  libvorbis-dev \
+  libwebp-dev \
+  libssl-dev \
+  libpango1.0-dev \
+  libswscale-dev \
+  libavcodec-dev \
+  libavutil-dev \
+  libavformat-dev
 msg_ok "Installed Dependencies"
+
+msg_info "Building Guacamole Server (guacd)"
+fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "latest" "/opt/guacamole-server"
+cd /opt/guacamole-server
+export CPPFLAGS="-Wno-error=deprecated-declarations"
+$STD autoreconf -fi
+$STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
+$STD make
+$STD make install
+$STD ldconfig
+cd /opt
+rm -rf /opt/guacamole-server
+msg_ok "Built Guacamole Server (guacd)"
 
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"
@@ -74,17 +106,46 @@ systemctl reload nginx
 msg_ok "Configured Nginx"
 
 msg_info "Creating Service"
+mkdir -p /etc/guacamole
+cat <<EOF >/etc/guacamole/guacd.conf
+[server]
+bind_host = 127.0.0.1
+bind_port = 4822
+EOF
+
+cat <<EOF >/opt/termix/.env
+NODE_ENV=production
+DATA_DIR=/opt/termix/data
+GUACD_HOST=127.0.0.1
+GUACD_PORT=4822
+EOF
+
+cat <<EOF >/etc/systemd/system/guacd.service
+[Unit]
+Description=Guacamole Proxy Daemon (guacd)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/guacd -f -b 127.0.0.1 -l 4822
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat <<EOF >/etc/systemd/system/termix.service
 [Unit]
 Description=Termix Backend
-After=network.target
+After=network.target guacd.service
+Wants=guacd.service
 
 [Service]
 Type=simple
 User=root
 WorkingDirectory=/opt/termix
-Environment=NODE_ENV=production
-Environment=DATA_DIR=/opt/termix/data
+EnvironmentFile=/opt/termix/.env
 ExecStart=/usr/bin/node /opt/termix/dist/backend/backend/starter.js
 Restart=on-failure
 RestartSec=5
@@ -92,7 +153,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now termix
+systemctl enable -q --now guacd termix
 msg_ok "Created Service"
 
 motd_ssh

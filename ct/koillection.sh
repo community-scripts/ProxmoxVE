@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://koillection.github.io/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://koillection.github.io/ | Github: https://github.com/benjaminjonard/koillection
 
 APP="Koillection"
 var_tags="${var_tags:-network}"
@@ -33,7 +33,8 @@ function update_script() {
     msg_ok "Stopped Service"
 
     PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
-    
+    setup_composer
+
     msg_info "Creating a backup"
     mv /opt/koillection/ /opt/koillection-backup
     msg_ok "Backup created"
@@ -47,7 +48,9 @@ function update_script() {
     
     # Ensure APP_RUNTIME is in .env.local for CLI commands (upgrades from older versions)
     if ! grep -q "APP_RUNTIME" /opt/koillection/.env.local 2>/dev/null; then
-      echo 'APP_RUNTIME="Symfony\Component\Runtime\SymfonyRuntime"' >> /opt/koillection/.env.local
+      # Ensure file ends with newline before appending to avoid concatenation
+      [[ -s /opt/koillection/.env.local && -n "$(tail -c 1 /opt/koillection/.env.local)" ]] && echo "" >>/opt/koillection/.env.local
+      echo 'APP_RUNTIME="Symfony\Component\Runtime\SymfonyRuntime"' >>/opt/koillection/.env.local
     fi
     
     export COMPOSER_ALLOW_SUPERUSER=1
@@ -59,6 +62,8 @@ function update_script() {
     $STD yarn install
     $STD yarn build
     mkdir -p /opt/koillection/public/uploads
+    mkdir -p /opt/koillection/var/log
+    chown -R www-data:www-data /opt/koillection/var/log
     chown -R www-data:www-data /opt/koillection/public/uploads
     rm -r /opt/koillection-backup
     

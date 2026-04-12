@@ -25,6 +25,11 @@ HOLD="-"
 CM="${GN}✓${CL}"
 current_kernel=$(uname -r)
 available_kernels=$(dpkg --list | grep 'kernel-.*-pve' | awk '{print substr($2, 16, length($2)-22)}')
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "kernel-pin" "pve"
+
 header_info
 
 function msg_info() {

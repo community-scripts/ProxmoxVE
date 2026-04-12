@@ -27,6 +27,16 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if ! command -v unrar &>/dev/null; then
+    setup_nonfree
+    $STD apt install -y unrar
+
+    if grep -q "UnrarCmd=unrar-free" /var/lib/nzbget/nzbget.conf; then
+      sed -i "s|UnrarCmd=unrar-free|UnrarCmd=unrar|g" /var/lib/nzbget/nzbget.conf
+    fi
+  fi
+
   msg_info "Updating NZBGet"
   $STD apt update
   $STD apt upgrade -y

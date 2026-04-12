@@ -51,7 +51,7 @@ while true; do
   attempts=$((attempts + 1))
   if [[ "$attempts" -ge 3 ]]; then
     msg_error "Maximum attempts reached. Exiting."
-    exit 1
+    exit 254
   fi
 done
 
@@ -60,7 +60,7 @@ read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT
 yq -i "
   .services.npmplus.environment |=
     (map(select(. != \"TZ=*\" and . != \"ACME_EMAIL=*\" and . != \"INITIAL_ADMIN_EMAIL=*\" and . != \"INITIAL_ADMIN_PASSWORD=*\")) +
-    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=helper-scripts.com\"])
+    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=community-scripts.org\"])
 " /opt/compose.yaml
 
 msg_info "Building and Starting NPMplus (Patience)"
@@ -76,11 +76,11 @@ for i in {1..60}; do
     elif [[ "$STATUS" == "unhealthy" ]]; then
       msg_error "NPMplus container is unhealthy! Check logs."
       docker logs "$CONTAINER_ID"
-      exit 1
+      exit 150
     fi
   fi
   sleep 2
-  [[ $i -eq 60 ]] && msg_error "NPMplus container did not become healthy within 120s." && docker logs "$CONTAINER_ID" && exit 1
+  [[ $i -eq 60 ]] && msg_error "NPMplus container did not become healthy within 120s." && docker logs "$CONTAINER_ID" && exit 150
 done
 msg_ok "Builded and started NPMplus"
 

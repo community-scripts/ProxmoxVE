@@ -26,7 +26,7 @@ function update_script() {
 
   if [[ ! -d /opt/endurain ]]; then
     msg_error "No ${APP} installation found!"
-    exit 1
+    exit 233
   fi
   if check_for_gh_release "endurain" "endurain-project/endurain"; then
     msg_info "Stopping Service"
@@ -61,7 +61,7 @@ function update_script() {
     msg_info "Updating Backend"
     cd /opt/endurain/backend
     $STD poetry export -f requirements.txt --output requirements.txt --without-hashes
-    $STD uv venv
+    $STD uv venv --clear
     $STD uv pip install -r requirements.txt
     msg_ok "Backend Updated"
 

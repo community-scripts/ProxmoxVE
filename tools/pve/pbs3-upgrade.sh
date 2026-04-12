@@ -44,6 +44,10 @@ msg_error() {
   echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
 }
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pbs3-upgrade" "pve"
+
 start_routines() {
   header_info
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 2 BACKUP" --menu "\nMake a backup of /etc/proxmox-backup to ensure that in the worst case, any relevant configuration can be recovered?" 14 58 2 \

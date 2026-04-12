@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MrYadro
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://recyclarr.dev/wiki/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://recyclarr.dev/wiki/ | Github: https://github.com/recyclarr/recyclarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
 
 msg_info "Configuring Recyclarr"
-mkdir -p /root/.config/recyclarr
+mkdir -p /root/.config/recyclarr/{configs,includes}
 $STD recyclarr config create
 msg_ok "Configured Recyclarr"
 

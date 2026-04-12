@@ -30,30 +30,30 @@ function update_script() {
 
   NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 
-  if check_for_gh_release "peanut" "Brandawg93/PeaNUT"; then
+  if check_for_gh_release "PeaNUT" "Brandawg93/PeaNUT"; then
     msg_info "Stopping Service"
     systemctl stop peanut
     msg_info "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PeaNUT" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
     if ! grep -q '/opt/peanut/entrypoint.mjs' /etc/systemd/system/peanut.service; then
       msg_info "Fixing entrypoint"
       cd /opt/peanut
-      ln -sf .next/standalone/server.js server.js
       sed -i 's|/opt/peanut/.next/standalone/server.js|/opt/peanut/entrypoint.mjs|' /etc/systemd/system/peanut.service
       systemctl daemon-reload
       msg_ok "Fixed entrypoint"
     fi
 
-    msg_info "Updating Peanut"
+    msg_info "Updating PeaNUT"
     cd /opt/peanut
     $STD pnpm i
     $STD pnpm run build:local
     cp -r .next/static .next/standalone/.next/
     mkdir -p /opt/peanut/.next/standalone/config
     ln -sf /etc/peanut/settings.yml /opt/peanut/.next/standalone/config/settings.yml
-    msg_ok "Updated Peanut"
+    ln -sf .next/standalone/server.js server.js
+    msg_ok "Updated PeaNUT"
 
     msg_info "Starting Service"
     systemctl start peanut

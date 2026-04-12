@@ -40,7 +40,7 @@ function update_script() {
     cd /opt/revealjs
     $STD npm install
     cp -f /opt/index.html /opt/revealjs
-    sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
+    sed -i 's/"vite"/"vite --host"/g' package.json
     rm -f /opt/index.html
     msg_ok "Updated RevealJS"
 

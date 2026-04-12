@@ -5,6 +5,11 @@
 # License: MIT
 # https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
 set -e
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "scaling-governor" "pve"
+
 header_info() {
   clear
   cat <<EOF

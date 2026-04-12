@@ -26,7 +26,7 @@ msg_ok "Installed Dependencies"
 setup_imagemagick
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="manyfold" PG_DB_USER="manyfold" setup_postgresql_db
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
 
 fetch_and_deploy_gh_release "manyfold" "manyfold3d/manyfold" "tarball" "latest" "/opt/manyfold/app"
 
@@ -101,11 +101,14 @@ server {
 
     location /cable {
         proxy_pass http://127.0.0.1:5000;
-        proxy_set_header Host \$host;
+        
+        proxy_set_header Host \$http_host;
+        proxy_set_header X-Forwarded-Host \$http_host;
+        proxy_set_header X-Forwarded-Port \$server_port;
 
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "Upgrade";
+        proxy_set_header Connection "upgrade";
 
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -118,7 +121,11 @@ server {
 
     location @rails {
         proxy_pass http://127.0.0.1:5000;
-        proxy_set_header Host \$host;
+        
+        proxy_set_header Host \$http_host;
+        proxy_set_header X-Forwarded-Host \$http_host;
+        proxy_set_header X-Forwarded-Port \$server_port;
+        
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;

@@ -19,7 +19,7 @@ setup_deb822_repo \
   "https://packages.microsoft.com/keys/microsoft-2025.asc" \
   "https://packages.microsoft.com/debian/13/prod/" \
   "trixie"
-$STD apt install -y aspnetcore-runtime-9.0
+$STD apt install -y aspnetcore-runtime-10.0
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "rdt-client" "rogerfar/rdt-client" "prebuild" "latest" "/opt/rdtc" "RealDebridClient.zip"

@@ -46,7 +46,7 @@ function update_script() {
     msg_info "Restoring configuration & data"
     mv /opt/app.env /opt/jotty/.env
     [[ -d /opt/data ]] && mv /opt/data /opt/jotty/data
-    [[ -d /opt/jotty/config ]] && mv /opt/config/* /opt/jotty/config
+    [[ -d /opt/jotty/config ]] && cp -a /opt/config/* /opt/jotty/config && rm -rf /opt/config
     msg_ok "Restored configuration & data"
 
     msg_info "Starting Service"

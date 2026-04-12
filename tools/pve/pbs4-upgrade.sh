@@ -32,6 +32,10 @@ msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
 msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
 msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pbs4-upgrade" "pve"
+
 start_routines() {
   header_info
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 3 BACKUP" --menu \

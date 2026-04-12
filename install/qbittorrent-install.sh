@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: Slaviša Arežina (tremor021)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.qbittorrent.org/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.qbittorrent.org/ | Github: https://github.com/qbittorrent/qBittorrent
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -27,6 +27,9 @@ WebUI\Password_PBKDF2="@ByteArray(amjeuVrF3xRbgzqWQmes5A==:XK3/Ra9jUmqUc4RwzCtrh
 WebUI\Port=8090
 WebUI\UseUPnP=false
 WebUI\Username=admin
+
+[Network]
+PortForwardingEnabled=false
 EOF
 msg_ok "Setup qBittorrent-nox"
 

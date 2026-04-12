@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://tandoor.dev/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://tandoor.dev/ | Github: https://github.com/TandoorRecipes/recipes
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -40,13 +40,14 @@ SECRET_KEY=$(openssl rand -base64 45 | sed 's/\//\\\//g')
 msg_info "Setup Tandoor"
 mkdir -p /opt/tandoor/{config,api,mediafiles,staticfiles}
 cd /opt/tandoor
-$STD uv venv .venv --python=python3
+$STD uv venv --clear .venv --python=python3
 $STD uv pip install -r requirements.txt --python .venv/bin/python
 cd /opt/tandoor/vue3
 $STD yarn install
 $STD yarn build
 cat <<EOF >/opt/tandoor/.env
 SECRET_KEY=$SECRET_KEY
+ALLOWED_HOSTS=$LOCAL_IP
 TZ=Europe/Berlin
 
 DB_ENGINE=django.db.backends.postgresql

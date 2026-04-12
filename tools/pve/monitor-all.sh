@@ -15,6 +15,10 @@ cat <<"EOF"
 
 EOF
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "monitor-all" "pve"
+
 add() {
   echo -e "\n IMPORTANT: Tag-Based Monitoring Enabled"
   echo "Only VMs and containers with the tag 'mon-restart' will be automatically restarted by this service."
@@ -28,9 +32,9 @@ add() {
   while true; do
     read -p "This script will add Monitor All to Proxmox VE. Proceed (y/n)? " yn
     case $yn in
-      [Yy]*) break ;;
-      [Nn]*) exit ;;
-      *) echo "Please answer yes or no." ;;
+    [Yy]*) break ;;
+    [Nn]*) exit ;;
+    *) echo "Please answer yes or no." ;;
     esac
   done
 
@@ -175,5 +179,8 @@ CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Monitor-All f
 case $CHOICE in
 "Add") add ;;
 "Remove") remove ;;
-*) echo "Exiting..."; exit 0 ;;
+*)
+  echo "Exiting..."
+  exit 0
+  ;;
 esac

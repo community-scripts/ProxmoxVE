@@ -14,7 +14,7 @@ network_check
 update_os
 
 read -r -p "${TAB3}Enter PostgreSQL version (15/16/17): " ver
-[[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 1; }
+[[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 64; }
 
 msg_info "Installing PostgreSQL ${ver}"
 $STD apk add --no-cache postgresql${ver} postgresql${ver}-contrib postgresql${ver}-openrc sudo

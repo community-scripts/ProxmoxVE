@@ -50,6 +50,7 @@ msg_ok "Installed MotionEye"
 
 msg_info "Creating Service"
 curl -fsSL "https://raw.githubusercontent.com/motioneye-project/motioneye/dev/motioneye/extra/motioneye.systemd" -o "/etc/systemd/system/motioneye.service"
+sed -i 's/^User=.*/User=root/' /etc/systemd/system/motioneye.service
 systemctl enable -q --now motioneye
 msg_ok "Created Service"
 

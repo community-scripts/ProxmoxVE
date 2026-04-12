@@ -15,7 +15,8 @@ update_os
 
 msg_info "Install Checkmk"
 RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
-curl -fsSL "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb" -o "/opt/checkmk.deb"
+RELEASE="${RELEASE%%+*}"
+curl -fsSL "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.$(get_os_info codename)_amd64.deb" -o "/opt/checkmk.deb"
 $STD apt-get install -y /opt/checkmk.deb
 rm -rf /opt/checkmk.deb
 echo "${RELEASE}" >"/opt/checkmk_version.txt"

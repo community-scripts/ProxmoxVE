@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.nocodb.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.nocodb.com/ | Github: https://github.com/nocodb/nocodb
 
 APP="NocoDB"
 var_tags="${var_tags:-noCode}"
@@ -23,10 +23,12 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+  #RELEASE="0.301.1"
   if [[ ! -f /etc/systemd/system/nocodb.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  #if check_for_gh_release "nocodb" "nocodb/nocodb" "${RELEASE}"; then
   if check_for_gh_release "nocodb" "nocodb/nocodb"; then
     msg_info "Stopping Service"
     systemctl stop nocodb

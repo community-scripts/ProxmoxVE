@@ -29,6 +29,8 @@ fetch_and_deploy_gh_release "vaultwarden" "dani-garcia/vaultwarden" "tarball" "l
 
 msg_info "Building Vaultwarden (Patience)"
 cd /tmp/vaultwarden-src
+VW_VERSION=$(get_latest_github_release "dani-garcia/vaultwarden")
+export VW_VERSION
 $STD cargo build --features "sqlite,mysql,postgresql" --release
 msg_ok "Built Vaultwarden"
 

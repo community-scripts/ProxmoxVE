@@ -8,8 +8,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/mi
 APP="Tracearr"
 var_tags="${var_tags:-media}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
-var_disk="${var_disk:-5}"
+var_ram="${var_ram:-8192}"
+var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -75,13 +75,34 @@ if [ -f \$pg_config_file ]; then
     fi
 fi
 systemctl restart postgresql
+sudo -u postgres psql -c "ALTER USER tracearr WITH SUPERUSER;"
 EOF
   chmod +x /data/tracearr/prestart.sh
   msg_ok "Updated prestart script"
 
+  # check if tailscale is installed
+  if command -v tailscale >/dev/null 2>&1; then
+    # Tracearr runs tailscaled in user mode, disable the service.
+    $STD systemctl disable --now tailscaled
+    $STD systemctl stop tailscaled
+    msg_ok "Tailscale already installed"
+  else
+    msg_info "Installing tailscale"
+    setup_deb822_repo \
+      "tailscale" \
+      "https://pkgs.tailscale.com/stable/$(get_os_info id)/$(get_os_info codename).noarmor.gpg" \
+      "https://pkgs.tailscale.com/stable/$(get_os_info id)/" \
+      "$(get_os_info codename)"
+    $STD apt install -y tailscale
+    # Tracearr runs tailscaled in user mode, disable the service.
+    $STD systemctl disable --now tailscaled
+    $STD systemctl stop tailscaled
+    msg_ok "Installed tailscale"
+  fi
+
   if check_for_gh_release "tracearr" "connorgallopo/Tracearr"; then
     msg_info "Stopping Services"
-    systemctl stop tracearr postgresql redis
+    systemctl stop tracearr postgresql redis-server
     msg_ok "Stopped Services"
 
     msg_info "Updating pnpm"
@@ -94,6 +115,7 @@ EOF
 
     msg_info "Building Tracearr"
     export TZ=$(cat /etc/timezone)
+    export NODE_OPTIONS="--max-old-space-size=4096"
     cd /opt/tracearr.build
     $STD pnpm install --frozen-lockfile --force
     $STD pnpm turbo telemetry disable
@@ -105,6 +127,7 @@ EOF
     cp -rf pnpm-lock.yaml /opt/tracearr/
     cp -rf apps/server/package.json /opt/tracearr/apps/server/
     cp -rf apps/server/dist /opt/tracearr/apps/server/dist
+    cp -rf apps/server/scripts /opt/tracearr/apps/server/scripts
     cp -rf apps/web/dist /opt/tracearr/apps/web/dist
     cp -rf packages/shared/package.json /opt/tracearr/packages/shared/
     cp -rf packages/shared/dist /opt/tracearr/packages/shared/dist
@@ -118,13 +141,15 @@ EOF
     msg_ok "Built Tracearr"
 
     msg_info "Configuring Tracearr"
-    sed -i "s/^APP_VERSION=.*/APP_VERSION=$(cat /root/.tracearr)/" /data/tracearr/.env
+    sed -i "s|^APP_VERSION=.*|APP_VERSION=${CHECK_UPDATE_RELEASE#v}|" /data/tracearr/.env
     chmod 600 /data/tracearr/.env
     chown -R tracearr:tracearr /data/tracearr
+    mkdir -p /data/backup
+    chown -R tracearr:tracearr /data/backup
     msg_ok "Configured Tracearr"
 
     msg_info "Starting services"
-    systemctl start postgresql redis tracearr
+    systemctl start postgresql redis-server tracearr
     msg_ok "Started services"
     msg_ok "Updated successfully!"
   else

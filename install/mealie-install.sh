@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://mealie.io
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://mealie.io | Github: https://github.com/mealie-recipes/mealie
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -28,7 +28,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
-POSTGRES_VERSION="16" setup_postgresql
+PG_VERSION="16" setup_postgresql
 NODE_MODULE="yarn" NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
 PG_DB_NAME="mealie_db" PG_DB_USER="mealie_user" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db

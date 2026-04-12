@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: thost96 (thost96)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.authelia.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.authelia.com/ | Github: https://github.com/authelia/authelia
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -29,7 +29,7 @@ while true; do
     msg_warn "Domain cannot be empty! (Attempt $attempt/$MAX_ATTEMPTS)"
   elif [[ "$DOMAIN" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
     valid_ip=true
-    IFS='.' read -ra octets <<< "$DOMAIN"
+    IFS='.' read -ra octets <<<"$DOMAIN"
     for octet in "${octets[@]}"; do
       if ((octet > 255)); then
         valid_ip=false
@@ -58,7 +58,7 @@ if [[ "$DOMAIN" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
 else
   AUTHELIA_URL="https://auth.${DOMAIN}"
 fi
-echo "$AUTHELIA_URL" > /etc/authelia/.authelia_url
+echo "$AUTHELIA_URL" >/etc/authelia/.authelia_url
 
 cat <<EOF >/etc/authelia/users.yml
 users:

@@ -36,8 +36,8 @@ fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 
 msg_info "Installing Python Dependencies with uv"
 cd /opt/dispatcharr
-$STD uv venv
-$STD uv pip install -r requirements.txt --index-strategy unsafe-best-match
+$STD uv venv --clear
+$STD uv sync
 $STD uv pip install gunicorn gevent celery redis daphne
 msg_ok "Installed Python Dependencies"
 
@@ -66,7 +66,9 @@ CELERY_BROKER_URL=redis://localhost:6379/0
 DJANGO_SECRET_KEY=$DJANGO_SECRET
 EOF
 cd /opt/dispatcharr/frontend
-$STD npm install --legacy-peer-deps
+node -e "const p=require('./package.json');p.overrides=p.overrides||{};p.overrides['webworkify-webpack']='2.1.3';require('fs').writeFileSync('package.json',JSON.stringify(p,null,2));"
+rm -f package-lock.json
+$STD npm install --no-audit --progress=false
 $STD npm run build
 msg_ok "Configured Dispatcharr"
 

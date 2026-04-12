@@ -64,6 +64,12 @@ function update_script() {
 }
 
 start
+
+if [[ $(sysctl -n vm.max_map_count 2>/dev/null) -lt 262144 ]]; then
+  sysctl -w vm.max_map_count=262144 >/dev/null 2>&1
+  echo "vm.max_map_count=262144" >/etc/sysctl.d/graylog.conf
+fi
+
 build_container
 description
 

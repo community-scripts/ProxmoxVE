@@ -27,7 +27,7 @@ function update_script() {
     exit
   fi
 
-  set +o pipefail && RELEASE=$(curl -fsSL https://teamspeak.com/en/downloads/#server | sed -n 's/.*teamspeak3-server_linux_amd64-\([0-9.]*[0-9]\).*/\1/p' | head -1) && set -o pipefail
+  RELEASE=$(curl -fsSL https://teamspeak.com/en/downloads/#server | sed -n 's/.*teamspeak3-server_linux_amd64-\([0-9.]*[0-9]\).*/\1/p' | awk 'NR==1')
 
   if [ "${RELEASE}" != "$(cat ~/.teamspeak-server)" ] || [ ! -f ~/.teamspeak-server ]; then
     msg_info "Updating ${APP} LXC"

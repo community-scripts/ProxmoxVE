@@ -86,7 +86,7 @@ EOF
     msg_ok "Docker TCP socket available on $socket"
   else
     msg_error "Docker failed to restart. Check journalctl -xeu docker.service"
-    exit 1
+    exit 150
   fi
 fi
 

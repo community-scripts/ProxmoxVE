@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://grocy.info/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://grocy.info/ | Github: https://github.com/grocy/grocy
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
 fetch_and_deploy_gh_release "grocy" "grocy/grocy" "prebuild" "latest" "/var/www/html" "grocy*.zip"
 
 msg_info "Configuring grocy"

@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT
-# https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.netdata.cloud/ | Github: https://github.com/netdata/netdata
 
 function header_info {
   clear
@@ -26,6 +26,11 @@ BFR="\\r\\033[K"
 HOLD="-"
 CM="${GN}✓${CL}"
 silent() { "$@" >/dev/null 2>&1; }
+
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "netdata" "addon"
+
 set -e
 header_info
 echo "Loading..."
@@ -53,7 +58,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 9)); then
       msg_error "This version of Proxmox VE is not supported."
       msg_error "Supported: Proxmox VE version 8.0 – 8.9"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -64,7 +69,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 1)); then
       msg_error "This version of Proxmox VE is not yet supported."
       msg_error "Supported: Proxmox VE version 9.0–9.1.x"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -72,19 +77,19 @@ pve_check() {
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
   msg_error "Supported versions: Proxmox VE 8.0 – 8.9 or 9.0–9.1.x"
-  exit 1
+  exit 105
 }
 
 detect_codename() {
   source /etc/os-release
   if [[ "$ID" != "debian" ]]; then
     msg_error "Unsupported base OS: $ID (only Proxmox VE / Debian supported)."
-    exit 1
+    exit 238
   fi
   CODENAME="${VERSION_CODENAME:-}"
   if [[ -z "$CODENAME" ]]; then
     msg_error "Could not detect Debian codename."
-    exit 1
+    exit 71
   fi
   echo "$CODENAME"
 }
@@ -119,7 +124,7 @@ install() {
   PKG=$(get_latest_repo_pkg "$REPO_URL")
   if [[ -z "$PKG" ]]; then
     msg_error "Could not find netdata-repo package for Debian $CODENAME"
-    exit 1
+    exit 237
   fi
   curl -fsSL "${REPO_URL}${PKG}" -o "$PKG"
   $STD dpkg -i "$PKG"

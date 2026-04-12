@@ -54,8 +54,9 @@ jobs:
             
             console.log(`Cutoff date: ${cutoffDate.toISOString().split('T')[0]}`);
             
-            // Read changelog
-            const content = await fs.readFile(CHANGELOG_PATH, 'utf-8');
+            // Read changelog and normalize line endings
+            let content = await fs.readFile(CHANGELOG_PATH, 'utf-8');
+            content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
             const lines = content.split('\n');
             
             // Parse entries
@@ -66,9 +67,39 @@ jobs:
             let currentDate = null;
             let currentContent = [];
             let inHeader = true;
+            let inOldHistory = false;
+            let historyDetailsDepth = 0;
             
-            for (const line of lines) {
+            for (let i = 0; i < lines.length; i++) {
+              const line = lines[i];
               const match = line.match(datePattern);
+              
+              // Detect the start of History section: <details> followed by line with 📜 History
+              if (inHeader && !inOldHistory && line.trim() === '<details>') {
+                // Look ahead to see if this is the History section
+                const nextLine = lines[i + 1] || '';
+                if (nextLine.includes('📜 History')) {
+                  inOldHistory = true;
+                  historyDetailsDepth = 1;
+                  continue;
+                }
+              }
+              
+              // Track nested details tags to find the end of History section
+              if (inOldHistory) {
+                if (line.trim() === '<details>') {
+                  historyDetailsDepth++;
+                }
+                if (line.trim() === '</details>') {
+                  historyDetailsDepth--;
+                  if (historyDetailsDepth === 0) {
+                    // We've closed the main History details tag
+                    inOldHistory = false;
+                  }
+                }
+                continue;
+              }
+              
               if (match) {
                 inHeader = false;
                 
@@ -148,30 +179,55 @@ jobs:
                 let existingContent = '';
                 try {
                   existingContent = await fs.readFile(monthPath, 'utf-8');
+                  // Normalize line endings to prevent regex issues
+                  existingContent = existingContent.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
                 } catch (e) {
                   // File doesn't exist
                 }
                 
-                // Merge new entries with existing (avoid duplicates)
-                const existingDates = new Set();
-                const existingDatePattern = /^## (\d{4}-\d{2}-\d{2})$/gm;
-                let match;
-                while ((match = existingDatePattern.exec(existingContent)) !== null) {
-                  existingDates.add(match[1]);
+                // Parse existing entries into a Map (date -> content) for deduplication
+                const allEntries = new Map();
+                
+                // Helper function to parse entries from content
+                const parseEntries = (content) => {
+                  const entries = new Map();
+                  const parts = content.split(/(?=^## \d{4}-\d{2}-\d{2}$)/m);
+                  for (const part of parts) {
+                    const trimmed = part.trim();
+                    if (!trimmed) continue;
+                    const dateMatch = trimmed.match(/^## (\d{4}-\d{2}-\d{2})/);
+                    if (dateMatch) {
+                      entries.set(dateMatch[1], trimmed);
+                    }
+                  }
+                  return entries;
+                };
+                
+                // Parse existing content
+                if (existingContent) {
+                  const existingEntries = parseEntries(existingContent);
+                  for (const [date, content] of existingEntries) {
+                    allEntries.set(date, content);
+                  }
                 }
                 
-                const newEntries = archiveData[year][month].filter(entry => {
+                // Add new entries (existing entries take precedence to avoid overwriting)
+                let addedCount = 0;
+                for (const entry of archiveData[year][month]) {
                   const dateMatch = entry.match(/^## (\d{4}-\d{2}-\d{2})/);
-                  return dateMatch && !existingDates.has(dateMatch[1]);
-                });
+                  if (dateMatch && !allEntries.has(dateMatch[1])) {
+                    allEntries.set(dateMatch[1], entry.trim());
+                    addedCount++;
+                  }
+                }
                 
-                if (newEntries.length > 0) {
-                  const allContent = existingContent 
-                    ? existingContent + '\n\n' + newEntries.join('\n\n')
-                    : newEntries.join('\n\n');
-                  
-                  await fs.writeFile(monthPath, allContent, 'utf-8');
-                  console.log(`Updated: ${monthPath} (+${newEntries.length} entries)`);
+                // Sort entries by date (newest first) and write
+                const sortedDates = [...allEntries.keys()].sort().reverse();
+                const sortedContent = sortedDates.map(date => allEntries.get(date)).join('\n\n');
+                
+                if (addedCount > 0 || !existingContent) {
+                  await fs.writeFile(monthPath, sortedContent + '\n', 'utf-8');
+                  console.log(`Updated: ${monthPath} (${allEntries.size} total entries, +${addedCount} new)`);
                 }
               }
             }
@@ -218,7 +274,8 @@ jobs:
                 // Count entries in month file
                 let entryCount = 0;
                 try {
-                  const monthContent = await fs.readFile(monthPath, 'utf-8');
+                  let monthContent = await fs.readFile(monthPath, 'utf-8');
+                  monthContent = monthContent.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
                   entryCount = (monthContent.match(/^## \d{4}-\d{2}-\d{2}$/gm) || []).length;
                 } catch (e) {
                   entryCount = (archiveData[year]?.[month] || []).length;

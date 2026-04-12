@@ -71,6 +71,7 @@ EOF
     $STD php artisan migrate --seed --force --no-interaction
     chown -R www-data:www-data /opt/pterodactyl-panel/*
     chmod -R 755 /opt/pterodactyl-panel/storage /opt/pterodactyl-panel/bootstrap/cache/
+    ln -s /opt/pterodactyl-panel /var/www/pterodactyl
     rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"

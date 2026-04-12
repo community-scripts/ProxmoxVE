@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/mi
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://actualbudget.org/
+# Source: https://actualbudget.org/ | Github: https://github.com/actualbudget/actual
 
 APP="Actual Budget"
 var_tags="${var_tags:-finance}"

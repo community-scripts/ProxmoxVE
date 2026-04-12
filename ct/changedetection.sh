@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://changedetection.io/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://changedetection.io/ | Github: https://github.com/dgtlmoon/changedetection.io
 
 APP="Change Detection"
 var_tags="${var_tags:-monitoring;crawler}"
@@ -35,11 +35,11 @@ function update_script() {
   NODE_VERSION="24" setup_nodejs
 
   msg_info "Updating ${APP}"
-  $STD pip3 install changedetection.io --upgrade
+  $STD pip3 install changedetection.io --upgrade --break-system-packages --ignore-installed typing_extensions
   msg_ok "Updated ${APP}"
 
   msg_info "Updating Playwright"
-  $STD pip3 install playwright --upgrade
+  $STD pip3 install playwright --upgrade --break-system-packages
   msg_ok "Updated Playwright"
 
   if [[ -f /etc/systemd/system/browserless.service ]]; then

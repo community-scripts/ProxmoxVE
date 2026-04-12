@@ -2,7 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.phpmyadmin.net/ | Github: https://github.com/phpmyadmin/phpmyadmin
 
 function header_info {
   clear
@@ -29,6 +30,10 @@ APP="phpMyAdmin"
 INSTALL_DIR_DEBIAN="/var/www/html/phpMyAdmin"
 INSTALL_DIR_ALPINE="/usr/share/phpmyadmin"
 
+# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "phpmyadmin" "addon"
+
 IFACE=$(ip -4 route | awk '/default/ {print $5; exit}')
 IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1)
 [[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
@@ -47,7 +52,7 @@ elif [[ -f "/etc/debian_version" ]]; then
   INSTALL_DIR="$INSTALL_DIR_DEBIAN"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 header_info
@@ -57,13 +62,17 @@ function msg_ok() { echo -e "${CM} ${GN}${1}${CL}"; }
 function msg_error() { echo -e "${CROSS} ${RD}${1}${CL}"; }
 
 function check_internet() {
+  if ! command -v curl &>/dev/null; then
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
   msg_info "Checking Internet connectivity to GitHub"
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://github.com)
   if [[ "$HTTP_CODE" -ge 200 && "$HTTP_CODE" -lt 400 ]]; then
     msg_ok "Internet connectivity OK"
   else
     msg_error "Internet connectivity or GitHub unreachable (Status $HTTP_CODE). Exiting."
-    exit 1
+    exit 115
   fi
 }
 
@@ -96,7 +105,7 @@ function install_php_and_modules() {
       msg_info "Installing missing PHP packages: ${MISSING_PACKAGES[*]}"
       if ! apt-get update &>/dev/null || ! apt-get install -y "${MISSING_PACKAGES[@]}" &>/dev/null; then
         msg_error "Failed to install required PHP modules. Exiting."
-        exit 1
+        exit 237
       fi
       msg_ok "Installed missing PHP packages"
     else
@@ -123,7 +132,7 @@ function install_phpmyadmin() {
   msg_info "Downloading ${TARBALL_URL}"
   if ! curl -fsSL "$TARBALL_URL" -o /tmp/phpmyadmin.tar.gz; then
     msg_error "Download failed: $TARBALL_URL"
-    exit 1
+    exit 115
   fi
 
   mkdir -p "$INSTALL_DIR"
@@ -179,7 +188,7 @@ EOF
       msg_ok "Started PHP-FPM service: $PHP_FPM_SERVICE"
     else
       msg_error "Failed to start PHP-FPM service: $PHP_FPM_SERVICE"
-      exit 1
+      exit 150
     fi
 
     $STD rc-service lighttpd start
@@ -228,7 +237,7 @@ function update_phpmyadmin() {
 
   if ! curl -fsSL "$TARBALL_URL" -o /tmp/phpmyadmin.tar.gz; then
     msg_error "Download failed: $TARBALL_URL"
-    exit 1
+    exit 115
   fi
 
   BACKUP_DIR="/tmp/phpmyadmin-backup-$(date +%Y%m%d-%H%M%S)"
@@ -271,7 +280,7 @@ if is_phpmyadmin_installed; then
     ;;
   *)
     echo -e "${YW}⚠️ Invalid input. Exiting.${CL}"
-    exit 1
+    exit 112
     ;;
   esac
 else

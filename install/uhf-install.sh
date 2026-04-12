@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: zackwithak13
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.uhfapp.com/server
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.uhfapp.com/server | Github: https://github.com/swapplications/uhf-server-dist
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -15,7 +15,7 @@ update_os
 setup_hwaccel
 
 msg_info "Installing Dependencies"
-$STD apt install -y ffmpeg
+setup_ffmpeg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting Up UHF Server Environment"

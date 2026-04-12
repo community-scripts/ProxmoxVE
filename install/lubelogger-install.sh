@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://lubelogger.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://lubelogger.com/ | Github: https://github.com/hargata/lubelog
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://cronicle.net/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://cronicle.net/ | Github: https://github.com/jhuckaby/Cronicle
 
 APP="Cronicle"
 var_tags="${var_tags:-task-scheduler}"
@@ -23,10 +23,9 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 2 \
-    "1" "Update ${APP}" ON \
-    "2" "Install ${APP} Worker" OFF \
-    3>&1 1>&2 2>&3)
+  UPD=$(msg_menu "Cronicle Update Options" \
+    "1" "Update ${APP}" \
+    "2" "Install ${APP} Worker")
 
   if [ "$UPD" == "1" ]; then
     if [[ ! -d /opt/cronicle ]]; then

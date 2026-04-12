@@ -2,11 +2,11 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.iobroker.net/#en/intro
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.iobroker.net/#en/intro | Github: https://github.com/ioBroker/ioBroker.js-controller
 
 APP="ioBroker"
-var_tags="${var_tags:-automtation}"
+var_tags="${var_tags:-automation}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"

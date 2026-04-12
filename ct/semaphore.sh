@@ -2,16 +2,16 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://semaphoreui.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://semaphoreui.com/ | Github: https://github.com/semaphoreui/semaphore
 
 APP="Semaphore"
 var_tags="${var_tags:-dev_ops}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
-var_os="${var_os:-debian}"
-var_version="${var_version:-13}"
+var_os="${var_os:-ubuntu}"
+var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +28,34 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if [[ -f /opt/semaphore/semaphore_db.bolt ]]; then
+    msg_warn "WARNING: Due to bugs with BoltDB database, update script will move your application"
+    msg_warn "to use SQLite database instead. Unfortunately, this will reset your application and make it a fresh"
+    msg_warn "installation. All your data will be lost!"
+    echo ""
+    read -r -p "${TAB3}Do you want to continue? (y/N): " CONFIRM
+    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+      exit 0
+    else
+      msg_info "Moving from BoltDB to SQLite"
+      systemctl stop semaphore
+      rm -rf /opt/semaphore/semaphore_db.bolt
+      sed -i \
+        -e 's|"bolt": {|"sqlite": {|' \
+        -e 's|/semaphore_db.bolt"|/database.sqlite"|' \
+        -e '/semaphore_db.bolt/d' \
+        -e '/"dialect"/d' \
+        -e '/^  },$/a\  "dialect": "sqlite",' \
+        /opt/semaphore/config.json
+      SEM_PW=$(cat ~/semaphore.creds)
+      systemctl start semaphore
+      $STD semaphore user add --admin --login admin --email admin@community-scripts.org --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
+
+      msg_ok "Moved from BoltDB to SQLite"
+    fi
+  fi
+
   if check_for_gh_release "semaphore" "semaphoreui/semaphore"; then
     msg_info "Stopping Service"
     systemctl stop semaphore

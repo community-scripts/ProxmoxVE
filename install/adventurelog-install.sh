@@ -58,10 +58,11 @@ DISABLE_REGISTRATION=False
 EOF
 cd /opt/adventurelog/backend/server
 mkdir -p /opt/adventurelog/backend/server/media
-$STD uv venv /opt/adventurelog/backend/server/.venv
+$STD uv venv --clear /opt/adventurelog/backend/server/.venv
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install -r requirements.txt
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install 'djangorestframework<3.15'
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage collectstatic --noinput
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage migrate
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage download-countries

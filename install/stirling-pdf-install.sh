@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://www.stirlingpdf.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.stirlingpdf.com/ | Github: https://github.com/Stirling-Tools/Stirling-PDF
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -31,7 +31,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
-JAVA_VERSION="21" setup_java
+JAVA_VERSION="25" setup_java
 
 read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response
 response=${response,,} # Convert to lowercase
@@ -61,7 +61,7 @@ msg_ok "Installed LibreOffice Components"
 
 msg_info "Installing Python Dependencies"
 mkdir -p /tmp/stirling-pdf
-$STD uv venv /opt/.venv
+$STD uv venv --clear /opt/.venv
 export PATH="/opt/.venv/bin:$PATH"
 source /opt/.venv/bin/activate
 $STD uv pip install --upgrade pip

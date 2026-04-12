@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://listmonk.app/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://listmonk.app/ | Github: https://github.com/knadh/listmonk
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

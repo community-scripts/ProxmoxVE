@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: remz1337
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://zitadel.com/
+# Author: dave-yap | Co-Author: remz1337
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://zitadel.com/ | Github: https://github.com/zitadel/zitadel
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://github.com/Luligu/matterbridge
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/Luligu/matterbridge/
 
 APP="Matterbridge"
 var_tags="${var_tags:-matter;smarthome}"
@@ -29,7 +29,7 @@ function update_script() {
   fi
   $STD apt update
   $STD apt upgrade -y
-  NODE_VERSION="22" NODE_MODULE="matterbridge" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="matterbridge" setup_nodejs
   msg_ok "Updated successfully!"
   exit
 }

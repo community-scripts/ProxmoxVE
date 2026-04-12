@@ -28,6 +28,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating Deluge"
+  ensure_dependencies python3-setuptools
   $STD apt update
   $STD pip3 install deluge[all] --upgrade
   msg_ok "Updated Deluge"

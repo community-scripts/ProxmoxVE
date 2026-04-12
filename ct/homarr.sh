@@ -2,8 +2,8 @@
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ) | Co-Author: CrazyWolf13
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://homarr.dev/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/homarr-labs/homarr
 
 APP="homarr"
 var_tags="${var_tags:-arr;dashboard}"
@@ -65,6 +65,8 @@ EOF
 
     msg_info "Updating Homarr"
     cp /opt/homarr/redis.conf /etc/redis/redis.conf
+    sed -i -e '$a\' /etc/redis/redis.conf
+    grep -q '^bind 127.0.0.1 -::1$' /etc/redis/redis.conf || echo "bind 127.0.0.1 -::1" >> /etc/redis/redis.conf
     rm /etc/nginx/nginx.conf
     cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
     msg_ok "Updated Homarr"

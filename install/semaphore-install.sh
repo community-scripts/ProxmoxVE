@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kristocopani
-# License: MIT | https://github.com/remz1337/ProxmoxVE/raw/remz/LICENSE
-# Source: https://semaphoreui.com/
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://semaphoreui.com/ | Github: https://github.com/semaphoreui/semaphore
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,13 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y git
-setup_deb822_repo \
-  "ansible" \
-  "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" \
-  "http://ppa.launchpad.net/ansible/ansible/ubuntu" \
-  "jammy"
-$STD apt install -y ansible
+$STD apt install -y \
+  git \
+  ansible
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "latest" "/opt/semaphore" "semaphore_*_linux_amd64.deb"
@@ -34,16 +30,17 @@ SEM_KEY=$(openssl rand -base64 32)
 SEM_PW=$(openssl rand -base64 12)
 cat <<EOF >/opt/semaphore/config.json
 {
-  "bolt": {
-    "host": "/opt/semaphore/semaphore_db.bolt"
+  "sqlite": {
+    "host": "/opt/semaphore/database.sqlite"
   },
+  "dialect": "sqlite",
   "tmp_path": "/opt/semaphore/tmp",
-  "cookie_hash": "${SEM_HASH}",
+  "cookie_hash": "${SEM_HASH}", 
   "cookie_encryption": "${SEM_ENCRYPTION}",
   "access_key_encryption": "${SEM_KEY}"
 }
 EOF
-$STD semaphore user add --admin --login admin --email admin@helper-scripts.com --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
+$STD semaphore user add --admin --login admin --email admin@community-scripts.org --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
 echo "${SEM_PW}" >~/semaphore.creds
 msg_ok "Setup Semaphore"
 

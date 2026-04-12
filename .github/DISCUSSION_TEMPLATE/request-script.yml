@@ -32,6 +32,8 @@ body:
         required: true
       - label: "The application requested has 600+ stars on Github (if applicable), is older than 6 months, actively maintained and has release tarballs published."
         required: true
+      - label: "I understand that not all applications will be accepted due to various reasons and criteria by the community-scripts ORG."
+        required: true
 - type: markdown
   attributes:
     value: "Thanks for submitting your request! The team will review it and reach out if we need more information."

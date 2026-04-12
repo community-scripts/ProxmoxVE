@@ -29,47 +29,49 @@ function update_script() {
     exit
   fi
 
-  if [ "$(node -v | cut -c2-3)" -ne 22 ]; then
-    msg_info "Updating Node.js Repository"
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-    msg_ok "Updating Node.js Repository"
+  if [[ -f "/opt/jellyseerr/package.json" ]] && [[ "$(grep -m1 '"version"' /opt/jellyseerr/package.json | awk -F'"' '{print $4}')" == "2.7.3" ]]; then
+    echo
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Jellyseerr v2.7.3 detected."
+    echo
+    echo "Seerr is the new unified Jellyseerr and Overseerr."
+    echo "More info: https://docs.seerr.dev/blog/seerr-release"
+    echo
+    read -rp "Do you want to migrate to Seerr now? (y/N): " MIGRATE
+    echo
+    if [[ ! "$MIGRATE" =~ ^[Yy]$ ]]; then
+      msg_info "Migration cancelled. Exiting."
+      exit 0
+    fi
 
-    msg_info "Updating Packages"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updating Packages"
-  fi
-
-  cd /opt/jellyseerr 
-  output=$(git pull --no-rebase)
-
-  pnpm_current=$(pnpm --version 2>/dev/null)
-  pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
-
-  if [ -z "$pnpm_current" ]; then
-    msg_error "pnpm not found. Installing version $pnpm_desired..."
-    NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
-  elif ! node -e "const semver = require('semver'); process.exit(semver.satisfies('$pnpm_current', '$pnpm_desired') ? 0 : 1)"; then
-    msg_error "Updating pnpm from version $pnpm_current to $pnpm_desired..."
-    NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
-  else
-    msg_ok "pnpm is already installed and satisfies version $pnpm_desired."
+    msg_info "Switching update script to Seerr"
+    TMP_UPDATE=$(mktemp)
+    cat <<'EOF' >"$TMP_UPDATE"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/seerr.sh)"
+EOF
+    mv "$TMP_UPDATE" /usr/bin/update
+    chmod +x /usr/bin/update
+    msg_ok "Switched update script to Seerr"
+    msg_warn "Please type 'update' again to complete the migration"
+    exit 0
   fi
 
   msg_info "Updating Jellyseerr"
+  cd /opt/jellyseerr
+  systemctl stop jellyseerr
+  output=$(git pull --no-rebase)
+  pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
+  NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
   if echo "$output" | grep -q "Already up to date."; then
     msg_ok "$APP is already up to date."
     exit
   fi
-
-  systemctl stop jellyseerr
   rm -rf dist .next node_modules
   export CYPRESS_INSTALL_BINARY=0
-  cd /opt/jellyseerr 
+  cd /opt/jellyseerr
   $STD pnpm install --frozen-lockfile
   export NODE_OPTIONS="--max-old-space-size=3072"
   $STD pnpm build
-
   cat <<EOF >/etc/systemd/system/jellyseerr.service
 [Unit]
 Description=jellyseerr Service
@@ -85,7 +87,6 @@ ExecStart=/usr/bin/node dist/index.js
 [Install]
 WantedBy=multi-user.target
 EOF
-
   systemctl daemon-reload
   systemctl start jellyseerr
   msg_ok "Updated Jellyseerr"

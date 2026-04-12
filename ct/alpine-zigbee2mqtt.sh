@@ -20,28 +20,10 @@ color
 catch_errors
 
 function update_script() {
-  if ! apk -e info newt >/dev/null 2>&1; then
-    apk add -q newt
-  fi
-  while true; do
-    CHOICE=$(
-      whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --menu "Select option" 11 58 1 \
-        "1" "Check for Zigbee2MQTT Updates" 3>&2 2>&1 1>&3
-    )
-    exit_status=$?
-    if [ $exit_status == 1 ]; then
-      clear
-      exit-script
-    fi
-    header_info
-    case $CHOICE in
-    1)
-      $STD apk -U upgrade
-      msg_ok "Updated successfully!"
-      exit
-      ;;
-    esac
-  done
+  header_info
+  $STD apk -U upgrade
+  msg_ok "Updated successfully!"
+  exit 0
 }
 
 start

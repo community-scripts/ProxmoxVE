@@ -27,12 +27,32 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_ok "There is currently no update available."
-  # sed -i 's/^\([[:space:]]*limiter:\)[[:space:]]*true/\1 false/' /etc/searxng/settings.yml
-  # if cd /usr/local/searxng/searxng-src && git pull | grep -q 'Already up to date'; then
-  #   msg_ok "There is currently no update available."
-  # fi
-  exit
+
+  chown -R searxng:searxng /usr/local/searxng/searxng-src
+  if su -s /bin/bash -c "git -C /usr/local/searxng/searxng-src pull" searxng | grep -q 'Already up to date'; then
+     msg_ok "There is currently no update available."
+     exit
+  fi
+
+  msg_info "Updating SearXNG installation"
+  msg_info "Stopping Service"
+  systemctl stop searxng
+  msg_ok "Stopped Service"
+
+  msg_info "Updating SearXNG"
+  $STD su -s /bin/bash searxng -c '
+    python3 -m venv /usr/local/searxng/searx-pyenv &&
+    . /usr/local/searxng/searx-pyenv/bin/activate &&
+    pip install -U pip setuptools wheel pyyaml lxml msgspec typing_extensions &&
+    pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
+    '
+  msg_ok "Updated SearXNG"
+  
+  msg_info "Starting Services"
+  systemctl start searxng
+  msg_ok "Started Services"
+  msg_ok "Updated successfully!"
+ exit
 }
 start
 build_container
