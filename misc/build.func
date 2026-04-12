@@ -3214,8 +3214,8 @@ check_container_resources() {
 # - Warns if usage >80% and asks user confirmation before proceeding
 # ------------------------------------------------------------------------------
 check_container_storage() {
-  total_size=$(df /boot --output=size | tail -n 1)
-  local used_size=$(df /boot --output=used | tail -n 1)
+  total_size=$(df -P /boot | awk 'NR==2 {print $2}')
+  local used_size=$(df -P /boot | awk 'NR==2 {print $3}')
   usage=$((100 * used_size / total_size))
   if ((usage > 80)); then
     msg_warn "Storage is dangerously low (${usage}% used on /boot)"
