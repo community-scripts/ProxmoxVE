@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add openssl
+$STD apk add openssl dbus gnome-keyring
 msg_ok "Installed Dependencies"
 
 msg_info "Installing PostgreSQL"
@@ -57,7 +57,8 @@ cat <<EOF >/etc/init.d/ironclaw
 
 name="IronClaw"
 description="IronClaw AI Agent"
-command="/usr/local/bin/ironclaw"
+command="/usr/bin/dbus-run-session"
+command_args="/usr/local/bin/ironclaw"
 command_background=true
 pidfile="/run/ironclaw.pid"
 directory="/root"

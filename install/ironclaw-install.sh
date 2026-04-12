@@ -13,12 +13,15 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  dbus-user-session \
+  gnome-keyring \
+  libsecret-tools
+msg_ok "Installed Dependencies"
+
 PG_VERSION="17" PG_MODULES="pgvector" setup_postgresql
 PG_DB_NAME="ironclaw" PG_DB_USER="ironclaw" PG_DB_EXTENSIONS="vector" setup_postgresql_db
-
-msg_info "Installing secret service dependencies"
-$STD apt install -y dbus-user-session gnome-keyring libsecret-tools
-msg_ok "Installed secret service dependencies"
 
 fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "latest" "/usr/local/bin" \
   "ironclaw-$(uname -m)-unknown-linux-$([[ -f /etc/alpine-release ]] && echo "musl" || echo "gnu").tar.gz"
@@ -41,13 +44,6 @@ chmod 600 /root/.ironclaw/.env
 msg_ok "Configured IronClaw"
 
 msg_info "Creating Service"
-cat <<'EOF' >/usr/local/bin/ironclaw-run.sh
-#!/usr/bin/env bash
-set -euo pipefail
-exec dbus-run-session -- bash -lc 'gnome-keyring-daemon --start --components=secrets >/dev/null 2>&1 && exec /usr/local/bin/ironclaw'
-EOF
-chmod +x /usr/local/bin/ironclaw-run.sh
-
 cat <<EOF >/etc/systemd/system/ironclaw.service
 [Unit]
 Description=IronClaw AI Agent
@@ -57,7 +53,8 @@ After=network.target postgresql.service
 Type=simple
 User=root
 WorkingDirectory=/root
-ExecStart=/usr/local/bin/ironclaw-run.sh
+EnvironmentFile=/root/.ironclaw/.env
+ExecStart=/usr/bin/dbus-run-session /usr/local/bin/ironclaw
 Restart=on-failure
 RestartSec=5
 
