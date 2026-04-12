@@ -4914,7 +4914,7 @@ EOF
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
           trap - ERR
-          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/install/${var_install}.sh)"
           local apt_retry_exit=$?
           set -Eeuo pipefail
           trap 'error_handler' ERR
