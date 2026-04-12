@@ -446,6 +446,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Alpine-Wakapi: Remove container checks in update_script function [@MickLesk](https://github.com/MickLesk) ([#13694](https://github.com/community-scripts/ProxmoxVE/pull/13694))
+
   - #### 🔧 Refactor
 
     - MeTube: Allow pnpm build scripts to fix ERR_PNPM_IGNORED_BUILDS [@MickLesk](https://github.com/MickLesk) ([#13668](https://github.com/community-scripts/ProxmoxVE/pull/13668))
