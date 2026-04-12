@@ -452,6 +452,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - IronClaw: Install keychain dependencies and launch in a DBus session [@MickLesk](https://github.com/MickLesk) ([#13692](https://github.com/community-scripts/ProxmoxVE/pull/13692))
     - MeTube: Allow pnpm build scripts to fix ERR_PNPM_IGNORED_BUILDS [@MickLesk](https://github.com/MickLesk) ([#13668](https://github.com/community-scripts/ProxmoxVE/pull/13668))
 
 ## 2026-04-11
