@@ -43,6 +43,7 @@ function update_script() {
     RELEASE=$(get_latest_github_release "SonarSource/sonarqube")
     curl -fsSL "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${RELEASE}.zip" -o $temp_file
     unzip -q "$temp_file" -d /opt
+    rm -f "$temp_file"
     mv /opt/sonarqube-${RELEASE} /opt/sonarqube
     echo "${RELEASE}" > ~/.sonarqube
     msg_ok "Updated SonarQube"
