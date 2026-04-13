@@ -454,6 +454,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenCloud: pin version to 6.0.0 [@vhsdream](https://github.com/vhsdream) ([#13691](https://github.com/community-scripts/ProxmoxVE/pull/13691))
 
+  - #### 🔧 Refactor
+
+    - core: remove unused TEMP_DIR mktemp leak in build_container / clean sonarqube [@MickLesk](https://github.com/MickLesk) ([#13708](https://github.com/community-scripts/ProxmoxVE/pull/13708))
+
 ## 2026-04-12
 
 ### 🚀 Updated Scripts
