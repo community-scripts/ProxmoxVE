@@ -6,8 +6,54 @@
 if ! command -v curl >/dev/null 2>&1; then
   apk update && apk add curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+
+REMOTE_CORE_REF="${COMMUNITY_SCRIPTS_REF:-main}"
+REMOTE_CORE_BASE="${COMMUNITY_SCRIPTS_REMOTE_BASE:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/${REMOTE_CORE_REF}/misc}"
+REMOTE_CT_BASE="${COMMUNITY_SCRIPTS_CT_BASE:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/${REMOTE_CORE_REF}/ct}"
+
+fetch_remote_core_file() {
+  local file="$1"
+  local retries=3
+  local delay=2
+  local attempt
+  for attempt in $(seq 1 "$retries"); do
+    if curl -fsSL --connect-timeout 10 --max-time 45 "${REMOTE_CORE_BASE}/${file}"; then
+      return 0
+    fi
+    sleep "$delay"
+  done
+  return 1
+}
+
+source_core_module_prefer_local() {
+  local file="$1"
+  local local_candidates=(
+    "$(dirname "${BASH_SOURCE[0]}")/${file}"
+    "/opt/community-scripts/misc/${file}"
+    "/usr/local/share/community-scripts/misc/${file}"
+    "/usr/local/community-scripts/misc/${file}"
+  )
+  local candidate
+  for candidate in "${local_candidates[@]}"; do
+    if [[ -r "$candidate" ]]; then
+      source "$candidate"
+      return 0
+    fi
+  done
+
+  local content
+  content="$(fetch_remote_core_file "$file")" || return 1
+  source /dev/stdin <<<"$content"
+}
+
+source_core_module_prefer_local "core.func" || {
+  echo "Failed to load core.func" >&2
+  exit 115
+}
+source_core_module_prefer_local "error_handler.func" || {
+  echo "Failed to load error_handler.func" >&2
+  exit 115
+}
 load_functions
 catch_errors
 
@@ -163,12 +209,30 @@ EOF
       exit 1
     fi
   fi
-  local tools_content
-  tools_content=$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func) || {
-    msg_error "Failed to download tools.func"
-    exit 115
-  }
-  source /dev/stdin <<<"$tools_content"
+  local tools_content=""
+  local local_tools_candidates=(
+    "$(dirname "${BASH_SOURCE[0]}")/tools.func"
+    "/opt/community-scripts/misc/tools.func"
+    "/usr/local/share/community-scripts/misc/tools.func"
+    "/usr/local/community-scripts/misc/tools.func"
+  )
+  local tools_candidate
+  for tools_candidate in "${local_tools_candidates[@]}"; do
+    if [[ -r "$tools_candidate" ]]; then
+      source "$tools_candidate"
+      tools_content="local"
+      break
+    fi
+  done
+
+  if [[ -z "$tools_content" ]]; then
+    tools_content=$(fetch_remote_core_file "tools.func") || {
+      msg_error "Failed to download tools.func"
+      exit 115
+    }
+    source /dev/stdin <<<"$tools_content"
+  fi
+
   if ! declare -f fetch_and_deploy_gh_release >/dev/null 2>&1; then
     msg_error "tools.func loaded but incomplete — missing expected functions"
     exit 115
@@ -234,7 +298,34 @@ EOF
     msg_ok "Customized Container"
   fi
 
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  mkdir -p /usr/local/community-scripts
+  cat <<EOF >/usr/local/community-scripts/runtime-source.env
+COMMUNITY_SCRIPTS_REF=${REMOTE_CORE_REF}
+COMMUNITY_SCRIPTS_CT_BASE=${REMOTE_CT_BASE}
+APP_SLUG=${app}
+EOF
+
+  cat <<EOF >/usr/bin/update
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEFAULT_REF="${REMOTE_CORE_REF}"
+DEFAULT_CT_BASE="${REMOTE_CT_BASE}"
+DEFAULT_APP="${app}"
+RUNTIME_SOURCE_FILE="/usr/local/community-scripts/runtime-source.env"
+
+if [[ -r "\$RUNTIME_SOURCE_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "\$RUNTIME_SOURCE_FILE"
+fi
+
+REF="\${COMMUNITY_SCRIPTS_REF:-\$DEFAULT_REF}"
+CT_BASE="\${COMMUNITY_SCRIPTS_CT_BASE:-\$DEFAULT_CT_BASE}"
+APP_NAME="\${APP_SLUG:-\$DEFAULT_APP}"
+URL="\${CT_BASE}/\${APP_NAME}.sh"
+
+exec bash -c "\$(curl -fsSL \"\$URL\")"
+EOF
   chmod +x /usr/bin/update
   post_progress_to_api
 }
