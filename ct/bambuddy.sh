@@ -39,6 +39,9 @@ function update_script() {
     msg_info "Backing up Configuration and Data"
     cp /opt/bambuddy/.env /opt/bambuddy.env.bak
     cp -r /opt/bambuddy/data /opt/bambuddy_data_bak
+    [[ -f /opt/bambuddy/bambuddy.db ]] && cp /opt/bambuddy/bambuddy.db /opt/bambuddy.db.bak
+    [[ -f /opt/bambuddy/bambutrack.db ]] && cp /opt/bambuddy/bambutrack.db /opt/bambutrack.db.bak
+    [[ -d /opt/bambuddy/archive ]] && cp -r /opt/bambuddy/archive /opt/bambuddy_archive_bak
     msg_ok "Backed up Configuration and Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bambuddy" "maziggy/bambuddy" "tarball" "latest" "/opt/bambuddy"
@@ -59,8 +62,14 @@ function update_script() {
     mkdir -p /opt/bambuddy/data
     cp /opt/bambuddy.env.bak /opt/bambuddy/.env
     cp -r /opt/bambuddy_data_bak/. /opt/bambuddy/data/
-    rm -f /opt/bambuddy.env.bak
-    rm -rf /opt/bambuddy_data_bak
+    [[ -f /opt/bambuddy.db.bak ]] && cp /opt/bambuddy.db.bak /opt/bambuddy/bambuddy.db
+    [[ -f /opt/bambutrack.db.bak ]] && cp /opt/bambutrack.db.bak /opt/bambuddy/bambutrack.db
+    if [[ -d /opt/bambuddy_archive_bak ]]; then
+      mkdir -p /opt/bambuddy/archive
+      cp -r /opt/bambuddy_archive_bak/. /opt/bambuddy/archive/
+    fi
+    rm -f /opt/bambuddy.env.bak /opt/bambuddy.db.bak /opt/bambutrack.db.bak
+    rm -rf /opt/bambuddy_data_bak /opt/bambuddy_archive_bak
     msg_ok "Restored Configuration and Data"
 
     msg_info "Starting Service"
