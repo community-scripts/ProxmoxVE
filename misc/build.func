@@ -3613,8 +3613,6 @@ build_container() {
   fi
 
   # Build PCT_OPTIONS as string for export
-  TEMP_DIR=$(mktemp -d)
-  pushd "$TEMP_DIR" >/dev/null
   local _func_url
   if [ "$var_os" == "alpine" ]; then
     _func_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func"
