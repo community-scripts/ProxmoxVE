@@ -446,6 +446,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Bambuddy: preserve database and archive on update [@Copilot](https://github.com/Copilot) ([#13706](https://github.com/community-scripts/ProxmoxVE/pull/13706))
+
   - #### ✨ New Features
 
     - OpenCloud: pin version to 6.0.0 [@vhsdream](https://github.com/vhsdream) ([#13691](https://github.com/community-scripts/ProxmoxVE/pull/13691))
