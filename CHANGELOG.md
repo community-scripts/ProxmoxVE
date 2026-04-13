@@ -442,6 +442,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-13
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - OpenCloud: pin version to 6.0.0 [@vhsdream](https://github.com/vhsdream) ([#13691](https://github.com/community-scripts/ProxmoxVE/pull/13691))
+
 ## 2026-04-12
 
 ### 🚀 Updated Scripts
