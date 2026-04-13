@@ -28,7 +28,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "mealie" "mealie-recipes/mealie"; then
+  RELEASE="v3.14.0"
+  if check_for_gh_release "mealie" "mealie-recipes/mealie" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     PYTHON_VERSION="3.12" setup_uv
     NODE_MODULE="yarn" NODE_VERSION="24" setup_nodejs
 
@@ -40,7 +41,7 @@ function update_script() {
     cp -f /opt/mealie/mealie.env /opt/mealie.env
     msg_ok "Backup completed"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "${RELEASE}" "/opt/mealie"
 
     msg_info "Installing Python Dependencies with uv"
     cd /opt/mealie
