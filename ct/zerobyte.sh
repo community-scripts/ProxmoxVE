@@ -38,6 +38,7 @@ function update_script() {
     cp /opt/zerobyte/.env /opt/zerobyte.env.bak
     msg_ok "Backed up Configuration"
     
+    ensure_dependencies git
     NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "zerobyte" "nicotsx/zerobyte" "tarball"
 
