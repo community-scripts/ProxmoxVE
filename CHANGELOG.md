@@ -457,6 +457,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Bytestash: auto backup/restore data on update [@MickLesk](https://github.com/MickLesk) ([#13707](https://github.com/community-scripts/ProxmoxVE/pull/13707))
     - OpenCloud: pin version to 6.0.0 [@vhsdream](https://github.com/vhsdream) ([#13691](https://github.com/community-scripts/ProxmoxVE/pull/13691))
 
+  - #### 💥 Breaking Changes
+
+    - Mealie: pin version to v3.14.0 in install and update scripts [@Copilot](https://github.com/Copilot) ([#13724](https://github.com/community-scripts/ProxmoxVE/pull/13724))
+
   - #### 🔧 Refactor
 
     - core: remove unused TEMP_DIR mktemp leak in build_container / clean sonarqube [@MickLesk](https://github.com/MickLesk) ([#13708](https://github.com/community-scripts/ProxmoxVE/pull/13708))
