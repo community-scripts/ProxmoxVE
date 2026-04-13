@@ -448,6 +448,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Slskd: Remove stale Soularr lock file on startup and redirect logs to stderr [@MickLesk](https://github.com/MickLesk) ([#13669](https://github.com/community-scripts/ProxmoxVE/pull/13669))
     - Bambuddy: preserve database and archive on update [@Copilot](https://github.com/Copilot) ([#13706](https://github.com/community-scripts/ProxmoxVE/pull/13706))
 
   - #### ✨ New Features
