@@ -452,6 +452,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Bytestash: auto backup/restore data on update [@MickLesk](https://github.com/MickLesk) ([#13707](https://github.com/community-scripts/ProxmoxVE/pull/13707))
     - OpenCloud: pin version to 6.0.0 [@vhsdream](https://github.com/vhsdream) ([#13691](https://github.com/community-scripts/ProxmoxVE/pull/13691))
 
   - #### 🔧 Refactor
