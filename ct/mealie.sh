@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE="v3.14.0"
-  if check_for_gh_release "mealie" "mealie-recipes/mealie" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
+  if check_for_gh_release "mealie" "mealie-recipes/mealie"; then
     PYTHON_VERSION="3.12" setup_uv
     NODE_MODULE="yarn" NODE_VERSION="24" setup_nodejs
 
@@ -41,7 +40,7 @@ function update_script() {
     cp -f /opt/mealie/mealie.env /opt/mealie.env
     msg_ok "Backup completed"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "${RELEASE}" "/opt/mealie"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
 
     msg_info "Installing Python Dependencies with uv"
     cd /opt/mealie
@@ -50,9 +49,10 @@ function update_script() {
 
     msg_info "Building Frontend"
     MEALIE_VERSION=$(<$HOME/.mealie)
-    $STD sed -i "s|https://github.com/mealie-recipes/mealie/commit/|https://github.com/mealie-recipes/mealie/releases/tag/|g" /opt/mealie/frontend/pages/admin/site-settings.vue
-    $STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
-    $STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
+    SITE_SETTINGS=$(find /opt/mealie/frontend -name "site-settings.vue" -path "*/admin/*" | head -1)
+    $STD sed -i "s|https://github.com/mealie-recipes/mealie/commit/|https://github.com/mealie-recipes/mealie/releases/tag/|g" "$SITE_SETTINGS"
+    $STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" "$SITE_SETTINGS"
+    $STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" "$SITE_SETTINGS"
     export NUXT_TELEMETRY_DISABLED=1
     cd /opt/mealie/frontend
     $STD yarn install --prefer-offline --frozen-lockfile --non-interactive --production=false --network-timeout 1000000
@@ -98,4 +98,3 @@ msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9000${CL}"
-
