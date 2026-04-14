@@ -30,16 +30,16 @@ function update_script() {
     exit
   fi
 
-  DEB_URL=$(curl -s 'https://lyrion.org/getting-started/' | grep -oP '<a\s[^>]*href="\K[^"]*amd64\.deb(?="[^>]*>)' | head -n 1)
+  DEB_URL=$(curl_with_retry 'https://lyrion.org/getting-started/' | grep -oP '<a\s[^>]*href="\K[^"]*amd64\.deb(?="[^>]*>)' | head -n 1)
   RELEASE=$(echo "$DEB_URL" | grep -oP 'lyrionmusicserver_\K[0-9.]+(?=_amd64\.deb)')
   DEB_FILE="/tmp/lyrionmusicserver_${RELEASE}_amd64.deb"
   if [[ ! -f /opt/lyrion_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/lyrion_version.txt)" ]]; then
     msg_info "Updating $APP to ${RELEASE}"
-    curl -fsSL -o "$DEB_FILE" "$DEB_URL"
+    curl_with_retry "$DEB_URL" "$DEB_FILE"
     $STD apt install "$DEB_FILE" -y
-    systemctl restart lyrion
-    $STD rm -f "$DEB_FILE"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+    systemctl restart lyrionmusicserver
+    rm -f "$DEB_FILE"
+    echo "${RELEASE}" >/opt/lyrion_version.txt
     msg_ok "Updated $APP to ${RELEASE}"
     msg_ok "Updated successfully!"
   else
