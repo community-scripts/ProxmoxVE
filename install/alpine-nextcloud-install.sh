@@ -102,8 +102,9 @@ server {
         fastcgi_read_timeout 120s;
 }
 server {
-        listen       443 ssl http2;
-        listen       [::]:443 ssl http2;
+        listen       443 ssl;
+        listen       [::]:443 ssl;
+        http2        on;
         server_name  localhost;
         root /usr/share/webapps/nextcloud;
         index  index.php index.html index.htm;
