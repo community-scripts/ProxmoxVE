@@ -40,7 +40,7 @@ function update_script() {
     cp -f /opt/mealie/mealie.env /opt/mealie.env
     msg_ok "Backup completed"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball"
 
     msg_info "Installing Python Dependencies with uv"
     cd /opt/mealie
