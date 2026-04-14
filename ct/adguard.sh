@@ -27,8 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_error "Adguard Home can only be updated via the user interface."
-  exit
+  msg_info "Updating AdGuard Home"
+  $STD /opt/AdGuardHome/AdGuardHome --update
+  msg_ok "Updating AdGuard Home"
 }
 
 start
