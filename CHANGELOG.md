@@ -448,6 +448,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - BentoPDF: Nginx fixes [@tremor021](https://github.com/tremor021) ([#13741](https://github.com/community-scripts/ProxmoxVE/pull/13741))
     - Zerobyte: add git to dependencies to fix bun install failure [@Copilot](https://github.com/Copilot) ([#13721](https://github.com/community-scripts/ProxmoxVE/pull/13721))
     - alpine-nextcloud-install: do not use deprecated nginx config [@AlexanderStein](https://github.com/AlexanderStein) ([#13726](https://github.com/community-scripts/ProxmoxVE/pull/13726))
 
