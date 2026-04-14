@@ -446,6 +446,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Immich: Pin photo-processing library revisions [@vhsdream](https://github.com/vhsdream) ([#13748](https://github.com/community-scripts/ProxmoxVE/pull/13748))
+
   - #### 🐞 Bug Fixes
 
     - BentoPDF: Nginx fixes [@tremor021](https://github.com/tremor021) ([#13741](https://github.com/community-scripts/ProxmoxVE/pull/13741))
