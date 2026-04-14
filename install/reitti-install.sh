@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   redis-server \
-  rabbitmq-server \
   libpq-dev \
   zstd \
   nginx
@@ -26,26 +25,8 @@ JAVA_VERSION="25" setup_java
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
 PG_DB_NAME="reitti_db" PG_DB_USER="reitti" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
 
-msg_info "Configuring RabbitMQ"
-RABBIT_USER="reitti"
-RABBIT_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-RABBIT_VHOST="/"
-$STD rabbitmqctl add_user "$RABBIT_USER" "$RABBIT_PASS"
-$STD rabbitmqctl add_vhost "$RABBIT_VHOST"
-$STD rabbitmqctl set_permissions -p "$RABBIT_VHOST" "$RABBIT_USER" ".*" ".*" ".*"
-$STD rabbitmqctl set_user_tags "$RABBIT_USER" administrator
-{
-  echo ""
-  echo "Reitti Credentials"
-  echo "RabbitMQ User: $RABBIT_USER"
-  echo "RabbitMQ Password: $RABBIT_PASS"
-} >>~/reitti.creds
-msg_ok "Configured RabbitMQ"
-
 USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "reitti" "dedicatedcode/reitti" "singlefile" "latest" "/opt/reitti" "reitti-app.jar"
 mv /opt/reitti/reitti-*.jar /opt/reitti/reitti.jar
-USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-*.jar"
-mv /opt/photon/photon-*.jar /opt/photon/photon.jar
 
 msg_info "Installing Nginx Tile Cache"
 mkdir -p /var/cache/nginx/tiles
@@ -73,57 +54,105 @@ EOF
 chown -R www-data:www-data /var/cache/nginx
 chmod -R 750 /var/cache/nginx
 systemctl restart nginx
-msg_info "Installed Nginx Tile Cache"
+msg_ok "Installed Nginx Tile Cache"
 
 msg_info "Creating Reitti Configuration-File"
 mkdir -p /opt/reitti/data
 cat <<EOF >/opt/reitti/application.properties
-# Reitti Server Base URI
-reitti.server.advertise-uri=http://127.0.0.1:8080
+# Server configuration
+server.port=8080
+server.servlet.context-path=/
+server.forward-headers-strategy=framework
+server.compression.enabled=true
+server.compression.min-response-size=1024
+server.compression.mime-types=text/plain,application/json
 
-# PostgreSQL Database Connection
+# Logging configuration
+logging.level.root=INFO
+logging.level.org.hibernate.engine.jdbc.spi.SqlExceptionHelper=FATAL
+logging.level.com.dedicatedcode.reitti=INFO
+
+# Internationalization
+spring.messages.basename=messages
+spring.messages.encoding=UTF-8
+spring.messages.cache-duration=3600
+spring.messages.fallback-to-system-locale=false
+
+# PostgreSQL configuration
 spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/$PG_DB_NAME
 spring.datasource.username=$PG_DB_USER
 spring.datasource.password=$PG_DB_PASS
-spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.hikari.maximum-pool-size=20
 
-# Flyway Database Migrations
-spring.flyway.enabled=true
-spring.flyway.locations=classpath:db/migration
-spring.flyway.baseline-on-migrate=true
-
-# RabbitMQ (Message Queue)
-spring.rabbitmq.host=127.0.0.1
-spring.rabbitmq.port=5672
-spring.rabbitmq.username=$RABBIT_USER
-spring.rabbitmq.password=$RABBIT_PASS
-
-# Redis (Cache)
+# Redis configuration
 spring.data.redis.host=127.0.0.1
 spring.data.redis.port=6379
+spring.data.redis.username=
+spring.data.redis.password=
+spring.data.redis.database=0
+spring.cache.redis.key-prefix=
 
-# Server Port
-server.port=8080
+spring.cache.cache-names=processed-visits,significant-places,users,magic-links,configurations,transport-mode-configs,avatarThumbnails,avatarData,user-settings
+spring.cache.redis.time-to-live=1d
 
-# Optional: Logging & Performance
-logging.level.root=INFO
-spring.jpa.hibernate.ddl-auto=none
-spring.datasource.hikari.maximum-pool-size=10
+# Upload configuration
+spring.servlet.multipart.max-file-size=5GB
+spring.servlet.multipart.max-request-size=5GB
+server.tomcat.max-part-count=100
+
+# Rqueue configuration
+rqueue.web.enable=false
+rqueue.job.enabled=false
+rqueue.message.durability.in-terminal-state=0
+rqueue.key.prefix=\${spring.cache.redis.key-prefix}
+rqueue.message.converter.provider.class=com.dedicatedcode.reitti.config.RQueueCustomMessageConverter
+
+# Application-specific settings
+reitti.server.advertise-uri=
+
+reitti.security.local-login.disable=false
 
 # OIDC / Security Settings
+reitti.security.oidc.enabled=false
 reitti.security.oidc.registration.enabled=false
 
-# Photon (Geocoding)
-PHOTON_BASE_URL=http://127.0.0.1:2322
-PROCESSING_WAIT_TIME=15
-PROCESSING_BATCH_SIZE=1000
-PROCESSING_WORKERS_PER_QUEUE=4-16
+reitti.import.batch-size=10000
+reitti.import.processing-idle-start-time=10
 
-# Disable potentially dangerous features unless needed
-DANGEROUS_LIFE=false
+reitti.geo-point-filter.max-speed-kmh=1000
+reitti.geo-point-filter.max-accuracy-meters=100
+reitti.geo-point-filter.history-lookback-hours=24
+reitti.geo-point-filter.window-size=50
 
-# Tiles Cache
+reitti.process-data.schedule=0 */10 * * * *
+reitti.process-data.refresh-views.schedule=0 0 4 * * *
+reitti.imports.schedule=0 5/10 * * * *
+reitti.imports.owntracks-recorder.schedule=\${reitti.imports.schedule}
+
+# Geocoding service configuration
+reitti.geocoding.max-errors=10
+reitti.geocoding.photon.base-url=
+
+# Tiles Configuration
 reitti.ui.tiles.cache.url=http://127.0.0.1
+reitti.ui.tiles.default.service=https://tile.openstreetmap.org/{z}/{x}/{y}.png
+reitti.ui.tiles.default.attribution=&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+
+# Data management configuration
+reitti.data-management.enabled=false
+reitti.data-management.preview-cleanup.cron=0 0 4 * * *
+
+reitti.storage.path=data/
+reitti.storage.cleanup.cron=0 0 4 * * *
+
+# Location data density normalization
+reitti.location.density.target-points-per-minute=4
+
+# Logging buffer
+reitti.logging.buffer-size=1000
+reitti.logging.max-buffer-size=10000
+
+spring.config.import=optional:oidc.properties
 EOF
 msg_ok "Created Configuration-File for Reitti"
 
@@ -131,8 +160,8 @@ msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/reitti.service
 [Unit]
 Description=Reitti
-After=network.target postgresql.service redis-server.service rabbitmq-server.service photon.service
-Wants=postgresql.service redis-server.service rabbitmq-server.service photon.service
+After=network.target postgresql.service redis-server.service
+Wants=postgresql.service redis-server.service
 
 [Service]
 Type=simple
@@ -146,26 +175,6 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/photon.service
-[Unit]
-Description=Photon Geocoding Service (Germany, OpenSearch)
-After=network.target
-
-[Service]
-Type=simple
-WorkingDirectory=/opt/photon
-ExecStart=/usr/bin/java -Xmx4g -jar photon.jar \
-  -data-dir /opt/photon \
-  -listen-port 2322 \
-  -listen-ip 0.0.0.0 \
-  -cors-any
-Restart=on-failure
-TimeoutStopSec=20
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable -q --now photon
 systemctl enable -q --now reitti
 msg_ok "Created Services"
 

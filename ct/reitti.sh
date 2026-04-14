@@ -37,39 +37,136 @@ function update_script() {
     fi
   fi
 
-  if [ ! -d /var/cache/nginx/tiles ]; then
-    msg_info "Installing Nginx Tile Cache"
-    mkdir -p /var/cache/nginx/tiles
-    $STD apt install -y nginx
-    cat <<EOF >/etc/nginx/nginx.conf
-user www-data;
-
-events {
-  worker_connections 1024;
-}
-http {
-  proxy_cache_path /var/cache/nginx/tiles levels=1:2 keys_zone=tiles:10m max_size=1g inactive=30d use_temp_path=off;
-  server {
-    listen 80;
-    location / {
-      proxy_pass https://tile.openstreetmap.org/;
-      proxy_set_header Host tile.openstreetmap.org;
-      proxy_set_header User-Agent "Reitti/1.0";
-      proxy_cache tiles;
-      proxy_cache_valid 200 30d;
-      proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
-    }
-  }
-}
-EOF
-    chown -R www-data:www-data /var/cache/nginx
-    chmod -R 750 /var/cache/nginx
-    systemctl restart nginx
-    echo "reitti.ui.tiles.cache.url=http://127.0.0.1" >> /opt/reitti/application.properties
-    systemctl restart reitti
-    msg_info "Installed Nginx Tile Cache"
+  # Migrate v3 -> v4: Remove RabbitMQ (no longer required) / Photon / Spring Settings
+  if systemctl is-enabled --quiet rabbitmq-server 2>/dev/null; then
+    msg_info "Migrating to v4: Removing RabbitMQ"
+    systemctl stop rabbitmq-server
+    systemctl disable rabbitmq-server
+    $STD apt-get purge -y rabbitmq-server erlang-base
+    $STD apt-get autoremove -y
+    msg_ok "Removed RabbitMQ"
   fi
-  
+
+  if systemctl is-enabled --quiet photon 2>/dev/null; then
+    msg_info "Migrating to v4: Removing Photon service"
+    systemctl stop photon
+    systemctl disable photon
+    rm -f /etc/systemd/system/photon.service
+    systemctl daemon-reload
+    msg_ok "Removed Photon service"
+  fi
+
+  if grep -q "spring.rabbitmq\|PHOTON_BASE_URL\|PROCESSING_WAIT_TIME\|DANGEROUS_LIFE" /opt/reitti/application.properties 2>/dev/null; then
+    msg_info "Migrating to v4: Rewriting application.properties"
+    local DB_URL DB_USER DB_PASS
+    DB_URL=$(grep '^spring.datasource.url=' /opt/reitti/application.properties | cut -d'=' -f2-)
+    DB_USER=$(grep '^spring.datasource.username=' /opt/reitti/application.properties | cut -d'=' -f2-)
+    DB_PASS=$(grep '^spring.datasource.password=' /opt/reitti/application.properties | cut -d'=' -f2-)
+    cp /opt/reitti/application.properties /opt/reitti/application.properties.bak
+    cat <<PROPEOF >/opt/reitti/application.properties
+# Server configuration
+server.port=8080
+server.servlet.context-path=/
+server.forward-headers-strategy=framework
+server.compression.enabled=true
+server.compression.min-response-size=1024
+server.compression.mime-types=text/plain,application/json
+
+# Logging configuration
+logging.level.root=INFO
+logging.level.org.hibernate.engine.jdbc.spi.SqlExceptionHelper=FATAL
+logging.level.com.dedicatedcode.reitti=INFO
+
+# Internationalization
+spring.messages.basename=messages
+spring.messages.encoding=UTF-8
+spring.messages.cache-duration=3600
+spring.messages.fallback-to-system-locale=false
+
+# PostgreSQL configuration
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASS}
+spring.datasource.hikari.maximum-pool-size=20
+
+# Redis configuration
+spring.data.redis.host=127.0.0.1
+spring.data.redis.port=6379
+spring.data.redis.username=
+spring.data.redis.password=
+spring.data.redis.database=0
+spring.cache.redis.key-prefix=
+
+spring.cache.cache-names=processed-visits,significant-places,users,magic-links,configurations,transport-mode-configs,avatarThumbnails,avatarData,user-settings
+spring.cache.redis.time-to-live=1d
+
+# Upload configuration
+spring.servlet.multipart.max-file-size=5GB
+spring.servlet.multipart.max-request-size=5GB
+server.tomcat.max-part-count=100
+
+# Rqueue configuration
+rqueue.web.enable=false
+rqueue.job.enabled=false
+rqueue.message.durability.in-terminal-state=0
+rqueue.key.prefix=\${spring.cache.redis.key-prefix}
+rqueue.message.converter.provider.class=com.dedicatedcode.reitti.config.RQueueCustomMessageConverter
+
+# Application-specific settings
+reitti.server.advertise-uri=
+
+reitti.security.local-login.disable=false
+
+# OIDC / Security Settings
+reitti.security.oidc.enabled=false
+reitti.security.oidc.registration.enabled=false
+
+reitti.import.batch-size=10000
+reitti.import.processing-idle-start-time=10
+
+reitti.geo-point-filter.max-speed-kmh=1000
+reitti.geo-point-filter.max-accuracy-meters=100
+reitti.geo-point-filter.history-lookback-hours=24
+reitti.geo-point-filter.window-size=50
+
+reitti.process-data.schedule=0 */10 * * * *
+reitti.process-data.refresh-views.schedule=0 0 4 * * *
+reitti.imports.schedule=0 5/10 * * * *
+reitti.imports.owntracks-recorder.schedule=\${reitti.imports.schedule}
+
+# Geocoding service configuration
+reitti.geocoding.max-errors=10
+reitti.geocoding.photon.base-url=
+
+# Tiles Configuration
+reitti.ui.tiles.cache.url=http://127.0.0.1
+reitti.ui.tiles.default.service=https://tile.openstreetmap.org/{z}/{x}/{y}.png
+reitti.ui.tiles.default.attribution=&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+
+# Data management configuration
+reitti.data-management.enabled=false
+reitti.data-management.preview-cleanup.cron=0 0 4 * * *
+
+reitti.storage.path=data/
+reitti.storage.cleanup.cron=0 0 4 * * *
+
+# Location data density normalization
+reitti.location.density.target-points-per-minute=4
+
+# Logging buffer
+reitti.logging.buffer-size=1000
+reitti.logging.max-buffer-size=10000
+
+spring.config.import=optional:oidc.properties
+PROPEOF
+    # Update reitti.service dependencies
+    if [[ -f /etc/systemd/system/reitti.service ]]; then
+      sed -i 's/ rabbitmq-server\.service//g; s/ photon\.service//g' /etc/systemd/system/reitti.service
+      systemctl daemon-reload
+    fi
+    msg_ok "Rewrote application.properties (backup: application.properties.bak)"
+  fi
+
   if check_for_gh_release "reitti" "dedicatedcode/reitti"; then
     msg_info "Stopping Service"
     systemctl stop reitti
@@ -83,55 +180,6 @@ EOF
 
     msg_info "Starting Service"
     systemctl start reitti
-    chown -R www-data:www-data /var/cache/nginx
-    chmod -R 750 /var/cache/nginx
-    systemctl restart nginx
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  fi
-  
-  if check_for_gh_release "photon" "komoot/photon"; then
-    if [[ -f "$HOME/.photon" ]] && [[ "$(cat "$HOME/.photon")" == 0.7 ]]; then
-      CURRENT_VERSION="$(<"$HOME/.photon")"
-      echo
-      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-      echo "Photon v1 upgrade detected (breaking change)"
-      echo
-      echo "Your current version: $CURRENT_VERSION"
-      echo
-      echo "Photon v1 requires a manual migration before updating."
-      echo
-      echo "You need to:"
-      echo "  1. Remove existing geocoding data (not actual reitti data):"
-      echo "     rm -rf /opt/photon_data"
-      echo
-      echo "  2. Follow the inial setup guide again:"
-      echo "     https://github.com/community-scripts/ProxmoxVE/discussions/8737"
-      echo
-      echo "  3. Re-download and import Photon data for v1"
-      echo
-      read -rp "Do you want to continue anyway? (y/N): " CONTINUE
-      echo
-        
-      if [[ ! "$CONTINUE" =~ ^[Yy]$ ]]; then
-        msg_info "Migration required. Update cancelled."
-        exit 0
-      fi
-        
-      msg_warn "Continuing without migration may break Photon in the future!"
-    fi
-  
-    msg_info "Stopping Service"
-    systemctl stop photon
-    msg_ok "Stopped Service"
-
-    rm -f /opt/photon/photon.jar
-    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon" "singlefile" "latest" "/opt/photon" "photon-*.jar"
-    mv /opt/photon/photon-*.jar /opt/photon/photon.jar
-
-    msg_info "Starting Service"
-    systemctl start photon
-    systemctl restart nginx
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
