@@ -446,7 +446,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - GitHub-Runner ([#13709](https://github.com/community-scripts/ProxmoxVE/pull/13709))
+  - iGotify ([#13773](https://github.com/community-scripts/ProxmoxVE/pull/13773))
+- GitHub-Runner ([#13709](https://github.com/community-scripts/ProxmoxVE/pull/13709))
 - Revert "Remove low-install-count CT scripts and installers (#13570)" [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13752](https://github.com/community-scripts/ProxmoxVE/pull/13752))
 
 ### 🚀 Updated Scripts
@@ -459,6 +460,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 💥 Breaking Changes
 
     - Reitti: refactor scripts for v4 - remove RabbitMQ and Photon [@MickLesk](https://github.com/MickLesk) ([#13728](https://github.com/community-scripts/ProxmoxVE/pull/13728))
+
+  - #### 🔧 Refactor
+
+    - Semaphore: add BoltDB to SQLite migration [@tremor021](https://github.com/tremor021) ([#13779](https://github.com/community-scripts/ProxmoxVE/pull/13779))
 
 ### 📚 Documentation
 
