@@ -442,6 +442,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-15
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Domain Monitor: Fix file ownership after update [@tremor021](https://github.com/tremor021) ([#13759](https://github.com/community-scripts/ProxmoxVE/pull/13759))
+
 ## 2026-04-14
 
 ### 🚀 Updated Scripts
