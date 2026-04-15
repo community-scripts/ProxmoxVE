@@ -20,8 +20,7 @@ setup_deb822_repo \
   "https://packages.microsoft.com/debian/13/prod/" \
   "trixie" \
   "main"
-$STD apt install -y \
-  aspnetcore-runtime-10.0
+$STD apt install -y aspnetcore-runtime-10.0
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "igotify" "androidseb25/iGotify-Notification-Assistent" "prebuild" "latest" "/opt/igotify" "iGotify-Notification-Service-amd64-v*.zip"
