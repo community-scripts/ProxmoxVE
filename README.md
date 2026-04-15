@@ -93,17 +93,18 @@ This project runs on community contributions. Whether you want to write new scri
 
 | I want to…                                  | Go here                                                                   |
 | ------------------------------------------- | ------------------------------------------------------------------------- |
-| Add a new script or improve an existing one | [Contributing Guidelines](CONTRIBUTING.md)                                |
-| Test scripts before they hit production     | [ProxmoxVED (dev repo)](https://github.com/community-scripts/ProxmoxVED)  |
+| Add a **new** script                        | [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) — new scripts are tested here first |
+| Fix or improve an **existing** script       | [Contributing Guidelines](CONTRIBUTING.md) — open a PR in this repo       |
 | Report a bug or broken script               | [Issues](https://github.com/community-scripts/ProxmoxVE/issues)           |
 | Request a new script or feature             | [Discussions](https://github.com/community-scripts/ProxmoxVE/discussions) |
+| Report a security vulnerability             | [Security Policy](SECURITY.md)                                             |
 | Get help or chat with other users           | [Discord](https://discord.gg/3AnUqsXnmK)                                  |
 
 ### Before you open a PR
 
-- Read the [Contributing Guidelines](CONTRIBUTING.md) — they cover script structure, variable naming, and how the review process works.
-- Test your changes in [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) first. PRs against the main repo without prior testing in VED are unlikely to be merged quickly.
-- Keep scripts focused. One script, one service.
+- **New scripts go to [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED), not here.** PRs with new scripts opened directly against this repo will be closed.
+- Bug fixes and improvements to existing scripts belong in this repo — read the [Contributing Guidelines](CONTRIBUTING.md) first.
+- Keep PRs focused. One fix or feature per PR.
 - Document what your script installs and any non-obvious decisions in the corresponding JSON metadata file.
 
 ---
