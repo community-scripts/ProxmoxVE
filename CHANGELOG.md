@@ -459,6 +459,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Reitti: refactor scripts for v4 - remove RabbitMQ and Photon [@MickLesk](https://github.com/MickLesk) ([#13728](https://github.com/community-scripts/ProxmoxVE/pull/13728))
 
+### 📚 Documentation
+
+  - cleanup: remove docs/, update README & CONTRIBUTING, fix repo config [@MickLesk](https://github.com/MickLesk) ([#13770](https://github.com/community-scripts/ProxmoxVE/pull/13770))
+
 ## 2026-04-14
 
 ### 🚀 Updated Scripts
