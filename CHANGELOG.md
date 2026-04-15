@@ -444,6 +444,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-15
 
+### 🆕 New Scripts
+
+  - Revert "Remove low-install-count CT scripts and installers (#13570)" [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13752](https://github.com/community-scripts/ProxmoxVE/pull/13752))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
