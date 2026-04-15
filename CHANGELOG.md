@@ -450,6 +450,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Domain Monitor: Fix file ownership after update [@tremor021](https://github.com/tremor021) ([#13759](https://github.com/community-scripts/ProxmoxVE/pull/13759))
 
+  - #### 💥 Breaking Changes
+
+    - Reitti: refactor scripts for v4 - remove RabbitMQ and Photon [@MickLesk](https://github.com/MickLesk) ([#13728](https://github.com/community-scripts/ProxmoxVE/pull/13728))
+
 ## 2026-04-14
 
 ### 🚀 Updated Scripts
