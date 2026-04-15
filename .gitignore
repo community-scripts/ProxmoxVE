@@ -2,17 +2,14 @@
 .DS_Store
 Thumbs.db
 
-# Editor & IDE files (keeping .vscode settings but ignoring unnecessary metadata)
+# Editor & IDE files
 !.vscode/
 .vscode/*.workspace
 .vscode/*.tmp
 
-# Log and Cache files
+# Log files
 logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Install scripts and temporary files
 install/tmp/
@@ -26,7 +23,7 @@ vm/*.vmdk
 vm/*.iso
 vm/*.bak
 
-# Miscellaneous temporary or unnecessary files
+# Miscellaneous temporary files
 *.bak
 *.swp
 *.swo
@@ -34,22 +31,7 @@ vm/*.bak
 *.tmp
 *.backup
 
-# JSON configuration backups
+# JSON temporary files
+json/
 json/*.bak
 json/*.tmp
-json/.vscode/
-
-# Ignore compiled binaries or packaged artifacts
-*.exe
-*.dll
-*.bin
-*.deb
-*.rpm
-*.tar.gz
-*.zip
-*.tgz
-
-# Ignore repository metadata or Git itself
-.git/
-.gitignore
-.vscode/settings.json
