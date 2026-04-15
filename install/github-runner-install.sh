@@ -20,9 +20,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Creating runner user (no sudo)"
-if ! getent passwd runner >/dev/null 2>&1; then
-  useradd -m -s /bin/bash runner
-fi
+useradd -m -s /bin/bash runner
 msg_ok "Runner user ready"
 
 fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-x64-*.tar.gz"
