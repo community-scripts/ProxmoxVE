@@ -126,19 +126,11 @@ This project runs on community contributions. Whether you want to write new scri
       </a>
     </td>
     <td align="center">
-      <a href="https://github.com/asylumexp">
-        <img src="https://github.com/asylumexp.png" width="80" height="80" style="border-radius:50%" alt="asylumexp" /><br/>
-        <sub><b>asylumexp</b></sub>
-      </a>
-    </td>
-    <td align="center">
       <a href="https://github.com/BramSuurdje">
         <img src="https://github.com/BramSuurdje.png" width="80" height="80" style="border-radius:50%" alt="BramSuurdje" /><br/>
         <sub><b>BramSuurdje</b></sub>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center">
       <a href="https://github.com/CrazyWolf13">
         <img src="https://github.com/CrazyWolf13.png" width="80" height="80" style="border-radius:50%" alt="CrazyWolf13" /><br/>
@@ -157,7 +149,6 @@ This project runs on community contributions. Whether you want to write new scri
         <sub><b>vhsdream</b></sub>
       </a>
     </td>
-    <td></td>
   </tr>
 </table>
 
