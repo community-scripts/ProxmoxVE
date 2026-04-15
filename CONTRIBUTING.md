@@ -1,176 +1,125 @@
-# Community Scripts Contribution Guide
+# Contributing to Proxmox VE Helper-Scripts
 
-## **Welcome to the communty-scripts Repository!**
+Welcome! We're glad you want to contribute. This guide covers everything you need to add new scripts, improve existing ones, or help in other ways.
 
-📜 These documents outline the essential coding standards for all our scripts and JSON files. Adhering to these standards ensures that our codebase remains consistent, readable, and maintainable. By following these guidelines, we can improve collaboration, reduce errors, and enhance the overall quality of our project.
-
-### Why Coding Standards Matter
-
-Coding standards are crucial for several reasons:
-
-1. **Consistency**: Consistent code is easier to read, understand, and maintain. It helps new team members quickly get up to speed and reduces the learning curve.
-2. **Readability**: Clear and well-structured code is easier to debug and extend. It allows developers to quickly identify and fix issues.
-3. **Maintainability**: Code that follows a standard structure is easier to refactor and update. It ensures that changes can be made with minimal risk of introducing new bugs.
-4. **Collaboration**: When everyone follows the same standards, it becomes easier to collaborate on code. It reduces friction and misunderstandings during code reviews and merges.
-
-### Scope of These Documents
-
-These documents cover the coding standards for the following types of files in our project:
-
-- **`install/$AppName-install.sh` Scripts**: These scripts are responsible for the installation of applications.
-- **`ct/$AppName.sh` Scripts**: These scripts handle the creation and updating of containers.
-- **Website metadata**: Display data (name, description, logo, etc.) is requested via the website (Report issue on the script page), not via files in the repo.
-
-Each section provides detailed guidelines on various aspects of coding, including shebang usage, comments, variable naming, function naming, indentation, error handling, command substitution, quoting, script structure, and logging. Additionally, examples are provided to illustrate the application of these standards.
-
-By following the coding standards outlined in this document, we ensure that our scripts and JSON files are of high quality, making our project more robust and easier to manage. Please refer to this guide whenever you create or update scripts and JSON files to maintain a high standard of code quality across the project. 📚🔍
-
-Let's work together to keep our codebase clean, efficient, and maintainable! 💪🚀
-
-## Getting Started
-
-Before contributing, please ensure that you have the following setup:
-
-1. **Visual Studio Code** (recommended for script development)
-2. **Recommended VS Code Extensions:**
-   - [Shell Syntax](https://marketplace.visualstudio.com/items?itemName=bmalehorn.shell-syntax)
-   - [ShellCheck](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)
-   - [Shell Format](https://marketplace.visualstudio.com/items?itemName=foxundermoon.shell-format)
-
-### Important Notes
-
-- Use [AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_ct/AppName.sh) and [AppName-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_install/AppName-install.sh) as templates when creating new scripts.
+For detailed coding standards and full documentation, visit **[community-scripts.org/docs](https://community-scripts.org/docs)**.
 
 ---
 
-# 🚀 The Application Script (ct/AppName.sh)
+## How Can I Help?
 
-- You can find all coding standards, as well as the structure for this file [here](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_ct/AppName.md).
-- These scripts are responsible for container creation, setting the necessary variables and handling the update of the application once installed.
-
----
-
-# 🛠 The Installation Script (install/AppName-install.sh)
-
-- You can find all coding standards, as well as the structure for this file [here](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_install/AppName-install.md).
-- These scripts are responsible for the installation of the application.
+| I want to… | Go here |
+| :--- | :--- |
+| Add a new script or improve an existing one | Read this guide, then open a PR |
+| Report a bug or broken script | [Open an Issue](https://github.com/community-scripts/ProxmoxVE/issues) |
+| Request a new script or feature | [Start a Discussion](https://github.com/community-scripts/ProxmoxVE/discussions) |
+| Chat with contributors | [Discord](https://discord.gg/3AnUqsXnmK) |
 
 ---
 
-## 🚀 Building Your Own Scripts
+## Prerequisites
 
-Start with the [template script](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_install/AppName-install.sh)
+Before writing scripts, we recommend setting up:
+
+- **Visual Studio Code** with these extensions:
+  - [Shell Syntax](https://marketplace.visualstudio.com/items?itemName=bmalehorn.shell-syntax)
+  - [ShellCheck](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)
+  - [Shell Format](https://marketplace.visualstudio.com/items?itemName=foxundermoon.shell-format)
 
 ---
 
-## 🤝 Contribution Process
+## Script Structure
 
-### 1. Fork the repository
+Every script consists of two files:
 
-Fork to your GitHub account
+| File | Purpose |
+| :--- | :--- |
+| `ct/AppName.sh` | Container creation, variable setup, and update handling |
+| `install/AppName-install.sh` | Application installation logic |
 
-### 2. Clone your fork on your local environment
+Use existing scripts in [`ct/`](ct/) and [`install/`](install/) as reference. Full coding standards and annotated templates are at **[community-scripts.org/docs/contribution](https://community-scripts.org/docs/contribution)**.
 
-```bash
-git clone https://github.com/yourUserName/ForkName
-```
+---
 
-### 3. Create a new branch
+## Contribution Process
 
-```bash
-git switch -c your-feature-branch
-```
+### 1. Fork and clone
 
-### 4. Run setup-fork.sh to auto-configure your fork
-
-```bash
-bash docs/contribution/setup-fork.sh --full
-```
-
-This script automatically:
-
-- Detects your GitHub username
-- Updates ALL curl URLs to point to your fork (for testing)
-- Creates `.git-setup-info` with your config
-- Backs up all modified files (\*.backup)
-
-**IMPORTANT**: This modifies 600+ files! Use cherry-pick when submitting your PR (see below).
-
-### 5. Commit ONLY your new application files
+Fork the repository to your GitHub account, then clone it:
 
 ```bash
-git commit -m "Your commit message"
+git clone https://github.com/YOUR_USERNAME/ProxmoxVE
+cd ProxmoxVE
 ```
 
-### 5. Push to your fork
+### 2. Create a branch
 
 ```bash
-git push origin your-feature-branch
+git switch -c feat/myapp
 ```
 
-### 6. Cherry-Pick: Submit Only Your Files for PR
+### 3. Write your scripts
 
-⚠️ **IMPORTANT**: setup-fork.sh modified 600+ files. You MUST only submit your 2 new files!
-
-See [README.md - Cherry-Pick Guide](README.md#-cherry-pick-submitting-only-your-changes) for step-by-step instructions.
-
-Quick version:
-
-```bash
-# Create clean branch from upstream
-git fetch upstream
-git checkout -b submit/myapp upstream/main
-
-# Copy only your files
-cp ../your-work-branch/ct/myapp.sh ct/myapp.sh
-cp ../your-work-branch/install/myapp-install.sh install/myapp-install.sh
-
-# Commit and verify
-git add ct/myapp.sh install/myapp-install.sh
-git commit -m "feat: add MyApp"
-git diff upstream/main --name-only  # Should show ONLY your 2 files
-
-# Push and create PR
-git push origin submit/myapp
-```
-
-### 7. Create a Pull Request
-
-Open a Pull Request from `submit/myapp` → `community-scripts/ProxmoxVE/main`.
-
-Verify the PR shows ONLY these 2 files:
+Create the two required files for your service:
 
 - `ct/myapp.sh`
 - `install/myapp-install.sh`
 
+Follow the coding standards at [community-scripts.org/docs/contribution](https://community-scripts.org/docs/contribution).
+
+### 4. Test in ProxmoxVED
+
+**Do not open a PR against the main repo without testing first.**
+
+Submit your scripts to [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) — the dedicated testing repository. PRs to the main repo without prior testing in ProxmoxVED will not be merged quickly.
+
+### 5. Open a Pull Request
+
+Once testing is complete, open a PR from your fork to `community-scripts/ProxmoxVE/main`.
+
+Your PR should only contain the files you created or modified. Do not include unrelated changes.
+
 ---
 
-# 🛠️ Developer Mode & Debugging
+## Code Standards
 
-When building or testing scripts, you can use the `dev_mode` variable to enable powerful debugging features. These flags can be combined (comma-separated).
+Key rules at a glance:
 
-**Usage**:
+- One script per service — keep them focused
+- Naming convention: lowercase, hyphen-separated (`my-app.sh`)
+- Shebang: `#!/usr/bin/env bash`
+- Quote all variables: `"$VAR"` not `$VAR`
+- Use lowercase variable names
+- Do not hardcode credentials or sensitive values
+
+Full standards and examples: **[community-scripts.org/docs/contribution](https://community-scripts.org/docs/contribution)**
+
+---
+
+## Developer Mode & Debugging
+
+Set the `dev_mode` variable to enable debugging features when testing. Flags can be combined (comma-separated):
+
 ```bash
-# Example: Run with trace and keep the container even if it fails
 dev_mode="trace,keep" bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
 ```
 
-### Available Flags:
-
 | Flag | Description |
 | :--- | :--- |
-| `trace` | Enables `set -x` for maximum verbosity during execution. |
-| `keep` | Prevents the container from being deleted if the build fails. |
-| `pause` | Pauses execution at key points (e.g., before customization). |
-| `breakpoint` | Allows hardcoded `breakpoint` calls in scripts to drop to a shell. |
-| `logs` | Saves detailed build logs to `/var/log/community-scripts/`. |
-| `dryrun` | Bypasses actual container creation (limited support). |
-| `motd` | Forces an update of the Message of the Day (MOTD). |
+| `trace` | Enables `set -x` for maximum verbosity during execution |
+| `keep` | Prevents the container from being deleted if the build fails |
+| `pause` | Pauses execution at key points before customization |
+| `breakpoint` | Drops to a shell at hardcoded `breakpoint` calls in scripts |
+| `logs` | Saves detailed build logs to `/var/log/community-scripts/` |
+| `dryrun` | Bypasses actual container creation (limited support) |
+| `motd` | Forces an update of the Message of the Day |
 
 ---
 
-## 📚 Pages
+## Notes
 
-- [CT Template: AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_ct/AppName.sh)
-- [Install Template: AppName-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_install/AppName-install.sh)
-- [JSON Template: AppName.json](https://github.com/community-scripts/ProxmoxVE/blob/main/docs/contribution/templates_json/AppName.json) — metadata structure reference; submit via the website (Report issue on script page)
+- **Website metadata** (name, description, logo, tags) is managed via the website — use the "Report Issue" link on any script page to request changes. Do not submit metadata changes via repo files.
+- **JSON files** in `json/` define script properties used by the website. See existing files for structure reference.
+- Keep PRs small and focused. One script addition or fix per PR is ideal.
+- PRs that fail CI checks or that haven't been tested in ProxmoxVED will not be merged.
+
