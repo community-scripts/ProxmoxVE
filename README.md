@@ -91,14 +91,14 @@ This project runs on community contributions. Whether you want to write new scri
 
 ### Where to start
 
-| I want to…                                  | Go here                                                                   |
-| ------------------------------------------- | ------------------------------------------------------------------------- |
-| Add a **new** script                        | [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) — new scripts are tested here first |
-| Fix or improve an **existing** script       | [Contributing Guidelines](CONTRIBUTING.md) — open a PR in this repo       |
-| Report a bug or broken script               | [Issues](https://github.com/community-scripts/ProxmoxVE/issues)           |
-| Request a new script or feature             | [Discussions](https://github.com/community-scripts/ProxmoxVE/discussions) |
-| Report a security vulnerability             | [Security Policy](SECURITY.md)                                             |
-| Get help or chat with other users           | [Discord](https://discord.gg/3AnUqsXnmK)                                  |
+| I want to…                            | Go here                                                                                           |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Add a **new** script                  | [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) — new scripts are tested here first |
+| Fix or improve an **existing** script | [Contributing Guidelines](CONTRIBUTING.md) — open a PR in this repo                               |
+| Report a bug or broken script         | [Issues](https://github.com/community-scripts/ProxmoxVE/issues)                                   |
+| Request a new script or feature       | [Discussions](https://github.com/community-scripts/ProxmoxVE/discussions)                         |
+| Report a security vulnerability       | [Security Policy](SECURITY.md)                                                                    |
+| Get help or chat with other users     | [Discord](https://discord.gg/3AnUqsXnmK)                                                          |
 
 ### Before you open a PR
 

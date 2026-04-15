@@ -13,15 +13,15 @@ For detailed coding standards and full documentation, visit **[community-scripts
 > PRs with new scripts opened directly against ProxmoxVE **will be closed without review**.
 > **Bug fixes, improvements, and features for existing scripts** go here (ProxmoxVE).
 
-| I want to… | Where to go |
-| :--- | :--- |
-| **Add a brand-new script** | [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) — testing repo for new scripts |
-| **Fix a bug or improve an existing script** | This repo (ProxmoxVE) — open a PR here |
-| **Add a feature to an existing script** | This repo (ProxmoxVE) — open a PR here |
-| Report a bug or broken script | [Open an Issue](https://github.com/community-scripts/ProxmoxVE/issues) |
-| Request a new script or feature | [Start a Discussion](https://github.com/community-scripts/ProxmoxVE/discussions) |
-| Report a security vulnerability | [Security Policy](SECURITY.md) |
-| Chat with contributors | [Discord](https://discord.gg/3AnUqsXnmK) |
+| I want to…                                  | Where to go                                                                                  |
+| :------------------------------------------ | :------------------------------------------------------------------------------------------- |
+| **Add a brand-new script**                  | [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) — testing repo for new scripts |
+| **Fix a bug or improve an existing script** | This repo (ProxmoxVE) — open a PR here                                                       |
+| **Add a feature to an existing script**     | This repo (ProxmoxVE) — open a PR here                                                       |
+| Report a bug or broken script               | [Open an Issue](https://github.com/community-scripts/ProxmoxVE/issues)                       |
+| Request a new script or feature             | [Start a Discussion](https://github.com/community-scripts/ProxmoxVE/discussions)             |
+| Report a security vulnerability             | [Security Policy](SECURITY.md)                                                               |
+| Chat with contributors                      | [Discord](https://discord.gg/3AnUqsXnmK)                                                     |
 
 ---
 
@@ -40,10 +40,10 @@ Before writing scripts, we recommend setting up:
 
 Every script consists of two files:
 
-| File | Purpose |
-| :--- | :--- |
-| `ct/AppName.sh` | Container creation, variable setup, and update handling |
-| `install/AppName-install.sh` | Application installation logic |
+| File                         | Purpose                                                 |
+| :--------------------------- | :------------------------------------------------------ |
+| `ct/AppName.sh`              | Container creation, variable setup, and update handling |
+| `install/AppName-install.sh` | Application installation logic                          |
 
 Use existing scripts in [`ct/`](ct/) and [`install/`](install/) as reference. Full coding standards and annotated templates are at **[community-scripts.org/docs/contribution](https://community-scripts.org/docs/contribution)**.
 
@@ -116,15 +116,15 @@ Set the `dev_mode` variable to enable debugging features when testing. Flags can
 dev_mode="trace,keep" bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/myapp.sh)"
 ```
 
-| Flag | Description |
-| :--- | :--- |
-| `trace` | Enables `set -x` for maximum verbosity during execution |
-| `keep` | Prevents the container from being deleted if the build fails |
-| `pause` | Pauses execution at key points before customization |
-| `breakpoint` | Drops to a shell at hardcoded `breakpoint` calls in scripts |
-| `logs` | Saves detailed build logs to `/var/log/community-scripts/` |
-| `dryrun` | Bypasses actual container creation (limited support) |
-| `motd` | Forces an update of the Message of the Day |
+| Flag         | Description                                                  |
+| :----------- | :----------------------------------------------------------- |
+| `trace`      | Enables `set -x` for maximum verbosity during execution      |
+| `keep`       | Prevents the container from being deleted if the build fails |
+| `pause`      | Pauses execution at key points before customization          |
+| `breakpoint` | Drops to a shell at hardcoded `breakpoint` calls in scripts  |
+| `logs`       | Saves detailed build logs to `/var/log/community-scripts/`   |
+| `dryrun`     | Bypasses actual container creation (limited support)         |
+| `motd`       | Forces an update of the Message of the Day                   |
 
 ---
 
@@ -135,4 +135,3 @@ dev_mode="trace,keep" bash -c "$(curl -fsSL https://raw.githubusercontent.com/co
 - Keep PRs small and focused. One fix or feature per PR is ideal.
 - PRs with **new scripts** opened against ProxmoxVE will be closed — submit them to [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) instead.
 - PRs that fail CI checks will not be merged.
-

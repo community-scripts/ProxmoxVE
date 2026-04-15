@@ -14,21 +14,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Python-specific exclusions
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.venv/
-venv/
-env/
-*.env
-
-# API and Backend specific exclusions
-api/.env
-api/__pycache__/
-api/*.sqlite3
-
 # Install scripts and temporary files
 install/tmp/
 install/*.bak
