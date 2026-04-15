@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
+
 # Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.github.com/en/actions/hosting-your-own-runners
 
