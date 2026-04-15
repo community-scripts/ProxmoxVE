@@ -109,6 +109,60 @@ This project runs on community contributions. Whether you want to write new scri
 
 ---
 
+## Core Team
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/MickLesk">
+        <img src="https://github.com/MickLesk.png" width="80" height="80" style="border-radius:50%" alt="MickLesk" /><br/>
+        <sub><b>MickLesk</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/michelroegl-brunner">
+        <img src="https://github.com/michelroegl-brunner.png" width="80" height="80" style="border-radius:50%" alt="michelroegl-brunner" /><br/>
+        <sub><b>michelroegl-brunner</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/asylumexp">
+        <img src="https://github.com/asylumexp.png" width="80" height="80" style="border-radius:50%" alt="asylumexp" /><br/>
+        <sub><b>asylumexp</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/BramSuurdje">
+        <img src="https://github.com/BramSuurdje.png" width="80" height="80" style="border-radius:50%" alt="BramSuurdje" /><br/>
+        <sub><b>BramSuurdje</b></sub>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/CrazyWolf13">
+        <img src="https://github.com/CrazyWolf13.png" width="80" height="80" style="border-radius:50%" alt="CrazyWolf13" /><br/>
+        <sub><b>CrazyWolf13</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/tremor021">
+        <img src="https://github.com/tremor021.png" width="80" height="80" style="border-radius:50%" alt="tremor021" /><br/>
+        <sub><b>tremor021</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/vhsdream">
+        <img src="https://github.com/vhsdream.png" width="80" height="80" style="border-radius:50%" alt="vhsdream" /><br/>
+        <sub><b>vhsdream</b></sub>
+      </a>
+    </td>
+    <td></td>
+  </tr>
+</table>
+
+---
+
 ## Project Activity
 
 <p align="center">
