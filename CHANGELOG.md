@@ -453,6 +453,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [alpine-nextcloud] Update Nginx MIME types to support .mjs files [@GuiltyFox](https://github.com/GuiltyFox) ([#13771](https://github.com/community-scripts/ProxmoxVE/pull/13771))
     - Domain Monitor: Fix file ownership after update [@tremor021](https://github.com/tremor021) ([#13759](https://github.com/community-scripts/ProxmoxVE/pull/13759))
 
   - #### 💥 Breaking Changes
