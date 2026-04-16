@@ -450,6 +450,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Add pnpm as a dependency to ghost-cli install [@YourFavoriteKyle](https://github.com/YourFavoriteKyle) ([#13789](https://github.com/community-scripts/ProxmoxVE/pull/13789))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: wire ENABLE_MKNOD and ALLOW_MOUNT_FS into LXC features [@MickLesk](https://github.com/MickLesk) ([#13796](https://github.com/community-scripts/ProxmoxVE/pull/13796))
+
 ## 2026-04-15
 
 ### 🆕 New Scripts
