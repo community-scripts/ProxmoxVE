@@ -46,7 +46,7 @@ EOF
 msg_ok "Configured Homelable"
 
 msg_info "Creating Password Reset Utility"
-cat <<'EOF' >/opt/homelable/change_password.sh
+cat <<'EOF' >/root/change_password.sh
 #!/usr/bin/env bash
 
 NEW_PASS=""
