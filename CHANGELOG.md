@@ -442,6 +442,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-16
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Add pnpm as a dependency to ghost-cli install [@YourFavoriteKyle](https://github.com/YourFavoriteKyle) ([#13789](https://github.com/community-scripts/ProxmoxVE/pull/13789))
+
 ## 2026-04-15
 
 ### 🆕 New Scripts
