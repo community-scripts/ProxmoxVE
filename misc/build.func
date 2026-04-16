@@ -1025,6 +1025,7 @@ base_settings() {
   ENABLE_NESTING=${var_nesting:-"1"}
   ENABLE_KEYCTL=${var_keyctl:-"0"}
   ENABLE_MKNOD=${var_mknod:-"0"}
+  ALLOW_MOUNT_FS=${var_mount_fs:-""}
   PROTECT_CT=${var_protection:-"no"}
   CT_TIMEZONE=${var_timezone:-"$timezone"}
   [[ "${CT_TIMEZONE:-}" == Etc/* ]] && CT_TIMEZONE="host" # pct doesn't accept Etc/* zones
@@ -1200,6 +1201,18 @@ load_vars_file() {
         var_fuse | var_tun | var_gpu | var_ssh | var_verbose | var_protection)
           if [[ "$var_val" != "yes" && "$var_val" != "no" ]]; then
             msg_warn "Invalid boolean '$var_val' for $var_key in $file (must be yes/no), ignoring"
+            continue
+          fi
+          ;;
+        var_mknod)
+          if [[ "$var_val" != "0" && "$var_val" != "1" ]]; then
+            msg_warn "Invalid mknod value '$var_val' in $file (must be 0 or 1), ignoring"
+            continue
+          fi
+          ;;
+        var_mount_fs)
+          if [[ ! "$var_val" =~ ^[a-zA-Z0-9,]+$ ]]; then
+            msg_warn "Invalid mount_fs value '$var_val' in $file (comma-separated fs names only, e.g. nfs,cifs), ignoring"
             continue
           fi
           ;;
@@ -1428,10 +1441,10 @@ get_app_defaults_path() {
 if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   declare -ag VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu
-    var_gateway var_hostname var_ipv6_method var_mac var_mtu
-    var_net var_ns var_os var_pw var_ram var_tags var_tun var_unprivileged
-    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_keyctl
+    var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
+    var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
+    var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
   )
 fi
 
@@ -2711,6 +2724,7 @@ Network:
 Features:
   FUSE: $_enable_fuse | TUN: $_enable_tun
   Nesting: $nesting_desc | Keyctl: $keyctl_desc
+  Mknod: $([ "$_enable_mknod" == "1" ] && echo Enabled || echo Disabled) | Mount FS: ${_mount_fs:-(none)}
   GPU: $_enable_gpu | Protection: $protect_desc
 
 Advanced:
@@ -2811,6 +2825,8 @@ Advanced:
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Nesting: ${BGN}$([ "${ENABLE_NESTING:-1}" == "1" ] && echo "Enabled" || echo "Disabled")${CL}"
   [[ "${ENABLE_KEYCTL:-0}" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Keyctl: ${BGN}Enabled${CL}"
   echo -e "${GPU}${BOLD}${DGN}GPU Passthrough: ${BGN}${ENABLE_GPU:-no}${CL}"
+  [[ "${ENABLE_MKNOD:-0}" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Mknod: ${BGN}Enabled${CL}"
+  [[ -n "${ALLOW_MOUNT_FS:-}" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Mount FS: ${BGN}${ALLOW_MOUNT_FS}${CL}"
   [[ "${PROTECT_CT:-no}" == "yes" || "${PROTECT_CT:-no}" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Protection: ${BGN}Enabled${CL}"
   [[ -n "${CT_TIMEZONE:-}" ]] && echo -e "${INFO}${BOLD}${DGN}Timezone: ${BGN}$CT_TIMEZONE${CL}"
   [[ "$APT_CACHER" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}APT Cacher: ${BGN}$APT_CACHER_IP${CL}"
@@ -2833,6 +2849,8 @@ Advanced:
   log_msg "IPv6: $IPV6_METHOD"
   log_msg "FUSE Support: ${ENABLE_FUSE:-no}"
   log_msg "Nesting: $([ "${ENABLE_NESTING:-1}" == "1" ] && echo "Enabled" || echo "Disabled")"
+  log_msg "Mknod: $([ "${ENABLE_MKNOD:-0}" == "1" ] && echo "Enabled" || echo "Disabled")"
+  [[ -n "${ALLOW_MOUNT_FS:-}" ]] && log_msg "Mount FS: ${ALLOW_MOUNT_FS}"
   log_msg "GPU Passthrough: ${ENABLE_GPU:-no}"
   log_msg "Verbose Mode: $VERBOSE"
   log_msg "Session ID: ${SESSION_ID}"
@@ -3610,6 +3628,18 @@ build_container() {
   if [ "$ENABLE_FUSE" == "yes" ]; then
     [ -n "$FEATURES" ] && FEATURES="$FEATURES,"
     FEATURES="${FEATURES}fuse=1"
+  fi
+
+  # Mknod support (user configurable via advanced settings)
+  if [ "${ENABLE_MKNOD:-0}" == "1" ]; then
+    [ -n "$FEATURES" ] && FEATURES="$FEATURES,"
+    FEATURES="${FEATURES}mknod=1"
+  fi
+
+  # Mount filesystem types (user configurable via advanced settings)
+  if [ -n "${ALLOW_MOUNT_FS:-}" ]; then
+    [ -n "$FEATURES" ] && FEATURES="$FEATURES,"
+    FEATURES="${FEATURES}mount=${ALLOW_MOUNT_FS//,/;}"
   fi
 
   # Build PCT_OPTIONS as string for export
