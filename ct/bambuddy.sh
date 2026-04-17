@@ -48,7 +48,7 @@ function update_script() {
 
     msg_info "Updating Python Dependencies"
     cd /opt/bambuddy
-    $STD uv venv
+    $STD uv venv --clear
     $STD uv pip install -r requirements.txt
     msg_ok "Updated Python Dependencies"
 
