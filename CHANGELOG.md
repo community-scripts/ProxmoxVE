@@ -442,6 +442,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-17
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Umami: Fix update procedure [@tremor021](https://github.com/tremor021) ([#13807](https://github.com/community-scripts/ProxmoxVE/pull/13807))
+
 ## 2026-04-16
 
 ### 🚀 Updated Scripts
