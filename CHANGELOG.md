@@ -456,6 +456,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: sanitize mount_fs input — strip spaces and trailing commas [@MickLesk](https://github.com/MickLesk) ([#13806](https://github.com/community-scripts/ProxmoxVE/pull/13806))
 
+  - #### 🔧 Refactor
+
+    - core: fix some pct create issues (telemetry) + cleanup [@MickLesk](https://github.com/MickLesk) ([#13810](https://github.com/community-scripts/ProxmoxVE/pull/13810))
+
 ## 2026-04-16
 
 ### 🚀 Updated Scripts
