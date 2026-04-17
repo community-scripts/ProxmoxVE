@@ -450,6 +450,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Umami: Fix update procedure [@tremor021](https://github.com/tremor021) ([#13807](https://github.com/community-scripts/ProxmoxVE/pull/13807))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: sanitize mount_fs input — strip spaces and trailing commas [@MickLesk](https://github.com/MickLesk) ([#13806](https://github.com/community-scripts/ProxmoxVE/pull/13806))
+
 ## 2026-04-16
 
 ### 🚀 Updated Scripts
