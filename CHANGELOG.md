@@ -444,6 +444,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-17
 
+### 🆕 New Scripts
+
+  - step-ca ([#13775](https://github.com/community-scripts/ProxmoxVE/pull/13775))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
