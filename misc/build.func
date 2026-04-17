@@ -1211,7 +1211,11 @@ load_vars_file() {
           fi
           ;;
         var_mount_fs)
-          if [[ ! "$var_val" =~ ^[a-zA-Z0-9,]+$ ]]; then
+          # Normalize: strip spaces, trailing commas
+          var_val="${var_val// /}"
+          var_val="${var_val%%,}"
+          var_val="${var_val##,}"
+          if [[ -n "$var_val" ]] && [[ ! "$var_val" =~ ^[a-zA-Z0-9]+(,[a-zA-Z0-9]+)*$ ]]; then
             msg_warn "Invalid mount_fs value '$var_val' in $file (comma-separated fs names only, e.g. nfs,cifs), ignoring"
             continue
           fi
@@ -2668,6 +2672,10 @@ advanced_settings() {
         --ok-button "Next" --cancel-button "Back" \
         --inputbox "\nAllow specific filesystem mounts.\n\nComma-separated list: nfs, cifs, fuse, ext4, etc.\nLeave empty for defaults (none).\n\nCurrent: $mount_hint" 14 62 "$_mount_fs" \
         3>&1 1>&2 2>&3); then
+        # Normalize: strip spaces and trailing/leading commas
+        result="${result// /}"
+        result="${result%%,}"
+        result="${result##,}"
         _mount_fs="$result"
         ((STEP++))
       else
@@ -3638,8 +3646,16 @@ build_container() {
 
   # Mount filesystem types (user configurable via advanced settings)
   if [ -n "${ALLOW_MOUNT_FS:-}" ]; then
-    [ -n "$FEATURES" ] && FEATURES="$FEATURES,"
-    FEATURES="${FEATURES}mount=${ALLOW_MOUNT_FS//,/;}"
+    # Sanitize: strip spaces, trailing/leading commas, then convert commas to semicolons
+    local _mount_clean="${ALLOW_MOUNT_FS// /}"
+    _mount_clean="${_mount_clean%%,}"
+    _mount_clean="${_mount_clean##,}"
+    _mount_clean="${_mount_clean%%;}"  
+    _mount_clean="${_mount_clean//,/;}"
+    if [ -n "$_mount_clean" ]; then
+      [ -n "$FEATURES" ] && FEATURES="$FEATURES,"
+      FEATURES="${FEATURES}mount=${_mount_clean}"
+    fi
   fi
 
   # Build PCT_OPTIONS as string for export
