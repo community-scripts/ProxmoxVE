@@ -452,6 +452,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix for bambuddy community script update [@abbasegbeyemi](https://github.com/abbasegbeyemi) ([#13816](https://github.com/community-scripts/ProxmoxVE/pull/13816))
     - Umami: Fix update procedure [@tremor021](https://github.com/tremor021) ([#13807](https://github.com/community-scripts/ProxmoxVE/pull/13807))
 
 ### 💾 Core
