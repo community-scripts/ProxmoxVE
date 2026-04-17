@@ -1139,39 +1139,42 @@ validate_github_token() {
     -H "Authorization: Bearer $token" \
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
-    "https://api.github.com/user" 2>/dev/null) || { rm -f "$headers"; return 3; }
+    "https://api.github.com/user" 2>/dev/null) || {
+    rm -f "$headers"
+    return 3
+  }
   http_code="$response"
 
   # Read expiry header (fine-grained PATs carry this)
-  expiry_date=$(grep -i '^github-authentication-token-expiration:' "$headers" \
-    | sed 's/.*: *//' | tr -d '\r\n' || true)
+  expiry_date=$(grep -i '^github-authentication-token-expiration:' "$headers" |
+    sed 's/.*: *//' | tr -d '\r\n' || true)
   # Read token scopes (classic PATs)
-  scopes=$(grep -i '^x-oauth-scopes:' "$headers" \
-    | sed 's/.*: *//' | tr -d '\r\n' || true)
+  scopes=$(grep -i '^x-oauth-scopes:' "$headers" |
+    sed 's/.*: *//' | tr -d '\r\n' || true)
   rm -f "$headers"
 
   case "$http_code" in
-    200)
-      if [[ -n "$expiry_date" ]]; then
-        msg_ok "GitHub token is valid (expires: $expiry_date)."
-      else
-        msg_ok "GitHub token is valid (no expiry / fine-grained PAT)."
-      fi
-      # Warn if classic PAT has no public_repo scope
-      if [[ -n "$scopes" && "$scopes" != *"public_repo"* && "$scopes" != *"repo"* ]]; then
-        msg_warn "Token has no 'public_repo' scope - private repos and some release APIs may fail."
-        return 2
-      fi
-      return 0
-      ;;
-    401)
-      msg_error "GitHub token is invalid or expired (HTTP 401)."
-      return 1
-      ;;
-    *)
-      msg_warn "GitHub token validation returned HTTP $http_code - treating as valid."
-      return 0
-      ;;
+  200)
+    if [[ -n "$expiry_date" ]]; then
+      msg_ok "GitHub token is valid (expires: $expiry_date)."
+    else
+      msg_ok "GitHub token is valid (no expiry / fine-grained PAT)."
+    fi
+    # Warn if classic PAT has no public_repo scope
+    if [[ -n "$scopes" && "$scopes" != *"public_repo"* && "$scopes" != *"repo"* ]]; then
+      msg_warn "Token has no 'public_repo' scope - private repos and some release APIs may fail."
+      return 2
+    fi
+    return 0
+    ;;
+  401)
+    msg_error "GitHub token is invalid or expired (HTTP 401)."
+    return 1
+    ;;
+  *)
+    msg_warn "GitHub token validation returned HTTP $http_code - treating as valid."
+    return 0
+    ;;
   esac
 }
 
@@ -4605,6 +4608,23 @@ function setup_hwaccel() {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Resolve the IGC tag that the latest compute-runtime was built against.
+# Must be called AFTER a fetch_and_deploy_gh_release for intel/compute-runtime
+# so that /tmp/gh_rel.json contains the compute-runtime release metadata.
+# Sets the variable named by $1 (default: igc_tag) to the discovered tag.
+# ══════════════════════════════════════════════════════════════════════════════
+_resolve_igc_tag() {
+  local -n _out_ref="${1:-igc_tag}"
+  _out_ref="latest"
+  if [[ -f /tmp/gh_rel.json ]]; then
+    local _body _parsed
+    _body=$(jq -r '.body // empty' /tmp/gh_rel.json 2>/dev/null) || return 0
+    _parsed=$(grep -oP 'intel-graphics-compiler/releases/tag/\K[^\s\)]+' <<<"$_body" | head -1)
+    [[ -n "$_parsed" ]] && _out_ref="$_parsed"
+  fi
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Intel Arc GPU Setup
 # ══════════════════════════════════════════════════════════════════════════════
 _setup_intel_arc() {
@@ -4630,12 +4650,17 @@ _setup_intel_arc() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub for Arc support"
 
+      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # then resolve the matching IGC tag from the release notes.
       # libigdgmm - bundled in compute-runtime releases
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
 
-      # Intel Graphics Compiler (note: packages have -2 suffix)
-      fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || true
-      fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || true
+      local igc_tag
+      _resolve_igc_tag igc_tag
+
+      # Intel Graphics Compiler – pinned to the version compute-runtime expects
+      fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "$igc_tag" "" "intel-igc-core-2_*_amd64.deb" || true
+      fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "$igc_tag" "" "intel-igc-opencl-2_*_amd64.deb" || true
 
       # Compute Runtime (depends on IGC and gmmlib)
       fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || true
@@ -4685,12 +4710,17 @@ _setup_intel_modern() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub"
 
+      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # then resolve the matching IGC tag from the release notes.
       # libigdgmm first (bundled in compute-runtime releases)
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
 
-      # Intel Graphics Compiler (note: packages have -2 suffix)
-      fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || true
-      fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || true
+      local igc_tag
+      _resolve_igc_tag igc_tag
+
+      # Intel Graphics Compiler – pinned to the version compute-runtime expects
+      fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "$igc_tag" "" "intel-igc-core-2_*_amd64.deb" || true
+      fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "$igc_tag" "" "intel-igc-opencl-2_*_amd64.deb" || true
 
       # Compute Runtime
       fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || true

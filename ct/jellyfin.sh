@@ -32,10 +32,16 @@ function update_script() {
   if ! grep -qEi 'ubuntu' /etc/os-release; then
     msg_info "Updating Intel Dependencies"
     rm -f ~/.intel-* || true
-    fetch_and_deploy_gh_release "intel-igc-core-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb"
-    fetch_and_deploy_gh_release "intel-igc-opencl-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb"
+
+    # Fetch compute-runtime first so /tmp/gh_rel.json is populated for IGC tag resolution
     fetch_and_deploy_gh_release "intel-libgdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb"
     fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb"
+
+    local igc_tag
+    _resolve_igc_tag igc_tag
+
+    fetch_and_deploy_gh_release "intel-igc-core-2" "intel/intel-graphics-compiler" "binary" "$igc_tag" "" "intel-igc-core-2_*_amd64.deb"
+    fetch_and_deploy_gh_release "intel-igc-opencl-2" "intel/intel-graphics-compiler" "binary" "$igc_tag" "" "intel-igc-opencl-2_*_amd64.deb"
     msg_ok "Updated Intel Dependencies"
   fi
 
