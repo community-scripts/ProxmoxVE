@@ -344,21 +344,36 @@ explain_exit_code() {
 # - Escapes a string for safe JSON embedding
 # - Strips ANSI escape sequences and non-printable control characters
 # - Handles backslashes, quotes, newlines, tabs, and carriage returns
+# - Uses jq when available (guaranteed correct), falls back to awk
 # ------------------------------------------------------------------------------
 json_escape() {
-  # Escape a string for safe JSON embedding using awk (handles any input size).
-  # Pipeline: strip ANSI → remove control chars → escape \ " TAB → join lines with \n
-  printf '%s' "$1" |
+  local input
+  # Pipeline: strip ANSI → remove control chars → escape for JSON
+  input=$(printf '%s' "$1" |
     sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
-    tr -d '\000-\010\013\014\016-\037\177\r' |
+    tr -d '\000-\010\013\014\016-\037\177\r')
+
+  # Prefer jq: guaranteed correct JSON string encoding (handles all edge cases)
+  if command -v jq &>/dev/null; then
+    # jq -Rs reads raw stdin as string, outputs JSON-encoded string with quotes.
+    # We strip the surrounding quotes since the heredoc adds them.
+    printf '%s' "$input" | jq -Rs '.' | sed 's/^"//;s/"$//'
+    return
+  fi
+
+  # Fallback: character-by-character processing with awk (avoids gsub replacement pitfalls)
+  printf '%s' "$input" |
     awk '
-        BEGIN { ORS = "" }
+        BEGIN { ORS="" }
         {
-          gsub(/\\/, "\\\\")   # backslash → \\
-          gsub(/"/, "\\\"")    # double quote → \"
-          gsub(/\t/, "\\t")   # tab → \t
-          if (NR > 1) printf "\\n"
-          printf "%s", $0
+          if (NR > 1) printf "%s", "\\n"
+          for (i = 1; i <= length($0); i++) {
+            c = substr($0, i, 1)
+            if (c == "\\") printf "%s", "\\\\"
+            else if (c == "\"") printf "%s", "\\\""
+            else if (c == "\t") printf "%s", "\\t"
+            else printf "%s", c
+          }
         }'
 }
 
