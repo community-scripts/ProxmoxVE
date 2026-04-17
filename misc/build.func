@@ -979,7 +979,6 @@ base_settings() {
   fi
 
   IPV6_METHOD=${var_ipv6_method:-"none"}
-  IPV6_STATIC=${var_ipv6_static:-""}
   GATE=${var_gateway:-""}
   APT_CACHER=${var_apt_cacher:-""}
   APT_CACHER_IP=${var_apt_cacher_ip:-""}
@@ -1015,8 +1014,12 @@ base_settings() {
   VLAN=${var_vlan:-""}
   SSH=${var_ssh:-"no"}
   SSH_AUTHORIZED_KEY=${var_ssh_authorized_key:-""}
-  UDHCPC_FIX=${var_udhcpc_fix:-""}
-  TAGS="community-script,${var_tags:-}"
+  # Build TAGS: ensure community-script prefix, use semicolons (pct format), no duplicates
+  if [[ "${var_tags:-}" == *community-script* ]]; then
+    TAGS="${var_tags:-community-script}"
+  else
+    TAGS="community-script${var_tags:+;${var_tags}}"
+  fi
   ENABLE_FUSE=${var_fuse:-"${1:-no}"}
   ENABLE_TUN=${var_tun:-"${1:-no}"}
 
@@ -1794,7 +1797,12 @@ advanced_settings() {
   trap 'tput rmcup 2>/dev/null || true' RETURN
 
   # Initialize defaults
-  TAGS="community-script;${var_tags:-}"
+  # Build TAGS: ensure community-script prefix, use semicolons (pct format), no duplicates
+  if [[ "${var_tags:-}" == *community-script* ]]; then
+    TAGS="${var_tags:-community-script}"
+  else
+    TAGS="community-script${var_tags:+;${var_tags}}"
+  fi
   local STEP=1
   local MAX_STEP=28
 
@@ -2531,6 +2539,13 @@ advanced_settings() {
     # STEP 22: Keyctl Support (Docker/systemd)
     # ═══════════════════════════════════════════════════════════════════════════
     22)
+      # Keyctl is always required for unprivileged containers — skip dialog
+      if [[ "$_ct_type" == "1" ]]; then
+        _enable_keyctl="1"
+        ((STEP++))
+        continue
+      fi
+
       local keyctl_default_flag="--defaultno"
       [[ "$_enable_keyctl" == "1" ]] && keyctl_default_flag=""
 
@@ -2538,7 +2553,7 @@ advanced_settings() {
         --title "KEYCTL SUPPORT" \
         --ok-button "Next" --cancel-button "Back" \
         $keyctl_default_flag \
-        --yesno "\nEnable Keyctl support?\n\nRequired for: Docker containers, systemd-networkd,\nand kernel keyring operations.\n\nNote: Automatically enabled for unprivileged containers.\n\n(App default: ${var_keyctl:-0})" 16 62; then
+        --yesno "\nEnable Keyctl support?\n\nRequired for: Docker containers, systemd-networkd,\nand kernel keyring operations.\n\n(App default: ${var_keyctl:-0})" 14 62; then
         _enable_keyctl="1"
       else
         if [ $? -eq 1 ]; then
@@ -2794,13 +2809,6 @@ Advanced:
   [[ -n "$_mac" ]] && MAC=",hwaddr=$_mac" || MAC=""
   [[ -n "$_vlan" ]] && VLAN=",tag=$_vlan" || VLAN=""
 
-  # Alpine UDHCPC fix
-  if [ "$var_os" == "alpine" ] && [ "$NET" == "dhcp" ] && [ -n "$_ns" ]; then
-    UDHCPC_FIX="yes"
-  else
-    UDHCPC_FIX="no"
-  fi
-  export UDHCPC_FIX
   export SSH_KEYS_FILE
 
   # Exit alternate screen buffer before showing summary (so output remains visible)
@@ -5781,6 +5789,9 @@ create_lxc_container() {
   msg_debug "Logfile: $LOGFILE"
 
   # First attempt (PCT_OPTIONS is a multi-line string, use it directly)
+  # Disable globbing: unquoted $PCT_OPTIONS needs word-splitting but must not glob-expand
+  # (e.g. passwords containing * or ? would match filenames otherwise)
+  set -f
   if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" $PCT_OPTIONS >"$LOGFILE" 2>&1; then
     msg_debug "Container creation failed on ${TEMPLATE_STORAGE}. Checking error..."
 
@@ -5888,6 +5899,7 @@ create_lxc_container() {
       fi
     fi # close CTID collision else-branch
   fi
+  set +f  # re-enable globbing after pct create block
 
   # Verify container exists (allow up to 10s for pmxcfs sync in clusters)
   local _pct_visible=false
