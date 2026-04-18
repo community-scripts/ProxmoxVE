@@ -30,6 +30,7 @@ $STD uv venv --clear /opt/litellm/.venv
 $STD /opt/litellm/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/litellm/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/litellm/.venv/bin/python -m pip install litellm[proxy] prisma
+$STD /opt/litellm/.venv/bin/prisma generate
 msg_ok "Installed LiteLLM"
 
 msg_info "Configuring LiteLLM"
@@ -40,7 +41,7 @@ general_settings:
   database_url: postgresql://$PG_DB_USER:$PG_DB_PASS@127.0.0.1:5432/$PG_DB_NAME
   store_model_in_db: true
 EOF
-uv --directory=/opt/litellm run litellm --config /opt/litellm/litellm.yaml --use_prisma_db_push --skip_server_startup
+$STD /opt/litellm/.venv/bin/litellm --config /opt/litellm/litellm.yaml --use_prisma_db_push --skip_server_startup
 msg_ok "Configured LiteLLM"
 
 msg_info "Creating Service"
@@ -50,7 +51,7 @@ Description=LiteLLM
 
 [Service]
 Type=simple
-ExecStart=uv --directory=/opt/litellm run litellm --config /opt/litellm/litellm.yaml
+ExecStart=/opt/litellm/.venv/bin/litellm --config /opt/litellm/litellm.yaml
 Restart=always
 
 [Install]

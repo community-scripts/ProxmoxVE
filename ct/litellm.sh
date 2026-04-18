@@ -38,11 +38,17 @@ function update_script() {
 
   msg_info "Updating LiteLLM"
   $STD "$VENV_PATH/bin/python" -m pip install --upgrade litellm[proxy] prisma
+  $STD "$VENV_PATH/bin/prisma" generate
   msg_ok "LiteLLM updated"
 
   msg_info "Updating DB Schema"
-  $STD uv --directory=/opt/litellm run litellm --config /opt/litellm/litellm.yaml --use_prisma_db_push --skip_server_startup
+  $STD /opt/litellm/.venv/bin/litellm --config /opt/litellm/litellm.yaml --use_prisma_db_push --skip_server_startup
   msg_ok "DB Schema Updated"
+
+  msg_info "Updating Service"
+  sed -i 's|ExecStart=uv --directory=/opt/litellm run litellm|ExecStart=/opt/litellm/.venv/bin/litellm|' /etc/systemd/system/litellm.service
+  systemctl daemon-reload
+  msg_ok "Updated Service"
 
   msg_info "Starting Service"
   systemctl start litellm
