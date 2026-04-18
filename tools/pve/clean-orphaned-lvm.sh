@@ -37,8 +37,9 @@ function find_orphaned_lvm {
     fi
 
     container_id=$(echo "$lv" | grep -oE "[0-9]+" | head -1)
-    # Check if the ID exists as a VM or LXC container
-    if [ -f "/etc/pve/lxc/${container_id}.conf" ] || [ -f "/etc/pve/qemu-server/${container_id}.conf" ]; then
+    # Check if the ID exists as a VM or LXC container on any cluster node
+    if compgen -G "/etc/pve/nodes/*/lxc/${container_id}.conf" >/dev/null 2>&1 ||
+      compgen -G "/etc/pve/nodes/*/qemu-server/${container_id}.conf" >/dev/null 2>&1; then
       continue
     fi
 
