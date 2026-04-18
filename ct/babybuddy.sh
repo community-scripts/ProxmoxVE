@@ -48,6 +48,7 @@ function update_script() {
     mv /tmp/production.py.bak /opt/babybuddy/babybuddy/settings/production.py
     source .venv/bin/activate
     $STD uv pip install -r requirements.txt
+    export DJANGO_SETTINGS_MODULE=babybuddy.settings.production
     $STD python manage.py migrate
     msg_ok "Updated ${APP}"
 
