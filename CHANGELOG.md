@@ -442,6 +442,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-18
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - SparkyFitness Garmin Microservice: fix update function [@tomfrenzel](https://github.com/tomfrenzel) ([#13824](https://github.com/community-scripts/ProxmoxVE/pull/13824))
+
 ## 2026-04-17
 
 ### 🆕 New Scripts
