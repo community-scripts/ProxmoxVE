@@ -45,6 +45,30 @@ STATUS_CHECKER_INTERVAL=60
 EOF
 msg_ok "Configured Homelable"
 
+msg_info "Creating Password Reset Utility"
+cat <<'EOF' >/root/change_password.sh
+#!/usr/bin/env bash
+
+NEW_PASS=""
+
+while [[ -z "$NEW_PASS" ]]; do
+    read -s -p "Enter new password: " NEW_PASS
+    echo ""
+    if [[ -z "$NEW_PASS" ]]; then
+        echo "Error: Password cannot be blank. Try again."
+    fi
+done
+
+HASH=$(/opt/homelable/backend/.venv/bin/python -c "from passlib.context import CryptContext; print(CryptContext(schemes=['bcrypt']).hash('${NEW_PASS}'))")
+
+sed -i "s|^AUTH_PASSWORD_HASH=.*|AUTH_PASSWORD_HASH='${HASH}'|" /opt/homelable/backend/.env
+
+systemctl restart homelable
+echo "Password updated and service restarted successfully!"
+EOF
+chmod +x /opt/homelable/change_password.sh
+msg_ok "Created Password Reset Utility"
+
 msg_info "Building Frontend"
 cd /opt/homelable/frontend
 $STD npm ci
