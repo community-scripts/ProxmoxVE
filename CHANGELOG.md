@@ -452,6 +452,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - BabyBuddy: set DJANGO_SETTINGS_MODULE before migrate in update [@MickLesk](https://github.com/MickLesk) ([#13836](https://github.com/community-scripts/ProxmoxVE/pull/13836))
     - litellm: add prisma generate and use venv binary directly [@MickLesk](https://github.com/MickLesk) ([#13835](https://github.com/community-scripts/ProxmoxVE/pull/13835))
     - yamtrack: add missing nginx.conf sed edits to update script [@MickLesk](https://github.com/MickLesk) ([#13834](https://github.com/community-scripts/ProxmoxVE/pull/13834))
 
@@ -460,6 +461,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🐞 Bug Fixes
 
     - SparkyFitness Garmin Microservice: fix update function [@tomfrenzel](https://github.com/tomfrenzel) ([#13824](https://github.com/community-scripts/ProxmoxVE/pull/13824))
+
+  - #### 🔧 Refactor
+
+    - Clean-Orphan-LVM: check all cluster nodes for VM/CT configs [@MickLesk](https://github.com/MickLesk) ([#13837](https://github.com/community-scripts/ProxmoxVE/pull/13837))
 
 ## 2026-04-17
 
