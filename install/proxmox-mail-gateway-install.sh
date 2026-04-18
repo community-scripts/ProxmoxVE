@@ -21,6 +21,13 @@ setup_deb822_repo \
   "trixie" \
   "pmg-no-subscription"
 $STD apt install -y proxmox-mailgateway-container
+
+msg_info "Cleaning up duplicate APT sources"
+rm -f /etc/apt/sources.list.d/pmg-enterprise.list
+rm -f /etc/apt/sources.list.d/pmg-install-repo.list
+[[ -f /etc/apt/sources.list.d/debian.sources ]] && : >/etc/apt/sources.list
+msg_ok "Cleaned up duplicate APT sources"
+
 msg_ok "Installed Proxmox Mail Gateway"
 
 motd_ssh
