@@ -448,6 +448,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Dagu ([#13830](https://github.com/community-scripts/ProxmoxVE/pull/13830))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - yamtrack: add missing nginx.conf sed edits to update script [@MickLesk](https://github.com/MickLesk) ([#13834](https://github.com/community-scripts/ProxmoxVE/pull/13834))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
