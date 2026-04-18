@@ -444,6 +444,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-18
 
+### 🆕 New Scripts
+
+  - Dagu ([#13830](https://github.com/community-scripts/ProxmoxVE/pull/13830))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
