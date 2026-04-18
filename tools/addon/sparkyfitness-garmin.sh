@@ -69,6 +69,9 @@ function update() {
     msg_ok "Stopped service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "sparkyfitness-garmin" "CodeWithCJ/SparkyFitness" "tarball" "latest" $INSTALL_PATH
+    cd $INSTALL_PATH/SparkyFitnessGarmin
+    $STD uv venv --clear .venv
+    $STD uv pip install -r requirements.txt
 
     msg_info "Starting service"
     systemctl start sparkyfitness-garmin
