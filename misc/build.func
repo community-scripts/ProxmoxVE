@@ -2702,16 +2702,21 @@ advanced_settings() {
     # STEP 28: Verbose Mode & Confirmation
     # ═══════════════════════════════════════════════════════════════════════════
     28)
-      local verbose_default_flag="--defaultno"
-      [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
-
-      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
-        --title "VERBOSE MODE" \
-        $verbose_default_flag \
-        --yesno "\nEnable Verbose Mode?\n\nShows detailed output during installation." 12 58; then
+      # PHS_VERBOSE=1 forces verbose mode and skips the prompt
+      if [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
         _verbose="yes"
       else
-        _verbose="no"
+        local verbose_default_flag="--defaultno"
+        [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
+
+        if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+          --title "VERBOSE MODE" \
+          $verbose_default_flag \
+          --yesno "\nEnable Verbose Mode?\n\nShows detailed output during installation." 12 58; then
+          _verbose="yes"
+        else
+          _verbose="no"
+        fi
       fi
       # Build summary
       local ct_type_desc="Unprivileged"
@@ -3519,6 +3524,14 @@ start() {
     return 0
   elif [ ! -z ${PHS_SILENT+x} ] && [[ "${PHS_SILENT}" == "1" ]]; then
     VERBOSE="no"
+    set_std_mode
+    ensure_profile_loaded
+    get_lxc_ip
+    update_script
+    update_motd_ip
+    cleanup_lxc
+  elif [ ! -z ${PHS_VERBOSE+x} ] && [[ "${PHS_VERBOSE}" == "1" ]]; then
+    VERBOSE="yes"
     set_std_mode
     ensure_profile_loaded
     get_lxc_ip
