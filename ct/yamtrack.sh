@@ -61,7 +61,10 @@ function update_script() {
     msg_info "Updating Nginx Configuration"
     cp /opt/yamtrack/nginx.conf /etc/nginx/nginx.conf
     sed -i 's|user abc;|user www-data;|' /etc/nginx/nginx.conf
+    sed -i 's|pid /tmp/nginx.pid;|pid /run/nginx.pid;|' /etc/nginx/nginx.conf
     sed -i 's|/yamtrack/staticfiles/|/opt/yamtrack/src/staticfiles/|' /etc/nginx/nginx.conf
+    sed -i 's|error_log /dev/stderr|error_log /var/log/nginx/error.log|' /etc/nginx/nginx.conf
+    sed -i 's|access_log /dev/stdout|access_log /var/log/nginx/access.log|' /etc/nginx/nginx.conf
     $STD systemctl reload nginx
     msg_ok "Updated Nginx Configuration"
 
