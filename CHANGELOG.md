@@ -447,6 +447,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-19
 
+### 🆕 New Scripts
+
+  - nametag ([#13849](https://github.com/community-scripts/ProxmoxVE/pull/13849))
+
 ## 2026-04-18
 
 ### 🆕 New Scripts
