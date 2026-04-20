@@ -459,6 +459,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Wanderer: add pocketbase CLI wrapper with env [@MickLesk](https://github.com/MickLesk) ([#13863](https://github.com/community-scripts/ProxmoxVE/pull/13863))
 
+  - #### 🔧 Refactor
+
+    - Refactor: PMG Post Install [@MickLesk](https://github.com/MickLesk) ([#13693](https://github.com/community-scripts/ProxmoxVE/pull/13693))
+
 ## 2026-04-19
 
 ### 🆕 New Scripts
