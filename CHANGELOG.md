@@ -455,6 +455,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - ActualBudget: change migration messages to warnings [@MickLesk](https://github.com/MickLesk) ([#13860](https://github.com/community-scripts/ProxmoxVE/pull/13860))
     - slskd: migrate config keys for 0.25.0 breaking change [@MickLesk](https://github.com/MickLesk) ([#13862](https://github.com/community-scripts/ProxmoxVE/pull/13862))
 
+  - #### ✨ New Features
+
+    - Wanderer: add pocketbase CLI wrapper with env [@MickLesk](https://github.com/MickLesk) ([#13863](https://github.com/community-scripts/ProxmoxVE/pull/13863))
+
 ## 2026-04-19
 
 ### 🆕 New Scripts
