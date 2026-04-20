@@ -3521,8 +3521,8 @@ msg_menu() {
 resolve_phs_mode() {
   if [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]] && [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
     whiptail --backtitle "Proxmox VE Helper Scripts" \
-      --title "⚠️ CONFLICT WARNING" \
-      --msgbox "PHS_SILENT and PHS_VERBOSE are both set.\n\nIgnoring both and prompting for selection." 10 58
+      --title "⚠️ Configuration Conflict Warning" \
+      --msgbox "PHS_SILENT and PHS_VERBOSE environment variables are both set.\n\nFalling back to interactive mode." 10 58
     PHS_MODE="interactive"
   elif [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]]; then
     PHS_MODE="silent"
