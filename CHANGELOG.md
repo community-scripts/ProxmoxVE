@@ -449,6 +449,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - pangolin: create migration tables before data transfer to prevent role loss [@MickLesk](https://github.com/MickLesk) ([#13874](https://github.com/community-scripts/ProxmoxVE/pull/13874))
+
   - #### 🐞 Bug Fixes
 
     - Pangolin: pre-apply schema migrations to prevent data loss [@MickLesk](https://github.com/MickLesk) ([#13861](https://github.com/community-scripts/ProxmoxVE/pull/13861))
