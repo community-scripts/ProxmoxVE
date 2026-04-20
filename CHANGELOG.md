@@ -447,6 +447,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-20
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - slskd: migrate config keys for 0.25.0 breaking change [@MickLesk](https://github.com/MickLesk) ([#13862](https://github.com/community-scripts/ProxmoxVE/pull/13862))
+
 ## 2026-04-19
 
 ### 🆕 New Scripts
