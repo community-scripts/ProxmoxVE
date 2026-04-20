@@ -3522,22 +3522,16 @@ start() {
   if command -v pveversion >/dev/null 2>&1; then
     install_script || return 0
     return 0
-  elif [ ! -z ${PHS_SILENT+x} ] && [[ "${PHS_SILENT}" == "1" ]]; then
+  elif [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]] && [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
+    whiptail --backtitle "Proxmox VE Helper Scripts" \
+      --title "⚠️ CONFLICT WARNING" \
+      --msgbox "PHS_SILENT and PHS_VERBOSE are both set.\n\nIgnoring both and prompting for selection." 10 58
+  elif [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]]; then
     VERBOSE="no"
     set_std_mode
-    ensure_profile_loaded
-    get_lxc_ip
-    update_script
-    update_motd_ip
-    cleanup_lxc
-  elif [ ! -z ${PHS_VERBOSE+x} ] && [[ "${PHS_VERBOSE}" == "1" ]]; then
+  elif [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
     VERBOSE="yes"
     set_std_mode
-    ensure_profile_loaded
-    get_lxc_ip
-    update_script
-    update_motd_ip
-    cleanup_lxc
   else
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC Update/Setting" --menu \
       "Support/Update functions for ${APP} LXC. Choose an option:" \
@@ -3561,12 +3555,12 @@ start() {
       exit 0
       ;;
     esac
-    ensure_profile_loaded
-    get_lxc_ip
-    update_script
-    update_motd_ip
-    cleanup_lxc
   fi
+  ensure_profile_loaded
+  get_lxc_ip
+  update_script
+  update_motd_ip
+  cleanup_lxc
 }
 
 # ==============================================================================
