@@ -451,6 +451,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pangolin: pre-apply schema migrations to prevent data loss [@MickLesk](https://github.com/MickLesk) ([#13861](https://github.com/community-scripts/ProxmoxVE/pull/13861))
     - ActualBudget: change migration messages to warnings [@MickLesk](https://github.com/MickLesk) ([#13860](https://github.com/community-scripts/ProxmoxVE/pull/13860))
     - slskd: migrate config keys for 0.25.0 breaking change [@MickLesk](https://github.com/MickLesk) ([#13862](https://github.com/community-scripts/ProxmoxVE/pull/13862))
 
