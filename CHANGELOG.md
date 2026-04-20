@@ -447,6 +447,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-20
 
+### 🆕 New Scripts
+
+  - WhoDB ([#13880](https://github.com/community-scripts/ProxmoxVE/pull/13880))
+
 ### 🚀 Updated Scripts
 
   - pangolin: create migration tables before data transfer to prevent role loss [@MickLesk](https://github.com/MickLesk) ([#13874](https://github.com/community-scripts/ProxmoxVE/pull/13874))
@@ -459,8 +463,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
-    - feat(homelable): add password reset utility script [@davidsoncabista](https://github.com/davidsoncabista) ([#13798](https://github.com/community-scripts/ProxmoxVE/pull/13798))
     - Wanderer: add pocketbase CLI wrapper with env [@MickLesk](https://github.com/MickLesk) ([#13863](https://github.com/community-scripts/ProxmoxVE/pull/13863))
+    - feat(homelable): add password reset utility script [@davidsoncabista](https://github.com/davidsoncabista) ([#13798](https://github.com/community-scripts/ProxmoxVE/pull/13798))
 
   - #### 🔧 Refactor
 
