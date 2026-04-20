@@ -467,6 +467,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Several Scripts: Bump NodeJS to align Node.js versions with upstream for 5 scripts [@MickLesk](https://github.com/MickLesk) ([#13875](https://github.com/community-scripts/ProxmoxVE/pull/13875))
     - Refactor: PMG Post Install [@MickLesk](https://github.com/MickLesk) ([#13693](https://github.com/community-scripts/ProxmoxVE/pull/13693))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: detect Perl breakage after LXC stack upgrade and improve storage validation [@MickLesk](https://github.com/MickLesk) ([#13879](https://github.com/community-scripts/ProxmoxVE/pull/13879))
+
 ## 2026-04-19
 
 ### 🆕 New Scripts
