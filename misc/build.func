@@ -2702,8 +2702,8 @@ advanced_settings() {
     # STEP 28: Verbose Mode & Confirmation
     # ═══════════════════════════════════════════════════════════════════════════
     28)
-      # PHS_VERBOSE=1 forces verbose mode and skips the prompt
-      if [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
+      # PHS_VERBOSE forces verbose mode and skips the prompt
+      if [[ "$PHS_MODE" == "verbose" ]]; then
         _verbose="yes"
       else
         local verbose_default_flag="--defaultno"
@@ -3449,7 +3449,7 @@ configure_ssh_settings() {
 # msg_menu()
 #
 # - Displays a numbered menu for update_script() functions
-# - In silent mode (PHS_SILENT=1): auto-selects the default option
+# - In silent mode (PHS_MODE=silent): auto-selects the default option
 # - In interactive mode: shows menu via read with 10s timeout + default fallback
 # - Usage: CHOICE=$(msg_menu "Title" "tag1" "Description 1" "tag2" "Desc 2" ...)
 # - The first item is always the default
@@ -3473,7 +3473,7 @@ msg_menu() {
   local count=${#tags[@]}
 
   # Silent mode: return default immediately
-  if [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]]; then
+  if [[ "$PHS_MODE" == "silent" ]]; then
     echo "$default_tag"
     return 0
   fi
@@ -3510,6 +3510,30 @@ msg_menu() {
 }
 
 # ------------------------------------------------------------------------------
+# resolve_phs_mode()
+#
+# - Resolves PHS_SILENT/PHS_VERBOSE env vars into a single PHS_MODE enum
+# - Values: "silent", "verbose", "interactive"
+# - If both PHS_SILENT=1 and PHS_VERBOSE=1, shows a conflict warning
+#   and defaults to "interactive"
+# - Should be called once early, before any mode-dependent logic
+# ------------------------------------------------------------------------------
+resolve_phs_mode() {
+  if [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]] && [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
+    whiptail --backtitle "Proxmox VE Helper Scripts" \
+      --title "⚠️ CONFLICT WARNING" \
+      --msgbox "PHS_SILENT and PHS_VERBOSE are both set.\n\nIgnoring both and prompting for selection." 10 58
+    PHS_MODE="interactive"
+  elif [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]]; then
+    PHS_MODE="silent"
+  elif [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
+    PHS_MODE="verbose"
+  else
+    PHS_MODE="interactive"
+  fi
+}
+
+# ------------------------------------------------------------------------------
 # start()
 #
 # - Entry point of script
@@ -3519,17 +3543,14 @@ msg_menu() {
 # ------------------------------------------------------------------------------
 start() {
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  resolve_phs_mode
   if command -v pveversion >/dev/null 2>&1; then
     install_script || return 0
     return 0
-  elif [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]] && [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
-    whiptail --backtitle "Proxmox VE Helper Scripts" \
-      --title "⚠️ CONFLICT WARNING" \
-      --msgbox "PHS_SILENT and PHS_VERBOSE are both set.\n\nIgnoring both and prompting for selection." 10 58
-  elif [[ -n "${PHS_SILENT+x}" ]] && [[ "${PHS_SILENT}" == "1" ]]; then
+  elif [[ "$PHS_MODE" == "silent" ]]; then
     VERBOSE="no"
     set_std_mode
-  elif [[ -n "${PHS_VERBOSE+x}" ]] && [[ "${PHS_VERBOSE}" == "1" ]]; then
+  elif [[ "$PHS_MODE" == "verbose" ]]; then
     VERBOSE="yes"
     set_std_mode
   else

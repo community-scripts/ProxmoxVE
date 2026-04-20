@@ -940,7 +940,7 @@ is_verbose_mode() {
 #
 # - Detects if script is running in unattended/non-interactive mode
 # - Checks MODE variable first (primary method)
-# - Falls back to legacy flags (PHS_SILENT, var_unattended)
+# - Falls back to legacy flags (PHS_MODE, var_unattended)
 # - Returns 0 (true) if unattended, 1 (false) otherwise
 # - Used by prompt functions to auto-apply defaults
 #
@@ -984,7 +984,7 @@ is_unattended() {
   esac
 
   # Legacy fallbacks for compatibility
-  [[ "${PHS_SILENT:-0}" == "1" ]] && return 0
+  [[ "${PHS_MODE:-}" == "silent" ]] && return 0
   [[ "${var_unattended:-}" =~ ^(yes|true|1)$ ]] && return 0
   [[ "${UNATTENDED:-}" =~ ^(yes|true|1)$ ]] && return 0
 
