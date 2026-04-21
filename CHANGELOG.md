@@ -449,7 +449,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - anchor ([#13895](https://github.com/community-scripts/ProxmoxVE/pull/13895))
+  - gogs ([#13896](https://github.com/community-scripts/ProxmoxVE/pull/13896))
+- anchor ([#13895](https://github.com/community-scripts/ProxmoxVE/pull/13895))
 - minthcm ([#13903](https://github.com/community-scripts/ProxmoxVE/pull/13903))
 - foldergram ([#13900](https://github.com/community-scripts/ProxmoxVE/pull/13900))
 
