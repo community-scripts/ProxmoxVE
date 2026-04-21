@@ -447,6 +447,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-21
 
+### 🆕 New Scripts
+
+  - foldergram ([#13900](https://github.com/community-scripts/ProxmoxVE/pull/13900))
+
 ### 🚀 Updated Scripts
 
   - OpenCloud: Pin version to 6.1.0 [@vhsdream](https://github.com/vhsdream) ([#13890](https://github.com/community-scripts/ProxmoxVE/pull/13890))
