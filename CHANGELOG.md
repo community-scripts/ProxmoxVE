@@ -463,6 +463,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Domain-Locker: Update dependencies [@tremor021](https://github.com/tremor021) ([#13901](https://github.com/community-scripts/ProxmoxVE/pull/13901))
     - homelable: fix install failure by correcting password-reset chmod target [@Copilot](https://github.com/Copilot) ([#13894](https://github.com/community-scripts/ProxmoxVE/pull/13894))
 
+  - #### ✨ New Features
+
+    - FileFlows: Update dependencies [@tremor021](https://github.com/tremor021) ([#13917](https://github.com/community-scripts/ProxmoxVE/pull/13917))
+
 ## 2026-04-20
 
 ### 🆕 New Scripts
