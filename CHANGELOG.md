@@ -449,7 +449,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Mini-QR ([#13902](https://github.com/community-scripts/ProxmoxVE/pull/13902))
+  - Dashy ([#13817](https://github.com/community-scripts/ProxmoxVE/pull/13817))
+- Mini-QR ([#13902](https://github.com/community-scripts/ProxmoxVE/pull/13902))
 - ownfoil ([#13904](https://github.com/community-scripts/ProxmoxVE/pull/13904))
 - ERPNext ([#13921](https://github.com/community-scripts/ProxmoxVE/pull/13921))
 
