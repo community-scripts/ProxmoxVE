@@ -460,6 +460,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - add --clear to uv venv in update_script() to prevent interactive prompt [@MickLesk](https://github.com/MickLesk) ([#13926](https://github.com/community-scripts/ProxmoxVE/pull/13926))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: Add PHS_VERBOSE env var to skip verbose mode prompts [@gormanity](https://github.com/gormanity) ([#13797](https://github.com/community-scripts/ProxmoxVE/pull/13797))
+
 ## 2026-04-21
 
 ### 🆕 New Scripts
