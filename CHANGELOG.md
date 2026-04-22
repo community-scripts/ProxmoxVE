@@ -445,6 +445,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-22
+
+### 🆕 New Scripts
+
+  - ownfoil ([#13904](https://github.com/community-scripts/ProxmoxVE/pull/13904))
+- ERPNext ([#13921](https://github.com/community-scripts/ProxmoxVE/pull/13921))
+
 ## 2026-04-21
 
 ### 🆕 New Scripts
