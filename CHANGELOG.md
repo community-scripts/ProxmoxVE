@@ -454,6 +454,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - ownfoil ([#13904](https://github.com/community-scripts/ProxmoxVE/pull/13904))
 - ERPNext ([#13921](https://github.com/community-scripts/ProxmoxVE/pull/13921))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - add --clear to uv venv in update_script() to prevent interactive prompt [@MickLesk](https://github.com/MickLesk) ([#13926](https://github.com/community-scripts/ProxmoxVE/pull/13926))
+
 ## 2026-04-21
 
 ### 🆕 New Scripts
