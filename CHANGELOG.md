@@ -445,6 +445,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-23
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: hotfix - prefer silent mode on PHS env conflict [@MickLesk](https://github.com/MickLesk) ([#13951](https://github.com/community-scripts/ProxmoxVE/pull/13951))
+
 ## 2026-04-22
 
 ### 🆕 New Scripts
