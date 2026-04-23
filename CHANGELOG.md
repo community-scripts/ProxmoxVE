@@ -449,6 +449,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - Revert "core: hotfix - prefer silent mode on PHS env conflict" [@MickLesk](https://github.com/MickLesk) ([#13962](https://github.com/community-scripts/ProxmoxVE/pull/13962))
+
   - #### 🐞 Bug Fixes
 
     - core: hotfix - prefer silent mode on PHS env conflict [@MickLesk](https://github.com/MickLesk) ([#13951](https://github.com/community-scripts/ProxmoxVE/pull/13951))
