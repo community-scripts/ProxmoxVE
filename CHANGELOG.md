@@ -454,14 +454,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - mealie: start.sh missing after failed update [@MickLesk](https://github.com/MickLesk) ([#13958](https://github.com/community-scripts/ProxmoxVE/pull/13958))
     - twingate-connector: perform real apt upgrade during update flow [@MickLesk](https://github.com/MickLesk) ([#13959](https://github.com/community-scripts/ProxmoxVE/pull/13959))
 
+  - #### ✨ New Features
+
+    - core: auto-size NODE_OPTIONS heap [@MickLesk](https://github.com/MickLesk) ([#13960](https://github.com/community-scripts/ProxmoxVE/pull/13960))
+
   - #### 🔧 Refactor
 
     - Update scripts to match standard [@tremor021](https://github.com/tremor021) ([#13956](https://github.com/community-scripts/ProxmoxVE/pull/13956))
 
 ### 💾 Core
-
-  - Revert "core: Add PHS_VERBOSE env var to skip verbose mode prompts" [@MickLesk](https://github.com/MickLesk) ([#13963](https://github.com/community-scripts/ProxmoxVE/pull/13963))
-- Revert "core: hotfix - prefer silent mode on PHS env conflict" [@MickLesk](https://github.com/MickLesk) ([#13962](https://github.com/community-scripts/ProxmoxVE/pull/13962))
 
   - #### 🐞 Bug Fixes
 
