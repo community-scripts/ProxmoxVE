@@ -447,6 +447,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-23
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Update scripts to match standard [@tremor021](https://github.com/tremor021) ([#13956](https://github.com/community-scripts/ProxmoxVE/pull/13956))
+
 ### 💾 Core
 
   - Revert "core: Add PHS_VERBOSE env var to skip verbose mode prompts" [@MickLesk](https://github.com/MickLesk) ([#13963](https://github.com/community-scripts/ProxmoxVE/pull/13963))
