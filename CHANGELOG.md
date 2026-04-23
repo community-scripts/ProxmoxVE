@@ -451,6 +451,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - mealie: start.sh missing after failed update [@MickLesk](https://github.com/MickLesk) ([#13958](https://github.com/community-scripts/ProxmoxVE/pull/13958))
     - twingate-connector: perform real apt upgrade during update flow [@MickLesk](https://github.com/MickLesk) ([#13959](https://github.com/community-scripts/ProxmoxVE/pull/13959))
 
   - #### 🔧 Refactor
