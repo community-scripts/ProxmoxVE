@@ -468,6 +468,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - tools.func: upgrade Node.js minor/patch on same major version [@MickLesk](https://github.com/MickLesk) ([#13957](https://github.com/community-scripts/ProxmoxVE/pull/13957))
     - core: hotfix - prefer silent mode on PHS env conflict [@MickLesk](https://github.com/MickLesk) ([#13951](https://github.com/community-scripts/ProxmoxVE/pull/13951))
 
+  - #### 🔧 Refactor
+
+    - core: improve system update information / lxc stack upgrade [@MickLesk](https://github.com/MickLesk) ([#13970](https://github.com/community-scripts/ProxmoxVE/pull/13970))
+
 ## 2026-04-22
 
 ### 🆕 New Scripts
