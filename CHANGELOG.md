@@ -449,6 +449,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - twingate-connector: perform real apt upgrade during update flow [@MickLesk](https://github.com/MickLesk) ([#13959](https://github.com/community-scripts/ProxmoxVE/pull/13959))
+
   - #### 🔧 Refactor
 
     - Update scripts to match standard [@tremor021](https://github.com/tremor021) ([#13956](https://github.com/community-scripts/ProxmoxVE/pull/13956))
