@@ -449,7 +449,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Revert "core: hotfix - prefer silent mode on PHS env conflict" [@MickLesk](https://github.com/MickLesk) ([#13962](https://github.com/community-scripts/ProxmoxVE/pull/13962))
+  - Revert "core: Add PHS_VERBOSE env var to skip verbose mode prompts" [@MickLesk](https://github.com/MickLesk) ([#13963](https://github.com/community-scripts/ProxmoxVE/pull/13963))
+- Revert "core: hotfix - prefer silent mode on PHS env conflict" [@MickLesk](https://github.com/MickLesk) ([#13962](https://github.com/community-scripts/ProxmoxVE/pull/13962))
 
   - #### 🐞 Bug Fixes
 
