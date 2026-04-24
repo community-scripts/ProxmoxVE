@@ -13,13 +13,18 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  nginx \
+  git
+msg_ok "Installed Dependencies" 
+
 PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "apprise" "caronc/apprise-api" "tarball"
 
 msg_info "Setup Apprise-API"
 cd /opt/apprise
 cp ./requirements.txt /etc/requirements.txt
-$STD apt install -y nginx git
 $STD uv pip install -r requirements.txt gunicorn supervisor --system
 cp -fr apprise_api/static /usr/share/nginx/html/s/
 mv apprise_api/ webapp
