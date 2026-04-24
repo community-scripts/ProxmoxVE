@@ -31,9 +31,6 @@ ACCESS_TOKEN_SALT=$(openssl rand -base64 32)
 JWT_SECRET_KEY=$(openssl rand -base64 32)
 {
   echo "Ghostfolio Credentials"
-  echo "Database User: $PG_DB_USER"
-  echo "Database Password: $PG_DB_PASS"
-  echo "Database Name: $PG_DB_NAME"
   echo "Redis Password: $REDIS_PASS"
   echo "Access Token Salt: $ACCESS_TOKEN_SALT"
   echo "JWT Secret Key: $JWT_SECRET_KEY"
