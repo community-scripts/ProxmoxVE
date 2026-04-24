@@ -449,7 +449,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Transmute ([#13935](https://github.com/community-scripts/ProxmoxVE/pull/13935))
+  - fireshare ([#13995](https://github.com/community-scripts/ProxmoxVE/pull/13995))
+- Transmute ([#13935](https://github.com/community-scripts/ProxmoxVE/pull/13935))
 - Jitsi-Meet ([#13897](https://github.com/community-scripts/ProxmoxVE/pull/13897))
 
 ### 🚀 Updated Scripts
