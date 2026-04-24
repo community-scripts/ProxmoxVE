@@ -47,6 +47,7 @@ function update_script() {
 
     msg_info "Updating Ghostfolio"
     mv /opt/env.backup /opt/ghostfolio/.env
+    sed -i -E '/^DATABASE_URL=/ s/[?&]sslmode=prefer//g' /opt/ghostfolio/.env
     cd /opt/ghostfolio
     $STD npm ci
     $STD npm run build:production
