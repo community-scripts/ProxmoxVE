@@ -44,7 +44,7 @@ function update_script() {
     cp -r /opt/transmute/data /opt/transmute_data_bak
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball" "latest" "/opt/transmute"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball"
 
     msg_info "Updating Python Dependencies"
     cd /opt/transmute
