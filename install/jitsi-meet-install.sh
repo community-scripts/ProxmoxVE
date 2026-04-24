@@ -18,7 +18,11 @@ $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
 source /etc/os-release
-setup_deb822_repo "jitsi" "https://download.jitsi.org/jitsi-key.gpg.key" "https://download.jitsi.org" "stable/" ""
+setup_deb822_repo "jitsi" \
+  "https://download.jitsi.org/jitsi-key.gpg.key" \
+  "https://download.jitsi.org" \
+  "stable/" \
+  ""
 
 msg_info "Installing Jitsi Meet"
 echo "jitsi-videobridge2 jitsi-videobridge/jvb-hostname string ${LOCAL_IP}" | debconf-set-selections
