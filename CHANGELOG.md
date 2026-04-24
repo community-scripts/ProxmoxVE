@@ -456,6 +456,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Update wger.sh [@Soppster1029](https://github.com/Soppster1029) ([#13977](https://github.com/community-scripts/ProxmoxVE/pull/13977))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Ghostfolio [@MickLesk](https://github.com/MickLesk) ([#13990](https://github.com/community-scripts/ProxmoxVE/pull/13990))
+
 ## 2026-04-23
 
 ### 🚀 Updated Scripts
