@@ -447,6 +447,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-24
 
+### 🆕 New Scripts
+
+  - Jitsi-Meet ([#13897](https://github.com/community-scripts/ProxmoxVE/pull/13897))
+
 ### 🚀 Updated Scripts
 
   - Update wger.sh [@Soppster1029](https://github.com/Soppster1029) ([#13977](https://github.com/community-scripts/ProxmoxVE/pull/13977))
