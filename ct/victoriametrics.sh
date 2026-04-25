@@ -32,6 +32,8 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop victoriametrics
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl stop victoriametrics-logs
+    [[ -f /etc/systemd/system/vmagent.service ]] && systemctl stop vmagent
+    [[ -f /etc/systemd/system/vmalert.service ]] && systemctl stop vmalert
     msg_ok "Stopped Service"
 
     victoriametrics_release=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases" |
@@ -62,6 +64,8 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start victoriametrics
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl start victoriametrics-logs
+    [[ -f /etc/systemd/system/vmagent.service ]] && systemctl start vmagent
+    [[ -f /etc/systemd/system/vmalert.service ]] && systemctl start vmalert
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
