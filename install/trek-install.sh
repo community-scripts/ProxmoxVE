@@ -18,7 +18,6 @@ $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
-
 fetch_and_deploy_gh_release "trek" "mauriceboe/TREK" "tarball"
 
 msg_info "Building Client"
@@ -74,24 +73,6 @@ WantedBy=multi-user.target
 EOF
 systemctl enable -q --now trek
 msg_ok "Created Service"
-
-msg_info "Waiting for TREK to initialize"
-for i in $(seq 1 30); do
-  if curl -sf http://localhost:3000/api/health >/dev/null 2>&1; then
-    break
-  fi
-  sleep 1
-done
-if ! curl -sf http://localhost:3000/api/health >/dev/null 2>&1; then
-  msg_error "TREK failed to initialize"
-  exit
-fi
-sed -i '/^ADMIN_EMAIL=/d;/^ADMIN_PASSWORD=/d' /opt/trek/server/.env
-msg_ok "TREK initialized"
-
-echo -e "${INFO}${YW} Default Admin Account:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}Email: ${ADMIN_EMAIL}${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}Password: ${ADMIN_PASSWORD}${CL}"
 
 motd_ssh
 customize
