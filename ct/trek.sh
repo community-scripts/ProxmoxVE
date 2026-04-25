@@ -56,6 +56,7 @@ function update_script() {
     $STD npm ci
     msg_ok "Installed Server Dependencies"
 
+    msg_info "Restoring Data"
     mv /opt/trek-data.bak /opt/trek/data
     mv /opt/trek-uploads.bak /opt/trek/uploads
     rm -rf /opt/trek/server/data /opt/trek/server/uploads
@@ -63,11 +64,12 @@ function update_script() {
     ln -s /opt/trek/uploads /opt/trek/server/uploads
     cp /opt/trek.env.bak /opt/trek/server/.env
     rm -f /opt/trek.env.bak
+    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start trek
     msg_ok "Started Service"
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }
