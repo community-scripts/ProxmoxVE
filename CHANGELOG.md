@@ -451,6 +451,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Domain-Monitor: start apache2 after stop instead of reload [@omertahaoztop](https://github.com/omertahaoztop) ([#14019](https://github.com/community-scripts/ProxmoxVE/pull/14019))
     - Transmute: Fix ffmpeg detection [@tremor021](https://github.com/tremor021) ([#14008](https://github.com/community-scripts/ProxmoxVE/pull/14008))
 
 ## 2026-04-24
