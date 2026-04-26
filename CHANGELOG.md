@@ -450,6 +450,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-26
 
+### 🆕 New Scripts
+
+  - TREK ([#14017](https://github.com/community-scripts/ProxmoxVE/pull/14017))
+
 ## 2026-04-25
 
 ### 🚀 Updated Scripts
