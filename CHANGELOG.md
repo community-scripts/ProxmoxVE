@@ -45,6 +45,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -54,7 +57,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>April (18 entries)</h4></summary>
+<summary><h4>April (25 entries)</h4></summary>
 
 [View April 2026 Changelog](.github/changelogs/2026/04.md)
 
@@ -1008,157 +1011,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### ✨ New Features
 
     - Refactor/Feature-Bump/Security: Update-Cron-LXCs (Now Local Mode!) [@MickLesk](https://github.com/MickLesk) ([#13339](https://github.com/community-scripts/ProxmoxVE/pull/13339))
-
-## 2026-03-26
-
-### 🆕 New Scripts
-
-  - BirdNET ([#13313](https://github.com/community-scripts/ProxmoxVE/pull/13313))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Immich: Bump to 2.6.2 | use start.sh in service, ensure DB_HOSTNAME in .env | Fix Rights Issue with ZFS Shares [@MickLesk](https://github.com/MickLesk) ([#13199](https://github.com/community-scripts/ProxmoxVE/pull/13199))
-
-  - #### ✨ New Features
-
-    - SparkyFitness: add garmin microservice as addon [@tomfrenzel](https://github.com/tomfrenzel) ([#12642](https://github.com/community-scripts/ProxmoxVE/pull/12642))
-    - Frigate: bump to v0.17.1 & change build order [@MickLesk](https://github.com/MickLesk) ([#13304](https://github.com/community-scripts/ProxmoxVE/pull/13304))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - tools.func: pin npm to 11.11.0 to work around Node.js 22.22.2 regression [@MickLesk](https://github.com/MickLesk) ([#13296](https://github.com/community-scripts/ProxmoxVE/pull/13296))
-
-  - #### ✨ New Features
-
-    - core: APT/APK Mirror Fallback for CDN Failures [@MickLesk](https://github.com/MickLesk) ([#13316](https://github.com/community-scripts/ProxmoxVE/pull/13316))
-    - core/tools: replace generic return 1 exit_codes with more specific exit_codes [@MickLesk](https://github.com/MickLesk) ([#13311](https://github.com/community-scripts/ProxmoxVE/pull/13311))
-
-  - #### 🔧 Refactor
-
-    - core: use /usr/bin/install to prevent function shadowing [@MickLesk](https://github.com/MickLesk) ([#13299](https://github.com/community-scripts/ProxmoxVE/pull/13299))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - SparkyFitness-Garmin: fix app name [@tomfrenzel](https://github.com/tomfrenzel) ([#13325](https://github.com/community-scripts/ProxmoxVE/pull/13325))
-
-## 2026-03-25
-
-### 🚀 Updated Scripts
-
-  - #### ✨ New Features
-
-    - Komodo v2: migrate env vars to v2 and update source [@MickLesk](https://github.com/MickLesk) ([#13262](https://github.com/community-scripts/ProxmoxVE/pull/13262))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - core: make shell command substitutions safe with || true [@MickLesk](https://github.com/MickLesk) ([#13279](https://github.com/community-scripts/ProxmoxVE/pull/13279))
-
-## 2026-03-24
-
-### 🆕 New Scripts
-
-  - Homebrew (Addon) ([#13249](https://github.com/community-scripts/ProxmoxVE/pull/13249))
-- NextExplorer ([#13252](https://github.com/community-scripts/ProxmoxVE/pull/13252))
-
-### 🚀 Updated Scripts
-
-  - #### ✨ New Features
-
-    - Turnkey: modernize turnkey.sh with shared libraries  [@MickLesk](https://github.com/MickLesk) ([#13242](https://github.com/community-scripts/ProxmoxVE/pull/13242))
-
-  - #### 🔧 Refactor
-
-    - chore: replace helper-scripts.com with community-scripts.com [@MickLesk](https://github.com/MickLesk) ([#13244](https://github.com/community-scripts/ProxmoxVE/pull/13244))
-
-### 🗑️ Deleted Scripts
-
-  - Remove: Booklore [@MickLesk](https://github.com/MickLesk) ([#13265](https://github.com/community-scripts/ProxmoxVE/pull/13265))
-
-## 2026-03-23
-
-### 🚀 Updated Scripts
-
-  - #### 🔧 Refactor
-
-    - core: harden shell scripts against injection and insecure permissions [@MickLesk](https://github.com/MickLesk) ([#13239](https://github.com/community-scripts/ProxmoxVE/pull/13239))
-
-## 2026-03-22
-
-### 🆕 New Scripts
-
-  - versitygw ([#13180](https://github.com/community-scripts/ProxmoxVE/pull/13180))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Adventurelog: pin DRF <3.15 to fix coreapi module removal [@MickLesk](https://github.com/MickLesk) ([#13194](https://github.com/community-scripts/ProxmoxVE/pull/13194))
-
-  - #### ✨ New Features
-
-    - ConvertX: add libreoffice-writer for ODT/document conversions [@MickLesk](https://github.com/MickLesk) ([#13196](https://github.com/community-scripts/ProxmoxVE/pull/13196))
-
-  - #### 🔧 Refactor
-
-    - iSponsorblockTV: add AVX CPU check before installation [@MickLesk](https://github.com/MickLesk) ([#13197](https://github.com/community-scripts/ProxmoxVE/pull/13197))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: guard against empty IPv6 address in static mode [@MickLesk](https://github.com/MickLesk) ([#13195](https://github.com/community-scripts/ProxmoxVE/pull/13195))
-
-## 2026-03-21
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Anytype-server: wait for MongoDB readiness before rs.initiate() [@MickLesk](https://github.com/MickLesk) ([#13165](https://github.com/community-scripts/ProxmoxVE/pull/13165))
-    - Frigate: use correct CPU model fallback path [@MickLesk](https://github.com/MickLesk) ([#13164](https://github.com/community-scripts/ProxmoxVE/pull/13164))
-    - iSponsorBlockTV: Fix release fetching  [@tremor021](https://github.com/tremor021) ([#13157](https://github.com/community-scripts/ProxmoxVE/pull/13157))
-    - Isponsorblocktv: use quoted heredoc to prevent unbound variable error during CLI wrapper creation [@Copilot](https://github.com/Copilot) ([#13146](https://github.com/community-scripts/ProxmoxVE/pull/13146))
-
-  - #### ✨ New Features
-
-    - Headscale: Enable TUN [@tremor021](https://github.com/tremor021) ([#13158](https://github.com/community-scripts/ProxmoxVE/pull/13158))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: add missing -searchdomain/-nameserver prefix in base_settings [@MickLesk](https://github.com/MickLesk) ([#13166](https://github.com/community-scripts/ProxmoxVE/pull/13166))
-
-## 2026-03-20
-
-### 🆕 New Scripts
-
-  - iSponsorBlockTV ([#13123](https://github.com/community-scripts/ProxmoxVE/pull/13123))
-- Alpine-Wakapi ([#13119](https://github.com/community-scripts/ProxmoxVE/pull/13119))
-- teleport ([#13086](https://github.com/community-scripts/ProxmoxVE/pull/13086))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Reactive-Resume: add git dependency for v5.0.13+ [@MickLesk](https://github.com/MickLesk) ([#13133](https://github.com/community-scripts/ProxmoxVE/pull/13133))
-    - Scanopy: increase default CPU, RAM, and HDD to prevent OOM during Rust build [@Copilot](https://github.com/Copilot) ([#13130](https://github.com/community-scripts/ProxmoxVE/pull/13130))
-
-  - #### ✨ New Features
-
-    - Immich: v2.6.1 [@vhsdream](https://github.com/vhsdream) ([#13111](https://github.com/community-scripts/ProxmoxVE/pull/13111))
-    - VM's: add input validation and hostname sanitization to all VM scripts [@MickLesk](https://github.com/MickLesk) ([#12973](https://github.com/community-scripts/ProxmoxVE/pull/12973))
-
-### 🧰 Tools
-
-  - #### 🔧 Refactor
-
-    - Harden code-server addon install script [@MickLesk](https://github.com/MickLesk) ([#13116](https://github.com/community-scripts/ProxmoxVE/pull/13116))
