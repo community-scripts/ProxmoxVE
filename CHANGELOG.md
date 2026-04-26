@@ -463,6 +463,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     -  Increase Frigate default CPU cores from 4 to 8 [@MickLesk](https://github.com/MickLesk) ([#14039](https://github.com/community-scripts/ProxmoxVE/pull/14039))
     - Technitium DNS: Ensure directories exist before running service [@tremor021](https://github.com/tremor021) ([#14030](https://github.com/community-scripts/ProxmoxVE/pull/14030))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: Correct deb822 repository flat path detection [@MickLesk](https://github.com/MickLesk) ([#14037](https://github.com/community-scripts/ProxmoxVE/pull/14037))
+
 ## 2026-04-25
 
 ### 🚀 Updated Scripts
