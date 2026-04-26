@@ -315,6 +315,61 @@ EOF
 fi
 msg_ok "Configured Frigate"
 
+msg_info "Creating Health Check Script"
+cat <<'CHECKEOF' >/usr/local/bin/frigate-healthcheck.sh
+#!/bin/bash
+# Frigate OpenVINO Health Check with automatic fallback
+CONFIG="/config/config.yml"
+MODELS_DIR="/openvino-model"
+
+# Check if OpenVINO model files exist and if detector is configured as openvino
+if grep -q "type: openvino" "$CONFIG" && [[ -d "$MODELS_DIR" ]]; then
+    # Test OpenVINO compilation in background - give it 30 seconds max
+    timeout 30 python3 -c "
+from openvino.runtime import Core
+import sys
+ov_core = Core()
+try:
+    ov_core.compile_model('/openvino-model/ssdlite_mobilenet_v2.xml', 'AUTO')
+    sys.exit(0)
+except Exception as e:
+    print(f'OpenVINO compilation failed: {str(e)[:100]}', file=sys.stderr)
+    sys.exit(1)
+" 2>/tmp/ov_test.log
+
+    if [[ $? -ne 0 ]]; then
+        echo "[WARN] OpenVINO health check failed, switching to CPU model fallback"
+        cat <<'FALLBACKEOF' > "$CONFIG"
+mqtt:
+  enabled: false
+cameras:
+  test:
+    ffmpeg:
+      inputs:
+        - path: /media/frigate/person-bicycle-car-detection.mp4
+          input_args: -re -stream_loop -1 -fflags +genpts
+          roles:
+            - detect
+    detect:
+      height: 1080
+      width: 1920
+      fps: 5
+auth:
+  enabled: false
+detect:
+  enabled: false
+ffmpeg:
+  hwaccel_args: auto
+model:
+  path: /models/cpu_model.tflite
+FALLBACKEOF
+        systemctl restart frigate
+    fi
+fi
+CHECKEOF
+chmod +x /usr/local/bin/frigate-healthcheck.sh
+msg_ok "Created Health Check Script"
+
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/create_directories.service
 [Unit]
@@ -353,7 +408,7 @@ EOF
 cat <<EOF >/etc/systemd/system/frigate.service
 [Unit]
 Description=Frigate NVR service
-After=go2rtc.service create_directories.service
+After=go2rtc.service create_directories.service frigate-healthcheck.service
 StartLimitIntervalSec=0
 
 [Service]
@@ -363,6 +418,7 @@ RestartSec=1
 User=root
 EnvironmentFile=/etc/frigate.env
 ExecStartPre=+rm -f /dev/shm/logs/frigate/current
+ExecStartPre=/usr/local/bin/frigate-healthcheck.sh
 ExecStart=/bin/bash -c "bash /opt/frigate/docker/main/rootfs/etc/s6-overlay/s6-rc.d/frigate/run 2> >(/usr/bin/ts '%%Y-%%m-%%d %%H:%%M:%%.S ' >&2) | /usr/bin/ts '%%Y-%%m-%%d %%H:%%M:%%.S '"
 StandardOutput=file:/dev/shm/logs/frigate/current
 StandardError=file:/dev/shm/logs/frigate/current

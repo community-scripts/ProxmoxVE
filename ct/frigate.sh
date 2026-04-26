@@ -7,7 +7,7 @@ source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxV
 
 APP="Frigate"
 var_tags="${var_tags:-nvr}"
-var_cpu="${var_cpu:-4}"
+var_cpu="${var_cpu:-8}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
@@ -21,15 +21,15 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /etc/systemd/system/frigate.service ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "To update Frigate, create a new container and transfer your configuration."
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /etc/systemd/system/frigate.service ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_error "To update Frigate, create a new container and transfer your configuration."
+  exit
 }
 
 start
