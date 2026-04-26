@@ -39,7 +39,7 @@ function update_script() {
     [ -d /opt/snowshare/uploads ] && cp -a /opt/snowshare/uploads /opt/.snowshare_uploads_backup
     msg_ok "Uploads backed up"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball" "$CHECK_UPDATE_RELEASE"
 
     msg_info "Restoring uploads"
     [ -d /opt/.snowshare_uploads_backup ] && rm -rf /opt/snowshare/uploads && cp -a /opt/.snowshare_uploads_backup /opt/snowshare/uploads
