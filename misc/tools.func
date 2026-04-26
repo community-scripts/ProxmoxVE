@@ -1924,8 +1924,8 @@ setup_deb822_repo() {
     echo "Types: deb"
     echo "URIs: $repo_url"
     echo "Suites: $suite"
-    # Flat repositories (suite="./" or absolute path) must not have Components
-    if [[ "$suite" != "./" && -n "$component" ]]; then
+    # Flat repositories (suite ending with "/" or "./") must not have Components
+    if [[ "$suite" != *"/" && -n "$component" ]]; then
       echo "Components: $component"
     fi
     [[ -n "$architectures" ]] && echo "Architectures: $architectures"
