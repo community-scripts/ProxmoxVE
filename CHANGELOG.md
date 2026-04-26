@@ -454,6 +454,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - TREK ([#14017](https://github.com/community-scripts/ProxmoxVE/pull/14017))
 
+### 🚀 Updated Scripts
+
+  - fix(2fauth): handle stale backup directory on update [@omertahaoztop](https://github.com/omertahaoztop) ([#14018](https://github.com/community-scripts/ProxmoxVE/pull/14018))
+
 ## 2026-04-25
 
 ### 🚀 Updated Scripts
