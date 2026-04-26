@@ -460,6 +460,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    -  Increase Frigate default CPU cores from 4 to 8 [@MickLesk](https://github.com/MickLesk) ([#14039](https://github.com/community-scripts/ProxmoxVE/pull/14039))
     - Technitium DNS: Ensure directories exist before running service [@tremor021](https://github.com/tremor021) ([#14030](https://github.com/community-scripts/ProxmoxVE/pull/14030))
 
 ## 2026-04-25
