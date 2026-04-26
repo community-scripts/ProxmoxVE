@@ -28,6 +28,7 @@ fetch_and_deploy_from_url "https://download.technitium.com/dns/DnsServerPortable
 echo "${RELEASE}" >~/.technitium
 
 msg_info "Creating service"
+mkdir -p /etc/dns /var/log/technitium/dns
 sed -i '/^User=/d;/^Group=/d' /opt/technitium/dns/systemd.service
 cp /opt/technitium/dns/systemd.service /etc/systemd/system/technitium.service
 systemctl enable -q --now technitium
