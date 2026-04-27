@@ -456,6 +456,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Update build.func - fixed spelling mistake [@m1ckywill](https://github.com/m1ckywill) ([#14047](https://github.com/community-scripts/ProxmoxVE/pull/14047))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - Add patchmon-agent report execution in update script [@heinemannj](https://github.com/heinemannj) ([#14054](https://github.com/community-scripts/ProxmoxVE/pull/14054))
+
 ## 2026-04-26
 
 ### 🆕 New Scripts
