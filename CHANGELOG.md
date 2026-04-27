@@ -454,6 +454,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Dawarich: run db:migrate before assets:precompile [@MickLesk](https://github.com/MickLesk) ([#14051](https://github.com/community-scripts/ProxmoxVE/pull/14051))
     - TechnitiumDNS: always install .NET 10 if not already present [@MickLesk](https://github.com/MickLesk) ([#14049](https://github.com/community-scripts/ProxmoxVE/pull/14049))
 
   - #### 💥 Breaking Changes
