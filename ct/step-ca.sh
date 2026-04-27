@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/heinemannj/ProxmoxVE/step-ca/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Joerg Heinemann (heinemannj)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -30,6 +30,12 @@ function update_script() {
   msg_info "Updating step-ca and step-cli"
   $STD apt update
   $STD apt upgrade -y step-ca step-cli
+
+  # Patch for making $STD happy (/usr/bin/step is a symlink to /usr/bin/step-cli)
+  STEPBIN="$(which step)"
+  rm -f "$STEPBIN"
+  cp -f "$(which step-cli)" "$STEPBIN"
+
   $STD systemctl restart step-ca
   msg_ok "Updated step-ca and step-cli"
 
