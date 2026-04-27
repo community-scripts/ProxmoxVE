@@ -76,6 +76,7 @@ function update_script() {
     if [[ -f "$DB" ]]; then
       sqlite3 "$DB" "ALTER TABLE 'orgs' ADD COLUMN 'settingsLogRetentionDaysConnection' integer DEFAULT 0 NOT NULL;" 2>/dev/null || true
       sqlite3 "$DB" "ALTER TABLE 'clientSitesAssociationsCache' ADD COLUMN 'isJitMode' integer DEFAULT 0 NOT NULL;" 2>/dev/null || true
+      sqlite3 "$DB" "ALTER TABLE 'userOrgs' ADD COLUMN 'pamUsername' text;" 2>/dev/null || true
 
       # Create new role-mapping tables and migrate data before drizzle-kit
       # drops the roleId columns from userOrgs and userInvites.
