@@ -32,8 +32,8 @@ function update_script() {
     systemctl daemon-reload
     systemctl enable -q --now technitium
   fi
-  if is_package_installed "aspnetcore-runtime-8.0" || is_package_installed "aspnetcore-runtime-9.0"; then
-    $STD apt remove -y aspnetcore-runtime-*
+  if ! is_package_installed "aspnetcore-runtime-10.0"; then
+    $STD apt remove -y aspnetcore-runtime-8.0 aspnetcore-runtime-9.0 2>/dev/null || true
     [ -f /etc/apt/sources.list.d/microsoft-prod.list ] && rm -f /etc/apt/sources.list.d/microsoft-prod.list
     [ -f /usr/share/keyrings/microsoft-prod.gpg ] && rm -f /usr/share/keyrings/microsoft-prod.gpg
     setup_deb822_repo \
