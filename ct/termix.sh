@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  GUACD_BUILD_MODE="$(cat /opt/.guacd_build_mode 2>/dev/null || echo "stable")"
+  GUACD_BUILD_MODE="$(cat /root/.guacd_build_mode 2>/dev/null || echo "stable")"
 
   if [[ "$GUACD_BUILD_MODE" == "main" ]] || check_for_gh_tag "guacd" "apache/guacamole-server"; then
     msg_info "Stopping guacd"

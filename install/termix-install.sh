@@ -48,7 +48,7 @@ if [[ "${REPLY,,}" =~ ^(y|yes)$ ]]; then
   GUACD_BUILD_MODE="main"
   msg_warn "Main branch builds may be unstable. Proceeding with main branch."
 fi
-echo "$GUACD_BUILD_MODE" >/opt/.guacd_build_mode
+echo "$GUACD_BUILD_MODE" >/root/.guacd_build_mode
 
 msg_info "Building Guacamole Server (guacd)"
 if [[ "$GUACD_BUILD_MODE" == "main" ]]; then
