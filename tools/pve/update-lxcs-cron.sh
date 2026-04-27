@@ -66,10 +66,20 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       pct start "$container"
       sleep 5
       update_container "$container" || echo " [Error] Update failed for $container"
+      # check if patchmon agent is present in container and run a report if found
+      if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
+        echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
+        pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report"
+      fi
       echo -e "[Info] Shutting down $container"
       pct shutdown "$container" --timeout 60 &
     elif [ "$status" == "status: running" ]; then
       update_container "$container" || echo " [Error] Update failed for $container"
+      # check if patchmon agent is present in container and run a report if found
+      if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
+        echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
+        pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report"
+      fi
     fi
   fi
 done
