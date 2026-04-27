@@ -450,6 +450,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-27
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - PatchMon: v2.0.0 migration [@vhsdream](https://github.com/vhsdream) ([#14015](https://github.com/community-scripts/ProxmoxVE/pull/14015))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
