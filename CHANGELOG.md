@@ -448,6 +448,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-27
+
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - Update build.func - fixed spelling mistake [@m1ckywill](https://github.com/m1ckywill) ([#14047](https://github.com/community-scripts/ProxmoxVE/pull/14047))
+
 ## 2026-04-26
 
 ### 🆕 New Scripts
