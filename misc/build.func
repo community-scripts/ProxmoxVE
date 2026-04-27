@@ -5456,14 +5456,14 @@ create_lxc_container() {
     local _has_fallback_option=false
     if [[ "$do_retry" == "yes" ]] && has_previous_os_version_template; then
       _has_fallback_option=true
-      echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packeages on your host!"
+      echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packages on your host!"
       echo "  [2] Use an older ${PCT_OSTYPE} template instead (may not work with all scripts)"
       echo "  [3] Ignore"
       echo "  [4] Cancel"
       echo
       read -rp "Select option [1/2/3/4]: " _ans </dev/tty
     else
-      echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packeages on your host!"
+      echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packages on your host!"
       echo "  [2] Ignore"
       echo "  [3] Cancel"
       echo
