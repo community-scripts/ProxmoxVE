@@ -468,6 +468,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🧰 Tools
 
+  - #### 🐞 Bug Fixes
+
+    - update-lxcs/apps: avoid pct exec on containers mid-shutdown [@MickLesk](https://github.com/MickLesk) ([#14050](https://github.com/community-scripts/ProxmoxVE/pull/14050))
+
   - #### ✨ New Features
 
     - Add patchmon-agent report execution in update script [@heinemannj](https://github.com/heinemannj) ([#14054](https://github.com/community-scripts/ProxmoxVE/pull/14054))
