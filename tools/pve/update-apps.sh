@@ -405,11 +405,6 @@ for container in $CHOICE; do
   esac
   exit_code=$?
 
-  if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
-    echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
-    pct shutdown $container &
-  fi
-
   #5) if build resources are different than run resources, then:
   if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ]; then
     pct set "$container" --cores "$run_cpu" --memory "$run_ram"
@@ -419,6 +414,11 @@ for container in $CHOICE; do
     # Get the container's hostname and add it to the list
     container_hostname=$(pct exec "$container" hostname)
     containers_needing_reboot+=("$container ($container_hostname)")
+  fi
+
+  if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
+    echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
+    pct shutdown $container &>/dev/null &
   fi
 
   if [ $exit_code -eq 0 ]; then
