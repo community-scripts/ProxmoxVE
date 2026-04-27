@@ -452,6 +452,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Add pamUsername column to userOrgs table [@JVKeller](https://github.com/JVKeller) ([#14075](https://github.com/community-scripts/ProxmoxVE/pull/14075))
+
   - #### 🐞 Bug Fixes
 
     - Dawarich: run db:migrate before assets:precompile [@MickLesk](https://github.com/MickLesk) ([#14051](https://github.com/community-scripts/ProxmoxVE/pull/14051))
