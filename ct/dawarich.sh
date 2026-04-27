@@ -67,8 +67,8 @@ function update_script() {
       $STD npm install
     fi
 
-    $STD bundle exec rake assets:precompile
     $STD bundle exec rails db:migrate
+    $STD bundle exec rake assets:precompile
     $STD bundle exec rake data:migrate
     msg_ok "Ran Migrations"
 
