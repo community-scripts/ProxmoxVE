@@ -29,7 +29,9 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_tag "guacd" "apache/guacamole-server"; then
+  GUACD_BUILD_MODE="$(cat /opt/.guacd_build_mode 2>/dev/null || echo "stable")"
+
+  if [[ "$GUACD_BUILD_MODE" == "main" ]] || check_for_gh_tag "guacd" "apache/guacamole-server"; then
     msg_info "Stopping guacd"
     systemctl stop guacd 2>/dev/null || true
     msg_ok "Stopped guacd"
@@ -55,8 +57,16 @@ function update_script() {
       libavutil-dev \
       libavformat-dev
 
-    msg_info "Updating Guacamole Server (guacd)"
-    fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "${CHECK_UPDATE_RELEASE}" "/opt/guacamole-server"
+    if [[ "$GUACD_BUILD_MODE" == "main" ]]; then
+      msg_info "Updating Guacamole Server (guacd) from main branch"
+      ensure_dependencies git
+      rm -rf /opt/guacamole-server
+      $STD git clone --depth 1 https://github.com/apache/guacamole-server.git /opt/guacamole-server
+    else
+      msg_info "Updating Guacamole Server (guacd)"
+      fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "${CHECK_UPDATE_RELEASE}" "/opt/guacamole-server"
+    fi
+
     cd /opt/guacamole-server
     export CPPFLAGS="-Wno-error=deprecated-declarations"
     $STD autoreconf -fi
@@ -66,7 +76,12 @@ function update_script() {
     $STD ldconfig
     cd /opt
     rm -rf /opt/guacamole-server
-    msg_ok "Updated Guacamole Server (guacd) to ${CHECK_UPDATE_RELEASE}"
+
+    if [[ "$GUACD_BUILD_MODE" == "main" ]]; then
+      msg_ok "Updated Guacamole Server (guacd) from main branch"
+    else
+      msg_ok "Updated Guacamole Server (guacd) to ${CHECK_UPDATE_RELEASE}"
+    fi
 
     if [[ ! -f /etc/guacamole/guacd.conf ]]; then
       mkdir -p /etc/guacamole

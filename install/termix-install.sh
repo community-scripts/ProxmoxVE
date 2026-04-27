@@ -41,8 +41,22 @@ $STD apt install -y \
   libavformat-dev
 msg_ok "Installed Dependencies"
 
+echo ""
+read -rp "${TAB3}Build guacd from main branch? Includes Wayland RDP fixes for Ubuntu/Zorin OS [y/N]: " REPLY
+GUACD_BUILD_MODE="stable"
+if [[ "${REPLY,,}" =~ ^(y|yes)$ ]]; then
+  GUACD_BUILD_MODE="main"
+  msg_warn "Main branch builds may be unstable. Proceeding with main branch."
+fi
+echo "$GUACD_BUILD_MODE" >/opt/.guacd_build_mode
+
 msg_info "Building Guacamole Server (guacd)"
-fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "latest" "/opt/guacamole-server"
+if [[ "$GUACD_BUILD_MODE" == "main" ]]; then
+  ensure_dependencies git
+  $STD git clone --depth 1 https://github.com/apache/guacamole-server.git /opt/guacamole-server
+else
+  fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "latest" "/opt/guacamole-server"
+fi
 cd /opt/guacamole-server
 export CPPFLAGS="-Wno-error=deprecated-declarations"
 $STD autoreconf -fi
