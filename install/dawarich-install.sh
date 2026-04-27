@@ -46,10 +46,12 @@ msg_ok "Set up Directories"
 
 msg_info "Configuring Environment"
 SECRET_KEY_BASE=$(openssl rand -hex 64)
+OTP_ENCRYPTION_PRIMARY_KEY=$(openssl rand -hex 32)
 RELEASE=$(get_latest_github_release "Freika/dawarich")
 cat <<EOF >/opt/dawarich/.env
 RAILS_ENV=production
 SECRET_KEY_BASE=${SECRET_KEY_BASE}
+OTP_ENCRYPTION_PRIMARY_KEY=${OTP_ENCRYPTION_PRIMARY_KEY}
 DATABASE_HOST=localhost
 DATABASE_USERNAME=${PG_DB_USER}
 DATABASE_PASSWORD=${PG_DB_PASS}
