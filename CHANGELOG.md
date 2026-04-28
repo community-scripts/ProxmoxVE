@@ -450,6 +450,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-04-28
 
+### 🆕 New Scripts
+
+  - CoreDNS ([#14082](https://github.com/community-scripts/ProxmoxVE/pull/14082))
+
 ### 🚀 Updated Scripts
 
   - Fix Dawarich Install/Update [@Jerry1098](https://github.com/Jerry1098) ([#14078](https://github.com/community-scripts/ProxmoxVE/pull/14078))
