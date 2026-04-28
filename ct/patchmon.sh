@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v2.0.1"
+  RELEASE="v2.0.2"
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon" "${RELEASE}"; then
     msg_info "Stopping Service"
     systemctl stop patchmon-server
