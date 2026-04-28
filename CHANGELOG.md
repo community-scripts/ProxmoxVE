@@ -459,6 +459,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Fix Dawarich Install/Update [@Jerry1098](https://github.com/Jerry1098) ([#14078](https://github.com/community-scripts/ProxmoxVE/pull/14078))
 
+  - #### ✨ New Features
+
+    - PatchMon Version 2.0.2 Script update [@9technologygroup](https://github.com/9technologygroup) ([#14095](https://github.com/community-scripts/ProxmoxVE/pull/14095))
+
 ## 2026-04-27
 
 ### 🚀 Updated Scripts
