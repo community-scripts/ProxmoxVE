@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="patchmon_db" PG_DB_USER="patchmon_usr" setup_postgresql_db
 
-RELEASE="v2.0.1"
+RELEASE="v2.0.2"
 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "$RELEASE" "/opt/patchmon" "patchmon-server-linux-amd64"
 mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
 
