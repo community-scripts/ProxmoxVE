@@ -452,7 +452,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - CoreDNS ([#14082](https://github.com/community-scripts/ProxmoxVE/pull/14082))
+  - StoryBook ([#14081](https://github.com/community-scripts/ProxmoxVE/pull/14081))
+- CoreDNS ([#14082](https://github.com/community-scripts/ProxmoxVE/pull/14082))
 
 ### 🚀 Updated Scripts
 
