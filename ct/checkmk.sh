@@ -23,26 +23,25 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /opt/checkmk_version.txt ]]; then
+  if ! command -v omd &>/dev/null; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
+  RELEASE=$(curl_with_retry "https://api.github.com/repos/checkmk/checkmk/tags" "-" | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
   RELEASE="${RELEASE%%+*}"
-  msg_info "Updating ${APP} to v${RELEASE}"
+  msg_info "Updating checkmk"
   $STD omd stop monitoring
   $STD omd cp monitoring monitoringbackup
-  curl -fsSL "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.$(get_os_info codename)_amd64.deb" -o "/opt/checkmk.deb"
-  $STD apt-get install -y /opt/checkmk.deb
+  curl_with_retry "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-community-${RELEASE}_0.$(get_os_info codename)_amd64.deb" "/opt/checkmk.deb"
+  $STD apt install -y /opt/checkmk.deb
   $STD omd --force -V ${RELEASE}.cre update --conflict=install monitoring
   $STD omd start monitoring
   $STD omd -f rm monitoringbackup
   $STD omd cleanup
   rm -rf /opt/checkmk.deb
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated checkmk"
   msg_ok "Updated successfully!"
-
   exit
 }
 
