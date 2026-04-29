@@ -454,6 +454,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: checkMK [@MickLesk](https://github.com/MickLesk) ([#14105](https://github.com/community-scripts/ProxmoxVE/pull/14105))
     - PatchMon: Unpin release [@tremor021](https://github.com/tremor021) ([#14097](https://github.com/community-scripts/ProxmoxVE/pull/14097))
 
 ## 2026-04-28
