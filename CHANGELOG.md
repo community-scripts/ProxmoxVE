@@ -448,6 +448,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-04-29
+
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - PatchMon: Unpin release [@tremor021](https://github.com/tremor021) ([#14097](https://github.com/community-scripts/ProxmoxVE/pull/14097))
+
 ## 2026-04-28
 
 ### 🆕 New Scripts
