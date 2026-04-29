@@ -5678,6 +5678,10 @@ create_lxc_container() {
 
   if ! pvesm status -content rootdir 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$CONTAINER_STORAGE"; then
     msg_error "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) does not support 'rootdir' content."
+    msg_custom "💡" "${YW}" "Enable 'Disk image' (rootdir) for storage '${CONTAINER_STORAGE}' in:"
+    msg_custom "   " "${YW}" "Datacenter → Storage → ${CONTAINER_STORAGE} → Edit → Content"
+    msg_custom "📖" "${YW}" "See: https://pve.proxmox.com/wiki/Storage"
+    msg_custom "🔗" "${YW}" "Help: https://github.com/community-scripts/ProxmoxVE/discussions"
     exit 213
   fi
   msg_ok "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) validated"
