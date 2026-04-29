@@ -454,6 +454,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - GrayLog: MongoDB update to 8.2.x [@tremor021](https://github.com/tremor021) ([#14114](https://github.com/community-scripts/ProxmoxVE/pull/14114))
     - Graylog: Better information in the log file [@tremor021](https://github.com/tremor021) ([#14110](https://github.com/community-scripts/ProxmoxVE/pull/14110))
 
   - #### 🔧 Refactor
