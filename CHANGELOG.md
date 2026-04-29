@@ -452,6 +452,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Graylog: Better information in the log file [@tremor021](https://github.com/tremor021) ([#14110](https://github.com/community-scripts/ProxmoxVE/pull/14110))
+
   - #### 🔧 Refactor
 
     - Refactor: checkMK [@MickLesk](https://github.com/MickLesk) ([#14105](https://github.com/community-scripts/ProxmoxVE/pull/14105))
