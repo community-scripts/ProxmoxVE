@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: johanngrobe
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/joaovitoriasilva/endurain
+# Source: https://codeberg.org/endurain-project/endurain
 
 APP="Endurain"
 var_tags="${var_tags:-sport;social-media}"
@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} installation found!"
     exit 233
   fi
-  if check_for_gh_release "endurain" "endurain-project/endurain"; then
+  if check_for_codeberg_release "endurain" "endurain-project/endurain"; then
     msg_info "Stopping Service"
     systemctl stop endurain
     msg_ok "Stopped Service"
@@ -38,7 +38,7 @@ function update_script() {
     cp /opt/endurain/frontend/app/dist/env.js /opt/endurain.env.js
     msg_ok "Created Backup"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
+    CLEAN_INSTALL=1 fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
 
     msg_info "Preparing Update"
     cd /opt/endurain
