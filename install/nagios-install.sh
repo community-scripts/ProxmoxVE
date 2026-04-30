@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: GitHub Copilot (GPT-5.3-Codex)
+# Author: CanbiZ (MickLesk)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/NagiosEnterprises/nagioscore
 
