@@ -455,6 +455,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Nagios ([#14126](https://github.com/community-scripts/ProxmoxVE/pull/14126))
 - Neko ([#14121](https://github.com/community-scripts/ProxmoxVE/pull/14121))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - endurain: update source references to Codeberg [@MickLesk](https://github.com/MickLesk) ([#14128](https://github.com/community-scripts/ProxmoxVE/pull/14128))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
