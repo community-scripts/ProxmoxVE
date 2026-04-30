@@ -459,6 +459,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - alpine-docker: install openssl as core dependency | alpine-komodo: check & install openssl if missing [@MickLesk](https://github.com/MickLesk) ([#14134](https://github.com/community-scripts/ProxmoxVE/pull/14134))
     - endurain: update source references to Codeberg [@MickLesk](https://github.com/MickLesk) ([#14128](https://github.com/community-scripts/ProxmoxVE/pull/14128))
 
 ### 💾 Core
