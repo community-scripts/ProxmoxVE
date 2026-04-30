@@ -452,7 +452,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Neko ([#14121](https://github.com/community-scripts/ProxmoxVE/pull/14121))
+  - Nagios ([#14126](https://github.com/community-scripts/ProxmoxVE/pull/14126))
+- Neko ([#14121](https://github.com/community-scripts/ProxmoxVE/pull/14121))
 
 ### 💾 Core
 
