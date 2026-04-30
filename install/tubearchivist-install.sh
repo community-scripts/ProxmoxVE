@@ -34,7 +34,12 @@ NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-x86_64-unknown-linux-gnu.zip"
 
 msg_info "Installing ElasticSearch"
-setup_deb822_repo "elastic-8.x" "https://artifacts.elastic.co/GPG-KEY-elasticsearch" "https://artifacts.elastic.co/packages/8.x/apt" "stable" "main"
+setup_deb822_repo \
+  "elastic-8.x" \
+  "https://artifacts.elastic.co/GPG-KEY-elasticsearch" \
+  "https://artifacts.elastic.co/packages/8.x/apt" \
+  "stable" \
+  "main"
 ES_JAVA_OPTS="-Xms1g -Xmx1g" $STD apt install -y elasticsearch
 msg_ok "Installed ElasticSearch"
 
@@ -108,7 +113,7 @@ EOF
   echo "Password: ${TA_PASSWORD}"
   echo "Elasticsearch Password: ${ES_PASSWORD}"
 } >~/tubearchivist.creds
-$STD systemctl enable --now redis-server
+systemctl enable -q --now redis-server
 msg_ok "Set up Tube Archivist"
 
 msg_info "Configuring Nginx"
