@@ -21,19 +21,18 @@ $STD apt install -y \
   bc \
   dc \
   gawk \
-  gperf \
   gettext \
-  libc6 \
+  gperf \
   libgd-dev \
   libmcrypt-dev \
   libnet-snmp-perl \
   libssl-dev \
-  php \
-  apache2 \
   snmp \
-  unzip \
-  wget
+  apache2 \
+  apache2-utils
 msg_ok "Installed Dependencies"
+
+PHP_APACHE="YES" setup_php
 
 fetch_and_deploy_gh_release "nagios" "NagiosEnterprises/nagioscore" "tarball"
 
@@ -48,8 +47,8 @@ $STD make install-daemoninit
 $STD make install-commandmode
 $STD make install-config
 $STD make install-webconf
-a2enmod rewrite >/dev/null 2>&1
-a2enmod cgi >/dev/null 2>&1
+$STD a2enmod rewrite
+$STD a2enmod cgi
 msg_ok "Built Nagios Core"
 
 fetch_and_deploy_gh_release "nagios-plugins" "nagios-plugins/nagios-plugins" "tarball"
@@ -63,7 +62,7 @@ $STD make install
 msg_ok "Built Nagios Plugins"
 
 msg_info "Configuring Web Authentication"
-htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin nagiosadmin
+$STD htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin nagiosadmin
 chown root:www-data /usr/local/nagios/etc/htpasswd.users
 chmod 640 /usr/local/nagios/etc/htpasswd.users
 msg_ok "Configured Web Authentication"
@@ -71,8 +70,6 @@ msg_ok "Configured Web Authentication"
 msg_info "Starting Services"
 systemctl enable -q --now apache2
 systemctl enable -q --now nagios
-systemctl restart apache2
-systemctl restart nagios
 msg_ok "Started Services"
 
 motd_ssh
