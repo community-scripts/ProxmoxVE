@@ -454,6 +454,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Neko ([#14121](https://github.com/community-scripts/ProxmoxVE/pull/14121))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - tools.func: Manage minor versions for MongoDB 8.x [@tremor021](https://github.com/tremor021) ([#14131](https://github.com/community-scripts/ProxmoxVE/pull/14131))
+
 ## 2026-04-29
 
 ### 🚀 Updated Scripts
