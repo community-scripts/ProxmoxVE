@@ -8675,8 +8675,7 @@ get_latest_gitlab_release() {
   local strip_v="${2:-true}"
 
   local repo_encoded
-  repo_encoded=$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$repo" 2>/dev/null ||
-    echo "$repo" | sed 's|/|%2F|g')
+  repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
 
   local header=()
   [[ -n "${GITLAB_TOKEN:-}" ]] && header=(-H "PRIVATE-TOKEN: $GITLAB_TOKEN")
