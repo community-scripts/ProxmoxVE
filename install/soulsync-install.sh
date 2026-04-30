@@ -29,7 +29,7 @@ fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
 msg_info "Setting up Application"
 cd /opt/soulsync
 $STD uv venv /opt/soulsync/.venv --python 3.11
-$STD uv pip install -r requirements-webui.txt --python /opt/soulsync/.venv/bin/python
+$STD uv pip install -r requirements.txt --python /opt/soulsync/.venv/bin/python
 mkdir -p /opt/soulsync/{config,data,logs}
 msg_ok "Set up Application"
 
