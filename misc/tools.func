@@ -5964,14 +5964,14 @@ function setup_mariadb_db() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs or updates MongoDB to specified major version.
+# Installs or updates MongoDB to specified version.
 #
 # Description:
 #   - Preserves data across installations
 #   - Adds official MongoDB repo
 #
 # Variables:
-#   MONGO_VERSION  - MongoDB major version to install (e.g. 7.0, 8.0)
+#   MONGO_VERSION  - MongoDB version to install (e.g. 7.0, 8.2)
 # ------------------------------------------------------------------------------
 
 function setup_mongodb() {
@@ -6044,8 +6044,11 @@ function setup_mongodb() {
   }
 
   # Setup repository
+  # MongoDB 8.x versions beyond 8.0 reuse the server-8.0.asc PGP key
+  local MONGO_KEY_VERSION="${MONGO_VERSION}"
+  [[ "${MONGO_VERSION}" == 8.[1-9]* ]] && MONGO_KEY_VERSION="8.0"
   manage_tool_repository "mongodb" "$MONGO_VERSION" "$MONGO_BASE_URL" \
-    "https://www.mongodb.org/static/pgp/server-${MONGO_VERSION}.asc" || {
+    "https://www.mongodb.org/static/pgp/server-${MONGO_KEY_VERSION}.asc" || {
     msg_error "Failed to setup MongoDB repository"
     return 100
   }
