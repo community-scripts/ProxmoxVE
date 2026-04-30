@@ -17,23 +17,19 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   autoconf \
   automake \
-  gcc \
-  libc6 \
-  libgd-dev \
-  libmcrypt-dev \
-  libnet-snmp-perl \
-  libssl-dev \
-  make \
-  openssl \
-  php \
-  apache2 \
-  apache2-utils \
   build-essential \
   bc \
   dc \
   gawk \
   gperf \
   gettext \
+  libc6 \
+  libgd-dev \
+  libmcrypt-dev \
+  libnet-snmp-perl \
+  libssl-dev \
+  php \
+  apache2 \
   snmp \
   unzip \
   wget
