@@ -68,7 +68,8 @@ chmod 640 /usr/local/nagios/etc/htpasswd.users
 msg_ok "Configured Web Authentication"
 
 msg_info "Starting Services"
-systemctl enable -q --now apache2
+systemctl enable -q apache2
+systemctl restart apache2
 systemctl enable -q --now nagios
 msg_ok "Started Services"
 
