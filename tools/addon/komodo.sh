@@ -151,6 +151,23 @@ function check_proxmox_host() {
 # ==============================================================================
 # CHECK / INSTALL DOCKER
 # ==============================================================================
+function ensure_openssl() {
+  if command -v openssl &>/dev/null; then
+    return
+  fi
+  msg_info "Installing openssl"
+  if [[ -f /etc/alpine-release ]]; then
+    $STD apk add openssl
+  elif command -v apt-get &>/dev/null; then
+    $STD apt-get update
+    $STD apt-get install -y openssl
+  else
+    msg_error "openssl is required but could not be installed automatically."
+    exit 10
+  fi
+  msg_ok "Installed openssl"
+}
+
 function check_or_install_docker() {
   if command -v docker &>/dev/null; then
     msg_ok "Docker $(docker --version | cut -d' ' -f3 | tr -d ',') is available"
@@ -160,6 +177,7 @@ function check_or_install_docker() {
       msg_error "Docker Compose plugin is not available. Please install it."
       exit 10
     fi
+    ensure_openssl
     return
   fi
 
@@ -183,6 +201,8 @@ function check_or_install_docker() {
     $STD sh <(curl -fsSL https://get.docker.com)
   fi
   msg_ok "Installed Docker"
+
+  ensure_openssl
 }
 
 # ==============================================================================
