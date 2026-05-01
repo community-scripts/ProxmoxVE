@@ -21,8 +21,6 @@ catch_errors
 
 function update_script() {
   header_info
-  check_container_storage
-  check_container_resources
 
   if ! apk info -e rustypaste >/dev/null 2>&1; then
     msg_error "No ${APP} Installation Found!"
