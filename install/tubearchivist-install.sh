@@ -67,7 +67,7 @@ EOF
 systemctl enable -q --now elasticsearch
 msg_ok "Configured ElasticSearch"
 
-fetch_and_deploy_gh_release "tubearchivist" "tubearchivist/tubearchivist" "tarball" "latest" "/opt/tubearchivist"
+fetch_and_deploy_gh_release "tubearchivist" "tubearchivist/tubearchivist" "tarball"
 
 msg_info "Building Frontend"
 cd /opt/tubearchivist/frontend
