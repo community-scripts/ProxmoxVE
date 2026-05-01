@@ -459,6 +459,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Step ca update [@heinemannj](https://github.com/heinemannj) ([#14058](https://github.com/community-scripts/ProxmoxVE/pull/14058))
     - paperless-ngx: refresh NLTK data on update [@kurtislanderson](https://github.com/kurtislanderson) ([#14144](https://github.com/community-scripts/ProxmoxVE/pull/14144))
     - [Pelican Panel] stop deleting the public storage [@LetterN](https://github.com/LetterN) ([#14145](https://github.com/community-scripts/ProxmoxVE/pull/14145))
 
