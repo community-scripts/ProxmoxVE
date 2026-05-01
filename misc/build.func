@@ -3505,6 +3505,52 @@ msg_menu() {
 }
 
 # ------------------------------------------------------------------------------
+# run_addon_updates()
+#
+# - Scans /usr/local/bin/update_* for addon update scripts installed alongside
+#   the main application (e.g. by tools/addon/*.sh)
+# - For each found addon, prompts the user (60s timeout, default no) whether
+#   it should be updated as well
+# - Skipped entirely when PHS_SILENT=1 to keep unattended updates predictable
+# ------------------------------------------------------------------------------
+run_addon_updates() {
+  shopt -s nullglob
+  local addons=(/usr/local/bin/update_*)
+  shopt -u nullglob
+
+  ((${#addons[@]} == 0)) && return 0
+
+  if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+    msg_info "Detected ${#addons[@]} addon update script(s) - skipping (PHS_SILENT)"
+    return 0
+  fi
+
+  echo
+  echo -e "${INFO}${YW} Detected installed addon update script(s):${CL}"
+  local a name
+  for a in "${addons[@]}"; do
+    echo -e "${TAB}- ${a##*/update_}"
+  done
+  echo
+
+  local ans
+  for a in "${addons[@]}"; do
+    name="${a##*/update_}"
+    printf 'Do you also want to update addon "%s"? (y/N) [60s]: ' "$name"
+    ans=""
+    if read -r -t 60 ans; then :; else echo; fi
+    case "${ans,,}" in
+    y | yes)
+      bash "$a" || msg_warn "Addon update for $name failed (rc=$?)"
+      ;;
+    *)
+      msg_info "Skipped addon: $name"
+      ;;
+    esac
+  done
+}
+
+# ------------------------------------------------------------------------------
 # start()
 #
 # - Entry point of script
@@ -3523,6 +3569,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     update_script
+    run_addon_updates
     update_motd_ip
     cleanup_lxc
   else
@@ -3551,6 +3598,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     update_script
+    run_addon_updates
     update_motd_ip
     cleanup_lxc
   fi
