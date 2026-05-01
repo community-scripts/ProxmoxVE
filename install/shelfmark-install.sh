@@ -116,7 +116,7 @@ else
 fi
 
 NODE_VERSION="24" setup_nodejs
-PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.14" setup_uv
 
 fetch_and_deploy_gh_release "shelfmark" "calibrain/shelfmark" "tarball" "latest" "/opt/shelfmark"
 RELEASE_VERSION=$(cat "$HOME/.shelfmark")
@@ -130,11 +130,15 @@ mv /opt/shelfmark/src/frontend/dist /opt/shelfmark/frontend-dist
 msg_ok "Built Shelfmark frontend"
 
 msg_info "Configuring Shelfmark"
+export VIRTUAL_ENV=/opt/shelfmark/venv
 cd /opt/shelfmark
 $STD uv venv --clear ./venv
 $STD source ./venv/bin/activate
-$STD uv pip install -r ./requirements-base.txt
-[[ "$DEPLOYMENT_TYPE" == "1" ]] && $STD uv pip install -r ./requirements-shelfmark.txt
+if [[ "$DEPLOYMENT_TYPE" == "1" ]]; then
+  $STD uv sync --active --locked --no-default-groups --extra browser
+else
+  $STD uv sync --active --locked --no-default-groups
+fi
 mkdir -p {/var/log/shelfmark,/tmp/shelfmark}
 msg_ok "Configured Shelfmark"
 
