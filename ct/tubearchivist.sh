@@ -38,7 +38,7 @@ function update_script() {
     cp /opt/tubearchivist/.env /opt/tubearchivist_env.bak
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tubearchivist" "tubearchivist/tubearchivist" "tarball" "latest" "/opt/tubearchivist"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tubearchivist" "tubearchivist/tubearchivist" "tarball"
 
     msg_info "Rebuilding Tube Archivist"
     cd /opt/tubearchivist/frontend
