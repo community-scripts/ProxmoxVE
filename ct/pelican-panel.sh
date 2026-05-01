@@ -45,15 +45,21 @@ function update_script() {
     $STD php artisan down
     msg_ok "Stopped Service"
 
-    cp -r /opt/pelican-panel/.env /opt/
+    cp -a /opt/pelican-panel/.env /opt/backup
+    cp -a /opt/pelican-panel/storage/app/public /opt/backup/storage/app/
+    
     SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1>/dev/null 2>&1 && echo "true" || echo "false")
-    $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/
-    rm -rf * .*
+    $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/backup
+    
+    find /opt/pelican-panel -mindepth 1 -maxdepth 1 ! -name 'backup' ! -name 'plugins' -exec rm -rf {} +
+    
     fetch_and_deploy_gh_release "pelican-panel" "pelican-dev/panel" "prebuild" "latest" "/opt/pelican-panel" "panel.tar.gz"
 
     msg_info "Updating Pelican Panel"
-    mv /opt/.env /opt/pelican-panel/
-    $SQLITE_INSTALL && mv /opt/*.sqlite /opt/pelican-panel/database/
+    cp -a /opt/backup/.env /opt/pelican-panel/
+    $SQLITE_INSTALL && mv /opt/backup/*.sqlite /opt/pelican-panel/database/
+    cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
+
     $STD composer install --no-dev --optimize-autoloader --no-interaction
     $STD php artisan p:environment:setup
     $STD php artisan view:clear
