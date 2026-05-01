@@ -738,7 +738,24 @@ done
 msg_info "Creating a OPNsense VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
-pvesm alloc $STORAGE $VMID $DISK0 4M &>/dev/null
+
+# Retry pvesm alloc on transient zfs_request "got timeout" errors (#14127)
+alloc_attempt=1
+alloc_max=4
+alloc_delay=5
+while :; do
+  alloc_err=$(pvesm alloc $STORAGE $VMID $DISK0 4M 2>&1 >/dev/null) && break
+  if [[ "$alloc_err" == *"got timeout"* && $alloc_attempt -lt $alloc_max ]]; then
+    msg_warn "pvesm alloc hit zfs timeout (attempt $alloc_attempt/$alloc_max), retrying in ${alloc_delay}s..."
+    pvesm free "${DISK0_REF}" &>/dev/null || true
+    sleep "$alloc_delay"
+    alloc_attempt=$((alloc_attempt + 1))
+    alloc_delay=$((alloc_delay * 2))
+    continue
+  fi
+  echo -e "$alloc_err" >&2
+  exit 220
+done
 qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-} &>/dev/null
 qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
