@@ -448,6 +448,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-01
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [Pelican Panel] stop deleting the public storage [@LetterN](https://github.com/LetterN) ([#14145](https://github.com/community-scripts/ProxmoxVE/pull/14145))
+
+  - #### 🔧 Refactor
+
+    - Mail-Archiver: update dependencies [@tremor021](https://github.com/tremor021) ([#14152](https://github.com/community-scripts/ProxmoxVE/pull/14152))
+
 ## 2026-04-30
 
 ### 🆕 New Scripts
