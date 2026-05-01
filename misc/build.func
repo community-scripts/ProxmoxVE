@@ -1062,6 +1062,7 @@ load_vars_file() {
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
+    var_post_install
   )
 
   # Whitelist check helper
@@ -1279,6 +1280,7 @@ default_var_settings() {
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
+    var_post_install
   )
 
   # Snapshot: environment variables (highest precedence)
@@ -1374,6 +1376,11 @@ var_verbose=no
 # GitHub Personal Access Token (optional – avoids API rate limits during installs)
 # Create at https://github.com/settings/tokens – read-only public access is sufficient
 # var_github_token=ghp_your_token_here
+
+# Optional post-install script (host-side path to a *.sh on the Proxmox host)
+# Runs ON THE HOST after the container is fully provisioned.
+# Available env vars: APP, NSAPP, CTID, IP, HN, STORAGE, BRG
+# var_post_install=/opt/post-install/myhook.sh
 EOF
 
     # Now choose storages (always prompt unless just one exists)
@@ -1452,6 +1459,7 @@ if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
+    var_post_install
   )
 fi
 
@@ -1664,6 +1672,7 @@ _build_current_app_vars_tmp() {
 
     [ -n "$_tpl_storage" ] && echo "var_template_storage=$(_sanitize_value "$_tpl_storage")"
     [ -n "$_ct_storage" ] && echo "var_container_storage=$(_sanitize_value "$_ct_storage")"
+    [ -n "${var_post_install:-}" ] && echo "var_post_install=$(_sanitize_value "${var_post_install}")"
   } >"$tmpf"
 
   echo "$tmpf"
@@ -1808,7 +1817,7 @@ advanced_settings() {
     TAGS="community-script${var_tags:+;${var_tags}}"
   fi
   local STEP=1
-  local MAX_STEP=28
+  local MAX_STEP=29
 
   # Store values for back navigation - inherit from var_* app defaults
   local _ct_type="${var_unprivileged:-1}"
@@ -1842,6 +1851,7 @@ advanced_settings() {
   local _enable_mknod="${var_mknod:-0}"
   local _mount_fs="${var_mount_fs:-}"
   local _protect_ct="${var_protection:-no}"
+  local _post_install="${var_post_install:-}"
 
   # Detect host timezone for default (if not set via var_timezone)
   local _host_timezone=""
@@ -2753,7 +2763,8 @@ Features:
 Advanced:
   Timezone: $tz_display
   APT Cacher: $apt_display
-  Verbose: $_verbose"
+  Verbose: $_verbose
+  Post-Install Script: ${_post_install:-(none)}"
 
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "CONFIRM SETTINGS" \
@@ -2796,6 +2807,7 @@ Advanced:
   APT_CACHER="$_apt_cacher"
   APT_CACHER_IP="$_apt_cacher_ip"
   VERBOSE="$_verbose"
+  var_post_install="$_post_install"
 
   # Update var_* based on user choice (for functions that check these)
   var_gpu="$_enable_gpu"
@@ -6303,6 +6315,25 @@ EOF
 
   if [[ -f /etc/systemd/system/ping-instances.service ]]; then
     systemctl start ping-instances.service
+  fi
+
+  # Optional host-side post-install hook
+  # Path comes from var_post_install (default.vars / app.vars / advanced settings).
+  # Runs ON THE PROXMOX HOST after the container is up and configured.
+  # Exposed env vars: APP, NSAPP, CTID, IP, HN, STORAGE, BRG.
+  if [[ -n "${var_post_install:-}" ]]; then
+    if [[ -f "${var_post_install}" ]]; then
+      msg_info "Running post-install script: ${var_post_install}"
+      if APP="$APP" NSAPP="${NSAPP:-}" CTID="$CTID" IP="$IP" HN="${HN:-}" \
+        STORAGE="${STORAGE:-}" BRG="${BRG:-}" \
+        bash "${var_post_install}"; then
+        msg_ok "Ran post-install script"
+      else
+        msg_error "Post-install script exited with non-zero status (rc=$?)"
+      fi
+    else
+      msg_error "Post-install script not found on host: ${var_post_install}"
+    fi
   fi
 
   INSTALL_COMPLETE=true
