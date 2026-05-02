@@ -448,6 +448,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-02
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Threadfin: use 'threadfin-app' as app name to avoid version-file clash  [@MickLesk](https://github.com/MickLesk) ([#14159](https://github.com/community-scripts/ProxmoxVE/pull/14159))
+
 ## 2026-05-01
 
 ### 🆕 New Scripts
