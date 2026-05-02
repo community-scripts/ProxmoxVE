@@ -8920,7 +8920,7 @@ function fetch_and_deploy_gl_release() {
   ensure_dependencies jq
 
   local repo_encoded
-  repo_encoded=$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$repo" 2>/dev/null ||
+  repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
     echo "$repo" | sed 's|/|%2F|g')
 
   local api_base="https://gitlab.com/api/v4/projects/$repo_encoded/releases"
