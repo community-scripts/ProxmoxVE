@@ -454,6 +454,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [FIX]ShelfMark: Use UV sync for shelfmark backend build; update to Python 3.14 [@vhsdream](https://github.com/vhsdream) ([#14170](https://github.com/community-scripts/ProxmoxVE/pull/14170))
     - alpine: remove deb/ubuntu-only resource & storage checks from update-script [@MickLesk](https://github.com/MickLesk) ([#14166](https://github.com/community-scripts/ProxmoxVE/pull/14166))
     - Threadfin: use 'threadfin-app' as app name to avoid version-file clash  [@MickLesk](https://github.com/MickLesk) ([#14159](https://github.com/community-scripts/ProxmoxVE/pull/14159))
 
