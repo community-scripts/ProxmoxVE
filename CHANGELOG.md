@@ -468,11 +468,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Revert "tools.func: add GitLab release check/fetch/deploy helpers"  [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14202](https://github.com/community-scripts/ProxmoxVE/pull/14202))
-
   - #### ✨ New Features
 
-    - tools.func: add GitLab release check/fetch/deploy helpers [@MickLesk](https://github.com/MickLesk) ([#14133](https://github.com/community-scripts/ProxmoxVE/pull/14133))
     - core: prompt to also run installed addon update scripts (…/bin/update_*) after update_script [@MickLesk](https://github.com/MickLesk) ([#14162](https://github.com/community-scripts/ProxmoxVE/pull/14162))
 
 ## 2026-05-01
