@@ -456,6 +456,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Threadfin: use 'threadfin-app' as app name to avoid version-file clash  [@MickLesk](https://github.com/MickLesk) ([#14159](https://github.com/community-scripts/ProxmoxVE/pull/14159))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: prompt to also run installed addon update scripts (…/bin/update_*) after update_script [@MickLesk](https://github.com/MickLesk) ([#14162](https://github.com/community-scripts/ProxmoxVE/pull/14162))
+
 ## 2026-05-01
 
 ### 🆕 New Scripts
