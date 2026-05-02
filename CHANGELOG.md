@@ -450,6 +450,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-02
 
+### 🆕 New Scripts
+
+  - Tube Archivist ([#14123](https://github.com/community-scripts/ProxmoxVE/pull/14123))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
