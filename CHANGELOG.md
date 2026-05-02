@@ -452,7 +452,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Tube Archivist ([#14123](https://github.com/community-scripts/ProxmoxVE/pull/14123))
+  - protonmail-bridge ([#14136](https://github.com/community-scripts/ProxmoxVE/pull/14136))
+- Tube Archivist ([#14123](https://github.com/community-scripts/ProxmoxVE/pull/14123))
 
 ### 🚀 Updated Scripts
 
