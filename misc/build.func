@@ -513,7 +513,7 @@ validate_bridge() {
   [[ -z "$bridge" ]] && return 1
 
   # Check if bridge interface exists
-  if ! ip link show "$bridge" &>/dev/null; then
+  if ! ip link show dev "$bridge" &>/dev/null; then
     return 1
   fi
 
