@@ -466,6 +466,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Hortusfox: fix update issues [@tomfrenzel](https://github.com/tomfrenzel) ([#14214](https://github.com/community-scripts/ProxmoxVE/pull/14214))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - pve/pbs scripts: guard sed against missing /etc/apt/sources.list [@MickLesk](https://github.com/MickLesk) ([#14222](https://github.com/community-scripts/ProxmoxVE/pull/14222))
+
 ## 2026-05-02
 
 ### 🆕 New Scripts
