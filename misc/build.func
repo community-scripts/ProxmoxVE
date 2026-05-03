@@ -2709,9 +2709,61 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 28: Verbose Mode & Confirmation
+    # STEP 28: Optional host-side post-install hook (path on the Proxmox HOST)
     # ═══════════════════════════════════════════════════════════════════════════
     28)
+      local _hook_prompt="Optional: absolute path to a *.sh file ON THE PROXMOX HOST.
+
+It runs as root on the HOST (NOT in the LXC) after the container
+is fully provisioned and started.
+
+Available env vars: APP, NSAPP, CTID, IP, HN, STORAGE, BRG.
+
+Leave empty to skip."
+      while true; do
+        if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+          --title "POST-INSTALL HOOK (HOST)" \
+          --ok-button "Next" --cancel-button "Back" \
+          --inputbox "$_hook_prompt" 16 70 "${_post_install}" \
+          3>&1 1>&2 2>&3); then
+          # Normalize: strip surrounding whitespace
+          result="$(printf '%s' "$result" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+          if [[ -z "$result" ]]; then
+            _post_install=""
+            ((STEP++))
+            break
+          fi
+          # Reject obvious shell-meta sneaking through
+          if [[ "$result" == *';'* || "$result" == *'$('* || "$result" == *'`'* || "$result" == *'&&'* || "$result" == *'||'* ]]; then
+            whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID PATH" \
+              --msgbox "Path contains shell metacharacters. Please provide a plain absolute file path." 10 70
+            continue
+          fi
+          if [[ "$result" != /* ]]; then
+            whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID PATH" \
+              --msgbox "Path must be absolute (start with /).\n\nGot: $result" 10 70
+            continue
+          fi
+          if [[ ! -f "$result" ]]; then
+            if ! whiptail --backtitle "Proxmox VE Helper Scripts" --title "FILE NOT FOUND" \
+              --yesno "File does not exist on host:\n\n$result\n\nKeep this path anyway?" 12 70; then
+              continue
+            fi
+          fi
+          _post_install="$result"
+          ((STEP++))
+          break
+        else
+          ((STEP--))
+          break
+        fi
+      done
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 29: Verbose Mode & Confirmation
+    # ═══════════════════════════════════════════════════════════════════════════
+    29)
       local verbose_default_flag="--defaultno"
       [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
 
@@ -2740,6 +2792,11 @@ advanced_settings() {
       local apt_display="${_apt_cacher:-no}"
       [[ "$_apt_cacher" == "yes" && -n "$_apt_cacher_ip" ]] && apt_display="$_apt_cacher_ip"
 
+      local post_install_display="${_post_install:-(none)}"
+      local post_install_warn=""
+      [[ -n "$_post_install" ]] && post_install_warn="
+  ⚠ Hook runs as root on Proxmox HOST (not in LXC)"
+
       local summary="Container Type: $ct_type_desc
 Container ID: $_ct_id
 Hostname: $_hostname
@@ -2764,7 +2821,7 @@ Advanced:
   Timezone: $tz_display
   APT Cacher: $apt_display
   Verbose: $_verbose
-  Post-Install Script: ${_post_install:-(none)}"
+  Post-Install Script: ${post_install_display}${post_install_warn}"
 
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "CONFIRM SETTINGS" \
@@ -6321,18 +6378,33 @@ EOF
   # Path comes from var_post_install (default.vars / app.vars / advanced settings).
   # Runs ON THE PROXMOX HOST after the container is up and configured.
   # Exposed env vars: APP, NSAPP, CTID, IP, HN, STORAGE, BRG.
+  # Output (stdout/stderr) is captured to /var/log/community-scripts/post-install-<CTID>.log
   if [[ -n "${var_post_install:-}" ]]; then
-    if [[ -f "${var_post_install}" ]]; then
-      msg_info "Running post-install script: ${var_post_install}"
-      if APP="$APP" NSAPP="${NSAPP:-}" CTID="$CTID" IP="$IP" HN="${HN:-}" \
-        STORAGE="${STORAGE:-}" BRG="${BRG:-}" \
-        bash "${var_post_install}"; then
-        msg_ok "Ran post-install script"
-      else
-        msg_error "Post-install script exited with non-zero status (rc=$?)"
-      fi
+    local _hook_log_dir="/var/log/community-scripts"
+    local _hook_log="${_hook_log_dir}/post-install-${CTID}.log"
+    mkdir -p "$_hook_log_dir" 2>/dev/null || true
+
+    if [[ ! -f "${var_post_install}" ]]; then
+      msg_error "Post-install hook not found on host: ${var_post_install}"
+      whiptail --backtitle "Proxmox VE Helper Scripts" \
+        --title "POST-INSTALL HOOK FAILED" \
+        --msgbox "The configured post-install hook was not found on the Proxmox host:\n\n${var_post_install}\n\nThe LXC was created successfully, but the hook did NOT run." 14 72 || true
     else
-      msg_error "Post-install script not found on host: ${var_post_install}"
+      msg_info "Running post-install hook: ${var_post_install}"
+      local _hook_rc=0
+      APP="$APP" NSAPP="${NSAPP:-}" CTID="$CTID" IP="$IP" HN="${HN:-}" \
+        STORAGE="${STORAGE:-}" BRG="${BRG:-}" \
+        bash "${var_post_install}" >"${_hook_log}" 2>&1 || _hook_rc=$?
+      if [[ $_hook_rc -eq 0 ]]; then
+        msg_ok "Post-install hook completed (log: ${_hook_log})"
+      else
+        msg_error "Post-install hook failed (rc=${_hook_rc}) – see ${_hook_log}"
+        local _hook_tail=""
+        _hook_tail="$(tail -n 15 "${_hook_log}" 2>/dev/null || true)"
+        whiptail --backtitle "Proxmox VE Helper Scripts" \
+          --title "POST-INSTALL HOOK FAILED" \
+          --msgbox "Hook exited with code ${_hook_rc}.\n\nScript: ${var_post_install}\nLog:    ${_hook_log}\n\n--- Last log lines ---\n${_hook_tail}\n\nThe LXC itself was created successfully." 22 78 || true
+      fi
     fi
   fi
 
