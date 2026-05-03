@@ -470,6 +470,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - pangolin: pin version, drop manual SQL, use upstream migrator [@MickLesk](https://github.com/MickLesk) ([#14223](https://github.com/community-scripts/ProxmoxVE/pull/14223))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: fix validate_bridge function [@MichaelOultram](https://github.com/MichaelOultram) ([#14206](https://github.com/community-scripts/ProxmoxVE/pull/14206))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
