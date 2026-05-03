@@ -55,7 +55,6 @@
 #       in Advanced Settings.
 # ============================================================================
 
-
 # ============================================================================
 # ▼▼▼ EXAMPLE 1 — BEGIN ▼▼▼
 # ----------------------------------------------------------------------------
@@ -90,7 +89,6 @@ printf '%s;%s;%s;%s;%s;%s;%s\n' \
 
 echo "Logged ${APP} (CTID=${CTID}) to ${LOG_FILE}"
 # ▲▲▲ EXAMPLE 1 — END ▲▲▲
-
 
 # ============================================================================
 # ▼▼▼ EXAMPLE 2 — BEGIN ▼▼▼
@@ -143,8 +141,8 @@ curl -fsS --max-time 10 \
   -H "Content-Type: application/json" \
   -X POST "$DISCORD_WEBHOOK" \
   --data "$DISCORD_PAYLOAD" \
-  >/dev/null \
-  || echo "WARN: Discord webhook failed (non-fatal)"
+  >/dev/null ||
+  echo "WARN: Discord webhook failed (non-fatal)"
 
 # --- Gotify push ------------------------------------------------------------
 curl -fsS --max-time 10 \
@@ -153,12 +151,11 @@ curl -fsS --max-time 10 \
   -F "message=CTID=${CTID}  IP=${IP}  HN=${HN}  on ${NODE}" \
   -F "priority=${GOTIFY_PRIORITY}" \
   "${GOTIFY_URL}/message" \
-  >/dev/null \
-  || echo "WARN: Gotify push failed (non-fatal)"
+  >/dev/null ||
+  echo "WARN: Gotify push failed (non-fatal)"
 
 echo "Notifications dispatched for CTID=${CTID}"
 # ▲▲▲ EXAMPLE 2 — END ▲▲▲
-
 
 # ============================================================================
 # ▼▼▼ EXAMPLE 3 — BEGIN ▼▼▼
@@ -176,11 +173,11 @@ set -euo pipefail
 
 # --- CONFIG (edit me) -------------------------------------------------------
 TARGET_POOL="auto-lxc"
-EXTRA_TAGS=("auto-provisioned" "${NSAPP}")     # community-script tag is set by build.func
-BACKUP_STORAGE="pbs-main"                       # set to "" to skip initial backup
+EXTRA_TAGS=("auto-provisioned" "${NSAPP}") # community-script tag is set by build.func
+BACKUP_STORAGE="pbs-main"                  # set to "" to skip initial backup
 PIHOLE_HOST="192.168.1.5"
-PIHOLE_PASSWORD="changeme"                      # web-UI password
-DNS_DOMAIN="lan"                                # FQDN will be ${HN}.${DNS_DOMAIN}
+PIHOLE_PASSWORD="changeme" # web-UI password
+DNS_DOMAIN="lan"           # FQDN will be ${HN}.${DNS_DOMAIN}
 # ----------------------------------------------------------------------------
 
 # 1) Ensure the pool exists, then attach the CT
@@ -197,7 +194,10 @@ declare -A TAG_SET
 IFS=';' read -r -a CUR_ARR <<<"${CURRENT_TAGS:-}"
 for t in "${CUR_ARR[@]}"; do [[ -n "$t" ]] && TAG_SET["$t"]=1; done
 for t in "${EXTRA_TAGS[@]}"; do [[ -n "$t" ]] && TAG_SET["$t"]=1; done
-NEW_TAGS="$(IFS=';'; echo "${!TAG_SET[*]}")"
+NEW_TAGS="$(
+  IFS=';'
+  echo "${!TAG_SET[*]}"
+)"
 echo "Setting tags: ${NEW_TAGS}"
 pct set "${CTID}" --tags "${NEW_TAGS}" || echo "WARN: tag update failed (non-fatal)"
 
@@ -206,16 +206,16 @@ FQDN="${HN}.${DNS_DOMAIN}"
 echo "Registering DNS: ${FQDN} → ${IP} on pi-hole ${PIHOLE_HOST}"
 SID="$(curl -fsS --max-time 5 \
   -d "pw=${PIHOLE_PASSWORD}" \
-  "http://${PIHOLE_HOST}/api/auth" 2>/dev/null \
-  | sed -nE 's/.*"sid":"([^"]+)".*/\1/p' || true)"
+  "http://${PIHOLE_HOST}/api/auth" 2>/dev/null |
+  sed -nE 's/.*"sid":"([^"]+)".*/\1/p' || true)"
 
 if [[ -n "${SID}" ]]; then
   curl -fsS --max-time 5 -X PUT \
     -H "Content-Type: application/json" \
     -H "sid: ${SID}" \
     -d "{\"hosts\":[\"${IP} ${FQDN}\"]}" \
-    "http://${PIHOLE_HOST}/api/config/dns/hosts" >/dev/null \
-    || echo "WARN: pi-hole DNS update failed (non-fatal)"
+    "http://${PIHOLE_HOST}/api/config/dns/hosts" >/dev/null ||
+    echo "WARN: pi-hole DNS update failed (non-fatal)"
   curl -fsS --max-time 5 -X DELETE -H "sid: ${SID}" "http://${PIHOLE_HOST}/api/auth" >/dev/null || true
 else
   echo "WARN: could not obtain pi-hole session (skipping DNS)"
@@ -230,8 +230,8 @@ if [[ -n "${BACKUP_STORAGE}" ]]; then
       --mode snapshot \
       --compress zstd \
       --notes-template "Initial backup of ${APP} (CTID=${CTID})" \
-      --notification-mode auto \
-      || echo "WARN: initial backup failed (non-fatal)"
+      --notification-mode auto ||
+      echo "WARN: initial backup failed (non-fatal)"
   else
     echo "Backup storage '${BACKUP_STORAGE}' not found — skipping."
   fi
@@ -239,7 +239,6 @@ fi
 
 echo "Post-provision routine complete for ${APP} (CTID=${CTID})"
 # ▲▲▲ EXAMPLE 3 — END ▲▲▲
-
 
 # ============================================================================
 # ▼▼▼ EXAMPLE 4 — BEGIN ▼▼▼
@@ -258,7 +257,7 @@ set -euo pipefail
 # --- CONFIG (edit me) -------------------------------------------------------
 ADMIN_KEY="/root/.ssh/admin_ed25519.pub"
 BESZEL_HUB_URL="http://192.168.1.10:8090"
-BESZEL_AGENT_KEY="ssh-ed25519 AAAA... beszel@hub"   # public key of the hub
+BESZEL_AGENT_KEY="ssh-ed25519 AAAA... beszel@hub" # public key of the hub
 UPTIME_KUMA_PUSH_BASE="http://uptime.lan/api/push/abc123"
 # ----------------------------------------------------------------------------
 
@@ -318,8 +317,8 @@ pct exec "${CTID}" -- sed -i "s|__KEY_PLACEHOLDER__|${BESZEL_AGENT_KEY}|" \
   /etc/systemd/system/beszel-agent.service
 
 pct exec "${CTID}" -- systemctl daemon-reload
-pct exec "${CTID}" -- systemctl enable --now beszel-agent.service \
-  || echo "WARN: could not start beszel-agent"
+pct exec "${CTID}" -- systemctl enable --now beszel-agent.service ||
+  echo "WARN: could not start beszel-agent"
 
 # 4) Register an Uptime-Kuma push monitor (host-side, just sends one ping)
 echo "Pinging Uptime-Kuma push monitor for ${HN}"
@@ -329,12 +328,11 @@ curl -fsS --max-time 5 \
   --data-urlencode "msg=created by community-scripts" \
   --data-urlencode "ping=1" \
   --data-urlencode "label=${HN}" \
-  "${UPTIME_KUMA_PUSH_BASE}" >/dev/null \
-  || echo "WARN: Uptime-Kuma push failed (non-fatal)"
+  "${UPTIME_KUMA_PUSH_BASE}" >/dev/null ||
+  echo "WARN: Uptime-Kuma push failed (non-fatal)"
 
 echo "Provisioned monitoring for ${APP} (CTID=${CTID}, IP=${IP})"
 # ▲▲▲ EXAMPLE 4 — END ▲▲▲
-
 
 # ============================================================================
 # ▼▼▼ EXAMPLE 5 — BEGIN ▼▼▼
@@ -351,7 +349,7 @@ set -euo pipefail
 
 # --- CONFIG (edit me) -------------------------------------------------------
 DEFAULT_DNS_SUFFIX="lan"
-PROM_FILE_SD_DIR="/etc/prometheus/file_sd"   # on the host that runs Prometheus
+PROM_FILE_SD_DIR="/etc/prometheus/file_sd" # on the host that runs Prometheus
 # ----------------------------------------------------------------------------
 
 log() { printf '[%s] %s\n' "$(date +%H:%M:%S)" "$*"; }
@@ -385,32 +383,33 @@ log "Dispatching post-install for NSAPP=${NSAPP} CTID=${CTID}"
 
 case "${NSAPP}" in
 
-  # ------ Databases ---------------------------------------------------------
-  postgresql|mariadb|mongodb|redis|valkey)
-    log "Database role: bumping resources & adding to backup-critical pool"
-    set_ct_options 4 4096 "DB: ${APP}"
-    pvesh set /pools/db-critical --vms "${CTID}" 2>/dev/null || true
-    register_prometheus_target "${NSAPP}-exporter" 9187
-    ;;
+# ------ Databases ---------------------------------------------------------
+postgresql | mariadb | mongodb | redis | valkey)
+  log "Database role: bumping resources & adding to backup-critical pool"
+  set_ct_options 4 4096 "DB: ${APP}"
+  pvesh set /pools/db-critical --vms "${CTID}" 2>/dev/null || true
+  register_prometheus_target "${NSAPP}-exporter" 9187
+  ;;
 
-  # ------ *arr media stack --------------------------------------------------
-  sonarr|radarr|prowlarr|lidarr|readarr|bazarr)
-    log "Media-arr role: tagging + Sonarr/Radarr API webhook"
-    pct set "${CTID}" --tags "community-script;media;arr-stack" || true
-    curl -fsS --max-time 5 -X POST \
-      "http://media-hub.${DEFAULT_DNS_SUFFIX}/hooks/arr-added" \
-      -H "Content-Type: application/json" \
-      -d "{\"app\":\"${NSAPP}\",\"ctid\":${CTID},\"ip\":\"${IP}\"}" \
-      >/dev/null || log "WARN: media-hub webhook failed"
-    ;;
+# ------ *arr media stack --------------------------------------------------
+sonarr | radarr | prowlarr | lidarr | readarr | bazarr)
+  log "Media-arr role: tagging + Sonarr/Radarr API webhook"
+  pct set "${CTID}" --tags "community-script;media;arr-stack" || true
+  curl -fsS --max-time 5 -X POST \
+    "http://media-hub.${DEFAULT_DNS_SUFFIX}/hooks/arr-added" \
+    -H "Content-Type: application/json" \
+    -d "{\"app\":\"${NSAPP}\",\"ctid\":${CTID},\"ip\":\"${IP}\"}" \
+    >/dev/null || log "WARN: media-hub webhook failed"
+  ;;
 
-  # ------ Web apps that should sit behind NPM/Traefik ----------------------
-  vaultwarden|paperless-ngx|nextcloud|immich|bookstack)
-    log "Web app role: registering reverse-proxy entry"
-    curl -fsS --max-time 5 -X POST \
-      "http://traefik.${DEFAULT_DNS_SUFFIX}/api/dynamic-add" \
-      -H "Content-Type: application/json" \
-      -d "$(cat <<JSON
+# ------ Web apps that should sit behind NPM/Traefik ----------------------
+vaultwarden | paperless-ngx | nextcloud | immich | bookstack)
+  log "Web app role: registering reverse-proxy entry"
+  curl -fsS --max-time 5 -X POST \
+    "http://traefik.${DEFAULT_DNS_SUFFIX}/api/dynamic-add" \
+    -H "Content-Type: application/json" \
+    -d "$(
+      cat <<JSON
 {
   "name": "${HN}",
   "host": "${HN}.${DEFAULT_DNS_SUFFIX}",
@@ -418,15 +417,15 @@ case "${NSAPP}" in
   "app": "${NSAPP}"
 }
 JSON
-)" >/dev/null || log "WARN: traefik registration failed"
-    register_prometheus_target "blackbox-http" 80
-    ;;
+    )" >/dev/null || log "WARN: traefik registration failed"
+  register_prometheus_target "blackbox-http" 80
+  ;;
 
-  # ------ Default fallback --------------------------------------------------
-  *)
-    log "No special handling for ${NSAPP} — applying generic defaults"
-    register_prometheus_target "node-exporter" 9100
-    ;;
+# ------ Default fallback --------------------------------------------------
+*)
+  log "No special handling for ${NSAPP} — applying generic defaults"
+  register_prometheus_target "node-exporter" 9100
+  ;;
 esac
 
 log "Finished dispatcher for ${APP} (CTID=${CTID})"
