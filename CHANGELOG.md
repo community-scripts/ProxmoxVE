@@ -466,6 +466,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Hortusfox: fix update issues [@tomfrenzel](https://github.com/tomfrenzel) ([#14214](https://github.com/community-scripts/ProxmoxVE/pull/14214))
 
+  - #### ✨ New Features
+
+    - pangolin: pin version, drop manual SQL, use upstream migrator [@MickLesk](https://github.com/MickLesk) ([#14223](https://github.com/community-scripts/ProxmoxVE/pull/14223))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
