@@ -45,7 +45,7 @@ function update_script() {
     mv /opt/hortusfox-backup/.env /opt/hortusfox/.env
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --optimize-autoloader
-    $STD php asatru migrate --no-interaction
+    $STD php asatru migrate:upgrade
     $STD php asatru plants:attributes
     $STD php asatru calendar:classes
     chown -R www-data:www-data /opt/hortusfox
