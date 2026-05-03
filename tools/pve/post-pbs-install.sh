@@ -188,7 +188,9 @@ start_routines_4() {
   yes)
     msg_info "Correcting Debian Sources (deb822)"
     rm -f /etc/apt/sources.list.d/*.list
-    sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
+    if [ -f /etc/apt/sources.list ]; then
+      sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list
+    fi
     cat >/etc/apt/sources.list.d/debian.sources <<EOF
 Types: deb
 URIs: http://deb.debian.org/debian/
