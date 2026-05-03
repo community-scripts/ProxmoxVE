@@ -48,6 +48,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -57,7 +60,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>April (25 entries)</h4></summary>
+<summary><h4>May (2 entries)</h4></summary>
+
+[View May 2026 Changelog](.github/changelogs/2026/05.md)
+
+</details>
+
+<details>
+<summary><h4>April (30 entries)</h4></summary>
 
 [View April 2026 Changelog](.github/changelogs/2026/04.md)
 
@@ -1054,110 +1064,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🐞 Bug Fixes
 
     - PVE LXC-Updater: pipe apt list through cat to prevent pager hang [@MickLesk](https://github.com/MickLesk) ([#13501](https://github.com/community-scripts/ProxmoxVE/pull/13501))
-
-## 2026-04-02
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Grist: Guard backup restore for empty docs/db files [@MickLesk](https://github.com/MickLesk) ([#13472](https://github.com/community-scripts/ProxmoxVE/pull/13472))
-    - fix(zigbee2mqtt): suppress grep error when pnpm-workspace.yaml is absent on update [@Copilot](https://github.com/Copilot) ([#13476](https://github.com/community-scripts/ProxmoxVE/pull/13476))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - Cron LXC Updater: Add full PATH for cron environment [@MickLesk](https://github.com/MickLesk) ([#13473](https://github.com/community-scripts/ProxmoxVE/pull/13473))
-
-## 2026-04-01
-
-### 🆕 New Scripts
-
-  - DrawDB ([#13454](https://github.com/community-scripts/ProxmoxVE/pull/13454))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - Filebrowser: make noauth setup use correct database [@MickLesk](https://github.com/MickLesk) ([#13457](https://github.com/community-scripts/ProxmoxVE/pull/13457))
-
-## 2026-03-31
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Graylog: set vm.max_map_count on host for OpenSearch [@MickLesk](https://github.com/MickLesk) ([#13441](https://github.com/community-scripts/ProxmoxVE/pull/13441))
-    - Koillection: ensure newline before appending to .env.local [@MickLesk](https://github.com/MickLesk) ([#13440](https://github.com/community-scripts/ProxmoxVE/pull/13440))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - core: skip empty gateway value in network config [@MickLesk](https://github.com/MickLesk) ([#13442](https://github.com/community-scripts/ProxmoxVE/pull/13442))
-
-## 2026-03-30
-
-### 🆕 New Scripts
-
-  - Bambuddy ([#13411](https://github.com/community-scripts/ProxmoxVE/pull/13411))
-
-### 🚀 Updated Scripts
-
-  - #### 💥 Breaking Changes
-
-    - Rename: BirdNET > BirdNET-Go [@MickLesk](https://github.com/MickLesk) ([#13410](https://github.com/community-scripts/ProxmoxVE/pull/13410))
-
-## 2026-03-29
-
-### 🆕 New Scripts
-
-  - YOURLS ([#13379](https://github.com/community-scripts/ProxmoxVE/pull/13379))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix(victoriametrics): use jq to filter releases [@Joery-M](https://github.com/Joery-M) ([#13393](https://github.com/community-scripts/ProxmoxVE/pull/13393))
-    - Ollama: add error handling for Intel GPG key imports [@MickLesk](https://github.com/MickLesk) ([#13397](https://github.com/community-scripts/ProxmoxVE/pull/13397))
-    - Immich: ignore Redis connection error on maintenance mode disable [@MickLesk](https://github.com/MickLesk) ([#13398](https://github.com/community-scripts/ProxmoxVE/pull/13398))
-    - NPM: unmask openresty after migration from package [@MickLesk](https://github.com/MickLesk) ([#13399](https://github.com/community-scripts/ProxmoxVE/pull/13399))
-
-## 2026-03-28
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Fix: Update gokapi binary name for v2.2.4+ and add migration step [@krazos](https://github.com/krazos) ([#13377](https://github.com/community-scripts/ProxmoxVE/pull/13377))
-    - Fix: update gokapi asset matching for v2.2.4+ naming convention [@krazos](https://github.com/krazos) ([#13369](https://github.com/community-scripts/ProxmoxVE/pull/13369))
-    - Tandoor Recipes: Add missing env variable [@tremor021](https://github.com/tremor021) ([#13365](https://github.com/community-scripts/ProxmoxVE/pull/13365))
-
-  - #### ✨ New Features
-
-    - FileFlows: add option to install Node [@tremor021](https://github.com/tremor021) ([#13368](https://github.com/community-scripts/ProxmoxVE/pull/13368))
-
-## 2026-03-27
-
-### 🆕 New Scripts
-
-  - Matter-Server ([#13355](https://github.com/community-scripts/ProxmoxVE/pull/13355))
-- GeoPulse ([#13320](https://github.com/community-scripts/ProxmoxVE/pull/13320))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - RevealJS: Switch from gulp to vite [@tremor021](https://github.com/tremor021) ([#13336](https://github.com/community-scripts/ProxmoxVE/pull/13336))
-
-  - #### ✨ New Features
-
-    - Dispatcharr add custom Postgres port support for upgrade [@MickLesk](https://github.com/MickLesk) ([#13347](https://github.com/community-scripts/ProxmoxVE/pull/13347))
-    - Immich: bump to v2.6.3 [@MickLesk](https://github.com/MickLesk) ([#13324](https://github.com/community-scripts/ProxmoxVE/pull/13324))
-
-### 🧰 Tools
-
-  - #### ✨ New Features
-
-    - Refactor/Feature-Bump/Security: Update-Cron-LXCs (Now Local Mode!) [@MickLesk](https://github.com/MickLesk) ([#13339](https://github.com/community-scripts/ProxmoxVE/pull/13339))
