@@ -22,7 +22,8 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
-fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
+PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.18.2}"
+fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VERSION"
 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
 fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"
 
@@ -204,6 +205,7 @@ User=root
 Environment=NODE_ENV=production
 Environment=ENVIRONMENT=prod
 WorkingDirectory=/opt/pangolin
+ExecStartPre=/usr/bin/node dist/migrations.mjs
 ExecStart=/usr/bin/node --enable-source-maps dist/server.mjs
 Restart=always
 RestartSec=10
