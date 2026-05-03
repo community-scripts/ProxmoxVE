@@ -468,6 +468,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Refactor: PeaNUT for v6 [@MickLesk](https://github.com/MickLesk) ([#14224](https://github.com/community-scripts/ProxmoxVE/pull/14224))
     - pangolin: pin version, drop manual SQL, use upstream migrator [@MickLesk](https://github.com/MickLesk) ([#14223](https://github.com/community-scripts/ProxmoxVE/pull/14223))
 
 ### 💾 Core
