@@ -460,6 +460,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-03
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Hortusfox: fix update issues [@tomfrenzel](https://github.com/tomfrenzel) ([#14214](https://github.com/community-scripts/ProxmoxVE/pull/14214))
+
 ## 2026-05-02
 
 ### 🆕 New Scripts
