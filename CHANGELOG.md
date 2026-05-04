@@ -458,6 +458,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-04
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Databasus: update mongo-tools fallback to 100.16.1 and use now pnpm instead of npm ci [@MickLesk](https://github.com/MickLesk) ([#14240](https://github.com/community-scripts/ProxmoxVE/pull/14240))
+
 ## 2026-05-03
 
 ### 🚀 Updated Scripts
