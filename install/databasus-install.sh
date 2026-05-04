@@ -32,7 +32,7 @@ for v in 12 13 14 15 16 18; do
 done
 # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
 [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools" "100." || echo "100.14.1")
+MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools" "100." || echo "100.16.1")
 fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-${MONGO_VERSION}.deb" ""
 mkdir -p /usr/local/mongodb-database-tools/bin
 [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
@@ -53,8 +53,9 @@ fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest"
 
 msg_info "Building Databasus (Patience)"
 cd /opt/databasus/frontend
-$STD npm ci
-$STD npm run build
+$STD corepack enable
+$STD pnpm install --frozen-lockfile
+$STD pnpm run build
 cd /opt/databasus/backend
 $STD go mod tidy
 $STD go mod download
