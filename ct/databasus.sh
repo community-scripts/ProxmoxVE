@@ -90,6 +90,11 @@ function update_script() {
     chmod 600 /.env
     msg_ok "Restored Configuration"
 
+    msg_info "Updating Service"
+    sed -i 's|EnvironmentFile=.*|EnvironmentFile=/.env|' /etc/systemd/system/databasus.service
+    $STD systemctl daemon-reload
+    msg_ok "Updated Service"
+
     msg_info "Starting Databasus"
     $STD systemctl start databasus
     msg_ok "Started Databasus"
