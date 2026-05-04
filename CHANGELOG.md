@@ -470,6 +470,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools.func get_latest_gh_tag - add pagination to find prefixed tags beyond first 50 [@MickLesk](https://github.com/MickLesk) ([#14241](https://github.com/community-scripts/ProxmoxVE/pull/14241))
     - tools.func: add GitLab release check/fetch/deploy helpers [@MickLesk](https://github.com/MickLesk) ([#14242](https://github.com/community-scripts/ProxmoxVE/pull/14242))
 
 ## 2026-05-03
