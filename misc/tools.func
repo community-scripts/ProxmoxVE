@@ -8891,6 +8891,113 @@ check_for_gl_release() {
   return 1
 }
 
+# ------------------------------------------------------------------------------
+# Scan older GitLab releases for a matching asset (fallback helper).
+#
+# Description:
+#   When the latest release does not contain the expected asset
+#   (e.g. .deb for the current arch, or a custom pattern), walks back
+#   through up to 15 recent releases and returns the first release JSON
+#   that has a matching asset. Used internally by fetch_and_deploy_gl_release.
+#
+# Usage (internal):
+#   _gl_scan_older_releases "owner/repo" "owner%2Frepo" "https://gitlab.com" \
+#     "binary|prebuild|singlefile" "$asset_pattern" "$skip_tag"
+#
+# Returns:
+#   - stdout: JSON of the matching release (single object) on success
+#   - 0 on success, 22 on API error, 250 if no match found
+# ------------------------------------------------------------------------------
+_gl_scan_older_releases() {
+  local repo="$1"
+  local repo_encoded="$2"
+  local base_url="${3:-https://gitlab.com}"
+  local mode="$4"
+  local asset_pattern="$5"
+  local skip_tag="$6"
+
+  local header=()
+  [[ -n "${GITLAB_TOKEN:-}" ]] && header=(-H "PRIVATE-TOKEN: $GITLAB_TOKEN")
+
+  local releases_list
+  releases_list=$(curl --connect-timeout 10 --max-time 30 -fsSL \
+    "${header[@]}" \
+    "${base_url}/api/v4/projects/${repo_encoded}/releases?per_page=15&order_by=released_at&sort=desc" 2>/dev/null) || {
+    msg_warn "Failed to fetch older releases for ${repo}"
+    return 22
+  }
+
+  local count
+  count=$(echo "$releases_list" | jq 'length' 2>/dev/null || echo 0)
+  [[ "$count" -eq 0 ]] && return 250
+
+  for ((i = 0; i < count; i++)); do
+    local rel_tag
+    rel_tag=$(echo "$releases_list" | jq -r ".[$i].tag_name")
+
+    # Skip the tag we already checked
+    [[ "$rel_tag" == "$skip_tag" ]] && continue
+
+    # Asset URLs for this release (direct_asset_url preferred, fallback to url)
+    local asset_urls
+    asset_urls=$(echo "$releases_list" | jq -r ".[$i].assets.links // [] | .[] | .direct_asset_url // .url")
+    [[ -z "$asset_urls" ]] && continue
+
+    local has_match=false
+
+    if [[ "$mode" == "binary" ]]; then
+      local arch
+      arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
+      [[ "$arch" == "x86_64" ]] && arch="amd64"
+      [[ "$arch" == "aarch64" ]] && arch="arm64"
+
+      # Check with explicit pattern first, then arch heuristic, then any .deb
+      if [[ -n "$asset_pattern" ]]; then
+        while read -r u; do
+          case "${u##*/}" in $asset_pattern)
+            has_match=true
+            break
+            ;;
+          esac
+        done <<<"$asset_urls"
+      fi
+      if [[ "$has_match" != "true" ]]; then
+        echo "$asset_urls" | grep -qE "($arch|amd64|x86_64|aarch64|arm64).*\.deb$" && has_match=true
+      fi
+      if [[ "$has_match" != "true" ]]; then
+        echo "$asset_urls" | grep -qE '\.deb$' && has_match=true
+      fi
+
+    elif [[ "$mode" == "prebuild" || "$mode" == "singlefile" ]]; then
+      while read -r u; do
+        case "${u##*/}" in $asset_pattern)
+          has_match=true
+          break
+          ;;
+        esac
+      done <<<"$asset_urls"
+    fi
+
+    if [[ "$has_match" == "true" ]]; then
+      local use_fallback="y"
+      if [[ -t 0 ]]; then
+        msg_warn "Release ${skip_tag} has no matching asset. Previous release ${rel_tag} has a compatible asset."
+        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback || use_fallback="y"
+        use_fallback="${use_fallback:-y}"
+      fi
+
+      if [[ "${use_fallback,,}" == "y" || "${use_fallback,,}" == "yes" ]]; then
+        echo "$releases_list" | jq ".[$i]"
+        return 0
+      else
+        return 250
+      fi
+    fi
+  done
+
+  return 250
+}
+
 function fetch_and_deploy_gl_release() {
   local app="$1"
   local repo="$2"
