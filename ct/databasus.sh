@@ -46,7 +46,7 @@ function update_script() {
     # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
     if ! command -v mongodump &>/dev/null; then
       [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-100.14.1.deb"
+      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-100.16.1.deb"
     fi
     [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
     [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
@@ -67,8 +67,9 @@ function update_script() {
 
     msg_info "Updating Databasus"
     cd /opt/databasus/frontend
-    $STD npm ci
-    $STD npm run build
+    $STD corepack enable
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm run build
     cd /opt/databasus/backend
     $STD go mod download
     $STD /root/go/bin/swag init -g cmd/main.go -o swagger
