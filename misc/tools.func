@@ -2079,15 +2079,33 @@ get_latest_gh_tag() {
   local temp_file
   temp_file=$(mktemp)
 
-  if ! github_api_call "https://api.github.com/repos/${repo}/tags?per_page=50" "$temp_file"; then
-    rm -f "$temp_file"
-    return 22
-  fi
-
   local tag=""
+
   if [[ -n "$prefix" ]]; then
-    tag=$(jq -r --arg p "$prefix" '[.[] | select(.name | startswith($p))][0].name // empty' "$temp_file")
+    # Use git/matching-refs API for server-side prefix filtering. This avoids
+    # paging through unrelated tags (e.g. mongodb/mongo-tools where 100.x tags
+    # only appear after page 4 of /tags). Returns ALL tags matching the prefix
+    # in a single call, sorted lexicographically ascending; we pick the
+    # highest version using `sort -V`.
+    if ! github_api_call "https://api.github.com/repos/${repo}/git/matching-refs/tags/${prefix}" "$temp_file"; then
+      rm -f "$temp_file"
+      return 22
+    fi
+
+    local count
+    count=$(jq 'length' "$temp_file" 2>/dev/null || echo 0)
+    if [[ "$count" -gt 0 ]]; then
+      tag=$(jq -r '.[].ref' "$temp_file" \
+        | sed 's|^refs/tags/||' \
+        | sort -V \
+        | tail -n1)
+    fi
   else
+    # No prefix: just take the first (newest) tag from /tags
+    if ! github_api_call "https://api.github.com/repos/${repo}/tags?per_page=1" "$temp_file"; then
+      rm -f "$temp_file"
+      return 22
+    fi
     tag=$(jq -r '.[0].name // empty' "$temp_file")
   fi
 
