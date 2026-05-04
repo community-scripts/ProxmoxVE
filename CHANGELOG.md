@@ -464,6 +464,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Databasus: move .env to filesystem root so service starts correctly [@Copilot](https://github.com/Copilot) ([#14252](https://github.com/community-scripts/ProxmoxVE/pull/14252))
     - Databasus: update mongo-tools fallback to 100.16.1 and use now pnpm instead of npm ci [@MickLesk](https://github.com/MickLesk) ([#14240](https://github.com/community-scripts/ProxmoxVE/pull/14240))
 
 ### 💾 Core
