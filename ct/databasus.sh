@@ -35,7 +35,8 @@ function update_script() {
     msg_ok "Stopped Databasus"
 
     msg_info "Backing up Configuration"
-    cp /opt/databasus/.env /opt/databasus.env.bak
+    cp /.env /opt/databasus.env.bak
+    chmod 600 /opt/databasus.env.bak
     msg_ok "Backed up Configuration"
 
     msg_info "Ensuring Database Clients"
@@ -84,9 +85,9 @@ function update_script() {
     msg_ok "Updated Databasus"
 
     msg_info "Restoring Configuration"
-    cp /opt/databasus.env.bak /opt/databasus/.env
+    cp /opt/databasus.env.bak /.env
     rm -f /opt/databasus.env.bak
-    chown postgres:postgres /opt/databasus/.env
+    chmod 600 /.env
     msg_ok "Restored Configuration"
 
     msg_info "Starting Databasus"

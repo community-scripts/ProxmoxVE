@@ -79,7 +79,7 @@ ENCRYPTION_KEY=$(openssl rand -hex 32)
 # Install goose for migrations
 $STD go install github.com/pressly/goose/v3/cmd/goose@latest
 ln -sf /root/go/bin/goose /usr/local/bin/goose
-cat <<EOF >/opt/databasus/.env
+cat <<EOF >/.env
 # Environment
 ENV_MODE=production
 
@@ -109,8 +109,7 @@ DATA_DIR=/databasus-data/data
 BACKUP_DIR=/databasus-data/backups
 LOG_DIR=/databasus-data/logs
 EOF
-chown postgres:postgres /opt/databasus/.env
-chmod 600 /opt/databasus/.env
+chmod 600 /.env
 msg_ok "Configured Databasus"
 
 msg_info "Configuring Valkey"
@@ -148,7 +147,7 @@ Requires=postgresql.service valkey.service
 [Service]
 Type=simple
 WorkingDirectory=/opt/databasus
-EnvironmentFile=/opt/databasus/.env
+EnvironmentFile=/.env
 ExecStart=/opt/databasus/databasus
 Restart=always
 RestartSec=5
