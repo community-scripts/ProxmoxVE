@@ -8750,8 +8750,7 @@ check_for_gl_release() {
   ensure_dependencies jq
 
   local repo_encoded
-  repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
-    echo "$source" | sed 's|/|%2F|g')
+  repo_encoded=$(printf '%s' "$source" | sed 's|/|%2F|g')
 
   local header=()
   [[ -n "${GITLAB_TOKEN:-}" ]] && header=(-H "PRIVATE-TOKEN: $GITLAB_TOKEN")
@@ -8921,7 +8920,6 @@ function fetch_and_deploy_gl_release() {
 
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
-    echo "$repo" | sed 's|/|%2F|g')
 
   local api_base="https://gitlab.com/api/v4/projects/$repo_encoded/releases"
   local api_url
