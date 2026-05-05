@@ -156,28 +156,28 @@ function dry_run_container() {
   local container="$1"
   local service="$2"
 
-  # Extract GitHub source URL from the ct script header (# Source: https://github.com/owner/repo)
-  local source_url source_repo
-  source_url=$(echo "$script" | grep '^# Source:' | head -1 | awk '{print $3}')
-  source_repo=$(echo "$source_url" | sed 's|https://github.com/||;s|/$||')
+  # Extract app name and source repo directly from check_for_gh_release call in the ct script
+  # Pattern: check_for_gh_release "appname" "owner/repo"
+  local check_line app_name app_lc source_repo
+  check_line=$(echo "$script" | grep -m1 'check_for_gh_release')
 
-  if [[ -z "$source_repo" || "$source_repo" == "$source_url" ]]; then
-    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): non-GitHub source or not detectable — skipping"
+  if [[ -z "$check_line" ]]; then
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): no check_for_gh_release found — skipping"
     return
   fi
 
-  # Find the app name used in check_for_gh_release to locate the version file (~/.appname)
-  local app_name app_lc
-  app_name=$(echo "$script" | grep -o 'check_for_gh_release "[^"]*"' | head -1 | cut -d'"' -f2)
-  if [[ -z "$app_name" ]]; then
-    app_lc=$(echo "${service,,}" | tr -d ' ')
-  else
-    app_lc=$(echo "${app_name,,}" | tr -d ' ')
+  app_name=$(echo "$check_line" | cut -d'"' -f2)
+  source_repo=$(echo "$check_line" | cut -d'"' -f4)
+  app_lc=$(echo "${app_name,,}" | tr -d ' ')
+
+  if [[ -z "$source_repo" || "$source_repo" != *"/"* ]]; then
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): cannot parse source repo — skipping"
+    return
   fi
 
-  # Read installed version from container
+  # Read installed version from container (stored by check_for_gh_release as ~/.<appname>)
   local current_version
-  current_version=$(pct exec "$container" -- bash -c "cat ~/'.${app_lc}' 2>/dev/null" 2>/dev/null || true)
+  current_version=$(pct exec "$container" -- bash -c "cat \$HOME/.${app_lc} 2>/dev/null" 2>/dev/null || true)
   current_version="${current_version#v}"
 
   # Query latest release from GitHub API
@@ -194,7 +194,7 @@ function dry_run_container() {
   fi
 
   if [[ -z "$current_version" ]]; then
-    echo -e "${BL}[DRY-RUN]${CL} Container $container ($service): installed version unknown, latest available: ${latest_version}"
+    echo -e "${BL}[DRY-RUN]${CL} Container $container ($service): installed version unknown, latest: ${latest_version} (${source_repo})"
   elif [[ "$current_version" == "$latest_version" ]]; then
     echo -e "${GN}[DRY-RUN]${CL} Container $container ($service): up to date (${current_version})"
   else
