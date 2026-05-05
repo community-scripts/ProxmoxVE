@@ -46,6 +46,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     cp -a /opt/pelican-panel/.env /opt/backup
+    mkdir -p /opt/backup/storage/app/
     cp -a /opt/pelican-panel/storage/app/public /opt/backup/storage/app/
     
     SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1>/dev/null 2>&1 && echo "true" || echo "false")
