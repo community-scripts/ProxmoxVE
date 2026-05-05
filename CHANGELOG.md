@@ -466,6 +466,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Matomo ([#14248](https://github.com/community-scripts/ProxmoxVE/pull/14248))
 - Storyteller ([#14122](https://github.com/community-scripts/ProxmoxVE/pull/14122))
 
+### 🧰 Tools
+
+  - Fix container count message in update-apps.sh [@Quotacious](https://github.com/Quotacious) ([#14265](https://github.com/community-scripts/ProxmoxVE/pull/14265))
+
 ## 2026-05-04
 
 ### 🚀 Updated Scripts
