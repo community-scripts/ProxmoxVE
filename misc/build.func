@@ -216,8 +216,35 @@ update_motd_ip() {
   # Update dynamic LXC details profile if values changed (e.g., after OS upgrade)
   # Only update if file exists and is from community-scripts
   if [ -f "$PROFILE_FILE" ] && grep -q "community-scripts" "$PROFILE_FILE" 2>/dev/null; then
+    local template_os_display="Unknown OS"
+    case "${var_os:-}" in
+      debian) template_os_display="Debian GNU/Linux${var_version:+ ${var_version}}" ;;
+      ubuntu) template_os_display="Ubuntu${var_version:+ ${var_version}}" ;;
+      alpine) template_os_display="Alpine Linux${var_version:+ v${var_version}}" ;;
+      "")
+        template_os_display="Unknown OS"
+        ;;
+      *)
+        template_os_display="${var_os}${var_version:+ ${var_version}}"
+        ;;
+    esac
+
     # Get current values
-    local current_os="$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"') - Version: $(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')"
+    local current_os=""
+    local current_pretty_name=""
+    local current_name=""
+    if [ -r /etc/os-release ]; then
+      current_pretty_name="$(awk -F= '/^PRETTY_NAME=/{print $2; exit}' /etc/os-release | tr -d '"')"
+      current_name="$(awk -F= '/^NAME=/{print $2; exit}' /etc/os-release | tr -d '"')"
+    fi
+    if [ -n "$current_pretty_name" ]; then
+      current_os="$current_pretty_name"
+    elif [ -n "$current_name" ]; then
+      current_os="$current_name"
+    else
+      current_os="$template_os_display"
+    fi
+    [ -n "$current_os" ] || current_os="Unknown OS"
     local current_hostname="$(hostname)"
     local current_ip="$(hostname -I | awk '{print $1}')"
 
