@@ -462,7 +462,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Matomo ([#14248](https://github.com/community-scripts/ProxmoxVE/pull/14248))
+  - LibreChat ([#14247](https://github.com/community-scripts/ProxmoxVE/pull/14247))
+- Matomo ([#14248](https://github.com/community-scripts/ProxmoxVE/pull/14248))
 - Storyteller ([#14122](https://github.com/community-scripts/ProxmoxVE/pull/14122))
 
 ## 2026-05-04
