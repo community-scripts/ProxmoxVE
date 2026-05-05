@@ -458,6 +458,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-05
+
+### 🆕 New Scripts
+
+  - Storyteller ([#14122](https://github.com/community-scripts/ProxmoxVE/pull/14122))
+
 ## 2026-05-04
 
 ### 🚀 Updated Scripts
