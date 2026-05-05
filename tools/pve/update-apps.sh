@@ -47,6 +47,12 @@ var_auto_reboot="${var_auto_reboot:-}"
 #   Note: containers with backups always attempt restore on failure regardless of this setting
 var_continue_on_error="${var_continue_on_error:-no}"
 
+# var_dry_run: Check for available updates without applying them
+#   Options: "yes" | "no" (default: no)
+#   Output: lists each container with current vs. latest version
+#   Note: requires the container to be running; does not modify any container
+var_dry_run="${var_dry_run:-no}"
+
 # var_tags: Optionally override the tags used for auto-detection
 #   Options: "community-script|proxmox-helper-scripts" (default)
 var_tags="${var_tags:-community-script|proxmox-helper-scripts}"
@@ -65,6 +71,7 @@ function export_config_json() {
   "var_skip_confirm": "${var_skip_confirm}",
   "var_auto_reboot": "${var_auto_reboot}",
   "var_continue_on_error": "${var_continue_on_error}",
+  "var_dry_run": "${var_dry_run}",
   "var_tags": "${var_tags}"
 }
 EOF
@@ -88,6 +95,7 @@ Environment Variables:
   var_skip_confirm       Skip initial confirmation (yes/no)
   var_auto_reboot        Auto-reboot containers if required (yes/no)
   var_continue_on_error  Continue to next container on update failure (yes/no)
+  var_dry_run            Check for updates without applying them (yes/no)
   var_tags               Optionally override auto-detection tags ("prod|smb|community-script")
 
 Examples:
@@ -102,6 +110,9 @@ Examples:
 
   # Unattended cron-style: skip confirm, continue on error, no backup
   var_backup=no var_container=all_running var_unattended=yes var_skip_confirm=yes var_continue_on_error=yes $(basename "$0")
+
+  # Dry-run: show available updates for all running containers without applying
+  var_container=all_running var_skip_confirm=yes var_dry_run=yes $(basename "$0")
 
   # Export current configuration
   $(basename "$0") --export-config
@@ -139,6 +150,56 @@ function detect_service() {
   pct pull "$1" /usr/bin/update update 2>/dev/null
   service=$(cat update | sed 's|.*/ct/||g' | sed 's|\.sh).*||g')
   popd >/dev/null
+}
+
+function dry_run_container() {
+  local container="$1"
+  local service="$2"
+
+  # Extract GitHub source URL from the ct script header (# Source: https://github.com/owner/repo)
+  local source_url source_repo
+  source_url=$(echo "$script" | grep '^# Source:' | head -1 | awk '{print $3}')
+  source_repo=$(echo "$source_url" | sed 's|https://github.com/||;s|/$||')
+
+  if [[ -z "$source_repo" || "$source_repo" == "$source_url" ]]; then
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): non-GitHub source or not detectable — skipping"
+    return
+  fi
+
+  # Find the app name used in check_for_gh_release to locate the version file (~/.appname)
+  local app_name app_lc
+  app_name=$(echo "$script" | grep -o 'check_for_gh_release "[^"]*"' | head -1 | cut -d'"' -f2)
+  if [[ -z "$app_name" ]]; then
+    app_lc=$(echo "${service,,}" | tr -d ' ')
+  else
+    app_lc=$(echo "${app_name,,}" | tr -d ' ')
+  fi
+
+  # Read installed version from container
+  local current_version
+  current_version=$(pct exec "$container" -- bash -c "cat ~/'.${app_lc}' 2>/dev/null" 2>/dev/null || true)
+  current_version="${current_version#v}"
+
+  # Query latest release from GitHub API
+  local latest_version
+  latest_version=$(curl -sSL --max-time 10 \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    "https://api.github.com/repos/${source_repo}/releases/latest" 2>/dev/null \
+    | grep '"tag_name"' | head -1 | cut -d'"' -f4 | sed 's/^v//')
+
+  if [[ -z "$latest_version" ]]; then
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): cannot fetch latest version from $source_repo"
+    return
+  fi
+
+  if [[ -z "$current_version" ]]; then
+    echo -e "${BL}[DRY-RUN]${CL} Container $container ($service): installed version unknown, latest available: ${latest_version}"
+  elif [[ "$current_version" == "$latest_version" ]]; then
+    echo -e "${GN}[DRY-RUN]${CL} Container $container ($service): up to date (${current_version})"
+  else
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): update available ${current_version} → ${latest_version}"
+  fi
 }
 
 function backup_container() {
@@ -401,8 +462,14 @@ for container in $CHOICE; do
   fi
 
   #3) if build resources are different than run resources, then:
-  if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ]; then
+  if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ] && [[ "$var_dry_run" != "yes" ]]; then
     pct set "$container" --cores "$build_cpu" --memory "$build_ram"
+  fi
+
+  #3.5) Dry-run: report update availability without applying
+  if [[ "$var_dry_run" == "yes" ]]; then
+    dry_run_container "$container" "$service"
+    continue
   fi
 
   #4) Update service, using the update command
