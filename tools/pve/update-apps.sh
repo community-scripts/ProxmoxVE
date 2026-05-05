@@ -199,7 +199,7 @@ while read -r container; do
     menu_items+=("$container_id" "$formatted_line" "OFF")
   fi
 done <<<"$containers"
-msg_ok "Loaded ${#menu_items[@]} containers"
+msg_ok "Loaded $((${#menu_items[@]} / 3)) containers"
 
 # Determine container selection based on var_container
 if [[ -n "$var_container" ]]; then
