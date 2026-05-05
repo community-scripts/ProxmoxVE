@@ -42,6 +42,11 @@ var_skip_confirm="${var_skip_confirm:-no}"
 #   Options: "yes" | "no" | "" (empty = interactive prompt)
 var_auto_reboot="${var_auto_reboot:-}"
 
+# var_continue_on_error: Continue updating remaining containers if one update fails
+#   Options: "yes" | "no" (default: no = stop on first error)
+#   Note: containers with backups always attempt restore on failure regardless of this setting
+var_continue_on_error="${var_continue_on_error:-no}"
+
 # var_tags: Optionally override the tags used for auto-detection
 #   Options: "community-script|proxmox-helper-scripts" (default)
 var_tags="${var_tags:-community-script|proxmox-helper-scripts}"
@@ -59,6 +64,7 @@ function export_config_json() {
   "var_unattended": "${var_unattended}",
   "var_skip_confirm": "${var_skip_confirm}",
   "var_auto_reboot": "${var_auto_reboot}",
+  "var_continue_on_error": "${var_continue_on_error}",
   "var_tags": "${var_tags}"
 }
 EOF
@@ -78,10 +84,11 @@ Environment Variables:
   var_backup          Enable backup before update (yes/no)
   var_backup_storage  Storage location for backups
   var_container       Container selection (all/all_running/all_stopped/101,102,...)
-  var_unattended      Run updates unattended (yes/no)
-  var_skip_confirm    Skip initial confirmation (yes/no)
-  var_auto_reboot     Auto-reboot containers if required (yes/no)
-  var_tags            Optionally override auto-detection tags ("prod|smb|community-script")
+  var_unattended         Run updates unattended (yes/no)
+  var_skip_confirm       Skip initial confirmation (yes/no)
+  var_auto_reboot        Auto-reboot containers if required (yes/no)
+  var_continue_on_error  Continue to next container on update failure (yes/no)
+  var_tags               Optionally override auto-detection tags ("prod|smb|community-script")
 
 Examples:
   # Run interactively
@@ -92,6 +99,9 @@ Examples:
 
   # Update specific containers without backup
   var_backup=no var_container=101,102,105 var_unattended=yes var_skip_confirm=yes $(basename "$0")
+
+  # Unattended cron-style: skip confirm, continue on error, no backup
+  var_backup=no var_container=all_running var_unattended=yes var_skip_confirm=yes var_continue_on_error=yes $(basename "$0")
 
   # Export current configuration
   $(basename "$0") --export-config
@@ -397,11 +407,11 @@ for container in $CHOICE; do
 
   #4) Update service, using the update command
   case "$os" in
-  alpine) pct exec "$container" -- ash -c "$UPDATE_CMD" ;;
-  archlinux) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
-  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
-  opensuse) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
+  alpine) pct exec "$container" -- ash -c "export TERM=dumb;$UPDATE_CMD" ;;
+  archlinux) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
+  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
+  opensuse) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
   esac
   exit_code=$?
 
@@ -446,8 +456,13 @@ for container in $CHOICE; do
       exit 235
     fi
   else
-    msg_error "Update failed for container $container. Exiting"
-    exit "$exit_code"
+    msg_error "Update failed for container $container (exit code: $exit_code)"
+    if [[ "$var_continue_on_error" == "yes" ]]; then
+      echo -e "${YW}[WARN]${CL} Continuing to next container (var_continue_on_error=yes)"
+      continue
+    else
+      exit "$exit_code"
+    fi
   fi
 done
 
