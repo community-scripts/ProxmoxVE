@@ -19,17 +19,6 @@ variables
 color
 catch_errors
 
-function flatten_matomo_layout() {
-  if [[ -d /opt/matomo/matomo ]]; then
-    msg_info "Migrating Legacy Layout"
-    rm -rf /opt/matomo/tmp "/opt/matomo/How to install Matomo.html"
-    find /opt/matomo/matomo -mindepth 1 -maxdepth 1 -exec mv -t /opt/matomo {} +
-    rm -rf /opt/matomo/matomo
-    msg_ok "Migrated Legacy Layout"
-  fi
-
-}
-
 function update_script() {
   header_info
   check_container_storage
@@ -45,8 +34,6 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    flatten_matomo_layout
-
     msg_info "Backing up Data"
     [[ -f /opt/matomo/config/config.ini.php ]] && cp /opt/matomo/config/config.ini.php /opt/matomo_config.bak
     [[ -d /opt/matomo/misc/user ]] && cp -r /opt/matomo/misc/user /opt/matomo_user_backup
@@ -54,8 +41,6 @@ function update_script() {
     msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "matomo" "matomo-org/matomo" "prebuild" "latest" "/opt/matomo" "matomo-*.zip"
-
-    flatten_matomo_layout
 
     msg_info "Restoring Data"
     if [[ -f /opt/matomo_config.bak ]]; then
