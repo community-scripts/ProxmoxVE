@@ -464,6 +464,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Hoodik ([#14279](https://github.com/community-scripts/ProxmoxVE/pull/14279))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Rustdeskserver: remove redundant else with undefined RELEASE var [@MickLesk](https://github.com/MickLesk) ([#14272](https://github.com/community-scripts/ProxmoxVE/pull/14272))
+
 ## 2026-05-05
 
 ### 🆕 New Scripts
