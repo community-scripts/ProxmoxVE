@@ -458,6 +458,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-06
+
+### 🆕 New Scripts
+
+  - Hoodik ([#14279](https://github.com/community-scripts/ProxmoxVE/pull/14279))
+
 ## 2026-05-05
 
 ### 🆕 New Scripts
