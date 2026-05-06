@@ -468,6 +468,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pelican-Panel: create backup subdirectory before copying storage [@MickLesk](https://github.com/MickLesk) ([#14274](https://github.com/community-scripts/ProxmoxVE/pull/14274))
     - Rustdeskserver: remove redundant else with undefined RELEASE var [@MickLesk](https://github.com/MickLesk) ([#14272](https://github.com/community-scripts/ProxmoxVE/pull/14272))
 
 ## 2026-05-05
