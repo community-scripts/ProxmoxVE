@@ -471,6 +471,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Pelican-Panel: create backup subdirectory before copying storage [@MickLesk](https://github.com/MickLesk) ([#14274](https://github.com/community-scripts/ProxmoxVE/pull/14274))
     - Rustdeskserver: remove redundant else with undefined RELEASE var [@MickLesk](https://github.com/MickLesk) ([#14272](https://github.com/community-scripts/ProxmoxVE/pull/14272))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - AdguardHome-Sync replace ifconfig with hostname -I for IP detection [@MickLesk](https://github.com/MickLesk) ([#14273](https://github.com/community-scripts/ProxmoxVE/pull/14273))
+
 ## 2026-05-05
 
 ### 🆕 New Scripts
