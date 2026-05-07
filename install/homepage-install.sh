@@ -25,6 +25,7 @@ msg_info "Installing Homepage (Patience)"
 mkdir -p /opt/homepage/config
 cd /opt/homepage
 cp /opt/homepage/src/skeleton/* /opt/homepage/config
+echo 'onlyBuiltDependencies=*' >> .npmrc
 $STD pnpm install
 export NEXT_PUBLIC_VERSION="v$RELEASE"
 export NEXT_PUBLIC_REVISION="source"

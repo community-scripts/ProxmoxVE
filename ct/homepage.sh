@@ -54,6 +54,7 @@ function update_script() {
     msg_info "Updating Homepage (Patience)"
     RELEASE=$(get_latest_github_release "gethomepage/homepage")
     cd /opt/homepage
+    echo 'onlyBuiltDependencies=*' >> .npmrc
     $STD pnpm install
     $STD pnpm update --no-save caniuse-lite
     export NEXT_PUBLIC_VERSION="v$RELEASE"
