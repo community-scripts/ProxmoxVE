@@ -470,6 +470,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - pangolin: bump version to 1.18.3 [@MickLesk](https://github.com/MickLesk) ([#14297](https://github.com/community-scripts/ProxmoxVE/pull/14297))
 
+### 🗑️ Deleted Scripts
+
+  - Remove: LiteLLM [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14294](https://github.com/community-scripts/ProxmoxVE/pull/14294))
+
 ## 2026-05-06
 
 ### 🆕 New Scripts
