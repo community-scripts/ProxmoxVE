@@ -474,6 +474,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Remove: LiteLLM [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14294](https://github.com/community-scripts/ProxmoxVE/pull/14294))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - update-apps: some  improvements [@MickLesk](https://github.com/MickLesk) ([#14275](https://github.com/community-scripts/ProxmoxVE/pull/14275))
+
 ## 2026-05-06
 
 ### 🆕 New Scripts
