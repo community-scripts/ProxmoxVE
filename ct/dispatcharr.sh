@@ -54,7 +54,7 @@ function update_script() {
       cp /opt/dispatcharr/.env /tmp/dispatcharr.env.backup
     fi
     if [[ -f /opt/dispatcharr/start-gunicorn.sh ]]; then
-      cp /opt/dispatcharr/start-gunicorn.sh /tmp/start-gunicorn.sh.backup
+      rm -f /opt/dispatcharr/start-gunicorn.sh
     fi
     if [[ -f /opt/dispatcharr/start-celery.sh ]]; then
       cp /opt/dispatcharr/start-celery.sh /tmp/start-celery.sh.backup
@@ -83,9 +83,6 @@ function update_script() {
     if [[ -f /tmp/dispatcharr.env.backup ]]; then
       mv /tmp/dispatcharr.env.backup /opt/dispatcharr/.env
     fi
-    if [[ -f /tmp/start-gunicorn.sh.backup ]]; then
-      mv /tmp/start-gunicorn.sh.backup /opt/dispatcharr/start-gunicorn.sh
-    fi
     if [[ -f /tmp/start-celery.sh.backup ]]; then
       mv /tmp/start-celery.sh.backup /opt/dispatcharr/start-celery.sh
     fi
@@ -105,7 +102,35 @@ function update_script() {
     rm -rf .venv
     $STD uv venv --clear
     $STD uv sync
-    $STD uv pip install gunicorn gevent celery redis daphne
+    $STD uv pip install uwsgi gevent celery redis daphne
+    cat <<'UWSGI_EOF' >/opt/dispatcharr/start-uwsgi.sh
+#!/usr/bin/env bash
+cd /opt/dispatcharr
+set -a
+source .env
+set +a
+exec .venv/bin/uwsgi \
+    --chdir=/opt/dispatcharr \
+    --module=dispatcharr.wsgi:application \
+    --master \
+    --workers=4 \
+    --gevent=400 \
+    --http=0.0.0.0:5656 \
+    --http-keepalive=1 \
+    --http-timeout=600 \
+    --socket-timeout=600 \
+    --buffer-size=65536 \
+    --post-buffering=4096 \
+    --lazy-apps \
+    --thunder-lock \
+    --die-on-term \
+    --vacuum
+UWSGI_EOF
+    chmod +x /opt/dispatcharr/start-uwsgi.sh
+    if grep -q 'start-gunicorn.sh' /etc/systemd/system/dispatcharr.service; then
+      sed -i 's|start-gunicorn.sh|start-uwsgi.sh|g' /etc/systemd/system/dispatcharr.service
+      systemctl daemon-reload
+    fi
     msg_ok "Updated Dispatcharr Backend"
 
     msg_info "Building Frontend"
