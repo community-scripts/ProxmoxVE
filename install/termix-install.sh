@@ -100,6 +100,7 @@ sed -i 's|/app/html|/opt/termix/html|g' /etc/nginx/nginx.conf
 sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
 sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
 
+mkdir -p /tmp/nginx
 rm -f /etc/nginx/sites-enabled/default
 nginx -t
 systemctl reload nginx
