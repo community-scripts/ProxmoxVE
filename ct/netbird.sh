@@ -25,7 +25,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /etc/netbird/config.json ]]; then
+  if [[ ! -d /var/lib/netbird/ ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
