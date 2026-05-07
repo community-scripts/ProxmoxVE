@@ -163,6 +163,7 @@ function dry_run_container() {
 
   if [[ -z "$check_line" ]]; then
     echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): no check_for_gh_release found — skipping"
+    DRY_RUN_RESULT="no check_for_gh_release found — skipping"
     return
   fi
 
@@ -172,6 +173,7 @@ function dry_run_container() {
 
   if [[ -z "$source_repo" || "$source_repo" != *"/"* ]]; then
     echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): cannot parse source repo — skipping"
+    DRY_RUN_RESULT="cannot parse source repo — skipping"
     return
   fi
 
@@ -190,15 +192,19 @@ function dry_run_container() {
 
   if [[ -z "$latest_version" ]]; then
     echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): cannot fetch latest version from $source_repo"
+    DRY_RUN_RESULT="cannot fetch latest version from $source_repo"
     return
   fi
 
   if [[ -z "$current_version" ]]; then
     echo -e "${BL}[DRY-RUN]${CL} Container $container ($service): installed version unknown, latest: ${latest_version} (${source_repo})"
+    DRY_RUN_RESULT="version unknown — latest: ${latest_version}"
   elif [[ "$current_version" == "$latest_version" ]]; then
     echo -e "${GN}[DRY-RUN]${CL} Container $container ($service): up to date (${current_version})"
+    DRY_RUN_RESULT="up to date (${current_version})"
   else
     echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): update available ${current_version} → ${latest_version}"
+    DRY_RUN_RESULT="update available ${current_version} → ${latest_version}"
   fi
 }
 
@@ -252,15 +258,19 @@ header_info
 
 # =============================================================================
 # LOGGING SETUP
-# A timestamped log file is written to
-# /usr/local/community-scripts/update_apps/ — the summary report is appended
-# at the end of the run. Real-time output goes only to the terminal to avoid
-# buffering issues with interactive spinners.
+# Key events are written directly to a timestamped log file under
+# /usr/local/community-scripts/update_apps/ — this avoids any stdout
+# redirection that would break interactive spinners or whiptail dialogs.
+# The full summary table is appended at the end of the run.
 # =============================================================================
 LOG_DIR="/usr/local/community-scripts/update_apps"
 mkdir -p "$LOG_DIR"
 LOG_FILE="${LOG_DIR}/$(date '+%Y%m%d_%H%M%S').log"
 echo "Update started: $(date '+%Y-%m-%d %H:%M:%S')" >"$LOG_FILE"
+
+function log_write() {
+  echo "[$(date '+%H:%M:%S')] $*" >>"$LOG_FILE"
+}
 
 # Skip confirmation if var_skip_confirm is set to yes
 if [[ "$var_skip_confirm" != "yes" ]]; then
@@ -351,7 +361,10 @@ fi
 header_info
 
 # Determine backup choice based on var_backup
-if [[ -n "$var_backup" ]]; then
+# Dry-run never needs a backup — skip the prompt entirely
+if [[ "$var_dry_run" == "yes" ]]; then
+  BACKUP_CHOICE="no"
+elif [[ -n "$var_backup" ]]; then
   BACKUP_CHOICE="$var_backup"
 else
   BACKUP_CHOICE="no"
@@ -361,7 +374,10 @@ else
 fi
 
 # Determine unattended update based on var_unattended
-if [[ -n "$var_unattended" ]]; then
+# Dry-run never executes updates — skip the prompt entirely
+if [[ "$var_dry_run" == "yes" ]]; then
+  UNATTENDED_UPDATE="no"
+elif [[ -n "$var_unattended" ]]; then
   UNATTENDED_UPDATE="$var_unattended"
 else
   UNATTENDED_UPDATE="no"
@@ -412,6 +428,7 @@ fi
 containers_needing_reboot=()
 for container in $CHOICE; do
   echo -e "${BL}[INFO]${CL} Updating container $container"
+  log_write "Container $container: starting"
 
   if [ "$BACKUP_CHOICE" == "yes" ]; then
     backup_container $container
@@ -434,9 +451,11 @@ for container in $CHOICE; do
   if [ -z "${service}" ]; then
     echo -e "${YW}[WARN]${CL} Update script not found. Skipping to next container"
     log_result "$container" "(unknown)" "SKIPPED" "No update script found in container"
+    log_write "Container $container: SKIPPED — no update script found"
     continue
   else
     echo -e "${BL}[INFO]${CL} Detected service: ${GN}${service}${CL}"
+    log_write "Container $container: detected service '$service'"
   fi
 
   #2) Extract service build/update resource requirements from config/installation file
@@ -489,8 +508,10 @@ for container in $CHOICE; do
 
   #3.5) Dry-run: report update availability without applying
   if [[ "$var_dry_run" == "yes" ]]; then
+    DRY_RUN_RESULT=""
     dry_run_container "$container" "$service"
-    log_result "$container" "$service" "DRY-RUN" "Version check only — no changes applied"
+    log_result "$container" "$service" "DRY-RUN" "${DRY_RUN_RESULT:-version check only}"
+    log_write "Container $container ($service): DRY-RUN — ${DRY_RUN_RESULT:-version check only}"
     continue
   fi
 
@@ -526,17 +547,22 @@ for container in $CHOICE; do
   if [ $exit_code -eq 0 ]; then
     msg_ok "Updated container $container"
     log_result "$container" "$service" "OK" "Updated successfully"
+    log_write "Container $container ($service): OK"
   elif [ $exit_code -eq 75 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (requires interactive mode)"
     log_result "$container" "$service" "SKIPPED" "Requires interactive mode (exit 75)"
+    log_write "Container $container ($service): SKIPPED — requires interactive mode"
   elif [ $exit_code -eq 113 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (under-provisioned: increase CPU/RAM to match template)"
     log_result "$container" "$service" "SKIPPED" "Under-provisioned — increase CPU/RAM to match template"
+    log_write "Container $container ($service): SKIPPED — under-provisioned"
   elif [ $exit_code -eq 114 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (storage critically low on /boot)"
     log_result "$container" "$service" "SKIPPED" "Storage critically low on /boot (>80%)"
+    log_write "Container $container ($service): SKIPPED — storage critically low on /boot"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
     msg_error "Update failed for container $container (exit code: $exit_code) — attempting restore"
+    log_write "Container $container ($service): FAILED (exit $exit_code) — attempting restore"
     msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
     pct stop $container
     LXC_STORAGE=$(pct config $container | awk -F '[:,]' '/rootfs/ {print $2}')
@@ -544,6 +570,7 @@ for container in $CHOICE; do
     if [ -z "$BACKUP_ENTRY" ]; then
       msg_error "No backup found in storage $STORAGE_CHOICE for container $container"
       log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — no backup found for restore"
+      log_write "Container $container ($service): FAILED — no backup found for restore"
       exit 235
     fi
     msg_info "Restoring from: $BACKUP_ENTRY"
@@ -553,14 +580,17 @@ for container in $CHOICE; do
       pct start $container
       msg_ok "Container $container successfully restored from backup"
       log_result "$container" "$service" "RESTORED" "Update failed (exit $exit_code) — restored from backup"
+      log_write "Container $container ($service): RESTORED from $BACKUP_ENTRY"
     else
       msg_error "Restore failed for container $container"
       log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — restore also failed"
+      log_write "Container $container ($service): FAILED — restore also failed"
       exit 235
     fi
   else
     msg_error "Update failed for container $container (exit code: $exit_code)"
     log_result "$container" "$service" "FAILED" "Exit code $exit_code"
+    log_write "Container $container ($service): FAILED (exit $exit_code)"
     if [[ "$var_continue_on_error" == "yes" ]]; then
       echo -e "${YW}[WARN]${CL} Continuing to next container (var_continue_on_error=yes)"
       continue
