@@ -240,7 +240,28 @@ END {
 ' /etc/pve/storage.cfg)
 }
 
+# Structured result tracking for the final summary report
+# Each entry: "CTID|service|STATUS|details"
+declare -a UPDATE_RESULTS=()
+function log_result() {
+  # log_result <ctid> <service> <STATUS> <details>
+  UPDATE_RESULTS+=("${1}|${2}|${3}|${4}")
+}
+
 header_info
+
+# =============================================================================
+# LOGGING SETUP
+# All output is tee'd (ANSI colours stripped) to a timestamped log file under
+# /usr/local/community-scripts/update_apps/
+# =============================================================================
+LOG_DIR="/usr/local/community-scripts/update_apps"
+mkdir -p "$LOG_DIR"
+LOG_FILE="${LOG_DIR}/$(date '+%Y%m%d_%H%M%S').log"
+# Redirect stdout+stderr through an ANSI-stripping sed into tee so the
+# terminal keeps colours while the log file stays plain text.
+exec > >(sed 's/\x1B\[[0-9;:]*[mKHfJ]//g' | tee -a "$LOG_FILE") 2>&1
+echo "Update started: $(date '+%Y-%m-%d %H:%M:%S') — log: $LOG_FILE"
 
 # Skip confirmation if var_skip_confirm is set to yes
 if [[ "$var_skip_confirm" != "yes" ]]; then
@@ -413,6 +434,7 @@ for container in $CHOICE; do
   #1.1) If update script not detected, return
   if [ -z "${service}" ]; then
     echo -e "${YW}[WARN]${CL} Update script not found. Skipping to next container"
+    log_result "$container" "(unknown)" "SKIPPED" "No update script found in container"
     continue
   else
     echo -e "${BL}[INFO]${CL} Detected service: ${GN}${service}${CL}"
@@ -469,6 +491,7 @@ for container in $CHOICE; do
   #3.5) Dry-run: report update availability without applying
   if [[ "$var_dry_run" == "yes" ]]; then
     dry_run_container "$container" "$service"
+    log_result "$container" "$service" "DRY-RUN" "Version check only — no changes applied"
     continue
   fi
 
@@ -503,12 +526,16 @@ for container in $CHOICE; do
 
   if [ $exit_code -eq 0 ]; then
     msg_ok "Updated container $container"
+    log_result "$container" "$service" "OK" "Updated successfully"
   elif [ $exit_code -eq 75 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (requires interactive mode)"
+    log_result "$container" "$service" "SKIPPED" "Requires interactive mode (exit 75)"
   elif [ $exit_code -eq 113 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (under-provisioned: increase CPU/RAM to match template)"
+    log_result "$container" "$service" "SKIPPED" "Under-provisioned — increase CPU/RAM to match template"
   elif [ $exit_code -eq 114 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (storage critically low on /boot)"
+    log_result "$container" "$service" "SKIPPED" "Storage critically low on /boot (>80%)"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
     msg_error "Update failed for container $container (exit code: $exit_code) — attempting restore"
     msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
@@ -517,6 +544,7 @@ for container in $CHOICE; do
     BACKUP_ENTRY=$(pvesm list "$STORAGE_CHOICE" 2>/dev/null | awk -v ctid="$container" '$1 ~ "vzdump-lxc-"ctid"-" || $1 ~ "/ct/"ctid"/" {print $1}' | sort -r | head -n1)
     if [ -z "$BACKUP_ENTRY" ]; then
       msg_error "No backup found in storage $STORAGE_CHOICE for container $container"
+      log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — no backup found for restore"
       exit 235
     fi
     msg_info "Restoring from: $BACKUP_ENTRY"
@@ -525,12 +553,15 @@ for container in $CHOICE; do
     if [ $restorestatus -eq 0 ]; then
       pct start $container
       msg_ok "Container $container successfully restored from backup"
+      log_result "$container" "$service" "RESTORED" "Update failed (exit $exit_code) — restored from backup"
     else
       msg_error "Restore failed for container $container"
+      log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — restore also failed"
       exit 235
     fi
   else
     msg_error "Update failed for container $container (exit code: $exit_code)"
+    log_result "$container" "$service" "FAILED" "Exit code $exit_code"
     if [[ "$var_continue_on_error" == "yes" ]]; then
       echo -e "${YW}[WARN]${CL} Continuing to next container (var_continue_on_error=yes)"
       continue
@@ -543,6 +574,30 @@ done
 wait
 header_info
 echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
+
+# =============================================================================
+# SUMMARY REPORT
+# =============================================================================
+if [ "${#UPDATE_RESULTS[@]}" -gt 0 ]; then
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  printf "  %-8s  %-22s  %-10s  %s\n" "CTID" "Service" "Status" "Details"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  for entry in "${UPDATE_RESULTS[@]}"; do
+    IFS='|' read -r _ctid _svc _status _details <<<"$entry"
+    case "$_status" in
+    OK) _color="${GN}" ;;
+    FAILED) _color="${RD}" ;;
+    RESTORED) _color="${YW}" ;;
+    *) _color="${YW}" ;;
+    esac
+    printf "  %-8s  %-22s  ${_color}%-10s${CL}  %s\n" "$_ctid" "$_svc" "$_status" "$_details"
+  done
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "Full log: $LOG_FILE"
+  echo ""
+fi
 if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
   echo -e "${RD}The following containers require a reboot:${CL}"
   for container_name in "${containers_needing_reboot[@]}"; do
