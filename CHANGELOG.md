@@ -464,6 +464,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - The Lounge: Fix service not starting automaticaly [@tremor021](https://github.com/tremor021) ([#14311](https://github.com/community-scripts/ProxmoxVE/pull/14311))
     - netbird-lxc: fix installation check [@MickLesk](https://github.com/MickLesk) ([#14309](https://github.com/community-scripts/ProxmoxVE/pull/14309))
     - databasus: Backup and secure configuration file [@MickLesk](https://github.com/MickLesk) ([#14308](https://github.com/community-scripts/ProxmoxVE/pull/14308))
     - vm: update disk image URL for Ubuntu 25.04 [@MickLesk](https://github.com/MickLesk) ([#14290](https://github.com/community-scripts/ProxmoxVE/pull/14290))
