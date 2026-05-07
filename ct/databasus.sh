@@ -35,6 +35,8 @@ function update_script() {
     msg_ok "Stopped Databasus"
 
     msg_info "Backing up Configuration"
+    [[ ! -f /.env && -f /opt/databasus/.env ]] && cp /opt/databasus/.env /.env
+    chmod 600 /.env
     cp /.env /opt/databasus.env.bak
     chmod 600 /opt/databasus.env.bak
     msg_ok "Backed up Configuration"
