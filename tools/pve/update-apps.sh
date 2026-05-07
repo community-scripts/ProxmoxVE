@@ -252,16 +252,15 @@ header_info
 
 # =============================================================================
 # LOGGING SETUP
-# All output is tee'd (ANSI colours stripped) to a timestamped log file under
-# /usr/local/community-scripts/update_apps/
+# A timestamped log file is written to
+# /usr/local/community-scripts/update_apps/ — the summary report is appended
+# at the end of the run. Real-time output goes only to the terminal to avoid
+# buffering issues with interactive spinners.
 # =============================================================================
 LOG_DIR="/usr/local/community-scripts/update_apps"
 mkdir -p "$LOG_DIR"
 LOG_FILE="${LOG_DIR}/$(date '+%Y%m%d_%H%M%S').log"
-# Redirect stdout+stderr through an ANSI-stripping sed into tee so the
-# terminal keeps colours while the log file stays plain text.
-exec > >(sed 's/\x1B\[[0-9;:]*[mKHfJ]//g' | tee -a "$LOG_FILE") 2>&1
-echo "Update started: $(date '+%Y-%m-%d %H:%M:%S') — log: $LOG_FILE"
+echo "Update started: $(date '+%Y-%m-%d %H:%M:%S')" >"$LOG_FILE"
 
 # Skip confirmation if var_skip_confirm is set to yes
 if [[ "$var_skip_confirm" != "yes" ]]; then
@@ -579,10 +578,14 @@ echo -e "${GN}The process is complete, and the containers have been successfully
 # SUMMARY REPORT
 # =============================================================================
 if [ "${#UPDATE_RESULTS[@]}" -gt 0 ]; then
+  SEPARATOR="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  HEADER=$(printf "  %-8s  %-22s  %-10s  %s" "CTID" "Service" "Status" "Details")
+
+  # terminal output (with colours)
   echo ""
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  printf "  %-8s  %-22s  %-10s  %s\n" "CTID" "Service" "Status" "Details"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "$SEPARATOR"
+  echo "$HEADER"
+  echo "$SEPARATOR"
   for entry in "${UPDATE_RESULTS[@]}"; do
     IFS='|' read -r _ctid _svc _status _details <<<"$entry"
     case "$_status" in
@@ -593,10 +596,24 @@ if [ "${#UPDATE_RESULTS[@]}" -gt 0 ]; then
     esac
     printf "  %-8s  %-22s  ${_color}%-10s${CL}  %s\n" "$_ctid" "$_svc" "$_status" "$_details"
   done
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "$SEPARATOR"
   echo ""
   echo "Full log: $LOG_FILE"
   echo ""
+
+  # append plain-text summary to log file
+  {
+    echo ""
+    echo "Update finished: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "$SEPARATOR"
+    echo "$HEADER"
+    echo "$SEPARATOR"
+    for entry in "${UPDATE_RESULTS[@]}"; do
+      IFS='|' read -r _ctid _svc _status _details <<<"$entry"
+      printf "  %-8s  %-22s  %-10s  %s\n" "$_ctid" "$_svc" "$_status" "$_details"
+    done
+    echo "$SEPARATOR"
+  } >>"$LOG_FILE"
 fi
 if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
   echo -e "${RD}The following containers require a reboot:${CL}"
