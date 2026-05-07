@@ -464,6 +464,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - termix: create /tmp/nginx before nginx -t [@MickLesk](https://github.com/MickLesk) ([#14312](https://github.com/community-scripts/ProxmoxVE/pull/14312))
     - The Lounge: Fix service not starting automaticaly [@tremor021](https://github.com/tremor021) ([#14311](https://github.com/community-scripts/ProxmoxVE/pull/14311))
     - netbird-lxc: fix installation check [@MickLesk](https://github.com/MickLesk) ([#14309](https://github.com/community-scripts/ProxmoxVE/pull/14309))
     - databasus: Backup and secure configuration file [@MickLesk](https://github.com/MickLesk) ([#14308](https://github.com/community-scripts/ProxmoxVE/pull/14308))
