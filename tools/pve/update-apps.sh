@@ -473,12 +473,15 @@ for container in $CHOICE; do
   fi
 
   #4) Update service, using the update command
+  # Prepend a no-op 'clear' wrapper to PATH so update scripts calling clear
+  # don't fail without a TTY — works for all shells incl. ash (no export -f)
+  SETUP_CMD="mkdir -p /tmp/.nc; printf '#!/bin/sh\n:\n' > /tmp/.nc/clear; chmod +x /tmp/.nc/clear; export PATH=/tmp/.nc:\$PATH; export TERM=dumb; "
   case "$os" in
-  alpine) pct exec "$container" -- ash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
-  archlinux) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
-  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
-  opensuse) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
+  alpine) pct exec "$container" -- ash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  archlinux) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  opensuse) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
   esac
   exit_code=$?
 
