@@ -868,6 +868,12 @@ get_header() {
 # - Returns silently if header not available
 # ------------------------------------------------------------------------------
 header_info() {
+  # Guard against printing the header twice in the same session (e.g. when
+  # the ct script calls header_info at global scope AND again inside
+  # update_script()).
+  [[ "${_HEADER_SHOWN:-0}" == "1" ]] && return 0
+  _HEADER_SHOWN=1
+
   local app_name=$(echo "${APP,,}" | tr -d ' ')
   local header_content
 

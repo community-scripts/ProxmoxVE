@@ -3230,6 +3230,10 @@ check_container_resources() {
   if [[ "$current_ram" -lt "$var_ram" ]] || [[ "$current_cpu" -lt "$var_cpu" ]]; then
     msg_warn "Under-provisioned: Required ${var_cpu} CPU/${var_ram}MB RAM, Current ${current_cpu} CPU/${current_ram}MB RAM"
     echo -e "${YWB}Please ensure that the ${APP} LXC is configured with at least ${var_cpu} vCPU and ${var_ram} MB RAM for the build process.${CL}\n"
+    if is_unattended; then
+      msg_error "Aborted: under-provisioned LXC in unattended mode (${current_cpu} CPU/${current_ram}MB RAM < ${var_cpu} CPU/${var_ram}MB RAM)"
+      exit 113
+    fi
     echo -ne "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  "
     read -r prompt </dev/tty
     if [[ ! ${prompt,,} =~ ^(yes)$ ]]; then
@@ -3253,6 +3257,10 @@ check_container_storage() {
   usage=$((100 * used_size / total_size))
   if ((usage > 80)); then
     msg_warn "Storage is dangerously low (${usage}% used on /boot)"
+    if is_unattended; then
+      msg_error "Aborted: storage too low in unattended mode (${usage}% used on /boot)"
+      exit 114
+    fi
     echo -ne "Continue anyway? <y/N>  "
     read -r prompt </dev/tty
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then

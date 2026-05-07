@@ -505,6 +505,10 @@ for container in $CHOICE; do
     msg_ok "Updated container $container"
   elif [ $exit_code -eq 75 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (requires interactive mode)"
+  elif [ $exit_code -eq 113 ]; then
+    echo -e "${YW}[WARN]${CL} Container $container skipped (under-provisioned: increase CPU/RAM to match template)"
+  elif [ $exit_code -eq 114 ]; then
+    echo -e "${YW}[WARN]${CL} Container $container skipped (storage critically low on /boot)"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
     msg_error "Update failed for container $container (exit code: $exit_code) — attempting restore"
     msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
