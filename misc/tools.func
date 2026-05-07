@@ -2095,10 +2095,10 @@ get_latest_gh_tag() {
     local count
     count=$(jq 'length' "$temp_file" 2>/dev/null || echo 0)
     if [[ "$count" -gt 0 ]]; then
-      tag=$(jq -r '.[].ref' "$temp_file" \
-        | sed 's|^refs/tags/||' \
-        | sort -V \
-        | tail -n1)
+      tag=$(jq -r '.[].ref' "$temp_file" |
+        sed 's|^refs/tags/||' |
+        sort -V |
+        tail -n1)
     fi
   else
     # No prefix: just take the first (newest) tag from /tags
