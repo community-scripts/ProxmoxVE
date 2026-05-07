@@ -458,6 +458,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-07
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - vm: update disk image URL for Ubuntu 25.04 [@MickLesk](https://github.com/MickLesk) ([#14290](https://github.com/community-scripts/ProxmoxVE/pull/14290))
+
 ## 2026-05-06
 
 ### 🆕 New Scripts
