@@ -9439,3 +9439,73 @@ function fetch_and_deploy_gl_release() {
   msg_ok "Deployed: $app ($version)"
   rm -rf "$tmpdir"
 }
+
+# ------------------------------------------------------------------------------
+# Download NLTK data packages directly from GitHub, bypassing Python.
+# Avoids CPU-instruction failures (SIGILL) on older hardware lacking AVX.
+#
+# Usage:
+#   setup_nltk "averaged_perceptron_tagger_eng" "/nltk_data"
+#   setup_nltk "snowball_data stopwords punkt_tab" "/usr/share/nltk_data"
+#
+# Parameters:
+#   $1 - Space-separated list of NLTK package IDs
+#   $2 - Target directory (default: /usr/share/nltk_data)
+#
+# Returns: 0 on success, non-zero if any package failed
+# ------------------------------------------------------------------------------
+function setup_nltk() {
+  local packages="${1:?setup_nltk requires at least one package name}"
+  local target_dir="${2:-/usr/share/nltk_data}"
+  local NLTK_INDEX_URL="https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/index.xml"
+  local index_xml rc=0
+
+  ensure_dependencies unzip
+
+  index_xml=$(curl_with_retry "$NLTK_INDEX_URL" "-") || {
+    msg_error "Failed to fetch NLTK package index"
+    return 1
+  }
+
+  local pkg
+  for pkg in $packages; do
+    msg_info "Downloading NLTK: $pkg"
+    local pkg_line subdir pkg_url do_unzip tmp_zip
+
+    pkg_line=$(echo "$index_xml" | grep "id=\"${pkg}\"" | head -1)
+    if [[ -z "$pkg_line" ]]; then
+      msg_error "NLTK package not found in index: $pkg"
+      rc=1
+      continue
+    fi
+
+    subdir=$(echo "$pkg_line" | grep -oP 'subdir="\K[^"]+')
+    pkg_url=$(echo "$pkg_line" | grep -oP 'url="\K[^"]+')
+    do_unzip=$(echo "$pkg_line" | grep -oP 'unzip="\K[^"]+')
+
+    if [[ -z "$subdir" || -z "$pkg_url" ]]; then
+      msg_error "Could not parse NLTK index entry for: $pkg"
+      rc=1
+      continue
+    fi
+
+    mkdir -p "${target_dir}/${subdir}"
+    tmp_zip=$(mktemp --suffix=.zip)
+
+    if CURL_TIMEOUT=120 curl_with_retry "$pkg_url" "$tmp_zip"; then
+      if [[ "$do_unzip" == "1" ]]; then
+        $STD unzip -q -o "$tmp_zip" -d "${target_dir}/${subdir}/"
+        rm -f "$tmp_zip"
+      else
+        mv "$tmp_zip" "${target_dir}/${subdir}/${pkg}.zip"
+      fi
+      msg_ok "Downloaded NLTK: $pkg"
+    else
+      msg_error "Failed to download NLTK package: $pkg"
+      rm -f "$tmp_zip"
+      rc=1
+    fi
+  done
+
+  return $rc
+}

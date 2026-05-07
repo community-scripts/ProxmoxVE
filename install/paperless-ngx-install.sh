@@ -94,18 +94,12 @@ user.save()
 EOF
 msg_ok "Set up admin Paperless-ngx User & Password"
 
-msg_info "Installing Natural Language Toolkit (Patience)"
-cd /opt/paperless
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data snowball_data
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data stopwords
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt_tab ||
-  $STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt
+setup_nltk "snowball_data stopwords punkt_tab" "/usr/share/nltk_data"
 for policy_file in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do
   if [[ -f "$policy_file" ]]; then
     sed -i -e 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' "$policy_file"
   fi
 done
-msg_ok "Installed Natural Language Toolkit"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/paperless-scheduler.service

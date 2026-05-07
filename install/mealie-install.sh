@@ -55,11 +55,7 @@ mkdir -p /opt/mealie/mealie/frontend
 cp -r /opt/mealie/frontend/dist/* /opt/mealie/mealie/frontend/
 msg_ok "Copied Frontend"
 
-msg_info "Downloading NLTK Data"
-mkdir -p /nltk_data/
-cd /opt/mealie
-$STD uv run python -m nltk.downloader -d /nltk_data averaged_perceptron_tagger_eng
-msg_ok "Downloaded NLTK Data"
+setup_nltk "averaged_perceptron_tagger_eng" "/nltk_data"
 
 msg_info "Writing Environment File"
 SECRET=$(openssl rand -hex 32)

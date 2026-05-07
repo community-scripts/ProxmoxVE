@@ -164,13 +164,7 @@ function update_script() {
       fi
     fi
 
-    msg_info "Updating NLTK Data"
-    cd /opt/paperless
-    $STD uv run python -m nltk.downloader -d /usr/share/nltk_data snowball_data
-    $STD uv run python -m nltk.downloader -d /usr/share/nltk_data stopwords
-    $STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt_tab ||
-      $STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt
-    msg_ok "Updated NLTK Data"
+    setup_nltk "snowball_data stopwords punkt_tab" "/usr/share/nltk_data"
 
     msg_info "Starting all Paperless-ngx Services"
     systemctl start paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
