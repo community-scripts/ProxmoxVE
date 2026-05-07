@@ -185,8 +185,8 @@ function dry_run_container() {
   latest_version=$(curl -sSL --max-time 10 \
     -H 'Accept: application/vnd.github+json' \
     -H 'X-GitHub-Api-Version: 2022-11-28' \
-    "https://api.github.com/repos/${source_repo}/releases/latest" 2>/dev/null \
-    | grep '"tag_name"' | head -1 | cut -d'"' -f4 | sed 's/^v//')
+    "https://api.github.com/repos/${source_repo}/releases/latest" 2>/dev/null |
+    grep '"tag_name"' | head -1 | cut -d'"' -f4 | sed 's/^v//')
 
   if [[ -z "$latest_version" ]]; then
     echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): cannot fetch latest version from $source_repo"
@@ -474,11 +474,11 @@ for container in $CHOICE; do
 
   #4) Update service, using the update command
   case "$os" in
-  alpine) pct exec "$container" -- ash -c "export TERM=dumb;$UPDATE_CMD" ;;
-  archlinux) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
-  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
-  opensuse) pct exec "$container" -- bash -c "export TERM=dumb;$UPDATE_CMD" ;;
+  alpine) pct exec "$container" -- ash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
+  archlinux) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
+  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
+  opensuse) pct exec "$container" -- bash -c "export TERM=dumb; clear() { :; }; $UPDATE_CMD" ;;
   esac
   exit_code=$?
 
