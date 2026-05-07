@@ -602,7 +602,11 @@ done
 
 wait
 header_info
-echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
+if [[ "$var_dry_run" == "yes" ]]; then
+  echo -e "${GN}Dry-run complete. No containers were modified.${CL}\n"
+else
+  echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
+fi
 
 # =============================================================================
 # SUMMARY REPORT
