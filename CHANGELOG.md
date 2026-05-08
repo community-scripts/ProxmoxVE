@@ -460,6 +460,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-08
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(homepage): fix ERR_PNPM_IGNORED_BUILDS error [@Sergih28](https://github.com/Sergih28) ([#14315](https://github.com/community-scripts/ProxmoxVE/pull/14315))
+
 ## 2026-05-07
 
 ### 🚀 Updated Scripts
