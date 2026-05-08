@@ -464,6 +464,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - wishlist: pin pnpm to v10 to match engine requirements [@MickLesk](https://github.com/MickLesk) ([#14342](https://github.com/community-scripts/ProxmoxVE/pull/14342))
     - [pelican] fix env copy regression [@LetterN](https://github.com/LetterN) ([#14328](https://github.com/community-scripts/ProxmoxVE/pull/14328))
     - fix(homepage): fix ERR_PNPM_IGNORED_BUILDS error [@Sergih28](https://github.com/Sergih28) ([#14315](https://github.com/community-scripts/ProxmoxVE/pull/14315))
 
