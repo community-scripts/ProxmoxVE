@@ -45,6 +45,7 @@ function update_script() {
     $STD php artisan down
     msg_ok "Stopped Service"
 
+    mkdir -p /opt/backup
     cp -a /opt/pelican-panel/.env /opt/backup
     mkdir -p /opt/backup/storage/app/
     cp -a /opt/pelican-panel/storage/app/public /opt/backup/storage/app/
