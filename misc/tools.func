@@ -7588,7 +7588,7 @@ function setup_meilisearch() {
 
           # Start meilisearch with --import-dump flag
           # This is a one-time import that happens during startup
-          /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" &
+          /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" >/dev/null 2>&1 &
           local MEILI_PID=$!
 
           # Wait for meilisearch to become healthy (import happens during startup)
@@ -7611,6 +7611,7 @@ function setup_meilisearch() {
 
           # Stop the manual process
           kill $MEILI_PID 2>/dev/null || true
+          wait $MEILI_PID 2>/dev/null || true
           sleep 2
 
           # Start via systemd for proper management
