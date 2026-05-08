@@ -466,6 +466,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix(homepage): fix ERR_PNPM_IGNORED_BUILDS error [@Sergih28](https://github.com/Sergih28) ([#14315](https://github.com/community-scripts/ProxmoxVE/pull/14315))
 
+  - #### ✨ New Features
+
+    - tools.func: add setup_nltk as new function [@MickLesk](https://github.com/MickLesk) ([#14314](https://github.com/community-scripts/ProxmoxVE/pull/14314))
+
 ## 2026-05-07
 
 ### 🚀 Updated Scripts
