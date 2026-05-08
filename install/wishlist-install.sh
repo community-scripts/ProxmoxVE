@@ -20,7 +20,7 @@ $STD apt install -y \
   caddy
 msg_ok "Installed dependencies"
 
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@10" setup_nodejs
 fetch_and_deploy_gh_release "wishlist" "cmintey/wishlist" "tarball"
 LATEST_APP_VERSION=$(get_latest_github_release "cmintey/wishlist")
 
