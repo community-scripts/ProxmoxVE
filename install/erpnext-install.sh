@@ -69,6 +69,13 @@ DB_ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASS}'; FLUSH PRIVILEGES;"
 $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-15 frappe-bench'
 $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt/frappe-bench && bench get-app erpnext --branch version-15'
+
+msg_info "Starting Redis Services for Site Setup"
+$STD sudo -u frappe bash -c 'redis-server /opt/frappe-bench/config/redis_queue.conf --daemonize yes'
+$STD sudo -u frappe bash -c 'redis-server /opt/frappe-bench/config/redis_cache.conf --daemonize yes'
+sleep 3
+msg_ok "Started Redis Services for Site Setup"
+
 $STD sudo -u frappe bash -c "export PATH=\"\$HOME/.local/bin:\$PATH\"; cd /opt/frappe-bench && bench new-site site1.local --db-root-username root --db-root-password \"$DB_ROOT_PASS\" --admin-password \"$ADMIN_PASS\" --install-app erpnext --set-default"
 msg_ok "Initialized Frappe Bench"
 
