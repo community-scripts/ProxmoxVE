@@ -6510,6 +6510,19 @@ function setup_nodejs() {
         MODULE_REQ_VERSION="latest"
       fi
 
+      # Cap pnpm at version 10 to avoid v11+ breaking changes (ERR_PNPM_IGNORED_BUILDS)
+      if [[ "$MODULE_NAME" == "pnpm" ]]; then
+        if [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
+          MODULE_REQ_VERSION="10"
+        else
+          local pnpm_major
+          pnpm_major=$(echo "${MODULE_REQ_VERSION#v}" | cut -d'.' -f1)
+          if [[ "$pnpm_major" =~ ^[0-9]+$ ]] && ((pnpm_major >= 11)); then
+            MODULE_REQ_VERSION="10"
+          fi
+        fi
+      fi
+
       # Check if the module is already installed
       if $STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep -q "$MODULE_NAME@"; then
         MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
