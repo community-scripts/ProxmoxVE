@@ -472,6 +472,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: add setup_nltk as new function [@MickLesk](https://github.com/MickLesk) ([#14314](https://github.com/community-scripts/ProxmoxVE/pull/14314))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: fix meilisearch import-dump background process handling [@MickLesk](https://github.com/MickLesk) ([#14341](https://github.com/community-scripts/ProxmoxVE/pull/14341))
+
 ## 2026-05-07
 
 ### 🚀 Updated Scripts
