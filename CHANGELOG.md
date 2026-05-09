@@ -464,6 +464,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(termix-install.sh): add tmpfiles.d persistence and systemd PIDFile path [@runnylogan](https://github.com/runnylogan) ([#14350](https://github.com/community-scripts/ProxmoxVE/pull/14350))
     - Purge openresty [@lucacome](https://github.com/lucacome) ([#14353](https://github.com/community-scripts/ProxmoxVE/pull/14353))
     - ERPNext: start bench Redis services before bench new-site [@MickLesk](https://github.com/MickLesk) ([#14343](https://github.com/community-scripts/ProxmoxVE/pull/14343))
     - Check for release for Sonarr [@lucacome](https://github.com/lucacome) ([#14354](https://github.com/community-scripts/ProxmoxVE/pull/14354))
