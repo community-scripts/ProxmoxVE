@@ -458,6 +458,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-09
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [Hotfix]Jotty: use absolute path when creating data dir [@vhsdream](https://github.com/vhsdream) ([#14355](https://github.com/community-scripts/ProxmoxVE/pull/14355))
+
 ## 2026-05-08
 
 ### 🚀 Updated Scripts
