@@ -464,6 +464,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Check for release for Sonarr [@lucacome](https://github.com/lucacome) ([#14354](https://github.com/community-scripts/ProxmoxVE/pull/14354))
     - [Hotfix]Jotty: use absolute path when creating data dir [@vhsdream](https://github.com/vhsdream) ([#14355](https://github.com/community-scripts/ProxmoxVE/pull/14355))
 
 ## 2026-05-08
