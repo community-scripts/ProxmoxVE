@@ -28,7 +28,6 @@ function update_script() {
     exit
   fi
 
-
   if command -v node &>/dev/null; then
     CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
     if [[ "$CURRENT_NODE_VERSION" != "22" ]]; then
@@ -48,7 +47,7 @@ function update_script() {
     msg_info "Migrating from packaged OpenResty to source"
     rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg /etc/apt/trusted.gpg.d/openresty.gpg
     rm -f /etc/apt/sources.list.d/openresty.list /etc/apt/sources.list.d/openresty.sources
-    $STD apt remove -y openresty
+    $STD apt purge -y openresty
     $STD apt autoremove -y
     rm -f ~/.openresty
     msg_ok "Migrated from packaged OpenResty to source"
