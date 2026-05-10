@@ -463,6 +463,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-10
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - inspIRCd: Fix service not autostarting [@tremor021](https://github.com/tremor021) ([#14368](https://github.com/community-scripts/ProxmoxVE/pull/14368))
+
 ## 2026-05-09
 
 ### 🚀 Updated Scripts
