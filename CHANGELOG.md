@@ -51,6 +51,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -60,7 +63,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>May (2 entries)</h4></summary>
+<summary><h4>May (9 entries)</h4></summary>
 
 [View May 2026 Changelog](.github/changelogs/2026/05.md)
 
@@ -1069,129 +1072,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - addons: Filebrowser & Filebrowser-Quantum get warning if host install [@MickLesk](https://github.com/MickLesk) ([#13639](https://github.com/community-scripts/ProxmoxVE/pull/13639))
-
-## 2026-04-09
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - boostack: add: git [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13620](https://github.com/community-scripts/ProxmoxVE/pull/13620))
-
-  - #### ✨ New Features
-
-    - Update OPNsense version from 25.7 to 26.1 [@tdn131](https://github.com/tdn131) ([#13626](https://github.com/community-scripts/ProxmoxVE/pull/13626))
-    - CheckMK: Bump Default OS to 13 (trixie) + dynamic codename + fix RELEASE-Tag Fetching [@MickLesk](https://github.com/MickLesk) ([#13610](https://github.com/community-scripts/ProxmoxVE/pull/13610))
-
-## 2026-04-08
-
-### 🆕 New Scripts
-
-  - IronClaw | Alpine-IronClaw ([#13591](https://github.com/community-scripts/ProxmoxVE/pull/13591))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - immich: disable upgrade-insecure-requests CSP directive [@MickLesk](https://github.com/MickLesk) ([#13600](https://github.com/community-scripts/ProxmoxVE/pull/13600))
-    - Immich: v2.7.2 [@vhsdream](https://github.com/vhsdream) ([#13579](https://github.com/community-scripts/ProxmoxVE/pull/13579))
-    - Update flaresolverr-install.sh [@maztheman](https://github.com/maztheman) ([#13584](https://github.com/community-scripts/ProxmoxVE/pull/13584))
-
-  - #### ✨ New Features
-
-    - bambuddy: add mkdir before data restore & add ffmpeg dependency [@MickLesk](https://github.com/MickLesk) ([#13601](https://github.com/community-scripts/ProxmoxVE/pull/13601))
-
-  - #### 🔧 Refactor
-
-    - feat: update UHF Server script to use setup_ffmpeg [@zackwithak13](https://github.com/zackwithak13) ([#13564](https://github.com/community-scripts/ProxmoxVE/pull/13564))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - core: add script page badges to descriptions | change donate URL [@MickLesk](https://github.com/MickLesk) ([#13596](https://github.com/community-scripts/ProxmoxVE/pull/13596))
-
-## 2026-04-07
-
-### 🗑️ Deleted Scripts
-
-  - Remove low-install-count CT scripts and installers [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#13570](https://github.com/community-scripts/ProxmoxVE/pull/13570))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - core: improve resilience for top Proxmox error codes (209, 215, 118, 206) [@MickLesk](https://github.com/MickLesk) ([#13575](https://github.com/community-scripts/ProxmoxVE/pull/13575))
-
-## 2026-04-06
-
-### 🆕 New Scripts
-
-  - OpenThread Border Router ([#13536](https://github.com/community-scripts/ProxmoxVE/pull/13536))
-- Homelable ([#13539](https://github.com/community-scripts/ProxmoxVE/pull/13539))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Papra: check env before copy [@MickLesk](https://github.com/MickLesk) ([#13553](https://github.com/community-scripts/ProxmoxVE/pull/13553))
-    - changedetection: fix: typing_extensions error [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13548](https://github.com/community-scripts/ProxmoxVE/pull/13548))
-    - kasm: fix: fetch latest version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#13547](https://github.com/community-scripts/ProxmoxVE/pull/13547))
-
-## 2026-04-05
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Grist: remove install:ee step (private repo, not needed for grist-core) [@MickLesk](https://github.com/MickLesk) ([#13526](https://github.com/community-scripts/ProxmoxVE/pull/13526))
-    - Nginx Proxy Manager: ensure /tmp/nginx/body exists via openresty service  [@MickLesk](https://github.com/MickLesk) ([#13528](https://github.com/community-scripts/ProxmoxVE/pull/13528))
-    - MotionEye: run as root to enable SMB share support [@MickLesk](https://github.com/MickLesk) ([#13527](https://github.com/community-scripts/ProxmoxVE/pull/13527))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - core: silent() function - use return instead of exit to allow || true error handling [@MickLesk](https://github.com/MickLesk) ([#13529](https://github.com/community-scripts/ProxmoxVE/pull/13529))
-
-## 2026-04-04
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - komodo: set `PERIPHERY_CORE_PUBLIC_KEYS` to default value if absent [@4ndv](https://github.com/4ndv) ([#13519](https://github.com/community-scripts/ProxmoxVE/pull/13519))
-
-## 2026-04-03
-
-### 🆕 New Scripts
-
-  - netboot.xyz ([#13480](https://github.com/community-scripts/ProxmoxVE/pull/13480))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - OpenWRT-VM: use poweroff instead of halt to properly stop VM [@MickLesk](https://github.com/MickLesk) ([#13504](https://github.com/community-scripts/ProxmoxVE/pull/13504))
-    - NginxProxyManager: fix openresty restart by setting user root before reload [@MickLesk](https://github.com/MickLesk) ([#13500](https://github.com/community-scripts/ProxmoxVE/pull/13500))
-
-  - #### ✨ New Features
-
-    - Crafty Controller: add Java 25 for Minecraft 1.26.1+ [@MickLesk](https://github.com/MickLesk) ([#13502](https://github.com/community-scripts/ProxmoxVE/pull/13502))
-    - Wealthfolio: update to v3.2.1 and Node.js 24 [@afadil](https://github.com/afadil) ([#13486](https://github.com/community-scripts/ProxmoxVE/pull/13486))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core.func: prevent profile.d scripts from aborting on non-zero exit [@MickLesk](https://github.com/MickLesk) ([#13503](https://github.com/community-scripts/ProxmoxVE/pull/13503))
-
-  - #### ✨ New Features
-
-    - APT Proxy: Support full URLs (http/https with custom ports) [@MickLesk](https://github.com/MickLesk) ([#13474](https://github.com/community-scripts/ProxmoxVE/pull/13474))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - PVE LXC-Updater: pipe apt list through cat to prevent pager hang [@MickLesk](https://github.com/MickLesk) ([#13501](https://github.com/community-scripts/ProxmoxVE/pull/13501))
