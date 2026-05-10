@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "web-check" "CrazyWolf13/web-check"; then
+  if check_for_gh_release "web-check" "Lissy93/web-check"; then
     msg_info "Stopping Service"
     systemctl stop web-check
     msg_ok "Stopped Service"
@@ -38,7 +38,7 @@ function update_script() {
     msg_ok "Created backup"
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "web-check" "CrazyWolf13/web-check" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "web-check" "Lissy93/web-check" "tarball"
 
     msg_info "Restoring backup"
     mv /opt/.env /opt/web-check
