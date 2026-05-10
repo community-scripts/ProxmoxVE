@@ -77,10 +77,9 @@ cat <<EOF >/etc/caddy/Caddyfile
 }
 EOF
 usermod -aG www-data caddy
-msg_ok "Configured Caddy"
-
 systemctl enable -q --now php${PHP_VER}-fpm
 systemctl restart caddy
+msg_ok "Configured Caddy"
 
 motd_ssh
 customize
