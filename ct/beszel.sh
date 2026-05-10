@@ -36,7 +36,9 @@ function update_script() {
     msg_info "Updating Beszel"
     $STD /opt/beszel/beszel update
     sleep 2 && chmod +x /opt/beszel/beszel
-    msg_ok "Updated Beszel"
+    VERSION=$(/opt/beszel/beszel -v | awk '{print $3}')
+    echo "${VERSION}" >$HOME/.beszel
+    msg_ok "Updated Beszel to ${VERSION}"
 
     msg_info "Starting Service"
     systemctl start beszel-hub
