@@ -468,6 +468,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - solidtime ([#14392](https://github.com/community-scripts/ProxmoxVE/pull/14392))
 - shlink ([#14393](https://github.com/community-scripts/ProxmoxVE/pull/14393))
 
+### 💾 Core
+
+  - core: support optional POST_INSTALL_SCRIPT (var_post_install_script) hook  [@MickLesk](https://github.com/MickLesk) ([#14160](https://github.com/community-scripts/ProxmoxVE/pull/14160))
+
 ## 2026-05-10
 
 ### 🚀 Updated Scripts
