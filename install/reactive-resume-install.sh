@@ -55,7 +55,7 @@ DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAM
 AUTH_SECRET=${AUTH_SECRET}
 
 # Printer (headless Chromium for PDF generation)
-PRINTER_ENDPOINT=http://localhost:9222
+PRINTER_ENDPOINT=http://127.0.0.1:9222
 
 # Storage: uses local filesystem (/opt/reactive-resume/data) when S3 is not configured
 # S3_ACCESS_KEY_ID=
@@ -92,7 +92,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/chromium --headless --disable-gpu --no-sandbox --disable-dev-shm-usage --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222
+ExecStart=/usr/bin/chromium --headless --disable-gpu --no-sandbox --no-zygote --disable-dev-shm-usage --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222
 Restart=always
 RestartSec=5
 
