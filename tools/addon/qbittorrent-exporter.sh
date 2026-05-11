@@ -120,7 +120,7 @@ function update() {
 function install() {
   read -erp "Enter URL of qBittorrent, example: (http://127.0.0.1:8080): " QBITTORRENT_BASE_URL
   echo -e "${TAB}${INFO} Create an API key in qBittorrent under Tools > Options > Web UI > API key"
-  read -erp "Enter qBittorrent API key: " QBITTORRENT_API_KEY
+  read -erp "${TAB3}Enter qBittorrent API key: " QBITTORRENT_API_KEY
 
   fetch_and_deploy_gh_release "qbittorrent-exporter" "martabal/qbittorrent-exporter" "tarball" "latest"
   setup_go
