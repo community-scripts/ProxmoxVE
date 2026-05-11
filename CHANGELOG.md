@@ -461,6 +461,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-11
+
+### 🆕 New Scripts
+
+  - solidtime ([#14392](https://github.com/community-scripts/ProxmoxVE/pull/14392))
+- shlink ([#14393](https://github.com/community-scripts/ProxmoxVE/pull/14393))
+
 ## 2026-05-10
 
 ### 🚀 Updated Scripts
