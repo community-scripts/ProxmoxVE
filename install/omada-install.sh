@@ -38,10 +38,12 @@ msg_info "Installing Omada Controller"
 OMADA_URL=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" |
   grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
   head -n1)
-OMADA_PKG=$(basename "$OMADA_URL")
-curl -fsSL "$OMADA_URL" -o "$OMADA_PKG"
-$STD dpkg -i "$OMADA_PKG"
-rm -rf "$OMADA_PKG"
+OMADA_PKG=$(basename "${OMADA_URL}")
+curl -fsSL "${OMADA_URL}" -o "${OMADA_PKG}"
+$STD dpkg -i "${OMADA_PKG}"
+rm -rf "${OMADA_PKG}"
+VERSION=$(sed -n 's/.*_v\([0-9.]*\)_.*_\([0-9]\{14\}\)\.deb$/\1-\2/p' <<<"${OMADA_PKG}")
+echo "${VERSION}" >$HOME/.omada
 msg_ok "Installed Omada Controller"
 
 motd_ssh

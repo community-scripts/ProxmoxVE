@@ -38,20 +38,32 @@ function update_script() {
 
   JAVA_VERSION="21" setup_java
 
-  msg_info "Updating Omada Controller"
   OMADA_URL=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" |
     grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
     head -n1)
-  OMADA_PKG=$(basename "$OMADA_URL")
-  if [ -z "$OMADA_PKG" ]; then
-    msg_error "Could not retrieve Omada package – server may be down."
-    exit
+  OMADA_PKG=$(basename "${OMADA_URL}")
+  VERSION=$(sed -n 's/.*_v\([0-9.]*\)_.*_\([0-9]\{14\}\)\.deb$/\1-\2/p' <<<"${OMADA_PKG}")
+
+  CURRENT_VERSION=$(cat $HOME/.omada 2>/dev/null || echo "0")
+
+  if dpkg --compare-versions "${VERSION}" gt "${CURRENT_VERSION}"; then
+
+    msg_info "Updating Omada Controller"
+
+    if [ -z "${OMADA_PKG}" ]; then
+      msg_error "Could not retrieve Omada package – server may be down."
+      exit
+    fi
+    curl -fsSL "${OMADA_URL}" -o "${OMADA_PKG}"
+    export DEBIAN_FRONTEND=noninteractive
+    $STD dpkg -i "${OMADA_PKG}"
+    rm -f "${OMADA_PKG}"
+    echo "${VERSION}" >$HOME/.omada
+    msg_ok "Updated Omada Controller to ${VERSION}"
+    msg_ok "Updated successfully!"
+  else
+    msg_ok "No update available: ${APP} (${CURRENT_VERSION})"
   fi
-  curl -fsSL "$OMADA_URL" -o "$OMADA_PKG"
-  export DEBIAN_FRONTEND=noninteractive
-  $STD dpkg -i "$OMADA_PKG"
-  rm -f "$OMADA_PKG"
-  msg_ok "Updated successfully!"
   exit
 }
 
