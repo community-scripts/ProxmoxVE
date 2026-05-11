@@ -72,9 +72,9 @@ function update() {
        ! grep -q "QBITTORRENT_API_KEY" "$CONFIG_PATH" 2>/dev/null; then
       echo ""
       msg_warn "Version 2.0.0 introduces a breaking change: username/password login has been replaced by an API key."
-      echo -e "${TAB}${INFO} You must create an API key in qBittorrent under Tools > Options > Web UI > API key"
+      echo -e "${TAB3}${INFO} You must create an API key in qBittorrent under Tools > Options > Web UI > API key"
       echo ""
-      echo -n "${TAB}Enter your qBittorrent API key (or press Enter to abort): "
+      echo -n "${TAB3}Enter your qBittorrent API key (or press Enter to abort): "
       read -r QBITTORRENT_API_KEY
       if [[ -z "$QBITTORRENT_API_KEY" ]]; then
         msg_warn "No API key provided. Update aborted."
@@ -118,8 +118,8 @@ function update() {
 # INSTALL
 # ==============================================================================
 function install() {
-  read -erp "Enter URL of qBittorrent, example: (http://127.0.0.1:8080): " QBITTORRENT_BASE_URL
-  echo -e "${TAB}${INFO} Create an API key in qBittorrent under Tools > Options > Web UI > API key"
+  read -erp "${TAB3}Enter URL of qBittorrent, example: (http://127.0.0.1:8080): " QBITTORRENT_BASE_URL
+  echo -e "${TAB3}${INFO} Create an API key in qBittorrent under Tools > Options > Web UI > API key"
   read -erp "${TAB3}Enter qBittorrent API key: " QBITTORRENT_API_KEY
 
   fetch_and_deploy_gh_release "qbittorrent-exporter" "martabal/qbittorrent-exporter" "tarball" "latest"
