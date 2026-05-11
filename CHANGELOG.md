@@ -472,6 +472,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - core: support optional POST_INSTALL_SCRIPT (var_post_install_script) hook  [@MickLesk](https://github.com/MickLesk) ([#14160](https://github.com/community-scripts/ProxmoxVE/pull/14160))
 
+### 🧰 Tools
+
+  - #### 💥 Breaking Changes
+
+    - fix: qbittorrent-exporter for 5.2 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14403](https://github.com/community-scripts/ProxmoxVE/pull/14403))
+
 ## 2026-05-10
 
 ### 🚀 Updated Scripts
