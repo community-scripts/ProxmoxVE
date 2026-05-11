@@ -92,6 +92,11 @@ ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
 [Install]
 WantedBy=multi-user.target
 EOF
+    if [ -f /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf ]; then
+      cp /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+      sed -i 's+^daemon+#daemon+g' /usr/local/openresty/nginx/conf/nginx.conf
+      sed -i 's+include conf.d+include /etc/nginx/conf.d+g' /usr/local/openresty/nginx/conf/nginx.conf
+    fi
     sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     systemctl daemon-reload
     systemctl unmask openresty 2>/dev/null || true
