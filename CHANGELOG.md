@@ -463,20 +463,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-11
 
-### 🆕 New Scripts
+### 🚀 Updated Scripts
 
-  - solidtime ([#14392](https://github.com/community-scripts/ProxmoxVE/pull/14392))
-- shlink ([#14393](https://github.com/community-scripts/ProxmoxVE/pull/14393))
+  - #### 🔧 Refactor
 
-### 💾 Core
-
-  - core: support optional POST_INSTALL_SCRIPT (var_post_install_script) hook  [@MickLesk](https://github.com/MickLesk) ([#14160](https://github.com/community-scripts/ProxmoxVE/pull/14160))
-
-### 🧰 Tools
-
-  - #### 💥 Breaking Changes
-
-    - fix: qbittorrent-exporter for 5.2 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14403](https://github.com/community-scripts/ProxmoxVE/pull/14403))
+    - InvestBrain: add commented reverse proxy config hints to .env [@MickLesk](https://github.com/MickLesk) ([#14422](https://github.com/community-scripts/ProxmoxVE/pull/14422))
 
 ## 2026-05-10
 
