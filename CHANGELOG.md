@@ -467,6 +467,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Termix: fix nginx pid path and log paths on update (#) [@MickLesk](https://github.com/MickLesk) ([#14419](https://github.com/community-scripts/ProxmoxVE/pull/14419))
     - Nginxproxymanager: restore NPM nginx.conf after OpenResty rebuid [@MickLesk](https://github.com/MickLesk) ([#14421](https://github.com/community-scripts/ProxmoxVE/pull/14421))
 
   - #### 🔧 Refactor
