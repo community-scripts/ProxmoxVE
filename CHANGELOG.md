@@ -465,9 +465,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Nginxproxymanager: restore NPM nginx.conf after OpenResty rebuid [@MickLesk](https://github.com/MickLesk) ([#14421](https://github.com/community-scripts/ProxmoxVE/pull/14421))
+
   - #### 🔧 Refactor
 
     - InvestBrain: add commented reverse proxy config hints to .env [@MickLesk](https://github.com/MickLesk) ([#14422](https://github.com/community-scripts/ProxmoxVE/pull/14422))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Cronmaster: fix unexpected EOF in update_cronmaster script [@MickLesk](https://github.com/MickLesk) ([#14420](https://github.com/community-scripts/ProxmoxVE/pull/14420))
 
 ## 2026-05-10
 
