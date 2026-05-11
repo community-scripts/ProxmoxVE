@@ -463,6 +463,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-11
 
+### 🆕 New Scripts
+
+  - Lychee ([#14424](https://github.com/community-scripts/ProxmoxVE/pull/14424))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
