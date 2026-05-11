@@ -90,6 +90,11 @@ MAIL_PORT=2525
 MAIL_FROM_ADDRESS="investbrain@${LOCAL_IP}"
 
 VITE_APP_NAME=Investbrain
+
+# Reverse Proxy Support (uncomment and set APP_URL/ASSET_URL to your domain when using a reverse proxy)
+# APP_URL=https://your-domain.com
+# ASSET_URL=https://your-domain.com
+# TRUSTED_PROXIES=*
 EOF
 export COMPOSER_ALLOW_SUPERUSER=1
 $STD /usr/local/bin/composer install --no-interaction --no-dev --optimize-autoloader
