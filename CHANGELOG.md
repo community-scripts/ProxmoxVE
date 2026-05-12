@@ -463,6 +463,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-12
 
+### 🆕 New Scripts
+
+  - Authentik ([#14440](https://github.com/community-scripts/ProxmoxVE/pull/14440))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
