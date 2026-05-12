@@ -461,6 +461,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-12
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Save Omada version [@lucacome](https://github.com/lucacome) ([#14433](https://github.com/community-scripts/ProxmoxVE/pull/14433))
+
 ## 2026-05-11
 
 ### 🆕 New Scripts
