@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   if check_for_gh_tag "guacd" "apache/guacamole-server"; then
     msg_info "Stopping guacd"
     systemctl stop guacd 2>/dev/null || true
@@ -154,8 +156,6 @@ EOF
       /opt/termix/nginx/cache \
       /opt/termix/nginx/client_body
     msg_ok "Recreated Directories"
-
-    NODE_VERSION="24" setup_nodejs
 
     msg_info "Building Frontend"
     cd /opt/termix
