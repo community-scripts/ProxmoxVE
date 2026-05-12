@@ -2939,6 +2939,7 @@ install_script() {
   pve_check
   shell_check
   root_check
+  ensure_whiptail
   arch_check
   ssh_check
   maxkeys_check
@@ -5074,8 +5075,6 @@ create_lxc_container() {
     msg_ok "Downloaded ARM64 LXC template"
   }
 
-  # Architecture-aware template download wrapper.
-  # Optional $1 overrides destination path (for local-storage fallback).
   download_template() {
     local dest="${1:-$TEMPLATE_PATH}"
     if [[ "$ARCH" == "arm64" ]]; then

@@ -1718,6 +1718,25 @@ function get_lxc_ip() {
   export LOCAL_IP
 }
 
+# ------------------------------------------------------------------------------
+# ensure_whiptail()
+#
+# - Ensures whiptail is installed
+# - Some ARM64 systems will not have whiptail installed.
+# - Exits with error message if installation fails
+# ------------------------------------------------------------------------------
+ensure_whiptail() {
+  command -v whiptail >/dev/null 2>&1 && return 0
+
+  msg_info "Installing whiptail"
+  apt_update_safe
+  $STD apt-get install -y whiptail || {
+    msg_error "Failed to install whiptail"
+    exit 115
+  }
+  msg_ok "Installed whiptail"
+}
+
 # ==============================================================================
 # SIGNAL TRAPS
 # ==============================================================================
