@@ -4076,9 +4076,14 @@ function setup_ffmpeg() {
   # If no source download (either VERSION empty or download failed), use binary
   if [[ -z "$VERSION" ]]; then
     msg_info "Setup FFmpeg from pre-built binary"
-    local ffmpeg_arch
-    case "$(dpkg --print-architecture 2>/dev/null || echo amd64)" in
-    arm64) ffmpeg_arch="arm64" ;;
+    local ffmpeg_arch detected_arch
+    detected_arch="$(dpkg --print-architecture 2>/dev/null || true)"
+    if [[ -z "$detected_arch" ]]; then
+      detected_arch="$(uname -m 2>/dev/null || true)"
+    fi
+    case "$detected_arch" in
+    arm64 | aarch64) ffmpeg_arch="arm64" ;;
+    amd64 | x86_64) ffmpeg_arch="amd64" ;;
     *) ffmpeg_arch="amd64" ;;
     esac
     if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-${ffmpeg_arch}-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
