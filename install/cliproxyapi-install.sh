@@ -22,7 +22,6 @@ fetch_and_deploy_gh_release "cliproxyapi" "router-for-me/CLIProxyAPI" "prebuild"
 msg_info "Configuring CLIProxyAPI"
 MANAGEMENT_PASSWORD=$(openssl rand -hex 32)
 API_KEY="sk-$(openssl rand -hex 16)"
-
 cat <<EOF >/opt/cliproxyapi/config.yaml
 host: ""
 port: 8317
@@ -39,7 +38,6 @@ quota-exceeded:
 routing:
   strategy: "round-robin"
 EOF
-
 msg_ok "Configured CLIProxyAPI"
 
 msg_info "Creating Service"
