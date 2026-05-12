@@ -18,6 +18,7 @@ echo "davfs2 davfs2/suid_file boolean false" | debconf-set-selections
 $STD apt-get install -y \
   bzip2 \
   fuse3 \
+  git \
   sshfs \
   davfs2 \
   openssh-client

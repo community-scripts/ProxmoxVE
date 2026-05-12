@@ -29,7 +29,9 @@ setup_deb822_repo \
 $STD apt update
 $STD apt install -y google-chrome-stable
 # remove google-chrome.list added by google-chrome-stable
-rm /etc/apt/sources.list.d/google-chrome.list
+if [ -f /etc/apt/sources.list.d/google-chrome.list ]; then
+  rm /etc/apt/sources.list.d/google-chrome.list
+fi
 msg_ok "Installed Chrome"
 
 fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"

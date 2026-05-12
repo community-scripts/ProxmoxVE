@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing dependencies"
+$STD apt install -y whois
+msg_ok "Installed dependencies"
+
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="domainlocker_db" PG_DB_USER="domainlocker" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs

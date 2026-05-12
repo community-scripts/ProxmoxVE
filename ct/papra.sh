@@ -35,14 +35,37 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Backing up Configuration"
-    cp /opt/papra/apps/papra-server/.env /opt/papra_env.bak
+    if [[ -f /opt/papra/apps/papra-server/.env ]]; then
+      cp /opt/papra/apps/papra-server/.env /opt/papra_env.bak
+    fi
     msg_ok "Backed up Configuration"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "papra" "papra-hq/papra" "tarball"
 
     msg_info "Building Application"
     cd /opt/papra
-    cp /opt/papra_env.bak /opt/papra/apps/papra-server/.env
+    if [[ -f /opt/papra_env.bak ]]; then
+      cp /opt/papra_env.bak /opt/papra/apps/papra-server/.env
+    else
+      msg_warn ".env missing, regenerating from defaults"
+      LOCAL_IP=$(hostname -I | awk '{print $1}')
+      cat <<EOF >/opt/papra/apps/papra-server/.env
+NODE_ENV=production
+SERVER_SERVE_PUBLIC_DIR=true
+PORT=1221
+DATABASE_URL=file:/opt/papra_data/db/db.sqlite
+DOCUMENT_STORAGE_FILESYSTEM_ROOT=/opt/papra_data/documents
+PAPRA_CONFIG_DIR=/opt/papra_data
+AUTH_SECRET=$(cat /opt/papra_data/.secret)
+BETTER_AUTH_SECRET=$(cat /opt/papra_data/.secret)
+BETTER_AUTH_TELEMETRY=0
+CLIENT_BASE_URL=http://${LOCAL_IP}:1221
+SERVER_BASE_URL=http://${LOCAL_IP}:1221
+EMAILS_DRY_RUN=true
+INGESTION_FOLDER_IS_ENABLED=true
+INGESTION_FOLDER_ROOT_PATH=/opt/papra_data/ingestion
+EOF
+    fi
     $STD pnpm install --frozen-lockfile
     $STD pnpm --filter "@papra/app-client..." run build
     $STD pnpm --filter "@papra/app-server..." run build

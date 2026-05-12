@@ -21,6 +21,7 @@ temp_file=$(mktemp)
 RELEASE=$(get_latest_github_release "SonarSource/sonarqube")
 curl -fsSL "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${RELEASE}.zip" -o $temp_file
 unzip -q "$temp_file" -d /opt
+rm -f "$temp_file"
 mv /opt/sonarqube-* /opt/sonarqube
 $STD useradd -r -m -U -d /opt/sonarqube -s /bin/bash sonarqube
 chown -R sonarqube:sonarqube /opt/sonarqube

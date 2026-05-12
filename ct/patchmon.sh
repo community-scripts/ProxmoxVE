@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/PatcMmon/PatchMon
+# Source: https://github.com/PatchMon/PatchMon
 
 APP="PatchMon"
 var_tags="${var_tags:-monitoring}"
@@ -29,62 +29,75 @@ function update_script() {
     exit
   fi
 
-  if ! grep -q "PORT=3001" /opt/patchmon/backend/.env; then
-    msg_warn "⚠️ The next PatchMon update will include breaking changes (port changes)."
-    msg_warn "See details here: https://github.com/community-scripts/ProxmoxVE/pull/11888"
-    msg_warn "Press Enter to continue with the update, or Ctrl+C to abort..."
-    read -r
-  fi
-
-  NODE_VERSION="24" setup_nodejs
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
     msg_info "Stopping Service"
     systemctl stop patchmon-server
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    cp /opt/patchmon/backend/.env /opt/backend.env
-    cp /opt/patchmon/frontend/.env /opt/frontend.env
-    msg_ok "Backup Created"
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
-
-    msg_info "Updating PatchMon"
-    VERSION=$(get_latest_github_release "PatchMon/PatchMon")
-    SERVER_PORT="$(sed -n '/SERVER_PORT/s/[^=]*=//p' /opt/backend.env)"
-    sed -i 's/PORT=3399/PORT=3001/' /opt/backend.env
-    sed -i -e "s/VERSION=.*/VERSION=$VERSION/" \
-      -e '/^VITE_API_URL/d' /opt/frontend.env
-    export NODE_ENV=production
-    cd /opt/patchmon
-    $STD npm install --no-audit --no-fund --no-save --ignore-scripts
-    cd /opt/patchmon/frontend
-    mv /opt/frontend.env /opt/patchmon/frontend/.env
-    $STD npm install --no-audit --no-fund --no-save --ignore-scripts --include=dev
-    $STD npm run build
-    cd /opt/patchmon/backend
-    mv /opt/backend.env /opt/patchmon/backend/.env
-    $STD npm run db:generate
-    $STD npx prisma migrate deploy
-    cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
-    sed -i -e 's|proxy_pass .*|proxy_pass http://127.0.0.1:3001;|' \
-      -e '\|try_files |i\        root /opt/patchmon/frontend/dist;' \
-      -e 's|alias.*|alias /opt/patchmon/frontend/dist/assets;|' \
-      -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
-    if [[ -n "$SERVER_PORT" ]] && [[ "$SERVER_PORT" != "443" ]]; then
-      sed -i "s/listen [[:digit:]].*/listen ${SERVER_PORT};/" /etc/nginx/sites-available/patchmon.conf
+    if [[ -d /opt/patchmon/backend ]]; then
+      msg_info "Legacy install detected - creating full backup, please wait..."
+      $STD tar czf ~/patchmon_legacy.tar.gz /opt/patchmon
+      cp /opt/patchmon/backend/.env /opt/legacy.env
+      msg_ok "Full backup saved in /root"
+      msg_info "Starting migration to PatchMon v2.x.x"
+      systemctl disable -q --now nginx
+      $STD npm cache clean --force
+      $STD apt autoremove --purge -y {nginx,nodejs}
+      if [[ -f /etc/apt/sources.list.d/nodesource.sources ]]; then
+        cp /etc/apt/sources.list.d/nodesource.sources /etc/apt/sources.list.d/nodesource.sources.bak
+        rm -f /etc/apt/sources.list.d/nodesource.sources
+      elif [[ -f /etc/apt/sources.list.d/nodesource.list ]]; then
+        cp /etc/apt/sources.list.d/nodesource.list /etc/apt/sources.list.d/nodesource.list.bak
+        rm -f /etc/apt/sources.list.d/nodesource.list
+      fi
+      rm -rf /opt/patchmon
+      mkdir -p /opt/patchmon/agents
+      cp /opt/legacy.env /opt/patchmon/.env
+      sed -i -e 's/^PORT=.*/PORT=3000/' \
+        -e 's/^NODE_/APP_/' \
+        -e '/^SERVER_*/d' \
+        -e '/^# API*/,+2d' /opt/patchmon/.env
+      {
+        echo ""
+        echo "SESSION_SECRET=$(openssl rand -hex 64)"
+        echo "AI_ENCRYPTION_KEY=$(openssl rand -hex 64)"
+        echo "AGENT_BINARIES_DIR=/opt/patchmon/agents"
+      } >>/opt/patchmon/.env
+      sed -i -e '\|Directory|s|/backend||' \
+        -e 's|^ExecStart=.*|ExecStart=/opt/patchmon/patchmon-server|' \
+        -e 's|^Environment=NODE_.*|EnvironmentFile=/opt/patchmon/.env|' \
+        /etc/systemd/system/patchmon-server.service
+      systemctl daemon-reload
+      rm /opt/legacy.env
+      msg_ok "Migration complete!"
     fi
-    ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
-    rm -f /etc/nginx/sites-enabled/default
-    $STD nginx -t
-    systemctl restart nginx
-    msg_ok "Updated PatchMon"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-amd64"
+    mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
+
+    msg_info "Fetching PatchMon agent binaries"
+    RELEASE=$(get_latest_github_release "PatchMon/PatchMon")
+    [[ ! -d /opt/patchmon/agents ]] && mkdir -p /opt/patchmon/agents
+    FILE_URL="https://github.com/PatchMon/PatchMon/releases/download/v${RELEASE}/patchmon-agent-"
+    AGENT_NAME=(
+      "linux-amd64"
+      "linux-arm64"
+      "linux-arm"
+      "linux-386"
+      "freebsd-amd64"
+      "freebsd-arm64"
+      "freebsd-arm"
+      "freebsd-386"
+      "windows-amd64.exe"
+      "windows-arm64.exe"
+    )
+    for arch in "${AGENT_NAME[@]}"; do
+      curl_with_retry "${FILE_URL}${arch}" "/opt/patchmon/agents/patchmon-agent-${arch}"
+      [[ "${arch}" != *.exe ]] && chmod 755 "/opt/patchmon/agents/patchmon-agent-${arch}"
+    done
+    msg_ok "Fetched PatchMon agent binaries"
 
     msg_info "Starting Service"
-    if grep -q '/usr/bin/node' /etc/systemd/system/patchmon-server.service; then
-      sed -i 's|ExecStart=.*|ExecStart=/usr/bin/npm run start|' /etc/systemd/system/patchmon-server.service
-      systemctl daemon-reload
-    fi
     systemctl start patchmon-server
     msg_ok "Started Service"
     msg_ok "Updated successfully!"

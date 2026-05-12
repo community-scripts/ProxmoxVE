@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 MARIADB_DB_NAME="ghost" MARIADB_DB_USER="ghostuser" setup_mariadb_db
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 
 msg_info "Installing Ghost CLI"
 $STD npm install ghost-cli@latest -g

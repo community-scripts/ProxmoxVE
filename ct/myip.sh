@@ -28,6 +28,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   if check_for_gh_release "myip" "jason5ng32/MyIP"; then
     msg_info "Stopping Services"
     systemctl stop myip

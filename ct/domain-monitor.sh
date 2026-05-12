@@ -34,7 +34,7 @@ function update_script() {
   fi
 
   if ! grep -Fq "www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php" /etc/crontab; then
-    echo "0 0 * * * www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >> /etc/crontab
+    echo "0 0 * * * www-data /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >>/etc/crontab
   fi
 
   if check_for_gh_release "domain-monitor" "Hosteroid/domain-monitor"; then
@@ -52,6 +52,7 @@ function update_script() {
     msg_info "Updating Domain Monitor"
     cd /opt/domain-monitor
     $STD composer install
+    chown -R www-data:www-data /opt/domain-monitor
     msg_ok "Updated Domain Monitor"
 
     msg_info "Restoring backup"
@@ -59,7 +60,7 @@ function update_script() {
     msg_ok "Restored backup"
 
     msg_info "Restarting Services"
-    systemctl reload apache2
+    systemctl start apache2
     msg_ok "Restarted Services"
     msg_ok "Updated successfully!"
   fi

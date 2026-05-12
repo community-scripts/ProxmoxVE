@@ -47,6 +47,7 @@ $STD yarn install
 $STD yarn build
 cat <<EOF >/opt/tandoor/.env
 SECRET_KEY=$SECRET_KEY
+ALLOWED_HOSTS=$LOCAL_IP
 TZ=Europe/Berlin
 
 DB_ENGINE=django.db.backends.postgresql

@@ -41,6 +41,21 @@ IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n
 [[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
 [[ -z "$IP" ]] && IP="127.0.0.1"
 
+# Proxmox Host Warning
+if [[ -d "/etc/pve" ]]; then
+  echo -e "${RD}⚠️  Warning: Running this addon directly on the Proxmox host is not recommended!${CL}"
+  echo -e "${YW}   Only the boot disk will be visible — passthrough drives will not be indexed.${CL}"
+  echo -e "${YW}   This causes incorrect disk usage stats and incomplete file browsing.${CL}"
+  echo -e "${YW}   Run this addon inside an LXC or VM instead and mount your drives there.${CL}"
+  echo ""
+  echo -n "Continue anyway on the Proxmox host? (y/N): "
+  read -r host_confirm
+  if [[ ! "${host_confirm,,}" =~ ^(y|yes)$ ]]; then
+    echo -e "${YW}Aborted.${CL}"
+    exit 0
+  fi
+fi
+
 # Detect OS
 if [[ -f "/etc/alpine-release" ]]; then
   OS="Alpine"
@@ -131,17 +146,18 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     cd /usr/local/community-scripts
     filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
     filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-    filebrowser config init --auth.method=noauth &>/dev/null
-    filebrowser config set --auth.method=noauth &>/dev/null
-    filebrowser users add ID 1 --perm.admin &>/dev/null
+    filebrowser config set --auth.method=noauth --database "$DB_PATH" &>/dev/null
+    if ! filebrowser users update 1 --perm.admin --database "$DB_PATH" &>/dev/null; then
+      filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH" &>/dev/null
+    fi
     msg_ok "No Authentication configured"
   else
     msg_info "Setting up default authentication"
     cd /usr/local/community-scripts
     filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
     filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-    filebrowser users add admin helper-scripts.com --perm.admin --database "$DB_PATH" &>/dev/null
-    msg_ok "Default authentication configured (admin:helper-scripts.com)"
+    filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH" &>/dev/null
+    msg_ok "Default authentication configured (admin:community-scripts.org)"
   fi
 
   msg_info "Creating service"

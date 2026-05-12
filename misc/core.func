@@ -143,7 +143,7 @@ ensure_profile_loaded() {
   # Source all profile.d scripts to ensure PATH is complete
   if [[ -d /etc/profile.d ]]; then
     for script in /etc/profile.d/*.sh; do
-      [[ -r "$script" ]] && source "$script"
+      [[ -r "$script" ]] && source "$script" || true
     done
   fi
 
@@ -533,29 +533,23 @@ silent() {
   fi
 
   if [[ $rc -ne 0 ]]; then
-    # Source explain_exit_code if needed
-    if ! declare -f explain_exit_code >/dev/null 2>&1; then
-      if ! source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func); then
-        explain_exit_code() { echo "unknown (error_handler.func download failed)"; }
-      fi
-    fi
+    # Return instead of exit so that callers can use `$STD cmd || true`
+    # or `if $STD cmd; then ...` to handle errors gracefully.
+    # When no || / if is used, set -e + ERR trap will still catch it
+    # and error_handler() will display the error and exit.
+    #
+    # Set flag so error_handler knows to show log tail from silent's logfile
+    export _SILENT_FAILED_RC="$rc"
+    export _SILENT_FAILED_CMD="$cmd"
+    export _SILENT_FAILED_LINE="$caller_line"
+    export _SILENT_FAILED_LOG="$logfile"
 
-    local explanation
-    explanation="$(explain_exit_code "$rc")"
-
-    printf "\e[?25h"
-    msg_error "in line ${caller_line}: exit code ${rc} (${explanation})"
-    msg_custom "→" "${YWB}" "${cmd}"
-
-    if [[ -s "$logfile" ]]; then
-      echo -e "\n${TAB}--- Last 20 lines of log ---"
-      tail -n 20 "$logfile"
-      echo -e "${TAB}-----------------------------------"
-      echo -e "${TAB}📋 Full log: ${logfile}\n"
-    fi
-
-    exit "$rc"
+    return "$rc"
   fi
+
+  # Clear stale flags on success (prevents false positives if a previous
+  # $STD cmd || true failed and a later non-silent command triggers error_handler)
+  unset _SILENT_FAILED_RC _SILENT_FAILED_CMD _SILENT_FAILED_LINE _SILENT_FAILED_LOG 2>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------
@@ -864,7 +858,7 @@ get_header() {
   if [ ! -s "$local_header_path" ]; then
     if ! curl -fsSL "$header_url" -o "$local_header_path"; then
       msg_warn "Failed to download header: $header_url"
-      return 1
+      return 250
     fi
   fi
 
@@ -880,6 +874,12 @@ get_header() {
 # - Returns silently if header not available
 # ------------------------------------------------------------------------------
 header_info() {
+  # Guard against printing the header twice in the same session (e.g. when
+  # the ct script calls header_info at global scope AND again inside
+  # update_script()).
+  [[ "${_HEADER_SHOWN:-0}" == "1" ]] && return 0
+  _HEADER_SHOWN=1
+
   local app_name=$(echo "${APP,,}" | tr -d ' ')
   local header_content
 
@@ -1364,7 +1364,7 @@ prompt_select() {
   if [[ $num_options -eq 0 ]]; then
     msg_warn "prompt_select called with no options"
     echo "" >&2
-    return 1
+    return 65
   fi
 
   # Validate default
@@ -1606,7 +1606,7 @@ check_or_create_swap() {
   swap_size_mb=$(prompt_input "Enter swap size in MB (e.g., 2048 for 2GB):" "2048" 60)
   if ! [[ "$swap_size_mb" =~ ^[0-9]+$ ]]; then
     msg_error "Invalid swap size: '${swap_size_mb}' (must be a number in MB)"
-    return 1
+    return 65
   fi
 
   local swap_file="/swapfile"
@@ -1614,19 +1614,19 @@ check_or_create_swap() {
   msg_info "Creating ${swap_size_mb}MB swap file at $swap_file"
   if ! dd if=/dev/zero of="$swap_file" bs=1M count="$swap_size_mb" status=progress; then
     msg_error "Failed to allocate swap file (dd failed)"
-    return 1
+    return 150
   fi
   if ! chmod 600 "$swap_file"; then
     msg_error "Failed to set permissions on $swap_file"
-    return 1
+    return 150
   fi
   if ! mkswap "$swap_file"; then
     msg_error "Failed to format swap file (mkswap failed)"
-    return 1
+    return 150
   fi
   if ! swapon "$swap_file"; then
     msg_error "Failed to activate swap (swapon failed)"
-    return 1
+    return 150
   fi
   msg_ok "Swap file created and activated successfully"
 }
@@ -1705,13 +1705,13 @@ function get_lxc_ip() {
         fi
       done
 
-      return 1
+      return 6
     }
 
     LOCAL_IP="$(get_current_ip || true)"
     if [[ -z "$LOCAL_IP" ]]; then
       msg_error "Could not determine LOCAL_IP (checked: eth0, hostname -I, ip route, IPv6 targets)"
-      return 1
+      return 6
     fi
   fi
 

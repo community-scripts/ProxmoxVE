@@ -23,21 +23,24 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+
   if [[ ! -d /var/lib/sonarr/ ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
-  msg_info "Stopping Service"
-  systemctl stop sonarr
-  msg_ok "Stopped Service"
+  if check_for_gh_release "Sonarr" "Sonarr/Sonarr"; then
+    msg_info "Stopping Service"
+    systemctl stop sonarr
+    msg_ok "Stopped Service"
 
-  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-x64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-x64.tar.gz"
 
-  msg_info "Starting Service"
-  systemctl start sonarr
-  msg_ok "Started Service"
-  msg_ok "Updated successfully!"
+    msg_info "Starting Service"
+    systemctl start sonarr
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
   exit
 }
 

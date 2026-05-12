@@ -24,7 +24,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d "/opt/2fauth" ]]; then
+  if [[ ! -d /opt/2fauth ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -34,7 +34,8 @@ function update_script() {
     $STD apt -y upgrade
 
     msg_info "Creating Backup"
-    mv "/opt/2fauth" "/opt/2fauth-backup"
+    rm -rf /opt/2fauth-backup
+    mv /opt/2fauth /opt/2fauth-backup
     if ! dpkg -l | grep -q 'php8.4'; then
       cp /etc/nginx/conf.d/2fauth.conf /etc/nginx/conf.d/2fauth.conf.bak
     fi
@@ -46,15 +47,17 @@ function update_script() {
     fi
     fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth" "tarball"
     setup_composer
-    mv "/opt/2fauth-backup/.env" "/opt/2fauth/.env"
-    mv "/opt/2fauth-backup/storage" "/opt/2fauth/storage"
-    cd "/opt/2fauth" || return
-    chown -R www-data: "/opt/2fauth"
-    chmod -R 755 "/opt/2fauth"
+    cp /opt/2fauth-backup/.env /opt/2fauth/.env
+    cp -r /opt/2fauth-backup/storage /opt/2fauth/storage
+    cd /opt/2fauth || return
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --prefer-dist
     php artisan 2fauth:install
+    chown -R www-data: /opt/2fauth
+    chmod -R 755 /opt/2fauth
+    $STD systemctl restart php8.4-fpm
     $STD systemctl restart nginx
+    rm -rf /opt/2fauth-backup
     msg_ok "Updated successfully!"
   fi
   exit

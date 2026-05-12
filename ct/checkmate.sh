@@ -39,7 +39,7 @@ function update_script() {
     [ -f /opt/checkmate/client/.env.local ] && cp /opt/checkmate/client/.env.local /opt/checkmate_client.env.local.bak
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "checkmate" "bluewave-labs/Checkmate"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "checkmate" "bluewave-labs/Checkmate" "tarball"
 
     msg_info "Updating Checkmate Server"
     cd /opt/checkmate/server

@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add tzdata
+$STD apk add tzdata openssl
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Docker"

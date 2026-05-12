@@ -39,7 +39,7 @@ function update_script() {
     cp /opt/linkding/.env /opt/linkding_env_backup
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
 
     msg_info "Restoring Data"
     cp -r /opt/linkding_data_backup/. /opt/linkding/data

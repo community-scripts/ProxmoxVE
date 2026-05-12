@@ -43,6 +43,10 @@ function update_script() {
 
     msg_info "Restoring config"
     mv /opt/slskd.yml.bak /opt/slskd/config/slskd.yml
+
+    # Migrate 0.25.0 breaking config key renames
+    sed -i 's/^global:/transfers:/' /opt/slskd/config/slskd.yml
+    sed -i 's/^integration:/integrations:/' /opt/slskd/config/slskd.yml
     msg_ok "Restored config"
 
     msg_info "Starting Service(s)"

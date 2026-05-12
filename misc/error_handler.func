@@ -236,6 +236,16 @@ error_handler() {
 
   command="${command//\$STD/}"
 
+  # If error originated from silent(), use its captured metadata
+  # This provides the actual command and line number instead of "silent ..."
+  if [[ -n "${_SILENT_FAILED_RC:-}" ]]; then
+    exit_code="$_SILENT_FAILED_RC"
+    command="$_SILENT_FAILED_CMD"
+    line_number="$_SILENT_FAILED_LINE"
+    # Clear flags to prevent stale data on subsequent errors
+    unset _SILENT_FAILED_RC _SILENT_FAILED_CMD _SILENT_FAILED_LINE
+  fi
+
   if [[ "$exit_code" -eq 0 ]]; then
     return 0
   fi
@@ -279,8 +289,12 @@ error_handler() {
   fi
 
   # Get active log file (BUILD_LOG or INSTALL_LOG)
+  # Prefer silent()'s logfile when available (contains the actual command output)
   local active_log=""
-  if declare -f get_active_logfile >/dev/null 2>&1; then
+  if [[ -n "${_SILENT_FAILED_LOG:-}" && -s "${_SILENT_FAILED_LOG}" ]]; then
+    active_log="$_SILENT_FAILED_LOG"
+    unset _SILENT_FAILED_LOG
+  elif declare -f get_active_logfile >/dev/null 2>&1; then
     active_log="$(get_active_logfile)"
   elif [[ -n "${SILENT_LOGFILE:-}" ]]; then
     active_log="$SILENT_LOGFILE"
@@ -297,6 +311,51 @@ error_handler() {
     echo -e "\n${TAB}--- Last 20 lines of log ---"
     tail -n 20 "$active_log"
     echo -e "${TAB}-----------------------------------\n"
+  fi
+
+  # Detect probable Node.js heap OOM and print actionable guidance.
+  # This avoids generic SIGABRT/SIGKILL confusion for frontend build failures.
+  local node_oom_detected="false"
+  local node_build_context="false"
+  if [[ "$command" =~ (npm|pnpm|yarn|node|vite|turbo) ]]; then
+    node_build_context="true"
+  fi
+  if [[ "$exit_code" == "243" ]]; then
+    node_oom_detected="true"
+  elif [[ -n "$active_log" && -s "$active_log" ]]; then
+    if tail -n 200 "$active_log" 2>/dev/null | grep -Eqi 'Reached heap limit|JavaScript heap out of memory|Allocation failed - JavaScript heap out of memory|FATAL ERROR: Reached heap limit'; then
+      node_oom_detected="true"
+    fi
+  fi
+
+  if [[ "$node_oom_detected" == "true" ]] || { [[ "$node_build_context" == "true" ]] && [[ "$exit_code" =~ ^(134|137)$ ]]; }; then
+    local heap_hint_mb=""
+
+    # If explicitly configured, prefer the current value for troubleshooting output.
+    if [[ -n "${NODE_OPTIONS:-}" ]] && [[ "${NODE_OPTIONS}" =~ max-old-space-size=([0-9]+) ]]; then
+      heap_hint_mb="${BASH_REMATCH[1]}"
+    elif [[ -n "${var_ram:-}" ]] && [[ "${var_ram}" =~ ^[0-9]+$ ]]; then
+      heap_hint_mb=$((var_ram * 75 / 100))
+    else
+      local mem_kb=""
+      mem_kb=$(awk '/^MemTotal:/ {print $2; exit}' /proc/meminfo 2>/dev/null || echo "")
+      if [[ "$mem_kb" =~ ^[0-9]+$ ]]; then
+        local mem_mb=$((mem_kb / 1024))
+        heap_hint_mb=$((mem_mb * 75 / 100))
+      fi
+    fi
+
+    if [[ -z "$heap_hint_mb" ]] || ((heap_hint_mb < 1024)); then
+      heap_hint_mb=1024
+    elif ((heap_hint_mb > 12288)); then
+      heap_hint_mb=12288
+    fi
+
+    if declare -f msg_warn >/dev/null 2>&1; then
+      msg_warn "Possible Node.js heap OOM. Try: export NODE_OPTIONS=\"--max-old-space-size=${heap_hint_mb}\" and rerun the build."
+    else
+      echo -e "${YW}Possible Node.js heap OOM. Try: export NODE_OPTIONS=\"--max-old-space-size=${heap_hint_mb}\" and rerun the build.${CL}"
+    fi
   fi
 
   # Detect context: Container (INSTALL_LOG set + inside container /root) vs Host
@@ -507,14 +566,23 @@ _stop_container_if_installing() {
 on_exit() {
   local exit_code=$?
 
-  # Report orphaned "installing" records to telemetry API
-  # Catches ALL exit paths: errors, signals, AND clean exits where
-  # post_to_api was called but post_update_to_api was never called
-  if [[ "${POST_TO_API_DONE:-}" == "true" && "${POST_UPDATE_DONE:-}" != "true" ]]; then
-    if [[ $exit_code -ne 0 ]]; then
-      _send_abort_telemetry "$exit_code"
-    elif declare -f post_update_to_api >/dev/null 2>&1; then
-      post_update_to_api "done" "0" 2>/dev/null || true
+  # Report orphaned telemetry records
+  # Two scenarios handled:
+  # 1. POST_TO_API_DONE=true but POST_UPDATE_DONE=false: Record was created but
+  #    never got a final status update → send abort/done now.
+  # 2. POST_TO_API_DONE=false but DIAGNOSTICS=yes: Initial post failed (server
+  #    unreachable/timeout), but the server has fallback create-on-update logic,
+  #    so a status update can still create the record. Worth one last try.
+  if [[ "${POST_UPDATE_DONE:-}" != "true" ]]; then
+    if [[ "${POST_TO_API_DONE:-}" == "true" || "${DIAGNOSTICS:-no}" == "yes" ]]; then
+      if [[ $exit_code -ne 0 ]]; then
+        _send_abort_telemetry "$exit_code"
+      elif [[ "${INSTALL_COMPLETE:-}" == "true" ]] && declare -f post_update_to_api >/dev/null 2>&1; then
+        # Only report success if the install was explicitly marked complete.
+        # Without this guard, early bailouts (e.g. user cancelled) with exit 0
+        # would be falsely reported as successful installations.
+        post_update_to_api "done" "0" 2>/dev/null || true
+      fi
     fi
   fi
 

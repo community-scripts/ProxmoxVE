@@ -51,15 +51,37 @@ function update_script() {
 
     msg_info "Updating Sparky Fitness Backend"
     cd /opt/sparkyfitness/SparkyFitnessServer
-    $STD npm install
+    $STD pnpm install
     msg_ok "Updated Sparky Fitness Backend"
 
     msg_info "Updating Sparky Fitness Frontend (Patience)"
-    cd /opt/sparkyfitness/SparkyFitnessFrontend
+    cd /opt/sparkyfitness
     $STD pnpm install
+    cd /opt/sparkyfitness/SparkyFitnessFrontend
     $STD pnpm run build
     cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
     msg_ok "Updated Sparky Fitness Frontend"
+
+    msg_info "Refreshing SparkyFitness Service"
+    cat <<EOF >/etc/systemd/system/sparkyfitness-server.service
+  [Unit]
+  Description=SparkyFitness Backend Service
+  After=network.target postgresql.service
+  Requires=postgresql.service
+
+  [Service]
+  Type=simple
+  WorkingDirectory=/opt/sparkyfitness/SparkyFitnessServer
+  EnvironmentFile=/etc/sparkyfitness/.env
+  ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx SparkyFitnessServer.js
+  Restart=always
+  RestartSec=5
+
+  [Install]
+  WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    msg_ok "Refreshed SparkyFitness Service"
 
     msg_info "Restoring data"
     cp -r /opt/sparkyfitness_backup/. /opt/sparkyfitness/SparkyFitnessServer/

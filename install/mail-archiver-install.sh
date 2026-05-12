@@ -22,7 +22,8 @@ setup_deb822_repo \
   "main"
 $STD apt install -y \
   dotnet-sdk-10.0 \
-  aspnetcore-runtime-8.0
+  aspnetcore-runtime-8.0 \
+  libgssapi-krb5-2
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql

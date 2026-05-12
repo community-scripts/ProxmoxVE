@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop nodecast-tv
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "nodecast-tv" "technomancer702/nodecast-tv"
+    fetch_and_deploy_gh_release "nodecast-tv" "technomancer702/nodecast-tv" "tarball"
 
     msg_info "Updating Modules"
     cd /opt/nodecast-tv

@@ -17,7 +17,7 @@ NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "latest" "/opt/jotty" "jotty_*_prebuild.tar.gz"
 
 msg_info "Setup jotty"
-mkdir -p data/{users,checklists,notes}
+mkdir -p /opt/jotty/data/{users,checklists,notes}
 
 cat <<EOF >/opt/jotty/.env
 NODE_ENV=production

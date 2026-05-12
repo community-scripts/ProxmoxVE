@@ -14,12 +14,12 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "cronmaster" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
 load_functions
-init_tool_telemetry "" "addon"
 
 # ==============================================================================
 # CONFIGURATION
@@ -147,7 +147,7 @@ EOF
   # Create update script
   msg_info "Creating update script"
   ensure_usr_local_bin_persist
-  cat <<EOF >/usr/local/bin/update_cronmaster
+  cat <<'EOF' >/usr/local/bin/update_cronmaster
 #!/usr/bin/env bash
 # CronMaster Update Script
 type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/cronmaster.sh)"

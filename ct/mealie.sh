@@ -38,9 +38,26 @@ function update_script() {
 
     msg_info "Backing up Configuration"
     cp -f /opt/mealie/mealie.env /opt/mealie.env
+    [[ -f /opt/mealie/start.sh ]] && cp -f /opt/mealie/start.sh /opt/mealie.start.sh
     msg_ok "Backup completed"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball"
+
+    msg_info "Restoring Configuration"
+    mv -f /opt/mealie.env /opt/mealie/mealie.env
+    if [[ -f /opt/mealie.start.sh ]]; then
+      mv -f /opt/mealie.start.sh /opt/mealie/start.sh
+    else
+      cat <<'STARTEOF' >/opt/mealie/start.sh
+#!/bin/bash
+set -a
+source /opt/mealie/mealie.env
+set +a
+exec uv run mealie
+STARTEOF
+    fi
+    chmod +x /opt/mealie/start.sh
+    msg_ok "Configuration restored"
 
     msg_info "Installing Python Dependencies with uv"
     cd /opt/mealie
@@ -49,9 +66,10 @@ function update_script() {
 
     msg_info "Building Frontend"
     MEALIE_VERSION=$(<$HOME/.mealie)
-    $STD sed -i "s|https://github.com/mealie-recipes/mealie/commit/|https://github.com/mealie-recipes/mealie/releases/tag/|g" /opt/mealie/frontend/pages/admin/site-settings.vue
-    $STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
-    $STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
+    SITE_SETTINGS=$(find /opt/mealie/frontend -name "site-settings.vue" -path "*/admin/*" | head -1)
+    $STD sed -i "s|https://github.com/mealie-recipes/mealie/commit/|https://github.com/mealie-recipes/mealie/releases/tag/|g" "$SITE_SETTINGS"
+    $STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" "$SITE_SETTINGS"
+    $STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" "$SITE_SETTINGS"
     export NUXT_TELEMETRY_DISABLED=1
     cd /opt/mealie/frontend
     $STD yarn install --prefer-offline --frozen-lockfile --non-interactive --production=false --network-timeout 1000000
@@ -63,23 +81,7 @@ function update_script() {
     cp -r /opt/mealie/frontend/dist/* /opt/mealie/mealie/frontend/
     msg_ok "Copied Frontend"
 
-    msg_info "Updating NLTK Data"
-    mkdir -p /nltk_data/
-    cd /opt/mealie
-    $STD uv run python -m nltk.downloader -d /nltk_data averaged_perceptron_tagger_eng
-    msg_ok "Updated NLTK Data"
-
-    msg_info "Restoring Configuration"
-    mv -f /opt/mealie.env /opt/mealie/mealie.env
-    cat <<'STARTEOF' >/opt/mealie/start.sh
-#!/bin/bash
-set -a
-source /opt/mealie/mealie.env
-set +a
-exec uv run mealie
-STARTEOF
-    chmod +x /opt/mealie/start.sh
-    msg_ok "Configuration restored"
+    setup_nltk "averaged_perceptron_tagger_eng" "/nltk_data"
 
     msg_info "Starting Service"
     systemctl start mealie
@@ -97,4 +99,3 @@ msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9000${CL}"
-

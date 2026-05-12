@@ -48,12 +48,15 @@ if [[ ${soularr,,} =~ ^(y|yes)$ ]]; then
 #!/usr/bin/env bash
 
 if ps aux | grep "[s]oularr.py" >/dev/null; then
-  echo "Soularr is already running. Exiting..."
+  echo "Soularr is already running. Exiting..." >&2
   exit 1
-else
-  source /opt/soularr/venv/bin/activate
-  uv run python3 -u /opt/soularr/soularr.py --config-dir /opt/soularr
 fi
+
+# Remove stale lock file from previous ungraceful exit
+rm -f "/opt/soularr/.soularr.lock"
+
+source /opt/soularr/venv/bin/activate
+uv run python3 -u /opt/soularr/soularr.py --config-dir /opt/soularr 2>&1
 EOF
   chmod +x /opt/soularr/run.sh
   deactivate

@@ -35,7 +35,7 @@ cd Shinobi
 gitVersionNumber=$(git rev-parse HEAD)
 theDateRightNow=$(date)
 touch version.json
-chmod 777 version.json
+chmod 644 version.json
 echo '{"Product" : "'"Shinobi"'" , "Branch" : "'"master"'" , "Version" : "'"$gitVersionNumber"'" , "Date" : "'"$theDateRightNow"'" , "Repository" : "'"https://gitlab.com/Shinobi-Systems/Shinobi.git"'"}' >version.json
 msg_ok "Cloned Shinobi"
 

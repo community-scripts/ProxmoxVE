@@ -7,7 +7,7 @@ source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxV
 
 APP="Frigate"
 var_tags="${var_tags:-nvr}"
-var_cpu="${var_cpu:-4}"
+var_cpu="${var_cpu:-8}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"

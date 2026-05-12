@@ -110,7 +110,7 @@ export AUTOGRAPH_VERBOSITY=0
 export GLOG_minloglevel=3
 export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.0" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.1" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -146,7 +146,7 @@ ldconfig
 msg_ok "Built libUSB"
 
 msg_info "Bootstrapping pip"
-wget -q https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py
+curl_with_retry "https://bootstrap.pypa.io/get-pip.py" "/tmp/get-pip.py"
 sed -i 's/args.append("setuptools")/args.append("setuptools==77.0.3")/' /tmp/get-pip.py
 $STD python3 /tmp/get-pip.py "pip"
 rm -f /tmp/get-pip.py
@@ -169,18 +169,47 @@ NODE_VERSION="20" setup_nodejs
 
 msg_info "Downloading Inference Models"
 mkdir -p /models /openvino-model
-wget -q -O /edgetpu_model.tflite https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite
-wget -q -O /models/cpu_model.tflite https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite
+curl_with_retry "https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite" "/edgetpu_model.tflite"
+curl_with_retry "https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite" "/models/cpu_model.tflite"
 cp /opt/frigate/labelmap.txt /labelmap.txt
 msg_ok "Downloaded Inference Models"
 
 msg_info "Downloading Audio Model"
-wget -q -O /tmp/yamnet.tar.gz https://www.kaggle.com/api/v1/models/google/yamnet/tfLite/classification-tflite/1/download
+curl_with_retry "https://www.kaggle.com/api/v1/models/google/yamnet/tfLite/classification-tflite/1/download" "/tmp/yamnet.tar.gz"
 $STD tar xzf /tmp/yamnet.tar.gz -C /
 mv /1.tflite /cpu_audio_model.tflite
 cp /opt/frigate/audio-labelmap.txt /audio-labelmap.txt
 rm -f /tmp/yamnet.tar.gz
 msg_ok "Downloaded Audio Model"
+
+msg_info "Installing OpenVino"
+$STD pip3 install -r /opt/frigate/docker/main/requirements-ov.txt
+msg_ok "Installed OpenVino"
+
+msg_info "Building OpenVino Model"
+cd /models
+curl_with_retry "http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz" "ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz"
+$STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
+if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
+  mkdir -p /openvino-model
+  cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
+  cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
+  OV_LABELS=$(python3 -c "import omz_tools; import os; print(os.path.join(omz_tools.__path__[0], 'data/dataset_classes/coco_91cl_bkgr.txt'))" 2>/dev/null)
+  if [[ -n "$OV_LABELS" && -f "$OV_LABELS" ]]; then
+    ln -sf "$OV_LABELS" /openvino-model/coco_91cl_bkgr.txt
+  else
+    OV_LABELS=$(find /usr/local/lib -name "coco_91cl_bkgr.txt" 2>/dev/null | head -1)
+    if [[ -n "$OV_LABELS" ]]; then
+      ln -sf "$OV_LABELS" /openvino-model/coco_91cl_bkgr.txt
+    else
+      curl_with_retry "https://raw.githubusercontent.com/openvinotoolkit/open_model_zoo/master/data/dataset_classes/coco_91cl_bkgr.txt" "/openvino-model/coco_91cl_bkgr.txt"
+    fi
+  fi
+  sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
+  msg_ok "Built OpenVino Model"
+else
+  msg_warn "OpenVino build failed (CPU may not support required instructions). Frigate will use CPU model."
+fi
 
 msg_info "Installing HailoRT Runtime"
 $STD bash /opt/frigate/docker/main/install_hailort.sh
@@ -188,7 +217,6 @@ cp -a /opt/frigate/docker/main/rootfs/. /
 sed -i '/^.*unset DEBIAN_FRONTEND.*$/d' /opt/frigate/docker/main/install_deps.sh
 echo "libedgetpu1-max libedgetpu/accepted-eula boolean true" | debconf-set-selections
 echo "libedgetpu1-max libedgetpu/install-confirm-max boolean true" | debconf-set-selections
-# Allow Frigate's Intel media packages to overwrite files from system GPU driver packages
 echo 'force-overwrite' >/etc/dpkg/dpkg.cfg.d/force-overwrite
 $STD bash /opt/frigate/docker/main/install_deps.sh
 rm -f /etc/dpkg/dpkg.cfg.d/force-overwrite
@@ -199,24 +227,6 @@ msg_ok "Installed HailoRT Runtime"
 msg_info "Installing MemryX Runtime"
 $STD bash /opt/frigate/docker/main/install_memryx.sh
 msg_ok "Installed MemryX Runtime"
-
-msg_info "Installing OpenVino"
-$STD pip3 install -r /opt/frigate/docker/main/requirements-ov.txt
-msg_ok "Installed OpenVino"
-
-msg_info "Building OpenVino Model"
-cd /models
-wget -q http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
-$STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
-if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
-  cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
-  cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
-  wget -q https://github.com/openvinotoolkit/open_model_zoo/raw/master/data/dataset_classes/coco_91cl_bkgr.txt -O /openvino-model/coco_91cl_bkgr.txt
-  sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
-  msg_ok "Built OpenVino Model"
-else
-  msg_warn "OpenVino build failed (CPU may not support required instructions). Frigate will use CPU model."
-fi
 
 msg_info "Building Frigate Application (Patience)"
 cd /opt/frigate
@@ -236,7 +246,7 @@ msg_info "Configuring Frigate"
 mkdir -p /config /media/frigate
 cp -r /opt/frigate/config/. /config
 
-curl -fsSL "https://github.com/intel-iot-devkit/sample-videos/raw/master/person-bicycle-car-detection.mp4" -o "/media/frigate/person-bicycle-car-detection.mp4"
+curl_with_retry "https://github.com/intel-iot-devkit/sample-videos/raw/master/person-bicycle-car-detection.mp4" "/media/frigate/person-bicycle-car-detection.mp4"
 
 echo "tmpfs   /tmp/cache      tmpfs   defaults        0       0" >>/etc/fstab
 
@@ -279,7 +289,7 @@ detect:
   enabled: false
 EOF
 
-if grep -q -o -m1 -E 'avx[^ ]*|sse4_2' /proc/cpuinfo; then
+if grep -q -o -m1 -E 'avx[^ ]*|sse4_2' /proc/cpuinfo && [[ -f /openvino-model/ssdlite_mobilenet_v2.xml ]] && [[ -f /openvino-model/coco_91cl_bkgr.txt ]]; then
   cat <<EOF >>/config/config.yml
 ffmpeg:
   hwaccel_args: auto
@@ -300,7 +310,7 @@ else
 ffmpeg:
   hwaccel_args: auto
 model:
-  path: /cpu_model.tflite
+  path: /models/cpu_model.tflite
 EOF
 fi
 msg_ok "Configured Frigate"

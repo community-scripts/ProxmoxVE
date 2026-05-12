@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Paperless-ngx"
 var_tags="${var_tags:-document;management}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -163,6 +163,8 @@ function update_script() {
         msg_ok "Removed old backup directory"
       fi
     fi
+
+    setup_nltk "snowball_data stopwords punkt_tab" "/usr/share/nltk_data"
 
     msg_info "Starting all Paperless-ngx Services"
     systemctl start paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue

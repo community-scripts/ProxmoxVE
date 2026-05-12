@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-MONGO_VERSION="8.0" setup_mongodb
+MONGO_VERSION="8.2" setup_mongodb
 
 msg_info "Setup Graylog Data Node"
 PASSWORD_SECRET=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
@@ -38,6 +38,8 @@ sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/s
 sed -i "s/root_password_sha2 =/root_password_sha2 = $ROOT_PASSWORD/g" /etc/graylog/server/server.conf
 sed -i 's/#http_bind_address = 127.0.0.1.*/http_bind_address = 0.0.0.0:9000/g' /etc/graylog/server/server.conf
 systemctl enable -q --now graylog-server
+sleep 5
+sed -i "s/0\.0\.0\.0:9000/$LOCAL_IP:9000/g" /var/log/graylog-server/server.log
 msg_ok "Setup ${APPLICATION}"
 
 motd_ssh

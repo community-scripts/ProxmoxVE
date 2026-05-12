@@ -29,28 +29,41 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "bytestash" "jordan-dalby/ByteStash"; then
-    read -rp "${TAB3}Did you make a backup via application WebUI? (y/n): " backuped
-    if [[ "$backuped" =~ ^[Yy]$ ]]; then
-      msg_info "Stopping Services"
-      systemctl stop bytestash-backend bytestash-frontend
-      msg_ok "Services Stopped"
+    msg_info "Stopping Services"
+    systemctl stop bytestash-backend bytestash-frontend
+    msg_ok "Services Stopped"
 
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
-
-      msg_info "Configuring ByteStash"
-      cd /opt/bytestash/server
-      $STD npm install
-      cd /opt/bytestash/client
-      $STD npm install
-      msg_ok "Updated ByteStash"
-
-      msg_info "Starting Services"
-      systemctl start bytestash-backend bytestash-frontend
-      msg_ok "Started Services"
-    else
-      msg_error "PLEASE MAKE A BACKUP FIRST!"
-      exit
+    msg_info "Backing up data"
+    tmp_dir="/opt/bytestash-data-backup"
+    mkdir -p "$tmp_dir"
+    if [[ -d /opt/bytestash/data ]]; then
+      cp -r /opt/bytestash/data "$tmp_dir"/data
+    elif [[ -d /opt/data ]]; then
+      cp -r /opt/data "$tmp_dir"/data
     fi
+    msg_ok "Data backed up"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
+
+    msg_info "Restoring data"
+    if [[ -d "$tmp_dir"/data ]]; then
+      mkdir -p /opt/bytestash/data
+      cp -r "$tmp_dir"/data/* /opt/bytestash/data/
+      rm -rf "$tmp_dir"
+    fi
+    msg_ok "Data restored"
+
+    msg_info "Configuring ByteStash"
+    cd /opt/bytestash/server
+    $STD npm install
+    cd /opt/bytestash/client
+    $STD npm install
+    msg_ok "Updated ByteStash"
+
+    msg_info "Starting Services"
+    systemctl start bytestash-backend bytestash-frontend
+    msg_ok "Started Services"
+
     msg_ok "Updated successfully!"
   fi
   exit

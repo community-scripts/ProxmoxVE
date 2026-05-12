@@ -59,6 +59,7 @@ function update_script() {
     if command -v corepack >/dev/null; then
       $STD corepack disable
     fi
+    sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env
     MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
     NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
     setup_meilisearch
@@ -83,7 +84,6 @@ function update_script() {
     cd /opt/karakeep/packages/db 
     $STD pnpm migrate
     $STD pnpm store prune
-    sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env
     msg_ok "Updated Karakeep"
 
     msg_info "Starting Services"

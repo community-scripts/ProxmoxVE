@@ -39,6 +39,8 @@ function update_script() {
   read -r -p "${TAB}Migrate update function now? [y/N]: " CONFIRM
   if [[ ! "${CONFIRM,,}" =~ ^(y|yes)$ ]]; then
     msg_warn "Migration skipped. The old update will continue to work for now."
+    msg_warn "⚠️  Komodo v2 uses :2 image tags. The :latest tag is deprecated and will not receive v2 updates."
+    msg_warn "Please migrate to the addon script to receive Komodo v2."
     msg_info "Updating ${APP} (legacy)"
     COMPOSE_FILE=$(find /opt/komodo -maxdepth 1 -type f -name '*.compose.yaml' ! -name 'compose.env' | head -n1)
     if [[ -z "$COMPOSE_FILE" ]]; then

@@ -15,7 +15,7 @@ update_os
 setup_hwaccel
 
 msg_info "Installing Dependencies"
-$STD apt install -y ffmpeg
+setup_ffmpeg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting Up UHF Server Environment"

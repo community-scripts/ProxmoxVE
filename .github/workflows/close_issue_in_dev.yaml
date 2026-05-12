@@ -62,10 +62,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           issues=$(gh issue list --repo community-scripts/ProxmoxVED --json number,title --jq '.[] | {number, title}')
-          
+
           best_match_score=0
           best_match_number=0
-          
+
           for issue in $(echo "$issues" | jq -r '. | @base64'); do
             _jq() {
               echo ${issue} | base64 --decode | jq -r ${1}
@@ -113,7 +113,8 @@ jobs:
             const http = require('http');
             const url = require('url');
 
-            function request(fullUrl, opts) {
+            function request(fullUrl, opts, redirectsLeft) {
+              if (redirectsLeft === undefined) redirectsLeft = 5;
               return new Promise(function(resolve, reject) {
                 const u = url.parse(fullUrl);
                 const isHttps = u.protocol === 'https:';
@@ -128,6 +129,19 @@ jobs:
                 if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
                 const lib = isHttps ? https : http;
                 const req = lib.request(options, function(res) {
+                  // Follow redirects (301/302/307/308)
+                  if ([301, 302, 307, 308].indexOf(res.statusCode) !== -1 && res.headers.location && redirectsLeft > 0) {
+                    res.resume();
+                    const nextUrl = url.resolve(fullUrl, res.headers.location);
+                    // For 301/302, browsers historically downgrade to GET; preserve method for 307/308.
+                    const nextOpts = Object.assign({}, opts);
+                    if (res.statusCode === 301 || res.statusCode === 302) {
+                      nextOpts.method = 'GET';
+                      delete nextOpts.body;
+                    }
+                    resolve(request(nextUrl, nextOpts, redirectsLeft - 1));
+                    return;
+                  }
                   let data = '';
                   res.on('data', function(chunk) { data += chunk; });
                   res.on('end', function() {

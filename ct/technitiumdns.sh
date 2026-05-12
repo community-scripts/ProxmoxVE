@@ -32,8 +32,8 @@ function update_script() {
     systemctl daemon-reload
     systemctl enable -q --now technitium
   fi
-  if is_package_installed "aspnetcore-runtime-8.0"; then
-    $STD apt remove -y aspnetcore-runtime-8.0
+  if ! is_package_installed "aspnetcore-runtime-10.0"; then
+    $STD apt remove -y aspnetcore-runtime-8.0 aspnetcore-runtime-9.0 2>/dev/null || true
     [ -f /etc/apt/sources.list.d/microsoft-prod.list ] && rm -f /etc/apt/sources.list.d/microsoft-prod.list
     [ -f /usr/share/keyrings/microsoft-prod.gpg ] && rm -f /usr/share/keyrings/microsoft-prod.gpg
     setup_deb822_repo \
@@ -42,18 +42,15 @@ function update_script() {
       "https://packages.microsoft.com/debian/13/prod/" \
       "trixie" \
       "main"
-    $STD apt install -y aspnetcore-runtime-9.0
+    $STD apt install -y aspnetcore-runtime-10.0
   fi
 
   RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
-  if [[ ! -f ~/.technitium || ${RELEASE} != "$(cat ~/.technitium)" ]]; then
-    msg_info "Updating Technitium DNS"
-    curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
-    $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
-    rm -f /opt/DnsServerPortable.tar.gz
+  if [[ ! -f ~/.technitium || ${RELEASE} != "$(cat ~/.technitium 2>/dev/null)" ]]; then
+    systemctl stop technitium
+    fetch_and_deploy_from_url "https://download.technitium.com/dns/DnsServerPortable.tar.gz" /opt/technitium/dns
     echo "${RELEASE}" >~/.technitium
-    systemctl restart technitium
-    msg_ok "Updated Technitium DNS"
+    systemctl start technitium
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  Technitium DNS is already at v${RELEASE}."

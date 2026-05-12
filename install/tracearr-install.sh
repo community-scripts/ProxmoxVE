@@ -62,6 +62,7 @@ fetch_and_deploy_gh_release "tracearr" "connorgallopo/Tracearr" "tarball" "lates
 
 msg_info "Building Tracearr"
 export TZ=$(cat /etc/timezone)
+export NODE_OPTIONS="--max-old-space-size=4096"
 cd /opt/tracearr.build
 $STD pnpm install --frozen-lockfile --force
 $STD pnpm turbo telemetry disable

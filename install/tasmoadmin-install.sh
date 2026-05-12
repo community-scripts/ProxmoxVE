@@ -23,7 +23,7 @@ fetch_and_deploy_gh_release "tasmoadmin" "TasmoAdmin/TasmoAdmin" "prebuild" "lat
 msg_info "Configuring TasmoAdmin"
 rm -rf /etc/php/8.4/apache2/conf.d/10-opcache.ini
 chown -R www-data:www-data /var/www/tasmoadmin
-chmod 777 /var/www/tasmoadmin/tmp /var/www/tasmoadmin/data
+chmod 775 /var/www/tasmoadmin/tmp /var/www/tasmoadmin/data
 cat <<EOF >/etc/apache2/sites-available/tasmoadmin.conf
 <VirtualHost *:9999>
 	ServerName tasmoadmin

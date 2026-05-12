@@ -70,7 +70,7 @@ function update_script() {
       source /opt/dispatcharr/.env
       set +o allexport
       if [[ -n "$POSTGRES_DB" ]] && [[ -n "$POSTGRES_USER" ]] && [[ -n "$POSTGRES_PASSWORD" ]]; then
-        PGPASSWORD=$POSTGRES_PASSWORD pg_dump -U $POSTGRES_USER -h ${POSTGRES_HOST:-localhost} $POSTGRES_DB >/tmp/dispatcharr_db_$(date +%F).sql
+        PGPASSWORD=$POSTGRES_PASSWORD pg_dump -U "$POSTGRES_USER" -h "${POSTGRES_HOST:-localhost}" -p "${POSTGRES_PORT:-5432}" "$POSTGRES_DB" >/tmp/dispatcharr_db_$(date +%F).sql
         msg_info "Database backup created"
       fi
     fi
@@ -110,7 +110,9 @@ function update_script() {
 
     msg_info "Building Frontend"
     cd /opt/dispatcharr/frontend
-    $STD npm install --legacy-peer-deps
+    node -e "const p=require('./package.json');p.overrides=p.overrides||{};p.overrides['webworkify-webpack']='2.1.3';require('fs').writeFileSync('package.json',JSON.stringify(p,null,2));"
+    rm -f package-lock.json
+    $STD npm install --no-audit --progress=false
     $STD npm run build
     msg_ok "Built Frontend"
 

@@ -35,7 +35,10 @@ function update_script() {
     msg_ok "Stopped Databasus"
 
     msg_info "Backing up Configuration"
-    cp /opt/databasus/.env /opt/databasus.env.bak
+    [[ ! -f /.env && -f /opt/databasus/.env ]] && cp /opt/databasus/.env /.env
+    chmod 600 /.env
+    cp /.env /opt/databasus.env.bak
+    chmod 600 /opt/databasus.env.bak
     msg_ok "Backed up Configuration"
 
     msg_info "Ensuring Database Clients"
@@ -46,7 +49,7 @@ function update_script() {
     # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
     if ! command -v mongodump &>/dev/null; then
       [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-100.14.1.deb"
+      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-100.16.1.deb"
     fi
     [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
     [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
@@ -66,9 +69,12 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest" "/opt/databasus"
 
     msg_info "Updating Databasus"
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     cd /opt/databasus/frontend
-    $STD npm ci
-    $STD npm run build
+    $STD corepack enable
+    $STD corepack prepare pnpm@latest --activate
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm run build
     cd /opt/databasus/backend
     $STD go mod download
     $STD /root/go/bin/swag init -g cmd/main.go -o swagger
@@ -81,10 +87,17 @@ function update_script() {
     msg_ok "Updated Databasus"
 
     msg_info "Restoring Configuration"
-    cp /opt/databasus.env.bak /opt/databasus/.env
+    cp /opt/databasus.env.bak /.env
     rm -f /opt/databasus.env.bak
-    chown postgres:postgres /opt/databasus/.env
+    chmod 600 /.env
     msg_ok "Restored Configuration"
+
+    if ! grep -q "EnvironmentFile=/.env" /etc/systemd/system/databasus.service; then
+      msg_info "Updating Service"
+      sed -i 's|EnvironmentFile=.*|EnvironmentFile=/.env|' /etc/systemd/system/databasus.service
+      $STD systemctl daemon-reload
+      msg_ok "Updated Service"
+    fi
 
     msg_info "Starting Databasus"
     $STD systemctl start databasus

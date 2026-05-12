@@ -57,7 +57,9 @@ start_routines() {
   yes)
     msg_info "Switching to Debian 13 (Trixie) Sources"
     rm -f /etc/apt/sources.list.d/*.list
-    sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
+    if [ -f /etc/apt/sources.list ]; then
+      sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list
+    fi
     cat >/etc/apt/sources.list.d/debian.sources <<EOF
 Types: deb
 URIs: http://deb.debian.org/debian

@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="22" setup_nodejs
+
   if check_for_gh_release "kima-hub" "Chevron7Locked/kima-hub"; then
     msg_info "Stopping Services"
     systemctl stop kima-frontend kima-backend kima-analyzer kima-analyzer-clap

@@ -25,25 +25,12 @@ PG_VERSION="17" setup_postgresql
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Setting up Database"
-DB_NAME=ghostfolio
-DB_USER=ghostfolio
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+PG_DB_NAME="ghostfolio" PG_DB_USER="ghostfolio" PG_DB_SCHEMA_PERMS="true" setup_postgresql_db
 REDIS_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 ACCESS_TOKEN_SALT=$(openssl rand -base64 32)
 JWT_SECRET_KEY=$(openssl rand -base64 32)
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
-$STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
-$STD sudo -u postgres psql -c "ALTER USER $DB_USER CREATEDB;"
-$STD sudo -u postgres psql -d $DB_NAME -c "GRANT ALL ON SCHEMA public TO $DB_USER;"
-$STD sudo -u postgres psql -d $DB_NAME -c "GRANT CREATE ON SCHEMA public TO $DB_USER;"
-$STD sudo -u postgres psql -d $DB_NAME -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO $DB_USER;"
-$STD sudo -u postgres psql -d $DB_NAME -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO $DB_USER;"
 {
   echo "Ghostfolio Credentials"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
   echo "Redis Password: $REDIS_PASS"
   echo "Access Token Salt: $ACCESS_TOKEN_SALT"
   echo "JWT Secret Key: $JWT_SECRET_KEY"
@@ -69,7 +56,7 @@ read -rp "${TAB3}CoinGecko Pro API key (press Enter to skip): " COINGECKO_PRO_KE
 
 msg_info "Setting up Environment"
 cat <<EOF >/opt/ghostfolio/.env
-DATABASE_URL=postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?connect_timeout=300&sslmode=prefer
+DATABASE_URL=postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME?connect_timeout=300
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=$REDIS_PASS

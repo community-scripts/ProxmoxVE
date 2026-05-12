@@ -102,8 +102,9 @@ server {
         fastcgi_read_timeout 120s;
 }
 server {
-        listen       443 ssl http2;
-        listen       [::]:443 ssl http2;
+        listen       443 ssl;
+        listen       [::]:443 ssl;
+        http2        on;
         server_name  localhost;
         root /usr/share/webapps/nextcloud;
         index  index.php index.html index.htm;
@@ -136,6 +137,7 @@ EOF
 sed -i -e 's|memory_limit = 128M|memory_limit = 512M|; $aapc.enable_cli=1' /etc/php83/php.ini
 sed -i -e 's|upload_max_file_size = 2M|upload_max_file_size = 16G|' /etc/php83/php.ini
 sed -i -E '/^php_admin_(flag|value)\[opcache/s/^/;/' /etc/php83/php-fpm.d/nextcloud.conf
+sed -i -e 's| js;| mjs js;|' /etc/nginx/mime.types
 msg_ok "Installed Nextcloud"
 
 msg_info "Adding Additional Nextcloud Packages"

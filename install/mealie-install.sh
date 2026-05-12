@@ -30,7 +30,7 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.12" setup_uv
 PG_VERSION="16" setup_postgresql
 NODE_MODULE="yarn" NODE_VERSION="24" setup_nodejs
-fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
+fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball"
 PG_DB_NAME="mealie_db" PG_DB_USER="mealie_user" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 msg_info "Installing Python Dependencies with uv"
@@ -42,9 +42,10 @@ msg_info "Building Frontend"
 MEALIE_VERSION=$(<$HOME/.mealie)
 export NUXT_TELEMETRY_DISABLED=1
 cd /opt/mealie/frontend
-$STD sed -i "s|https://github.com/mealie-recipes/mealie/commit/|https://github.com/mealie-recipes/mealie/releases/tag/|g" /opt/mealie/frontend/pages/admin/site-settings.vue
-$STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
-$STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
+SITE_SETTINGS=$(find /opt/mealie/frontend -name "site-settings.vue" -path "*/admin/*" | head -1)
+$STD sed -i "s|https://github.com/mealie-recipes/mealie/commit/|https://github.com/mealie-recipes/mealie/releases/tag/|g" "$SITE_SETTINGS"
+$STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" "$SITE_SETTINGS"
+$STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" "$SITE_SETTINGS"
 $STD yarn install --prefer-offline --frozen-lockfile --non-interactive --production=false --network-timeout 1000000
 $STD yarn generate
 msg_ok "Built Frontend"
@@ -54,11 +55,7 @@ mkdir -p /opt/mealie/mealie/frontend
 cp -r /opt/mealie/frontend/dist/* /opt/mealie/mealie/frontend/
 msg_ok "Copied Frontend"
 
-msg_info "Downloading NLTK Data"
-mkdir -p /nltk_data/
-cd /opt/mealie
-$STD uv run python -m nltk.downloader -d /nltk_data averaged_perceptron_tagger_eng
-msg_ok "Downloaded NLTK Data"
+setup_nltk "averaged_perceptron_tagger_eng" "/nltk_data"
 
 msg_info "Writing Environment File"
 SECRET=$(openssl rand -hex 32)

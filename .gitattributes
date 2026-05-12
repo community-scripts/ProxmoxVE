@@ -4,35 +4,29 @@
 *.sh linguist-detectable=true
 *.bash linguist-language=Shell
 *.func linguist-language=Shell
+*.func linguist-detectable=true
 *.install linguist-language=Shell
 
 # ---------------------------------------
-# Treat Golang files as Go (for /api/)
-api/**/*.go linguist-language=Go
-
+# Exclude header art from stats
 # ---------------------------------------
-# Treat frontend as JavaScript/TypeScript (optional)
-frontend/**/*.ts linguist-language=TypeScript
-frontend/**/*.js linguist-language=JavaScript
+ct/headers/* linguist-documentation
 
 # ---------------------------------------
 # Exclude documentation from stats
+# ---------------------------------------
 *.md linguist-documentation
-docs/** linguist-documentation
 README.md linguist-documentation
 CONTRIBUTING.md linguist-documentation
 SECURITY.md linguist-documentation
 
 # ---------------------------------------
 # Exclude generated/config files
-*.json linguist-generated
-frontend/public/json/*.json linguist-generated=false
-*.lock linguist-generated
-*.yml linguist-generated
-*.yaml linguist-generated
+# ---------------------------------------
 .github/** linguist-generated
 .vscode/** linguist-generated
 
 # ---------------------------------------
 # Standard text handling
+# ---------------------------------------
 * text=auto eol=lf

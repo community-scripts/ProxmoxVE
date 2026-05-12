@@ -13,10 +13,10 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="20" setup_nodejs
+NODE_VERSION="20" NODE_MODULE="pnpm" setup_nodejs
 
 msg_info "Installing FlowiseAI (Patience)"
-$STD npm install -g flowise \
+$STD pnpm add -g flowise \
   @opentelemetry/exporter-trace-otlp-grpc \
   @opentelemetry/exporter-trace-otlp-proto \
   @opentelemetry/sdk-trace-node \
@@ -33,7 +33,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=/opt/flowiseai/.env
-ExecStart=npx flowise start
+ExecStart=flowise start
 Restart=always
 
 [Install]

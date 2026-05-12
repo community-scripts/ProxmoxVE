@@ -128,6 +128,8 @@ EOF
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "seerr" "seerr-team/seerr" "tarball"
 
+    ensure_dependencies build-essential python3-setuptools
+
     msg_info "Updating PNPM Version"
     pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/seerr/package.json)
     NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs

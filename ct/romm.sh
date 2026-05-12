@@ -54,8 +54,12 @@ function update_script() {
     # Merge static assets into dist folder
     cp -rf /opt/romm/frontend/assets/* /opt/romm/frontend/dist/assets/
     mkdir -p /opt/romm/frontend/dist/assets/romm
-    ln -sfn /var/lib/romm/resources /opt/romm/frontend/dist/assets/romm/resources
-    ln -sfn /var/lib/romm/assets /opt/romm/frontend/dist/assets/romm/assets
+    ROMM_BASE=$(grep '^ROMM_BASE_PATH=' /opt/romm/.env | cut -d'=' -f2)
+    ROMM_BASE=${ROMM_BASE:-/var/lib/romm}
+    ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
+    ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
+    sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
+    systemctl reload nginx
     msg_ok "Updated ROMM"
 
     msg_info "Starting Services"

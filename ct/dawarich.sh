@@ -53,6 +53,18 @@ function update_script() {
     export PATH="/root/.rbenv/shims:/root/.rbenv/bin:$PATH"
     eval "$(/root/.rbenv/bin/rbenv init - bash)"
 
+    if ! grep -q "OTP_ENCRYPTION_PRIMARY_KEY" /opt/dawarich/.env; then
+      echo "OTP_ENCRYPTION_PRIMARY_KEY=$(openssl rand -hex 64)" >>/opt/dawarich/.env
+    fi
+
+    if ! grep -q "OTP_ENCRYPTION_DETERMINISTIC_KEY" /opt/dawarich/.env; then
+      echo "OTP_ENCRYPTION_DETERMINISTIC_KEY=$(openssl rand -hex 64)" >>/opt/dawarich/.env
+    fi
+
+    if ! grep -q "OTP_ENCRYPTION_KEY_DERIVATION_SALT" /opt/dawarich/.env; then
+      echo "OTP_ENCRYPTION_KEY_DERIVATION_SALT=$(openssl rand -hex 64)" >>/opt/dawarich/.env
+    fi
+
     set -a && source /opt/dawarich/.env && set +a
 
     $STD bundle config set --local deployment 'true'
@@ -67,8 +79,8 @@ function update_script() {
       $STD npm install
     fi
 
-    $STD bundle exec rake assets:precompile
     $STD bundle exec rails db:migrate
+    $STD bundle exec rake assets:precompile
     $STD bundle exec rake data:migrate
     msg_ok "Ran Migrations"
 

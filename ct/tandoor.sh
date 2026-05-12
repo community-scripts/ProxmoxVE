@@ -33,6 +33,10 @@ function update_script() {
     exit
   fi
 
+  if ! grep -q "^ALLOWED_HOSTS=" /opt/tandoor/.env; then
+    echo "ALLOWED_HOSTS=${LOCAL_IP}" >>/opt/tandoor/.env
+  fi
+
   if check_for_gh_release "tandoor" "TandoorRecipes/recipes"; then
     msg_info "Stopping Service"
     systemctl stop tandoor

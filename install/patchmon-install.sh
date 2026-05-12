@@ -14,74 +14,91 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  build-essential \
-  nginx \
-  redis-server
+$STD apt install -y redis-server
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="patchmon_db" PG_DB_USER="patchmon_usr" setup_postgresql_db
 
-fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
+RELEASE="v2.0.2"
+fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-amd64"
+mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
 
 msg_info "Configuring PatchMon"
-VERSION=$(get_latest_github_release "PatchMon/PatchMon")
-export NODE_ENV=production
-cd /opt/patchmon
-$STD npm install --no-audit --no-fund --no-save --ignore-scripts
-
-cd /opt/patchmon/frontend
-cat <<EOF >./.env
-VITE_APP_NAME=PatchMon
-VITE_APP_VERSION=${VERSION}
-EOF
-$STD npm install --no-audit --no-fund --no-save --ignore-scripts --include=dev
-$STD npm run build
-
+cat <<EOF >/opt/patchmon/.env
+DATABASE_URL="postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME"
 JWT_SECRET="$(openssl rand -hex 64)"
-mv /opt/patchmon/backend/env.example /opt/patchmon/backend/.env
-sed -i -e "s|DATABASE_URL=.*|DATABASE_URL=\"postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME\"|" \
-  -e "/JWT_SECRET/s/[=$].*/=$JWT_SECRET/" \
-  -e "\|CORS_ORIGIN|s|localhost|$LOCAL_IP|" \
-  -e "/PORT=3001/aSERVER_PROTOCOL=http \\
-  SERVER_HOST=$LOCAL_IP \\
-  SERVER_PORT=3000" \
-  -e '/_ENV=production/aTRUST_PROXY=1' \
-  -e '/REDIS_USER=.*/,+1d' /opt/patchmon/backend/.env
+SESSION_SECRET="$(openssl rand -hex 64)"
+AI_ENCRYPTION_KEY="$(openssl rand -hex 64)"
+CORS_ORIGIN=http://${LOCAL_IP}:3000
+PORT=3000
+APP_ENV=production
 
-cd /opt/patchmon/backend
-$STD npm run db:generate
-$STD npx prisma migrate deploy
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+## OIDC / SSO (when OIDC_ENABLED=true, issuer/client/secret/redirect required)
+# OIDC_ENABLED=false
+# OIDC_ISSUER_URL=
+# OIDC_CLIENT_ID=
+# OIDC_CLIENT_SECRET=
+# OIDC_REDIRECT_URI=
+# OIDC_SCOPES=openid email profile groups
+# OIDC_AUTO_CREATE_USERS=false
+# OIDC_DEFAULT_ROLE=user
+# OIDC_DISABLE_LOCAL_AUTH=false
+# OIDC_BUTTON_TEXT=Login with SSO
+# OIDC_SESSION_TTL=600
+# OIDC_POST_LOGOUT_URI=
+# OIDC_SYNC_ROLES=false
+# OIDC_ADMIN_GROUP=
+# OIDC_SUPERADMIN_GROUP=
+# OIDC_HOST_MANAGER_GROUP=
+# OIDC_READONLY_GROUP=
+# OIDC_USER_GROUP=
+# OIDC_ENFORCE_HTTPS=true
+
+AGENT_BINARIES_DIR=/opt/patchmon/agents
+EOF
 msg_ok "Configured PatchMon"
 
-msg_info "Configuring Nginx"
-cp /opt/patchmon/docker/nginx.conf.template /etc/nginx/sites-available/patchmon.conf
-sed -i -e 's|proxy_pass .*|proxy_pass http://127.0.0.1:3001;|' \
-  -e '\|try_files |i\        root /opt/patchmon/frontend/dist;' \
-  -e 's|alias.*|alias /opt/patchmon/frontend/dist/assets;|' \
-  -e '\|expires 1y|i\        root /opt/patchmon/frontend/dist;' /etc/nginx/sites-available/patchmon.conf
-ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl restart nginx
-msg_ok "Configured Nginx"
+msg_info "Fetching PatchMon agent binaries"
+RELEASE=$(get_latest_github_release "PatchMon/PatchMon")
+mkdir -p /opt/patchmon/agents
+FILE_URL="https://github.com/PatchMon/PatchMon/releases/download/v${RELEASE}/patchmon-agent-"
+AGENT_NAME=(
+  "linux-amd64"
+  "linux-arm64"
+  "linux-arm"
+  "linux-386"
+  "freebsd-amd64"
+  "freebsd-arm64"
+  "freebsd-arm"
+  "freebsd-386"
+  "windows-amd64.exe"
+  "windows-arm64.exe"
+)
+for arch in "${AGENT_NAME[@]}"; do
+  curl_with_retry "${FILE_URL}${arch}" "/opt/patchmon/agents/patchmon-agent-${arch}"
+  [[ "${arch}" != *.exe ]] && chmod 755 "/opt/patchmon/agents/patchmon-agent-${arch}"
+done
+msg_ok "Fetched PatchMon agent binaries"
 
 msg_info "Creating service"
 cat <<EOF >/etc/systemd/system/patchmon-server.service
 [Unit]
-Description=PatchMon Service
+Description=PatchMon Server
 After=network.target postgresql.service
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/patchmon/backend
-ExecStart=/usr/bin/npm run start
+WorkingDirectory=/opt/patchmon
+ExecStart=/opt/patchmon/patchmon-server
 Restart=always
 RestartSec=10
-Environment=NODE_ENV=production
 Environment=PATH=/usr/bin:/usr/local/bin
+EnvironmentFile=/opt/patchmon/.env
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict

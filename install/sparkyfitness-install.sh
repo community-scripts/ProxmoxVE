@@ -40,6 +40,7 @@ sed \
   -e "s|^SPARKY_FITNESS_SERVER_HOST=.*|SPARKY_FITNESS_SERVER_HOST=localhost|" \
   -e "s|^SPARKY_FITNESS_SERVER_PORT=.*|SPARKY_FITNESS_SERVER_PORT=3010|" \
   -e "s|^SPARKY_FITNESS_FRONTEND_URL=.*|SPARKY_FITNESS_FRONTEND_URL=http://${LOCAL_IP}:80|" \
+  -e "s|^GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" \
   -e "s|^SPARKY_FITNESS_API_ENCRYPTION_KEY=.*|SPARKY_FITNESS_API_ENCRYPTION_KEY=$(openssl rand -hex 32)|" \
   -e "s|^BETTER_AUTH_SECRET=.*|BETTER_AUTH_SECRET=$(openssl rand -hex 32)|" \
   "/etc/sparkyfitness/.env"
@@ -47,12 +48,13 @@ msg_ok "Configured Sparky Fitness"
 
 msg_info "Building Backend"
 cd /opt/sparkyfitness/SparkyFitnessServer
-$STD npm install
+$STD pnpm install
 msg_ok "Built Backend"
 
 msg_info "Building Frontend (Patience)"
-cd /opt/sparkyfitness/SparkyFitnessFrontend
+cd /opt/sparkyfitness
 $STD pnpm install
+cd /opt/sparkyfitness/SparkyFitnessFrontend
 $STD pnpm run build
 cp -a /opt/sparkyfitness/SparkyFitnessFrontend/dist/. /var/www/sparkyfitness/
 msg_ok "Built Frontend"
@@ -68,7 +70,7 @@ Requires=postgresql.service
 Type=simple
 WorkingDirectory=/opt/sparkyfitness/SparkyFitnessServer
 EnvironmentFile=/etc/sparkyfitness/.env
-ExecStart=/usr/bin/node SparkyFitnessServer.js
+ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx SparkyFitnessServer.js
 Restart=always
 RestartSec=5
 

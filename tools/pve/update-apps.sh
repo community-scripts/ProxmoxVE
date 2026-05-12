@@ -42,6 +42,17 @@ var_skip_confirm="${var_skip_confirm:-no}"
 #   Options: "yes" | "no" | "" (empty = interactive prompt)
 var_auto_reboot="${var_auto_reboot:-}"
 
+# var_continue_on_error: Continue updating remaining containers if one update fails
+#   Options: "yes" | "no" (default: no = stop on first error)
+#   Note: containers with backups always attempt restore on failure regardless of this setting
+var_continue_on_error="${var_continue_on_error:-no}"
+
+# var_dry_run: Check for available updates without applying them
+#   Options: "yes" | "no" (default: no)
+#   Output: lists each container with current vs. latest version
+#   Note: requires the container to be running; does not modify any container
+var_dry_run="${var_dry_run:-no}"
+
 # var_tags: Optionally override the tags used for auto-detection
 #   Options: "community-script|proxmox-helper-scripts" (default)
 var_tags="${var_tags:-community-script|proxmox-helper-scripts}"
@@ -59,6 +70,8 @@ function export_config_json() {
   "var_unattended": "${var_unattended}",
   "var_skip_confirm": "${var_skip_confirm}",
   "var_auto_reboot": "${var_auto_reboot}",
+  "var_continue_on_error": "${var_continue_on_error}",
+  "var_dry_run": "${var_dry_run}",
   "var_tags": "${var_tags}"
 }
 EOF
@@ -78,10 +91,12 @@ Environment Variables:
   var_backup          Enable backup before update (yes/no)
   var_backup_storage  Storage location for backups
   var_container       Container selection (all/all_running/all_stopped/101,102,...)
-  var_unattended      Run updates unattended (yes/no)
-  var_skip_confirm    Skip initial confirmation (yes/no)
-  var_auto_reboot     Auto-reboot containers if required (yes/no)
-  var_tags            Optionally override auto-detection tags ("prod|smb|community-script")
+  var_unattended         Run updates unattended (yes/no)
+  var_skip_confirm       Skip initial confirmation (yes/no)
+  var_auto_reboot        Auto-reboot containers if required (yes/no)
+  var_continue_on_error  Continue to next container on update failure (yes/no)
+  var_dry_run            Check for updates without applying them (yes/no)
+  var_tags               Optionally override auto-detection tags ("prod|smb|community-script")
 
 Examples:
   # Run interactively
@@ -92,6 +107,12 @@ Examples:
 
   # Update specific containers without backup
   var_backup=no var_container=101,102,105 var_unattended=yes var_skip_confirm=yes $(basename "$0")
+
+  # Unattended cron-style: skip confirm, continue on error, no backup
+  var_backup=no var_container=all_running var_unattended=yes var_skip_confirm=yes var_continue_on_error=yes $(basename "$0")
+
+  # Dry-run: show available updates for all running containers without applying
+  var_container=all_running var_skip_confirm=yes var_dry_run=yes $(basename "$0")
 
   # Export current configuration
   $(basename "$0") --export-config
@@ -129,6 +150,62 @@ function detect_service() {
   pct pull "$1" /usr/bin/update update 2>/dev/null
   service=$(cat update | sed 's|.*/ct/||g' | sed 's|\.sh).*||g')
   popd >/dev/null
+}
+
+function dry_run_container() {
+  local container="$1"
+  local service="$2"
+
+  # Extract app name and source repo directly from check_for_gh_release call in the ct script
+  # Pattern: check_for_gh_release "appname" "owner/repo"
+  local check_line app_name app_lc source_repo
+  check_line=$(echo "$script" | grep -m1 'check_for_gh_release')
+
+  if [[ -z "$check_line" ]]; then
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): no check_for_gh_release found — skipping"
+    DRY_RUN_RESULT="no check_for_gh_release found — skipping"
+    return
+  fi
+
+  app_name=$(echo "$check_line" | cut -d'"' -f2)
+  source_repo=$(echo "$check_line" | cut -d'"' -f4)
+  app_lc=$(echo "${app_name,,}" | tr -d ' ')
+
+  if [[ -z "$source_repo" || "$source_repo" != *"/"* ]]; then
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): cannot parse source repo — skipping"
+    DRY_RUN_RESULT="cannot parse source repo — skipping"
+    return
+  fi
+
+  # Read installed version from container (stored by check_for_gh_release as ~/.<appname>)
+  local current_version
+  current_version=$(pct exec "$container" -- bash -c "cat \$HOME/.${app_lc} 2>/dev/null" 2>/dev/null || true)
+  current_version="${current_version#v}"
+
+  # Query latest release from GitHub API
+  local latest_version
+  latest_version=$(curl -sSL --max-time 10 \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    "https://api.github.com/repos/${source_repo}/releases/latest" 2>/dev/null |
+    grep '"tag_name"' | head -1 | cut -d'"' -f4 | sed 's/^v//')
+
+  if [[ -z "$latest_version" ]]; then
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): cannot fetch latest version from $source_repo"
+    DRY_RUN_RESULT="cannot fetch latest version from $source_repo"
+    return
+  fi
+
+  if [[ -z "$current_version" ]]; then
+    echo -e "${BL}[DRY-RUN]${CL} Container $container ($service): installed version unknown, latest: ${latest_version} (${source_repo})"
+    DRY_RUN_RESULT="version unknown — latest: ${latest_version}"
+  elif [[ "$current_version" == "$latest_version" ]]; then
+    echo -e "${GN}[DRY-RUN]${CL} Container $container ($service): up to date (${current_version})"
+    DRY_RUN_RESULT="up to date (${current_version})"
+  else
+    echo -e "${YW}[DRY-RUN]${CL} Container $container ($service): update available ${current_version} → ${latest_version}"
+    DRY_RUN_RESULT="update available ${current_version} → ${latest_version}"
+  fi
 }
 
 function backup_container() {
@@ -169,7 +246,31 @@ END {
 ' /etc/pve/storage.cfg)
 }
 
+# Structured result tracking for the final summary report
+# Each entry: "CTID|service|STATUS|details"
+declare -a UPDATE_RESULTS=()
+function log_result() {
+  # log_result <ctid> <service> <STATUS> <details>
+  UPDATE_RESULTS+=("${1}|${2}|${3}|${4}")
+}
+
 header_info
+
+# =============================================================================
+# LOGGING SETUP
+# Key events are written directly to a timestamped log file under
+# /usr/local/community-scripts/update_apps/ — this avoids any stdout
+# redirection that would break interactive spinners or whiptail dialogs.
+# The full summary table is appended at the end of the run.
+# =============================================================================
+LOG_DIR="/usr/local/community-scripts/update_apps"
+mkdir -p "$LOG_DIR"
+LOG_FILE="${LOG_DIR}/$(date '+%Y%m%d_%H%M%S').log"
+echo "Update started: $(date '+%Y-%m-%d %H:%M:%S')" >"$LOG_FILE"
+
+function log_write() {
+  echo "[$(date '+%H:%M:%S')] $*" >>"$LOG_FILE"
+}
 
 # Skip confirmation if var_skip_confirm is set to yes
 if [[ "$var_skip_confirm" != "yes" ]]; then
@@ -199,7 +300,7 @@ while read -r container; do
     menu_items+=("$container_id" "$formatted_line" "OFF")
   fi
 done <<<"$containers"
-msg_ok "Loaded ${#menu_items[@]} containers"
+msg_ok "Loaded $((${#menu_items[@]} / 3)) containers"
 
 # Determine container selection based on var_container
 if [[ -n "$var_container" ]]; then
@@ -260,7 +361,10 @@ fi
 header_info
 
 # Determine backup choice based on var_backup
-if [[ -n "$var_backup" ]]; then
+# Dry-run never needs a backup — skip the prompt entirely
+if [[ "$var_dry_run" == "yes" ]]; then
+  BACKUP_CHOICE="no"
+elif [[ -n "$var_backup" ]]; then
   BACKUP_CHOICE="$var_backup"
 else
   BACKUP_CHOICE="no"
@@ -270,7 +374,10 @@ else
 fi
 
 # Determine unattended update based on var_unattended
-if [[ -n "$var_unattended" ]]; then
+# Dry-run never executes updates — skip the prompt entirely
+if [[ "$var_dry_run" == "yes" ]]; then
+  UNATTENDED_UPDATE="no"
+elif [[ -n "$var_unattended" ]]; then
   UNATTENDED_UPDATE="$var_unattended"
 else
   UNATTENDED_UPDATE="no"
@@ -321,6 +428,7 @@ fi
 containers_needing_reboot=()
 for container in $CHOICE; do
   echo -e "${BL}[INFO]${CL} Updating container $container"
+  log_write "Container $container: starting"
 
   if [ "$BACKUP_CHOICE" == "yes" ]; then
     backup_container $container
@@ -342,9 +450,12 @@ for container in $CHOICE; do
   #1.1) If update script not detected, return
   if [ -z "${service}" ]; then
     echo -e "${YW}[WARN]${CL} Update script not found. Skipping to next container"
+    log_result "$container" "(unknown)" "SKIPPED" "No update script found in container"
+    log_write "Container $container: SKIPPED — no update script found"
     continue
   else
     echo -e "${BL}[INFO]${CL} Detected service: ${GN}${service}${CL}"
+    log_write "Container $container: detected service '$service'"
   fi
 
   #2) Extract service build/update resource requirements from config/installation file
@@ -391,24 +502,31 @@ for container in $CHOICE; do
   fi
 
   #3) if build resources are different than run resources, then:
-  if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ]; then
+  if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ] && [[ "$var_dry_run" != "yes" ]]; then
     pct set "$container" --cores "$build_cpu" --memory "$build_ram"
   fi
 
+  #3.5) Dry-run: report update availability without applying
+  if [[ "$var_dry_run" == "yes" ]]; then
+    DRY_RUN_RESULT=""
+    dry_run_container "$container" "$service"
+    log_result "$container" "$service" "DRY-RUN" "${DRY_RUN_RESULT:-version check only}"
+    log_write "Container $container ($service): DRY-RUN — ${DRY_RUN_RESULT:-version check only}"
+    continue
+  fi
+
   #4) Update service, using the update command
+  # Prepend a no-op 'clear' wrapper to PATH so update scripts calling clear
+  # don't fail without a TTY — works for all shells incl. ash (no export -f)
+  SETUP_CMD="mkdir -p /tmp/.nc; printf '#!/bin/sh\n:\n' > /tmp/.nc/clear; chmod +x /tmp/.nc/clear; export PATH=/tmp/.nc:\$PATH; export TERM=dumb; "
   case "$os" in
-  alpine) pct exec "$container" -- ash -c "$UPDATE_CMD" ;;
-  archlinux) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
-  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
-  opensuse) pct exec "$container" -- bash -c "$UPDATE_CMD" ;;
+  alpine) pct exec "$container" -- ash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  archlinux) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  fedora | rocky | centos | alma) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
+  opensuse) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
   esac
   exit_code=$?
-
-  if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
-    echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
-    pct shutdown $container &
-  fi
 
   #5) if build resources are different than run resources, then:
   if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ]; then
@@ -421,32 +539,116 @@ for container in $CHOICE; do
     containers_needing_reboot+=("$container ($container_hostname)")
   fi
 
+  if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
+    echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
+    pct shutdown $container &>/dev/null &
+  fi
+
   if [ $exit_code -eq 0 ]; then
     msg_ok "Updated container $container"
+    log_result "$container" "$service" "OK" "Updated successfully"
+    log_write "Container $container ($service): OK"
   elif [ $exit_code -eq 75 ]; then
     echo -e "${YW}[WARN]${CL} Container $container skipped (requires interactive mode)"
+    log_result "$container" "$service" "SKIPPED" "Requires interactive mode (exit 75)"
+    log_write "Container $container ($service): SKIPPED — requires interactive mode"
+  elif [ $exit_code -eq 113 ]; then
+    echo -e "${YW}[WARN]${CL} Container $container skipped (under-provisioned: increase CPU/RAM to match template)"
+    log_result "$container" "$service" "SKIPPED" "Under-provisioned — increase CPU/RAM to match template"
+    log_write "Container $container ($service): SKIPPED — under-provisioned"
+  elif [ $exit_code -eq 114 ]; then
+    echo -e "${YW}[WARN]${CL} Container $container skipped (storage critically low on /boot)"
+    log_result "$container" "$service" "SKIPPED" "Storage critically low on /boot (>80%)"
+    log_write "Container $container ($service): SKIPPED — storage critically low on /boot"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
-    msg_info "Restoring LXC from backup"
+    msg_error "Update failed for container $container (exit code: $exit_code) — attempting restore"
+    log_write "Container $container ($service): FAILED (exit $exit_code) — attempting restore"
+    msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
     pct stop $container
     LXC_STORAGE=$(pct config $container | awk -F '[:,]' '/rootfs/ {print $2}')
-    pct restore $container /var/lib/vz/dump/vzdump-lxc-${container}-*.tar.zst --storage $LXC_STORAGE --force >/dev/null 2>&1
-    pct start $container
+    BACKUP_ENTRY=$(pvesm list "$STORAGE_CHOICE" 2>/dev/null | awk -v ctid="$container" '$1 ~ "vzdump-lxc-"ctid"-" || $1 ~ "/ct/"ctid"/" {print $1}' | sort -r | head -n1)
+    if [ -z "$BACKUP_ENTRY" ]; then
+      msg_error "No backup found in storage $STORAGE_CHOICE for container $container"
+      log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — no backup found for restore"
+      log_write "Container $container ($service): FAILED — no backup found for restore"
+      exit 235
+    fi
+    msg_info "Restoring from: $BACKUP_ENTRY"
+    pct restore $container "$BACKUP_ENTRY" --storage $LXC_STORAGE --force >/dev/null 2>&1
     restorestatus=$?
     if [ $restorestatus -eq 0 ]; then
-      msg_ok "Restored LXC from backup"
+      pct start $container
+      msg_ok "Container $container successfully restored from backup"
+      log_result "$container" "$service" "RESTORED" "Update failed (exit $exit_code) — restored from backup"
+      log_write "Container $container ($service): RESTORED from $BACKUP_ENTRY"
     else
-      msg_error "Restored LXC from backup failed"
+      msg_error "Restore failed for container $container"
+      log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — restore also failed"
+      log_write "Container $container ($service): FAILED — restore also failed"
       exit 235
     fi
   else
-    msg_error "Update failed for container $container. Exiting"
-    exit "$exit_code"
+    msg_error "Update failed for container $container (exit code: $exit_code)"
+    log_result "$container" "$service" "FAILED" "Exit code $exit_code"
+    log_write "Container $container ($service): FAILED (exit $exit_code)"
+    if [[ "$var_continue_on_error" == "yes" ]]; then
+      echo -e "${YW}[WARN]${CL} Continuing to next container (var_continue_on_error=yes)"
+      continue
+    else
+      exit "$exit_code"
+    fi
   fi
 done
 
 wait
 header_info
-echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
+if [[ "$var_dry_run" == "yes" ]]; then
+  echo -e "${GN}Dry-run complete. No containers were modified.${CL}\n"
+else
+  echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
+fi
+
+# =============================================================================
+# SUMMARY REPORT
+# =============================================================================
+if [ "${#UPDATE_RESULTS[@]}" -gt 0 ]; then
+  SEPARATOR="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  HEADER=$(printf "  %-8s  %-22s  %-10s  %s" "CTID" "Service" "Status" "Details")
+
+  # terminal output (with colours)
+  echo ""
+  echo "$SEPARATOR"
+  echo "$HEADER"
+  echo "$SEPARATOR"
+  for entry in "${UPDATE_RESULTS[@]}"; do
+    IFS='|' read -r _ctid _svc _status _details <<<"$entry"
+    case "$_status" in
+    OK) _color="${GN}" ;;
+    FAILED) _color="${RD}" ;;
+    RESTORED) _color="${YW}" ;;
+    *) _color="${YW}" ;;
+    esac
+    printf "  %-8s  %-22s  ${_color}%-10s${CL}  %s\n" "$_ctid" "$_svc" "$_status" "$_details"
+  done
+  echo "$SEPARATOR"
+  echo ""
+  echo "Full log: $LOG_FILE"
+  echo ""
+
+  # append plain-text summary to log file
+  {
+    echo ""
+    echo "Update finished: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "$SEPARATOR"
+    echo "$HEADER"
+    echo "$SEPARATOR"
+    for entry in "${UPDATE_RESULTS[@]}"; do
+      IFS='|' read -r _ctid _svc _status _details <<<"$entry"
+      printf "  %-8s  %-22s  %-10s  %s\n" "$_ctid" "$_svc" "$_status" "$_details"
+    done
+    echo "$SEPARATOR"
+  } >>"$LOG_FILE"
+fi
 if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
   echo -e "${RD}The following containers require a reboot:${CL}"
   for container_name in "${containers_needing_reboot[@]}"; do

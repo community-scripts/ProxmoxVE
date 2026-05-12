@@ -15,8 +15,8 @@ update_os
 
 msg_info "Setting up TemurinJDK"
 setup_java
-$STD apt install -y temurin-{8,11,17,21}-jre
-sudo update-alternatives --set java /usr/lib/jvm/temurin-21-jre-amd64/bin/java
+$STD apt install -y temurin-{8,11,17,21,25}-jre
+sudo update-alternatives --set java /usr/lib/jvm/temurin-25-jre-amd64/bin/java
 msg_ok "Installed TemurinJDK"
 
 msg_info "Setup Python3"
@@ -59,7 +59,7 @@ After=network.target
 Type=simple
 User=crafty
 WorkingDirectory=/opt/crafty-controller/crafty/crafty-4
-Environment=PATH=/usr/lib/jvm/temurin-21-jre-amd64/bin:/opt/crafty-controller/crafty/.venv/bin:$PATH
+Environment=PATH=/usr/lib/jvm/temurin-25-jre-amd64/bin:/opt/crafty-controller/crafty/.venv/bin:$PATH
 ExecStart=/opt/crafty-controller/crafty/.venv/bin/python3 main.py -d
 Restart=on-failure
 
@@ -67,12 +67,18 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 $STD systemctl enable -q --now crafty-controller
-sleep 10
-{
-  echo "Crafty-Controller-Credentials"
-  echo "Username: $(grep -oP '(?<="username": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
-  echo "Password: $(grep -oP '(?<="password": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
-} >>~/crafty-controller.creds
+CREDS_FILE="/opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt"
+for i in $(seq 1 30); do
+  [[ -f "$CREDS_FILE" ]] && break
+  sleep 2
+done
+if [[ -f "$CREDS_FILE" ]]; then
+  {
+    echo "Crafty-Controller-Credentials"
+    echo "Username: $(grep -oP '(?<="username": ")[^"]*' "$CREDS_FILE")"
+    echo "Password: $(grep -oP '(?<="password": ")[^"]*' "$CREDS_FILE")"
+  } >>~/crafty-controller.creds
+fi
 msg_ok "Service started"
 
 motd_ssh

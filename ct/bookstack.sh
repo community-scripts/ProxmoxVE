@@ -29,6 +29,7 @@ function update_script() {
     exit
   fi
   setup_mariadb
+  ensure_dependencies git
   if check_for_gh_release "bookstack" "BookStackApp/BookStack"; then
     msg_info "Stopping Apache2"
     systemctl stop apache2

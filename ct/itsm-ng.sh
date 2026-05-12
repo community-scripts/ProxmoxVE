@@ -30,9 +30,14 @@ function update_script() {
   fi
   setup_mariadb
 
-  msg_info "Updating LXC"
+  msg_info "Updating ITSM-NG"
   $STD apt update
   $STD apt -y upgrade
+  chown -R www-data:www-data /var/lib/itsm-ng
+  mkdir -p /usr/share/itsm-ng/css/palettes
+  chown -R www-data:www-data /usr/share/itsm-ng/css
+  chown -R www-data:www-data /usr/share/itsm-ng/css_compiled
+  chown www-data:www-data /etc/itsm-ng/config_db.php
   msg_ok "Updated successfully!"
   exit
 }

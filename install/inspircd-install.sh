@@ -17,7 +17,7 @@ fetch_and_deploy_gh_release "inspircd" "inspircd/inspircd" "binary" "latest" "/o
 
 msg_info "Configuring InspIRCd"
 cat <<EOF >/etc/inspircd/inspircd.conf
-<define name="networkDomain" value="helper-scripts.com">
+<define name="networkDomain" value="community-scripts.org">
 <define name="networkName" value="Proxmox VE Helper-Scripts">
 
 <server
@@ -30,6 +30,7 @@ cat <<EOF >/etc/inspircd/inspircd.conf
        email="irc@&networkDomain;">
 <bind address="" port="6667" type="clients">
 EOF
+systemctl enable -q --now inspircd
 msg_ok "Installed InspIRCd"
 
 motd_ssh

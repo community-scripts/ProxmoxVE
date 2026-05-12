@@ -44,7 +44,7 @@ function update_script() {
 
     msg_info "Installing Python Dependencies"
     cd /opt/profilarr/backend
-    $STD uv venv /opt/profilarr/backend/.venv
+    $STD uv venv --clear /opt/profilarr/backend/.venv
     sed 's/==/>=/g' requirements.txt >requirements-relaxed.txt
     $STD uv pip install --python /opt/profilarr/backend/.venv/bin/python -r requirements-relaxed.txt
     rm -f requirements-relaxed.txt

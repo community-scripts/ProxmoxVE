@@ -29,13 +29,28 @@ cp -r .next/static .next/standalone/.next/
 mkdir -p /opt/peanut/.next/standalone/config
 mkdir -p /etc/peanut/
 ln -sf .next/standalone/server.js server.js
-cat <<EOF >/etc/peanut/settings.yml
-WEB_HOST: 0.0.0.0
-WEB_PORT: 8080
-NUT_HOST: 0.0.0.0
-NUT_PORT: 3493
+if [[ ! -f /etc/peanut/settings.yml ]]; then
+  cat <<EOF >/etc/peanut/settings.yml
+NUT_SERVERS: []
 EOF
+fi
 ln -sf /etc/peanut/settings.yml /opt/peanut/.next/standalone/config/settings.yml
+cat <<EOF >/etc/peanut/peanut.env
+NODE_ENV=production
+
+#WEB_HOST=0.0.0.0
+#WEB_PORT=8080
+#NUT_HOST=localhost
+#NUT_PORT=3493
+
+# Disable auth entirely:
+#AUTH_DISABLED=true
+
+# Bootstrap initial account on first start (ignored afterwards):
+#WEB_USERNAME=admin
+#WEB_PASSWORD=changeme
+EOF
+chmod 600 /etc/peanut/peanut.env
 msg_ok "Setup Peanut"
 
 msg_info "Creating Service"
@@ -48,11 +63,7 @@ SyslogIdentifier=peanut
 Restart=always
 RestartSec=5
 Type=simple
-Environment="NODE_ENV=production"
-#Environment="NUT_HOST=localhost"
-#Environment="NUT_PORT=3493"
-#Environment="WEB_HOST=0.0.0.0"
-#Environment="WEB_PORT=8080"
+EnvironmentFile=/etc/peanut/peanut.env
 WorkingDirectory=/opt/peanut
 ExecStart=node /opt/peanut/entrypoint.mjs
 TimeoutStopSec=30

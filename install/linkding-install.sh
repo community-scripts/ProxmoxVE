@@ -27,7 +27,7 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 setup_uv
-fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding"
+fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
 
 msg_info "Building Frontend"
 cd /opt/linkding

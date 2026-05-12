@@ -20,21 +20,18 @@ setup_deb822_repo \
   "https://packages.microsoft.com/debian/13/prod/" \
   "trixie" \
   "main"
-$STD apt install -y aspnetcore-runtime-9.0
+$STD apt install -y aspnetcore-runtime-10.0
 msg_ok "Installed Dependencies"
 
 RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
-msg_info "Installing Technitium DNS"
-mkdir -p /opt/technitium/dns
-curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
-$STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
-rm -f /opt/DnsServerPortable.tar.gz
+fetch_and_deploy_from_url "https://download.technitium.com/dns/DnsServerPortable.tar.gz" /opt/technitium/dns
 echo "${RELEASE}" >~/.technitium
-msg_ok "Installed Technitium DNS"
 
 msg_info "Creating service"
+mkdir -p /etc/dns /var/log/technitium/dns
+sed -i '/^User=/d;/^Group=/d' /opt/technitium/dns/systemd.service
 cp /opt/technitium/dns/systemd.service /etc/systemd/system/technitium.service
-systemctl enable -q --now technitium 
+systemctl enable -q --now technitium
 msg_ok "Service created"
 
 motd_ssh

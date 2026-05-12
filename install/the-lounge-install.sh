@@ -14,6 +14,7 @@ network_check
 update_os
 
 fetch_and_deploy_gh_release "thelounge" "thelounge/thelounge-deb" "binary"
+systemctl enable -q --now thelounge
 
 motd_ssh
 customize

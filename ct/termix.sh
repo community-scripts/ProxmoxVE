@@ -29,17 +29,123 @@ function update_script() {
     exit
   fi
 
+  if check_for_gh_tag "guacd" "apache/guacamole-server"; then
+    msg_info "Stopping guacd"
+    systemctl stop guacd 2>/dev/null || true
+    msg_ok "Stopped guacd"
+
+    ensure_dependencies \
+      libcairo2-dev \
+      libjpeg62-turbo-dev \
+      libpng-dev \
+      libtool-bin \
+      uuid-dev \
+      libvncserver-dev \
+      freerdp3-dev \
+      libssh2-1-dev \
+      libtelnet-dev \
+      libwebsockets-dev \
+      libpulse-dev \
+      libvorbis-dev \
+      libwebp-dev \
+      libssl-dev \
+      libpango1.0-dev \
+      libswscale-dev \
+      libavcodec-dev \
+      libavutil-dev \
+      libavformat-dev
+
+    msg_info "Updating Guacamole Server (guacd)"
+    fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "${CHECK_UPDATE_RELEASE}" "/opt/guacamole-server"
+    cd /opt/guacamole-server
+    export CPPFLAGS="-Wno-error=deprecated-declarations"
+    $STD autoreconf -fi
+    $STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
+    $STD make
+    $STD make install
+    $STD ldconfig
+    cd /opt
+    rm -rf /opt/guacamole-server
+    msg_ok "Updated Guacamole Server (guacd) to ${CHECK_UPDATE_RELEASE}"
+
+    if [[ ! -f /etc/guacamole/guacd.conf ]]; then
+      mkdir -p /etc/guacamole
+      cat <<EOF >/etc/guacamole/guacd.conf
+[server]
+bind_host = 127.0.0.1
+bind_port = 4822
+EOF
+    fi
+
+    if [[ ! -f /etc/systemd/system/guacd.service ]] || grep -q "Type=forking" /etc/systemd/system/guacd.service 2>/dev/null; then
+      cat <<EOF >/etc/systemd/system/guacd.service
+[Unit]
+Description=Guacamole Proxy Daemon (guacd)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/guacd -f -b 127.0.0.1 -l 4822
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    fi
+
+    if ! grep -q "guacd.service" /etc/systemd/system/termix.service 2>/dev/null; then
+      sed -i '/^After=network.target/s/$/ guacd.service/' /etc/systemd/system/termix.service
+      sed -i '/^\[Unit\]/a Wants=guacd.service' /etc/systemd/system/termix.service
+    fi
+
+    systemctl daemon-reload
+    systemctl enable -q --now guacd
+  fi
+
   if check_for_gh_release "termix" "Termix-SSH/Termix"; then
-    msg_info "Stopping Service"
+    msg_info "Stopping Termix"
     systemctl stop termix
-    msg_ok "Stopped Service"
+    msg_ok "Stopped Termix"
+
+    msg_info "Migrating Configuration"
+    if [[ ! -f /opt/termix/.env ]]; then
+      cat <<EOF >/opt/termix/.env
+NODE_ENV=production
+DATA_DIR=/opt/termix/data
+GUACD_HOST=127.0.0.1
+GUACD_PORT=4822
+EOF
+    fi
+    if ! grep -q "EnvironmentFile" /etc/systemd/system/termix.service 2>/dev/null; then
+      cat <<EOF >/etc/systemd/system/termix.service
+[Unit]
+Description=Termix Backend
+After=network.target guacd.service
+Wants=guacd.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/termix
+EnvironmentFile=/opt/termix/.env
+ExecStart=/usr/bin/node /opt/termix/dist/backend/backend/starter.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+      systemctl daemon-reload
+    fi
+    msg_ok "Migrated Configuration"
 
     msg_info "Backing up Data"
     cp -r /opt/termix/data /opt/termix_data_backup
     cp -r /opt/termix/uploads /opt/termix_uploads_backup
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
 
     msg_info "Recreating Directories"
     mkdir -p /opt/termix/html \
@@ -48,6 +154,8 @@ function update_script() {
       /opt/termix/nginx/cache \
       /opt/termix/nginx/client_body
     msg_ok "Recreated Directories"
+
+    NODE_VERSION="24" setup_nodejs
 
     msg_info "Building Frontend"
     cd /opt/termix
@@ -91,20 +199,22 @@ function update_script() {
       cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
       curl -fsSL "https://raw.githubusercontent.com/Termix-SSH/Termix/main/docker/nginx.conf" -o /etc/nginx/nginx.conf
       sed -i '/^master_process/d' /etc/nginx/nginx.conf
-      sed -i '/^pid \/app\/nginx/d' /etc/nginx/nginx.conf
+      sed -i 's|pid /tmp/nginx/nginx.pid;|pid /run/nginx.pid;|' /etc/nginx/nginx.conf
+      sed -i 's|error_log /tmp/nginx/error.log|error_log /var/log/nginx/error.log|' /etc/nginx/nginx.conf
+      sed -i 's|access_log /tmp/nginx/access.log|access_log /var/log/nginx/access.log|' /etc/nginx/nginx.conf
       sed -i 's|/app/html|/opt/termix/html|g' /etc/nginx/nginx.conf
       sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
       sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
-      
+
       nginx -t && systemctl reload nginx
       msg_ok "Updated Nginx Configuration"
     else
       msg_warn "Nginx configuration not updated. If Termix doesn't work, restore from backup or update manually."
     fi
 
-    msg_info "Starting Service"
+    msg_info "Starting Termix"
     systemctl start termix
-    msg_ok "Started Service"
+    msg_ok "Started Termix"
     msg_ok "Updated successfully!"
   fi
   exit

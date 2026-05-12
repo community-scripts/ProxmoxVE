@@ -56,6 +56,10 @@ NODE_VERSION="24" setup_nodejs
 msg_info "Installing Change Detection"
 mkdir /opt/changedetection
 $STD pip3 install changedetection.io
+cat <<EOF >/opt/changedetection/.env
+WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
+PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
+EOF
 msg_ok "Installed Change Detection"
 
 msg_info "Installing Browserless & Playwright"
@@ -112,12 +116,13 @@ Description=Change Detection
 After=network-online.target
 After=network.target browserless.service
 Wants=browserless.service
+
 [Service]
 Type=simple
+EnvironmentFile=/opt/changedetection/.env
 WorkingDirectory=/opt/changedetection
-Environment=WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
-Environment=PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
 ExecStart=changedetection.io -d /opt/changedetection -p 5000
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -126,15 +131,16 @@ cat <<EOF >/etc/systemd/system/browserless.service
 [Unit]
 Description=browserless service
 After=network.target
+
 [Service]
 Environment=CONNECTION_TIMEOUT=60000
 WorkingDirectory=/opt/browserless
 ExecStart=/opt/browserless/scripts/start.sh
 SyslogIdentifier=browserless
+
 [Install]
 WantedBy=default.target
 EOF
-
 systemctl enable -q --now browserless
 systemctl enable -q --now changedetection
 msg_ok "Created Services"

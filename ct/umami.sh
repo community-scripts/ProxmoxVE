@@ -33,7 +33,9 @@ function update_script() {
     systemctl stop umami
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
+    mv /opt/umami/.env /opt/.env.bak
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
+    mv /opt/.env.bak /opt/umami/.env
 
     msg_info "Updating Umami"
     cd /opt/umami

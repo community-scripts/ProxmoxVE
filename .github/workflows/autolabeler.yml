@@ -93,7 +93,7 @@ jobs:
             const websiteRegex = new RegExp(`- \\[(x|X)\\]\\s*${escapedWebsite}`, "i");
 
             if (websiteRegex.test(prBody)) {
-              const hasJson = prFiles.some((f) => f.filename.startsWith("frontend/public/json/"));
+              const hasJson = prFiles.some((f) => f.filename.startsWith("json/"));
               const hasUpdateScript = labelsToAdd.has("update script");
               const hasContentLabel = ["bugfix", "feature", "refactor"].some((l) => labelsToAdd.has(l));
 

@@ -29,8 +29,9 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
-  ensure_dependencies twingate-connector
+  msg_info "Updating Twingate Connector"
+  $STD apt update
+  $STD apt install -y --only-upgrade twingate-connector
   $STD systemctl restart twingate-connector
   msg_ok "Updated successfully!"
   exit

@@ -56,6 +56,7 @@ function update_script() {
     fi
     $STD .venv/bin/python -m pip install --upgrade pip
     $STD .venv/bin/python -m pip install -r requirements.txt
+    $STD .venv/bin/python -m pip install 'djangorestframework<3.15'
     $STD .venv/bin/python -m manage collectstatic --noinput
     $STD .venv/bin/python -m manage migrate
 

@@ -19,7 +19,7 @@ fetch_and_deploy_gh_release "revealjs" "hakimel/reveal.js" "tarball"
 msg_info "Configuring ${APPLICATION}"
 cd /opt/revealjs
 $STD npm install
-sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
+sed -i 's/"vite"/"vite --host"/g' package.json
 msg_ok "Setup ${APPLICATION}"
 
 msg_info "Creating Service"

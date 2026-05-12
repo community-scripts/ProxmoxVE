@@ -38,7 +38,7 @@ function update_script() {
     cp -r /opt/flatnotes/data /opt/flatnotes_data_backup
     msg_ok "Backed up Configuration and Data"
 
-    fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes"
+    fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes" "tarball"
 
     msg_info "Updating Flatnotes"
     cd /opt/flatnotes/client

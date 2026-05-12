@@ -60,6 +60,16 @@ wait -n
 EOF
 chmod +x /opt/wanderer/start.sh
 
+cat <<'EOF' >/usr/local/bin/wanderer-pb
+#!/usr/bin/env bash
+set -a
+source /opt/wanderer/.env
+set +a
+cd /opt/wanderer/source/db
+exec ./pocketbase "$@" --dir="$PB_DB_LOCATION"
+EOF
+chmod +x /usr/local/bin/wanderer-pb
+
 cat <<EOF >/etc/systemd/system/wanderer-web.service
 [Unit]
 Description=wanderer

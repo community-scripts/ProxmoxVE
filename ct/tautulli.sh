@@ -51,6 +51,7 @@ function update_script() {
     $STD source /opt/Tautulli/.venv/bin/activate
     $STD uv pip install -r requirements.txt
     $STD uv pip install pyopenssl
+    $STD uv pip install "setuptools<81"
     msg_ok "Updated Tautulli"
 
     msg_info "Restoring config and database"

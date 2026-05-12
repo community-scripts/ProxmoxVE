@@ -47,7 +47,8 @@ msg_error() {
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "post-pmg-install" "pve"
 
-if ! grep -q "Proxmox Mail Gateway" /etc/issue 2>/dev/null; then
+if ! dpkg -s proxmox-mailgateway-container >/dev/null 2>&1 &&
+  ! dpkg -s proxmox-mailgateway >/dev/null 2>&1; then
   msg_error "This script is only intended for Proxmox Mail Gateway"
   exit 232
 fi
@@ -57,19 +58,51 @@ repo_state() {
   local repo="$1"
   local file=""
   local state="missing"
-  for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list; do
+  for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
     [[ -f "$f" ]] || continue
     if grep -q "$repo" "$f"; then
       file="$f"
-      if grep -qE "^[^#].*${repo}" "$f"; then
-        state="active"
-      elif grep -qE "^#.*${repo}" "$f"; then
-        state="disabled"
+      if [[ "$f" == *.sources ]]; then
+        # deb822 format: check Enabled field
+        if grep -qiE '^Enabled:\s*no' "$f"; then
+          state="disabled"
+        else
+          state="active"
+        fi
+      else
+        # legacy format
+        if grep -qE "^[^#].*${repo}" "$f"; then
+          state="active"
+        elif grep -qE "^#.*${repo}" "$f"; then
+          state="disabled"
+        fi
       fi
       break
     fi
   done
   echo "$state $file"
+}
+
+toggle_repo() {
+  # $1 = file, $2 = action (enable|disable)
+  local file="$1" action="$2"
+  if [[ "$file" == *.sources ]]; then
+    if [[ "$action" == "disable" ]]; then
+      if grep -qiE '^Enabled:' "$file"; then
+        sed -i 's/^Enabled:.*/Enabled: no/' "$file"
+      else
+        echo "Enabled: no" >>"$file"
+      fi
+    else
+      sed -i 's/^Enabled:.*/Enabled: yes/' "$file"
+    fi
+  else
+    if [[ "$action" == "disable" ]]; then
+      sed -i '/^[^#]/s/^/# /' "$file"
+    else
+      sed -i 's/^# *//' "$file"
+    fi
+  fi
 }
 
 start_routines() {
@@ -84,11 +117,20 @@ start_routines() {
   case $CHOICE in
   yes)
     msg_info "Correcting Debian Sources"
-    cat <<EOF >/etc/apt/sources.list
-deb http://deb.debian.org/debian ${VERSION} main contrib
-deb http://deb.debian.org/debian ${VERSION}-updates main contrib
-deb http://security.debian.org/debian-security ${VERSION}-security main contrib
+    cat <<EOF >/etc/apt/sources.list.d/debian.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: ${VERSION} ${VERSION}-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: http://security.debian.org/debian-security
+Suites: ${VERSION}-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
+    rm -f /etc/apt/sources.list
     msg_ok "Corrected Debian Sources"
     ;;
   no) msg_error "Selected no to Correcting Debian Sources" ;;
@@ -108,7 +150,7 @@ EOF
     keep) msg_ok "Kept 'pmg-enterprise' repository" ;;
     disable)
       msg_info "Disabling 'pmg-enterprise' repository"
-      sed -i "s/^[^#].*pmg-enterprise/# &/" "$file"
+      toggle_repo "$file" disable
       msg_ok "Disabled 'pmg-enterprise' repository"
       ;;
     delete)
@@ -128,7 +170,7 @@ EOF
     case $CHOICE in
     enable)
       msg_info "Enabling 'pmg-enterprise' repository"
-      sed -i "s/^#.*pmg-enterprise/deb/" "$file"
+      toggle_repo "$file" enable
       msg_ok "Enabled 'pmg-enterprise' repository"
       ;;
     keep) msg_ok "Kept 'pmg-enterprise' repository disabled" ;;
@@ -149,8 +191,12 @@ EOF
     case $CHOICE in
     yes)
       msg_info "Adding 'pmg-enterprise' repository"
-      cat >/etc/apt/sources.list.d/pmg-enterprise.list <<EOF
-deb https://enterprise.proxmox.com/debian/pmg ${VERSION} pmg-enterprise
+      cat >/etc/apt/sources.list.d/pmg-enterprise.sources <<EOF
+Types: deb
+URIs: https://enterprise.proxmox.com/debian/pmg
+Suites: ${VERSION}
+Components: pmg-enterprise
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 EOF
       msg_ok "Added 'pmg-enterprise' repository"
       ;;
@@ -173,7 +219,7 @@ EOF
     keep) msg_ok "Kept 'pmg-no-subscription' repository" ;;
     disable)
       msg_info "Disabling 'pmg-no-subscription' repository"
-      sed -i "s/^[^#].*pmg-no-subscription/# &/" "$file"
+      toggle_repo "$file" disable
       msg_ok "Disabled 'pmg-no-subscription' repository"
       ;;
     delete)
@@ -193,7 +239,7 @@ EOF
     case $CHOICE in
     enable)
       msg_info "Enabling 'pmg-no-subscription' repository"
-      sed -i "s/^#.*pmg-no-subscription/deb/" "$file"
+      toggle_repo "$file" enable
       msg_ok "Enabled 'pmg-no-subscription' repository"
       ;;
     keep) msg_ok "Kept 'pmg-no-subscription' repository disabled" ;;
@@ -213,8 +259,12 @@ EOF
     case $CHOICE in
     yes)
       msg_info "Adding 'pmg-no-subscription' repository"
-      cat >/etc/apt/sources.list.d/pmg-install-repo.list <<EOF
-deb http://download.proxmox.com/debian/pmg ${VERSION} pmg-no-subscription
+      cat >/etc/apt/sources.list.d/pmg-no-subscription.sources <<EOF
+Types: deb
+URIs: http://download.proxmox.com/debian/pmg
+Suites: ${VERSION}
+Components: pmg-no-subscription
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 EOF
       msg_ok "Added 'pmg-no-subscription' repository"
       ;;
@@ -236,8 +286,13 @@ EOF
     case $CHOICE in
     yes)
       msg_info "Adding 'pmgtest' repository (disabled)"
-      cat >/etc/apt/sources.list.d/pmgtest-for-beta.list <<EOF
-# deb http://download.proxmox.com/debian/pmg ${VERSION} pmgtest
+      cat >/etc/apt/sources.list.d/pmgtest.sources <<EOF
+Types: deb
+URIs: http://download.proxmox.com/debian/pmg
+Suites: ${VERSION}
+Components: pmgtest
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+Enabled: no
 EOF
       msg_ok "Added 'pmgtest' repository"
       ;;

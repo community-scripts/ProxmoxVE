@@ -22,6 +22,6 @@ Fixes #
 - [ ] ✨ **New feature** – Adds new, non-breaking functionality.
 - [ ] 💥 **Breaking change** – Alters existing functionality in a way that may require updates.
 - [ ] 🆕 **New script** – A fully functional and tested script or script set.
-- [ ] 🌍 **Website update** – Changes to website-related JSON files or metadata.
+- [ ] 🌍 **Website update** – Changes to script metadata (PocketBase/website data).
 - [ ] 🔧 **Refactoring / Code Cleanup** – Improves readability or maintainability without changing functionality.
 - [ ] 📝 **Documentation update** – Changes to `README`, `AppName.md`, `CONTRIBUTING.md`, or other docs.

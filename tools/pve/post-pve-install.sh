@@ -251,8 +251,10 @@ start_routines_9() {
       msg_info "Correcting Proxmox VE Sources (deb822)"
       # remove all existing .list files
       rm -f /etc/apt/sources.list.d/*.list
-      # remove bookworm and proxmox entries from sources.list
-      sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
+      # remove bookworm and proxmox entries from sources.list (if it exists)
+      if [ -f /etc/apt/sources.list ]; then
+        sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list
+      fi
       # Create new deb822 sources
       cat >/etc/apt/sources.list.d/debian.sources <<EOF
 Types: deb

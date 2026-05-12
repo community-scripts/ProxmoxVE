@@ -41,6 +41,7 @@ if command -v corepack >/dev/null 2>&1; then
   $STD corepack enable
   $STD corepack prepare pnpm --activate || true
 fi
+echo 'onlyBuiltDependencies=*' >> .npmrc
 $STD pnpm install --frozen-lockfile
 $STD pnpm run build
 cd /opt/metube

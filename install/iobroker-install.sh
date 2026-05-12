@@ -28,7 +28,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   exit 10
 fi
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing ioBroker (Patience)"
 $STD bash <(curl -fsSL https://iobroker.net/install.sh)

@@ -6,6 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://pangolin.net/ | Github: https://github.com/fosrl/pangolin
 
 APP="Pangolin"
+PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.18.3}"
 var_tags="${var_tags:-proxy}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
@@ -33,7 +34,7 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
-  if check_for_gh_release "pangolin" "fosrl/pangolin"; then
+  if check_for_gh_release "pangolin" "fosrl/pangolin" "$PANGOLIN_VERSION" "Pinned to a tested release because Pangolin's schema changes have repeatedly broken unattended updates. To try a newer version at your own risk, run: 'export PANGOLIN_VERSION=<tag>' and re-run update. If it breaks, please open an issue at https://github.com/community-scripts/ProxmoxVE/issues with the error log."; then
     msg_info "Stopping Service"
     systemctl stop pangolin
     systemctl stop gerbil
@@ -41,9 +42,13 @@ function update_script() {
 
     msg_info "Creating backup"
     tar -czf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin config
+    if [[ -f /opt/pangolin/config/db/db.sqlite ]]; then
+      cp -a /opt/pangolin/config/db/db.sqlite \
+        "/opt/pangolin/config/db/db.sqlite.pre-${PANGOLIN_VERSION}-$(date +%Y%m%d-%H%M%S).bak"
+    fi
     msg_ok "Created backup"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VERSION"
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
 
     msg_info "Updating Pangolin"
@@ -67,9 +72,16 @@ function update_script() {
     rm -f /opt/pangolin_config_backup.tar.gz
     msg_ok "Restored config"
 
+    if ! grep -q '^ExecStartPre=/usr/bin/node dist/migrations.mjs' /etc/systemd/system/pangolin.service 2>/dev/null; then
+      msg_info "Adding migration step to pangolin.service"
+      sed -i '/^ExecStart=\/usr\/bin\/node --enable-source-maps dist\/server.mjs/i ExecStartPre=/usr/bin/node dist/migrations.mjs' /etc/systemd/system/pangolin.service
+      systemctl daemon-reload
+      msg_ok "Updated pangolin.service"
+    fi
+
     msg_info "Running database migrations"
     cd /opt/pangolin
-    ENVIRONMENT=prod $STD npx drizzle-kit push --config drizzle.sqlite.config.ts
+    ENVIRONMENT=prod $STD node dist/migrations.mjs
     msg_ok "Ran database migrations"
 
     msg_info "Updating Badger plugin version"

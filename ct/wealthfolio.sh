@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+
   if grep -q '^WF_CORS_ALLOW_ORIGINS=\*$' /opt/wealthfolio/.env; then
     sed -i "s|^WF_CORS_ALLOW_ORIGINS=\*$|WF_CORS_ALLOW_ORIGINS=http://${LOCAL_IP}:8080|" /opt/wealthfolio/.env
   fi

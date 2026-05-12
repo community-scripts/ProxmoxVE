@@ -48,9 +48,9 @@ function update_script() {
       msg_ok "Updated successfully!"
     fi
   else
-    msg_info "Old Installation Found, you need to migrate your data and recreate to a new container"
-    msg_info "Please follow the instructions on the Actual Budget website to migrate your data"
-    msg_info "https://actualbudget.org/docs/backup-restore/backup"
+    msg_warn "Old Installation Found, you need to migrate your data and recreate to a new container"
+    msg_warn "Please follow the instructions on the Actual Budget website to migrate your data"
+    msg_warn "https://actualbudget.org/docs/backup-restore/backup"
     exit
   fi
   exit

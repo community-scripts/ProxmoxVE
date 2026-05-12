@@ -27,9 +27,16 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="20" NODE_MODULE="pnpm" setup_nodejs
+
   msg_info "Updating FlowiseAI (this may take some time)"
   systemctl stop flowise
-  $STD npm install -g flowise --upgrade
+  $STD pnpm add -g flowise
+  if grep -q 'ExecStart=npx flowise start' /etc/systemd/system/flowise.service; then
+    sed -i 's|ExecStart=npx flowise start|ExecStart=flowise start|' /etc/systemd/system/flowise.service
+    systemctl daemon-reload
+  fi
   systemctl start flowise
   msg_ok "Updated FlowiseAI"
   msg_ok "Updated successfully!"

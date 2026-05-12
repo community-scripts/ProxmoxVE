@@ -20,7 +20,7 @@ $STD apt install -y \
   caddy
 msg_ok "Installed dependencies"
 
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@10" setup_nodejs
 fetch_and_deploy_gh_release "wishlist" "cmintey/wishlist" "tarball"
 LATEST_APP_VERSION=$(get_latest_github_release "cmintey/wishlist")
 
@@ -30,7 +30,7 @@ cp .env.example .env
 sed -i "s|^ORIGIN=.*|ORIGIN=http://${LOCAL_IP}:3280|" /opt/wishlist/.env
 echo "" >>/opt/wishlist/.env
 echo "NODE_ENV=production" >>/opt/wishlist/.env
-$STD pnpm install
+$STD pnpm install --frozen-lockfile
 $STD pnpm svelte-kit sync
 $STD pnpm prisma generate
 sed -i 's|/usr/src/app/|/opt/wishlist/|g' $(grep -rl '/usr/src/app/' /opt/wishlist)

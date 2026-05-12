@@ -45,6 +45,33 @@ function update_script() {
       msg_ok "Fixed entrypoint"
     fi
 
+    if [[ ! -f /etc/peanut/peanut.env ]]; then
+      msg_info "Migrating service to EnvironmentFile"
+      mkdir -p /etc/peanut
+      cat <<EOF >/etc/peanut/peanut.env
+NODE_ENV=production
+
+#WEB_HOST=0.0.0.0
+#WEB_PORT=8080
+#NUT_HOST=localhost
+#NUT_PORT=3493
+
+# Disable auth entirely:
+#AUTH_DISABLED=true
+
+# Bootstrap initial account on first start (ignored afterwards):
+#WEB_USERNAME=admin
+#WEB_PASSWORD=changeme
+EOF
+      chmod 600 /etc/peanut/peanut.env
+      sed -i '/^Environment=/d' /etc/systemd/system/peanut.service
+      if ! grep -q '^EnvironmentFile=/etc/peanut/peanut.env' /etc/systemd/system/peanut.service; then
+        sed -i '/^Type=simple/a EnvironmentFile=/etc/peanut/peanut.env' /etc/systemd/system/peanut.service
+      fi
+      systemctl daemon-reload
+      msg_ok "Migrated to /etc/peanut/peanut.env"
+    fi
+
     msg_info "Updating PeaNUT"
     cd /opt/peanut
     $STD pnpm i

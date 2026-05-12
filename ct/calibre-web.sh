@@ -44,7 +44,7 @@ function update_script() {
 
     msg_info "Installing Dependencies"
     cd /opt/calibre-web
-    $STD uv venv
+    $STD uv venv --clear /opt/calibre-web/.venv
     $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir --upgrade pip setuptools wheel
     $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir -r requirements.txt
     msg_ok "Installed Dependencies"

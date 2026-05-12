@@ -25,7 +25,7 @@ function update_script() {
   check_container_resources
 
   setup_mariadb
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
   ensure_dependencies git
 
   msg_info "Updating Ghost"

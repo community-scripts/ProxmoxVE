@@ -78,7 +78,7 @@ function update_container() {
   alpine) pct exec "$container" -- ash -c "apk -U upgrade" ;;
   archlinux) pct exec "$container" -- bash -c "pacman -Syyu --noconfirm" ;;
   fedora | rocky | centos | alma) pct exec "$container" -- bash -c "dnf -y update && dnf -y upgrade" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update 2>/dev/null | grep 'packages.*upgraded'; apt list --upgradable && apt-get -yq dist-upgrade 2>&1; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED || true" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update 2>/dev/null | grep 'packages.*upgraded'; apt list --upgradable 2>/dev/null | cat && apt-get -yq dist-upgrade 2>&1; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED || true" ;;
   opensuse) pct exec "$container" -- bash -c "zypper ref && zypper --non-interactive dup" ;;
   esac
 }
@@ -110,15 +110,17 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     elif [ "$status" == "status: running" ]; then
       update_container $container
     fi
-    if pct exec "$container" -- [ -e "/var/run/reboot-required" ]; then
-      # Get the container's hostname and add it to the list
-      container_hostname=$(pct exec "$container" hostname)
-      containers_needing_reboot+=("$container ($container_hostname)")
-    fi
-    # check if patchmon agent is present in container and run a report if found
-    if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
-      echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
-      pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report"
+    if [ "$status" == "status: running" ]; then
+      if pct exec "$container" -- [ -e "/var/run/reboot-required" ]; then
+        # Get the container's hostname and add it to the list
+        container_hostname=$(pct exec "$container" hostname)
+        containers_needing_reboot+=("$container ($container_hostname)")
+      fi
+      # check if patchmon agent is present in container and run a report if found
+      if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
+        echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
+        pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report"
+      fi
     fi
   fi
 done

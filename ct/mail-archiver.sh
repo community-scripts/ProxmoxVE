@@ -28,6 +28,8 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies libgssapi-krb5-2
+
   if check_for_gh_release "mail-archiver" "s1t5/mail-archiver"; then
     msg_info "Stopping Mail-Archiver"
     systemctl stop mail-archiver

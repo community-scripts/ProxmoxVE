@@ -43,8 +43,6 @@ cd /tmp/immichframe/immichFrame.Web
 $STD npm ci
 $STD npm run build
 cp -r build/* /opt/immichframe/wwwroot
-$STD apt remove -y dotnet-sdk-8.0
-$STD apt autoremove -y
 rm -rf /tmp/immichframe
 mkdir -p /opt/immichframe/Config
 curl -fsSL "https://raw.githubusercontent.com/immichFrame/ImmichFrame/main/docker/Settings.example.yml" -o /opt/immichframe/Config/Settings.yml

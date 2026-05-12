@@ -319,11 +319,11 @@ function setup_cloud_init() {
   if [ "$network_mode" = "static" ]; then
     if [ -n "$static_ip" ] && ! validate_ip_cidr "$static_ip"; then
       _ci_msg_error "Invalid static IP format: $static_ip (expected: x.x.x.x/xx)"
-      return 1
+      return 65
     fi
     if [ -n "$gateway" ] && ! validate_ip "$gateway"; then
       _ci_msg_error "Invalid gateway IP format: $gateway"
-      return 1
+      return 65
     fi
   fi
 
@@ -433,7 +433,7 @@ function configure_cloud_init_interactive() {
   if ! command -v whiptail >/dev/null 2>&1; then
     echo "Warning: whiptail not available, skipping interactive configuration"
     export CLOUDINIT_ENABLE="no"
-    return 1
+    return 127
   fi
 
   # Ask if user wants to enable Cloud-Init
@@ -603,7 +603,7 @@ function get_vm_ip() {
     elapsed=$((elapsed + 2))
   done
 
-  return 1
+  return 7
 }
 
 # ------------------------------------------------------------------------------
@@ -621,7 +621,7 @@ function wait_for_cloud_init() {
 
   if [ -z "$vm_ip" ]; then
     _ci_msg_warn "Unable to determine VM IP address"
-    return 1
+    return 7
   fi
 
   _ci_msg_info "Waiting for Cloud-Init to complete on ${vm_ip}"
@@ -638,7 +638,7 @@ function wait_for_cloud_init() {
   done
 
   _ci_msg_warn "Cloud-Init did not complete within ${timeout}s"
-  return 1
+  return 150
 }
 
 # ==============================================================================

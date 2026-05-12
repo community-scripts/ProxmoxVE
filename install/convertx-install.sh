@@ -24,6 +24,7 @@ $STD apt install -y \
   dvisvgm \
   ffmpeg \
   inkscape \
+  libreoffice-writer \
   libva2 \
   libvips-tools \
   lmodern \
