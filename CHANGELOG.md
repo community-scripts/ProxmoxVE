@@ -465,7 +465,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Authentik ([#14440](https://github.com/community-scripts/ProxmoxVE/pull/14440))
+  - DocuSeal ([#14445](https://github.com/community-scripts/ProxmoxVE/pull/14445))
+- Authentik ([#14440](https://github.com/community-scripts/ProxmoxVE/pull/14440))
 
 ### 🚀 Updated Scripts
 
