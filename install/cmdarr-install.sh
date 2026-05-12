@@ -25,7 +25,7 @@ NODE_VERSION="24" setup_nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing uv and Python 3.14"
-$STD curl -LsSf https://astral.sh/uv/install.sh | env INSTALLER_NO_MODIFY_PATH=1 sh
+curl -LsSf https://astral.sh/uv/install.sh | env INSTALLER_NO_MODIFY_PATH=1 sh &>/dev/null
 export PATH="/root/.local/bin:$PATH"
 export UV_PYTHON_INSTALL_DIR="/opt/uv-python"
 $STD uv python install 3.14
