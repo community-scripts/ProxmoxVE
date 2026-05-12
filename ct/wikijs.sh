@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="yarn,node-gyp" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="yarn,node-gyp" setup_nodejs
 
   if check_for_gh_release "wikijs" "requarks/wiki"; then
     msg_info "Verifying whether ${APP}' new release is v3.x+ and current install uses SQLite."
