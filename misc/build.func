@@ -52,9 +52,10 @@ variables() {
   # as "/tmp/${NSAPP}-${CTID}-${SESSION_ID}.log" (requires CTID, not available here)
   CTTYPE="${CTTYPE:-${CT_TYPE:-1}}"
 
-	# ARM64 Template default variables
-	DEBIAN_DEFAULT_CODENAME="trixie"
-	UBUNTU_DEFAULT_CODENAME="noble"
+  # ARM64 Template default variables
+  DEBIAN_DEFAULT_CODENAME="trixie"
+  UBUNTU_DEFAULT_CODENAME="noble"
+  ALPINE_DEFAULT_VERSION="3.23"
 
   # Parse dev_mode early
   parse_dev_mode
@@ -5026,13 +5027,13 @@ create_lxc_container() {
     case "$1:$2" in
       debian:12) echo "bookworm" ;;
       debian:13) echo "trixie" ;;
-      debian:) echo "$(DEBIAN_DEFAULT_CODENAME)" ;;
+      debian:) echo "$DEBIAN_DEFAULT_CODENAME" ;;
 
       ubuntu:24.04) echo "noble" ;;
       ubuntu:26.04) echo "questing" ;;
-      ubuntu:) echo "$(UBUNTU_DEFAULT_CODENAME)" ;;
+      ubuntu:) echo "$UBUNTU_DEFAULT_CODENAME" ;;
 
-      alpine:*) echo "$2" ;;
+      alpine:*) echo "${2:-$ALPINE_DEFAULT_VERSION}" ;;
 
       *) return 1 ;;
     esac
@@ -5050,8 +5051,13 @@ create_lxc_container() {
     }
 
     if [[ "$PCT_OSTYPE" == "debian" ]]; then
-      url=$(curl -fsSL "https://api.github.com/repos/community-scripts/debian-arm64-lxc/releases/latest" |
-        grep -Eo "https://[^\"]*debian-${CUSTOM_TEMPLATE_VARIANT}-arm64-rootfs\.tar\.xz" | head -n1)
+      url=$(
+        curl -fsSL "https://api.github.com/repos/community-scripts/debian-arm64-lxc/releases/latest" |
+          jq -r --arg v "$CUSTOM_TEMPLATE_VARIANT" \
+            '.assets[].browser_download_url | select(test("debian-" + $v + "-arm64-rootfs\\.tar\\.xz$"))' |
+          head -n1
+      )
+
       [[ -n "$url" ]] || {
         msg_error "Could not find Debian ${CUSTOM_TEMPLATE_VARIANT} ARM64 template URL."
         exit 207
