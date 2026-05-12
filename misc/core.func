@@ -1732,7 +1732,7 @@ ensure_whiptail() {
   apt_update_safe
   $STD apt-get install -y whiptail || {
     msg_error "Failed to install whiptail"
-    exit 115
+    exit 100
   }
   msg_ok "Installed whiptail"
 }

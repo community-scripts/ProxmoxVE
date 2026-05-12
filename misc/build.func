@@ -5934,7 +5934,11 @@ create_lxc_container() {
     TEMPLATE_PATH="$(pvesm path "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" 2>/dev/null || true)"
     if [[ -z "$TEMPLATE_PATH" ]]; then
       local _tpl_base
-      _tpl_base=$(awk -v s="$TEMPLATE_STORAGE" '$1==s {f=1} f && /path/ {print $2; exit}' /etc/pve/storage.cfg)
+      _tpl_base=$(awk -v s="$TEMPLATE_STORAGE" '
+        $0 ~ "^[^:]+:[[:space:]]*" s "$" {f=1; next}
+        f && /^[^[:space:]]/ {f=0}
+        f && $1 == "path" {print $2; exit}
+      ' /etc/pve/storage.cfg)
       TEMPLATE_PATH="${_tpl_base:-/var/lib/vz}/template/cache/$TEMPLATE"
     fi
 

@@ -3060,6 +3060,7 @@ function fetch_and_deploy_codeberg_release() {
     # Fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
+        [[ "$u" =~ \.deb$ ]] || continue
         if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
           [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
         elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
@@ -3573,6 +3574,7 @@ function fetch_and_deploy_gh_release() {
     # If no match via explicit pattern, fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
+        [[ "$u" =~ \.deb$ ]] || continue
         if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
           [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
         elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
@@ -3610,6 +3612,7 @@ function fetch_and_deploy_gh_release() {
         fi
         if [[ -z "$url_match" ]]; then
           for u in $assets; do
+            [[ "$u" =~ \.deb$ ]] || continue
             if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
               [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
             elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
