@@ -2941,6 +2941,7 @@ install_script() {
   root_check
   ensure_whiptail
   arch_check
+  arm64_notice
   ssh_check
   maxkeys_check
   diagnostics_check

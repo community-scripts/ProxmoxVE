@@ -1722,7 +1722,7 @@ function get_lxc_ip() {
 # ensure_whiptail()
 #
 # - Ensures whiptail is installed
-# - Some ARM64 systems will not have whiptail installed.
+# - Some ARM64 systems will not have whiptail installed
 # - Exits with error message if installation fails
 # ------------------------------------------------------------------------------
 ensure_whiptail() {
@@ -1737,6 +1737,19 @@ ensure_whiptail() {
   msg_ok "Installed whiptail"
 }
 
+# ------------------------------------------------------------------------------
+# arm64_notice()
+#
+# - Shows a short warning when running scripts on ARM64 systems
+# ------------------------------------------------------------------------------
+arm64_notice() {
+  [[ "$(dpkg --print-architecture)" == "arm64" ]] || return 0
+
+  whiptail --backtitle "Proxmox VE Helper Scripts" \
+    --title "ARM64 SUPPORT" \
+    --ok-button "Continue" \
+    --msgbox "ARM64 support is in active development.\n\nSome scripts, packages, or application releases may not be fully tested or working yet." 10 68
+}
 # ==============================================================================
 # SIGNAL TRAPS
 # ==============================================================================
