@@ -473,6 +473,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenCloud: bump version to 6.2.0 [@vhsdream](https://github.com/vhsdream) ([#14451](https://github.com/community-scripts/ProxmoxVE/pull/14451))
 
+  - #### 🔧 Refactor
+
+    - misc: bump node versions [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14447](https://github.com/community-scripts/ProxmoxVE/pull/14447))
+
 ## 2026-05-11
 
 ### 🆕 New Scripts
