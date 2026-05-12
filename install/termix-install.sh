@@ -101,7 +101,7 @@ sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
 sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
 
 mkdir -p /tmp/nginx
-echo "d /tmp/nginx 0755 nobody nobody -" > /etc/tmpfiles.d/nginx-termix.conf
+echo "d /tmp/nginx 0755 nobody nogroup -" > /etc/tmpfiles.d/nginx-termix.conf
 mkdir -p /etc/systemd/system/nginx.service.d/
 cat > /etc/systemd/system/nginx.service.d/pidfile.conf << EOF
 [Service]
