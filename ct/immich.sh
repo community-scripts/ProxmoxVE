@@ -206,6 +206,9 @@ EOF
     $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
     [[ -f "$INSTALL_DIR"/start.sh ]] && mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
 
+    # cleanup
+    $STD pnpm store prune
+
     # plugins
     cd "$SRC_DIR"
     $STD mise trust --ignore ./mise.toml

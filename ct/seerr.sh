@@ -142,6 +142,7 @@ EOF
     $STD pnpm install --frozen-lockfile
     export NODE_OPTIONS="--max-old-space-size=3072"
     $STD pnpm build
+    $STD pnpm store prune
     msg_ok "Updated Seerr"
 
     msg_info "Restoring Backup"
