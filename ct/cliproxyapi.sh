@@ -40,8 +40,7 @@ function update_script() {
     msg_info "Starting CLIProxyAPI"
     systemctl start cliproxyapi
     msg_ok "Started CLIProxyAPI"
-
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
