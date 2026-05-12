@@ -3838,6 +3838,7 @@ build_container() {
   export ENABLE_TUN="$ENABLE_TUN"
   export PCT_OSTYPE="$var_os"
   export PCT_OSVERSION="$var_version"
+  export PCT_ARCH="$(dpkg --print-architecture 2>/dev/null || uname -m)"
   export PCT_DISK_SIZE="$DISK_SIZE"
   export IPV6_METHOD="$IPV6_METHOD"
   export ENABLE_GPU="$ENABLE_GPU"

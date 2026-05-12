@@ -361,6 +361,26 @@ arch_check() {
 }
 
 # ------------------------------------------------------------------------------
+# get_arch_value()
+#
+# - Selects an architecture-specific value while preserving amd64 defaults
+# - Usage: get_arch_value "amd64-value" "arm64-value"
+# - Defaults: amd64="amd64", arm64="arm64"
+# ------------------------------------------------------------------------------
+get_arch_value() {
+  local amd64_val="${1:-amd64}"
+  local arm64_val="${2:-arm64}"
+  case "$PCT_ARCH" in
+  amd64) echo "$amd64_val" ;;
+  arm64) echo "$arm64_val" ;;
+  *)
+    msg_error "Unsupported architecture: $PCT_ARCH"
+    return 106
+    ;;
+  esac
+}
+
+# ------------------------------------------------------------------------------
 # ssh_check()
 #
 # - Detects if script is running over SSH connection
