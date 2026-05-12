@@ -28,6 +28,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+  
   if check_for_gh_release "excalidraw" "excalidraw/excalidraw"; then
     msg_info "Stopping Service"
     systemctl stop excalidraw
