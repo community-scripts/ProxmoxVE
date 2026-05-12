@@ -465,11 +465,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - OpenCloud: bump version to 6.2.0 [@vhsdream](https://github.com/vhsdream) ([#14451](https://github.com/community-scripts/ProxmoxVE/pull/14451))
-
   - #### 🐞 Bug Fixes
 
     - Save Omada version [@lucacome](https://github.com/lucacome) ([#14433](https://github.com/community-scripts/ProxmoxVE/pull/14433))
+
+  - #### ✨ New Features
+
+    - OpenCloud: bump version to 6.2.0 [@vhsdream](https://github.com/vhsdream) ([#14451](https://github.com/community-scripts/ProxmoxVE/pull/14451))
 
 ## 2026-05-11
 
