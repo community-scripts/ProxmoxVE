@@ -52,6 +52,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
+Environment="QTWEBENGINE_CHROMIUM_FLAGS=--no-sandbox"
 WorkingDirectory=/opt/calibre-web
 ExecStart=/opt/calibre-web/.venv/bin/python /opt/calibre-web/cps.py
 Restart=on-failure
