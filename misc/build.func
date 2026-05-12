@@ -52,6 +52,10 @@ variables() {
   # as "/tmp/${NSAPP}-${CTID}-${SESSION_ID}.log" (requires CTID, not available here)
   CTTYPE="${CTTYPE:-${CT_TYPE:-1}}"
 
+	# ARM64 Template default variables
+	DEBIAN_DEFAULT_CODENAME="trixie"
+	UBUNTU_DEFAULT_CODENAME="noble"
+
   # Parse dev_mode early
   parse_dev_mode
 
@@ -5019,21 +5023,18 @@ create_lxc_container() {
 
   # Maps OS type + version to the release variant name used by ARM64 template sources.
   arm64_template_variant() {
-    case "$1" in
-    debian)
-      case "$2" in
-      12 | 12.*) echo "bookworm" ;; 13 | 13.*) echo "trixie" ;;
-      *) echo "trixie" ;;
-      esac
-      ;;
-    alpine) echo "3.22" ;;
-    ubuntu)
-      case "$2" in
-      24.04* | noble) echo "noble" ;; 24.10* | oracular) echo "oracular" ;;
-      *) echo "jammy" ;;
-      esac
-      ;;
-    *) return 1 ;;
+    case "$1:$2" in
+      debian:12) echo "bookworm" ;;
+      debian:13) echo "trixie" ;;
+      debian:) echo "$(DEBIAN_DEFAULT_CODENAME)" ;;
+
+      ubuntu:24.04) echo "noble" ;;
+      ubuntu:26.04) echo "questing" ;;
+      ubuntu:) echo "$(UBUNTU_DEFAULT_CODENAME)" ;;
+
+      alpine:*) echo "$2" ;;
+
+      *) return 1 ;;
     esac
   }
 
@@ -5231,7 +5232,7 @@ create_lxc_container() {
     TEMPLATE="${PCT_OSTYPE}-${CUSTOM_TEMPLATE_VARIANT}-rootfs.tar.xz"
     TEMPLATE_SOURCE="custom-arm64"
 
-    # Resolve template path: pvesm → storage.cfg fallback → default
+    # Resolve template path
     TEMPLATE_PATH="$(pvesm path "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" 2>/dev/null || true)"
     if [[ -z "$TEMPLATE_PATH" ]]; then
       local _tpl_base
@@ -5239,11 +5240,11 @@ create_lxc_container() {
       TEMPLATE_PATH="${_tpl_base:-/var/lib/vz}/template/cache/$TEMPLATE"
     fi
 
-    # Download if missing, too small, or corrupt (single pass)
+    # Download if missing, too small, or corrupt
     if [[ ! -f "$TEMPLATE_PATH" ]]; then
       download_arm64_template "$TEMPLATE_PATH"
     elif [[ "$(stat -c%s "$TEMPLATE_PATH")" -lt 1000000 ]] || ! tar -tf "$TEMPLATE_PATH" &>/dev/null; then
-      msg_warn "Local template invalid – re-downloading."
+      msg_warn "Local template invalid - re-downloading."
       rm -f "$TEMPLATE_PATH"
       download_arm64_template "$TEMPLATE_PATH"
     else
@@ -5585,13 +5586,13 @@ create_lxc_container() {
 
   # Validate template before pct create (while holding lock)
   if [[ ! -s "$TEMPLATE_PATH" || "$(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo 0)" -lt 1000000 ]]; then
-    msg_info "Template file missing or too small – downloading"
+    msg_info "Template file missing or too small - downloading"
     rm -f "$TEMPLATE_PATH"
     download_template
     msg_ok "Template downloaded"
   elif ! tar -tf "$TEMPLATE_PATH" &>/dev/null; then
     if [[ "$ARCH" == "arm64" || -n "$ONLINE_TEMPLATE" ]]; then
-      msg_info "Template appears corrupted – re-downloading"
+      msg_info "Template appears corrupted - re-downloading"
       rm -f "$TEMPLATE_PATH"
       download_template
       msg_ok "Template re-downloaded"
@@ -5612,7 +5613,7 @@ create_lxc_container() {
 
     # Check if template issue - retry with fresh download
     if grep -qiE 'unable to open|corrupt|invalid' "$LOGFILE"; then
-      msg_info "Template may be corrupted – re-downloading"
+      msg_info "Template may be corrupted - re-downloading"
       rm -f "$TEMPLATE_PATH"
       download_template
       msg_ok "Template re-downloaded"
