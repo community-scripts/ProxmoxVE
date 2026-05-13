@@ -2394,11 +2394,12 @@ check_for_gh_release() {
 
   # For pinned versions, query the specific release tag directly
   if [[ -n "$pinned_version_in" ]]; then
+    local pinned_version_encoded="${pinned_version_in//\//%2F}"
     http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
-      "https://api.github.com/repos/${source}/releases/tags/${pinned_version_in}" 2>/dev/null) || true
+      "https://api.github.com/repos/${source}/releases/tags/${pinned_version_encoded}" 2>/dev/null) || true
 
     if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
       releases_json="[$(</tmp/gh_check.json)]"
@@ -2520,11 +2521,150 @@ check_for_gh_release() {
       rm -f "${legacy_files[0]}"
     fi
   fi
-  current="${current#v}"
+  if [[ "$current" =~ ^v[0-9] ]]; then
+    current="${current:1}"
+  fi
+						
 
   # Pinned version handling
   if [[ -n "$pinned_version_in" ]]; then
-    local pin_clean="${pinned_version_in#v}"
+    local pin_clean
+    if [[ "$pinned_version_in" =~ ^v[0-9] ]]; then
+      pin_clean="${pinned_version_in:1}"
+    else
+      pin_clean="$pinned_version_in"
+    fi
+    local match_raw=""
+    for i in "${!clean_tags[@]}"; do
+      if [[ "${clean_tags[$i]}" == "$pin_clean" ]]; then
+        match_raw="${raw_tags[$i]}"
+        break
+      fi
+    done
+
+    if [[ -z "$match_raw" ]]; then
+      msg_error "Pinned version ${pinned_version_in} not found upstream"
+      return 250
+    fi
+
+    if [[ "$current" != "$pin_clean" ]]; then
+      CHECK_UPDATE_RELEASE="$match_raw"
+      msg_ok "Update available: ${app} ${current:-not installed} → ${pin_clean}"
+      return 0
+    fi
+
+    if [[ -n "$pin_reason" ]]; then
+      msg_ok "No update available: ${app} (${current}) - update held back: ${pin_reason}"
+    else
+      msg_ok "No update available: ${app} (${current}) - update temporarily held back due to issues with newer releases"
+    fi
+    return 1
+  fi
+
+  # No pinning → use latest
+  if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
+    CHECK_UPDATE_RELEASE="$latest_raw"
+    msg_ok "Update available: ${app} ${current:-not installed} → ${latest_clean}"
+    return 0
+  fi
+
+  msg_ok "No update available: ${app} (${latest_clean})"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# Checks for new Codeberg release (latest tag).
+#
+# Description:
+#   - Queries the Codeberg API for the latest release tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#
+# Usage:
+#     if check_for_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" [optional] "v0.11.3"; then
+#       # trigger update...
+#     fi
+#     exit 0
+#     } (end of update_script not from the function)
+#
+# Notes:
+#   - Requires `jq` (auto-installed if missing)
+#   - Does not modify anything, only checks version state
+#   - Does not support pre-releases
+# ------------------------------------------------------------------------------
+check_for_codeberg_release() {
+  local app="$1"
+  local source="$2"
+  local pinned_version_in="${3:-}" # optional
+  local pin_reason="${4:-}"        # optional reason shown to user
+  local app_lc="${app,,}"
+  local current_file="$HOME/.${app_lc}"
+
+  msg_info "Checking for update: ${app}"
+
+  # DNS check
+  if ! getent hosts codeberg.org >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve codeberg.org"
+    return 6
+  fi
+
+  ensure_dependencies jq
+
+  # Fetch releases from Codeberg API
+  local releases_json=""
+  releases_json=$(curl -fsSL --max-time 20 \
+    -H 'Accept: application/json' \
+    "https://codeberg.org/api/v1/repos/${source}/releases" 2>/dev/null) || {
+    msg_error "Unable to fetch releases for ${app} (codeberg.org/api/v1/repos/${source}/releases)"
+    return 22
+  }
+
+  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  if ((${#raw_tags[@]} == 0)); then
+    msg_error "No stable releases found for ${app}"
+    return 250
+  fi
+
+  local clean_tags=()
+  for t in "${raw_tags[@]}"; do
+    # Only strip leading 'v' when followed by a digit (e.g. v1.2.3)
+    if [[ "$t" =~ ^v[0-9] ]]; then
+      clean_tags+=("${t:1}")
+    else
+      clean_tags+=("$t")
+    fi
+  done
+
+  local latest_raw="${raw_tags[0]}"
+  local latest_clean="${clean_tags[0]}"
+
+  # current installed (stored without v)
+  local current=""
+  if [[ -f "$current_file" ]]; then
+    current="$(<"$current_file")"
+  else
+    # Migration: search for any /opt/*_version.txt
+    local legacy_files
+    mapfile -t legacy_files < <(find /opt -maxdepth 1 -type f -name "*_version.txt" 2>/dev/null)
+    if ((${#legacy_files[@]} == 1)); then
+      current="$(<"${legacy_files[0]}")"
+      echo "${current#v}" >"$current_file"
+      rm -f "${legacy_files[0]}"
+    fi
+  fi
+  if [[ "$current" =~ ^v[0-9] ]]; then
+    current="${current:1}"
+  fi
+						
+
+  # Pinned version handling
+  if [[ -n "$pinned_version_in" ]]; then
+    local pin_clean
+    if [[ "$pinned_version_in" =~ ^v[0-9] ]]; then
+      pin_clean="${pinned_version_in:1}"
+    else
+      pin_clean="$pinned_version_in"
+    fi
     local match_raw=""
     for i in "${!clean_tags[@]}"; do
       if [[ "${clean_tags[$i]}" == "$pin_clean" ]]; then
