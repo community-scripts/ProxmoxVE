@@ -467,6 +467,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix: Broken Manifold update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14468](https://github.com/community-scripts/ProxmoxVE/pull/14468))
     - SoulSync: Fix update function [@tremor021](https://github.com/tremor021) ([#14465](https://github.com/community-scripts/ProxmoxVE/pull/14465))
     - Reactive-Resume: fix PDF generation timeout in LXC containers [@MickLesk](https://github.com/MickLesk) ([#14416](https://github.com/community-scripts/ProxmoxVE/pull/14416))
     - (calibre-web) Add --no-sandbox for PDF conversion [@jamesmyatt](https://github.com/jamesmyatt) ([#14461](https://github.com/community-scripts/ProxmoxVE/pull/14461))
