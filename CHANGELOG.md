@@ -472,6 +472,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Reactive-Resume: fix PDF generation timeout in LXC containers [@MickLesk](https://github.com/MickLesk) ([#14416](https://github.com/community-scripts/ProxmoxVE/pull/14416))
     - (calibre-web) Add --no-sandbox for PDF conversion [@jamesmyatt](https://github.com/jamesmyatt) ([#14461](https://github.com/community-scripts/ProxmoxVE/pull/14461))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - tools.func: encode GitHub tag, refine pin logic, add Codeberg [@MickLesk](https://github.com/MickLesk) ([#14473](https://github.com/community-scripts/ProxmoxVE/pull/14473))
+
 ## 2026-05-12
 
 ### 🆕 New Scripts
