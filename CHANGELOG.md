@@ -461,6 +461,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-13
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - (calibre-web) Add --no-sandbox for PDF conversion [@jamesmyatt](https://github.com/jamesmyatt) ([#14461](https://github.com/community-scripts/ProxmoxVE/pull/14461))
+
 ## 2026-05-12
 
 ### 🆕 New Scripts
