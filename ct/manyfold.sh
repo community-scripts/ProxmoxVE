@@ -55,9 +55,20 @@ function update_script() {
 
     RUBY_VERSION=${RUBY_INSTALL_VERSION} RUBY_INSTALL_RAILS="true" HOME=/home/manyfold setup_ruby
 
-    msg_info "Installing Manyfold"
+    msg_info "Restoring Data"
+    rm -rf /opt/manyfold/app/{storage,tmp,config/credentials.yml.enc,config/master.key}
+    cp -r /opt/manyfold_storage_backup /opt/manyfold/app/storage 2>/dev/null || true
+    cp -r /opt/manyfold_tmp_backup /opt/manyfold/app/tmp 2>/dev/null || true
+    cp /opt/manyfold_credentials.yml.enc /opt/manyfold/app/config/credentials.yml.enc 2>/dev/null || true
+    cp /opt/manyfold_master.key /opt/manyfold/app/config/master.key 2>/dev/null || true
     chown -R manyfold:manyfold {/home/manyfold,/opt/manyfold}
-    chown -R manyfold:manyfold /opt/manyfold
+    chown -R manyfold:manyfold /opt/manyfold/app/storage /opt/manyfold/app/tmp /opt/manyfold/app/config
+    rm -rf /opt/manyfold_storage_backup /opt/manyfold_tmp_backup /opt/manyfold_credentials.yml.enc /opt/manyfold_master.key
+    msg_ok "Restored Data"
+
+    msg_info "Installing Manyfold"
+    $STD npm install --global corepack
+    $STD corepack enable yarn
 
     sudo -u manyfold bash -c '
             source /opt/manyfold/.env
@@ -66,23 +77,12 @@ function update_script() {
             cd /opt/manyfold/app
             gem install bundler sidekiq foreman
             bundle install
-            corepack enable yarn
             corepack prepare '"$YARN_VERSION"' --activate
             corepack use '"$YARN_VERSION"'
             bin/rails db:migrate
             bin/rails assets:precompile
         '
     msg_ok "Installed Manyfold"
-
-    msg_info "Restoring Data"
-    rm -rf /opt/manyfold/app/{storage,tmp,config/credentials.yml.enc,config/master.key}
-    cp -r /opt/manyfold_storage_backup /opt/manyfold/app/storage 2>/dev/null || true
-    cp -r /opt/manyfold_tmp_backup /opt/manyfold/app/tmp 2>/dev/null || true
-    cp /opt/manyfold_credentials.yml.enc /opt/manyfold/app/config/credentials.yml.enc 2>/dev/null || true
-    cp /opt/manyfold_master.key /opt/manyfold/app/config/master.key 2>/dev/null || true
-    chown -R manyfold:manyfold /opt/manyfold/app/storage /opt/manyfold/app/tmp /opt/manyfold/app/config
-    rm -rf /opt/manyfold_storage_backup /opt/manyfold_tmp_backup /opt/manyfold_credentials.yml.enc /opt/manyfold_master.key
-    msg_ok "Restored Data"
 
     msg_info "Restarting Services"
     source /opt/manyfold/.env
