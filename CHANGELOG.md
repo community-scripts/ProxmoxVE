@@ -461,6 +461,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-14
+
+### 🆕 New Scripts
+
+  - CLIProxyAPI ([#14443](https://github.com/community-scripts/ProxmoxVE/pull/14443))
+
 ## 2026-05-13
 
 ### 🚀 Updated Scripts
