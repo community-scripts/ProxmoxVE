@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}"
-source <(curl -fsSL "$COMMUNITY_SCRIPTS_URL/misc/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: John Lombardo
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
