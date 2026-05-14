@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021) | Co-Author: Stavros (steveiliop56)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/steveiliop56/tinyauth
+# Source: https://github.com/tinyauthapp/tinyauth
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -19,8 +19,8 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Tinyauth"
 mkdir -p /opt/tinyauth
-RELEASE=$(curl -s https://api.github.com/repos/steveiliop56/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
+RELEASE=$(curl -s https://api.github.com/repos/tinyauthapp/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
 chmod +x /opt/tinyauth/tinyauth
 PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
 USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
