@@ -3649,6 +3649,16 @@ start() {
     run_addon_updates
     update_motd_ip
     cleanup_lxc
+  elif ! command -v whiptail &>/dev/null || ! [ -t 0 ]; then
+    msg_info "No interactive terminal detected – defaulting to silent update mode"
+    VERBOSE="no"
+    set_std_mode
+    ensure_profile_loaded
+    get_lxc_ip
+    update_script
+    run_addon_updates
+    update_motd_ip
+    cleanup_lxc
   else
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC Update/Setting" --menu \
       "Support/Update functions for ${APP} LXC. Choose an option:" \
