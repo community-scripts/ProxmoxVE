@@ -73,11 +73,11 @@ EOF
   msg_ok "Installed Intel® oneAPI Base Toolkit"
 
   msg_info "Installing Ollama"
-  OLLAMA_RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
-  curl -fsSLO -C - https://github.com/ollama/ollama/releases/download/${OLLAMA_RELEASE}/ollama-linux-amd64.tar.zst
-  tar --zstd -C /usr -xf ollama-linux-amd64.tar.zst
-  rm -rf ollama-linux-amd64.tar.zst
-  cat <<EOF >/etc/systemd/system/ollama.service
+  if ! fetch_and_deploy_gh_release "ollama" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama" "ollama-linux-amd64.tar.zst"; then
+    msg_error "Failed to download or deploy Ollama – check network connectivity and GitHub API availability"
+  else
+    ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama
+    cat <<EOF >/etc/systemd/system/ollama.service
 [Unit]
 Description=Ollama Service
 After=network-online.target
@@ -93,9 +93,10 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 EOF
-  systemctl enable -q --now ollama
-  echo "ENABLE_OLLAMA_API=true" >/root/.env
-  msg_ok "Installed Ollama"
+    systemctl enable -q --now ollama
+    echo "ENABLE_OLLAMA_API=true" >/root/.env
+    msg_ok "Installed Ollama"
+  fi
 fi
 
 msg_info "Creating Service"

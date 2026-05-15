@@ -91,37 +91,22 @@ EOF
 
   if [ -x "/usr/bin/ollama" ]; then
     msg_info "Checking for Ollama Update"
-    OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
-    RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
-    if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
-      msg_info "Ollama update available: v$OLLAMA_VERSION -> v$RELEASE"
-      msg_info "Downloading Ollama v$RELEASE \n"
-      curl -fS#LO https://github.com/ollama/ollama/releases/download/v${RELEASE}/ollama-linux-amd64.tar.zst
-      msg_ok "Download Complete"
+    if check_for_gh_release "ollama" "ollama/ollama"; then
+      msg_info "Stopping Ollama Service"
+      systemctl stop ollama
+      msg_ok "Stopped Service"
 
-      if [ -f "ollama-linux-amd64.tar.zst" ]; then
-
-        msg_info "Stopping Ollama Service"
-        systemctl stop ollama
-        msg_ok "Stopped Service"
-
-        msg_info "Installing Ollama"
-        rm -rf /usr/lib/ollama
-        rm -rf /usr/bin/ollama
-        tar --zstd -C /usr -xf ollama-linux-amd64.tar.zst
-        rm -rf ollama-linux-amd64.tar.zst
-        msg_ok "Installed Ollama"
-
-        msg_info "Starting Ollama Service"
-        systemctl start ollama
-        msg_ok "Started Service"
-
-        msg_ok "Ollama updated to version $RELEASE"
+      rm -rf /usr/lib/ollama /usr/bin/ollama
+      if ! fetch_and_deploy_gh_release "ollama" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama" "ollama-linux-amd64.tar.zst"; then
+        msg_error "Ollama download or deployment failed – check network connectivity and GitHub API availability"
       else
-        msg_error "Ollama download failed. Aborting update."
+        ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama
+        msg_ok "Updated Ollama to ${CHECK_UPDATE_RELEASE}"
       fi
-    else
-      msg_ok "Ollama is already up to date."
+
+      msg_info "Starting Ollama Service"
+      systemctl start ollama
+      msg_ok "Started Service"
     fi
   fi
 

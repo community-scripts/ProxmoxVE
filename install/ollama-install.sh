@@ -62,26 +62,15 @@ $STD apt install -y --no-install-recommends intel-basekit-2024.1
 msg_ok "Installed Intel® oneAPI Base Toolkit"
 
 msg_info "Installing Ollama (Patience)"
-RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
 OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
 BINDIR="/usr/local/bin"
-mkdir -p $OLLAMA_INSTALL_DIR
-OLLAMA_URL="https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tar.zst"
-TMP_TAR="/tmp/ollama.tar.zst"
-echo -e "\n"
-if curl -fL# -C - -o "$TMP_TAR" "$OLLAMA_URL"; then
-  if tar --zstd -xf "$TMP_TAR" -C "$OLLAMA_INSTALL_DIR"; then
-    ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" "$BINDIR/ollama"
-    echo "${RELEASE}" >/opt/Ollama_version.txt
-    msg_ok "Installed Ollama ${RELEASE}"
-  else
-    msg_error "Extraction failed – archive corrupt or incomplete"
-    exit 251
-  fi
-else
-  msg_error "Download failed – $OLLAMA_URL not reachable"
+mkdir -p "$OLLAMA_INSTALL_DIR"
+if ! fetch_and_deploy_gh_release "ollama" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-amd64.tar.zst"; then
+  msg_error "Failed to download or deploy Ollama – check network connectivity and GitHub API availability"
   exit 250
 fi
+ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" "$BINDIR/ollama"
+msg_ok "Installed Ollama"
 
 msg_info "Creating ollama User and Group"
 if ! id ollama >/dev/null 2>&1; then

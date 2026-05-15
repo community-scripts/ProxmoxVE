@@ -27,34 +27,26 @@ function update_script() {
     msg_error "No Ollama Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
-  if [[ ! -f /opt/Ollama_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/Ollama_version.txt)" ]]; then
-    if [[ ! -f /opt/Ollama_version.txt ]]; then
-      touch /opt/Ollama_version.txt
-    fi
+  if check_for_gh_release "ollama" "ollama/ollama"; then
     ensure_dependencies zstd
     msg_info "Stopping Services"
     systemctl stop ollama
     msg_ok "Services Stopped"
 
-    TMP_TAR=$(mktemp --suffix=.tar.zst)
-    curl -fL# -C - -o "${TMP_TAR}" "https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tar.zst"
-    msg_info "Updating Ollama to ${RELEASE}"
-    rm -rf /usr/local/lib/ollama
-    rm -rf /usr/local/bin/ollama
-    mkdir -p /usr/local/lib/ollama
-    tar --zstd -xf "${TMP_TAR}" -C /usr/local/lib/ollama
-    ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
-    rm -f "${TMP_TAR}"
-    echo "${RELEASE}" >/opt/Ollama_version.txt
-    msg_ok "Updated Ollama to ${RELEASE}"
+    OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
+    rm -rf "$OLLAMA_INSTALL_DIR" /usr/local/bin/ollama
+    mkdir -p "$OLLAMA_INSTALL_DIR"
+    if ! fetch_and_deploy_gh_release "ollama" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-amd64.tar.zst"; then
+      msg_error "Download or deployment failed – check network connectivity and GitHub API availability"
+      exit 250
+    fi
+    ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" /usr/local/bin/ollama
+    msg_ok "Updated Ollama"
 
     msg_info "Starting Services"
     systemctl start ollama
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. Ollama is already at ${RELEASE}"
   fi
   exit
 }
