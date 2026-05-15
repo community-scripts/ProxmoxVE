@@ -469,6 +469,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Checkmk: detect OMD version suffix dynamically on update [@MickLesk](https://github.com/MickLesk) ([#14496](https://github.com/community-scripts/ProxmoxVE/pull/14496))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: fall back to silent mode when no TTY or whiptail unavailable [@MickLesk](https://github.com/MickLesk) ([#14497](https://github.com/community-scripts/ProxmoxVE/pull/14497))
+
 ## 2026-05-14
 
 ### 🆕 New Scripts
