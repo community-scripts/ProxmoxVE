@@ -35,7 +35,12 @@ function update_script() {
   $STD omd cp monitoring monitoringbackup
   curl_with_retry "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-community-${RELEASE}_0.$(get_os_info codename)_amd64.deb" "/opt/checkmk.deb"
   $STD apt install -y /opt/checkmk.deb
-  $STD omd --force -V ${RELEASE}.cre update --conflict=install monitoring
+  OMD_VERSION=$(omd versions 2>/dev/null | grep "^${RELEASE}" | awk '{print $1}')
+  if [[ -z "${OMD_VERSION}" ]]; then
+    msg_error "Could not find installed OMD version for release ${RELEASE}"
+    exit 1
+  fi
+  $STD omd --force -V "${OMD_VERSION}" update --conflict=install monitoring
   $STD omd start monitoring
   $STD omd -f rm monitoringbackup
   $STD omd cleanup
