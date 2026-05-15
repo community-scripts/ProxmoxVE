@@ -474,6 +474,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - SearXNG: enable JSON format by default for API integrations [@MickLesk](https://github.com/MickLesk) ([#14498](https://github.com/community-scripts/ProxmoxVE/pull/14498))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Ollama use tools.func [@MickLesk](https://github.com/MickLesk) ([#14501](https://github.com/community-scripts/ProxmoxVE/pull/14501))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
