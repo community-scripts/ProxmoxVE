@@ -746,7 +746,7 @@ alloc_delay=5
 while :; do
   alloc_err=$(pvesm alloc $STORAGE $VMID $DISK0 4M 2>&1 >/dev/null) && break
   if [[ "$alloc_err" == *"got timeout"* && $alloc_attempt -lt $alloc_max ]]; then
-    msg_warn "pvesm alloc hit zfs timeout (attempt $alloc_attempt/$alloc_max), retrying in ${alloc_delay}s..."
+    echo -e "${YW}[WARN]${CL} pvesm alloc hit zfs timeout (attempt $alloc_attempt/$alloc_max), retrying in ${alloc_delay}s..."
     pvesm free "${DISK0_REF}" &>/dev/null || true
     sleep "$alloc_delay"
     alloc_attempt=$((alloc_attempt + 1))
