@@ -467,7 +467,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OPNsense: replace undefined msg_warn with inline echo in alloc retry [@MickLesk](https://github.com/MickLesk) ([#14500](https://github.com/community-scripts/ProxmoxVE/pull/14500))
     - Checkmk: detect OMD version suffix dynamically on update [@MickLesk](https://github.com/MickLesk) ([#14496](https://github.com/community-scripts/ProxmoxVE/pull/14496))
+
+  - #### ✨ New Features
+
+    - SearXNG: enable JSON format by default for API integrations [@MickLesk](https://github.com/MickLesk) ([#14498](https://github.com/community-scripts/ProxmoxVE/pull/14498))
 
 ### 💾 Core
 
