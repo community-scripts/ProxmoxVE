@@ -470,6 +470,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Update Tinyauth source URL in installation script [@MehrunesSky](https://github.com/MehrunesSky) ([#14483](https://github.com/community-scripts/ProxmoxVE/pull/14483))
     - Excalidraw: Fix build [@tremor021](https://github.com/tremor021) ([#14509](https://github.com/community-scripts/ProxmoxVE/pull/14509))
 
+  - #### ✨ New Features
+
+    - Update authentik version to 2026.2.3 [@thieneret](https://github.com/thieneret) ([#14517](https://github.com/community-scripts/ProxmoxVE/pull/14517))
+
 ## 2026-05-15
 
 ### 🚀 Updated Scripts
