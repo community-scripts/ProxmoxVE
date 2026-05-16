@@ -467,6 +467,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Homelable: replace passlib with bcrypt for password hashing [@MickLesk](https://github.com/MickLesk) ([#14530](https://github.com/community-scripts/ProxmoxVE/pull/14530))
     - dashy: fix: restore [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14527](https://github.com/community-scripts/ProxmoxVE/pull/14527))
     - Update Tinyauth source URL in installation script [@MehrunesSky](https://github.com/MehrunesSky) ([#14483](https://github.com/community-scripts/ProxmoxVE/pull/14483))
     - Excalidraw: Fix build [@tremor021](https://github.com/tremor021) ([#14509](https://github.com/community-scripts/ProxmoxVE/pull/14509))
