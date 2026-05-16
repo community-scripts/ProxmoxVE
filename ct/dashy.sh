@@ -48,7 +48,7 @@ function update_script() {
     msg_ok "Updated Dashy"
 
     msg_info "Restoring conf.yml"
-    cp -R /opt/dashy_conf_backup.yml /opt/dashy/user-data
+    cp /opt/dashy_conf_backup.yml /opt/dashy/user-data/conf.yml
     msg_ok "Restored conf.yml"
 
     msg_info "Cleaning"
