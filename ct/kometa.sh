@@ -30,7 +30,7 @@ function update_script() {
   fi
   if check_for_gh_release "kometa" "Kometa-Team/Kometa"; then
     msg_info "Stopping Service"
-    systemctl stop kometa
+    systemctl stop kometa kometa-quickstart
     msg_ok "Stopped Service"
 
     msg_info "Backing up data"
@@ -41,16 +41,34 @@ function update_script() {
     fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
 
     msg_info "Updating Kometa"
-    cd /opt/kometa 
+    cd /opt/kometa
     $STD uv pip install -r requirements.txt --system
     mkdir -p config/assets
     cp /opt/config.yml config/config.yml
     msg_ok "Updated Kometa"
 
     msg_info "Starting Service"
-    systemctl start kometa
+    systemctl start kometa kometa-quickstart
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
+  fi
+
+  if check_for_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"; then
+    msg_info "Stopping Quickstart Service"
+    systemctl stop kometa-quickstart
+    msg_ok "Stopped Quickstart Service"
+
+    fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart" "tarball"
+
+    msg_info "Updating Kometa Quickstart"
+    cd /opt/kometa-quickstart
+    $STD uv pip install -r requirements.txt -p /opt/kometa-quickstart/.venv/bin/python
+    msg_ok "Updated Kometa Quickstart"
+
+    msg_info "Starting Quickstart Service"
+    systemctl start kometa-quickstart
+    msg_ok "Started Quickstart Service"
+    msg_ok "Updated Quickstart successfully!"
   fi
   exit
 }
