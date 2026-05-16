@@ -33,7 +33,7 @@ function update_script() {
   msg_info "Updating checkmk"
   $STD omd stop monitoring
   $STD omd cp monitoring monitoringbackup
-  curl_with_retry "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-community-${RELEASE}_0.$(get_os_info codename)_amd64.deb" "/opt/checkmk.deb"
+  curl_download "/opt/checkmk.deb" "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-community-${RELEASE}_0.$(get_os_info codename)_amd64.deb"
   $STD apt install -y /opt/checkmk.deb
   OMD_VERSION=$(omd versions 2>/dev/null | grep "^${RELEASE}" | awk '{print $1}')
   if [[ -z "${OMD_VERSION}" ]]; then

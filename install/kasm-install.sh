@@ -50,7 +50,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 fi
 
 msg_info "Installing Kasm Workspaces"
-curl -fsSL -o "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
+curl_download "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
 cd /opt
 tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
 chmod +x /opt/kasm_release/install.sh

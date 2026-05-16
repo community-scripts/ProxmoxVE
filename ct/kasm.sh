@@ -71,7 +71,7 @@ function update_script() {
       msg_error "Aborted by user. No changes have been made."
       exit 10
     fi
-    curl -fsSL -o "/tmp/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
+    curl_download "/tmp/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
     tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
     chmod +x /tmp/kasm_release/install.sh
     rm -f /tmp/kasm_release_"${KASM_VERSION}".tar.gz
