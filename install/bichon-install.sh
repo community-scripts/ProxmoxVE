@@ -50,7 +50,7 @@ Type=simple
 User=root
 EnvironmentFile=/opt/bichon/bichon.env
 WorkingDirectory=/opt/bichon
-ExecStart=/opt/bichon/bichon
+ExecStart=/opt/bichon/bichon-server
 Restart=on-failure
 RestartSec=5
 
