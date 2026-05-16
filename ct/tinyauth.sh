@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/steveiliop56/tinyauth
+# Source: https://github.com/tinyauthapp/tinyauth
 
 APP="Tinyauth"
 var_tags="${var_tags:-auth}"
@@ -28,12 +28,12 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "tinyauth" "steveiliop56/tinyauth"; then
+  if check_for_gh_release "tinyauth" "tinyauthapp/tinyauth"; then
     msg_info "Stopping Service"
     systemctl stop tinyauth
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "tinyauth" "steveiliop56/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-amd64"
+    fetch_and_deploy_gh_release "tinyauth" "tinyauthapp/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-amd64"
 
     msg_info "Starting Service"
     systemctl start tinyauth
