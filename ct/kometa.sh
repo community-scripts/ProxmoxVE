@@ -30,7 +30,8 @@ function update_script() {
   fi
   if check_for_gh_release "kometa" "Kometa-Team/Kometa"; then
     msg_info "Stopping Service"
-    systemctl stop kometa kometa-quickstart
+    systemctl stop kometa
+    [[ -d "/opt/kometa-quickstart" ]] && systemctl stop kometa-quickstart
     msg_ok "Stopped Service"
 
     msg_info "Backing up data"
@@ -48,12 +49,13 @@ function update_script() {
     msg_ok "Updated Kometa"
 
     msg_info "Starting Service"
-    systemctl start kometa kometa-quickstart
+    systemctl start kometa
+    [[ -d "/opt/kometa-quickstart" ]] && systemctl start kometa-quickstart
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
 
-  if check_for_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"; then
+  if [[ -d "/opt/kometa-quickstart" ]] && check_for_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"; then
     msg_info "Stopping Quickstart Service"
     systemctl stop kometa-quickstart
     msg_ok "Stopped Quickstart Service"
