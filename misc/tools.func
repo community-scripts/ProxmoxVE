@@ -2524,7 +2524,6 @@ check_for_gh_release() {
   if [[ "$current" =~ ^v[0-9] ]]; then
     current="${current:1}"
   fi
-						
 
   # Pinned version handling
   if [[ -n "$pinned_version_in" ]]; then
@@ -2815,9 +2814,9 @@ function curl_download() {
 
   while ((attempt <= retries)); do
     if curl --connect-timeout 15 \
-            --speed-limit 1024 \
-            --speed-time 60 \
-            -fsSL -o "$output" "$url"; then
+      --speed-limit 1024 \
+      --speed-time 60 \
+      -fsSL -o "$output" "$url"; then
       return 0
     fi
     if ((attempt < retries)); then

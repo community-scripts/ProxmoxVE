@@ -20,7 +20,7 @@ msg_ok "Installed Docker"
 msg_info "Detecting latest Kasm Workspaces release"
 KASM_VERSION=$(curl -s https://kasm.com/downloads | grep -oP '<h1[^>]*>.*?</h1>' | sed -E 's/<\/?h1[^>]*>//g' | grep -oP '\d+\.\d+\.\d+')
 KASM_URL="https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION:-var_kasm_version}.tar.gz"
-  
+
 # KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' | head -n 1)
 # if [[ -z "$KASM_URL" ]]; then
 #   SERVICE_IMAGE_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_service_images_amd64_[0-9]+\.[0-9]+\.[0-9]+\.tar\.gz' | head -n 1)
