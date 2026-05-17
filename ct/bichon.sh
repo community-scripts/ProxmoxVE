@@ -69,9 +69,9 @@ function update_script() {
     cp /tmp/bichon.env.backup /opt/bichon/bichon.env
 
     if [ "$MIGRATE_V1" -eq 1 ]; then
-      msg_info "Running Bichon v1 Data Migration"
+      msg_info "Running Bichon v1 Data Migration (patience)"
       $STD apt install -y expect
-      expect <<'EOF'
+      $STD expect <<'EOF'
 set timeout -1
 spawn /opt/bichon/bichon-admin
 expect "*Select an operation*"
@@ -99,7 +99,7 @@ EOF
       $STD apt autoremove -y
       msg_ok "Migration completed"
 
-      msg_info "Cleaning up legacy Bichon v0.3.x storage files"
+      msg_info "Cleaning up legacy Bichon v0.x storage files"
       rm -rf /opt/bichon-data/envelope
       rm -rf /opt/bichon-data/eml
       rm -f /opt/bichon-data/mailbox.db
