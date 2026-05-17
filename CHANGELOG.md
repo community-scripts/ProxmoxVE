@@ -468,6 +468,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - dashy: fix yarn-missing on update and back up full user-data [@lissy93](https://github.com/lissy93) ([#14548](https://github.com/community-scripts/ProxmoxVE/pull/14548))
+
   - #### ✨ New Features
 
     - tools.func: replace max-time with speed-limit stall detection in curl_download [@MickLesk](https://github.com/MickLesk) ([#14545](https://github.com/community-scripts/ProxmoxVE/pull/14545))
