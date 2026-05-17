@@ -466,6 +466,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-17
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - tools.func: replace max-time with speed-limit stall detection in curl_download [@MickLesk](https://github.com/MickLesk) ([#14545](https://github.com/community-scripts/ProxmoxVE/pull/14545))
+
 ## 2026-05-16
 
 ### 🚀 Updated Scripts
