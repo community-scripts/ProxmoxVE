@@ -65,6 +65,17 @@ function update_script() {
     msg_ok "Stopped service"
 
     cp /opt/bichon/bichon.env /tmp/bichon.env.backup
+
+    if [ "$MIGRATE_V1" -eq 1 ] && [ "$CURRENT_VERSION" != "0.3.7" ]; then
+      msg_info "Updating to intermediate version v0.3.7"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "v0.3.7" "/opt/bichon" "bichon-*-x86_64-unknown-linux-gnu.tar.gz"
+      cp /tmp/bichon.env.backup /opt/bichon/bichon.env
+      systemctl start bichon
+      sleep 30
+      systemctl stop bichon
+      msg_ok "Intermediate update completed"
+    fi
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-x86_64-unknown-linux-gnu.tar.gz"
     cp /tmp/bichon.env.backup /opt/bichon/bichon.env
 
@@ -75,22 +86,16 @@ function update_script() {
 set timeout -1
 spawn /opt/bichon/bichon-admin
 expect "*Select an operation*"
-sleep 0.2
 send "\033\[B\r"
 expect "*--bichon-root-dir*"
-sleep 0.2
 send "/opt/bichon-data\r"
 expect "*--bichon-index-dir*"
-sleep 0.2
 send "\r"
 expect "*--bichon-data-dir*"
-sleep 0.2
 send "\r"
 expect "*Ready to migrate?*"
-sleep 0.2
 send "y"
 expect "*Enter batch size*"
-sleep 0.2
 send "1000\r"
 expect eof
 catch wait
