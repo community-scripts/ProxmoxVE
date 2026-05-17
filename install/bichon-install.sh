@@ -54,6 +54,8 @@ ExecStart=/opt/bichon/bichon-server
 Restart=on-failure
 RestartSec=5
 
+LimitNOFILE=65536
+
 [Install]
 WantedBy=multi-user.target
 EOF

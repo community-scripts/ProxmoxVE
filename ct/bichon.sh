@@ -105,7 +105,7 @@ EOF
       msg_ok "Cleanup completed"
 
       msg_info "Updating Bichon service for v1"
-      sed -i 's|ExecStart=/opt/bichon/bichon|ExecStart=/opt/bichon/bichon-server|g' /etc/systemd/system/bichon.service
+      sed -i 's|ExecStart=/opt/bichon/bichon|ExecStart=/opt/bichon/bichon-server|g; s|RestartSec=5|RestartSec=5\n\nLimitNOFILE=65536|g' /etc/systemd/system/bichon.service
       systemctl daemon-reload
       msg_ok "Service updated"
     fi
