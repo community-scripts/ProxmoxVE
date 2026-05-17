@@ -70,7 +70,7 @@ function update_script() {
 
     if [ "$MIGRATE_V1" -eq 1 ]; then
       msg_info "Running Bichon v1 Data Migration"
-      apt-get install -y expect >/dev/null 2>&1
+      $STD apt install -y expect
       expect <<'EOF'
 set timeout -1
 spawn /opt/bichon/bichon-admin
@@ -95,6 +95,8 @@ send "1000\r"
 expect eof
 catch wait
 EOF
+      $STD apt remove --purge expect -y
+      $STD apt autoremove -y
       msg_ok "Migration completed"
 
       msg_info "Cleaning up legacy Bichon v0.3.x storage files"
