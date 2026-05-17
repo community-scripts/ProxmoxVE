@@ -23,37 +23,34 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/dashy/public/ ]]; then
+  if [[ ! -d /opt/dashy ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+
   if check_for_gh_release "dashy" "Lissy93/dashy"; then
     msg_info "Stopping Service"
     systemctl stop dashy
     msg_ok "Stopped Service"
 
-    msg_info "Backing up conf.yml"
-    if [[ -f /opt/dashy/public/conf.yml ]]; then
-      cp -R /opt/dashy/public/conf.yml /opt/dashy_conf_backup.yml
-    else
-      cp -R /opt/dashy/user-data/conf.yml /opt/dashy_conf_backup.yml
-    fi
-    msg_ok "Backed up conf.yml"
+    msg_info "Backing up user-data"
+    rm -rf /opt/dashy_user_data_backup
+    cp -r /opt/dashy/user-data /opt/dashy_user_data_backup
+    msg_ok "Backed up user-data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dashy" "Lissy93/dashy" "prebuild" "latest" "/opt/dashy" "dashy-*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dashy" "lissy93/dashy" "prebuild" "latest" "/opt/dashy" "dashy-*.tar.gz"
 
     msg_info "Updating Dashy"
     cd /opt/dashy
     $STD yarn install --ignore-engines --network-timeout 300000
     msg_ok "Updated Dashy"
 
-    msg_info "Restoring conf.yml"
-    cp /opt/dashy_conf_backup.yml /opt/dashy/user-data/conf.yml
-    msg_ok "Restored conf.yml"
-
-    msg_info "Cleaning"
-    rm -rf /opt/dashy_conf_backup.yml /opt/dashy/public/conf.yml
-    msg_ok "Cleaned"
+    msg_info "Restoring user-data"
+    cp -r /opt/dashy_user_data_backup/. /opt/dashy/user-data/
+    rm -rf /opt/dashy_user_data_backup
+    msg_ok "Restored user-data"
 
     msg_info "Starting Dashy"
     systemctl start dashy
