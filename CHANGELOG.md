@@ -468,7 +468,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - degoog ([#14533](https://github.com/community-scripts/ProxmoxVE/pull/14533))
+  - ESPconnect ([#14444](https://github.com/community-scripts/ProxmoxVE/pull/14444))
+- degoog ([#14533](https://github.com/community-scripts/ProxmoxVE/pull/14533))
 - Webtrees ([#14532](https://github.com/community-scripts/ProxmoxVE/pull/14532))
 
 ### 🚀 Updated Scripts
