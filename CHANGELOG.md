@@ -470,6 +470,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Webtrees ([#14532](https://github.com/community-scripts/ProxmoxVE/pull/14532))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Bichon: Support v1 migration [@tomfrenzel](https://github.com/tomfrenzel) ([#14524](https://github.com/community-scripts/ProxmoxVE/pull/14524))
+
 ## 2026-05-17
 
 ### 🚀 Updated Scripts
