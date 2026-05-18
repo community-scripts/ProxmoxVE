@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: John Lombardo
+# Author: John Lombardo (programbo)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/thelastoutpostworkshop/ESPConnect
 
@@ -18,14 +18,10 @@ $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "espconnect" "thelastoutpostworkshop/ESPConnect" "prebuild" "latest" "/opt/espconnect" "dist.zip"
+create_self_signed_cert
 
 msg_info "Configuring Nginx"
 mkdir -p /etc/ssl/private
-$STD openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
-  -keyout /etc/ssl/private/espconnect-selfsigned.key \
-  -out /etc/ssl/certs/espconnect-selfsigned.crt \
-  -subj "/CN=ESPConnect"
-
 cat <<'EOF' >/etc/nginx/sites-available/espconnect
 server {
     listen 80 default_server;
