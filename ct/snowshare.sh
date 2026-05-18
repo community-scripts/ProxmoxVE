@@ -36,13 +36,14 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Backing up uploads"
-    [ -d /opt/snowshare/uploads ] && cp -a /opt/snowshare/uploads /opt/.snowshare_uploads_backup
+    rm -rf /opt/.snowshare_uploads_backup
+    [ -d /opt/snowshare/uploads ] && mv /opt/snowshare/uploads /opt/.snowshare_uploads_backup
     msg_ok "Uploads backed up"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
 
     msg_info "Restoring uploads"
-    [ -d /opt/.snowshare_uploads_backup ] && rm -rf /opt/snowshare/uploads && cp -a /opt/.snowshare_uploads_backup /opt/snowshare/uploads
+    [ -d /opt/.snowshare_uploads_backup ] && rm -rf /opt/snowshare/uploads && mv /opt/.snowshare_uploads_backup /opt/snowshare/uploads
     msg_ok "Uploads restored"
 
     msg_info "Updating Snowshare"
