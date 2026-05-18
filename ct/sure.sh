@@ -64,7 +64,7 @@ EOF
     fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sure" "we-promise/sure" "tarball" "latest" "/opt/sure"
-    RUBY_VERSION="$(cat /opt/sure/.ruby-version)" RUBY_INSTALL_RAILS=false setup_ruby
+    RUBY_VERSION="$(cat /opt/sure/.ruby-version)" RUBY_INSTALL_RAILS=false HOME=/root setup_ruby
 
     msg_info "Updating Sure"
     source ~/.profile

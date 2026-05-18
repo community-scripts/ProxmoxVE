@@ -72,12 +72,12 @@ msg_ok "Configured Environment"
 
 NODE_VERSION="22" setup_nodejs
 RUBY_VERSION=$(cat /opt/dawarich/app/.ruby-version 2>/dev/null || echo "3.4.6")
-RUBY_VERSION=${RUBY_VERSION} RUBY_INSTALL_RAILS="false" setup_ruby
+RUBY_VERSION=${RUBY_VERSION} RUBY_INSTALL_RAILS="false" HOME=/root setup_ruby
 
 msg_info "Installing Dawarich"
 cd /opt/dawarich/app
 source /root/.profile
-export PATH="/root/.rbenv/shims:/root/.rbenv/bin:$PATH"
+export PATH="/root/.rbenv/shims:/root/.rbenv/bin:${PATH}"
 eval "$(/root/.rbenv/bin/rbenv init - bash)"
 set -a && source /opt/dawarich/.env && set +a
 $STD gem install bundler

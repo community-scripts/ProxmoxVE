@@ -28,14 +28,94 @@ function update_script() {
     exit
   fi
 
+  CURRENT_VERSION="unknown"
+  if [[ -f /root/.bichon ]]; then
+    CURRENT_VERSION=$(cat /root/.bichon)
+  fi
+
+  MIGRATE_V1=0
+  if [[ "$CURRENT_VERSION" == 0.* ]]; then
+    MIGRATE_V1=1
+    DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+    if [ "$DISK_USAGE" -gt 50 ]; then
+      echo -e "\n${RD}Warning: Less than 50% free storage remaining on the root disk.${CL}"
+      echo -e "${RD}Bichon v1 data migration temporarily duplicates data and requires free space for it.${CL}"
+      read -r -p "Are you sure you want to proceed with the update? (y/N): " proceed
+      if [[ ! "$proceed" =~ ^[Yy]$ ]]; then
+        msg_error "Update cancelled by user."
+        exit
+      fi
+    fi
+
+    RAM_TOTAL=$(free -m | awk '/^Mem:/{print $2}')
+    if [ "$RAM_TOTAL" -lt 2000 ]; then
+      echo -e "\n${RD}Warning: LXC has less than 2GB of RAM allocated (${RAM_TOTAL}MB).${CL}"
+      echo -e "${RD}Bichon v1 data migration consumes significant memory and may crash if insufficient.${CL}"
+      read -r -p "Are you sure you want to proceed with the update? (y/N): " proceed_ram
+      if [[ ! "$proceed_ram" =~ ^[Yy]$ ]]; then
+        msg_error "Update cancelled by user."
+        exit
+      fi
+    fi
+  fi
+
   if check_for_gh_release "bichon" "rustmailer/bichon"; then
     msg_info "Stopping service"
     systemctl stop bichon
     msg_ok "Stopped service"
 
     cp /opt/bichon/bichon.env /tmp/bichon.env.backup
+
+    if [ "$MIGRATE_V1" -eq 1 ] && [ "$CURRENT_VERSION" != "0.3.7" ]; then
+      msg_info "Updating to intermediate version v0.3.7"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "v0.3.7" "/opt/bichon" "bichon-*-x86_64-unknown-linux-gnu.tar.gz"
+      cp /tmp/bichon.env.backup /opt/bichon/bichon.env
+      systemctl start bichon
+      sleep 30
+      systemctl stop bichon
+      msg_ok "Intermediate update completed"
+    fi
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-x86_64-unknown-linux-gnu.tar.gz"
     cp /tmp/bichon.env.backup /opt/bichon/bichon.env
+
+    if [ "$MIGRATE_V1" -eq 1 ]; then
+      msg_info "Running Bichon v1 Data Migration (patience)"
+      $STD apt install -y expect
+      $STD expect <<'EOF'
+set timeout -1
+spawn /opt/bichon/bichon-admin
+expect "*Select an operation*"
+send "\033\[B\r"
+expect "*--bichon-root-dir*"
+send "/opt/bichon-data\r"
+expect "*--bichon-index-dir*"
+send "\r"
+expect "*--bichon-data-dir*"
+send "\r"
+expect "*Ready to migrate?*"
+send "y"
+expect "*Enter batch size*"
+send "1000\r"
+expect eof
+catch wait
+EOF
+      $STD apt remove --purge expect -y
+      $STD apt autoremove -y
+      msg_ok "Migration completed"
+
+      msg_info "Cleaning up legacy Bichon v0.x storage files"
+      rm -rf /opt/bichon-data/envelope
+      rm -rf /opt/bichon-data/eml
+      rm -f /opt/bichon-data/mailbox.db
+      rm -f /opt/bichon-data/meta.db
+      msg_ok "Cleanup completed"
+
+      msg_info "Updating Bichon service for v1"
+      sed -i 's|ExecStart=/opt/bichon/bichon|ExecStart=/opt/bichon/bichon-server|g; s|RestartSec=5|RestartSec=5\n\nLimitNOFILE=65536|g' /etc/systemd/system/bichon.service
+      systemctl daemon-reload
+      msg_ok "Service updated"
+    fi
 
     msg_info "Starting service"
     systemctl start bichon

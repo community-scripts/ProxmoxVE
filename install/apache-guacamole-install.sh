@@ -65,12 +65,12 @@ $STD make
 $STD make install
 $STD ldconfig
 echo "${GUAC_SERVER_VERSION}" >~/.guacamole_server
-curl -fsSL "https://downloads.apache.org/guacamole/${GUAC_CLIENT_VERSION}/binary/guacamole-${GUAC_CLIENT_VERSION}.war" -o "/opt/apache-guacamole/tomcat9/webapps/guacamole.war"
+curl_download "/opt/apache-guacamole/tomcat9/webapps/guacamole.war" "https://downloads.apache.org/guacamole/${GUAC_CLIENT_VERSION}/binary/guacamole-${GUAC_CLIENT_VERSION}.war"
 echo "${GUAC_CLIENT_VERSION}" >~/.guacamole_client
-curl -fsSL "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/${MYSQL_CONNECTOR_VERSION}/mysql-connector-j-${MYSQL_CONNECTOR_VERSION}.jar" -o "/etc/guacamole/lib/mysql-connector-j.jar"
+curl_download "/etc/guacamole/lib/mysql-connector-j.jar" "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/${MYSQL_CONNECTOR_VERSION}/mysql-connector-j-${MYSQL_CONNECTOR_VERSION}.jar"
 echo "${MYSQL_CONNECTOR_VERSION}" >~/.guacamole_mysql_connector
 cd /root
-curl -fsSL "https://downloads.apache.org/guacamole/${GUAC_SERVER_VERSION}/binary/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz" -o "/root/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz"
+curl_download "/root/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz" "https://downloads.apache.org/guacamole/${GUAC_SERVER_VERSION}/binary/guacamole-auth-jdbc-${GUAC_SERVER_VERSION}.tar.gz"
 $STD tar -xf ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION".tar.gz
 mv ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION"/mysql/guacamole-auth-jdbc-mysql-"$GUAC_SERVER_VERSION".jar /etc/guacamole/extensions/
 echo "${GUAC_SERVER_VERSION}" >~/.guacamole_auth_jdbc

@@ -28,7 +28,7 @@ fi
 
 if ! dpkg -l | grep -q 'libssl1.1'; then
   msg_info "Installing libssl (if needed)"
-  curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u5_amd64.deb" -o "/tmp/libssl.deb"
+  curl_download "/tmp/libssl.deb" "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u5_amd64.deb"
   $STD dpkg -i /tmp/libssl.deb
   rm -f /tmp/libssl.deb
   msg_ok "Installed libssl1.1"
@@ -39,7 +39,7 @@ OMADA_URL=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/o
   grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
   head -n1)
 OMADA_PKG=$(basename "${OMADA_URL}")
-curl -fsSL "${OMADA_URL}" -o "${OMADA_PKG}"
+curl_download "${OMADA_PKG}" "${OMADA_URL}"
 $STD dpkg -i "${OMADA_PKG}"
 rm -rf "${OMADA_PKG}"
 VERSION=$(sed -n 's/.*_v\([0-9.]*\)_.*_\([0-9]\{14\}\)\.deb$/\1-\2/p' <<<"${OMADA_PKG}")

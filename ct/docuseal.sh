@@ -48,7 +48,7 @@ function update_script() {
 
     msg_info "Building Application"
     cd /opt/docuseal
-    export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
+    export PATH="/root/.rbenv/bin:/root/.rbenv/shims:${PATH}"
     eval "$(rbenv init - bash)" 2>/dev/null || true
     export RAILS_ENV=production
     export NODE_ENV=production

@@ -45,12 +45,12 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dawarich" "Freika/dawarich" "tarball" "latest" "/opt/dawarich/app"
 
     RUBY_VERSION=$(cat /opt/dawarich/app/.ruby-version 2>/dev/null || echo "3.4.6")
-    RUBY_VERSION=${RUBY_VERSION} RUBY_INSTALL_RAILS="false" setup_ruby
+    RUBY_VERSION=${RUBY_VERSION} RUBY_INSTALL_RAILS="false" HOME=/root setup_ruby
 
     msg_info "Running Migrations"
     cd /opt/dawarich/app
     source /root/.profile
-    export PATH="/root/.rbenv/shims:/root/.rbenv/bin:$PATH"
+    export PATH="/root/.rbenv/shims:/root/.rbenv/bin:${PATH}"
     eval "$(/root/.rbenv/bin/rbenv init - bash)"
 
     if ! grep -q "OTP_ENCRYPTION_PRIMARY_KEY" /opt/dawarich/.env; then

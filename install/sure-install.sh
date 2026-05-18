@@ -26,7 +26,7 @@ fetch_and_deploy_gh_release "Sure" "we-promise/sure" "tarball" "latest" "/opt/su
 
 PG_VERSION="$(sed -n '/postgres:/s/[^[:digit:]]*//p' /opt/sure/compose.example.yml)" setup_postgresql
 PG_DB_NAME=sure_production PG_DB_USER=sure_user setup_postgresql_db
-RUBY_VERSION="$(cat /opt/sure/.ruby-version)" RUBY_INSTALL_RAILS=false setup_ruby
+RUBY_VERSION="$(cat /opt/sure/.ruby-version)" RUBY_INSTALL_RAILS=false HOME=/root setup_ruby
 
 msg_info "Building Sure"
 cd /opt/sure
@@ -73,6 +73,7 @@ ExecStartPre=/opt/sure/bin/rails db:prepare
 ExecStart=/opt/sure/bin/rails server
 Restart=always
 RestartSec=5
+TimeoutStartSec=300
 StandardOutput=journal
 StandardError=journal
 

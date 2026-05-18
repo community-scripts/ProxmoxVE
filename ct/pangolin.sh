@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://pangolin.net/ | Github: https://github.com/fosrl/pangolin
 
 APP="Pangolin"
-PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.18.3}"
+PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.18.4}"
 var_tags="${var_tags:-proxy}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
@@ -81,6 +81,12 @@ function update_script() {
 
     msg_info "Running database migrations"
     cd /opt/pangolin
+    SQLITE_DB="/opt/pangolin/config/db/db.sqlite"
+    if [[ -f "$SQLITE_DB" ]]; then
+      if ! sqlite3 "$SQLITE_DB" ".tables" 2>/dev/null | tr ' ' '\n' | grep -qx "statusHistory"; then
+        sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations;" 2>/dev/null || true
+      fi
+    fi
     ENVIRONMENT=prod $STD node dist/migrations.mjs
     msg_ok "Ran database migrations"
 

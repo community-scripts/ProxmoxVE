@@ -34,7 +34,7 @@ function update_script() {
   UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
   setup_rust
 
-  AUTHENTIK_VERSION="version/2026.2.2"
+  AUTHENTIK_VERSION="version/2026.2.3"
   XMLSEC_VERSION="1.3.11"
 
   if check_for_gh_release "geoipupdate" "maxmind/geoipupdate"; then

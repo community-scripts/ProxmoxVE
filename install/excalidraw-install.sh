@@ -22,6 +22,7 @@ fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw" "tarball"
 
 msg_info "Configuring Excalidraw"
 cd /opt/excalidraw
+$STD yarn config set ignore-engines true
 $STD yarn
 msg_ok "Setup Excalidraw"
 

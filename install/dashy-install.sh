@@ -29,7 +29,6 @@ Description=dashy
 [Service]
 Type=simple
 WorkingDirectory=/opt/dashy
-Environment=NODE_OPTIONS=--openssl-legacy-provider
 ExecStart=/usr/bin/node server.js
 [Install]
 WantedBy=multi-user.target

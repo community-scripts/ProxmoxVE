@@ -30,7 +30,7 @@ function update_script() {
   fi
 
   NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
-  
+
   if check_for_gh_release "excalidraw" "excalidraw/excalidraw"; then
     msg_info "Stopping Service"
     systemctl stop excalidraw
@@ -40,6 +40,7 @@ function update_script() {
 
     msg_info "Updating Excalidraw"
     cd /opt/excalidraw
+    $STD yarn config set ignore-engines true
     $STD yarn
     msg_ok "Updated Excalidraw"
 

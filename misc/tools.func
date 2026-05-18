@@ -2524,7 +2524,6 @@ check_for_gh_release() {
   if [[ "$current" =~ ^v[0-9] ]]; then
     current="${current:1}"
   fi
-						
 
   # Pinned version handling
   if [[ -n "$pinned_version_in" ]]; then
@@ -2796,25 +2795,34 @@ function ensure_usr_local_bin_persist() {
 }
 
 # ------------------------------------------------------------------------------
-# curl_download - Downloads a file with automatic retry and exponential backoff.
+# curl_download - Downloads a file with stall detection and retry.
 #
 # Usage: curl_download <output_file> <url>
 #
-# Retries up to 5 times with increasing --max-time (60/120/240/480/960s).
-# Returns 0 on success, 1 if all attempts fail.
+# Uses --speed-limit / --speed-time instead of a hard --max-time cap so that
+# slow but progressing downloads (e.g. large .deb files from slow mirrors) are
+# never aborted mid-transfer.  Only aborts when throughput drops below 1 KB/s
+# for 60 consecutive seconds (i.e. a genuine stall or dead connection).
+# Retries up to 3 times on failure.
+# Returns 0 on success, 7 if all attempts fail.
 # ------------------------------------------------------------------------------
 function curl_download() {
   local output="$1"
   local url="$2"
-  local timeouts=(60 120 240 480 960)
+  local retries=3
+  local attempt=1
 
-  for i in "${!timeouts[@]}"; do
-    if curl --connect-timeout 15 --max-time "${timeouts[$i]}" -fsSL -o "$output" "$url"; then
+  while ((attempt <= retries)); do
+    if curl --connect-timeout 15 \
+      --speed-limit 1024 \
+      --speed-time 60 \
+      -fsSL -o "$output" "$url"; then
       return 0
     fi
-    if ((i < ${#timeouts[@]} - 1)); then
-      msg_warn "Download timed out after ${timeouts[$i]}s, retrying... (attempt $((i + 2))/${#timeouts[@]})"
+    if ((attempt < retries)); then
+      msg_warn "Download failed or stalled (attempt ${attempt}/${retries}), retrying..."
     fi
+    ((attempt++))
   done
   return 7
 }

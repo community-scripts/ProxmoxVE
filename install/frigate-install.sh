@@ -169,13 +169,13 @@ NODE_VERSION="20" setup_nodejs
 
 msg_info "Downloading Inference Models"
 mkdir -p /models /openvino-model
-curl_with_retry "https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite" "/edgetpu_model.tflite"
-curl_with_retry "https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite" "/models/cpu_model.tflite"
+curl_download "/edgetpu_model.tflite" "https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite"
+curl_download "/models/cpu_model.tflite" "https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite"
 cp /opt/frigate/labelmap.txt /labelmap.txt
 msg_ok "Downloaded Inference Models"
 
 msg_info "Downloading Audio Model"
-curl_with_retry "https://www.kaggle.com/api/v1/models/google/yamnet/tfLite/classification-tflite/1/download" "/tmp/yamnet.tar.gz"
+curl_download "/tmp/yamnet.tar.gz" "https://www.kaggle.com/api/v1/models/google/yamnet/tfLite/classification-tflite/1/download"
 $STD tar xzf /tmp/yamnet.tar.gz -C /
 mv /1.tflite /cpu_audio_model.tflite
 cp /opt/frigate/audio-labelmap.txt /audio-labelmap.txt
@@ -188,7 +188,7 @@ msg_ok "Installed OpenVino"
 
 msg_info "Building OpenVino Model"
 cd /models
-curl_with_retry "http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz" "ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz"
+curl_download "ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz" "http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz"
 $STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
 if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
   mkdir -p /openvino-model
@@ -246,7 +246,7 @@ msg_info "Configuring Frigate"
 mkdir -p /config /media/frigate
 cp -r /opt/frigate/config/. /config
 
-curl_with_retry "https://github.com/intel-iot-devkit/sample-videos/raw/master/person-bicycle-car-detection.mp4" "/media/frigate/person-bicycle-car-detection.mp4"
+curl_download "/media/frigate/person-bicycle-car-detection.mp4" "https://github.com/intel-iot-devkit/sample-videos/raw/master/person-bicycle-car-detection.mp4"
 
 echo "tmpfs   /tmp/cache      tmpfs   defaults        0       0" >>/etc/fstab
 

@@ -31,7 +31,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-RUBY_VERSION="4.0.1" RUBY_INSTALL_RAILS="false" setup_ruby
+RUBY_VERSION="4.0.1" RUBY_INSTALL_RAILS="false" HOME=/root setup_ruby
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="docuseal" PG_DB_USER="docuseal" setup_postgresql_db
 
@@ -82,7 +82,7 @@ msg_ok "Configured DocuSeal"
 
 msg_info "Building Application"
 cd /opt/docuseal
-export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
+export PATH="/root/.rbenv/bin:/root/.rbenv/shims:${PATH}"
 eval "$(rbenv init - bash)" 2>/dev/null || true
 export RAILS_ENV=production
 export NODE_ENV=production
