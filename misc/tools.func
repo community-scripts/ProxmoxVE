@@ -8064,21 +8064,12 @@ function setup_uv() {
 
   # Fetch latest version
   local releases_json
-  releases_json=$(curl -fsSL --max-time 15 \
-    "https://api.github.com/repos/astral-sh/uv/releases/latest" 2>/dev/null || echo "")
-
-  if [[ -z "$releases_json" ]]; then
-    msg_error "Could not fetch latest uv version from GitHub API"
-    return 7
-  fi
 
   local LATEST_VERSION
-  LATEST_VERSION=$(echo "$releases_json" | jq -r '.tag_name' 2>/dev/null | sed 's/^v//')
-
-  if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not parse uv version from GitHub API response"
-    return 250
-  fi
+  LATEST_VERSION=$(get_latest_gh_tag "astral-sh/uv") || {
+    msg_error "Could not fetch latest uv version from GitHub API"
+    return 7
+  }
 
   # Get currently installed version
   local INSTALLED_VERSION=""
