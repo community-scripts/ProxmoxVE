@@ -477,6 +477,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Bichon: Support v1 migration [@tomfrenzel](https://github.com/tomfrenzel) ([#14524](https://github.com/community-scripts/ProxmoxVE/pull/14524))
 
+  - #### ✨ New Features
+
+    - Pangolin: bump to 1.18.4, fix missing statusHistory migration [@MickLesk](https://github.com/MickLesk) ([#14566](https://github.com/community-scripts/ProxmoxVE/pull/14566))
+
 ## 2026-05-17
 
 ### 🚀 Updated Scripts
