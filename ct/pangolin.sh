@@ -84,7 +84,6 @@ function update_script() {
     SQLITE_DB="/opt/pangolin/config/db/db.sqlite"
     if [[ -f "$SQLITE_DB" ]]; then
       if ! sqlite3 "$SQLITE_DB" ".tables" 2>/dev/null | tr ' ' '\n' | grep -qx "statusHistory"; then
-        msg_info "Detected missing statusHistory table, resetting migration state"
         sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations;" 2>/dev/null || true
       fi
     fi
