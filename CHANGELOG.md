@@ -464,6 +464,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-18
+
+### 🆕 New Scripts
+
+  - Webtrees ([#14532](https://github.com/community-scripts/ProxmoxVE/pull/14532))
+
 ## 2026-05-17
 
 ### 🚀 Updated Scripts
