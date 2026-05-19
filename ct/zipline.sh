@@ -27,7 +27,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 
   if check_for_gh_release "zipline" "diced/zipline"; then
     msg_info "Stopping Service"
