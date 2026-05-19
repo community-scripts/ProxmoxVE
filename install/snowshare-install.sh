@@ -21,12 +21,14 @@ fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
 msg_info "Installing SnowShare"
 cd /opt/snowshare
 $STD npm ci
+mkdir -p /opt/snowshare_data
 cat <<EOF >/opt/snowshare.env
 DATABASE_URL="postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="$(openssl rand -base64 32)"
 ALLOW_SIGNUP=true
 NODE_ENV=production
+UPLOAD_DIR=/opt/snowshare_data
 EOF
 set -a
 source /opt/snowshare.env

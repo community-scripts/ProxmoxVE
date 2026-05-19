@@ -35,16 +35,19 @@ function update_script() {
     systemctl stop snowshare
     msg_ok "Stopped Service"
 
-    msg_info "Backing up uploads"
-    rm -rf /opt/.snowshare_uploads_backup
-    [ -d /opt/snowshare/uploads ] && mv /opt/snowshare/uploads /opt/.snowshare_uploads_backup
-    msg_ok "Uploads backed up"
+    if ! grep -q '^UPLOAD_DIR=' /opt/snowshare.env 2>/dev/null; then
+      msg_info "Migrating uploads to persistent directory"
+      mkdir -p /opt/snowshare_data
+      if [ -d /opt/snowshare/uploads ] && [ -z "$(ls -A /opt/snowshare_data 2>/dev/null)" ]; then
+        mv /opt/snowshare/uploads/* /opt/snowshare_data/ 2>/dev/null || true
+        mv /opt/snowshare/uploads/.[!.]* /opt/snowshare_data/ 2>/dev/null || true
+        rmdir /opt/snowshare/uploads 2>/dev/null || true
+      fi
+      echo "UPLOAD_DIR=/opt/snowshare_data" >>/opt/snowshare.env
+      msg_ok "Migrated uploads to /opt/snowshare_data"
+    fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare" "tarball"
-
-    msg_info "Restoring uploads"
-    [ -d /opt/.snowshare_uploads_backup ] && rm -rf /opt/snowshare/uploads && mv /opt/.snowshare_uploads_backup /opt/snowshare/uploads
-    msg_ok "Uploads restored"
 
     msg_info "Updating Snowshare"
     cd /opt/snowshare
