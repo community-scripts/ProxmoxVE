@@ -34,8 +34,8 @@ server {
     listen 443 ssl default_server;
     listen [::]:443 ssl default_server;
 
-    ssl_certificate /etc/ssl/certs/espconnect-selfsigned.crt;
-    ssl_certificate_key /etc/ssl/private/espconnect-selfsigned.key;
+    ssl_certificate /etc/ssl/espconnect/espconnect.crt;
+    ssl_certificate_key /etc/ssl/espconnect/espconnect.key;
     ssl_protocols TLSv1.2 TLSv1.3;
 
     root /opt/espconnect;
