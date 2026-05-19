@@ -51,6 +51,11 @@ function update_script() {
     mv /opt/reactive-resume.env.bak /opt/reactive-resume/.env
     msg_ok "Updated Reactive Resume"
 
+    msg_info "Updating Service"
+    sed -i 's|WorkingDirectory=/opt/reactive-resume$|WorkingDirectory=/opt/reactive-resume/apps/web|' /etc/systemd/system/reactive-resume.service
+    systemctl daemon-reload
+    msg_ok "Updated Service"
+
     msg_info "Restarting services"
     systemctl start chromium-printer reactive-resume
     msg_ok "Restarted services"
