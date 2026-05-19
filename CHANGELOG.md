@@ -482,6 +482,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Wanderer: include dev dependencies during build [@MickLesk](https://github.com/MickLesk) ([#14577](https://github.com/community-scripts/ProxmoxVE/pull/14577))
     - Whisparr: switch from nightly to stable GitHub release [@MickLesk](https://github.com/MickLesk) ([#14581](https://github.com/community-scripts/ProxmoxVE/pull/14581))
 
+  - #### 🔧 Refactor
+
+    - Refactor: SonarQube [@tremor021](https://github.com/tremor021) ([#14594](https://github.com/community-scripts/ProxmoxVE/pull/14594))
+
 ## 2026-05-18
 
 ### 🆕 New Scripts
