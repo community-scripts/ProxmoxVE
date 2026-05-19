@@ -466,6 +466,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-19
 
+### 🆕 New Scripts
+
+  - LobeHub ([#14441](https://github.com/community-scripts/ProxmoxVE/pull/14441))
+
 ### 🚀 Updated Scripts
 
   - Update nodejs Versions [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14582](https://github.com/community-scripts/ProxmoxVE/pull/14582))
