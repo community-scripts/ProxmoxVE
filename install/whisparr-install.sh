@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y sqlite3
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_from_url "https://whisparr.servarr.com/v1/update/nightly/updatefile?os=linux&runtime=netcore&arch=x64" /opt/Whisparr
+fetch_and_deploy_gh_release "Whisparr" "Whisparr/Whisparr" "prebuild" "latest" "/opt/Whisparr" "Whisparr.*.linux-x64.tar.gz"
 
 msg_info "Configuring Whisparr"
 mkdir -p /var/lib/whisparr/
