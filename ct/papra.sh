@@ -42,6 +42,9 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "papra" "papra-hq/papra" "tarball"
 
+    pnpm_version=$(grep -oP '"packageManager":\s*"pnpm@\K[^"]+' /opt/papra/package.json)
+    NODE_VERSION="26" NODE_MODULE="pnpm@$pnpm_version" setup_nodejs
+
     msg_info "Building Application"
     cd /opt/papra
     if [[ -f /opt/papra_env.bak ]]; then
