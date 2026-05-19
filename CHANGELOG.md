@@ -468,6 +468,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Update nodejs Versions [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14582](https://github.com/community-scripts/ProxmoxVE/pull/14582))
+
   - #### 🐞 Bug Fixes
 
     - Whisparr: switch from nightly to stable GitHub release [@MickLesk](https://github.com/MickLesk) ([#14581](https://github.com/community-scripts/ProxmoxVE/pull/14581))
