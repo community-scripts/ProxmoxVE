@@ -476,6 +476,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - ESPConnect: Fix paths to SSL certificates [@tremor021](https://github.com/tremor021) ([#14591](https://github.com/community-scripts/ProxmoxVE/pull/14591))
     - ReactiveResume: set correct WorkingDirectory for systemd service [@MickLesk](https://github.com/MickLesk) ([#14579](https://github.com/community-scripts/ProxmoxVE/pull/14579))
     - Sparkyfitness: add missing nginx template variable substitutions [@MickLesk](https://github.com/MickLesk) ([#14578](https://github.com/community-scripts/ProxmoxVE/pull/14578))
     - Wanderer: include dev dependencies during build [@MickLesk](https://github.com/MickLesk) ([#14577](https://github.com/community-scripts/ProxmoxVE/pull/14577))
