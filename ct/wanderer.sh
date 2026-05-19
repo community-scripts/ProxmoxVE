@@ -41,7 +41,7 @@ function update_script() {
     $STD go mod tidy
     $STD go build
     cd /opt/wanderer/source/web
-    $STD npm ci --omit=dev
+    $STD npm ci
     $STD npm run build
     msg_ok "Updated wanderer"
 
