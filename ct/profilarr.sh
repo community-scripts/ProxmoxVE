@@ -70,8 +70,8 @@ EOF
     export VITE_CHANNEL=stable
     $STD deno run -A npm:vite build
     case "$ARCH" in
-      aarch64) DENO_TARGET="aarch64-unknown-linux-gnu" ;;
-      *) DENO_TARGET="x86_64-unknown-linux-gnu" ;;
+    aarch64) DENO_TARGET="aarch64-unknown-linux-gnu" ;;
+    *) DENO_TARGET="x86_64-unknown-linux-gnu" ;;
     esac
     $STD deno compile \
       --no-check \

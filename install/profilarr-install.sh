@@ -14,12 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  curl \
+$STD apt install -y \
   unzip \
   git \
-  tar \
-  ca-certificates \
   libsqlite3-0
 msg_ok "Installed Dependencies"
 
@@ -27,8 +24,8 @@ msg_info "Installing Deno"
 DENO_VERSION=$(curl -fsSL "https://api.github.com/repos/denoland/deno/releases/latest" | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
 ARCH=$(uname -m)
 case "$ARCH" in
-  aarch64) DENO_FILE="deno-aarch64-unknown-linux-gnu.zip" ;;
-  *) DENO_FILE="deno-x86_64-unknown-linux-gnu.zip" ;;
+aarch64) DENO_FILE="deno-aarch64-unknown-linux-gnu.zip" ;;
+*) DENO_FILE="deno-x86_64-unknown-linux-gnu.zip" ;;
 esac
 curl -fsSL "https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/${DENO_FILE}" -o /tmp/deno.zip
 $STD unzip -qo /tmp/deno.zip -d /usr/local/bin/
@@ -64,8 +61,8 @@ export APP_BASE_PATH=/opt/profilarr/dist/build
 export VITE_CHANNEL=stable
 $STD deno run -A npm:vite build
 case "$ARCH" in
-  aarch64) DENO_TARGET="aarch64-unknown-linux-gnu" ;;
-  *) DENO_TARGET="x86_64-unknown-linux-gnu" ;;
+aarch64) DENO_TARGET="aarch64-unknown-linux-gnu" ;;
+*) DENO_TARGET="x86_64-unknown-linux-gnu" ;;
 esac
 $STD deno compile \
   --no-check \
