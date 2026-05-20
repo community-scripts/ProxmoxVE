@@ -473,6 +473,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Update mylar3 to point to new Repo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14606](https://github.com/community-scripts/ProxmoxVE/pull/14606))
     - Ollama: Fix for latest version [@tremor021](https://github.com/tremor021) ([#14596](https://github.com/community-scripts/ProxmoxVE/pull/14596))
 
+  - #### ✨ New Features
+
+    - Profilarr v2: Update and Refactor whole Script [@MickLesk](https://github.com/MickLesk) ([#14584](https://github.com/community-scripts/ProxmoxVE/pull/14584))
+
 ## 2026-05-19
 
 ### 🆕 New Scripts
