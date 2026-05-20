@@ -22,7 +22,7 @@ catch_errors
 function update_script() {
   header_info
   if [[ ! -d /opt/mylar3 ]]; then
-    msg_error "No ${APP} Installation Found!"
+    msg_error "No Mylar3 Installation Found!"
     exit
   fi
 
