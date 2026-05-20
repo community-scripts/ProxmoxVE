@@ -24,8 +24,8 @@ $STD apt update
 $STD apt install -y unrar
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.12" setup_uv
-fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
+PYTHON_VERSION="3.11" setup_uv
+fetch_and_deploy_gh_release "mylar3" "MylarComics/mylar3" "tarball"
 
 msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/mylar3-data

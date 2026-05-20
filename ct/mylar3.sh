@@ -26,8 +26,8 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "mylar3" "mylar3/mylar3"; then
-    fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
+  if check_for_gh_release "mylar3" "MylarComics/mylar3"; then
+    fetch_and_deploy_gh_release "mylar3" "MylarComics/mylar3" "tarball"
     systemctl restart mylar3
     msg_ok "Updated successfully!"
   fi
