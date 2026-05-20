@@ -8,8 +8,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Profilarr"
 var_tags="${var_tags:-arr;radarr;sonarr;config}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-8}"
+var_ram="${var_ram:-2048}"
+var_disk="${var_disk:-7}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -36,17 +36,21 @@ function update_script() {
     exit
   fi
 
+  if check_for_gh_release "deno" "denoland/deno"; then
+    ARCH=$(uname -m)
+    fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-${ARCH}-unknown-linux-gnu.zip"
+  fi
+
   if check_for_gh_release "profilarr" "Dictionarry-Hub/profilarr"; then
     msg_info "Stopping Service"
     systemctl stop profilarr
     msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "profilarr" "Dictionarry-Hub/profilarr" "tarball"
-    PROFILARR_VERSION=$(curl -fsSL "https://api.github.com/repos/Dictionarry-Hub/profilarr/releases/latest" | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+    PROFILARR_VERSION=$(cat ~/.profilarr)
 
     msg_info "Building Profilarr v${PROFILARR_VERSION} (Patience)"
     cd /opt/profilarr
-    ARCH=$(uname -m)
     cat >src/lib/shared/build.ts <<EOF
 // Generated at update time. Do not hand-edit.
 export type Channel = 'stable' | 'develop' | 'dev';
@@ -69,10 +73,7 @@ EOF
     export APP_BASE_PATH=/opt/profilarr/dist/build
     export VITE_CHANNEL=stable
     $STD deno run -A npm:vite build
-    case "$ARCH" in
-    aarch64) DENO_TARGET="aarch64-unknown-linux-gnu" ;;
-    *) DENO_TARGET="x86_64-unknown-linux-gnu" ;;
-    esac
+    DENO_TARGET="${ARCH}-unknown-linux-gnu"
     $STD deno compile \
       --no-check \
       --allow-net \
