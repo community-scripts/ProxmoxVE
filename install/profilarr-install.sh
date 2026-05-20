@@ -15,26 +15,14 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  unzip \
   git \
   libsqlite3-0
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Deno"
-DENO_VERSION=$(curl -fsSL "https://api.github.com/repos/denoland/deno/releases/latest" | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
 ARCH=$(uname -m)
-case "$ARCH" in
-aarch64) DENO_FILE="deno-aarch64-unknown-linux-gnu.zip" ;;
-*) DENO_FILE="deno-x86_64-unknown-linux-gnu.zip" ;;
-esac
-curl -fsSL "https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/${DENO_FILE}" -o /tmp/deno.zip
-$STD unzip -qo /tmp/deno.zip -d /usr/local/bin/
-rm /tmp/deno.zip
-chmod +x /usr/local/bin/deno
-msg_ok "Installed Deno v${DENO_VERSION}"
-
+fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-${ARCH}-unknown-linux-gnu.zip"
 fetch_and_deploy_gh_release "profilarr" "Dictionarry-Hub/profilarr" "tarball"
-PROFILARR_VERSION=$(curl -fsSL "https://api.github.com/repos/Dictionarry-Hub/profilarr/releases/latest" | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+PROFILARR_VERSION=$(cat ~/.profilarr)
 
 msg_info "Building Profilarr v${PROFILARR_VERSION} (Patience)"
 cd /opt/profilarr
@@ -60,10 +48,7 @@ $STD deno install --node-modules-dir
 export APP_BASE_PATH=/opt/profilarr/dist/build
 export VITE_CHANNEL=stable
 $STD deno run -A npm:vite build
-case "$ARCH" in
-aarch64) DENO_TARGET="aarch64-unknown-linux-gnu" ;;
-*) DENO_TARGET="x86_64-unknown-linux-gnu" ;;
-esac
+DENO_TARGET="${ARCH}-unknown-linux-gnu"
 $STD deno compile \
   --no-check \
   --allow-net \
@@ -85,10 +70,16 @@ cp dist/build/server.js /opt/profilarr/app/server.js
 cp -r dist/build/static /opt/profilarr/app/static
 chmod +x /opt/profilarr/app/profilarr
 mkdir -p /var/lib/profilarr/{data,logs,backups,databases}
+SQLITE_PATH="/usr/lib/${ARCH}-linux-gnu/libsqlite3.so.0"
+cat <<EOF >/etc/default/profilarr
+PORT=6868
+HOST=0.0.0.0
+APP_BASE_PATH=/var/lib/profilarr
+DENO_SQLITE_PATH=${SQLITE_PATH}
+EOF
 msg_ok "Installed Profilarr"
 
 msg_info "Creating Service"
-SQLITE_PATH="/usr/lib/${ARCH}-linux-gnu/libsqlite3.so.0"
 cat <<EOF >/etc/systemd/system/profilarr.service
 [Unit]
 Description=Profilarr - Configuration Management for Radarr/Sonarr
@@ -97,10 +88,8 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/profilarr/app
-Environment="PORT=6868"
-Environment="HOST=0.0.0.0"
-Environment="APP_BASE_PATH=/var/lib/profilarr"
-Environment="DENO_SQLITE_PATH=${SQLITE_PATH}"
+EnvironmentFile=/etc/default/profilarr
+Environment=HOME=/root
 ExecStart=/opt/profilarr/app/profilarr
 Restart=always
 RestartSec=5
