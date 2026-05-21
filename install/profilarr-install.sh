@@ -20,7 +20,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 ARCH=$(uname -m)
-fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-${ARCH}-unknown-linux-gnu.zip"
+fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "v2.7.5" "/usr/local/bin" "deno-${ARCH}-unknown-linux-gnu.zip"
 fetch_and_deploy_gh_release "profilarr" "Dictionarry-Hub/profilarr" "tarball"
 PROFILARR_VERSION=$(cat ~/.profilarr)
 
