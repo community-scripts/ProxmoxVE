@@ -53,6 +53,14 @@ function update_script() {
     if grep -q '^ExecStart=/usr/bin/node\s\+dist/index\.mjs$' /etc/systemd/system/karakeep-workers.service; then
       sed -i -E 's#^(ExecStart=/usr/bin/node\s+dist/)index\.mjs$#\1index.js#' /etc/systemd/system/karakeep-workers.service
       systemctl daemon-reload
+    fi    
+    
+    if [ ! -f /usr/bin/karakeep ]; then
+      cat <<'EOF' >/usr/bin/karakeep
+#!/usr/bin/env node
+import('/opt/karakeep/apps/cli/dist/index.mjs')
+EOF
+      chmod +x /usr/bin/karakeep
     fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
