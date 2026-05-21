@@ -132,9 +132,9 @@ msg_ok "Installed Valkey"
 
 echo
 echo -e "${TAB3}Valkey Connection Mode"
-echo -e "${TAB3}1) Standard - TCP on port 6379"
-echo -e "${TAB3}2) Dual     - TCP on port 6379 and TLS on port 6380"
-echo -e "${TAB3}3) TLS-only - TLS on port 6379, plain TCP disabled"
+echo -e "${TAB3}1) Standard - non-TLS connections over TCP on port 6379"
+echo -e "${TAB3}2) Dual     - non-TLS connections on port 6379 and TLS connections on port 6380"
+echo -e "${TAB3}3) TLS-only - TLS connections on port 6379, non-TLS port disabled"
 read -r -p "${TAB3}Select connection mode [1]: " connection_choice
 connection_choice="${connection_choice:-1}"
 
