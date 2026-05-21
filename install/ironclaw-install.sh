@@ -39,6 +39,7 @@ mkdir -p /root/.ironclaw
 msg_ok "Generated gateway authentication token"
 
 msg_info "Generating Environment file"
+mkdir -p /root/.ironclaw
 cat <<EOF >/root/.ironclaw/.env
 DATABASE_BACKEND=postgres
 DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}?sslmode=disable
