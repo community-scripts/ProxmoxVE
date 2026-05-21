@@ -67,7 +67,7 @@ sleep 5
 sed -i '/SECRETS_MASTER_KEY/d' /root/.ironclaw/.env
 msg_ok "Configured IronClaw"
 
-msg_info "Creating Service"1
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/ironclaw.service
 [Unit]
 Description=IronClaw AI Agent
