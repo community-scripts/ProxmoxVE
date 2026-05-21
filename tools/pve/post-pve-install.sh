@@ -96,7 +96,7 @@ main() {
       msg_error "Only Proxmox 9.0-9.2.x is currently supported"
       exit 105
     fi
-    start_routines_9
+    start_routines_9 "$PVE_MINOR"
   else
     msg_error "Unsupported Proxmox VE major version: $PVE_MAJOR"
     echo -e "Supported: 8.0–8.9.x and 9.0–9.2.x"
@@ -188,6 +188,7 @@ EOF
 }
 
 start_routines_9() {
+  local PVE_MINOR="${1:-0}"
   header_info
 
   # check if deb822 Sources (*.sources) exist
@@ -475,15 +476,21 @@ EOF
       "no" " " 3>&2 2>&1 1>&3)
     case $CHOICE in
     yes)
+      local CEPH_RELEASE
+      if ((PVE_MINOR >= 2)); then
+        CEPH_RELEASE="ceph-tentacle"
+      else
+        CEPH_RELEASE="ceph-squid"
+      fi
       msg_info "Adding 'ceph package repositories' (deb822)"
       cat >/etc/apt/sources.list.d/ceph.sources <<EOF
 Types: deb
-URIs: http://download.proxmox.com/debian/ceph-squid
+URIs: http://download.proxmox.com/debian/${CEPH_RELEASE}
 Suites: trixie
 Components: no-subscription
 Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 EOF
-      msg_ok "Added 'ceph package repositories'"
+      msg_ok "Added 'ceph package repositories' (${CEPH_RELEASE})"
       ;;
     no)
       msg_error "Selected no to Adding 'ceph package repositories'"
