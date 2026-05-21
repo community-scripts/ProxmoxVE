@@ -71,9 +71,7 @@ EOF
     fi
 
     if ! command -v deno &>/dev/null; then
-      msg_info "Installing Deno for yt-dlp-ejs"
       fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(uname -m)-unknown-linux-gnu.zip"
-      msg_ok "Installed Deno for yt-dlp-ejs"
     fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
