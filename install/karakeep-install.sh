@@ -35,7 +35,7 @@ MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.
 NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
 msg_info "Installing external JavaScript Extension for yt-dlp"
-pip install -U yt-dlp-ejs
+$STD pip install -U yt-dlp-ejs
 msg_ok "Installed external JavaScript Extension for yt-dlp"
 
 msg_info "Installing karakeep"
