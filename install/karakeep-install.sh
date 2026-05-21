@@ -20,6 +20,8 @@ $STD apt install -y \
   chromium \
   graphicsmagick \
   ghostscript \
+  python3 \
+  python3-pip \
   ffmpeg
 msg_ok "Installed Dependencies"
 
@@ -31,6 +33,10 @@ fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
 cd /opt/karakeep
 MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
 NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+
+msg_info "Installing external JavaScript Extension for yt-dlp"
+pip install -U yt-dlp-ejs
+msg_ok "Installed external JavaScript Extension for yt-dlp"
 
 msg_info "Installing karakeep"
 export PUPPETEER_SKIP_DOWNLOAD="true"
