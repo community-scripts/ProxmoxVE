@@ -30,7 +30,7 @@ The collection covers hundreds of services across categories like home automatio
 
 | Component      | Details                                          |
 | -------------- | ------------------------------------------------ |
-| **Proxmox VE** | Version 8.4, 9.0, or 9.1                         |
+| **Proxmox VE** | Version 8.4, 9.0, 9.1, or 9.2                    |
 | **Host OS**    | Proxmox VE (Debian-based)                        |
 | **Access**     | Root shell access on the Proxmox host            |
 | **Network**    | Internet connection required during installation |
