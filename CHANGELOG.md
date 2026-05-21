@@ -472,6 +472,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Technitium DNS: download release before stopping the service on update [@w-gitops](https://github.com/w-gitops) ([#14616](https://github.com/community-scripts/ProxmoxVE/pull/14616))
 
+  - #### ✨ New Features
+
+    - Proxmox VE 9.2 support  [@MickLesk](https://github.com/MickLesk) ([#14624](https://github.com/community-scripts/ProxmoxVE/pull/14624))
+
 ## 2026-05-20
 
 ### 🚀 Updated Scripts
