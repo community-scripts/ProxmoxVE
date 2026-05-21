@@ -68,7 +68,7 @@ EOF
       $STD apt install -y \
         python3 \
         python3-pip
-      pip install -U yt-dlp-ejs
+      $STD pip install -U yt-dlp-ejs
       msg_ok "Installed external JavaScript Extension for yt-dlp"
     fi
 
