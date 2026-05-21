@@ -135,7 +135,7 @@ echo -e "${TAB3}Valkey Connection Mode"
 echo -e "${TAB3}1) Standard - non-TLS connections over TCP on port 6379"
 echo -e "${TAB3}2) Dual     - non-TLS connections on port 6379 and TLS connections on port 6380"
 echo -e "${TAB3}3) TLS-only - TLS connections on port 6379, non-TLS port disabled"
-read -r -p "${TAB3}Select connection mode [1]: " connection_choice
+read -r -p "${TAB3}Select connection mode [1]: " connection_choice || connection_choice="1"
 connection_choice="${connection_choice:-1}"
 
 case "$connection_choice" in
@@ -146,7 +146,7 @@ case "$connection_choice" in
     VALKEY_TCP_PORT="6379"
     VALKEY_TLS_PORT=""
     VALKEY_TLS_CERT_TYPE="none"
-    msg_ok "Configured standard mode: TCP on port 6379"
+    msg_ok "Configured standard mode"
     ;;
   2|3)
     msg_info "Configuring TLS for Valkey..."
@@ -175,7 +175,7 @@ case "$connection_choice" in
         echo "tls-auth-clients no"
       } >> /etc/valkey/valkey.conf
 
-      msg_ok "Configured TLS-only mode: TLS on port 6379"
+      msg_ok "Configured TLS-only mode"
     else
       CONNECTION_MODE="dual"
       VALKEY_TCP_ENABLED="yes"
@@ -193,12 +193,18 @@ case "$connection_choice" in
         echo "tls-auth-clients no"
       } >> /etc/valkey/valkey.conf
 
-      msg_ok "Configured dual mode: TCP on port 6379 and TLS on port 6380"
+      msg_ok "Configured dual mode"
     fi
     ;;
   *)
-    msg_error "Invalid connection mode selected"
-    exit 1
+    msg_warn "Invalid connection mode selected; using standard mode"
+    CONNECTION_MODE="standard"
+    VALKEY_TCP_ENABLED="yes"
+    VALKEY_TLS_ENABLED="no"
+    VALKEY_TCP_PORT="6379"
+    VALKEY_TLS_PORT=""
+    VALKEY_TLS_CERT_TYPE="none"
+    msg_ok "Configured standard mode"
     ;;
 esac
 
