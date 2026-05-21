@@ -49,6 +49,7 @@ GATEWAY_AUTH_TOKEN=${GATEWAY_TOKEN}
 CLI_ENABLED=false
 RUST_LOG=ironclaw=info,tower_http=info
 EOF
+chmod 600 /root/.ironclaw/.env
 msg_ok "Generated Environment file"
 
 msg_info "Configuring IronClaw"
