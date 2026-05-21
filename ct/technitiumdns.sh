@@ -47,10 +47,9 @@ function update_script() {
 
   RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
   if [[ ! -f ~/.technitium || ${RELEASE} != "$(cat ~/.technitium 2>/dev/null)" ]]; then
-    systemctl stop technitium
     fetch_and_deploy_from_url "https://download.technitium.com/dns/DnsServerPortable.tar.gz" /opt/technitium/dns
     echo "${RELEASE}" >~/.technitium
-    systemctl start technitium
+    systemctl restart technitium
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  Technitium DNS is already at v${RELEASE}."
