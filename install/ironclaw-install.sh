@@ -81,7 +81,7 @@ Environment=GATEWAY_HOST=0.0.0.0
 Environment=GATEWAY_PORT=3000
 Environment=GATEWAY_AUTH_TOKEN=${GATEWAY_TOKEN}
 Environment=CLI_ENABLED=false
-ExecStart=/usr/local/bin/ironclaw run
+ExecStart=/usr/bin/dbus-run-session /usr/local/bin/ironclaw run
 Restart=on-failure
 RestartSec=5
 
