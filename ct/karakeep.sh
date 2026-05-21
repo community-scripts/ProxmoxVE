@@ -65,7 +65,7 @@ EOF
 
     if ! command -v pip >/dev/null 2>&1 || ! pip show yt-dlp-ejs >/dev/null 2>&1; then
       msg_info "Installing external JavaScript Extension for yt-dlp"
-      $STD apt install -y python3-pip
+      ensure_dependencies python3-pip
       $STD pip install -U yt-dlp-ejs
       msg_ok "Installed external JavaScript Extension for yt-dlp"
     fi
