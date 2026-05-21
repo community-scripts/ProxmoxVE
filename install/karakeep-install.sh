@@ -47,6 +47,11 @@ cd /opt/karakeep/apps/cli
 $STD pnpm install --frozen-lockfile
 $STD pnpm build
 $STD pnpm store prune
+cat <<'EOF' >/usr/bin/karakeep
+#!/usr/bin/env node
+import('/opt/karakeep/apps/cli/dist/index.mjs')
+EOF
+chmod +x /usr/bin/karakeep
 
 export DATA_DIR=/opt/karakeep_data
 karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)
