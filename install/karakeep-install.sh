@@ -20,7 +20,6 @@ $STD apt install -y \
   chromium \
   graphicsmagick \
   ghostscript \
-  python3 \
   python3-pip \
   ffmpeg
 msg_ok "Installed Dependencies"
