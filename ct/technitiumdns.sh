@@ -36,11 +36,19 @@ function update_script() {
     $STD apt remove -y aspnetcore-runtime-8.0 aspnetcore-runtime-9.0 2>/dev/null || true
     [ -f /etc/apt/sources.list.d/microsoft-prod.list ] && rm -f /etc/apt/sources.list.d/microsoft-prod.list
     [ -f /usr/share/keyrings/microsoft-prod.gpg ] && rm -f /usr/share/keyrings/microsoft-prod.gpg
+    local os_version os_codename ms_key
+    os_version="$(awk -F= '/^VERSION_ID=/{gsub(/"/,"",$2);print $2}' /etc/os-release)"
+    os_codename="$(awk -F= '/^VERSION_CODENAME=/{gsub(/"/,"",$2);print $2}' /etc/os-release)"
+    if [[ "$os_version" == "12" ]]; then
+      ms_key="https://packages.microsoft.com/keys/microsoft.asc"
+    else
+      ms_key="https://packages.microsoft.com/keys/microsoft-2025.asc"
+    fi
     setup_deb822_repo \
       "microsoft" \
-      "https://packages.microsoft.com/keys/microsoft-2025.asc" \
-      "https://packages.microsoft.com/debian/13/prod/" \
-      "trixie" \
+      "$ms_key" \
+      "https://packages.microsoft.com/debian/${os_version}/prod/" \
+      "${os_codename}" \
       "main"
     $STD apt install -y aspnetcore-runtime-10.0
   fi
