@@ -63,6 +63,15 @@ EOF
       chmod +x /usr/bin/karakeep
     fi
 
+    if ! command -v pip >/dev/null 2>&1 || ! pip show yt-dlp-ejs >/dev/null 2>&1; then
+      msg_info "Installing external JavaScript Extension for yt-dlp"
+      $STD apt install -y \
+        python3 \
+        python3-pip
+      pip install -U yt-dlp-ejs
+      msg_ok "Installed external JavaScript Extension for yt-dlp"
+    fi
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
     if command -v corepack >/dev/null; then
       $STD corepack disable
