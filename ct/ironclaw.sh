@@ -39,7 +39,7 @@ function update_script() {
     msg_ok "Backed up Configuration"
 
     fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "latest" "/usr/local/bin" \
-      "ironclaw-$(uname -m)-unknown-linux-$([[ -f /etc/alpine-release ]] && echo "musl" || echo "gnu").tar.gz"
+      "ironclaw-$(uname -m)-unknown-linux-gnu.tar.gz"
     chmod +x /usr/local/bin/ironclaw
 
     msg_info "Restoring Configuration"
@@ -61,11 +61,12 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Complete setup by running:${CL}"
-echo -e "${TAB}${BGN}ironclaw onboard${CL}"
-echo -e "${INFO}${YW} Then start the service:${CL}"
-echo -e "${TAB}${BGN}systemctl start ironclaw${CL}"
-echo -e "${INFO}${YW} Access the Web UI at:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
-echo -e "${INFO}${YW} Auth token and database credentials:${CL}"
-echo -e "${TAB}${BGN}cat /root/.ironclaw/.env${CL}"
+echo -e "${INFO}${YW} Next Steps:${CL}"
+echo -e "${TAB}1. Configure remaining settings:${CL}"
+echo -e "${TAB}${TAB}${BGN}/usr/local/bin/ironclaw onboard${CL}"
+echo -e "${TAB}2. Start the service:${CL}"
+echo -e "${TAB}${TAB}${BGN}systemctl start ironclaw${CL}"
+echo -e "${TAB}3. Access the Web UI at:${CL}"
+echo -e "${TAB}${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW} Use Gateway Authentication Token to login:${CL}"
+echo -e "${TAB}${TAB}${BGN}cat /root/.ironclaw/gateway.creds${CL}"
