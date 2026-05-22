@@ -8,8 +8,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Tunarr"
 var_tags="${var_tags:-iptv}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-5}"
+var_ram="${var_ram:-4196}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -33,11 +33,11 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Creating Backup"
-    if [ -d "/usr/local/share/tunarr" ]; then
-      tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" /usr/local/share/tunarr $STD
+    if [ -d "/root/.local/share/tunarr" ]; then
+      tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" /root/.local/share/tunarr $STD
       msg_ok "Backup Created"
     else
-      msg_error "Backup failed: /usr/local/share/tunarr does not exist"
+      msg_error "Backup failed: /root/.local/share/tunarr does not exist"
     fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-x64.tar.gz"
