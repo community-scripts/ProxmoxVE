@@ -140,10 +140,12 @@ ensure_profile_loaded() {
   [[ -n "${_PROFILE_LOADED:-}" ]] && return
   command -v pveversion &>/dev/null && return
 
-  # Source all profile.d scripts to ensure PATH is complete
+  # Source all profile.d scripts to ensure PATH is complete.
+  # Redirect stdout to suppress banner/MOTD output (e.g. 00_lxc-details.sh)
+  # while still allowing env/PATH exports to take effect.
   if [[ -d /etc/profile.d ]]; then
     for script in /etc/profile.d/*.sh; do
-      [[ -r "$script" ]] && source "$script" || true
+      [[ -r "$script" ]] && source "$script" >/dev/null || true
     done
   fi
 

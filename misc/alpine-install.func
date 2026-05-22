@@ -183,7 +183,8 @@ motd_ssh() {
 
   PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
 
-  echo "echo -e \"\"" >"$PROFILE_FILE"
+  echo "[ -t 1 ] || return 0" >"$PROFILE_FILE"
+  echo "echo -e \"\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
   echo "echo \"\"" >>"$PROFILE_FILE"
