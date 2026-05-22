@@ -483,6 +483,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: make LXC banner OS detection dynamic via /etc/os-release [@atahan99](https://github.com/atahan99) ([#14269](https://github.com/community-scripts/ProxmoxVE/pull/14269))
 
+  - #### 🔧 Refactor
+
+    - core: suppress MOTD for non-interactive shells [@MickLesk](https://github.com/MickLesk) ([#14638](https://github.com/community-scripts/ProxmoxVE/pull/14638))
+
 ## 2026-05-21
 
 ### 🚀 Updated Scripts
