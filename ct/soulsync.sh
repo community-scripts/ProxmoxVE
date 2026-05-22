@@ -29,6 +29,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="22" setup_nodejs
+
   if check_for_gh_release "soulsync" "Nezreka/SoulSync"; then
     msg_info "Stopping Service"
     systemctl stop soulsync
@@ -46,6 +48,12 @@ function update_script() {
     $STD uv venv --clear /opt/soulsync/.venv --python 3.11
     $STD uv pip install -r requirements.txt
     msg_ok "Updated Python Dependencies"
+
+    msg_info "Building WebUI"
+    cd /opt/soulsync/webui
+    $STD npm ci
+    $STD npm run build
+    msg_ok "Built WebUI"
 
     mv /opt/soulsync-config.bak /opt/soulsync/config
     mv /opt/soulsync-data.bak /opt/soulsync/data
