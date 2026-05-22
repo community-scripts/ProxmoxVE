@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://wealthfolio.app/ | Github: https://github.com/afadil/wealthfolio
+# Source: https://wealthfolio.app/ | Github: https://github.com/wealthfolio/wealthfolio
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,31 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  pkg-config \
-  libssl-dev \
-  build-essential \
-  libsqlite3-dev \
-  argon2
+$STD apt install -y argon2
 msg_ok "Installed Dependencies"
 
-setup_rust
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
-fetch_and_deploy_gh_release "wealthfolio" "afadil/wealthfolio" "tarball"
+fetch_and_deploy_gh_release "wealthfolio" "wealthfolio/wealthfolio" "prebuild" "latest" "/opt/wealthfolio" "wealthfolio-server-*-linux-amd64.tar.gz"
 
-msg_info "Building Frontend (patience)"
-cd /opt/wealthfolio
-export BUILD_TARGET=web
-$STD pnpm install --frozen-lockfile
-$STD pnpm --filter frontend... build
-msg_ok "Built Frontend"
-
-msg_info "Building Backend (patience)"
-source ~/.cargo/env
-$STD cargo build --release --manifest-path apps/server/Cargo.toml
-cp /opt/wealthfolio/target/release/wealthfolio-server /usr/local/bin/wealthfolio-server
-chmod +x /usr/local/bin/wealthfolio-server
-msg_ok "Built Backend"
+msg_info "Installing Wealthfolio"
+install -m 755 /opt/wealthfolio/wealthfolio-server /usr/local/bin/wealthfolio-server
+msg_ok "Installed Wealthfolio"
 
 msg_info "Configuring Wealthfolio"
 mkdir -p /opt/wealthfolio_data
@@ -56,12 +39,6 @@ WF_CORS_ALLOW_ORIGINS=http://${LOCAL_IP}:8080
 EOF
 echo "WF_PASSWORD=${WF_PASSWORD}" >~/wealthfolio.creds
 msg_ok "Configured Wealthfolio"
-
-msg_info "Cleaning Up"
-rm -rf /opt/wealthfolio/target
-rm -rf /root/.cargo/registry
-rm -rf /opt/wealthfolio/node_modules
-msg_ok "Cleaned Up"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/wealthfolio.service
