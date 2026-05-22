@@ -22,10 +22,6 @@ $STD apt install -y \
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-msg_info "Installing runlike"
-$STD pip install runlike
-msg_ok "Installed runlike"
-
 get_latest_release() {
   curl -fsSL https://api.github.com/repos/$1/releases/latest | grep '"tag_name":' | cut -d'"' -f4
 }

@@ -42,9 +42,9 @@ function update_script() {
       docker pull "${CONTAINER_IMAGE}"
       LATEST_IMAGE="$(docker inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
       if [[ "${RUNNING_IMAGE}" != "${LATEST_IMAGE}" ]]; then
-        pip install -U runlike
         echo "Updating ${container} image ${CONTAINER_IMAGE}"
-        DOCKER_COMMAND="$(runlike --use-volume-id "${container}")"
+        DOCKER_ARGS="$(docker inspect --format "$(curl -s https://gist.githubusercontent.com/efrecon/8ce9c75d518b6eb863f667442d7bc679/raw/run.tpl)" ${container} | sed 's/docker run //')"
+        DOCKER_COMMAND="docker run -d --name ${container} ${DOCKER_ARGS}"
         docker rm --force "${container}"
         eval "${DOCKER_COMMAND}"
       fi
