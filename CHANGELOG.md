@@ -466,6 +466,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-22
 
+### 🆕 New Scripts
+
+  - bitfocus-companion ([#14603](https://github.com/community-scripts/ProxmoxVE/pull/14603))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
