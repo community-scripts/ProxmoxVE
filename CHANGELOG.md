@@ -474,6 +474,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - SoulSync: setup Node v22 and build WebUI [@MickLesk](https://github.com/MickLesk) ([#14639](https://github.com/community-scripts/ProxmoxVE/pull/14639))
     - Refactor: Dispatcharr [@MickLesk](https://github.com/MickLesk) ([#14313](https://github.com/community-scripts/ProxmoxVE/pull/14313))
 
 ### 💾 Core
