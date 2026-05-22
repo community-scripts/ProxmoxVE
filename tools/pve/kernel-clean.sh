@@ -41,13 +41,23 @@ echo -e "${GN}Currently running kernel: ${current_kernel}${CL}"
 echo -e "${YW}Available kernels for removal:${CL}"
 echo "$available_kernels" | nl -w 2 -s '. '
 
-echo -e "\n${YW}Select kernels to remove (comma-separated, e.g., 1,2):${CL}"
+echo -e "\n${YW}Select kernels to remove (e.g. 1,3 or 1-5 or 1-3,7):${CL}"
 read -r selected
 
-# Parse selection
-IFS=',' read -r -a selected_indices <<<"$selected"
-kernels_to_remove=()
+# Parse selection: supports single indices, ranges (e.g., 1-5), and combinations (e.g., 1,3-5,7)
+selected_indices=()
+IFS=',' read -r -a tokens <<<"$selected"
+for token in "${tokens[@]}"; do
+  if [[ "$token" =~ ^([0-9]+)-([0-9]+)$ ]]; then
+    for ((i = BASH_REMATCH[1]; i <= BASH_REMATCH[2]; i++)); do
+      selected_indices+=("$i")
+    done
+  else
+    selected_indices+=("$token")
+  fi
+done
 
+kernels_to_remove=()
 for index in "${selected_indices[@]}"; do
   kernel=$(echo "$available_kernels" | sed -n "${index}p")
   if [ -n "$kernel" ]; then
