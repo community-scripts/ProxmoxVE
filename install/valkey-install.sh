@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: pshankinclarke (lazarillo)
