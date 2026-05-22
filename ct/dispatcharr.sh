@@ -103,7 +103,7 @@ function update_script() {
     $STD uv venv --clear
     $STD uv sync
     $STD uv pip install uwsgi gevent celery redis daphne
-    cat <<'UWSGI_EOF' >/opt/dispatcharr/start-uwsgi.sh
+    cat <<'EOF' >/opt/dispatcharr/start-uwsgi.sh
 #!/usr/bin/env bash
 cd /opt/dispatcharr
 set -a
@@ -125,7 +125,7 @@ exec .venv/bin/uwsgi \
     --thunder-lock \
     --die-on-term \
     --vacuum
-UWSGI_EOF
+EOF
     chmod +x /opt/dispatcharr/start-uwsgi.sh
     if grep -q 'start-gunicorn.sh' /etc/systemd/system/dispatcharr.service; then
       sed -i 's|start-gunicorn.sh|start-uwsgi.sh|g' /etc/systemd/system/dispatcharr.service
