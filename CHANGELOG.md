@@ -464,6 +464,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-22
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - fix: make LXC banner OS detection dynamic via /etc/os-release [@atahan99](https://github.com/atahan99) ([#14269](https://github.com/community-scripts/ProxmoxVE/pull/14269))
+
 ## 2026-05-21
 
 ### 🚀 Updated Scripts
