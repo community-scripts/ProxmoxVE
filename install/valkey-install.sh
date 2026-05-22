@@ -29,10 +29,10 @@ emit_valkey_command() {
   printf "%s:\n" "$label"
 
   if [[ -n "$tls_args" ]]; then
-    printf 'VALKEYCLI_AUTH="$(cat /root/valkey.creds)" valkey-cli -h %s -p %s %s ping\n\n' \
+    printf 'REDISCLI_AUTH="$(cat /root/valkey.creds)" valkey-cli -h %s -p %s %s ping\n\n' \
       "$VALKEY_HOST" "$port" "$tls_args"
   else
-    printf 'VALKEYCLI_AUTH="$(cat /root/valkey.creds)" valkey-cli -h %s -p %s ping\n\n' \
+    printf 'REDISCLI_AUTH="$(cat /root/valkey.creds)" valkey-cli -h %s -p %s ping\n\n' \
       "$VALKEY_HOST" "$port"
   fi
 }
@@ -81,7 +81,7 @@ validate_valkey() {
   fi
 
   if [[ "$VALKEY_TCP_ENABLED" == "yes" ]]; then
-    if ! VALKEYCLI_AUTH="$PASS" valkey-cli -p "$VALKEY_TCP_PORT" ping 2>/dev/null | grep -q PONG; then
+    if ! REDISCLI_AUTH="$PASS" valkey-cli -h 127.0.0.1 -p "$VALKEY_TCP_PORT" ping 2>/dev/null | grep -q PONG; then
       msg_error "Valkey did not respond to TCP port ${VALKEY_TCP_PORT}"
       journalctl -u valkey-server -n 20 --no-pager || true
       exit 1
@@ -90,7 +90,7 @@ validate_valkey() {
   fi
 
   if [[ "$VALKEY_TLS_ENABLED" == "yes" ]]; then
-    if ! VALKEYCLI_AUTH="$PASS" valkey-cli -p "$VALKEY_TLS_PORT" --tls --insecure ping 2>/dev/null | grep -q PONG; then
+    if ! REDISCLI_AUTH="$PASS" valkey-cli -h 127.0.0.1 -p "$VALKEY_TLS_PORT" --tls --insecure ping 2>/dev/null | grep -q PONG; then
       msg_error "Valkey did not respond over TLS on port ${VALKEY_TLS_PORT}"
       journalctl -u valkey-server -n 20 --no-pager || true
       exit 1
@@ -99,7 +99,7 @@ validate_valkey() {
   fi
 
   if [[ "$CONNECTION_MODE" == "tls-only" ]]; then
-    if VALKEYCLI_AUTH="$PASS" valkey-cli -p "$VALKEY_TLS_PORT" ping >/dev/null 2>&1; then
+    if REDISCLI_AUTH="$PASS" valkey-cli -h 127.0.0.1 -p "$VALKEY_TLS_PORT" ping >/dev/null 2>&1; then
       msg_error "Plain TCP unexpectedly responded on port ${VALKEY_TLS_PORT}"
       exit 1
     fi
