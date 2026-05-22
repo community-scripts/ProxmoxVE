@@ -474,6 +474,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(the-lounge): install Node.js 22 before deb package [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14648](https://github.com/community-scripts/ProxmoxVE/pull/14648))
     - Docmost: Fix duplicate STORAGE_DRIVER [@MickLesk](https://github.com/MickLesk) ([#14645](https://github.com/community-scripts/ProxmoxVE/pull/14645))
     - Profilarr: pin Deno version to v2.7.5 [@MickLesk](https://github.com/MickLesk) ([#14632](https://github.com/community-scripts/ProxmoxVE/pull/14632))
 
