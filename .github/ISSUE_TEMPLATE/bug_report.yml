@@ -79,6 +79,18 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: host_arm64
+    attributes:
+      label: 🧱 Is this Proxmox host running arm64?
+      description: "Run `dpkg --print-architecture` on your Proxmox host if unsure."
+      options:
+        - ""
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+
   - type: input
     id: pve_version
     attributes:
