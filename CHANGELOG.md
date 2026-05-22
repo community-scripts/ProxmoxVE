@@ -478,6 +478,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Docmost: Fix duplicate STORAGE_DRIVER [@MickLesk](https://github.com/MickLesk) ([#14645](https://github.com/community-scripts/ProxmoxVE/pull/14645))
     - Profilarr: pin Deno version to v2.7.5 [@MickLesk](https://github.com/MickLesk) ([#14632](https://github.com/community-scripts/ProxmoxVE/pull/14632))
 
+  - #### ✨ New Features
+
+    - add: karakeep cli wrapper [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14618](https://github.com/community-scripts/ProxmoxVE/pull/14618))
+
   - #### 💥 Breaking Changes
 
     - OpenCloud: v7.0.0 changes [@vhsdream](https://github.com/vhsdream) ([#14650](https://github.com/community-scripts/ProxmoxVE/pull/14650))
