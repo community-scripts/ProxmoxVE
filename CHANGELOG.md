@@ -472,6 +472,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Profilarr: pin Deno version to v2.7.5 [@MickLesk](https://github.com/MickLesk) ([#14632](https://github.com/community-scripts/ProxmoxVE/pull/14632))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Dispatcharr [@MickLesk](https://github.com/MickLesk) ([#14313](https://github.com/community-scripts/ProxmoxVE/pull/14313))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
