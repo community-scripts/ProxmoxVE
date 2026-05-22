@@ -23,6 +23,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 UV_PYTHON="3.11" setup_uv
+NODE_VERSION="22" setup_nodejs
 
 fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
 
@@ -32,6 +33,12 @@ $STD uv venv /opt/soulsync/.venv --python 3.11
 $STD uv pip install -r requirements.txt --python /opt/soulsync/.venv/bin/python
 mkdir -p /opt/soulsync/{config,data,logs}
 msg_ok "Set up Application"
+
+msg_info "Building WebUI"
+cd /opt/soulsync/webui
+$STD npm ci
+$STD npm run build
+msg_ok "Built WebUI"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/soulsync.service

@@ -31,8 +31,8 @@ cd /opt/docmost
 # included in GitHub tarballs.  The community NoopAuditService exists but
 # is only exported by CoreModule – child modules such as UserModule cannot
 # resolve it.  Making CoreModule @Global() exposes the token app-wide.
-if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] \
-  && ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
+if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] &&
+  ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
   sed -i '/^  Module,$/a\  Global,' /opt/docmost/apps/server/src/core/core.module.ts
   sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
 fi
@@ -45,6 +45,7 @@ sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z
   -e "s|DRAWIO_URL=.*|DRAWIO_URL=https://embed.diagrams.net|" \
   -e "s|DISABLE_TELEMETRY=.*|DISABLE_TELEMETRY=true|" \
   -e "s|APP_URL=.*|APP_URL=http://$LOCAL_IP:3000|" \
+  -e "s|^STORAGE_DRIVER=azure|#STORAGE_DRIVER=azure|" \
   /opt/docmost/.env
 export NODE_OPTIONS="--max-old-space-size=2048"
 $STD pnpm install
