@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v6.2.0"
+  RELEASE="v7.0.0"
   if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping services"
     systemctl stop opencloud opencloud-wopi
@@ -54,6 +54,15 @@ function update_script() {
 # STORAGE_USERS_POSIX_WATCH_TYPE=inotifywait\
 # STORAGE_USERS_POSIX_WATCH_FS=true\
 # STORAGE_USERS_POSIX_WATCH_PATH=<path-to-storage-or-bind-mount>' /etc/opencloud/opencloud.env
+    fi
+
+    if ! sed -n '/^sharing:/,/^storage_users:/p' /etc/opencloud/opencloud.yaml | grep -q 'service_account'; then
+      ACCOUNT_ID="$(sed -n '/^activitylog:/,/*.$/p' /etc/opencloud/opencloud.yaml | awk -F'id:' '{print $2}' | tr -d '[:space:]')"
+      ACCOUNT_SECRET="$(sed -n '/^activitylog:/,/*.$/p' /etc/opencloud/opencloud.yaml | awk -F'secret:' '{print $2}' | tr -d '[:space:]')"
+      sed -i "/^sharing:/a\\
+  service_account:\\
+    service_account_id: $ACCOUNT_ID\\
+    service_account_secret: $ACCOUNT_SECRET" /etc/opencloud/opencloud.yaml
     fi
 
     msg_info "Starting services"

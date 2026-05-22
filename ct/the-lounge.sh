@@ -33,6 +33,7 @@ function update_script() {
     systemctl stop thelounge
     msg_ok "Stopped Service"
 
+    NODE_VERSION="22" setup_nodejs
     fetch_and_deploy_gh_release "thelounge" "thelounge/thelounge-deb" "binary"
 
     msg_info "Starting Service"
