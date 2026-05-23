@@ -36,7 +36,11 @@ function update_script() {
     systemctl stop isponsorblocktv
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "isponsorblocktv" "dmunozv04/iSponsorBlockTV" "singlefile" "latest" "/opt/isponsorblocktv" "iSponsorBlockTV-x86_64-linux"
+    ISBTV_BINARY="iSponsorBlockTV-x86_64-linux-v1"
+    if grep -q ' avx ' /proc/cpuinfo 2>/dev/null && grep -q ' avx2 ' /proc/cpuinfo 2>/dev/null && grep -q ' movbe ' /proc/cpuinfo 2>/dev/null; then
+      ISBTV_BINARY="iSponsorBlockTV-x86_64-linux"
+    fi
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "isponsorblocktv" "dmunozv04/iSponsorBlockTV" "singlefile" "latest" "/opt/isponsorblocktv" "${ISBTV_BINARY}"
 
     msg_info "Starting Service"
     systemctl start isponsorblocktv

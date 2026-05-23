@@ -13,12 +13,12 @@ setting_up_container
 network_check
 update_os
 
-if ! grep -q ' avx ' /proc/cpuinfo 2>/dev/null; then
-  msg_error "CPU does not support AVX instructions (required by iSponsorBlockTV/PyApp)"
-  exit 106
+ISBTV_BINARY="iSponsorBlockTV-x86_64-linux-v1"
+if grep -q ' avx ' /proc/cpuinfo 2>/dev/null && grep -q ' avx2 ' /proc/cpuinfo 2>/dev/null && grep -q ' movbe ' /proc/cpuinfo 2>/dev/null; then
+  ISBTV_BINARY="iSponsorBlockTV-x86_64-linux"
 fi
 
-fetch_and_deploy_gh_release "isponsorblocktv" "dmunozv04/iSponsorBlockTV" "singlefile" "latest" "/opt/isponsorblocktv" "iSponsorBlockTV-x86_64-linux"
+fetch_and_deploy_gh_release "isponsorblocktv" "dmunozv04/iSponsorBlockTV" "singlefile" "latest" "/opt/isponsorblocktv" "${ISBTV_BINARY}"
 
 msg_info "Setting up iSponsorBlockTV"
 install -d /var/lib/isponsorblocktv
