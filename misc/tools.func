@@ -4269,12 +4269,10 @@ function setup_gs() {
 
   ensure_dependencies jq
 
-  local RELEASE_JSON
-  RELEASE_JSON=$(curl -fsSL --max-time 15 https://api.github.com/repos/ArtifexSoftware/ghostpdl-downloads/releases/latest 2>/dev/null || echo "")
-
-  if [[ -z "$RELEASE_JSON" ]]; then
+  local LATEST_VERSION
+  # Tags are "gs10.05.1" format — fetch without stripping "v", then strip "gs"
+  LATEST_VERSION=$(get_latest_github_release "ArtifexSoftware/ghostpdl-downloads" "false") || {
     msg_warn "Cannot fetch latest Ghostscript version from GitHub API"
-    # Try to get from current version
     if command -v gs &>/dev/null; then
       gs --version | head -n1
       cache_installed_version "ghostscript" "$CURRENT_VERSION"
@@ -4282,11 +4280,9 @@ function setup_gs() {
     fi
     msg_error "Cannot determine Ghostscript version and no existing installation found"
     return 250
-  fi
-  local LATEST_VERSION
-  LATEST_VERSION=$(echo "$RELEASE_JSON" | jq -r '.tag_name' | sed 's/^gs//')
-  local LATEST_VERSION_DOTTED
-  LATEST_VERSION_DOTTED=$(echo "$RELEASE_JSON" | jq -r '.name' | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+  }
+  LATEST_VERSION="${LATEST_VERSION#gs}"
+  local LATEST_VERSION_DOTTED="$LATEST_VERSION"
 
   if [[ -z "$LATEST_VERSION" || -z "$LATEST_VERSION_DOTTED" ]]; then
     msg_warn "Could not determine latest Ghostscript version from GitHub - checking system"
@@ -7336,22 +7332,11 @@ function setup_ruby() {
   # Download and build rbenv if needed
   if [[ ! -x "$RBENV_BIN" ]]; then
     local RBENV_RELEASE
-    local rbenv_json
-    rbenv_json=$(curl -fsSL --max-time 15 https://api.github.com/repos/rbenv/rbenv/releases/latest 2>/dev/null || echo "")
-
-    if [[ -z "$rbenv_json" ]]; then
+    RBENV_RELEASE=$(get_latest_github_release "rbenv/rbenv") || {
       msg_error "Failed to fetch latest rbenv version from GitHub"
       rm -rf "$TMP_DIR"
       return 7
-    fi
-
-    RBENV_RELEASE=$(echo "$rbenv_json" | jq -r '.tag_name' 2>/dev/null | sed 's/^v//' || echo "")
-
-    if [[ -z "$RBENV_RELEASE" ]]; then
-      msg_error "Could not parse rbenv version from GitHub response"
-      rm -rf "$TMP_DIR"
-      return 250
-    fi
+    }
 
     if ! curl_with_retry "https://github.com/rbenv/rbenv/archive/refs/tags/v${RBENV_RELEASE}.tar.gz" "$TMP_DIR/rbenv.tar.gz"; then
       msg_error "Failed to download rbenv"
@@ -7383,22 +7368,11 @@ function setup_ruby() {
   # Install ruby-build plugin
   if [[ ! -d "$RBENV_DIR/plugins/ruby-build" ]]; then
     local RUBY_BUILD_RELEASE
-    local ruby_build_json
-    ruby_build_json=$(curl -fsSL --max-time 15 https://api.github.com/repos/rbenv/ruby-build/releases/latest 2>/dev/null || echo "")
-
-    if [[ -z "$ruby_build_json" ]]; then
+    RUBY_BUILD_RELEASE=$(get_latest_github_release "rbenv/ruby-build") || {
       msg_error "Failed to fetch latest ruby-build version from GitHub"
       rm -rf "$TMP_DIR"
       return 7
-    fi
-
-    RUBY_BUILD_RELEASE=$(echo "$ruby_build_json" | jq -r '.tag_name' 2>/dev/null | sed 's/^v//' || echo "")
-
-    if [[ -z "$RUBY_BUILD_RELEASE" ]]; then
-      msg_error "Could not parse ruby-build version from GitHub response"
-      rm -rf "$TMP_DIR"
-      return 250
-    fi
+    }
 
     if ! curl_with_retry "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" "$TMP_DIR/ruby-build.tar.gz"; then
       msg_error "Failed to download ruby-build"
@@ -7781,8 +7755,7 @@ function setup_clickhouse() {
 
     # Fallback to GitHub API if package server failed
     if [[ -z "$CLICKHOUSE_VERSION" ]]; then
-      CLICKHOUSE_VERSION=$(curl -fsSL --max-time 15 https://api.github.com/repos/ClickHouse/ClickHouse/releases/latest 2>/dev/null |
-        grep -oP '"tag_name":\s*"v\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -n1 || echo "")
+      CLICKHOUSE_VERSION=$(get_latest_github_release "ClickHouse/ClickHouse") || true
     fi
 
     [[ -z "$CLICKHOUSE_VERSION" ]] && {
@@ -8071,22 +8044,11 @@ function setup_uv() {
   ensure_dependencies jq
 
   # Fetch latest version
-  local releases_json
-  releases_json=$(curl -fsSL --max-time 15 \
-    "https://api.github.com/repos/astral-sh/uv/releases/latest" 2>/dev/null || echo "")
-
-  if [[ -z "$releases_json" ]]; then
+  local LATEST_VERSION
+  LATEST_VERSION=$(get_latest_github_release "astral-sh/uv") || {
     msg_error "Could not fetch latest uv version from GitHub API"
     return 7
-  fi
-
-  local LATEST_VERSION
-  LATEST_VERSION=$(echo "$releases_json" | jq -r '.tag_name' 2>/dev/null | sed 's/^v//')
-
-  if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not parse uv version from GitHub API response"
-    return 250
-  fi
+  }
 
   # Get currently installed version
   local INSTALLED_VERSION=""
@@ -8213,22 +8175,11 @@ function setup_yq() {
   fi
 
   local LATEST_VERSION
-  local releases_json
-  releases_json=$(curl -fsSL --max-time 15 "https://api.github.com/repos/${GITHUB_REPO}/releases/latest" 2>/dev/null || echo "")
-
-  if [[ -z "$releases_json" ]]; then
+  LATEST_VERSION=$(get_latest_github_release "${GITHUB_REPO}") || {
     msg_error "Could not fetch latest yq version from GitHub API"
     rm -rf "$TMP_DIR"
     return 250
-  fi
-
-  LATEST_VERSION=$(echo "$releases_json" | jq -r '.tag_name' 2>/dev/null | sed 's/^v//' || echo "")
-
-  if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not parse yq version from GitHub API response"
-    rm -rf "$TMP_DIR"
-    return 250
-  fi
+  }
 
   # Get currently installed version
   local INSTALLED_VERSION=""
