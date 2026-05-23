@@ -468,9 +468,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Tunarr: fix path to backup during update [@SystemIdleProcess](https://github.com/SystemIdleProcess) ([#14655](https://github.com/community-scripts/ProxmoxVE/pull/14655))
+
   - #### ✨ New Features
 
     - wealthfolio: add: prebuild [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14658](https://github.com/community-scripts/ProxmoxVE/pull/14658))
+
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - kernel-clean: support range syntax in selection prompt [@djhojd](https://github.com/djhojd) ([#14656](https://github.com/community-scripts/ProxmoxVE/pull/14656))
 
 ## 2026-05-22
 
