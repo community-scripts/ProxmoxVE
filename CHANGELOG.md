@@ -464,6 +464,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-23
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - wealthfolio: add: prebuild [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14658](https://github.com/community-scripts/ProxmoxVE/pull/14658))
+
 ## 2026-05-22
 
 ### 🆕 New Scripts
