@@ -31,11 +31,11 @@ current_kernel=$(uname -r)
 # Only list fully-installed (ii) versioned kernel packages; the pattern
 # proxmox-kernel-X.Y.Z matches versioned kernels while excluding the
 # two-segment meta-packages (proxmox-kernel-X.Y) and proxmox-kernel-helper.
-available_kernels=$(dpkg --list \
-  | awk '/^ii/ {print $2}' \
-  | grep -E '^proxmox-kernel-[0-9]+\.[0-9]+\.[0-9]' \
-  | grep -v "$current_kernel" \
-  | sort -V)
+available_kernels=$(dpkg --list |
+  awk '/^ii/ {print $2}' |
+  grep -E '^proxmox-kernel-[0-9]+\.[0-9]+\.[0-9]' |
+  grep -v "$current_kernel" |
+  sort -V)
 
 header_info
 
@@ -98,11 +98,11 @@ for kernel in "${kernels_to_remove[@]}"; do
   # no other versioned kernel of the same minor version will remain
   # (the running kernel keeps it alive if it shares the same minor).
   if dpkg -l "$meta" 2>/dev/null | grep -q '^ii'; then
-    remaining=$(dpkg --list \
-      | awk '/^ii/ {print $2}' \
-      | grep -E "^proxmox-kernel-${minor_version}\." \
-      | grep -v "^${kernel}$" \
-      | wc -l)
+    remaining=$(dpkg --list |
+      awk '/^ii/ {print $2}' |
+      grep -E "^proxmox-kernel-${minor_version}\." |
+      grep -v "^${kernel}$" |
+      wc -l)
     if [ "$remaining" -eq 0 ]; then
       pkgs_to_remove+=("$meta")
     fi
