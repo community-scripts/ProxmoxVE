@@ -28,7 +28,14 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "kernel-clean"
 
 # Detect current kernel
 current_kernel=$(uname -r)
-available_kernels=$(dpkg --list | grep 'kernel-.*-pve' | awk '{print $2}' | grep -v "$current_kernel" | sort -V)
+# Only list fully-installed (ii) versioned kernel packages; the pattern
+# proxmox-kernel-X.Y.Z matches versioned kernels while excluding the
+# two-segment meta-packages (proxmox-kernel-X.Y) and proxmox-kernel-helper.
+available_kernels=$(dpkg --list \
+  | awk '/^ii/ {print $2}' \
+  | grep -E '^proxmox-kernel-[0-9]+\.[0-9]+\.[0-9]' \
+  | grep -v "$current_kernel" \
+  | sort -V)
 
 header_info
 
@@ -82,10 +89,28 @@ fi
 # Remove kernels
 for kernel in "${kernels_to_remove[@]}"; do
   echo -e "${YW}Removing $kernel...${CL}"
-  if apt-get purge -y "$kernel" >/dev/null 2>&1; then
-    echo -e "${GN}Successfully removed: $kernel${CL}"
+  # Derive the major.minor meta-package name (e.g. proxmox-kernel-6.14)
+  # from a versioned name like proxmox-kernel-6.14.11-9-pve-signed.
+  minor_version=$(echo "$kernel" | sed -E 's/^proxmox-kernel-([0-9]+\.[0-9]+)\..*/\1/')
+  meta="proxmox-kernel-${minor_version}"
+  pkgs_to_remove=("$kernel")
+  # Include the meta-package in the purge when it is installed and when
+  # no other versioned kernel of the same minor version will remain
+  # (the running kernel keeps it alive if it shares the same minor).
+  if dpkg -l "$meta" 2>/dev/null | grep -q '^ii'; then
+    remaining=$(dpkg --list \
+      | awk '/^ii/ {print $2}' \
+      | grep -E "^proxmox-kernel-${minor_version}\." \
+      | grep -v "^${kernel}$" \
+      | wc -l)
+    if [ "$remaining" -eq 0 ]; then
+      pkgs_to_remove+=("$meta")
+    fi
+  fi
+  if apt-get purge -y "${pkgs_to_remove[@]}" >/dev/null 2>&1; then
+    echo -e "${GN}Successfully removed: ${pkgs_to_remove[*]}${CL}"
   else
-    echo -e "${RD}Failed to remove: $kernel. Check dependencies.${CL}"
+    echo -e "${RD}Failed to remove: ${pkgs_to_remove[*]}. Check dependencies.${CL}"
   fi
 done
 
