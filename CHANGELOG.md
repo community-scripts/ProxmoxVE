@@ -470,6 +470,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - IronClaw: Extra configuration during install to ensure Web Gateway can run [@SystemIdleProcess](https://github.com/SystemIdleProcess) ([#14635](https://github.com/community-scripts/ProxmoxVE/pull/14635))
     - Tunarr: fix path to backup during update [@SystemIdleProcess](https://github.com/SystemIdleProcess) ([#14655](https://github.com/community-scripts/ProxmoxVE/pull/14655))
 
   - #### ✨ New Features
