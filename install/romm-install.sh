@@ -41,6 +41,16 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
+msg_info "Installing Nginx mod_zip module"
+setup_deb822_repo \
+  "getpagespeed-extras" \
+  "https://extras.getpagespeed.com/deb-archive-keyring.gpg" \
+  "https://extras.getpagespeed.com/debian" \
+  "$(get_os_info codename)" \
+  "main"
+$STD apt-get install -y nginx nginx-module-zip
+msg_ok "Installed Nginx mod_zip module"
+
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 setup_mariadb
