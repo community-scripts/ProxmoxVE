@@ -479,7 +479,7 @@ install_packages_with_retry() {
   msg_error "Failed to install packages after $((max_retries + 1)) attempts: ${packages[*]}"
   # Provide a quick diagnostic: check if package exists in any configured repo
   local _os_codename
-  _os_codename=$(awk -F= '/^VERSION_CODENAME=/{gsub(/"/, "", $2); print $2}' /etc/os-release 2>/dev/null || echo "unknown")
+  _os_codename=$(get_os_info codename)
   local _unavailable=()
   for _pkg in "${packages[@]}"; do
     if ! apt-cache show "$_pkg" &>/dev/null; then
@@ -716,7 +716,7 @@ manage_tool_repository() {
   local gpg_key_url="${4:-}"
   local distro_id repo_component suite
 
-  distro_id=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
+  distro_id=$(get_os_info id)
 
   case "$tool_name" in
   mariadb)
@@ -730,7 +730,7 @@ manage_tool_repository() {
 
     # Get suite for fallback handling
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
     suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url/$distro_id")
 
     # Setup new repository using deb822 format
@@ -755,13 +755,14 @@ manage_tool_repository() {
     # Import GPG key with retry logic
     if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/mongodb-server-${version}.gpg" "dearmor"; then
       msg_error "Failed to download MongoDB GPG key"
+      msg_error "Hint: Check connectivity to downloads.mongodb.org or verify MongoDB version ${version} is still available"
       return 7
     fi
     chmod 644 "/etc/apt/keyrings/mongodb-server-${version}.gpg"
 
     # Setup repository
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
 
     # Suite mapping with fallback for newer releases not yet supported by upstream
     if [[ "$distro_id" == "debian" ]]; then
@@ -832,7 +833,7 @@ EOF
 
     # NodeSource uses deb822 format with GPG from repo
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
 
     # Download GPG key from NodeSource with retry logic
     if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/nodesource.gpg" "dearmor"; then
@@ -862,6 +863,7 @@ EOF
     # Download and install keyring with retry logic
     if ! curl_with_retry "$gpg_key_url" "/tmp/debsuryorg-archive-keyring.deb"; then
       msg_error "Failed to download PHP keyring"
+      msg_error "Hint: Check connectivity to packages.sury.org (packages.sury.org/php)"
       return 7
     fi
     # Don't use /dev/null redirection for dpkg as it may use background processes
@@ -874,7 +876,7 @@ EOF
 
     # Setup repository
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
     cat <<EOF >/etc/apt/sources.list.d/php.sources
 Types: deb
 URIs: https://packages.sury.org/php
@@ -902,7 +904,7 @@ EOF
 
     # Setup repository
     local distro_codename
-    distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+    distro_codename=$(get_os_info codename)
     cat <<EOF >/etc/apt/sources.list.d/postgresql.sources
 Types: deb
 URIs: http://apt.postgresql.org/pub/repos/apt
@@ -1747,6 +1749,7 @@ wait_for_apt() {
   while is_apt_locked; do
     if [[ $waited -ge $max_wait ]]; then
       msg_error "Timeout waiting for apt to be available"
+      msg_error "Hint: Another process (apt, dpkg, unattended-upgrades) may hold a lock. Check: ps aux | grep -E 'apt|dpkg'"
       return 100
     fi
 
@@ -3938,6 +3941,7 @@ function setup_adminer() {
     mkdir -p /var/www/localhost/htdocs/adminer
     if ! curl_with_retry "https://github.com/vrana/adminer/releases/latest/download/adminer.php" "/var/www/localhost/htdocs/adminer/index.php"; then
       msg_error "Failed to download Adminer"
+      msg_error "Hint: Check connectivity to github.com/vrana/adminer (GitHub Releases)"
       return 250
     fi
     cache_installed_version "adminer" "latest-alpine"
@@ -3958,6 +3962,125 @@ function setup_adminer() {
     cache_installed_version "adminer" "${VERSION:-unknown}"
     msg_ok "Setup Adminer (Debian/Ubuntu)"
   fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs or upgrades ClickHouse database server.
+#
+# Description:
+#   - Adds ClickHouse official repository
+#   - Installs specified version
+#   - Configures systemd service
+#   - Supports Debian/Ubuntu with fallback mechanism
+#
+# Variables:
+#   CLICKHOUSE_VERSION  - ClickHouse version to install (default: latest)
+# ------------------------------------------------------------------------------
+
+function setup_clickhouse() {
+  local CLICKHOUSE_VERSION="${CLICKHOUSE_VERSION:-latest}"
+  local DISTRO_ID DISTRO_CODENAME
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
+
+  # Ensure non-interactive mode for all apt operations
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
+  export NEEDRESTART_SUSPEND=1
+
+  # Resolve "latest" version
+  if [[ "$CLICKHOUSE_VERSION" == "latest" ]]; then
+    CLICKHOUSE_VERSION=$(curl -fsSL --max-time 15 https://packages.clickhouse.com/tgz/stable/ 2>/dev/null |
+      grep -oP 'clickhouse-common-static-\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' |
+      sort -V | tail -n1 || echo "")
+
+    # Fallback to GitHub API if package server failed
+    if [[ -z "$CLICKHOUSE_VERSION" ]]; then
+      CLICKHOUSE_VERSION=$(get_latest_github_release "ClickHouse/ClickHouse") || true
+    fi
+
+    [[ -z "$CLICKHOUSE_VERSION" ]] && {
+      msg_error "Could not determine latest ClickHouse version from any source"
+      return 250
+    }
+  fi
+
+  # Get currently installed version
+  local CURRENT_VERSION=""
+  if command -v clickhouse-server >/dev/null 2>&1; then
+    CURRENT_VERSION=$(clickhouse-server --version 2>/dev/null | grep -oP 'version \K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+  fi
+
+  # Scenario 1: Already at target version - just update packages
+  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$CLICKHOUSE_VERSION" ]]; then
+    msg_info "Update ClickHouse $CLICKHOUSE_VERSION"
+    ensure_apt_working || return 100
+
+    # Perform upgrade with retry logic (non-fatal if fails)
+    upgrade_packages_with_retry "clickhouse-server" "clickhouse-client" || {
+      msg_warn "ClickHouse package upgrade had issues, continuing with current version"
+    }
+    cache_installed_version "clickhouse" "$CLICKHOUSE_VERSION"
+    msg_ok "Update ClickHouse $CLICKHOUSE_VERSION"
+    return 0
+  fi
+
+  # Scenario 2: Different version - clean upgrade
+  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$CLICKHOUSE_VERSION" ]]; then
+    msg_info "Upgrade ClickHouse from $CURRENT_VERSION to $CLICKHOUSE_VERSION"
+    stop_all_services "clickhouse-server"
+    remove_old_tool_version "clickhouse"
+  else
+    msg_info "Setup ClickHouse $CLICKHOUSE_VERSION"
+  fi
+
+  ensure_dependencies apt-transport-https ca-certificates dirmngr gnupg
+
+  # Prepare repository (cleanup + validation)
+  prepare_repository_setup "clickhouse" || {
+    msg_error "Failed to prepare ClickHouse repository"
+    return 100
+  }
+
+  # Setup repository (ClickHouse uses 'stable' suite)
+  setup_deb822_repo \
+    "clickhouse" \
+    "https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key" \
+    "https://packages.clickhouse.com/deb" \
+    "stable" \
+    "main"
+
+  # Install packages with retry logic
+  $STD apt update || {
+    msg_error "APT update failed for ClickHouse repository"
+    return 100
+  }
+
+  install_packages_with_retry "clickhouse-server" "clickhouse-client" || {
+    msg_error "Failed to install ClickHouse packages"
+    return 100
+  }
+
+  # Verify installation
+  if ! command -v clickhouse-server >/dev/null 2>&1; then
+    msg_error "ClickHouse installation completed but clickhouse-server command not found"
+    return 127
+  fi
+
+  # Setup data directory
+  mkdir -p /var/lib/clickhouse
+  if id clickhouse >/dev/null 2>&1; then
+    chown -R clickhouse:clickhouse /var/lib/clickhouse
+  fi
+
+  # Enable and start service
+  $STD systemctl enable clickhouse-server || {
+    msg_warn "Failed to enable clickhouse-server service"
+  }
+  safe_service_restart clickhouse-server || true
+
+  cache_installed_version "clickhouse" "$CLICKHOUSE_VERSION"
+  msg_ok "Setup ClickHouse $CLICKHOUSE_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -4004,6 +4127,7 @@ function setup_composer() {
 
   if ! curl_with_retry "https://getcomposer.org/installer" "/tmp/composer-setup.php"; then
     msg_error "Failed to download Composer installer"
+    msg_error "Hint: Check connectivity to getcomposer.org"
     return 250
   fi
 
@@ -4028,6 +4152,275 @@ function setup_composer() {
   FINAL_VERSION=$("$COMPOSER_BIN" --version 2>/dev/null | awk '{print $3}')
   cache_installed_version "composer" "$FINAL_VERSION"
   msg_ok "Setup Composer"
+}
+
+# ------------------------------------------------------------------------------
+# Docker Engine Installation and Management (All-In-One)
+#
+# Description:
+#   - By default uses distro repository (docker.io) for stability
+#   - Optionally uses official Docker repository for latest features
+#   - Detects and migrates old Docker installations
+#   - Optional: Installs/Updates Portainer CE
+#   - Updates running containers interactively
+#   - Cleans up legacy repository files
+#
+# Usage:
+#   setup_docker                              # Uses distro package (recommended)
+#   USE_DOCKER_REPO=true setup_docker         # Uses official Docker repo
+#   DOCKER_PORTAINER="true" setup_docker
+#   DOCKER_LOG_DRIVER="json-file" setup_docker
+#
+# Variables:
+#   USE_DOCKER_REPO        - Set to "true" to use official Docker repository
+#                            (default: false, uses distro docker.io package)
+#   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
+#   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
+#   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
+#
+# Features:
+#   - Uses stable distro packages by default
+#   - Migrates from get.docker.com to repository-based installation
+#   - Updates Docker Engine if newer version available
+#   - Interactive container update with multi-select
+#   - Portainer installation and update support
+# ------------------------------------------------------------------------------
+function setup_docker() {
+  local docker_installed=false
+  local portainer_installed=false
+  local USE_DOCKER_REPO="${USE_DOCKER_REPO:-false}"
+
+  # Check if Docker is already installed
+  if command -v docker &>/dev/null; then
+    docker_installed=true
+    DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+    msg_info "Docker $DOCKER_CURRENT_VERSION detected"
+  fi
+
+  # Check if Portainer is running
+  if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^portainer$'; then
+    portainer_installed=true
+    msg_info "Portainer container detected"
+  fi
+
+  # Scenario 1: Use distro repository (default, most stable)
+  if [[ "$USE_DOCKER_REPO" != "true" && "$USE_DOCKER_REPO" != "TRUE" && "$USE_DOCKER_REPO" != "1" ]]; then
+
+    # Install or upgrade Docker from distro repo
+    if [ "$docker_installed" = true ]; then
+      msg_info "Checking for Docker updates (distro package)"
+      ensure_apt_working || return 100
+      upgrade_packages_with_retry "docker.io" "docker-compose" || true
+      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+      msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
+    else
+      msg_info "Installing Docker (distro package)"
+      ensure_apt_working || return 100
+
+      # Install docker.io and docker-compose from distro
+      if ! install_packages_with_retry "docker.io"; then
+        msg_error "Failed to install docker.io from distro repository"
+        return 100
+      fi
+      # docker-compose is optional
+      $STD apt install -y docker-compose 2>/dev/null ||
+        msg_warn "Optional docker-compose not available from distro repository — use 'docker compose' plugin instead if needed"
+
+      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+      msg_ok "Installed Docker $DOCKER_CURRENT_VERSION (distro package)"
+    fi
+
+    # Configure daemon.json
+    local log_driver="${DOCKER_LOG_DRIVER:-journald}"
+    mkdir -p /etc/docker
+    if [ ! -f /etc/docker/daemon.json ]; then
+      cat <<EOF >/etc/docker/daemon.json
+{
+  "log-driver": "$log_driver"
+}
+EOF
+    fi
+
+    # Enable and start Docker
+    systemctl enable -q --now docker
+
+    # Continue to Portainer section below
+  else
+    # Scenario 2: Use official Docker repository (USE_DOCKER_REPO=true)
+
+    # Cleanup old repository configurations
+    if [ -f /etc/apt/sources.list.d/docker.list ]; then
+      msg_info "Migrating from old Docker repository format"
+      rm -f /etc/apt/sources.list.d/docker.list
+      rm -f /etc/apt/keyrings/docker.asc
+    fi
+
+    # Setup/Update Docker repository
+    msg_info "Setting up Docker Repository"
+    setup_deb822_repo \
+      "docker" \
+      "https://download.docker.com/linux/$(get_os_info id)/gpg" \
+      "https://download.docker.com/linux/$(get_os_info id)" \
+      "$(get_os_info codename)" \
+      "stable" \
+      "$(dpkg --print-architecture)"
+
+    # Install or upgrade Docker
+    if [ "$docker_installed" = true ]; then
+      msg_info "Checking for Docker updates"
+      DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' 2>/dev/null | cut -d':' -f2 | cut -d'-' -f1 || echo '')
+
+      if [ "$DOCKER_CURRENT_VERSION" != "$DOCKER_LATEST_VERSION" ]; then
+        msg_info "Updating Docker $DOCKER_CURRENT_VERSION → $DOCKER_LATEST_VERSION"
+        $STD apt install -y --only-upgrade \
+          docker-ce \
+          docker-ce-cli \
+          containerd.io \
+          docker-buildx-plugin \
+          docker-compose-plugin || {
+          msg_error "Failed to update Docker packages"
+          return 100
+        }
+        msg_ok "Updated Docker to $DOCKER_LATEST_VERSION"
+      else
+        msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
+      fi
+    else
+      msg_info "Installing Docker"
+      $STD apt install -y \
+        docker-ce \
+        docker-ce-cli \
+        containerd.io \
+        docker-buildx-plugin \
+        docker-compose-plugin || {
+        msg_error "Failed to install Docker packages"
+        return 100
+      }
+
+      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+      msg_ok "Installed Docker $DOCKER_CURRENT_VERSION"
+    fi
+
+    # Configure daemon.json
+    local log_driver="${DOCKER_LOG_DRIVER:-journald}"
+    mkdir -p /etc/docker
+    if [ ! -f /etc/docker/daemon.json ]; then
+      cat <<EOF >/etc/docker/daemon.json
+{
+  "log-driver": "$log_driver"
+}
+EOF
+    fi
+
+    # Enable and start Docker
+    systemctl enable -q --now docker
+  fi
+
+  # Portainer Management (common for both modes)
+  if [[ "${DOCKER_PORTAINER:-}" == "true" ]]; then
+    if [ "$portainer_installed" = true ]; then
+      msg_info "Checking for Portainer updates"
+      PORTAINER_CURRENT=$(docker inspect portainer --format='{{.Config.Image}}' 2>/dev/null | cut -d':' -f2)
+      PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
+
+      if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
+        read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
+        if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+          msg_info "Updating Portainer"
+          docker stop portainer
+          docker rm portainer
+          docker pull portainer/portainer-ce:latest
+          docker run -d \
+            -p 9000:9000 \
+            -p 9443:9443 \
+            --name=portainer \
+            --restart=always \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v portainer_data:/data \
+            portainer/portainer-ce:latest
+          msg_ok "Updated Portainer to $PORTAINER_LATEST"
+        fi
+      else
+        msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
+      fi
+    else
+      msg_info "Installing Portainer"
+      docker volume create portainer_data
+      docker run -d \
+        -p 9000:9000 \
+        -p 9443:9443 \
+        --name=portainer \
+        --restart=always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v portainer_data:/data \
+        portainer/portainer-ce:latest
+
+      LOCAL_IP=$(hostname -I | awk '{print $1}')
+      msg_ok "Installed Portainer (http://${LOCAL_IP}:9000)"
+    fi
+  fi
+
+  # Interactive Container Update Check
+  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ]; then
+    msg_info "Checking for container updates"
+
+    # Get list of running containers with update status
+    local containers_with_updates=()
+    local container_info=()
+    local index=1
+
+    while IFS= read -r container; do
+      local name=$(echo "$container" | awk '{print $1}')
+      local image=$(echo "$container" | awk '{print $2}')
+      local current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+
+      # Pull latest image digest
+      docker pull "$image" >/dev/null 2>&1
+      local latest_digest=$(docker inspect "$image" --format='{{.Id}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+
+      if [ "$current_digest" != "$latest_digest" ]; then
+        containers_with_updates+=("$name")
+        container_info+=("${index}) ${name} (${image})")
+        ((index++))
+      fi
+    done < <(docker ps --format '{{.Names}} {{.Image}}')
+
+    if [ ${#containers_with_updates[@]} -gt 0 ]; then
+      echo ""
+      echo "${TAB3}Container updates available:"
+      for info in "${container_info[@]}"; do
+        echo "${TAB3}  $info"
+      done
+      echo ""
+      read -r -p "${TAB3}Select containers to update (e.g., 1,3,5 or 'all' or 'none'): " selection
+
+      if [[ ${selection,,} == "all" ]]; then
+        for container in "${containers_with_updates[@]}"; do
+          msg_info "Updating container: $container"
+          docker stop "$container"
+          docker rm "$container"
+          # Note: This requires the original docker run command - best to recreate via compose
+          msg_ok "Stopped and removed $container (please recreate with updated image)"
+        done
+      elif [[ ${selection,,} != "none" ]]; then
+        IFS=',' read -ra SELECTED <<<"$selection"
+        for num in "${SELECTED[@]}"; do
+          num=$(echo "$num" | xargs) # trim whitespace
+          if [[ "$num" =~ ^[0-9]+$ ]] && [ "$num" -ge 1 ] && [ "$num" -le "${#containers_with_updates[@]}" ]; then
+            container="${containers_with_updates[$((num - 1))]}"
+            msg_info "Updating container: $container"
+            docker stop "$container"
+            docker rm "$container"
+            msg_ok "Stopped and removed $container (please recreate with updated image)"
+          fi
+        done
+      fi
+    else
+      msg_ok "All containers are up-to-date"
+    fi
+  fi
+
+  msg_ok "Docker setup completed"
 }
 
 # ------------------------------------------------------------------------------
@@ -4067,6 +4460,7 @@ function setup_ffmpeg() {
   if [[ "$TYPE" == "binary" ]]; then
     if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg binary"
+      msg_error "Hint: Check connectivity to johnvansickle.com/ffmpeg (static builds, may be slow — large file)"
       rm -rf "$TMP_DIR"
       return 250
     fi
@@ -4154,6 +4548,7 @@ function setup_ffmpeg() {
     msg_info "Setup FFmpeg from pre-built binary"
     if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg pre-built binary"
+      msg_error "Hint: Check connectivity to johnvansickle.com/ffmpeg (large file, may timeout on slow connections)"
       rm -rf "$TMP_DIR"
       return 250
     fi
@@ -4314,6 +4709,7 @@ function setup_go() {
 
   if ! CURL_TIMEOUT=300 curl_with_retry "$URL" "$TMP_TAR"; then
     msg_error "Failed to download Go $GO_VERSION"
+    msg_error "Hint: Check connectivity to go.dev/dl — URL: $URL"
     rm -f "$TMP_TAR"
     return 250
   fi
@@ -4390,6 +4786,7 @@ function setup_gs() {
 
   if ! CURL_TIMEOUT=180 curl_with_retry "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${LATEST_VERSION}/ghostscript-${LATEST_VERSION_DOTTED}.tar.gz" "$TMP_DIR/ghostscript.tar.gz"; then
     msg_error "Failed to download Ghostscript"
+    msg_error "Hint: Check connectivity to github.com/ArtifexSoftware — may be a GitHub rate-limit, set GITHUB_TOKEN"
     rm -rf "$TMP_DIR"
     return 250
   fi
@@ -4646,9 +5043,9 @@ function setup_hwaccel() {
   # OS Detection
   # ═══════════════════════════════════════════════════════════════════════════
   local os_id os_codename os_version
-  os_id=$(grep -oP '(?<=^ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "debian")
-  os_codename=$(grep -oP '(?<=^VERSION_CODENAME=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "unknown")
-  os_version=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "")
+  os_id=$(get_os_info id)
+  os_codename=$(get_os_info codename)
+  os_version=$(get_os_info version)
   [[ -z "$os_id" ]] && os_id="debian"
 
   local in_ct="${CTTYPE:-0}"
@@ -5496,6 +5893,7 @@ function setup_imagemagick() {
 
   if ! CURL_TIMEOUT=180 curl_with_retry "https://imagemagick.org/archive/ImageMagick.tar.gz" "$TMP_DIR/ImageMagick.tar.gz"; then
     msg_error "Failed to download ImageMagick"
+    msg_error "Hint: Check connectivity to imagemagick.org/archive"
     rm -rf "$TMP_DIR"
     return 250
   fi
@@ -5562,8 +5960,8 @@ function setup_imagemagick() {
 function setup_java() {
   local JAVA_VERSION="${JAVA_VERSION:-21}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
   local DESIRED_PACKAGE="temurin-${JAVA_VERSION}-jdk"
 
   # Prepare repository (cleanup + validation)
@@ -6072,6 +6470,308 @@ function setup_mariadb_db() {
 }
 
 # ------------------------------------------------------------------------------
+# Installs or updates MeiliSearch search engine.
+#
+# Description:
+#   - Fresh install: Downloads binary, creates config/service, starts
+#   - Update: Checks for new release, updates binary if available
+#   - Waits for service to be ready before returning
+#   - Exports API keys for use by caller
+#
+# Variables:
+#   MEILISEARCH_BIND     - Bind address (default: 127.0.0.1:7700)
+#   MEILISEARCH_ENV      - Environment: production/development (default: production)
+#   MEILISEARCH_DB_PATH  - Database path (default: /var/lib/meilisearch/data)
+#
+# Exports:
+#   MEILISEARCH_MASTER_KEY  - The master key for admin access
+#   MEILISEARCH_API_KEY     - The default search API key
+#   MEILISEARCH_API_KEY_UID - The UID of the default API key
+#
+# Example (install script):
+#   setup_meilisearch
+#
+# Example (CT update_script):
+#   setup_meilisearch
+# ------------------------------------------------------------------------------
+
+function setup_meilisearch() {
+  local MEILISEARCH_BIND="${MEILISEARCH_BIND:-127.0.0.1:7700}"
+  local MEILISEARCH_ENV="${MEILISEARCH_ENV:-production}"
+  local MEILISEARCH_DB_PATH="${MEILISEARCH_DB_PATH:-/var/lib/meilisearch/data}"
+  local MEILISEARCH_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
+  local MEILISEARCH_SNAPSHOT_DIR="${MEILISEARCH_SNAPSHOT_DIR:-/var/lib/meilisearch/snapshots}"
+
+  # Get bind address for health checks
+  local MEILISEARCH_HOST="${MEILISEARCH_BIND%%:*}"
+  local MEILISEARCH_PORT="${MEILISEARCH_BIND##*:}"
+  [[ "$MEILISEARCH_HOST" == "0.0.0.0" ]] && MEILISEARCH_HOST="127.0.0.1"
+
+  # Update mode: MeiliSearch already installed
+  if [[ -f /usr/bin/meilisearch ]]; then
+    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
+      msg_info "Updating MeiliSearch"
+
+      # Get current and new version for compatibility check
+      local CURRENT_VERSION NEW_VERSION
+      CURRENT_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || CURRENT_VERSION="0.0.0"
+      NEW_VERSION="${CHECK_UPDATE_RELEASE#v}"
+
+      # Extract major.minor for comparison (Meilisearch requires dump/restore between minor versions)
+      local CURRENT_MAJOR_MINOR NEW_MAJOR_MINOR
+      CURRENT_MAJOR_MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f1,2)
+      NEW_MAJOR_MINOR=$(echo "$NEW_VERSION" | cut -d. -f1,2)
+
+      # Determine if migration is needed (different major.minor = incompatible DB format)
+      local NEEDS_MIGRATION=false
+      if [[ "$CURRENT_MAJOR_MINOR" != "$NEW_MAJOR_MINOR" ]]; then
+        NEEDS_MIGRATION=true
+        msg_info "MeiliSearch version change detected (${CURRENT_VERSION} → ${NEW_VERSION}), preparing data migration"
+      fi
+
+      # Read config values for dump/restore
+      local MEILI_HOST MEILI_PORT MEILI_MASTER_KEY MEILI_DUMP_DIR
+      MEILI_HOST="${MEILISEARCH_HOST:-127.0.0.1}"
+      MEILI_PORT="${MEILISEARCH_PORT:-7700}"
+      MEILI_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
+      MEILI_MASTER_KEY=$(grep -E "^master_key\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
+
+      # Create dump before update if migration is needed
+      local DUMP_UID=""
+      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$MEILI_MASTER_KEY" ]]; then
+        msg_info "Creating MeiliSearch data dump before upgrade"
+
+        # Trigger dump creation
+        local DUMP_RESPONSE
+        DUMP_RESPONSE=$(curl -s -X POST "http://${MEILI_HOST}:${MEILI_PORT}/dumps" \
+          -H "Authorization: Bearer ${MEILI_MASTER_KEY}" \
+          -H "Content-Type: application/json" 2>/dev/null) || true
+
+        # The initial response only contains taskUid, not dumpUid
+        # dumpUid is only available after the task completes
+        local TASK_UID
+        TASK_UID=$(echo "$DUMP_RESPONSE" | grep -oP '"taskUid":\s*\K[0-9]+' || true)
+
+        if [[ -n "$TASK_UID" ]]; then
+          msg_info "Waiting for dump task ${TASK_UID} to complete..."
+          local MAX_WAIT=120
+          local WAITED=0
+          local TASK_RESULT=""
+
+          while [[ $WAITED -lt $MAX_WAIT ]]; do
+            TASK_RESULT=$(curl -s "http://${MEILI_HOST}:${MEILI_PORT}/tasks/${TASK_UID}" \
+              -H "Authorization: Bearer ${MEILI_MASTER_KEY}" 2>/dev/null) || true
+
+            local TASK_STATUS
+            TASK_STATUS=$(echo "$TASK_RESULT" | grep -oP '"status":\s*"\K[^"]+' || true)
+
+            if [[ "$TASK_STATUS" == "succeeded" ]]; then
+              # Extract dumpUid from the completed task details
+              DUMP_UID=$(echo "$TASK_RESULT" | grep -oP '"dumpUid":\s*"\K[^"]+' || true)
+              if [[ -n "$DUMP_UID" ]]; then
+                msg_ok "MeiliSearch dump created successfully: ${DUMP_UID}"
+              else
+                msg_warn "Dump task succeeded but could not extract dumpUid"
+              fi
+              break
+            elif [[ "$TASK_STATUS" == "failed" ]]; then
+              local ERROR_MSG
+              ERROR_MSG=$(echo "$TASK_RESULT" | grep -oP '"message":\s*"\K[^"]+' || echo "Unknown error")
+              msg_warn "MeiliSearch dump failed: ${ERROR_MSG}"
+              break
+            fi
+            sleep 2
+            WAITED=$((WAITED + 2))
+          done
+
+          if [[ $WAITED -ge $MAX_WAIT ]]; then
+            msg_warn "MeiliSearch dump timed out after ${MAX_WAIT}s"
+          fi
+        else
+          msg_warn "Could not trigger MeiliSearch dump (no taskUid in response)"
+          msg_info "Response was: ${DUMP_RESPONSE:-empty}"
+        fi
+      fi
+
+      # If migration is needed but dump failed, we have options:
+      # 1. Abort the update (safest, but annoying)
+      # 2. Backup data directory and proceed (allows manual recovery)
+      # 3. Just proceed and hope for the best (dangerous)
+      # We choose option 2: backup and proceed with warning
+      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
+        local MEILI_DB_PATH
+        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
+        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
+
+        if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
+          local BACKUP_PATH="${MEILI_DB_PATH}.backup.$(date +%Y%m%d%H%M%S)"
+          msg_warn "Backing up MeiliSearch data to ${BACKUP_PATH}"
+          mv "$MEILI_DB_PATH" "$BACKUP_PATH"
+          mkdir -p "$MEILI_DB_PATH"
+          msg_info "Data backed up. After update, you may need to reindex your data."
+          msg_info "Old data is preserved at: ${BACKUP_PATH}"
+        fi
+      fi
+
+      # Stop service and update binary
+      systemctl stop meilisearch
+      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+
+      # If migration needed and dump was created, remove old data and import dump
+      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
+        local MEILI_DB_PATH
+        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
+        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
+
+        msg_info "Removing old MeiliSearch database for migration"
+        rm -rf "${MEILI_DB_PATH:?}"/*
+
+        # Import dump using CLI flag (this is the supported method)
+        local DUMP_FILE="${MEILI_DUMP_DIR}/${DUMP_UID}.dump"
+        if [[ -f "$DUMP_FILE" ]]; then
+          msg_info "Importing dump: ${DUMP_FILE}"
+
+          # Start meilisearch with --import-dump flag
+          # This is a one-time import that happens during startup
+          /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" >/dev/null 2>&1 &
+          local MEILI_PID=$!
+
+          # Wait for meilisearch to become healthy (import happens during startup)
+          msg_info "Waiting for MeiliSearch to import and start..."
+          local MAX_WAIT=300
+          local WAITED=0
+          while [[ $WAITED -lt $MAX_WAIT ]]; do
+            if curl -sf "http://${MEILI_HOST}:${MEILI_PORT}/health" &>/dev/null; then
+              msg_ok "MeiliSearch is healthy after import"
+              break
+            fi
+            # Check if process is still running
+            if ! kill -0 $MEILI_PID 2>/dev/null; then
+              msg_warn "MeiliSearch process exited during import"
+              break
+            fi
+            sleep 3
+            WAITED=$((WAITED + 3))
+          done
+
+          # Stop the manual process
+          kill $MEILI_PID 2>/dev/null || true
+          wait $MEILI_PID 2>/dev/null || true
+          sleep 2
+
+          # Start via systemd for proper management
+          systemctl start meilisearch
+
+          if systemctl is-active --quiet meilisearch; then
+            msg_ok "MeiliSearch migrated successfully"
+          else
+            msg_warn "MeiliSearch failed to start after migration - check logs with: journalctl -u meilisearch"
+          fi
+        else
+          msg_warn "Dump file not found: ${DUMP_FILE}"
+          systemctl start meilisearch
+        fi
+      else
+        systemctl start meilisearch
+      fi
+
+      msg_ok "Updated MeiliSearch"
+    fi
+    return 0
+  fi
+
+  # Fresh install
+  msg_info "Setup MeiliSearch"
+
+  # Install binary
+  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
+    msg_error "Failed to install MeiliSearch binary"
+    return 250
+  }
+
+  # Download default config
+  curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml || {
+    msg_error "Failed to download MeiliSearch config"
+    msg_error "Hint: Check connectivity to raw.githubusercontent.com/meilisearch/meilisearch"
+    return 7
+  }
+
+  # Generate master key
+  MEILISEARCH_MASTER_KEY=$(openssl rand -base64 12)
+  export MEILISEARCH_MASTER_KEY
+
+  # Configure
+  sed -i \
+    -e "s|^env =.*|env = \"${MEILISEARCH_ENV}\"|" \
+    -e "s|^# master_key =.*|master_key = \"${MEILISEARCH_MASTER_KEY}\"|" \
+    -e "s|^db_path =.*|db_path = \"${MEILISEARCH_DB_PATH}\"|" \
+    -e "s|^dump_dir =.*|dump_dir = \"${MEILISEARCH_DUMP_DIR}\"|" \
+    -e "s|^snapshot_dir =.*|snapshot_dir = \"${MEILISEARCH_SNAPSHOT_DIR}\"|" \
+    -e 's|^# no_analytics = true|no_analytics = true|' \
+    -e "s|^http_addr =.*|http_addr = \"${MEILISEARCH_BIND}\"|" \
+    /etc/meilisearch.toml
+
+  # Create data directories
+  mkdir -p "${MEILISEARCH_DB_PATH}" "${MEILISEARCH_DUMP_DIR}" "${MEILISEARCH_SNAPSHOT_DIR}"
+
+  # Create systemd service
+  cat <<EOF >/etc/systemd/system/meilisearch.service
+[Unit]
+Description=Meilisearch
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/meilisearch --config-file-path /etc/meilisearch.toml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  # Enable and start service
+  systemctl daemon-reload
+  systemctl enable -q --now meilisearch
+
+  # Wait for MeiliSearch to be ready (up to 30 seconds)
+  for i in {1..30}; do
+    if curl -s -o /dev/null -w "%{http_code}" "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/health" 2>/dev/null | grep -q "200"; then
+      break
+    fi
+    sleep 1
+  done
+
+  # Verify service is running
+  if ! systemctl is-active --quiet meilisearch; then
+    msg_error "MeiliSearch service failed to start"
+    return 150
+  fi
+
+  # Get API keys with retry logic
+  MEILISEARCH_API_KEY=""
+  for i in {1..10}; do
+    MEILISEARCH_API_KEY=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
+      -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null |
+      grep -o '"key":"[^"]*"' | head -n 1 | sed 's/"key":"//;s/"//') || true
+    [[ -n "$MEILISEARCH_API_KEY" ]] && break
+    sleep 2
+  done
+
+  MEILISEARCH_API_KEY_UID=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
+    -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null |
+    grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//') || true
+
+  export MEILISEARCH_API_KEY
+  export MEILISEARCH_API_KEY_UID
+
+  # Cache version
+  local MEILISEARCH_VERSION
+  MEILISEARCH_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || true
+  cache_installed_version "meilisearch" "${MEILISEARCH_VERSION:-unknown}"
+
+  msg_ok "Setup MeiliSearch ${MEILISEARCH_VERSION:-}"
+}
+
+# ------------------------------------------------------------------------------
 # Installs or updates MongoDB to specified version.
 #
 # Description:
@@ -6222,8 +6922,8 @@ function setup_mysql() {
   local MYSQL_VERSION="${MYSQL_VERSION:-8.0}"
   local USE_MYSQL_REPO="${USE_MYSQL_REPO:-true}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
 
   # Ensure non-interactive mode for all apt operations
   export DEBIAN_FRONTEND=noninteractive
@@ -6681,8 +7381,8 @@ function setup_php() {
   local PHP_APACHE="${PHP_APACHE:-NO}"
   local PHP_FPM="${PHP_FPM:-NO}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
 
   # Parse version for compatibility checks
   local PHP_MAJOR="${PHP_VERSION%%.*}"
@@ -6994,8 +7694,8 @@ setup_postgresql() {
   local PG_MODULES="${PG_MODULES:-}"
   local USE_PGDG_REPO="${USE_PGDG_REPO:-true}"
   local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
+  DISTRO_ID=$(get_os_info id)
+  DISTRO_CODENAME=$(get_os_info codename)
 
   # Ensure non-interactive mode for all apt operations
   export DEBIAN_FRONTEND=noninteractive
@@ -7024,7 +7724,8 @@ setup_postgresql() {
       if [[ -n "$PG_MODULES" ]]; then
         IFS=',' read -ra MODULES <<<"$PG_MODULES"
         for module in "${MODULES[@]}"; do
-          $STD apt install -y "postgresql-${CURRENT_PG_VERSION}-${module}" 2>/dev/null || true
+          $STD apt install -y "postgresql-${CURRENT_PG_VERSION}-${module}" 2>/dev/null ||
+            msg_warn "Optional PostgreSQL module '${module}' not available for PG ${CURRENT_PG_VERSION} on $(get_os_info codename) — skipping"
         done
       fi
       _configure_pg_cron_preload "$PG_MODULES"
@@ -7060,7 +7761,8 @@ setup_postgresql() {
     if [[ -n "$PG_MODULES" && -n "$INSTALLED_VERSION" ]]; then
       IFS=',' read -ra MODULES <<<"$PG_MODULES"
       for module in "${MODULES[@]}"; do
-        $STD apt install -y "postgresql-${INSTALLED_VERSION}-${module}" 2>/dev/null || true
+        $STD apt install -y "postgresql-${INSTALLED_VERSION}-${module}" 2>/dev/null ||
+          msg_warn "Optional PostgreSQL module '${module}' not available for PG ${INSTALLED_VERSION} on $(get_os_info codename) — skipping"
       done
     fi
     _configure_pg_cron_preload "$PG_MODULES"
@@ -7082,7 +7784,8 @@ setup_postgresql() {
     if [[ -n "$PG_MODULES" ]]; then
       IFS=',' read -ra MODULES <<<"$PG_MODULES"
       for module in "${MODULES[@]}"; do
-        $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || true
+        $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null ||
+          msg_warn "Optional PostgreSQL module '${module}' not available for PG ${PG_VERSION} on $(get_os_info codename) — skipping"
       done
     fi
     _configure_pg_cron_preload "$PG_MODULES"
@@ -7150,7 +7853,8 @@ setup_postgresql() {
 
   # Install ssl-cert dependency if available
   if apt-cache search "^ssl-cert$" 2>/dev/null | grep -q .; then
-    $STD apt install -y ssl-cert 2>/dev/null || true
+    $STD apt install -y ssl-cert 2>/dev/null ||
+      msg_warn "Optional ssl-cert package could not be installed — continuing without it"
   fi
 
   # Try multiple PostgreSQL package patterns with retry logic
@@ -7406,7 +8110,8 @@ function setup_ruby() {
   done
 
   if [[ ${#ruby_deps[@]} -gt 0 ]]; then
-    $STD apt install -y "${ruby_deps[@]}" 2>/dev/null || true
+    $STD apt install -y "${ruby_deps[@]}" 2>/dev/null ||
+      msg_warn "Some Ruby build dependencies could not be installed — compilation may fail"
   else
     msg_error "No Ruby build dependencies available"
     rm -rf "$TMP_DIR"
@@ -7424,6 +8129,7 @@ function setup_ruby() {
 
     if ! curl_with_retry "https://github.com/rbenv/rbenv/archive/refs/tags/v${RBENV_RELEASE}.tar.gz" "$TMP_DIR/rbenv.tar.gz"; then
       msg_error "Failed to download rbenv"
+      msg_error "Hint: Check connectivity to github.com/rbenv/rbenv"
       rm -rf "$TMP_DIR"
       return 7
     fi
@@ -7460,6 +8166,7 @@ function setup_ruby() {
 
     if ! curl_with_retry "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" "$TMP_DIR/ruby-build.tar.gz"; then
       msg_error "Failed to download ruby-build"
+      msg_error "Hint: Check connectivity to github.com/rbenv/ruby-build"
       rm -rf "$TMP_DIR"
       return 7
     fi
@@ -7507,426 +8214,6 @@ function setup_ruby() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs or updates MeiliSearch search engine.
-#
-# Description:
-#   - Fresh install: Downloads binary, creates config/service, starts
-#   - Update: Checks for new release, updates binary if available
-#   - Waits for service to be ready before returning
-#   - Exports API keys for use by caller
-#
-# Variables:
-#   MEILISEARCH_BIND     - Bind address (default: 127.0.0.1:7700)
-#   MEILISEARCH_ENV      - Environment: production/development (default: production)
-#   MEILISEARCH_DB_PATH  - Database path (default: /var/lib/meilisearch/data)
-#
-# Exports:
-#   MEILISEARCH_MASTER_KEY  - The master key for admin access
-#   MEILISEARCH_API_KEY     - The default search API key
-#   MEILISEARCH_API_KEY_UID - The UID of the default API key
-#
-# Example (install script):
-#   setup_meilisearch
-#
-# Example (CT update_script):
-#   setup_meilisearch
-# ------------------------------------------------------------------------------
-
-function setup_meilisearch() {
-  local MEILISEARCH_BIND="${MEILISEARCH_BIND:-127.0.0.1:7700}"
-  local MEILISEARCH_ENV="${MEILISEARCH_ENV:-production}"
-  local MEILISEARCH_DB_PATH="${MEILISEARCH_DB_PATH:-/var/lib/meilisearch/data}"
-  local MEILISEARCH_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
-  local MEILISEARCH_SNAPSHOT_DIR="${MEILISEARCH_SNAPSHOT_DIR:-/var/lib/meilisearch/snapshots}"
-
-  # Get bind address for health checks
-  local MEILISEARCH_HOST="${MEILISEARCH_BIND%%:*}"
-  local MEILISEARCH_PORT="${MEILISEARCH_BIND##*:}"
-  [[ "$MEILISEARCH_HOST" == "0.0.0.0" ]] && MEILISEARCH_HOST="127.0.0.1"
-
-  # Update mode: MeiliSearch already installed
-  if [[ -f /usr/bin/meilisearch ]]; then
-    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-      msg_info "Updating MeiliSearch"
-
-      # Get current and new version for compatibility check
-      local CURRENT_VERSION NEW_VERSION
-      CURRENT_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || CURRENT_VERSION="0.0.0"
-      NEW_VERSION="${CHECK_UPDATE_RELEASE#v}"
-
-      # Extract major.minor for comparison (Meilisearch requires dump/restore between minor versions)
-      local CURRENT_MAJOR_MINOR NEW_MAJOR_MINOR
-      CURRENT_MAJOR_MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f1,2)
-      NEW_MAJOR_MINOR=$(echo "$NEW_VERSION" | cut -d. -f1,2)
-
-      # Determine if migration is needed (different major.minor = incompatible DB format)
-      local NEEDS_MIGRATION=false
-      if [[ "$CURRENT_MAJOR_MINOR" != "$NEW_MAJOR_MINOR" ]]; then
-        NEEDS_MIGRATION=true
-        msg_info "MeiliSearch version change detected (${CURRENT_VERSION} → ${NEW_VERSION}), preparing data migration"
-      fi
-
-      # Read config values for dump/restore
-      local MEILI_HOST MEILI_PORT MEILI_MASTER_KEY MEILI_DUMP_DIR
-      MEILI_HOST="${MEILISEARCH_HOST:-127.0.0.1}"
-      MEILI_PORT="${MEILISEARCH_PORT:-7700}"
-      MEILI_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
-      MEILI_MASTER_KEY=$(grep -E "^master_key\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-
-      # Create dump before update if migration is needed
-      local DUMP_UID=""
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$MEILI_MASTER_KEY" ]]; then
-        msg_info "Creating MeiliSearch data dump before upgrade"
-
-        # Trigger dump creation
-        local DUMP_RESPONSE
-        DUMP_RESPONSE=$(curl -s -X POST "http://${MEILI_HOST}:${MEILI_PORT}/dumps" \
-          -H "Authorization: Bearer ${MEILI_MASTER_KEY}" \
-          -H "Content-Type: application/json" 2>/dev/null) || true
-
-        # The initial response only contains taskUid, not dumpUid
-        # dumpUid is only available after the task completes
-        local TASK_UID
-        TASK_UID=$(echo "$DUMP_RESPONSE" | grep -oP '"taskUid":\s*\K[0-9]+' || true)
-
-        if [[ -n "$TASK_UID" ]]; then
-          msg_info "Waiting for dump task ${TASK_UID} to complete..."
-          local MAX_WAIT=120
-          local WAITED=0
-          local TASK_RESULT=""
-
-          while [[ $WAITED -lt $MAX_WAIT ]]; do
-            TASK_RESULT=$(curl -s "http://${MEILI_HOST}:${MEILI_PORT}/tasks/${TASK_UID}" \
-              -H "Authorization: Bearer ${MEILI_MASTER_KEY}" 2>/dev/null) || true
-
-            local TASK_STATUS
-            TASK_STATUS=$(echo "$TASK_RESULT" | grep -oP '"status":\s*"\K[^"]+' || true)
-
-            if [[ "$TASK_STATUS" == "succeeded" ]]; then
-              # Extract dumpUid from the completed task details
-              DUMP_UID=$(echo "$TASK_RESULT" | grep -oP '"dumpUid":\s*"\K[^"]+' || true)
-              if [[ -n "$DUMP_UID" ]]; then
-                msg_ok "MeiliSearch dump created successfully: ${DUMP_UID}"
-              else
-                msg_warn "Dump task succeeded but could not extract dumpUid"
-              fi
-              break
-            elif [[ "$TASK_STATUS" == "failed" ]]; then
-              local ERROR_MSG
-              ERROR_MSG=$(echo "$TASK_RESULT" | grep -oP '"message":\s*"\K[^"]+' || echo "Unknown error")
-              msg_warn "MeiliSearch dump failed: ${ERROR_MSG}"
-              break
-            fi
-            sleep 2
-            WAITED=$((WAITED + 2))
-          done
-
-          if [[ $WAITED -ge $MAX_WAIT ]]; then
-            msg_warn "MeiliSearch dump timed out after ${MAX_WAIT}s"
-          fi
-        else
-          msg_warn "Could not trigger MeiliSearch dump (no taskUid in response)"
-          msg_info "Response was: ${DUMP_RESPONSE:-empty}"
-        fi
-      fi
-
-      # If migration is needed but dump failed, we have options:
-      # 1. Abort the update (safest, but annoying)
-      # 2. Backup data directory and proceed (allows manual recovery)
-      # 3. Just proceed and hope for the best (dangerous)
-      # We choose option 2: backup and proceed with warning
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
-        local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
-
-        if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
-          local BACKUP_PATH="${MEILI_DB_PATH}.backup.$(date +%Y%m%d%H%M%S)"
-          msg_warn "Backing up MeiliSearch data to ${BACKUP_PATH}"
-          mv "$MEILI_DB_PATH" "$BACKUP_PATH"
-          mkdir -p "$MEILI_DB_PATH"
-          msg_info "Data backed up. After update, you may need to reindex your data."
-          msg_info "Old data is preserved at: ${BACKUP_PATH}"
-        fi
-      fi
-
-      # Stop service and update binary
-      systemctl stop meilisearch
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
-
-      # If migration needed and dump was created, remove old data and import dump
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
-        local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
-
-        msg_info "Removing old MeiliSearch database for migration"
-        rm -rf "${MEILI_DB_PATH:?}"/*
-
-        # Import dump using CLI flag (this is the supported method)
-        local DUMP_FILE="${MEILI_DUMP_DIR}/${DUMP_UID}.dump"
-        if [[ -f "$DUMP_FILE" ]]; then
-          msg_info "Importing dump: ${DUMP_FILE}"
-
-          # Start meilisearch with --import-dump flag
-          # This is a one-time import that happens during startup
-          /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" >/dev/null 2>&1 &
-          local MEILI_PID=$!
-
-          # Wait for meilisearch to become healthy (import happens during startup)
-          msg_info "Waiting for MeiliSearch to import and start..."
-          local MAX_WAIT=300
-          local WAITED=0
-          while [[ $WAITED -lt $MAX_WAIT ]]; do
-            if curl -sf "http://${MEILI_HOST}:${MEILI_PORT}/health" &>/dev/null; then
-              msg_ok "MeiliSearch is healthy after import"
-              break
-            fi
-            # Check if process is still running
-            if ! kill -0 $MEILI_PID 2>/dev/null; then
-              msg_warn "MeiliSearch process exited during import"
-              break
-            fi
-            sleep 3
-            WAITED=$((WAITED + 3))
-          done
-
-          # Stop the manual process
-          kill $MEILI_PID 2>/dev/null || true
-          wait $MEILI_PID 2>/dev/null || true
-          sleep 2
-
-          # Start via systemd for proper management
-          systemctl start meilisearch
-
-          if systemctl is-active --quiet meilisearch; then
-            msg_ok "MeiliSearch migrated successfully"
-          else
-            msg_warn "MeiliSearch failed to start after migration - check logs with: journalctl -u meilisearch"
-          fi
-        else
-          msg_warn "Dump file not found: ${DUMP_FILE}"
-          systemctl start meilisearch
-        fi
-      else
-        systemctl start meilisearch
-      fi
-
-      msg_ok "Updated MeiliSearch"
-    fi
-    return 0
-  fi
-
-  # Fresh install
-  msg_info "Setup MeiliSearch"
-
-  # Install binary
-  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
-    msg_error "Failed to install MeiliSearch binary"
-    return 250
-  }
-
-  # Download default config
-  curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml || {
-    msg_error "Failed to download MeiliSearch config"
-    return 7
-  }
-
-  # Generate master key
-  MEILISEARCH_MASTER_KEY=$(openssl rand -base64 12)
-  export MEILISEARCH_MASTER_KEY
-
-  # Configure
-  sed -i \
-    -e "s|^env =.*|env = \"${MEILISEARCH_ENV}\"|" \
-    -e "s|^# master_key =.*|master_key = \"${MEILISEARCH_MASTER_KEY}\"|" \
-    -e "s|^db_path =.*|db_path = \"${MEILISEARCH_DB_PATH}\"|" \
-    -e "s|^dump_dir =.*|dump_dir = \"${MEILISEARCH_DUMP_DIR}\"|" \
-    -e "s|^snapshot_dir =.*|snapshot_dir = \"${MEILISEARCH_SNAPSHOT_DIR}\"|" \
-    -e 's|^# no_analytics = true|no_analytics = true|' \
-    -e "s|^http_addr =.*|http_addr = \"${MEILISEARCH_BIND}\"|" \
-    /etc/meilisearch.toml
-
-  # Create data directories
-  mkdir -p "${MEILISEARCH_DB_PATH}" "${MEILISEARCH_DUMP_DIR}" "${MEILISEARCH_SNAPSHOT_DIR}"
-
-  # Create systemd service
-  cat <<EOF >/etc/systemd/system/meilisearch.service
-[Unit]
-Description=Meilisearch
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/meilisearch --config-file-path /etc/meilisearch.toml
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-  # Enable and start service
-  systemctl daemon-reload
-  systemctl enable -q --now meilisearch
-
-  # Wait for MeiliSearch to be ready (up to 30 seconds)
-  for i in {1..30}; do
-    if curl -s -o /dev/null -w "%{http_code}" "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/health" 2>/dev/null | grep -q "200"; then
-      break
-    fi
-    sleep 1
-  done
-
-  # Verify service is running
-  if ! systemctl is-active --quiet meilisearch; then
-    msg_error "MeiliSearch service failed to start"
-    return 150
-  fi
-
-  # Get API keys with retry logic
-  MEILISEARCH_API_KEY=""
-  for i in {1..10}; do
-    MEILISEARCH_API_KEY=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
-      -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null |
-      grep -o '"key":"[^"]*"' | head -n 1 | sed 's/"key":"//;s/"//') || true
-    [[ -n "$MEILISEARCH_API_KEY" ]] && break
-    sleep 2
-  done
-
-  MEILISEARCH_API_KEY_UID=$(curl -s -X GET "http://${MEILISEARCH_HOST}:${MEILISEARCH_PORT}/keys" \
-    -H "Authorization: Bearer ${MEILISEARCH_MASTER_KEY}" 2>/dev/null |
-    grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//') || true
-
-  export MEILISEARCH_API_KEY
-  export MEILISEARCH_API_KEY_UID
-
-  # Cache version
-  local MEILISEARCH_VERSION
-  MEILISEARCH_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || true
-  cache_installed_version "meilisearch" "${MEILISEARCH_VERSION:-unknown}"
-
-  msg_ok "Setup MeiliSearch ${MEILISEARCH_VERSION:-}"
-}
-
-# ------------------------------------------------------------------------------
-# Installs or upgrades ClickHouse database server.
-#
-# Description:
-#   - Adds ClickHouse official repository
-#   - Installs specified version
-#   - Configures systemd service
-#   - Supports Debian/Ubuntu with fallback mechanism
-#
-# Variables:
-#   CLICKHOUSE_VERSION  - ClickHouse version to install (default: latest)
-# ------------------------------------------------------------------------------
-
-function setup_clickhouse() {
-  local CLICKHOUSE_VERSION="${CLICKHOUSE_VERSION:-latest}"
-  local DISTRO_ID DISTRO_CODENAME
-  DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
-
-  # Ensure non-interactive mode for all apt operations
-  export DEBIAN_FRONTEND=noninteractive
-  export NEEDRESTART_MODE=a
-  export NEEDRESTART_SUSPEND=1
-
-  # Resolve "latest" version
-  if [[ "$CLICKHOUSE_VERSION" == "latest" ]]; then
-    CLICKHOUSE_VERSION=$(curl -fsSL --max-time 15 https://packages.clickhouse.com/tgz/stable/ 2>/dev/null |
-      grep -oP 'clickhouse-common-static-\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' |
-      sort -V | tail -n1 || echo "")
-
-    # Fallback to GitHub API if package server failed
-    if [[ -z "$CLICKHOUSE_VERSION" ]]; then
-      CLICKHOUSE_VERSION=$(get_latest_github_release "ClickHouse/ClickHouse") || true
-    fi
-
-    [[ -z "$CLICKHOUSE_VERSION" ]] && {
-      msg_error "Could not determine latest ClickHouse version from any source"
-      return 250
-    }
-  fi
-
-  # Get currently installed version
-  local CURRENT_VERSION=""
-  if command -v clickhouse-server >/dev/null 2>&1; then
-    CURRENT_VERSION=$(clickhouse-server --version 2>/dev/null | grep -oP 'version \K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
-  fi
-
-  # Scenario 1: Already at target version - just update packages
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$CLICKHOUSE_VERSION" ]]; then
-    msg_info "Update ClickHouse $CLICKHOUSE_VERSION"
-    ensure_apt_working || return 100
-
-    # Perform upgrade with retry logic (non-fatal if fails)
-    upgrade_packages_with_retry "clickhouse-server" "clickhouse-client" || {
-      msg_warn "ClickHouse package upgrade had issues, continuing with current version"
-    }
-    cache_installed_version "clickhouse" "$CLICKHOUSE_VERSION"
-    msg_ok "Update ClickHouse $CLICKHOUSE_VERSION"
-    return 0
-  fi
-
-  # Scenario 2: Different version - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$CLICKHOUSE_VERSION" ]]; then
-    msg_info "Upgrade ClickHouse from $CURRENT_VERSION to $CLICKHOUSE_VERSION"
-    stop_all_services "clickhouse-server"
-    remove_old_tool_version "clickhouse"
-  else
-    msg_info "Setup ClickHouse $CLICKHOUSE_VERSION"
-  fi
-
-  ensure_dependencies apt-transport-https ca-certificates dirmngr gnupg
-
-  # Prepare repository (cleanup + validation)
-  prepare_repository_setup "clickhouse" || {
-    msg_error "Failed to prepare ClickHouse repository"
-    return 100
-  }
-
-  # Setup repository (ClickHouse uses 'stable' suite)
-  setup_deb822_repo \
-    "clickhouse" \
-    "https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key" \
-    "https://packages.clickhouse.com/deb" \
-    "stable" \
-    "main"
-
-  # Install packages with retry logic
-  $STD apt update || {
-    msg_error "APT update failed for ClickHouse repository"
-    return 100
-  }
-
-  install_packages_with_retry "clickhouse-server" "clickhouse-client" || {
-    msg_error "Failed to install ClickHouse packages"
-    return 100
-  }
-
-  # Verify installation
-  if ! command -v clickhouse-server >/dev/null 2>&1; then
-    msg_error "ClickHouse installation completed but clickhouse-server command not found"
-    return 127
-  fi
-
-  # Setup data directory
-  mkdir -p /var/lib/clickhouse
-  if id clickhouse >/dev/null 2>&1; then
-    chown -R clickhouse:clickhouse /var/lib/clickhouse
-  fi
-
-  # Enable and start service
-  $STD systemctl enable clickhouse-server || {
-    msg_warn "Failed to enable clickhouse-server service"
-  }
-  safe_service_restart clickhouse-server || true
-
-  cache_installed_version "clickhouse" "$CLICKHOUSE_VERSION"
-  msg_ok "Setup ClickHouse $CLICKHOUSE_VERSION"
-}
-
-# ------------------------------------------------------------------------------
 # Installs Rust toolchain and optional global crates via cargo.
 #
 # Description:
@@ -7959,6 +8246,7 @@ function setup_rust() {
     msg_info "Setup Rust ($RUST_TOOLCHAIN)"
     curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN" || {
       msg_error "Failed to install Rust"
+      msg_error "Hint: Check connectivity to sh.rustup.rs and static.rust-lang.org"
       return 7
     }
     export PATH="$CARGO_BIN:$PATH"
@@ -8165,6 +8453,7 @@ function setup_uv() {
 
   if ! curl_with_retry "$UV_URL" "$TMP_DIR/uv.tar.gz"; then
     msg_error "Failed to download uv from $UV_URL"
+    msg_error "Hint: GitHub Releases — check connectivity or set GITHUB_TOKEN to avoid rate-limiting"
     return 7
   fi
 
@@ -8287,6 +8576,7 @@ function setup_yq() {
 
   if ! curl_with_retry "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" "$TMP_DIR/yq"; then
     msg_error "Failed to download yq"
+    msg_error "Hint: Check connectivity to github.com/${GITHUB_REPO} — set GITHUB_TOKEN to avoid rate-limiting"
     rm -rf "$TMP_DIR"
     return 250
   fi
@@ -8305,274 +8595,6 @@ function setup_yq() {
   FINAL_VERSION=$("$BINARY_PATH" --version 2>/dev/null | awk '{print $NF}' | sed 's/^v//')
   cache_installed_version "yq" "$FINAL_VERSION"
   msg_ok "Setup yq $FINAL_VERSION"
-}
-
-# ------------------------------------------------------------------------------
-# Docker Engine Installation and Management (All-In-One)
-#
-# Description:
-#   - By default uses distro repository (docker.io) for stability
-#   - Optionally uses official Docker repository for latest features
-#   - Detects and migrates old Docker installations
-#   - Optional: Installs/Updates Portainer CE
-#   - Updates running containers interactively
-#   - Cleans up legacy repository files
-#
-# Usage:
-#   setup_docker                              # Uses distro package (recommended)
-#   USE_DOCKER_REPO=true setup_docker         # Uses official Docker repo
-#   DOCKER_PORTAINER="true" setup_docker
-#   DOCKER_LOG_DRIVER="json-file" setup_docker
-#
-# Variables:
-#   USE_DOCKER_REPO        - Set to "true" to use official Docker repository
-#                            (default: false, uses distro docker.io package)
-#   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
-#   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
-#   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
-#
-# Features:
-#   - Uses stable distro packages by default
-#   - Migrates from get.docker.com to repository-based installation
-#   - Updates Docker Engine if newer version available
-#   - Interactive container update with multi-select
-#   - Portainer installation and update support
-# ------------------------------------------------------------------------------
-function setup_docker() {
-  local docker_installed=false
-  local portainer_installed=false
-  local USE_DOCKER_REPO="${USE_DOCKER_REPO:-false}"
-
-  # Check if Docker is already installed
-  if command -v docker &>/dev/null; then
-    docker_installed=true
-    DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
-    msg_info "Docker $DOCKER_CURRENT_VERSION detected"
-  fi
-
-  # Check if Portainer is running
-  if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^portainer$'; then
-    portainer_installed=true
-    msg_info "Portainer container detected"
-  fi
-
-  # Scenario 1: Use distro repository (default, most stable)
-  if [[ "$USE_DOCKER_REPO" != "true" && "$USE_DOCKER_REPO" != "TRUE" && "$USE_DOCKER_REPO" != "1" ]]; then
-
-    # Install or upgrade Docker from distro repo
-    if [ "$docker_installed" = true ]; then
-      msg_info "Checking for Docker updates (distro package)"
-      ensure_apt_working || return 100
-      upgrade_packages_with_retry "docker.io" "docker-compose" || true
-      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
-      msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
-    else
-      msg_info "Installing Docker (distro package)"
-      ensure_apt_working || return 100
-
-      # Install docker.io and docker-compose from distro
-      if ! install_packages_with_retry "docker.io"; then
-        msg_error "Failed to install docker.io from distro repository"
-        return 100
-      fi
-      # docker-compose is optional
-      $STD apt install -y docker-compose 2>/dev/null || true
-
-      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
-      msg_ok "Installed Docker $DOCKER_CURRENT_VERSION (distro package)"
-    fi
-
-    # Configure daemon.json
-    local log_driver="${DOCKER_LOG_DRIVER:-journald}"
-    mkdir -p /etc/docker
-    if [ ! -f /etc/docker/daemon.json ]; then
-      cat <<EOF >/etc/docker/daemon.json
-{
-  "log-driver": "$log_driver"
-}
-EOF
-    fi
-
-    # Enable and start Docker
-    systemctl enable -q --now docker
-
-    # Continue to Portainer section below
-  else
-    # Scenario 2: Use official Docker repository (USE_DOCKER_REPO=true)
-
-    # Cleanup old repository configurations
-    if [ -f /etc/apt/sources.list.d/docker.list ]; then
-      msg_info "Migrating from old Docker repository format"
-      rm -f /etc/apt/sources.list.d/docker.list
-      rm -f /etc/apt/keyrings/docker.asc
-    fi
-
-    # Setup/Update Docker repository
-    msg_info "Setting up Docker Repository"
-    setup_deb822_repo \
-      "docker" \
-      "https://download.docker.com/linux/$(get_os_info id)/gpg" \
-      "https://download.docker.com/linux/$(get_os_info id)" \
-      "$(get_os_info codename)" \
-      "stable" \
-      "$(dpkg --print-architecture)"
-
-    # Install or upgrade Docker
-    if [ "$docker_installed" = true ]; then
-      msg_info "Checking for Docker updates"
-      DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' 2>/dev/null | cut -d':' -f2 | cut -d'-' -f1 || echo '')
-
-      if [ "$DOCKER_CURRENT_VERSION" != "$DOCKER_LATEST_VERSION" ]; then
-        msg_info "Updating Docker $DOCKER_CURRENT_VERSION → $DOCKER_LATEST_VERSION"
-        $STD apt install -y --only-upgrade \
-          docker-ce \
-          docker-ce-cli \
-          containerd.io \
-          docker-buildx-plugin \
-          docker-compose-plugin || {
-          msg_error "Failed to update Docker packages"
-          return 100
-        }
-        msg_ok "Updated Docker to $DOCKER_LATEST_VERSION"
-      else
-        msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
-      fi
-    else
-      msg_info "Installing Docker"
-      $STD apt install -y \
-        docker-ce \
-        docker-ce-cli \
-        containerd.io \
-        docker-buildx-plugin \
-        docker-compose-plugin || {
-        msg_error "Failed to install Docker packages"
-        return 100
-      }
-
-      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
-      msg_ok "Installed Docker $DOCKER_CURRENT_VERSION"
-    fi
-
-    # Configure daemon.json
-    local log_driver="${DOCKER_LOG_DRIVER:-journald}"
-    mkdir -p /etc/docker
-    if [ ! -f /etc/docker/daemon.json ]; then
-      cat <<EOF >/etc/docker/daemon.json
-{
-  "log-driver": "$log_driver"
-}
-EOF
-    fi
-
-    # Enable and start Docker
-    systemctl enable -q --now docker
-  fi
-
-  # Portainer Management (common for both modes)
-  if [[ "${DOCKER_PORTAINER:-}" == "true" ]]; then
-    if [ "$portainer_installed" = true ]; then
-      msg_info "Checking for Portainer updates"
-      PORTAINER_CURRENT=$(docker inspect portainer --format='{{.Config.Image}}' 2>/dev/null | cut -d':' -f2)
-      PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
-
-      if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
-        read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
-        if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-          msg_info "Updating Portainer"
-          docker stop portainer
-          docker rm portainer
-          docker pull portainer/portainer-ce:latest
-          docker run -d \
-            -p 9000:9000 \
-            -p 9443:9443 \
-            --name=portainer \
-            --restart=always \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v portainer_data:/data \
-            portainer/portainer-ce:latest
-          msg_ok "Updated Portainer to $PORTAINER_LATEST"
-        fi
-      else
-        msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
-      fi
-    else
-      msg_info "Installing Portainer"
-      docker volume create portainer_data
-      docker run -d \
-        -p 9000:9000 \
-        -p 9443:9443 \
-        --name=portainer \
-        --restart=always \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v portainer_data:/data \
-        portainer/portainer-ce:latest
-
-      LOCAL_IP=$(hostname -I | awk '{print $1}')
-      msg_ok "Installed Portainer (http://${LOCAL_IP}:9000)"
-    fi
-  fi
-
-  # Interactive Container Update Check
-  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ]; then
-    msg_info "Checking for container updates"
-
-    # Get list of running containers with update status
-    local containers_with_updates=()
-    local container_info=()
-    local index=1
-
-    while IFS= read -r container; do
-      local name=$(echo "$container" | awk '{print $1}')
-      local image=$(echo "$container" | awk '{print $2}')
-      local current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
-
-      # Pull latest image digest
-      docker pull "$image" >/dev/null 2>&1
-      local latest_digest=$(docker inspect "$image" --format='{{.Id}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
-
-      if [ "$current_digest" != "$latest_digest" ]; then
-        containers_with_updates+=("$name")
-        container_info+=("${index}) ${name} (${image})")
-        ((index++))
-      fi
-    done < <(docker ps --format '{{.Names}} {{.Image}}')
-
-    if [ ${#containers_with_updates[@]} -gt 0 ]; then
-      echo ""
-      echo "${TAB3}Container updates available:"
-      for info in "${container_info[@]}"; do
-        echo "${TAB3}  $info"
-      done
-      echo ""
-      read -r -p "${TAB3}Select containers to update (e.g., 1,3,5 or 'all' or 'none'): " selection
-
-      if [[ ${selection,,} == "all" ]]; then
-        for container in "${containers_with_updates[@]}"; do
-          msg_info "Updating container: $container"
-          docker stop "$container"
-          docker rm "$container"
-          # Note: This requires the original docker run command - best to recreate via compose
-          msg_ok "Stopped and removed $container (please recreate with updated image)"
-        done
-      elif [[ ${selection,,} != "none" ]]; then
-        IFS=',' read -ra SELECTED <<<"$selection"
-        for num in "${SELECTED[@]}"; do
-          num=$(echo "$num" | xargs) # trim whitespace
-          if [[ "$num" =~ ^[0-9]+$ ]] && [ "$num" -ge 1 ] && [ "$num" -le "${#containers_with_updates[@]}" ]; then
-            container="${containers_with_updates[$((num - 1))]}"
-            msg_info "Updating container: $container"
-            docker stop "$container"
-            docker rm "$container"
-            msg_ok "Stopped and removed $container (please recreate with updated image)"
-          fi
-        done
-      fi
-    else
-      msg_ok "All containers are up-to-date"
-    fi
-  fi
-
-  msg_ok "Docker setup completed"
 }
 
 # ------------------------------------------------------------------------------
