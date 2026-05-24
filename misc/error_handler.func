@@ -358,6 +358,55 @@ error_handler() {
     fi
   fi
 
+  # ── Log-pattern analysis: detect common failure causes and emit actionable hints ──
+  if [[ -n "$active_log" && -s "$active_log" ]]; then
+    local _log_tail
+    _log_tail=$(tail -n 60 "$active_log" 2>/dev/null || true)
+
+    # 1. APT/dpkg dependency conflict
+    if echo "$_log_tail" | grep -qE "Depends:|depends on.*but.*not installed|broken packages|unmet dep|dependency problems"; then
+      # Check for PostgreSQL-specific version mismatch (most actionable)
+      local _pg_conflict
+      _pg_conflict=$(echo "$_log_tail" | grep -oE 'postgresql-[0-9]+ but.*installed' | head -1 || true)
+      if [[ -n "$_pg_conflict" ]]; then
+        if declare -f msg_warn >/dev/null 2>&1; then
+          msg_warn "PostgreSQL version conflict: ${_pg_conflict}"
+          msg_warn "Hint: A package requires a specific PostgreSQL version that is not installed. Your distribution may have installed a different PG version than expected."
+        fi
+      else
+        if declare -f msg_warn >/dev/null 2>&1; then
+          msg_warn "APT dependency conflict detected. A required package is not available or is the wrong version for this system."
+          msg_warn "Hint: Run 'apt-get install -f' inside the container or check that all required repositories are configured for your distribution."
+        fi
+      fi
+    # 2. APT/GPG signature verification failure
+    elif echo "$_log_tail" | grep -qE "sqv|KEYEXPIRED|NO_PUBKEY|key is not certified|signature verification failed|is not signed|Sub-process.*sqv"; then
+      if declare -f msg_warn >/dev/null 2>&1; then
+        msg_warn "APT repository signature error detected."
+        msg_warn "Hint: A repository GPG key may be missing, expired, or the keyring file is not yet present (/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc etc.)."
+        msg_warn "Hint: Install the 'postgresql-common' package first, or re-add the repository with its correct signing key."
+      fi
+    # 3. Network / DNS failure during apt-get or curl
+    elif echo "$_log_tail" | grep -qE "Could not resolve|Failed to fetch|Unable to connect|Name or service not known|Network is unreachable|curl.*resolve"; then
+      if declare -f msg_warn >/dev/null 2>&1; then
+        msg_warn "Network or DNS failure detected."
+        msg_warn "Hint: Check the container's network connectivity, DNS settings, and whether any firewall or ad-blocker is intercepting traffic."
+      fi
+    # 4. APT lock held by another process
+    elif echo "$_log_tail" | grep -qE "Could not get lock|dpkg frontend lock|waiting for it to exit|E: Unable to lock"; then
+      if declare -f msg_warn >/dev/null 2>&1; then
+        msg_warn "APT or dpkg lock conflict detected."
+        msg_warn "Hint: Another package manager process may be running. Try 'rm /var/lib/dpkg/lock-frontend && dpkg --configure -a' inside the container."
+      fi
+    # 5. Disk space exhaustion
+    elif echo "$_log_tail" | grep -qE "No space left on device|disk quota exceeded|ENOSPC"; then
+      if declare -f msg_warn >/dev/null 2>&1; then
+        msg_warn "Disk space exhausted during installation."
+        msg_warn "Hint: Increase the container's disk size (pct resize <ctid> rootfs +2G) or clean up space first."
+      fi
+    fi
+  fi
+
   # Detect context: Container (INSTALL_LOG set + inside container /root) vs Host
   if [[ -n "${INSTALL_LOG:-}" && -f "${INSTALL_LOG:-}" && -d /root ]]; then
     # CONTAINER CONTEXT: Copy log and create flag file for host

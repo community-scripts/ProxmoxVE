@@ -477,6 +477,21 @@ install_packages_with_retry() {
   done
 
   msg_error "Failed to install packages after $((max_retries + 1)) attempts: ${packages[*]}"
+  # Provide a quick diagnostic: check if package exists in any configured repo
+  local _os_codename
+  _os_codename=$(awk -F= '/^VERSION_CODENAME=/{gsub(/"/, "", $2); print $2}' /etc/os-release 2>/dev/null || echo "unknown")
+  local _unavailable=()
+  for _pkg in "${packages[@]}"; do
+    if ! apt-cache show "$_pkg" &>/dev/null; then
+      _unavailable+=("$_pkg")
+    fi
+  done
+  if [[ ${#_unavailable[@]} -gt 0 ]]; then
+    msg_error "Package(s) not found in any configured repository: ${_unavailable[*]}"
+    msg_error "Hint: These packages may not be available for '${_os_codename}'. Check repository configuration or package names."
+  else
+    msg_error "Hint: Package(s) exist in the repo but could not be installed — run 'apt-get install -f' inside the container or check for dependency conflicts."
+  fi
   return 100
 }
 
@@ -508,6 +523,7 @@ upgrade_packages_with_retry() {
   done
 
   msg_error "Failed to upgrade packages after $((max_retries + 1)) attempts: ${packages[*]}"
+  msg_error "Hint: The package may be held back, have conflicting dependencies, or the repository is unreachable. Check 'apt-cache policy ${packages[*]}' inside the container."
   return 100
 }
 
@@ -1468,6 +1484,7 @@ download_file() {
   done
 
   msg_error "Failed to download: $url"
+  msg_error "Hint: Check network connectivity or DNS resolution. The server may be unreachable or the URL may have changed."
   return 250
 }
 
@@ -1896,7 +1913,8 @@ setup_deb822_repo() {
   local tmp_gpg
   tmp_gpg=$(mktemp) || return 252
   curl -fsSL "$gpg_url" -o "$tmp_gpg" || {
-    msg_error "Failed to download GPG key for ${name}"
+    msg_error "Failed to download GPG key for ${name} from: ${gpg_url}"
+    msg_error "Hint: Check network connectivity. If behind a proxy or firewall, ensure HTTPS access to $(echo "$gpg_url" | grep -oE 'https?://[^/]+') is allowed."
     rm -f "$tmp_gpg"
     return 7
   }
@@ -2873,6 +2891,66 @@ function curl_download() {
 #   fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tag" "v0.11.3" "/opt/autocaliweb"
 # ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# _diagnose_deb_failure()
+#
+# - Called when both apt and dpkg fail to install a .deb package
+# - Extracts package metadata and detects common failure patterns
+# - Outputs enhanced error messages with actionable hints:
+#     * PostgreSQL version conflicts (e.g., postgresql-16-foo with pg17 active)
+#     * Missing declared dependencies
+#     * Generic fallback hint pointing to the log
+#
+# Usage: _diagnose_deb_failure "/path/to/file.deb"
+# Returns: always 0 (diagnostic only — caller must return the error code)
+# ------------------------------------------------------------------------------
+_diagnose_deb_failure() {
+  local deb_path="$1"
+  local filename="${deb_path##*/}"
+  local pkg_name pkg_deps pkg_version
+
+  pkg_name=$(dpkg-deb -f "$deb_path" Package 2>/dev/null || echo "${filename%%_*}")
+  pkg_version=$(dpkg-deb -f "$deb_path" Version 2>/dev/null || true)
+  pkg_deps=$(dpkg-deb -f "$deb_path" Depends 2>/dev/null || true)
+
+  msg_error "Failed to install '${pkg_name}${pkg_version:+ (${pkg_version})}' — both apt and dpkg reported errors"
+
+  # Detect PostgreSQL version conflict (e.g., postgresql-16-vchord while pg17 is active)
+  local pg_ver_needed pg_ver_installed
+  pg_ver_needed=$(echo "$filename" | grep -oP '(?<=postgresql-)[0-9]+(?=-)' | head -1 || true)
+  if [[ -n "$pg_ver_needed" ]]; then
+    pg_ver_installed=$(psql -V 2>/dev/null | awk '{print $3}' | cut -d. -f1 || true)
+    if [[ -n "$pg_ver_installed" && "$pg_ver_needed" != "$pg_ver_installed" ]]; then
+      msg_error "Version conflict: '${pkg_name}' is built for PostgreSQL ${pg_ver_needed}, but PostgreSQL ${pg_ver_installed} is installed on this system."
+      msg_error "Hint: Your distribution installed a different PostgreSQL version than expected. The script may need updating to use postgresql-${pg_ver_installed}-* packages."
+      return 0
+    fi
+  fi
+
+  # Show which declared dependencies are not satisfied
+  if [[ -n "$pkg_deps" ]]; then
+    local missing_deps=()
+    while IFS=',' read -ra dep_list; do
+      for dep_entry in "${dep_list[@]}"; do
+        local dep_pkg
+        dep_pkg=$(echo "$dep_entry" | awk '{print $1}' | tr -d ' ')
+        [[ -z "$dep_pkg" || "$dep_pkg" == "("* ]] && continue
+        if ! dpkg-query -W -f='${Status}' "$dep_pkg" 2>/dev/null | grep -q "install ok installed"; then
+          missing_deps+=("$dep_pkg")
+        fi
+      done
+    done <<<"$pkg_deps"
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+      msg_error "Unmet dependencies: ${missing_deps[*]}"
+      msg_error "Hint: Run 'apt-get install -f' inside the container to attempt automatic dependency resolution."
+    else
+      msg_error "Hint: Declared dependencies appear present but installation still failed. Check the log above for the exact error."
+    fi
+  else
+    msg_error "Hint: Check the installation log above for the exact dependency or configuration error."
+  fi
+}
+
 function fetch_and_deploy_codeberg_release() {
   local app="$1"
   local repo="$2"
@@ -3106,7 +3184,7 @@ function fetch_and_deploy_codeberg_release() {
     chmod 644 "$tmpdir/$filename"
     $STD apt install -y "$tmpdir/$filename" || {
       $STD dpkg -i "$tmpdir/$filename" || {
-        msg_error "Both apt and dpkg installation failed"
+        _diagnose_deb_failure "$tmpdir/$filename"
         rm -rf "$tmpdir"
         return 100
       }
@@ -3651,7 +3729,7 @@ function fetch_and_deploy_gh_release() {
     [[ "${DPKG_FORCE_CONFNEW:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confnew"
     DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
-        msg_error "Both apt and dpkg installation failed"
+        _diagnose_deb_failure "$tmpdir/$filename"
         rm -rf "$tmpdir"
         return 100
       }
@@ -7040,7 +7118,13 @@ setup_postgresql() {
       SUITE="trixie-pgdg"
 
     else
-      msg_warn "PGDG repo not available for ${DISTRO_CODENAME}, falling back to distro packages"
+      local _distro_pg_ver
+      _distro_pg_ver=$(apt-cache show postgresql 2>/dev/null | awk '/^Version:/{print $2; exit}' | grep -oE '^[0-9]+' || true)
+      msg_warn "PGDG repository not available for ${DISTRO_CODENAME} — falling back to distro-provided PostgreSQL packages"
+      if [[ -n "$_distro_pg_ver" ]]; then
+        msg_warn "Distro will install PostgreSQL ${_distro_pg_ver} (not the requested ${PG_VERSION})."
+        msg_warn "Any PostgreSQL extension packages (e.g. vchord, pgvector) must be built for PostgreSQL ${_distro_pg_ver} on ${DISTRO_CODENAME}."
+      fi
       USE_PGDG_REPO=false setup_postgresql
       return $?
     fi
@@ -8558,7 +8642,7 @@ function fetch_and_deploy_from_url() {
     chmod 644 "$tmpdir/$filename"
     $STD apt install -y "$tmpdir/$filename" || {
       $STD dpkg -i "$tmpdir/$filename" || {
-        msg_error "Both apt and dpkg installation failed"
+        _diagnose_deb_failure "$tmpdir/$filename"
         rm -rf "$tmpdir"
         return 100
       }
@@ -9226,7 +9310,7 @@ function fetch_and_deploy_gl_release() {
     [[ "${DPKG_FORCE_CONFNEW:-}" == "1" ]] && dpkg_opts="-o Dpkg::Options::=--force-confnew"
     DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
-        msg_error "Both apt and dpkg installation failed"
+        _diagnose_deb_failure "$tmpdir/$filename"
         rm -rf "$tmpdir"
         return 1
       }
