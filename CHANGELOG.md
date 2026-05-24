@@ -469,6 +469,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-24
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - ISponsorblockTV: detect CPU capabilities to select compatible binary [@MickLesk](https://github.com/MickLesk) ([#14677](https://github.com/community-scripts/ProxmoxVE/pull/14677))
+
 ## 2026-05-23
 
 ### 🚀 Updated Scripts
