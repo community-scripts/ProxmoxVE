@@ -475,6 +475,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - ISponsorblockTV: detect CPU capabilities to select compatible binary [@MickLesk](https://github.com/MickLesk) ([#14677](https://github.com/community-scripts/ProxmoxVE/pull/14677))
 
+  - #### 🔧 Refactor
+
+    - Refactor: MQTT [@tremor021](https://github.com/tremor021) ([#14673](https://github.com/community-scripts/ProxmoxVE/pull/14673))
+
 ## 2026-05-23
 
 ### 🚀 Updated Scripts
