@@ -2764,7 +2764,7 @@ create_self_signed_cert() {
 #   $2 - Destination path
 # ------------------------------------------------------------------------------
 
-function download_with_progress() {
+download_with_progress() {
   local url="$1"
   local output="$2"
   if [ -n "$SPINNER_PID" ] && ps -p "$SPINNER_PID" >/dev/null; then kill "$SPINNER_PID" >/dev/null; fi
@@ -2797,7 +2797,7 @@ function download_with_progress() {
 #   - Adds to /root/.bashrc for non-login shells (pct enter)
 # ------------------------------------------------------------------------------
 
-function ensure_usr_local_bin_persist() {
+ensure_usr_local_bin_persist() {
   # Skip on Proxmox host
   command -v pveversion &>/dev/null && return
 
@@ -2827,7 +2827,7 @@ function ensure_usr_local_bin_persist() {
 # Retries up to 3 times on failure.
 # Returns 0 on success, 7 if all attempts fail.
 # ------------------------------------------------------------------------------
-function curl_download() {
+curl_download() {
   local output="$1"
   local url="$2"
   local retries=3
@@ -2954,7 +2954,7 @@ _diagnose_deb_failure() {
   fi
 }
 
-function fetch_and_deploy_codeberg_release() {
+fetch_and_deploy_codeberg_release() {
   local app="$1"
   local repo="$2"
   local mode="${3:-tarball}" # tarball | binary | prebuild | singlefile | tag
@@ -3496,7 +3496,7 @@ _gh_scan_older_releases() {
   return 250
 }
 
-function fetch_and_deploy_gh_release() {
+fetch_and_deploy_gh_release() {
   local app="$1"
   local repo="$2"
   local mode="${3:-tarball}" # tarball | binary | prebuild | singlefile
@@ -3935,7 +3935,7 @@ function fetch_and_deploy_gh_release() {
 #   - Supports Alpine and Debian-based systems
 # ------------------------------------------------------------------------------
 
-function setup_adminer() {
+setup_adminer() {
   if grep -qi alpine /etc/os-release; then
     msg_info "Setup Adminer (Alpine)"
     mkdir -p /var/www/localhost/htdocs/adminer
@@ -3977,7 +3977,7 @@ function setup_adminer() {
 #   CLICKHOUSE_VERSION  - ClickHouse version to install (default: latest)
 # ------------------------------------------------------------------------------
 
-function setup_clickhouse() {
+setup_clickhouse() {
   local CLICKHOUSE_VERSION="${CLICKHOUSE_VERSION:-latest}"
   local DISTRO_ID DISTRO_CODENAME
   DISTRO_ID=$(get_os_info id)
@@ -4092,7 +4092,7 @@ function setup_clickhouse() {
 # - Auto-updates to latest version
 # ------------------------------------------------------------------------------
 
-function setup_composer() {
+setup_composer() {
   local COMPOSER_BIN="/usr/local/bin/composer"
   export COMPOSER_ALLOW_SUPERUSER=1
 
@@ -4185,7 +4185,7 @@ function setup_composer() {
 #   - Interactive container update with multi-select
 #   - Portainer installation and update support
 # ------------------------------------------------------------------------------
-function setup_docker() {
+setup_docker() {
   local docker_installed=false
   local portainer_installed=false
   local USE_DOCKER_REPO="${USE_DOCKER_REPO:-false}"
@@ -4441,7 +4441,7 @@ EOF
 #   - Result is installed to /usr/local/bin/ffmpeg
 # ------------------------------------------------------------------------------
 
-function setup_ffmpeg() {
+setup_ffmpeg() {
   local TMP_DIR=$(mktemp -d)
   local GITHUB_REPO="FFmpeg/FFmpeg"
   local VERSION="${FFMPEG_VERSION:-latest}"
@@ -4657,7 +4657,7 @@ function setup_ffmpeg() {
 #   GO_VERSION     - Version to install (e.g. 1.22.2 or latest)
 # ------------------------------------------------------------------------------
 
-function setup_go() {
+setup_go() {
   local ARCH
   case "$(uname -m)" in
   x86_64) ARCH="amd64" ;;
@@ -4737,7 +4737,7 @@ function setup_go() {
 #   - Builds and installs system-wide
 # ------------------------------------------------------------------------------
 
-function setup_gs() {
+setup_gs() {
   local TMP_DIR=$(mktemp -d)
   local CURRENT_VERSION=$(gs --version 2>/dev/null || echo "0")
 
@@ -4857,7 +4857,7 @@ function setup_gs() {
 #   - Some Intel packages are fetched from GitHub due to missing Debian packages
 #   - NVIDIA requires matching host driver version
 # ------------------------------------------------------------------------------
-function setup_hwaccel() {
+setup_hwaccel() {
   local service_user="${1:-}"
 
   # Check if user explicitly disabled GPU in advanced settings
@@ -5859,7 +5859,7 @@ _setup_gpu_permissions() {
 # Notes:
 #   - Requires: build-essential, libtool, libjpeg-dev, libpng-dev, etc.
 # ------------------------------------------------------------------------------
-function setup_imagemagick() {
+setup_imagemagick() {
   local TMP_DIR=$(mktemp -d)
   local BINARY_PATH="/usr/local/bin/magick"
 
@@ -5957,7 +5957,7 @@ function setup_imagemagick() {
 #   JAVA_VERSION   - Temurin JDK version to install (e.g. 17, 21)
 # ------------------------------------------------------------------------------
 
-function setup_java() {
+setup_java() {
   local JAVA_VERSION="${JAVA_VERSION:-21}"
   local DISTRO_ID DISTRO_CODENAME
   DISTRO_ID=$(get_os_info id)
@@ -6027,7 +6027,7 @@ function setup_java() {
 #   - Automatically runs on network changes
 # ------------------------------------------------------------------------------
 
-function setup_local_ip_helper() {
+setup_local_ip_helper() {
   local BASE_DIR="/usr/local/community-scripts/ip-management"
   local SCRIPT_PATH="$BASE_DIR/update_local_ip.sh"
   local IP_FILE="/run/local-ip.env"
@@ -6421,7 +6421,7 @@ _setup_mariadb_runtime_dir() {
 #   MARIADB_DB_NAME, MARIADB_DB_USER, MARIADB_DB_PASS
 # ------------------------------------------------------------------------------
 
-function setup_mariadb_db() {
+setup_mariadb_db() {
   if [[ -z "${MARIADB_DB_NAME:-}" || -z "${MARIADB_DB_USER:-}" ]]; then
     msg_error "MARIADB_DB_NAME and MARIADB_DB_USER must be set before calling setup_mariadb_db"
     return 65
@@ -6495,7 +6495,7 @@ function setup_mariadb_db() {
 #   setup_meilisearch
 # ------------------------------------------------------------------------------
 
-function setup_meilisearch() {
+setup_meilisearch() {
   local MEILISEARCH_BIND="${MEILISEARCH_BIND:-127.0.0.1:7700}"
   local MEILISEARCH_ENV="${MEILISEARCH_ENV:-production}"
   local MEILISEARCH_DB_PATH="${MEILISEARCH_DB_PATH:-/var/lib/meilisearch/data}"
@@ -6782,7 +6782,7 @@ EOF
 #   MONGO_VERSION  - MongoDB version to install (e.g. 7.0, 8.2)
 # ------------------------------------------------------------------------------
 
-function setup_mongodb() {
+setup_mongodb() {
   local MONGO_VERSION="${MONGO_VERSION:-8.0}"
   local DISTRO_ID DISTRO_CODENAME
   DISTRO_ID=$(get_os_info id)
@@ -6918,7 +6918,7 @@ function setup_mongodb() {
 #   USE_MYSQL_REPO=false setup_mysql         # Uses distro package instead
 # ------------------------------------------------------------------------------
 
-function setup_mysql() {
+setup_mysql() {
   local MYSQL_VERSION="${MYSQL_VERSION:-8.0}"
   local USE_MYSQL_REPO="${USE_MYSQL_REPO:-true}"
   local DISTRO_ID DISTRO_CODENAME
@@ -7132,7 +7132,7 @@ EOF
 #   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
 # ------------------------------------------------------------------------------
 
-function setup_nodejs() {
+setup_nodejs() {
   local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
 
@@ -7375,7 +7375,7 @@ function setup_nodejs() {
 #   - Unavailable modules are skipped with a warning, not an error
 # ------------------------------------------------------------------------------
 
-function setup_php() {
+setup_php() {
   local PHP_VERSION="${PHP_VERSION:-8.4}"
   local PHP_MODULE="${PHP_MODULE:-}"
   local PHP_APACHE="${PHP_APACHE:-NO}"
@@ -7951,7 +7951,7 @@ setup_postgresql() {
 #   PG_DB_NAME, PG_DB_USER, PG_DB_PASS - For use in calling script
 # ------------------------------------------------------------------------------
 
-function setup_postgresql_db() {
+setup_postgresql_db() {
   # Validation
   if [[ -z "${PG_DB_NAME:-}" || -z "${PG_DB_USER:-}" ]]; then
     msg_error "PG_DB_NAME and PG_DB_USER must be set before calling setup_postgresql_db"
@@ -8043,7 +8043,7 @@ function setup_postgresql_db() {
 #   RUBY_INSTALL_RAILS   - true/false to install Rails (default: true)
 # ------------------------------------------------------------------------------
 
-function setup_ruby() {
+setup_ruby() {
   local RUBY_VERSION="${RUBY_VERSION:-3.4.4}"
   local RUBY_INSTALL_RAILS="${RUBY_INSTALL_RAILS:-true}"
   local RBENV_DIR="$HOME/.rbenv"
@@ -8230,7 +8230,7 @@ function setup_ruby() {
 #   RUST_CRATES     - Comma-separated list of crates (e.g. "cargo-edit,wasm-pack@0.12.1")
 # ------------------------------------------------------------------------------
 
-function setup_rust() {
+setup_rust() {
   local RUST_TOOLCHAIN="${RUST_TOOLCHAIN:-stable}"
   local RUST_CRATES="${RUST_CRATES:-}"
   local CARGO_BIN="${HOME}/.cargo/bin"
@@ -8375,7 +8375,7 @@ function setup_rust() {
 #   - Optionally installs a specific Python version via uv
 # ------------------------------------------------------------------------------
 
-function setup_uv() {
+setup_uv() {
   local UV_BIN="/usr/local/bin/uv"
   local UVX_BIN="/usr/local/bin/uvx"
   local TMP_DIR=$(mktemp -d)
@@ -8532,7 +8532,7 @@ EOF
 #   - Updates if outdated or wrong implementation
 # ------------------------------------------------------------------------------
 
-function setup_yq() {
+setup_yq() {
   local TMP_DIR=$(mktemp -d)
   local BINARY_PATH="/usr/local/bin/yq"
   local GITHUB_REPO="mikefarah/yq"
@@ -8611,7 +8611,7 @@ function setup_yq() {
 #   fetch_and_deploy_from_url "https://example.com/app.zip" "/opt/myapp"
 #   fetch_and_deploy_from_url "https://example.com/package.deb" ""
 # ------------------------------------------------------------------------------
-function fetch_and_deploy_from_url() {
+fetch_and_deploy_from_url() {
   local url="$1"
   local directory="${2:-}"
 
@@ -9098,7 +9098,7 @@ _gl_scan_older_releases() {
   return 250
 }
 
-function fetch_and_deploy_gl_release() {
+fetch_and_deploy_gl_release() {
   local app="$1"
   local repo="$2"
   local mode="${3:-tarball}"
@@ -9536,7 +9536,7 @@ function fetch_and_deploy_gl_release() {
 #
 # Returns: 0 on success, non-zero if any package failed
 # ------------------------------------------------------------------------------
-function setup_nltk() {
+setup_nltk() {
   local packages="${1:?setup_nltk requires at least one package name}"
   local target_dir="${2:-/usr/share/nltk_data}"
   local NLTK_INDEX_URL="https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/index.xml"
