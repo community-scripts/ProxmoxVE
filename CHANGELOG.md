@@ -57,6 +57,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -66,7 +69,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>May (16 entries)</h4></summary>
+<summary><h4>May (23 entries)</h4></summary>
 
 [View May 2026 Changelog](.github/changelogs/2026/05.md)
 
@@ -1035,160 +1038,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - Refactor: Ghostfolio [@MickLesk](https://github.com/MickLesk) ([#13990](https://github.com/community-scripts/ProxmoxVE/pull/13990))
-
-## 2026-04-23
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - mealie: start.sh missing after failed update [@MickLesk](https://github.com/MickLesk) ([#13958](https://github.com/community-scripts/ProxmoxVE/pull/13958))
-    - twingate-connector: perform real apt upgrade during update flow [@MickLesk](https://github.com/MickLesk) ([#13959](https://github.com/community-scripts/ProxmoxVE/pull/13959))
-
-  - #### ✨ New Features
-
-    - core: auto-size NODE_OPTIONS heap [@MickLesk](https://github.com/MickLesk) ([#13960](https://github.com/community-scripts/ProxmoxVE/pull/13960))
-
-  - #### 🔧 Refactor
-
-    - Update scripts to match standard [@tremor021](https://github.com/tremor021) ([#13956](https://github.com/community-scripts/ProxmoxVE/pull/13956))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - tools.func: upgrade Node.js minor/patch on same major version [@MickLesk](https://github.com/MickLesk) ([#13957](https://github.com/community-scripts/ProxmoxVE/pull/13957))
-    - core: hotfix - prefer silent mode on PHS env conflict [@MickLesk](https://github.com/MickLesk) ([#13951](https://github.com/community-scripts/ProxmoxVE/pull/13951))
-
-  - #### 🔧 Refactor
-
-    - core: improve system update information / lxc stack upgrade [@MickLesk](https://github.com/MickLesk) ([#13970](https://github.com/community-scripts/ProxmoxVE/pull/13970))
-
-## 2026-04-22
-
-### 🆕 New Scripts
-
-  - Dashy ([#13817](https://github.com/community-scripts/ProxmoxVE/pull/13817))
-- Mini-QR ([#13902](https://github.com/community-scripts/ProxmoxVE/pull/13902))
-- ownfoil ([#13904](https://github.com/community-scripts/ProxmoxVE/pull/13904))
-- ERPNext ([#13921](https://github.com/community-scripts/ProxmoxVE/pull/13921))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - add --clear to uv venv in update_script() to prevent interactive prompt [@MickLesk](https://github.com/MickLesk) ([#13926](https://github.com/community-scripts/ProxmoxVE/pull/13926))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - core: Add PHS_VERBOSE env var to skip verbose mode prompts [@gormanity](https://github.com/gormanity) ([#13797](https://github.com/community-scripts/ProxmoxVE/pull/13797))
-
-## 2026-04-21
-
-### 🆕 New Scripts
-
-  - gogs ([#13896](https://github.com/community-scripts/ProxmoxVE/pull/13896))
-- anchor ([#13895](https://github.com/community-scripts/ProxmoxVE/pull/13895))
-- minthcm ([#13903](https://github.com/community-scripts/ProxmoxVE/pull/13903))
-- foldergram ([#13900](https://github.com/community-scripts/ProxmoxVE/pull/13900))
-
-### 🚀 Updated Scripts
-
-  - OpenCloud: Pin version to 6.1.0 [@vhsdream](https://github.com/vhsdream) ([#13890](https://github.com/community-scripts/ProxmoxVE/pull/13890))
-
-  - #### 🐞 Bug Fixes
-
-    - Domain-Locker: Update dependencies [@tremor021](https://github.com/tremor021) ([#13901](https://github.com/community-scripts/ProxmoxVE/pull/13901))
-    - homelable: fix install failure by correcting password-reset chmod target [@Copilot](https://github.com/Copilot) ([#13894](https://github.com/community-scripts/ProxmoxVE/pull/13894))
-
-  - #### ✨ New Features
-
-    - FileFlows: Update dependencies [@tremor021](https://github.com/tremor021) ([#13917](https://github.com/community-scripts/ProxmoxVE/pull/13917))
-
-## 2026-04-20
-
-### 🆕 New Scripts
-
-  - WhoDB ([#13880](https://github.com/community-scripts/ProxmoxVE/pull/13880))
-
-### 🚀 Updated Scripts
-
-  - pangolin: create migration tables before data transfer to prevent role loss [@MickLesk](https://github.com/MickLesk) ([#13874](https://github.com/community-scripts/ProxmoxVE/pull/13874))
-
-  - #### 🐞 Bug Fixes
-
-    - Pangolin: pre-apply schema migrations to prevent data loss [@MickLesk](https://github.com/MickLesk) ([#13861](https://github.com/community-scripts/ProxmoxVE/pull/13861))
-    - ActualBudget: change migration messages to warnings [@MickLesk](https://github.com/MickLesk) ([#13860](https://github.com/community-scripts/ProxmoxVE/pull/13860))
-    - slskd: migrate config keys for 0.25.0 breaking change [@MickLesk](https://github.com/MickLesk) ([#13862](https://github.com/community-scripts/ProxmoxVE/pull/13862))
-
-  - #### ✨ New Features
-
-    - Wanderer: add pocketbase CLI wrapper with env [@MickLesk](https://github.com/MickLesk) ([#13863](https://github.com/community-scripts/ProxmoxVE/pull/13863))
-    - feat(homelable): add password reset utility script [@davidsoncabista](https://github.com/davidsoncabista) ([#13798](https://github.com/community-scripts/ProxmoxVE/pull/13798))
-
-  - #### 🔧 Refactor
-
-    - Several Scripts: Bump NodeJS to align Node.js versions with upstream for 5 scripts [@MickLesk](https://github.com/MickLesk) ([#13875](https://github.com/community-scripts/ProxmoxVE/pull/13875))
-    - Refactor: PMG Post Install [@MickLesk](https://github.com/MickLesk) ([#13693](https://github.com/community-scripts/ProxmoxVE/pull/13693))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: detect Perl breakage after LXC stack upgrade and improve storage validation [@MickLesk](https://github.com/MickLesk) ([#13879](https://github.com/community-scripts/ProxmoxVE/pull/13879))
-
-## 2026-04-19
-
-### 🆕 New Scripts
-
-  - nametag ([#13849](https://github.com/community-scripts/ProxmoxVE/pull/13849))
-
-## 2026-04-18
-
-### 🆕 New Scripts
-
-  - Dagu ([#13830](https://github.com/community-scripts/ProxmoxVE/pull/13830))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - BabyBuddy: set DJANGO_SETTINGS_MODULE before migrate in update [@MickLesk](https://github.com/MickLesk) ([#13836](https://github.com/community-scripts/ProxmoxVE/pull/13836))
-    - litellm: add prisma generate and use venv binary directly [@MickLesk](https://github.com/MickLesk) ([#13835](https://github.com/community-scripts/ProxmoxVE/pull/13835))
-    - yamtrack: add missing nginx.conf sed edits to update script [@MickLesk](https://github.com/MickLesk) ([#13834](https://github.com/community-scripts/ProxmoxVE/pull/13834))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - SparkyFitness Garmin Microservice: fix update function [@tomfrenzel](https://github.com/tomfrenzel) ([#13824](https://github.com/community-scripts/ProxmoxVE/pull/13824))
-
-  - #### 🔧 Refactor
-
-    - Clean-Orphan-LVM: check all cluster nodes for VM/CT configs [@MickLesk](https://github.com/MickLesk) ([#13837](https://github.com/community-scripts/ProxmoxVE/pull/13837))
-
-## 2026-04-17
-
-### 🆕 New Scripts
-
-  - step-ca ([#13775](https://github.com/community-scripts/ProxmoxVE/pull/13775))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - core: pin IGC version to compute-runtime compatible tag (Intel GPU) [@MickLesk](https://github.com/MickLesk) ([#13814](https://github.com/community-scripts/ProxmoxVE/pull/13814))
-    - Fix for bambuddy community script update [@abbasegbeyemi](https://github.com/abbasegbeyemi) ([#13816](https://github.com/community-scripts/ProxmoxVE/pull/13816))
-    - Umami: Fix update procedure [@tremor021](https://github.com/tremor021) ([#13807](https://github.com/community-scripts/ProxmoxVE/pull/13807))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: sanitize mount_fs input — strip spaces and trailing commas [@MickLesk](https://github.com/MickLesk) ([#13806](https://github.com/community-scripts/ProxmoxVE/pull/13806))
-
-  - #### 🔧 Refactor
-
-    - core: fix some pct create issues (telemetry) + cleanup [@MickLesk](https://github.com/MickLesk) ([#13810](https://github.com/community-scripts/ProxmoxVE/pull/13810))
