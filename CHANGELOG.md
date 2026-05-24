@@ -473,6 +473,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - RomM: add installation steps for Nginx mod_zip module [@MickLesk](https://github.com/MickLesk) ([#14678](https://github.com/community-scripts/ProxmoxVE/pull/14678))
     - ISponsorblockTV: detect CPU capabilities to select compatible binary [@MickLesk](https://github.com/MickLesk) ([#14677](https://github.com/community-scripts/ProxmoxVE/pull/14677))
 
   - #### 🔧 Refactor
