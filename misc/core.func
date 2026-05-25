@@ -18,6 +18,7 @@
 
 [[ -n "${_CORE_FUNC_LOADED:-}" ]] && return
 _CORE_FUNC_LOADED=1
+SCRIPT_REPO="${PVE_SCRIPT_REPO:-community-scripts/ProxmoxVE}"
 
 # ==============================================================================
 # SECTION 1: INITIALIZATION & SETUP
@@ -846,7 +847,7 @@ get_header() {
   local app_type=${APP_TYPE:-ct} # Default to 'ct' if not set
   local header_dir="${app_type}"
   [[ "$app_type" == "addon" ]] && header_dir="tools"
-  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${header_dir}/headers/${app_name}"
+  local header_url="https://raw.githubusercontent.com/${SCRIPT_REPO}/main/${header_dir}/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
 
   mkdir -p "$(dirname "$local_header_path")"

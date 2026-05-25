@@ -27,13 +27,15 @@
 # SECTION 1: INITIALIZATION
 # ==============================================================================
 
+SCRIPT_REPO="${PVE_SCRIPT_REPO:-community-scripts/ProxmoxVE}"
+
 if ! command -v curl >/dev/null 2>&1; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
   apt update >/dev/null 2>&1
   apt install -y curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL "https://raw.githubusercontent.com/${SCRIPT_REPO}/main/misc/core.func")
+source <(curl -fsSL "https://raw.githubusercontent.com/${SCRIPT_REPO}/main/misc/error_handler.func")
 load_functions
 catch_errors
 
@@ -421,7 +423,7 @@ EOF
   post_progress_to_api
 
   local tools_content
-  tools_content=$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func) || {
+  tools_content=$(curl -fsSL "https://raw.githubusercontent.com/${SCRIPT_REPO}/main/misc/tools.func") || {
     msg_error "Failed to download tools.func"
     exit 115
   }
@@ -509,7 +511,7 @@ EOF
     systemctl restart "$(basename "$(dirname "$GETTY_OVERRIDE")" | sed 's/\.d//')"
     msg_ok "Customized Container"
   fi
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/${SCRIPT_REPO}/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 
   if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then
