@@ -27,6 +27,7 @@ msg_info "Setting up BirdNET-Go"
 cp /opt/birdnet/birdnet-go /usr/local/bin/birdnet-go
 chmod +x /usr/local/bin/birdnet-go
 cp -r /opt/birdnet/libtensorflowlite_c.so /usr/local/lib/ || true
+cp -r /opt/birdnet/libonnxruntime.so /usr/local/lib/ || true
 ldconfig
 mkdir -p /opt/birdnet/data/clips
 msg_ok "Set up BirdNET-Go"
