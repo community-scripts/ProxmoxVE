@@ -469,6 +469,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-25
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: replace raw GitHub API curl calls with get_latest_github_release [@MickLesk](https://github.com/MickLesk) ([#14690](https://github.com/community-scripts/ProxmoxVE/pull/14690))
+
 ### 🧰 Tools
 
   - #### 🔧 Refactor
