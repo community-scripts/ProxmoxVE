@@ -36,6 +36,11 @@ NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
 msg_info "Installing external JavaScript Extension for yt-dlp"
 $STD pip install -U yt-dlp-ejs
+mkdir -p ~/.config/pip
+cat <<EOF >~/.config/pip/pip.conf
+[global]
+break-system-packages = true
+EOF
 msg_ok "Installed external JavaScript Extension for yt-dlp"
 
 msg_info "Installing karakeep"
