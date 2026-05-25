@@ -469,6 +469,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-25
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - karakeep: fix: pip config [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14703](https://github.com/community-scripts/ProxmoxVE/pull/14703))
+
 ### 💾 Core
 
   - #### ✨ New Features
