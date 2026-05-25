@@ -31,7 +31,6 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-RUBY_VERSION="4.0.1" RUBY_INSTALL_RAILS="false" HOME=/root setup_ruby
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="docuseal" PG_DB_USER="docuseal" setup_postgresql_db
 
@@ -55,6 +54,9 @@ rm -rf /tmp/pdfium /tmp/pdfium.tgz
 msg_ok "Downloaded Fonts and PDFium"
 
 fetch_and_deploy_gh_release "docuseal" "docusealco/docuseal" "tarball"
+
+RUBY_VERSION=$(grep -m1 '^ruby ' /opt/docuseal/Gemfile | grep -oP '[0-9]+\.[0-9]+\.[0-9]+')
+RUBY_VERSION="${RUBY_VERSION}" RUBY_INSTALL_RAILS="false" HOME=/root setup_ruby
 
 msg_info "Downloading Field Detection Model"
 mkdir -p /opt/docuseal/tmp
