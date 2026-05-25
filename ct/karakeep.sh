@@ -46,6 +46,14 @@ function update_script() {
     fi
     msg_ok "Update prepared"
 
+    if [ ! -f ~/.config/pip/pip.conf ]; then
+      mkdir -p ~/.config/pip
+      cat <<EOF >~/.config/pip/pip.conf
+[global]
+break-system-packages = true
+EOF
+    fi
+
     if grep -q "start:prod" /etc/systemd/system/karakeep-workers.service; then
       sed -i 's|^ExecStart=.*$|ExecStart=/usr/bin/node dist/index.mjs|' /etc/systemd/system/karakeep-workers.service
       systemctl daemon-reload
