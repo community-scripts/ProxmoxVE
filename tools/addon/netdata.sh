@@ -47,7 +47,7 @@ function msg_ok() {
 function msg_error() { echo -e "${RD}✗ $1${CL}"; }
 
 # This function checks the version of Proxmox Virtual Environment (PVE) and exits if the version is not supported.
-# Supported: Proxmox VE 8.0.x – 8.9.x and 9.0–9.1.x
+# Supported: Proxmox VE 8.0.x – 8.9.x and 9.0–9.x
 pve_check() {
   local PVE_VER
   PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
@@ -63,20 +63,14 @@ pve_check() {
     return 0
   fi
 
-  # Check for Proxmox VE 9.x: allow 9.0–9.1.x
+  # Check for Proxmox VE 9.x: allow 9.0–9.x
   if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
-    local MINOR="${BASH_REMATCH[1]}"
-    if ((MINOR < 0 || MINOR > 1)); then
-      msg_error "This version of Proxmox VE is not yet supported."
-      msg_error "Supported: Proxmox VE version 9.0–9.1.x"
-      exit 105
-    fi
     return 0
   fi
 
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
-  msg_error "Supported versions: Proxmox VE 8.0 – 8.9 or 9.0–9.1.x"
+  msg_error "Supported versions: Proxmox VE 8.0 – 8.9 or 9.0–9.x"
   exit 105
 }
 
