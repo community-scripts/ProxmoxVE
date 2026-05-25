@@ -37,8 +37,9 @@ function update_script() {
     exit
   fi
 
+  ARCH=$(uname -m)
+
   if check_for_gh_release "deno" "denoland/deno" "v2.7.5" "Deno is pinned to 2.7.5 because the known WouldBlock: Resource temporarily unavailable (os error 11) Issue"; then
-    ARCH=$(uname -m)
     fetch_and_deploy_gh_release "deno" "denoland/deno" "v2.7.5" "latest" "/usr/local/bin" "deno-${ARCH}-unknown-linux-gnu.zip"
   fi
 
