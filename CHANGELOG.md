@@ -467,6 +467,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-25
+
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - Kernel-Clean: detect meta-packages and fix silent removal failures [@MickLesk](https://github.com/MickLesk) ([#14674](https://github.com/community-scripts/ProxmoxVE/pull/14674))
+
 ## 2026-05-24
 
 ### 🚀 Updated Scripts
