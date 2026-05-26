@@ -473,6 +473,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Open-archiver: approve pnpm build scripts and run build:oss without subshell [@MickLesk](https://github.com/MickLesk) ([#14711](https://github.com/community-scripts/ProxmoxVE/pull/14711))
     - Docuseal: read Ruby version from Gemfile, upgrade on update if needed [@MickLesk](https://github.com/MickLesk) ([#14715](https://github.com/community-scripts/ProxmoxVE/pull/14715))
 
   - #### ✨ New Features
