@@ -480,6 +480,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Birdnet-GO: install libonnxruntime.so from release tarball [@MickLesk](https://github.com/MickLesk) ([#14716](https://github.com/community-scripts/ProxmoxVE/pull/14716))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: better error diagnostics, consistent OS detection, setup function ordering [@MickLesk](https://github.com/MickLesk) ([#14692](https://github.com/community-scripts/ProxmoxVE/pull/14692))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
