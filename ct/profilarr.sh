@@ -91,6 +91,7 @@ EOF
     msg_ok "Built Profilarr"
 
     msg_info "Updating Profilarr"
+    mkdir -p /opt/profilarr/app
     cp dist/build/profilarr /opt/profilarr/app/profilarr
     cp dist/build/server.js /opt/profilarr/app/server.js
     cp -r dist/build/static /opt/profilarr/app/static
