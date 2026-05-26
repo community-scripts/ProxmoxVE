@@ -43,6 +43,7 @@ function update_script() {
     cp /opt/birdnet/birdnet-go /usr/local/bin/birdnet-go
     chmod +x /usr/local/bin/birdnet-go
     cp -r /opt/birdnet/libtensorflowlite_c.so /usr/local/lib/ || true
+    cp -r /opt/birdnet/libonnxruntime.so /usr/local/lib/ || true
     ldconfig
     msg_ok "Deployed Binary"
 

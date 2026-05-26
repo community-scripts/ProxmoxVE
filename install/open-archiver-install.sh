@@ -46,6 +46,7 @@ sed -i "s|^ENCRYPTION_KEY=.*|ENCRYPTION_KEY=$SECRET_KEY|g" /opt/openarchiver/.en
 sed -i "s|^TIKA_URL=.*|TIKA_URL=|g" /opt/openarchiver/.env
 sed -i "s|^ORIGIN=.*|ORIGIN=http://$LOCAL_IP:3000|g" /opt/openarchiver/.env
 $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
+$STD pnpm approve-builds --yes
 $STD pnpm run build:oss
 $STD pnpm db:migrate
 msg_ok "Setup Open Archiver"

@@ -467,6 +467,38 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-26
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Add directory creation to Profilarr update script [@ryansully](https://github.com/ryansully) ([#14740](https://github.com/community-scripts/ProxmoxVE/pull/14740))
+    - profilarr: Fix ARCH assignment in profilarr.sh to support Profilarr build usage [@mpeleshenko](https://github.com/mpeleshenko) ([#14709](https://github.com/community-scripts/ProxmoxVE/pull/14709))
+    - Jackett: Remove quotes in Service File [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14729](https://github.com/community-scripts/ProxmoxVE/pull/14729))
+    - Open-archiver: approve pnpm build scripts and run build:oss without subshell [@MickLesk](https://github.com/MickLesk) ([#14711](https://github.com/community-scripts/ProxmoxVE/pull/14711))
+    - Docuseal: read Ruby version from Gemfile, upgrade on update if needed [@MickLesk](https://github.com/MickLesk) ([#14715](https://github.com/community-scripts/ProxmoxVE/pull/14715))
+
+  - #### ✨ New Features
+
+    - Birdnet-GO: install libonnxruntime.so from release tarball [@MickLesk](https://github.com/MickLesk) ([#14716](https://github.com/community-scripts/ProxmoxVE/pull/14716))
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: better error diagnostics, consistent OS detection, setup function ordering [@MickLesk](https://github.com/MickLesk) ([#14692](https://github.com/community-scripts/ProxmoxVE/pull/14692))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - IPTag-Tool: use qm set for VM tags to handle snapshot sections crrectly [@MickLesk](https://github.com/MickLesk) ([#14713](https://github.com/community-scripts/ProxmoxVE/pull/14713))
+
+  - #### ✨ New Features
+
+    - Netdata: extend PVE version support to 9.x [@MickLesk](https://github.com/MickLesk) ([#14714](https://github.com/community-scripts/ProxmoxVE/pull/14714))
+
 ## 2026-05-25
 
 ### 🚀 Updated Scripts

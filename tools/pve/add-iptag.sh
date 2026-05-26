@@ -811,13 +811,7 @@ update_tags() {
         if [[ "$type" == "lxc" ]]; then
             pct set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")" &>/dev/null
         else
-            local vm_config="/etc/pve/qemu-server/${vmid}.conf"
-            if [[ -f "$vm_config" ]]; then
-                sed -i '/^tags:/d' "$vm_config"
-                if [[ ${#next_tags[@]} -gt 0 ]]; then
-                    echo "tags: $(IFS=';'; echo "${next_tags[*]}")" >> "$vm_config"
-                fi
-            fi
+            qm set "${vmid}" --tags "$(IFS=';'; echo "${next_tags[*]}")" &>/dev/null
         fi
     else
         # Tags unchanged

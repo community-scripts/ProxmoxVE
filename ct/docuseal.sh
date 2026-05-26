@@ -42,6 +42,13 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "docuseal" "docusealco/docuseal" "tarball"
 
+    local required_ruby current_ruby
+    required_ruby=$(grep -m1 '^ruby ' /opt/docuseal/Gemfile | grep -oP '[0-9]+\.[0-9]+\.[0-9]+')
+    current_ruby=$(PATH="/root/.rbenv/bin:/root/.rbenv/shims:${PATH}" rbenv global 2>/dev/null || true)
+    if [[ -n "$required_ruby" && "$required_ruby" != "$current_ruby" ]]; then
+      RUBY_VERSION="${required_ruby}" RUBY_INSTALL_RAILS="false" HOME=/root setup_ruby
+    fi
+
     msg_info "Restoring Data"
     mv /opt/docuseal.env.bak /opt/docuseal/.env
     [[ -d /opt/docuseal_data.bak ]] && mv /opt/docuseal_data.bak /opt/docuseal/data
