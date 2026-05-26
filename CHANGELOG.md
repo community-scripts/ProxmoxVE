@@ -479,6 +479,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Birdnet-GO: install libonnxruntime.so from release tarball [@MickLesk](https://github.com/MickLesk) ([#14716](https://github.com/community-scripts/ProxmoxVE/pull/14716))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - IPTag-Tool: use qm set for VM tags to handle snapshot sections crrectly [@MickLesk](https://github.com/MickLesk) ([#14713](https://github.com/community-scripts/ProxmoxVE/pull/14713))
+
+  - #### ✨ New Features
+
+    - Netdata: extend PVE version support to 9.x [@MickLesk](https://github.com/MickLesk) ([#14714](https://github.com/community-scripts/ProxmoxVE/pull/14714))
+
 ## 2026-05-25
 
 ### 🚀 Updated Scripts
