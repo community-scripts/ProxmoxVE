@@ -3982,7 +3982,7 @@ $PCT_OPTIONS_STRING"
       if [[ -d /dev/dri ]]; then
         # Only add if not already claimed by Intel
         if [[ ${#INTEL_DEVICES[@]} -eq 0 ]]; then
-          for d in /dev/dri/renderD* /dev/dri/card*; do
+          for d in /dev/dri/renderD* /dev/dri/card* /dev/kfd; do
             [[ -e "$d" ]] && AMD_DEVICES+=("$d")
           done
         fi
