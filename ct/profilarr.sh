@@ -92,7 +92,7 @@ EOF
 
     msg_info "Updating Profilarr"
     if [[ ! -d /opt/profilarr/app ]]; then
-      mkdir /opt/profilarr/app
+      mkdir -p /opt/profilarr/app
     fi
     cp dist/build/profilarr /opt/profilarr/app/profilarr
     cp dist/build/server.js /opt/profilarr/app/server.js
