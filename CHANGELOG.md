@@ -471,6 +471,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Docuseal: read Ruby version from Gemfile, upgrade on update if needed [@MickLesk](https://github.com/MickLesk) ([#14715](https://github.com/community-scripts/ProxmoxVE/pull/14715))
+
   - #### ✨ New Features
 
     - Birdnet-GO: install libonnxruntime.so from release tarball [@MickLesk](https://github.com/MickLesk) ([#14716](https://github.com/community-scripts/ProxmoxVE/pull/14716))
