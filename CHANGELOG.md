@@ -471,7 +471,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Hermes Agent ([#14751](https://github.com/community-scripts/ProxmoxVE/pull/14751))
+  - MusicSeerr ([#14746](https://github.com/community-scripts/ProxmoxVE/pull/14746))
+- Hermes Agent ([#14751](https://github.com/community-scripts/ProxmoxVE/pull/14751))
 
 ### 💾 Core
 
