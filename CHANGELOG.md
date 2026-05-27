@@ -467,6 +467,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-27
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - [tools.func]: `setup_gs()` fix getting dotted release format [@tremor021](https://github.com/tremor021) ([#14745](https://github.com/community-scripts/ProxmoxVE/pull/14745))
+
 ## 2026-05-26
 
 ### 🚀 Updated Scripts
