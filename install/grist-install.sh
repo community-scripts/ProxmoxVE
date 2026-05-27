@@ -28,6 +28,7 @@ export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=2048"
 cd /opt/grist
 $STD yarn install
+$STD yarn run install:ee -y
 $STD yarn run build:prod
 $STD yarn run install:python
 cat <<EOF >/opt/grist/.env
