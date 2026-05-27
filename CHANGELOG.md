@@ -469,6 +469,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-27
 
+### 🆕 New Scripts
+
+  - Hermes Agent ([#14751](https://github.com/community-scripts/ProxmoxVE/pull/14751))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
