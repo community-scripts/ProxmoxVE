@@ -55,7 +55,7 @@ for selected_gpu_type in $(echo $GPU_CHOICE | tr -d \"); do
     sed -i "s|graphics/7.2.2|graphics/7.2.1|" /etc/apt/sources.list.d/rocm.list
     # Not required for proxmox
     # apt install amdgpu-dkms
-    $STD apt -y install python3-setuptools python3-wheel git 2>/dev/null || {
+    $STD apt -y install python3-setuptools python3-wheel 2>/dev/null || {
         msg_warn "Failed to install deps for AMD ROCM, continuing anyway"
       }
     # Update to pull in rocm
