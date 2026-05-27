@@ -474,6 +474,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - MusicSeerr ([#14746](https://github.com/community-scripts/ProxmoxVE/pull/14746))
 - Hermes Agent ([#14751](https://github.com/community-scripts/ProxmoxVE/pull/14751))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - grist: restore install:ee step [@paulfitz](https://github.com/paulfitz) ([#14759](https://github.com/community-scripts/ProxmoxVE/pull/14759))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
