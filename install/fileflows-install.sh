@@ -46,10 +46,9 @@ if [[ "$install_server" =~ ^[Ss]$ ]]; then
   systemctl enable -q --now fileflows
   msg_ok "Installed FileFlows Server"
 else
-  read -r -p "${TAB3}Enter the FileFlows Server address (e.g. http://192.168.1.10:19200): " server_address
   msg_info "Installing FileFlows Node"
   cd /opt/fileflows/Node
-  $STD dotnet FileFlows.Node.dll --server "$server_address" --systemd install --root true
+  $STD dotnet FileFlows.Node.dll --server "http://localhost:19200" --systemd install --root true
   systemctl enable -q --now fileflows-node
   msg_ok "Installed FileFlows Node"
 fi
