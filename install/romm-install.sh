@@ -265,6 +265,7 @@ EOF
 
 sed -i "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
 rm -f /etc/nginx/sites-enabled/default
+rm -f /etc/nginx/conf.d/default.conf
 ln -sf /etc/nginx/sites-available/romm /etc/nginx/sites-enabled/romm
 systemctl restart nginx
 systemctl enable -q --now nginx
