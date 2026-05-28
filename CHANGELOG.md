@@ -481,6 +481,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Yamtrack: migrate to uv [@MickLesk](https://github.com/MickLesk) ([#14767](https://github.com/community-scripts/ProxmoxVE/pull/14767))
 
+### ❔ Uncategorized
+
+  - chore(ct): sync adventurelog defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#14772](https://github.com/community-scripts/ProxmoxVE/pull/14772))
+
 ## 2026-05-27
 
 ### 🆕 New Scripts
