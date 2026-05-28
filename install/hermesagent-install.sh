@@ -47,6 +47,7 @@ fi
 msg_info "Installing Hermes Agent"
 $STD setsid --wait bash -c '
   set -a; source /etc/default/hermes; set +a
+  export npm_config_yes=true
   bash <(curl -fsSL https://hermes-agent.nousresearch.com/install.sh) --skip-setup --hermes-home /home/hermes/.hermes --dir /home/hermes/.hermes/hermes-agent
 '
 chown -R hermes:hermes /home/hermes
