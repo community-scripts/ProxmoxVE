@@ -473,8 +473,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - RomM: remove nginx default.conf during installation [@MickLesk](https://github.com/MickLesk) ([#14766](https://github.com/community-scripts/ProxmoxVE/pull/14766))
     - Open-Archiver: replace pnpm approve-builds --yes with --all [@MickLesk](https://github.com/MickLesk) ([#14765](https://github.com/community-scripts/ProxmoxVE/pull/14765))
     - fix(hermesagent): set npm_config_yes=true to suppress interactive pro… [@steveonjava](https://github.com/steveonjava) ([#14763](https://github.com/community-scripts/ProxmoxVE/pull/14763))
+
+  - #### 🔧 Refactor
+
+    - Yamtrack: migrate to uv [@MickLesk](https://github.com/MickLesk) ([#14767](https://github.com/community-scripts/ProxmoxVE/pull/14767))
 
 ## 2026-05-27
 
