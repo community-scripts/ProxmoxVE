@@ -52,6 +52,9 @@ After=network-online.target
 Type=simple
 WorkingDirectory=/opt/apprise
 ExecStart=/opt/apprise/webapp/supervisord-startup
+Environment=APPRISE_CONFIG_DIR=/config
+Environment=APPRISE_ATTACH_DIR=/attach
+Environment=APPRISE_PLUGIN_PATHS=/plugin
 Restart=always
 RestartSec=30
 
