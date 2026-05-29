@@ -23,7 +23,7 @@ PG_VERSION="16" setup_postgresql
 PG_DB_NAME="kan" PG_DB_USER="kan" setup_postgresql_db
 NODE_VERSION="20" NODE_MODULE="pnpm" setup_nodejs
 
-fetch_and_deploy_gh_tag "kan" "kanbn/kan"
+fetch_and_deploy_gh_tag "kan" "kanbn/kan" "tarball"
 
 msg_info "Configuring Application"
 AUTH_SECRET=$(openssl rand -base64 32)
