@@ -39,7 +39,7 @@ function update_script() {
     cp /opt/kan/.env /opt/kan.env.bak
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "kan" "kanbn/kan"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "kan" "kanbn/kan" "tarball"
 
     msg_info "Restoring Configuration"
     cp /opt/kan.env.bak /opt/kan/.env
