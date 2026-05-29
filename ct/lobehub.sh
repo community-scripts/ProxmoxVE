@@ -56,8 +56,9 @@ function update_script() {
 
     msg_info "Running Database Migrations"
     cd /opt/lobehub
+    cp scripts/migrateServerDB/docker.cjs .next/standalone/
     set -a && source /opt/lobehub/.env && set +a
-    $STD node /opt/lobehub/scripts/migrateServerDB/docker.cjs
+    $STD node /opt/lobehub/.next/standalone/docker.cjs
     msg_ok "Ran Database Migrations"
 
     msg_info "Starting Services"
