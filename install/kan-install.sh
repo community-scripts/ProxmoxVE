@@ -43,7 +43,7 @@ msg_ok "Configured Application"
 
 msg_info "Building Application"
 cd /opt/kan
-source /opt/kan/.env
+set -a && source /opt/kan/.env && set +a
 export NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true NEXT_PUBLIC_BASE_URL BETTER_AUTH_TRUSTED_ORIGINS NEXT_PUBLIC_ALLOW_CREDENTIALS BETTER_AUTH_SECRET
 export CI=true
 $STD pnpm install
