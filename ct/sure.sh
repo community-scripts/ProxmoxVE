@@ -81,7 +81,7 @@ EOF
     msg_ok "Updated Sure"
 
     msg_info "Starting Services"
-    $STD systemctl start sure sure-worker
+    systemctl start sure sure-worker
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi

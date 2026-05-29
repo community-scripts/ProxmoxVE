@@ -103,7 +103,7 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable -q --now sure sure-worker
+systemctl enable -q --now sure sure-worker
 msg_ok "Created Services"
 
 motd_ssh
