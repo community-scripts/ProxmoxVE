@@ -54,6 +54,13 @@ function update_script() {
     unset NODE_OPTIONS
     msg_ok "Built Application"
 
+    msg_info "Setting Up Standalone"
+    cp -r /opt/lobehub/.next/static /opt/lobehub/.next/standalone/.next/static
+    cp -r /opt/lobehub/public /opt/lobehub/.next/standalone/public
+    cp -r /opt/lobehub/scripts/migrateServerDB/* /opt/lobehub/.next/standalone/
+    cp -r /opt/lobehub/packages/database/migrations /opt/lobehub/.next/standalone/migrations
+    msg_ok "Set Up Standalone"
+
     msg_info "Running Database Migrations"
     cd /opt/lobehub
     set -a && source /opt/lobehub/.env && set +a
