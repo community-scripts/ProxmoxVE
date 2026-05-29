@@ -478,6 +478,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix lobehub docker path [@dannyyy](https://github.com/dannyyy) ([#14793](https://github.com/community-scripts/ProxmoxVE/pull/14793))
     - Grist: Revert installation of EE [@tremor021](https://github.com/tremor021) ([#14784](https://github.com/community-scripts/ProxmoxVE/pull/14784))
 
 ## 2026-05-28
