@@ -471,7 +471,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Dynacat ([#14777](https://github.com/community-scripts/ProxmoxVE/pull/14777))
+  - Kan ([#14776](https://github.com/community-scripts/ProxmoxVE/pull/14776))
+- Dynacat ([#14777](https://github.com/community-scripts/ProxmoxVE/pull/14777))
 
 ### 🚀 Updated Scripts
 
