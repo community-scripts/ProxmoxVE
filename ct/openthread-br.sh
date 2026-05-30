@@ -70,6 +70,27 @@ function update_script() {
   $STD ninja install
   msg_ok "Rebuilt OpenThread Border Router"
 
+  if ! grep -q "net.ipv6.conf.all.accept_ra=2" /etc/sysctl.d/99-otbr.conf; then
+    msg_info "Configuring Network"
+    cat <<EOF >/etc/sysctl.d/99-otbr.conf
+net.ipv6.conf.all.forwarding=1
+net.ipv6.conf.all.accept_ra=2
+net.ipv6.conf.all.accept_ra_rtr_pref=1
+net.ipv6.conf.all.accept_ra_rt_info_max_plen=64
+net.ipv6.conf.default.forwarding=1
+net.ipv6.conf.default.accept_ra=2
+net.ipv6.conf.default.accept_ra_rtr_pref=1
+net.ipv6.conf.default.accept_ra_rt_info_max_plen=64
+net.ipv6.conf.eth0.forwarding=1
+net.ipv6.conf.eth0.accept_ra=2
+net.ipv6.conf.eth0.accept_ra_rtr_pref=1
+net.ipv6.conf.eth0.accept_ra_rt_info_max_plen=64
+net.ipv4.ip_forward=1
+EOF
+    $STD sysctl -p /etc/sysctl.d/99-otbr.conf
+    msg_ok "Configured Network"
+  fi
+
   msg_info "Starting Services"
   systemctl start otbr-agent
   systemctl start otbr-web
