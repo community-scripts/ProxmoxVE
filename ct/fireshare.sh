@@ -53,6 +53,9 @@ function update_script() {
     export VIDEO_DIRECTORY=/opt/fireshare-videos
     export PROCESSED_DIRECTORY=/opt/fireshare-processed
     $STD uv run flask db upgrade
+    cd /opt/fireshare/app/client
+    $STD npm install
+    $STD npm run build
     msg_ok "Updated Fireshare"
 
     msg_info "Starting Service"
