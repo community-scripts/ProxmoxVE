@@ -467,6 +467,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-05-30
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Flatnotes: fix empty package name in pyproject.toml [@MickLesk](https://github.com/MickLesk) ([#14814](https://github.com/community-scripts/ProxmoxVE/pull/14814))
+
 ## 2026-05-29
 
 ### 🆕 New Scripts
