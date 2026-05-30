@@ -40,8 +40,6 @@ function update_script() {
     CURRENT_VERSION=$(grep -oP 'APP_VERSION=\K[^ ]+' /opt/manyfold/.env || echo "unknown")
     cp -r /opt/manyfold/app/storage /opt/manyfold_storage_backup 2>/dev/null || true
     cp -r /opt/manyfold/app/tmp /opt/manyfold_tmp_backup 2>/dev/null || true
-    cp /opt/manyfold/app/config/credentials.yml.enc /opt/manyfold_credentials.yml.enc 2>/dev/null || true
-    cp /opt/manyfold/app/config/master.key /opt/manyfold_master.key 2>/dev/null || true
     $STD tar -czf "/opt/manyfold_${CURRENT_VERSION}_backup.tar.gz" -C /opt/manyfold app
     msg_ok "Backed up Data"
 
@@ -57,14 +55,12 @@ function update_script() {
     RUBY_VERSION=${RUBY_INSTALL_VERSION} RUBY_INSTALL_RAILS="true" HOME=/home/manyfold setup_ruby
 
     msg_info "Restoring Data"
-    rm -rf /opt/manyfold/app/{storage,tmp,config/credentials.yml.enc,config/master.key}
+    rm -rf /opt/manyfold/app/{storage,tmp}
     cp -r /opt/manyfold_storage_backup /opt/manyfold/app/storage 2>/dev/null || true
     cp -r /opt/manyfold_tmp_backup /opt/manyfold/app/tmp 2>/dev/null || true
-    cp /opt/manyfold_credentials.yml.enc /opt/manyfold/app/config/credentials.yml.enc 2>/dev/null || true
-    cp /opt/manyfold_master.key /opt/manyfold/app/config/master.key 2>/dev/null || true
     chown -R manyfold:manyfold {/home/manyfold,/opt/manyfold}
     chown -R manyfold:manyfold /opt/manyfold/app/storage /opt/manyfold/app/tmp /opt/manyfold/app/config
-    rm -rf /opt/manyfold_storage_backup /opt/manyfold_tmp_backup /opt/manyfold_credentials.yml.enc /opt/manyfold_master.key
+    rm -rf /opt/manyfold_storage_backup /opt/manyfold_tmp_backup
     msg_ok "Restored Data"
 
     msg_info "Installing Manyfold"
@@ -80,6 +76,8 @@ function update_script() {
             bundle install
             corepack prepare '"$YARN_VERSION"' --activate
             corepack use '"$YARN_VERSION"'
+            rm -f config/credentials.yml.enc config/master.key
+            EDITOR=/bin/true bin/rails credentials:edit
             bin/rails db:migrate
             bin/rails assets:precompile
         '
