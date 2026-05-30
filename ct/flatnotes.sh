@@ -47,6 +47,7 @@ function update_script() {
     $STD npm run build
     cd /opt/flatnotes
     rm -f uv.lock
+    sed -i 's/^name = ""$/name = "flatnotes"/' pyproject.toml
     $STD /usr/local/bin/uvx migrate-to-uv
     $STD /usr/local/bin/uv sync
     msg_ok "Updated Flatnotes"
