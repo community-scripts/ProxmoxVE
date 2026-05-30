@@ -19,6 +19,7 @@ NODE_VERSION="22" setup_nodejs
 
 msg_info "Setting up Flatnotes"
 cd /opt/flatnotes
+sed -i 's/^name = ""$/name = "flatnotes"/' pyproject.toml
 $STD /usr/local/bin/uvx migrate-to-uv
 $STD /usr/local/bin/uv sync
 mkdir -p /opt/flatnotes/data
