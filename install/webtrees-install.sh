@@ -47,23 +47,21 @@ systemctl enable -q --now php${PHP_VER}-fpm
 systemctl restart caddy
 
 msg_info "Automating Webtrees Setup"
-sleep 5
 WT_ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c15)
-curl -sS -X POST "http://127.0.0.1/" \
-  -d "step=6" \
-  --data-urlencode "baseurl=http://${LOCAL_IP}" \
-  -d "lang=en-US" \
-  -d "dbtype=mysql" \
-  -d "dbhost=127.0.0.1" \
-  -d "dbport=3306" \
-  -d "dbuser=webtrees" \
-  --data-urlencode "dbpass=${MARIADB_DB_PASS}" \
-  -d "dbname=webtrees" \
-  -d "tblpfx=wt_" \
-  -d "wtname=Administrator" \
-  -d "wtuser=Admin" \
-  --data-urlencode "wtpass=${WT_ADMIN_PASS}" \
-  -d "wtemail=admin@example.com" >/dev/null
+$STD sudo -u www-data php /opt/webtrees/index.php config-ini \
+  --dbhost=127.0.0.1 \
+  --dbport=3306 \
+  --dbuser=webtrees \
+  --dbpass="${MARIADB_DB_PASS}" \
+  --dbname=webtrees \
+  --tblpfx=wt_ \
+  --base-url="http://${LOCAL_IP}"
+$STD sudo -u www-data php /opt/webtrees/index.php user Admin \
+  --create \
+  --real-name="Administrator" \
+  --email="admin@example.com" \
+  --password="${WT_ADMIN_PASS}"
+$STD sudo -u www-data php /opt/webtrees/index.php user-setting Admin canadmin 1
 
 cat <<EOF >>~/webtrees.creds
 
