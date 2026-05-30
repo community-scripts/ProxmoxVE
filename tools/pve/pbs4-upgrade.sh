@@ -50,6 +50,19 @@ start_routines() {
   no) msg_error "Selected no to Backup" ;;
   esac
 
+  # --- Update Current PBS 3 System ---
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 3 UPDATE" --menu \
+    "\nUpdate current PBS 3 (Bookworm) packages before upgrade?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
+  case $CHOICE in
+  yes)
+    msg_info "Updating current PBS 3 packages"
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
+    msg_ok "Updated current PBS 3 packages"
+    ;;
+  no) msg_error "Skipped updating current packages" ;;
+  esac
+
   # --- Debian 13 Sources ---
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 4 SOURCES" --menu \
     "Switch to Debian 13 (Trixie) sources for PBS 4?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
