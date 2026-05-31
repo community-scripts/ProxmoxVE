@@ -60,6 +60,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -69,7 +72,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>May (23 entries)</h4></summary>
+<summary><h4>May (30 entries)</h4></summary>
 
 [View May 2026 Changelog](.github/changelogs/2026/05.md)
 
@@ -1029,141 +1032,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - Mail-Archiver: update dependencies [@tremor021](https://github.com/tremor021) ([#14152](https://github.com/community-scripts/ProxmoxVE/pull/14152))
-
-## 2026-04-30
-
-### 🆕 New Scripts
-
-  - Nagios ([#14126](https://github.com/community-scripts/ProxmoxVE/pull/14126))
-- Neko ([#14121](https://github.com/community-scripts/ProxmoxVE/pull/14121))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - alpine-docker: install openssl as core dependency | alpine-komodo: check & install openssl if missing [@MickLesk](https://github.com/MickLesk) ([#14134](https://github.com/community-scripts/ProxmoxVE/pull/14134))
-    - endurain: update source references to Codeberg [@MickLesk](https://github.com/MickLesk) ([#14128](https://github.com/community-scripts/ProxmoxVE/pull/14128))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - tools.func: Manage minor versions for MongoDB 8.x [@tremor021](https://github.com/tremor021) ([#14131](https://github.com/community-scripts/ProxmoxVE/pull/14131))
-
-## 2026-04-29
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - GrayLog: MongoDB update to 8.2.x [@tremor021](https://github.com/tremor021) ([#14114](https://github.com/community-scripts/ProxmoxVE/pull/14114))
-    - Graylog: Better information in the log file [@tremor021](https://github.com/tremor021) ([#14110](https://github.com/community-scripts/ProxmoxVE/pull/14110))
-
-  - #### 🔧 Refactor
-
-    - Refactor: checkMK [@MickLesk](https://github.com/MickLesk) ([#14105](https://github.com/community-scripts/ProxmoxVE/pull/14105))
-    - PatchMon: Unpin release [@tremor021](https://github.com/tremor021) ([#14097](https://github.com/community-scripts/ProxmoxVE/pull/14097))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - core: add guidance when storage lacks rootdir support [@MickLesk](https://github.com/MickLesk) ([#14108](https://github.com/community-scripts/ProxmoxVE/pull/14108))
-
-## 2026-04-28
-
-### 🆕 New Scripts
-
-  - StoryBook ([#14081](https://github.com/community-scripts/ProxmoxVE/pull/14081))
-- CoreDNS ([#14082](https://github.com/community-scripts/ProxmoxVE/pull/14082))
-
-### 🚀 Updated Scripts
-
-  - Fix Dawarich Install/Update [@Jerry1098](https://github.com/Jerry1098) ([#14078](https://github.com/community-scripts/ProxmoxVE/pull/14078))
-
-  - #### ✨ New Features
-
-    - PatchMon Version 2.0.2 Script update [@9technologygroup](https://github.com/9technologygroup) ([#14095](https://github.com/community-scripts/ProxmoxVE/pull/14095))
-
-## 2026-04-27
-
-### 🚀 Updated Scripts
-
-  - Add pamUsername column to userOrgs table [@JVKeller](https://github.com/JVKeller) ([#14075](https://github.com/community-scripts/ProxmoxVE/pull/14075))
-
-  - #### 🐞 Bug Fixes
-
-    - Dawarich: run db:migrate before assets:precompile [@MickLesk](https://github.com/MickLesk) ([#14051](https://github.com/community-scripts/ProxmoxVE/pull/14051))
-    - TechnitiumDNS: always install .NET 10 if not already present [@MickLesk](https://github.com/MickLesk) ([#14049](https://github.com/community-scripts/ProxmoxVE/pull/14049))
-
-  - #### 💥 Breaking Changes
-
-    - PatchMon: v2.0.0 migration [@vhsdream](https://github.com/vhsdream) ([#14015](https://github.com/community-scripts/ProxmoxVE/pull/14015))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - Update build.func - fixed spelling mistake [@m1ckywill](https://github.com/m1ckywill) ([#14047](https://github.com/community-scripts/ProxmoxVE/pull/14047))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - update-lxcs/apps: avoid pct exec on containers mid-shutdown [@MickLesk](https://github.com/MickLesk) ([#14050](https://github.com/community-scripts/ProxmoxVE/pull/14050))
-
-  - #### ✨ New Features
-
-    - Add patchmon-agent report execution in update script [@heinemannj](https://github.com/heinemannj) ([#14054](https://github.com/community-scripts/ProxmoxVE/pull/14054))
-
-## 2026-04-26
-
-### 🆕 New Scripts
-
-  - TREK ([#14017](https://github.com/community-scripts/ProxmoxVE/pull/14017))
-
-### 🚀 Updated Scripts
-
-  - fix(2fauth): handle stale backup directory on update [@omertahaoztop](https://github.com/omertahaoztop) ([#14018](https://github.com/community-scripts/ProxmoxVE/pull/14018))
-
-  - #### 🐞 Bug Fixes
-
-    -  Increase Frigate default CPU cores from 4 to 8 [@MickLesk](https://github.com/MickLesk) ([#14039](https://github.com/community-scripts/ProxmoxVE/pull/14039))
-    - Technitium DNS: Ensure directories exist before running service [@tremor021](https://github.com/tremor021) ([#14030](https://github.com/community-scripts/ProxmoxVE/pull/14030))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: Correct deb822 repository flat path detection [@MickLesk](https://github.com/MickLesk) ([#14037](https://github.com/community-scripts/ProxmoxVE/pull/14037))
-
-## 2026-04-25
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - VictoriaMetrics: Stop vmagent/vmalert before update [@irishpadres](https://github.com/irishpadres) ([#14016](https://github.com/community-scripts/ProxmoxVE/pull/14016))
-    - Domain-Monitor: start apache2 after stop instead of reload [@omertahaoztop](https://github.com/omertahaoztop) ([#14019](https://github.com/community-scripts/ProxmoxVE/pull/14019))
-    - Transmute: Fix ffmpeg detection [@tremor021](https://github.com/tremor021) ([#14008](https://github.com/community-scripts/ProxmoxVE/pull/14008))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Technitium DNS [@tremor021](https://github.com/tremor021) ([#14013](https://github.com/community-scripts/ProxmoxVE/pull/14013))
-
-## 2026-04-24
-
-### 🆕 New Scripts
-
-  - Apprise-API ([#13934](https://github.com/community-scripts/ProxmoxVE/pull/13934))
-- fireshare ([#13995](https://github.com/community-scripts/ProxmoxVE/pull/13995))
-- Transmute ([#13935](https://github.com/community-scripts/ProxmoxVE/pull/13935))
-- Jitsi-Meet ([#13897](https://github.com/community-scripts/ProxmoxVE/pull/13897))
-
-### 🚀 Updated Scripts
-
-  - Update wger.sh [@Soppster1029](https://github.com/Soppster1029) ([#13977](https://github.com/community-scripts/ProxmoxVE/pull/13977))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Ghostfolio [@MickLesk](https://github.com/MickLesk) ([#13990](https://github.com/community-scripts/ProxmoxVE/pull/13990))
