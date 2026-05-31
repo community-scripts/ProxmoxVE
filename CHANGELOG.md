@@ -472,6 +472,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-05-31
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Kima-Hub: use curl_with_retry for ML model downloads to fix possible timeout issues [@MickLesk](https://github.com/MickLesk) ([#14816](https://github.com/community-scripts/ProxmoxVE/pull/14816))
+
 ## 2026-05-30
 
 ### 🚀 Updated Scripts
