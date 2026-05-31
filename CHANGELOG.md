@@ -476,6 +476,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Manyfold: regenerate Rails credentials on update to fix encryption mimatch [@MickLesk](https://github.com/MickLesk) ([#14817](https://github.com/community-scripts/ProxmoxVE/pull/14817))
     - OpenThread-BR: use correct ipv6 configuration [@tomfrenzel](https://github.com/tomfrenzel) ([#14829](https://github.com/community-scripts/ProxmoxVE/pull/14829))
 
   - #### 🔧 Refactor
