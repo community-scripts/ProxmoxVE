@@ -474,6 +474,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - OpenThread-BR: use correct ipv6 configuration [@tomfrenzel](https://github.com/tomfrenzel) ([#14829](https://github.com/community-scripts/ProxmoxVE/pull/14829))
+
   - #### 🔧 Refactor
 
     - Webtrees: use PHP CLI for initial setup instead of curl to setup wizard [@MickLesk](https://github.com/MickLesk) ([#14818](https://github.com/community-scripts/ProxmoxVE/pull/14818))
