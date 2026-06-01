@@ -31,27 +31,38 @@ function update_script() {
     exit
   fi
 
-  update_available=$(curl -fsSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' | jq .UpdateAvailable)
-  if [[ "${update_available}" == "true" ]]; then
-    msg_info "Stopping Service"
-    systemctl --all stop 'fileflows*'
-    msg_info "Stopped Service"
-
-    msg_info "Creating Backup"
-    ls /opt/*.tar.gz &>/dev/null && rm -f /opt/*.tar.gz
-    backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
-    tar -czf "$backup_filename" -C /opt/fileflows Data
-    msg_ok "Backup Created"
-
-    fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
-
-    msg_info "Starting Service"
-    systemctl --all start 'fileflows*'
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at latest version"
+  if systemctl list-unit-files 'fileflows.service' --no-legend 2>/dev/null | grep -q '^fileflows\.service'; then
+    tmp=$(mktemp)
+    http_code=$(curl -sSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' -o "$tmp" -w '%{http_code}' 2>/dev/null) || http_code="000"
+    if [[ "$http_code" == "401" ]]; then
+      rm -f "$tmp"
+      msg_error "Could not check for updates: API returned 401. Disable security in FileFlows."
+      exit
+    fi
+    update_available=$(jq -r '.UpdateAvailable // false' "$tmp" 2>/dev/null)
+    rm -f "$tmp"
+    if [[ "${update_available}" != "true" ]]; then
+      msg_ok "No update required. ${APP} is already at latest version"
+      exit
+    fi
   fi
+
+  msg_info "Stopping Service"
+  systemctl --all stop 'fileflows*'
+  msg_ok "Stopped Service"
+
+  msg_info "Creating Backup"
+  ls /opt/*.tar.gz &>/dev/null && rm -f /opt/*.tar.gz
+  backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
+  tar -czf "$backup_filename" -C /opt/fileflows Data
+  msg_ok "Backup Created"
+
+  fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
+
+  msg_info "Starting Service"
+  systemctl --all start 'fileflows*'
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
 
   exit
 }
