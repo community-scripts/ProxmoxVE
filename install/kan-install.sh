@@ -45,7 +45,7 @@ msg_info "Building Application"
 cd /opt/kan
 set -a && source /opt/kan/.env && set +a
 export NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true NEXT_PUBLIC_BASE_URL BETTER_AUTH_TRUSTED_ORIGINS NEXT_PUBLIC_ALLOW_CREDENTIALS BETTER_AUTH_SECRET
-$STD pnpm install --ignore-scripts
+$STD pnpm install --ignore-scripts --prod=false
 export CI=true
 find /opt/kan/packages /opt/kan/apps -name 'tsconfig.json' -exec sed -i 's|"@kan/tsconfig/|"../../tooling/typescript/|g' {} +
 $STD pnpm build --filter=@kan/web

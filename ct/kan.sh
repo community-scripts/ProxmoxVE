@@ -50,7 +50,7 @@ function update_script() {
     cd /opt/kan
     set -a && source /opt/kan/.env && set +a
     export NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true
-    $STD pnpm install --ignore-scripts
+    $STD pnpm install --ignore-scripts --prod=false
     export CI=true
     find /opt/kan/packages /opt/kan/apps -name 'tsconfig.json' -exec sed -i 's|"@kan/tsconfig/|"../../tooling/typescript/|g' {} +
     $STD pnpm build --filter=@kan/web
