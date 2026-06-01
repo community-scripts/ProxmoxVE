@@ -121,6 +121,7 @@ server {
     # All other requests proxy to uWSGI
     location / {
         include proxy_params;
+        proxy_set_header X-Forwarded-Port \$server_port;
         proxy_pass http://127.0.0.1:5656;
     }
 }
