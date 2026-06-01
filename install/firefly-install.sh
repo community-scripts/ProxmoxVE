@@ -37,7 +37,13 @@ msg_ok "Configured Firefly III"
 
 msg_info "Configuring Data Importer"
 cp /opt/firefly/dataimporter/.env.example /opt/firefly/dataimporter/.env
-sed -i "s#FIREFLY_III_URL=#FIREFLY_III_URL=http://${LOCAL_IP}#g" /opt/firefly/dataimporter/.env
+sed -i \
+  -e "s#FIREFLY_III_URL=#FIREFLY_III_URL=http://${LOCAL_IP}#g" \
+  -e "s|^APP_URL=.*|APP_URL=http://${LOCAL_IP}/dataimporter|" \
+  -e "s|^ASSET_URL=.*|ASSET_URL=/dataimporter|" \
+  /opt/firefly/dataimporter/.env
+cd /opt/firefly/dataimporter
+$STD php artisan config:clear
 chown -R www-data:www-data /opt/firefly
 msg_ok "Configured Data Importer"
 
