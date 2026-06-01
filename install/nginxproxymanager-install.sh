@@ -160,7 +160,8 @@ $STD yarn install --network-timeout 600000
 msg_ok "Initialized Backend"
 
 msg_info "Creating Service"
-cat <<'EOF' >/lib/systemd/system/npm.service
+CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}')
+cat <<EOF >/lib/systemd/system/npm.service
 [Unit]
 Description=Nginx Proxy Manager
 After=network.target
@@ -169,6 +170,7 @@ Wants=openresty.service
 [Service]
 Type=simple
 Environment=NODE_ENV=production
+Environment=CERTBOT_VERSION=${CERTBOT_VER}
 ExecStartPre=-mkdir -p /tmp/nginx/body /data/letsencrypt-acme-challenge
 ExecStart=/usr/bin/node index.js --abort_on_uncaught_exception --max_old_space_size=250
 WorkingDirectory=/app
