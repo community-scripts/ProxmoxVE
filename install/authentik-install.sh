@@ -29,8 +29,6 @@ $STD apt install -y \
   libltdl-dev \
   libpq5 \
   libmaxminddb0 \
-  libkrb5-3 \
-  libkdb5-10 \
   libkadm5clnt-mit12 \
   libkadm5clnt7t64-heimdal \
   libltdl7 \
@@ -44,6 +42,11 @@ $STD apt install -y \
   libtool \
   libtool-bin \
   gcc \
+  crossbuild-essential-amd64 \
+  gcc-x86-64-linux-gnu \
+  cmake \
+  clang \
+  libunwind-18-dev \
   git
 msg_ok "Installed Dependencies"
 
@@ -51,12 +54,11 @@ NODE_VERSION="24" setup_nodejs
 setup_yq
 setup_go
 UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
-setup_rust
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 XMLSEC_VERSION="1.3.11"
-AUTHENTIK_VERSION="version/2026.2.3"
+AUTHENTIK_VERSION="version/2026.5.2"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
@@ -68,7 +70,16 @@ $STD make -j $(nproc)
 $STD make check
 $STD make install
 $STD ldconfig
-msg_ok "xmlsec installed"
+msg_ok "Setup xmlsec"
+
+msg_info "Setup custom rust"
+cd /opt/authentik
+export PATH="/root/.cargo/bin:$PATH"
+echo 'export PATH="/root/.cargo/bin:$PATH"' >>"/root/.profile"
+curl https://sh.rustup.rs -sSf | $STD sh -s -- -y --profile minimal --default-toolchain none
+$STD rustup install
+$STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
+msg_ok "Setup custom rust"
 
 msg_info "Setup web"
 cd /opt/authentik/web
@@ -76,17 +87,18 @@ export NODE_ENV="production"
 $STD npm install
 $STD npm run build
 $STD npm run build:sfe
-msg_ok "Web installed"
+msg_ok "Setup web"
 
 msg_info "Setup go proxy"
 cd /opt/authentik
 export CGO_ENABLED="1"
+export CC="x86_64-linux-gnu-gcc"
 $STD go mod download
 $STD go build -o /opt/authentik/authentik-server ./cmd/server
 $STD go build -o /opt/authentik/ldap ./cmd/ldap
 $STD go build -o /opt/authentik/rac ./cmd/rac
 $STD go build -o /opt/authentik/radius ./cmd/radius
-msg_ok "Go proxy installed"
+msg_ok "Setup go proxy"
 
 cat <<EOF >/usr/local/etc/GeoIP.conf
 AccountID ChangeME
@@ -99,17 +111,23 @@ EOF
 
 echo "#39 19 * * 6,4 /usr/bin/geoipupdate -f /usr/local/etc/GeoIP.conf" | crontab -
 
+msg_info "Building worker"
+export AWS_LC_FIPS_SYS_CC="clang"
+cd /opt/authentik
+$STD cargo build --package authentik --no-default-features --features core --locked --release --jobs 1
+cp ./target/release/authentik /opt/authentik/authentik-worker
+msg_ok "Building worker"
+
 msg_info "Setup python server"
 export UV_NO_BINARY_PACKAGE="cryptography lxml python-kadmin-rs xmlsec"
 export UV_COMPILE_BYTECODE="1"
 export UV_LINK_MODE="copy"
 export UV_NATIVE_TLS="1"
-export RUSTUP_PERMIT_COPY_RENAME="true"
 export UV_PYTHON_INSTALL_DIR="/usr/local/bin"
 cd /opt/authentik
 $STD uv sync --frozen --no-install-project --no-dev
 cp /opt/authentik/authentik/sources/kerberos/krb5.conf /etc/krb5.conf
-msg_ok "Installed python server"
+msg_ok "Setup python server"
 
 msg_info "Creating authentik config"
 mkdir -p /etc/authentik
@@ -125,7 +143,7 @@ yq -i ".storage.file.path = \"/opt/authentik-data\"" /etc/authentik/config.yml
 yq -i ".disable_startup_analytics = \"true\"" /etc/authentik/config.yml
 $STD useradd -U -s /usr/sbin/nologin -r -M -d /opt/authentik authentik
 chown -R authentik:authentik /opt/authentik
-cat <<EOF >/etc/default/authentik
+cat <<EOF >/etc/default/authentik-server
 TMPDIR=/dev/shm/
 UV_LINK_MODE=copy
 UV_PYTHON_DOWNLOADS=0
@@ -136,6 +154,24 @@ PYTHONUNBUFFERED=1
 PATH=/opt/authentik/lifecycle:/opt/authentik/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
 DJANGO_SETTINGS_MODULE=authentik.root.settings
 PROMETHEUS_MULTIPROC_DIR="/tmp/authentik_prometheus_tmp"
+AUTHENTIK_LISTEN__HTTP="[::]:9000"
+AUTHENTIK_LISTEN__HTTPS="[::]:9443"
+AUTHENTIK_LISTEN__METRICS="[::]:9300"
+EOF
+cat <<EOF >/etc/default/authentik-worker
+TMPDIR=/dev/shm/
+UV_LINK_MODE=copy
+UV_PYTHON_DOWNLOADS=0
+UV_NATIVE_TLS=1
+VENV_PATH=/opt/authentik/.venv
+PYTHONDONTWRITEBYTECODE=1
+PYTHONUNBUFFERED=1
+PATH=/opt/authentik/lifecycle:/opt/authentik/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
+DJANGO_SETTINGS_MODULE=authentik.root.settings
+PROMETHEUS_MULTIPROC_DIR="/tmp/authentik_prometheus_tmp"
+AUTHENTIK_LISTEN__HTTP="[::]:8000"
+AUTHENTIK_LISTEN__HTTPS="[::]:8443"
+AUTHENTIK_LISTEN__METRICS="[::]:8300"
 EOF
 cat <<EOF >/etc/default/authentik_ldap
 AUTHENTIK_HOST="https://127.0.0.1:9443"
@@ -152,7 +188,7 @@ AUTHENTIK_HOST="https://127.0.0.1:9443"
 AUTHENTIK_INSECURE="true"
 AUTHENTIK_TOKEN="token-generated-by-authentik"
 EOF
-msg_ok "authentik config created"
+msg_ok "Created authentik config"
 
 msg_info "Creating services"
 cat <<EOF >/etc/systemd/system/authentik-server.service
@@ -164,12 +200,12 @@ Wants=postgresql.service
 [Service]
 User=authentik
 Group=authentik
+EnvironmentFile=/etc/default/authentik-server
 ExecStartPre=/usr/bin/mkdir -p "\${PROMETHEUS_MULTIPROC_DIR}"
 ExecStart=/opt/authentik/authentik-server
 WorkingDirectory=/opt/authentik/
 Restart=always
 RestartSec=5
-EnvironmentFile=/etc/default/authentik
 
 [Install]
 WantedBy=multi-user.target
@@ -184,8 +220,9 @@ After=network.target postgresql.service
 User=authentik
 Group=authentik
 Type=simple
-EnvironmentFile=/etc/default/authentik
-ExecStart=/usr/local/bin/uv run python -m manage worker --pid-file /dev/shm/authentik-worker.pid
+EnvironmentFile=/etc/default/authentik-worker
+ExecStartPre=/usr/bin/mkdir -p "\${PROMETHEUS_MULTIPROC_DIR}"
+ExecStart=/opt/authentik/authentik-worker worker
 WorkingDirectory=/opt/authentik
 Restart=always
 RestartSec=5
@@ -250,7 +287,8 @@ EnvironmentFile=/etc/default/authentik_radius
 [Install]
 WantedBy=multi-user.target
 EOF
-msg_ok "Services created"
+
+msg_ok "Created services"
 
 motd_ssh
 customize
