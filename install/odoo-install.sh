@@ -13,10 +13,25 @@ setting_up_container
 network_check
 update_os
 
+ensure_lxml_html_clean() {
+  ensure_dependencies python3-lxml
+  if apt-cache show python3-lxml-html-clean &>/dev/null; then
+    ensure_dependencies python3-lxml-html-clean
+  else
+    curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
+    $STD dpkg -i /opt/python3-lxml-html-clean.deb
+    $STD apt-get install -f -y
+    rm -f /opt/python3-lxml-html-clean.deb
+  fi
+  if ! python3 -c "import lxml_html_clean; from lxml.html import clean" 2>/dev/null; then
+    msg_error "lxml.html.clean is not available (python3-lxml-html-clean required)"
+    exit 1
+  fi
+}
+
 msg_info "Installing Dependencies"
-$STD apt install -y python3-lxml wkhtmltopdf
-curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
-$STD dpkg -i /opt/python3-lxml-html-clean.deb
+$STD apt install -y wkhtmltopdf
+ensure_lxml_html_clean
 msg_ok "Installed Dependencies"
 
 PG_VERSION="18" setup_postgresql
@@ -31,6 +46,7 @@ LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
 msg_info "Setup Odoo $RELEASE"
 curl -fsSL https://nightly.odoo.com/${RELEASE}/nightly/deb/odoo_${RELEASE}.latest_all.deb -o /opt/odoo.deb
 $STD apt install -y /opt/odoo.deb
+ensure_lxml_html_clean
 msg_ok "Setup Odoo $RELEASE"
 
 msg_info "Setup PostgreSQL Database"
@@ -59,7 +75,6 @@ sed -i \
   /etc/odoo/odoo.conf
 $STD sudo -u odoo odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init
 rm -f /opt/odoo.deb
-rm -f /opt/python3-lxml-html-clean.deb
 echo "${LATEST_VERSION}" >/opt/${APPLICATION}_version.txt
 msg_ok "Configured Odoo"
 

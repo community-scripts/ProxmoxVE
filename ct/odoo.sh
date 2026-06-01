@@ -20,6 +20,22 @@ variables
 color
 catch_errors
 
+ensure_lxml_html_clean() {
+  ensure_dependencies python3-lxml
+  if apt-cache show python3-lxml-html-clean &>/dev/null; then
+    ensure_dependencies python3-lxml-html-clean
+  else
+    curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
+    $STD dpkg -i /opt/python3-lxml-html-clean.deb
+    $STD apt-get install -f -y
+    rm -f /opt/python3-lxml-html-clean.deb
+  fi
+  if ! python3 -c "import lxml_html_clean; from lxml.html import clean" 2>/dev/null; then
+    msg_error "lxml.html.clean is not available (python3-lxml-html-clean required)"
+    exit 1
+  fi
+}
+
 function update_script() {
   header_info
   check_container_storage
@@ -29,12 +45,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  ensure_dependencies python3-lxml
-  if ! [[ $(dpkg -s python3-lxml-html-clean 2>/dev/null) ]]; then
-    curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
-    $STD dpkg -i /opt/python3-lxml-html-clean.deb
-    rm -f /opt/python3-lxml-html-clean.deb
-  fi
+  ensure_lxml_html_clean
 
   RELEASE=$(curl -fsSL https://nightly.odoo.com/ | grep -oE 'href="[0-9]+\.[0-9]+/nightly"' | head -n1 | cut -d'"' -f2 | cut -d/ -f1)
   LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
@@ -51,6 +62,7 @@ function update_script() {
     msg_info "Updating ${APP} to ${LATEST_VERSION}"
     curl -fsSL https://nightly.odoo.com/${RELEASE}/nightly/deb/odoo_${RELEASE}.latest_all.deb -o /opt/odoo.deb
     $STD apt install -y /opt/odoo.deb
+    ensure_lxml_html_clean
     rm -f /opt/odoo.deb
     echo "$LATEST_VERSION" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${LATEST_VERSION}"
