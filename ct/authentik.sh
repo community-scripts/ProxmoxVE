@@ -22,7 +22,9 @@ catch_errors
 
 function update_script() {
   header_info
-
+  check_container_storage
+  check_container_resources
+  
   if [[ ! -d /opt/authentik ]]; then
     msg_error "No authentik Installation Found!"
     exit
@@ -32,9 +34,6 @@ function update_script() {
   IFS='.' read -ra PARTS <<< "${CUR_VERSION#version/}"
   MAJOR=${PARTS[0]}
   MINOR=${PARTS[1]}
-
-  check_container_storage
-  check_container_resources
 
   msg_info "Update dependencies"
   ensure_dependencies crossbuild-essential-amd64 gcc-x86-64-linux-gnu cmake clang libunwind-18-dev
