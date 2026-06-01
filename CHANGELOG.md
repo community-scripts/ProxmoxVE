@@ -476,6 +476,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Glance: preserve glance.yml across updates [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14845](https://github.com/community-scripts/ProxmoxVE/pull/14845))
+    - NginxProxymanager: set Certbot version in npm.service environment variable (2.15.0) [@MickLesk](https://github.com/MickLesk) ([#14843](https://github.com/community-scripts/ProxmoxVE/pull/14843))
     - [FileFlows] Fix service handling by using systemctl --all with quoted glob [@adrianmusante](https://github.com/adrianmusante) ([#14838](https://github.com/community-scripts/ProxmoxVE/pull/14838))
 
 ## 2026-05-31
