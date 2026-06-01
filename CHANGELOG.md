@@ -472,6 +472,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-01
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [FileFlows] Fix service handling by using systemctl --all with quoted glob [@adrianmusante](https://github.com/adrianmusante) ([#14838](https://github.com/community-scripts/ProxmoxVE/pull/14838))
+
 ## 2026-05-31
 
 ### 🚀 Updated Scripts
