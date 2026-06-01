@@ -24,7 +24,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  
+
   if [[ ! -d /opt/authentik ]]; then
     msg_error "No authentik Installation Found!"
     exit
@@ -42,6 +42,7 @@ function update_script() {
   NODE_VERSION="24" setup_nodejs
   setup_go
   UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
+  RUST_PROFILE="minimal" RUST_TOOLCHAIN="1.95.0" setup_rust
 
   AUTHENTIK_VERSION="version/2026.5.2"
   XMLSEC_VERSION="1.3.11"
@@ -79,18 +80,11 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 
-    msg_info "Clearing rust"
-	rm -rf /root/.cargo /root/.rustup
-	msg_ok "Clearing rust"
-
-	msg_info "Setup custom rust"
+	msg_info "Configure rust"
 	cd /opt/authentik
-	export PATH="/root/.cargo/bin:$PATH"
-	echo 'export PATH="/root/.cargo/bin:$PATH"' >>"/root/.profile"
-	curl https://sh.rustup.rs -sSf | $STD sh -s -- -y --profile minimal --default-toolchain none
 	$STD rustup install
 	$STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
-	msg_ok "Setup custom rust"
+	msg_ok "Configure rust"
 
 	msg_info "Updating web"
     cd /opt/authentik/web
@@ -187,8 +181,8 @@ EOF
 	  cat <<EOF >/etc/systemd/system/authentik-server.service
 [Unit]
 Description=authentik Go Server (API Gateway)
-After=network.target authentik-worker.service
-Wants=postgresql.service authentik-worker.service
+After=network.target
+Wants=postgresql.service
 
 [Service]
 User=authentik

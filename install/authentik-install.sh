@@ -53,6 +53,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 setup_yq
 setup_go
+RUST_PROFILE="minimal" RUST_TOOLCHAIN="1.95.0" setup_rust
 UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
@@ -72,14 +73,11 @@ $STD make install
 $STD ldconfig
 msg_ok "Setup xmlsec"
 
-msg_info "Setup custom rust"
+msg_info "Configure rust"
 cd /opt/authentik
-export PATH="/root/.cargo/bin:$PATH"
-echo 'export PATH="/root/.cargo/bin:$PATH"' >>"/root/.profile"
-curl https://sh.rustup.rs -sSf | $STD sh -s -- -y --profile minimal --default-toolchain none
 $STD rustup install
 $STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
-msg_ok "Setup custom rust"
+msg_ok "Configure rust"
 
 msg_info "Setup web"
 cd /opt/authentik/web
@@ -116,6 +114,7 @@ export AWS_LC_FIPS_SYS_CC="clang"
 cd /opt/authentik
 $STD cargo build --package authentik --no-default-features --features core --locked --release --jobs 1
 cp ./target/release/authentik /opt/authentik/authentik-worker
+rm -r ./target
 msg_ok "Building worker"
 
 msg_info "Setup python server"
