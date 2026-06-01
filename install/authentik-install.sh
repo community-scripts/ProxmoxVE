@@ -287,7 +287,6 @@ EnvironmentFile=/etc/default/authentik_radius
 [Install]
 WantedBy=multi-user.target
 EOF
-
 msg_ok "Created services"
 
 motd_ssh
