@@ -34,7 +34,19 @@ function update_script() {
     systemctl stop glance
     msg_ok "Stopped Service"
 
+    if [[ -f /opt/glance/glance.yml ]]; then
+      msg_info "Backing up glance.yml"
+      cp /opt/glance/glance.yml /tmp/glance.yml.bak
+      msg_ok "Backed up glance.yml"
+    fi
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-amd64.tar.gz"
+
+    if [[ -f /tmp/glance.yml.bak ]]; then
+      msg_info "Restoring glance.yml"
+      mv /tmp/glance.yml.bak /opt/glance/glance.yml
+      msg_ok "Restored glance.yml"
+    fi
 
     msg_info "Starting Service"
     systemctl start glance
