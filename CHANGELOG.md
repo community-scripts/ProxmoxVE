@@ -476,6 +476,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(dispatcharr): forward nginx port for M3U URLs on new installs [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14862](https://github.com/community-scripts/ProxmoxVE/pull/14862))
     - Set environment paths in service for apprise-api-install.sh [@SystemIdleProcess](https://github.com/SystemIdleProcess) ([#14805](https://github.com/community-scripts/ProxmoxVE/pull/14805))
     - fix(fireshare): rebuild client on update to fix nginx 500 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14848](https://github.com/community-scripts/ProxmoxVE/pull/14848))
     - Fix Kan build failure (TS7016 nodemailer) [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14856](https://github.com/community-scripts/ProxmoxVE/pull/14856))
