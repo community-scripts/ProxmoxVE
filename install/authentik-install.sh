@@ -73,7 +73,7 @@ $STD make install
 $STD ldconfig
 msg_ok "Setup xmlsec"
 
-msg_info "Configure rust"
+msg_info "Configuring rust"
 cd /opt/authentik
 $STD rustup install
 $STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
