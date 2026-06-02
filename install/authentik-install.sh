@@ -64,7 +64,7 @@ fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
 
-msg_info "Setup xmlsec"
+msg_info "Setting up xmlsec"
 cd /opt/xmlsec
 $STD ./autogen.sh
 $STD make -j $(nproc)
