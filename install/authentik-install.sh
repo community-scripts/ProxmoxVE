@@ -79,7 +79,7 @@ $STD rustup install
 $STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
 msg_ok "Configured rust"
 
-msg_info "Setup web"
+msg_info "Setting up web"
 cd /opt/authentik/web
 export NODE_ENV="production"
 $STD npm install
