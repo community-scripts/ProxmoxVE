@@ -77,7 +77,7 @@ msg_info "Configure rust"
 cd /opt/authentik
 $STD rustup install
 $STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
-msg_ok "Configure rust"
+msg_ok "Configured rust"
 
 msg_info "Setup web"
 cd /opt/authentik/web
