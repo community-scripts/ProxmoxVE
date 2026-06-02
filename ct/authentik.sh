@@ -80,7 +80,7 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 
-	msg_info "Configure rust"
+	msg_info "Configuring rust"
 	cd /opt/authentik
 	$STD rustup install
 	$STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
