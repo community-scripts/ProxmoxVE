@@ -87,7 +87,7 @@ $STD npm run build
 $STD npm run build:sfe
 msg_ok "Setup web"
 
-msg_info "Setup go proxy"
+msg_info "Setting up go proxy"
 cd /opt/authentik
 export CGO_ENABLED="1"
 export CC="x86_64-linux-gnu-gcc"
