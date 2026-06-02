@@ -8227,11 +8227,13 @@ setup_ruby() {
 #
 # Variables:
 #   RUST_TOOLCHAIN  - Rust toolchain to install (default: stable)
+#   RUST_PROFILE    - Rust installation profile (default: default, e.g. minimal)
 #   RUST_CRATES     - Comma-separated list of crates (e.g. "cargo-edit,wasm-pack@0.12.1")
 # ------------------------------------------------------------------------------
 
 setup_rust() {
   local RUST_TOOLCHAIN="${RUST_TOOLCHAIN:-stable}"
+  local RUST_PROFILE="${RUST_PROFILE:-default}"
   local RUST_CRATES="${RUST_CRATES:-}"
   local CARGO_BIN="${HOME}/.cargo/bin"
 
@@ -8243,8 +8245,8 @@ setup_rust() {
 
   # Scenario 1: Rustup not installed - fresh install
   if ! command -v rustup &>/dev/null; then
-    msg_info "Setup Rust ($RUST_TOOLCHAIN)"
-    curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN" || {
+    msg_info "Setup Rust ($RUST_TOOLCHAIN, profile: $RUST_PROFILE)"
+    curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --profile "$RUST_PROFILE" --default-toolchain "$RUST_TOOLCHAIN" || {
       msg_error "Failed to install Rust"
       msg_error "Hint: Check connectivity to sh.rustup.rs and static.rust-lang.org"
       return 7
