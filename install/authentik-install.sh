@@ -117,7 +117,7 @@ cp ./target/release/authentik /opt/authentik/authentik-worker
 rm -r ./target
 msg_ok "Building worker"
 
-msg_info "Setup python server"
+msg_info "Setting up python server"
 export UV_NO_BINARY_PACKAGE="cryptography lxml python-kadmin-rs xmlsec"
 export UV_COMPILE_BYTECODE="1"
 export UV_LINK_MODE="copy"
