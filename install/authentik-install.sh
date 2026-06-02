@@ -115,7 +115,7 @@ cd /opt/authentik
 $STD cargo build --package authentik --no-default-features --features core --locked --release --jobs 1
 cp ./target/release/authentik /opt/authentik/authentik-worker
 rm -r ./target
-msg_ok "Building worker"
+msg_ok "Built worker"
 
 msg_info "Setting up python server"
 export UV_NO_BINARY_PACKAGE="cryptography lxml python-kadmin-rs xmlsec"
