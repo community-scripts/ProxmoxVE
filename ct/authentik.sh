@@ -42,7 +42,7 @@ function update_script() {
   NODE_VERSION="24" setup_nodejs
   setup_go
   UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
-  RUST_PROFILE="minimal" RUST_TOOLCHAIN="1.95.0" setup_rust
+  RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
 
   AUTHENTIK_VERSION="version/2026.5.2"
   XMLSEC_VERSION="1.3.11"
