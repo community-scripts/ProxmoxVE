@@ -47,6 +47,10 @@ function update_script() {
   systemctl stop otbr-agent
   msg_ok "Stopped Services"
 
+  msg_info "Backing up Configuration"
+  cp /etc/default/otbr-agent /etc/default/otbr-agent.bak
+  msg_ok "Backed up Configuration"
+
   msg_info "Updating Source"
   $STD git reset --hard origin/main
   $STD git submodule update --depth 1 --init --recursive
@@ -90,6 +94,10 @@ EOF
     $STD sysctl -p /etc/sysctl.d/99-otbr.conf
     msg_ok "Configured Network"
   fi
+
+  msg_info "Restoring Configuration"
+  mv /etc/default/otbr-agent.bak /etc/default/otbr-agent
+  msg_ok "Restored Configuration"
 
   msg_info "Starting Services"
   systemctl start otbr-agent
