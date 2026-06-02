@@ -470,6 +470,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-02
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: add support for Rust installation profile in setup_rust [@MickLesk](https://github.com/MickLesk) ([#14872](https://github.com/community-scripts/ProxmoxVE/pull/14872))
+
 ## 2026-06-01
 
 ### 🚀 Updated Scripts
