@@ -50,7 +50,7 @@ function update_script() {
     fi
 
     msg_info "Updating Valkey"
-    $STD apt install -y --only-upgrade valkey
+    $STD apt install -y valkey
     msg_ok "Updated Valkey"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
@@ -58,6 +58,12 @@ function update_script() {
     msg_info "Restoring Configuration & Data"
     [[ -f /opt/degoog.env.bak ]] && mv /opt/degoog.env.bak /opt/degoog/.env
     [[ -d /opt/degoog_data_backup ]] && mv /opt/degoog_data_backup /opt/degoog/data
+
+    if [[ -f /opt/degoog/.env ]]; then
+      grep -q "^DEGOOG_VALKEY_URL=" /opt/degoog/.env && sed -i "s|^DEGOOG_VALKEY_URL=.*|DEGOOG_VALKEY_URL=redis://valkey:6379|" /opt/degoog/.env || echo "DEGOOG_VALKEY_URL=redis://valkey:6379" >>/opt/degoog/.env
+      grep -q "^DEGOOG_CACHE_MAX_ENTRIES=" /opt/degoog/.env && sed -i "s|^DEGOOG_CACHE_MAX_ENTRIES=.*|DEGOOG_CACHE_MAX_ENTRIES=1000|" /opt/degoog/.env || echo "DEGOOG_CACHE_MAX_ENTRIES=1000" >>/opt/degoog/.env
+      grep -q "^DEGOOG_CACHE_TTL_MS=" /opt/degoog/.env && sed -i "s|^DEGOOG_CACHE_TTL_MS=.*|DEGOOG_CACHE_TTL_MS=43200000|" /opt/degoog/.env || echo "DEGOOG_CACHE_TTL_MS=43200000" >>/opt/degoog/.env
+    fi
     msg_ok "Restored Configuration & Data"
 
     msg_info "Starting Service"
