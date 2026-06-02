@@ -478,6 +478,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - infisical: fix update abort due to creds field mismatch (#14868) [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14870](https://github.com/community-scripts/ProxmoxVE/pull/14870))
 
+  - #### 🔧 Refactor
+
+    - chore: bump Node version in selected scripts [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14873](https://github.com/community-scripts/ProxmoxVE/pull/14873))
+
 ### 💾 Core
 
   - #### ✨ New Features
