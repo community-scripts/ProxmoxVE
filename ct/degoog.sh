@@ -50,7 +50,7 @@ function update_script() {
     fi
 
     msg_info "Updating Valkey"
-    $STD apt install -y valkey
+    ensure_dependencies valkey
     msg_ok "Updated Valkey"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
