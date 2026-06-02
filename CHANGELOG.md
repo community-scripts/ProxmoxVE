@@ -492,6 +492,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: add support for Rust installation profile in setup_rust [@MickLesk](https://github.com/MickLesk) ([#14872](https://github.com/community-scripts/ProxmoxVE/pull/14872))
 
+### 📂 Github
+
+  - fix(workflow): only flag node drift when local is behind upstream [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14874](https://github.com/community-scripts/ProxmoxVE/pull/14874))
+
 ## 2026-06-01
 
 ### 🚀 Updated Scripts
