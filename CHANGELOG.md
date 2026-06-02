@@ -474,7 +474,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - InvoiceShelf ([#14882](https://github.com/community-scripts/ProxmoxVE/pull/14882))
+  - DDNS-Updater ([#14883](https://github.com/community-scripts/ProxmoxVE/pull/14883))
+- InvoiceShelf ([#14882](https://github.com/community-scripts/ProxmoxVE/pull/14882))
 - Certimate ([#14881](https://github.com/community-scripts/ProxmoxVE/pull/14881))
 
 ### 🚀 Updated Scripts
