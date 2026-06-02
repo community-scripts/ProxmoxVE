@@ -16,7 +16,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   git \
-  unzip
+  unzip \
+  valkey
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Bun"
@@ -38,6 +39,9 @@ DEGOOG_PLUGINS_DIR=/opt/degoog/data/plugins
 DEGOOG_THEMES_DIR=/opt/degoog/data/themes
 DEGOOG_ALIASES_FILE=/opt/degoog/data/aliases.json
 DEGOOG_PLUGIN_SETTINGS_FILE=/opt/degoog/data/plugin-settings.json
+DEGOOG_VALKEY_URL=redis://valkey:6379
+DEGOOG_CACHE_MAX_ENTRIES=1000
+DEGOOG_CACHE_TTL_MS=43200000
 # DEGOOG_SETTINGS_PASSWORDS=changeme
 # DEGOOG_PUBLIC_INSTANCE=false
 # LOGGER=debug
@@ -62,11 +66,16 @@ EOF
 fi
 msg_ok "Set up degoog"
 
+msg_info "Starting Valkey Service"
+systemctl enable -q --now valkey-server
+msg_ok "Started Valkey Service"
+
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/degoog.service
 [Unit]
 Description=degoog
-After=network.target
+After=network.target valkey-server.service
+Wants=valkey-server.service
 
 [Service]
 Type=simple

@@ -49,6 +49,10 @@ function update_script() {
       msg_ok "Installed Bun"
     fi
 
+    msg_info "Updating Valkey"
+    $STD apt install -y --only-upgrade valkey
+    msg_ok "Updated Valkey"
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
 
     msg_info "Restoring Configuration & Data"
