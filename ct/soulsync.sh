@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_release "soulsync" "Nezreka/SoulSync"; then
     msg_info "Stopping Service"
