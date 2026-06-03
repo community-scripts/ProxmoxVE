@@ -32,29 +32,23 @@ function update_script() {
     exit
   fi
 
-  cd /opt/ot-br-posix
-  LOCAL_COMMIT=$(git rev-parse HEAD)
-  $STD git fetch --depth 1 origin main
-  REMOTE_COMMIT=$(git rev-parse origin/main)
+  if check_for_gh_release "openthread-br" "openthread/ot-br-posix"; then
+    msg_info "Stopping Services"
+    systemctl stop otbr-web
+    systemctl stop otbr-agent
+    msg_ok "Stopped Services"
 
-  if [[ "${LOCAL_COMMIT}" == "${REMOTE_COMMIT}" ]]; then
-    msg_ok "Already up to date (${LOCAL_COMMIT:0:7})"
-    exit
-  fi
+    msg_info "Backing up Configuration"
+    cp /etc/default/otbr-agent /etc/default/otbr-agent.bak
+    msg_ok "Backed up Configuration"
 
-  msg_info "Stopping Services"
-  systemctl stop otbr-web
-  systemctl stop otbr-agent
-  msg_ok "Stopped Services"
-
-  msg_info "Backing up Configuration"
-  cp /etc/default/otbr-agent /etc/default/otbr-agent.bak
-  msg_ok "Backed up Configuration"
-
-  msg_info "Updating Source"
-  $STD git reset --hard origin/main
-  $STD git submodule update --depth 1 --init --recursive
-  msg_ok "Updated Source"
+    msg_info "Fetching GitHub release OpenThread-BR (${CHECK_UPDATE_RELEASE#v})" 
+    cd /opt/ot-br-posix
+    $STD git fetch --depth 1 origin tag "$CHECK_UPDATE_RELEASE"
+    $STD git checkout -f "$CHECK_UPDATE_RELEASE"
+    $STD git submodule update --depth 1 --init --recursive
+    echo "${CHECK_UPDATE_RELEASE#v}" > ~/.openthread-br
+    msg_ok "Deployed GitHub release OpenThread-BR (${CHECK_UPDATE_RELEASE#v})"
 
   msg_info "Rebuilding OpenThread Border Router (Patience)"
   cd /opt/ot-br-posix/build
@@ -104,6 +98,7 @@ EOF
   systemctl start otbr-web
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
+  fi
   exit
 }
 
