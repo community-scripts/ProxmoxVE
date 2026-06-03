@@ -472,15 +472,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-03
 
-### 🆕 New Scripts
+### 💾 Core
 
-  - ezBookkeeping ([#14901](https://github.com/community-scripts/ProxmoxVE/pull/14901))
+  - #### 🐞 Bug Fixes
 
-### 🚀 Updated Scripts
-
-  - #### 🔧 Refactor
-
-    - [misc]: Fix aligment of status messages [@tremor021](https://github.com/tremor021) ([#14900](https://github.com/community-scripts/ProxmoxVE/pull/14900))
+    - [core]: Fix alignment for `msg_` functions [@tremor021](https://github.com/tremor021) ([#14908](https://github.com/community-scripts/ProxmoxVE/pull/14908))
 
 ## 2026-06-02
 
