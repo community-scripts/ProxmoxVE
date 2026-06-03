@@ -470,6 +470,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-03
+
+### 🆕 New Scripts
+
+  - ezBookkeeping ([#14901](https://github.com/community-scripts/ProxmoxVE/pull/14901))
+
 ## 2026-06-02
 
 ### 🆕 New Scripts
