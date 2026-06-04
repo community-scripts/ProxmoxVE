@@ -474,6 +474,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Jellyfin: install intel-igc deps before intel-opencl-icd to fix dependency order [@MickLesk](https://github.com/MickLesk) ([#14927](https://github.com/community-scripts/ProxmoxVE/pull/14927))
+
   - #### 🔧 Refactor
 
     - Grist: remove extra text at the end of installation [@tremor021](https://github.com/tremor021) ([#14905](https://github.com/community-scripts/ProxmoxVE/pull/14905))
