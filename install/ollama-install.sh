@@ -89,8 +89,8 @@ msg_ok "Created ollama User and adjusted Groups"
 setup_hwaccel "ollama"
 
 msg_info "Creating Service"
-if [[ -e /dev/kfd ]]; then
-  cat <<EOF >/etc/systemd/system/ollama.service
+
+cat <<EOF >/etc/systemd/system/ollama.service
 [Unit]
 Description=Ollama Service
 After=network-online.target
@@ -111,27 +111,9 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 EOF
-else
-    cat <<EOF >/etc/systemd/system/ollama.service
-[Unit]
-Description=Ollama Service
-After=network-online.target
-
-[Service]
-Type=exec
-ExecStart=/usr/local/bin/ollama serve
-Environment=HOME=$HOME
-Environment=OLLAMA_INTEL_GPU=true
-Environment=OLLAMA_HOST=0.0.0.0
-Environment=OLLAMA_NUM_GPU=999
-Environment=SYCL_CACHE_PERSISTENT=1
-Environment=ZES_ENABLE_SYSMAN=1
-Restart=always
-RestartSec=3
-
-[Install]
-WantedBy=multi-user.target
-EOF
+if [[ -e /dev/kfd ]]; then
+  sed -i '/Environment=OLLAMA_INTEL_GPU=true/a Environment=OLLAMA_IGPU_ENABLE=1' \
+      /etc/systemd/system/ollama.service
 fi
 systemctl enable -q --now ollama
 msg_ok "Created Service"
