@@ -478,6 +478,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Grist: remove extra text at the end of installation [@tremor021](https://github.com/tremor021) ([#14905](https://github.com/community-scripts/ProxmoxVE/pull/14905))
 
+### ❔ Uncategorized
+
+  - chore(ct): sync sparkyfitness defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#14925](https://github.com/community-scripts/ProxmoxVE/pull/14925))
+
 ## 2026-06-03
 
 ### 🚀 Updated Scripts
