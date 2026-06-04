@@ -107,9 +107,9 @@ After=network.target postgresql.service chromium-printer.service
 Wants=postgresql.service chromium-printer.service
 
 [Service]
-WorkingDirectory=/opt/reactive-resume/apps/web
+WorkingDirectory=/opt/reactive-resume/apps/server
 EnvironmentFile=/opt/reactive-resume/.env
-ExecStart=/usr/bin/node .output/server/index.mjs
+ExecStart=/usr/bin/node dist/index.mjs
 Restart=always
 RestartSec=5
 
