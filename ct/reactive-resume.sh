@@ -53,7 +53,7 @@ function update_script() {
     msg_ok "Updated Reactive Resume"
 
     msg_info "Updating Service"
-    sed -i 's|WorkingDirectory=/opt/reactive-resume$|WorkingDirectory=/opt/reactive-resume/apps/web|' /etc/systemd/system/reactive-resume.service
+    sed -i 's|WorkingDirectory=/opt/reactive-resume/apps/web|WorkingDirectory=/opt/reactive-resume/apps/server|; s|ExecStart=/usr/bin/node .output/server/index.mjs|ExecStart=/usr/bin/node dist/index.mjs|' /etc/systemd/system/reactive-resume.service
     systemctl daemon-reload
     msg_ok "Updated Service"
 
