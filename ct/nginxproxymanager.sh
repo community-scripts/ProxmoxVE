@@ -20,6 +20,85 @@ variables
 color
 catch_errors
 
+get_latest_openresty_release() {
+  local openresty_index
+  local release
+
+  if ! openresty_index=$(curl -fsSL --max-time 20 "https://openresty.org/download/"); then
+    msg_error "Unable to fetch OpenResty download index"
+    return 22
+  fi
+
+  release=$(grep -oE 'openresty-[0-9]+([.][0-9]+)*[.]tar[.]gz' <<<"$openresty_index" |
+    sed -E 's/^openresty-([0-9.]+)[.]tar[.]gz$/\1/' |
+    sort -V |
+    tail -n1)
+
+  if [[ -z "$release" ]]; then
+    msg_error "Unable to determine latest OpenResty release"
+    return 250
+  fi
+
+  echo "$release"
+}
+
+deploy_openresty_source() {
+  local release="$1"
+  local target="${2:-/opt/openresty}"
+  local tmpdir
+  local tarball
+
+  if [[ -z "$release" ]]; then
+    msg_error "OpenResty release is required"
+    return 65
+  fi
+
+  tmpdir=$(mktemp -d) || return 1
+  tarball="${tmpdir}/openresty-${release}.tar.gz"
+
+  msg_info "Fetching OpenResty (${release})"
+  if ! curl_download "$tarball" "https://openresty.org/download/openresty-${release}.tar.gz"; then
+    msg_error "Download failed: https://openresty.org/download/openresty-${release}.tar.gz"
+    rm -rf "$tmpdir"
+    return 250
+  fi
+
+  rm -rf "$target"
+  mkdir -p "$target"
+  if ! tar --no-same-owner --strip-components=1 -xzf "$tarball" -C "$target"; then
+    msg_error "Failed to extract OpenResty source"
+    rm -rf "$tmpdir"
+    return 251
+  fi
+
+  echo "$release" >"$HOME/.openresty"
+  rm -rf "$tmpdir"
+  msg_ok "Fetched OpenResty (${release})"
+}
+
+check_for_openresty_release() {
+  local current_file="$HOME/.openresty"
+  local current=""
+  local latest
+
+  msg_info "Checking for update: openresty"
+
+  latest=$(get_latest_openresty_release) || return
+  if [[ -f "$current_file" ]]; then
+    current="$(<"$current_file")"
+    [[ "$current" =~ ^v[0-9] ]] && current="${current:1}"
+  fi
+
+  if [[ -z "$current" || "$current" != "$latest" ]]; then
+    CHECK_UPDATE_RELEASE="$latest"
+    msg_ok "Update available: openresty ${current:-not installed} -> ${latest}"
+    return 0
+  fi
+
+  msg_ok "No update available: openresty (${latest})"
+  return 1
+}
+
 function update_script() {
   header_info
   check_container_storage
@@ -60,8 +139,8 @@ function update_script() {
   fi
   $STD apt install -y build-essential "$pcre_pkg" libssl-dev zlib1g-dev
 
-  if check_for_gh_release "openresty" "openresty/openresty"; then
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "${CHECK_UPDATE_RELEASE}" "/opt/openresty" "openresty-*.tar.gz"
+  if check_for_openresty_release; then
+    deploy_openresty_source "${CHECK_UPDATE_RELEASE}" "/opt/openresty"
 
     msg_info "Building OpenResty"
     cd /opt/openresty

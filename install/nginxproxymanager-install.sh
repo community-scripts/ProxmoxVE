@@ -13,6 +13,62 @@ setting_up_container
 network_check
 update_os
 
+get_latest_openresty_release() {
+  local openresty_index
+  local release
+
+  if ! openresty_index=$(curl -fsSL --max-time 20 "https://openresty.org/download/"); then
+    msg_error "Unable to fetch OpenResty download index"
+    return 22
+  fi
+
+  release=$(grep -oE 'openresty-[0-9]+([.][0-9]+)*[.]tar[.]gz' <<<"$openresty_index" |
+    sed -E 's/^openresty-([0-9.]+)[.]tar[.]gz$/\1/' |
+    sort -V |
+    tail -n1)
+
+  if [[ -z "$release" ]]; then
+    msg_error "Unable to determine latest OpenResty release"
+    return 250
+  fi
+
+  echo "$release"
+}
+
+deploy_openresty_source() {
+  local release="$1"
+  local target="${2:-/opt/openresty}"
+  local tmpdir
+  local tarball
+
+  if [[ -z "$release" ]]; then
+    msg_error "OpenResty release is required"
+    return 65
+  fi
+
+  tmpdir=$(mktemp -d) || return 1
+  tarball="${tmpdir}/openresty-${release}.tar.gz"
+
+  msg_info "Fetching OpenResty (${release})"
+  if ! curl_download "$tarball" "https://openresty.org/download/openresty-${release}.tar.gz"; then
+    msg_error "Download failed: https://openresty.org/download/openresty-${release}.tar.gz"
+    rm -rf "$tmpdir"
+    return 250
+  fi
+
+  rm -rf "$target"
+  mkdir -p "$target"
+  if ! tar --no-same-owner --strip-components=1 -xzf "$tarball" -C "$target"; then
+    msg_error "Failed to extract OpenResty source"
+    rm -rf "$tmpdir"
+    return 251
+  fi
+
+  echo "$release" >"$HOME/.openresty"
+  rm -rf "$tmpdir"
+  msg_ok "Fetched OpenResty (${release})"
+}
+
 msg_info "Installing Dependencies"
 $STD apt install -y \
   apache2-utils \
@@ -36,7 +92,8 @@ $STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
 ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
 msg_ok "Set up Certbot"
 
-fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
+openresty_release=$(get_latest_openresty_release)
+deploy_openresty_source "$openresty_release" "/opt/openresty"
 
 msg_info "Building OpenResty"
 cd /opt/openresty
