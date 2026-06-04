@@ -43,6 +43,7 @@ function update_script() {
   setup_go
   UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
+  setup_yq
 
   AUTHENTIK_VERSION="version/2026.5.2"
   XMLSEC_VERSION="1.3.11"
