@@ -89,7 +89,6 @@ msg_ok "Created ollama User and adjusted Groups"
 setup_hwaccel "ollama"
 
 msg_info "Creating Service"
-
 cat <<EOF >/etc/systemd/system/ollama.service
 [Unit]
 Description=Ollama Service
@@ -100,7 +99,6 @@ Type=exec
 ExecStart=/usr/local/bin/ollama serve
 Environment=HOME=$HOME
 Environment=OLLAMA_INTEL_GPU=true
-Environment=OLLAMA_IGPU_ENABLE=1
 Environment=OLLAMA_HOST=0.0.0.0
 Environment=OLLAMA_NUM_GPU=999
 Environment=SYCL_CACHE_PERSISTENT=1
