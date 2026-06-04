@@ -30,10 +30,7 @@ function update_script() {
     exit
   fi
 
-  CUR_VERSION="$(<"$HOME/.authentik")"
-  IFS='.' read -ra PARTS <<< "${CUR_VERSION#version/}"
-  MAJOR=${PARTS[0]}
-  MINOR=${PARTS[1]}
+  read -r MAJOR MINOR PATCH <<< "$(sed 's/^version\///; s/\./ /g' "$HOME/.authentik")"
 
   msg_info "Update dependencies"
   ensure_dependencies crossbuild-essential-amd64 gcc-x86-64-linux-gnu cmake clang libunwind-18-dev
