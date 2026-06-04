@@ -34,9 +34,7 @@ $STD apt install -y \
   libnetfilter-queue-dev \
   libprotobuf-dev \
   protobuf-compiler \
-  socat \
-  curl \
-  jq
+  socat
 msg_ok "Installed Dependencies"
 
 setup_nodejs
