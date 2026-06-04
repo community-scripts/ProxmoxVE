@@ -42,7 +42,7 @@ function update_script() {
       echo -e ""
       msg_custom "🔄" "Migration required to new data structure (/opt/paperless_data/)"
       msg_custom "📖" "Please follow the migration guide:"
-      echo -e "${TAB}${GATEWAY}${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/9223${CL}"
+      echo -e "${GATEWAY}${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/9223${CL}"
       echo -e ""
       msg_custom "⚠️" "Update aborted. Please migrate your data first."
       exit 253
@@ -182,5 +182,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000${CL}"

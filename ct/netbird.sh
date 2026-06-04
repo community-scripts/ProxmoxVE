@@ -45,4 +45,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access NetBird by entering the container and running:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}netbird up${CL}"
+echo -e "${GATEWAY}${BGN}netbird up${CL}"

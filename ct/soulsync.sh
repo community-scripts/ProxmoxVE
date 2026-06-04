@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_release "soulsync" "Nezreka/SoulSync"; then
     msg_info "Stopping Service"
@@ -73,5 +73,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8008${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8008${CL}"

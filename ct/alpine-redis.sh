@@ -58,5 +58,6 @@ build_container
 description
 
 msg_ok "Completed successfully!\n"
-echo -e "${APP} should be reachable on port 6379.
-         ${BL}redis-cli -h ${IP} -p 6379${CL} \n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Connect to Redis CLI using the following command:${CL}"
+echo -e "${GATEWAY}${BGN}redis-cli -h ${IP} -p 6379${CL}"

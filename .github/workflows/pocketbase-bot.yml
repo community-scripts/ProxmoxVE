@@ -13,8 +13,8 @@ jobs:
   pocketbase-bot:
     runs-on: self-hosted
 
-    # Only act on /pocketbase commands
-    if: startsWith(github.event.comment.body, '/pocketbase')
+    # Act on comments that contain a /pocketbase command line (precise line check happens in-script)
+    if: contains(github.event.comment.body, '/pocketbase')
 
     steps:
       - name: Execute PocketBase bot command
@@ -257,6 +257,22 @@ jobs:
               if (!res.ok) console.warn('Could not post comment:', res.body);
             }
 
+            // ── Locate the command line ────────────────────────────────────────
+            // Accept /pocketbase at the start of ANY line (leading whitespace ok),
+            // so the command works even when preceded by other text. Mid-sentence
+            // mentions and blockquoted ("> ...") examples are ignored.
+            const commentBody = process.env.COMMENT_BODY || '';
+            const cmdLine = commentBody
+              .split('\n')
+              .map(l => l.trim())
+              .find(l => l.startsWith('/pocketbase'));
+
+            if (!cmdLine) {
+              console.log('No /pocketbase command line found — ignoring comment.');
+              process.exit(0);
+            }
+            const withoutCmd = cmdLine.replace(/^\/pocketbase\s*/, '').trim();
+
             // ── Permission check ───────────────────────────────────────────────
             const association = process.env.ACTOR_ASSOCIATION;
             if (association !== 'OWNER' && association !== 'MEMBER') {
@@ -272,10 +288,6 @@ jobs:
             await addReaction('eyes');
 
             // ── Parse command ──────────────────────────────────────────────────
-            const commentBody = process.env.COMMENT_BODY || '';
-            const lines = commentBody.trim().split('\n');
-            const firstLine = lines[0].trim();
-            const withoutCmd = firstLine.replace(/^\/pocketbase\s+/, '').trim();
 
             function extractCodeBlock(body) {
               const m = body.match(/```[^\n]*\n([\s\S]*?)```/);

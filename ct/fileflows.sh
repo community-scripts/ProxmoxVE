@@ -34,7 +34,7 @@ function update_script() {
   update_available=$(curl -fsSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' | jq .UpdateAvailable)
   if [[ "${update_available}" == "true" ]]; then
     msg_info "Stopping Service"
-    systemctl stop fileflows*
+    systemctl --all stop 'fileflows*'
     msg_info "Stopped Service"
 
     msg_info "Creating Backup"
@@ -46,7 +46,7 @@ function update_script() {
     fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
 
     msg_info "Starting Service"
-    systemctl start fileflows*
+    systemctl --all start 'fileflows*'
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   else
@@ -62,5 +62,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:19200${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:19200${CL}"

@@ -39,7 +39,7 @@ function update_script() {
     cp /opt/kan/.env /opt/kan.env.bak
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "kan" "kanbn/kan" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "kan" "kanbn/kan" "latest"
 
     msg_info "Restoring Configuration"
     cp /opt/kan.env.bak /opt/kan/.env
@@ -49,8 +49,10 @@ function update_script() {
     msg_info "Building Application"
     cd /opt/kan
     set -a && source /opt/kan/.env && set +a
-    export NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true CI=true
-    $STD pnpm install
+    export NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true
+    $STD pnpm install --ignore-scripts --prod=false
+    export CI=true
+    find /opt/kan/packages /opt/kan/apps -name 'tsconfig.json' -exec sed -i 's|"@kan/tsconfig/|"../../tooling/typescript/|g' {} +
     $STD pnpm build --filter=@kan/web
     unset NEXT_PUBLIC_USE_STANDALONE_OUTPUT CI
     msg_ok "Built Application"
@@ -80,5 +82,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

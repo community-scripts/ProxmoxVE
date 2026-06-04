@@ -685,7 +685,7 @@ msg_info() {
 
   if is_verbose_mode || is_alpine; then
     local HOURGLASS="${TAB}⏳${TAB}"
-    printf "\r\e[2K%s %b" "$HOURGLASS" "${YW}${msg}${CL}" >&2
+    printf "\r\e[2K%s%b" "$HOURGLASS" "${YW}${msg}${CL}" >&2
 
     # Pause mode: Wait for Enter after each step
     if [[ "${DEV_MODE_PAUSE:-false}" == "true" ]]; then
@@ -722,7 +722,7 @@ msg_ok() {
   [[ -z "$msg" ]] && return
   stop_spinner
   clear_line
-  echo -e "$CM ${GN}${msg}${CL}"
+  echo -e "$CM${GN}${msg}${CL}"
   log_msg "[OK] $msg"
   local sanitized_msg
   sanitized_msg=$(printf '%s' "$msg" | sed 's/\x1b\[[0-9;]*m//g; s/[^a-zA-Z0-9_]/_/g')
@@ -740,7 +740,7 @@ msg_ok() {
 msg_error() {
   stop_spinner
   local msg="$1"
-  echo -e "${BFR:-}${CROSS:-✖️} ${RD}${msg}${CL}" >&2
+  echo -e "${BFR:-}${CROSS:-✖️}${RD}${msg}${CL}" >&2
   log_msg "[ERROR] $msg"
 }
 
@@ -755,7 +755,7 @@ msg_error() {
 msg_warn() {
   stop_spinner
   local msg="$1"
-  echo -e "${BFR:-}${INFO:-ℹ️} ${YWB}${msg}${CL}" >&2
+  echo -e "${BFR:-}${INFO:-ℹ️}${YWB}${msg}${CL}" >&2
   log_msg "[WARN] $msg"
 }
 

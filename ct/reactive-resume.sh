@@ -53,7 +53,7 @@ function update_script() {
     msg_ok "Updated Reactive Resume"
 
     msg_info "Updating Service"
-    sed -i 's|WorkingDirectory=/opt/reactive-resume$|WorkingDirectory=/opt/reactive-resume/apps/web|' /etc/systemd/system/reactive-resume.service
+    sed -i 's|WorkingDirectory=/opt/reactive-resume/apps/web|WorkingDirectory=/opt/reactive-resume/apps/server|; s|ExecStart=/usr/bin/node .output/server/index.mjs|ExecStart=/usr/bin/node dist/index.mjs|' /etc/systemd/system/reactive-resume.service
     systemctl daemon-reload
     msg_ok "Updated Service"
 
@@ -71,5 +71,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

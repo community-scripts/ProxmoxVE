@@ -1,0 +1,610 @@
+name: PocketBase AI Bot
+
+# Natural-language companion to pocketbase-bot.yml.
+# Mention the bot in plain English, e.g.:
+#   @pocketbase-bot change RAM to 4096 on zigbee2mqtt
+#   @pocketbase-bot disable script Nextcloud because upstream is broken
+# The bot parses the request with GitHub Models, replies with the exact change(s)
+# it understood, and only applies them after you reply "@pocketbase-bot confirm".
+# The slash-command bot (/pocketbase ...) is unaffected; triggers do not overlap.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  models: read # lets the built-in GITHUB_TOKEN call GitHub Models inference
+  contents: write # built-in token opens the CT-defaults sync PR (like the slash bot)
+  pull-requests: write
+
+jobs:
+  ai-bot:
+    runs-on: self-hosted
+    # Broad gate; the script does precise keyword + self-author checks.
+    if: contains(github.event.comment.body, '@pocketbase-bot')
+
+    steps:
+      - name: Mint GitHub App token (bot identity)
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PB_BOT_APP_ID }}
+          private-key: ${{ secrets.PB_BOT_APP_PRIVATE_KEY }}
+
+      - name: Run PocketBase AI bot
+        env:
+          # GitHub REST as the bot identity
+          GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          PB_BOT_APP_ID: ${{ secrets.PB_BOT_APP_ID }}
+          # GitHub Models inference uses the built-in token (needs models: read)
+          MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Built-in token for git/PR ops (CT-defaults sync), mirroring the slash bot
+          GH_DEFAULT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AI_MODEL: openai/gpt-4o
+          # PocketBase
+          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
+          POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
+          POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          # Event context
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+          COMMENT_AUTHOR_TYPE: ${{ github.event.comment.user.type }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          ACTOR: ${{ github.event.comment.user.login }}
+          ACTOR_ASSOCIATION: ${{ github.event.comment.author_association }}
+        run: |
+          node << 'ENDSCRIPT'
+          (async function () {
+            const https = require('https');
+            const http = require('http');
+            const url = require('url');
+
+            // ── HTTP helper with redirect following ────────────────────────────
+            function request(fullUrl, opts, redirectCount) {
+              redirectCount = redirectCount || 0;
+              return new Promise(function (resolve, reject) {
+                const u = url.parse(fullUrl);
+                const isHttps = u.protocol === 'https:';
+                const body = opts.body;
+                const options = {
+                  hostname: u.hostname,
+                  port: u.port || (isHttps ? 443 : 80),
+                  path: u.path,
+                  method: opts.method || 'GET',
+                  headers: opts.headers || {}
+                };
+                if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
+                const lib = isHttps ? https : http;
+                const req = lib.request(options, function (res) {
+                  if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                    if (redirectCount >= 5) return reject(new Error('Too many redirects from ' + fullUrl));
+                    const redirectUrl = url.resolve(fullUrl, res.headers.location);
+                    res.resume();
+                    resolve(request(redirectUrl, opts, redirectCount + 1));
+                    return;
+                  }
+                  let data = '';
+                  res.on('data', function (chunk) { data += chunk; });
+                  res.on('end', function () {
+                    resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, statusCode: res.statusCode, body: data });
+                  });
+                });
+                req.on('error', reject);
+                if (body) req.write(body);
+                req.end();
+              });
+            }
+
+            // ── GitHub REST (as the bot app) ───────────────────────────────────
+            const owner = process.env.REPO_OWNER;
+            const repo = process.env.REPO_NAME;
+            const issueNumber = parseInt(process.env.ISSUE_NUMBER, 10);
+            const commentId = parseInt(process.env.COMMENT_ID, 10);
+            const actor = process.env.ACTOR;
+
+            function ghRequest(path, method, body) {
+              const headers = {
+                'Authorization': 'Bearer ' + process.env.GH_APP_TOKEN,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'User-Agent': 'PocketBase-AI-Bot'
+              };
+              const bodyStr = body ? JSON.stringify(body) : undefined;
+              if (bodyStr) headers['Content-Type'] = 'application/json';
+              return request('https://api.github.com' + path, { method: method || 'GET', headers, body: bodyStr });
+            }
+
+            // Same as ghRequest but authenticated with the built-in GITHUB_TOKEN.
+            // Used for the CT-defaults sync branch/PR (the App token lacks contents:write).
+            function ghDefault(path, method, body) {
+              const headers = {
+                'Authorization': 'Bearer ' + process.env.GH_DEFAULT_TOKEN,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'User-Agent': 'PocketBase-AI-Bot'
+              };
+              const bodyStr = body ? JSON.stringify(body) : undefined;
+              if (bodyStr) headers['Content-Type'] = 'application/json';
+              return request('https://api.github.com' + path, { method: method || 'GET', headers, body: bodyStr });
+            }
+
+            async function addReaction(content) {
+              try {
+                await ghRequest('/repos/' + owner + '/' + repo + '/issues/comments/' + commentId + '/reactions', 'POST', { content });
+              } catch (e) { console.warn('Could not add reaction:', e.message); }
+            }
+            async function postComment(text) {
+              const res = await ghRequest('/repos/' + owner + '/' + repo + '/issues/' + issueNumber + '/comments', 'POST', { body: text });
+              if (!res.ok) console.warn('Could not post comment:', res.body);
+              return res.ok ? JSON.parse(res.body) : null;
+            }
+            async function updateComment(id, text) {
+              const res = await ghRequest('/repos/' + owner + '/' + repo + '/issues/comments/' + id, 'PATCH', { body: text });
+              if (!res.ok) console.warn('Could not update comment:', res.body);
+            }
+            async function listIssueComments() {
+              const all = [];
+              let page = 1;
+              while (page <= 10) {
+                const res = await ghRequest('/repos/' + owner + '/' + repo + '/issues/' + issueNumber + '/comments?per_page=100&page=' + page);
+                if (!res.ok) break;
+                const batch = JSON.parse(res.body);
+                all.push.apply(all, batch);
+                if (batch.length < 100) break;
+                page++;
+              }
+              return all;
+            }
+
+            // ── 1. Self-trigger guard (App-token comments DO re-fire this event) ─
+            if (process.env.COMMENT_AUTHOR_TYPE === 'Bot') {
+              console.log('Comment authored by a bot — skipping to avoid loops.');
+              return;
+            }
+
+            // ── 2. Permission gate (mirrors the slash bot) ─────────────────────
+            const association = process.env.ACTOR_ASSOCIATION;
+            if (association !== 'OWNER' && association !== 'MEMBER') {
+              await addReaction('-1');
+              await postComment(
+                '❌ **PocketBase AI Bot**: @' + actor + ' is not authorized to use this command.\n' +
+                'Only org members (Contributors team) can use `@pocketbase-bot`.'
+              );
+              return;
+            }
+
+            // ── 3. Extract the instruction after the @pocketbase-bot handle ────
+            const commentBody = process.env.COMMENT_BODY || '';
+            const handleMatch = commentBody.match(/@pocketbase-bot(\[bot\])?/i);
+            if (!handleMatch) {
+              console.log('No @pocketbase-bot handle found — ignoring.');
+              return;
+            }
+            const instruction = commentBody.slice(handleMatch.index + handleMatch[0].length).trim();
+            if (!instruction) {
+              await addReaction('-1');
+              await postComment(
+                'ℹ️ **PocketBase AI Bot**: Tell me what to do, e.g.\n' +
+                '`@pocketbase-bot change RAM to 4096 on zigbee2mqtt` or `@pocketbase-bot disable script Nextcloud`.'
+              );
+              return;
+            }
+
+            // ── PocketBase auth + low-level helpers ────────────────────────────
+            const pbRaw = process.env.POCKETBASE_URL.replace(/\/$/, '');
+            const apiBase = /\/api$/i.test(pbRaw) ? pbRaw : pbRaw + '/api';
+            const coll = process.env.POCKETBASE_COLLECTION;
+            const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
+
+            async function pbAuth() {
+              const res = await request(apiBase + '/collections/users/auth-with-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identity: process.env.POCKETBASE_ADMIN_EMAIL, password: process.env.POCKETBASE_ADMIN_PASSWORD })
+              });
+              if (!res.ok) throw new Error('PocketBase auth failed: ' + res.body);
+              return JSON.parse(res.body).token;
+            }
+            async function pbFindRecord(token, slug) {
+              const filter = "(slug='" + String(slug).replace(/'/g, "''") + "')";
+              const res = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1', { headers: { 'Authorization': token } });
+              const list = JSON.parse(res.body);
+              return list.items && list.items[0];
+            }
+            async function pbPatch(token, id, payload) {
+              return request(recordsUrl + '/' + id, {
+                method: 'PATCH',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+            }
+            function readJsonBlob(val) {
+              if (Array.isArray(val)) return val;
+              try { return JSON.parse(val || '[]'); } catch (e) { return []; }
+            }
+            async function revalidate(s) {
+              const frontendUrl = process.env.FRONTEND_URL;
+              const secret = process.env.REVALIDATE_SECRET;
+              if (!frontendUrl || !secret) return;
+              try {
+                await request(frontendUrl.replace(/\/$/, '') + '/api/revalidate', {
+                  method: 'POST',
+                  headers: { 'Authorization': 'Bearer ' + secret, 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ tags: ['scripts', 'script-' + s] })
+                });
+              } catch (e) { console.warn('Revalidation skipped:', e.message); }
+            }
+
+            // ── CT-defaults sync PR (copied from slash bot) ────────────────────
+            function encodeContentPath(filePath) { return filePath.split('/').map(encodeURIComponent).join('/'); }
+            function decodeGitHubContent(content) { return Buffer.from((content || '').replace(/\n/g, ''), 'base64').toString('utf8'); }
+            function sanitizeBranchPart(value) {
+              return (value || '').toLowerCase().replace(/[^a-z0-9._/-]+/g, '-').replace(/\/+/g, '/').replace(/^-+|-+$/g, '');
+            }
+            function applyCtDefaultChanges(scriptText, varChanges) {
+              let nextText = scriptText;
+              const updatedVars = [], unchangedVars = [];
+              for (const [varName, rawValue] of Object.entries(varChanges)) {
+                const newValue = String(rawValue);
+                const pattern = new RegExp('(^\\s*' + varName + '="\\$\\{' + varName + ':-)([^"}]*)(\\}"\\s*$)', 'm');
+                const match = nextText.match(pattern);
+                if (!match) continue;
+                if (match[2] === newValue) { unchangedVars.push(varName); continue; }
+                nextText = nextText.replace(pattern, '$1' + newValue + '$3');
+                updatedVars.push(varName);
+              }
+              return { nextText, updatedVars, unchangedVars };
+            }
+            async function ensureBranch(defaultBranch, branchName) {
+              const ghRequest = ghDefault; // git ops run as the built-in token
+              const branchRefRes = await ghRequest('/repos/' + owner + '/' + repo + '/git/ref/heads/' + encodeURIComponent(branchName));
+              if (branchRefRes.ok) return;
+              const defaultRefRes = await ghRequest('/repos/' + owner + '/' + repo + '/git/ref/heads/' + encodeURIComponent(defaultBranch));
+              if (!defaultRefRes.ok) throw new Error('Could not read default branch ref: ' + defaultRefRes.body);
+              const defaultRef = JSON.parse(defaultRefRes.body);
+              const createBranchRes = await ghRequest('/repos/' + owner + '/' + repo + '/git/refs', 'POST', { ref: 'refs/heads/' + branchName, sha: defaultRef.object.sha });
+              if (!createBranchRes.ok) throw new Error('Could not create branch: ' + createBranchRes.body);
+            }
+            async function upsertCtDefaultsPr(slugValue, varChanges) {
+              const ghRequest = ghDefault; // contents/PR ops run as the built-in token
+              const wantedEntries = Object.entries(varChanges || {}).filter(function ([, v]) { return v !== undefined && v !== null && String(v) !== ''; });
+              if (wantedEntries.length === 0) return { status: 'skipped', reason: 'No mapped CT defaults changed.' };
+              const repoRes = await ghRequest('/repos/' + owner + '/' + repo);
+              if (!repoRes.ok) throw new Error('Could not read repository metadata: ' + repoRes.body);
+              const defaultBranch = JSON.parse(repoRes.body).default_branch;
+              const ctPath = 'ct/' + slugValue + '.sh';
+              const encodedCtPath = encodeContentPath(ctPath);
+              const defaultFileRes = await ghRequest('/repos/' + owner + '/' + repo + '/contents/' + encodedCtPath + '?ref=' + encodeURIComponent(defaultBranch));
+              if (defaultFileRes.statusCode === 404) return { status: 'skipped', reason: 'No matching CT file found at `' + ctPath + '`.' };
+              if (!defaultFileRes.ok) throw new Error('Could not read CT file from default branch: ' + defaultFileRes.body);
+              const branchName = 'pocketbase-sync/' + sanitizeBranchPart(slugValue || 'unknown');
+              await ensureBranch(defaultBranch, branchName);
+              const branchFileRes = await ghRequest('/repos/' + owner + '/' + repo + '/contents/' + encodedCtPath + '?ref=' + encodeURIComponent(branchName));
+              if (!branchFileRes.ok) throw new Error('Could not read CT file from sync branch: ' + branchFileRes.body);
+              const branchFile = JSON.parse(branchFileRes.body);
+              const currentBranchText = decodeGitHubContent(branchFile.content);
+              const updateResult = applyCtDefaultChanges(currentBranchText, Object.fromEntries(wantedEntries));
+              if (updateResult.updatedVars.length === 0) return { status: 'skipped', reason: 'CT defaults already up to date.' };
+              const putRes = await ghRequest('/repos/' + owner + '/' + repo + '/contents/' + encodedCtPath, 'PUT', {
+                message: 'chore(ct): sync ' + slugValue + ' defaults from PocketBase',
+                content: Buffer.from(updateResult.nextText, 'utf8').toString('base64'),
+                sha: branchFile.sha,
+                branch: branchName
+              });
+              if (!putRes.ok) throw new Error('Could not update CT file: ' + putRes.body);
+              const openPrRes = await ghRequest('/repos/' + owner + '/' + repo + '/pulls?state=open&head=' + encodeURIComponent(owner + ':' + branchName) + '&base=' + encodeURIComponent(defaultBranch));
+              if (!openPrRes.ok) throw new Error('Could not query existing PRs: ' + openPrRes.body);
+              const openPrs = JSON.parse(openPrRes.body);
+              if (openPrs.length > 0) return { status: 'updated', prUrl: openPrs[0].html_url, updatedVars: updateResult.updatedVars };
+              const createPrRes = await ghRequest('/repos/' + owner + '/' + repo + '/pulls', 'POST', {
+                title: 'chore(ct): sync ' + slugValue + ' defaults with PocketBase',
+                body: '## Summary\n- Sync default CT variables for `' + slugValue + '` after an `@pocketbase-bot` update.\n- Updated vars: `' + updateResult.updatedVars.join('`, `') + '`.\n\n## Source\n- Triggered by @' + actor + ' via PocketBase AI bot.\n',
+                head: branchName,
+                base: defaultBranch
+              });
+              if (!createPrRes.ok) throw new Error('Could not create PR: ' + createPrRes.body);
+              return { status: 'created', prUrl: JSON.parse(createPrRes.body).html_url, updatedVars: updateResult.updatedVars };
+            }
+
+            // ── Allow-lists (mirror the slash bot) ─────────────────────────────
+            const ALLOWED_FIELDS = {
+              name: 'string', description: 'string', logo: 'string', documentation: 'string',
+              website: 'string', project_url: 'string', github: 'string', config_path: 'string',
+              tags: 'string', port: 'number', default_user: 'nullable_string', default_passwd: 'nullable_string',
+              unprivileged: 'number', updateable: 'boolean', privileged: 'boolean', has_arm: 'boolean',
+              is_dev: 'boolean', is_disabled: 'boolean', disable_message: 'string',
+              is_deleted: 'boolean', deleted_message: 'string'
+            };
+            const FIELD_TO_CT_VAR = { tags: 'var_tags', unprivileged: 'var_unprivileged' };
+            const RESOURCE_KEYS = { cpu: 'number', ram: 'number', hdd: 'number', os: 'string', version: 'string' };
+            const METHOD_KEYS = { config_path: 'string', script: 'string' };
+            const ALL_METHOD_KEYS = Object.assign({}, RESOURCE_KEYS, METHOD_KEYS);
+            const RESOURCE_TO_CT_VAR = { cpu: 'var_cpu', ram: 'var_ram', hdd: 'var_disk', os: 'var_os', version: 'var_version' };
+
+            function castFieldValue(key, rawVal) {
+              const type = ALLOWED_FIELDS[key];
+              if (!type) return { error: 'Unknown field `' + key + '`' };
+              if (type === 'boolean') {
+                if (rawVal === true || rawVal === 'true') return { value: true };
+                if (rawVal === false || rawVal === 'false') return { value: false };
+                return { error: '`' + key + '` must be true/false' };
+              }
+              if (type === 'number') {
+                const n = parseInt(rawVal, 10);
+                if (isNaN(n)) return { error: '`' + key + '` must be a number' };
+                return { value: n };
+              }
+              if (type === 'nullable_string') return { value: rawVal === '' || rawVal == null ? null : String(rawVal) };
+              return { value: String(rawVal) };
+            }
+
+            // ── Operation validation (used at propose AND confirm time) ────────
+            // Never trust raw operations: enforce the field/op allow-lists and
+            // re-cast values. Returns only well-formed, allowed operations.
+            function sanitizeOperations(ops) {
+              const validOps = [], problems = [];
+              for (const op of (Array.isArray(ops) ? ops : [])) {
+                if (op && op.kind === 'field') {
+                  const cast = castFieldValue(op.field, op.value);
+                  if (cast.error) { problems.push(cast.error); continue; }
+                  validOps.push({ kind: 'field', field: op.field, value: cast.value });
+                } else if (op && op.kind === 'note' && ['add', 'edit', 'remove'].includes(op.action)) {
+                  validOps.push({ kind: 'note', action: op.action, type: String(op.type || ''), text: op.text, newText: op.newText });
+                } else if (op && op.kind === 'method' && ['add', 'edit', 'remove'].includes(op.action)) {
+                  const changes = {};
+                  for (const [k, v] of Object.entries(op.changes || {})) { if (ALL_METHOD_KEYS[k]) changes[k] = v; }
+                  validOps.push({ kind: 'method', action: op.action, type: String(op.type || 'default'), changes });
+                } else {
+                  problems.push('Unsupported operation: `' + JSON.stringify(op) + '`');
+                }
+              }
+              return { validOps, problems };
+            }
+
+            // ── Executor: apply a validated {slug, operations} set ─────────────
+            async function applyOperations(action) {
+              const token = await pbAuth();
+              const record = await pbFindRecord(token, action.slug);
+              if (!record) return { ok: false, summary: '❌ No PocketBase record for slug `' + action.slug + '`.' };
+
+              const fieldPayload = {};
+              let notesArr = readJsonBlob(record.notes);
+              let methodsArr = readJsonBlob(record.install_methods);
+              let notesChanged = false, methodsChanged = false;
+              const ctChanges = {};
+              const lines = [];
+
+              for (const op of action.operations) {
+                if (op.kind === 'field') {
+                  const cast = castFieldValue(op.field, op.value);
+                  if (cast.error) { lines.push('- ⚠️ skipped field: ' + cast.error); continue; }
+                  fieldPayload[op.field] = cast.value;
+                  if (FIELD_TO_CT_VAR[op.field]) ctChanges[FIELD_TO_CT_VAR[op.field]] = cast.value;
+                  lines.push('- `' + op.field + '` → `' + JSON.stringify(cast.value) + '`');
+                } else if (op.kind === 'note') {
+                  const type = String(op.type || '').toLowerCase();
+                  if (op.action === 'add') {
+                    notesArr.push({ type, text: String(op.text || '') });
+                    notesChanged = true; lines.push('- note add `' + type + '`: ' + op.text);
+                  } else if (op.action === 'remove') {
+                    const before = notesArr.length;
+                    notesArr = notesArr.filter(function (n) { return !(String(n.type).toLowerCase() === type && n.text === op.text); });
+                    if (notesArr.length !== before) { notesChanged = true; lines.push('- note remove `' + type + '`: ' + op.text); }
+                    else lines.push('- ⚠️ note remove: no `' + type + '` note matched');
+                  } else if (op.action === 'edit') {
+                    const idx = notesArr.findIndex(function (n) { return String(n.type).toLowerCase() === type && n.text === op.text; });
+                    if (idx !== -1) { notesArr[idx].text = String(op.newText || ''); notesChanged = true; lines.push('- note edit `' + type + '`'); }
+                    else lines.push('- ⚠️ note edit: no `' + type + '` note matched');
+                  }
+                } else if (op.kind === 'method') {
+                  const type = String(op.type || '').toLowerCase();
+                  const changes = op.changes || {};
+                  if (op.action === 'remove') {
+                    const before = methodsArr.length;
+                    methodsArr = methodsArr.filter(function (im) { return String(im.type || '').toLowerCase() !== type; });
+                    if (methodsArr.length !== before) { methodsChanged = true; lines.push('- method remove `' + type + '`'); }
+                    else lines.push('- ⚠️ method remove: `' + type + '` not found');
+                  } else {
+                    let method = methodsArr.find(function (im) { return String(im.type || '').toLowerCase() === type; });
+                    if (!method && op.action === 'add') { method = { type, resources: { cpu: 1, ram: 512, hdd: 4, os: 'debian', version: '13' } }; methodsArr.push(method); }
+                    if (!method) { lines.push('- ⚠️ method edit: `' + type + '` not found'); continue; }
+                    if (!method.resources) method.resources = {};
+                    for (const [k, v] of Object.entries(changes)) {
+                      if (RESOURCE_KEYS[k]) {
+                        method.resources[k] = RESOURCE_KEYS[k] === 'number' ? parseInt(v, 10) : String(v);
+                        if (RESOURCE_TO_CT_VAR[k]) ctChanges[RESOURCE_TO_CT_VAR[k]] = method.resources[k];
+                      } else if (METHOD_KEYS[k]) {
+                        method[k] = v === '' ? null : String(v);
+                      }
+                    }
+                    methodsChanged = true;
+                    lines.push('- method `' + (op.action === 'add' ? 'add' : 'edit') + '` `' + type + '`: ' + JSON.stringify(changes));
+                  }
+                }
+              }
+
+              if (Object.keys(fieldPayload).length) {
+                const r = await pbPatch(token, record.id, fieldPayload);
+                if (!r.ok) return { ok: false, summary: '❌ Field update failed:\n```\n' + r.body + '\n```' };
+              }
+              if (notesChanged) {
+                const r = await pbPatch(token, record.id, { notes: notesArr });
+                if (!r.ok) return { ok: false, summary: '❌ Notes update failed:\n```\n' + r.body + '\n```' };
+              }
+              if (methodsChanged) {
+                const r = await pbPatch(token, record.id, { install_methods: methodsArr });
+                if (!r.ok) return { ok: false, summary: '❌ Install-method update failed:\n```\n' + r.body + '\n```' };
+              }
+              await revalidate(action.slug);
+
+              let ctNote = '';
+              if (Object.keys(ctChanges).length) {
+                try {
+                  const sync = await upsertCtDefaultsPr(action.slug, ctChanges);
+                  if (sync.status === 'created') ctNote = '\n\n**CT sync PR:** ' + sync.prUrl;
+                  else if (sync.status === 'updated') ctNote = '\n\n**CT sync PR updated:** ' + sync.prUrl;
+                  else if (sync.status === 'skipped') ctNote = '\n\n**CT sync skipped:** ' + sync.reason;
+                } catch (e) { ctNote = '\n\n**CT sync failed:** ' + e.message; }
+              }
+              return { ok: true, summary: lines.join('\n') + ctNote };
+            }
+
+            // ── 4. Confirm branch ──────────────────────────────────────────────
+            const PENDING_RE = /<!--\s*pocketbase-pending:\s*([A-Za-z0-9+/=]+)\s*-->/;
+            const isConfirm = /^(confirm|yes|apply|do it|y)\b/i.test(instruction);
+
+            if (isConfirm) {
+              const comments = await listIssueComments();
+              const appId = String(process.env.PB_BOT_APP_ID || '');
+              let pending = null, pendingComment = null;
+              for (let i = comments.length - 1; i >= 0; i--) {
+                const c = comments[i];
+                // Only trust a marker in a comment THIS bot app authored — otherwise a
+                // user could hand-craft a forged pocketbase-pending marker and confirm it.
+                const byBotApp = c.user && c.user.type === 'Bot' &&
+                  c.performed_via_github_app && String(c.performed_via_github_app.id) === appId;
+                if (!byBotApp) continue;
+                const m = c.body && c.body.match(PENDING_RE);
+                if (m) { pending = m[1]; pendingComment = c; break; }
+              }
+              if (!pending) {
+                await addReaction('confused');
+                await postComment('🤔 **PocketBase AI Bot**: I have no pending change to confirm in this thread.');
+                return;
+              }
+              let action;
+              try { action = JSON.parse(Buffer.from(pending, 'base64').toString('utf8')); }
+              catch (e) { await postComment('❌ **PocketBase AI Bot**: Could not decode the pending change.'); return; }
+
+              // Re-validate the decoded operations before applying (defense-in-depth).
+              const recheck = sanitizeOperations(action.operations);
+              if (!action.slug || recheck.validOps.length === 0) {
+                await addReaction('-1');
+                await postComment('❌ **PocketBase AI Bot**: The pending change is no longer valid. Please restate the request.');
+                return;
+              }
+              action.operations = recheck.validOps;
+
+              let result;
+              try { result = await applyOperations(action); }
+              catch (e) { await addReaction('-1'); await postComment('❌ **PocketBase AI Bot**: ' + e.message); return; }
+
+              if (!result.ok) { await addReaction('-1'); await postComment(result.summary); return; }
+              await updateComment(pendingComment.id, pendingComment.body.replace(PENDING_RE, '<!-- pocketbase-applied -->'));
+              await addReaction('+1');
+              await postComment(
+                '✅ **PocketBase AI Bot**: Applied to **`' + action.slug + '`**\n\n' + result.summary +
+                '\n\n*Confirmed by @' + actor + '*'
+              );
+              return;
+            }
+
+            // ── 5. New request: acknowledge, fetch script list, call the model ─
+            await addReaction('eyes');
+
+            const token0 = await pbAuth();
+            const scripts = [];
+            let page = 1;
+            while (page <= 5) {
+              const res = await request(recordsUrl + '?fields=slug,name&perPage=500&page=' + page, { headers: { 'Authorization': token0 } });
+              if (!res.ok) break;
+              const data = JSON.parse(res.body);
+              (data.items || []).forEach(function (it) { if (it.slug) scripts.push({ slug: it.slug, name: it.name || it.slug }); });
+              if (!data.items || data.items.length < 500) break;
+              page++;
+            }
+
+            const SYSTEM_PROMPT =
+              'You translate a maintainer\'s natural-language request into a STRICT JSON change-set for a ' +
+              'script catalog (PocketBase). Respond with a SINGLE JSON object and nothing else.\n\n' +
+              'Schema:\n' +
+              '{\n' +
+              '  "slug": string|null,            // MUST be one of the known slugs below, chosen from the request\n' +
+              '  "operations": [ ... ],          // [] if you cannot determine concrete changes\n' +
+              '  "human_summary": string,        // short plain-English description\n' +
+              '  "clarification": string|null    // a question to ask if ambiguous/unsupported; else null\n' +
+              '}\n\n' +
+              'Operation kinds:\n' +
+              '- {"kind":"field","field":<one of: ' + Object.keys(ALLOWED_FIELDS).join(', ') + '>,"value":<bool|number|string>}\n' +
+              '  (booleans true/false; "is_disabled"/"is_deleted"/"is_dev" are booleans; "port"/"unprivileged" are numbers; rest strings.)\n' +
+              '- {"kind":"note","action":"add"|"edit"|"remove","type":string,"text":string,"newText":string?}\n' +
+              '- {"kind":"method","action":"add"|"edit"|"remove","type":string,"changes":{cpu?:number,ram?:number,hdd?:number,os?:string,version?:string,config_path?:string,script?:string}}\n' +
+              '  (RAM/HDD are in MB/GB; method "type" defaults to "default" if the user does not name one.)\n\n' +
+              'Rules:\n' +
+              '- Only use fields/operations listed above. If the request needs something else, set clarification and operations=[].\n' +
+              '- "disable"/"enable" map to is_disabled true/false. If disabling and the user gave a reason, also set disable_message.\n' +
+              '- Resolve the target script to a slug from the list. If you cannot confidently match exactly one, set slug=null and ask via clarification.\n\n' +
+              'Known scripts (slug — name):\n' +
+              scripts.map(function (s) { return s.slug + ' — ' + s.name; }).join('\n');
+
+            const modelRes = await request('https://models.github.ai/inference/chat/completions', {
+              method: 'POST',
+              headers: { 'Authorization': 'Bearer ' + process.env.MODELS_TOKEN, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({
+                model: process.env.AI_MODEL || 'openai/gpt-4o',
+                temperature: 0.1,
+                response_format: { type: 'json_object' },
+                messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: instruction }]
+              })
+            });
+            if (!modelRes.ok) {
+              await addReaction('-1');
+              await postComment('❌ **PocketBase AI Bot**: Model request failed (' + modelRes.statusCode + ').\n```\n' + modelRes.body.slice(0, 500) + '\n```');
+              return;
+            }
+
+            let parsed;
+            try {
+              const content = JSON.parse(modelRes.body).choices[0].message.content;
+              const cleaned = content.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+              parsed = JSON.parse(cleaned);
+            } catch (e) {
+              await addReaction('-1');
+              await postComment('❌ **PocketBase AI Bot**: Could not parse the model response. Please rephrase.');
+              return;
+            }
+
+            // ── 6. Validate ────────────────────────────────────────────────────
+            const knownSlugs = new Set(scripts.map(function (s) { return s.slug; }));
+            const problems = [];
+            if (parsed.clarification) problems.push(parsed.clarification);
+            if (!parsed.slug || !knownSlugs.has(parsed.slug)) problems.push('I could not match the request to a known script.');
+            const sanitized = sanitizeOperations(parsed.operations);
+            const validOps = sanitized.validOps;
+            problems.push.apply(problems, sanitized.problems);
+            if (validOps.length === 0) problems.push('No concrete, supported change was found.');
+
+            if (problems.length) {
+              await addReaction('confused');
+              await postComment(
+                '🤔 **PocketBase AI Bot**: I need a bit more to act on that.\n\n- ' + problems.join('\n- ') +
+                '\n\nTry naming the script and the exact change, e.g. `@pocketbase-bot set RAM to 4096 on zigbee2mqtt`.'
+              );
+              return;
+            }
+
+            // ── 7. Propose (do NOT apply yet) ──────────────────────────────────
+            const action = { slug: parsed.slug, operations: validOps };
+            const bullets = validOps.map(function (op) {
+              if (op.kind === 'field') return '- `' + op.field + '` → `' + JSON.stringify(op.value) + '`';
+              if (op.kind === 'note') return '- note ' + op.action + ' `' + op.type + '`' + (op.text ? ': ' + op.text : '');
+              return '- method ' + op.action + ' `' + op.type + '`: ' + JSON.stringify(op.changes);
+            }).join('\n');
+            const marker = '<!-- pocketbase-pending: ' + Buffer.from(JSON.stringify(action), 'utf8').toString('base64') + ' -->';
+            await addReaction('+1');
+            await postComment(
+              '🤖 **PocketBase AI Bot** — please confirm\n\n' +
+              (parsed.human_summary ? '> ' + parsed.human_summary + '\n\n' : '') +
+              '**Target:** `' + action.slug + '`\n**Proposed changes:**\n' + bullets + '\n\n' +
+              'Reply **`@pocketbase-bot confirm`** to apply, or restate the request to adjust.\n' + marker
+            );
+          })().catch(function (e) {
+            console.error('Fatal error:', e && (e.message || e));
+            process.exit(1);
+          });
+          ENDSCRIPT

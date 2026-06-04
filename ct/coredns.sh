@@ -54,4 +54,4 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} CoreDNS is listening on port 53 (DNS)${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}dns://${IP}${CL}"
+echo -e "${GATEWAY}${BGN}dns://${IP}${CL}"

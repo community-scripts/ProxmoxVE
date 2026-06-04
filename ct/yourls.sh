@@ -62,6 +62,6 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} First, complete the database setup at:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/admin/install.php${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}/admin/install.php${CL}"
 echo -e "${INFO}${YW} Admin credentials are in the install log:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}grep -A2 'admin' /opt/yourls/user/config.php${CL}"
+echo -e "${GATEWAY}${BGN}grep -A2 'admin' /opt/yourls/user/config.php${CL}"

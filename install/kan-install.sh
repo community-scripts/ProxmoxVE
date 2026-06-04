@@ -23,7 +23,7 @@ PG_VERSION="16" setup_postgresql
 PG_DB_NAME="kan" PG_DB_USER="kan" setup_postgresql_db
 NODE_VERSION="20" NODE_MODULE="pnpm" setup_nodejs
 
-fetch_and_deploy_gh_tag "kan" "kanbn/kan" "tarball"
+fetch_and_deploy_gh_tag "kan" "kanbn/kan" "latest"
 
 msg_info "Configuring Application"
 AUTH_SECRET=$(openssl rand -base64 32)
@@ -45,8 +45,9 @@ msg_info "Building Application"
 cd /opt/kan
 set -a && source /opt/kan/.env && set +a
 export NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true NEXT_PUBLIC_BASE_URL BETTER_AUTH_TRUSTED_ORIGINS NEXT_PUBLIC_ALLOW_CREDENTIALS BETTER_AUTH_SECRET
+$STD pnpm install --ignore-scripts --prod=false
 export CI=true
-$STD pnpm install
+find /opt/kan/packages /opt/kan/apps -name 'tsconfig.json' -exec sed -i 's|"@kan/tsconfig/|"../../tooling/typescript/|g' {} +
 $STD pnpm build --filter=@kan/web
 unset NEXT_PUBLIC_USE_STANDALONE_OUTPUT CI
 msg_ok "Built Application"

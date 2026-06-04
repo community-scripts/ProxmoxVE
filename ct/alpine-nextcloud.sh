@@ -57,5 +57,6 @@ build_container
 description
 
 msg_ok "Completed successfully!\n"
-echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}https://${IP}${CL} \n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}https://${IP}${CL}"

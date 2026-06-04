@@ -42,7 +42,7 @@ function update_script() {
 
     PYTHON_VERSION="3.13" setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "musicseerr" "HabiRabbu/Musicseerr" "tarball"
-    NODE_VERSION="22" NODE_MODULE="pnpm@10.33.0" setup_nodejs
+    NODE_VERSION="25" NODE_MODULE="pnpm@10.33.0" setup_nodejs
 
     msg_info "Building Frontend"
     cd /opt/musicseerr/frontend
@@ -81,5 +81,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8688${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8688${CL}"

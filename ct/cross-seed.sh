@@ -25,7 +25,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  NODE_VERSION="24" setup_nodejs
+  NODE_VERSION="26" setup_nodejs
   ensure_dependencies build-essential
 
   if command -v cross-seed &>/dev/null; then
@@ -53,4 +53,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access cross-seed API using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:2468${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:2468${CL}"

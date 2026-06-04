@@ -216,6 +216,12 @@ EOF
     msg_ok "Initialized Backend"
 
     msg_info "Starting Services"
+    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}')
+    if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
+      sed -i "s|Environment=CERTBOT_VERSION=.*|Environment=CERTBOT_VERSION=${CERTBOT_VER}|" /lib/systemd/system/npm.service
+    else
+      sed -i "/Environment=NODE_ENV=production/a Environment=CERTBOT_VERSION=${CERTBOT_VER}" /lib/systemd/system/npm.service
+    fi
     sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
     systemctl daemon-reload
@@ -233,5 +239,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:81${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:81${CL}"

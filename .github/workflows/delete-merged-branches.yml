@@ -1,0 +1,134 @@
+name: Delete merged branches
+
+on:
+  schedule:
+    - cron: "0 2 * * *"  # Run daily at 02:00 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only log branches that would be deleted (no deletion)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write       # required to delete branch refs
+  pull-requests: read
+
+jobs:
+  delete-merged-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete branches of merged PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // dry_run is only set on workflow_dispatch; scheduled runs delete for real.
+            const dryRun = context.eventName === "workflow_dispatch"
+              ? context.payload.inputs?.dry_run === "true" || context.payload.inputs?.dry_run === true
+              : false;
+
+            // Only look at PRs updated within this window on scheduled runs, so we don't
+            // re-scan the entire history every day. Raise this for an initial cleanup.
+            const lookbackDays = 30;
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - lookbackDays);
+
+            // Long-lived branches that must never be deleted (besides the default branch).
+            const protectedNames = new Set();
+
+            // Resolve the default branch once.
+            const { data: repoData } = await github.rest.repos.get({ owner, repo });
+            const defaultBranch = repoData.default_branch;
+            protectedNames.add(defaultBranch);
+
+            console.log(`Mode: ${dryRun ? "DRY RUN (no deletion)" : "LIVE"}`);
+            console.log(`Default branch: ${defaultBranch}`);
+
+            const candidates = new Set();
+            let page = 1;
+            let stop = false;
+
+            while (!stop) {
+              const { data: prs } = await github.rest.pulls.list({
+                owner,
+                repo,
+                state: "closed",
+                sort: "updated",
+                direction: "desc",
+                per_page: 100,
+                page,
+              });
+
+              if (prs.length === 0) break;
+
+              for (const pr of prs) {
+                // Sorted by updated desc: once we pass the cutoff we can stop paginating.
+                if (new Date(pr.updated_at) < cutoff) {
+                  stop = true;
+                  break;
+                }
+
+                if (!pr.merged_at) continue;                          // only merged PRs
+                if (!pr.head.repo) continue;                          // head fork was deleted
+                if (pr.head.repo.full_name !== pr.base.repo.full_name) continue; // skip forks
+
+                const branch = pr.head.ref;
+                if (protectedNames.has(branch)) continue;             // default / kept branches
+
+                candidates.add(branch);
+              }
+
+              page++;
+              if (page > 50) break; // safety cap
+            }
+
+            console.log(`Found ${candidates.size} unique candidate branch(es) from merged PRs.`);
+
+            let deleted = 0;
+            let skipped = 0;
+
+            for (const branch of candidates) {
+              // Confirm the branch still exists and isn't protected.
+              let branchData;
+              try {
+                const res = await github.rest.repos.getBranch({ owner, repo, branch });
+                branchData = res.data;
+              } catch (error) {
+                if (error.status === 404) {
+                  // Already deleted (e.g. auto-delete head branch) — nothing to do.
+                  continue;
+                }
+                console.log(`Failed to inspect "${branch}": ${error.message}`);
+                skipped++;
+                continue;
+              }
+
+              if (branchData.protected) {
+                console.log(`Skipped "${branch}" (protected branch)`);
+                skipped++;
+                continue;
+              }
+
+              if (dryRun) {
+                console.log(`[dry-run] Would delete "${branch}"`);
+                continue;
+              }
+
+              try {
+                await github.rest.git.deleteRef({ owner, repo, ref: `heads/${branch}` });
+                console.log(`Deleted "${branch}"`);
+                deleted++;
+              } catch (error) {
+                console.log(`Failed to delete "${branch}": ${error.message}`);
+                skipped++;
+              }
+            }
+
+            console.log(
+              dryRun
+                ? `Dry run complete. ${candidates.size} candidate(s) would be processed.`
+                : `Done. Deleted ${deleted} branch(es), skipped ${skipped}.`
+            );

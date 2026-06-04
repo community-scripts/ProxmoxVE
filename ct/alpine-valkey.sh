@@ -59,5 +59,6 @@ build_container
 description
 
 msg_ok "Completed successfully!\n"
-echo -e "${APP} should be reachable on port 6379.
-         ${BL}valkey-cli -h ${IP} -p 6379${CL} \n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Connect to Valkey CLI using the following command:${CL}"
+echo -e "${GATEWAY}${BGN}valkey-cli -h ${IP} -p 6379${CL}"

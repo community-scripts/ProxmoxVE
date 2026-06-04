@@ -104,5 +104,5 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Connection information:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}ssh backup@${IP}${CL}"
+echo -e "${GATEWAY}${BGN}ssh backup@${IP}${CL}"
 echo -e "${TAB}${VERIFYPW}${YW}To set SSH key, run this script with the 'update' option and select option 2${CL}"

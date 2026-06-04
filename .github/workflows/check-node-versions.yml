@@ -336,14 +336,18 @@ jobs:
               issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
               drift_count=$((drift_count + 1))
             elif [[ -n "$upstream_major" && "$our_version" != "$upstream_major" ]]; then
-              # Check if engines.node is a minimum constraint that our version satisfies
-              if [[ -z "$DF_NODE_MAJOR" && "$ENGINES_IS_MINIMUM" == "true" ]] && \
-                 version_satisfies_engines "$our_version" "$ENGINES_MIN_MAJOR" "$ENGINES_IS_MINIMUM"; then
-                status="✅ (engines: $ENGINES_NODE_RAW — ours: $our_version satisfies)"
+              if (( our_version < upstream_major )); then
+                # Check if engines.node is a minimum constraint that our version satisfies
+                if [[ -z "$DF_NODE_MAJOR" && "$ENGINES_IS_MINIMUM" == "true" ]] && \
+                   version_satisfies_engines "$our_version" "$ENGINES_MIN_MAJOR" "$ENGINES_IS_MINIMUM"; then
+                  status="✅ (engines: $ENGINES_NODE_RAW — ours: $our_version satisfies)"
+                else
+                  status="🔸 Drift → upstream=$upstream_major ($upstream_hint)"
+                  issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
+                  drift_count=$((drift_count + 1))
+                fi
               else
-                status="🔸 Drift → upstream=$upstream_major ($upstream_hint)"
-                issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
-                drift_count=$((drift_count + 1))
+                status="✅ Ahead of upstream ($upstream_major via $upstream_hint)"
               fi
             fi
 

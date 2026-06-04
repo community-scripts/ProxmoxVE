@@ -29,6 +29,15 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if [[ ! -d /opt/glance_data ]]; then
+    msg_info "Creating config directory"
+    mkdir -p /opt/glance_data/
+    cp /opt/glance/*.yml /opt/glance_data/
+    sed -i 's|/opt/glance/glance\.yml|/opt/glance_data/glance.yml|' /etc/systemd/system/glance.service
+    systemctl daemon-reload
+    msg_ok "Created config directory"
+  fi
+
   if check_for_gh_release "glance" "glanceapp/glance"; then
     msg_info "Stopping Service"
     systemctl stop glance
@@ -50,5 +59,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

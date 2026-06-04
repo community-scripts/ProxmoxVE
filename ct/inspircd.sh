@@ -50,4 +50,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Server-Acces it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}${IP}:6667${CL}"
+echo -e "${GATEWAY}${BGN}${IP}:6667${CL}"

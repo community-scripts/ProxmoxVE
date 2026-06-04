@@ -53,7 +53,7 @@ function update_script() {
       [[ -s /opt/koillection/.env.local && -n "$(tail -c 1 /opt/koillection/.env.local)" ]] && echo "" >>/opt/koillection/.env.local
       echo 'APP_RUNTIME="Symfony\Component\Runtime\SymfonyRuntime"' >>/opt/koillection/.env.local
     fi
-    
+    NODE_VERSION="26" NODE_MODULE="yarn" setup_nodejs
     export COMPOSER_ALLOW_SUPERUSER=1
     export APP_RUNTIME='Symfony\Component\Runtime\SymfonyRuntime'
     $STD composer install --no-dev -o --no-interaction --classmap-authoritative
@@ -88,5 +88,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

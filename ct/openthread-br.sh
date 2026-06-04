@@ -47,6 +47,10 @@ function update_script() {
   systemctl stop otbr-agent
   msg_ok "Stopped Services"
 
+  msg_info "Backing up Configuration"
+  cp /etc/default/otbr-agent /etc/default/otbr-agent.bak
+  msg_ok "Backed up Configuration"
+
   msg_info "Updating Source"
   $STD git reset --hard origin/main
   $STD git submodule update --depth 1 --init --recursive
@@ -91,6 +95,10 @@ EOF
     msg_ok "Configured Network"
   fi
 
+  msg_info "Restoring Configuration"
+  mv /etc/default/otbr-agent.bak /etc/default/otbr-agent
+  msg_ok "Restored Configuration"
+
   msg_info "Starting Services"
   systemctl start otbr-agent
   systemctl start otbr-web
@@ -105,5 +113,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"
