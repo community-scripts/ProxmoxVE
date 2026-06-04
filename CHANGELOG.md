@@ -476,6 +476,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix status messages for several alpine scripts [@tremor021](https://github.com/tremor021) ([#14911](https://github.com/community-scripts/ProxmoxVE/pull/14911))
     - ReactiveResume: Fix Service Path [@MickLesk](https://github.com/MickLesk) ([#14926](https://github.com/community-scripts/ProxmoxVE/pull/14926))
     - Jellyfin: install intel-igc deps before intel-opencl-icd to fix dependency order [@MickLesk](https://github.com/MickLesk) ([#14927](https://github.com/community-scripts/ProxmoxVE/pull/14927))
 
