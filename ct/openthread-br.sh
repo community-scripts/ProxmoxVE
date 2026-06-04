@@ -47,6 +47,13 @@ function update_script() {
   systemctl stop otbr-agent
   msg_ok "Stopped Services"
 
+  if [[ -f /etc/init.d/otbr-agent ]] || [[ -f /etc/init.d/otbr-web ]]; then
+    msg_info "Removing legacy services"
+    rm -f /etc/init.d/otbr-agent /etc/init.d/otbr-web
+    systemctl daemon-reload
+    msg_ok "Removed legacy services"
+  fi
+
   msg_info "Backing up Configuration"
   cp /etc/default/otbr-agent /etc/default/otbr-agent.bak
   msg_ok "Backed up Configuration"
@@ -67,6 +74,7 @@ function update_script() {
     -DOTBR_WEB=ON \
     -DOTBR_BORDER_ROUTING=ON \
     -DOTBR_BACKBONE_ROUTER=ON \
+    -DOTBR_SYSTEMD_UNIT_DIR=/etc/systemd/system \
     -DOT_FIREWALL=ON \
     -DOT_POSIX_NAT64_CIDR="192.168.255.0/24" \
     ..
