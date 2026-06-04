@@ -470,6 +470,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-04
+
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Grist: remove extra text at the end of installation [@tremor021](https://github.com/tremor021) ([#14905](https://github.com/community-scripts/ProxmoxVE/pull/14905))
+
 ## 2026-06-03
 
 ### 🚀 Updated Scripts
