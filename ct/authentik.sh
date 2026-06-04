@@ -43,6 +43,7 @@ function update_script() {
   setup_yq
 
   AUTHENTIK_VERSION="version/2026.5.2"
+  # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
   XMLSEC_VERSION="1.3.11"
 
   if check_for_gh_release "geoipupdate" "maxmind/geoipupdate"; then
