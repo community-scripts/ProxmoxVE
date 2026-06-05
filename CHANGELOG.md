@@ -474,7 +474,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - CyberChef ([#14952](https://github.com/community-scripts/ProxmoxVE/pull/14952))
+  - MatterJS-Server ([#14951](https://github.com/community-scripts/ProxmoxVE/pull/14951))
+- CyberChef ([#14952](https://github.com/community-scripts/ProxmoxVE/pull/14952))
 
 ### 🚀 Updated Scripts
 
