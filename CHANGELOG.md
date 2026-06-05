@@ -481,6 +481,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Jackett: Create missing .env file [@tremor021](https://github.com/tremor021) ([#14959](https://github.com/community-scripts/ProxmoxVE/pull/14959))
     - OpenThread-BR: use systemd instead of init.d [@tomfrenzel](https://github.com/tomfrenzel) ([#14942](https://github.com/community-scripts/ProxmoxVE/pull/14942))
 
   - #### ✨ New Features
