@@ -474,6 +474,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - OpenThread-BR: use systemd instead of init.d [@tomfrenzel](https://github.com/tomfrenzel) ([#14942](https://github.com/community-scripts/ProxmoxVE/pull/14942))
+
   - #### 💥 Breaking Changes
 
     - update authentik to 2026.5.2 [@thieneret](https://github.com/thieneret) ([#14846](https://github.com/community-scripts/ProxmoxVE/pull/14846))
