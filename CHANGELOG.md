@@ -478,6 +478,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenThread-BR: use systemd instead of init.d [@tomfrenzel](https://github.com/tomfrenzel) ([#14942](https://github.com/community-scripts/ProxmoxVE/pull/14942))
 
+  - #### ✨ New Features
+
+    - AMD IGPU support [@Learath](https://github.com/Learath) ([#14944](https://github.com/community-scripts/ProxmoxVE/pull/14944))
+
   - #### 💥 Breaking Changes
 
     - update authentik to 2026.5.2 [@thieneret](https://github.com/thieneret) ([#14846](https://github.com/community-scripts/ProxmoxVE/pull/14846))
