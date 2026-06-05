@@ -482,6 +482,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - OpenThread-BR: use official GitHub releases [@tomfrenzel](https://github.com/tomfrenzel) ([#14916](https://github.com/community-scripts/ProxmoxVE/pull/14916))
     - Grist: remove extra text at the end of installation [@tremor021](https://github.com/tremor021) ([#14905](https://github.com/community-scripts/ProxmoxVE/pull/14905))
 
 ### ❔ Uncategorized
