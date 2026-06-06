@@ -474,7 +474,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - XYOps ([#14967](https://github.com/community-scripts/ProxmoxVE/pull/14967))
+  - Tolgee ([#14965](https://github.com/community-scripts/ProxmoxVE/pull/14965))
+- XYOps ([#14967](https://github.com/community-scripts/ProxmoxVE/pull/14967))
 
 ### 🚀 Updated Scripts
 
