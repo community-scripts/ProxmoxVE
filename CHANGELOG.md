@@ -470,6 +470,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-06
+
+### 🆕 New Scripts
+
+  - XYOps ([#14967](https://github.com/community-scripts/ProxmoxVE/pull/14967))
+
 ## 2026-06-05
 
 ### 🆕 New Scripts
