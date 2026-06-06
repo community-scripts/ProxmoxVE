@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Baserow"
 var_tags="${var_tags:-database;nocode;spreadsheet}"
 var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-8192}"
+var_ram="${var_ram:-10240}"
 var_disk="${var_disk:-15}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
