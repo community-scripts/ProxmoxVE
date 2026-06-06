@@ -37,7 +37,9 @@ function update_script() {
     if ! grep -q "photoprism/config/.env" ~/.bashrc 2>/dev/null; then
       msg_info "Adding environment export for CLI tools"
       echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
-      echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
+      echo 'set -a' >>~/.bashrc
+      echo 'source /opt/photoprism/config/.env' >>~/.bashrc
+      echo 'set +a' >>~/.bashrc
       msg_ok "Added environment export"
     fi
 
