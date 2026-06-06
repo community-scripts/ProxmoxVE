@@ -476,6 +476,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - XYOps ([#14967](https://github.com/community-scripts/ProxmoxVE/pull/14967))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Photoprism: Allow env variables with spaces [@Badintral](https://github.com/Badintral) ([#14969](https://github.com/community-scripts/ProxmoxVE/pull/14969))
+
 ## 2026-06-05
 
 ### 🆕 New Scripts
