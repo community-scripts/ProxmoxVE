@@ -34,13 +34,32 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
-  msg_info "Updating ${APP}"
-  $STD pip3 install changedetection.io --upgrade --break-system-packages --ignore-installed typing_extensions
-  msg_ok "Updated ${APP}"
+  VENV_PATH="/opt/changedetection/.venv"
+  CHANGEDETECTION_BIN="${VENV_PATH}/bin/changedetection.io"
 
-  msg_info "Updating Playwright"
-  $STD pip3 install playwright --upgrade --break-system-packages
-  msg_ok "Updated Playwright"
+  PYTHON_VERSION="3.13" setup_uv
+
+  if [[ ! -d "$VENV_PATH" || ! -x "$CHANGEDETECTION_BIN" ]]; then
+    msg_info "Migrating to uv/venv"
+    rm -rf "$VENV_PATH"
+    $STD uv venv --clear "$VENV_PATH"
+    $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
+    $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
+    $STD "$VENV_PATH/bin/python" -m pip install changedetection.io playwright
+    msg_ok "Migrated to uv/venv"
+  else
+    msg_info "Updating ${APP}"
+    $STD "$VENV_PATH/bin/python" -m pip install --upgrade changedetection.io playwright
+    msg_ok "Updated ${APP}"
+  fi
+
+  SERVICE_FILE="/etc/systemd/system/changedetection.service"
+  if ! grep -q "${VENV_PATH}/bin/changedetection.io" "$SERVICE_FILE"; then
+    msg_info "Updating systemd service"
+    sed -i "s|^ExecStart=.*|ExecStart=${VENV_PATH}/bin/changedetection.io -d /opt/changedetection -p 5000|" "$SERVICE_FILE"
+    $STD systemctl daemon-reload
+    msg_ok "Updated systemd service"
+  fi
 
   if [[ -f /etc/systemd/system/browserless.service ]]; then
     msg_info "Updating Browserless (Patience)"
