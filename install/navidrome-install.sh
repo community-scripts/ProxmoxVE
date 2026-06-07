@@ -26,6 +26,7 @@ msg_ok "Started Navidrome"
 read -p "${TAB3}Do you want to install filebrowser addon? (y/n) " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/filebrowser.sh)"
+  chown -R navidrome:navidrome /usr/local/community-scripts
   mkdir -p /etc/systemd/system/filebrowser.service.d
   cat <<EOF >/etc/systemd/system/filebrowser.service.d/navidrome.conf
 [Service]
