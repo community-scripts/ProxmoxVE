@@ -488,6 +488,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: use actual installed PostgreSQL version for vchord package [@MickLesk](https://github.com/MickLesk) ([#14989](https://github.com/community-scripts/ProxmoxVE/pull/14989))
 
+  - #### 🔧 Refactor
+
+    - Navidrome: remove genereic filebrowser addon setup [@MickLesk](https://github.com/MickLesk) ([#14991](https://github.com/community-scripts/ProxmoxVE/pull/14991))
+
 ## 2026-06-06
 
 ### 🆕 New Scripts
