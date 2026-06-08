@@ -16,7 +16,7 @@ update_os
 msg_info "Installing Proxmox Backup Server"
 curl -fsSL "https://enterprise.proxmox.com/debian/proxmox-release-trixie.gpg" -o "/etc/apt/trusted.gpg.d/proxmox-release-trixie.gpg"
 cat <<EOF >>/etc/apt/sources.list
-deb http://download.proxmox.com/debian/pbs trixie pbs-no-subscription
+deb https://download.proxmox.com/debian/pbs trixie pbs-no-subscription
 EOF
 $STD apt update
 export DEBIAN_FRONTEND=noninteractive

@@ -71,9 +71,9 @@ start_routines() {
   yes)
     msg_info "Changing to Proxmox Backup Server 3 Sources"
     cat <<EOF >/etc/apt/sources.list
-deb http://deb.debian.org/debian bookworm main contrib
-deb http://deb.debian.org/debian bookworm-updates main contrib
-deb http://security.debian.org/debian-security bookworm-security main contrib
+deb https://deb.debian.org/debian bookworm main contrib
+deb https://deb.debian.org/debian bookworm-updates main contrib
+deb https://security.debian.org/debian-security bookworm-security main contrib
 EOF
     msg_ok "Changed to Proxmox Backup Server 3 Sources"
     ;;
@@ -105,7 +105,7 @@ EOF
   yes)
     msg_info "Enabling 'pbs-no-subscription' repository"
     cat <<EOF >/etc/apt/sources.list.d/pbs-install-repo.list
-deb http://download.proxmox.com/debian/pbs bookworm pbs-no-subscription
+deb https://download.proxmox.com/debian/pbs bookworm pbs-no-subscription
 EOF
     msg_ok "Enabled 'pbs-no-subscription' repository"
     ;;

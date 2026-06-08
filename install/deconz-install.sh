@@ -16,14 +16,14 @@ update_os
 msg_info "Setting Phoscon Repository"
 setup_deb822_repo \
   "deconz" \
-  "http://phoscon.de/apt/deconz.pub.key" \
-  "http://phoscon.de/apt/deconz" \
+  "https://phoscon.de/apt/deconz.pub.key" \
+  "https://phoscon.de/apt/deconz" \
   "generic"
 msg_ok "Setup Phoscon Repository"
 
 msg_info "Installing deConz"
-libssl=$(curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/" | grep -o 'libssl1\.1_1\.1\.1f-1ubuntu2\.2[^"]*amd64\.deb' | head -n1)
-curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/$libssl" -o "$libssl"
+libssl=$(curl -fsSL --proto '=https' "https://security.ubuntu.com/ubuntu/pool/main/o/openssl/" | grep -o 'libssl1\.1_1\.1\.1f-1ubuntu2\.2[^"]*amd64\.deb' | head -n1)
+curl -fsSL --proto '=https' "https://security.ubuntu.com/ubuntu/pool/main/o/openssl/$libssl" -o "$libssl"
 $STD dpkg -i "$libssl"
 $STD apt install -y deconz
 rm -rf "$libssl"

@@ -20,7 +20,7 @@ $STD apt install -y \
   mediainfo
 
 cat <<EOF >/etc/apt/sources.list.d/non-free.list
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb https://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
 EOF
 $STD apt update
 $STD apt install -y unrar

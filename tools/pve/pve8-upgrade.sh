@@ -54,9 +54,9 @@ start_routines() {
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8 SOURCES" "This will set the correct sources to update and install Proxmox VE 8." 10 58
   msg_info "Changing to Proxmox VE 8 Sources"
   cat <<EOF >/etc/apt/sources.list
-deb http://ftp.debian.org/debian bookworm main contrib
-deb http://ftp.debian.org/debian bookworm-updates main contrib
-deb http://security.debian.org/debian-security bookworm-security main contrib
+deb https://ftp.debian.org/debian bookworm main contrib
+deb https://ftp.debian.org/debian bookworm-updates main contrib
+deb https://security.debian.org/debian-security bookworm-security main contrib
 EOF
   msg_ok "Changed to Proxmox VE 8 Sources"
 
@@ -70,7 +70,7 @@ EOF
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8-NO-SUBSCRIPTION" "The 'pve-no-subscription' repository provides access to all of the open-source components of Proxmox VE." 10 58
   msg_info "Enabling 'pve-no-subscription' repository"
   cat <<EOF >/etc/apt/sources.list.d/pve-install-repo.list
-deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
+deb https://download.proxmox.com/debian/pve bookworm pve-no-subscription
 EOF
   msg_ok "Enabled 'pve-no-subscription' repository"
 
