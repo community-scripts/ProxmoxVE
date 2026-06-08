@@ -38,9 +38,6 @@ function update_script() {
     msg_info "Backing up Configuration and Data"
     cp /opt/homelable/backend/.env /opt/homelable.env.bak
     cp -r /opt/homelable/data /opt/homelable_data_bak
-    # Preserve the optional MCP server config (installed separately via
-    # Pouzor/homelable scripts/lxc-mcp-install.sh). Its .env and .venv live
-    # under /opt/homelable/mcp and are wiped by the CLEAN_INSTALL deploy below.
     if [[ -f /opt/homelable/mcp/.env ]]; then
       cp -a /opt/homelable/mcp/.env /opt/homelable-mcp.env.bak
     fi
