@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential python3-dev
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="20" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing FlowiseAI (Patience)"
 $STD npm install -g flowise \
