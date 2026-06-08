@@ -480,6 +480,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-08
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - changedetection: migrate Python install to uv venv [@ferr079](https://github.com/ferr079) ([#14995](https://github.com/community-scripts/ProxmoxVE/pull/14995))
+
 ## 2026-06-07
 
 ### 🚀 Updated Scripts
