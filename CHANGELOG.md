@@ -493,6 +493,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Update Flowwiseai to node 24 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14999](https://github.com/community-scripts/ProxmoxVE/pull/14999))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - security: Fix MITM RCE vulnerability in microcode scripts (CVE) [@MickLesk](https://github.com/MickLesk) ([#15007](https://github.com/community-scripts/ProxmoxVE/pull/15007))
+
+### ❔ Uncategorized
+
+  - security: Fix HTTP to HTTPS for all package and repository downloads [@MickLesk](https://github.com/MickLesk) ([#15009](https://github.com/community-scripts/ProxmoxVE/pull/15009))
+
 ## 2026-06-07
 
 ### 🚀 Updated Scripts
