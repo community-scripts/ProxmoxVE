@@ -90,7 +90,7 @@ intel() {
   }
 
   msg_info "Downloading Intel processor microcode package $microcode"
-  curl -fsSL "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -o $(basename "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode")
+  curl -fsSL --proto '=https' "https://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -o "$microcode"
   msg_ok "Downloaded Intel processor microcode package $microcode"
 
   msg_info "Installing $microcode (this might take a while)"
