@@ -489,6 +489,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - homelable: preserve MCP server config across updates [@ferr079](https://github.com/ferr079) ([#14996](https://github.com/community-scripts/ProxmoxVE/pull/14996))
     - changedetection: migrate Python install to uv venv [@ferr079](https://github.com/ferr079) ([#14995](https://github.com/community-scripts/ProxmoxVE/pull/14995))
 
+  - #### 🔧 Refactor
+
+    - Update Flowwiseai to node 24 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14999](https://github.com/community-scripts/ProxmoxVE/pull/14999))
+
 ## 2026-06-07
 
 ### 🚀 Updated Scripts
