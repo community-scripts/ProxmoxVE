@@ -25,7 +25,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  NODE_VERSION="26" setup_nodejs
+  NODE_VERSION="24" setup_nodejs
   ensure_dependencies build-essential
 
   if command -v cross-seed &>/dev/null; then
