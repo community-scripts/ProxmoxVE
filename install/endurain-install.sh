@@ -88,6 +88,7 @@ $STD poetry self add poetry-plugin-export
 $STD poetry export -f requirements.txt --output requirements.txt --without-hashes
 $STD uv venv --clear
 $STD uv pip install -r requirements.txt
+$STD uv pip install pytz
 msg_ok "Setup Backend"
 
 msg_info "Creating Service"
