@@ -482,6 +482,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-09
 
+### 🆕 New Scripts
+
+  - paperclip ([#14990](https://github.com/community-scripts/ProxmoxVE/pull/14990))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
