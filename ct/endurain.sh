@@ -64,6 +64,7 @@ function update_script() {
     $STD poetry export -f requirements.txt --output requirements.txt --without-hashes
     $STD uv venv --clear
     $STD uv pip install -r requirements.txt
+    $STD uv pip install pytz
     msg_ok "Backend Updated"
 
     msg_info "Starting Service"
