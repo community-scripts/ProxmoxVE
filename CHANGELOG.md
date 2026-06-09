@@ -484,6 +484,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - endurain: Install pytz package during backend setup [@MickLesk](https://github.com/MickLesk) ([#15014](https://github.com/community-scripts/ProxmoxVE/pull/15014))
+
   - #### 🔧 Refactor
 
     - Refactor: Proxmox Backup Server - use deb822 [@MickLesk](https://github.com/MickLesk) ([#15013](https://github.com/community-scripts/ProxmoxVE/pull/15013))
