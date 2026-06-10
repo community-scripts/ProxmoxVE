@@ -486,6 +486,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Baserow ([#14968](https://github.com/community-scripts/ProxmoxVE/pull/14968))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Koillection: Fix update procedure [@tremor021](https://github.com/tremor021) ([#15033](https://github.com/community-scripts/ProxmoxVE/pull/15033))
+
 ## 2026-06-09
 
 ### 🆕 New Scripts
