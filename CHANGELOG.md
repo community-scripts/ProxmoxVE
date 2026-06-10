@@ -480,6 +480,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-10
+
+### 🆕 New Scripts
+
+  - Baserow ([#14968](https://github.com/community-scripts/ProxmoxVE/pull/14968))
+
 ## 2026-06-09
 
 ### 🆕 New Scripts
