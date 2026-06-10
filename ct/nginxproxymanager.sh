@@ -216,7 +216,13 @@ EOF
     msg_ok "Initialized Backend"
 
     msg_info "Starting Services"
-    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}')
+    if [ -f /opt/certbot/bin/certbot ]; then
+    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    elif command -v certbot &>/dev/null; then
+    CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    else
+    CERTBOT_VER="2.0.0"
+    fi
     if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
       sed -i "s|Environment=CERTBOT_VERSION=.*|Environment=CERTBOT_VERSION=${CERTBOT_VER}|" /lib/systemd/system/npm.service
     else
