@@ -5707,9 +5707,7 @@ create_lxc_container() {
     esac
   }
 
-  # Downloads an ARM64 LXC rootfs template to $1.
-  # Debian: fetches latest release from community-scripts/debian-arm64-lxc on GitHub.
-  # Others: fetches from jenkins.linuxcontainers.org.
+  # Downloads an ARM64 LXC rootfs template from jenkins.linuxcontainers.org.
   download_arm64_template() {
     local dest="$1" url
 
@@ -5718,21 +5716,7 @@ create_lxc_container() {
       exit 207
     }
 
-    if [[ "$PCT_OSTYPE" == "debian" ]]; then
-      url=$(
-        curl -fsSL "https://api.github.com/repos/community-scripts/debian-arm64-lxc/releases/latest" |
-          jq -r --arg v "$CUSTOM_TEMPLATE_VARIANT" \
-            '.assets[].browser_download_url | select(test("debian-" + $v + "-arm64-rootfs\\.tar\\.xz$"))' |
-          head -n1
-      )
-
-      [[ -n "$url" ]] || {
-        msg_error "Could not find Debian ${CUSTOM_TEMPLATE_VARIANT} ARM64 template URL."
-        exit 207
-      }
-    else
-      url="https://jenkins.linuxcontainers.org/job/image-${PCT_OSTYPE}/architecture=arm64,release=${CUSTOM_TEMPLATE_VARIANT},variant=default/lastStableBuild/artifact/rootfs.tar.xz"
-    fi
+    url="https://jenkins.linuxcontainers.org/job/image-${PCT_OSTYPE}/architecture=arm64,release=${CUSTOM_TEMPLATE_VARIANT},variant=default/lastStableBuild/artifact/rootfs.tar.xz"
 
     msg_info "Downloading ${PCT_OSTYPE^} ${CUSTOM_TEMPLATE_VARIANT} ARM64 template"
     if ! curl -fsSL -o "$dest" "$url"; then
