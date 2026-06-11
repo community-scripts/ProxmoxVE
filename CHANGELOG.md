@@ -492,6 +492,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Alpine-Nextcloud: Upgrade PHP and dependencies in installation script [@MickLesk](https://github.com/MickLesk) ([#15039](https://github.com/community-scripts/ProxmoxVE/pull/15039))
     - [arm64] porting stage 1: set script arm64 statuses to yes [@asylumexp](https://github.com/asylumexp) ([#15052](https://github.com/community-scripts/ProxmoxVE/pull/15052))
 
 ### 💾 Core
