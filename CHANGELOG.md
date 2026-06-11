@@ -503,6 +503,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - misc scripts: add support for arm64 [@asylumexp](https://github.com/asylumexp) ([#12639](https://github.com/community-scripts/ProxmoxVE/pull/12639))
 
+### 📚 Documentation
+
+  - (github): Revise script request template [@MickLesk](https://github.com/MickLesk) ([#15058](https://github.com/community-scripts/ProxmoxVE/pull/15058))
+
 ## 2026-06-10
 
 ### 🆕 New Scripts
