@@ -490,6 +490,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Jotty: Fix wrong path test in config restore [@vhsdream](https://github.com/vhsdream) ([#15038](https://github.com/community-scripts/ProxmoxVE/pull/15038))
     - Fix for cross-seed after node upgrade [@TorinFrancis](https://github.com/TorinFrancis) ([#15025](https://github.com/community-scripts/ProxmoxVE/pull/15025))
 
+  - #### 🔧 Refactor
+
+    - [arm64] porting stage 1: set script arm64 statuses to yes [@asylumexp](https://github.com/asylumexp) ([#15052](https://github.com/community-scripts/ProxmoxVE/pull/15052))
+
 ### 💾 Core
 
   - #### ✨ New Features
