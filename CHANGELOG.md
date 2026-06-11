@@ -486,6 +486,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Manyfold: add new dependency [@MickLesk](https://github.com/MickLesk) ([#15040](https://github.com/community-scripts/ProxmoxVE/pull/15040))
     - OpenArchiver: switch Rebuild Function [@MickLesk](https://github.com/MickLesk) ([#15042](https://github.com/community-scripts/ProxmoxVE/pull/15042))
     - CLIProxyAPI: Save management password to creds file [@tremor021](https://github.com/tremor021) ([#15051](https://github.com/community-scripts/ProxmoxVE/pull/15051))
     - Jotty: Fix wrong path test in config restore [@vhsdream](https://github.com/vhsdream) ([#15038](https://github.com/community-scripts/ProxmoxVE/pull/15038))
