@@ -1,39 +1,147 @@
+name: Script request
+description: Request a new script for Proxmox VE Helper-Scripts
 title: "[Script request]: "
 labels: ["enhancement"]
+
 body:
-- type: input
-  attributes:
-    label: Application Name
-    description: Enter the application name.
-    placeholder: "e.g., Home Assistant"
-  validations:
-    required: true
-- type: input
-  attributes:
-    label: Website
-    description: Official website or github page.
-    placeholder: "e.g., https://www.home-assistant.io/"
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Description
-    description: Explain what the application does and why it should be added to Proxmox VE Helper-Scripts.
-    placeholder: "e.g., Home Assistant is a popular open-source platform that brings all your smart home devices together in one place. Adding it to Proxmox VE Helper-Scripts would make setup and management on Proxmox easy, letting users quickly get a powerful, self-hosted smart home system up and running."
-  validations:
-    required: true
-- type: checkboxes
-  attributes:
-    label: Due Diligence
-    options:
-      - label: "I have searched existing [scripts](https://community-scripts.github.io/Proxmox/scripts) and found no duplicates."
-        required: true
-      - label: "I have searched existing [discussions](https://github.com/community-scripts/ProxmoxVE/discussions?discussions_q=) and found no duplicate requests."
-        required: true
-      - label: "The application requested has 600+ stars on Github (if applicable), is older than 6 months, actively maintained and has release tarballs published."
-        required: true
-      - label: "I understand that not all applications will be accepted due to various reasons and criteria by the community-scripts ORG."
-        required: true
-- type: markdown
-  attributes:
-    value: "Thanks for submitting your request! The team will review it and reach out if we need more information."
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new script for Proxmox VE Helper-Scripts.
+
+        Please make sure the requested application fits the scope of this project.
+        Requests may be closed if the application is out of scope, abandoned, too new, not publicly verifiable, or not suitable for a reliable Proxmox VE Helper-Scripts integration.
+
+  - type: input
+    id: application-name
+    attributes:
+      label: Application Name
+      description: Enter the official application name.
+      placeholder: "e.g., Home Assistant"
+    validations:
+      required: true
+
+  - type: input
+    id: official-website
+    attributes:
+      label: Official Website
+      description: Enter the official website, documentation page, or project homepage.
+      placeholder: "e.g., https://www.home-assistant.io/"
+    validations:
+      required: true
+
+  - type: input
+    id: source-repository
+    attributes:
+      label: Source Repository
+      description: Enter the official GitHub, GitLab, Forgejo, or other public source repository URL.
+      placeholder: "e.g., https://github.com/home-assistant/core"
+    validations:
+      required: true
+
+  - type: input
+    id: latest-release
+    attributes:
+      label: Latest Official Release or Tag
+      description: Enter the URL to the latest official release, tag, or release archive. The latest release or tag should not be older than 6 months.
+      placeholder: "e.g., https://github.com/home-assistant/core/releases/latest"
+    validations:
+      required: true
+
+  - type: input
+    id: latest-release-date
+    attributes:
+      label: Latest Release/Tag Date
+      description: Enter the date of the latest official release or tag.
+      placeholder: "e.g., 2026-06-01"
+    validations:
+      required: true
+
+  - type: input
+    id: project-age
+    attributes:
+      label: Project Age
+      description: Confirm when the project was first publicly released or created. The project should be at least 6 months old.
+      placeholder: "e.g., First public release: 2024-11-15"
+    validations:
+      required: true
+
+  - type: input
+    id: stars-or-adoption
+    attributes:
+      label: Stars / Adoption
+      description: Enter the current star count or another public adoption metric. The repository should have at least 1,000 stars or a clearly comparable public adoption signal.
+      placeholder: "e.g., 75k GitHub stars"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Explain what the application does and why it should be added to Proxmox VE Helper-Scripts.
+      placeholder: |
+        Example:
+        Home Assistant is a popular open-source platform for managing smart home devices.
+        Adding it to Proxmox VE Helper-Scripts would make setup and management on Proxmox easier for users who want a self-hosted smart home system.
+    validations:
+      required: true
+
+  - type: textarea
+    id: installation-notes
+    attributes:
+      label: Installation / Deployment Notes
+      description: Add any relevant installation details, dependencies, build requirements, ports, databases, services, or known limitations.
+      placeholder: |
+        Example:
+        - Requires Python, Node.js, PostgreSQL, Redis, etc.
+        - Provides official release tarballs
+        - Runs as a systemd service
+        - Uses port 8123 by default
+    validations:
+      required: false
+
+  - type: textarea
+    id: scope-fit
+    attributes:
+      label: Scope Fit
+      description: Explain why this application fits the Proxmox VE Helper-Scripts project.
+      placeholder: |
+        Example:
+        This is a self-hosted server application that can run reliably in a Proxmox LXC or VM.
+        It has an active upstream project, official releases, and broad community adoption.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: due-diligence
+    attributes:
+      label: Due Diligence
+      description: Please confirm the following before submitting your request.
+      options:
+        - label: "I have searched existing [scripts](https://community-scripts.github.io/Proxmox/scripts) and found no duplicate."
+          required: true
+        - label: "I have searched existing [discussions](https://github.com/community-scripts/ProxmoxVE/discussions?discussions_q=) and found no duplicate request."
+          required: true
+        - label: "The application has an official public source repository."
+          required: true
+        - label: "The application has official releases, tags, or release tarballs."
+          required: true
+        - label: "The latest official release or tag is not older than 6 months."
+          required: true
+        - label: "The project itself is at least 6 months old."
+          required: true
+        - label: "The project has at least 1,000 stars or a comparable public adoption signal."
+          required: true
+        - label: "The application is actively maintained."
+          required: true
+        - label: "The application is self-hosted and suitable for Proxmox VE Helper-Scripts."
+          required: true
+        - label: "I understand that requests outside the project scope may be closed without an extensive explanation."
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for submitting your request.
+        The team will review it and may ask for more information if needed.
