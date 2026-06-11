@@ -98,7 +98,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now redis-server twenty-server twenty-worker
 msg_ok "Created Services"
 
