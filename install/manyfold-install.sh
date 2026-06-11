@@ -15,12 +15,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  libarchive-dev \
+  f3d \
   git \
+  libarchive-dev \
+  libassimp-dev \
   libmariadb-dev \
-  redis-server \
   nginx \
-  libassimp-dev
+  redis-server
 msg_ok "Installed Dependencies"
 
 setup_imagemagick
