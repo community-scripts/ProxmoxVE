@@ -36,11 +36,8 @@ function update_script() {
     systemctl stop twenty-worker twenty-server
     msg_ok "Stopped Services"
 
-    
     create_backup /opt/twenty/.env \
                   /opt/twenty/packages/twenty-server/.local-storage
-                  
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "twenty" "twentyhq/twenty" "tarball"
 
     msg_info "Restoring Configuration"
