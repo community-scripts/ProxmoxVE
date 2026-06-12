@@ -36,10 +36,8 @@ function update_script() {
     systemctl stop postiz-orchestrator postiz-frontend postiz-backend
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/postiz/.env /opt/postiz_env.bak
-    cp -r /opt/postiz/uploads /opt/postiz_uploads.bak 2>/dev/null || true
-    msg_ok "Backed up Data"
+    create_backup /opt/postiz/.env \
+                  /opt/postiz/uploads
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "postiz" "gitroomhq/postiz-app" "tarball"
 
@@ -58,12 +56,9 @@ function update_script() {
     $STD pnpm run prisma-db-push
     msg_ok "Ran Database Migrations"
 
-    msg_info "Restoring Data"
+
     mkdir -p /opt/postiz/uploads
-    cp -r /opt/postiz_uploads.bak/. /opt/postiz/uploads 2>/dev/null || true
-    rm -f /opt/postiz_env.bak
-    rm -rf /opt/postiz_uploads.bak
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Services"
     systemctl start postiz-backend postiz-frontend postiz-orchestrator
