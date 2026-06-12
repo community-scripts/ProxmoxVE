@@ -1124,6 +1124,94 @@ create_temp_dir() {
 }
 
 # ------------------------------------------------------------------------------
+# create_backup <path> [<path> ...] / restore_backup
+#
+# Standardized data backup helpers for update_script(). They replace the
+# hand-rolled "cp/mv to a sibling dir, update, copy back, rm" dance that is
+# duplicated across the ct/*.sh update functions.
+#
+# create_backup <path> [<path> ...]
+#   - Copies each given file/directory into a persistent store at
+#     /opt/<NSAPP>.backup, mirroring its absolute path inside the store, and
+#     records it in a manifest so restore_backup needs no arguments.
+#   - Idempotent: if a store from a previous (failed) run already exists, it is
+#     left untouched and no new backup is taken. This keeps the last-known-good
+#     data instead of overwriting it with now-partially-updated data on retry.
+#   - Missing source paths are skipped with a warning (not fatal).
+#   - Aborts the update on copy failure: if any file/dir cannot be backed up,
+#     the half-written store is removed and the script exits, so the update
+#     never runs against unprotected data (and a retry re-attempts a clean
+#     backup rather than skipping it).
+#
+# restore_backup
+#   - Copies every path recorded in the manifest back to its origin (replacing
+#     whatever the update left there), then deletes the store.
+#   - No-op (with a warning) if no store exists.
+#
+# Override the store location with BACKUP_DIR if the default does not fit.
+# ------------------------------------------------------------------------------
+create_backup() {
+  local store manifest path dest
+  store="${BACKUP_DIR:-/opt/${NSAPP:-app}.backup}"
+  manifest="${store}/.manifest"
+
+  [[ $# -eq 0 ]] && {
+    msg_warn "create_backup called without any paths"
+    return 0
+  }
+
+  if [[ -f "$manifest" ]]; then
+    msg_ok "Existing backup found at ${store}, skipping backup"
+    return 0
+  fi
+
+  msg_info "Backing up data"
+  if ! mkdir -p "$store" || ! : >"$manifest"; then
+    msg_error "Backup failed: could not create store at ${store} - aborting update"
+    rm -rf "$store"
+    exit 1
+  fi
+  for path in "$@"; do
+    path="${path%/}"
+    if [[ ! -e "$path" ]]; then
+      msg_warn "Skipping backup of '${path}' (not found)"
+      continue
+    fi
+    dest="${store}/files${path}"
+    if ! mkdir -p "$(dirname "$dest")" || ! cp -a "$path" "$dest"; then
+      msg_error "Backup of '${path}' failed - aborting update"
+      rm -rf "$store"
+      exit 1
+    fi
+    echo "$path" >>"$manifest"
+  done
+  msg_ok "Backed up data to ${store}"
+}
+
+restore_backup() {
+  local store manifest path src
+  store="${BACKUP_DIR:-/opt/${NSAPP:-app}.backup}"
+  manifest="${store}/.manifest"
+
+  if [[ ! -f "$manifest" ]]; then
+    msg_warn "No backup found to restore"
+    return 0
+  fi
+
+  msg_info "Restoring data"
+  while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+    src="${store}/files${path}"
+    [[ -e "$src" ]] || continue
+    mkdir -p "$(dirname "$path")"
+    rm -rf "$path"
+    cp -a "$src" "$path"
+  done <"$manifest"
+  rm -rf "$store"
+  msg_ok "Restored data"
+}
+
+# ------------------------------------------------------------------------------
 # Check if package is installed (supports both Debian and Alpine)
 # ------------------------------------------------------------------------------
 is_package_installed() {
