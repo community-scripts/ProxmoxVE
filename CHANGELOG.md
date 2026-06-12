@@ -484,7 +484,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Alpine-Cinny ([#15044](https://github.com/community-scripts/ProxmoxVE/pull/15044))
+  - Twenty ([#15047](https://github.com/community-scripts/ProxmoxVE/pull/15047))
+- Alpine-Cinny ([#15044](https://github.com/community-scripts/ProxmoxVE/pull/15044))
 
 ### 💾 Core
 
