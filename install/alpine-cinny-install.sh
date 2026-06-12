@@ -14,9 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add --no-cache \
-  jq \
-  nginx
+$STD apk add --no-cache nginx
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "cinny" "cinnyapp/cinny" "prebuild" "latest" "/opt/cinny" "cinny-*.tar.gz"
