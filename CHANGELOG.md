@@ -486,6 +486,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Alpine-Cinny ([#15044](https://github.com/community-scripts/ProxmoxVE/pull/15044))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - [core] Implement backup and restore functions [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15067](https://github.com/community-scripts/ProxmoxVE/pull/15067))
+
 ## 2026-06-11
 
 ### 🆕 New Scripts
