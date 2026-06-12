@@ -480,6 +480,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-12
+
+### 🆕 New Scripts
+
+  - Alpine-Cinny ([#15044](https://github.com/community-scripts/ProxmoxVE/pull/15044))
+
 ## 2026-06-11
 
 ### 🆕 New Scripts
