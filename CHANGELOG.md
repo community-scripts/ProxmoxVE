@@ -486,6 +486,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - BookOrbit ([#15080](https://github.com/community-scripts/ProxmoxVE/pull/15080))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: Implement backup functions for scripts A-B [@tremor021](https://github.com/tremor021) ([#15075](https://github.com/community-scripts/ProxmoxVE/pull/15075))
+
 ## 2026-06-12
 
 ### 🆕 New Scripts
