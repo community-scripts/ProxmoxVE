@@ -488,6 +488,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - HomeBox: Support v0.26.0 [@tomfrenzel](https://github.com/tomfrenzel) ([#15086](https://github.com/community-scripts/ProxmoxVE/pull/15086))
+
   - #### 🔧 Refactor
 
     - Refactor: Implement backup functions for scripts A-B [@tremor021](https://github.com/tremor021) ([#15075](https://github.com/community-scripts/ProxmoxVE/pull/15075))
