@@ -42,7 +42,7 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.5.2"
+  AUTHENTIK_VERSION="version/2026.5.3"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
   XMLSEC_VERSION="1.3.11"
 
