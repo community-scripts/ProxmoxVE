@@ -132,6 +132,7 @@ server {
     location = /index.php {
         fastcgi_pass unix:/run/php/php8.4-fpm.sock;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param SERVER_NAME $http_host;
         include fastcgi_params;
         fastcgi_read_timeout 300;
     }
