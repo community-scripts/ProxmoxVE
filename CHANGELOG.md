@@ -480,6 +480,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-13
+
+### 🆕 New Scripts
+
+  - BookOrbit ([#15080](https://github.com/community-scripts/ProxmoxVE/pull/15080))
+
 ## 2026-06-12
 
 ### 🆕 New Scripts
