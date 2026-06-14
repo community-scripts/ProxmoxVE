@@ -66,6 +66,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -75,7 +78,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>June (6 entries)</h4></summary>
+<summary><h4>June (13 entries)</h4></summary>
 
 [View June 2026 Changelog](.github/changelogs/2026/06.md)
 
@@ -1050,123 +1053,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🐞 Bug Fixes
 
     - core: fall back to silent mode when no TTY or whiptail unavailable [@MickLesk](https://github.com/MickLesk) ([#14497](https://github.com/community-scripts/ProxmoxVE/pull/14497))
-
-## 2026-05-14
-
-### 🆕 New Scripts
-
-  - CLIProxyAPI ([#14443](https://github.com/community-scripts/ProxmoxVE/pull/14443))
-
-## 2026-05-13
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Fix: Broken Manifold update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14468](https://github.com/community-scripts/ProxmoxVE/pull/14468))
-    - SoulSync: Fix update function [@tremor021](https://github.com/tremor021) ([#14465](https://github.com/community-scripts/ProxmoxVE/pull/14465))
-    - Reactive-Resume: fix PDF generation timeout in LXC containers [@MickLesk](https://github.com/MickLesk) ([#14416](https://github.com/community-scripts/ProxmoxVE/pull/14416))
-    - (calibre-web) Add --no-sandbox for PDF conversion [@jamesmyatt](https://github.com/jamesmyatt) ([#14461](https://github.com/community-scripts/ProxmoxVE/pull/14461))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - tools.func: encode GitHub tag, refine pin logic, add Codeberg [@MickLesk](https://github.com/MickLesk) ([#14473](https://github.com/community-scripts/ProxmoxVE/pull/14473))
-
-## 2026-05-12
-
-### 🆕 New Scripts
-
-  - DocuSeal ([#14445](https://github.com/community-scripts/ProxmoxVE/pull/14445))
-- Authentik ([#14440](https://github.com/community-scripts/ProxmoxVE/pull/14440))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Save Omada version [@lucacome](https://github.com/lucacome) ([#14433](https://github.com/community-scripts/ProxmoxVE/pull/14433))
-
-  - #### ✨ New Features
-
-    - OpenCloud: bump version to 6.2.0 [@vhsdream](https://github.com/vhsdream) ([#14451](https://github.com/community-scripts/ProxmoxVE/pull/14451))
-
-  - #### 🔧 Refactor
-
-    - misc: bump node versions [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14447](https://github.com/community-scripts/ProxmoxVE/pull/14447))
-
-## 2026-05-11
-
-### 🆕 New Scripts
-
-  - Lychee ([#14424](https://github.com/community-scripts/ProxmoxVE/pull/14424))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Termix: fix nginx pid path and log paths on update (#) [@MickLesk](https://github.com/MickLesk) ([#14419](https://github.com/community-scripts/ProxmoxVE/pull/14419))
-    - Nginxproxymanager: restore NPM nginx.conf after OpenResty rebuid [@MickLesk](https://github.com/MickLesk) ([#14421](https://github.com/community-scripts/ProxmoxVE/pull/14421))
-
-  - #### 🔧 Refactor
-
-    - InvestBrain: add commented reverse proxy config hints to .env [@MickLesk](https://github.com/MickLesk) ([#14422](https://github.com/community-scripts/ProxmoxVE/pull/14422))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - Cronmaster: fix unexpected EOF in update_cronmaster script [@MickLesk](https://github.com/MickLesk) ([#14420](https://github.com/community-scripts/ProxmoxVE/pull/14420))
-
-## 2026-05-10
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Save Beszel version [@lucacome](https://github.com/lucacome) ([#14389](https://github.com/community-scripts/ProxmoxVE/pull/14389))
-    - karakeep: Fix SERVER_VERSION update [@MickLesk](https://github.com/MickLesk) ([#14378](https://github.com/community-scripts/ProxmoxVE/pull/14378))
-    - inspIRCd: Fix service not autostarting [@tremor021](https://github.com/tremor021) ([#14368](https://github.com/community-scripts/ProxmoxVE/pull/14368))
-
-  - #### 🔧 Refactor
-
-    - refactor: webcheck [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14391](https://github.com/community-scripts/ProxmoxVE/pull/14391))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - [tools.func]: Pin `pnpm` version [@tremor021](https://github.com/tremor021) ([#14386](https://github.com/community-scripts/ProxmoxVE/pull/14386))
-
-## 2026-05-09
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - FlowiseAI: Migrate to pnpm [@MickLesk](https://github.com/MickLesk) ([#14344](https://github.com/community-scripts/ProxmoxVE/pull/14344))
-    - Purge openresty [@lucacome](https://github.com/lucacome) ([#14353](https://github.com/community-scripts/ProxmoxVE/pull/14353))
-    - Check for release for Sonarr [@lucacome](https://github.com/lucacome) ([#14354](https://github.com/community-scripts/ProxmoxVE/pull/14354))
-    - fix(termix-install.sh): add tmpfiles.d persistence and systemd PIDFile path [@runnylogan](https://github.com/runnylogan) ([#14350](https://github.com/community-scripts/ProxmoxVE/pull/14350))
-    - ERPNext: start bench Redis services before bench new-site [@MickLesk](https://github.com/MickLesk) ([#14343](https://github.com/community-scripts/ProxmoxVE/pull/14343))
-    - [Hotfix]Jotty: use absolute path when creating data dir [@vhsdream](https://github.com/vhsdream) ([#14355](https://github.com/community-scripts/ProxmoxVE/pull/14355))
-
-## 2026-05-08
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - wishlist: pin pnpm to v10 to match engine requirements [@MickLesk](https://github.com/MickLesk) ([#14342](https://github.com/community-scripts/ProxmoxVE/pull/14342))
-    - [pelican] fix env copy regression [@LetterN](https://github.com/LetterN) ([#14328](https://github.com/community-scripts/ProxmoxVE/pull/14328))
-    - fix(homepage): fix ERR_PNPM_IGNORED_BUILDS error [@Sergih28](https://github.com/Sergih28) ([#14315](https://github.com/community-scripts/ProxmoxVE/pull/14315))
-
-  - #### ✨ New Features
-
-    - tools.func: add setup_nltk as new function [@MickLesk](https://github.com/MickLesk) ([#14314](https://github.com/community-scripts/ProxmoxVE/pull/14314))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - tools.func: fix meilisearch import-dump background process handling [@MickLesk](https://github.com/MickLesk) ([#14341](https://github.com/community-scripts/ProxmoxVE/pull/14341))
