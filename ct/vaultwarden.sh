@@ -37,7 +37,64 @@ function update_script() {
     "2" "Set Admin Token")
 
   if [ "$UPD" == "1" ]; then
+    # Version cache written by fetch_and_deploy_gh_release (see misc/tools.func).
+    VW_CACHE="$HOME/.vaultwarden"
+
+    # Resolve the installed binary location (layout differs between installs).
+    if [[ -x /usr/bin/vaultwarden ]]; then
+      VW_BIN="/usr/bin/vaultwarden"
+    elif [[ -x /opt/vaultwarden/bin/vaultwarden ]]; then
+      VW_BIN="/opt/vaultwarden/bin/vaultwarden"
+    else
+      VW_BIN=""
+    fi
+
+    # Returns the installed binary's reported version (x.y.z), empty on failure.
+    vw_installed_version() {
+      [[ -n "$1" && -x "$1" ]] || return 0
+      "$1" --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1
+    }
+
+    # Abort an in-flight update: invalidate the (possibly stale) version cache so
+    # the next run retries, clean the build dir, bring the previously-running
+    # service back up, and exit non-zero.
+    vw_abort_update() {
+      msg_error "$1"
+      rm -f "$VW_CACHE"
+      cd ~ && rm -rf /tmp/vaultwarden-src
+      msg_info "Starting Service"
+      systemctl start vaultwarden
+      msg_ok "Started Service"
+      exit 1
+    }
+
+    NEEDS_UPDATE=0
     if check_for_gh_release "vaultwarden" "dani-garcia/vaultwarden"; then
+      NEEDS_UPDATE=1
+    else
+      # Cache repair guard. check_for_gh_release reports "up to date" purely from
+      # the cached version in /root/.vaultwarden, which fetch_and_deploy_gh_release
+      # writes when it extracts the source tarball - BEFORE the cargo build that
+      # actually produces the binary. If a previous compile failed mid-flight, the
+      # cache can claim the new version while the old binary is still installed.
+      # Cross-check the cache against the running binary and force an update on a
+      # mismatch instead of silently skipping it.
+      INSTALLED_VER="$(vw_installed_version "$VW_BIN")"
+      CACHED_VER=""
+      [[ -f "$VW_CACHE" ]] && CACHED_VER="$(<"$VW_CACHE")"
+      CACHED_VER="${CACHED_VER#v}"
+
+      if [[ -n "$CACHED_VER" && -n "$INSTALLED_VER" && "$CACHED_VER" != "$INSTALLED_VER" ]]; then
+        msg_warn "Version cache desync: cache reports ${CACHED_VER} but installed binary is ${INSTALLED_VER}"
+        msg_warn "A previous compile likely failed after the cache was written - forcing update"
+        rm -f "$VW_CACHE"
+        NEEDS_UPDATE=1
+      else
+        msg_ok "VaultWarden is already up-to-date"
+      fi
+    fi
+
+    if [[ "$NEEDS_UPDATE" == "1" ]]; then
       msg_info "Stopping Service"
       systemctl stop vaultwarden
       msg_ok "Stopped Service"
@@ -49,19 +106,35 @@ function update_script() {
       VW_VERSION="$VAULT"
       export VW_VERSION
       $STD cargo build --features "sqlite,mysql,postgresql" --release
+
+      # Verify the freshly built artifact BEFORE replacing the running binary, so
+      # an interrupted or silently-failed compile cannot leave a broken install.
+      BUILT_BIN="target/release/vaultwarden"
+      [[ -x "$BUILT_BIN" ]] || vw_abort_update "Build artifact missing or not executable: ${BUILT_BIN}"
+      BUILT_VER="$(vw_installed_version "$BUILT_BIN")"
+      [[ -n "$BUILT_VER" && "$BUILT_VER" == "$VAULT" ]] ||
+        vw_abort_update "Built binary version mismatch: expected ${VAULT}, got ${BUILT_VER:-unknown}"
+
+      # Preserve the existing install layout when copying.
       if [[ -f /usr/bin/vaultwarden ]]; then
-        cp target/release/vaultwarden /usr/bin/
+        INSTALL_TARGET="/usr/bin/vaultwarden"
       else
-        cp target/release/vaultwarden /opt/vaultwarden/bin/
+        INSTALL_TARGET="/opt/vaultwarden/bin/vaultwarden"
       fi
+      cp "$BUILT_BIN" "$INSTALL_TARGET"
+
+      # Re-verify the installed copy before restarting the service.
+      [[ -x "$INSTALL_TARGET" ]] || vw_abort_update "Installed binary is not executable: ${INSTALL_TARGET}"
+      INSTALLED_VER="$(vw_installed_version "$INSTALL_TARGET")"
+      [[ "$INSTALLED_VER" == "$VAULT" ]] ||
+        vw_abort_update "Installed binary version mismatch: expected ${VAULT}, got ${INSTALLED_VER:-unknown}"
+
       cd ~ && rm -rf /tmp/vaultwarden-src
       msg_ok "Updated VaultWarden to ${VAULT}"
 
       msg_info "Starting Service"
       systemctl start vaultwarden
       msg_ok "Started Service"
-    else
-      msg_ok "VaultWarden is already up-to-date"
     fi
 
     if check_for_gh_release "vaultwarden_webvault" "dani-garcia/bw_web_builds"; then
