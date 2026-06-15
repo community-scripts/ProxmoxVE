@@ -34,9 +34,9 @@ function update_script() {
     systemctl stop watcharr
     msg_ok "Stopped Service"
 
-    rm -f /opt/watcharr/server/watcharr
-    rm -rf /opt/watcharr/server/ui
-    fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
+    create_backup /opt/watcharr/server/data
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball" "latest" "/opt/watcharr"
+    restore_backup
 
     msg_info "Updating Watcharr"
     cd /opt/watcharr
