@@ -4379,10 +4379,12 @@ EOF
     pct exec "$CTID" -- bash -c "apt-get update 2>&1 && apt-get install -y ${_base_pkgs} 2>&1" >>"$BUILD_LOG" 2>&1 || {
       local failed_mirror
       failed_mirror=$(pct exec "$CTID" -- bash -c "grep -m1 -oP '(?<=URIs: https?://)[^/]+' /etc/apt/sources.list.d/debian.sources 2>/dev/null || grep -m1 -oP '(?<=deb https?://)[^/]+' /etc/apt/sources.list 2>/dev/null" 2>/dev/null || echo "unknown")
-      msg_warn "apt-get update failed (${failed_mirror}), trying alternate mirrors..."
+      msg_warn "apt-get update failed (${failed_mirror})."
+      msg_custom "ℹ️" "${YW}" "Probing alternate mirrors (this can take 1-2 minutes on network issues)"
       local mirror_exit=0
       pct exec "$CTID" -- env APT_BASE="$_base_pkgs" bash -c '
         DISTRO=$(. /etc/os-release 2>/dev/null && echo "$ID" || echo "debian")
+        echo "  Mirror fallback for distro: $DISTRO"
 
         if [ "$DISTRO" = "ubuntu" ]; then
           EU_MIRRORS="de.archive.ubuntu.com fr.archive.ubuntu.com se.archive.ubuntu.com nl.archive.ubuntu.com it.archive.ubuntu.com ch.archive.ubuntu.com mirrors.xtom.de"
@@ -4440,8 +4442,13 @@ EOF
         }
 
         # Phase 1: Scan global mirrors first (independent of local CDN issues)
+        echo "  Phase 1/3: Scanning global mirrors for reachability..."
         OTHERS_OK=$(scan_reachable "$OTHERS")
         OTHERS_PICK=$(printf "%s\n" $OTHERS_OK | shuf | head -3 | xargs)
+
+        if [ -z "$OTHERS_PICK" ]; then
+          echo "  No reachable global mirrors found"
+        fi
 
         for mirror in $OTHERS_PICK; do
           echo "  Attempting mirror: $mirror"
@@ -4449,6 +4456,7 @@ EOF
         done
 
         # Phase 2: Try primary mirror
+        echo "  Phase 2/3: Trying primary mirror..."
         if [ "$DISTRO" = "ubuntu" ]; then
           PRIMARY="archive.ubuntu.com"
         else
@@ -4460,8 +4468,13 @@ EOF
         fi
 
         # Phase 3: Fall back to regional mirrors
+        echo "  Phase 3/3: Scanning regional mirrors..."
         REGIONAL_OK=$(scan_reachable "$REGIONAL")
         REGIONAL_PICK=$(printf "%s\n" $REGIONAL_OK | shuf | head -3 | xargs)
+
+        if [ -z "$REGIONAL_PICK" ]; then
+          echo "  No reachable regional mirrors found"
+        fi
 
         for mirror in $REGIONAL_PICK; do
           echo "  Attempting mirror: $mirror"
@@ -4496,12 +4509,14 @@ EOF
           msg_warn "Mirror '${custom_mirror}' also failed. Try another or type 'skip'."
         done
         if [[ "$custom_mirror" == "skip" ]]; then
-          msg_error "apt-get base packages installation failed"
-          install_exit_code=1
+          msg_warn "Mirror selection aborted by user ('skip')"
+          msg_warn "Aborting installation before base package bootstrap"
+          post_update_to_api "aborted" "130" "force"
+          install_exit_code=130
         fi
       elif [[ $mirror_exit -ne 0 ]]; then
         msg_error "apt-get base packages installation failed"
-        install_exit_code=1
+        install_exit_code=100
       fi
     }
   fi
