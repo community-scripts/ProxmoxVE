@@ -37,6 +37,11 @@ function update_script() {
     "2" "Set Admin Token")
 
   if [ "$UPD" == "1" ]; then
+    INSTALLED_VERSION="$(cd /opt/vaultwarden && ./bin/vaultwarden --version 2>/dev/null | awk '{print $2}')"
+    if [[ -n "$INSTALLED_VERSION" ]] &&
+      ! grep -qxF "$INSTALLED_VERSION" "$HOME/.vaultwarden" 2>/dev/null; then
+      printf '%s\n' "$INSTALLED_VERSION" >"$HOME/.vaultwarden"
+    fi
     if check_for_gh_release "vaultwarden" "dani-garcia/vaultwarden"; then
       msg_info "Stopping Service"
       systemctl stop vaultwarden
