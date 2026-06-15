@@ -483,6 +483,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-15
+
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: implement gateway validation for DHCP and static networks [@MickLesk](https://github.com/MickLesk) ([#15107](https://github.com/community-scripts/ProxmoxVE/pull/15107))
+
 ## 2026-06-14
 
 ### 🚀 Updated Scripts
