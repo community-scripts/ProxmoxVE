@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/watcharr/server/data
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball" "latest" "/opt/watcharr"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
     restore_backup
 
     msg_info "Updating Watcharr"
