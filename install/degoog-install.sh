@@ -27,6 +27,7 @@ ln -sf /root/.bun/bin/bun /usr/local/bin/bun
 ln -sf /root/.bun/bin/bunx /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
+fetch_and_deploy_gh_release "curl-impersonate" "lexiforest/curl-impersonate" "prebuild" "latest" "/usr/local/bin" "curl-impersonate-v*.$(uname -m)-linux-gnu.tar.gz"
 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
 
 msg_info "Setting up degoog"
