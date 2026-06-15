@@ -485,7 +485,17 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-15
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Vaultwarden: extend version check for VaultWarden update [@MickLesk](https://github.com/MickLesk) ([#15105](https://github.com/community-scripts/ProxmoxVE/pull/15105))
+
 ### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func: extend mesa-vulkan-drivers and vulkan-tools to installation for ARC GPU's [@MickLesk](https://github.com/MickLesk) ([#15106](https://github.com/community-scripts/ProxmoxVE/pull/15106))
 
   - #### 🔧 Refactor
 
