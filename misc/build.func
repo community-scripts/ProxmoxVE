@@ -979,6 +979,20 @@ base_settings() {
 
   IPV6_METHOD=${var_ipv6_method:-"none"}
   GATE=${var_gateway:-""}
+
+  # Guard against invalid gateway combinations from defaults/app vars:
+  # - DHCP must not force a static gateway
+  # - Static IPv4 must use a gateway in the same subnet
+  if [[ "$NET" == "dhcp" && -n "$GATE" ]]; then
+    msg_warn "Ignoring var_gateway '$GATE' because var_net is 'dhcp'"
+    GATE=""
+  elif [[ "$NET" != "dhcp" && -n "$GATE" ]]; then
+    if ! validate_gateway_in_subnet "$NET" "$GATE"; then
+      msg_warn "Ignoring var_gateway '$GATE' because it is not in subnet of var_net '$NET'"
+      GATE=""
+    fi
+  fi
+
   APT_CACHER=${var_apt_cacher:-""}
   APT_CACHER_IP=${var_apt_cacher_ip:-""}
 
