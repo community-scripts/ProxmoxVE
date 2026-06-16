@@ -37,6 +37,12 @@ function update_script() {
   rm -f "$STEPBIN"
   cp -f "$(which step-cli)" "$STEPBIN"
 
+  # Patch for leaf_data.tpl - Issue: #14810
+  sed -i \
+  -e 's/\[//' \
+  -e 's/\]//' \
+  "$STEPPATH/templates/x509/leaf_data.tpl"
+
   $STD systemctl restart step-ca
   msg_ok "Updated step-ca and step-cli"
 
