@@ -52,8 +52,14 @@ function update_script() {
     msg_info "Updating Application"
     cd /opt/invoiceshelf
     $STD composer install --no-dev --optimize-autoloader
-    $STD yarn install
-    $STD yarn build
+    if command -v corepack >/dev/null 2>&1; then
+      $STD corepack enable
+      $STD corepack yarn install
+      $STD corepack yarn build
+    else
+      $STD yarn install
+      $STD yarn build
+    fi
     $STD php artisan migrate --force
     $STD php artisan optimize:clear
     chown -R www-data:www-data /opt/invoiceshelf
