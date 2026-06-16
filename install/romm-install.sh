@@ -56,6 +56,8 @@ $STD mkdir -p /etc/nginx/custom-modules
 $STD cp objs/ngx_http_zip_module.so /etc/nginx/custom-modules/
 $STD mkdir -p /etc/nginx/modules-enabled
 echo "load_module /etc/nginx/custom-modules/ngx_http_zip_module.so;" > /etc/nginx/modules-enabled/50-mod-http-zip.conf
+
+rm -rf /tmp/mod_zip /tmp/nginx-${NGINX_VER} /tmp/nginx-${NGINX_VER}.tar.gz
 msg_ok "Installed Nginx mod_zip module"
 
 PYTHON_VERSION="3.13" setup_uv
