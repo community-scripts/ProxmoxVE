@@ -43,7 +43,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Nginx mod_zip module"
-$STD apt-get install -y libpcre3-dev libpcre2-dev
+$STD apt-get install -y libpcre2-dev
 cd /tmp
 $STD git clone https://github.com/evanmiller/mod_zip.git
 NGINX_VER=$(nginx -v 2>&1 | cut -d'/' -f2 | cut -d' ' -f1)
