@@ -495,8 +495,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - fix storyteller install failure with yarn 4 corepack [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15140](https://github.com/community-scripts/ProxmoxVE/pull/15140))
+    - fix(degoog): use localhost for valkey url [@ethan-hgwr](https://github.com/ethan-hgwr) ([#15149](https://github.com/community-scripts/ProxmoxVE/pull/15149))
     - Fix InvoiceShelf install/update Yarn package manager mismatch [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15141](https://github.com/community-scripts/ProxmoxVE/pull/15141))
+    - fix storyteller install failure with yarn 4 corepack [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15140](https://github.com/community-scripts/ProxmoxVE/pull/15140))
     - fix: generate policy-compliant OpenObserve root password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15137](https://github.com/community-scripts/ProxmoxVE/pull/15137))
 
 ## 2026-06-15
