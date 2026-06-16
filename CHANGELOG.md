@@ -483,6 +483,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-16
+
+### 🆕 New Scripts
+
+  - Add runtime status guard and deleted script stubs [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15125](https://github.com/community-scripts/ProxmoxVE/pull/15125))
+
 ## 2026-06-15
 
 ### 🚀 Updated Scripts
