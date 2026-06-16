@@ -52,13 +52,13 @@ cd nginx-${NGINX_VER}
 $STD ./configure --with-compat --without-http_rewrite_module --add-dynamic-module=/tmp/mod_zip
 $STD make modules
 
-mkdir -p /usr/lib/nginx/modules/
-mkdir -p /usr/share/nginx/modules-available/
-mkdir -p /etc/nginx/modules-enabled/
+# Création d'un dossier personnalisé indépendant
+$STD mkdir -p /etc/nginx/custom-modules
+$STD cp objs/ngx_http_zip_module.so /etc/nginx/custom-modules/
 
-cp objs/ngx_http_zip_module.so /usr/lib/nginx/modules/
-echo "load_module modules/ngx_http_zip_module.so;" > /usr/share/nginx/modules-available/mod-http-zip.conf
-ln -sf /usr/share/nginx/modules-available/mod-http-zip.conf /etc/nginx/modules-enabled/50-mod-http-zip.conf
+# Activation via le chemin absolu
+$STD mkdir -p /etc/nginx/modules-enabled
+echo "load_module /etc/nginx/custom-modules/ngx_http_zip_module.so;" > /etc/nginx/modules-enabled/50-mod-http-zip.conf
 msg_ok "Installed Nginx mod_zip module"
 
 PYTHON_VERSION="3.13" setup_uv
