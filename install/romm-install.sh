@@ -43,20 +43,18 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Nginx mod_zip module"
+$STD apt-get install -y libpcre3-dev libpcre2-dev
 cd /tmp
 $STD git clone https://github.com/evanmiller/mod_zip.git
 NGINX_VER=$(nginx -v 2>&1 | cut -d'/' -f2 | cut -d' ' -f1)
 $STD wget -q http://nginx.org/download/nginx-${NGINX_VER}.tar.gz
 $STD tar -zxvf nginx-${NGINX_VER}.tar.gz
 cd nginx-${NGINX_VER}
-$STD ./configure --with-compat --without-http_rewrite_module --add-dynamic-module=/tmp/mod_zip
+$STD ./configure --with-compat --add-dynamic-module=/tmp/mod_zip
 $STD make modules
 
-# Création d'un dossier personnalisé indépendant
 $STD mkdir -p /etc/nginx/custom-modules
 $STD cp objs/ngx_http_zip_module.so /etc/nginx/custom-modules/
-
-# Activation via le chemin absolu
 $STD mkdir -p /etc/nginx/modules-enabled
 echo "load_module /etc/nginx/custom-modules/ngx_http_zip_module.so;" > /etc/nginx/modules-enabled/50-mod-http-zip.conf
 msg_ok "Installed Nginx mod_zip module"
