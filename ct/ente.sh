@@ -3,13 +3,13 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-APP="MinIO"
+APP="Ente"
 
 header_info "$APP"
 variables
 color
 
 msg_error "This script is no longer available in community-scripts."
-msg_error "Repository is archived. Minio is gone"
-msg_info "More info: https://community-scripts.org/scripts/minio"
+msg_error "This script was removed and cannot be installed or updated."
+msg_info "More info: https://community-scripts.org/scripts/ente"
 exit 1

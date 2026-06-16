@@ -3621,6 +3621,53 @@ run_addon_updates() {
   done
 }
 
+
+runtime_script_status_guard() {
+  local script_slug="${SCRIPT_SLUG:-${NSAPP:-}}"
+  script_slug="$(echo "$script_slug" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+  [[ -z "$script_slug" ]] && return 0
+
+  local api_url="https://db.community-scripts.org/api/collections/script_scripts/records?filter=(slug='${script_slug}')&perPage=1&fields=slug,is_disabled,is_deleted,disable_message,deleted_message"
+  local response
+  if ! response=$(curl -fsSL --connect-timeout 2 --max-time 3 "$api_url" 2>/dev/null); then
+    msg_warn "Script status check is unavailable. Continuing without status verification."
+    return 0
+  fi
+
+  if ! command -v jq >/dev/null 2>&1; then
+    msg_warn "Missing jq for script status check. Continuing without status verification."
+    return 0
+  fi
+
+  local has_record is_deleted is_disabled deleted_message disable_message info_url
+  has_record=$(printf '%s' "$response" | jq -r '.items | length')
+  [[ "$has_record" == "0" ]] && return 0
+
+  is_deleted=$(printf '%s' "$response" | jq -r '.items[0].is_deleted // false')
+  is_disabled=$(printf '%s' "$response" | jq -r '.items[0].is_disabled // false')
+  deleted_message=$(printf '%s' "$response" | jq -r '.items[0].deleted_message // ""')
+  disable_message=$(printf '%s' "$response" | jq -r '.items[0].disable_message // ""')
+  info_url="https://community-scripts.org/scripts/${script_slug}"
+
+  if [[ "$is_deleted" == "true" ]]; then
+    msg_error "This script is no longer available in community-scripts."
+    [[ -n "$deleted_message" ]] && msg_error "$deleted_message"
+    [[ -z "$deleted_message" ]] && msg_error "This script was removed and cannot be installed or updated."
+    msg_info "More info: ${info_url}"
+    return 1
+  fi
+
+  if [[ "$is_disabled" == "true" ]]; then
+    msg_error "This script is currently disabled in community-scripts."
+    [[ -n "$disable_message" ]] && msg_error "$disable_message"
+    [[ -z "$disable_message" ]] && msg_error "Updates and installs are temporarily disabled for this script."
+    msg_info "More info: ${info_url}"
+    return 1
+  fi
+
+  return 0
+}
+
 # ------------------------------------------------------------------------------
 # start()
 #
@@ -3629,9 +3676,11 @@ run_addon_updates() {
 # - In silent mode: runs update_script with automatic cleanup
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
+
 start() {
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
+    runtime_script_status_guard || return 0
     install_script || return 0
     return 0
   elif [ ! -z ${PHS_SILENT+x} ] && [[ "${PHS_SILENT}" == "1" ]]; then
@@ -3639,6 +3688,7 @@ start() {
     set_std_mode
     ensure_profile_loaded
     get_lxc_ip
+    runtime_script_status_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3649,6 +3699,7 @@ start() {
     set_std_mode
     ensure_profile_loaded
     get_lxc_ip
+    runtime_script_status_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3678,6 +3729,7 @@ start() {
     esac
     ensure_profile_loaded
     get_lxc_ip
+    runtime_script_status_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
