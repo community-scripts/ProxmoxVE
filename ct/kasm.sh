@@ -16,7 +16,7 @@ var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-0}"
 var_fuse="${var_fuse:-yes}"
 var_tun="${var_tun:-yes}"
-var_kasm_version="${var_kasm_version:-}"
+var_kasm_version="${var_kasm_version:-1.19.0}"
 
 header_info "$APP"
 variables
@@ -34,19 +34,18 @@ function update_script() {
 
   msg_info "Checking for new version"
   CURRENT_VERSION=$(readlink -f /opt/kasm/current | awk -F'/' '{print $4}')
-  KASM_VERSION=$(curl -s https://kasm.com/downloads | grep -oP '<h1[^>]*>.*?</h1>' | sed -E 's/<\/?h1[^>]*>//g' | grep -oP '\d+\.\d+\.\d+')
-  KASM_URL="https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION:-var_kasm_version}.tar.gz"
+  KASM_URL=$(curl -s https://kasm.com/downloads \
+    | grep -oP 'https://kasm-static-content\.s3\.amazonaws\.com/kasm_release_\d+\.\d+\.\d+-latest\.tar\.gz' \
+    | head -1)
+  KASM_VERSION=$(echo "$KASM_URL" | grep -oP '\d+\.\d+\.\d+(?=-latest)')
 
-  # KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' | head -n 1)
-  # if [[ -z "$KASM_URL" ]]; then
-  #   SERVICE_IMAGE_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_service_images_amd64_[0-9]+\.[0-9]+\.[0-9]+\.tar\.gz' | head -n 1)
-  #   if [[ -n "$SERVICE_IMAGE_URL" ]]; then
-  #     KASM_VERSION=$(echo "$SERVICE_IMAGE_URL" | sed -E 's/.*kasm_release_service_images_amd64_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
-  #     KASM_URL="https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
-  #   fi
-  # else
-  #   KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
-  # fi
+  # Fallback to predefined version if online lookup failed.
+  if [[ -z "$KASM_VERSION" ]] || [[ -z "$KASM_URL" ]]; then
+    msg_warn "Unable to fetch latest Kasm release online, falling back to v${var_kasm_version}"
+  fi
+
+  KASM_VERSION="${KASM_VERSION:-$var_kasm_version}"
+  KASM_URL="${KASM_URL:-https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}-latest.tar.gz}"
 
   if [[ -z "$KASM_VERSION" ]] || [[ -z "$KASM_URL" ]]; then
     msg_error "Unable to detect latest Kasm release URL."
