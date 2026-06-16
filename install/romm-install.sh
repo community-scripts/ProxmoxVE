@@ -43,12 +43,18 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Nginx mod_zip module"
+$STD apt-get install -y libpcre2-dev
 cd /tmp
-$STD git clone https://github.com/evanmiller/mod_zip.git
+
+$STD wget -qO mod_zip.tar.gz https://github.com/evanmiller/mod_zip/archive/refs/heads/master.tar.gz
+$STD tar -xzf mod_zip.tar.gz
+mv mod_zip-master mod_zip
+
 NGINX_VER=$(nginx -v 2>&1 | cut -d'/' -f2 | cut -d' ' -f1)
 $STD wget -q http://nginx.org/download/nginx-${NGINX_VER}.tar.gz
 $STD tar -zxvf nginx-${NGINX_VER}.tar.gz
 cd nginx-${NGINX_VER}
+
 $STD ./configure --with-compat --add-dynamic-module=/tmp/mod_zip
 $STD make modules
 
@@ -57,9 +63,8 @@ $STD cp objs/ngx_http_zip_module.so /etc/nginx/custom-modules/
 $STD mkdir -p /etc/nginx/modules-enabled
 echo "load_module /etc/nginx/custom-modules/ngx_http_zip_module.so;" > /etc/nginx/modules-enabled/50-mod-http-zip.conf
 
-rm -rf /tmp/mod_zip /tmp/nginx-${NGINX_VER} /tmp/nginx-${NGINX_VER}.tar.gz
+rm -rf /tmp/mod_zip* /tmp/nginx-${NGINX_VER}*
 msg_ok "Installed Nginx mod_zip module"
-
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 setup_mariadb
