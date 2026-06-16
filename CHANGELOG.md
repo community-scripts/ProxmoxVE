@@ -495,6 +495,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix InvoiceShelf install/update Yarn package manager mismatch [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15141](https://github.com/community-scripts/ProxmoxVE/pull/15141))
     - fix: generate policy-compliant OpenObserve root password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15137](https://github.com/community-scripts/ProxmoxVE/pull/15137))
 
 ## 2026-06-15
