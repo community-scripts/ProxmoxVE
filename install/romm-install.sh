@@ -38,12 +38,22 @@ $STD apt install -y \
   redis-tools \
   p7zip-full \
   tzdata \
-  nginx-extras
+  nginx \
+  libpcre2-dev
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Nginx mod_zip module"
-# Modification ici : On active le module natif de Debian sans passer par GetPageSpeed
-$STD ln -sf /usr/share/nginx/modules-available/mod-http-zip.load /etc/nginx/modules-enabled/50-mod-http-zip.conf
+cd /tmp
+$STD git clone https://github.com/evanmiller/mod_zip.git
+NGINX_VER=$(nginx -v 2>&1 | cut -d'/' -f2 | cut -d' ' -f1)
+$STD wget -q http://nginx.org/download/nginx-${NGINX_VER}.tar.gz
+$STD tar -zxvf nginx-${NGINX_VER}.tar.gz
+cd nginx-${NGINX_VER}
+$STD ./configure --with-compat --without-http_rewrite_module --add-dynamic-module=/tmp/mod_zip
+$STD make modules
+cp objs/ngx_http_zip_module.so /usr/lib/nginx/modules/
+echo "load_module modules/ngx_http_zip_module.so;" > /usr/share/nginx/modules-available/mod-http-zip.conf
+ln -sf /usr/share/nginx/modules-available/mod-http-zip.conf /etc/nginx/modules-enabled/50-mod-http-zip.conf
 msg_ok "Installed Nginx mod_zip module"
 
 PYTHON_VERSION="3.13" setup_uv
