@@ -43,6 +43,16 @@ function update_script() {
   -e 's/\]//' \
   "$STEPPATH/templates/x509/leaf_data.tpl"
 
+  # Patch for provisioners templateData - Issue: #14810
+  step ca provisioner list | jq -c '.[] | select(.options.x509.templateData != null) | .name' > /tmp/provisioner_names.json
+  for i in $(cat /tmp/provisioner_names.json); do
+    prov=`echo $i | tr -d '"'`
+    echo
+    echo "Updating provisioner $prov ..."
+    $STD step ca provisioner update $prov --x509-template-data=$STEPPATH/templates/x509/leaf_data.tpl
+  done
+  rm /tmp/provisioner_names.json
+
   $STD systemctl restart step-ca
   msg_ok "Updated step-ca and step-cli"
 
