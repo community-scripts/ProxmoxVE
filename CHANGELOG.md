@@ -491,6 +491,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Kiwix ([#15131](https://github.com/community-scripts/ProxmoxVE/pull/15131))
 - Add runtime status guard and deleted script stubs [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15125](https://github.com/community-scripts/ProxmoxVE/pull/15125))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix: generate policy-compliant OpenObserve root password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15137](https://github.com/community-scripts/ProxmoxVE/pull/15137))
+
 ## 2026-06-15
 
 ### 🚀 Updated Scripts
