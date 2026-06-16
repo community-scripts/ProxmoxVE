@@ -183,8 +183,8 @@ cat <<EOF >"$X509LeafTemplateData"
 	"country": "${PKICountry}",
 	"organization": "${PKIName}",
 	"organizationalUnit": "${PKIOrganizationalUnit}",
-	"issuingCertificateURL": ["https://${FQDN}${LISTENER}/intermediates.pem"],
-	"crlDistributionPoints": ["https://${FQDN}${LISTENER}/crl"]
+	"issuingCertificateURL": "https://${FQDN}${LISTENER}/intermediates.pem",
+	"crlDistributionPoints": "https://${FQDN}${LISTENER}/crl"
 }
 EOF
 
