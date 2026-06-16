@@ -38,17 +38,12 @@ $STD apt install -y \
   redis-tools \
   p7zip-full \
   tzdata \
-  nginx
+  nginx-extras
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Nginx mod_zip module"
-setup_deb822_repo \
-  "getpagespeed-extras" \
-  "https://extras.getpagespeed.com/deb-archive-keyring.gpg" \
-  "https://extras.getpagespeed.com/debian" \
-  "$(get_os_info codename)" \
-  "main"
-$STD apt-get install -y nginx nginx-module-zip
+# Modification ici : On active le module natif de Debian sans passer par GetPageSpeed
+$STD ln -sf /usr/share/nginx/modules-available/mod-http-zip.load /etc/nginx/modules-enabled/50-mod-http-zip.conf
 msg_ok "Installed Nginx mod_zip module"
 
 PYTHON_VERSION="3.13" setup_uv
