@@ -10,6 +10,6 @@ variables
 color
 
 msg_error "This script is no longer available in community-scripts."
-msg_error "The Booklore or the Fork Grimmory will for now not return to community-scripts. Due to the unstable nature of this Projects we decided to remove them, and decide on a later Point if they come back. Wich will most likley not happen. Dont create Issues for this."
+msg_error "The Booklore or the Grimmory Fork will for now not return to community-scripts. Due to the unstable nature of these projects we decided to remove them and will decide at later point if they come back, which will most likley not happen. Plese do not create Issues for this."
 msg_info "More info: https://community-scripts.org/scripts/booklore"
 exit 1
