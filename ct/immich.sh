@@ -177,10 +177,10 @@ EOF
 
     # server build
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter immich --frozen-lockfile build
+    $STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
     unset SHARP_IGNORE_GLOBAL_LIBVIPS
     export SHARP_FORCE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
+    $STD pnpm --filter immich --prod --no-optional deploy "$APP_DIR"
 
     # Patch helmet.json: disable upgrade-insecure-requests for HTTP access
     if [[ -f "$APP_DIR/helmet.json" ]]; then
@@ -190,10 +190,9 @@ EOF
     cp "$APP_DIR"/package.json "$APP_DIR"/bin
     sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
-    # openapi & web build
+    # sdk & web build
     cd "$SRC_DIR"
     echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
-    $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
     unset SHARP_FORCE_GLOBAL_LIBVIPS
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter @immich/sdk --filter immich-web build
@@ -201,18 +200,16 @@ EOF
     cp LICENSE "$APP_DIR"
 
     # cli build
-    $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
     $STD pnpm --filter @immich/sdk --filter @immich/cli build
     $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
     [[ -f "$INSTALL_DIR"/start.sh ]] && mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
 
     # plugins
     cd "$SRC_DIR"
-    $STD mise trust --ignore ./mise.toml
-    $STD mise trust ./plugins/mise.toml
-    cd plugins
-    $STD mise install
-    $STD mise run build
+    $STD mise trust
+    export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
+    export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
+    $STD mise //:plugins
     mkdir -p "$PLUGIN_DIR"
     cp -r ./dist "$PLUGIN_DIR"/dist
     cp ./manifest.json "$PLUGIN_DIR"
