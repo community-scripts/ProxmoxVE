@@ -51,6 +51,11 @@ $STD tar -zxvf nginx-${NGINX_VER}.tar.gz
 cd nginx-${NGINX_VER}
 $STD ./configure --with-compat --without-http_rewrite_module --add-dynamic-module=/tmp/mod_zip
 $STD make modules
+
+mkdir -p /usr/lib/nginx/modules/
+mkdir -p /usr/share/nginx/modules-available/
+mkdir -p /etc/nginx/modules-enabled/
+
 cp objs/ngx_http_zip_module.so /usr/lib/nginx/modules/
 echo "load_module modules/ngx_http_zip_module.so;" > /usr/share/nginx/modules-available/mod-http-zip.conf
 ln -sf /usr/share/nginx/modules-available/mod-http-zip.conf /etc/nginx/modules-enabled/50-mod-http-zip.conf
