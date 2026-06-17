@@ -140,7 +140,7 @@ EOF
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
     SRC_DIR="${INSTALL_DIR}/source"
     APP_DIR="${INSTALL_DIR}/app"
-    PLUGIN_DIR="${APP_DIR}/corePlugin"
+    PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
 
