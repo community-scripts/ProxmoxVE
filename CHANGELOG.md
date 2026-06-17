@@ -499,6 +499,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - TREK: Pin version [@tremor021](https://github.com/tremor021) ([#15156](https://github.com/community-scripts/ProxmoxVE/pull/15156))
 
+  - #### 🔧 Refactor
+
+    - chore(paperless-ngx): pin version to prevent v3 update [@tomfrenzel](https://github.com/tomfrenzel) ([#15171](https://github.com/community-scripts/ProxmoxVE/pull/15171))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
