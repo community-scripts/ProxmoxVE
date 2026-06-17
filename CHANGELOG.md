@@ -487,6 +487,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - kasm: fix release detection [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15151](https://github.com/community-scripts/ProxmoxVE/pull/15151))
+
   - #### 💥 Breaking Changes
 
     - TREK: Pin version [@tremor021](https://github.com/tremor021) ([#15156](https://github.com/community-scripts/ProxmoxVE/pull/15156))
