@@ -491,6 +491,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - kasm: fix release detection [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15151](https://github.com/community-scripts/ProxmoxVE/pull/15151))
 
+  - #### ✨ New Features
+
+    - trek: update install and upgrade workflow for v3.1.0 [@MickLesk](https://github.com/MickLesk) ([#15165](https://github.com/community-scripts/ProxmoxVE/pull/15165))
+
   - #### 💥 Breaking Changes
 
     - TREK: Pin version [@tremor021](https://github.com/tremor021) ([#15156](https://github.com/community-scripts/ProxmoxVE/pull/15156))
