@@ -483,6 +483,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-17
+
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - TREK: Pin version [@tremor021](https://github.com/tremor021) ([#15156](https://github.com/community-scripts/ProxmoxVE/pull/15156))
+
 ## 2026-06-16
 
 ### 🆕 New Scripts
