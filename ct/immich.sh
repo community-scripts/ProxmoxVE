@@ -203,13 +203,12 @@ EOF
 
     # plugins
     cd "$SRC_DIR"
-    $STD mise trust
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
     export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
     $STD mise //:plugins
     mkdir -p "$PLUGIN_DIR"
-    cp -r ./dist "$PLUGIN_DIR"/dist
-    cp ./manifest.json "$PLUGIN_DIR"
+    cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
+    cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
     msg_ok "Updated Immich server, web, cli and plugins"
 
     cd "$SRC_DIR"/machine-learning
