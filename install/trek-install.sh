@@ -58,6 +58,7 @@ ADMIN_EMAIL="admin@trek.local"
 ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'A-Za-z0-9' | head -c 16)
 cat <<EOF >/opt/trek/server/.env
 NODE_ENV=production
+HOST=0.0.0.0
 PORT=3000
 ENCRYPTION_KEY=${ENCRYPTION_KEY}
 ADMIN_EMAIL=${ADMIN_EMAIL}
@@ -68,6 +69,7 @@ DEFAULT_LANGUAGE=en
 ALLOWED_ORIGINS=
 COOKIE_SECURE=false
 FORCE_HTTPS=false
+TRUST_PROXY=1
 EOF
 chmod 600 /opt/trek/server/.env
 msg_ok "Configured TREK"
