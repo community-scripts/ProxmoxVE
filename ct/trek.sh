@@ -32,7 +32,7 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
-  if check_for_gh_release "trek" "mauriceboe/TREK"; then
+  if check_for_gh_release "trek" "mauriceboe/TREK" "v3.0.22"; then
     msg_info "Stopping Service"
     systemctl stop trek
     msg_ok "Stopped Service"

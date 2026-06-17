@@ -18,7 +18,7 @@ $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
-fetch_and_deploy_gh_release "trek" "mauriceboe/TREK" "tarball"
+fetch_and_deploy_gh_release "trek" "mauriceboe/TREK" "tarball" "v3.0.22"
 
 msg_info "Building Client"
 cd /opt/trek/client
