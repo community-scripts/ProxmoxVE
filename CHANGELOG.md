@@ -499,6 +499,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - TREK: Pin version [@tremor021](https://github.com/tremor021) ([#15156](https://github.com/community-scripts/ProxmoxVE/pull/15156))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - immich public proxy: replace npm install with npm ci for consistent dependency installation [@MickLesk](https://github.com/MickLesk) ([#15166](https://github.com/community-scripts/ProxmoxVE/pull/15166))
+
 ## 2026-06-16
 
 ### 🆕 New Scripts
