@@ -327,18 +327,15 @@ fi
 cp "$APP_DIR"/package.json "$APP_DIR"/bin
 sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
-# sdk & web build
+# sdk, cli & web build
 cd "$SRC_DIR"
 echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
 unset SHARP_FORCE_GLOBAL_LIBVIPS
 export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-$STD pnpm --filter @immich/sdk --filter immich-web build
+$STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
+$STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
-
-# cli build
-$STD pnpm --filter @immich/sdk --filter @immich/cli build
-$STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 
 # plugins
 cd "$SRC_DIR"
