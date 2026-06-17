@@ -16,6 +16,7 @@ var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-0}"
 var_tun="${var_tun:-yes}"
 var_nesting="${var_nesting:-1}"
+var_ns="${var_ns:-1.1.1.1 8.8.8.8}"
 
 header_info "$APP"
 variables
@@ -36,6 +37,19 @@ function update_script() {
 
 start
 build_container
+
+HOOKSCRIPT_PATH="/var/lib/vz/snippets/unifi-os-server-multicast-${CTID}.sh"
+cat >"$HOOKSCRIPT_PATH" <<EOF
+#!/bin/sh
+# Hookscript: enable multicast on the veth interface for UniFi OS Server LXC ${CTID}
+# Required so the UniFi discovery client does not crash on startup inside the container.
+if [ "\$1" = "${CTID}" ] && [ "\$2" = "post-start" ]; then
+  ip link set "veth${CTID}i0" multicast on 2>/dev/null || true
+fi
+EOF
+chmod +x "$HOOKSCRIPT_PATH"
+pct set "$CTID" --hookscript "local:snippets/unifi-os-server-multicast-${CTID}.sh"
+
 description
 
 msg_ok "Completed successfully!\n"
