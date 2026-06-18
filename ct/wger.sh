@@ -118,6 +118,7 @@ bucket_definitions:
       - SELECT * FROM manager_routine WHERE user_id = bucket.user_id
       - SELECT * FROM manager_workoutlog WHERE user_id = bucket.user_id
       - SELECT * FROM manager_workoutsession WHERE user_id = bucket.user_id
+      - SELECT * FROM core_userprofile WHERE user_id = bucket.user_id
 EOF
   msg_ok "Created PowerSync config"
 
