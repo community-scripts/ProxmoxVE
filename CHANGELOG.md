@@ -491,6 +491,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - flowise: add deps / uv / python 3.11 [@MickLesk](https://github.com/MickLesk) ([#15177](https://github.com/community-scripts/ProxmoxVE/pull/15177))
 
+  - #### 💥 Breaking Changes
+
+    - refactor: crafty-controller [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15178](https://github.com/community-scripts/ProxmoxVE/pull/15178))
+
 ## 2026-06-17
 
 ### 🚀 Updated Scripts
