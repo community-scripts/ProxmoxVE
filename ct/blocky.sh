@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -37,7 +37,7 @@ function update_script() {
     mv /opt/blocky/config.yml /opt/config.yml
     msg_ok "Backed Up Config"
     
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_x86_64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_$(get_arch_value "x86_64" "arm64").tar.gz"
 
     msg_info "Restore Config"
     mv /opt/config.yml /opt/blocky/config.yml

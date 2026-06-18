@@ -12,7 +12,7 @@ var_ram="${var_ram:-256}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.23}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -52,7 +52,7 @@ function update_script() {
 
     msg_info "Updating Tinyauth"
     rm -f /opt/tinyauth/tinyauth
-    curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
+    curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-$(get_arch_value)" -o /opt/tinyauth/tinyauth
     chmod +x /opt/tinyauth/tinyauth
     echo "${RELEASE}" >~/.tinyauth
     msg_ok "Updated Tinyauth"

@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -39,7 +39,7 @@ function update_script() {
     mv /opt/donetick/config/selfhosted.yaml /opt/donetick/donetick.db /opt
     msg_ok "Backed Up Configurations"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_x86_64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_$(get_arch_value "x86_64" "arm64").tar.gz"
 
     msg_info "Restoring Configurations"
     mv /opt/selfhosted.yaml /opt/donetick/config

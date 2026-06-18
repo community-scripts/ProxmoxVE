@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-15}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -42,8 +42,8 @@ function update_script() {
     cp /opt/discopanel/data/discopanel.db /opt/discopanel_backup_temp/discopanel.db
     msg_ok "Created Backup"
 
-    fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-amd64.tar.gz"
-    ln -sf /opt/discopanel/discopanel-linux-amd64 /opt/discopanel/discopanel
+    fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-$(get_arch_value).tar.gz"
+    ln -sf /opt/discopanel/discopanel-linux-$(get_arch_value) /opt/discopanel/discopanel
 
     msg_info "Restoring Data"
     mkdir -p /opt/discopanel/data

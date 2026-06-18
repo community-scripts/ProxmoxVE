@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing ebusd"
-fetch_and_deploy_gh_release "ebusd" "john30/ebusd" "binary" "latest" "" "ebusd-*_amd64-trixie_mqtt1.deb"
+fetch_and_deploy_gh_release "ebusd" "john30/ebusd" "binary" "latest" "" "ebusd-*_$(get_arch_value)-trixie_mqtt1.deb"
 systemctl enable -q ebusd
 msg_ok "Installed ebusd"
 

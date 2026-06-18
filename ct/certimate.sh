@@ -12,7 +12,7 @@ var_ram="${var_ram:-256}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -39,7 +39,7 @@ function update_script() {
     cp -r /opt/certimate/pb_data /opt/certimate_pb_data_backup
     msg_ok "Backed up Data"
 
-    fetch_and_deploy_gh_release "certimate" "certimate-go/certimate" "prebuild" "latest" "/opt/certimate" "certimate_*_linux_amd64.zip"
+    fetch_and_deploy_gh_release "certimate" "certimate-go/certimate" "prebuild" "latest" "/opt/certimate" "certimate_*_linux_$(get_arch_value).zip"
 
     msg_info "Restoring Data"
     cp -r /opt/certimate_pb_data_backup/. /opt/certimate/pb_data

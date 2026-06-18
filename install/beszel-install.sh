@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "beszel" "henrygd/beszel" "prebuild" "latest" "/opt/beszel" "beszel_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "beszel" "henrygd/beszel" "prebuild" "latest" "/opt/beszel" "beszel_linux_$(get_arch_value).tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/beszel-hub.service

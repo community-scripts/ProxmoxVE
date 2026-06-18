@@ -80,7 +80,7 @@ After=network.target
 Type=forking
 User=$(whoami)
 Group=$(whoami)
-Environment=JAVA_HOME=/usr/lib/jvm/temurin-${jdk_version}-jdk-amd64
+Environment=JAVA_HOME=/usr/lib/jvm/temurin-${jdk_version}-jdk-$(get_arch_value)
 Environment=CATALINA_HOME=/opt/tomcat-$TOMCAT_VERSION
 Environment=CATALINA_BASE=/opt/tomcat-$TOMCAT_VERSION
 Environment=CATALINA_PID=/opt/tomcat-$TOMCAT_VERSION/temp/tomcat.pid

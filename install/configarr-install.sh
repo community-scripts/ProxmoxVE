@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y git
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
+fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-$(get_arch_value "x64" "arm64").tar.xz"
 
 msg_info "Setup Configarr"
 cat <<EOF >/opt/configarr/.env

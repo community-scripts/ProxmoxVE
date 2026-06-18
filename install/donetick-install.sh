@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y ca-certificates
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_x86_64.tar.gz"
+fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_$(get_arch_value "x86_64" "arm64").tar.gz"
 
 msg_info "Setup Donetick"
 cd /opt/donetick

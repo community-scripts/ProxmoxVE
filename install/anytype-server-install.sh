@@ -42,7 +42,7 @@ $STD apt install -y redis-stack-server
 systemctl enable -q --now redis-stack-server
 msg_ok "Installed Redis Stack"
 
-fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_$(get_arch_value).tar.gz"
 chmod +x /opt/anytype/any-sync-bundle
 
 msg_info "Configuring Anytype"

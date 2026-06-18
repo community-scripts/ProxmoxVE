@@ -23,12 +23,20 @@ msg_ok "Installed Dependencies"
 setup_hwaccel
 
 msg_info "Installing ASP.NET Core Runtime"
-setup_deb822_repo \
-  "microsoft" \
-  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
-  "https://packages.microsoft.com/debian/13/prod/" \
-  "trixie"
-$STD apt install -y aspnetcore-runtime-8.0
+if [[ "$(get_arch_value)" == "arm64" ]]; then
+  # packages.microsoft.com only ships amd64 debs for Debian; use dotnet-install on arm64
+  curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+  $STD bash /tmp/dotnet-install.sh --channel 8.0 --runtime aspnetcore --install-dir /usr/lib/dotnet8
+  ln -sf /usr/lib/dotnet8/dotnet /usr/bin/dotnet
+  rm -f /tmp/dotnet-install.sh
+else
+  setup_deb822_repo \
+    "microsoft" \
+    "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+    "https://packages.microsoft.com/debian/13/prod/" \
+    "trixie"
+  $STD apt install -y aspnetcore-runtime-8.0
+fi
 msg_ok "Installed ASP.NET Core Runtime"
 
 fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"

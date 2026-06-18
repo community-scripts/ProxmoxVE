@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -50,7 +50,10 @@ function update_script() {
     # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
     if ! command -v mongodump &>/dev/null; then
       [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-100.16.1.deb"
+      MONGO_ARCH=$(get_arch_value "x86_64" "arm64")
+      # MongoDB only publishes arm64 builds for Ubuntu
+      [[ "$MONGO_ARCH" == "arm64" ]] && MONGO_DIST="ubuntu2204"
+      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.16.1.deb"
     fi
     [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
     [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
@@ -79,7 +82,7 @@ function update_script() {
     cd /opt/databasus/backend
     $STD go mod download
     $STD /root/go/bin/swag init -g cmd/main.go -o swagger
-    $STD env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o databasus ./cmd/main.go
+    $STD env CGO_ENABLED=0 GOOS=linux GOARCH=$(get_arch_value) go build -o databasus ./cmd/main.go
     mv /opt/databasus/backend/databasus /opt/databasus/databasus
     mkdir -p /opt/databasus/ui/build
     cp -r /opt/databasus/frontend/dist/* /opt/databasus/ui/build/

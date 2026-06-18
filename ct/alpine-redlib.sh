@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-1}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.23}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,7 +36,7 @@ function update_script() {
   $STD rc-service redlib stop
   msg_ok "Stopped Service"
 
-  fetch_and_deploy_gh_release "redlib" "redlib-org/redlib" "prebuild" "latest" "/opt/redlib" "redlib-x86_64-unknown-linux-musl.tar.gz"
+  fetch_and_deploy_gh_release "redlib" "redlib-org/redlib" "prebuild" "latest" "/opt/redlib" "redlib-$(get_arch_value "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
 
   msg_info "Starting Service"
   $STD rc-service redlib start

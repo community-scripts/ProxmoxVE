@@ -6912,14 +6912,24 @@ setup_mongodb() {
   export NEEDRESTART_MODE=a
   export NEEDRESTART_SUSPEND=1
 
-  # Check AVX support
-  if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
-    local major="${MONGO_VERSION%%.*}"
-    if ((major > 5)); then
-      msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+  # Check CPU requirements: AVX on x86_64, NEON/ASIMD on arm64
+  case "$(uname -m)" in
+  aarch64)
+    if ! grep -qm1 'asimd' /proc/cpuinfo; then
+      msg_error "MongoDB ${MONGO_VERSION} requires ARMv8.2-A support, which is not available on this system."
       return 236
     fi
-  fi
+    ;;
+  *)
+    if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
+      local major="${MONGO_VERSION%%.*}"
+      if ((major > 5)); then
+        msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+        return 236
+      fi
+    fi
+    ;;
+  esac
 
   case "$DISTRO_ID" in
   ubuntu)

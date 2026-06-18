@@ -42,8 +42,8 @@ $STD apt install -y \
   libtool \
   libtool-bin \
   gcc \
-  crossbuild-essential-amd64 \
-  gcc-x86-64-linux-gnu \
+  crossbuild-essential-$(get_arch_value) \
+  gcc-$(get_arch_value "x86-64" "aarch64")-linux-gnu \
   cmake \
   clang \
   libunwind-18-dev \
@@ -90,7 +90,7 @@ msg_ok "Setup web"
 msg_info "Setting up go proxy"
 cd /opt/authentik
 export CGO_ENABLED="1"
-export CC="x86_64-linux-gnu-gcc"
+export CC="$(get_arch_value "x86_64" "aarch64")-linux-gnu-gcc"
 $STD go mod download
 $STD go build -o /opt/authentik/authentik-server ./cmd/server
 $STD go build -o /opt/authentik/ldap ./cmd/ldap

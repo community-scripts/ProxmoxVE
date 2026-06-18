@@ -5720,9 +5720,37 @@ create_lxc_container() {
     url="https://jenkins.linuxcontainers.org/job/image-${PCT_OSTYPE}/architecture=arm64,release=${CUSTOM_TEMPLATE_VARIANT},variant=default/lastStableBuild/artifact/rootfs.tar.xz"
 
     msg_info "Downloading ${PCT_OSTYPE^} ${CUSTOM_TEMPLATE_VARIANT} ARM64 template"
-    if ! curl -fsSL -o "$dest" "$url"; then
-      msg_error "Failed to download ARM64 template from: $url"
-      exit 208
+    local patched="${dest%/*}/.${dest##*/}.patched"
+    (
+      flock -x 200
+      if [[ -f "$patched" ]] && [[ -s "$dest" ]] && xz -t "$dest" 2>/dev/null; then
+        exit 0
+      fi
+      if ! curl -fsSL -o "$dest" "$url"; then
+        msg_error "Failed to download ARM64 template from: $url"
+        exit 208
+      fi
+      # Some linuxcontainers.org rootfs builds ship without /etc/network,
+      # which makes pve-container's post-create hook fail when it writes the
+      # interfaces file. This appends an empty /etc/network/interfaces if missing.
+      if ! tar -tJf "$dest" 2>/dev/null | grep -q '/etc/network/$'; then
+        fixdir=$(mktemp -d)
+        tmptar="${dest%.xz}"
+        mkdir -p "$fixdir/etc/network"
+        : >"$fixdir/etc/network/interfaces"
+        if xz -d -f "$dest" && tar -C "$fixdir" --append -f "$tmptar" ./etc/network && xz -1 -f "$tmptar"; then
+          rm -rf "$fixdir"
+        else
+          rm -rf "$fixdir" "$tmptar"
+          msg_error "Failed to patch ARM64 template (missing /etc/network)"
+          exit 208
+        fi
+      fi
+      touch "$patched"
+    ) 200>"${dest}.lock"
+    local dl_rc=$?
+    if [[ $dl_rc -ne 0 ]]; then
+      exit "$dl_rc"
     fi
     msg_ok "Downloaded ARM64 LXC template"
   }

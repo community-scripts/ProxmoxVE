@@ -45,9 +45,9 @@ $STD apt install -y --no-install-recommends \
     zip
 msg_ok "Installed dependencies"
 
-fetch_and_deploy_gh_release "kepubify" "pgaskin/kepubify" "singlefile" "latest" "/usr/bin" "kepubify-linux-64bit"
+fetch_and_deploy_gh_release "kepubify" "pgaskin/kepubify" "singlefile" "latest" "/usr/bin" "kepubify-linux-$(get_arch_value "64bit" "arm64")"
 KEPUB_VERSION="$(/usr/bin/kepubify --version | awk '{print $2}')"
-fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-x86_64.txz"
+fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-$(get_arch_value "x86_64" "arm64").txz"
 
 msg_info "Installing Calibre"
 $STD /opt/calibre/calibre_postinstall

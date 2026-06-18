@@ -14,13 +14,13 @@ network_check
 update_os
 
 msg_info "Downloading AdGuard Home"
-$STD curl -fsSL -o /tmp/AdGuardHome_linux_amd64.tar.gz \
-  "https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_amd64.tar.gz"
+$STD curl -fsSL -o /tmp/AdGuardHome_linux_$(get_arch_value).tar.gz \
+"https://github.com/AdguardTeam/AdGuardHome/releases/latest/download/AdGuardHome_linux_$(get_arch_value).tar.gz"
 msg_ok "Downloaded AdGuard Home"
 
 msg_info "Installing AdGuard Home"
-$STD tar -xzf /tmp/AdGuardHome_linux_amd64.tar.gz -C /opt
-$STD rm /tmp/AdGuardHome_linux_amd64.tar.gz
+$STD tar -xzf /tmp/AdGuardHome_linux_$(get_arch_value).tar.gz -C /opt
+$STD rm /tmp/AdGuardHome_linux_$(get_arch_value).tar.gz
 msg_ok "Installed AdGuard Home"
 
 msg_info "Creating AdGuard Home Service"

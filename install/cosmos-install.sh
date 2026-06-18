@@ -25,7 +25,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_docker
-fetch_and_deploy_gh_release "cosmos" "azukaar/Cosmos-Server" "prebuild" "latest" "/opt/cosmos" "cosmos-cloud-*-amd64.zip"
+fetch_and_deploy_gh_release "cosmos" "azukaar/Cosmos-Server" "prebuild" "latest" "/opt/cosmos" "cosmos-cloud-*-$(get_arch_value).zip"
 
 msg_info "Setting up Cosmos"
 cd /opt/cosmos

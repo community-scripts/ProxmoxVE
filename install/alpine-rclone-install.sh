@@ -22,7 +22,7 @@ msg_info "Installing rclone"
 temp_file=$(mktemp)
 mkdir -p /opt/rclone
 RELEASE=$(curl -s https://api.github.com/repos/rclone/rclone/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/rclone/rclone/releases/download/v${RELEASE}/rclone-v${RELEASE}-linux-amd64.zip" -o "$temp_file"
+curl -fsSL "https://github.com/rclone/rclone/releases/download/v${RELEASE}/rclone-v${RELEASE}-linux-$(get_arch_value).zip" -o "$temp_file"
 $STD unzip -j "$temp_file" '*/**' -d /opt/rclone
 cd /opt/rclone
 RCLONE_PASSWORD=$(head -c 16 /dev/urandom | xxd -p -c 16)

@@ -13,7 +13,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.23}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -43,7 +43,7 @@ function update_script() {
     cp /opt/wakapi/config.yml /opt/wakapi/wakapi_db.db /opt/wakapi-backup/
     msg_ok "Created backup"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi" "wakapi_linux_amd64.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi" "wakapi_linux_$(get_arch_value).zip"
 
     msg_info "Configuring Wakapi"
     cd /opt/wakapi
