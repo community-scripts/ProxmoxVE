@@ -86,7 +86,7 @@ sync_rules:
   path: /app/sync-rules.yaml
 
 client_auth:
-  jwks_uri: http://${SERVER_IP}:3000/api/v2/auth/jwks/
+  jwks_uri: http://${SERVER_IP}:3000/api/v2/powersync-keys
 
 api:
   tokens:
