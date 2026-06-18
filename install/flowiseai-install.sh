@@ -14,7 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y build-essential python3-dev
+$STD apt install -y \
+  build-essential \
+  python3-dev \
+  python3-setuptools \
+  pkg-config
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
