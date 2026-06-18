@@ -23,7 +23,6 @@ function install_powersync() {
   SERVER_IP=$(hostname -I | awk '{print $1}')
   set -a && source /opt/wger/.env && set +a
 
-  # Install Docker if not present
   if ! command -v docker &>/dev/null; then
     msg_info "Installing Docker"
     apt update
@@ -64,6 +63,10 @@ function install_powersync() {
     uv run python manage.py generate-jwt-keys >> /opt/wger/.env
   fi
   msg_ok "Generated JWT keys"
+
+  msg_info "Setting up PowerSync storage"
+  uv run python manage.py setup-powersync-storage
+  msg_ok "Set up PowerSync storage"
 
   msg_info "Creating PowerSync config"
   mkdir -p /opt/powersync
@@ -111,14 +114,30 @@ bucket_definitions:
       - SELECT * FROM exercises_exerciseimage
       - SELECT * FROM exercises_exercisevideo
       - SELECT * FROM exercises_muscle
+      - SELECT * FROM core_language
+      - SELECT * FROM core_license
+      - SELECT * FROM core_repetitionunit
+      - SELECT * FROM core_weightunit
   by_user:
     parameters:
       - SELECT id as user_id FROM auth_user WHERE CAST(id AS TEXT) = request.user_id()
     data:
+      - SELECT * FROM core_userprofile WHERE user_id = bucket.user_id
+      - SELECT * FROM core_usercache WHERE user_id = bucket.user_id
       - SELECT * FROM manager_routine WHERE user_id = bucket.user_id
       - SELECT * FROM manager_workoutlog WHERE user_id = bucket.user_id
       - SELECT * FROM manager_workoutsession WHERE user_id = bucket.user_id
-      - SELECT * FROM core_userprofile WHERE user_id = bucket.user_id
+      - SELECT * FROM measurements_category WHERE user_id = bucket.user_id
+      - SELECT * FROM nutrition_nutritionplan WHERE user_id = bucket.user_id
+      - SELECT * FROM weight_weightentry WHERE user_id = bucket.user_id
+      - SELECT * FROM gallery_image WHERE user_id = bucket.user_id
+      - SELECT * FROM trophies_userstatistics WHERE user_id = bucket.user_id
+      - SELECT * FROM trophies_usertrophy WHERE user_id = bucket.user_id
+      - SELECT * FROM gym_gymuserconfig WHERE user_id = bucket.user_id
+      - SELECT * FROM gym_userdocument WHERE user_id = bucket.user_id
+      - SELECT * FROM gym_adminusernote WHERE user_id = bucket.user_id
+      - SELECT * FROM gym_contract WHERE user_id = bucket.user_id
+      - SELECT * FROM mailer_log WHERE user_id = bucket.user_id
 EOF
   msg_ok "Created PowerSync config"
 
