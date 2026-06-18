@@ -54,6 +54,7 @@ function install_powersync() {
   sed -i "s/#wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
   systemctl restart postgresql
   sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
+  sudo -u postgres psql -d wger -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
   msg_ok "Configured PostgreSQL"
 
   msg_info "Generating JWT keys"
