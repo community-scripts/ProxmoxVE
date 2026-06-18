@@ -423,7 +423,7 @@ function compile_imagemagick() {
 
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
-  LIBVIPS_REVISION="17ad2f62dda7e39985955da189183e594683d45e"
+  LIBVIPS_REVISION="3664cfc5dc2c5661288f5bf5a85ccc51c64c1626"
   if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
