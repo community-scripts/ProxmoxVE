@@ -4,7 +4,6 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/wger-project/wger
-
 APP="wger"
 var_tags="${var_tags:-management;fitness}"
 var_cpu="${var_cpu:-2}"
@@ -14,7 +13,6 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
-
 header_info "$APP"
 variables
 color
@@ -24,6 +22,16 @@ function install_powersync() {
   msg_info "Checking PowerSync installation"
   SERVER_IP=$(hostname -I | awk '{print $1}')
   set -a && source /opt/wger/.env && set +a
+
+  # Install Docker if not present
+  if ! command -v docker &>/dev/null; then
+    msg_info "Installing Docker"
+    apt update
+    apt install -y docker.io
+    systemctl enable docker
+    systemctl start docker
+    msg_ok "Installed Docker"
+  fi
 
   if docker ps -a --format '{{.Names}}' | grep -q "^powersync$"; then
     msg_info "Updating PowerSync"
@@ -41,12 +49,6 @@ function install_powersync() {
     msg_ok "Updated PowerSync"
     return
   fi
-
-  msg_info "Installing Docker"
-  apt update
-  apt install -y docker.io
-  systemctl enable docker
-  msg_ok "Installed Docker"
 
   msg_info "Configuring PostgreSQL for PowerSync"
   sed -i "s/#wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
@@ -116,25 +118,24 @@ EOF
   msg_ok "Updated PowerSync URL in wger .env"
 }
 
-
 function update_script() {
   header_info
   check_container_storage
   check_container_resources
-
   if [[ ! -d /opt/wger ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
   if check_for_gh_release "wger" "wger-project/wger"; then
     msg_info "Stopping Service"
     systemctl stop redis-server nginx celery celery-beat wger
+    docker stop powersync 2>/dev/null || true
     msg_ok "Stopped Service"
 
     msg_info "Backing up Data"
     cp -r /opt/wger/media /opt/wger_media_backup
     cp /opt/wger/.env /opt/wger_env_backup
+    cp -r /opt/powersync /opt/wger_powersync_backup 2>/dev/null || true
     msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball"
@@ -142,40 +143,37 @@ function update_script() {
     msg_info "Restoring Data"
     cp -r /opt/wger_media_backup/. /opt/wger/media
     cp /opt/wger_env_backup /opt/wger/.env
-    rm -rf /opt/wger_media_backup /opt/wger_env_backup
-
+    cp -r /opt/wger_powersync_backup /opt/powersync 2>/dev/null || true
+    rm -rf /opt/wger_media_backup /opt/wger_env_backup /opt/wger_powersync_backup
     msg_ok "Restored Data"
 
     msg_info "Updating wger"
     cd /opt/wger
     set -a && source /opt/wger/.env && set +a
     export DJANGO_SETTINGS_MODULE=settings.main
-    
     sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
     sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
-    
     $STD uv pip install .
     $STD npm install
     $STD npm run build:css:sass
     $STD uv run python manage.py migrate
     $STD uv run python manage.py collectstatic --no-input
-
     sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
-    
     msg_ok "Updated wger"
+
+    install_powersync
 
     msg_info "Starting Services"
     systemctl start redis-server nginx celery celery-beat wger
+    docker start powersync
     msg_ok "Started Services"
     msg_ok "Updated Successfully"
   fi
   exit
 }
-
 start
 build_container
 description
-
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
