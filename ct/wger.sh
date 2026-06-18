@@ -86,6 +86,8 @@ sync_rules:
   path: /app/sync-rules.yaml
 
 client_auth:
+  audience:
+    - "powersync"
   jwks_uri: http://${SERVER_IP}:3000/api/v2/powersync-keys
 
 api:
@@ -97,7 +99,25 @@ EOF
 bucket_definitions:
   global:
     data:
-      - SELECT * FROM core_user
+      - SELECT * FROM exercises_exercise
+      - SELECT * FROM exercises_translation
+      - SELECT * FROM exercises_alias
+      - SELECT * FROM exercises_equipment
+      - SELECT * FROM exercises_exercise_equipment
+      - SELECT * FROM exercises_exercise_muscles
+      - SELECT * FROM exercises_exercise_muscles_secondary
+      - SELECT * FROM exercises_exercisecategory
+      - SELECT * FROM exercises_exercisecomment
+      - SELECT * FROM exercises_exerciseimage
+      - SELECT * FROM exercises_exercisevideo
+      - SELECT * FROM exercises_muscle
+  by_user:
+    parameters:
+      - SELECT id as user_id FROM auth_user WHERE CAST(id AS TEXT) = request.user_id()
+    data:
+      - SELECT * FROM manager_routine WHERE user_id = bucket.user_id
+      - SELECT * FROM manager_workoutlog WHERE user_id = bucket.user_id
+      - SELECT * FROM manager_workoutsession WHERE user_id = bucket.user_id
 EOF
   msg_ok "Created PowerSync config"
 
