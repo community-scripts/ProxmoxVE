@@ -35,9 +35,7 @@ function update_script() {
     systemctl stop anchor-web anchor-server
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Configuration"
-    cp /opt/anchor/.env /opt/anchor.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/anchor/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anchor" "ZhFahim/anchor" "tarball"
 
@@ -57,8 +55,7 @@ function update_script() {
     cp -r public .next/standalone/public
     msg_ok "Built Web Interface"
 
-    cp /opt/anchor.env.bak /opt/anchor/.env
-    rm -f /opt/anchor.env.bak
+    restore_backup
 
     msg_info "Running Database Migrations"
     cd /opt/anchor/server

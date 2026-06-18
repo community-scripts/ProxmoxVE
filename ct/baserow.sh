@@ -35,27 +35,20 @@ function update_script() {
     systemctl stop baserow-backend baserow-celery baserow-celery-beat baserow-celery-export baserow-frontend
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/baserow/.env /opt/baserow.env.bak
-    msg_ok "Backed up Data"
-
+    create_backup /opt/baserow/.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "baserow" "baserow/baserow" "tarball"
+    restore_backup
 
-    msg_info "Restoring Configuration"
-    cp /opt/baserow.env.bak /opt/baserow/.env
-    rm -f /opt/baserow.env.bak
-    msg_ok "Restored Configuration"
-
-    msg_info "Updating Backend Dependencies"
+    msg_info "Configuring Baserow"
     cd /opt/baserow/backend
     $STD uv sync --frozen --no-dev
-    msg_ok "Updated Backend Dependencies"
+    msg_ok "Configured Baserow"
 
-    msg_info "Updating Frontend"
+    msg_info "Rebuilding Frontend"
     cd /opt/baserow/web-frontend
     $STD npm install
     $STD npm run build
-    msg_ok "Updated Frontend"
+    msg_ok "Rebuilt Frontend"
 
     msg_info "Running Migrations"
     cd /opt/baserow/backend

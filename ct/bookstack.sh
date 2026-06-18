@@ -36,20 +36,14 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Services Stopped"
 
-    msg_info "Backing up data"
-    mv /opt/bookstack /opt/bookstack-backup
-    msg_ok "Backup finished"
-
+    create_backup /opt/bookstack/.env \
+      /opt/bookstack/public/uploads \
+      /opt/bookstack/storage/uploads \
+      /opt/bookstack/themes
     fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack" "tarball"
     PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="ldap,tidy,mysqli" setup_php
     setup_composer
-
-    msg_info "Restoring backup"
-    cp /opt/bookstack-backup/.env /opt/bookstack/.env
-    [[ -d /opt/bookstack-backup/public/uploads ]] && cp -a /opt/bookstack-backup/public/uploads/. /opt/bookstack/public/uploads/
-    [[ -d /opt/bookstack-backup/storage/uploads ]] && cp -a /opt/bookstack-backup/storage/uploads/. /opt/bookstack/storage/uploads/
-    [[ -d /opt/bookstack-backup/themes ]] && cp -a /opt/bookstack-backup/themes/. /opt/bookstack/themes/
-    msg_ok "Backup restored"
+    restore_backup
 
     msg_info "Configuring BookStack"
     cd /opt/bookstack
@@ -60,7 +54,6 @@ function update_script() {
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
     chmod -R 640 /opt/bookstack/.env
-    rm -rf /opt/bookstack-backup
     msg_ok "Configured BookStack"
 
     msg_info "Starting Apache2"

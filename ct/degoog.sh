@@ -35,10 +35,8 @@ function update_script() {
     systemctl stop degoog
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration & Data"
-    [[ -f /opt/degoog/.env ]] && cp /opt/degoog/.env /opt/degoog.env.bak
-    [[ -d /opt/degoog/data ]] && mv /opt/degoog/data /opt/degoog_data_backup
-    msg_ok "Backed up Configuration & Data"
+    create_backup /opt/degoog/.env \
+      /opt/degoog/data
 
     if ! command -v bun >/dev/null 2>&1; then
       msg_info "Installing Bun"
@@ -54,10 +52,9 @@ function update_script() {
     msg_ok "Updated Valkey"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "curl-impersonate" "lexiforest/curl-impersonate" "prebuild" "latest" "/usr/local/bin" "curl-impersonate-v*.$(uname -m)-linux-gnu.tar.gz"
 
-    msg_info "Restoring Configuration & Data"
-    [[ -f /opt/degoog.env.bak ]] && mv /opt/degoog.env.bak /opt/degoog/.env
-    [[ -d /opt/degoog_data_backup ]] && mv /opt/degoog_data_backup /opt/degoog/data
+    restore_backup
 
     if [[ -f /opt/degoog/.env ]]; then
       grep -q "^DEGOOG_VALKEY_URL=" /opt/degoog/.env && sed -i "s|^DEGOOG_VALKEY_URL=.*|DEGOOG_VALKEY_URL=redis://valkey:6379|" /opt/degoog/.env || echo "DEGOOG_VALKEY_URL=redis://valkey:6379" >>/opt/degoog/.env

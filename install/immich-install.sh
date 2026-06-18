@@ -178,7 +178,7 @@ cd "$STAGING_DIR"
 SOURCE=${SOURCE_DIR}/libjxl
 JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
 JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-LIBJXL_REVISION="794a5dcf0d54f9f0b20d288a12e87afb91d20dfc"
+LIBJXL_REVISION="332feb17d17311c748445f7ee75c4fb55cc38530"
 # : "${LIBJXL_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libjxl.json)}"
 $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
 cd "$SOURCE"
@@ -216,7 +216,7 @@ msg_ok "(1/5) Compiled libjxl"
 
 msg_info "(2/5) Compiling libheif"
 SOURCE=${SOURCE_DIR}/libheif
-LIBHEIF_REVISION="35dad50a9145332a7bfdf1ff6aef6801fb613d68"
+LIBHEIF_REVISION="62f1b8c76ed4d8305071fdacbe74ef9717bacac5"
 # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
 $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
 cd "$SOURCE"
@@ -242,7 +242,7 @@ msg_ok "(2/5) Compiled libheif"
 
 msg_info "(3/5) Compiling libraw"
 SOURCE=${SOURCE_DIR}/libraw
-LIBRAW_REVISION="0b56545a4f828743f28a4345cdfdd4c49f9f9a2a"
+LIBRAW_REVISION="b860248a89d9082b8e0a1e202e516f46af9adb29"
 # : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
 $STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
 cd "$SOURCE"
@@ -272,7 +272,7 @@ msg_ok "(4/5) Compiled imagemagick"
 
 msg_info "(5/5) Compiling libvips"
 SOURCE=$SOURCE_DIR/libvips
-LIBVIPS_REVISION="0c9151a4f416d2f8ae20a755db218f6637050eec"
+LIBVIPS_REVISION="17ad2f62dda7e39985955da189183e594683d45e"
 $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBVIPS_REVISION"

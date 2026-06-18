@@ -33,15 +33,9 @@ function update_script() {
     systemctl stop blocky
     msg_ok "Stopped Service"
 
-    msg_info "Backup Config"
-    mv /opt/blocky/config.yml /opt/config.yml
-    msg_ok "Backed Up Config"
-    
+    create_backup /opt/blocky/config.yml
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_$(get_arch_value "x86_64" "arm64").tar.gz"
-
-    msg_info "Restore Config"
-    mv /opt/config.yml /opt/blocky/config.yml
-    msg_ok "Restored Config"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start blocky

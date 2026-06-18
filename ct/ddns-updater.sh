@@ -33,16 +33,11 @@ function update_script() {
     systemctl stop ddns-updater
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/ddns-updater/data /opt/ddns-updater_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/ddns-updater/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ddns-updater" "qdm12/ddns-updater" "singlefile" "latest" "/opt/ddns-updater" "ddns-updater_*_linux_$(get_arch_value)"
 
-    msg_info "Restoring Data"
-    cp -r /opt/ddns-updater_data_backup/. /opt/ddns-updater/data/
-    rm -rf /opt/ddns-updater_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start ddns-updater

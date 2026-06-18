@@ -35,18 +35,14 @@ function update_script() {
     systemctl stop donetick
     msg_ok "Stopped Service"
 
-    msg_info "Backing Up Configurations"
-    mv /opt/donetick/config/selfhosted.yaml /opt/donetick/donetick.db /opt
-    msg_ok "Backed Up Configurations"
+    create_backup /opt/donetick/config/selfhosted.yaml \
+      /opt/donetick/donetick.db
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_$(get_arch_value "x86_64" "arm64").tar.gz"
 
-    msg_info "Restoring Configurations"
-    mv /opt/selfhosted.yaml /opt/donetick/config
+    restore_backup
     grep -q 'http://localhost"$' /opt/donetick/config/selfhosted.yaml || sed -i '/https:\/\/localhost"$/a\    - "http://localhost"' /opt/donetick/config/selfhosted.yaml
     grep -q 'capacitor://localhost' /opt/donetick/config/selfhosted.yaml || sed -i '/http:\/\/localhost"$/a\    - "capacitor://localhost"' /opt/donetick/config/selfhosted.yaml
-    mv /opt/donetick.db /opt/donetick
-    msg_ok "Restored Configurations"
 
     msg_info "Starting Service"
     systemctl start donetick

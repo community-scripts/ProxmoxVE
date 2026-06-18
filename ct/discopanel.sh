@@ -37,19 +37,12 @@ function update_script() {
     systemctl stop discopanel
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    mkdir -p /opt/discopanel_backup_temp
-    cp /opt/discopanel/data/discopanel.db /opt/discopanel_backup_temp/discopanel.db
-    msg_ok "Created Backup"
+    create_backup /opt/discopanel/data/discopanel.db
 
     fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-$(get_arch_value).tar.gz"
     ln -sf /opt/discopanel/discopanel-linux-$(get_arch_value) /opt/discopanel/discopanel
 
-    msg_info "Restoring Data"
-    mkdir -p /opt/discopanel/data
-    mv /opt/discopanel_backup_temp/discopanel.db /opt/discopanel/data/discopanel.db
-    rm -rf /opt/discopanel_backup_temp
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start discopanel

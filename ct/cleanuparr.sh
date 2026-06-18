@@ -33,16 +33,11 @@ function update_script() {
     systemctl stop cleanuparr
     msg_ok "Stopped Service"
 
-    msg_info "Backing up config"
-    cp -r /opt/cleanuparr/config /opt/cleanuparr_config_backup
-    msg_ok "Backed up config"
+    create_backup /opt/cleanuparr/config
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-$(get_arch_value).zip"
 
-    msg_info "Restoring config"
-    [[ -d /opt/cleanuparr/config ]] && rm -rf /opt/cleanuparr/config
-    mv /opt/cleanuparr_config_backup /opt/cleanuparr/config
-    msg_ok "Restored config"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start cleanuparr

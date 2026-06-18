@@ -37,16 +37,17 @@ function update_script() {
     systemctl stop uwsgi
     msg_ok "Services Stopped"
 
+    create_backup /opt/babybuddy/babybuddy/settings/production.py
+
     msg_info "Cleaning old files"
-    cp /opt/babybuddy/babybuddy/settings/production.py /tmp/production.py.bak
     find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf {} +
     msg_ok "Cleaned old files"
 
     fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy" "tarball"
+    restore_backup
 
     msg_info "Updating ${APP}"
     cd /opt/babybuddy
-    mv /tmp/production.py.bak /opt/babybuddy/babybuddy/settings/production.py
     source .venv/bin/activate
     $STD uv pip install -r requirements.txt
     export DJANGO_SETTINGS_MODULE=babybuddy.settings.production

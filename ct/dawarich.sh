@@ -37,11 +37,9 @@ function update_script() {
     systemctl stop dawarich-web dawarich-worker
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp -r /opt/dawarich/app/storage /opt/dawarich_storage_backup 2>/dev/null || true
-    cp /opt/dawarich/app/config/master.key /opt/dawarich_master.key 2>/dev/null || true
-    cp /opt/dawarich/app/config/credentials.yml.enc /opt/dawarich_credentials.yml.enc 2>/dev/null || true
-    msg_ok "Backed up Data"
+    create_backup /opt/dawarich/app/storage \
+      /opt/dawarich/app/config/master.key \
+      /opt/dawarich/app/config/credentials.yml.enc
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dawarich" "Freika/dawarich" "tarball" "latest" "/opt/dawarich/app"
 
@@ -85,12 +83,7 @@ function update_script() {
     $STD bundle exec rake data:migrate
     msg_ok "Ran Migrations"
 
-    msg_info "Restoring Data"
-    cp -r /opt/dawarich_storage_backup/. /opt/dawarich/app/storage/ 2>/dev/null || true
-    cp /opt/dawarich_master.key /opt/dawarich/app/config/master.key 2>/dev/null || true
-    cp /opt/dawarich_credentials.yml.enc /opt/dawarich/app/config/credentials.yml.enc 2>/dev/null || true
-    rm -rf /opt/dawarich_storage_backup /opt/dawarich_master.key /opt/dawarich_credentials.yml.enc
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Services"
     systemctl start dawarich-web dawarich-worker

@@ -36,17 +36,12 @@ function update_script() {
     systemctl stop anytype
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/anytype/data /opt/anytype_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/anytype/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_$(get_arch_value).tar.gz"
     chmod +x /opt/anytype/any-sync-bundle
 
-    msg_info "Restoring Data"
-    cp -r /opt/anytype_data_backup/. /opt/anytype/data
-    rm -rf /opt/anytype_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start anytype

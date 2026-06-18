@@ -17,7 +17,7 @@ msg_info "Installing OpenObserve"
 mkdir -p /opt/openobserve/data
 RELEASE=$(get_latest_github_release "openobserve/openobserve")
 tar zxf <(curl -fsSL https://downloads.openobserve.ai/releases/openobserve/v$RELEASE/openobserve-v$RELEASE-linux-amd64.tar.gz) -C /opt/openobserve
-ROOT_PASS=$(openssl rand -base64 18 | cut -c1-13)
+ROOT_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c9)Aa1!"
 
 cat <<EOF >/opt/openobserve/data/.env
 ZO_ROOT_USER_EMAIL = "admin@example.com"

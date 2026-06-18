@@ -36,18 +36,13 @@ function update_script() {
     systemctl stop bentopdf
     msg_ok "Stopped Service"
 
-    [[ -f /opt/bentopdf/.env.production ]] && cp /opt/bentopdf/.env.production /opt/production.env
-
+    create_backup /opt/bentopdf/.env.production
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bentopdf" "alam00000/bentopdf" "tarball" "latest" "/opt/bentopdf"
+    restore_backup
 
-    msg_info "Updating BentoPDF"
+    msg_info "Configuring BentoPDF"
     cd /opt/bentopdf
     $STD npm ci --no-audit --no-fund
-    if [[ -f /opt/production.env ]]; then
-      mv /opt/production.env ./.env.production
-    else
-      cp ./.env.example ./.env.production
-    fi
     export NODE_OPTIONS="--max-old-space-size=3072"
     export SIMPLE_MODE=true
     export VITE_USE_CDN=true
@@ -64,9 +59,9 @@ EOF
     if [[ ! -f /etc/ssl/private/bentopdf-selfsigned.key || ! -f /etc/ssl/certs/bentopdf-selfsigned.crt ]]; then
       CERT_CN="$(hostname -I | awk '{print $1}')"
       $STD openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
-      -keyout /etc/ssl/private/bentopdf-selfsigned.key \
-      -out /etc/ssl/certs/bentopdf-selfsigned.crt \
-      -subj "/CN=${CERT_CN}"
+        -keyout /etc/ssl/private/bentopdf-selfsigned.key \
+        -out /etc/ssl/certs/bentopdf-selfsigned.crt \
+        -subj "/CN=${CERT_CN}"
     fi
     cat <<'EOF' >/etc/nginx/sites-available/bentopdf
 server {

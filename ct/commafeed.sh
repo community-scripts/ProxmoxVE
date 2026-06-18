@@ -36,20 +36,11 @@ function update_script() {
     msg_ok "Stopped Service"
 
     ensure_dependencies rsync
-
-    if [ -d /opt/commafeed/data ] && [ "$(ls -A /opt/commafeed/data)" ]; then
-      msg_info "Backing up existing data"
-      mv /opt/commafeed/data /opt/data.bak
-      msg_ok "Backed up existing data"
-    fi
+    create_backup /opt/commafeed/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "commafeed" "Athou/commafeed" "prebuild" "latest" "/opt/commafeed" "commafeed-*-h2-jvm.zip"
 
-    if [ -d /opt/data.bak ] && [ "$(ls -A /opt/data.bak)" ]; then
-      msg_info "Restoring data"
-      mv /opt/data.bak /opt/commafeed/data
-      msg_ok "Restored data"
-    fi
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start commafeed

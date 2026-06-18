@@ -35,17 +35,11 @@ function update_script() {
     systemctl stop dagu
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/dagu/data /opt/dagu_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/dagu/data
 
     fetch_and_deploy_gh_release "dagu" "dagucloud/dagu" "prebuild" "latest" "/opt/dagu" "dagu_*_linux_$(get_arch_value).tar.gz"
 
-    msg_info "Restoring Data"
-    mkdir -p /opt/dagu/data
-    cp -r /opt/dagu_data_backup/. /opt/dagu/data
-    rm -rf /opt/dagu_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start dagu

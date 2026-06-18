@@ -310,7 +310,7 @@ function compile_libjxl() {
   SOURCE=${SOURCE_DIR}/libjxl
   JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
   JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-  LIBJXL_REVISION="794a5dcf0d54f9f0b20d288a12e87afb91d20dfc"
+  LIBJXL_REVISION="332feb17d17311c748445f7ee75c4fb55cc38530"
   # : "${LIBJXL_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)}"
   if [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libjxl"
@@ -355,7 +355,7 @@ function compile_libjxl() {
 function compile_libheif() {
   SOURCE=${SOURCE_DIR}/libheif
   ensure_dependencies libaom-dev
-  LIBHEIF_REVISION="35dad50a9145332a7bfdf1ff6aef6801fb613d68"
+  LIBHEIF_REVISION="62f1b8c76ed4d8305071fdacbe74ef9717bacac5"
   # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"
   if [[ "${update:-}" ]] || [[ "$LIBHEIF_REVISION" != "$(grep 'libheif' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libheif"
@@ -387,7 +387,7 @@ function compile_libheif() {
 
 function compile_libraw() {
   SOURCE=${SOURCE_DIR}/libraw
-  LIBRAW_REVISION="0b56545a4f828743f28a4345cdfdd4c49f9f9a2a"
+  LIBRAW_REVISION="b860248a89d9082b8e0a1e202e516f46af9adb29"
   # : "${LIBRAW_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libraw.json)}"
   if [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libraw"
@@ -430,7 +430,7 @@ function compile_imagemagick() {
 
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
-  LIBVIPS_REVISION="0c9151a4f416d2f8ae20a755db218f6637050eec"
+  LIBVIPS_REVISION="17ad2f62dda7e39985955da189183e594683d45e"
   if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"

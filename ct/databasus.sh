@@ -35,12 +35,7 @@ function update_script() {
     $STD systemctl stop databasus
     msg_ok "Stopped Databasus"
 
-    msg_info "Backing up Configuration"
-    [[ ! -f /.env && -f /opt/databasus/.env ]] && cp /opt/databasus/.env /.env
-    chmod 600 /.env
-    cp /.env /opt/databasus.env.bak
-    chmod 600 /opt/databasus.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/databasus/.env
 
     msg_info "Ensuring Database Clients"
     # Create PostgreSQL version symlinks for compatibility
@@ -90,11 +85,7 @@ function update_script() {
     chown -R postgres:postgres /opt/databasus
     msg_ok "Updated Databasus"
 
-    msg_info "Restoring Configuration"
-    cp /opt/databasus.env.bak /.env
-    rm -f /opt/databasus.env.bak
-    chmod 600 /.env
-    msg_ok "Restored Configuration"
+    restore_backup
 
     if ! grep -q "EnvironmentFile=/.env" /etc/systemd/system/databasus.service; then
       msg_info "Updating Service"

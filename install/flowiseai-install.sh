@@ -14,12 +14,17 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y build-essential python3-dev
+$STD apt install -y \
+  build-essential \
+  pkg-config
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+PYTHON_VERSION="3.11" setup_uv
+NODE_VERSION="22" setup_nodejs #needed because better-sql break
 
 msg_info "Installing FlowiseAI (Patience)"
+PYTHON_BIN="$(uv python find 3.11)"
+export npm_config_python="$PYTHON_BIN"
 $STD npm install -g flowise \
   @opentelemetry/exporter-trace-otlp-grpc \
   @opentelemetry/exporter-trace-otlp-proto \

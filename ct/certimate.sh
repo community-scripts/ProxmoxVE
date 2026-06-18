@@ -35,16 +35,11 @@ function update_script() {
     systemctl stop certimate
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/certimate/pb_data /opt/certimate_pb_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/certimate/pb_data
 
     fetch_and_deploy_gh_release "certimate" "certimate-go/certimate" "prebuild" "latest" "/opt/certimate" "certimate_*_linux_$(get_arch_value).zip"
 
-    msg_info "Restoring Data"
-    cp -r /opt/certimate_pb_data_backup/. /opt/certimate/pb_data
-    rm -rf /opt/certimate_pb_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start certimate

@@ -35,10 +35,8 @@ function update_script() {
     systemctl stop adventurelog-frontend
     msg_ok "Services Stopped"
 
-    msg_info "Backup Old Installation"
-    cp -r /opt/adventurelog /opt/adventurelog-backup
-    rm -rf /opt/adventurelog
-    msg_ok "Backup done"
+    create_backup /opt/adventurelog/backend/server/.env \
+      /opt/adventurelog/backend/server/media
 
     fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog" "tarball"
     PYTHON_VERSION="3.13" setup_uv
@@ -47,9 +45,9 @@ function update_script() {
     $STD sudo -u postgres psql -d adventurelog_db -c "CREATE EXTENSION IF NOT EXISTS postgis;"
     msg_ok "PostgreSQL Extensions Ready"
 
-    msg_info "Updating ${APP}"
-    cp /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
-    cp -r /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
+    restore_backup
+
+    msg_info "Updating AdventureLog"
     cd /opt/adventurelog/backend/server
     if [[ ! -x .venv/bin/python ]]; then
       $STD uv venv --clear .venv
@@ -61,12 +59,10 @@ function update_script() {
     $STD .venv/bin/python -m manage collectstatic --noinput
     $STD .venv/bin/python -m manage migrate
 
-    cp /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
     cd /opt/adventurelog/frontend
     $STD pnpm i
     $STD pnpm build
-    rm -rf /opt/adventurelog-backup
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated AdventureLog"
 
     msg_info "Starting Services"
     systemctl daemon-reexec

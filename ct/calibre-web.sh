@@ -35,10 +35,8 @@ function update_script() {
     systemctl stop calibre-web
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/calibre-web/app.db /opt/app.db_backup
-    cp -r /opt/calibre-web/data /opt/data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/calibre-web/app.db \
+      /opt/calibre-web/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibre-web*.tar.gz"
     setup_uv
@@ -50,11 +48,7 @@ function update_script() {
     $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir -r requirements.txt
     msg_ok "Installed Dependencies"
 
-    msg_info "Restoring Data"
-    cp /opt/app.db_backup /opt/calibre-web/app.db 2>/dev/null
-    cp -r /opt/data_backup /opt/calibre-web/data 2>/dev/null
-    rm -rf /opt/app.db_backup /opt/data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start calibre-web

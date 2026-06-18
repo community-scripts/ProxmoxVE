@@ -36,10 +36,7 @@ function update_script() {
     systemctl stop dashy
     msg_ok "Stopped Service"
 
-    msg_info "Backing up user-data"
-    rm -rf /opt/dashy_user_data_backup
-    cp -r /opt/dashy/user-data /opt/dashy_user_data_backup
-    msg_ok "Backed up user-data"
+    create_backup /opt/dashy/user-data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dashy" "lissy93/dashy" "prebuild" "latest" "/opt/dashy" "dashy-*.tar.gz"
 
@@ -48,10 +45,7 @@ function update_script() {
     $STD yarn install --ignore-engines --network-timeout 300000
     msg_ok "Updated Dashy"
 
-    msg_info "Restoring user-data"
-    cp -r /opt/dashy_user_data_backup/. /opt/dashy/user-data/
-    rm -rf /opt/dashy_user_data_backup
-    msg_ok "Restored user-data"
+    restore_backup
 
     msg_info "Starting Dashy"
     systemctl start dashy

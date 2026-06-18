@@ -39,8 +39,14 @@ sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${PG_DB_USER}|" .env
 sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${PG_DB_PASS}|" .env
 COMPOSER_ALLOW_SUPERUSER=1 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate
-$STD yarn install
-$STD yarn build
+if command -v corepack >/dev/null 2>&1; then
+  $STD corepack enable
+  $STD corepack yarn install
+  $STD corepack yarn build
+else
+  $STD yarn install
+  $STD yarn build
+fi
 mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache
 chown -R www-data:www-data /opt/invoiceshelf
 chmod -R 775 storage bootstrap/cache

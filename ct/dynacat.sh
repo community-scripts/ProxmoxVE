@@ -35,19 +35,13 @@ function update_script() {
     systemctl stop dynacat
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/dynacat/config /opt/dynacat_config_backup
-    cp -r /opt/dynacat/assets /opt/dynacat_assets_backup
-    cp -r /opt/dynacat/data /opt/dynacat_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/dynacat/config \
+      /opt/dynacat/assets \
+      /opt/dynacat/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dynacat" "Panonim/dynacat" "prebuild" "latest" "/opt/dynacat" "dynacat-linux-$(get_arch_value).tar.gz"
 
-    msg_info "Restoring Data"
-    cp -r /opt/dynacat_config_backup/. /opt/dynacat/config
-    cp -r /opt/dynacat_assets_backup/. /opt/dynacat/assets
-    cp -r /opt/dynacat_data_backup/. /opt/dynacat/data
-    rm -rf /opt/dynacat_config_backup /opt/dynacat_assets_backup /opt/dynacat_data_backup
+    restore_backup
     chmod +x /opt/dynacat/dynacat
     msg_ok "Restored Data"
 
