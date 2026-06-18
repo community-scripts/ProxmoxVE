@@ -20,6 +20,103 @@ variables
 color
 catch_errors
 
+function install_powersync() {
+  msg_info "Checking PowerSync installation"
+  SERVER_IP=$(hostname -I | awk '{print $1}')
+  set -a && source /opt/wger/.env && set +a
+
+  if docker ps -a --format '{{.Names}}' | grep -q "^powersync$"; then
+    msg_info "Updating PowerSync"
+    docker pull journeyapps/powersync-service:latest
+    docker stop powersync
+    docker rm powersync
+    docker run -d \
+      -p 8080:8080 \
+      -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
+      -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
+      --network host \
+      --restart=always \
+      --name powersync \
+      journeyapps/powersync-service:latest
+    msg_ok "Updated PowerSync"
+    return
+  fi
+
+  msg_info "Installing Docker"
+  apt update
+  apt install -y docker.io
+  systemctl enable docker
+  msg_ok "Installed Docker"
+
+  msg_info "Configuring PostgreSQL for PowerSync"
+  sed -i "s/#wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
+  systemctl restart postgresql
+  sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
+  msg_ok "Configured PostgreSQL"
+
+  msg_info "Generating JWT keys"
+  cd /opt/wger
+  export DJANGO_SETTINGS_MODULE=settings.main
+  if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
+    uv run python manage.py generate-jwt-keys >> /opt/wger/.env
+  fi
+  msg_ok "Generated JWT keys"
+
+  msg_info "Creating PowerSync config"
+  mkdir -p /opt/powersync
+
+  cat > /opt/powersync/powersync.yaml <<EOF
+replication:
+  connections:
+    - type: postgresql
+      uri: ${DATABASE_URL}
+      sslmode: disable
+
+storage:
+  type: postgresql
+  uri: ${DATABASE_URL}
+  sslmode: disable
+
+port: 8080
+
+sync_rules:
+  path: /app/sync-rules.yaml
+
+client_auth:
+  jwks_uri: http://${SERVER_IP}:3000/api/v2/auth/jwks/
+
+api:
+  tokens:
+    - $(openssl rand -hex 32)
+EOF
+
+  cat > /opt/powersync/sync-rules.yaml <<EOF
+bucket_definitions:
+  global:
+    data:
+      - SELECT * FROM core_user
+EOF
+  msg_ok "Created PowerSync config"
+
+  msg_info "Starting PowerSync container"
+  docker run -d \
+    -p 8080:8080 \
+    -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
+    -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
+    --network host \
+    --restart=always \
+    --name powersync \
+    journeyapps/powersync-service:latest
+  msg_ok "Started PowerSync"
+
+  msg_info "Updating wger .env with PowerSync URL"
+  if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
+    echo "POWERSYNC_URL=http://${SERVER_IP}:8080" >> /opt/wger/.env
+  fi
+  msg_ok "Updated PowerSync URL in wger .env"
+}
+
+
 function update_script() {
   header_info
   check_container_storage
