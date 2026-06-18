@@ -16,10 +16,11 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  python3-dev \
-  python3-setuptools \
   pkg-config
 msg_ok "Installed Dependencies"
+
+PYTHON_VERSION="3.11" setup_uv
+export npm_config_python="$HOME/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/bin/python3.11"
 
 NODE_VERSION="24" setup_nodejs
 
