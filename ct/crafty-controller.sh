@@ -29,42 +29,37 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
-  if [[ ! -f /opt/crafty-controller_version.txt ]] || [[ ${RELEASE} != "$(cat /opt/crafty-controller_version.txt)" ]]; then
-
+  if check_for_gl_release "Crafty-Controller" "crafty-controller/crafty-4"; then
     msg_info "Stopping Crafty-Controller"
     systemctl stop crafty-controller
     msg_ok "Stopped Crafty-Controller"
 
-    create_backup /opt/crafty-controller/crafty/crafty-4/app/config/version.json \
-      /opt/crafty-controller/crafty/crafty-4/app/config/credits.json \
-      /opt/crafty-controller/crafty/crafty-4/app/config/logging.json \
-      /opt/crafty-controller/crafty/crafty-4/app/config/default.json.example \
-      /opt/crafty-controller/crafty/crafty-4/app/config/motd_format.json
+    create_backup \
+      "/opt/crafty-controller/crafty/crafty-4/app/config/db" \
+      "/opt/crafty-controller/crafty/crafty-4/app/config/config.json" \
+      "/opt/crafty-controller/crafty/crafty-4/app/config/web" \
+      "/opt/crafty-controller/crafty/crafty-4/servers" \
+      "/opt/crafty-controller/crafty/crafty-4/backups" \
+      "/opt/crafty-controller/crafty/crafty-4/import"
 
-    msg_info "Updating Crafty-Controller to v${RELEASE}"
-    curl -fsSL "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip" -o $(basename "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip")
-    $STD unzip crafty-4-v"${RELEASE}".zip
-    cp -a crafty-4-v"${RELEASE}"/. /opt/crafty-controller/crafty/crafty-4/
-    rm -rf crafty-4-v"${RELEASE}"
-    cd /opt/crafty-controller/crafty/crafty-4
-    sudo -u crafty bash -c '
-        source /opt/crafty-controller/crafty/.venv/bin/activate
-        pip3 install --no-cache-dir -r requirements.txt
-      ' &>/dev/null
-    echo "${RELEASE}" >"/opt/crafty-controller_version.txt"
-    msg_ok "Updated Crafty-Controller to v${RELEASE}"
+    CLEAN_INSTALL=1 fetch_and_deploy_gl_release "Crafty-Controller" "crafty-controller/crafty-4" "tarball" "latest" "/opt/crafty-controller/crafty/crafty-4"
 
     restore_backup
-    chown -R crafty:crafty /opt/crafty-controller/
+
+    msg_info "Updating Python dependencies"
+    chown -R crafty:crafty /opt/crafty-controller
+    cd /opt/crafty-controller/crafty/crafty-4
+    $STD sudo -u crafty bash -c '
+      source /opt/crafty-controller/crafty/.venv/bin/activate
+      pip3 install --no-cache-dir -r requirements.txt
+    '
+    msg_ok "Updated Python dependencies"
 
     msg_info "Starting Crafty-Controller"
     systemctl start crafty-controller
     msg_ok "Started Crafty-Controller"
 
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
