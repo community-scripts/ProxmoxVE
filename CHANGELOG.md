@@ -483,6 +483,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-18
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - flowise: add deps / uv / python 3.11 [@MickLesk](https://github.com/MickLesk) ([#15177](https://github.com/community-scripts/ProxmoxVE/pull/15177))
+
 ## 2026-06-17
 
 ### 🚀 Updated Scripts
