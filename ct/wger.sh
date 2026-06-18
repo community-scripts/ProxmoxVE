@@ -53,11 +53,18 @@ function update_script() {
     cd /opt/wger
     set -a && source /opt/wger/.env && set +a
     export DJANGO_SETTINGS_MODULE=settings.main
+    
+    sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
+    sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
+    
     $STD uv pip install .
     $STD npm install
     $STD npm run build:css:sass
     $STD uv run python manage.py migrate
     $STD uv run python manage.py collectstatic --no-input
+
+    sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
+    
     msg_ok "Updated wger"
 
     msg_info "Starting Services"
