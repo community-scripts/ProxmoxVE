@@ -147,6 +147,8 @@ function update_script() {
     rm -rf /opt/wger_media_backup /opt/wger_env_backup /opt/wger_powersync_backup
     msg_ok "Restored Data"
 
+    install_powersync
+
     msg_info "Updating wger"
     cd /opt/wger
     set -a && source /opt/wger/.env && set +a
@@ -160,8 +162,6 @@ function update_script() {
     $STD uv run python manage.py collectstatic --no-input
     sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
     msg_ok "Updated wger"
-
-    install_powersync
 
     msg_info "Starting Services"
     systemctl start redis-server nginx celery celery-beat wger
