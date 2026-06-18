@@ -39,7 +39,7 @@ function update_script() {
     msg_ok "Backed Up Data"
 
     msg_info "Updating Garage"
-    curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(get_arch_value "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
+    curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
     chmod +x /usr/local/bin/garage
     echo "${GITEA_RELEASE}" >~/.garage
     msg_ok "Updated Garage"

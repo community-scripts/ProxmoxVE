@@ -37,7 +37,7 @@ function update_script() {
 
     create_backup /opt/dagu/data
 
-    fetch_and_deploy_gh_release "dagu" "dagucloud/dagu" "prebuild" "latest" "/opt/dagu" "dagu_*_linux_$(get_arch_value).tar.gz"
+    fetch_and_deploy_gh_release "dagu" "dagucloud/dagu" "prebuild" "latest" "/opt/dagu" "dagu_*_linux_$(arch_resolve).tar.gz"
 
     restore_backup
 

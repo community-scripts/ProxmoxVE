@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop ebusd
     msg_ok "Stopped Services"
 
-    fetch_and_deploy_gh_release "ebusd" "john30/ebusd" "binary" "latest" "/opt/ebusd" "ebusd-*_$(get_arch_value)-trixie_mqtt1.deb"
+    fetch_and_deploy_gh_release "ebusd" "john30/ebusd" "binary" "latest" "/opt/ebusd" "ebusd-*_$(arch_resolve)-trixie_mqtt1.deb"
 
     msg_info "Starting Services"
     systemctl start ebusd

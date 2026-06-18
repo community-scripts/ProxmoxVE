@@ -91,7 +91,7 @@ msg_ok "Installed Dependencies"
 
 setup_hwaccel
 
-export TARGETARCH="$(get_arch_value)"
+export TARGETARCH="$(arch_resolve)"
 export CCACHE_DIR=/root/.ccache
 export CCACHE_MAXSIZE=2G
 export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
@@ -122,7 +122,7 @@ msg_info "Building SQLite Extensions"
 $STD bash /opt/frigate/docker/main/build_sqlite_vec.sh
 msg_ok "Built SQLite Extensions"
 
-fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/usr/local/go2rtc/bin" "go2rtc_linux_$(get_arch_value)"
+fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/usr/local/go2rtc/bin" "go2rtc_linux_$(arch_resolve)"
 
 msg_info "Installing Tempio"
 sed -i 's|/rootfs/usr/local|/usr/local|g' /opt/frigate/docker/main/install_tempio.sh

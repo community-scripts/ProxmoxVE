@@ -35,7 +35,7 @@ function update_script() {
 
     create_backup /opt/cleanuparr/config
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-$(get_arch_value).zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-$(arch_resolve).zip"
 
     restore_backup
 

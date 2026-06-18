@@ -38,7 +38,7 @@ function update_script() {
     create_backup /opt/donetick/config/selfhosted.yaml \
       /opt/donetick/donetick.db
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_$(get_arch_value "x86_64" "arm64").tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 
     restore_backup
     grep -q 'http://localhost"$' /opt/donetick/config/selfhosted.yaml || sed -i '/https:\/\/localhost"$/a\    - "http://localhost"' /opt/donetick/config/selfhosted.yaml

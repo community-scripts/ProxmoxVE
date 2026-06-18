@@ -69,7 +69,7 @@ function update_script() {
 
     if [ "$MIGRATE_V1" -eq 1 ] && [ "$CURRENT_VERSION" != "0.3.7" ]; then
       msg_info "Updating to intermediate version v0.3.7"
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "v0.3.7" "/opt/bichon" "bichon-*-$(get_arch_value "x86_64" "aarch64")-unknown-linux-gnu.tar.gz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "v0.3.7" "/opt/bichon" "bichon-*-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.tar.gz"
       restore_backup
       systemctl start bichon
       sleep 30
@@ -77,7 +77,7 @@ function update_script() {
       msg_ok "Intermediate update completed"
     fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-$(get_arch_value "x86_64" "aarch64")-unknown-linux-gnu.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.tar.gz"
     restore_backup
 
     if [ "$MIGRATE_V1" -eq 1 ]; then

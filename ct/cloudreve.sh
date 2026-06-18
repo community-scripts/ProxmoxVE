@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop cloudreve
     msg_info "Stopped Service"
 
-    fetch_and_deploy_gh_release "cloudreve" "cloudreve/cloudreve" "prebuild" "latest" "/opt/cloudreve" "*linux_$(get_arch_value).tar.gz"
+    fetch_and_deploy_gh_release "cloudreve" "cloudreve/cloudreve" "prebuild" "latest" "/opt/cloudreve" "*linux_$(arch_resolve).tar.gz"
 
     msg_info "Starting Service"
     systemctl start cloudreve

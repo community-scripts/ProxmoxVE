@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 setup_hwaccel
 
 msg_info "Installing ASP.NET Core Runtime"
-if [[ "$(get_arch_value)" == "arm64" ]]; then
+if [[ "$(arch_resolve)" == "arm64" ]]; then
   # packages.microsoft.com only ships amd64 debs for Debian; use dotnet-install on arm64
   curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
   $STD bash /tmp/dotnet-install.sh --channel 8.0 --runtime aspnetcore --install-dir /usr/lib/dotnet8

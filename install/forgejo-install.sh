@@ -19,7 +19,7 @@ $STD apt install -y \
     git-lfs
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_codeberg_release "forgejo" "forgejo/forgejo" "singlefile" "latest" "/opt/forgejo" "forgejo-*-linux-$(get_arch_value)"
+fetch_and_deploy_codeberg_release "forgejo" "forgejo/forgejo" "singlefile" "latest" "/opt/forgejo" "forgejo-*-linux-$(arch_resolve)"
 ln -sf /opt/forgejo/forgejo /usr/local/bin/forgejo
 
 msg_info "Setting up Forgejo"

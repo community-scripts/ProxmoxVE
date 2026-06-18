@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop argus
     msg_ok "Service stopped"
 
-    fetch_and_deploy_gh_release "Argus" "release-argus/Argus" "singlefile" "latest" "/opt/argus" "Argus*linux-$(get_arch_value)"
+    fetch_and_deploy_gh_release "Argus" "release-argus/Argus" "singlefile" "latest" "/opt/argus" "Argus*linux-$(arch_resolve)"
 
     msg_info "Starting service"
     systemctl start argus

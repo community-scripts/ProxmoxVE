@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/blocky/config.yml
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_$(get_arch_value "x86_64" "arm64").tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
     restore_backup
 
     msg_info "Starting Service"

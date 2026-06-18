@@ -37,7 +37,7 @@ function update_script() {
     systemctl stop birdnet
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "birdnet" "tphakala/birdnet-go" "prebuild" "latest" "/opt/birdnet" "birdnet-go-linux-$(get_arch_value).tar.gz"
+    fetch_and_deploy_gh_release "birdnet" "tphakala/birdnet-go" "prebuild" "latest" "/opt/birdnet" "birdnet-go-linux-$(arch_resolve).tar.gz"
 
     msg_info "Deploying Binary"
     cp /opt/birdnet/birdnet-go /usr/local/bin/birdnet-go

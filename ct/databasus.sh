@@ -45,7 +45,7 @@ function update_script() {
     # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
     if ! command -v mongodump &>/dev/null; then
       [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-      MONGO_ARCH=$(get_arch_value "x86_64" "arm64")
+      MONGO_ARCH=$(arch_resolve "x86_64" "arm64")
       # MongoDB only publishes arm64 builds for Ubuntu
       [[ "$MONGO_ARCH" == "arm64" ]] && MONGO_DIST="ubuntu2204"
       fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.16.1.deb"
@@ -77,7 +77,7 @@ function update_script() {
     cd /opt/databasus/backend
     $STD go mod download
     $STD /root/go/bin/swag init -g cmd/main.go -o swagger
-    $STD env CGO_ENABLED=0 GOOS=linux GOARCH=$(get_arch_value) go build -o databasus ./cmd/main.go
+    $STD env CGO_ENABLED=0 GOOS=linux GOARCH=$(arch_resolve) go build -o databasus ./cmd/main.go
     mv /opt/databasus/backend/databasus /opt/databasus/databasus
     mkdir -p /opt/databasus/ui/build
     cp -r /opt/databasus/frontend/dist/* /opt/databasus/ui/build/

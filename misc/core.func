@@ -361,13 +361,13 @@ arch_check() {
 }
 
 # ------------------------------------------------------------------------------
-# get_arch_value()
+# arch_resolve()
 #
 # - Selects an architecture-specific value while preserving amd64 defaults
-# - Usage: get_arch_value "amd64-value" "arm64-value"
+# - Usage: arch_resolve "amd64-value" "arm64-value"
 # - Defaults: amd64="amd64", arm64="arm64"
 # ------------------------------------------------------------------------------
-get_arch_value() {
+arch_resolve() {
   local amd64_val="${1:-amd64}"
   local arm64_val="${2:-arm64}"
   local arch="${PCT_ARCH:-$(dpkg --print-architecture 2>/dev/null || uname -m)}"

@@ -38,7 +38,7 @@ function update_script() {
 
     create_backup /opt/anytype/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_$(get_arch_value).tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_$(arch_resolve).tar.gz"
     chmod +x /opt/anytype/any-sync-bundle
 
     restore_backup

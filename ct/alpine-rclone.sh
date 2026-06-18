@@ -31,7 +31,7 @@ function update_script() {
   if [ "${RELEASE}" != "$(cat /opt/rclone_version.txt)" ] || [ ! -f /opt/rclone_version.txt ]; then
     msg_info "Updating ${APP} LXC"
     temp_file=$(mktemp)
-    curl -fsSL "https://github.com/rclone/rclone/releases/download/v${RELEASE}/rclone-v${RELEASE}-linux-$(get_arch_value).zip" -o "$temp_file"
+    curl -fsSL "https://github.com/rclone/rclone/releases/download/v${RELEASE}/rclone-v${RELEASE}-linux-$(arch_resolve).zip" -o "$temp_file"
     $STD unzip -o "$temp_file" '*/**' -d /opt/rclone
     rm -f "$temp_file"
     echo "${RELEASE}" >/opt/rclone_version.txt

@@ -39,7 +39,7 @@ function update_script() {
       /opt/dynacat/assets \
       /opt/dynacat/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dynacat" "Panonim/dynacat" "prebuild" "latest" "/opt/dynacat" "dynacat-linux-$(get_arch_value).tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dynacat" "Panonim/dynacat" "prebuild" "latest" "/opt/dynacat" "dynacat-linux-$(arch_resolve).tar.gz"
 
     restore_backup
     chmod +x /opt/dynacat/dynacat

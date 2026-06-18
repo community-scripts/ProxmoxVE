@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "cloudreve" "cloudreve/cloudreve" "prebuild" "latest" "/opt/cloudreve" "*linux_$(get_arch_value).tar.gz"
+fetch_and_deploy_gh_release "cloudreve" "cloudreve/cloudreve" "prebuild" "latest" "/opt/cloudreve" "*linux_$(arch_resolve).tar.gz"
 
 msg_info "Setup Service"
 cat <<EOF >/etc/systemd/system/cloudreve.service

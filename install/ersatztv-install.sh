@@ -14,8 +14,8 @@ network_check
 update_os
 
 setup_hwaccel
-fetch_and_deploy_gh_release "ersatztv" "ErsatzTV/ErsatzTV" "prebuild" "latest" "/opt/ErsatzTV" "*linux-$(get_arch_value "x64" "arm64").tar.gz"
-fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-$(get_arch_value "linux64" "linuxarm64")-gpl-7.1.tar.xz"
+fetch_and_deploy_gh_release "ersatztv" "ErsatzTV/ErsatzTV" "prebuild" "latest" "/opt/ErsatzTV" "*linux-$(arch_resolve "x64" "arm64").tar.gz"
+fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-$(arch_resolve "linux64" "linuxarm64")-gpl-7.1.tar.xz"
 
 msg_info "Set ErsatzTV-ffmpeg links"
 chmod +x /opt/ErsatzTV-ffmpeg/bin/*

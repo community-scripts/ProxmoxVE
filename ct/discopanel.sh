@@ -39,8 +39,8 @@ function update_script() {
 
     create_backup /opt/discopanel/data/discopanel.db
 
-    fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-$(get_arch_value).tar.gz"
-    ln -sf /opt/discopanel/discopanel-linux-$(get_arch_value) /opt/discopanel/discopanel
+    fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-$(arch_resolve).tar.gz"
+    ln -sf /opt/discopanel/discopanel-linux-$(arch_resolve) /opt/discopanel/discopanel
 
     restore_backup
 

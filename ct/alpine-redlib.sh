@@ -36,7 +36,7 @@ function update_script() {
   $STD rc-service redlib stop
   msg_ok "Stopped Service"
 
-  fetch_and_deploy_gh_release "redlib" "redlib-org/redlib" "prebuild" "latest" "/opt/redlib" "redlib-$(get_arch_value "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
+  fetch_and_deploy_gh_release "redlib" "redlib-org/redlib" "prebuild" "latest" "/opt/redlib" "redlib-$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
 
   msg_info "Starting Service"
   $STD rc-service redlib start

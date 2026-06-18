@@ -37,7 +37,7 @@ function update_script() {
 
     create_backup /opt/certimate/pb_data
 
-    fetch_and_deploy_gh_release "certimate" "certimate-go/certimate" "prebuild" "latest" "/opt/certimate" "certimate_*_linux_$(get_arch_value).zip"
+    fetch_and_deploy_gh_release "certimate" "certimate-go/certimate" "prebuild" "latest" "/opt/certimate" "certimate_*_linux_$(arch_resolve).zip"
 
     restore_backup
 

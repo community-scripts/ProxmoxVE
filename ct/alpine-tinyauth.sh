@@ -52,7 +52,7 @@ function update_script() {
 
     msg_info "Updating Tinyauth"
     rm -f /opt/tinyauth/tinyauth
-    curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-$(get_arch_value)" -o /opt/tinyauth/tinyauth
+    curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-$(arch_resolve)" -o /opt/tinyauth/tinyauth
     chmod +x /opt/tinyauth/tinyauth
     echo "${RELEASE}" >~/.tinyauth
     msg_ok "Updated Tinyauth"

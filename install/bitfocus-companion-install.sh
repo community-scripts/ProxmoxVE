@@ -19,9 +19,9 @@ msg_ok "Installed Dependencies"
 
 msg_info "Fetching Latest Bitfocus Companion Release"
 RELEASE_JSON=$(curl -fsSL "https://api.bitfocus.io/v1/product/companion/packages?limit=20")
-COMPANION_ARCH=$(get_arch_value "x64" "arm64")
+COMPANION_ARCH=$(arch_resolve "x64" "arm64")
 PACKAGE_JSON=$(echo "$RELEASE_JSON" | jq -c \
-  --arg target "linux-$(get_arch_value "tgz" "arm64-tgz")" \
+  --arg target "linux-$(arch_resolve "tgz" "arm64-tgz")" \
   --arg arch "linux-$COMPANION_ARCH" \
   '(if type == "array" then . else .packages end) | [.[] | select(.target==$target and (.uri | contains($arch)))] | first')
 RELEASE=$(echo "$PACKAGE_JSON" | jq -r '.version // empty')

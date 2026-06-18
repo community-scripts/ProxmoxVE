@@ -35,7 +35,7 @@ function update_script() {
     $STD service rustdesk-server-hbbs stop
     $STD service rustdesk-server-hbbr stop
     temp_file1=$(mktemp)
-    ARCH=$(get_arch_value "amd64" "arm64v8")
+    ARCH=$(arch_resolve "amd64" "arm64v8")
     curl -fsSL "https://github.com/lejianwen/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-linux-${ARCH}.zip" -o "$temp_file1"
     $STD unzip "$temp_file1"
     cp -r "$ARCH"/* /opt/rustdesk-server/
@@ -52,7 +52,7 @@ function update_script() {
     msg_info "Updating RustDesk API to v${APIRELEASE}"
     $STD service rustdesk-api stop
     temp_file2=$(mktemp)
-    curl -fsSL "https://github.com/lejianwen/rustdesk-api/releases/download/v${APIRELEASE}/linux-$(get_arch_value).tar.gz" -o "$temp_file2"
+    curl -fsSL "https://github.com/lejianwen/rustdesk-api/releases/download/v${APIRELEASE}/linux-$(arch_resolve).tar.gz" -o "$temp_file2"
     $STD tar zxvf "$temp_file2"
     cp -r release/* /opt/rustdesk-api
     echo "${APIRELEASE}" >~/.rustdesk-api

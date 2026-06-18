@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "redlib" "redlib-org/redlib" "prebuild" "latest" "/opt/redlib" "redlib-$(get_arch_value "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
+fetch_and_deploy_gh_release "redlib" "redlib-org/redlib" "prebuild" "latest" "/opt/redlib" "redlib-$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
 
 msg_info "Configuring Redlib"
 cat <<EOF >/opt/redlib/redlib.conf

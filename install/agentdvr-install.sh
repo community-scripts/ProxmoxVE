@@ -25,13 +25,13 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing AgentDVR"
 mkdir -p /opt/agentdvr/agent
-RELEASE=$(curl -fsSL "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=$(get_arch_value "Linux64" "LinuxARM64")&fromVersion=0" | grep -o 'https://.*\.zip')
+RELEASE=$(curl -fsSL "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=$(arch_resolve "Linux64" "LinuxARM64")&fromVersion=0" | grep -o 'https://.*\.zip')
 cd /opt/agentdvr/agent
 curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
-$STD unzip Agent_$(get_arch_value "Linux64" "LinuxARM64")*.zip
+$STD unzip Agent_$(arch_resolve "Linux64" "LinuxARM64")*.zip
 chmod +x ./Agent
 echo $RELEASE >~/.agentdvr
-rm -rf Agent_$(get_arch_value "Linux64" "LinuxARM64")*.zip
+rm -rf Agent_$(arch_resolve "Linux64" "LinuxARM64")*.zip
 msg_ok "Installed AgentDVR"
 
 msg_info "Creating Service"

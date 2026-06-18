@@ -12,7 +12,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-$(get_arch_value).tar.gz"
+fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-$(arch_resolve).tar.gz"
 setup_docker
 
 msg_info "Creating Service"
@@ -23,7 +23,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/discopanel
-ExecStart=/opt/discopanel/discopanel-linux-$(get_arch_value)
+ExecStart=/opt/discopanel/discopanel-linux-$(arch_resolve)
 Restart=always
 
 [Install]

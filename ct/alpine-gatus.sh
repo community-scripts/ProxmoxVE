@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Alpine-gatus"
 var_tags="${var_tags:-alpine;monitoring}"
 var_cpu="${var_cpu:-1}"
-var_ram="${var_ram:-$(get_arch_value 256 512)}"
+var_ram="${var_ram:-512}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.23}"

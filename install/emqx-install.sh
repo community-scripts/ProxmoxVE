@@ -25,8 +25,8 @@ if [[ -z "$LATEST_VERSION" ]]; then
 fi
 msg_ok "Latest version: v$LATEST_VERSION"
 
-DOWNLOAD_URL="https://www.emqx.com/en/downloads/enterprise/v$LATEST_VERSION/emqx-enterprise-${LATEST_VERSION}-debian12-$(get_arch_value).deb"
-DEB_FILE="/tmp/emqx-enterprise-${LATEST_VERSION}-debian12-$(get_arch_value).deb"
+DOWNLOAD_URL="https://www.emqx.com/en/downloads/enterprise/v$LATEST_VERSION/emqx-enterprise-${LATEST_VERSION}-debian12-$(arch_resolve).deb"
+DEB_FILE="/tmp/emqx-enterprise-${LATEST_VERSION}-debian12-$(arch_resolve).deb"
 
 msg_info "Downloading EMQX v$LATEST_VERSION"
 $STD curl -fsSL -o "$DEB_FILE" "$DOWNLOAD_URL"

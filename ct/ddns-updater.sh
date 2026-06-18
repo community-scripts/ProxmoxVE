@@ -35,7 +35,7 @@ function update_script() {
 
     create_backup /opt/ddns-updater/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ddns-updater" "qdm12/ddns-updater" "singlefile" "latest" "/opt/ddns-updater" "ddns-updater_*_linux_$(get_arch_value)"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ddns-updater" "qdm12/ddns-updater" "singlefile" "latest" "/opt/ddns-updater" "ddns-updater_*_linux_$(arch_resolve)"
 
     restore_backup
 
