@@ -20,11 +20,11 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.11" setup_uv
-export npm_config_python="$HOME/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/bin/python3.11"
-
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing FlowiseAI (Patience)"
+PYTHON_BIN="$(uv python find 3.11)"
+export npm_config_python="$PYTHON_BIN"
 $STD npm install -g flowise \
   @opentelemetry/exporter-trace-otlp-grpc \
   @opentelemetry/exporter-trace-otlp-proto \
