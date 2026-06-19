@@ -44,28 +44,9 @@ function install_powersync() {
 
     systemctl stop powersync 2>/dev/null || true
 
-    RELEASE_JSON=$(curl -fsSL \
-      https://api.github.com/repos/powersync-ja/powersync-service/releases/latest)
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync"
 
-    TARBALL_URL=$(echo "$RELEASE_JSON" | jq -r .tarball_url)
-
-    rm -rf /opt/powersync/powersync-service
-    rm -rf /opt/powersync/powersync-ja-powersync-service-*
-
-    curl -fsSL -L "$TARBALL_URL" \
-      -o /tmp/powersync.tar.gz
-
-    tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
-
-    EXTRACTED_DIR=$(find /opt/powersync \
-      -maxdepth 1 \
-      -type d \
-      -name "powersync-ja-powersync-service-*" \
-      | head -1)
-
-    mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
-
-    cd /opt/powersync/powersync-service
+    cd /opt/powersync/powersync-service || true
 
     corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
 
@@ -281,26 +262,9 @@ if ! command -v jq >/dev/null 2>&1; then
   apt-get install -y jq >/dev/null 2>&1
 fi
 
-RELEASE_JSON=$(curl -fsSL \
-  https://api.github.com/repos/powersync-ja/powersync-service/releases/latest)
+CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync"
 
-TARBALL_URL=$(echo "$RELEASE_JSON" | jq -r .tarball_url)
-
-curl -fsSL -L "$TARBALL_URL" \
-  -o /tmp/powersync.tar.gz
-
-tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
-
-EXTRACTED_DIR=$(find /opt/powersync \
-  -maxdepth 1 \
-  -type d \
-  -name "powersync-ja-powersync-service-*")
-
-rm -rf /opt/powersync/powersync-service
-
-mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
-
-cd /opt/powersync/powersync-service
+cd /opt/powersync/powersync-service || true
 
 corepack enable >/dev/null 2>&1
 corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
