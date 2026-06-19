@@ -20,7 +20,8 @@ $STD apt install -y \
   nginx \
   redis-server \
   libpq-dev \
-  jq
+  jq \
+  sudo
 msg_ok "Installed Dependencies"
 
 # ====================== 3. Tool Setup ======================
@@ -78,9 +79,10 @@ set -a && source /opt/wger/.env && set +a
 
 # ====================== Critical Bootstrap Fix ======================
 msg_info "Preparing PowerSync publication"
-sudo -u postgres psql -d ${PG_DB_NAME} -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
-sudo -u postgres psql -d ${PG_DB_NAME} -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
-sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER;" 2>/dev/null || true
+$STD sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "DROP PUBLICATION IF EXISTS powersync;"
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "CREATE PUBLICATION powersync FOR ALL TABLES;"
+msg_ok "Prepared PowerSync publication"
 
 $STD uv run wger bootstrap
 $STD uv run python manage.py collectstatic --no-input
@@ -100,7 +102,7 @@ if created:
     user.save()
 EOF
 
-sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;" 2>/dev/null || true
+$STD sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
 msg_ok "wger core setup completed"
 
 # ====================== PowerSync Setup ======================
@@ -123,11 +125,11 @@ if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
   set -a && source /opt/wger/.env && set +a
 fi
 
-sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER CREATEROLE CREATEDB;"
+$STD sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
 $STD uv run python manage.py setup-powersync-storage
-sudo -u postgres psql -d ${PG_DB_NAME} -c "GRANT USAGE, CREATE ON SCHEMA powersync TO ${PG_DB_USER};"
-sudo -u postgres psql -d ${PG_DB_NAME} -c "ALTER ROLE ${PG_DB_USER} IN DATABASE ${PG_DB_NAME} SET search_path TO powersync, public;"
-sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "GRANT USAGE, CREATE ON SCHEMA powersync TO ${PG_DB_USER};"
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "ALTER ROLE ${PG_DB_USER} IN DATABASE ${PG_DB_NAME} SET search_path TO powersync, public;"
+$STD sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
 
 mkdir -p /opt/powersync
 
