@@ -113,7 +113,7 @@ client_auth:
     - "powersync"
 EOF
 
-  cat > /opt/powersync/sync-rules.yaml <<EOF
+  cat > /opt/powersync/sync-rules.yaml <<'SYNCRULES'
 # Note that changes to this file are not watched.
 # The service needs to be restarted for changes to take effect.
 
@@ -245,7 +245,7 @@ streams:
         JOIN nutrition_nutritionplan
           ON nutrition_logitem.plan_id = nutrition_nutritionplan.id
         WHERE CAST(nutrition_nutritionplan.user_id AS TEXT) = auth.user_id()
-EOF
+SYNCRULES
   msg_ok "Created PowerSync config"
 
   msg_info "Starting PowerSync container"
