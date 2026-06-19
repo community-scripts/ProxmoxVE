@@ -520,6 +520,19 @@ validate_bridge() {
 }
 
 # ------------------------------------------------------------------------------
+# validate_sdn_vnet()
+#
+# - Validates that an SDN vnet exists in the cluster config
+# ------------------------------------------------------------------------------
+validate_sdn_vnet() {
+  local vnet="$1"
+  [[ -z "$vnet" ]] && return 1
+  [[ -f /etc/pve/sdn/vnets.cfg ]] && grep -qE "^vnet:[[:space:]]*${vnet}([[:space:]]|$)" /etc/pve/sdn/vnets.cfg && return 0
+  command -v pvesh &>/dev/null && pvesh get "/cluster/sdn/vnets/${vnet}" &>/dev/null && return 0
+  return 1
+}
+
+# ------------------------------------------------------------------------------
 # validate_gateway_in_subnet()
 #
 # - Validates that gateway IP is in the same subnet as static IP
@@ -964,6 +977,7 @@ base_settings() {
   HN="$requested_hostname"
 
   BRG=${var_brg:-"vmbr0"}
+  SDN_VNET=${var_sdn_vnet:-""}
   NET=${var_net:-"dhcp"}
 
   # Resolve IP range if NET contains a range (e.g., 192.168.1.100/24-192.168.1.200/24)
@@ -1075,7 +1089,7 @@ load_vars_file() {
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
-    var_post_install
+    var_post_install var_sdn_vnet
   )
 
   # Whitelist check helper
@@ -1250,6 +1264,12 @@ load_vars_file() {
             continue
           fi
           ;;
+        var_sdn_vnet)
+          if [[ -n "$var_val" ]] && ! validate_sdn_vnet "$var_val"; then
+            msg_warn "SDN vnet '$var_val' from $file not found, ignoring"
+            continue
+          fi
+          ;;
         var_container_storage | var_template_storage)
           # Validate that the storage exists and is active on the current node
           local _storage_status
@@ -1293,7 +1313,7 @@ default_var_settings() {
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
-    var_post_install
+    var_post_install var_sdn_vnet
   )
 
   # Snapshot: environment variables (highest precedence)
@@ -1472,7 +1492,7 @@ if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
-    var_post_install
+    var_post_install var_sdn_vnet
   )
 fi
 
@@ -1682,6 +1702,7 @@ _build_current_app_vars_tmp() {
 
     [ -n "$_hostname" ] && echo "var_hostname=$(_sanitize_value "$_hostname")"
     [ -n "$_searchdomain" ] && echo "var_searchdomain=$(_sanitize_value "$_searchdomain")"
+    [ -n "${var_sdn_vnet:-}" ] && echo "var_sdn_vnet=$(_sanitize_value "${var_sdn_vnet}")"
 
     [ -n "$_tpl_storage" ] && echo "var_template_storage=$(_sanitize_value "$_tpl_storage")"
     [ -n "$_ct_storage" ] && echo "var_container_storage=$(_sanitize_value "$_ct_storage")"
@@ -1842,6 +1863,7 @@ advanced_settings() {
   local _core_count="${var_cpu:-1}"
   local _ram_size="${var_ram:-1024}"
   local _bridge="${var_brg:-vmbr0}"
+  local _sdn_vnet="${var_sdn_vnet:-}"
   local _net="${var_net:-dhcp}"
   local _gate="${var_gateway:-}"
   local _ipv6_method="${var_ipv6_method:-auto}"
@@ -1920,6 +1942,11 @@ advanced_settings() {
           BRIDGE_MENU_OPTIONS+=("$bridge" "${description:- }")
         fi
       done <<<"$BRIDGES"
+    fi
+    if [[ -f /etc/pve/sdn/vnets.cfg ]]; then
+      while IFS= read -r vnet; do
+        [[ -n "$vnet" ]] && BRIDGE_MENU_OPTIONS+=("sdn:${vnet}" "[SDN] ${vnet}")
+      done < <(awk '/^vnet:/{print $2}' /etc/pve/sdn/vnets.cfg 2>/dev/null)
     fi
   }
   _detect_bridges
@@ -2153,8 +2180,18 @@ advanced_settings() {
           if [[ "$bridge_test" == "__other__" || "$bridge_test" == -* ]]; then
             continue
           fi
-          if validate_bridge "$bridge_test"; then
+          if [[ "$bridge_test" == sdn:* ]]; then
+            local vnet_test="${bridge_test#sdn:}"
+            if validate_sdn_vnet "$vnet_test"; then
+              _sdn_vnet="$vnet_test"
+              _bridge="${var_brg:-vmbr0}"
+              ((STEP++))
+            else
+              whiptail --msgbox "SDN vnet '$vnet_test' is not configured on this cluster." 8 58
+            fi
+          elif validate_bridge "$bridge_test"; then
             _bridge="$bridge_test"
+            _sdn_vnet=""
             ((STEP++))
           else
             whiptail --msgbox "Bridge '$bridge_test' is not available or not active." 8 58
@@ -2891,6 +2928,7 @@ Advanced:
   var_timezone="$_ct_timezone"
   var_apt_cacher="$_apt_cacher"
   var_apt_cacher_ip="$_apt_cacher_ip"
+  var_sdn_vnet="$_sdn_vnet"
 
   # Format optional values
   [[ -n "$_mtu" ]] && MTU=",mtu=$_mtu" || MTU=""
@@ -3782,6 +3820,9 @@ build_container() {
   #  if [ "$VERBOSE" == "yes" ]; then set -x; fi
 
   NET_STRING="-net0 name=eth0,bridge=${BRG:-vmbr0}"
+  if [[ -n "${var_sdn_vnet:-${SDN_VNET:-}}" ]]; then
+    NET_STRING="-net0 name=eth0,vnet=${var_sdn_vnet:-$SDN_VNET}"
+  fi
 
   # MAC
   if [[ -n "$MAC" ]]; then
