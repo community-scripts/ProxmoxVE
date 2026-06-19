@@ -217,6 +217,10 @@ function update_script() {
     sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
     msg_ok "Updated wger"
 
+    msg_info "Fixing nginx proxy header"
+    sed -i 's/proxy_set_header Host \$host;/proxy_set_header Host \$http_host;/' /etc/nginx/sites-enabled/wger
+    msg_ok "Fixed nginx proxy header"
+
     msg_info "Starting Services"
     systemctl start redis-server nginx celery celery-beat wger
     docker start powersync
