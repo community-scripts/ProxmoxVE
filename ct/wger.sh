@@ -344,6 +344,42 @@ EOF
   systemctl enable -q --now powersync
   msg_ok "Started PowerSync service"
 
+msg_info "Creating PowerSync compaction timer"
+
+cat > /etc/systemd/system/wger-powersync-compact.service <<EOF
+[Unit]
+Description=wger PowerSync bucket compaction
+After=powersync.service
+
+[Service]
+Type=oneshot
+User=powersync
+Group=powersync
+WorkingDirectory=/opt/powersync/powersync-service
+EnvironmentFile=/opt/powersync/powersync.env
+Environment=NODE_ENV=production
+Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync.yaml
+ExecStart=/usr/bin/node service/lib/entry.js compact
+EOF
+
+cat > /etc/systemd/system/wger-powersync-compact.timer <<EOF
+[Unit]
+Description=Run wger PowerSync compaction daily
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+RandomizedDelaySec=15min
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl daemon-reload
+systemctl enable -q --now wger-powersync-compact.timer
+
+msg_ok "Created PowerSync compaction timer"
+
   msg_info "Updating wger .env with PowerSync URL"
   if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
     echo "POWERSYNC_URL=http://${SERVER_IP}:8080" >> /opt/wger/.env
