@@ -1075,7 +1075,7 @@ load_vars_file() {
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
-    var_post_install
+    var_post_install var_vzdump_after_install var_vzdump_storage
   )
 
   # Whitelist check helper
@@ -1250,6 +1250,20 @@ load_vars_file() {
             continue
           fi
           ;;
+        var_vzdump_after_install)
+          if [[ "$var_val" != "yes" && "$var_val" != "no" ]]; then
+            msg_warn "Invalid vzdump_after_install '$var_val' in $file (must be yes/no), ignoring"
+            continue
+          fi
+          ;;
+        var_vzdump_storage)
+          local _vz_storage_status
+          _vz_storage_status=$(pvesm status 2>/dev/null | awk -v s="$var_val" '$1 == s { print $3 }')
+          if [[ -n "$var_val" && -z "$_vz_storage_status" ]]; then
+            msg_warn "Storage '$var_val' from $file not found on this node, ignoring"
+            continue
+          fi
+          ;;
         var_container_storage | var_template_storage)
           # Validate that the storage exists and is active on the current node
           local _storage_status
@@ -1293,7 +1307,7 @@ default_var_settings() {
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
-    var_post_install
+    var_post_install var_vzdump_after_install var_vzdump_storage
   )
 
   # Snapshot: environment variables (highest precedence)
@@ -1394,6 +1408,10 @@ var_verbose=no
 # Runs ON THE HOST after the container is fully provisioned.
 # Available env vars: APP, NSAPP, CTID, IP, HN, STORAGE, BRG
 # var_post_install=/opt/post-install/myhook.sh
+
+# Optional vzdump backup after successful install (Proxmox host)
+# var_vzdump_after_install=yes
+# var_vzdump_storage=local
 EOF
 
     # Now choose storages (always prompt unless just one exists)
@@ -1472,7 +1490,7 @@ if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
-    var_post_install
+    var_post_install var_vzdump_after_install var_vzdump_storage
   )
 fi
 
@@ -1686,6 +1704,8 @@ _build_current_app_vars_tmp() {
     [ -n "$_tpl_storage" ] && echo "var_template_storage=$(_sanitize_value "$_tpl_storage")"
     [ -n "$_ct_storage" ] && echo "var_container_storage=$(_sanitize_value "$_ct_storage")"
     [ -n "${var_post_install:-}" ] && echo "var_post_install=$(_sanitize_value "${var_post_install}")"
+    [ -n "${var_vzdump_after_install:-}" ] && echo "var_vzdump_after_install=$(_sanitize_value "${var_vzdump_after_install}")"
+    [ -n "${var_vzdump_storage:-}" ] && echo "var_vzdump_storage=$(_sanitize_value "${var_vzdump_storage}")"
   } >"$tmpf"
 
   echo "$tmpf"
@@ -1830,7 +1850,7 @@ advanced_settings() {
     TAGS="community-script${var_tags:+;${var_tags}}"
   fi
   local STEP=1
-  local MAX_STEP=29
+  local MAX_STEP=30
 
   # Store values for back navigation - inherit from var_* app defaults
   local _ct_type="${var_unprivileged:-1}"
@@ -1865,6 +1885,8 @@ advanced_settings() {
   local _mount_fs="${var_mount_fs:-}"
   local _protect_ct="${var_protection:-no}"
   local _post_install="${var_post_install:-}"
+  local _vzdump="${var_vzdump_after_install:-no}"
+  local _vzdump_storage="${var_vzdump_storage:-}"
 
   # Detect host timezone for default (if not set via var_timezone)
   local _host_timezone=""
@@ -2774,9 +2796,58 @@ Leave empty to skip."
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 29: Verbose Mode & Confirmation
+    # STEP 29: Optional vzdump backup after install
     # ═══════════════════════════════════════════════════════════════════════════
     29)
+      local vzdump_default_flag="--defaultno"
+      [[ "$_vzdump" == "yes" ]] && vzdump_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "POST-INSTALL VZDUMP" \
+        --ok-button "Next" --cancel-button "Back" \
+        $vzdump_default_flag \
+        --yesno "\nCreate a vzdump backup after successful install?\n\nRuns on the Proxmox host once the container is ready.\n\n(App default: ${var_vzdump_after_install:-no})" 14 62; then
+        _vzdump="yes"
+        local _storages _menu_items=() _s
+        _storages=$(awk '
+/^[a-z]+:/ { if (name != "") { if (has_backup || (!has_content && type == "dir")) print name }
+  split($0,a,":"); type=a[1]; name=a[2]; gsub(/^[ \t]+|[ \t]+$/, "", name); has_content=0; has_backup=0 }
+/^[ \t]*content/ { has_content=1; if ($0 ~ /backup/) has_backup=1 }
+END { if (name != "") { if (has_backup || (!has_content && type == "dir")) print name } }
+' /etc/pve/storage.cfg 2>/dev/null)
+        if [[ -n "$_storages" ]]; then
+          while IFS= read -r _s; do
+            [[ -n "$_s" ]] && _menu_items+=("$_s" " ")
+          done <<<"$_storages"
+          if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+            --title "VZDUMP STORAGE" \
+            --ok-button "Next" --cancel-button "Back" \
+            --menu "\nSelect backup storage:" 16 58 8 \
+            "${_menu_items[@]}" \
+            3>&1 1>&2 2>&3); then
+            _vzdump_storage="$result"
+          fi
+        else
+          whiptail --msgbox "No backup-capable storage found.\n\nConfigure storage with 'backup' content in Proxmox first." 10 58
+          _vzdump="no"
+          _vzdump_storage=""
+        fi
+      else
+        if [ $? -eq 1 ]; then
+          _vzdump="no"
+          _vzdump_storage=""
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 30: Verbose Mode & Confirmation
+    # ═══════════════════════════════════════════════════════════════════════════
+    30)
       local verbose_default_flag="--defaultno"
       [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
 
@@ -2878,6 +2949,8 @@ Advanced:
   APT_CACHER_IP="$_apt_cacher_ip"
   VERBOSE="$_verbose"
   var_post_install="$_post_install"
+  var_vzdump_after_install="$_vzdump"
+  var_vzdump_storage="$_vzdump_storage"
 
   # Update var_* based on user choice (for functions that check these)
   var_gpu="$_enable_gpu"
@@ -6586,6 +6659,26 @@ create_lxc_container() {
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# _run_post_install_vzdump()
+#
+# - Optional vzdump on the Proxmox host after a successful install
+# - Controlled by var_vzdump_after_install / var_vzdump_storage
+# ------------------------------------------------------------------------------
+_run_post_install_vzdump() {
+  [[ "${var_vzdump_after_install:-no}" != "yes" ]] && return 0
+  [[ -z "${CTID:-}" ]] && return 0
+
+  local storage="${var_vzdump_storage:-${CONTAINER_STORAGE:-local}}"
+  msg_info "Creating post-install vzdump backup (CT ${CTID} → ${storage})"
+  if vzdump "$CTID" --mode snapshot --compress zstd --storage "$storage" \
+    --notes-template "community-scripts post-install - ${APP:-LXC}" >>"${BUILD_LOG:-/dev/null}" 2>&1; then
+    msg_ok "Post-install vzdump created on ${storage}"
+  else
+    msg_warn "Post-install vzdump failed (storage: ${storage})"
+  fi
+}
+
+# ------------------------------------------------------------------------------
 # description()
 #
 # - Sets container description with formatted HTML content
@@ -6682,6 +6775,8 @@ EOF
       fi
     fi
   fi
+
+  _run_post_install_vzdump
 
   INSTALL_COMPLETE=true
   post_update_to_api "done" "none"
