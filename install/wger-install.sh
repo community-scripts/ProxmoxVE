@@ -106,7 +106,6 @@ msg_ok "wger core setup completed"
 # ====================== PowerSync Setup ======================
 msg_info "Setting up PowerSync"
 SERVER_IP=$(hostname -I | awk '{print $1}')
-POWERSYNC_NODE_VERSION="24.15.0"
 
 if ! command -v node &>/dev/null || ! node -v | grep -q "^v24"; then
   msg_info "Installing Node.js 24"
@@ -124,14 +123,12 @@ if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
   set -a && source /opt/wger/.env && set +a
 fi
 
-# PowerSync storage setup
 sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER CREATEROLE CREATEDB;"
 $STD uv run python manage.py setup-powersync-storage
 sudo -u postgres psql -d ${PG_DB_NAME} -c "GRANT USAGE, CREATE ON SCHEMA powersync TO ${PG_DB_USER};"
 sudo -u postgres psql -d ${PG_DB_NAME} -c "ALTER ROLE ${PG_DB_USER} IN DATABASE ${PG_DB_NAME} SET search_path TO powersync, public;"
 sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
 
-# PowerSync configuration files
 mkdir -p /opt/powersync
 
 cat > /opt/powersync/powersync.env <<EOF
@@ -160,13 +157,17 @@ sync_rules:
 client_auth:
   allow_local_jwks: true
   jwks_uri: !env PS_JWKS_URL
+
   audience:
     - "powersync"
 EOF
 
 cat > /opt/powersync/sync-rules.yaml <<'SYNCRULES'
+# Note that changes to this file are not watched.
+# The service needs to be restarted for changes to take effect.
 config:
   edition: 3
+
 streams:
   core:
     auto_subscribe: true
@@ -187,11 +188,13 @@ streams:
       - SELECT * FROM exercises_exercisecategory
       - SELECT * FROM exercises_exerciseimage
       - SELECT * FROM exercises_exercisevideo
+
   user_profile:
     auto_subscribe: true
     queries:
       - SELECT * FROM core_userprofile WHERE CAST(user_id AS TEXT) = auth.user_id()
       - SELECT * FROM gallery_image WHERE CAST(user_id AS TEXT) = auth.user_id()
+
   user_ingredients:
     auto_subscribe: true
     with:
@@ -210,37 +213,232 @@ streams:
       - SELECT * FROM nutrition_synced_ingredient WHERE id IN user_ingredients
       - SELECT * FROM nutrition_image WHERE ingredient_id IN user_ingredients
       - SELECT * FROM nutrition_ingredientweightunit WHERE ingredient_id IN user_ingredients
+
   user_planning:
     auto_subscribe: true
     queries:
       - SELECT * FROM manager_routine WHERE CAST(user_id AS TEXT) = auth.user_id() AND is_template = FALSE
       - SELECT * FROM measurements_category WHERE CAST(user_id AS TEXT) = auth.user_id()
       - SELECT * FROM nutrition_nutritionplan WHERE CAST(user_id AS TEXT) = auth.user_id()
-      - SELECT * FROM manager_workoutsession WHERE CAST(user_id AS TEXT) = auth.user_id()
+
   user_activity:
     auto_subscribe: true
     queries:
       - SELECT uuid AS id, weight, date, user_id FROM weight_weightentry WHERE CAST(user_id AS TEXT) = auth.user_id()
+      - SELECT * FROM manager_workoutsession WHERE CAST(user_id AS TEXT) = auth.user_id()
       - SELECT * FROM manager_workoutlog WHERE CAST(user_id AS TEXT) = auth.user_id()
       - SELECT * FROM nutrition_logitem WHERE plan_id IN (SELECT id FROM nutrition_nutritionplan WHERE CAST(user_id AS TEXT) = auth.user_id())
 SYNCRULES
 msg_ok "PowerSync config created"
 
-# Build PowerSync (simplified)
-msg_info "Building PowerSync"
-# Add full download + pnpm build here if desired
+msg_info "Downloading and Building PowerSync"
+RELEASE_JSON=$(curl -fsSL https://api.github.com/repos/powersync-ja/powersync-service/releases/latest)
+TARBALL_URL=$(echo "$RELEASE_JSON" | jq -r .tarball_url)
+curl -fsSL -L "$TARBALL_URL" -o /tmp/powersync.tar.gz
+tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
+EXTRACTED_DIR=$(find /opt/powersync -maxdepth 1 -type d -name "powersync-ja-powersync-service-*" | head -1)
+rm -rf /opt/powersync/powersync-service
+mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
+cd /opt/powersync/powersync-service
+corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+$STD pnpm install --frozen-lockfile
+$STD pnpm build:production
+msg_ok "Built PowerSync"
 
-# Create systemd services for PowerSync (add full services if needed)
+msg_info "Creating PowerSync service user"
+if ! id -u powersync &>/dev/null; then
+  useradd --system --home /opt/powersync --shell /usr/sbin/nologin powersync
+fi
+chown -R powersync:powersync /opt/powersync
+msg_ok "Created PowerSync service user"
 
-echo "POWERSYNC_URL=http://${SERVER_IP}:8080" >> /opt/wger/.env
+if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
+  echo "POWERSYNC_URL=http://${SERVER_IP}:8080" >> /opt/wger/.env
+fi
 msg_ok "PowerSync setup completed"
 
 # ====================== 8. Services ======================
 msg_info "Creating Config and Services"
-# wger.service, celery, celery-beat, nginx, powersync services go here
-# (Add them from previous full versions)
+cat <<EOF >/etc/systemd/system/wger.service
+[Unit]
+Description=wger Web Application
+After=network.target postgresql.service redis-server.service
+Requires=postgresql.service redis-server.service
 
-systemctl enable -q --now redis-server nginx wger celery celery-beat powersync
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/wger
+EnvironmentFile=/opt/wger/.env
+ExecStart=/opt/wger/.venv/bin/gunicorn --bind 127.0.0.1:8000 --workers 3 --threads 2 --timeout 120 wger.wsgi:application
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF >/etc/systemd/system/celery.service
+[Unit]
+Description=wger Celery Worker
+After=network.target postgresql.service redis-server.service
+Requires=postgresql.service redis-server.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/wger
+EnvironmentFile=/opt/wger/.env
+ExecStart=/opt/wger/.venv/bin/celery -A wger worker -l info
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+mkdir -p /var/lib/wger/celery
+chmod 700 /var/lib/wger/celery
+cat <<EOF >/etc/systemd/system/celery-beat.service
+[Unit]
+Description=wger Celery Beat Scheduler
+After=network.target postgresql.service redis-server.service
+Requires=postgresql.service redis-server.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/wger
+EnvironmentFile=/opt/wger/.env
+ExecStart=/opt/wger/.venv/bin/celery -A wger beat -l info --schedule /var/lib/wger/celery/celerybeat-schedule
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF >/etc/systemd/system/powersync.service
+[Unit]
+Description=PowerSync Service
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=powersync
+Group=powersync
+WorkingDirectory=/opt/powersync/powersync-service
+EnvironmentFile=/opt/powersync/powersync.env
+Environment=NODE_ENV=production
+Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync.yaml
+Environment=NODE_OPTIONS=--max-old-space-size=1024
+ExecStart=/usr/bin/node service/lib/entry.js start
+Restart=always
+RestartSec=5
+TimeoutStartSec=120
+LimitNOFILE=65535
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /opt/powersync/powersync-compact.yaml <<'EOF'
+telemetry:
+  disable_telemetry_sharing: true
+
+replication:
+  connections:
+    - type: postgresql
+      uri: !env PS_DATABASE_URI
+      sslmode: disable
+
+storage:
+  type: postgresql
+  uri: !env PS_STORAGE_PG_URI
+  sslmode: disable
+
+port: !env PS_PORT
+
+sync_rules:
+  path: sync-rules.yaml
+
+client_auth:
+  allow_local_jwks: true
+  jwks_uri: !env PS_JWKS_URL
+  audience:
+    - "powersync"
+EOF
+
+cat <<EOF >/etc/systemd/system/wger-powersync-compact.service
+[Unit]
+Description=wger PowerSync Bucket Compaction
+After=powersync.service
+Requires=powersync.service
+
+[Service]
+Type=oneshot
+User=powersync
+Group=powersync
+WorkingDirectory=/opt/powersync/powersync-service
+EnvironmentFile=/opt/powersync/powersync.env
+Environment=NODE_ENV=production
+Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync-compact.yaml
+Environment=PS_PORT=8081
+Environment=NODE_OPTIONS=--max-old-space-size=1024
+ExecStart=/usr/bin/node service/lib/entry.js compact
+TimeoutStartSec=1800
+Restart=on-failure
+RestartSec=60
+StandardOutput=journal
+StandardError=journal
+EOF
+
+cat <<EOF >/etc/systemd/system/wger-powersync-compact.timer
+[Unit]
+Description=Run wger PowerSync Compaction Daily
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+RandomizedDelaySec=15min
+
+[Install]
+WantedBy=timers.target
+EOF
+
+cat <<EOF >/etc/nginx/sites-available/wger
+server {
+    listen 3000;
+    server_name _;
+    client_max_body_size 100M;
+
+    location /static/ {
+        alias /opt/wger/static/;
+    }
+
+    location /media/ {
+        alias /opt/wger/media/;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host \$http_host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_redirect off;
+    }
+}
+EOF
+
+ln -sf /etc/nginx/sites-available/wger /etc/nginx/sites-enabled/wger
+rm -f /etc/nginx/sites-enabled/default
+
+systemctl daemon-reload
+systemctl enable -q --now redis-server nginx wger celery celery-beat powersync wger-powersync-compact.timer
 systemctl restart nginx
 msg_ok "Services created"
 
