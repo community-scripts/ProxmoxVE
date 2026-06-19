@@ -236,6 +236,7 @@ streams:
         INNER JOIN measurements_category
           ON measurements_measurement.category_id = measurements_category.id
         WHERE CAST(measurements_category.user_id AS TEXT) = auth.user_id()
+          AND measurements_measurement.category_id IS NOT NULL   -- extra safety
 
       # Nutrition plan structure (not the log items)
       - SELECT * FROM nutrition_nutritionplan WHERE CAST(user_id AS TEXT) = auth.user_id()
