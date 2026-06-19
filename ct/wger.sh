@@ -37,14 +37,14 @@ function install_powersync() {
     docker pull journeyapps/powersync-service:latest
     docker stop powersync
     docker rm powersync
-    docker run -d \
-      -p 8080:8080 \
-      -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
-      -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
-      --network host \
-      --restart=always \
-      --name powersync \
-      journeyapps/powersync-service:latest
+docker run -d \
+  --name powersync \
+  --network host \
+  --restart always \
+  --env-file /opt/powersync/.env \
+  -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
+  -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
+  journeyapps/powersync-service:latest
     msg_ok "Updated PowerSync"
     return
   fi
@@ -66,13 +66,6 @@ function install_powersync() {
   fi
   msg_ok "Generated JWT keys"
 
-  msg_info "Generating PowerSync API token"
-  if ! grep -q "POWERSYNC_API_TOKEN" /opt/wger/.env; then
-    echo "POWERSYNC_API_TOKEN=$(openssl rand -hex 32)" >> /opt/wger/.env
-  fi
-  set -a && source /opt/wger/.env && set +a
-  msg_ok "Generated PowerSync API token"
-
   msg_info "Setting up PowerSync storage"
   sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB;"
   uv run python manage.py setup-powersync-storage
@@ -81,34 +74,43 @@ function install_powersync() {
   sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
   msg_ok "Set up PowerSync storage"
 
-  msg_info "Creating PowerSync config"
-  mkdir -p /opt/powersync
+msg_info "Creating PowerSync config"
+mkdir -p /opt/powersync
 
-  cat > /opt/powersync/powersync.yaml <<EOF
+cat > /opt/powersync/.env <<EOF
+PS_DATABASE_URI=${DATABASE_URL}
+PS_STORAGE_PG_URI=${DATABASE_URL}
+PS_PORT=8080
+PS_JWKS_URL=http://${SERVER_IP}:3000/api/v2/powersync-keys
+EOF
+
+cat > /opt/powersync/powersync.yaml <<'EOF'
+telemetry:
+  disable_telemetry_sharing: true
+  prometheus_port: 9090
+
 replication:
   connections:
     - type: postgresql
-      uri: ${DATABASE_URL}
+      uri: !env PS_DATABASE_URI
       sslmode: disable
 
 storage:
   type: postgresql
-  uri: ${DATABASE_URL}
+  uri: !env PS_STORAGE_PG_URI
   sslmode: disable
 
-port: 8080
+port: !env PS_PORT
 
 sync_rules:
   path: /app/sync-rules.yaml
 
 client_auth:
+  allow_local_jwks: true
+  jwks_uri: !env PS_JWKS_URL
+
   audience:
     - "powersync"
-  jwks_uri: http://${SERVER_IP}:3000/api/v2/powersync-keys
-
-api:
-  tokens:
-    - ${POWERSYNC_API_TOKEN}
 EOF
 
   cat > /opt/powersync/sync-rules.yaml <<EOF
@@ -247,14 +249,14 @@ EOF
   msg_ok "Created PowerSync config"
 
   msg_info "Starting PowerSync container"
-  docker run -d \
-    -p 8080:8080 \
-    -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
-    -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
-    --network host \
-    --restart=always \
-    --name powersync \
-    journeyapps/powersync-service:latest
+docker run -d \
+  --name powersync \
+  --network host \
+  --restart always \
+  --env-file /opt/powersync/.env \
+  -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
+  -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
+  journeyapps/powersync-service:latest
   msg_ok "Started PowerSync"
 
   msg_info "Updating wger .env with PowerSync URL"
