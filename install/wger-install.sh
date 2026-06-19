@@ -221,6 +221,13 @@ streams:
     queries:
       - SELECT * FROM manager_routine WHERE CAST(user_id AS TEXT) = auth.user_id() AND is_template = FALSE
       - SELECT * FROM measurements_category WHERE CAST(user_id AS TEXT) = auth.user_id()
+      - |
+        SELECT measurements_measurement.*
+        FROM measurements_measurement
+        INNER JOIN measurements_category
+          ON measurements_measurement.category_id = measurements_category.id
+        WHERE CAST(measurements_category.user_id AS TEXT) = auth.user_id()
+          AND measurements_measurement.category_id IS NOT NULL
       - SELECT * FROM nutrition_nutritionplan WHERE CAST(user_id AS TEXT) = auth.user_id()
 
   user_activity:

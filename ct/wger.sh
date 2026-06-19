@@ -72,18 +72,14 @@ function install_powersync() {
     $STD pnpm install --frozen-lockfile
     $STD pnpm build:production
 
-    chown -R powersync:powersync /opt/powersync
-
-    systemctl start powersync
-
     msg_ok "Updated PowerSync"
-    return
   fi
 
   msg_info "Configuring PostgreSQL for PowerSync"
-  sed -i "s/#wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
+  sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
   systemctl restart postgresql
-  sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
+  sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
+  sudo -u postgres psql -d wger -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
   sudo -u postgres psql -d wger -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
   msg_ok "Configured PostgreSQL"
 
@@ -98,7 +94,6 @@ function install_powersync() {
   msg_ok "Generated JWT keys"
 
   msg_info "Setting up PowerSync storage"
-  sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB;"
   uv run python manage.py setup-powersync-storage
   sudo -u postgres psql -d wger -c "GRANT USAGE, CREATE ON SCHEMA powersync TO wger;"
   sudo -u postgres psql -d wger -c "ALTER ROLE wger IN DATABASE wger SET search_path TO powersync, public;"
