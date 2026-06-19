@@ -51,7 +51,7 @@ function update_script() {
   echo "${LATEST}" >~/.airflow
   msg_ok "Updated Apache Airflow to ${LATEST}"
 
-    restore_backup
+  restore_backup
 
   msg_info "Running Database Migrations"
   set -a && source /opt/airflow/.env && set +a
