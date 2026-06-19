@@ -28,6 +28,7 @@ jobs:
             const allowedBots = [
               "push-app-to-main[bot]",
               "push-app-to-main",
+              "community-scripts-pr-app"
             ];
 
             if (allowedBots.includes(author)) {

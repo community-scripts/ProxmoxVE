@@ -5267,6 +5267,8 @@ _setup_intel_arc() {
       intel-media-va-driver-non-free \
       intel-opencl-icd \
       libmfx-gen1.2 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel Arc packages failed"
 
@@ -5301,6 +5303,8 @@ _setup_intel_arc() {
       ocl-icd-libopencl1 \
       libvpl2 \
       libmfx-gen1.2 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel Arc packages failed"
 
@@ -5324,6 +5328,8 @@ _setup_intel_modern() {
       va-driver-all \
       intel-media-va-driver \
       ocl-icd-libopencl1 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel packages failed"
 
@@ -5358,6 +5364,8 @@ _setup_intel_modern() {
     $STD apt -y install \
       intel-media-va-driver-non-free \
       ocl-icd-libopencl1 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       libmfx-gen1.2 \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel packages failed"
@@ -6912,14 +6920,24 @@ setup_mongodb() {
   export NEEDRESTART_MODE=a
   export NEEDRESTART_SUSPEND=1
 
-  # Check AVX support
-  if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
-    local major="${MONGO_VERSION%%.*}"
-    if ((major > 5)); then
-      msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+  # Check CPU requirements: AVX on x86_64, NEON/ASIMD on arm64
+  case "$(uname -m)" in
+  aarch64)
+    if ! grep -qm1 'asimd' /proc/cpuinfo; then
+      msg_error "MongoDB ${MONGO_VERSION} requires ARMv8.2-A support, which is not available on this system."
       return 236
     fi
-  fi
+    ;;
+  *)
+    if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
+      local major="${MONGO_VERSION%%.*}"
+      if ((major > 5)); then
+        msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+        return 236
+      fi
+    fi
+    ;;
+  esac
 
   case "$DISTRO_ID" in
   ubuntu)
@@ -8098,7 +8116,7 @@ setup_postgresql_db() {
     IFS=',' read -ra EXT_LIST <<<"${PG_DB_EXTENSIONS:-}"
     for ext in "${EXT_LIST[@]}"; do
       ext=$(echo "$ext" | xargs) # Trim whitespace
-      $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS $ext;"
+      $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS \"$ext\";"
     done
   fi
 

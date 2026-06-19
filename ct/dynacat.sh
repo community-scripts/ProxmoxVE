@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,19 +35,13 @@ function update_script() {
     systemctl stop dynacat
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/dynacat/config /opt/dynacat_config_backup
-    cp -r /opt/dynacat/assets /opt/dynacat_assets_backup
-    cp -r /opt/dynacat/data /opt/dynacat_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/dynacat/config \
+      /opt/dynacat/assets \
+      /opt/dynacat/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dynacat" "Panonim/dynacat" "prebuild" "latest" "/opt/dynacat" "dynacat-linux-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dynacat" "Panonim/dynacat" "prebuild" "latest" "/opt/dynacat" "dynacat-linux-$(arch_resolve).tar.gz"
 
-    msg_info "Restoring Data"
-    cp -r /opt/dynacat_config_backup/. /opt/dynacat/config
-    cp -r /opt/dynacat_assets_backup/. /opt/dynacat/assets
-    cp -r /opt/dynacat_data_backup/. /opt/dynacat/data
-    rm -rf /opt/dynacat_config_backup /opt/dynacat_assets_backup /opt/dynacat_data_backup
+    restore_backup
     chmod +x /opt/dynacat/dynacat
     msg_ok "Restored Data"
 

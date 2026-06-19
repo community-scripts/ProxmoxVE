@@ -32,8 +32,10 @@ for v in 12 13 14 15 16 18; do
 done
 # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
 [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
+# MongoDB only publishes arm64 builds for Ubuntu
+[[ "$MONGO_ARCH" == "arm64" ]] && MONGO_DIST="ubuntu2204"
 MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools" "100." || echo "100.16.1")
-fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-${MONGO_VERSION}.deb" ""
+fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-$(arch_resolve "x86_64" "arm64")-${MONGO_VERSION}.deb" ""
 mkdir -p /usr/local/mongodb-database-tools/bin
 [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
 [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
@@ -63,7 +65,7 @@ $STD go mod tidy
 $STD go mod download
 $STD go install github.com/swaggo/swag/cmd/swag@latest
 $STD /root/go/bin/swag init -g cmd/main.go -o swagger
-$STD env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o databasus ./cmd/main.go
+$STD env CGO_ENABLED=0 GOOS=linux GOARCH=$(arch_resolve) go build -o databasus ./cmd/main.go
 mv /opt/databasus/backend/databasus /opt/databasus/databasus
 mkdir -p /databasus-data/{pgdata,temp,backups,data,logs}
 mkdir -p /opt/databasus/ui/build

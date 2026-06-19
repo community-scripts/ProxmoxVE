@@ -42,8 +42,8 @@ $STD apt install -y \
   libtool \
   libtool-bin \
   gcc \
-  crossbuild-essential-amd64 \
-  gcc-x86-64-linux-gnu \
+  crossbuild-essential-$(arch_resolve) \
+  gcc-$(arch_resolve "x86-64" "aarch64")-linux-gnu \
   cmake \
   clang \
   libunwind-18-dev \
@@ -59,7 +59,7 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 XMLSEC_VERSION="1.3.11"
-AUTHENTIK_VERSION="version/2026.5.2"
+AUTHENTIK_VERSION="version/2026.5.3"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
@@ -90,7 +90,7 @@ msg_ok "Setup web"
 msg_info "Setting up go proxy"
 cd /opt/authentik
 export CGO_ENABLED="1"
-export CC="x86_64-linux-gnu-gcc"
+export CC="$(arch_resolve "x86_64" "aarch64")-linux-gnu-gcc"
 $STD go mod download
 $STD go build -o /opt/authentik/authentik-server ./cmd/server
 $STD go build -o /opt/authentik/ldap ./cmd/ldap

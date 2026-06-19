@@ -37,16 +37,15 @@ function update_script() {
 
     PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="pdo-sqlite" setup_php
 
-    msg_info "Backing up Bar Assistant"
-    mv /opt/bar-assistant /opt/bar-assistant-backup
-    msg_ok "Backed up Bar Assistant"
+    create_backup /opt/bar-assistant/.env \
+      /opt/bar-assistant/storage/bar-assistant
 
     fetch_and_deploy_gh_release "bar-assistant" "karlomikus/bar-assistant" "tarball" "latest" "/opt/bar-assistant"
     setup_composer
 
-    msg_info "Updating Bar-Assistant"
-    cp -r /opt/bar-assistant-backup/.env /opt/bar-assistant/.env
-    cp -r /opt/bar-assistant-backup/storage/bar-assistant /opt/bar-assistant/storage/bar-assistant
+    restore_backup
+
+    msg_info "Configuring Bar-Assistant"
     cd /opt/bar-assistant
     $STD composer install --no-interaction
     $STD php artisan migrate --force
@@ -57,8 +56,7 @@ function update_script() {
     $STD php artisan route:cache
     $STD php artisan event:cache
     chown -R www-data:www-data /opt/bar-assistant
-    rm -rf /opt/bar-assistant-backup
-    msg_ok "Updated Bar-Assistant"
+    msg_ok "Configured Bar-Assistant"
 
     msg_info "Starting nginx"
     systemctl start nginx
@@ -66,23 +64,21 @@ function update_script() {
   fi
 
   if check_for_gh_release "vue-salt-rim" "karlomikus/vue-salt-rim"; then
-    msg_info "Backing up Vue Salt Rim"
-    mv /opt/vue-salt-rim /opt/vue-salt-rim-backup
-    msg_ok "Backed up Vue Salt Rim"
+
+    create_backup /opt/vue-salt-rim/public/config.js
 
     msg_info "Stopping nginx"
     systemctl stop nginx
     msg_ok "Stopped nginx"
 
     fetch_and_deploy_gh_release "vue-salt-rim" "karlomikus/vue-salt-rim" "tarball" "latest" "/opt/vue-salt-rim"
+    restore_backup
 
-    msg_info "Updating Vue Salt Rim"
-    cp /opt/vue-salt-rim-backup/public/config.js /opt/vue-salt-rim/public/config.js
+    msg_info "Configuring Vue Salt Rim"
     cd /opt/vue-salt-rim
     $STD npm install
     $STD npm run build
-    rm -rf /opt/vue-salt-rim-backup
-    msg_ok "Updated Vue Salt Rim"
+    msg_ok "Configured Vue Salt Rim"
 
     msg_info "Starting nginx"
     systemctl start nginx

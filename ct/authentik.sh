@@ -33,7 +33,7 @@ function update_script() {
   read -r MAJOR MINOR PATCH <<< "$(sed 's/^version\///; s/\./ /g' "$HOME/.authentik")"
 
   msg_info "Update dependencies"
-  ensure_dependencies crossbuild-essential-amd64 gcc-x86-64-linux-gnu cmake clang libunwind-18-dev
+  ensure_dependencies crossbuild-essential-$(arch_resolve) gcc-$(arch_resolve "x86-64" "aarch64")-linux-gnu cmake clang libunwind-18-dev
   msg_ok "Update dependencies"
 
   NODE_VERSION="24" setup_nodejs
@@ -42,7 +42,7 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.5.2"
+  AUTHENTIK_VERSION="version/2026.5.3"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
   XMLSEC_VERSION="1.3.11"
 
@@ -96,6 +96,7 @@ function update_script() {
     msg_info "Updating go proxy"
     cd /opt/authentik
     export CGO_ENABLED="1"
+    export CC="$(arch_resolve "x86_64" "aarch64")-linux-gnu-gcc"
     $STD go mod download
     $STD go build -o /opt/authentik/authentik-server ./cmd/server
 	$STD go build -o /opt/authentik/ldap ./cmd/ldap

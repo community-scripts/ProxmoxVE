@@ -11,7 +11,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,11 +33,13 @@ function update_script() {
     systemctl stop configarr-task.timer
     msg_ok "Stopped Service"
 
-    mkdir -p /opt/backup/
-    mv /opt/configarr/{config.yml,secrets.yml,.env} /opt/backup/
+    create_backup /opt/configarr/config.yml \
+      /opt/configarr/secrets.yml \
+      /opt/configarr/.env
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
-    mv /opt/backup/{config.yml,secrets.yml,.env} /opt/configarr/
-    rm -rf /opt/backup
+
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start configarr-task.timer

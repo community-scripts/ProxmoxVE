@@ -20,7 +20,7 @@ $STD apk add --no-cache \
 $STD update-ca-certificates
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi" "wakapi_linux_amd64.zip"
+fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi" "wakapi_linux_$(arch_resolve).zip"
 
 msg_info "Configuring Wakapi"
 LOCAL_IP=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)

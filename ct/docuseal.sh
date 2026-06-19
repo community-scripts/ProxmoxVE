@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,24 +35,19 @@ function update_script() {
     systemctl stop docuseal docuseal-sidekiq
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/docuseal/.env /opt/docuseal.env.bak
-    [[ -d /opt/docuseal/data ]] && mv /opt/docuseal/data /opt/docuseal_data.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/docuseal/.env \
+      /opt/docuseal/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "docuseal" "docusealco/docuseal" "tarball"
 
     local required_ruby current_ruby
     required_ruby=$(grep -m1 '^ruby ' /opt/docuseal/Gemfile | grep -oP '[0-9]+\.[0-9]+\.[0-9]+')
     current_ruby=$(PATH="/root/.rbenv/bin:/root/.rbenv/shims:${PATH}" rbenv global 2>/dev/null || true)
-    if [[ -n "$required_ruby" && "$required_ruby" != "$current_ruby" ]]; then
+    if [[ -n $required_ruby && $required_ruby != "$current_ruby" ]]; then
       RUBY_VERSION="${required_ruby}" RUBY_INSTALL_RAILS="false" HOME=/root setup_ruby
     fi
 
-    msg_info "Restoring Data"
-    mv /opt/docuseal.env.bak /opt/docuseal/.env
-    [[ -d /opt/docuseal_data.bak ]] && mv /opt/docuseal_data.bak /opt/docuseal/data
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Building Application"
     cd /opt/docuseal

@@ -12,7 +12,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "ddns-updater" "qdm12/ddns-updater" "singlefile" "latest" "/opt/ddns-updater" "ddns-updater_*_linux_amd64"
+fetch_and_deploy_gh_release "ddns-updater" "qdm12/ddns-updater" "singlefile" "latest" "/opt/ddns-updater" "ddns-updater_*_linux_$(arch_resolve)"
 
 msg_info "Configuring DDNS-Updater"
 mkdir -p /opt/ddns-updater/data

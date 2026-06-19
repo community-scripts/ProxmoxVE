@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop ersatzTV
     msg_ok "Stopped ErsatzTV"
 
-    fetch_and_deploy_gh_release "ersatztv" "ErsatzTV/ErsatzTV" "prebuild" "latest" "/opt/ErsatzTV" "*linux-x64.tar.gz"
+    fetch_and_deploy_gh_release "ersatztv" "ErsatzTV/ErsatzTV" "prebuild" "latest" "/opt/ErsatzTV" "*linux-$(arch_resolve "x64" "arm64").tar.gz"
 
     msg_info "Starting ErsatzTV"
     systemctl start ersatzTV
@@ -47,7 +47,7 @@ function update_script() {
     systemctl stop ersatzTV
     msg_ok "Stopped ErsatzTV"
 
-    fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux64-gpl-7.1.tar.xz"
+    fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-$(arch_resolve "linux64" "linuxarm64")-gpl-7.1.tar.xz"
 
     msg_info "Set ErsatzTV-ffmpeg links"
     chmod +x /opt/ErsatzTV-ffmpeg/bin/*

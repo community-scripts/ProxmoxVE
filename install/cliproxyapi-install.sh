@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y openssl
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "cliproxyapi" "router-for-me/CLIProxyAPI" "prebuild" "latest" "/opt/cliproxyapi" "CLIProxyAPI_*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "cliproxyapi" "router-for-me/CLIProxyAPI" "prebuild" "latest" "/opt/cliproxyapi" "CLIProxyAPI_*_linux_$(arch_resolve "amd64" "aarch64").tar.gz"
 
 msg_info "Configuring CLIProxyAPI"
 MANAGEMENT_PASSWORD=$(openssl rand -hex 32)

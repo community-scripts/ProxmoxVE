@@ -35,10 +35,8 @@ function update_script() {
     systemctl stop checkmate-server checkmate-client nginx
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/checkmate/server/.env /opt/checkmate_server.env.bak
-    [ -f /opt/checkmate/client/.env.local ] && cp /opt/checkmate/client/.env.local /opt/checkmate_client.env.local.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/checkmate/server/.env \
+      /opt/checkmate/client/.env.local
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "checkmate" "bluewave-labs/Checkmate" "tarball"
 
@@ -56,10 +54,7 @@ function update_script() {
     VITE_APP_API_BASE_URL="/api/v1" UPTIME_APP_API_BASE_URL="/api/v1" VITE_APP_LOG_LEVEL="warn" $STD npm run build
     msg_ok "Updated Checkmate Client"
 
-    msg_info "Restoring Data"
-    mv /opt/checkmate_server.env.bak /opt/checkmate/server/.env
-    [ -f /opt/checkmate_client.env.local.bak ] && mv /opt/checkmate_client.env.local.bak /opt/checkmate/client/.env.local
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Services"
     systemctl start checkmate-server checkmate-client nginx

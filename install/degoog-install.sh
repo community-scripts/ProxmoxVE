@@ -27,6 +27,7 @@ ln -sf /root/.bun/bin/bun /usr/local/bin/bun
 ln -sf /root/.bun/bin/bunx /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
+fetch_and_deploy_gh_release "curl-impersonate" "lexiforest/curl-impersonate" "prebuild" "latest" "/usr/local/bin" "curl-impersonate-v*.$(uname -m)-linux-gnu.tar.gz"
 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
 
 msg_info "Setting up degoog"
@@ -39,7 +40,7 @@ DEGOOG_PLUGINS_DIR=/opt/degoog/data/plugins
 DEGOOG_THEMES_DIR=/opt/degoog/data/themes
 DEGOOG_ALIASES_FILE=/opt/degoog/data/aliases.json
 DEGOOG_PLUGIN_SETTINGS_FILE=/opt/degoog/data/plugin-settings.json
-DEGOOG_VALKEY_URL=redis://valkey:6379
+DEGOOG_VALKEY_URL=redis://127.0.0.1:6379
 DEGOOG_CACHE_MAX_ENTRIES=1000
 DEGOOG_CACHE_TTL_MS=43200000
 # DEGOOG_SETTINGS_PASSWORDS=changeme

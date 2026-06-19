@@ -30,7 +30,8 @@ $STD apt install -t ${VERSION_CODENAME}-backports cockpit cracklib-runtime --no-
 sed -i "s/root//g" /etc/cockpit/disallowed-users
 msg_ok "Installed Cockpit"
 
-read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator  <y/N> " prompt
+# 45Drives only publishes amd64 packages
+[[ "$(arch_resolve)" == "arm64" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator  <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   install_45drives=true
   if [[ "${VERSION_ID}" -ge 13 ]]; then

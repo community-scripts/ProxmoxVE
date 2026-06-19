@@ -34,25 +34,10 @@ function update_script() {
     systemctl stop bytestash-backend bytestash-frontend
     msg_ok "Services Stopped"
 
-    msg_info "Backing up data"
-    tmp_dir="/opt/bytestash-data-backup"
-    mkdir -p "$tmp_dir"
-    if [[ -d /opt/bytestash/data ]]; then
-      cp -r /opt/bytestash/data "$tmp_dir"/data
-    elif [[ -d /opt/data ]]; then
-      cp -r /opt/data "$tmp_dir"/data
-    fi
-    msg_ok "Data backed up"
-
+    [[ -d /opt/bytestash/data ]] && create_backup /opt/bytestash/data
+    [[ -d /opt/data ]] && create_backup /opt/data
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
-
-    msg_info "Restoring data"
-    if [[ -d "$tmp_dir"/data ]]; then
-      mkdir -p /opt/bytestash/data
-      cp -r "$tmp_dir"/data/* /opt/bytestash/data/
-      rm -rf "$tmp_dir"
-    fi
-    msg_ok "Data restored"
+    restore_backup
 
     msg_info "Configuring ByteStash"
     cd /opt/bytestash/server

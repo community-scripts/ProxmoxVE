@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "dynacat" "Panonim/dynacat" "prebuild" "latest" "/opt/dynacat" "dynacat-linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "dynacat" "Panonim/dynacat" "prebuild" "latest" "/opt/dynacat" "dynacat-linux-$(arch_resolve).tar.gz"
 
 msg_info "Setting up Dynacat"
 mkdir -p /opt/dynacat/config /opt/dynacat/assets /opt/dynacat/data

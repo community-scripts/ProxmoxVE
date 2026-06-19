@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,14 +35,14 @@ function update_script() {
   fi
 
   MIGRATE_V1=0
-  if [[ "$CURRENT_VERSION" == 0.* ]]; then
+  if [[ $CURRENT_VERSION == 0.* ]]; then
     MIGRATE_V1=1
     DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
     if [ "$DISK_USAGE" -gt 50 ]; then
       echo -e "\n${RD}Warning: Less than 50% free storage remaining on the root disk.${CL}"
       echo -e "${RD}Bichon v1 data migration temporarily duplicates data and requires free space for it.${CL}"
       read -r -p "Are you sure you want to proceed with the update? (y/N): " proceed
-      if [[ ! "$proceed" =~ ^[Yy]$ ]]; then
+      if [[ ! $proceed =~ ^[Yy]$ ]]; then
         msg_error "Update cancelled by user."
         exit
       fi
@@ -53,7 +53,7 @@ function update_script() {
       echo -e "\n${RD}Warning: LXC has less than 2GB of RAM allocated (${RAM_TOTAL}MB).${CL}"
       echo -e "${RD}Bichon v1 data migration consumes significant memory and may crash if insufficient.${CL}"
       read -r -p "Are you sure you want to proceed with the update? (y/N): " proceed_ram
-      if [[ ! "$proceed_ram" =~ ^[Yy]$ ]]; then
+      if [[ ! $proceed_ram =~ ^[Yy]$ ]]; then
         msg_error "Update cancelled by user."
         exit
       fi
@@ -65,20 +65,20 @@ function update_script() {
     systemctl stop bichon
     msg_ok "Stopped service"
 
-    cp /opt/bichon/bichon.env /tmp/bichon.env.backup
+    create_backup /opt/bichon/bichon.env
 
     if [ "$MIGRATE_V1" -eq 1 ] && [ "$CURRENT_VERSION" != "0.3.7" ]; then
       msg_info "Updating to intermediate version v0.3.7"
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "v0.3.7" "/opt/bichon" "bichon-*-x86_64-unknown-linux-gnu.tar.gz"
-      cp /tmp/bichon.env.backup /opt/bichon/bichon.env
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "v0.3.7" "/opt/bichon" "bichon-*-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.tar.gz"
+      restore_backup
       systemctl start bichon
       sleep 30
       systemctl stop bichon
       msg_ok "Intermediate update completed"
     fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-x86_64-unknown-linux-gnu.tar.gz"
-    cp /tmp/bichon.env.backup /opt/bichon/bichon.env
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.tar.gz"
+    restore_backup
 
     if [ "$MIGRATE_V1" -eq 1 ]; then
       msg_info "Running Bichon v1 Data Migration (patience)"

@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-x86_64-unknown-linux-gnu.tar.gz"
+fetch_and_deploy_gh_release "bichon" "rustmailer/bichon" "prebuild" "latest" "/opt/bichon" "bichon-*-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.tar.gz"
 
 read -r -p "${TAB3}Enter the public URL for Bichon (e.g., https://bichon.yourdomain.com) or leave empty to use container IP: " bichon_url
 if [[ -z "$bichon_url" ]]; then

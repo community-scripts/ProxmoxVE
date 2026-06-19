@@ -46,7 +46,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="paperlessdb" PG_DB_USER="paperless" setup_postgresql_db
 PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v2.20.15" "/opt/paperless" "paperless*tar.xz"
 
 msg_info "Setup Paperless-ngx"
 cd /opt/paperless

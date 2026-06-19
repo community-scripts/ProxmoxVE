@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,12 +35,7 @@ function update_script() {
     $STD systemctl stop databasus
     msg_ok "Stopped Databasus"
 
-    msg_info "Backing up Configuration"
-    [[ ! -f /.env && -f /opt/databasus/.env ]] && cp /opt/databasus/.env /.env
-    chmod 600 /.env
-    cp /.env /opt/databasus.env.bak
-    chmod 600 /opt/databasus.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/databasus/.env
 
     msg_info "Ensuring Database Clients"
     # Create PostgreSQL version symlinks for compatibility
@@ -50,7 +45,10 @@ function update_script() {
     # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
     if ! command -v mongodump &>/dev/null; then
       [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-100.16.1.deb"
+      MONGO_ARCH=$(arch_resolve "x86_64" "arm64")
+      # MongoDB only publishes arm64 builds for Ubuntu
+      [[ "$MONGO_ARCH" == "arm64" ]] && MONGO_DIST="ubuntu2204"
+      fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-${MONGO_ARCH}-100.16.1.deb"
     fi
     [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
     [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
@@ -79,7 +77,7 @@ function update_script() {
     cd /opt/databasus/backend
     $STD go mod download
     $STD /root/go/bin/swag init -g cmd/main.go -o swagger
-    $STD env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o databasus ./cmd/main.go
+    $STD env CGO_ENABLED=0 GOOS=linux GOARCH=$(arch_resolve) go build -o databasus ./cmd/main.go
     mv /opt/databasus/backend/databasus /opt/databasus/databasus
     mkdir -p /opt/databasus/ui/build
     cp -r /opt/databasus/frontend/dist/* /opt/databasus/ui/build/
@@ -87,11 +85,7 @@ function update_script() {
     chown -R postgres:postgres /opt/databasus
     msg_ok "Updated Databasus"
 
-    msg_info "Restoring Configuration"
-    cp /opt/databasus.env.bak /.env
-    rm -f /opt/databasus.env.bak
-    chmod 600 /.env
-    msg_ok "Restored Configuration"
+    restore_backup
 
     if ! grep -q "EnvironmentFile=/.env" /etc/systemd/system/databasus.service; then
       msg_info "Updating Service"

@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,16 +33,11 @@ function update_script() {
     systemctl stop ddns-updater
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/ddns-updater/data /opt/ddns-updater_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/ddns-updater/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ddns-updater" "qdm12/ddns-updater" "singlefile" "latest" "/opt/ddns-updater" "ddns-updater_*_linux_amd64"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ddns-updater" "qdm12/ddns-updater" "singlefile" "latest" "/opt/ddns-updater" "ddns-updater_*_linux_$(arch_resolve)"
 
-    msg_info "Restoring Data"
-    cp -r /opt/ddns-updater_data_backup/. /opt/ddns-updater/data/
-    rm -rf /opt/ddns-updater_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start ddns-updater
