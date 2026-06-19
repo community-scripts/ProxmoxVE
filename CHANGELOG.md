@@ -489,6 +489,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - add avx2 check to influxdb3 [@asylumexp](https://github.com/asylumexp) ([#15208](https://github.com/community-scripts/ProxmoxVE/pull/15208))
     - Step ca leaf data patch [@heinemannj](https://github.com/heinemannj) ([#15210](https://github.com/community-scripts/ProxmoxVE/pull/15210))
     - Kimai: Add APP_SECRET env var [@tremor021](https://github.com/tremor021) ([#15199](https://github.com/community-scripts/ProxmoxVE/pull/15199))
 
