@@ -23,28 +23,29 @@ function install_powersync() {
   SERVER_IP=$(hostname -I | awk '{print $1}')
   set -a && source /opt/wger/.env && set +a
 
-  if ! command -v docker &>/dev/null; then
-    msg_info "Installing Docker"
-    apt update
-    apt install -y docker.io
-    systemctl enable docker
-    systemctl start docker
-    msg_ok "Installed Docker"
+  POWERSYNC_NODE_VERSION="24.15.0"
+  POWERSYNC_REPO="https://github.com/powersync-ja/powersync-service.git"
+
+  if ! command -v node &>/dev/null || ! node -v | grep -q "^v${POWERSYNC_NODE_VERSION%%.*}\."; then
+    msg_info "Installing Node.js ${POWERSYNC_NODE_VERSION}"
+    NODE_MAJOR="${POWERSYNC_NODE_VERSION%%.*}"
+    curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | bash - >/dev/null 2>&1
+    apt install -y nodejs >/dev/null 2>&1
+    corepack enable >/dev/null 2>&1
+    msg_ok "Installed Node.js ${POWERSYNC_NODE_VERSION}"
   fi
 
-  if docker ps -a --format '{{.Names}}' | grep -q "^powersync$"; then
+  if [[ -d /opt/powersync/powersync-service ]]; then
     msg_info "Updating PowerSync"
-    docker pull journeyapps/powersync-service:latest
-    docker stop powersync
-    docker rm powersync
-docker run -d \
-  --name powersync \
-  --network host \
-  --restart always \
-  --env-file /opt/powersync/.env \
-  -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
-  -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
-  journeyapps/powersync-service:latest
+    systemctl stop powersync 2>/dev/null || true
+    cd /opt/powersync/powersync-service
+    git fetch --tags origin >/dev/null 2>&1
+    git checkout main >/dev/null 2>&1
+    git pull origin main >/dev/null 2>&1
+    corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm build:production
+    systemctl start powersync
     msg_ok "Updated PowerSync"
     return
   fi
@@ -77,7 +78,7 @@ docker run -d \
 msg_info "Creating PowerSync config"
 mkdir -p /opt/powersync
 
-cat > /opt/powersync/.env <<EOF
+cat > /opt/powersync/powersync.env <<EOF
 PS_DATABASE_URI=${DATABASE_URL}
 PS_STORAGE_PG_URI=${DATABASE_URL}
 PS_PORT=8080
@@ -103,7 +104,7 @@ storage:
 port: !env PS_PORT
 
 sync_rules:
-  path: /app/sync-rules.yaml
+  path: sync-rules.yaml
 
 client_auth:
   allow_local_jwks: true
@@ -248,16 +249,46 @@ streams:
 SYNCRULES
   msg_ok "Created PowerSync config"
 
-  msg_info "Starting PowerSync container"
-docker run -d \
-  --name powersync \
-  --network host \
-  --restart always \
-  --env-file /opt/powersync/.env \
-  -v /opt/powersync/powersync.yaml:/app/powersync.yaml \
-  -v /opt/powersync/sync-rules.yaml:/app/sync-rules.yaml \
-  journeyapps/powersync-service:latest
-  msg_ok "Started PowerSync"
+  msg_info "Cloning and building PowerSync from source"
+  git clone --depth 1 "$POWERSYNC_REPO" /opt/powersync/powersync-service
+  cd /opt/powersync/powersync-service
+  corepack enable >/dev/null 2>&1
+  corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+  $STD pnpm install --frozen-lockfile
+  $STD pnpm build:production
+  msg_ok "Built PowerSync from source"
+
+  msg_info "Creating PowerSync service user"
+  if ! id -u powersync &>/dev/null; then
+    useradd --system --home /opt/powersync --shell /usr/sbin/nologin powersync
+  fi
+  chown -R powersync:powersync /opt/powersync
+  msg_ok "Created PowerSync service user"
+
+  msg_info "Creating PowerSync systemd service"
+  cat > /etc/systemd/system/powersync.service <<EOF
+[Unit]
+Description=PowerSync Service
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=powersync
+Group=powersync
+WorkingDirectory=/opt/powersync/powersync-service
+EnvironmentFile=/opt/powersync/powersync.env
+Environment=NODE_ENV=production
+Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync.yaml
+ExecStart=/usr/bin/node service/lib/entry.js start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+  systemctl enable -q --now powersync
+  msg_ok "Started PowerSync service"
 
   msg_info "Updating wger .env with PowerSync URL"
   if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
@@ -277,13 +308,13 @@ function update_script() {
   if check_for_gh_release "wger" "wger-project/wger"; then
     msg_info "Stopping Service"
     systemctl stop redis-server nginx celery celery-beat wger
-    docker stop powersync 2>/dev/null || true
+    systemctl stop powersync 2>/dev/null || true
     msg_ok "Stopped Service"
 
     msg_info "Backing up Data"
     cp -r /opt/wger/media /opt/wger_media_backup
     cp /opt/wger/.env /opt/wger_env_backup
-    cp -r /opt/powersync /opt/wger_powersync_backup 2>/dev/null || true
+    cp -r /opt/powersync/*.env /opt/powersync/*.yaml /opt/wger_powersync_backup 2>/dev/null || mkdir -p /opt/wger_powersync_backup
     msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball"
@@ -317,7 +348,7 @@ function update_script() {
 
     msg_info "Starting Services"
     systemctl start redis-server nginx celery celery-beat wger
-    docker start powersync
+    systemctl start powersync
     msg_ok "Started Services"
     msg_ok "Updated Successfully"
   fi
