@@ -241,13 +241,7 @@ SYNCRULES
 msg_ok "PowerSync config created"
 
 msg_info "Downloading and Building PowerSync"
-RELEASE_JSON=$(curl -fsSL https://api.github.com/repos/powersync-ja/powersync-service/releases/latest)
-TARBALL_URL=$(echo "$RELEASE_JSON" | jq -r .tarball_url)
-curl -fsSL -L "$TARBALL_URL" -o /tmp/powersync.tar.gz
-tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
-EXTRACTED_DIR=$(find /opt/powersync -maxdepth 1 -type d -name "powersync-ja-powersync-service-*" | head -1)
-rm -rf /opt/powersync/powersync-service
-mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
+CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
 cd /opt/powersync/powersync-service
 corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
 $STD pnpm install --frozen-lockfile

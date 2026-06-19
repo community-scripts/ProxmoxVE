@@ -44,7 +44,7 @@ function install_powersync() {
 
     systemctl stop powersync 2>/dev/null || true
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
 
     cd /opt/powersync/powersync-service || true
 
