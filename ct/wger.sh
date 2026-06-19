@@ -306,7 +306,6 @@ fi
   chown -R powersync:powersync /opt/powersync
   msg_ok "Created PowerSync service user"
 
-[ -n "$WORKDIR" ] && SERVICE_DIR="$WORKDIR" || SERVICE_DIR="/opt/powersync/powersync-service"
 msg_info "Creating PowerSync systemd service"
 cat > /etc/systemd/system/powersync.service <<EOF
 [Unit]
@@ -318,7 +317,7 @@ Wants=postgresql.service
 Type=simple
 User=powersync
 Group=powersync
-WorkingDirectory=${SERVICE_DIR}
+WorkingDirectory=/opt/powersync/powersync-service
 EnvironmentFile=/opt/powersync/powersync.env
 Environment=NODE_ENV=production
 Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync.yaml
@@ -337,9 +336,10 @@ StandardOutput=journal
 StandardError=journal
 EOF
  
-  systemctl daemon-reload
-  systemctl enable -q --now powersync
-  msg_ok "Started PowerSync service"
+  systemctl daemon-reload || msg_warn "systemctl daemon-reload failed"
+  systemctl enable -q powersync 2>/dev/null || msg_warn "Failed to enable powersync service"
+  systemctl start powersync 2>/dev/null || msg_warn "Failed to start powersync service (may require manual intervention in container)"
+  msg_ok "PowerSync service created and start attempted"
 
 msg_info "Creating PowerSync compaction timer"
 
@@ -383,7 +383,7 @@ Requires=powersync.service
 Type=oneshot
 User=powersync
 Group=powersync
-WorkingDirectory=${SERVICE_DIR}
+WorkingDirectory=/opt/powersync/powersync-service
 EnvironmentFile=/opt/powersync/powersync.env
 Environment=NODE_ENV=production
 Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync-compact.yaml
@@ -413,9 +413,10 @@ RandomizedDelaySec=15min
 WantedBy=timers.target
 EOF
 
-systemctl daemon-reload
-systemctl enable -q --now wger-powersync-compact.timer
-msg_ok "Created PowerSync compaction timer"
+systemctl daemon-reload || msg_warn "systemctl daemon-reload failed for timer"
+systemctl enable -q wger-powersync-compact.timer 2>/dev/null || msg_warn "Failed to enable compaction timer"
+systemctl start wger-powersync-compact.timer 2>/dev/null || msg_warn "Failed to start compaction timer"
+msg_ok "Created PowerSync compaction timer (start/enable may require manual intervention in container)"
 
   msg_info "Updating wger .env with PowerSync URL"
   if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
