@@ -14,7 +14,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_x86_64.tar.gz"
+fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 
 msg_info "Configuring Homebox"
 chmod +x /opt/homebox/homebox

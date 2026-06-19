@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://www.kasmweb.com/docs/latest/index.html
 
 APP="Kasm"
-var_tags="${var_tags:-os}"
+var_tags="${var_tags:-os;docker}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-8192}"
 var_disk="${var_disk:-30}"

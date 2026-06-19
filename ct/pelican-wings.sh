@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/pelican-dev/wings
 
 APP="Pelican-Wings"
-var_tags="${var_tags:-Gaming}"
+var_tags="${var_tags:-Gaming;docker}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"

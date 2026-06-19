@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://discopanel.app/ | Github: https://github.com/nickheyer/discopanel
 
 APP="DiscoPanel"
-var_tags="${var_tags:-gaming}"
+var_tags="${var_tags:-gaming;docker}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-15}"
