@@ -319,11 +319,12 @@ msg_ok "Built PowerSync"
   chown -R powersync:powersync /opt/powersync
   msg_ok "Created PowerSync service user"
 
-  msg_info "Creating PowerSync systemd service"
-  cat > /etc/systemd/system/powersync.service <<EOF
+msg_info "Creating PowerSync systemd service"
+cat > /etc/systemd/system/powersync.service <<EOF
 [Unit]
 Description=PowerSync Service
 After=network.target postgresql.service
+Wants=postgresql.service
 
 [Service]
 Type=simple
@@ -333,23 +334,62 @@ WorkingDirectory=/opt/powersync/powersync-service
 EnvironmentFile=/opt/powersync/powersync.env
 Environment=NODE_ENV=production
 Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync.yaml
+
 ExecStart=/usr/bin/node service/lib/entry.js start
+
 Restart=always
 RestartSec=5
+TimeoutStartSec=120
 
-[Install]
-WantedBy=multi-user.target
+# Resource limits
+Environment=NODE_OPTIONS=--max-old-space-size=1024
+LimitNOFILE=65535
+
+StandardOutput=journal
+StandardError=journal
 EOF
+ 
   systemctl daemon-reload
   systemctl enable -q --now powersync
   msg_ok "Started PowerSync service"
 
 msg_info "Creating PowerSync compaction timer"
 
-cat > /etc/systemd/system/wger-powersync-compact.service <<EOF
+# Create minimal config for compaction (no port conflicts)
+cat > /opt/powersync/powersync-compact.yaml <<'EOF'
+telemetry:
+  disable_telemetry_sharing: true
+  # prometheus_port intentionally omitted = no metrics server
+
+replication:
+  connections:
+    - type: postgresql
+      uri: !env PS_DATABASE_URI
+      sslmode: disable
+
+storage:
+  type: postgresql
+  uri: !env PS_STORAGE_PG_URI
+  sslmode: disable
+
+port: !env PS_PORT
+
+sync_rules:
+  path: sync-rules.yaml
+
+client_auth:
+  allow_local_jwks: true
+  jwks_uri: !env PS_JWKS_URL
+  audience:
+    - "powersync"
+EOF
+
+# Create improved compaction service
+cat > /etc/systemd/system/wger-powersync-compact.service <<'EOF'
 [Unit]
 Description=wger PowerSync bucket compaction
 After=powersync.service
+Requires=powersync.service
 
 [Service]
 Type=oneshot
@@ -358,22 +398,36 @@ Group=powersync
 WorkingDirectory=/opt/powersync/powersync-service
 EnvironmentFile=/opt/powersync/powersync.env
 Environment=NODE_ENV=production
-Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync.yaml
+Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync-compact.yaml
+
+# Prevent port conflicts
+Environment=PS_PORT=8081
+
 ExecStart=/usr/bin/node service/lib/entry.js compact
+
+TimeoutStartSec=1800
+Restart=on-failure
+RestartSec=60
+Environment=NODE_OPTIONS=--max-old-space-size=1024
+
+StandardOutput=journal
+StandardError=journal
 EOF
 
 cat > /etc/systemd/system/wger-powersync-compact.timer <<EOF
 [Unit]
 Description=Run wger PowerSync compaction daily
-
 [Timer]
 OnCalendar=*-*-* 03:00:00
 Persistent=true
 RandomizedDelaySec=15min
-
 [Install]
 WantedBy=timers.target
 EOF
+
+systemctl daemon-reload
+systemctl enable -q --now wger-powersync-compact.timer
+msg_ok "Created PowerSync compaction timer"
 
 systemctl daemon-reload
 systemctl enable -q --now wger-powersync-compact.timer
