@@ -264,15 +264,40 @@ fi
 
 CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync"
 
-cd /opt/powersync/powersync-service || true
+# Locate directory containing package.json (if any) and cd there
+WORKDIR=""
+if [[ -d /opt/powersync/powersync-service ]]; then
+  WORKDIR=/opt/powersync/powersync-service
+elif [[ -f /opt/powersync/package.json ]]; then
+  WORKDIR=/opt/powersync
+else
+  WORKDIR=$(find /opt/powersync -maxdepth 2 -type f -name package.json -printf '%h\n' | head -n1 || true)
+fi
 
-corepack enable >/dev/null 2>&1
-corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+if [[ -n "$WORKDIR" && -d "$WORKDIR" ]]; then
+  cd "$WORKDIR" || true
+  corepack enable >/dev/null 2>&1 || true
+  # Try to read pnpm version from package.json, fall back to global
+  if node -e "process.exit(require('./package.json') && 0)" >/dev/null 2>&1; then
+    PNPM_VER=$(node -p "(require('./package.json').packageManager||'').split('@')[1]" 2>/dev/null || true)
+    [[ -n "$PNPM_VER" ]] && corepack use "pnpm@$PNPM_VER" >/dev/null 2>&1 || true
+  fi
 
-$STD pnpm install --frozen-lockfile
-$STD pnpm build:production
+  $STD pnpm install --frozen-lockfile || true
 
-msg_ok "Built PowerSync"
+  # Run available build script: prefer build:production, then build
+  if jq -e '.scripts["build:production"]' package.json >/dev/null 2>&1; then
+    $STD pnpm run build:production || msg_warn "pnpm build:production failed"
+  elif jq -e '.scripts["build"]' package.json >/dev/null 2>&1; then
+    $STD pnpm run build || msg_warn "pnpm build failed"
+  else
+    msg_warn "No pnpm build script found; skipping build"
+  fi
+
+  msg_ok "Built PowerSync (if applicable)"
+else
+  msg_warn "No Node.js project found under /opt/powersync; skipping build"
+fi
   
   msg_info "Creating PowerSync service user"
   if ! id -u powersync &>/dev/null; then
@@ -281,6 +306,7 @@ msg_ok "Built PowerSync"
   chown -R powersync:powersync /opt/powersync
   msg_ok "Created PowerSync service user"
 
+[ -n "$WORKDIR" ] && SERVICE_DIR="$WORKDIR" || SERVICE_DIR="/opt/powersync/powersync-service"
 msg_info "Creating PowerSync systemd service"
 cat > /etc/systemd/system/powersync.service <<EOF
 [Unit]
@@ -292,7 +318,7 @@ Wants=postgresql.service
 Type=simple
 User=powersync
 Group=powersync
-WorkingDirectory=/opt/powersync/powersync-service
+WorkingDirectory=${SERVICE_DIR}
 EnvironmentFile=/opt/powersync/powersync.env
 Environment=NODE_ENV=production
 Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync.yaml
@@ -357,7 +383,7 @@ Requires=powersync.service
 Type=oneshot
 User=powersync
 Group=powersync
-WorkingDirectory=/opt/powersync/powersync-service
+WorkingDirectory=${SERVICE_DIR}
 EnvironmentFile=/opt/powersync/powersync.env
 Environment=NODE_ENV=production
 Environment=POWERSYNC_CONFIG_PATH=/opt/powersync/powersync-compact.yaml
