@@ -26,6 +26,10 @@ function install_powersync() {
   POWERSYNC_NODE_VERSION="24.15.0"
   POWERSYNC_REPO="https://github.com/powersync-ja/powersync-service.git"
 
+  if ! command -v jq >/dev/null 2>&1; then
+    apt-get install -y jq
+  fi
+
   if ! command -v node &>/dev/null || ! node -v | grep -q "^v${POWERSYNC_NODE_VERSION%%.*}\."; then
     msg_info "Installing Node.js ${POWERSYNC_NODE_VERSION}"
     NODE_MAJOR="${POWERSYNC_NODE_VERSION%%.*}"
@@ -42,13 +46,18 @@ if [[ -d /opt/powersync/powersync-service ]]; then
 
     rm -rf /opt/powersync/powersync-service
 
-    curl -fsSL \
-      "$POWERSYNC_RELEASE_URL" \
+    RELEASE_JSON=$(curl -fsSL \
+      https://api.github.com/repos/powersync-ja/powersync-service/releases/latest)
+
+    TARBALL_URL=$(echo "$RELEASE_JSON" | jq -r .tarball_url)
+
+    curl -fsSL -L "$TARBALL_URL" \
       -o /tmp/powersync.tar.gz
 
     tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
 
-    EXTRACTED_DIR=$(find /opt/powersync -maxdepth 1 -type d -name "powersync-service*" | head -1)
+    EXTRACTED_DIR=$(find /opt/powersync \
+      -mindepth 1 -maxdepth 1 -type d | head -1)
 
     mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
 
@@ -58,6 +67,8 @@ if [[ -d /opt/powersync/powersync-service ]]; then
 
     $STD pnpm install --frozen-lockfile
     $STD pnpm build:production
+
+    chown -R powersync:powersync /opt/powersync
 
     systemctl start powersync
 
@@ -264,18 +275,23 @@ streams:
 SYNCRULES
   msg_ok "Created PowerSync config"
 
-msg_info "Downloading and building PowerSync"
+msg_info "Downloading latest PowerSync release"
+
+RELEASE_JSON=$(curl -fsSL \
+  https://api.github.com/repos/powersync-ja/powersync-service/releases/latest)
+
+TARBALL_URL=$(echo "$RELEASE_JSON" | jq -r .tarball_url)
 
 mkdir -p /opt/powersync
 
-curl -fsSL \
-  "https://github.com/powersync-ja/powersync-service/archive/refs/tags/%40powersync%2Flib-service-postgres%400.4.28.tar.gz" \
+curl -fsSL -L "$TARBALL_URL" \
   -o /tmp/powersync.tar.gz
 
 tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
 
-mv /opt/powersync/powersync-service-* \
-   /opt/powersync/powersync-service
+EXTRACTED_DIR=$(find /opt/powersync -maxdepth 1 -type d -name "*powersync*" | head -1)
+
+mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
 
 cd /opt/powersync/powersync-service
 
