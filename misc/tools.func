@@ -1162,6 +1162,7 @@ create_backup() {
 
   if [[ -f "$manifest" ]]; then
     msg_ok "Existing backup found at ${store}, skipping backup"
+    trap '_restore_update_backup_on_error' ERR
     return 0
   fi
 
@@ -1186,6 +1187,24 @@ create_backup() {
     echo "$path" >>"$manifest"
   done
   msg_ok "Backed up data to ${store}"
+  trap '_restore_update_backup_on_error' ERR
+}
+
+_restore_update_backup_on_error() {
+  local _err=$?
+  trap - ERR
+  if [[ -f "${BACKUP_DIR:-/opt/${NSAPP:-app}.backup}/.manifest" ]]; then
+    msg_error "Update failed (exit ${_err}) – restoring backup"
+    restore_backup
+  fi
+  exit "${_err:-1}"
+}
+
+clear_update_backup() {
+  local store="${BACKUP_DIR:-/opt/${NSAPP:-app}.backup}"
+  [[ -d "$store" ]] || return 0
+  rm -rf "$store"
+  trap - ERR
 }
 
 restore_backup() {
@@ -1208,6 +1227,7 @@ restore_backup() {
     cp -a "$src" "$path"
   done <"$manifest"
   rm -rf "$store"
+  trap - ERR
   msg_ok "Restored data"
 }
 

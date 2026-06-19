@@ -3693,6 +3693,28 @@ runtime_script_status_guard() {
 }
 
 # ------------------------------------------------------------------------------
+# _run_update_script()
+#
+# - Runs update_script inside the LXC with standardized backup recovery
+# - create_backup() arms an ERR trap; successful updates clear the backup store
+# - Works even when update_script ends with exit (EXIT trap)
+# ------------------------------------------------------------------------------
+_run_update_script() {
+  local _update_rc=0
+  _on_update_script_exit() {
+    local _exit_rc=$?
+    trap - EXIT
+    if [[ $_exit_rc -eq 0 ]] && declare -f clear_update_backup &>/dev/null; then
+      clear_update_backup
+    fi
+    exit "$_exit_rc"
+  }
+  trap '_on_update_script_exit' EXIT
+  update_script || _update_rc=$?
+  return "$_update_rc"
+}
+
+# ------------------------------------------------------------------------------
 # start()
 #
 # - Entry point of script
@@ -3713,7 +3735,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard || return 0
-    update_script
+    _run_update_script
     run_addon_updates
     update_motd_ip
     cleanup_lxc
@@ -3724,7 +3746,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard || return 0
-    update_script
+    _run_update_script
     run_addon_updates
     update_motd_ip
     cleanup_lxc
@@ -3754,7 +3776,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard || return 0
-    update_script
+    _run_update_script
     run_addon_updates
     update_motd_ip
     cleanup_lxc
