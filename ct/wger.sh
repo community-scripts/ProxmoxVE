@@ -112,45 +112,137 @@ api:
 EOF
 
   cat > /opt/powersync/sync-rules.yaml <<EOF
-bucket_definitions:
-  global:
-    data:
-      - SELECT * FROM exercises_exercise
-      - SELECT * FROM exercises_translation
-      - SELECT * FROM exercises_alias
-      - SELECT * FROM exercises_equipment
-      - SELECT * FROM exercises_exercise_equipment
-      - SELECT * FROM exercises_exercise_muscles
-      - SELECT * FROM exercises_exercise_muscles_secondary
-      - SELECT * FROM exercises_exercisecategory
-      - SELECT * FROM exercises_exercisecomment
-      - SELECT * FROM exercises_exerciseimage
-      - SELECT * FROM exercises_exercisevideo
-      - SELECT * FROM exercises_muscle
+# Note that changes to this file are not watched.
+# The service needs to be restarted for changes to take effect.
+
+# Warning: a user may have at most 1000 buckets, i.e. parameter-query results
+# summed across all streams. This counts the *parameter* rows, not the data
+# rows inside a bucket (a single bucket can hold any number of rows). For a
+# stream with a `with:` CTE the count is the number of rows the CTE returns,
+# so for `user_ingredients` below that is the number of distinct ingredients
+# a user has ever referenced. Exceeding the limit is a hard error
+# (PSYNC_S2305 "Too many parameter query results").
+# See https://docs.powersync.com/sync/rules/parameter-queries
+#
+# Streams are split by update frequency (cold / medium / hot) so that
+# bucket compaction can collapse the head of hot buckets without being
+# blocked by long-lived rows from cold tables.
+#
+# For details, see the documentation:
+# https://docs.powersync.com/sync/streams/overview
+# https://docs.powersync.com/maintenance-ops/compacting-buckets
+
+config:
+  edition: 3
+
+streams:
+  # Global reference data, shared by all users, changes rarely enough
+  core:
+    auto_subscribe: true
+    queries:
       - SELECT * FROM core_language
       - SELECT * FROM core_license
       - SELECT * FROM core_repetitionunit
       - SELECT * FROM core_weightunit
-  by_user:
-    parameters:
-      - SELECT id as user_id FROM auth_user WHERE CAST(id AS TEXT) = request.user_id()
-    data:
-      - SELECT * FROM core_userprofile WHERE user_id = bucket.user_id
-      - SELECT * FROM core_usercache WHERE user_id = bucket.user_id
-      - SELECT * FROM manager_routine WHERE user_id = bucket.user_id
-      - SELECT * FROM manager_workoutlog WHERE user_id = bucket.user_id
-      - SELECT * FROM manager_workoutsession WHERE user_id = bucket.user_id
-      - SELECT * FROM measurements_category WHERE user_id = bucket.user_id
-      - SELECT * FROM nutrition_nutritionplan WHERE user_id = bucket.user_id
-      - SELECT * FROM weight_weightentry WHERE user_id = bucket.user_id
-      - SELECT * FROM gallery_image WHERE user_id = bucket.user_id
-      - SELECT * FROM trophies_userstatistics WHERE user_id = bucket.user_id
-      - SELECT * FROM trophies_usertrophy WHERE user_id = bucket.user_id
-      - SELECT * FROM gym_gymuserconfig WHERE user_id = bucket.user_id
-      - SELECT * FROM gym_userdocument WHERE user_id = bucket.user_id
-      - SELECT * FROM gym_adminusernote WHERE user_id = bucket.user_id
-      - SELECT * FROM gym_contract WHERE user_id = bucket.user_id
-      - SELECT * FROM mailer_log WHERE user_id = bucket.user_id
+      - SELECT * FROM exercises_exercise
+      - SELECT * FROM exercises_translation
+      - SELECT * FROM exercises_alias
+      - SELECT * FROM exercises_exercisecomment
+      - SELECT * FROM exercises_muscle
+      - SELECT * FROM exercises_exercise_muscles
+      - SELECT * FROM exercises_exercise_muscles_secondary
+      - SELECT * FROM exercises_equipment
+      - SELECT * FROM exercises_exercise_equipment
+      - SELECT * FROM exercises_exercisecategory
+      - SELECT * FROM exercises_exerciseimage
+      - SELECT * FROM exercises_exercisevideo
+
+  # COLD, per-user data that almost never changes after creation.
+  user_profile:
+    auto_subscribe: true
+    queries:
+      - SELECT * FROM core_userprofile WHERE CAST(user_id AS TEXT) = auth.user_id()
+      - SELECT * FROM gallery_image WHERE CAST(user_id AS TEXT) = auth.user_id()
+
+  # COLD but potentially large, only the per-user *filter set* changes when the user logs new foods
+  user_ingredients:
+    auto_subscribe: true
+    with:
+      user_ingredients: |
+        SELECT DISTINCT nutrition_synced_ingredient.id
+        FROM nutrition_synced_ingredient
+        WHERE nutrition_synced_ingredient.id IN (
+                SELECT nutrition_logitem.ingredient_id FROM nutrition_logitem
+                JOIN nutrition_nutritionplan ON nutrition_logitem.plan_id = nutrition_nutritionplan.id
+                WHERE CAST(nutrition_nutritionplan.user_id AS TEXT) = auth.user_id())
+           OR nutrition_synced_ingredient.id IN (
+                SELECT nutrition_mealitem.ingredient_id FROM nutrition_mealitem
+                JOIN nutrition_meal ON nutrition_mealitem.meal_id = nutrition_meal.id
+                JOIN nutrition_nutritionplan ON nutrition_meal.plan_id = nutrition_nutritionplan.id
+                WHERE CAST(nutrition_nutritionplan.user_id AS TEXT) = auth.user_id())
+    queries:
+      - SELECT * FROM nutrition_synced_ingredient AS nutrition_ingredient WHERE id IN user_ingredients
+      - |
+        SELECT nutrition_image.* FROM nutrition_image
+        WHERE nutrition_image.ingredient_id IN user_ingredients
+      - |
+        SELECT nutrition_ingredientweightunit.* FROM nutrition_ingredientweightunit
+        WHERE nutrition_ingredientweightunit.ingredient_id IN user_ingredients
+
+  # MEDIUM. Edited e.g. when the user builds or edits their routine or nutrition plan,
+  # but not on every workout.
+  user_planning:
+    auto_subscribe: true
+    queries:
+      # Routines (templates excluded)
+      - SELECT * FROM manager_routine WHERE CAST(user_id AS TEXT) = auth.user_id() AND is_template = FALSE
+
+      # Measurements
+      - SELECT * FROM measurements_category WHERE CAST(user_id AS TEXT) = auth.user_id()
+      - |
+        SELECT measurements_measurement.*
+        FROM measurements_measurement
+        INNER JOIN measurements_category
+          ON measurements_measurement.category_id = measurements_category.id
+        WHERE CAST(measurements_category.user_id AS TEXT) = auth.user_id()
+
+      # Nutrition plan structure (not the log items)
+      - SELECT * FROM nutrition_nutritionplan WHERE CAST(user_id AS TEXT) = auth.user_id()
+      - |
+        SELECT nutrition_meal.*
+        FROM nutrition_meal
+        JOIN nutrition_nutritionplan
+          ON nutrition_meal.plan_id = nutrition_nutritionplan.id
+        WHERE CAST(nutrition_nutritionplan.user_id AS TEXT) = auth.user_id()
+      - |
+        SELECT nutrition_mealitem.*
+        FROM nutrition_mealitem
+        JOIN nutrition_meal
+          ON nutrition_mealitem.meal_id = nutrition_meal.id
+        JOIN nutrition_nutritionplan
+          ON nutrition_meal.plan_id = nutrition_nutritionplan.id
+        WHERE CAST(nutrition_nutritionplan.user_id AS TEXT) = auth.user_id()
+
+
+  # HOT. Generates  one or more new rows per workout / meal. Compaction has the
+  # biggest impact here, so it must stay isolated from the other streams above
+  user_activity:
+    auto_subscribe: true
+    queries:
+      # Weight tracking
+      - SELECT uuid AS id, weight, date, user_id FROM weight_weightentry WHERE CAST(user_id AS TEXT) = auth.user_id()
+
+      # Workout sessions and per-set logs
+      - SELECT * FROM manager_workoutsession WHERE CAST(user_id AS TEXT) = auth.user_id()
+      - SELECT * FROM manager_workoutlog WHERE CAST(user_id AS TEXT) = auth.user_id()
+
+      # Nutrition log entries
+      - |
+        SELECT nutrition_logitem.*
+        FROM nutrition_logitem
+        JOIN nutrition_nutritionplan
+          ON nutrition_logitem.plan_id = nutrition_nutritionplan.id
+        WHERE CAST(nutrition_nutritionplan.user_id AS TEXT) = auth.user_id()
 EOF
   msg_ok "Created PowerSync config"
 
