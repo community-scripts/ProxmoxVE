@@ -36,12 +36,11 @@ function update_script() {
     systemctl stop spoolman
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    [ -d /opt/spoolman_bak ] && rm -rf /opt/spoolman_bak
-    mv /opt/spoolman /opt/spoolman_bak
+    create_backup /opt/spoolman
     msg_ok "Created Backup"
 
     fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+    restore_backup
 
     msg_info "Updating Spoolman"
     cd /opt/spoolman

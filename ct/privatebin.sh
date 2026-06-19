@@ -29,16 +29,14 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "privatebin" "PrivateBin/PrivateBin"; then
-    msg_info "Creating backup"
-    cp -f /opt/privatebin/cfg/conf.php /tmp/privatebin_conf.bak
-    msg_ok "Backup created"
+    create_backup /opt/privatebin/cfg/conf.php
 
     rm -rf /opt/privatebin/*
     fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
+    restore_backup
 
     msg_info "Configuring ${APP}"
     mkdir -p /opt/privatebin/data
-    mv /tmp/privatebin_conf.bak /opt/privatebin/cfg/conf.php
     chown -R www-data:www-data /opt/privatebin
     chmod -R 0755 /opt/privatebin/data
     systemctl reload nginx php8.2-fpm

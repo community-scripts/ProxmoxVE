@@ -37,12 +37,11 @@ function update_script() {
     systemctl stop mealie
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp -f /opt/mealie/mealie.env /opt/mealie.env
-    [[ -f /opt/mealie/start.sh ]] && cp -f /opt/mealie/start.sh /opt/mealie.start.sh
+    create_backup /opt/mealie/mealie.env /opt/mealie/start.sh
     msg_ok "Backup completed"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball"
+    restore_backup
 
     msg_info "Restoring Configuration"
     mv -f /opt/mealie.env /opt/mealie/mealie.env

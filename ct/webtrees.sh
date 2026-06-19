@@ -36,17 +36,11 @@ function update_script() {
     systemctl stop caddy php${PHP_VER}-fpm
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/webtrees/data /opt/webtrees_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/webtrees/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "webtrees" "fisharebest/webtrees" "prebuild" "latest" "/opt/webtrees" "webtrees-*.zip"
+    restore_backup
 
-    msg_info "Restoring Data"
-    cp -r /opt/webtrees_data_backup/. /opt/webtrees/data
-    rm -rf /opt/webtrees_data_backup
-    chown -R www-data:www-data /opt/webtrees
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start caddy php${PHP_VER}-fpm

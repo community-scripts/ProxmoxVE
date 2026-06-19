@@ -38,11 +38,10 @@ function update_script() {
     systemctl stop nginx
     msg_ok "Services Stopped"
 
-    msg_info "Creating Backup"
-    mv /opt/snipe-it /opt/snipe-it-backup
-    msg_ok "Created Backup"
+    create_backup /opt/snipe-it/.env /opt/snipe-it/public/uploads /opt/snipe-it/storage/private_uploads
 
     fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
+    restore_backup
     [[ "$(php -v 2>/dev/null)" == PHP\ 8.2* ]] && PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="ldap,soap,xsl" setup_php
     sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/snipeit.conf
     setup_composer
@@ -50,9 +49,6 @@ function update_script() {
     msg_info "Updating Snipe-IT"
     $STD apt update
     $STD apt -y upgrade
-    cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
-    cp -r /opt/snipe-it-backup/public/uploads/. /opt/snipe-it/public/uploads/
-    cp -r /opt/snipe-it-backup/storage/private_uploads/. /opt/snipe-it/storage/private_uploads/
     cd /opt/snipe-it/
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --optimize-autoloader --no-interaction
@@ -64,7 +60,6 @@ function update_script() {
     $STD php artisan view:clear
     chown -R www-data: /opt/snipe-it
     chmod -R 755 /opt/snipe-it
-    rm -rf /opt/snipe-it-backup
     msg_ok "Updated Snipe-IT"
 
     msg_info "Starting Service"

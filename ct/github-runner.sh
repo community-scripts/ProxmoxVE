@@ -38,22 +38,11 @@ function update_script() {
     systemctl stop actions-runner
     msg_ok "Stopped Service"
 
-    msg_info "Backing up runner configuration"
-    BACKUP_DIR="/opt/actions-runner.backup"
-    mkdir -p "$BACKUP_DIR"
-    for f in .runner .credentials .credentials_rsaparams .env .path; do
-      [[ -f /opt/actions-runner/$f ]] && cp -a /opt/actions-runner/$f "$BACKUP_DIR/"
-    done
-    msg_ok "Backed up configuration"
+    create_backup /opt/actions-runner/$f
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-x64-*.tar.gz"
+    restore_backup
 
-    msg_info "Restoring runner configuration"
-    for f in .runner .credentials .credentials_rsaparams .env .path; do
-      [[ -f "$BACKUP_DIR/$f" ]] && cp -a "$BACKUP_DIR/$f" /opt/actions-runner/
-    done
-    rm -rf "$BACKUP_DIR"
-    msg_ok "Restored configuration"
 
     msg_info "Starting Service"
     systemctl start actions-runner

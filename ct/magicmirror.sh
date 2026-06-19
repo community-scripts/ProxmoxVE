@@ -35,26 +35,15 @@ function update_script() {
 
     NODE_VERSION="24" setup_nodejs
 
-    msg_info "Backing up data"
-    rm -rf /opt/magicmirror-backup
-    mkdir /opt/magicmirror-backup
-    cp /opt/magicmirror/config/config.js /opt/magicmirror-backup
-    if [[ -f /opt/magicmirror/css/custom.css ]]; then
-      cp /opt/magicmirror/css/custom.css /opt/magicmirror-backup
-    fi
-    cp -r /opt/magicmirror/modules /opt/magicmirror-backup
-    msg_ok "Backed up data"
+    create_backup /opt/magicmirror/config/config.js /opt/magicmirror/css/custom.css /opt/magicmirror/modules
 
     fetch_and_deploy_gh_release "magicmirror" "MagicMirrorOrg/MagicMirror" "tarball"
+    restore_backup
 
     msg_info "Configuring MagicMirror"
     cd /opt/magicmirror
     sed -i -E 's/("postinstall": )".*"/\1""/; s/("prepare": )".*"/\1""/' package.json
     $STD npm run install-mm
-    cp /opt/magicmirror-backup/config.js /opt/magicmirror/config/
-    if [[ -f /opt/magicmirror-backup/custom.css ]]; then
-      cp /opt/magicmirror-backup/custom.css /opt/magicmirror/css/
-    fi
     msg_ok "Configured MagicMirror"
 
     msg_info "Starting Service"

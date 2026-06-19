@@ -68,11 +68,12 @@ function update_script() {
       msg_info "Stopping Service"
       systemctl stop pocketid
       msg_ok "Stopped Service"
-      cp /opt/pocket-id/.env /opt/env
     fi
 
+    create_backup /opt/pocket-id/.env
+
     fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id-linux-amd64"
-    mv /opt/env /opt/pocket-id/.env
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start pocketid

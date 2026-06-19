@@ -35,13 +35,11 @@ function update_script() {
     systemctl stop musicseerr
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -a /opt/musicseerr/backend/config /opt/musicseerr_config_backup
-    cp -a /opt/musicseerr/backend/cache /opt/musicseerr_cache_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/musicseerr/backend/config /opt/musicseerr/backend/cache
 
     PYTHON_VERSION="3.13" setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "musicseerr" "HabiRabbu/Musicseerr" "tarball"
+    restore_backup
     NODE_VERSION="25" NODE_MODULE="pnpm@10.33.0" setup_nodejs
 
     msg_info "Building Frontend"
@@ -60,12 +58,6 @@ function update_script() {
     cp -r /opt/musicseerr/frontend/build /opt/musicseerr/backend/static
     msg_ok "Updated Application"
 
-    msg_info "Restoring Data"
-    rm -rf /opt/musicseerr/backend/config /opt/musicseerr/backend/cache
-    cp -a /opt/musicseerr_config_backup/. /opt/musicseerr/backend/config/
-    cp -a /opt/musicseerr_cache_backup/. /opt/musicseerr/backend/cache/
-    rm -rf /opt/musicseerr_config_backup /opt/musicseerr_cache_backup
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start musicseerr

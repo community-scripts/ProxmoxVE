@@ -35,21 +35,11 @@ function update_script() {
     systemctl stop ezbookkeeping
     msg_ok "Stopped Service"
 
-    msg_info "Backing up configuration"
-    mkdir -p /opt/ezbookkeeping-backup
-    cp /opt/ezbookkeeping/conf/ezbookkeeping.ini /opt/ezbookkeeping-backup/
-    cp -r /opt/ezbookkeeping/data /opt/ezbookkeeping-backup/data/
-    cp -r /opt/ezbookkeeping/storage /opt/ezbookkeeping-backup/storage/
-    msg_ok "Backed up configuration"
+    create_backup /opt/ezbookkeeping/data /opt/ezbookkeeping/storage
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ezbookkeeping" "mayswind/ezbookkeeping" "prebuild" "latest" "/opt/ezbookkeeping" "ezbookkeeping-*-linux-$(arch_resolve).tar.gz"
+    restore_backup
 
-    msg_info "Restoring configuration"
-    cp -rf /opt/ezbookkeeping-backup/ezbookkeeping.ini /opt/ezbookkeeping/conf/
-    cp -rf /opt/ezbookkeeping-backup/data/. /opt/ezbookkeeping/data/
-    cp -rf /opt/ezbookkeeping-backup/storage/. /opt/ezbookkeeping/storage/
-    rm -rf /opt/ezbookkeeping-backup
-    msg_ok "Restored configuration"
 
     msg_info "Starting Service"
     systemctl start ezbookkeeping

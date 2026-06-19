@@ -34,24 +34,19 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Backing up current HortusFox installation"
-    cd /opt
-    mv /opt/hortusfox/ /opt/hortusfox-backup
-    msg_ok "Backed up current HortusFox installation"
+    create_backup /opt/hortusfox/.env /opt/hortusfox/public/img
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web" "tarball"
+    restore_backup
 
     msg_info "Updating HortusFox"
     cd /opt/hortusfox
-    cp /opt/hortusfox-backup/.env /opt/hortusfox/.env
-    cp -a /opt/hortusfox-backup/public/img/. /opt/hortusfox/public/img/
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --optimize-autoloader
     $STD php asatru migrate:upgrade
     $STD php asatru plants:attributes
     $STD php asatru calendar:classes
     chown -R www-data:www-data /opt/hortusfox
-    rm -r /opt/hortusfox-backup
     msg_ok "Updated HortusFox"
 
     msg_info "Starting Service"

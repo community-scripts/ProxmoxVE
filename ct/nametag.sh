@@ -35,12 +35,10 @@ function update_script() {
     systemctl stop nametag
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/nametag/.env /opt/nametag.env.bak
-    cp -r /opt/nametag/data /opt/nametag_data_bak
-    msg_ok "Backed up Data"
+    create_backup /opt/nametag/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/opt/nametag"
+    restore_backup
 
     msg_info "Rebuilding Application"
     cd /opt/nametag
@@ -54,12 +52,6 @@ function update_script() {
     cp -r /opt/nametag/public /opt/nametag/.next/standalone/public
     msg_ok "Rebuilt Application"
 
-    msg_info "Restoring Data"
-    cp /opt/nametag.env.bak /opt/nametag/.env
-    cp -r /opt/nametag_data_bak/. /opt/nametag/data/
-    rm -f /opt/nametag.env.bak
-    rm -rf /opt/nametag_data_bak
-    msg_ok "Restored Data"
 
     msg_info "Running Migrations"
     cd /opt/nametag

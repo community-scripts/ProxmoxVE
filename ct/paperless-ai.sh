@@ -34,16 +34,11 @@ function update_script() {
     systemctl stop paperless-ai paperless-rag
     msg_ok "Stopped Service"
 
-    msg_info "Backing up data"
-    cp -r /opt/paperless-ai/data /opt/paperless-ai-data-backup
-    msg_ok "Backed up data"
+    create_backup /opt/paperless-ai/data
 
     fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai" "tarball"
+    restore_backup
 
-    msg_info "Restoring data"
-    cp -r /opt/paperless-ai-data-backup/* /opt/paperless-ai/data/
-    rm -rf /opt/paperless-ai-data-backup
-    msg_ok "Restored data"
 
     msg_info "Updating Paperless-AI"
     cd /opt/paperless-ai

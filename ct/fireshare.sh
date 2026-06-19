@@ -35,9 +35,10 @@ function update_script() {
     systemctl stop fireshare
     msg_ok "Stopped Service"
 
-    mv /opt/fireshare/fireshare.env /opt
+    create_backup /opt/fireshare/fireshare.env
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fireshare" "ShaneIsrael/fireshare" "tarball"
-    mv /opt/fireshare.env /opt/fireshare
+    restore_backup
     rm -f /usr/local/bin/fireshare
 
     msg_info "Updating Fireshare"

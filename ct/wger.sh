@@ -35,19 +35,11 @@ function update_script() {
     systemctl stop redis-server nginx celery celery-beat wger
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/wger/media /opt/wger_media_backup
-    cp /opt/wger/.env /opt/wger_env_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/wger/media
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball"
+    restore_backup
 
-    msg_info "Restoring Data"
-    cp -r /opt/wger_media_backup/. /opt/wger/media
-    cp /opt/wger_env_backup /opt/wger/.env
-    rm -rf /opt/wger_media_backup /opt/wger_env_backup
-
-    msg_ok "Restored Data"
 
     msg_info "Updating wger"
     cd /opt/wger

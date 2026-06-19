@@ -33,23 +33,10 @@ function update_script() {
     systemctl stop lubelogger
     msg_ok "Stopped Service"
 
-    msg_info "Backing up data"
-    mkdir -p /tmp/lubeloggerData/data
-    cp /opt/lubelogger/appsettings.json /tmp/lubeloggerData/appsettings.json
-    cp -r /opt/lubelogger/data/ /tmp/lubeloggerData/
-
-    # Lubelogger has moved multiples folders to the 'data' folder, and we need to move them before the update to keep the user data
-    # Github Discussion: https://github.com/hargata/lubelog/discussions/787
-    [[ -e /opt/lubelogger/config ]] && cp -r /opt/lubelogger/config /tmp/lubeloggerData/data/
-    [[ -e /opt/lubelogger/wwwroot/translations ]] && cp -r /opt/lubelogger/wwwroot/translations /tmp/lubeloggerData/data/
-    [[ -e /opt/lubelogger/wwwroot/documents ]] && cp -r /opt/lubelogger/wwwroot/documents /tmp/lubeloggerData/data/
-    [[ -e /opt/lubelogger/wwwroot/images ]] && cp -r /opt/lubelogger/wwwroot/images /tmp/lubeloggerData/data/
-    [[ -e /opt/lubelogger/wwwroot/temp ]] && cp -r /opt/lubelogger/wwwroot/temp /tmp/lubeloggerData/data/
-    [[ -e /opt/lubelogger/log ]] && cp -r /opt/lubelogger/log /tmp/lubeloggerData/
-    rm -rf /opt/lubelogger
-    msg_ok "Backed up data"
+    create_backup /opt/lubelogger/data/
 
     fetch_and_deploy_gh_release "lubelogger" "hargata/lubelog" "prebuild" "latest" "/opt/lubelogger" "LubeLogger*linux_x64.zip"
+    restore_backup
 
     msg_info "Configuring LubeLogger"
     chmod 700 /opt/lubelogger/CarCareTracker

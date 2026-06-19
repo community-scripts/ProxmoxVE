@@ -39,19 +39,12 @@ function update_script() {
     systemctl stop wealthfolio
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/wealthfolio_data /opt/wealthfolio_data_backup
-    cp /opt/wealthfolio/.env /opt/wealthfolio_env_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/wealthfolio_data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wealthfolio" "wealthfolio/wealthfolio" "prebuild" "latest" "/opt/wealthfolio" "wealthfolio-server-*-linux-amd64.tar.gz"
+    restore_backup
     install -m 755 /opt/wealthfolio/wealthfolio-server /usr/local/bin/wealthfolio-server
 
-    msg_info "Restoring Data"
-    cp -r /opt/wealthfolio_data_backup/. /opt/wealthfolio_data
-    cp /opt/wealthfolio_env_backup /opt/wealthfolio/.env
-    rm -rf /opt/wealthfolio_data_backup /opt/wealthfolio_env_backup
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start wealthfolio
