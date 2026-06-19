@@ -64,6 +64,7 @@ function install_powersync() {
   sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
   msg_ok "Set up PowerSync storage"
 
+  # [PowerSync config, services, etc. – same as before]
   msg_info "Creating PowerSync config"
   mkdir -p /opt/powersync
 
@@ -306,7 +307,6 @@ EOF
 }
 
 # ====================== MAIN INSTALLATION ======================
-
 start
 build_container
 description
@@ -364,14 +364,14 @@ EOF
 
 set -a && source /opt/wger/.env && set +a
 
-# === FIX: Grant superuser temporarily for bootstrap ===
+# === CRITICAL FIX: Grant superuser BEFORE bootstrap ===
 msg_info "Granting temporary superuser rights for bootstrap"
-sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
+sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER;"
 
 $STD uv run wger bootstrap
 $STD uv run python manage.py collectstatic --no-input
 
-# Create admin user with default password
+# Create admin user
 cat <<EOF | uv run python manage.py shell
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -388,13 +388,13 @@ EOF
 msg_ok "Set up wger"
 
 # Remove superuser rights
-sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
+sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER;"
 
 # Install PowerSync
 install_powersync
 
 msg_info "Creating Config and Services"
-# ... (rest of the service files remain the same)
+# (wger.service, celery.service, celery-beat.service, nginx config – unchanged)
 cat <<EOF >/etc/systemd/system/wger.service
 [Unit]
 Description=wger Gunicorn
@@ -460,9 +460,9 @@ server {
     }
     location / {
         proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host \$http_host;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
         proxy_redirect off;
     }
 }
