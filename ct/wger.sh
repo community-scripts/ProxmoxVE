@@ -66,6 +66,13 @@ function install_powersync() {
   fi
   msg_ok "Generated JWT keys"
 
+  msg_info "Generating PowerSync API token"
+  if ! grep -q "POWERSYNC_API_TOKEN" /opt/wger/.env; then
+    echo "POWERSYNC_API_TOKEN=$(openssl rand -hex 32)" >> /opt/wger/.env
+  fi
+  set -a && source /opt/wger/.env && set +a
+  msg_ok "Generated PowerSync API token"
+
   msg_info "Setting up PowerSync storage"
   sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB;"
   uv run python manage.py setup-powersync-storage
@@ -101,7 +108,7 @@ client_auth:
 
 api:
   tokens:
-    - $(openssl rand -hex 32)
+    - ${POWERSYNC_API_TOKEN}
 EOF
 
   cat > /opt/powersync/sync-rules.yaml <<EOF
