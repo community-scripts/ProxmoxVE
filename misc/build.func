@@ -4246,11 +4246,6 @@ EOF
   configure_gpu_passthrough
   configure_additional_devices
 
-  # Docker-in-LXC on arm64 needs apparmor=unconfined to work.
-  if [[ ";${var_tags:-};" == *";docker;"* ]] && [[ "$(arch_resolve)" == "arm64" ]]; then
-    echo "lxc.apparmor.profile: unconfined" >>"$LXC_CONFIG"
-  fi
-
   # Increase disk size for AMD ROCm runtime (~4GB extra needed)
   if [[ "${GPU_TYPE:-}" == "AMD" ]]; then
     local rocm_extra=4

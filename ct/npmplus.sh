@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/ZoeyVid/NPMplus
 
 APP="NPMplus"
-var_tags="${var_tags:-proxy;nginx;docker}"
+var_tags="${var_tags:-proxy;nginx}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-3}"

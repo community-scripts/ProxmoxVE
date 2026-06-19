@@ -13,9 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Docker"
-$STD sh <(curl -fsSL https://get.docker.com/)
-msg_ok "Installed Docker"
+setup_docker
 
 msg_info "Detecting latest Kasm Workspaces release"
 KASM_URL=$(curl -s https://kasm.com/downloads \
