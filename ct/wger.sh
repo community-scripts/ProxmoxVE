@@ -58,15 +58,19 @@ function install_powersync() {
 
   msg_info "Generating JWT keys"
   cd /opt/wger
+  set -a && source /opt/wger/.env && set +a
   export DJANGO_SETTINGS_MODULE=settings.main
   if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
     uv run python manage.py generate-jwt-keys >> /opt/wger/.env
+    set -a && source /opt/wger/.env && set +a
   fi
   msg_ok "Generated JWT keys"
 
   msg_info "Setting up PowerSync storage"
   sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB;"
   uv run python manage.py setup-powersync-storage
+  sudo -u postgres psql -d wger -c "GRANT USAGE, CREATE ON SCHEMA powersync TO wger;"
+  sudo -u postgres psql -d wger -c "ALTER ROLE wger IN DATABASE wger SET search_path TO powersync, public;"
   sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
   msg_ok "Set up PowerSync storage"
 
