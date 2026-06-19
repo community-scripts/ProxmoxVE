@@ -487,6 +487,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Kimai: Add APP_SECRET env var [@tremor021](https://github.com/tremor021) ([#15199](https://github.com/community-scripts/ProxmoxVE/pull/15199))
+
   - #### ✨ New Features
 
     - [arm64] Port scripts titled between A-F to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15181](https://github.com/community-scripts/ProxmoxVE/pull/15181))
