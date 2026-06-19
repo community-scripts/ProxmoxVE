@@ -214,7 +214,7 @@ SYNCRULES
   chown -R powersync:powersync /opt/powersync
   msg_ok "Created PowerSync service user"
 
-  msg_info "Creating PowerSync systemd service"
+  msg_info "Creating PowerSync systemd service + compaction"
   cat > /etc/systemd/system/powersync.service <<EOF
 [Unit]
 Description=PowerSync Service
@@ -238,7 +238,6 @@ StandardOutput=journal
 StandardError=journal
 EOF
 
-  msg_info "Creating PowerSync compaction timer"
   cat > /opt/powersync/powersync-compact.yaml <<'EOF'
 telemetry:
   disable_telemetry_sharing: true
@@ -364,6 +363,11 @@ SECRET_KEY=${SECRET_KEY}
 EOF
 
 set -a && source /opt/wger/.env && set +a
+
+# === FIX: Grant superuser temporarily for bootstrap ===
+msg_info "Granting temporary superuser rights for bootstrap"
+sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
+
 $STD uv run wger bootstrap
 $STD uv run python manage.py collectstatic --no-input
 
@@ -383,10 +387,14 @@ if created:
 EOF
 msg_ok "Set up wger"
 
+# Remove superuser rights
+sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
+
 # Install PowerSync
 install_powersync
 
 msg_info "Creating Config and Services"
+# ... (rest of the service files remain the same)
 cat <<EOF >/etc/systemd/system/wger.service
 [Unit]
 Description=wger Gunicorn
@@ -471,7 +479,6 @@ motd_ssh
 customize
 cleanup_lxc
 
-# Final Messages
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
