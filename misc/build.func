@@ -4001,6 +4001,7 @@ $PCT_OPTIONS_STRING"
       exit 214
     fi
     msg_ok "Storage space validated"
+    check_storage_health "$CONTAINER_STORAGE" "$DISK_SIZE"
   fi
 
   create_lxc_container || exit $?
@@ -5383,6 +5384,7 @@ select_storage() {
     # Validate storage space for container storage
     if [[ "$CLASS" == "container" && -n "${DISK_SIZE:-}" ]]; then
       validate_storage_space "$STORAGE_RESULT" "$DISK_SIZE" "yes"
+      check_storage_health "$STORAGE_RESULT" "$DISK_SIZE"
       # Continue even if validation fails - user was warned
     fi
 
@@ -5443,6 +5445,51 @@ validate_storage_space() {
       whiptail --msgbox "⚠️  Warning: Storage '$storage' may not have enough space!\n\nStorage Type: ${storage_type}\nRequired: ${required_gb}GB\nAvailable: ${free_gb_fmt}\n\nYou can continue, but creation might fail." 14 70
     fi
     return 236
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# check_storage_health()
+#
+# - Warns or blocks when target storage is nearly full
+# - Complements validate_storage_space (free space vs. requested disk)
+# - Uses pvesm status usage when available
+# ------------------------------------------------------------------------------
+check_storage_health() {
+  local storage="$1"
+  local required_gb="${2:-8}"
+  [[ -z "$storage" ]] && return 0
+
+  local storage_line storage_type total_kb avail_kb used_pct free_gb_fmt
+  storage_line=$(pvesm status 2>/dev/null | awk -v s="$storage" '$1 == s {print $0}')
+  [[ -z "$storage_line" ]] && return 0
+
+  storage_type=$(awk '{print $2}' <<<"$storage_line")
+  total_kb=$(awk '{print $4}' <<<"$storage_line")
+  avail_kb=$(awk '{print $6}' <<<"$storage_line")
+
+  [[ -z "$total_kb" || "$total_kb" == "0" || -z "$avail_kb" ]] && return 0
+
+  used_pct=$(( (total_kb - avail_kb) * 100 / total_kb ))
+  free_gb_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$avail_kb" 2>/dev/null || echo "${avail_kb}KB")
+
+  if (( used_pct >= 95 )); then
+    msg_warn "Storage '${storage}' (${storage_type}) is ${used_pct}% full (${free_gb_fmt} free)"
+    if ! is_unattended && command -v whiptail >/dev/null 2>&1 && [[ -t 0 ]]; then
+      if ! whiptail --backtitle "Proxmox VE Helper Scripts" \
+        --title "STORAGE ALMOST FULL" \
+        --yesno "Storage '${storage}' is ${used_pct}% full.\n\nType: ${storage_type}\nAvailable: ${free_gb_fmt}\nRequired for CT: ${required_gb} GB\n\nContinue anyway?" 14 70; then
+        msg_error "Installation cancelled – storage nearly full"
+        exit 214
+      fi
+    elif (( used_pct >= 98 )); then
+      msg_error "Storage '${storage}' is ${used_pct}% full – refusing install in unattended mode"
+      exit 214
+    fi
+  elif (( used_pct >= 85 )); then
+    msg_warn "Storage '${storage}' (${storage_type}) is ${used_pct}% full (${free_gb_fmt} free)"
   fi
 
   return 0
