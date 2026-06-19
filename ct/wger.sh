@@ -35,20 +35,35 @@ function install_powersync() {
     msg_ok "Installed Node.js ${POWERSYNC_NODE_VERSION}"
   fi
 
-  if [[ -d /opt/powersync/powersync-service ]]; then
+if [[ -d /opt/powersync/powersync-service ]]; then
     msg_info "Updating PowerSync"
+
     systemctl stop powersync 2>/dev/null || true
+
+    rm -rf /opt/powersync/powersync-service
+
+    curl -fsSL \
+      "$POWERSYNC_RELEASE_URL" \
+      -o /tmp/powersync.tar.gz
+
+    tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
+
+    EXTRACTED_DIR=$(find /opt/powersync -maxdepth 1 -type d -name "powersync-service*" | head -1)
+
+    mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
+
     cd /opt/powersync/powersync-service
-    git fetch --tags origin >/dev/null 2>&1
-    git checkout main >/dev/null 2>&1
-    git pull origin main >/dev/null 2>&1
+
     corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+
     $STD pnpm install --frozen-lockfile
     $STD pnpm build:production
+
     systemctl start powersync
+
     msg_ok "Updated PowerSync"
     return
-  fi
+fi
 
   msg_info "Configuring PostgreSQL for PowerSync"
   sed -i "s/#wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
@@ -249,14 +264,27 @@ streams:
 SYNCRULES
   msg_ok "Created PowerSync config"
 
-  msg_info "Cloning and building PowerSync from source"
-  git clone --depth 1 "$POWERSYNC_REPO" /opt/powersync/powersync-service
-  cd /opt/powersync/powersync-service
-  corepack enable >/dev/null 2>&1
-  corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
-  $STD pnpm install --frozen-lockfile
-  $STD pnpm build:production
-  msg_ok "Built PowerSync from source"
+msg_info "Downloading and building PowerSync"
+
+mkdir -p /opt/powersync
+
+curl -fsSL \
+  "https://github.com/powersync-ja/powersync-service/archive/refs/tags/%40powersync%2Flib-service-postgres%400.4.28.tar.gz" \
+  -o /tmp/powersync.tar.gz
+
+tar -xzf /tmp/powersync.tar.gz -C /opt/powersync
+
+mv /opt/powersync/powersync-service-* \
+   /opt/powersync/powersync-service
+
+cd /opt/powersync/powersync-service
+
+corepack enable >/dev/null 2>&1
+corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+$STD pnpm install --frozen-lockfile
+$STD pnpm build:production
+
+msg_ok "Built PowerSync"
 
   msg_info "Creating PowerSync service user"
   if ! id -u powersync &>/dev/null; then
