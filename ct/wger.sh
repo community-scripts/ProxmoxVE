@@ -262,41 +262,32 @@ if ! command -v jq >/dev/null 2>&1; then
   apt-get install -y jq >/dev/null 2>&1
 fi
 
-CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync"
+CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
 
-# Locate directory containing package.json (if any) and cd there
-WORKDIR=""
 if [[ -d /opt/powersync/powersync-service ]]; then
-  WORKDIR=/opt/powersync/powersync-service
-elif [[ -f /opt/powersync/package.json ]]; then
-  WORKDIR=/opt/powersync
-else
-  WORKDIR=$(find /opt/powersync -maxdepth 2 -type f -name package.json -printf '%h\n' | head -n1 || true)
-fi
-
-if [[ -n "$WORKDIR" && -d "$WORKDIR" ]]; then
-  cd "$WORKDIR" || true
+  cd /opt/powersync/powersync-service || true
   corepack enable >/dev/null 2>&1 || true
   # Try to read pnpm version from package.json, fall back to global
-  if node -e "process.exit(require('./package.json') && 0)" >/dev/null 2>&1; then
+  if [[ -f package.json ]] && node -e "process.exit(require('./package.json') && 0)" >/dev/null 2>&1; then
     PNPM_VER=$(node -p "(require('./package.json').packageManager||'').split('@')[1]" 2>/dev/null || true)
     [[ -n "$PNPM_VER" ]] && corepack use "pnpm@$PNPM_VER" >/dev/null 2>&1 || true
   fi
 
-  $STD pnpm install --frozen-lockfile || true
+  if [[ -f package.json ]]; then
+    $STD pnpm install --frozen-lockfile || true
 
-  # Run available build script: prefer build:production, then build
-  if jq -e '.scripts["build:production"]' package.json >/dev/null 2>&1; then
-    $STD pnpm run build:production || msg_warn "pnpm build:production failed"
-  elif jq -e '.scripts["build"]' package.json >/dev/null 2>&1; then
-    $STD pnpm run build || msg_warn "pnpm build failed"
-  else
-    msg_warn "No pnpm build script found; skipping build"
+    # Run available build script: prefer build:production, then build
+    if jq -e '.scripts["build:production"]' package.json >/dev/null 2>&1; then
+      $STD pnpm run build:production || msg_warn "pnpm build:production failed"
+    elif jq -e '.scripts["build"]' package.json >/dev/null 2>&1; then
+      $STD pnpm run build || msg_warn "pnpm build failed"
+    else
+      msg_warn "No pnpm build script found; skipping build"
+    fi
   fi
-
   msg_ok "Built PowerSync (if applicable)"
 else
-  msg_warn "No Node.js project found under /opt/powersync; skipping build"
+  msg_warn "PowerSync directory not found at /opt/powersync/powersync-service; skipping build"
 fi
   
   msg_info "Creating PowerSync service user"
