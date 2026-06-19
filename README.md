@@ -149,6 +149,12 @@ This project runs on community contributions. Whether you want to write new scri
         <sub><b>vhsdream</b></sub>
       </a>
     </td>
+    <td align="center">
+      <a href="https://github.com/asylumexp">
+        <img src="https://github.com/asylumexp.png" width="80" height="80" style="border-radius:50%" alt="asylumexp" /><br/>
+        <sub><b>asylumexp</b></sub>
+      </a>
+    </td>
   </tr>
 </table>
 
