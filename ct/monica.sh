@@ -42,16 +42,13 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
-    mv /opt/monica/ /opt/monica-backup
-    msg_ok "Backup created"
+    create_backup /opt/monica/.env /opt/monica/storage
 
     fetch_and_deploy_gh_release "monica" "monicahq/monica" "prebuild" "latest" "/opt/monica" "monica-v*.tar.bz2"
+    restore_backup
 
     msg_info "Configuring monica"
     cd /opt/monica/
-    cp -r /opt/monica-backup/.env /opt/monica
-    cp -r /opt/monica-backup/storage/* /opt/monica/storage/
     $STD composer install --no-interaction --no-dev
     $STD yarn config set ignore-engines true
     $STD yarn install
@@ -59,7 +56,6 @@ function update_script() {
     $STD php artisan monica:update --force
     chown -R www-data:www-data /opt/monica
     chmod -R 775 /opt/monica/storage
-    rm -r /opt/monica-backup
     msg_ok "Configured monica"
 
     msg_info "Starting Service"

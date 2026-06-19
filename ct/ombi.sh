@@ -33,19 +33,11 @@ function update_script() {
     systemctl stop ombi
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
-    [[ -f /opt/ombi/Ombi.db ]] && mv /opt/ombi/Ombi.db /opt
-    [[ -f /opt/ombi/OmbiExternal.db ]] && mv /opt/ombi/OmbiExternal.db /opt
-    [[ -f /opt/ombi/OmbiSettings.db ]] && mv /opt/ombi/OmbiSettings.db /opt
-    [[ -f /opt/ombi/database.json ]] && mv /opt/ombi/database.json /opt
-    msg_ok "Backup created"
+    create_backup /opt/ombi/Ombi.db /opt/ombi/OmbiExternal.db /opt/ombi/OmbiSettings.db /opt/ombi/database.json
 
     rm -rf /opt/ombi
     fetch_and_deploy_gh_release "ombi" "Ombi-app/Ombi" "prebuild" "latest" "/opt/ombi" "linux-x64.tar.gz"
-    [[ -f /opt/Ombi.db ]] && mv /opt/Ombi.db /opt/ombi
-    [[ -f /opt/OmbiExternal.db ]] && mv /opt/OmbiExternal.db /opt/ombi
-    [[ -f /opt/OmbiSettings.db ]] && mv /opt/OmbiSettings.db /opt/ombi
-    [[ -f /opt/database.json ]] && mv /opt/database.json /opt/ombi
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start ombi

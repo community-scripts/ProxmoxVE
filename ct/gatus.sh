@@ -34,15 +34,16 @@ function update_script() {
     systemctl stop gatus
     msg_ok "Stopped Service"
 
-    mv /opt/gatus/config/config.yaml /opt
+    create_backup /opt/gatus/config/config.yaml
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gatus" "TwiN/gatus" "tarball"
+    restore_backup
 
     msg_info "Updating Gatus"
     cd /opt/gatus
     $STD go mod tidy
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
     setcap CAP_NET_RAW+ep gatus
-    mv /opt/config.yaml config
     msg_ok "Updated Gatus"
 
     msg_info "Starting Service"

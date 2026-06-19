@@ -36,9 +36,7 @@ function update_script() {
     systemctl stop neko
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /etc/neko/neko.yaml /opt/neko.yaml.bak
-    msg_ok "Backed up Data"
+    create_backup /etc/neko/neko.yaml
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "neko" "m1k1o/neko" "tarball"
 
@@ -56,10 +54,7 @@ function update_script() {
     cp -r /opt/neko/server/bin/plugins/* /etc/neko/plugins/ 2>/dev/null || true
     msg_ok "Built Server"
 
-    msg_info "Restoring Data"
-    cp /opt/neko.yaml.bak /etc/neko/neko.yaml
-    rm -f /opt/neko.yaml.bak
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start neko

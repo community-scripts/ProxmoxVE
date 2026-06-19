@@ -34,16 +34,10 @@ function update_script() {
     systemctl stop blackbox-exporter
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
-    mv /opt/blackbox-exporter/blackbox.yml /opt
-    msg_ok "Backup created"
+    create_backup /opt/blackbox-exporter/blackbox.yml
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "blackbox-exporter" "prometheus/blackbox_exporter" "prebuild" "latest" "/opt/blackbox-exporter" "blackbox_exporter-*.linux-amd64.tar.gz"
-
-    msg_info "Restoring backup"
-    cp -r /opt/blackbox.yml /opt/blackbox-exporter
-    rm -f /opt/blackbox.yml
-    msg_ok "Backup restored"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start blackbox-exporter

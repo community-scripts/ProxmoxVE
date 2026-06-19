@@ -35,10 +35,8 @@ function update_script() {
     systemctl stop zerobyte
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp /opt/zerobyte/.env /opt/zerobyte.env.bak
-    msg_ok "Backed up Configuration"
-    
+    create_backup /opt/zerobyte/.env
+
     ensure_dependencies git
     NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "zerobyte" "nicotsx/zerobyte" "tarball"
@@ -50,10 +48,7 @@ function update_script() {
     $STD node ./node_modules/vite/bin/vite.js build
     msg_ok "Built Zerobyte"
 
-    msg_info "Restoring Configuration"
-    cp /opt/zerobyte.env.bak /opt/zerobyte/.env
-    rm -f /opt/zerobyte.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start zerobyte

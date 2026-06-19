@@ -35,16 +35,10 @@ function update_script() {
     systemctl stop kan
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/kan/.env /opt/kan.env.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/kan/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "kan" "kanbn/kan" "latest"
-
-    msg_info "Restoring Configuration"
-    cp /opt/kan.env.bak /opt/kan/.env
-    rm -f /opt/kan.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Building Application"
     cd /opt/kan

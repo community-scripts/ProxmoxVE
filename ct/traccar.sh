@@ -34,11 +34,7 @@ function update_script() {
     systemctl stop traccar
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
-    mv /opt/traccar/conf/traccar.xml /opt
-    [[ -d /opt/traccar/data ]] && mv /opt/traccar/data /opt
-    [[ -d /opt/traccar/media ]] && mv /opt/traccar/media /opt
-    msg_ok "Backup created"
+    create_backup /opt/traccar/conf/traccar.xml /opt/traccar/data /opt/traccar/media
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "traccar" "traccar/traccar" "prebuild" "latest" "/opt/traccar" "traccar-linux-64*.zip"
 
@@ -47,12 +43,8 @@ function update_script() {
     $STD ./traccar.run
     msg_ok "App-Update completed"
 
-    msg_info "Restoring data"
-    mv /opt/traccar.xml /opt/traccar/conf
-    [[ -d /opt/data ]] && mv /opt/data /opt/traccar
-    [[ -d /opt/media ]] && mv /opt/media /opt/traccar
+    restore_backup
     [ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
-    msg_ok "Data restored"
 
     msg_info "Starting Service"
     systemctl start traccar

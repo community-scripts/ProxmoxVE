@@ -123,9 +123,7 @@ EOF
     systemctl stop seerr
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    cp -a /opt/seerr/config /opt/seerr_backup
-    msg_ok "Created Backup"
+    create_backup /opt/seerr/config
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "seerr" "seerr-team/seerr" "tarball"
 
@@ -145,10 +143,7 @@ EOF
     $STD pnpm build
     msg_ok "Updated Seerr"
 
-    msg_info "Restoring Backup"
-    rm -rf /opt/seerr/config
-    mv /opt/seerr_backup /opt/seerr/config
-    msg_ok "Restored Backup"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start seerr

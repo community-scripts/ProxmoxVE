@@ -30,18 +30,13 @@ function update_script() {
   fi
 
   if check_for_gh_release "wallos" "ellite/Wallos"; then
-    msg_info "Creating backup"
-    mkdir -p /opt/logos
-    mv /opt/wallos/db/wallos.db /opt/wallos.db
-    mv /opt/wallos/images/uploads/logos /opt/logos/
-    msg_ok "Backup created"
+    create_backup /opt/wallos/db/wallos.db /opt/wallos/images/uploads/logos
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wallos" "ellite/Wallos" "tarball"
+    restore_backup
 
     msg_info "Configuring Wallos"
     rm -rf /opt/wallos/db/wallos.empty.db
-    mv /opt/wallos.db /opt/wallos/db/wallos.db
-    mv /opt/logos/* /opt/wallos/images/uploads/logos
     if ! grep -q "storetotalyearlycost.php" /opt/wallos.cron; then
       echo "30 1 * * 1 php /opt/wallos/endpoints/cronjobs/storetotalyearlycost.php >> /var/log/cron/storetotalyearlycost.log 2>&1" >>/opt/wallos.cron
     fi

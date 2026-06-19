@@ -36,15 +36,13 @@ function update_script() {
     systemctl stop outline
     msg_ok "Services Stopped"
 
-    msg_info "Creating backup"
-    cp /opt/outline/.env /opt
-    msg_ok "Backup created"
+    create_backup /opt/outline/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
+    restore_backup
 
     msg_info "Updating Outline"
     cd /opt/outline
-    mv /opt/.env /opt/outline
     export NODE_ENV=development
     export NODE_OPTIONS="--max-old-space-size=3584"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0

@@ -35,9 +35,7 @@ function update_script() {
     systemctl stop nginx-ui
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp /usr/local/etc/nginx-ui/app.ini /tmp/nginx-ui-app.ini.bak
-    msg_ok "Backed up Configuration"
+    create_backup /usr/local/etc/nginx-ui/app.ini
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nginx-ui" "0xJacky/nginx-ui" "prebuild" "latest" "/opt/nginx-ui" "nginx-ui-linux-64.tar.gz"
 
@@ -45,11 +43,8 @@ function update_script() {
     cp /opt/nginx-ui/nginx-ui /usr/local/bin/nginx-ui
     chmod +x /usr/local/bin/nginx-ui
     rm -rf /opt/nginx-ui
+    restore_backup
     msg_ok "Updated Binary"
-
-    msg_info "Restoring Configuration"
-    mv /tmp/nginx-ui-app.ini.bak /usr/local/etc/nginx-ui/app.ini
-    msg_ok "Restored Configuration"
 
     msg_info "Starting Service"
     systemctl start nginx-ui

@@ -37,14 +37,12 @@ function update_script() {
     systemctl stop romm-backend romm-worker romm-scheduler romm-watcher
     msg_ok "Stopped Services"
 
-    msg_info "Backing up configuration"
-    cp /opt/romm/.env /opt/romm/.env.backup
-    msg_ok "Backed up configuration"
+    create_backup /opt/romm/.env
 
     fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball" "latest" "/opt/romm"
+    restore_backup
 
     msg_info "Updating ROMM"
-    cp /opt/romm/.env.backup /opt/romm/.env
     cd /opt/romm
     $STD uv sync --all-extras
     cd /opt/romm/backend

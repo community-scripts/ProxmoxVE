@@ -61,18 +61,15 @@ EOF
     systemctl stop overseerr
     msg_ok "Service stopped"
 
-    msg_info "Creating backup"
-    mv /opt/overseerr/config /opt/config_backup
-    msg_ok "Backup created"
+    create_backup /opt/overseerr/config
 
     fetch_and_deploy_gh_release "overseerr" "sct/overseerr" "tarball"
-    rm -rf /opt/overseerr/config
 
     msg_info "Configuring ${APP} (Patience)"
     cd /opt/overseerr
     $STD yarn install
     $STD yarn build
-    mv /opt/config_backup /opt/overseerr/config
+    restore_backup
     msg_ok "Configured ${APP}"
 
     msg_info "Starting Service"

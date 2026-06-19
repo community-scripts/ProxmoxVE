@@ -35,22 +35,10 @@ function update_script() {
     systemctl stop guardian-backend guardian-frontend
     msg_ok "Stopped Services"
 
-    if [[ -f "/opt/guardian/backend/plex-guard.db" ]]; then
-      msg_info "Backing up Database"
-      cp "/opt/guardian/backend/plex-guard.db" "/tmp/plex-guard.db.backup"
-      msg_ok "Backed up Database"
-    fi
+    create_backup /opt/guardian/.env /opt/guardian/backend/plex-guard.db
 
-    [[ -f "/opt/guardian/.env" ]] && cp "/opt/guardian/.env" "/opt"
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "guardian" "HydroshieldMKII/Guardian" "tarball" "latest" "/opt/guardian"
-    [[ -f "/opt/.env" ]] && mv "/opt/.env" "/opt/guardian"
-
-    if [[ -f "/tmp/plex-guard.db.backup" ]]; then
-      msg_info "Restoring Database"
-      cp "/tmp/plex-guard.db.backup" "/opt/guardian/backend/plex-guard.db"
-      rm "/tmp/plex-guard.db.backup"
-      msg_ok "Restored Database"
-    fi
+    restore_backup
 
     msg_info "Updating Guardian"
     cd /opt/guardian/backend

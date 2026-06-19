@@ -35,18 +35,10 @@ function update_script() {
     systemctl stop rustypaste
     msg_ok "Stopped Services"
 
-    msg_info "Creating Backup"
-    tar -czf "/opt/rustypaste_backup_$(date +%F).tar.gz" /opt/rustypaste/upload 2>/dev/null || true
-    cp /opt/rustypaste/config.toml /tmp/rustypaste_config.toml.bak
-    msg_ok "Backup Created"
+    create_backup /opt/rustypaste/config.toml /opt/rustypaste/upload
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rustypaste" "orhun/rustypaste" "prebuild" "latest" "/opt/rustypaste" "*x86_64-unknown-linux-gnu.tar.gz"
-
-    msg_info "Restoring Data"
-    mv /tmp/rustypaste_config.toml.bak /opt/rustypaste/config.toml
-    tar -xzf "/opt/rustypaste_backup_$(date +%F).tar.gz" -C /opt/rustypaste/upload 2>/dev/null || true
-    rm -rf /opt/rustypaste_backup_$(date +%F).tar.gz
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Services"
     systemctl start rustypaste
