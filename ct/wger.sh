@@ -65,7 +65,9 @@ function install_powersync() {
   msg_ok "Generated JWT keys"
 
   msg_info "Setting up PowerSync storage"
+  sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB;"
   uv run python manage.py setup-powersync-storage
+  sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
   msg_ok "Set up PowerSync storage"
 
   msg_info "Creating PowerSync config"
