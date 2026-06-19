@@ -25,7 +25,6 @@ function install_powersync() {
   set -a && source /opt/wger/.env && set +a
 
   POWERSYNC_NODE_VERSION="24.15.0"
-  POWERSYNC_REPO="https://github.com/powersync-ja/powersync-service.git"
 
   if ! command -v jq >/dev/null 2>&1; then
     apt-get install -y jq
@@ -40,7 +39,7 @@ function install_powersync() {
     msg_ok "Installed Node.js ${POWERSYNC_NODE_VERSION}"
   fi
 
-if [[ -d /opt/powersync/powersync-service ]]; then
+  if [[ -d /opt/powersync/powersync-service ]]; then
     msg_info "Updating PowerSync"
 
     systemctl stop powersync 2>/dev/null || true
@@ -51,6 +50,7 @@ if [[ -d /opt/powersync/powersync-service ]]; then
     TARBALL_URL=$(echo "$RELEASE_JSON" | jq -r .tarball_url)
 
     rm -rf /opt/powersync/powersync-service
+    rm -rf /opt/powersync/powersync-ja-powersync-service-*
 
     curl -fsSL -L "$TARBALL_URL" \
       -o /tmp/powersync.tar.gz
@@ -60,7 +60,8 @@ if [[ -d /opt/powersync/powersync-service ]]; then
     EXTRACTED_DIR=$(find /opt/powersync \
       -maxdepth 1 \
       -type d \
-      -name "powersync-ja-powersync-service-*")
+      -name "powersync-ja-powersync-service-*" \
+      | head -1)
 
     mv "$EXTRACTED_DIR" /opt/powersync/powersync-service
 
@@ -77,7 +78,7 @@ if [[ -d /opt/powersync/powersync-service ]]; then
 
     msg_ok "Updated PowerSync"
     return
-fi
+  fi
 
   msg_info "Configuring PostgreSQL for PowerSync"
   sed -i "s/#wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
@@ -431,11 +432,6 @@ systemctl daemon-reload
 systemctl enable -q --now wger-powersync-compact.timer
 msg_ok "Created PowerSync compaction timer"
 
-systemctl daemon-reload
-systemctl enable -q --now wger-powersync-compact.timer
-
-msg_ok "Created PowerSync compaction timer"
-
   msg_info "Updating wger .env with PowerSync URL"
   if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
     echo "POWERSYNC_URL=http://${SERVER_IP}:8080" >> /opt/wger/.env
@@ -460,7 +456,8 @@ function update_script() {
     msg_info "Backing up Data"
     cp -r /opt/wger/media /opt/wger_media_backup
     cp /opt/wger/.env /opt/wger_env_backup
-    cp -r /opt/powersync/*.env /opt/powersync/*.yaml /opt/wger_powersync_backup 2>/dev/null || mkdir -p /opt/wger_powersync_backup
+    mkdir -p /opt/wger_powersync_backup
+    cp -r /opt/powersync/*.env /opt/powersync/*.yaml /opt/wger_powersync_backup/ 2>/dev/null || true
     msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball"
@@ -468,7 +465,8 @@ function update_script() {
     msg_info "Restoring Data"
     cp -r /opt/wger_media_backup/. /opt/wger/media
     cp /opt/wger_env_backup /opt/wger/.env
-    cp -r /opt/wger_powersync_backup /opt/powersync 2>/dev/null || true
+    mkdir -p /opt/powersync
+    cp -r /opt/wger_powersync_backup/. /opt/powersync/ 2>/dev/null || true
     rm -rf /opt/wger_media_backup /opt/wger_env_backup /opt/wger_powersync_backup
     msg_ok "Restored Data"
 
