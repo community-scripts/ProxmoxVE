@@ -32,6 +32,10 @@ fi
 
 msg_info "Installing InfluxDB v${INFLUX}"
 if [[ $INFLUX == "3" ]]; then
+  if ! grep -qm1 'avx2' /proc/cpuinfo; then
+    msg_error "InfluxDB v3 requires AVX2 support, which is not available on this system."
+    exit 106
+  fi
   $STD apt install -y influxdb3-core
   systemctl enable -q --now influxdb3-core
 elif [[ $INFLUX == "2" ]]; then
