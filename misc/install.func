@@ -388,7 +388,8 @@ apt_update_safe() {
 # ------------------------------------------------------------------------------
 update_os() {
   msg_info "Updating Container OS"
-  if [[ "$CACHER" == "yes" ]]; then
+  configure_http_proxy
+  if [[ "$CACHER" == "yes" && -z "${HTTP_PROXY:-${http_proxy:-}}" ]]; then
     echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
     local _proxy_raw="${CACHER_IP}"
     local _proxy_host _proxy_port _proxy_url
@@ -509,7 +510,7 @@ EOF
     systemctl restart "$(basename "$(dirname "$GETTY_OVERRIDE")" | sed 's/\.d//')"
     msg_ok "Customized Container"
   fi
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo 'set -a; [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh; set +a; bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/'"${app}"'.sh)"' >/usr/bin/update
   chmod +x /usr/bin/update
 
   if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then
