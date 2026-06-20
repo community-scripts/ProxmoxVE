@@ -22,6 +22,7 @@ $STD apt install -y \
   jq \
   sudo
 msg_ok "Installed Dependencies"
+n8nwger
 
 NODE_VERSION="22" NODE_MODULE="sass" setup_nodejs
 setup_uv
@@ -37,7 +38,7 @@ $STD corepack enable
 $STD npm install
 $STD npm run build:css:sass
 $STD uv venv
-$STD uv pip install . --group dockerhomarrflo
+$STD uv pip install .
 SECRET_KEY=$(openssl rand -base64 40)
 cat <<EOF >/opt/wger/.env
 DJANGO_SETTINGS_MODULE=settings.main
