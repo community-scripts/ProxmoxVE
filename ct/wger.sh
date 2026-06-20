@@ -29,7 +29,7 @@ function install_powersync_if_missing() {
   set -a && source /opt/wger/.env && set +a
 
   msg_info "Configuring PostgreSQL for PowerSync"
-  $STD sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
+  sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
   systemctl restart postgresql
   $STD sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
   $STD sudo -u postgres psql -d wger -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
@@ -371,7 +371,7 @@ function update_script() {
     msg_ok "Updated wger"
 
     msg_info "Fixing nginx proxy header"
-    $STD sed -i 's/proxy_set_header Host \$host;/proxy_set_header Host \$http_host;/' /etc/nginx/sites-enabled/wger
+    sed -i 's/proxy_set_header Host \$host;/proxy_set_header Host \$http_host;/' /etc/nginx/sites-enabled/wger
     msg_ok "Fixed nginx proxy header"
 
     msg_info "Ensuring Node.js 24 for PowerSync"

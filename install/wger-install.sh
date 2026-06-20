@@ -37,7 +37,7 @@ $STD corepack enable
 $STD npm install
 $STD npm run build:css:sass
 $STD uv venv
-$STD uv pip install .
+$STD uv pip install . gunicorn
 SECRET_KEY=$(openssl rand -base64 40)
 cat <<EOF >/opt/wger/.env
 DJANGO_SETTINGS_MODULE=settings.main
@@ -85,7 +85,7 @@ msg_ok "Prepared PowerSync publication"
 $STD uv run wger bootstrap
 $STD uv run python manage.py collectstatic --no-input
 
-cat <<EOF | uv run python manage.py shell
+cat <<EOF | $STD uv run python manage.py shell
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
