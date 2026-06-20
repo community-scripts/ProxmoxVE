@@ -485,6 +485,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-20
 
+### 🆕 New Scripts
+
+  - Plane ([#15227](https://github.com/community-scripts/ProxmoxVE/pull/15227))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
