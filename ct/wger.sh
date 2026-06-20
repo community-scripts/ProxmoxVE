@@ -18,8 +18,6 @@ variables
 color
 catch_errors
 
-
-
 function install_powersync_if_missing() {
   if [[ -f /etc/systemd/system/powersync.service ]]; then
     msg_info "PowerSync already provisioned, skipping first-time setup"
@@ -31,11 +29,11 @@ function install_powersync_if_missing() {
   set -a && source /opt/wger/.env && set +a
 
   msg_info "Configuring PostgreSQL for PowerSync"
-  sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
+  $STD sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
   systemctl restart postgresql
-  sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
-  sudo -u postgres psql -d wger -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
-  sudo -u postgres psql -d wger -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
+  $STD sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
+  $STD sudo -u postgres psql -d wger -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
+  $STD sudo -u postgres psql -d wger -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
   msg_ok "Configured PostgreSQL"
 
   msg_info "Generating JWT keys"
@@ -43,16 +41,16 @@ function install_powersync_if_missing() {
   set -a && source /opt/wger/.env && set +a
   export DJANGO_SETTINGS_MODULE=settings.main
   if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
-    uv run python manage.py generate-jwt-keys >> /opt/wger/.env
+    $STD uv run python manage.py generate-jwt-keys >> /opt/wger/.env
     set -a && source /opt/wger/.env && set +a
   fi
   msg_ok "Generated JWT keys"
 
   msg_info "Setting up PowerSync storage"
-  uv run python manage.py setup-powersync-storage
-  sudo -u postgres psql -d wger -c "GRANT USAGE, CREATE ON SCHEMA powersync TO wger;"
-  sudo -u postgres psql -d wger -c "ALTER ROLE wger IN DATABASE wger SET search_path TO powersync, public;"
-  sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
+  $STD uv run python manage.py setup-powersync-storage
+  $STD sudo -u postgres psql -d wger -c "GRANT USAGE, CREATE ON SCHEMA powersync TO wger;"
+  $STD sudo -u postgres psql -d wger -c "ALTER ROLE wger IN DATABASE wger SET search_path TO powersync, public;"
+  $STD sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
   msg_ok "Set up PowerSync storage"
 
   msg_info "Creating PowerSync config"
@@ -316,7 +314,7 @@ function update_powersync() {
   systemctl stop powersync 2>/dev/null || true
 
   if ! command -v jq >/dev/null 2>&1; then
-    apt-get install -y jq >/dev/null 2>&1
+    $STD apt-get install -y jq >/dev/null 2>&1
   fi
 
   CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
@@ -362,19 +360,27 @@ function update_script() {
     cd /opt/wger
     set -a && source /opt/wger/.env && set +a
     export DJANGO_SETTINGS_MODULE=settings.main
-    sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
-    sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
+    $STD sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
+    $STD sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
     $STD uv pip install .
     $STD npm install
     $STD npm run build:css:sass
     $STD uv run python manage.py migrate
     $STD uv run python manage.py collectstatic --no-input
-    sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
+    $STD sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
     msg_ok "Updated wger"
 
     msg_info "Fixing nginx proxy header"
-    sed -i 's/proxy_set_header Host \$host;/proxy_set_header Host \$http_host;/' /etc/nginx/sites-enabled/wger
+    $STD sed -i 's/proxy_set_header Host \$host;/proxy_set_header Host \$http_host;/' /etc/nginx/sites-enabled/wger
     msg_ok "Fixed nginx proxy header"
+
+    msg_info "Ensuring Node.js 24 for PowerSync"
+    CURRENT_NODE_MAJOR=$(node -v | sed 's/^v//' | cut -d. -f1)
+    if [[ "$CURRENT_NODE_MAJOR" -lt 24 ]]; then
+      curl -fsSL https://deb.nodesource.com/setup_24.x | bash - >/dev/null 2>&1
+      $STD apt-get install -y nodejs
+    fi
+    msg_ok "Node.js $(node -v) ready"
 
     install_powersync_if_missing
     update_powersync
@@ -394,8 +400,7 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"
-echo ""
 msg_warn "Initial credentials:"
 echo "Username: admin"
-echo "Password: ${PG_DB_PASS}"
+echo "Password: adminadmin"
 msg_warn "Change the password immediately after first login!"

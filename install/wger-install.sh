@@ -23,7 +23,7 @@ $STD apt install -y \
   sudo
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="sass" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="sass" setup_nodejs
 setup_uv
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="wger" PG_DB_USER="wger" setup_postgresql_db
@@ -95,7 +95,7 @@ user, created = User.objects.get_or_create(
 )
 
 if created:
-    user.set_password("${PG_DB_PASS}")
+    user.set_password("adminadmin")
     user.is_superuser = True
     user.is_staff = True
     user.save()
@@ -119,9 +119,9 @@ msg_ok "Checked PowerSync installation"
 msg_info "Configuring PostgreSQL for PowerSync"
 sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
 systemctl restart postgresql
-sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
-sudo -u postgres psql -d ${PG_DB_NAME} -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
-sudo -u postgres psql -d ${PG_DB_NAME} -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
+$STD sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
 msg_ok "Configured PostgreSQL"
 
 msg_info "Generating JWT keys"
@@ -129,16 +129,16 @@ cd /opt/wger
 set -a && source /opt/wger/.env && set +a
 export DJANGO_SETTINGS_MODULE=settings.main
 if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
-  uv run python manage.py generate-jwt-keys >> /opt/wger/.env
+  $STD uv run python manage.py generate-jwt-keys >> /opt/wger/.env
   set -a && source /opt/wger/.env && set +a
 fi
 msg_ok "Generated JWT keys"
 
 msg_info "Setting up PowerSync storage"
-uv run python manage.py setup-powersync-storage
-sudo -u postgres psql -d ${PG_DB_NAME} -c "GRANT USAGE, CREATE ON SCHEMA powersync TO ${PG_DB_USER};"
-sudo -u postgres psql -d ${PG_DB_NAME} -c "ALTER ROLE ${PG_DB_USER} IN DATABASE ${PG_DB_NAME} SET search_path TO powersync, public;"
-sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
+$STD uv run python manage.py setup-powersync-storage
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "GRANT USAGE, CREATE ON SCHEMA powersync TO ${PG_DB_USER};"
+$STD sudo -u postgres psql -d ${PG_DB_NAME} -c "ALTER ROLE ${PG_DB_USER} IN DATABASE ${PG_DB_NAME} SET search_path TO powersync, public;"
+$STD sudo -u postgres psql -c "ALTER USER ${PG_DB_USER} WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
 msg_ok "Set up PowerSync storage"
 
 msg_info "Creating PowerSync config"
