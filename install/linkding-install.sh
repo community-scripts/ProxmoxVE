@@ -33,7 +33,7 @@ msg_info "Building Frontend"
 cd /opt/linkding
 $STD npm ci
 $STD npm run build
-ln -sf /usr/lib/x86_64-linux-gnu/mod_icu.so /opt/linkding/libicu.so
+ln -sf /usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/mod_icu.so /opt/linkding/libicu.so
 msg_ok "Built Frontend"
 
 msg_info "Setting up LinkDing"

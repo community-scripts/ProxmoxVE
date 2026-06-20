@@ -764,8 +764,11 @@ manage_tool_repository() {
     local distro_codename
     distro_codename=$(get_os_info codename)
 
-    # Suite mapping with fallback for newer releases not yet supported by upstream
-    if [[ "$distro_id" == "debian" ]]; then
+    if [[ "$distro_id" == "debian" && "$(dpkg --print-architecture)" == "arm64" ]]; then
+      distro_id="ubuntu" 
+      suite="noble"
+      repo_url="https://repo.mongodb.org/apt/ubuntu"
+    elif [[ "$distro_id" == "debian" ]]; then
       case "$distro_codename" in
       trixie | forky | sid)
         # Testing/unstable releases fallback to latest stable suite

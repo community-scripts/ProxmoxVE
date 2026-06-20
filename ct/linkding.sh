@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -46,7 +46,7 @@ function update_script() {
     cp -r /opt/linkding_data_backup/. /opt/linkding/data
     cp /opt/linkding_env_backup /opt/linkding/.env
     rm -rf /opt/linkding_data_backup /opt/linkding_env_backup
-    ln -sf /usr/lib/x86_64-linux-gnu/mod_icu.so /opt/linkding/libicu.so
+    ln -sf /usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/mod_icu.so /opt/linkding/libicu.so
     msg_ok "Restored Data"
 
     msg_info "Updating LinkDing"

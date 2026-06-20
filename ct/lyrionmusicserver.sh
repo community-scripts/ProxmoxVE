@@ -13,7 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -31,9 +31,10 @@ function update_script() {
     exit
   fi
 
-  DEB_URL=$(curl_with_retry 'https://lyrion.org/getting-started/' | grep -oP '<a\s[^>]*href="\K[^"]*amd64\.deb(?="[^>]*>)' | head -n 1)
-  RELEASE=$(echo "$DEB_URL" | grep -oP 'lyrionmusicserver_\K[0-9.]+(?=_amd64\.deb)')
-  DEB_FILE="/tmp/lyrionmusicserver_${RELEASE}_amd64.deb"
+  DEB_ARCH=$(arch_resolve "amd64" "arm")
+  DEB_URL=$(curl_with_retry 'https://lyrion.org/getting-started/' | grep -oP "<a\s[^>]*href=\"\K[^\"]*${DEB_ARCH}\.deb(?=\"[^>]*>)" | head -n 1)
+  RELEASE=$(echo "$DEB_URL" | grep -oP "lyrionmusicserver_\K[0-9.]+(?=_${DEB_ARCH}\.deb)")
+  DEB_FILE="/tmp/lyrionmusicserver_${RELEASE}_${DEB_ARCH}.deb"
   if [[ ! -f /opt/lyrion_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/lyrion_version.txt)" ]]; then
     msg_info "Updating $APP to ${RELEASE}"
     curl_with_retry "$DEB_URL" "$DEB_FILE"
