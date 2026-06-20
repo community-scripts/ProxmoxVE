@@ -22,7 +22,6 @@ $STD apt install -y \
   jq \
   sudo
 msg_ok "Installed Dependencies"
-n8nwger
 
 NODE_VERSION="22" NODE_MODULE="sass" setup_nodejs
 setup_uv
