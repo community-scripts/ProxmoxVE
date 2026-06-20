@@ -83,14 +83,12 @@ function update_script() {
       msg_ok "Installed Node.js 24"
     fi
 
-    if [[ -d /opt/powersync/powersync-service ]]; then
-      systemctl stop powersync 2>/dev/null || true
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
-      cd /opt/powersync/powersync-service
-      corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
-      $STD pnpm install --frozen-lockfile
-      $STD pnpm build:production
-    fi
+    systemctl stop powersync 2>/dev/null || true
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
+    cd /opt/powersync/powersync-service
+    corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm build:production
     msg_ok "Checked PowerSync installation"
 
     msg_info "Configuring PostgreSQL for PowerSync"
