@@ -494,6 +494,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix docker service crash [@asylumexp](https://github.com/asylumexp) ([#15243](https://github.com/community-scripts/ProxmoxVE/pull/15243))
     - Nginxproxymanager: repair broken certbot pip before update [@MickLesk](https://github.com/MickLesk) ([#15224](https://github.com/community-scripts/ProxmoxVE/pull/15224))
 
 ## 2026-06-19
