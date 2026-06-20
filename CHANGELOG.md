@@ -502,6 +502,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - [arm64] Port scripts between komga & mediamanager to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15245](https://github.com/community-scripts/ProxmoxVE/pull/15245))
     - [arm64] port scripts between hyperhdr & kometa to arm64 [@asylumexp](https://github.com/asylumexp) ([#15234](https://github.com/community-scripts/ProxmoxVE/pull/15234))
 
+### 📂 Github
+
+  - add arm64 title check to autolabeler [@asylumexp](https://github.com/asylumexp) ([#15235](https://github.com/community-scripts/ProxmoxVE/pull/15235))
+
 ### ❔ Uncategorized
 
   - chore(ct): sync limesurvey defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#15247](https://github.com/community-scripts/ProxmoxVE/pull/15247))
