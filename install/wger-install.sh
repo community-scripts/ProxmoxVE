@@ -108,10 +108,6 @@ msg_info "Checking PowerSync installation"
 SERVER_IP=$(hostname -I | awk '{print $1}')
 set -a && source /opt/wger/.env && set +a
 
-NODE_VERSION="24"
-setup_nodejs
-corepack enable >/dev/null 2>&1
-
 systemctl stop powersync 2>/dev/null || true
 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
 cd /opt/powersync/powersync-service

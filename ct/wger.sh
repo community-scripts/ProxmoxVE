@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/Soppster1029/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -18,114 +18,57 @@ variables
 color
 catch_errors
 
-function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
-  if [[ ! -d /opt/wger ]]; then
-    msg_error "No ${APP} Installation Found!"
-    exit
+
+
+function install_powersync_if_missing() {
+  if [[ -f /etc/systemd/system/powersync.service ]]; then
+    msg_info "PowerSync already provisioned, skipping first-time setup"
+    return
   fi
-  if check_for_gh_release "wger" "wger-project/wger"; then
-    msg_info "Stopping Service"
-    systemctl stop redis-server nginx celery celery-beat wger
-    systemctl stop powersync 2>/dev/null || true
-    msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/wger/media /opt/wger_media_backup
-    cp /opt/wger/.env /opt/wger_env_backup
-    mkdir -p /opt/wger_powersync_backup
-    cp -r /opt/powersync/*.env /opt/powersync/*.yaml /opt/wger_powersync_backup/ 2>/dev/null || true
-    msg_ok "Backed up Data"
+  msg_info "First-time PowerSync provisioning"
+  SERVER_IP=$(hostname -I | awk '{print $1}')
+  set -a && source /opt/wger/.env && set +a
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball"
+  msg_info "Configuring PostgreSQL for PowerSync"
+  sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
+  systemctl restart postgresql
+  sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
+  sudo -u postgres psql -d wger -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
+  sudo -u postgres psql -d wger -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
+  msg_ok "Configured PostgreSQL"
 
-    msg_info "Restoring Data"
-    cp -r /opt/wger_media_backup/. /opt/wger/media
-    cp /opt/wger_env_backup /opt/wger/.env
-    mkdir -p /opt/powersync
-    cp -r /opt/wger_powersync_backup/. /opt/powersync/ 2>/dev/null || true
-    rm -rf /opt/wger_media_backup /opt/wger_env_backup /opt/wger_powersync_backup
-    msg_ok "Restored Data"
-
-    msg_info "Updating wger"
-    cd /opt/wger
+  msg_info "Generating JWT keys"
+  cd /opt/wger
+  set -a && source /opt/wger/.env && set +a
+  export DJANGO_SETTINGS_MODULE=settings.main
+  if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
+    uv run python manage.py generate-jwt-keys >> /opt/wger/.env
     set -a && source /opt/wger/.env && set +a
-    export DJANGO_SETTINGS_MODULE=settings.main
-    sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
-    sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
-    $STD uv pip install .
-    $STD npm install
-    $STD npm run build:css:sass
-    $STD uv run python manage.py migrate
-    $STD uv run python manage.py collectstatic --no-input
-    sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
-    msg_ok "Updated wger"
+  fi
+  msg_ok "Generated JWT keys"
 
-    msg_info "Fixing nginx proxy header"
-    sed -i 's/proxy_set_header Host \$host;/proxy_set_header Host \$http_host;/' /etc/nginx/sites-enabled/wger
-    msg_ok "Fixed nginx proxy header"
+  msg_info "Setting up PowerSync storage"
+  uv run python manage.py setup-powersync-storage
+  sudo -u postgres psql -d wger -c "GRANT USAGE, CREATE ON SCHEMA powersync TO wger;"
+  sudo -u postgres psql -d wger -c "ALTER ROLE wger IN DATABASE wger SET search_path TO powersync, public;"
+  sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
+  msg_ok "Set up PowerSync storage"
 
-    msg_info "Checking PowerSync installation"
-    SERVER_IP=$(hostname -I | awk '{print $1}')
-    set -a && source /opt/wger/.env && set +a
+  msg_info "Creating PowerSync config"
+  mkdir -p /opt/powersync
 
-    if ! command -v jq >/dev/null 2>&1; then
-      apt-get install -y jq
-    fi
-
-    if ! command -v node &>/dev/null || ! node -v | grep -q "^v24\."; then
-      msg_info "Installing Node.js 24"
-      curl -fsSL https://deb.nodesource.com/setup_24.x | bash - >/dev/null 2>&1
-      apt install -y nodejs >/dev/null 2>&1
-      corepack enable >/dev/null 2>&1
-      msg_ok "Installed Node.js 24"
-    fi
-
-    systemctl stop powersync 2>/dev/null || true
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
-    cd /opt/powersync/powersync-service
-    corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm build:production
-    msg_ok "Checked PowerSync installation"
-
-    msg_info "Configuring PostgreSQL for PowerSync"
-    sed -i "s/^#*wal_level = .*/wal_level = logical/" /etc/postgresql/*/main/postgresql.conf
-    systemctl restart postgresql
-    sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER CREATEROLE CREATEDB REPLICATION;"
-    sudo -u postgres psql -d wger -c "DROP PUBLICATION IF EXISTS powersync;" 2>/dev/null || true
-    sudo -u postgres psql -d wger -c "CREATE PUBLICATION powersync FOR ALL TABLES;" 2>/dev/null || true
-    msg_ok "Configured PostgreSQL"
-
-    msg_info "Generating JWT keys"
-    cd /opt/wger
-    set -a && source /opt/wger/.env && set +a
-    export DJANGO_SETTINGS_MODULE=settings.main
-    if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
-      uv run python manage.py generate-jwt-keys >> /opt/wger/.env
-      set -a && source /opt/wger/.env && set +a
-    fi
-    msg_ok "Generated JWT keys"
-
-    msg_info "Setting up PowerSync storage"
-    uv run python manage.py setup-powersync-storage
-    sudo -u postgres psql -d wger -c "GRANT USAGE, CREATE ON SCHEMA powersync TO wger;"
-    sudo -u postgres psql -d wger -c "ALTER ROLE wger IN DATABASE wger SET search_path TO powersync, public;"
-    sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER NOCREATEROLE NOCREATEDB;"
-    msg_ok "Set up PowerSync storage"
-
-    msg_info "Creating PowerSync config"
-    mkdir -p /opt/powersync
-
+  # Only create config files if they don't exist (preserve user changes)
+  if [[ ! -f /opt/powersync/powersync.env ]]; then
     cat > /opt/powersync/powersync.env <<EOF
 PS_DATABASE_URI=${DATABASE_URL}
 PS_STORAGE_PG_URI=${DATABASE_URL}
 PS_PORT=8080
 PS_JWKS_URL=http://${SERVER_IP}:3000/api/v2/powersync-keys
 EOF
+  fi
 
+  if [[ ! -f /opt/powersync/powersync.yaml ]]; then
     cat > /opt/powersync/powersync.yaml <<'EOF'
 telemetry:
   disable_telemetry_sharing: true
@@ -148,7 +91,9 @@ client_auth:
   audience:
     - "powersync"
 EOF
+  fi
 
+  if [[ ! -f /opt/powersync/sync-rules.yaml ]]; then
     cat > /opt/powersync/sync-rules.yaml <<'SYNCRULES'
 # Note that changes to this file are not watched.
 # The service needs to be restarted for changes to take effect.
@@ -242,16 +187,19 @@ streams:
           ON nutrition_logitem.plan_id = nutrition_nutritionplan.id
         WHERE CAST(nutrition_nutritionplan.user_id AS TEXT) = auth.user_id()
 SYNCRULES
-    msg_ok "Created PowerSync config"
+  fi
+  msg_ok "Created PowerSync config"
 
-    msg_info "Creating PowerSync service user"
-    if ! id -u powersync &>/dev/null; then
-      useradd --system --home /opt/powersync --shell /usr/sbin/nologin powersync
-    fi
-    chown -R powersync:powersync /opt/powersync
-    msg_ok "Created PowerSync service user"
+  msg_info "Creating PowerSync service user"
+  if ! id -u powersync &>/dev/null; then
+    useradd --system --home /opt/powersync --shell /usr/sbin/nologin powersync
+  fi
+  chown -R powersync:powersync /opt/powersync
+  msg_ok "Created PowerSync service user"
 
-    msg_info "Creating PowerSync systemd service"
+  msg_info "Creating PowerSync systemd service"
+ 
+  if [[ ! -f /etc/systemd/system/powersync.service ]]; then
     cat > /etc/systemd/system/powersync.service <<EOF
 [Unit]
 Description=PowerSync Service
@@ -278,9 +226,11 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-    msg_ok "Created PowerSync systemd service"
+  fi
+  msg_ok "Created PowerSync systemd service"
 
-    msg_info "Creating PowerSync compaction timer"
+  msg_info "Creating PowerSync compaction timer"
+  if [[ ! -f /opt/powersync/powersync-compact.yaml ]]; then
     cat > /opt/powersync/powersync-compact.yaml <<'EOF'
 telemetry:
   disable_telemetry_sharing: true
@@ -307,7 +257,9 @@ client_auth:
   audience:
     - "powersync"
 EOF
+  fi
 
+  if [[ ! -f /etc/systemd/system/wger-powersync-compact.service ]]; then
     cat > /etc/systemd/system/wger-powersync-compact.service <<'EOF'
 [Unit]
 Description=wger PowerSync Bucket Compaction
@@ -331,7 +283,9 @@ RestartSec=60
 StandardOutput=journal
 StandardError=journal
 EOF
+  fi
 
+  if [[ ! -f /etc/systemd/system/wger-powersync-compact.timer ]]; then
     cat > /etc/systemd/system/wger-powersync-compact.timer <<EOF
 [Unit]
 Description=Run wger PowerSync Compaction Daily
@@ -344,16 +298,86 @@ RandomizedDelaySec=15min
 [Install]
 WantedBy=timers.target
 EOF
+  fi
 
-    systemctl daemon-reload || msg_warn "systemctl daemon-reload failed for PowerSync units"
-    systemctl enable -q powersync wger-powersync-compact.timer 2>/dev/null || msg_warn "Failed to enable PowerSync units"
-    msg_ok "Created PowerSync compaction timer"
+  systemctl daemon-reload || msg_warn "systemctl daemon-reload failed for PowerSync units"
+  systemctl enable -q powersync wger-powersync-compact.timer 2>/dev/null || msg_warn "Failed to enable PowerSync units"
+  msg_ok "Created PowerSync compaction timer"
 
-    msg_info "Updating wger .env with PowerSync URL"
-    if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
-      echo "POWERSYNC_URL=http://${SERVER_IP}:8080" >> /opt/wger/.env
-    fi
-    msg_ok "Updated PowerSync URL in wger .env"
+  msg_info "Updating wger .env with PowerSync URL"
+  if ! grep -q "POWERSYNC_URL" /opt/wger/.env; then
+    echo "POWERSYNC_URL=http://${SERVER_IP}:8080" >> /opt/wger/.env
+  fi
+  msg_ok "Updated PowerSync URL in wger .env"
+}
+
+function update_powersync() {
+  msg_info "Updating PowerSync"
+  systemctl stop powersync 2>/dev/null || true
+
+  if ! command -v jq >/dev/null 2>&1; then
+    apt-get install -y jq >/dev/null 2>&1
+  fi
+
+  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "powersync" "powersync-ja/powersync-service" "tarball" "latest" "/opt/powersync/powersync-service"
+  cd /opt/powersync/powersync-service
+  corepack use "pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")" >/dev/null 2>&1
+  $STD pnpm install --frozen-lockfile
+  $STD pnpm build:production
+  msg_ok "Updated PowerSync"
+}
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/wger ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  if check_for_gh_release "wger" "wger-project/wger"; then
+    msg_info "Stopping Service"
+    systemctl stop redis-server nginx celery celery-beat wger
+    systemctl stop powersync 2>/dev/null || true
+    msg_ok "Stopped Service"
+
+    msg_info "Backing up Data"
+    cp -r /opt/wger/media /opt/wger_media_backup
+    cp /opt/wger/.env /opt/wger_env_backup
+    mkdir -p /opt/wger_powersync_backup
+    cp -r /opt/powersync/*.env /opt/powersync/*.yaml /opt/wger_powersync_backup/ 2>/dev/null || true
+    msg_ok "Backed up Data"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wger" "wger-project/wger" "tarball"
+
+    msg_info "Restoring Data"
+    cp -r /opt/wger_media_backup/. /opt/wger/media
+    cp /opt/wger_env_backup /opt/wger/.env
+    mkdir -p /opt/powersync
+    cp -r /opt/wger_powersync_backup/. /opt/powersync/ 2>/dev/null || true
+    rm -rf /opt/wger_media_backup /opt/wger_env_backup /opt/wger_powersync_backup
+    msg_ok "Restored Data"
+
+    msg_info "Updating wger"
+    cd /opt/wger
+    set -a && source /opt/wger/.env && set +a
+    export DJANGO_SETTINGS_MODULE=settings.main
+    sudo -u postgres psql -c "ALTER USER wger WITH SUPERUSER;"
+    sudo -u postgres psql -c "ALTER USER wger WITH REPLICATION;"
+    $STD uv pip install .
+    $STD npm install
+    $STD npm run build:css:sass
+    $STD uv run python manage.py migrate
+    $STD uv run python manage.py collectstatic --no-input
+    sudo -u postgres psql -c "ALTER USER wger WITH NOSUPERUSER;"
+    msg_ok "Updated wger"
+
+    msg_info "Fixing nginx proxy header"
+    sed -i 's/proxy_set_header Host \$host;/proxy_set_header Host \$http_host;/' /etc/nginx/sites-enabled/wger
+    msg_ok "Fixed nginx proxy header"
+
+    install_powersync_if_missing
+    update_powersync
 
     msg_info "Starting Services"
     systemctl start redis-server nginx celery celery-beat wger
@@ -371,5 +395,7 @@ echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"
 echo ""
-msg_warn "Default credentials: admin / adminadmin"
+msg_warn "Initial credentials:"
+echo "Username: admin"
+echo "Password: ${PG_DB_PASS}"
 msg_warn "Change the password immediately after first login!"
