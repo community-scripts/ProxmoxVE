@@ -494,11 +494,3 @@ msg_ok "Services created"
 motd_ssh
 customize
 cleanup_lxc
-
-msg_ok "Completed Successfully!\n"
-echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"
-echo ""
-echo -e "${RED}⚠️  Default credentials: admin / adminadmin${CL}"
-echo -e "${RED}   Change the password immediately after first login!${CL}"
