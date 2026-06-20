@@ -108,8 +108,13 @@ EOF
   cd /root
   if [ -d /opt/certbot ]; then
     msg_info "Updating Certbot"
-    $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
-    $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
+    CERTBOT_PYTHON="/opt/certbot/bin/python"
+    if ! "$CERTBOT_PYTHON" -m pip --version &>/dev/null; then
+      msg_info "Repairing Certbot pip"
+      $STD "$CERTBOT_PYTHON" -m ensurepip --upgrade
+    fi
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade pip setuptools wheel
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade certbot certbot-dns-cloudflare
     msg_ok "Updated Certbot"
   fi
 

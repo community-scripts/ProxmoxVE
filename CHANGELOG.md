@@ -483,6 +483,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-20
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Nginxproxymanager: repair broken certbot pip before update [@MickLesk](https://github.com/MickLesk) ([#15224](https://github.com/community-scripts/ProxmoxVE/pull/15224))
+
 ## 2026-06-19
 
 ### 🚀 Updated Scripts
@@ -495,6 +503,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - [arm64] Port scripts between garage-hortusfox to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15207](https://github.com/community-scripts/ProxmoxVE/pull/15207))
     - [arm64] Port scripts titled between A-F to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15181](https://github.com/community-scripts/ProxmoxVE/pull/15181))
 
 ### 📂 Github
