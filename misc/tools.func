@@ -6742,7 +6742,11 @@ setup_meilisearch() {
 
       # Stop service and update binary
       systemctl stop meilisearch
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+      if [[ "$(arch_resolve)" == "arm64" ]]; then
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/bin" "meilisearch-linux-aarch64"
+      else
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+      fi
 
       # If migration needed and dump was created, remove old data and import dump
       if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
@@ -6810,11 +6814,18 @@ setup_meilisearch() {
   # Fresh install
   msg_info "Setup MeiliSearch"
 
-  # Install binary
-  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
-    msg_error "Failed to install MeiliSearch binary"
-    return 250
-  }
+  # Install binary (meilisearch publishes only an amd64 .deb; arm64 uses the raw linux-aarch64 binary)
+  if [[ "$(arch_resolve)" == "arm64" ]]; then
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/bin" "meilisearch-linux-aarch64" || {
+      msg_error "Failed to install MeiliSearch binary"
+      return 250
+    }
+  else
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
+      msg_error "Failed to install MeiliSearch binary"
+      return 250
+    }
+  fi
 
   # Download default config
   curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml || {

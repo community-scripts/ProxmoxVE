@@ -18,7 +18,8 @@ fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
 
 msg_info "Setup Kometa"
 cd /opt/kometa
-$STD uv pip install -r requirements.txt --system
+$STD uv venv /opt/kometa/.venv
+$STD uv pip install -r requirements.txt -p /opt/kometa/.venv/bin/python
 mkdir -p config/assets
 cp config/config.yml.template config/config.yml
 msg_ok "Setup Kometa"
@@ -47,7 +48,7 @@ After=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/kometa
-ExecStart=/usr/bin/python3 kometa.py
+ExecStart=/opt/kometa/.venv/bin/python kometa.py
 Restart=always
 RestartSec=30
 

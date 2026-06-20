@@ -14,7 +14,26 @@ network_check
 update_os
 
 msg_info "Installing Docker"
-$STD sh <(curl -fsSL https://get.docker.com/)
+if [[ "$(arch_resolve)" == "arm64" ]]; then
+  setup_deb822_repo "docker" \
+    "https://download.docker.com/linux/$(get_os_info id)/gpg" \
+    "https://download.docker.com/linux/$(get_os_info id)" \
+    "$(get_os_info codename)" \
+    "stable"
+  $STD apt install -y \
+    docker-ce=5:28.5.2-1~debian.13~trixie \
+    docker-ce-cli=5:28.5.2-1~debian.13~trixie \
+    containerd.io=1.7.29-1~debian.13~trixie \
+    docker-buildx-plugin docker-compose-plugin
+  runc_tmp=$(mktemp -d)
+  (cd "$runc_tmp" && apt-get download runc && dpkg-deb -x runc_*.deb x)
+  dpkg-divert --local --rename --add /usr/bin/runc
+  install -m755 "$runc_tmp"/x/usr/sbin/runc /usr/bin/runc
+  rm -rf "$runc_tmp"
+  systemctl restart containerd docker
+else
+  $STD sh <(curl -fsSL https://get.docker.com/)
+fi
 msg_ok "Installed Docker"
 
 msg_info "Detecting latest Kasm Workspaces release"
@@ -53,7 +72,7 @@ curl_download "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
 cd /opt
 tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
 chmod +x /opt/kasm_release/install.sh
-printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh >~/kasm-install.output 2>&1
+printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh --ignore-dep-failures >~/kasm-install.output 2>&1
 awk '
   /^Kasm UI Login Credentials$/ {capture=1}
   capture {print}

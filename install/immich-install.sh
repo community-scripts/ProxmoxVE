@@ -124,13 +124,23 @@ msg_ok "Dependencies Installed"
 
 msg_info "Installing Mise"
 curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
+echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
 $STD apt update
 $STD apt install -y mise
 msg_ok "Installed Mise"
 
 msg_info "Configuring Debian Testing Repo"
-sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+if [[ -f /etc/apt/sources.list.d/debian.sources ]]; then
+  sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+else
+  cat <<EOF >/etc/apt/sources.list.d/testing.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: testing
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
+fi
 cat <<EOF >/etc/apt/preferences.d/preferences
 Package: *
 Pin: release a=unstable
@@ -153,7 +163,7 @@ ACTUAL_PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
 ACTUAL_PG_VERSION=${ACTUAL_PG_VERSION:-16}
 
 VCHORD_RELEASE="0.5.3"
-fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${ACTUAL_PG_VERSION}-vchord_*_amd64.deb"
+fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${ACTUAL_PG_VERSION}-vchord_*_$(arch_resolve).deb"
 
 sed -i "s/^#shared_preload.*/shared_preload_libraries = 'vchord.so'/" /etc/postgresql/${ACTUAL_PG_VERSION}/main/postgresql.conf
 systemctl restart postgresql.service
@@ -376,7 +386,7 @@ if [[ -f ~/.openvino ]]; then
     $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
     [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
   done
-  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
+  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
   msg_ok "Installed Intel OpenVINO machine-learning"
 else
   ML_PYTHON="python3.11"

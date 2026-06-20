@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   nginx \
   supervisor \
+  cron \
   redis-server \
   libfreetype-dev \
   libjpeg62-turbo-dev \

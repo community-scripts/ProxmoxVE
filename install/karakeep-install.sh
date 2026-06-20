@@ -24,7 +24,7 @@ $STD apt install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-gnu-linux-x86_64"
+fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-gnu-linux-$(arch_resolve "x86_64" "aarch64")"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp-nightly-builds" "singlefile" "latest" "/usr/bin" "yt-dlp_linux"
 fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(uname -m)-unknown-linux-gnu.zip"
 setup_meilisearch
@@ -35,7 +35,7 @@ MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.
 NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
 msg_info "Installing external JavaScript Extension for yt-dlp"
-$STD pip install -U yt-dlp-ejs
+$STD pip install -U yt-dlp-ejs --break-system-packages
 mkdir -p ~/.config/pip
 cat <<EOF >~/.config/pip/pip.conf
 [global]

@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -44,7 +44,8 @@ function update_script() {
 
     msg_info "Updating Kometa"
     cd /opt/kometa
-    $STD uv pip install -r requirements.txt --system
+    [[ -d /opt/kometa/.venv ]] || $STD uv venv /opt/kometa/.venv
+    $STD uv pip install -r requirements.txt -p /opt/kometa/.venv/bin/python
     mkdir -p config/assets
     cp /opt/config.yml config/config.yml
     msg_ok "Updated Kometa"
