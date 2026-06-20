@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install minimatch
 
-      - name: Label PR based on file changes and PR template
+      - name: Label PR based on file changes, title, and PR template
         uses: actions/github-script@v7
         with:
           script: |
@@ -35,6 +35,7 @@ jobs:
 
             const prNumber = context.payload.pull_request.number;
             const prBody = context.payload.pull_request.body || "";
+            const prTitle = context.payload.pull_request.title || "";
 
             let labelsToAdd = new Set();
 
@@ -66,6 +67,11 @@ jobs:
                   }
                 }
               }
+            }
+
+            // Add arm64 label if PR title contains "arm64"
+            if (/arm64/i.test(prTitle)) {
+              labelsToAdd.add("arm64");
             }
 
             // Always parse template checkboxes to add content-type labels (bugfix, feature, etc.)
