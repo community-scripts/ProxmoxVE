@@ -35,19 +35,11 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/lychee/.env /opt/lychee.env.bak
-    cp -r /opt/lychee/storage /opt/lychee_storage_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/lychee/storage
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "lychee" "LycheeOrg/Lychee" "prebuild" "latest" "/opt/lychee" "Lychee.zip"
+    restore_backup
 
-    msg_info "Restoring Data"
-    cp /opt/lychee.env.bak /opt/lychee/.env
-    rm -f /opt/lychee.env.bak
-    cp -r /opt/lychee_storage_backup/. /opt/lychee/storage
-    rm -rf /opt/lychee_storage_backup
-    msg_ok "Restored Data"
 
     msg_info "Updating Application"
     cd /opt/lychee

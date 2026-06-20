@@ -30,9 +30,7 @@ function update_script() {
     exit
   fi
 
-  msg_info "Backing up Configuration"
-  cp -a /usr/local/nagios/etc /opt/nagios-etc-backup
-  msg_ok "Backed up Configuration"
+    create_backup /usr/local/nagios/etc
 
   if check_for_gh_release "nagios" "NagiosEnterprises/nagioscore"; then
     msg_info "Stopping Nagios"
@@ -40,6 +38,7 @@ function update_script() {
     msg_ok "Stopped Nagios"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nagios" "NagiosEnterprises/nagioscore" "tarball"
+    restore_backup
 
     msg_info "Building Nagios Core"
     cd /opt/nagios
@@ -73,11 +72,6 @@ function update_script() {
     msg_ok "Built Nagios Plugins"
   fi
 
-  msg_info "Restoring Configuration"
-  rm -rf /usr/local/nagios/etc
-  cp -a /opt/nagios-etc-backup /usr/local/nagios/etc
-  rm -rf /opt/nagios-etc-backup
-  msg_ok "Restored Configuration"
   msg_ok "Updated successfully!"
   exit
 }

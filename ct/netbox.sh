@@ -34,20 +34,15 @@ function update_script() {
     systemctl stop netbox netbox-rq
     msg_ok "Stopped Services"
 
-    msg_info "Backing up NetBox configurations"
-    mv /opt/netbox/ /opt/netbox-backup
-    msg_ok "Backed up NetBox configurations"
+    create_backup /opt/netbox/netbox/netbox/configuration.py \
+      /opt/netbox/netbox/media /opt/netbox/netbox/scripts /opt/netbox/netbox/reports \
+      /opt/netbox/gunicorn.py /opt/netbox/local_requirements.txt \
+      /opt/netbox/netbox/netbox/ldap_config.py
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netbox" "netbox-community/netbox" "tarball"
-
-    cp -r /opt/netbox-backup/netbox/netbox/configuration.py /opt/netbox/netbox/netbox/
-    cp -r /opt/netbox-backup/netbox/{media,scripts,reports}/ /opt/netbox/netbox/
-    cp -r /opt/netbox-backup/gunicorn.py /opt/netbox/
-    [[ -f /opt/netbox-backup/local_requirements.txt ]] && cp -r /opt/netbox-backup/local_requirements.txt /opt/netbox/
-    [[ -f /opt/netbox-backup/netbox/netbox/ldap_config.py ]] && cp -r /opt/netbox-backup/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
+    restore_backup
 
     $STD /opt/netbox/upgrade.sh
-    rm -r /opt/netbox-backup
 
     msg_info "Starting Services"
     systemctl start netbox netbox-rq

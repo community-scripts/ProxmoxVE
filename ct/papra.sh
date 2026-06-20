@@ -35,11 +35,7 @@ function update_script() {
     systemctl stop papra
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    if [[ -f /opt/papra/apps/papra-server/.env ]]; then
-      cp /opt/papra/apps/papra-server/.env /opt/papra_env.bak
-    fi
-    msg_ok "Backed up Configuration"
+    create_backup /opt/papra/apps/papra-server/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "papra" "papra-hq/papra" "tarball"
 
@@ -48,9 +44,8 @@ function update_script() {
 
     msg_info "Building Application"
     cd /opt/papra
-    if [[ -f /opt/papra_env.bak ]]; then
-      cp /opt/papra_env.bak /opt/papra/apps/papra-server/.env
-    else
+    restore_backup
+    if [[ ! -f /opt/papra/apps/papra-server/.env ]]; then
       msg_warn ".env missing, regenerating from defaults"
       LOCAL_IP=$(hostname -I | awk '{print $1}')
       cat <<EOF >/opt/papra/apps/papra-server/.env
@@ -74,7 +69,6 @@ EOF
     $STD pnpm --filter "@papra/app-client..." run build
     $STD pnpm --filter "@papra/app-server..." run build
     ln -sf /opt/papra/apps/papra-client/dist /opt/papra/apps/papra-server/public
-    rm -f /opt/papra_env.bak
     msg_ok "Built Application"
 
     msg_info "Starting Service"

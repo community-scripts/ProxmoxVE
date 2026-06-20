@@ -45,14 +45,12 @@ function update_script() {
     $STD apt --only-upgrade install -y speedtest
     msg_ok "Updated Speedtest CLI"
 
-    msg_info "Creating Backup"
-    cp -r /opt/speedtest-tracker /opt/speedtest-tracker-backup
-    msg_ok "Backup Created"
+    create_backup /opt/speedtest-tracker/.env
 
     fetch_and_deploy_gh_release "speedtest-tracker" "alexjustesen/speedtest-tracker" "tarball" "latest" "/opt/speedtest-tracker"
+    restore_backup
 
     msg_info "Updating Speedtest Tracker"
-    cp -r /opt/speedtest-tracker-backup/.env /opt/speedtest-tracker/.env
     cd /opt/speedtest-tracker
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --optimize-autoloader --no-dev

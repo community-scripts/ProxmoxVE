@@ -35,12 +35,10 @@ function update_script() {
     systemctl stop healthchecks
     msg_ok "Stopped Services"
 
-    msg_info "Backing up existing installation"
-    BACKUP="/opt/healthchecks-backup-$(date +%F-%H%M)"
-    cp -a /opt/healthchecks "$BACKUP"
-    msg_ok "Backup created at $BACKUP"
+    create_backup /opt/healthchecks
 
     fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks" "tarball"
+    restore_backup
 
     cd /opt/healthchecks
     if [[ -d venv ]]; then

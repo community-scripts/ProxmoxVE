@@ -37,12 +37,10 @@ function update_script() {
     systemctl stop soulsync
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    mv /opt/soulsync/config /opt/soulsync-config.bak
-    mv /opt/soulsync/data /opt/soulsync-data.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/soulsync/config /opt/soulsync/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
+    restore_backup
 
     msg_info "Updating Python Dependencies"
     cd /opt/soulsync
@@ -55,9 +53,6 @@ function update_script() {
     $STD npm ci
     $STD npm run build
     msg_ok "Built WebUI"
-
-    mv /opt/soulsync-config.bak /opt/soulsync/config
-    mv /opt/soulsync-data.bak /opt/soulsync/data
 
     msg_info "Starting Service"
     systemctl start soulsync

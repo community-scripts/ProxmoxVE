@@ -35,19 +35,10 @@ function update_script() {
     systemctl stop writefreely
     msg_ok "Stopped Services"
 
-    msg_info "Creating Backup"
-    mkdir -p /tmp/writefreely_backup
-    cp /opt/writefreely/keys /tmp/writefreely_backup/ 2>/dev/null
-    cp /opt/writefreely/config.ini /tmp/writefreely_backup/ 2>/dev/null
-    msg_ok "Created Backup"
+    create_backup /opt/writefreely/keys /opt/writefreely/config.ini
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "writefreely" "writefreely/writefreely" "prebuild" "latest" "/opt/writefreely" "writefreely_*_linux_amd64.tar.gz"
-
-    msg_info "Restoring Data"
-    cp /tmp/writefreely_backup/config.ini /opt/writefreely/ 2>/dev/null
-    cp /tmp/writefreely_backup/keys/* /opt/writefreely/keys/ 2>/dev/null
-    rm -rf /tmp/writefreely_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Running Post-Update Tasks"
     cd /opt/writefreely

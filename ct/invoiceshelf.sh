@@ -35,19 +35,11 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/invoiceshelf/.env /opt/invoiceshelf.env.bak
-    cp -r /opt/invoiceshelf/storage /opt/invoiceshelf_storage_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/invoiceshelf/storage
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "invoiceshelf" "InvoiceShelf/InvoiceShelf" "tarball"
+    restore_backup
 
-    msg_info "Restoring Data"
-    cp /opt/invoiceshelf.env.bak /opt/invoiceshelf/.env
-    rm -f /opt/invoiceshelf.env.bak
-    cp -r /opt/invoiceshelf_storage_backup/. /opt/invoiceshelf/storage
-    rm -rf /opt/invoiceshelf_storage_backup
-    msg_ok "Restored Data"
 
     msg_info "Updating Application"
     cd /opt/invoiceshelf

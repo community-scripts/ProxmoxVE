@@ -35,19 +35,11 @@ function update_script() {
     systemctl stop nginx linkding linkding-tasks
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp -r /opt/linkding/data /opt/linkding_data_backup
-    cp /opt/linkding/.env /opt/linkding_env_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/linkding/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
+    restore_backup
 
-    msg_info "Restoring Data"
-    cp -r /opt/linkding_data_backup/. /opt/linkding/data
-    cp /opt/linkding_env_backup /opt/linkding/.env
-    rm -rf /opt/linkding_data_backup /opt/linkding_env_backup
-    ln -sf /usr/lib/x86_64-linux-gnu/mod_icu.so /opt/linkding/libicu.so
-    msg_ok "Restored Data"
 
     msg_info "Updating LinkDing"
     cd /opt/linkding

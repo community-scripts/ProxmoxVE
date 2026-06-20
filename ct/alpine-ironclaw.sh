@@ -33,18 +33,12 @@ function update_script() {
     rc-service ironclaw stop 2>/dev/null || true
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp /root/.ironclaw/.env /root/ironclaw.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /root/.ironclaw/.env
 
     fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "latest" "/usr/local/bin" \
       "ironclaw-$(uname -m)-unknown-linux-musl.tar.gz"
     chmod +x /usr/local/bin/ironclaw
-
-    msg_info "Restoring Configuration"
-    cp /root/ironclaw.env.bak /root/.ironclaw/.env
-    rm -f /root/ironclaw.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Starting Service"
     rc-service ironclaw start

@@ -41,20 +41,11 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Stopped Apache2"
 
-    msg_info "Backing up FreshRSS"
-    mv /opt/freshrss /opt/freshrss-backup
-    msg_ok "Backup Created"
+    create_backup /opt/freshrss /opt/freshrss/data /opt/freshrss/extensions
 
     fetch_and_deploy_gh_release "freshrss" "FreshRSS/FreshRSS" "tarball"
+    restore_backup
 
-    msg_info "Restoring data and configuration"
-    if [[ -d /opt/freshrss-backup/data ]]; then
-      cp -a /opt/freshrss-backup/data/. /opt/freshrss/data/
-    fi
-    if [[ -d /opt/freshrss-backup/extensions ]]; then
-      cp -a /opt/freshrss-backup/extensions/. /opt/freshrss/extensions/
-    fi
-    msg_ok "Data Restored"
 
     msg_info "Setting permissions"
     chown -R www-data:www-data /opt/freshrss
@@ -66,9 +57,6 @@ function update_script() {
     systemctl start apache2
     msg_ok "Started Apache2"
 
-    msg_info "Cleaning up backup"
-    rm -rf /opt/freshrss-backup
-    msg_ok "Cleaned up backup"
     msg_ok "Updated successfully!"
   fi
   exit

@@ -35,20 +35,12 @@ function update_script() {
     systemctl stop jotty
     msg_ok "Stopped Service"
 
-    msg_info "Backing up configuration & data"
-    cp /opt/jotty/.env /opt/app.env
-    [[ -d /opt/jotty/data ]] && mv /opt/jotty/data /opt/data
-    [[ -d /opt/jotty/config ]] && mv /opt/jotty/config /opt/config
-    msg_ok "Backed up configuration & data"
+    create_backup /opt/jotty/data /opt/jotty/config
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "latest" "/opt/jotty" "jotty_*_prebuild.tar.gz"
+    restore_backup
 
-    msg_info "Restoring configuration & data"
-    mv /opt/app.env /opt/jotty/.env
-    [[ -d /opt/data ]] && mv /opt/data /opt/jotty/data
-    [[ -d /opt/config ]] && cp -a /opt/config/* /opt/jotty/config && rm -rf /opt/config
-    msg_ok "Restored configuration & data"
 
     msg_info "Starting Service"
     systemctl start jotty

@@ -31,6 +31,7 @@ function update_script() {
   fi
 
   fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-x86_64.txz"
+    restore_backup
   ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert
   fetch_and_deploy_gh_release "drawio" "jgraph/drawio-desktop" "binary" "latest" "" "drawio-amd64-*.deb"
   fetch_and_deploy_gh_release "pandoc" "jgm/pandoc" "binary" "latest" "" "pandoc-*-amd64.deb"
@@ -40,10 +41,7 @@ function update_script() {
     systemctl stop transmute
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/transmute/backend/.env /opt/transmute.env.bak
-    cp -r /opt/transmute/data /opt/transmute_data_bak
-    msg_ok "Backed up Data"
+    create_backup /opt/transmute/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball"
 
@@ -59,12 +57,6 @@ function update_script() {
     $STD npm run build
     msg_ok "Rebuilt Frontend"
 
-    msg_info "Restoring Data"
-    cp /opt/transmute.env.bak /opt/transmute/backend/.env
-    cp -r /opt/transmute_data_bak/. /opt/transmute/data/
-    rm -f /opt/transmute.env.bak
-    rm -rf /opt/transmute_data_bak
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start transmute

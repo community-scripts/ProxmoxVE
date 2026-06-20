@@ -33,17 +33,13 @@ function update_script() {
     systemctl stop listmonk
     msg_ok "Stopped Service"
 
-    msg_info "Backing up data"
-    mv /opt/listmonk/ /opt/listmonk-backup
-    msg_ok "Backed up data"
+    create_backup /opt/listmonk/config.toml /opt/listmonk/uploads
 
     fetch_and_deploy_gh_release "listmonk" "knadh/listmonk" "prebuild" "latest" "/opt/listmonk" "listmonk*linux_amd64.tar.gz"
+    restore_backup
 
     msg_info "Configuring listmonk"
-    mv /opt/listmonk-backup/config.toml /opt/listmonk/config.toml
-    mv /opt/listmonk-backup/uploads /opt/listmonk/uploads
     $STD /opt/listmonk/listmonk --upgrade --yes --config /opt/listmonk/config.toml
-    rm -rf /opt/listmonk-backup/
     msg_ok "Configured listmonk"
 
     msg_info "Starting Service"

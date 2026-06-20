@@ -39,10 +39,7 @@ function update_script() {
     create_backup /opt/twenty/.env \
                   /opt/twenty/packages/twenty-server/.local-storage
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "twenty" "twentyhq/twenty" "tarball"
-
-    msg_info "Restoring Configuration"
-    cp /opt/twenty.env.bak /opt/twenty/.env
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Building Application"
     cd /opt/twenty
@@ -63,8 +60,6 @@ function update_script() {
     $STD npx ts-node ./scripts/setup-db.ts
     $STD npx -y typeorm migration:run -d dist/database/typeorm/core/core.datasource
     msg_ok "Ran Database Migrations"
-
-    restore_backup
 
     msg_info "Starting Services"
     systemctl start twenty-server twenty-worker

@@ -35,11 +35,10 @@ function update_script() {
     systemctl stop ownfoil
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/ownfoil/app/config /opt/ownfoil_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/ownfoil/app/config
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ownfoil" "a1ex4/ownfoil" "tarball"
+    restore_backup
 
     msg_info "Installing Dependencies"
     cd /opt/ownfoil
@@ -47,10 +46,6 @@ function update_script() {
     $STD uv pip install -r requirements.txt
     msg_ok "Installed Dependencies"
 
-    msg_info "Restoring Data"
-    cp -r /opt/ownfoil_data_backup /opt/ownfoil/app/config
-    rm -rf /opt/ownfoil_data_backup
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start ownfoil

@@ -33,19 +33,15 @@ function update_script() {
     systemctl stop mafl
     msg_ok "Service stopped"
 
-    msg_info "Backing up data"
-    mkdir -p /opt/mafl-backup/data
-    mv /opt/mafl/data /opt/mafl-backup/data
-    rm -rf /opt/mafl
-    msg_ok "Backup complete"
+    create_backup /opt/mafl/data
 
-    fetch_and_deploy_gh_release "mafl" "hywax/mafl" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mafl" "hywax/mafl" "tarball"
+    restore_backup
 
     msg_info "Updating Mafl"
     cd /opt/mafl
     $STD yarn install
     $STD yarn build
-    mv /opt/mafl-backup/data /opt/mafl/data
     msg_ok "Mafl updated"
 
     msg_info "Starting Service"

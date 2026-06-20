@@ -35,13 +35,10 @@ function update_script() {
 
     RUST_CRATES="monolith" setup_rust
 
-    msg_info "Backing up data"
-    mv /opt/linkwarden/.env /opt/.env
-    [ -d /opt/linkwarden/data ] && mv /opt/linkwarden/data /opt/data.bak
-    rm -rf /opt/linkwarden
-    msg_ok "Backed up data"
+    create_backup /opt/linkwarden/.env /opt/linkwarden/data
 
     fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden" "tarball"
+    restore_backup
 
     msg_info "Updating Linkwarden"
     cd /opt/linkwarden
@@ -60,11 +57,9 @@ function update_script() {
     $STD yarn
     $STD npx playwright install-deps
     $STD npx playwright install
-    mv /opt/.env /opt/linkwarden/.env
     $STD yarn prisma:generate
     $STD yarn web:build
     $STD yarn prisma:deploy
-    [ -d /opt/data.bak ] && mv /opt/data.bak /opt/linkwarden/data
     rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache
     rm -rf /root/.cache/yarn
     rm -rf /opt/linkwarden/.next/cache

@@ -35,19 +35,12 @@ function update_script() {
     systemctl stop ghostfolio
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    tar -czf "/opt/ghostfolio_backup_$(date +%F).tar.gz" \
-      -C /opt \
-      --exclude="ghostfolio/node_modules" \
-      --exclude="ghostfolio/dist" \
-      ghostfolio
-    mv /opt/ghostfolio/.env /opt/env.backup
-    msg_ok "Backup Created"
+    create_backup /opt/ghostfolio/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ghostfolio" "ghostfolio/ghostfolio" "tarball" "latest" "/opt/ghostfolio"
+    restore_backup
 
     msg_info "Updating Ghostfolio"
-    mv /opt/env.backup /opt/ghostfolio/.env
     sed -i -E '/^DATABASE_URL=/ s/[?&]sslmode=prefer//g' /opt/ghostfolio/.env
     cd /opt/ghostfolio
     $STD npm ci

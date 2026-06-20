@@ -34,19 +34,14 @@ function update_script() {
         systemctl stop metabase
         msg_info "Stopped Service"
 
-        msg_info "Creating backup"
-        mv /opt/metabase/.env /opt
-        msg_ok "Created backup"
+        create_backup /opt/metabase/.env
 
         msg_info "Updating Metabase"
         RELEASE=$(get_latest_github_release "metabase/metabase")
         curl -fsSL "https://downloads.metabase.com/v${RELEASE}.x/metabase.jar" -o /opt/metabase/metabase.jar
         echo $RELEASE >~/.metabase
+        restore_backup
         msg_ok "Updated Metabase"
-
-        msg_info "Restoring backup"
-        mv /opt/.env /opt/metabase
-        msg_ok "Restored backup"
 
         msg_info "Starting Service"
         systemctl start metabase

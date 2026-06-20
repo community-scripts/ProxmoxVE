@@ -34,27 +34,16 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Services Stopped"
 
-    msg_info "Creating backup"
-    cp /opt/wavelog/application/config/config.php /opt/config.php
-    cp /opt/wavelog/application/config/database.php /opt/database.php
-    cp -r /opt/wavelog/userdata /opt/userdata
-    if [[ -f /opt/wavelog/assets/js/sections/custom.js ]]; then
-      cp /opt/wavelog/assets/js/sections/custom.js /opt/custom.js
-    fi
-    msg_ok "Backup created"
+    create_backup /opt/wavelog/application/config/config.php \
+      /opt/wavelog/application/config/database.php \
+      /opt/wavelog/userdata \
+      /opt/wavelog/assets/js/sections/custom.js
 
-    rm -rf /opt/wavelog
     fetch_and_deploy_gh_release "wavelog" "wavelog/wavelog" "tarball"
+    restore_backup
 
     msg_info "Updating Wavelog"
     rm -rf /opt/wavelog/install
-    mv /opt/config.php /opt/wavelog/application/config/config.php
-    mv /opt/database.php /opt/wavelog/application/config/database.php
-    cp -r /opt/userdata/* /opt/wavelog/userdata
-    rm -rf /opt/userdata
-    if [[ -f /opt/custom.js ]]; then
-      mv /opt/custom.js /opt/wavelog/assets/js/sections/custom.js
-    fi
     chown -R www-data:www-data /opt/wavelog/
     find /opt/wavelog/ -type d -exec chmod 755 {} \;
     find /opt/wavelog/ -type f -exec chmod 664 {} \;

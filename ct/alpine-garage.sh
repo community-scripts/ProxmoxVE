@@ -33,15 +33,13 @@ function update_script() {
     rc-service garage stop || true
     msg_ok "Stopped Service"
 
-    msg_info "Backing Up Data"
-    cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null || true
-    cp /etc/garage.toml /etc/garage.toml.bak 2>/dev/null || true
-    msg_ok "Backed Up Data"
+    create_backup /etc/garage.toml
 
     msg_info "Updating Garage"
     curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
     chmod +x /usr/local/bin/garage
     echo "${GITEA_RELEASE}" >~/.garage
+    clear_update_backup
     msg_ok "Updated Garage"
 
     msg_info "Starting Service"

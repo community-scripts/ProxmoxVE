@@ -33,9 +33,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "netboot-xyz" "netbootxyz/netboot.xyz"; then
-    msg_info "Backing up Configuration"
-    cp /var/www/html/boot.cfg /opt/netboot-xyz-boot.cfg.bak
-    msg_ok "Backed up Configuration"
+    create_backup /var/www/html/boot.cfg
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netboot-xyz" "netbootxyz/netboot.xyz" "prebuild" "latest" "/var/www/html" "menus.tar.gz"
 
@@ -70,10 +68,7 @@ function update_script() {
     USE_ORIGINAL_FILENAME=true fetch_and_deploy_gh_release "netboot-xyz-multiarch-img" "netbootxyz/netboot.xyz" "singlefile" "latest" "/var/www/html" "netboot.xyz-multiarch.img"
     USE_ORIGINAL_FILENAME=true fetch_and_deploy_gh_release "netboot-xyz-checksums" "netbootxyz/netboot.xyz" "singlefile" "latest" "/var/www/html" "netboot.xyz-sha256-checksums.txt"
 
-    msg_info "Restoring Configuration"
-    cp /opt/netboot-xyz-boot.cfg.bak /var/www/html/boot.cfg
-    rm -f /opt/netboot-xyz-boot.cfg.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_ok "Updated successfully!"
   fi

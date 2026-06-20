@@ -37,14 +37,12 @@ function update_script() {
     systemctl stop kapowarr
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    mv /opt/kapowarr/db /opt/
-    msg_ok "Backup Created"
+    create_backup /opt/kapowarr/db
 
     fetch_and_deploy_gh_release "kapowarr" "Casvt/Kapowarr" "tarball"
+    restore_backup
 
     msg_info "Updating Kapowarr"
-    mv /opt/db /opt/kapowarr
     msg_ok "Updated Kapowarr"
 
     msg_info "Starting Service"

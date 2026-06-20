@@ -36,12 +36,10 @@ function update_script() {
     systemctl stop tianji
     msg_ok "Stopped Service"
 
-    msg_info "Backing up data"
-    cp /opt/tianji/src/server/.env /opt/.env
-    mv /opt/tianji /opt/tianji_bak
-    msg_ok "Backed up data"
+    create_backup /opt/tianji
 
     fetch_and_deploy_gh_release "tianji" "msgbyte/tianji" "tarball"
+    restore_backup
 
     msg_info "Updating Tianji"
     cd /opt/tianji
@@ -52,10 +50,8 @@ function update_script() {
     mkdir -p ./src/server/public
     cp -r ./geo ./src/server/public
     $STD pnpm build:server
-    mv /opt/.env /opt/tianji/src/server/.env
     cd src/server
     $STD pnpm db:migrate:apply
-    rm -rf /opt/tianji_bak
     rm -rf /opt/tianji/src/client
     rm -rf /opt/tianji/website
     rm -rf /opt/tianji/reporter

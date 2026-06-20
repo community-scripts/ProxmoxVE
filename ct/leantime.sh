@@ -31,22 +31,13 @@ function update_script() {
   fi
   setup_mariadb
   if check_for_gh_release "leantime" "Leantime/leantime"; then
-    msg_info "Creating Backup"
-    mariadb-dump leantime >"/opt/leantime_db_backup_$(date +%F).sql"
-    tar -czf "/opt/leantime_backup_$(date +%F).tar.gz" "/opt/leantime"
-    mv /opt/leantime /opt/leantime_bak
-    msg_ok "Backup Created"
+    create_backup /opt/leantime
 
     fetch_and_deploy_gh_release "leantime" "Leantime/leantime" "prebuild" "latest" "/opt/leantime" Leantime*.tar.gz
+    restore_backup
 
-    msg_info "Restoring Config & Permissions"
-    mv /opt/leantime_bak/config/.env /opt/leantime/config/.env
-    chown -R www-data:www-data "/opt/leantime"
-    chmod -R 750 "/opt/leantime"
-    msg_ok "Restored Config & Permissions"
 
     msg_info "Removing Backup"
-    rm -rf /opt/leantime_bak
     msg_ok "Removed Backup"
     msg_ok "Updated successfully!"
   fi

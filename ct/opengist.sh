@@ -33,15 +33,10 @@ function update_script() {
     systemctl stop opengist
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
-    mv /opt/opengist /opt/opengist-backup
-    msg_ok "Backup created"
+    create_backup /opt/opengist/config.yml
 
     fetch_and_deploy_gh_release "opengist" "thomiceli/opengist" "prebuild" "latest" "/opt/opengist" "opengist*linux-amd64.tar.gz"
-
-    msg_info "Restoring Configuration"
-    mv /opt/opengist-backup/config.yml /opt/opengist/config.yml
-    msg_ok "Configuration Restored"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start opengist

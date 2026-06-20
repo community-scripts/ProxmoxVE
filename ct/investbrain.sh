@@ -41,20 +41,13 @@ function update_script() {
     NODE_VERSION="22" setup_nodejs
     PG_VERSION="17" setup_postgresql
 
-    msg_info "Creating Backup"
-    rm -f /opt/.env.backup
-    rm -rf /opt/investbrain_backup
-    cp /opt/investbrain/.env /opt/.env.backup
-    cp -r /opt/investbrain/storage /opt/investbrain_backup
-    msg_ok "Created Backup"
+    create_backup /opt/investbrain/.env /opt/investbrain/storage
 
     fetch_and_deploy_gh_release "Investbrain" "investbrainapp/investbrain" "tarball" "latest" "/opt/investbrain"
+    restore_backup
 
     msg_info "Updating Investbrain"
     cd /opt/investbrain
-    rm -rf /opt/investbrain/storage
-    cp /opt/.env.backup /opt/investbrain/.env
-    cp -r /opt/investbrain_backup/ /opt/investbrain/storage
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD /usr/local/bin/composer install --no-interaction --no-dev --optimize-autoloader
     $STD npm install
@@ -69,7 +62,6 @@ function update_script() {
     $STD php artisan event:cache
     chown -R www-data:www-data /opt/investbrain
     chmod -R 775 /opt/investbrain/storage /opt/investbrain/bootstrap/cache
-    rm -rf /opt/.env.backup /opt/investbrain_backup
     msg_ok "Updated Investbrain"
 
     msg_info "Starting Services"

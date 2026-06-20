@@ -37,14 +37,10 @@ function update_script() {
     systemctl stop manyfold.target manyfold-rails.1 manyfold-default_worker.1 manyfold-performance_worker.1
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    CURRENT_VERSION=$(grep -oP 'APP_VERSION=\K[^ ]+' /opt/manyfold/.env || echo "unknown")
-    cp -r /opt/manyfold/app/storage /opt/manyfold_storage_backup 2>/dev/null || true
-    cp -r /opt/manyfold/app/tmp /opt/manyfold_tmp_backup 2>/dev/null || true
-    $STD tar -czf "/opt/manyfold_${CURRENT_VERSION}_backup.tar.gz" -C /opt/manyfold app
-    msg_ok "Backed up Data"
+    create_backup /opt/manyfold/app/storage /opt/manyfold/app/tmp
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "manyfold" "manyfold3d/manyfold" "tarball" "latest" "/opt/manyfold/app"
+    restore_backup
 
     msg_info "Configuring Manyfold"
     RUBY_INSTALL_VERSION=$(cat /opt/manyfold/app/.ruby-version)
@@ -55,14 +51,6 @@ function update_script() {
 
     RUBY_VERSION=${RUBY_INSTALL_VERSION} RUBY_INSTALL_RAILS="true" HOME=/home/manyfold setup_ruby
 
-    msg_info "Restoring Data"
-    rm -rf /opt/manyfold/app/{storage,tmp}
-    cp -r /opt/manyfold_storage_backup /opt/manyfold/app/storage 2>/dev/null || true
-    cp -r /opt/manyfold_tmp_backup /opt/manyfold/app/tmp 2>/dev/null || true
-    chown -R manyfold:manyfold {/home/manyfold,/opt/manyfold}
-    chown -R manyfold:manyfold /opt/manyfold/app/storage /opt/manyfold/app/tmp /opt/manyfold/app/config
-    rm -rf /opt/manyfold_storage_backup /opt/manyfold_tmp_backup
-    msg_ok "Restored Data"
 
     msg_info "Installing Manyfold"
     $STD npm install --global corepack
