@@ -41,7 +41,7 @@ function install_powersync_if_missing() {
   set -a && source /opt/wger/.env && set +a
   export DJANGO_SETTINGS_MODULE=settings.main
   if ! grep -q "JWT_PRIVATE_KEY" /opt/wger/.env; then
-    $STD uv run python manage.py generate-jwt-keys >> /opt/wger/.env
+    uv run python manage.py generate-jwt-keys >> /opt/wger/.env
     set -a && source /opt/wger/.env && set +a
   fi
   msg_ok "Generated JWT keys"
