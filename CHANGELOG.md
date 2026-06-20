@@ -487,7 +487,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Plane ([#15227](https://github.com/community-scripts/ProxmoxVE/pull/15227))
+  - Apache-Airflow ([#15228](https://github.com/community-scripts/ProxmoxVE/pull/15228))
+- Plane ([#15227](https://github.com/community-scripts/ProxmoxVE/pull/15227))
 
 ### 🚀 Updated Scripts
 
