@@ -58,7 +58,7 @@ if [[ -n "$socket" ]]; then
   cat <<EOF >/etc/systemd/system/docker.service.d/override.conf
 [Service]
 ExecStart=
-ExecStart=/usr/bin/dockerd
+ExecStart=$(command -v dockerd || echo /usr/sbin/dockerd)
 EOF
 
   $STD systemctl daemon-reexec
