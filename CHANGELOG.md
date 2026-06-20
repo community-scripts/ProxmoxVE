@@ -497,6 +497,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Fix docker service crash [@asylumexp](https://github.com/asylumexp) ([#15243](https://github.com/community-scripts/ProxmoxVE/pull/15243))
     - Nginxproxymanager: repair broken certbot pip before update [@MickLesk](https://github.com/MickLesk) ([#15224](https://github.com/community-scripts/ProxmoxVE/pull/15224))
 
+  - #### ✨ New Features
+
+    - [arm64] port scripts between hyperhdr & kometa to arm64 [@asylumexp](https://github.com/asylumexp) ([#15234](https://github.com/community-scripts/ProxmoxVE/pull/15234))
+
 ## 2026-06-19
 
 ### 🚀 Updated Scripts
