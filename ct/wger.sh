@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/Soppster1029/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -56,7 +56,6 @@ function install_powersync_if_missing() {
   msg_info "Creating PowerSync config"
   mkdir -p /opt/powersync
 
-  # Only create config files if they don't exist (preserve user changes)
   if [[ ! -f /opt/powersync/powersync.env ]]; then
     cat > /opt/powersync/powersync.env <<EOF
 PS_DATABASE_URI=${DATABASE_URL}
