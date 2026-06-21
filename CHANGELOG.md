@@ -488,6 +488,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-21
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - [arm64] Port scripts between mediamtx-nocodb to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15254](https://github.com/community-scripts/ProxmoxVE/pull/15254))
+
 ## 2026-06-20
 
 ### 🆕 New Scripts
