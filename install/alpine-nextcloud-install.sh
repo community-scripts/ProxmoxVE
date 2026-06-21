@@ -94,16 +94,16 @@ EOF
 rm -rf /etc/nginx/http.d/default.conf
 cat <<'EOF' >/etc/nginx/http.d/nextcloud.conf
 server {
-        listen       [::]:80;
-        listen       80;
+        listen       [::]:8888;
+        listen       8888;
         return 301 https://$host$request_uri;
         server_name localhost;
         client_max_body_size 16G;
         fastcgi_read_timeout 120s;
 }
 server {
-        listen       443 ssl;
-        listen       [::]:443 ssl;
+        listen       4434 ssl;
+        listen       [::]:4434 ssl;
         http2        on;
         server_name  localhost;
         root /usr/share/webapps/nextcloud;
