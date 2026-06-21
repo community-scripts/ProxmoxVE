@@ -496,6 +496,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - [arm64] Port scripts between qdrant & snipeit to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15274](https://github.com/community-scripts/ProxmoxVE/pull/15274))
     - [arm64] Port scripts between nodered & paperlessngx to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15255](https://github.com/community-scripts/ProxmoxVE/pull/15255))
     - [arm64] port scripts titled between papra and qbittorrent to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15258](https://github.com/community-scripts/ProxmoxVE/pull/15258))
     - [arm64] Port scripts between mediamtx-nocodb to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15254](https://github.com/community-scripts/ProxmoxVE/pull/15254))
