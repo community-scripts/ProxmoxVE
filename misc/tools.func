@@ -2482,6 +2482,8 @@ check_for_gh_tag() {
 #   - Does not modify anything, only checks version state
 #   - Does not support pre-releases
 # ------------------------------------------------------------------------------
+TOOLS_GH_REL_JSON=""
+
 check_for_gh_release() {
   local app="$1"
   local source="$2"
@@ -2501,6 +2503,10 @@ check_for_gh_release() {
 
   ensure_dependencies jq
 
+  local gh_check_json
+  gh_check_json=$(mktemp /tmp/tools-gh-check-XXXXXX.json) || return 7
+  trap 'rm -f "$gh_check_json"' RETURN
+
   # Build auth header if token is available
   local header_args=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
@@ -2511,14 +2517,14 @@ check_for_gh_release() {
   # For pinned versions, query the specific release tag directly
   if [[ -n "$pinned_version_in" ]]; then
     local pinned_version_encoded="${pinned_version_in//\//%2F}"
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases/tags/${pinned_version_encoded}" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json="[$(</tmp/gh_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json="[$(<"$gh_check_json")]"
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2526,27 +2532,27 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
   if [[ -z "$pinned_version_in" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases/latest" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json="[$(</tmp/gh_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json="[$(<"$gh_check_json")]"
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2554,28 +2560,28 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
   # If no releases yet (pinned version OR /latest failed), fetch up to 100
   if [[ -z "$releases_json" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases?per_page=100" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json=$(</tmp/gh_check.json)
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json=$(<"$gh_check_json")
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2583,25 +2589,25 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitHub API connection failed (no response)."
       msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 7
     else
       msg_error "Unable to fetch releases for ${app} (HTTP ${http_code})"
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
   mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
@@ -3147,10 +3153,14 @@ fetch_and_deploy_codeberg_release() {
     return 6
   fi
 
+  local codeberg_rel_json
+  codeberg_rel_json=$(mktemp /tmp/tools-codeberg-rel-XXXXXX.json) || return 7
+  trap 'rm -f "$codeberg_rel_json"' RETURN
+
   local attempt=0 success=false resp http_code
 
   while ((attempt < ${#api_timeouts[@]})); do
-    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
+    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o "$codeberg_rel_json" "$api_url") && success=true && break
     attempt=$((attempt + 1))
     if ((attempt < ${#api_timeouts[@]})); then
       msg_warn "API request timed out after ${api_timeouts[$((attempt - 1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
@@ -3169,7 +3179,7 @@ fetch_and_deploy_codeberg_release() {
   }
 
   local json tag_name
-  json=$(</tmp/codeberg_rel.json)
+  json=$(<"$codeberg_rel_json")
 
   # For "latest", the API returns an array - take the first (most recent) release
   if [[ "$version" == "latest" ]]; then
@@ -3627,6 +3637,13 @@ fetch_and_deploy_gh_release() {
 
   ensure_dependencies jq
 
+  if [[ -n "${TOOLS_GH_REL_JSON:-}" && -f "$TOOLS_GH_REL_JSON" ]]; then
+    rm -f "$TOOLS_GH_REL_JSON"
+  fi
+  local gh_rel_json
+  gh_rel_json=$(mktemp /tmp/tools-gh-rel-XXXXXX.json) || return 7
+  TOOLS_GH_REL_JSON="$gh_rel_json"
+
   local api_url="https://api.github.com/repos/$repo/releases"
   [[ "$version" != "latest" ]] && api_url="$api_url/tags/$version" || api_url="$api_url/latest"
   local header=()
@@ -3643,7 +3660,7 @@ fetch_and_deploy_gh_release() {
   local max_retries=${#api_timeouts[@]} retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o "$gh_rel_json" "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -3690,7 +3707,7 @@ fetch_and_deploy_gh_release() {
   fi
 
   local json tag_name
-  json=$(</tmp/gh_rel.json)
+  json=$(<"$gh_rel_json")
   tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
   # Only strip leading 'v' when followed by a digit (e.g. v1.2.3), not words like "version/..."
   [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -4295,7 +4312,12 @@ setup_composer() {
 #   - Updates Docker Engine if newer version available
 #   - Interactive container update with multi-select
 #   - Portainer installation and update support
+#   - Set DOCKER_NONINTERACTIVE=1 to skip interactive prompts (CI/unattended)
 # ------------------------------------------------------------------------------
+_docker_is_noninteractive() {
+  [[ "${DOCKER_NONINTERACTIVE:-}" == "1" || "${DOCKER_NONINTERACTIVE:-}" == "true" || "${DOCKER_NONINTERACTIVE:-}" == "TRUE" ]] || [[ ! -t 0 ]]
+}
+
 setup_docker() {
   local docker_installed=false
   local portainer_installed=false
@@ -4435,21 +4457,25 @@ EOF
       PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
 
       if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
-        read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
-        if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-          msg_info "Updating Portainer"
-          docker stop portainer
-          docker rm portainer
-          docker pull portainer/portainer-ce:latest
-          docker run -d \
-            -p 9000:9000 \
-            -p 9443:9443 \
-            --name=portainer \
-            --restart=always \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v portainer_data:/data \
-            portainer/portainer-ce:latest
-          msg_ok "Updated Portainer to $PORTAINER_LATEST"
+        if _docker_is_noninteractive; then
+          msg_info "Skipping Portainer update prompt (non-interactive)"
+        else
+          read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
+          if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+            msg_info "Updating Portainer"
+            docker stop portainer
+            docker rm portainer
+            docker pull portainer/portainer-ce:latest
+            docker run -d \
+              -p 9000:9000 \
+              -p 9443:9443 \
+              --name=portainer \
+              --restart=always \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v portainer_data:/data \
+              portainer/portainer-ce:latest
+            msg_ok "Updated Portainer to $PORTAINER_LATEST"
+          fi
         fi
       else
         msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
@@ -4472,7 +4498,7 @@ EOF
   fi
 
   # Interactive Container Update Check
-  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ]; then
+  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ] && ! _docker_is_noninteractive; then
     msg_info "Checking for container updates"
 
     # Get list of running containers with update status
@@ -5246,15 +5272,15 @@ setup_hwaccel() {
 # ══════════════════════════════════════════════════════════════════════════════
 # Resolve the IGC tag that the latest compute-runtime was built against.
 # Must be called AFTER a fetch_and_deploy_gh_release for intel/compute-runtime
-# so that /tmp/gh_rel.json contains the compute-runtime release metadata.
+# so that TOOLS_GH_REL_JSON contains the compute-runtime release metadata.
 # Sets the variable named by $1 (default: igc_tag) to the discovered tag.
 # ══════════════════════════════════════════════════════════════════════════════
 _resolve_igc_tag() {
   local -n _out_ref="${1:-igc_tag}"
   _out_ref="latest"
-  if [[ -f /tmp/gh_rel.json ]]; then
+  if [[ -n "${TOOLS_GH_REL_JSON:-}" && -f "$TOOLS_GH_REL_JSON" ]]; then
     local _body _parsed
-    _body=$(jq -r '.body // empty' /tmp/gh_rel.json 2>/dev/null) || return 0
+    _body=$(jq -r '.body // empty' "$TOOLS_GH_REL_JSON" 2>/dev/null) || return 0
     _parsed=$(grep -oP 'intel-graphics-compiler/releases/tag/\K[^\s\)]+' <<<"$_body" | head -1)
     [[ -n "$_parsed" ]] && _out_ref="$_parsed"
   fi
@@ -5288,7 +5314,7 @@ _setup_intel_arc() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub for Arc support"
 
-      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # Fetch a compute-runtime package first so TOOLS_GH_REL_JSON is populated,
       # then resolve the matching IGC tag from the release notes.
       # libigdgmm - bundled in compute-runtime releases
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
@@ -5352,7 +5378,7 @@ _setup_intel_modern() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub"
 
-      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # Fetch a compute-runtime package first so TOOLS_GH_REL_JSON is populated,
       # then resolve the matching IGC tag from the release notes.
       # libigdgmm first (bundled in compute-runtime releases)
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
@@ -6727,24 +6753,13 @@ setup_meilisearch() {
         fi
       fi
 
-      # If migration is needed but dump failed, we have options:
-      # 1. Abort the update (safest, but annoying)
-      # 2. Backup data directory and proceed (allows manual recovery)
-      # 3. Just proceed and hope for the best (dangerous)
-      # We choose option 2: backup and proceed with warning
       if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
-        local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
-
-        if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
-          local BACKUP_PATH="${MEILI_DB_PATH}.backup.$(date +%Y%m%d%H%M%S)"
-          msg_warn "Backing up MeiliSearch data to ${BACKUP_PATH}"
-          mv "$MEILI_DB_PATH" "$BACKUP_PATH"
-          mkdir -p "$MEILI_DB_PATH"
-          msg_info "Data backed up. After update, you may need to reindex your data."
-          msg_info "Old data is preserved at: ${BACKUP_PATH}"
+        msg_error "MeiliSearch migration requires a successful dump before upgrade"
+        msg_error "Ensure the service is running and master_key is configured, or set MEILISEARCH_SKIP_MIGRATION=1 to force (data loss risk)"
+        if [[ "${MEILISEARCH_SKIP_MIGRATION:-}" != "1" ]]; then
+          return 100
         fi
+        msg_warn "MEILISEARCH_SKIP_MIGRATION=1 — proceeding without dump (manual reindex may be required)"
       fi
 
       # Stop service and update binary
@@ -9041,6 +9056,10 @@ check_for_gl_release() {
 
   ensure_dependencies jq
 
+  local gl_check_json
+  gl_check_json=$(mktemp /tmp/tools-gl-check-XXXXXX.json) || return 7
+  trap 'rm -f "$gl_check_json"' RETURN
+
   local repo_encoded
   repo_encoded=$(printf '%s' "$source" | sed 's|/|%2F|g')
 
@@ -9052,23 +9071,23 @@ check_for_gl_release() {
   # For pinned versions, try to fetch the specific release tag first
   if [[ -n "$pinned_version_in" ]]; then
     local pinned_encoded="${pinned_version_in//\//%2F}"
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gl_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
       "https://gitlab.com/api/v4/projects/$repo_encoded/releases/$pinned_encoded" 2>/dev/null) || true
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gl_check.json ]]; then
-      releases_json="[$(</tmp/gl_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
+      releases_json="[$(<"$gl_check_json")]"
     fi
-    rm -f /tmp/gl_check.json
+    rm -f "$gl_check_json"
   fi
 
   # Fetch full releases list if needed
   if [[ -z "$releases_json" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gl_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
       "https://gitlab.com/api/v4/projects/$repo_encoded/releases?per_page=100&order_by=released_at&sort=desc" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gl_check.json ]]; then
-      releases_json=$(</tmp/gl_check.json)
+    if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
+      releases_json=$(<"$gl_check_json")
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitLab API authentication failed (HTTP 401)."
       if [[ -n "${GITLAB_TOKEN:-}" ]]; then
@@ -9076,28 +9095,28 @@ check_for_gl_release() {
       else
         msg_error "The repository may require authentication. Try: export GITLAB_TOKEN=\"glpat-your_token\""
       fi
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "404" ]]; then
       msg_error "GitLab project not found (HTTP 404). Ensure '${source}' is correct and publicly accessible."
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "429" ]]; then
       msg_error "GitLab API rate limit exceeded (HTTP 429)."
       msg_error "To increase the limit, export a GitLab token: export GITLAB_TOKEN=\"glpat-your_token_here\""
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitLab API connection failed (no response)."
       msg_error "Check your network/DNS: curl -sSL https://gitlab.com/api/v4/version"
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 7
     else
       msg_error "Unable to fetch releases for ${app} (HTTP ${http_code})"
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     fi
-    rm -f /tmp/gl_check.json
+    rm -f "$gl_check_json"
   fi
 
   mapfile -t raw_tags < <(jq -r '.[] | .tag_name' <<<"$releases_json")
@@ -9317,6 +9336,10 @@ fetch_and_deploy_gl_release() {
 
   ensure_dependencies jq
 
+  local gl_rel_json
+  gl_rel_json=$(mktemp /tmp/tools-gl-rel-XXXXXX.json) || return 7
+  trap 'rm -f "$gl_rel_json"' RETURN
+
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
 
@@ -9334,7 +9357,7 @@ fetch_and_deploy_gl_release() {
   local max_retries=3 retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o /tmp/gl_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o "$gl_rel_json" "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -9375,7 +9398,7 @@ fetch_and_deploy_gl_release() {
   fi
 
   local json tag_name
-  json=$(</tmp/gl_rel.json)
+  json=$(<"$gl_rel_json")
 
   if [[ "$version" == "latest" ]]; then
     json=$(echo "$json" | jq '.[0] // empty')
