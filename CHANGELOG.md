@@ -496,6 +496,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - [arm64] port scripts titled between papra and qbittorrent to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15258](https://github.com/community-scripts/ProxmoxVE/pull/15258))
     - [arm64] Port scripts between mediamtx-nocodb to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15254](https://github.com/community-scripts/ProxmoxVE/pull/15254))
 
+  - #### 🔧 Refactor
+
+    - tools.func: centralize Node.js corepack and npm handling in `setup_nodejs()` [@MickLesk](https://github.com/MickLesk) ([#15268](https://github.com/community-scripts/ProxmoxVE/pull/15268))
+
 ## 2026-06-20
 
 ### 🆕 New Scripts
