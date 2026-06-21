@@ -282,7 +282,7 @@ get_cached_version() {
     cat "/var/cache/app-versions/${app}_version.txt"
     return 0
   fi
-  return 0
+  return 1
 }
 
 # ------------------------------------------------------------------------------
@@ -462,10 +462,10 @@ install_packages_with_retry() {
             fi
           fi
         done
-        # If some packages installed, consider partial success
         if [[ ${#failed[@]} -lt ${#packages[@]} ]]; then
           if [[ ${#failed[@]} -gt 0 ]]; then
-            msg_warn "Partially installed. Failed packages: ${failed[*]}"
+            msg_error "Partial install — failed packages: ${failed[*]}"
+            return 100
           fi
           return 0
         fi
@@ -1122,11 +1122,34 @@ get_system_arch() {
 
 # ------------------------------------------------------------------------------
 # Create temporary directory with automatic cleanup
+# Appends to a shared list so existing EXIT traps are preserved.
 # ------------------------------------------------------------------------------
+_tools_temp_dirs=()
+
+_tools_cleanup_temp_dirs() {
+  local d
+  for d in "${_tools_temp_dirs[@]}"; do
+    rm -rf "$d" 2>/dev/null || true
+  done
+}
+
+_tools_register_temp_cleanup() {
+  [[ "${_TOOLS_TEMP_TRAP_SET:-}" == "1" ]] && return 0
+  _TOOLS_TEMP_TRAP_SET=1
+  local existing
+  existing=$(trap -p EXIT 2>/dev/null | sed -n "s/^trap -- '\\(.*\\)' EXIT/\1/p" || true)
+  if [[ -n "$existing" && "$existing" != "_tools_cleanup_temp_dirs" ]]; then
+    trap "_tools_cleanup_temp_dirs; ${existing}" EXIT ERR INT TERM
+  else
+    trap _tools_cleanup_temp_dirs EXIT ERR INT TERM
+  fi
+}
+
 create_temp_dir() {
-  local tmp_dir=$(mktemp -d)
-  # Set trap to cleanup on EXIT, ERR, INT, TERM
-  trap "rm -rf '$tmp_dir'" EXIT ERR INT TERM
+  local tmp_dir
+  tmp_dir=$(mktemp -d) || return 1
+  _tools_temp_dirs+=("$tmp_dir")
+  _tools_register_temp_cleanup
   echo "$tmp_dir"
 }
 
@@ -2049,9 +2072,11 @@ setup_deb822_repo() {
     [[ -n "$enabled" ]] && echo "Enabled: $enabled"
   } >/etc/apt/sources.list.d/${name}.sources
 
-  $STD apt update || {
-    msg_warn "apt update failed after adding repository: ${name}"
-  }
+  if ! $STD apt update; then
+    msg_error "apt update failed after adding repository: ${name}"
+    msg_error "Hint: Verify suite '${suite}' and URI '${repo_url}' are valid for this distribution."
+    return 100
+  fi
 }
 
 # ------------------------------------------------------------------------------
@@ -8559,12 +8584,9 @@ setup_uv() {
   local UV_BIN="/usr/local/bin/uv"
   local UVX_BIN="/usr/local/bin/uvx"
   local TMP_DIR=$(mktemp -d)
-  local CACHED_VERSION
 
   # trap for TMP Cleanup
   trap "rm -rf '$TMP_DIR'" EXIT
-
-  CACHED_VERSION=$(get_cached_version "uv")
 
   # Architecture Detection
   local ARCH=$(uname -m)
