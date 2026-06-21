@@ -49,7 +49,7 @@ function update_script() {
     cd /opt/plane
     export NODE_OPTIONS="--max-old-space-size=4096"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-    $STD corepack enable pnpm
+
     $STD pnpm install --frozen-lockfile
     $STD pnpm turbo run build --filter=web --filter=admin --filter=space --filter=live
     msg_ok "Rebuilt Frontend"

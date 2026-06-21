@@ -7283,13 +7283,18 @@ EOF
 #   - Optionally installs or updates global npm modules
 #
 # Variables:
-#   NODE_VERSION   - Node.js version to install (default: 24 LTS)
-#   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
+#   NODE_VERSION          - Node.js version to install (default: 24 LTS)
+#   NODE_MODULE           - Comma-separated global modules (e.g. "yarn,corepack,pnpm@10")
+#   NODE_COREPACK_ENABLE  - Run corepack enable after install (default: 1 when corepack is used)
 # ------------------------------------------------------------------------------
 
 setup_nodejs() {
   local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
+  local NODE_COREPACK_ENABLE="${NODE_COREPACK_ENABLE:-1}"
+  local node_major="${NODE_VERSION%%.*}"
+  local wants_corepack=0
+  local node_setup_ok_msg=""
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
   cleanup_legacy_install "nodejs"
@@ -7316,18 +7321,17 @@ setup_nodejs() {
     # Upgrade to the latest minor/patch release from NodeSource
     $STD apt-get install -y --only-upgrade nodejs 2>/dev/null || true
 
-    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
-    $STD npm install -g npm@11.11.0 2>/dev/null || true
-
     cache_installed_version "nodejs" "$NODE_VERSION"
     msg_ok "Update Node.js $NODE_VERSION"
   else
     # Scenario 2: Different version installed - clean upgrade
     if [[ -n "$CURRENT_NODE_VERSION" && "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]]; then
       msg_info "Upgrade Node.js from $CURRENT_NODE_VERSION to $NODE_VERSION"
+      node_setup_ok_msg="Upgrade Node.js to $NODE_VERSION"
       remove_old_tool_version "nodejs"
     else
       msg_info "Setup Node.js $NODE_VERSION"
+      node_setup_ok_msg="Setup Node.js $NODE_VERSION"
     fi
 
     # Remove ALL Debian nodejs packages BEFORE adding NodeSource repo
@@ -7336,6 +7340,7 @@ setup_nodejs() {
       $STD apt purge -y nodejs nodejs-doc libnode* node-* 2>/dev/null || true
       $STD apt autoremove -y 2>/dev/null || true
       $STD apt clean 2>/dev/null || true
+      msg_ok "Removed Debian-packaged Node.js"
     fi
 
     # Remove any APT pinning (not needed)
@@ -7381,17 +7386,19 @@ setup_nodejs() {
       return 127
     fi
 
-    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
-    local NPM_VERSION
-    NPM_VERSION=$(npm -v 2>/dev/null || echo "0")
-    if [[ "$NPM_VERSION" != "0" ]]; then
-      $STD npm install -g npm@11.11.0 2>/dev/null || {
-        msg_warn "Failed to update npm to 11.11.0 (continuing with bundled npm $NPM_VERSION)"
-      }
-    fi
-
     cache_installed_version "nodejs" "$NODE_VERSION"
-    msg_ok "Setup Node.js $NODE_VERSION"
+    msg_ok "$node_setup_ok_msg"
+  fi
+
+  # Node 22.22.2 bundles npm 10.9.7 which cannot self-upgrade (nodejs/node#62425)
+  if [[ "$NODE_VERSION" == "22" && "$(npm -v 2>/dev/null)" == "10.9.7" ]]; then
+    msg_info "Updating npm (Node 22 regression fix)"
+    $STD npm install -g npm@10.9.8 2>/dev/null || true
+    if $STD npm install -g npm@latest 2>/dev/null; then
+      msg_ok "Updated npm ($(npm -v))"
+    else
+      msg_warn "npm update failed on Node 22.22.2"
+    fi
   fi
 
   # Set a safe default heap limit for Node.js builds if not explicitly provided.
@@ -7436,12 +7443,20 @@ setup_nodejs() {
   }
 
   # Install global Node modules
-  if [[ -n "$NODE_MODULE" ]]; then
+  if [[ -n "$NODE_MODULE" ]] || (( node_major >= 25 )); then
+    if (( node_major >= 25 )) && [[ ",${NODE_MODULE}," != *",corepack,"* ]] && [[ "$NODE_MODULE" != corepack* ]]; then
+      NODE_MODULE="${NODE_MODULE:+$NODE_MODULE,}corepack"
+    fi
+
     IFS=',' read -ra MODULES <<<"$NODE_MODULE"
 
-    # Pin pnpm to v10 to avoid breaking changes from newer major versions
     for i in "${!MODULES[@]}"; do
-      if [[ "${MODULES[$i]}" =~ ^pnpm(@.*)?$ ]]; then
+      if [[ "${MODULES[$i]}" == "corepack" || "${MODULES[$i]}" == corepack@* ]]; then
+        wants_corepack=1
+      elif [[ "${MODULES[$i]}" == yarn || "${MODULES[$i]}" == yarn@* || "${MODULES[$i]}" == pnpm || "${MODULES[$i]}" == pnpm@* ]]; then
+        wants_corepack=1
+      fi
+      if [[ "${MODULES[$i]}" == "pnpm" ]]; then
         MODULES[$i]="pnpm@^10"
       fi
     done
@@ -7467,33 +7482,43 @@ setup_nodejs() {
       if $STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep -q "$MODULE_NAME@"; then
         MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
-          msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
-          if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+          msg_info "Updating $MODULE_NAME to v$MODULE_REQ_VERSION"
+          if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+            msg_ok "Updated $MODULE_NAME"
+          else
             msg_warn "Failed to update $MODULE_NAME to version $MODULE_REQ_VERSION"
             ((failed_modules++)) || true
-            continue
           fi
         elif [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
           msg_info "Updating $MODULE_NAME to latest version"
-          if ! $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null; then
+          if $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null; then
+            msg_ok "Updated $MODULE_NAME"
+          else
             msg_warn "Failed to update $MODULE_NAME to latest version"
             ((failed_modules++)) || true
-            continue
           fi
         fi
       else
         msg_info "Installing $MODULE_NAME@$MODULE_REQ_VERSION"
-        if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+        if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+          msg_ok "Installed $MODULE_NAME"
+        else
           msg_warn "Failed to install $MODULE_NAME@$MODULE_REQ_VERSION"
           ((failed_modules++)) || true
-          continue
         fi
       fi
     done
-    if [[ $failed_modules -eq 0 ]]; then
-      msg_ok "Installed Node.js modules: $NODE_MODULE"
+    if (( failed_modules > 0 )); then
+      msg_warn "$failed_modules Node.js module(s) failed: $NODE_MODULE"
+    fi
+  fi
+
+  if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && (( wants_corepack )) && command -v corepack >/dev/null 2>&1; then
+    msg_info "Enabling corepack"
+    if $STD corepack enable 2>/dev/null; then
+      msg_ok "Enabled corepack"
     else
-      msg_warn "Installed Node.js modules with $failed_modules failure(s): $NODE_MODULE"
+      msg_warn "corepack enable failed"
     fi
   fi
 }

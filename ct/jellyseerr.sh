@@ -62,7 +62,7 @@ EOF
   systemctl stop jellyseerr
   output=$(git pull --no-rebase)
   pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
-  NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="corepack,pnpm@$pnpm_desired" setup_nodejs
   if echo "$output" | grep -q "Already up to date."; then
     msg_ok "$APP is already up to date."
     exit

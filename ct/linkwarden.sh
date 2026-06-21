@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "linkwarden" "linkwarden/linkwarden"; then
-    NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="corepack,yarn@latest" setup_nodejs
     msg_info "Stopping Service"
     systemctl stop linkwarden
     msg_ok "Stopped Service"
@@ -54,7 +54,7 @@ function update_script() {
       fi
     fi
     if command -v corepack >/dev/null 2>&1; then
-      $STD corepack enable
+
       $STD corepack prepare "yarn@${yarn_ver}" --activate || true
     fi
     $STD yarn

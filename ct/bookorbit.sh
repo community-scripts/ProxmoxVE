@@ -42,7 +42,7 @@ function update_script() {
     msg_info "Rebuilding Application"
     cd /opt/bookorbit
     PNPM_VERSION=$(jq -r '.packageManager | ltrimstr("pnpm@")' /opt/bookorbit/package.json)
-    $STD corepack enable
+
     $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
     $STD pnpm install --frozen-lockfile
     $STD pnpm --filter client run build-only
@@ -58,7 +58,6 @@ function update_script() {
     msg_info "Updating Kobo Python Runtime"
     $STD uv pip install --python /opt/bookorbit-python/bin/python -r /opt/bookorbit/server/requirements/kobo-cloudscraper.txt
     msg_ok "Updated Kobo Python Runtime"
-
 
     msg_info "Starting Service"
     systemctl start bookorbit

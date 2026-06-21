@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="corepack,pnpm@latest" setup_nodejs
   ensure_dependencies jq
 
   if check_for_gh_release "homepage" "gethomepage/homepage"; then

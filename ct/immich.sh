@@ -168,13 +168,12 @@ EOF
     setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
-    NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${PNPM_VERSION}" setup_nodejs
 
     msg_info "Updating Immich web and microservices"
     cd "$SRC_DIR"/server
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     export CI=1
-    corepack enable
 
     # server build
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true

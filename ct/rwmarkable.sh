@@ -34,7 +34,7 @@ function update_script() {
   systemctl -q disable --now rwmarkable
   msg_ok "Stopped Service"
 
-  NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
   CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "tarball" "latest" "/opt/jotty"
 
   msg_info "Updating app"

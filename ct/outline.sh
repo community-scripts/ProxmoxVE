@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
   if check_for_gh_release "outline" "outline/outline"; then
     msg_info "Stopping Services"
@@ -48,7 +48,7 @@ function update_script() {
     export NODE_ENV=development
     export NODE_OPTIONS="--max-old-space-size=3584"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-    $STD corepack enable
+
     $STD yarn install --immutable
     export NODE_ENV=production
     $STD yarn build

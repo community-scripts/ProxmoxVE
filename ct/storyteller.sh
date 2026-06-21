@@ -48,7 +48,7 @@ function update_script() {
     msg_info "Rebuilding Storyteller"
     cd /opt/storyteller
     export NODE_OPTIONS="--max-old-space-size=4096"
-    $STD corepack enable
+
     $STD corepack yarn install --network-timeout 600000
     $STD gcc -g -fPIC -rdynamic -shared web/sqlite/uuid.c -o web/sqlite/uuid.c.so
     export CI=1

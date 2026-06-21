@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop streamlink-webui
     msg_info "Stopped Service"
 
-    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
     setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui" "tarball"
 

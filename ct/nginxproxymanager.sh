@@ -42,7 +42,7 @@ function update_script() {
     fi
   fi
 
-  NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
 
   if dpkg -s openresty &>/dev/null 2>&1; then
     msg_info "Migrating from packaged OpenResty to source"

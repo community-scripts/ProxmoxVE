@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
   ensure_dependencies f3d
   
   if check_for_gh_release "manyfold" "manyfold3d/manyfold"; then
@@ -65,8 +65,6 @@ function update_script() {
     msg_ok "Restored Data"
 
     msg_info "Installing Manyfold"
-    $STD npm install --global corepack
-    $STD corepack enable yarn
 
     sudo -u manyfold bash -c '
             source /opt/manyfold/.env

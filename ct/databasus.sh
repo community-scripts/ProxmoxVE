@@ -70,7 +70,7 @@ function update_script() {
     msg_info "Updating Databasus"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     cd /opt/databasus/frontend
-    $STD corepack enable
+
     $STD corepack prepare pnpm@latest --activate
     $STD pnpm install --frozen-lockfile
     $STD pnpm run build

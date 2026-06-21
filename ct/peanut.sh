@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 
   if check_for_gh_release "PeaNUT" "Brandawg93/PeaNUT"; then
     msg_info "Stopping Service"

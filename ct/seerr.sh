@@ -133,7 +133,7 @@ EOF
 
     msg_info "Updating PNPM Version"
     pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/seerr/package.json)
-    NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="corepack,pnpm@$pnpm_desired" setup_nodejs
     msg_ok "Updated PNPM Version"
 
     msg_info "Updating Seerr"

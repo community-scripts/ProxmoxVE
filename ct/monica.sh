@@ -30,7 +30,7 @@ function update_script() {
   fi
 
   setup_mariadb
-  NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="corepack,yarn@latest" setup_nodejs
 
   # Fix for previous versions not having cronjob
   if ! grep -Fq 'php /opt/monica/artisan schedule:run' /etc/crontab; then

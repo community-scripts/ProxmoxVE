@@ -31,7 +31,7 @@ function update_script() {
   fi
 
   PYTHON_VERSION="3.12" setup_uv
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="corepack" setup_nodejs
 
   if check_for_gh_release "gramps-web-api" "gramps-project/gramps-web-api"; then
     msg_info "Stopping Service"
@@ -84,7 +84,7 @@ function update_script() {
     msg_info "Updating Gramps Web Frontend"
     cd /opt/gramps-web/frontend
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-    $STD corepack enable
+
     $STD npm install
     $STD npm run build
     msg_ok "Updated Gramps Web Frontend"
