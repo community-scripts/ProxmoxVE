@@ -12,7 +12,7 @@ var_disk="${var_disk:-2}"
 var_ram="${var_ram:-512}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 
 header_info "${APP}"
 variables
@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop silverbullet
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "silverbullet" "silverbulletmd/silverbullet" "prebuild" "latest" "/opt/silverbullet/bin" "silverbullet-server-linux-x86_64.zip"
+    fetch_and_deploy_gh_release "silverbullet" "silverbulletmd/silverbullet" "prebuild" "latest" "/opt/silverbullet/bin" "silverbullet-server-linux-$(arch_resolve "x86_64" "aarch64").zip"
 
     msg_info "Starting Service"
     systemctl start silverbullet

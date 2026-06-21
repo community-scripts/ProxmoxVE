@@ -126,9 +126,13 @@ EOF
 chmod 644 /var/lib/romm/config/config.yml
 msg_ok "Created configuration file"
 
-fetch_and_deploy_gh_release "RAHasher" "RetroAchievements/RALibretro" "prebuild" "latest" "/opt/RALibretro" "RAHasher-x64-Linux-*.zip"
-cp /opt/RALibretro/RAHasher /usr/bin/RAHasher
-chmod +x /usr/bin/RAHasher
+if [[ "$(arch_resolve)" != "arm64" ]]; then
+  fetch_and_deploy_gh_release "RAHasher" "RetroAchievements/RALibretro" "prebuild" "latest" "/opt/RALibretro" "RAHasher-x64-Linux-*.zip"
+  cp /opt/RALibretro/RAHasher /usr/bin/RAHasher
+  chmod +x /usr/bin/RAHasher
+else
+  msg_warn "RAHasher (RetroAchievements hashing) has no arm64 build; skipping. RA hash features will be unavailable."
+fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
 

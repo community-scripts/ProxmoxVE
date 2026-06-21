@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_codeberg_release "readeck" "readeck/readeck" "singlefile" "latest" "/opt/readeck" "readeck-*-linux-amd64"
+fetch_and_deploy_codeberg_release "readeck" "readeck/readeck" "singlefile" "latest" "/opt/readeck" "readeck-*-linux-$(arch_resolve)"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/readeck.service
