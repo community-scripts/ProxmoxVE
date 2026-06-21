@@ -19,7 +19,7 @@ msg_info "Installing Dependencies (Patience)"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "owncast" "owncast/owncast" "prebuild" "latest" "/opt/owncast" "owncast*linux-64bit.zip"
+fetch_and_deploy_gh_release "owncast" "owncast/owncast" "prebuild" "latest" "/opt/owncast" "owncast*linux-$(arch_resolve "64bit" "arm64").zip"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/owncast.service

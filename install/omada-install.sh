@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 JAVA_VERSION="21" setup_java
 
-if lscpu | grep -q 'avx'; then
+if [[ "$(arch_resolve)" == "arm64" ]] || lscpu | grep -q 'avx'; then
   MONGO_VERSION="8.0" setup_mongodb
 else
   msg_error "No AVX detected (CPU-Flag)! We have discontinued support for this. You are welcome to try it manually with a Debian LXC, but due to the many issues with Omada, we currently only support AVX CPUs."
@@ -28,7 +28,7 @@ fi
 
 if ! dpkg -l | grep -q 'libssl1.1'; then
   msg_info "Installing libssl (if needed)"
-  curl_download "/tmp/libssl.deb" "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u5_amd64.deb"
+  curl_download "/tmp/libssl.deb" "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u8_$(arch_resolve).deb"
   $STD dpkg -i /tmp/libssl.deb
   rm -f /tmp/libssl.deb
   msg_ok "Installed libssl1.1"

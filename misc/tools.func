@@ -765,8 +765,12 @@ manage_tool_repository() {
     distro_codename=$(get_os_info codename)
 
     if [[ "$distro_id" == "debian" && "$(dpkg --print-architecture)" == "arm64" ]]; then
-      distro_id="ubuntu" 
-      suite="noble"
+      case "$distro_codename" in
+      trixie | forky) suite="noble" ;;
+      bookworm) suite="jammy" ;;
+      *) suite="noble" ;;
+      esac
+      distro_id="ubuntu"
       repo_url="https://repo.mongodb.org/apt/ubuntu"
     elif [[ "$distro_id" == "debian" ]]; then
       case "$distro_codename" in

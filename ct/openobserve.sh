@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,7 +33,7 @@ function update_script() {
     msg_info "Updating OpenObserve"
     systemctl stop openobserve
     RELEASE=$(get_latest_github_release "openobserve/openobserve")
-    tar zxf <(curl -fsSL https://downloads.openobserve.ai/releases/openobserve/v$RELEASE/openobserve-v$RELEASE-linux-amd64.tar.gz) -C /opt/openobserve
+    tar zxf <(curl -fsSL https://downloads.openobserve.ai/releases/openobserve/v$RELEASE/openobserve-v$RELEASE-linux-$(arch_resolve).tar.gz) -C /opt/openobserve
     systemctl start openobserve
     msg_ok "Updated OpenObserve"
     msg_ok "Updated successfully!"
