@@ -43,6 +43,18 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "matomo" "matomo-org/matomo" "prebuild" "latest" "/opt/matomo" "matomo-*.zip"
 
+    msg_info "Setting up Matomo"
+    # Matomo zips ship matomo/ plus How to install Matomo.html at the root, so prebuild
+    # deploy lands files in /opt/matomo/matomo/ instead of /opt/matomo/ (404 on :80).
+    if [[ -d /opt/matomo/matomo ]]; then
+      rm -rf /opt/matomo/tmp "/opt/matomo/How to install Matomo.html"
+      find /opt/matomo/matomo -mindepth 1 -maxdepth 1 -exec mv -t /opt/matomo {} +
+      rm -rf /opt/matomo/matomo
+    fi
+    mkdir -p /opt/matomo/tmp
+    chmod -R 755 /opt/matomo/tmp
+    msg_ok "Set up Matomo"
+
     msg_info "Restoring Data"
     if [[ -f /opt/matomo_config.bak ]]; then
       mkdir -p /opt/matomo/config
@@ -58,7 +70,16 @@ function update_script() {
     chown -R www-data:www-data /opt/matomo
     msg_ok "Restored Data"
 
+    if [[ -f /opt/matomo/console ]]; then
+      msg_info "Running Matomo database upgrade"
+      cd /opt/matomo
+      $STD sudo -u www-data php console core:update --no-interaction
+      msg_ok "Ran Matomo database upgrade"
+    fi
+
     msg_info "Starting Services"
+    PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+    systemctl restart "php${PHP_VER}-fpm"
     systemctl start caddy
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
