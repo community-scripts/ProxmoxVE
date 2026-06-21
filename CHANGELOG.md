@@ -69,6 +69,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -78,7 +81,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>June (13 entries)</h4></summary>
+<summary><h4>June (20 entries)</h4></summary>
 
 [View June 2026 Changelog](.github/changelogs/2026/06.md)
 
@@ -1081,119 +1084,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🔧 Refactor
 
     - core: suppress MOTD for non-interactive shells [@MickLesk](https://github.com/MickLesk) ([#14638](https://github.com/community-scripts/ProxmoxVE/pull/14638))
-
-## 2026-05-21
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - snowshare: use mv instead of cp for uploads backup to prevent disk fill [@TuroYT](https://github.com/TuroYT) ([#14558](https://github.com/community-scripts/ProxmoxVE/pull/14558))
-    - Technitium DNS: download release before stopping the service on update [@w-gitops](https://github.com/w-gitops) ([#14616](https://github.com/community-scripts/ProxmoxVE/pull/14616))
-
-  - #### ✨ New Features
-
-    - Proxmox VE 9.2 support  [@MickLesk](https://github.com/MickLesk) ([#14624](https://github.com/community-scripts/ProxmoxVE/pull/14624))
-
-## 2026-05-20
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Update mylar3 to point to new Repo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14606](https://github.com/community-scripts/ProxmoxVE/pull/14606))
-    - Ollama: Fix for latest version [@tremor021](https://github.com/tremor021) ([#14596](https://github.com/community-scripts/ProxmoxVE/pull/14596))
-
-  - #### ✨ New Features
-
-    - Profilarr v2: Update and Refactor whole Script [@MickLesk](https://github.com/MickLesk) ([#14584](https://github.com/community-scripts/ProxmoxVE/pull/14584))
-
-## 2026-05-19
-
-### 🆕 New Scripts
-
-  - LobeHub ([#14441](https://github.com/community-scripts/ProxmoxVE/pull/14441))
-
-### 🚀 Updated Scripts
-
-  - Update nodejs Versions [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14582](https://github.com/community-scripts/ProxmoxVE/pull/14582))
-
-  - #### 🐞 Bug Fixes
-
-    - ESPConnect: Fix paths to SSL certificates [@tremor021](https://github.com/tremor021) ([#14591](https://github.com/community-scripts/ProxmoxVE/pull/14591))
-    - ReactiveResume: set correct WorkingDirectory for systemd service [@MickLesk](https://github.com/MickLesk) ([#14579](https://github.com/community-scripts/ProxmoxVE/pull/14579))
-    - Sparkyfitness: add missing nginx template variable substitutions [@MickLesk](https://github.com/MickLesk) ([#14578](https://github.com/community-scripts/ProxmoxVE/pull/14578))
-    - Wanderer: include dev dependencies during build [@MickLesk](https://github.com/MickLesk) ([#14577](https://github.com/community-scripts/ProxmoxVE/pull/14577))
-    - Whisparr: switch from nightly to stable GitHub release [@MickLesk](https://github.com/MickLesk) ([#14581](https://github.com/community-scripts/ProxmoxVE/pull/14581))
-
-  - #### 🔧 Refactor
-
-    - Refactor: SonarQube [@tremor021](https://github.com/tremor021) ([#14594](https://github.com/community-scripts/ProxmoxVE/pull/14594))
-
-## 2026-05-18
-
-### 🆕 New Scripts
-
-  - ESPconnect ([#14444](https://github.com/community-scripts/ProxmoxVE/pull/14444))
-- degoog ([#14533](https://github.com/community-scripts/ProxmoxVE/pull/14533))
-- Webtrees ([#14532](https://github.com/community-scripts/ProxmoxVE/pull/14532))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Bichon: Support v1 migration [@tomfrenzel](https://github.com/tomfrenzel) ([#14524](https://github.com/community-scripts/ProxmoxVE/pull/14524))
-
-  - #### ✨ New Features
-
-    - Pangolin: bump to 1.18.4, fix missing statusHistory migration [@MickLesk](https://github.com/MickLesk) ([#14566](https://github.com/community-scripts/ProxmoxVE/pull/14566))
-
-## 2026-05-17
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - dashy: fix yarn-missing on update and back up full user-data [@lissy93](https://github.com/lissy93) ([#14548](https://github.com/community-scripts/ProxmoxVE/pull/14548))
-
-  - #### ✨ New Features
-
-    - tools.func: replace max-time with speed-limit stall detection in curl_download [@MickLesk](https://github.com/MickLesk) ([#14545](https://github.com/community-scripts/ProxmoxVE/pull/14545))
-
-## 2026-05-16
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Homelable: replace passlib with bcrypt for password hashing [@MickLesk](https://github.com/MickLesk) ([#14530](https://github.com/community-scripts/ProxmoxVE/pull/14530))
-    - dashy: fix: restore [@CrazyWolf13](https://github.com/CrazyWolf13) ([#14527](https://github.com/community-scripts/ProxmoxVE/pull/14527))
-    - Update Tinyauth source URL in installation script [@MehrunesSky](https://github.com/MehrunesSky) ([#14483](https://github.com/community-scripts/ProxmoxVE/pull/14483))
-    - Excalidraw: Fix build [@tremor021](https://github.com/tremor021) ([#14509](https://github.com/community-scripts/ProxmoxVE/pull/14509))
-
-  - #### ✨ New Features
-
-    - Update authentik version to 2026.2.3 [@thieneret](https://github.com/thieneret) ([#14517](https://github.com/community-scripts/ProxmoxVE/pull/14517))
-
-## 2026-05-15
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - OPNsense: replace undefined msg_warn with inline echo in alloc retry [@MickLesk](https://github.com/MickLesk) ([#14500](https://github.com/community-scripts/ProxmoxVE/pull/14500))
-    - Checkmk: detect OMD version suffix dynamically on update [@MickLesk](https://github.com/MickLesk) ([#14496](https://github.com/community-scripts/ProxmoxVE/pull/14496))
-
-  - #### ✨ New Features
-
-    - SearXNG: enable JSON format by default for API integrations [@MickLesk](https://github.com/MickLesk) ([#14498](https://github.com/community-scripts/ProxmoxVE/pull/14498))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Ollama use tools.func [@MickLesk](https://github.com/MickLesk) ([#14501](https://github.com/community-scripts/ProxmoxVE/pull/14501))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: fall back to silent mode when no TTY or whiptail unavailable [@MickLesk](https://github.com/MickLesk) ([#14497](https://github.com/community-scripts/ProxmoxVE/pull/14497))
