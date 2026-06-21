@@ -44,8 +44,6 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "matomo" "matomo-org/matomo" "prebuild" "latest" "/opt/matomo" "matomo-*.zip"
 
     msg_info "Setting up Matomo"
-    # Matomo zips ship matomo/ plus How to install Matomo.html at the root, so prebuild
-    # deploy lands files in /opt/matomo/matomo/ instead of /opt/matomo/ (404 on :80).
     if [[ -d /opt/matomo/matomo ]]; then
       rm -rf /opt/matomo/tmp "/opt/matomo/How to install Matomo.html"
       find /opt/matomo/matomo -mindepth 1 -maxdepth 1 -exec mv -t /opt/matomo {} +
@@ -73,7 +71,7 @@ function update_script() {
     if [[ -f /opt/matomo/console ]]; then
       msg_info "Running Matomo database upgrade"
       cd /opt/matomo
-      $STD sudo -u www-data php console core:update --no-interaction
+      $STD runuser -u www-data -- php console core:update --no-interaction
       msg_ok "Ran Matomo database upgrade"
     fi
 
