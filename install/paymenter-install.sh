@@ -17,7 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   git \
   nginx \
-  redis-server
+  redis-server \
+  cron
 msg_ok "Installed Dependencies"
 
 setup_mariadb

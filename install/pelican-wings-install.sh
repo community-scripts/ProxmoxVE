@@ -15,7 +15,7 @@ update_os
 
 setup_docker
 
-fetch_and_deploy_gh_release "wings" "pelican-dev/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_amd64"
+fetch_and_deploy_gh_release "wings" "pelican-dev/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_$(arch_resolve)"
 mkdir -p /etc/pelican /var/run/wings
 
 msg_info "Creating Service"
