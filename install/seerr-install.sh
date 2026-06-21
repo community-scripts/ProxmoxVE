@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "seerr" "seerr-team/seerr" "tarball"
 pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/seerr/package.json)
-NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="corepack,pnpm@$pnpm_desired" setup_nodejs
 
 msg_info "Installing Seerr (Patience)"
 export CYPRESS_INSTALL_BINARY=0

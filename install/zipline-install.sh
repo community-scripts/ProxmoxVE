@@ -14,7 +14,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="ziplinedb" PG_DB_USER="zipline" setup_postgresql_db
 fetch_and_deploy_gh_release "zipline" "diced/zipline" "tarball"

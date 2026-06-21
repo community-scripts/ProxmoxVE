@@ -30,7 +30,7 @@ systemctl restart postgresql
 msg_ok "Configured pg_search preload library"
 
 PG_DB_NAME="lobehub" PG_DB_USER="lobehub" PG_DB_EXTENSIONS="vector,pg_search" setup_postgresql_db
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 
 fetch_and_deploy_gh_release "lobehub" "lobehub/lobehub" "tarball"
 

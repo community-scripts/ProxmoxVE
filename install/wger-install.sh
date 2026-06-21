@@ -31,7 +31,7 @@ msg_info "Setting up wger"
 mkdir -p /opt/wger/{static,media}
 chmod o+w /opt/wger/media
 cd /opt/wger
-$STD corepack enable
+
 $STD npm install
 $STD npm run build:css:sass
 $STD uv venv

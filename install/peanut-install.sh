@@ -18,7 +18,7 @@ msg_info "Installing NUT"
 $STD apt install -y nut-client
 msg_ok "Installed NUT"
 
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
 msg_info "Setup Peanut"

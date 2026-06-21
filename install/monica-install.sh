@@ -17,7 +17,7 @@ PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="mysqli,pdo-mysql" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="monica" MARIADB_DB_USER="monica" setup_mariadb_db
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="corepack,yarn@latest" setup_nodejs
 fetch_and_deploy_gh_release "monica" "monicahq/monica" "prebuild" "latest" "/opt/monica" "monica-v*.tar.bz2"
 
 msg_info "Configuring monica"

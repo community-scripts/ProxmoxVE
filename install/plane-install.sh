@@ -32,7 +32,7 @@ $STD apt install -y \
   rabbitmq-server
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="plane" PG_DB_USER="plane" setup_postgresql_db
 
@@ -90,7 +90,7 @@ for app in web admin space; do
 done
 export NODE_OPTIONS="--max-old-space-size=4096"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-$STD corepack enable pnpm
+
 $STD pnpm install --frozen-lockfile
 $STD pnpm turbo run build --filter=web --filter=admin --filter=space --filter=live
 msg_ok "Built Frontend Apps"

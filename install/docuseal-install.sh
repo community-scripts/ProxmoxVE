@@ -30,7 +30,7 @@ $STD apt install -y \
   fontconfig
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="docuseal" PG_DB_USER="docuseal" setup_postgresql_db
 

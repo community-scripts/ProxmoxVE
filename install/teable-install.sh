@@ -20,7 +20,7 @@ $STD apt install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="teable" PG_DB_USER="teable" setup_postgresql_db
 

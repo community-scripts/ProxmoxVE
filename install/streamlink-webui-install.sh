@@ -15,7 +15,7 @@ network_check
 update_os
 
 NODE_VERSION="22"
-NODE_MODULE="npm@latest,yarn@latest"
+NODE_MODULE="corepack,npm@latest,yarn@latest"
 setup_nodejs
 setup_uv
 fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui" "tarball"

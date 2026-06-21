@@ -19,7 +19,7 @@ $STD apt install -y \
   debconf-utils
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
 
 echo "${TAB3}It is important to choose the name for your server before you install Synapse, because it cannot be changed later."
 echo "${TAB3}The server name determines the “domain” part of user-ids for users on your server: these will all be of the format @user:my.domain.name. It also determines how other matrix servers will reach yours for federation."

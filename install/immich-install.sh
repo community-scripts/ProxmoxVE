@@ -313,14 +313,13 @@ mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v2.7.5" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
-NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Installing Immich (patience)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
-corepack enable
 
 # server build
 export SHARP_IGNORE_GLOBAL_LIBVIPS=true

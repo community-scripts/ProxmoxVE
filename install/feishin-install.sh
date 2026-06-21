@@ -19,14 +19,14 @@ $STD apt install -y \
   gettext-base
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
 fetch_and_deploy_gh_release "feishin" "jeffvli/feishin" "tarball"
 
 msg_info "Building Feishin Web"
 cd /opt/feishin
 #PNPM_VERSION=$(jq -r '.packageManager | ltrimstr("pnpm@")' /opt/feishin/package.json)
-$STD corepack enable
+
 $STD corepack prepare "pnpm@10" --activate
 $STD pnpm install
 $STD pnpm run build:web

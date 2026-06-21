@@ -23,7 +23,7 @@ PG_DB_NAME="sparkyfitness" PG_DB_USER="sparky" PG_DB_GRANT_SUPERUSER="true" setu
 fetch_and_deploy_gh_release sparkyfitness "CodeWithCJ/SparkyFitness" "tarball" "latest"
 
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/package.json)"
-NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+NODE_VERSION="25" NODE_MODULE="corepack,pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Configuring Sparky Fitness"
 mkdir -p "/etc/sparkyfitness" "/var/lib/sparkyfitness/uploads" "/var/lib/sparkyfitness/backup" "/var/www/sparkyfitness"

@@ -24,7 +24,7 @@ $STD apt install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
 
 fetch_and_deploy_gh_release "readium" "readium/cli" "prebuild" "latest" "/opt/readium" "readium_linux_x86_64.tar.gz"
 ln -sf /opt/readium/readium /usr/local/bin/readium
@@ -32,7 +32,7 @@ fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "ta
 
 msg_info "Setting up Storyteller"
 cd /opt/storyteller
-$STD corepack enable
+
 $STD corepack yarn install --network-timeout 600000
 $STD gcc -g -fPIC -rdynamic -shared web/sqlite/uuid.c -o web/sqlite/uuid.c.so
 STORYTELLER_SECRET_KEY=$(openssl rand -base64 32)
