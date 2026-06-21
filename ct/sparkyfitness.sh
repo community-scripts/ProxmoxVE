@@ -48,7 +48,7 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness" "tarball"
 
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/package.json)"
-    NODE_VERSION="25" NODE_MODULE="corepack,pnpm@${PNPM_VERSION}" setup_nodejs
+    NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
     msg_info "Updating Sparky Fitness Backend"
     cd /opt/sparkyfitness/SparkyFitnessServer

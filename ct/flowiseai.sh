@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="corepack,pnpm" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 
   msg_info "Updating FlowiseAI (this may take some time)"
   systemctl stop flowise

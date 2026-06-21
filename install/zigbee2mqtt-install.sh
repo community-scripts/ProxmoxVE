@@ -19,7 +19,7 @@ $STD apt install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" NODE_MODULE="corepack,pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
 msg_info "Setting up Zigbee2MQTT"

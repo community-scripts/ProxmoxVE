@@ -19,7 +19,7 @@ $STD apt-get install -y \
   python3-venv
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="corepack,yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
 msg_info "Setup Platformio"
 curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py

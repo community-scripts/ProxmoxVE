@@ -22,7 +22,7 @@ $STD apt install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="corepack,pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="tianji_db" PG_DB_USER="tianji" setup_postgresql_db
 PYTHON_VERSION="3.13" setup_uv

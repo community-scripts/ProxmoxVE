@@ -38,7 +38,7 @@ function update_script() {
     mv /opt/web-check/.env /opt
     msg_ok "Created backup"
 
-    NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "web-check" "Lissy93/web-check" "tarball"
 
     msg_info "Restoring backup"

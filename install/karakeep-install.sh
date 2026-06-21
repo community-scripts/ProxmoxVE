@@ -32,7 +32,7 @@ setup_meilisearch
 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
 cd /opt/karakeep
 MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
-NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${MODULE_VERSION}" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
 msg_info "Installing external JavaScript Extension for yt-dlp"
 $STD pip install -U yt-dlp-ejs --break-system-packages

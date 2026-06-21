@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y jq
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="corepack,pnpm@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
 RELEASE=$(get_latest_github_release "gethomepage/homepage")
 

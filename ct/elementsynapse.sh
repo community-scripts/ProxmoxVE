@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
   msg_info "Updating LXC"
   $STD apt update

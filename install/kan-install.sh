@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="kan" PG_DB_USER="kan" setup_postgresql_db
-NODE_VERSION="20" NODE_MODULE="corepack,pnpm" setup_nodejs
+NODE_VERSION="20" NODE_MODULE="pnpm" setup_nodejs
 
 fetch_and_deploy_gh_tag "kan" "kanbn/kan" "latest"
 

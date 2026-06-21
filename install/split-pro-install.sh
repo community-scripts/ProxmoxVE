@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" NODE_MODULE="corepack,pnpm" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" PG_MODULES="cron" setup_postgresql
 
 msg_info "Installing Dependencies"

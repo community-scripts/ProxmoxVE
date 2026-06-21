@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
 
   if check_for_gh_release "dashy" "Lissy93/dashy"; then
     msg_info "Stopping Service"

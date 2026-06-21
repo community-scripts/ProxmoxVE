@@ -32,7 +32,7 @@ $STD apt -y install --no-install-recommends \
   x11-apps
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
 msg_info "Setup Python3"
 $STD apt install -y python3

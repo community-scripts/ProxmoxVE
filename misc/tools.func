@@ -7453,8 +7453,6 @@ setup_nodejs() {
     for i in "${!MODULES[@]}"; do
       if [[ "${MODULES[$i]}" == "corepack" || "${MODULES[$i]}" == corepack@* ]]; then
         wants_corepack=1
-      elif [[ "${MODULES[$i]}" == yarn || "${MODULES[$i]}" == yarn@* || "${MODULES[$i]}" == pnpm || "${MODULES[$i]}" == pnpm@* ]]; then
-        wants_corepack=1
       fi
       if [[ "${MODULES[$i]}" == "pnpm" ]]; then
         MODULES[$i]="pnpm@^10"

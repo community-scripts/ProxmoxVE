@@ -19,7 +19,7 @@ $STD apt install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 
 msg_info "Preparing Fumadocs - "
 mkdir -p /opt/fumadocs

@@ -17,7 +17,7 @@ msg_info "Installing dependendencies"
 $STD apt install -y valkey
 msg_ok "Installed dependendencies"
 
-NODE_VERSION="22" NODE_MODULE="corepack,pnpm" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="openarchiver_db" PG_DB_USER="openarchiver" setup_postgresql_db
 

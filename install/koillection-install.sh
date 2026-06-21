@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="26" NODE_MODULE="corepack,yarn" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="yarn" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
 setup_composer

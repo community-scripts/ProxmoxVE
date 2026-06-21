@@ -30,7 +30,7 @@ function update_script() {
 
   setup_uv
   if check_for_gh_release "tianji" "msgbyte/tianji"; then
-    NODE_VERSION="22" NODE_MODULE="corepack,pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 
     msg_info "Stopping Service"
     systemctl stop tianji

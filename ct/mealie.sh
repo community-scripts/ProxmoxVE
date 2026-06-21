@@ -31,7 +31,7 @@ function update_script() {
   fi
   if check_for_gh_release "mealie" "mealie-recipes/mealie"; then
     PYTHON_VERSION="3.12" setup_uv
-    NODE_MODULE="corepack,yarn" NODE_VERSION="24" setup_nodejs
+    NODE_MODULE="yarn" NODE_VERSION="24" setup_nodejs
 
     msg_info "Stopping Service"
     systemctl stop mealie

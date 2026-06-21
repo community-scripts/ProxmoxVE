@@ -24,7 +24,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="koel" PG_DB_USER="koel" setup_postgresql_db
 PHP_VERSION="8.4" PHP_FPM="YES" setup_php
-NODE_VERSION="22" NODE_MODULE="corepack,pnpm" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 setup_composer
 
 fetch_and_deploy_gh_release "koel" "koel/koel" "prebuild" "latest" "/opt/koel" "koel-*.tar.gz"

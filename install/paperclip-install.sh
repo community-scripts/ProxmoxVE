@@ -20,7 +20,7 @@ $STD apt install -y \
   ripgrep
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="paperclip" PG_DB_USER="paperclip" setup_postgresql_db
 

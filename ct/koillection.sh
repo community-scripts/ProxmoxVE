@@ -52,7 +52,7 @@ function update_script() {
       [[ -s /opt/koillection/.env.local && -n "$(tail -c 1 /opt/koillection/.env.local)" ]] && echo "" >>/opt/koillection/.env.local
       echo 'APP_RUNTIME="Symfony\Component\Runtime\SymfonyRuntime"' >>/opt/koillection/.env.local
     fi
-    NODE_VERSION="26" NODE_MODULE="corepack,yarn" setup_nodejs
+    NODE_VERSION="26" NODE_MODULE="yarn" setup_nodejs
     cd /opt/koillection
     export COMPOSER_ALLOW_SUPERUSER=1
     export APP_RUNTIME='Symfony\Component\Runtime\SymfonyRuntime'

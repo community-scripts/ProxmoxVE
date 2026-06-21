@@ -71,7 +71,7 @@ WantedBy=multi-user.target
 EOF
 msg_ok "Built OpenResty"
 
-NODE_VERSION="22" NODE_MODULE="corepack,yarn" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 RELEASE=$(get_latest_github_release "NginxProxyManager/nginx-proxy-manager")
 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "v${RELEASE}"
 

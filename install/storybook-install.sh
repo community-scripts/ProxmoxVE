@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 
 msg_info "Preparing Storybook"
 mkdir -p /opt/storybook
