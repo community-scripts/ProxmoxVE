@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
   if check_for_gh_release "bookorbit" "bookorbit/bookorbit"; then
     msg_info "Stopping Service"
     systemctl stop bookorbit

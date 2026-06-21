@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
   if check_for_gh_release "feishin" "jeffvli/feishin"; then
     create_backup /opt/feishin/.env
 

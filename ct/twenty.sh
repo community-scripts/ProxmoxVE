@@ -31,6 +31,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
   if check_for_gh_release "twenty" "twentyhq/twenty"; then
     msg_info "Stopping Services"
     systemctl stop twenty-worker twenty-server

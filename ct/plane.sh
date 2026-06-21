@@ -30,6 +30,8 @@ function update_script() {
     exit 1
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
   if check_for_gh_release "plane" "makeplane/plane"; then
     msg_info "Stopping Services"
     systemctl stop plane-api plane-worker plane-beat plane-live plane-space
