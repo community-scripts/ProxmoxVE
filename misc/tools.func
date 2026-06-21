@@ -24,6 +24,7 @@
 #   cleanup_tool_keyrings()          - Remove keyrings from all 3 locations
 #   stop_all_services()              - Stop services by pattern (e.g. "php*-fpm")
 #   verify_tool_version()            - Validate installed version matches expected
+#   version_matches_spec()           - Compare installed semver against spec (8.0 matches 8.0.40)
 #   cleanup_legacy_install()         - Remove nvm, rbenv, rustup, etc.
 #   prepare_repository_setup()       - Cleanup repos + keyrings + validate APT
 #   install_packages_with_retry()    - Install with 3 retries and APT refresh
@@ -345,6 +346,37 @@ verify_tool_version() {
 }
 
 # ------------------------------------------------------------------------------
+# Compare installed semver against a version spec at the spec's precision.
+# Returns: 0 if match (e.g. spec 8.0 matches installed 8.0.40), 1 otherwise
+# Usage: version_matches_spec "8.0.40" "8.0"
+# ------------------------------------------------------------------------------
+version_matches_spec() {
+  local installed="$1"
+  local spec="$2"
+  local spec_depth prefix i
+  local -a spec_parts installed_parts
+
+  [[ -n "$installed" && -n "$spec" ]] || return 1
+
+  IFS='.' read -ra spec_parts <<<"$spec"
+  spec_depth=${#spec_parts[@]}
+  ((spec_depth > 0)) || return 1
+
+  if ((spec_depth == 1)); then
+    [[ "${installed%%.*}" == "$spec" ]] && return 0
+    return 1
+  fi
+
+  IFS='.' read -ra installed_parts <<<"$installed"
+  prefix=""
+  for ((i = 0; i < spec_depth && i < ${#installed_parts[@]}; i++)); do
+    [[ -n "$prefix" ]] && prefix+="."
+    prefix+="${installed_parts[i]}"
+  done
+  [[ "$prefix" == "$spec" ]]
+}
+
+# ------------------------------------------------------------------------------
 # Clean up legacy installation methods (nvm, rbenv, rustup, etc.)
 # Usage: cleanup_legacy_install "nodejs" -> removes nvm
 # ------------------------------------------------------------------------------
@@ -620,13 +652,15 @@ remove_old_tool_version() {
   mysql)
     stop_all_services "mysql"
     $STD apt purge -y 'mysql*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/mysql 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/mysql 2>/dev/null || true
     cleanup_tool_keyrings "mysql"
     ;;
   mongodb)
     stop_all_services "mongod"
     $STD apt purge -y 'mongodb*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/mongodb 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/mongodb 2>/dev/null || true
     cleanup_tool_keyrings "mongodb"
     ;;
   node | nodejs)
@@ -671,7 +705,8 @@ remove_old_tool_version() {
   clickhouse)
     stop_all_services "clickhouse-server"
     $STD apt purge -y 'clickhouse*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/clickhouse 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/clickhouse 2>/dev/null || true
     cleanup_tool_keyrings "clickhouse"
     ;;
   esac
@@ -695,8 +730,8 @@ should_update_tool() {
   # Get currently installed version
   current_version=$(is_tool_installed "$tool_name" 2>/dev/null) || return 0 # Not installed = needs install
 
-  # If versions are identical, no update needed
-  if [[ "$current_version" == "$target_version" ]]; then
+  # If versions match at the requested precision, no update needed
+  if version_matches_spec "$current_version" "$target_version"; then
     return 1 # No update needed
   fi
 
@@ -891,6 +926,49 @@ Suites: $distro_codename
 Components: main
 Architectures: $(dpkg --print-architecture)
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
+EOF
+    return 0
+    ;;
+
+  mysql)
+    if [[ -z "$gpg_key_url" ]]; then
+      msg_error "MySQL repository requires gpg_key_url"
+      return 65
+    fi
+
+    cleanup_old_repo_files "mysql"
+
+    if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/mysql.gpg" "dearmor"; then
+      msg_error "Failed to import MySQL GPG key"
+      return 7
+    fi
+
+    local distro_codename suite component
+    distro_codename=$(get_os_info codename)
+
+    if [[ "$distro_id" == "debian" ]]; then
+      case "$distro_codename" in
+      trixie | forky | sid) suite="bookworm" ;;
+      bookworm | bullseye) suite="$distro_codename" ;;
+      *) suite="bookworm" ;;
+      esac
+    else
+      suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url")
+    fi
+
+    case "$version" in
+    8.4 | 8.4.*) component="mysql-8.4-lts" ;;
+    8.0 | 8.0.*) component="mysql-8.0" ;;
+    *) component="mysql-${version}" ;;
+    esac
+
+    cat <<EOF >/etc/apt/sources.list.d/mysql.sources
+Types: deb
+URIs: ${repo_url}/
+Suites: ${suite}
+Components: ${component}
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/mysql.gpg
 EOF
     return 0
     ;;
@@ -6406,7 +6484,7 @@ EOF
   fi
 
   # Scenario 1: Already installed at target version - just update packages
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && version_matches_spec "$CURRENT_VERSION" "$MARIADB_VERSION"; then
     msg_info "Update MariaDB $MARIADB_VERSION"
 
     # Ensure APT is working
@@ -6438,7 +6516,7 @@ EOF
   fi
 
   # Scenario 2b: Different version installed - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MARIADB_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && ! version_matches_spec "$CURRENT_VERSION" "$MARIADB_VERSION"; then
     msg_info "Upgrade MariaDB from $CURRENT_VERSION to $MARIADB_VERSION"
     remove_old_tool_version "mariadb"
   fi
@@ -7153,7 +7231,7 @@ setup_mysql() {
 
   # Scenario 2: Use official MySQL repository (USE_MYSQL_REPO=true)
   # Scenario 2a: Already at target version - just update packages
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MYSQL_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && version_matches_spec "$CURRENT_VERSION" "$MYSQL_VERSION"; then
     msg_info "Update MySQL $MYSQL_VERSION"
 
     ensure_apt_working || return 100
@@ -7169,7 +7247,7 @@ setup_mysql() {
   fi
 
   # Scenario 2: Different version installed - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && ! version_matches_spec "$CURRENT_VERSION" "$MYSQL_VERSION"; then
     msg_info "Upgrade MySQL from $CURRENT_VERSION to $MYSQL_VERSION"
     remove_old_tool_version "mysql"
   else
