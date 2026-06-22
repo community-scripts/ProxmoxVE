@@ -46,10 +46,10 @@ if [[ "$(arch_resolve)" == "arm64" ]]; then
   cd /opt/key-networks/ztncui
   $STD npm install --omit=dev
   cp etc/default.passwd etc/passwd
+  create_self_signed_cert "ztncui"
   mkdir -p etc/tls
-  openssl req -x509 -sha256 -nodes -days 3650 -newkey rsa:2048 \
-    -keyout etc/tls/privkey.pem -out etc/tls/fullchain.pem \
-    -subj "/C=XX/ST=YY/L=ZZ/O=Security/OU=SelfSigned/CN=example.com" >/dev/null 2>&1
+  cp /etc/ssl/ztncui/ztncui.key etc/tls/privkey.pem
+  cp /etc/ssl/ztncui/ztncui.crt etc/tls/fullchain.pem
   id -u ztncui &>/dev/null || useradd --system --home-dir /opt/key-networks/ztncui --shell /usr/sbin/nologin ztncui
   chown -R ztncui:ztncui /opt/key-networks/ztncui
   cat <<'EOF' >/lib/systemd/system/ztncui.service
