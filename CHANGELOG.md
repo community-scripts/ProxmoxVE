@@ -496,6 +496,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - add proxy headers to dispatcharr from #15143 [@asylumexp](https://github.com/asylumexp) ([#15293](https://github.com/community-scripts/ProxmoxVE/pull/15293))
     - Fix-15015: check correct path for certbot [@galz55](https://github.com/galz55) ([#15034](https://github.com/community-scripts/ProxmoxVE/pull/15034))
     - fix(romm): resolve 403 Forbidden error on nginx mod_zip installation [@hug-efrei](https://github.com/hug-efrei) ([#15134](https://github.com/community-scripts/ProxmoxVE/pull/15134))
     - Degoog: Fix valkey url in update; set mandatory settings password [@vhsdream](https://github.com/vhsdream) ([#15300](https://github.com/community-scripts/ProxmoxVE/pull/15300))
