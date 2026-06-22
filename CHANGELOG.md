@@ -501,6 +501,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - [arm64] Port scripts between thingsboard & wanderer to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15286](https://github.com/community-scripts/ProxmoxVE/pull/15286))
     - [arm64] Port scripts between snowshare & thelounge to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15280](https://github.com/community-scripts/ProxmoxVE/pull/15280))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: add pre-install storage health checks [@MickLesk](https://github.com/MickLesk) ([#15226](https://github.com/community-scripts/ProxmoxVE/pull/15226))
+
 ## 2026-06-21
 
 ### 🚀 Updated Scripts
