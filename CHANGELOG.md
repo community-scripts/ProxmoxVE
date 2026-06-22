@@ -486,6 +486,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-22
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - [arm64] Port scripts between snowshare & thelounge to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15280](https://github.com/community-scripts/ProxmoxVE/pull/15280))
+
 ## 2026-06-21
 
 ### 🚀 Updated Scripts
