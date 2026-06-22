@@ -175,4 +175,10 @@ while true; do
   esac
 done
 
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "This upgrade script targets the amd64 Proxmox repositories and is not supported on ARM64."
+  exit 1
+fi
+
 start_routines

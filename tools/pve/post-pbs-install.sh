@@ -73,6 +73,8 @@ require_whiptail() {
   fi
 }
 
+arch_is_arm64() { [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; }
+
 # ---- main ----
 main() {
   header_info
@@ -134,6 +136,12 @@ EOF
     ;;
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
+
+  if arch_is_arm64; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
+  fi
 
   # --- Enterprise repo ---
   read -r state file <<<"$(repo_state_list pbs-enterprise)"
@@ -208,6 +216,12 @@ EOF
     ;;
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
+
+  if arch_is_arm64; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
+  fi
 
   # --- Enterprise repo ---
   if component_exists_in_sources "pbs-enterprise"; then

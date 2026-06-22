@@ -131,6 +131,12 @@ if ! command -v pveversion >/dev/null 2>&1; then
   exit
 fi
 
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "This upgrade script targets the amd64 Proxmox VE repositories and is not supported on ARM64."
+  exit 1
+fi
+
 if ! pveversion | grep -Eq "pve-manager/(7\.4-(16|17|18|19))"; then
   header_info
   msg_error "This version of Proxmox Virtual Environment is not supported"
