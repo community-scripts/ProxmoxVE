@@ -209,7 +209,7 @@ EOF
       rm -f /etc/systemd/system/nginx.service.d/pidfile.conf
       rm -f /etc/tmpfiles.d/nginx-termix.conf
       
-            if [ ! -d /tmp/nginx ]; then
+      if [ ! -d /tmp/nginx ]; then
         mkdir -p /tmp/nginx
       fi
 
