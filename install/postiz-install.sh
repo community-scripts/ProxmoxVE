@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  python3 \
   redis-server \
   nginx
 msg_ok "Installed Dependencies"
@@ -27,7 +26,6 @@ NODE_VERSION="24" setup_nodejs
 
 fetch_and_deploy_gh_release "temporal" "temporalio/cli" "prebuild" "latest" "/opt/temporal" "temporal_cli_*_linux_amd64.tar.gz"
 chmod +x /opt/temporal/temporal
-
 fetch_and_deploy_gh_release "postiz" "gitroomhq/postiz-app" "tarball"
 
 msg_info "Installing pnpm"
@@ -73,7 +71,6 @@ msg_ok "Ran Database Migrations"
 
 msg_info "Creating Services"
 PNPM_BIN="$(command -v pnpm)"
-
 cat <<EOF >/etc/systemd/system/postiz-temporal.service
 [Unit]
 Description=Temporal Dev Server (Postiz)
