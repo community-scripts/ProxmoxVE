@@ -516,6 +516,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: add pre-install storage health checks [@MickLesk](https://github.com/MickLesk) ([#15226](https://github.com/community-scripts/ProxmoxVE/pull/15226))
 
+  - #### 🔧 Refactor
+
+    - core:: skip LXC stack upgrade prompt in unattended mode [@MickLesk](https://github.com/MickLesk) ([#15319](https://github.com/community-scripts/ProxmoxVE/pull/15319))
+
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - update-apps: sanitize service detection and fail on invalid names [@MickLesk](https://github.com/MickLesk) ([#15318](https://github.com/community-scripts/ProxmoxVE/pull/15318))
+
 ## 2026-06-21
 
 ### 🚀 Updated Scripts
