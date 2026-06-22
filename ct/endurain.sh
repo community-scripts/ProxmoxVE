@@ -61,6 +61,8 @@ function update_script() {
 
     msg_info "Updating Backend"
     cd /opt/endurain/backend
+    UV_VERSION=$(grep -Po 'required-version\s*=\s*"\K[^"]+' pyproject.toml 2>/dev/null || echo "0.11.18")
+    UV_VERSION="$UV_VERSION" setup_uv
     $STD poetry export -f requirements.txt --output requirements.txt --without-hashes
     $STD uv venv --clear
     $STD uv pip install -r requirements.txt

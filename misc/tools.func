@@ -8710,12 +8710,14 @@ setup_uv() {
 
   ensure_dependencies jq
 
-  # Fetch latest version
-  local LATEST_VERSION
-  LATEST_VERSION=$(get_latest_github_release "astral-sh/uv") || {
-    msg_error "Could not fetch latest uv version from GitHub API"
-    return 7
-  }
+  # Fetch target version (pinned via UV_VERSION or latest release)
+  local TARGET_VERSION="${UV_VERSION:-}"
+  if [[ -z "$TARGET_VERSION" ]]; then
+    TARGET_VERSION=$(get_latest_github_release "astral-sh/uv") || {
+      msg_error "Could not fetch latest uv version from GitHub API"
+      return 7
+    }
+  fi
 
   # Get currently installed version
   local INSTALLED_VERSION=""
@@ -8723,9 +8725,9 @@ setup_uv() {
     INSTALLED_VERSION=$("$UV_BIN" --version 2>/dev/null | awk '{print $2}')
   fi
 
-  # Scenario 1: Already at latest version
-  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
-    cache_installed_version "uv" "$LATEST_VERSION"
+  # Scenario 1: Already at target version
+  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" == "$TARGET_VERSION" ]]; then
+    cache_installed_version "uv" "$TARGET_VERSION"
 
     # Check if uvx is needed and missing
     if [[ "${USE_UVX:-NO}" == "YES" ]] && [[ ! -x "$UVX_BIN" ]]; then
@@ -8738,13 +8740,13 @@ setup_uv() {
   fi
 
   # Scenario 2: New install or upgrade
-  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" != "$LATEST_VERSION" ]]; then
-    msg_info "Upgrade uv from $INSTALLED_VERSION to $LATEST_VERSION"
+  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" != "$TARGET_VERSION" ]]; then
+    msg_info "Upgrade uv from $INSTALLED_VERSION to $TARGET_VERSION"
   else
-    msg_info "Setup uv $LATEST_VERSION"
+    msg_info "Setup uv $TARGET_VERSION"
   fi
 
-  local UV_URL="https://github.com/astral-sh/uv/releases/download/${LATEST_VERSION}/${UV_TAR}"
+  local UV_URL="https://github.com/astral-sh/uv/releases/download/${TARGET_VERSION}/${UV_TAR}"
 
   if ! curl_with_retry "$UV_URL" "$TMP_DIR/uv.tar.gz"; then
     msg_error "Failed to download uv from $UV_URL"
@@ -8799,8 +8801,8 @@ setup_uv() {
     msg_ok "Python $PYTHON_VERSION installed"
   fi
 
-  cache_installed_version "uv" "$LATEST_VERSION"
-  msg_ok "Setup uv $LATEST_VERSION"
+  cache_installed_version "uv" "$TARGET_VERSION"
+  msg_ok "Setup uv $TARGET_VERSION"
 }
 
 # Helper function to install uvx wrapper
