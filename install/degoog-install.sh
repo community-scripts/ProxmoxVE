@@ -33,6 +33,7 @@ fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/
 msg_info "Setting up degoog"
 mkdir -p /opt/degoog/data/{engines,plugins,themes,store}
 
+SETTINGS_PASS="$(openssl rand -hex 32)"
 cat <<EOF >/opt/degoog/.env
 DEGOOG_PORT=4444
 DEGOOG_ENGINES_DIR=/opt/degoog/data/engines
@@ -43,7 +44,7 @@ DEGOOG_PLUGIN_SETTINGS_FILE=/opt/degoog/data/plugin-settings.json
 DEGOOG_VALKEY_URL=redis://127.0.0.1:6379
 DEGOOG_CACHE_MAX_ENTRIES=1000
 DEGOOG_CACHE_TTL_MS=43200000
-# DEGOOG_SETTINGS_PASSWORDS=changeme
+DEGOOG_SETTINGS_PASSWORDS=${SETTINGS_PASS}
 # DEGOOG_PUBLIC_INSTANCE=false
 # LOGGER=debug
 EOF

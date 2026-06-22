@@ -57,9 +57,11 @@ function update_script() {
     restore_backup
 
     if [[ -f /opt/degoog/.env ]]; then
-      grep -q "^DEGOOG_VALKEY_URL=" /opt/degoog/.env && sed -i "s|^DEGOOG_VALKEY_URL=.*|DEGOOG_VALKEY_URL=redis://valkey:6379|" /opt/degoog/.env || echo "DEGOOG_VALKEY_URL=redis://valkey:6379" >>/opt/degoog/.env
+      grep -q "^DEGOOG_VALKEY_URL=" /opt/degoog/.env && sed -i "s|^DEGOOG_VALKEY_URL=.*|DEGOOG_VALKEY_URL=redis://127.0.0.1:6379|" /opt/degoog/.env || echo "DEGOOG_VALKEY_URL=redis://127.0.0.1:6379" >>/opt/degoog/.env
       grep -q "^DEGOOG_CACHE_MAX_ENTRIES=" /opt/degoog/.env && sed -i "s|^DEGOOG_CACHE_MAX_ENTRIES=.*|DEGOOG_CACHE_MAX_ENTRIES=1000|" /opt/degoog/.env || echo "DEGOOG_CACHE_MAX_ENTRIES=1000" >>/opt/degoog/.env
       grep -q "^DEGOOG_CACHE_TTL_MS=" /opt/degoog/.env && sed -i "s|^DEGOOG_CACHE_TTL_MS=.*|DEGOOG_CACHE_TTL_MS=43200000|" /opt/degoog/.env || echo "DEGOOG_CACHE_TTL_MS=43200000" >>/opt/degoog/.env
+      grep -q "^# DEGOOG_SETTINGS_PASSWORDS" /opt/degoog/.env && sed -i "s|^# DEGOOG_SETTINGS_PASSWORDS=.*|DEGOOG_SETTINGS_PASSWORDS=$(openssl rand -hex 32)|" /opt/degoog/.env &&
+        msg_warn "Mandatory Settings Password created - check /opt/degoog/.env"
     fi
     msg_ok "Restored Configuration & Data"
 
