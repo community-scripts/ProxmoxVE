@@ -18,10 +18,11 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   ffmpeg \
   gosu \
-  sqlite3
+  sqlite3 \
+  libicu-dev
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "sportarr" "Sportarr/Sportarr" "prebuild" "latest" "/opt/sportarr" "Sportarr-linux-x64-*.tar.gz"
+fetch_and_deploy_gh_release "sportarr" "Sportarr/Sportarr" "prebuild" "latest" "/opt/sportarr" "Sportarr-linux-$(arch_resolve "x64" "arm64")-*.tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/opt/sportarr/.env
