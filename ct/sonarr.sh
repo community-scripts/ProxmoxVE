@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop sonarr
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-x64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-$(arch_resolve "x64" "arm64").tar.gz"
 
     msg_info "Starting Service"
     systemctl start sonarr

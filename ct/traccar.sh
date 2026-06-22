@@ -40,7 +40,7 @@ function update_script() {
     [[ -d /opt/traccar/media ]] && mv /opt/traccar/media /opt
     msg_ok "Backup created"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "traccar" "traccar/traccar" "prebuild" "latest" "/opt/traccar" "traccar-linux-64*.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "traccar" "traccar/traccar" "prebuild" "latest" "/opt/traccar" "traccar-linux-$(arch_resolve "64*" "arm-*").zip"
 
     msg_info "Perform Update"
     cd /opt/traccar

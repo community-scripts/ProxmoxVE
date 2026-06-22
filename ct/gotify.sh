@@ -33,8 +33,8 @@ function update_script() {
     systemctl stop gotify
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-amd64.zip"
-    chmod +x /opt/gotify/gotify-linux-amd64
+    fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-$(arch_resolve).zip"
+    chmod +x /opt/gotify/gotify-linux-$(arch_resolve)
 
     msg_info "Starting Service"
     systemctl start gotify

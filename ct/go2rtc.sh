@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop go2rtc
     msg_ok "Stopped service"
 
-    fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/opt/go2rtc" "go2rtc_linux_amd64"
+    fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/opt/go2rtc" "go2rtc_linux_$(arch_resolve)"
 
     msg_info "Starting service"
     systemctl start go2rtc

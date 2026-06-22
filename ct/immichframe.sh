@@ -45,7 +45,7 @@ function update_script() {
     cd /tmp/immichframe
     $STD dotnet publish ImmichFrame.WebApi/ImmichFrame.WebApi.csproj \
       --configuration Release \
-      --runtime linux-x64 \
+      --runtime "$(arch_resolve "linux-x64" "linux-arm64")" \
       --self-contained false \
       --output /opt/immichframe
 

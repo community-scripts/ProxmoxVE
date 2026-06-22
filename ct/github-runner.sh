@@ -46,7 +46,7 @@ function update_script() {
     done
     msg_ok "Backed up configuration"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-x64-*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-$(arch_resolve "x64" "arm64")-*.tar.gz"
 
     msg_info "Restoring runner configuration"
     for f in .runner .credentials .credentials_rsaparams .env .path; do

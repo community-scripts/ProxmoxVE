@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop wings
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "wings" "pelican-dev/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_amd64"
+    fetch_and_deploy_gh_release "wings" "pelican-dev/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_$(arch_resolve)"
 
     msg_info "Starting Service"
     systemctl start wings

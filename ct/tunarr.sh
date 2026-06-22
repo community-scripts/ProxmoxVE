@@ -41,7 +41,7 @@ function update_script() {
       msg_error "Backup failed: /root/.local/share/tunarr does not exist"
     fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-x64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-$(arch_resolve "x64" "arm64").tar.gz"
     cd /opt/tunarr
     mv tunarr* tunarr
 
@@ -56,7 +56,7 @@ function update_script() {
     systemctl stop tunarr
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux64-gpl-7.1.tar.xz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux$(arch_resolve "64" "arm64")-gpl-7.1.tar.xz"
 
     msg_info "Set ErsatzTV-ffmpeg links"
     chmod +x /opt/ErsatzTV-ffmpeg/bin/*

@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop tinyauth
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "tinyauth" "tinyauthapp/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-amd64"
+    fetch_and_deploy_gh_release "tinyauth" "tinyauthapp/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-$(arch_resolve)"
 
     msg_info "Starting Service"
     systemctl start tinyauth

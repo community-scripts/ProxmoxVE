@@ -43,7 +43,7 @@ function update_script() {
     systemctl stop glance
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-$(arch_resolve).tar.gz"
 
     msg_info "Starting Service"
     systemctl start glance

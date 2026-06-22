@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop stylus
     msg_info "Stopped Service"
 
-    fetch_and_deploy_gh_release "stylus" "mmastrac/stylus" "singlefile" "latest" "/usr/bin/" "*_linux_amd64"
+    fetch_and_deploy_gh_release "stylus" "mmastrac/stylus" "singlefile" "latest" "/usr/bin/" "*_linux_$(arch_resolve)"
 
     msg_info "Starting Service"
     systemctl start stylus

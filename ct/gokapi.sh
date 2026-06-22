@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop gokapi
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "*linux*amd64.zip"
+    fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "*linux*$(arch_resolve).zip"
 
     # Migrate from pre-v2.2.4 binary name (gokapi-linux_amd64 -> gokapi)
     if [[ -f /opt/gokapi/gokapi-linux_amd64 ]]; then

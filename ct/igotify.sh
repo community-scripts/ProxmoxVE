@@ -39,7 +39,7 @@ function update_script() {
     cp /opt/igotify/.env /opt/igotify.env.bak
     msg_ok "Backed up Configuration"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "igotify" "androidseb25/iGotify-Notification-Assistent" "prebuild" "latest" "/opt/igotify" "iGotify-Notification-Service-amd64-v*.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "igotify" "androidseb25/iGotify-Notification-Assistent" "prebuild" "latest" "/opt/igotify" "iGotify-Notification-Service-$(arch_resolve)-v*.zip"
 
     msg_info "Restoring Configuration"
     cp /opt/igotify.env.bak /opt/igotify/.env

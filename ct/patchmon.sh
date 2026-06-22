@@ -73,7 +73,7 @@ function update_script() {
       msg_ok "Migration complete!"
     fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-amd64"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-$(arch_resolve)"
     mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
 
     msg_info "Fetching PatchMon agent binaries"

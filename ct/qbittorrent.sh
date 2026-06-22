@@ -38,7 +38,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     rm -f /opt/qbittorrent/qbittorrent-nox
-    fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "x86_64-qbittorrent-nox"
+    fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "$(arch_resolve "x86_64" "aarch64")-qbittorrent-nox"
     mv /opt/qbittorrent/qbittorrent /opt/qbittorrent/qbittorrent-nox
 
     msg_info "Starting Service"

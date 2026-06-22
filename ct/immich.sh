@@ -67,7 +67,7 @@ EOF
   if [[ ! -f /etc/apt/sources.list.d/mise.list ]]; then
     msg_info "Installing Mise"
     curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
+    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
     ensure_dependencies mise
     msg_ok "Installed Mise"
   fi
@@ -127,7 +127,7 @@ EOF
     VCHORD_RELEASE="0.5.3"
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
     if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
-      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
+      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_$(arch_resolve).deb"
       systemctl restart postgresql
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
@@ -240,7 +240,7 @@ EOF
         $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
-      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
+      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
       msg_ok "Updated Intel OpenVINO machine-learning"
     else
       ML_PYTHON="python3.11"

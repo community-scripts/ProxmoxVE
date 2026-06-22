@@ -40,7 +40,7 @@ function update_script() {
     cp /opt/hoodik/.env /opt/hoodik.env.bak
     msg_ok "Backed up Configuration"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "hoodik" "hudikhq/hoodik" "prebuild" "latest" "/opt/hoodik" "*x86_64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "hoodik" "hudikhq/hoodik" "prebuild" "latest" "/opt/hoodik" "*$(arch_resolve "x86_64" "arm64").tar.gz"
 
     msg_info "Restoring Configuration"
     cp /opt/hoodik.env.bak /opt/hoodik/.env

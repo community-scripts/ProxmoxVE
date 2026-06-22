@@ -34,7 +34,7 @@ function update_script() {
         systemctl stop upsnap
         msg_ok "Stopped Services"
 
-        fetch_and_deploy_gh_release "upsnap" "seriousm4x/UpSnap" "prebuild" "latest" "/opt/upsnap" "UpSnap_*_linux_amd64.zip"
+        fetch_and_deploy_gh_release "upsnap" "seriousm4x/UpSnap" "prebuild" "latest" "/opt/upsnap" "UpSnap_*_linux_$(arch_resolve).zip"
 
         msg_info "Starting Services"
         systemctl start upsnap

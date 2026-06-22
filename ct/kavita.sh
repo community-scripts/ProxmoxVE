@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop kavita
     msg_ok "Service Stopped"
 
-    fetch_and_deploy_gh_release "kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-x64.tar.gz"
+    fetch_and_deploy_gh_release "kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-$(arch_resolve "x64" "arm64").tar.gz"
     chmod +x /opt/Kavita/Kavita && chown root:root /opt/Kavita/Kavita
 
     msg_info "Starting Service"

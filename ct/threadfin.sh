@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop threadfin
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "threadfin-app" "threadfin/threadfin" "singlefile" "latest" "/opt/threadfin" "Threadfin_linux_amd64"
+    fetch_and_deploy_gh_release "threadfin-app" "threadfin/threadfin" "singlefile" "latest" "/opt/threadfin" "Threadfin_linux_$(arch_resolve)"
     mv /opt/threadfin/threadfin-app /opt/threadfin/threadfin
 
     msg_info "Starting Service"

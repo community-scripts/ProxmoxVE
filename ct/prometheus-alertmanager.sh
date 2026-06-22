@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop prometheus-alertmanager
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "alertmanager" "prometheus/alertmanager" "prebuild" "latest" "/usr/local/bin/" "alertmanager*linux-amd64.tar.gz"
+    fetch_and_deploy_gh_release "alertmanager" "prometheus/alertmanager" "prebuild" "latest" "/usr/local/bin/" "alertmanager*linux-$(arch_resolve).tar.gz"
 
     msg_info "Starting Service"
     systemctl start prometheus-alertmanager

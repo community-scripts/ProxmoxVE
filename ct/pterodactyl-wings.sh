@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     rm /usr/local/bin/wings
-    fetch_and_deploy_gh_release "wings" "pterodactyl/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_amd64"
+    fetch_and_deploy_gh_release "wings" "pterodactyl/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_$(arch_resolve)"
 
     msg_info "Starting Service"
     systemctl start wings

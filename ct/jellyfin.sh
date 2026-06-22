@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  if ! grep -qEi 'ubuntu' /etc/os-release; then
+  if ! grep -qEi 'ubuntu' /etc/os-release && [[ "$(arch_resolve)" == "amd64" ]]; then
     msg_info "Updating Intel Dependencies"
     rm -f ~/.intel-* || true
 
@@ -57,7 +57,7 @@ function update_script() {
   msg_info "Updating Jellyfin"
   ensure_dependencies libjemalloc2
   if [[ ! -f /usr/lib/libjemalloc.so ]]; then
-    ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
+    ln -sf "/usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/libjemalloc.so.2" /usr/lib/libjemalloc.so
   fi
   $STD apt -y upgrade
   $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server jellyfin-ffmpeg7

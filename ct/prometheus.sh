@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop prometheus
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "prometheus" "prometheus/prometheus" "prebuild" "latest" "/usr/local/bin" "*linux-amd64.tar.gz"
+    fetch_and_deploy_gh_release "prometheus" "prometheus/prometheus" "prebuild" "latest" "/usr/local/bin" "*linux-$(arch_resolve).tar.gz"
     rm -f /usr/local/bin/prometheus.yml
 
     msg_info "Starting Service"

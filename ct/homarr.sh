@@ -62,7 +62,7 @@ EOF
 
     NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
     setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-$(arch_resolve).tar.gz"
 
     msg_info "Updating Homarr"
     cp /opt/homarr/redis.conf /etc/redis/redis.conf

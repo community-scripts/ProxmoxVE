@@ -41,7 +41,7 @@ EOF
     systemctl stop jackett
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.LinuxAMDx64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.Linux$(arch_resolve "AMDx64" "ARM64").tar.gz"
 
     msg_info "Starting Service"
     systemctl start jackett

@@ -37,7 +37,7 @@ function update_script() {
       /opt/configarr/secrets.yml \
       /opt/configarr/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-$(arch_resolve "x64" "arm64").tar.xz"
 
     restore_backup
 

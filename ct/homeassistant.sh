@@ -71,7 +71,7 @@ function update_script() {
   if [ "$UPD" == "4" ]; then
     msg_info "Installing FileBrowser"
     RELEASE=$(curl -fsSL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -o '"tag_name": ".*"' | sed 's/"//g' | sed 's/tag_name: //g')
-    $STD curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/v2.23.0/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin
+    $STD curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/v2.23.0/linux-$(arch_resolve)-filebrowser.tar.gz | tar -xzv -C /usr/local/bin
     $STD filebrowser config init -a '0.0.0.0'
     $STD filebrowser config set -a '0.0.0.0'
     $STD filebrowser users add admin community-scripts.org --perm.admin

@@ -34,7 +34,7 @@ function update_script() {
   $STD apt upgrade -y
   rm -rf /opt/tdarr/Tdarr_Updater
   cd /opt/tdarr
-  RELEASE=$(curl_with_retry "https://f000.backblazeb2.com/file/tdarrs/versions.json" "-" | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep linux_x64 | head -n 1)
+  RELEASE=$(curl_with_retry "https://f000.backblazeb2.com/file/tdarrs/versions.json" "-" | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep "linux_$(arch_resolve "x64" "arm64")" | head -n 1)
   curl_with_retry "$RELEASE" "Tdarr_Updater.zip"
   $STD unzip Tdarr_Updater.zip
   chmod +x Tdarr_Updater

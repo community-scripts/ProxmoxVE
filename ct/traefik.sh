@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop traefik
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"
+    fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_$(arch_resolve).tar.gz"
 
     msg_info "Starting Service"
     systemctl start traefik

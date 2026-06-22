@@ -43,9 +43,9 @@ function update_script() {
       msg_ok "Added environment export"
     fi
 
-    fetch_and_deploy_gh_release "photoprism" "photoprism/photoprism" "prebuild" "latest" "/opt/photoprism" "*linux-amd64.tar.gz"
+    fetch_and_deploy_gh_release "photoprism" "photoprism/photoprism" "prebuild" "latest" "/opt/photoprism" "*linux-$(arch_resolve).tar.gz"
 
-    LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-bookworm-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
+    LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-bookworm-$(arch_resolve)-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
     if [[ "${LIBHEIF_URL}" != "$(cat ~/.photoprism_libheif 2>/dev/null)" ]] || [[ ! -f ~/.photoprism_libheif ]]; then
       msg_info "Updating PhotoPrism LibHeif"
       ensure_dependencies libvips42

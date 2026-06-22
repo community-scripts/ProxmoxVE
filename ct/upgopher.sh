@@ -34,7 +34,7 @@ function update_script() {
         systemctl stop upgopher
         msg_ok "Stopped Service"
 
-        fetch_and_deploy_gh_release "upgopher" "wanetty/upgopher" "prebuild" "latest" "/opt/upgopher" "upgopher_*_linux_amd64.tar.gz"
+        fetch_and_deploy_gh_release "upgopher" "wanetty/upgopher" "prebuild" "latest" "/opt/upgopher" "upgopher_*_linux_$(arch_resolve).tar.gz"
         chmod +x /opt/upgopher/upgopher
 
         msg_info "Starting Service"
