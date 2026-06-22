@@ -50,10 +50,11 @@ if ! curl -fsSL "$API_URL" -o "$TEMP_JSON"; then
   msg_error "Failed to fetch data from Ubiquiti API"
   exit 250
 fi
-LATEST=$(jq -r '
+PLATFORM="linux-$(arch_resolve "x64" "arm64")"
+LATEST=$(jq -r --arg platform "$PLATFORM" '
   ._embedded.firmware
   | map(select(.product == "unifi-os-server"))
-  | map(select(.platform == "linux-x64"))
+  | map(select(.platform == $platform))
   | sort_by(.version_major, .version_minor, .version_patch)
   | last
 ' "$TEMP_JSON")

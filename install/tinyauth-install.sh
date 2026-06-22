@@ -19,7 +19,7 @@ $STD apt install -y \
   apache2-utils
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "tinyauth" "steveiliop56/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-amd64"
+fetch_and_deploy_gh_release "tinyauth" "steveiliop56/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-$(arch_resolve)"
 
 msg_info "Setting up Tinyauth"
 PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
