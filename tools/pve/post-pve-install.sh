@@ -48,8 +48,6 @@ msg_error() {
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "post-pve-install" "pve"
 
-arch_is_arm64() { [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; }
-
 get_pve_version() {
   local pve_ver
   pve_ver="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
@@ -127,7 +125,7 @@ EOF
   no) msg_error "Selected no to Correcting Proxmox VE Sources" ;;
   esac
 
-  if arch_is_arm64; then
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
     msg_ok "ARM64 detected - skipping Proxmox repository setup"
     post_routines_common
     return
@@ -290,7 +288,7 @@ EOF
     esac
   fi
 
-  if arch_is_arm64; then
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
     msg_ok "ARM64 detected - skipping Proxmox repository setup"
     post_routines_common
     return
