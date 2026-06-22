@@ -32,11 +32,76 @@ function update_script() {
 
   setup_uv
   NODE_VERSION="24" setup_nodejs
+  if [[ -f "/etc/nginx/sites-available/dispatcharr.conf" ]] && ! grep -q "real_forwarded_proto" "/etc/nginx/sites-available/dispatcharr.conf"; then
+    msg_info "Migrating Nginx Configuration"
+    cat <<EOF >"/etc/nginx/sites-available/dispatcharr.conf"
+map \$http_x_forwarded_proto \$real_forwarded_proto {
+    ""      \$scheme;
+    default \$http_x_forwarded_proto;
+}
 
-  # Fix for nginx not allowing large files
-  if ! grep -q "client_max_body_size 100M;" /etc/nginx/sites-available/dispatcharr.conf; then
-    sed -i '/server_name _;/a \    client_max_body_size 100M;' /etc/nginx/sites-available/dispatcharr.conf
+map \$http_x_forwarded_port \$real_forwarded_port {
+    ""      \$server_port;
+    default \$http_x_forwarded_port;
+}
+
+server {
+    listen 9191;
+    server_name _;
+    client_max_body_size 100M;
+
+    # Serve static assets with correct MIME types
+    location /assets/ {
+        alias /opt/dispatcharr/frontend/dist/assets/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+
+        # Explicitly set MIME types for webpack-built assets
+        types {
+            text/javascript js;
+            text/css css;
+            image/png png;
+            image/svg+xml svg svgz;
+            font/woff2 woff2;
+            font/woff woff;
+            font/ttf ttf;
+        }
+    }
+
+    location /static/ {
+        alias /opt/dispatcharr/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location /media/ {
+        alias /opt/dispatcharr/media/;
+    }
+
+    location /ws/ {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
+    }
+
+    # All other requests proxy to uWSGI
+    location / {
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
+        proxy_set_header X-Forwarded-Port \$real_forwarded_port;
+        proxy_pass http://127.0.0.1:5656;
+    }
+}
+EOF
     systemctl reload nginx
+    msg_ok "Migrated Nginx Configuration"
   fi
 
   ensure_dependencies vlc-bin vlc-plugin-base
