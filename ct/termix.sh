@@ -209,13 +209,21 @@ EOF
       rm -f /etc/systemd/system/nginx.service.d/pidfile.conf
       rm -f /etc/tmpfiles.d/nginx-termix.conf
       
-      mkdir -p /tmp/nginx
-      echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
-      mkdir -p /etc/systemd/system/nginx.service.d/
-cat <<EOF >/etc/systemd/system/nginx.service.d/pidfile.conf
-[Service]
-PIDFile=/tmp/nginx/nginx.pid
-EOF
+            if [ ! -d /tmp/nginx ]; then
+        mkdir -p /tmp/nginx
+      fi
+
+      if [ ! -f /etc/tmpfiles.d/nginx-termix.conf ]; then
+        echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
+      fi
+
+      if [ ! -f /etc/systemd/system/nginx.service.d/pidfile.conf ]; then
+        mkdir -p /etc/systemd/system/nginx.service.d/
+        cat >/etc/systemd/system/nginx.service.d/pidfile.conf <<'EOF'
+      [Service]
+      PIDFile=/tmp/nginx/nginx.pid
+      EOF
+      fi
       
       systemctl daemon-reload
       nginx -t && systemctl restart nginx
