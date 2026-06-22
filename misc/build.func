@@ -5722,6 +5722,11 @@ create_lxc_container() {
       return 0
     fi
 
+    if [[ "${PHS_SILENT:-0}" == "1" || "${DISABLE_UPDATE,,}" == "yes" ]]; then
+      msg_info "Skipping host LXC stack upgrade prompt (unattended mode)"
+      return 2
+    fi
+
     msg_warn "An update for the Proxmox LXC stack is available"
     echo "  pve-container: installed=${_pvec_i:-n/a}  candidate=${_pvec_c:-n/a}"
     echo "  lxc-pve     : installed=${_lxcp_i:-n/a}  candidate=${_lxcp_c:-n/a}"
