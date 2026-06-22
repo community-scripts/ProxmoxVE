@@ -212,7 +212,7 @@ EOF
       mkdir -p /tmp/nginx
       echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
       mkdir -p /etc/systemd/system/nginx.service.d/
-cat >/etc/systemd/system/nginx.service.d/pidfile.conf <<EOF
+cat <<EOF >/etc/systemd/system/nginx.service.d/pidfile.conf
 [Service]
 PIDFile=/tmp/nginx/nginx.pid
 EOF
