@@ -16,7 +16,7 @@ update_os
 msg_info "Getting latest version of VictoriaMetrics"
 
 victoriametrics_release=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases" |
-  jq -r --arg a "$arch_resolve" '.[] | select(.assets[].name | match("^victoria-metrics-linux-" + $a + "-v[0-9.]+.tar.gz$")) | .tag_name' |
+  jq -r --arg a "$(arch_resolve)" '.[] | select(.assets[].name | match("^victoria-metrics-linux-" + $a + "-v[0-9.]+.tar.gz$")) | .tag_name' |
   head -n 1)
 victoriametrics_filename="victoria-metrics-linux-$(arch_resolve)-${victoriametrics_release}.tar.gz"
 vmutils_filename="vmutils-linux-$(arch_resolve)-${victoriametrics_release}.tar.gz"
