@@ -488,6 +488,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-22
 
+### 🆕 New Scripts
+
+  - Postiz ([#15048](https://github.com/community-scripts/ProxmoxVE/pull/15048))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
