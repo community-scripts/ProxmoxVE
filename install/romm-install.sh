@@ -37,34 +37,19 @@ $STD apt install -y \
   redis-server \
   redis-tools \
   p7zip-full \
-  tzdata \
-  nginx \
-  libpcre2-dev
+  tzdata
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Nginx mod_zip module"
-$STD apt-get install -y libpcre2-dev
-cd /tmp
-
-$STD wget -qO mod_zip.tar.gz https://github.com/evanmiller/mod_zip/archive/refs/heads/master.tar.gz
-$STD tar -xzf mod_zip.tar.gz
-mv mod_zip-master mod_zip
-
-NGINX_VER=$(nginx -v 2>&1 | cut -d'/' -f2 | cut -d' ' -f1)
-$STD wget -q http://nginx.org/download/nginx-${NGINX_VER}.tar.gz
-$STD tar -zxvf nginx-${NGINX_VER}.tar.gz
-cd nginx-${NGINX_VER}
-
-$STD ./configure --with-compat --add-dynamic-module=/tmp/mod_zip
-$STD make modules
-
-$STD mkdir -p /etc/nginx/custom-modules
-$STD cp objs/ngx_http_zip_module.so /etc/nginx/custom-modules/
-$STD mkdir -p /etc/nginx/modules-enabled
-echo "load_module /etc/nginx/custom-modules/ngx_http_zip_module.so;" > /etc/nginx/modules-enabled/50-mod-http-zip.conf
-
-rm -rf /tmp/mod_zip* /tmp/nginx-${NGINX_VER}*
-msg_ok "Installed Nginx mod_zip module"
+msg_info "Installing Angie with mod_zip module"
+setup_deb822_repo \
+  "angie" \
+  "https://angie.software/keys/angie-signing.gpg" \
+  "https://download.angie.software/angie/debian/$(get_os_info version_id)" \
+  "$(get_os_info codename)" \
+  "main"
+$STD apt-get install -y angie angie-module-zip
+sed -i '1i load_module modules/ngx_http_zip_module.so;' /etc/angie/angie.conf
+msg_ok "Installed Angie with mod_zip module"
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 setup_mariadb
@@ -206,8 +191,8 @@ ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
 ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
 msg_ok "Set up RomM Frontend"
 
-msg_info "Configuring Nginx"
-cat <<'EOF' >/etc/nginx/sites-available/romm
+msg_info "Configuring Angie"
+cat <<'EOF' >/etc/angie/http.d/romm.conf
 upstream romm_backend {
     server 127.0.0.1:5000;
 }
@@ -277,13 +262,11 @@ server {
 }
 EOF
 
-sed -i "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
-rm -f /etc/nginx/sites-enabled/default
-rm -f /etc/nginx/conf.d/default.conf
-ln -sf /etc/nginx/sites-available/romm /etc/nginx/sites-enabled/romm
-systemctl restart nginx
-systemctl enable -q --now nginx
-msg_ok "Configured Nginx"
+sed -i "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" /etc/angie/http.d/romm.conf
+rm -f /etc/angie/http.d/default.conf
+systemctl restart angie
+systemctl enable -q --now angie
+msg_ok "Configured Angie"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/romm-backend.service
