@@ -53,12 +53,11 @@ function update_script() {
     cd /opt/invoiceshelf
     $STD composer install --no-dev --optimize-autoloader
     if command -v corepack >/dev/null 2>&1; then
-
-      $STD corepack yarn install
-      $STD corepack yarn build
+      $STD corepack pnpm install
+      $STD corepack pnpm run build
     else
-      $STD yarn install
-      $STD yarn build
+      $STD pnpm install
+      $STD pnpm run build
     fi
     $STD php artisan migrate --force
     $STD php artisan optimize:clear
