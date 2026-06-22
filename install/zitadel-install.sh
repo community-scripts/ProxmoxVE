@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt install -y ca-certificates
+$STD apt install -y ca-certificates lsof
 msg_ok "Installed Dependecies"
 
 PG_VERSION="17" setup_postgresql
@@ -39,7 +39,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
 } >>~/zitadel.creds
 msg_ok "Installed PostgreSQL"
 
-fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-$(arch_resolve).tar.gz"
 
 msg_info "Setting up Zitadel Environments"
 mkdir -p /opt/zitadel

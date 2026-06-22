@@ -36,8 +36,44 @@ fi
 msg_ok "Setup Zerotier-One"
 
 msg_info "Setting up UI"
-curl -O https://s3-us-west-1.amazonaws.com/key-networks/deb/ztncui/1/x86_64/ztncui_0.8.14_amd64.deb
-dpkg -i ztncui_0.8.14_amd64.deb
+if [[ "$(arch_resolve)" == "arm64" ]]; then
+  $STD apt-get install -y build-essential python3 openssl
+  NODE_VERSION="20" setup_nodejs
+  curl -fsSL "https://github.com/key-networks/ztncui/archive/refs/heads/master.tar.gz" -o /tmp/ztncui.tar.gz
+  $STD tar -xzf /tmp/ztncui.tar.gz -C /tmp
+  mkdir -p /opt/key-networks
+  cp -r /tmp/ztncui-master/src /opt/key-networks/ztncui
+  cd /opt/key-networks/ztncui
+  $STD npm install --omit=dev
+  cp etc/default.passwd etc/passwd
+  mkdir -p etc/tls
+  openssl req -x509 -sha256 -nodes -days 3650 -newkey rsa:2048 \
+    -keyout etc/tls/privkey.pem -out etc/tls/fullchain.pem \
+    -subj "/C=XX/ST=YY/L=ZZ/O=Security/OU=SelfSigned/CN=example.com" >/dev/null 2>&1
+  id -u ztncui &>/dev/null || useradd --system --home-dir /opt/key-networks/ztncui --shell /usr/sbin/nologin ztncui
+  chown -R ztncui:ztncui /opt/key-networks/ztncui
+  cat <<'EOF' >/lib/systemd/system/ztncui.service
+[Unit]
+Description=ztncui - ZeroTier network controller user interface
+Documentation=https://key-networks.com
+After=network.target
+
+[Service]
+Type=simple
+User=ztncui
+WorkingDirectory=/opt/key-networks/ztncui
+ExecStart=/usr/bin/node /opt/key-networks/ztncui/bin/www
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+  systemctl enable -q ztncui
+else
+  curl -O https://s3-us-west-1.amazonaws.com/key-networks/deb/ztncui/1/x86_64/ztncui_0.8.14_amd64.deb
+  dpkg -i ztncui_0.8.14_amd64.deb
+fi
 sh -c "echo ZT_TOKEN=$(cat /var/lib/zerotier-one/authtoken.secret) > /opt/key-networks/ztncui/.env"
 echo HTTPS_PORT=3443 >>/opt/key-networks/ztncui/.env
 echo NODE_ENV=production >>/opt/key-networks/ztncui/.env

@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-amd64"
+fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-$(arch_resolve)"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "yt-dlp"
 
 msg_info "Setting up YT-DLP-WEBUI"

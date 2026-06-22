@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y sqlite3
+$STD apt install -y sqlite3 libicu-dev
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "Whisparr" "Whisparr/Whisparr" "prebuild" "latest" "/opt/Whisparr" "Whisparr.*.linux-x64.tar.gz"
+fetch_and_deploy_gh_release "Whisparr" "Whisparr/Whisparr" "prebuild" "latest" "/opt/Whisparr" "Whisparr.*.linux-$(arch_resolve "x64" "arm64").tar.gz"
 
 msg_info "Configuring Whisparr"
 mkdir -p /var/lib/whisparr/
