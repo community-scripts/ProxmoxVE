@@ -219,10 +219,10 @@ EOF
 
       if [ ! -f /etc/systemd/system/nginx.service.d/pidfile.conf ]; then
         mkdir -p /etc/systemd/system/nginx.service.d/
-        cat >/etc/systemd/system/nginx.service.d/pidfile.conf <<'EOF'
-      [Service]
-      PIDFile=/tmp/nginx/nginx.pid
-      EOF
+        cat <<'EOF' >/etc/systemd/system/nginx.service.d/pidfile.conf
+[Service]
+PIDFile=/tmp/nginx/nginx.pid
+EOF
       fi
       
       systemctl daemon-reload
