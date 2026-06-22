@@ -210,10 +210,10 @@ EOF
       mkdir -p /tmp/nginx
       echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
       mkdir -p /etc/systemd/system/nginx.service.d/
-      cat >/etc/systemd/system/nginx.service.d/pidfile.conf <<EOF
-      [Service]
-      PIDFile=/tmp/nginx/nginx.pid
-      EOF
+cat >/etc/systemd/system/nginx.service.d/pidfile.conf <<EOF
+[Service]
+PIDFile=/tmp/nginx/nginx.pid
+EOF
       
       systemctl daemon-reload
       nginx -t && systemctl restart nginx
