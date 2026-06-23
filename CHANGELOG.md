@@ -492,6 +492,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Fix syntax error in build function [@l0caldadmin](https://github.com/l0caldadmin) ([#15337](https://github.com/community-scripts/ProxmoxVE/pull/15337))
 
+### ❔ Uncategorized
+
+  - fix(build.func): remove duplicate if statement causing syntax error on container creation [@Copilot](https://github.com/Copilot) ([#15338](https://github.com/community-scripts/ProxmoxVE/pull/15338))
+
 ## 2026-06-22
 
 ### 🆕 New Scripts
