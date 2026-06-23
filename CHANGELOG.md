@@ -494,6 +494,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - LibreNMS: run daily.sh as librenms user with git available [@MickLesk](https://github.com/MickLesk) ([#15314](https://github.com/community-scripts/ProxmoxVE/pull/15314))
 
+  - #### ✨ New Features
+
+    - termix - patch tmp nginx behaviour to match the install script [@xyzulu](https://github.com/xyzulu) ([#15283](https://github.com/community-scripts/ProxmoxVE/pull/15283))
+
 ### 💾 Core
 
   - Fix syntax error in build function [@l0caldadmin](https://github.com/l0caldadmin) ([#15337](https://github.com/community-scripts/ProxmoxVE/pull/15337))
