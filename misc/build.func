@@ -5722,7 +5722,7 @@ create_lxc_container() {
       return 0
     fi
 
-    if [[ "${PHS_SILENT:-0}" == "1" || "${DISABLE_UPDATE,,}" == "yes" ]]; then
+    if [[ "${PHS_SILENT:-0}" == "1" || "${DISABLE_UPDATE:-}" =~ ^([Yy][Ee][Ss])$ ]]; then
       msg_info "Skipping host LXC stack upgrade prompt (unattended mode)"
       return 2
     fi
