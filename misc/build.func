@@ -5820,7 +5820,7 @@ create_lxc_container() {
       ;;
     *) return 2 ;;
     esac
-  ;;
+  }
 
   ARCH="$(dpkg --print-architecture)"
 
