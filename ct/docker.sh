@@ -30,7 +30,11 @@ function update_script() {
   $STD apt upgrade -y
   msg_ok "Base system updated"
 
-  setup_docker
+  if dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -q "ok installed"; then
+    USE_DOCKER_REPO="true" setup_docker
+  else
+    setup_docker
+  fi
 
   if docker ps -a --format '{{.Image}}' | grep -q '^portainer/portainer-ce:latest$'; then
     msg_info "Updating Portainer"
