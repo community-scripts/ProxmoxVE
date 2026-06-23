@@ -73,8 +73,6 @@ require_whiptail() {
   fi
 }
 
-arch_is_arm64() { [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; }
-
 # ---- main ----
 main() {
   header_info
@@ -137,7 +135,7 @@ EOF
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
 
-  if arch_is_arm64; then
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
     msg_ok "ARM64 detected - skipping Proxmox repository setup"
     post_routines_common
     return
@@ -217,7 +215,7 @@ EOF
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
 
-  if arch_is_arm64; then
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
     msg_ok "ARM64 detected - skipping Proxmox repository setup"
     post_routines_common
     return
