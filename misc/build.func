@@ -5721,9 +5721,8 @@ create_lxc_container() {
       msg_debug "No newer candidate for pve-container/lxc-pve (installed=$_pvec_i/$_lxcp_i, cand=$_pvec_c/$_lxcp_c)"
       return 0
     fi
-    local _disable_update="${DISABLE_UPDATE:-no}" 
+    local _disable_update="${DISABLE_UPDATE:-no}"
     if [[ "${PHS_SILENT:-0}" == "1" || "${_disable_update,,}" == "yes" ]]; then
-    if [[ "${PHS_SILENT:-0}" == "1" || "${DISABLE_UPDATE,,}" == "yes" ]]; then
       msg_info "Skipping host LXC stack upgrade prompt (unattended mode)"
       return 2
     fi
