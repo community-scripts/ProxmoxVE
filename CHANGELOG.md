@@ -492,6 +492,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - enabling rewirte module in apache [@d3v3lop3rDE](https://github.com/d3v3lop3rDE) ([#15360](https://github.com/community-scripts/ProxmoxVE/pull/15360))
 
+  - #### 🐞 Bug Fixes
+
+    - watcharr: Increase default RAM allocation from 1024 to 2048 [@MickLesk](https://github.com/MickLesk) ([#15370](https://github.com/community-scripts/ProxmoxVE/pull/15370))
+
   - #### 🔧 Refactor
 
     - Refactor LibreNMS: replace old install and update variant with tarball approach [@MickLesk](https://github.com/MickLesk) ([#15369](https://github.com/community-scripts/ProxmoxVE/pull/15369))
