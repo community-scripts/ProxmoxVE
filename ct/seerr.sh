@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Seerr"
 var_tags="${var_tags:-media}"
 var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-4096}"
+var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
