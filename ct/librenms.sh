@@ -24,27 +24,49 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [ ! -d /opt/librenms ]; then
+  if [[ ! -d /opt/librenms ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  setup_mariadb
-  ensure_dependencies git
-  if [[ ! -d /opt/librenms/.git ]]; then
-    msg_info "Initializing LibreNMS git metadata"
-    LIBRENMS_VERSION=$(cat ~/.librenms 2>/dev/null)
-    cd /opt/librenms
-    git init -q
-    git remote add origin https://github.com/librenms/librenms.git
-    git fetch --depth 1 origin "refs/tags/v${LIBRENMS_VERSION}" 2>/dev/null ||
-      git fetch --depth 1 origin "refs/tags/${LIBRENMS_VERSION}" 2>/dev/null || true
-    git checkout -qf FETCH_HEAD 2>/dev/null || true
-    chown -R librenms:librenms .git
-    msg_ok "Initialized LibreNMS git metadata"
+  if check_for_gh_release "librenms" "librenms/librenms"; then
+    msg_info "Stopping Services"
+    systemctl stop php8.4-fpm librenms-scheduler.timer
+    msg_ok "Stopped Services"
+
+    msg_info "Backing up Data"
+    cp /opt/librenms/.env /opt/librenms.env.bak
+    [[ -f /opt/librenms/config.php ]] && cp /opt/librenms/config.php /opt/librenms.config.php.bak
+    [[ -d /opt/librenms/rrd ]] && cp -r /opt/librenms/rrd /opt/librenms_rrd_bak
+    msg_ok "Backed up Data"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
+
+    msg_info "Restoring Data"
+    mv /opt/librenms.env.bak /opt/librenms/.env
+    [[ -f /opt/librenms.config.php.bak ]] && mv /opt/librenms.config.php.bak /opt/librenms/config.php
+    if [[ -d /opt/librenms_rrd_bak ]]; then
+      mkdir -p /opt/librenms/rrd
+      cp -r /opt/librenms_rrd_bak/. /opt/librenms/rrd/
+      rm -rf /opt/librenms_rrd_bak
+    fi
+    msg_ok "Restored Data"
+
+    msg_info "Updating ${APP}"
+    mkdir -p /opt/librenms/{rrd,logs,bootstrap/cache,storage}
+    chown -R librenms:librenms /opt/librenms
+    chmod 771 /opt/librenms
+    chmod -R ug=rwX /opt/librenms/bootstrap/cache /opt/librenms/storage /opt/librenms/logs /opt/librenms/rrd
+    $STD su - librenms -s /bin/bash -c "cd /opt/librenms && uv venv --clear .venv && source .venv/bin/activate && uv pip install -r requirements.txt"
+    $STD su - librenms -s /bin/bash -c "cd /opt/librenms && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev"
+    $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan optimize:clear"
+    $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan migrate --force --isolated"
+    msg_ok "Updated ${APP}"
+
+    msg_info "Starting Services"
+    systemctl start php8.4-fpm librenms-scheduler.timer
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
   fi
-  msg_info "Updating LibreNMS"
-  $STD su - librenms -s /bin/bash -c 'cd /opt/librenms && ./daily.sh'
-  msg_ok "Updated LibreNMS"
   exit
 }
 

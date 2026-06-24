@@ -65,16 +65,6 @@ EOF
 chown -R librenms:librenms /opt/librenms
 chmod 771 /opt/librenms
 chmod -R ug=rwX /opt/librenms/bootstrap/cache /opt/librenms/storage /opt/librenms/logs /opt/librenms/rrd
-if [[ ! -d /opt/librenms/.git ]]; then
-  LIBRENMS_VERSION=$(cat ~/.librenms 2>/dev/null)
-  cd /opt/librenms
-  git init -q
-  git remote add origin https://github.com/librenms/librenms.git
-  git fetch --depth 1 origin "refs/tags/v${LIBRENMS_VERSION}" 2>/dev/null ||
-    git fetch --depth 1 origin "refs/tags/${LIBRENMS_VERSION}" 2>/dev/null || true
-  git checkout -qf FETCH_HEAD 2>/dev/null || true
-  chown -R librenms:librenms .git
-fi
 msg_ok "Configured LibreNMS"
 
 msg_info "Configure MariaDB"
