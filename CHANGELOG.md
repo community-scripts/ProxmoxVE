@@ -492,6 +492,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - enabling rewirte module in apache [@d3v3lop3rDE](https://github.com/d3v3lop3rDE) ([#15360](https://github.com/community-scripts/ProxmoxVE/pull/15360))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: add var_http_proxy and var_http_no_proxy support [@MickLesk](https://github.com/MickLesk) ([#15225](https://github.com/community-scripts/ProxmoxVE/pull/15225))
+
 ## 2026-06-23
 
 ### 🚀 Updated Scripts
