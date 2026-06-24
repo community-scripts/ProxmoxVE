@@ -34,12 +34,10 @@ function update_script() {
     msg_ok "Stopped Services"
 
     create_backup /opt/librenms/.env /opt/librenms/config.php /opt/librenms/rrd
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
-
     restore_backup
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating LibreNMS"
     mkdir -p /opt/librenms/{rrd,logs,bootstrap/cache,storage}
     chown -R librenms:librenms /opt/librenms
     chmod 771 /opt/librenms
@@ -48,7 +46,7 @@ function update_script() {
     $STD su - librenms -s /bin/bash -c "cd /opt/librenms && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev"
     $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan optimize:clear"
     $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan migrate --force --isolated"
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated LibreNMS"
 
     msg_info "Starting Services"
     systemctl start php8.4-fpm librenms-scheduler.timer
