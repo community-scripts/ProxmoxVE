@@ -17,7 +17,6 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   acl \
   fping \
-  git \
   graphviz \
   imagemagick \
   mtr-tiny \
