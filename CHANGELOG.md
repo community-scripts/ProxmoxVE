@@ -505,7 +505,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🗑️ Deleted Scripts
 
-  - Delete ghost [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15377](https://github.com/community-scripts/ProxmoxVE/pull/15377))
+  - delete wger [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15380](https://github.com/community-scripts/ProxmoxVE/pull/15380))
+- Delete ghost [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15377](https://github.com/community-scripts/ProxmoxVE/pull/15377))
 
 ### 💾 Core
 
