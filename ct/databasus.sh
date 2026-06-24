@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
   if check_for_gh_release "databasus" "databasus/databasus"; then
     msg_info "Stopping Databasus"
     $STD systemctl stop databasus
@@ -70,7 +72,7 @@ function update_script() {
     msg_info "Updating Databasus"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     cd /opt/databasus/frontend
-    $STD corepack enable
+
     $STD corepack prepare pnpm@latest --activate
     $STD pnpm install --frozen-lockfile
     $STD pnpm run build

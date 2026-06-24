@@ -32,7 +32,7 @@ fi
 
 msg_info "Installing InfluxDB v${INFLUX}"
 if [[ $INFLUX == "3" ]]; then
-  if ! grep -qm1 'avx2' /proc/cpuinfo; then
+  if [[ "$(arch_resolve)" == "amd64" ]] && ! grep -qm1 'avx2' /proc/cpuinfo; then
     msg_error "InfluxDB v3 requires AVX2 support, which is not available on this system."
     exit 106
   fi
@@ -43,9 +43,9 @@ elif [[ $INFLUX == "2" ]]; then
   systemctl enable -q --now influxdb
 else
   $STD apt install -y influxdb
-  download_file "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.8_amd64.deb" "${HOME}/chronograf_1.10.8_amd64.deb"
-  $STD dpkg -i "${HOME}/chronograf_1.10.8_amd64.deb"
-  rm -rf "${HOME}/chronograf_1.10.8_amd64.deb"
+  download_file "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.8_$(arch_resolve).deb" "${HOME}/chronograf_1.10.8_$(arch_resolve).deb"
+  $STD dpkg -i "${HOME}/chronograf_1.10.8_$(arch_resolve).deb"
+  rm -rf "${HOME}/chronograf_1.10.8_$(arch_resolve).deb"
   systemctl enable -q --now influxdb
 fi
 msg_ok "Installed InfluxDB"

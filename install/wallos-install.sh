@@ -39,11 +39,12 @@ cat <<EOF >/etc/apache2/sites-available/wallos.conf
 EOF
 $STD a2ensite wallos.conf
 $STD a2dissite 000-default.conf
-$STD systemctl reload apache2
+$STD systemctl restart apache2
 $STD curl http://localhost/endpoints/db/migrate.php
 msg_ok "Installed Wallos"
 
 msg_info "Setting up Crontabs"
+$STD apt-get install -y cron
 mkdir -p /var/log/cron
 cat <<EOF >/opt/wallos.cron
 0 1 * * * php /opt/wallos/endpoints/cronjobs/updatenextpayment.php >> /var/log/cron/updatenextpayment.log 2>&1

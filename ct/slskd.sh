@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -40,7 +40,7 @@ function update_script() {
     cp /opt/slskd/config/slskd.yml /opt/slskd.yml.bak
     msg_ok "Backed up config"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Slskd" "slskd/slskd" "prebuild" "latest" "/opt/slskd" "slskd-*-linux-x64.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Slskd" "slskd/slskd" "prebuild" "latest" "/opt/slskd" "slskd-*-linux-$(arch_resolve "x64" "arm64").zip"
 
     msg_info "Restoring config"
     mv /opt/slskd.yml.bak /opt/slskd/config/slskd.yml

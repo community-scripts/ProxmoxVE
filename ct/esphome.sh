@@ -24,13 +24,14 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/systemd/system/esphomeDashboard.service ]]; then
+  if [[ ! -f /etc/systemd/system/esphome-device-builder.service && ! -f /etc/systemd/system/esphomeDashboard.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
   msg_info "Stopping Service"
-  systemctl stop esphomeDashboard
+  systemctl stop esphome-device-builder 2>/dev/null || true
+  systemctl stop esphomeDashboard 2>/dev/null || true
   msg_ok "Stopped Service"
 
   VENV_PATH="/opt/esphome/.venv"
@@ -46,33 +47,36 @@ function update_script() {
     $STD uv venv --clear "$VENV_PATH"
     $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
     $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
-    $STD "$VENV_PATH/bin/python" -m pip install esphome tornado esptool
+    $STD "$VENV_PATH/bin/python" -m pip install esphome esphome-device-builder esptool
     msg_ok "Migrated to uv/venv"
   else
-    msg_info "Updating ESPHome"
+    msg_info "Updating ESPHome Device Builder"
     PYTHON_VERSION="3.12" setup_uv
-    $STD "$VENV_PATH/bin/python" -m pip install --upgrade esphome tornado esptool
-    msg_ok "Updated ESPHome"
+    $STD "$VENV_PATH/bin/python" -m pip install --upgrade esphome esphome-device-builder esptool
+    msg_ok "Updated ESPHome Device Builder"
   fi
-  SERVICE_FILE="/etc/systemd/system/esphomeDashboard.service"
-  if ! grep -q "${VENV_PATH}/bin/esphome" "$SERVICE_FILE"; then
-    msg_info "Updating systemd service"
-    cat <<EOF >"$SERVICE_FILE"
+
+  msg_info "Migrating to ESPHome Device Builder service"
+  if [[ -f /etc/systemd/system/esphomeDashboard.service ]]; then
+    systemctl disable -q esphomeDashboard 2>/dev/null || true
+    rm -f /etc/systemd/system/esphomeDashboard.service
+  fi
+  cat <<EOF >/etc/systemd/system/esphome-device-builder.service
 [Unit]
-Description=ESPHome Dashboard
+Description=ESPHome Device Builder
 After=network.target
 
 [Service]
-ExecStart=${VENV_PATH}/bin/esphome dashboard /root/config/
+ExecStart=${VENV_PATH}/bin/esphome-device-builder /root/config/
 Restart=always
 User=root
 
 [Install]
 WantedBy=multi-user.target
 EOF
-    $STD systemctl daemon-reload
-    msg_ok "Updated systemd service"
-  fi
+  $STD systemctl daemon-reload
+  $STD systemctl enable esphome-device-builder
+  msg_ok "Migrated to ESPHome Device Builder service"
 
   msg_info "Linking esphome to /usr/local/bin"
   rm -f /usr/local/bin/esphome
@@ -80,7 +84,7 @@ EOF
   msg_ok "Linked esphome binary"
 
   msg_info "Starting Service"
-  systemctl start esphomeDashboard
+  systemctl start esphome-device-builder
   msg_ok "Started Service"
   msg_ok "Updated successfully!"
   exit

@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULES="bcmath,gd,intl,xml,zip,pdo_pgsql,mbstring,curl,exif" setup_php
 setup_composer
-NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="invoiceshelf" PG_DB_USER="invoiceshelf" setup_postgresql_db
 
@@ -38,14 +38,14 @@ sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${PG_DB_NAME}|" .env
 sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${PG_DB_USER}|" .env
 sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${PG_DB_PASS}|" .env
 COMPOSER_ALLOW_SUPERUSER=1 $STD composer install --no-dev --optimize-autoloader --no-interaction
-$STD php artisan key:generate
+$STD php artisan key:generate --force
 if command -v corepack >/dev/null 2>&1; then
-  $STD corepack enable
-  $STD corepack yarn install
-  $STD corepack yarn build
+
+  $STD corepack pnpm install
+  $STD corepack pnpm run build
 else
-  $STD yarn install
-  $STD yarn build
+  $STD pnpm install
+  $STD pnpm run build
 fi
 mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache
 chown -R www-data:www-data /opt/invoiceshelf

@@ -12,7 +12,7 @@ var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-6144}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -67,7 +67,7 @@ EOF
   if [[ ! -f /etc/apt/sources.list.d/mise.list ]]; then
     msg_info "Installing Mise"
     curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
+    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
     ensure_dependencies mise
     msg_ok "Installed Mise"
   fi
@@ -127,7 +127,7 @@ EOF
     VCHORD_RELEASE="0.5.3"
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
     if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
-      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
+      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_$(arch_resolve).deb"
       systemctl restart postgresql
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
@@ -168,13 +168,12 @@ EOF
     setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
-    NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${PNPM_VERSION}" setup_nodejs
 
     msg_info "Updating Immich web and microservices"
     cd "$SRC_DIR"/server
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     export CI=1
-    corepack enable
 
     # server build
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
@@ -241,7 +240,7 @@ EOF
         $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
-      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
+      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
       msg_ok "Updated Intel OpenVINO machine-learning"
     else
       ML_PYTHON="python3.11"

@@ -18,7 +18,7 @@ msg_custom "ℹ️" "${GN}" "If NVIDIA GPU passthrough is detected, you'll be as
 msg_info "Installing Dependencies"
 ensure_dependencies libjemalloc2
 if [[ ! -f /usr/lib/libjemalloc.so ]]; then
-  ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
+  ln -sf "/usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/libjemalloc.so.2" /usr/lib/libjemalloc.so
 fi
 msg_ok "Installed Dependencies"
 

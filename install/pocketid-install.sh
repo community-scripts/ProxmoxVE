@@ -14,7 +14,7 @@ network_check
 update_os
 
 read -r -p "${TAB3}What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
-fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id-linux-amd64"
+fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id-linux-$(arch_resolve)"
 
 msg_info "Configuring Pocket ID"
 ENCRYPTION_KEY=$(openssl rand -base64 32)

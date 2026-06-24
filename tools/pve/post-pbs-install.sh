@@ -135,6 +135,12 @@ EOF
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
 
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
+  fi
+
   # --- Enterprise repo ---
   read -r state file <<<"$(repo_state_list pbs-enterprise)"
   case $state in
@@ -208,6 +214,12 @@ EOF
     ;;
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
+
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
+  fi
 
   # --- Enterprise repo ---
   if component_exists_in_sources "pbs-enterprise"; then

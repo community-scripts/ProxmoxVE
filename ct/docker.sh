@@ -27,12 +27,14 @@ function update_script() {
 
   msg_info "Updating base system"
   $STD apt update
-  $STD apt upgrade -y 
+  $STD apt upgrade -y
   msg_ok "Base system updated"
 
-  msg_info "Updating Docker Engine"
-  $STD apt install --only-upgrade -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin
-  msg_ok "Docker Engine updated"
+  if dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -q "ok installed"; then
+    USE_DOCKER_REPO="true" setup_docker
+  else
+    setup_docker
+  fi
 
   if docker ps -a --format '{{.Image}}' | grep -q '^portainer/portainer-ce:latest$'; then
     msg_info "Updating Portainer"

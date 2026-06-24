@@ -13,7 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,9 +36,9 @@ function update_script() {
     systemctl stop isponsorblocktv
     msg_ok "Stopped Service"
 
-    ISBTV_BINARY="iSponsorBlockTV-x86_64-linux-v1"
+    ISBTV_BINARY="iSponsorBlockTV-$(arch_resolve "x86_64-linux-v1" "aarch64-linux")"
     if grep -q ' avx ' /proc/cpuinfo 2>/dev/null && grep -q ' avx2 ' /proc/cpuinfo 2>/dev/null && grep -q ' movbe ' /proc/cpuinfo 2>/dev/null; then
-      ISBTV_BINARY="iSponsorBlockTV-x86_64-linux"
+      ISBTV_BINARY="iSponsorBlockTV-$(arch_resolve "x86_64" "aarch64")-linux"
     fi
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "isponsorblocktv" "dmunozv04/iSponsorBlockTV" "singlefile" "latest" "/opt/isponsorblocktv" "${ISBTV_BINARY}"
 

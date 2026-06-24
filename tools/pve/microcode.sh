@@ -139,6 +139,12 @@ if ! command -v pveversion >/dev/null 2>&1; then
   exit
 fi
 
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "CPU microcode updates are only available for x86 (Intel/AMD) systems."
+  exit 0
+fi
+
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Processor Microcode" --yesno "This will check for CPU microcode packages with the option to install. Proceed?" 10 58
 
 msg_info "Checking CPU Vendor"

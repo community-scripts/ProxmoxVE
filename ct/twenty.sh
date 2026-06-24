@@ -13,7 +13,7 @@ var_ram="${var_ram:-10240}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -31,6 +31,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
   if check_for_gh_release "twenty" "twentyhq/twenty"; then
     msg_info "Stopping Services"
     systemctl stop twenty-worker twenty-server
@@ -47,7 +49,7 @@ function update_script() {
     msg_info "Building Application"
     cd /opt/twenty
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-    $STD corepack enable
+
     $STD corepack prepare yarn@4.9.2 --activate
     export NODE_OPTIONS="--max-old-space-size=3072"
     $STD yarn install --immutable || $STD yarn install

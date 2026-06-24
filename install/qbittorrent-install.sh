@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "x86_64-qbittorrent-nox"
+fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "$(arch_resolve "x86_64" "aarch64")-qbittorrent-nox"
 
 msg_info "Setup qBittorrent-nox"
 mv /opt/qbittorrent/qbittorrent /opt/qbittorrent/qbittorrent-nox

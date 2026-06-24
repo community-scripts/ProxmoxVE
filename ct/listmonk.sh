@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -37,7 +37,7 @@ function update_script() {
     mv /opt/listmonk/ /opt/listmonk-backup
     msg_ok "Backed up data"
 
-    fetch_and_deploy_gh_release "listmonk" "knadh/listmonk" "prebuild" "latest" "/opt/listmonk" "listmonk*linux_amd64.tar.gz"
+    fetch_and_deploy_gh_release "listmonk" "knadh/listmonk" "prebuild" "latest" "/opt/listmonk" "listmonk*linux_$(arch_resolve).tar.gz"
 
     msg_info "Configuring listmonk"
     mv /opt/listmonk-backup/config.toml /opt/listmonk/config.toml

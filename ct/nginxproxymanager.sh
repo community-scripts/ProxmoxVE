@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -108,8 +108,13 @@ EOF
   cd /root
   if [ -d /opt/certbot ]; then
     msg_info "Updating Certbot"
-    $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
-    $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
+    CERTBOT_PYTHON="/opt/certbot/bin/python"
+    if ! "$CERTBOT_PYTHON" -m pip --version &>/dev/null; then
+      msg_info "Repairing Certbot pip"
+      $STD "$CERTBOT_PYTHON" -m ensurepip --upgrade
+    fi
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade pip setuptools wheel
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade certbot certbot-dns-cloudflare
     msg_ok "Updated Certbot"
   fi
 
@@ -216,7 +221,13 @@ EOF
     msg_ok "Initialized Backend"
 
     msg_info "Starting Services"
-    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}')
+    if [ -f /opt/certbot/bin/certbot ]; then
+    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    elif command -v certbot &>/dev/null; then
+    CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    else
+    CERTBOT_VER="2.0.0"
+    fi
     if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
       sed -i "s|Environment=CERTBOT_VERSION=.*|Environment=CERTBOT_VERSION=${CERTBOT_VER}|" /lib/systemd/system/npm.service
     else

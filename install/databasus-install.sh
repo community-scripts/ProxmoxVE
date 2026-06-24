@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 setup_go
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
 msg_info "Installing Database Clients"
 # Create PostgreSQL version symlinks for compatibility
@@ -56,7 +56,7 @@ fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest"
 msg_info "Building Databasus (Patience)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 cd /opt/databasus/frontend
-$STD corepack enable
+
 $STD corepack prepare pnpm@latest --activate
 $STD pnpm install --frozen-lockfile
 $STD pnpm run build

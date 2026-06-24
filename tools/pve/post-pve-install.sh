@@ -125,6 +125,12 @@ EOF
   no) msg_error "Selected no to Correcting Proxmox VE Sources" ;;
   esac
 
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
+  fi
+
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PVE-ENTERPRISE" --menu "The 'pve-enterprise' repository is only available to users who have purchased a Proxmox VE subscription.\n \nDisable 'pve-enterprise' repository?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
@@ -280,6 +286,12 @@ EOF
       ;;
     no) msg_error "Selected no to Correcting Proxmox VE Sources" ;;
     esac
+  fi
+
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
   fi
 
   # ---- PVE-ENTERPRISE ----

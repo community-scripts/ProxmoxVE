@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -57,7 +57,7 @@ function update_script() {
   msg_ok "Updated step-ca and step-cli"
 
   if check_for_gh_release "step-badger" "lukasz-lobocki/step-badger"; then
-    fetch_and_deploy_gh_release "step-badger" "lukasz-lobocki/step-badger" "prebuild" "latest" "/opt/step-badger" "step-badger_Linux_x86_64.tar.gz"
+    fetch_and_deploy_gh_release "step-badger" "lukasz-lobocki/step-badger" "prebuild" "latest" "/opt/step-badger" "step-badger_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
     msg_ok "Updated step-badger"
   fi
   exit

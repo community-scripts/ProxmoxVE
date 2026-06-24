@@ -971,6 +971,53 @@ is_verbose_mode() {
 }
 
 # ------------------------------------------------------------------------------
+# configure_http_proxy()
+#
+# - Applies var_http_proxy / var_http_no_proxy inside the container
+# - Persists proxy env for login shells, systemd, and package managers
+# - Skips APT proxy config when APT Cacher-NG is active
+# ------------------------------------------------------------------------------
+configure_http_proxy() {
+  local proxy="${HTTP_PROXY:-${http_proxy:-${var_http_proxy:-}}}"
+  local noproxy="${HTTP_NO_PROXY:-${no_proxy:-${var_http_no_proxy:-}}}"
+  [[ -z "$proxy" ]] && return 0
+  [[ -z "$noproxy" ]] && noproxy="localhost,127.0.0.1,.local"
+
+  msg_info "Configuring HTTP proxy"
+  cat >/etc/profile.d/90-http-proxy.sh <<EOF
+export http_proxy="$proxy"
+export https_proxy="$proxy"
+export HTTP_PROXY="$proxy"
+export HTTPS_PROXY="$proxy"
+export no_proxy="$noproxy"
+export NO_PROXY="$noproxy"
+EOF
+  chmod 644 /etc/profile.d/90-http-proxy.sh
+
+  if ! grep -q '^http_proxy=' /etc/environment 2>/dev/null; then
+    cat >>/etc/environment <<EOF
+http_proxy=$proxy
+https_proxy=$proxy
+HTTP_PROXY=$proxy
+HTTPS_PROXY=$proxy
+no_proxy=$noproxy
+NO_PROXY=$noproxy
+EOF
+  fi
+
+  if [[ "${CACHER:-}" != "yes" && -d /etc/apt/apt.conf.d ]]; then
+    cat >/etc/apt/apt.conf.d/95http-proxy <<EOF
+Acquire::http::Proxy "$proxy";
+Acquire::https::Proxy "$proxy";
+EOF
+  fi
+
+  export http_proxy="$proxy" https_proxy="$proxy" HTTP_PROXY="$proxy" HTTPS_PROXY="$proxy"
+  export no_proxy="$noproxy" NO_PROXY="$noproxy"
+  msg_ok "Configured HTTP proxy"
+}
+
+# ------------------------------------------------------------------------------
 # is_unattended()
 #
 # - Detects if script is running in unattended/non-interactive mode

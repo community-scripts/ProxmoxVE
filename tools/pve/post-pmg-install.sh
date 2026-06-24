@@ -53,6 +53,11 @@ if ! dpkg -s proxmox-mailgateway-container >/dev/null 2>&1 &&
   exit 232
 fi
 
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  msg_error "Proxmox Mail Gateway does not support ARM64."
+  exit 1
+fi
+
 repo_state() {
   # $1 = repo name (e.g. pmg-enterprise, pmg-no-subscription, pmgtest)
   local repo="$1"

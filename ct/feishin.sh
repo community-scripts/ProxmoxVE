@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
   if check_for_gh_release "feishin" "jeffvli/feishin"; then
     create_backup /opt/feishin/.env
 
@@ -38,7 +40,7 @@ function update_script() {
     msg_info "Rebuilding Feishin Web"
     cd /opt/feishin
     #PNPM_VERSION=$(jq -r '.packageManager | ltrimstr("pnpm@")' /opt/feishin/package.json)
-    $STD corepack enable
+
     $STD corepack prepare "pnpm@10" --activate
     $STD pnpm install
     $STD pnpm run build:web

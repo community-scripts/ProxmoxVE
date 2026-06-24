@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-15}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -89,11 +89,11 @@ EOF
     fi
     sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env
     MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
-    NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${MODULE_VERSION}" setup_nodejs
     setup_meilisearch
 
     msg_info "Updating Karakeep"
-    corepack enable
+
     export PUPPETEER_SKIP_DOWNLOAD="true"
     export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
     export NEXT_TELEMETRY_DISABLED=1

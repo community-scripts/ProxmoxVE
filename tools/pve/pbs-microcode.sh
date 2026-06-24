@@ -157,6 +157,12 @@ if [ ! -f /etc/proxmox-backup/user.cfg ]; then
   exit
 fi
 
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "CPU microcode updates are only available for x86 (Intel/AMD) systems."
+  exit 0
+fi
+
 whiptail --backtitle "Proxmox Backup Server Helper Scripts" \
   --title "Proxmox Backup Server Processor Microcode" \
   --yesno "This script searches for CPU microcode packages and offers the option to install them.\nProceed?" 10 68

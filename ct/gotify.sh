@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,8 +33,8 @@ function update_script() {
     systemctl stop gotify
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-amd64.zip"
-    chmod +x /opt/gotify/gotify-linux-amd64
+    fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-$(arch_resolve).zip"
+    chmod +x /opt/gotify/gotify-linux-$(arch_resolve)
 
     msg_info "Starting Service"
     systemctl start gotify

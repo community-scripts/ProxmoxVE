@@ -24,6 +24,7 @@
 #   cleanup_tool_keyrings()          - Remove keyrings from all 3 locations
 #   stop_all_services()              - Stop services by pattern (e.g. "php*-fpm")
 #   verify_tool_version()            - Validate installed version matches expected
+#   version_matches_spec()           - Compare installed semver against spec (8.0 matches 8.0.40)
 #   cleanup_legacy_install()         - Remove nvm, rbenv, rustup, etc.
 #   prepare_repository_setup()       - Cleanup repos + keyrings + validate APT
 #   install_packages_with_retry()    - Install with 3 retries and APT refresh
@@ -282,7 +283,7 @@ get_cached_version() {
     cat "/var/cache/app-versions/${app}_version.txt"
     return 0
   fi
-  return 0
+  return 1
 }
 
 # ------------------------------------------------------------------------------
@@ -342,6 +343,37 @@ verify_tool_version() {
   fi
 
   return 0
+}
+
+# ------------------------------------------------------------------------------
+# Compare installed semver against a version spec at the spec's precision.
+# Returns: 0 if match (e.g. spec 8.0 matches installed 8.0.40), 1 otherwise
+# Usage: version_matches_spec "8.0.40" "8.0"
+# ------------------------------------------------------------------------------
+version_matches_spec() {
+  local installed="$1"
+  local spec="$2"
+  local spec_depth prefix i
+  local -a spec_parts installed_parts
+
+  [[ -n "$installed" && -n "$spec" ]] || return 1
+
+  IFS='.' read -ra spec_parts <<<"$spec"
+  spec_depth=${#spec_parts[@]}
+  ((spec_depth > 0)) || return 1
+
+  if ((spec_depth == 1)); then
+    [[ "${installed%%.*}" == "$spec" ]] && return 0
+    return 1
+  fi
+
+  IFS='.' read -ra installed_parts <<<"$installed"
+  prefix=""
+  for ((i = 0; i < spec_depth && i < ${#installed_parts[@]}; i++)); do
+    [[ -n "$prefix" ]] && prefix+="."
+    prefix+="${installed_parts[i]}"
+  done
+  [[ "$prefix" == "$spec" ]]
 }
 
 # ------------------------------------------------------------------------------
@@ -462,10 +494,10 @@ install_packages_with_retry() {
             fi
           fi
         done
-        # If some packages installed, consider partial success
         if [[ ${#failed[@]} -lt ${#packages[@]} ]]; then
           if [[ ${#failed[@]} -gt 0 ]]; then
-            msg_warn "Partially installed. Failed packages: ${failed[*]}"
+            msg_error "Partial install — failed packages: ${failed[*]}"
+            return 100
           fi
           return 0
         fi
@@ -620,13 +652,15 @@ remove_old_tool_version() {
   mysql)
     stop_all_services "mysql"
     $STD apt purge -y 'mysql*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/mysql 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/mysql 2>/dev/null || true
     cleanup_tool_keyrings "mysql"
     ;;
   mongodb)
     stop_all_services "mongod"
     $STD apt purge -y 'mongodb*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/mongodb 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/mongodb 2>/dev/null || true
     cleanup_tool_keyrings "mongodb"
     ;;
   node | nodejs)
@@ -671,7 +705,8 @@ remove_old_tool_version() {
   clickhouse)
     stop_all_services "clickhouse-server"
     $STD apt purge -y 'clickhouse*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/clickhouse 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/clickhouse 2>/dev/null || true
     cleanup_tool_keyrings "clickhouse"
     ;;
   esac
@@ -695,8 +730,8 @@ should_update_tool() {
   # Get currently installed version
   current_version=$(is_tool_installed "$tool_name" 2>/dev/null) || return 0 # Not installed = needs install
 
-  # If versions are identical, no update needed
-  if [[ "$current_version" == "$target_version" ]]; then
+  # If versions match at the requested precision, no update needed
+  if version_matches_spec "$current_version" "$target_version"; then
     return 1 # No update needed
   fi
 
@@ -764,8 +799,15 @@ manage_tool_repository() {
     local distro_codename
     distro_codename=$(get_os_info codename)
 
-    # Suite mapping with fallback for newer releases not yet supported by upstream
-    if [[ "$distro_id" == "debian" ]]; then
+    if [[ "$distro_id" == "debian" && "$(dpkg --print-architecture)" == "arm64" ]]; then
+      case "$distro_codename" in
+      trixie | forky) suite="noble" ;;
+      bookworm) suite="jammy" ;;
+      *) suite="noble" ;;
+      esac
+      distro_id="ubuntu"
+      repo_url="https://repo.mongodb.org/apt/ubuntu"
+    elif [[ "$distro_id" == "debian" ]]; then
       case "$distro_codename" in
       trixie | forky | sid)
         # Testing/unstable releases fallback to latest stable suite
@@ -884,6 +926,49 @@ Suites: $distro_codename
 Components: main
 Architectures: $(dpkg --print-architecture)
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
+EOF
+    return 0
+    ;;
+
+  mysql)
+    if [[ -z "$gpg_key_url" ]]; then
+      msg_error "MySQL repository requires gpg_key_url"
+      return 65
+    fi
+
+    cleanup_old_repo_files "mysql"
+
+    if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/mysql.gpg" "dearmor"; then
+      msg_error "Failed to import MySQL GPG key"
+      return 7
+    fi
+
+    local distro_codename suite component
+    distro_codename=$(get_os_info codename)
+
+    if [[ "$distro_id" == "debian" ]]; then
+      case "$distro_codename" in
+      trixie | forky | sid) suite="bookworm" ;;
+      bookworm | bullseye) suite="$distro_codename" ;;
+      *) suite="bookworm" ;;
+      esac
+    else
+      suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url")
+    fi
+
+    case "$version" in
+    8.4 | 8.4.*) component="mysql-8.4-lts" ;;
+    8.0 | 8.0.*) component="mysql-8.0" ;;
+    *) component="mysql-${version}" ;;
+    esac
+
+    cat <<EOF >/etc/apt/sources.list.d/mysql.sources
+Types: deb
+URIs: ${repo_url}/
+Suites: ${suite}
+Components: ${component}
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/mysql.gpg
 EOF
     return 0
     ;;
@@ -1115,11 +1200,34 @@ get_system_arch() {
 
 # ------------------------------------------------------------------------------
 # Create temporary directory with automatic cleanup
+# Appends to a shared list so existing EXIT traps are preserved.
 # ------------------------------------------------------------------------------
+_tools_temp_dirs=()
+
+_tools_cleanup_temp_dirs() {
+  local d
+  for d in "${_tools_temp_dirs[@]}"; do
+    rm -rf "$d" 2>/dev/null || true
+  done
+}
+
+_tools_register_temp_cleanup() {
+  [[ "${_TOOLS_TEMP_TRAP_SET:-}" == "1" ]] && return 0
+  _TOOLS_TEMP_TRAP_SET=1
+  local existing
+  existing=$(trap -p EXIT 2>/dev/null | sed -n "s/^trap -- '\\(.*\\)' EXIT/\1/p" || true)
+  if [[ -n "$existing" && "$existing" != "_tools_cleanup_temp_dirs" ]]; then
+    trap "_tools_cleanup_temp_dirs; ${existing}" EXIT ERR INT TERM
+  else
+    trap _tools_cleanup_temp_dirs EXIT ERR INT TERM
+  fi
+}
+
 create_temp_dir() {
-  local tmp_dir=$(mktemp -d)
-  # Set trap to cleanup on EXIT, ERR, INT, TERM
-  trap "rm -rf '$tmp_dir'" EXIT ERR INT TERM
+  local tmp_dir
+  tmp_dir=$(mktemp -d) || return 1
+  _tools_temp_dirs+=("$tmp_dir")
+  _tools_register_temp_cleanup
   echo "$tmp_dir"
 }
 
@@ -2042,9 +2150,11 @@ setup_deb822_repo() {
     [[ -n "$enabled" ]] && echo "Enabled: $enabled"
   } >/etc/apt/sources.list.d/${name}.sources
 
-  $STD apt update || {
-    msg_warn "apt update failed after adding repository: ${name}"
-  }
+  if ! $STD apt update; then
+    msg_error "apt update failed after adding repository: ${name}"
+    msg_error "Hint: Verify suite '${suite}' and URI '${repo_url}' are valid for this distribution."
+    return 100
+  fi
 }
 
 # ------------------------------------------------------------------------------
@@ -2475,6 +2585,8 @@ check_for_gh_tag() {
 #   - Does not modify anything, only checks version state
 #   - Does not support pre-releases
 # ------------------------------------------------------------------------------
+TOOLS_GH_REL_JSON=""
+
 check_for_gh_release() {
   local app="$1"
   local source="$2"
@@ -2494,6 +2606,10 @@ check_for_gh_release() {
 
   ensure_dependencies jq
 
+  local gh_check_json
+  gh_check_json=$(mktemp /tmp/tools-gh-check-XXXXXX.json) || return 7
+  trap 'rm -f "$gh_check_json"' RETURN
+
   # Build auth header if token is available
   local header_args=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
@@ -2504,14 +2620,14 @@ check_for_gh_release() {
   # For pinned versions, query the specific release tag directly
   if [[ -n "$pinned_version_in" ]]; then
     local pinned_version_encoded="${pinned_version_in//\//%2F}"
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases/tags/${pinned_version_encoded}" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json="[$(</tmp/gh_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json="[$(<"$gh_check_json")]"
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2519,27 +2635,27 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
   if [[ -z "$pinned_version_in" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases/latest" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json="[$(</tmp/gh_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json="[$(<"$gh_check_json")]"
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2547,28 +2663,28 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
   # If no releases yet (pinned version OR /latest failed), fetch up to 100
   if [[ -z "$releases_json" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases?per_page=100" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json=$(</tmp/gh_check.json)
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json=$(<"$gh_check_json")
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2576,25 +2692,25 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitHub API connection failed (no response)."
       msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 7
     else
       msg_error "Unable to fetch releases for ${app} (HTTP ${http_code})"
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
   mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
@@ -3140,10 +3256,14 @@ fetch_and_deploy_codeberg_release() {
     return 6
   fi
 
+  local codeberg_rel_json
+  codeberg_rel_json=$(mktemp /tmp/tools-codeberg-rel-XXXXXX.json) || return 7
+  trap 'rm -f "$codeberg_rel_json"' RETURN
+
   local attempt=0 success=false resp http_code
 
   while ((attempt < ${#api_timeouts[@]})); do
-    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
+    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o "$codeberg_rel_json" "$api_url") && success=true && break
     attempt=$((attempt + 1))
     if ((attempt < ${#api_timeouts[@]})); then
       msg_warn "API request timed out after ${api_timeouts[$((attempt - 1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
@@ -3162,7 +3282,7 @@ fetch_and_deploy_codeberg_release() {
   }
 
   local json tag_name
-  json=$(</tmp/codeberg_rel.json)
+  json=$(<"$codeberg_rel_json")
 
   # For "latest", the API returns an array - take the first (most recent) release
   if [[ "$version" == "latest" ]]; then
@@ -3620,6 +3740,13 @@ fetch_and_deploy_gh_release() {
 
   ensure_dependencies jq
 
+  if [[ -n "${TOOLS_GH_REL_JSON:-}" && -f "$TOOLS_GH_REL_JSON" ]]; then
+    rm -f "$TOOLS_GH_REL_JSON"
+  fi
+  local gh_rel_json
+  gh_rel_json=$(mktemp /tmp/tools-gh-rel-XXXXXX.json) || return 7
+  TOOLS_GH_REL_JSON="$gh_rel_json"
+
   local api_url="https://api.github.com/repos/$repo/releases"
   [[ "$version" != "latest" ]] && api_url="$api_url/tags/$version" || api_url="$api_url/latest"
   local header=()
@@ -3636,7 +3763,7 @@ fetch_and_deploy_gh_release() {
   local max_retries=${#api_timeouts[@]} retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o "$gh_rel_json" "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -3683,7 +3810,7 @@ fetch_and_deploy_gh_release() {
   fi
 
   local json tag_name
-  json=$(</tmp/gh_rel.json)
+  json=$(<"$gh_rel_json")
   tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
   # Only strip leading 'v' when followed by a digit (e.g. v1.2.3), not words like "version/..."
   [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -4288,7 +4415,12 @@ setup_composer() {
 #   - Updates Docker Engine if newer version available
 #   - Interactive container update with multi-select
 #   - Portainer installation and update support
+#   - Set DOCKER_NONINTERACTIVE=1 to skip interactive prompts (CI/unattended)
 # ------------------------------------------------------------------------------
+_docker_is_noninteractive() {
+  [[ "${DOCKER_NONINTERACTIVE:-}" == "1" || "${DOCKER_NONINTERACTIVE:-}" == "true" || "${DOCKER_NONINTERACTIVE:-}" == "TRUE" ]] || [[ ! -t 0 ]]
+}
+
 setup_docker() {
   local docker_installed=false
   local portainer_installed=false
@@ -4428,21 +4560,25 @@ EOF
       PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
 
       if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
-        read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
-        if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-          msg_info "Updating Portainer"
-          docker stop portainer
-          docker rm portainer
-          docker pull portainer/portainer-ce:latest
-          docker run -d \
-            -p 9000:9000 \
-            -p 9443:9443 \
-            --name=portainer \
-            --restart=always \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v portainer_data:/data \
-            portainer/portainer-ce:latest
-          msg_ok "Updated Portainer to $PORTAINER_LATEST"
+        if _docker_is_noninteractive; then
+          msg_info "Skipping Portainer update prompt (non-interactive)"
+        else
+          read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
+          if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+            msg_info "Updating Portainer"
+            docker stop portainer
+            docker rm portainer
+            docker pull portainer/portainer-ce:latest
+            docker run -d \
+              -p 9000:9000 \
+              -p 9443:9443 \
+              --name=portainer \
+              --restart=always \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v portainer_data:/data \
+              portainer/portainer-ce:latest
+            msg_ok "Updated Portainer to $PORTAINER_LATEST"
+          fi
         fi
       else
         msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
@@ -4465,7 +4601,7 @@ EOF
   fi
 
   # Interactive Container Update Check
-  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ]; then
+  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ] && ! _docker_is_noninteractive; then
     msg_info "Checking for container updates"
 
     # Get list of running containers with update status
@@ -5239,15 +5375,15 @@ setup_hwaccel() {
 # ══════════════════════════════════════════════════════════════════════════════
 # Resolve the IGC tag that the latest compute-runtime was built against.
 # Must be called AFTER a fetch_and_deploy_gh_release for intel/compute-runtime
-# so that /tmp/gh_rel.json contains the compute-runtime release metadata.
+# so that TOOLS_GH_REL_JSON contains the compute-runtime release metadata.
 # Sets the variable named by $1 (default: igc_tag) to the discovered tag.
 # ══════════════════════════════════════════════════════════════════════════════
 _resolve_igc_tag() {
   local -n _out_ref="${1:-igc_tag}"
   _out_ref="latest"
-  if [[ -f /tmp/gh_rel.json ]]; then
+  if [[ -n "${TOOLS_GH_REL_JSON:-}" && -f "$TOOLS_GH_REL_JSON" ]]; then
     local _body _parsed
-    _body=$(jq -r '.body // empty' /tmp/gh_rel.json 2>/dev/null) || return 0
+    _body=$(jq -r '.body // empty' "$TOOLS_GH_REL_JSON" 2>/dev/null) || return 0
     _parsed=$(grep -oP 'intel-graphics-compiler/releases/tag/\K[^\s\)]+' <<<"$_body" | head -1)
     [[ -n "$_parsed" ]] && _out_ref="$_parsed"
   fi
@@ -5281,7 +5417,7 @@ _setup_intel_arc() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub for Arc support"
 
-      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # Fetch a compute-runtime package first so TOOLS_GH_REL_JSON is populated,
       # then resolve the matching IGC tag from the release notes.
       # libigdgmm - bundled in compute-runtime releases
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
@@ -5345,7 +5481,7 @@ _setup_intel_modern() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub"
 
-      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # Fetch a compute-runtime package first so TOOLS_GH_REL_JSON is populated,
       # then resolve the matching IGC tag from the release notes.
       # libigdgmm first (bundled in compute-runtime releases)
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
@@ -6399,7 +6535,7 @@ EOF
   fi
 
   # Scenario 1: Already installed at target version - just update packages
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && version_matches_spec "$CURRENT_VERSION" "$MARIADB_VERSION"; then
     msg_info "Update MariaDB $MARIADB_VERSION"
 
     # Ensure APT is working
@@ -6431,7 +6567,7 @@ EOF
   fi
 
   # Scenario 2b: Different version installed - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MARIADB_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && ! version_matches_spec "$CURRENT_VERSION" "$MARIADB_VERSION"; then
     msg_info "Upgrade MariaDB from $CURRENT_VERSION to $MARIADB_VERSION"
     remove_old_tool_version "mariadb"
   fi
@@ -6720,29 +6856,22 @@ setup_meilisearch() {
         fi
       fi
 
-      # If migration is needed but dump failed, we have options:
-      # 1. Abort the update (safest, but annoying)
-      # 2. Backup data directory and proceed (allows manual recovery)
-      # 3. Just proceed and hope for the best (dangerous)
-      # We choose option 2: backup and proceed with warning
       if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
-        local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
-
-        if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
-          local BACKUP_PATH="${MEILI_DB_PATH}.backup.$(date +%Y%m%d%H%M%S)"
-          msg_warn "Backing up MeiliSearch data to ${BACKUP_PATH}"
-          mv "$MEILI_DB_PATH" "$BACKUP_PATH"
-          mkdir -p "$MEILI_DB_PATH"
-          msg_info "Data backed up. After update, you may need to reindex your data."
-          msg_info "Old data is preserved at: ${BACKUP_PATH}"
+        msg_error "MeiliSearch migration requires a successful dump before upgrade"
+        msg_error "Ensure the service is running and master_key is configured, or set MEILISEARCH_SKIP_MIGRATION=1 to force (data loss risk)"
+        if [[ "${MEILISEARCH_SKIP_MIGRATION:-}" != "1" ]]; then
+          return 100
         fi
+        msg_warn "MEILISEARCH_SKIP_MIGRATION=1 — proceeding without dump (manual reindex may be required)"
       fi
 
       # Stop service and update binary
       systemctl stop meilisearch
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+      if [[ "$(arch_resolve)" == "arm64" ]]; then
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/bin" "meilisearch-linux-aarch64"
+      else
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+      fi
 
       # If migration needed and dump was created, remove old data and import dump
       if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
@@ -6810,11 +6939,18 @@ setup_meilisearch() {
   # Fresh install
   msg_info "Setup MeiliSearch"
 
-  # Install binary
-  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
-    msg_error "Failed to install MeiliSearch binary"
-    return 250
-  }
+  # Install binary (meilisearch publishes only an amd64 .deb; arm64 uses the raw linux-aarch64 binary)
+  if [[ "$(arch_resolve)" == "arm64" ]]; then
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/bin" "meilisearch-linux-aarch64" || {
+      msg_error "Failed to install MeiliSearch binary"
+      return 250
+    }
+  else
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
+      msg_error "Failed to install MeiliSearch binary"
+      return 250
+    }
+  fi
 
   # Download default config
   curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml || {
@@ -7135,7 +7271,7 @@ setup_mysql() {
 
   # Scenario 2: Use official MySQL repository (USE_MYSQL_REPO=true)
   # Scenario 2a: Already at target version - just update packages
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MYSQL_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && version_matches_spec "$CURRENT_VERSION" "$MYSQL_VERSION"; then
     msg_info "Update MySQL $MYSQL_VERSION"
 
     ensure_apt_working || return 100
@@ -7151,7 +7287,7 @@ setup_mysql() {
   fi
 
   # Scenario 2: Different version installed - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && ! version_matches_spec "$CURRENT_VERSION" "$MYSQL_VERSION"; then
     msg_info "Upgrade MySQL from $CURRENT_VERSION to $MYSQL_VERSION"
     remove_old_tool_version "mysql"
   else
@@ -7265,13 +7401,18 @@ EOF
 #   - Optionally installs or updates global npm modules
 #
 # Variables:
-#   NODE_VERSION   - Node.js version to install (default: 24 LTS)
-#   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
+#   NODE_VERSION          - Node.js version to install (default: 24 LTS)
+#   NODE_MODULE           - Comma-separated global modules (e.g. "yarn,corepack,pnpm@10")
+#   NODE_COREPACK_ENABLE  - Run corepack enable after install (default: 1 when corepack is used)
 # ------------------------------------------------------------------------------
 
 setup_nodejs() {
   local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
+  local NODE_COREPACK_ENABLE="${NODE_COREPACK_ENABLE:-1}"
+  local node_major="${NODE_VERSION%%.*}"
+  local wants_corepack=0
+  local node_setup_ok_msg=""
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
   cleanup_legacy_install "nodejs"
@@ -7298,18 +7439,17 @@ setup_nodejs() {
     # Upgrade to the latest minor/patch release from NodeSource
     $STD apt-get install -y --only-upgrade nodejs 2>/dev/null || true
 
-    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
-    $STD npm install -g npm@11.11.0 2>/dev/null || true
-
     cache_installed_version "nodejs" "$NODE_VERSION"
     msg_ok "Update Node.js $NODE_VERSION"
   else
     # Scenario 2: Different version installed - clean upgrade
     if [[ -n "$CURRENT_NODE_VERSION" && "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]]; then
       msg_info "Upgrade Node.js from $CURRENT_NODE_VERSION to $NODE_VERSION"
+      node_setup_ok_msg="Upgrade Node.js to $NODE_VERSION"
       remove_old_tool_version "nodejs"
     else
       msg_info "Setup Node.js $NODE_VERSION"
+      node_setup_ok_msg="Setup Node.js $NODE_VERSION"
     fi
 
     # Remove ALL Debian nodejs packages BEFORE adding NodeSource repo
@@ -7318,6 +7458,7 @@ setup_nodejs() {
       $STD apt purge -y nodejs nodejs-doc libnode* node-* 2>/dev/null || true
       $STD apt autoremove -y 2>/dev/null || true
       $STD apt clean 2>/dev/null || true
+      msg_ok "Removed Debian-packaged Node.js"
     fi
 
     # Remove any APT pinning (not needed)
@@ -7363,17 +7504,19 @@ setup_nodejs() {
       return 127
     fi
 
-    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
-    local NPM_VERSION
-    NPM_VERSION=$(npm -v 2>/dev/null || echo "0")
-    if [[ "$NPM_VERSION" != "0" ]]; then
-      $STD npm install -g npm@11.11.0 2>/dev/null || {
-        msg_warn "Failed to update npm to 11.11.0 (continuing with bundled npm $NPM_VERSION)"
-      }
-    fi
-
     cache_installed_version "nodejs" "$NODE_VERSION"
-    msg_ok "Setup Node.js $NODE_VERSION"
+    msg_ok "$node_setup_ok_msg"
+  fi
+
+  # Node 22.22.2 bundles npm 10.9.7 which cannot self-upgrade (nodejs/node#62425)
+  if [[ "$NODE_VERSION" == "22" && "$(npm -v 2>/dev/null)" == "10.9.7" ]]; then
+    msg_info "Updating npm (Node 22 regression fix)"
+    $STD npm install -g npm@10.9.8 2>/dev/null || true
+    if $STD npm install -g npm@latest 2>/dev/null; then
+      msg_ok "Updated npm ($(npm -v))"
+    else
+      msg_warn "npm update failed on Node 22.22.2"
+    fi
   fi
 
   # Set a safe default heap limit for Node.js builds if not explicitly provided.
@@ -7418,12 +7561,18 @@ setup_nodejs() {
   }
 
   # Install global Node modules
-  if [[ -n "$NODE_MODULE" ]]; then
+  if [[ -n "$NODE_MODULE" ]] || (( node_major >= 25 )); then
+    if (( node_major >= 25 )) && [[ ",${NODE_MODULE}," != *",corepack,"* ]] && [[ "$NODE_MODULE" != corepack* ]]; then
+      NODE_MODULE="${NODE_MODULE:+$NODE_MODULE,}corepack"
+    fi
+
     IFS=',' read -ra MODULES <<<"$NODE_MODULE"
 
-    # Pin pnpm to v10 to avoid breaking changes from newer major versions
     for i in "${!MODULES[@]}"; do
-      if [[ "${MODULES[$i]}" =~ ^pnpm(@.*)?$ ]]; then
+      if [[ "${MODULES[$i]}" == "corepack" || "${MODULES[$i]}" == corepack@* ]]; then
+        wants_corepack=1
+      fi
+      if [[ "${MODULES[$i]}" == "pnpm" ]]; then
         MODULES[$i]="pnpm@^10"
       fi
     done
@@ -7449,33 +7598,43 @@ setup_nodejs() {
       if $STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep -q "$MODULE_NAME@"; then
         MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
-          msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
-          if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+          msg_info "Updating $MODULE_NAME to v$MODULE_REQ_VERSION"
+          if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+            msg_ok "Updated $MODULE_NAME"
+          else
             msg_warn "Failed to update $MODULE_NAME to version $MODULE_REQ_VERSION"
             ((failed_modules++)) || true
-            continue
           fi
         elif [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
           msg_info "Updating $MODULE_NAME to latest version"
-          if ! $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null; then
+          if $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null; then
+            msg_ok "Updated $MODULE_NAME"
+          else
             msg_warn "Failed to update $MODULE_NAME to latest version"
             ((failed_modules++)) || true
-            continue
           fi
         fi
       else
         msg_info "Installing $MODULE_NAME@$MODULE_REQ_VERSION"
-        if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+        if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+          msg_ok "Installed $MODULE_NAME"
+        else
           msg_warn "Failed to install $MODULE_NAME@$MODULE_REQ_VERSION"
           ((failed_modules++)) || true
-          continue
         fi
       fi
     done
-    if [[ $failed_modules -eq 0 ]]; then
-      msg_ok "Installed Node.js modules: $NODE_MODULE"
+    if (( failed_modules > 0 )); then
+      msg_warn "$failed_modules Node.js module(s) failed: $NODE_MODULE"
+    fi
+  fi
+
+  if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && (( wants_corepack )) && command -v corepack >/dev/null 2>&1; then
+    msg_info "Enabling corepack"
+    if $STD corepack enable 2>/dev/null; then
+      msg_ok "Enabled corepack"
     else
-      msg_warn "Installed Node.js modules with $failed_modules failure(s): $NODE_MODULE"
+      msg_warn "corepack enable failed"
     fi
   fi
 }
@@ -8293,29 +8452,34 @@ setup_ruby() {
   fi
 
   # Install ruby-build plugin
-  if [[ ! -d "$RBENV_DIR/plugins/ruby-build" ]]; then
+  _install_ruby_build_plugin() {
     local RUBY_BUILD_RELEASE
     RUBY_BUILD_RELEASE=$(get_latest_github_release "rbenv/ruby-build") || {
       msg_error "Failed to fetch latest ruby-build version from GitHub"
-      rm -rf "$TMP_DIR"
       return 7
     }
 
     if ! curl_with_retry "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" "$TMP_DIR/ruby-build.tar.gz"; then
       msg_error "Failed to download ruby-build"
       msg_error "Hint: Check connectivity to github.com/rbenv/ruby-build"
-      rm -rf "$TMP_DIR"
       return 7
     fi
 
     tar -xzf "$TMP_DIR/ruby-build.tar.gz" -C "$TMP_DIR" || {
       msg_error "Failed to extract ruby-build"
-      rm -rf "$TMP_DIR"
       return 251
     }
 
     mkdir -p "$RBENV_DIR/plugins/ruby-build"
     cp -r "$TMP_DIR/ruby-build-${RUBY_BUILD_RELEASE}/." "$RBENV_DIR/plugins/ruby-build/"
+    return 0
+  }
+
+  if [[ ! -d "$RBENV_DIR/plugins/ruby-build" ]]; then
+    _install_ruby_build_plugin || {
+      rm -rf "$TMP_DIR"
+      return 7
+    }
   fi
 
   # Setup PATH and install Ruby version
@@ -8323,6 +8487,14 @@ setup_ruby() {
   eval "$("$RBENV_BIN" init - bash)" 2>/dev/null || true
 
   if ! "$RBENV_BIN" versions --bare 2>/dev/null | grep -qx "$RUBY_VERSION"; then
+    if [[ ! -f "$RBENV_DIR/plugins/ruby-build/share/ruby-build/$RUBY_VERSION" ]]; then
+      msg_info "Updating ruby-build definitions"
+      _install_ruby_build_plugin || {
+        rm -rf "$TMP_DIR"
+        return 7
+      }
+      msg_ok "Updated ruby-build definitions"
+    fi
     $STD "$RBENV_BIN" install "$RUBY_VERSION" || {
       msg_error "Failed to install Ruby $RUBY_VERSION"
       rm -rf "$TMP_DIR"
@@ -8518,12 +8690,9 @@ setup_uv() {
   local UV_BIN="/usr/local/bin/uv"
   local UVX_BIN="/usr/local/bin/uvx"
   local TMP_DIR=$(mktemp -d)
-  local CACHED_VERSION
 
   # trap for TMP Cleanup
   trap "rm -rf '$TMP_DIR'" EXIT
-
-  CACHED_VERSION=$(get_cached_version "uv")
 
   # Architecture Detection
   local ARCH=$(uname -m)
@@ -8554,12 +8723,14 @@ setup_uv() {
 
   ensure_dependencies jq
 
-  # Fetch latest version
-  local LATEST_VERSION
-  LATEST_VERSION=$(get_latest_github_release "astral-sh/uv") || {
-    msg_error "Could not fetch latest uv version from GitHub API"
-    return 7
-  }
+  # Fetch target version (pinned via UV_VERSION or latest release)
+  local TARGET_VERSION="${UV_VERSION:-}"
+  if [[ -z "$TARGET_VERSION" ]]; then
+    TARGET_VERSION=$(get_latest_github_release "astral-sh/uv") || {
+      msg_error "Could not fetch latest uv version from GitHub API"
+      return 7
+    }
+  fi
 
   # Get currently installed version
   local INSTALLED_VERSION=""
@@ -8567,9 +8738,9 @@ setup_uv() {
     INSTALLED_VERSION=$("$UV_BIN" --version 2>/dev/null | awk '{print $2}')
   fi
 
-  # Scenario 1: Already at latest version
-  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
-    cache_installed_version "uv" "$LATEST_VERSION"
+  # Scenario 1: Already at target version
+  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" == "$TARGET_VERSION" ]]; then
+    cache_installed_version "uv" "$TARGET_VERSION"
 
     # Check if uvx is needed and missing
     if [[ "${USE_UVX:-NO}" == "YES" ]] && [[ ! -x "$UVX_BIN" ]]; then
@@ -8582,13 +8753,13 @@ setup_uv() {
   fi
 
   # Scenario 2: New install or upgrade
-  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" != "$LATEST_VERSION" ]]; then
-    msg_info "Upgrade uv from $INSTALLED_VERSION to $LATEST_VERSION"
+  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" != "$TARGET_VERSION" ]]; then
+    msg_info "Upgrade uv from $INSTALLED_VERSION to $TARGET_VERSION"
   else
-    msg_info "Setup uv $LATEST_VERSION"
+    msg_info "Setup uv $TARGET_VERSION"
   fi
 
-  local UV_URL="https://github.com/astral-sh/uv/releases/download/${LATEST_VERSION}/${UV_TAR}"
+  local UV_URL="https://github.com/astral-sh/uv/releases/download/${TARGET_VERSION}/${UV_TAR}"
 
   if ! curl_with_retry "$UV_URL" "$TMP_DIR/uv.tar.gz"; then
     msg_error "Failed to download uv from $UV_URL"
@@ -8643,8 +8814,8 @@ setup_uv() {
     msg_ok "Python $PYTHON_VERSION installed"
   fi
 
-  cache_installed_version "uv" "$LATEST_VERSION"
-  msg_ok "Setup uv $LATEST_VERSION"
+  cache_installed_version "uv" "$TARGET_VERSION"
+  msg_ok "Setup uv $TARGET_VERSION"
 }
 
 # Helper function to install uvx wrapper
@@ -9000,6 +9171,10 @@ check_for_gl_release() {
 
   ensure_dependencies jq
 
+  local gl_check_json
+  gl_check_json=$(mktemp /tmp/tools-gl-check-XXXXXX.json) || return 7
+  trap 'rm -f "$gl_check_json"' RETURN
+
   local repo_encoded
   repo_encoded=$(printf '%s' "$source" | sed 's|/|%2F|g')
 
@@ -9011,23 +9186,23 @@ check_for_gl_release() {
   # For pinned versions, try to fetch the specific release tag first
   if [[ -n "$pinned_version_in" ]]; then
     local pinned_encoded="${pinned_version_in//\//%2F}"
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gl_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
       "https://gitlab.com/api/v4/projects/$repo_encoded/releases/$pinned_encoded" 2>/dev/null) || true
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gl_check.json ]]; then
-      releases_json="[$(</tmp/gl_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
+      releases_json="[$(<"$gl_check_json")]"
     fi
-    rm -f /tmp/gl_check.json
+    rm -f "$gl_check_json"
   fi
 
   # Fetch full releases list if needed
   if [[ -z "$releases_json" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gl_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
       "https://gitlab.com/api/v4/projects/$repo_encoded/releases?per_page=100&order_by=released_at&sort=desc" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gl_check.json ]]; then
-      releases_json=$(</tmp/gl_check.json)
+    if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
+      releases_json=$(<"$gl_check_json")
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitLab API authentication failed (HTTP 401)."
       if [[ -n "${GITLAB_TOKEN:-}" ]]; then
@@ -9035,28 +9210,28 @@ check_for_gl_release() {
       else
         msg_error "The repository may require authentication. Try: export GITLAB_TOKEN=\"glpat-your_token\""
       fi
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "404" ]]; then
       msg_error "GitLab project not found (HTTP 404). Ensure '${source}' is correct and publicly accessible."
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "429" ]]; then
       msg_error "GitLab API rate limit exceeded (HTTP 429)."
       msg_error "To increase the limit, export a GitLab token: export GITLAB_TOKEN=\"glpat-your_token_here\""
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitLab API connection failed (no response)."
       msg_error "Check your network/DNS: curl -sSL https://gitlab.com/api/v4/version"
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 7
     else
       msg_error "Unable to fetch releases for ${app} (HTTP ${http_code})"
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     fi
-    rm -f /tmp/gl_check.json
+    rm -f "$gl_check_json"
   fi
 
   mapfile -t raw_tags < <(jq -r '.[] | .tag_name' <<<"$releases_json")
@@ -9276,6 +9451,10 @@ fetch_and_deploy_gl_release() {
 
   ensure_dependencies jq
 
+  local gl_rel_json
+  gl_rel_json=$(mktemp /tmp/tools-gl-rel-XXXXXX.json) || return 7
+  trap 'rm -f "$gl_rel_json"' RETURN
+
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
 
@@ -9293,7 +9472,7 @@ fetch_and_deploy_gl_release() {
   local max_retries=3 retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o /tmp/gl_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o "$gl_rel_json" "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -9334,7 +9513,7 @@ fetch_and_deploy_gl_release() {
   fi
 
   local json tag_name
-  json=$(</tmp/gl_rel.json)
+  json=$(<"$gl_rel_json")
 
   if [[ "$version" == "latest" ]]; then
     json=$(echo "$json" | jq '.[0] // empty')

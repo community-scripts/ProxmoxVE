@@ -74,6 +74,16 @@ msg_ok "Configured Dispatcharr"
 
 msg_info "Configuring Nginx"
 cat <<EOF >/etc/nginx/sites-available/dispatcharr.conf
+map \$http_x_forwarded_proto \$real_forwarded_proto {
+    ""      \$scheme;
+    default \$http_x_forwarded_proto;
+}
+
+map \$http_x_forwarded_port \$real_forwarded_port {
+    ""      \$server_port;
+    default \$http_x_forwarded_port;
+}
+
 server {
     listen 9191;
     server_name _;
@@ -115,13 +125,16 @@ server {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
     }
 
     # All other requests proxy to uWSGI
     location / {
-        include proxy_params;
-        proxy_set_header X-Forwarded-Port \$server_port;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
+        proxy_set_header X-Forwarded-Port \$real_forwarded_port;
         proxy_pass http://127.0.0.1:5656;
     }
 }

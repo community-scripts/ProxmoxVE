@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -38,13 +38,13 @@ function update_script() {
     msg_ok "Stopped Service"
 
     victoriametrics_release=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases" |
-      jq -r '.[] | select(.assets[].name | match("^victoria-metrics-linux-amd64-v[0-9.]+.tar.gz$")) | .tag_name' |
+      jq -r --arg a "$(arch_resolve)" '.[] | select(.assets[].name | match("^victoria-metrics-linux-" + $a + "-v[0-9.]+.tar.gz$")) | .tag_name' |
       head -n 1)
 
     msg_debug "Using release $victoriametrics_release"
 
-    victoriametrics_filename="victoria-metrics-linux-amd64-${victoriametrics_release}.tar.gz"
-    vmutils_filename="vmutils-linux-amd64-${victoriametrics_release}.tar.gz"
+    victoriametrics_filename="victoria-metrics-linux-$(arch_resolve)-${victoriametrics_release}.tar.gz"
+    vmutils_filename="vmutils-linux-$(arch_resolve)-${victoriametrics_release}.tar.gz"
 
     fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$victoriametrics_filename"
     fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$vmutils_filename"
@@ -52,10 +52,10 @@ function update_script() {
     if [[ -f /etc/systemd/system/victoriametrics-logs.service ]]; then
       vmlogs_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
         jq -r '.assets[].name' |
-        grep -E '^victoria-logs-linux-amd64-v[0-9.]+\.tar\.gz$')
+        grep -E "^victoria-logs-linux-$(arch_resolve)-v[0-9.]+\.tar\.gz$")
       vlutils_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
         jq -r '.assets[].name' |
-        grep -E '^vlutils-linux-amd64-v[0-9.]+\.tar\.gz$')
+        grep -E "^vlutils-linux-$(arch_resolve)-v[0-9.]+\.tar\.gz$")
 
       fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vmlogs_filename"
       fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vlutils_filename"

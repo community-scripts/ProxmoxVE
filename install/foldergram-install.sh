@@ -23,7 +23,7 @@ fetch_and_deploy_gh_release "foldergram" "foldergram/foldergram" "tarball"
 
 msg_info "Configuring Foldergram"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-$STD corepack enable
+
 cd /opt/foldergram
 $STD pnpm install
 $STD pnpm run build

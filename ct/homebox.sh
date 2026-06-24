@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -39,7 +39,7 @@ function update_script() {
     systemctl stop homebox
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_x86_64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
     chmod +x /opt/homebox/homebox
     [ -f /opt/.env ] && mv /opt/.env /opt/homebox/.env
     [ -d /opt/.data ] && mv /opt/.data /opt/homebox/.data

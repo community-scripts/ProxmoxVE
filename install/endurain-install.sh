@@ -81,6 +81,8 @@ msg_ok "Built Frontend"
 
 msg_info "Setting up Backend"
 cd /opt/endurain/backend
+UV_VERSION=$(grep -Po 'required-version\s*=\s*"\K[^"]+' pyproject.toml 2>/dev/null || echo "0.11.18")
+UV_VERSION="$UV_VERSION" setup_uv
 $STD uv tool install poetry
 $STD uv tool update-shell
 export PATH="/root/.local/bin:$PATH"

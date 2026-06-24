@@ -138,6 +138,7 @@ network_check() {
 # This function updates the Container OS by running apk upgrade with mirror fallback
 update_os() {
   msg_info "Updating Container OS"
+  configure_http_proxy
   if ! $STD apk -U upgrade; then
     msg_warn "apk update failed (dl-cdn.alpinelinux.org), trying alternate mirrors..."
     local alpine_mirrors="mirror.init7.net ftp.halifax.rwth-aachen.de mirrors.edge.kernel.org alpine.mirror.wearetriple.com mirror.leaseweb.com uk.alpinelinux.org dl-2.alpinelinux.org dl-4.alpinelinux.org"
@@ -243,7 +244,7 @@ EOF
     msg_ok "Customized Container"
   fi
 
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo 'set -a; [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh; set +a; bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/'"${app}"'.sh)"' >/usr/bin/update
   chmod +x /usr/bin/update
   post_progress_to_api
 }

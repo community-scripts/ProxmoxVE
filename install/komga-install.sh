@@ -22,7 +22,7 @@ $STD apt -y install \
 msg_ok "Installed dependencies"
 
 JAVA_VERSION="23" setup_java
-fetch_and_deploy_gh_release "kepubify" "pgaskin/kepubify" "singlefile" "latest" "/usr/bin" "kepubify-linux-64bit"
+fetch_and_deploy_gh_release "kepubify" "pgaskin/kepubify" "singlefile" "latest" "/usr/bin" "kepubify-linux-$(arch_resolve "64bit" "arm64")"
 USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "komga-org" "gotson/komga" "singlefile" "latest" "/opt/komga" "komga*.jar"
 mv /opt/komga/komga-*.jar /opt/komga/komga.jar
 
@@ -35,7 +35,7 @@ After=syslog.target network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/komga/
-Environment=LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
+Environment=LD_LIBRARY_PATH=/usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")
 ExecStart=/usr/bin/java --enable-native-access=ALL-UNNAMED -jar -Xmx2g komga.jar
 TimeoutStopSec=20
 KillMode=process

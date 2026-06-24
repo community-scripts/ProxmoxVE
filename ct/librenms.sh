@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,10 +29,21 @@ function update_script() {
     exit
   fi
   setup_mariadb
+  ensure_dependencies git
+  if [[ ! -d /opt/librenms/.git ]]; then
+    msg_info "Initializing LibreNMS git metadata"
+    LIBRENMS_VERSION=$(cat ~/.librenms 2>/dev/null)
+    cd /opt/librenms
+    git init -q
+    git remote add origin https://github.com/librenms/librenms.git
+    git fetch --depth 1 origin "refs/tags/v${LIBRENMS_VERSION}" 2>/dev/null ||
+      git fetch --depth 1 origin "refs/tags/${LIBRENMS_VERSION}" 2>/dev/null || true
+    git checkout -qf FETCH_HEAD 2>/dev/null || true
+    chown -R librenms:librenms .git
+    msg_ok "Initialized LibreNMS git metadata"
+  fi
   msg_info "Updating LibreNMS"
-  su librenms
-  cd /opt/librenms
-  ./daily.sh
+  $STD su - librenms -s /bin/bash -c 'cd /opt/librenms && ./daily.sh'
   msg_ok "Updated LibreNMS"
   exit
 }

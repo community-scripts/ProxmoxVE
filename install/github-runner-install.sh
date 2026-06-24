@@ -25,7 +25,7 @@ msg_info "Creating runner user (no sudo)"
 useradd -m -s /bin/bash runner
 msg_ok "Runner user ready"
 
-fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-x64-*.tar.gz"
+fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-$(arch_resolve "x64" "arm64")-*.tar.gz"
 
 msg_info "Setting ownership for runner user"
 chown -R runner:runner /opt/actions-runner

@@ -46,6 +46,12 @@ function update_script() {
 
     restore_backup
 
+    msg_info "Updating TemurinJDK"
+    setup_java
+    $STD apt install -y temurin-{8,11,17,21,25}-jre
+    $STD update-alternatives --set java /usr/lib/jvm/temurin-25-jre-$(arch_resolve)/bin/java
+    msg_ok "Updated TemurinJDK"
+
     msg_info "Updating Python dependencies"
     chown -R crafty:crafty /opt/crafty-controller
     cd /opt/crafty-controller/crafty/crafty-4

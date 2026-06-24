@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "silverbullet" "silverbulletmd/silverbullet" "prebuild" "latest" "/opt/silverbullet/bin" "silverbullet-server-linux-x86_64.zip"
+fetch_and_deploy_gh_release "silverbullet" "silverbulletmd/silverbullet" "prebuild" "latest" "/opt/silverbullet/bin" "silverbullet-server-linux-$(arch_resolve "x86_64" "aarch64").zip"
 mkdir -p /opt/silverbullet/space
 
 msg_info "Creating Service"

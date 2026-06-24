@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y apache2-utils fuse3
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone*linux-amd64.zip"
+fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone*linux-$(arch_resolve).zip"
 
 msg_info "Installing rclone"
 cd /opt/rclone

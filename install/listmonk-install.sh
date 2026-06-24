@@ -29,7 +29,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
 } >>~/listmonk.creds
 msg_ok "Configured PostgreSQL"
 
-fetch_and_deploy_gh_release "listmonk" "knadh/listmonk" "prebuild" "latest" "/opt/listmonk" "listmonk*linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "listmonk" "knadh/listmonk" "prebuild" "latest" "/opt/listmonk" "listmonk*linux_$(arch_resolve).tar.gz"
 
 msg_info "Configuring listmonk"
 mkdir -p /opt/listmonk/uploads

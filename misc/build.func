@@ -1032,6 +1032,9 @@ base_settings() {
     fi
   fi
 
+  HTTP_PROXY="${var_http_proxy:-}"
+  HTTP_NO_PROXY="${var_http_no_proxy:-}"
+
   MTU=${var_mtu:-""}
   _sd_val="${var_searchdomain:-""}"
   [[ -n "$_sd_val" ]] && SD="-searchdomain=$_sd_val" || SD=""
@@ -1085,7 +1088,7 @@ load_vars_file() {
 
   # Allowed var_* keys
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
@@ -1267,6 +1270,15 @@ load_vars_file() {
         var_sdn_vnet)
           if [[ -n "$var_val" ]] && ! validate_sdn_vnet "$var_val"; then
             msg_warn "SDN vnet '$var_val' from $file not found, ignoring"
+        var_http_proxy)
+          if [[ -n "$var_val" ]] && ! [[ "$var_val" =~ ^https?://[^[:space:]]+(:[0-9]+)?/?$ ]]; then
+            msg_warn "Invalid HTTP proxy URL '$var_val' in $file, ignoring"
+            continue
+          fi
+          ;;
+        var_http_no_proxy)
+          if [[ -n "$var_val" ]] && [[ ! "$var_val" =~ ^[a-zA-Z0-9.*_:/-]+(,[a-zA-Z0-9.*_:/-]+)*$ ]]; then
+            msg_warn "Invalid no_proxy value '$var_val' in $file, ignoring"
             continue
           fi
           ;;
@@ -1309,7 +1321,7 @@ default_var_settings() {
   # Allowed var_* keys (alphabetically sorted)
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
@@ -1388,6 +1400,10 @@ var_ssh=no
 # var_apt_cacher_ip=192.168.1.10
 # var_apt_cacher_ip=http://proxy.local
 # var_apt_cacher_ip=https://proxy.local:443
+
+# HTTP/HTTPS proxy (optional - for networks requiring a proxy)
+# var_http_proxy=http://proxy.local:8080
+# var_http_no_proxy=localhost,127.0.0.1,.local
 
 # Features/Tags/verbosity
 var_fuse=no
@@ -1488,7 +1504,7 @@ get_app_defaults_path() {
 if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   declare -ag VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
@@ -1636,6 +1652,8 @@ _build_current_app_vars_tmp() {
   _ssh_auth="${SSH_AUTHORIZED_KEY:-}"
   _apt_cacher="${APT_CACHER:-}"
   _apt_cacher_ip="${APT_CACHER_IP:-}"
+  _http_proxy="${HTTP_PROXY:-${var_http_proxy:-}}"
+  _http_no_proxy="${HTTP_NO_PROXY:-${var_http_no_proxy:-}}"
   _fuse="${ENABLE_FUSE:-no}"
   _tun="${ENABLE_TUN:-no}"
   _gpu="${ENABLE_GPU:-no}"
@@ -1687,6 +1705,8 @@ _build_current_app_vars_tmp() {
 
     [ -n "$_apt_cacher" ] && echo "var_apt_cacher=$(_sanitize_value "$_apt_cacher")"
     [ -n "$_apt_cacher_ip" ] && echo "var_apt_cacher_ip=$(_sanitize_value "$_apt_cacher_ip")"
+    [ -n "$_http_proxy" ] && echo "var_http_proxy=$(_sanitize_value "$_http_proxy")"
+    [ -n "$_http_no_proxy" ] && echo "var_http_no_proxy=$(_sanitize_value "$_http_no_proxy")"
 
     [ -n "$_fuse" ] && echo "var_fuse=$(_sanitize_value "$_fuse")"
     [ -n "$_tun" ] && echo "var_tun=$(_sanitize_value "$_tun")"
@@ -1851,7 +1871,7 @@ advanced_settings() {
     TAGS="community-script${var_tags:+;${var_tags}}"
   fi
   local STEP=1
-  local MAX_STEP=29
+  local MAX_STEP=30
 
   # Store values for back navigation - inherit from var_* app defaults
   local _ct_type="${var_unprivileged:-1}"
@@ -1871,6 +1891,8 @@ advanced_settings() {
   local _ipv6_gate=""
   local _apt_cacher="${var_apt_cacher:-no}"
   local _apt_cacher_ip="${var_apt_cacher_ip:-}"
+  local _http_proxy="${var_http_proxy:-}"
+  local _http_no_proxy="${var_http_no_proxy:-}"
   local _mtu="${var_mtu:-}"
   local _sd="${var_searchdomain:-}"
   local _ns="${var_ns:-}"
@@ -2663,9 +2685,46 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 24: Container Timezone
+    # STEP 24: HTTP/HTTPS Proxy
     # ═══════════════════════════════════════════════════════════════════════════
     24)
+      local http_proxy_default_flag="--defaultno"
+      [[ -n "$_http_proxy" ]] && http_proxy_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "HTTP/HTTPS PROXY" \
+        --ok-button "Next" --cancel-button "Back" \
+        $http_proxy_default_flag \
+        --yesno "\nUse HTTP/HTTPS proxy?\n\nRequired when internet access must go through a proxy server.\n(e.g. corporate networks)\n\n(App default: ${var_http_proxy:-none})" 14 62; then
+        if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+          --title "HTTP PROXY URL" \
+          --inputbox "\nEnter HTTP proxy URL:\n(e.g. http://proxy.local:8080)" 12 62 "$_http_proxy" \
+          3>&1 1>&2 2>&3); then
+          _http_proxy="$result"
+          local _no_proxy_default="${_http_no_proxy:-localhost,127.0.0.1,.local}"
+          if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+            --title "NO_PROXY EXCEPTIONS" \
+            --inputbox "\nEnter NO_PROXY exceptions (comma-separated):\nLeave empty for defaults." 12 62 "$_no_proxy_default" \
+            3>&1 1>&2 2>&3); then
+            _http_no_proxy="$result"
+          fi
+        fi
+      else
+        if [ $? -eq 1 ]; then
+          _http_proxy=""
+          _http_no_proxy=""
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 25: Container Timezone
+    # ═══════════════════════════════════════════════════════════════════════════
+    25)
       local tz_hint="$_ct_timezone"
       [[ -z "$tz_hint" ]] && tz_hint="(empty - will use host timezone)"
 
@@ -2688,9 +2747,9 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 25: Container Protection
+    # STEP 26: Container Protection
     # ═══════════════════════════════════════════════════════════════════════════
-    25)
+    26)
       local protect_default_flag="--defaultno"
       [[ "$_protect_ct" == "yes" || "$_protect_ct" == "1" ]] && protect_default_flag=""
 
@@ -2712,9 +2771,9 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 26: Device Node Creation (mknod)
+    # STEP 27: Device Node Creation (mknod)
     # ═══════════════════════════════════════════════════════════════════════════
-    26)
+    27)
       local mknod_default_flag="--defaultno"
       [[ "$_enable_mknod" == "1" ]] && mknod_default_flag=""
 
@@ -2736,9 +2795,9 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 27: Mount Filesystems
+    # STEP 28: Mount Filesystems
     # ═══════════════════════════════════════════════════════════════════════════
-    27)
+    28)
       local mount_hint=""
       [[ -n "$_mount_fs" ]] && mount_hint="$_mount_fs" || mount_hint="(none)"
 
@@ -2759,9 +2818,9 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 28: Optional host-side post-install hook (path on the Proxmox HOST)
+    # STEP 29: Optional host-side post-install hook (path on the Proxmox HOST)
     # ═══════════════════════════════════════════════════════════════════════════
-    28)
+    29)
       local _hook_prompt="Optional: absolute path to a *.sh file ON THE PROXMOX HOST.
 
 It runs as root on the HOST (NOT in the LXC) after the container
@@ -2811,9 +2870,9 @@ Leave empty to skip."
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 29: Verbose Mode & Confirmation
+    # STEP 30: Verbose Mode & Confirmation
     # ═══════════════════════════════════════════════════════════════════════════
-    29)
+    30)
       local verbose_default_flag="--defaultno"
       [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
 
@@ -2841,6 +2900,7 @@ Leave empty to skip."
       local tz_display="${_ct_timezone:-Host TZ}"
       local apt_display="${_apt_cacher:-no}"
       [[ "$_apt_cacher" == "yes" && -n "$_apt_cacher_ip" ]] && apt_display="$_apt_cacher_ip"
+      local http_proxy_display="${_http_proxy:-(none)}"
 
       local post_install_display="${_post_install:-(none)}"
       local post_install_warn=""
@@ -2870,6 +2930,7 @@ Features:
 Advanced:
   Timezone: $tz_display
   APT Cacher: $apt_display
+  HTTP Proxy: $http_proxy_display
   Verbose: $_verbose
   Post-Install Script: ${post_install_display}${post_install_warn}"
 
@@ -2913,6 +2974,8 @@ Advanced:
   CT_TIMEZONE="$_ct_timezone"
   APT_CACHER="$_apt_cacher"
   APT_CACHER_IP="$_apt_cacher_ip"
+  HTTP_PROXY="$_http_proxy"
+  HTTP_NO_PROXY="$_http_no_proxy"
   VERBOSE="$_verbose"
   var_post_install="$_post_install"
 
@@ -2929,6 +2992,8 @@ Advanced:
   var_apt_cacher="$_apt_cacher"
   var_apt_cacher_ip="$_apt_cacher_ip"
   var_sdn_vnet="$_sdn_vnet"
+  var_http_proxy="$_http_proxy"
+  var_http_no_proxy="$_http_no_proxy"
 
   # Format optional values
   [[ -n "$_mtu" ]] && MTU=",mtu=$_mtu" || MTU=""
@@ -2966,6 +3031,7 @@ Advanced:
   [[ "${PROTECT_CT:-no}" == "yes" || "${PROTECT_CT:-no}" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Protection: ${BGN}Enabled${CL}"
   [[ -n "${CT_TIMEZONE:-}" ]] && echo -e "${INFO}${BOLD}${DGN}Timezone: ${BGN}$CT_TIMEZONE${CL}"
   [[ "$APT_CACHER" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}APT Cacher: ${BGN}$APT_CACHER_IP${CL}"
+  [[ -n "${HTTP_PROXY:-}" ]] && echo -e "${INFO}${BOLD}${DGN}HTTP Proxy: ${BGN}$HTTP_PROXY${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating an LXC of ${APP} using the above advanced settings${CL}"
 
@@ -3804,6 +3870,47 @@ start() {
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# _apply_http_proxy_in_container()
+#
+# - Writes persistent proxy settings into the LXC before base package install
+# - Ensures apt/apk/curl work behind corporate proxies during early setup
+# ------------------------------------------------------------------------------
+_apply_http_proxy_in_container() {
+  local proxy="${HTTP_PROXY:-}"
+  local noproxy="${HTTP_NO_PROXY:-}"
+  [[ -z "$proxy" || -z "${CTID:-}" ]] && return 0
+  [[ -z "$noproxy" ]] && noproxy="localhost,127.0.0.1,.local"
+
+  msg_info "Applying HTTP proxy in container"
+  local tmpf
+  tmpf="$(mktemp)"
+  cat >"$tmpf" <<EOF
+export http_proxy="$proxy"
+export https_proxy="$proxy"
+export HTTP_PROXY="$proxy"
+export HTTPS_PROXY="$proxy"
+export no_proxy="$noproxy"
+export NO_PROXY="$noproxy"
+EOF
+  pct push "$CTID" "$tmpf" /etc/profile.d/90-http-proxy.sh >/dev/null 2>&1 || {
+    rm -f "$tmpf"
+    msg_warn "Failed to push HTTP proxy profile into container"
+    return 0
+  }
+  pct exec "$CTID" -- chmod 644 /etc/profile.d/90-http-proxy.sh >/dev/null 2>&1 || true
+
+  if [[ "$var_os" != "alpine" && "${APT_CACHER:-}" != "yes" ]]; then
+    cat >"$tmpf" <<EOF
+Acquire::http::Proxy "$proxy";
+Acquire::https::Proxy "$proxy";
+EOF
+    pct push "$CTID" "$tmpf" /etc/apt/apt.conf.d/95http-proxy >/dev/null 2>&1 || true
+  fi
+  rm -f "$tmpf"
+  msg_ok "Applied HTTP proxy in container"
+}
+
+# ------------------------------------------------------------------------------
 # build_container()
 #
 # - Main function for creating and configuring LXC container
@@ -3932,6 +4039,12 @@ build_container() {
   export SESSION_ID="$SESSION_ID"
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
+  if [[ -n "${HTTP_PROXY:-}" ]]; then
+    export HTTP_PROXY HTTPS_PROXY="$HTTP_PROXY" http_proxy="$HTTP_PROXY" https_proxy="$HTTP_PROXY"
+    export NO_PROXY="${HTTP_NO_PROXY:-}" no_proxy="${HTTP_NO_PROXY:-}"
+    export var_http_proxy="$HTTP_PROXY"
+    export var_http_no_proxy="${HTTP_NO_PROXY:-}"
+  fi
   export tz="$timezone"
   export APPLICATION="$APP"
   export app="$NSAPP"
@@ -4042,6 +4155,7 @@ $PCT_OPTIONS_STRING"
       exit 214
     fi
     msg_ok "Storage space validated"
+    check_storage_health "$CONTAINER_STORAGE" "$DISK_SIZE"
   fi
 
   create_lxc_container || exit $?
@@ -4415,6 +4529,8 @@ EOF
 
   local install_exit_code=0
 
+  _apply_http_proxy_in_container
+
   # Continue with standard container setup
   if [ "$var_os" == "alpine" ]; then
     sleep 3
@@ -4422,10 +4538,13 @@ EOF
 https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 https://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-    pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq" >>"$BUILD_LOG" 2>&1 || {
+    pct exec "$CTID" -- ash -c 'set -a; [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh; set +a; apk add bash newt curl openssh nano mc ncurses jq' >>"$BUILD_LOG" 2>&1 || {
       msg_warn "apk install failed (dl-cdn.alpinelinux.org), trying alternate mirrors..."
       local alpine_exit=0
       pct exec "$CTID" -- ash -c '
+        set -a
+        [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh
+        set +a
         ALPINE_MIRRORS="mirror.init7.net ftp.halifax.rwth-aachen.de mirrors.edge.kernel.org alpine.mirror.wearetriple.com mirror.leaseweb.com uk.alpinelinux.org dl-2.alpinelinux.org dl-4.alpinelinux.org"
         for m in $(printf "%s\n" $ALPINE_MIRRORS | shuf); do
           if wget -q --spider --timeout=2 "http://$m/alpine/latest-stable/main/" 2>/dev/null; then
@@ -4484,13 +4603,16 @@ EOF
       pct exec "$CTID" -- bash -c "echo -e 'nameserver 8.8.8.8\nnameserver 1.1.1.1' >/etc/resolv.conf"
     fi
 
-    pct exec "$CTID" -- bash -c "apt-get update 2>&1 && apt-get install -y ${_base_pkgs} 2>&1" >>"$BUILD_LOG" 2>&1 || {
+    pct exec "$CTID" -- bash -c "set -a; [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh; set +a; apt-get update 2>&1 && apt-get install -y ${_base_pkgs} 2>&1" >>"$BUILD_LOG" 2>&1 || {
       local failed_mirror
       failed_mirror=$(pct exec "$CTID" -- bash -c "grep -m1 -oP '(?<=URIs: https?://)[^/]+' /etc/apt/sources.list.d/debian.sources 2>/dev/null || grep -m1 -oP '(?<=deb https?://)[^/]+' /etc/apt/sources.list 2>/dev/null" 2>/dev/null || echo "unknown")
       msg_warn "apt-get update failed (${failed_mirror})."
       msg_custom "ℹ️" "${YW}" "Probing alternate mirrors (this can take 1-2 minutes on network issues)"
       local mirror_exit=0
       pct exec "$CTID" -- env APT_BASE="$_base_pkgs" bash -c '
+        set -a
+        [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh
+        set +a
         DISTRO=$(. /etc/os-release 2>/dev/null && echo "$ID" || echo "debian")
         echo "  Mirror fallback for distro: $DISTRO"
 
@@ -5424,6 +5546,7 @@ select_storage() {
     # Validate storage space for container storage
     if [[ "$CLASS" == "container" && -n "${DISK_SIZE:-}" ]]; then
       validate_storage_space "$STORAGE_RESULT" "$DISK_SIZE" "yes"
+      check_storage_health "$STORAGE_RESULT" "$DISK_SIZE"
       # Continue even if validation fails - user was warned
     fi
 
@@ -5484,6 +5607,51 @@ validate_storage_space() {
       whiptail --msgbox "⚠️  Warning: Storage '$storage' may not have enough space!\n\nStorage Type: ${storage_type}\nRequired: ${required_gb}GB\nAvailable: ${free_gb_fmt}\n\nYou can continue, but creation might fail." 14 70
     fi
     return 236
+  fi
+
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# check_storage_health()
+#
+# - Warns or blocks when target storage is nearly full
+# - Complements validate_storage_space (free space vs. requested disk)
+# - Uses pvesm status usage when available
+# ------------------------------------------------------------------------------
+check_storage_health() {
+  local storage="$1"
+  local required_gb="${2:-8}"
+  [[ -z "$storage" ]] && return 0
+
+  local storage_line storage_type total_kb avail_kb used_pct free_gb_fmt
+  storage_line=$(pvesm status 2>/dev/null | awk -v s="$storage" '$1 == s {print $0}')
+  [[ -z "$storage_line" ]] && return 0
+
+  storage_type=$(awk '{print $2}' <<<"$storage_line")
+  total_kb=$(awk '{print $4}' <<<"$storage_line")
+  avail_kb=$(awk '{print $6}' <<<"$storage_line")
+
+  [[ -z "$total_kb" || "$total_kb" == "0" || -z "$avail_kb" ]] && return 0
+
+  used_pct=$(( (total_kb - avail_kb) * 100 / total_kb ))
+  free_gb_fmt=$(numfmt --to=iec --from-unit=1024 --suffix=B --format %.1f "$avail_kb" 2>/dev/null || echo "${avail_kb}KB")
+
+  if (( used_pct >= 95 )); then
+    msg_warn "Storage '${storage}' (${storage_type}) is ${used_pct}% full (${free_gb_fmt} free)"
+    if ! is_unattended && command -v whiptail >/dev/null 2>&1 && [[ -t 0 ]]; then
+      if ! whiptail --backtitle "Proxmox VE Helper Scripts" \
+        --title "STORAGE ALMOST FULL" \
+        --yesno "Storage '${storage}' is ${used_pct}% full.\n\nType: ${storage_type}\nAvailable: ${free_gb_fmt}\nRequired for CT: ${required_gb} GB\n\nContinue anyway?" 14 70; then
+        msg_error "Installation cancelled – storage nearly full"
+        exit 214
+      fi
+    elif (( used_pct >= 98 )); then
+      msg_error "Storage '${storage}' is ${used_pct}% full – refusing install in unattended mode"
+      exit 214
+    fi
+  elif (( used_pct >= 85 )); then
+    msg_warn "Storage '${storage}' (${storage_type}) is ${used_pct}% full (${free_gb_fmt} free)"
   fi
 
   return 0
@@ -5714,6 +5882,11 @@ create_lxc_container() {
     if [[ $need -eq 0 ]]; then
       msg_debug "No newer candidate for pve-container/lxc-pve (installed=$_pvec_i/$_lxcp_i, cand=$_pvec_c/$_lxcp_c)"
       return 0
+    fi
+    local _disable_update="${DISABLE_UPDATE:-no}"
+    if [[ "${PHS_SILENT:-0}" == "1" || "${_disable_update,,}" == "yes" ]]; then
+      msg_info "Skipping host LXC stack upgrade prompt (unattended mode)"
+      return 2
     fi
 
     msg_warn "An update for the Proxmox LXC stack is available"

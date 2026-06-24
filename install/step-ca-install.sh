@@ -333,7 +333,7 @@ EOF
 $STD systemctl enable -q --now step-ca
 msg_ok "Started step-ca as a Daemon"
 
-fetch_and_deploy_gh_release "step-badger" "lukasz-lobocki/step-badger" "prebuild" "latest" "/opt/step-badger" "step-badger_Linux_x86_64.tar.gz"
+fetch_and_deploy_gh_release "step-badger" "lukasz-lobocki/step-badger" "prebuild" "latest" "/opt/step-badger" "step-badger_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 ln -s /opt/step-badger/step-badger /usr/local/bin/step-badger
 
 motd_ssh

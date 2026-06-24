@@ -21,7 +21,7 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="patchmon_db" PG_DB_USER="patchmon_usr" setup_postgresql_db
 
 RELEASE="v2.0.2"
-fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-amd64"
+fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-$(arch_resolve)"
 mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
 
 msg_info "Configuring PatchMon"

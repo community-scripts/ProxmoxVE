@@ -17,13 +17,13 @@ msg_info "Installing Dependencies"
 $STD apt install -y redis-server
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 PG_VERSION="18" setup_postgresql
 
 msg_info "Installing pnpm"
 PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/connorgallopo/Tracearr/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]' | cut -d'+' -f1)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-$STD corepack enable pnpm
+
 $STD corepack prepare pnpm@${PNPM_VERSION} --activate
 msg_ok "Installed pnpm"
 

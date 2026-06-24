@@ -34,13 +34,13 @@ echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
 export PATH=/usr/local:$PATH
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "photoprism" "photoprism/photoprism" "prebuild" "latest" "/opt/photoprism" "*linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "photoprism" "photoprism/photoprism" "prebuild" "latest" "/opt/photoprism" "*linux-$(arch_resolve).tar.gz"
 
 msg_info "Installing PhotoPrism (Patience)"
 mkdir -p /opt/photoprism/{cache,config,photos,storage,temp}
 mkdir -p /opt/photoprism/photos/{originals,import}
 mkdir -p /opt/photoprism_backups
-LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-bookworm-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
+LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-bookworm-$(arch_resolve)-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
 curl -fsSL "https://dl.photoprism.app/dist/libheif/$LIBHEIF_URL" -o /tmp/libheif.tar.gz
 tar -xzf /tmp/libheif.tar.gz -C /usr/local
 ldconfig

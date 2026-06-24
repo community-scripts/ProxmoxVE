@@ -31,11 +31,14 @@ function update_script() {
   fi
 
   RELEASE_JSON=$(curl -fsSL "https://api.bitfocus.io/v1/product/companion/packages?limit=20")
-  PACKAGE_JSON=$(echo "$RELEASE_JSON" | jq -c '(if type == "array" then . else .packages end) | [.[] | select(.target=="linux-tgz" and (.uri | contains("linux-x64")))] | first')
+  PACKAGE_JSON=$(echo "$RELEASE_JSON" | jq -c \
+    --arg target "linux-$(arch_resolve "tgz" "arm64-tgz")" \
+    --arg arch "linux-$(arch_resolve "x64" "arm64")" \
+    '(if type == "array" then . else .packages end) | [.[] | select(.target==$target and (.uri | contains($arch)))] | first')
   RELEASE=$(echo "$PACKAGE_JSON" | jq -r '.version // empty')
   ASSET_URL=$(echo "$PACKAGE_JSON" | jq -r '.uri // empty')
   if [[ -z "$RELEASE" || -z "$ASSET_URL" ]]; then
-    msg_error "Could not resolve a matching Linux x64 Companion package from the Bitfocus API."
+    msg_error "Could not resolve a matching Linux $(arch_resolve "x64" "arm64") Companion package from the Bitfocus API."
     exit 1
   fi
 
