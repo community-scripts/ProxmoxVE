@@ -33,23 +33,11 @@ function update_script() {
     systemctl stop php8.4-fpm librenms-scheduler.timer
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/librenms/.env /opt/librenms.env.bak
-    [[ -f /opt/librenms/config.php ]] && cp /opt/librenms/config.php /opt/librenms.config.php.bak
-    [[ -d /opt/librenms/rrd ]] && cp -r /opt/librenms/rrd /opt/librenms_rrd_bak
-    msg_ok "Backed up Data"
+    create_backup /opt/librenms/.env /opt/librenms/config.php /opt/librenms/rrd
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
 
-    msg_info "Restoring Data"
-    mv /opt/librenms.env.bak /opt/librenms/.env
-    [[ -f /opt/librenms.config.php.bak ]] && mv /opt/librenms.config.php.bak /opt/librenms/config.php
-    if [[ -d /opt/librenms_rrd_bak ]]; then
-      mkdir -p /opt/librenms/rrd
-      cp -r /opt/librenms_rrd_bak/. /opt/librenms/rrd/
-      rm -rf /opt/librenms_rrd_bak
-    fi
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Updating ${APP}"
     mkdir -p /opt/librenms/{rrd,logs,bootstrap/cache,storage}
