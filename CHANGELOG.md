@@ -488,6 +488,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-24
 
+### 🆕 New Scripts
+
+  - SnapOtter ([#15368](https://github.com/community-scripts/ProxmoxVE/pull/15368))
+
 ### 🚀 Updated Scripts
 
   - enabling rewirte module in apache [@d3v3lop3rDE](https://github.com/d3v3lop3rDE) ([#15360](https://github.com/community-scripts/ProxmoxVE/pull/15360))
