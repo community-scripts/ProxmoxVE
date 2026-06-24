@@ -504,6 +504,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor LibreNMS: replace old install and update variant with tarball approach [@MickLesk](https://github.com/MickLesk) ([#15369](https://github.com/community-scripts/ProxmoxVE/pull/15369))
 
+### 🗑️ Deleted Scripts
+
+  - Delete ghost [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15377](https://github.com/community-scripts/ProxmoxVE/pull/15377))
+
 ### 💾 Core
 
   - #### ✨ New Features
