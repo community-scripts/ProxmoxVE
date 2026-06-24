@@ -1270,6 +1270,9 @@ load_vars_file() {
         var_sdn_vnet)
           if [[ -n "$var_val" ]] && ! validate_sdn_vnet "$var_val"; then
             msg_warn "SDN vnet '$var_val' from $file not found, ignoring"
+            continue
+          fi
+          ;;
         var_http_proxy)
           if [[ -n "$var_val" ]] && ! [[ "$var_val" =~ ^https?://[^[:space:]]+(:[0-9]+)?/?$ ]]; then
             msg_warn "Invalid HTTP proxy URL '$var_val' in $file, ignoring"
