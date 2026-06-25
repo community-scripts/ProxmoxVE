@@ -40,7 +40,7 @@ NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
 FFMPEG_TYPE="binary" setup_ffmpeg
 setup_hwaccel
 fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.zip"
-fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "yt-dlp_linux"
+fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "yt-dlp_$(arch_resolve "linux" "linux_aarch64")"
 
 msg_info "Installing Apprise"
 export PIPX_HOME=/opt/pipx
