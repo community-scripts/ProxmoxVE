@@ -486,6 +486,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-25
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - VM-Core: Update some Functions [@MickLesk](https://github.com/MickLesk) ([#15113](https://github.com/community-scripts/ProxmoxVE/pull/15113))
+
 ## 2026-06-24
 
 ### 🆕 New Scripts
