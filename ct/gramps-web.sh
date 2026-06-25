@@ -85,8 +85,13 @@ function update_script() {
     cd /opt/gramps-web/frontend
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
+    create_backup /opt/gramps-web/frontend/dist/config.js
+
     $STD npm install
     $STD npm run build
+
+    restore_backup
+
     msg_ok "Updated Gramps Web Frontend"
 
     msg_info "Starting Service"
