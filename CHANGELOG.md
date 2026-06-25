@@ -492,6 +492,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Pinchflat ([#15367](https://github.com/community-scripts/ProxmoxVE/pull/15367))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - persist gramps-web configuration file after update [@operfesium](https://github.com/operfesium) ([#15394](https://github.com/community-scripts/ProxmoxVE/pull/15394))
+
 ### 💾 Core
 
   - #### ✨ New Features
