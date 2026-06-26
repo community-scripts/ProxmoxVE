@@ -2607,7 +2607,7 @@ check_for_gh_release() {
   ensure_dependencies jq
 
   local gh_check_json
-  gh_check_json=$(mktemp /tmp/tools-gh-check-XXXXXX.json) || return 7
+  gh_check_json=$(mktemp /tmp/tools-gh-check-XXXXXX) || return 73
   trap 'rm -f "$gh_check_json"' RETURN
 
   # Build auth header if token is available
@@ -3257,7 +3257,7 @@ fetch_and_deploy_codeberg_release() {
   fi
 
   local codeberg_rel_json
-  codeberg_rel_json=$(mktemp /tmp/tools-codeberg-rel-XXXXXX.json) || return 7
+  codeberg_rel_json=$(mktemp /tmp/tools-codeberg-rel-XXXXXX) || return 73
   trap 'rm -f "$codeberg_rel_json"' RETURN
 
   local attempt=0 success=false resp http_code
@@ -3744,7 +3744,7 @@ fetch_and_deploy_gh_release() {
     rm -f "$TOOLS_GH_REL_JSON"
   fi
   local gh_rel_json
-  gh_rel_json=$(mktemp /tmp/tools-gh-rel-XXXXXX.json) || return 7
+  gh_rel_json=$(mktemp /tmp/tools-gh-rel-XXXXXX) || return 73
   TOOLS_GH_REL_JSON="$gh_rel_json"
 
   local api_url="https://api.github.com/repos/$repo/releases"
@@ -9172,7 +9172,7 @@ check_for_gl_release() {
   ensure_dependencies jq
 
   local gl_check_json
-  gl_check_json=$(mktemp /tmp/tools-gl-check-XXXXXX.json) || return 7
+  gl_check_json=$(mktemp /tmp/tools-gl-check-XXXXXX) || return 73
   trap 'rm -f "$gl_check_json"' RETURN
 
   local repo_encoded
@@ -9452,7 +9452,7 @@ fetch_and_deploy_gl_release() {
   ensure_dependencies jq
 
   local gl_rel_json
-  gl_rel_json=$(mktemp /tmp/tools-gl-rel-XXXXXX.json) || return 7
+  gl_rel_json=$(mktemp /tmp/tools-gl-rel-XXXXXX) || return 73
   trap 'rm -f "$gl_rel_json"' RETURN
 
   local repo_encoded
@@ -9902,7 +9902,7 @@ setup_nltk() {
     fi
 
     mkdir -p "${target_dir}/${subdir}"
-    tmp_zip=$(mktemp --suffix=.zip)
+    tmp_zip=$(mktemp)
 
     if CURL_TIMEOUT=120 curl_with_retry "$pkg_url" "$tmp_zip"; then
       if [[ "$do_unzip" == "1" ]]; then
