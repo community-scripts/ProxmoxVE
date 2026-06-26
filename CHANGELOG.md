@@ -486,6 +486,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-26
+
+### 🚀 Updated Scripts
+
+  - Termix: Update Nginx configuration file paths [@xyzulu](https://github.com/xyzulu) ([#15397](https://github.com/community-scripts/ProxmoxVE/pull/15397))
+
 ## 2026-06-25
 
 ### 🆕 New Scripts
