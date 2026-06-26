@@ -52,8 +52,10 @@ if ! pveversion | grep -Eq "pve-manager/(8\.[0-4]|9\.[0-9]+)(\.[0-9]+)*"; then
   msg_error "Requires Proxmox Virtual Environment Version 8.0-8.4 or 9.x."
   exit 1
 fi
-virt=$(systemd-detect-virt 2>/dev/null || echo "none")
-if [ "$virt" != "none" ]; then
+# systemd-detect-virt prints "none" but exits non-zero on bare metal, so a
+# `|| echo none` fallback would duplicate the value; capture output as-is.
+virt=$(systemd-detect-virt 2>/dev/null)
+if [ -n "$virt" ] && [ "$virt" != "none" ]; then
   msg_error "IOMMU/PCI passthrough must be configured on bare metal. Detected: $virt"
   exit 1
 fi
