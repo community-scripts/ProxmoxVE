@@ -5430,6 +5430,7 @@ fix_gpu_gids() {
   # Update dev entries with correct GIDs
   sed -i.bak -E "s|(dev[0-9]+: /dev/dri/renderD[0-9]+),gid=[0-9]+|\1,gid=${render_gid}|g" "$LXC_CONFIG"
   sed -i -E "s|(dev[0-9]+: /dev/dri/card[0-9]+),gid=[0-9]+|\1,gid=${video_gid}|g" "$LXC_CONFIG"
+  sed -i -E "s|(dev[0-9]+: /dev/kfd),gid=[0-9]+|\1,gid=${render_gid}|g" "$LXC_CONFIG"
 
   # Restart container
   pct start "$CTID" >/dev/null 2>&1
@@ -5450,6 +5451,10 @@ fix_gpu_gids() {
             chmod 660 \"\$dev\" 2>/dev/null || true
           fi
         done
+      fi
+      if [ -e /dev/kfd ]; then
+        chgrp ${render_gid} /dev/kfd 2>/dev/null || true
+        chmod 660 /dev/kfd 2>/dev/null || true
       fi
     " >/dev/null 2>&1
   fi
