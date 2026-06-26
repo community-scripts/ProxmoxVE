@@ -4614,11 +4614,11 @@ EOF
       local image=$(echo "$container" | awk '{print $2}')
       local current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
 
-      # Pull latest image digest
-      docker pull "$image" >/dev/null 2>&1
+      # Pull latest image digest (ignore failures, e.g. local-only images or registry/permission issues)
+      docker pull "$image" >/dev/null 2>&1 || true
       local latest_digest=$(docker inspect "$image" --format='{{.Id}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
 
-      if [ "$current_digest" != "$latest_digest" ]; then
+      if [ -n "$latest_digest" ] && [ "$current_digest" != "$latest_digest" ]; then
         containers_with_updates+=("$name")
         container_info+=("${index}) ${name} (${image})")
         ((index++))
@@ -7561,8 +7561,8 @@ setup_nodejs() {
   }
 
   # Install global Node modules
-  if [[ -n "$NODE_MODULE" ]] || (( node_major >= 25 )); then
-    if (( node_major >= 25 )) && [[ ",${NODE_MODULE}," != *",corepack,"* ]] && [[ "$NODE_MODULE" != corepack* ]]; then
+  if [[ -n "$NODE_MODULE" ]] || ((node_major >= 25)); then
+    if ((node_major >= 25)) && [[ ",${NODE_MODULE}," != *",corepack,"* ]] && [[ "$NODE_MODULE" != corepack* ]]; then
       NODE_MODULE="${NODE_MODULE:+$NODE_MODULE,}corepack"
     fi
 
@@ -7624,12 +7624,12 @@ setup_nodejs() {
         fi
       fi
     done
-    if (( failed_modules > 0 )); then
+    if ((failed_modules > 0)); then
       msg_warn "$failed_modules Node.js module(s) failed: $NODE_MODULE"
     fi
   fi
 
-  if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && (( wants_corepack )) && command -v corepack >/dev/null 2>&1; then
+  if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && ((wants_corepack)) && command -v corepack >/dev/null 2>&1; then
     msg_info "Enabling corepack"
     if $STD corepack enable 2>/dev/null; then
       msg_ok "Enabled corepack"
