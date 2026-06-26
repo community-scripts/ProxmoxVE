@@ -38,12 +38,10 @@ function update_script() {
     create_backup /opt/degoog/.env \
       /opt/degoog/data
 
-    if ! command -v bun >/dev/null 2>&1; then
+    if [[ ! -x /root/.bun/bin/bun ]]; then
       msg_info "Installing Bun"
       export BUN_INSTALL="/root/.bun"
       curl -fsSL https://bun.sh/install | $STD bash
-      ln -sf /root/.bun/bin/bun /usr/local/bin/bun
-      ln -sf /root/.bun/bin/bunx /usr/local/bin/bunx
       msg_ok "Installed Bun"
     fi
 
@@ -53,6 +51,10 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
     fetch_and_deploy_gh_release "curl-impersonate" "lexiforest/curl-impersonate" "prebuild" "latest" "/usr/local/bin" "curl-impersonate-v*.$(uname -m)-linux-gnu.tar.gz"
+
+    # CLEAN_INSTALL wipes /usr/local/bin, so re-create the Bun symlinks afterwards
+    ln -sf /root/.bun/bin/bun /usr/local/bin/bun
+    ln -sf /root/.bun/bin/bunx /usr/local/bin/bunx
 
     restore_backup
 
