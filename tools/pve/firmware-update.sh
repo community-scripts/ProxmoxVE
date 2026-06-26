@@ -10,19 +10,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 load_functions
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "firmware-update" "pve"
 
-function header_info {
-  clear
-  cat <<"EOF"
-    _______                                      __  __          __      __
-   / ____(_)________ _      ______ _________     / / / /___  ____/ /___ _/ /____
-  / /_  / / ___/ __ `/ | /| / / __ `/ ___/ _ \   / / / / __ \/ __  / __ `/ __/ _ \
- / __/ / / /  / /_/ /| |/ |/ / /_/ / /  /  __/  / /_/ / /_/ / /_/ / /_/ / /_/  __/
-/_/   /_/_/   \__,_/ |__/|__/\__,_/_/   \___/   \____/ .___/\__,_/\__,_/\__/\___/
-                                                    /_/
-EOF
-}
-
-header_info
+APP="Firmware-Update"
+APP_TYPE="tools"
+header_info "$APP"
 
 # Must run as root
 if [ "$(id -u)" -ne 0 ]; then
