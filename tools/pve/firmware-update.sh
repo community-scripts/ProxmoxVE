@@ -54,9 +54,11 @@ if ! pveversion | grep -Eq "pve-manager/(8\.[0-4]|9\.[0-9]+)(\.[0-9]+)*"; then
   exit 1
 fi
 
-# Firmware updates only make sense on bare metal
-virt=$(systemd-detect-virt 2>/dev/null || echo "none")
-if [ "$virt" != "none" ]; then
+# Firmware updates only make sense on bare metal. systemd-detect-virt prints
+# "none" but exits non-zero on bare metal, so a `|| echo none` fallback would
+# duplicate the value; capture the output as-is instead.
+virt=$(systemd-detect-virt 2>/dev/null)
+if [ -n "$virt" ] && [ "$virt" != "none" ]; then
   msg_error "Firmware updates can only be applied on bare metal. Detected: $virt"
   exit 1
 fi
