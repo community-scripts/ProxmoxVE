@@ -563,9 +563,10 @@ get_vm_ips() {
     
     debug_log "vm $vmid: starting IP detection"
     
-    # Check if VM is running first
-    local vm_status=""
-    if command -v qm >/dev/null 2>&1; then
+    # Check if VM is running first (status comes from the cached `qm list`,
+    # falling back to `qm status` only when called outside the normal cycle).
+    local vm_status="${STATUS_CACHE[vm_${vmid}]:-}"
+    if [[ -z "$vm_status" ]] && command -v qm >/dev/null 2>&1; then
         vm_status=$(qm status "$vmid" 2>/dev/null | awk '{print $2}')
     fi
     
@@ -662,6 +663,9 @@ get_vm_ips() {
 # Cache for configs to avoid repeated reads
 declare -A CONFIG_CACHE
 declare -A IP_CACHE
+# Status cache populated once per check from `pct list` / `qm list` to avoid
+# spawning an expensive `pct status` / `qm status` (Perl) per guest each cycle.
+declare -A STATUS_CACHE
 
 # Update tags for container or VM
 update_tags() {
@@ -846,7 +850,16 @@ update_all_tags() {
     
     # Get list of all containers/VMs
     if [[ "$type" == "lxc" ]]; then
-        vmids=($(pct list 2>/dev/null | grep -v VMID | awk '{print $1}'))
+        # A single `pct list` call yields both the VMID list and the running
+        # status, so we never need a per-container `pct status` afterwards.
+        local pct_list_output
+        pct_list_output=$(pct list 2>/dev/null)
+        vmids=($(echo "$pct_list_output" | awk 'NR>1 {print $1}'))
+        local _vmid _status _rest
+        while read -r _vmid _status _rest; do
+            [[ "$_vmid" == "VMID" || -z "$_vmid" ]] && continue
+            STATUS_CACHE["lxc_${_vmid}"]="$_status"
+        done <<<"$pct_list_output"
     else
         # More efficient: direct file listing instead of ls+sed
         vmids=()
@@ -855,6 +868,15 @@ update_all_tags() {
             local basename="${conf##*/}"
             vmids+=("${basename%.conf}")
         done
+        # A single `qm list` call yields the status for all VMs, avoiding a
+        # per-VM `qm status`.
+        if command -v qm >/dev/null 2>&1; then
+            local _vmid _name _status _rest
+            while read -r _vmid _name _status _rest; do
+                [[ "$_vmid" == "VMID" || -z "$_vmid" ]] && continue
+                STATUS_CACHE["vm_${_vmid}"]="$_status"
+            done <<<"$(qm list 2>/dev/null)"
+        fi
     fi
     
     count=${#vmids[@]}
@@ -891,6 +913,7 @@ check() {
     # Clear caches before each run
     CONFIG_CACHE=()
     IP_CACHE=()
+    STATUS_CACHE=()
     
     # Update LXC containers
     update_all_tags "lxc"
@@ -935,8 +958,12 @@ get_lxc_ips() {
     
     debug_log "lxc $vmid: starting IP detection"
     
-    # Check if LXC is running
-    local lxc_status=$(pct status "${vmid}" 2>/dev/null | awk '{print $2}')
+    # Check if LXC is running (status comes from the cached `pct list`,
+    # falling back to `pct status` only when called outside the normal cycle).
+    local lxc_status="${STATUS_CACHE[lxc_${vmid}]:-}"
+    if [[ -z "$lxc_status" ]]; then
+        lxc_status=$(pct status "${vmid}" 2>/dev/null | awk '{print $2}')
+    fi
     if [[ "$lxc_status" != "running" ]]; then
         debug_log "lxc $vmid: not running (status: $lxc_status)"
         return
