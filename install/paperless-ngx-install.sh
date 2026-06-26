@@ -22,7 +22,6 @@ $STD apt install -y \
   optipng \
   libpq-dev \
   libmagic-dev \
-  libzbar0t64 \
   poppler-utils \
   default-libmysqlclient-dev \
   automake \
@@ -46,7 +45,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="paperlessdb" PG_DB_USER="paperless" setup_postgresql_db
 PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v2.20.15" "/opt/paperless" "paperless*tar.xz"
+fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v3.0.0-beta.rc1" "/opt/paperless" "paperless*tar.xz"
 
 msg_info "Setup Paperless-ngx"
 cd /opt/paperless
@@ -69,12 +68,12 @@ sed -i \
   -e "s|#PAPERLESS_MEDIA_ROOT=../media|PAPERLESS_MEDIA_ROOT=/opt/paperless_data/media|" \
   -e "s|#PAPERLESS_EMPTY_TRASH_DIR=|PAPERLESS_EMPTY_TRASH_DIR=/opt/paperless_data/trash|" \
   -e "s|#PAPERLESS_STATICDIR=../static|PAPERLESS_STATICDIR=/opt/paperless/static|" \
-  -e 's|#PAPERLESS_DBHOST=localhost|PAPERLESS_DBHOST=localhost|' \
+  -e 's|#PAPERLESS_DBHOST=localhost|PAPERLESS_DBENGINE=postgresql\nPAPERLESS_DBHOST=localhost|' \
   -e 's|#PAPERLESS_DBPORT=5432|PAPERLESS_DBPORT=5432|' \
   -e "s|#PAPERLESS_DBNAME=paperless|PAPERLESS_DBNAME=$PG_DB_NAME|" \
   -e "s|#PAPERLESS_DBUSER=paperless|PAPERLESS_DBUSER=$PG_DB_USER|" \
   -e "s|#PAPERLESS_DBPASS=paperless|PAPERLESS_DBPASS=$PG_DB_PASS|" \
-  -e "s|#PAPERLESS_SECRET_KEY=change-me|PAPERLESS_SECRET_KEY=$SECRET_KEY|" \
+  -e "s|^#\?PAPERLESS_SECRET_KEY=.*|PAPERLESS_SECRET_KEY=$SECRET_KEY|" \
   /opt/paperless/paperless.conf
 cd /opt/paperless/src
 set -a

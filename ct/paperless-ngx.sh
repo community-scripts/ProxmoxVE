@@ -49,8 +49,7 @@ function update_script() {
     fi
   fi
 
-  RELEASE="v2.20.15"
-  if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx" "${RELEASE}" "v3 needs further testing"; then
+  if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx"; then
     msg_info "Stopping all Paperless-ngx Services"
     systemctl stop paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     msg_ok "Stopped all Paperless-ngx Services"
@@ -64,7 +63,7 @@ function update_script() {
       msg_ok "Backup completed to $BACKUP_DIR"
 
       PYTHON_VERSION="3.13" setup_uv
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "${RELEASE}" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v3.0.0-beta.rc1" "/opt/paperless" "paperless*tar.xz"
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 
       . /etc/os-release
@@ -76,11 +75,16 @@ function update_script() {
 
       msg_info "Updating Paperless-ngx"
       cp -r "$BACKUP_DIR"/* /opt/paperless/
+      grep -q '^PAPERLESS_DBENGINE=' /opt/paperless/paperless.conf || echo 'PAPERLESS_DBENGINE=postgresql' >>/opt/paperless/paperless.conf
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Updated Paperless-ngx"
+
+      # zxing-cpp replaces pyzbar in v3, libzbar is no longer required
+      $STD apt-get -y purge libzbar0t64 libzbar0 2>/dev/null || true
+      $STD apt-get -y autoremove 2>/dev/null || true
 
       rm -rf "$BACKUP_DIR"
 
@@ -139,7 +143,7 @@ function update_script() {
       msg_ok "Backup completed to $BACKUP_DIR"
 
       PYTHON_VERSION="3.13" setup_uv
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "${RELEASE}" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v2.20.15" "/opt/paperless" "paperless*tar.xz"
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 
       . /etc/os-release
@@ -151,13 +155,14 @@ function update_script() {
         msg_ok "Installed Ghostscript"
       fi
 
-      msg_info "Updating Paperless-ngx"
+      msg_info "Updating Paperless-ngx to v2.20.15"
       cp -r "$BACKUP_DIR"/* /opt/paperless/
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
-      msg_ok "Paperless-ngx migration and update completed"
+      msg_ok "Migrated to uv and updated to v2.20.15 (required before v3)"
+      msg_custom "ℹ️" "Run the update again to complete the upgrade to the latest version (v3)."
 
       rm -rf "$BACKUP_DIR"
       if [[ -d /opt/paperless/backup ]]; then
