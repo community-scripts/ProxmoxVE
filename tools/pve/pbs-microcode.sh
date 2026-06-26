@@ -18,10 +18,10 @@ EOF
 }
 
 # Color definitions
-RD=$(echo "\033[01;31m")
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-CL=$(echo "\033[m")
+RD="\033[01;31m"
+YW="\033[33m"
+GN="\033[1;92m"
+CL="\033[m"
 BFR="\\r\\033[K"
 HOLD="-"
 CM="${GN}✓${CL}"
@@ -94,11 +94,11 @@ intel() {
   msg_ok "Downloaded Intel processor microcode package $microcode"
 
   msg_info "Installing $microcode (this might take a while)"
-  dpkg -i $microcode &>/dev/null
+  dpkg -i "$microcode" &>/dev/null
   msg_ok "Installed $microcode"
 
   msg_info "Cleaning up"
-  rm $microcode
+  rm -f "$microcode"
   msg_ok "Clean up complete"
   echo -e "\nA system reboot is required to apply the changes.\n"
 }
@@ -137,15 +137,15 @@ amd() {
   }
 
   msg_info "Downloading AMD processor microcode package $microcode"
-  curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -o $(basename "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode")
+  curl -fsSL --proto '=https' "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -o "$microcode"
   msg_ok "Downloaded AMD processor microcode package $microcode"
 
   msg_info "Installing $microcode (this might take a while)"
-  dpkg -i $microcode &>/dev/null
+  dpkg -i "$microcode" &>/dev/null
   msg_ok "Installed $microcode"
 
   msg_info "Cleaning up"
-  rm $microcode
+  rm -f "$microcode"
   msg_ok "Clean up complete"
   echo -e "\nA system reboot is required to apply the changes.\n"
 }
