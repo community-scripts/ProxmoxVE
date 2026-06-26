@@ -494,6 +494,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Docuseal: use real SECRET_KEY_BASE for db:migrate on update [@MickLesk](https://github.com/MickLesk) ([#15411](https://github.com/community-scripts/ProxmoxVE/pull/15411))
     - bun: correct install for degoog [@MickLesk](https://github.com/MickLesk) ([#15412](https://github.com/community-scripts/ProxmoxVE/pull/15412))
     - fix databasus update/install errors [@asylumexp](https://github.com/asylumexp) ([#15403](https://github.com/community-scripts/ProxmoxVE/pull/15403))
 
