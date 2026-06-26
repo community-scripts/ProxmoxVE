@@ -5,6 +5,11 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+load_functions
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "firmware-update" "pve"
+
 function header_info {
   clear
   cat <<"EOF"
@@ -16,24 +21,6 @@ function header_info {
                                                     /_/
 EOF
 }
-
-# Color variables
-YW="\033[33m"
-GN="\033[1;92m"
-RD="\033[01;31m"
-CL="\033[m"
-BFR="\\r\\033[K"
-HOLD="-"
-CM="${GN}✓${CL}"
-CROSS="${RD}✗${CL}"
-
-msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
-msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
-msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
-
-# Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
-declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "firmware-update" "pve"
 
 header_info
 
@@ -89,19 +76,29 @@ else
   msg_error "Could not refresh metadata (continuing with cached data)"
 fi
 
-# Show detected, updatable devices
+# Show detected, updatable devices. --no-metadata-check / -y keep fwupd from
+# prompting interactively (e.g. the "metadata is 30 days old, update now?"
+# question) which would otherwise block and garble the output.
 echo -e "\n${YW}Detected devices with firmware management support:${CL}\n"
-fwupdmgr get-devices --no-unreported-check 2>/dev/null || true
+fwupdmgr get-devices --no-unreported-check --no-metadata-check 2>/dev/null || true
 echo
 
-# Check for available updates
+# Check for available updates (non-interactive)
 msg_info "Checking for available firmware updates"
-updates_output=$(fwupdmgr get-updates --no-unreported-check 2>&1)
+updates_output=$(fwupdmgr get-updates --no-unreported-check --no-metadata-check -y 2>&1)
 updates_rc=$?
 msg_ok "Checked for firmware updates"
 
-if [ "$updates_rc" -ne 0 ] || echo "$updates_output" | grep -qiE "No (updates|upgrades) available|Devices with no available firmware updates"; then
-  echo -e "\n$updates_output\n"
+# Many Proxmox hosts have no permanently mounted EFI System Partition (e.g.
+# ZFS root managed by proxmox-boot-tool). Without it, fwupd cannot stage
+# UEFI/BIOS capsule updates, so make that explicit instead of burying it.
+if echo "$updates_output" | grep -qi "ESP partition not detected"; then
+  echo -e "${YW}Note:${CL} No mounted EFI System Partition (ESP) was detected."
+  echo -e "      UEFI/BIOS capsule firmware updates cannot be staged on this host."
+  echo -e "      Device firmware (e.g. NVMe/SSD) can still be updated if offered.\n"
+fi
+
+if [ "$updates_rc" -ne 0 ] || echo "$updates_output" | grep -qiE "No (updates|upgrades) available|Devices with no available firmware updates|No updatable devices"; then
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Firmware Updates" \
     --msgbox "No applicable firmware updates were found for this system." 10 68
   echo -e "${GN}Nothing to do.${CL}"
