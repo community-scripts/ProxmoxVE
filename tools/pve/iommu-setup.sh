@@ -5,6 +5,11 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+load_functions
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "iommu-setup" "pve"
+
 function header_info {
   clear
   cat <<"EOF"
@@ -16,25 +21,6 @@ function header_info {
                                                        /_/
 EOF
 }
-
-# Color variables
-YW="\033[33m"
-GN="\033[1;92m"
-RD="\033[01;31m"
-BL="\033[36m"
-CL="\033[m"
-BFR="\\r\\033[K"
-HOLD="-"
-CM="${GN}✓${CL}"
-CROSS="${RD}✗${CL}"
-
-msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
-msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
-msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
-
-# Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
-declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "iommu-setup" "pve"
 
 header_info
 
