@@ -492,6 +492,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Termix: Update Nginx configuration file paths [@xyzulu](https://github.com/xyzulu) ([#15397](https://github.com/community-scripts/ProxmoxVE/pull/15397))
 
+  - #### 🐞 Bug Fixes
+
+    - fix databasus update/install errors [@asylumexp](https://github.com/asylumexp) ([#15403](https://github.com/community-scripts/ProxmoxVE/pull/15403))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
