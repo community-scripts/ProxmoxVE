@@ -55,7 +55,7 @@ function update_script() {
     eval "$(rbenv init - bash)" 2>/dev/null || true
     export RAILS_ENV=production
     export NODE_ENV=production
-    export SECRET_KEY_BASE_DUMMY=1
+    mkdir -p /opt/docuseal/tmp
     set -a
     source /opt/docuseal/.env
     set +a
