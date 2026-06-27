@@ -33,17 +33,12 @@ function update_script() {
     systemctl stop tunarr
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    if [ -d "/root/.local/share/tunarr" ]; then
-      $STD tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" /root/.local/share/tunarr
-      msg_ok "Backup Created"
-    else
-      msg_error "Backup failed: /root/.local/share/tunarr does not exist"
-    fi
+    create_backup /root/.local/share/tunarr
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-$(arch_resolve "x64" "arm64").tar.gz"
     cd /opt/tunarr
     mv tunarr* tunarr
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start tunarr
