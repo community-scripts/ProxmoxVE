@@ -31,11 +31,12 @@ $STD apt install -y \
   libjpeg-dev \
   libmariadb-dev \
   python3-pip \
+  pkg-config \
   cron
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
-UV_PYTHON="3.13" setup_uv
+UV_PYTHON="3.14" setup_uv
 setup_mariadb
 
 msg_info "Configuring MariaDB for ERPNext"
@@ -68,8 +69,9 @@ msg_info "Initializing Frappe Bench"
 ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 DB_ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASS}'; FLUSH PRIVILEGES;"
-$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-15 frappe-bench'
-$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt/frappe-bench && bench get-app erpnext --branch version-15'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv python install 3.14'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-16 --python "$(uv python find 3.14)" frappe-bench'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt/frappe-bench && bench get-app erpnext --branch version-16'
 
 msg_info "Starting Redis Services for Site Setup"
 $STD sudo -u frappe bash -c 'redis-server /opt/frappe-bench/config/redis_queue.conf --daemonize yes'
