@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Creating Backup"
     if [ -d "/root/.local/share/tunarr" ]; then
-      tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" /root/.local/share/tunarr $STD
+      $STD tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" /root/.local/share/tunarr
       msg_ok "Backup Created"
     else
       msg_error "Backup failed: /root/.local/share/tunarr does not exist"
