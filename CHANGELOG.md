@@ -488,6 +488,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-27
 
+### 🆕 New Scripts
+
+  - tool: add disk-health tool (SMART + NVMe) [@MickLesk](https://github.com/MickLesk) ([#15417](https://github.com/community-scripts/ProxmoxVE/pull/15417))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
