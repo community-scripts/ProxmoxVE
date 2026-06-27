@@ -495,6 +495,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Deluge openssl fix [@asylumexp](https://github.com/asylumexp) ([#15435](https://github.com/community-scripts/ProxmoxVE/pull/15435))
     - fix command syntax in tunarr.sh [@asylumexp](https://github.com/asylumexp) ([#15434](https://github.com/community-scripts/ProxmoxVE/pull/15434))
 
+  - #### 🔧 Refactor
+
+    - Storyteller: bump Node.js version to Node 24 [@thinusn](https://github.com/thinusn) ([#15439](https://github.com/community-scripts/ProxmoxVE/pull/15439))
+
 ### ❔ Uncategorized
 
   - fix(endurain): replace Poetry/uv-pip backend setup with uv sync --frozen --no-dev [@Copilot](https://github.com/Copilot) ([#15429](https://github.com/community-scripts/ProxmoxVE/pull/15429))
