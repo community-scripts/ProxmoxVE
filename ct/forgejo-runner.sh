@@ -50,7 +50,7 @@ function update_script() {
   msg_ok "Stopped Services"
 
   msg_info "Updating Forgejo Runner to v${RELEASE}"
-  curl -fsSL "https://code.forgejo.org/forgejo/runner/releases/download/v${RELEASE}/forgejo-runner-${RELEASE}-linux-amd64" -o /usr/local/bin/forgejo-runner
+  curl -fsSL "https://code.forgejo.org/forgejo/runner/releases/download/v${RELEASE}/forgejo-runner-${RELEASE}-linux-$(arch_resolve)" -o /usr/local/bin/forgejo-runner
   chmod +x /usr/local/bin/forgejo-runner
   echo "${RELEASE}" >~/.forgejo-runner
   msg_ok "Updated Forgejo Runner"
