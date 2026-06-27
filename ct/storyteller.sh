@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
+
   if check_for_gl_release "storyteller" "storyteller-platform/storyteller"; then
     msg_info "Stopping Service"
     systemctl stop storyteller
