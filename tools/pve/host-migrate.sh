@@ -20,6 +20,14 @@ TEMP_MOUNTS=()
 # Result holders for the storage picker / disk preparation helpers.
 BROWSE_RESULT=""
 PREPARED_MP=""
+# Run logfile for traceability / support.
+LOGFILE="/var/log/host-migrate-$(date +%Y%m%d_%H%M%S).log"
+
+# Append a timestamped line to the run logfile.
+function mlog {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') $*" >>"$LOGFILE" 2>/dev/null
+}
+mlog "host-migrate started on $(hostname)"
 
 function header_info {
   clear
@@ -295,10 +303,11 @@ function choose_location {
   local choice
 
   choice=$(whiptail --backtitle "$BACKTITLE" --title "$prompt_title" --menu \
-    "\nWhere is the migration bundle located?" 16 74 4 \
+    "\nWhere is the migration bundle located?" 17 74 5 \
     "browse" "Pick / prepare storage (mounts, disks, LVM)" \
     "local" "Type a local path manually (SSD, USB, mount)" \
     "nfs" "NFS share (mount on demand)" \
+    "cifs" "SMB/CIFS share (mount on demand)" \
     3>&1 1>&2 2>&3) || return 1
 
   if [ "$choice" = "browse" ]; then
@@ -355,6 +364,53 @@ function choose_location {
       sleep 2
       return 1
     fi
+  elif [ "$choice" = "cifs" ]; then
+    local cifs_unc cifs_user cifs_pass
+    cifs_unc=$(whiptail --backtitle "$BACKTITLE" --inputbox \
+      "\nCIFS/SMB share (UNC path):\ne.g. //192.168.1.10/proxmox-backups" 11 68 \
+      --title "CIFS Share" 3>&1 1>&2 2>&3) || return 1
+    [ -z "$cifs_unc" ] && {
+      msg_error "Share path is required."
+      sleep 2
+      return 1
+    }
+    cifs_unc="${cifs_unc//\\//}"
+    cifs_user=$(whiptail --backtitle "$BACKTITLE" --inputbox \
+      "\nUsername (leave empty for guest):" 10 60 \
+      --title "CIFS User" 3>&1 1>&2 2>&3) || return 1
+    cifs_pass=$(whiptail --backtitle "$BACKTITLE" --passwordbox \
+      "\nPassword (leave empty for guest):" 10 60 \
+      --title "CIFS Password" 3>&1 1>&2 2>&3) || return 1
+
+    if ! command -v mount.cifs >/dev/null 2>&1; then
+      msg_info "Installing cifs-utils"
+      apt-get update &>/dev/null
+      apt-get install -y cifs-utils &>/dev/null || {
+        msg_error "Failed to install cifs-utils"
+        return 1
+      }
+      msg_ok "Installed cifs-utils"
+    fi
+
+    NFS_MOUNTPOINT="/mnt/${BUNDLE_PREFIX}-cifs-$$"
+    mkdir -p "$NFS_MOUNTPOINT"
+    local opts="vers=3.0"
+    if [ -n "$cifs_user" ]; then
+      opts="${opts},username=${cifs_user},password=${cifs_pass}"
+    else
+      opts="${opts},guest"
+    fi
+    msg_info "Mounting ${cifs_unc}"
+    if mount -t cifs "$cifs_unc" "$NFS_MOUNTPOINT" -o "$opts" 2>/tmp/host-migrate-cifs.log; then
+      NFS_MOUNTED=1
+      msg_ok "Mounted CIFS share at ${NFS_MOUNTPOINT}"
+      BASE_DIR="$NFS_MOUNTPOINT"
+    else
+      msg_error "Could not mount ${cifs_unc} (see /tmp/host-migrate-cifs.log)"
+      rmdir "$NFS_MOUNTPOINT" 2>/dev/null
+      sleep 2
+      return 1
+    fi
   else
     local path
     path=$(whiptail --backtitle "$BACKTITLE" --inputbox \
@@ -394,6 +450,32 @@ function collect_guests {
   fi
 }
 
+# Record bridges and storages referenced by a guest config into the bundle's
+# requirements file, so the import side can pre-flight them on the new host.
+# $1=type(vm|ct) $2=id $3=requirements_file
+function capture_guest_requirements {
+  local type="$1" id="$2" reqfile="$3" conf bridges storages
+  if [ "$type" = "vm" ]; then
+    conf=$(qm config "$id" 2>/dev/null)
+  else
+    conf=$(pct config "$id" 2>/dev/null)
+  fi
+  [ -z "$conf" ] && return
+  # bridges from netX: ...,bridge=vmbrY,...
+  bridges=$(echo "$conf" | grep -oE 'bridge=[^,]+' | cut -d= -f2 | sort -u | tr '\n' ' ')
+  # storages: parse disk-bearing keys and take the storage id before the colon.
+  # Handles block (local-lvm:vm-100-disk-0) and file (local:100/...) volumes,
+  # while ignoring non-volume values (e.g. "none,media=cdrom") and MAC addresses.
+  storages=$(echo "$conf" |
+    grep -E '^(scsi|sata|ide|virtio|efidisk|tpmstate|rootfs|mp|unused)[0-9]*:' |
+    sed -E 's/^[^:]+:[[:space:]]*//' |
+    cut -d, -f1 |
+    grep -E '^[a-zA-Z0-9_.-]+:' |
+    cut -d: -f1 |
+    sort -u | tr '\n' ' ')
+  echo -e "${type}\t${id}\tbridges=${bridges}\tstorages=${storages}" >>"$reqfile"
+}
+
 # ----------------------------------------------------------------------------
 # EXPORT
 # ----------------------------------------------------------------------------
@@ -425,36 +507,61 @@ function do_export {
   # --- Component selection -------------------------------------------------
   local components
   components=$(whiptail --backtitle "$BACKTITLE" --title "Export Components" --checklist \
-    "\nSelect what to export into the bundle:" 18 78 7 \
-    "hostcfg" "Host configs (/etc/pve, network, storage, users, fw)" ON \
-    "etc" "Full /etc tarball (extra safety net)" OFF \
+    "\nSelect what to export into the bundle (SPACE toggles):" 22 86 13 \
+    "pvecfg" "All Proxmox config /etc/pve (guests,storage,users,fw,jobs,sdn)" ON \
+    "network" "Network config (/etc/network/interfaces*)" ON \
+    "hostid" "Hostname + /etc/hosts" ON \
+    "dns" "DNS (/etc/resolv.conf)" ON \
     "ssh" "SSH host keys + /root/.ssh" ON \
-    "apt" "APT sources + installed package list" ON \
+    "apt" "APT sources (/etc/apt: sources.list + .list.d + keyrings)" ON \
+    "pkglist" "Installed package list (dpkg selections)" ON \
+    "cron" "Cron jobs (/etc/cron*, user crontabs)" ON \
+    "systemd" "Custom systemd units (/etc/systemd/system)" OFF \
+    "roothome" "/root dotfiles (.bashrc, .profile, .bash_aliases)" OFF \
+    "etcfull" "Full /etc tarball (extra safety net)" OFF \
     "guests" "LXC / VM guests" ON \
     3>&1 1>&2 2>&3) || return
 
   components="${components//\"/}"
+  [ -z "$components" ] && {
+    msg_warn "Nothing selected"
+    sleep 2
+    return
+  }
+  mlog "export bundle=$bundle components=$components"
 
-  # --- Host config ---------------------------------------------------------
-  if [[ "$components" == *hostcfg* ]]; then
-    msg_info "Collecting host configuration"
-    mkdir -p "$bundle/host/etc-pve" "$bundle/host/network"
+  # --- /etc/pve (full PVE config) ------------------------------------------
+  if [[ "$components" == *pvecfg* ]]; then
+    msg_info "Collecting Proxmox config (/etc/pve)"
+    mkdir -p "$bundle/host/etc-pve"
     # pmxcfs content is readable as normal files
     [ -d /etc/pve ] && cp -a /etc/pve/. "$bundle/host/etc-pve/" 2>/dev/null
+    msg_ok "Collected /etc/pve"
+  fi
+
+  # --- Network -------------------------------------------------------------
+  if [[ "$components" == *network* ]]; then
+    msg_info "Collecting network config"
+    mkdir -p "$bundle/host/network"
     [ -f /etc/network/interfaces ] && cp -a /etc/network/interfaces "$bundle/host/network/"
     [ -d /etc/network/interfaces.d ] && cp -a /etc/network/interfaces.d "$bundle/host/network/" 2>/dev/null
+    msg_ok "Collected network config"
+  fi
+
+  # --- Hostname / hosts ----------------------------------------------------
+  if [[ "$components" == *hostid* ]]; then
     [ -f /etc/hostname ] && cp -a /etc/hostname "$bundle/host/"
     [ -f /etc/hosts ] && cp -a /etc/hosts "$bundle/host/"
-    [ -f /etc/resolv.conf ] && cp -a /etc/resolv.conf "$bundle/host/" 2>/dev/null
-    msg_ok "Collected host configuration"
+    msg_ok "Collected hostname + hosts"
   fi
 
-  if [[ "$components" == *etc* ]]; then
-    msg_info "Creating /etc tarball"
-    tar -czf "$bundle/host/etc-full.tar.gz" --absolute-names /etc 2>/dev/null
-    msg_ok "Created /etc tarball"
+  # --- DNS -----------------------------------------------------------------
+  if [[ "$components" == *dns* ]]; then
+    cp -aL /etc/resolv.conf "$bundle/host/resolv.conf" 2>/dev/null
+    msg_ok "Collected DNS"
   fi
 
+  # --- SSH -----------------------------------------------------------------
   if [[ "$components" == *ssh* ]]; then
     msg_info "Collecting SSH keys"
     mkdir -p "$bundle/host/ssh"
@@ -463,18 +570,65 @@ function do_export {
     msg_ok "Collected SSH keys"
   fi
 
+  # --- APT -----------------------------------------------------------------
   if [[ "$components" == *apt* ]]; then
-    msg_info "Collecting APT state"
+    msg_info "Collecting APT sources"
     mkdir -p "$bundle/host/apt"
     cp -a /etc/apt/sources.list "$bundle/host/apt/" 2>/dev/null
     cp -a /etc/apt/sources.list.d "$bundle/host/apt/" 2>/dev/null
+    cp -a /etc/apt/trusted.gpg.d "$bundle/host/apt/" 2>/dev/null
+    [ -d /etc/apt/keyrings ] && cp -a /etc/apt/keyrings "$bundle/host/apt/" 2>/dev/null
+    msg_ok "Collected APT sources"
+  fi
+
+  if [[ "$components" == *pkglist* ]]; then
+    mkdir -p "$bundle/host/apt"
     dpkg --get-selections >"$bundle/host/apt/packages.selections" 2>/dev/null
-    msg_ok "Collected APT state"
+    msg_ok "Collected package list"
+  fi
+
+  # --- Cron ----------------------------------------------------------------
+  if [[ "$components" == *cron* ]]; then
+    msg_info "Collecting cron jobs"
+    mkdir -p "$bundle/host/cron"
+    [ -f /etc/crontab ] && cp -a /etc/crontab "$bundle/host/cron/"
+    local cdir
+    for cdir in /etc/cron.d /etc/cron.hourly /etc/cron.daily /etc/cron.weekly /etc/cron.monthly; do
+      [ -d "$cdir" ] && cp -a "$cdir" "$bundle/host/cron/" 2>/dev/null
+    done
+    [ -d /var/spool/cron/crontabs ] && cp -a /var/spool/cron/crontabs "$bundle/host/cron/user-crontabs" 2>/dev/null
+    msg_ok "Collected cron jobs"
+  fi
+
+  # --- Custom systemd units ------------------------------------------------
+  if [[ "$components" == *systemd* ]]; then
+    msg_info "Collecting custom systemd units"
+    mkdir -p "$bundle/host/systemd"
+    cp -a /etc/systemd/system "$bundle/host/systemd/etc-systemd-system" 2>/dev/null
+    msg_ok "Collected systemd units"
+  fi
+
+  # --- root dotfiles -------------------------------------------------------
+  if [[ "$components" == *roothome* ]]; then
+    mkdir -p "$bundle/host/roothome"
+    local rf
+    for rf in .bashrc .profile .bash_aliases .vimrc .tmux.conf; do
+      [ -f "/root/$rf" ] && cp -a "/root/$rf" "$bundle/host/roothome/" 2>/dev/null
+    done
+    msg_ok "Collected /root dotfiles"
+  fi
+
+  # --- Full /etc tarball ---------------------------------------------------
+  if [[ "$components" == *etcfull* ]]; then
+    msg_info "Creating /etc tarball"
+    tar -czf "$bundle/host/etc-full.tar.gz" --absolute-names /etc 2>/dev/null
+    msg_ok "Created /etc tarball"
   fi
 
   # --- Guests --------------------------------------------------------------
   local guest_method="" guest_mode="snapshot"
   : >"$bundle/guests.tsv"
+  : >"$bundle/host/guest-requirements.info"
   if [[ "$components" == *guests* ]]; then
     collect_guests
     if [ "${#GUEST_ROWS[@]}" -eq 0 ]; then
@@ -520,6 +674,9 @@ function do_export {
             if [ "$r_type" = "$type" ] && [ "$r_id" = "$id" ]; then name="$r_name"; fi
           done
 
+          # Record bridge/storage requirements for the import preflight.
+          capture_guest_requirements "$type" "$id" "$bundle/host/guest-requirements.info"
+
           if [ "$guest_method" = "vzdump" ]; then
             msg_info "vzdump ${type} ${id} (${name})"
             if vzdump "$id" --dumpdir "$bundle/guests" --mode "$guest_mode" --compress zstd &>>"$bundle/guests/vzdump.log"; then
@@ -556,25 +713,67 @@ function do_export {
     fi
   fi
 
+  # --- Reference info ------------------------------------------------------
+  ip -br link >"$bundle/host/network-links.info" 2>/dev/null
+  ip -br addr >"$bundle/host/network-addr.info" 2>/dev/null
+  pvesm status >"$bundle/host/storage.info" 2>/dev/null
+  ip -br link 2>/dev/null | awk '$1 ~ /^vmbr/ {print $1}' >"$bundle/host/bridges.info" 2>/dev/null
+
+  # Cluster detection (corosync) - relevant warning for the import side.
+  local in_cluster="no"
+  [ -f /etc/pve/corosync.conf ] && in_cluster="yes"
+
   # --- Manifest ------------------------------------------------------------
   {
     echo "EXPORT_HOSTNAME=\"$(hostname)\""
     echo "EXPORT_DATE=\"$(date -Iseconds)\""
     echo "EXPORT_PVE_VERSION=\"$(pveversion | head -n1)\""
+    echo "EXPORT_KERNEL=\"$(uname -r)\""
     echo "EXPORT_ARCH=\"$(uname -m)\""
     echo "EXPORT_COMPONENTS=\"${components}\""
     echo "EXPORT_GUEST_METHOD=\"${guest_method}\""
+    echo "EXPORT_GUEST_MODE=\"${guest_mode}\""
+    echo "EXPORT_IN_CLUSTER=\"${in_cluster}\""
+    echo "EXPORT_TOOL_VERSION=\"1\""
   } >"$bundle/manifest.env"
 
-  ip -br link >"$bundle/host/network-links.info" 2>/dev/null
-  ip -br addr >"$bundle/host/network-addr.info" 2>/dev/null
-  pvesm status >"$bundle/host/storage.info" 2>/dev/null
+  # --- Integrity: checksums ------------------------------------------------
+  msg_info "Generating checksums"
+  (cd "$bundle" && find . -type f ! -name 'sha256sums.txt' -print0 |
+    xargs -0 sha256sum >"sha256sums.txt" 2>/dev/null)
+  msg_ok "Wrote sha256sums.txt"
+  mlog "export finished bundle=$bundle"
+
+  # --- Optional: push bundle to a remote host via rsync/SSH ----------------
+  if whiptail --backtitle "$BACKTITLE" --yesno \
+    "Also copy this bundle to a remote host via SSH/rsync now?\n\n(e.g. directly to the NEW Proxmox target)" 11 72; then
+    local rhost rpath
+    rhost=$(whiptail --backtitle "$BACKTITLE" --inputbox \
+      "\nRemote target (user@host):\ne.g. root@192.168.1.50" 11 68 \
+      --title "SSH Target" 3>&1 1>&2 2>&3) || rhost=""
+    rpath=$(whiptail --backtitle "$BACKTITLE" --inputbox \
+      "\nRemote directory:\ne.g. /mnt/backup/" 11 68 \
+      --title "Remote Path" "/root/" 3>&1 1>&2 2>&3) || rpath=""
+    if [ -n "$rhost" ] && [ -n "$rpath" ]; then
+      if ! command -v rsync >/dev/null 2>&1; then
+        msg_info "Installing rsync"
+        apt-get install -y rsync &>/dev/null && msg_ok "Installed rsync"
+      fi
+      msg_info "Copying bundle to ${rhost}:${rpath}"
+      if rsync -aH --info=progress2 "$bundle" "${rhost}:${rpath}" 2>>"$LOGFILE"; then
+        msg_ok "Copied bundle to ${rhost}:${rpath}"
+      else
+        msg_error "rsync failed (see $LOGFILE)"
+      fi
+    fi
+  fi
 
   header_info
   msg_ok "Export finished"
-  echo -e "\nBundle: \e[1;33m${bundle}\e[0m\n"
+  echo -e "\nBundle: \e[1;33m${bundle}\e[0m"
+  echo -e "Logfile: \e[1;33m${LOGFILE}\e[0m\n"
   if [ "$NFS_MOUNTED" -eq 1 ]; then
-    echo -e "Copied to NFS share (will be unmounted on exit).\n"
+    echo -e "Network share will be unmounted on exit.\n"
   fi
   read -rp "Press ENTER to return to the menu..."
 }
@@ -731,12 +930,17 @@ function import_hostcfg {
 
   local sel
   sel=$(whiptail --backtitle "$BACKTITLE" --title "Restore Host Configuration" --checklist \
-    "\nSelect host components to restore.\nNETWORK and HOSTNAME are DANGEROUS - read the warnings!" 20 82 8 \
+    "\nSelect host components to restore (SPACE toggles).\nNETWORK and HOSTNAME are DANGEROUS - read the warnings!" 23 84 12 \
     "storage" "storage.cfg (storage definitions)" OFF \
     "users" "user.cfg / firewall (PVE users + ACLs)" OFF \
     "ssh" "SSH host keys + /root/.ssh" OFF \
-    "apt" "APT sources + package selections" OFF \
+    "apt" "APT sources + keyrings" OFF \
+    "pkginstall" "Re-install package list (apt, needs network)" OFF \
+    "dns" "/etc/resolv.conf" OFF \
     "hosts" "/etc/hosts" OFF \
+    "cron" "Cron jobs (/etc/cron*, user crontabs)" OFF \
+    "systemd" "Custom systemd units (/etc/systemd/system)" OFF \
+    "roothome" "/root dotfiles" OFF \
     "network" "/etc/network/interfaces  (!! DANGER !!)" OFF \
     "hostname" "hostname  (!! DANGER !!)" OFF \
     3>&1 1>&2 2>&3) || return
@@ -766,11 +970,60 @@ function import_hostcfg {
   if [[ "$sel" == *apt* ]]; then
     [ -f "$bundle/host/apt/sources.list" ] && cp "$bundle/host/apt/sources.list" /etc/apt/sources.list && msg_ok "Restored sources.list"
     [ -d "$bundle/host/apt/sources.list.d" ] && cp -a "$bundle/host/apt/sources.list.d/." /etc/apt/sources.list.d/ 2>/dev/null && msg_ok "Restored sources.list.d"
-    msg_warn "Package selections saved as reference: apt/packages.selections (not auto-installed)"
+    [ -d "$bundle/host/apt/trusted.gpg.d" ] && cp -a "$bundle/host/apt/trusted.gpg.d/." /etc/apt/trusted.gpg.d/ 2>/dev/null && msg_ok "Restored APT trusted keys"
+    [ -d "$bundle/host/apt/keyrings" ] && mkdir -p /etc/apt/keyrings && cp -a "$bundle/host/apt/keyrings/." /etc/apt/keyrings/ 2>/dev/null && msg_ok "Restored APT keyrings"
+  fi
+
+  if [[ "$sel" == *pkginstall* ]]; then
+    if [ -f "$bundle/host/apt/packages.selections" ]; then
+      if whiptail --backtitle "$BACKTITLE" --yesno \
+        "Re-install the package selection from the source host?\nThis runs apt-get and needs working network + repos." 10 74; then
+        msg_info "Updating package lists"
+        apt-get update &>>"$LOGFILE"
+        msg_info "Applying package selections"
+        dpkg --set-selections <"$bundle/host/apt/packages.selections" 2>>"$LOGFILE"
+        if DEBIAN_FRONTEND=noninteractive apt-get -y dselect-upgrade &>>"$LOGFILE"; then
+          msg_ok "Package selection applied"
+        else
+          msg_error "apt dselect-upgrade had errors (see $LOGFILE)"
+        fi
+      fi
+    else
+      msg_error "No package list in bundle"
+    fi
+  fi
+
+  if [[ "$sel" == *dns* ]]; then
+    [ -f "$bundle/host/resolv.conf" ] && cp /etc/resolv.conf "/etc/resolv.conf.bak.$(date +%s)" 2>/dev/null
+    [ -f "$bundle/host/resolv.conf" ] && cp "$bundle/host/resolv.conf" /etc/resolv.conf && msg_ok "Restored /etc/resolv.conf"
   fi
 
   if [[ "$sel" == *hosts* ]]; then
     [ -f "$bundle/host/hosts" ] && cp /etc/hosts "/etc/hosts.bak.$(date +%s)" && cp "$bundle/host/hosts" /etc/hosts && msg_ok "Restored /etc/hosts"
+  fi
+
+  if [[ "$sel" == *cron* ]]; then
+    [ -f "$bundle/host/cron/crontab" ] && cp "$bundle/host/cron/crontab" /etc/crontab && msg_ok "Restored /etc/crontab"
+    local cd2
+    for cd2 in cron.d cron.hourly cron.daily cron.weekly cron.monthly; do
+      [ -d "$bundle/host/cron/$cd2" ] && cp -a "$bundle/host/cron/$cd2/." "/etc/$cd2/" 2>/dev/null
+    done
+    [ -d "$bundle/host/cron/user-crontabs" ] && mkdir -p /var/spool/cron/crontabs && cp -a "$bundle/host/cron/user-crontabs/." /var/spool/cron/crontabs/ 2>/dev/null
+    msg_ok "Restored cron jobs"
+  fi
+
+  if [[ "$sel" == *systemd* ]]; then
+    if [ -d "$bundle/host/systemd/etc-systemd-system" ]; then
+      cp -a "$bundle/host/systemd/etc-systemd-system/." /etc/systemd/system/ 2>/dev/null
+      systemctl daemon-reload 2>/dev/null
+      msg_ok "Restored systemd units (review + enable manually)"
+    else
+      msg_error "No systemd units in bundle"
+    fi
+  fi
+
+  if [[ "$sel" == *roothome* ]]; then
+    [ -d "$bundle/host/roothome" ] && cp -a "$bundle/host/roothome/." /root/ 2>/dev/null && msg_ok "Restored /root dotfiles"
   fi
 
   if [[ "$sel" == *network* ]]; then
@@ -861,7 +1114,35 @@ function do_import {
   # shellcheck disable=SC1090
   source "$BUNDLE/manifest.env" 2>/dev/null
   whiptail --backtitle "$BACKTITLE" --title "Bundle Information" --scrolltext --msgbox \
-    "Origin host : ${EXPORT_HOSTNAME:-?}\nExported    : ${EXPORT_DATE:-?}\nPVE version : ${EXPORT_PVE_VERSION:-?}\nArch        : ${EXPORT_ARCH:-?}\nComponents  : ${EXPORT_COMPONENTS:-?}\nGuest method: ${EXPORT_GUEST_METHOD:-?}\n\nThis (target) host: $(hostname) / $(pveversion | head -n1)" 18 82
+    "Origin host : ${EXPORT_HOSTNAME:-?}\nExported    : ${EXPORT_DATE:-?}\nPVE version : ${EXPORT_PVE_VERSION:-?}\nKernel      : ${EXPORT_KERNEL:-?}\nArch        : ${EXPORT_ARCH:-?}\nComponents  : ${EXPORT_COMPONENTS:-?}\nGuest method: ${EXPORT_GUEST_METHOD:-?}\nFrom cluster: ${EXPORT_IN_CLUSTER:-?}\n\nThis (target) host: $(hostname) / $(pveversion | head -n1)" 20 84
+  mlog "import bundle=$BUNDLE origin=${EXPORT_HOSTNAME:-?}"
+
+  # Architecture mismatch warning
+  if [ -n "${EXPORT_ARCH:-}" ] && [ "${EXPORT_ARCH}" != "$(uname -m)" ]; then
+    whiptail --backtitle "$BACKTITLE" --title "Architecture Mismatch" --msgbox \
+      "Source arch (${EXPORT_ARCH}) differs from this host ($(uname -m)).\nVM/CT restores may not be portable." 10 74
+  fi
+
+  # Cluster warning
+  if [ "${EXPORT_IN_CLUSTER:-no}" = "yes" ]; then
+    whiptail --backtitle "$BACKTITLE" --title "!! Cluster Source !!" --scrolltext --msgbox \
+      "The source host was part of a Proxmox CLUSTER.\n\nNEVER restore corosync.conf onto a standalone/new host - it will break clustering. This tool will NOT restore cluster membership; only standalone configs are offered.\n\nJoin the new host to a cluster manually if required." 15 80
+  fi
+
+  # Integrity verify (optional)
+  if [ -f "$BUNDLE/sha256sums.txt" ]; then
+    if whiptail --backtitle "$BACKTITLE" --yesno "Verify bundle integrity (sha256) before restoring?" 9 70; then
+      msg_info "Verifying checksums"
+      if (cd "$BUNDLE" && sha256sum --quiet -c sha256sums.txt) &>/tmp/host-migrate-verify.log; then
+        msg_ok "Integrity OK"
+      else
+        msg_error "Checksum verification FAILED (see /tmp/host-migrate-verify.log)"
+        if ! whiptail --backtitle "$BACKTITLE" --yesno "Integrity check FAILED. Continue anyway?" 9 70; then
+          return
+        fi
+      fi
+    fi
+  fi
 
   # Preflight: storage comparison
   if [ -f "$BUNDLE/host/storage.info" ]; then
@@ -875,6 +1156,21 @@ function do_import {
     if [ -n "$missing" ]; then
       whiptail --backtitle "$BACKTITLE" --title "Storage Preflight" --msgbox \
         "These storages from the source are MISSING on this host:\n\n  ${missing}\n\nRestores using them may fail. Create them first or pick a different target storage during restore." 14 78
+    fi
+  fi
+
+  # Preflight: bridges + storages actually used by the exported guests
+  if [ -f "$BUNDLE/host/guest-requirements.info" ]; then
+    local need_bridges need_stores cur_bridges cur_stores2 miss_b="" miss_s="" b st
+    need_bridges=$(awk -F'\t' '{sub(/^bridges=/,"",$3); print $3}' "$BUNDLE/host/guest-requirements.info" | tr ' ' '\n' | sort -u | grep -v '^$')
+    need_stores=$(awk -F'\t' '{sub(/^storages=/,"",$4); print $4}' "$BUNDLE/host/guest-requirements.info" | tr ' ' '\n' | sort -u | grep -v '^$')
+    cur_bridges=$(ip -br link 2>/dev/null | awk '{print $1}')
+    cur_stores2=$(pvesm status 2>/dev/null | awk 'NR>1 {print $1}')
+    for b in $need_bridges; do grep -qx "$b" <<<"$cur_bridges" || miss_b+="$b "; done
+    for st in $need_stores; do grep -qx "$st" <<<"$cur_stores2" || miss_s+="$st "; done
+    if [ -n "$miss_b" ] || [ -n "$miss_s" ]; then
+      whiptail --backtitle "$BACKTITLE" --title "!! Guest Preflight !!" --scrolltext --msgbox \
+        "Some guests reference resources that are MISSING on this host.\nThey may restore but FAIL TO START until you create them:\n\nMissing bridges : ${miss_b:-none}\nMissing storages: ${miss_s:-none}\n\nCreate the bridges (e.g. vmbr0) and storages first, or adjust the guest configs after restore." 18 82
     fi
   fi
 
@@ -895,20 +1191,55 @@ function do_import {
 }
 
 # ----------------------------------------------------------------------------
+# CLEANUP / RETENTION
+# ----------------------------------------------------------------------------
+function do_cleanup {
+  choose_location "Manage / Cleanup Bundles" "/mnt/" || return
+  local menu=() d size
+  while IFS= read -r d; do
+    [ -f "$d/manifest.env" ] || continue
+    size=$(du -sh "$d" 2>/dev/null | awk '{print $1}')
+    menu+=("$d" "${size:-?}" OFF)
+  done < <(find "$BASE_DIR" -maxdepth 2 -type d -name "${BUNDLE_PREFIX}-*" 2>/dev/null | sort)
+
+  if [ "${#menu[@]}" -eq 0 ]; then
+    msg_error "No migration bundles found under ${BASE_DIR}"
+    sleep 2
+    return
+  fi
+
+  local todelete
+  todelete=$(whiptail --backtitle "$BACKTITLE" --title "Delete Bundles" --checklist \
+    "\nSelect bundles to DELETE permanently:" 20 100 10 "${menu[@]}" 3>&1 1>&2 2>&3) || return
+  todelete="${todelete//\"/}"
+  [ -z "$todelete" ] && return
+
+  if whiptail --backtitle "$BACKTITLE" --yesno "Permanently delete the selected bundle(s)?" 9 70; then
+    local b
+    for b in $todelete; do
+      rm -rf "$b" && msg_ok "Deleted $(basename "$b")" && mlog "deleted bundle $b"
+    done
+    read -rp "Press ENTER to continue..."
+  fi
+}
+
+# ----------------------------------------------------------------------------
 # Main menu
 # ----------------------------------------------------------------------------
 while true; do
   header_info
   ACTION=$(whiptail --backtitle "$BACKTITLE" --title "Proxmox VE Host Migrate" --menu \
-    "\nExport this host or import a bundle onto a new host." 15 78 3 \
-    "export" "Export host + guests to a bundle (mount/SSD/NFS)" \
+    "\nExport this host or import a bundle onto a new host." 16 78 4 \
+    "export" "Export host + guests to a bundle (mount/SSD/NFS/CIFS)" \
     "import" "Import a bundle onto THIS host" \
+    "cleanup" "Manage / delete old bundles" \
     "quit" "Exit" \
     3>&1 1>&2 2>&3) || break
 
   case "$ACTION" in
   export) do_export ;;
   import) do_import ;;
+  cleanup) do_cleanup ;;
   quit) break ;;
   esac
 done
