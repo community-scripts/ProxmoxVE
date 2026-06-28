@@ -18,7 +18,7 @@ $STD apt install -y \
   apache2-utils \
   logrotate \
   build-essential \
-  libpcre3-dev \
+  libpcre2-dev \
   libssl-dev \
   zlib1g-dev \
   git \
