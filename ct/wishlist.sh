@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "wishlist" "cmintey/wishlist"; then
-    NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="pnpm@11" setup_nodejs
 
     msg_info "Stopping Service"
     systemctl stop wishlist

@@ -235,6 +235,9 @@ EOF
     fi
     sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
+    if [ -n "$(command -v node)" ]; then
+      sed -i -E "s|^ExecStart=.*/node index\.js|ExecStart=$(command -v node) index.js|" /lib/systemd/system/npm.service
+    fi
     systemctl daemon-reload
     systemctl enable -q --now openresty
     systemctl enable -q --now npm
