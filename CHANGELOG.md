@@ -491,6 +491,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-28
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - remove: promtail as EOL and other fixes [@asylumexp](https://github.com/asylumexp) ([#15455](https://github.com/community-scripts/ProxmoxVE/pull/15455))
+
 ## 2026-06-27
 
 ### 🆕 New Scripts
