@@ -495,6 +495,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Flame ([#15464](https://github.com/community-scripts/ProxmoxVE/pull/15464))
 
+### 🚀 Updated Scripts
+
+  - chore(ct): sync snapotter defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#15472](https://github.com/community-scripts/ProxmoxVE/pull/15472))
+
 ## 2026-06-28
 
 ### 🚀 Updated Scripts
