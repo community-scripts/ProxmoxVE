@@ -14,13 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  build-essential \
-  python3
+$STD apt install -y \
+  build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
-
 fetch_and_deploy_gh_release "flame" "pawelmalak/flame" "tarball"
 
 msg_info "Setting up Flame"
