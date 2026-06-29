@@ -20,16 +20,11 @@ $STD apt install -y \
   libsqlite3-dev
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
-
-msg_info "Enabling pnpm via corepack"
-export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-$STD corepack enable
-msg_ok "Enabled pnpm"
-
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 fetch_and_deploy_gh_release "etherpad-lite" "ether/etherpad" "tarball"
 
 msg_info "Building Etherpad"
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 cd /opt/etherpad-lite
 $STD pnpm install --frozen-lockfile
 $STD pnpm run build:etherpad
