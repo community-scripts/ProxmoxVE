@@ -267,6 +267,47 @@ download_gpg_key() {
 }
 
 # ------------------------------------------------------------------------------
+# Edit a key-value pair in a YAML configuration file.
+#
+# Description:
+#   - Finds the first occurrence of the given key in the YAML file and replaces
+#     its value in-place using sed.
+#   - Handles both quoted and unquoted values on the same line.
+#   - The key is matched at the start of a line (optionally preceded by spaces),
+#     followed by a colon and optional whitespace.
+#   - If the key is not found, the function exits with a non-zero status and
+#     prints an error message.
+#
+# Usage:
+#   edit_yaml_config "/opt/myapp/config.yml" "database_host" "localhost"
+#   edit_yaml_config "/opt/myapp/config.yml" "port" "5432"
+#
+# Parameters:
+#   $1 - Path to the YAML file
+#   $2 - Key to find (e.g. "database_host")
+#   $3 - New value to set (e.g. "localhost")
+#
+# Returns: 0 on success, 1 if the file does not exist or the key is not found
+# ------------------------------------------------------------------------------
+edit_yaml_config() {
+  local file="$1"
+  local key="$2"
+  local value="$3"
+
+  if [[ ! -f "$file" ]]; then
+    msg_error "edit_yaml_config: file not found: $file"
+    return 1
+  fi
+
+  if ! grep -qE "^[[:space:]]*${key}[[:space:]]*:" "$file"; then
+    msg_error "edit_yaml_config: key '${key}' not found in $file"
+    return 1
+  fi
+
+  sed -i "s|^\([[:space:]]*${key}[[:space:]]*:\).*|\1 ${value}|" "$file"
+}
+
+# ------------------------------------------------------------------------------
 # Cache installed version to avoid repeated checks
 # ------------------------------------------------------------------------------
 cache_installed_version() {
