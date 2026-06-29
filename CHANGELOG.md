@@ -500,6 +500,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - chore(ct): sync snapotter defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#15472](https://github.com/community-scripts/ProxmoxVE/pull/15472))
 
+  - #### 🐞 Bug Fixes
+
+    - feat: update nginx proxy manager to trixie [@asylumexp](https://github.com/asylumexp) ([#15457](https://github.com/community-scripts/ProxmoxVE/pull/15457))
+
 ## 2026-06-28
 
 ### 🚀 Updated Scripts
