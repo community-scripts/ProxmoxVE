@@ -37,9 +37,7 @@ function update_script() {
 
     create_backup /opt/flame/.env \
                   /opt/flame/data
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flame" "pawelmalak/flame" "tarball"
-
     restore_backup
 
     msg_info "Rebuilding Application"
