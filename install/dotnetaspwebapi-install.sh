@@ -43,11 +43,11 @@ sed -i "s|#chroot_local_user=YES|chroot_local_user=NO|g" /etc/vsftpd.conf
 
 systemctl restart -q vsftpd.service
 
-{
-  echo "FTP-Credentials"
-  echo "Username: ftpuser"
-  echo "Password: $FTP_PASS"
-} >>~/ftp.creds
+cat <<EOF >>~/ftp.creds
+FTP-Credentials
+Username: ftpuser
+Password: $FTP_PASS
+EOF
 
 msg_ok "FTP server setup completed"
 

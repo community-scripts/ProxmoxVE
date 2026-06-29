@@ -37,10 +37,10 @@ msg_info "Setup Keys (Admin / Secret)"
 SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
 ADMIN_EMAIL="admin@community-scripts.org"
 ADMIN_PASSWORD="$PG_DB_PASS"
-{
-  echo "healthchecks Admin Email: $ADMIN_EMAIL"
-  echo "healthchecks Admin Password: $ADMIN_PASSWORD"
-} >>~/healthchecks.creds
+cat <<EOF >>~/healthchecks.creds
+healthchecks Admin Email: $ADMIN_EMAIL
+healthchecks Admin Password: $ADMIN_PASSWORD
+EOF
 msg_ok "Set up Keys"
 
 fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks" "tarball"

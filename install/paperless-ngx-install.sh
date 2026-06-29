@@ -56,12 +56,12 @@ curl -fsSL "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/p
 mkdir -p /opt/paperless_data/{consume,data,media,trash}
 mkdir -p /opt/paperless/static
 SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
-{
-  echo ""
-  echo "Paperless-ngx Secret Key: $SECRET_KEY"
-  echo "Paperless-ngx WebUI User: admin"
-  echo "Paperless-ngx WebUI Password: $PG_DB_PASS"
-} >>~/paperless-ngx.creds
+cat <<EOF >>~/paperless-ngx.creds
+
+Paperless-ngx Secret Key: $SECRET_KEY
+Paperless-ngx WebUI User: admin
+Paperless-ngx WebUI Password: $PG_DB_PASS
+EOF
 sed -i \
   -e 's|#PAPERLESS_REDIS=redis://localhost:6379|PAPERLESS_REDIS=redis://localhost:6379|' \
   -e "s|#PAPERLESS_CONSUMPTION_DIR=../consume|PAPERLESS_CONSUMPTION_DIR=/opt/paperless_data/consume|" \

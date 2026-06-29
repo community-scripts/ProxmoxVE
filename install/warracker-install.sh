@@ -35,14 +35,14 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
 $STD sudo -u postgres psql -d "$DB_NAME" -c "GRANT USAGE ON SCHEMA public TO $DB_USER;"
 $STD sudo -u postgres psql -d "$DB_NAME" -c "GRANT CREATE ON SCHEMA public TO $DB_USER;"
 $STD sudo -u postgres psql -d "$DB_NAME" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $DB_USER;"
-{
-    echo "Application Credentials"
-    echo "DB_NAME: $DB_NAME"
-    echo "DB_USER: $DB_USER"
-    echo "DB_PASS: $DB_PASS"
-    echo "DB_ADMIN_USER: $DB_ADMIN_USER"
-    echo "DB_ADMIN_PASS: $DB_ADMIN_PASS"
-} >>~/warracker.creds
+cat <<EOF >>~/warracker.creds
+Application Credentials
+DB_NAME: $DB_NAME
+DB_USER: $DB_USER
+DB_PASS: $DB_PASS
+DB_ADMIN_USER: $DB_ADMIN_USER
+DB_ADMIN_PASS: $DB_ADMIN_PASS
+EOF
 msg_ok "Setup PostgreSQL"
 
 fetch_and_deploy_gh_release "warracker" "sassanix/Warracker" "tarball" "latest" "/opt/warracker"

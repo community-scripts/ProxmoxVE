@@ -25,13 +25,13 @@ chmod 600 ~/valkey.creds
 MEMTOTAL_MB=$(free -m | grep ^Mem: | awk '{print $2}')
 MAXMEMORY_MB=$((MEMTOTAL_MB * 75 / 100))
 
-{
-  echo ""
-  echo "# Memory-optimized settings for small-scale deployments"
-  echo "maxmemory ${MAXMEMORY_MB}mb"
-  echo "maxmemory-policy allkeys-lru"
-  echo "maxmemory-samples 10"
-} >>/etc/valkey/valkey.conf
+cat <<EOF >>/etc/valkey/valkey.conf
+
+# Memory-optimized settings for small-scale deployments
+maxmemory ${MAXMEMORY_MB}mb
+maxmemory-policy allkeys-lru
+maxmemory-samples 10
+EOF
 msg_ok "Installed Valkey"
 
 # Note: Alpine's valkey package is compiled without TLS support

@@ -271,14 +271,14 @@ WantedBy=multi-user.target
 EOF
 systemctl daemon-reload
 systemctl enable -q --now plane-api plane-worker plane-beat plane-live plane-space
-{
-  echo "RabbitMQ User: plane"
-  echo "RabbitMQ Password: ${RABBITMQ_PASS}"
-  echo "MinIO Access Key: ${MINIO_ACCESS_KEY}"
-  echo "MinIO Secret Key: ${MINIO_SECRET_KEY}"
-  echo "Secret Key: ${SECRET_KEY}"
-  echo "Config: /opt/plane/apps/api/.env"
-} >>~/plane.creds
+cat <<EOF >>~/plane.creds
+RabbitMQ User: plane
+RabbitMQ Password: ${RABBITMQ_PASS}
+MinIO Access Key: ${MINIO_ACCESS_KEY}
+MinIO Secret Key: ${MINIO_SECRET_KEY}
+Secret Key: ${SECRET_KEY}
+Config: /opt/plane/apps/api/.env
+EOF
 msg_ok "Created Services and MinIO Bucket"
 
 msg_info "Configuring Nginx"

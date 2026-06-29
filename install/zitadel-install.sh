@@ -29,14 +29,14 @@ systemctl start postgresql
 $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE USER $DB_ADMIN_USER WITH PASSWORD '$DB_ADMIN_PASS' SUPERUSER;"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
-{
-  echo "Application Credentials"
-  echo "DB_NAME: $DB_NAME"
-  echo "DB_USER: $DB_USER"
-  echo "DB_PASS: $DB_PASS"
-  echo "DB_ADMIN_USER: $DB_ADMIN_USER"
-  echo "DB_ADMIN_PASS: $DB_ADMIN_PASS"
-} >>~/zitadel.creds
+cat <<EOF >>~/zitadel.creds
+Application Credentials
+DB_NAME: $DB_NAME
+DB_USER: $DB_USER
+DB_PASS: $DB_PASS
+DB_ADMIN_USER: $DB_ADMIN_USER
+DB_ADMIN_PASS: $DB_ADMIN_PASS
+EOF
 msg_ok "Installed PostgreSQL"
 
 fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-$(arch_resolve).tar.gz"
@@ -45,10 +45,10 @@ msg_info "Setting up Zitadel Environments"
 mkdir -p /opt/zitadel
 echo "/opt/zitadel/config.yaml" >"/opt/zitadel/.config"
 head -c 32 < <(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9') >"/opt/zitadel/.masterkey"
-{
-  echo "Config location: $(cat "/opt/zitadel/.config")"
-  echo "Masterkey: $(cat "/opt/zitadel/.masterkey")"
-} >>~/zitadel.creds
+cat <<EOF >>~/zitadel.creds
+Config location: $(cat "/opt/zitadel/.config")
+Masterkey: $(cat "/opt/zitadel/.masterkey")
+EOF
 cat <<EOF >/opt/zitadel/config.yaml
 Port: 8080
 ExternalPort: 8080

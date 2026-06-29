@@ -59,11 +59,11 @@ msg_ok "Setup Splunk Enterprise v${RELEASE}"
 msg_info "Creating Splunk admin user"
 ADMIN_USER="admin"
 ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-{
-    echo "Splunk-Credentials"
-    echo "Username: $ADMIN_USER"
-    echo "Password: $ADMIN_PASS"
-} >> ~/splunk.creds
+cat <<EOF >>~/splunk.creds
+Splunk-Credentials
+Username: $ADMIN_USER
+Password: $ADMIN_PASS
+EOF
 
 cat << EOF > "/opt/splunk/etc/system/local/user-seed.conf"
 [user_info]

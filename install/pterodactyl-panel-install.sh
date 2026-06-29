@@ -52,12 +52,12 @@ DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "pterodactyl Panel-Credentials"
-  echo "pterodactyl Panel Database User: $DB_USER"
-  echo "pterodactyl Panel Database Password: $DB_PASS"
-  echo "pterodactyl Panel Database Name: $DB_NAME"
-} >>~/pterodactyl-panel.creds
+cat <<EOF >>~/pterodactyl-panel.creds
+pterodactyl Panel-Credentials
+pterodactyl Panel Database User: $DB_USER
+pterodactyl Panel Database Password: $DB_PASS
+pterodactyl Panel Database Name: $DB_NAME
+EOF
 msg_ok "Set up MariaDB"
 
 read -p "${TAB3}Provide an email address for admin login, this should be a valid email address: " ADMIN_EMAIL
@@ -82,12 +82,12 @@ echo "* * * * * php /opt/pterodactyl-panel/artisan schedule:run >> /dev/null 2>&
 chown -R www-data:www-data /opt/pterodactyl-panel/*
 chmod -R 755 /opt/pterodactyl-panel/storage/* /opt/pterodactyl-panel/bootstrap/cache/
 ln -s /opt/pterodactyl-panel /var/www/pterodactyl
-{
-  echo ""
-  echo "pterodactyl Admin Username: admin"
-  echo "pterodactyl Admin Email: $ADMIN_EMAIL"
-  echo "pterodactyl Admin Password: $ADMIN_PASS"
-} >>~/pterodactyl-panel.creds
+cat <<EOF >>~/pterodactyl-panel.creds
+
+pterodactyl Admin Username: admin
+pterodactyl Admin Email: $ADMIN_EMAIL
+pterodactyl Admin Password: $ADMIN_PASS
+EOF
 rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
 rm -rf "/tmp/debsuryorg-archive-keyring.deb"
 echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt

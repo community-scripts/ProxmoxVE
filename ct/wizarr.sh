@@ -57,11 +57,11 @@ function update_script() {
       sed -i 's/--workers 4//' /opt/wizarr/start.sh
     fi
     if ! grep -qE 'FLASK|WORKERS|VERSION' /opt/wizarr/.env; then
-      {
-        echo "FLASK_ENV=production"
-        echo "GUNICORN_WORKERS=4"
-        echo "APP_VERSION=$(sed 's/^20/v&/' ~/.wizarr)"
-      } >>/opt/wizarr/.env
+      cat <<EOF >>/opt/wizarr/.env
+FLASK_ENV=production
+GUNICORN_WORKERS=4
+APP_VERSION=$(sed 's/^20/v&/' ~/.wizarr)
+EOF
     else
       sed -i "s/_VERSION=v.*$/_VERSION=v$(cat ~/.wizarr)/" /opt/wizarr/.env
     fi

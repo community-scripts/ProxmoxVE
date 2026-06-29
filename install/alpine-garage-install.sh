@@ -25,12 +25,12 @@ mkdir -p /etc/garage
 RPC_SECRET=$(openssl rand -hex 64 | cut -c1-64)
 ADMIN_TOKEN=$(openssl rand -base64 32)
 METRICS_TOKEN=$(openssl rand -base64 32)
-{
-  echo "Garage Tokens and Secrets"
-  echo "RPC Secret: $RPC_SECRET"
-  echo "Admin Token: $ADMIN_TOKEN"
-  echo "Metrics Token: $METRICS_TOKEN"
-} >~/garage.creds
+cat <<EOF >~/garage.creds
+Garage Tokens and Secrets
+RPC Secret: $RPC_SECRET
+Admin Token: $ADMIN_TOKEN
+Metrics Token: $METRICS_TOKEN
+EOF
 echo $GITEA_RELEASE >>~/.garage
 cat <<EOF >/etc/garage.toml
 metadata_dir = "/var/lib/garage/meta"

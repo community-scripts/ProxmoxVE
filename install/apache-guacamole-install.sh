@@ -79,13 +79,13 @@ msg_ok "Setup Apache Guacamole"
 msg_info "Importing Database Schema"
 cd ~/guacamole-auth-jdbc-"${GUAC_SERVER_VERSION}"/mysql/schema
 cat *.sql | mariadb -u root ${MARIADB_DB_NAME}
-{
-  echo "mysql-hostname: 127.0.0.1"
-  echo "mysql-port: 3306"
-  echo "mysql-database: $MARIADB_DB_NAME"
-  echo "mysql-username: $MARIADB_DB_USER"
-  echo "mysql-password: $MARIADB_DB_PASS"
-} >>/etc/guacamole/guacamole.properties
+cat <<EOF >>/etc/guacamole/guacamole.properties
+mysql-hostname: 127.0.0.1
+mysql-port: 3306
+mysql-database: $MARIADB_DB_NAME
+mysql-username: $MARIADB_DB_USER
+mysql-password: $MARIADB_DB_PASS
+EOF
 rm -rf ~/guacamole-auth-jdbc-"$GUAC_SERVER_VERSION"{,.tar.gz}
 msg_ok "Imported Database Schema"
 

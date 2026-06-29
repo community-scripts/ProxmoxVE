@@ -40,12 +40,12 @@ mv release /opt/rustdesk-api
 cd /opt/rustdesk-api
 ADMINPASS=$(head -c 16 /dev/urandom | xxd -p -c 16)
 $STD ./apimain reset-admin-pwd "$ADMINPASS"
-{
-  echo "RustDesk WebUI"
-  echo ""
-  echo "Username: admin"
-  echo "Password: $ADMINPASS"
-} >>~/rustdesk.creds
+cat <<EOF >>~/rustdesk.creds
+RustDesk WebUI
+
+Username: admin
+Password: $ADMINPASS
+EOF
 echo "${APIRELEASE}" >~/.rustdesk-api
 msg_ok "Installed RustDesk API v${APIRELEASE}"
 

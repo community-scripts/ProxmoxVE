@@ -21,12 +21,12 @@ DB_USER=listmonk
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-{
-  echo "listmonk-Credentials"
-  echo -e "listmonk Database User: \e[32m$DB_USER\e[0m"
-  echo -e "listmonk Database Password: \e[32m$DB_PASS\e[0m"
-  echo -e "listmonk Database Name: \e[32m$DB_NAME\e[0m"
-} >>~/listmonk.creds
+cat <<EOF >>~/listmonk.creds
+listmonk-Credentials
+listmonk Database User: $DB_USER
+listmonk Database Password: $DB_PASS
+listmonk Database Name: $DB_NAME
+EOF
 msg_ok "Configured PostgreSQL"
 
 fetch_and_deploy_gh_release "listmonk" "knadh/listmonk" "prebuild" "latest" "/opt/listmonk" "listmonk*linux_$(arch_resolve).tar.gz"

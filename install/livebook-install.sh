@@ -67,10 +67,10 @@ export ERLANG_BIN="/opt/livebook/.elixir-install/installs/otp/\${ERLANG_VERSION}
 export ELIXIR_BIN="/opt/livebook/.elixir-install/installs/elixir/\${ELIXIR_VERSION}/bin"
 export PATH="\$ESCRIPTS_BIN:\$ERLANG_BIN:\$ELIXIR_BIN:\$PATH"
 EOF
-{
-  echo "Livebook-Credentials"
-  echo "Livebook Password: $LIVEBOOK_PASSWORD"
-} >>~/livebook.creds
+cat <<EOF >>~/livebook.creds
+Livebook-Credentials
+Livebook Password: $LIVEBOOK_PASSWORD
+EOF
 msg_ok "Installed Erlang $ERLANG_VERSION and Elixir $ELIXIR_VERSION"
 
 msg_info "Installing Livebook"

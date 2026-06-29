@@ -293,13 +293,13 @@ ldconfig /usr/local/lib
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
 msg_ok "(5/5) Compiled libvips"
-{
-  echo "imagemagick: $IMAGEMAGICK_REVISION"
-  echo "libheif: $LIBHEIF_REVISION"
-  echo "libjxl: $LIBJXL_REVISION"
-  echo "libraw: $LIBRAW_REVISION"
-  echo "libvips: $LIBVIPS_REVISION"
-} >~/.immich_library_revisions
+cat <<EOF >~/.immich_library_revisions
+imagemagick: $IMAGEMAGICK_REVISION
+libheif: $LIBHEIF_REVISION
+libjxl: $LIBJXL_REVISION
+libraw: $LIBRAW_REVISION
+libvips: $LIBVIPS_REVISION
+EOF
 msg_ok "Custom Photo-processing Libraries Compiled Successfully"
 
 INSTALL_DIR="/opt/${APPLICATION}"

@@ -27,11 +27,11 @@ $STD unzip -j "$temp_file" '*/**' -d /opt/rclone
 cd /opt/rclone
 RCLONE_PASSWORD=$(head -c 16 /dev/urandom | xxd -p -c 16)
 $STD htpasswd -cb -B /opt/login.pwd admin "$RCLONE_PASSWORD"
-{
-  echo "rclone-Credentials"
-  echo "rclone User Name: admin"
-  echo "rclone Password: $RCLONE_PASSWORD"
-} >>~/rclone.creds
+cat <<EOF >>~/rclone.creds
+rclone-Credentials
+rclone User Name: admin
+rclone Password: $RCLONE_PASSWORD
+EOF
 echo "${RELEASE}" >/opt/rclone_version.txt
 rm -f "$temp_file"
 msg_ok "Installed rclone"

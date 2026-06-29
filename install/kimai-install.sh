@@ -33,12 +33,12 @@ MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 $STD mariadb -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "Kimai-Credentials"
-  echo "Kimai Database User: $DB_USER"
-  echo "Kimai Database Password: $DB_PASS"
-  echo "Kimai Database Name: $DB_NAME"
-} >>~/kimai.creds
+cat <<EOF >>~/kimai.creds
+Kimai-Credentials
+Kimai Database User: $DB_USER
+Kimai Database Password: $DB_PASS
+Kimai Database Name: $DB_NAME
+EOF
 msg_ok "Set up database"
 
 fetch_and_deploy_gh_release "kimai" "kimai/kimai" "tarball"

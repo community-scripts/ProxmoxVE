@@ -35,12 +35,12 @@ mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
-{
-  echo "Paymenter Database Credentials"
-  echo "Database: $DB_NAME"
-  echo "Username: $DB_USER"
-  echo "Password: $DB_PASS"
-} >>~/paymenter_db.creds
+cat <<EOF >>~/paymenter_db.creds
+Paymenter Database Credentials
+Database: $DB_NAME
+Username: $DB_USER
+Password: $DB_PASS
+EOF
 cd /opt/paymenter
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction

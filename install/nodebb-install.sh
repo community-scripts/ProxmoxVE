@@ -31,14 +31,14 @@ NODEBB_USER="nodebb"
 NODEBB_PWD="$(openssl rand -base64 18 | cut -c1-13)"
 MONGO_CONNECTION_STRING="mongodb://${NODEBB_USER}:${NODEBB_PWD}@localhost:27017/nodebb"
 NODEBB_SECRET=$(uuidgen)
-{
-  echo "NodeBB-Credentials"
-  echo "Mongo Database User: $MONGO_ADMIN_USER"
-  echo "Mongo Database Password: $MONGO_ADMIN_PWD"
-  echo "NodeBB User: $NODEBB_USER"
-  echo "NodeBB Password: $NODEBB_PWD"
-  echo "NodeBB Secret: $NODEBB_SECRET"
-} >>~/nodebb.creds
+cat <<EOF >>~/nodebb.creds
+NodeBB-Credentials
+Mongo Database User: $MONGO_ADMIN_USER
+Mongo Database Password: $MONGO_ADMIN_PWD
+NodeBB User: $NODEBB_USER
+NodeBB Password: $NODEBB_PWD
+NodeBB Secret: $NODEBB_SECRET
+EOF
 
 $STD mongosh <<EOF
 use admin

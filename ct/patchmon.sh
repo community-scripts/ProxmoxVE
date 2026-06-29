@@ -58,12 +58,11 @@ function update_script() {
         -e 's/^NODE_/APP_/' \
         -e '/^SERVER_*/d' \
         -e '/^# API*/,+2d' /opt/patchmon/.env
-      {
-        echo ""
-        echo "SESSION_SECRET=$(openssl rand -hex 64)"
-        echo "AI_ENCRYPTION_KEY=$(openssl rand -hex 64)"
-        echo "AGENT_BINARIES_DIR=/opt/patchmon/agents"
-      } >>/opt/patchmon/.env
+      cat <<EOF >>/opt/patchmon/.env
+SESSION_SECRET=$(openssl rand -hex 64)
+AI_ENCRYPTION_KEY=$(openssl rand -hex 64)
+AGENT_BINARIES_DIR=/opt/patchmon/agents
+EOF
       sed -i -e '\|Directory|s|/backend||' \
         -e 's|^ExecStart=.*|ExecStart=/opt/patchmon/patchmon-server|' \
         -e 's|^Environment=NODE_.*|EnvironmentFile=/opt/patchmon/.env|' \
