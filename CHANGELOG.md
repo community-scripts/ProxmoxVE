@@ -489,6 +489,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-29
+
+### 🆕 New Scripts
+
+  - Flame ([#15464](https://github.com/community-scripts/ProxmoxVE/pull/15464))
+
 ## 2026-06-28
 
 ### 🚀 Updated Scripts
