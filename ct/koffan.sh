@@ -12,6 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,15 +36,13 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/koffan/data
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "koffan" "PanSalut/Koffan" "tarball"
+    restore_backup
 
     msg_info "Rebuilding Koffan"
     cd /opt/koffan
-    go build -o koffan main.go
+    $STD go build -o koffan main.go
     msg_ok "Rebuild Koffan"
-
-    restore_backup
 
     msg_info "Starting Service"
     systemctl start koffan
