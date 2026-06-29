@@ -43,7 +43,7 @@ function update_script() {
 
     msg_info "Installing Dependencies"
     $STD apt-get install -y pkg-config
-    $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"; uv python install 3.14'
+    $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"; cd /opt/frappe-bench && uv python install 3.14'
     msg_ok "Installed Dependencies"
 
     msg_info "Migrating bench environment"
