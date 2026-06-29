@@ -493,7 +493,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Etherpad ([#15468](https://github.com/community-scripts/ProxmoxVE/pull/15468))
+  - Koffan ([#15467](https://github.com/community-scripts/ProxmoxVE/pull/15467))
+- Etherpad ([#15468](https://github.com/community-scripts/ProxmoxVE/pull/15468))
 - Flame ([#15464](https://github.com/community-scripts/ProxmoxVE/pull/15464))
 
 ### 🚀 Updated Scripts
