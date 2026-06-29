@@ -28,14 +28,9 @@ aarch64) BUN_VARIANT="aarch64" ;;
   exit 1
   ;;
 esac
-BUN_TMP=$(mktemp -d)
-curl_with_retry "https://github.com/oven-sh/bun/releases/download/bun-v${BUN_VERSION}/bun-linux-${BUN_VARIANT}.zip" "$BUN_TMP/bun.zip"
-$STD unzip -o "$BUN_TMP/bun.zip" -d "$BUN_TMP"
-mkdir -p /usr/local/bun/bin
-install -m 755 "$BUN_TMP/bun-linux-${BUN_VARIANT}/bun" /usr/local/bun/bin/bun
-rm -rf "$BUN_TMP"
-ln -sf /usr/local/bun/bin/bun /usr/local/bin/bun
-ln -sf /usr/local/bun/bin/bun /usr/local/bin/bunx
+export BUN_INSTALL="/root/.bun"
+curl -fsSL https://bun.sh/install | $STD bash
+ln -sf /root/.bun/bin/bun /usr/local/bin/bun
 msg_ok "Installed Bun"
 
 fetch_and_deploy_gh_release "rackula" "RackulaLives/Rackula" "prebuild" "latest" "/opt/rackula" "rackula-lxc-*.tar.gz"
