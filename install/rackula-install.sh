@@ -31,11 +31,7 @@ esac
 export BUN_INSTALL="/root/.bun"
 curl -fsSL https://bun.sh/install | $STD bash
 ln -sf /root/.bun/bin/bun /usr/local/bin/bun
-msg_ok "Installed Bun"
-
 fetch_and_deploy_gh_release "rackula" "RackulaLives/Rackula" "prebuild" "latest" "/opt/rackula" "rackula-lxc-*.tar.gz"
-
-msg_info "Setting up Rackula"
 mkdir -p /opt/rackula/data /etc/nginx/snippets
 
 SECURITY_HEADERS_SRC="/opt/rackula/config/security-headers.conf"
