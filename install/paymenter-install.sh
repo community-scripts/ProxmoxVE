@@ -15,10 +15,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  git \
-  nginx \
-  redis-server \
-  cron
+    git \
+    nginx \
+    redis-server \
+    cron
 msg_ok "Installed Dependencies"
 
 setup_mariadb
@@ -35,7 +35,7 @@ mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
-cat <<EOF >>~/paymenter_db.creds
+cat <<EOF >~/paymenter_db.creds
 Paymenter Database Credentials
 Database: $DB_NAME
 Username: $DB_USER

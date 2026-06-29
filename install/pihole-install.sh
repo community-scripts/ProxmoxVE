@@ -119,7 +119,7 @@ edns-packet-max=1232
 EOF
 
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-    cat <<EOF >>/etc/unbound/unbound.conf.d/pi-hole.conf
+    cat <<EOF >/etc/unbound/unbound.conf.d/pi-hole.conf
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
 forward-zone:
   name: "."

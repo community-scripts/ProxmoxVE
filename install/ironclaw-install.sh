@@ -30,7 +30,7 @@ chmod +x /usr/local/bin/ironclaw
 msg_info "Configuring Environment"
 GATEWAY_TOKEN=$(openssl rand -hex 32)
 mkdir -p /root/.ironclaw
-cat <<EOF >> /root/.ironclaw/gateway.creds
+cat <<EOF >/root/.ironclaw/gateway.creds
 Gateway-Token
 Token: $GATEWAY_TOKEN
 EOF

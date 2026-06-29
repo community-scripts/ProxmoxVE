@@ -42,7 +42,7 @@ $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
-cat <<EOF >>~/odoo.creds
+cat <<EOF >~/odoo.creds
 Odoo-Credentials
 Odoo Database User: $DB_USER
 Odoo Database Password: $DB_PASS

@@ -44,7 +44,7 @@ ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
 echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
 echo "registration_shared_secret: ${SECRET}" >>/etc/matrix-synapse/homeserver.yaml
 
-cat <<EOF >>/etc/matrix-synapse/homeserver.yaml
+cat <<EOF >/etc/matrix-synapse/homeserver.yaml
 
 # MatrixRTC / Element Call configuration
 experimental_features:
@@ -63,7 +63,7 @@ rc_delayed_event_mgmt:
 EOF
 systemctl enable -q --now matrix-synapse
 $STD register_new_matrix_user -a --user admin --password "$ADMIN_PASS" --config /etc/matrix-synapse/homeserver.yaml
-cat <<EOF >>~/matrix.creds
+cat <<EOF >~/matrix.creds
 Matrix-Credentials
 Admin username: admin
 Admin password: $ADMIN_PASS

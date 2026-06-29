@@ -85,7 +85,7 @@ user.is_superuser = True
 user.is_staff = True
 user.save()
 EOF
-cat <<EOF >>~/netbox.creds
+cat <<EOF >~/netbox.creds
 
 Netbox-Django-Credentials
 Django User: $DJANGO_USER

@@ -21,7 +21,7 @@ DB_USER=listmonk
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-cat <<EOF >>~/listmonk.creds
+cat <<EOF >~/listmonk.creds
 listmonk-Credentials
 listmonk Database User: $DB_USER
 listmonk Database Password: $DB_PASS

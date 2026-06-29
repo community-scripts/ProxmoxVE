@@ -30,7 +30,7 @@ DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-cat <<EOF >>~/mediamanager.creds
+cat <<EOF >~/mediamanager.creds
 MediaManager Credentials
 MediaManager Database User: $DB_USER
 MediaManager Database Password: $DB_PASS

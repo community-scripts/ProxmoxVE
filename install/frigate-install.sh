@@ -290,7 +290,7 @@ detect:
 EOF
 
 if grep -q -o -m1 -E 'avx[^ ]*|sse4_2' /proc/cpuinfo && [[ -f /openvino-model/ssdlite_mobilenet_v2.xml ]] && [[ -f /openvino-model/coco_91cl_bkgr.txt ]]; then
-  cat <<EOF >>/config/config.yml
+  cat <<EOF >/config/config.yml
 ffmpeg:
   hwaccel_args: auto
 detectors:
@@ -306,7 +306,7 @@ model:
   labelmap_path: /openvino-model/coco_91cl_bkgr.txt
 EOF
 else
-  cat <<EOF >>/config/config.yml
+  cat <<EOF >/config/config.yml
 ffmpeg:
   hwaccel_args: auto
 model:

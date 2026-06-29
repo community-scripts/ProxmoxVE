@@ -116,7 +116,7 @@ cp /opt/librenms/snmpd.conf.example /etc/snmp/snmpd.conf
 
 APP_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 APP_USER="admin"
-cat <<EOF >>~/librenms.creds
+cat <<EOF >~/librenms.creds
 LibreNMS Credentials
 Username: ${APP_USER}
 Password: ${APP_PASSWORD}

@@ -25,7 +25,7 @@ fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" 
 msg_info "Configuring duplicati"
 DECRYPTKEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 ADMINPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-cat <<EOF >>~/duplicati.creds
+cat <<EOF >~/duplicati.creds
 Admin password = ${ADMINPASS}
 Database encryption key = ${DECRYPTKEY}
 EOF

@@ -15,10 +15,10 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt install -y \
-  build-essential \
-  redis-server \
-  expect \
-  ca-certificates
+    build-essential \
+    redis-server \
+    expect \
+    ca-certificates
 msg_ok "Installed Dependencies"
 
 setup_mongodb
@@ -31,7 +31,7 @@ NODEBB_USER="nodebb"
 NODEBB_PWD="$(openssl rand -base64 18 | cut -c1-13)"
 MONGO_CONNECTION_STRING="mongodb://${NODEBB_USER}:${NODEBB_PWD}@localhost:27017/nodebb"
 NODEBB_SECRET=$(uuidgen)
-cat <<EOF >>~/nodebb.creds
+cat <<EOF >~/nodebb.creds
 NodeBB-Credentials
 Mongo Database User: $MONGO_ADMIN_USER
 Mongo Database Password: $MONGO_ADMIN_PWD

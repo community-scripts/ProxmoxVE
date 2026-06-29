@@ -30,7 +30,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCO
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-cat <<EOF >>~/onlyoffice.creds
+cat <<EOF >~/onlyoffice.creds
 ONLYOFFICE-Credentials
 ONLYOFFICE Database User: $DB_USER
 ONLYOFFICE Database Password: $DB_PASS
@@ -81,7 +81,7 @@ echo onlyoffice-documentserver onlyoffice/rabbitmq-pwd password $RMQ_PASS | debc
 echo onlyoffice-documentserver onlyoffice/jwt-enabled boolean true | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-secret password $JWT_SECRET | debconf-set-selections
 
-cat <<EOF >>~/onlyoffice.creds
+cat <<EOF >~/onlyoffice.creds
 
 ONLYOFFICE RabbitMQ Credentials
 User: $RMQ_USER

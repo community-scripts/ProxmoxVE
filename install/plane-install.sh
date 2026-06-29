@@ -15,21 +15,21 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  nginx \
-  build-essential \
-  libpq-dev \
-  libxml2-dev \
-  libxslt1-dev \
-  libxmlsec1-dev \
-  libxmlsec1-openssl \
-  pkg-config \
-  python3-dev \
-  python3-venv \
-  redis-server \
-  erlang-base \
-  erlang-{asn1,crypto,eldap,ftp,inets,mnesia,os-mon,parsetools} \
-  erlang-{public-key,runtime-tools,snmp,ssl,syntax-tools,tftp,tools,xmerl} \
-  rabbitmq-server
+    nginx \
+    build-essential \
+    libpq-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libxmlsec1-dev \
+    libxmlsec1-openssl \
+    pkg-config \
+    python3-dev \
+    python3-venv \
+    redis-server \
+    erlang-base \
+    erlang-{asn1,crypto,eldap,ftp,inets,mnesia,os-mon,parsetools} \
+    erlang-{public-key,runtime-tools,snmp,ssl,syntax-tools,tftp,tools,xmerl} \
+    rabbitmq-server
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
@@ -86,7 +86,7 @@ VITE_LIVE_BASE_URL=http://${LOCAL_IP}
 VITE_LIVE_BASE_PATH=/live"
 # Each Vite app needs its own .env for the build
 for app in web admin space; do
-  echo "$FRONTEND_ENV" >/opt/plane/apps/${app}/.env
+    echo "$FRONTEND_ENV" >/opt/plane/apps/${app}/.env
 done
 export NODE_OPTIONS="--max-old-space-size=4096"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -271,7 +271,7 @@ WantedBy=multi-user.target
 EOF
 systemctl daemon-reload
 systemctl enable -q --now plane-api plane-worker plane-beat plane-live plane-space
-cat <<EOF >>~/plane.creds
+cat <<EOF >~/plane.creds
 RabbitMQ User: plane
 RabbitMQ Password: ${RABBITMQ_PASS}
 MinIO Access Key: ${MINIO_ACCESS_KEY}

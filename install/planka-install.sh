@@ -32,7 +32,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCO
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-cat <<EOF >>~/planka.creds
+cat <<EOF >~/planka.creds
 PLANKA DB Credentials
 PLANKA Database User: $DB_USER
 PLANKA Database Password: $DB_PASS
@@ -67,7 +67,7 @@ echo "DEFAULT_ADMIN_NAME=$ADMIN_NAME" >>.env
 echo "DEFAULT_ADMIN_USERNAME=$ADMIN_USERNAME" >>.env
 $STD npm run db:seed
 sed -i '/# Temporary admin user creation settings/,$d' .env
-cat <<EOF >>~/planka.creds
+cat <<EOF >~/planka.creds
 
 PLANKA Admin Credentials
 Admin Email: $ADMIN_EMAIL

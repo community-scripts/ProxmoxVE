@@ -25,8 +25,7 @@ chmod 600 ~/valkey.creds
 MEMTOTAL_MB=$(free -m | grep ^Mem: | awk '{print $2}')
 MAXMEMORY_MB=$((MEMTOTAL_MB * 75 / 100))
 
-cat <<EOF >>/etc/valkey/valkey.conf
-
+cat <<EOF >/etc/valkey/valkey.conf
 # Memory-optimized settings for small-scale deployments
 maxmemory ${MAXMEMORY_MB}mb
 maxmemory-policy allkeys-lru

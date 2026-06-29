@@ -22,7 +22,7 @@ mkdir -p /etc/garage
 RPC_SECRET=$(openssl rand -hex 32)
 ADMIN_TOKEN=$(openssl rand -base64 32)
 METRICS_TOKEN=$(openssl rand -base64 32)
-cat <<EOF >>~/garage.creds
+cat <<EOF >~/garage.creds
 Garage Tokens and Secrets
 RPC Secret: $RPC_SECRET
 Admin Token: $ADMIN_TOKEN

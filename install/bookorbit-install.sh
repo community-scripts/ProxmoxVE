@@ -51,7 +51,7 @@ mkdir -p /opt/bookorbit-data/covers /opt/bookorbit-data/book-bucket /opt/bookorb
 APP_VER=$(cat ~/.bookorbit)
 JWT_SECRET=$(openssl rand -hex 32)
 SETUP_BOOTSTRAP_TOKEN=$(openssl rand -hex 16)
-cat <<EOF >>~/bookorbit.creds
+cat <<EOF >~/bookorbit.creds
 
 Setup Token: ${SETUP_BOOTSTRAP_TOKEN}
 EOF

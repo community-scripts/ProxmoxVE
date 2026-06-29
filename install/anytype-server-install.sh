@@ -16,7 +16,7 @@ update_os
 setup_mongodb
 
 msg_info "Configuring MongoDB Replica Set"
-cat <<EOF >>/etc/mongod.conf
+cat <<EOF >/etc/mongod.conf
 
 replication:
   replSetName: "rs0"

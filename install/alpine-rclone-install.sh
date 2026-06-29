@@ -27,7 +27,7 @@ $STD unzip -j "$temp_file" '*/**' -d /opt/rclone
 cd /opt/rclone
 RCLONE_PASSWORD=$(head -c 16 /dev/urandom | xxd -p -c 16)
 $STD htpasswd -cb -B /opt/login.pwd admin "$RCLONE_PASSWORD"
-cat <<EOF >>~/rclone.creds
+cat <<EOF >~/rclone.creds
 rclone-Credentials
 rclone User Name: admin
 rclone Password: $RCLONE_PASSWORD

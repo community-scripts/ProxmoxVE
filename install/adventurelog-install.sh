@@ -86,7 +86,7 @@ user.is_superuser = True
 user.is_staff = True
 user.save()
 EOF
-cat <<EOF >>~/adventurelog.creds
+cat <<EOF >~/adventurelog.creds
 Django-Credentials
 Django Admin User: $DJANGO_ADMIN_USER
 Django Admin Password: $DJANGO_ADMIN_PASS

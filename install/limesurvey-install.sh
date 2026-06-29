@@ -23,7 +23,7 @@ DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-cat <<EOF >>~/limesurvey.creds
+cat <<EOF >~/limesurvey.creds
 LimeSurvey-Credentials
 LimeSurvey Database User: $DB_USER
 LimeSurvey Database Password: $DB_PASS

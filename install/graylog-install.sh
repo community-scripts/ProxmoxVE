@@ -28,7 +28,7 @@ msg_ok "Setup Graylog Data Node"
 msg_info "Setup ${APPLICATION}"
 $STD apt-get install graylog-server
 ROOT_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
-cat <<EOF >>~/graylog.creds
+cat <<EOF >~/graylog.creds
 ${APPLICATION} Credentials
 Admin User: admin
 Admin Password: ${ROOT_PASSWORD}

@@ -59,7 +59,7 @@ EOF
 systemctl enable -q --now nightscout
 msg_ok "Created Service"
 
-cat <<EOF >>~/nightscout.creds
+cat <<EOF >~/nightscout.creds
 Nightscout Credentials
 API_SECRET: ${API_SECRET}
 EOF

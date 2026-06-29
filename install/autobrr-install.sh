@@ -17,7 +17,7 @@ fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/us
 
 msg_info "Configuring Autobrr"
 mkdir -p /root/.config/autobrr
-cat <<EOF >>/root/.config/autobrr/config.toml
+cat <<EOF >/root/.config/autobrr/config.toml
 # https://autobrr.com/configuration/autobrr
 host = "0.0.0.0"
 port = 7474

@@ -52,7 +52,7 @@ DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-cat <<EOF >>~/pterodactyl-panel.creds
+cat <<EOF >~/pterodactyl-panel.creds
 pterodactyl Panel-Credentials
 pterodactyl Panel Database User: $DB_USER
 pterodactyl Panel Database Password: $DB_PASS
@@ -82,7 +82,7 @@ echo "* * * * * php /opt/pterodactyl-panel/artisan schedule:run >> /dev/null 2>&
 chown -R www-data:www-data /opt/pterodactyl-panel/*
 chmod -R 755 /opt/pterodactyl-panel/storage/* /opt/pterodactyl-panel/bootstrap/cache/
 ln -s /opt/pterodactyl-panel /var/www/pterodactyl
-cat <<EOF >>~/pterodactyl-panel.creds
+cat <<EOF >~/pterodactyl-panel.creds
 
 pterodactyl Admin Username: admin
 pterodactyl Admin Email: $ADMIN_EMAIL

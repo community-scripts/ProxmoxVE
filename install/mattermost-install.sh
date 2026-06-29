@@ -35,7 +35,7 @@ $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 $STD sudo -u postgres psql -c "GRANT USAGE, CREATE ON SCHEMA PUBLIC TO $DB_USER;"
-cat <<EOF >>~/mattermost.creds
+cat <<EOF >~/mattermost.creds
 Mattermost Credentials
 Database User: $DB_USER
 Database Password: $DB_PASS

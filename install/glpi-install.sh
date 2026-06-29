@@ -33,7 +33,7 @@ $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
 $STD mariadb -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-cat <<EOF >>~/glpi_db.creds
+cat <<EOF >~/glpi_db.creds
 GLPI Database Credentials
 Database: $DB_NAME
 Username: $DB_USER

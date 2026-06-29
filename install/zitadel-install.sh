@@ -29,7 +29,7 @@ systemctl start postgresql
 $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE USER $DB_ADMIN_USER WITH PASSWORD '$DB_ADMIN_PASS' SUPERUSER;"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
-cat <<EOF >>~/zitadel.creds
+cat <<EOF >~/zitadel.creds
 Application Credentials
 DB_NAME: $DB_NAME
 DB_USER: $DB_USER
@@ -45,7 +45,7 @@ msg_info "Setting up Zitadel Environments"
 mkdir -p /opt/zitadel
 echo "/opt/zitadel/config.yaml" >"/opt/zitadel/.config"
 head -c 32 < <(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9') >"/opt/zitadel/.masterkey"
-cat <<EOF >>~/zitadel.creds
+cat <<EOF >~/zitadel.creds
 Config location: $(cat "/opt/zitadel/.config")
 Masterkey: $(cat "/opt/zitadel/.masterkey")
 EOF

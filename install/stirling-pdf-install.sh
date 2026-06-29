@@ -103,7 +103,7 @@ PATH=/opt/.venv/bin:/usr/lib/libreoffice/program:/usr/local/sbin:/usr/local/bin:
 EOF
 
 if [[ "$login_mode" == "true" ]]; then
-  cat <<EOF >>/opt/Stirling-PDF/.env
+  cat <<EOF >/opt/Stirling-PDF/.env
 # activate Login
 DISABLE_ADDITIONAL_FEATURES=false
 SECURITY_ENABLELOGIN=true

@@ -66,7 +66,7 @@ for i in $(seq 1 30); do
   sleep 2
 done
 if [[ -f "$CREDS_FILE" ]]; then
-  cat <<EOF >>~/crafty-controller.creds
+  cat <<EOF >~/crafty-controller.creds
 Crafty-Controller-Credentials
 Username: $(grep -oP '(?<="username": ")[^"]*' "$CREDS_FILE")
 Password: $(grep -oP '(?<="password": ")[^"]*' "$CREDS_FILE")

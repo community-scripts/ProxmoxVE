@@ -24,7 +24,7 @@ msg_info "Setting up YT-DLP-WEBUI"
 mkdir -p /opt/yt-dlp-webui
 mkdir /downloads
 RPC_PASSWORD=$(openssl rand -base64 16)
-cat <<EOF >>~/yt-dlp-webui.creds
+cat <<EOF >~/yt-dlp-webui.creds
 yt-dlp-webui-Credentials
 Username: admin
 Password: ${RPC_PASSWORD}

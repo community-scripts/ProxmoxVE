@@ -24,7 +24,7 @@ msg_info "Setting up Radicale"
 cd /opt/radicale
 RNDPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD htpasswd -c -b -5 /opt/radicale/users admin "$RNDPASS"
-cat <<EOF >>~/radicale.creds
+cat <<EOF >~/radicale.creds
 Radicale Credentials
 Admin User: admin
 Admin Password: $RNDPASS

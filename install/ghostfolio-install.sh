@@ -29,7 +29,7 @@ PG_DB_NAME="ghostfolio" PG_DB_USER="ghostfolio" PG_DB_SCHEMA_PERMS="true" setup_
 REDIS_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 ACCESS_TOKEN_SALT=$(openssl rand -base64 32)
 JWT_SECRET_KEY=$(openssl rand -base64 32)
-cat <<EOF >>~/ghostfolio.creds
+cat <<EOF >~/ghostfolio.creds
 Ghostfolio Credentials
 Redis Password: $REDIS_PASS
 Access Token Salt: $ACCESS_TOKEN_SALT

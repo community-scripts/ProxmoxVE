@@ -28,7 +28,7 @@ setup_deb822_repo \
   "$(get_os_info codename)" \
   "main"
 $STD apt install -y couchdb
-cat <<EOF >>~/couchdb.creds
+cat <<EOF >~/couchdb.creds
 CouchDB Credentials
 CouchDB Erlang Cookie: $ERLANG_COOKIE
 CouchDB Admin Password: $ADMIN_PASS

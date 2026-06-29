@@ -27,7 +27,7 @@ DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED by '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-cat <<EOF >>~/mmdl.creds
+cat <<EOF >~/mmdl.creds
 Manage My Damn Life Credentials
 Database User: $DB_USER
 Database Password: $DB_PASS

@@ -63,7 +63,7 @@ $STD sudo -u www-data php /opt/webtrees/index.php user Admin \
   --password="${WT_ADMIN_PASS}"
 $STD sudo -u www-data php /opt/webtrees/index.php user-setting Admin canadmin 1
 
-cat <<EOF >>~/webtrees.creds
+cat <<EOF >~/webtrees.creds
 
 Webtrees Admin User: Admin
 Webtrees Admin Password: ${WT_ADMIN_PASS}
