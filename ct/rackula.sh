@@ -66,7 +66,6 @@ function update_script() {
     systemctl daemon-reload
     systemctl start nginx rackula-api
     msg_ok "Started Services"
-
     msg_ok "Updated successfully!"
   fi
   exit
