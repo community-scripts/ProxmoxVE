@@ -491,6 +491,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-30
 
+### 🆕 New Scripts
+
+  - FMD Server ([#15481](https://github.com/community-scripts/ProxmoxVE/pull/15481))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
