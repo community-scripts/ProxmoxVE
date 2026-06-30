@@ -497,6 +497,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - feat(erpnext): add migration to v16/update install script for v16 [@asylumexp](https://github.com/asylumexp) ([#15437](https://github.com/community-scripts/ProxmoxVE/pull/15437))
+
   - #### 🔧 Refactor
 
     - Refactor: Use heredoc when creating env files and creds/other [@tremor021](https://github.com/tremor021) ([#15469](https://github.com/community-scripts/ProxmoxVE/pull/15469))
