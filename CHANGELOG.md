@@ -495,6 +495,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - FMD Server ([#15481](https://github.com/community-scripts/ProxmoxVE/pull/15481))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: Use heredoc when creating env files and creds/other [@tremor021](https://github.com/tremor021) ([#15469](https://github.com/community-scripts/ProxmoxVE/pull/15469))
+
 ### 💾 Core
 
   - #### 🔧 Refactor
