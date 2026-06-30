@@ -152,7 +152,7 @@ EOF
   yes)
     msg_info "Enabling 'pve-no-subscription' repository"
     cat <<EOF >/etc/apt/sources.list.d/pve-install-repo.list
-deb https://download.proxmox.com/debian/pve bookworm pve-no-subscription
+deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
 EOF
     msg_ok "Enabled 'pve-no-subscription' repository"
     ;;
