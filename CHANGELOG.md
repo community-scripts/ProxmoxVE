@@ -491,25 +491,17 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-06-30
 
-### 🆕 New Scripts
-
-  - FMD Server ([#15481](https://github.com/community-scripts/ProxmoxVE/pull/15481))
-
 ### 🚀 Updated Scripts
-
-  - #### ✨ New Features
-
-    - feat(erpnext): add migration to v16/update install script for v16 [@asylumexp](https://github.com/asylumexp) ([#15437](https://github.com/community-scripts/ProxmoxVE/pull/15437))
 
   - #### 🔧 Refactor
 
     - Refactor: Use heredoc when creating env files and creds/other [@tremor021](https://github.com/tremor021) ([#15469](https://github.com/community-scripts/ProxmoxVE/pull/15469))
 
-### 💾 Core
+### 🧰 Tools
 
-  - #### 🔧 Refactor
+  - #### 🐞 Bug Fixes
 
-    - ImageMagick: Switch to github releases [@MickLesk](https://github.com/MickLesk) ([#15492](https://github.com/community-scripts/ProxmoxVE/pull/15492))
+    - [tools/pve/*.sh] https://download.proxmox.com -> http://download.proxmox.com (PVE8 Only) [@galeksandrp](https://github.com/galeksandrp) ([#15498](https://github.com/community-scripts/ProxmoxVE/pull/15498))
 
 ## 2026-06-29
 
