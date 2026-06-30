@@ -489,6 +489,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-06-30
+
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - ImageMagick: Switch to github releases [@MickLesk](https://github.com/MickLesk) ([#15492](https://github.com/community-scripts/ProxmoxVE/pull/15492))
+
 ## 2026-06-29
 
 ### 🆕 New Scripts
