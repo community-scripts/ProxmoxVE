@@ -51,7 +51,6 @@ function update_script() {
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
-  cleanup_lxc
   exit
 }
 
