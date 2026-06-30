@@ -6164,7 +6164,6 @@ _setup_gpu_permissions() {
 #   - Requires: build-essential, libtool, libjpeg-dev, libpng-dev, etc.
 # ------------------------------------------------------------------------------
 setup_imagemagick() {
-  local TMP_DIR=$(mktemp -d)
   local BINARY_PATH="/usr/local/bin/magick"
 
   # Get currently installed version
@@ -6195,51 +6194,39 @@ setup_imagemagick() {
     pkg-config \
     ghostscript
 
-  if ! CURL_TIMEOUT=180 curl_with_retry "https://imagemagick.org/archive/ImageMagick.tar.gz" "$TMP_DIR/ImageMagick.tar.gz"; then
-    msg_error "Failed to download ImageMagick"
-    msg_error "Hint: Check connectivity to imagemagick.org/archive"
-    rm -rf "$TMP_DIR"
+  # Fetch and deploy source tarball from GitHub Releases
+  fetch_and_deploy_gh_release "imagemagick" "ImageMagick/ImageMagick" "tarball" || {
+    msg_error "Failed to download ImageMagick source from GitHub"
+    msg_error "Hint: Check connectivity to github.com/ImageMagick/ImageMagick"
     return 250
-  fi
-
-  tar -xzf "$TMP_DIR/ImageMagick.tar.gz" -C "$TMP_DIR" || {
-    msg_error "Failed to extract ImageMagick"
-    rm -rf "$TMP_DIR"
-    return 251
   }
 
-  cd "$TMP_DIR"/ImageMagick-* || {
-    msg_error "Source extraction failed"
-    rm -rf "$TMP_DIR"
+  cd /opt/imagemagick || {
+    msg_error "Failed to enter ImageMagick source directory"
     return 251
   }
 
   $STD ./configure --disable-static || {
     msg_error "ImageMagick configure failed"
-    rm -rf "$TMP_DIR"
     return 150
   }
   $STD make -j"$(nproc)" || {
     msg_error "ImageMagick compilation failed"
-    rm -rf "$TMP_DIR"
     return 150
   }
   $STD make install || {
     msg_error "ImageMagick installation failed"
-    rm -rf "$TMP_DIR"
     return 150
   }
   $STD ldconfig /usr/local/lib
 
   if [[ ! -x "$BINARY_PATH" ]]; then
     msg_error "ImageMagick installation failed"
-    rm -rf "$TMP_DIR"
     return 150
   fi
 
   local FINAL_VERSION
   FINAL_VERSION=$("$BINARY_PATH" -version | awk '/^Version/ {print $3}')
-  rm -rf "$TMP_DIR"
   cache_installed_version "imagemagick" "$FINAL_VERSION"
   ensure_usr_local_bin_persist
 
