@@ -12,7 +12,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-0}"
 
 header_info "$APP"
@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Stopped iVentoy"
 
     create_backup /opt/iventoy/data /opt/iventoy/iso
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "iventoy" "ventoy/PXE" "prebuild" "latest" "/opt/iventoy" "iventoy-*-linux-x86_64-free.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "iventoy" "ventoy/PXE" "prebuild" "latest" "/opt/iventoy" "iventoy-*-linux-$(arch_resolve x86_64-free arm64-trial).tar.gz"
     restore_backup
 
     msg_info "Starting iVentoy"
