@@ -489,6 +489,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-01
+
+### 🆕 New Scripts
+
+  - iVentoy ([#15503](https://github.com/community-scripts/ProxmoxVE/pull/15503))
+
 ## 2026-06-30
 
 ### 🚀 Updated Scripts
