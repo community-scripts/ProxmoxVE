@@ -110,7 +110,7 @@ export AUTOGRAPH_VERBOSITY=0
 export GLOG_minloglevel=3
 export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.1" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.2" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
