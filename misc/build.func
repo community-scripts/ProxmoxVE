@@ -3930,7 +3930,7 @@ build_container() {
 
   NET_STRING="-net0 name=eth0,bridge=${BRG:-vmbr0}"
   if [[ -n "${var_sdn_vnet:-${SDN_VNET:-}}" ]]; then
-    NET_STRING="-net0 name=eth0,vnet=${var_sdn_vnet:-$SDN_VNET}"
+    NET_STRING="-net0 name=eth0,bridge=${var_sdn_vnet:-$SDN_VNET}"
   fi
 
   # MAC
