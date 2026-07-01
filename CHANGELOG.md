@@ -511,6 +511,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: fix SDN vnet network parameter to use bridge instead of vnet [@MickLesk](https://github.com/MickLesk) ([#15527](https://github.com/community-scripts/ProxmoxVE/pull/15527))
     - tools.func: use safe variable expansion in check_for_gh_release RETURN trap [@MickLesk](https://github.com/MickLesk) ([#15529](https://github.com/community-scripts/ProxmoxVE/pull/15529))
 
 ## 2026-06-30
