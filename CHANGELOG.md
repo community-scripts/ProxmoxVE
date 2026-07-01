@@ -499,6 +499,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - homarr: fix: update-fail [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15512](https://github.com/community-scripts/ProxmoxVE/pull/15512))
     - n8n: pin version to 2.27.5 [@tremor021](https://github.com/tremor021) ([#15516](https://github.com/community-scripts/ProxmoxVE/pull/15516))
 
 ## 2026-06-30
