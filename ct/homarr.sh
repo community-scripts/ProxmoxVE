@@ -51,7 +51,7 @@ function update_script() {
 ReadWritePaths=-/appdata/redis -/var/lib/redis -/var/log/redis -/var/run/redis -/etc/redis
 EOF
       systemctl daemon-reload
-      rm /opt/run_homarr.sh
+      rm -f /opt/run_homarr.sh
       msg_ok "Fixed old structure"
     fi
 
@@ -68,7 +68,7 @@ EOF
     cp /opt/homarr/redis.conf /etc/redis/redis.conf
     sed -i -e '$a\' /etc/redis/redis.conf
     grep -q '^bind 127.0.0.1 -::1$' /etc/redis/redis.conf || echo "bind 127.0.0.1 -::1" >> /etc/redis/redis.conf
-    rm /etc/nginx/nginx.conf
+    rm -f /etc/nginx/nginx.conf
     cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
     msg_ok "Updated Homarr"
 
