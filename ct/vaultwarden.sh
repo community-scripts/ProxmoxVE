@@ -37,7 +37,7 @@ function update_script() {
     "2" "Set Admin Token")
 
   if [ "$UPD" == "1" ]; then
-    INSTALLED_VERSION="$(/opt/vaultwarden/bin/vaultwarden --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+    INSTALLED_VERSION="$(/opt/vaultwarden/bin/vaultwarden --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1 || true)"
     if [[ -n "$INSTALLED_VERSION" ]] &&
       ! grep -qxF "$INSTALLED_VERSION" "$HOME/.vaultwarden" 2>/dev/null; then
       printf '%s\n' "$INSTALLED_VERSION" >"$HOME/.vaultwarden"
