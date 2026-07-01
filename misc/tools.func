@@ -7657,6 +7657,12 @@ setup_nodejs() {
     fi
   fi
 
+  # pnpm v10+ blocks dependency build scripts by default (ERR_PNPM_IGNORED_BUILDS).
+  # In a container environment all installed packages are trusted, so we enable builds globally.
+  if command -v pnpm >/dev/null 2>&1; then
+    pnpm config set --global dangerouslyAllowAllBuilds true >/dev/null 2>&1 || true
+  fi
+
   if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && ((wants_corepack)) && command -v corepack >/dev/null 2>&1; then
     msg_info "Enabling corepack"
     if $STD corepack enable 2>/dev/null; then
