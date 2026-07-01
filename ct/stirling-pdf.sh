@@ -38,6 +38,10 @@ function update_script() {
     PYTHON_VERSION="3.12" setup_uv
     JAVA_VERSION="25" setup_java
 
+    msg_info "Patching Native Libraries for LXC Compatibility"
+    find /usr/lib -name "libicudata.so.*" -exec patchelf --clear-execstack {} \;
+    msg_ok "Patched Native Libraries"
+
     msg_info "Stopping Services"
     systemctl stop stirlingpdf libreoffice-listener unoserver
     msg_ok "Stopped Services"

@@ -27,7 +27,8 @@ $STD apt install -y \
   fonts-urw-base35 \
   qpdf \
   poppler-utils \
-  jbig2
+  jbig2 \
+  patchelf
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
@@ -114,6 +115,10 @@ SECURITY_INITIALLOGIN_PASSWORD=stirling
 EOF
 fi
 msg_ok "Created Environment Variables"
+
+msg_info "Patching Native Libraries for LXC Compatibility"
+find /usr/lib -name "libicudata.so.*" -exec patchelf --clear-execstack {} \;
+msg_ok "Patched Native Libraries"
 
 msg_info "Refreshing Font Cache"
 $STD fc-cache -fv
