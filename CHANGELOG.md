@@ -506,6 +506,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [arm64] feat: iventory arm64 support [@asylumexp](https://github.com/asylumexp) ([#15521](https://github.com/community-scripts/ProxmoxVE/pull/15521))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: use safe variable expansion in check_for_gh_release RETURN trap [@MickLesk](https://github.com/MickLesk) ([#15529](https://github.com/community-scripts/ProxmoxVE/pull/15529))
+
 ## 2026-06-30
 
 ### 🚀 Updated Scripts
