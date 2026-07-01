@@ -2647,9 +2647,9 @@ check_for_gh_release() {
 
   ensure_dependencies jq
 
-  local gh_check_json
+  local gh_check_json=""
   gh_check_json=$(mktemp /tmp/tools-gh-check-XXXXXX) || return 73
-  trap 'rm -f "$gh_check_json"' RETURN
+  trap 'rm -f "${gh_check_json:-}"' RETURN
 
   # Build auth header if token is available
   local header_args=()
