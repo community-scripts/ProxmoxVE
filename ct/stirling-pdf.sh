@@ -39,7 +39,8 @@ function update_script() {
     JAVA_VERSION="25" setup_java
 
     msg_info "Patching Native Libraries for LXC Compatibility"
-    find /usr/lib -name "libicudata.so.*" -exec patchelf --clear-execstack {} \;
+    ensure_dependencies patchelf
+    find /usr/lib -name "libicudata.so.*" -exec patchelf --clear-execstack {} \; || true
     msg_ok "Patched Native Libraries"
 
     msg_info "Stopping Services"

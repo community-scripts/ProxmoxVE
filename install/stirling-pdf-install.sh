@@ -117,7 +117,7 @@ fi
 msg_ok "Created Environment Variables"
 
 msg_info "Patching Native Libraries for LXC Compatibility"
-find /usr/lib -name "libicudata.so.*" -exec patchelf --clear-execstack {} \;
+find /usr/lib -name "libicudata.so.*" -exec patchelf --clear-execstack {} \; || true
 msg_ok "Patched Native Libraries"
 
 msg_info "Refreshing Font Cache"
