@@ -18,9 +18,6 @@ $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Bun"
-ensure_dependencies unzip ca-certificates
-# rackula-api.service ships with ProtectHome=true, so the bun binary must live
-# outside /root; /opt/bun matches yubal and gitea-mirror
 export BUN_INSTALL="/opt/bun"
 curl -fsSL https://bun.sh/install | $STD bash
 ln -sf /opt/bun/bin/bun /usr/local/bin/bun
@@ -30,14 +27,8 @@ fetch_and_deploy_gh_release "rackula" "RackulaLives/Rackula" "prebuild" "latest"
 
 msg_info "Setting up Rackula"
 mkdir -p /opt/rackula/data /etc/nginx/snippets
-
 SECURITY_HEADERS_SRC="/opt/rackula/config/security-headers.conf"
-if [ ! -f "$SECURITY_HEADERS_SRC" ]; then
-  msg_error "Required config file missing: $SECURITY_HEADERS_SRC (release may be incomplete)"
-  exit 1
-fi
 cp "$SECURITY_HEADERS_SRC" /etc/nginx/snippets/security-headers.conf
-
 chown -R root:root /opt/rackula/frontend
 find /opt/rackula/frontend -type d -exec chmod 755 {} \;
 find /opt/rackula/frontend -type f -exec chmod 644 {} \;
