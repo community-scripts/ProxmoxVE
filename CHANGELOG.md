@@ -491,6 +491,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-02
 
+### 🆕 New Scripts
+
+  - Rackula ([#15465](https://github.com/community-scripts/ProxmoxVE/pull/15465))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
