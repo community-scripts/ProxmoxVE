@@ -7627,7 +7627,10 @@ setup_nodejs() {
         MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
           msg_info "Updating $MODULE_NAME to v$MODULE_REQ_VERSION"
-          if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+          # Retry with --force to overwrite corepack-provided shims (pnpm/yarn), which now
+          # ship with recent corepack and cause EEXIST on /usr/bin/<tool>
+          if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null ||
+            $STD npm install -g --force "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
             msg_ok "Updated $MODULE_NAME"
           else
             msg_warn "Failed to update $MODULE_NAME to version $MODULE_REQ_VERSION"
@@ -7635,7 +7638,8 @@ setup_nodejs() {
           fi
         elif [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
           msg_info "Updating $MODULE_NAME to latest version"
-          if $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null; then
+          if $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null ||
+            $STD npm install -g --force "${MODULE_NAME}@latest" 2>/dev/null; then
             msg_ok "Updated $MODULE_NAME"
           else
             msg_warn "Failed to update $MODULE_NAME to latest version"
@@ -7644,7 +7648,10 @@ setup_nodejs() {
         fi
       else
         msg_info "Installing $MODULE_NAME@$MODULE_REQ_VERSION"
-        if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+        # Retry with --force to overwrite corepack-provided shims (pnpm/yarn), which now
+        # ship with recent corepack and cause EEXIST on /usr/bin/<tool>
+        if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null ||
+          $STD npm install -g --force "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
           msg_ok "Installed $MODULE_NAME"
         else
           msg_warn "Failed to install $MODULE_NAME@$MODULE_REQ_VERSION"
