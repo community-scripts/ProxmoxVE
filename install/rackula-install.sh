@@ -19,19 +19,16 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Bun"
 ensure_dependencies unzip ca-certificates
-BUN_VERSION="${BUN_VERSION:-1.3.14}"
-case "$(uname -m)" in
-x86_64) grep -q avx2 /proc/cpuinfo && BUN_VARIANT="x64" || BUN_VARIANT="x64-baseline" ;;
-aarch64) BUN_VARIANT="aarch64" ;;
-*)
-  msg_error "Unsupported architecture: $(uname -m)"
-  exit 1
-  ;;
-esac
-export BUN_INSTALL="/root/.bun"
+# rackula-api.service ships with ProtectHome=true, so the bun binary must live
+# outside /root; /opt/bun matches yubal and gitea-mirror
+export BUN_INSTALL="/opt/bun"
 curl -fsSL https://bun.sh/install | $STD bash
-ln -sf /root/.bun/bin/bun /usr/local/bin/bun
+ln -sf /opt/bun/bin/bun /usr/local/bin/bun
+msg_ok "Installed Bun"
+
 fetch_and_deploy_gh_release "rackula" "RackulaLives/Rackula" "prebuild" "latest" "/opt/rackula" "rackula-lxc-*.tar.gz"
+
+msg_info "Setting up Rackula"
 mkdir -p /opt/rackula/data /etc/nginx/snippets
 
 SECURITY_HEADERS_SRC="/opt/rackula/config/security-headers.conf"
