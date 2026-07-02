@@ -497,6 +497,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Revert "Immich v3.0.0" [@MickLesk](https://github.com/MickLesk) ([#15558](https://github.com/community-scripts/ProxmoxVE/pull/15558))
+
   - #### 🐞 Bug Fixes
 
     - typo: fix npm update to npm install for n8n [@MickLesk](https://github.com/MickLesk) ([#15545](https://github.com/community-scripts/ProxmoxVE/pull/15545))
