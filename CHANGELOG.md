@@ -505,6 +505,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Frigate: bump to v0.17.2 [@MickLesk](https://github.com/MickLesk) ([#15536](https://github.com/community-scripts/ProxmoxVE/pull/15536))
 
+  - #### 💥 Breaking Changes
+
+    - Immich v3.0.0 [@vhsdream](https://github.com/vhsdream) ([#15153](https://github.com/community-scripts/ProxmoxVE/pull/15153))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
