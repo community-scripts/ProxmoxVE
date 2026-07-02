@@ -3788,6 +3788,17 @@ runtime_script_status_guard() {
   fi
 
   if [[ "$is_disabled" == "true" ]]; then
+    # Allow bypass via var_ignore_disable=true (still warn, but continue)
+    case "${var_ignore_disable:-}" in
+    1 | yes | true | on)
+      msg_warn "This script is currently disabled in community-scripts."
+      [[ -n "$disable_message" ]] && msg_warn "$disable_message"
+      msg_warn "Bypassing disable status via var_ignore_disable — continuing at your own risk."
+      msg_warn "More info: ${info_url}"
+      return 0
+      ;;
+    esac
+
     msg_error "This script is currently disabled in community-scripts."
     [[ -n "$disable_message" ]] && msg_error "$disable_message"
     [[ -z "$disable_message" ]] && msg_error "Updates and installs are temporarily disabled for this script."
