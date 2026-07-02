@@ -350,7 +350,10 @@ cp LICENSE "$APP_DIR"
 cd "$SRC_DIR"
 export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
 export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
-# mise v2026.7.0 renamed 'experimental_monorepo_root' to 'monorepo_root'; ensure both are set so the //:plugins task works regardless of mise version
+# mise gates monorepo task paths (//:plugins) behind experimental mode and renamed the
+# 'experimental_monorepo_root' setting to 'monorepo_root' in v2026.7.0. Set the env flag and
+# ensure both config keys are present so the task works regardless of the installed mise version.
+export MISE_EXPERIMENTAL=1
 grep -q '^monorepo_root = true' "$SRC_DIR"/mise.toml || sed -i 's/^experimental_monorepo_root = true/monorepo_root = true\nexperimental_monorepo_root = true/' "$SRC_DIR"/mise.toml
 $STD mise //:plugins
 mkdir -p "$PLUGIN_DIR"
