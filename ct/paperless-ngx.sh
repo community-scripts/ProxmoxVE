@@ -55,6 +55,8 @@ function update_script() {
     msg_ok "Stopped all Paperless-ngx Services"
 
     if grep -q "uv run" /etc/systemd/system/paperless-webserver.service; then
+      PAPERLESS_INSTALLED_VERSION=""
+      [[ -f ~/.paperless ]] && PAPERLESS_INSTALLED_VERSION="$(<~/.paperless)"
 
       msg_info "Backing up configuration"
       local BACKUP_DIR="/opt/paperless_backup_$$"
@@ -72,10 +74,94 @@ function update_script() {
       else
         ensure_dependencies ghostscript
       fi
+      ensure_dependencies gnupg
 
       msg_info "Updating Paperless-ngx"
       cp -r "$BACKUP_DIR"/* /opt/paperless/
-      grep -q '^PAPERLESS_DBENGINE=' /opt/paperless/paperless.conf || echo 'PAPERLESS_DBENGINE=postgresql' >>/opt/paperless/paperless.conf
+      if [[ "$PAPERLESS_INSTALLED_VERSION" == 2.* ]]; then
+        msg_info "Migrating Paperless-ngx v2 configuration to v3"
+        PAPERLESS_CONF="/opt/paperless/paperless.conf"
+
+        SECRET_KEY_CURRENT="$(sed -n 's|^PAPERLESS_SECRET_KEY=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DBENGINE="$(sed -n 's|^PAPERLESS_DBENGINE=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DBSSLMODE="$(sed -n 's|^PAPERLESS_DBSSLMODE=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DBSSLROOTCERT="$(sed -n 's|^PAPERLESS_DBSSLROOTCERT=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DBSSLCERT="$(sed -n 's|^PAPERLESS_DBSSLCERT=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DBSSLKEY="$(sed -n 's|^PAPERLESS_DBSSLKEY=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DB_POOLSIZE="$(sed -n 's|^PAPERLESS_DB_POOLSIZE=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DB_TIMEOUT="$(sed -n 's|^PAPERLESS_DB_TIMEOUT=||p' "$PAPERLESS_CONF" | tail -n1)"
+        CONSUMER_POLLING="$(sed -n 's|^PAPERLESS_CONSUMER_POLLING=||p' "$PAPERLESS_CONF" | tail -n1)"
+        CONSUMER_POLLING_INTERVAL="$(sed -n 's|^PAPERLESS_CONSUMER_POLLING_INTERVAL=||p' "$PAPERLESS_CONF" | tail -n1)"
+        CONSUMER_INOTIFY_DELAY="$(sed -n 's|^PAPERLESS_CONSUMER_INOTIFY_DELAY=||p' "$PAPERLESS_CONF" | tail -n1)"
+        CONSUMER_STABILITY_DELAY="$(sed -n 's|^PAPERLESS_CONSUMER_STABILITY_DELAY=||p' "$PAPERLESS_CONF" | tail -n1)"
+        OCR_MODE="$(sed -n 's|^PAPERLESS_OCR_MODE=||p' "$PAPERLESS_CONF" | tail -n1)"
+        OCR_SKIP_ARCHIVE="$(sed -n 's|^PAPERLESS_OCR_SKIP_ARCHIVE_FILE=||p' "$PAPERLESS_CONF" | tail -n1)"
+        ARCHIVE_FILE_GENERATION="$(sed -n 's|^PAPERLESS_ARCHIVE_FILE_GENERATION=||p' "$PAPERLESS_CONF" | tail -n1)"
+
+        DB_OPTIONS_MIGRATED=""
+        [[ -n "$DBSSLMODE" ]] && DB_OPTIONS_MIGRATED="sslmode=$DBSSLMODE"
+        [[ -n "$DBSSLROOTCERT" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}sslrootcert=$DBSSLROOTCERT"
+        [[ -n "$DBSSLCERT" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}sslcert=$DBSSLCERT"
+        [[ -n "$DBSSLKEY" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}sslkey=$DBSSLKEY"
+        [[ -n "$DB_POOLSIZE" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}pool.max_size=$DB_POOLSIZE"
+        [[ -n "$DB_TIMEOUT" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}connect_timeout=$DB_TIMEOUT"
+
+        sed -i \
+          -e '/^PAPERLESS_DBSSLMODE=/d' \
+          -e '/^PAPERLESS_DBSSLROOTCERT=/d' \
+          -e '/^PAPERLESS_DBSSLCERT=/d' \
+          -e '/^PAPERLESS_DBSSLKEY=/d' \
+          -e '/^PAPERLESS_DB_POOLSIZE=/d' \
+          -e '/^PAPERLESS_DB_TIMEOUT=/d' \
+          -e '/^PAPERLESS_CONSUMER_POLLING=/d' \
+          -e '/^PAPERLESS_CONSUMER_INOTIFY_DELAY=/d' \
+          -e '/^PAPERLESS_CONSUMER_POLLING_DELAY=/d' \
+          -e '/^PAPERLESS_CONSUMER_POLLING_RETRY_COUNT=/d' \
+          -e '/^PAPERLESS_CONSUMER_BARCODE_SCANNER=/d' \
+          -e '/^PAPERLESS_OCR_SKIP_ARCHIVE_FILE=/d' \
+          -e 's|^PAPERLESS_OCR_MODE="\?skip"\?$|PAPERLESS_OCR_MODE=auto|' \
+          -e 's|^PAPERLESS_OCR_MODE="\?skip_noarchive"\?$|PAPERLESS_OCR_MODE=auto|' \
+          "$PAPERLESS_CONF"
+
+        if [[ -z "$SECRET_KEY_CURRENT" ]]; then
+          SECRET_KEY="$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -An -tx1 | tr -d ' \n')"
+          sed -i \
+            -e '/^#\?PAPERLESS_SECRET_KEY=/d' \
+            -e "\$a\\PAPERLESS_SECRET_KEY=$SECRET_KEY" \
+            "$PAPERLESS_CONF"
+          printf "Paperless-ngx Secret Key: %s\n" "$SECRET_KEY" >>~/paperless-ngx.creds
+        fi
+        [[ -z "$DBENGINE" ]] && sed -i '$a\PAPERLESS_DBENGINE=postgresql' "$PAPERLESS_CONF"
+        if [[ -n "$DB_OPTIONS_MIGRATED" ]]; then
+          sed -i \
+            -e '/^PAPERLESS_DB_OPTIONS=/d' \
+            -e "\$a\\PAPERLESS_DB_OPTIONS=$DB_OPTIONS_MIGRATED" \
+            "$PAPERLESS_CONF"
+        fi
+        [[ -n "$CONSUMER_POLLING" && -z "$CONSUMER_POLLING_INTERVAL" ]] &&
+          sed -i "\$a\\PAPERLESS_CONSUMER_POLLING_INTERVAL=$CONSUMER_POLLING" "$PAPERLESS_CONF"
+        [[ -n "$CONSUMER_INOTIFY_DELAY" && -z "$CONSUMER_STABILITY_DELAY" ]] &&
+          sed -i "\$a\\PAPERLESS_CONSUMER_STABILITY_DELAY=$CONSUMER_INOTIFY_DELAY" "$PAPERLESS_CONF"
+        if [[ -z "$ARCHIVE_FILE_GENERATION" ]]; then
+          if [[ "$OCR_MODE" == "skip_noarchive" || "$OCR_MODE" == "\"skip_noarchive\"" ]]; then
+            sed -i '$a\PAPERLESS_ARCHIVE_FILE_GENERATION=never' "$PAPERLESS_CONF"
+          elif [[ "$OCR_SKIP_ARCHIVE" == "never" || "$OCR_SKIP_ARCHIVE" == "\"never\"" ]]; then
+            sed -i '$a\PAPERLESS_ARCHIVE_FILE_GENERATION=always' "$PAPERLESS_CONF"
+          elif [[ "$OCR_SKIP_ARCHIVE" == "with_text" || "$OCR_SKIP_ARCHIVE" == "\"with_text\"" ]]; then
+            sed -i '$a\PAPERLESS_ARCHIVE_FILE_GENERATION=auto' "$PAPERLESS_CONF"
+          elif [[ "$OCR_SKIP_ARCHIVE" == "always" || "$OCR_SKIP_ARCHIVE" == "\"always\"" ]]; then
+            sed -i '$a\PAPERLESS_ARCHIVE_FILE_GENERATION=never' "$PAPERLESS_CONF"
+          fi
+        fi
+        [[ -n "$(sed -n '/^PAPERLESS_CONSUMER_IGNORE_PATTERNS=/p' "$PAPERLESS_CONF")" ]] &&
+          msg_warn "PAPERLESS_CONSUMER_IGNORE_PATTERNS now uses regex patterns; please verify custom values."
+        [[ -n "$(sed -n '/^PAPERLESS_PRE_CONSUME_SCRIPT=/p;/^PAPERLESS_POST_CONSUME_SCRIPT=/p' "$PAPERLESS_CONF")" ]] &&
+          msg_warn "Pre/post consume scripts no longer receive positional arguments in v3; please verify custom scripts."
+        msg_ok "Migrated Paperless-ngx configuration"
+      fi
+
+      sed -i 's|^ExecStart=.*|ExecStart=uv run -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
+      $STD systemctl daemon-reload
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
@@ -83,8 +169,8 @@ function update_script() {
       msg_ok "Updated Paperless-ngx"
 
       # zxing-cpp replaces pyzbar in v3, libzbar is no longer required
-      $STD apt-get -y purge libzbar0t64 libzbar0 2>/dev/null || true
-      $STD apt-get -y autoremove 2>/dev/null || true
+      $STD apt -y purge libzbar0t64 libzbar0 2>/dev/null || true
+      $STD apt -y autoremove 2>/dev/null || true
 
       rm -rf "$BACKUP_DIR"
 
@@ -154,6 +240,7 @@ function update_script() {
         ensure_dependencies ghostscript
         msg_ok "Installed Ghostscript"
       fi
+      ensure_dependencies gnupg
 
       msg_info "Updating Paperless-ngx to v2.20.15"
       cp -r "$BACKUP_DIR"/* /opt/paperless/

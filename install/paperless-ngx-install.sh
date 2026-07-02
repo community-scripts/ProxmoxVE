@@ -19,6 +19,7 @@ $STD apt install -y \
   build-essential \
   imagemagick \
   fonts-liberation \
+  gnupg \
   optipng \
   libpq-dev \
   libmagic-dev \
@@ -151,7 +152,7 @@ Requires=redis.service
 
 [Service]
 WorkingDirectory=/opt/paperless/src
-ExecStart=uv run -- granian --interface asgi --ws "paperless.asgi:application"
+ExecStart=uv run -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"
 Environment=GRANIAN_HOST=::
 Environment=GRANIAN_PORT=8000
 Environment=GRANIAN_WORKERS=1
