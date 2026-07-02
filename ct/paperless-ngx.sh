@@ -84,12 +84,7 @@ function update_script() {
 
         SECRET_KEY_CURRENT="$(sed -n 's|^PAPERLESS_SECRET_KEY=||p' "$PAPERLESS_CONF" | tail -n1)"
         DBENGINE="$(sed -n 's|^PAPERLESS_DBENGINE=||p' "$PAPERLESS_CONF" | tail -n1)"
-        DBSSLMODE="$(sed -n 's|^PAPERLESS_DBSSLMODE=||p' "$PAPERLESS_CONF" | tail -n1)"
-        DBSSLROOTCERT="$(sed -n 's|^PAPERLESS_DBSSLROOTCERT=||p' "$PAPERLESS_CONF" | tail -n1)"
-        DBSSLCERT="$(sed -n 's|^PAPERLESS_DBSSLCERT=||p' "$PAPERLESS_CONF" | tail -n1)"
-        DBSSLKEY="$(sed -n 's|^PAPERLESS_DBSSLKEY=||p' "$PAPERLESS_CONF" | tail -n1)"
-        DB_POOLSIZE="$(sed -n 's|^PAPERLESS_DB_POOLSIZE=||p' "$PAPERLESS_CONF" | tail -n1)"
-        DB_TIMEOUT="$(sed -n 's|^PAPERLESS_DB_TIMEOUT=||p' "$PAPERLESS_CONF" | tail -n1)"
+        DB_OPTIONS_DEPRECATED="$(sed -n '/^PAPERLESS_DBSSLMODE=/p;/^PAPERLESS_DBSSLROOTCERT=/p;/^PAPERLESS_DBSSLCERT=/p;/^PAPERLESS_DBSSLKEY=/p;/^PAPERLESS_DB_POOLSIZE=/p;/^PAPERLESS_DB_TIMEOUT=/p' "$PAPERLESS_CONF")"
         CONSUMER_POLLING="$(sed -n 's|^PAPERLESS_CONSUMER_POLLING=||p' "$PAPERLESS_CONF" | tail -n1)"
         CONSUMER_POLLING_INTERVAL="$(sed -n 's|^PAPERLESS_CONSUMER_POLLING_INTERVAL=||p' "$PAPERLESS_CONF" | tail -n1)"
         CONSUMER_INOTIFY_DELAY="$(sed -n 's|^PAPERLESS_CONSUMER_INOTIFY_DELAY=||p' "$PAPERLESS_CONF" | tail -n1)"
@@ -98,21 +93,7 @@ function update_script() {
         OCR_SKIP_ARCHIVE="$(sed -n 's|^PAPERLESS_OCR_SKIP_ARCHIVE_FILE=||p' "$PAPERLESS_CONF" | tail -n1)"
         ARCHIVE_FILE_GENERATION="$(sed -n 's|^PAPERLESS_ARCHIVE_FILE_GENERATION=||p' "$PAPERLESS_CONF" | tail -n1)"
 
-        DB_OPTIONS_MIGRATED=""
-        [[ -n "$DBSSLMODE" ]] && DB_OPTIONS_MIGRATED="sslmode=$DBSSLMODE"
-        [[ -n "$DBSSLROOTCERT" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}sslrootcert=$DBSSLROOTCERT"
-        [[ -n "$DBSSLCERT" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}sslcert=$DBSSLCERT"
-        [[ -n "$DBSSLKEY" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}sslkey=$DBSSLKEY"
-        [[ -n "$DB_POOLSIZE" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}pool.max_size=$DB_POOLSIZE"
-        [[ -n "$DB_TIMEOUT" ]] && DB_OPTIONS_MIGRATED="${DB_OPTIONS_MIGRATED:+$DB_OPTIONS_MIGRATED,}connect_timeout=$DB_TIMEOUT"
-
         sed -i \
-          -e '/^PAPERLESS_DBSSLMODE=/d' \
-          -e '/^PAPERLESS_DBSSLROOTCERT=/d' \
-          -e '/^PAPERLESS_DBSSLCERT=/d' \
-          -e '/^PAPERLESS_DBSSLKEY=/d' \
-          -e '/^PAPERLESS_DB_POOLSIZE=/d' \
-          -e '/^PAPERLESS_DB_TIMEOUT=/d' \
           -e '/^PAPERLESS_CONSUMER_POLLING=/d' \
           -e '/^PAPERLESS_CONSUMER_INOTIFY_DELAY=/d' \
           -e '/^PAPERLESS_CONSUMER_POLLING_DELAY=/d' \
@@ -123,6 +104,8 @@ function update_script() {
           -e 's|^PAPERLESS_OCR_MODE="\?skip_noarchive"\?$|PAPERLESS_OCR_MODE=auto|' \
           "$PAPERLESS_CONF"
 
+        [[ -n "$DB_OPTIONS_DEPRECATED" ]] &&
+          msg_warn "Deprecated Paperless DB options detected; migrate them manually to PAPERLESS_DB_OPTIONS."
         if [[ -z "$SECRET_KEY_CURRENT" ]]; then
           SECRET_KEY="$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -An -tx1 | tr -d ' \n')"
           sed -i \
@@ -132,12 +115,6 @@ function update_script() {
           printf "Paperless-ngx Secret Key: %s\n" "$SECRET_KEY" >>~/paperless-ngx.creds
         fi
         [[ -z "$DBENGINE" ]] && sed -i '$a\PAPERLESS_DBENGINE=postgresql' "$PAPERLESS_CONF"
-        if [[ -n "$DB_OPTIONS_MIGRATED" ]]; then
-          sed -i \
-            -e '/^PAPERLESS_DB_OPTIONS=/d' \
-            -e "\$a\\PAPERLESS_DB_OPTIONS=$DB_OPTIONS_MIGRATED" \
-            "$PAPERLESS_CONF"
-        fi
         [[ -n "$CONSUMER_POLLING" && -z "$CONSUMER_POLLING_INTERVAL" ]] &&
           sed -i "\$a\\PAPERLESS_CONSUMER_POLLING_INTERVAL=$CONSUMER_POLLING" "$PAPERLESS_CONF"
         [[ -n "$CONSUMER_INOTIFY_DELAY" && -z "$CONSUMER_STABILITY_DELAY" ]] &&
