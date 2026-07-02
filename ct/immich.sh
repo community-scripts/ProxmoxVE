@@ -205,6 +205,8 @@ EOF
     cd "$SRC_DIR"
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
     export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
+    # mise v2026.7.0 renamed 'experimental_monorepo_root' to 'monorepo_root'; ensure both are set so the //:plugins task works regardless of mise version
+    grep -q '^monorepo_root = true' "$SRC_DIR"/mise.toml || sed -i 's/^experimental_monorepo_root = true/monorepo_root = true\nexperimental_monorepo_root = true/' "$SRC_DIR"/mise.toml
     $STD mise //:plugins
     mkdir -p "$PLUGIN_DIR"
     cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
