@@ -255,6 +255,23 @@ EOF
     cd "$SRC_DIR"
     cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
     [[ -f "$INSTALL_DIR"/ml_start.sh ]] && mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
+    # Regenerate ml_start.sh if it is missing (e.g. lost by a previously interrupted update),
+    # otherwise immich-ml.service fails to start with status=203/EXEC
+    if [[ ! -f "$ML_DIR"/ml_start.sh ]]; then
+      cat <<EOF >"$ML_DIR"/ml_start.sh
+#!/usr/bin/env bash
+
+cd ${ML_DIR}
+. ${VIRTUAL_ENV}/bin/activate
+
+set -a
+. ${INSTALL_DIR}/.env
+set +a
+
+python3 -m immich_ml
+EOF
+      chmod +x "$ML_DIR"/ml_start.sh
+    fi
     [[ -f ~/.openvino ]] && sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
     ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
     cd "$APP_DIR"
