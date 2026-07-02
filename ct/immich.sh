@@ -110,7 +110,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="v3.0.0"
+  RELEASE="v3.0.1"
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
@@ -202,15 +202,16 @@ EOF
     [[ -f "$INSTALL_DIR"/start.sh ]] && mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
 
     # plugins
+    # Build the plugin(s) directly instead of via the `mise //:plugins` monorepo task path,
+    # which repeatedly breaks across mise releases (experimental/monorepo_root setting churn).
+    # mise is used only to provide the build tools (extism-js, wasm-opt, etc.) via `mise install`
+    # and `mise exec`, both of which are stable and do not depend on the monorepo feature.
     cd "$SRC_DIR"
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
     export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
-    # mise gates monorepo task paths (//:plugins) behind experimental mode and renamed the
-    # 'experimental_monorepo_root' setting to 'monorepo_root' in v2026.7.0. Set the env flag and
-    # ensure both config keys are present so the task works regardless of the installed mise version.
-    export MISE_EXPERIMENTAL=1
-    grep -q '^monorepo_root = true' "$SRC_DIR"/mise.toml || sed -i 's/^experimental_monorepo_root = true/monorepo_root = true\nexperimental_monorepo_root = true/' "$SRC_DIR"/mise.toml
-    $STD mise //:plugins
+    $STD mise install
+    $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core install --frozen-lockfile
+    $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
     mkdir -p "$PLUGIN_DIR"
     cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
     cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
