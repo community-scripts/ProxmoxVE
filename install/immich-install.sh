@@ -162,7 +162,7 @@ PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 ACTUAL_PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
 ACTUAL_PG_VERSION=${ACTUAL_PG_VERSION:-16}
 
-VCHORD_RELEASE="0.5.3"
+VCHORD_RELEASE="1.0.0"
 fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${ACTUAL_PG_VERSION}-vchord_*_$(arch_resolve).deb"
 
 sed -i "s/^#shared_preload.*/shared_preload_libraries = 'vchord.so'/" /etc/postgresql/${ACTUAL_PG_VERSION}/main/postgresql.conf
@@ -282,7 +282,7 @@ msg_ok "(4/5) Compiled imagemagick"
 
 msg_info "(5/5) Compiling libvips"
 SOURCE=$SOURCE_DIR/libvips
-LIBVIPS_REVISION="17ad2f62dda7e39985955da189183e594683d45e"
+LIBVIPS_REVISION="3664cfc5dc2c5661288f5bf5a85ccc51c64c1626"
 $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBVIPS_REVISION"
@@ -306,10 +306,11 @@ INSTALL_DIR="/opt/${APPLICATION}"
 UPLOAD_DIR="${INSTALL_DIR}/upload"
 SRC_DIR="${INSTALL_DIR}/source"
 APP_DIR="${INSTALL_DIR}/app"
-PLUGIN_DIR="${APP_DIR}/corePlugin"
+PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
 ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
+
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.0.1" "$SRC_DIR"
 
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
@@ -338,13 +339,13 @@ fi
 cp "$APP_DIR"/package.json "$APP_DIR"/bin
 sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
-# openapi & web build
+# sdk, cli & web build
 cd "$SRC_DIR"
 echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
-$STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
 unset SHARP_FORCE_GLOBAL_LIBVIPS
 export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-$STD pnpm --filter @immich/sdk --filter immich-web build
+$STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
+$STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
 cd "$SRC_DIR"
@@ -365,10 +366,9 @@ fi
 $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core install --frozen-lockfile
 $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
 mkdir -p "$PLUGIN_DIR"
-cp -r ./dist "$PLUGIN_DIR"/dist
-cp ./manifest.json "$PLUGIN_DIR"
+cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
+cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
 msg_ok "Installed Immich Server, Web and Plugin Components"
-
 cd "$SRC_DIR"/machine-learning
 $STD useradd -U -s /usr/sbin/nologin -r -M -d "$INSTALL_DIR" immich
 mkdir -p "$ML_DIR"
