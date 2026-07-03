@@ -218,6 +218,19 @@ EOF
       install -m 0755 /tmp/extism-js /usr/local/bin/extism-js
       rm -f /tmp/extism-js
     fi
+    if ! command -v wasm-merge >/dev/null 2>&1; then
+      # extism-js needs binaryen's `wasm-merge` to build the plugin wasm. mise
+      # 2026.7.0's github backend no longer exposes `wasm-merge` on PATH (ubi only
+      # extracts a single binary), so install the pinned binaryen release from
+      # mise.toml directly. The extracted bin/ keeps libbinaryen.so alongside it.
+      BINARYEN_VERSION="$(grep -oiP 'binaryen"\s*=\s*"\Kversion_[0-9]+' "$SRC_DIR"/mise.toml | head -n1)"
+      [[ -z "$BINARYEN_VERSION" ]] && BINARYEN_VERSION="version_124"
+      BINARYEN_ARCH="$(arch_resolve x86_64 aarch64)"
+      curl_download /tmp/binaryen.tar.gz "https://github.com/WebAssembly/binaryen/releases/download/${BINARYEN_VERSION}/binaryen-${BINARYEN_VERSION}-${BINARYEN_ARCH}-linux.tar.gz"
+      tar -xzf /tmp/binaryen.tar.gz -C /opt
+      rm -f /tmp/binaryen.tar.gz
+      export PATH="/opt/binaryen-${BINARYEN_VERSION}/bin:$PATH"
+    fi
     $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core install --frozen-lockfile
     $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
     mkdir -p "$PLUGIN_DIR"
