@@ -7442,6 +7442,13 @@ setup_nodejs() {
   local wants_corepack=0
   local node_setup_ok_msg=""
 
+  # Corepack must run fully non-interactive. Without this it prints
+  # "Corepack is about to download X. Do you want to continue? [Y/n]" and blocks
+  # the whole install waiting for keyboard input - both here and in the calling
+  # script's later `corepack prepare` / `corepack <pm>` calls, which run in this
+  # same shell and inherit the export.
+  export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
   cleanup_legacy_install "nodejs"
 
@@ -7596,17 +7603,48 @@ setup_nodejs() {
 
     IFS=',' read -ra MODULES <<<"$NODE_MODULE"
 
+    local corepack_spec="corepack@latest"
     for i in "${!MODULES[@]}"; do
       if [[ "${MODULES[$i]}" == "corepack" || "${MODULES[$i]}" == corepack@* ]]; then
         wants_corepack=1
+        [[ "${MODULES[$i]}" == corepack@* ]] && corepack_spec="${MODULES[$i]}"
       fi
       if [[ "${MODULES[$i]}" == "pnpm" ]]; then
         MODULES[$i]="pnpm@^10"
       fi
     done
 
+    # When corepack is requested, install and enable it FIRST. The corepack npm
+    # package owns the global yarn/pnpm/pnpx/yarnpkg bin shims, so a second
+    # `npm install -g yarn`/`pnpm` collides on /usr/bin/<tool> (EEXIST). With
+    # corepack ready we provision those package managers THROUGH corepack instead.
+    local corepack_ready=0
+    if ((wants_corepack)); then
+      msg_info "Installing corepack"
+      if $STD npm install -g "$corepack_spec" 2>/dev/null ||
+        $STD npm install -g --force "$corepack_spec" 2>/dev/null; then
+        msg_ok "Installed corepack"
+      else
+        msg_warn "Failed to install corepack"
+      fi
+      if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && command -v corepack >/dev/null 2>&1; then
+        msg_info "Enabling corepack"
+        if $STD corepack enable 2>/dev/null; then
+          corepack_ready=1
+          msg_ok "Enabled corepack"
+        else
+          msg_warn "corepack enable failed"
+        fi
+      fi
+    fi
+
     local failed_modules=0
     for mod in "${MODULES[@]}"; do
+      # corepack itself is already handled above
+      if [[ "$mod" == "corepack" || "$mod" == corepack@* ]]; then
+        continue
+      fi
+
       local MODULE_NAME MODULE_REQ_VERSION MODULE_INSTALLED_VERSION
       if [[ "$mod" == @*/*@* ]]; then
         # Scoped package with version, e.g. @vue/cli-service@latest
@@ -7620,6 +7658,27 @@ setup_nodejs() {
         # No version specified
         MODULE_NAME="$mod"
         MODULE_REQ_VERSION="latest"
+      fi
+
+      # Provision pnpm/yarn through corepack when it is active, so we never fight
+      # corepack over the /usr/bin/{yarn,pnpm} shim locations it owns.
+      if ((corepack_ready)) && [[ "$MODULE_NAME" == "pnpm" || "$MODULE_NAME" == "yarn" ]]; then
+        local corepack_pkg="$MODULE_NAME"
+        [[ "$MODULE_REQ_VERSION" != "latest" ]] && corepack_pkg="${MODULE_NAME}@${MODULE_REQ_VERSION}"
+        msg_info "Provisioning $MODULE_NAME via corepack"
+        if $STD corepack prepare "$corepack_pkg" --activate 2>/dev/null || command -v "$MODULE_NAME" >/dev/null 2>&1; then
+          msg_ok "Provisioned $MODULE_NAME via corepack"
+        else
+          msg_warn "Failed to provision $MODULE_NAME via corepack"
+          ((failed_modules++)) || true
+        fi
+        continue
+      fi
+
+      # For the npm-global path, drop any corepack-provided shim first so the
+      # bin link can be created without an EEXIST collision.
+      if [[ "$MODULE_NAME" == "pnpm" || "$MODULE_NAME" == "yarn" || "$MODULE_NAME" == "yarnpkg" ]]; then
+        rm -f /usr/bin/"$MODULE_NAME" /usr/local/bin/"$MODULE_NAME" 2>/dev/null || true
       fi
 
       # Check if the module is already installed
@@ -7664,19 +7723,15 @@ setup_nodejs() {
     fi
   fi
 
-  # pnpm v10+ blocks dependency build scripts by default (ERR_PNPM_IGNORED_BUILDS).
-  # In a container environment all installed packages are trusted, so we enable builds globally.
+  # pnpm v10+ blocks dependency build scripts by default. Do NOT force
+  # `dangerouslyAllowAllBuilds` globally: pnpm implements that flag as an empty
+  # `neverBuiltDependencies`, which then clashes with any project that ships its
+  # own `onlyBuiltDependencies` (every create-t3-app based app, e.g. Split Pro)
+  # and aborts with ERR_PNPM_CONFIG_CONFLICT_BUILT_DEPENDENCIES. Instead relax the
+  # strict check so an unapproved build is a warning, not a fatal error; scripts
+  # that truly need every build script executed enable that themselves.
   if command -v pnpm >/dev/null 2>&1; then
-    pnpm config set --global dangerouslyAllowAllBuilds true >/dev/null 2>&1 || true
-  fi
-
-  if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && ((wants_corepack)) && command -v corepack >/dev/null 2>&1; then
-    msg_info "Enabling corepack"
-    if $STD corepack enable 2>/dev/null; then
-      msg_ok "Enabled corepack"
-    else
-      msg_warn "corepack enable failed"
-    fi
+    pnpm config set --global strictDepBuilds false >/dev/null 2>&1 || true
   fi
 }
 
