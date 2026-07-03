@@ -205,14 +205,21 @@ EOF
 
     # plugins
     cd "$SRC_DIR"
-    # mise 2026.7.0 renamed the monorepo root setting `experimental_monorepo_root`
-    # to `monorepo_root`. Immich still ships the old key, so newer mise cannot resolve
-    # the monorepo tasks (`//:plugins`). Add the new key at the root table (harmless on
-    # older mise, which keeps using the existing `experimental_monorepo_root`).
-    grep -q '^monorepo_root' ./mise.toml || sed -i '1i monorepo_root = true' ./mise.toml
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
     export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
-    $STD mise //:plugins
+    $STD mise install
+    export PATH="$(mise bin-paths 2>/dev/null | tr '\n' ':')$PATH"
+    if ! command -v extism-js >/dev/null 2>&1; then
+      # extism-js ships as a bare gzip-compressed single binary (.gz) that
+      # fetch_and_deploy_gh_release cannot deploy; fetch + gunzip it directly.
+      EXTISM_ARCH="$(arch_resolve x86_64 aarch64)"
+      curl_download /tmp/extism-js.gz "https://github.com/extism/js-pdk/releases/download/v1.6.0/extism-js-${EXTISM_ARCH}-linux-v1.6.0.gz"
+      gunzip -f /tmp/extism-js.gz
+      install -m 0755 /tmp/extism-js /usr/local/bin/extism-js
+      rm -f /tmp/extism-js
+    fi
+    $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core install --frozen-lockfile
+    $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
     mkdir -p "$PLUGIN_DIR"
     cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
     cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
