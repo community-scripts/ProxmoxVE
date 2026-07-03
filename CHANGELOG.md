@@ -489,6 +489,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-03
+
 ## 2026-07-02
 
 ### 🆕 New Scripts
@@ -507,6 +509,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 💥 Breaking Changes
 
+    - Revert "Immich v3.0.0" [@MickLesk](https://github.com/MickLesk) ([#15558](https://github.com/community-scripts/ProxmoxVE/pull/15558))
     - Immich v3.0.0 [@vhsdream](https://github.com/vhsdream) ([#15153](https://github.com/community-scripts/ProxmoxVE/pull/15153))
 
 ### 💾 Core

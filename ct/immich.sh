@@ -124,7 +124,7 @@ EOF
     systemctl stop immich-web
     systemctl stop immich-ml
     msg_ok "Stopped Services"
-    VCHORD_RELEASE="1.0.0"
+    VCHORD_RELEASE="0.5.3"
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
     if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
       fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_$(arch_resolve).deb"
@@ -140,7 +140,7 @@ EOF
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
     SRC_DIR="${INSTALL_DIR}/source"
     APP_DIR="${INSTALL_DIR}/app"
-    PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
+    PLUGIN_DIR="${APP_DIR}/corePlugin"
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
 
@@ -181,10 +181,10 @@ EOF
 
     # server build
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
+    $STD pnpm --filter immich --frozen-lockfile build
     unset SHARP_IGNORE_GLOBAL_LIBVIPS
     export SHARP_FORCE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter immich --prod --no-optional deploy "$APP_DIR"
+    $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
 
     # Patch helmet.json: disable upgrade-insecure-requests for HTTP access
     if [[ -f "$APP_DIR/helmet.json" ]]; then
@@ -194,15 +194,20 @@ EOF
     cp "$APP_DIR"/package.json "$APP_DIR"/bin
     sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
-    # sdk, cli & web build
+    # openapi & web build
     cd "$SRC_DIR"
     echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
+    $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
     unset SHARP_FORCE_GLOBAL_LIBVIPS
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
-    $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
+    $STD pnpm --filter @immich/sdk --filter immich-web build
     cp -a web/build "$APP_DIR"/www
     cp LICENSE "$APP_DIR"
+
+    # cli build
+    $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
+    $STD pnpm --filter @immich/sdk --filter @immich/cli build
+    $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
     [[ -f "$INSTALL_DIR"/start.sh ]] && mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
 
     # plugins
@@ -233,8 +238,8 @@ EOF
     $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core install --frozen-lockfile
     $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
     mkdir -p "$PLUGIN_DIR"
-    cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
-    cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
+    cp -r ./dist "$PLUGIN_DIR"/dist
+    cp ./manifest.json "$PLUGIN_DIR"
     msg_ok "Updated Immich server, web, cli and plugins"
 
     cd "$SRC_DIR"/machine-learning
@@ -250,13 +255,13 @@ EOF
       ML_PYTHON="python3.13"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV -Pnu immich uv python install "${ML_PYTHON}" && break
+        $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
         [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
       done
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating Intel OpenVINO machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
       patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
@@ -265,13 +270,13 @@ EOF
       ML_PYTHON="python3.11"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV -Pnu immich uv python install "${ML_PYTHON}" && break
+        $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
         [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
       done
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
       msg_ok "Updated machine-learning"
@@ -465,7 +470,7 @@ function compile_imagemagick() {
 
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
-  LIBVIPS_REVISION="3664cfc5dc2c5661288f5bf5a85ccc51c64c1626"
+  LIBVIPS_REVISION="17ad2f62dda7e39985955da189183e594683d45e"
   if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
