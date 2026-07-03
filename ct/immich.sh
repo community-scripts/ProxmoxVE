@@ -171,11 +171,7 @@ EOF
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
     $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
-    # corepack activates pnpm but its global bin dir is not in PATH by default;
-    # export it so that `pnpm config set --global` succeeds.
-    export PNPM_HOME="/root/.local/share/pnpm"
-    export PATH="$PNPM_HOME/bin:$PATH"
-    mkdir -p "$PNPM_HOME/bin"
+    export PATH="/root/.local/share/pnpm/bin:$PATH"
     $STD pnpm config set --global dangerouslyAllowAllBuilds true
 
     msg_info "Updating Immich web and microservices"
