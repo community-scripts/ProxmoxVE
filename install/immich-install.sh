@@ -124,13 +124,23 @@ msg_ok "Dependencies Installed"
 
 msg_info "Installing Mise"
 curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
+echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
 $STD apt update
 $STD apt install -y mise
 msg_ok "Installed Mise"
 
 msg_info "Configuring Debian Testing Repo"
-sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+if [[ -f /etc/apt/sources.list.d/debian.sources ]]; then
+  sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+else
+  cat <<EOF >/etc/apt/sources.list.d/testing.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: testing
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
+fi
 cat <<EOF >/etc/apt/preferences.d/preferences
 Package: *
 Pin: release a=unstable
@@ -149,10 +159,13 @@ msg_ok "Installed packages from Debian Testing repo"
 setup_uv
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
-VCHORD_RELEASE="0.5.3"
-fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_amd64.deb"
+ACTUAL_PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
+ACTUAL_PG_VERSION=${ACTUAL_PG_VERSION:-16}
 
-sed -i "s/^#shared_preload.*/shared_preload_libraries = 'vchord.so'/" /etc/postgresql/16/main/postgresql.conf
+VCHORD_RELEASE="0.5.3"
+fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${ACTUAL_PG_VERSION}-vchord_*_$(arch_resolve).deb"
+
+sed -i "s/^#shared_preload.*/shared_preload_libraries = 'vchord.so'/" /etc/postgresql/${ACTUAL_PG_VERSION}/main/postgresql.conf
 systemctl restart postgresql.service
 PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_GRANT_SUPERUSER="true" PG_DB_SKIP_ALTER_ROLE="true" setup_postgresql_db
 
@@ -175,7 +188,7 @@ cd "$STAGING_DIR"
 SOURCE=${SOURCE_DIR}/libjxl
 JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
 JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-LIBJXL_REVISION="794a5dcf0d54f9f0b20d288a12e87afb91d20dfc"
+LIBJXL_REVISION="332feb17d17311c748445f7ee75c4fb55cc38530"
 # : "${LIBJXL_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libjxl.json)}"
 $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
 cd "$SOURCE"
@@ -213,7 +226,7 @@ msg_ok "(1/5) Compiled libjxl"
 
 msg_info "(2/5) Compiling libheif"
 SOURCE=${SOURCE_DIR}/libheif
-LIBHEIF_REVISION="35dad50a9145332a7bfdf1ff6aef6801fb613d68"
+LIBHEIF_REVISION="62f1b8c76ed4d8305071fdacbe74ef9717bacac5"
 # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
 $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
 cd "$SOURCE"
@@ -239,7 +252,7 @@ msg_ok "(2/5) Compiled libheif"
 
 msg_info "(3/5) Compiling libraw"
 SOURCE=${SOURCE_DIR}/libraw
-LIBRAW_REVISION="0b56545a4f828743f28a4345cdfdd4c49f9f9a2a"
+LIBRAW_REVISION="b860248a89d9082b8e0a1e202e516f46af9adb29"
 # : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
 $STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
 cd "$SOURCE"
@@ -269,7 +282,7 @@ msg_ok "(4/5) Compiled imagemagick"
 
 msg_info "(5/5) Compiling libvips"
 SOURCE=$SOURCE_DIR/libvips
-LIBVIPS_REVISION="0c9151a4f416d2f8ae20a755db218f6637050eec"
+LIBVIPS_REVISION="17ad2f62dda7e39985955da189183e594683d45e"
 $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBVIPS_REVISION"
@@ -280,13 +293,13 @@ ldconfig /usr/local/lib
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
 msg_ok "(5/5) Compiled libvips"
-{
-  echo "imagemagick: $IMAGEMAGICK_REVISION"
-  echo "libheif: $LIBHEIF_REVISION"
-  echo "libjxl: $LIBJXL_REVISION"
-  echo "libraw: $LIBRAW_REVISION"
-  echo "libvips: $LIBVIPS_REVISION"
-} >~/.immich_library_revisions
+cat <<EOF >~/.immich_library_revisions
+imagemagick: $IMAGEMAGICK_REVISION
+libheif: $LIBHEIF_REVISION
+libjxl: $LIBJXL_REVISION
+libraw: $LIBRAW_REVISION
+libvips: $LIBVIPS_REVISION
+EOF
 msg_ok "Custom Photo-processing Libraries Compiled Successfully"
 
 INSTALL_DIR="/opt/${APPLICATION}"
@@ -300,14 +313,13 @@ mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.0.1" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
-NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Installing Immich (patience)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
-corepack enable
 
 # server build
 export SHARP_IGNORE_GLOBAL_LIBVIPS=true
@@ -373,7 +385,7 @@ if [[ -f ~/.openvino ]]; then
     $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
     [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
   done
-  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-x86_64-linux-gnu.so"
+  patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
   msg_ok "Installed Intel OpenVINO machine-learning"
 else
   ML_PYTHON="python3.11"

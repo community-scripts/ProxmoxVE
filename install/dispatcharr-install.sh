@@ -38,7 +38,7 @@ msg_info "Installing Python Dependencies with uv"
 cd /opt/dispatcharr
 $STD uv venv --clear
 $STD uv sync
-$STD uv pip install gunicorn gevent celery redis daphne
+$STD uv pip install uwsgi gevent celery redis daphne
 msg_ok "Installed Python Dependencies"
 
 msg_info "Configuring Dispatcharr"
@@ -74,6 +74,16 @@ msg_ok "Configured Dispatcharr"
 
 msg_info "Configuring Nginx"
 cat <<EOF >/etc/nginx/sites-available/dispatcharr.conf
+map \$http_x_forwarded_proto \$real_forwarded_proto {
+    ""      \$scheme;
+    default \$http_x_forwarded_proto;
+}
+
+map \$http_x_forwarded_port \$real_forwarded_port {
+    ""      \$server_port;
+    default \$http_x_forwarded_port;
+}
+
 server {
     listen 9191;
     server_name _;
@@ -115,12 +125,16 @@ server {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
     }
 
-    # All other requests proxy to Gunicorn
+    # All other requests proxy to uWSGI
     location / {
-        include proxy_params;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
+        proxy_set_header X-Forwarded-Port \$real_forwarded_port;
         proxy_pass http://127.0.0.1:5656;
     }
 }
@@ -131,20 +145,30 @@ systemctl restart nginx
 msg_ok "Configured Nginx"
 
 msg_info "Creating Services"
-cat <<EOF >/opt/dispatcharr/start-gunicorn.sh
+cat <<EOF >/opt/dispatcharr/start-uwsgi.sh
 #!/usr/bin/env bash
 cd /opt/dispatcharr
 set -a
 source .env
 set +a
-exec uv run gunicorn \\
+exec .venv/bin/uwsgi \\
+    --chdir=/opt/dispatcharr \\
+    --module=dispatcharr.wsgi:application \\
+    --master \\
     --workers=4 \\
-    --worker-class=gevent \\
-    --timeout=300 \\
-    --bind 0.0.0.0:5656 \\
-    dispatcharr.wsgi:application
+    --gevent=400 \\
+    --http=0.0.0.0:5656 \\
+    --http-keepalive=1 \\
+    --http-timeout=600 \\
+    --socket-timeout=600 \\
+    --buffer-size=65536 \\
+    --post-buffering=4096 \\
+    --lazy-apps \\
+    --thunder-lock \\
+    --die-on-term \\
+    --vacuum
 EOF
-chmod +x /opt/dispatcharr/start-gunicorn.sh
+chmod +x /opt/dispatcharr/start-uwsgi.sh
 
 cat <<EOF >/opt/dispatcharr/start-celery.sh
 #!/usr/bin/env bash
@@ -184,7 +208,7 @@ After=network.target postgresql.service redis-server.service
 [Service]
 Type=simple
 WorkingDirectory=/opt/dispatcharr
-ExecStart=/opt/dispatcharr/start-gunicorn.sh
+ExecStart=/opt/dispatcharr/start-uwsgi.sh
 Restart=on-failure
 RestartSec=10
 User=root

@@ -12,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,11 +37,27 @@ function update_script() {
   rm -f "$STEPBIN"
   cp -f "$(which step-cli)" "$STEPBIN"
 
+  # Patch for leaf_data.tpl - Issue: #14810
+  sed -i \
+  -e 's/\[//' \
+  -e 's/\]//' \
+  "$STEPPATH/templates/x509/leaf_data.tpl"
+
+  # Patch for provisioners templateData - Issue: #14810
+  step ca provisioner list | jq -c '.[] | select(.options.x509.templateData != null) | .name' > /tmp/provisioner_names.json
+  for i in $(cat /tmp/provisioner_names.json); do
+    prov=`echo $i | tr -d '"'`
+    echo
+    echo "Updating provisioner $prov ..."
+    $STD step ca provisioner update $prov --x509-template-data=$STEPPATH/templates/x509/leaf_data.tpl
+  done
+  rm /tmp/provisioner_names.json
+
   $STD systemctl restart step-ca
   msg_ok "Updated step-ca and step-cli"
 
   if check_for_gh_release "step-badger" "lukasz-lobocki/step-badger"; then
-    fetch_and_deploy_gh_release "step-badger" "lukasz-lobocki/step-badger" "prebuild" "latest" "/opt/step-badger" "step-badger_Linux_x86_64.tar.gz"
+    fetch_and_deploy_gh_release "step-badger" "lukasz-lobocki/step-badger" "prebuild" "latest" "/opt/step-badger" "step-badger_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
     msg_ok "Updated step-badger"
   fi
   exit
@@ -52,5 +69,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}https://${IP}/provisioners${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}https://${IP}/provisioners${CL}"

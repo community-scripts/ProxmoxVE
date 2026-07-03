@@ -24,7 +24,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing n8n (Patience)"
-$STD npm install -g n8n
+$STD npm install -g n8n@2.27.5
 msg_ok "Installed n8n"
 
 msg_info "Creating Service"

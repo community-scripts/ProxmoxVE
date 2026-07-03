@@ -49,18 +49,26 @@ jobs:
               return
             fi
 
-            local url="https://pkgs.alpinelinux.org/package/v${alpine_ver}/main/x86_64/nodejs"
-            local page
-            page=$(curl -sf "$url" 2>/dev/null || echo "")
             local full_ver=""
-            if [[ -n "$page" ]]; then
-              # Parse: "Version | 24.13.0-r1" or similar table row
-              full_ver=$(echo "$page" | grep -oP 'Version\s*\|\s*\K[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
-              if [[ -z "$full_ver" ]]; then
-                # Fallback: look for version pattern after "Version"
-                full_ver=$(echo "$page" | grep -oP '(?<=Version</td><td>)[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+            local arch_label url_arch url page
+            for arch_pair in "amd64:x86_64" "arm64:aarch64"; do
+              arch_label="${arch_pair%%:*}"
+              url_arch="${arch_pair#*:}"
+              url="https://pkgs.alpinelinux.org/package/v${alpine_ver}/main/${url_arch}/nodejs"
+              page=$(curl -sf "$url" 2>/dev/null || echo "")
+              if [[ -n "$page" ]]; then
+                # Parse: "Version | 24.13.0-r1" or similar table row.
+                full_ver=$(echo "$page" | grep -oP 'Version\s*\|\s*\K[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+                if [[ -z "$full_ver" ]]; then
+                  # Fallback: look for version pattern after "Version".
+                  full_ver=$(echo "$page" | grep -oP '(?<=Version</td><td>)[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
+                fi
               fi
-            fi
+              if [[ -n "$full_ver" ]]; then
+                echo "Resolved Alpine ${alpine_ver} nodejs via ${arch_label}"
+                break
+              fi
+            done
 
             local major=""
             if [[ -n "$full_ver" ]]; then
@@ -328,14 +336,18 @@ jobs:
               issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
               drift_count=$((drift_count + 1))
             elif [[ -n "$upstream_major" && "$our_version" != "$upstream_major" ]]; then
-              # Check if engines.node is a minimum constraint that our version satisfies
-              if [[ -z "$DF_NODE_MAJOR" && "$ENGINES_IS_MINIMUM" == "true" ]] && \
-                 version_satisfies_engines "$our_version" "$ENGINES_MIN_MAJOR" "$ENGINES_IS_MINIMUM"; then
-                status="✅ (engines: $ENGINES_NODE_RAW — ours: $our_version satisfies)"
+              if (( our_version < upstream_major )); then
+                # Check if engines.node is a minimum constraint that our version satisfies
+                if [[ -z "$DF_NODE_MAJOR" && "$ENGINES_IS_MINIMUM" == "true" ]] && \
+                   version_satisfies_engines "$our_version" "$ENGINES_MIN_MAJOR" "$ENGINES_IS_MINIMUM"; then
+                  status="✅ (engines: $ENGINES_NODE_RAW — ours: $our_version satisfies)"
+                else
+                  status="🔸 Drift → upstream=$upstream_major ($upstream_hint)"
+                  issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
+                  drift_count=$((drift_count + 1))
+                fi
               else
-                status="🔸 Drift → upstream=$upstream_major ($upstream_hint)"
-                issue_scripts+=("$slug|$our_version|$upstream_major|$upstream_hint|$repo")
-                drift_count=$((drift_count + 1))
+                status="✅ Ahead of upstream ($upstream_major via $upstream_hint)"
               fi
             fi
 

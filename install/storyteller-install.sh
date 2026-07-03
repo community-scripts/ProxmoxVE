@@ -24,15 +24,16 @@ $STD apt install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
 
-fetch_and_deploy_gh_release "readium" "readium/cli" "prebuild" "latest" "/opt/readium" "readium_linux_x86_64.tar.gz"
+fetch_and_deploy_gh_release "readium" "readium/cli" "prebuild" "latest" "/opt/readium" "readium_linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 ln -sf /opt/readium/readium /usr/local/bin/readium
 fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "tarball" "latest" "/opt/storyteller"
 
 msg_info "Setting up Storyteller"
 cd /opt/storyteller
-$STD yarn install --network-timeout 600000
+
+$STD corepack yarn install --network-timeout 600000
 $STD gcc -g -fPIC -rdynamic -shared web/sqlite/uuid.c -o web/sqlite/uuid.c.so
 STORYTELLER_SECRET_KEY=$(openssl rand -base64 32)
 cat <<EOF >/opt/storyteller/.env
@@ -45,11 +46,11 @@ NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
 EOF
 mkdir -p /opt/storyteller/data
-{
-  echo "Storyteller Credentials"
-  echo "======================="
-  echo "Secret Key: ${STORYTELLER_SECRET_KEY}"
-} >~/storyteller.creds
+cat <<EOF >~/storyteller.creds
+Storyteller Credentials
+=======================
+Secret Key: ${STORYTELLER_SECRET_KEY}
+EOF
 msg_ok "Set up Storyteller"
 
 msg_info "Building Storyteller"
@@ -58,7 +59,7 @@ export CI=1
 export NODE_ENV=production
 export NEXT_TELEMETRY_DISABLED=1
 export SQLITE_NATIVE_BINDING=/opt/storyteller/node_modules/better-sqlite3/build/Release/better_sqlite3.node
-$STD yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
+$STD corepack yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
 mkdir -p /opt/storyteller/web/.next/standalone/web/.next/static
 cp -rT /opt/storyteller/web/.next/static /opt/storyteller/web/.next/standalone/web/.next/static
 if [[ -d /opt/storyteller/web/public ]]; then

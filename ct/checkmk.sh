@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,10 +33,16 @@ function update_script() {
   RELEASE="${RELEASE%%+*}"
   msg_info "Updating checkmk"
   $STD omd stop monitoring
+  $STD omd -f rm monitoringbackup 2>/dev/null || true
   $STD omd cp monitoring monitoringbackup
-  curl_with_retry "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-community-${RELEASE}_0.$(get_os_info codename)_amd64.deb" "/opt/checkmk.deb"
+  curl_download "/opt/checkmk.deb" "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-community-${RELEASE}_0.$(get_os_info codename)_amd64.deb"
   $STD apt install -y /opt/checkmk.deb
-  $STD omd --force -V ${RELEASE}.cre update --conflict=install monitoring
+  OMD_VERSION=$(omd versions 2>/dev/null | grep "^${RELEASE}" | awk '{print $1}')
+  if [[ -z "${OMD_VERSION}" ]]; then
+    msg_error "Could not find installed OMD version for release ${RELEASE}"
+    exit 1
+  fi
+  $STD omd --force -V "${OMD_VERSION}" update --conflict=install monitoring
   $STD omd start monitoring
   $STD omd -f rm monitoringbackup
   $STD omd cleanup
@@ -51,5 +58,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/monitoring${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}/monitoring${CL}"

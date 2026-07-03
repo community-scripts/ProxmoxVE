@@ -55,7 +55,7 @@ EOF
 # HELPER FUNCTIONS
 # ==============================================================================
 get_ip() {
- ifconfig | grep -v '127.0.0.1' | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -m1 -Eo '([0-9]*\.){3}[0-9]*' || echo "127.0.0.1"
+  hostname -I 2>/dev/null | awk '{print $1}' || ip -4 addr show scope global 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1 || echo "127.0.0.1"
 }
 
 # ==============================================================================

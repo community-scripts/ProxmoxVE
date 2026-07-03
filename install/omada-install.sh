@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 JAVA_VERSION="21" setup_java
 
-if lscpu | grep -q 'avx'; then
+if [[ "$(arch_resolve)" == "arm64" ]] || lscpu | grep -q 'avx'; then
   MONGO_VERSION="8.0" setup_mongodb
 else
   msg_error "No AVX detected (CPU-Flag)! We have discontinued support for this. You are welcome to try it manually with a Debian LXC, but due to the many issues with Omada, we currently only support AVX CPUs."
@@ -28,20 +28,22 @@ fi
 
 if ! dpkg -l | grep -q 'libssl1.1'; then
   msg_info "Installing libssl (if needed)"
-  curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u5_amd64.deb" -o "/tmp/libssl.deb"
+  curl_download "/tmp/libssl.deb" "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u8_$(arch_resolve).deb"
   $STD dpkg -i /tmp/libssl.deb
   rm -f /tmp/libssl.deb
   msg_ok "Installed libssl1.1"
 fi
 
 msg_info "Installing Omada Controller"
-OMADA_URL=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" |
+OMADA_URL=$(curl -fsSL -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15" "https://support.omadanetworks.com/en/download/software/omada-controller/" |
   grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
   head -n1)
-OMADA_PKG=$(basename "$OMADA_URL")
-curl -fsSL "$OMADA_URL" -o "$OMADA_PKG"
-$STD dpkg -i "$OMADA_PKG"
-rm -rf "$OMADA_PKG"
+OMADA_PKG=$(basename "${OMADA_URL}")
+curl_download "${OMADA_PKG}" "${OMADA_URL}"
+$STD dpkg -i "${OMADA_PKG}"
+rm -rf "${OMADA_PKG}"
+VERSION=$(sed -n 's/.*_v\([0-9.]*\)_.*_\([0-9]\{14\}\)\.deb$/\1-\2/p' <<<"${OMADA_PKG}")
+echo "${VERSION}" >$HOME/.omada
 msg_ok "Installed Omada Controller"
 
 motd_ssh

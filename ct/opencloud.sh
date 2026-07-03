@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v6.1.0"
+  RELEASE="v7.0.0"
   if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping services"
     systemctl stop opencloud opencloud-wopi
@@ -42,7 +43,7 @@ function update_script() {
     msg_ok "Updated packages"
 
     rm -f /usr/bin/{OpenCloud,opencloud}
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-amd64"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-$(arch_resolve)"
     mv /usr/bin/OpenCloud /usr/bin/opencloud
 
     if ! grep -q 'POSIX_WATCH' /etc/opencloud/opencloud.env; then
@@ -54,6 +55,15 @@ function update_script() {
 # STORAGE_USERS_POSIX_WATCH_TYPE=inotifywait\
 # STORAGE_USERS_POSIX_WATCH_FS=true\
 # STORAGE_USERS_POSIX_WATCH_PATH=<path-to-storage-or-bind-mount>' /etc/opencloud/opencloud.env
+    fi
+
+    if ! sed -n '/^sharing:/,/^storage_users:/p' /etc/opencloud/opencloud.yaml | grep -q 'service_account'; then
+      ACCOUNT_ID="$(sed -n '/^activitylog:/,/*.$/p' /etc/opencloud/opencloud.yaml | awk -F'id:' '{print $2}' | tr -d '[:space:]')"
+      ACCOUNT_SECRET="$(sed -n '/^activitylog:/,/*.$/p' /etc/opencloud/opencloud.yaml | awk -F'secret:' '{print $2}' | tr -d '[:space:]')"
+      sed -i "/^sharing:/a\\
+  service_account:\\
+    service_account_id: $ACCOUNT_ID\\
+    service_account_secret: $ACCOUNT_SECRET" /etc/opencloud/opencloud.yaml
     fi
 
     msg_info "Starting services"
@@ -70,5 +80,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}https://<your-OpenCloud-FQDN>${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}https://<your-OpenCloud-FQDN>${CL}"

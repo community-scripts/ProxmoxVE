@@ -86,12 +86,11 @@ user.is_superuser = True
 user.is_staff = True
 user.save()
 EOF
-{
-  echo ""
-  echo "Django-Credentials"
-  echo "Django Admin User: $DJANGO_ADMIN_USER"
-  echo "Django Admin Password: $DJANGO_ADMIN_PASS"
-} >>~/adventurelog.creds
+cat <<EOF >~/adventurelog.creds
+Django-Credentials
+Django Admin User: $DJANGO_ADMIN_USER
+Django Admin Password: $DJANGO_ADMIN_PASS
+EOF
 msg_ok "Setup Django Admin"
 
 msg_info "Creating Service"

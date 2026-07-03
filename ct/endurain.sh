@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -60,9 +61,9 @@ function update_script() {
 
     msg_info "Updating Backend"
     cd /opt/endurain/backend
-    $STD poetry export -f requirements.txt --output requirements.txt --without-hashes
-    $STD uv venv --clear
-    $STD uv pip install -r requirements.txt
+    UV_VERSION=$(grep -Po 'required-version\s*=\s*"\K[^"]+' pyproject.toml 2>/dev/null || echo "0.11.18")
+    UV_VERSION="$UV_VERSION" setup_uv
+    $STD uv sync --frozen --no-dev
     msg_ok "Backend Updated"
 
     msg_info "Starting Service"
@@ -79,5 +80,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

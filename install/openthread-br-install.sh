@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: MickLesk (CanbiZ)
+# Author: MickLesk (CanbiZ) | Co-Author: Tom Frenzel (tomfrenzel)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://openthread.io/guides/border-router
 
@@ -39,12 +39,19 @@ msg_ok "Installed Dependencies"
 
 setup_nodejs
 
-msg_info "Cloning OpenThread Border Router"
+RELEASE=$(get_latest_gh_tag "openthread/ot-br-posix")
+if [[ -z "$RELEASE" ]]; then
+  msg_error "Failed to fetch latest release tag"
+  exit 1
+fi
+
+msg_info "Fetching GitHub release OpenThread-BR (${RELEASE#v})"
 # git clone is needed to fetch submodules, fetch_and_deploy_gh_release doesn't support this. We use --depth 1 to minimize the amount of data cloned, but it still may take a while.
-$STD git clone --depth 1 https://github.com/openthread/ot-br-posix /opt/ot-br-posix
+$STD git clone --depth 1 --branch "$RELEASE" https://github.com/openthread/ot-br-posix /opt/ot-br-posix
 cd /opt/ot-br-posix
 $STD git submodule update --depth 1 --init --recursive
-msg_ok "Cloned OpenThread Border Router"
+echo "${RELEASE#v}" > ~/.openthread-br
+msg_ok "Deployed GitHub release OpenThread-BR (${RELEASE#v})"
 
 msg_info "Building OpenThread Border Router (Patience)"
 mkdir -p build && cd build
@@ -57,6 +64,7 @@ $STD cmake -GNinja \
   -DOTBR_WEB=ON \
   -DOTBR_BORDER_ROUTING=ON \
   -DOTBR_BACKBONE_ROUTER=ON \
+  -DOTBR_SYSTEMD_UNIT_DIR=/etc/systemd/system \
   -DOT_FIREWALL=ON \
   -DOT_POSIX_NAT64_CIDR="192.168.255.0/24" \
   ..
@@ -67,6 +75,17 @@ msg_ok "Built OpenThread Border Router"
 msg_info "Configuring Network"
 cat <<EOF >/etc/sysctl.d/99-otbr.conf
 net.ipv6.conf.all.forwarding=1
+net.ipv6.conf.all.accept_ra=2
+net.ipv6.conf.all.accept_ra_rtr_pref=1
+net.ipv6.conf.all.accept_ra_rt_info_max_plen=64
+net.ipv6.conf.default.forwarding=1
+net.ipv6.conf.default.accept_ra=2
+net.ipv6.conf.default.accept_ra_rtr_pref=1
+net.ipv6.conf.default.accept_ra_rt_info_max_plen=64
+net.ipv6.conf.eth0.forwarding=1
+net.ipv6.conf.eth0.accept_ra=2
+net.ipv6.conf.eth0.accept_ra_rtr_pref=1
+net.ipv6.conf.eth0.accept_ra_rt_info_max_plen=64
 net.ipv4.ip_forward=1
 EOF
 $STD sysctl -p /etc/sysctl.d/99-otbr.conf

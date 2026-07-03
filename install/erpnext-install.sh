@@ -30,11 +30,13 @@ $STD apt install -y \
   fontconfig \
   libjpeg-dev \
   libmariadb-dev \
-  python3-pip
+  python3-pip \
+  pkg-config \
+  cron
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
-UV_PYTHON="3.13" setup_uv
+UV_PYTHON="3.14" setup_uv
 setup_mariadb
 
 msg_info "Configuring MariaDB for ERPNext"
@@ -50,7 +52,7 @@ $STD systemctl restart mariadb
 msg_ok "Configured MariaDB for ERPNext"
 
 msg_info "Installing wkhtmltopdf"
-WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb"
+WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_$(arch_resolve).deb"
 $STD curl -fsSL -o /tmp/wkhtmltox.deb "$WKHTMLTOPDF_URL"
 $STD apt install -y /tmp/wkhtmltox.deb
 rm -f /tmp/wkhtmltox.deb
@@ -67,8 +69,16 @@ msg_info "Initializing Frappe Bench"
 ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 DB_ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASS}'; FLUSH PRIVILEGES;"
-$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-15 frappe-bench'
-$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt/frappe-bench && bench get-app erpnext --branch version-15'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv python install 3.14'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-16 --python "$(uv python find 3.14)" frappe-bench'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt/frappe-bench && bench get-app erpnext --branch version-16'
+
+msg_info "Starting Redis Services for Site Setup"
+$STD sudo -u frappe bash -c 'redis-server /opt/frappe-bench/config/redis_queue.conf --daemonize yes'
+$STD sudo -u frappe bash -c 'redis-server /opt/frappe-bench/config/redis_cache.conf --daemonize yes'
+sleep 3
+msg_ok "Started Redis Services for Site Setup"
+
 $STD sudo -u frappe bash -c "export PATH=\"\$HOME/.local/bin:\$PATH\"; cd /opt/frappe-bench && bench new-site site1.local --db-root-username root --db-root-password \"$DB_ROOT_PASS\" --admin-password \"$ADMIN_PASS\" --install-app erpnext --set-default"
 msg_ok "Initialized Frappe Bench"
 
@@ -78,14 +88,14 @@ ADMIN_PASSWORD=${ADMIN_PASS}
 DB_ROOT_PASSWORD=${DB_ROOT_PASS}
 SITE_NAME=site1.local
 EOF
-{
-  echo "ERPNext Credentials"
-  echo "=================="
-  echo "Admin Username: Administrator"
-  echo "Admin Password: ${ADMIN_PASS}"
-  echo "DB Root Password: ${DB_ROOT_PASS}"
-  echo "Site Name: site1.local"
-} >~/erpnext.creds
+cat <<EOF >~/erpnext.creds
+ERPNext Credentials
+==================
+Admin Username: Administrator
+Admin Password: ${ADMIN_PASS}
+DB Root Password: ${DB_ROOT_PASS}
+Site Name: site1.local
+EOF
 $STD systemctl enable --now redis-server
 msg_ok "Configured ERPNext"
 

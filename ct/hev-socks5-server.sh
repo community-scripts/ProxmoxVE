@@ -12,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,7 +36,7 @@ function update_script() {
     systemctl stop hev-socks5-server
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "hev-socks5-server" "heiher/hev-socks5-server" "singlefile" "latest" "/opt" "hev-socks5-server-linux-x86_64"
+    fetch_and_deploy_gh_release "hev-socks5-server" "heiher/hev-socks5-server" "singlefile" "latest" "/opt" "hev-socks5-server-linux-$(arch_resolve "x86_64" "arm64")"
 
     msg_info "Starting Service"
     systemctl start hev-socks5-server
@@ -52,5 +53,5 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it with a SOCKS5 client using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}${IP}:1080${CL}"
+echo -e "${GATEWAY}${BGN}${IP}:1080${CL}"
 echo -e "${INFO}${YW} and the credentials stored at /root/hev.creds${CL}"

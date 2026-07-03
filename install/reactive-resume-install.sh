@@ -15,7 +15,7 @@ update_os
 
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="reactive_resume" PG_DB_USER="reactive_resume" setup_postgresql_db
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
@@ -28,7 +28,7 @@ fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "ta
 msg_info "Building Reactive Resume (Patience)"
 cd /opt/reactive-resume
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-corepack enable
+
 corepack prepare --activate
 export NODE_ENV="production"
 export CI="true"
@@ -55,7 +55,7 @@ DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAM
 AUTH_SECRET=${AUTH_SECRET}
 
 # Printer (headless Chromium for PDF generation)
-PRINTER_ENDPOINT=http://localhost:9222
+PRINTER_ENDPOINT=http://127.0.0.1:9222
 
 # Storage: uses local filesystem (/opt/reactive-resume/data) when S3 is not configured
 # S3_ACCESS_KEY_ID=
@@ -92,7 +92,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/chromium --headless --disable-gpu --no-sandbox --disable-dev-shm-usage --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222
+ExecStart=/usr/bin/chromium --headless --disable-gpu --no-sandbox --no-zygote --disable-dev-shm-usage --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222
 Restart=always
 RestartSec=5
 
@@ -107,9 +107,9 @@ After=network.target postgresql.service chromium-printer.service
 Wants=postgresql.service chromium-printer.service
 
 [Service]
-WorkingDirectory=/opt/reactive-resume
+WorkingDirectory=/opt/reactive-resume/apps/server
 EnvironmentFile=/opt/reactive-resume/.env
-ExecStart=/usr/bin/node .output/server/index.mjs
+ExecStart=/usr/bin/node dist/index.mjs
 Restart=always
 RestartSec=5
 

@@ -30,6 +30,7 @@ cat <<EOF >/etc/inspircd/inspircd.conf
        email="irc@&networkDomain;">
 <bind address="" port="6667" type="clients">
 EOF
+systemctl enable -q --now inspircd
 msg_ok "Installed InspIRCd"
 
 motd_ssh

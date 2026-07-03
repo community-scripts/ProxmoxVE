@@ -16,10 +16,10 @@ function header_info {
 EOF
 }
 
-RD=$(echo "\033[01;31m")
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-CL=$(echo "\033[m")
+RD="\033[01;31m"
+YW="\033[33m"
+GN="\033[1;92m"
+CL="\033[m"
 BFR="\\r\\033[K"
 HOLD="-"
 CM="${GN}✓${CL}"
@@ -47,7 +47,7 @@ intel() {
     sleep 1
   fi
 
-  intel_microcode=$(curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode//" | grep -o 'href="[^"]*amd64.deb"' | sed 's/href="//;s/"//')
+  intel_microcode=$(curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/" | grep -o 'href="[^"]*amd64.deb"' | sed 's/href="//;s/"//')
   [ -z "$intel_microcode" ] && {
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Microcode Found" --msgbox "It appears there were no microcode packages found\n Try again later." 10 68
     msg_info "Exiting"
@@ -76,21 +76,21 @@ intel() {
   }
 
   msg_info "Downloading the Intel Processor Microcode Package $microcode"
-  curl -fsSL "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -o $(basename "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode")
+  curl -fsSL --proto '=https' "https://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -o "$microcode"
   msg_ok "Downloaded the Intel Processor Microcode Package $microcode"
 
   msg_info "Installing $microcode (Patience)"
-  dpkg -i $microcode &>/dev/null
+  dpkg -i "$microcode" &>/dev/null
   msg_ok "Installed $microcode"
 
   msg_info "Cleaning up"
-  rm $microcode
+  rm -f "$microcode"
   msg_ok "Cleaned"
   echo -e "\nIn order to apply the changes, a system reboot will be necessary.\n"
 }
 
 amd() {
-  amd_microcode=$(curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode///" | grep -o 'href="[^"]*amd64.deb"' | sed 's/href="//;s/"//')
+  amd_microcode=$(curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/" | grep -o 'href="[^"]*amd64.deb"' | sed 's/href="//;s/"//')
 
   [ -z "$amd_microcode" ] && {
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Microcode Found" --msgbox "It appears there were no microcode packages found\n Try again later." 10 68
@@ -120,15 +120,15 @@ amd() {
   }
 
   msg_info "Downloading the AMD Processor Microcode Package $microcode"
-  curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -o $(basename "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode")
+  curl -fsSL --proto '=https' "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -o "$microcode"
   msg_ok "Downloaded the AMD Processor Microcode Package $microcode"
 
   msg_info "Installing $microcode (Patience)"
-  dpkg -i $microcode &>/dev/null
+  dpkg -i "$microcode" &>/dev/null
   msg_ok "Installed $microcode"
 
   msg_info "Cleaning up"
-  rm $microcode
+  rm -f "$microcode"
   msg_ok "Cleaned"
   echo -e "\nIn order to apply the changes, a system reboot will be necessary.\n"
 }
@@ -137,6 +137,12 @@ if ! command -v pveversion >/dev/null 2>&1; then
   header_info
   msg_error "No PVE Detected!"
   exit
+fi
+
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "CPU microcode updates are only available for x86 (Intel/AMD) systems."
+  exit 0
 fi
 
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Processor Microcode" --yesno "This will check for CPU microcode packages with the option to install. Proceed?" 10 58

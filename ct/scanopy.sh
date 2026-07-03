@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -69,7 +70,7 @@ function update_script() {
     msg_ok "Created frontend UI"
 
     if [[ -f /etc/systemd/system/scanopy-daemon.service ]]; then
-      fetch_and_deploy_gh_release "Scanopy Daemon" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-amd64"
+      fetch_and_deploy_gh_release "Scanopy Daemon" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-$(arch_resolve)"
       mv "/usr/local/bin/Scanopy Daemon" /usr/local/bin/scanopy-daemon
       rm -f /usr/bin/scanopy-daemon ~/configure_daemon.sh
       sed -i -e 's|usr/bin|usr/local/bin|' \
@@ -93,6 +94,6 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:60072${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:60072${CL}"
 echo -e "${INFO}${YW} Then create your account, and create a daemon in the UI.${CL}"

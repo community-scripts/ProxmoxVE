@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,7 +31,7 @@ function update_script() {
   fi
 
   PYTHON_VERSION="3.12" setup_uv
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="corepack" setup_nodejs
 
   if check_for_gh_release "gramps-web-api" "gramps-project/gramps-web-api"; then
     msg_info "Stopping Service"
@@ -83,9 +84,14 @@ function update_script() {
     msg_info "Updating Gramps Web Frontend"
     cd /opt/gramps-web/frontend
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-    $STD corepack enable
+
+    create_backup /opt/gramps-web/frontend/dist/config.js
+
     $STD npm install
     $STD npm run build
+
+    restore_backup
+
     msg_ok "Updated Gramps Web Frontend"
 
     msg_info "Starting Service"
@@ -101,5 +107,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5000${CL}"

@@ -12,6 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -32,17 +33,12 @@ function update_script() {
     systemctl stop tunarr
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    if [ -d "/usr/local/share/tunarr" ]; then
-      tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" /usr/local/share/tunarr $STD
-      msg_ok "Backup Created"
-    else
-      msg_error "Backup failed: /usr/local/share/tunarr does not exist"
-    fi
+    create_backup /root/.local/share/tunarr
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-x64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-$(arch_resolve "x64" "arm64").tar.gz"
     cd /opt/tunarr
     mv tunarr* tunarr
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start tunarr
@@ -55,7 +51,7 @@ function update_script() {
     systemctl stop tunarr
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux64-gpl-7.1.tar.xz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux$(arch_resolve "64" "arm64")-gpl-7.1.tar.xz"
 
     msg_info "Set ErsatzTV-ffmpeg links"
     chmod +x /opt/ErsatzTV-ffmpeg/bin/*
@@ -78,5 +74,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000${CL}"

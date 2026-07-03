@@ -24,10 +24,10 @@ setup_mariadb
 msg_info "Setting up Database"
 ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$ROOT_PASS'; flush privileges;"
-{
-  echo "Dolibarr DB Credentials"
-  echo "MariaDB Root Password: $ROOT_PASS"
-} >>~/dolibarr.creds
+cat <<EOF >~/dolibarr.creds
+Dolibarr DB Credentials
+MariaDB Root Password: $ROOT_PASS
+EOF
 msg_ok "Set up database"
 
 msg_info "Setup Dolibarr"

@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   if check_for_gh_release "soulsync" "Nezreka/SoulSync"; then
     msg_info "Stopping Service"
     systemctl stop soulsync
@@ -44,8 +47,14 @@ function update_script() {
     msg_info "Updating Python Dependencies"
     cd /opt/soulsync
     $STD uv venv --clear /opt/soulsync/.venv --python 3.11
-    $STD /opt/soulsync/.venv/bin/pip install -r requirements.txt
+    $STD uv pip install -r requirements.txt
     msg_ok "Updated Python Dependencies"
+
+    msg_info "Building WebUI"
+    cd /opt/soulsync/webui
+    $STD npm ci
+    $STD npm run build
+    msg_ok "Built WebUI"
 
     mv /opt/soulsync-config.bak /opt/soulsync/config
     mv /opt/soulsync-data.bak /opt/soulsync/data
@@ -64,5 +73,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8008${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8008${CL}"

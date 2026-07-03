@@ -30,7 +30,7 @@ setup_deb822_repo \
 $STD apt install -y elasticsearch
 sed -i 's/^#\{0,2\} *-Xms[0-9]*g.*/-Xms2g/' /etc/elasticsearch/jvm.options
 sed -i 's/^#\{0,2\} *-Xmx[0-9]*g.*/-Xmx2g/' /etc/elasticsearch/jvm.options
-cat <<EOF >>/etc/elasticsearch/elasticsearch.yml
+cat <<EOF >/etc/elasticsearch/elasticsearch.yml
 discovery.type: single-node
 xpack.security.enabled: false
 bootstrap.memory_lock: false

@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y git
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "gogs" "gogs/gogs" "prebuild" "latest" "/opt/gogs" "gogs_*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "gogs" "gogs/gogs" "prebuild" "latest" "/opt/gogs" "gogs_*_linux_$(arch_resolve).tar.gz"
 
 msg_info "Setting up Gogs"
 mkdir -p /opt/gogs/{custom/conf,data,log}

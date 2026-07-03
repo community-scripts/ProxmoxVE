@@ -12,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,6 +34,7 @@ function update_script() {
     systemctl stop apprise-api
     msg_ok "Stopped Service"
 
+    export UV_PYTHON_INSTALL_DIR=/opt/uv-python
     PYTHON_VERSION="3.12" setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "apprise" "caronc/apprise-api" "tarball"
 
@@ -40,7 +42,9 @@ function update_script() {
     cd /opt/apprise
     cp ./requirements.txt /etc/requirements.txt
     $STD apt install -y nginx git
-    $STD uv pip install -r requirements.txt gunicorn supervisor --system
+    $STD uv venv /opt/apprise/.venv
+    $STD uv pip install -r requirements.txt gunicorn supervisor -p /opt/apprise/.venv/bin/python
+    ln -sf /opt/apprise/.venv/bin/supervisord /opt/apprise/.venv/bin/gunicorn /usr/local/bin/
     cp -fr apprise_api/static /usr/share/nginx/html/s/
     mv apprise_api/ webapp
     touch /etc/nginx/server-override.conf
@@ -71,5 +75,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000${CL}"

@@ -12,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,7 +31,7 @@ function update_script() {
   fi
 
   CHOICE=$(msg_menu "Loki Update Options" \
-    "1" "Update Loki & Promtail" \
+    "1" "Update Loki" \
     "2" "Allow 0.0.0.0 for listening" \
     "3" "Allow only ${LOCAL_IP} for listening")
 
@@ -38,24 +39,15 @@ function update_script() {
   1)
       msg_info "Stopping Loki"
       systemctl stop loki
-      if systemctl is-active --quiet promtail 2>/dev/null || dpkg -s promtail >/dev/null 2>&1; then
-        systemctl stop promtail
-      fi
       msg_ok "Stopped Loki"
 
       msg_info "Updating Loki"
       $STD apt update
       $STD apt install -y --only-upgrade loki
-      if dpkg -s promtail >/dev/null 2>&1; then
-        $STD apt install -y --only-upgrade promtail
-      fi
       msg_ok "Updated Loki"
 
       msg_info "Starting Loki"
       systemctl start loki
-      if dpkg -s promtail >/dev/null 2>&1; then
-        systemctl start promtail
-      fi
       msg_ok "Started Loki"
       msg_ok "Updated successfully!"
       exit
@@ -87,8 +79,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access loki using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3100${CL}\n"
-if dpkg -s promtail >/dev/null 2>&1; then
-  echo -e "${INFO}${YW} Access promtail using the following URL:${CL}"
-  echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9080${CL}"
-fi
+echo -e "${GATEWAY}${BGN}http://${IP}:3100${CL}\n"

@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -37,11 +38,11 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Backing up Configuration and Data"
-    cp /opt/bambuddy/.env /opt/bambuddy.env.bak
-    cp -r /opt/bambuddy/data /opt/bambuddy_data_bak
-    [[ -f /opt/bambuddy/bambuddy.db ]] && cp /opt/bambuddy/bambuddy.db /opt/bambuddy.db.bak
-    [[ -f /opt/bambuddy/bambutrack.db ]] && cp /opt/bambuddy/bambutrack.db /opt/bambutrack.db.bak
-    [[ -d /opt/bambuddy/archive ]] && cp -r /opt/bambuddy/archive /opt/bambuddy_archive_bak
+    create_backup /opt/bambuddy/.env \
+      /opt/bambuddy/data \
+      /opt/bambuddy/bambuddy.db \
+      /opt/bambuddy/bambutrack.db \
+      /opt/bambuddy/archive
     msg_ok "Backed up Configuration and Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bambuddy" "maziggy/bambuddy" "tarball" "latest" "/opt/bambuddy"
@@ -58,19 +59,7 @@ function update_script() {
     $STD npm run build
     msg_ok "Rebuilt Frontend"
 
-    msg_info "Restoring Configuration and Data"
-    mkdir -p /opt/bambuddy/data
-    cp /opt/bambuddy.env.bak /opt/bambuddy/.env
-    cp -r /opt/bambuddy_data_bak/. /opt/bambuddy/data/
-    [[ -f /opt/bambuddy.db.bak ]] && cp /opt/bambuddy.db.bak /opt/bambuddy/bambuddy.db
-    [[ -f /opt/bambutrack.db.bak ]] && cp /opt/bambutrack.db.bak /opt/bambuddy/bambutrack.db
-    if [[ -d /opt/bambuddy_archive_bak ]]; then
-      mkdir -p /opt/bambuddy/archive
-      cp -r /opt/bambuddy_archive_bak/. /opt/bambuddy/archive/
-    fi
-    rm -f /opt/bambuddy.env.bak /opt/bambuddy.db.bak /opt/bambutrack.db.bak
-    rm -rf /opt/bambuddy_data_bak /opt/bambuddy_archive_bak
-    msg_ok "Restored Configuration and Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start bambuddy
@@ -86,5 +75,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000${CL}"

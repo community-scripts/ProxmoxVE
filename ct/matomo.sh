@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -42,6 +43,16 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "matomo" "matomo-org/matomo" "prebuild" "latest" "/opt/matomo" "matomo-*.zip"
 
+    msg_info "Setting up Matomo"
+    if [[ -d /opt/matomo/matomo ]]; then
+      rm -rf /opt/matomo/tmp "/opt/matomo/How to install Matomo.html"
+      find /opt/matomo/matomo -mindepth 1 -maxdepth 1 -exec mv -t /opt/matomo {} +
+      rm -rf /opt/matomo/matomo
+    fi
+    mkdir -p /opt/matomo/tmp
+    chmod -R 755 /opt/matomo/tmp
+    msg_ok "Set up Matomo"
+
     msg_info "Restoring Data"
     if [[ -f /opt/matomo_config.bak ]]; then
       mkdir -p /opt/matomo/config
@@ -57,7 +68,16 @@ function update_script() {
     chown -R www-data:www-data /opt/matomo
     msg_ok "Restored Data"
 
+    if [[ -f /opt/matomo/console ]]; then
+      msg_info "Running Matomo database upgrade"
+      cd /opt/matomo
+      $STD runuser -u www-data -- php console core:update --no-interaction
+      msg_ok "Ran Matomo database upgrade"
+    fi
+
     msg_info "Starting Services"
+    PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+    systemctl restart "php${PHP_VER}-fpm"
     systemctl start caddy
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
@@ -71,5 +91,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

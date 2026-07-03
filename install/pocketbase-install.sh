@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "pocketbase" "pocketbase/pocketbase" "prebuild" "latest" "/opt/pocketbase" "pocketbase*linux_amd64.zip"
+fetch_and_deploy_gh_release "pocketbase" "pocketbase/pocketbase" "prebuild" "latest" "/opt/pocketbase" "pocketbase*linux_$(arch_resolve).zip"
 
 msg_info "Configuring Pocketbase"
 mkdir -p /opt/pocketbase/{pb_public,pb_migrations,pb_hooks}

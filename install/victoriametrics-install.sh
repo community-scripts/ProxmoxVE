@@ -16,10 +16,10 @@ update_os
 msg_info "Getting latest version of VictoriaMetrics"
 
 victoriametrics_release=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases" |
-  jq -r '.[] | select(.assets[].name | match("^victoria-metrics-linux-amd64-v[0-9.]+.tar.gz$")) | .tag_name' |
+  jq -r --arg a "$(arch_resolve)" '.[] | select(.assets[].name | match("^victoria-metrics-linux-" + $a + "-v[0-9.]+.tar.gz$")) | .tag_name' |
   head -n 1)
-victoriametrics_filename="victoria-metrics-linux-amd64-${victoriametrics_release}.tar.gz"
-vmutils_filename="vmutils-linux-amd64-${victoriametrics_release}.tar.gz"
+victoriametrics_filename="victoria-metrics-linux-$(arch_resolve)-${victoriametrics_release}.tar.gz"
+vmutils_filename="vmutils-linux-$(arch_resolve)-${victoriametrics_release}.tar.gz"
 msg_ok "Got version $victoriametrics_release of VictoriaMetrics"
 
 fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$victoriametrics_filename"
@@ -30,10 +30,10 @@ read -r -p "${TAB3}Would you like to add VictoriaLogs? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   vmlogs_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
     jq -r '.assets[].name' |
-    grep -E '^victoria-logs-linux-amd64-v[0-9.]+\.tar\.gz$')
+    grep -E "^victoria-logs-linux-$(arch_resolve)-v[0-9.]+\.tar\.gz$")
   vlutils_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
     jq -r '.assets[].name' |
-    grep -E '^vlutils-linux-amd64-v[0-9.]+\.tar\.gz$')
+    grep -E "^vlutils-linux-$(arch_resolve)-v[0-9.]+\.tar\.gz$")
   fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vmlogs_filename"
   fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vlutils_filename"
 fi

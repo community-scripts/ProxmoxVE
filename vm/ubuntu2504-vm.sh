@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
@@ -146,7 +146,7 @@ function check_root() {
 }
 
 # This function checks the version of Proxmox Virtual Environment (PVE) and exits if the version is not supported.
-# Supported: Proxmox VE 8.0.x – 8.9.x, 9.0 and 9.1
+# Supported: Proxmox VE 8.0.x – 8.9.x, 9.0 and 9.2
 pve_check() {
   local PVE_VER
   PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
@@ -162,12 +162,12 @@ pve_check() {
     return 0
   fi
 
-  # Check for Proxmox VE 9.x: allow 9.0 and 9.1
+  # Check for Proxmox VE 9.x: allow 9.0 and 9.2
   if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
     local MINOR="${BASH_REMATCH[1]}"
-    if ((MINOR < 0 || MINOR > 1)); then
+    if ((MINOR < 0 || MINOR > 2)); then
       msg_error "This version of Proxmox VE is not supported."
-      msg_error "Supported: Proxmox VE version 9.0 – 9.1"
+      msg_error "Supported: Proxmox VE version 9.0 – 9.2"
       exit 105
     fi
     return 0
@@ -175,7 +175,7 @@ pve_check() {
 
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
-  msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0 – 9.1"
+  msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0 – 9.2"
   exit 105
 }
 
@@ -494,7 +494,7 @@ fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_info "Retrieving the URL for the Ubuntu 25.04 Disk Image"
-URL=https://cloud-images.ubuntu.com/plucky/current/plucky-server-cloudimg-amd64.img
+URL=https://cloud-images.ubuntu.com/releases/server/plucky/release/ubuntu-25.04-server-cloudimg-amd64.img
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"

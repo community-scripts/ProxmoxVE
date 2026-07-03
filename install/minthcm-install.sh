@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt install -y cron
+msg_ok "Installed Dependencies"
+
 PHP_VERSION="8.2"
 PHP_APACHE="YES" PHP_MODULE="mysql,redis" PHP_FPM="YES" setup_php
 setup_composer

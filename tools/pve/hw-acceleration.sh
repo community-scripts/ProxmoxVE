@@ -54,6 +54,11 @@ if ! pveversion | grep -Eq "pve-manager/8\.[0-4](\.[0-9]+)*"; then
   exit
 fi
 
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  echo -e "${RD}Intel HW acceleration is only available on x86 (Intel) systems.${CL}"
+  exit 0
+fi
+
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Add Intel HW Acceleration" --yesno "This Will Add Intel HW Acceleration to an existing LXC Container. Proceed?" 8 72
 NODE=$(hostname)
 PREV_MENU=()
@@ -96,14 +101,14 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Hardware Acceleration (non-free)"
   pct exec "${privileged_container}" -- bash -c "cat <<EOF >/etc/apt/sources.list.d/non-free.list
 
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb https://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb-src https://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
-deb-src http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+deb https://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+deb-src https://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
-deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+deb https://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+deb-src https://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
 EOF"
 
   pct exec "${privileged_container}" -- bash -c "silent() { \"\$@\" >/dev/null 2>&1; } && $STD apt-get update && $STD apt-get install -y intel-media-va-driver-non-free ocl-icd-libopencl1 intel-opencl-icd vainfo intel-gpu-tools && $STD adduser \$(id -u -n) video && $STD adduser \$(id -u -n) render"

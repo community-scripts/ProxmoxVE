@@ -22,10 +22,10 @@ APP="IP-Tag"
 hostname=$(hostname)
 
 # Color variables
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-RD=$(echo "\033[01;31m")
-CL=$(echo "\033[m")
+YW="\033[33m"
+GN="\033[1;92m"
+RD="\033[01;31m"
+CL="\033[m"
 BFR="\\r\\033[K"
 HOLD=" "
 CM="${GN}✓${CL} "
@@ -127,7 +127,7 @@ update_installation() {
     echo -e "\n${YW}Configuration file already exists.${CL}"
     echo -e "${YW}Note: No critical changes were made in this version.${CL}"
     while true; do
-      read -p "Do you want to replace it with defaults? (y/n): " yn
+      read -rp "Do you want to replace it with defaults? (y/n): " yn
       case $yn in
       [Yy]*)
         interactive_config_setup
@@ -176,7 +176,7 @@ export FORCE_SINGLE_RUN=true
 exec "$SCRIPT_FILE"
 EOF
   chmod +x /usr/local/bin/iptag-run
-  msg_ok "Created iptag-run executable - You can execute this manually by entering “iptag-run” in the Proxmox host, so the script is executed by hand."
+  msg_ok "Created iptag-run executable - You can execute this manually by entering 'iptag-run' in the Proxmox host, so the script is executed by hand."
 
   msg_info "Restarting service"
   systemctl daemon-reload &>/dev/null
@@ -208,7 +208,7 @@ install_command_only() {
   else
     stop_spinner
     echo -e "\n${YW}Configuration file already exists.${CL}"
-    read -p "Do you want to reconfigure tag format? (y/n): " reconfigure
+    read -rp "Do you want to reconfigure tag format? (y/n): " reconfigure
     case $reconfigure in
     [Yy]*)
       interactive_config_setup_command
@@ -285,7 +285,7 @@ interactive_config_setup_command() {
   echo -e "${GN}3)${CL} full - Show full IP address (e.g., 192.168.0.100)"
 
   while true; do
-    read -p "Enter your choice (1-3) [1]: " tag_choice
+    read -rp "Enter your choice (1-3) [1]: " tag_choice
     case ${tag_choice:-1} in
     1)
       TAG_FORMAT="last_two_octets"
@@ -323,7 +323,7 @@ interactive_config_setup() {
   echo -e "${GN}3)${CL} full - Show full IP address (e.g., 192.168.0.100)"
 
   while true; do
-    read -p "Enter your choice (1-3) [1]: " tag_choice
+    read -rp "Enter your choice (1-3) [1]: " tag_choice
     case ${tag_choice:-1} in
     1)
       TAG_FORMAT="last_two_octets"
@@ -352,7 +352,7 @@ interactive_config_setup() {
   echo -e "${YW}Recommended range: 300-3600 seconds${CL}"
 
   while true; do
-    read -p "Enter interval in seconds [300]: " interval_input
+    read -rp "Enter interval in seconds [300]: " interval_input
     interval_input=${interval_input:-300}
 
     if [[ $interval_input =~ ^[0-9]+$ ]] && [ $interval_input -ge 300 ] && [ $interval_input -le 7200 ]; then
@@ -563,9 +563,10 @@ get_vm_ips() {
     
     debug_log "vm $vmid: starting IP detection"
     
-    # Check if VM is running first
-    local vm_status=""
-    if command -v qm >/dev/null 2>&1; then
+    # Check if VM is running first (status comes from the cached `qm list`,
+    # falling back to `qm status` only when called outside the normal cycle).
+    local vm_status="${STATUS_CACHE[vm_${vmid}]:-}"
+    if [[ -z "$vm_status" ]] && command -v qm >/dev/null 2>&1; then
         vm_status=$(qm status "$vmid" 2>/dev/null | awk '{print $2}')
     fi
     
@@ -578,33 +579,43 @@ get_vm_ips() {
     local mac_addresses=$(grep -E "^net[0-9]+:" "$vm_config" | grep -oE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}" | head -3)
     debug_log "vm $vmid: found MACs: $mac_addresses"
     
-    # Method 1: QM guest agent (most reliable for current IP)
-    if command -v qm >/dev/null 2>&1; then
-        debug_log "vm $vmid: trying qm guest agent first"
-        local qm_ips=$(timeout 8 qm guest cmd "$vmid" network-get-interfaces 2>/dev/null | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | grep -v "127.0.0.1" | head -3)
+    # Method 1: QEMU guest agent (most reliable for current IP). Only query it
+    # when the agent is actually enabled in the VM config, otherwise the call
+    # blocks until the timeout on every VM without an agent.
+    local agent_enabled=0
+    if [[ "$(grep -E '^agent:' "$vm_config" 2>/dev/null)" =~ (^agent:[[:space:]]*1|enabled=1) ]]; then
+        agent_enabled=1
+    fi
+    if [[ "$agent_enabled" == "1" ]] && command -v qm >/dev/null 2>&1; then
+        debug_log "vm $vmid: querying guest agent"
+        local qm_ips=$(timeout 5 qm guest cmd "$vmid" network-get-interfaces 2>/dev/null | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | grep -v "127.0.0.1" | head -3)
         for qm_ip in $qm_ips; do
             if [[ "$qm_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
                 debug_log "vm $vmid: found IP $qm_ip via qm guest cmd"
                 ips+="$qm_ip "
             fi
         done
+    else
+        debug_log "vm $vmid: guest agent not enabled, skipping qm guest cmd"
     fi
     
-    # Method 2: Fresh ARP table lookup (force refresh)
-    if [[ -n "$mac_addresses" ]]; then
-        debug_log "vm $vmid: refreshing ARP table and checking"
-        # Try to refresh ARP table by pinging network ranges
+    # Method 2: ARP table lookup (only if the guest agent gave us nothing).
+    if [[ -z "$ips" && -n "$mac_addresses" ]]; then
+        debug_log "vm $vmid: checking ARP table"
+        # Snapshot the neighbor table once instead of per MAC
+        local neigh_table
+        neigh_table=$(ip neighbor show 2>/dev/null)
         for mac in $mac_addresses; do
             local mac_lower=$(echo "$mac" | tr '[:upper:]' '[:lower:]')
             
-            # First check current ARP table
-            local current_ip=$(ip neighbor show | grep "$mac_lower" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
+            # Check current ARP table
+            local current_ip=$(echo "$neigh_table" | grep "$mac_lower" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
             
             # If found in ARP, verify it's still valid by trying to ping
             if [[ -n "$current_ip" && "$current_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
                 debug_log "vm $vmid: found IP $current_ip in ARP table for MAC $mac_lower, verifying..."
                 # Quick ping test to verify IP is still active
-                if timeout 2 ping -c 1 "$current_ip" >/dev/null 2>&1; then
+                if timeout 1 ping -c 1 -W 1 "$current_ip" >/dev/null 2>&1; then
                     debug_log "vm $vmid: verified IP $current_ip is active via ping"
                     ips+="$current_ip "
                 else
@@ -628,7 +639,7 @@ get_vm_ips() {
                     if [[ -n "$dhcp_ip" && "$dhcp_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
                         debug_log "vm $vmid: found IP $dhcp_ip via DHCP leases"
                         # Verify this IP responds
-                        if timeout 2 ping -c 1 "$dhcp_ip" >/dev/null 2>&1; then
+                        if timeout 1 ping -c 1 -W 1 "$dhcp_ip" >/dev/null 2>&1; then
                             debug_log "vm $vmid: verified DHCP IP $dhcp_ip is active"
                             ips+="$dhcp_ip "
                             break 2
@@ -652,6 +663,9 @@ get_vm_ips() {
 # Cache for configs to avoid repeated reads
 declare -A CONFIG_CACHE
 declare -A IP_CACHE
+# Status cache populated once per check from `pct list` / `qm list` to avoid
+# spawning an expensive `pct status` / `qm status` (Perl) per guest each cycle.
+declare -A STATUS_CACHE
 
 # Update tags for container or VM
 update_tags() {
@@ -811,13 +825,7 @@ update_tags() {
         if [[ "$type" == "lxc" ]]; then
             pct set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")" &>/dev/null
         else
-            local vm_config="/etc/pve/qemu-server/${vmid}.conf"
-            if [[ -f "$vm_config" ]]; then
-                sed -i '/^tags:/d' "$vm_config"
-                if [[ ${#next_tags[@]} -gt 0 ]]; then
-                    echo "tags: $(IFS=';'; echo "${next_tags[*]}")" >> "$vm_config"
-                fi
-            fi
+            qm set "${vmid}" --tags "$(IFS=';'; echo "${next_tags[*]}")" &>/dev/null
         fi
     else
         # Tags unchanged
@@ -842,7 +850,16 @@ update_all_tags() {
     
     # Get list of all containers/VMs
     if [[ "$type" == "lxc" ]]; then
-        vmids=($(pct list 2>/dev/null | grep -v VMID | awk '{print $1}'))
+        # A single `pct list` call yields both the VMID list and the running
+        # status, so we never need a per-container `pct status` afterwards.
+        local pct_list_output
+        pct_list_output=$(pct list 2>/dev/null)
+        vmids=($(echo "$pct_list_output" | awk 'NR>1 {print $1}'))
+        local _vmid _status _rest
+        while read -r _vmid _status _rest; do
+            [[ "$_vmid" == "VMID" || -z "$_vmid" ]] && continue
+            STATUS_CACHE["lxc_${_vmid}"]="$_status"
+        done <<<"$pct_list_output"
     else
         # More efficient: direct file listing instead of ls+sed
         vmids=()
@@ -851,6 +868,15 @@ update_all_tags() {
             local basename="${conf##*/}"
             vmids+=("${basename%.conf}")
         done
+        # A single `qm list` call yields the status for all VMs, avoiding a
+        # per-VM `qm status`.
+        if command -v qm >/dev/null 2>&1; then
+            local _vmid _name _status _rest
+            while read -r _vmid _name _status _rest; do
+                [[ "$_vmid" == "VMID" || -z "$_vmid" ]] && continue
+                STATUS_CACHE["vm_${_vmid}"]="$_status"
+            done <<<"$(qm list 2>/dev/null)"
+        fi
     fi
     
     count=${#vmids[@]}
@@ -887,6 +913,7 @@ check() {
     # Clear caches before each run
     CONFIG_CACHE=()
     IP_CACHE=()
+    STATUS_CACHE=()
     
     # Update LXC containers
     update_all_tags "lxc"
@@ -931,8 +958,12 @@ get_lxc_ips() {
     
     debug_log "lxc $vmid: starting IP detection"
     
-    # Check if LXC is running
-    local lxc_status=$(pct status "${vmid}" 2>/dev/null | awk '{print $2}')
+    # Check if LXC is running (status comes from the cached `pct list`,
+    # falling back to `pct status` only when called outside the normal cycle).
+    local lxc_status="${STATUS_CACHE[lxc_${vmid}]:-}"
+    if [[ -z "$lxc_status" ]]; then
+        lxc_status=$(pct status "${vmid}" 2>/dev/null | awk '{print $2}')
+    fi
     if [[ "$lxc_status" != "running" ]]; then
         debug_log "lxc $vmid: not running (status: $lxc_status)"
         return
@@ -958,9 +989,12 @@ get_lxc_ips() {
     if [[ -z "$ips" && -f "$pve_lxc_config" ]]; then
         local mac_addrs=$(grep -Eo 'hwaddr=([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}' "$pve_lxc_config" | cut -d'=' -f2)
         if [[ -n "$mac_addrs" ]]; then
+            # Snapshot the neighbor table once instead of per MAC
+            local neigh_table
+            neigh_table=$(ip neighbor show 2>/dev/null)
             while IFS= read -r mac_addr; do
                 [[ -z "$mac_addr" ]] && continue
-                local arp_ip=$(ip neighbor show | grep -i "$mac_addr" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
+                local arp_ip=$(echo "$neigh_table" | grep -i "$mac_addr" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -1)
                 if [[ -n "$arp_ip" && "$arp_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
                     debug_log "lxc $vmid: found IP $arp_ip via ARP table for MAC $mac_addr"
                     ips="${ips}${ips:+ }${arp_ip}"
@@ -1002,7 +1036,7 @@ echo -e "${GN}3)${CL} Update existing installation"
 echo -e "${RD}4)${CL} Cancel"
 
 while true; do
-  read -p "Enter your choice (1-4): " choice
+  read -rp "Enter your choice (1-4): " choice
   case $choice in
   1)
     INSTALL_MODE="service"
@@ -1031,7 +1065,7 @@ done
 
 echo -e "\n${YW}This will install ${APP} on ${hostname} in $INSTALL_MODE mode.${CL}"
 while true; do
-  read -p "Proceed? (y/n): " yn
+  read -rp "Proceed? (y/n): " yn
   case $yn in
   [Yy]*)
     break
@@ -1078,7 +1112,7 @@ if [[ "$INSTALL_MODE" == "service" ]]; then
   else
     stop_spinner
     echo -e "\n${YW}Configuration file already exists.${CL}"
-    read -p "Do you want to reconfigure tag format and loop interval? (y/n): " reconfigure
+    read -rp "Do you want to reconfigure tag format and loop interval? (y/n): " reconfigure
     case $reconfigure in
     [Yy]*)
       interactive_config_setup

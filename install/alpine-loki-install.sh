@@ -71,16 +71,6 @@ $STD rc-update add loki default
 $STD rc-service loki start
 msg_ok "Installed Loki"
 
-read -rp "Would you like to install Promtail? (y/N): " INSTALL_PROMTAIL
-if [[ "${INSTALL_PROMTAIL,,}" =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Promtail"
-  $STD apk add loki-promtail
-  $STD sed -i '/http_addr/s/127.0.0.1/0.0.0.0/g' /etc/conf.d/loki-promtail
-  $STD rc-update add loki-promtail default
-  $STD rc-service loki-promtail start
-  msg_ok "Installed Promtail"
-fi
-
 motd_ssh
 customize
 cleanup_lxc

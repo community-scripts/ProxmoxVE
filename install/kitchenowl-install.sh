@@ -47,8 +47,7 @@ msg_info "Setting up KitchenOwl"
 cd /opt/kitchenowl/backend
 $STD uv sync --no-dev
 sed -i 's/default=True/default=False/' /opt/kitchenowl/backend/wsgi.py
-mkdir -p /nltk_data
-$STD uv run python -m nltk.downloader -d /nltk_data averaged_perceptron_tagger_eng
+setup_nltk "averaged_perceptron_tagger_eng" "/nltk_data"
 JWT_SECRET=$(openssl rand -hex 32)
 mkdir -p /opt/kitchenowl/data
 cat <<EOF >/opt/kitchenowl/kitchenowl.env

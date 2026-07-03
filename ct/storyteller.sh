@@ -12,6 +12,7 @@ var_ram="${var_ram:-10240}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +29,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
 
   if check_for_gl_release "storyteller" "storyteller-platform/storyteller"; then
     msg_info "Stopping Service"
@@ -47,13 +50,14 @@ function update_script() {
     msg_info "Rebuilding Storyteller"
     cd /opt/storyteller
     export NODE_OPTIONS="--max-old-space-size=4096"
-    $STD yarn install --network-timeout 600000
+
+    $STD corepack yarn install --network-timeout 600000
     $STD gcc -g -fPIC -rdynamic -shared web/sqlite/uuid.c -o web/sqlite/uuid.c.so
     export CI=1
     export NODE_ENV=production
     export NEXT_TELEMETRY_DISABLED=1
     export SQLITE_NATIVE_BINDING=/opt/storyteller/node_modules/better-sqlite3/build/Release/better_sqlite3.node
-    $STD yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
+    $STD corepack yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
     mkdir -p /opt/storyteller/web/.next/standalone/web/.next/static
     cp -rT /opt/storyteller/web/.next/static /opt/storyteller/web/.next/standalone/web/.next/static
     if [[ -d /opt/storyteller/web/public ]]; then
@@ -81,5 +85,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8001${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8001${CL}"

@@ -15,7 +15,11 @@ update_os
 
 setup_go
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
+if [[ "$(arch_resolve)" == "arm64" ]]; then
+  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/local/bin" "meilisearch-linux-aarch64"
+else
+  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
+fi
 mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data}
 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
 
@@ -24,8 +28,7 @@ cd /opt/wanderer/source/db
 $STD go mod tidy
 $STD go build
 cd /opt/wanderer/source/web
-$STD npm ci -s vitest
-$STD npm ci --omit=dev
+$STD npm ci
 $STD npm run build
 msg_ok "Installed wanderer"
 

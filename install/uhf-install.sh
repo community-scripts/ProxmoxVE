@@ -31,8 +31,8 @@ LOG_LEVEL=INFO
 EOF
 msg_ok "Set Up UHF Server Environment"
 
-fetch_and_deploy_gh_release "comskip" "swapplications/comskip" "prebuild" "latest" "/opt/comskip" "comskip-x64-*.zip"
-fetch_and_deploy_gh_release "uhf-server" "swapplications/uhf-server-dist" "prebuild" "latest" "/opt/uhf-server" "UHF.Server-linux-x64-*.zip"
+fetch_and_deploy_gh_release "comskip" "swapplications/comskip" "prebuild" "latest" "/opt/comskip" "comskip-$(arch_resolve "x64" "arm64")-*.zip"
+fetch_and_deploy_gh_release "uhf-server" "swapplications/uhf-server-dist" "prebuild" "latest" "/opt/uhf-server" "UHF.Server-linux-$(arch_resolve "x64" "arm64")-*.zip"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/uhf-server.service

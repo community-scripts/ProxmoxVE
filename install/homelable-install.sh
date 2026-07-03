@@ -33,7 +33,7 @@ msg_ok "Set up Python Backend"
 msg_info "Configuring Homelable"
 mkdir -p /opt/homelable/data
 SECRET_KEY=$(openssl rand -hex 32)
-BCRYPT_HASH=$(/opt/homelable/backend/.venv/bin/python -c "from passlib.context import CryptContext; print(CryptContext(schemes=['bcrypt']).hash('admin'))")
+BCRYPT_HASH=$(/opt/homelable/backend/.venv/bin/python -c "import bcrypt; print(bcrypt.hashpw(b'admin', bcrypt.gensalt()).decode())")
 cat <<EOF >/opt/homelable/backend/.env
 SECRET_KEY=${SECRET_KEY}
 SQLITE_PATH=/opt/homelable/data/homelab.db
@@ -59,7 +59,7 @@ while [[ -z "$NEW_PASS" ]]; do
     fi
 done
 
-HASH=$(/opt/homelable/backend/.venv/bin/python -c "from passlib.context import CryptContext; print(CryptContext(schemes=['bcrypt']).hash('${NEW_PASS}'))")
+HASH=$(/opt/homelable/backend/.venv/bin/python -c "import bcrypt; print(bcrypt.hashpw('${NEW_PASS}'.encode(), bcrypt.gensalt()).decode())")
 
 sed -i "s|^AUTH_PASSWORD_HASH=.*|AUTH_PASSWORD_HASH='${HASH}'|" /opt/homelable/backend/.env
 

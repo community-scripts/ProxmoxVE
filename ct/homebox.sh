@@ -12,6 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -38,13 +39,15 @@ function update_script() {
     systemctl stop homebox
     msg_ok "Stopped Service"
 
-    if [ -f /opt/homebox ] && [ -x /opt/homebox ]; then
-      rm -f /opt/homebox
-    fi
-    fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_x86_64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
     chmod +x /opt/homebox/homebox
     [ -f /opt/.env ] && mv /opt/.env /opt/homebox/.env
     [ -d /opt/.data ] && mv /opt/.data /opt/homebox/.data
+
+    if ! grep -q "HBOX_AUTH_API_KEY_PEPPER" /opt/homebox/.env; then
+      AUTH_KEY=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)
+      echo "HBOX_AUTH_API_KEY_PEPPER=${AUTH_KEY}" >>/opt/homebox/.env
+    fi
 
     msg_info "Starting Service"
     systemctl start homebox
@@ -60,5 +63,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7745${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:7745${CL}"

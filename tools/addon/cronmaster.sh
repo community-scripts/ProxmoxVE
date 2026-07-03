@@ -147,7 +147,7 @@ EOF
   # Create update script
   msg_info "Creating update script"
   ensure_usr_local_bin_persist
-  cat <<EOF >/usr/local/bin/update_cronmaster
+  cat <<'EOF' >/usr/local/bin/update_cronmaster
 #!/usr/bin/env bash
 # CronMaster Update Script
 type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/cronmaster.sh)"

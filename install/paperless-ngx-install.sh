@@ -46,7 +46,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="paperlessdb" PG_DB_USER="paperless" setup_postgresql_db
 PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v2.20.15" "/opt/paperless" "paperless*tar.xz"
 
 msg_info "Setup Paperless-ngx"
 cd /opt/paperless
@@ -56,12 +56,12 @@ curl -fsSL "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/p
 mkdir -p /opt/paperless_data/{consume,data,media,trash}
 mkdir -p /opt/paperless/static
 SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
-{
-  echo ""
-  echo "Paperless-ngx Secret Key: $SECRET_KEY"
-  echo "Paperless-ngx WebUI User: admin"
-  echo "Paperless-ngx WebUI Password: $PG_DB_PASS"
-} >>~/paperless-ngx.creds
+cat <<EOF >~/paperless-ngx.creds
+
+Paperless-ngx Secret Key: $SECRET_KEY
+Paperless-ngx WebUI User: admin
+Paperless-ngx WebUI Password: $PG_DB_PASS
+EOF
 sed -i \
   -e 's|#PAPERLESS_REDIS=redis://localhost:6379|PAPERLESS_REDIS=redis://localhost:6379|' \
   -e "s|#PAPERLESS_CONSUMPTION_DIR=../consume|PAPERLESS_CONSUMPTION_DIR=/opt/paperless_data/consume|" \
@@ -94,18 +94,12 @@ user.save()
 EOF
 msg_ok "Set up admin Paperless-ngx User & Password"
 
-msg_info "Installing Natural Language Toolkit (Patience)"
-cd /opt/paperless
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data snowball_data
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data stopwords
-$STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt_tab ||
-  $STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt
+setup_nltk "snowball_data stopwords punkt_tab" "/usr/share/nltk_data"
 for policy_file in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do
   if [[ -f "$policy_file" ]]; then
     sed -i -e 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' "$policy_file"
   fi
 done
-msg_ok "Installed Natural Language Toolkit"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/paperless-scheduler.service

@@ -12,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,17 +35,11 @@ function update_script() {
     systemctl stop dagu
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/dagu/data /opt/dagu_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/dagu/data
 
-    fetch_and_deploy_gh_release "dagu" "dagucloud/dagu" "prebuild" "latest" "/opt/dagu" "dagu_*_linux_amd64.tar.gz"
+    fetch_and_deploy_gh_release "dagu" "dagucloud/dagu" "prebuild" "latest" "/opt/dagu" "dagu_*_linux_$(arch_resolve).tar.gz"
 
-    msg_info "Restoring Data"
-    mkdir -p /opt/dagu/data
-    cp -r /opt/dagu_data_backup/. /opt/dagu/data
-    rm -rf /opt/dagu_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start dagu
@@ -60,5 +55,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

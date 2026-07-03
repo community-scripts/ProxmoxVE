@@ -12,6 +12,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,25 +34,10 @@ function update_script() {
     systemctl stop bytestash-backend bytestash-frontend
     msg_ok "Services Stopped"
 
-    msg_info "Backing up data"
-    tmp_dir="/opt/bytestash-data-backup"
-    mkdir -p "$tmp_dir"
-    if [[ -d /opt/bytestash/data ]]; then
-      cp -r /opt/bytestash/data "$tmp_dir"/data
-    elif [[ -d /opt/data ]]; then
-      cp -r /opt/data "$tmp_dir"/data
-    fi
-    msg_ok "Data backed up"
-
+    [[ -d /opt/bytestash/data ]] && create_backup /opt/bytestash/data
+    [[ -d /opt/data ]] && create_backup /opt/data
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
-
-    msg_info "Restoring data"
-    if [[ -d "$tmp_dir"/data ]]; then
-      mkdir -p /opt/bytestash/data
-      cp -r "$tmp_dir"/data/* /opt/bytestash/data/
-      rm -rf "$tmp_dir"
-    fi
-    msg_ok "Data restored"
+    restore_backup
 
     msg_info "Configuring ByteStash"
     cd /opt/bytestash/server
@@ -75,5 +61,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

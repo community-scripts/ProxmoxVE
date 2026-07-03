@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -23,37 +24,28 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/dashy/public/ ]]; then
+  if [[ ! -d /opt/dashy ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+
   if check_for_gh_release "dashy" "Lissy93/dashy"; then
     msg_info "Stopping Service"
     systemctl stop dashy
     msg_ok "Stopped Service"
 
-    msg_info "Backing up conf.yml"
-    if [[ -f /opt/dashy/public/conf.yml ]]; then
-      cp -R /opt/dashy/public/conf.yml /opt/dashy_conf_backup.yml
-    else
-      cp -R /opt/dashy/user-data/conf.yml /opt/dashy_conf_backup.yml
-    fi
-    msg_ok "Backed up conf.yml"
+    create_backup /opt/dashy/user-data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dashy" "Lissy93/dashy" "prebuild" "latest" "/opt/dashy" "dashy-*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dashy" "lissy93/dashy" "prebuild" "latest" "/opt/dashy" "dashy-*.tar.gz"
 
     msg_info "Updating Dashy"
     cd /opt/dashy
     $STD yarn install --ignore-engines --network-timeout 300000
     msg_ok "Updated Dashy"
 
-    msg_info "Restoring conf.yml"
-    cp -R /opt/dashy_conf_backup.yml /opt/dashy/user-data
-    msg_ok "Restored conf.yml"
-
-    msg_info "Cleaning"
-    rm -rf /opt/dashy_conf_backup.yml /opt/dashy/public/conf.yml
-    msg_ok "Cleaned"
+    restore_backup
 
     msg_info "Starting Dashy"
     systemctl start dashy
@@ -69,5 +61,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:4000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:4000${CL}"

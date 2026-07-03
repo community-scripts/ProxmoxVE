@@ -12,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -22,12 +23,12 @@ catch_errors
 function update_script() {
   header_info
   if [[ ! -d /opt/mylar3 ]]; then
-    msg_error "No ${APP} Installation Found!"
+    msg_error "No Mylar3 Installation Found!"
     exit
   fi
 
-  if check_for_gh_release "mylar3" "mylar3/mylar3"; then
-    fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
+  if check_for_gh_release "mylar3" "MylarComics/mylar3"; then
+    fetch_and_deploy_gh_release "mylar3" "MylarComics/mylar3" "tarball"
     systemctl restart mylar3
     msg_ok "Updated successfully!"
   fi
@@ -40,5 +41,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8090${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8090${CL}"

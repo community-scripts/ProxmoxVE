@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,10 +35,8 @@ function update_script() {
     systemctl stop calibre-web
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/calibre-web/app.db /opt/app.db_backup
-    cp -r /opt/calibre-web/data /opt/data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/calibre-web/app.db \
+      /opt/calibre-web/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibre-web*.tar.gz"
     setup_uv
@@ -49,11 +48,7 @@ function update_script() {
     $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir -r requirements.txt
     msg_ok "Installed Dependencies"
 
-    msg_info "Restoring Data"
-    cp /opt/app.db_backup /opt/calibre-web/app.db 2>/dev/null
-    cp -r /opt/data_backup /opt/calibre-web/data 2>/dev/null
-    rm -rf /opt/app.db_backup /opt/data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start calibre-web
@@ -69,5 +64,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8083${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8083${CL}"

@@ -11,7 +11,8 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,7 +28,6 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
 
   if command -v node &>/dev/null; then
     CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
@@ -48,7 +48,7 @@ function update_script() {
     msg_info "Migrating from packaged OpenResty to source"
     rm -f /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg /etc/apt/trusted.gpg.d/openresty.gpg
     rm -f /etc/apt/sources.list.d/openresty.list /etc/apt/sources.list.d/openresty.sources
-    $STD apt remove -y openresty
+    $STD apt purge -y openresty
     $STD apt autoremove -y
     rm -f ~/.openresty
     msg_ok "Migrated from packaged OpenResty to source"
@@ -60,8 +60,9 @@ function update_script() {
   fi
   $STD apt install -y build-essential "$pcre_pkg" libssl-dev zlib1g-dev
 
-  if check_for_gh_release "openresty" "openresty/openresty"; then
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "${CHECK_UPDATE_RELEASE}" "/opt/openresty" "openresty-*.tar.gz"
+  OPENRESTY_VERSION="1.29.2.5"
+  if [[ "$(cat ~/.openresty 2>/dev/null)" != "$OPENRESTY_VERSION" ]]; then
+    CLEAN_INSTALL=1 fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
 
     msg_info "Building OpenResty"
     cd /opt/openresty
@@ -77,6 +78,7 @@ function update_script() {
       --with-stream_ssl_module
     $STD make -j"$(nproc)"
     $STD make install
+    echo "${OPENRESTY_VERSION}" >~/.openresty
     rm -rf /opt/openresty
     cat <<'EOF' >/lib/systemd/system/openresty.service
 [Unit]
@@ -93,6 +95,11 @@ ExecStart=/usr/local/openresty/nginx/sbin/nginx -g 'daemon off;'
 [Install]
 WantedBy=multi-user.target
 EOF
+    if [ -f /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf ]; then
+      cp /opt/nginxproxymanager/docker/rootfs/etc/nginx/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+      sed -i 's+^daemon+#daemon+g' /usr/local/openresty/nginx/conf/nginx.conf
+      sed -i 's+include conf.d+include /etc/nginx/conf.d+g' /usr/local/openresty/nginx/conf/nginx.conf
+    fi
     sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     systemctl daemon-reload
     systemctl unmask openresty 2>/dev/null || true
@@ -103,8 +110,13 @@ EOF
   cd /root
   if [ -d /opt/certbot ]; then
     msg_info "Updating Certbot"
-    $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
-    $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
+    CERTBOT_PYTHON="/opt/certbot/bin/python"
+    if ! "$CERTBOT_PYTHON" -m pip --version &>/dev/null; then
+      msg_info "Repairing Certbot pip"
+      $STD "$CERTBOT_PYTHON" -m ensurepip --upgrade
+    fi
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade pip setuptools wheel
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade certbot certbot-dns-cloudflare
     msg_ok "Updated Certbot"
   fi
 
@@ -211,8 +223,23 @@ EOF
     msg_ok "Initialized Backend"
 
     msg_info "Starting Services"
+    if [ -f /opt/certbot/bin/certbot ]; then
+    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    elif command -v certbot &>/dev/null; then
+    CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    else
+    CERTBOT_VER="2.0.0"
+    fi
+    if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
+      sed -i "s|Environment=CERTBOT_VERSION=.*|Environment=CERTBOT_VERSION=${CERTBOT_VER}|" /lib/systemd/system/npm.service
+    else
+      sed -i "/Environment=NODE_ENV=production/a Environment=CERTBOT_VERSION=${CERTBOT_VER}" /lib/systemd/system/npm.service
+    fi
     sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
+    if [ -n "$(command -v node)" ]; then
+      sed -i -E "s|^ExecStart=.*/node index\.js|ExecStart=$(command -v node) index.js|" /lib/systemd/system/npm.service
+    fi
     systemctl daemon-reload
     systemctl enable -q --now openresty
     systemctl enable -q --now npm
@@ -228,5 +255,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:81${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:81${CL}"

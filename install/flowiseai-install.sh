@@ -13,14 +13,19 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="20" setup_nodejs
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  build-essential \
+  pkg-config
+msg_ok "Installed Dependencies"
+
+PYTHON_VERSION="3.11" setup_uv
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 
 msg_info "Installing FlowiseAI (Patience)"
-$STD npm install -g flowise \
-  @opentelemetry/exporter-trace-otlp-grpc \
-  @opentelemetry/exporter-trace-otlp-proto \
-  @opentelemetry/sdk-trace-node \
-  langchainhub
+PYTHON_BIN="$(uv python find 3.11)"
+export npm_config_python="$PYTHON_BIN"
+$STD pnpm add -g flowise
 mkdir -p /opt/flowiseai
 curl -fsSL "https://raw.githubusercontent.com/FlowiseAI/Flowise/main/packages/server/.env.example" -o "/opt/flowiseai/.env"
 msg_ok "Installed FlowiseAI"
@@ -33,7 +38,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=/opt/flowiseai/.env
-ExecStart=npx flowise start
+ExecStart=flowise start
 Restart=always
 
 [Install]

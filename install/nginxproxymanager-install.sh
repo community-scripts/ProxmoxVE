@@ -18,7 +18,7 @@ $STD apt install -y \
   apache2-utils \
   logrotate \
   build-essential \
-  libpcre3-dev \
+  libpcre2-dev \
   libssl-dev \
   zlib1g-dev \
   git \
@@ -36,7 +36,8 @@ $STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
 ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
 msg_ok "Set up Certbot"
 
-fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
+OPENRESTY_VERSION="1.29.2.5"
+fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
 
 msg_info "Building OpenResty"
 cd /opt/openresty
@@ -52,6 +53,7 @@ $STD ./configure \
   --with-stream_ssl_module
 $STD make -j"$(nproc)"
 $STD make install
+echo "${OPENRESTY_VERSION}" >~/.openresty
 rm -rf /opt/openresty
 
 cat <<'EOF' >/lib/systemd/system/openresty.service
@@ -160,7 +162,8 @@ $STD yarn install --network-timeout 600000
 msg_ok "Initialized Backend"
 
 msg_info "Creating Service"
-cat <<'EOF' >/lib/systemd/system/npm.service
+CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}')
+cat <<EOF >/lib/systemd/system/npm.service
 [Unit]
 Description=Nginx Proxy Manager
 After=network.target
@@ -169,6 +172,7 @@ Wants=openresty.service
 [Service]
 Type=simple
 Environment=NODE_ENV=production
+Environment=CERTBOT_VERSION=${CERTBOT_VER}
 ExecStartPre=-mkdir -p /tmp/nginx/body /data/letsencrypt-acme-challenge
 ExecStart=/usr/bin/node index.js --abort_on_uncaught_exception --max_old_space_size=250
 WorkingDirectory=/app

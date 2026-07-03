@@ -3,7 +3,7 @@ name: Close Unauthorized New Script PRs
 on:
   pull_request_target:
     branches: ["main"]
-    types: [opened, labeled]
+    types: [opened, labeled, reopened, synchronize]
 
 jobs:
   check-new-script:
@@ -24,17 +24,11 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
 
-            // --- Only act on PRs with the "new script" label ---
-            const labels = pr.labels.map(l => l.name);
-            if (!labels.includes("new script")) {
-              core.info(`PR #${prNumber} does not have "new script" label — skipping.`);
-              return;
-            }
-
             // --- Allow our bots ---
             const allowedBots = [
               "push-app-to-main[bot]",
               "push-app-to-main",
+              "community-scripts-pr-app"
             ];
 
             if (allowedBots.includes(author)) {
@@ -42,38 +36,40 @@ jobs:
               return;
             }
 
-            // --- Check if author is a member of the contributor team ---
-            const teamSlug = "contributor";
-            let isMember = false;
-
-            try {
-              const { status } = await github.rest.teams.getMembershipForUserInOrg({
-                org: owner,
-                team_slug: teamSlug,
-                username: author,
-              });
-              // status 200 means the user is a member (active or pending)
-              isMember = true;
-            } catch (error) {
-              if (error.status === 404) {
-                isMember = false;
-              } else {
-                core.warning(`Could not check team membership for ${author}: ${error.message}`);
-                // Fallback: check org membership
-                try {
-                  await github.rest.orgs.checkMembershipForUser({
-                    org: owner,
-                    username: author,
-                  });
-                  isMember = true;
-                } catch {
-                  isMember = false;
-                }
-              }
+            // --- Exempt contributors via author_association ---
+            // OWNER/MEMBER/COLLABORATOR are trusted; CONTRIBUTOR ("has merged before")
+            // and NONE are not — their new-script PRs are still closed.
+            const association = pr.author_association;
+            const exempt = ["OWNER", "MEMBER", "COLLABORATOR"];
+            if (exempt.includes(association)) {
+              core.info(`PR #${prNumber} by ${association} "${author}" — skipping.`);
+              return;
             }
 
-            if (isMember) {
-              core.info(`PR #${prNumber} by contributor "${author}" — skipping.`);
+            // --- Detect a new-script PR: "new script" label OR a newly-added
+            //     script file under ct/ install/ turnkey/ vm/ (mirrors
+            //     autolabeler-config.json). Removes the label-timing dependency. ---
+            const labels = pr.labels.map(l => l.name);
+            const hasNewScriptLabel = labels.includes("new script");
+
+            const scriptPrefixes = ["ct/", "install/", "turnkey/", "vm/"];
+            let hasAddedScriptFile = false;
+            try {
+              const files = await github.paginate(github.rest.pulls.listFiles, {
+                owner,
+                repo,
+                pull_number: prNumber,
+                per_page: 100,
+              });
+              hasAddedScriptFile = files.some(
+                f => f.status === "added" && scriptPrefixes.some(p => f.filename.startsWith(p))
+              );
+            } catch (error) {
+              core.warning(`Could not list files for PR #${prNumber}: ${error.message}`);
+            }
+
+            if (!hasNewScriptLabel && !hasAddedScriptFile) {
+              core.info(`PR #${prNumber} is not a new-script submission (no label, no added script file) — skipping.`);
               return;
             }
 

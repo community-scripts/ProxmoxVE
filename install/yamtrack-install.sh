@@ -27,8 +27,7 @@ fetch_and_deploy_gh_release "yamtrack" "FuzzyGrim/Yamtrack" "tarball"
 
 msg_info "Installing Python Dependencies"
 cd /opt/yamtrack
-$STD uv venv .venv
-$STD uv pip install --no-cache-dir -r requirements.txt
+$STD uv sync --locked
 msg_ok "Installed Python Dependencies"
 
 msg_info "Configuring Yamtrack"

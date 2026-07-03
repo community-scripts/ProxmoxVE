@@ -15,19 +15,19 @@ update_os
 
 msg_info "Setup Garage"
 GITEA_RELEASE=$(curl -s https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
-curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/x86_64-unknown-linux-musl/garage" -o /usr/local/bin/garage
+curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
 chmod +x /usr/local/bin/garage
 mkdir -p /var/lib/garage/{data,meta,snapshots}
 mkdir -p /etc/garage
 RPC_SECRET=$(openssl rand -hex 32)
 ADMIN_TOKEN=$(openssl rand -base64 32)
 METRICS_TOKEN=$(openssl rand -base64 32)
-{
-    echo "Garage Tokens and Secrets"
-    echo "RPC Secret: $RPC_SECRET"
-    echo "Admin Token: $ADMIN_TOKEN"
-    echo "Metrics Token: $METRICS_TOKEN"
-} >>~/garage.creds
+cat <<EOF >~/garage.creds
+Garage Tokens and Secrets
+RPC Secret: $RPC_SECRET
+Admin Token: $ADMIN_TOKEN
+Metrics Token: $METRICS_TOKEN
+EOF
 echo $GITEA_RELEASE >>~/.garage
 cat <<EOF >/etc/garage.toml
 metadata_dir = "/var/lib/garage/meta"

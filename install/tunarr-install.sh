@@ -15,10 +15,10 @@ update_os
 
 setup_hwaccel
 
-fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-x64.tar.gz"
+fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-$(arch_resolve "x64" "arm64").tar.gz"
 cd /opt/tunarr
 mv tunarr* tunarr
-fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux64-gpl-7.1.tar.xz"
+fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux$(arch_resolve "64" "arm64")-gpl-7.1.tar.xz"
 
 msg_info "Set ErsatzTV-ffmpeg links"
 chmod +x /opt/ErsatzTV-ffmpeg/bin/*

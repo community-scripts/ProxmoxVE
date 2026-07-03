@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y python3-lxml wkhtmltopdf
-curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
+curl -fsSL --proto '=https' "https://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
 $STD dpkg -i /opt/python3-lxml-html-clean.deb
 msg_ok "Installed Dependencies"
 
@@ -42,12 +42,12 @@ $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
-{
-  echo "Odoo-Credentials"
-  echo -e "Odoo Database User: $DB_USER"
-  echo -e "Odoo Database Password: $DB_PASS"
-  echo -e "Odoo Database Name: $DB_NAME"
-} >>~/odoo.creds
+cat <<EOF >~/odoo.creds
+Odoo-Credentials
+Odoo Database User: $DB_USER
+Odoo Database Password: $DB_PASS
+Odoo Database Name: $DB_NAME
+EOF
 msg_ok "Setup PostgreSQL"
 
 msg_info "Configuring Odoo"

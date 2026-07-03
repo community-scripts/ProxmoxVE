@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -35,19 +36,14 @@ function update_script() {
 
     ensure_dependencies libreoffice-writer
 
-    msg_info "Move data-Folder"
-    if [[ -d /opt/convertx/data ]]; then
-      mv /opt/convertx/data /opt/data
-    fi
-    msg_ok "Moved data-Folder"
+    create_backup /opt/convertx/data
 
     fetch_and_deploy_gh_release "ConvertX" "C4illin/ConvertX" "tarball" "latest" "/opt/convertx"
 
+    restore_backup
+
     msg_info "Updating ConvertX"
-    if [[ -d /opt/data ]]; then
-      mv /opt/data /opt/convertx/data
-    fi
-    cd /opt/convertx 
+    cd /opt/convertx
     $STD bun install
     msg_ok "Updated ConvertX"
 
@@ -64,5 +60,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

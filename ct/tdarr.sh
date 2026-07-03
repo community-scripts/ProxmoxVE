@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -33,7 +34,7 @@ function update_script() {
   $STD apt upgrade -y
   rm -rf /opt/tdarr/Tdarr_Updater
   cd /opt/tdarr
-  RELEASE=$(curl_with_retry "https://f000.backblazeb2.com/file/tdarrs/versions.json" "-" | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep linux_x64 | head -n 1)
+  RELEASE=$(curl_with_retry "https://f000.backblazeb2.com/file/tdarrs/versions.json" "-" | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep "linux_$(arch_resolve "x64" "arm64")" | head -n 1)
   curl_with_retry "$RELEASE" "Tdarr_Updater.zip"
   $STD unzip Tdarr_Updater.zip
   chmod +x Tdarr_Updater
@@ -54,5 +55,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8265${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8265${CL}"

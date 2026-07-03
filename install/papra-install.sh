@@ -24,7 +24,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/papra-hq/papra/releases | grep
 fetch_and_deploy_gh_release "papra" "papra-hq/papra" "tarball" "${RELEASE}" "/opt/papra"
 
 pnpm_version=$(grep -oP '"packageManager":\s*"pnpm@\K[^"]+' /opt/papra/package.json)
-NODE_VERSION="24" NODE_MODULE="pnpm@$pnpm_version" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="pnpm@$pnpm_version" setup_nodejs
 
 msg_info "Installing Papra (Patience)"
 cd /opt/papra

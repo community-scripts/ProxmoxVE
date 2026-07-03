@@ -12,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,12 +29,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if [[ ! -d /opt/glance_data ]]; then
+    msg_info "Creating config directory"
+    mkdir -p /opt/glance_data/
+    cp /opt/glance/*.yml /opt/glance_data/
+    sed -i 's|/opt/glance/glance\.yml|/opt/glance_data/glance.yml|' /etc/systemd/system/glance.service
+    systemctl daemon-reload
+    msg_ok "Created config directory"
+  fi
+
   if check_for_gh_release "glance" "glanceapp/glance"; then
     msg_info "Stopping Service"
     systemctl stop glance
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-$(arch_resolve).tar.gz"
 
     msg_info "Starting Service"
     systemctl start glance
@@ -49,5 +59,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

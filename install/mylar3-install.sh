@@ -24,16 +24,16 @@ $STD apt update
 $STD apt install -y unrar
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.12" setup_uv
-fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
+PYTHON_VERSION="3.11" setup_uv
+fetch_and_deploy_gh_release "mylar3" "MylarComics/mylar3" "tarball"
 
-msg_info "Installing ${APPLICATION}"
+msg_info "Installing Mylar3"
 mkdir -p /opt/mylar3-data
 $STD uv venv --clear /opt/mylar3/.venv
 $STD /opt/mylar3/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/mylar3/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/mylar3/.venv/bin/python -m pip install --no-cache-dir -r /opt/mylar3/requirements.txt
-msg_ok "Installed ${APPLICATION}"
+msg_ok "Installed Mylar3"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/mylar3.service

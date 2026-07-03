@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +29,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_tag "guacd" "apache/guacamole-server"; then
     msg_info "Stopping guacd"
@@ -155,8 +158,6 @@ EOF
       /opt/termix/nginx/client_body
     msg_ok "Recreated Directories"
 
-    NODE_VERSION="24" setup_nodejs
-
     msg_info "Building Frontend"
     cd /opt/termix
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -200,11 +201,32 @@ EOF
       curl -fsSL "https://raw.githubusercontent.com/Termix-SSH/Termix/main/docker/nginx.conf" -o /etc/nginx/nginx.conf
       sed -i '/^master_process/d' /etc/nginx/nginx.conf
       sed -i '/^pid \/app\/nginx/d' /etc/nginx/nginx.conf
+      sed -i 's|error_log /tmp/nginx/error.log|error_log /var/log/nginx/error.log|' /etc/nginx/nginx.conf
+      sed -i 's|access_log /tmp/nginx/access.log|access_log /var/log/nginx/access.log|' /etc/nginx/nginx.conf
       sed -i 's|/app/html|/opt/termix/html|g' /etc/nginx/nginx.conf
       sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
       sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
+      rm -f /etc/systemd/system/nginx.service.d/pidfile.conf
+      rm -f /etc/tmpfiles.d/nginx-termix.conf
+      
+      if [ ! -d /tmp/nginx ]; then
+        mkdir -p /tmp/nginx
+      fi
 
-      nginx -t && systemctl reload nginx
+      if [ ! -f /etc/tmpfiles.d/nginx-termix.conf ]; then
+        echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
+      fi
+
+      if [ ! -f /etc/systemd/system/nginx.service.d/pidfile.conf ]; then
+        mkdir -p /etc/systemd/system/nginx.service.d/
+        cat <<'EOF' >/etc/systemd/system/nginx.service.d/pidfile.conf
+[Service]
+PIDFile=/tmp/nginx/nginx.pid
+EOF
+      fi
+      
+      systemctl daemon-reload
+      nginx -t && systemctl restart nginx
       msg_ok "Updated Nginx Configuration"
     else
       msg_warn "Nginx configuration not updated. If Termix doesn't work, restore from backup or update manually."
@@ -224,5 +246,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

@@ -46,12 +46,12 @@ ADMIN_EMAIL="admin@example.com"
 ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)"
 ADMIN_HASH=$(php -r "echo password_hash('$ADMIN_PASS', PASSWORD_BCRYPT);")
 $STD mariadb -u root -D $MARIADB_DB_NAME -e "INSERT IGNORE INTO UserModel (name, email, password, admin) VALUES ('Admin', '$ADMIN_EMAIL', '$ADMIN_HASH', 1);"
-{
-  echo ""
-  echo "HortusFox-Admin-Creds:"
-  echo "E-Mail: $ADMIN_EMAIL"
-  echo "Passwort: $ADMIN_PASS"
-} >>~/hortusfox.creds
+cat <<EOF >~/hortusfox.creds
+
+HortusFox-Admin-Creds:
+E-Mail: $ADMIN_EMAIL
+Passwort: $ADMIN_PASS
+EOF
 $STD mariadb -u root -D $MARIADB_DB_NAME -e "INSERT IGNORE INTO LocationsModel (name, active, created_at) VALUES ('Home', 1, NOW());"
 msg_ok "Set up HortusFox"
 

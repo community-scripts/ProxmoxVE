@@ -56,46 +56,57 @@ jobs:
           echo "$slugs" > pocketbase_slugs.txt
           echo "count=$(echo $slugs | wc -w)" >> "$GITHUB_OUTPUT"
 
-      - name: Search for Issues with Similar Titles
+      - name: Find matching issues in ProxmoxVED by slug
         id: find_issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          issues=$(gh issue list --repo community-scripts/ProxmoxVED --json number,title --jq '.[] | {number, title}')
-
-          best_match_score=0
-          best_match_number=0
-
-          for issue in $(echo "$issues" | jq -r '. | @base64'); do
-            _jq() {
-              echo ${issue} | base64 --decode | jq -r ${1}
-            }
-
-            issue_title=$(_jq '.title' | tr '[:upper:]' '[:lower:]' | sed 's/ //g' | sed 's/-//g')
-            issue_number=$(_jq '.number')
-
-            match_score=$(echo "$title" | grep -o "$issue_title" | wc -l)
-            
-            if [ "$match_score" -gt "$best_match_score" ]; then
-              best_match_score=$match_score
-              best_match_number=$issue_number
-            fi
-          done
-
-          if [ "$best_match_number" != "0" ]; then
-            echo "issue_number=$best_match_number" >> $GITHUB_ENV
-          else
-            echo "No matching issue found."
+          if [[ ! -s pocketbase_slugs.txt ]]; then
+            echo "No slugs derived from PR — nothing to match."
+            echo "issue_numbers=" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          slugs=$(cat pocketbase_slugs.txt)
 
-      - name: Comment on the Best-Matching Issue and Close It
-        if: env.issue_number != ''
+          # Normalize: lowercase, strip spaces and hyphens (same shape as the slug derivation)
+          norm() { echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]//g; s/-//g'; }
+
+          issues=$(gh issue list --repo community-scripts/ProxmoxVED --state open --limit 1000 --json number,title,body)
+
+          matched=""
+          for slug in $slugs; do
+            nslug=$(norm "$slug")
+            [[ -z "$nslug" ]] && continue
+            while IFS= read -r row; do
+              num=$(echo "$row" | jq -r '.number')
+              ntitle=$(norm "$(echo "$row" | jq -r '.title')")
+              body=$(echo "$row" | jq -r '.body // ""' | tr '[:upper:]' '[:lower:]')
+              # Match when the issue title contains the slug, or the body mentions it verbatim
+              if [[ "$ntitle" == *"$nslug"* ]] || [[ "$body" == *"$slug"* ]]; then
+                matched="$matched $num"
+              fi
+            done < <(echo "$issues" | jq -c '.[]')
+          done
+
+          matched=$(echo $matched | xargs -n1 2>/dev/null | sort -un | tr '\n' ' ')
+          if [[ -z "$matched" ]]; then
+            echo "No matching ProxmoxVED issues found for slugs: $slugs"
+            echo "issue_numbers=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Matched ProxmoxVED issues: $matched"
+          echo "issue_numbers=$matched" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on and close matching ProxmoxVED issues
+        if: steps.find_issue.outputs.issue_numbers != ''
         env:
           GH_TOKEN: ${{ secrets.PAT_MICHEL }}
         run: |
-          gh issue comment $issue_number --repo community-scripts/ProxmoxVED --body "Merged with #${{ github.event.pull_request.number }} in ProxmoxVE"
-          gh issue close $issue_number --repo community-scripts/ProxmoxVED
+          for issue_number in ${{ steps.find_issue.outputs.issue_numbers }}; do
+            echo "Closing ProxmoxVED issue #$issue_number"
+            gh issue comment "$issue_number" --repo community-scripts/ProxmoxVED --body "Merged with #${{ github.event.pull_request.number }} in ProxmoxVE"
+            gh issue close "$issue_number" --repo community-scripts/ProxmoxVED
+          done
 
       - name: Set is_dev to false in PocketBase
         if: steps.get_slugs.outputs.count != '0'

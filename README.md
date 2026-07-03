@@ -30,7 +30,7 @@ The collection covers hundreds of services across categories like home automatio
 
 | Component      | Details                                          |
 | -------------- | ------------------------------------------------ |
-| **Proxmox VE** | Version 8.4, 9.0, or 9.1                         |
+| **Proxmox VE** | Version 8.4, 9.0, 9.1, or 9.2                    |
 | **Host OS**    | Proxmox VE (Debian-based)                        |
 | **Access**     | Root shell access on the Proxmox host            |
 | **Network**    | Internet connection required during installation |
@@ -147,6 +147,12 @@ This project runs on community contributions. Whether you want to write new scri
       <a href="https://github.com/vhsdream">
         <img src="https://github.com/vhsdream.png" width="80" height="80" style="border-radius:50%" alt="vhsdream" /><br/>
         <sub><b>vhsdream</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/asylumexp">
+        <img src="https://github.com/asylumexp.png" width="80" height="80" style="border-radius:50%" alt="asylumexp" /><br/>
+        <sub><b>asylumexp</b></sub>
       </a>
     </td>
   </tr>

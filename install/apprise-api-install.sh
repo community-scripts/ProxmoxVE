@@ -19,13 +19,16 @@ $STD apt install -y \
   git
 msg_ok "Installed Dependencies" 
 
+export UV_PYTHON_INSTALL_DIR=/opt/uv-python
 PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "apprise" "caronc/apprise-api" "tarball"
 
 msg_info "Setup Apprise-API"
 cd /opt/apprise
 cp ./requirements.txt /etc/requirements.txt
-$STD uv pip install -r requirements.txt gunicorn supervisor --system
+$STD uv venv /opt/apprise/.venv
+$STD uv pip install -r requirements.txt gunicorn supervisor -p /opt/apprise/.venv/bin/python
+ln -sf /opt/apprise/.venv/bin/supervisord /opt/apprise/.venv/bin/gunicorn /usr/local/bin/
 cp -fr apprise_api/static /usr/share/nginx/html/s/
 mv apprise_api/ webapp
 touch /etc/nginx/server-override.conf
@@ -52,6 +55,9 @@ After=network-online.target
 Type=simple
 WorkingDirectory=/opt/apprise
 ExecStart=/opt/apprise/webapp/supervisord-startup
+Environment=APPRISE_CONFIG_DIR=/config
+Environment=APPRISE_ATTACH_DIR=/attach
+Environment=APPRISE_PLUGIN_PATHS=/plugin
 Restart=always
 RestartSec=30
 

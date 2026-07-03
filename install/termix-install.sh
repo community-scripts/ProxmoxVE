@@ -54,7 +54,7 @@ cd /opt
 rm -rf /opt/guacamole-server
 msg_ok "Built Guacamole Server (guacd)"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
 
 msg_info "Building Frontend"
@@ -100,9 +100,18 @@ sed -i 's|/app/html|/opt/termix/html|g' /etc/nginx/nginx.conf
 sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
 sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
 
+mkdir -p /tmp/nginx
+echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
+mkdir -p /etc/systemd/system/nginx.service.d/
+cat >/etc/systemd/system/nginx.service.d/pidfile.conf <<EOF
+[Service]
+PIDFile=/tmp/nginx/nginx.pid
+EOF
+systemctl daemon-reload
 rm -f /etc/nginx/sites-enabled/default
 nginx -t
-systemctl reload nginx
+systemctl enable nginx
+systemctl restart nginx
 msg_ok "Configured Nginx"
 
 msg_info "Creating Service"

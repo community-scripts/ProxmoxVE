@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -58,8 +59,13 @@ function update_script() {
     ROMM_BASE=${ROMM_BASE:-/var/lib/romm}
     ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
     ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
-    sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
-    systemctl reload nginx
+    if [[ -f /etc/angie/http.d/romm.conf ]]; then
+      sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/angie/http.d/romm.conf
+      systemctl reload angie
+    elif [[ -f /etc/nginx/sites-available/romm ]]; then
+      sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
+      systemctl reload nginx
+    fi
     msg_ok "Updated ROMM"
 
     msg_info "Starting Services"
@@ -76,5 +82,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

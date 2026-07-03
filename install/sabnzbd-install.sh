@@ -43,7 +43,7 @@ msg_ok "Installed SABnzbd"
 read -r -p "Would you like to install par2cmdline-turbo? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   mv /usr/bin/par2 /usr/bin/par2.old
-  fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-amd64.zip"
+  fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-$(arch_resolve).zip"
 fi
 
 msg_info "Creating Service"

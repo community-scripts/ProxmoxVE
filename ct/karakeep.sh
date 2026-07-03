@@ -9,9 +9,10 @@ APP="karakeep"
 var_tags="${var_tags:-bookmark}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-10}"
+var_disk="${var_disk:-15}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -45,6 +46,14 @@ function update_script() {
     fi
     msg_ok "Update prepared"
 
+    if [ ! -f ~/.config/pip/pip.conf ]; then
+      mkdir -p ~/.config/pip
+      cat <<EOF >~/.config/pip/pip.conf
+[global]
+break-system-packages = true
+EOF
+    fi
+
     if grep -q "start:prod" /etc/systemd/system/karakeep-workers.service; then
       sed -i 's|^ExecStart=.*$|ExecStart=/usr/bin/node dist/index.mjs|' /etc/systemd/system/karakeep-workers.service
       systemctl daemon-reload
@@ -53,18 +62,38 @@ function update_script() {
     if grep -q '^ExecStart=/usr/bin/node\s\+dist/index\.mjs$' /etc/systemd/system/karakeep-workers.service; then
       sed -i -E 's#^(ExecStart=/usr/bin/node\s+dist/)index\.mjs$#\1index.js#' /etc/systemd/system/karakeep-workers.service
       systemctl daemon-reload
+    fi    
+    
+    if [ ! -f /usr/bin/karakeep ]; then
+      cat <<'EOF' >/usr/bin/karakeep
+#!/usr/bin/env node
+import('/opt/karakeep/apps/cli/dist/index.mjs')
+EOF
+      chmod +x /usr/bin/karakeep
+    fi
+
+    if ! command -v pip >/dev/null 2>&1 || ! pip show yt-dlp-ejs >/dev/null 2>&1; then
+      msg_info "Installing external JavaScript Extension for yt-dlp"
+      ensure_dependencies python3-pip
+      $STD pip install -U yt-dlp-ejs
+      msg_ok "Installed external JavaScript Extension for yt-dlp"
+    fi
+
+    if ! command -v deno &>/dev/null; then
+      fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(uname -m)-unknown-linux-gnu.zip"
     fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
     if command -v corepack >/dev/null; then
       $STD corepack disable
     fi
+    sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env
     MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
-    NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${MODULE_VERSION}" setup_nodejs
     setup_meilisearch
 
     msg_info "Updating Karakeep"
-    corepack enable
+
     export PUPPETEER_SKIP_DOWNLOAD="true"
     export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
     export NEXT_TELEMETRY_DISABLED=1
@@ -83,7 +112,6 @@ function update_script() {
     cd /opt/karakeep/packages/db 
     $STD pnpm migrate
     $STD pnpm store prune
-    sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env
     msg_ok "Updated Karakeep"
 
     msg_info "Starting Services"
@@ -101,5 +129,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

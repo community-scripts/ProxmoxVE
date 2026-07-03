@@ -179,6 +179,7 @@ jobs:
             if (resolvedType) payload.type = resolvedType;
             var resolvedCats = (data.categories || []).map(function(n) { return categoryNameToPbId[categoryIdToName[n]]; }).filter(Boolean);
             if (resolvedCats.length) payload.categories = resolvedCats;
+            if (data.has_arm !== undefined) payload.has_arm = data.has_arm === true || data.has_arm === 'true';
             if (data.version !== undefined) payload.version = data.version;
             if (data.changelog !== undefined) payload.changelog = data.changelog;
             if (data.screenshots !== undefined) payload.screenshots = data.screenshots;

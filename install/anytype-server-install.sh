@@ -16,7 +16,7 @@ update_os
 setup_mongodb
 
 msg_info "Configuring MongoDB Replica Set"
-cat <<EOF >>/etc/mongod.conf
+cat <<EOF >/etc/mongod.conf
 
 replication:
   replSetName: "rs0"
@@ -42,7 +42,7 @@ $STD apt install -y redis-stack-server
 systemctl enable -q --now redis-stack-server
 msg_ok "Installed Redis Stack"
 
-fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_$(arch_resolve).tar.gz"
 chmod +x /opt/anytype/any-sync-bundle
 
 msg_info "Configuring Anytype"

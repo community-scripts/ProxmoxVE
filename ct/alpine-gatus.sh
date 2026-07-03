@@ -8,10 +8,11 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Alpine-gatus"
 var_tags="${var_tags:-alpine;monitoring}"
 var_cpu="${var_cpu:-1}"
-var_ram="${var_ram:-256}"
+var_ram="${var_ram:-512}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.23}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -57,5 +58,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following IP:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following IP:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

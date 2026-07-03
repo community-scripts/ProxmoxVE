@@ -12,6 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -56,11 +57,11 @@ function update_script() {
       sed -i 's/--workers 4//' /opt/wizarr/start.sh
     fi
     if ! grep -qE 'FLASK|WORKERS|VERSION' /opt/wizarr/.env; then
-      {
-        echo "FLASK_ENV=production"
-        echo "GUNICORN_WORKERS=4"
-        echo "APP_VERSION=$(sed 's/^20/v&/' ~/.wizarr)"
-      } >>/opt/wizarr/.env
+      cat <<EOF >/opt/wizarr/.env
+FLASK_ENV=production
+GUNICORN_WORKERS=4
+APP_VERSION=$(sed 's/^20/v&/' ~/.wizarr)
+EOF
     else
       sed -i "s/_VERSION=v.*$/_VERSION=v$(cat ~/.wizarr)/" /opt/wizarr/.env
     fi
@@ -83,5 +84,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5690${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5690${CL}"

@@ -30,12 +30,12 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCO
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-{
-  echo "ONLYOFFICE-Credentials"
-  echo "ONLYOFFICE Database User: $DB_USER"
-  echo "ONLYOFFICE Database Password: $DB_PASS"
-  echo "ONLYOFFICE Database Name: $DB_NAME"
-} >>~/onlyoffice.creds
+cat <<EOF >~/onlyoffice.creds
+ONLYOFFICE-Credentials
+ONLYOFFICE Database User: $DB_USER
+ONLYOFFICE Database Password: $DB_PASS
+ONLYOFFICE Database Name: $DB_NAME
+EOF
 msg_ok "Set up Database"
 
 msg_info "Adding ONLYOFFICE GPG Key"
@@ -81,16 +81,13 @@ echo onlyoffice-documentserver onlyoffice/rabbitmq-pwd password $RMQ_PASS | debc
 echo onlyoffice-documentserver onlyoffice/jwt-enabled boolean true | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-secret password $JWT_SECRET | debconf-set-selections
 
-echo "RabbitMQ User: $RMQ_USER" >>~/onlyoffice.creds
-echo "RabbitMQ Password: $RMQ_PASS" >>~/onlyoffice.creds
-echo "JWT Secret: $JWT_SECRET" >>~/onlyoffice.creds
-{
-  echo ""
-  echo "ONLYOFFICE RabbitMQ Credentials"
-  echo "User: $RMQ_USER"
-  echo "Password: $RMQ_PASS"
-  echo "Secret: $JWT_SECRET"
-} >>~/onlyoffice.creds
+cat <<EOF >~/onlyoffice.creds
+
+ONLYOFFICE RabbitMQ Credentials
+User: $RMQ_USER
+Password: $RMQ_PASS
+Secret: $JWT_SECRET
+EOF
 msg_ok "Debconf Preconfiguration Done"
 
 msg_info "Installing ttf-mscorefonts-installer"

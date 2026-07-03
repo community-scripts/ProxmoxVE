@@ -13,10 +13,11 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-$(arch_resolve).tar.gz"
 
 msg_info "Configuring Glance"
-cat <<EOF >/opt/glance/glance.yml
+mkdir -p /opt/glance_data
+cat <<EOF >/opt/glance_data/glance.yml
 pages:
   - name: Startpage
     width: slim
@@ -39,22 +40,22 @@ EOF
 msg_ok "Configured Glance"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/glance.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/glance.service
+[Unit]
 Description=Glance Daemon
 After=network.target
 
 [Service]
 Type=simple
 WorkingDirectory=/opt/glance
-ExecStart=/opt/glance/glance --config /opt/glance/glance.yml
+ExecStart=/opt/glance/glance --config /opt/glance_data/glance.yml
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" >$service_path
-
+WantedBy=multi-user.target
+EOF
 systemctl enable -q --now glance
 msg_ok "Created Service"
 

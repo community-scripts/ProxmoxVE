@@ -8,10 +8,11 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Bitmagnet"
 var_tags="${var_tags:-os}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-1024}"
+var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -55,21 +56,19 @@ function update_script() {
       bitmagnet \
       >/tmp/backup.sql
     mv /tmp/backup.sql /opt/
-    [ -f /opt/bitmagnet/.env ] && cp /opt/bitmagnet/.env /opt/
-    [ -f /opt/bitmagnet/config.yml ] && cp /opt/bitmagnet/config.yml /opt/
+    create_backup /opt/bitmagnet/.env \
+      /opt/bitmagnet/config.yml
     msg_ok "Data backed up"
 
-    rm -rf /opt/bitmagnet
-    fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
+    restore_backup
 
-    msg_info "Updating Bitmagnet"
+    msg_info "Configuring Bitmagnet"
     cd /opt/bitmagnet
     VREL=v$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
     chmod +x bitmagnet
-    [ -f "/opt/.env" ] && cp "/opt/.env" /opt/bitmagnet/
-    [ -f "/opt/config.yml" ] && cp "/opt/config.yml" /opt/bitmagnet/
-    msg_ok "Updated Bitmagnet"
+    msg_ok "Configured Bitmagnet"
 
     msg_info "Starting Service"
     systemctl start bitmagnet-web
@@ -85,5 +84,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3333${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3333${CL}"

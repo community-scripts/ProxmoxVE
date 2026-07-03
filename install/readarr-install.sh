@@ -14,14 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y sqlite3
+$STD apt install -y sqlite3 libicu-dev
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Readarr"
 mkdir -p /var/lib/readarr/
 chmod 775 /var/lib/readarr/
 cd /var/lib/readarr/
-$STD curl -fsSL 'https://readarr.servarr.com/v1/update/develop/updatefile?os=linux&runtime=netcore&arch=x64' -o readarr.tar.gz
+$STD curl -fsSL "https://readarr.servarr.com/v1/update/develop/updatefile?os=linux&runtime=netcore&arch=$(arch_resolve "x64" "arm64")" -o readarr.tar.gz
 $STD tar -xvzf readarr.tar.gz
 mv Readarr /opt
 chmod 775 /opt/Readarr

@@ -12,6 +12,7 @@ var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -41,14 +42,15 @@ function update_script() {
       echo -e ""
       msg_custom "🔄" "Migration required to new data structure (/opt/paperless_data/)"
       msg_custom "📖" "Please follow the migration guide:"
-      echo -e "${TAB}${GATEWAY}${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/9223${CL}"
+      echo -e "${GATEWAY}${BGN}https://github.com/community-scripts/ProxmoxVE/discussions/9223${CL}"
       echo -e ""
       msg_custom "⚠️" "Update aborted. Please migrate your data first."
       exit 253
     fi
   fi
 
-  if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx"; then
+  RELEASE="v2.20.15"
+  if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx" "${RELEASE}" "v3 needs further testing"; then
     msg_info "Stopping all Paperless-ngx Services"
     systemctl stop paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     msg_ok "Stopped all Paperless-ngx Services"
@@ -62,7 +64,7 @@ function update_script() {
       msg_ok "Backup completed to $BACKUP_DIR"
 
       PYTHON_VERSION="3.13" setup_uv
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "${RELEASE}" "/opt/paperless" "paperless*tar.xz"
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 
       . /etc/os-release
@@ -137,7 +139,7 @@ function update_script() {
       msg_ok "Backup completed to $BACKUP_DIR"
 
       PYTHON_VERSION="3.13" setup_uv
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "${RELEASE}" "/opt/paperless" "paperless*tar.xz"
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 
       . /etc/os-release
@@ -164,13 +166,7 @@ function update_script() {
       fi
     fi
 
-    msg_info "Updating NLTK Data"
-    cd /opt/paperless
-    $STD uv run python -m nltk.downloader -d /usr/share/nltk_data snowball_data
-    $STD uv run python -m nltk.downloader -d /usr/share/nltk_data stopwords
-    $STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt_tab ||
-      $STD uv run python -m nltk.downloader -d /usr/share/nltk_data punkt
-    msg_ok "Updated NLTK Data"
+    setup_nltk "snowball_data stopwords punkt_tab" "/usr/share/nltk_data"
 
     msg_info "Starting all Paperless-ngx Services"
     systemctl start paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
@@ -187,5 +183,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000${CL}"

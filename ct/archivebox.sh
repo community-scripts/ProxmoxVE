@@ -12,6 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -38,13 +39,13 @@ function update_script() {
   msg_ok "Stopped Service"
 
   msg_info "Upgrading Playwright"
-  $STD uv pip install playwright --system
+  $STD uv pip install playwright --system --break-system-packages
   $STD playwright install-deps chromium
   msg_ok "Upgraded Playwright"
 
   msg_info "Updating ArchiveBox"
   cd /opt/archivebox/data
-  $STD uv pip install --system --upgrade --no-reinstall archivebox
+  $STD uv pip install --system --break-system-packages --upgrade --no-reinstall archivebox
   sudo -u archivebox archivebox init
   msg_ok "Updated ArchiveBox"
 
@@ -61,5 +62,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000/admin/login${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000/admin/login${CL}"

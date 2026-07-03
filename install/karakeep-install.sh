@@ -20,17 +20,28 @@ $STD apt install -y \
   chromium \
   graphicsmagick \
   ghostscript \
+  python3-pip \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-gnu-linux-x86_64"
+fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-gnu-linux-$(arch_resolve "x86_64" "aarch64")"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp-nightly-builds" "singlefile" "latest" "/usr/bin" "yt-dlp_linux"
+fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(uname -m)-unknown-linux-gnu.zip"
 setup_meilisearch
 
 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
 cd /opt/karakeep
 MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
 NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+
+msg_info "Installing external JavaScript Extension for yt-dlp"
+$STD pip install -U yt-dlp-ejs --break-system-packages
+mkdir -p ~/.config/pip
+cat <<EOF >~/.config/pip/pip.conf
+[global]
+break-system-packages = true
+EOF
+msg_ok "Installed external JavaScript Extension for yt-dlp"
 
 msg_info "Installing karakeep"
 export PUPPETEER_SKIP_DOWNLOAD="true"
@@ -47,6 +58,11 @@ cd /opt/karakeep/apps/cli
 $STD pnpm install --frozen-lockfile
 $STD pnpm build
 $STD pnpm store prune
+cat <<'EOF' >/usr/bin/karakeep
+#!/usr/bin/env node
+import('/opt/karakeep/apps/cli/dist/index.mjs')
+EOF
+chmod +x /usr/bin/karakeep
 
 export DATA_DIR=/opt/karakeep_data
 karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)

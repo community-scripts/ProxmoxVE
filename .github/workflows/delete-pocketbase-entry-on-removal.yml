@@ -27,6 +27,7 @@ jobs:
           BEFORE="${{ github.event.before }}"
           AFTER="${{ github.event.after }}"
           slugs=""
+          ct_slugs=""
 
           # Deleted JSON files: get slug from previous commit
           deleted_json=$(git diff --name-only --diff-filter=D "$BEFORE" "$AFTER" -- json/ | grep '\.json$' || true)
@@ -37,6 +38,14 @@ jobs:
           done
 
           # Deleted script files: derive slug from path
+          deleted_ct=$(git diff --name-only --diff-filter=D "$BEFORE" "$AFTER" -- ct/ | grep '\.sh$' || true)
+          for f in $deleted_ct; do
+            [[ -z "$f" ]] && continue
+            base="${f##*/}"
+            base="${base%.sh}"
+            [[ -n "$base" ]] && ct_slugs="$ct_slugs $base"
+          done
+
           deleted_sh=$(git diff --name-only --diff-filter=D "$BEFORE" "$AFTER" -- ct/ install/ tools/ turnkey/ vm/ | grep '\.sh$' || true)
           for f in $deleted_sh; do
             [[ -z "$f" ]] && continue
@@ -51,14 +60,17 @@ jobs:
           done
 
           slugs=$(echo $slugs | xargs -n1 | sort -u | tr '\n' ' ')
+          ct_slugs=$(echo $ct_slugs | xargs -n1 2>/dev/null | sort -u | tr '\n' ' ')
           if [[ -z "$slugs" ]]; then
             echo "No deleted JSON or script files to mark as deleted in PocketBase."
             echo "count=0" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           echo "$slugs" > slugs_to_delete.txt
+          echo "$ct_slugs" > ct_slugs_to_stub.txt
           echo "count=$(echo $slugs | wc -w)" >> "$GITHUB_OUTPUT"
           echo "Slugs to mark as deleted: $slugs"
+          [[ -n "$ct_slugs" ]] && echo "CT stubs to generate: $ct_slugs"
 
       - name: Mark as deleted in PocketBase
         if: steps.slugs.outputs.count != '0'
@@ -158,4 +170,135 @@ jobs:
             console.log('Done.');
           })().catch(e => { console.error(e); process.exit(1); });
           ENDSCRIPT
+        shell: bash
+
+      - name: Generate CT stubs for deleted scripts
+        if: steps.slugs.outputs.count != '0'
+        env:
+          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
+          POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
+          POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
+        run: |
+          if [[ ! -s ct_slugs_to_stub.txt ]]; then
+            echo "No deleted ct/*.sh files; skipping stub generation."
+            exit 0
+          fi
+          node << 'ENDSCRIPT'
+          (async function() {
+            const fs = require('fs');
+            const https = require('https');
+            const http = require('http');
+            const path = require('path');
+            const url = require('url');
+
+            function request(fullUrl, opts, redirectCount) {
+              redirectCount = redirectCount || 0;
+              return new Promise(function(resolve, reject) {
+                const u = url.parse(fullUrl);
+                const isHttps = u.protocol === 'https:';
+                const body = opts.body;
+                const options = {
+                  hostname: u.hostname,
+                  port: u.port || (isHttps ? 443 : 80),
+                  path: u.path,
+                  method: opts.method || 'GET',
+                  headers: opts.headers || {}
+                };
+                if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
+                const lib = isHttps ? https : http;
+                const req = lib.request(options, function(res) {
+                  if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                    if (redirectCount >= 5) return reject(new Error('Too many redirects from ' + fullUrl));
+                    const redirectUrl = url.resolve(fullUrl, res.headers.location);
+                    res.resume();
+                    resolve(request(redirectUrl, opts, redirectCount + 1));
+                    return;
+                  }
+                  let data = '';
+                  res.on('data', function(chunk) { data += chunk; });
+                  res.on('end', function() {
+                    resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, statusCode: res.statusCode, body: data });
+                  });
+                });
+                req.on('error', reject);
+                if (body) req.write(body);
+                req.end();
+              });
+            }
+
+            const raw = process.env.POCKETBASE_URL.replace(/\/$/, '');
+            const apiBase = /\/api$/i.test(raw) ? raw : raw + '/api';
+            const coll = process.env.POCKETBASE_COLLECTION;
+            const ctSlugs = fs.readFileSync('ct_slugs_to_stub.txt', 'utf8').trim().split(/\s+/).filter(Boolean);
+            if (!ctSlugs.length) {
+              console.log('No ct slugs to process.');
+              return;
+            }
+
+            const authRes = await request(apiBase + '/collections/users/auth-with-password', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                identity: process.env.POCKETBASE_ADMIN_EMAIL,
+                password: process.env.POCKETBASE_ADMIN_PASSWORD
+              })
+            });
+            if (!authRes.ok) throw new Error('Auth failed: ' + authRes.body);
+            const token = JSON.parse(authRes.body).token;
+            const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
+
+            for (const slug of ctSlugs) {
+              const filter = "(slug='" + slug + "')";
+              const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1&fields=slug,name,deleted_message', {
+                headers: { 'Authorization': token }
+              });
+              if (!listRes.ok) {
+                console.warn('Failed to fetch record for slug "' + slug + '"');
+                continue;
+              }
+              const list = JSON.parse(listRes.body);
+              const rec = list.items && list.items[0];
+              const appName = (rec && rec.name) ? rec.name : slug;
+              const deletedMessage = (rec && rec.deleted_message && rec.deleted_message.trim())
+                ? rec.deleted_message.trim()
+                : 'This script was removed and cannot be installed or updated.';
+
+              const stubPath = path.join('ct', slug + '.sh');
+              const content = [
+                "#!/usr/bin/env bash",
+                "source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)",
+                "# Copyright (c) 2021-2026 community-scripts ORG",
+                "# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE",
+                "",
+                `APP="${appName.replace(/"/g, '\\"')}"`,
+                "",
+                'header_info "$APP"',
+                'variables',
+                'color',
+                "",
+                'msg_error "This script is no longer available in community-scripts."',
+                `msg_error "${deletedMessage.replace(/"/g, '\\"')}"`,
+                `msg_warn "More info: https://community-scripts.org/scripts/${slug}"`,
+                "exit 1"
+              ].join('\n') + '\n';
+              fs.writeFileSync(stubPath, content);
+              console.log('Generated stub: ' + stubPath);
+            }
+          })().catch(e => { console.error(e); process.exit(1); });
+          ENDSCRIPT
+        shell: bash
+
+      - name: Commit generated stubs
+        if: steps.slugs.outputs.count != '0'
+        run: |
+          if git diff --quiet -- ct; then
+            echo "No generated ct stubs to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ct/*.sh
+          git commit -m "chore: add deleted script stubs"
+          git push
         shell: bash

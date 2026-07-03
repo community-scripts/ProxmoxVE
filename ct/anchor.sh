@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,9 +35,7 @@ function update_script() {
     systemctl stop anchor-web anchor-server
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Configuration"
-    cp /opt/anchor/.env /opt/anchor.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/anchor/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anchor" "ZhFahim/anchor" "tarball"
 
@@ -56,8 +55,7 @@ function update_script() {
     cp -r public .next/standalone/public
     msg_ok "Built Web Interface"
 
-    cp /opt/anchor.env.bak /opt/anchor/.env
-    rm -f /opt/anchor.env.bak
+    restore_backup
 
     msg_info "Running Database Migrations"
     cd /opt/anchor/server
@@ -79,5 +77,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

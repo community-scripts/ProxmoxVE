@@ -12,6 +12,7 @@ var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,6 +37,11 @@ function update_script() {
     "2" "Set Admin Token")
 
   if [ "$UPD" == "1" ]; then
+    INSTALLED_VERSION="$(/opt/vaultwarden/bin/vaultwarden --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1 || true)"
+    if [[ -n "$INSTALLED_VERSION" ]] &&
+      ! grep -qxF "$INSTALLED_VERSION" "$HOME/.vaultwarden" 2>/dev/null; then
+      printf '%s\n' "$INSTALLED_VERSION" >"$HOME/.vaultwarden"
+    fi
     if check_for_gh_release "vaultwarden" "dani-garcia/vaultwarden"; then
       msg_info "Stopping Service"
       systemctl stop vaultwarden
@@ -115,5 +121,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}https://${IP}:8000${CL}"

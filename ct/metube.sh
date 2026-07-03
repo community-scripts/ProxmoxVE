@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -40,7 +41,7 @@ function update_script() {
     fi
   fi
 
-  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 
   if check_for_gh_release "metube" "alexta69/metube"; then
     msg_info "Stopping Service"
@@ -59,7 +60,7 @@ function update_script() {
     msg_info "Building Frontend"
     cd /opt/metube/ui
     if command -v corepack >/dev/null 2>&1; then
-      $STD corepack enable
+
       $STD corepack prepare pnpm --activate || true
     fi
     echo 'onlyBuiltDependencies=*' >> .npmrc
@@ -116,5 +117,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8081${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8081${CL}"

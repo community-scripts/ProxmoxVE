@@ -12,6 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -26,12 +27,14 @@ function update_script() {
 
   msg_info "Updating base system"
   $STD apt update
-  $STD apt upgrade -y 
+  $STD apt upgrade -y
   msg_ok "Base system updated"
 
-  msg_info "Updating Docker Engine"
-  $STD apt install --only-upgrade -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin
-  msg_ok "Docker Engine updated"
+  if dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -q "ok installed"; then
+    USE_DOCKER_REPO="true" setup_docker
+  else
+    setup_docker
+  fi
 
   if docker ps -a --format '{{.Image}}' | grep -q '^portainer/portainer-ce:latest$'; then
     msg_info "Updating Portainer"
@@ -75,4 +78,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} If you installed Portainer, access it at the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:9443${CL}"
+echo -e "${GATEWAY}${BGN}https://${IP}:9443${CL}"
