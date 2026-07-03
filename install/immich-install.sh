@@ -317,10 +317,7 @@ export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 # Provision the exact pnpm pinned in package.json's packageManager field via corepack instead
 # of `npm i -g pnpm@X`, which collides (EEXIST) with the corepack pnpm shim shipped by the
-# NodeSource nodejs package.
 $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
-# corepack activates pnpm but its global bin dir is not in PATH by default;
-# export it so that `pnpm config set --global` succeeds.
 export PATH="/root/.local/share/pnpm/bin:$PATH"
 $STD pnpm config set --global dangerouslyAllowAllBuilds true
 
