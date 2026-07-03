@@ -212,23 +212,10 @@ EOF
     cd "$SRC_DIR"
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
     export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
-    $STD mise install
-    export PATH="$(mise bin-paths 2>/dev/null | tr '\n' ':')$PATH"
-    if ! command -v extism-js >/dev/null 2>&1; then
-      # extism-js is published as a bare gzip-compressed single binary (.gz), which
-      # fetch_and_deploy_gh_release cannot deploy (singlefile leaves it compressed,
-      # prebuild only handles zip/tar). Fetch + gunzip it directly.
-      EXTISM_ARCH="$(arch_resolve x86_64 aarch64)"
-      curl_download /tmp/extism-js.gz "https://github.com/extism/js-pdk/releases/download/v1.6.0/extism-js-${EXTISM_ARCH}-linux-v1.6.0.gz"
-      gunzip -f /tmp/extism-js.gz
-      install -m 0755 /tmp/extism-js /usr/local/bin/extism-js
-      rm -f /tmp/extism-js
-    fi
-    $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core install --frozen-lockfile
-    $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
+    $STD mise //:plugins
     mkdir -p "$PLUGIN_DIR"
-    cp -r ./dist "$PLUGIN_DIR"/dist
-    cp ./manifest.json "$PLUGIN_DIR"
+    cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
+    cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
     msg_ok "Updated Immich server, web, cli and plugins"
 
     cd "$SRC_DIR"/machine-learning
