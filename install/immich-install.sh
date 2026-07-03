@@ -310,26 +310,19 @@ PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
 ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
-
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.0.1" "$SRC_DIR"
+
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
-# Provision the exact pnpm pinned in package.json's packageManager field via corepack instead
-# of `npm i -g pnpm@X`, which collides (EEXIST) with the corepack pnpm shim shipped by the
-# NodeSource nodejs package.
 $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
-# corepack activates pnpm but its global bin dir is not in PATH by default;
-# export it so that `pnpm config set --global` succeeds.
 export PATH="/root/.local/share/pnpm/bin:$PATH"
 $STD pnpm config set --global dangerouslyAllowAllBuilds true
-
 msg_info "Installing Immich (patience)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
-
 # server build
 export SHARP_IGNORE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
