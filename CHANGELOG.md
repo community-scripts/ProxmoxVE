@@ -499,6 +499,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: handle mise monorepo_root rename correctly | bump to 3.0.1 [@MickLesk](https://github.com/MickLesk) ([#15557](https://github.com/community-scripts/ProxmoxVE/pull/15557))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - tools.func: fix corepack/pnpm install flow in setup_nodejs [@MickLesk](https://github.com/MickLesk) ([#15579](https://github.com/community-scripts/ProxmoxVE/pull/15579))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
