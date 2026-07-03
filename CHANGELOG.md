@@ -491,6 +491,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-03
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Removed deprecated parameter in Filebrowser Quantum configuration [@alpargatagazer](https://github.com/alpargatagazer) ([#15573](https://github.com/community-scripts/ProxmoxVE/pull/15573))
+
 ## 2026-07-02
 
 ### 🆕 New Scripts
