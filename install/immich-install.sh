@@ -313,7 +313,16 @@ mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.0.1" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
-NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${PNPM_VERSION}" setup_nodejs
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+# Provision the exact pnpm pinned in package.json's packageManager field via corepack instead
+# of `npm i -g pnpm@X`, which collides (EEXIST) with the corepack pnpm shim shipped by the
+# NodeSource nodejs package.
+$STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
+# corepack activates pnpm but its global bin dir is not in PATH by default;
+# export it so that `pnpm config set --global` succeeds.
+export PATH="/root/.local/share/pnpm/bin:$PATH"
+$STD pnpm config set --global dangerouslyAllowAllBuilds true
 
 msg_info "Installing Immich (patience)"
 
@@ -345,16 +354,21 @@ $STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
 $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
-
-# plugins
-# Build the plugin(s) directly instead of via the `mise //:plugins` monorepo task path,
-# which repeatedly breaks across mise releases (experimental/monorepo_root setting churn).
-# mise is used only to provide the build tools (extism-js, wasm-opt, etc.) via `mise install`
-# and `mise exec`, both of which are stable and do not depend on the monorepo feature.
 cd "$SRC_DIR"
 export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
 export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
 $STD mise install
+export PATH="$(mise bin-paths 2>/dev/null | tr '\n' ':')$PATH"
+if ! command -v extism-js >/dev/null 2>&1; then
+  # extism-js is published as a bare gzip-compressed single binary (.gz), which
+  # fetch_and_deploy_gh_release cannot deploy (singlefile leaves it compressed,
+  # prebuild only handles zip/tar). Fetch + gunzip it directly.
+  EXTISM_ARCH="$(arch_resolve x86_64 aarch64)"
+  curl_download /tmp/extism-js.gz "https://github.com/extism/js-pdk/releases/download/v1.6.0/extism-js-${EXTISM_ARCH}-linux-v1.6.0.gz"
+  gunzip -f /tmp/extism-js.gz
+  install -m 0755 /tmp/extism-js /usr/local/bin/extism-js
+  rm -f /tmp/extism-js
+fi
 $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core install --frozen-lockfile
 $STD mise exec -- pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
 mkdir -p "$PLUGIN_DIR"
