@@ -124,7 +124,7 @@ EOF
     systemctl stop immich-web
     systemctl stop immich-ml
     msg_ok "Stopped Services"
-    VCHORD_RELEASE="0.5.3"
+    VCHORD_RELEASE="1.0.0"
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
     if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
       fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_$(arch_resolve).deb"
@@ -140,7 +140,7 @@ EOF
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
     SRC_DIR="${INSTALL_DIR}/source"
     APP_DIR="${INSTALL_DIR}/app"
-    PLUGIN_DIR="${APP_DIR}/corePlugin"
+    PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
 
@@ -176,14 +176,8 @@ EOF
     $STD pnpm config set --global dangerouslyAllowAllBuilds true
 
     msg_info "Updating Immich web and microservices"
-    cd "$SRC_DIR"
-    # Install all workspace deps with locked versions before any build step.
-    # --frozen-lockfile must come AFTER the install subcommand in pnpm v11.
-    echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
-    $STD pnpm install --frozen-lockfile
-
-    # server build
     cd "$SRC_DIR"/server
+    # server build
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
     unset SHARP_IGNORE_GLOBAL_LIBVIPS
@@ -200,6 +194,7 @@ EOF
 
     # sdk, cli & web build
     cd "$SRC_DIR"
+    echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
     unset SHARP_FORCE_GLOBAL_LIBVIPS
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
@@ -210,6 +205,11 @@ EOF
 
     # plugins
     cd "$SRC_DIR"
+    # mise 2026.7.0 renamed the monorepo root setting `experimental_monorepo_root`
+    # to `monorepo_root`. Immich still ships the old key, so newer mise cannot resolve
+    # the monorepo tasks (`//:plugins`). Add the new key at the root table (harmless on
+    # older mise, which keeps using the existing `experimental_monorepo_root`).
+    grep -q '^monorepo_root' ./mise.toml || sed -i '1i monorepo_root = true' ./mise.toml
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
     export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
     $STD mise //:plugins
@@ -231,13 +231,13 @@ EOF
       ML_PYTHON="python3.13"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
+        $STD sudo --preserve-env=VIRTUAL_ENV -Pnu immich uv python install "${ML_PYTHON}" && break
         [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
       done
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating Intel OpenVINO machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
       patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
@@ -246,13 +246,13 @@ EOF
       ML_PYTHON="python3.11"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
+        $STD sudo --preserve-env=VIRTUAL_ENV -Pnu immich uv python install "${ML_PYTHON}" && break
         [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
       done
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
       done
       msg_ok "Updated machine-learning"
@@ -446,7 +446,7 @@ function compile_imagemagick() {
 
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
-  LIBVIPS_REVISION="17ad2f62dda7e39985955da189183e594683d45e"
+  LIBVIPS_REVISION="3664cfc5dc2c5661288f5bf5a85ccc51c64c1626"
   if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
