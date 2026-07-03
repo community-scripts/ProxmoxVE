@@ -312,24 +312,30 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.0.1" "$SRC_DIR"
-
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+# Provision the exact pnpm pinned in package.json's packageManager field via corepack instead
+# of `npm i -g pnpm@X`, which collides (EEXIST) with the corepack pnpm shim shipped by the
+# NodeSource nodejs package.
 $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
+# corepack activates pnpm but its global bin dir is not in PATH by default;
+# export it so that `pnpm config set --global` succeeds.
 export PATH="/root/.local/share/pnpm/bin:$PATH"
 $STD pnpm config set --global dangerouslyAllowAllBuilds true
+
 msg_info "Installing Immich (patience)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
+
 # server build
 export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-$STD pnpm --filter immich --frozen-lockfile build
+$STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
 unset SHARP_IGNORE_GLOBAL_LIBVIPS
 export SHARP_FORCE_GLOBAL_LIBVIPS=true
-$STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
+$STD pnpm --filter immich --prod --no-optional deploy "$APP_DIR"
 
 # Patch helmet.json: disable upgrade-insecure-requests for HTTP access
 if [[ -f "$APP_DIR/helmet.json" ]]; then
@@ -369,6 +375,7 @@ mkdir -p "$PLUGIN_DIR"
 cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
 cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
 msg_ok "Installed Immich Server, Web and Plugin Components"
+
 cd "$SRC_DIR"/machine-learning
 $STD useradd -U -s /usr/sbin/nologin -r -M -d "$INSTALL_DIR" immich
 mkdir -p "$ML_DIR"
@@ -382,13 +389,13 @@ if [[ -f ~/.openvino ]]; then
   ML_PYTHON="python3.13"
   msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
   for attempt in $(seq 1 3); do
-    $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
+    $STD sudo --preserve-env=VIRTUAL_ENV -Pnu immich uv python install "${ML_PYTHON}" && break
     [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
   done
   msg_ok "Pre-installed Python ${ML_PYTHON}"
   msg_info "Installing Intel OpenVINO machine-learning"
   for attempt in $(seq 1 3); do
-    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
     [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
   done
   patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
@@ -397,13 +404,13 @@ else
   ML_PYTHON="python3.11"
   msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
   for attempt in $(seq 1 3); do
-    $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv python install "${ML_PYTHON}" && break
+    $STD sudo --preserve-env=VIRTUAL_ENV -Pnu immich uv python install "${ML_PYTHON}" && break
     [[ $attempt -lt 3 ]] && msg_warn "Python download attempt $attempt failed, retrying..." && sleep 5
   done
   msg_ok "Pre-installed Python ${ML_PYTHON}"
   msg_info "Installing machine-learning"
   for attempt in $(seq 1 3); do
-    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -nu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
     [[ $attempt -lt 3 ]] && msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
   done
   msg_ok "Installed machine-learning"
