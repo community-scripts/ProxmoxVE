@@ -169,22 +169,26 @@ EOF
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    export CI=1
     NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
     $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
     export PATH="/root/.local/share/pnpm/bin:$PATH"
     $STD pnpm config set --global dangerouslyAllowAllBuilds true
 
     msg_info "Updating Immich web and microservices"
-    cd "$SRC_DIR"/server
-    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-    export CI=1
+    cd "$SRC_DIR"
+    # Install all workspace deps with locked versions before any build step.
+    # --frozen-lockfile must come AFTER the install subcommand in pnpm v11.
+    echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
+    $STD pnpm install --frozen-lockfile
 
     # server build
+    cd "$SRC_DIR"/server
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter immich --frozen-lockfile build
+    $STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
     unset SHARP_IGNORE_GLOBAL_LIBVIPS
     export SHARP_FORCE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
+    $STD pnpm --filter immich --prod --no-optional deploy "$APP_DIR"
 
     # Patch helmet.json: disable upgrade-insecure-requests for HTTP access
     if [[ -f "$APP_DIR/helmet.json" ]]; then
@@ -194,20 +198,14 @@ EOF
     cp "$APP_DIR"/package.json "$APP_DIR"/bin
     sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 
-    # openapi & web build
+    # sdk, cli & web build
     cd "$SRC_DIR"
-    echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
-    $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
     unset SHARP_FORCE_GLOBAL_LIBVIPS
     export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-    $STD pnpm --filter @immich/sdk --filter immich-web build
+    $STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
+    $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
     cp -a web/build "$APP_DIR"/www
     cp LICENSE "$APP_DIR"
-
-    # cli build
-    $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
-    $STD pnpm --filter @immich/sdk --filter @immich/cli build
-    $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
     [[ -f "$INSTALL_DIR"/start.sh ]] && mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
 
     # plugins
