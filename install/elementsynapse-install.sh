@@ -44,7 +44,7 @@ ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
 echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
 echo "registration_shared_secret: ${SECRET}" >>/etc/matrix-synapse/homeserver.yaml
 
-cat <<EOF >/etc/matrix-synapse/homeserver.yaml
+cat <<EOF >>/etc/matrix-synapse/homeserver.yaml
 
 # MatrixRTC / Element Call configuration
 experimental_features:
