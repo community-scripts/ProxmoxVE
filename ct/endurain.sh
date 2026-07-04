@@ -36,7 +36,7 @@ function update_script() {
 
     msg_info "Creating Backup"
     cp /opt/endurain/.env /opt/endurain.env
-    cp /opt/endurain/frontend/app/dist/env.js /opt/endurain.env.js
+    cp /opt/endurain/frontend/dist/env.js /opt/endurain.env.js
     msg_ok "Created Backup"
 
     CLEAN_INSTALL=1 fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
@@ -52,10 +52,10 @@ function update_script() {
     msg_ok "Prepared Update"
 
     msg_info "Updating Frontend"
-    cd /opt/endurain/frontend/app
+    cd /opt/endurain/frontend
     $STD npm ci
     $STD npm run build
-    cp /opt/endurain.env.js /opt/endurain/frontend/app/dist/env.js
+    cp /opt/endurain.env.js /opt/endurain/frontend/dist/env.js
     rm /opt/endurain.env.js
     msg_ok "Updated Frontend"
 

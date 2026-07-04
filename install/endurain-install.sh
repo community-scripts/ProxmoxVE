@@ -55,7 +55,7 @@ DB_HOST=localhost
 DATABASE_URL=postgresql+psycopg://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}
 
 BACKEND_DIR="/opt/endurain/backend/app"
-FRONTEND_DIR="/opt/endurain/frontend/app/dist"
+FRONTEND_DIR="/opt/endurain/frontend/dist"
 DATA_DIR="/opt/endurain_data/data"
 LOGS_DIR="/opt/endurain_data/logs"
 
@@ -69,10 +69,10 @@ EOF
 msg_ok "Setup Endurain"
 
 msg_info "Building Frontend"
-cd /opt/endurain/frontend/app
+cd /opt/endurain/frontend
 $STD npm ci --prefer-offline
 $STD npm run build
-cat <<EOF >/opt/endurain/frontend/app/dist/env.js
+cat <<EOF >/opt/endurain/frontend/dist/env.js
 window.env = {
   ENDURAIN_HOST: "${ENDURAIN_HOST}"
 }
