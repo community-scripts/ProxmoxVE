@@ -495,6 +495,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Element Synapse: Fix heredoc syntax in elementsynapse-install.sh [@tremor021](https://github.com/tremor021) ([#15594](https://github.com/community-scripts/ProxmoxVE/pull/15594))
+    - Twenty: Fix backup restore [@tremor021](https://github.com/tremor021) ([#15586](https://github.com/community-scripts/ProxmoxVE/pull/15586))
     - fix(endurain): update frontend dist path after upstream restructure [@joaovitoriasilva](https://github.com/joaovitoriasilva) ([#15590](https://github.com/community-scripts/ProxmoxVE/pull/15590))
 
 ## 2026-07-03
