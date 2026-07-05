@@ -35,6 +35,11 @@ function update_script() {
     systemctl stop redis-server
     msg_ok "Services Stopped"
 
+    if ! grep -q "source /opt/homarr.env" /usr/bin/homarr 2>/dev/null; then
+      echo $'#!/bin/bash\nset -a\nsource /opt/homarr.env\nset +a\ncd /opt/homarr/apps/cli && timeout 10 node ./cli.cjs "$@"' >/usr/bin/homarr
+      chmod +x /usr/bin/homarr
+    fi
+
     if ! { grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr/.env 2>/dev/null || grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr.env 2>/dev/null; }; then
       msg_info "Fixing old structure"
       systemctl disable -q --now nginx
