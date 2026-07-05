@@ -505,6 +505,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - excalidash ([#15604](https://github.com/community-scripts/ProxmoxVE/pull/15604))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - immich: vacuum smart_search/face_search before VectorChord bump [@irishpadres](https://github.com/irishpadres) ([#15607](https://github.com/community-scripts/ProxmoxVE/pull/15607))
+
 ## 2026-07-04
 
 ### 🚀 Updated Scripts
