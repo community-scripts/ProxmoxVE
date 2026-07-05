@@ -501,6 +501,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-05
 
+### 🆕 New Scripts
+
+  - excalidash ([#15604](https://github.com/community-scripts/ProxmoxVE/pull/15604))
+
 ## 2026-07-04
 
 ### 🚀 Updated Scripts
