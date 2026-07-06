@@ -11,6 +11,7 @@ catch_errors
 setting_up_container
 network_check
 update_os
+
 setup_yq
 
 # Get required configuration — skip prompts if already set (generated/unattended mode)
