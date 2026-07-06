@@ -282,7 +282,7 @@ msg_ok "(4/5) Compiled imagemagick"
 
 msg_info "(5/5) Compiling libvips"
 SOURCE=$SOURCE_DIR/libvips
-LIBVIPS_REVISION="3664cfc5dc2c5661288f5bf5a85ccc51c64c1626"
+LIBVIPS_REVISION="e01a4797cabe77d457fdfa7d776b7a7e7ca6d6a7"
 $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBVIPS_REVISION"
