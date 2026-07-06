@@ -21,48 +21,48 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  if ! dpkg -s kiwix-tools &>/dev/null; then
-    msg_error "No ${APP} Installation Found!"
+    if ! dpkg -s kiwix-tools &>/dev/null; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+
+    CURRENT=$(dpkg-query -W -f='${Version}' kiwix-tools 2>/dev/null)
+
+    msg_info "Updating Package Index"
+    $STD apt update
+    msg_ok "Updated Package Index"
+
+    CANDIDATE=$(apt-cache policy kiwix-tools | awk '/Candidate:/{print $2}')
+    if [[ -z "$CANDIDATE" || "$CANDIDATE" == "(none)" ]]; then
+        msg_error "No Candidate Version Found for kiwix-tools"
+        exit
+    fi
+
+    if [[ "$CURRENT" == "$CANDIDATE" ]]; then
+        echo "${CURRENT}" >/root/.kiwix
+        msg_ok "Already on latest version: ${CURRENT}"
+        exit
+    fi
+
+    msg_info "Stopping Service"
+    systemctl stop kiwix-serve
+    msg_ok "Stopped Service"
+
+    msg_info "Updating Kiwix-Tools"
+    $STD apt install -y --only-upgrade kiwix-tools
+    RELEASE=$(dpkg-query -W -f='${Version}' kiwix-tools 2>/dev/null)
+    echo "${RELEASE}" >/root/.kiwix
+    msg_ok "Updated Kiwix-Tools"
+    msg_ok "Updated successfully from ${CURRENT} to ${RELEASE}!"
+
+    msg_info "Starting Service"
+    systemctl start kiwix-serve
+    msg_ok "Started Service"
     exit
-  fi
-
-  CURRENT=$(dpkg-query -W -f='${Version}' kiwix-tools 2>/dev/null)
-
-  msg_info "Updating Package Index"
-  $STD apt update
-  msg_ok "Updated Package Index"
-
-  CANDIDATE=$(apt-cache policy kiwix-tools | awk '/Candidate:/{print $2}')
-  if [[ -z "$CANDIDATE" || "$CANDIDATE" == "(none)" ]]; then
-    msg_error "No Candidate Version Found for kiwix-tools"
-    exit
-  fi
-
-  if [[ "$CURRENT" == "$CANDIDATE" ]]; then
-    echo "${CURRENT}" >/root/.kiwix
-    msg_ok "Already on latest version: ${CURRENT}"
-    exit
-  fi
-
-  msg_info "Stopping Service"
-  systemctl stop kiwix-serve
-  msg_ok "Stopped Service"
-
-  msg_info "Updating Kiwix-Tools"
-  $STD apt install -y --only-upgrade kiwix-tools
-  RELEASE=$(dpkg-query -W -f='${Version}' kiwix-tools 2>/dev/null)
-  echo "${RELEASE}" >/root/.kiwix
-  msg_ok "Updated Kiwix-Tools"
-  msg_ok "Updated successfully from ${CURRENT} to ${RELEASE}!"
-
-  msg_info "Starting Service"
-  systemctl start kiwix-serve
-  msg_ok "Started Service"
-  exit
 }
 
 start
@@ -71,5 +71,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

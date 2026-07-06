@@ -21,29 +21,29 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  NODE_VERSION="24" setup_nodejs
-  ensure_dependencies build-essential
+    NODE_VERSION="24" setup_nodejs
+    ensure_dependencies build-essential
 
-  if command -v cross-seed &>/dev/null; then
-    current_version=$(cross-seed --version)
-    latest_version=$(npm show cross-seed version)
-    if [ "$current_version" != "$latest_version" ]; then
-      msg_info "Updating cross-seed from version v${current_version} to v${latest_version}"
-      $STD npm install -g cross-seed@latest
-      systemctl restart cross-seed
-      msg_ok "Updated successfully!"
+    if command -v cross-seed &>/dev/null; then
+        current_version=$(cross-seed --version)
+        latest_version=$(npm show cross-seed version)
+        if [ "$current_version" != "$latest_version" ]; then
+            msg_info "Updating cross-seed from version v${current_version} to v${latest_version}"
+            $STD npm install -g cross-seed@latest
+            systemctl restart cross-seed
+            msg_ok "Updated successfully!"
+        else
+            msg_ok "cross-seed is already at v${current_version}"
+        fi
     else
-      msg_ok "cross-seed is already at v${current_version}"
+        msg_error "No cross-seed Installation Found!"
+        exit
     fi
-  else
-    msg_error "No cross-seed Installation Found!"
     exit
-  fi
-  exit
 }
 
 start
@@ -52,5 +52,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access cross-seed API using the following URL:${CL}"
+echo -e "${INFO}${YW}Access cross-seed API using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:2468${CL}"

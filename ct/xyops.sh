@@ -21,46 +21,46 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  if [[ ! -d /opt/xyops ]]; then
-    msg_error "No ${APP} Installation Found!"
+    if [[ ! -d /opt/xyops ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+
+    if check_for_gh_release "xyops" "pixlcore/xyops"; then
+        msg_info "Stopping Service"
+        systemctl stop xyops
+        msg_ok "Stopped Service"
+
+        msg_info "Backing up Data"
+        cp -r /opt/xyops/data /opt/xyops_data_backup
+        cp -r /opt/xyops/conf /opt/xyops_conf_backup
+        msg_ok "Backed up Data"
+
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xyops" "pixlcore/xyops" "tarball"
+
+        msg_info "Rebuilding Application"
+        cd /opt/xyops
+        $STD npm install
+        $STD node bin/build.js dist
+        chmod 644 /opt/xyops/node_modules/useragent-ng/lib/regexps.js
+        msg_ok "Rebuilt Application"
+
+        msg_info "Restoring Data"
+        cp -r /opt/xyops_data_backup/. /opt/xyops/data
+        cp -r /opt/xyops_conf_backup/. /opt/xyops/conf
+        rm -rf /opt/xyops_data_backup /opt/xyops_conf_backup
+        msg_ok "Restored Data"
+
+        msg_info "Starting Service"
+        systemctl start xyops
+        msg_ok "Started Service"
+        msg_ok "Updated successfully!"
+    fi
     exit
-  fi
-
-  if check_for_gh_release "xyops" "pixlcore/xyops"; then
-    msg_info "Stopping Service"
-    systemctl stop xyops
-    msg_ok "Stopped Service"
-
-    msg_info "Backing up Data"
-    cp -r /opt/xyops/data /opt/xyops_data_backup
-    cp -r /opt/xyops/conf /opt/xyops_conf_backup
-    msg_ok "Backed up Data"
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xyops" "pixlcore/xyops" "tarball"
-
-    msg_info "Rebuilding Application"
-    cd /opt/xyops
-    $STD npm install
-    $STD node bin/build.js dist
-    chmod 644 /opt/xyops/node_modules/useragent-ng/lib/regexps.js
-    msg_ok "Rebuilt Application"
-
-    msg_info "Restoring Data"
-    cp -r /opt/xyops_data_backup/. /opt/xyops/data
-    cp -r /opt/xyops_conf_backup/. /opt/xyops/conf
-    rm -rf /opt/xyops_data_backup /opt/xyops_conf_backup
-    msg_ok "Restored Data"
-
-    msg_info "Starting Service"
-    systemctl start xyops
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  fi
-  exit
 }
 
 start
@@ -69,5 +69,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5522${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5522${CL}"

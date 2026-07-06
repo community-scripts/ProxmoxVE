@@ -21,60 +21,60 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  if [[ ! -d "/opt/kometa" ]]; then
-    msg_error "No ${APP} Installation Found!"
+    if [[ ! -d "/opt/kometa" ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+    if check_for_gh_release "kometa" "Kometa-Team/Kometa"; then
+        msg_info "Stopping Service"
+        systemctl stop kometa
+        [[ -d "/opt/kometa-quickstart" ]] && systemctl stop kometa-quickstart
+        msg_ok "Stopped Service"
+
+        msg_info "Backing up data"
+        cp /opt/kometa/config/config.yml /opt
+        msg_ok "Backup completed"
+
+        PYTHON_VERSION="3.13" setup_uv
+        fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
+
+        msg_info "Updating Kometa"
+        cd /opt/kometa
+        [[ -d /opt/kometa/.venv ]] || $STD uv venv /opt/kometa/.venv
+        $STD uv pip install -r requirements.txt -p /opt/kometa/.venv/bin/python
+        mkdir -p config/assets
+        cp /opt/config.yml config/config.yml
+        msg_ok "Updated Kometa"
+
+        msg_info "Starting Service"
+        systemctl start kometa
+        [[ -d "/opt/kometa-quickstart" ]] && systemctl start kometa-quickstart
+        msg_ok "Started Service"
+        msg_ok "Updated successfully!"
+    fi
+
+    if [[ -d "/opt/kometa-quickstart" ]] && check_for_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"; then
+        msg_info "Stopping Quickstart Service"
+        systemctl stop kometa-quickstart
+        msg_ok "Stopped Quickstart Service"
+
+        fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart" "tarball"
+
+        msg_info "Updating Kometa Quickstart"
+        cd /opt/kometa-quickstart
+        $STD uv pip install -r requirements.txt -p /opt/kometa-quickstart/.venv/bin/python
+        msg_ok "Updated Kometa Quickstart"
+
+        msg_info "Starting Quickstart Service"
+        systemctl start kometa-quickstart
+        msg_ok "Started Quickstart Service"
+        msg_ok "Updated Quickstart successfully!"
+    fi
     exit
-  fi
-  if check_for_gh_release "kometa" "Kometa-Team/Kometa"; then
-    msg_info "Stopping Service"
-    systemctl stop kometa
-    [[ -d "/opt/kometa-quickstart" ]] && systemctl stop kometa-quickstart
-    msg_ok "Stopped Service"
-
-    msg_info "Backing up data"
-    cp /opt/kometa/config/config.yml /opt
-    msg_ok "Backup completed"
-
-    PYTHON_VERSION="3.13" setup_uv
-    fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
-
-    msg_info "Updating Kometa"
-    cd /opt/kometa
-    [[ -d /opt/kometa/.venv ]] || $STD uv venv /opt/kometa/.venv
-    $STD uv pip install -r requirements.txt -p /opt/kometa/.venv/bin/python
-    mkdir -p config/assets
-    cp /opt/config.yml config/config.yml
-    msg_ok "Updated Kometa"
-
-    msg_info "Starting Service"
-    systemctl start kometa
-    [[ -d "/opt/kometa-quickstart" ]] && systemctl start kometa-quickstart
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  fi
-
-  if [[ -d "/opt/kometa-quickstart" ]] && check_for_gh_release "kometa-quickstart" "Kometa-Team/Quickstart"; then
-    msg_info "Stopping Quickstart Service"
-    systemctl stop kometa-quickstart
-    msg_ok "Stopped Quickstart Service"
-
-    fetch_and_deploy_gh_release "kometa-quickstart" "Kometa-Team/Quickstart" "tarball"
-
-    msg_info "Updating Kometa Quickstart"
-    cd /opt/kometa-quickstart
-    $STD uv pip install -r requirements.txt -p /opt/kometa-quickstart/.venv/bin/python
-    msg_ok "Updated Kometa Quickstart"
-
-    msg_info "Starting Quickstart Service"
-    systemctl start kometa-quickstart
-    msg_ok "Started Quickstart Service"
-    msg_ok "Updated Quickstart successfully!"
-  fi
-  exit
 }
 
 start
@@ -83,5 +83,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access Kometa Quickstart:${CL}"
+echo -e "${INFO}${YW}Access Kometa Quickstart:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:7171${CL}"

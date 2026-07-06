@@ -15,9 +15,9 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  build-essential \
-  git \
-  ripgrep
+    build-essential \
+    git \
+    ripgrep
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
@@ -37,8 +37,8 @@ msg_ok "Built Paperclip"
 
 msg_info "Installing Agent CLIs"
 $STD npm install -g \
-  @anthropic-ai/claude-code@latest \
-  @openai/codex@latest
+    @anthropic-ai/claude-code@latest \
+    @openai/codex@latest
 msg_ok "Installed Agent CLIs"
 
 msg_info "Configuring Paperclip"
@@ -73,60 +73,60 @@ PAPERCLIP_ONBOARD_LOG=/opt/paperclip-ai/paperclip-onboard.log
 PAPERCLIP_BOOTSTRAP_LOG=/opt/paperclip-ai/paperclip-bootstrap.log
 
 for PAPERCLIP_ONBOARD_CMD in \
-  "pnpm paperclipai onboard --yes --bind lan" \
-  "pnpm paperclipai onboard --yes"; do
-  rm -f "$PAPERCLIP_ONBOARD_LOG"
-  setsid env \
-    PAPERCLIP_HOME="$PAPERCLIP_HOME" \
-    PAPERCLIP_CONFIG="$PAPERCLIP_CONFIG" \
-    bash -c 'cd /opt/paperclip-ai && exec "$@"' _ $PAPERCLIP_ONBOARD_CMD \
-    >"$PAPERCLIP_ONBOARD_LOG" 2>&1 &
-  PAPERCLIP_ONBOARD_PID=$!
-  for _ in {1..60}; do
-    if [[ -f "$PAPERCLIP_CONFIG" ]]; then
-      break
+    "pnpm paperclipai onboard --yes --bind lan" \
+    "pnpm paperclipai onboard --yes"; do
+    rm -f "$PAPERCLIP_ONBOARD_LOG"
+    setsid env \
+        PAPERCLIP_HOME="$PAPERCLIP_HOME" \
+        PAPERCLIP_CONFIG="$PAPERCLIP_CONFIG" \
+        bash -c 'cd /opt/paperclip-ai && exec "$@"' _ $PAPERCLIP_ONBOARD_CMD \
+        >"$PAPERCLIP_ONBOARD_LOG" 2>&1 &
+    PAPERCLIP_ONBOARD_PID=$!
+    for _ in {1..60}; do
+        if [[ -f "$PAPERCLIP_CONFIG" ]]; then
+            break
+        fi
+        if ! kill -0 "$PAPERCLIP_ONBOARD_PID" 2>/dev/null; then
+            break
+        fi
+        sleep 2
+    done
+    if kill -0 "$PAPERCLIP_ONBOARD_PID" 2>/dev/null; then
+        kill -- -"${PAPERCLIP_ONBOARD_PID}" >/dev/null 2>&1 || true
+        wait "$PAPERCLIP_ONBOARD_PID" 2>/dev/null || true
     fi
-    if ! kill -0 "$PAPERCLIP_ONBOARD_PID" 2>/dev/null; then
-      break
+    [[ -f "$PAPERCLIP_CONFIG" ]] && break
+    if ! grep -q "unknown option '--bind'" "$PAPERCLIP_ONBOARD_LOG"; then
+        break
     fi
-    sleep 2
-  done
-  if kill -0 "$PAPERCLIP_ONBOARD_PID" 2>/dev/null; then
-    kill -- -"${PAPERCLIP_ONBOARD_PID}" >/dev/null 2>&1 || true
-    wait "$PAPERCLIP_ONBOARD_PID" 2>/dev/null || true
-  fi
-  [[ -f "$PAPERCLIP_CONFIG" ]] && break
-  if ! grep -q "unknown option '--bind'" "$PAPERCLIP_ONBOARD_LOG"; then
-    break
-  fi
-  msg_info "Retrying Paperclip Onboarding"
+    msg_info "Retrying Paperclip Onboarding"
 done
 
 if [[ ! -f "$PAPERCLIP_CONFIG" ]]; then
-  msg_error "Failed to bootstrap Paperclip"
-  exit 1
+    msg_error "Failed to bootstrap Paperclip"
+    exit 1
 fi
 
 if grep -q 'authenticated' $PAPERCLIP_CONFIG; then
-  pnpm paperclipai auth bootstrap-ceo >"$PAPERCLIP_BOOTSTRAP_LOG" 2>&1 || true
-  PAPERCLIP_INVITE_URL=$(awk -F'Invite URL: ' '/Invite URL:/ {print $2; exit}' "$PAPERCLIP_BOOTSTRAP_LOG")
-  PAPERCLIP_INVITE_EXPIRY=$(awk -F'Expires: ' '/Expires:/ {print $2; exit}' "$PAPERCLIP_BOOTSTRAP_LOG")
-  if [[ -n "$PAPERCLIP_INVITE_URL" ]]; then
-    cat <<EOF >~/paperclip.creds
+    pnpm paperclipai auth bootstrap-ceo >"$PAPERCLIP_BOOTSTRAP_LOG" 2>&1 || true
+    PAPERCLIP_INVITE_URL=$(awk -F'Invite URL: ' '/Invite URL:/ {print $2; exit}' "$PAPERCLIP_BOOTSTRAP_LOG")
+    PAPERCLIP_INVITE_EXPIRY=$(awk -F'Expires: ' '/Expires:/ {print $2; exit}' "$PAPERCLIP_BOOTSTRAP_LOG")
+    if [[ -n "$PAPERCLIP_INVITE_URL" ]]; then
+        cat <<EOF >~/paperclip.creds
 
 Paperclip Admin Invite
 Invite URL: ${PAPERCLIP_INVITE_URL}
 Expires: ${PAPERCLIP_INVITE_EXPIRY}
 EOF
-    msg_ok "Generated Paperclip CEO Invite"
-    echo -e "${INFO}${YW} Open this invite URL to finish Paperclip admin setup:${CL}"
-    echo -e "${TAB}${GATEWAY}${BGN}${PAPERCLIP_INVITE_URL}${CL}"
-    [[ -n "$PAPERCLIP_INVITE_EXPIRY" ]] && echo -e "${TAB}${INFO}${YW}Invite expires: ${PAPERCLIP_INVITE_EXPIRY}${CL}"
-  else
-    msg_warn "Paperclip authenticated mode is enabled, but no CEO invite was generated automatically"
-  fi
+        msg_ok "Generated Paperclip CEO Invite"
+        echo -e "${INFO}${YW} Open this invite URL to finish Paperclip admin setup:${CL}"
+        echo -e "${GATEWAY}${BGN}${PAPERCLIP_INVITE_URL}${CL}"
+        [[ -n "$PAPERCLIP_INVITE_EXPIRY" ]] && echo -e "${TAB}${INFO}${YW}Invite expires: ${PAPERCLIP_INVITE_EXPIRY}${CL}"
+    else
+        msg_warn "Paperclip authenticated mode is enabled, but no CEO invite was generated automatically"
+    fi
 else
-  msg_info "Paperclip Bootstrapped in Local Trusted Mode"
+    msg_info "Paperclip Bootstrapped in Local Trusted Mode"
 fi
 rm -f "$PAPERCLIP_ONBOARD_LOG" "$PAPERCLIP_BOOTSTRAP_LOG"
 msg_ok "Bootstrapped Paperclip"

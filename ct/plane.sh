@@ -21,63 +21,63 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  if [[ ! -d /opt/plane ]]; then
-    msg_error "No Plane Installation Found!"
-    exit 1
-  fi
+    if [[ ! -d /opt/plane ]]; then
+        msg_error "No Plane Installation Found!"
+        exit 1
+    fi
 
-  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
-  if check_for_gh_release "plane" "makeplane/plane"; then
-    msg_info "Stopping Services"
-    systemctl stop plane-api plane-worker plane-beat plane-live plane-space
-    msg_ok "Stopped Services"
+    if check_for_gh_release "plane" "makeplane/plane"; then
+        msg_info "Stopping Services"
+        systemctl stop plane-api plane-worker plane-beat plane-live plane-space
+        msg_ok "Stopped Services"
 
-    create_backup /opt/plane/.env \
-        /opt/plane/apps/admin/.env \
-        /opt/plane/apps/api/.env \
-        /opt/plane/apps/space/.env \
-       /opt/plane/apps/web/.env
+        create_backup /opt/plane/.env \
+            /opt/plane/apps/admin/.env \
+            /opt/plane/apps/api/.env \
+            /opt/plane/apps/space/.env \
+            /opt/plane/apps/web/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "plane" "makeplane/plane" "tarball"
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "plane" "makeplane/plane" "tarball"
 
-    restore_backup
+        restore_backup
 
-    msg_info "Rebuilding Frontend (Patience)"
-    cd /opt/plane
-    export NODE_OPTIONS="--max-old-space-size=4096"
-    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+        msg_info "Rebuilding Frontend (Patience)"
+        cd /opt/plane
+        export NODE_OPTIONS="--max-old-space-size=4096"
+        export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm turbo run build --filter=web --filter=admin --filter=space --filter=live
-    msg_ok "Rebuilt Frontend"
+        $STD pnpm install --frozen-lockfile
+        $STD pnpm turbo run build --filter=web --filter=admin --filter=space --filter=live
+        msg_ok "Rebuilt Frontend"
 
-    msg_info "Updating Python Dependencies"
-    cd /opt/plane/apps/api
-    export VIRTUAL_ENV=/opt/plane-venv
-    $STD uv pip install --upgrade -r requirements/production.txt
-    msg_ok "Updated Python Dependencies"
+        msg_info "Updating Python Dependencies"
+        cd /opt/plane/apps/api
+        export VIRTUAL_ENV=/opt/plane-venv
+        $STD uv pip install --upgrade -r requirements/production.txt
+        msg_ok "Updated Python Dependencies"
 
-    msg_info "Running Migrations"
-    cd /opt/plane/apps/api
-    set -a
-    source /opt/plane/apps/api/.env
-    set +a
-    $STD /opt/plane-venv/bin/python manage.py migrate
-    $STD /opt/plane-venv/bin/python manage.py collectstatic --noinput
-    $STD /opt/plane-venv/bin/python manage.py configure_instance
-    msg_ok "Ran Migrations"
+        msg_info "Running Migrations"
+        cd /opt/plane/apps/api
+        set -a
+        source /opt/plane/apps/api/.env
+        set +a
+        $STD /opt/plane-venv/bin/python manage.py migrate
+        $STD /opt/plane-venv/bin/python manage.py collectstatic --noinput
+        $STD /opt/plane-venv/bin/python manage.py configure_instance
+        msg_ok "Ran Migrations"
 
-    msg_info "Starting Services"
-    systemctl start plane-api plane-worker plane-beat plane-live plane-space
-    msg_ok "Started Services"
-    msg_ok "Updated successfully!"
-  fi
-  exit
+        msg_info "Starting Services"
+        systemctl start plane-api plane-worker plane-beat plane-live plane-space
+        msg_ok "Started Services"
+        msg_ok "Updated successfully!"
+    fi
+    exit
 }
 
 start
@@ -86,5 +86,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

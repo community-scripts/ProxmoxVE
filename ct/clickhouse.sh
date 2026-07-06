@@ -21,18 +21,18 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  if ! command -v clickhouse-server &>/dev/null; then
-    msg_error "No ${APP} Installation Found!"
+    if ! command -v clickhouse-server &>/dev/null; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+
+    setup_clickhouse
+    msg_ok "Updated successfully!"
     exit
-  fi
-
-  setup_clickhouse
-  msg_ok "Updated successfully!"
-  exit
 }
 
 start
@@ -41,5 +41,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8123${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8123${CL}"

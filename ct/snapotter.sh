@@ -21,36 +21,36 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  if [[ ! -d /opt/snapotter ]]; then
-    msg_error "No ${APP} Installation Found!"
+    if [[ ! -d /opt/snapotter ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+
+    if check_for_gh_release "snapotter" "snapotter-hq/SnapOtter"; then
+        msg_info "Stopping Service"
+        systemctl stop snapotter
+        msg_ok "Stopped Service"
+
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snapotter" "snapotter-hq/SnapOtter" "tarball"
+
+        msg_info "Updating SnapOtter"
+        cd /opt/snapotter
+        $STD npm pkg delete scripts.prepare
+        $STD pnpm install --frozen-lockfile
+        $STD pnpm --filter @snapotter/web build
+        sed -i 's/mediapipe==0.10.21/mediapipe>=0.10.21/' /opt/snapotter/docker/feature-manifest.json
+        msg_ok "Updated SnapOtter"
+
+        msg_info "Starting Service"
+        systemctl start snapotter
+        msg_ok "Started Service"
+        msg_ok "Updated successfully!"
+    fi
     exit
-  fi
-
-  if check_for_gh_release "snapotter" "snapotter-hq/SnapOtter"; then
-    msg_info "Stopping Service"
-    systemctl stop snapotter
-    msg_ok "Stopped Service"
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snapotter" "snapotter-hq/SnapOtter" "tarball"
-
-    msg_info "Updating SnapOtter"
-    cd /opt/snapotter
-    $STD npm pkg delete scripts.prepare
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm --filter @snapotter/web build
-    sed -i 's/mediapipe==0.10.21/mediapipe>=0.10.21/' /opt/snapotter/docker/feature-manifest.json
-    msg_ok "Updated SnapOtter"
-
-    msg_info "Starting Service"
-    systemctl start snapotter
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  fi
-  exit
 }
 
 start
@@ -59,5 +59,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:1349${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:1349${CL}"

@@ -21,29 +21,28 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
+    header_info
+    check_container_storage
+    check_container_resources
 
-  if [[ ! -f /opt/${APP} ]]; then
-    msg_error "No ${APP} Installation Found!"
+    if [[ ! -f /opt/${APP} ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+
+    if check_for_gh_release "hev-socks5-server" "heiher/hev-socks5-server"; then
+        msg_info "Stopping Service"
+        systemctl stop hev-socks5-server
+        msg_ok "Stopped Service"
+
+        fetch_and_deploy_gh_release "hev-socks5-server" "heiher/hev-socks5-server" "singlefile" "latest" "/opt" "hev-socks5-server-linux-$(arch_resolve "x86_64" "arm64")"
+
+        msg_info "Starting Service"
+        systemctl start hev-socks5-server
+        msg_ok "Started Service"
+        msg_ok "Updated successfully!"
+    fi
     exit
-  fi
-
-  
-  if check_for_gh_release "hev-socks5-server" "heiher/hev-socks5-server"; then
-    msg_info "Stopping Service"
-    systemctl stop hev-socks5-server
-    msg_ok "Stopped Service"
-
-    fetch_and_deploy_gh_release "hev-socks5-server" "heiher/hev-socks5-server" "singlefile" "latest" "/opt" "hev-socks5-server-linux-$(arch_resolve "x86_64" "arm64")"
-
-    msg_info "Starting Service"
-    systemctl start hev-socks5-server
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  fi
-  exit
 }
 
 start
@@ -52,6 +51,6 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it with a SOCKS5 client using the following URL:${CL}"
+echo -e "${INFO}${YW}Access it with a SOCKS5 client using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}${IP}:1080${CL}"
 echo -e "${INFO}${YW} and the credentials stored at /root/hev.creds${CL}"
