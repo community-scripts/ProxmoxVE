@@ -37,12 +37,12 @@ function update_script() {
   msg_ok "Updated Package Index"
 
   CANDIDATE=$(apt-cache policy kiwix-tools | awk '/Candidate:/{print $2}')
-  if [[ -z "$CANDIDATE" || "$CANDIDATE" == "(none)" ]]; then
+  if [[ -z $CANDIDATE || $CANDIDATE == "(none)" ]]; then
     msg_error "No Candidate Version Found for kiwix-tools"
     exit
   fi
 
-  if [[ "$CURRENT" == "$CANDIDATE" ]]; then
+  if [[ $CURRENT == "$CANDIDATE" ]]; then
     echo "${CURRENT}" >/root/.kiwix
     msg_ok "Already on latest version: ${CURRENT}"
     exit
@@ -71,5 +71,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"
