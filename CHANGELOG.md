@@ -510,6 +510,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - attempt to port docker-vm to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15611](https://github.com/community-scripts/ProxmoxVE/pull/15611))
     - fix(plane): don't clobber global app var, breaking /usr/bin/update [@asylumexp](https://github.com/asylumexp) ([#15612](https://github.com/community-scripts/ProxmoxVE/pull/15612))
 
+  - #### 🔧 Refactor
+
+    - cliproxyapi: point setup message at /management.html [@austinpilz](https://github.com/austinpilz) ([#15628](https://github.com/community-scripts/ProxmoxVE/pull/15628))
+
 ## 2026-07-05
 
 ### 🆕 New Scripts
