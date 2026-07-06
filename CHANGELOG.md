@@ -516,6 +516,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - cliproxyapi: point setup message at /management.html [@austinpilz](https://github.com/austinpilz) ([#15628](https://github.com/community-scripts/ProxmoxVE/pull/15628))
 
+### 🗑️ Deleted Scripts
+
+  - Remove: FlowiseAI [@MickLesk](https://github.com/MickLesk) ([#15624](https://github.com/community-scripts/ProxmoxVE/pull/15624))
+
 ## 2026-07-05
 
 ### 🆕 New Scripts
