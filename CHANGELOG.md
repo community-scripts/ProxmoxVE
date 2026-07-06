@@ -503,7 +503,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Immich: Update libvips to 8.18.4 [@vhsdream](https://github.com/vhsdream) ([#15619](https://github.com/community-scripts/ProxmoxVE/pull/15619))
+  - Fix alignment in various ct end messages [@tremor021](https://github.com/tremor021) ([#15632](https://github.com/community-scripts/ProxmoxVE/pull/15632))
+- Immich: Update libvips to 8.18.4 [@vhsdream](https://github.com/vhsdream) ([#15619](https://github.com/community-scripts/ProxmoxVE/pull/15619))
 
   - #### 🐞 Bug Fixes
 
