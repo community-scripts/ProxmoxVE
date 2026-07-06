@@ -85,8 +85,8 @@ VITE_SPACE_BASE_PATH=/spaces
 VITE_LIVE_BASE_URL=http://${LOCAL_IP}
 VITE_LIVE_BASE_PATH=/live"
 # Each Vite app needs its own .env for the build
-for app in web admin space; do
-    echo "$FRONTEND_ENV" >/opt/plane/apps/${app}/.env
+for frontend_app in web admin space; do
+    echo "$FRONTEND_ENV" >/opt/plane/apps/${frontend_app}/.env
 done
 export NODE_OPTIONS="--max-old-space-size=4096"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
