@@ -21,18 +21,18 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if ! command -v clickhouse-server &>/dev/null; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    setup_clickhouse
-    msg_ok "Updated successfully!"
+  if ! command -v clickhouse-server &>/dev/null; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  setup_clickhouse
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

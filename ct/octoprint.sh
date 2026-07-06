@@ -21,27 +21,27 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/octoprint ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping OctoPrint"
-    systemctl stop octoprint
-    msg_ok "Stopped OctoPrint"
-
-    msg_info "Updating OctoPrint"
-    source /opt/octoprint/bin/activate
-    $STD pip3 install octoprint --upgrade
-    msg_ok "Updated OctoPrint"
-
-    msg_info "Starting OctoPrint"
-    systemctl start octoprint
-    msg_ok "Started OctoPrint"
-    msg_ok "Updated successfully!"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/octoprint ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Stopping OctoPrint"
+  systemctl stop octoprint
+  msg_ok "Stopped OctoPrint"
+
+  msg_info "Updating OctoPrint"
+  source /opt/octoprint/bin/activate
+  $STD pip3 install octoprint --upgrade
+  msg_ok "Updated OctoPrint"
+
+  msg_info "Starting OctoPrint"
+  systemctl start octoprint
+  msg_ok "Started OctoPrint"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

@@ -21,39 +21,39 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/metabase ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "metabase" "metabase/metabase"; then
-        msg_info "Stopping Service"
-        systemctl stop metabase
-        msg_info "Stopped Service"
-
-        msg_info "Creating backup"
-        mv /opt/metabase/.env /opt
-        msg_ok "Created backup"
-
-        msg_info "Updating Metabase"
-        RELEASE=$(get_latest_github_release "metabase/metabase")
-        curl -fsSL "https://downloads.metabase.com/v${RELEASE}.x/metabase.jar" -o /opt/metabase/metabase.jar
-        echo $RELEASE >~/.metabase
-        msg_ok "Updated Metabase"
-
-        msg_info "Restoring backup"
-        mv /opt/.env /opt/metabase
-        msg_ok "Restored backup"
-
-        msg_info "Starting Service"
-        systemctl start metabase
-        msg_ok "Started Service"
-        msg_ok "Updated successfully!"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/metabase ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "metabase" "metabase/metabase"; then
+    msg_info "Stopping Service"
+    systemctl stop metabase
+    msg_info "Stopped Service"
+
+    msg_info "Creating backup"
+    mv /opt/metabase/.env /opt
+    msg_ok "Created backup"
+
+    msg_info "Updating Metabase"
+    RELEASE=$(get_latest_github_release "metabase/metabase")
+    curl -fsSL "https://downloads.metabase.com/v${RELEASE}.x/metabase.jar" -o /opt/metabase/metabase.jar
+    echo $RELEASE >~/.metabase
+    msg_ok "Updated Metabase"
+
+    msg_info "Restoring backup"
+    mv /opt/.env /opt/metabase
+    msg_ok "Restored backup"
+
+    msg_info "Starting Service"
+    systemctl start metabase
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

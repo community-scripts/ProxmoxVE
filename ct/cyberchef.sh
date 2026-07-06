@@ -21,35 +21,35 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /opt/cyberchef ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "cyberchef" "gchq/CyberChef"; then
-        msg_info "Stopping Service"
-        systemctl stop caddy
-        msg_ok "Stopped Service"
-
-        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cyberchef" "gchq/CyberChef" "tarball"
-
-        msg_info "Building CyberChef"
-        cd /opt/cyberchef
-        $STD npm ci --ignore-scripts
-        $STD npm run postinstall
-        $STD npm run build
-        msg_ok "Built CyberChef"
-
-        msg_info "Starting Service"
-        systemctl start caddy
-        msg_ok "Started Service"
-        msg_ok "Updated successfully!"
-    fi
+  if [[ ! -d /opt/cyberchef ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "cyberchef" "gchq/CyberChef"; then
+    msg_info "Stopping Service"
+    systemctl stop caddy
+    msg_ok "Stopped Service"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cyberchef" "gchq/CyberChef" "tarball"
+
+    msg_info "Building CyberChef"
+    cd /opt/cyberchef
+    $STD npm ci --ignore-scripts
+    $STD npm run postinstall
+    $STD npm run build
+    msg_ok "Built CyberChef"
+
+    msg_info "Starting Service"
+    systemctl start caddy
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

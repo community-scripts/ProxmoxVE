@@ -21,11 +21,11 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    msg_error "No Update function provided for ${APP} LXC"
-    exit
+  header_info
+  check_container_storage
+  check_container_resources
+  msg_error "No Update function provided for ${APP} LXC"
+  exit
 }
 
 start

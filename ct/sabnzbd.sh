@@ -21,44 +21,44 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if par2 --version | grep -q "par2cmdline-turbo"; then
-        fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-$(arch_resolve).zip"
-    fi
+  if par2 --version | grep -q "par2cmdline-turbo"; then
+    fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-$(arch_resolve).zip"
+  fi
 
-    if [[ ! -d /opt/sabnzbd ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    if check_for_gh_release "sabnzbd-org" "sabnzbd/sabnzbd"; then
-        PYTHON_VERSION="3.13" setup_uv
-        systemctl stop sabnzbd
-        cp -r /opt/sabnzbd /opt/sabnzbd_backup_$(date +%s)
-        fetch_and_deploy_gh_release "sabnzbd-org" "sabnzbd/sabnzbd" "prebuild" "latest" "/opt/sabnzbd" "SABnzbd-*-src.tar.gz"
-
-        # Always ensure venv exists
-        if [[ ! -d /opt/sabnzbd/venv ]]; then
-            msg_info "Migrating SABnzbd to uv virtual environment"
-            $STD uv venv --clear /opt/sabnzbd/venv
-            msg_ok "Created uv venv at /opt/sabnzbd/venv"
-        fi
-
-        # Always check and fix service file if needed
-        if [[ -f /etc/systemd/system/sabnzbd.service ]] && grep -q "ExecStart=python3 SABnzbd.py" /etc/systemd/system/sabnzbd.service; then
-            sed -i "s|ExecStart=python3 SABnzbd.py|ExecStart=/opt/sabnzbd/venv/bin/python SABnzbd.py|" /etc/systemd/system/sabnzbd.service
-            systemctl daemon-reload
-            msg_ok "Updated SABnzbd service to use uv venv"
-        fi
-        $STD uv pip install --upgrade pip --python=/opt/sabnzbd/venv/bin/python
-        $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
-
-        systemctl start sabnzbd
-        msg_ok "Updated successfully!"
-    fi
+  if [[ ! -d /opt/sabnzbd ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  if check_for_gh_release "sabnzbd-org" "sabnzbd/sabnzbd"; then
+    PYTHON_VERSION="3.13" setup_uv
+    systemctl stop sabnzbd
+    cp -r /opt/sabnzbd /opt/sabnzbd_backup_$(date +%s)
+    fetch_and_deploy_gh_release "sabnzbd-org" "sabnzbd/sabnzbd" "prebuild" "latest" "/opt/sabnzbd" "SABnzbd-*-src.tar.gz"
+
+    # Always ensure venv exists
+    if [[ ! -d /opt/sabnzbd/venv ]]; then
+      msg_info "Migrating SABnzbd to uv virtual environment"
+      $STD uv venv --clear /opt/sabnzbd/venv
+      msg_ok "Created uv venv at /opt/sabnzbd/venv"
+    fi
+
+    # Always check and fix service file if needed
+    if [[ -f /etc/systemd/system/sabnzbd.service ]] && grep -q "ExecStart=python3 SABnzbd.py" /etc/systemd/system/sabnzbd.service; then
+      sed -i "s|ExecStart=python3 SABnzbd.py|ExecStart=/opt/sabnzbd/venv/bin/python SABnzbd.py|" /etc/systemd/system/sabnzbd.service
+      systemctl daemon-reload
+      msg_ok "Updated SABnzbd service to use uv venv"
+    fi
+    $STD uv pip install --upgrade pip --python=/opt/sabnzbd/venv/bin/python
+    $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
+
+    systemctl start sabnzbd
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

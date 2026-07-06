@@ -22,20 +22,20 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /var/lib/netbird/ ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    msg_info "Updating Netbird"
-    $STD apt update
-    $STD apt upgrade -y
-    msg_ok "Updated successfully!"
+  if [[ ! -d /var/lib/netbird/ ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  msg_info "Updating Netbird"
+  $STD apt update
+  $STD apt upgrade -y
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

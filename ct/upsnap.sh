@@ -21,27 +21,27 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/upsnap ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "upsnap" "seriousm4x/UpSnap"; then
-        msg_info "Stopping Services"
-        systemctl stop upsnap
-        msg_ok "Stopped Services"
-
-        fetch_and_deploy_gh_release "upsnap" "seriousm4x/UpSnap" "prebuild" "latest" "/opt/upsnap" "UpSnap_*_linux_$(arch_resolve).zip"
-
-        msg_info "Starting Services"
-        systemctl start upsnap
-        msg_ok "Started Services"
-        msg_ok "Updated successfully!"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/upsnap ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "upsnap" "seriousm4x/UpSnap"; then
+    msg_info "Stopping Services"
+    systemctl stop upsnap
+    msg_ok "Stopped Services"
+
+    fetch_and_deploy_gh_release "upsnap" "seriousm4x/UpSnap" "prebuild" "latest" "/opt/upsnap" "UpSnap_*_linux_$(arch_resolve).zip"
+
+    msg_info "Starting Services"
+    systemctl start upsnap
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

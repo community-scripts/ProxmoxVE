@@ -22,30 +22,30 @@ color
 catch_errors
 
 function update_script() {
-    header_info
+  header_info
 
-    if [[ ! -d /opt/cinny ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "cinny" "cinnyapp/cinny"; then
-        msg_info "Backing up Configuration"
-        cp /opt/cinny/config.json /opt/cinny_config.json.bak
-        msg_ok "Backed up Configuration"
-
-        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cinny" "cinnyapp/cinny" "prebuild" "latest" "/opt/cinny" "cinny-*.tar.gz"
-
-        msg_info "Restoring Configuration"
-        cp /opt/cinny_config.json.bak /opt/cinny/config.json
-        rm -f /opt/cinny_config.json.bak
-        msg_ok "Restored Configuration"
-
-        msg_info "Restarting nginx"
-        $STD rc-service nginx restart
-        msg_ok "Updated successfully!"
-    fi
+  if [[ ! -d /opt/cinny ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "cinny" "cinnyapp/cinny"; then
+    msg_info "Backing up Configuration"
+    cp /opt/cinny/config.json /opt/cinny_config.json.bak
+    msg_ok "Backed up Configuration"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cinny" "cinnyapp/cinny" "prebuild" "latest" "/opt/cinny" "cinny-*.tar.gz"
+
+    msg_info "Restoring Configuration"
+    cp /opt/cinny_config.json.bak /opt/cinny/config.json
+    rm -f /opt/cinny_config.json.bak
+    msg_ok "Restored Configuration"
+
+    msg_info "Restarting nginx"
+    $STD rc-service nginx restart
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

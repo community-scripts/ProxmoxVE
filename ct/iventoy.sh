@@ -21,29 +21,29 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/iventoy ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "iventoy" "ventoy/PXE"; then
-        msg_info "Stopping iVentoy"
-        $STD /opt/iventoy/iventoy.sh stop
-        msg_ok "Stopped iVentoy"
-
-        create_backup /opt/iventoy/data /opt/iventoy/iso
-        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "iventoy" "ventoy/PXE" "prebuild" "latest" "/opt/iventoy" "iventoy-*-linux-$(arch_resolve x86_64-free arm64-trial).tar.gz"
-        restore_backup
-
-        msg_info "Starting iVentoy"
-        $STD /opt/iventoy/iventoy.sh -R start
-        msg_ok "Started iVentoy"
-        msg_ok "Updated Successfully"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/iventoy ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "iventoy" "ventoy/PXE"; then
+    msg_info "Stopping iVentoy"
+    $STD /opt/iventoy/iventoy.sh stop
+    msg_ok "Stopped iVentoy"
+
+    create_backup /opt/iventoy/data /opt/iventoy/iso
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "iventoy" "ventoy/PXE" "prebuild" "latest" "/opt/iventoy" "iventoy-*-linux-$(arch_resolve x86_64-free arm64-trial).tar.gz"
+    restore_backup
+
+    msg_info "Starting iVentoy"
+    $STD /opt/iventoy/iventoy.sh -R start
+    msg_ok "Started iVentoy"
+    msg_ok "Updated Successfully"
+  fi
+  exit
 }
 
 start

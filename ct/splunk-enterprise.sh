@@ -21,15 +21,15 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/splunk ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "Currently we don't provide an update function for this ${APP}."
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/splunk ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_error "Currently we don't provide an update function for this ${APP}."
+  exit
 }
 
 start

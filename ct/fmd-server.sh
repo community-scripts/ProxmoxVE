@@ -22,36 +22,36 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/fmd-server ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gl_release "fmd-server" "fmd-foss/fmd-server"; then
-        msg_info "Stopping Service"
-        systemctl stop fmd-server
-        msg_ok "Stopped Service"
-
-        create_backup /opt/fmd-server/config.yml /opt/fmd-server/db
-
-        CLEAN_INSTALL=1 fetch_and_deploy_gl_release "fmd-server" "fmd-foss/fmd-server" "prebuild" "latest" "/opt/fmd-server" "fmd-server-*.zip"
-
-        msg_info "Configuring FMD-Server"
-        cd /opt/fmd-server
-        chmod +x fmd-server-*
-        msg_ok "Configured FMD-Server"
-
-        restore_backup
-
-        msg_info "Starting Service"
-        systemctl start fmd-server
-        msg_ok "Started Service"
-        msg_ok "Updated successfully!"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/fmd-server ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gl_release "fmd-server" "fmd-foss/fmd-server"; then
+    msg_info "Stopping Service"
+    systemctl stop fmd-server
+    msg_ok "Stopped Service"
+
+    create_backup /opt/fmd-server/config.yml /opt/fmd-server/db
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gl_release "fmd-server" "fmd-foss/fmd-server" "prebuild" "latest" "/opt/fmd-server" "fmd-server-*.zip"
+
+    msg_info "Configuring FMD-Server"
+    cd /opt/fmd-server
+    chmod +x fmd-server-*
+    msg_ok "Configured FMD-Server"
+
+    restore_backup
+
+    msg_info "Starting Service"
+    systemctl start fmd-server
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

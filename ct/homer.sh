@@ -21,15 +21,15 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/homer ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/homer ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
 
-    if check_for_gh_release "homer" "bastienwirtz/homer"; then
+  if check_for_gh_release "homer" "bastienwirtz/homer"; then
       msg_info "Stopping Service"
       systemctl stop homer
       msg_ok "Stopped Service"
@@ -47,13 +47,13 @@ function update_script() {
       cp -Rf assets-backup/. /opt/homer/assets/
       rm -rf assets-backup
       msg_ok "Restored assets directory"
-    
+  
       msg_info "Starting Service"
       systemctl start homer
       msg_ok "Started Service"
       msg_ok "Updated successfully!"
-    fi
-    exit
+  fi
+  exit
 }
 
 start

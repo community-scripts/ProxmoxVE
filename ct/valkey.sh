@@ -21,19 +21,19 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /lib/systemd/system/valkey-server.service ]]; then
-        msg_error "No Valkey Installation Found!"
-        exit
-    fi
-    msg_info "Updating Valkey LXC"
-    $STD apt update
-    $STD apt -y upgrade
-    msg_ok "Updated Valkey LXC"
-    msg_ok "Updated successfully!"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /lib/systemd/system/valkey-server.service ]]; then
+    msg_error "No Valkey Installation Found!"
     exit
+  fi
+  msg_info "Updating Valkey LXC"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated Valkey LXC"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

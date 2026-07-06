@@ -21,42 +21,42 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /opt/flame ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "flame" "pawelmalak/flame"; then
-        msg_info "Stopping Service"
-        systemctl stop flame
-        msg_ok "Stopped Service"
-
-        create_backup /opt/flame/.env \
-            /opt/flame/data
-        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flame" "pawelmalak/flame" "tarball"
-        restore_backup
-
-        msg_info "Rebuilding Application"
-        cd /opt/flame
-        mkdir -p data public
-        $STD npm install --production
-        cd /opt/flame/client
-        $STD npm install --production
-        $STD npm run build
-        cd /opt/flame
-        cp -r client/build/. public/
-        msg_ok "Rebuilt Application"
-
-        msg_info "Starting Service"
-        systemctl start flame
-        msg_ok "Started Service"
-        msg_ok "Updated successfully!"
-    fi
+  if [[ ! -d /opt/flame ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "flame" "pawelmalak/flame"; then
+    msg_info "Stopping Service"
+    systemctl stop flame
+    msg_ok "Stopped Service"
+
+    create_backup /opt/flame/.env \
+      /opt/flame/data
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flame" "pawelmalak/flame" "tarball"
+    restore_backup
+
+    msg_info "Rebuilding Application"
+    cd /opt/flame
+    mkdir -p data public
+    $STD npm install --production
+    cd /opt/flame/client
+    $STD npm install --production
+    $STD npm run build
+    cd /opt/flame
+    cp -r client/build/. public/
+    msg_ok "Rebuilt Application"
+
+    msg_info "Starting Service"
+    systemctl start flame
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start
