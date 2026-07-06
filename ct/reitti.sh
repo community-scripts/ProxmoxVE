@@ -106,13 +106,6 @@ spring.servlet.multipart.max-file-size=5GB
 spring.servlet.multipart.max-request-size=5GB
 server.tomcat.max-part-count=100
 
-# Rqueue configuration
-rqueue.web.enable=false
-rqueue.job.enabled=false
-rqueue.message.durability.in-terminal-state=0
-rqueue.key.prefix=\${spring.cache.redis.key-prefix}
-rqueue.message.converter.provider.class=com.dedicatedcode.reitti.config.RQueueCustomMessageConverter
-
 # Application-specific settings
 reitti.server.advertise-uri=
 
@@ -168,6 +161,81 @@ PROPEOF
     msg_ok "Rewrote application.properties (backup: application.properties.bak)"
   fi
 
+  # Migrate v4 -> v5: Remove Rqueue configuration (replaced by Quartz Scheduler)
+  if grep -q "^rqueue\." /opt/reitti/application.properties 2>/dev/null; then
+    msg_info "Migrating to v5: Removing Rqueue configuration"
+    sed -i '/^# Rqueue configuration$/d; /^rqueue\./d' /opt/reitti/application.properties
+    msg_ok "Removed Rqueue configuration"
+  fi
+
+  # Migrate v4 -> v5: Update application.properties and nginx tile cache for v5 compatibility
+  if grep -q "^reitti\.process-data\.schedule=" /opt/reitti/application.properties 2>/dev/null; then
+    msg_info "Migrating to v5: Updating application.properties"
+    sed -i '/^reitti\.process-data\.schedule=/d' /opt/reitti/application.properties
+    sed -i 's/^reitti\.import\.processing-idle-start-time=.*/reitti.import.grace-time-seconds=30/' /opt/reitti/application.properties
+    sed -i 's/^spring\.datasource\.hikari\.maximum-pool-size=20$/spring.datasource.hikari.maximum-pool-size=30/' /opt/reitti/application.properties
+    grep -q "devices" /opt/reitti/application.properties || \
+      sed -i 's/^spring\.cache\.cache-names=\(.*\)$/spring.cache.cache-names=\1,devices,mapStyles,mapStyleJson/' /opt/reitti/application.properties
+    grep -q "org.quartz.core.ErrorLogger" /opt/reitti/application.properties || \
+      sed -i '/^logging\.level\.com\.dedicatedcode\.reitti=/a logging.level.org.quartz.core.ErrorLogger=FATAL' /opt/reitti/application.properties
+    grep -q "^spring.servlet.multipart.resolve-lazily=" /opt/reitti/application.properties || \
+      sed -i '/^spring\.servlet\.multipart\.max-request-size=/a spring.servlet.multipart.resolve-lazily=true' /opt/reitti/application.properties
+    grep -q "^spring.mvc.async.request-timeout=" /opt/reitti/application.properties || \
+      echo "spring.mvc.async.request-timeout=600000" >>/opt/reitti/application.properties
+    if ! grep -q "^spring.quartz" /opt/reitti/application.properties; then
+      cat >>/opt/reitti/application.properties <<'QUARTZEOF'
+
+# Quartz Scheduler configuration
+spring.quartz.job-store-type=jdbc
+spring.quartz.jdbc.initialize-schema=never
+spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+spring.quartz.properties.org.quartz.jobStore.isClustered=false
+spring.quartz.properties.org.quartz.jobStore.tablePrefix=qrtz_
+spring.quartz.properties.org.quartz.threadPool.threadCount=5
+QUARTZEOF
+    fi
+    grep -q "^reitti.import.staging.cleanup.cron=" /opt/reitti/application.properties || \
+      echo "reitti.import.staging.cleanup.cron=0 0 4 * * *" >>/opt/reitti/application.properties
+    grep -q "^reitti.batching.max-batch-size=" /opt/reitti/application.properties || \
+      printf "reitti.batching.max-batch-size=100\nreitti.batching.max-wait-time=5\n" >>/opt/reitti/application.properties
+    grep -q "^reitti.jobs.cleanup.cron=" /opt/reitti/application.properties || \
+      printf "reitti.jobs.cleanup.cron=0 0 4 * * ?\nreitti.jobs.cleanup.max-age-hours=24\n" >>/opt/reitti/application.properties
+    grep -q "^reitti.db-janitor.schedule=" /opt/reitti/application.properties || \
+      echo "reitti.db-janitor.schedule=0 0 4 * * ?" >>/opt/reitti/application.properties
+    msg_ok "Updated application.properties for v5"
+
+    if [[ -f /etc/nginx/nginx.conf ]]; then
+      msg_info "Migrating to v5: Updating nginx tile cache configuration"
+      cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak.v5
+      cat >/etc/nginx/nginx.conf <<'NGINXEOF'
+user www-data;
+
+events {
+  worker_connections 1024;
+}
+http {
+  resolver 1.1.1.1 8.8.8.8 valid=30s ipv6=off;
+  proxy_cache_path /var/cache/nginx/tiles levels=1:2 keys_zone=tiles:10m max_size=1g inactive=30d use_temp_path=off;
+  server {
+    listen 80;
+    location /custom/ {
+      set $upstream_url $http_x_reitti_upstream_url;
+      proxy_pass $upstream_url;
+      proxy_set_header Host $proxy_host;
+      proxy_set_header User-Agent "Reitti/1.0";
+      proxy_cache tiles;
+      proxy_cache_key $upstream_url;
+      proxy_cache_valid 200 30d;
+      proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+    }
+  }
+}
+NGINXEOF
+      systemctl reload nginx
+      msg_ok "Updated nginx tile cache configuration"
+    fi
+  fi
+
   if check_for_gh_release "reitti" "dedicatedcode/reitti"; then
     msg_info "Stopping Service"
     systemctl stop reitti
@@ -179,10 +247,12 @@ PROPEOF
     USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "reitti" "dedicatedcode/reitti" "singlefile" "latest" "/opt/reitti" "reitti-app.jar"
     mv /opt/reitti/reitti-*.jar /opt/reitti/reitti.jar
 
+    msg_warn "v5 runs a one-time database migration on first start (GPS points → device table). This may take several minutes on large datasets — do not interrupt the container."
     msg_info "Starting Service"
     systemctl start reitti
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
+    msg_warn "Post-upgrade: Verify each API token has a Device assigned in Settings → API Tokens. Tokens without a device cannot ingest location data in v5."
   fi
   exit
 }
