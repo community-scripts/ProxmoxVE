@@ -14,7 +14,6 @@ update_os
 
 setup_yq
 
-# Get required configuration — skip prompts if already set (generated/unattended mode)
 if [[ -z "${var_forgejo_instance:-}" ]]; then
   read -r -p "${TAB3}Forgejo Instance URL (e.g. https://codeberg.org): " var_forgejo_instance
   var_forgejo_instance="${var_forgejo_instance:-https://codeberg.org}"
@@ -38,7 +37,6 @@ if [[ -z "${var_forgejo_runner_token:-}" ]]; then
   exit 1
 fi
 
-# Runner labels — default is always included; additional labels are appended
 DEFAULT_RUNNER_LABELS="linux-amd64:docker://node:22-bookworm"
 if [[ -z "${var_runner_labels:-}" ]]; then
   read -r -p "${TAB3}Additional runner labels (comma-separated, or leave blank for default only): " var_runner_labels
