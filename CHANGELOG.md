@@ -499,6 +499,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-07
+
+### 🆕 New Scripts
+
+  - Forgejo-Runner ([#15046](https://github.com/community-scripts/ProxmoxVE/pull/15046))
+
 ## 2026-07-06
 
 ### 🚀 Updated Scripts
