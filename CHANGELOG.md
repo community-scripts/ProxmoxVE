@@ -505,6 +505,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Opencloud: Bump version to 7.2.1 [@vhsdream](https://github.com/vhsdream) ([#15655](https://github.com/community-scripts/ProxmoxVE/pull/15655))
     - BabyBuddy: Harden update script [@MickLesk](https://github.com/MickLesk) ([#15642](https://github.com/community-scripts/ProxmoxVE/pull/15642))
 
 ## 2026-07-07
