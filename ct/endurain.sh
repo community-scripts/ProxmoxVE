@@ -34,29 +34,19 @@ function update_script() {
     systemctl stop endurain
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    cp /opt/endurain/.env /opt/endurain.env
-    cp /opt/endurain/frontend/dist/env.js /opt/endurain.env.js
-    msg_ok "Created Backup"
-
+    create_backup /opt/endurain/.env /opt/endurain/frontend/dist/env.js
     CLEAN_INSTALL=1 fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
+    restore_backup
 
     msg_info "Preparing Update"
     cd /opt/endurain
-    rm -rf \
-      /opt/endurain/{docs,example.env,screenshot_01.png} \
-      /opt/endurain/docker* \
-      /opt/endurain/*.yml
-    cp /opt/endurain.env /opt/endurain/.env
-    rm /opt/endurain.env
+    rm -rf /opt/endurain/{docs,example.env,screenshot_01.png} /opt/endurain/docker* /opt/endurain/*.yml
     msg_ok "Prepared Update"
 
     msg_info "Updating Frontend"
     cd /opt/endurain/frontend
     $STD npm ci
     $STD npm run build
-    cp /opt/endurain.env.js /opt/endurain/frontend/dist/env.js
-    rm /opt/endurain.env.js
     msg_ok "Updated Frontend"
 
     msg_info "Updating Backend"
