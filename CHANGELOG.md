@@ -499,6 +499,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-09
+
+### 🚀 Updated Scripts
+
+  - fix(pihole): repair Unbound DNS-over-TLS (DoT) forwarding config [@TowyTowy](https://github.com/TowyTowy) ([#15654](https://github.com/community-scripts/ProxmoxVE/pull/15654))
+
 ## 2026-07-08
 
 ### 🚀 Updated Scripts
