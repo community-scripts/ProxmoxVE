@@ -36,7 +36,6 @@ function update_script() {
 
     create_backup /opt/endurain/.env /opt/endurain/frontend/dist/env.js
     CLEAN_INSTALL=1 fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
-    restore_backup
 
     msg_info "Preparing Update"
     cd /opt/endurain
@@ -48,6 +47,8 @@ function update_script() {
     $STD npm ci
     $STD npm run build
     msg_ok "Updated Frontend"
+
+    restore_backup
 
     msg_info "Updating Backend"
     cd /opt/endurain/backend
