@@ -52,6 +52,7 @@ msg_info "Setup Paperless-ngx"
 cd /opt/paperless
 rm -rf /opt/paperless/docker
 $STD uv sync --all-extras
+$STD uv pip install sqlite_vec
 curl -fsSL "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example" -o /opt/paperless/paperless.conf
 mkdir -p /opt/paperless_data/{consume,data,media,trash}
 mkdir -p /opt/paperless/static
