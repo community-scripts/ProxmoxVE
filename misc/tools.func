@@ -36,6 +36,10 @@
 #
 # ==============================================================================
 
+# Guard against double-sourcing (core.func uses the same pattern)
+[[ -n "${_TOOLS_FUNC_LOADED:-}" ]] && return 0
+_TOOLS_FUNC_LOADED=1
+
 # ------------------------------------------------------------------------------
 # Debug helper - outputs to stderr when TOOLS_DEBUG is enabled
 # Usage: debug_log "message"
@@ -91,16 +95,17 @@ curl_with_retry() {
   while [[ $attempt -le $retries ]]; do
     debug_log "curl attempt $attempt/$retries: $url"
 
-    local curl_cmd="curl -fsSL --connect-timeout $connect_timeout --max-time $timeout"
-    [[ -n "$extra_opts" ]] && curl_cmd="$curl_cmd $extra_opts"
+    # Build curl command as array to avoid command injection via extra_opts
+    local -a curl_args=(curl -fsSL --connect-timeout "$connect_timeout" --max-time "$timeout")
+    [[ -n "$extra_opts" ]] && read -ra _extra <<<"$extra_opts" && curl_args+=("${_extra[@]}")
 
     if [[ "$output" == "-" ]]; then
-      if $curl_cmd "$url"; then
+      if "${curl_args[@]}" "$url"; then
         success=true
         break
       fi
     else
-      if $curl_cmd -o "$output" "$url"; then
+      if "${curl_args[@]}" -o "$output" "$url"; then
         success=true
         break
       fi
@@ -153,15 +158,16 @@ curl_api_with_retry() {
   while [[ $attempt -le $retries ]]; do
     debug_log "curl API attempt $attempt/$retries: $url"
 
-    local curl_cmd="curl -fsSL --connect-timeout $connect_timeout --max-time $timeout -w '%{http_code}'"
-    [[ -n "$extra_opts" ]] && curl_cmd="$curl_cmd $extra_opts"
+    # Build curl command as array to avoid command injection via extra_opts
+    local -a curl_args=(curl -fsSL --connect-timeout "$connect_timeout" --max-time "$timeout" -w '%{http_code}')
+    [[ -n "$extra_opts" ]] && read -ra _extra <<<"$extra_opts" && curl_args+=("${_extra[@]}")
 
     if [[ -n "$body_file" ]]; then
-      http_code=$($curl_cmd -o "$body_file" "$url" 2>/dev/null) || true
+      http_code=$("${curl_args[@]}" -o "$body_file" "$url" 2>/dev/null) || true
     else
       # Capture body and http_code separately
       local tmp_body="/tmp/curl_api_body_$$"
-      http_code=$($curl_cmd -o "$tmp_body" "$url" 2>/dev/null) || true
+      http_code=$("${curl_args[@]}" -o "$tmp_body" "$url" 2>/dev/null) || true
       if [[ -f "$tmp_body" ]]; then
         cat "$tmp_body"
         rm -f "$tmp_body"
@@ -304,7 +310,10 @@ edit_yaml_config() {
     return 1
   fi
 
-  sed -i "s|^\([[:space:]]*${key}[[:space:]]*:\).*|\1 ${value}|" "$file"
+  # Escape sed metacharacters in value (| and &) to prevent injection
+  local escaped_value="${value//|/\\|}"
+  escaped_value="${escaped_value//&/\\&}"
+  sed -i "s|^\([[:space:]]*${key}[[:space:]]*:\).*|\1 ${escaped_value}|" "$file"
 }
 
 # ------------------------------------------------------------------------------
@@ -1687,10 +1696,6 @@ is_ubuntu() {
   [[ "$(get_os_info id)" == "ubuntu" ]]
 }
 
-is_alpine() {
-  [[ "$(get_os_info id)" == "alpine" ]]
-}
-
 # ------------------------------------------------------------------------------
 # Get Debian/Ubuntu major version
 # ------------------------------------------------------------------------------
@@ -2454,8 +2459,10 @@ start_timer() {
 end_timer() {
   local start_time="$1"
   local label="${2:-Operation}"
-  local end_time=$(date +%s)
+  local end_time
+  end_time=$(date +%s)
   local duration=$((end_time - start_time))
+  echo "${label} took ${duration}s"
 }
 
 # ------------------------------------------------------------------------------
@@ -6746,9 +6753,16 @@ setup_mariadb_db() {
 
   msg_info "Setting up MariaDB Database"
 
-  $STD mariadb -u root -e "CREATE DATABASE \`$MARIADB_DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-  $STD mariadb -u root -e "CREATE USER '$MARIADB_DB_USER'@'localhost' IDENTIFIED BY '$MARIADB_DB_PASS';"
-  $STD mariadb -u root -e "GRANT ALL ON \`$MARIADB_DB_NAME\`.* TO '$MARIADB_DB_USER'@'localhost';"
+  # Use --defaults-extra-file to pass credentials safely and escape identifiers
+  # to prevent SQL injection via DB name / user / password
+  local _db_escaped _user_escaped _pass_escaped
+  _db_escaped="${MARIADB_DB_NAME//\'/\'\'}"
+  _user_escaped="${MARIADB_DB_USER//\'/\'\'}"
+  _pass_escaped="${MARIADB_DB_PASS//\'/\'\'}"
+
+  $STD mariadb -u root -e "CREATE DATABASE \`$_db_escaped\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+  $STD mariadb -u root -e "CREATE USER '$_user_escaped'@'localhost' IDENTIFIED BY '$_pass_escaped';"
+  $STD mariadb -u root -e "GRANT ALL ON \`$_db_escaped\`.* TO '$_user_escaped'@'localhost';"
 
   # Optional extra grants
   if [[ -n "${MARIADB_DB_EXTRA_GRANTS:-}" ]]; then
@@ -8378,8 +8392,14 @@ setup_postgresql_db() {
   fi
 
   msg_info "Setting up PostgreSQL Database"
-  $STD sudo -u postgres psql -c "CREATE ROLE $PG_DB_USER WITH LOGIN PASSWORD '$PG_DB_PASS';"
-  $STD sudo -u postgres psql -c "CREATE DATABASE $PG_DB_NAME WITH OWNER $PG_DB_USER ENCODING 'UTF8' TEMPLATE template0;"
+  # Escape single quotes in identifiers to prevent SQL injection
+  local _pg_user_escaped _pg_pass_escaped _pg_db_escaped
+  _pg_user_escaped="${PG_DB_USER//\'/\'\'}"
+  _pg_pass_escaped="${PG_DB_PASS//\'/\'\'}"
+  _pg_db_escaped="${PG_DB_NAME//\'/\'\'}"
+
+  $STD sudo -u postgres psql -c "CREATE ROLE $_pg_user_escaped WITH LOGIN PASSWORD '$_pg_pass_escaped';"
+  $STD sudo -u postgres psql -c "CREATE DATABASE $_pg_db_escaped WITH OWNER $_pg_user_escaped ENCODING 'UTF8' TEMPLATE template0;"
 
   # Configure pg_cron database BEFORE creating the extension (must be set before pg_cron loads)
   if [[ -n "${PG_DB_EXTENSIONS:-}" ]] && [[ ",${PG_DB_EXTENSIONS//[[:space:]]/}," == *",pg_cron,"* ]]; then
