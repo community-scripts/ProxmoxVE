@@ -39,9 +39,7 @@ function update_script() {
 
     create_backup /opt/docmost/.env \
       /opt/docmost/data
-
     fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
-
     restore_backup
 
     # Fix: Docmost EE (audit logs etc.) lives in a git submodule that is NOT
@@ -54,9 +52,11 @@ function update_script() {
       sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
     fi
 
+    msg_insfo "Configuring Docmost"
+    cd /opt/docmost
     $STD pnpm install --force
     $STD pnpm build
-    msg_ok "Updated ${APP}"
+    msg_ok "Configured Docmost"
 
     msg_info "Starting Service"
     systemctl start docmost
