@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  read -r MAJOR MINOR PATCH <<< "$(sed 's/^version\///; s/\./ /g' "$HOME/.authentik")"
+  read -r MAJOR MINOR PATCH <<<"$(sed 's/^version\///; s/\./ /g' "$HOME/.authentik")"
 
   msg_info "Update dependencies"
   ensure_dependencies crossbuild-essential-$(arch_resolve) gcc-$(arch_resolve "x86-64" "aarch64")-linux-gnu cmake clang libunwind-18-dev
@@ -66,26 +66,26 @@ function update_script() {
   if check_for_gh_release "authentik" "goauthentik/authentik" "${AUTHENTIK_VERSION}"; then
     msg_info "Stopping Services"
     systemctl stop authentik-server authentik-worker
-	if [[ $(systemctl is-active authentik-ldap) == active ]]; then
-		systemctl stop authentik-ldap
-	fi
-	if [[ $(systemctl is-active authentik-rac) == active ]]; then
-		systemctl stop authentik-rac
-	fi
-	if [[ $(systemctl is-active authentik-radius) == active ]]; then
-		systemctl stop authentik-radius
-	fi
+    if [[ $(systemctl is-active authentik-ldap) == active ]]; then
+      systemctl stop authentik-ldap
+    fi
+    if [[ $(systemctl is-active authentik-rac) == active ]]; then
+      systemctl stop authentik-rac
+    fi
+    if [[ $(systemctl is-active authentik-radius) == active ]]; then
+      systemctl stop authentik-radius
+    fi
     msg_ok "Stopped Services"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 
-	msg_info "Configuring rust"
-	cd /opt/authentik
-	$STD rustup install
-	$STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
-	msg_ok "Configured rust"
+    msg_info "Configuring rust"
+    cd /opt/authentik
+    $STD rustup install
+    $STD rustup default "$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)"
+    msg_ok "Configured rust"
 
-	msg_info "Updating web"
+    msg_info "Updating web"
     cd /opt/authentik/web
     export NODE_ENV="production"
     $STD npm install
@@ -99,18 +99,18 @@ function update_script() {
     export CC="$(arch_resolve "x86_64" "aarch64")-linux-gnu-gcc"
     $STD go mod download
     $STD go build -o /opt/authentik/authentik-server ./cmd/server
-	$STD go build -o /opt/authentik/ldap ./cmd/ldap
-	$STD go build -o /opt/authentik/rac ./cmd/rac
-	$STD go build -o /opt/authentik/radius ./cmd/radius
+    $STD go build -o /opt/authentik/ldap ./cmd/ldap
+    $STD go build -o /opt/authentik/rac ./cmd/rac
+    $STD go build -o /opt/authentik/radius ./cmd/radius
     msg_ok "Updated go proxy"
 
-	msg_info "Building worker"
-	export AWS_LC_FIPS_SYS_CC="clang"
-	cd /opt/authentik
-	$STD cargo build --package authentik --no-default-features --features core --locked --release --jobs 1
-	cp ./target/release/authentik /opt/authentik/authentik-worker
-	rm -r ./target
-	msg_ok "Built worker"
+    msg_info "Building worker"
+    export AWS_LC_FIPS_SYS_CC="clang"
+    cd /opt/authentik
+    $STD cargo build --package authentik --no-default-features --features core --locked --release --jobs 1
+    cp ./target/release/authentik /opt/authentik/authentik-worker
+    rm -r ./target
+    msg_ok "Built worker"
 
     msg_info "Updating python server"
     export UV_NO_BINARY_PACKAGE="cryptography lxml python-kadmin-rs xmlsec"
@@ -125,26 +125,26 @@ function update_script() {
     msg_ok "Updated python server"
 
     if [[ $MAJOR == 2026 && $MINOR -lt 5 ]]; then
-	  msg_info "Updating Worker and Server config"
-	  cp /etc/authentik/config.yml /etc/authentik/config.bak
-	  yq -i ".postgresql.conn_max_age = 0" /etc/authentik/config.yml
-	  yq -i ".postgresql.conn_health_checks = false" /etc/authentik/config.yml
-	  yq -i ".listen.debug_tokio = \"[::]:6669\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.console_subscriber = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.h2 = \"info\""  /etc/authentik/config.yml
-      yq -i ".log.rust_log.hyper_util = \"warn\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.mio = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.notify = \"info\"" /etc/authentik/config.yml
-	  yq -i ".log.rust_log.reqwest = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.runtime = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.rustls = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.sqlx = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.sqlx_postgres = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.tokio = \"info\"" /etc/authentik/config.yml
-      yq -i ".log.rust_log.tungstenite = \"info\"" /etc/authentik/config.yml
-	  yq -i ".web.workers = 2" /etc/authentik/config.yml
-	  mv /etc/default/authentik /etc/default/authentik.bak
-	  cat <<EOF >/etc/default/authentik-server
+      msg_info "Updating Worker and Server config"
+      cp /etc/authentik/config.yml /etc/authentik/config.bak
+      yq -i ".postgresql.conn_max_age = 0" /etc/authentik/config.yml
+      yq -i ".postgresql.conn_health_checks = false" /etc/authentik/config.yml
+      yq -i '.listen.debug_tokio = "[::]:6669"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.console_subscriber = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.h2 = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.hyper_util = "warn"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.mio = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.notify = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.reqwest = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.runtime = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.rustls = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.sqlx = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.sqlx_postgres = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.tokio = "info"' /etc/authentik/config.yml
+      yq -i '.log.rust_log.tungstenite = "info"' /etc/authentik/config.yml
+      yq -i ".web.workers = 2" /etc/authentik/config.yml
+      mv /etc/default/authentik /etc/default/authentik.bak
+      cat <<EOF >/etc/default/authentik-server
 TMPDIR=/dev/shm/
 UV_LINK_MODE=copy
 UV_PYTHON_DOWNLOADS=0
@@ -159,7 +159,7 @@ AUTHENTIK_LISTEN__HTTP="[::]:9000"
 AUTHENTIK_LISTEN__HTTPS="[::]:9443"
 AUTHENTIK_LISTEN__METRICS="[::]:9300"
 EOF
-	  cat <<EOF >/etc/default/authentik-worker
+      cat <<EOF >/etc/default/authentik-worker
 TMPDIR=/dev/shm/
 UV_LINK_MODE=copy
 UV_PYTHON_DOWNLOADS=0
@@ -174,11 +174,11 @@ AUTHENTIK_LISTEN__HTTP="[::]:8000"
 AUTHENTIK_LISTEN__HTTPS="[::]:8443"
 AUTHENTIK_LISTEN__METRICS="[::]:8300"
 EOF
-	  msg_ok "Updated Worker and Server config!"
-	  msg_warn "Please check /etc/default/authentik-worker and /etc/default/authentik-server config files for port configurations!"
+      msg_ok "Updated Worker and Server config!"
+      msg_warn "Please check /etc/default/authentik-worker and /etc/default/authentik-server config files for port configurations!"
 
-	  msg_info "Updating services"
-	  cat <<EOF >/etc/systemd/system/authentik-server.service
+      msg_info "Updating services"
+      cat <<EOF >/etc/systemd/system/authentik-server.service
 [Unit]
 Description=authentik Go Server (API Gateway)
 After=network.target
@@ -198,7 +198,7 @@ EnvironmentFile=/etc/default/authentik-server
 WantedBy=multi-user.target
 EOF
 
-	  cat <<EOF >/etc/systemd/system/authentik-worker.service
+      cat <<EOF >/etc/systemd/system/authentik-worker.service
 [Unit]
 Description=authentik Worker
 After=network.target postgresql.service
@@ -217,21 +217,21 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-	  systemctl daemon-reload
-	  msg_ok "Updated services"
-	fi
+      systemctl daemon-reload
+      msg_ok "Updated services"
+    fi
   fi
 
   msg_info "Starting Services"
   systemctl start authentik-server authentik-worker
   if [[ $(systemctl is-enabled authentik-ldap) == enabled ]]; then
-  	systemctl start authentik-ldap
+    systemctl start authentik-ldap
   fi
   if [[ $(systemctl is-enabled authentik-rac) == enabled ]]; then
-  	systemctl start authentik-rac
+    systemctl start authentik-rac
   fi
   if [[ $(systemctl is-enabled authentik-radius) == enabled ]]; then
-  	systemctl start authentik-radius
+    systemctl start authentik-radius
   fi
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
@@ -270,5 +270,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:9443${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}https://${IP}:9443${CL}"

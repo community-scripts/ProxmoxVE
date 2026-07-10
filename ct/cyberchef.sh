@@ -26,8 +26,8 @@ function update_script() {
   check_container_resources
 
   if [[ ! -d /opt/cyberchef ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
+    msg_error "No ${APP} Installation Found!"
+    exit
   fi
 
   if check_for_gh_release "cyberchef" "gchq/CyberChef"; then
@@ -58,5 +58,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

@@ -37,38 +37,38 @@ function update_script() {
 
   case $CHOICE in
   1)
-      msg_info "Stopping Loki"
-      systemctl stop loki
-      msg_ok "Stopped Loki"
+    msg_info "Stopping Loki"
+    systemctl stop loki
+    msg_ok "Stopped Loki"
 
-      msg_info "Updating Loki"
-      $STD apt update
-      $STD apt install -y --only-upgrade loki
-      msg_ok "Updated Loki"
+    msg_info "Updating Loki"
+    $STD apt update
+    $STD apt install -y --only-upgrade loki
+    msg_ok "Updated Loki"
 
-      msg_info "Starting Loki"
-      systemctl start loki
-      msg_ok "Started Loki"
-      msg_ok "Updated successfully!"
-      exit
-      ;;
-    2)
-      msg_info "Configuring Loki to listen on 0.0.0.0"
-      sed -i 's/http_listen_address:.*/http_listen_address: 0.0.0.0/' /etc/loki/config.yml
-      sed -i 's/http_listen_port:.*/http_listen_port: 3100/' /etc/loki/config.yml
-      systemctl restart loki
-      msg_ok "Configured Loki to listen on 0.0.0.0"
-      exit
-      ;;
-    3)
-      msg_info "Configuring Loki to listen on ${LOCAL_IP}"
-      sed -i "s/http_listen_address:.*/http_listen_address: $LOCAL_IP/" /etc/loki/config.yml
-      sed -i 's/http_listen_port:.*/http_listen_port: 3100/' /etc/loki/config.yml
-      systemctl restart loki
-      msg_ok "Configured Loki to listen on ${LOCAL_IP}"
-      exit
-      ;;
-    esac
+    msg_info "Starting Loki"
+    systemctl start loki
+    msg_ok "Started Loki"
+    msg_ok "Updated successfully!"
+    exit
+    ;;
+  2)
+    msg_info "Configuring Loki to listen on 0.0.0.0"
+    sed -i 's/http_listen_address:.*/http_listen_address: 0.0.0.0/' /etc/loki/config.yml
+    sed -i 's/http_listen_port:.*/http_listen_port: 3100/' /etc/loki/config.yml
+    systemctl restart loki
+    msg_ok "Configured Loki to listen on 0.0.0.0"
+    exit
+    ;;
+  3)
+    msg_info "Configuring Loki to listen on ${LOCAL_IP}"
+    sed -i "s/http_listen_address:.*/http_listen_address: $LOCAL_IP/" /etc/loki/config.yml
+    sed -i 's/http_listen_port:.*/http_listen_port: 3100/' /etc/loki/config.yml
+    systemctl restart loki
+    msg_ok "Configured Loki to listen on ${LOCAL_IP}"
+    exit
+    ;;
+  esac
   exit 0
 }
 
@@ -78,5 +78,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access loki using the following URL:${CL}"
+echo -e "${INFO}${YW}Access loki using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:3100${CL}\n"

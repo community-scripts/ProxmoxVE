@@ -31,10 +31,10 @@ function update_script() {
   fi
 
   NODE_VERSION="24" setup_nodejs
-  
+
   CURRENT=$(cat /opt/matter-server/node_modules/matter-server/package.json | grep '"version"' | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
   LATEST=$(npm view matter-server version 2>/dev/null)
-  if [[ "$CURRENT" != "$LATEST" ]]; then
+  if [[ $CURRENT != "$LATEST" ]]; then
     msg_info "Stopping Service"
     systemctl stop matterjs-server
     msg_ok "Stopped Service"
@@ -60,5 +60,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5580${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5580${CL}"

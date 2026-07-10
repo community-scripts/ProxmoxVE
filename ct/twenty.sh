@@ -39,10 +39,10 @@ function update_script() {
     msg_ok "Stopped Services"
 
     create_backup /opt/twenty/.env \
-                  /opt/twenty/packages/twenty-server/.local-storage
+      /opt/twenty/packages/twenty-server/.local-storage
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "twenty" "twentyhq/twenty" "tarball"
     restore_backup
-    
+
     msg_info "Building Application"
     cd /opt/twenty
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -63,7 +63,6 @@ function update_script() {
     $STD npx -y typeorm migration:run -d dist/database/typeorm/core/core.datasource
     msg_ok "Ran Database Migrations"
 
-
     msg_info "Starting Services"
     systemctl start twenty-server twenty-worker
     msg_ok "Started Services"
@@ -78,5 +77,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

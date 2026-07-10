@@ -50,20 +50,38 @@ function update_script() {
     $STD /usr/local/bin/uv sync --frozen
     $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
     $STD npm --prefix app/static install
-    $STD npm --prefix app/static run build:css
+    $STD npm --prefix app/static run build
     mkdir -p ./.cache
     $STD tar -xf "$BACKUP_FILE" --directory=/
-    if grep -q 'workers' /opt/wizarr/start.sh; then
-      sed -i 's/--workers 4//' /opt/wizarr/start.sh
+    if grep -q 'bind' /opt/wizarr/start.sh; then
+      WIZARR_PORT=$(awk -F: '{print $2}' /opt/wizarr/start.sh | awk -F' ' '{print $1}' | tr -d '[:space:]')
     fi
-    if ! grep -qE 'FLASK|WORKERS|VERSION' /opt/wizarr/.env; then
-      cat <<EOF >/opt/wizarr/.env
+    sed -i -E -e 's/[[:space:]]+/ /g' \
+      -e 's/--workers 4//' \
+      -e 's/--bind 0.0.0.0:[0-9]+//' /opt/wizarr/start.sh
+    KEYS=("FLASK" "WORKERS" "HOST" "PORT")
+    for key in "${KEYS[@]}"; do
+      if ! grep -q "$key" /opt/wizarr/.env; then
+        cat <<EOF >/opt/wizarr/.env
+APP_URL=http://${LOCAL_IP}
+DISABLE_BUILTIN_AUTH=false
 FLASK_ENV=production
 GUNICORN_WORKERS=4
-APP_VERSION=$(sed 's/^20/v&/' ~/.wizarr)
+HOST=0.0.0.0
+PORT=${WIZARR_PORT:-5690}
+LOG_LEVEL=info
+APP_VERSION=$(cat ~/.wizarr)
 EOF
-    else
-      sed -i "s/_VERSION=v.*$/_VERSION=v$(cat ~/.wizarr)/" /opt/wizarr/.env
+      fi
+      continue
+    done
+    sed -i "s/_VERSION=.*$/_VERSION=$(cat ~/.wizarr)/" /opt/wizarr/.env
+    if grep -q 'abnormal' /etc/systemd/system/wizarr.service; then
+      sed -i 's/on-abnormal/always \
+RestartSec=10 \
+KillMode=mixed \
+TimeoutStopSec=10/' /etc/systemd/system/wizarr.service
+      systemctl daemon-reload
     fi
     rm -rf "$BACKUP_FILE"
     export FLASK_SKIP_SCHEDULER=true

@@ -35,7 +35,7 @@ function update_script() {
   DEB_URL=$(curl_with_retry 'https://lyrion.org/getting-started/' | grep -oP "<a\s[^>]*href=\"\K[^\"]*${DEB_ARCH}\.deb(?=\"[^>]*>)" | head -n 1)
   RELEASE=$(echo "$DEB_URL" | grep -oP "lyrionmusicserver_\K[0-9.]+(?=_${DEB_ARCH}\.deb)")
   DEB_FILE="/tmp/lyrionmusicserver_${RELEASE}_${DEB_ARCH}.deb"
-  if [[ ! -f /opt/lyrion_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/lyrion_version.txt)" ]]; then
+  if [[ ! -f /opt/lyrion_version.txt ]] || [[ ${RELEASE} != "$(cat /opt/lyrion_version.txt)" ]]; then
     msg_info "Updating $APP to ${RELEASE}"
     curl_with_retry "$DEB_URL" "$DEB_FILE"
     $STD apt install "$DEB_FILE" -y
@@ -56,5 +56,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access the web interface at:${CL}"
+echo -e "${INFO}${YW}Access the web interface at:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:9000${CL}"

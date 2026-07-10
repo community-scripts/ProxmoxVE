@@ -36,7 +36,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/flame/.env \
-                  /opt/flame/data
+      /opt/flame/data
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flame" "pawelmalak/flame" "tarball"
     restore_backup
 
@@ -65,5 +65,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5005${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5005${CL}"

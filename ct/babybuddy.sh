@@ -40,7 +40,8 @@ function update_script() {
     create_backup /opt/babybuddy/babybuddy/settings/production.py
 
     msg_info "Cleaning old files"
-    find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf {} +
+    cd /opt/babybuddy || exit
+    find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf -- {} +
     msg_ok "Cleaned old files"
 
     fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy" "tarball"
@@ -51,6 +52,7 @@ function update_script() {
     source .venv/bin/activate
     $STD uv pip install -r requirements.txt
     export DJANGO_SETTINGS_MODULE=babybuddy.settings.production
+    $STD python manage.py makemigrations
     $STD python manage.py migrate
     msg_ok "Updated ${APP}"
 
