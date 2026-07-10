@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://pangolin.net/ | Github: https://github.com/fosrl/pangolin
 
 APP="Pangolin"
-PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.18.4}"
+PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.20.0}"
 var_tags="${var_tags:-proxy}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
@@ -80,15 +80,61 @@ function update_script() {
       msg_ok "Updated pangolin.service"
     fi
 
+    sqlite_table_exists() {
+      local db_path="$1"
+      local table_name="$2"
+      sqlite3 "$db_path" "SELECT 1 FROM sqlite_master WHERE type='table' AND name='$table_name' LIMIT 1;" 2>/dev/null | grep -q '^1$'
+    }
+
+    sqlite_column_exists() {
+      local db_path="$1"
+      local table_name="$2"
+      local column_name="$3"
+      sqlite3 "$db_path" "PRAGMA table_info('$table_name');" 2>/dev/null | awk -F'|' -v col="$column_name" '$2==col{found=1} END{exit !found}'
+    }
+
+    sqlite_schema_ready_for_120() {
+      local db_path="$1"
+      sqlite_table_exists "$db_path" "remoteExitNodePreferenceLabels" &&
+        sqlite_table_exists "$db_path" "remoteExitNodeResources" &&
+        sqlite_table_exists "$db_path" "launcherViews" &&
+        sqlite_column_exists "$db_path" "domains" "customCertResolver" &&
+        sqlite_column_exists "$db_path" "domains" "lastCheckedAt"
+    }
+
+    run_sqlite_migrations() {
+      ENVIRONMENT=prod $STD node dist/migrations.mjs
+    }
+
     msg_info "Running database migrations"
     cd /opt/pangolin
     SQLITE_DB="/opt/pangolin/config/db/db.sqlite"
     if [[ -f "$SQLITE_DB" ]]; then
-      if ! sqlite3 "$SQLITE_DB" ".tables" 2>/dev/null | tr ' ' '\n' | grep -qx "statusHistory"; then
+      if ! sqlite_table_exists "$SQLITE_DB" "statusHistory"; then
         sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations;" 2>/dev/null || true
       fi
+
+      if [[ "$PANGOLIN_VERSION" == "1.20.0" ]] &&
+        sqlite3 "$SQLITE_DB" "SELECT 1 FROM versionMigrations WHERE version='1.20.0' LIMIT 1;" 2>/dev/null | grep -q '^1$' &&
+        ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
+        msg_info "Detected stale migration marker for 1.20.0; forcing replay"
+        sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations WHERE version='1.20.0';" 2>/dev/null || true
+      fi
     fi
-    ENVIRONMENT=prod $STD node dist/migrations.mjs
+
+    run_sqlite_migrations
+
+    if [[ -f "$SQLITE_DB" ]] && [[ "$PANGOLIN_VERSION" == "1.20.0" ]] && ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
+      msg_info "Schema check failed after first pass; retrying 1.20.0 migration"
+      sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations WHERE version='1.20.0';" 2>/dev/null || true
+      run_sqlite_migrations
+    fi
+
+    if [[ -f "$SQLITE_DB" ]] && [[ "$PANGOLIN_VERSION" == "1.20.0" ]] && ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
+      msg_error "SQLite schema is still incomplete after migration replay (expected 1.20.0 schema). Aborting update to prevent broken runtime."
+      exit 1
+    fi
+
     msg_ok "Ran database migrations"
 
     msg_info "Updating Badger plugin version"
