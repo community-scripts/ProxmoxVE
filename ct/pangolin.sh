@@ -33,14 +33,13 @@ function update_script() {
 
   ensure_dependencies build-essential python3
 
-  CURRENT_VERSION=$(grep -oP '(?<="version": ")[^"]+' /opt/pangolin/package.json 2>/dev/null || echo "0.0.0")
-  if [[ $(echo -e "$CURRENT_VERSION\n1.20.0" | sort -V | head -1) != "1.20.0" ]]; then
-    if [[ "$CURRENT_VERSION" != "1.20.0" ]]; then
-      msg_error "Upgrade from ${CURRENT_VERSION} to ${PANGOLIN_VERSION} is not supported by this script."
-      echo -e "${INFO}${YW}This installation uses SQLite. Please perform a fresh install with PostgreSQL.${CL}"
-      echo -e "${INFO}${YW}See: https://docs.pangolin.net/self-host/advanced/database-options${CL}"
-      exit 1
-    fi
+  if ! command -v psql &>/dev/null; then
+    msg_error "This installation uses SQLite and cannot be upgraded to Pangolin ${PANGOLIN_VERSION}."
+    echo -e "${INFO}${YW}Starting with Pangolin 1.20.0, PostgreSQL is required as the database backend.${CL}"
+    echo -e "${INFO}${YW}An automatic migration of your existing SQLite data is not supported.${CL}"
+    echo -e "${INFO}${YW}Please create a new LXC with the Pangolin install script, which sets up PostgreSQL automatically.${CL}"
+    echo -e "${INFO}${YW}Your current data is preserved in this container and can be manually migrated if needed.${CL}"
+    exit 1
   fi
 
   NODE_VERSION="24" setup_nodejs
