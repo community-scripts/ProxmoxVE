@@ -33,7 +33,20 @@ function update_script() {
 
   ensure_dependencies build-essential python3
 
+  is_sqlite_installation() {
+    [[ -f /opt/pangolin/config/db/db.sqlite ]]
+  }
+
+  has_postgres_config() {
+    local cfg
+    cfg="/opt/pangolin/config/config.yml"
+    [[ ! -f "$cfg" ]] && cfg="/opt/pangolin/config/config.yaml"
+    [[ -f "$cfg" ]] && grep -Eq '^[[:space:]]*postgres:' "$cfg"
+  }
+
   NODE_VERSION="24" setup_nodejs
+  PG_VERSION="17" setup_postgresql
+  PG_DB_NAME="pangolin" PG_DB_USER="pangolin" setup_postgresql_db
 
   if check_for_gh_release "pangolin" "fosrl/pangolin" "$PANGOLIN_VERSION" "Pinned to a tested release because Pangolin's schema changes have repeatedly broken unattended updates. To try a newer version at your own risk, run: 'export PANGOLIN_VERSION=<tag>' and re-run update. If it breaks, please open an issue at https://github.com/community-scripts/ProxmoxVE/issues with the error log."; then
     msg_info "Stopping Service"
@@ -55,7 +68,7 @@ function update_script() {
     msg_info "Updating Pangolin"
     cd /opt/pangolin
     $STD npm ci
-    $STD npm run set:sqlite
+    $STD npm run set:pg
     $STD npm run set:oss
     rm -rf server/private
     $STD npm run db:generate
@@ -73,6 +86,22 @@ function update_script() {
     rm -f /opt/pangolin_config_backup.tar.gz
     msg_ok "Restored config"
 
+    if is_sqlite_installation && ! has_postgres_config; then
+      msg_error "SQLite installation detected without PostgreSQL config."
+      echo -e "${INFO}${YW}Automatic data migration from SQLite to PostgreSQL is not supported.${CL}"
+      echo -e "${INFO}${YW}Please migrate your data manually and add the postgres: block to config.yml, then re-run the update.${CL}"
+      exit 1
+    fi
+
+    if ! has_postgres_config; then
+      local cfg="/opt/pangolin/config/config.yml"
+      cat <<EOF >>"$cfg"
+
+postgres:
+  connection_string: "postgresql://pangolin:${PG_DB_PASS}@localhost:5432/pangolin"
+EOF
+    fi
+
     if ! grep -q '^ExecStartPre=/usr/bin/node dist/migrations.mjs' /etc/systemd/system/pangolin.service 2>/dev/null; then
       msg_info "Adding migration step to pangolin.service"
       sed -i '/^ExecStart=\/usr\/bin\/node --enable-source-maps dist\/server.mjs/i ExecStartPre=/usr/bin/node dist/migrations.mjs' /etc/systemd/system/pangolin.service
@@ -80,104 +109,18 @@ function update_script() {
       msg_ok "Updated pangolin.service"
     fi
 
-    sqlite_table_exists() {
-      local db_path="$1"
-      local table_name="$2"
-      sqlite3 "$db_path" "SELECT 1 FROM sqlite_master WHERE type='table' AND name='$table_name' LIMIT 1;" 2>/dev/null | grep -q '^1$'
-    }
-
-    sqlite_column_exists() {
-      local db_path="$1"
-      local table_name="$2"
-      local column_name="$3"
-      sqlite3 "$db_path" "PRAGMA table_info('$table_name');" 2>/dev/null | awk -F'|' -v col="$column_name" '$2==col{found=1} END{exit !found}'
-    }
-
-    sqlite_schema_ready_for_120() {
-      local db_path="$1"
-      sqlite_table_exists "$db_path" "remoteExitNodePreferenceLabels" &&
-        sqlite_table_exists "$db_path" "remoteExitNodeResources" &&
-        sqlite_table_exists "$db_path" "launcherViews" &&
-        sqlite_column_exists "$db_path" "domains" "customCertResolver" &&
-        sqlite_column_exists "$db_path" "domains" "lastCheckedAt"
-    }
-
-    sqlite_backfill_pre_120_prereqs() {
-      local db_path="$1"
-
-      if sqlite_table_exists "$db_path" "resourceSessions"; then
-        if ! sqlite_column_exists "$db_path" "resourceSessions" "policyPasswordId"; then
-          msg_info "Backfilling missing column resourceSessions.policyPasswordId"
-          sqlite3 "$db_path" "ALTER TABLE 'resourceSessions' ADD 'policyPasswordId' integer REFERENCES resourcePolicyPassword(passwordId);" 2>/dev/null || true
-        fi
-        if ! sqlite_column_exists "$db_path" "resourceSessions" "policyPincodeId"; then
-          msg_info "Backfilling missing column resourceSessions.policyPincodeId"
-          sqlite3 "$db_path" "ALTER TABLE 'resourceSessions' ADD 'policyPincodeId' integer REFERENCES resourcePolicyPincode(pincodeId);" 2>/dev/null || true
-        fi
-        if ! sqlite_column_exists "$db_path" "resourceSessions" "policyWhitelistId"; then
-          msg_info "Backfilling missing column resourceSessions.policyWhitelistId"
-          sqlite3 "$db_path" "ALTER TABLE 'resourceSessions' ADD 'policyWhitelistId' integer REFERENCES resourcePolicyWhitelist(id);" 2>/dev/null || true
-        fi
-      fi
-    }
-
-    sqlite_value() {
-      local db_path="$1"
-      local query="$2"
-      sqlite3 "$db_path" "$query" 2>/dev/null | tr -d '[:space:]'
-    }
-
-    prepare_sqlite_for_120_replay() {
-      local db_path="$1"
-      local has_120
-      local vm_count
-
-      has_120="$(sqlite_value "$db_path" "SELECT COUNT(*) FROM versionMigrations WHERE version='1.20.0';")"
-      vm_count="$(sqlite_value "$db_path" "SELECT COUNT(*) FROM versionMigrations;")"
-
-      if [[ "${has_120:-0}" -gt 0 ]]; then
-        msg_info "Detected stale migration marker for 1.20.0; forcing replay"
-        sqlite3 "$db_path" "DELETE FROM versionMigrations WHERE version='1.20.0';" 2>/dev/null || true
-        vm_count="$(sqlite_value "$db_path" "SELECT COUNT(*) FROM versionMigrations;")"
-      fi
-
-      if [[ "${vm_count:-0}" -eq 0 ]]; then
-        msg_info "Migration history is empty; seeding baseline 1.19.1 so 1.20.0 migration can run"
-        sqlite3 "$db_path" "INSERT INTO versionMigrations (version, executedAt) VALUES ('1.19.1', CAST(strftime('%s','now') AS INTEGER) * 1000);" 2>/dev/null || true
-      fi
-
-      sqlite_backfill_pre_120_prereqs "$db_path"
-    }
-
-    run_sqlite_migrations() {
-      ENVIRONMENT=prod $STD node dist/migrations.mjs
-    }
+    if ! grep -q '^After=.*postgresql.service' /etc/systemd/system/pangolin.service; then
+      sed -i '/^After=/ s/$/ postgresql.service/' /etc/systemd/system/pangolin.service
+    fi
+    if ! grep -q '^Wants=.*postgresql.service' /etc/systemd/system/pangolin.service; then
+      sed -i '/^After=/a Wants=postgresql.service' /etc/systemd/system/pangolin.service
+    fi
+    systemctl daemon-reload
 
     msg_info "Running database migrations"
     cd /opt/pangolin
-    SQLITE_DB="/opt/pangolin/config/db/db.sqlite"
-    if [[ -f "$SQLITE_DB" ]]; then
-      if ! sqlite_table_exists "$SQLITE_DB" "statusHistory"; then
-        sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations;" 2>/dev/null || true
-      fi
-
-      if [[ "$PANGOLIN_VERSION" == "1.20.0" ]] && ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
-        prepare_sqlite_for_120_replay "$SQLITE_DB"
-      fi
-    fi
-
-    run_sqlite_migrations
-
-    if [[ -f "$SQLITE_DB" ]] && [[ "$PANGOLIN_VERSION" == "1.20.0" ]] && ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
-      msg_info "Schema check failed after first pass; retrying 1.20.0 migration"
-      prepare_sqlite_for_120_replay "$SQLITE_DB"
-      run_sqlite_migrations
-    fi
-
-    if [[ -f "$SQLITE_DB" ]] && [[ "$PANGOLIN_VERSION" == "1.20.0" ]] && ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
-      msg_error "SQLite schema is still incomplete after migration replay (expected 1.20.0 schema). Aborting update to prevent broken runtime."
-      exit 1
-    fi
+    msg_info "Running setup migrations"
+    ENVIRONMENT=prod $STD node dist/migrations.mjs
 
     msg_ok "Ran database migrations"
 
