@@ -37,11 +37,8 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/localagi/.env
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "localagi" "mudler/LocalAGI" "tarball" "latest" "/opt/localagi"
-
     restore_backup
-
 
     msg_info "Building LocalAGI"
     cd /opt/localagi/webui/react-ui
