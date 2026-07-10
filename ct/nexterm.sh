@@ -30,15 +30,6 @@ function update_script() {
     exit
   fi
 
-  case "$(dpkg --print-architecture)" in
-    amd64) NX_ARCH="x64" ;;
-    arm64) NX_ARCH="arm64" ;;
-    *)
-      msg_error "Unsupported architecture"
-      exit 1
-      ;;
-  esac
-
   if check_for_gh_release "nexterm-engine" "gnmyt/Nexterm"; then
     msg_info "Stopping nexterm-engine"
     systemctl stop nexterm-engine
