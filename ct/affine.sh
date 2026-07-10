@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -51,11 +50,11 @@ function update_script() {
     export VITE_CORE_COMMIT_SHA=$(cat ~/.affine_app)
 
     # Initialize git repo (required for build process)
-    git init -q
-    git config user.email "build@local"
-    git config user.name "Build"
-    git add -A
-    git commit -q -m "update"
+    $STD git init -q
+    $STD git config user.email "build@local"
+    $STD git config user.name "Build"
+    $STD git add -A
+    $STD git commit -q -m "update"
 
     # Force Turbo to run sequentially
     mkdir -p /opt/affine/.turbo
