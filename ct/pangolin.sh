@@ -51,9 +51,7 @@ function update_script() {
     systemctl stop gerbil
     msg_info "Service stopped"
 
-    msg_info "Creating backup"
-    tar -czf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin config
-    msg_ok "Created backup"
+    create_backup /opt/pangolin/config
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VERSION"
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_$(arch_resolve)"
@@ -74,10 +72,7 @@ function update_script() {
     cp server/db/mac_models.json ./dist/mac_models.json
     msg_ok "Updated Pangolin"
 
-    msg_info "Restoring config"
-    tar -xzf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin --overwrite
-    rm -f /opt/pangolin_config_backup.tar.gz
-    msg_ok "Restored config"
+    restore_backup
 
     if ! grep -q '^ExecStartPre=/usr/bin/node dist/migrations.mjs' /etc/systemd/system/pangolin.service 2>/dev/null; then
       msg_info "Adding migration step to pangolin.service"
