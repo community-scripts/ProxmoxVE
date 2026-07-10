@@ -102,6 +102,32 @@ function update_script() {
         sqlite_column_exists "$db_path" "domains" "lastCheckedAt"
     }
 
+    sqlite_value() {
+      local db_path="$1"
+      local query="$2"
+      sqlite3 "$db_path" "$query" 2>/dev/null | tr -d '[:space:]'
+    }
+
+    prepare_sqlite_for_120_replay() {
+      local db_path="$1"
+      local has_120
+      local vm_count
+
+      has_120="$(sqlite_value "$db_path" "SELECT COUNT(*) FROM versionMigrations WHERE version='1.20.0';")"
+      vm_count="$(sqlite_value "$db_path" "SELECT COUNT(*) FROM versionMigrations;")"
+
+      if [[ "${has_120:-0}" -gt 0 ]]; then
+        msg_info "Detected stale migration marker for 1.20.0; forcing replay"
+        sqlite3 "$db_path" "DELETE FROM versionMigrations WHERE version='1.20.0';" 2>/dev/null || true
+        vm_count="$(sqlite_value "$db_path" "SELECT COUNT(*) FROM versionMigrations;")"
+      fi
+
+      if [[ "${vm_count:-0}" -eq 0 ]]; then
+        msg_info "Migration history is empty; seeding baseline 1.19.1 so 1.20.0 migration can run"
+        sqlite3 "$db_path" "INSERT INTO versionMigrations (version, executedAt) VALUES ('1.19.1', CAST(strftime('%s','now') AS INTEGER) * 1000);" 2>/dev/null || true
+      fi
+    }
+
     run_sqlite_migrations() {
       ENVIRONMENT=prod $STD node dist/migrations.mjs
     }
@@ -114,11 +140,8 @@ function update_script() {
         sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations;" 2>/dev/null || true
       fi
 
-      if [[ "$PANGOLIN_VERSION" == "1.20.0" ]] &&
-        sqlite3 "$SQLITE_DB" "SELECT 1 FROM versionMigrations WHERE version='1.20.0' LIMIT 1;" 2>/dev/null | grep -q '^1$' &&
-        ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
-        msg_info "Detected stale migration marker for 1.20.0; forcing replay"
-        sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations WHERE version='1.20.0';" 2>/dev/null || true
+      if [[ "$PANGOLIN_VERSION" == "1.20.0" ]] && ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
+        prepare_sqlite_for_120_replay "$SQLITE_DB"
       fi
     fi
 
@@ -126,7 +149,7 @@ function update_script() {
 
     if [[ -f "$SQLITE_DB" ]] && [[ "$PANGOLIN_VERSION" == "1.20.0" ]] && ! sqlite_schema_ready_for_120 "$SQLITE_DB"; then
       msg_info "Schema check failed after first pass; retrying 1.20.0 migration"
-      sqlite3 "$SQLITE_DB" "DELETE FROM versionMigrations WHERE version='1.20.0';" 2>/dev/null || true
+      prepare_sqlite_for_120_replay "$SQLITE_DB"
       run_sqlite_migrations
     fi
 
