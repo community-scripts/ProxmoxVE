@@ -102,6 +102,25 @@ function update_script() {
         sqlite_column_exists "$db_path" "domains" "lastCheckedAt"
     }
 
+    sqlite_backfill_pre_120_prereqs() {
+      local db_path="$1"
+
+      if sqlite_table_exists "$db_path" "resourceSessions"; then
+        if ! sqlite_column_exists "$db_path" "resourceSessions" "policyPasswordId"; then
+          msg_info "Backfilling missing column resourceSessions.policyPasswordId"
+          sqlite3 "$db_path" "ALTER TABLE 'resourceSessions' ADD 'policyPasswordId' integer REFERENCES resourcePolicyPassword(passwordId);" 2>/dev/null || true
+        fi
+        if ! sqlite_column_exists "$db_path" "resourceSessions" "policyPincodeId"; then
+          msg_info "Backfilling missing column resourceSessions.policyPincodeId"
+          sqlite3 "$db_path" "ALTER TABLE 'resourceSessions' ADD 'policyPincodeId' integer REFERENCES resourcePolicyPincode(pincodeId);" 2>/dev/null || true
+        fi
+        if ! sqlite_column_exists "$db_path" "resourceSessions" "policyWhitelistId"; then
+          msg_info "Backfilling missing column resourceSessions.policyWhitelistId"
+          sqlite3 "$db_path" "ALTER TABLE 'resourceSessions' ADD 'policyWhitelistId' integer REFERENCES resourcePolicyWhitelist(id);" 2>/dev/null || true
+        fi
+      fi
+    }
+
     sqlite_value() {
       local db_path="$1"
       local query="$2"
@@ -126,6 +145,8 @@ function update_script() {
         msg_info "Migration history is empty; seeding baseline 1.19.1 so 1.20.0 migration can run"
         sqlite3 "$db_path" "INSERT INTO versionMigrations (version, executedAt) VALUES ('1.19.1', CAST(strftime('%s','now') AS INTEGER) * 1000);" 2>/dev/null || true
       fi
+
+      sqlite_backfill_pre_120_prereqs "$db_path"
     }
 
     run_sqlite_migrations() {
