@@ -185,7 +185,8 @@ http:
         servers:
           - url: "http://$LOCAL_IP:3000"
 EOF
-$STD ENVIRONMENT=prod node dist/migrations.mjs
+export ENVIRONMENT=prod
+$STD node dist/migrations.mjs
 
 . /etc/os-release
 if [ "$VERSION_CODENAME" = "trixie" ]; then
