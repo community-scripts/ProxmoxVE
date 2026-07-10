@@ -33,20 +33,17 @@ function update_script() {
 
   ensure_dependencies build-essential python3
 
-  is_sqlite_installation() {
-    [[ -f /opt/pangolin/config/db/db.sqlite ]]
-  }
-
-  has_postgres_config() {
-    local cfg
-    cfg="/opt/pangolin/config/config.yml"
-    [[ ! -f "$cfg" ]] && cfg="/opt/pangolin/config/config.yaml"
-    [[ -f "$cfg" ]] && grep -Eq '^[[:space:]]*postgres:' "$cfg"
-  }
+  CURRENT_VERSION=$(grep -oP '(?<="version": ")[^"]+' /opt/pangolin/package.json 2>/dev/null || echo "0.0.0")
+  if [[ $(echo -e "$CURRENT_VERSION\n1.20.0" | sort -V | head -1) != "1.20.0" ]]; then
+    if [[ "$CURRENT_VERSION" != "1.20.0" ]]; then
+      msg_error "Upgrade from ${CURRENT_VERSION} to ${PANGOLIN_VERSION} is not supported by this script."
+      echo -e "${INFO}${YW}This installation uses SQLite. Please perform a fresh install with PostgreSQL.${CL}"
+      echo -e "${INFO}${YW}See: https://docs.pangolin.net/self-host/advanced/database-options${CL}"
+      exit 1
+    fi
+  fi
 
   NODE_VERSION="24" setup_nodejs
-  PG_VERSION="17" setup_postgresql
-  PG_DB_NAME="pangolin" PG_DB_USER="pangolin" setup_postgresql_db
 
   if check_for_gh_release "pangolin" "fosrl/pangolin" "$PANGOLIN_VERSION" "Pinned to a tested release because Pangolin's schema changes have repeatedly broken unattended updates. To try a newer version at your own risk, run: 'export PANGOLIN_VERSION=<tag>' and re-run update. If it breaks, please open an issue at https://github.com/community-scripts/ProxmoxVE/issues with the error log."; then
     msg_info "Stopping Service"
@@ -56,10 +53,6 @@ function update_script() {
 
     msg_info "Creating backup"
     tar -czf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin config
-    if [[ -f /opt/pangolin/config/db/db.sqlite ]]; then
-      cp -a /opt/pangolin/config/db/db.sqlite \
-        "/opt/pangolin/config/db/db.sqlite.pre-${PANGOLIN_VERSION}-$(date +%Y%m%d-%H%M%S).bak"
-    fi
     msg_ok "Created backup"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VERSION"
@@ -86,22 +79,6 @@ function update_script() {
     rm -f /opt/pangolin_config_backup.tar.gz
     msg_ok "Restored config"
 
-    if is_sqlite_installation && ! has_postgres_config; then
-      msg_error "SQLite installation detected without PostgreSQL config."
-      echo -e "${INFO}${YW}Automatic data migration from SQLite to PostgreSQL is not supported.${CL}"
-      echo -e "${INFO}${YW}Please migrate your data manually and add the postgres: block to config.yml, then re-run the update.${CL}"
-      exit 1
-    fi
-
-    if ! has_postgres_config; then
-      local cfg="/opt/pangolin/config/config.yml"
-      cat <<EOF >>"$cfg"
-
-postgres:
-  connection_string: "postgresql://pangolin:${PG_DB_PASS}@localhost:5432/pangolin"
-EOF
-    fi
-
     if ! grep -q '^ExecStartPre=/usr/bin/node dist/migrations.mjs' /etc/systemd/system/pangolin.service 2>/dev/null; then
       msg_info "Adding migration step to pangolin.service"
       sed -i '/^ExecStart=\/usr\/bin\/node --enable-source-maps dist\/server.mjs/i ExecStartPre=/usr/bin/node dist/migrations.mjs' /etc/systemd/system/pangolin.service
@@ -109,17 +86,8 @@ EOF
       msg_ok "Updated pangolin.service"
     fi
 
-    if ! grep -q '^After=.*postgresql.service' /etc/systemd/system/pangolin.service; then
-      sed -i '/^After=/ s/$/ postgresql.service/' /etc/systemd/system/pangolin.service
-    fi
-    if ! grep -q '^Wants=.*postgresql.service' /etc/systemd/system/pangolin.service; then
-      sed -i '/^After=/a Wants=postgresql.service' /etc/systemd/system/pangolin.service
-    fi
-    systemctl daemon-reload
-
     msg_info "Running database migrations"
     cd /opt/pangolin
-    msg_info "Running setup migrations"
     ENVIRONMENT=prod $STD node dist/migrations.mjs
 
     msg_ok "Ran database migrations"
