@@ -125,6 +125,8 @@ EOF
     systemctl stop immich-ml
     msg_ok "Stopped Services"
     VCHORD_RELEASE="1.0.0"
+    ACTUAL_PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
+    ACTUAL_PG_VERSION=${ACTUAL_PG_VERSION:-16}
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
     if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
       # dead tuples in smart_search/face_search make the REINDEX below fail with
@@ -132,7 +134,7 @@ EOF
       # while still on the old extension version, a post-upgrade vacuum errors instead
       $STD sudo -u postgres psql -d immich -c "VACUUM (ANALYZE) smart_search;"
       $STD sudo -u postgres psql -d immich -c "VACUUM (ANALYZE) face_search;"
-      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-16-vchord_*_$(arch_resolve).deb"
+      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${ACTUAL_PG_VERSION}-vchord_*_$(arch_resolve).deb"
       systemctl restart postgresql
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
