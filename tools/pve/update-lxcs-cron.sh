@@ -58,6 +58,28 @@ function update_container() {
 
 update_status=0
 
+# Define exit handler to send healthchecks.io status (with logfile on failure/success)
+function exit_handler() {
+  local exit_code=$?
+  if [[ -n "$PING_URL" ]]; then
+    sync
+    if [[ $exit_code -ne 0 || $update_status -ne 0 ]]; then
+      if [[ -f "$LOG_FILE" ]]; then
+        curl -fsS -m 10 --retry 5 --data-binary @"$LOG_FILE" "${PING_URL}/fail" -o /dev/null 2>/dev/null || true
+      else
+        curl -fsS -m 10 --retry 5 "${PING_URL}/fail" -o /dev/null 2>/dev/null || true
+      fi
+    else
+      if [[ -f "$LOG_FILE" ]]; then
+        curl -fsS -m 10 --retry 5 --data-binary @"$LOG_FILE" "$PING_URL" -o /dev/null 2>/dev/null || true
+      else
+        curl -fsS -m 10 --retry 5 "$PING_URL" -o /dev/null 2>/dev/null || true
+      fi
+    fi
+  fi
+}
+trap exit_handler EXIT
+
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   excluded=false
   for excluded_container in "${excluded_containers[@]}"; do
@@ -98,19 +120,3 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
   fi
 done
 wait
-
-if [[ -n "$PING_URL" ]]; then
-  if [[ -f "$LOG_FILE" ]]; then
-    if [[ $update_status -eq 0 ]]; then
-      curl -fsS -m 10 --retry 5 --data-binary @"$LOG_FILE" "$PING_URL" -o /dev/null 2>/dev/null || true
-    else
-      curl -fsS -m 10 --retry 5 --data-binary @"$LOG_FILE" "${PING_URL}/fail" -o /dev/null 2>/dev/null || true
-    fi
-  else
-    if [[ $update_status -eq 0 ]]; then
-      curl -fsS -m 10 --retry 5 "$PING_URL" -o /dev/null 2>/dev/null || true
-    else
-      curl -fsS -m 10 --retry 5 "${PING_URL}/fail" -o /dev/null 2>/dev/null || true
-    fi
-  fi
-fi
