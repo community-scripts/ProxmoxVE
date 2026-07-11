@@ -511,6 +511,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(fileflows): install .NET 10 ASP.NET Core Runtime to match current release [@TowyTowy](https://github.com/TowyTowy) ([#15702](https://github.com/community-scripts/ProxmoxVE/pull/15702))
     - Fix spacing on VLAN Input Box in haos-vm.sh [@pumrum](https://github.com/pumrum) ([#15696](https://github.com/community-scripts/ProxmoxVE/pull/15696))
 
 ### 💾 Core
