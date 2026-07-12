@@ -504,6 +504,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-12
 
+### 🆕 New Scripts
+
+  - AFFiNE ([#15690](https://github.com/community-scripts/ProxmoxVE/pull/15690))
+
 ### 🚀 Updated Scripts
 
   - Immich: Bump version to 3.0.2 [@vhsdream](https://github.com/vhsdream) ([#15668](https://github.com/community-scripts/ProxmoxVE/pull/15668))
