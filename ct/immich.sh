@@ -340,10 +340,10 @@ old = "(0, sharp_1.default)(input).metadata()"
 new = "(0, sharp_1.default)(input, { unlimited: true, limitInputPixels: false }).metadata()"
 if new in s:
     print('hotfix already there')
-  elif old in s:
+elif old in s:
     p.write_text(s.replace(old, new, 1))
     print('hotfix applied')
-  else:
+else:
     print('pattern not found, skipped')
 PY
     fi
