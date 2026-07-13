@@ -506,6 +506,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - fix(shinobi): remove obsolete --unsafe-perm npm flag [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15730](https://github.com/community-scripts/ProxmoxVE/pull/15730))
+
   - #### 💥 Breaking Changes
 
     - reitti: update to v5 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15635](https://github.com/community-scripts/ProxmoxVE/pull/15635))
