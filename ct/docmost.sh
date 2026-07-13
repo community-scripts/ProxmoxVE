@@ -53,7 +53,7 @@ function update_script() {
       sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
     fi
 
-    msg_insfo "Configuring Docmost"
+    msg_info "Configuring Docmost"
     cd /opt/docmost
     $STD pnpm install --force
     $STD pnpm build
