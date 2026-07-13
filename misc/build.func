@@ -3764,19 +3764,18 @@ runtime_script_status_guard() {
     return 0
   fi
 
-  if ! command -v jq >/dev/null 2>&1; then
-    msg_warn "Missing jq for script status check. Continuing without status verification."
+  local is_deleted is_disabled deleted_message disable_message info_url
+  if printf '%s' "$response" | grep -qE '"items":[[:space:]]*\[[[:space:]]*\]'; then
     return 0
   fi
 
-  local has_record is_deleted is_disabled deleted_message disable_message info_url
-  has_record=$(printf '%s' "$response" | jq -r '.items | length')
-  [[ "$has_record" == "0" ]] && return 0
-
-  is_deleted=$(printf '%s' "$response" | jq -r '.items[0].is_deleted // false')
-  is_disabled=$(printf '%s' "$response" | jq -r '.items[0].is_disabled // false')
-  deleted_message=$(printf '%s' "$response" | jq -r '.items[0].deleted_message // ""')
-  disable_message=$(printf '%s' "$response" | jq -r '.items[0].disable_message // ""')
+  # PocketBase returns a flat, fixed-field JSON blob; sed is enough here (no jq needed).
+  is_deleted=$(printf '%s' "$response" | sed -n 's/.*"is_deleted"[[:space:]]*:[[:space:]]*\(true\|false\).*/\1/p' | head -1)
+  is_disabled=$(printf '%s' "$response" | sed -n 's/.*"is_disabled"[[:space:]]*:[[:space:]]*\(true\|false\).*/\1/p' | head -1)
+  deleted_message=$(printf '%s' "$response" | sed -n 's/.*"deleted_message"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+  disable_message=$(printf '%s' "$response" | sed -n 's/.*"disable_message"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+  is_deleted=${is_deleted:-false}
+  is_disabled=${is_disabled:-false}
   info_url="https://community-scripts.org/scripts/${script_slug}"
 
   if [[ "$is_deleted" == "true" ]]; then
