@@ -6755,14 +6755,9 @@ setup_mariadb_db() {
 
   # Use --defaults-extra-file to pass credentials safely and escape identifiers
   # to prevent SQL injection via DB name / user / password
-  local _db_escaped _user_escaped _pass_escaped
-  _db_escaped="${MARIADB_DB_NAME//\'/\'\'}"
-  _user_escaped="${MARIADB_DB_USER//\'/\'\'}"
-  _pass_escaped="${MARIADB_DB_PASS//\'/\'\'}"
-
-  $STD mariadb -u root -e "CREATE DATABASE \`$_db_escaped\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-  $STD mariadb -u root -e "CREATE USER '$_user_escaped'@'localhost' IDENTIFIED BY '$_pass_escaped';"
-  $STD mariadb -u root -e "GRANT ALL ON \`$_db_escaped\`.* TO '$_user_escaped'@'localhost';"
+  $STD mariadb -u root -e "CREATE DATABASE \`${MARIADB_DB_NAME//\`/\`\`}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+  $STD mariadb -u root -e "CREATE USER '${MARIADB_DB_USER//\'/\'\'}'@'localhost' IDENTIFIED BY '${MARIADB_DB_PASS//\'/\'\'}';"
+  $STD mariadb -u root -e "GRANT ALL ON \`${MARIADB_DB_NAME//\`/\`\`}\`.* TO '${MARIADB_DB_USER//\'/\'\'}'@'localhost';"
 
   # Optional extra grants
   if [[ -n "${MARIADB_DB_EXTRA_GRANTS:-}" ]]; then
