@@ -50,6 +50,7 @@ function update_script() {
     systemctl stop gerbil
     msg_info "Service stopped"
 
+    DB_URL=$(sed -n 's/.*connection_string: "\(.*\)".*/\1/p' /opt/pangolin/config/config.yml)
     create_backup /opt/pangolin/config
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VERSION"
@@ -61,10 +62,11 @@ function update_script() {
     $STD npm run set:pg
     $STD npm run set:oss
     rm -rf server/private
-    $STD npm run db:generate
+    DATABASE_URL="$DB_URL" $STD npm run db:generate
     $STD npm run build
     $STD npm run build:cli
     cp -R .next/standalone ./
+    cp -r server/migrations ./dist/init
     chmod +x ./dist/cli.mjs
     cp server/db/names.json ./dist/names.json
     cp server/db/ios_models.json ./dist/ios_models.json
@@ -107,4 +109,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}https://<YOUR_PANGOLIN_URL>${CL}"
+echo -e "${GATEWAY}${BGN}https://<YOUR_PANGOLIN_URL> or http://${IP}:3002${CL}"
