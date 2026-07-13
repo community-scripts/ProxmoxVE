@@ -29,6 +29,14 @@ function update_script() {
     exit
   fi
 
+  msg_info "Downloading latest Infisical package"
+  $STD apt-get update
+  if ! $STD apt-get install -y --download-only infisical-core; then
+    msg_error "Failed to download the infisical-core package (the APT artifact may be missing or return HTTP 403). Aborting update - the service was left running untouched."
+    exit 1
+  fi
+  msg_ok "Downloaded latest Infisical package"
+
   msg_info "Stopping service"
   $STD infisical-ctl stop
   msg_ok "Service stopped"
@@ -40,8 +48,7 @@ function update_script() {
   msg_ok "Created backup"
 
   msg_info "Updating Infisical"
-  $STD apt update
-  $STD apt install -y infisical-core
+  $STD apt-get install -y infisical-core
   $STD infisical-ctl reconfigure
   msg_ok "Updated Infisical"
 
