@@ -502,6 +502,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-13
+
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - reitti: update to v5 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15635](https://github.com/community-scripts/ProxmoxVE/pull/15635))
+
 ## 2026-07-12
 
 ### 🆕 New Scripts
