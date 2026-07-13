@@ -24,11 +24,6 @@ msg_ok "Set up Hyperion repository"
 
 msg_info "Installing Hyperion"
 $STD apt install -y hyperion
-# The packaged hyperion@.service uses "Requisite=network.target" without ordering
-# after it. In an LXC the unit's start job can be evaluated before network.target
-# is active, so the strict Requisite= fails and the service does not come up after
-# a reboot. Drop the Requisite= (ordering via Wants/After network-online.target in
-# the base unit is kept) with a systemd override.
 mkdir -p /etc/systemd/system/hyperion@.service.d
 cat <<EOF >/etc/systemd/system/hyperion@.service.d/override.conf
 [Unit]
