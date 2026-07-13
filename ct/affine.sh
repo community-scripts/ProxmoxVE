@@ -124,4 +124,4 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:3010/sign-in${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3010/admin${CL}"
