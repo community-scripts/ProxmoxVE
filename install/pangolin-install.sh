@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  python3 \
   iptables
 msg_ok "Installed Dependencies"
 
@@ -29,6 +28,7 @@ fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/
 fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_$(arch_resolve).tar.gz"
 
 read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " pango_url
+[[ "$pango_url" != https://* && "$pango_url" != http://* ]] && pango_url="https://${pango_url}"
 read -rp "${TAB3}Enter your email address: " pango_email
 
 msg_info "Setup Pangolin"
@@ -40,10 +40,11 @@ $STD npm ci
 $STD npm run set:pg
 $STD npm run set:oss
 rm -rf server/private
-$STD npm run db:generate
+DATABASE_URL="postgresql://pangolin:${PG_DB_PASS}@localhost:5432/pangolin" $STD npm run db:generate
 $STD npm run build
 $STD npm run build:cli
 cp -R .next/standalone ./
+cp -r server/migrations ./dist/init
 
 cat <<EOF >/usr/local/bin/pangctl
 #!/bin/sh
