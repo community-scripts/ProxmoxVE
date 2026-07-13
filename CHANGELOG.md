@@ -504,12 +504,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-13
 
-### 🚀 Updated Scripts
+### 🆕 New Scripts
 
-  - fix(hyperion): keep service running after container reboot [@TowyTowy](https://github.com/TowyTowy) ([#15653](https://github.com/community-scripts/ProxmoxVE/pull/15653))
+  - LeafWiki ([#15748](https://github.com/community-scripts/ProxmoxVE/pull/15748))
+
+### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - fix(hyperion): keep service running after container reboot [@TowyTowy](https://github.com/TowyTowy) ([#15653](https://github.com/community-scripts/ProxmoxVE/pull/15653))
     - Change sign-in URL to admin URL in affine.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15741](https://github.com/community-scripts/ProxmoxVE/pull/15741))
     - immich: use actual PostgreSQL version for VectorChord package lookup [@mnavon](https://github.com/mnavon) ([#15705](https://github.com/community-scripts/ProxmoxVE/pull/15705))
     - fix storyteller release selection for stable web tags [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15736](https://github.com/community-scripts/ProxmoxVE/pull/15736))
