@@ -510,6 +510,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - reitti: update to v5 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15635](https://github.com/community-scripts/ProxmoxVE/pull/15635))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - fix(build.func): parse script status without jq dependency [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15729](https://github.com/community-scripts/ProxmoxVE/pull/15729))
+
 ## 2026-07-12
 
 ### 🆕 New Scripts
