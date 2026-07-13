@@ -43,6 +43,28 @@ function update_script() {
     tar -czf "$backup_filename" -C /opt/fileflows Data
     msg_ok "Backup Created"
 
+    # FileFlows tracks the latest release, whose .NET target can move (e.g. 8 -> 10);
+    # ensure the current ASP.NET Core Runtime so an existing install doesn't fail to
+    # start after updating to a newer .NET major version.
+    msg_info "Ensuring ASP.NET Core Runtime"
+    if [[ "$(arch_resolve)" == "arm64" ]]; then
+      if [[ ! -x /usr/lib/dotnet10/dotnet ]]; then
+        curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+        $STD bash /tmp/dotnet-install.sh --channel 10.0 --runtime aspnetcore --install-dir /usr/lib/dotnet10
+        ln -sf /usr/lib/dotnet10/dotnet /usr/bin/dotnet
+        rm -f /tmp/dotnet-install.sh
+      fi
+    elif ! is_package_installed "aspnetcore-runtime-10.0"; then
+      $STD apt remove -y aspnetcore-runtime-8.0 aspnetcore-runtime-9.0 2>/dev/null || true
+      setup_deb822_repo \
+        "microsoft" \
+        "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+        "https://packages.microsoft.com/debian/13/prod/" \
+        "trixie"
+      $STD apt install -y aspnetcore-runtime-10.0
+    fi
+    msg_ok "Ensured ASP.NET Core Runtime"
+
     fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
 
     msg_info "Starting Service"

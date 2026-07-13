@@ -110,7 +110,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="v3.0.1"
+  RELEASE="v3.0.2"
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
@@ -124,7 +124,7 @@ EOF
     systemctl stop immich-web
     systemctl stop immich-ml
     msg_ok "Stopped Services"
-    VCHORD_RELEASE="1.0.0"
+    VCHORD_RELEASE="1.1.1"
     PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
     PG_VERSION=${PG_VERSION:-16}
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
@@ -329,6 +329,27 @@ EOF
       sed -i "s|^ExecStart=.*|ExecStart=${APP_DIR}/bin/start.sh|" /etc/systemd/system/immich-web.service
       systemctl daemon-reload
     fi
+
+    # MickLesk temporary patch for HEIC thumbnail gen
+    msg_info "Patching media.repository.js"
+    MEDIA_REPO_JS="/opt/immich/app/dist/repositories/media.repository.js"
+    if [[ -f "$MEDIA_REPO_JS" ]]; then
+      python3 - <<'PY'
+from pathlib import Path
+p = Path('/opt/immich/app/dist/repositories/media.repository.js')
+s = p.read_text()
+old = "(0, sharp_1.default)(input).metadata()"
+new = "(0, sharp_1.default)(input, { unlimited: true, limitInputPixels: false }).metadata()"
+if new in s:
+    print('hotfix already there')
+elif old in s:
+    p.write_text(s.replace(old, new, 1))
+    print('hotfix applied')
+else:
+    print('pattern not found, skipped')
+PY
+    fi
+    msg_ok "Patched media.repository.js"
 
     # chown excluding upload dir contents (may be a mount with restricted permissions)
     chown immich:immich "$INSTALL_DIR"

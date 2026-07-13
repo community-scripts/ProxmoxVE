@@ -72,6 +72,7 @@ BODY_SIZE_LIMIT=Infinity
 ORIGIN='http://$LOCAL_IP:3000'
 EOF
 cd /opt/adventurelog/frontend
+grep -q "^dangerouslyAllowAllBuilds:" ./pnpm-workspace.yaml 2>/dev/null || echo "dangerouslyAllowAllBuilds: true" >>./pnpm-workspace.yaml
 $STD pnpm i
 $STD pnpm build
 msg_ok "Installed AdventureLog"

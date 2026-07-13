@@ -2560,6 +2560,199 @@ fetch_and_deploy_gh_tag() {
 }
 
 # ------------------------------------------------------------------------------
+# Get the latest GitLab repository tag matching a glob pattern.
+#
+# Description:
+#   - Queries the GitLab repository tags API (up to 100 tags per page)
+#   - Filters tag names against a shell glob pattern (e.g. "web-v*" or "mobile-v*")
+#   - Always excludes pre-release tags (those containing alpha, beta, or rc)
+#   - Sorts matching tags with `sort -V` and returns the highest one
+#   - Supports GITLAB_TOKEN for private/rate-limited projects
+#
+# Usage:
+#     get_latest_gl_tag "owner/repo" "web-v*"
+#     get_latest_gl_tag "owner/repo" "mobile-v*"
+#     get_latest_gl_tag "owner/repo"          # returns newest tag (no filter)
+#
+# Arguments:
+#   $1 - GitLab repo path (namespace/project, e.g. "mygroup/myapp")
+#   $2 - Optional glob pattern to filter tag names (e.g. "web-v*")
+#
+# Returns:
+#   Latest matching tag name on stdout, or non-zero on failure
+# ------------------------------------------------------------------------------
+get_latest_gl_tag() {
+  local repo="$1"
+  local pattern="${2:-}"
+
+  local repo_encoded
+  repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
+
+  local api_base="https://gitlab.com/api/v4/projects/${repo_encoded}/repository/tags"
+  local api_timeout="--connect-timeout 10 --max-time 60"
+
+  local header=()
+  [[ -n "${GITLAB_TOKEN:-}" ]] && header=(-H "PRIVATE-TOKEN: $GITLAB_TOKEN")
+
+  # If a pattern is given, pass it as a regex search to reduce server-side results.
+  # GitLab ?search= supports anchored regex; convert leading glob prefix to regex anchor.
+  local search_param=""
+  if [[ -n "$pattern" ]]; then
+    # Strip trailing wildcard for the search hint (server-side prefix filter).
+    local prefix="${pattern%%\**}"
+    [[ -n "$prefix" ]] && search_param="?search=^${prefix}&per_page=100" || search_param="?per_page=100"
+  else
+    search_param="?per_page=100"
+  fi
+
+  local temp_file
+  temp_file=$(mktemp) || return 1
+
+  local http_code
+  http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o "$temp_file" \
+    "${header[@]}" "${api_base}${search_param}" 2>/dev/null) || true
+
+  if [[ "$http_code" != "200" ]]; then
+    rm -f "$temp_file"
+    msg_error "GitLab tags API returned HTTP $http_code for $repo"
+    return 22
+  fi
+
+  local tag=""
+  if [[ -n "$pattern" ]]; then
+    # Client-side glob filter + pre-release exclusion, then version-sort to pick the highest match.
+    tag=$(jq -r '.[].name' "$temp_file" 2>/dev/null | while IFS= read -r t; do
+      case "$t" in
+      *alpha* | *beta* | *rc*) continue ;;
+      $pattern) echo "$t" ;;
+      esac
+    done | sort -V | tail -n1)
+  else
+    # No pattern: skip pre-release tags, take the first remaining (newest) one.
+    tag=$(jq -r '.[].name' "$temp_file" 2>/dev/null |
+      grep -Eiv '(alpha|beta|rc)' |
+      head -n1)
+  fi
+
+  rm -f "$temp_file"
+
+  if [[ -z "$tag" ]]; then
+    msg_error "No tags matching '${pattern:-*}' found for ${repo}"
+    return 250
+  fi
+
+  echo "$tag"
+}
+
+# ------------------------------------------------------------------------------
+# Fetches and deploys a GitLab tag-based source tarball.
+#
+# Description:
+#   - Resolves the latest tag matching the given glob pattern via get_latest_gl_tag
+#     (or uses the exact tag if one is provided instead of "latest")
+#   - Downloads the GitLab source tarball for that tag
+#   - Extracts it to the target directory
+#   - Writes the resolved tag to ~/.<app> for update-checking
+#
+# Usage:
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "web-v*"
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "mobile-v*" "/opt/myapp"
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "v*"          # any v-tag
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "web-v3.0*"   # narrow version range
+#
+# Arguments:
+#   $1 - App name (used for version file ~/.<app> and lowercase tarball name)
+#   $2 - GitLab repo path (namespace/project, e.g. "mygroup/myapp")
+#   $3 - Tag pattern: glob (e.g. "web-v*") or exact tag (e.g. "web-v3.0.0").
+#        Use "latest" to fetch the single newest tag with no pattern filter.
+#   $4 - Target directory (default: /opt/$app)
+#
+# Notes:
+#   - Supports CLEAN_INSTALL=1 to wipe target before extracting
+#   - Supports GITLAB_TOKEN for private/rate-limited projects
+#   - For repos that only publish tags, not formal GitLab Releases
+#     (use fetch_and_deploy_gl_release for proper Releases with assets)
+# ------------------------------------------------------------------------------
+fetch_and_deploy_gl_tag() {
+  local app="$1"
+  local repo="$2"
+  local tag_pattern="${3:-latest}"
+  local target="${4:-/opt/$app}"
+
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local version_file="$HOME/.${app_lc}"
+
+  local api_timeout="--connect-timeout 10 --max-time 60"
+  local download_timeout="--connect-timeout 15 --max-time 900"
+
+  local header=()
+  [[ -n "${GITLAB_TOKEN:-}" ]] && header=(-H "PRIVATE-TOKEN: $GITLAB_TOKEN")
+
+  # Resolve the tag: if caller passed a glob/latest, query the API.
+  # If caller passed an exact tag (no wildcards), use it directly.
+  local resolved_tag="$tag_pattern"
+  if [[ "$tag_pattern" == "latest" || "$tag_pattern" == *"*"* || "$tag_pattern" == *"?"* ]]; then
+    local glob_arg=""
+    [[ "$tag_pattern" != "latest" ]] && glob_arg="$tag_pattern"
+    resolved_tag=$(get_latest_gl_tag "$repo" "$glob_arg") || {
+      msg_error "Failed to determine latest tag matching '${tag_pattern}' for ${repo}"
+      return 250
+    }
+  fi
+
+  local current_version=""
+  [[ -f "$version_file" ]] && current_version=$(<"$version_file")
+
+  if [[ "$current_version" == "$resolved_tag" ]]; then
+    msg_ok "$app is already up-to-date ($resolved_tag)"
+    return 0
+  fi
+
+  local repo_encoded
+  repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
+
+  # GitLab source tarball URL (no release needed, works for any tag).
+  local version_safe="${resolved_tag//\//-}"
+  local tarball_url="https://gitlab.com/${repo}/-/archive/${resolved_tag}/${app_lc}-${version_safe}.tar.gz"
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || return 1
+  local filename="${app_lc}-${version_safe}.tar.gz"
+
+  msg_info "Fetching GitLab tag: ${app} (${resolved_tag})"
+
+  curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$tarball_url" || {
+    msg_error "Download failed: $tarball_url"
+    rm -rf "$tmpdir"
+    return 7
+  }
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    rm -rf "${target:?}/"*
+  fi
+
+  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+    msg_error "Failed to extract tarball"
+    rm -rf "$tmpdir"
+    return 251
+  }
+
+  local unpack_dir
+  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+  shopt -s dotglob nullglob
+  cp -r "$unpack_dir"/* "$target/"
+  shopt -u dotglob nullglob
+
+  rm -rf "$tmpdir"
+  echo "$resolved_tag" >"$version_file"
+  msg_ok "Deployed ${app} ${resolved_tag} to ${target}"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # Checks for new GitHub tag (for repos without releases).
 #
 # Description:
