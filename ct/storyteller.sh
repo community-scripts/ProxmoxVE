@@ -32,7 +32,7 @@ function update_script() {
 
   NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
 
-  if check_for_gl_release "storyteller" "storyteller-platform/storyteller"; then
+  if check_for_gl_release "storyteller" "storyteller-platform/storyteller" "" "" "web-v2"; then
     msg_info "Stopping Service"
     systemctl stop storyteller
     msg_ok "Stopped Service"
@@ -41,7 +41,7 @@ function update_script() {
     cp /opt/storyteller/.env /opt/storyteller_env.bak
     msg_ok "Backed up Data"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "tarball" "latest" "/opt/storyteller"
+    CLEAN_INSTALL=1 fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "tarball" "latest" "/opt/storyteller" "" "web-v2"
 
     msg_info "Restoring Configuration"
     mv /opt/storyteller_env.bak /opt/storyteller/.env

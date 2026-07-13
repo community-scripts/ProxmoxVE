@@ -2633,6 +2633,7 @@ check_for_gh_release() {
   local source="$2"
   local pinned_version_in="${3:-}" # optional
   local pin_reason="${4:-}"        # optional reason shown to user
+  local tag_prefix="${5:-}"        # optional tag prefix filter (e.g. web-v2)
   local app_lc=""
   app_lc="$(echo "${app,,}" | tr -d ' ')"
   local current_file="$HOME/.${app_lc}"
@@ -2688,7 +2689,7 @@ check_for_gh_release() {
     rm -f "$gh_check_json"
   fi
 
-  if [[ -z "$pinned_version_in" ]]; then
+  if [[ -z "$pinned_version_in" && -z "$tag_prefix" ]]; then
     http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
@@ -2716,7 +2717,7 @@ check_for_gh_release() {
     rm -f "$gh_check_json"
   fi
 
-  # If no releases yet (pinned version OR /latest failed), fetch up to 100
+  # If no releases yet (pinned version, tag prefix, OR /latest failed), fetch up to 100
   if [[ -z "$releases_json" ]]; then
     http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
@@ -2754,9 +2755,18 @@ check_for_gh_release() {
     rm -f "$gh_check_json"
   fi
 
-  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  if [[ -n "$tag_prefix" ]]; then
+    mapfile -t raw_tags < <(jq -r --arg p "$tag_prefix" \
+      '.[] | select(.draft==false and .prerelease==false) | select(.tag_name | startswith($p)) | .tag_name' <<<"$releases_json")
+  else
+    mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  fi
   if ((${#raw_tags[@]} == 0)); then
-    msg_error "No stable releases found for ${app}"
+    if [[ -n "$tag_prefix" ]]; then
+      msg_error "No stable releases matching prefix '${tag_prefix}' found for ${app}"
+    else
+      msg_error "No stable releases found for ${app}"
+    fi
     return 250
   fi
 
@@ -3760,6 +3770,7 @@ fetch_and_deploy_gh_release() {
   local version="${var_appversion:-${4:-latest}}"
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
+  local tag_prefix="${7:-}"
 
   # Validate app name to prevent /root/. directory issues
   if [[ -z "$app" ]]; then
@@ -3789,7 +3800,13 @@ fetch_and_deploy_gh_release() {
   TOOLS_GH_REL_JSON="$gh_rel_json"
 
   local api_url="https://api.github.com/repos/$repo/releases"
-  [[ "$version" != "latest" ]] && api_url="$api_url/tags/$version" || api_url="$api_url/latest"
+  if [[ "$version" != "latest" ]]; then
+    api_url="$api_url/tags/$version"
+  elif [[ -n "$tag_prefix" ]]; then
+    api_url="$api_url?per_page=100"
+  else
+    api_url="$api_url/latest"
+  fi
   local header=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header=(-H "Authorization: token $GITHUB_TOKEN")
 
@@ -3852,6 +3869,14 @@ fetch_and_deploy_gh_release() {
 
   local json tag_name
   json=$(<"$gh_rel_json")
+  if [[ "$version" == "latest" && -n "$tag_prefix" ]]; then
+    json=$(echo "$json" | jq --arg p "$tag_prefix" \
+      '[.[] | select(.draft==false and .prerelease==false) | select(.tag_name | startswith($p))][0] // empty')
+    if [[ -z "$json" || "$json" == "null" ]]; then
+      msg_error "No stable release matching prefix '${tag_prefix}' found for $repo on GitHub"
+      return 1
+    fi
+  fi
   tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
   # Only strip leading 'v' when followed by a digit (e.g. v1.2.3), not words like "version/..."
   [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -9192,6 +9217,7 @@ check_for_gl_release() {
   local source="$2"
   local pinned_version_in="${3:-}" # optional
   local pin_reason="${4:-}"        # optional reason shown to user
+  local tag_prefix="${5:-}"        # optional tag prefix filter (e.g. web-v2)
   local app_lc="${app,,}"
   local current_file="$HOME/.${app_lc}"
 
@@ -9268,9 +9294,18 @@ check_for_gl_release() {
     rm -f "$gl_check_json"
   fi
 
-  mapfile -t raw_tags < <(jq -r '.[] | .tag_name' <<<"$releases_json")
+  if [[ -n "$tag_prefix" ]]; then
+    mapfile -t raw_tags < <(jq -r --arg p "$tag_prefix" \
+      '.[] | select(.tag_name | startswith($p)) | .tag_name' <<<"$releases_json")
+  else
+    mapfile -t raw_tags < <(jq -r '.[] | .tag_name' <<<"$releases_json")
+  fi
   if ((${#raw_tags[@]} == 0)); then
-    msg_error "No releases found for ${app} on GitLab"
+    if [[ -n "$tag_prefix" ]]; then
+      msg_error "No releases matching prefix '${tag_prefix}' found for ${app} on GitLab"
+    else
+      msg_error "No releases found for ${app} on GitLab"
+    fi
     return 250
   fi
 
@@ -9465,6 +9500,7 @@ fetch_and_deploy_gl_release() {
   local version="${var_appversion:-${4:-latest}}"
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
+  local tag_prefix="${7:-}"
 
   if [[ -z "$app" ]]; then
     app="${repo##*/}"
@@ -9496,6 +9532,8 @@ fetch_and_deploy_gl_release() {
   local api_url
   if [[ "$version" != "latest" ]]; then
     api_url="$api_base/$version"
+  elif [[ -n "$tag_prefix" ]]; then
+    api_url="$api_base?per_page=100&order_by=released_at&sort=desc"
   else
     api_url="$api_base?per_page=1&order_by=released_at&sort=desc"
   fi
@@ -9550,9 +9588,18 @@ fetch_and_deploy_gl_release() {
   json=$(<"$gl_rel_json")
 
   if [[ "$version" == "latest" ]]; then
-    json=$(echo "$json" | jq '.[0] // empty')
+    if [[ -n "$tag_prefix" ]]; then
+      json=$(echo "$json" | jq --arg p "$tag_prefix" \
+        '[.[] | select(.tag_name | startswith($p))][0] // empty')
+    else
+      json=$(echo "$json" | jq '.[0] // empty')
+    fi
     if [[ -z "$json" || "$json" == "null" ]]; then
-      msg_error "No releases found for $repo on GitLab"
+      if [[ -n "$tag_prefix" ]]; then
+        msg_error "No release matching prefix '${tag_prefix}' found for $repo on GitLab"
+      else
+        msg_error "No releases found for $repo on GitLab"
+      fi
       return 1
     fi
   fi
