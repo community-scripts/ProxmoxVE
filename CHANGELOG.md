@@ -506,7 +506,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Yuvomi ([#15772](https://github.com/community-scripts/ProxmoxVE/pull/15772))
+  - Grav ([#15773](https://github.com/community-scripts/ProxmoxVE/pull/15773))
+- Yuvomi ([#15772](https://github.com/community-scripts/ProxmoxVE/pull/15772))
 
 ### 🚀 Updated Scripts
 
