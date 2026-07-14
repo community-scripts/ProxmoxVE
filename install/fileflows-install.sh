@@ -55,12 +55,9 @@ if [[ "$install_server" =~ ^[Ss]$ ]]; then
   msg_ok "Installed FileFlows Server"
 else
   msg_info "Installing FileFlows Node"
-  read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
-  while [[ -z "${server_url// /}" ]]; do
-    read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
-  done
   cd /opt/fileflows/Node
-  $STD dotnet FileFlows.Node.dll --server "$server_url" --systemd install --root true
+  $STD dotnet FileFlows.Node.dll
+  $STD dotnet FileFlows.Node.dll --systemd install --root true
   systemctl enable -q --now fileflows-node
   msg_ok "Installed FileFlows Node"
 fi
