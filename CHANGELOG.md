@@ -513,8 +513,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - Wanderer: Clean deploy and install plugins for v0.20.0 update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15759](https://github.com/community-scripts/ProxmoxVE/pull/15759))
     - Lychee: Preserve uploads and ownership during update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15768](https://github.com/community-scripts/ProxmoxVE/pull/15768))
+    - Wanderer: Clean deploy and install plugins for v0.20.0 update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15759](https://github.com/community-scripts/ProxmoxVE/pull/15759))
     - FileFlows: Handle update API 401, force update, and Node install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15766](https://github.com/community-scripts/ProxmoxVE/pull/15766))
     - BirdNET-Go: Match new upstream release asset naming [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15758](https://github.com/community-scripts/ProxmoxVE/pull/15758))
     - [Upstream Fix] Immich: Fix loader priority [@vhsdream](https://github.com/vhsdream) ([#15755](https://github.com/community-scripts/ProxmoxVE/pull/15755))
@@ -523,6 +523,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Bump OpenCloud version to v7.2.2 [@MickLesk](https://github.com/MickLesk) ([#15769](https://github.com/community-scripts/ProxmoxVE/pull/15769))
     - Silverbullet: Add optional Runtime API install via Chromium [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15761](https://github.com/community-scripts/ProxmoxVE/pull/15761))
+
+  - #### 🔧 Refactor
+
+    - AFFiNE: Pin to v0.26.3 [@MickLesk](https://github.com/MickLesk) ([#15782](https://github.com/community-scripts/ProxmoxVE/pull/15782))
 
 ## 2026-07-13
 
