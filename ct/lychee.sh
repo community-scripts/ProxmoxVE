@@ -31,33 +31,38 @@ function update_script() {
   fi
 
   if check_for_gh_release "lychee" "LycheeOrg/Lychee"; then
+    PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+
     msg_info "Stopping Services"
-    systemctl stop caddy
+    systemctl stop caddy php${PHP_VER}-fpm
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/lychee/.env /opt/lychee.env.bak
-    cp -r /opt/lychee/storage /opt/lychee_storage_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/lychee/.env \
+      /opt/lychee/storage \
+      /opt/lychee/public/uploads \
+      /opt/lychee/public/dist
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "lychee" "LycheeOrg/Lychee" "prebuild" "latest" "/opt/lychee" "Lychee.zip"
 
-    msg_info "Restoring Data"
-    cp /opt/lychee.env.bak /opt/lychee/.env
-    rm -f /opt/lychee.env.bak
-    cp -r /opt/lychee_storage_backup/. /opt/lychee/storage
-    rm -rf /opt/lychee_storage_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Updating Application"
     cd /opt/lychee
     $STD php artisan migrate --force
+    $STD php artisan config:clear
+    $STD php artisan cache:clear
     $STD php artisan optimize:clear
-    chmod -R 775 /opt/lychee/storage /opt/lychee/bootstrap/cache
+    $STD php artisan optimize
+    chown -R www-data:www-data /opt/lychee
+    chmod -R 775 /opt/lychee/storage /opt/lychee/bootstrap/cache \
+      /opt/lychee/public/dist /opt/lychee/public/uploads
+    if [[ "${VERBOSE:-no}" = "yes" ]]; then
+      php artisan lychee:diagnostics || true
+    fi
     msg_ok "Updated Application"
 
     msg_info "Starting Services"
-    systemctl start caddy
+    systemctl start caddy php${PHP_VER}-fpm
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
