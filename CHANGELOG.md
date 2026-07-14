@@ -504,6 +504,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-14
 
+### 🆕 New Scripts
+
+  - Yuvomi ([#15772](https://github.com/community-scripts/ProxmoxVE/pull/15772))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
