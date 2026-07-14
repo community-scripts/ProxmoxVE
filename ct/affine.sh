@@ -30,14 +30,15 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "affine_app" "toeverything/AFFiNE"; then
+  RELEASE="v0.26.3"
+  if check_for_gh_release "affine_app" "toeverything/AFFiNE" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping Services"
     systemctl stop affine-web affine-worker
     msg_ok "Stopped Services"
 
     create_backup /root/.affine/config /root/.affine/storage
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "latest" "/opt/affine"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "${RELEASE}" "/opt/affine"
 
     msg_info "Rebuilding Application (Patience)"
     cd /opt/affine
