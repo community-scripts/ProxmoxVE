@@ -506,6 +506,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Revert "fix(fileflows): handle update API 401, force update, and Node install" [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15764](https://github.com/community-scripts/ProxmoxVE/pull/15764))
+
   - #### 🐞 Bug Fixes
 
     - fix(fileflows): handle update API 401, force update, and Node install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14858](https://github.com/community-scripts/ProxmoxVE/pull/14858))
