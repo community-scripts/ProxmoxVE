@@ -96,6 +96,7 @@ EOF
     rm -rf /opt/musicseerr_config_backup /opt/musicseerr_cache_backup
     cp /bin/update /bin/update.bak
     sed -i 's/musicseerr/droppedneedle/' /bin/update
+    rm -rf /opt/musicseerr
     msg_ok "Migrated successfully!"
   fi
   exit
