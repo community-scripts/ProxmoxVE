@@ -508,6 +508,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(fileflows): handle update API 401, force update, and Node install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#14858](https://github.com/community-scripts/ProxmoxVE/pull/14858))
     - [Upstream Fix] Immich: Fix loader priority [@vhsdream](https://github.com/vhsdream) ([#15755](https://github.com/community-scripts/ProxmoxVE/pull/15755))
 
 ## 2026-07-13
