@@ -30,7 +30,7 @@ PG_DB_NAME="affine" PG_DB_USER="affine" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs
 setup_rust
 
-fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "latest" "/opt/affine"
+fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "v0.26.3" "/opt/affine"
 
 msg_info "Setting up Directories"
 rm -rf /root/.affine
