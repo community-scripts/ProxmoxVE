@@ -82,9 +82,6 @@ function update_script() {
   tar -czf "$backup_filename" -C /opt/fileflows Data
   msg_ok "Backup Created"
 
-  # FileFlows tracks the latest release, whose .NET target can move (e.g. 8 -> 10);
-  # ensure the current ASP.NET Core Runtime so an existing install doesn't fail to
-  # start after updating to a newer .NET major version.
   msg_info "Ensuring ASP.NET Core Runtime"
   if [[ "$(arch_resolve)" == "arm64" ]]; then
     if [[ ! -x /usr/lib/dotnet10/dotnet ]]; then
