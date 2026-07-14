@@ -20,7 +20,8 @@ if [[ "$(arch_resolve)" == "arm64" ]]; then
 else
   fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
 fi
-mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data}
+mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data,data/plugins}
+[[ -e /data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /data/plugins
 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
 
 msg_info "Installing wanderer (patience)"
@@ -31,6 +32,12 @@ cd /opt/wanderer/source/web
 $STD npm ci
 $STD npm run build
 msg_ok "Installed wanderer"
+
+msg_info "Installing wanderer plugins"
+for plugin in hammerhead komoot strava; do
+  fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer/data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+done
+msg_ok "Installed wanderer plugins"
 
 msg_info "Creating Service"
 MEILI_KEY=$(openssl rand -hex 32)
