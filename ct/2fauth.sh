@@ -60,6 +60,7 @@ function update_script() {
     php artisan 2fauth:install
     chown -R www-data: /opt/2fauth
     chmod -R 755 /opt/2fauth
+    $STD php artisan 2fauth:fix-passport-key-permissions
     $STD systemctl restart php8.4-fpm
     $STD systemctl restart nginx
     msg_ok "Configured 2FAuth"
