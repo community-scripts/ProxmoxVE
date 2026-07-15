@@ -515,6 +515,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - 2fauth: minor fixes for 8.0.0 [@MickLesk](https://github.com/MickLesk) ([#15795](https://github.com/community-scripts/ProxmoxVE/pull/15795))
     - SnapOtter: refactor update process to prebuild [@MickLesk](https://github.com/MickLesk) ([#15797](https://github.com/community-scripts/ProxmoxVE/pull/15797))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - tools.func: default Docker setup to official repo [@MickLesk](https://github.com/MickLesk) ([#15794](https://github.com/community-scripts/ProxmoxVE/pull/15794))
+
 ## 2026-07-14
 
 ### 🆕 New Scripts
