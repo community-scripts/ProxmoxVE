@@ -14,7 +14,7 @@ network_check
 update_os
 
 PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "DroppedNeedle" "DroppedNeedle/DroppedNeedle" "tarball"
+fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
 NODE_VERSION="25" NODE_MODULE="pnpm@10.33.0" setup_nodejs
 
 msg_info "Building Frontend"
