@@ -4663,20 +4663,20 @@ setup_composer() {
 #   - Cleans up legacy repository files
 #
 # Usage:
-#   setup_docker                              # Uses distro package (recommended)
-#   USE_DOCKER_REPO=true setup_docker         # Uses official Docker repo
+#   setup_docker                              # Uses official Docker repo (recommended)
+#   USE_DOCKER_REPO=false setup_docker        # Uses distro docker.io package
 #   DOCKER_PORTAINER="true" setup_docker
 #   DOCKER_LOG_DRIVER="json-file" setup_docker
 #
 # Variables:
-#   USE_DOCKER_REPO        - Set to "true" to use official Docker repository
-#                            (default: false, uses distro docker.io package)
+#   USE_DOCKER_REPO        - Set to "false" to use distro docker.io package
+#                            (default: true, uses official Docker repository)
 #   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
 #   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
 #   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
 #
 # Features:
-#   - Uses stable distro packages by default
+#   - Uses official Docker repository by default
 #   - Migrates from get.docker.com to repository-based installation
 #   - Updates Docker Engine if newer version available
 #   - Interactive per-container update prompt (Y/N, 60 s auto-no)
@@ -4692,7 +4692,7 @@ _docker_is_noninteractive() {
 setup_docker() {
   local docker_installed=false
   local portainer_installed=false
-  local USE_DOCKER_REPO="${USE_DOCKER_REPO:-false}"
+  local USE_DOCKER_REPO="${USE_DOCKER_REPO:-true}"
 
   # Check if Docker is already installed
   if command -v docker &>/dev/null; then
@@ -4707,7 +4707,7 @@ setup_docker() {
     msg_info "Portainer container detected"
   fi
 
-  # Scenario 1: Use distro repository (default, most stable)
+  # Scenario 1: Use distro repository (opt-out via USE_DOCKER_REPO=false)
   if [[ "$USE_DOCKER_REPO" != "true" && "$USE_DOCKER_REPO" != "TRUE" && "$USE_DOCKER_REPO" != "1" ]]; then
 
     # Install or upgrade Docker from distro repo
