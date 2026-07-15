@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "DroppedNeedle" "DroppedNeedle/DroppedNeedle"; then
+  if check_for_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle"; then
     msg_warn "Migrating Musicseerr to DroppedNeedle"
     msg_info "Stopping Service"
     systemctl disable -q --now musicseerr
