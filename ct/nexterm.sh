@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop nexterm-engine
     msg_ok "Stopped nexterm-engine"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nexterm-engine" "gnmyt/Nexterm" "prebuild" "latest" "/opt/nexterm/engine" "nexterm-engine-linux-${NX_ARCH}.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nexterm-engine" "gnmyt/Nexterm" "prebuild" "latest" "/opt/nexterm/engine" "nexterm-engine-linux-$(arch_resolve "x64" "arm64").tar.gz"
 
     msg_info "Starting nexterm-engine"
     systemctl start nexterm-engine
@@ -47,7 +47,7 @@ function update_script() {
     systemctl stop nexterm-server
     msg_ok "Stopped nexterm-server"
 
-    fetch_and_deploy_gh_release "nexterm-server" "gnmyt/Nexterm" "singlefile" "latest" "/opt/nexterm/server" "nexterm-server-linux-${NX_ARCH}"
+    fetch_and_deploy_gh_release "nexterm-server" "gnmyt/Nexterm" "singlefile" "latest" "/opt/nexterm/server" "nexterm-server-linux-$(arch_resolve "x64" "arm64")"
 
     msg_info "Starting nexterm-server"
     systemctl start nexterm-server
