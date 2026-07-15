@@ -502,6 +502,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-15
+
+### 🆕 New Scripts
+
+  - Nexterm ([#15688](https://github.com/community-scripts/ProxmoxVE/pull/15688))
+
 ## 2026-07-14
 
 ### 🆕 New Scripts
