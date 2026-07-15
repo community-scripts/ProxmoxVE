@@ -42,7 +42,7 @@ function update_script() {
     msg_ok "Backed up Musicseerr Data"
 
     PYTHON_VERSION="3.13" setup_uv
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "DroppedNeedle" "DroppedNeedle/DroppedNeedle" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
     NODE_VERSION="25" NODE_MODULE="pnpm@10.33.0" setup_nodejs
 
     msg_info "Building DroppedNeedle Frontend"
