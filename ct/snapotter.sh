@@ -35,14 +35,12 @@ function update_script() {
     systemctl stop snapotter
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snapotter" "snapotter-hq/SnapOtter" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snapotter" "snapotter-hq/SnapOtter" "prebuild" "latest" "/opt/snapotter" "snapotter-*-linux-amd64.tar.gz"
 
     msg_info "Updating SnapOtter"
-    cd /opt/snapotter
-    $STD npm pkg delete scripts.prepare
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm --filter @snapotter/web build
-    sed -i 's/mediapipe==0.10.21/mediapipe>=0.10.21/' /opt/snapotter/docker/feature-manifest.json
+    $STD uv python install 3.11
+    $STD uv venv --seed --python 3.11 /opt/snapotter_data/ai/venv
+    ln -sfn /opt/snapotter /app
     msg_ok "Updated SnapOtter"
 
     msg_info "Starting Service"
