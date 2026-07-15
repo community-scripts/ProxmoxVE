@@ -43,6 +43,7 @@ $STD php artisan migrate:refresh
 $STD php artisan passport:install -q -n
 $STD php artisan storage:link
 $STD php artisan config:cache
+$STD php artisan 2fauth:fix-passport-key-permissions
 chown -R www-data: /opt/2fauth
 chmod -R 755 /opt/2fauth
 msg_ok "Setup 2fauth"
