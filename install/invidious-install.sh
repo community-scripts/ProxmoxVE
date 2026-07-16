@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
   git \
+  pkg-config \
   libssl-dev \
   libxml2-dev \
   libyaml-dev \
