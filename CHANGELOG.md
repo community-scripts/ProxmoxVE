@@ -504,6 +504,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-16
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Pin Immich to v3.0.3 [@vhsdream](https://github.com/vhsdream) ([#15790](https://github.com/community-scripts/ProxmoxVE/pull/15790))
+
 ## 2026-07-15
 
 ### 🆕 New Scripts
