@@ -40,6 +40,22 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.11" setup_uv
 NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
+
+msg_info "Waiting for PostgreSQL"
+PG_READY=0
+for _ in {1..30}; do
+  if pg_isready -q -h 127.0.0.1 -p 5432; then
+    PG_READY=1
+    break
+  fi
+  sleep 1
+done
+if [[ "$PG_READY" -ne 1 ]]; then
+  msg_error "PostgreSQL is not accepting connections on 127.0.0.1:5432 after 30s"
+  exit 1
+fi
+msg_ok "PostgreSQL is ready"
+
 PG_DB_NAME="snapotter" PG_DB_USER="snapotter" setup_postgresql_db
 
 msg_info "Installing Redis"
