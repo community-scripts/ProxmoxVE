@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "droppeddeedle" "DroppedNeedle/DroppedNeedle"; then
+  if check_for_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle"; then
     msg_info "Stopping Service"
     systemctl stop droppedneedle
     msg_ok "Stopped Service"
