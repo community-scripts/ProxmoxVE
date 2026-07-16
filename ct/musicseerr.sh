@@ -97,7 +97,19 @@ EOF
     cp /bin/update /bin/update.bak
     sed -i 's/musicseerr/droppedneedle/' /bin/update
     rm -rf /opt/musicseerr
-    msg_ok "Migrated successfully!"
+    msg_info "Waiting up to 1min for backend to boot and retrieve Admin Username"
+    for i in {1..30}; do
+        username=$(/opt/droppedneedle/venv/bin/python -c 'import sqlite3; conn = sqlite3.connect("/opt/droppedneedle/backend/cache/library.db"); c = conn.cursor(); c.execute("SELECT username FROM auth_users WHERE role=\"admin\""); admin=c.fetchone(); print(admin[0]) if (admin and admin[0]) else None' 2>/dev/null || true)
+        if [ -n "$username" ]; then
+            break
+        fi
+        sleep 2
+    done
+    if [ -n "$username" ]; then
+        msg_ok "Admin Username retrieved (Admin Username is: ${username})"
+    else
+        msg_error "Failed to retrieve Admin Username. The backend might still be starting."
+    fi
   fi
   exit
 }
