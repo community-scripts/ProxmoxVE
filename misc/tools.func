@@ -8723,7 +8723,7 @@ EOF
     CURRENT_RUBY_VERSION=$("$RBENV_BIN" global 2>/dev/null || echo "")
   fi
 
-   # Scenario 1: Already at correct Ruby version
+  # Scenario 1: Already at correct Ruby version
   if [[ "$CURRENT_RUBY_VERSION" == "$RUBY_VERSION" ]]; then
     msg_info "Update Ruby $RUBY_VERSION"
     cache_installed_version "ruby" "$RUBY_VERSION"
