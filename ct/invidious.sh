@@ -40,7 +40,7 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Invidious" "iv-org/invidious" "tarball" "latest" "/opt/invidious"
     if check_for_gh_release "Invidious-Companion" "iv-org/invidious-companion"; then
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Invidious-Companion" "iv-org/invidious-companion" "prebuild" "latest" "/opt/invidious-companion" "invidious_companion-x86_64-unknown-linux-gnu.tar.gz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Invidious-Companion" "iv-org/invidious-companion" "prebuild" "latest" "/opt/invidious-companion" "invidious_companion-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
     fi
 
     msg_info "Rebuilding Invidious"
