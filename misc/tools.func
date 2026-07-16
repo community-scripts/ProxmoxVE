@@ -8723,7 +8723,7 @@ EOF
     CURRENT_RUBY_VERSION=$("$RBENV_BIN" global 2>/dev/null || echo "")
   fi
 
-  # Scenario 1: Already at correct Ruby version
+   # Scenario 1: Already at correct Ruby version
   if [[ "$CURRENT_RUBY_VERSION" == "$RUBY_VERSION" ]]; then
     msg_info "Update Ruby $RUBY_VERSION"
     cache_installed_version "ruby" "$RUBY_VERSION"
@@ -8814,32 +8814,42 @@ EOF
       return 150
     }
 
+    # Setup profile
+    if ! grep -q 'rbenv init' "$PROFILE_FILE" 2>/dev/null; then
+      echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >>"$PROFILE_FILE"
+      echo 'eval "$(rbenv init -)"' >>"$PROFILE_FILE"
+    fi
   fi
 
   # Install ruby-build plugin
-  if [[ ! -d "$RBENV_DIR/plugins/ruby-build" ]]; then
+  _install_ruby_build_plugin() {
     local RUBY_BUILD_RELEASE
     RUBY_BUILD_RELEASE=$(get_latest_github_release "rbenv/ruby-build") || {
       msg_error "Failed to fetch latest ruby-build version from GitHub"
-      rm -rf "$TMP_DIR"
       return 7
     }
 
     if ! curl_with_retry "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" "$TMP_DIR/ruby-build.tar.gz"; then
       msg_error "Failed to download ruby-build"
       msg_error "Hint: Check connectivity to github.com/rbenv/ruby-build"
-      rm -rf "$TMP_DIR"
       return 7
     fi
 
     tar -xzf "$TMP_DIR/ruby-build.tar.gz" -C "$TMP_DIR" || {
       msg_error "Failed to extract ruby-build"
-      rm -rf "$TMP_DIR"
       return 251
     }
 
     mkdir -p "$RBENV_DIR/plugins/ruby-build"
     cp -r "$TMP_DIR/ruby-build-${RUBY_BUILD_RELEASE}/." "$RBENV_DIR/plugins/ruby-build/"
+    return 0
+  }
+
+  if [[ ! -d "$RBENV_DIR/plugins/ruby-build" ]]; then
+    _install_ruby_build_plugin || {
+      rm -rf "$TMP_DIR"
+      return 7
+    }
   fi
 
   # Setup PATH and install Ruby version
@@ -8847,6 +8857,14 @@ EOF
   eval "$("$RBENV_BIN" init - bash)" 2>/dev/null || true
 
   if ! "$RBENV_BIN" versions --bare 2>/dev/null | grep -qx "$RUBY_VERSION"; then
+    if [[ ! -f "$RBENV_DIR/plugins/ruby-build/share/ruby-build/$RUBY_VERSION" ]]; then
+      msg_info "Updating ruby-build definitions"
+      _install_ruby_build_plugin || {
+        rm -rf "$TMP_DIR"
+        return 7
+      }
+      msg_ok "Updated ruby-build definitions"
+    fi
     $STD "$RBENV_BIN" install "$RUBY_VERSION" || {
       msg_error "Failed to install Ruby $RUBY_VERSION"
       rm -rf "$TMP_DIR"
