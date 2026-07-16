@@ -30,12 +30,58 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "snapotter" "snapotter-hq/SnapOtter"; then
+  NEEDS_V2_MIGRATION=false
+  grep -q '^DB_PATH=' /opt/snapotter_data/.env 2>/dev/null && NEEDS_V2_MIGRATION=true
+  UPDATE_AVAILABLE=false
+  check_for_gh_release "snapotter" "snapotter-hq/SnapOtter" && UPDATE_AVAILABLE=true
+
+  if [[ "$NEEDS_V2_MIGRATION" == true || "$UPDATE_AVAILABLE" == true ]]; then
     msg_info "Stopping Service"
     systemctl stop snapotter
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snapotter" "snapotter-hq/SnapOtter" "prebuild" "latest" "/opt/snapotter" "snapotter-*-linux-amd64.tar.gz"
+    PG_VERSION="17" setup_postgresql
+    if ! sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname = 'snapotter'" | grep -qx '1'; then
+      PG_DB_NAME="snapotter" PG_DB_USER="snapotter" setup_postgresql_db
+    else
+      PG_DB_NAME="snapotter"
+      PG_DB_USER="snapotter"
+      PG_DB_PASS=$(sed -n 's|^DATABASE_URL=postgres://snapotter:\([^@]*\)@.*|\1|p' /opt/snapotter_data/.env | head -n1)
+      if [[ -z "$PG_DB_PASS" ]]; then
+        msg_error "SnapOtter's PostgreSQL database exists, but its password is not available in /opt/snapotter_data/.env"
+        exit 1
+      fi
+    fi
+
+    msg_info "Installing Redis"
+    $STD apt install -y redis-server
+    if grep -q '^appendonly ' /etc/redis/redis.conf; then
+      sed -i 's/^appendonly .*/appendonly yes/' /etc/redis/redis.conf
+    else
+      echo 'appendonly yes' >>/etc/redis/redis.conf
+    fi
+    $STD systemctl enable --now redis-server
+    msg_ok "Installed Redis"
+
+    msg_info "Migrating SnapOtter Configuration"
+    sed -i '/^DB_PATH=/d; /^DATABASE_URL=/d; /^REDIS_URL=/d; /^SQLITE_MIGRATE_PATH=/d' /opt/snapotter_data/.env
+    cat <<EOF >>/opt/snapotter_data/.env
+DATABASE_URL=postgres://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}
+REDIS_URL=redis://127.0.0.1:6379
+EOF
+    if [[ -f /opt/snapotter_data/snapotter.db ]]; then
+      echo 'SQLITE_MIGRATE_PATH=/opt/snapotter_data/snapotter.db' >>/opt/snapotter_data/.env
+    fi
+    if ! grep -q '^Requires=postgresql.service redis-server.service$' /etc/systemd/system/snapotter.service; then
+      sed -i '/^After=/c\After=network-online.target postgresql.service redis-server.service' /etc/systemd/system/snapotter.service
+      sed -i '/^\[Unit\]/a Wants=network-online.target\nRequires=postgresql.service redis-server.service' /etc/systemd/system/snapotter.service
+    fi
+    systemctl daemon-reload
+    msg_ok "Migrated SnapOtter Configuration"
+
+    if [[ "$UPDATE_AVAILABLE" == true ]]; then
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "snapotter" "snapotter-hq/SnapOtter" "prebuild" "latest" "/opt/snapotter" "snapotter-*-linux-amd64.tar.gz"
+    fi
 
     msg_info "Updating SnapOtter"
     $STD uv python install 3.11

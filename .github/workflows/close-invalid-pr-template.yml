@@ -1,0 +1,163 @@
+name: Close PRs Missing Template
+
+on:
+  pull_request_target:
+    branches: ["main"]
+    types: [opened, edited, reopened, synchronize, labeled]
+
+jobs:
+  validate-pr-template:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+    steps:
+      - name: Close PR if it does not follow the PR template
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const prNumber = pr.number;
+            const author = pr.user.login;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const allowedBots = [
+              "push-app-to-main[bot]",
+              "push-app-to-main",
+              "community-scripts-pr-app",
+              "github-actions[bot]",
+              "dependabot[bot]",
+            ];
+
+            if (allowedBots.includes(author) || author.endsWith("[bot]")) {
+              core.info(`PR #${prNumber} by bot "${author}" — skipping template validation.`);
+              return;
+            }
+
+            const association = pr.author_association;
+            const exemptAssociations = ["OWNER", "MEMBER", "COLLABORATOR"];
+            if (exemptAssociations.includes(association)) {
+              core.info(`PR #${prNumber} by ${association} "${author}" — skipping template validation.`);
+              return;
+            }
+
+            const labels = pr.labels.map((label) => label.name);
+            const skipLabels = ["automated pr", "keep open"];
+
+            if (skipLabels.some((label) => labels.includes(label))) {
+              core.info(`PR #${prNumber} has a skip label (${labels.join(", ")}) — skipping template validation.`);
+              return;
+            }
+
+            if (pr.draft) {
+              core.info(`PR #${prNumber} is a draft — skipping template validation.`);
+              return;
+            }
+
+            const body = pr.body || "";
+            const failures = [];
+
+            const requiredSections = [
+              "## ✍️ Description",
+              "## ✅ Prerequisites",
+              "## 🛠️ Type of Change",
+            ];
+
+            for (const section of requiredSections) {
+              if (!body.includes(section)) {
+                failures.push(`Missing required section: \`${section}\``);
+              }
+            }
+
+            const descriptionMatch = body.match(
+              /## ✍️ Description\s*\n+([\s\S]*?)(?=\n## )/i
+            );
+            const description = (descriptionMatch?.[1] || "").trim();
+            if (!description) {
+              failures.push("The **Description** section is empty.");
+            }
+
+            const prerequisiteCheckboxes = [
+              "**Self-review completed**",
+              "**Tested thoroughly**",
+              "**No security risks**",
+            ];
+
+            for (const checkbox of prerequisiteCheckboxes) {
+              const escaped = checkbox.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
+              const regex = new RegExp(`- \\[(x|X)\\]\\s*${escaped}`, "i");
+              if (!regex.test(body)) {
+                failures.push(`Prerequisite not checked: ${checkbox}`);
+              }
+            }
+
+            const typeOfChangeCheckboxes = [
+              "🐞 **Bug fix**",
+              "✨ **New feature**",
+              "💥 **Breaking change**",
+              "🆕 **New script**",
+              "🌍 **Website update**",
+              "🔧 **Refactoring / Code Cleanup**",
+              "📝 **Documentation update**",
+            ];
+
+            const hasTypeChecked = typeOfChangeCheckboxes.some((checkbox) => {
+              const escaped = checkbox.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
+              const regex = new RegExp(`- \\[(x|X)\\]\\s*${escaped}`, "i");
+              return regex.test(body);
+            });
+
+            if (!hasTypeChecked) {
+              failures.push("At least one **Type of Change** checkbox must be checked.");
+            }
+
+            if (failures.length === 0) {
+              core.info(`PR #${prNumber} follows the PR template.`);
+              return;
+            }
+
+            core.info(`Closing PR #${prNumber} — template validation failed.`);
+
+            const templateUrl =
+              "https://github.com/community-scripts/ProxmoxVE/blob/main/.github/pull_request_template.md";
+            const failureList = failures.map((item) => `- ${item}`).join("\n");
+
+            const comment = [
+              `👋 Hi @${author},`,
+              ``,
+              `This pull request was closed because it does not follow the [PR template](${templateUrl}).`,
+              ``,
+              `Please fix the following and open a new PR (or reopen this one after updating the description):`,
+              ``,
+              failureList,
+              ``,
+              `> Use the template sections, fill in the description, check all prerequisite boxes, and select at least one type of change.`,
+              ``,
+              `Maintainers can add the \`keep open\` label to exempt a PR from this check.`,
+              ``,
+              `Thank you for contributing! 🙏`,
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: comment,
+            });
+
+            await github.rest.pulls.update({
+              owner,
+              repo,
+              pull_number: prNumber,
+              state: "closed",
+            });
+
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: prNumber,
+              labels: ["missing pr template"],
+            });

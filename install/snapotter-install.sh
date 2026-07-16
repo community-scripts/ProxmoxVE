@@ -39,6 +39,19 @@ msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.11" setup_uv
 NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+PG_VERSION="17" setup_postgresql
+PG_DB_NAME="snapotter" PG_DB_USER="snapotter" setup_postgresql_db
+
+msg_info "Installing Redis"
+$STD apt install -y redis-server
+if grep -q '^appendonly ' /etc/redis/redis.conf; then
+  sed -i 's/^appendonly .*/appendonly yes/' /etc/redis/redis.conf
+else
+  echo 'appendonly yes' >>/etc/redis/redis.conf
+fi
+$STD systemctl enable --now redis-server
+msg_ok "Installed Redis"
+
 fetch_and_deploy_gh_release "caire" "esimov/caire" "prebuild" "latest" "/usr/local/bin" "caire-*-linux-amd64.tar.gz"
 fetch_and_deploy_gh_release "snapotter" "snapotter-hq/SnapOtter" "prebuild" "latest" "/opt/snapotter" "snapotter-*-linux-amd64.tar.gz"
 
@@ -61,7 +74,8 @@ mkdir -p /tmp/snapotter-workspace
 cat <<EOF >/opt/snapotter_data/.env
 PORT=1349
 NODE_ENV=production
-DB_PATH=/opt/snapotter_data/snapotter.db
+DATABASE_URL=postgres://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}
+REDIS_URL=redis://127.0.0.1:6379
 WORKSPACE_PATH=/tmp/snapotter-workspace
 FILES_STORAGE_PATH=/opt/snapotter_data/files
 PYTHON_VENV_PATH=/opt/snapotter_data/ai/venv
@@ -85,7 +99,9 @@ PNPM_BIN="$(command -v pnpm)"
 cat <<EOF >/etc/systemd/system/snapotter.service
 [Unit]
 Description=SnapOtter Service
-After=network.target
+Wants=network-online.target
+After=network-online.target postgresql.service redis-server.service
+Requires=postgresql.service redis-server.service
 
 [Service]
 Type=simple
@@ -99,6 +115,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl daemon-reload
 systemctl enable -q --now snapotter
 msg_ok "Created Service"
 
