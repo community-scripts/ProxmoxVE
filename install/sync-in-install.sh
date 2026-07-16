@@ -14,9 +14,7 @@ network_check
 update_os
 
 NODE_VERSION="22" setup_nodejs
-
 setup_mariadb
-
 MARIADB_DB_NAME="sync_in" MARIADB_DB_USER="sync_in" setup_mariadb_db
 
 msg_info "Installing Sync-in"
