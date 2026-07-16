@@ -36,7 +36,7 @@ $STD apt install -y crystal
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="invidious" PG_DB_USER="invidious" setup_postgresql_db
 fetch_and_deploy_gh_release "Invidious" "iv-org/invidious" "tarball" "latest" "/opt/invidious"
-fetch_and_deploy_gh_release "Invidious Companion" "iv-org/invidious-companion" "prebuild" "latest" "/opt/invidious-companion" "invidious_companion-x86_64-unknown-linux-gnu.tar.gz"
+fetch_and_deploy_gh_release "Invidious Companion" "iv-org/invidious-companion" "prebuild" "latest" "/opt/invidious-companion" "invidious_companion-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
 
 msg_info "Building Invidious"
 cd /opt/invidious
