@@ -30,8 +30,14 @@ $STD apt install -y \
   fonts-open-sans
 msg_ok "Installed Dependencies"
 
-setup_deb822_repo "crystal" "https://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_13/Release.key" "https://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_13/" "./"
-$STD apt install -y crystal
+if [[ "$(arch_resolve amd64 arm64)" == "amd64" ]]; then
+  setup_deb822_repo "crystal" "https://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_13/Release.key" "https://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_13/" "./"
+  $STD apt install -y crystal
+else
+  fetch_and_deploy_gh_release "Crystal" "crystal-lang/crystal" "prebuild" "latest" "/opt/crystal" "crystal-*-linux-aarch64-bundled.tar.gz"
+  ln -sf /opt/crystal/bin/crystal /usr/local/bin/crystal
+  ln -sf /opt/crystal/bin/shards /usr/local/bin/shards
+fi
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="invidious" PG_DB_USER="invidious" setup_postgresql_db
