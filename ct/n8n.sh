@@ -45,7 +45,7 @@ EOF
     systemctl daemon-reload
   fi
 
-  $STD npm install -g n8n@2.27.5
+  $STD npm install -g n8n@latest
   systemctl restart n8n
   msg_ok "Updated n8n"
   msg_ok "Updated successfully!"
