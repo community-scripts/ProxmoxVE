@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  python3 \
   python3-setuptools \
   graphicsmagick
 msg_ok "Installed Dependencies"
@@ -24,7 +23,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing n8n (Patience)"
-$STD npm install -g n8n@2.27.5
+$STD npm install -g n8n@latest
 msg_ok "Installed n8n"
 
 msg_info "Creating Service"
