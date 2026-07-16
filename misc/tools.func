@@ -7431,6 +7431,18 @@ setup_mongodb() {
   mkdir -p /var/lib/mongodb
   chown -R mongodb:mongodb /var/lib/mongodb
 
+  local KERNEL_VERSION MONGO_MAJOR
+  KERNEL_VERSION=$(uname -r | cut -d- -f1)
+  MONGO_MAJOR="${MONGO_VERSION%%.*}"
+  if ((MONGO_MAJOR >= 8)) && [[ "$(printf '%s\n' "6.19" "$KERNEL_VERSION" | sort -V | head -n1)" == "6.19" ]]; then
+    mkdir -p /etc/systemd/system/mongod.service.d
+    cat <<EOF >/etc/systemd/system/mongod.service.d/rseq.conf
+[Service]
+Environment=GLIBC_TUNABLES=glibc.pthread.rseq=1
+EOF
+    systemctl daemon-reload
+  fi
+
   $STD systemctl enable mongod || {
     msg_warn "Failed to enable mongod service"
   }
