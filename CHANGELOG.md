@@ -515,6 +515,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - n8n: unpin / use latest release [@MickLesk](https://github.com/MickLesk) ([#15817](https://github.com/community-scripts/ProxmoxVE/pull/15817))
     - Pin Opencloud to v7.3.0 [@vhsdream](https://github.com/vhsdream) ([#15826](https://github.com/community-scripts/ProxmoxVE/pull/15826))
 
+  - #### 🔧 Refactor
+
+    - SFTPGo: Update APT Repo & Re-Enable Script [@MickLesk](https://github.com/MickLesk) ([#15829](https://github.com/community-scripts/ProxmoxVE/pull/15829))
+
 ### 💾 Core
 
   - #### ✨ New Features
