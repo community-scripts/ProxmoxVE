@@ -519,6 +519,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - AFFiNE: Bump to 0.27.0 [@MickLesk](https://github.com/MickLesk) ([#15848](https://github.com/community-scripts/ProxmoxVE/pull/15848))
     - n8n: unpin / use latest release [@MickLesk](https://github.com/MickLesk) ([#15817](https://github.com/community-scripts/ProxmoxVE/pull/15817))
     - Pin Opencloud to v7.3.0 [@vhsdream](https://github.com/vhsdream) ([#15826](https://github.com/community-scripts/ProxmoxVE/pull/15826))
 
