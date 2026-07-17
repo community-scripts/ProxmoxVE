@@ -36,19 +36,11 @@ function update_script() {
     systemctl stop cliproxyapi
     msg_ok "Stopped CLIProxyAPI"
 
-    if [[ -f /opt/cliproxyapi/config.yaml ]]; then
-      msg_info "Backing up configuration"
-      cp /opt/cliproxyapi/config.yaml /tmp/cliproxyapi_config.yaml.bak
-      msg_ok "Backed up configuration"
-    fi
+    create_backup /opt/cliproxyapi/config.yaml
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cliproxyapi" "router-for-me/CLIProxyAPI" "prebuild" "latest" "/opt/cliproxyapi" "CLIProxyAPI_*_linux_$(arch_resolve "amd64" "aarch64").tar.gz"
 
-    if [[ -f /tmp/cliproxyapi_config.yaml.bak ]]; then
-      msg_info "Restoring configuration"
-      mv /tmp/cliproxyapi_config.yaml.bak /opt/cliproxyapi/config.yaml
-      msg_ok "Restored configuration"
-    fi
+    restore_backup
 
     msg_info "Starting CLIProxyAPI"
     systemctl start cliproxyapi
