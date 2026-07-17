@@ -513,6 +513,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - webtrees: initialize database schema before admin user creation [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15837](https://github.com/community-scripts/ProxmoxVE/pull/15837))
     - Fix DocuSeal missing Leptonica deps on install and update [@Copilot](https://github.com/Copilot) ([#15858](https://github.com/community-scripts/ProxmoxVE/pull/15858))
     - apache-guacamole: detect installed extensions during update [@TowyTowy](https://github.com/TowyTowy) ([#15841](https://github.com/community-scripts/ProxmoxVE/pull/15841))
     - CLIProxyAPI: fix update deleting config.yaml [@austinpilz](https://github.com/austinpilz) ([#15834](https://github.com/community-scripts/ProxmoxVE/pull/15834))
