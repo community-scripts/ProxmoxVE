@@ -35,6 +35,8 @@ function update_script() {
     systemctl stop docuseal docuseal-sidekiq
     msg_ok "Stopped Services"
 
+    ensure_dependencies libleptonica-dev libleptonica6
+
     create_backup /opt/docuseal/.env \
       /opt/docuseal/data
 
