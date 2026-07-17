@@ -506,7 +506,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - OxiCloud ([#15823](https://github.com/community-scripts/ProxmoxVE/pull/15823))
+  - Invidious ([#15824](https://github.com/community-scripts/ProxmoxVE/pull/15824))
+- OxiCloud ([#15823](https://github.com/community-scripts/ProxmoxVE/pull/15823))
 
 ### 🚀 Updated Scripts
 
