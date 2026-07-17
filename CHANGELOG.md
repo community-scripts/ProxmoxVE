@@ -514,6 +514,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Pin Opencloud to v7.3.0 [@vhsdream](https://github.com/vhsdream) ([#15826](https://github.com/community-scripts/ProxmoxVE/pull/15826))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - feat(build.func): notify users when already on a pinned script version [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15819](https://github.com/community-scripts/ProxmoxVE/pull/15819))
+
 ### 🧰 Tools
 
   - #### ✨ New Features
