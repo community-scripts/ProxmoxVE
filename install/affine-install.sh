@@ -31,7 +31,7 @@ PG_DB_NAME="affine" PG_DB_USER="affine" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs
 setup_rust
 
-fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "v0.26.3" "/opt/affine"
+fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "v0.27.0" "/opt/affine"
 
 msg_info "Setting up Directories"
 rm -rf /root/.affine
@@ -73,7 +73,7 @@ cat <<TURBO >/opt/affine/.turbo/config.json
 }
 TURBO
 $STD corepack enable
-$STD corepack prepare yarn@4.12.0 --activate
+$STD corepack prepare yarn@4.13.0 --activate
 $STD yarn config set enableTelemetry 0
 export NODE_OPTIONS="--max-old-space-size=4096"
 export TSC_COMPILE_ON_ERROR=true

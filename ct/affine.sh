@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v0.26.3"
+  RELEASE="v0.27.0"
   if check_for_gh_release "affine_app" "toeverything/AFFiNE" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping Services"
     systemctl stop affine-web affine-worker
@@ -67,7 +67,7 @@ function update_script() {
 TURBO
 
     $STD corepack enable
-    $STD corepack prepare yarn@4.12.0 --activate
+    $STD corepack prepare yarn@4.13.0 --activate
     $STD yarn config set enableTelemetry 0
 
     export NODE_OPTIONS="--max-old-space-size=2048"
