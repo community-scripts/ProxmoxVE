@@ -51,11 +51,12 @@ function update_script() {
     export VITE_CORE_COMMIT_SHA=$(cat ~/.affine_app)
 
     # Initialize git repo (required for build process)
+    export HUSKY=0
     $STD git init -q
     $STD git config user.email "build@local"
     $STD git config user.name "Build"
     $STD git add -A
-    $STD git commit -q -m "update"
+    $STD git commit -q -m "update" --no-verify --allow-empty
 
     # Force Turbo to run sequentially
     mkdir -p /opt/affine/.turbo

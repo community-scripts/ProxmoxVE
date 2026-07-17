@@ -22,7 +22,8 @@ $STD apt install -y \
   libssl-dev \
   libjemalloc2 \
   redis-server \
-  nginx
+  nginx \
+  cmake
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
@@ -59,11 +60,12 @@ export PATH="/root/.cargo/bin:$PATH"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export VITE_CORE_COMMIT_SHA=$(cat ~/.affine_app)
 # # Initialize git repo (required for build process)
+export HUSKY=0
 $STD git init -q
 $STD git config user.email "build@local"
 $STD git config user.name "Build"
 $STD git add -A
-$STD git commit -q -m "initial"
+$STD git commit -q -m "update" --no-verify --allow-empty
 mkdir -p /opt/affine/.turbo
 cat <<TURBO >/opt/affine/.turbo/config.json
 {
