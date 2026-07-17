@@ -38,20 +38,31 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
   setup_go
-  UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
+  setup_uv
+  export UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.6"
+  if [[ $(/opt/authentik/.venv/bin/python --version 2>&1 | awk '{print $2}') != "${PYTHON_VERSION}" ]]; then
+    msg_info "Installing Python $PYTHON_VERSION via uv"
+    $STD uv cache clean
+    $STD uv python install "$PYTHON_VERSION" || {
+      msg_error "Failed to install Python $PYTHON_VERSION"
+      return 150
+    }
+    msg_ok "Python $PYTHON_VERSION installed"
+  fi
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.5.3"
+  AUTHENTIK_VERSION="version/2026.5.5"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
-  XMLSEC_VERSION="1.3.11"
+  XMLSEC_VERSION="1.3.12"
 
   if check_for_gh_release "geoipupdate" "maxmind/geoipupdate"; then
     fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
   fi
 
   if check_for_gh_release "xmlsec" "lsh123/xmlsec" "${XMLSEC_VERSION}"; then
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
+    rm -rf /opt/xmlsec
+    fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 
     msg_info "Updating xmlsec"
     cd /opt/xmlsec
@@ -77,7 +88,8 @@ function update_script() {
     fi
     msg_ok "Stopped Services"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
+    rm -rf /opt/authentik
+    fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 
     msg_info "Configuring rust"
     cd /opt/authentik

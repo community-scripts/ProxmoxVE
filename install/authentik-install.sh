@@ -54,12 +54,12 @@ NODE_VERSION="24" setup_nodejs
 setup_yq
 setup_go
 RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
-UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
+UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.6" setup_uv
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
-XMLSEC_VERSION="1.3.11"
-AUTHENTIK_VERSION="version/2026.5.3"
+XMLSEC_VERSION="1.3.12"
+AUTHENTIK_VERSION="version/2026.5.5"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
