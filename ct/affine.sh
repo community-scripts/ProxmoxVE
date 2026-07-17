@@ -36,6 +36,8 @@ function update_script() {
     systemctl stop affine-web affine-worker
     msg_ok "Stopped Services"
 
+    ensure_dependencies cmake
+
     create_backup /root/.affine/config /root/.affine/storage
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "${RELEASE}" "/opt/affine"
