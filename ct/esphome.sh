@@ -28,6 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  ensure_dependencies libusb-1.0-0
 
   msg_info "Stopping Service"
   systemctl stop esphome-device-builder 2>/dev/null || true
