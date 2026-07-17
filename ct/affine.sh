@@ -40,7 +40,7 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "${RELEASE}" "/opt/affine"
 
-    msg_info "Rebuilding Application (Patience)"
+    msg_info "Rebuilding Application (Patience ~25 mins, don't close the console!)"
     cd /opt/affine
     source /root/.profile
     export PATH="/root/.cargo/bin:/root/.rbenv/shims:$PATH"
