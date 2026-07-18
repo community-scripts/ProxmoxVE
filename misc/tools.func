@@ -8637,6 +8637,11 @@ setup_ruby() {
   local BASHRC_FILE="$HOME/.bashrc"
   local TMP_DIR=$(mktemp -d)
 
+  # Ensure HOME exists: callers may pass a not-yet-created home (e.g. a service
+  # user that is created later in the install), so the profile writes below do
+  # not fail on a missing directory.
+  mkdir -p "$HOME"
+
   if ! grep -q 'rbenv init' "$PROFILE_FILE" 2>/dev/null; then
     cat <<'EOF' >>"$PROFILE_FILE"
 export PATH="$HOME/.rbenv/bin:$PATH"
