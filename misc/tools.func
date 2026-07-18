@@ -2484,6 +2484,118 @@ verify_gpg_fingerprint() {
 }
 
 # ------------------------------------------------------------------------------
+# _deploy_source_tarball <tarball_path> <target> <workdir>
+#
+# Shared tail for the *source tarball* modes of the fetch_and_deploy_* helpers
+# (GitHub/GitLab/Codeberg archive tarballs that contain a single top-level
+# directory). Extracts <tarball_path> into <workdir>, then copies the contents
+# of that top-level directory into <target>.
+#
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included).
+#   - Does NOT own <workdir>: the caller creates it and is responsible for its
+#     cleanup (typically via a RETURN trap on its tmpdir).
+#   - cp failures are non-fatal here, matching the previous inline behavior.
+#
+# Returns: 0 on success (or non-fatal cp failure), 251 on extraction failure.
+# ------------------------------------------------------------------------------
+_deploy_source_tarball() {
+  local tarball="$1" target="$2" workdir="$3"
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    find "${target:?}" -mindepth 1 -delete
+  fi
+
+  tar --no-same-owner -xzf "$tarball" -C "$workdir" || {
+    msg_error "Failed to extract tarball"
+    return 251
+  }
+
+  local unpack_dir
+  unpack_dir=$(find "$workdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+  shopt -s dotglob nullglob
+  cp -r "$unpack_dir"/* "$target/"
+  shopt -u dotglob nullglob
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# _deploy_unpacked_archive <archive_path> <target> <workdir>
+#
+# Shared tail for the *prebuild* modes of the fetch_and_deploy_*_release helpers
+# (release assets shipped as .zip / .tar.* / .tgz / .txz). Extracts the archive
+# into <workdir>, then copies its payload into <target>. If the archive contains
+# a single top-level directory, that directory is stripped (its contents land
+# directly in <target>); otherwise the archive contents are copied as-is.
+#
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included).
+#   - Does NOT own <workdir>: the caller creates it and cleans it up.
+#
+# Returns: 0 on success, 65 on unsupported format, 251 on extraction failure,
+#          252 on copy failure / empty archive.
+# ------------------------------------------------------------------------------
+_deploy_unpacked_archive() {
+  local archive="$1" target="$2" workdir="$3"
+  local filename="${archive##*/}"
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    find "${target:?}" -mindepth 1 -delete
+  fi
+
+  if [[ "$filename" == *.zip ]]; then
+    ensure_dependencies unzip
+    unzip -q "$archive" -d "$workdir" || {
+      msg_error "Failed to extract ZIP archive"
+      return 251
+    }
+  elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
+    tar --no-same-owner -xf "$archive" -C "$workdir" || {
+      msg_error "Failed to extract TAR archive"
+      return 251
+    }
+  else
+    msg_error "Unsupported archive format: $filename"
+    return 65
+  fi
+
+  local top_entries inner_dir
+  top_entries=$(find "$workdir" -mindepth 1 -maxdepth 1)
+  if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
+    inner_dir="$top_entries"
+    shopt -s dotglob nullglob
+    if compgen -G "$inner_dir/*" >/dev/null; then
+      cp -r "$inner_dir"/* "$target/" || {
+        msg_error "Failed to copy contents from $inner_dir to $target"
+        shopt -u dotglob nullglob
+        return 252
+      }
+    else
+      msg_error "Inner directory is empty: $inner_dir"
+      shopt -u dotglob nullglob
+      return 252
+    fi
+    shopt -u dotglob nullglob
+  else
+    shopt -s dotglob nullglob
+    if compgen -G "$workdir/*" >/dev/null; then
+      cp -r "$workdir"/* "$target/" || {
+        msg_error "Failed to copy contents to $target"
+        shopt -u dotglob nullglob
+        return 252
+      }
+    else
+      msg_error "Unpacked archive is empty"
+      shopt -u dotglob nullglob
+      return 252
+    fi
+    shopt -u dotglob nullglob
+  fi
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # Fetches and deploys a GitHub tag-based source tarball.
 #
 # Description:
@@ -2531,6 +2643,7 @@ fetch_and_deploy_gh_tag() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
+  trap 'rm -rf "$tmpdir"' RETURN
   local tarball_url="https://github.com/${repo}/archive/refs/tags/${version}.tar.gz"
   local filename="${app_lc}-${version}.tar.gz"
 
@@ -2538,29 +2651,11 @@ fetch_and_deploy_gh_tag() {
 
   download_file "$tarball_url" "$tmpdir/$filename" || {
     msg_error "Download failed: $tarball_url"
-    rm -rf "$tmpdir"
     return 7
   }
 
-  mkdir -p "$target"
-  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${target:?}" -mindepth 1 -delete
-  fi
+  _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
-  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-    msg_error "Failed to extract tarball"
-    rm -rf "$tmpdir"
-    return 251
-  }
-
-  local unpack_dir
-  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-  shopt -s dotglob nullglob
-  cp -r "$unpack_dir"/* "$target/"
-  shopt -u dotglob nullglob
-
-  rm -rf "$tmpdir"
   echo "$version" >"$version_file"
   msg_ok "Deployed ${app} ${version} to ${target}"
   return 0
@@ -2725,35 +2820,18 @@ fetch_and_deploy_gl_tag() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
+  trap 'rm -rf "$tmpdir"' RETURN
   local filename="${app_lc}-${version_safe}.tar.gz"
 
   msg_info "Fetching GitLab tag: ${app} (${resolved_tag})"
 
   curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$tarball_url" || {
     msg_error "Download failed: $tarball_url"
-    rm -rf "$tmpdir"
     return 7
   }
 
-  mkdir -p "$target"
-  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${target:?}" -mindepth 1 -delete
-  fi
+  _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
-  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-    msg_error "Failed to extract tarball"
-    rm -rf "$tmpdir"
-    return 251
-  }
-
-  local unpack_dir
-  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-  shopt -s dotglob nullglob
-  cp -r "$unpack_dir"/* "$target/"
-  shopt -u dotglob nullglob
-
-  rm -rf "$tmpdir"
   echo "$resolved_tag" >"$version_file"
   msg_ok "Deployed ${app} ${resolved_tag} to ${target}"
   return 0
@@ -3450,6 +3528,7 @@ fetch_and_deploy_codeberg_release() {
 
     local tmpdir
     tmpdir=$(mktemp -d) || return 252
+    trap 'rm -rf "$tmpdir"' RETURN
 
     msg_info "Fetching Codeberg tag: $app ($tag_name)"
 
@@ -3466,31 +3545,13 @@ fetch_and_deploy_codeberg_release() {
 
     if [[ "$download_success" != "true" ]]; then
       msg_error "Download failed for $app ($tag_name)"
-      rm -rf "$tmpdir"
       return 250
     fi
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      find "${target:?}" -mindepth 1 -delete
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 251
-    }
-
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
     echo "$version" >"$version_file"
     msg_ok "Deployed: $app ($version)"
-    rm -rf "$tmpdir"
     return 0
   fi
 
@@ -3509,7 +3570,7 @@ fetch_and_deploy_codeberg_release() {
 
   local codeberg_rel_json
   codeberg_rel_json=$(mktemp /tmp/tools-codeberg-rel-XXXXXX) || return 73
-  trap 'rm -f "$codeberg_rel_json"' RETURN
+  trap 'rm -f "$codeberg_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"' RETURN
 
   local attempt=0 success=false resp http_code
 
@@ -3569,26 +3630,10 @@ fetch_and_deploy_codeberg_release() {
 
     if [[ "$download_success" != "true" ]]; then
       msg_error "Download failed for $app ($tag_name)"
-      rm -rf "$tmpdir"
       return 250
     fi
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      find "${target:?}" -mindepth 1 -delete
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 251
-    }
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
   ### Binary Mode ###
   elif [[ "$mode" == "binary" ]]; then
@@ -3636,14 +3681,12 @@ fetch_and_deploy_codeberg_release() {
 
     if [[ -z "$url_match" ]]; then
       msg_error "No suitable .deb asset found for $app"
-      rm -rf "$tmpdir"
       return 252
     fi
 
     filename="${url_match##*/}"
     curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -3651,7 +3694,6 @@ fetch_and_deploy_codeberg_release() {
     $STD apt install -y "$tmpdir/$filename" || {
       $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 100
       }
     }
@@ -3686,70 +3728,12 @@ fetch_and_deploy_codeberg_release() {
     filename="${asset_url##*/}"
     curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
     local unpack_tmp
     unpack_tmp=$(mktemp -d)
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      find "${target:?}" -mindepth 1 -delete
-    fi
-
-    if [[ "$filename" == *.zip ]]; then
-      ensure_dependencies unzip
-      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
-        msg_error "Failed to extract ZIP archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz ]]; then
-      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
-        msg_error "Failed to extract TAR archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    else
-      msg_error "Unsupported archive format: $filename"
-      rm -rf "$tmpdir" "$unpack_tmp"
-      return 251
-    fi
-
-    local top_dirs
-    top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
-    local top_entries inner_dir
-    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
-    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
-      inner_dir="$top_entries"
-      shopt -s dotglob nullglob
-      if compgen -G "$inner_dir/*" >/dev/null; then
-        cp -r "$inner_dir"/* "$target/" || {
-          msg_error "Failed to copy contents from $inner_dir to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Inner directory is empty: $inner_dir"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    else
-      shopt -s dotglob nullglob
-      if compgen -G "$unpack_tmp/*" >/dev/null; then
-        cp -r "$unpack_tmp"/* "$target/" || {
-          msg_error "Failed to copy contents to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Unpacked archive is empty"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    fi
+    _deploy_unpacked_archive "$tmpdir/$filename" "$target" "$unpack_tmp" || return
 
   ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
@@ -3757,7 +3741,6 @@ fetch_and_deploy_codeberg_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -3774,7 +3757,6 @@ fetch_and_deploy_codeberg_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
@@ -3787,7 +3769,6 @@ fetch_and_deploy_codeberg_release() {
 
     curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -3797,13 +3778,11 @@ fetch_and_deploy_codeberg_release() {
 
   else
     msg_error "Unknown mode: $mode"
-    rm -rf "$tmpdir"
     return 65
   fi
 
   echo "$version" >"$version_file"
   msg_ok "Deployed: $app ($version)"
-  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------
@@ -4090,6 +4069,7 @@ fetch_and_deploy_gh_release() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
+  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"' RETURN
   local filename="" url=""
 
   msg_info "Fetching GitHub release: $app ($version)"
@@ -4106,26 +4086,10 @@ fetch_and_deploy_gh_release() {
 
     curl_download "$tmpdir/$filename" "$direct_tarball_url" || {
       msg_error "Download failed: $direct_tarball_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      find "${target:?}" -mindepth 1 -delete
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 251
-    }
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
     ### Binary Mode ###
   elif [[ "$mode" == "binary" ]]; then
@@ -4210,14 +4174,12 @@ fetch_and_deploy_gh_release() {
 
     if [[ -z "$url_match" ]]; then
       msg_error "No suitable .deb asset found for $app"
-      rm -rf "$tmpdir"
       return 252
     fi
 
     filename="${url_match##*/}"
     curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -4230,7 +4192,6 @@ fetch_and_deploy_gh_release() {
     DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 100
       }
     }
@@ -4284,72 +4245,12 @@ fetch_and_deploy_gh_release() {
     filename="${asset_url##*/}"
     curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
     local unpack_tmp
     unpack_tmp=$(mktemp -d)
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      find "${target:?}" -mindepth 1 -delete
-    fi
-
-    if [[ "$filename" == *.zip ]]; then
-      ensure_dependencies unzip
-      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
-        msg_error "Failed to extract ZIP archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
-      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
-        msg_error "Failed to extract TAR archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    else
-      msg_error "Unsupported archive format: $filename"
-      rm -rf "$tmpdir" "$unpack_tmp"
-      return 65
-    fi
-
-    local top_dirs
-    top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
-    local top_entries inner_dir
-    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
-    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
-      # Strip leading folder
-      inner_dir="$top_entries"
-      shopt -s dotglob nullglob
-      if compgen -G "$inner_dir/*" >/dev/null; then
-        cp -r "$inner_dir"/* "$target/" || {
-          msg_error "Failed to copy contents from $inner_dir to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Inner directory is empty: $inner_dir"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    else
-      # Copy all contents
-      shopt -s dotglob nullglob
-      if compgen -G "$unpack_tmp/*" >/dev/null; then
-        cp -r "$unpack_tmp"/* "$target/" || {
-          msg_error "Failed to copy contents to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Unpacked archive is empty"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    fi
+    _deploy_unpacked_archive "$tmpdir/$filename" "$target" "$unpack_tmp" || return
 
     ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
@@ -4357,7 +4258,6 @@ fetch_and_deploy_gh_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -4392,7 +4292,6 @@ fetch_and_deploy_gh_release() {
     fi
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
@@ -4405,7 +4304,6 @@ fetch_and_deploy_gh_release() {
 
     curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -4415,13 +4313,11 @@ fetch_and_deploy_gh_release() {
 
   else
     msg_error "Unknown mode: $mode"
-    rm -rf "$tmpdir"
     return 65
   fi
 
   echo "$version" >"$version_file"
   msg_ok "Deployed: $app ($version)"
-  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------
@@ -9343,10 +9239,10 @@ fetch_and_deploy_from_url() {
     msg_error "Failed to create temporary directory"
     return 252
   }
+  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"' RETURN
 
   curl -fsSL -o "$tmpdir/$filename" "$url" || {
     msg_error "Download failed: $url"
-    rm -rf "$tmpdir"
     return 250
   }
 
@@ -9366,7 +9262,6 @@ fetch_and_deploy_from_url() {
     archive_type="tar"
   else
     msg_error "Unsupported or unknown archive type: $file_desc"
-    rm -rf "$tmpdir"
     return 65
   fi
 
@@ -9379,19 +9274,16 @@ fetch_and_deploy_from_url() {
     $STD apt install -y "$tmpdir/$filename" || {
       $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 100
       }
     }
 
-    rm -rf "$tmpdir"
     msg_ok "Successfully installed .deb package"
     return 0
   fi
 
   if [[ -z "$directory" ]]; then
     msg_error "Directory parameter is required for archive extraction"
-    rm -rf "$tmpdir"
     return 65
   fi
 
@@ -9410,13 +9302,11 @@ fetch_and_deploy_from_url() {
     ensure_dependencies unzip
     unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
       msg_error "Failed to extract ZIP archive"
-      rm -rf "$tmpdir" "$unpack_tmp"
       return 251
     }
   elif [[ "$archive_type" == "tar" ]]; then
     tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
       msg_error "Failed to extract TAR archive"
-      rm -rf "$tmpdir" "$unpack_tmp"
       return 251
     }
   fi
@@ -9430,12 +9320,12 @@ fetch_and_deploy_from_url() {
     if compgen -G "$inner_dir/*" >/dev/null; then
       cp -r "$inner_dir"/* "$directory/" || {
         msg_error "Failed to copy contents from $inner_dir to $directory"
-        rm -rf "$tmpdir" "$unpack_tmp"
+        shopt -u dotglob nullglob
         return 252
       }
     else
       msg_error "Inner directory is empty: $inner_dir"
-      rm -rf "$tmpdir" "$unpack_tmp"
+      shopt -u dotglob nullglob
       return 252
     fi
     shopt -u dotglob nullglob
@@ -9444,18 +9334,17 @@ fetch_and_deploy_from_url() {
     if compgen -G "$unpack_tmp/*" >/dev/null; then
       cp -r "$unpack_tmp"/* "$directory/" || {
         msg_error "Failed to copy contents to $directory"
-        rm -rf "$tmpdir" "$unpack_tmp"
+        shopt -u dotglob nullglob
         return 252
       }
     else
       msg_error "Unpacked archive is empty"
-      rm -rf "$tmpdir" "$unpack_tmp"
+      shopt -u dotglob nullglob
       return 252
     fi
     shopt -u dotglob nullglob
   fi
 
-  rm -rf "$tmpdir" "$unpack_tmp"
   msg_ok "Successfully deployed archive to $directory"
   return 0
 }
@@ -9856,7 +9745,7 @@ fetch_and_deploy_gl_release() {
 
   local gl_rel_json
   gl_rel_json=$(mktemp /tmp/tools-gl-rel-XXXXXX) || return 73
-  trap 'rm -f "$gl_rel_json"' RETURN
+  trap 'rm -f "$gl_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"' RETURN
 
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
@@ -9970,26 +9859,10 @@ fetch_and_deploy_gl_release() {
 
     curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$direct_tarball_url" || {
       msg_error "Download failed: $direct_tarball_url"
-      rm -rf "$tmpdir"
       return 1
     }
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      find "${target:?}" -mindepth 1 -delete
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 1
-    }
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 1
 
   ### Binary Mode ###
   elif [[ "$mode" == "binary" ]]; then
@@ -10059,14 +9932,12 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$url_match" ]]; then
       msg_error "No suitable .deb asset found for $app"
-      rm -rf "$tmpdir"
       return 1
     fi
 
     filename="${url_match##*/}"
     curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -10077,7 +9948,6 @@ fetch_and_deploy_gl_release() {
     DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 1
       }
     }
@@ -10088,7 +9958,6 @@ fetch_and_deploy_gl_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -10123,75 +9992,18 @@ fetch_and_deploy_gl_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 1
     }
 
     filename="${asset_url##*/}"
     curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 1
     }
 
     local unpack_tmp
     unpack_tmp=$(mktemp -d)
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      find "${target:?}" -mindepth 1 -delete
-    fi
-
-    if [[ "$filename" == *.zip ]]; then
-      ensure_dependencies unzip
-      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
-        msg_error "Failed to extract ZIP archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      }
-    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
-      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
-        msg_error "Failed to extract TAR archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      }
-    else
-      msg_error "Unsupported archive format: $filename"
-      rm -rf "$tmpdir" "$unpack_tmp"
-      return 1
-    fi
-
-    local top_entries inner_dir
-    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
-    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
-      inner_dir="$top_entries"
-      shopt -s dotglob nullglob
-      if compgen -G "$inner_dir/*" >/dev/null; then
-        cp -r "$inner_dir"/* "$target/" || {
-          msg_error "Failed to copy contents from $inner_dir to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 1
-        }
-      else
-        msg_error "Inner directory is empty: $inner_dir"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      fi
-      shopt -u dotglob nullglob
-    else
-      shopt -s dotglob nullglob
-      if compgen -G "$unpack_tmp/*" >/dev/null; then
-        cp -r "$unpack_tmp"/* "$target/" || {
-          msg_error "Failed to copy contents to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 1
-        }
-      else
-        msg_error "Unpacked archive is empty"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      fi
-      shopt -u dotglob nullglob
-    fi
+    _deploy_unpacked_archive "$tmpdir/$filename" "$target" "$unpack_tmp" || return
 
   ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
@@ -10199,7 +10011,6 @@ fetch_and_deploy_gl_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -10234,7 +10045,6 @@ fetch_and_deploy_gl_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -10247,7 +10057,6 @@ fetch_and_deploy_gl_release() {
 
     curl $download_timeout -fsSL "${header[@]}" -o "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -10257,13 +10066,11 @@ fetch_and_deploy_gl_release() {
 
   else
     msg_error "Unknown mode: $mode"
-    rm -rf "$tmpdir"
     return 1
   fi
 
   echo "$version" >"$version_file"
   msg_ok "Deployed: $app ($version)"
-  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------
