@@ -2544,7 +2544,7 @@ fetch_and_deploy_gh_tag() {
 
   mkdir -p "$target"
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    rm -rf "${target:?}/"*
+    find "${target:?}" -mindepth 1 -delete
   fi
 
   tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
@@ -2737,7 +2737,7 @@ fetch_and_deploy_gl_tag() {
 
   mkdir -p "$target"
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    rm -rf "${target:?}/"*
+    find "${target:?}" -mindepth 1 -delete
   fi
 
   tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
@@ -3472,7 +3472,7 @@ fetch_and_deploy_codeberg_release() {
 
     mkdir -p "$target"
     if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
+      find "${target:?}" -mindepth 1 -delete
     fi
 
     tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
@@ -3575,7 +3575,7 @@ fetch_and_deploy_codeberg_release() {
 
     mkdir -p "$target"
     if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
+      find "${target:?}" -mindepth 1 -delete
     fi
 
     tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
@@ -3694,7 +3694,7 @@ fetch_and_deploy_codeberg_release() {
     unpack_tmp=$(mktemp -d)
     mkdir -p "$target"
     if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
+      find "${target:?}" -mindepth 1 -delete
     fi
 
     if [[ "$filename" == *.zip ]]; then
@@ -4112,7 +4112,7 @@ fetch_and_deploy_gh_release() {
 
     mkdir -p "$target"
     if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
+      find "${target:?}" -mindepth 1 -delete
     fi
 
     tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
@@ -4292,7 +4292,7 @@ fetch_and_deploy_gh_release() {
     unpack_tmp=$(mktemp -d)
     mkdir -p "$target"
     if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
+      find "${target:?}" -mindepth 1 -delete
     fi
 
     if [[ "$filename" == *.zip ]]; then
@@ -9131,6 +9131,16 @@ setup_uv() {
       msg_ok "uvx wrapper installed"
     fi
 
+    # Install specific Python version if requested (even when uv is already up to date)
+    if [[ -n "${PYTHON_VERSION:-}" ]]; then
+      msg_info "Installing Python $PYTHON_VERSION via uv"
+      $STD uv python install "$PYTHON_VERSION" || {
+        msg_error "Failed to install Python $PYTHON_VERSION"
+        return 150
+      }
+      msg_ok "Python $PYTHON_VERSION installed"
+    fi
+
     return 0
   fi
 
@@ -9966,7 +9976,7 @@ fetch_and_deploy_gl_release() {
 
     mkdir -p "$target"
     if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
+      find "${target:?}" -mindepth 1 -delete
     fi
 
     tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
@@ -10128,7 +10138,7 @@ fetch_and_deploy_gl_release() {
     unpack_tmp=$(mktemp -d)
     mkdir -p "$target"
     if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
+      find "${target:?}" -mindepth 1 -delete
     fi
 
     if [[ "$filename" == *.zip ]]; then
