@@ -3600,9 +3600,14 @@ configure_ssh_settings() {
     glob_path=$(whiptail --backtitle "$backtitle" \
       --inputbox "Enter a folder or glob to scan (e.g. /root/.ssh/*.pub)" 10 72 --title "Scan Folder/Glob" 3>&1 1>&2 2>&3)
     if [[ -n "$glob_path" ]]; then
-      shopt -s nullglob
-      read -r -a _scan_files <<<"$glob_path"
-      shopt -u nullglob
+      # A folder means "scan every file inside it"; read(1) performs no
+      # pathname expansion, so expand the glob with compgen -G instead
+      [[ -d "$glob_path" ]] && glob_path="${glob_path%/}/*"
+      local -a _scan_files=()
+      local _scan_file
+      while IFS= read -r _scan_file; do
+        _scan_files+=("$_scan_file")
+      done < <(compgen -G "$glob_path")
       if [[ "${#_scan_files[@]}" -gt 0 ]]; then
         ssh_build_choices_from_files "${_scan_files[@]}"
         if [[ "$COUNT" -gt 0 ]]; then
