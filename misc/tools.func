@@ -7157,7 +7157,7 @@ setup_meilisearch() {
         MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
 
         msg_info "Removing old MeiliSearch database for migration"
-        rm -rf "${MEILI_DB_PATH:?}"/*
+        find "${MEILI_DB_PATH:?}" -mindepth 1 -delete
 
         # Import dump using CLI flag (this is the supported method)
         local DUMP_FILE="${MEILI_DUMP_DIR}/${DUMP_UID}.dump"
@@ -9400,7 +9400,7 @@ fetch_and_deploy_from_url() {
   mkdir -p "$directory"
 
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    rm -rf "${directory:?}/"*
+    find "${directory:?}" -mindepth 1 -delete
   fi
 
   local unpack_tmp
