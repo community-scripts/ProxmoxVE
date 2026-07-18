@@ -2484,6 +2484,38 @@ verify_gpg_fingerprint() {
 }
 
 # ------------------------------------------------------------------------------
+# _download_source_tarball <url> <dest> [curl args...]
+#
+# Downloads a source .tar.gz to <dest> and verifies the gzip stream is complete
+# before returning. Source forges (GitHub/GitLab/Codeberg) build these archives
+# on the fly; for large repos the response is occasionally a truncated-but-
+# cleanly-closed gzip that curl accepts as success (HTTP 200) and which then
+# fails at extraction time. We validate with `gzip -t` and re-download on
+# failure, and abort stalled transfers (--speed-time) so a hung generation
+# retries instead of blocking for minutes. Extra args pass through to curl
+# (e.g. auth headers like -H "PRIVATE-TOKEN: ...").
+#
+# Returns: 0 on success, 250 on persistent failure.
+# ------------------------------------------------------------------------------
+_download_source_tarball() {
+  local url="$1" dest="$2"
+  shift 2
+  local attempt max=3
+  for ((attempt = 1; attempt <= max; attempt++)); do
+    if curl --connect-timeout 15 --max-time 900 --speed-limit 1024 --speed-time 60 \
+      -fsSL "$@" -o "$dest" "$url" && gzip -t "$dest" 2>/dev/null; then
+      return 0
+    fi
+    rm -f "$dest"
+    ((attempt < max)) && {
+      msg_warn "Source archive download failed or incomplete (attempt ${attempt}/${max}), retrying..."
+      sleep $((attempt * 3))
+    }
+  done
+  return 250
+}
+
+# ------------------------------------------------------------------------------
 # _deploy_source_tarball <tarball_path> <target> <workdir>
 #
 # Shared tail for the *source tarball* modes of the fetch_and_deploy_* helpers
@@ -2649,7 +2681,7 @@ fetch_and_deploy_gh_tag() {
 
   msg_info "Fetching GitHub tag: ${app} (${version})"
 
-  download_file "$tarball_url" "$tmpdir/$filename" || {
+  _download_source_tarball "$tarball_url" "$tmpdir/$filename" || {
     msg_error "Download failed: $tarball_url"
     return 7
   }
@@ -2825,7 +2857,7 @@ fetch_and_deploy_gl_tag() {
 
   msg_info "Fetching GitLab tag: ${app} (${resolved_tag})"
 
-  curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$tarball_url" || {
+  _download_source_tarball "$tarball_url" "$tmpdir/$filename" "${header[@]}" || {
     msg_error "Download failed: $tarball_url"
     return 7
   }
@@ -3539,7 +3571,7 @@ fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format: https://codeberg.org/{owner}/{repo}/archive/{tag}.tar.gz
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl_download "$tmpdir/$filename" "$archive_url"; then
+    if _download_source_tarball "$archive_url" "$tmpdir/$filename"; then
       download_success=true
     fi
 
@@ -3624,7 +3656,7 @@ fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl_download "$tmpdir/$filename" "$archive_url"; then
+    if _download_source_tarball "$archive_url" "$tmpdir/$filename"; then
       download_success=true
     fi
 
@@ -3704,7 +3736,6 @@ fetch_and_deploy_codeberg_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -3721,7 +3752,6 @@ fetch_and_deploy_codeberg_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
@@ -4084,7 +4114,7 @@ fetch_and_deploy_gh_release() {
     local direct_tarball_url="https://github.com/$repo/archive/refs/tags/$tag_name.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
-    curl_download "$tmpdir/$filename" "$direct_tarball_url" || {
+    _download_source_tarball "$direct_tarball_url" "$tmpdir/$filename" || {
       msg_error "Download failed: $direct_tarball_url"
       return 250
     }
@@ -4202,7 +4232,6 @@ fetch_and_deploy_gh_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -4238,7 +4267,6 @@ fetch_and_deploy_gh_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
@@ -9857,7 +9885,7 @@ fetch_and_deploy_gl_release() {
     local direct_tarball_url="https://gitlab.com/$repo/-/archive/$tag_name/${app_lc}-${version_safe}.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
-    curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$direct_tarball_url" || {
+    _download_source_tarball "$direct_tarball_url" "$tmpdir/$filename" "${header[@]}" || {
       msg_error "Download failed: $direct_tarball_url"
       return 1
     }
