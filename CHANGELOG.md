@@ -502,6 +502,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-18
+
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - [tools.update-lxcs] feat: optional reporting success/failures to heathchecks.io (or others) [@sir106](https://github.com/sir106) ([#15701](https://github.com/community-scripts/ProxmoxVE/pull/15701))
+
 ## 2026-07-17
 
 ### 🆕 New Scripts
