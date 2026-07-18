@@ -510,6 +510,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: add configurable host CA inheritance during bootstrap [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15840](https://github.com/community-scripts/ProxmoxVE/pull/15840))
 
+  - #### 🔧 Refactor
+
+    - tools.func: Safe Delete Directorys & Update PYTHON_VERSION with setup_uv [@MickLesk](https://github.com/MickLesk) ([#15870](https://github.com/community-scripts/ProxmoxVE/pull/15870))
+
 ### 🧰 Tools
 
   - #### ✨ New Features
