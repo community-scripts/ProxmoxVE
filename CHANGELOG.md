@@ -504,6 +504,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-18
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: add configurable host CA inheritance during bootstrap [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15840](https://github.com/community-scripts/ProxmoxVE/pull/15840))
+
 ### 🧰 Tools
 
   - #### ✨ New Features
