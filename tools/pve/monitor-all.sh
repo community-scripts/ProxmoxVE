@@ -54,18 +54,24 @@ while true; do
       continue
     fi
 
-    # Determine type and set config command
-    if pct status $instance >/dev/null 2>&1; then
+    # Determine type and read the current config directly from Proxmox's pmxcfs.
+    # Ignore snapshot sections, matching the current config shown by pct/qm config.
+    if [ -r "/etc/pve/lxc/$instance.conf" ]; then
       type="ct"
-      config_cmd="pct config"
+      config_file="/etc/pve/lxc/$instance.conf"
     else
       type="vm"
-      config_cmd="qm config"
+      config_file="/etc/pve/qemu-server/$instance.conf"
     fi
+    config=$(sed '/^\[/,$d' "$config_file")
 
     # Skip templates and onboot-disabled
-    onboot=$($config_cmd $instance | grep -q "onboot: 0" || ( ! $config_cmd $instance | grep -q "onboot" ) && echo "true" || echo "false")
-    template=$($config_cmd $instance | grep -q "^template:" && echo "true" || echo "false")
+    if grep -q "onboot: 0" <<<"$config" || ! grep -q "onboot" <<<"$config"; then
+      onboot="true"
+    else
+      onboot="false"
+    fi
+    template=$(grep -q "^template:" <<<"$config" && echo "true" || echo "false")
 
     if [ "$onboot" == "true" ]; then
       echo "Skipping $instance because it is set not to boot"
@@ -76,7 +82,7 @@ while true; do
     fi
 
     # Check for mon-restart tag
-    has_tag=$($config_cmd $instance | grep -q "tags:.*mon-restart" && echo "true" || echo "false")
+    has_tag=$(grep -q "tags:.*mon-restart" <<<"$config" && echo "true" || echo "false")
     if [ "$has_tag" != "true" ]; then
       echo "Skipping $instance because it does not have 'mon-restart' tag"
       continue
