@@ -511,6 +511,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - update authentik to 2026.5.5 [@thieneret](https://github.com/thieneret) ([#15855](https://github.com/community-scripts/ProxmoxVE/pull/15855))
     - [FIX] BookOrbit: add missing `restore_backup` during update [@vhsdream](https://github.com/vhsdream) ([#15881](https://github.com/community-scripts/ProxmoxVE/pull/15881))
 
 ### 💾 Core
