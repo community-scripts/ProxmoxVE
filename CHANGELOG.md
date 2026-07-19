@@ -524,6 +524,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Revert "core: add configurable host CA inheritance during bootstrap" [@MickLesk](https://github.com/MickLesk) ([#15886](https://github.com/community-scripts/ProxmoxVE/pull/15886))
 
+  - #### 🐞 Bug Fixes
+
+    - fix(build.func): expand glob in SSH key "Scan Folder/Glob" so it can find keys [@TowyTowy](https://github.com/TowyTowy) ([#15873](https://github.com/community-scripts/ProxmoxVE/pull/15873))
+
 ## 2026-07-18
 
 ### 💾 Core
