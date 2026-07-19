@@ -4024,7 +4024,7 @@ _apply_host_ca_certs_in_container() {
 
   case "${inherit_host_ca,,}" in
   no | false | 0 | off)
-    msg_info "Skipping host CA inheritance by configuration"
+    msg_warn "Skipping host CA inheritance by configuration (${#host_certs[@]} host certificate(s) available)"
     return 0
     ;;
   esac
