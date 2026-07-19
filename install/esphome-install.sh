@@ -14,7 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y git
+$STD apt install -y git \
+  libusb-1.0-0
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv

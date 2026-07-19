@@ -3753,18 +3753,19 @@ run_addon_updates() {
 }
 
 runtime_script_status_guard() {
+  local mode="${1:-}"
   local script_slug="${SCRIPT_SLUG:-${NSAPP:-}}"
   script_slug="$(echo "$script_slug" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
   [[ -z "$script_slug" ]] && return 0
 
-  local api_url="https://db.community-scripts.org/api/collections/script_scripts/records?filter=(slug='${script_slug}')&perPage=1&fields=slug,is_disabled,is_deleted,disable_message,deleted_message"
+  local api_url="https://db.community-scripts.org/api/collections/script_scripts/records?filter=(slug='${script_slug}')&perPage=1&fields=slug,is_disabled,is_deleted,disable_message,deleted_message,pinned_version,pin_reason"
   local response
   if ! response=$(curl -fsSL --connect-timeout 2 --max-time 3 "$api_url" 2>/dev/null); then
     msg_warn "Script status check is unavailable. Continuing without status verification."
     return 0
   fi
 
-  local is_deleted is_disabled deleted_message disable_message info_url
+  local is_deleted is_disabled deleted_message disable_message pinned_version pin_reason info_url
   if printf '%s' "$response" | grep -qE '"items":[[:space:]]*\[[[:space:]]*\]'; then
     return 0
   fi
@@ -3774,6 +3775,8 @@ runtime_script_status_guard() {
   is_disabled=$(printf '%s' "$response" | sed -n 's/.*"is_disabled"[[:space:]]*:[[:space:]]*\(true\|false\).*/\1/p' | head -1)
   deleted_message=$(printf '%s' "$response" | sed -n 's/.*"deleted_message"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
   disable_message=$(printf '%s' "$response" | sed -n 's/.*"disable_message"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+  pinned_version=$(printf '%s' "$response" | sed -n 's/.*"pinned_version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+  pin_reason=$(printf '%s' "$response" | sed -n 's/.*"pin_reason"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
   is_deleted=${is_deleted:-false}
   is_disabled=${is_disabled:-false}
   info_url="https://community-scripts.org/scripts/${script_slug}"
@@ -3805,6 +3808,26 @@ runtime_script_status_guard() {
     return 1
   fi
 
+  if [[ "$mode" == "update" && -n "$pinned_version" && -n "${NSAPP:-}" ]]; then
+    local current_file="$HOME/.${NSAPP}"
+    if [[ -f "$current_file" ]]; then
+      local installed pinned_clean installed_clean
+      installed="$(<"$current_file")"
+      pinned_clean="$pinned_version"
+      installed_clean="$installed"
+      [[ "$pinned_clean" =~ ^v[0-9] ]] && pinned_clean="${pinned_clean:1}"
+      [[ "$installed_clean" =~ ^v[0-9] ]] && installed_clean="${installed_clean:1}"
+      if [[ "$installed_clean" == "$pinned_clean" ]]; then
+        if [[ -n "$pin_reason" ]]; then
+          msg_info "You are already on the pinned version (${pinned_version}). ${pin_reason}"
+        else
+          msg_info "You are already on the pinned version (${pinned_version}). No newer update is offered intentionally — please do not open an issue unless you see an actual error."
+        fi
+        msg_info "More info: ${info_url}"
+      fi
+    fi
+  fi
+
   return 0
 }
 
@@ -3820,7 +3843,7 @@ runtime_script_status_guard() {
 start() {
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
-    runtime_script_status_guard || return 0
+    runtime_script_status_guard install || return 0
     install_script || return 0
     return 0
   elif [ ! -z ${PHS_SILENT+x} ] && [[ "${PHS_SILENT}" == "1" ]]; then
@@ -3828,7 +3851,7 @@ start() {
     set_std_mode
     ensure_profile_loaded
     get_lxc_ip
-    runtime_script_status_guard || return 0
+    runtime_script_status_guard update || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3839,7 +3862,7 @@ start() {
     set_std_mode
     ensure_profile_loaded
     get_lxc_ip
-    runtime_script_status_guard || return 0
+    runtime_script_status_guard update || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3869,7 +3892,7 @@ start() {
     esac
     ensure_profile_loaded
     get_lxc_ip
-    runtime_script_status_guard || return 0
+    runtime_script_status_guard update || return 0
     update_script
     run_addon_updates
     update_motd_ip

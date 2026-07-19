@@ -91,6 +91,30 @@ jobs:
             let skipped = 0;
 
             for (const branch of candidates) {
+              // A branch name can be reused after an earlier PR was merged. Never delete a
+              // branch while it is the head of a current open PR, even if it is also a
+              // candidate from an older merged PR.
+              try {
+                const { data: openPrs } = await github.rest.pulls.list({
+                  owner,
+                  repo,
+                  state: "open",
+                  head: `${owner}:${branch}`,
+                  per_page: 1,
+                });
+
+                if (openPrs.length > 0) {
+                  console.log(`Skipped "${branch}" (head of open PR #${openPrs[0].number})`);
+                  skipped++;
+                  continue;
+                }
+              } catch (error) {
+                // Do not risk deleting a branch if GitHub cannot confirm it has no open PR.
+                console.log(`Failed to check open PRs for "${branch}": ${error.message}`);
+                skipped++;
+                continue;
+              }
+
               // Confirm the branch still exists and isn't protected.
               let branchData;
               try {

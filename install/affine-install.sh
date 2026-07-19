@@ -22,7 +22,8 @@ $STD apt install -y \
   libssl-dev \
   libjemalloc2 \
   redis-server \
-  nginx
+  nginx \
+  cmake
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
@@ -30,7 +31,7 @@ PG_DB_NAME="affine" PG_DB_USER="affine" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs
 setup_rust
 
-fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "v0.26.3" "/opt/affine"
+fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "v0.27.0" "/opt/affine"
 
 msg_info "Setting up Directories"
 rm -rf /root/.affine
@@ -59,11 +60,12 @@ export PATH="/root/.cargo/bin:$PATH"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export VITE_CORE_COMMIT_SHA=$(cat ~/.affine_app)
 # # Initialize git repo (required for build process)
+export HUSKY=0
 $STD git init -q
 $STD git config user.email "build@local"
 $STD git config user.name "Build"
 $STD git add -A
-$STD git commit -q -m "initial"
+$STD git commit -q -m "update" --no-verify --allow-empty
 mkdir -p /opt/affine/.turbo
 cat <<TURBO >/opt/affine/.turbo/config.json
 {
@@ -71,7 +73,7 @@ cat <<TURBO >/opt/affine/.turbo/config.json
 }
 TURBO
 $STD corepack enable
-$STD corepack prepare yarn@4.12.0 --activate
+$STD corepack prepare yarn@4.13.0 --activate
 $STD yarn config set enableTelemetry 0
 export NODE_OPTIONS="--max-old-space-size=4096"
 export TSC_COMPILE_ON_ERROR=true

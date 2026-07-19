@@ -11,14 +11,15 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 CONF_FILE="/etc/update-lxcs.conf"
-
-echo -e "\n $(date)"
+LOG_FILE="/var/log/update-lxcs-cron.log"
+PING_URL=""
 
 # Collect excluded containers from arguments
 excluded_containers=("$@")
 
-# Merge exclusions from config file if it exists
+# Merge exclusions and healthchecks URL from config file if it exists
 if [[ -f "$CONF_FILE" ]]; then
+  PING_URL=$(grep -oP '^\s*PING_URL\s*=\s*\K.+' "$CONF_FILE" 2>/dev/null | tr -d '"' | tr -d "'" || true)
   conf_exclude=$(grep -oP '^\s*EXCLUDE\s*=\s*\K[0-9,]+' "$CONF_FILE" 2>/dev/null || true)
   IFS=',' read -ra conf_ids <<<"$conf_exclude"
   for id in "${conf_ids[@]}"; do
@@ -26,6 +27,17 @@ if [[ -f "$CONF_FILE" ]]; then
     [[ -n "$id" ]] && excluded_containers+=("$id")
   done
 fi
+
+# Overwrite logfile on each run when healthchecks is used
+if [[ -n "$PING_URL" ]]; then
+  true > "$LOG_FILE"
+fi
+
+if [[ -n "$PING_URL" ]]; then
+  curl -fsS -m 10 --retry 5 "${PING_URL}/start" -o /dev/null 2>/dev/null || true
+fi
+
+echo -e "\n $(date)"
 
 function update_container() {
   local container=$1
@@ -38,11 +50,35 @@ function update_container() {
   alpine) pct exec "$container" -- ash -c "apk -U upgrade" ;;
   archlinux) pct exec "$container" -- bash -c "pacman -Syyu --noconfirm" ;;
   fedora | rocky | centos | alma) pct exec "$container" -- bash -c "dnf -y update && dnf -y upgrade" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::='--force-confold' dist-upgrade -y; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::='--force-confold' dist-upgrade -y; status=\$?; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED || true; exit \$status" ;;
   opensuse) pct exec "$container" -- bash -c "zypper ref && zypper --non-interactive dup" ;;
   *) echo " [Warn] Unknown OS type '$os' for container $container, skipping" ;;
   esac
 }
+
+update_status=0
+
+# Define exit handler to send healthchecks.io status (with logfile on failure/success)
+function exit_handler() {
+  local exit_code=$?
+  if [[ -n "$PING_URL" ]]; then
+    sync
+    if [[ $exit_code -ne 0 || $update_status -ne 0 ]]; then
+      if [[ -f "$LOG_FILE" ]]; then
+        curl -fsS -m 10 --retry 5 --data-binary @"$LOG_FILE" "${PING_URL}/fail" -o /dev/null 2>/dev/null || true
+      else
+        curl -fsS -m 10 --retry 5 "${PING_URL}/fail" -o /dev/null 2>/dev/null || true
+      fi
+    else
+      if [[ -f "$LOG_FILE" ]]; then
+        curl -fsS -m 10 --retry 5 --data-binary @"$LOG_FILE" "$PING_URL" -o /dev/null 2>/dev/null || true
+      else
+        curl -fsS -m 10 --retry 5 "$PING_URL" -o /dev/null 2>/dev/null || true
+      fi
+    fi
+  fi
+}
+trap exit_handler EXIT
 
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   excluded=false
@@ -65,7 +101,7 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       echo -e "[Info] Starting $container"
       pct start "$container"
       sleep 5
-      update_container "$container" || echo " [Error] Update failed for $container"
+      update_container "$container" || { echo " [Error] Update failed for $container"; update_status=1; }
       # check if patchmon agent is present in container and run a report if found
       if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
         echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
@@ -74,7 +110,7 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       echo -e "[Info] Shutting down $container"
       pct shutdown "$container" --timeout 60 &
     elif [ "$status" == "status: running" ]; then
-      update_container "$container" || echo " [Error] Update failed for $container"
+      update_container "$container" || { echo " [Error] Update failed for $container"; update_status=1; }
       # check if patchmon agent is present in container and run a report if found
       if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
         echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"

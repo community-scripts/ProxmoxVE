@@ -28,6 +28,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  setup_deb822_repo \
+  "sftpgo" \
+  "https://oss.sftpgo.com/apt/gpg.key" \
+  "https://oss.sftpgo.com/apt" \
+  "trixie"
   
   msg_info "Updating SFTPGo"
   $STD apt update

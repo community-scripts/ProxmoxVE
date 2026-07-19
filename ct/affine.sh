@@ -30,17 +30,19 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v0.26.3"
+  RELEASE="v0.27.0"
   if check_for_gh_release "affine_app" "toeverything/AFFiNE" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping Services"
     systemctl stop affine-web affine-worker
     msg_ok "Stopped Services"
 
+    ensure_dependencies cmake
+
     create_backup /root/.affine/config /root/.affine/storage
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "${RELEASE}" "/opt/affine"
 
-    msg_info "Rebuilding Application (Patience)"
+    msg_info "Rebuilding Application (Patience ~25 mins, don't close the console!)"
     cd /opt/affine
     source /root/.profile
     export PATH="/root/.cargo/bin:/root/.rbenv/shims:$PATH"
@@ -51,11 +53,12 @@ function update_script() {
     export VITE_CORE_COMMIT_SHA=$(cat ~/.affine_app)
 
     # Initialize git repo (required for build process)
+    export HUSKY=0
     $STD git init -q
     $STD git config user.email "build@local"
     $STD git config user.name "Build"
     $STD git add -A
-    $STD git commit -q -m "update"
+    $STD git commit -q -m "update" --no-verify --allow-empty
 
     # Force Turbo to run sequentially
     mkdir -p /opt/affine/.turbo
@@ -66,7 +69,7 @@ function update_script() {
 TURBO
 
     $STD corepack enable
-    $STD corepack prepare yarn@4.12.0 --activate
+    $STD corepack prepare yarn@4.13.0 --activate
     $STD yarn config set enableTelemetry 0
 
     export NODE_OPTIONS="--max-old-space-size=2048"
