@@ -31,8 +31,6 @@ NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
 
 fetch_and_deploy_gh_release "manyfold" "manyfold3d/manyfold" "tarball" "latest" "/opt/manyfold/app"
 
-# Create the service user (and its home) before setup_ruby, which writes rbenv
-# profile snippets into HOME=/home/manyfold.
 useradd -m -s /usr/bin/bash manyfold
 
 RUBY_INSTALL_VERSION=$(cat /opt/manyfold/app/.ruby-version)
