@@ -515,6 +515,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - update authentik to 2026.5.5 [@thieneret](https://github.com/thieneret) ([#15855](https://github.com/community-scripts/ProxmoxVE/pull/15855))
     - [FIX] BookOrbit: add missing `restore_backup` during update [@vhsdream](https://github.com/vhsdream) ([#15881](https://github.com/community-scripts/ProxmoxVE/pull/15881))
 
+  - #### ✨ New Features
+
+    - Update OPNsense from 26.1 to 26.7 [@tdn131](https://github.com/tdn131) ([#15895](https://github.com/community-scripts/ProxmoxVE/pull/15895))
+
 ### 💾 Core
 
   - Revert "core: add configurable host CA inheritance during bootstrap" [@MickLesk](https://github.com/MickLesk) ([#15886](https://github.com/community-scripts/ProxmoxVE/pull/15886))
