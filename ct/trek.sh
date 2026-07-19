@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/mauriceboe/TREK
+# Source: https://github.com/liketrek/TREK
 
 APP="TREK"
 var_tags="${var_tags:-travel;planning;collaboration}"
@@ -32,7 +32,7 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
-  if check_for_gh_release "trek" "mauriceboe/TREK"; then
+  if check_for_gh_release "trek" "liketrek/TREK"; then
     MIGRATION=0
     grep -qF "ExecStart=/usr/bin/node --import tsx src/index.ts" \
       /etc/systemd/system/trek.service && MIGRATION=1
@@ -47,7 +47,7 @@ function update_script() {
       /opt/trek/data \
       /opt/trek/uploads
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "trek" "mauriceboe/TREK" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "trek" "liketrek/TREK" "tarball"
 
     msg_info "Building TREK"
     cd /opt/trek
@@ -79,7 +79,7 @@ function update_script() {
       cat <<EOF >/etc/systemd/system/trek.service
 [Unit]
 Description=TREK Travel Planner
-Documentation=https://github.com/mauriceboe/TREK
+Documentation=https://github.com/liketrek/TREK
 After=network-online.target
 Wants=network-online.target
 
