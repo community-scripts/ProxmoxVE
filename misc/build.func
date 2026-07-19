@@ -1009,6 +1009,7 @@ base_settings() {
 
   APT_CACHER=${var_apt_cacher:-""}
   APT_CACHER_IP=${var_apt_cacher_ip:-""}
+  INHERIT_HOST_CA="${var_inherit_host_ca:-auto}"
 
   # Runtime check: Verify APT cacher is reachable if configured
   if [[ -n "$APT_CACHER_IP" && "$APT_CACHER" == "yes" ]]; then
@@ -1088,7 +1089,7 @@ load_vars_file() {
 
   # Allowed var_* keys
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_inherit_host_ca var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
@@ -1285,6 +1286,12 @@ load_vars_file() {
             continue
           fi
           ;;
+        var_inherit_host_ca)
+          if [[ "$var_val" != "yes" && "$var_val" != "no" && "$var_val" != "auto" ]]; then
+            msg_warn "Invalid host CA inheritance value '$var_val' in $file (must be yes/no/auto), ignoring"
+            continue
+          fi
+          ;;
         var_container_storage | var_template_storage)
           # Validate that the storage exists and is active on the current node
           local _storage_status
@@ -1324,7 +1331,7 @@ default_var_settings() {
   # Allowed var_* keys (alphabetically sorted)
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_inherit_host_ca var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
@@ -1407,6 +1414,7 @@ var_ssh=no
 # HTTP/HTTPS proxy (optional - for networks requiring a proxy)
 # var_http_proxy=http://proxy.local:8080
 # var_http_no_proxy=localhost,127.0.0.1,.local
+# var_inherit_host_ca=auto
 
 # Features/Tags/verbosity
 var_fuse=no
@@ -1507,7 +1515,7 @@ get_app_defaults_path() {
 if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   declare -ag VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_github_token var_gpu var_http_no_proxy var_http_proxy var_inherit_host_ca var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_os var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_version var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage var_searchdomain
@@ -1657,6 +1665,7 @@ _build_current_app_vars_tmp() {
   _apt_cacher_ip="${APT_CACHER_IP:-}"
   _http_proxy="${HTTP_PROXY:-${var_http_proxy:-}}"
   _http_no_proxy="${HTTP_NO_PROXY:-${var_http_no_proxy:-}}"
+  _inherit_host_ca="${INHERIT_HOST_CA:-${var_inherit_host_ca:-auto}}"
   _fuse="${ENABLE_FUSE:-no}"
   _tun="${ENABLE_TUN:-no}"
   _gpu="${ENABLE_GPU:-no}"
@@ -1710,6 +1719,7 @@ _build_current_app_vars_tmp() {
     [ -n "$_apt_cacher_ip" ] && echo "var_apt_cacher_ip=$(_sanitize_value "$_apt_cacher_ip")"
     [ -n "$_http_proxy" ] && echo "var_http_proxy=$(_sanitize_value "$_http_proxy")"
     [ -n "$_http_no_proxy" ] && echo "var_http_no_proxy=$(_sanitize_value "$_http_no_proxy")"
+    [ -n "$_inherit_host_ca" ] && echo "var_inherit_host_ca=$(_sanitize_value "$_inherit_host_ca")"
 
     [ -n "$_fuse" ] && echo "var_fuse=$(_sanitize_value "$_fuse")"
     [ -n "$_tun" ] && echo "var_tun=$(_sanitize_value "$_tun")"
@@ -1874,7 +1884,7 @@ advanced_settings() {
     TAGS="community-script${var_tags:+;${var_tags}}"
   fi
   local STEP=1
-  local MAX_STEP=30
+  local MAX_STEP=31
 
   # Store values for back navigation - inherit from var_* app defaults
   local _ct_type="${var_unprivileged:-1}"
@@ -1896,6 +1906,7 @@ advanced_settings() {
   local _apt_cacher_ip="${var_apt_cacher_ip:-}"
   local _http_proxy="${var_http_proxy:-}"
   local _http_no_proxy="${var_http_no_proxy:-}"
+  local _inherit_host_ca="${var_inherit_host_ca:-auto}"
   local _mtu="${var_mtu:-}"
   local _sd="${var_searchdomain:-}"
   local _ns="${var_ns:-}"
@@ -2725,9 +2736,47 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 25: Container Timezone
+    # STEP 25: Host CA Inheritance
     # ═══════════════════════════════════════════════════════════════════════════
     25)
+      local host_ca_count=0
+      local host_ca_dir="/usr/local/share/ca-certificates"
+      local cert
+      shopt -s nullglob
+      for cert in "$host_ca_dir"/*.crt; do
+        host_ca_count=$((host_ca_count + 1))
+      done
+      shopt -u nullglob
+
+      if [[ $host_ca_count -eq 0 ]]; then
+        _inherit_host_ca="auto"
+        ((STEP++))
+        continue
+      fi
+
+      local host_ca_default_flag=""
+      [[ "$_inherit_host_ca" == "no" ]] && host_ca_default_flag="--defaultno"
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "HOST CA INHERITANCE" \
+        --ok-button "Next" --cancel-button "Back" \
+        $host_ca_default_flag \
+        --yesno "\nInherit host CA certificates into this container?\n\nDetected on host: ${host_ca_count} certificate(s) in:\n${host_ca_dir}\n\nRecommended for private PKI / TLS-inspection environments.\n\n(App default: ${var_inherit_host_ca:-auto})" 16 72; then
+        _inherit_host_ca="yes"
+      else
+        if [ $? -eq 1 ]; then
+          _inherit_host_ca="no"
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 26: Container Timezone
+    # ═══════════════════════════════════════════════════════════════════════════
+    26)
       local tz_hint="$_ct_timezone"
       [[ -z "$tz_hint" ]] && tz_hint="(empty - will use host timezone)"
 
@@ -2750,9 +2799,9 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 26: Container Protection
+    # STEP 27: Container Protection
     # ═══════════════════════════════════════════════════════════════════════════
-    26)
+    27)
       local protect_default_flag="--defaultno"
       [[ "$_protect_ct" == "yes" || "$_protect_ct" == "1" ]] && protect_default_flag=""
 
@@ -2904,6 +2953,7 @@ Leave empty to skip."
       local apt_display="${_apt_cacher:-no}"
       [[ "$_apt_cacher" == "yes" && -n "$_apt_cacher_ip" ]] && apt_display="$_apt_cacher_ip"
       local http_proxy_display="${_http_proxy:-(none)}"
+      local inherit_ca_display="${_inherit_host_ca:-auto}"
 
       local post_install_display="${_post_install:-(none)}"
       local post_install_warn=""
@@ -2934,6 +2984,7 @@ Advanced:
   Timezone: $tz_display
   APT Cacher: $apt_display
   HTTP Proxy: $http_proxy_display
+  Inherit Host CAs: $inherit_ca_display
   Verbose: $_verbose
   Post-Install Script: ${post_install_display}${post_install_warn}"
 
@@ -2979,6 +3030,7 @@ Advanced:
   APT_CACHER_IP="$_apt_cacher_ip"
   HTTP_PROXY="$_http_proxy"
   HTTP_NO_PROXY="$_http_no_proxy"
+  INHERIT_HOST_CA="$_inherit_host_ca"
   VERBOSE="$_verbose"
   var_post_install="$_post_install"
 
@@ -2997,6 +3049,7 @@ Advanced:
   var_sdn_vnet="$_sdn_vnet"
   var_http_proxy="$_http_proxy"
   var_http_no_proxy="$_http_no_proxy"
+  var_inherit_host_ca="$_inherit_host_ca"
 
   # Format optional values
   [[ -n "$_mtu" ]] && MTU=",mtu=$_mtu" || MTU=""
@@ -3946,6 +3999,81 @@ EOF
 }
 
 # ------------------------------------------------------------------------------
+# _apply_host_ca_certs_in_container()
+#
+# - Copies administrator-provided CA certificates from the Proxmox host into the
+#   container before base package bootstrap
+# - Source: /usr/local/share/ca-certificates/*.crt (Debian convention)
+# - Refreshes the container trust store when update-ca-certificates is available
+# - No-op when no host certificates are present; failures are non-fatal
+# ------------------------------------------------------------------------------
+_apply_host_ca_certs_in_container() {
+  local host_ca_dir="/usr/local/share/ca-certificates"
+  [[ -z "${CTID:-}" ]] && return 0
+  local inherit_host_ca="${INHERIT_HOST_CA:-${var_inherit_host_ca:-auto}}"
+
+  local -a host_certs=()
+  local cert
+  shopt -s nullglob
+  for cert in "$host_ca_dir"/*.crt; do
+    host_certs+=("$cert")
+  done
+  shopt -u nullglob
+
+  [[ ${#host_certs[@]} -eq 0 ]] && return 0
+
+  case "${inherit_host_ca,,}" in
+  no | false | 0 | off)
+    msg_info "Skipping host CA inheritance by configuration"
+    return 0
+    ;;
+  esac
+
+  msg_info "Inheriting host CA certificates into container"
+
+  local found=${#host_certs[@]}
+  local copied=0
+  local skipped=0
+  local cert_name
+
+  pct exec "$CTID" -- mkdir -p /usr/local/share/ca-certificates >/dev/null 2>&1 || {
+    msg_warn "Failed to create CA certificate directory in container"
+    return 0
+  }
+
+  for cert in "${host_certs[@]}"; do
+    cert_name="$(basename "$cert")"
+    if [[ ! -r "$cert" || "$cert_name" != *.crt ]]; then
+      msg_warn "Skipping invalid or unreadable host CA certificate: ${cert_name}"
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    if pct push "$CTID" "$cert" "/usr/local/share/ca-certificates/${cert_name}" >/dev/null 2>&1; then
+      pct exec "$CTID" -- chmod 644 "/usr/local/share/ca-certificates/${cert_name}" >/dev/null 2>&1 || true
+      copied=$((copied + 1))
+    else
+      msg_warn "Failed to push host CA certificate: ${cert_name}"
+      skipped=$((skipped + 1))
+    fi
+  done
+
+  if [[ $copied -eq 0 ]]; then
+    msg_warn "No host CA certificates were copied (${found} found, ${skipped} skipped)"
+    return 0
+  fi
+
+  local refresh_shell="bash"
+  [[ "$var_os" == "alpine" ]] && refresh_shell="ash"
+
+  if pct exec "$CTID" -- "$refresh_shell" -c 'command -v update-ca-certificates >/dev/null 2>&1 && update-ca-certificates' >/dev/null 2>&1; then
+    msg_ok "Inherited ${copied} host CA certificate(s) and updated trust store (${skipped} skipped)"
+  else
+    msg_warn "Copied ${copied} host CA certificate(s), but trust store update failed or update-ca-certificates is unavailable (${skipped} skipped)"
+  fi
+}
+
+# ------------------------------------------------------------------------------
 # build_container()
 #
 # - Main function for creating and configuring LXC container
@@ -4565,6 +4693,7 @@ EOF
   local install_exit_code=0
 
   _apply_http_proxy_in_container
+  _apply_host_ca_certs_in_container
 
   # Continue with standard container setup
   if [ "$var_os" == "alpine" ]; then
