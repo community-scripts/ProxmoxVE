@@ -517,6 +517,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools.func: centralize deploy tail + trap-based tmpdir cleanup [@MickLesk](https://github.com/MickLesk) ([#15872](https://github.com/community-scripts/ProxmoxVE/pull/15872))
     - Update OPNsense from 26.1 to 26.7 [@tdn131](https://github.com/tdn131) ([#15895](https://github.com/community-scripts/ProxmoxVE/pull/15895))
 
 ### 💾 Core
