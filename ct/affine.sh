@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v0.27.0"
+  RELEASE="v0.27.2"
   if check_for_gh_release "affine_app" "toeverything/AFFiNE" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping Services"
     systemctl stop affine-web affine-worker
