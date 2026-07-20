@@ -36,6 +36,17 @@ function update_script() {
     fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-$(arch_resolve).zip"
     chmod +x /opt/gotify/gotify-linux-$(arch_resolve)
 
+    if [[ -f /opt/gotify/config.yml && ! -f /opt/gotify/gotify-server.env ]]; then
+      msg_info "Migrating config.yml to env format (Gotify 3.x)"
+      if /opt/gotify/gotify-linux-$(arch_resolve) migrate-config /opt/gotify/config.yml >/opt/gotify/gotify-server.env 2>/dev/null; then
+        mv /opt/gotify/config.yml /opt/gotify/config.yml.bak
+        msg_ok "Migrated config.yml → gotify-server.env (backup: config.yml.bak)"
+      else
+        rm -f /opt/gotify/gotify-server.env
+        msg_warn "config.yml migration failed — left config.yml in place, review manually"
+      fi
+    fi
+
     if ! grep -qE '^ExecStart=.* serve' /etc/systemd/system/gotify.service 2>/dev/null; then
       msg_info "Migrating service to serve subcommand (Gotify 3.x)"
       sed -i -E 's|^(ExecStart=/opt/gotify/.*gotify-linux-[^ ]+)$|\1 serve|' /etc/systemd/system/gotify.service
