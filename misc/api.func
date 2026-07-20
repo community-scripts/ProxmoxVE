@@ -9,37 +9,52 @@
 # Provides functions for sending anonymous telemetry data via the community
 # telemetry ingest service at telemetry.community-scripts.org.
 #
-# Features:
-#   - Container/VM creation statistics
-#   - Installation success/failure tracking
-#   - Error code mapping and reporting
-#   - Privacy-respecting anonymous telemetry
+# DESIGN PRINCIPLES:
+#   1. SINGLE REPORTER: only the HOST sends terminal statuses (success/failed/
+#      aborted). Containers never curl the telemetry endpoint for terminal
+#      events - they write local artifact files (.failed flag + .errinfo) that
+#      the host picks up. This prevents the "first terminal event wins" race
+#      on the server from persisting a metadata-less container payload and
+#      discarding the full host payload.
+#   2. FULL PAYLOAD, ALWAYS: every send includes the complete system metadata
+#      (os, pve version, arch, cpu, gpu, ram, repo attribution). No more
+#      minimal payloads that create empty records.
+#   3. FOCUSED ERROR TRACE: the error field contains exactly the output of the
+#      command that failed (captured by silent() via byte offset), prefixed
+#      with "exit_code=N | <explanation> | at line L: <command>". Not a 120KB
+#      log dump, not the wrong phase of the log.
+#   4. IDEMPOTENT FINALIZE: post_update_to_api() sends exactly one terminal
+#      status per execution, no matter how many traps fire.
 #
 # Usage:
 #   source <(curl -fsSL .../api.func)
-#   post_to_api          # Report LXC container creation
-#   post_to_api_vm       # Report VM creation
-#   post_update_to_api   # Report installation status
+#   post_to_api            # Report LXC container creation ("installing")
+#   post_to_api_vm         # Report VM creation ("installing")
+#   post_progress_to_api   # Progress ping ("validation"/"configuring")
+#   post_update_to_api     # Final status ("done"/"failed"/"aborted")
 #
 # Privacy:
-#   - Only anonymous statistics (no personal data)
+#   - Only anonymous statistics (no personal data, IPs are anonymized)
 #   - User can opt-out via DIAGNOSTICS=no
 #   - Random UUID for session tracking only
-#   - Data retention: 30 days
 #
 # ==============================================================================
 
 # ==============================================================================
 # Telemetry Configuration
 # ==============================================================================
-TELEMETRY_URL="https://telemetry.community-scripts.org/telemetry"
+TELEMETRY_URL="${TELEMETRY_URL:-https://telemetry.community-scripts.org/telemetry}"
 
-# Timeout for telemetry requests (seconds)
-# Progress pings (validation/configuring) use the short timeout
+# Timeout for progress pings (seconds)
 TELEMETRY_TIMEOUT=5
-# Final status updates (success/failed) use the longer timeout
-# PocketBase may need more time under load (FindRecord + UpdateRecord)
+# Timeout for final status updates (they carry the error trace)
 STATUS_TIMEOUT=10
+
+# Max size of the error trace sent to the API (bytes) and max line count.
+# Keep this SMALL and FOCUSED - the goal is "exactly the messages from the
+# moment of failure", not the whole installation log.
+TELEMETRY_ERROR_MAX_LINES=60
+TELEMETRY_ERROR_MAX_BYTES=10240
 
 # ==============================================================================
 # SECTION 0: REPOSITORY SOURCE DETECTION
@@ -54,64 +69,75 @@ STATUS_TIMEOUT=10
 #   * "ProxmoxVE"  — official community-scripts/ProxmoxVE (production)
 #   * "ProxmoxVED" — official community-scripts/ProxmoxVED (development)
 #   * "external"   — any fork or unknown source
-# - Fallback: "ProxmoxVED" (CI sed transforms ProxmoxVED → ProxmoxVE on promotion)
-# - Sets and exports REPO_SOURCE global variable
-# - Skips detection if REPO_SOURCE is already set (e.g., by environment)
+# - Additionally sets REPO_SLUG to the real "owner/repo" string
+# - Fallback: "ProxmoxVE" (this file lives in the production repo)
+# - Skips detection if REPO_SOURCE is already set (e.g., exported by the host
+#   into the container environment)
 # ------------------------------------------------------------------------------
 detect_repo_source() {
-  # Allow explicit override via environment
-  [[ -n "${REPO_SOURCE:-}" ]] && return 0
+  # Allow explicit override via environment (also how the container inherits
+  # the host's attribution instead of re-detecting)
+  if [[ -n "${REPO_SOURCE:-}" ]]; then
+    if [[ -z "${REPO_SLUG:-}" ]]; then
+      case "$REPO_SOURCE" in
+      ProxmoxVE) REPO_SLUG="community-scripts/ProxmoxVE" ;;
+      ProxmoxVED) REPO_SLUG="community-scripts/ProxmoxVED" ;;
+      esac
+      export REPO_SLUG
+    fi
+    return 0
+  fi
 
   local content="" owner_repo=""
 
   # Method 1: Read from /proc/$$/cmdline
   # When invoked via: bash -c "$(curl -fsSL https://.../ct/app.sh)"
-  # the full CT/VM script content is in /proc/$$/cmdline (same PID through source chain)
   if [[ -r /proc/$$/cmdline ]]; then
     content=$(tr '\0' ' ' </proc/$$/cmdline 2>/dev/null) || true
   fi
 
-  # Method 2: Read from the original script file (bash ct/app.sh / bash vm/app.sh)
+  # Method 2: Read from the original script file (bash ct/app.sh)
   if [[ -z "$content" ]] || ! echo "$content" | grep -qE 'githubusercontent\.com|community-scripts\.org' 2>/dev/null; then
     if [[ -f "$0" ]] && [[ "$0" != *bash* ]]; then
       content=$(head -10 "$0" 2>/dev/null) || true
     fi
   fi
 
-  # Extract owner/repo from URL patterns found in the script content
   if [[ -n "$content" ]]; then
-    # GitHub raw URL: raw.githubusercontent.com/OWNER/REPO/...
     owner_repo=$(echo "$content" | grep -oE 'raw\.githubusercontent\.com/[^/]+/[^/]+' | head -1 | sed 's|raw\.githubusercontent\.com/||') || true
-
-    # Gitea URL: git.community-scripts.org/OWNER/REPO/...
     if [[ -z "$owner_repo" ]]; then
       owner_repo=$(echo "$content" | grep -oE 'git\.community-scripts\.org/[^/]+/[^/]+' | head -1 | sed 's|git\.community-scripts\.org/||') || true
     fi
   fi
 
-  # Map detected owner/repo to canonical repo_source value
   case "$owner_repo" in
-  community-scripts/ProxmoxVE) REPO_SOURCE="ProxmoxVE" ;;
-  community-scripts/ProxmoxVED) REPO_SOURCE="ProxmoxVED" ;;
-  "")
-    # No URL detected — use hardcoded fallback
-    # This value must match the repo: ProxmoxVE for production, ProxmoxVED for dev
+  community-scripts/ProxmoxVE)
     REPO_SOURCE="ProxmoxVE"
+    REPO_SLUG="community-scripts/ProxmoxVE"
+    ;;
+  community-scripts/ProxmoxVED)
+    REPO_SOURCE="ProxmoxVED"
+    REPO_SLUG="community-scripts/ProxmoxVED"
+    ;;
+  "")
+    # No URL detected — hardcoded fallback (production repo)
+    REPO_SOURCE="ProxmoxVE"
+    REPO_SLUG="community-scripts/ProxmoxVE"
     ;;
   *)
-    # Fork or unknown repo
     REPO_SOURCE="external"
+    REPO_SLUG="$owner_repo"
     ;;
   esac
 
-  export REPO_SOURCE
+  export REPO_SOURCE REPO_SLUG
 }
 
 # Run detection immediately when api.func is sourced
 detect_repo_source
 
 # ==============================================================================
-# SECTION 1: ERROR CODE DESCRIPTIONS
+# SECTION 1: ERROR CODE DESCRIPTIONS & CATEGORIES
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -120,22 +146,6 @@ detect_repo_source
 # - Maps numeric exit codes to human-readable error descriptions
 # - Canonical source of truth for ALL exit code mappings
 # - Used by both api.func (telemetry) and error_handler.func (error display)
-# - Supports:
-#   * Generic/Shell errors (1-3, 10, 124-132, 134, 137, 139, 141, 143-146)
-#   * curl/wget errors (4-8, 16, 18, 22-28, 30, 32-36, 39, 44-48, 51-52, 55-57, 59, 61, 63, 75, 78-79, 92, 95)
-#   * Package manager errors (APT, DPKG: 100-102, 255)
-#   * Script Validation & Setup (103-123)
-#   * BSD sysexits (64-78)
-#   * Systemd/Service errors (150-154)
-#   * Python/pip/uv errors (160-162)
-#   * PostgreSQL errors (170-173)
-#   * MySQL/MariaDB errors (180-183)
-#   * MongoDB errors (190-193)
-#   * Proxmox custom codes (200-231)
-#   * Tools & Addon Scripts (232-238)
-#   * Node.js/npm errors (239, 243, 245-249)
-#   * Application Install/Update errors (250-254)
-# - Returns description string for given exit code
 # ------------------------------------------------------------------------------
 explain_exit_code() {
   local code="$1"
@@ -146,7 +156,7 @@ explain_exit_code() {
   3) echo "General syntax or argument error" ;;
   10) echo "Docker / privileged mode required (unsupported environment)" ;;
 
-  # --- curl / wget errors (commonly seen in downloads) ---
+  # --- curl / wget errors ---
   4) echo "curl: Feature not supported or protocol error" ;;
   5) echo "curl: Could not resolve proxy" ;;
   6) echo "curl: DNS resolution failed (could not resolve host)" ;;
@@ -254,6 +264,7 @@ explain_exit_code() {
   152) echo "Permission denied (EACCES)" ;;
   153) echo "Build/compile failed (make/gcc/cmake)" ;;
   154) echo "Node.js: Native addon build failed (node-gyp)" ;;
+
   # --- Python / pip / uv (160-162) ---
   160) echo "Python: Virtualenv / uv environment missing or broken" ;;
   161) echo "Python: Dependency resolution failed" ;;
@@ -339,29 +350,61 @@ explain_exit_code() {
 }
 
 # ------------------------------------------------------------------------------
+# categorize_error()
+#
+# - Maps exit codes to error categories for dashboard grouping
+# - Can be overridden via ERROR_CATEGORY_OVERRIDE (log-based subclassification)
+# ------------------------------------------------------------------------------
+categorize_error() {
+  if [[ -n "${ERROR_CATEGORY_OVERRIDE:-}" ]]; then
+    echo "$ERROR_CATEGORY_OVERRIDE"
+    return
+  fi
+
+  local code="$1"
+  case "$code" in
+  6 | 7 | 22 | 35) echo "network" ;;
+  10) echo "config" ;;
+  28 | 124 | 211) echo "timeout" ;;
+  214 | 217 | 219 | 224) echo "storage" ;;
+  100 | 101 | 102 | 127 | 160 | 161 | 162 | 255) echo "dependency" ;;
+  126 | 152) echo "permission" ;;
+  128 | 203 | 204 | 205 | 206 | 207 | 208) echo "config" ;;
+  200 | 209 | 210 | 212 | 213 | 215 | 216 | 218 | 220 | 221 | 222 | 223 | 225 | 231) echo "proxmox" ;;
+  150 | 151 | 153 | 154) echo "service" ;;
+  170 | 171 | 172 | 173 | 180 | 181 | 182 | 183 | 190 | 191 | 192 | 193) echo "database" ;;
+  243 | 245 | 246 | 247 | 248 | 249) echo "runtime" ;;
+  129 | 130 | 143) echo "user_aborted" ;;
+  134 | 137) echo "resource" ;;
+  139 | 141) echo "signal" ;;
+  1 | 2) echo "shell" ;;
+  *) echo "unknown" ;;
+  esac
+}
+
+# ==============================================================================
+# SECTION 2: JSON & LOG HELPERS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
 # json_escape()
 #
 # - Escapes a string for safe JSON embedding
 # - Strips ANSI escape sequences and non-printable control characters
-# - Handles backslashes, quotes, newlines, tabs, and carriage returns
 # - Uses jq when available (guaranteed correct), falls back to awk
 # ------------------------------------------------------------------------------
 json_escape() {
   local input
-  # Pipeline: strip ANSI → remove control chars → escape for JSON
   input=$(printf '%s' "$1" |
     sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
     tr -d '\000-\010\013\014\016-\037\177\r')
 
-  # Prefer jq: guaranteed correct JSON string encoding (handles all edge cases)
   if command -v jq &>/dev/null; then
-    # jq -Rs reads raw stdin as string, outputs JSON-encoded string with quotes.
-    # We strip the surrounding quotes since the heredoc adds them.
     printf '%s' "$input" | jq -Rs '.' | sed 's/^"//;s/"$//'
     return
   fi
 
-  # Fallback: character-by-character processing with awk (avoids gsub replacement pitfalls)
+  # Fallback: character-by-character processing with awk
   printf '%s' "$input" |
     awk '
         BEGIN { ORS="" }
@@ -378,140 +421,220 @@ json_escape() {
 }
 
 # ------------------------------------------------------------------------------
-# get_error_text()
+# _tm_clean_log()
 #
-# - Returns last 20 lines of the active log (INSTALL_LOG or BUILD_LOG)
-# - Falls back to combined log or BUILD_LOG if primary is not accessible
-# - Handles container paths that don't exist on the host
+# - stdin filter: strips ANSI/CR, anonymizes IPs (GDPR), drops pure
+#   progress-noise lines (apt/dpkg download and unpack chatter)
 # ------------------------------------------------------------------------------
-get_error_text() {
-  local logfile=""
-  if declare -f get_active_logfile >/dev/null 2>&1; then
-    logfile=$(get_active_logfile)
-  elif [[ -n "${INSTALL_LOG:-}" ]]; then
-    logfile="$INSTALL_LOG"
-  elif [[ -n "${BUILD_LOG:-}" ]]; then
-    logfile="$BUILD_LOG"
-  fi
-
-  # If logfile is inside container (e.g. /root/.install-*), try the host copy
-  if [[ -n "$logfile" && ! -s "$logfile" ]]; then
-    # Try combined log: /tmp/<app>-<CTID>-<SESSION_ID>.log
-    if [[ -n "${CTID:-}" && -n "${SESSION_ID:-}" ]]; then
-      local combined_log="/tmp/${NSAPP:-lxc}-${CTID}-${SESSION_ID}.log"
-      if [[ -s "$combined_log" ]]; then
-        logfile="$combined_log"
-      fi
-    fi
-  fi
-
-  # Also try BUILD_LOG as fallback if primary log is empty/missing
-  if [[ -z "$logfile" || ! -s "$logfile" ]] && [[ -n "${BUILD_LOG:-}" && -s "${BUILD_LOG}" ]]; then
-    logfile="$BUILD_LOG"
-  fi
-
-  # Try SILENT_LOGFILE as last resort (captures $STD command output)
-  if [[ -z "$logfile" || ! -s "$logfile" ]] && [[ -n "${SILENT_LOGFILE:-}" && -s "${SILENT_LOGFILE}" ]]; then
-    logfile="$SILENT_LOGFILE"
-  fi
-
-  if [[ -n "$logfile" && -s "$logfile" ]]; then
-    tail -n 20 "$logfile" 2>/dev/null | sed 's/\r$//' | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g'
-  fi
+_tm_clean_log() {
+  sed 's/\r$//' |
+    sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+    sed -E 's/([0-9]{1,3}\.)[0-9]{1,3}\.[0-9]{1,3}/\1x.x/g' |
+    grep -avE '^(Get:|Hit:|Ign:|Fetched |Reading package lists|Reading state information|Building dependency tree|Selecting previously|Preparing to unpack|Unpacking |Processing triggers for|\(Reading database|[0-9]+%[[:space:]]*\[)' |
+    grep -avE '^[[:space:]]*$' || true
 }
 
 # ------------------------------------------------------------------------------
-# get_full_log()
+# _tm_pick_logfile()
 #
-# - Returns the FULL installation log (build + install combined)
-# - Calls ensure_log_on_host() to pull container log if needed
-# - Strips ANSI escape codes and carriage returns
-# - Truncates to max_bytes (default: 120KB) to stay within API limits
-# - Used for the error telemetry field (full trace instead of 20 lines)
+# - Returns the most specific available log file (combined → INSTALL_LOG →
+#   BUILD_LOG → SILENT_LOGFILE). Never downgrades a present log.
+# ------------------------------------------------------------------------------
+_tm_pick_logfile() {
+  local candidate
+  for candidate in \
+    "${combined_log:-}" \
+    "/tmp/install-${SESSION_ID:-}-combined.log" \
+    "/tmp/${NSAPP:-lxc}-${CTID:-}-${SESSION_ID:-}.log" \
+    "${INSTALL_LOG:-}" \
+    "${BUILD_LOG:-}" \
+    "${SILENT_LOGFILE:-}"; do
+    if [[ -n "$candidate" && -s "$candidate" ]]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# get_error_log()
+#
+# - Returns the last N (default 50) RELEVANT lines of the active log
+# - Fallback error source when no .errinfo capture exists
+# ------------------------------------------------------------------------------
+get_error_log() {
+  local max_lines="${1:-50}"
+  local logfile
+
+  if declare -f ensure_log_on_host >/dev/null 2>&1; then
+    ensure_log_on_host 2>/dev/null || true
+  fi
+
+  logfile=$(_tm_pick_logfile)
+  [[ -z "$logfile" || ! -s "$logfile" ]] && return 0
+
+  _tm_clean_log <"$logfile" | tail -n "$max_lines"
+}
+
+# ------------------------------------------------------------------------------
+# get_error_text()  (legacy compatibility)
+#
+# - Returns last 20 relevant lines of the active log
+# ------------------------------------------------------------------------------
+get_error_text() {
+  get_error_log 20
+}
+
+# ------------------------------------------------------------------------------
+# get_full_log()  (legacy compatibility - dev/debug use only)
+#
+# - Returns the full log, ANSI-stripped and IP-anonymized, capped at max_bytes
 # ------------------------------------------------------------------------------
 get_full_log() {
-  local max_bytes="${1:-122880}" # 120KB default
-  local logfile=""
-
-  # Ensure logs are available on host (pulls from container if needed)
+  local max_bytes="${1:-122880}"
+  local logfile
   if declare -f ensure_log_on_host >/dev/null 2>&1; then
-    ensure_log_on_host
+    ensure_log_on_host 2>/dev/null || true
   fi
+  logfile=$(_tm_pick_logfile)
+  [[ -z "$logfile" || ! -s "$logfile" ]] && return 0
+  sed 's/\r$//' "$logfile" 2>/dev/null |
+    sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+    sed -E 's/([0-9]{1,3}\.)[0-9]{1,3}\.[0-9]{1,3}/\1x.x/g' |
+    head -c "$max_bytes"
+}
 
-  # Try combined log first (most complete)
-  if [[ -n "${CTID:-}" && -n "${SESSION_ID:-}" ]]; then
-    local combined_log="/tmp/${NSAPP:-lxc}-${CTID}-${SESSION_ID}.log"
-    if [[ -s "$combined_log" ]]; then
-      logfile="$combined_log"
+# ==============================================================================
+# SECTION 3: STRUCTURED ERROR CAPTURE (.errinfo protocol)
+# ==============================================================================
+#
+# When a command run via silent() fails, silent() writes "<logfile>.errinfo":
+#
+#   EXIT_CODE=<n>
+#   LINE=<n>
+#   COMMAND=<the exact command, single line>
+#   --- OUTPUT ---
+#   <the failing command's OWN output (last 60 lines)>
+#
+# error_handler() writes the same file for non-silent failures (best effort:
+# tail of the active log). The HOST reads this file (pulling it from the
+# container if needed) and builds the telemetry error field from it.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# _tm_find_errinfo()
+#
+# - Locates the newest .errinfo file for this session
+# - Honors TELEMETRY_ERRINFO override (set by the host after pulling the
+#   container's copy)
+# ------------------------------------------------------------------------------
+_tm_find_errinfo() {
+  local candidate
+  for candidate in \
+    "${TELEMETRY_ERRINFO:-}" \
+    "/tmp/.errinfo-${SESSION_ID:-none}" \
+    "${INSTALL_LOG:-/nonexistent}.errinfo" \
+    "${BUILD_LOG:-/nonexistent}.errinfo"; do
+    if [[ -n "$candidate" && -s "$candidate" ]]; then
+      echo "$candidate"
+      return 0
     fi
-  fi
+  done
+  return 1
+}
 
-  # Fall back to INSTALL_LOG
-  if [[ -z "$logfile" || ! -s "$logfile" ]]; then
-    if [[ -n "${INSTALL_LOG:-}" && -s "${INSTALL_LOG}" ]]; then
-      logfile="$INSTALL_LOG"
-    fi
-  fi
-
-  # Fall back to BUILD_LOG
-  if [[ -z "$logfile" || ! -s "$logfile" ]]; then
-    if [[ -n "${BUILD_LOG:-}" && -s "${BUILD_LOG}" ]]; then
-      logfile="$BUILD_LOG"
-    fi
-  fi
-
-  # Fall back to SILENT_LOGFILE (captures $STD command output)
-  if [[ -z "$logfile" || ! -s "$logfile" ]]; then
-    if [[ -n "${SILENT_LOGFILE:-}" && -s "${SILENT_LOGFILE}" ]]; then
-      logfile="$SILENT_LOGFILE"
-    fi
-  fi
-
-  if [[ -n "$logfile" && -s "$logfile" ]]; then
-    # Strip ANSI codes, carriage returns, and anonymize IP addresses (GDPR)
-    sed 's/\r$//' "$logfile" 2>/dev/null |
-      sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
-      sed -E 's/([0-9]{1,3}\.)[0-9]{1,3}\.[0-9]{1,3}/\1x.x/g' |
-      head -c "$max_bytes"
-  fi
+# ------------------------------------------------------------------------------
+# write_errinfo()
+#
+# - Writes a structured .errinfo file next to the given logfile
+# - Arguments:
+#   * $1: target file path
+#   * $2: exit_code
+#   * $3: line number
+#   * $4: command (flattened to one line, truncated)
+#   * stdin: output segment of the failing command
+# ------------------------------------------------------------------------------
+write_errinfo() {
+  local target="$1" exit_code="$2" line="$3" command="$4"
+  command=$(printf '%s' "$command" | tr '\n' ' ' | head -c 300)
+  {
+    echo "EXIT_CODE=${exit_code}"
+    echo "LINE=${line}"
+    echo "COMMAND=${command}"
+    echo "--- OUTPUT ---"
+    _tm_clean_log | tail -n "${TELEMETRY_ERROR_MAX_LINES}" | head -c "${TELEMETRY_ERROR_MAX_BYTES}"
+  } >"$target" 2>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------
 # build_error_string()
 #
-# - Builds a structured error string for telemetry reporting
-# - Format: "exit_code=<N> | <explanation>\n---\n<last 20 log lines>"
-# - If no log lines available, returns just the explanation
+# - Builds the final structured error string for telemetry:
+#   "exit_code=N | <explanation> | at line L: <cmd>\n---\n<focused output>"
+# - Sources, in priority order:
+#   1. .errinfo file (exact output of the failing command)
+#   2. FAILED_COMMAND/FAILED_LINE globals + filtered log tail
+#   3. Explanation only
 # - Arguments:
-#   * $1: exit_code (numeric)
-#   * $2: log_text (optional, output from get_error_text)
-# - Returns structured error string via stdout
+#   * $1: exit_code
+#   * $2: log_text (optional override for the output section)
 # ------------------------------------------------------------------------------
 build_error_string() {
   local exit_code="${1:-1}"
   local log_text="${2:-}"
-  local explanation
+  local explanation location="" cmd="" line="" errinfo=""
+
+  # Prefer the structured capture from the failure moment
+  if errinfo=$(_tm_find_errinfo); then
+    local captured_code
+    captured_code=$(sed -n 's/^EXIT_CODE=//p' "$errinfo" | head -1)
+    line=$(sed -n 's/^LINE=//p' "$errinfo" | head -1)
+    cmd=$(sed -n 's/^COMMAND=//p' "$errinfo" | head -1)
+    # Only trust the capture when it matches the reported failure (or the
+    # reported code is the generic 1 that bash propagates upward)
+    if [[ -n "$captured_code" && ("$captured_code" == "$exit_code" || "$exit_code" == "1" || "$exit_code" == "255") ]]; then
+      exit_code="$captured_code"
+      if [[ -z "$log_text" ]]; then
+        log_text=$(awk 'found{print} /^--- OUTPUT ---$/{found=1}' "$errinfo")
+      fi
+    else
+      cmd="" line=""
+    fi
+  fi
+
+  # Fall back to globals exported by silent()/error_handler
+  [[ -z "$cmd" && -n "${FAILED_COMMAND:-}" ]] && cmd="${FAILED_COMMAND}"
+  [[ -z "$line" && -n "${FAILED_LINE:-}" ]] && line="${FAILED_LINE}"
+
   explanation=$(explain_exit_code "$exit_code")
 
+  if [[ -n "$cmd" ]]; then
+    if [[ -n "$line" ]]; then
+      location=$(printf ' | at line %s: %s' "$line" "$cmd")
+    else
+      location=$(printf ' | command: %s' "$cmd")
+    fi
+  fi
+
+  # Last-resort output: filtered tail of the active log
+  if [[ -z "$log_text" ]]; then
+    log_text=$(get_error_log 40) || true
+  fi
+
   if [[ -n "$log_text" ]]; then
-    # Structured format: header + separator + log lines
-    printf 'exit_code=%s | %s\n---\n%s' "$exit_code" "$explanation" "$log_text"
+    printf 'exit_code=%s | %s%s\n---\n%s' "$exit_code" "$explanation" "$location" "$log_text"
   else
-    # No log available - just the explanation with exit code
-    printf 'exit_code=%s | %s' "$exit_code" "$explanation"
+    printf 'exit_code=%s | %s%s' "$exit_code" "$explanation" "$location"
   fi
 }
 
 # ==============================================================================
-# SECTION 2: TELEMETRY FUNCTIONS
+# SECTION 4: SYSTEM INFO COLLECTION (collected once, sent with EVERY payload)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# detect_gpu()
-#
-# - Detects GPU vendor, model, and passthrough type
-# - Sets GPU_VENDOR, GPU_MODEL, and GPU_PASSTHROUGH globals
-# - Used for GPU analytics
+# detect_gpu() - GPU vendor, model, passthrough type
 # ------------------------------------------------------------------------------
 detect_gpu() {
   GPU_VENDOR="unknown"
@@ -522,10 +645,8 @@ detect_gpu() {
   gpu_line=$(lspci 2>/dev/null | grep -iE "VGA|3D|Display" | head -1 || true)
 
   if [[ -n "$gpu_line" ]]; then
-    # Extract model: everything after the colon, clean up
     GPU_MODEL=$(echo "$gpu_line" | sed 's/.*: //' | sed 's/ (rev .*)$//' | cut -c1-64)
 
-    # Detect vendor and passthrough type
     if echo "$gpu_line" | grep -qi "Intel"; then
       GPU_VENDOR="intel"
       GPU_PASSTHROUGH="igpu"
@@ -546,11 +667,7 @@ detect_gpu() {
 }
 
 # ------------------------------------------------------------------------------
-# detect_cpu()
-#
-# - Detects CPU vendor and model
-# - Sets CPU_VENDOR (intel/amd/arm/unknown) and CPU_MODEL globals
-# - Used for CPU analytics
+# detect_cpu() - CPU vendor and model
 # ------------------------------------------------------------------------------
 detect_cpu() {
   CPU_VENDOR="unknown"
@@ -564,14 +681,12 @@ detect_cpu() {
     GenuineIntel) CPU_VENDOR="intel" ;;
     AuthenticAMD) CPU_VENDOR="amd" ;;
     *)
-      # ARM doesn't have vendor_id, check for CPU implementer
       if grep -qi "CPU implementer" /proc/cpuinfo 2>/dev/null; then
         CPU_VENDOR="arm"
       fi
       ;;
     esac
 
-    # Extract model name and clean it up
     CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ *//' | sed 's/(R)//g' | sed 's/(TM)//g' | sed 's/  */ /g' | cut -c1-64 || true)
   fi
 
@@ -579,22 +694,13 @@ detect_cpu() {
 }
 
 # ------------------------------------------------------------------------------
-# detect_ram()
-#
-# - Detects RAM speed using dmidecode
-# - Sets RAM_SPEED global (e.g., "4800" for DDR5-4800)
-# - Requires root access for dmidecode
-# - Returns empty if not available or if speed is "Unknown" (nested VMs)
+# detect_ram() - RAM speed via dmidecode (empty in nested VMs)
 # ------------------------------------------------------------------------------
 detect_ram() {
   RAM_SPEED=""
 
   if command -v dmidecode &>/dev/null; then
-    # Get configured memory speed (actual running speed)
-    # Use || true to handle "Unknown" values in nested VMs (no numeric match)
     RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Configured Memory Speed:" | grep -oE "[0-9]+" | head -1) || true
-
-    # Fallback to Speed: if Configured not available
     if [[ -z "$RAM_SPEED" ]]; then
       RAM_SPEED=$(dmidecode -t memory 2>/dev/null | grep -m1 "Speed:" | grep -oE "[0-9]+" | head -1) || true
     fi
@@ -604,287 +710,265 @@ detect_ram() {
 }
 
 # ------------------------------------------------------------------------------
-# post_to_api()
-#
-# - Sends LXC container creation statistics to telemetry ingest service
-# - Only executes if:
-#   * curl is available
-#   * DIAGNOSTICS=yes
-#   * RANDOM_UUID is set
-# - Payload includes:
-#   * Container type, disk size, CPU cores, RAM
-#   * OS type and version
-#   * Application name (NSAPP)
-#   * Installation method
-#   * PVE version
-#   * Status: "installing"
-#   * Random UUID for session tracking
-# - Anonymous telemetry (no personal data)
-# - Never blocks or fails script execution
+# detect_arm() - true when running on arm64 hardware
 # ------------------------------------------------------------------------------
-post_to_api() {
-  # Prevent duplicate submissions (post_to_api is called from multiple places)
-  [[ "${POST_TO_API_DONE:-}" == "true" ]] && return 0
+detect_arm() {
+  HAS_ARM="false"
+  case "$(dpkg --print-architecture 2>/dev/null || uname -m)" in
+  arm64 | aarch64) HAS_ARM="true" ;;
+  esac
+  export HAS_ARM
+}
 
-  # Silent fail - telemetry should never break scripts
-  command -v curl &>/dev/null || {
-    [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] curl not found, skipping" >&2
-    return 0
-  }
-  [[ "${DIAGNOSTICS:-no}" == "no" ]] && {
-    [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] DIAGNOSTICS=no, skipping" >&2
-    return 0
-  }
-  [[ -z "${RANDOM_UUID:-}" ]] && {
-    [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] RANDOM_UUID empty, skipping" >&2
-    return 0
-  }
+# ------------------------------------------------------------------------------
+# telemetry_collect_sysinfo()
+#
+# - Collects ALL system metadata exactly once (cached via _TM_SYSINFO_DONE)
+# - Sets: CPU_VENDOR, CPU_MODEL, GPU_VENDOR, GPU_MODEL, GPU_PASSTHROUGH,
+#   RAM_SPEED, HAS_ARM, TM_ARCH, TM_PVE_VERSION, TM_PLATFORM
+# ------------------------------------------------------------------------------
+telemetry_collect_sysinfo() {
+  [[ "${_TM_SYSINFO_DONE:-}" == "true" ]] && return 0
 
-  [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] post_to_api() DIAGNOSTICS=$DIAGNOSTICS RANDOM_UUID=$RANDOM_UUID NSAPP=$NSAPP" >&2
+  [[ -z "${GPU_VENDOR:-}" ]] && detect_gpu
+  [[ -z "${CPU_VENDOR:-}" ]] && detect_cpu
+  [[ -z "${RAM_SPEED+x}" ]] && detect_ram
+  [[ -z "${HAS_ARM:-}" ]] && detect_arm
 
-  # Set type for later status updates (preserve if already set, e.g. turnkey)
-  TELEMETRY_TYPE="${TELEMETRY_TYPE:-lxc}"
+  TM_ARCH="$(dpkg --print-architecture 2>/dev/null || uname -m || echo unknown)"
 
-  local pve_version=""
+  # Virtualization platform: pve (Proxmox VE) or incus.
+  # Containers inherit TELEMETRY_PLATFORM from the host environment.
+  TM_PLATFORM="${TELEMETRY_PLATFORM:-}"
+  TM_PVE_VERSION=""
   if command -v pveversion &>/dev/null; then
-    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
+    TM_PVE_VERSION=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
+    TM_PLATFORM="${TM_PLATFORM:-pve}"
+  elif command -v incus &>/dev/null; then
+    TM_PVE_VERSION="incus-$(incus version 2>/dev/null | head -1 | awk '{print $NF}')" || true
+    TM_PLATFORM="${TM_PLATFORM:-incus}"
   fi
 
-  # Detect GPU if not already set
-  if [[ -z "${GPU_VENDOR:-}" ]]; then
-    detect_gpu
+  _TM_SYSINFO_DONE=true
+  export TM_ARCH TM_PVE_VERSION TM_PLATFORM _TM_SYSINFO_DONE
+}
+
+# ==============================================================================
+# SECTION 5: PAYLOAD BUILDER & SENDER
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# _tm_enabled()
+#
+# - Central gate: curl present, DIAGNOSTICS=yes, RANDOM_UUID set
+# ------------------------------------------------------------------------------
+_tm_enabled() {
+  command -v curl &>/dev/null || return 1
+  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 1
+  [[ -z "${RANDOM_UUID:-}" ]] && return 1
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# _tm_payload()
+#
+# - Builds the COMPLETE JSON payload. Every send (installing, progress ping,
+#   final status) carries the full metadata so no record is ever empty,
+#   regardless of which event the server persists.
+# - Arguments:
+#   * $1: status
+#   * $2: exit_code (optional, default 0)
+#   * $3: error text (optional, raw - will be JSON-escaped here)
+# ------------------------------------------------------------------------------
+_tm_payload() {
+  local status="$1"
+  local exit_code="${2:-0}"
+  local error_raw="${3:-}"
+
+  telemetry_collect_sysinfo
+
+  # Numeric sanitation (server rejects out-of-range values)
+  [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
+  ((exit_code > 255)) && exit_code=255
+
+  local disk_size="${DISK_SIZE:-0}"
+  disk_size="${disk_size%G}"
+  [[ ! "$disk_size" =~ ^[0-9]+$ ]] && disk_size=0
+
+  local duration=0
+  if [[ -n "${INSTALL_START_TIME:-}" ]]; then
+    duration=$(($(date +%s) - INSTALL_START_TIME))
+    ((duration < 0)) && duration=0
+    ((duration > 86400)) && duration=86400
   fi
-  local gpu_vendor="${GPU_VENDOR:-unknown}"
-  local gpu_model
+
+  local error_json="" error_category=""
+  if [[ -n "$error_raw" ]]; then
+    error_json=$(json_escape "$error_raw")
+    error_category=$(categorize_error "$exit_code")
+  fi
+
+  local gpu_model cpu_model
   gpu_model=$(json_escape "${GPU_MODEL:-}")
-  local gpu_passthrough="${GPU_PASSTHROUGH:-unknown}"
-
-  # Detect CPU if not already set
-  if [[ -z "${CPU_VENDOR:-}" ]]; then
-    detect_cpu
-  fi
-  local cpu_vendor="${CPU_VENDOR:-unknown}"
-  local cpu_model
   cpu_model=$(json_escape "${CPU_MODEL:-}")
 
-  # Detect RAM if not already set
-  if [[ -z "${RAM_SPEED:-}" ]]; then
-    detect_ram
-  fi
-  local ram_speed="${RAM_SPEED:-}"
-
-  local JSON_PAYLOAD
-  JSON_PAYLOAD=$(
-    cat <<EOF
+  cat <<EOF
 {
     "random_id": "${RANDOM_UUID}",
     "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "${TELEMETRY_TYPE}",
-    "nsapp": "${NSAPP:-unknown}",
-    "status": "installing",
+    "type": "${TELEMETRY_TYPE:-lxc}",
+    "nsapp": "${NSAPP:-${app:-unknown}}",
+    "status": "${status}",
     "ct_type": ${CT_TYPE:-1},
-    "disk_size": ${DISK_SIZE:-0},
+    "disk_size": ${disk_size},
     "core_count": ${CORE_COUNT:-0},
     "ram_size": ${RAM_SIZE:-0},
     "os_type": "${var_os:-}",
     "os_version": "${var_version:-}",
-    "pve_version": "${pve_version}",
+    "pve_version": "${TM_PVE_VERSION:-}",
     "method": "${METHOD:-default}",
-    "cpu_vendor": "${cpu_vendor}",
+    "exit_code": ${exit_code},
+    "error": "${error_json}",
+    "error_category": "${error_category}",
+    "install_duration": ${duration},
+    "cpu_vendor": "${CPU_VENDOR:-unknown}",
     "cpu_model": "${cpu_model}",
-    "gpu_vendor": "${gpu_vendor}",
+    "gpu_vendor": "${GPU_VENDOR:-unknown}",
     "gpu_model": "${gpu_model}",
-    "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
-    "repo_source": "${REPO_SOURCE}"
+    "gpu_passthrough": "${GPU_PASSTHROUGH:-unknown}",
+    "ram_speed": "${RAM_SPEED:-}",
+    "arch": "${TM_ARCH:-}",
+    "platform": "${TM_PLATFORM:-}",
+    "has_arm": ${HAS_ARM:-false},
+    "repo_source": "${REPO_SOURCE}",
+    "repo_slug": "${REPO_SLUG:-}"
 }
 EOF
-  )
+}
 
-  [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] Sending to: $TELEMETRY_URL" >&2
-  [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] Payload: $JSON_PAYLOAD" >&2
+# ------------------------------------------------------------------------------
+# _tm_send()
+#
+# - Single curl wrapper for all telemetry sends
+# - Arguments:
+#   * $1: JSON payload
+#   * $2: timeout seconds (default TELEMETRY_TIMEOUT)
+#   * $3: attempts (default 1)
+# - Returns 0 on HTTP 2xx, 1 otherwise. Never raises errors.
+# ------------------------------------------------------------------------------
+_tm_send() {
+  local payload="$1"
+  local timeout="${2:-$TELEMETRY_TIMEOUT}"
+  local attempts="${3:-1}"
+  local http_code attempt
 
-  # Send initial "installing" record with retry.
-  # This record MUST exist for all subsequent updates to succeed.
-  local http_code="" attempt
-  local _post_success=false
-  for attempt in 1 2 3; do
+  for ((attempt = 1; attempt <= attempts; attempt++)); do
     if [[ "${DEV_MODE:-}" == "true" ]]; then
-      http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-        -H "Content-Type: application/json" \
-        -d "$JSON_PAYLOAD" -o /dev/stderr 2>&1) || http_code="000"
-      echo "[DEBUG] post_to_api attempt $attempt HTTP=$http_code" >&2
-    else
-      http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-        -H "Content-Type: application/json" \
-        -d "$JSON_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
+      echo "[DEBUG] telemetry POST (attempt ${attempt}/${attempts}): $payload" >&2
     fi
+    http_code=$(curl -sS -w "%{http_code}" -m "$timeout" -X POST "${TELEMETRY_URL}" \
+      -H "Content-Type: application/json" \
+      -d "$payload" -o /dev/null 2>/dev/null) || http_code="000"
+    [[ "${DEV_MODE:-}" == "true" ]] && echo "[DEBUG] telemetry HTTP=${http_code}" >&2
     if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
-      _post_success=true
-      break
+      return 0
     fi
-    [[ "$attempt" -lt 3 ]] && sleep 1
+    ((attempt < attempts)) && sleep 1
   done
+  return 1
+}
 
-  # Only mark done if at least one attempt succeeded.
-  # If all 3 failed, POST_TO_API_DONE stays false so post_update_to_api
-  # and on_exit() know the initial record was never created.
-  # The server has fallback logic to create a new record on status updates,
-  # so subsequent calls can still succeed even without the initial record.
-  POST_TO_API_DONE=${_post_success}
+# ==============================================================================
+# SECTION 6: PUBLIC TELEMETRY API
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# post_to_api()
+#
+# - Sends the initial "installing" record for LXC container creation
+# - Full metadata payload; retried up to 3x
+# - Idempotent per execution (POST_TO_API_DONE)
+# ------------------------------------------------------------------------------
+post_to_api() {
+  [[ "${POST_TO_API_DONE:-}" == "true" ]] && return 0
+  _tm_enabled || return 0
+
+  TELEMETRY_TYPE="${TELEMETRY_TYPE:-lxc}"
+
+  local payload
+  payload=$(_tm_payload "installing")
+
+  if _tm_send "$payload" "$TELEMETRY_TIMEOUT" 3; then
+    POST_TO_API_DONE=true
+  else
+    POST_TO_API_DONE=false
+  fi
 }
 
 # ------------------------------------------------------------------------------
 # post_to_api_vm()
 #
-# - Sends VM creation statistics to telemetry ingest service
-# - Reads DIAGNOSTICS from /usr/local/community-scripts/diagnostics file
-# - Payload differences from LXC:
-#   * ct_type=2 (VM instead of LXC)
-#   * type="vm"
-#   * Disk size without 'G' suffix
-# - Includes hardware detection: CPU, GPU, RAM speed
-# - Only executes if DIAGNOSTICS=yes and RANDOM_UUID is set
-# - Never blocks or fails script execution
+# - Sends the initial "installing" record for VM creation
+# - Reads DIAGNOSTICS from /usr/local/community-scripts/diagnostics
 # ------------------------------------------------------------------------------
 post_to_api_vm() {
-  # Read diagnostics setting from file
+  [[ "${POST_TO_API_DONE:-}" == "true" ]] && return 0
+
   if [[ -f /usr/local/community-scripts/diagnostics ]]; then
     DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics 2>/dev/null | awk -F'=' '{print $2}') || true
   fi
 
-  # Silent fail - telemetry should never break scripts
-  command -v curl &>/dev/null || return 0
-  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
-  [[ -z "${RANDOM_UUID:-}" ]] && return 0
+  _tm_enabled || return 0
 
-  # Set type for later status updates
   TELEMETRY_TYPE="vm"
+  CT_TYPE=2
 
-  local pve_version=""
-  if command -v pveversion &>/dev/null; then
-    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
+  local payload
+  payload=$(_tm_payload "installing")
+
+  if _tm_send "$payload" "$TELEMETRY_TIMEOUT" 3; then
+    POST_TO_API_DONE=true
+  else
+    POST_TO_API_DONE=false
   fi
-
-  # Detect GPU if not already set
-  if [[ -z "${GPU_VENDOR:-}" ]]; then
-    detect_gpu
-  fi
-  local gpu_vendor="${GPU_VENDOR:-unknown}"
-  local gpu_model
-  gpu_model=$(json_escape "${GPU_MODEL:-}")
-  local gpu_passthrough="${GPU_PASSTHROUGH:-unknown}"
-
-  # Detect CPU if not already set
-  if [[ -z "${CPU_VENDOR:-}" ]]; then
-    detect_cpu
-  fi
-  local cpu_vendor="${CPU_VENDOR:-unknown}"
-  local cpu_model
-  cpu_model=$(json_escape "${CPU_MODEL:-}")
-
-  # Detect RAM if not already set
-  if [[ -z "${RAM_SPEED:-}" ]]; then
-    detect_ram
-  fi
-  local ram_speed="${RAM_SPEED:-}"
-
-  # Remove 'G' suffix from disk size
-  local DISK_SIZE_API="${DISK_SIZE%G}"
-
-  local JSON_PAYLOAD
-  JSON_PAYLOAD=$(
-    cat <<EOF
-{
-    "random_id": "${RANDOM_UUID}",
-    "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "vm",
-    "nsapp": "${NSAPP:-unknown}",
-    "status": "installing",
-    "ct_type": 2,
-    "disk_size": ${DISK_SIZE_API:-0},
-    "core_count": ${CORE_COUNT:-0},
-    "ram_size": ${RAM_SIZE:-0},
-    "os_type": "${var_os:-}",
-    "os_version": "${var_version:-}",
-    "pve_version": "${pve_version}",
-    "method": "${METHOD:-default}",
-    "cpu_vendor": "${cpu_vendor}",
-    "cpu_model": "${cpu_model}",
-    "gpu_vendor": "${gpu_vendor}",
-    "gpu_model": "${gpu_model}",
-    "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
-    "repo_source": "${REPO_SOURCE}"
-}
-EOF
-  )
-
-  # Send initial "installing" record with retry (must succeed for updates to work)
-  local http_code="" attempt
-  local _post_success=false
-  for attempt in 1 2 3; do
-    http_code=$(curl -sS -w "%{http_code}" -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
-    if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
-      _post_success=true
-      break
-    fi
-    [[ "$attempt" -lt 3 ]] && sleep 1
-  done
-
-  POST_TO_API_DONE=${_post_success}
 }
 
 # ------------------------------------------------------------------------------
 # post_progress_to_api()
 #
-# - Lightweight progress ping from host or container
-# - Updates the existing telemetry record status
-# - Arguments:
-#   * $1: status (optional, default: "configuring")
-#         Valid values: "validation", "configuring"
-# - Signals that the installation is actively progressing (not stuck)
-# - Fire-and-forget: never blocks or fails the script
-# - Only executes if DIAGNOSTICS=yes and RANDOM_UUID is set
-# - Can be called multiple times safely
+# - Progress ping ("validation" / "configuring")
+# - Sends the FULL payload (not a minimal one) so that even if the server
+#   ever has to fall back to a progress row, it carries all metadata
+# - Fire-and-forget, single attempt
 # ------------------------------------------------------------------------------
 post_progress_to_api() {
-  command -v curl &>/dev/null || return 0
-  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
-  [[ -z "${RANDOM_UUID:-}" ]] && return 0
+  _tm_enabled || return 0
 
   local progress_status="${1:-configuring}"
-  local app_name="${NSAPP:-${app:-unknown}}"
-  local telemetry_type="${TELEMETRY_TYPE:-lxc}"
-
-  curl -fsS -m 5 -X POST "${TELEMETRY_URL:-https://telemetry.community-scripts.org/telemetry}" \
-    -H "Content-Type: application/json" \
-    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"${telemetry_type}\",\"nsapp\":\"${app_name}\",\"status\":\"${progress_status}\"}" &>/dev/null || true
+  local payload
+  payload=$(_tm_payload "$progress_status")
+  _tm_send "$payload" "$TELEMETRY_TIMEOUT" 1 || true
 }
 
 # ------------------------------------------------------------------------------
 # post_update_to_api()
 #
-# - Reports installation completion status to telemetry ingest service
-# - Prevents duplicate submissions via POST_UPDATE_DONE flag
+# - Reports the FINAL installation status. This is the single most important
+#   telemetry event - it must carry full metadata AND the focused error trace.
 # - Arguments:
-#   * $1: status ("done" or "failed")
-#   * $2: exit_code (numeric, default: 1 for failed, 0 for done)
-# - Payload includes:
-#   * Final status (mapped: "done"→"success", "failed"→"failed")
-#   * Error description via explain_exit_code()
-#   * Numeric exit code
-# - Only executes once per session
-# - Never blocks or fails script execution
+#   * $1: status ("done"/"success" | "failed" | "aborted")
+#   * $2: exit_code (numeric; "none" → 0)
+#   * $3: "force" to bypass the duplicate guard (new information available)
+# - Signal exit codes (129/130/143) are reported as "aborted", not "failed"
+# - Idempotent via POST_UPDATE_DONE
 # ------------------------------------------------------------------------------
 post_update_to_api() {
-  # Silent fail - telemetry should never break scripts
   command -v curl &>/dev/null || return 0
 
-  # Support "force" mode (3rd arg) to bypass duplicate check for retries after cleanup
+  local status="${1:-failed}"
+  local raw_exit_code="${2:-1}"
   local force="${3:-}"
+
   POST_UPDATE_DONE=${POST_UPDATE_DONE:-false}
   if [[ "$POST_UPDATE_DONE" == "true" && "$force" != "force" ]]; then
     return 0
@@ -893,326 +977,114 @@ post_update_to_api() {
   [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
   [[ -z "${RANDOM_UUID:-}" ]] && return 0
 
-  local status="${1:-failed}"
-  local raw_exit_code="${2:-1}"
-  local exit_code=0 error="" pb_status error_category=""
+  local exit_code=0
+  if [[ "$raw_exit_code" =~ ^[0-9]+$ ]]; then
+    exit_code="$raw_exit_code"
+  elif [[ "$raw_exit_code" == "none" ]]; then
+    exit_code=0
+  else
+    exit_code=1
+  fi
 
-  # Get GPU info (if detected)
-  local gpu_vendor="${GPU_VENDOR:-unknown}"
-  local gpu_model
-  gpu_model=$(json_escape "${GPU_MODEL:-}")
-  local gpu_passthrough="${GPU_PASSTHROUGH:-unknown}"
-
-  # Get CPU info (if detected)
-  local cpu_vendor="${CPU_VENDOR:-unknown}"
-  local cpu_model
-  cpu_model=$(json_escape "${CPU_MODEL:-}")
-
-  # Get RAM info (if detected)
-  local ram_speed="${RAM_SPEED:-}"
-
-  # Map status to telemetry values: installing, success, failed, unknown
+  local pb_status error_raw=""
   case "$status" in
   done | success)
     pb_status="success"
     exit_code=0
-    error=""
-    error_category=""
+    ;;
+  aborted)
+    pb_status="aborted"
     ;;
   failed)
-    pb_status="failed"
+    # Signal-based exits are user aborts, not installation failures
+    case "$exit_code" in
+    129 | 130 | 143) pb_status="aborted" ;;
+    *) pb_status="failed" ;;
+    esac
     ;;
   *)
     pb_status="unknown"
     ;;
   esac
 
-  # For failed/unknown status, resolve exit code and error description
-  local short_error="" medium_error=""
-  if [[ "$pb_status" == "failed" ]] || [[ "$pb_status" == "unknown" ]]; then
-    if [[ "$raw_exit_code" =~ ^[0-9]+$ ]]; then
-      exit_code="$raw_exit_code"
-    else
-      exit_code=1
-    fi
-    # Get full installation log for error field
-    local log_text=""
-    log_text=$(get_full_log 122880) || true # 120KB max
-    if [[ -z "$log_text" ]]; then
-      # Fallback to last 20 lines
-      log_text=$(get_error_text)
-    fi
-    local full_error
-    full_error=$(build_error_string "$exit_code" "$log_text")
-    error=$(json_escape "$full_error")
-    short_error=$(json_escape "$(explain_exit_code "$exit_code")")
-    error_category=$(categorize_error "$exit_code")
-    [[ -z "$error" ]] && error="Unknown error"
-
-    # Build medium error for attempt 2: explanation + last 100 log lines (≤16KB)
-    # This is the critical middle ground between full 120KB log and generic-only description
-    local medium_log=""
-    medium_log=$(get_full_log 16384) || true # 16KB max
-    if [[ -z "$medium_log" ]]; then
-      medium_log=$(get_error_text) || true
-    fi
-    local medium_full
-    medium_full=$(build_error_string "$exit_code" "$medium_log")
-    medium_error=$(json_escape "$medium_full")
-    [[ -z "$medium_error" ]] && medium_error="$short_error"
+  if [[ "$pb_status" == "failed" || "$pb_status" == "unknown" ]]; then
+    error_raw=$(build_error_string "$exit_code")
+  elif [[ "$pb_status" == "aborted" ]]; then
+    # Short context line only - no log dump for user aborts
+    error_raw="exit_code=${exit_code} | $(explain_exit_code "$exit_code")"
+    ERROR_CATEGORY_OVERRIDE="${ERROR_CATEGORY_OVERRIDE:-user_aborted}"
   fi
 
-  # Calculate duration if timer was started
-  local duration=0
-  if [[ -n "${INSTALL_START_TIME:-}" ]]; then
-    duration=$(($(date +%s) - INSTALL_START_TIME))
-  fi
+  local payload
+  payload=$(_tm_payload "$pb_status" "$exit_code" "$error_raw")
 
-  # Get PVE version
-  local pve_version=""
-  if command -v pveversion &>/dev/null; then
-    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
-  fi
-
-  local http_code=""
-
-  # Strip 'G' suffix from disk size (VMs set DISK_SIZE=32G)
-  local DISK_SIZE_API="${DISK_SIZE:-0}"
-  DISK_SIZE_API="${DISK_SIZE_API%G}"
-  [[ ! "$DISK_SIZE_API" =~ ^[0-9]+$ ]] && DISK_SIZE_API=0
-
-  # ── Attempt 1: Full payload with complete error text (includes full log) ──
-  local JSON_PAYLOAD
-  JSON_PAYLOAD=$(
-    cat <<EOF
-{
-    "random_id": "${RANDOM_UUID}",
-    "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "${TELEMETRY_TYPE:-lxc}",
-    "nsapp": "${NSAPP:-unknown}",
-    "status": "${pb_status}",
-    "ct_type": ${CT_TYPE:-1},
-    "disk_size": ${DISK_SIZE_API},
-    "core_count": ${CORE_COUNT:-0},
-    "ram_size": ${RAM_SIZE:-0},
-    "os_type": "${var_os:-}",
-    "os_version": "${var_version:-}",
-    "pve_version": "${pve_version}",
-    "method": "${METHOD:-default}",
-    "exit_code": ${exit_code},
-    "error": "${error}",
-    "error_category": "${error_category}",
-    "install_duration": ${duration},
-    "cpu_vendor": "${cpu_vendor}",
-    "cpu_model": "${cpu_model}",
-    "gpu_vendor": "${gpu_vendor}",
-    "gpu_model": "${gpu_model}",
-    "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
-    "repo_source": "${REPO_SOURCE}"
-}
-EOF
-  )
-
-  http_code=$(curl -sS -w "%{http_code}" -m "${STATUS_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
-
-  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+  if _tm_send "$payload" "$STATUS_TIMEOUT" 2; then
     POST_UPDATE_DONE=true
     return 0
   fi
 
-  # ── Attempt 2: Medium error text (truncated log ≤16KB instead of full 120KB) ──
-  sleep 1
-  local RETRY_PAYLOAD
-  RETRY_PAYLOAD=$(
-    cat <<EOF
-{
-    "random_id": "${RANDOM_UUID}",
-    "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "${TELEMETRY_TYPE:-lxc}",
-    "nsapp": "${NSAPP:-unknown}",
-    "status": "${pb_status}",
-    "ct_type": ${CT_TYPE:-1},
-    "disk_size": ${DISK_SIZE_API},
-    "core_count": ${CORE_COUNT:-0},
-    "ram_size": ${RAM_SIZE:-0},
-    "os_type": "${var_os:-}",
-    "os_version": "${var_version:-}",
-    "pve_version": "${pve_version}",
-    "method": "${METHOD:-default}",
-    "exit_code": ${exit_code},
-    "error": "${medium_error}",
-    "error_category": "${error_category}",
-    "install_duration": ${duration},
-    "cpu_vendor": "${cpu_vendor}",
-    "cpu_model": "${cpu_model}",
-    "gpu_vendor": "${gpu_vendor}",
-    "gpu_model": "${gpu_model}",
-    "gpu_passthrough": "${gpu_passthrough}",
-    "ram_speed": "${ram_speed}",
-    "repo_source": "${REPO_SOURCE}"
-}
-EOF
-  )
-
-  http_code=$(curl -sS -w "%{http_code}" -m "${STATUS_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-    -H "Content-Type: application/json" \
-    -d "$RETRY_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
-
-  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
-    POST_UPDATE_DONE=true
-    return 0
+  # Retry with a smaller error trace (in case the payload was the problem)
+  if [[ -n "$error_raw" ]]; then
+    local short_error
+    short_error="exit_code=${exit_code} | $(explain_exit_code "$exit_code")"
+    [[ -n "${FAILED_COMMAND:-}" ]] && short_error+=" | at line ${FAILED_LINE:-?}: $(printf '%s' "$FAILED_COMMAND" | head -c 200)"
+    payload=$(_tm_payload "$pb_status" "$exit_code" "$short_error")
+    if _tm_send "$payload" "$STATUS_TIMEOUT" 2; then
+      POST_UPDATE_DONE=true
+      return 0
+    fi
   fi
 
-  # ── Attempt 3: Minimal payload with medium error (bare minimum to set status) ──
-  sleep 2
-  local MINIMAL_PAYLOAD
-  MINIMAL_PAYLOAD=$(
-    cat <<EOF
-{
-    "random_id": "${RANDOM_UUID}",
-    "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "${TELEMETRY_TYPE:-lxc}",
-    "nsapp": "${NSAPP:-unknown}",
-    "status": "${pb_status}",
-    "exit_code": ${exit_code},
-    "error": "${medium_error}",
-    "error_category": "${error_category}",
-    "install_duration": ${duration}
+  # All attempts failed - leave POST_UPDATE_DONE=false so the EXIT trap can retry
+  return 0
 }
-EOF
-  )
 
-  http_code=$(curl -sS -w "%{http_code}" -m "${STATUS_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-    -H "Content-Type: application/json" \
-    -d "$MINIMAL_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
-
-  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
-    POST_UPDATE_DONE=true
-    return 0
-  fi
-
-  # All 3 attempts failed — do NOT set POST_UPDATE_DONE=true.
-  # This allows the EXIT trap (on_exit in error_handler.func) to retry.
-  # No infinite loop risk: EXIT trap fires exactly once.
+# ------------------------------------------------------------------------------
+# telemetry_new_attempt()
+#
+# - Resets telemetry state for a RETRY of the same session (recovery menu:
+#   rebuild, OOM retry, DNS retry, APT repair). Each attempt becomes its own
+#   execution on the server (the previous one keeps its terminal status).
+# ------------------------------------------------------------------------------
+telemetry_new_attempt() {
+  EXECUTION_ID="$(cat /proc/sys/kernel/random/uuid 2>/dev/null || echo "${RANDOM_UUID}-r$RANDOM")"
+  POST_TO_API_DONE=false
+  POST_UPDATE_DONE=false
+  unset FAILED_COMMAND FAILED_LINE ERROR_CATEGORY_OVERRIDE TELEMETRY_ERRINFO
+  export EXECUTION_ID
 }
 
 # ==============================================================================
-# SECTION 3: EXTENDED TELEMETRY FUNCTIONS
+# SECTION 7: TIMERS
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-# categorize_error()
-#
-# - Maps exit codes to error categories for better analytics
-# - Categories: network, storage, dependency, permission, timeout, config, resource, unknown
-# - Used to group errors in dashboard
-# ------------------------------------------------------------------------------
-categorize_error() {
-  # Allow build.func to override category based on log analysis (exit code 1 subclassification)
-  if [[ -n "${ERROR_CATEGORY_OVERRIDE:-}" ]]; then
-    echo "$ERROR_CATEGORY_OVERRIDE"
-    return
-  fi
-
-  local code="$1"
-  case "$code" in
-  # Network errors (curl/wget)
-  6 | 7 | 22 | 35) echo "network" ;;
-
-  # Docker / Privileged mode required
-  10) echo "config" ;;
-
-  # Timeout errors
-  28 | 124 | 211) echo "timeout" ;;
-
-  # Storage errors (Proxmox storage)
-  214 | 217 | 219 | 224) echo "storage" ;;
-
-  # Dependency/Package errors (APT, DPKG, pip, commands)
-  100 | 101 | 102 | 127 | 160 | 161 | 162 | 255) echo "dependency" ;;
-
-  # Permission errors
-  126 | 152) echo "permission" ;;
-
-  # Configuration errors (Proxmox config, invalid args)
-  128 | 203 | 204 | 205 | 206 | 207 | 208) echo "config" ;;
-
-  # Proxmox container/template errors
-  200 | 209 | 210 | 212 | 213 | 215 | 216 | 218 | 220 | 221 | 222 | 223 | 225 | 231) echo "proxmox" ;;
-
-  # Service/Systemd errors
-  150 | 151 | 153 | 154) echo "service" ;;
-
-  # Database errors (PostgreSQL, MySQL, MongoDB)
-  170 | 171 | 172 | 173 | 180 | 181 | 182 | 183 | 190 | 191 | 192 | 193) echo "database" ;;
-
-  # Node.js / JavaScript runtime errors
-  243 | 245 | 246 | 247 | 248 | 249) echo "runtime" ;;
-
-  # Python environment errors
-  # (already covered: 160-162 under dependency)
-
-  # Aborted by user (SIGHUP=terminal closed, SIGINT=Ctrl+C, SIGTERM=killed)
-  129 | 130 | 143) echo "user_aborted" ;;
-
-  # Resource errors (OOM, SIGKILL, SIGABRT)
-  134 | 137) echo "resource" ;;
-
-  # Signal/Process errors (SIGPIPE, SIGSEGV)
-  139 | 141) echo "signal" ;;
-
-  # Shell errors (general error, syntax error)
-  1 | 2) echo "shell" ;;
-
-  # Default - truly unknown
-  *) echo "unknown" ;;
-  esac
-}
-
-# ------------------------------------------------------------------------------
-# start_install_timer()
-#
-# - Captures start time for installation duration tracking
-# - Call at the beginning of installation
-# - Sets INSTALL_START_TIME global variable
-# ------------------------------------------------------------------------------
 start_install_timer() {
   INSTALL_START_TIME=$(date +%s)
   export INSTALL_START_TIME
 }
 
-# ------------------------------------------------------------------------------
-# get_install_duration()
-#
-# - Returns elapsed seconds since start_install_timer() was called
-# - Returns 0 if timer was not started
-# ------------------------------------------------------------------------------
 get_install_duration() {
   if [[ -z "${INSTALL_START_TIME:-}" ]]; then
     echo "0"
     return
   fi
-  local now=$(date +%s)
+  local now
+  now=$(date +%s)
   echo $((now - INSTALL_START_TIME))
 }
 
+# ==============================================================================
+# SECTION 8: TOOLS & ADDON TELEMETRY
+# ==============================================================================
+
 # ------------------------------------------------------------------------------
-# _telemetry_report_exit()
-#
-# - Internal handler called by EXIT trap set in init_tool_telemetry()
-# - Determines success/failure from exit code and reports via appropriate API
-# - Arguments:
-#   * $1: exit_code from the script
+# _telemetry_report_exit() - EXIT trap handler set by init_tool_telemetry()
 # ------------------------------------------------------------------------------
 _telemetry_report_exit() {
   local ec="${1:-0}"
   local status="success"
   [[ "$ec" -ne 0 ]] && status="failed"
 
-  # Lazy name resolution: use explicit name, fall back to $APP, then "unknown"
   local name="${TELEMETRY_TOOL_NAME:-${APP:-unknown}}"
 
   if [[ "${TELEMETRY_TOOL_TYPE:-pve}" == "addon" ]]; then
@@ -1226,17 +1098,9 @@ _telemetry_report_exit() {
 # init_tool_telemetry()
 #
 # - One-line telemetry setup for tools/addon scripts
-# - Reads DIAGNOSTICS from /usr/local/community-scripts/diagnostics
-#   (persisted on PVE host during first build, and inside containers by install.func)
-# - Starts install timer for duration tracking
-# - Sets EXIT trap to automatically report success/failure on script exit
 # - Arguments:
 #   * $1: tool_name (optional, falls back to $APP at exit time)
 #   * $2: type ("pve" for PVE host scripts, "addon" for container addons)
-# - Usage:
-#   source <(curl -fsSL .../misc/api.func) 2>/dev/null || true
-#   init_tool_telemetry "post-pve-install" "pve"
-#   init_tool_telemetry "" "addon"  # uses $APP at exit time
 # ------------------------------------------------------------------------------
 init_tool_telemetry() {
   local name="${1:-}"
@@ -1245,26 +1109,17 @@ init_tool_telemetry() {
   [[ -n "$name" ]] && TELEMETRY_TOOL_NAME="$name"
   TELEMETRY_TOOL_TYPE="$type"
 
-  # Read diagnostics opt-in/opt-out
   if [[ -f /usr/local/community-scripts/diagnostics ]]; then
     DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics 2>/dev/null | awk -F'=' '{print $2}') || true
   fi
 
   start_install_timer
 
-  # EXIT trap: automatically report telemetry when script ends
   trap '_telemetry_report_exit "$?"' EXIT
 }
 
 # ------------------------------------------------------------------------------
-# post_tool_to_api()
-#
-# - Reports tool usage to telemetry
-# - Arguments:
-#   * $1: tool_name (e.g., "microcode", "lxc-update", "post-pve-install")
-#   * $2: status ("success" or "failed")
-#   * $3: exit_code (optional, default: 0 for success, 1 for failed)
-# - For PVE host tools, not container installations
+# post_tool_to_api() - PVE host tool usage report
 # ------------------------------------------------------------------------------
 post_tool_to_api() {
   command -v curl &>/dev/null || return 0
@@ -1276,34 +1131,25 @@ post_tool_to_api() {
   local error="" error_category=""
   local uuid duration
 
-  # Generate UUID for this tool execution
   uuid=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen 2>/dev/null || echo "tool-$(date +%s)")
   duration=$(get_install_duration)
 
-  # Map status
   [[ "$status" == "done" ]] && status="success"
 
   if [[ "$status" == "failed" ]]; then
     [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
-    local error_text=""
-    error_text=$(get_error_text)
-    local full_error
-    full_error=$(build_error_string "$exit_code" "$error_text")
-    error=$(json_escape "$full_error")
+    error=$(json_escape "$(build_error_string "$exit_code")")
     error_category=$(categorize_error "$exit_code")
   fi
 
-  local pve_version=""
-  if command -v pveversion &>/dev/null; then
-    pve_version=$(pveversion 2>/dev/null | awk -F'[/ ]' '{print $2}') || true
-  fi
+  telemetry_collect_sysinfo
 
   local JSON_PAYLOAD
   JSON_PAYLOAD=$(
     cat <<EOF
 {
     "random_id": "${uuid}",
-    "execution_id": "${EXECUTION_ID:-${uuid}}",
+    "execution_id": "${uuid}",
     "type": "pve",
     "nsapp": "${tool_name}",
     "status": "${status}",
@@ -1311,26 +1157,19 @@ post_tool_to_api() {
     "error": "${error}",
     "error_category": "${error_category}",
     "install_duration": ${duration:-0},
-    "pve_version": "${pve_version}",
-    "repo_source": "${REPO_SOURCE}"
+    "pve_version": "${TM_PVE_VERSION:-}",
+    "platform": "${TM_PLATFORM:-}",
+    "repo_source": "${REPO_SOURCE}",
+    "repo_slug": "${REPO_SLUG:-}"
 }
 EOF
   )
 
-  curl -fsS -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD" &>/dev/null || true
+  _tm_send "$JSON_PAYLOAD" "$TELEMETRY_TIMEOUT" 1 || true
 }
 
 # ------------------------------------------------------------------------------
-# post_addon_to_api()
-#
-# - Reports addon installation to telemetry
-# - Arguments:
-#   * $1: addon_name (e.g., "filebrowser", "netdata")
-#   * $2: status ("success" or "failed")
-#   * $3: exit_code (optional)
-# - For addons installed inside containers
+# post_addon_to_api() - Addon installation report (runs inside containers)
 # ------------------------------------------------------------------------------
 post_addon_to_api() {
   command -v curl &>/dev/null || return 0
@@ -1342,24 +1181,17 @@ post_addon_to_api() {
   local error="" error_category=""
   local uuid duration
 
-  # Generate UUID for this addon installation
   uuid=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen 2>/dev/null || echo "addon-$(date +%s)")
   duration=$(get_install_duration)
 
-  # Map status
   [[ "$status" == "done" ]] && status="success"
 
   if [[ "$status" == "failed" ]]; then
     [[ ! "$exit_code" =~ ^[0-9]+$ ]] && exit_code=1
-    local error_text=""
-    error_text=$(get_error_text)
-    local full_error
-    full_error=$(build_error_string "$exit_code" "$error_text")
-    error=$(json_escape "$full_error")
+    error=$(json_escape "$(build_error_string "$exit_code")")
     error_category=$(categorize_error "$exit_code")
   fi
 
-  # Detect OS info
   local os_type="" os_version=""
   if [[ -f /etc/os-release ]]; then
     os_type=$(grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"' || true)
@@ -1371,7 +1203,7 @@ post_addon_to_api() {
     cat <<EOF
 {
     "random_id": "${uuid}",
-    "execution_id": "${EXECUTION_ID:-${uuid}}",
+    "execution_id": "${uuid}",
     "type": "addon",
     "nsapp": "${addon_name}",
     "status": "${status}",
@@ -1381,124 +1213,12 @@ post_addon_to_api() {
     "install_duration": ${duration:-0},
     "os_type": "${os_type}",
     "os_version": "${os_version}",
-    "repo_source": "${REPO_SOURCE}"
+    "platform": "${TELEMETRY_PLATFORM:-}",
+    "repo_source": "${REPO_SOURCE}",
+    "repo_slug": "${REPO_SLUG:-}"
 }
 EOF
   )
 
-  curl -fsS -m "${TELEMETRY_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD" &>/dev/null || true
-}
-
-# ------------------------------------------------------------------------------
-# post_update_to_api_extended()
-#
-# - Extended version of post_update_to_api with duration, GPU, and error category
-# - Same arguments as post_update_to_api:
-#   * $1: status ("done" or "failed")
-#   * $2: exit_code (numeric)
-# - Automatically includes:
-#   * Install duration (if start_install_timer was called)
-#   * Error category (for failed status)
-#   * GPU info (if detect_gpu was called)
-# ------------------------------------------------------------------------------
-post_update_to_api_extended() {
-  # Silent fail - telemetry should never break scripts
-  command -v curl &>/dev/null || return 0
-
-  # Prevent duplicate submissions
-  POST_UPDATE_DONE=${POST_UPDATE_DONE:-false}
-  [[ "$POST_UPDATE_DONE" == "true" ]] && return 0
-
-  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
-  [[ -z "${RANDOM_UUID:-}" ]] && return 0
-
-  local status="${1:-failed}"
-  local raw_exit_code="${2:-1}"
-  local exit_code=0 error="" pb_status error_category=""
-  local duration gpu_vendor gpu_passthrough
-
-  # Get duration
-  duration=$(get_install_duration)
-
-  # Get GPU info (if detected)
-  gpu_vendor="${GPU_VENDOR:-}"
-  gpu_passthrough="${GPU_PASSTHROUGH:-}"
-
-  # Map status to telemetry values
-  case "$status" in
-  done | success)
-    pb_status="success"
-    exit_code=0
-    error=""
-    error_category=""
-    ;;
-  failed)
-    pb_status="failed"
-    ;;
-  *)
-    pb_status="unknown"
-    ;;
-  esac
-
-  # For failed/unknown status, resolve exit code and error description
-  if [[ "$pb_status" == "failed" ]] || [[ "$pb_status" == "unknown" ]]; then
-    if [[ "$raw_exit_code" =~ ^[0-9]+$ ]]; then
-      exit_code="$raw_exit_code"
-    else
-      exit_code=1
-    fi
-    local error_text=""
-    error_text=$(get_error_text)
-    local full_error
-    full_error=$(build_error_string "$exit_code" "$error_text")
-    error=$(json_escape "$full_error")
-    error_category=$(categorize_error "$exit_code")
-    [[ -z "$error" ]] && error="Unknown error"
-  fi
-
-  local JSON_PAYLOAD
-  JSON_PAYLOAD=$(
-    cat <<EOF
-{
-    "random_id": "${RANDOM_UUID}",
-    "execution_id": "${EXECUTION_ID:-${RANDOM_UUID}}",
-    "type": "${TELEMETRY_TYPE:-lxc}",
-    "nsapp": "${NSAPP:-unknown}",
-    "status": "${pb_status}",
-    "exit_code": ${exit_code},
-    "error": "${error}",
-    "error_category": "${error_category}",
-    "install_duration": ${duration:-0},
-    "gpu_vendor": "${gpu_vendor}",
-    "gpu_passthrough": "${gpu_passthrough}",
-    "repo_source": "${REPO_SOURCE}"
-}
-EOF
-  )
-
-  local http_code
-  http_code=$(curl -sS -w "%{http_code}" -m "${STATUS_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD" -o /dev/null 2>/dev/null) || http_code="000"
-
-  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
-    POST_UPDATE_DONE=true
-    return 0
-  fi
-
-  # Retry with minimal payload
-  sleep 1
-  http_code=$(curl -sS -w "%{http_code}" -m "${STATUS_TIMEOUT}" -X POST "${TELEMETRY_URL}" \
-    -H "Content-Type: application/json" \
-    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"${TELEMETRY_TYPE:-lxc}\",\"nsapp\":\"${NSAPP:-unknown}\",\"status\":\"${pb_status}\",\"exit_code\":${exit_code},\"install_duration\":${duration:-0}}" \
-    -o /dev/null 2>/dev/null) || http_code="000"
-
-  if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
-    POST_UPDATE_DONE=true
-    return 0
-  fi
-
-  # Do NOT set POST_UPDATE_DONE=true — let EXIT trap retry
+  _tm_send "$JSON_PAYLOAD" "$TELEMETRY_TIMEOUT" 1 || true
 }

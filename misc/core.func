@@ -546,6 +546,12 @@ silent() {
   set +Eeuo pipefail
   trap - ERR
 
+  # Byte offset BEFORE the command runs - everything the log grows by is
+  # exactly this command's output (used for the .errinfo telemetry capture)
+  local start_bytes=0
+  [[ -f "$logfile" ]] && start_bytes=$(stat -c%s "$logfile" 2>/dev/null || echo 0)
+  [[ ! "$start_bytes" =~ ^[0-9]+$ ]] && start_bytes=0
+
   "$@" >>"$logfile" 2>&1
   local rc=$?
 
@@ -567,12 +573,43 @@ silent() {
     export _SILENT_FAILED_LINE="$caller_line"
     export _SILENT_FAILED_LOG="$logfile"
 
+    # ── Structured error capture (.errinfo) for telemetry ──
+    # Extract exactly THIS command's output (from the recorded byte offset),
+    # strip ANSI/progress noise, keep the last 60 lines. The host builds the
+    # telemetry error trace from this file (pulled from the container on
+    # failure). Self-contained - containers don't source api.func.
+    {
+      local flat_cmd
+      flat_cmd=$(printf '%s' "$cmd" | tr '\n' ' ' | head -c 300)
+      echo "EXIT_CODE=${rc}"
+      echo "LINE=${caller_line}"
+      echo "COMMAND=${flat_cmd}"
+      echo "--- OUTPUT ---"
+      if [[ -s "$logfile" ]]; then
+        local segment
+        segment=$(tail -c +"$((start_bytes + 1))" "$logfile" 2>/dev/null |
+          sed 's/\r$//' |
+          sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+          grep -avE '^(Get:|Hit:|Ign:|Fetched |Reading package lists|Reading state information|Building dependency tree|Selecting previously|Preparing to unpack|Unpacking |Processing triggers for|\(Reading database|[0-9]+%[[:space:]]*\[)' |
+          grep -avE '^[[:space:]]*$' |
+          tail -n 60)
+        # If the noise filter swallowed everything, fall back to the raw tail
+        if [[ -z "$segment" ]]; then
+          segment=$(tail -c +"$((start_bytes + 1))" "$logfile" 2>/dev/null |
+            sed 's/\r$//' | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' | tail -n 60)
+        fi
+        printf '%s' "$segment" | head -c 10240
+      fi
+    } >"${logfile}.errinfo" 2>/dev/null || true
+
     return "$rc"
   fi
 
   # Clear stale flags on success (prevents false positives if a previous
   # $STD cmd || true failed and a later non-silent command triggers error_handler)
   unset _SILENT_FAILED_RC _SILENT_FAILED_CMD _SILENT_FAILED_LINE _SILENT_FAILED_LOG 2>/dev/null || true
+  # Also drop a stale .errinfo from a previously tolerated failure ($STD cmd || true)
+  rm -f "${logfile}.errinfo" 2>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------

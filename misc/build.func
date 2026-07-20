@@ -4072,6 +4072,11 @@ build_container() {
   export RANDOM_UUID="$RANDOM_UUID"
   export EXECUTION_ID="$EXECUTION_ID"
   export SESSION_ID="$SESSION_ID"
+  # Repo attribution + platform for container-side progress pings (the
+  # container inherits the host's detection instead of re-detecting)
+  export REPO_SOURCE="${REPO_SOURCE:-}"
+  export REPO_SLUG="${REPO_SLUG:-}"
+  export TELEMETRY_PLATFORM="pve"
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
   if [[ -n "${HTTP_PROXY:-}" ]]; then
@@ -4895,6 +4900,16 @@ EOF
         # Point INSTALL_LOG to combined log so get_full_log() finds it
         INSTALL_LOG="$combined_log"
       fi
+
+      # Pull the structured error capture (.errinfo) from the container.
+      # It contains EXACTLY the output of the command that failed (written by
+      # silent()/error_handler inside the container) and is the primary source
+      # for the telemetry error trace - instead of a generic log tail.
+      local host_errinfo="/tmp/.errinfo-${SESSION_ID}"
+      if timeout 8 pct pull "$CTID" "/root/.install-${SESSION_ID}.log.errinfo" "$host_errinfo" 2>/dev/null && [[ -s "$host_errinfo" ]]; then
+        TELEMETRY_ERRINFO="$host_errinfo"
+        export TELEMETRY_ERRINFO
+      fi
     fi
 
     # Defense-in-depth: Ensure error handling stays disabled during recovery.
@@ -5170,6 +5185,8 @@ EOF
         echo -e "  Verbose: ${GN}enabled${CL}"
         echo ""
         msg_info "Restarting installation..."
+        # New telemetry execution for the retry (previous one keeps its "failed")
+        declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
         # Re-run build_container
         build_container
         return $?
@@ -5208,6 +5225,10 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Re-running installation script..."
+
+          # New telemetry execution for the in-place retry
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
+          declare -f post_to_api &>/dev/null && post_to_api 2>/dev/null || true
 
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
@@ -5272,6 +5293,7 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Restarting installation..."
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
           build_container
           return $?
         fi
@@ -5301,6 +5323,7 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Restarting installation..."
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
           build_container
           return $?
         fi
@@ -5325,6 +5348,7 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Restarting installation..."
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
           build_container
           return $?
         fi
@@ -6997,6 +7021,16 @@ ensure_log_on_host() {
           echo ""
         } >>"$combined_log"
         rm -f "$temp_log"
+      fi
+    fi
+    # Also pull the structured error capture (.errinfo) so the telemetry error
+    # trace shows the failing command's exact output (signal-exit paths reach
+    # this via on_exit before/instead of the recovery flow)
+    if [[ -z "${TELEMETRY_ERRINFO:-}" || ! -s "${TELEMETRY_ERRINFO:-}" ]]; then
+      local host_errinfo="/tmp/.errinfo-${SESSION_ID}"
+      if timeout 8 pct pull "$CTID" "/root/.install-${SESSION_ID}.log.errinfo" "$host_errinfo" 2>/dev/null && [[ -s "$host_errinfo" ]]; then
+        TELEMETRY_ERRINFO="$host_errinfo"
+        export TELEMETRY_ERRINFO
       fi
     fi
     if [[ -s "$combined_log" ]]; then
