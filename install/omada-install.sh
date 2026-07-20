@@ -42,7 +42,7 @@ OMADA_PKG=$(basename "${OMADA_URL}")
 curl_download "${OMADA_PKG}" "${OMADA_URL}"
 $STD dpkg -i "${OMADA_PKG}"
 rm -rf "${OMADA_PKG}"
-VERSION=$(sed -n 's/.*_v\([0-9.]*\)_.*_\([0-9]\{14\}\)\.deb$/\1-\2/p' <<<"${OMADA_PKG}")
+VERSION=$(sed -n 's/.*_v\([0-9.]*\)_linux.*/\1/p' <<<"${OMADA_PKG}")
 echo "${VERSION}" >$HOME/.omada
 msg_ok "Installed Omada Controller"
 
