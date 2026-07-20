@@ -39,8 +39,12 @@ function update_script() {
     systemctl stop homebox
     msg_ok "Stopped Service"
 
+    create_backup /opt/homebox/.env /opt/homebox/.data
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
     chmod +x /opt/homebox/homebox
+
+    restore_backup
     [ -f /opt/.env ] && mv /opt/.env /opt/homebox/.env
     [ -d /opt/.data ] && mv /opt/.data /opt/homebox/.data
 

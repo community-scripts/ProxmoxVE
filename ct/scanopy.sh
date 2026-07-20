@@ -36,19 +36,16 @@ function update_script() {
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl stop scanopy-daemon
     msg_ok "Stopped services"
 
-    msg_info "Backing up configurations"
-    cp /opt/scanopy/.env /opt/scanopy.env
-    [[ -f /opt/scanopy/oidc.toml ]] && cp /opt/scanopy/oidc.toml /opt/scanopy.oidc.toml
-    msg_ok "Backed up configurations"
+    create_backup /opt/scanopy/.env /opt/scanopy/oidc.toml
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
+
+    restore_backup
 
     ensure_dependencies pkg-config libssl-dev
     TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
     RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
-    [[ -f /opt/scanopy.env ]] && mv /opt/scanopy.env /opt/scanopy/.env
-    [[ -f /opt/scanopy.oidc.toml ]] && mv /opt/scanopy.oidc.toml /opt/scanopy/oidc.toml
     if ! grep -q "PUBLIC_URL" /opt/scanopy/.env; then
       sed -i "\|_PATH=|a\\scanopy_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
     fi

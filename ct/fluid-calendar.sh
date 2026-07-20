@@ -38,9 +38,9 @@ function update_script() {
     systemctl stop fluid-calendar
     msg_info "Stopped Service"
 
-    cp /opt/fluid-calendar/.env /opt/fluid.env
+    create_backup /opt/fluid-calendar/.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar" "tarball"
-    mv /opt/fluid.env /opt/fluid-calendar/.env
+    restore_backup
 
     msg_info "Updating Fluid Calendar"
     cd /opt/fluid-calendar

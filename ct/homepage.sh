@@ -38,8 +38,6 @@ function update_script() {
     msg_ok "Stopped service"
 
     create_backup /opt/homepage/.env /opt/homepage/config
-    # Separate store for user assets: they must be restored AFTER the build
-    # (pnpm build regenerates public/), not together with .env/config
     BACKUP_DIR=/opt/homepage-assets.backup create_backup /opt/homepage/public/images /opt/homepage/public/icons
     
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"

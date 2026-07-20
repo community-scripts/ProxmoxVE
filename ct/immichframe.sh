@@ -55,7 +55,6 @@ function update_script() {
     rm -rf /tmp/immichframe
     msg_ok "Setup ImmichFrame"
 
-    # Restore AFTER the publish step above (it rewrites /opt/immichframe)
     restore_backup
     chown -R immichframe:immichframe /opt/immichframe
 

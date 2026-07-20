@@ -36,9 +36,9 @@ function update_script() {
     systemctl stop joplin-server
     msg_ok "Stopped Services"
 
-    cp /opt/joplin-server/.env /opt
+    create_backup /opt/joplin-server/.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "joplin-server" "laurent22/joplin" "tarball"
-    mv /opt/.env /opt/joplin-server
+    restore_backup
 
     msg_info "Updating Joplin-Server"
     cd /opt/joplin-server
