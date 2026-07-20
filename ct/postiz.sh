@@ -41,8 +41,6 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "postiz" "gitroomhq/postiz-app" "tarball"
 
-    # Restore BEFORE the build: CLEAN_INSTALL wiped /opt/postiz including .env,
-    # and the build below sources it
     restore_backup
 
     msg_info "Building Application"

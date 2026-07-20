@@ -42,8 +42,6 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "${RELEASE}" "/opt/affine"
 
-    # Restore BEFORE the build: CLEAN_INSTALL wiped /opt/affine including .env,
-    # and the build below sources it
     restore_backup
 
     if [[ ! -f /opt/affine/.env ]]; then

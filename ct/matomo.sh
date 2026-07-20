@@ -49,8 +49,6 @@ function update_script() {
     chmod -R 755 /opt/matomo/tmp
     msg_ok "Set up Matomo"
 
-    # Restore AFTER the matomo/ subdir normalization above, so the restored
-    # config lands in the final directory layout
     restore_backup
     chown -R www-data:www-data /opt/matomo
 

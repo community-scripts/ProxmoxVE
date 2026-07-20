@@ -39,7 +39,6 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/opt/nametag"
 
-    # Restore BEFORE the build: CLEAN_INSTALL wiped /opt/nametag and the build sources .env
     restore_backup
 
     msg_info "Rebuilding Application"
