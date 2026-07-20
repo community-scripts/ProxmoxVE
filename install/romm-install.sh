@@ -184,6 +184,18 @@ cd /opt/romm/backend
 $STD uv run alembic upgrade head
 msg_ok "Set up RomM Backend"
 
+if [[ -f /opt/romm/backend/utils/rom_patcher/package.json ]]; then
+  msg_info "Building ROM Patcher helper"
+  cd /opt/romm/backend/utils/rom_patcher
+  $STD npm install --ignore-scripts --no-audit --no-fund
+  if [[ -d node_modules/rom-patcher/rom-patcher-js ]]; then
+    rm -rf rom-patcher-js
+    cp -r node_modules/rom-patcher/rom-patcher-js ./rom-patcher-js
+  fi
+  rm -rf node_modules
+  msg_ok "Built ROM Patcher helper"
+fi
+
 msg_info "Setting up RomM Frontend"
 cd /opt/romm/frontend
 $STD npm install

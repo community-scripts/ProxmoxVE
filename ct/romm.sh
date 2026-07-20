@@ -37,7 +37,6 @@ function update_script() {
     systemctl stop romm-backend romm-worker romm-scheduler romm-watcher
     msg_ok "Stopped Services"
 
-
     create_backup /opt/romm/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball" "latest" "/opt/romm"
@@ -49,6 +48,15 @@ function update_script() {
     $STD uv sync --all-extras
     cd /opt/romm/backend
     $STD uv run alembic upgrade head
+    if [[ -f /opt/romm/backend/utils/rom_patcher/package.json ]]; then
+      cd /opt/romm/backend/utils/rom_patcher
+      $STD npm install --ignore-scripts --no-audit --no-fund
+      if [[ -d node_modules/rom-patcher/rom-patcher-js ]]; then
+        rm -rf rom-patcher-js
+        cp -r node_modules/rom-patcher/rom-patcher-js ./rom-patcher-js
+      fi
+      rm -rf node_modules
+    fi
     cd /opt/romm/frontend
     $STD npm install
     $STD npm run build
