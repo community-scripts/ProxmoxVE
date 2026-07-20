@@ -515,6 +515,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Omada: fix package version extraction [@MickLesk](https://github.com/MickLesk) ([#15908](https://github.com/community-scripts/ProxmoxVE/pull/15908))
     - fix(wanderer): use PocketBase-relative plugin symlink in unprivileged LXC [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15911](https://github.com/community-scripts/ProxmoxVE/pull/15911))
 
+  - #### 💥 Breaking Changes
+
+    - Gotify: Migration to v3 [@MickLesk](https://github.com/MickLesk) ([#15912](https://github.com/community-scripts/ProxmoxVE/pull/15912))
+
 ### 💾 Core
 
   - #### ✨ New Features
