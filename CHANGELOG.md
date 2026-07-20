@@ -516,6 +516,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
+  - #### ✨ New Features
+
+    - Meilisearch : use dumpless Meilisearch upgrades [@MickLesk](https://github.com/MickLesk) ([#15921](https://github.com/community-scripts/ProxmoxVE/pull/15921))
+
   - #### 🔧 Refactor
 
     - core: Improve GPU detection and mapping logic [@MickLesk](https://github.com/MickLesk) ([#15918](https://github.com/community-scripts/ProxmoxVE/pull/15918))
