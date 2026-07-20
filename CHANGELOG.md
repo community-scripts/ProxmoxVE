@@ -529,6 +529,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: refactor to single-reporter telemetry and better error_handling [@MickLesk](https://github.com/MickLesk) ([#15933](https://github.com/community-scripts/ProxmoxVE/pull/15933))
     - tools.func: add support for extracting 7z archives [@MickLesk](https://github.com/MickLesk) ([#15919](https://github.com/community-scripts/ProxmoxVE/pull/15919))
     - Meilisearch : use dumpless Meilisearch upgrades [@MickLesk](https://github.com/MickLesk) ([#15921](https://github.com/community-scripts/ProxmoxVE/pull/15921))
 
