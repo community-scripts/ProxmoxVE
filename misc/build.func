@@ -4233,27 +4233,31 @@ $PCT_OPTIONS_STRING"
       return 0
     fi
 
-    # Check for Intel GPU - look for Intel vendor ID [8086]
-    if grep -q "\[8086:" <<<"$pci_vga_info"; then
-      msg_custom "🎮" "${BL}" "Detected Intel GPU"
-      if [[ -d /dev/dri ]]; then
-        for d in /dev/dri/renderD* /dev/dri/card*; do
-          [[ -e "$d" ]] && INTEL_DEVICES+=("$d")
-        done
-      fi
+    # Map each DRI render/card node to its owning GPU via the PCI vendor ID
+    # exposed in sysfs (/sys/class/drm/<node>/device/vendor). This is required
+    # on multi-GPU hosts: globbing every /dev/dri node onto the first detected
+    # vendor would pass through *both* GPUs and skip the selection prompt.
+    if [[ -d /dev/dri ]]; then
+      for d in /dev/dri/renderD* /dev/dri/card*; do
+        [[ -e "$d" ]] || continue
+        local node vendor
+        node=$(basename "$d")
+        vendor=$(cat "/sys/class/drm/${node}/device/vendor" 2>/dev/null || true)
+        case "$vendor" in
+        0x8086) INTEL_DEVICES+=("$d") ;;        # Intel
+        0x1002 | 0x1022) AMD_DEVICES+=("$d") ;; # AMD/ATI
+        0x10de) ;;                              # NVIDIA - handled via /dev/nvidia* below
+        *) msg_debug "Unmapped GPU vendor '${vendor:-unknown}' for $d" ;;
+        esac
+      done
     fi
 
-    # Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
-    if grep -qE "\[1002:|\[1022:" <<<"$pci_vga_info"; then
-      msg_custom "🎮" "${RD}" "Detected AMD GPU"
-      if [[ -d /dev/dri ]]; then
-        # Only add if not already claimed by Intel
-        if [[ ${#INTEL_DEVICES[@]} -eq 0 ]]; then
-          for d in /dev/dri/renderD* /dev/dri/card* /dev/kfd; do
-            [[ -e "$d" ]] && AMD_DEVICES+=("$d")
-          done
-        fi
-      fi
+    [[ ${#INTEL_DEVICES[@]} -gt 0 ]] && msg_custom "🎮" "${BL}" "Detected Intel GPU"
+    [[ ${#AMD_DEVICES[@]} -gt 0 ]] && msg_custom "🎮" "${RD}" "Detected AMD GPU"
+
+    # AMD compute (ROCm) additionally needs /dev/kfd alongside the render nodes
+    if [[ ${#AMD_DEVICES[@]} -gt 0 && -e /dev/kfd ]]; then
+      AMD_DEVICES+=("/dev/kfd")
     fi
 
     # Check for NVIDIA GPU - look for NVIDIA vendor ID [10de]
