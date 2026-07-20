@@ -111,16 +111,8 @@ EOF
     systemctl stop termix
     msg_ok "Stopped Termix"
 
-    msg_info "Migrating Configuration"
-    if [[ ! -f /opt/termix/.env ]]; then
-      cat <<EOF >/opt/termix/.env
-NODE_ENV=production
-DATA_DIR=/opt/termix/data
-GUACD_HOST=127.0.0.1
-GUACD_PORT=4822
-EOF
-    fi
     if ! grep -q "EnvironmentFile" /etc/systemd/system/termix.service 2>/dev/null; then
+      msg_info "Migrating Configuration"
       cat <<EOF >/etc/systemd/system/termix.service
 [Unit]
 Description=Termix Backend
