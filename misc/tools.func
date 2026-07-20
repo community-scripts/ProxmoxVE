@@ -2587,6 +2587,16 @@ _deploy_unpacked_archive() {
       msg_error "Failed to extract TAR archive"
       return 251
     }
+  elif [[ "$filename" == *.7z ]]; then
+    if [[ -f /etc/alpine-release ]]; then
+      ensure_dependencies 7zip
+    else
+      ensure_dependencies p7zip-full
+    fi
+    7z x -y -o"$workdir" "$archive" >/dev/null 2>&1 || {
+      msg_error "Failed to extract 7z archive"
+      return 251
+    }
   else
     msg_error "Unsupported archive format: $filename"
     return 65
