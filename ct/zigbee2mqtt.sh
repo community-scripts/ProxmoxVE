@@ -37,24 +37,24 @@ function update_script() {
 
     msg_info "Creating Backup"
     ensure_dependencies zstd
-    mkdir -p /opt/{backups,z2m_backup}
+    mkdir -p /opt/backups
     BACKUP_VERSION="$(<"$HOME/.zigbee2mqtt")"
     BACKUP_FILE="/opt/backups/${APP}_backup_${BACKUP_VERSION}.tar.zst"
     $STD tar -cf - -C /opt zigbee2mqtt | zstd -q -o "$BACKUP_FILE"
     ls -t /opt/backups/${APP}_backup_*.tar.zst 2>/dev/null | tail -n +6 | xargs -r rm -f
-    mv /opt/zigbee2mqtt/data /opt/z2m_backup/data
     msg_ok "Backup Created (${BACKUP_VERSION})"
+
+    create_backup /opt/zigbee2mqtt/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
+    restore_backup
+
     msg_info "Updating Zigbee2MQTT"
-    rm -rf /opt/zigbee2mqtt/data
-    mv /opt/z2m_backup/data /opt/zigbee2mqtt
     cd /opt/zigbee2mqtt
     grep -q "^packageImportMethod" ./pnpm-workspace.yaml 2>/dev/null || echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
-    rm -rf /opt/z2m_backup
     msg_ok "Updated Zigbee2MQTT"
 
     msg_info "Starting Service"

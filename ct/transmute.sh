@@ -40,12 +40,11 @@ function update_script() {
     systemctl stop transmute
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/transmute/backend/.env /opt/transmute.env.bak
-    cp -r /opt/transmute/data /opt/transmute_data_bak
-    msg_ok "Backed up Data"
+    create_backup /opt/transmute/backend/.env /opt/transmute/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball"
+
+    restore_backup
 
     msg_info "Updating Python Dependencies"
     cd /opt/transmute
@@ -59,12 +58,6 @@ function update_script() {
     $STD npm run build
     msg_ok "Rebuilt Frontend"
 
-    msg_info "Restoring Data"
-    cp /opt/transmute.env.bak /opt/transmute/backend/.env
-    cp -r /opt/transmute_data_bak/. /opt/transmute/data/
-    rm -f /opt/transmute.env.bak
-    rm -rf /opt/transmute_data_bak
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start transmute

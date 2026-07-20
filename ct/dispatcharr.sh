@@ -116,21 +116,10 @@ EOF
 
     msg_info "Creating Backup"
     BACKUP_FILE="/opt/dispatcharr_backup_$(date +%F_%H-%M-%S).tar.gz"
-    if [[ -f /opt/dispatcharr/.env ]]; then
-      cp /opt/dispatcharr/.env /tmp/dispatcharr.env.backup
-    fi
     if [[ -f /opt/dispatcharr/start-gunicorn.sh ]]; then
       rm -f /opt/dispatcharr/start-gunicorn.sh
     fi
-    if [[ -f /opt/dispatcharr/start-celery.sh ]]; then
-      cp /opt/dispatcharr/start-celery.sh /tmp/start-celery.sh.backup
-    fi
-    if [[ -f /opt/dispatcharr/start-celerybeat.sh ]]; then
-      cp /opt/dispatcharr/start-celerybeat.sh /tmp/start-celerybeat.sh.backup
-    fi
-    if [[ -f /opt/dispatcharr/start-daphne.sh ]]; then
-      cp /opt/dispatcharr/start-daphne.sh /tmp/start-daphne.sh.backup
-    fi
+    create_backup /opt/dispatcharr/.env /opt/dispatcharr/start-celery.sh /opt/dispatcharr/start-celerybeat.sh /opt/dispatcharr/start-daphne.sh
     if [[ -f /opt/dispatcharr/.env ]]; then
       set -o allexport
       source /opt/dispatcharr/.env
@@ -145,20 +134,9 @@ EOF
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 
-    msg_info "Updating Dispatcharr Backend"
-    if [[ -f /tmp/dispatcharr.env.backup ]]; then
-      mv /tmp/dispatcharr.env.backup /opt/dispatcharr/.env
-    fi
-    if [[ -f /tmp/start-celery.sh.backup ]]; then
-      mv /tmp/start-celery.sh.backup /opt/dispatcharr/start-celery.sh
-    fi
-    if [[ -f /tmp/start-celerybeat.sh.backup ]]; then
-      mv /tmp/start-celerybeat.sh.backup /opt/dispatcharr/start-celerybeat.sh
-    fi
-    if [[ -f /tmp/start-daphne.sh.backup ]]; then
-      mv /tmp/start-daphne.sh.backup /opt/dispatcharr/start-daphne.sh
-    fi
+    restore_backup
 
+    msg_info "Updating Dispatcharr Backend"
     if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
       DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
       echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >>/opt/dispatcharr/.env

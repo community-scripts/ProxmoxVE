@@ -35,12 +35,11 @@ function update_script() {
     systemctl stop xyops
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/xyops/data /opt/xyops_data_backup
-    cp -r /opt/xyops/conf /opt/xyops_conf_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/xyops/data /opt/xyops/conf
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xyops" "pixlcore/xyops" "tarball"
+
+    restore_backup
 
     msg_info "Rebuilding Application"
     cd /opt/xyops
@@ -48,12 +47,6 @@ function update_script() {
     $STD node bin/build.js dist
     chmod 644 /opt/xyops/node_modules/useragent-ng/lib/regexps.js
     msg_ok "Rebuilt Application"
-
-    msg_info "Restoring Data"
-    cp -r /opt/xyops_data_backup/. /opt/xyops/data
-    cp -r /opt/xyops_conf_backup/. /opt/xyops/conf
-    rm -rf /opt/xyops_data_backup /opt/xyops_conf_backup
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start xyops

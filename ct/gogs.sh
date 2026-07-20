@@ -35,18 +35,11 @@ function update_script() {
     systemctl stop gogs
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/gogs/custom /opt/gogs_custom_backup
-    cp -r /opt/gogs/data /opt/gogs_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/gogs/custom /opt/gogs/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gogs" "gogs/gogs" "prebuild" "latest" "/opt/gogs" "gogs_*_linux_$(arch_resolve).tar.gz"
 
-    msg_info "Restoring Data"
-    cp -r /opt/gogs_custom_backup/. /opt/gogs/custom
-    cp -r /opt/gogs_data_backup/. /opt/gogs/data
-    rm -rf /opt/gogs_custom_backup /opt/gogs_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start gogs

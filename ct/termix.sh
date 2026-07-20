@@ -143,12 +143,11 @@ EOF
     fi
     msg_ok "Migrated Configuration"
 
-    msg_info "Backing up Data"
-    cp -r /opt/termix/data /opt/termix_data_backup
-    cp -r /opt/termix/uploads /opt/termix_uploads_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/termix/data /opt/termix/uploads
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
+
+    restore_backup
 
     msg_info "Recreating Directories"
     mkdir -p /opt/termix/html \
@@ -176,12 +175,6 @@ EOF
     $STD npm rebuild better-sqlite3 bcryptjs --force
     $STD npm cache clean --force
     msg_ok "Set up Production Dependencies"
-
-    msg_info "Restoring Data"
-    cp -r /opt/termix_data_backup /opt/termix/data
-    cp -r /opt/termix_uploads_backup /opt/termix/uploads
-    rm -rf /opt/termix_data_backup /opt/termix_uploads_backup
-    msg_ok "Restored Data"
 
     msg_info "Updating Frontend Files"
     rm -rf /opt/termix/html/*

@@ -36,9 +36,11 @@ function update_script() {
 
     ensure_dependencies git
 
-    cp /opt/reactive-resume/.env /opt/reactive-resume.env.bak
+    create_backup /opt/reactive-resume/.env
     NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball" "latest" "/opt/reactive-resume"
+
+    restore_backup
 
     msg_info "Updating Reactive Resume (Patience)"
     cd /opt/reactive-resume
@@ -49,7 +51,6 @@ function update_script() {
     export NODE_ENV="production"
     $STD pnpm install --frozen-lockfile
     $STD pnpm run build
-    mv /opt/reactive-resume.env.bak /opt/reactive-resume/.env
     msg_ok "Updated Reactive Resume"
 
     msg_info "Updating Service"

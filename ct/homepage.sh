@@ -37,20 +37,14 @@ function update_script() {
     systemctl stop homepage
     msg_ok "Stopped service"
 
-    msg_info "Creating Backup"
-    cp /opt/homepage/.env /opt/homepage.env
-    cp -r /opt/homepage/config /opt/homepage_config_backup
-    [[ -d /opt/homepage/public/images ]] && cp -r /opt/homepage/public/images /opt/homepage_images_backup
-    [[ -d /opt/homepage/public/icons ]] && cp -r /opt/homepage/public/icons /opt/homepage_icons_backup
-    msg_ok "Created Backup"
+    create_backup /opt/homepage/.env /opt/homepage/config
+    # Separate store for user assets: they must be restored AFTER the build
+    # (pnpm build regenerates public/), not together with .env/config
+    BACKUP_DIR=/opt/homepage-assets.backup create_backup /opt/homepage/public/images /opt/homepage/public/icons
     
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
     
-    msg_info "Restoring Backup"
-    mv /opt/homepage.env /opt/homepage
-    rm -rf /opt/homepage/config
-    mv /opt/homepage_config_backup /opt/homepage/config
-    msg_ok "Restored Backup"
+    restore_backup
 
     msg_info "Updating Homepage (Patience)"
     RELEASE=$(get_latest_github_release "gethomepage/homepage")
@@ -63,8 +57,7 @@ function update_script() {
     export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | jq -r '.published_at')
     export NEXT_TELEMETRY_DISABLED=1
     $STD pnpm build
-    [[ -d /opt/homepage_images_backup ]] && mv /opt/homepage_images_backup /opt/homepage/public/images
-    [[ -d /opt/homepage_icons_backup ]] && mv /opt/homepage_icons_backup /opt/homepage/public/icons
+    BACKUP_DIR=/opt/homepage-assets.backup restore_backup
     msg_ok "Updated Homepage"
 
     msg_info "Starting service"

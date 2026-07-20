@@ -35,17 +35,12 @@ function update_script() {
     systemctl stop nginx
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp -r /opt/yourls/user /opt/yourls_user.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/yourls/user
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "yourls" "YOURLS/YOURLS" "tarball"
-    chown -R www-data:www-data /opt/yourls
 
-    msg_info "Restoring Configuration"
-    cp -r /opt/yourls_user.bak/. /opt/yourls/user/
-    rm -rf /opt/yourls_user.bak
-    msg_ok "Restored Configuration"
+    restore_backup
+    chown -R www-data:www-data /opt/yourls
 
     msg_info "Starting Service"
     systemctl start nginx

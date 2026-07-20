@@ -37,21 +37,14 @@ function update_script() {
     systemctl stop grist
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
-    rm -rf /opt/grist_bak
-    mv /opt/grist /opt/grist_bak
-    msg_ok "Backup created"
+    create_backup /opt/grist/.env /opt/grist/docs /opt/grist/grist-sessions.db /opt/grist/landing.db
 
-    fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
+
+    restore_backup
 
     msg_info "Updating Grist"
     mkdir -p /opt/grist/docs
-    cp -n /opt/grist_bak/.env /opt/grist/.env
-    if ls /opt/grist_bak/docs/* &>/dev/null; then
-      cp -r /opt/grist_bak/docs/* /opt/grist/docs/
-    fi
-    [[ -f /opt/grist_bak/grist-sessions.db ]] && cp /opt/grist_bak/grist-sessions.db /opt/grist/grist-sessions.db
-    [[ -f /opt/grist_bak/landing.db ]] && cp /opt/grist_bak/landing.db /opt/grist/landing.db
     cd /opt/grist
     $STD yarn install
     $STD yarn run build:prod

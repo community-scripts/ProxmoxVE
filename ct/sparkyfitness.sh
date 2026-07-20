@@ -35,17 +35,11 @@ function update_script() {
     systemctl stop sparkyfitness-server nginx
     msg_ok "Stopped Services"
 
-    msg_info "Backing up data"
-    mkdir -p /opt/sparkyfitness_backup
-    if [[ -d /opt/sparkyfitness/SparkyFitnessServer/uploads ]]; then
-      cp -r /opt/sparkyfitness/SparkyFitnessServer/uploads /opt/sparkyfitness_backup/
-    fi
-    if [[ -d /opt/sparkyfitness/SparkyFitnessServer/backup ]]; then
-      cp -r /opt/sparkyfitness/SparkyFitnessServer/backup /opt/sparkyfitness_backup/
-    fi
-    msg_ok "Backed up data"
+    create_backup /opt/sparkyfitness/SparkyFitnessServer/uploads /opt/sparkyfitness/SparkyFitnessServer/backup
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "sparkyfitness" "CodeWithCJ/SparkyFitness" "tarball"
+
+    restore_backup
 
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/package.json)"
     NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
@@ -95,11 +89,6 @@ function update_script() {
 EOF
     systemctl daemon-reload
     msg_ok "Refreshed SparkyFitness Service"
-
-    msg_info "Restoring data"
-    cp -r /opt/sparkyfitness_backup/. /opt/sparkyfitness/SparkyFitnessServer/
-    rm -rf /opt/sparkyfitness_backup
-    msg_ok "Restored data"
 
     msg_info "Starting Services"
     $STD systemctl start sparkyfitness-server nginx

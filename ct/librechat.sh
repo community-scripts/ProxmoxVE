@@ -35,11 +35,11 @@ function update_script() {
     systemctl stop librechat rag-api
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Configuration"
-    cp /opt/librechat/.env /opt/librechat.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/librechat/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "librechat" "danny-avila/LibreChat"
+
+    restore_backup
 
     msg_info "Installing Dependencies"
     cd /opt/librechat
@@ -52,11 +52,6 @@ function update_script() {
     $STD npm cache clean --force
     msg_ok "Built Frontend"
 
-    msg_info "Restoring Configuration"
-    cp /opt/librechat.env.bak /opt/librechat/.env
-    rm -f /opt/librechat.env.bak
-    msg_ok "Restored Configuration"
-
     msg_info "Starting Services"
     systemctl start rag-api librechat
     msg_ok "Started Services"
@@ -68,21 +63,16 @@ function update_script() {
     systemctl stop rag-api
     msg_ok "Stopped RAG API"
 
-    msg_info "Backing up RAG API Configuration"
-    cp /opt/rag-api/.env /opt/rag-api.env.bak
-    msg_ok "Backed up RAG API Configuration"
+    create_backup /opt/rag-api/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rag-api" "danny-avila/rag_api" "tarball"
+
+    restore_backup
 
     msg_info "Updating RAG API Dependencies"
     cd /opt/rag-api
     $STD .venv/bin/pip install -r requirements.lite.txt
     msg_ok "Updated RAG API Dependencies"
-
-    msg_info "Restoring RAG API Configuration"
-    cp /opt/rag-api.env.bak /opt/rag-api/.env
-    rm -f /opt/rag-api.env.bak
-    msg_ok "Restored RAG API Configuration"
 
     msg_info "Starting RAG API"
     systemctl start rag-api

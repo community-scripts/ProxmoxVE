@@ -52,11 +52,12 @@ function update_script() {
       msg_ok "Updated FlareSolverr"
     fi
 
-    cp /opt/shelfmark/start.sh /opt/start.sh.bak
+    create_backup /opt/shelfmark/start.sh
     if command -v chromedriver &>/dev/null; then
       $STD apt remove -y chromium-driver
     fi
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shelfmark" "calibrain/shelfmark" "tarball" "latest" "/opt/shelfmark"
+    restore_backup
     RELEASE_VERSION=$(cat "$HOME/.shelfmark")
 
     msg_info "Updating Shelfmark"
@@ -74,7 +75,6 @@ function update_script() {
     else
       $STD uv sync --active --locked --no-default-groups
     fi
-    mv /opt/start.sh.bak /opt/shelfmark/start.sh
     msg_ok "Updated Shelfmark"
 
     msg_info "Starting Service(s)"
