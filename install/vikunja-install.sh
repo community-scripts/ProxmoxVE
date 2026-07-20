@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary"
+fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary" "latest" "" "vikunja-*-$(arch_resolve "x86_64" "aarch64").deb"
 
 msg_info "Setting up Vikunja"
 sed -i 's|^# \(service:\)|\1|' /etc/vikunja/config.yml
