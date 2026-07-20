@@ -514,6 +514,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Omada: fix package version extraction [@MickLesk](https://github.com/MickLesk) ([#15908](https://github.com/community-scripts/ProxmoxVE/pull/15908))
     - fix(wanderer): use PocketBase-relative plugin symlink in unprivileged LXC [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15911](https://github.com/community-scripts/ProxmoxVE/pull/15911))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: Improve GPU detection and mapping logic [@MickLesk](https://github.com/MickLesk) ([#15918](https://github.com/community-scripts/ProxmoxVE/pull/15918))
+
 ## 2026-07-19
 
 ### 🚀 Updated Scripts
