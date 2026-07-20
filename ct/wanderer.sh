@@ -46,8 +46,8 @@ function update_script() {
     cd /opt/wanderer/source/web
     $STD npm ci
     $STD npm run build
-    mkdir -p /opt/wanderer/data/plugins
-    [[ -e /data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /data/plugins
+    mkdir -p /opt/wanderer/data/plugins /opt/wanderer/source/db/data
+    [[ -e /opt/wanderer/source/db/data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /opt/wanderer/source/db/data/plugins
     msg_info "Installing wanderer plugins"
     for plugin in hammerhead komoot strava; do
       fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "${CHECK_UPDATE_RELEASE:-latest}" "/opt/wanderer/data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
