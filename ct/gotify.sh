@@ -36,14 +36,20 @@ function update_script() {
     fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-$(arch_resolve).zip"
     chmod +x /opt/gotify/gotify-linux-$(arch_resolve)
 
-    if [[ -f /opt/gotify/config.yml && ! -f /opt/gotify/gotify-server.env ]]; then
-      msg_info "Migrating config.yml to env format (Gotify 3.x)"
-      if /opt/gotify/gotify-linux-$(arch_resolve) migrate-config /opt/gotify/config.yml >/opt/gotify/gotify-server.env 2>/dev/null; then
-        mv /opt/gotify/config.yml /opt/gotify/config.yml.bak
-        msg_ok "Migrated config.yml → gotify-server.env (backup: config.yml.bak)"
-      else
-        rm -f /opt/gotify/gotify-server.env
-        msg_warn "config.yml migration failed — left config.yml in place, review manually"
+    if [[ ! -f /opt/gotify/gotify-server.env ]]; then
+      gotify_old_config=""
+      for f in /opt/gotify/config.yml /etc/gotify/config.yml; do
+        [[ -f "$f" ]] && gotify_old_config="$f" && break
+      done
+      if [[ -n "$gotify_old_config" ]]; then
+        msg_info "Migrating ${gotify_old_config} to env format (Gotify 3.x)"
+        if /opt/gotify/gotify-linux-$(arch_resolve) migrate-config "$gotify_old_config" >/opt/gotify/gotify-server.env 2>/dev/null; then
+          mv "$gotify_old_config" "${gotify_old_config}.bak"
+          msg_ok "Migrated config to /opt/gotify/gotify-server.env (backup: ${gotify_old_config}.bak)"
+        else
+          rm -f /opt/gotify/gotify-server.env
+          msg_warn "Config migration failed — left ${gotify_old_config} in place, review manually"
+        fi
       fi
     fi
 
