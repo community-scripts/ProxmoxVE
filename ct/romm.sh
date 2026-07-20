@@ -38,6 +38,9 @@ function update_script() {
     msg_ok "Stopped Services"
 
     create_backup /opt/romm/.env
+    BACKUP_DIR=/opt/romm-players.backup create_backup \
+      /opt/romm/frontend/dist/assets/emulatorjs \
+      /opt/romm/frontend/dist/assets/ruffle
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball" "latest" "/opt/romm"
 
@@ -80,6 +83,12 @@ function update_script() {
     systemctl start romm-backend romm-worker romm-scheduler romm-watcher
     msg_ok "Started Services"
     msg_ok "Updated successfully"
+  fi
+
+  if check_for_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "v4.2.3"; then
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
+    systemctl restart romm-backend romm-worker romm-scheduler romm-watcher
+    msg_ok "Updated EmulatorJS successfully"
   fi
   exit
 }

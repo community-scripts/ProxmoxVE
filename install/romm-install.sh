@@ -134,6 +134,8 @@ else
 fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
+fetch_and_deploy_gh_release "ruffle" "ruffle-rs/ruffle" "prebuild" "latest" "/opt/romm/frontend/dist/assets/ruffle" "ruffle-*-web-selfhosted.zip"
+fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
 
 msg_info "Creating environment file"
 sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
