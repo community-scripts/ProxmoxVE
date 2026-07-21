@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NCP_INSTALLER_REF="v1.57.1"
+NCP_INSTALLER_REF="v1.58.0-rc1"
 
 msg_warn "WARNING: This script will run an external installer from a third-party source (https://nextcloudpi.com/)."
 msg_warn "The following code is NOT maintained or audited by our repository."
