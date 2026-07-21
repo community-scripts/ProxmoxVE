@@ -41,6 +41,12 @@ function update_script() {
 
     restore_backup
 
+    msg_info "Downloading Chromium for PDF Generation"
+    cd /opt/invoiceninja
+    $STD ./vendor/bin/snappdf download
+    chown -R www-data:www-data /opt/invoiceninja/vendor/beganovich/snappdf/versions
+    msg_ok "Downloaded Chromium for PDF Generation"
+
     msg_info "Running Migrations"
     cd /opt/invoiceninja 
     $STD php artisan migrate --force
