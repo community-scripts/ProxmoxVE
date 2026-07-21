@@ -27,11 +27,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 fi
 
 msg_info "Installing NextCloudPi (Patience)"
-# Pinned to the last known-good stable release instead of the floating "master"
-# branch: master has repeatedly broken distro detection on our default Debian
-# base out from under this script (e.g. #15944), since it's third-party code
-# not audited or version-locked by us.
-$STD bash <(curl -fsSL "https://raw.githubusercontent.com/nextcloud/nextcloudpi/${NCP_INSTALLER_REF}/install.sh")
+BRANCH="${NCP_INSTALLER_REF}" $STD bash <(curl -fsSL "https://raw.githubusercontent.com/nextcloud/nextcloudpi/${NCP_INSTALLER_REF}/install.sh")
 msg_ok "Installed NextCloudPi"
 
 motd_ssh
