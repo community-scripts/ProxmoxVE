@@ -772,7 +772,7 @@ DESCRIPTION=$(
   cat <<EOF
 <div align='center'>
   <a href='https://community-scripts.org' target='_blank' rel='noopener noreferrer'>
-    <img src='https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/develop/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
   <h2 style='font-size: 24px; margin: 20px 0;'>OPNsense VM</h2>
