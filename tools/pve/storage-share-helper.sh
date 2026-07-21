@@ -116,8 +116,8 @@ pick_container() {
     --menu "Select a container:" 24 100 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
-# Interactive mountpoint picker (read-only): returns the chosen mpX key on stdout.
-pick_mountpoint() {
+# Interactive multi-select mountpoint picker (read-only): returns chosen mpX keys on stdout.
+pick_mountpoints_multi() {
   local ctid="$1"
   local title="$2"
   local -a rows=()
@@ -127,7 +127,7 @@ pick_mountpoint() {
     [[ -z "$line" ]] && continue
     key="${line%%:*}"
     def="${line#*: }"
-    rows+=("$key" "$def")
+    rows+=("$key" "$def" "OFF")
   done < <(pct config "$ctid" 2>/dev/null | grep -E '^mp[0-9]+:')
 
   if [[ ${#rows[@]} -eq 0 ]]; then
@@ -137,7 +137,30 @@ pick_mountpoint() {
   fi
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --menu "Select mountpoint to act on:" 22 116 12 "${rows[@]}" 3>&1 1>&2 2>&3
+    --checklist "Select mountpoint(s) to remove (Space to toggle, Enter to confirm):" \
+    22 116 12 "${rows[@]}" 3>&1 1>&2 2>&3
+}
+
+# Interactive multi-select storage picker (read-only): returns chosen storage IDs on stdout.
+pick_storages_multi() {
+  local title="$1"
+  local -a rows=()
+  local stype sid
+
+  while IFS= read -r stype sid; do
+    [[ -z "$sid" ]] && continue
+    rows+=("$sid" "[${stype}]" "OFF")
+  done < <(awk -F': ' '/^[a-z]+: /{print $1, $2}' /etc/pve/storage.cfg 2>/dev/null)
+
+  if [[ ${#rows[@]} -eq 0 ]]; then
+    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+      --msgbox "No storages found in /etc/pve/storage.cfg." 10 72
+    return 1
+  fi
+
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+    --checklist "Select storage(s) to remove (Space to toggle, Enter to confirm):" \
+    24 100 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 # Interactive multi-select container picker (read-only): returns chosen CTIDs on stdout.
@@ -323,21 +346,40 @@ add_lvm_on_base_storage() {
 
 remove_storage() {
   header_info
-  local storage_id
+  local selection storage_id
+  local -a results=()
 
-  storage_id=$(read_input "Remove Storage" "Storage ID to remove") || return
-  confirm_danger "Remove Storage" \
-    "Really remove storage '${storage_id}' from the Proxmox config?
-
-This removes the storage definition only.
-Data on the underlying share/target is NOT deleted." || return
-
-  if pvesm remove "$storage_id" >/dev/null 2>&1; then
-    msg_ok "Storage '${storage_id}' removed"
-  else
-    msg_error "Failed to remove storage '${storage_id}'"
+  selection=$(pick_storages_multi "Remove Storage") || return
+  if [[ -z "$selection" ]]; then
+    msg_warn "No storage selected."
+    pause
+    return
   fi
 
+  # Confirm each selected storage separately (defaults to No).
+  for storage_id in $selection; do
+    storage_id="${storage_id//\"/}"
+    [[ -z "$storage_id" ]] && continue
+
+    if confirm_danger "Remove Storage" \
+      "Really remove storage '${storage_id}' from the Proxmox config?
+
+This removes the storage definition only.
+Data on the underlying share/target is NOT deleted."; then
+      if pvesm remove "$storage_id" >/dev/null 2>&1; then
+        results+=("removed  ${storage_id}")
+      else
+        results+=("FAILED   ${storage_id}")
+      fi
+    else
+      results+=("skipped  ${storage_id}")
+    fi
+  done
+
+  header_info
+  echo -e "${BL}Remove storage — result${CL}\n"
+  printf '  %s\n' "${results[@]}"
+  echo
   pause
 }
 
