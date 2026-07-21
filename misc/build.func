@@ -3867,7 +3867,7 @@ check_container_os_guard() {
 
   # Persistent opt-out: stores the ignored target version, so the question
   # comes back once the script targets a newer OS again
-  local ignore_file="/root/.helper-scripts-ignoreOSupdate"
+  local ignore_file="/usr/local/community-scripts/ignore-os-mismatch"
   if [[ -f "$ignore_file" && "$(cat "$ignore_file" 2>/dev/null)" == "${rec_os} ${rec_ver}" ]]; then
     msg_warn "Container OS is ${cur_os} ${cur_ver} but the script recommends ${rec_os} ${rec_ver} — continuing (previously ignored via ${ignore_file}, may break, no support)."
     return 0
@@ -3888,6 +3888,7 @@ check_container_os_guard() {
       return 0
       ;;
     3)
+      mkdir -p "${ignore_file%/*}"
       echo "${rec_os} ${rec_ver}" >"$ignore_file"
       msg_warn "Continuing update on ${cur_os} ${cur_ver}; OS check for ${rec_os} ${rec_ver} disabled via ${ignore_file} — may break, no support."
       return 0
