@@ -505,6 +505,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-21
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Pangolin: Bump Version to 1.21.0 [@MickLesk](https://github.com/MickLesk) ([#15938](https://github.com/community-scripts/ProxmoxVE/pull/15938))
+
 ## 2026-07-20
 
 ### 🚀 Updated Scripts
