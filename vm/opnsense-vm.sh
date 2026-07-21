@@ -491,7 +491,7 @@ function advanced_settings() {
         fi
         echo -e "${DGN}Using LAN GATEWAY ADDRESS: ${BGN}$LAN_GW${CL}"
       fi
-      if NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN netmmask (24 for example)" 8 58 $NETMASK --title "LAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN netmask (24 for example)" 8 58 $NETMASK --title "LAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
         if [ -z $NETMASK ]; then
           echo -e "${DGN}Netmask needs to be set if ip is not dhcp${CL}"
         fi
@@ -559,7 +559,7 @@ function advanced_settings() {
       else
         exit-script
       fi
-      if WAN_NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN netmmask (24 for example)" 8 58 $WAN_NETMASK --title "WAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if WAN_NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN netmask (24 for example)" 8 58 $WAN_NETMASK --title "WAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
         if [ -z $WAN_NETMASK ]; then
           echo -e "${DGN}WAN Netmask needs to be set if ip is not dhcp${CL}"
         fi
@@ -575,7 +575,7 @@ function advanced_settings() {
   else
     exit-script
   fi
-  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN MAC Address" 8 58 $GEN_MAC --title "WAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN MAC Address" 8 58 $GEN_MAC --title "LAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $MAC1 ]; then
       MAC="$GEN_MAC"
     else
@@ -586,7 +586,7 @@ function advanced_settings() {
     exit-script
   fi
 
-  if MAC2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN MAC Address" 8 58 $GEN_MAC_LAN --title "LAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  if MAC2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN MAC Address" 8 58 $GEN_MAC_LAN --title "WAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $MAC2 ]; then
       WAN_MAC="$GEN_MAC_LAN"
     else
@@ -818,6 +818,12 @@ if [ -n "$WAN_BRG" ]; then
   msg_ok "WAN interface added"
   sleep 5 # Brief pause after adding network interface
 fi
+# FreeBSD 15+ VM images ship the base system as pkgbase packages; the bootstrap's
+# "delete all packages" step would remove the running base system (/bin/rm etc.)
+# and brick the VM. Deregister them from the pkg db first - the files stay in
+# place and OPNsense replaces base and kernel with its own sets afterwards.
+send_line_to_vm "echo \"PRAGMA foreign_keys=ON; DELETE FROM packages WHERE name LIKE 'FreeBSD-%';\" | pkg shell"
+sleep 5
 send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r ${var_version}"
 msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
 #We need to wait for the OPNsense build proccess to finish, this takes a few minutes
