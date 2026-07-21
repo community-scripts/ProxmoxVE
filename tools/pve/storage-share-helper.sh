@@ -436,26 +436,44 @@ add_lxc_mountpoint() {
 
 remove_lxc_mountpoint() {
   header_info
-  local ctid mp_key mp_def
+  local ctid selection mp_key mp_def
+  local -a results=()
 
   ctid=$(pick_container "LXC: remove mountpoint") || return
-  mp_key=$(pick_mountpoint "$ctid" "LXC: remove mountpoint") || return
-  mp_def=$(pct config "$ctid" | awk -F': ' -v k="$mp_key" '$1==k{print $2}')
+  selection=$(pick_mountpoints_multi "$ctid" "LXC: remove mountpoint") || return
+  if [[ -z "$selection" ]]; then
+    msg_warn "No mountpoint selected."
+    pause
+    return
+  fi
 
-  confirm_danger "LXC: remove mountpoint" \
-    "Remove ${mp_key} from CT ${ctid}?
+  # Confirm each selected mountpoint separately (defaults to No).
+  for mp_key in $selection; do
+    mp_key="${mp_key//\"/}"
+    [[ -z "$mp_key" ]] && continue
+    mp_def=$(pct config "$ctid" | awk -F': ' -v k="$mp_key" '$1==k{print $2}')
+
+    if confirm_danger "LXC: remove mountpoint" \
+      "Remove ${mp_key} from CT ${ctid}?
 
   ${mp_key}: ${mp_def}
 
 This only detaches the mountpoint from the container.
-Data on the host is NOT deleted." || return
+Data on the host is NOT deleted."; then
+      if pct set "$ctid" -delete "$mp_key" >/dev/null 2>&1; then
+        results+=("removed  ${mp_key}")
+      else
+        results+=("FAILED   ${mp_key}")
+      fi
+    else
+      results+=("skipped  ${mp_key}")
+    fi
+  done
 
-  if pct set "$ctid" -delete "$mp_key" >/dev/null 2>&1; then
-    msg_ok "Removed ${mp_key} from CT ${ctid}"
-  else
-    msg_error "Failed to remove ${mp_key} from CT ${ctid}"
-  fi
-
+  header_info
+  echo -e "${BL}Remove mountpoint — result for CT ${ctid}${CL}\n"
+  printf '  %s\n' "${results[@]}"
+  echo
   pause
 }
 
