@@ -35,17 +35,20 @@ function update_script() {
     systemctl stop supervisor nginx php8.4-fpm
     msg_ok "Stopped Services"
 
-    create_backup /opt/invoiceninja/.env /opt/invoiceninja/storage /opt/invoiceninja/public/storage
+    create_backup /opt/invoiceninja/.env /opt/invoiceninja/storage /opt/invoiceninja/public/storage /opt/invoiceninja/vendor/beganovich/snappdf/versions
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "invoiceninja" "invoiceninja/invoiceninja" "prebuild" "latest" "/opt/invoiceninja" "invoiceninja.tar.gz"
 
     restore_backup
 
-    msg_info "Downloading Chromium for PDF Generation"
+    # No-op if the snappdf/versions restore above already has a Chromium build
+    # (snappdf skips downloading when versions/revision.txt exists); acts as a
+    # safety net if it's missing, e.g. the very first update after this fix.
+    msg_info "Verifying Chromium for PDF Generation"
     cd /opt/invoiceninja
     $STD ./vendor/bin/snappdf download
     chown -R www-data:www-data /opt/invoiceninja/vendor/beganovich/snappdf/versions
-    msg_ok "Downloaded Chromium for PDF Generation"
+    msg_ok "Verified Chromium for PDF Generation"
 
     msg_info "Running Migrations"
     cd /opt/invoiceninja 
