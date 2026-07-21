@@ -3860,23 +3860,45 @@ check_container_os_guard() {
 
   case "${var_ignore_os_mismatch:-}" in
   1 | yes | true | on)
-    msg_warn "Container OS is ${cur_os} ${cur_ver} but the script recommends ${rec_os} ${rec_ver} — continuing via var_ignore_os_mismatch."
+    msg_warn "Container OS is ${cur_os} ${cur_ver} but the script recommends ${rec_os} ${rec_ver} — continuing via var_ignore_os_mismatch (may break, no support)."
     return 0
     ;;
   esac
 
+  # Persistent opt-out: stores the ignored target version, so the question
+  # comes back once the script targets a newer OS again
+  local ignore_file="/root/.helper-scripts-ignoreOSupdate"
+  if [[ -f "$ignore_file" && "$(cat "$ignore_file" 2>/dev/null)" == "${rec_os} ${rec_ver}" ]]; then
+    msg_warn "Container OS is ${cur_os} ${cur_ver} but the script recommends ${rec_os} ${rec_ver} — continuing (previously ignored via ${ignore_file}, may break, no support)."
+    return 0
+  fi
+
   if [[ "${PHS_SILENT:-0}" != "1" ]] && command -v whiptail &>/dev/null && [ -t 0 ] && [[ "$TERM" != "dumb" ]]; then
-    if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "OS VERSION MISMATCH" --yesno \
-      "This container runs ${cur_os} ${cur_ver}, but this script now targets ${rec_os} ${rec_ver}.\n\nUpdating on the older base OS may fail or leave ${APP:-the application} broken (e.g. required runtime versions are not available).\n\nRecommended: upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again.\n\nContinue anyway?" 16 70; then
-      msg_warn "Continuing update on ${cur_os} ${cur_ver} despite recommended ${rec_os} ${rec_ver}."
+    local choice
+    choice=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "OS VERSION MISMATCH" --menu \
+      "This container runs ${cur_os} ${cur_ver}, but this script now targets ${rec_os} ${rec_ver}.\n\nUpdating on the older base OS may fail or leave ${APP:-the application} broken (e.g. required runtime versions are not available).\n\nRecommended: upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again.\n\nIf you continue anyway, it may break — no support is provided in that case.\n\nContinue anyway?" \
+      20 70 3 \
+      "1" "No  (cancel update)" \
+      "2" "Yes (continue this time)" \
+      "3" "Yes (continue and don't ask again)" \
+      --nocancel --default-item "1" 3>&1 1>&2 2>&3)
+    case "$choice" in
+    2)
+      msg_warn "Continuing update on ${cur_os} ${cur_ver} despite recommended ${rec_os} ${rec_ver} — may break, no support."
       return 0
-    fi
+      ;;
+    3)
+      echo "${rec_os} ${rec_ver}" >"$ignore_file"
+      msg_warn "Continuing update on ${cur_os} ${cur_ver}; OS check for ${rec_os} ${rec_ver} disabled via ${ignore_file} — may break, no support."
+      return 0
+      ;;
+    esac
     msg_error "Update cancelled: container OS ${cur_os} ${cur_ver} does not match the recommended ${rec_os} ${rec_ver}."
     return 1
   fi
 
   msg_error "Container OS ${cur_os} ${cur_ver} does not match the recommended ${rec_os} ${rec_ver} — skipping update."
-  msg_error "Upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again — or set var_ignore_os_mismatch=1 to bypass this check."
+  msg_error "Upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again — or bypass this check (may break, no support) with: echo \"${rec_os} ${rec_ver}\" > ${ignore_file}"
   return 1
 }
 
