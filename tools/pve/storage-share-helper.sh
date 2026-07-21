@@ -140,6 +140,28 @@ pick_mountpoint() {
     --menu "Select mountpoint to act on:" 24 96 12 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
+# Interactive multi-select container picker (read-only): returns chosen CTIDs on stdout.
+pick_containers_multi() {
+  local title="$1"
+  local -a rows=()
+  local ctid status name
+
+  while IFS=$'\t' read -r ctid status name; do
+    [[ -z "$ctid" ]] && continue
+    rows+=("$ctid" "${name:-<no-name>} [${status}]" "OFF")
+  done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
+
+  if [[ ${#rows[@]} -eq 0 ]]; then
+    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+      --msgbox "No LXC containers found on this host." 9 60
+    return 1
+  fi
+
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+    --checklist "Select one or more containers (Space to toggle, Enter to confirm):" \
+    24 84 14 "${rows[@]}" 3>&1 1>&2 2>&3
+}
+
 manual_smb_test() {
   header_info
   local server share username password domain vers mount_dir mount_opts
@@ -397,13 +419,28 @@ Data on the host is NOT deleted." || return
 
 list_lxc_mountpoints() {
   header_info
-  local ctid
+  local selection ctid mps
 
-  ctid=$(pick_container "LXC: list mountpoints") || return
+  selection=$(pick_containers_multi "LXC: list mountpoints") || return
+  if [[ -z "$selection" ]]; then
+    msg_warn "No container selected."
+    pause
+    return
+  fi
 
-  echo -e "${BL}Mountpoints for CT ${ctid}${CL}\n"
-  pct config "$ctid" | awk '/^mp[0-9]+:/{print}'
-  echo
+  for ctid in $selection; do
+    ctid="${ctid//\"/}"
+    [[ -z "$ctid" ]] && continue
+    echo -e "${BL}Mountpoints for CT ${ctid}${CL}"
+    mps=$(pct config "$ctid" | awk '/^mp[0-9]+:/{print}')
+    if [[ -n "$mps" ]]; then
+      echo "$mps"
+    else
+      echo "  (no mountpoints configured)"
+    fi
+    echo
+  done
+
   pause
 }
 
@@ -515,40 +552,40 @@ main_menu() {
     local choice
     choice=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Share Allrounder" \
       --menu "Select action  (read-only actions are safe; write/remove actions ask for confirmation):" 30 116 22 \
-      "sep1" "──────────  READ-ONLY (safe, no changes)  ──────────" \
-      "1" "  Test | SMB: manual mount test" \
-      "2" "  Test | NFS: manual mount test" \
-      "3" "  Test | iSCSI: discovery test" \
-      "11" "  Read | LXC: list mountpoints" \
-      "14" "  Read | Show storage/mount/iSCSI status" \
-      "sep2" "──────────  WRITE (modifies config / host)  ──────────" \
-      "4" " Write | Proxmox: add SMB/CIFS storage" \
-      "5" " Write | Proxmox: add NFS storage" \
-      "6" " Write | Proxmox: add iSCSI storage" \
-      "7" " Write | Proxmox: add LVM on base storage (e.g. iSCSI)" \
-      "9" " Write | LXC: add bind mountpoint (pct set -mpX)" \
-      "12" " Write | Host: install Samba + create SMB share" \
-      "13" " Write | Host: install NFS server + create export" \
-      "sep3" "──────────  REMOVE (destructive, defaults to No)  ──────────" \
-      "8" "Remove | Proxmox: remove storage definition" \
-      "10" "Remove | LXC: remove mountpoint (pct set -delete mpX)" \
+      " " "──────────  READ-ONLY (safe, no changes)  ──────────" \
+      "1" "Test   | SMB: manual mount test" \
+      "2" "Test   | NFS: manual mount test" \
+      "3" "Test   | iSCSI: discovery test" \
+      "4" "Read   | LXC: list mountpoints" \
+      "5" "Read   | Show storage/mount/iSCSI status" \
+      "  " "──────────  WRITE (modifies config / host)  ──────────" \
+      "6" "Write  | Proxmox: add SMB/CIFS storage" \
+      "7" "Write  | Proxmox: add NFS storage" \
+      "8" "Write  | Proxmox: add iSCSI storage" \
+      "9" "Write  | Proxmox: add LVM on base storage (e.g. iSCSI)" \
+      "10" "Write  | LXC: add bind mountpoint (pct set -mpX)" \
+      "11" "Write  | Host: install Samba + create SMB share" \
+      "12" "Write  | Host: install NFS server + create export" \
+      "   " "──────────  REMOVE (destructive, defaults to No)  ──────────" \
+      "13" "Remove | Proxmox: remove storage definition" \
+      "14" "Remove | LXC: remove mountpoint (pct set -delete mpX)" \
       "0" "Exit" 3>&1 1>&2 2>&3) || break
 
     case "$choice" in
     1) manual_smb_test ;;
     2) manual_nfs_test ;;
     3) manual_iscsi_discovery ;;
-    4) add_smb_storage ;;
-    5) add_nfs_storage ;;
-    6) add_iscsi_storage ;;
-    7) add_lvm_on_base_storage ;;
-    8) remove_storage ;;
-    9) add_lxc_mountpoint ;;
-    10) remove_lxc_mountpoint ;;
-    11) list_lxc_mountpoints ;;
-    12) host_create_samba_share ;;
-    13) host_create_nfs_export ;;
-    14) show_status ;;
+    4) list_lxc_mountpoints ;;
+    5) show_status ;;
+    6) add_smb_storage ;;
+    7) add_nfs_storage ;;
+    8) add_iscsi_storage ;;
+    9) add_lvm_on_base_storage ;;
+    10) add_lxc_mountpoint ;;
+    11) host_create_samba_share ;;
+    12) host_create_nfs_export ;;
+    13) remove_storage ;;
+    14) remove_lxc_mountpoint ;;
     0) break ;;
     *) ;;
     esac
