@@ -25,6 +25,7 @@ METHOD=""
 NSAPP="opnsense-vm"
 var_os="opnsense"
 var_version="26.7"
+FREEBSD_MAJOR="15"
 #
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 GEN_MAC_LAN=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
@@ -652,23 +653,26 @@ fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_info "Retrieving the URL for the OPNsense Qcow2 Disk Image"
-# Use latest stable FreeBSD amd64 qcow2 VM image (generic, not UFS/ZFS)
+# Use latest stable FreeBSD amd64 qcow2 VM image matching FREEBSD_MAJOR
 RELEASE_LIST="$(curl -s https://download.freebsd.org/releases/VM-IMAGES/ |
-  grep -Eo '[0-9]+\.[0-9]+-RELEASE' |
+  grep -Eo "${FREEBSD_MAJOR}\.[0-9]+-RELEASE" |
   sort -Vr |
   uniq)"
 URL=""
 FREEBSD_VER=""
 for ver in $RELEASE_LIST; do
-  candidate="https://download.freebsd.org/releases/VM-IMAGES/${ver}/amd64/Latest/FreeBSD-${ver}-amd64.qcow2.xz"
-  if curl -fsI "$candidate" >/dev/null 2>&1; then
-    FREEBSD_VER="$ver"
-    URL="$candidate"
-    break
-  fi
+  # FreeBSD 15+ publishes separate -ufs/-zfs images instead of a generic one
+  for variant in "" "-ufs" "-zfs"; do
+    candidate="https://download.freebsd.org/releases/VM-IMAGES/${ver}/amd64/Latest/FreeBSD-${ver}-amd64${variant}.qcow2.xz"
+    if curl -fsI "$candidate" >/dev/null 2>&1; then
+      FREEBSD_VER="$ver"
+      URL="$candidate"
+      break 2
+    fi
+  done
 done
 if [ -z "$URL" ]; then
-  msg_error "Could not find generic FreeBSD amd64 qcow2 image (non-UFS/ZFS)."
+  msg_error "Could not find a FreeBSD ${FREEBSD_MAJOR}.x amd64 qcow2 image."
   exit 115
 fi
 msg_ok "Download URL: ${CL}${BL}${URL}${CL}"
@@ -814,7 +818,7 @@ if [ -n "$WAN_BRG" ]; then
   msg_ok "WAN interface added"
   sleep 5 # Brief pause after adding network interface
 fi
-send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 26.7"
+send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r ${var_version}"
 msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
 #We need to wait for the OPNsense build proccess to finish, this takes a few minutes
 sleep 1000
