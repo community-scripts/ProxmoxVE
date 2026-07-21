@@ -826,8 +826,29 @@ send_line_to_vm "echo \"PRAGMA foreign_keys=ON; DELETE FROM packages WHERE name 
 sleep 5
 send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r ${var_version}"
 msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
-#We need to wait for the OPNsense build proccess to finish, this takes a few minutes
-sleep 1000
+# The bootstrap ends with an automatic reboot into OPNsense. While it runs the
+# console keeps changing (download progress, package installs); once the VM has
+# settled at the login prompt the screen stays static. Poll a screendump hash
+# and continue after 3 minutes without change, bounded by a floor (the build
+# never finishes faster) and a ceiling for slow machines or if screendump fails.
+SCREEN_PPM="${TEMP_DIR}/screen-${VMID}.ppm"
+build_elapsed=300
+build_stable=0
+last_hash=""
+sleep 300
+while [ $build_stable -lt 6 ] && [ $build_elapsed -lt 2400 ]; do
+  sleep 30
+  build_elapsed=$((build_elapsed + 30))
+  echo "screendump ${SCREEN_PPM}" | qm monitor $VMID >/dev/null 2>&1 || true
+  new_hash=$(md5sum "${SCREEN_PPM}" 2>/dev/null | cut -d' ' -f1 || true)
+  if [ -n "$new_hash" ] && [ "$new_hash" = "$last_hash" ]; then
+    build_stable=$((build_stable + 1))
+  else
+    build_stable=0
+  fi
+  last_hash="$new_hash"
+done
+msg_ok "OPNsense build finished after $((build_elapsed / 60)) minutes"
 send_line_to_vm "root"
 send_line_to_vm "opnsense"
 send_line_to_vm "2"
