@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT | https://github.com/community-scripts/ProxmoxVED/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+load_functions
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "storage-share-helper" "pve"
 
 set -eEuo pipefail
 
@@ -20,26 +25,8 @@ function header_info() {
 EOF
 }
 
-YW="\033[33m"
-BL="\033[36m"
-GN="\033[1;92m"
-RD="\033[01;31m"
-CL="\033[m"
-
-msg_info() { echo -e "${BL}[INFO]${CL} ${YW}$1${CL}"; }
-msg_ok() { echo -e "${GN}[OK]${CL} $1"; }
-msg_warn() { echo -e "${YW}[WARN]${CL} $1"; }
-msg_error() { echo -e "${RD}[ERROR]${CL} $1"; }
-
 pause() {
   read -r -p "Press Enter to continue..." _
-}
-
-require_root() {
-  if [[ $EUID -ne 0 ]]; then
-    msg_error "Run this script as root."
-    exit 1
-  fi
 }
 
 require_pve() {
@@ -507,7 +494,8 @@ main_menu() {
 }
 
 header_info
-require_root
+root_check
+pve_check
 require_pve
 ensure_packages
 confirm_start || exit 0
