@@ -54,7 +54,7 @@ ensure_packages() {
 
 confirm_start() {
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Share Allrounder" \
-    --yesno "This AIO wizard can test and configure SMB/NFS/iSCSI, create/remove Proxmox storages, manage LXC mountpoints and optionally create host shares. Proceed?" 12 96
+    --yesno "This AIO wizard can test and configure SMB/NFS/iSCSI, create/remove Proxmox storages, manage LXC mountpoints and optionally create host shares. Proceed?" 13 100
 }
 
 read_input() {
@@ -63,7 +63,7 @@ read_input() {
   local default_value="${3:-}"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --inputbox "$prompt" 11 84 "$default_value" 3>&1 1>&2 2>&3
+    --inputbox "$prompt" 11 100 "$default_value" 3>&1 1>&2 2>&3
 }
 
 read_password() {
@@ -71,14 +71,14 @@ read_password() {
   local prompt="$2"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --passwordbox "$prompt" 11 84 3>&1 1>&2 2>&3
+    --passwordbox "$prompt" 11 100 3>&1 1>&2 2>&3
 }
 
 confirm_yes_no() {
   local title="$1"
   local prompt="$2"
   local height="${3:-11}"
-  local width="${4:-84}"
+  local width="${4:-100}"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
     --yesno "$prompt" "$height" "$width"
@@ -89,7 +89,7 @@ confirm_danger() {
   local title="$1"
   local prompt="$2"
   local height="${3:-15}"
-  local width="${4:-84}"
+  local width="${4:-100}"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
     --defaultno --yesno "$prompt" "$height" "$width"
@@ -108,12 +108,12 @@ pick_container() {
 
   if [[ ${#rows[@]} -eq 0 ]]; then
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "No LXC containers found on this host." 9 60
+      --msgbox "No LXC containers found on this host." 10 72
     return 1
   fi
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --menu "Select a container:" 24 84 14 "${rows[@]}" 3>&1 1>&2 2>&3
+    --menu "Select a container:" 24 100 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 # Interactive mountpoint picker (read-only): returns the chosen mpX key on stdout.
@@ -132,12 +132,12 @@ pick_mountpoint() {
 
   if [[ ${#rows[@]} -eq 0 ]]; then
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "Container ${ctid} has no mountpoints (mpX) configured." 9 70
+      --msgbox "Container ${ctid} has no mountpoints (mpX) configured." 10 80
     return 1
   fi
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --menu "Select mountpoint to act on:" 24 96 12 "${rows[@]}" 3>&1 1>&2 2>&3
+    --menu "Select mountpoint to act on:" 22 116 12 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 # Interactive multi-select container picker (read-only): returns chosen CTIDs on stdout.
@@ -153,13 +153,13 @@ pick_containers_multi() {
 
   if [[ ${#rows[@]} -eq 0 ]]; then
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "No LXC containers found on this host." 9 60
+      --msgbox "No LXC containers found on this host." 10 72
     return 1
   fi
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
     --checklist "Select one or more containers (Space to toggle, Enter to confirm):" \
-    24 84 14 "${rows[@]}" 3>&1 1>&2 2>&3
+    24 100 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 manual_smb_test() {
@@ -380,7 +380,7 @@ add_lxc_mountpoint() {
   confirm_yes_no "LXC: add mountpoint" \
     "Add mp${mp_slot} to CT ${ctid}?
 
-  ${host_path}  ->  ${ct_path}" 13 84 || return
+  ${host_path}  ->  ${ct_path}" 13 100 || return
 
   if pct set "$ctid" -mp"$mp_slot" "$host_path",mp="$ct_path" >/dev/null 2>&1; then
     msg_ok "Added mp${mp_slot}: ${host_path} -> ${ct_path} on CT ${ctid}"
