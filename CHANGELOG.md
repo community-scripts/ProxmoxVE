@@ -513,6 +513,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Pangolin: Bump Version to 1.21.0 [@MickLesk](https://github.com/MickLesk) ([#15938](https://github.com/community-scripts/ProxmoxVE/pull/15938))
 
+  - #### 🔧 Refactor
+
+    - Standardize CT update backup handling [@MickLesk](https://github.com/MickLesk) ([#15937](https://github.com/community-scripts/ProxmoxVE/pull/15937))
+
 ## 2026-07-20
 
 ### 🚀 Updated Scripts
