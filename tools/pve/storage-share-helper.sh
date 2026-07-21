@@ -77,9 +77,67 @@ read_password() {
 confirm_yes_no() {
   local title="$1"
   local prompt="$2"
+  local height="${3:-11}"
+  local width="${4:-84}"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --yesno "$prompt" 11 84
+    --yesno "$prompt" "$height" "$width"
+}
+
+# Destructive confirmation: defaults to "No" so a stray Enter never removes anything.
+confirm_danger() {
+  local title="$1"
+  local prompt="$2"
+  local height="${3:-15}"
+  local width="${4:-84}"
+
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+    --defaultno --yesno "$prompt" "$height" "$width"
+}
+
+# Interactive container picker (read-only): returns the chosen CTID on stdout.
+pick_container() {
+  local title="$1"
+  local -a rows=()
+  local ctid status name
+
+  while IFS=$'\t' read -r ctid status name; do
+    [[ -z "$ctid" ]] && continue
+    rows+=("$ctid" "${name:-<no-name>} [${status}]")
+  done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
+
+  if [[ ${#rows[@]} -eq 0 ]]; then
+    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+      --msgbox "No LXC containers found on this host." 9 60
+    return 1
+  fi
+
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+    --menu "Select a container:" 24 84 14 "${rows[@]}" 3>&1 1>&2 2>&3
+}
+
+# Interactive mountpoint picker (read-only): returns the chosen mpX key on stdout.
+pick_mountpoint() {
+  local ctid="$1"
+  local title="$2"
+  local -a rows=()
+  local line key def
+
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    key="${line%%:*}"
+    def="${line#*: }"
+    rows+=("$key" "$def")
+  done < <(pct config "$ctid" 2>/dev/null | grep -E '^mp[0-9]+:')
+
+  if [[ ${#rows[@]} -eq 0 ]]; then
+    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+      --msgbox "Container ${ctid} has no mountpoints (mpX) configured." 9 70
+    return 1
+  fi
+
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+    --menu "Select mountpoint to act on:" 24 96 12 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 manual_smb_test() {
@@ -246,7 +304,11 @@ remove_storage() {
   local storage_id
 
   storage_id=$(read_input "Remove Storage" "Storage ID to remove") || return
-  confirm_yes_no "Remove Storage" "Really remove storage '${storage_id}' from Proxmox config?" || return
+  confirm_danger "Remove Storage" \
+    "Really remove storage '${storage_id}' from the Proxmox config?
+
+This removes the storage definition only.
+Data on the underlying share/target is NOT deleted." || return
 
   if pvesm remove "$storage_id" >/dev/null 2>&1; then
     msg_ok "Storage '${storage_id}' removed"
@@ -276,15 +338,9 @@ add_lxc_mountpoint() {
   header_info
   local ctid host_path ct_path mp_slot
 
-  ctid=$(read_input "LXC Mountpoint" "Container ID (CTID)") || return
+  ctid=$(pick_container "LXC: add mountpoint") || return
   host_path=$(read_input "LXC Mountpoint" "Host path (must exist, e.g. /mnt/pve/smb-media)") || return
   ct_path=$(read_input "LXC Mountpoint" "Container path (e.g. /mnt/media)") || return
-
-  if ! pct config "$ctid" >/dev/null 2>&1; then
-    msg_error "Container ${ctid} not found"
-    pause
-    return
-  fi
 
   if [[ ! -d "$host_path" ]]; then
     msg_error "Host path does not exist: ${host_path}"
@@ -299,6 +355,11 @@ add_lxc_mountpoint() {
     return
   fi
 
+  confirm_yes_no "LXC: add mountpoint" \
+    "Add mp${mp_slot} to CT ${ctid}?
+
+  ${host_path}  ->  ${ct_path}" 13 84 || return
+
   if pct set "$ctid" -mp"$mp_slot" "$host_path",mp="$ct_path" >/dev/null 2>&1; then
     msg_ok "Added mp${mp_slot}: ${host_path} -> ${ct_path} on CT ${ctid}"
     msg_warn "If CT is unprivileged, ensure UID/GID mapping and filesystem permissions fit your workload."
@@ -311,16 +372,19 @@ add_lxc_mountpoint() {
 
 remove_lxc_mountpoint() {
   header_info
-  local ctid mp_key
+  local ctid mp_key mp_def
 
-  ctid=$(read_input "Remove LXC Mountpoint" "Container ID (CTID)") || return
-  mp_key=$(read_input "Remove LXC Mountpoint" "Mountpoint key (e.g. mp0, mp1)") || return
+  ctid=$(pick_container "LXC: remove mountpoint") || return
+  mp_key=$(pick_mountpoint "$ctid" "LXC: remove mountpoint") || return
+  mp_def=$(pct config "$ctid" | awk -F': ' -v k="$mp_key" '$1==k{print $2}')
 
-  if ! pct config "$ctid" >/dev/null 2>&1; then
-    msg_error "Container ${ctid} not found"
-    pause
-    return
-  fi
+  confirm_danger "LXC: remove mountpoint" \
+    "Remove ${mp_key} from CT ${ctid}?
+
+  ${mp_key}: ${mp_def}
+
+This only detaches the mountpoint from the container.
+Data on the host is NOT deleted." || return
 
   if pct set "$ctid" -delete "$mp_key" >/dev/null 2>&1; then
     msg_ok "Removed ${mp_key} from CT ${ctid}"
@@ -335,12 +399,7 @@ list_lxc_mountpoints() {
   header_info
   local ctid
 
-  ctid=$(read_input "List LXC Mountpoints" "Container ID (CTID)") || return
-  if ! pct config "$ctid" >/dev/null 2>&1; then
-    msg_error "Container ${ctid} not found"
-    pause
-    return
-  fi
+  ctid=$(pick_container "LXC: list mountpoints") || return
 
   echo -e "${BL}Mountpoints for CT ${ctid}${CL}\n"
   pct config "$ctid" | awk '/^mp[0-9]+:/{print}'
@@ -455,21 +514,24 @@ main_menu() {
   while true; do
     local choice
     choice=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Share Allrounder" \
-      --menu "Select action:" 30 110 20 \
-      "1" "SMB: manual mount test" \
-      "2" "NFS: manual mount test" \
-      "3" "iSCSI: discovery test" \
-      "4" "Proxmox: add SMB/CIFS storage" \
-      "5" "Proxmox: add NFS storage" \
-      "6" "Proxmox: add iSCSI storage" \
-      "7" "Proxmox: add LVM on base storage (e.g. iSCSI)" \
-      "8" "Proxmox: remove storage definition" \
-      "9" "LXC: add bind mountpoint (pct set -mpX)" \
-      "10" "LXC: remove mountpoint (pct set -delete mpX)" \
-      "11" "LXC: list mountpoints" \
-      "12" "Host: install Samba + create SMB share" \
-      "13" "Host: install NFS server + create export" \
-      "14" "Show storage/mount/iSCSI status" \
+      --menu "Select action  (read-only actions are safe; write/remove actions ask for confirmation):" 30 116 22 \
+      "sep1" "──────────  READ-ONLY (safe, no changes)  ──────────" \
+      "1" "  Test | SMB: manual mount test" \
+      "2" "  Test | NFS: manual mount test" \
+      "3" "  Test | iSCSI: discovery test" \
+      "11" "  Read | LXC: list mountpoints" \
+      "14" "  Read | Show storage/mount/iSCSI status" \
+      "sep2" "──────────  WRITE (modifies config / host)  ──────────" \
+      "4" " Write | Proxmox: add SMB/CIFS storage" \
+      "5" " Write | Proxmox: add NFS storage" \
+      "6" " Write | Proxmox: add iSCSI storage" \
+      "7" " Write | Proxmox: add LVM on base storage (e.g. iSCSI)" \
+      "9" " Write | LXC: add bind mountpoint (pct set -mpX)" \
+      "12" " Write | Host: install Samba + create SMB share" \
+      "13" " Write | Host: install NFS server + create export" \
+      "sep3" "──────────  REMOVE (destructive, defaults to No)  ──────────" \
+      "8" "Remove | Proxmox: remove storage definition" \
+      "10" "Remove | LXC: remove mountpoint (pct set -delete mpX)" \
       "0" "Exit" 3>&1 1>&2 2>&3) || break
 
     case "$choice" in
