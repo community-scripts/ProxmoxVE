@@ -3832,6 +3832,55 @@ runtime_script_status_guard() {
 }
 
 # ------------------------------------------------------------------------------
+# check_container_os_guard()
+#
+# - Compares the container OS (/etc/os-release) with the script's recommended
+#   var_os/var_version before running update_script
+# - On mismatch: interactive runs ask whether to continue (default: no);
+#   headless runs (PHS_SILENT=1 / no tty) abort instead of updating on an
+#   unsupported base and leaving the app broken mid-update
+# - Bypass via var_ignore_os_mismatch=1|yes|true|on (still warns, but continues)
+# ------------------------------------------------------------------------------
+check_container_os_guard() {
+  local rec_os="${var_os:-}" rec_ver="${var_version:-}"
+  rec_os="${rec_os,,}"
+  [[ -z "$rec_os" || -z "$rec_ver" ]] && return 0
+  [[ -r /etc/os-release ]] || return 0
+
+  local cur_os cur_ver
+  cur_os="$(. /etc/os-release 2>/dev/null; echo "${ID:-}")"
+  cur_ver="$(. /etc/os-release 2>/dev/null; echo "${VERSION_ID:-}")"
+  cur_os="${cur_os,,}"
+  [[ -z "$cur_os" || -z "$cur_ver" ]] && return 0
+
+  # Exact version or prefix on a dot boundary (e.g. alpine 3.22 matches 3.22.1)
+  if [[ "$cur_os" == "$rec_os" ]] && [[ "$cur_ver" == "$rec_ver" || "$cur_ver" == "$rec_ver".* ]]; then
+    return 0
+  fi
+
+  case "${var_ignore_os_mismatch:-}" in
+  1 | yes | true | on)
+    msg_warn "Container OS is ${cur_os} ${cur_ver} but the script recommends ${rec_os} ${rec_ver} — continuing via var_ignore_os_mismatch."
+    return 0
+    ;;
+  esac
+
+  if [[ "${PHS_SILENT:-0}" != "1" ]] && command -v whiptail &>/dev/null && [ -t 0 ] && [[ "$TERM" != "dumb" ]]; then
+    if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "OS VERSION MISMATCH" --yesno \
+      "This container runs ${cur_os} ${cur_ver}, but this script now targets ${rec_os} ${rec_ver}.\n\nUpdating on the older base OS may fail or leave ${APP:-the application} broken (e.g. required runtime versions are not available).\n\nRecommended: create a new ${rec_os} ${rec_ver} container and migrate your data.\n\nContinue anyway?" 16 70; then
+      msg_warn "Continuing update on ${cur_os} ${cur_ver} despite recommended ${rec_os} ${rec_ver}."
+      return 0
+    fi
+    msg_error "Update cancelled: container OS ${cur_os} ${cur_ver} does not match the recommended ${rec_os} ${rec_ver}."
+    return 1
+  fi
+
+  msg_error "Container OS ${cur_os} ${cur_ver} does not match the recommended ${rec_os} ${rec_ver} — skipping update."
+  msg_error "Recreate the container on ${rec_os} ${rec_ver}, or set var_ignore_os_mismatch=1 to bypass this check."
+  return 1
+}
+
+# ------------------------------------------------------------------------------
 # start()
 #
 # - Entry point of script
@@ -3852,6 +3901,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard update || return 0
+    check_container_os_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3863,6 +3913,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard update || return 0
+    check_container_os_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3893,6 +3944,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard update || return 0
+    check_container_os_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
