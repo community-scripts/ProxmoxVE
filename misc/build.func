@@ -3867,7 +3867,7 @@ check_container_os_guard() {
 
   if [[ "${PHS_SILENT:-0}" != "1" ]] && command -v whiptail &>/dev/null && [ -t 0 ] && [[ "$TERM" != "dumb" ]]; then
     if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "OS VERSION MISMATCH" --yesno \
-      "This container runs ${cur_os} ${cur_ver}, but this script now targets ${rec_os} ${rec_ver}.\n\nUpdating on the older base OS may fail or leave ${APP:-the application} broken (e.g. required runtime versions are not available).\n\nRecommended: create a new ${rec_os} ${rec_ver} container and migrate your data.\n\nContinue anyway?" 16 70; then
+      "This container runs ${cur_os} ${cur_ver}, but this script now targets ${rec_os} ${rec_ver}.\n\nUpdating on the older base OS may fail or leave ${APP:-the application} broken (e.g. required runtime versions are not available).\n\nRecommended: upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again.\n\nContinue anyway?" 16 70; then
       msg_warn "Continuing update on ${cur_os} ${cur_ver} despite recommended ${rec_os} ${rec_ver}."
       return 0
     fi
@@ -3876,7 +3876,7 @@ check_container_os_guard() {
   fi
 
   msg_error "Container OS ${cur_os} ${cur_ver} does not match the recommended ${rec_os} ${rec_ver} — skipping update."
-  msg_error "Recreate the container on ${rec_os} ${rec_ver}, or set var_ignore_os_mismatch=1 to bypass this check."
+  msg_error "Upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again — or set var_ignore_os_mismatch=1 to bypass this check."
   return 1
 }
 
