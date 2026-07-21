@@ -99,11 +99,12 @@ confirm_danger() {
 pick_container() {
   local title="$1"
   local -a rows=()
-  local ctid status name
+  local ctid status name label
 
   while IFS=$'\t' read -r ctid status name; do
     [[ -z "$ctid" ]] && continue
-    rows+=("$ctid" "${name:-<no-name>} [${status}]")
+    label=$(printf '%-58s' "${name:-<no-name>} [${status}]")
+    rows+=("$ctid" "$label")
   done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
 
   if [[ ${#rows[@]} -eq 0 ]]; then
@@ -113,43 +114,48 @@ pick_container() {
   fi
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --menu "Select a container:" 24 100 16 "${rows[@]}" 3>&1 1>&2 2>&3
+    --menu "Select a container:" 24 80 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
-# Interactive multi-select mountpoint picker (read-only): returns chosen mpX keys on stdout.
-pick_mountpoints_multi() {
-  local ctid="$1"
-  local title="$2"
+# Interactive multi-select picker over ALL mountpoints across ALL containers (read-only).
+# Returns chosen entries as "<ctid>:<mpX>" tokens on stdout.
+pick_all_mountpoints_multi() {
+  local title="$1"
   local -a rows=()
-  local line key def
+  local ctid status name line key def label
 
-  while IFS= read -r line; do
-    [[ -z "$line" ]] && continue
-    key="${line%%:*}"
-    def="${line#*: }"
-    rows+=("$key" "$def" "OFF")
-  done < <(pct config "$ctid" 2>/dev/null | grep -E '^mp[0-9]+:')
+  while IFS=$'\t' read -r ctid status name; do
+    [[ -z "$ctid" ]] && continue
+    while IFS= read -r line; do
+      [[ -z "$line" ]] && continue
+      key="${line%%:*}"
+      def="${line#*: }"
+      label=$(printf '%-86s' "CT ${ctid} ${name} | ${key}: ${def}")
+      rows+=("${ctid}:${key}" "$label" "OFF")
+    done < <(pct config "$ctid" 2>/dev/null | grep -E '^mp[0-9]+:')
+  done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
 
   if [[ ${#rows[@]} -eq 0 ]]; then
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "Container ${ctid} has no mountpoints (mpX) configured." 10 80
+      --msgbox "No LXC mountpoints found on any container." 10 76
     return 1
   fi
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-    --checklist "Select mountpoint(s) to remove (Space to toggle, Enter to confirm):" \
-    22 116 12 "${rows[@]}" 3>&1 1>&2 2>&3
+    --checklist "Select mountpoint(s) to remove across all containers (Space to toggle, Enter to confirm):" \
+    24 112 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 # Interactive multi-select storage picker (read-only): returns chosen storage IDs on stdout.
 pick_storages_multi() {
   local title="$1"
   local -a rows=()
-  local stype sid
+  local stype sid label
 
   while IFS= read -r stype sid; do
     [[ -z "$sid" ]] && continue
-    rows+=("$sid" "[${stype}]" "OFF")
+    label=$(printf '%-58s' "[${stype}]")
+    rows+=("$sid" "$label" "OFF")
   done < <(awk -F': ' '/^[a-z]+: /{print $1, $2}' /etc/pve/storage.cfg 2>/dev/null)
 
   if [[ ${#rows[@]} -eq 0 ]]; then
@@ -160,18 +166,19 @@ pick_storages_multi() {
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
     --checklist "Select storage(s) to remove (Space to toggle, Enter to confirm):" \
-    24 100 16 "${rows[@]}" 3>&1 1>&2 2>&3
+    24 80 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 # Interactive multi-select container picker (read-only): returns chosen CTIDs on stdout.
 pick_containers_multi() {
   local title="$1"
   local -a rows=()
-  local ctid status name
+  local ctid status name label
 
   while IFS=$'\t' read -r ctid status name; do
     [[ -z "$ctid" ]] && continue
-    rows+=("$ctid" "${name:-<no-name>} [${status}]" "OFF")
+    label=$(printf '%-58s' "${name:-<no-name>} [${status}]")
+    rows+=("$ctid" "$label" "OFF")
   done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
 
   if [[ ${#rows[@]} -eq 0 ]]; then
@@ -182,7 +189,7 @@ pick_containers_multi() {
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
     --checklist "Select one or more containers (Space to toggle, Enter to confirm):" \
-    24 100 16 "${rows[@]}" 3>&1 1>&2 2>&3
+    24 80 16 "${rows[@]}" 3>&1 1>&2 2>&3
 }
 
 manual_smb_test() {
@@ -436,11 +443,10 @@ add_lxc_mountpoint() {
 
 remove_lxc_mountpoint() {
   header_info
-  local ctid selection mp_key mp_def
+  local selection entry ctid mp_key mp_def
   local -a results=()
 
-  ctid=$(pick_container "LXC: remove mountpoint") || return
-  selection=$(pick_mountpoints_multi "$ctid" "LXC: remove mountpoint") || return
+  selection=$(pick_all_mountpoints_multi "LXC: remove mountpoint") || return
   if [[ -z "$selection" ]]; then
     msg_warn "No mountpoint selected."
     pause
@@ -448,9 +454,11 @@ remove_lxc_mountpoint() {
   fi
 
   # Confirm each selected mountpoint separately (defaults to No).
-  for mp_key in $selection; do
-    mp_key="${mp_key//\"/}"
-    [[ -z "$mp_key" ]] && continue
+  for entry in $selection; do
+    entry="${entry//\"/}"
+    [[ -z "$entry" ]] && continue
+    ctid="${entry%%:*}"
+    mp_key="${entry#*:}"
     mp_def=$(pct config "$ctid" | awk -F': ' -v k="$mp_key" '$1==k{print $2}')
 
     if confirm_danger "LXC: remove mountpoint" \
@@ -461,17 +469,17 @@ remove_lxc_mountpoint() {
 This only detaches the mountpoint from the container.
 Data on the host is NOT deleted."; then
       if pct set "$ctid" -delete "$mp_key" >/dev/null 2>&1; then
-        results+=("removed  ${mp_key}")
+        results+=("removed  CT ${ctid}  ${mp_key}")
       else
-        results+=("FAILED   ${mp_key}")
+        results+=("FAILED   CT ${ctid}  ${mp_key}")
       fi
     else
-      results+=("skipped  ${mp_key}")
+      results+=("skipped  CT ${ctid}  ${mp_key}")
     fi
   done
 
   header_info
-  echo -e "${BL}Remove mountpoint — result for CT ${ctid}${CL}\n"
+  echo -e "${BL}Remove mountpoint — result${CL}\n"
   printf '  %s\n' "${results[@]}"
   echo
   pause
@@ -631,21 +639,23 @@ main_menu() {
       "14" "Remove | LXC: remove mountpoint (pct set -delete mpX)" \
       "0" "Exit" 3>&1 1>&2 2>&3) || break
 
+    # '|| true' so a cancelled sub-dialog (whiptail returns non-zero) returns to the
+    # menu instead of tripping 'set -e' and exiting the whole script.
     case "$choice" in
-    1) manual_smb_test ;;
-    2) manual_nfs_test ;;
-    3) manual_iscsi_discovery ;;
-    4) list_lxc_mountpoints ;;
-    5) show_status ;;
-    6) add_smb_storage ;;
-    7) add_nfs_storage ;;
-    8) add_iscsi_storage ;;
-    9) add_lvm_on_base_storage ;;
-    10) add_lxc_mountpoint ;;
-    11) host_create_samba_share ;;
-    12) host_create_nfs_export ;;
-    13) remove_storage ;;
-    14) remove_lxc_mountpoint ;;
+    1) manual_smb_test || true ;;
+    2) manual_nfs_test || true ;;
+    3) manual_iscsi_discovery || true ;;
+    4) list_lxc_mountpoints || true ;;
+    5) show_status || true ;;
+    6) add_smb_storage || true ;;
+    7) add_nfs_storage || true ;;
+    8) add_iscsi_storage || true ;;
+    9) add_lvm_on_base_storage || true ;;
+    10) add_lxc_mountpoint || true ;;
+    11) host_create_samba_share || true ;;
+    12) host_create_nfs_export || true ;;
+    13) remove_storage || true ;;
+    14) remove_lxc_mountpoint || true ;;
     0) break ;;
     *) ;;
     esac
