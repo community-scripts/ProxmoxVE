@@ -830,23 +830,56 @@ msg_ok "OPNsense VM is being installed, do not close the terminal, or the instal
 # console keeps changing (download progress, package installs); once the VM has
 # settled at the login prompt the screen stays static. Poll a screendump hash
 # and continue after 3 minutes without change, bounded by a floor (the build
-# never finishes faster) and a ceiling for slow machines or if screendump fails.
+# never finishes faster) and a ceiling for slow machines. If no screendump can
+# be captured at all, fall back to a fixed wait.
 SCREEN_PPM="${TEMP_DIR}/screen-${VMID}.ppm"
+
+function screen_hash() {
+  # Remove the previous dump first: a stale file from an earlier successful
+  # dump must not simulate a static screen when later dumps start failing.
+  # Note: "qm monitor" is unusable here - its readline attaches to /dev/tty
+  # even with piped stdin and captures the terminal, so use the API instead.
+  rm -f "$SCREEN_PPM"
+  timeout 10 pvesh create /nodes/$(hostname -s)/qemu/$VMID/monitor --command "screendump ${SCREEN_PPM}" >/dev/null 2>&1 || true
+  md5sum "$SCREEN_PPM" 2>/dev/null | cut -d' ' -f1 || true
+}
+
 build_elapsed=300
 build_stable=0
-last_hash=""
+screen_ok=0
+hash_a=""
+hash_b=""
 sleep 300
 while [ $build_stable -lt 6 ] && [ $build_elapsed -lt 2400 ]; do
   sleep 30
   build_elapsed=$((build_elapsed + 30))
-  echo "screendump ${SCREEN_PPM}" | qm monitor $VMID >/dev/null 2>&1 || true
-  new_hash=$(md5sum "${SCREEN_PPM}" 2>/dev/null | cut -d' ' -f1 || true)
-  if [ -n "$new_hash" ] && [ "$new_hash" = "$last_hash" ]; then
-    build_stable=$((build_stable + 1))
+  new_hash=$(screen_hash)
+  if [ -n "$new_hash" ]; then
+    screen_ok=1
+    # The login prompt cursor may blink: a screen alternating between the same
+    # two frames (A/B/A/B) counts as stable, anything new resets the counter
+    if [ "$new_hash" = "$hash_a" ] || [ "$new_hash" = "$hash_b" ]; then
+      build_stable=$((build_stable + 1))
+    else
+      build_stable=0
+    fi
   else
     build_stable=0
   fi
-  last_hash="$new_hash"
+  hash_b="$hash_a"
+  hash_a="$new_hash"
+  if [ -n "$new_hash" ]; then
+    echo -e "${DGN}Waiting for OPNsense build: ${YW}$((build_elapsed / 60))min elapsed, screen ${new_hash:0:8}, stable ${build_stable}/6${CL}"
+  else
+    echo -e "${DGN}Waiting for OPNsense build: ${YW}$((build_elapsed / 60))min elapsed, screendump failed${CL}"
+  fi
+  # No working screendump after several attempts: fixed wait instead
+  if [ $screen_ok -eq 0 ] && [ $build_elapsed -ge 480 ]; then
+    msg_error "Console screendump not available on this system - falling back to a fixed wait (12 minutes)."
+    sleep 720
+    build_elapsed=$((build_elapsed + 720))
+    break
+  fi
 done
 msg_ok "OPNsense build finished after $((build_elapsed / 60)) minutes"
 send_line_to_vm "root"
