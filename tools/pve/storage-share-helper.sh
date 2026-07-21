@@ -95,12 +95,28 @@ confirm_danger() {
     --defaultno --yesno "$prompt" "$height" "$width"
 }
 
+# Shown before slow data gathering. Goes to stderr: inside $(...) captures, stdout is
+# swallowed — stderr is the real terminal.
+show_loading() {
+  echo -e "${YW}Loading... gathering data, this can take a moment (CTRL+C to abort)${CL}" >&2
+}
+
+# Info popup that stays visible inside $(...) captures: whiptail draws its UI on
+# stdout, so without 1>&2 the dialog would be captured and the script appears hung.
+notice_box() {
+  local title="$1"
+  local text="$2"
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
+    --msgbox "$text" 10 80 1>&2
+}
+
 # Interactive container picker (read-only): returns the chosen CTID on stdout.
 pick_container() {
   local title="$1"
   local -a rows=()
   local ctid status name label
 
+  show_loading
   while IFS=$'\t' read -r ctid status name; do
     [[ -z "$ctid" ]] && continue
     label=$(printf '%-58s' "${name:-<no-name>} [${status}]")
@@ -108,8 +124,7 @@ pick_container() {
   done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
 
   if [[ ${#rows[@]} -eq 0 ]]; then
-    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "No LXC containers found on this host." 10 72
+    notice_box "$title" "No LXC containers found on this host."
     return 1
   fi
 
@@ -119,25 +134,29 @@ pick_container() {
 
 # Interactive multi-select picker over ALL mountpoints across ALL containers (read-only).
 # Returns chosen entries as "<ctid>:<mpX>" tokens on stdout.
+# Reads /etc/pve/lxc/*.conf directly (one 'pct config' per CT is far too slow);
+# awk stops at the first '[section]' so snapshot mp entries are not listed.
 pick_all_mountpoints_multi() {
   local title="$1"
   local -a rows=()
-  local ctid status name line key def label
+  local conf ctid name line key def label
 
-  while IFS=$'\t' read -r ctid status name; do
-    [[ -z "$ctid" ]] && continue
+  show_loading
+  for conf in /etc/pve/lxc/*.conf; do
+    [[ -e "$conf" ]] || continue
+    ctid="$(basename "$conf" .conf)"
+    name=$(awk '/^\[/{exit} $1=="hostname:"{print $2; exit}' "$conf")
     while IFS= read -r line; do
       [[ -z "$line" ]] && continue
       key="${line%%:*}"
       def="${line#*: }"
-      label=$(printf '%-86s' "CT ${ctid} ${name} | ${key}: ${def}")
+      label=$(printf '%-86s' "CT ${ctid} ${name:-<no-name>} | ${key}: ${def}")
       rows+=("${ctid}:${key}" "$label" "OFF")
-    done < <(pct config "$ctid" 2>/dev/null | grep -E '^mp[0-9]+:')
-  done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
+    done < <(awk '/^\[/{exit} /^mp[0-9]+:/{print}' "$conf")
+  done
 
   if [[ ${#rows[@]} -eq 0 ]]; then
-    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "No LXC mountpoints found on any container." 10 76
+    notice_box "$title" "No LXC mountpoints found on any container."
     return 1
   fi
 
@@ -152,15 +171,15 @@ pick_storages_multi() {
   local -a rows=()
   local stype sid label
 
-  while IFS= read -r stype sid; do
+  show_loading
+  while read -r stype sid; do
     [[ -z "$sid" ]] && continue
     label=$(printf '%-58s' "[${stype}]")
     rows+=("$sid" "$label" "OFF")
   done < <(awk -F': ' '/^[a-z]+: /{print $1, $2}' /etc/pve/storage.cfg 2>/dev/null)
 
   if [[ ${#rows[@]} -eq 0 ]]; then
-    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "No storages found in /etc/pve/storage.cfg." 10 72
+    notice_box "$title" "No storages found in /etc/pve/storage.cfg."
     return 1
   fi
 
@@ -175,6 +194,7 @@ pick_containers_multi() {
   local -a rows=()
   local ctid status name label
 
+  show_loading
   while IFS=$'\t' read -r ctid status name; do
     [[ -z "$ctid" ]] && continue
     label=$(printf '%-58s' "${name:-<no-name>} [${status}]")
@@ -182,8 +202,7 @@ pick_containers_multi() {
   done < <(pct list 2>/dev/null | awk 'NR>1 {print $1"\t"$2"\t"$NF}')
 
   if [[ ${#rows[@]} -eq 0 ]]; then
-    whiptail --backtitle "Proxmox VE Helper Scripts" --title "$title" \
-      --msgbox "No LXC containers found on this host." 10 72
+    notice_box "$title" "No LXC containers found on this host."
     return 1
   fi
 
