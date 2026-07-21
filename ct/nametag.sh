@@ -43,7 +43,7 @@ function update_script() {
 
     msg_info "Rebuilding Application"
     cd /opt/nametag
-    $STD npm ci
+    $STD npm ci --include=dev
     set -a
     source /opt/nametag/.env
     set +a
