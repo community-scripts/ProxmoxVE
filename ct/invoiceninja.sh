@@ -41,9 +41,6 @@ function update_script() {
 
     restore_backup
 
-    # No-op if the snappdf/versions restore above already has a Chromium build
-    # (snappdf skips downloading when versions/revision.txt exists); acts as a
-    # safety net if it's missing, e.g. the very first update after this fix.
     msg_info "Verifying Chromium for PDF Generation"
     cd /opt/invoiceninja
     $STD ./vendor/bin/snappdf download
