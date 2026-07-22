@@ -21,8 +21,9 @@ else
   fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
 fi
 mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data,data/plugins}
-[[ -e /data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /data/plugins
 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
+mkdir -p /opt/wanderer/source/db/data
+[[ -e /opt/wanderer/source/db/data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /opt/wanderer/source/db/data/plugins
 
 msg_info "Installing wanderer (patience)"
 cd /opt/wanderer/source/db

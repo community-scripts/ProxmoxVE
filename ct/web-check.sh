@@ -34,16 +34,12 @@ function update_script() {
     systemctl stop web-check
     msg_ok "Stopped Service"
 
-    msg_info "Creating backup"
-    mv /opt/web-check/.env /opt
-    msg_ok "Created backup"
+    create_backup /opt/web-check/.env
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "web-check" "Lissy93/web-check" "tarball"
 
-    msg_info "Restoring backup"
-    mv /opt/.env /opt/web-check
-    msg_ok "Restored backup"
+    restore_backup
 
     msg_info "Building Web-Check"
     cd /opt/web-check 

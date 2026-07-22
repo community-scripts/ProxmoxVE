@@ -35,11 +35,7 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    [[ -f /opt/matomo/config/config.ini.php ]] && cp /opt/matomo/config/config.ini.php /opt/matomo_config.bak
-    [[ -d /opt/matomo/misc/user ]] && cp -r /opt/matomo/misc/user /opt/matomo_user_backup
-    [[ -f /root/matomo.creds ]] && cp /root/matomo.creds /opt/matomo_db_creds.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/matomo/config/config.ini.php /opt/matomo/misc/user /root/matomo.creds
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "matomo" "matomo-org/matomo" "prebuild" "latest" "/opt/matomo" "matomo-*.zip"
 
@@ -53,20 +49,8 @@ function update_script() {
     chmod -R 755 /opt/matomo/tmp
     msg_ok "Set up Matomo"
 
-    msg_info "Restoring Data"
-    if [[ -f /opt/matomo_config.bak ]]; then
-      mkdir -p /opt/matomo/config
-      cp /opt/matomo_config.bak /opt/matomo/config/config.ini.php
-    fi
-    if [[ -d /opt/matomo_user_backup ]]; then
-      mkdir -p /opt/matomo/misc/user
-      cp -r /opt/matomo_user_backup/. /opt/matomo/misc/user
-    fi
-    [[ -f /opt/matomo_db_creds.bak ]] && cp /opt/matomo_db_creds.bak /root/matomo.creds
-    rm -f /opt/matomo_config.bak /opt/matomo_db_creds.bak
-    rm -rf /opt/matomo_user_backup
+    restore_backup
     chown -R www-data:www-data /opt/matomo
-    msg_ok "Restored Data"
 
     if [[ -f /opt/matomo/console ]]; then
       msg_info "Running Matomo database upgrade"

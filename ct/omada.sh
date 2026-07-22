@@ -43,7 +43,7 @@ function update_script() {
     grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
     head -n1)
   OMADA_PKG=$(basename "${OMADA_URL}")
-  VERSION=$(sed -n 's/.*_v\([0-9.]*\)_.*_\([0-9]\{14\}\)\.deb$/\1-\2/p' <<<"${OMADA_PKG}")
+  VERSION=$(sed -n 's/.*_v\([0-9.]*\)_linux.*/\1/p' <<<"${OMADA_PKG}")
 
   CURRENT_VERSION=$(cat $HOME/.omada 2>/dev/null || echo "0")
 

@@ -3832,6 +3832,78 @@ runtime_script_status_guard() {
 }
 
 # ------------------------------------------------------------------------------
+# check_container_os_guard()
+#
+# - Compares the container OS (/etc/os-release) with the script's recommended
+#   var_os/var_version before running update_script
+# - On mismatch: interactive runs ask whether to continue (default: no);
+#   headless runs (PHS_SILENT=1 / no tty) abort instead of updating on an
+#   unsupported base and leaving the app broken mid-update
+# - Bypass via var_ignore_os_mismatch=1|yes|true|on (still warns, but continues)
+# ------------------------------------------------------------------------------
+check_container_os_guard() {
+  local rec_os="${var_os:-}" rec_ver="${var_version:-}"
+  rec_os="${rec_os,,}"
+  [[ -z "$rec_os" || -z "$rec_ver" ]] && return 0
+  [[ -r /etc/os-release ]] || return 0
+
+  local cur_os cur_ver
+  cur_os="$(. /etc/os-release 2>/dev/null; echo "${ID:-}")"
+  cur_ver="$(. /etc/os-release 2>/dev/null; echo "${VERSION_ID:-}")"
+  cur_os="${cur_os,,}"
+  [[ -z "$cur_os" || -z "$cur_ver" ]] && return 0
+
+  # Exact version or prefix on a dot boundary (e.g. alpine 3.22 matches 3.22.1)
+  if [[ "$cur_os" == "$rec_os" ]] && [[ "$cur_ver" == "$rec_ver" || "$cur_ver" == "$rec_ver".* ]]; then
+    return 0
+  fi
+
+  case "${var_ignore_os_mismatch:-}" in
+  1 | yes | true | on)
+    msg_warn "Container OS is ${cur_os} ${cur_ver} but the script recommends ${rec_os} ${rec_ver} — continuing via var_ignore_os_mismatch (may break, no support)."
+    return 0
+    ;;
+  esac
+
+  # Persistent opt-out: stores the ignored target version, so the question
+  # comes back once the script targets a newer OS again
+  local ignore_file="/usr/local/community-scripts/ignore-os-mismatch"
+  if [[ -f "$ignore_file" && "$(cat "$ignore_file" 2>/dev/null)" == "${rec_os} ${rec_ver}" ]]; then
+    msg_warn "Container OS is ${cur_os} ${cur_ver} but the script recommends ${rec_os} ${rec_ver} — continuing (previously ignored via ${ignore_file}, may break, no support)."
+    return 0
+  fi
+
+  if [[ "${PHS_SILENT:-0}" != "1" ]] && command -v whiptail &>/dev/null && [ -t 0 ] && [[ "$TERM" != "dumb" ]]; then
+    local choice
+    choice=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "OS VERSION MISMATCH" --menu \
+      "This container runs ${cur_os} ${cur_ver}, but this script now targets ${rec_os} ${rec_ver}.\n\nUpdating on the older base OS may fail or leave ${APP:-the application} broken (e.g. required runtime versions are not available).\n\nRecommended: upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again.\n\nIf you continue anyway, it may break — no support is provided in that case.\n\nContinue anyway?" \
+      20 70 3 \
+      "1" "No  (cancel update)" \
+      "2" "Yes (continue this time)" \
+      "3" "Yes (continue and don't ask again)" \
+      --nocancel --default-item "1" 3>&1 1>&2 2>&3)
+    case "$choice" in
+    2)
+      msg_warn "Continuing update on ${cur_os} ${cur_ver} despite recommended ${rec_os} ${rec_ver} — may break, no support."
+      return 0
+      ;;
+    3)
+      mkdir -p "${ignore_file%/*}"
+      echo "${rec_os} ${rec_ver}" >"$ignore_file"
+      msg_warn "Continuing update on ${cur_os} ${cur_ver}; OS check for ${rec_os} ${rec_ver} disabled via ${ignore_file} — may break, no support."
+      return 0
+      ;;
+    esac
+    msg_error "Update cancelled: container OS ${cur_os} ${cur_ver} does not match the recommended ${rec_os} ${rec_ver}."
+    return 1
+  fi
+
+  msg_error "Container OS ${cur_os} ${cur_ver} does not match the recommended ${rec_os} ${rec_ver} — skipping update."
+  msg_error "Upgrade the container OS to ${rec_os} ${rec_ver} first, then run this update again — or bypass this check (may break, no support) with: echo \"${rec_os} ${rec_ver}\" > ${ignore_file}"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
 # start()
 #
 # - Entry point of script
@@ -3852,6 +3924,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard update || return 0
+    check_container_os_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3863,6 +3936,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard update || return 0
+    check_container_os_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -3893,6 +3967,7 @@ start() {
     ensure_profile_loaded
     get_lxc_ip
     runtime_script_status_guard update || return 0
+    check_container_os_guard || return 0
     update_script
     run_addon_updates
     update_motd_ip
@@ -4072,6 +4147,11 @@ build_container() {
   export RANDOM_UUID="$RANDOM_UUID"
   export EXECUTION_ID="$EXECUTION_ID"
   export SESSION_ID="$SESSION_ID"
+  # Repo attribution + platform for container-side progress pings (the
+  # container inherits the host's detection instead of re-detecting)
+  export REPO_SOURCE="${REPO_SOURCE:-}"
+  export REPO_SLUG="${REPO_SLUG:-}"
+  export TELEMETRY_PLATFORM="pve"
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
   if [[ -n "${HTTP_PROXY:-}" ]]; then
@@ -4233,27 +4313,31 @@ $PCT_OPTIONS_STRING"
       return 0
     fi
 
-    # Check for Intel GPU - look for Intel vendor ID [8086]
-    if grep -q "\[8086:" <<<"$pci_vga_info"; then
-      msg_custom "🎮" "${BL}" "Detected Intel GPU"
-      if [[ -d /dev/dri ]]; then
-        for d in /dev/dri/renderD* /dev/dri/card*; do
-          [[ -e "$d" ]] && INTEL_DEVICES+=("$d")
-        done
-      fi
+    # Map each DRI render/card node to its owning GPU via the PCI vendor ID
+    # exposed in sysfs (/sys/class/drm/<node>/device/vendor). This is required
+    # on multi-GPU hosts: globbing every /dev/dri node onto the first detected
+    # vendor would pass through *both* GPUs and skip the selection prompt.
+    if [[ -d /dev/dri ]]; then
+      for d in /dev/dri/renderD* /dev/dri/card*; do
+        [[ -e "$d" ]] || continue
+        local node vendor
+        node=$(basename "$d")
+        vendor=$(cat "/sys/class/drm/${node}/device/vendor" 2>/dev/null || true)
+        case "$vendor" in
+        0x8086) INTEL_DEVICES+=("$d") ;;        # Intel
+        0x1002 | 0x1022) AMD_DEVICES+=("$d") ;; # AMD/ATI
+        0x10de) ;;                              # NVIDIA - handled via /dev/nvidia* below
+        *) msg_debug "Unmapped GPU vendor '${vendor:-unknown}' for $d" ;;
+        esac
+      done
     fi
 
-    # Check for AMD GPU - look for AMD vendor IDs [1002] (AMD/ATI) or [1022] (AMD)
-    if grep -qE "\[1002:|\[1022:" <<<"$pci_vga_info"; then
-      msg_custom "🎮" "${RD}" "Detected AMD GPU"
-      if [[ -d /dev/dri ]]; then
-        # Only add if not already claimed by Intel
-        if [[ ${#INTEL_DEVICES[@]} -eq 0 ]]; then
-          for d in /dev/dri/renderD* /dev/dri/card* /dev/kfd; do
-            [[ -e "$d" ]] && AMD_DEVICES+=("$d")
-          done
-        fi
-      fi
+    [[ ${#INTEL_DEVICES[@]} -gt 0 ]] && msg_custom "🎮" "${BL}" "Detected Intel GPU"
+    [[ ${#AMD_DEVICES[@]} -gt 0 ]] && msg_custom "🎮" "${RD}" "Detected AMD GPU"
+
+    # AMD compute (ROCm) additionally needs /dev/kfd alongside the render nodes
+    if [[ ${#AMD_DEVICES[@]} -gt 0 && -e /dev/kfd ]]; then
+      AMD_DEVICES+=("/dev/kfd")
     fi
 
     # Check for NVIDIA GPU - look for NVIDIA vendor ID [10de]
@@ -4891,6 +4975,16 @@ EOF
         # Point INSTALL_LOG to combined log so get_full_log() finds it
         INSTALL_LOG="$combined_log"
       fi
+
+      # Pull the structured error capture (.errinfo) from the container.
+      # It contains EXACTLY the output of the command that failed (written by
+      # silent()/error_handler inside the container) and is the primary source
+      # for the telemetry error trace - instead of a generic log tail.
+      local host_errinfo="/tmp/.errinfo-${SESSION_ID}"
+      if timeout 8 pct pull "$CTID" "/root/.install-${SESSION_ID}.log.errinfo" "$host_errinfo" 2>/dev/null && [[ -s "$host_errinfo" ]]; then
+        TELEMETRY_ERRINFO="$host_errinfo"
+        export TELEMETRY_ERRINFO
+      fi
     fi
 
     # Defense-in-depth: Ensure error handling stays disabled during recovery.
@@ -5121,7 +5215,10 @@ EOF
     echo -en "${YW}Select option [1-${max_option}] (default: 1, auto-remove in 60s): ${CL}"
 
     local response=""
-    if read -t 60 -r response; then
+    local read_rc
+    read -t 60 -r response
+    read_rc=$?
+    if [[ $read_rc -eq 0 ]]; then
       case "${response:-1}" in
       1)
         # Remove container
@@ -5166,6 +5263,8 @@ EOF
         echo -e "  Verbose: ${GN}enabled${CL}"
         echo ""
         msg_info "Restarting installation..."
+        # New telemetry execution for the retry (previous one keeps its "failed")
+        declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
         # Re-run build_container
         build_container
         return $?
@@ -5204,6 +5303,10 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Re-running installation script..."
+
+          # New telemetry execution for the in-place retry
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
+          declare -f post_to_api &>/dev/null && post_to_api 2>/dev/null || true
 
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
@@ -5268,6 +5371,7 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Restarting installation..."
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
           build_container
           return $?
         fi
@@ -5297,6 +5401,7 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Restarting installation..."
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
           build_container
           return $?
         fi
@@ -5321,6 +5426,7 @@ EOF
           echo -e "  Verbose: ${GN}enabled${CL}"
           echo ""
           msg_info "Restarting installation..."
+          declare -f telemetry_new_attempt &>/dev/null && telemetry_new_attempt
           build_container
           return $?
         fi
@@ -5331,13 +5437,20 @@ EOF
         fi
         ;;
       esac
-    else
+    elif [[ $read_rc -gt 128 ]]; then
       # Timeout - auto-remove
       echo ""
       msg_info "No response - removing container ${CTID}"
       pct stop "$CTID" &>/dev/null || true
       pct destroy "$CTID" &>/dev/null || true
       msg_ok "Container ${CTID} removed"
+    else
+      # read itself failed (e.g. broken/closed stdin, I/O error) rather than
+      # timing out - don't guess and destroy the container on a read we
+      # couldn't actually capture; keep it since that's the reversible choice.
+      echo ""
+      msg_error "Could not read your response (stdin error) - keeping container ${CTID} for safety."
+      msg_error "Remove it manually if not needed: pct destroy ${CTID}"
     fi
 
     # Force one final status update attempt after cleanup
@@ -6993,6 +7106,16 @@ ensure_log_on_host() {
           echo ""
         } >>"$combined_log"
         rm -f "$temp_log"
+      fi
+    fi
+    # Also pull the structured error capture (.errinfo) so the telemetry error
+    # trace shows the failing command's exact output (signal-exit paths reach
+    # this via on_exit before/instead of the recovery flow)
+    if [[ -z "${TELEMETRY_ERRINFO:-}" || ! -s "${TELEMETRY_ERRINFO:-}" ]]; then
+      local host_errinfo="/tmp/.errinfo-${SESSION_ID}"
+      if timeout 8 pct pull "$CTID" "/root/.install-${SESSION_ID}.log.errinfo" "$host_errinfo" 2>/dev/null && [[ -s "$host_errinfo" ]]; then
+        TELEMETRY_ERRINFO="$host_errinfo"
+        export TELEMETRY_ERRINFO
       fi
     fi
     if [[ -s "$combined_log" ]]; then

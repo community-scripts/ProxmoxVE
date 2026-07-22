@@ -34,17 +34,12 @@ function update_script() {
     systemctl stop radicale
     msg_ok "Stopped service"
 
-    msg_info "Backing up users file"
-    cp /opt/radicale/users /opt/radicale_users_backup
-    msg_ok "Backed up users file"
+    create_backup /opt/radicale/users
 
     PYTHON_VERSION="3.13" setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Radicale" "Kozea/Radicale" "tarball" "latest" "/opt/radicale"
 
-    msg_info "Restoring users file"
-    rm -f /opt/radicale/users
-    mv /opt/radicale_users_backup /opt/radicale/users
-    msg_ok "Restored users file"
+    restore_backup
 
     if grep -q 'start.sh' /etc/systemd/system/radicale.service; then
       sed -i -e '/^Description/i[Unit]' \

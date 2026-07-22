@@ -35,16 +35,11 @@ function update_script() {
     systemctl stop spliit
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    rm -f /opt/spliit.env.bak
-    cp /opt/spliit/.env /opt/spliit.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/spliit/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "spliit" "spliit-app/spliit" "tarball"
 
-    msg_info "Restoring Configuration"
-    cp /opt/spliit.env.bak /opt/spliit/.env
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Building Application"
     cd /opt/spliit

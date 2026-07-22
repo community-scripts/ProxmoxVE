@@ -33,14 +33,13 @@ function update_script() {
       systemctl stop meilisearch-ui
       msg_ok "Stopped Meilisearch-UI"
 
-      cp /opt/meilisearch-ui/.env.local /tmp/.env.local.bak
-      rm -rf /opt/meilisearch-ui
-      fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"
+      create_backup /opt/meilisearch-ui/.env.local
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"
+      restore_backup
 
       msg_info "Configuring Meilisearch-UI"
       cd /opt/meilisearch-ui
       sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
-      mv /tmp/.env.local.bak /opt/meilisearch-ui/.env.local
       $STD pnpm install
       msg_ok "Configured Meilisearch-UI"
 

@@ -34,9 +34,9 @@ function update_script() {
     systemctl stop umlautadaptarr
     msg_ok "Stopped Service"
 
-    cp /opt/UmlautAdaptarr/appsettings.json /opt/UmlautAdaptarr/appsettings.json.bak
+    create_backup /opt/UmlautAdaptarr/appsettings.json
     fetch_and_deploy_gh_release "UmlautAdaptarr" "PCJones/Umlautadaptarr" "prebuild" "latest" "/opt/UmlautAdaptarr" "linux-x64.zip"
-    cp /opt/UmlautAdaptarr/appsettings.json.bak /opt/UmlautAdaptarr/appsettings.json
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start umlautadaptarr

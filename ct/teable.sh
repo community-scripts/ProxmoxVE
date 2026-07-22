@@ -36,15 +36,11 @@ function update_script() {
     systemctl stop teable
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp /opt/teable/.env /opt/teable.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/teable/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "teable" "teableio/teable" "tarball"
 
-    msg_info "Restoring Configuration"
-    mv /opt/teable.env.bak /opt/teable/.env
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Rebuilding Teable"
     cd /opt/teable

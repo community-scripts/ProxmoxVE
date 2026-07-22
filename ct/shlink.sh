@@ -35,19 +35,11 @@ function update_script() {
     systemctl stop shlink
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/shlink/.env /opt/shlink.env.bak
-    cp -r /opt/shlink/data /opt/shlink_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/shlink/.env /opt/shlink/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shlink" "shlinkio/shlink" "prebuild" "latest" "/opt/shlink" "shlink*_php8.5_dist.zip"
 
-    msg_info "Restoring Data"
-    cp /opt/shlink.env.bak /opt/shlink/.env
-    rm -f /opt/shlink.env.bak
-    cp -r /opt/shlink_data_backup/. /opt/shlink/data
-    rm -rf /opt/shlink_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Updating Application"
     cd /opt/shlink

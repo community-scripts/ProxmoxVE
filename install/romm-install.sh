@@ -134,6 +134,8 @@ else
 fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
+fetch_and_deploy_gh_release "ruffle" "ruffle-rs/ruffle" "prebuild" "latest" "/opt/romm/frontend/dist/assets/ruffle" "ruffle-*-web-selfhosted.zip"
+fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
 
 msg_info "Creating environment file"
 sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
@@ -159,6 +161,9 @@ ROMM_AUTH_SECRET_KEY=$AUTH_SECRET_KEY
 DISABLE_DOWNLOAD_ENDPOINT_AUTH=false
 DISABLE_CSRF_PROTECTION=false
 
+SCREENSCRAPER_DEV_ID=
+SCREENSCRAPER_DEV_PASSWORD=
+
 ENABLE_RESCAN_ON_FILESYSTEM_CHANGE=true
 RESCAN_ON_FILESYSTEM_CHANGE_DELAY=5
 
@@ -180,6 +185,18 @@ $STD uv sync --all-extras
 cd /opt/romm/backend
 $STD uv run alembic upgrade head
 msg_ok "Set up RomM Backend"
+
+if [[ -f /opt/romm/backend/utils/rom_patcher/package.json ]]; then
+  msg_info "Building ROM Patcher helper"
+  cd /opt/romm/backend/utils/rom_patcher
+  $STD npm install --ignore-scripts --no-audit --no-fund
+  if [[ -d node_modules/rom-patcher/rom-patcher-js ]]; then
+    rm -rf rom-patcher-js
+    cp -r node_modules/rom-patcher/rom-patcher-js ./rom-patcher-js
+  fi
+  rm -rf node_modules
+  msg_ok "Built ROM Patcher helper"
+fi
 
 msg_info "Setting up RomM Frontend"
 cd /opt/romm/frontend

@@ -37,18 +37,29 @@ function update_script() {
     systemctl stop romm-backend romm-worker romm-scheduler romm-watcher
     msg_ok "Stopped Services"
 
-    msg_info "Backing up configuration"
-    cp /opt/romm/.env /opt/romm/.env.backup
-    msg_ok "Backed up configuration"
+    create_backup /opt/romm/.env
+    BACKUP_DIR=/opt/romm-players.backup create_backup \
+      /opt/romm/frontend/dist/assets/emulatorjs \
+      /opt/romm/frontend/dist/assets/ruffle
 
-    fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball" "latest" "/opt/romm"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball" "latest" "/opt/romm"
+
+    restore_backup
 
     msg_info "Updating ROMM"
-    cp /opt/romm/.env.backup /opt/romm/.env
     cd /opt/romm
     $STD uv sync --all-extras
     cd /opt/romm/backend
     $STD uv run alembic upgrade head
+    if [[ -f /opt/romm/backend/utils/rom_patcher/package.json ]]; then
+      cd /opt/romm/backend/utils/rom_patcher
+      $STD npm install --ignore-scripts --no-audit --no-fund
+      if [[ -d node_modules/rom-patcher/rom-patcher-js ]]; then
+        rm -rf rom-patcher-js
+        cp -r node_modules/rom-patcher/rom-patcher-js ./rom-patcher-js
+      fi
+      rm -rf node_modules
+    fi
     cd /opt/romm/frontend
     $STD npm install
     $STD npm run build
@@ -72,6 +83,12 @@ function update_script() {
     systemctl start romm-backend romm-worker romm-scheduler romm-watcher
     msg_ok "Started Services"
     msg_ok "Updated successfully"
+  fi
+
+  if check_for_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "v4.2.3"; then
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
+    systemctl restart romm-backend romm-worker romm-scheduler romm-watcher
+    msg_ok "Updated EmulatorJS successfully"
   fi
   exit
 }

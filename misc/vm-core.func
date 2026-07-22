@@ -573,8 +573,10 @@ cleanup() {
       if [[ $exit_code -ne 0 ]]; then
         post_update_to_api "failed" "$exit_code"
       else
-        # Exited cleanly but description()/success was never called — shouldn't happen
-        post_update_to_api "failed" "1"
+        # Exited cleanly but description()/success was never called: the user
+        # backed out of a dialog. Report as aborted - NOT "failed 1" (which
+        # produced meaningless 'General error' records with no error text).
+        post_update_to_api "aborted" "0"
       fi
     fi
   fi

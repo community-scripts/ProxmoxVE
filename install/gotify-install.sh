@@ -27,7 +27,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/gotify
-ExecStart=/opt/gotify/./gotify-linux-$(arch_resolve)
+ExecStart=/opt/gotify/gotify-linux-$(arch_resolve) serve
 Restart=always
 RestartSec=3
 

@@ -31,7 +31,10 @@ $STD apt install -y elasticsearch
 sed -i 's/^#\{0,2\} *-Xms[0-9]*g.*/-Xms2g/' /etc/elasticsearch/jvm.options
 sed -i 's/^#\{0,2\} *-Xmx[0-9]*g.*/-Xmx2g/' /etc/elasticsearch/jvm.options
 cat <<EOF >/etc/elasticsearch/elasticsearch.yml
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
 discovery.type: single-node
+network.host: 127.0.0.1
 xpack.security.enabled: false
 bootstrap.memory_lock: false
 EOF
@@ -40,7 +43,7 @@ systemctl daemon-reload
 systemctl enable -q elasticsearch
 systemctl restart -q elasticsearch
 for i in $(seq 1 30); do
-  if curl -s http://localhost:9200 >/dev/null 2>&1; then
+  if curl -s http://127.0.0.1:9200 >/dev/null 2>&1; then
     break
   fi
   sleep 2
@@ -55,7 +58,7 @@ setup_deb822_repo \
   "$(get_os_info version_id)" \
   "main"
 $STD apt install -y zammad
-$STD zammad run rails r "Setting.set('es_url', 'http://localhost:9200')"
+$STD zammad run rails r "Setting.set('es_url', 'http://127.0.0.1:9200')"
 $STD zammad run rake zammad:searchindex:rebuild
 msg_ok "Installed Zammad"
 

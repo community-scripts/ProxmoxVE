@@ -65,7 +65,7 @@ function update_script() {
     systemctl stop vikunja
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary"
+    fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary" "latest" "" "vikunja-*-$(arch_resolve "x86_64" "aarch64").deb"
     $STD systemctl daemon-reload
 
     msg_info "Starting Service"

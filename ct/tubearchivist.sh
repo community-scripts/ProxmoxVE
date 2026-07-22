@@ -35,11 +35,11 @@ function update_script() {
     systemctl stop tubearchivist tubearchivist-celery tubearchivist-beat
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/tubearchivist/.env /opt/tubearchivist_env.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/tubearchivist/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tubearchivist" "tubearchivist/tubearchivist" "tarball"
+
+    restore_backup
 
     msg_info "Rebuilding Tube Archivist"
     cd /opt/tubearchivist/frontend
@@ -56,7 +56,6 @@ function update_script() {
     msg_ok "Rebuilt Tube Archivist"
 
     msg_info "Restoring Configuration"
-    mv /opt/tubearchivist_env.bak /opt/tubearchivist/.env
     sed -i 's|^TA_APP_DIR=/opt/tubearchivist$|TA_APP_DIR=/opt/tubearchivist/backend|' /opt/tubearchivist/.env
     sed -i 's|^TA_CACHE_DIR=/opt/tubearchivist/cache$|TA_CACHE_DIR=/cache|' /opt/tubearchivist/.env
     sed -i 's|^TA_MEDIA_DIR=/opt/tubearchivist/media$|TA_MEDIA_DIR=/youtube|' /opt/tubearchivist/.env

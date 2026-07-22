@@ -35,15 +35,11 @@ function update_script() {
     systemctl stop paperclip
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp /opt/paperclip-ai/.env /opt/paperclip.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/paperclip-ai/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperclip-ai" "paperclipai/paperclip" "tarball"
 
-    msg_info "Restoring Configuration"
-    mv /opt/paperclip.env.bak /opt/paperclip-ai/.env
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Rebuilding Paperclip"
     cd /opt/paperclip-ai

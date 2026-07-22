@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v0.27.0"
+  RELEASE="v0.27.2"
   if check_for_gh_release "affine_app" "toeverything/AFFiNE" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping Services"
     systemctl stop affine-web affine-worker
@@ -38,9 +38,16 @@ function update_script() {
 
     ensure_dependencies cmake
 
-    create_backup /root/.affine/config /root/.affine/storage
+    create_backup /opt/affine/.env /root/.affine/config /root/.affine/storage
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "affine_app" "toeverything/AFFiNE" "tarball" "${RELEASE}" "/opt/affine"
+
+    restore_backup
+
+    if [[ ! -f /opt/affine/.env ]]; then
+      msg_error "/opt/affine/.env is missing (lost by an earlier update). Recreate it before retrying — see the AFFiNE install script for the expected variables."
+      exit 1
+    fi
 
     msg_info "Rebuilding Application (Patience ~25 mins, don't close the console!)"
     cd /opt/affine
@@ -110,8 +117,6 @@ TURBO
     cd /opt/affine/packages/backend/server
     set -a && source /opt/affine/.env && set +a
     $STD node ./scripts/self-host-predeploy.js
-
-    restore_backup
 
     msg_info "Starting Services"
     systemctl start affine-web affine-worker

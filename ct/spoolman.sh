@@ -36,18 +36,16 @@ function update_script() {
     systemctl stop spoolman
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    [ -d /opt/spoolman_bak ] && rm -rf /opt/spoolman_bak
-    mv /opt/spoolman /opt/spoolman_bak
-    msg_ok "Created Backup"
+    create_backup /opt/spoolman/.env
 
-    fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+
+    restore_backup
 
     msg_info "Updating Spoolman"
     cd /opt/spoolman
     $STD uv sync --locked --no-install-project
     $STD uv sync --locked
-    cp /opt/spoolman_bak/.env /opt/spoolman
     sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/bash /opt/spoolman/scripts/start.sh|' /etc/systemd/system/spoolman.service
     msg_ok "Updated Spoolman"
 

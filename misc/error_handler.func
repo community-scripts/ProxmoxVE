@@ -7,12 +7,17 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # ------------------------------------------------------------------------------
 #
-# Provides comprehensive error handling and signal management for all scripts.
-# Includes:
-#   - Exit code explanations (shell, package managers, databases, custom codes)
-#   - Error handler with detailed logging
-#   - Signal handlers (EXIT, INT, TERM)
-#   - Initialization function for trap setup
+# Provides error handling and signal management for all scripts.
+#
+# TELEMETRY CONTRACT:
+#   - HOST context: this file reports terminal statuses via post_update_to_api
+#     (full metadata + focused error trace).
+#   - CONTAINER context: this file NEVER talks to the telemetry API. It writes
+#     two local artifacts that the host picks up after lxc-attach returns:
+#       /root/.install-<SESSION_ID>.failed        → exit code (flag file)
+#       /root/.install-<SESSION_ID>.log.errinfo   → structured error capture
+#     This guarantees the server only ever sees ONE terminal event per
+#     execution - the host's complete one.
 #
 # Usage:
 #   source <(curl -fsSL .../error_handler.func)
@@ -21,15 +26,14 @@
 # ------------------------------------------------------------------------------
 
 # ==============================================================================
-# SECTION 1: EXIT CODE EXPLANATIONS
+# SECTION 1: EXIT CODE EXPLANATIONS (fallback)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
 # explain_exit_code()
 #
-# - Canonical version is defined in api.func (sourced before this file)
-# - This section only provides a fallback if api.func was not loaded
-# - See api.func SECTION 1 for the authoritative exit code mappings
+# - Canonical version lives in api.func (sourced before this file on the host)
+# - This fallback covers the container context where api.func is not sourced
 # ------------------------------------------------------------------------------
 if ! declare -f explain_exit_code &>/dev/null; then
   explain_exit_code() {
@@ -94,8 +98,6 @@ if ! declare -f explain_exit_code &>/dev/null; then
     100) echo "APT: Package manager error (broken packages / dependency problems)" ;;
     101) echo "APT: Configuration error (bad sources.list, malformed config)" ;;
     102) echo "APT: Lock held by another process (dpkg/apt still running)" ;;
-
-    # --- Script Validation & Setup (103-123) ---
     103) echo "Validation: Shell is not Bash" ;;
     104) echo "Validation: Not running as root (or invoked via sudo)" ;;
     105) echo "Validation: Proxmox VE version not supported" ;;
@@ -177,9 +179,8 @@ if ! declare -f explain_exit_code &>/dev/null; then
     223) echo "Proxmox: Template not available after download" ;;
     224) echo "Proxmox: PBS storage is for backups only" ;;
     225) echo "Proxmox: No template available for OS/Version" ;;
+    226) echo "Proxmox: VM disk import or post-creation setup failed" ;;
     231) echo "Proxmox: LXC stack upgrade failed" ;;
-
-    # --- Tools & Addon Scripts (232-238) ---
     232) echo "Tools: Wrong execution environment (run on PVE host, not inside LXC)" ;;
     233) echo "Tools: Application not installed (update prerequisite missing)" ;;
     234) echo "Tools: No LXC containers found or available" ;;
@@ -187,7 +188,6 @@ if ! declare -f explain_exit_code &>/dev/null; then
     236) echo "Tools: Required hardware not detected" ;;
     237) echo "Tools: Dependency package installation failed" ;;
     238) echo "Tools: OS or distribution not supported for this addon" ;;
-
     239) echo "npm/Node.js: Unexpected runtime error or dependency failure" ;;
     243) echo "Node.js: Out of memory (JavaScript heap out of memory)" ;;
     245) echo "Node.js: Invalid command-line option" ;;
@@ -195,14 +195,11 @@ if ! declare -f explain_exit_code &>/dev/null; then
     247) echo "Node.js: Fatal internal error" ;;
     248) echo "Node.js: Invalid C++ addon / N-API failure" ;;
     249) echo "npm/pnpm/yarn: Unknown fatal error" ;;
-
-    # --- Application Install/Update Errors (250-254) ---
     250) echo "App: Download failed or version not determined" ;;
     251) echo "App: File extraction failed (corrupt or incomplete archive)" ;;
     252) echo "App: Required file or resource not found" ;;
     253) echo "App: Data migration required — update aborted" ;;
     254) echo "App: User declined prompt or input timed out" ;;
-
     255) echo "DPKG: Fatal internal error" ;;
     *) echo "Unknown error" ;;
     esac
@@ -210,24 +207,98 @@ if ! declare -f explain_exit_code &>/dev/null; then
 fi
 
 # ==============================================================================
-# SECTION 2: ERROR HANDLERS
+# SECTION 2: CONTEXT DETECTION & CONTAINER ARTIFACTS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# _is_container_context()
+#
+# - Returns 0 (true) when running INSIDE the LXC container being installed
+# - TELEMETRY_CONTEXT can override the heuristic ("host" / "container");
+#   install.func sets TELEMETRY_CONTEXT=container during bootstrap
+# ------------------------------------------------------------------------------
+_is_container_context() {
+  case "${TELEMETRY_CONTEXT:-}" in
+  container) return 0 ;;
+  host) return 1 ;;
+  esac
+  # Proxmox/Incus tooling exists only on the host
+  command -v pveversion &>/dev/null && return 1
+  command -v pct &>/dev/null && return 1
+  command -v incus &>/dev/null && return 1
+  # systemd-detect-virt reports lxc inside containers
+  if command -v systemd-detect-virt &>/dev/null; then
+    case "$(systemd-detect-virt -c 2>/dev/null)" in
+    lxc | lxc-libvirt | openvz) return 0 ;;
+    esac
+  fi
+  # PCT_OSTYPE is exported into the install environment by the host
+  [[ -n "${PCT_OSTYPE:-}" ]] && return 0
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# _container_write_failure()
+#
+# - Writes the failure artifacts inside the container for the host to pick up:
+#   * flag file with the exit code
+#   * .errinfo capture (if silent() has not already written a better one)
+#   * copy of the install log
+# - This REPLACES any direct telemetry send from the container
+# - Arguments: $1 = exit_code, $2 = command (optional), $3 = line (optional)
+# ------------------------------------------------------------------------------
+_container_write_failure() {
+  local exit_code="${1:-1}"
+  local command="${2:-}"
+  local line="${3:-}"
+  local sid="${SESSION_ID:-error}"
+
+  # Flag file with exit code (host reads this after lxc-attach returns)
+  echo "$exit_code" >"/root/.install-${sid}.failed" 2>/dev/null || true
+
+  # Keep the install log where the host expects it
+  if [[ -n "${INSTALL_LOG:-}" && -f "${INSTALL_LOG}" && "${INSTALL_LOG}" != "/root/.install-${sid}.log" ]]; then
+    cp "${INSTALL_LOG}" "/root/.install-${sid}.log" 2>/dev/null || true
+  fi
+
+  # Structured error capture (skip if silent() already wrote the exact
+  # output segment of the failing command - that one is always better).
+  # Self-contained: api.func is NOT sourced inside containers.
+  local errinfo="${INSTALL_LOG:-/root/.install-${sid}.log}.errinfo"
+  if [[ ! -s "$errinfo" ]]; then
+    local flat_cmd
+    flat_cmd=$(printf '%s' "${command:-unknown}" | tr '\n' ' ' | head -c 300)
+    {
+      echo "EXIT_CODE=${exit_code}"
+      echo "LINE=${line:-0}"
+      echo "COMMAND=${flat_cmd}"
+      echo "--- OUTPUT ---"
+      if [[ -n "${INSTALL_LOG:-}" && -s "${INSTALL_LOG}" ]]; then
+        tail -n 80 "${INSTALL_LOG}" 2>/dev/null |
+          sed 's/\r$//' |
+          sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+          grep -avE '^(Get:|Hit:|Ign:|Fetched |Reading package lists|Reading state information|Building dependency tree|Selecting previously|Preparing to unpack|Unpacking |Processing triggers for|\(Reading database|[0-9]+%[[:space:]]*\[)' |
+          grep -avE '^[[:space:]]*$' |
+          tail -n 60 | head -c 10240
+      fi
+    } >"$errinfo" 2>/dev/null || true
+  fi
+}
+
+# ==============================================================================
+# SECTION 3: ERROR HANDLER
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
 # error_handler()
 #
 # - Main error handler triggered by ERR trap
-# - Arguments: exit_code, command, line_number
-# - Behavior:
-#   * Returns silently if exit_code is 0 (success)
-#   * Sources explain_exit_code() for detailed error description
-#   * Displays error message with:
-#     - Line number where error occurred
-#     - Exit code with explanation
-#     - Command that failed
-#   * Shows last 20 lines of SILENT_LOGFILE if available
-#   * Copies log to container /root for later inspection
-#   * Exits with original exit code
+# - Displays error message with line number, exit code, explanation, command
+# - Shows last 20 lines of the active log
+# - Emits actionable hints for common failure patterns (OOM, APT, network...)
+# - HOST: reports "failed" to telemetry (full payload via api.func)
+# - CONTAINER: writes failure artifacts, sends nothing
+# - Exits with original exit code
 # ------------------------------------------------------------------------------
 error_handler() {
   local exit_code=${1:-$?}
@@ -237,12 +308,10 @@ error_handler() {
   command="${command//\$STD/}"
 
   # If error originated from silent(), use its captured metadata
-  # This provides the actual command and line number instead of "silent ..."
   if [[ -n "${_SILENT_FAILED_RC:-}" ]]; then
     exit_code="$_SILENT_FAILED_RC"
     command="$_SILENT_FAILED_CMD"
     line_number="$_SILENT_FAILED_LINE"
-    # Clear flags to prevent stale data on subsequent errors
     unset _SILENT_FAILED_RC _SILENT_FAILED_CMD _SILENT_FAILED_LINE
   fi
 
@@ -250,8 +319,12 @@ error_handler() {
     return 0
   fi
 
-  # Stop spinner and restore cursor FIRST — before any output
-  # This prevents spinner text overlapping with error messages
+  # Export the failure location so telemetry can include the "where"
+  FAILED_COMMAND="$command"
+  FAILED_LINE="$line_number"
+  export FAILED_COMMAND FAILED_LINE
+
+  # Stop spinner and restore cursor FIRST - before any output
   if declare -f stop_spinner >/dev/null 2>&1; then
     stop_spinner 2>/dev/null || true
   fi
@@ -259,18 +332,18 @@ error_handler() {
 
   local explanation
   explanation="$(explain_exit_code "$exit_code")"
-
-  # ALWAYS report failure to API immediately - don't wait for container checks
-  # This ensures we capture failures that occur before/after container exists
-  if declare -f post_update_to_api &>/dev/null; then
-    post_update_to_api "failed" "$exit_code" 2>/dev/null || true
-  else
-    # Container context: post_update_to_api not available (api.func not sourced)
-    # Send status directly via curl so container failures are never lost
-    _send_abort_telemetry "$exit_code" 2>/dev/null || true
+  if [[ "$explanation" == curl:* && ! "$command" =~ (^|[[:space:]])([^[:space:]]*/)?curl([[:space:]]|$) ]]; then
+    explanation="Command failed with exit status ${exit_code}"
   fi
 
-  # Use msg_error if available, fallback to echo
+  # ── Telemetry / failure artifacts ──
+  if _is_container_context; then
+    _container_write_failure "$exit_code" "$command" "$line_number"
+  elif declare -f post_update_to_api &>/dev/null; then
+    post_update_to_api "failed" "$exit_code" 2>/dev/null || true
+  fi
+
+  # ── Display ──
   if declare -f msg_error >/dev/null 2>&1; then
     msg_error "in line ${line_number}: exit code ${exit_code} (${explanation}): while executing command ${command}"
   else
@@ -288,8 +361,7 @@ error_handler() {
     } >>"$DEBUG_LOGFILE"
   fi
 
-  # Get active log file (BUILD_LOG or INSTALL_LOG)
-  # Prefer silent()'s logfile when available (contains the actual command output)
+  # Get active log file (prefer silent()'s logfile when available)
   local active_log=""
   if [[ -n "${_SILENT_FAILED_LOG:-}" && -s "${_SILENT_FAILED_LOG}" ]]; then
     active_log="$_SILENT_FAILED_LOG"
@@ -300,21 +372,17 @@ error_handler() {
     active_log="$SILENT_LOGFILE"
   fi
 
-  # If active_log points to a container-internal path that doesn't exist on host,
-  # fall back to BUILD_LOG (host-side log)
   if [[ -n "$active_log" && ! -s "$active_log" && -n "${BUILD_LOG:-}" && -s "${BUILD_LOG}" ]]; then
     active_log="$BUILD_LOG"
   fi
 
-  # Show last log lines if available
   if [[ -n "$active_log" && -s "$active_log" ]]; then
     echo -e "\n${TAB}--- Last 20 lines of log ---"
     tail -n 20 "$active_log"
     echo -e "${TAB}-----------------------------------\n"
   fi
 
-  # Detect probable Node.js heap OOM and print actionable guidance.
-  # This avoids generic SIGABRT/SIGKILL confusion for frontend build failures.
+  # ── Node.js heap OOM detection with actionable guidance ──
   local node_oom_detected="false"
   local node_build_context="false"
   if [[ "$command" =~ (npm|pnpm|yarn|node|vite|turbo) ]]; then
@@ -331,7 +399,6 @@ error_handler() {
   if [[ "$node_oom_detected" == "true" ]] || { [[ "$node_build_context" == "true" ]] && [[ "$exit_code" =~ ^(134|137)$ ]]; }; then
     local heap_hint_mb=""
 
-    # If explicitly configured, prefer the current value for troubleshooting output.
     if [[ -n "${NODE_OPTIONS:-}" ]] && [[ "${NODE_OPTIONS}" =~ max-old-space-size=([0-9]+) ]]; then
       heap_hint_mb="${BASH_REMATCH[1]}"
     elif [[ -n "${var_ram:-}" ]] && [[ "${var_ram}" =~ ^[0-9]+$ ]]; then
@@ -358,14 +425,13 @@ error_handler() {
     fi
   fi
 
-  # ── Log-pattern analysis: detect common failure causes and emit actionable hints ──
+  # ── Log-pattern analysis: actionable hints for common failure causes ──
   if [[ -n "$active_log" && -s "$active_log" ]]; then
     local _log_tail
     _log_tail=$(tail -n 60 "$active_log" 2>/dev/null || true)
 
     # 1. APT/dpkg dependency conflict
     if echo "$_log_tail" | grep -qE "Depends:|depends on.*but.*not installed|broken packages|unmet dep|dependency problems"; then
-      # Check for PostgreSQL-specific version mismatch (most actionable)
       local _pg_conflict
       _pg_conflict=$(echo "$_log_tail" | grep -oE 'postgresql-[0-9]+ but.*installed' | head -1 || true)
       if [[ -n "$_pg_conflict" ]]; then
@@ -386,7 +452,7 @@ error_handler() {
         msg_warn "Hint: A repository GPG key may be missing, expired, or the keyring file is not yet present (/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc etc.)."
         msg_warn "Hint: Install the 'postgresql-common' package first, or re-add the repository with its correct signing key."
       fi
-    # 3. Network / DNS failure during apt-get or curl
+    # 3. Network / DNS failure
     elif echo "$_log_tail" | grep -qE "Could not resolve|Failed to fetch|Unable to connect|Name or service not known|Network is unreachable|curl.*resolve"; then
       if declare -f msg_warn >/dev/null 2>&1; then
         msg_warn "Network or DNS failure detected."
@@ -407,17 +473,12 @@ error_handler() {
     fi
   fi
 
-  # Detect context: Container (INSTALL_LOG set + inside container /root) vs Host
-  if [[ -n "${INSTALL_LOG:-}" && -f "${INSTALL_LOG:-}" && -d /root ]]; then
-    # CONTAINER CONTEXT: Copy log and create flag file for host
-    local container_log="/root/.install-${SESSION_ID:-error}.log"
-    cp "${INSTALL_LOG}" "$container_log" 2>/dev/null || true
-
-    # Create error flag file with exit code for host detection
-    echo "$exit_code" >"/root/.install-${SESSION_ID:-error}.failed" 2>/dev/null || true
-    # Log path is shown by host as combined log - no need to show container path
+  # ── Context-specific cleanup ──
+  if _is_container_context; then
+    # Container: artifacts already written above; nothing more to do
+    :
   else
-    # HOST CONTEXT: Show local log path and offer container cleanup
+    # HOST: show log path and offer container cleanup
     if [[ -n "$active_log" && -s "$active_log" ]]; then
       if declare -f msg_custom >/dev/null 2>&1; then
         msg_custom "📋" "${YW}" "Full log: ${active_log}"
@@ -435,9 +496,11 @@ error_handler() {
         echo -en "${YW}Remove broken container ${CTID}? (Y/n) [auto-remove in 60s]: ${CL}"
       fi
 
-      # Read user response
       local response=""
-      if read -t 60 -r response; then
+      local read_rc
+      read -t 60 -r response
+      read_rc=$?
+      if [[ $read_rc -eq 0 ]]; then
         if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
           echo ""
           if declare -f msg_info >/dev/null 2>&1; then
@@ -460,7 +523,7 @@ error_handler() {
             echo -e "${YW}Container ${CTID} kept for debugging${CL}"
           fi
         fi
-      else
+      elif [[ $read_rc -gt 128 ]]; then
         # Timeout - auto-remove
         echo ""
         if declare -f msg_info >/dev/null 2>&1; then
@@ -475,12 +538,18 @@ error_handler() {
         else
           echo -e "${GN}✔${CL} Container ${CTID} removed"
         fi
-      fi
-
-      # Force one final status update attempt after cleanup
-      # This ensures status is updated even if the first attempt failed (e.g., HTTP 400)
-      if declare -f post_update_to_api &>/dev/null; then
-        post_update_to_api "failed" "$exit_code" "force"
+      else
+        # read itself failed (e.g. broken/closed stdin, I/O error) rather than
+        # timing out - don't guess and destroy the container on a read we
+        # couldn't actually capture; keep it since that's the reversible choice.
+        echo ""
+        if declare -f msg_error >/dev/null 2>&1; then
+          msg_error "Could not read your response (stdin error) - keeping container ${CTID} for safety."
+          msg_error "Remove it manually if not needed: pct destroy ${CTID}"
+        else
+          echo -e "${YW}Could not read your response (stdin error) - keeping container ${CTID} for safety.${CL}"
+          echo -e "${YW}Remove it manually if not needed: pct destroy ${CTID}${CL}"
+        fi
       fi
     fi
   fi
@@ -489,106 +558,33 @@ error_handler() {
 }
 
 # ==============================================================================
-# SECTION 3: TELEMETRY & CLEANUP HELPERS FOR SIGNAL HANDLERS
+# SECTION 4: TELEMETRY & CLEANUP HELPERS FOR SIGNAL HANDLERS
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# _send_abort_telemetry()
+# _send_abort_telemetry()  (compatibility name)
 #
-# - Sends failure/abort status to telemetry API
-# - Works in BOTH host context (post_update_to_api available) and
-#   container context (only curl available, api.func not sourced)
-# - Container context is critical: without this, container-side failures
-#   and signal exits are never reported, leaving records stuck in
-#   "installing" or "configuring" forever
+# - HOST: reports via post_update_to_api (signals map to "aborted" there)
+# - CONTAINER: writes failure artifacts instead of sending anything
 # - Arguments: $1 = exit_code
 # ------------------------------------------------------------------------------
 _send_abort_telemetry() {
   local exit_code="${1:-1}"
-  # Try full API function first (host context - api.func sourced)
+  if _is_container_context; then
+    _container_write_failure "$exit_code"
+    return 0
+  fi
   if declare -f post_update_to_api &>/dev/null; then
     post_update_to_api "failed" "$exit_code" 2>/dev/null || true
-    return
   fi
-  # Fallback: direct curl (container context - api.func NOT sourced)
-  # This is the ONLY way containers can report failures to telemetry
-  command -v curl &>/dev/null || return 0
-  [[ "${DIAGNOSTICS:-no}" == "no" ]] && return 0
-  [[ -z "${RANDOM_UUID:-}" ]] && return 0
-
-  # Collect last 200 log lines for error diagnosis (best-effort)
-  # Container context has no get_full_log(), so we gather as much as possible
-  local error_text=""
-  local logfile=""
-  if [[ -n "${INSTALL_LOG:-}" && -s "${INSTALL_LOG}" ]]; then
-    logfile="${INSTALL_LOG}"
-  elif [[ -n "${SILENT_LOGFILE:-}" && -s "${SILENT_LOGFILE}" ]]; then
-    logfile="${SILENT_LOGFILE}"
-  fi
-
-  if [[ -n "$logfile" ]]; then
-    error_text=$(tail -n 200 "$logfile" 2>/dev/null | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\\/\\\\/g; s/"/\\"/g; s/\r//g' | tr '\n' '|' | sed 's/|$//' | head -c 16384 | tr -d '\000-\010\013\014\016-\037\177') || true
-  fi
-
-  # Prepend exit code explanation header (like build_error_string does on host)
-  local explanation=""
-  if declare -f explain_exit_code &>/dev/null; then
-    explanation=$(explain_exit_code "$exit_code" 2>/dev/null) || true
-  fi
-  if [[ -n "$explanation" && -n "$error_text" ]]; then
-    error_text="exit_code=${exit_code} | ${explanation}|---|${error_text}"
-  elif [[ -n "$explanation" && -z "$error_text" ]]; then
-    error_text="exit_code=${exit_code} | ${explanation}"
-  fi
-
-  # Calculate duration if start time is available
-  local duration=""
-  if [[ -n "${DIAGNOSTICS_START_TIME:-}" ]]; then
-    duration=$(($(date +%s) - DIAGNOSTICS_START_TIME))
-  fi
-
-  # Categorize error if function is available (may not be in minimal container context)
-  local error_category=""
-  if declare -f categorize_error &>/dev/null; then
-    error_category=$(categorize_error "$exit_code" 2>/dev/null) || true
-  fi
-
-  # Build JSON payload with error context
-  local payload
-  payload="{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"${TELEMETRY_TYPE:-lxc}\",\"nsapp\":\"${NSAPP:-${app:-unknown}}\",\"status\":\"failed\",\"exit_code\":${exit_code}"
-  [[ -n "$error_text" ]] && payload="${payload},\"error\":\"${error_text}\""
-  [[ -n "$error_category" ]] && payload="${payload},\"error_category\":\"${error_category}\""
-  [[ -n "$duration" ]] && payload="${payload},\"duration\":${duration}"
-  payload="${payload}}"
-
-  local api_url="${TELEMETRY_URL:-https://telemetry.community-scripts.org/telemetry}"
-
-  # 2 attempts (retry once on failure) — original had no retry
-  local attempt
-  for attempt in 1 2; do
-    if curl -fsS -m 5 -X POST "$api_url" \
-      -H "Content-Type: application/json" \
-      -d "$payload" &>/dev/null; then
-      return 0
-    fi
-    [[ $attempt -eq 1 ]] && sleep 1
-  done
   return 0
 }
 
 # ------------------------------------------------------------------------------
 # _stop_container_if_installing()
 #
-# - Stops the LXC container if we're in the install phase
+# - Stops the LXC container if we're in the install phase (host only)
 # - Prevents orphaned container processes when the host exits due to a signal
-#   (SSH disconnect, Ctrl+C, SIGTERM) — without this, the container keeps
-#   running and may send "configuring" status AFTER the host already sent
-#   "failed", leaving records permanently stuck in "configuring"
-# - Only acts when:
-#   * CONTAINER_INSTALLING flag is set (during lxc-attach in build_container)
-#   * CTID is set (container was created)
-#   * pct command is available (we're on the Proxmox host, not inside a container)
-# - Does NOT destroy the container — just stops it for potential debugging
 # ------------------------------------------------------------------------------
 _stop_container_if_installing() {
   [[ "${CONTAINER_INSTALLING:-}" == "true" ]] || return 0
@@ -598,51 +594,47 @@ _stop_container_if_installing() {
 }
 
 # ==============================================================================
-# SECTION 4: SIGNAL HANDLERS
+# SECTION 5: SIGNAL HANDLERS
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
 # on_exit()
 #
 # - EXIT trap handler — runs on EVERY script termination
-# - Catches orphaned "installing"/"configuring" records:
-#   * If post_to_api sent "installing" but post_update_to_api never ran
-#   * Reports final status to prevent records stuck forever
-# - Best-effort log collection for failed installs
-# - Stops orphaned container processes on failure
-# - Cleans up lock files
+# - CONTAINER: ensures failure artifacts exist on non-zero exit (this also
+#   covers silent()'s direct `exit $rc`, which bypasses the ERR trap)
+# - HOST: catches executions that never sent a final status:
+#   * non-zero exit → "failed" (signal codes map to "aborted")
+#   * zero exit with an "installing" record but no final → "aborted"
+#     (e.g. user cancelled a whiptail dialog, script exited cleanly)
 # ------------------------------------------------------------------------------
 on_exit() {
   local exit_code=$?
 
-  # Report orphaned telemetry records
-  # Two scenarios handled:
-  # 1. POST_TO_API_DONE=true but POST_UPDATE_DONE=false: Record was created but
-  #    never got a final status update → send abort/done now.
-  # 2. POST_TO_API_DONE=false but DIAGNOSTICS=yes: Initial post failed (server
-  #    unreachable/timeout), but the server has fallback create-on-update logic,
-  #    so a status update can still create the record. Worth one last try.
-  if [[ "${POST_UPDATE_DONE:-}" != "true" ]]; then
-    if [[ "${POST_TO_API_DONE:-}" == "true" || "${DIAGNOSTICS:-no}" == "yes" ]]; then
+  if _is_container_context; then
+    if [[ $exit_code -ne 0 ]]; then
+      _container_write_failure "$exit_code" "${FAILED_COMMAND:-}" "${FAILED_LINE:-}"
+    fi
+  else
+    if [[ "${POST_UPDATE_DONE:-}" != "true" ]] && declare -f post_update_to_api >/dev/null 2>&1; then
       if [[ $exit_code -ne 0 ]]; then
-        _send_abort_telemetry "$exit_code"
-      elif [[ "${INSTALL_COMPLETE:-}" == "true" ]] && declare -f post_update_to_api >/dev/null 2>&1; then
-        # Only report success if the install was explicitly marked complete.
-        # Without this guard, early bailouts (e.g. user cancelled) with exit 0
-        # would be falsely reported as successful installations.
-        post_update_to_api "done" "0" 2>/dev/null || true
+        post_update_to_api "failed" "$exit_code" 2>/dev/null || true
+      elif [[ "${POST_TO_API_DONE:-}" == "true" ]]; then
+        # Clean exit but no success was ever reported: the user backed out
+        # somewhere. Report as aborted so the record doesn't stay "installing".
+        post_update_to_api "aborted" "0" 2>/dev/null || true
       fi
     fi
-  fi
 
-  # Best-effort log collection on failure (non-critical, telemetry already sent)
-  if [[ $exit_code -ne 0 ]] && declare -f ensure_log_on_host >/dev/null 2>&1; then
-    ensure_log_on_host 2>/dev/null || true
-  fi
+    # Best-effort log collection on failure
+    if [[ $exit_code -ne 0 ]] && declare -f ensure_log_on_host >/dev/null 2>&1; then
+      ensure_log_on_host 2>/dev/null || true
+    fi
 
-  # Stop orphaned container if we're in the install phase and exiting with error
-  if [[ $exit_code -ne 0 ]]; then
-    _stop_container_if_installing
+    # Stop orphaned container if we're in the install phase
+    if [[ $exit_code -ne 0 ]]; then
+      _stop_container_if_installing
+    fi
   fi
 
   [[ -n "${lockfile:-}" && -e "$lockfile" ]] && rm -f "$lockfile"
@@ -650,21 +642,19 @@ on_exit() {
 }
 
 # ------------------------------------------------------------------------------
-# on_interrupt()
-#
-# - SIGINT (Ctrl+C) trap handler
-# - Reports status FIRST (time-critical: container may be dying)
-# - Stops orphaned container to prevent "configuring" ghost records
-# - Exits with code 130 (128 + SIGINT=2)
+# on_interrupt() - SIGINT (Ctrl+C)
 # ------------------------------------------------------------------------------
 on_interrupt() {
-  # Stop spinner and restore cursor before any output
   if declare -f stop_spinner >/dev/null 2>&1; then
     stop_spinner 2>/dev/null || true
   fi
   printf "\e[?25h" 2>/dev/null || true
 
-  _send_abort_telemetry "130"
+  if _is_container_context; then
+    _container_write_failure "130"
+  elif declare -f post_update_to_api &>/dev/null; then
+    post_update_to_api "aborted" "130" 2>/dev/null || true
+  fi
   _stop_container_if_installing
   if declare -f msg_error >/dev/null 2>&1; then
     msg_error "Interrupted by user (SIGINT)" 2>/dev/null || true
@@ -675,21 +665,19 @@ on_interrupt() {
 }
 
 # ------------------------------------------------------------------------------
-# on_terminate()
-#
-# - SIGTERM trap handler
-# - Reports status FIRST (time-critical: process being killed)
-# - Stops orphaned container to prevent "configuring" ghost records
-# - Exits with code 143 (128 + SIGTERM=15)
+# on_terminate() - SIGTERM
 # ------------------------------------------------------------------------------
 on_terminate() {
-  # Stop spinner and restore cursor before any output
   if declare -f stop_spinner >/dev/null 2>&1; then
     stop_spinner 2>/dev/null || true
   fi
   printf "\e[?25h" 2>/dev/null || true
 
-  _send_abort_telemetry "143"
+  if _is_container_context; then
+    _container_write_failure "143"
+  elif declare -f post_update_to_api &>/dev/null; then
+    post_update_to_api "aborted" "143" 2>/dev/null || true
+  fi
   _stop_container_if_installing
   if declare -f msg_error >/dev/null 2>&1; then
     msg_error "Terminated by signal (SIGTERM)" 2>/dev/null || true
@@ -700,45 +688,32 @@ on_terminate() {
 }
 
 # ------------------------------------------------------------------------------
-# on_hangup()
-#
-# - SIGHUP trap handler (SSH disconnect, terminal closed)
-# - CRITICAL: This was previously MISSING from catch_errors(), causing
-#   container processes to become orphans on SSH disconnect — the #1 cause
-#   of records stuck in "installing" and "configuring" states
-# - Reports status via direct curl (terminal is already closed, no output)
-# - Stops orphaned container to prevent ghost records
-# - Exits with code 129 (128 + SIGHUP=1)
+# on_hangup() - SIGHUP (SSH disconnect, terminal closed)
 # ------------------------------------------------------------------------------
 on_hangup() {
-  # Stop spinner (no cursor restore needed — terminal is already gone)
   if declare -f stop_spinner >/dev/null 2>&1; then
     stop_spinner 2>/dev/null || true
   fi
 
-  _send_abort_telemetry "129"
+  if _is_container_context; then
+    _container_write_failure "129"
+  elif declare -f post_update_to_api &>/dev/null; then
+    post_update_to_api "aborted" "129" 2>/dev/null || true
+  fi
   _stop_container_if_installing
   exit 129
 }
 
 # ==============================================================================
-# SECTION 5: INITIALIZATION
+# SECTION 6: INITIALIZATION
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
 # catch_errors()
 #
 # - Initializes error handling and signal traps
-# - Enables strict error handling:
-#   * set -Ee: Exit on error, inherit ERR trap in functions
-#   * set -o pipefail: Pipeline fails if any command fails
-#   * set -u: (optional) Exit on undefined variable (if STRICT_UNSET=1)
-# - Sets up traps:
-#   * ERR  → error_handler (script errors)
-#   * EXIT → on_exit      (any termination — cleanup + orphan detection)
-#   * INT  → on_interrupt  (Ctrl+C)
-#   * TERM → on_terminate  (kill / systemd stop)
-#   * HUP  → on_hangup     (SSH disconnect / terminal closed)
+# - set -Ee -o pipefail (+ set -u when STRICT_UNSET=1)
+# - Traps: ERR → error_handler, EXIT → on_exit, INT/TERM/HUP → signal handlers
 # - Call this function early in every script
 # ------------------------------------------------------------------------------
 catch_errors() {

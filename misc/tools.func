@@ -2523,7 +2523,9 @@ _download_source_tarball() {
 # directory). Extracts <tarball_path> into <workdir>, then copies the contents
 # of that top-level directory into <target>.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
+#     up config dotfiles like .env via create_backup and call restore_backup
+#     BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and is responsible for its
 #     cleanup (typically via a RETURN trap on its tmpdir).
 #   - cp failures are non-fatal here, matching the previous inline behavior.
@@ -2561,7 +2563,9 @@ _deploy_source_tarball() {
 # a single top-level directory, that directory is stripped (its contents land
 # directly in <target>); otherwise the archive contents are copied as-is.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
+#     up config dotfiles like .env via create_backup and call restore_backup
+#     BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and cleans it up.
 #
 # Returns: 0 on success, 65 on unsupported format, 251 on extraction failure,
@@ -2585,6 +2589,16 @@ _deploy_unpacked_archive() {
   elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
     tar --no-same-owner -xf "$archive" -C "$workdir" || {
       msg_error "Failed to extract TAR archive"
+      return 251
+    }
+  elif [[ "$filename" == *.7z ]]; then
+    if [[ -f /etc/alpine-release ]]; then
+      ensure_dependencies 7zip
+    else
+      ensure_dependencies p7zip-full
+    fi
+    7z x -y -o"$workdir" "$archive" >/dev/null 2>&1 || {
+      msg_error "Failed to extract 7z archive"
       return 251
     }
   else
@@ -2675,7 +2689,7 @@ fetch_and_deploy_gh_tag() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
-  trap 'rm -rf "$tmpdir"' RETURN
+  trap 'rm -rf "$tmpdir"; trap - RETURN' RETURN
   local tarball_url="https://github.com/${repo}/archive/refs/tags/${version}.tar.gz"
   local filename="${app_lc}-${version}.tar.gz"
 
@@ -2852,7 +2866,7 @@ fetch_and_deploy_gl_tag() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
-  trap 'rm -rf "$tmpdir"' RETURN
+  trap 'rm -rf "$tmpdir"; trap - RETURN' RETURN
   local filename="${app_lc}-${version_safe}.tar.gz"
 
   msg_info "Fetching GitLab tag: ${app} (${resolved_tag})"
@@ -2960,7 +2974,7 @@ check_for_gh_release() {
 
   local gh_check_json=""
   gh_check_json=$(mktemp /tmp/tools-gh-check-XXXXXX) || return 73
-  trap 'rm -f "${gh_check_json:-}"' RETURN
+  trap 'rm -f "${gh_check_json:-}"; trap - RETURN' RETURN
 
   # Build auth header if token is available
   local header_args=()
@@ -3560,7 +3574,7 @@ fetch_and_deploy_codeberg_release() {
 
     local tmpdir
     tmpdir=$(mktemp -d) || return 252
-    trap 'rm -rf "$tmpdir"' RETURN
+    trap 'rm -rf "$tmpdir"; trap - RETURN' RETURN
 
     msg_info "Fetching Codeberg tag: $app ($tag_name)"
 
@@ -3602,7 +3616,7 @@ fetch_and_deploy_codeberg_release() {
 
   local codeberg_rel_json
   codeberg_rel_json=$(mktemp /tmp/tools-codeberg-rel-XXXXXX) || return 73
-  trap 'rm -f "$codeberg_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"' RETURN
+  trap 'rm -f "$codeberg_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"; trap - RETURN' RETURN
 
   local attempt=0 success=false resp http_code
 
@@ -4099,7 +4113,7 @@ fetch_and_deploy_gh_release() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
-  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"' RETURN
+  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"; trap - RETURN' RETURN
   local filename="" url=""
 
   msg_info "Fetching GitHub release: $app ($version)"
@@ -6981,7 +6995,7 @@ setup_meilisearch() {
       CURRENT_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || CURRENT_VERSION="0.0.0"
       NEW_VERSION="${CHECK_UPDATE_RELEASE#v}"
 
-      # Extract major.minor for comparison (Meilisearch requires dump/restore between minor versions)
+      # Extract major.minor for comparison (Meilisearch changes its on-disk DB format between minor versions)
       local CURRENT_MAJOR_MINOR NEW_MAJOR_MINOR
       CURRENT_MAJOR_MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f1,2)
       NEW_MAJOR_MINOR=$(echo "$NEW_VERSION" | cut -d. -f1,2)
@@ -6993,140 +7007,72 @@ setup_meilisearch() {
         msg_info "MeiliSearch version change detected (${CURRENT_VERSION} → ${NEW_VERSION}), preparing data migration"
       fi
 
-      # Read config values for dump/restore
-      local MEILI_HOST MEILI_PORT MEILI_MASTER_KEY MEILI_DUMP_DIR
+      # Read connection + storage paths for the in-place (dumpless) upgrade
+      local MEILI_HOST MEILI_PORT MEILI_DB_PATH
       MEILI_HOST="${MEILISEARCH_HOST:-127.0.0.1}"
       MEILI_PORT="${MEILISEARCH_PORT:-7700}"
-      MEILI_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
-      MEILI_MASTER_KEY=$(grep -E "^master_key\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
+      MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
+      MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
 
-      # Create dump before update if migration is needed
-      local DUMP_UID=""
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$MEILI_MASTER_KEY" ]]; then
-        msg_info "Creating MeiliSearch data dump before upgrade"
+      systemctl stop meilisearch
 
-        # Trigger dump creation
-        local DUMP_RESPONSE
-        DUMP_RESPONSE=$(curl -s -X POST "http://${MEILI_HOST}:${MEILI_PORT}/dumps" \
-          -H "Authorization: Bearer ${MEILI_MASTER_KEY}" \
-          -H "Content-Type: application/json" 2>/dev/null) || true
-
-        # The initial response only contains taskUid, not dumpUid
-        # dumpUid is only available after the task completes
-        local TASK_UID
-        TASK_UID=$(echo "$DUMP_RESPONSE" | grep -oP '"taskUid":\s*\K[0-9]+' || true)
-
-        if [[ -n "$TASK_UID" ]]; then
-          msg_info "Waiting for dump task ${TASK_UID} to complete..."
-          local MAX_WAIT=120
-          local WAITED=0
-          local TASK_RESULT=""
-
-          while [[ $WAITED -lt $MAX_WAIT ]]; do
-            TASK_RESULT=$(curl -s "http://${MEILI_HOST}:${MEILI_PORT}/tasks/${TASK_UID}" \
-              -H "Authorization: Bearer ${MEILI_MASTER_KEY}" 2>/dev/null) || true
-
-            local TASK_STATUS
-            TASK_STATUS=$(echo "$TASK_RESULT" | grep -oP '"status":\s*"\K[^"]+' || true)
-
-            if [[ "$TASK_STATUS" == "succeeded" ]]; then
-              # Extract dumpUid from the completed task details
-              DUMP_UID=$(echo "$TASK_RESULT" | grep -oP '"dumpUid":\s*"\K[^"]+' || true)
-              if [[ -n "$DUMP_UID" ]]; then
-                msg_ok "MeiliSearch dump created successfully: ${DUMP_UID}"
-              else
-                msg_warn "Dump task succeeded but could not extract dumpUid"
-              fi
-              break
-            elif [[ "$TASK_STATUS" == "failed" ]]; then
-              local ERROR_MSG
-              ERROR_MSG=$(echo "$TASK_RESULT" | grep -oP '"message":\s*"\K[^"]+' || echo "Unknown error")
-              msg_warn "MeiliSearch dump failed: ${ERROR_MSG}"
-              break
-            fi
-            sleep 2
-            WAITED=$((WAITED + 2))
-          done
-
-          if [[ $WAITED -ge $MAX_WAIT ]]; then
-            msg_warn "MeiliSearch dump timed out after ${MAX_WAIT}s"
-          fi
-        else
-          msg_warn "Could not trigger MeiliSearch dump (no taskUid in response)"
-          msg_info "Response was: ${DUMP_RESPONSE:-empty}"
-        fi
-      fi
-
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
-        msg_error "MeiliSearch migration requires a successful dump before upgrade"
-        msg_error "Ensure the service is running and master_key is configured, or set MEILISEARCH_SKIP_MIGRATION=1 to force (data loss risk)"
-        if [[ "${MEILISEARCH_SKIP_MIGRATION:-}" != "1" ]]; then
+      # Safety backup of the data dir before any in-place migration.
+      # Dumpless upgrade mutates the DB in place and cannot be rolled back on
+      # failure, so keep a tarball to restore from. (No master_key/API needed.)
+      local MEILI_BACKUP=""
+      if [[ "$NEEDS_MIGRATION" == "true" ]]; then
+        MEILI_BACKUP="/var/lib/meilisearch/pre-upgrade-${CURRENT_VERSION}.tar.gz"
+        msg_info "Backing up data dir before upgrade → ${MEILI_BACKUP}"
+        if ! tar -czf "$MEILI_BACKUP" -C "$MEILI_DB_PATH" . 2>/dev/null; then
+          msg_error "MeiliSearch data backup failed — aborting upgrade to avoid data loss"
+          systemctl start meilisearch
           return 100
         fi
-        msg_warn "MEILISEARCH_SKIP_MIGRATION=1 — proceeding without dump (manual reindex may be required)"
+        msg_ok "Backup created: ${MEILI_BACKUP}"
       fi
 
-      # Stop service and update binary
-      systemctl stop meilisearch
+      # Replace the binary
       if [[ "$(arch_resolve)" == "arm64" ]]; then
         fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/bin" "meilisearch-linux-aarch64"
       else
         fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
       fi
 
-      # If migration needed and dump was created, remove old data and import dump
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
-        local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
+      if [[ "$NEEDS_MIGRATION" == "true" ]]; then
+        # One-time in-place migration via --experimental-dumpless-upgrade.
+        # Meilisearch migrates the on-disk DB during this startup; subsequent
+        # normal (systemd) starts run without the flag.
+        msg_info "Migrating data in place (dumpless upgrade ${CURRENT_VERSION} → ${NEW_VERSION})"
+        /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --experimental-dumpless-upgrade >/dev/null 2>&1 &
+        local MEILI_PID=$!
 
-        msg_info "Removing old MeiliSearch database for migration"
-        find "${MEILI_DB_PATH:?}" -mindepth 1 -delete
-
-        # Import dump using CLI flag (this is the supported method)
-        local DUMP_FILE="${MEILI_DUMP_DIR}/${DUMP_UID}.dump"
-        if [[ -f "$DUMP_FILE" ]]; then
-          msg_info "Importing dump: ${DUMP_FILE}"
-
-          # Start meilisearch with --import-dump flag
-          # This is a one-time import that happens during startup
-          /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" >/dev/null 2>&1 &
-          local MEILI_PID=$!
-
-          # Wait for meilisearch to become healthy (import happens during startup)
-          msg_info "Waiting for MeiliSearch to import and start..."
-          local MAX_WAIT=300
-          local WAITED=0
-          while [[ $WAITED -lt $MAX_WAIT ]]; do
-            if curl -sf "http://${MEILI_HOST}:${MEILI_PORT}/health" &>/dev/null; then
-              msg_ok "MeiliSearch is healthy after import"
-              break
-            fi
-            # Check if process is still running
-            if ! kill -0 $MEILI_PID 2>/dev/null; then
-              msg_warn "MeiliSearch process exited during import"
-              break
-            fi
-            sleep 3
-            WAITED=$((WAITED + 3))
-          done
-
-          # Stop the manual process
-          kill $MEILI_PID 2>/dev/null || true
-          wait $MEILI_PID 2>/dev/null || true
-          sleep 2
-
-          # Start via systemd for proper management
-          systemctl start meilisearch
-
-          if systemctl is-active --quiet meilisearch; then
-            msg_ok "MeiliSearch migrated successfully"
-          else
-            msg_warn "MeiliSearch failed to start after migration - check logs with: journalctl -u meilisearch"
+        local MAX_WAIT=300
+        local WAITED=0
+        local MIGRATED=false
+        while [[ $WAITED -lt $MAX_WAIT ]]; do
+          if curl -sf "http://${MEILI_HOST}:${MEILI_PORT}/health" &>/dev/null; then
+            MIGRATED=true
+            break
           fi
+          # Bail early if the migration process died
+          if ! kill -0 $MEILI_PID 2>/dev/null; then
+            msg_warn "MeiliSearch process exited during migration"
+            break
+          fi
+          sleep 3
+          WAITED=$((WAITED + 3))
+        done
+
+        # Stop the one-shot migration process and hand over to systemd
+        kill $MEILI_PID 2>/dev/null || true
+        wait $MEILI_PID 2>/dev/null || true
+        sleep 2
+        systemctl start meilisearch
+
+        if [[ "$MIGRATED" == "true" ]] && systemctl is-active --quiet meilisearch; then
+          msg_ok "MeiliSearch migrated successfully (backup kept at ${MEILI_BACKUP})"
         else
-          msg_warn "Dump file not found: ${DUMP_FILE}"
-          systemctl start meilisearch
+          msg_error "MeiliSearch migration failed. Restore with: systemctl stop meilisearch; rm -rf ${MEILI_DB_PATH:?}/*; tar -xzf ${MEILI_BACKUP} -C ${MEILI_DB_PATH}; then reinstall the previous version"
         fi
       else
         systemctl start meilisearch
@@ -9272,7 +9218,7 @@ fetch_and_deploy_from_url() {
     msg_error "Failed to create temporary directory"
     return 252
   }
-  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"' RETURN
+  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"; trap - RETURN' RETURN
 
   curl -fsSL -o "$tmpdir/$filename" "$url" || {
     msg_error "Download failed: $url"
@@ -9488,7 +9434,7 @@ check_for_gl_release() {
 
   local gl_check_json
   gl_check_json=$(mktemp /tmp/tools-gl-check-XXXXXX) || return 73
-  trap 'rm -f "$gl_check_json"' RETURN
+  trap 'rm -f "$gl_check_json"; trap - RETURN' RETURN
 
   local repo_encoded
   repo_encoded=$(printf '%s' "$source" | sed 's|/|%2F|g')
@@ -9778,7 +9724,7 @@ fetch_and_deploy_gl_release() {
 
   local gl_rel_json
   gl_rel_json=$(mktemp /tmp/tools-gl-rel-XXXXXX) || return 73
-  trap 'rm -f "$gl_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"' RETURN
+  trap 'rm -f "$gl_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"; trap - RETURN' RETURN
 
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
