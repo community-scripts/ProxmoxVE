@@ -132,14 +132,15 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
       systemctl daemon-reload
+      msg_ok "Migrated Configuration"
     fi
-    msg_ok "Migrated Configuration"
 
-    create_backup /opt/termix/data /opt/termix/uploads
+    msg_info "Backing up Data"
+    cp -r /opt/termix/data /opt/termix_data_backup
+    cp -r /opt/termix/uploads /opt/termix_uploads_backup
+    msg_ok "Backed up Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
-
-    restore_backup
 
     msg_info "Recreating Directories"
     mkdir -p /opt/termix/html \
@@ -148,6 +149,17 @@ EOF
       /opt/termix/nginx/cache \
       /opt/termix/nginx/client_body
     msg_ok "Recreated Directories"
+
+    if [[ ! -f /opt/termix/.env ]]; then
+      msg_info "Writing Environment File"
+      cat <<EOF >/opt/termix/.env
+NODE_ENV=production
+DATA_DIR=/opt/termix/data
+GUACD_HOST=127.0.0.1
+GUACD_PORT=4822
+EOF
+      msg_ok "Wrote Environment File"
+    fi
 
     msg_info "Building Frontend"
     cd /opt/termix
@@ -160,6 +172,10 @@ EOF
     msg_info "Building Backend"
     $STD npm rebuild better-sqlite3 --force
     $STD npm run build:backend
+    if [[ ! -f /opt/termix/dist/backend/backend/starter.js ]]; then
+      msg_error "Backend build failed: /opt/termix/dist/backend/backend/starter.js was not created"
+      exit 1
+    fi
     msg_ok "Built Backend"
 
     msg_info "Setting up Production Dependencies"
@@ -167,6 +183,12 @@ EOF
     $STD npm rebuild better-sqlite3 bcryptjs --force
     $STD npm cache clean --force
     msg_ok "Set up Production Dependencies"
+
+    msg_info "Restoring Data"
+    cp -r /opt/termix_data_backup /opt/termix/data
+    cp -r /opt/termix_uploads_backup /opt/termix/uploads
+    rm -rf /opt/termix_data_backup /opt/termix_uploads_backup
+    msg_ok "Restored Data"
 
     msg_info "Updating Frontend Files"
     rm -rf /opt/termix/html/*
@@ -193,7 +215,7 @@ EOF
       sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
       rm -f /etc/systemd/system/nginx.service.d/pidfile.conf
       rm -f /etc/tmpfiles.d/nginx-termix.conf
-      
+
       if [ ! -d /tmp/nginx ]; then
         mkdir -p /tmp/nginx
       fi
@@ -209,7 +231,7 @@ EOF
 PIDFile=/tmp/nginx/nginx.pid
 EOF
       fi
-      
+
       systemctl daemon-reload
       nginx -t && systemctl restart nginx
       msg_ok "Updated Nginx Configuration"
