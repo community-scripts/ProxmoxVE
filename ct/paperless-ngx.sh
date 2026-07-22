@@ -141,7 +141,6 @@ function update_script() {
       $STD systemctl daemon-reload
       cd /opt/paperless
       $STD uv sync --all-extras
-      $STD uv pip install sqlite_vec
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Updated Paperless-ngx"
@@ -224,7 +223,6 @@ function update_script() {
       cp -r "$BACKUP_DIR"/* /opt/paperless/
       cd /opt/paperless
       $STD uv sync --all-extras
-      $STD uv pip install sqlite_vec
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Migrated to uv and updated to v2.20.15 (required before v3)"
