@@ -505,6 +505,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-22
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Anytype: preserve default mongod.conf when configuring Anytype replica set [@MickLesk](https://github.com/MickLesk) ([#15954](https://github.com/community-scripts/ProxmoxVE/pull/15954))
+    - Nametag: fix missing tailwindcss module [@MickLesk](https://github.com/MickLesk) ([#15955](https://github.com/community-scripts/ProxmoxVE/pull/15955))
+
 ## 2026-07-21
 
 ### 🚀 Updated Scripts
