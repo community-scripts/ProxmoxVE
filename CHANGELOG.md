@@ -511,6 +511,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - InvoiceNinja: preserve and Re-download snappdf Chromium [@MickLesk](https://github.com/MickLesk) ([#15956](https://github.com/community-scripts/ProxmoxVE/pull/15956))
     - Anytype: preserve default mongod.conf when configuring Anytype replica set [@MickLesk](https://github.com/MickLesk) ([#15954](https://github.com/community-scripts/ProxmoxVE/pull/15954))
     - Nametag: fix missing tailwindcss module [@MickLesk](https://github.com/MickLesk) ([#15955](https://github.com/community-scripts/ProxmoxVE/pull/15955))
 
