@@ -24,7 +24,7 @@ catch_errors
 
 function update_script() {
   header_info
-  
+
   check_container_storage
   check_container_resources
 
@@ -54,7 +54,7 @@ function setup_moai() {
 
   # ── Step 1: Install base dependencies ───────────────────────
   msg_info "Installing base system packages"
-  
+
   $STD apt update
   $STD apt install -y \
     curl wget git vim nano htop tmux \
@@ -62,7 +62,7 @@ function setup_moai() {
     apt-transport-https software-properties-common \
     python3 python3-pip python3-venv \
     docker.io docker-compose-plugin
-  
+
   # Install additional tools for AI workloads
   $STD apt install -y \
     build-essential cmake pkg-config libjpeg-dev libpng-dev \
@@ -72,10 +72,10 @@ function setup_moai() {
 
   # ── Step 2: Configure Docker ────────────────────────────────
   msg_info "Configuring Docker"
-  
+
   $STD systemctl enable docker
   $STD systemctl start docker
-  
+
   # Add current user to docker group (non-root access)
   if id -nG "$USER" 2>/dev/null | grep -qw docker; then
     msg_ok "User '$USER' already in docker group"
@@ -103,42 +103,42 @@ function setup_moai() {
   }
 }
 EOF
-  
+
   $STD systemctl restart docker
   msg_ok "Docker configured"
 
   # ── Step 3: GPU Detection & Configuration ───────────────────
   if command -v lspci &>/dev/null; then
     PCI_INFO=$(lspci 2>/dev/null)
-    
+
     # NVIDIA GPU detection
     if echo "$PCI_INFO" | grep -qi "nvidia"; then
       msg_info "NVIDIA GPU detected — installing drivers"
-      
+
       $STD apt install -y nvidia-driver-libs nvidia-cuda-toolkit
-      
+
       # Configure NVIDIA container runtime
       $STD curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
         $STD gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-      
+
       $STD curl -fsSL https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
         sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' > /etc/apt/sources.list.d/nvidia-container-toolkit.list
-      
+
       $STD apt update
       $STD apt install -y nvidia-container-toolkit
       $STD nvidia-ctk runtime configure --runtime=docker
       $STD systemctl restart docker
-      
+
       msg_ok "NVIDIA drivers and container toolkit installed"
     fi
 
     # AMD GPU detection
     if echo "$PCI_INFO" | grep -qi "amd\|ati"; then
       msg_info "AMD GPU detected — configuring ROCm"
-      
+
       # Install ROCm packages (Debian 13+)
       $STD apt install -y rocm-dev rocminfo
-      
+
       # Configure AMD container runtime
       mkdir -p /etc/rocm
       cat > /etc/rocm/core.conf << 'EOF'
@@ -154,10 +154,10 @@ EOF
 
   # ── Step 4: Install MoAI Platform ───────────────────────────
   msg_info "Installing MoAI platform"
-  
+
   mkdir -p /opt/moai
   cd /opt/moai
-  
+
   # Clone MoAI repository
   if [ ! -d ".git" ]; then
     $STD git clone https://github.com/41-4g3nt/MoAI.git . || {
@@ -170,7 +170,7 @@ EOF
 
   # Create data directories for services
   mkdir -p /opt/moai/data/{searxng,ollama,mem0,qdrant}
-  
+
   # Set proper permissions
   chown -R "$USER:$USER" /opt/moai
   chmod +x /opt/moai/*.sh 2>/dev/null || true
@@ -179,7 +179,7 @@ EOF
 
   # ── Step 5: Create systemd service for MoAI ────────────────
   msg_info "Creating systemd service for MoAI"
-  
+
   cat > /etc/systemd/system/moai.service << EOF
 [Unit]
 Description=MoAI Platform Service
@@ -202,28 +202,28 @@ EOF
 
   $STD systemctl daemon-reload
   $STD systemctl enable moai.service
-  
+
   msg_ok "Systemd service created"
 
   # ── Step 6: Configure firewall (if ufw available) ───────────
   if command -v ufw &>/dev/null; then
     msg_info "Configuring firewall"
-    
+
     $STD ufw allow ssh
     $STD ufw allow http
     $STD ufw allow https
-    
+
     # MoAI service ports (configurable)
     $STD ufw allow 3000/tcp comment 'MoAI Open WebUI'
     $STD ufw allow 8080/tcp comment 'MoAI SearXNG'
-    
+
     $STD ufw enable || true
     msg_ok "Firewall configured"
   fi
 
   # ── Step 7: Setup motd and access info ─────────────────────
   msg_info "Configuring access information"
-  
+
   cat > /etc/profile.d/moai-info.sh << EOF
 export MOAI_HOME="/opt/moai"
 export PATH="\$MOAI_HOME/bin:\$PATH"
@@ -249,10 +249,10 @@ EOF
 
   # ── Step 8: Verify installation ─────────────────────────────
   msg_info "Verifying installation"
-  
+
   local checks_passed=0
   local total_checks=5
-  
+
   # Check Docker
   if command -v docker &>/dev/null && docker --version &>/dev/null; then
     msg_ok "✓ Docker installed: $(docker --version 2>/dev/null | awk '{print $3}')"
@@ -260,7 +260,7 @@ EOF
   else
     msg_error "✗ Docker not working"
   fi
-  
+
   # Check Python
   if command -v python3 &>/dev/null; then
     msg_ok "✓ Python3 installed: $(python3 --version 2>&1)"
@@ -268,7 +268,7 @@ EOF
   else
     msg_error "✗ Python3 not found"
   fi
-  
+
   # Check MoAI directory
   if [ -d /opt/moai ] && [ -f /opt/moai/README.md ]; then
     msg_ok "✓ MoAI platform files present"
@@ -276,7 +276,7 @@ EOF
   else
     msg_error "✗ MoAI files missing"
   fi
-  
+
   # Check Docker group membership
   if id -nG "$USER" 2>/dev/null | grep -qw docker; then
     msg_ok "✓ User '$USER' in docker group"
@@ -284,7 +284,7 @@ EOF
   else
     msg_warn "⚠ User not in docker group — log out and back in"
   fi
-  
+
   # Check systemd service
   if systemctl is-enabled moai.service &>/dev/null; then
     msg_ok "✓ MoAI service enabled on boot"
