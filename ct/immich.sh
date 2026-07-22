@@ -128,18 +128,20 @@ EOF
     PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
     PG_VERSION=${PG_VERSION:-16}
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
+    DB_NAME=$(grep "^DB_DATABASE_NAME=" /opt/immich/.env | tail -1 | sed "s/^DB_DATABASE_NAME=//")
+    DB_NAME=${DB_NAME:-immich}
     if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
       # dead tuples in smart_search/face_search make the REINDEX below fail with
       # "missing chunk ... for toast value" on VectorChord 1.0.0 (#15588); must vacuum
       # while still on the old extension version, a post-upgrade vacuum errors instead
-      $STD sudo -u postgres psql -d immich -c "VACUUM (ANALYZE) smart_search;"
-      $STD sudo -u postgres psql -d immich -c "VACUUM (ANALYZE) face_search;"
+      $STD sudo -u postgres psql -d "$DB_NAME" -c "VACUUM (ANALYZE) smart_search;"
+      $STD sudo -u postgres psql -d "$DB_NAME" -c "VACUUM (ANALYZE) face_search;"
       fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${PG_VERSION}-vchord_*_$(arch_resolve).deb"
       systemctl restart postgresql
-      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
-      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
-      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
-      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
+      $STD sudo -u postgres psql -d "$DB_NAME" -c "ALTER EXTENSION vector UPDATE;"
+      $STD sudo -u postgres psql -d "$DB_NAME" -c "ALTER EXTENSION vchord UPDATE;"
+      $STD sudo -u postgres psql -d "$DB_NAME" -c "REINDEX INDEX face_index;"
+      $STD sudo -u postgres psql -d "$DB_NAME" -c "REINDEX INDEX clip_index;"
     fi
     ensure_dependencies ccache gcc-13 g++-13
 
