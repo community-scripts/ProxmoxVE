@@ -80,7 +80,8 @@ function update_script() {
       [[ -f /opt/paperless/paperless.conf ]] && cp /opt/paperless/paperless.conf "$BACKUP_DIR/"
       msg_ok "Backup completed to $BACKUP_DIR"
 
-      PYTHON_VERSION="3.13" setup_uv
+      PG_VERSION="18" setup_postgresql
+      PYTHON_VERSION="3.13" setup_uv  
       if ((BRIDGE_UPDATE)); then
         CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v2.20.15" "/opt/paperless" "paperless*tar.xz"
       else
