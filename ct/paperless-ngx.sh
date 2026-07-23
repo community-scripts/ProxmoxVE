@@ -130,6 +130,7 @@ function update_script() {
 
         [[ -n "$DB_OPTIONS_DEPRECATED" ]] &&
           msg_warn "Deprecated Paperless DB options detected; migrate them manually to PAPERLESS_DB_OPTIONS."
+          echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#database-advanced-options{CL}"
         if [[ -z "$SECRET_KEY_CURRENT" || "$SECRET_KEY_CURRENT" == "change-me" ]]; then
           SECRET_KEY="$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -An -tx1 | tr -d ' \n')"
           sed -i \
