@@ -59,8 +59,9 @@ function update_script() {
   if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx"; then
     if [[ "$PAPERLESS_INSTALLED_VERSION" == "2.20.15" ]]; then
       msg_warn "Paperless-ngx v3 does not support encrypted documents anymore."
-      echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#encryption-support${CL}\n"
-      echo -ne "${INFO}${HOLD} Before continuing make sure that you do not use encryption or have decrypted all documents."
+      echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#encryption-support${CL}"
+      msg_warn "Before continuing make sure that you do not use encryption or have decrypted all documents."
+      echo ""
       read -rp "Do you want to continue with the update? (y/N): " MIGRATE
       echo
       if [[ ! "$MIGRATE" =~ ^[Yy]$ ]]; then
@@ -97,7 +98,7 @@ function update_script() {
       fi
       ensure_dependencies gnupg
 
-        msg_info "Updating Paperless-ngx"
+      msg_info "Updating Paperless-ngx"
       cp -r "$BACKUP_DIR"/* /opt/paperless/
       if ((BRIDGE_UPDATE == 0)) && [[ "$PAPERLESS_INSTALLED_VERSION" == 2.* ]]; then
         msg_info "Migrating Paperless-ngx v2 configuration to v3"
@@ -129,7 +130,7 @@ function update_script() {
 
         [[ -n "$DB_OPTIONS_DEPRECATED" ]] &&
           msg_warn "Deprecated Paperless DB options detected; migrate them manually to PAPERLESS_DB_OPTIONS."
-        if [[ -z "$SECRET_KEY_CURRENT" ]]; then
+        if [[ -z "$SECRET_KEY_CURRENT" || "$SECRET_KEY_CURRENT" == "change-me" ]]; then
           SECRET_KEY="$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -An -tx1 | tr -d ' \n')"
           sed -i \
             -e '/^#\?PAPERLESS_SECRET_KEY=/d' \
@@ -271,7 +272,7 @@ function update_script() {
     sleep 1
     msg_ok "Started all Paperless-ngx Services"
     if ((BRIDGE_UPDATE)); then
-      msg_custom "ℹ️" "Paperless-ngx is now on v2.20.15. Run the update again to upgrade to v3."
+      msg_custom "ℹ️" "${YW}" "Paperless-ngx is now on v2.20.15. Run the update again to upgrade to v3."
       exit
     fi
     msg_ok "Updated successfully!"
