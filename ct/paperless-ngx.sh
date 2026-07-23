@@ -97,7 +97,6 @@ function update_script() {
       fi
       ensure_dependencies gnupg
 
-      msg_info "Updating Paperless-ngx"
       cp -r "$BACKUP_DIR"/* /opt/paperless/
       if ((BRIDGE_UPDATE == 0)) && [[ "$PAPERLESS_INSTALLED_VERSION" == 2.* ]]; then
         msg_info "Migrating Paperless-ngx v2 configuration to v3"
@@ -127,9 +126,10 @@ function update_script() {
           -e 's|^PAPERLESS_OCR_MODE="\?skip_noarchive"\?$|PAPERLESS_OCR_MODE=auto|' \
           "$PAPERLESS_CONF"
 
-        [[ -n "$DB_OPTIONS_DEPRECATED" ]] &&
+        if [[ -n "$DB_OPTIONS_DEPRECATED" ]]; then
           msg_warn "Deprecated Paperless DB options detected; migrate them manually to PAPERLESS_DB_OPTIONS."
           echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#database-advanced-options${CL}"
+        fi
         if [[ -z "$SECRET_KEY_CURRENT" || "$SECRET_KEY_CURRENT" == "change-me" ]]; then
           SECRET_KEY="$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -An -tx1 | tr -d ' \n')"
           sed -i \
@@ -163,6 +163,7 @@ function update_script() {
         msg_ok "Migrated Paperless-ngx configuration"
       fi
 
+      msg_info "Updating Paperless-ngx"
       if ((BRIDGE_UPDATE == 0)); then
         sed -i 's|^ExecStart=.*|ExecStart=uv run -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
         $STD systemctl daemon-reload
