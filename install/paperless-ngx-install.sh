@@ -52,7 +52,6 @@ msg_info "Setup Paperless-ngx"
 cd /opt/paperless
 rm -rf /opt/paperless/docker
 $STD uv sync --all-extras
-curl -fsSL "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example" -o /opt/paperless/paperless.conf
 mkdir -p /opt/paperless_data/{consume,data,media,trash}
 mkdir -p /opt/paperless/static
 SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
