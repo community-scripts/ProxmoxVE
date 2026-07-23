@@ -34,7 +34,7 @@ msg_ok "Installed Cockpit"
 [[ "$(arch_resolve)" == "arm64" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator  <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   install_45drives=true
-  if [[ "${VERSION_ID}" -ge 13 ]]; then
+  if [[ "${VERSION_ID}" -ge 14 ]]; then
     read -r -p "Debian ${VERSION_ID} is not officially supported by 45Drives yet, would you like to continue anyway? <y/N> " prompt
     if [[ ! "${prompt,,}" =~ ^(y|yes)$ ]]; then
       install_45drives=false
@@ -45,7 +45,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     setup_deb822_repo "45drives" \
       "https://repo.45drives.com/key/gpg.asc" \
       "https://repo.45drives.com/enterprise/debian" \
-      "bookworm" \
+      "${VERSION_CODENAME}" \
       "main" \
       "amd64"
     $STD apt install -y cockpit-file-sharing cockpit-identities cockpit-navigator
