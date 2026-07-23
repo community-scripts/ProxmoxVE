@@ -81,7 +81,6 @@ function update_script() {
       [[ -f /opt/paperless/paperless.conf ]] && cp /opt/paperless/paperless.conf "$BACKUP_DIR/"
       msg_ok "Backup completed to $BACKUP_DIR"
 
-      PG_VERSION="18" setup_postgresql
       PYTHON_VERSION="3.13" setup_uv  
       if ((BRIDGE_UPDATE)); then
         CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v2.20.15" "/opt/paperless" "paperless*tar.xz"
@@ -130,7 +129,7 @@ function update_script() {
 
         [[ -n "$DB_OPTIONS_DEPRECATED" ]] &&
           msg_warn "Deprecated Paperless DB options detected; migrate them manually to PAPERLESS_DB_OPTIONS."
-          echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#database-advanced-options{CL}"
+          echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#database-advanced-options${CL}"
         if [[ -z "$SECRET_KEY_CURRENT" || "$SECRET_KEY_CURRENT" == "change-me" ]]; then
           SECRET_KEY="$(dd if=/dev/urandom bs=32 count=1 2>/dev/null | od -An -tx1 | tr -d ' \n')"
           sed -i \
