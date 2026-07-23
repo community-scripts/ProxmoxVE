@@ -25,8 +25,28 @@ setup_hwaccel
 
 PYTHON_VERSION="3.12" setup_uv
 
+OTEL_ARGS=()
+read -r -p "${TAB3}Would you like to install OpenTelemetry instrumentation packages (requires manual .env configuration)? <y/N> " prompt
+if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  for pkg in \
+    opentelemetry-api \
+    opentelemetry-sdk \
+    opentelemetry-exporter-otlp \
+    opentelemetry-exporter-otlp-proto-http \
+    opentelemetry-instrumentation-fastapi \
+    opentelemetry-instrumentation-aiohttp-client \
+    opentelemetry-instrumentation-httpx \
+    opentelemetry-instrumentation-sqlalchemy \
+    opentelemetry-instrumentation-requests \
+    opentelemetry-instrumentation-logging \
+    opentelemetry-instrumentation-redis \
+    opentelemetry-instrumentation-system-metrics; do
+    OTEL_ARGS+=(--with "$pkg")
+  done
+fi
+
 msg_info "Installing Open WebUI"
-$STD uv tool install --python 3.12 --constraint <(echo "numba>=0.60") open-webui[all]
+$STD uv tool install --python 3.12 --constraint <(echo "numba>=0.60") "${OTEL_ARGS[@]}" open-webui[all]
 msg_ok "Installed Open WebUI"
 
 read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
