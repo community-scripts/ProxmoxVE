@@ -24,6 +24,11 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   exit 10
 fi
 
+msg_info "Switching SSH to classic (non-socket-activated) mode"
+systemctl disable --now ssh.socket &>/dev/null || true
+systemctl enable --now ssh &>/dev/null || true
+msg_ok "Switched SSH to classic mode"
+
 msg_info "Installing NextCloudPi (Patience)"
 $STD bash <(curl -fsSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh)
 msg_ok "Installed NextCloudPi"
