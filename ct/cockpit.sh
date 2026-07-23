@@ -33,6 +33,22 @@ function update_script() {
   $STD apt update
   $STD apt -y upgrade
   msg_ok "Updated ${APP} LXC"
+
+  if [[ ! -f /etc/apt/sources.list.d/45drives.sources ]]; then
+    [[ "$(arch_resolve)" == "arm64" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator now? <y/N> " prompt
+    if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+      msg_info "Installing 45Drives' cockpit extensions"
+      setup_deb822_repo "45drives" \
+        "https://repo.45drives.com/key/gpg.asc" \
+        "https://repo.45drives.com/enterprise/debian" \
+        "$(get_os_info codename)" \
+        "main" \
+        "amd64"
+      $STD apt install -y cockpit-file-sharing cockpit-identities cockpit-navigator
+      msg_ok "Installed 45Drives' cockpit extensions"
+    fi
+  fi
+
   msg_ok "Updated successfully!"
   exit
 }
