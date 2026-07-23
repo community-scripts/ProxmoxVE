@@ -513,6 +513,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - update authentik to 2026.5.6 [@thieneret](https://github.com/thieneret) ([#15973](https://github.com/community-scripts/ProxmoxVE/pull/15973))
 
+  - #### ✨ New Features
+
+    - Paperless-ngx: Support v3 [@tomfrenzel](https://github.com/tomfrenzel) ([#15221](https://github.com/community-scripts/ProxmoxVE/pull/15221))
+
 ## 2026-07-22
 
 ### 🆕 New Scripts
