@@ -173,8 +173,7 @@ function update_script() {
       $STD uv run -- python manage.py migrate
       msg_ok "Updated Paperless-ngx"
 
-      if ((BRIDGE_UPDATE == 0)); then
-        # zxing-cpp replaces pyzbar in v3, libzbar is no longer required
+      if ((BRIDGE_UPDATE == 0)) && [[ "$PAPERLESS_INSTALLED_VERSION" == "2.20.15" ]]; then
         $STD apt -y purge libzbar0t64 libzbar0 2>/dev/null || true
         $STD apt -y autoremove 2>/dev/null || true
       fi
