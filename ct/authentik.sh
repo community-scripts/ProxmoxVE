@@ -43,7 +43,7 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.5.5"
+  AUTHENTIK_VERSION="version/2026.5.6"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
   XMLSEC_VERSION="1.3.12"
 
@@ -105,7 +105,7 @@ function update_script() {
     $STD go build -o /opt/authentik/radius ./cmd/radius
     msg_ok "Updated go proxy"
 
-    msg_info "Building worker"
+    msg_info "Building worker. It may take more than 10 minutes, please be patient."
     export AWS_LC_FIPS_SYS_CC="clang"
     cd /opt/authentik
     $STD cargo build --package authentik --no-default-features --features core --locked --release --jobs 1
