@@ -92,6 +92,7 @@ function update_script() {
         OCR_MODE="$(sed -n 's|^PAPERLESS_OCR_MODE=||p' "$PAPERLESS_CONF" | tail -n1)"
         OCR_SKIP_ARCHIVE="$(sed -n 's|^PAPERLESS_OCR_SKIP_ARCHIVE_FILE=||p' "$PAPERLESS_CONF" | tail -n1)"
         ARCHIVE_FILE_GENERATION="$(sed -n 's|^PAPERLESS_ARCHIVE_FILE_GENERATION=||p' "$PAPERLESS_CONF" | tail -n1)"
+        CONSUMER_DELETE_DUPLICATES="$(sed -n 's|^PAPERLESS_CONSUMER_DELETE_DUPLICATES=||p' "$PAPERLESS_CONF" | tail -n1)"
 
         sed -i \
           -e '/^PAPERLESS_CONSUMER_POLLING=/d' \
@@ -119,6 +120,8 @@ function update_script() {
           sed -i "\$a\\PAPERLESS_CONSUMER_POLLING_INTERVAL=$CONSUMER_POLLING" "$PAPERLESS_CONF"
         [[ -n "$CONSUMER_INOTIFY_DELAY" && -z "$CONSUMER_STABILITY_DELAY" ]] &&
           sed -i "\$a\\PAPERLESS_CONSUMER_STABILITY_DELAY=$CONSUMER_INOTIFY_DELAY" "$PAPERLESS_CONF"
+        [[ -z "$CONSUMER_DELETE_DUPLICATES" ]] &&
+          sed -i '$a\PAPERLESS_CONSUMER_DELETE_DUPLICATES=true' "$PAPERLESS_CONF"
         if [[ -z "$ARCHIVE_FILE_GENERATION" ]]; then
           if [[ "$OCR_MODE" == "skip_noarchive" || "$OCR_MODE" == "\"skip_noarchive\"" ]]; then
             sed -i '$a\PAPERLESS_ARCHIVE_FILE_GENERATION=never' "$PAPERLESS_CONF"
