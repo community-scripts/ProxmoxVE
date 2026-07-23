@@ -28,7 +28,8 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "ironclaw-bin" "nearai/ironclaw"; then
+  RELEASE="ironclaw-v0.29.1"
+  if check_for_gh_release "ironclaw-bin" "nearai/ironclaw" "${RELEASE}" "IronClaw 1.0 (Reborn) is a ground-up rearchitecture with an incompatible CLI/config format; pinned until this script supports it"; then
     msg_info "Stopping Service"
     rc-service ironclaw stop 2>/dev/null || true
     msg_ok "Stopped Service"
@@ -37,7 +38,7 @@ function update_script() {
     cp /root/.ironclaw/.env /root/ironclaw.env.bak
     msg_ok "Backed up Configuration"
 
-    fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "latest" "/usr/local/bin" \
+    fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "${RELEASE}" "/usr/local/bin" \
       "ironclaw-$(uname -m)-unknown-linux-musl.tar.gz"
     chmod +x /usr/local/bin/ironclaw
 

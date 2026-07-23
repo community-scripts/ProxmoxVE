@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="17" PG_MODULES="pgvector" setup_postgresql
 PG_DB_NAME="ironclaw" PG_DB_USER="ironclaw" PG_DB_EXTENSIONS="vector" setup_postgresql_db
 
-fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "latest" "/usr/local/bin" \
+fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "ironclaw-v0.29.1" "/usr/local/bin" \
   "ironclaw-$(uname -m)-unknown-linux-gnu.tar.gz"
 chmod +x /usr/local/bin/ironclaw
 
