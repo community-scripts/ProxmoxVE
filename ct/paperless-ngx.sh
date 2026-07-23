@@ -49,15 +49,31 @@ function update_script() {
     fi
   fi
 
+  local PAPERLESS_INSTALLED_VERSION="" BRIDGE_UPDATE=0
+  [[ -f ~/.paperless ]] && PAPERLESS_INSTALLED_VERSION="$(<~/.paperless)"
+  PAPERLESS_INSTALLED_VERSION="${PAPERLESS_INSTALLED_VERSION#v}"
+  if [[ "$PAPERLESS_INSTALLED_VERSION" == 2.* && "$PAPERLESS_INSTALLED_VERSION" != "2.20.15" ]]; then
+    BRIDGE_UPDATE=1
+  fi
+
   if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx"; then
+    if [[ "$PAPERLESS_INSTALLED_VERSION" == "2.20.15" ]]; then
+      msg_warn "Paperless-ngx v3 does not support encrypted documents anymore."
+      echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#encryption-support${CL}\n"
+      echo -ne "${INFO}${HOLD} Before continuing make sure that you do not use encryption or have decrypted all documents."
+      read -rp "Do you want to continue with the update? (y/N): " MIGRATE
+      echo
+      if [[ ! "$MIGRATE" =~ ^[Yy]$ ]]; then
+        msg_info "Update aborted. Decrypt all documents before upgrading to v3."
+        exit 0
+      fi
+    fi
+
     msg_info "Stopping all Paperless-ngx Services"
     systemctl stop paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     msg_ok "Stopped all Paperless-ngx Services"
 
     if grep -q "uv run" /etc/systemd/system/paperless-webserver.service; then
-      PAPERLESS_INSTALLED_VERSION=""
-      [[ -f ~/.paperless ]] && PAPERLESS_INSTALLED_VERSION="$(<~/.paperless)"
-
       msg_info "Backing up configuration"
       local BACKUP_DIR="/opt/paperless_backup_$$"
       mkdir -p "$BACKUP_DIR"
@@ -65,7 +81,11 @@ function update_script() {
       msg_ok "Backup completed to $BACKUP_DIR"
 
       PYTHON_VERSION="3.13" setup_uv
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      if ((BRIDGE_UPDATE)); then
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "v2.20.15" "/opt/paperless" "paperless*tar.xz"
+      else
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      fi
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 
       . /etc/os-release
@@ -76,9 +96,9 @@ function update_script() {
       fi
       ensure_dependencies gnupg
 
-      msg_info "Updating Paperless-ngx"
+        msg_info "Updating Paperless-ngx"
       cp -r "$BACKUP_DIR"/* /opt/paperless/
-      if [[ "$PAPERLESS_INSTALLED_VERSION" == 2.* ]]; then
+      if ((BRIDGE_UPDATE == 0)) && [[ "$PAPERLESS_INSTALLED_VERSION" == 2.* ]]; then
         msg_info "Migrating Paperless-ngx v2 configuration to v3"
         PAPERLESS_CONF="/opt/paperless/paperless.conf"
 
@@ -100,6 +120,7 @@ function update_script() {
           -e '/^PAPERLESS_CONSUMER_POLLING_DELAY=/d' \
           -e '/^PAPERLESS_CONSUMER_POLLING_RETRY_COUNT=/d' \
           -e '/^PAPERLESS_CONSUMER_BARCODE_SCANNER=/d' \
+          -e '/^PAPERLESS_PASSPHRASE=/d' \
           -e '/^PAPERLESS_OCR_SKIP_ARCHIVE_FILE=/d' \
           -e 's|^PAPERLESS_OCR_MODE="\?skip"\?$|PAPERLESS_OCR_MODE=auto|' \
           -e 's|^PAPERLESS_OCR_MODE="\?skip_noarchive"\?$|PAPERLESS_OCR_MODE=auto|' \
@@ -140,21 +161,26 @@ function update_script() {
         msg_ok "Migrated Paperless-ngx configuration"
       fi
 
-      sed -i 's|^ExecStart=.*|ExecStart=uv run -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
-      $STD systemctl daemon-reload
+      if ((BRIDGE_UPDATE == 0)); then
+        sed -i 's|^ExecStart=.*|ExecStart=uv run -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
+        $STD systemctl daemon-reload
+      fi
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Updated Paperless-ngx"
 
-      # zxing-cpp replaces pyzbar in v3, libzbar is no longer required
-      $STD apt -y purge libzbar0t64 libzbar0 2>/dev/null || true
-      $STD apt -y autoremove 2>/dev/null || true
+      if ((BRIDGE_UPDATE == 0)); then
+        # zxing-cpp replaces pyzbar in v3, libzbar is no longer required
+        $STD apt -y purge libzbar0t64 libzbar0 2>/dev/null || true
+        $STD apt -y autoremove 2>/dev/null || true
+      fi
 
       rm -rf "$BACKUP_DIR"
 
     else
+      BRIDGE_UPDATE=1
       msg_warn "You are about to migrate your Paperless-ngx installation to uv!"
       msg_custom "🔒" "It is strongly recommended to take a Proxmox snapshot first:"
       echo -e "   1. Stop the container:  pct stop <CTID>"
@@ -229,7 +255,6 @@ function update_script() {
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Migrated to uv and updated to v2.20.15 (required before v3)"
-      msg_custom "ℹ️" "Run the update again to complete the upgrade to the latest version (v3)."
 
       rm -rf "$BACKUP_DIR"
       if [[ -d /opt/paperless/backup ]]; then
@@ -244,6 +269,10 @@ function update_script() {
     systemctl start paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     sleep 1
     msg_ok "Started all Paperless-ngx Services"
+    if ((BRIDGE_UPDATE)); then
+      msg_custom "ℹ️" "Paperless-ngx is now on v2.20.15. Run the update again to upgrade to v3."
+      exit
+    fi
     msg_ok "Updated successfully!"
   fi
   exit
