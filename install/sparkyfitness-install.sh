@@ -84,6 +84,7 @@ msg_info "Configuring Nginx"
 sed \
   -e 's|${SPARKY_FITNESS_SERVER_HOST}|127.0.0.1|g' \
   -e 's|${SPARKY_FITNESS_SERVER_PORT}|3010|g' \
+  -e "s|\${SPARKY_FITNESS_FRONTEND_URL}|http://${LOCAL_IP}:80|g" \
   -e 's|${NGINX_LISTEN_PORT}|80|g' \
   -e 's|${NGINX_ACCESS_LOG}|/var/log/nginx/sparkyfitness.access.log|g' \
   -e 's|${NGINX_ERROR_LOG}|/var/log/nginx/sparkyfitness.error.log|g' \
