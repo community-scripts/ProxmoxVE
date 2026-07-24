@@ -511,6 +511,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Sync-in: create admin user with admin role instead of default user [@MickLesk](https://github.com/MickLesk) ([#15983](https://github.com/community-scripts/ProxmoxVE/pull/15983))
     - VM: fix machine type selection being ignored, VM always created as q35 [@MickLesk](https://github.com/MickLesk) ([#15995](https://github.com/community-scripts/ProxmoxVE/pull/15995))
 
   - #### ✨ New Features
