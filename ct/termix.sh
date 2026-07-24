@@ -154,8 +154,15 @@ EOF
       /opt/termix/nginx \
       /opt/termix/nginx/logs \
       /opt/termix/nginx/cache \
-      /opt/termix/nginx/client_body
+      /opt/termix/nginx/client_body \
+      /opt/termix/db/data
     msg_ok "Recreated Directories"
+
+    if [[ -f /opt/termix/data/db.sqlite.encrypted && ! -f /opt/termix/db/data/db.sqlite.encrypted ]]; then
+      msg_info "Migrating Database to new layout"
+      cp -a /opt/termix/data/db.sqlite.encrypted /opt/termix/db/data/db.sqlite.encrypted
+      msg_ok "Migrated Database to new layout"
+    fi
 
     msg_info "Building Frontend"
     cd /opt/termix
@@ -168,6 +175,10 @@ EOF
     msg_info "Building Backend"
     $STD npm rebuild better-sqlite3 --force
     $STD npm run build:backend
+    if [[ ! -f /opt/termix/dist/backend/backend/starter.js ]]; then
+      msg_error "Backend build failed: /opt/termix/dist/backend/backend/starter.js was not created"
+      exit 1
+    fi
     msg_ok "Built Backend"
 
     msg_info "Setting up Production Dependencies"
