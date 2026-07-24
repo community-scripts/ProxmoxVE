@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-256}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-alpine}"
-var_version="${var_version:-3.23}"
+var_version="${var_version:-3.24}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
