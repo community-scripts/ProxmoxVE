@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: michelroegl-brunner
+# Author: michelroegl-brunner | vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://musicseerr.com/ | Github: https://github.com/HabiRabbu/Musicseerr
 
@@ -30,47 +30,86 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "musicseerr" "HabiRabbu/Musicseerr"; then
+  if check_for_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle"; then
+    msg_warn "Migrating Musicseerr to DroppedNeedle"
     msg_info "Stopping Service"
-    systemctl stop musicseerr
+    systemctl disable -q --now musicseerr
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
+    msg_info "Backing up Musicseerr Data"
     cp -a /opt/musicseerr/backend/config /opt/musicseerr_config_backup
     cp -a /opt/musicseerr/backend/cache /opt/musicseerr_cache_backup
-    msg_ok "Backed up Data"
+    msg_ok "Backed up Musicseerr Data"
 
     PYTHON_VERSION="3.13" setup_uv
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "musicseerr" "HabiRabbu/Musicseerr" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
     NODE_VERSION="25" NODE_MODULE="pnpm@10.33.0" setup_nodejs
 
-    msg_info "Building Frontend"
-    cd /opt/musicseerr/frontend
+    msg_info "Building DroppedNeedle Frontend"
+    cd /opt/droppedneedle/frontend
     export NODE_OPTIONS="--max-old-space-size=3072"
     rm -rf node_modules build
     $STD pnpm install --frozen-lockfile
     $STD pnpm run build
-    msg_ok "Built Frontend"
+    msg_ok "Built DroppedNeedle Frontend"
 
-    msg_info "Updating Application"
-    mkdir -p /opt/musicseerr/backend/config /opt/musicseerr/backend/cache
-    $STD uv venv --clear /opt/musicseerr/venv
-    $STD uv pip install -r /opt/musicseerr/backend/requirements.txt --python=/opt/musicseerr/venv/bin/python
-    rm -rf /opt/musicseerr/backend/static
-    cp -r /opt/musicseerr/frontend/build /opt/musicseerr/backend/static
-    msg_ok "Updated Application"
+    msg_info "Building DroppedNeedle backend"
+    mkdir -p /opt/droppedneedle/backend/config /opt/droppedneedle/backend/cache
+    $STD uv venv /opt/droppedneedle/venv
+    $STD uv pip install -r /opt/droppedneedle/backend/requirements.txt --python=/opt/droppedneedle/venv/bin/python
+    rm -rf /opt/droppedneedle/backend/static
+    cp -r /opt/droppedneedle/frontend/build /opt/droppedneedle/backend/static
+    msg_ok "Built DroppedNeedle backend"
 
-    msg_info "Restoring Data"
-    rm -rf /opt/musicseerr/backend/config /opt/musicseerr/backend/cache
-    cp -a /opt/musicseerr_config_backup/. /opt/musicseerr/backend/config/
-    cp -a /opt/musicseerr_cache_backup/. /opt/musicseerr/backend/cache/
+    msg_info "Restoring Data from Musicseerr"
+    rm -rf /opt/droppedneedle/backend/config /opt/droppedneedle/backend/cache
+    cp -a /opt/musicseerr_config_backup/. /opt/droppedneedle/backend/config/
+    cp -a /opt/musicseerr_cache_backup/. /opt/droppedneedle/backend/cache/
+    msg_ok "Restored Data from Musicseerr"
+
+    msg_info "Replacing systemd service file"
+    cat <<EOF >/etc/systemd/system/droppedneedle.service
+[Unit]
+Description=DroppedNeedle Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/droppedneedle/backend
+Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
+Environment=PORT=8688
+# Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>
+ExecStart=/opt/droppedneedle/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8688 --loop uvloop --http httptools --workers 1
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    rm -f /etc/systemd/system/musicseerr.service
+    msg_ok "Replaced systemd service file"
+
+    msg_info "Enabling DroppedNeedle Service"
+    systemctl enable -q --now droppedneedle
+    msg_ok "Enabled DroppedNeedle Service"
     rm -rf /opt/musicseerr_config_backup /opt/musicseerr_cache_backup
-    msg_ok "Restored Data"
-
-    msg_info "Starting Service"
-    systemctl start musicseerr
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
+    cp /bin/update /bin/update.bak
+    sed -i 's/musicseerr/droppedneedle/' /bin/update
+    rm -rf /opt/musicseerr
+    msg_info "Waiting up to 1min for backend to boot and retrieve Admin Username"
+    for i in {1..30}; do
+        username=$(/opt/droppedneedle/venv/bin/python -c 'import sqlite3; conn = sqlite3.connect("/opt/droppedneedle/backend/cache/library.db"); c = conn.cursor(); c.execute("SELECT username FROM auth_users WHERE role=\"admin\""); admin=c.fetchone(); print(admin[0]) if (admin and admin[0]) else None' 2>/dev/null || true)
+        if [ -n "$username" ]; then
+            break
+        fi
+        sleep 2
+    done
+    if [ -n "$username" ]; then
+        msg_ok "Admin Username retrieved (Admin Username is: ${username})"
+    else
+        msg_error "Failed to retrieve Admin Username. The backend might still be starting."
+    fi
   fi
   exit
 }
