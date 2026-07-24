@@ -4653,9 +4653,10 @@ EOF
   # Continue with standard container setup
   if [ "$var_os" == "alpine" ]; then
     sleep 3
+    local alpine_repo_branch="v${var_version}"
     pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
-https://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-https://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+https://dl-cdn.alpinelinux.org/alpine/'"${alpine_repo_branch}"'/main
+https://dl-cdn.alpinelinux.org/alpine/'"${alpine_repo_branch}"'/community
 EOF'
     pct exec "$CTID" -- ash -c 'set -a; [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh; set +a; apk add bash newt curl openssh nano mc ncurses jq' >>"$BUILD_LOG" 2>&1 || {
       msg_warn "apk install failed (dl-cdn.alpinelinux.org), trying alternate mirrors..."
@@ -4666,11 +4667,11 @@ EOF'
         set +a
         ALPINE_MIRRORS="mirror.init7.net ftp.halifax.rwth-aachen.de mirrors.edge.kernel.org alpine.mirror.wearetriple.com mirror.leaseweb.com uk.alpinelinux.org dl-2.alpinelinux.org dl-4.alpinelinux.org"
         for m in $(printf "%s\n" $ALPINE_MIRRORS | shuf); do
-          if wget -q --spider --timeout=2 "http://$m/alpine/latest-stable/main/" 2>/dev/null; then
+          if wget -q --spider --timeout=2 "http://$m/alpine/'"${alpine_repo_branch}"'/main/" 2>/dev/null; then
             echo "  Attempting mirror: $m"
             cat <<EOF >/etc/apk/repositories
-http://$m/alpine/latest-stable/main
-http://$m/alpine/latest-stable/community
+http://$m/alpine/'"${alpine_repo_branch}"'/main
+http://$m/alpine/'"${alpine_repo_branch}"'/community
 EOF
             if apk update >/dev/null 2>&1 && apk add bash newt curl openssh nano mc ncurses jq >/dev/null 2>&1; then
               echo "  CDN set to $m: tests passed"

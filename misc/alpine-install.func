@@ -147,12 +147,15 @@ update_os() {
     msg_warn "apk update failed (dl-cdn.alpinelinux.org), trying alternate mirrors..."
     local alpine_mirrors="mirror.init7.net ftp.halifax.rwth-aachen.de mirrors.edge.kernel.org alpine.mirror.wearetriple.com mirror.leaseweb.com uk.alpinelinux.org dl-2.alpinelinux.org dl-4.alpinelinux.org"
     local apk_ok=false
+    local alpine_branch
+    alpine_branch="v$(. /etc/os-release 2>/dev/null; printf '%s' "${VERSION_ID:-}" | cut -d. -f1,2)"
+    [ "$alpine_branch" = "v" ] && alpine_branch="latest-stable"
     for m in $(printf '%s\n' $alpine_mirrors | shuf); do
       if timeout 2 bash -c "echo >/dev/tcp/$m/80" 2>/dev/null; then
         msg_custom "${INFO}" "${YW}" "Attempting mirror: ${m}"
         cat <<EOF >/etc/apk/repositories
-http://$m/alpine/latest-stable/main
-http://$m/alpine/latest-stable/community
+http://$m/alpine/${alpine_branch}/main
+http://$m/alpine/${alpine_branch}/community
 EOF
         if $STD apk -U upgrade; then
           msg_ok "CDN set to ${m}: tests passed"
