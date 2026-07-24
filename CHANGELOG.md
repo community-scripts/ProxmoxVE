@@ -505,6 +505,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-24
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Bump all Alpine scripts to 3.24 [@asylumexp](https://github.com/asylumexp) ([#15994](https://github.com/community-scripts/ProxmoxVE/pull/15994))
+
 ## 2026-07-23
 
 ### 🚀 Updated Scripts
