@@ -85,7 +85,8 @@ mkdir -p /opt/termix/data \
   /opt/termix/nginx \
   /opt/termix/nginx/logs \
   /opt/termix/nginx/cache \
-  /opt/termix/nginx/client_body
+  /opt/termix/nginx/client_body \
+  /opt/termix/db/data
 
 cp -r /opt/termix/dist/* /opt/termix/html/ 2>/dev/null || true
 cp -r /opt/termix/src/locales /opt/termix/html/locales 2>/dev/null || true
