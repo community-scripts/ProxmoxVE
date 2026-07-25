@@ -513,6 +513,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - SparkyFitness: substitute SPARKY_FITNESS_FRONTEND_URL in nginx config [@MickLesk](https://github.com/MickLesk) ([#16007](https://github.com/community-scripts/ProxmoxVE/pull/16007))
 
+  - #### ✨ New Features
+
+    - AFFiNE: Bump version to v0.27.3 [@Oscar006](https://github.com/Oscar006) ([#16012](https://github.com/community-scripts/ProxmoxVE/pull/16012))
+
 ## 2026-07-24
 
 ### 🚀 Updated Scripts
