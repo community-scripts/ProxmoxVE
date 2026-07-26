@@ -130,12 +130,12 @@ if [[ -z "$ADMIN_PASS" ]]; then
   exit 1
 fi
 RAILS_ENV=production $STD bundle exec bin/tootctl settings registrations approved
-{
-  echo "Mastodon Admin Credentials"
-  echo "URL:      http://${LOCAL_IP}"
-  echo "Email:    admin@${LOCAL_IP}"
-  echo "Password: ${ADMIN_PASS}"
-} >~/mastodon.creds
+cat <<EOF > ~/mastodon.creds
+  Mastodon Admin Credentials
+  URL:      http://${LOCAL_IP}
+  Email:    admin@${LOCAL_IP}
+  Password: ${ADMIN_PASS}
+EOF
 msg_ok "Created Admin Account"
 
 msg_info "Creating Services"
