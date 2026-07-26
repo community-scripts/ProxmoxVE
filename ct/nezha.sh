@@ -38,6 +38,7 @@ function update_script() {
     create_backup /opt/nezha/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nezha" "nezhahq/nezha" "prebuild" "latest" "/opt/nezha" "dashboard-linux-amd64.zip"
+    
     if [[ -f /opt/nezha/dashboard-linux-amd64 ]]; then
       mv /opt/nezha/dashboard-linux-amd64 /opt/nezha/dashboard
       chmod +x /opt/nezha/dashboard
