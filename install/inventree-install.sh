@@ -30,6 +30,11 @@ msg_ok "Installed InvenTree"
 msg_info "Configuring InvenTree"
 if [[ -f /etc/inventree/config.yaml ]]; then
   sed -i "s|site_url:.*|site_url: http://${LOCAL_IP}|" /etc/inventree/config.yaml
+  if ! grep -q "^  engine:" /etc/inventree/config.yaml; then
+    mkdir -p /home/inventree/data
+    chown inventree:inventree /home/inventree/data
+    sed -i "/^database:$/a\\  engine: sqlite3\\n  name: '/home/inventree/data/database.sqlite3'" /etc/inventree/config.yaml
+  fi
 fi
 $STD inventree run invoke update
 msg_ok "Configured InvenTree"
