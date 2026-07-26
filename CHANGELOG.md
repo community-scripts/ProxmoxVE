@@ -512,7 +512,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - OmniTools ([#16032](https://github.com/community-scripts/ProxmoxVE/pull/16032))
+  - Satisfactory ([#16023](https://github.com/community-scripts/ProxmoxVE/pull/16023))
+- OmniTools ([#16032](https://github.com/community-scripts/ProxmoxVE/pull/16032))
 
 ### 🚀 Updated Scripts
 
