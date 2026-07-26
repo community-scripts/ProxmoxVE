@@ -37,12 +37,7 @@ function update_script() {
 
     create_backup /opt/cookcli/recipes
 
-    ARCH=$(dpkg --print-architecture)
-    if [[ "$ARCH" == "arm64" ]]; then
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cook" "cooklang/cookcli" "prebuild" "latest" "/opt/cookcli" "cook-aarch64-unknown-linux-musl.tar.gz"
-    else
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cook" "cooklang/cookcli" "prebuild" "latest" "/opt/cookcli" "cook-x86_64-unknown-linux-gnu.tar.gz"
-    fi
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cook" "cooklang/cookcli" "prebuild" "latest" "/opt/cookcli" "cook-$(arch_resolve "x86_64-unknown-linux-gnu" "aarch64-unknown-linux-musl").tar.gz"
     chmod +x /opt/cookcli/cook
 
     restore_backup
