@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-source "$(dirname "${BASH_SOURCE[0]}")/../misc/build.func" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: GitHub Copilot (GPT-5.3-Codex)
+# Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/nezhahq/nezha
 
@@ -38,7 +38,6 @@ function update_script() {
     create_backup /opt/nezha/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nezha" "nezhahq/nezha" "prebuild" "latest" "/opt/nezha" "dashboard-linux-amd64.zip"
-
     if [[ -f /opt/nezha/dashboard-linux-amd64 ]]; then
       mv /opt/nezha/dashboard-linux-amd64 /opt/nezha/dashboard
       chmod +x /opt/nezha/dashboard
