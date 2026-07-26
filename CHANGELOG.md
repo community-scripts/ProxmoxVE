@@ -510,6 +510,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-07-26
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [endurain] add node update to update script [@johanngrobe](https://github.com/johanngrobe) ([#16014](https://github.com/community-scripts/ProxmoxVE/pull/16014))
+
 ## 2026-07-25
 
 ### 🚀 Updated Scripts
