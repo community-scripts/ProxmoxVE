@@ -18,7 +18,6 @@ $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
-
 fetch_and_deploy_gh_release "omnitools" "iib0011/omni-tools" "tarball"
 
 msg_info "Building OmniTools"
@@ -40,7 +39,7 @@ sed -i \
   's/application\/javascript.*js;/application\/javascript                js mjs;/' \
   /etc/nginx/mime.types
 
-cat <<'NGINXEOF' >/etc/nginx/sites-available/omnitools
+cat <<'EOF' >/etc/nginx/sites-available/omnitools
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -54,13 +53,10 @@ server {
         try_files $uri $uri/ /index.html;
     }
 }
-NGINXEOF
+EOF
 
-ln -sf /etc/nginx/sites-available/omnitools \
-  /etc/nginx/sites-enabled/omnitools
-
+ln -sf /etc/nginx/sites-available/omnitools /etc/nginx/sites-enabled/omnitools
 rm -f /etc/nginx/sites-enabled/default
-
 $STD nginx -t
 systemctl enable -q --now nginx
 systemctl reload nginx
