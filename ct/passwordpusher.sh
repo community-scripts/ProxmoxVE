@@ -39,10 +39,10 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "passwordpusher" "pglombardo/PasswordPusher" "tarball"
 
-    export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 
     msg_info "Installing Gem Dependencies"
     cd /opt/passwordpusher
+    export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
     $STD bundle config set --local without 'development test'
     $STD bundle config set --local deployment 'true'
     $STD bundle install
