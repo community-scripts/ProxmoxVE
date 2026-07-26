@@ -300,7 +300,7 @@ EOF
       --title "PVE-ENTERPRISE" \
       --menu "'pve-enterprise' repository already exists.\n\nWhat do you want to do?" 14 58 2 \
       "keep" "Keep as is" \
-      "disable" "Comment out (disable) this repo" \
+      "disable" "Disable this repo (set Enabled: false)" \
       "delete" "Delete this repo file" \
       3>&2 2>&1 1>&3)
     case $CHOICE in
