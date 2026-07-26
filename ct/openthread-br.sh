@@ -70,7 +70,9 @@ function update_script() {
     -DOTBR_BACKBONE_ROUTER=ON \
     -DOTBR_SYSTEMD_UNIT_DIR=/etc/systemd/system \
     -DOT_FIREWALL=ON \
+    -DOTBR_NAT64=ON \
     -DOT_POSIX_NAT64_CIDR="192.168.255.0/24" \
+    -DOTBR_DNS_UPSTREAM_QUERY=ON \
     ..
   $STD ninja
   $STD ninja install
