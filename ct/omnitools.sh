@@ -49,7 +49,6 @@ function update_script() {
     rm -rf /opt/omnitools/node_modules
     systemctl reload nginx
     msg_ok "Published Web Assets"
-
     msg_ok "Updated successfully!"
   fi
 
