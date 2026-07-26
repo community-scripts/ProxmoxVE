@@ -522,6 +522,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Apache Tika: Switch from Debian Bookworm to Debian Trixie and replace manual install of OpenJDK with setup_java [@andygrunwald](https://github.com/andygrunwald) ([#16036](https://github.com/community-scripts/ProxmoxVE/pull/16036))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: improve OS mismatch message [@MickLesk](https://github.com/MickLesk) ([#16035](https://github.com/community-scripts/ProxmoxVE/pull/16035))
+
 ## 2026-07-25
 
 ### 🚀 Updated Scripts
