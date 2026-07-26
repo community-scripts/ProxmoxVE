@@ -810,6 +810,8 @@ msg_ok "Starting OPNsense VM (Patience this takes 20-30 minutes)"
 qm start $VMID
 sleep 90
 send_line_to_vm "root"
+sleep 2
+send_line_to_vm ""
 send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in"
 if [ -n "$WAN_BRG" ]; then
   msg_info "Adding WAN interface"
