@@ -13,12 +13,7 @@ setting_up_container
 network_check
 update_os
 
-ARCH=$(dpkg --print-architecture)
-if [[ "$ARCH" == "arm64" ]]; then
-  fetch_and_deploy_gh_release "cook" "cooklang/cookcli" "prebuild" "latest" "/opt/cookcli" "cook-aarch64-unknown-linux-musl.tar.gz"
-else
-  fetch_and_deploy_gh_release "cook" "cooklang/cookcli" "prebuild" "latest" "/opt/cookcli" "cook-x86_64-unknown-linux-gnu.tar.gz"
-fi
+fetch_and_deploy_gh_release "cook" "cooklang/cookcli" "prebuild" "latest" "/opt/cookcli" "cook-$(arch_resolve "x86_64-unknown-linux-gnu" "aarch64-unknown-linux-musl").tar.gz"
 
 msg_info "Configuring CookCLI"
 chmod +x /opt/cookcli/cook
