@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  software-properties-common \
   gdal-bin \
   tesseract-ocr \
   tesseract-ocr-eng \
