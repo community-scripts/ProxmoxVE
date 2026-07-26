@@ -41,7 +41,6 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_ffmpeg
-
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 $STD corepack enable
 
@@ -68,7 +67,6 @@ $STD yarn install
 msg_ok "Installed Node.js Dependencies"
 
 msg_info "Configuring Mastodon"
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 SECRET_KEY_BASE=$(RAILS_ENV=production bundle exec rails secret)
 OTP_SECRET=$(RAILS_ENV=production bundle exec rails secret)
 
