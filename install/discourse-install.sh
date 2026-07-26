@@ -124,9 +124,7 @@ cd /opt/discourse
 export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
 eval "$(rbenv init - bash)" 2>/dev/null || true
 export RAILS_ENV=production
-set -a
-source /opt/discourse/.env
-set +a
+set -a && source /opt/discourse/.env && set +a
 $STD bundle exec rails assets:precompile
 msg_ok "Built Discourse Assets"
 
