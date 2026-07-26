@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "shiori" "go-shiori/shiori" "prebuild" "latest" "/opt/shiori" "shiori_Linux_$(arch_resolve "x86_64" "arm")_*.tar.gz"
+fetch_and_deploy_gh_release "shiori" "go-shiori/shiori" "prebuild" "latest" "/opt/shiori" "shiori_Linux_$(arch_resolve "x86_64" "aarch64")_*.tar.gz"
 
 msg_info "Configuring Shiori"
 mkdir -p /opt/shiori/data
