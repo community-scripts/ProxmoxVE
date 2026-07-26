@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-source "$(dirname "${BASH_SOURCE[0]}")/../misc/build.func" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/build.func")
-
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: n8flx
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -31,31 +30,31 @@ function update_script() {
     exit
   fi
 
-  msg_info "Stopping ${APP}"
+  msg_info "Stopping Satisfactory"
   systemctl stop satisfactory
-  msg_ok "Stopped ${APP}"
+  msg_ok "Stopped Satisfactory"
 
   create_backup /home/steam/.config/Epic/FactoryGame/Saved
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating Satisfactory"
   if $STD runuser -u steam -- /opt/steamcmd/steamcmd.sh \
     +force_install_dir /opt/satisfactory/server \
     +login anonymous \
     +app_update 1690800 -beta public validate \
     +quit; then
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Satisfactory"
   else
     restore_backup
     systemctl start satisfactory
-    msg_error "Failed to update ${APP}"
+    msg_error "Failed to update Satisfactory"
     exit 1
   fi
 
   restore_backup
 
-  msg_info "Starting ${APP}"
+  msg_info "Starting Satisfactory"
   systemctl start satisfactory
-  msg_ok "Started ${APP}"
+  msg_ok "Started Satisfactory"
   msg_ok "Updated Successfully!"
   exit
 }
