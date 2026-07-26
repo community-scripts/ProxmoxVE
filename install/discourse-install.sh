@@ -110,13 +110,13 @@ user.change_trust_level!(TrustLevel[4])
 SiteSetting.has_login_hint = false
 SiteSetting.wizard_enabled = false
 "
-{
-  echo "Discourse Credentials"
-  echo "Admin Username: admin"
-  echo "Admin Email: admin@discourse.local"
-  echo "Admin Password: ${ADMIN_PASS}"
-  echo "Database Password: ${DISCOURSE_DB_PASS}"
-} >~/discourse.creds
+cat <<EOF >~/discourse.creds
+  Discourse Credentials
+  Admin Username: admin
+  Admin Email: admin@discourse.local
+  Admin Password: ${ADMIN_PASS}
+  Database Password: ${DISCOURSE_DB_PASS}
+EOF
 msg_ok "Created Admin Account"
 
 msg_info "Building Discourse Assets"
