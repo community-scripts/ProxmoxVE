@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$(dirname "${BASH_SOURCE[0]}")/../misc/build.func" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -41,10 +41,9 @@ function update_script() {
     sed -i "s/config.force_ssl = true/config.force_ssl = ENV.fetch('LOCAL_HTTPS', 'false') == 'true'/" /opt/mastodon/config/environments/production.rb
     sed -i "s/https = Rails.env.production? || ENV\['LOCAL_HTTPS'\] == 'true'/https = ENV.fetch('LOCAL_HTTPS', 'false') == 'true'/" /opt/mastodon/config/initializers/1_hosts.rb
 
-    export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
-    cd /opt/mastodon
-
     msg_info "Installing Ruby Dependencies"
+    cd /opt/mastodon
+    export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
     $STD bundle config set --local without 'development test'
     $STD bundle config set --local deployment 'true'
     $STD bundle install -j"$(nproc)"
