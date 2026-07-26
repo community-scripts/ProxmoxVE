@@ -23,9 +23,8 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 RUBY_VERSION="4.0.5" RUBY_INSTALL_RAILS="false" setup_ruby
-export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
-
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 
 fetch_and_deploy_gh_release "passwordpusher" "pglombardo/PasswordPusher" "tarball"
 
