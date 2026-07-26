@@ -518,6 +518,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - OPNsense VM: answer console password prompt explicitly, add inter-key delay [@MickLesk](https://github.com/MickLesk) ([#16021](https://github.com/community-scripts/ProxmoxVE/pull/16021))
     - [endurain] add node update to update script [@johanngrobe](https://github.com/johanngrobe) ([#16014](https://github.com/community-scripts/ProxmoxVE/pull/16014))
 
+  - #### 🔧 Refactor
+
+    - Apache Tika: Switch from Debian Bookworm to Debian Trixie and replace manual install of OpenJDK with setup_java [@andygrunwald](https://github.com/andygrunwald) ([#16036](https://github.com/community-scripts/ProxmoxVE/pull/16036))
+
 ## 2026-07-25
 
 ### 🚀 Updated Scripts
