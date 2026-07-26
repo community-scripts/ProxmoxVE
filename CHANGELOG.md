@@ -528,6 +528,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: improve OS mismatch message [@MickLesk](https://github.com/MickLesk) ([#16035](https://github.com/community-scripts/ProxmoxVE/pull/16035))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - Improve command description for disabling pve-enterprise repo [@Marcondiro](https://github.com/Marcondiro) ([#16020](https://github.com/community-scripts/ProxmoxVE/pull/16020))
+
 ## 2026-07-25
 
 ### 🚀 Updated Scripts
