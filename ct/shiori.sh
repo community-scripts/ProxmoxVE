@@ -36,7 +36,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/shiori/data
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shiori" "go-shiori/shiori" "prebuild" "latest" "/opt/shiori" "shiori_Linux_$(arch_resolve "x86_64" "arm")_*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shiori" "go-shiori/shiori" "prebuild" "latest" "/opt/shiori" "shiori_Linux_$(arch_resolve "x86_64" "aarch64")_*.tar.gz"
     chmod +x /opt/shiori/shiori
     restore_backup
 
