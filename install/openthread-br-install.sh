@@ -105,22 +105,24 @@ EOF
 cat <<'EOF' >/etc/default/otbr-web
 OTBR_WEB_OPTS="-I wpan0 -a 0.0.0.0 -p 80"
 EOF
-cat <<'EOF' >/usr/local/bin/otbr-init.sh
+cat <<'EOF' >/usr/local/bin/otbr-post-start.sh
 #!/bin/sh
 
-# This script is executed after the otbr-agent service has started. It can be used to perform additional configuration or initialization tasks for the OpenThread Border Router.
-# Give otbr-agent a few seconds to establish the interface and network attach
+# OpenThread Border Router post-start script
+# Run custom commands for runtime configuration options
+
+# Wait for the otbr-agent service to be initialized
 #sleep 3
 
 # Configure routing and translation features
 #ot-ctl nat64 enable
 #ot-ctl dns server upstream enable
 EOF
-chmod +x /usr/local/bin/otbr-init.sh
+chmod +x /usr/local/bin/otbr-post-start.sh
 mkdir -p /etc/systemd/system/otbr-agent.service.d
-cat <<'EOF' >/etc/systemd/system/otbr-agent.service.d/10-otbr-init.conf
+cat <<'EOF' >/etc/systemd/system/otbr-agent.service.d/10-otbr-post-start.conf
 [Service]
-ExecStartPost=/usr/local/bin/otbr-init.sh
+ExecStartPost=/usr/local/bin/otbr-post-start.sh
 EOF
 systemctl enable -q dbus rsyslog otbr-agent otbr-web
 systemctl enable -q bind9 2>/dev/null || systemctl enable -q named 2>/dev/null || true

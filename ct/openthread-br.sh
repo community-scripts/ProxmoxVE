@@ -103,27 +103,29 @@ EOF
   mv /etc/default/otbr-agent.bak /etc/default/otbr-agent
   msg_ok "Restored Configuration"
 
-  if [[ ! -f /etc/systemd/system/otbr-agent.service.d/10-otbr-init.conf ]]; then
-    msg_info "Configuring OpenThread Border Router initialization service"
-    cat <<'EOF' >/usr/local/bin/otbr-init.sh
+  if [[ ! -f /etc/systemd/system/otbr-agent.service.d/10-otbr-post-start.conf ]]; then
+    msg_info "Configuring OpenThread Border Router post-start service"
+    cat <<'EOF' >/usr/local/bin/otbr-post-start.sh
 #!/bin/sh
 
-# This script is executed after the otbr-agent service has started. It can be used to perform additional configuration or initialization tasks for the OpenThread Border Router.
-# Give otbr-agent a few seconds to establish the interface and network attach
+# OpenThread Border Router post-start script
+# Run custom commands for runtime configuration options
+
+# Wait for the otbr-agent service to be initialized
 #sleep 3
 
 # Configure routing and translation features
 #ot-ctl nat64 enable
 #ot-ctl dns server upstream enable
 EOF
-    chmod +x /usr/local/bin/otbr-init.sh
+    chmod +x /usr/local/bin/otbr-post-start.sh
     mkdir -p /etc/systemd/system/otbr-agent.service.d
-    cat <<'EOF' >/etc/systemd/system/otbr-agent.service.d/10-otbr-init.conf
+    cat <<'EOF' >/etc/systemd/system/otbr-agent.service.d/10-otbr-post-start.conf
 [Service]
-ExecStartPost=/usr/local/bin/otbr-init.sh
+ExecStartPost=/usr/local/bin/otbr-post-start.sh
 EOF
     systemctl daemon-reload
-    msg_ok "Configured OpenThread Border Router initialization service"
+    msg_ok "Configured OpenThread Border Router post-start service"
   fi
 
   msg_info "Starting Services"
