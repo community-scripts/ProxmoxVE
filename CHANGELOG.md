@@ -508,6 +508,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-27
+
+### 🆕 New Scripts
+
+  - PasswordPusher ([#16031](https://github.com/community-scripts/ProxmoxVE/pull/16031))
+
 ## 2026-07-26
 
 ### 🆕 New Scripts
