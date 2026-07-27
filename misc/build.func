@@ -936,8 +936,7 @@ resolve_os_version() {
   local ostype="${var_os:-}" want="${var_version:-}"
   [[ -n "$ostype" && -n "$want" ]] || return 0
 
-  # ARM64 pulls rootfs images from linuxcontainers.org (see download_arm64_template),
-  # so the amd64-only pveam catalog says nothing about what is obtainable there
+  # ARM64 pulls from linuxcontainers.org, the pveam catalog says nothing there
   [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]] && return 0
 
   local -a versions=()
@@ -949,8 +948,7 @@ resolve_os_version() {
     [[ "$v" == "$want" ]] && return 0
   done
 
-  # An already downloaded template counts as available even if the catalog
-  # no longer lists it (storage may not be known yet - then skip this check)
+  # Already downloaded counts as available even if the catalog dropped it
   if [[ -n "${TEMPLATE_STORAGE:-}" ]] &&
     pveam list "$TEMPLATE_STORAGE" 2>/dev/null | grep -q "/${ostype}-${want}-"; then
     return 0
@@ -996,8 +994,7 @@ resolve_os_version() {
   var_version="$candidate"
   export var_version
   msg_ok "Using ${ostype} ${var_version} instead of ${want}"
-  # Explicit: this is the last call in base_settings(), which runs under errexit
-  return 0
+  return 0 # last call in base_settings(), which runs under errexit
 }
 
 # ------------------------------------------------------------------------------
@@ -1176,10 +1173,7 @@ base_settings() {
     var_version="13"
   fi
 
-  # Last point where var_os/var_version are settled for every install path
-  # (default, advanced, user defaults, app defaults, generated) and still
-  # before any summary is printed - so an unavailable version is resolved
-  # here instead of surfacing much later as a failed template lookup.
+  # every install path passes here, and still before any summary is printed
   resolve_os_version
 }
 
@@ -6598,10 +6592,8 @@ create_lxc_container() {
       msg_ok "Template search completed"
     fi
 
-    # The version itself was already validated against the catalog by
-    # resolve_os_version() before the settings summary, so reaching this point
-    # means the version exists but no template matches the expected variant
-    # (TEMPLATE_PATTERN) - a catalog problem, not something to auto-repair here.
+    # resolve_os_version() already validated the version, so this means the
+    # variant (TEMPLATE_PATTERN) is missing - a catalog issue, don't auto-repair
     if [[ -z "$TEMPLATE" ]]; then
       msg_error "No ${TEMPLATE_PATTERN#-} template found for ${PCT_OSTYPE} ${PCT_OSVERSION}"
       msg_custom "ℹ️" "${YW}" "Refresh the catalog and check what this host offers:"
