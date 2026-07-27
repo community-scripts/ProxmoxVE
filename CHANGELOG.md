@@ -518,6 +518,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Nezha ([#16025](https://github.com/community-scripts/ProxmoxVE/pull/16025))
 - PasswordPusher ([#16031](https://github.com/community-scripts/ProxmoxVE/pull/16031))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: Handle LXC upgrade prompt cancellation [@MickLesk](https://github.com/MickLesk) ([#16058](https://github.com/community-scripts/ProxmoxVE/pull/16058))
+
 ## 2026-07-26
 
 ### 🆕 New Scripts
