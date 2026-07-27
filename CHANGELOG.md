@@ -512,7 +512,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Docspell ([#16033](https://github.com/community-scripts/ProxmoxVE/pull/16033))
+  - Mastodon ([#16029](https://github.com/community-scripts/ProxmoxVE/pull/16029))
+- Docspell ([#16033](https://github.com/community-scripts/ProxmoxVE/pull/16033))
 - Poznote ([#16030](https://github.com/community-scripts/ProxmoxVE/pull/16030))
 - Shiori ([#16026](https://github.com/community-scripts/ProxmoxVE/pull/16026))
 - Nezha ([#16025](https://github.com/community-scripts/ProxmoxVE/pull/16025))
