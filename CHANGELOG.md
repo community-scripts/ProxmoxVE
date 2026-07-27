@@ -526,6 +526,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Vikunja: pin install/update to v2.3.0 due upstream issues [@MickLesk](https://github.com/MickLesk) ([#16059](https://github.com/community-scripts/ProxmoxVE/pull/16059))
 
+  - #### ✨ New Features
+
+    - OpenThread-BR: Add runtime configuration options [@tomfrenzel](https://github.com/tomfrenzel) ([#16038](https://github.com/community-scripts/ProxmoxVE/pull/16038))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
