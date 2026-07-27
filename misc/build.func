@@ -6486,20 +6486,24 @@ create_lxc_container() {
     if [[ -z "$TEMPLATE" ]]; then
       msg_warn "No template found for ${PCT_OSTYPE} ${PCT_OSVERSION}, searching for alternatives..."
 
-      # Get all available versions for this OS type
+      # Get all available versions for this OS type.
+      # `pveam available` prints "<section>\t<template>", so the name is field 2.
+      # The trailing `|| true` is required: without a match the pipeline exits non-zero
+      # under pipefail, the ERR trap fires inside the process substitution and mapfile
+      # would swallow the error handler's log dump as if it were version entries.
       AVAILABLE_VERSIONS=()
       mapfile -t AVAILABLE_VERSIONS < <(
         pveam available -section system 2>/dev/null |
           grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-          awk -F'\t' '{print $1}' |
-          grep "^${PCT_OSTYPE}-" |
-          sed -E "s/.*${PCT_OSTYPE}-([0-9]+(\.[0-9]+)?).*/\1/" |
-          sort -u -V 2>/dev/null
+          awk '{print $2}' |
+          grep -E "^${PCT_OSTYPE}-" |
+          sed -E "s/^${PCT_OSTYPE}-([0-9]+(\.[0-9]+)?).*/\1/" |
+          sort -u -V || true
       )
 
       if [[ ${#AVAILABLE_VERSIONS[@]} -gt 0 ]]; then
         echo ""
-        echo "${BL}Available ${PCT_OSTYPE} versions:${CL}"
+        echo -e "${BL}Available ${PCT_OSTYPE} versions:${CL}"
         for i in "${!AVAILABLE_VERSIONS[@]}"; do
           echo "  [$((i + 1))] ${AVAILABLE_VERSIONS[$i]}"
         done
@@ -6551,13 +6555,15 @@ create_lxc_container() {
       if [[ -z "$TEMPLATE" ]]; then
         msg_error "Template ${PCT_OSTYPE} ${PCT_OSVERSION} not available"
 
-        # Get available versions
+        # Get available versions (see the note above: field 2 holds the template name,
+        # and the pipeline must not fail the ERR trap when nothing matches)
         mapfile -t AVAILABLE_VERSIONS < <(
           pveam available -section system 2>/dev/null |
-            grep "^${PCT_OSTYPE}-" |
-            sed -E 's/.*'"${PCT_OSTYPE}"'-([0-9]+\.[0-9]+).*/\1/' |
-            grep -E '^[0-9]+\.[0-9]+$' |
-            sort -u -V 2>/dev/null || sort -u
+            grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
+            awk '{print $2}' |
+            grep -E "^${PCT_OSTYPE}-" |
+            sed -E "s/^${PCT_OSTYPE}-([0-9]+(\.[0-9]+)?).*/\1/" |
+            sort -u -V || true
         )
 
         if [[ ${#AVAILABLE_VERSIONS[@]} -gt 0 ]]; then
