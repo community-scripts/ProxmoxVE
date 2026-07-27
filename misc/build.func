@@ -6070,14 +6070,14 @@ create_lxc_container() {
       _has_fallback_option=true
       echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packages on your host!"
       echo "  [2] Use an older ${PCT_OSTYPE} template instead (may not work with all scripts)"
-      echo "  [3] Ignore"
-      echo "  [4] Cancel"
+      echo "  [3] Ignore (continue without upgrading)"
+      echo "  [4] Cancel (abort the script)"
       echo
       read -rp "Select option [1/2/3/4]: " _ans </dev/tty
     else
       echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packages on your host!"
-      echo "  [2] Ignore"
-      echo "  [3] Cancel"
+      echo "  [2] Ignore (continue without upgrading)"
+      echo "  [3] Cancel (abort the script)"
       echo
       read -rp "Select option [1/2/3]: " _ans </dev/tty
     fi
@@ -6101,7 +6101,8 @@ create_lxc_container() {
         return 4
         ;;
       *)
-        return 4
+        # Unrecognized/empty input: treat as ignore, never as an implicit cancel
+        return 2
         ;;
       esac
     else
@@ -6112,8 +6113,12 @@ create_lxc_container() {
       2)
         return 2
         ;;
-      *)
+      3)
         return 4
+        ;;
+      *)
+        # Unrecognized/empty input: treat as ignore, never as an implicit cancel
+        return 2
         ;;
       esac
     fi
@@ -6701,7 +6706,12 @@ create_lxc_container() {
   if [[ "$PCT_OSTYPE" == "debian" ]]; then
     OSVER="$(parse_template_osver "$TEMPLATE")"
     if [[ -n "$OSVER" ]]; then
-      offer_lxc_stack_upgrade_and_maybe_retry "no" || true
+      local _lxc_stack_rc=0
+      offer_lxc_stack_upgrade_and_maybe_retry "no" || _lxc_stack_rc=$?
+      # 4 = user chose "Cancel" -> honor it and abort before creating the container
+      if [[ $_lxc_stack_rc -eq 4 ]]; then
+        exit_script
+      fi
     fi
   fi
 
