@@ -207,7 +207,6 @@ server {
   }
 }
 EOF
-
 ln -sf /etc/nginx/sites-available/discourse /etc/nginx/sites-enabled/discourse
 rm -f /etc/nginx/sites-enabled/default
 $STD nginx -t
