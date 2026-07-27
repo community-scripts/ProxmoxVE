@@ -896,6 +896,111 @@ choose_and_set_storage_for_file() {
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# Distinct versions of OS type $1 in the cached pveam catalog (no network).
+# `pveam available` prints "<section>\t<template>" - the name is field 2.
+# Must never fail: callers capture this via mapfile < <(...).
+# ------------------------------------------------------------------------------
+_list_os_versions() {
+  local ostype="${1:-}"
+  [[ -n "$ostype" ]] || return 0
+  pveam available -section system 2>/dev/null |
+    grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
+    awk '{print $2}' |
+    sed -nE "s/^${ostype}-([0-9]+(\.[0-9]+)?).*/\1/p" |
+    sort -u -V || true
+}
+
+# ------------------------------------------------------------------------------
+# Catalog templates matching prefix $1 and variant $2 ("debian-13" +
+# "-standard_"), oldest first. Same no-fail contract as _list_os_versions.
+# ------------------------------------------------------------------------------
+_list_templates() {
+  local search="${1:-}" pattern="${2:-}"
+  [[ -n "$search" ]] || return 0
+  pveam available -section system 2>/dev/null |
+    grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
+    awk '{print $2}' |
+    grep -E "^${search}.*${pattern}" |
+    sort -t - -k 2 -V || true
+}
+
+# ------------------------------------------------------------------------------
+# Maps var_version onto a version this host's catalog actually has, before the
+# settings summary is printed. Availability comes from `pveam available` only -
+# never inferred from the PVE release (an updated 8.4 may carry templates an
+# older 8.x never saw, and entries drop out again at EOL).
+# Picks the nearest version, newer wins on a tie. Interactive: menu with that
+# candidate preselected; unattended: takes it with a warning.
+# ------------------------------------------------------------------------------
+resolve_os_version() {
+  local ostype="${var_os:-}" want="${var_version:-}"
+  [[ -n "$ostype" && -n "$want" ]] || return 0
+
+  # ARM64 pulls rootfs images from linuxcontainers.org (see download_arm64_template),
+  # so the amd64-only pveam catalog says nothing about what is obtainable there
+  [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]] && return 0
+
+  local -a versions=()
+  mapfile -t versions < <(_list_os_versions "$ostype")
+  [[ ${#versions[@]} -gt 0 ]] || return 0
+
+  local v
+  for v in "${versions[@]}"; do
+    [[ "$v" == "$want" ]] && return 0
+  done
+
+  # An already downloaded template counts as available even if the catalog
+  # no longer lists it (storage may not be known yet - then skip this check)
+  if [[ -n "${TEMPLATE_STORAGE:-}" ]] &&
+    pveam list "$TEMPLATE_STORAGE" 2>/dev/null | grep -q "/${ostype}-${want}-"; then
+    return 0
+  fi
+
+  local candidate
+  candidate=$(printf '%s\n' "${versions[@]}" | awk -v want="$want" '
+    function num(v,   a) { split(v, a, "."); return a[1] * 10000 + (a[2] + 0) }
+    BEGIN { w = num(want); best = ""; bestd = -1 }
+    {
+      d = num($0) - w
+      ad = (d < 0) ? -d : d
+      if (bestd < 0 || ad < bestd || (ad == bestd && d > 0)) { bestd = ad; best = $0 }
+    }
+    END { print best }
+  ')
+  [[ -n "$candidate" ]] || return 0
+
+  msg_warn "${ostype^} ${want} is not in this host's template catalog (PVE ${PVEVERSION:-unknown})"
+
+  if [[ "${PHS_SILENT:-0}" != "1" ]] && command -v whiptail &>/dev/null && [ -t 0 ] && [[ "$TERM" != "dumb" ]]; then
+    local -a menu=()
+    while read -r v; do
+      if [[ "$v" == "$candidate" ]]; then
+        menu+=("$v" "closest to ${want} (recommended)")
+      else
+        menu+=("$v" " ")
+      fi
+    done < <(printf '%s\n' "${versions[@]}" | sort -rV)
+
+    local choice
+    choice=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+      --title "OS VERSION NOT AVAILABLE" \
+      --ok-button "Use" --cancel-button "Exit" \
+      --menu "\n${ostype^} ${want} is not available on this Proxmox host.\n\nSelect the version to use instead:" \
+      20 70 8 "${menu[@]}" --default-item "$candidate" \
+      3>&1 1>&2 2>&3) || exit_script
+    candidate="$choice"
+  else
+    msg_warn "Unattended run - continuing with ${ostype} ${candidate}"
+  fi
+
+  var_version="$candidate"
+  export var_version
+  msg_ok "Using ${ostype} ${var_version} instead of ${want}"
+  # Explicit: this is the last call in base_settings(), which runs under errexit
+  return 0
+}
+
+# ------------------------------------------------------------------------------
 # base_settings()
 #
 # - Defines all base/default variables for container creation
@@ -1068,8 +1173,14 @@ base_settings() {
     var_os="debian"
   fi
   if [ -z "$var_version" ]; then
-    var_version="12"
+    var_version="13"
   fi
+
+  # Last point where var_os/var_version are settled for every install path
+  # (default, advanced, user defaults, app defaults, generated) and still
+  # before any summary is printed - so an unavailable version is resolved
+  # here instead of surfacing much later as a failed template lookup.
+  resolve_os_version
 }
 
 # ------------------------------------------------------------------------------
@@ -6070,14 +6181,14 @@ create_lxc_container() {
       _has_fallback_option=true
       echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packages on your host!"
       echo "  [2] Use an older ${PCT_OSTYPE} template instead (may not work with all scripts)"
-      echo "  [3] Ignore"
-      echo "  [4] Cancel"
+      echo "  [3] Ignore (continue without upgrading)"
+      echo "  [4] Cancel (abort the script)"
       echo
       read -rp "Select option [1/2/3/4]: " _ans </dev/tty
     else
       echo "  [1] Run host upgrade now (recommended). WARNING: this runs apt upgrade and updates all Packages on your host!"
-      echo "  [2] Ignore"
-      echo "  [3] Cancel"
+      echo "  [2] Ignore (continue without upgrading)"
+      echo "  [3] Cancel (abort the script)"
       echo
       read -rp "Select option [1/2/3]: " _ans </dev/tty
     fi
@@ -6101,7 +6212,8 @@ create_lxc_container() {
         return 4
         ;;
       *)
-        return 4
+        # empty/invalid: ignore, never an implicit cancel
+        return 2
         ;;
       esac
     else
@@ -6112,8 +6224,12 @@ create_lxc_container() {
       2)
         return 2
         ;;
-      *)
+      3)
         return 4
+        ;;
+      *)
+        # empty/invalid: ignore, never an implicit cancel
+        return 2
         ;;
       esac
     fi
@@ -6474,7 +6590,7 @@ create_lxc_container() {
       fi
 
       ONLINE_TEMPLATES=()
-      mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
+      mapfile -t ONLINE_TEMPLATES < <(_list_templates "$TEMPLATE_SEARCH" "$TEMPLATE_PATTERN")
       [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
 
       TEMPLATE="$ONLINE_TEMPLATE"
@@ -6482,62 +6598,15 @@ create_lxc_container() {
       msg_ok "Template search completed"
     fi
 
-    # If still no template, try to find alternatives
+    # The version itself was already validated against the catalog by
+    # resolve_os_version() before the settings summary, so reaching this point
+    # means the version exists but no template matches the expected variant
+    # (TEMPLATE_PATTERN) - a catalog problem, not something to auto-repair here.
     if [[ -z "$TEMPLATE" ]]; then
-      msg_warn "No template found for ${PCT_OSTYPE} ${PCT_OSVERSION}, searching for alternatives..."
-
-      # Get all available versions for this OS type.
-      # `pveam available` prints "<section>\t<template>", so the name is field 2.
-      # The trailing `|| true` is required: without a match the pipeline exits non-zero
-      # under pipefail, the ERR trap fires inside the process substitution and mapfile
-      # would swallow the error handler's log dump as if it were version entries.
-      AVAILABLE_VERSIONS=()
-      mapfile -t AVAILABLE_VERSIONS < <(
-        pveam available -section system 2>/dev/null |
-          grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-          awk '{print $2}' |
-          grep -E "^${PCT_OSTYPE}-" |
-          sed -E "s/^${PCT_OSTYPE}-([0-9]+(\.[0-9]+)?).*/\1/" |
-          sort -u -V || true
-      )
-
-      if [[ ${#AVAILABLE_VERSIONS[@]} -gt 0 ]]; then
-        echo ""
-        echo -e "${BL}Available ${PCT_OSTYPE} versions:${CL}"
-        for i in "${!AVAILABLE_VERSIONS[@]}"; do
-          echo "  [$((i + 1))] ${AVAILABLE_VERSIONS[$i]}"
-        done
-        echo ""
-        read -p "Select version [1-${#AVAILABLE_VERSIONS[@]}] or press Enter to cancel: " choice </dev/tty
-
-        if [[ "$choice" =~ ^[0-9]+$ ]] && [[ "$choice" -ge 1 ]] && [[ "$choice" -le ${#AVAILABLE_VERSIONS[@]} ]]; then
-          PCT_OSVERSION="${AVAILABLE_VERSIONS[$((choice - 1))]}"
-          TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION}"
-
-          ONLINE_TEMPLATES=()
-          mapfile -t ONLINE_TEMPLATES < <(
-            pveam available -section system 2>/dev/null |
-              grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-              awk '{print $2}' |
-              grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
-              sort -t - -k 2 -V 2>/dev/null || true
-          )
-
-          if [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]]; then
-            TEMPLATE="${ONLINE_TEMPLATES[-1]}"
-            TEMPLATE_SOURCE="online"
-          else
-            msg_error "No templates available for ${PCT_OSTYPE} ${PCT_OSVERSION}"
-            exit 225
-          fi
-        else
-          msg_custom "🚫" "${YW}" "Installation cancelled"
-          exit 0
-        fi
-      else
-        msg_error "No ${PCT_OSTYPE} templates available"
-        exit 225
-      fi
+      msg_error "No ${TEMPLATE_PATTERN#-} template found for ${PCT_OSTYPE} ${PCT_OSVERSION}"
+      msg_custom "ℹ️" "${YW}" "Refresh the catalog and check what this host offers:"
+      echo -e "${TAB}  pveam update && pveam available -section system | grep '${PCT_OSTYPE}-'"
+      exit 225
     fi
 
     TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || true)"
@@ -6552,94 +6621,9 @@ create_lxc_container() {
     fi
 
     [[ -n "$TEMPLATE_PATH" ]] || {
-      if [[ -z "$TEMPLATE" ]]; then
-        msg_error "Template ${PCT_OSTYPE} ${PCT_OSVERSION} not available"
-
-        # Get available versions (see the note above: field 2 holds the template name,
-        # and the pipeline must not fail the ERR trap when nothing matches)
-        mapfile -t AVAILABLE_VERSIONS < <(
-          pveam available -section system 2>/dev/null |
-            grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-            awk '{print $2}' |
-            grep -E "^${PCT_OSTYPE}-" |
-            sed -E "s/^${PCT_OSTYPE}-([0-9]+(\.[0-9]+)?).*/\1/" |
-            sort -u -V || true
-        )
-
-        if [[ ${#AVAILABLE_VERSIONS[@]} -gt 0 ]]; then
-          echo -e "\n${BL}Available versions:${CL}"
-          for i in "${!AVAILABLE_VERSIONS[@]}"; do
-            echo "  [$((i + 1))] ${AVAILABLE_VERSIONS[$i]}"
-          done
-
-          echo ""
-          read -p "Select version [1-${#AVAILABLE_VERSIONS[@]}] or press Enter to exit: " choice </dev/tty
-
-          if [[ "$choice" =~ ^[0-9]+$ ]] && [[ "$choice" -ge 1 ]] && [[ "$choice" -le ${#AVAILABLE_VERSIONS[@]} ]]; then
-            export var_version="${AVAILABLE_VERSIONS[$((choice - 1))]}"
-            export PCT_OSVERSION="$var_version"
-            msg_ok "Switched to ${PCT_OSTYPE} ${var_version}"
-
-            # Retry template search with new version
-            TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
-
-            mapfile -t LOCAL_TEMPLATES < <(
-              pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
-                awk -v search="${TEMPLATE_SEARCH}-" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
-                sed 's|.*/||' | sort -t - -k 2 -V
-            )
-            mapfile -t ONLINE_TEMPLATES < <(
-              pveam available -section system 2>/dev/null |
-                grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-                awk '{print $2}' |
-                grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
-                sort -t - -k 2 -V 2>/dev/null || true
-            )
-            ONLINE_TEMPLATE=""
-            [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
-
-            if [[ ${#LOCAL_TEMPLATES[@]} -gt 0 ]]; then
-              TEMPLATE="${LOCAL_TEMPLATES[-1]}"
-              TEMPLATE_SOURCE="local"
-            else
-              TEMPLATE="$ONLINE_TEMPLATE"
-              TEMPLATE_SOURCE="online"
-            fi
-
-            TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || true)"
-            if [[ -z "$TEMPLATE_PATH" ]]; then
-              TEMPLATE_BASE=$(awk -v s="$TEMPLATE_STORAGE" '$1==s {f=1} f && /path/ {print $2; exit}' /etc/pve/storage.cfg)
-              [[ -n "$TEMPLATE_BASE" ]] && TEMPLATE_PATH="$TEMPLATE_BASE/template/cache/$TEMPLATE"
-            fi
-
-            # If we still don't have a path but have a valid template name, construct it
-            if [[ -z "$TEMPLATE_PATH" && -n "$TEMPLATE" ]]; then
-              TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
-            fi
-
-            [[ -n "$TEMPLATE_PATH" ]] || {
-              msg_error "Template still not found after version change"
-              exit 220
-            }
-          else
-            msg_custom "🚫" "${YW}" "Installation cancelled"
-            exit 0
-          fi
-        else
-          msg_error "No ${PCT_OSTYPE} templates available"
-          exit 220
-        fi
-      fi
+      msg_error "Could not resolve a storage path for template ${TEMPLATE}"
+      exit 220
     }
-
-    # Validate that we found a template
-    if [[ -z "$TEMPLATE" ]]; then
-      msg_error "No template found for ${PCT_OSTYPE} ${PCT_OSVERSION}"
-      msg_custom "ℹ️" "${YW}" "Please check:"
-      msg_custom "  •" "${YW}" "Is pveam catalog available? (run: pveam available -section system)"
-      msg_custom "  •" "${YW}" "Does the template exist for your OS version?"
-      exit 225
-    fi
 
     msg_ok "Template ${BL}$TEMPLATE${CL} [$TEMPLATE_SOURCE]"
     msg_debug "Resolved TEMPLATE_PATH=$TEMPLATE_PATH"
@@ -6707,7 +6691,10 @@ create_lxc_container() {
   if [[ "$PCT_OSTYPE" == "debian" ]]; then
     OSVER="$(parse_template_osver "$TEMPLATE")"
     if [[ -n "$OSVER" ]]; then
-      offer_lxc_stack_upgrade_and_maybe_retry "no" || true
+      local _lxc_stack_rc=0
+      offer_lxc_stack_upgrade_and_maybe_retry "no" || _lxc_stack_rc=$?
+      # 4 = cancel; without this the container was created anyway
+      [[ $_lxc_stack_rc -eq 4 ]] && exit_script
     fi
   fi
 

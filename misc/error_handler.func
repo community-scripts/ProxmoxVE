@@ -376,10 +376,12 @@ error_handler() {
     active_log="$BUILD_LOG"
   fi
 
+  # stderr, not stdout: the trap can fire inside a $(...) or < <(...) capture,
+  # and a caller reading that stream must never ingest this dump as data.
   if [[ -n "$active_log" && -s "$active_log" ]]; then
-    echo -e "\n${TAB}--- Last 20 lines of log ---"
-    tail -n 20 "$active_log"
-    echo -e "${TAB}-----------------------------------\n"
+    echo -e "\n${TAB}--- Last 20 lines of log ---" >&2
+    tail -n 20 "$active_log" >&2
+    echo -e "${TAB}-----------------------------------\n" >&2
   fi
 
   # ── Node.js heap OOM detection with actionable guidance ──
