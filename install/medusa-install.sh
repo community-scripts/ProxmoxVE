@@ -19,12 +19,16 @@ $STD apt install -y \
   git-core \
   mediainfo
 
-cat <<EOF >/etc/apt/sources.list.d/non-free.list
-deb https://deb.debian.org/debian trixie main contrib non-free non-free-firmware
+cat <<EOF >/etc/apt/sources.list.d/non-free.sources
+Types: deb
+URIs: https://deb.debian.org/debian
+Suites: trixie
+Components: non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
 $STD apt update
 $STD apt install -y unrar
-rm /etc/apt/sources.list.d/non-free.list
+rm /etc/apt/sources.list.d/non-free.sources
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Medusa"
