@@ -376,8 +376,7 @@ error_handler() {
     active_log="$BUILD_LOG"
   fi
 
-  # stderr, not stdout: the trap can fire inside a $(...) or < <(...) capture,
-  # and a caller reading that stream must never ingest this dump as data.
+  # stderr: the trap can fire inside a $(...) capture that would eat this as data
   if [[ -n "$active_log" && -s "$active_log" ]]; then
     echo -e "\n${TAB}--- Last 20 lines of log ---" >&2
     tail -n 20 "$active_log" >&2
