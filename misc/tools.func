@@ -7039,11 +7039,11 @@ setup_meilisearch() {
       fi
 
       if [[ "$NEEDS_MIGRATION" == "true" ]]; then
-        # One-time in-place migration via --experimental-dumpless-upgrade.
+        # One-time in-place migration via --experimental-dumpless-upgrade (replaced with --upgrade-db)
         # Meilisearch migrates the on-disk DB during this startup; subsequent
         # normal (systemd) starts run without the flag.
         msg_info "Migrating data in place (dumpless upgrade ${CURRENT_VERSION} → ${NEW_VERSION})"
-        /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --experimental-dumpless-upgrade >/dev/null 2>&1 &
+        /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --upgrade-db >/dev/null 2>&1 &
         local MEILI_PID=$!
 
         local MAX_WAIT=300
