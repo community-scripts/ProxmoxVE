@@ -512,7 +512,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Shiori ([#16026](https://github.com/community-scripts/ProxmoxVE/pull/16026))
+  - Poznote ([#16030](https://github.com/community-scripts/ProxmoxVE/pull/16030))
+- Shiori ([#16026](https://github.com/community-scripts/ProxmoxVE/pull/16026))
 - Nezha ([#16025](https://github.com/community-scripts/ProxmoxVE/pull/16025))
 - PasswordPusher ([#16031](https://github.com/community-scripts/ProxmoxVE/pull/16031))
 
