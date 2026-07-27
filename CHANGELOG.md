@@ -526,6 +526,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Mylar3 & Medusa: use trixie non-free for unrar, not bookworm [@angusmaul](https://github.com/angusmaul) ([#16072](https://github.com/community-scripts/ProxmoxVE/pull/16072))
     - Vikunja: pin install/update to v2.3.0 due upstream issues [@MickLesk](https://github.com/MickLesk) ([#16059](https://github.com/community-scripts/ProxmoxVE/pull/16059))
 
   - #### ✨ New Features
