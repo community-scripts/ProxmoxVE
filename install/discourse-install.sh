@@ -209,7 +209,6 @@ server {
 EOF
 ln -sf /etc/nginx/sites-available/discourse /etc/nginx/sites-enabled/discourse
 rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
 $STD systemctl enable --now nginx
 $STD systemctl reload nginx
 msg_ok "Configured Nginx"
