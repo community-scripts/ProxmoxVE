@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
 
-  RELEASE="$( [[ -f "$HOME/.vikunja" ]] && cat "$HOME/.vikunja" 2>/dev/null || [[ -f /opt/Vikunja_version ]] && cat /opt/Vikunja_version 2>/dev/null || true)"
-  if [[ -z "$RELEASE" ]] || [[ "$RELEASE" == "unstable" ]] || dpkg --compare-versions "${RELEASE:-0.0.0}" lt "1.0.0"; then
-    msg_warn "You are upgrading from Vikunja '$RELEASE'."
+  INSTALLED_VERSION="$( [[ -f "$HOME/.vikunja" ]] && cat "$HOME/.vikunja" 2>/dev/null || [[ -f /opt/Vikunja_version ]] && cat /opt/Vikunja_version 2>/dev/null || true)"
+  if [[ -z "$INSTALLED_VERSION" ]] || [[ "$INSTALLED_VERSION" == "unstable" ]] || dpkg --compare-versions "${INSTALLED_VERSION:-0.0.0}" lt "1.0.0"; then
+    msg_warn "You are upgrading from Vikunja '$INSTALLED_VERSION'."
     msg_warn "This requires MANUAL config changes in /etc/vikunja/config.yml."
     msg_warn "See: https://vikunja.io/changelog/whats-new-in-vikunja-1.0.0/#config-changes"
 
