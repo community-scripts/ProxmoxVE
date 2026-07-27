@@ -512,8 +512,25 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Nezha ([#16025](https://github.com/community-scripts/ProxmoxVE/pull/16025))
+  - Discourse ([#16024](https://github.com/community-scripts/ProxmoxVE/pull/16024))
+- Mastodon ([#16029](https://github.com/community-scripts/ProxmoxVE/pull/16029))
+- Docspell ([#16033](https://github.com/community-scripts/ProxmoxVE/pull/16033))
+- Poznote ([#16030](https://github.com/community-scripts/ProxmoxVE/pull/16030))
+- Shiori ([#16026](https://github.com/community-scripts/ProxmoxVE/pull/16026))
+- Nezha ([#16025](https://github.com/community-scripts/ProxmoxVE/pull/16025))
 - PasswordPusher ([#16031](https://github.com/community-scripts/ProxmoxVE/pull/16031))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Vikunja: pin install/update to v2.3.0 due upstream issues [@MickLesk](https://github.com/MickLesk) ([#16059](https://github.com/community-scripts/ProxmoxVE/pull/16059))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: Handle LXC upgrade prompt cancellation [@MickLesk](https://github.com/MickLesk) ([#16058](https://github.com/community-scripts/ProxmoxVE/pull/16058))
 
 ## 2026-07-26
 

@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
 
-  RELEASE="$( [[ -f "$HOME/.vikunja" ]] && cat "$HOME/.vikunja" 2>/dev/null || [[ -f /opt/Vikunja_version ]] && cat /opt/Vikunja_version 2>/dev/null || true)"
-  if [[ -z "$RELEASE" ]] || [[ "$RELEASE" == "unstable" ]] || dpkg --compare-versions "${RELEASE:-0.0.0}" lt "1.0.0"; then
-    msg_warn "You are upgrading from Vikunja '$RELEASE'."
+  INSTALLED_VERSION="$( [[ -f "$HOME/.vikunja" ]] && cat "$HOME/.vikunja" 2>/dev/null || [[ -f /opt/Vikunja_version ]] && cat /opt/Vikunja_version 2>/dev/null || true)"
+  if [[ -z "$INSTALLED_VERSION" ]] || [[ "$INSTALLED_VERSION" == "unstable" ]] || dpkg --compare-versions "${INSTALLED_VERSION:-0.0.0}" lt "1.0.0"; then
+    msg_warn "You are upgrading from Vikunja '$INSTALLED_VERSION'."
     msg_warn "This requires MANUAL config changes in /etc/vikunja/config.yml."
     msg_warn "See: https://vikunja.io/changelog/whats-new-in-vikunja-1.0.0/#config-changes"
 
@@ -46,7 +46,8 @@ function update_script() {
     [[ "$CONFIRM2" =~ ^[yY]$ ]] || exit 0
   fi
 
-  if check_for_gh_release "vikunja" "go-vikunja/vikunja"; then
+  RELEASE="v2.3.0"
+  if check_for_gh_release "vikunja" "go-vikunja/vikunja" "${RELEASE}" "v2.4.0 is killed at startup by the systemd SystemCallFilter shipped in the .deb (upstream go-vikunja/vikunja#3252); pinned until a fixed release is out"; then
     echo
     msg_warn "The package update may include config file changes."
     echo -e "${TAB}${YW}How do you want to handle /etc/vikunja/config.yml?${CL}"
@@ -65,7 +66,7 @@ function update_script() {
     systemctl stop vikunja
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary" "latest" "" "vikunja-*-$(arch_resolve "x86_64" "aarch64").deb"
+    fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary" "${RELEASE}" "" "vikunja-*-$(arch_resolve "x86_64" "aarch64").deb"
     $STD systemctl daemon-reload
 
     msg_info "Starting Service"

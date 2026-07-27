@@ -6206,7 +6206,7 @@ create_lxc_container() {
         return 4
         ;;
       *)
-        # empty/invalid: ignore, never an implicit cancel
+        # Unrecognized/empty input: treat as ignore, never as an implicit cancel
         return 2
         ;;
       esac
@@ -6222,7 +6222,7 @@ create_lxc_container() {
         return 4
         ;;
       *)
-        # empty/invalid: ignore, never an implicit cancel
+        # Unrecognized/empty input: treat as ignore, never as an implicit cancel
         return 2
         ;;
       esac
@@ -6685,8 +6685,10 @@ create_lxc_container() {
     if [[ -n "$OSVER" ]]; then
       local _lxc_stack_rc=0
       offer_lxc_stack_upgrade_and_maybe_retry "no" || _lxc_stack_rc=$?
-      # 4 = cancel; without this the container was created anyway
-      [[ $_lxc_stack_rc -eq 4 ]] && exit_script
+      # 4 = user chose "Cancel" -> honor it and abort before creating the container
+      if [[ $_lxc_stack_rc -eq 4 ]]; then
+        exit_script
+      fi
     fi
   fi
 
