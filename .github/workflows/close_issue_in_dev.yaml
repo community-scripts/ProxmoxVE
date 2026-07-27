@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout target repo (merge commit)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: community-scripts/ProxmoxVE
           ref: ${{ github.event.pull_request.merge_commit_sha }}

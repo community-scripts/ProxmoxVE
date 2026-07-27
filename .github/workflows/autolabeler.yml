@@ -16,13 +16,13 @@ jobs:
       CONFIG_PATH: .github/autolabeler-config.json
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install dependencies
         run: npm install minimatch
 
       - name: Label PR based on file changes, title, and PR template
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs').promises;
