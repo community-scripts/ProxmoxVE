@@ -512,7 +512,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - CookCLI ([#16028](https://github.com/community-scripts/ProxmoxVE/pull/16028))
+  - Unpackerr ([#16034](https://github.com/community-scripts/ProxmoxVE/pull/16034))
+- CookCLI ([#16028](https://github.com/community-scripts/ProxmoxVE/pull/16028))
 - Discourse ([#16024](https://github.com/community-scripts/ProxmoxVE/pull/16024))
 - Mastodon ([#16029](https://github.com/community-scripts/ProxmoxVE/pull/16029))
 - Docspell ([#16033](https://github.com/community-scripts/ProxmoxVE/pull/16033))
