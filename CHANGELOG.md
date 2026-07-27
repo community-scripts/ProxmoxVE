@@ -540,6 +540,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: Handle LXC upgrade prompt cancellation [@MickLesk](https://github.com/MickLesk) ([#16058](https://github.com/community-scripts/ProxmoxVE/pull/16058))
 
+  - #### ✨ New Features
+
+    - core: fix OS version fallback when the host catalog lacks the requested version & harden template validation [@MickLesk](https://github.com/MickLesk) ([#16068](https://github.com/community-scripts/ProxmoxVE/pull/16068))
+
 ## 2026-07-26
 
 ### 🆕 New Scripts
