@@ -29,6 +29,18 @@ function update_script() {
     exit
   fi
 
+  if grep -qs "packages.microsoft.com/debian/12" /etc/apt/sources.list.d/microsoft*.sources; then
+    msg_info "Migrating Microsoft Repository to Debian 13"
+    setup_deb822_repo \
+      "microsoft" \
+      "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+      "https://packages.microsoft.com/debian/13/prod/" \
+      "trixie" \
+      "main"
+    rm -f /usr/share/keyrings/microsoft-prod.gpg
+    msg_ok "Migrated Microsoft Repository to Debian 13"
+  fi
+
   if check_for_gh_release "UmlautAdaptarr" "PCJones/Umlautadaptarr"; then
     msg_info "Stopping Service"
     systemctl stop umlautadaptarr
