@@ -94,9 +94,6 @@ function update() {
     fetch_and_deploy_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-exporter" "binary" "latest"
   fi
 
-  # Always refresh the service definition so newly introduced flags
-  # (e.g. --paperless_header / --collectors) are applied, regardless of
-  # whether a new binary release was found above.
   msg_info "Refreshing service configuration"
   write_service
   msg_ok "Refreshed service configuration"
