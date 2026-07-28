@@ -8174,6 +8174,88 @@ EOF
 }
 
 # ------------------------------------------------------------------------------
+# Resolves the path of the active PHP-FPM unix socket.
+#
+# Description:
+#   - Prefers the socket of ${PHP_VERSION} when that variable is set, which is
+#     the deterministic case directly after setup_php ran
+#   - Falls back to the highest version found below /run/php
+#   - Webserver-agnostic: works for nginx (fastcgi_pass) and Caddy (php_fastcgi)
+#
+# Notes:
+#   - Prints the path to stdout, diagnostics go to stderr, so the result can be
+#     captured via command substitution
+#   - Deliberately avoids `head -n1`: it closes the pipe early and with
+#     `set -o pipefail` (see catch_errors) SIGPIPE would abort the install
+#   - php-fpm has to be running, the socket only exists after the service start
+#
+# Usage:
+#   PHP_SOCK=$(get_php_fpm_socket)
+#   echo "fastcgi_pass unix:${PHP_SOCK};"
+# ------------------------------------------------------------------------------
+get_php_fpm_socket() {
+  local sock
+
+  if [[ -n "${PHP_VERSION:-}" && -S "/run/php/php${PHP_VERSION}-fpm.sock" ]]; then
+    echo "/run/php/php${PHP_VERSION}-fpm.sock"
+    return 0
+  fi
+
+  sock=$(find /run/php -maxdepth 1 -name "php*-fpm.sock" -type s 2>/dev/null | sort -V | tail -1)
+
+  if [[ -z "$sock" ]]; then
+    msg_error "No active PHP-FPM socket found under /run/php"
+    return 1
+  fi
+
+  echo "$sock"
+}
+
+# ------------------------------------------------------------------------------
+# Enables an nginx site, validates the configuration and reloads the service.
+#
+# Description:
+#   - Removes the packaged default vhost (idempotent, unlike `unlink`)
+#   - Links the site from sites-available into sites-enabled
+#   - Runs `nginx -t` and aborts before a broken config reaches a running service
+#   - Enables the unit so nginx survives a reboot, then restarts it via
+#     safe_service_restart so a failed start is actually reported
+#
+# Variables:
+#   $1 - site name, has to exist as /etc/nginx/sites-available/<name>
+#
+# Usage:
+#   cat <<EOF >/etc/nginx/sites-available/myapp
+#   ...
+#   EOF
+#   nginx_enable_site myapp
+# ------------------------------------------------------------------------------
+nginx_enable_site() {
+  local site="${1:-}"
+
+  if [[ -z "$site" ]]; then
+    msg_error "nginx_enable_site: no site name given"
+    return 1
+  fi
+
+  if [[ ! -f "/etc/nginx/sites-available/${site}" ]]; then
+    msg_error "nginx site config not found: /etc/nginx/sites-available/${site}"
+    return 1
+  fi
+
+  rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
+  ln -sf "/etc/nginx/sites-available/${site}" "/etc/nginx/sites-enabled/${site}"
+
+  if ! $STD nginx -t; then
+    msg_error "nginx configuration test failed for site '${site}'"
+    return 1
+  fi
+
+  $STD systemctl enable -q nginx
+  safe_service_restart nginx
+}
+
+# ------------------------------------------------------------------------------
 # Installs or upgrades PostgreSQL and optional extensions/modules.
 #
 # Description:
