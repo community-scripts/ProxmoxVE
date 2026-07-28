@@ -520,6 +520,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(bazarr): store data in /var/lib/bazarr instead of inside /opt/bazarr [@angusmaul](https://github.com/angusmaul) ([#16098](https://github.com/community-scripts/ProxmoxVE/pull/16098))
     - Cloudflare-DDNS: store API token in a 600 env file and build the binary at install time [@angusmaul](https://github.com/angusmaul) ([#16100](https://github.com/community-scripts/ProxmoxVE/pull/16100))
 
+  - #### ✨ New Features
+
+    - tools.func:  add nginx site helper and PHP socket resolver  [@MickLesk](https://github.com/MickLesk) ([#16118](https://github.com/community-scripts/ProxmoxVE/pull/16118))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
