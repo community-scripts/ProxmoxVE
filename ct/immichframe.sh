@@ -30,6 +30,11 @@ function update_script() {
     exit
   fi
 
+  if ! dotnet --list-sdks 2>/dev/null | grep -q '^8\.'; then
+    msg_error ".NET SDK 8.0 is required to update ${APP}. Install it before retrying."
+    exit
+  fi
+
   if check_for_gh_release "immichframe" "immichFrame/ImmichFrame"; then
     msg_info "Stopping Service"
     systemctl stop immichframe
