@@ -524,6 +524,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func:  add nginx site helper and PHP socket resolver  [@MickLesk](https://github.com/MickLesk) ([#16118](https://github.com/community-scripts/ProxmoxVE/pull/16118))
 
+  - #### 💥 Breaking Changes
+
+    - Migrate Musicseerr to DroppedNeedle [@vhsdream](https://github.com/vhsdream) ([#15751](https://github.com/community-scripts/ProxmoxVE/pull/15751))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
