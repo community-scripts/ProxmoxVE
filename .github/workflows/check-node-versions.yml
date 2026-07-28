@@ -242,7 +242,7 @@ jobs:
             checked=$((checked + 1))
 
             # Extract our NODE_VERSION
-            our_version=$(grep -oP 'NODE_VERSION="(\d+)"' "$script" | head -1 | grep -oP '\d+' || echo "")
+            our_version=$(grep -oP 'NODE_VERSION=\K"?\d+' "$script" | head -1 | grep -oP '\d+' || echo "")
             if [[ -z "$our_version" ]]; then
               if grep -q 'NODE_VERSION=\$(' "$script"; then
                 our_version="dynamic"
