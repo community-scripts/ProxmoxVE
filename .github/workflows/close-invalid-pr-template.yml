@@ -45,7 +45,7 @@ jobs:
             }
 
             const labels = pr.labels.map((label) => label.name);
-            const skipLabels = ["automated pr", "keep open"];
+            const skipLabels = ["automated pr", "keep-open"];
 
             if (skipLabels.some((label) => labels.includes(label))) {
               core.info(`PR #${prNumber} has a skip label (${labels.join(", ")}) — skipping template validation.`);
@@ -136,7 +136,7 @@ jobs:
               ``,
               `> Use the template sections, fill in the description, check all prerequisite boxes, and select at least one type of change.`,
               ``,
-              `Maintainers can add the \`keep open\` label to exempt a PR from this check.`,
+              `Maintainers can add the \`keep-open\` label to exempt a PR from this check.`,
               ``,
               `Thank you for contributing! 🙏`,
             ].join("\n");
