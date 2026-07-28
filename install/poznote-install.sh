@@ -29,6 +29,7 @@ chown -R www-data:www-data /var/www/html
 msg_ok "Deployed Poznote"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/poznote
 server {
     listen 8040;
@@ -41,7 +42,7 @@ server {
 
     location ~ \.php$ {
         include fastcgi_params;
-        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT \$document_root;
     }
@@ -51,11 +52,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/poznote /etc/nginx/sites-enabled/poznote
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl enable -q --now nginx
-systemctl reload nginx
+nginx_enable_site poznote
 msg_ok "Configured Nginx"
 
 motd_ssh

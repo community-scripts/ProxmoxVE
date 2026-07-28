@@ -26,9 +26,7 @@ chown -R www-data:www-data /opt/grav
 
 msg_info "Configuring Nginx"
 PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
-PHP_FPM_SOCK=$(find /run/php -maxdepth 1 -name "php*-fpm.sock" -type s | sort -V | tail -1)
-unlink /etc/nginx/sites-enabled/default
-rm -f /etc/nginx/sites-available/default
+PHP_FPM_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/grav
 server {
     listen 80;
@@ -99,11 +97,8 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/grav /etc/nginx/sites-enabled/grav
 systemctl enable -q --now php${PHP_VER}-fpm
-$STD nginx -t
-systemctl enable -q --now nginx
-$STD nginx -s reload
+nginx_enable_site grav
 msg_ok "Configured Nginx"
 
 motd_ssh

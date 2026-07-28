@@ -69,10 +69,7 @@ sed -i \
     -e "s|/var/www/html|/opt/warracker/frontend|g" \
     -e "s/client_max_body_size __NGINX_MAX_BODY_SIZE_CONFIG_VALUE__/client_max_body_size 32M/" \
     /etc/nginx/sites-available/warracker.conf
-ln -s /etc/nginx/sites-available/warracker.conf /etc/nginx/sites-enabled/warracker.conf
-rm /etc/nginx/sites-enabled/default
-systemctl restart nginx
-
+nginx_enable_site warracker.conf
 msg_ok "Configured Nginx"
 
 msg_info "Creating systemd services"

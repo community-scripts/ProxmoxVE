@@ -57,6 +57,7 @@ $STD php artisan app:user:create paymenter admin admin@paymenter.org paymenter 1
 msg_ok "Created Admin User"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/paymenter.conf
 server {
     listen 80;
@@ -72,7 +73,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
@@ -82,9 +83,7 @@ server {
     }
 }
 EOF
-ln -s /etc/nginx/sites-available/paymenter.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site paymenter.conf
 chown -R www-data:www-data /opt/paymenter/*
 msg_ok "Configured Nginx"
 

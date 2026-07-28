@@ -55,9 +55,7 @@ msg_ok "Set up Rackula"
 
 msg_info "Configuring nginx"
 cp /opt/rackula/config/nginx.conf /etc/nginx/sites-available/rackula
-rm -f /etc/nginx/sites-enabled/default
-ln -sf /etc/nginx/sites-available/rackula /etc/nginx/sites-enabled/rackula
-$STD nginx -t
+nginx_enable_site rackula
 msg_ok "Configured nginx"
 
 msg_info "Creating Services"

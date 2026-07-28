@@ -62,9 +62,7 @@ server {
 }
 EOF
 
-ln -s /etc/nginx/sites-available/ots.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site ots.conf
 msg_ok "Configured nginx"
 
 msg_info "Creating Services"

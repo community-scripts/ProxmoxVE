@@ -59,7 +59,6 @@ USE_ORIGINAL_FILENAME=true fetch_and_deploy_gh_release "netboot-xyz-multiarch-im
 USE_ORIGINAL_FILENAME=true fetch_and_deploy_gh_release "netboot-xyz-checksums" "netbootxyz/netboot.xyz" "singlefile" "latest" "/var/www/html" "netboot.xyz-sha256-checksums.txt"
 
 msg_info "Configuring Webserver"
-rm -f /etc/nginx/sites-enabled/default
 cat <<'EOF' >/etc/nginx/sites-available/netboot-xyz
 server {
     listen 80 default_server;
@@ -83,8 +82,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/netboot-xyz /etc/nginx/sites-enabled/netboot-xyz
-$STD systemctl reload nginx
+nginx_enable_site netboot-xyz
 msg_ok "Configured Webserver"
 
 msg_info "Configuring TFTP Server"

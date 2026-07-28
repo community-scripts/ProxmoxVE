@@ -185,11 +185,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/databasus /etc/nginx/sites-enabled/databasus
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-$STD systemctl enable -q --now nginx
-$STD systemctl reload nginx
+nginx_enable_site databasus
 msg_ok "Configured Nginx"
 
 motd_ssh

@@ -236,11 +236,7 @@ server {
   }
 }
 EOF
-ln -sf /etc/nginx/sites-available/postiz /etc/nginx/sites-enabled/postiz
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl enable -q nginx
-systemctl reload -q nginx
+nginx_enable_site postiz
 msg_ok "Configured Nginx"
 
 motd_ssh

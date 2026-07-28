@@ -68,10 +68,11 @@ msg_ok "Set up SolidTime"
 
 msg_info "Configuring Caddy"
 PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/caddy/Caddyfile
 :80 {
     root * /opt/solidtime/public
-    php_fastcgi unix//run/php/php${PHP_VER}-fpm.sock
+    php_fastcgi unix/${PHP_SOCK}
     file_server
     encode gzip
 }

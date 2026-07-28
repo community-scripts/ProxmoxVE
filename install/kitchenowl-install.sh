@@ -86,7 +86,6 @@ systemctl enable -q --now kitchenowl
 msg_ok "Created and Started Service"
 
 msg_info "Configuring Nginx"
-rm -f /etc/nginx/sites-enabled/default
 cat <<'EOF' >/etc/nginx/sites-available/kitchenowl.conf
 server {
     listen 80;
@@ -134,9 +133,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/kitchenowl.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site kitchenowl.conf
 msg_ok "Configured Nginx"
 
 motd_ssh

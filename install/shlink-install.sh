@@ -93,10 +93,7 @@ server {
     }
 }
 EOF
-  ln -sf /etc/nginx/sites-available/shlink-web-client /etc/nginx/sites-enabled/shlink-web-client
-  rm -f /etc/nginx/sites-enabled/default
-  systemctl enable -q nginx
-  $STD systemctl restart nginx
+  nginx_enable_site shlink-web-client
   msg_ok "Set up Web Client"
 fi
 

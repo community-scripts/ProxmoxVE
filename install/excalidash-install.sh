@@ -108,9 +108,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/excalidash /etc/nginx/sites-enabled/excalidash
-rm -f /etc/nginx/sites-enabled/default
-systemctl reload nginx
+nginx_enable_site excalidash
 msg_ok "Configured Nginx"
 
 msg_info "Creating Service"

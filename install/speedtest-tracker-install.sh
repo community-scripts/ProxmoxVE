@@ -120,6 +120,7 @@ EOF
 msg_ok "Set up Scheduler"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/speedtest-tracker
 server {
     listen 80;
@@ -143,7 +144,7 @@ server {
     error_page 404 /index.php;
 
     location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
     }
@@ -154,9 +155,7 @@ server {
 }
 EOF
 
-ln -sf /etc/nginx/sites-available/speedtest-tracker /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-systemctl reload nginx
+nginx_enable_site speedtest-tracker
 msg_ok "Configured Nginx"
 
 motd_ssh

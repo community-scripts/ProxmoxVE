@@ -40,6 +40,7 @@ $STD php artisan key:generate --force
 msg_ok "Configured Snipe-IT"
 
 msg_info "Creating Service"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/conf.d/snipeit.conf
 server {
         listen 80;
@@ -55,7 +56,7 @@ server {
         location ~ \.php\$ {
                 include fastcgi.conf;
                 include snippets/fastcgi-php.conf;
-                fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+                fastcgi_pass unix:${PHP_SOCK};
                 fastcgi_split_path_info ^(.+\.php)(/.+)\$;
                 fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                 include fastcgi_params;

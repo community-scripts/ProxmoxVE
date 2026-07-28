@@ -207,9 +207,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/affine.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-systemctl enable -q --now nginx
+nginx_enable_site affine.conf
 msg_ok "Configured Nginx"
 
 motd_ssh
