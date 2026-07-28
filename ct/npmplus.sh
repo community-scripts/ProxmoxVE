@@ -21,8 +21,6 @@ color
 catch_errors
 
 function update_script() {
-  header_info "$APP"
-
   msg_info "Updating Alpine OS"
   $STD apk -U upgrade
   msg_ok "System updated"
@@ -32,7 +30,6 @@ function update_script() {
   $STD docker compose pull
   $STD docker compose up -d
   msg_ok "Updated NPMplus container"
-
   msg_ok "Updated successfully!"
   exit
 }
