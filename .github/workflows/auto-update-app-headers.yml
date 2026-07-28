@@ -20,21 +20,21 @@ jobs:
     steps:
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Generate a token for PR approval and merge
         id: generate-token-merge
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.APP_ID_APPROVE_AND_MERGE }}
           private-key: ${{ secrets.APP_KEY_APPROVE_AND_MERGE }}
 
       # Step 1: Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       # Step 2: Disable file mode changes detection
       - name: Disable file mode changes
