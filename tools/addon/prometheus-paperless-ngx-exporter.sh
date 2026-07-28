@@ -36,32 +36,6 @@ if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
 fi
 
 # ==============================================================================
-# SERVICE FILE
-# ==============================================================================
-function write_service() {
-  cat <<EOF >"$SERVICE_PATH"
-[Unit]
-Description=Prometheus Paperless NGX Exporter
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=root
-EnvironmentFile=$CONFIG_PATH
-ExecStart=$BINARY_PATH \\
-    --paperless_url=\${PAPERLESS_URL} \\
-    --paperless_auth_token_file=$AUTH_TOKEN_FILE \\
-    --paperless_header 'Accept: application/json; version=9' \\
-    --collectors=tag,correspondent,document_type,storage_path,task,log,group,user,status,statistics
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-  systemctl daemon-reload
-}
-
-# ==============================================================================
 # UNINSTALL
 # ==============================================================================
 function uninstall() {
@@ -95,7 +69,26 @@ function update() {
   fi
 
   msg_info "Refreshing service configuration"
-  write_service
+  cat <<EOF >"$SERVICE_PATH"
+[Unit]
+Description=Prometheus Paperless NGX Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+EnvironmentFile=$CONFIG_PATH
+ExecStart=$BINARY_PATH \\
+    --paperless_url=\${PAPERLESS_URL} \\
+    --paperless_auth_token_file=$AUTH_TOKEN_FILE \\
+    --paperless_header 'Accept: application/json; version=9' \\
+    --collectors=tag,correspondent,document_type,storage_path,task,log,group,user,status,statistics
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
   msg_ok "Refreshed service configuration"
 
   msg_info "Starting service"
@@ -131,7 +124,26 @@ EOF
   msg_ok "Created configuration"
 
   msg_info "Creating service"
-  write_service
+  cat <<EOF >"$SERVICE_PATH"
+[Unit]
+Description=Prometheus Paperless NGX Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+EnvironmentFile=$CONFIG_PATH
+ExecStart=$BINARY_PATH \\
+    --paperless_url=\${PAPERLESS_URL} \\
+    --paperless_auth_token_file=$AUTH_TOKEN_FILE \\
+    --paperless_header 'Accept: application/json; version=9' \\
+    --collectors=tag,correspondent,document_type,storage_path,task,log,group,user,status,statistics
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
   systemctl enable -q --now prometheus-paperless-ngx-exporter
   msg_ok "Created and started service"
 
