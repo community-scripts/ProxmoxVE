@@ -25,6 +25,12 @@ $STD uv pip install -r /opt/bazarr/requirements.txt --python /opt/bazarr/venv/bi
 msg_ok "Installed Bazarr"
 
 msg_info "Creating Service"
+# -c keeps config/ db/ backup/ cache/ log/ restore/ in /var/lib/bazarr. Without it
+# Bazarr defaults to <install dir>/data (resolved from its own source file, not the
+# working directory), which puts the database inside the directory every update
+# redeploys over. Same intent as the -data= flag the other *arr scripts pass.
+# Note: Bazarr re-execs itself once while loading its config, so a single
+# "exited with status code -100" in the journal right after start is normal.
 cat <<EOF >/etc/systemd/system/bazarr.service
 [Unit]
 Description=Bazarr Daemon
@@ -36,7 +42,7 @@ UMask=0002
 Restart=on-failure
 RestartSec=5
 Type=simple
-ExecStart=/opt/bazarr/venv/bin/python3 /opt/bazarr/bazarr.py
+ExecStart=/opt/bazarr/venv/bin/python3 /opt/bazarr/bazarr.py -c /var/lib/bazarr
 KillSignal=SIGINT
 TimeoutStopSec=20
 SyslogIdentifier=bazarr
