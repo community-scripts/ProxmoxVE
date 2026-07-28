@@ -514,6 +514,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - npmplus: Remove duplicate msg_info for container recreation [@MickLesk](https://github.com/MickLesk) ([#16122](https://github.com/community-scripts/ProxmoxVE/pull/16122))
     - fix Node.js version drift [@asylumexp](https://github.com/asylumexp) ([#16111](https://github.com/community-scripts/ProxmoxVE/pull/16111))
     - UmlautAdaptarr: use the Debian 13 Microsoft repo with its 2025 signing key [@angusmaul](https://github.com/angusmaul) ([#16077](https://github.com/community-scripts/ProxmoxVE/pull/16077))
     - fix(bazarr): store data in /var/lib/bazarr instead of inside /opt/bazarr [@angusmaul](https://github.com/angusmaul) ([#16098](https://github.com/community-scripts/ProxmoxVE/pull/16098))
