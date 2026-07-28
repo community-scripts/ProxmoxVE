@@ -539,6 +539,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - actual-budget-prometheus-exporter ([#16109](https://github.com/community-scripts/ProxmoxVE/pull/16109))
 
+  - #### 🐞 Bug Fixes
+
+    - fix: prometheus-paperless-exporter incompatibility with paperless v3 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#16119](https://github.com/community-scripts/ProxmoxVE/pull/16119))
+
 ### 📂 Github
 
   - fix keep-open for close invalid pr [@asylumexp](https://github.com/asylumexp) ([#16105](https://github.com/community-scripts/ProxmoxVE/pull/16105))
