@@ -23,6 +23,7 @@ fi
 mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data,data/plugins}
 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
 mkdir -p /opt/wanderer/source/db/data
+mkdir -p /opt/wanderer/source/search
 [[ -e /opt/wanderer/source/db/data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /opt/wanderer/source/db/data/plugins
 
 msg_info "Installing wanderer (patience)"
