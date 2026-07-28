@@ -5337,7 +5337,7 @@ EOF
 
     local response=""
     local read_rc
-    read -t 60 -r response
+    read -t 60 -r response </dev/tty
     read_rc=$?
     if [[ $read_rc -eq 0 ]]; then
       case "${response:-1}" in
