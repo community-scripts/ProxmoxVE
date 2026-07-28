@@ -44,10 +44,6 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball" "latest" "/opt/romm"
 
-    # Defensive cleanup: remove stale 1.x migration files from older romm
-    # releases. Pre-v2.4 romm shipped dot-version migrations (1.6.2_, 1.7.1_,
-    # 1.8.x, 2.0.0_) alongside the 4-digit series, causing alembic to fail
-    # with "Multiple head revisions" on upgrade. No-op on clean installs.
     find /opt/romm/backend/alembic/versions -maxdepth 1 -type f -name '1.*.py' -delete 2>/dev/null || true
     find /opt/romm/backend/alembic/versions -maxdepth 1 -type f -name '2.0.0_.py' -delete 2>/dev/null || true
     find /opt/romm/backend -name '__pycache__' -type d -prune -exec rm -rf {} + 2>/dev/null || true
