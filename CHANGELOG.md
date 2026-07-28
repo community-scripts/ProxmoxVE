@@ -520,6 +520,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(bazarr): store data in /var/lib/bazarr instead of inside /opt/bazarr [@angusmaul](https://github.com/angusmaul) ([#16098](https://github.com/community-scripts/ProxmoxVE/pull/16098))
     - Cloudflare-DDNS: store API token in a 600 env file and build the binary at install time [@angusmaul](https://github.com/angusmaul) ([#16100](https://github.com/community-scripts/ProxmoxVE/pull/16100))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: fix read prompt input directly from /dev/tty [@MickLesk](https://github.com/MickLesk) ([#16126](https://github.com/community-scripts/ProxmoxVE/pull/16126))
+
 ### 🧰 Tools
 
   - actual-budget-prometheus-exporter ([#16109](https://github.com/community-scripts/ProxmoxVE/pull/16109))
