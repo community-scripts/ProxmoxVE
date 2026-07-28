@@ -31,6 +31,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="26" setup_nodejs
+
   if check_for_gh_release "OxiCloud" "DioCrafts/OxiCloud"; then
     msg_info "Stopping OxiCloud"
     systemctl stop oxicloud
