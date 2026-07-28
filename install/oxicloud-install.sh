@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="oxicloud" PG_DB_USER="oxicloud" setup_postgresql_db
 fetch_and_deploy_gh_release "OxiCloud" "DioCrafts/OxiCloud" "tarball" "latest" "/opt/oxicloud"

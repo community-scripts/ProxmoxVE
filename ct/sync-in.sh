@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   if check_for_gh_release "sync-in" "Sync-in/server"; then
     msg_info "Stopping Service"
     systemctl stop sync-in

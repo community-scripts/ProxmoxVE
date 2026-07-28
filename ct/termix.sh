@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" setup_nodejs
+  NODE_VERSION="26" setup_nodejs
 
   if check_for_gh_tag "guacd" "apache/guacamole-server"; then
     msg_info "Stopping guacd"

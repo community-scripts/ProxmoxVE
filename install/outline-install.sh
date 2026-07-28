@@ -20,7 +20,7 @@ $STD apt install -y \
   redis
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="outline" PG_DB_USER="outline" setup_postgresql_db
 

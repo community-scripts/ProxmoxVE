@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+  NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
 
   if check_for_gh_release "outline" "outline/outline"; then
     msg_info "Stopping Services"
