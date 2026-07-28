@@ -35,6 +35,8 @@ function update_script() {
     "4" "Install FileBrowser")
 
   if [ "$UPD" == "1" ]; then
+    msg_info "Remove python Externally Managed restriction"
+    rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
     msg_info "Updating All Containers"
     CONTAINER_LIST="${1:-$(docker ps -q)}"
     for container in ${CONTAINER_LIST}; do
