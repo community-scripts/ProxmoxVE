@@ -100,7 +100,7 @@ server {
     }
 }
 EOF
-    systemctl reload nginx
+    nginx_enable_site dispatcharr.conf
     msg_ok "Migrated Nginx Configuration"
   fi
 
