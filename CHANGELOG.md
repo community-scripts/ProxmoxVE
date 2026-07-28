@@ -516,6 +516,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Cloudflare-DDNS: store API token in a 600 env file and build the binary at install time [@angusmaul](https://github.com/angusmaul) ([#16100](https://github.com/community-scripts/ProxmoxVE/pull/16100))
 
+### 📂 Github
+
+  - Bump GitHub Actions across workflows  [@MickLesk](https://github.com/MickLesk) ([#16091](https://github.com/community-scripts/ProxmoxVE/pull/16091))
+
 ## 2026-07-27
 
 ### 🆕 New Scripts
