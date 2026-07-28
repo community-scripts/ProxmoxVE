@@ -57,19 +57,50 @@ function uninstall() {
 # UPDATE
 # ==============================================================================
 function update() {
+  local release_found=1
+
   if check_for_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-exporter"; then
+    release_found=0
     msg_info "Stopping service"
     systemctl stop prometheus-paperless-ngx-exporter
     msg_ok "Stopped service"
 
     fetch_and_deploy_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-exporter" "binary" "latest"
-
-    msg_info "Starting service"
-    systemctl start prometheus-paperless-ngx-exporter
-    msg_ok "Started service"
-    msg_ok "Updated successfully!"
-    exit
   fi
+
+  msg_info "Refreshing service configuration"
+  cat <<EOF >"$SERVICE_PATH"
+[Unit]
+Description=Prometheus Paperless NGX Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+EnvironmentFile=$CONFIG_PATH
+ExecStart=$BINARY_PATH \\
+    --paperless_url=\${PAPERLESS_URL} \\
+    --paperless_auth_token_file=$AUTH_TOKEN_FILE \\
+    --paperless_header 'Accept: application/json; version=9' \\
+    --collectors=tag,correspondent,document_type,storage_path,task,log,group,user,status,statistics
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+  msg_ok "Refreshed service configuration"
+
+  msg_info "Starting service"
+  systemctl restart prometheus-paperless-ngx-exporter
+  msg_ok "Started service"
+
+  if [[ $release_found -eq 0 ]]; then
+    msg_ok "Updated successfully!"
+  else
+    msg_ok "No new release found, service configuration refreshed"
+  fi
+  exit
 }
 
 # ==============================================================================
@@ -104,7 +135,9 @@ User=root
 EnvironmentFile=$CONFIG_PATH
 ExecStart=$BINARY_PATH \\
     --paperless_url=\${PAPERLESS_URL} \\
-    --paperless_auth_token_file=$AUTH_TOKEN_FILE
+    --paperless_auth_token_file=$AUTH_TOKEN_FILE \\
+    --paperless_header 'Accept: application/json; version=9' \\
+    --collectors=tag,correspondent,document_type,storage_path,task,log,group,user,status,statistics
 Restart=always
 
 [Install]
