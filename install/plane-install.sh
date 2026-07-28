@@ -376,9 +376,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/plane.conf /etc/nginx/sites-enabled/plane.conf
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site plane.conf
 msg_ok "Configured Nginx"
 
 motd_ssh

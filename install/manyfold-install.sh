@@ -134,9 +134,7 @@ server {
     }
 }
 EOF
-ln -s /etc/nginx/sites-available/manyfold.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site manyfold.conf
 msg_ok "Created Services"
 
 motd_ssh

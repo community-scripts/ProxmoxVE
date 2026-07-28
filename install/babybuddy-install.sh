@@ -89,10 +89,7 @@ server {
 }
 EOF
 
-ln -sf /etc/nginx/sites-available/babybuddy /etc/nginx/sites-enabled/babybuddy
-rm /etc/nginx/sites-enabled/default
-systemctl enable -q --now nginx
-service nginx reload
+nginx_enable_site babybuddy
 msg_ok "Configured NGINX"
 
 motd_ssh

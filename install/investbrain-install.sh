@@ -115,6 +115,7 @@ chmod -R 775 /opt/investbrain/bootstrap/cache
 msg_ok "Installed Investbrain"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/investbrain.conf
 server {
     listen 8000 default_server;
@@ -135,7 +136,7 @@ server {
     }
 
     location ~ \.php\$ {
-        fastcgi_pass unix:/var/run/php/php${PHP_VERSION}-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
         fastcgi_hide_header X-Powered-By;
@@ -150,9 +151,7 @@ server {
     access_log /var/log/nginx/investbrain_access.log;
 }
 EOF
-ln -sf /etc/nginx/sites-available/investbrain.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site investbrain.conf
 msg_ok "Configured Nginx"
 
 msg_info "Setting up Supervisor"

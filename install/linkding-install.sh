@@ -115,10 +115,8 @@ server {
     }
 }
 EOF
-$STD rm -f /etc/nginx/sites-enabled/default
-$STD ln -sf /etc/nginx/sites-available/linkding /etc/nginx/sites-enabled/linkding
-systemctl enable -q --now nginx linkding linkding-tasks
-systemctl restart nginx
+systemctl enable -q --now linkding linkding-tasks
+nginx_enable_site linkding
 msg_ok "Created Services"
 
 motd_ssh

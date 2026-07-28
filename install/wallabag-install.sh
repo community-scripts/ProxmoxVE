@@ -93,6 +93,7 @@ chmod -R 755 /opt/wallabag/{var,web/assets}
 msg_ok "Installed Wallabag"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<'EOF' >/etc/nginx/sites-available/wallabag
 server {
     listen 8000;
@@ -110,7 +111,7 @@ server {
     }
 
     location ~ ^/app\.php(/|$) {
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:__PHP_SOCK__;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
@@ -131,9 +132,8 @@ server {
 }
 EOF
 
-ln -sf /etc/nginx/sites-available/wallabag /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+sed -i "s|__PHP_SOCK__|${PHP_SOCK}|" /etc/nginx/sites-available/wallabag
+nginx_enable_site wallabag
 msg_ok "Configured Nginx"
 
 msg_info "Enabling Services"

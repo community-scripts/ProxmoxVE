@@ -178,10 +178,7 @@ server {
     error_log /var/log/geopulse/nginx/error.log;
 }
 EOF
-ln -sf /etc/nginx/sites-available/geopulse.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-systemctl enable -q --now nginx
-systemctl reload nginx
+nginx_enable_site geopulse.conf
 msg_ok "Configured Nginx"
 
 msg_info "Creating Admin Helper"

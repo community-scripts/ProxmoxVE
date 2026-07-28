@@ -207,10 +207,7 @@ server {
   }
 }
 EOF
-ln -sf /etc/nginx/sites-available/discourse /etc/nginx/sites-enabled/discourse
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl enable --now nginx
-$STD systemctl reload nginx
+nginx_enable_site discourse
 msg_ok "Configured Nginx"
 
 motd_ssh

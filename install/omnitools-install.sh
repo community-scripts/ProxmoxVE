@@ -55,11 +55,7 @@ server {
 }
 EOF
 
-ln -sf /etc/nginx/sites-available/omnitools /etc/nginx/sites-enabled/omnitools
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl enable -q --now nginx
-systemctl reload nginx
+nginx_enable_site omnitools
 msg_ok "Configured Nginx"
 
 motd_ssh

@@ -129,6 +129,7 @@ $STD systemctl restart php8.4-fpm
 msg_ok "Tuned PHP-FPM"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<'EOF' >/etc/nginx/sites-available/koel
 server {
     listen 80;
@@ -156,7 +157,7 @@ server {
 
     location ~ \.php$ {
         try_files $uri $uri/ /index.php?$args;
-        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+        fastcgi_pass unix:__PHP_SOCK__;
         fastcgi_index index.php;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_intercept_errors on;
@@ -171,9 +172,8 @@ server {
     }
 }
 EOF
-rm -f /etc/nginx/sites-enabled/default
-ln -sf /etc/nginx/sites-available/koel /etc/nginx/sites-enabled/koel
-$STD systemctl reload nginx
+sed -i "s|__PHP_SOCK__|${PHP_SOCK}|" /etc/nginx/sites-available/koel
+nginx_enable_site koel
 msg_ok "Configured Nginx"
 
 msg_info "Setting up Cron Job"

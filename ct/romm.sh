@@ -75,7 +75,7 @@ function update_script() {
       systemctl reload angie
     elif [[ -f /etc/nginx/sites-available/romm ]]; then
       sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
-      systemctl reload nginx
+      nginx_enable_site romm
     fi
     msg_ok "Updated ROMM"
 

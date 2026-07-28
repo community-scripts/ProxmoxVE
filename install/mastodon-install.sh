@@ -262,12 +262,8 @@ server {
   }
 }
 EOF
-ln -sf /etc/nginx/sites-available/mastodon /etc/nginx/sites-enabled/mastodon
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
 systemctl enable -q --now redis-server
-systemctl enable -q --now nginx
-systemctl reload nginx
+nginx_enable_site mastodon
 msg_ok "Configured Nginx"
 
 motd_ssh

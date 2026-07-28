@@ -48,6 +48,7 @@ chown -R www-data:www-data /opt/yourls
 msg_ok "Configured YOURLS"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/yourls
 server {
     listen 80 default_server;
@@ -62,7 +63,7 @@ server {
     location ~ \.php\$ {
         try_files \$uri =404;
         fastcgi_split_path_info ^(.+\.php)(/.+)\$;
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
@@ -79,11 +80,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/yourls /etc/nginx/sites-enabled/yourls
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl enable -q --now nginx
-systemctl reload nginx
+nginx_enable_site yourls
 msg_ok "Configured Nginx"
 
 motd_ssh
