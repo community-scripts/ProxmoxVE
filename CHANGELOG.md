@@ -512,6 +512,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - backup virtual printer in bambuddy [@asylumexp](https://github.com/asylumexp) ([#16142](https://github.com/community-scripts/ProxmoxVE/pull/16142))
+
   - #### 🐞 Bug Fixes
 
     - ImmichFrame: check .NET SDK before update deployment [@aidaskni](https://github.com/aidaskni) ([#16104](https://github.com/community-scripts/ProxmoxVE/pull/16104))
