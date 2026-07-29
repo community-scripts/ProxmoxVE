@@ -60,7 +60,7 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now bichon
-msg_ok "Created Service"
+msg_info "Created Service"
 
 motd_ssh
 customize
