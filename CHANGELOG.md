@@ -518,6 +518,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - ImmichFrame: check .NET SDK before update deployment [@aidaskni](https://github.com/aidaskni) ([#16104](https://github.com/community-scripts/ProxmoxVE/pull/16104))
 
+  - #### ✨ New Features
+
+    - Bichon: Migration for V2 Release [@MickLesk](https://github.com/MickLesk) ([#16145](https://github.com/community-scripts/ProxmoxVE/pull/16145))
+
 ### 💾 Core
 
   - #### ✨ New Features
