@@ -42,7 +42,8 @@ function update_script() {
       /opt/bambuddy/data \
       /opt/bambuddy/bambuddy.db \
       /opt/bambuddy/bambutrack.db \
-      /opt/bambuddy/archive
+      /opt/bambuddy/archive \
+      /opt/bambuddy/virtual_printer
     msg_ok "Backed up Configuration and Data"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bambuddy" "maziggy/bambuddy" "tarball" "latest" "/opt/bambuddy"
