@@ -90,6 +90,15 @@ variables() {
 
 # `source <(curl ...)` hides the download exit code, so a failed fetch would
 # silently source an empty stream and leave the helpers undefined.
+_bootstrap_die() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "$1"
+  else
+    echo "FATAL: $1" >&2
+  fi
+  exit 115
+}
+
 _bootstrap_source() {
   local url="$1" probe="$2" content=""
   if command -v curl >/dev/null 2>&1; then
@@ -97,18 +106,12 @@ _bootstrap_source() {
   elif command -v wget >/dev/null 2>&1; then
     content=$(wget -qO- --tries=5 --timeout=10 "$url") || content=""
   else
-    echo "FATAL: neither curl nor wget available" >&2
-    exit 115
+    _bootstrap_die "Neither curl nor wget available"
   fi
-  if [[ -z "$content" ]]; then
-    echo "FATAL: failed to download ${url##*/}" >&2
-    exit 115
-  fi
+  [[ -n "$content" ]] || _bootstrap_die "Failed to download ${url##*/}"
   source /dev/stdin <<<"$content"
-  if ! declare -f "$probe" >/dev/null 2>&1; then
-    echo "FATAL: ${url##*/} loaded but incomplete (missing ${probe})" >&2
-    exit 115
-  fi
+  declare -f "$probe" >/dev/null 2>&1 ||
+    _bootstrap_die "${url##*/} loaded but incomplete (missing ${probe})"
 }
 
 _FUNC_BASE="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc"

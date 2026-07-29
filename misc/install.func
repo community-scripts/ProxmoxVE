@@ -39,17 +39,22 @@ export TELEMETRY_CONTEXT="container"
 
 # A freshly booted container may not have DNS up yet. `source <(curl ...)` hides
 # curl's exit code, so a failed download would silently source an empty stream.
+_bootstrap_die() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "$1"
+  else
+    echo "FATAL: $1" >&2
+  fi
+  exit 115
+}
+
 _bootstrap_source() {
   local url="$1" probe="$2" content
-  content=$(curl -fsSL --connect-timeout 10 --retry 5 --retry-connrefused --retry-delay 2 "$url") || {
-    echo "FATAL: failed to download ${url##*/}" >&2
-    exit 115
-  }
+  content=$(curl -fsSL --connect-timeout 10 --retry 5 --retry-connrefused --retry-delay 2 "$url") ||
+    _bootstrap_die "Failed to download ${url##*/}"
   source /dev/stdin <<<"$content"
-  declare -f "$probe" >/dev/null 2>&1 || {
-    echo "FATAL: ${url##*/} loaded but incomplete (missing ${probe})" >&2
-    exit 115
-  }
+  declare -f "$probe" >/dev/null 2>&1 ||
+    _bootstrap_die "${url##*/} loaded but incomplete (missing ${probe})"
 }
 
 _FUNC_BASE="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc"
