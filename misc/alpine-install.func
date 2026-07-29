@@ -10,8 +10,29 @@ fi
 # must write local failure artifacts instead of talking to the telemetry API
 # (the host is the single telemetry reporter).
 export TELEMETRY_CONTEXT="container"
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+# A freshly booted container may not have DNS up yet. `source <(curl ...)` hides
+# curl's exit code, so a failed download would silently source an empty stream.
+_bootstrap_die() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "$1"
+  else
+    echo "FATAL: $1" >&2
+  fi
+  exit 115
+}
+
+_bootstrap_source() {
+  local url="$1" probe="$2" content
+  content=$(curl -fsSL --connect-timeout 10 --retry 5 --retry-connrefused --retry-delay 2 "$url") ||
+    _bootstrap_die "Failed to download ${url##*/}"
+  source /dev/stdin <<<"$content"
+  declare -f "$probe" >/dev/null 2>&1 ||
+    _bootstrap_die "${url##*/} loaded but incomplete (missing ${probe})"
+}
+
+_FUNC_BASE="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc"
+_bootstrap_source "$_FUNC_BASE/core.func" load_functions
+_bootstrap_source "$_FUNC_BASE/error_handler.func" catch_errors
 load_functions
 catch_errors
 

@@ -88,19 +88,38 @@ variables() {
   fi
 }
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+# `source <(curl ...)` hides the download exit code, so a failed fetch would
+# silently source an empty stream and leave the helpers undefined.
+_bootstrap_die() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "$1"
+  else
+    echo "FATAL: $1" >&2
+  fi
+  exit 115
+}
 
-if command -v curl >/dev/null 2>&1; then
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-  load_functions
-  catch_errors
-elif command -v wget >/dev/null 2>&1; then
-  source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-  load_functions
-  catch_errors
-fi
+_bootstrap_source() {
+  local url="$1" probe="$2" content=""
+  if command -v curl >/dev/null 2>&1; then
+    content=$(curl -fsSL --connect-timeout 10 --retry 5 --retry-connrefused --retry-delay 2 "$url") || content=""
+  elif command -v wget >/dev/null 2>&1; then
+    content=$(wget -qO- --tries=5 --timeout=10 "$url") || content=""
+  else
+    _bootstrap_die "Neither curl nor wget available"
+  fi
+  [[ -n "$content" ]] || _bootstrap_die "Failed to download ${url##*/}"
+  source /dev/stdin <<<"$content"
+  declare -f "$probe" >/dev/null 2>&1 ||
+    _bootstrap_die "${url##*/} loaded but incomplete (missing ${probe})"
+}
+
+_FUNC_BASE="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc"
+_bootstrap_source "$_FUNC_BASE/api.func" post_to_api
+_bootstrap_source "$_FUNC_BASE/core.func" load_functions
+_bootstrap_source "$_FUNC_BASE/error_handler.func" catch_errors
+load_functions
+catch_errors
 
 # ==============================================================================
 # SECTION 2: PRE-FLIGHT CHECKS & SYSTEM VALIDATION
