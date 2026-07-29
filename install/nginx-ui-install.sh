@@ -71,6 +71,12 @@ msg_ok "Created Service"
 msg_info "Starting Service"
 systemctl enable -q --now nginx-ui
 rm -rf /etc/nginx/sites-enabled/default
+sleep 3
+cat <<EOF >~/nginx-ui.creds
+Nginx UI Install Secret: $(cat /usr/local/etc/nginx-ui/.install_secret 2>/dev/null)
+Valid for 10 minutes after service start, then removed.
+New secret: systemctl restart nginx-ui && cat /usr/local/etc/nginx-ui/.install_secret
+EOF
 msg_ok "Started Service"
 
 motd_ssh
