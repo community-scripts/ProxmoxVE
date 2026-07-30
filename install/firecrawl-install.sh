@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  build-essential \
   cmake \
   git \
   nftables \
@@ -33,7 +32,7 @@ PG_VERSION="17" PG_MODULES="cron" setup_postgresql
 
 fetch_and_deploy_gh_release "firecrawl" "firecrawl/firecrawl" "tarball" "latest" "/opt/firecrawl"
 
-# Firecrawl pins its FoundationDB client version in the API Dockerfile; FDB debs name arm64 as aarch64.
+msg_info "Configuring FDB"
 FDB_VERSION="$(awk -F= '/^ARG FDB_VERSION=/{print $2; exit}' /opt/firecrawl/apps/api/Dockerfile)"
 if [[ -z "$FDB_VERSION" ]]; then
   msg_error "FDB_VERSION pin not found in upstream Dockerfile"
@@ -42,12 +41,12 @@ fi
 FDB_ARCH="$(get_system_arch)"
 [[ "$FDB_ARCH" == "arm64" ]] && FDB_ARCH="aarch64"
 fetch_and_deploy_gh_release "foundationdb-clients" "apple/foundationdb" "binary" "$FDB_VERSION" "/opt/foundationdb-clients" "foundationdb-clients_${FDB_VERSION}-1_${FDB_ARCH}.deb"
+msg_ok "Configured FDB"
+
 
 PG_DB_NAME="firecrawl" PG_DB_USER="firecrawl" PG_DB_EXTENSIONS="pgcrypto,pg_cron" PG_DB_CREDS_FILE="/dev/null" setup_postgresql_db
 
 msg_info "Configuring pg_cron"
-# pg_cron defaults to libpq connections against localhost, which pg_hba rejects
-# (scram auth, no postgres password); background workers need no connection.
 $STD runuser -u postgres -- psql -c "ALTER SYSTEM SET cron.use_background_workers = 'on';"
 systemctl restart postgresql
 until runuser -u postgres -- psql -c "SELECT 1;" &>/dev/null; do sleep 1; done
@@ -73,15 +72,13 @@ $STD runuser -u postgres -- psql -d firecrawl -c "ALTER DEFAULT PRIVILEGES IN SC
 msg_ok "Imported NuQ Schema"
 
 msg_info "Generating Configuration"
-BULL_AUTH_KEY="$(openssl rand -hex 32)"
-JWT_SECRET="$(openssl rand -hex 32)"
 cat <<EOF >/opt/firecrawl/.env
 ENV=local
 HOST=0.0.0.0
 PORT=3002
 USE_DB_AUTHENTICATION=false
-BULL_AUTH_KEY=${BULL_AUTH_KEY}
-JWT_SECRET=${JWT_SECRET}
+BULL_AUTH_KEY=$(openssl rand -hex 32)
+JWT_SECRET=$(openssl rand -hex 32)
 
 REDIS_URL=redis://127.0.0.1:6379
 REDIS_RATE_LIMIT_URL=redis://127.0.0.1:6379
