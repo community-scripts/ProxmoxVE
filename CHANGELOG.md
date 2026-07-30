@@ -516,6 +516,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - OmniRoute ([#16155](https://github.com/community-scripts/ProxmoxVE/pull/16155))
 - PegaProx ([#16154](https://github.com/community-scripts/ProxmoxVE/pull/16154))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - romm: remove stale 1.x alembic migrations on update [@Darkatek7](https://github.com/Darkatek7) ([#16101](https://github.com/community-scripts/ProxmoxVE/pull/16101))
+
 ### 💾 Core
 
   - #### ✨ New Features
