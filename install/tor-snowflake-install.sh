@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: KernelSailor
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVED/raw/main/LICENSE
 # Source: https://snowflake.torproject.org/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
@@ -15,14 +15,11 @@ update_os
 
 setup_go
 
-RELEASE=$(curl -fsSL https://gitlab.torproject.org/api/v4/projects/tpo%2Fanti-censorship%2Fpluggable-transports%2Fsnowflake/releases | jq -r '.[0].tag_name' | sed 's/^v//')
-fetch_and_deploy_from_url "https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/snowflake/-/archive/v${RELEASE}/snowflake-v${RELEASE}.tar.gz" "/opt/tor-snowflake"
-
 msg_info "Building Snowflake"
+GITLAB_URL="https://gitlab.torproject.org" fetch_and_deploy_gl_release "tor-snowflake" "tpo/anti-censorship/pluggable-transports/snowflake" "tarball"
 cd /opt/tor-snowflake/proxy
 $STD go build -o snowflake-proxy .
-echo "${RELEASE}" >~/.tor-snowflake
-msg_ok "Built Snowflake Proxy v${RELEASE}"
+msg_ok "Built Snowflake Proxy"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/snowflake-proxy.service
