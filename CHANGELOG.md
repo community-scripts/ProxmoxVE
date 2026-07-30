@@ -508,6 +508,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-30
+
+### 🆕 New Scripts
+
+  - PegaProx ([#16154](https://github.com/community-scripts/ProxmoxVE/pull/16154))
+
 ## 2026-07-29
 
 ### 🚀 Updated Scripts
