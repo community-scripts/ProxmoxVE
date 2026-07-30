@@ -2736,7 +2736,8 @@ get_latest_gl_tag() {
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
 
-  local api_base="https://gitlab.com/api/v4/projects/${repo_encoded}/repository/tags"
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
+  local api_base="${gitlab_url}/api/v4/projects/${repo_encoded}/repository/tags"
   local api_timeout="--connect-timeout 10 --max-time 60"
 
   local header=()
@@ -2818,6 +2819,7 @@ get_latest_gl_tag() {
 # Notes:
 #   - Supports CLEAN_INSTALL=1 to wipe target before extracting
 #   - Supports GITLAB_TOKEN for private/rate-limited projects
+#   - Supports GITLAB_URL for self-hosted GitLab (default: https://gitlab.com)
 #   - For repos that only publish tags, not formal GitLab Releases
 #     (use fetch_and_deploy_gl_release for proper Releases with assets)
 # ------------------------------------------------------------------------------
@@ -2861,8 +2863,9 @@ fetch_and_deploy_gl_tag() {
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
 
   # GitLab source tarball URL (no release needed, works for any tag).
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
   local version_safe="${resolved_tag//\//-}"
-  local tarball_url="https://gitlab.com/${repo}/-/archive/${resolved_tag}/${app_lc}-${version_safe}.tar.gz"
+  local tarball_url="${gitlab_url}/${repo}/-/archive/${resolved_tag}/${app_lc}-${version_safe}.tar.gz"
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
@@ -6948,6 +6951,60 @@ setup_mariadb_db() {
 }
 
 # ------------------------------------------------------------------------------
+# Creates a MySQL database and user (for apps that require MySQL, not MariaDB).
+#
+# Description:
+#   - Creates database, user and grants using the mysql root socket login
+#   - The user is created with host '%' because MySQL treats 'localhost'
+#     (socket) and '127.0.0.1' (TCP) as distinct hosts; apps connecting over
+#     TCP to 127.0.0.1 would not match a 'localhost' account. mysql-server
+#     binds to 127.0.0.1 by default, so '%' stays local-only.
+#
+# Variables:
+#   MYSQL_DB_NAME   - Database name (required)
+#   MYSQL_DB_USER   - Database user (required)
+#   MYSQL_DB_PASS   - Password (optional, generated if unset)
+#
+# Exports:
+#   MYSQL_DB_NAME, MYSQL_DB_USER, MYSQL_DB_PASS
+#
+# Example:
+#   MYSQL_DB_NAME="fleet" MYSQL_DB_USER="fleet" setup_mysql_db
+# ------------------------------------------------------------------------------
+setup_mysql_db() {
+  if [[ -z "${MYSQL_DB_NAME:-}" || -z "${MYSQL_DB_USER:-}" ]]; then
+    msg_error "MYSQL_DB_NAME and MYSQL_DB_USER must be set before calling setup_mysql_db"
+    return 65
+  fi
+
+  if [[ -z "${MYSQL_DB_PASS:-}" ]]; then
+    MYSQL_DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+  fi
+
+  msg_info "Setting up MySQL Database"
+
+  $STD mysql -u root -e "CREATE DATABASE \`${MYSQL_DB_NAME//\`/\`\`}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+  $STD mysql -u root -e "CREATE USER '${MYSQL_DB_USER//\'/\'\'}'@'%' IDENTIFIED BY '${MYSQL_DB_PASS//\'/\'\'}';"
+  $STD mysql -u root -e "GRANT ALL ON \`${MYSQL_DB_NAME//\`/\`\`}\`.* TO '${MYSQL_DB_USER//\'/\'\'}'@'%';"
+  $STD mysql -u root -e "FLUSH PRIVILEGES;"
+
+  local app_name="${APPLICATION,,}"
+  local CREDS_FILE="${MYSQL_DB_CREDS_FILE:-${HOME}/${app_name}.creds}"
+  {
+    echo "MySQL Credentials"
+    echo "Database: $MYSQL_DB_NAME"
+    echo "User: $MYSQL_DB_USER"
+    echo "Password: $MYSQL_DB_PASS"
+  } >>"$CREDS_FILE"
+
+  msg_ok "Set up MySQL Database"
+
+  export MYSQL_DB_NAME
+  export MYSQL_DB_USER
+  export MYSQL_DB_PASS
+}
+
+# ------------------------------------------------------------------------------
 # Installs or updates MeiliSearch search engine.
 #
 # Description:
@@ -8195,22 +8252,17 @@ EOF
 # ------------------------------------------------------------------------------
 get_php_fpm_socket() {
   local sock
-
   if [[ -n "${PHP_VERSION:-}" && -S "/run/php/php${PHP_VERSION}-fpm.sock" ]]; then
     echo "/run/php/php${PHP_VERSION}-fpm.sock"
     return 0
   fi
-
   sock=$(find /run/php -maxdepth 1 -name "php*-fpm.sock" -type s 2>/dev/null | sort -V | tail -1)
-
   if [[ -z "$sock" ]]; then
     msg_error "No active PHP-FPM socket found under /run/php"
     return 1
   fi
-
   echo "$sock"
 }
-
 # ------------------------------------------------------------------------------
 # Enables an nginx site, validates the configuration and reloads the service.
 #
@@ -8232,25 +8284,20 @@ get_php_fpm_socket() {
 # ------------------------------------------------------------------------------
 nginx_enable_site() {
   local site="${1:-}"
-
   if [[ -z "$site" ]]; then
     msg_error "nginx_enable_site: no site name given"
     return 1
   fi
-
   if [[ ! -f "/etc/nginx/sites-available/${site}" ]]; then
     msg_error "nginx site config not found: /etc/nginx/sites-available/${site}"
     return 1
   fi
-
   rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
   ln -sf "/etc/nginx/sites-available/${site}" "/etc/nginx/sites-enabled/${site}"
-
   if ! $STD nginx -t; then
     msg_error "nginx configuration test failed for site '${site}'"
     return 1
   fi
-
   $STD systemctl enable -q nginx
   safe_service_restart nginx
 }
@@ -9447,11 +9494,12 @@ get_latest_gitlab_release() {
   local temp_file
   temp_file=$(mktemp)
 
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
   local http_code
   http_code=$(curl --connect-timeout 10 --max-time 30 -sSL \
     -w "%{http_code}" -o "$temp_file" \
     "${header[@]}" \
-    "https://gitlab.com/api/v4/projects/$repo_encoded/releases?per_page=1&order_by=released_at&sort=desc" 2>/dev/null) || true
+    "${gitlab_url}/api/v4/projects/$repo_encoded/releases?per_page=1&order_by=released_at&sort=desc" 2>/dev/null) || true
 
   if [[ "$http_code" != "200" ]]; then
     rm -f "$temp_file"
@@ -9493,6 +9541,7 @@ get_latest_gitlab_release() {
 # Notes:
 #   - Requires `jq` (auto-installed if missing)
 #   - Supports GITLAB_TOKEN env var for private/rate-limited repos
+#   - Supports GITLAB_URL for self-hosted GitLab (default: https://gitlab.com)
 #   - Does not modify anything, only checks version state
 # ------------------------------------------------------------------------------
 check_for_gl_release() {
@@ -9504,11 +9553,15 @@ check_for_gl_release() {
   local app_lc="${app,,}"
   local current_file="$HOME/.${app_lc}"
 
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
+  local gitlab_hostname="${gitlab_url#*://}"
+  gitlab_hostname="${gitlab_hostname%%/*}"
+
   msg_info "Checking for update: ${app}"
 
   # DNS check
-  if ! getent hosts gitlab.com >/dev/null 2>&1; then
-    msg_error "Network error: cannot resolve gitlab.com"
+  if ! getent hosts "$gitlab_hostname" >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve $gitlab_hostname"
     return 6
   fi
 
@@ -9531,7 +9584,7 @@ check_for_gl_release() {
     local pinned_encoded="${pinned_version_in//\//%2F}"
     http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
-      "https://gitlab.com/api/v4/projects/$repo_encoded/releases/$pinned_encoded" 2>/dev/null) || true
+      "${gitlab_url}/api/v4/projects/$repo_encoded/releases/$pinned_encoded" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
       releases_json="[$(<"$gl_check_json")]"
     fi
@@ -9542,7 +9595,7 @@ check_for_gl_release() {
   if [[ -z "$releases_json" ]]; then
     http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
-      "https://gitlab.com/api/v4/projects/$repo_encoded/releases?per_page=100&order_by=released_at&sort=desc" 2>/dev/null) || true
+      "${gitlab_url}/api/v4/projects/$repo_encoded/releases?per_page=100&order_by=released_at&sort=desc" 2>/dev/null) || true
 
     if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
       releases_json=$(<"$gl_check_json")
@@ -9566,7 +9619,7 @@ check_for_gl_release() {
       return 22
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitLab API connection failed (no response)."
-      msg_error "Check your network/DNS: curl -sSL https://gitlab.com/api/v4/version"
+      msg_error "Check your network/DNS: curl -sSL ${gitlab_url}/api/v4/version"
       rm -f "$gl_check_json"
       return 7
     else
@@ -9811,7 +9864,8 @@ fetch_and_deploy_gl_release() {
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
 
-  local api_base="https://gitlab.com/api/v4/projects/$repo_encoded/releases"
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
+  local api_base="${gitlab_url}/api/v4/projects/$repo_encoded/releases"
   local api_url
   if [[ "$version" != "latest" ]]; then
     api_url="$api_base/$version"
@@ -9860,7 +9914,7 @@ fetch_and_deploy_gl_release() {
       msg_error "  export GITLAB_TOKEN=\"glpat-your_token_here\""
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitLab API connection failed (no response)."
-      msg_error "Check your network/DNS: curl -sSL https://gitlab.com/api/v4/version"
+      msg_error "Check your network/DNS: curl -sSL ${gitlab_url}/api/v4/version"
     else
       msg_error "Failed to fetch release metadata (HTTP $http_code)"
     fi
@@ -9915,7 +9969,7 @@ fetch_and_deploy_gl_release() {
 
   ### Tarball Mode ###
   if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
-    local direct_tarball_url="https://gitlab.com/$repo/-/archive/$tag_name/${app_lc}-${version_safe}.tar.gz"
+    local direct_tarball_url="${gitlab_url}/$repo/-/archive/$tag_name/${app_lc}-${version_safe}.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
     _download_source_tarball "$direct_tarball_url" "$tmpdir/$filename" "${header[@]}" || {
@@ -9963,7 +10017,7 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$url_match" ]]; then
       local fallback_json
-      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "https://gitlab.com" "binary" "$asset_pattern" "$tag_name"); then
+      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "$gitlab_url" "binary" "$asset_pattern" "$tag_name"); then
         json="$fallback_json"
         tag_name=$(echo "$json" | jq -r '.tag_name // empty')
         [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -10035,7 +10089,7 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$asset_url" ]]; then
       local fallback_json
-      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "https://gitlab.com" "prebuild" "$pattern" "$tag_name"); then
+      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "$gitlab_url" "prebuild" "$pattern" "$tag_name"); then
         json="$fallback_json"
         tag_name=$(echo "$json" | jq -r '.tag_name // empty')
         [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -10088,7 +10142,7 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$asset_url" ]]; then
       local fallback_json
-      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "https://gitlab.com" "singlefile" "$pattern" "$tag_name"); then
+      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "$gitlab_url" "singlefile" "$pattern" "$tag_name"); then
         json="$fallback_json"
         tag_name=$(echo "$json" | jq -r '.tag_name // empty')
         [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
