@@ -429,6 +429,7 @@ msg_info "Installing GeoNames data"
 cd "$GEO_DIR"
 curl_with_retry "https://download.geonames.org/export/dump/admin1CodesASCII.txt" "admin1CodesASCII.txt"
 curl_with_retry "https://download.geonames.org/export/dump/admin2Codes.txt" "admin2Codes.txt"
+curl_with_retry "https://download.geonames.org/export/dump/countryInfo.txt" "countryInfo.txt"
 curl_with_retry "https://download.geonames.org/export/dump/cities500.zip" "cities500.zip"
 curl_with_retry "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson" "ne_10m_admin_0_countries.geojson"
 unzip -q cities500.zip
