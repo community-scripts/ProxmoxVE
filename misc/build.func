@@ -1009,7 +1009,7 @@ base_settings() {
 
   APT_CACHER=${var_apt_cacher:-""}
   APT_CACHER_IP=${var_apt_cacher_ip:-""}
-  INHERIT_HOST_CA="${var_inherit_host_ca:-auto}"
+  INHERIT_HOST_CA="${var_inherit_host_ca:-no}"
 
   # Runtime check: Verify APT cacher is reachable if configured
   if [[ -n "$APT_CACHER_IP" && "$APT_CACHER" == "yes" ]]; then
@@ -1414,7 +1414,7 @@ var_ssh=no
 # HTTP/HTTPS proxy (optional - for networks requiring a proxy)
 # var_http_proxy=http://proxy.local:8080
 # var_http_no_proxy=localhost,127.0.0.1,.local
-# var_inherit_host_ca=auto
+# var_inherit_host_ca=no
 
 # Features/Tags/verbosity
 var_fuse=no
@@ -1665,7 +1665,7 @@ _build_current_app_vars_tmp() {
   _apt_cacher_ip="${APT_CACHER_IP:-}"
   _http_proxy="${HTTP_PROXY:-${var_http_proxy:-}}"
   _http_no_proxy="${HTTP_NO_PROXY:-${var_http_no_proxy:-}}"
-  _inherit_host_ca="${INHERIT_HOST_CA:-${var_inherit_host_ca:-auto}}"
+  _inherit_host_ca="${INHERIT_HOST_CA:-${var_inherit_host_ca:-no}}"
   _fuse="${ENABLE_FUSE:-no}"
   _tun="${ENABLE_TUN:-no}"
   _gpu="${ENABLE_GPU:-no}"
@@ -1906,7 +1906,7 @@ advanced_settings() {
   local _apt_cacher_ip="${var_apt_cacher_ip:-}"
   local _http_proxy="${var_http_proxy:-}"
   local _http_no_proxy="${var_http_no_proxy:-}"
-  local _inherit_host_ca="${var_inherit_host_ca:-auto}"
+  local _inherit_host_ca="${var_inherit_host_ca:-no}"
   local _mtu="${var_mtu:-}"
   local _sd="${var_searchdomain:-}"
   local _ns="${var_ns:-}"
@@ -2749,18 +2749,18 @@ advanced_settings() {
       shopt -u nullglob
 
       if [[ $host_ca_count -eq 0 ]]; then
-        _inherit_host_ca="auto"
+        _inherit_host_ca="no"
         ((STEP++))
         continue
       fi
 
-      local host_ca_default_flag=""
-      [[ "$_inherit_host_ca" == "no" ]] && host_ca_default_flag="--defaultno"
+      local host_ca_default_flag="--defaultno"
+      [[ "$_inherit_host_ca" == "yes" ]] && host_ca_default_flag=""
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "HOST CA INHERITANCE" \
         --ok-button "Next" --cancel-button "Back" \
         $host_ca_default_flag \
-        --yesno "\nInherit host CA certificates into this container?\n\nDetected on host: ${host_ca_count} certificate(s) in:\n${host_ca_dir}\n\nRecommended for private PKI / TLS-inspection environments.\n\n(App default: ${var_inherit_host_ca:-auto})" 16 72; then
+        --yesno "\nInherit host CA certificates into this container?\n\nDetected on host: ${host_ca_count} certificate(s) in:\n${host_ca_dir}\n\nRecommended for private PKI / TLS-inspection environments.\n\n(App default: ${var_inherit_host_ca:-no})" 16 72; then
         _inherit_host_ca="yes"
       else
         if [ $? -eq 1 ]; then
@@ -2953,7 +2953,7 @@ Leave empty to skip."
       local apt_display="${_apt_cacher:-no}"
       [[ "$_apt_cacher" == "yes" && -n "$_apt_cacher_ip" ]] && apt_display="$_apt_cacher_ip"
       local http_proxy_display="${_http_proxy:-(none)}"
-      local inherit_ca_display="${_inherit_host_ca:-auto}"
+      local inherit_ca_display="${_inherit_host_ca:-no}"
 
       local post_install_display="${_post_install:-(none)}"
       local post_install_warn=""
@@ -4010,7 +4010,7 @@ EOF
 _apply_host_ca_certs_in_container() {
   local host_ca_dir="/usr/local/share/ca-certificates"
   [[ -z "${CTID:-}" ]] && return 0
-  local inherit_host_ca="${INHERIT_HOST_CA:-${var_inherit_host_ca:-auto}}"
+  local inherit_host_ca="${INHERIT_HOST_CA:-${var_inherit_host_ca:-no}}"
 
   local -a host_certs=()
   local cert
@@ -4022,9 +4022,11 @@ _apply_host_ca_certs_in_container() {
 
   [[ ${#host_certs[@]} -eq 0 ]] && return 0
 
+  # Opt-in only: copy host CA certs solely when explicitly enabled.
+  # Any other value (no/auto/unset) is a silent no-op to preserve LXC isolation.
   case "${inherit_host_ca,,}" in
-  no | false | 0 | off)
-    msg_warn "Skipping host CA inheritance by configuration (${#host_certs[@]} host certificate(s) available)"
+  yes | true | 1 | on) ;;
+  *)
     return 0
     ;;
   esac
