@@ -512,7 +512,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - OmniRoute ([#16155](https://github.com/community-scripts/ProxmoxVE/pull/16155))
+  - Firecrawl ([#16156](https://github.com/community-scripts/ProxmoxVE/pull/16156))
+- OmniRoute ([#16155](https://github.com/community-scripts/ProxmoxVE/pull/16155))
 - PegaProx ([#16154](https://github.com/community-scripts/ProxmoxVE/pull/16154))
 
 ## 2026-07-29
