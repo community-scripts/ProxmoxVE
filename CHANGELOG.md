@@ -530,6 +530,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tools.func: support dynamic gitlab URL | add setup_mysql_db function [@MickLesk](https://github.com/MickLesk) ([#16166](https://github.com/community-scripts/ProxmoxVE/pull/16166))
     - core: add configurable host CA inheritance during bootstrap [@MickLesk](https://github.com/MickLesk) ([#15889](https://github.com/community-scripts/ProxmoxVE/pull/15889))
 
 ## 2026-07-29
