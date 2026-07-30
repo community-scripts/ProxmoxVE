@@ -31,27 +31,27 @@ function update_script() {
   $STD apt upgrade -y
   msg_ok "Updated Container OS"
 
-  RELEASE=$(curl -fsSL https://gitlab.torproject.org/api/v4/projects/tpo%2Fanti-censorship%2Fpluggable-transports%2Fsnowflake/releases | jq -r '.[0].tag_name' | sed 's/^v//')
-  if [[ ! -f ~/.tor-snowflake ]] || [[ "${RELEASE}" != "$(cat ~/.tor-snowflake)" ]]; then
+  if [[ ! -d /opt/tor-snowflake ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  if GITLAB_URL="https://gitlab.torproject.org" check_for_gl_release "tor-snowflake" "tpo/anti-censorship/pluggable-transports/snowflake"; then
     msg_info "Stopping Service"
     systemctl stop snowflake-proxy
     msg_ok "Stopped Service"
 
-    setup_go
-    fetch_and_deploy_from_url "https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/snowflake/-/archive/v${RELEASE}/snowflake-v${RELEASE}.tar.gz" "/opt/tor-snowflake"
+    CLEAN_INSTALL=1 GITLAB_URL="https://gitlab.torproject.org" fetch_and_deploy_gl_release "tor-snowflake" "tpo/anti-censorship/pluggable-transports/snowflake" "tarball"
 
-    msg_info "Updating Snowflake"
+    msg_info "Building Snowflake"
     cd /opt/tor-snowflake/proxy
     $STD go build -o snowflake-proxy .
-    echo "${RELEASE}" >~/.tor-snowflake
-    msg_ok "Updated Snowflake to v${RELEASE}"
+    msg_ok "Built Snowflake"
 
     msg_info "Starting Service"
     systemctl start snowflake-proxy
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. Snowflake is already at v${RELEASE}."
   fi
   exit
 }
@@ -61,3 +61,4 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
+
