@@ -522,6 +522,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - romm: remove stale 1.x alembic migrations on update [@Darkatek7](https://github.com/Darkatek7) ([#16101](https://github.com/community-scripts/ProxmoxVE/pull/16101))
 
+  - #### 🔧 Refactor
+
+    - Medusa: convert the non-free unrar source to deb822 format [@angusmaul](https://github.com/angusmaul) ([#16093](https://github.com/community-scripts/ProxmoxVE/pull/16093))
+
 ### 💾 Core
 
   - #### ✨ New Features
