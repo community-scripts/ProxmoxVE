@@ -508,6 +508,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-07-31
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Firecrawl: Add dependency [@tremor021](https://github.com/tremor021) ([#16174](https://github.com/community-scripts/ProxmoxVE/pull/16174))
+
 ## 2026-07-30
 
 ### 🆕 New Scripts
