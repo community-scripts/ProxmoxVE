@@ -514,6 +514,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Docmost: cleanup folder at update [@MickLesk](https://github.com/MickLesk) ([#16177](https://github.com/community-scripts/ProxmoxVE/pull/16177))
     - Firecrawl: Add dependency [@tremor021](https://github.com/tremor021) ([#16174](https://github.com/community-scripts/ProxmoxVE/pull/16174))
 
 ## 2026-07-30
