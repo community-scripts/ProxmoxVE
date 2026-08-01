@@ -5,17 +5,6 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://filebrowser.org/ | Github: https://github.com/filebrowser/filebrowser
 
-function header_info {
-  clear
-  cat <<"EOF"
-    _______ __     ____
-   / ____(_) /__  / __ )_________ _      __________  _____
-  / /_  / / / _ \/ __  / ___/ __ \ | /| / / ___/ _ \/ ___/
- / __/ / / /  __/ /_/ / /  / /_/ / |/ |/ (__  )  __/ /
-/_/   /_/_/\___/_____/_/   \____/|__/|__/____/\___/_/
-EOF
-}
-
 YW=$(echo "\033[33m")
 GN=$(echo "\033[1;92m")
 RD=$(echo "\033[01;31m")
@@ -26,20 +15,19 @@ CROSS="${RD}✖️${CL}"
 INFO="${BL}ℹ️${CL}"
 
 APP="FileBrowser"
+APP_TYPE="addon"
 INSTALL_PATH="/usr/local/bin/filebrowser"
 DB_PATH="/usr/local/community-scripts/filebrowser.db"
 DEFAULT_PORT=8080
 
 # Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+load_functions
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "filebrowser" "addon"
 
-# Get first non-loopback IP & Detect primary network interface dynamically
-IFACE=$(ip -4 route | awk '/default/ {print $5; exit}')
-IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1)
-
-[[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
-[[ -z "$IP" ]] && IP="127.0.0.1"
+get_lxc_ip
+IP="$LOCAL_IP"
 
 # Proxmox Host Warning
 if [[ -d "/etc/pve" ]]; then
