@@ -122,9 +122,18 @@ export UV_NO_BINARY_PACKAGE="cryptography lxml python-kadmin-rs xmlsec"
 export UV_COMPILE_BYTECODE="1"
 export UV_LINK_MODE="copy"
 export UV_NATIVE_TLS="1"
+export UV_HTTP_TIMEOUT="300"
 export UV_PYTHON_INSTALL_DIR="/usr/local/bin"
 cd /opt/authentik
-$STD uv sync --frozen --no-install-project --no-dev
+for attempt in 1 2 3; do
+  if [[ $attempt -eq 3 ]]; then
+    $STD uv sync --frozen --no-install-project --no-dev
+    break
+  fi
+  $STD uv sync --frozen --no-install-project --no-dev && break
+  msg_warn "uv sync attempt $attempt failed, retrying..."
+  sleep $((attempt * 15))
+done
 cp /opt/authentik/authentik/sources/kerberos/krb5.conf /etc/krb5.conf
 msg_ok "Setup python server"
 

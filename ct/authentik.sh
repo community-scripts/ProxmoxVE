@@ -118,10 +118,19 @@ function update_script() {
     export UV_COMPILE_BYTECODE="1"
     export UV_LINK_MODE="copy"
     export UV_NATIVE_TLS="1"
+    export UV_HTTP_TIMEOUT="300"
     export RUSTUP_PERMIT_COPY_RENAME="true"
     export UV_PYTHON_INSTALL_DIR="/usr/local/bin"
     cd /opt/authentik
-    $STD uv sync --frozen --no-install-project --no-dev
+    for attempt in 1 2 3; do
+      if [[ $attempt -eq 3 ]]; then
+        $STD uv sync --frozen --no-install-project --no-dev
+        break
+      fi
+      $STD uv sync --frozen --no-install-project --no-dev && break
+      msg_warn "uv sync attempt $attempt failed, retrying..."
+      sleep $((attempt * 15))
+    done
     chown -R authentik:authentik /opt/authentik
     msg_ok "Updated python server"
 
