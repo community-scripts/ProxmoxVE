@@ -111,6 +111,7 @@ if [[ -f "$INSTALL_PATH" ]]; then
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
     if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi
+    TMP_BIN=$(mktemp)
     curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
     chmod +x "$TMP_BIN"
     mv -f "$TMP_BIN" /usr/local/bin/filebrowser
@@ -138,6 +139,7 @@ msg_info "Installing ${APP} on ${OS}"
 $STD $PKG_MANAGER \
   curl \
   ffmpeg
+TMP_BIN=$(mktemp)
 curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
 chmod +x "$TMP_BIN"
 mv -f "$TMP_BIN" /usr/local/bin/filebrowser
