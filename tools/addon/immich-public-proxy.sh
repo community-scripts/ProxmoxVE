@@ -68,19 +68,13 @@ function update() {
     systemctl stop immich-proxy.service &>/dev/null || true
     msg_ok "Stopped service"
 
-    msg_info "Backing up configuration"
-    cp "$CONFIG_PATH"/.env /tmp/ipp.env.bak 2>/dev/null || true
-    cp "$CONFIG_PATH"/config.json /tmp/ipp.config.json.bak 2>/dev/null || true
-    msg_ok "Backed up configuration"
+    BACKUP_DIR="/opt/immich-public-proxy_backup"
+    create_backup "$CONFIG_PATH"/.env "$CONFIG_PATH"/config.json
 
     NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "$INSTALL_PATH"
 
-    msg_info "Restoring configuration"
-    cp /tmp/ipp.env.bak "$CONFIG_PATH"/.env 2>/dev/null || true
-    cp /tmp/ipp.config.json.bak "$CONFIG_PATH"/config.json 2>/dev/null || true
-    rm -f /tmp/ipp.*.bak
-    msg_ok "Restored configuration"
+    restore_backup
 
     msg_info "Installing dependencies"
     cd "$CONFIG_PATH"

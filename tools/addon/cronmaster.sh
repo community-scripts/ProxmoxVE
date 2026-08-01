@@ -62,16 +62,12 @@ function update() {
     systemctl stop cronmaster.service &>/dev/null || true
     msg_ok "Stopped service"
 
-    msg_info "Backing up configuration"
-    cp "$CONFIG_PATH" /tmp/cronmaster.env.bak 2>/dev/null || true
-    msg_ok "Backed up configuration"
+    BACKUP_DIR="/opt/cronmaster_backup"
+    create_backup "$CONFIG_PATH"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cronmaster" "fccview/cronmaster" "prebuild" "latest" "$INSTALL_PATH" "cronmaster_*_prebuild.tar.gz"
 
-    msg_info "Restoring configuration"
-    cp /tmp/cronmaster.env.bak "$CONFIG_PATH" 2>/dev/null || true
-    rm -f /tmp/cronmaster.env.bak
-    msg_ok "Restored configuration"
+    restore_backup
 
     msg_info "Starting service"
     systemctl start cronmaster

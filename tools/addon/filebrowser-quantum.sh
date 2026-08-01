@@ -11,7 +11,6 @@ INSTALL_PATH="/usr/local/bin/filebrowser"
 CONFIG_PATH="/usr/local/community-scripts/fq-config.yaml"
 DEFAULT_PORT=8080
 SRC_DIR="/"
-TMP_BIN="/tmp/filebrowser.$$"
 
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)

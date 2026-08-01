@@ -112,7 +112,7 @@ function install_php_and_modules() {
 
 function install_phpmyadmin() {
   msg_info "Fetching latest phpMyAdmin release from GitHub"
-  LATEST_VERSION_RAW=$(curl -s https://api.github.com/repos/phpmyadmin/phpmyadmin/releases/latest | grep tag_name | cut -d '"' -f4)
+  LATEST_VERSION_RAW=$(curl -fsSL https://api.github.com/repos/phpmyadmin/phpmyadmin/releases/latest | grep tag_name | cut -d '"' -f4)
   LATEST_VERSION=$(echo "$LATEST_VERSION_RAW" | sed -e 's/^RELEASE_//' -e 's/_/./g')
   if [[ -z "$LATEST_VERSION" ]]; then
     msg_error "Could not determine latest phpMyAdmin version from GitHub – falling back to 5.2.2"
@@ -122,13 +122,15 @@ function install_phpmyadmin() {
 
   TARBALL_URL="https://files.phpmyadmin.net/phpMyAdmin/${LATEST_VERSION}/phpMyAdmin-${LATEST_VERSION}-all-languages.tar.gz"
   msg_info "Downloading ${TARBALL_URL}"
-  if ! curl -fsSL "$TARBALL_URL" -o /tmp/phpmyadmin.tar.gz; then
+  tarball=$(mktemp)
+  if ! curl -fsSL "$TARBALL_URL" -o "$tarball"; then
     msg_error "Download failed: $TARBALL_URL"
     exit 115
   fi
 
   mkdir -p "$INSTALL_DIR"
-  tar xf /tmp/phpmyadmin.tar.gz --strip-components=1 -C "$INSTALL_DIR"
+  tar xf "$tarball" --strip-components=1 -C "$INSTALL_DIR"
+  rm -f "$tarball"
 }
 
 function configure_phpmyadmin() {
@@ -215,7 +217,7 @@ function uninstall_phpmyadmin() {
 
 function update_phpmyadmin() {
   msg_info "Fetching latest phpMyAdmin release from GitHub"
-  LATEST_VERSION_RAW=$(curl -s https://api.github.com/repos/phpmyadmin/phpmyadmin/releases/latest | grep tag_name | cut -d '"' -f4)
+  LATEST_VERSION_RAW=$(curl -fsSL https://api.github.com/repos/phpmyadmin/phpmyadmin/releases/latest | grep tag_name | cut -d '"' -f4)
   LATEST_VERSION=$(echo "$LATEST_VERSION_RAW" | sed -e 's/^RELEASE_//' -e 's/_/./g')
 
   if [[ -z "$LATEST_VERSION" ]]; then
@@ -226,30 +228,26 @@ function update_phpmyadmin() {
 
   TARBALL_URL="https://files.phpmyadmin.net/phpMyAdmin/${LATEST_VERSION}/phpMyAdmin-${LATEST_VERSION}-all-languages.tar.gz"
   msg_info "Downloading ${TARBALL_URL}"
+  tarball=$(mktemp)
 
-  if ! curl -fsSL "$TARBALL_URL" -o /tmp/phpmyadmin.tar.gz; then
+  if ! curl -fsSL "$TARBALL_URL" -o "$tarball"; then
     msg_error "Download failed: $TARBALL_URL"
     exit 115
   fi
 
-  BACKUP_DIR="/tmp/phpmyadmin-backup-$(date +%Y%m%d-%H%M%S)"
-  mkdir -p "$BACKUP_DIR"
-  BACKUP_ITEMS=("config.inc.php" "upload" "save" "tmp" "themes")
+  BACKUP_DIR="/opt/phpmyadmin_backup"
+  create_backup \
+    "$INSTALL_DIR/config.inc.php" \
+    "$INSTALL_DIR/upload" \
+    "$INSTALL_DIR/save" \
+    "$INSTALL_DIR/tmp" \
+    "$INSTALL_DIR/themes"
 
-  msg_info "Backing up existing phpMyAdmin data"
-  for item in "${BACKUP_ITEMS[@]}"; do
-    [[ -e "$INSTALL_DIR/$item" ]] && cp -a "$INSTALL_DIR/$item" "$BACKUP_DIR/" && echo "  ↪︎ $item"
-  done
-  msg_ok "Backup completed: $BACKUP_DIR"
-
-  tar xf /tmp/phpmyadmin.tar.gz --strip-components=1 -C "$INSTALL_DIR"
+  tar xf "$tarball" --strip-components=1 -C "$INSTALL_DIR"
+  rm -f "$tarball"
   msg_ok "Extracted phpMyAdmin $LATEST_VERSION"
 
-  msg_info "Restoring preserved files"
-  for item in "${BACKUP_ITEMS[@]}"; do
-    [[ -e "$BACKUP_DIR/$item" ]] && cp -a "$BACKUP_DIR/$item" "$INSTALL_DIR/" && echo "  ↪︎ $item restored"
-  done
-  msg_ok "Restoration completed"
+  restore_backup
 
   configure_phpmyadmin
 }

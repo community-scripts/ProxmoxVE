@@ -87,16 +87,12 @@ function update() {
     systemctl stop jellystat.service &>/dev/null || true
     msg_ok "Stopped service"
 
-    msg_info "Backing up configuration"
-    cp "$CONFIG_PATH" /tmp/jellystat.env.bak 2>/dev/null || true
-    msg_ok "Backed up configuration"
+    BACKUP_DIR="/opt/jellystat_backup"
+    create_backup "$CONFIG_PATH"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jellystat" "CyferShepard/Jellystat" "tarball" "latest" "$INSTALL_PATH"
 
-    msg_info "Restoring configuration"
-    cp /tmp/jellystat.env.bak "$CONFIG_PATH" 2>/dev/null || true
-    rm -f /tmp/jellystat.env.bak
-    msg_ok "Restored configuration"
+    restore_backup
 
     msg_info "Installing dependencies"
     cd "$INSTALL_PATH"
