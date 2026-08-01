@@ -37,13 +37,6 @@ DEFAULT_PORT=8080
 load_functions
 
 # ==============================================================================
-# HELPER FUNCTIONS
-# ==============================================================================
-get_ip() {
-  hostname -I 2>/dev/null | awk '{print $1}' || ip -4 addr show scope global 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1 || echo "127.0.0.1"
-}
-
-# ==============================================================================
 # OS DETECTION
 # ==============================================================================
 if [[ -f "/etc/alpine-release" ]]; then
@@ -126,9 +119,6 @@ function update() {
 # INSTALL
 # ==============================================================================
 function install() {
-  local ip
-  ip=$(get_ip)
-
   fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_amd64.tar.gz"
 
   # Gather configuration from user
@@ -278,7 +268,7 @@ UPDATEEOF
 
   echo ""
   msg_ok "${APP} installed successfully"
-  msg_ok "Web UI: ${BL}http://${ip}:${DEFAULT_PORT}${CL}"
+  msg_ok "Web UI: ${BL}http://${IP}:${DEFAULT_PORT}${CL}"
   msg_ok "Config: ${BL}${CONFIG_PATH}${CL}"
   echo ""
   msg_warn "Edit the config file to add your AdGuardHome instances!"
@@ -304,7 +294,8 @@ fi
 
 header_info
 
-IP=$(get_ip)
+get_lxc_ip
+IP="$LOCAL_IP"
 
 # Check if already installed
 if [[ -d "$INSTALL_PATH" && -f "$INSTALL_PATH/adguardhome-sync" ]]; then
