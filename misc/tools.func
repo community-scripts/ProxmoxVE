@@ -4766,7 +4766,7 @@ EOF
       name=$(echo "$line" | awk '{print $1}')
       image=$(echo "$line" | awk '{print $2}')
 
-      # Portainer containers are handled by the dedicated block above
+      # Portainer is managed by its own addon script, not this generic loop
       [[ "$name" == "portainer" || "$name" == "portainer_agent" ]] && continue
 
       current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
