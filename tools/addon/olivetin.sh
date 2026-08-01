@@ -7,6 +7,7 @@
 
 APP="OliveTin"
 APP_TYPE="addon"
+INSTALL_PATH="/opt/olivetin"
 
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -25,6 +26,67 @@ header_info
 get_lxc_ip
 IP="$LOCAL_IP"
 
+# ==============================================================================
+# UNINSTALL
+# ==============================================================================
+function uninstall() {
+  msg_info "Uninstalling ${APP}"
+  systemctl disable --now OliveTin &>/dev/null || true
+  $STD apt remove -y olivetin
+  rm -f "$HOME/.olivetin"
+  msg_ok "${APP} has been uninstalled"
+}
+
+# ==============================================================================
+# UPDATE
+# ==============================================================================
+function update() {
+  if check_for_gh_release "olivetin" "OliveTin/OliveTin"; then
+    msg_info "Updating ${APP}"
+    fetch_and_deploy_gh_release "olivetin" "OliveTin/OliveTin" "binary" "latest" "$INSTALL_PATH"
+    systemctl restart OliveTin
+    msg_ok "Updated successfully!"
+    exit
+  fi
+}
+
+# ==============================================================================
+# INSTALL
+# ==============================================================================
+function install() {
+  msg_info "Installing ${APP}"
+  fetch_and_deploy_gh_release "olivetin" "OliveTin/OliveTin" "binary" "latest" "$INSTALL_PATH"
+  systemctl enable --now OliveTin &>/dev/null
+  msg_ok "Installed ${APP}"
+
+  msg_ok "Completed successfully!\n"
+  echo -e "${APP} should be reachable by going to the following URL.
+         ${BL}http://${IP}:1337${CL} \n"
+}
+
+# ==============================================================================
+# MAIN
+# ==============================================================================
+if [[ -d "$HOME" && -f "$HOME/.olivetin" ]] || command -v olivetin &>/dev/null; then
+  msg_warn "${APP} is already installed."
+  echo -n "${TAB}Uninstall ${APP}? (y/N): "
+  read -r uninstall_prompt
+  if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+    uninstall
+    exit 0
+  fi
+
+  echo -n "${TAB}Update ${APP}? (y/N): "
+  read -r update_prompt
+  if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
+    update
+    exit 0
+  fi
+
+  msg_warn "No action selected. Exiting."
+  exit 0
+fi
+
 while true; do
   echo -n "${TAB}This will Install ${APP}. Proceed (y/n)? "
   read -r yn
@@ -37,17 +99,4 @@ done
 unset _HEADER_SHOWN
 header_info
 
-msg_info "Installing ${APP}"
-if ! command -v curl &>/dev/null; then
-  $STD apt update
-  $STD apt install -y curl
-fi
-curl -fsSL "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb" -o OliveTin_linux_amd64.deb
-$STD dpkg -i OliveTin_linux_amd64.deb
-systemctl enable --now OliveTin &>/dev/null
-rm OliveTin_linux_amd64.deb
-msg_ok "Installed ${APP}"
-
-msg_ok "Completed successfully!\n"
-echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://${IP}:1337${CL} \n"
+install
