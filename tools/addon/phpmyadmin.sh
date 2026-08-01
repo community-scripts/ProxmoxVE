@@ -5,39 +5,26 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.phpmyadmin.net/ | Github: https://github.com/phpmyadmin/phpmyadmin
 
-function header_info {
-  clear
-  cat <<"EOF"
-    ____  __          __  ___      ___       __          _
-   / __ \/ /_  ____  /  |/  /_  __/   | ____/ /___ ___  (_)___
-  / /_/ / __ \/ __ \/ /|_/ / / / / /| |/ __  / __ `__ \/ / __ \
- / ____/ / / / /_/ / /  / / /_/ / ___ / /_/ / / / / / / / / / /
-/_/   /_/ /_/ .___/_/  /_/\__, /_/  |_\__,_/_/ /_/ /_/_/_/ /_/
-           /_/           /____/
-EOF
-}
-
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-RD=$(echo "\033[01;31m")
-BL=$(echo "\033[36m")
-CL=$(echo "\033[m")
-CM="${GN}✔️${CL}"
-CROSS="${RD}✖️${CL}"
-INFO="${BL}ℹ️${CL}"
-
 APP="phpMyAdmin"
+APP_TYPE="addon"
 INSTALL_DIR_DEBIAN="/var/www/html/phpMyAdmin"
 INSTALL_DIR_ALPINE="/usr/share/phpmyadmin"
 
-# Telemetry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "phpmyadmin" "addon"
 
-IFACE=$(ip -4 route | awk '/default/ {print $5; exit}')
-IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1)
-[[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
-[[ -z "$IP" ]] && IP="127.0.0.1"
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
+
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+
+get_lxc_ip
+IP="$LOCAL_IP"
 
 # Detect OS
 if [[ -f "/etc/alpine-release" ]]; then
@@ -51,20 +38,16 @@ elif [[ -f "/etc/debian_version" ]]; then
   PKG_QUERY="dpkg -l"
   INSTALL_DIR="$INSTALL_DIR_DEBIAN"
 else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
+  msg_error "Unsupported OS detected. Exiting."
   exit 238
 fi
 
 header_info
 
-function msg_info() { echo -e "${INFO} ${YW}${1}...${CL}"; }
-function msg_ok() { echo -e "${CM} ${GN}${1}${CL}"; }
-function msg_error() { echo -e "${CROSS} ${RD}${1}${CL}"; }
-
 function check_internet() {
   if ! command -v curl &>/dev/null; then
-    apt-get update >/dev/null 2>&1
-    apt-get install -y curl >/dev/null 2>&1
+    $STD apt-get update
+    $STD apt-get install -y curl
   fi
   msg_info "Checking Internet connectivity to GitHub"
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://github.com)
@@ -103,7 +86,7 @@ function install_php_and_modules() {
     done
     if [[ ${#MISSING_PACKAGES[@]} -gt 0 ]]; then
       msg_info "Installing missing PHP packages: ${MISSING_PACKAGES[*]}"
-      if ! apt-get update &>/dev/null || ! apt-get install -y "${MISSING_PACKAGES[@]}" &>/dev/null; then
+      if ! $STD apt-get update || ! $STD apt-get install -y "${MISSING_PACKAGES[@]}"; then
         msg_error "Failed to install required PHP modules. Exiting."
         exit 237
       fi
@@ -113,7 +96,7 @@ function install_php_and_modules() {
     fi
   else
     msg_info "Installing Lighttpd and PHP for Alpine"
-    $PKG_MANAGER_INSTALL lighttpd php php-fpm php-session php-json php-mysqli curl tar openssl &>/dev/null
+    $STD $PKG_MANAGER_INSTALL lighttpd php php-fpm php-session php-json php-mysqli curl tar openssl
     msg_ok "Installed Lighttpd and PHP"
   fi
 }
@@ -263,7 +246,7 @@ function update_phpmyadmin() {
 }
 
 if is_phpmyadmin_installed; then
-  echo -e "${YW}⚠️ ${APP} is already installed at ${INSTALL_DIR}.${CL}"
+  msg_warn "${APP} is already installed at ${INSTALL_DIR}."
   read -r -p "Would you like to Update (1), Uninstall (2) or Cancel (3)? [1/2/3]: " action
   action="${action//[[:space:]]/}"
   case "$action" in
@@ -275,11 +258,11 @@ if is_phpmyadmin_installed; then
     uninstall_phpmyadmin
     ;;
   3)
-    echo -e "${YW}⚠️ Action cancelled. Exiting.${CL}"
+    msg_warn "Action cancelled. Exiting."
     exit 0
     ;;
   *)
-    echo -e "${YW}⚠️ Invalid input. Exiting.${CL}"
+    msg_warn "Invalid input. Exiting."
     exit 112
     ;;
   esac
@@ -292,12 +275,12 @@ else
     install_phpmyadmin
     configure_phpmyadmin
     if [[ "$OS" == "Debian" ]]; then
-      echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://${IP}/phpMyAdmin${CL}"
+      msg_ok "${APP} is reachable at: ${BL}http://${IP}/phpMyAdmin${CL}"
     else
-      echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://${IP}/${CL}"
+      msg_ok "${APP} is reachable at: ${BL}http://${IP}/${CL}"
     fi
   else
-    echo -e "${YW}⚠️ Installation skipped. Exiting.${CL}"
+    msg_warn "Installation skipped. Exiting."
     exit 0
   fi
 fi

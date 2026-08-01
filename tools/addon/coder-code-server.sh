@@ -69,7 +69,7 @@ rm -rf code-server_"${VERSION}"_amd64.deb
 mkdir -p "${HOME}/.config/code-server/"
 
 if [ "$preexisting_config" = false ]; then
-cat <<EOF >"$config_path"
+  cat <<EOF >"$config_path"
 bind-addr: 0.0.0.0:8680
 auth: none
 password: 

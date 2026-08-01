@@ -5,41 +5,40 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://filebrowser.org/ | Github: https://github.com/filebrowser/filebrowser
 
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-RD=$(echo "\033[01;31m")
-BL=$(echo "\033[36m")
-CL=$(echo "\033[m")
-CM="${GN}✔️${CL}"
-CROSS="${RD}✖️${CL}"
-INFO="${BL}ℹ️${CL}"
-
 APP="FileBrowser"
 APP_TYPE="addon"
 INSTALL_PATH="/usr/local/bin/filebrowser"
 DB_PATH="/usr/local/community-scripts/filebrowser.db"
 DEFAULT_PORT=8080
 
-# Telemetry
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-load_functions
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "filebrowser" "addon"
 
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
+
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+
+header_info
 get_lxc_ip
 IP="$LOCAL_IP"
 
 # Proxmox Host Warning
 if [[ -d "/etc/pve" ]]; then
-  echo -e "${RD}⚠️  Warning: Running this addon directly on the Proxmox host is not recommended!${CL}"
-  echo -e "${YW}   Only the boot disk will be visible — passthrough drives will not be indexed.${CL}"
-  echo -e "${YW}   This causes incorrect disk usage stats and incomplete file browsing.${CL}"
-  echo -e "${YW}   Run this addon inside an LXC or VM instead and mount your drives there.${CL}"
+  msg_warn "Running this addon directly on the Proxmox host is not recommended!"
+  msg_warn "Only the boot disk will be visible — passthrough drives will not be indexed."
+  msg_warn "This causes incorrect disk usage stats and incomplete file browsing."
+  msg_warn "Run this addon inside an LXC or VM instead and mount your drives there."
   echo ""
-  echo -n "Continue anyway on the Proxmox host? (y/N): "
+  echo -n "${TAB}Continue anyway on the Proxmox host? (y/N): "
   read -r host_confirm
   if [[ ! "${host_confirm,,}" =~ ^(y|yes)$ ]]; then
-    echo -e "${YW}Aborted.${CL}"
+    msg_error "Aborted."
     exit 0
   fi
 fi
@@ -54,38 +53,21 @@ elif [[ -f "/etc/debian_version" ]]; then
   SERVICE_PATH="/etc/systemd/system/filebrowser.service"
   PKG_MANAGER="apt-get install -y"
 else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
+  msg_error "Unsupported OS detected. Exiting."
   exit 238
 fi
 
-header_info
-
-function msg_info() {
-  local msg="$1"
-  echo -e "${INFO} ${YW}${msg}...${CL}"
-}
-
-function msg_ok() {
-  local msg="$1"
-  echo -e "${CM} ${GN}${msg}${CL}"
-}
-
-function msg_error() {
-  local msg="$1"
-  echo -e "${CROSS} ${RD}${msg}${CL}"
-}
-
 if [ -f "$INSTALL_PATH" ]; then
-  echo -e "${YW}⚠️ ${APP} is already installed.${CL}"
+  msg_warn "${APP} is already installed."
   read -r -p "Would you like to uninstall ${APP}? (y/N): " uninstall_prompt
   if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Uninstalling ${APP}"
     if [[ "$OS" == "Debian" ]]; then
-      systemctl disable --now filebrowser.service &>/dev/null
+      systemctl disable --now filebrowser.service &>/dev/null || true
       rm -f "$SERVICE_PATH"
     else
-      rc-service filebrowser stop &>/dev/null
-      rc-update del filebrowser &>/dev/null
+      rc-service filebrowser stop &>/dev/null || true
+      rc-update del filebrowser &>/dev/null || true
       rm -f "$SERVICE_PATH"
     fi
     rm -f "$INSTALL_PATH" "$DB_PATH"
@@ -96,25 +78,25 @@ if [ -f "$INSTALL_PATH" ]; then
   read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
-    if ! command -v curl &>/dev/null; then $PKG_MANAGER curl &>/dev/null; fi
+    if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi
     curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
     chmod +x "$INSTALL_PATH"
     msg_ok "Updated ${APP}"
     exit 0
   else
-    echo -e "${YW}⚠️ Update skipped. Exiting.${CL}"
+    msg_warn "Update skipped. Exiting."
     exit 0
   fi
 fi
 
-echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
+msg_warn "${APP} is not installed."
 read -r -p "Enter port number (Default: ${DEFAULT_PORT}): " PORT
 PORT=${PORT:-$DEFAULT_PORT}
 
 read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing ${APP} on ${OS}"
-  $PKG_MANAGER wget tar curl &>/dev/null
+  $STD $PKG_MANAGER wget tar curl
   curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
   chmod +x "$INSTALL_PATH"
   msg_ok "Installed ${APP}"
@@ -132,19 +114,19 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
   if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Configuring No Authentication"
     cd /usr/local/community-scripts
-    filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-    filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-    filebrowser config set --auth.method=noauth --database "$DB_PATH" &>/dev/null
+    $STD filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser config set --auth.method=noauth --database "$DB_PATH"
     if ! filebrowser users update 1 --perm.admin --database "$DB_PATH" &>/dev/null; then
-      filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH" &>/dev/null
+      $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
     fi
     msg_ok "No Authentication configured"
   else
     msg_info "Setting up default authentication"
     cd /usr/local/community-scripts
-    filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-    filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-    filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH" &>/dev/null
+    $STD filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
     msg_ok "Default authentication configured (admin:community-scripts.org)"
   fi
 
@@ -182,13 +164,13 @@ depend() {
 }
 EOF
     chmod +x "$SERVICE_PATH"
-    rc-update add filebrowser default &>/dev/null
-    rc-service filebrowser start &>/dev/null
+    $STD rc-update add filebrowser default
+    $STD rc-service filebrowser start
   fi
   msg_ok "Service created successfully"
 
-  echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:$PORT${CL}"
+  msg_ok "${APP} is reachable at: ${BL}http://${IP}:${PORT}${CL}"
 else
-  echo -e "${YW}⚠️ Installation skipped. Exiting.${CL}"
+  msg_warn "Installation skipped. Exiting."
   exit 0
 fi
