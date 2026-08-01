@@ -4599,20 +4599,17 @@ setup_composer() {
 #   - By default uses distro repository (docker.io) for stability
 #   - Optionally uses official Docker repository for latest features
 #   - Detects and migrates old Docker installations
-#   - Optional: Installs/Updates Portainer CE
 #   - Updates running containers interactively
 #   - Cleans up legacy repository files
 #
 # Usage:
 #   setup_docker                              # Uses official Docker repo (recommended)
 #   USE_DOCKER_REPO=false setup_docker        # Uses distro docker.io package
-#   DOCKER_PORTAINER="true" setup_docker
 #   DOCKER_LOG_DRIVER="json-file" setup_docker
 #
 # Variables:
 #   USE_DOCKER_REPO        - Set to "false" to use distro docker.io package
 #                            (default: true, uses official Docker repository)
-#   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
 #   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
 #   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
 #
@@ -4623,7 +4620,7 @@ setup_composer() {
 #   - Interactive per-container update prompt (Y/N, 60 s auto-no)
 #   - Compose-managed containers: full restart via docker compose
 #   - Standalone containers: image pull only, no destructive stop/rm
-#   - Portainer installation and update support
+#   - Portainer is no longer managed here; use tools/addon/portainer.sh
 #   - Set DOCKER_NONINTERACTIVE=1 to skip interactive prompts (CI/unattended)
 # ------------------------------------------------------------------------------
 _docker_is_noninteractive() {
@@ -4632,7 +4629,6 @@ _docker_is_noninteractive() {
 
 setup_docker() {
   local docker_installed=false
-  local portainer_installed=false
   local USE_DOCKER_REPO="${USE_DOCKER_REPO:-true}"
 
   # Check if Docker is already installed
@@ -4640,12 +4636,6 @@ setup_docker() {
     docker_installed=true
     DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
     msg_info "Docker $DOCKER_CURRENT_VERSION detected"
-  fi
-
-  # Check if Portainer is running
-  if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^portainer$'; then
-    portainer_installed=true
-    msg_info "Portainer container detected"
   fi
 
   # Scenario 1: Use distro repository (opt-out via USE_DOCKER_REPO=false)
@@ -4759,54 +4749,6 @@ EOF
 
     # Enable and start Docker
     systemctl enable -q --now docker
-  fi
-
-  # Portainer Management (common for both modes)
-  if [[ "${DOCKER_PORTAINER:-}" == "true" ]]; then
-    if [ "$portainer_installed" = true ]; then
-      msg_info "Checking for Portainer updates"
-      PORTAINER_CURRENT=$(docker inspect portainer --format='{{.Config.Image}}' 2>/dev/null | cut -d':' -f2)
-      PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
-
-      if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
-        if _docker_is_noninteractive; then
-          msg_info "Skipping Portainer update prompt (non-interactive)"
-        else
-          read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
-          if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-            msg_info "Updating Portainer"
-            docker stop portainer
-            docker rm portainer
-            docker pull portainer/portainer-ce:latest
-            docker run -d \
-              -p 9000:9000 \
-              -p 9443:9443 \
-              --name=portainer \
-              --restart=always \
-              -v /var/run/docker.sock:/var/run/docker.sock \
-              -v portainer_data:/data \
-              portainer/portainer-ce:latest
-            msg_ok "Updated Portainer to $PORTAINER_LATEST"
-          fi
-        fi
-      else
-        msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
-      fi
-    else
-      msg_info "Installing Portainer"
-      docker volume create portainer_data
-      docker run -d \
-        -p 9000:9000 \
-        -p 9443:9443 \
-        --name=portainer \
-        --restart=always \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v portainer_data:/data \
-        portainer/portainer-ce:latest
-
-      LOCAL_IP=$(hostname -I | awk '{print $1}')
-      msg_ok "Installed Portainer (http://${LOCAL_IP}:9000)"
-    fi
   fi
 
   # Container Update Check
