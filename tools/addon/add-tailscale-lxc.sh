@@ -5,8 +5,18 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://tailscale.com/ | Github: https://github.com/tailscale/tailscale
 
+APP="add-tailscale-lxc"
+APP_TYPE="addon"
+
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-tailscale-lxc" "addon"
+
+# Enable error handling
 set -Eeuo pipefail
-trap 'echo -e "\n[ERROR] in line $LINENO: exit code $?"' ERR
+trap 'error_handler' ERR
 
 function header_info() {
   clear
@@ -20,13 +30,8 @@ function header_info() {
 EOF
 }
 
-function msg_info() { echo -e " \e[1;36m➤\e[0m $1"; }
-function msg_ok() { echo -e " \e[1;32m✔\e[0m $1"; }
-function msg_error() { echo -e " \e[1;31m✖\e[0m $1"; }
-
-# Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
-declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-tailscale-lxc" "addon"
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
 
 header_info
 
@@ -168,4 +173,4 @@ TAGS="${TAGS:+$TAGS; }tailscale"
 pct set "$CTID" -tags "$TAGS"
 
 msg_ok "Tailscale installed on CT $CTID"
-msg_info "Reboot the container, then run 'tailscale up' inside the container to activate."
+echo -e "${YW}Reboot the container${CL}, then run 'tailscale up' inside the container to activate."
