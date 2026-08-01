@@ -37,6 +37,8 @@ $STD apt install -y \
   redis-server \
   redis-tools \
   p7zip-full \
+  7zip-standalone \
+  libarchive-tools \
   tzdata
 msg_ok "Installed Dependencies"
 

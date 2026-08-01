@@ -30,6 +30,12 @@ function update_script() {
     exit
   fi
 
+  if [[ ! -x /usr/bin/7zz || ! -x /usr/bin/bsdtar ]]; then
+    msg_info "Installing Archive Tools"
+    $STD apt install -y 7zip-standalone libarchive-tools
+    msg_ok "Installed Archive Tools"
+  fi
+
   NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_release "romm" "rommapp/romm"; then
