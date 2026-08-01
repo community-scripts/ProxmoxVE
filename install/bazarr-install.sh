@@ -22,6 +22,7 @@ chmod 775 /opt/bazarr /var/lib/bazarr/
 sed -i.bak 's/--only-binary=Pillow//g' /opt/bazarr/requirements.txt
 $STD uv venv --clear /opt/bazarr/venv --python 3.12
 $STD uv pip install -r /opt/bazarr/requirements.txt --python /opt/bazarr/venv/bin/python3
+$STD uv pip install psycopg2-binary --python /opt/bazarr/venv/bin/python3
 msg_ok "Installed Bazarr"
 
 msg_info "Creating Service"
