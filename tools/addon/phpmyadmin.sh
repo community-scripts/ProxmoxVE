@@ -46,8 +46,8 @@ header_info
 
 function check_internet() {
   if ! command -v curl &>/dev/null; then
-    $STD apt-get update
-    $STD apt-get install -y curl
+    $STD apt update
+    $STD apt install -y curl
   fi
   msg_info "Checking Internet connectivity to GitHub"
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://github.com)
@@ -86,7 +86,7 @@ function install_php_and_modules() {
     done
     if [[ ${#MISSING_PACKAGES[@]} -gt 0 ]]; then
       msg_info "Installing missing PHP packages: ${MISSING_PACKAGES[*]}"
-      if ! $STD apt-get update || ! $STD apt-get install -y "${MISSING_PACKAGES[@]}"; then
+      if ! $STD apt update || ! $STD apt install -y "${MISSING_PACKAGES[@]}"; then
         msg_error "Failed to install required PHP modules. Exiting."
         exit 237
       fi
@@ -96,7 +96,16 @@ function install_php_and_modules() {
     fi
   else
     msg_info "Installing Lighttpd and PHP for Alpine"
-    $STD $PKG_MANAGER_INSTALL lighttpd php php-fpm php-session php-json php-mysqli curl tar openssl
+    $STD $PKG_MANAGER_INSTALL \
+      lighttpd \
+      php \
+      php-fpm \
+      php-session \
+      php-json \
+      php-mysqli \
+      curl \
+      tar \
+      openssl
     msg_ok "Installed Lighttpd and PHP"
   fi
 }

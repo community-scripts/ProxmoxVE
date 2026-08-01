@@ -39,8 +39,8 @@ header_info
 
 msg_info "Installing ${APP}"
 if ! command -v curl &>/dev/null; then
-  $STD apt-get update
-  $STD apt-get install -y curl
+  $STD apt update
+  $STD apt install -y curl
 fi
 curl -fsSL "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb" -o OliveTin_linux_amd64.deb
 $STD dpkg -i OliveTin_linux_amd64.deb
