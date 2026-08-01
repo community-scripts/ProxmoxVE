@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
+
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+
+APP="all-templates"
+APP_TYPE="addon"
+
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "all-templates" "addon"
 
 function header_info {
   clear
@@ -15,37 +24,17 @@ function header_info {
 EOF
 }
 
-set -eEuo pipefail
-shopt -s expand_aliases
-alias die='EXIT=$? LINE=$LINENO error_exit'
-trap die ERR
-function error_exit() {
-  trap - ERR
-  local DEFAULT='Unknown failure occured.'
-  local REASON="\e[97m${1:-$DEFAULT}\e[39m"
-  local FLAG="\e[91m[ERROR] \e[93m$EXIT@$LINE"
-  msg "$FLAG $REASON" 1>&2
-  [ ! -z ${CTID-} ] && cleanup_ctid
-  exit $EXIT
+# Enable error handling; destroy any partially-created container before reporting the error
+set -Eeuo pipefail
+function _cleanup_on_error() {
+  local ec=$? cmd="$BASH_COMMAND"
+  [[ -n "${CTID:-}" ]] && cleanup_ctid
+  error_handler "$ec" "$cmd"
 }
-function warn() {
-  local REASON="\e[97m$1\e[39m"
-  local FLAG="\e[93m[WARNING]\e[39m"
-  msg "$FLAG $REASON"
-}
-function info() {
-  local REASON="$1"
-  local FLAG="\e[36m[INFO]\e[39m"
-  msg "$FLAG $REASON"
-}
-function msg() {
-  local TEXT="$1"
-  echo -e "$TEXT"
-}
+trap '_cleanup_on_error' ERR
 
-# Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
-declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "all-templates" "addon"
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
 
 function validate_container_id() {
   local ctid="$1"
@@ -84,7 +73,7 @@ if systemctl is-active -q ping-instances.service; then
   systemctl stop ping-instances.service
 fi
 header_info
-echo "Loading..."
+msg_info "Loading"
 pveam update >/dev/null 2>&1
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templates" --yesno "This will allow for the creation of one of the many Template LXC Containers. Proceed?" 10 68
 TEMPLATE_MENU=()
@@ -97,8 +86,8 @@ done < <(pveam available)
 TEMPLATE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Template LXCs" --radiolist "\nSelect a Template LXC to create:\n" 16 $((MSG_MAX_LENGTH + 58)) 10 "${TEMPLATE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"')
 [ -z "$TEMPLATE" ] && {
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Template LXC Selected" --msgbox "It appears that no Template LXC container was selected" 10 68
-  msg "Done"
-  exit
+  echo "Done"
+  exit 0
 }
 
 # Setup script environment
@@ -108,9 +97,9 @@ PASS="$(openssl rand -base64 8)"
 # Get valid Container ID
 CTID=$(pvesh get /cluster/nextid)
 if ! validate_container_id "$CTID"; then
-  warn "Container ID $CTID is already in use."
+  msg_warn "Container ID $CTID is already in use."
   CTID=$(get_valid_container_id "$CTID")
-  info "Using next available ID: $CTID"
+  msg_info "Using next available ID: $CTID"
 fi
 
 PCT_OPTIONS="
@@ -142,7 +131,10 @@ function select_storage() {
     CONTENT='vztmpl'
     CONTENT_LABEL='Container template'
     ;;
-  *) false || die "Invalid storage class." ;;
+  *)
+    msg_error "Invalid storage class."
+    exit 1
+    ;;
   esac
 
   # Query all storage locations
@@ -161,8 +153,9 @@ function select_storage() {
 
   # Select storage location
   if [ $((${#MENU[@]} / 3)) -eq 0 ]; then
-    warn "'$CONTENT_LABEL' needs to be selected for at least one storage location."
-    die "Unable to detect valid storage location."
+    msg_warn "'$CONTENT_LABEL' needs to be selected for at least one storage location."
+    msg_error "Unable to detect valid storage location."
+    exit 1
   elif [ $((${#MENU[@]} / 3)) -eq 1 ]; then
     printf ${MENU[0]}
   else
@@ -171,7 +164,10 @@ function select_storage() {
       STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
         "Which storage pool would you like to use for the ${CONTENT_LABEL,,}?\n\n" \
         16 $(($MSG_MAX_LENGTH + 23)) 6 \
-        "${MENU[@]}" 3>&1 1>&2 2>&3) || die "Menu aborted."
+        "${MENU[@]}" 3>&1 1>&2 2>&3) || {
+        msg_error "Menu aborted."
+        exit 1
+      }
     done
     printf $STORAGE
   fi
@@ -179,35 +175,43 @@ function select_storage() {
 header_info
 # Get template storage
 TEMPLATE_STORAGE=$(select_storage template)
-info "Using '$TEMPLATE_STORAGE' for template storage."
+msg_info "Using '$TEMPLATE_STORAGE' for template storage."
 
 # Get container storage
 CONTAINER_STORAGE=$(select_storage container)
-info "Using '$CONTAINER_STORAGE' for container storage."
+msg_info "Using '$CONTAINER_STORAGE' for container storage."
 
 # Download template
-msg "Downloading LXC template (Patience)..."
-pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null || die "A problem occured while downloading the LXC template."
+msg_info "Downloading LXC template (Patience)"
+pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null || {
+  msg_error "A problem occured while downloading the LXC template."
+  exit 1
+}
+msg_ok "Downloaded LXC template"
 
 # Create variable for 'pct' options
 PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
 [[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs $CONTAINER_STORAGE:${PCT_DISK_SIZE:-8})
 
 # Create LXC
-msg "Creating LXC container..."
-pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/null ||
-  die "A problem occured while trying to create container."
+msg_info "Creating LXC container"
+pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/null || {
+  msg_error "A problem occured while trying to create container."
+  exit 1
+}
+msg_ok "Created LXC container"
 
 # Save password
 echo "$NAME password: ${PASS}" >>~/$NAME.creds # file is located in the Proxmox root directory
 
 # Start container
-msg "Starting LXC Container..."
+msg_info "Starting LXC Container"
 pct start "$CTID"
 sleep 5
+msg_ok "Started LXC Container"
 
 # Get container IP
-set +eEuo pipefail
+set +Eeuo pipefail
 max_attempts=5
 attempt=1
 IP=""
@@ -216,18 +220,18 @@ while [[ $attempt -le $max_attempts ]]; do
   if [[ -n $IP ]]; then
     break
   else
-    warn "Attempt $attempt: IP address not found. Pausing for 5 seconds..."
+    msg_warn "Attempt $attempt: IP address not found. Pausing for 5 seconds..."
     sleep 5
     ((attempt++))
   fi
 done
 
 if [[ -z $IP ]]; then
-  warn "Maximum number of attempts reached. IP address not found."
+  msg_warn "Maximum number of attempts reached. IP address not found."
   IP="NOT FOUND"
 fi
 
-set -eEuo pipefail
+set -Eeuo pipefail
 # Start Proxmox VE Monitor-All if available
 if [[ -f /etc/systemd/system/ping-instances.service ]]; then
   systemctl start ping-instances.service
@@ -236,10 +240,10 @@ fi
 # Success message
 header_info
 echo
-info "LXC container '$CTID' was successfully created, and its IP address is ${IP}."
+msg_ok "LXC container '$CTID' was successfully created, and its IP address is ${IP}."
 echo
-info "Proceed to the LXC console to complete the setup."
+echo -e "${YW}Proceed to the LXC console to complete the setup.${CL}"
 echo
-info "login: root"
-info "password: $PASS"
+echo -e "${YW}login: root${CL}"
+echo -e "${YW}password: $PASS${CL}"
 echo
