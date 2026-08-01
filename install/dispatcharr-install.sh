@@ -174,7 +174,7 @@ cd /opt/dispatcharr
 set -a
 source .env
 set +a
-exec uv run celery -A dispatcharr worker -l info -c 4
+exec uv run celery -A dispatcharr worker -l info -c 4 -Q celery,recordings,dvr,default
 EOF
 chmod +x /opt/dispatcharr/start-celery.sh
 
