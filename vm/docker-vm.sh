@@ -659,8 +659,11 @@ fi
 
 # Resize disk to target size
 msg_info "Resizing disk image to ${DISK_SIZE}"
-qemu-img resize "$WORK_FILE" "${DISK_SIZE}" >/dev/null 2>&1
-msg_ok "Resized disk image"
+GROWN_FILE=$(mktemp --suffix=.qcow2)
+qemu-img create -f qcow2 "$GROWN_FILE" "${DISK_SIZE}" >/dev/null
+virt-resize --quiet --expand /dev/sda1 "$WORK_FILE" "$GROWN_FILE" >/dev/null
+mv -f "$GROWN_FILE" "$WORK_FILE"
+msg_ok "Resized disk image and expanded root filesystem"
 
 # ==============================================================================
 # VM CREATION
