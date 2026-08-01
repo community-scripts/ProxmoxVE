@@ -52,7 +52,7 @@ function uninstall() {
 function update() {
   if check_for_gh_release "coder-code-server" "coder/code-server"; then
     msg_info "Updating ${APP}"
-    fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_amd64.deb"
+    fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_$(arch_resolve).deb"
     systemctl restart code-server@"$USER"
     msg_ok "Updated successfully!"
     exit
@@ -77,7 +77,7 @@ function install() {
     preexisting_config=true
   fi
 
-  fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_amd64.deb"
+  fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_$(arch_resolve).deb"
   mkdir -p "${HOME}/.config/code-server/"
 
   if [ "$preexisting_config" = false ]; then

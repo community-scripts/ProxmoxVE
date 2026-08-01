@@ -70,18 +70,20 @@ if [ -f "$INSTALL_PATH" ]; then
       rc-update del filebrowser &>/dev/null || true
       rm -f "$SERVICE_PATH"
     fi
-    rm -f "$INSTALL_PATH" "$DB_PATH"
+    rm -f "$INSTALL_PATH" "$DB_PATH" "$HOME/.filebrowser"
     msg_ok "${APP} has been uninstalled."
     exit 0
   fi
 
   read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_info "Updating ${APP}"
-    if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi
-    curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
-    chmod +x "$INSTALL_PATH"
-    msg_ok "Updated ${APP}"
+    if check_for_gh_release "filebrowser" "filebrowser/filebrowser"; then
+      msg_info "Updating ${APP}"
+      fetch_and_deploy_gh_release "filebrowser" "filebrowser/filebrowser" "prebuild" "latest" "/opt/filebrowser-dist" "linux-$(arch_resolve)-filebrowser.tar.gz"
+      install -m 755 /opt/filebrowser-dist/filebrowser "$INSTALL_PATH"
+      rm -rf /opt/filebrowser-dist
+      msg_ok "Updated ${APP}"
+    fi
     exit 0
   else
     msg_warn "Update skipped. Exiting."
@@ -97,11 +99,11 @@ read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing ${APP} on ${OS}"
   $STD $PKG_MANAGER \
-    wget \
     tar \
     curl
-  curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
-  chmod +x "$INSTALL_PATH"
+  fetch_and_deploy_gh_release "filebrowser" "filebrowser/filebrowser" "prebuild" "latest" "/opt/filebrowser-dist" "linux-$(arch_resolve)-filebrowser.tar.gz"
+  install -m 755 /opt/filebrowser-dist/filebrowser "$INSTALL_PATH"
+  rm -rf /opt/filebrowser-dist
   msg_ok "Installed ${APP}"
 
   msg_info "Creating FileBrowser directory"

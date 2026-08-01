@@ -101,7 +101,7 @@ if [[ -f "$INSTALL_PATH" ]]; then
       rc-update del filebrowser &>/dev/null || true
       rm -f "$SERVICE_PATH"
     fi
-    rm -f "$INSTALL_PATH" "$CONFIG_PATH"
+    rm -f "$INSTALL_PATH" "$CONFIG_PATH" "$HOME/.filebrowser-quantum"
     msg_ok "${APP} has been uninstalled."
     exit 0
   fi
@@ -109,13 +109,13 @@ if [[ -f "$INSTALL_PATH" ]]; then
   echo -n "${TAB}Update ${APP}? (y/N): "
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_info "Updating ${APP}"
-    if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi
-    TMP_BIN=$(mktemp)
-    curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
-    chmod +x "$TMP_BIN"
-    mv -f "$TMP_BIN" /usr/local/bin/filebrowser
-    msg_ok "Updated ${APP}"
+    if check_for_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser"; then
+      msg_info "Updating ${APP}"
+      if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi
+      fetch_and_deploy_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser" "singlefile" "latest" "/usr/local/bin" "linux-$(arch_resolve)-filebrowser"
+      mv -f /usr/local/bin/filebrowser-quantum "$INSTALL_PATH"
+      msg_ok "Updated ${APP}"
+    fi
     exit 0
   else
     msg_warn "Update skipped. Exiting."
@@ -139,10 +139,8 @@ msg_info "Installing ${APP} on ${OS}"
 $STD $PKG_MANAGER \
   curl \
   ffmpeg
-TMP_BIN=$(mktemp)
-curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
-chmod +x "$TMP_BIN"
-mv -f "$TMP_BIN" /usr/local/bin/filebrowser
+fetch_and_deploy_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser" "singlefile" "latest" "/usr/local/bin" "linux-$(arch_resolve)-filebrowser"
+mv -f /usr/local/bin/filebrowser-quantum "$INSTALL_PATH"
 msg_ok "Installed ${APP}"
 
 msg_info "Preparing configuration directory"

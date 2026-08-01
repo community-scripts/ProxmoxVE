@@ -95,7 +95,7 @@ function update() {
     BACKUP_DIR="/opt/adguardhome-sync_backup"
     create_backup "$CONFIG_PATH"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_$(arch_resolve).tar.gz"
 
     restore_backup
 
@@ -115,7 +115,7 @@ function update() {
 # INSTALL
 # ==============================================================================
 function install() {
-  fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_amd64.tar.gz"
+  fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_$(arch_resolve).tar.gz"
 
   # Gather configuration from user
   echo ""
