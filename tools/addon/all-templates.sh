@@ -191,11 +191,11 @@ msg_ok "Downloaded LXC template"
 
 # Create variable for 'pct' options
 PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
-[[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs $CONTAINER_STORAGE:${PCT_DISK_SIZE:-8})
+[[ " ${PCT_OPTIONS[*]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs $CONTAINER_STORAGE:${PCT_DISK_SIZE:-8})
 
 # Create LXC
 msg_info "Creating LXC container"
-pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/null || {
+pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} "${PCT_OPTIONS[@]}" >/dev/null || {
   msg_error "A problem occured while trying to create container."
   exit 1
 }
