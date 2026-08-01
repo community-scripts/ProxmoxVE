@@ -10,8 +10,8 @@ if ! command -v curl &>/dev/null; then
   if [[ -f "/etc/alpine-release" ]]; then
     apk -U add curl >/dev/null 2>&1
   else
-    apt-get update >/dev/null 2>&1
-    apt-get install -y curl >/dev/null 2>&1
+    apt update >/dev/null 2>&1
+    apt install -y curl >/dev/null 2>&1
   fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)

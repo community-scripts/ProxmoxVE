@@ -27,8 +27,12 @@ IP="$LOCAL_IP"
 
 install_glances_debian() {
   msg_info "Installing dependencies"
-  $STD apt-get update
-  $STD apt-get install -y gcc lm-sensors wireless-tools curl
+  $STD apt update
+  $STD apt install -y \
+    gcc \
+    lm-sensors \
+    wireless-tools \
+    curl
   msg_ok "Installed dependencies"
 
   msg_info "Setting up Python + uv"

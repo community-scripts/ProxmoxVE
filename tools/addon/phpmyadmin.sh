@@ -34,7 +34,7 @@ if [[ -f "/etc/alpine-release" ]]; then
   INSTALL_DIR="$INSTALL_DIR_ALPINE"
 elif [[ -f "/etc/debian_version" ]]; then
   OS="Debian"
-  PKG_MANAGER_INSTALL="apt-get install -y"
+  PKG_MANAGER_INSTALL="apt install -y"
   PKG_QUERY="dpkg -l"
   INSTALL_DIR="$INSTALL_DIR_DEBIAN"
 else

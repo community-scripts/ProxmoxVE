@@ -51,7 +51,7 @@ if [[ -f "/etc/alpine-release" ]]; then
 elif [[ -f "/etc/debian_version" ]]; then
   OS="Debian"
   SERVICE_PATH="/etc/systemd/system/filebrowser.service"
-  PKG_MANAGER="apt-get install -y"
+  PKG_MANAGER="apt install -y"
 else
   msg_error "Unsupported OS detected. Exiting."
   exit 238

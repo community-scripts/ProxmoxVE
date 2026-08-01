@@ -39,19 +39,20 @@ while true; do
 done
 
 msg_info "Setting up ${APP} Repository"
-$STD apt-get update
-$STD apt-get install -y curl
-$STD apt-get install -y gnupg
+$STD apt update
+$STD apt install -y \
+  curl \
+  gnupg
 $STD bash -c "curl -fsSL https://install.crowdsec.net | bash"
 msg_ok "Setup ${APP} Repository"
 
 msg_info "Installing ${APP}"
-$STD apt-get update
-$STD apt-get install -y crowdsec
+$STD apt update
+$STD apt install -y crowdsec
 msg_ok "Installed ${APP}"
 
 msg_info "Installing ${APP} Common Bouncer"
-$STD apt-get install -y crowdsec-firewall-bouncer-iptables
+$STD apt install -y crowdsec-firewall-bouncer-iptables
 msg_ok "Installed ${APP} Common Bouncer"
 
 msg_ok "Completed successfully!\n"
