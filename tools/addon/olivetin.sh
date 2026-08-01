@@ -7,7 +7,6 @@
 
 APP="OliveTin"
 APP_TYPE="addon"
-INSTALL_PATH="/opt/olivetin"
 
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -23,6 +22,7 @@ trap 'error_handler' ERR
 load_functions
 
 header_info
+ensure_usr_local_bin_persist
 get_lxc_ip
 IP="$LOCAL_IP"
 
@@ -43,7 +43,7 @@ function uninstall() {
 function update() {
   if check_for_gh_release "olivetin" "OliveTin/OliveTin"; then
     msg_info "Updating ${APP}"
-    fetch_and_deploy_gh_release "olivetin" "OliveTin/OliveTin" "binary" "latest" "$INSTALL_PATH"
+    fetch_and_deploy_gh_release "olivetin" "OliveTin/OliveTin" "binary"
     systemctl restart OliveTin
     msg_ok "Updated successfully!"
     exit
@@ -55,9 +55,19 @@ function update() {
 # ==============================================================================
 function install() {
   msg_info "Installing ${APP}"
-  fetch_and_deploy_gh_release "olivetin" "OliveTin/OliveTin" "binary" "latest" "$INSTALL_PATH"
+  fetch_and_deploy_gh_release "olivetin" "OliveTin/OliveTin" "binary"
   systemctl enable --now OliveTin &>/dev/null
   msg_ok "Installed ${APP}"
+
+  msg_info "Creating update script"
+  ensure_usr_local_bin_persist
+  cat <<'EOF' >/usr/local/bin/update_olivetin
+#!/usr/bin/env bash
+# OliveTin Update Script
+type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/olivetin.sh)"
+EOF
+  chmod +x /usr/local/bin/update_olivetin
+  msg_ok "Created update script (/usr/local/bin/update_olivetin)"
 
   msg_ok "Completed successfully!\n"
   echo -e "${APP} should be reachable by going to the following URL.
@@ -67,6 +77,18 @@ function install() {
 # ==============================================================================
 # MAIN
 # ==============================================================================
+
+# Handle type=update (called from update script)
+if [[ "${type:-}" == "update" ]]; then
+  if command -v olivetin &>/dev/null; then
+    update
+  else
+    msg_error "${APP} is not installed. Nothing to update."
+    exit 233
+  fi
+  exit 0
+fi
+
 if [[ -d "$HOME" && -f "$HOME/.olivetin" ]] || command -v olivetin &>/dev/null; then
   msg_warn "${APP} is already installed."
   echo -n "${TAB}Uninstall ${APP}? (y/N): "
