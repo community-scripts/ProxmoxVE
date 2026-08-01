@@ -46,9 +46,8 @@ while true; do
 done
 
 msg_info "Installing Dependencies"
-$STD apt-get update
-$STD apt-get install -y curl
-$STD apt-get install -y git
+$STD apt update
+$STD apt install -y curl git
 msg_ok "Installed Dependencies"
 
 VERSION=$(curl -fsSL https://api.github.com/repos/coder/code-server/releases/latest |
