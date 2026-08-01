@@ -96,7 +96,10 @@ PORT=${PORT:-$DEFAULT_PORT}
 read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing ${APP} on ${OS}"
-  $STD $PKG_MANAGER wget tar curl
+  $STD $PKG_MANAGER \
+    wget \
+    tar \
+    curl
   curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
   chmod +x "$INSTALL_PATH"
   msg_ok "Installed ${APP}"

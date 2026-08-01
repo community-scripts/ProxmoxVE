@@ -136,7 +136,9 @@ if ! [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
 fi
 
 msg_info "Installing ${APP} on ${OS}"
-$STD $PKG_MANAGER curl ffmpeg
+$STD $PKG_MANAGER \
+  curl \
+  ffmpeg
 curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
 chmod +x "$TMP_BIN"
 mv -f "$TMP_BIN" /usr/local/bin/filebrowser

@@ -22,6 +22,9 @@ APP_TYPE="addon"
 load_functions
 
 header_info
+ensure_usr_local_bin_persist
+get_lxc_ip
+IP="$LOCAL_IP"
 
 if command -v pveversion >/dev/null 2>&1; then
   msg_error "Can't Install on Proxmox"
@@ -32,8 +35,115 @@ if [ -e /etc/alpine-release ]; then
   exit 1
 fi
 
-get_lxc_ip
-IP="$LOCAL_IP"
+# ==============================================================================
+# UNINSTALL
+# ==============================================================================
+function uninstall() {
+  msg_info "Uninstalling ${APP}"
+  systemctl disable --now code-server@"$USER" &>/dev/null || true
+  $STD apt remove -y code-server
+  rm -f "$HOME/.coder-code-server"
+  msg_ok "${APP} has been uninstalled"
+}
+
+# ==============================================================================
+# UPDATE
+# ==============================================================================
+function update() {
+  if check_for_gh_release "coder-code-server" "coder/code-server"; then
+    msg_info "Updating ${APP}"
+    fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_amd64.deb"
+    systemctl restart code-server@"$USER"
+    msg_ok "Updated successfully!"
+    exit
+  fi
+}
+
+# ==============================================================================
+# INSTALL
+# ==============================================================================
+function install() {
+  msg_info "Installing Dependencies"
+  $STD apt update
+  $STD apt install -y \
+    curl \
+    git
+  msg_ok "Installed Dependencies"
+
+  msg_info "Installing ${APP}"
+  config_path="${HOME}/.config/code-server/config.yaml"
+  preexisting_config=false
+  if [ -f "$config_path" ]; then
+    preexisting_config=true
+  fi
+
+  fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_amd64.deb"
+  mkdir -p "${HOME}/.config/code-server/"
+
+  if [ "$preexisting_config" = false ]; then
+    cat <<EOF >"$config_path"
+bind-addr: 0.0.0.0:8680
+auth: none
+password: 
+cert: false
+EOF
+  fi
+  systemctl enable -q --now code-server@"$USER"
+  systemctl restart code-server@"$USER"
+  if ! systemctl is-active --quiet code-server@"$USER"; then
+    msg_error "code-server service failed to start."
+    exit 1
+  fi
+  msg_ok "Installed ${APP}"
+
+  msg_info "Creating update script"
+  ensure_usr_local_bin_persist
+  cat <<'EOF' >/usr/local/bin/update_coder-code-server
+#!/usr/bin/env bash
+# Coder Code Server Update Script
+type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/coder-code-server.sh)"
+EOF
+  chmod +x /usr/local/bin/update_coder-code-server
+  msg_ok "Created update script (/usr/local/bin/update_coder-code-server)"
+
+  echo -e "${APP} should be reachable by going to the following URL.
+         ${BL}http://${IP}:8680${CL} \n"
+}
+
+# ==============================================================================
+# MAIN
+# ==============================================================================
+
+# Handle type=update (called from update script)
+if [[ "${type:-}" == "update" ]]; then
+  if command -v code-server &>/dev/null; then
+    update
+  else
+    msg_error "${APP} is not installed. Nothing to update."
+    exit 233
+  fi
+  exit 0
+fi
+
+if [[ -d "$HOME" && -f "$HOME/.coder-code-server" ]] || command -v code-server &>/dev/null; then
+  msg_warn "${APP} is already installed."
+  echo -n "${TAB}Uninstall ${APP}? (y/N): "
+  read -r uninstall_prompt
+  if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+    uninstall
+    exit 0
+  fi
+
+  echo -n "${TAB}Update ${APP}? (y/N): "
+  read -r update_prompt
+  if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
+    update
+    exit 0
+  fi
+
+  msg_warn "No action selected. Exiting."
+  exit 0
+fi
 
 while true; do
   echo -n "${TAB}This will Install ${APP}. Proceed (y/n)? "
@@ -45,43 +155,4 @@ while true; do
   esac
 done
 
-msg_info "Installing Dependencies"
-$STD apt update
-$STD apt install -y curl git
-msg_ok "Installed Dependencies"
-
-VERSION=$(curl -fsSL https://api.github.com/repos/coder/code-server/releases/latest |
-  grep "tag_name" |
-  awk '{print substr($2, 3, length($2)-4) }')
-
-msg_info "Installing Code-Server v${VERSION}"
-config_path="${HOME}/.config/code-server/config.yaml"
-preexisting_config=false
-
-if [ -f "$config_path" ]; then
-  preexisting_config=true
-fi
-
-$STD curl -fOL https://github.com/coder/code-server/releases/download/v"$VERSION"/code-server_"${VERSION}"_amd64.deb
-$STD dpkg -i code-server_"${VERSION}"_amd64.deb
-rm -rf code-server_"${VERSION}"_amd64.deb
-mkdir -p "${HOME}/.config/code-server/"
-
-if [ "$preexisting_config" = false ]; then
-  cat <<EOF >"$config_path"
-bind-addr: 0.0.0.0:8680
-auth: none
-password: 
-cert: false
-EOF
-fi
-systemctl enable -q --now code-server@"$USER"
-systemctl restart code-server@"$USER"
-if ! systemctl is-active --quiet code-server@"$USER"; then
-  msg_error "code-server service failed to start."
-  exit 1
-fi
-msg_ok "Installed Code-Server v${VERSION}"
-
-echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://${IP}:8680${CL} \n"
+install

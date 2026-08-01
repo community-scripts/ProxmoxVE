@@ -158,9 +158,17 @@ function install() {
 
   msg_info "Installing dependencies"
   if [[ "$OS" == "Debian" ]]; then
-    $STD $PKG_MANAGER python3 python3-pil ffmpeg curl
+    $STD $PKG_MANAGER \
+      python3 \
+      python3-pil \
+      ffmpeg \
+      curl
   else
-    $STD $PKG_MANAGER python3 py3-pillow ffmpeg curl
+    $STD $PKG_MANAGER \
+      python3 \
+      py3-pillow \
+      ffmpeg \
+      curl
   fi
   msg_ok "Dependencies installed (with thumbnail support)"
 
