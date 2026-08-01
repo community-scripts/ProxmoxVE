@@ -112,11 +112,11 @@ function install_php_and_modules() {
 
 function install_phpmyadmin() {
   msg_info "Fetching latest phpMyAdmin release from GitHub"
-  LATEST_VERSION_RAW=$(curl -fsSL https://api.github.com/repos/phpmyadmin/phpmyadmin/releases/latest | grep tag_name | cut -d '"' -f4)
+  LATEST_VERSION_RAW=$(get_latest_github_release "phpmyadmin/phpmyadmin" false) || true
   LATEST_VERSION=$(echo "$LATEST_VERSION_RAW" | sed -e 's/^RELEASE_//' -e 's/_/./g')
   if [[ -z "$LATEST_VERSION" ]]; then
     msg_error "Could not determine latest phpMyAdmin version from GitHub – falling back to 5.2.2"
-    LATEST_VERSION="RELEASE_5_2_2"
+    LATEST_VERSION="5.2.2"
   fi
   msg_ok "Latest version: $LATEST_VERSION"
 
@@ -217,7 +217,7 @@ function uninstall_phpmyadmin() {
 
 function update_phpmyadmin() {
   msg_info "Fetching latest phpMyAdmin release from GitHub"
-  LATEST_VERSION_RAW=$(curl -fsSL https://api.github.com/repos/phpmyadmin/phpmyadmin/releases/latest | grep tag_name | cut -d '"' -f4)
+  LATEST_VERSION_RAW=$(get_latest_github_release "phpmyadmin/phpmyadmin" false) || true
   LATEST_VERSION=$(echo "$LATEST_VERSION_RAW" | sed -e 's/^RELEASE_//' -e 's/_/./g')
 
   if [[ -z "$LATEST_VERSION" ]]; then

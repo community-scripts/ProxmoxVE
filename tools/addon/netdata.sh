@@ -87,7 +87,8 @@ install() {
   $STD apt install -y netdata
   msg_ok "Installed ${APP}"
   msg_ok "Completed successfully!\n"
-  echo -e "\n${APP} should be reachable at${BL} http://$(hostname -I | awk '{print $1}'):19999 ${CL}\n"
+  get_lxc_ip
+  echo -e "\n${APP} should be reachable at${BL} http://${LOCAL_IP}:19999 ${CL}\n"
 }
 
 uninstall() {

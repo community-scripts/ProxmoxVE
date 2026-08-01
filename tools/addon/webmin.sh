@@ -52,6 +52,6 @@ fetch_and_deploy_gh_release "webmin" "webmin/webmin" "binary" "latest" "/opt/web
 /usr/share/webmin/changepass.pl /etc/webmin root root &>/dev/null
 msg_ok "Installed ${APP}"
 
-IP=$(hostname -I | cut -f1 -d ' ')
-echo -e "Successfully Installed!! ${APP} should be reachable by going to ${BL}https://${IP}:10000${CL}"
+get_lxc_ip
+echo -e "Successfully Installed!! ${APP} should be reachable by going to ${BL}https://${LOCAL_IP}:10000${CL}"
 

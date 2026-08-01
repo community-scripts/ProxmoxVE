@@ -25,6 +25,7 @@ if command -v pveversion >/dev/null 2>&1; then
   msg_error "Can't Install on Proxmox "
   exit 1
 fi
+get_lxc_ip
 msg_info "Installing ${APP}"
 $STD apt update
 $STD apt install -y \
@@ -90,7 +91,7 @@ EOF
   $STD pip3 install --pre homeassistant
   systemctl enable homeassistant &>/dev/null
   msg_ok "Installed Home Assistant Beta"
-  echo -e " Go to $(hostname -I | awk '{print $1}'):8123"
+  echo -e " Go to ${LOCAL_IP}:8123"
   hass
 fi
 
@@ -132,7 +133,7 @@ WantedBy=multi-user.target
 EOF
   systemctl enable --now esphomedashboard &>/dev/null
   msg_ok "Installed ESPHome Beta"
-  echo -e " Go to $(hostname -I | awk '{print $1}'):6052"
+  echo -e " Go to ${LOCAL_IP}:6052"
   exec $SHELL
 fi
 
