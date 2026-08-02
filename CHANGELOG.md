@@ -524,6 +524,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Bitfocus Companion: add libatomic1 dependency [@tremor021](https://github.com/tremor021) ([#16212](https://github.com/community-scripts/ProxmoxVE/pull/16212))
     - fix(dispatcharr): add recordings and dvr queues to celery worker [@eXistC](https://github.com/eXistC) ([#16204](https://github.com/community-scripts/ProxmoxVE/pull/16204))
     - add retry for uv - same as immich [@asylumexp](https://github.com/asylumexp) ([#16203](https://github.com/community-scripts/ProxmoxVE/pull/16203))
     - Fix for cross-seed node version regression [@TorinFrancis](https://github.com/TorinFrancis) ([#16209](https://github.com/community-scripts/ProxmoxVE/pull/16209))
