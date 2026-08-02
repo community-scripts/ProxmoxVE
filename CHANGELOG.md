@@ -520,6 +520,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-02
 
+### 🆕 New Scripts
+
+  - Portainer as Addon [@MickLesk](https://github.com/MickLesk) ([#16200](https://github.com/community-scripts/ProxmoxVE/pull/16200))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
