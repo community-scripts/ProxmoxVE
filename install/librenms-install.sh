@@ -25,7 +25,8 @@ $STD apt install -y \
   rrdtool \
   snmp \
   snmpd \
-  whois
+  whois \
+  ipmitool
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python Dependencies"
