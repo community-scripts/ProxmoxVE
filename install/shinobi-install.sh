@@ -54,7 +54,7 @@ cronKey=$(head -c 1024 </dev/urandom | sha256sum | awk '{print substr($1,1,29)}'
 sed -i -e 's/Shinobi/'"$cronKey"'/g' conf.json
 cp super.sample.json super.json
 $STD npm i npm -g
-$STD npm install --unsafe-perm
+$STD npm install
 $STD npm install pm2@latest -g
 chmod -R 755 .
 touch INSTALL/installed.txt

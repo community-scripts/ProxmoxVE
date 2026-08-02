@@ -32,8 +32,34 @@ if ! command -v curl >/dev/null 2>&1; then
   apt update >/dev/null 2>&1
   apt install -y curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+# Mark container context BEFORE error handling starts: error_handler/on_exit
+# must write local failure artifacts instead of talking to the telemetry API
+# (the host is the single telemetry reporter).
+export TELEMETRY_CONTEXT="container"
+
+# A freshly booted container may not have DNS up yet. `source <(curl ...)` hides
+# curl's exit code, so a failed download would silently source an empty stream.
+_bootstrap_die() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "$1"
+  else
+    echo "FATAL: $1" >&2
+  fi
+  exit 115
+}
+
+_bootstrap_source() {
+  local url="$1" probe="$2" content
+  content=$(curl -fsSL --connect-timeout 10 --retry 5 --retry-connrefused --retry-delay 2 "$url") ||
+    _bootstrap_die "Failed to download ${url##*/}"
+  source /dev/stdin <<<"$content"
+  declare -f "$probe" >/dev/null 2>&1 ||
+    _bootstrap_die "${url##*/} loaded but incomplete (missing ${probe})"
+}
+
+_FUNC_BASE="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc"
+_bootstrap_source "$_FUNC_BASE/core.func" load_functions
+_bootstrap_source "$_FUNC_BASE/error_handler.func" catch_errors
 load_functions
 catch_errors
 
@@ -65,9 +91,12 @@ post_progress_to_api() {
 
   local progress_status="${1:-configuring}"
 
+  # Progress pings are the ONLY telemetry a container sends (terminal statuses
+  # are reported by the host). Include execution_id + platform + repo
+  # attribution (exported by the host) so the server can correlate and filter.
   curl -fsS -m 5 -X POST "https://telemetry.community-scripts.org/telemetry" \
     -H "Content-Type: application/json" \
-    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"lxc\",\"nsapp\":\"${app:-unknown}\",\"status\":\"${progress_status}\"}" &>/dev/null || true
+    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"lxc\",\"nsapp\":\"${app:-unknown}\",\"status\":\"${progress_status}\",\"platform\":\"${TELEMETRY_PLATFORM:-}\",\"repo_source\":\"${REPO_SOURCE:-}\",\"repo_slug\":\"${REPO_SLUG:-}\"}" &>/dev/null || true
 }
 
 # ==============================================================================
@@ -388,7 +417,8 @@ apt_update_safe() {
 # ------------------------------------------------------------------------------
 update_os() {
   msg_info "Updating Container OS"
-  if [[ "$CACHER" == "yes" ]]; then
+  configure_http_proxy
+  if [[ "$CACHER" == "yes" && -z "${HTTP_PROXY:-${http_proxy:-}}" ]]; then
     echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
     local _proxy_raw="${CACHER_IP}"
     local _proxy_host _proxy_port _proxy_url
@@ -509,7 +539,7 @@ EOF
     systemctl restart "$(basename "$(dirname "$GETTY_OVERRIDE")" | sed 's/\.d//')"
     msg_ok "Customized Container"
   fi
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo 'set -a; [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh; set +a; bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/'"${app}"'.sh)"' >/usr/bin/update
   chmod +x /usr/bin/update
 
   if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then

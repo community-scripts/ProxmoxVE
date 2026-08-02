@@ -20,7 +20,7 @@ fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/
 
 msg_info "Setting up Application"
 cd /opt/nametag
-$STD npm ci
+$STD npm ci --include=dev
 DATABASE_URL="postgresql://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}" $STD npx prisma generate
 DATABASE_URL="postgresql://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}" $STD npx prisma migrate deploy
 msg_ok "Set up Application"

@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -41,13 +41,15 @@ function update_script() {
       --exclude="ghostfolio/node_modules" \
       --exclude="ghostfolio/dist" \
       ghostfolio
-    mv /opt/ghostfolio/.env /opt/env.backup
     msg_ok "Backup Created"
+
+    create_backup /opt/ghostfolio/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ghostfolio" "ghostfolio/ghostfolio" "tarball" "latest" "/opt/ghostfolio"
 
+    restore_backup
+
     msg_info "Updating Ghostfolio"
-    mv /opt/env.backup /opt/ghostfolio/.env
     sed -i -E '/^DATABASE_URL=/ s/[?&]sslmode=prefer//g' /opt/ghostfolio/.env
     cd /opt/ghostfolio
     $STD npm ci

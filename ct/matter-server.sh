@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -41,7 +41,7 @@ function update_script() {
     echo "${MATTER_VERSION}" >~/.matter-server
     msg_ok "Updated Matter Server"
 
-    fetch_and_deploy_gh_release "chip-ota-provider-app" "home-assistant-libs/matter-linux-ota-provider" "singlefile" "latest" "/usr/local/bin" "chip-ota-provider-app-x86-64"
+    fetch_and_deploy_gh_release "chip-ota-provider-app" "home-assistant-libs/matter-linux-ota-provider" "singlefile" "latest" "/usr/local/bin" "chip-ota-provider-app-$(arch_resolve "x86-64" "aarch64")"
 
     msg_info "Starting Service"
     systemctl start matter-server

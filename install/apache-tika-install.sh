@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  software-properties-common \
   gdal-bin \
   tesseract-ocr \
   tesseract-ocr-eng \
@@ -33,10 +32,7 @@ $STD apt-get install -y \
   cabextract
 msg_ok "Installed Dependencies"
 
-msg_info "Setup OpenJDK"
-$STD apt-get install -y \
-  openjdk-17-jre-headless
-msg_ok "Setup OpenJDK"
+JAVA_VERSION="21" setup_java
 
 msg_info "Installing Apache Tika"
 mkdir -p /opt/apache-tika

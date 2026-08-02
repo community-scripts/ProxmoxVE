@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,12 +35,11 @@ function update_script() {
     systemctl stop xyops
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/xyops/data /opt/xyops_data_backup
-    cp -r /opt/xyops/conf /opt/xyops_conf_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/xyops/data /opt/xyops/conf
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xyops" "pixlcore/xyops" "tarball"
+
+    restore_backup
 
     msg_info "Rebuilding Application"
     cd /opt/xyops
@@ -48,12 +47,6 @@ function update_script() {
     $STD node bin/build.js dist
     chmod 644 /opt/xyops/node_modules/useragent-ng/lib/regexps.js
     msg_ok "Rebuilt Application"
-
-    msg_info "Restoring Data"
-    cp -r /opt/xyops_data_backup/. /opt/xyops/data
-    cp -r /opt/xyops_conf_backup/. /opt/xyops/conf
-    rm -rf /opt/xyops_data_backup /opt/xyops_conf_backup
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start xyops
@@ -69,5 +62,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5522${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5522${CL}"

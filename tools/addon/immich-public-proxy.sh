@@ -99,7 +99,7 @@ function update() {
 
     msg_info "Installing dependencies"
     cd "$CONFIG_PATH"
-    $STD npm install
+    $STD npm ci
     msg_ok "Installed dependencies"
 
     msg_info "Building ${APP}"
@@ -151,7 +151,7 @@ function install() {
 
   msg_info "Installing dependencies"
   cd "$CONFIG_PATH"
-  $STD npm install
+  $STD npm ci
   msg_ok "Installed dependencies"
 
   msg_info "Building ${APP}"

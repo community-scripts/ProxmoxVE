@@ -18,7 +18,7 @@ $STD apt install -y \
   apache2-utils \
   logrotate \
   build-essential \
-  libpcre3-dev \
+  libpcre2-dev \
   libssl-dev \
   zlib1g-dev \
   git \
@@ -36,7 +36,8 @@ $STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
 ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
 msg_ok "Set up Certbot"
 
-fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "latest" "/opt/openresty" "openresty-*.tar.gz"
+OPENRESTY_VERSION="1.29.2.5"
+fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
 
 msg_info "Building OpenResty"
 cd /opt/openresty
@@ -52,6 +53,7 @@ $STD ./configure \
   --with-stream_ssl_module
 $STD make -j"$(nproc)"
 $STD make install
+echo "${OPENRESTY_VERSION}" >~/.openresty
 rm -rf /opt/openresty
 
 cat <<'EOF' >/lib/systemd/system/openresty.service

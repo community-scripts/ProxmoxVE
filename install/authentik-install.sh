@@ -42,8 +42,8 @@ $STD apt install -y \
   libtool \
   libtool-bin \
   gcc \
-  crossbuild-essential-amd64 \
-  gcc-x86-64-linux-gnu \
+  crossbuild-essential-$(arch_resolve) \
+  gcc-$(arch_resolve "x86-64" "aarch64")-linux-gnu \
   cmake \
   clang \
   libunwind-18-dev \
@@ -54,12 +54,12 @@ NODE_VERSION="24" setup_nodejs
 setup_yq
 setup_go
 RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
-UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.3" setup_uv
+UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.6" setup_uv
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
-XMLSEC_VERSION="1.3.11"
-AUTHENTIK_VERSION="version/2026.5.2"
+XMLSEC_VERSION="1.3.12"
+AUTHENTIK_VERSION="version/2026.5.6"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
@@ -90,7 +90,7 @@ msg_ok "Setup web"
 msg_info "Setting up go proxy"
 cd /opt/authentik
 export CGO_ENABLED="1"
-export CC="x86_64-linux-gnu-gcc"
+export CC="$(arch_resolve "x86_64" "aarch64")-linux-gnu-gcc"
 $STD go mod download
 $STD go build -o /opt/authentik/authentik-server ./cmd/server
 $STD go build -o /opt/authentik/ldap ./cmd/ldap
@@ -109,7 +109,7 @@ EOF
 
 echo "#39 19 * * 6,4 /usr/bin/geoipupdate -f /usr/local/etc/GeoIP.conf" | crontab -
 
-msg_info "Building worker"
+msg_info "Building worker. It may take more than 10 minutes, please be patient."
 export AWS_LC_FIPS_SYS_CC="clang"
 cd /opt/authentik
 $STD cargo build --package authentik --no-default-features --features core --locked --release --jobs 1

@@ -174,9 +174,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/dawarich.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-systemctl enable -q --now nginx
+nginx_enable_site dawarich.conf
 msg_ok "Configured Nginx"
 
 motd_ssh

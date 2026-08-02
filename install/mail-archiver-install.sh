@@ -22,8 +22,14 @@ setup_deb822_repo \
   "main"
 $STD apt install -y \
   dotnet-sdk-10.0 \
-  aspnetcore-runtime-8.0 \
   libgssapi-krb5-2
+if [[ "$(arch_resolve)" == "arm64" ]]; then
+  curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+  $STD bash /tmp/dotnet-install.sh --channel 8.0 --runtime aspnetcore --install-dir /usr/lib/dotnet
+  rm -f /tmp/dotnet-install.sh
+else
+  $STD apt install -y aspnetcore-runtime-8.0
+fi
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql

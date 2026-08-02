@@ -120,6 +120,7 @@ EOF
 
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     cat <<EOF >>/etc/unbound/unbound.conf.d/pi-hole.conf
+server:
   tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
 forward-zone:
   name: "."

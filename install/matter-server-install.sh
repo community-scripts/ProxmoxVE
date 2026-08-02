@@ -39,7 +39,7 @@ $STD uv pip install --python /opt/matter-server/.venv/bin/python "python-matter-
 echo "${MATTER_VERSION}" >~/.matter-server
 msg_ok "Set up Matter Server"
 
-fetch_and_deploy_gh_release "chip-ota-provider-app" "home-assistant-libs/matter-linux-ota-provider" "singlefile" "latest" "/usr/local/bin" "chip-ota-provider-app-x86-64"
+fetch_and_deploy_gh_release "chip-ota-provider-app" "home-assistant-libs/matter-linux-ota-provider" "singlefile" "latest" "/usr/local/bin" "chip-ota-provider-app-$(arch_resolve "x86-64" "aarch64")"
 
 msg_info "Configuring Network"
 cat <<EOF >/etc/sysctl.d/99-matter.conf

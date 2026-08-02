@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -51,7 +51,7 @@ function update_script() {
     rm -rf /opt/trilium
     msg_ok "Backed up Database"
 
-    fetch_and_deploy_gh_release "Trilium" "TriliumNext/Trilium" "prebuild" "latest" "/opt/trilium" "TriliumNotes-Server-*linux-x64.tar.xz"
+    fetch_and_deploy_gh_release "Trilium" "TriliumNext/Trilium" "prebuild" "latest" "/opt/trilium" "TriliumNotes-Server-*linux-$(arch_resolve "x64" "arm64").tar.xz"
 
     msg_info "Restoring Database"
     mkdir -p "$(dirname "${DB_RESTORE_PATH}")"

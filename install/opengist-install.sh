@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y git
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "opengist" "thomiceli/opengist" "prebuild" "latest" "/opt/opengist" "opengist*linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "opengist" "thomiceli/opengist" "prebuild" "latest" "/opt/opengist" "opengist*linux-$(arch_resolve).tar.gz"
 mkdir -p /opt/opengist-data
 sed -i 's|opengist-home:.*|opengist-home: /opt/opengist-data|' /opt/opengist/config.yml
 

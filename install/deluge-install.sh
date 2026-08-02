@@ -26,7 +26,7 @@ cat >~/.config/pip/pip.conf <<EOF
 [global]
 break-system-packages = true
 EOF
-$STD pip install deluge[all]
+$STD pip install deluge[all] "pyopenssl<25"
 msg_ok "Installed Deluge"
 
 msg_info "Creating Service"

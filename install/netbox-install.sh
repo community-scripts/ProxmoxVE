@@ -85,12 +85,12 @@ user.is_superuser = True
 user.is_staff = True
 user.save()
 EOF
-{
-  echo ""
-  echo "Netbox-Django-Credentials"
-  echo -e "Django User: \e[32m$DJANGO_USER\e[0m"
-  echo -e "Django Password: \e[32m$DJANGO_PASS\e[0m"
-} >>~/netbox.creds
+cat <<EOF >~/netbox.creds
+
+Netbox-Django-Credentials
+Django User: $DJANGO_USER
+Django Password: $DJANGO_PASS
+EOF
 msg_ok "Setup Django Admin"
 
 motd_ssh

@@ -16,9 +16,9 @@ update_os
 msg_info "Installing Dependencies"
 setup_deb822_repo \
   "microsoft" \
-  "https://packages.microsoft.com/keys/microsoft.asc" \
-  "https://packages.microsoft.com/debian/12/prod/" \
-  "bookworm" \
+  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+  "https://packages.microsoft.com/debian/13/prod/" \
+  "trixie" \
   "main"
 $STD apt install -y \
   dotnet-sdk-8.0 \

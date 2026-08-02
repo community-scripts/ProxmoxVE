@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "dagu" "dagucloud/dagu" "prebuild" "latest" "/opt/dagu" "dagu_*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "dagu" "dagucloud/dagu" "prebuild" "latest" "/opt/dagu" "dagu_*_linux_$(arch_resolve).tar.gz"
 
 msg_info "Setting up Dagu"
 mkdir -p /opt/dagu/data

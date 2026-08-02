@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Service stopped"
 
     rm -rf /opt/zoraxy/zoraxy
-    fetch_and_deploy_gh_release "zoraxy" "tobychui/zoraxy" "singlefile" "latest" "/opt/zoraxy" "zoraxy_linux_amd64"
+    fetch_and_deploy_gh_release "zoraxy" "tobychui/zoraxy" "singlefile" "latest" "/opt/zoraxy" "zoraxy_linux_$(arch_resolve)"
 
     msg_info "Starting service"
     systemctl start zoraxy

@@ -33,6 +33,7 @@ function update_script() {
   RELEASE="${RELEASE%%+*}"
   msg_info "Updating checkmk"
   $STD omd stop monitoring
+  $STD omd -f rm monitoringbackup 2>/dev/null || true
   $STD omd cp monitoring monitoringbackup
   curl_download "/opt/checkmk.deb" "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-community-${RELEASE}_0.$(get_os_info codename)_amd64.deb"
   $STD apt install -y /opt/checkmk.deb

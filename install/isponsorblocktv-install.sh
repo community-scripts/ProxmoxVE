@@ -13,9 +13,9 @@ setting_up_container
 network_check
 update_os
 
-ISBTV_BINARY="iSponsorBlockTV-x86_64-linux-v1"
+ISBTV_BINARY="$(arch_resolve "iSponsorBlockTV-x86_64-linux-v1" "iSponsorBlockTV-aarch64-linux")"
 if grep -q ' avx ' /proc/cpuinfo 2>/dev/null && grep -q ' avx2 ' /proc/cpuinfo 2>/dev/null && grep -q ' movbe ' /proc/cpuinfo 2>/dev/null; then
-  ISBTV_BINARY="iSponsorBlockTV-x86_64-linux"
+  ISBTV_BINARY="$(arch_resolve "iSponsorBlockTV-x86_64-linux" "iSponsorBlockTV-aarch64-linux")"
 fi
 
 fetch_and_deploy_gh_release "isponsorblocktv" "dmunozv04/iSponsorBlockTV" "singlefile" "latest" "/opt/isponsorblocktv" "${ISBTV_BINARY}"

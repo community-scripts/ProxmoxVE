@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop backrest
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "backrest" "garethgeorge/backrest" "prebuild" "latest" "/opt/backrest/bin" "backrest_Linux_x86_64.tar.gz"
+    fetch_and_deploy_gh_release "backrest" "garethgeorge/backrest" "prebuild" "latest" "/opt/backrest/bin" "backrest_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 
     msg_info "Starting Service"
     systemctl start backrest

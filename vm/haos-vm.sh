@@ -280,7 +280,7 @@ function extract_xz_with_pv() {
 function default_settings() {
   BRANCH="$stable"
   VMID=$(get_valid_nextid)
-  MACHINE="q35"
+  MACHINE=" -machine q35"
   FORMAT=""
   DISK_SIZE="32G"
   HN="haos-${BRANCH}"
@@ -475,7 +475,7 @@ function advanced_settings() {
   done
 
   while true; do
-    if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan (leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
       if [ -z "$VLAN1" ]; then
         VLAN1="Default"
         VLAN=""
@@ -598,7 +598,7 @@ msg_ok "${CL}${BL}${URL}${CL}"
 download_and_validate_xz "$URL" "$CACHE_FILE"
 
 msg_info "Creating Home Assistant OS VM shell"
-qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
+qm create $VMID${MACHINE} -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
   -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" -tags community-script \
   -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 msg_ok "Created VM shell"

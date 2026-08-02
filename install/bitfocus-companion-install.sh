@@ -19,11 +19,15 @@ msg_ok "Installed Dependencies"
 
 msg_info "Fetching Latest Bitfocus Companion Release"
 RELEASE_JSON=$(curl -fsSL "https://api.bitfocus.io/v1/product/companion/packages?limit=20")
-PACKAGE_JSON=$(echo "$RELEASE_JSON" | jq -c '(if type == "array" then . else .packages end) | [.[] | select(.target=="linux-tgz" and (.uri | contains("linux-x64")))] | first')
+COMPANION_ARCH=$(arch_resolve "x64" "arm64")
+PACKAGE_JSON=$(echo "$RELEASE_JSON" | jq -c \
+  --arg target "linux-$(arch_resolve "tgz" "arm64-tgz")" \
+  --arg arch "linux-$COMPANION_ARCH" \
+  '(if type == "array" then . else .packages end) | [.[] | select(.target==$target and (.uri | contains($arch)))] | first')
 RELEASE=$(echo "$PACKAGE_JSON" | jq -r '.version // empty')
 ASSET_URL=$(echo "$PACKAGE_JSON" | jq -r '.uri // empty')
 if [[ -z "$RELEASE" || -z "$ASSET_URL" ]]; then
-  msg_error "Could not resolve a matching Linux x64 Companion package from the Bitfocus API."
+  msg_error "Could not resolve a matching Linux ${COMPANION_ARCH} Companion package from the Bitfocus API."
   exit 1
 fi
 msg_ok "Found Companion ${RELEASE}"

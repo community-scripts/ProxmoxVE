@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -45,7 +45,7 @@ EOF
     systemctl daemon-reload
   fi
 
-  $STD npm update -g n8n
+  $STD npm install -g n8n@latest
   systemctl restart n8n
   msg_ok "Updated n8n"
   msg_ok "Updated successfully!"

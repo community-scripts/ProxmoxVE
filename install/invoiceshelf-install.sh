@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULES="bcmath,gd,intl,xml,zip,pdo_pgsql,mbstring,curl,exif" setup_php
 setup_composer
-NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="invoiceshelf" PG_DB_USER="invoiceshelf" setup_postgresql_db
 
@@ -38,9 +38,15 @@ sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${PG_DB_NAME}|" .env
 sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${PG_DB_USER}|" .env
 sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${PG_DB_PASS}|" .env
 COMPOSER_ALLOW_SUPERUSER=1 $STD composer install --no-dev --optimize-autoloader --no-interaction
-$STD php artisan key:generate
-$STD yarn install
-$STD yarn build
+$STD php artisan key:generate --force
+if command -v corepack >/dev/null 2>&1; then
+
+  $STD corepack pnpm install
+  $STD corepack pnpm run build
+else
+  $STD pnpm install
+  $STD pnpm run build
+fi
 mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache
 chown -R www-data:www-data /opt/invoiceshelf
 chmod -R 775 storage bootstrap/cache
@@ -50,10 +56,11 @@ msg_ok "Set up InvoiceShelf"
 
 msg_info "Configuring Caddy"
 PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/caddy/Caddyfile
 :80 {
     root * /opt/invoiceshelf/public
-    php_fastcgi unix//run/php/php${PHP_VER}-fpm.sock
+    php_fastcgi unix/${PHP_SOCK}
     file_server
     encode gzip
 }

@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,19 +35,12 @@ function update_script() {
     systemctl stop nginx linkding linkding-tasks
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp -r /opt/linkding/data /opt/linkding_data_backup
-    cp /opt/linkding/.env /opt/linkding_env_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/linkding/data /opt/linkding/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
 
-    msg_info "Restoring Data"
-    cp -r /opt/linkding_data_backup/. /opt/linkding/data
-    cp /opt/linkding_env_backup /opt/linkding/.env
-    rm -rf /opt/linkding_data_backup /opt/linkding_env_backup
-    ln -sf /usr/lib/x86_64-linux-gnu/mod_icu.so /opt/linkding/libicu.so
-    msg_ok "Restored Data"
+    restore_backup
+    ln -sf /usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/mod_icu.so /opt/linkding/libicu.so
 
     msg_info "Updating LinkDing"
     cd /opt/linkding

@@ -17,18 +17,18 @@ msg_info "Installing Dependencies"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-amd64"
+fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-$(arch_resolve)"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "yt-dlp"
 
 msg_info "Setting up YT-DLP-WEBUI"
 mkdir -p /opt/yt-dlp-webui
 mkdir /downloads
 RPC_PASSWORD=$(openssl rand -base64 16)
-{
-  echo "yt-dlp-webui-Credentials"
-  echo "Username: admin"
-  echo "Password: ${RPC_PASSWORD}"
-} >>~/yt-dlp-webui.creds
+cat <<EOF >~/yt-dlp-webui.creds
+yt-dlp-webui-Credentials
+Username: admin
+Password: ${RPC_PASSWORD}
+EOF
 
 cat <<EOF >/opt/yt-dlp-webui/config.conf
 # Host where server will listen at (default: "0.0.0.0")

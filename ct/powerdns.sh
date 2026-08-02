@@ -13,7 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,18 +36,14 @@ function update_script() {
   msg_ok "Updated PowerDNS"
 
   if check_for_gh_release "poweradmin" "poweradmin/poweradmin"; then
-    msg_info "Backing up Configuration"
-    cp /opt/poweradmin/config/settings.php /opt/poweradmin_settings.php.bak
-    cp /opt/poweradmin/powerdns.db /opt/poweradmin_powerdns.db.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/poweradmin/config/settings.php /opt/poweradmin/powerdns.db
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "poweradmin" "poweradmin/poweradmin" "tarball"
 
+    restore_backup
+
     msg_info "Updating Poweradmin"
-    cp /opt/poweradmin_settings.php.bak /opt/poweradmin/config/settings.php
-    cp /opt/poweradmin_powerdns.db.bak /opt/poweradmin/powerdns.db
     rm -rf /opt/poweradmin/install
-    rm -f /opt/poweradmin_settings.php.bak /opt/poweradmin_powerdns.db.bak
     chown -R www-data:pdns /opt/poweradmin
     chmod 775 /opt/poweradmin
     chown pdns:pdns /opt/poweradmin/powerdns.db

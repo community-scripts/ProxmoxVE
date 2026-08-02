@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +28,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  setup_deb822_repo \
+  "sftpgo" \
+  "https://oss.sftpgo.com/apt/gpg.key" \
+  "https://oss.sftpgo.com/apt" \
+  "trixie"
   
   msg_info "Updating SFTPGo"
   $STD apt update

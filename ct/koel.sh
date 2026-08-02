@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,21 +35,11 @@ function update_script() {
     systemctl stop nginx php8.4-fpm
     msg_ok "Stopped Services"
 
-    msg_info "Creating Backup"
-    mkdir -p /tmp/koel_backup
-    cp /opt/koel/.env /tmp/koel_backup/
-    cp -r /opt/koel/storage /tmp/koel_backup/ 2>/dev/null || true
-    cp -r /opt/koel/public/img /tmp/koel_backup/ 2>/dev/null || true
-    msg_ok "Created Backup"
+    create_backup /opt/koel/.env /opt/koel/storage /opt/koel/public/img
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "koel" "koel/koel" "prebuild" "latest" "/opt/koel" "koel-*.tar.gz"
 
-    msg_info "Restoring Data"
-    cp /tmp/koel_backup/.env /opt/koel/
-    cp -r /tmp/koel_backup/storage/* /opt/koel/storage/ 2>/dev/null || true
-    cp -r /tmp/koel_backup/img/* /opt/koel/public/img/ 2>/dev/null || true
-    rm -rf /tmp/koel_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Running Migrations"
     cd /opt/koel 

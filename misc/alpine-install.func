@@ -6,8 +6,33 @@
 if ! command -v curl >/dev/null 2>&1; then
   apk update && apk add curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+# Mark container context BEFORE error handling starts: error_handler/on_exit
+# must write local failure artifacts instead of talking to the telemetry API
+# (the host is the single telemetry reporter).
+export TELEMETRY_CONTEXT="container"
+# A freshly booted container may not have DNS up yet. `source <(curl ...)` hides
+# curl's exit code, so a failed download would silently source an empty stream.
+_bootstrap_die() {
+  if declare -f msg_error >/dev/null 2>&1; then
+    msg_error "$1"
+  else
+    echo "FATAL: $1" >&2
+  fi
+  exit 115
+}
+
+_bootstrap_source() {
+  local url="$1" probe="$2" content
+  content=$(curl -fsSL --connect-timeout 10 --retry 5 --retry-connrefused --retry-delay 2 "$url") ||
+    _bootstrap_die "Failed to download ${url##*/}"
+  source /dev/stdin <<<"$content"
+  declare -f "$probe" >/dev/null 2>&1 ||
+    _bootstrap_die "${url##*/} loaded but incomplete (missing ${probe})"
+}
+
+_FUNC_BASE="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc"
+_bootstrap_source "$_FUNC_BASE/core.func" load_functions
+_bootstrap_source "$_FUNC_BASE/error_handler.func" catch_errors
 load_functions
 catch_errors
 
@@ -41,7 +66,7 @@ post_progress_to_api() {
 
   curl -fsS -m 5 -X POST "https://telemetry.community-scripts.org/telemetry" \
     -H "Content-Type: application/json" \
-    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"lxc\",\"nsapp\":\"${app:-unknown}\",\"status\":\"${progress_status}\"}" &>/dev/null || true
+    -d "{\"random_id\":\"${RANDOM_UUID}\",\"execution_id\":\"${EXECUTION_ID:-${RANDOM_UUID}}\",\"type\":\"lxc\",\"nsapp\":\"${app:-unknown}\",\"status\":\"${progress_status}\",\"platform\":\"${TELEMETRY_PLATFORM:-}\",\"repo_source\":\"${REPO_SOURCE:-}\",\"repo_slug\":\"${REPO_SLUG:-}\"}" &>/dev/null || true
 }
 
 # This function enables IPv6 if it's not disabled and sets verbose mode
@@ -138,6 +163,7 @@ network_check() {
 # This function updates the Container OS by running apk upgrade with mirror fallback
 update_os() {
   msg_info "Updating Container OS"
+  configure_http_proxy
   if ! $STD apk -U upgrade; then
     msg_warn "apk update failed (dl-cdn.alpinelinux.org), trying alternate mirrors..."
     local alpine_mirrors="mirror.init7.net ftp.halifax.rwth-aachen.de mirrors.edge.kernel.org alpine.mirror.wearetriple.com mirror.leaseweb.com uk.alpinelinux.org dl-2.alpinelinux.org dl-4.alpinelinux.org"
@@ -243,7 +269,7 @@ EOF
     msg_ok "Customized Container"
   fi
 
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo 'set -a; [ -f /etc/profile.d/90-http-proxy.sh ] && . /etc/profile.d/90-http-proxy.sh; set +a; bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/'"${app}"'.sh)"' >/usr/bin/update
   chmod +x /usr/bin/update
   post_progress_to_api
 }

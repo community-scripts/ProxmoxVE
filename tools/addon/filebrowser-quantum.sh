@@ -176,11 +176,10 @@ if [[ "${noauth_prompt,,}" =~ ^(y|yes)$ ]]; then
 server:
   port: $PORT
   sources:
-    - path: "$SRC_DIR"      
+    - path: "$SRC_DIR"
       name: "RootFS"
       config:
         denyByDefault: false
-        disableIndexing: false
         indexingIntervalMinutes: 240
         conditionals:
           rules:
@@ -204,7 +203,6 @@ server:
       name: "RootFS"
       config:
         denyByDefault: false
-        disableIndexing: false
         indexingIntervalMinutes: 240
         conditionals:
           rules:

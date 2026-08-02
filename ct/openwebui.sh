@@ -12,7 +12,7 @@ var_ram="${var_ram:-8192}"
 var_disk="${var_disk:-50}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -99,7 +99,7 @@ EOF
       msg_ok "Stopped Service"
 
       rm -rf /usr/lib/ollama /usr/bin/ollama
-      if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama" "ollama-linux-amd64.tar.zst"; then
+      if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama" "ollama-linux-$(arch_resolve).tar.zst"; then
         msg_error "Ollama download or deployment failed – check network connectivity and GitHub API availability"
       else
         ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama

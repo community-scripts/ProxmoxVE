@@ -16,18 +16,19 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  python3 \
-  sqlite3 \
   iptables
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
-PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.18.4}"
+PG_VERSION="17" setup_postgresql
+PG_DB_NAME="pangolin" PG_DB_USER="pangolin" setup_postgresql_db
+PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.21.0}"
 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VERSION"
-fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
-fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_$(arch_resolve)"
+fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_$(arch_resolve).tar.gz"
 
 read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " pango_url
+[[ "$pango_url" != https://* && "$pango_url" != http://* ]] && pango_url="https://${pango_url}"
 read -rp "${TAB3}Enter your email address: " pango_email
 
 msg_info "Setup Pangolin"
@@ -36,13 +37,14 @@ BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
 cd /opt/pangolin
 mkdir -p /opt/pangolin/config/{traefik,db,letsencrypt,logs}
 $STD npm ci
-$STD npm run set:sqlite
+$STD npm run set:pg
 $STD npm run set:oss
 rm -rf server/private
-$STD npm run db:generate
+DATABASE_URL="postgresql://pangolin:${PG_DB_PASS}@localhost:5432/pangolin" $STD npm run db:generate
 $STD npm run build
 $STD npm run build:cli
 cp -R .next/standalone ./
+cp -r server/migrations ./dist/init
 
 cat <<EOF >/usr/local/bin/pangctl
 #!/bin/sh
@@ -74,6 +76,9 @@ flags:
   require_email_verification: false
   disable_signup_without_invite: false
   disable_user_create_org: false
+
+postgres:
+  connection_string: "postgresql://pangolin:${PG_DB_PASS}@localhost:5432/pangolin"
 EOF
 
 cat <<EOF >/opt/pangolin/config/traefik/traefik_config.yml
@@ -181,7 +186,8 @@ http:
         servers:
           - url: "http://$LOCAL_IP:3000"
 EOF
-$STD npm run db:push
+export ENVIRONMENT=prod
+$STD node dist/migrations.mjs
 
 . /etc/os-release
 if [ "$VERSION_CODENAME" = "trixie" ]; then
@@ -197,7 +203,8 @@ msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/pangolin.service
 [Unit]
 Description=Pangolin Service
-After=network.target
+After=network.target postgresql.service
+Wants=postgresql.service
 
 [Service]
 Type=simple

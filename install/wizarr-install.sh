@@ -27,15 +27,17 @@ cd /opt/wizarr
 $STD /usr/local/bin/uv sync --frozen
 $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
 $STD npm --prefix app/static install
-$STD npm --prefix app/static run build:css
+$STD npm --prefix app/static run build
 mkdir -p ./.cache
 cat <<EOF >/opt/wizarr/.env
 FLASK_ENV=production
 GUNICORN_WORKERS=4
 APP_URL=http://${LOCAL_IP}
+HOST=0.0.0.0
+PORT=5690
 DISABLE_BUILTIN_AUTH=false
 LOG_LEVEL=INFO
-APP_VERSION=v$(get_latest_github_release "wizarrrr/wizarr")
+APP_VERSION=$(get_latest_github_release "wizarrrr/wizarr")
 EOF
 
 cat <<EOF >/opt/wizarr/start.sh
@@ -44,7 +46,6 @@ cat <<EOF >/opt/wizarr/start.sh
 uv run --frozen gunicorn \
     --config gunicorn.conf.py \
     --preload \
-    --bind 0.0.0.0:5690 \
     --umask 007 \
     run:app
 EOF
@@ -62,7 +63,10 @@ Type=simple
 WorkingDirectory=/opt/wizarr
 EnvironmentFile=/opt/wizarr/.env
 ExecStart=/opt/wizarr/start.sh
-Restart=on-abnormal
+Restart=always
+RestartSec=10
+KillMode=mixed
+TimeoutStopSec=10
 
 [Install]
 WantedBy=multi-user.target

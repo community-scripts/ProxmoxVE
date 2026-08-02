@@ -13,11 +13,15 @@ setting_up_container
 network_check
 update_os
 
-read -p "${TAB3}Do you want to install MongoDB 8.0 instead of 7.0? [y/N]: " install_mongodb_8
-if [[ "$install_mongodb_8" =~ ^[Yy]$ ]]; then
+if [[ "$(arch_resolve)" == "arm64" ]]; then
   MONGO_VERSION="8.0" setup_mongodb
 else
-  MONGO_VERSION="7.0" setup_mongodb
+  read -p "${TAB3}Do you want to install MongoDB 8.0 instead of 7.0? [y/N]: " install_mongodb_8
+  if [[ "$install_mongodb_8" =~ ^[Yy]$ ]]; then
+    MONGO_VERSION="8.0" setup_mongodb
+  else
+    MONGO_VERSION="7.0" setup_mongodb
+  fi
 fi
 sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
 

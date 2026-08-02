@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,16 +35,15 @@ function update_script() {
     systemctl stop nametag
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/nametag/.env /opt/nametag.env.bak
-    cp -r /opt/nametag/data /opt/nametag_data_bak
-    msg_ok "Backed up Data"
+    create_backup /opt/nametag/.env /opt/nametag/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/opt/nametag"
 
+    restore_backup
+
     msg_info "Rebuilding Application"
     cd /opt/nametag
-    $STD npm ci
+    $STD npm ci --include=dev
     set -a
     source /opt/nametag/.env
     set +a
@@ -53,13 +52,6 @@ function update_script() {
     cp -r /opt/nametag/.next/static /opt/nametag/.next/standalone/.next/static
     cp -r /opt/nametag/public /opt/nametag/.next/standalone/public
     msg_ok "Rebuilt Application"
-
-    msg_info "Restoring Data"
-    cp /opt/nametag.env.bak /opt/nametag/.env
-    cp -r /opt/nametag_data_bak/. /opt/nametag/data/
-    rm -f /opt/nametag.env.bak
-    rm -rf /opt/nametag_data_bak
-    msg_ok "Restored Data"
 
     msg_info "Running Migrations"
     cd /opt/nametag

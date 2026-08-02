@@ -30,11 +30,11 @@ $STD php bin/console cache:clear
 php bin/console doctrine:migrations:migrate -n >~/database-migration-output
 chown -R www-data:www-data /opt/partdb
 ADMIN_PASS=$(grep -oP 'The initial password for the "admin" user is: \K\w+' ~/database-migration-output)
-{
-  echo ""
-  echo "Part-DB Admin User: admin"
-  echo "Part-DB Admin Password: $ADMIN_PASS"
-} >>~/partdb.creds
+cat <<EOF >~/partdb.creds
+
+Part-DB Admin User: admin
+Part-DB Admin Password: $ADMIN_PASS
+EOF
 rm -rf ~/database-migration-output
 msg_ok "Installed Part-DB"
 

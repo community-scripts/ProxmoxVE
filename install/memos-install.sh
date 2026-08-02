@@ -14,7 +14,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "memos" "usememos/memos" "prebuild" "latest" "/opt/memos" "memos*linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "memos" "usememos/memos" "prebuild" "latest" "/opt/memos" "memos*linux_$(arch_resolve).tar.gz"
 mkdir -p /opt/memos_data
 
 msg_info "Creating Service"

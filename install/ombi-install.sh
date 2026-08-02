@@ -13,7 +13,11 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "ombi" "Ombi-app/Ombi" "prebuild" "latest" "/opt/ombi" "linux-x64.tar.gz"
+msg_info "Installing Dependencies"
+$STD apt install -y libicu-dev
+msg_ok "Installed Dependencies"
+
+fetch_and_deploy_gh_release "ombi" "Ombi-app/Ombi" "prebuild" "latest" "/opt/ombi" "linux-$(arch_resolve "x64" "arm64").tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/ombi.service

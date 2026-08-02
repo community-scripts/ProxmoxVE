@@ -24,6 +24,7 @@
 #   cleanup_tool_keyrings()          - Remove keyrings from all 3 locations
 #   stop_all_services()              - Stop services by pattern (e.g. "php*-fpm")
 #   verify_tool_version()            - Validate installed version matches expected
+#   version_matches_spec()           - Compare installed semver against spec (8.0 matches 8.0.40)
 #   cleanup_legacy_install()         - Remove nvm, rbenv, rustup, etc.
 #   prepare_repository_setup()       - Cleanup repos + keyrings + validate APT
 #   install_packages_with_retry()    - Install with 3 retries and APT refresh
@@ -34,6 +35,10 @@
 #   TOOLS_DEBUG=true ./script.sh     - Enable verbose output for troubleshooting
 #
 # ==============================================================================
+
+# Guard against double-sourcing (core.func uses the same pattern)
+[[ -n "${_TOOLS_FUNC_LOADED:-}" ]] && return 0
+_TOOLS_FUNC_LOADED=1
 
 # ------------------------------------------------------------------------------
 # Debug helper - outputs to stderr when TOOLS_DEBUG is enabled
@@ -90,16 +95,17 @@ curl_with_retry() {
   while [[ $attempt -le $retries ]]; do
     debug_log "curl attempt $attempt/$retries: $url"
 
-    local curl_cmd="curl -fsSL --connect-timeout $connect_timeout --max-time $timeout"
-    [[ -n "$extra_opts" ]] && curl_cmd="$curl_cmd $extra_opts"
+    # Build curl command as array to avoid command injection via extra_opts
+    local -a curl_args=(curl -fsSL --connect-timeout "$connect_timeout" --max-time "$timeout")
+    [[ -n "$extra_opts" ]] && read -ra _extra <<<"$extra_opts" && curl_args+=("${_extra[@]}")
 
     if [[ "$output" == "-" ]]; then
-      if $curl_cmd "$url"; then
+      if "${curl_args[@]}" "$url"; then
         success=true
         break
       fi
     else
-      if $curl_cmd -o "$output" "$url"; then
+      if "${curl_args[@]}" -o "$output" "$url"; then
         success=true
         break
       fi
@@ -152,15 +158,16 @@ curl_api_with_retry() {
   while [[ $attempt -le $retries ]]; do
     debug_log "curl API attempt $attempt/$retries: $url"
 
-    local curl_cmd="curl -fsSL --connect-timeout $connect_timeout --max-time $timeout -w '%{http_code}'"
-    [[ -n "$extra_opts" ]] && curl_cmd="$curl_cmd $extra_opts"
+    # Build curl command as array to avoid command injection via extra_opts
+    local -a curl_args=(curl -fsSL --connect-timeout "$connect_timeout" --max-time "$timeout" -w '%{http_code}')
+    [[ -n "$extra_opts" ]] && read -ra _extra <<<"$extra_opts" && curl_args+=("${_extra[@]}")
 
     if [[ -n "$body_file" ]]; then
-      http_code=$($curl_cmd -o "$body_file" "$url" 2>/dev/null) || true
+      http_code=$("${curl_args[@]}" -o "$body_file" "$url" 2>/dev/null) || true
     else
       # Capture body and http_code separately
       local tmp_body="/tmp/curl_api_body_$$"
-      http_code=$($curl_cmd -o "$tmp_body" "$url" 2>/dev/null) || true
+      http_code=$("${curl_args[@]}" -o "$tmp_body" "$url" 2>/dev/null) || true
       if [[ -f "$tmp_body" ]]; then
         cat "$tmp_body"
         rm -f "$tmp_body"
@@ -266,6 +273,50 @@ download_gpg_key() {
 }
 
 # ------------------------------------------------------------------------------
+# Edit a key-value pair in a YAML configuration file.
+#
+# Description:
+#   - Finds the first occurrence of the given key in the YAML file and replaces
+#     its value in-place using sed.
+#   - Handles both quoted and unquoted values on the same line.
+#   - The key is matched at the start of a line (optionally preceded by spaces),
+#     followed by a colon and optional whitespace.
+#   - If the key is not found, the function exits with a non-zero status and
+#     prints an error message.
+#
+# Usage:
+#   edit_yaml_config "/opt/myapp/config.yml" "database_host" "localhost"
+#   edit_yaml_config "/opt/myapp/config.yml" "port" "5432"
+#
+# Parameters:
+#   $1 - Path to the YAML file
+#   $2 - Key to find (e.g. "database_host")
+#   $3 - New value to set (e.g. "localhost")
+#
+# Returns: 0 on success, 1 if the file does not exist or the key is not found
+# ------------------------------------------------------------------------------
+edit_yaml_config() {
+  local file="$1"
+  local key="$2"
+  local value="$3"
+
+  if [[ ! -f "$file" ]]; then
+    msg_error "edit_yaml_config: file not found: $file"
+    return 1
+  fi
+
+  if ! grep -qE "^[[:space:]]*${key}[[:space:]]*:" "$file"; then
+    msg_error "edit_yaml_config: key '${key}' not found in $file"
+    return 1
+  fi
+
+  # Escape sed metacharacters in value (| and &) to prevent injection
+  local escaped_value="${value//|/\\|}"
+  escaped_value="${escaped_value//&/\\&}"
+  sed -i "s|^\([[:space:]]*${key}[[:space:]]*:\).*|\1 ${escaped_value}|" "$file"
+}
+
+# ------------------------------------------------------------------------------
 # Cache installed version to avoid repeated checks
 # ------------------------------------------------------------------------------
 cache_installed_version() {
@@ -282,7 +333,7 @@ get_cached_version() {
     cat "/var/cache/app-versions/${app}_version.txt"
     return 0
   fi
-  return 0
+  return 1
 }
 
 # ------------------------------------------------------------------------------
@@ -342,6 +393,37 @@ verify_tool_version() {
   fi
 
   return 0
+}
+
+# ------------------------------------------------------------------------------
+# Compare installed semver against a version spec at the spec's precision.
+# Returns: 0 if match (e.g. spec 8.0 matches installed 8.0.40), 1 otherwise
+# Usage: version_matches_spec "8.0.40" "8.0"
+# ------------------------------------------------------------------------------
+version_matches_spec() {
+  local installed="$1"
+  local spec="$2"
+  local spec_depth prefix i
+  local -a spec_parts installed_parts
+
+  [[ -n "$installed" && -n "$spec" ]] || return 1
+
+  IFS='.' read -ra spec_parts <<<"$spec"
+  spec_depth=${#spec_parts[@]}
+  ((spec_depth > 0)) || return 1
+
+  if ((spec_depth == 1)); then
+    [[ "${installed%%.*}" == "$spec" ]] && return 0
+    return 1
+  fi
+
+  IFS='.' read -ra installed_parts <<<"$installed"
+  prefix=""
+  for ((i = 0; i < spec_depth && i < ${#installed_parts[@]}; i++)); do
+    [[ -n "$prefix" ]] && prefix+="."
+    prefix+="${installed_parts[i]}"
+  done
+  [[ "$prefix" == "$spec" ]]
 }
 
 # ------------------------------------------------------------------------------
@@ -462,10 +544,10 @@ install_packages_with_retry() {
             fi
           fi
         done
-        # If some packages installed, consider partial success
         if [[ ${#failed[@]} -lt ${#packages[@]} ]]; then
           if [[ ${#failed[@]} -gt 0 ]]; then
-            msg_warn "Partially installed. Failed packages: ${failed[*]}"
+            msg_error "Partial install — failed packages: ${failed[*]}"
+            return 100
           fi
           return 0
         fi
@@ -620,13 +702,15 @@ remove_old_tool_version() {
   mysql)
     stop_all_services "mysql"
     $STD apt purge -y 'mysql*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/mysql 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/mysql 2>/dev/null || true
     cleanup_tool_keyrings "mysql"
     ;;
   mongodb)
     stop_all_services "mongod"
     $STD apt purge -y 'mongodb*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/mongodb 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/mongodb 2>/dev/null || true
     cleanup_tool_keyrings "mongodb"
     ;;
   node | nodejs)
@@ -671,7 +755,8 @@ remove_old_tool_version() {
   clickhouse)
     stop_all_services "clickhouse-server"
     $STD apt purge -y 'clickhouse*' >/dev/null 2>&1 || true
-    rm -rf /var/lib/clickhouse 2>/dev/null || true
+    # Keep data directory for safety (remove manually if needed)
+    # rm -rf /var/lib/clickhouse 2>/dev/null || true
     cleanup_tool_keyrings "clickhouse"
     ;;
   esac
@@ -695,8 +780,8 @@ should_update_tool() {
   # Get currently installed version
   current_version=$(is_tool_installed "$tool_name" 2>/dev/null) || return 0 # Not installed = needs install
 
-  # If versions are identical, no update needed
-  if [[ "$current_version" == "$target_version" ]]; then
+  # If versions match at the requested precision, no update needed
+  if version_matches_spec "$current_version" "$target_version"; then
     return 1 # No update needed
   fi
 
@@ -764,8 +849,15 @@ manage_tool_repository() {
     local distro_codename
     distro_codename=$(get_os_info codename)
 
-    # Suite mapping with fallback for newer releases not yet supported by upstream
-    if [[ "$distro_id" == "debian" ]]; then
+    if [[ "$distro_id" == "debian" && "$(dpkg --print-architecture)" == "arm64" ]]; then
+      case "$distro_codename" in
+      trixie | forky) suite="noble" ;;
+      bookworm) suite="jammy" ;;
+      *) suite="noble" ;;
+      esac
+      distro_id="ubuntu"
+      repo_url="https://repo.mongodb.org/apt/ubuntu"
+    elif [[ "$distro_id" == "debian" ]]; then
       case "$distro_codename" in
       trixie | forky | sid)
         # Testing/unstable releases fallback to latest stable suite
@@ -884,6 +976,49 @@ Suites: $distro_codename
 Components: main
 Architectures: $(dpkg --print-architecture)
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
+EOF
+    return 0
+    ;;
+
+  mysql)
+    if [[ -z "$gpg_key_url" ]]; then
+      msg_error "MySQL repository requires gpg_key_url"
+      return 65
+    fi
+
+    cleanup_old_repo_files "mysql"
+
+    if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/mysql.gpg" "dearmor"; then
+      msg_error "Failed to import MySQL GPG key"
+      return 7
+    fi
+
+    local distro_codename suite component
+    distro_codename=$(get_os_info codename)
+
+    if [[ "$distro_id" == "debian" ]]; then
+      case "$distro_codename" in
+      trixie | forky | sid) suite="bookworm" ;;
+      bookworm | bullseye) suite="$distro_codename" ;;
+      *) suite="bookworm" ;;
+      esac
+    else
+      suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url")
+    fi
+
+    case "$version" in
+    8.4 | 8.4.*) component="mysql-8.4-lts" ;;
+    8.0 | 8.0.*) component="mysql-8.0" ;;
+    *) component="mysql-${version}" ;;
+    esac
+
+    cat <<EOF >/etc/apt/sources.list.d/mysql.sources
+Types: deb
+URIs: ${repo_url}/
+Suites: ${suite}
+Components: ${component}
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/mysql.gpg
 EOF
     return 0
     ;;
@@ -1115,12 +1250,123 @@ get_system_arch() {
 
 # ------------------------------------------------------------------------------
 # Create temporary directory with automatic cleanup
+# Appends to a shared list so existing EXIT traps are preserved.
 # ------------------------------------------------------------------------------
+_tools_temp_dirs=()
+
+_tools_cleanup_temp_dirs() {
+  local d
+  for d in "${_tools_temp_dirs[@]}"; do
+    rm -rf "$d" 2>/dev/null || true
+  done
+}
+
+_tools_register_temp_cleanup() {
+  [[ "${_TOOLS_TEMP_TRAP_SET:-}" == "1" ]] && return 0
+  _TOOLS_TEMP_TRAP_SET=1
+  local existing
+  existing=$(trap -p EXIT 2>/dev/null | sed -n "s/^trap -- '\\(.*\\)' EXIT/\1/p" || true)
+  if [[ -n "$existing" && "$existing" != "_tools_cleanup_temp_dirs" ]]; then
+    trap "_tools_cleanup_temp_dirs; ${existing}" EXIT ERR INT TERM
+  else
+    trap _tools_cleanup_temp_dirs EXIT ERR INT TERM
+  fi
+}
+
 create_temp_dir() {
-  local tmp_dir=$(mktemp -d)
-  # Set trap to cleanup on EXIT, ERR, INT, TERM
-  trap "rm -rf '$tmp_dir'" EXIT ERR INT TERM
+  local tmp_dir
+  tmp_dir=$(mktemp -d) || return 1
+  _tools_temp_dirs+=("$tmp_dir")
+  _tools_register_temp_cleanup
   echo "$tmp_dir"
+}
+
+# ------------------------------------------------------------------------------
+# create_backup <path> [<path> ...] / restore_backup
+#
+# Standardized data backup helpers for update_script(). They replace the
+# hand-rolled "cp/mv to a sibling dir, update, copy back, rm" dance that is
+# duplicated across the ct/*.sh update functions.
+#
+# create_backup <path> [<path> ...]
+#   - Copies each given file/directory into a persistent store at
+#     /opt/<NSAPP>.backup, mirroring its absolute path inside the store, and
+#     records it in a manifest so restore_backup needs no arguments.
+#   - Idempotent: if a store from a previous (failed) run already exists, it is
+#     left untouched and no new backup is taken. This keeps the last-known-good
+#     data instead of overwriting it with now-partially-updated data on retry.
+#   - Missing source paths are skipped with a warning (not fatal).
+#   - Aborts the update on copy failure: if any file/dir cannot be backed up,
+#     the half-written store is removed and the script exits, so the update
+#     never runs against unprotected data (and a retry re-attempts a clean
+#     backup rather than skipping it).
+#
+# restore_backup
+#   - Copies every path recorded in the manifest back to its origin (replacing
+#     whatever the update left there), then deletes the store.
+#   - No-op (with a warning) if no store exists.
+#
+# Override the store location with BACKUP_DIR if the default does not fit.
+# ------------------------------------------------------------------------------
+create_backup() {
+  local store manifest path dest
+  store="${BACKUP_DIR:-/opt/${NSAPP:-app}.backup}"
+  manifest="${store}/.manifest"
+
+  [[ $# -eq 0 ]] && {
+    msg_warn "create_backup called without any paths"
+    return 0
+  }
+
+  if [[ -f "$manifest" ]]; then
+    msg_ok "Existing backup found at ${store}, skipping backup"
+    return 0
+  fi
+
+  msg_info "Backing up data"
+  if ! mkdir -p "$store" || ! : >"$manifest"; then
+    msg_error "Backup failed: could not create store at ${store} - aborting update"
+    rm -rf "$store"
+    exit 1
+  fi
+  for path in "$@"; do
+    path="${path%/}"
+    if [[ ! -e "$path" ]]; then
+      msg_warn "Skipping backup of '${path}' (not found)"
+      continue
+    fi
+    dest="${store}/files${path}"
+    if ! mkdir -p "$(dirname "$dest")" || ! cp -a "$path" "$dest"; then
+      msg_error "Backup of '${path}' failed - aborting update"
+      rm -rf "$store"
+      exit 1
+    fi
+    echo "$path" >>"$manifest"
+  done
+  msg_ok "Backed up data to ${store}"
+}
+
+restore_backup() {
+  local store manifest path src
+  store="${BACKUP_DIR:-/opt/${NSAPP:-app}.backup}"
+  manifest="${store}/.manifest"
+
+  if [[ ! -f "$manifest" ]]; then
+    msg_warn "No backup found to restore"
+    return 0
+  fi
+
+  msg_info "Restoring data"
+  while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+    src="${store}/files${path}"
+    [[ -e "$src" ]] || continue
+    mkdir -p "$(dirname "$path")"
+    rm -rf "$path"
+    cp -a "$src" "$path"
+  done <"$manifest"
+  rm -rf "$store"
+  msg_ok "Restored data"
 }
 
 # ------------------------------------------------------------------------------
@@ -1448,10 +1694,6 @@ is_debian() {
 
 is_ubuntu() {
   [[ "$(get_os_info id)" == "ubuntu" ]]
-}
-
-is_alpine() {
-  [[ "$(get_os_info id)" == "alpine" ]]
 }
 
 # ------------------------------------------------------------------------------
@@ -1954,9 +2196,11 @@ setup_deb822_repo() {
     [[ -n "$enabled" ]] && echo "Enabled: $enabled"
   } >/etc/apt/sources.list.d/${name}.sources
 
-  $STD apt update || {
-    msg_warn "apt update failed after adding repository: ${name}"
-  }
+  if ! $STD apt update; then
+    msg_error "apt update failed after adding repository: ${name}"
+    msg_error "Hint: Verify suite '${suite}' and URI '${repo_url}' are valid for this distribution."
+    return 100
+  fi
 }
 
 # ------------------------------------------------------------------------------
@@ -2215,8 +2459,10 @@ start_timer() {
 end_timer() {
   local start_time="$1"
   local label="${2:-Operation}"
-  local end_time=$(date +%s)
+  local end_time
+  end_time=$(date +%s)
   local duration=$((end_time - start_time))
+  echo "${label} took ${duration}s"
 }
 
 # ------------------------------------------------------------------------------
@@ -2235,6 +2481,164 @@ verify_gpg_fingerprint() {
 
   msg_error "GPG fingerprint mismatch! Expected: $expected_fingerprint, Got: $actual_fingerprint"
   return 65
+}
+
+# ------------------------------------------------------------------------------
+# _download_source_tarball <url> <dest> [curl args...]
+#
+# Downloads a source .tar.gz to <dest> and verifies the gzip stream is complete
+# before returning. Source forges (GitHub/GitLab/Codeberg) build these archives
+# on the fly; for large repos the response is occasionally a truncated-but-
+# cleanly-closed gzip that curl accepts as success (HTTP 200) and which then
+# fails at extraction time. We validate with `gzip -t` and re-download on
+# failure, and abort stalled transfers (--speed-time) so a hung generation
+# retries instead of blocking for minutes. Extra args pass through to curl
+# (e.g. auth headers like -H "PRIVATE-TOKEN: ...").
+#
+# Returns: 0 on success, 250 on persistent failure.
+# ------------------------------------------------------------------------------
+_download_source_tarball() {
+  local url="$1" dest="$2"
+  shift 2
+  local attempt max=3
+  for ((attempt = 1; attempt <= max; attempt++)); do
+    if curl --connect-timeout 15 --max-time 900 --speed-limit 1024 --speed-time 60 \
+      -fsSL "$@" -o "$dest" "$url" && gzip -t "$dest" 2>/dev/null; then
+      return 0
+    fi
+    rm -f "$dest"
+    ((attempt < max)) && {
+      msg_warn "Source archive download failed or incomplete (attempt ${attempt}/${max}), retrying..."
+      sleep $((attempt * 3))
+    }
+  done
+  return 250
+}
+
+# ------------------------------------------------------------------------------
+# _deploy_source_tarball <tarball_path> <target> <workdir>
+#
+# Shared tail for the *source tarball* modes of the fetch_and_deploy_* helpers
+# (GitHub/GitLab/Codeberg archive tarballs that contain a single top-level
+# directory). Extracts <tarball_path> into <workdir>, then copies the contents
+# of that top-level directory into <target>.
+#
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
+#     up config dotfiles like .env via create_backup and call restore_backup
+#     BEFORE any build step that sources them).
+#   - Does NOT own <workdir>: the caller creates it and is responsible for its
+#     cleanup (typically via a RETURN trap on its tmpdir).
+#   - cp failures are non-fatal here, matching the previous inline behavior.
+#
+# Returns: 0 on success (or non-fatal cp failure), 251 on extraction failure.
+# ------------------------------------------------------------------------------
+_deploy_source_tarball() {
+  local tarball="$1" target="$2" workdir="$3"
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    find "${target:?}" -mindepth 1 -delete
+  fi
+
+  tar --no-same-owner -xzf "$tarball" -C "$workdir" || {
+    msg_error "Failed to extract tarball"
+    return 251
+  }
+
+  local unpack_dir
+  unpack_dir=$(find "$workdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+  shopt -s dotglob nullglob
+  cp -r "$unpack_dir"/* "$target/"
+  shopt -u dotglob nullglob
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# _deploy_unpacked_archive <archive_path> <target> <workdir>
+#
+# Shared tail for the *prebuild* modes of the fetch_and_deploy_*_release helpers
+# (release assets shipped as .zip / .tar.* / .tgz / .txz). Extracts the archive
+# into <workdir>, then copies its payload into <target>. If the archive contains
+# a single top-level directory, that directory is stripped (its contents land
+# directly in <target>); otherwise the archive contents are copied as-is.
+#
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
+#     up config dotfiles like .env via create_backup and call restore_backup
+#     BEFORE any build step that sources them).
+#   - Does NOT own <workdir>: the caller creates it and cleans it up.
+#
+# Returns: 0 on success, 65 on unsupported format, 251 on extraction failure,
+#          252 on copy failure / empty archive.
+# ------------------------------------------------------------------------------
+_deploy_unpacked_archive() {
+  local archive="$1" target="$2" workdir="$3"
+  local filename="${archive##*/}"
+
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    find "${target:?}" -mindepth 1 -delete
+  fi
+
+  if [[ "$filename" == *.zip ]]; then
+    ensure_dependencies unzip
+    unzip -q "$archive" -d "$workdir" || {
+      msg_error "Failed to extract ZIP archive"
+      return 251
+    }
+  elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
+    tar --no-same-owner -xf "$archive" -C "$workdir" || {
+      msg_error "Failed to extract TAR archive"
+      return 251
+    }
+  elif [[ "$filename" == *.7z ]]; then
+    if [[ -f /etc/alpine-release ]]; then
+      ensure_dependencies 7zip
+    else
+      ensure_dependencies p7zip-full
+    fi
+    7z x -y -o"$workdir" "$archive" >/dev/null 2>&1 || {
+      msg_error "Failed to extract 7z archive"
+      return 251
+    }
+  else
+    msg_error "Unsupported archive format: $filename"
+    return 65
+  fi
+
+  local top_entries inner_dir
+  top_entries=$(find "$workdir" -mindepth 1 -maxdepth 1)
+  if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
+    inner_dir="$top_entries"
+    shopt -s dotglob nullglob
+    if compgen -G "$inner_dir/*" >/dev/null; then
+      cp -r "$inner_dir"/* "$target/" || {
+        msg_error "Failed to copy contents from $inner_dir to $target"
+        shopt -u dotglob nullglob
+        return 252
+      }
+    else
+      msg_error "Inner directory is empty: $inner_dir"
+      shopt -u dotglob nullglob
+      return 252
+    fi
+    shopt -u dotglob nullglob
+  else
+    shopt -s dotglob nullglob
+    if compgen -G "$workdir/*" >/dev/null; then
+      cp -r "$workdir"/* "$target/" || {
+        msg_error "Failed to copy contents to $target"
+        shopt -u dotglob nullglob
+        return 252
+      }
+    else
+      msg_error "Unpacked archive is empty"
+      shopt -u dotglob nullglob
+      return 252
+    fi
+    shopt -u dotglob nullglob
+  fi
+  return 0
 }
 
 # ------------------------------------------------------------------------------
@@ -2285,38 +2689,200 @@ fetch_and_deploy_gh_tag() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
+  trap 'rm -rf "$tmpdir"; trap - RETURN' RETURN
   local tarball_url="https://github.com/${repo}/archive/refs/tags/${version}.tar.gz"
   local filename="${app_lc}-${version}.tar.gz"
 
   msg_info "Fetching GitHub tag: ${app} (${version})"
 
-  download_file "$tarball_url" "$tmpdir/$filename" || {
+  _download_source_tarball "$tarball_url" "$tmpdir/$filename" || {
     msg_error "Download failed: $tarball_url"
-    rm -rf "$tmpdir"
     return 7
   }
 
-  mkdir -p "$target"
-  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    rm -rf "${target:?}/"*
-  fi
+  _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
-  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-    msg_error "Failed to extract tarball"
-    rm -rf "$tmpdir"
-    return 251
-  }
-
-  local unpack_dir
-  unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-  shopt -s dotglob nullglob
-  cp -r "$unpack_dir"/* "$target/"
-  shopt -u dotglob nullglob
-
-  rm -rf "$tmpdir"
   echo "$version" >"$version_file"
   msg_ok "Deployed ${app} ${version} to ${target}"
+  return 0
+}
+
+# ------------------------------------------------------------------------------
+# Get the latest GitLab repository tag matching a glob pattern.
+#
+# Description:
+#   - Queries the GitLab repository tags API (up to 100 tags per page)
+#   - Filters tag names against a shell glob pattern (e.g. "web-v*" or "mobile-v*")
+#   - Always excludes pre-release tags (those containing alpha, beta, or rc)
+#   - Sorts matching tags with `sort -V` and returns the highest one
+#   - Supports GITLAB_TOKEN for private/rate-limited projects
+#
+# Usage:
+#     get_latest_gl_tag "owner/repo" "web-v*"
+#     get_latest_gl_tag "owner/repo" "mobile-v*"
+#     get_latest_gl_tag "owner/repo"          # returns newest tag (no filter)
+#
+# Arguments:
+#   $1 - GitLab repo path (namespace/project, e.g. "mygroup/myapp")
+#   $2 - Optional glob pattern to filter tag names (e.g. "web-v*")
+#
+# Returns:
+#   Latest matching tag name on stdout, or non-zero on failure
+# ------------------------------------------------------------------------------
+get_latest_gl_tag() {
+  local repo="$1"
+  local pattern="${2:-}"
+
+  local repo_encoded
+  repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
+
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
+  local api_base="${gitlab_url}/api/v4/projects/${repo_encoded}/repository/tags"
+  local api_timeout="--connect-timeout 10 --max-time 60"
+
+  local header=()
+  [[ -n "${GITLAB_TOKEN:-}" ]] && header=(-H "PRIVATE-TOKEN: $GITLAB_TOKEN")
+
+  # If a pattern is given, pass it as a regex search to reduce server-side results.
+  # GitLab ?search= supports anchored regex; convert leading glob prefix to regex anchor.
+  local search_param=""
+  if [[ -n "$pattern" ]]; then
+    # Strip trailing wildcard for the search hint (server-side prefix filter).
+    local prefix="${pattern%%\**}"
+    [[ -n "$prefix" ]] && search_param="?search=^${prefix}&per_page=100" || search_param="?per_page=100"
+  else
+    search_param="?per_page=100"
+  fi
+
+  local temp_file
+  temp_file=$(mktemp) || return 1
+
+  local http_code
+  http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o "$temp_file" \
+    "${header[@]}" "${api_base}${search_param}" 2>/dev/null) || true
+
+  if [[ "$http_code" != "200" ]]; then
+    rm -f "$temp_file"
+    msg_error "GitLab tags API returned HTTP $http_code for $repo"
+    return 22
+  fi
+
+  local tag=""
+  if [[ -n "$pattern" ]]; then
+    # Client-side glob filter + pre-release exclusion, then version-sort to pick the highest match.
+    tag=$(jq -r '.[].name' "$temp_file" 2>/dev/null | while IFS= read -r t; do
+      case "$t" in
+      *alpha* | *beta* | *rc*) continue ;;
+      $pattern) echo "$t" ;;
+      esac
+    done | sort -V | tail -n1)
+  else
+    # No pattern: skip pre-release tags, take the first remaining (newest) one.
+    tag=$(jq -r '.[].name' "$temp_file" 2>/dev/null |
+      grep -Eiv '(alpha|beta|rc)' |
+      head -n1)
+  fi
+
+  rm -f "$temp_file"
+
+  if [[ -z "$tag" ]]; then
+    msg_error "No tags matching '${pattern:-*}' found for ${repo}"
+    return 250
+  fi
+
+  echo "$tag"
+}
+
+# ------------------------------------------------------------------------------
+# Fetches and deploys a GitLab tag-based source tarball.
+#
+# Description:
+#   - Resolves the latest tag matching the given glob pattern via get_latest_gl_tag
+#     (or uses the exact tag if one is provided instead of "latest")
+#   - Downloads the GitLab source tarball for that tag
+#   - Extracts it to the target directory
+#   - Writes the resolved tag to ~/.<app> for update-checking
+#
+# Usage:
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "web-v*"
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "mobile-v*" "/opt/myapp"
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "v*"          # any v-tag
+#     fetch_and_deploy_gl_tag "myapp" "mygroup/myrepo" "web-v3.0*"   # narrow version range
+#
+# Arguments:
+#   $1 - App name (used for version file ~/.<app> and lowercase tarball name)
+#   $2 - GitLab repo path (namespace/project, e.g. "mygroup/myapp")
+#   $3 - Tag pattern: glob (e.g. "web-v*") or exact tag (e.g. "web-v3.0.0").
+#        Use "latest" to fetch the single newest tag with no pattern filter.
+#   $4 - Target directory (default: /opt/$app)
+#
+# Notes:
+#   - Supports CLEAN_INSTALL=1 to wipe target before extracting
+#   - Supports GITLAB_TOKEN for private/rate-limited projects
+#   - Supports GITLAB_URL for self-hosted GitLab (default: https://gitlab.com)
+#   - For repos that only publish tags, not formal GitLab Releases
+#     (use fetch_and_deploy_gl_release for proper Releases with assets)
+# ------------------------------------------------------------------------------
+fetch_and_deploy_gl_tag() {
+  local app="$1"
+  local repo="$2"
+  local tag_pattern="${3:-latest}"
+  local target="${4:-/opt/$app}"
+
+  local app_lc=""
+  app_lc="$(echo "${app,,}" | tr -d ' ')"
+  local version_file="$HOME/.${app_lc}"
+
+  local api_timeout="--connect-timeout 10 --max-time 60"
+  local download_timeout="--connect-timeout 15 --max-time 900"
+
+  local header=()
+  [[ -n "${GITLAB_TOKEN:-}" ]] && header=(-H "PRIVATE-TOKEN: $GITLAB_TOKEN")
+
+  # Resolve the tag: if caller passed a glob/latest, query the API.
+  # If caller passed an exact tag (no wildcards), use it directly.
+  local resolved_tag="$tag_pattern"
+  if [[ "$tag_pattern" == "latest" || "$tag_pattern" == *"*"* || "$tag_pattern" == *"?"* ]]; then
+    local glob_arg=""
+    [[ "$tag_pattern" != "latest" ]] && glob_arg="$tag_pattern"
+    resolved_tag=$(get_latest_gl_tag "$repo" "$glob_arg") || {
+      msg_error "Failed to determine latest tag matching '${tag_pattern}' for ${repo}"
+      return 250
+    }
+  fi
+
+  local current_version=""
+  [[ -f "$version_file" ]] && current_version=$(<"$version_file")
+
+  if [[ "$current_version" == "$resolved_tag" ]]; then
+    msg_ok "$app is already up-to-date ($resolved_tag)"
+    return 0
+  fi
+
+  local repo_encoded
+  repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
+
+  # GitLab source tarball URL (no release needed, works for any tag).
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
+  local version_safe="${resolved_tag//\//-}"
+  local tarball_url="${gitlab_url}/${repo}/-/archive/${resolved_tag}/${app_lc}-${version_safe}.tar.gz"
+
+  local tmpdir
+  tmpdir=$(mktemp -d) || return 1
+  trap 'rm -rf "$tmpdir"; trap - RETURN' RETURN
+  local filename="${app_lc}-${version_safe}.tar.gz"
+
+  msg_info "Fetching GitLab tag: ${app} (${resolved_tag})"
+
+  _download_source_tarball "$tarball_url" "$tmpdir/$filename" "${header[@]}" || {
+    msg_error "Download failed: $tarball_url"
+    return 7
+  }
+
+  _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
+
+  echo "$resolved_tag" >"$version_file"
+  msg_ok "Deployed ${app} ${resolved_tag} to ${target}"
   return 0
 }
 
@@ -2387,11 +2953,14 @@ check_for_gh_tag() {
 #   - Does not modify anything, only checks version state
 #   - Does not support pre-releases
 # ------------------------------------------------------------------------------
+TOOLS_GH_REL_JSON=""
+
 check_for_gh_release() {
   local app="$1"
   local source="$2"
   local pinned_version_in="${3:-}" # optional
   local pin_reason="${4:-}"        # optional reason shown to user
+  local tag_prefix="${5:-}"        # optional tag prefix filter (e.g. web-v2)
   local app_lc=""
   app_lc="$(echo "${app,,}" | tr -d ' ')"
   local current_file="$HOME/.${app_lc}"
@@ -2406,6 +2975,10 @@ check_for_gh_release() {
 
   ensure_dependencies jq
 
+  local gh_check_json=""
+  gh_check_json=$(mktemp /tmp/tools-gh-check-XXXXXX) || return 73
+  trap 'rm -f "${gh_check_json:-}"; trap - RETURN' RETURN
+
   # Build auth header if token is available
   local header_args=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header_args=(-H "Authorization: Bearer $GITHUB_TOKEN")
@@ -2416,14 +2989,14 @@ check_for_gh_release() {
   # For pinned versions, query the specific release tag directly
   if [[ -n "$pinned_version_in" ]]; then
     local pinned_version_encoded="${pinned_version_in//\//%2F}"
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases/tags/${pinned_version_encoded}" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json="[$(</tmp/gh_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json="[$(<"$gh_check_json")]"
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2431,27 +3004,27 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
-  if [[ -z "$pinned_version_in" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+  if [[ -z "$pinned_version_in" && -z "$tag_prefix" ]]; then
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases/latest" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json="[$(</tmp/gh_check.json)]"
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json="[$(<"$gh_check_json")]"
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2459,28 +3032,28 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
-  # If no releases yet (pinned version OR /latest failed), fetch up to 100
+  # If no releases yet (pinned version, tag prefix, OR /latest failed), fetch up to 100
   if [[ -z "$releases_json" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gh_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gh_check_json" \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "${header_args[@]}" \
       "https://api.github.com/repos/${source}/releases?per_page=100" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gh_check.json ]]; then
-      releases_json=$(</tmp/gh_check.json)
+    if [[ "$http_code" == "200" ]] && [[ -s "$gh_check_json" ]]; then
+      releases_json=$(<"$gh_check_json")
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitHub API authentication failed (HTTP 401)."
       if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -2488,30 +3061,39 @@ check_for_gh_release() {
       else
         msg_error "The repository may require authentication. Try: export GITHUB_TOKEN=\"ghp_your_token\""
       fi
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "403" ]]; then
       msg_error "GitHub API rate limit exceeded (HTTP 403)."
       msg_error "To increase the limit, export a GitHub token before running the script:"
       msg_error "  export GITHUB_TOKEN=\"ghp_your_token_here\""
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitHub API connection failed (no response)."
       msg_error "Check your network/DNS: curl -sSL https://api.github.com/rate_limit"
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 7
     else
       msg_error "Unable to fetch releases for ${app} (HTTP ${http_code})"
-      rm -f /tmp/gh_check.json
+      rm -f "$gh_check_json"
       return 22
     fi
-    rm -f /tmp/gh_check.json
+    rm -f "$gh_check_json"
   fi
 
-  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  if [[ -n "$tag_prefix" ]]; then
+    mapfile -t raw_tags < <(jq -r --arg p "$tag_prefix" \
+      '.[] | select(.draft==false and .prerelease==false) | select(.tag_name | startswith($p)) | .tag_name' <<<"$releases_json")
+  else
+    mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  fi
   if ((${#raw_tags[@]} == 0)); then
-    msg_error "No stable releases found for ${app}"
+    if [[ -n "$tag_prefix" ]]; then
+      msg_error "No stable releases matching prefix '${tag_prefix}' found for ${app}"
+    else
+      msg_error "No stable releases found for ${app}"
+    fi
     return 250
   fi
 
@@ -2995,6 +3577,7 @@ fetch_and_deploy_codeberg_release() {
 
     local tmpdir
     tmpdir=$(mktemp -d) || return 252
+    trap 'rm -rf "$tmpdir"; trap - RETURN' RETURN
 
     msg_info "Fetching Codeberg tag: $app ($tag_name)"
 
@@ -3005,37 +3588,19 @@ fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format: https://codeberg.org/{owner}/{repo}/archive/{tag}.tar.gz
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl_download "$tmpdir/$filename" "$archive_url"; then
+    if _download_source_tarball "$archive_url" "$tmpdir/$filename"; then
       download_success=true
     fi
 
     if [[ "$download_success" != "true" ]]; then
       msg_error "Download failed for $app ($tag_name)"
-      rm -rf "$tmpdir"
       return 250
     fi
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 251
-    }
-
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
     echo "$version" >"$version_file"
     msg_ok "Deployed: $app ($version)"
-    rm -rf "$tmpdir"
     return 0
   fi
 
@@ -3052,10 +3617,14 @@ fetch_and_deploy_codeberg_release() {
     return 6
   fi
 
+  local codeberg_rel_json
+  codeberg_rel_json=$(mktemp /tmp/tools-codeberg-rel-XXXXXX) || return 73
+  trap 'rm -f "$codeberg_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"; trap - RETURN' RETURN
+
   local attempt=0 success=false resp http_code
 
   while ((attempt < ${#api_timeouts[@]})); do
-    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o /tmp/codeberg_rel.json "$api_url") && success=true && break
+    resp=$(curl --connect-timeout 10 --max-time "${api_timeouts[$attempt]}" -fsSL -w "%{http_code}" -o "$codeberg_rel_json" "$api_url") && success=true && break
     attempt=$((attempt + 1))
     if ((attempt < ${#api_timeouts[@]})); then
       msg_warn "API request timed out after ${api_timeouts[$((attempt - 1))]}s, retrying... (attempt $((attempt + 1))/${#api_timeouts[@]})"
@@ -3074,7 +3643,7 @@ fetch_and_deploy_codeberg_release() {
   }
 
   local json tag_name
-  json=$(</tmp/codeberg_rel.json)
+  json=$(<"$codeberg_rel_json")
 
   # For "latest", the API returns an array - take the first (most recent) release
   if [[ "$version" == "latest" ]]; then
@@ -3104,32 +3673,16 @@ fetch_and_deploy_codeberg_release() {
 
     # Codeberg archive URL format
     local archive_url="https://codeberg.org/$repo/archive/${tag_name}.tar.gz"
-    if curl_download "$tmpdir/$filename" "$archive_url"; then
+    if _download_source_tarball "$archive_url" "$tmpdir/$filename"; then
       download_success=true
     fi
 
     if [[ "$download_success" != "true" ]]; then
       msg_error "Download failed for $app ($tag_name)"
-      rm -rf "$tmpdir"
       return 250
     fi
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 251
-    }
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
   ### Binary Mode ###
   elif [[ "$mode" == "binary" ]]; then
@@ -3157,10 +3710,14 @@ fetch_and_deploy_codeberg_release() {
     # Fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
-        if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
-          url_match="$u"
-          break
+        [[ "$u" =~ \.deb$ ]] || continue
+        if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+          [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
+        elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+          [[ "$u" =~ (arm64|aarch64).*\.deb$ ]] || continue
         fi
+        url_match="$u"
+        break
       done
     fi
 
@@ -3173,14 +3730,12 @@ fetch_and_deploy_codeberg_release() {
 
     if [[ -z "$url_match" ]]; then
       msg_error "No suitable .deb asset found for $app"
-      rm -rf "$tmpdir"
       return 252
     fi
 
     filename="${url_match##*/}"
     curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -3188,7 +3743,6 @@ fetch_and_deploy_codeberg_release() {
     $STD apt install -y "$tmpdir/$filename" || {
       $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 100
       }
     }
@@ -3199,7 +3753,6 @@ fetch_and_deploy_codeberg_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -3216,77 +3769,18 @@ fetch_and_deploy_codeberg_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
     filename="${asset_url##*/}"
     curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
     local unpack_tmp
     unpack_tmp=$(mktemp -d)
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
-    fi
-
-    if [[ "$filename" == *.zip ]]; then
-      ensure_dependencies unzip
-      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
-        msg_error "Failed to extract ZIP archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz ]]; then
-      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
-        msg_error "Failed to extract TAR archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    else
-      msg_error "Unsupported archive format: $filename"
-      rm -rf "$tmpdir" "$unpack_tmp"
-      return 251
-    fi
-
-    local top_dirs
-    top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
-    local top_entries inner_dir
-    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
-    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
-      inner_dir="$top_entries"
-      shopt -s dotglob nullglob
-      if compgen -G "$inner_dir/*" >/dev/null; then
-        cp -r "$inner_dir"/* "$target/" || {
-          msg_error "Failed to copy contents from $inner_dir to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Inner directory is empty: $inner_dir"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    else
-      shopt -s dotglob nullglob
-      if compgen -G "$unpack_tmp/*" >/dev/null; then
-        cp -r "$unpack_tmp"/* "$target/" || {
-          msg_error "Failed to copy contents to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Unpacked archive is empty"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    fi
+    _deploy_unpacked_archive "$tmpdir/$filename" "$target" "$unpack_tmp" || return
 
   ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
@@ -3294,7 +3788,6 @@ fetch_and_deploy_codeberg_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -3311,7 +3804,6 @@ fetch_and_deploy_codeberg_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
@@ -3324,7 +3816,6 @@ fetch_and_deploy_codeberg_release() {
 
     curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -3334,13 +3825,11 @@ fetch_and_deploy_codeberg_release() {
 
   else
     msg_error "Unknown mode: $mode"
-    rm -rf "$tmpdir"
     return 65
   fi
 
   echo "$version" >"$version_file"
   msg_ok "Deployed: $app ($version)"
-  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------
@@ -3457,7 +3946,11 @@ _gh_scan_older_releases() {
         done)
       fi
       if [[ "$has_match" != "true" ]]; then
-        has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE "($arch|amd64|x86_64|aarch64|arm64).*\.deb$" && echo true)
+        if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+          has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE '(amd64|x86_64).*\.deb$' && echo true)
+        elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+          has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE '(arm64|aarch64).*\.deb$' && echo true)
+        fi
       fi
       if [[ "$has_match" != "true" ]]; then
         has_match=$(echo "$releases_list" | jq -r ".[$i].assets[].browser_download_url" | grep -qE '\.deb$' && echo true)
@@ -3503,6 +3996,7 @@ fetch_and_deploy_gh_release() {
   local version="${var_appversion:-${4:-latest}}"
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
+  local tag_prefix="${7:-}"
 
   # Validate app name to prevent /root/. directory issues
   if [[ -z "$app" ]]; then
@@ -3524,8 +4018,21 @@ fetch_and_deploy_gh_release() {
 
   ensure_dependencies jq
 
+  if [[ -n "${TOOLS_GH_REL_JSON:-}" && -f "$TOOLS_GH_REL_JSON" ]]; then
+    rm -f "$TOOLS_GH_REL_JSON"
+  fi
+  local gh_rel_json
+  gh_rel_json=$(mktemp /tmp/tools-gh-rel-XXXXXX) || return 73
+  TOOLS_GH_REL_JSON="$gh_rel_json"
+
   local api_url="https://api.github.com/repos/$repo/releases"
-  [[ "$version" != "latest" ]] && api_url="$api_url/tags/$version" || api_url="$api_url/latest"
+  if [[ "$version" != "latest" ]]; then
+    api_url="$api_url/tags/$version"
+  elif [[ -n "$tag_prefix" ]]; then
+    api_url="$api_url?per_page=100"
+  else
+    api_url="$api_url/latest"
+  fi
   local header=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header=(-H "Authorization: token $GITHUB_TOKEN")
 
@@ -3540,7 +4047,7 @@ fetch_and_deploy_gh_release() {
   local max_retries=${#api_timeouts[@]} retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl --connect-timeout 10 --max-time "${api_timeouts[$((attempt - 1))]:-240}" -sSL -w "%{http_code}" -o "$gh_rel_json" "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -3587,7 +4094,15 @@ fetch_and_deploy_gh_release() {
   fi
 
   local json tag_name
-  json=$(</tmp/gh_rel.json)
+  json=$(<"$gh_rel_json")
+  if [[ "$version" == "latest" && -n "$tag_prefix" ]]; then
+    json=$(echo "$json" | jq --arg p "$tag_prefix" \
+      '[.[] | select(.draft==false and .prerelease==false) | select(.tag_name | startswith($p))][0] // empty')
+    if [[ -z "$json" || "$json" == "null" ]]; then
+      msg_error "No stable release matching prefix '${tag_prefix}' found for $repo on GitHub"
+      return 1
+    fi
+  fi
   tag_name=$(echo "$json" | jq -r '.tag_name // .name // empty')
   # Only strip leading 'v' when followed by a digit (e.g. v1.2.3), not words like "version/..."
   [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -3601,6 +4116,7 @@ fetch_and_deploy_gh_release() {
 
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
+  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"; trap - RETURN' RETURN
   local filename="" url=""
 
   msg_info "Fetching GitHub release: $app ($version)"
@@ -3615,28 +4131,12 @@ fetch_and_deploy_gh_release() {
     local direct_tarball_url="https://github.com/$repo/archive/refs/tags/$tag_name.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
-    curl_download "$tmpdir/$filename" "$direct_tarball_url" || {
+    _download_source_tarball "$direct_tarball_url" "$tmpdir/$filename" || {
       msg_error "Download failed: $direct_tarball_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 251
-    }
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 251
 
     ### Binary Mode ###
   elif [[ "$mode" == "binary" ]]; then
@@ -3663,10 +4163,14 @@ fetch_and_deploy_gh_release() {
     # If no match via explicit pattern, fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
-        if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
-          url_match="$u"
-          break
+        [[ "$u" =~ \.deb$ ]] || continue
+        if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+          [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
+        elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+          [[ "$u" =~ (arm64|aarch64).*\.deb$ ]] || continue
         fi
+        url_match="$u"
+        break
       done
     fi
 
@@ -3697,10 +4201,14 @@ fetch_and_deploy_gh_release() {
         fi
         if [[ -z "$url_match" ]]; then
           for u in $assets; do
-            if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
-              url_match="$u"
-              break
+            [[ "$u" =~ \.deb$ ]] || continue
+            if [[ "${arch,,}" =~ ^(amd64|x86_64)$ ]]; then
+              [[ "$u" =~ (amd64|x86_64).*\.deb$ ]] || continue
+            elif [[ "${arch,,}" =~ ^(arm64|aarch64)$ ]]; then
+              [[ "$u" =~ (arm64|aarch64).*\.deb$ ]] || continue
             fi
+            url_match="$u"
+            break
           done
         fi
         if [[ -z "$url_match" ]]; then
@@ -3713,14 +4221,12 @@ fetch_and_deploy_gh_release() {
 
     if [[ -z "$url_match" ]]; then
       msg_error "No suitable .deb asset found for $app"
-      rm -rf "$tmpdir"
       return 252
     fi
 
     filename="${url_match##*/}"
     curl_download "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -3733,7 +4239,6 @@ fetch_and_deploy_gh_release() {
     DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 100
       }
     }
@@ -3744,7 +4249,6 @@ fetch_and_deploy_gh_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -3780,79 +4284,18 @@ fetch_and_deploy_gh_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
     filename="${asset_url##*/}"
     curl_download "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
     local unpack_tmp
     unpack_tmp=$(mktemp -d)
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
-    fi
-
-    if [[ "$filename" == *.zip ]]; then
-      ensure_dependencies unzip
-      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
-        msg_error "Failed to extract ZIP archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
-      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
-        msg_error "Failed to extract TAR archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 251
-      }
-    else
-      msg_error "Unsupported archive format: $filename"
-      rm -rf "$tmpdir" "$unpack_tmp"
-      return 65
-    fi
-
-    local top_dirs
-    top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
-    local top_entries inner_dir
-    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
-    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
-      # Strip leading folder
-      inner_dir="$top_entries"
-      shopt -s dotglob nullglob
-      if compgen -G "$inner_dir/*" >/dev/null; then
-        cp -r "$inner_dir"/* "$target/" || {
-          msg_error "Failed to copy contents from $inner_dir to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Inner directory is empty: $inner_dir"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    else
-      # Copy all contents
-      shopt -s dotglob nullglob
-      if compgen -G "$unpack_tmp/*" >/dev/null; then
-        cp -r "$unpack_tmp"/* "$target/" || {
-          msg_error "Failed to copy contents to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 252
-        }
-      else
-        msg_error "Unpacked archive is empty"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 252
-      fi
-      shopt -u dotglob nullglob
-    fi
+    _deploy_unpacked_archive "$tmpdir/$filename" "$target" "$unpack_tmp" || return
 
     ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
@@ -3860,7 +4303,6 @@ fetch_and_deploy_gh_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 65
     }
 
@@ -3895,7 +4337,6 @@ fetch_and_deploy_gh_release() {
     fi
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 252
     }
 
@@ -3908,7 +4349,6 @@ fetch_and_deploy_gh_release() {
 
     curl_download "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 250
     }
 
@@ -3918,13 +4358,11 @@ fetch_and_deploy_gh_release() {
 
   else
     msg_error "Unknown mode: $mode"
-    rm -rf "$tmpdir"
     return 65
   fi
 
   echo "$version" >"$version_file"
   msg_ok "Deployed: $app ($version)"
-  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------
@@ -4166,29 +4604,36 @@ setup_composer() {
 #   - Cleans up legacy repository files
 #
 # Usage:
-#   setup_docker                              # Uses distro package (recommended)
-#   USE_DOCKER_REPO=true setup_docker         # Uses official Docker repo
+#   setup_docker                              # Uses official Docker repo (recommended)
+#   USE_DOCKER_REPO=false setup_docker        # Uses distro docker.io package
 #   DOCKER_PORTAINER="true" setup_docker
 #   DOCKER_LOG_DRIVER="json-file" setup_docker
 #
 # Variables:
-#   USE_DOCKER_REPO        - Set to "true" to use official Docker repository
-#                            (default: false, uses distro docker.io package)
+#   USE_DOCKER_REPO        - Set to "false" to use distro docker.io package
+#                            (default: true, uses official Docker repository)
 #   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
 #   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
 #   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
 #
 # Features:
-#   - Uses stable distro packages by default
+#   - Uses official Docker repository by default
 #   - Migrates from get.docker.com to repository-based installation
 #   - Updates Docker Engine if newer version available
-#   - Interactive container update with multi-select
+#   - Interactive per-container update prompt (Y/N, 60 s auto-no)
+#   - Compose-managed containers: full restart via docker compose
+#   - Standalone containers: image pull only, no destructive stop/rm
 #   - Portainer installation and update support
+#   - Set DOCKER_NONINTERACTIVE=1 to skip interactive prompts (CI/unattended)
 # ------------------------------------------------------------------------------
+_docker_is_noninteractive() {
+  [[ "${DOCKER_NONINTERACTIVE:-}" == "1" || "${DOCKER_NONINTERACTIVE:-}" == "true" || "${DOCKER_NONINTERACTIVE:-}" == "TRUE" ]] || [[ ! -t 0 ]]
+}
+
 setup_docker() {
   local docker_installed=false
   local portainer_installed=false
-  local USE_DOCKER_REPO="${USE_DOCKER_REPO:-false}"
+  local USE_DOCKER_REPO="${USE_DOCKER_REPO:-true}"
 
   # Check if Docker is already installed
   if command -v docker &>/dev/null; then
@@ -4203,7 +4648,7 @@ setup_docker() {
     msg_info "Portainer container detected"
   fi
 
-  # Scenario 1: Use distro repository (default, most stable)
+  # Scenario 1: Use distro repository (opt-out via USE_DOCKER_REPO=false)
   if [[ "$USE_DOCKER_REPO" != "true" && "$USE_DOCKER_REPO" != "TRUE" && "$USE_DOCKER_REPO" != "1" ]]; then
 
     # Install or upgrade Docker from distro repo
@@ -4324,21 +4769,25 @@ EOF
       PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
 
       if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
-        read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
-        if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-          msg_info "Updating Portainer"
-          docker stop portainer
-          docker rm portainer
-          docker pull portainer/portainer-ce:latest
-          docker run -d \
-            -p 9000:9000 \
-            -p 9443:9443 \
-            --name=portainer \
-            --restart=always \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v portainer_data:/data \
-            portainer/portainer-ce:latest
-          msg_ok "Updated Portainer to $PORTAINER_LATEST"
+        if _docker_is_noninteractive; then
+          msg_info "Skipping Portainer update prompt (non-interactive)"
+        else
+          read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
+          if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+            msg_info "Updating Portainer"
+            docker stop portainer
+            docker rm portainer
+            docker pull portainer/portainer-ce:latest
+            docker run -d \
+              -p 9000:9000 \
+              -p 9443:9443 \
+              --name=portainer \
+              --restart=always \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v portainer_data:/data \
+              portainer/portainer-ce:latest
+            msg_ok "Updated Portainer to $PORTAINER_LATEST"
+          fi
         fi
       else
         msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
@@ -4360,63 +4809,83 @@ EOF
     fi
   fi
 
-  # Interactive Container Update Check
-  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ]; then
+  # Container Update Check
+  # - Skipped entirely when running unattended / non-interactive
+  # - Compose-managed containers: offered via Y/N → docker compose pull + up -d
+  # - Standalone containers: offered via Y/N → image pull only (no stop/rm)
+  if [ "$docker_installed" = true ] && ! _docker_is_noninteractive; then
     msg_info "Checking for container updates"
 
-    # Get list of running containers with update status
-    local containers_with_updates=()
-    local container_info=()
-    local index=1
+    local name image compose_workdir compose_service current_digest latest_digest
+    local compose_updates=()
+    local standalone_updates=()
 
-    while IFS= read -r container; do
-      local name=$(echo "$container" | awk '{print $1}')
-      local image=$(echo "$container" | awk '{print $2}')
-      local current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+    while IFS= read -r line; do
+      name=$(echo "$line" | awk '{print $1}')
+      image=$(echo "$line" | awk '{print $2}')
 
-      # Pull latest image digest
-      docker pull "$image" >/dev/null 2>&1
-      local latest_digest=$(docker inspect "$image" --format='{{.Id}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+      # Portainer containers are handled by the dedicated block above
+      [[ "$name" == "portainer" || "$name" == "portainer_agent" ]] && continue
 
-      if [ "$current_digest" != "$latest_digest" ]; then
-        containers_with_updates+=("$name")
-        container_info+=("${index}) ${name} (${image})")
-        ((index++))
+      current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+      docker pull "$image" >/dev/null 2>&1 || continue
+      latest_digest=$(docker inspect "$image" --format='{{.Id}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+      [[ -z "$latest_digest" || "$current_digest" == "$latest_digest" ]] && continue
+
+      compose_workdir=$(docker inspect "$name" \
+        --format='{{index .Config.Labels "com.docker.compose.project.working_dir"}}' 2>/dev/null || true)
+      compose_service=$(docker inspect "$name" \
+        --format='{{index .Config.Labels "com.docker.compose.service"}}' 2>/dev/null || true)
+
+      if [[ -n "$compose_workdir" && -n "$compose_service" && -d "$compose_workdir" ]]; then
+        compose_updates+=("${name}|${image}|${compose_workdir}|${compose_service}")
+      else
+        standalone_updates+=("${name}|${image}")
       fi
     done < <(docker ps --format '{{.Names}} {{.Image}}')
 
-    if [ ${#containers_with_updates[@]} -gt 0 ]; then
-      echo ""
-      echo "${TAB3}Container updates available:"
-      for info in "${container_info[@]}"; do
-        echo "${TAB3}  $info"
-      done
-      echo ""
-      read -r -p "${TAB3}Select containers to update (e.g., 1,3,5 or 'all' or 'none'): " selection
+    # Stop spinner before any interactive prompt
+    stop_spinner
 
-      if [[ ${selection,,} == "all" ]]; then
-        for container in "${containers_with_updates[@]}"; do
-          msg_info "Updating container: $container"
-          docker stop "$container"
-          docker rm "$container"
-          # Note: This requires the original docker run command - best to recreate via compose
-          msg_ok "Stopped and removed $container (please recreate with updated image)"
-        done
-      elif [[ ${selection,,} != "none" ]]; then
-        IFS=',' read -ra SELECTED <<<"$selection"
-        for num in "${SELECTED[@]}"; do
-          num=$(echo "$num" | xargs) # trim whitespace
-          if [[ "$num" =~ ^[0-9]+$ ]] && [ "$num" -ge 1 ] && [ "$num" -le "${#containers_with_updates[@]}" ]; then
-            container="${containers_with_updates[$((num - 1))]}"
-            msg_info "Updating container: $container"
-            docker stop "$container"
-            docker rm "$container"
-            msg_ok "Stopped and removed $container (please recreate with updated image)"
-          fi
-        done
-      fi
-    else
+    if [[ ${#compose_updates[@]} -eq 0 && ${#standalone_updates[@]} -eq 0 ]]; then
       msg_ok "All containers are up-to-date"
+    else
+      local reply
+      for entry in "${compose_updates[@]}"; do
+        IFS='|' read -r name image compose_workdir compose_service <<<"$entry"
+        reply=""
+        if read -r -t 60 -p "${TAB3}Update ${name} (${image}) via Compose? <y/N> (auto-no in 60s): " reply; then
+          echo ""
+        else
+          echo ""
+        fi
+        if [[ "${reply,,}" =~ ^(y|yes)$ ]]; then
+          msg_info "Updating $name"
+          if (cd "$compose_workdir" && $STD docker compose pull "$compose_service" && $STD docker compose up -d "$compose_service"); then
+            msg_ok "Updated $name"
+          else
+            msg_warn "Could not update $name — try manually in $compose_workdir"
+          fi
+        fi
+      done
+
+      for entry in "${standalone_updates[@]}"; do
+        IFS='|' read -r name image <<<"$entry"
+        reply=""
+        if read -r -t 60 -p "${TAB3}Pull new image for ${name} (${image})? <y/N> (auto-no in 60s): " reply; then
+          echo ""
+        else
+          echo ""
+        fi
+        if [[ "${reply,,}" =~ ^(y|yes)$ ]]; then
+          msg_info "Pulling new image for $name"
+          if $STD docker pull "$image"; then
+            msg_ok "New image available for $name — recreate the container to apply the update"
+          else
+            msg_warn "Failed to pull image for $name"
+          fi
+        fi
+      done
     fi
   fi
 
@@ -4458,7 +4927,12 @@ setup_ffmpeg() {
 
   # Binary fallback mode
   if [[ "$TYPE" == "binary" ]]; then
-    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
+    local ffmpeg_arch
+    case "$(dpkg --print-architecture 2>/dev/null || echo amd64)" in
+    arm64) ffmpeg_arch="arm64" ;;
+    *) ffmpeg_arch="amd64" ;;
+    esac
+    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-${ffmpeg_arch}-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg binary"
       msg_error "Hint: Check connectivity to johnvansickle.com/ffmpeg (static builds, may be slow — large file)"
       rm -rf "$TMP_DIR"
@@ -4546,7 +5020,17 @@ setup_ffmpeg() {
   # If no source download (either VERSION empty or download failed), use binary
   if [[ -z "$VERSION" ]]; then
     msg_info "Setup FFmpeg from pre-built binary"
-    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
+    local ffmpeg_arch detected_arch
+    detected_arch="$(dpkg --print-architecture 2>/dev/null || true)"
+    if [[ -z "$detected_arch" ]]; then
+      detected_arch="$(uname -m 2>/dev/null || true)"
+    fi
+    case "$detected_arch" in
+    arm64 | aarch64) ffmpeg_arch="arm64" ;;
+    amd64 | x86_64) ffmpeg_arch="amd64" ;;
+    *) ffmpeg_arch="amd64" ;;
+    esac
+    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-${ffmpeg_arch}-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg pre-built binary"
       msg_error "Hint: Check connectivity to johnvansickle.com/ffmpeg (large file, may timeout on slow connections)"
       rm -rf "$TMP_DIR"
@@ -5120,15 +5604,15 @@ setup_hwaccel() {
 # ══════════════════════════════════════════════════════════════════════════════
 # Resolve the IGC tag that the latest compute-runtime was built against.
 # Must be called AFTER a fetch_and_deploy_gh_release for intel/compute-runtime
-# so that /tmp/gh_rel.json contains the compute-runtime release metadata.
+# so that TOOLS_GH_REL_JSON contains the compute-runtime release metadata.
 # Sets the variable named by $1 (default: igc_tag) to the discovered tag.
 # ══════════════════════════════════════════════════════════════════════════════
 _resolve_igc_tag() {
   local -n _out_ref="${1:-igc_tag}"
   _out_ref="latest"
-  if [[ -f /tmp/gh_rel.json ]]; then
+  if [[ -n "${TOOLS_GH_REL_JSON:-}" && -f "$TOOLS_GH_REL_JSON" ]]; then
     local _body _parsed
-    _body=$(jq -r '.body // empty' /tmp/gh_rel.json 2>/dev/null) || return 0
+    _body=$(jq -r '.body // empty' "$TOOLS_GH_REL_JSON" 2>/dev/null) || return 0
     _parsed=$(grep -oP 'intel-graphics-compiler/releases/tag/\K[^\s\)]+' <<<"$_body" | head -1)
     [[ -n "$_parsed" ]] && _out_ref="$_parsed"
   fi
@@ -5148,6 +5632,8 @@ _setup_intel_arc() {
       intel-media-va-driver-non-free \
       intel-opencl-icd \
       libmfx-gen1.2 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel Arc packages failed"
 
@@ -5160,7 +5646,7 @@ _setup_intel_arc() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub for Arc support"
 
-      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # Fetch a compute-runtime package first so TOOLS_GH_REL_JSON is populated,
       # then resolve the matching IGC tag from the release notes.
       # libigdgmm - bundled in compute-runtime releases
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
@@ -5182,6 +5668,8 @@ _setup_intel_arc() {
       ocl-icd-libopencl1 \
       libvpl2 \
       libmfx-gen1.2 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel Arc packages failed"
 
@@ -5205,6 +5693,8 @@ _setup_intel_modern() {
       va-driver-all \
       intel-media-va-driver \
       ocl-icd-libopencl1 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel packages failed"
 
@@ -5220,7 +5710,7 @@ _setup_intel_modern() {
     if [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
       msg_info "Fetching Intel compute-runtime from GitHub"
 
-      # Fetch a compute-runtime package first so /tmp/gh_rel.json is populated,
+      # Fetch a compute-runtime package first so TOOLS_GH_REL_JSON is populated,
       # then resolve the matching IGC tag from the release notes.
       # libigdgmm first (bundled in compute-runtime releases)
       fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || true
@@ -5239,6 +5729,8 @@ _setup_intel_modern() {
     $STD apt -y install \
       intel-media-va-driver-non-free \
       ocl-icd-libopencl1 \
+      mesa-vulkan-drivers \
+      vulkan-tools \
       vainfo \
       libmfx-gen1.2 \
       intel-gpu-tools 2>/dev/null || msg_warn "Some Intel packages failed"
@@ -5860,7 +6352,6 @@ _setup_gpu_permissions() {
 #   - Requires: build-essential, libtool, libjpeg-dev, libpng-dev, etc.
 # ------------------------------------------------------------------------------
 setup_imagemagick() {
-  local TMP_DIR=$(mktemp -d)
   local BINARY_PATH="/usr/local/bin/magick"
 
   # Get currently installed version
@@ -5891,51 +6382,39 @@ setup_imagemagick() {
     pkg-config \
     ghostscript
 
-  if ! CURL_TIMEOUT=180 curl_with_retry "https://imagemagick.org/archive/ImageMagick.tar.gz" "$TMP_DIR/ImageMagick.tar.gz"; then
-    msg_error "Failed to download ImageMagick"
-    msg_error "Hint: Check connectivity to imagemagick.org/archive"
-    rm -rf "$TMP_DIR"
+  # Fetch and deploy source tarball from GitHub Releases
+  fetch_and_deploy_gh_release "imagemagick" "ImageMagick/ImageMagick" "tarball" || {
+    msg_error "Failed to download ImageMagick source from GitHub"
+    msg_error "Hint: Check connectivity to github.com/ImageMagick/ImageMagick"
     return 250
-  fi
-
-  tar -xzf "$TMP_DIR/ImageMagick.tar.gz" -C "$TMP_DIR" || {
-    msg_error "Failed to extract ImageMagick"
-    rm -rf "$TMP_DIR"
-    return 251
   }
 
-  cd "$TMP_DIR"/ImageMagick-* || {
-    msg_error "Source extraction failed"
-    rm -rf "$TMP_DIR"
+  cd /opt/imagemagick || {
+    msg_error "Failed to enter ImageMagick source directory"
     return 251
   }
 
   $STD ./configure --disable-static || {
     msg_error "ImageMagick configure failed"
-    rm -rf "$TMP_DIR"
     return 150
   }
   $STD make -j"$(nproc)" || {
     msg_error "ImageMagick compilation failed"
-    rm -rf "$TMP_DIR"
     return 150
   }
   $STD make install || {
     msg_error "ImageMagick installation failed"
-    rm -rf "$TMP_DIR"
     return 150
   }
   $STD ldconfig /usr/local/lib
 
   if [[ ! -x "$BINARY_PATH" ]]; then
     msg_error "ImageMagick installation failed"
-    rm -rf "$TMP_DIR"
     return 150
   fi
 
   local FINAL_VERSION
   FINAL_VERSION=$("$BINARY_PATH" -version | awk '/^Version/ {print $3}')
-  rm -rf "$TMP_DIR"
   cache_installed_version "imagemagick" "$FINAL_VERSION"
   ensure_usr_local_bin_persist
 
@@ -6272,7 +6751,7 @@ EOF
   fi
 
   # Scenario 1: Already installed at target version - just update packages
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && version_matches_spec "$CURRENT_VERSION" "$MARIADB_VERSION"; then
     msg_info "Update MariaDB $MARIADB_VERSION"
 
     # Ensure APT is working
@@ -6304,7 +6783,7 @@ EOF
   fi
 
   # Scenario 2b: Different version installed - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MARIADB_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && ! version_matches_spec "$CURRENT_VERSION" "$MARIADB_VERSION"; then
     msg_info "Upgrade MariaDB from $CURRENT_VERSION to $MARIADB_VERSION"
     remove_old_tool_version "mariadb"
   fi
@@ -6433,9 +6912,11 @@ setup_mariadb_db() {
 
   msg_info "Setting up MariaDB Database"
 
-  $STD mariadb -u root -e "CREATE DATABASE \`$MARIADB_DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-  $STD mariadb -u root -e "CREATE USER '$MARIADB_DB_USER'@'localhost' IDENTIFIED BY '$MARIADB_DB_PASS';"
-  $STD mariadb -u root -e "GRANT ALL ON \`$MARIADB_DB_NAME\`.* TO '$MARIADB_DB_USER'@'localhost';"
+  # Use --defaults-extra-file to pass credentials safely and escape identifiers
+  # to prevent SQL injection via DB name / user / password
+  $STD mariadb -u root -e "CREATE DATABASE \`${MARIADB_DB_NAME//\`/\`\`}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+  $STD mariadb -u root -e "CREATE USER '${MARIADB_DB_USER//\'/\'\'}'@'localhost' IDENTIFIED BY '${MARIADB_DB_PASS//\'/\'\'}';"
+  $STD mariadb -u root -e "GRANT ALL ON \`${MARIADB_DB_NAME//\`/\`\`}\`.* TO '${MARIADB_DB_USER//\'/\'\'}'@'localhost';"
 
   # Optional extra grants
   if [[ -n "${MARIADB_DB_EXTRA_GRANTS:-}" ]]; then
@@ -6467,6 +6948,60 @@ setup_mariadb_db() {
   export MARIADB_DB_NAME
   export MARIADB_DB_USER
   export MARIADB_DB_PASS
+}
+
+# ------------------------------------------------------------------------------
+# Creates a MySQL database and user (for apps that require MySQL, not MariaDB).
+#
+# Description:
+#   - Creates database, user and grants using the mysql root socket login
+#   - The user is created with host '%' because MySQL treats 'localhost'
+#     (socket) and '127.0.0.1' (TCP) as distinct hosts; apps connecting over
+#     TCP to 127.0.0.1 would not match a 'localhost' account. mysql-server
+#     binds to 127.0.0.1 by default, so '%' stays local-only.
+#
+# Variables:
+#   MYSQL_DB_NAME   - Database name (required)
+#   MYSQL_DB_USER   - Database user (required)
+#   MYSQL_DB_PASS   - Password (optional, generated if unset)
+#
+# Exports:
+#   MYSQL_DB_NAME, MYSQL_DB_USER, MYSQL_DB_PASS
+#
+# Example:
+#   MYSQL_DB_NAME="fleet" MYSQL_DB_USER="fleet" setup_mysql_db
+# ------------------------------------------------------------------------------
+setup_mysql_db() {
+  if [[ -z "${MYSQL_DB_NAME:-}" || -z "${MYSQL_DB_USER:-}" ]]; then
+    msg_error "MYSQL_DB_NAME and MYSQL_DB_USER must be set before calling setup_mysql_db"
+    return 65
+  fi
+
+  if [[ -z "${MYSQL_DB_PASS:-}" ]]; then
+    MYSQL_DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+  fi
+
+  msg_info "Setting up MySQL Database"
+
+  $STD mysql -u root -e "CREATE DATABASE \`${MYSQL_DB_NAME//\`/\`\`}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+  $STD mysql -u root -e "CREATE USER '${MYSQL_DB_USER//\'/\'\'}'@'%' IDENTIFIED BY '${MYSQL_DB_PASS//\'/\'\'}';"
+  $STD mysql -u root -e "GRANT ALL ON \`${MYSQL_DB_NAME//\`/\`\`}\`.* TO '${MYSQL_DB_USER//\'/\'\'}'@'%';"
+  $STD mysql -u root -e "FLUSH PRIVILEGES;"
+
+  local app_name="${APPLICATION,,}"
+  local CREDS_FILE="${MYSQL_DB_CREDS_FILE:-${HOME}/${app_name}.creds}"
+  {
+    echo "MySQL Credentials"
+    echo "Database: $MYSQL_DB_NAME"
+    echo "User: $MYSQL_DB_USER"
+    echo "Password: $MYSQL_DB_PASS"
+  } >>"$CREDS_FILE"
+
+  msg_ok "Set up MySQL Database"
+
+  export MYSQL_DB_NAME
+  export MYSQL_DB_USER
+  export MYSQL_DB_PASS
 }
 
 # ------------------------------------------------------------------------------
@@ -6517,7 +7052,7 @@ setup_meilisearch() {
       CURRENT_VERSION=$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1) || CURRENT_VERSION="0.0.0"
       NEW_VERSION="${CHECK_UPDATE_RELEASE#v}"
 
-      # Extract major.minor for comparison (Meilisearch requires dump/restore between minor versions)
+      # Extract major.minor for comparison (Meilisearch changes its on-disk DB format between minor versions)
       local CURRENT_MAJOR_MINOR NEW_MAJOR_MINOR
       CURRENT_MAJOR_MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f1,2)
       NEW_MAJOR_MINOR=$(echo "$NEW_VERSION" | cut -d. -f1,2)
@@ -6529,147 +7064,72 @@ setup_meilisearch() {
         msg_info "MeiliSearch version change detected (${CURRENT_VERSION} → ${NEW_VERSION}), preparing data migration"
       fi
 
-      # Read config values for dump/restore
-      local MEILI_HOST MEILI_PORT MEILI_MASTER_KEY MEILI_DUMP_DIR
+      # Read connection + storage paths for the in-place (dumpless) upgrade
+      local MEILI_HOST MEILI_PORT MEILI_DB_PATH
       MEILI_HOST="${MEILISEARCH_HOST:-127.0.0.1}"
       MEILI_PORT="${MEILISEARCH_PORT:-7700}"
-      MEILI_DUMP_DIR="${MEILISEARCH_DUMP_DIR:-/var/lib/meilisearch/dumps}"
-      MEILI_MASTER_KEY=$(grep -E "^master_key\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
+      MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
+      MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
 
-      # Create dump before update if migration is needed
-      local DUMP_UID=""
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$MEILI_MASTER_KEY" ]]; then
-        msg_info "Creating MeiliSearch data dump before upgrade"
-
-        # Trigger dump creation
-        local DUMP_RESPONSE
-        DUMP_RESPONSE=$(curl -s -X POST "http://${MEILI_HOST}:${MEILI_PORT}/dumps" \
-          -H "Authorization: Bearer ${MEILI_MASTER_KEY}" \
-          -H "Content-Type: application/json" 2>/dev/null) || true
-
-        # The initial response only contains taskUid, not dumpUid
-        # dumpUid is only available after the task completes
-        local TASK_UID
-        TASK_UID=$(echo "$DUMP_RESPONSE" | grep -oP '"taskUid":\s*\K[0-9]+' || true)
-
-        if [[ -n "$TASK_UID" ]]; then
-          msg_info "Waiting for dump task ${TASK_UID} to complete..."
-          local MAX_WAIT=120
-          local WAITED=0
-          local TASK_RESULT=""
-
-          while [[ $WAITED -lt $MAX_WAIT ]]; do
-            TASK_RESULT=$(curl -s "http://${MEILI_HOST}:${MEILI_PORT}/tasks/${TASK_UID}" \
-              -H "Authorization: Bearer ${MEILI_MASTER_KEY}" 2>/dev/null) || true
-
-            local TASK_STATUS
-            TASK_STATUS=$(echo "$TASK_RESULT" | grep -oP '"status":\s*"\K[^"]+' || true)
-
-            if [[ "$TASK_STATUS" == "succeeded" ]]; then
-              # Extract dumpUid from the completed task details
-              DUMP_UID=$(echo "$TASK_RESULT" | grep -oP '"dumpUid":\s*"\K[^"]+' || true)
-              if [[ -n "$DUMP_UID" ]]; then
-                msg_ok "MeiliSearch dump created successfully: ${DUMP_UID}"
-              else
-                msg_warn "Dump task succeeded but could not extract dumpUid"
-              fi
-              break
-            elif [[ "$TASK_STATUS" == "failed" ]]; then
-              local ERROR_MSG
-              ERROR_MSG=$(echo "$TASK_RESULT" | grep -oP '"message":\s*"\K[^"]+' || echo "Unknown error")
-              msg_warn "MeiliSearch dump failed: ${ERROR_MSG}"
-              break
-            fi
-            sleep 2
-            WAITED=$((WAITED + 2))
-          done
-
-          if [[ $WAITED -ge $MAX_WAIT ]]; then
-            msg_warn "MeiliSearch dump timed out after ${MAX_WAIT}s"
-          fi
-        else
-          msg_warn "Could not trigger MeiliSearch dump (no taskUid in response)"
-          msg_info "Response was: ${DUMP_RESPONSE:-empty}"
-        fi
-      fi
-
-      # If migration is needed but dump failed, we have options:
-      # 1. Abort the update (safest, but annoying)
-      # 2. Backup data directory and proceed (allows manual recovery)
-      # 3. Just proceed and hope for the best (dangerous)
-      # We choose option 2: backup and proceed with warning
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -z "$DUMP_UID" ]]; then
-        local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
-
-        if [[ -d "$MEILI_DB_PATH" ]] && [[ -n "$(ls -A "$MEILI_DB_PATH" 2>/dev/null)" ]]; then
-          local BACKUP_PATH="${MEILI_DB_PATH}.backup.$(date +%Y%m%d%H%M%S)"
-          msg_warn "Backing up MeiliSearch data to ${BACKUP_PATH}"
-          mv "$MEILI_DB_PATH" "$BACKUP_PATH"
-          mkdir -p "$MEILI_DB_PATH"
-          msg_info "Data backed up. After update, you may need to reindex your data."
-          msg_info "Old data is preserved at: ${BACKUP_PATH}"
-        fi
-      fi
-
-      # Stop service and update binary
       systemctl stop meilisearch
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
 
-      # If migration needed and dump was created, remove old data and import dump
-      if [[ "$NEEDS_MIGRATION" == "true" ]] && [[ -n "$DUMP_UID" ]]; then
-        local MEILI_DB_PATH
-        MEILI_DB_PATH=$(grep -E "^db_path\s*=" /etc/meilisearch.toml 2>/dev/null | sed 's/.*=\s*"\(.*\)"/\1/' | tr -d ' ' || true)
-        MEILI_DB_PATH="${MEILI_DB_PATH:-/var/lib/meilisearch/data}"
-
-        msg_info "Removing old MeiliSearch database for migration"
-        rm -rf "${MEILI_DB_PATH:?}"/*
-
-        # Import dump using CLI flag (this is the supported method)
-        local DUMP_FILE="${MEILI_DUMP_DIR}/${DUMP_UID}.dump"
-        if [[ -f "$DUMP_FILE" ]]; then
-          msg_info "Importing dump: ${DUMP_FILE}"
-
-          # Start meilisearch with --import-dump flag
-          # This is a one-time import that happens during startup
-          /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --import-dump "$DUMP_FILE" >/dev/null 2>&1 &
-          local MEILI_PID=$!
-
-          # Wait for meilisearch to become healthy (import happens during startup)
-          msg_info "Waiting for MeiliSearch to import and start..."
-          local MAX_WAIT=300
-          local WAITED=0
-          while [[ $WAITED -lt $MAX_WAIT ]]; do
-            if curl -sf "http://${MEILI_HOST}:${MEILI_PORT}/health" &>/dev/null; then
-              msg_ok "MeiliSearch is healthy after import"
-              break
-            fi
-            # Check if process is still running
-            if ! kill -0 $MEILI_PID 2>/dev/null; then
-              msg_warn "MeiliSearch process exited during import"
-              break
-            fi
-            sleep 3
-            WAITED=$((WAITED + 3))
-          done
-
-          # Stop the manual process
-          kill $MEILI_PID 2>/dev/null || true
-          wait $MEILI_PID 2>/dev/null || true
-          sleep 2
-
-          # Start via systemd for proper management
+      # Safety backup of the data dir before any in-place migration.
+      # Dumpless upgrade mutates the DB in place and cannot be rolled back on
+      # failure, so keep a tarball to restore from. (No master_key/API needed.)
+      local MEILI_BACKUP=""
+      if [[ "$NEEDS_MIGRATION" == "true" ]]; then
+        MEILI_BACKUP="/var/lib/meilisearch/pre-upgrade-${CURRENT_VERSION}.tar.gz"
+        msg_info "Backing up data dir before upgrade → ${MEILI_BACKUP}"
+        if ! tar -czf "$MEILI_BACKUP" -C "$MEILI_DB_PATH" . 2>/dev/null; then
+          msg_error "MeiliSearch data backup failed — aborting upgrade to avoid data loss"
           systemctl start meilisearch
+          return 100
+        fi
+        msg_ok "Backup created: ${MEILI_BACKUP}"
+      fi
 
-          if systemctl is-active --quiet meilisearch; then
-            msg_ok "MeiliSearch migrated successfully"
-          else
-            msg_warn "MeiliSearch failed to start after migration - check logs with: journalctl -u meilisearch"
+      # Replace the binary
+      if [[ "$(arch_resolve)" == "arm64" ]]; then
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/bin" "meilisearch-linux-aarch64"
+      else
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+      fi
+
+      if [[ "$NEEDS_MIGRATION" == "true" ]]; then
+        # One-time in-place migration via --experimental-dumpless-upgrade (replaced with --upgrade-db)
+        # Meilisearch migrates the on-disk DB during this startup; subsequent
+        # normal (systemd) starts run without the flag.
+        msg_info "Migrating data in place (dumpless upgrade ${CURRENT_VERSION} → ${NEW_VERSION})"
+        /usr/bin/meilisearch --config-file-path /etc/meilisearch.toml --upgrade-db >/dev/null 2>&1 &
+        local MEILI_PID=$!
+
+        local MAX_WAIT=300
+        local WAITED=0
+        local MIGRATED=false
+        while [[ $WAITED -lt $MAX_WAIT ]]; do
+          if curl -sf "http://${MEILI_HOST}:${MEILI_PORT}/health" &>/dev/null; then
+            MIGRATED=true
+            break
           fi
+          # Bail early if the migration process died
+          if ! kill -0 $MEILI_PID 2>/dev/null; then
+            msg_warn "MeiliSearch process exited during migration"
+            break
+          fi
+          sleep 3
+          WAITED=$((WAITED + 3))
+        done
+
+        # Stop the one-shot migration process and hand over to systemd
+        kill $MEILI_PID 2>/dev/null || true
+        wait $MEILI_PID 2>/dev/null || true
+        sleep 2
+        systemctl start meilisearch
+
+        if [[ "$MIGRATED" == "true" ]] && systemctl is-active --quiet meilisearch; then
+          msg_ok "MeiliSearch migrated successfully (backup kept at ${MEILI_BACKUP})"
         else
-          msg_warn "Dump file not found: ${DUMP_FILE}"
-          systemctl start meilisearch
+          msg_error "MeiliSearch migration failed. Restore with: systemctl stop meilisearch; rm -rf ${MEILI_DB_PATH:?}/*; tar -xzf ${MEILI_BACKUP} -C ${MEILI_DB_PATH}; then reinstall the previous version"
         fi
       else
         systemctl start meilisearch
@@ -6683,11 +7143,18 @@ setup_meilisearch() {
   # Fresh install
   msg_info "Setup MeiliSearch"
 
-  # Install binary
-  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
-    msg_error "Failed to install MeiliSearch binary"
-    return 250
-  }
+  # Install binary (meilisearch publishes only an amd64 .deb; arm64 uses the raw linux-aarch64 binary)
+  if [[ "$(arch_resolve)" == "arm64" ]]; then
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/bin" "meilisearch-linux-aarch64" || {
+      msg_error "Failed to install MeiliSearch binary"
+      return 250
+    }
+  else
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" || {
+      msg_error "Failed to install MeiliSearch binary"
+      return 250
+    }
+  fi
 
   # Download default config
   curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml || {
@@ -6793,14 +7260,24 @@ setup_mongodb() {
   export NEEDRESTART_MODE=a
   export NEEDRESTART_SUSPEND=1
 
-  # Check AVX support
-  if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
-    local major="${MONGO_VERSION%%.*}"
-    if ((major > 5)); then
-      msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+  # Check CPU requirements: AVX on x86_64, NEON/ASIMD on arm64
+  case "$(uname -m)" in
+  aarch64)
+    if ! grep -qm1 'asimd' /proc/cpuinfo; then
+      msg_error "MongoDB ${MONGO_VERSION} requires ARMv8.2-A support, which is not available on this system."
       return 236
     fi
-  fi
+    ;;
+  *)
+    if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
+      local major="${MONGO_VERSION%%.*}"
+      if ((major > 5)); then
+        msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+        return 236
+      fi
+    fi
+    ;;
+  esac
 
   case "$DISTRO_ID" in
   ubuntu)
@@ -6880,6 +7357,18 @@ setup_mongodb() {
 
   mkdir -p /var/lib/mongodb
   chown -R mongodb:mongodb /var/lib/mongodb
+
+  local KERNEL_VERSION MONGO_MAJOR
+  KERNEL_VERSION=$(uname -r | cut -d- -f1)
+  MONGO_MAJOR="${MONGO_VERSION%%.*}"
+  if ((MONGO_MAJOR >= 8)) && [[ "$(printf '%s\n' "6.19" "$KERNEL_VERSION" | sort -V | head -n1)" == "6.19" ]]; then
+    mkdir -p /etc/systemd/system/mongod.service.d
+    cat <<EOF >/etc/systemd/system/mongod.service.d/rseq.conf
+[Service]
+Environment=GLIBC_TUNABLES=glibc.pthread.rseq=1
+EOF
+    systemctl daemon-reload
+  fi
 
   $STD systemctl enable mongod || {
     msg_warn "Failed to enable mongod service"
@@ -6998,7 +7487,7 @@ setup_mysql() {
 
   # Scenario 2: Use official MySQL repository (USE_MYSQL_REPO=true)
   # Scenario 2a: Already at target version - just update packages
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MYSQL_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && version_matches_spec "$CURRENT_VERSION" "$MYSQL_VERSION"; then
     msg_info "Update MySQL $MYSQL_VERSION"
 
     ensure_apt_working || return 100
@@ -7014,7 +7503,7 @@ setup_mysql() {
   fi
 
   # Scenario 2: Different version installed - clean upgrade
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
+  if [[ -n "$CURRENT_VERSION" ]] && ! version_matches_spec "$CURRENT_VERSION" "$MYSQL_VERSION"; then
     msg_info "Upgrade MySQL from $CURRENT_VERSION to $MYSQL_VERSION"
     remove_old_tool_version "mysql"
   else
@@ -7128,13 +7617,25 @@ EOF
 #   - Optionally installs or updates global npm modules
 #
 # Variables:
-#   NODE_VERSION   - Node.js version to install (default: 24 LTS)
-#   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
+#   NODE_VERSION          - Node.js version to install (default: 24 LTS)
+#   NODE_MODULE           - Comma-separated global modules (e.g. "yarn,corepack,pnpm@10")
+#   NODE_COREPACK_ENABLE  - Run corepack enable after install (default: 1 when corepack is used)
 # ------------------------------------------------------------------------------
 
 setup_nodejs() {
   local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
+  local NODE_COREPACK_ENABLE="${NODE_COREPACK_ENABLE:-1}"
+  local node_major="${NODE_VERSION%%.*}"
+  local wants_corepack=0
+  local node_setup_ok_msg=""
+
+  # Corepack must run fully non-interactive. Without this it prints
+  # "Corepack is about to download X. Do you want to continue? [Y/n]" and blocks
+  # the whole install waiting for keyboard input - both here and in the calling
+  # script's later `corepack prepare` / `corepack <pm>` calls, which run in this
+  # same shell and inherit the export.
+  export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
   cleanup_legacy_install "nodejs"
@@ -7161,18 +7662,17 @@ setup_nodejs() {
     # Upgrade to the latest minor/patch release from NodeSource
     $STD apt-get install -y --only-upgrade nodejs 2>/dev/null || true
 
-    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
-    $STD npm install -g npm@11.11.0 2>/dev/null || true
-
     cache_installed_version "nodejs" "$NODE_VERSION"
     msg_ok "Update Node.js $NODE_VERSION"
   else
     # Scenario 2: Different version installed - clean upgrade
     if [[ -n "$CURRENT_NODE_VERSION" && "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]]; then
       msg_info "Upgrade Node.js from $CURRENT_NODE_VERSION to $NODE_VERSION"
+      node_setup_ok_msg="Upgrade Node.js to $NODE_VERSION"
       remove_old_tool_version "nodejs"
     else
       msg_info "Setup Node.js $NODE_VERSION"
+      node_setup_ok_msg="Setup Node.js $NODE_VERSION"
     fi
 
     # Remove ALL Debian nodejs packages BEFORE adding NodeSource repo
@@ -7181,6 +7681,7 @@ setup_nodejs() {
       $STD apt purge -y nodejs nodejs-doc libnode* node-* 2>/dev/null || true
       $STD apt autoremove -y 2>/dev/null || true
       $STD apt clean 2>/dev/null || true
+      msg_ok "Removed Debian-packaged Node.js"
     fi
 
     # Remove any APT pinning (not needed)
@@ -7226,17 +7727,19 @@ setup_nodejs() {
       return 127
     fi
 
-    # Pin npm to 11.11.0 to work around Node.js 22.22.2 regression (nodejs/node#62425)
-    local NPM_VERSION
-    NPM_VERSION=$(npm -v 2>/dev/null || echo "0")
-    if [[ "$NPM_VERSION" != "0" ]]; then
-      $STD npm install -g npm@11.11.0 2>/dev/null || {
-        msg_warn "Failed to update npm to 11.11.0 (continuing with bundled npm $NPM_VERSION)"
-      }
-    fi
-
     cache_installed_version "nodejs" "$NODE_VERSION"
-    msg_ok "Setup Node.js $NODE_VERSION"
+    msg_ok "$node_setup_ok_msg"
+  fi
+
+  # Node 22.22.2 bundles npm 10.9.7 which cannot self-upgrade (nodejs/node#62425)
+  if [[ "$NODE_VERSION" == "22" && "$(npm -v 2>/dev/null)" == "10.9.7" ]]; then
+    msg_info "Updating npm (Node 22 regression fix)"
+    $STD npm install -g npm@10.9.8 2>/dev/null || true
+    if $STD npm install -g npm@latest 2>/dev/null; then
+      msg_ok "Updated npm ($(npm -v))"
+    else
+      msg_warn "npm update failed on Node 22.22.2"
+    fi
   fi
 
   # Set a safe default heap limit for Node.js builds if not explicitly provided.
@@ -7281,18 +7784,55 @@ setup_nodejs() {
   }
 
   # Install global Node modules
-  if [[ -n "$NODE_MODULE" ]]; then
+  if [[ -n "$NODE_MODULE" ]] || ((node_major >= 25)); then
+    if ((node_major >= 25)) && [[ ",${NODE_MODULE}," != *",corepack,"* ]] && [[ "$NODE_MODULE" != corepack* ]]; then
+      NODE_MODULE="${NODE_MODULE:+$NODE_MODULE,}corepack"
+    fi
+
     IFS=',' read -ra MODULES <<<"$NODE_MODULE"
 
-    # Pin pnpm to v10 to avoid breaking changes from newer major versions
+    local corepack_spec="corepack@latest"
     for i in "${!MODULES[@]}"; do
-      if [[ "${MODULES[$i]}" =~ ^pnpm(@.*)?$ ]]; then
+      if [[ "${MODULES[$i]}" == "corepack" || "${MODULES[$i]}" == corepack@* ]]; then
+        wants_corepack=1
+        [[ "${MODULES[$i]}" == corepack@* ]] && corepack_spec="${MODULES[$i]}"
+      fi
+      if [[ "${MODULES[$i]}" == "pnpm" ]]; then
         MODULES[$i]="pnpm@^10"
       fi
     done
 
+    # When corepack is requested, install and enable it FIRST. The corepack npm
+    # package owns the global yarn/pnpm/pnpx/yarnpkg bin shims, so a second
+    # `npm install -g yarn`/`pnpm` collides on /usr/bin/<tool> (EEXIST). With
+    # corepack ready we provision those package managers THROUGH corepack instead.
+    local corepack_ready=0
+    if ((wants_corepack)); then
+      msg_info "Installing corepack"
+      if $STD npm install -g "$corepack_spec" 2>/dev/null ||
+        $STD npm install -g --force "$corepack_spec" 2>/dev/null; then
+        msg_ok "Installed corepack"
+      else
+        msg_warn "Failed to install corepack"
+      fi
+      if [[ "$NODE_COREPACK_ENABLE" == "1" ]] && command -v corepack >/dev/null 2>&1; then
+        msg_info "Enabling corepack"
+        if $STD corepack enable 2>/dev/null; then
+          corepack_ready=1
+          msg_ok "Enabled corepack"
+        else
+          msg_warn "corepack enable failed"
+        fi
+      fi
+    fi
+
     local failed_modules=0
     for mod in "${MODULES[@]}"; do
+      # corepack itself is already handled above
+      if [[ "$mod" == "corepack" || "$mod" == corepack@* ]]; then
+        continue
+      fi
+
       local MODULE_NAME MODULE_REQ_VERSION MODULE_INSTALLED_VERSION
       if [[ "$mod" == @*/*@* ]]; then
         # Scoped package with version, e.g. @vue/cli-service@latest
@@ -7308,38 +7848,78 @@ setup_nodejs() {
         MODULE_REQ_VERSION="latest"
       fi
 
+      # Provision pnpm/yarn through corepack when it is active, so we never fight
+      # corepack over the /usr/bin/{yarn,pnpm} shim locations it owns.
+      if ((corepack_ready)) && [[ "$MODULE_NAME" == "pnpm" || "$MODULE_NAME" == "yarn" ]]; then
+        local corepack_pkg="$MODULE_NAME"
+        [[ "$MODULE_REQ_VERSION" != "latest" ]] && corepack_pkg="${MODULE_NAME}@${MODULE_REQ_VERSION}"
+        msg_info "Provisioning $MODULE_NAME via corepack"
+        if $STD corepack prepare "$corepack_pkg" --activate 2>/dev/null || command -v "$MODULE_NAME" >/dev/null 2>&1; then
+          msg_ok "Provisioned $MODULE_NAME via corepack"
+        else
+          msg_warn "Failed to provision $MODULE_NAME via corepack"
+          ((failed_modules++)) || true
+        fi
+        continue
+      fi
+
+      # For the npm-global path, drop any corepack-provided shim first so the
+      # bin link can be created without an EEXIST collision.
+      if [[ "$MODULE_NAME" == "pnpm" || "$MODULE_NAME" == "yarn" || "$MODULE_NAME" == "yarnpkg" ]]; then
+        rm -f /usr/bin/"$MODULE_NAME" /usr/local/bin/"$MODULE_NAME" 2>/dev/null || true
+      fi
+
       # Check if the module is already installed
       if $STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep -q "$MODULE_NAME@"; then
         MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
-          msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
-          if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+          msg_info "Updating $MODULE_NAME to v$MODULE_REQ_VERSION"
+          # Retry with --force to overwrite corepack-provided shims (pnpm/yarn), which now
+          # ship with recent corepack and cause EEXIST on /usr/bin/<tool>
+          if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null ||
+            $STD npm install -g --force "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+            msg_ok "Updated $MODULE_NAME"
+          else
             msg_warn "Failed to update $MODULE_NAME to version $MODULE_REQ_VERSION"
             ((failed_modules++)) || true
-            continue
           fi
         elif [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
           msg_info "Updating $MODULE_NAME to latest version"
-          if ! $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null; then
+          if $STD npm install -g "${MODULE_NAME}@latest" 2>/dev/null ||
+            $STD npm install -g --force "${MODULE_NAME}@latest" 2>/dev/null; then
+            msg_ok "Updated $MODULE_NAME"
+          else
             msg_warn "Failed to update $MODULE_NAME to latest version"
             ((failed_modules++)) || true
-            continue
           fi
         fi
       else
         msg_info "Installing $MODULE_NAME@$MODULE_REQ_VERSION"
-        if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+        # Retry with --force to overwrite corepack-provided shims (pnpm/yarn), which now
+        # ship with recent corepack and cause EEXIST on /usr/bin/<tool>
+        if $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null ||
+          $STD npm install -g --force "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
+          msg_ok "Installed $MODULE_NAME"
+        else
           msg_warn "Failed to install $MODULE_NAME@$MODULE_REQ_VERSION"
           ((failed_modules++)) || true
-          continue
         fi
       fi
     done
-    if [[ $failed_modules -eq 0 ]]; then
-      msg_ok "Installed Node.js modules: $NODE_MODULE"
-    else
-      msg_warn "Installed Node.js modules with $failed_modules failure(s): $NODE_MODULE"
+    if ((failed_modules > 0)); then
+      msg_warn "$failed_modules Node.js module(s) failed: $NODE_MODULE"
     fi
+  fi
+
+  # pnpm v10+ blocks dependency build scripts by default. Do NOT force
+  # `dangerouslyAllowAllBuilds` globally: pnpm implements that flag as an empty
+  # `neverBuiltDependencies`, which then clashes with any project that ships its
+  # own `onlyBuiltDependencies` (every create-t3-app based app, e.g. Split Pro)
+  # and aborts with ERR_PNPM_CONFIG_CONFLICT_BUILT_DEPENDENCIES. Instead relax the
+  # strict check so an unapproved build is a warning, not a fatal error; scripts
+  # that truly need every build script executed enable that themselves.
+  if command -v pnpm >/dev/null 2>&1; then
+    pnpm config set --global strictDepBuilds false >/dev/null 2>&1 || true
   fi
 }
 
@@ -7648,6 +8228,78 @@ EOF
 
   cache_installed_version "php" "$INSTALLED_VERSION"
   msg_ok "Setup PHP ${INSTALLED_VERSION}"
+}
+
+# ------------------------------------------------------------------------------
+# Resolves the path of the active PHP-FPM unix socket.
+#
+# Description:
+#   - Prefers the socket of ${PHP_VERSION} when that variable is set, which is
+#     the deterministic case directly after setup_php ran
+#   - Falls back to the highest version found below /run/php
+#   - Webserver-agnostic: works for nginx (fastcgi_pass) and Caddy (php_fastcgi)
+#
+# Notes:
+#   - Prints the path to stdout, diagnostics go to stderr, so the result can be
+#     captured via command substitution
+#   - Deliberately avoids `head -n1`: it closes the pipe early and with
+#     `set -o pipefail` (see catch_errors) SIGPIPE would abort the install
+#   - php-fpm has to be running, the socket only exists after the service start
+#
+# Usage:
+#   PHP_SOCK=$(get_php_fpm_socket)
+#   echo "fastcgi_pass unix:${PHP_SOCK};"
+# ------------------------------------------------------------------------------
+get_php_fpm_socket() {
+  local sock
+  if [[ -n "${PHP_VERSION:-}" && -S "/run/php/php${PHP_VERSION}-fpm.sock" ]]; then
+    echo "/run/php/php${PHP_VERSION}-fpm.sock"
+    return 0
+  fi
+  sock=$(find /run/php -maxdepth 1 -name "php*-fpm.sock" -type s 2>/dev/null | sort -V | tail -1)
+  if [[ -z "$sock" ]]; then
+    msg_error "No active PHP-FPM socket found under /run/php"
+    return 1
+  fi
+  echo "$sock"
+}
+# ------------------------------------------------------------------------------
+# Enables an nginx site, validates the configuration and reloads the service.
+#
+# Description:
+#   - Removes the packaged default vhost (idempotent, unlike `unlink`)
+#   - Links the site from sites-available into sites-enabled
+#   - Runs `nginx -t` and aborts before a broken config reaches a running service
+#   - Enables the unit so nginx survives a reboot, then restarts it via
+#     safe_service_restart so a failed start is actually reported
+#
+# Variables:
+#   $1 - site name, has to exist as /etc/nginx/sites-available/<name>
+#
+# Usage:
+#   cat <<EOF >/etc/nginx/sites-available/myapp
+#   ...
+#   EOF
+#   nginx_enable_site myapp
+# ------------------------------------------------------------------------------
+nginx_enable_site() {
+  local site="${1:-}"
+  if [[ -z "$site" ]]; then
+    msg_error "nginx_enable_site: no site name given"
+    return 1
+  fi
+  if [[ ! -f "/etc/nginx/sites-available/${site}" ]]; then
+    msg_error "nginx site config not found: /etc/nginx/sites-available/${site}"
+    return 1
+  fi
+  rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
+  ln -sf "/etc/nginx/sites-available/${site}" "/etc/nginx/sites-enabled/${site}"
+  if ! $STD nginx -t; then
+    msg_error "nginx configuration test failed for site '${site}'"
+    return 1
+  fi
+  $STD systemctl enable -q nginx
+  safe_service_restart nginx
 }
 
 # ------------------------------------------------------------------------------
@@ -7964,8 +8616,14 @@ setup_postgresql_db() {
   fi
 
   msg_info "Setting up PostgreSQL Database"
-  $STD sudo -u postgres psql -c "CREATE ROLE $PG_DB_USER WITH LOGIN PASSWORD '$PG_DB_PASS';"
-  $STD sudo -u postgres psql -c "CREATE DATABASE $PG_DB_NAME WITH OWNER $PG_DB_USER ENCODING 'UTF8' TEMPLATE template0;"
+  # Escape single quotes in identifiers to prevent SQL injection
+  local _pg_user_escaped _pg_pass_escaped _pg_db_escaped
+  _pg_user_escaped="${PG_DB_USER//\'/\'\'}"
+  _pg_pass_escaped="${PG_DB_PASS//\'/\'\'}"
+  _pg_db_escaped="${PG_DB_NAME//\'/\'\'}"
+
+  $STD sudo -u postgres psql -c "CREATE ROLE $_pg_user_escaped WITH LOGIN PASSWORD '$_pg_pass_escaped';"
+  $STD sudo -u postgres psql -c "CREATE DATABASE $_pg_db_escaped WITH OWNER $_pg_user_escaped ENCODING 'UTF8' TEMPLATE template0;"
 
   # Configure pg_cron database BEFORE creating the extension (must be set before pg_cron loads)
   if [[ -n "${PG_DB_EXTENSIONS:-}" ]] && [[ ",${PG_DB_EXTENSIONS//[[:space:]]/}," == *",pg_cron,"* ]]; then
@@ -7979,7 +8637,7 @@ setup_postgresql_db() {
     IFS=',' read -ra EXT_LIST <<<"${PG_DB_EXTENSIONS:-}"
     for ext in "${EXT_LIST[@]}"; do
       ext=$(echo "$ext" | xargs) # Trim whitespace
-      $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS $ext;"
+      $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS \"$ext\";"
     done
   fi
 
@@ -8030,6 +8688,7 @@ setup_postgresql_db() {
   export PG_DB_USER
   export PG_DB_PASS
 }
+
 # ------------------------------------------------------------------------------
 # Installs rbenv and ruby-build, installs Ruby and optionally Rails.
 #
@@ -8049,7 +8708,30 @@ setup_ruby() {
   local RBENV_DIR="$HOME/.rbenv"
   local RBENV_BIN="$RBENV_DIR/bin/rbenv"
   local PROFILE_FILE="$HOME/.profile"
+  local BASH_PROFILE_FILE="$HOME/.bash_profile"
+  local BASHRC_FILE="$HOME/.bashrc"
   local TMP_DIR=$(mktemp -d)
+
+  # Ensure HOME exists: callers may pass a not-yet-created home (e.g. a service
+  # user that is created later in the install), so the profile writes below do
+  # not fail on a missing directory.
+  mkdir -p "$HOME"
+
+  if ! grep -q 'rbenv init' "$PROFILE_FILE" 2>/dev/null; then
+    cat <<'EOF' >>"$PROFILE_FILE"
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+EOF
+  fi
+  if ! grep -q '.rbenv/shims' "$PROFILE_FILE" 2>/dev/null; then
+    echo 'export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"' >>"$PROFILE_FILE"
+  fi
+  if [[ -f "$BASH_PROFILE_FILE" ]] && ! grep -q '.rbenv/shims' "$BASH_PROFILE_FILE"; then
+    echo 'export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"' >>"$BASH_PROFILE_FILE"
+  fi
+  if [[ -f "$BASHRC_FILE" ]] && ! grep -q '.rbenv/shims' "$BASHRC_FILE"; then
+    echo 'export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"' >>"$BASHRC_FILE"
+  fi
 
   # Get currently installed Ruby version
   local CURRENT_RUBY_VERSION=""
@@ -8156,29 +8838,34 @@ setup_ruby() {
   fi
 
   # Install ruby-build plugin
-  if [[ ! -d "$RBENV_DIR/plugins/ruby-build" ]]; then
+  _install_ruby_build_plugin() {
     local RUBY_BUILD_RELEASE
     RUBY_BUILD_RELEASE=$(get_latest_github_release "rbenv/ruby-build") || {
       msg_error "Failed to fetch latest ruby-build version from GitHub"
-      rm -rf "$TMP_DIR"
       return 7
     }
 
     if ! curl_with_retry "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" "$TMP_DIR/ruby-build.tar.gz"; then
       msg_error "Failed to download ruby-build"
       msg_error "Hint: Check connectivity to github.com/rbenv/ruby-build"
-      rm -rf "$TMP_DIR"
       return 7
     fi
 
     tar -xzf "$TMP_DIR/ruby-build.tar.gz" -C "$TMP_DIR" || {
       msg_error "Failed to extract ruby-build"
-      rm -rf "$TMP_DIR"
       return 251
     }
 
     mkdir -p "$RBENV_DIR/plugins/ruby-build"
     cp -r "$TMP_DIR/ruby-build-${RUBY_BUILD_RELEASE}/." "$RBENV_DIR/plugins/ruby-build/"
+    return 0
+  }
+
+  if [[ ! -d "$RBENV_DIR/plugins/ruby-build" ]]; then
+    _install_ruby_build_plugin || {
+      rm -rf "$TMP_DIR"
+      return 7
+    }
   fi
 
   # Setup PATH and install Ruby version
@@ -8186,6 +8873,14 @@ setup_ruby() {
   eval "$("$RBENV_BIN" init - bash)" 2>/dev/null || true
 
   if ! "$RBENV_BIN" versions --bare 2>/dev/null | grep -qx "$RUBY_VERSION"; then
+    if [[ ! -f "$RBENV_DIR/plugins/ruby-build/share/ruby-build/$RUBY_VERSION" ]]; then
+      msg_info "Updating ruby-build definitions"
+      _install_ruby_build_plugin || {
+        rm -rf "$TMP_DIR"
+        return 7
+      }
+      msg_ok "Updated ruby-build definitions"
+    fi
     $STD "$RBENV_BIN" install "$RUBY_VERSION" || {
       msg_error "Failed to install Ruby $RUBY_VERSION"
       rm -rf "$TMP_DIR"
@@ -8381,12 +9076,9 @@ setup_uv() {
   local UV_BIN="/usr/local/bin/uv"
   local UVX_BIN="/usr/local/bin/uvx"
   local TMP_DIR=$(mktemp -d)
-  local CACHED_VERSION
 
   # trap for TMP Cleanup
   trap "rm -rf '$TMP_DIR'" EXIT
-
-  CACHED_VERSION=$(get_cached_version "uv")
 
   # Architecture Detection
   local ARCH=$(uname -m)
@@ -8417,12 +9109,14 @@ setup_uv() {
 
   ensure_dependencies jq
 
-  # Fetch latest version
-  local LATEST_VERSION
-  LATEST_VERSION=$(get_latest_github_release "astral-sh/uv") || {
-    msg_error "Could not fetch latest uv version from GitHub API"
-    return 7
-  }
+  # Fetch target version (pinned via UV_VERSION or latest release)
+  local TARGET_VERSION="${UV_VERSION:-}"
+  if [[ -z "$TARGET_VERSION" ]]; then
+    TARGET_VERSION=$(get_latest_github_release "astral-sh/uv") || {
+      msg_error "Could not fetch latest uv version from GitHub API"
+      return 7
+    }
+  fi
 
   # Get currently installed version
   local INSTALLED_VERSION=""
@@ -8430,9 +9124,9 @@ setup_uv() {
     INSTALLED_VERSION=$("$UV_BIN" --version 2>/dev/null | awk '{print $2}')
   fi
 
-  # Scenario 1: Already at latest version
-  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
-    cache_installed_version "uv" "$LATEST_VERSION"
+  # Scenario 1: Already at target version
+  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" == "$TARGET_VERSION" ]]; then
+    cache_installed_version "uv" "$TARGET_VERSION"
 
     # Check if uvx is needed and missing
     if [[ "${USE_UVX:-NO}" == "YES" ]] && [[ ! -x "$UVX_BIN" ]]; then
@@ -8441,17 +9135,27 @@ setup_uv() {
       msg_ok "uvx wrapper installed"
     fi
 
+    # Install specific Python version if requested (even when uv is already up to date)
+    if [[ -n "${PYTHON_VERSION:-}" ]]; then
+      msg_info "Installing Python $PYTHON_VERSION via uv"
+      $STD uv python install "$PYTHON_VERSION" || {
+        msg_error "Failed to install Python $PYTHON_VERSION"
+        return 150
+      }
+      msg_ok "Python $PYTHON_VERSION installed"
+    fi
+
     return 0
   fi
 
   # Scenario 2: New install or upgrade
-  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" != "$LATEST_VERSION" ]]; then
-    msg_info "Upgrade uv from $INSTALLED_VERSION to $LATEST_VERSION"
+  if [[ -n "$INSTALLED_VERSION" && "$INSTALLED_VERSION" != "$TARGET_VERSION" ]]; then
+    msg_info "Upgrade uv from $INSTALLED_VERSION to $TARGET_VERSION"
   else
-    msg_info "Setup uv $LATEST_VERSION"
+    msg_info "Setup uv $TARGET_VERSION"
   fi
 
-  local UV_URL="https://github.com/astral-sh/uv/releases/download/${LATEST_VERSION}/${UV_TAR}"
+  local UV_URL="https://github.com/astral-sh/uv/releases/download/${TARGET_VERSION}/${UV_TAR}"
 
   if ! curl_with_retry "$UV_URL" "$TMP_DIR/uv.tar.gz"; then
     msg_error "Failed to download uv from $UV_URL"
@@ -8506,8 +9210,8 @@ setup_uv() {
     msg_ok "Python $PYTHON_VERSION installed"
   fi
 
-  cache_installed_version "uv" "$LATEST_VERSION"
-  msg_ok "Setup uv $LATEST_VERSION"
+  cache_installed_version "uv" "$TARGET_VERSION"
+  msg_ok "Setup uv $TARGET_VERSION"
 }
 
 # Helper function to install uvx wrapper
@@ -8576,7 +9280,19 @@ setup_yq() {
     msg_info "Setup yq $LATEST_VERSION"
   fi
 
-  if ! curl_with_retry "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" "$TMP_DIR/yq"; then
+  local yq_arch detected_arch
+  if command -v dpkg &>/dev/null; then
+    detected_arch="$(dpkg --print-architecture 2>/dev/null)"
+  else
+    detected_arch="$(uname -m 2>/dev/null)"
+  fi
+
+  case "$detected_arch" in
+  arm64 | aarch64) yq_arch="arm64" ;;
+  amd64 | x86_64) yq_arch="amd64" ;;
+  *) yq_arch="amd64" ;;
+  esac
+  if ! curl_with_retry "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_${yq_arch}" "$TMP_DIR/yq"; then
     msg_error "Failed to download yq"
     msg_error "Hint: Check connectivity to github.com/${GITHUB_REPO} — set GITHUB_TOKEN to avoid rate-limiting"
     rm -rf "$TMP_DIR"
@@ -8631,10 +9347,10 @@ fetch_and_deploy_from_url() {
     msg_error "Failed to create temporary directory"
     return 252
   }
+  trap 'rm -rf "$tmpdir" "${unpack_tmp:-}"; trap - RETURN' RETURN
 
   curl -fsSL -o "$tmpdir/$filename" "$url" || {
     msg_error "Download failed: $url"
-    rm -rf "$tmpdir"
     return 250
   }
 
@@ -8654,7 +9370,6 @@ fetch_and_deploy_from_url() {
     archive_type="tar"
   else
     msg_error "Unsupported or unknown archive type: $file_desc"
-    rm -rf "$tmpdir"
     return 65
   fi
 
@@ -8667,19 +9382,16 @@ fetch_and_deploy_from_url() {
     $STD apt install -y "$tmpdir/$filename" || {
       $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 100
       }
     }
 
-    rm -rf "$tmpdir"
     msg_ok "Successfully installed .deb package"
     return 0
   fi
 
   if [[ -z "$directory" ]]; then
     msg_error "Directory parameter is required for archive extraction"
-    rm -rf "$tmpdir"
     return 65
   fi
 
@@ -8688,7 +9400,7 @@ fetch_and_deploy_from_url() {
   mkdir -p "$directory"
 
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    rm -rf "${directory:?}/"*
+    find "${directory:?}" -mindepth 1 -delete
   fi
 
   local unpack_tmp
@@ -8698,13 +9410,11 @@ fetch_and_deploy_from_url() {
     ensure_dependencies unzip
     unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
       msg_error "Failed to extract ZIP archive"
-      rm -rf "$tmpdir" "$unpack_tmp"
       return 251
     }
   elif [[ "$archive_type" == "tar" ]]; then
     tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
       msg_error "Failed to extract TAR archive"
-      rm -rf "$tmpdir" "$unpack_tmp"
       return 251
     }
   fi
@@ -8718,12 +9428,12 @@ fetch_and_deploy_from_url() {
     if compgen -G "$inner_dir/*" >/dev/null; then
       cp -r "$inner_dir"/* "$directory/" || {
         msg_error "Failed to copy contents from $inner_dir to $directory"
-        rm -rf "$tmpdir" "$unpack_tmp"
+        shopt -u dotglob nullglob
         return 252
       }
     else
       msg_error "Inner directory is empty: $inner_dir"
-      rm -rf "$tmpdir" "$unpack_tmp"
+      shopt -u dotglob nullglob
       return 252
     fi
     shopt -u dotglob nullglob
@@ -8732,18 +9442,17 @@ fetch_and_deploy_from_url() {
     if compgen -G "$unpack_tmp/*" >/dev/null; then
       cp -r "$unpack_tmp"/* "$directory/" || {
         msg_error "Failed to copy contents to $directory"
-        rm -rf "$tmpdir" "$unpack_tmp"
+        shopt -u dotglob nullglob
         return 252
       }
     else
       msg_error "Unpacked archive is empty"
-      rm -rf "$tmpdir" "$unpack_tmp"
+      shopt -u dotglob nullglob
       return 252
     fi
     shopt -u dotglob nullglob
   fi
 
-  rm -rf "$tmpdir" "$unpack_tmp"
   msg_ok "Successfully deployed archive to $directory"
   return 0
 }
@@ -8785,11 +9494,12 @@ get_latest_gitlab_release() {
   local temp_file
   temp_file=$(mktemp)
 
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
   local http_code
   http_code=$(curl --connect-timeout 10 --max-time 30 -sSL \
     -w "%{http_code}" -o "$temp_file" \
     "${header[@]}" \
-    "https://gitlab.com/api/v4/projects/$repo_encoded/releases?per_page=1&order_by=released_at&sort=desc" 2>/dev/null) || true
+    "${gitlab_url}/api/v4/projects/$repo_encoded/releases?per_page=1&order_by=released_at&sort=desc" 2>/dev/null) || true
 
   if [[ "$http_code" != "200" ]]; then
     rm -f "$temp_file"
@@ -8831,6 +9541,7 @@ get_latest_gitlab_release() {
 # Notes:
 #   - Requires `jq` (auto-installed if missing)
 #   - Supports GITLAB_TOKEN env var for private/rate-limited repos
+#   - Supports GITLAB_URL for self-hosted GitLab (default: https://gitlab.com)
 #   - Does not modify anything, only checks version state
 # ------------------------------------------------------------------------------
 check_for_gl_release() {
@@ -8838,18 +9549,27 @@ check_for_gl_release() {
   local source="$2"
   local pinned_version_in="${3:-}" # optional
   local pin_reason="${4:-}"        # optional reason shown to user
+  local tag_prefix="${5:-}"        # optional tag prefix filter (e.g. web-v2)
   local app_lc="${app,,}"
   local current_file="$HOME/.${app_lc}"
+
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
+  local gitlab_hostname="${gitlab_url#*://}"
+  gitlab_hostname="${gitlab_hostname%%/*}"
 
   msg_info "Checking for update: ${app}"
 
   # DNS check
-  if ! getent hosts gitlab.com >/dev/null 2>&1; then
-    msg_error "Network error: cannot resolve gitlab.com"
+  if ! getent hosts "$gitlab_hostname" >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve $gitlab_hostname"
     return 6
   fi
 
   ensure_dependencies jq
+
+  local gl_check_json
+  gl_check_json=$(mktemp /tmp/tools-gl-check-XXXXXX) || return 73
+  trap 'rm -f "$gl_check_json"; trap - RETURN' RETURN
 
   local repo_encoded
   repo_encoded=$(printf '%s' "$source" | sed 's|/|%2F|g')
@@ -8862,23 +9582,23 @@ check_for_gl_release() {
   # For pinned versions, try to fetch the specific release tag first
   if [[ -n "$pinned_version_in" ]]; then
     local pinned_encoded="${pinned_version_in//\//%2F}"
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gl_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
-      "https://gitlab.com/api/v4/projects/$repo_encoded/releases/$pinned_encoded" 2>/dev/null) || true
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gl_check.json ]]; then
-      releases_json="[$(</tmp/gl_check.json)]"
+      "${gitlab_url}/api/v4/projects/$repo_encoded/releases/$pinned_encoded" 2>/dev/null) || true
+    if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
+      releases_json="[$(<"$gl_check_json")]"
     fi
-    rm -f /tmp/gl_check.json
+    rm -f "$gl_check_json"
   fi
 
   # Fetch full releases list if needed
   if [[ -z "$releases_json" ]]; then
-    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o /tmp/gl_check.json \
+    http_code=$(curl -sSL --max-time 20 -w "%{http_code}" -o "$gl_check_json" \
       "${header[@]}" \
-      "https://gitlab.com/api/v4/projects/$repo_encoded/releases?per_page=100&order_by=released_at&sort=desc" 2>/dev/null) || true
+      "${gitlab_url}/api/v4/projects/$repo_encoded/releases?per_page=100&order_by=released_at&sort=desc" 2>/dev/null) || true
 
-    if [[ "$http_code" == "200" ]] && [[ -s /tmp/gl_check.json ]]; then
-      releases_json=$(</tmp/gl_check.json)
+    if [[ "$http_code" == "200" ]] && [[ -s "$gl_check_json" ]]; then
+      releases_json=$(<"$gl_check_json")
     elif [[ "$http_code" == "401" ]]; then
       msg_error "GitLab API authentication failed (HTTP 401)."
       if [[ -n "${GITLAB_TOKEN:-}" ]]; then
@@ -8886,33 +9606,42 @@ check_for_gl_release() {
       else
         msg_error "The repository may require authentication. Try: export GITLAB_TOKEN=\"glpat-your_token\""
       fi
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "404" ]]; then
       msg_error "GitLab project not found (HTTP 404). Ensure '${source}' is correct and publicly accessible."
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "429" ]]; then
       msg_error "GitLab API rate limit exceeded (HTTP 429)."
       msg_error "To increase the limit, export a GitLab token: export GITLAB_TOKEN=\"glpat-your_token_here\""
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitLab API connection failed (no response)."
-      msg_error "Check your network/DNS: curl -sSL https://gitlab.com/api/v4/version"
-      rm -f /tmp/gl_check.json
+      msg_error "Check your network/DNS: curl -sSL ${gitlab_url}/api/v4/version"
+      rm -f "$gl_check_json"
       return 7
     else
       msg_error "Unable to fetch releases for ${app} (HTTP ${http_code})"
-      rm -f /tmp/gl_check.json
+      rm -f "$gl_check_json"
       return 22
     fi
-    rm -f /tmp/gl_check.json
+    rm -f "$gl_check_json"
   fi
 
-  mapfile -t raw_tags < <(jq -r '.[] | .tag_name' <<<"$releases_json")
+  if [[ -n "$tag_prefix" ]]; then
+    mapfile -t raw_tags < <(jq -r --arg p "$tag_prefix" \
+      '.[] | select(.tag_name | startswith($p)) | .tag_name' <<<"$releases_json")
+  else
+    mapfile -t raw_tags < <(jq -r '.[] | .tag_name' <<<"$releases_json")
+  fi
   if ((${#raw_tags[@]} == 0)); then
-    msg_error "No releases found for ${app} on GitLab"
+    if [[ -n "$tag_prefix" ]]; then
+      msg_error "No releases matching prefix '${tag_prefix}' found for ${app} on GitLab"
+    else
+      msg_error "No releases found for ${app} on GitLab"
+    fi
     return 250
   fi
 
@@ -9107,6 +9836,7 @@ fetch_and_deploy_gl_release() {
   local version="${var_appversion:-${4:-latest}}"
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
+  local tag_prefix="${7:-}"
 
   if [[ -z "$app" ]]; then
     app="${repo##*/}"
@@ -9127,13 +9857,20 @@ fetch_and_deploy_gl_release() {
 
   ensure_dependencies jq
 
+  local gl_rel_json
+  gl_rel_json=$(mktemp /tmp/tools-gl-rel-XXXXXX) || return 73
+  trap 'rm -f "$gl_rel_json"; rm -rf "${tmpdir:-}" "${unpack_tmp:-}"; trap - RETURN' RETURN
+
   local repo_encoded
   repo_encoded=$(printf '%s' "$repo" | sed 's|/|%2F|g')
 
-  local api_base="https://gitlab.com/api/v4/projects/$repo_encoded/releases"
+  local gitlab_url="${GITLAB_URL:-https://gitlab.com}"
+  local api_base="${gitlab_url}/api/v4/projects/$repo_encoded/releases"
   local api_url
   if [[ "$version" != "latest" ]]; then
     api_url="$api_base/$version"
+  elif [[ -n "$tag_prefix" ]]; then
+    api_url="$api_base?per_page=100&order_by=released_at&sort=desc"
   else
     api_url="$api_base?per_page=1&order_by=released_at&sort=desc"
   fi
@@ -9144,7 +9881,7 @@ fetch_and_deploy_gl_release() {
   local max_retries=3 retry_delay=2 attempt=1 success=false http_code
 
   while ((attempt <= max_retries)); do
-    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o /tmp/gl_rel.json "${header[@]}" "$api_url" 2>/dev/null) || true
+    http_code=$(curl $api_timeout -sSL -w "%{http_code}" -o "$gl_rel_json" "${header[@]}" "$api_url" 2>/dev/null) || true
     if [[ "$http_code" == "200" ]]; then
       success=true
       break
@@ -9177,7 +9914,7 @@ fetch_and_deploy_gl_release() {
       msg_error "  export GITLAB_TOKEN=\"glpat-your_token_here\""
     elif [[ "$http_code" == "000" || -z "$http_code" ]]; then
       msg_error "GitLab API connection failed (no response)."
-      msg_error "Check your network/DNS: curl -sSL https://gitlab.com/api/v4/version"
+      msg_error "Check your network/DNS: curl -sSL ${gitlab_url}/api/v4/version"
     else
       msg_error "Failed to fetch release metadata (HTTP $http_code)"
     fi
@@ -9185,12 +9922,21 @@ fetch_and_deploy_gl_release() {
   fi
 
   local json tag_name
-  json=$(</tmp/gl_rel.json)
+  json=$(<"$gl_rel_json")
 
   if [[ "$version" == "latest" ]]; then
-    json=$(echo "$json" | jq '.[0] // empty')
+    if [[ -n "$tag_prefix" ]]; then
+      json=$(echo "$json" | jq --arg p "$tag_prefix" \
+        '[.[] | select(.tag_name | startswith($p))][0] // empty')
+    else
+      json=$(echo "$json" | jq '.[0] // empty')
+    fi
     if [[ -z "$json" || "$json" == "null" ]]; then
-      msg_error "No releases found for $repo on GitLab"
+      if [[ -n "$tag_prefix" ]]; then
+        msg_error "No release matching prefix '${tag_prefix}' found for $repo on GitLab"
+      else
+        msg_error "No releases found for $repo on GitLab"
+      fi
       return 1
     fi
   fi
@@ -9223,31 +9969,15 @@ fetch_and_deploy_gl_release() {
 
   ### Tarball Mode ###
   if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
-    local direct_tarball_url="https://gitlab.com/$repo/-/archive/$tag_name/${app_lc}-${version_safe}.tar.gz"
+    local direct_tarball_url="${gitlab_url}/$repo/-/archive/$tag_name/${app_lc}-${version_safe}.tar.gz"
     filename="${app_lc}-${version_safe}.tar.gz"
 
-    curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$direct_tarball_url" || {
+    _download_source_tarball "$direct_tarball_url" "$tmpdir/$filename" "${header[@]}" || {
       msg_error "Download failed: $direct_tarball_url"
-      rm -rf "$tmpdir"
       return 1
     }
 
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
-    fi
-
-    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
-      msg_error "Failed to extract tarball"
-      rm -rf "$tmpdir"
-      return 1
-    }
-    local unpack_dir
-    unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
-
-    shopt -s dotglob nullglob
-    cp -r "$unpack_dir"/* "$target/"
-    shopt -u dotglob nullglob
+    _deploy_source_tarball "$tmpdir/$filename" "$target" "$tmpdir" || return 1
 
   ### Binary Mode ###
   elif [[ "$mode" == "binary" ]]; then
@@ -9287,7 +10017,7 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$url_match" ]]; then
       local fallback_json
-      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "https://gitlab.com" "binary" "$asset_pattern" "$tag_name"); then
+      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "$gitlab_url" "binary" "$asset_pattern" "$tag_name"); then
         json="$fallback_json"
         tag_name=$(echo "$json" | jq -r '.tag_name // empty')
         [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -9317,14 +10047,12 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$url_match" ]]; then
       msg_error "No suitable .deb asset found for $app"
-      rm -rf "$tmpdir"
       return 1
     fi
 
     filename="${url_match##*/}"
     curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -9335,7 +10063,6 @@ fetch_and_deploy_gl_release() {
     DEBIAN_FRONTEND=noninteractive SYSTEMD_OFFLINE=1 $STD apt install -y $dpkg_opts "$tmpdir/$filename" || {
       SYSTEMD_OFFLINE=1 $STD dpkg -i "$tmpdir/$filename" || {
         _diagnose_deb_failure "$tmpdir/$filename"
-        rm -rf "$tmpdir"
         return 1
       }
     }
@@ -9346,7 +10073,6 @@ fetch_and_deploy_gl_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -9363,7 +10089,7 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$asset_url" ]]; then
       local fallback_json
-      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "https://gitlab.com" "prebuild" "$pattern" "$tag_name"); then
+      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "$gitlab_url" "prebuild" "$pattern" "$tag_name"); then
         json="$fallback_json"
         tag_name=$(echo "$json" | jq -r '.tag_name // empty')
         [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -9381,75 +10107,18 @@ fetch_and_deploy_gl_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 1
     }
 
     filename="${asset_url##*/}"
     curl $download_timeout -fsSL "${header[@]}" -o "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 1
     }
 
     local unpack_tmp
     unpack_tmp=$(mktemp -d)
-    mkdir -p "$target"
-    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-      rm -rf "${target:?}/"*
-    fi
-
-    if [[ "$filename" == *.zip ]]; then
-      ensure_dependencies unzip
-      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
-        msg_error "Failed to extract ZIP archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      }
-    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz || "$filename" == *.txz ]]; then
-      tar --no-same-owner -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
-        msg_error "Failed to extract TAR archive"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      }
-    else
-      msg_error "Unsupported archive format: $filename"
-      rm -rf "$tmpdir" "$unpack_tmp"
-      return 1
-    fi
-
-    local top_entries inner_dir
-    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
-    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
-      inner_dir="$top_entries"
-      shopt -s dotglob nullglob
-      if compgen -G "$inner_dir/*" >/dev/null; then
-        cp -r "$inner_dir"/* "$target/" || {
-          msg_error "Failed to copy contents from $inner_dir to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 1
-        }
-      else
-        msg_error "Inner directory is empty: $inner_dir"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      fi
-      shopt -u dotglob nullglob
-    else
-      shopt -s dotglob nullglob
-      if compgen -G "$unpack_tmp/*" >/dev/null; then
-        cp -r "$unpack_tmp"/* "$target/" || {
-          msg_error "Failed to copy contents to $target"
-          rm -rf "$tmpdir" "$unpack_tmp"
-          return 1
-        }
-      else
-        msg_error "Unpacked archive is empty"
-        rm -rf "$tmpdir" "$unpack_tmp"
-        return 1
-      fi
-      shopt -u dotglob nullglob
-    fi
+    _deploy_unpacked_archive "$tmpdir/$filename" "$target" "$unpack_tmp" || return
 
   ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
@@ -9457,7 +10126,6 @@ fetch_and_deploy_gl_release() {
     pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -9474,7 +10142,7 @@ fetch_and_deploy_gl_release() {
 
     if [[ -z "$asset_url" ]]; then
       local fallback_json
-      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "https://gitlab.com" "singlefile" "$pattern" "$tag_name"); then
+      if fallback_json=$(_gl_scan_older_releases "$repo" "$repo_encoded" "$gitlab_url" "singlefile" "$pattern" "$tag_name"); then
         json="$fallback_json"
         tag_name=$(echo "$json" | jq -r '.tag_name // empty')
         [[ "$tag_name" =~ ^v[0-9] ]] && version="${tag_name:1}" || version="$tag_name"
@@ -9492,7 +10160,6 @@ fetch_and_deploy_gl_release() {
 
     [[ -z "$asset_url" ]] && {
       msg_error "No asset matching '$pattern' found"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -9505,7 +10172,6 @@ fetch_and_deploy_gl_release() {
 
     curl $download_timeout -fsSL "${header[@]}" -o "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
-      rm -rf "$tmpdir"
       return 1
     }
 
@@ -9515,13 +10181,11 @@ fetch_and_deploy_gl_release() {
 
   else
     msg_error "Unknown mode: $mode"
-    rm -rf "$tmpdir"
     return 1
   fi
 
   echo "$version" >"$version_file"
   msg_ok "Deployed: $app ($version)"
-  rm -rf "$tmpdir"
 }
 
 # ------------------------------------------------------------------------------
@@ -9574,7 +10238,7 @@ setup_nltk() {
     fi
 
     mkdir -p "${target_dir}/${subdir}"
-    tmp_zip=$(mktemp --suffix=.zip)
+    tmp_zip=$(mktemp)
 
     if CURL_TIMEOUT=120 curl_with_retry "$pkg_url" "$tmp_zip"; then
       if [[ "$do_unzip" == "1" ]]; then

@@ -17,17 +17,17 @@ msg_info "Installing Dependencies"
 $STD apt install -y apache2-utils fuse3
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone*linux-amd64.zip"
+fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone*linux-$(arch_resolve).zip"
 
 msg_info "Installing rclone"
 cd /opt/rclone
 RCLONE_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD htpasswd -cb -B /opt/login.pwd admin "$RCLONE_PASSWORD"
-{
-  echo "rclone-Credentials"
-  echo "rclone User Name: admin"
-  echo "rclone Password: $RCLONE_PASSWORD"
-} >>~/rclone.creds
+cat <<EOF >~/rclone.creds
+rclone-Credentials
+rclone User Name: admin
+rclone Password: $RCLONE_PASSWORD
+EOF
 msg_ok "Installed rclone"
 
 msg_info "Creating Service"

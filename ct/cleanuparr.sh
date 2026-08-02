@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,16 +33,23 @@ function update_script() {
     systemctl stop cleanuparr
     msg_ok "Stopped Service"
 
-    msg_info "Backing up config"
-    cp -r /opt/cleanuparr/config /opt/cleanuparr_config_backup
-    msg_ok "Backed up config"
+    if [[ ! -d /etc/cleanuparr ]]; then
+      msg_info "Migrating Configuration to /etc/cleanuparr"
+      mv /opt/cleanuparr/config /etc/cleanuparr
+      mkdir -p /etc/cleanuparr /var/log/cleanuparr
+      rm -rf /etc/cleanuparr/logs
+      sed -i -e 's|^Environment="CONFIG_DIR=.*|Environment="CLEANUPARR_CONFIG_PATH=/etc/cleanuparr"|' \
+        -e '/^Environment="CLEANUPARR_CONFIG_PATH=/a Environment="CLEANUPARR_LOGS_PATH=/var/log/cleanuparr"' \
+        /etc/systemd/system/cleanuparr.service
+      systemctl daemon-reload
+      msg_ok "Migrated Configuration to /etc/cleanuparr"
+    fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-amd64.zip"
+    create_backup /etc/cleanuparr
 
-    msg_info "Restoring config"
-    [[ -d /opt/cleanuparr/config ]] && rm -rf /opt/cleanuparr/config
-    mv /opt/cleanuparr_config_backup /opt/cleanuparr/config
-    msg_ok "Restored config"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-$(arch_resolve).zip"
+
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start cleanuparr

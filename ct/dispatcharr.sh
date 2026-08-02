@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -32,11 +32,76 @@ function update_script() {
 
   setup_uv
   NODE_VERSION="24" setup_nodejs
+  if [[ -f "/etc/nginx/sites-available/dispatcharr.conf" ]] && ! grep -q "real_forwarded_proto" "/etc/nginx/sites-available/dispatcharr.conf"; then
+    msg_info "Migrating Nginx Configuration"
+    cat <<EOF >"/etc/nginx/sites-available/dispatcharr.conf"
+map \$http_x_forwarded_proto \$real_forwarded_proto {
+    ""      \$scheme;
+    default \$http_x_forwarded_proto;
+}
 
-  # Fix for nginx not allowing large files
-  if ! grep -q "client_max_body_size 100M;" /etc/nginx/sites-available/dispatcharr.conf; then
-    sed -i '/server_name _;/a \    client_max_body_size 100M;' /etc/nginx/sites-available/dispatcharr.conf
-    systemctl reload nginx
+map \$http_x_forwarded_port \$real_forwarded_port {
+    ""      \$server_port;
+    default \$http_x_forwarded_port;
+}
+
+server {
+    listen 9191;
+    server_name _;
+    client_max_body_size 100M;
+
+    # Serve static assets with correct MIME types
+    location /assets/ {
+        alias /opt/dispatcharr/frontend/dist/assets/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+
+        # Explicitly set MIME types for webpack-built assets
+        types {
+            text/javascript js;
+            text/css css;
+            image/png png;
+            image/svg+xml svg svgz;
+            font/woff2 woff2;
+            font/woff woff;
+            font/ttf ttf;
+        }
+    }
+
+    location /static/ {
+        alias /opt/dispatcharr/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location /media/ {
+        alias /opt/dispatcharr/media/;
+    }
+
+    location /ws/ {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
+    }
+
+    # All other requests proxy to uWSGI
+    location / {
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
+        proxy_set_header X-Forwarded-Port \$real_forwarded_port;
+        proxy_pass http://127.0.0.1:5656;
+    }
+}
+EOF
+    nginx_enable_site dispatcharr.conf
+    msg_ok "Migrated Nginx Configuration"
   fi
 
   ensure_dependencies vlc-bin vlc-plugin-base
@@ -51,21 +116,10 @@ function update_script() {
 
     msg_info "Creating Backup"
     BACKUP_FILE="/opt/dispatcharr_backup_$(date +%F_%H-%M-%S).tar.gz"
-    if [[ -f /opt/dispatcharr/.env ]]; then
-      cp /opt/dispatcharr/.env /tmp/dispatcharr.env.backup
-    fi
     if [[ -f /opt/dispatcharr/start-gunicorn.sh ]]; then
       rm -f /opt/dispatcharr/start-gunicorn.sh
     fi
-    if [[ -f /opt/dispatcharr/start-celery.sh ]]; then
-      cp /opt/dispatcharr/start-celery.sh /tmp/start-celery.sh.backup
-    fi
-    if [[ -f /opt/dispatcharr/start-celerybeat.sh ]]; then
-      cp /opt/dispatcharr/start-celerybeat.sh /tmp/start-celerybeat.sh.backup
-    fi
-    if [[ -f /opt/dispatcharr/start-daphne.sh ]]; then
-      cp /opt/dispatcharr/start-daphne.sh /tmp/start-daphne.sh.backup
-    fi
+    create_backup /opt/dispatcharr/.env /opt/dispatcharr/start-celery.sh /opt/dispatcharr/start-celerybeat.sh /opt/dispatcharr/start-daphne.sh
     if [[ -f /opt/dispatcharr/.env ]]; then
       set -o allexport
       source /opt/dispatcharr/.env
@@ -80,20 +134,9 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 
-    msg_info "Updating Dispatcharr Backend"
-    if [[ -f /tmp/dispatcharr.env.backup ]]; then
-      mv /tmp/dispatcharr.env.backup /opt/dispatcharr/.env
-    fi
-    if [[ -f /tmp/start-celery.sh.backup ]]; then
-      mv /tmp/start-celery.sh.backup /opt/dispatcharr/start-celery.sh
-    fi
-    if [[ -f /tmp/start-celerybeat.sh.backup ]]; then
-      mv /tmp/start-celerybeat.sh.backup /opt/dispatcharr/start-celerybeat.sh
-    fi
-    if [[ -f /tmp/start-daphne.sh.backup ]]; then
-      mv /tmp/start-daphne.sh.backup /opt/dispatcharr/start-daphne.sh
-    fi
+    restore_backup
 
+    msg_info "Updating Dispatcharr Backend"
     if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
       DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
       echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >>/opt/dispatcharr/.env

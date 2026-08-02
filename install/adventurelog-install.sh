@@ -72,6 +72,7 @@ BODY_SIZE_LIMIT=Infinity
 ORIGIN='http://$LOCAL_IP:3000'
 EOF
 cd /opt/adventurelog/frontend
+grep -q "^dangerouslyAllowAllBuilds:" ./pnpm-workspace.yaml 2>/dev/null || echo "dangerouslyAllowAllBuilds: true" >>./pnpm-workspace.yaml
 $STD pnpm i
 $STD pnpm build
 msg_ok "Installed AdventureLog"
@@ -86,12 +87,11 @@ user.is_superuser = True
 user.is_staff = True
 user.save()
 EOF
-{
-  echo ""
-  echo "Django-Credentials"
-  echo "Django Admin User: $DJANGO_ADMIN_USER"
-  echo "Django Admin Password: $DJANGO_ADMIN_PASS"
-} >>~/adventurelog.creds
+cat <<EOF >~/adventurelog.creds
+Django-Credentials
+Django Admin User: $DJANGO_ADMIN_USER
+Django Admin Password: $DJANGO_ADMIN_PASS
+EOF
 msg_ok "Setup Django Admin"
 
 msg_info "Creating Service"

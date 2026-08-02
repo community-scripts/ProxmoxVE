@@ -110,6 +110,7 @@ chown -R www-data:www-data /opt/invoiceninja
 msg_ok "Set up Database"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<'EOF' >/etc/nginx/sites-available/invoiceninja
 server {
     listen 8080;
@@ -130,9 +131,11 @@ server {
     }
 
     location = /index.php {
-        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+        fastcgi_pass unix:__PHP_SOCK__;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         include fastcgi_params;
+        fastcgi_param HTTP_X_FORWARDED_HOST $http_host;
+        fastcgi_param HTTP_X_FORWARDED_PROTO $scheme;
         fastcgi_read_timeout 300;
     }
 
@@ -149,9 +152,8 @@ server {
 }
 EOF
 
-ln -sf /etc/nginx/sites-available/invoiceninja /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+sed -i "s|__PHP_SOCK__|${PHP_SOCK}|" /etc/nginx/sites-available/invoiceninja
+nginx_enable_site invoiceninja
 msg_ok "Configured Nginx"
 
 msg_info "Setting up Queue Worker"

@@ -12,7 +12,7 @@ var_ram="${var_ram:-10240}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,31 +30,30 @@ function update_script() {
     exit
   fi
 
-  if check_for_gl_release "storyteller" "storyteller-platform/storyteller"; then
+  NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
+
+  if check_for_gl_release "storyteller" "storyteller-platform/storyteller" "" "" "web-v2"; then
     msg_info "Stopping Service"
     systemctl stop storyteller
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/storyteller/.env /opt/storyteller_env.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/storyteller/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "tarball" "latest" "/opt/storyteller"
+    CLEAN_INSTALL=1 fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "tarball" "latest" "/opt/storyteller" "" "web-v2"
 
-    msg_info "Restoring Configuration"
-    mv /opt/storyteller_env.bak /opt/storyteller/.env
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Rebuilding Storyteller"
     cd /opt/storyteller
     export NODE_OPTIONS="--max-old-space-size=4096"
-    $STD yarn install --network-timeout 600000
+
+    $STD corepack yarn install --network-timeout 600000
     $STD gcc -g -fPIC -rdynamic -shared web/sqlite/uuid.c -o web/sqlite/uuid.c.so
     export CI=1
     export NODE_ENV=production
     export NEXT_TELEMETRY_DISABLED=1
     export SQLITE_NATIVE_BINDING=/opt/storyteller/node_modules/better-sqlite3/build/Release/better_sqlite3.node
-    $STD yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
+    $STD corepack yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
     mkdir -p /opt/storyteller/web/.next/standalone/web/.next/static
     cp -rT /opt/storyteller/web/.next/static /opt/storyteller/web/.next/standalone/web/.next/static
     if [[ -d /opt/storyteller/web/public ]]; then

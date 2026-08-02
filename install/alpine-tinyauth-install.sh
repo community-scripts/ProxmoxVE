@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Tinyauth"
 mkdir -p /opt/tinyauth
 RELEASE=$(curl -s https://api.github.com/repos/tinyauthapp/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
+curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-$(arch_resolve)" -o /opt/tinyauth/tinyauth
 chmod +x /opt/tinyauth/tinyauth
 PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
 USER=$(htpasswd -Bbn "tinyauth" "${PASS}")

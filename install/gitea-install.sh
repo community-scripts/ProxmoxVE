@@ -20,7 +20,7 @@ $STD apt install -y \
   sqlite3
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "gitea" "go-gitea/gitea" "singlefile" "latest" "/usr/local/bin" "gitea-*-linux-amd64"
+fetch_and_deploy_gh_release "gitea" "go-gitea/gitea" "singlefile" "latest" "/usr/local/bin" "gitea-*-linux-$(arch_resolve)"
 
 msg_info "Configuring Gitea"
 chmod +x /usr/local/bin/gitea

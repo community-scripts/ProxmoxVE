@@ -23,7 +23,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.13" setup_uv
-NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 
 msg_info "Installing Deno"
 export DENO_INSTALL="/usr/local"
@@ -38,7 +38,7 @@ fetch_and_deploy_gh_release "metube" "alexta69/metube" "tarball" "latest"
 msg_info "Installing MeTube"
 cd /opt/metube/ui
 if command -v corepack >/dev/null 2>&1; then
-  $STD corepack enable
+
   $STD corepack prepare pnpm --activate || true
 fi
 echo 'onlyBuiltDependencies=*' >> .npmrc

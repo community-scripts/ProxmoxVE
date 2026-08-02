@@ -70,7 +70,7 @@ EOF
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8-NO-SUBSCRIPTION" "The 'pve-no-subscription' repository provides access to all of the open-source components of Proxmox VE." 10 58
   msg_info "Enabling 'pve-no-subscription' repository"
   cat <<EOF >/etc/apt/sources.list.d/pve-install-repo.list
-deb https://download.proxmox.com/debian/pve bookworm pve-no-subscription
+deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
 EOF
   msg_ok "Enabled 'pve-no-subscription' repository"
 
@@ -129,6 +129,12 @@ if ! command -v pveversion >/dev/null 2>&1; then
   header_info
   msg_error "\n No PVE Detected!\n"
   exit
+fi
+
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "This upgrade script targets the amd64 Proxmox VE repositories and is not supported on ARM64."
+  exit 1
 fi
 
 if ! pveversion | grep -Eq "pve-manager/(7\.4-(16|17|18|19))"; then

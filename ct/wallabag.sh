@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -38,16 +38,11 @@ function update_script() {
     systemctl stop nginx php8.3-fpm
     msg_ok "Stopped Services"
 
-    msg_info "Creating Backup"
-    cp /opt/wallabag/app/config/parameters.yml /tmp/wallabag_parameters.yml.bak
-    msg_ok "Created Backup"
+    create_backup /opt/wallabag/app/config/parameters.yml
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wallabag" "wallabag/wallabag" "prebuild" "latest" "/opt/wallabag" "wallabag-*.tar.gz"
 
-    msg_info "Restoring Configuration"
-    cp /tmp/wallabag_parameters.yml.bak /opt/wallabag/app/config/parameters.yml
-    rm -f /tmp/wallabag_parameters.yml.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Running Migrations"
     cd /opt/wallabag

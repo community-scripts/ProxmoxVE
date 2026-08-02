@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "whodb" "clidey/whodb" "singlefile" "latest" "/opt/whodb" "whodb-*-linux-amd64"
+fetch_and_deploy_gh_release "whodb" "clidey/whodb" "singlefile" "latest" "/opt/whodb" "whodb-*-linux-$(arch_resolve)"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/whodb.service

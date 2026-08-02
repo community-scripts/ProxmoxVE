@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 
 header_info "$APP"
 variables
@@ -27,8 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v node >/dev/null || [[ "$(/usr/bin/env node -v | grep -oP '^v\K[0-9]+')" != "22" ]]; then
-    NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/docmost/docmost/main/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+  if ! command -v node >/dev/null || [[ "$(/usr/bin/env node -v | grep -oP '^v\K[0-9]+')" != "26" ]]; then
+    NODE_VERSION="26" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/docmost/docmost/main/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
   fi
   export NODE_OPTIONS="--max_old_space_size=4096"
 
@@ -37,32 +37,27 @@ function update_script() {
     systemctl stop docmost
     msg_ok "Stopped Service"
 
-    msg_info "Backing up data"
-    cp /opt/docmost/.env /opt/
-    cp -r /opt/docmost/data /opt/
-    rm -rf /opt/docmost
-    msg_ok "Data backed up"
+    create_backup /opt/docmost/.env /opt/docmost/data
+    
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
 
-    fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
-
-    msg_info "Updating ${APP}"
-    cd /opt/docmost
-    mv /opt/.env /opt/docmost/.env
-    mv /opt/data /opt/docmost/data
+    restore_backup
 
     # Fix: Docmost EE (audit logs etc.) lives in a git submodule that is NOT
     # included in GitHub tarballs.  The community NoopAuditService exists but
     # is only exported by CoreModule – child modules such as UserModule cannot
     # resolve it.  Making CoreModule @Global() exposes the token app-wide.
-    if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] \
-      && ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
+    if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] &&
+      ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
       sed -i '/^  Module,$/a\  Global,' /opt/docmost/apps/server/src/core/core.module.ts
       sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
     fi
 
+    msg_info "Configuring Docmost"
+    cd /opt/docmost
     $STD pnpm install --force
     $STD pnpm build
-    msg_ok "Updated ${APP}"
+    msg_ok "Configured Docmost"
 
     msg_info "Starting Service"
     systemctl start docmost

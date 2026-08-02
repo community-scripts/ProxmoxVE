@@ -13,7 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,17 +36,12 @@ function update_script() {
     systemctl stop anytype
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/anytype/data /opt/anytype_data_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/anytype/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_$(arch_resolve).tar.gz"
     chmod +x /opt/anytype/any-sync-bundle
 
-    msg_info "Restoring Data"
-    cp -r /opt/anytype_data_backup/. /opt/anytype/data
-    rm -rf /opt/anytype_data_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start anytype

@@ -28,10 +28,10 @@ ADMIN_USERNAME=$ADMIN_NAME
 ADMIN_PASSWORD=$ADMIN_PASS
 LISTEN_ADDR=0.0.0.0:8080
 EOF
-{
-  echo "ADMIN_USERNAME: $ADMIN_NAME"
-  echo "ADMIN_PASSWORD: $ADMIN_PASS"
-} >>~/miniflux.creds
+cat <<EOF >~/miniflux.creds
+ADMIN_USERNAME: $ADMIN_NAME
+ADMIN_PASSWORD: $ADMIN_PASS
+EOF
 $STD miniflux -migrate -config-file /etc/miniflux.conf
 systemctl enable -q --now miniflux
 msg_ok "Configured Miniflux"

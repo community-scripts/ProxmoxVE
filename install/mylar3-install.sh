@@ -17,8 +17,9 @@ msg_info "Installing Dependencies"
 cat <<EOF >/etc/apt/sources.list.d/non-free.sources
 Types: deb
 URIs: http://deb.debian.org/debian
-Suites: bookworm
+Suites: trixie
 Components: non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
 $STD apt update
 $STD apt install -y unrar

@@ -15,9 +15,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  git \
-  nginx \
-  redis-server
+    git \
+    nginx \
+    redis-server \
+    cron
 msg_ok "Installed Dependencies"
 
 setup_mariadb
@@ -34,12 +35,12 @@ mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
-{
-  echo "Paymenter Database Credentials"
-  echo "Database: $DB_NAME"
-  echo "Username: $DB_USER"
-  echo "Password: $DB_PASS"
-} >>~/paymenter_db.creds
+cat <<EOF >~/paymenter_db.creds
+Paymenter Database Credentials
+Database: $DB_NAME
+Username: $DB_USER
+Password: $DB_PASS
+EOF
 cd /opt/paymenter
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction
@@ -56,6 +57,7 @@ $STD php artisan app:user:create paymenter admin admin@paymenter.org paymenter 1
 msg_ok "Created Admin User"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/paymenter.conf
 server {
     listen 80;
@@ -71,7 +73,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
@@ -81,9 +83,7 @@ server {
     }
 }
 EOF
-ln -s /etc/nginx/sites-available/paymenter.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site paymenter.conf
 chown -R www-data:www-data /opt/paymenter/*
 msg_ok "Configured Nginx"
 

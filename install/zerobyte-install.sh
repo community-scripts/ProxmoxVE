@@ -24,15 +24,15 @@ $STD apt-get install -y \
   openssh-client
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "restic" "restic/restic" "singlefile" "latest" "/usr/local/bin" "restic_*_linux_amd64.bz2"
+fetch_and_deploy_gh_release "restic" "restic/restic" "singlefile" "latest" "/usr/local/bin" "restic_*_linux_$(arch_resolve).bz2"
 mv /usr/local/bin/restic /usr/local/bin/restic.bz2
 bzip2 -d /usr/local/bin/restic.bz2
 chmod +x /usr/local/bin/restic
 
-fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone-*-linux-amd64.zip"
+fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone-*-linux-$(arch_resolve).zip"
 ln -sf /opt/rclone/rclone /usr/local/bin/rclone
 
-fetch_and_deploy_gh_release "shoutrrr" "nicholas-fedor/shoutrrr" "prebuild" "latest" "/opt/shoutrrr" "shoutrrr_linux_amd64_*.tar.gz"
+fetch_and_deploy_gh_release "shoutrrr" "nicholas-fedor/shoutrrr" "prebuild" "latest" "/opt/shoutrrr" "shoutrrr_linux_$(arch_resolve "amd64" "arm64v8")_*.tar.gz"
 ln -sf /opt/shoutrrr/shoutrrr /usr/local/bin/shoutrrr
 
 msg_info "Installing Bun"

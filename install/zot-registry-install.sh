@@ -17,18 +17,18 @@ msg_info "Installing Dependencies"
 $STD apt install -y apache2-utils
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "zot" "project-zot/zot" "singlefile" "latest" "/usr/bin" "zot-linux-amd64"
+fetch_and_deploy_gh_release "zot" "project-zot/zot" "singlefile" "latest" "/usr/bin" "zot-linux-$(arch_resolve)"
 
 msg_info "Configuring Zot Registry"
 mkdir -p /etc/zot
 curl -fsSL https://raw.githubusercontent.com/project-zot/zot/refs/heads/main/examples/config-ui.json -o /etc/zot/config.json
 ZOTPASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD htpasswd -b -B -c /etc/zot/htpasswd admin "$ZOTPASSWORD"
-{
-  echo "Zot-Credentials"
-  echo "Zot User: admin"
-  echo "Zot Password: $ZOTPASSWORD"
-} >>~/zot.creds
+cat <<EOF >~/zot.creds
+Zot-Credentials
+Zot User: admin
+Zot Password: $ZOTPASSWORD
+EOF
 msg_ok "Configured Zot Registry"
 
 msg_info "Setup Service"

@@ -11,8 +11,8 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
-var_arm64="${var_arm64:-no}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -60,8 +60,9 @@ function update_script() {
   fi
   $STD apt install -y build-essential "$pcre_pkg" libssl-dev zlib1g-dev
 
-  if check_for_gh_release "openresty" "openresty/openresty"; then
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openresty" "openresty/openresty" "prebuild" "${CHECK_UPDATE_RELEASE}" "/opt/openresty" "openresty-*.tar.gz"
+  OPENRESTY_VERSION="1.29.2.5"
+  if [[ "$(cat ~/.openresty 2>/dev/null)" != "$OPENRESTY_VERSION" ]]; then
+    CLEAN_INSTALL=1 fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
 
     msg_info "Building OpenResty"
     cd /opt/openresty
@@ -77,6 +78,7 @@ function update_script() {
       --with-stream_ssl_module
     $STD make -j"$(nproc)"
     $STD make install
+    echo "${OPENRESTY_VERSION}" >~/.openresty
     rm -rf /opt/openresty
     cat <<'EOF' >/lib/systemd/system/openresty.service
 [Unit]
@@ -108,8 +110,13 @@ EOF
   cd /root
   if [ -d /opt/certbot ]; then
     msg_info "Updating Certbot"
-    $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
-    $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
+    CERTBOT_PYTHON="/opt/certbot/bin/python"
+    if ! "$CERTBOT_PYTHON" -m pip --version &>/dev/null; then
+      msg_info "Repairing Certbot pip"
+      $STD "$CERTBOT_PYTHON" -m ensurepip --upgrade
+    fi
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade pip setuptools wheel
+    $STD "$CERTBOT_PYTHON" -m pip install --upgrade certbot certbot-dns-cloudflare
     msg_ok "Updated Certbot"
   fi
 
@@ -216,7 +223,13 @@ EOF
     msg_ok "Initialized Backend"
 
     msg_info "Starting Services"
-    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}')
+    if [ -f /opt/certbot/bin/certbot ]; then
+    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    elif command -v certbot &>/dev/null; then
+    CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    else
+    CERTBOT_VER="2.0.0"
+    fi
     if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
       sed -i "s|Environment=CERTBOT_VERSION=.*|Environment=CERTBOT_VERSION=${CERTBOT_VER}|" /lib/systemd/system/npm.service
     else
@@ -224,6 +237,9 @@ EOF
     fi
     sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
+    if [ -n "$(command -v node)" ]; then
+      sed -i -E "s|^ExecStart=.*/node index\.js|ExecStart=$(command -v node) index.js|" /lib/systemd/system/npm.service
+    fi
     systemctl daemon-reload
     systemctl enable -q --now openresty
     systemctl enable -q --now npm

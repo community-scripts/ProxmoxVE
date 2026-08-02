@@ -116,6 +116,9 @@ add() {
 # Add container IDs to exclude from updates (comma-separated):
 # EXCLUDE=100,101,102
 EXCLUDE=
+
+# Healthchecks.io Ping URL (optional)
+# PING_URL=
 CONF
     ok "Created config ${CONF_FILE}"
   fi
@@ -235,9 +238,11 @@ view_cron_config() {
   fi
   if [[ -f "$CONF_FILE" ]]; then
     echo -e " \e[36mConfig file:\e[0m ${CONF_FILE}"
-    local excludes
+    local excludes ping_url
     excludes=$(grep -oP '^\s*EXCLUDE\s*=\s*\K.*' "$CONF_FILE" 2>/dev/null || true)
+    ping_url=$(grep -oP '^\s*PING_URL\s*=\s*\K.*' "$CONF_FILE" 2>/dev/null | tr -d '"' | tr -d "'" || true)
     echo -e " \e[36mExcluded:\e[0m    ${excludes:-(none)}"
+    echo -e " \e[36mPing URL:\e[0m    ${ping_url:-(none)}"
     echo ""
     echo -e " \e[90m--- ${CONF_FILE} ---\e[0m"
     cat "$CONF_FILE"
@@ -284,9 +289,11 @@ show_status() {
   fi
 
   if [[ -f "$CONF_FILE" ]]; then
-    local excludes
+    local excludes ping_url
     excludes=$(grep -oP '^\s*EXCLUDE\s*=\s*\K.*' "$CONF_FILE" 2>/dev/null || echo "(none)")
+    ping_url=$(grep -oP '^\s*PING_URL\s*=\s*\K.*' "$CONF_FILE" 2>/dev/null | tr -d '"' | tr -d "'" || echo "(none)")
     echo -e "   \e[36mExcluded:\e[0m  ${excludes:-"(none)"}"
+    echo -e "   \e[36mPing URL:\e[0m  ${ping_url:-"(none)"}"
   fi
 
   if [[ -f "$LOG_FILE" ]]; then

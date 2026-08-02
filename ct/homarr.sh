@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,6 +35,11 @@ function update_script() {
     systemctl stop redis-server
     msg_ok "Services Stopped"
 
+    if ! grep -q "source /opt/homarr.env" /usr/bin/homarr 2>/dev/null; then
+      echo $'#!/bin/bash\nset -a\nsource /opt/homarr.env\nset +a\ncd /opt/homarr/apps/cli && timeout 10 node ./cli.cjs "$@"' >/usr/bin/homarr
+      chmod +x /usr/bin/homarr
+    fi
+
     if ! { grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr/.env 2>/dev/null || grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr.env 2>/dev/null; }; then
       msg_info "Fixing old structure"
       systemctl disable -q --now nginx
@@ -51,7 +56,7 @@ function update_script() {
 ReadWritePaths=-/appdata/redis -/var/lib/redis -/var/log/redis -/var/run/redis -/etc/redis
 EOF
       systemctl daemon-reload
-      rm /opt/run_homarr.sh
+      rm -f /opt/run_homarr.sh
       msg_ok "Fixed old structure"
     fi
 
@@ -62,13 +67,13 @@ EOF
 
     NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
     setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-$(arch_resolve).tar.gz"
 
     msg_info "Updating Homarr"
     cp /opt/homarr/redis.conf /etc/redis/redis.conf
     sed -i -e '$a\' /etc/redis/redis.conf
     grep -q '^bind 127.0.0.1 -::1$' /etc/redis/redis.conf || echo "bind 127.0.0.1 -::1" >> /etc/redis/redis.conf
-    rm /etc/nginx/nginx.conf
+    rm -f /etc/nginx/nginx.conf
     cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
     msg_ok "Updated Homarr"
 

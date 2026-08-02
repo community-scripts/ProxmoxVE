@@ -54,7 +54,7 @@ cd /opt
 rm -rf /opt/guacamole-server
 msg_ok "Built Guacamole Server (guacd)"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
 
 msg_info "Building Frontend"
@@ -85,7 +85,8 @@ mkdir -p /opt/termix/data \
   /opt/termix/nginx \
   /opt/termix/nginx/logs \
   /opt/termix/nginx/cache \
-  /opt/termix/nginx/client_body
+  /opt/termix/nginx/client_body \
+  /opt/termix/db/data
 
 cp -r /opt/termix/dist/* /opt/termix/html/ 2>/dev/null || true
 cp -r /opt/termix/src/locales /opt/termix/html/locales 2>/dev/null || true

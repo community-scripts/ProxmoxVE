@@ -47,6 +47,7 @@ cat <<EOF >/etc/apache2/sites-available/wordpress.conf
 EOF
 $STD a2ensite wordpress.conf
 $STD a2dissite 000-default.conf
+$STD a2enmod rewrite
 systemctl reload apache2
 msg_ok "Created Services"
 

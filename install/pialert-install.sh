@@ -30,7 +30,8 @@ $STD apt -y install \
   wakeonlan \
   fping \
   zip \
-  libtext-csv-perl
+  libtext-csv-perl \
+  cron
 msg_ok "Installed Dependencies"
 
 msg_info "Installing PHP Dependencies"

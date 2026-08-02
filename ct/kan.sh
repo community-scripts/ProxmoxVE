@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,16 +35,11 @@ function update_script() {
     systemctl stop kan
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/kan/.env /opt/kan.env.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/kan/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "kan" "kanbn/kan" "latest"
 
-    msg_info "Restoring Configuration"
-    cp /opt/kan.env.bak /opt/kan/.env
-    rm -f /opt/kan.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Building Application"
     cd /opt/kan

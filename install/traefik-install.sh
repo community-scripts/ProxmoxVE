@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_$(arch_resolve).tar.gz"
 mkdir -p /etc/traefik/{conf.d,ssl}
 
 msg_info "Creating Traefik configuration"

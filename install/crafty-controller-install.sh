@@ -16,29 +16,22 @@ update_os
 msg_info "Setting up TemurinJDK"
 setup_java
 $STD apt install -y temurin-{8,11,17,21,25}-jre
-sudo update-alternatives --set java /usr/lib/jvm/temurin-25-jre-amd64/bin/java
+$STD update-alternatives --set java /usr/lib/jvm/temurin-25-jre-$(arch_resolve)/bin/java
 msg_ok "Installed TemurinJDK"
 
 msg_info "Setup Python3"
 $STD apt install -y \
-  python3 \
   python3-dev \
   python3-pip \
   python3-venv
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-msg_info "Installing Crafty-Controller (Patience)"
 useradd crafty -m -s /bin/bash
-cd /opt
 mkdir -p /opt/crafty-controller/crafty /opt/crafty-controller/server
-RELEASE=$(curl -fsSL "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
-echo "${RELEASE}" >"/opt/crafty-controller_version.txt"
-curl -fsSL "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip" -o "crafty-4-v${RELEASE}.zip"
-$STD unzip crafty-4-v"${RELEASE}".zip
-cp -a crafty-4-v"${RELEASE}"/. /opt/crafty-controller/crafty/crafty-4/
-rm -rf crafty-4-v"${RELEASE}"
+fetch_and_deploy_gl_release "Crafty-Controller" "crafty-controller/crafty-4" "tarball" "latest" "/opt/crafty-controller/crafty/crafty-4"
 
+msg_info "Installing Crafty-Controller dependencies (Patience)"
 cd /opt/crafty-controller/crafty
 python3 -m venv .venv
 chown -R crafty:crafty /opt/crafty-controller/
@@ -47,7 +40,7 @@ $STD sudo -u crafty bash -c '
     cd /opt/crafty-controller/crafty/crafty-4
     pip3 install --no-cache-dir -r requirements.txt
 '
-msg_ok "Installed Craft-Controller and dependencies"
+msg_ok "Installed Crafty-Controller dependencies"
 
 msg_info "Setting up service"
 cat <<EOF >/etc/systemd/system/crafty-controller.service
@@ -59,7 +52,7 @@ After=network.target
 Type=simple
 User=crafty
 WorkingDirectory=/opt/crafty-controller/crafty/crafty-4
-Environment=PATH=/usr/lib/jvm/temurin-25-jre-amd64/bin:/opt/crafty-controller/crafty/.venv/bin:$PATH
+Environment=PATH=/usr/lib/jvm/temurin-25-jre-$(arch_resolve)/bin:/opt/crafty-controller/crafty/.venv/bin:$PATH
 ExecStart=/opt/crafty-controller/crafty/.venv/bin/python3 main.py -d
 Restart=on-failure
 
@@ -73,14 +66,13 @@ for i in $(seq 1 30); do
   sleep 2
 done
 if [[ -f "$CREDS_FILE" ]]; then
-  {
-    echo "Crafty-Controller-Credentials"
-    echo "Username: $(grep -oP '(?<="username": ")[^"]*' "$CREDS_FILE")"
-    echo "Password: $(grep -oP '(?<="password": ")[^"]*' "$CREDS_FILE")"
-  } >>~/crafty-controller.creds
+  cat <<EOF >~/crafty-controller.creds
+Crafty-Controller-Credentials
+Username: $(grep -oP '(?<="username": ")[^"]*' "$CREDS_FILE")
+Password: $(grep -oP '(?<="password": ")[^"]*' "$CREDS_FILE")
+EOF
 fi
 msg_ok "Service started"
-
 motd_ssh
 customize
 cleanup_lxc

@@ -19,7 +19,7 @@ $STD apt install -y \
   logrotate
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "nginx-ui" "0xJacky/nginx-ui" "prebuild" "latest" "/opt/nginx-ui" "nginx-ui-linux-64.tar.gz"
+fetch_and_deploy_gh_release "nginx-ui" "0xJacky/nginx-ui" "prebuild" "latest" "/opt/nginx-ui" "nginx-ui-linux-$(arch_resolve "64" "arm64-v8a").tar.gz"
 
 msg_info "Installing Nginx UI"
 cp /opt/nginx-ui/nginx-ui /usr/local/bin/nginx-ui

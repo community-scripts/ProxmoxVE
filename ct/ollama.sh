@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-40}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
@@ -40,7 +40,7 @@ function update_script() {
     OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
     rm -rf "$OLLAMA_INSTALL_DIR" /usr/local/bin/ollama
     mkdir -p "$OLLAMA_INSTALL_DIR"
-    if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-amd64.tar.zst"; then
+    if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-$(arch_resolve).tar.zst"; then
       msg_error "Download or deployment failed – check network connectivity and GitHub API availability"
       exit 250
     fi

@@ -42,11 +42,11 @@ $STD apt install -y \
   python3-cssselect
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "pandoc" "jgm/pandoc" "binary" "latest" "" "pandoc-*-amd64.deb"
-fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-x86_64.txz"
+fetch_and_deploy_gh_release "pandoc" "jgm/pandoc" "binary" "latest" "" "pandoc-*-$(arch_resolve).deb"
+fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-$(arch_resolve "x86_64" "arm64").txz"
 ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert
 ln -sf /usr/local/bin/ffmpeg /usr/bin/ffmpeg
-fetch_and_deploy_gh_release "drawio" "jgraph/drawio-desktop" "binary" "latest" "" "drawio-amd64-*.deb"
+fetch_and_deploy_gh_release "drawio" "jgraph/drawio-desktop" "binary" "latest" "" "drawio-$(arch_resolve)-*.deb"
 fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball"
 
 msg_info "Setting up Python Backend"

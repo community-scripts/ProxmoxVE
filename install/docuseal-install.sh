@@ -23,6 +23,8 @@ $STD apt install -y \
   libreadline-dev \
   zlib1g-dev \
   libffi-dev \
+  libleptonica-dev \
+  libleptonica6 \
   libvips42 \
   libvips-dev \
   libheif1 \

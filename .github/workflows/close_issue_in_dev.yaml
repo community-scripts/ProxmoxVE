@@ -3,109 +3,145 @@ on:
   pull_request:
     types:
       - closed
+
+permissions:
+  contents: read
+
 jobs:
   close_issue:
     if: github.event.pull_request.merged == true && github.repository == 'community-scripts/ProxmoxVE'
     runs-on: self-hosted
+    env:
+      DEV_REPO: community-scripts/ProxmoxVED
 
     steps:
       - name: Checkout target repo (merge commit)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: community-scripts/ProxmoxVE
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract and Process PR Title
-        id: extract_title
-        run: |
-          title=$(echo "${{ github.event.pull_request.title }}" | sed 's/^New Script://g' | tr '[:upper:]' '[:lower:]' | sed 's/ //g' | sed 's/-//g')
-          echo "Processed Title: $title"
-          echo "title=$title" >> $GITHUB_ENV
-
-      - name: Get slugs from merged PR
+      - name: Collect script slugs from the merged PR
         id: get_slugs
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          pr_files=$(gh pr view ${{ github.event.pull_request.number }} --repo community-scripts/ProxmoxVE --json files -q '.files[].path' 2>/dev/null || true)
           slugs=""
-          for path in $pr_files; do
-            [[ -f "$path" ]] || continue
-            if [[ "$path" == frontend/public/json/*.json ]]; then
-              s=$(jq -r '.slug // empty' "$path" 2>/dev/null)
-              [[ -n "$s" ]] && slugs="$slugs $s"
-            elif [[ "$path" == ct/*.sh ]] || [[ "$path" == install/*.sh ]] || [[ "$path" == tools/*.sh ]] || [[ "$path" == turnkey/*.sh ]] || [[ "$path" == vm/*.sh ]]; then
-              base=$(basename "$path" .sh)
-              if [[ "$path" == install/* && "$base" == *-install ]]; then
-                s="${base%-install}"
-              else
-                s="$base"
-              fi
-              [[ -n "$s" ]] && slugs="$slugs $s"
-            fi
-          done
-          slugs=$(echo $slugs | xargs -n1 | sort -u | tr '\n' ' ')
-          if [[ -z "$slugs" && -n "$title" ]]; then
-            slugs="$title"
-          fi
-          if [[ -z "$slugs" ]]; then
-            echo "count=0" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "$slugs" > pocketbase_slugs.txt
-          echo "count=$(echo $slugs | wc -w)" >> "$GITHUB_OUTPUT"
+          while IFS= read -r path; do
+            [ -n "$path" ] || continue
+            [ -f "$path" ] || continue
 
-      - name: Find matching issues in ProxmoxVED by slug
+            case "$path" in
+              frontend/public/json/*.json)
+                s=$(jq -r '.slug // empty' "$path" 2>/dev/null || true)
+                ;;
+              install/*.sh)
+                s=$(basename "$path" .sh)
+                s="${s%-install}"
+                ;;
+              ct/*.sh|tools/*.sh|turnkey/*.sh|vm/*.sh)
+                s=$(basename "$path" .sh)
+                ;;
+              *)
+                s=""
+                ;;
+            esac
+
+            if [ -n "$s" ]; then
+              slugs="$slugs $s"
+            fi
+          done < <(gh pr view "$PR_NUMBER" --repo community-scripts/ProxmoxVE --json files --jq '.files[].path')
+
+          slugs=$(printf '%s\n' $slugs | sed '/^$/d' | sort -u | tr '\n' ' ' | xargs || true)
+          printf '%s' "$slugs" > pocketbase_slugs.txt
+          echo "count=$(printf '%s' "$slugs" | wc -w | tr -d '[:space:]')" >> "$GITHUB_OUTPUT"
+          echo "Slugs in this PR: ${slugs:-<none>}"
+
+      - name: Resolve the matching ProxmoxVED issue
         id: find_issue
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          if [[ ! -s pocketbase_slugs.txt ]]; then
-            echo "No slugs derived from PR — nothing to match."
-            echo "issue_numbers=" >> "$GITHUB_OUTPUT"
-            exit 0
+          # move-to-main-repo.yaml stamps the source issue into the PR body it
+          # creates, so migration PRs carry an exact back-reference. Guessing from
+          # titles or file names is never needed for them.
+          matched=$(printf '%s' "$PR_BODY" \
+            | grep -oE 'community-scripts/ProxmoxVED#[0-9]+' \
+            | sed 's/.*#//' || true)
+
+          if [ -n "$matched" ]; then
+            echo "Back-reference in PR body -> issue(s): $(printf '%s' "$matched" | tr '\n' ' ')"
+          else
+            slugs=$(cat pocketbase_slugs.txt)
+            if [ -z "$slugs" ]; then
+              echo "No back-reference and no script slugs — nothing to close."
+            else
+              # Hand-made PR: fall back to an exact slug match, and only against
+              # issues a maintainer already put into migration. A substring match
+              # here would close unrelated issues that merely mention the app.
+              issues=$(gh issue list --repo "$DEV_REPO" --state open --limit 500 \
+                --json number,title,body,labels \
+                | jq -c '[.[] | select([.labels[].name]
+                    | any(. == "Started Migration To ProxmoxVE" or . == "Migration To ProxmoxVE"))]')
+
+              echo "Migration candidates in $DEV_REPO: $(printf '%s' "$issues" | jq 'length')"
+
+              for slug in $slugs; do
+                while IFS= read -r row; do
+                  [ -n "$row" ] || continue
+                  num=$(printf '%s' "$row" | jq -r '.number')
+
+                  # Same slug derivation the ProxmoxVED workflows use, so both
+                  # sides agree on what "alpine-cinny" means.
+                  name=$(printf '%s' "$row" | jq -r '.body // ""' \
+                    | sed -n '/^###[[:space:]]*Name of the Script/,/^###/p' \
+                    | sed '1d;/^###/d;/^[[:space:]]*$/d' | head -n1)
+                  [ -n "$name" ] || name=$(printf '%s' "$row" | jq -r '.title')
+                  issue_slug=$(printf '%s' "$name" | tr -d '\r' | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]\+/-/g')
+
+                  if [ "$issue_slug" = "$slug" ]; then
+                    echo "Exact slug match: $slug -> #$num"
+                    matched="$matched $num"
+                  fi
+                done < <(printf '%s' "$issues" | jq -c '.[]')
+              done
+            fi
           fi
-          slugs=$(cat pocketbase_slugs.txt)
 
-          # Normalize: lowercase, strip spaces and hyphens (same shape as the slug derivation)
-          norm() { echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]//g; s/-//g'; }
+          matched=$(printf '%s\n' $matched | sed '/^$/d' | sort -un | tr '\n' ' ' | xargs || true)
+          count=$(printf '%s' "$matched" | wc -w | tr -d '[:space:]')
 
-          issues=$(gh issue list --repo community-scripts/ProxmoxVED --state open --limit 1000 --json number,title,body)
-
-          matched=""
-          for slug in $slugs; do
-            nslug=$(norm "$slug")
-            [[ -z "$nslug" ]] && continue
-            while IFS= read -r row; do
-              num=$(echo "$row" | jq -r '.number')
-              ntitle=$(norm "$(echo "$row" | jq -r '.title')")
-              body=$(echo "$row" | jq -r '.body // ""' | tr '[:upper:]' '[:lower:]')
-              # Match when the issue title contains the slug, or the body mentions it verbatim
-              if [[ "$ntitle" == *"$nslug"* ]] || [[ "$body" == *"$slug"* ]]; then
-                matched="$matched $num"
-              fi
-            done < <(echo "$issues" | jq -c '.[]')
-          done
-
-          matched=$(echo $matched | xargs -n1 2>/dev/null | sort -un | tr '\n' ' ')
-          if [[ -z "$matched" ]]; then
-            echo "No matching ProxmoxVED issues found for slugs: $slugs"
-            echo "issue_numbers=" >> "$GITHUB_OUTPUT"
-            exit 0
+          if [ "$count" -gt 3 ]; then
+            echo "::error::Refusing to close $count issues for a single PR ($matched) — matching is wrong."
+            exit 1
           fi
-          echo "Matched ProxmoxVED issues: $matched"
+
           echo "issue_numbers=$matched" >> "$GITHUB_OUTPUT"
+          echo "Closing: ${matched:-<none>}"
 
       - name: Comment on and close matching ProxmoxVED issues
         if: steps.find_issue.outputs.issue_numbers != ''
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.PAT_MICHEL }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ISSUE_NUMBERS: ${{ steps.find_issue.outputs.issue_numbers }}
         run: |
-          for issue_number in ${{ steps.find_issue.outputs.issue_numbers }}; do
-            echo "Closing ProxmoxVED issue #$issue_number"
-            gh issue comment "$issue_number" --repo community-scripts/ProxmoxVED --body "Merged with #${{ github.event.pull_request.number }} in ProxmoxVE"
-            gh issue close "$issue_number" --repo community-scripts/ProxmoxVED
+          for issue_number in $ISSUE_NUMBERS; do
+            state=$(gh issue view "$issue_number" --repo "$DEV_REPO" --json state --jq '.state' 2>/dev/null || echo "MISSING")
+            if [ "$state" != "OPEN" ]; then
+              echo "Skipping #$issue_number (state: $state)"
+              continue
+            fi
+            echo "Closing $DEV_REPO#$issue_number"
+            gh issue comment "$issue_number" --repo "$DEV_REPO" \
+              --body "Merged with #${PR_NUMBER} in ProxmoxVE"
+            gh issue close "$issue_number" --repo "$DEV_REPO"
           done
 
       - name: Set is_dev to false in PocketBase

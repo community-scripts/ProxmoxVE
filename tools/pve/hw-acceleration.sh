@@ -54,6 +54,11 @@ if ! pveversion | grep -Eq "pve-manager/8\.[0-4](\.[0-9]+)*"; then
   exit
 fi
 
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  echo -e "${RD}Intel HW acceleration is only available on x86 (Intel) systems.${CL}"
+  exit 0
+fi
+
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Add Intel HW Acceleration" --yesno "This Will Add Intel HW Acceleration to an existing LXC Container. Proceed?" 8 72
 NODE=$(hostname)
 PREV_MENU=()

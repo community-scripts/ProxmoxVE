@@ -66,7 +66,9 @@ $STD cmake -GNinja \
   -DOTBR_BACKBONE_ROUTER=ON \
   -DOTBR_SYSTEMD_UNIT_DIR=/etc/systemd/system \
   -DOT_FIREWALL=ON \
+  -DOTBR_NAT64=ON \
   -DOT_POSIX_NAT64_CIDR="192.168.255.0/24" \
+  -DOTBR_DNS_UPSTREAM_QUERY=ON \
   ..
 $STD ninja
 $STD ninja install
@@ -102,6 +104,25 @@ OTBR_AGENT_OPTS="-I wpan0 -B eth0 --vendor-name OpenThread --model-name BorderRo
 EOF
 cat <<'EOF' >/etc/default/otbr-web
 OTBR_WEB_OPTS="-I wpan0 -a 0.0.0.0 -p 80"
+EOF
+cat <<'EOF' >/usr/local/bin/otbr-post-start.sh
+#!/bin/sh
+
+# OpenThread Border Router post-start script
+# Run custom commands for runtime configuration options
+
+# Wait for the otbr-agent service to be initialized
+#sleep 3
+
+# Configure routing and translation features
+#ot-ctl nat64 enable
+#ot-ctl dns server upstream enable
+EOF
+chmod +x /usr/local/bin/otbr-post-start.sh
+mkdir -p /etc/systemd/system/otbr-agent.service.d
+cat <<'EOF' >/etc/systemd/system/otbr-agent.service.d/10-otbr-post-start.conf
+[Service]
+ExecStartPost=/usr/local/bin/otbr-post-start.sh
 EOF
 systemctl enable -q dbus rsyslog otbr-agent otbr-web
 systemctl enable -q bind9 2>/dev/null || systemctl enable -q named 2>/dev/null || true

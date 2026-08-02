@@ -13,7 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,12 +35,22 @@ function update_script() {
     systemctl stop fireshare
     msg_ok "Stopped Service"
 
-    mv /opt/fireshare/fireshare.env /opt
+    create_backup /opt/fireshare/fireshare.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fireshare" "ShaneIsrael/fireshare" "tarball"
-    mv /opt/fireshare.env /opt/fireshare
+    restore_backup
     rm -f /usr/local/bin/fireshare
 
-    msg_info "Updating Fireshare"
+    if ! grep -q "__FIRESHARE_PORT__" /etc/nginx/nginx.conf; then
+      cp /opt/fireshare/app/nginx/prod.conf /etc/nginx/nginx.conf
+      sed -i 's|root /processed/|root /opt/fireshare-processed/|g' /etc/nginx/nginx.conf
+      sed -i 's/^user[[:space:]]\+nginx;/user  root;/' /etc/nginx/nginx.conf
+      sed -i 's|root[[:space:]]\+/app/build;|root /opt/fireshare/app/client/build;|' /etc/nginx/nginx.conf
+      sed -i 's/__FIRESHARE_PORT__/80/g' /etc/nginx/nginx.conf
+      cp /opt/fireshare/app/nginx/error.html /etc/nginx/
+      cp /opt/fireshare/app/nginx/api_unavailable.html /etc/nginx/
+    fi
+    msg_info "Configuring Fireshare"
+
     cd /opt/fireshare
     $STD uv venv --clear
     $STD .venv/bin/python -m ensurepip --upgrade
@@ -53,13 +63,10 @@ function update_script() {
     export VIDEO_DIRECTORY=/opt/fireshare-videos
     export PROCESSED_DIRECTORY=/opt/fireshare-processed
     $STD uv run flask db upgrade
-
-    msg_info "Building Fireshare Client"
     cd /opt/fireshare/app/client
     $STD npm install
     $STD npm run build
-    msg_ok "Built Fireshare Client"
-    msg_ok "Updated Fireshare"
+    msg_ok "Configured Fireshare"
 
     msg_info "Starting Service"
     systemctl start fireshare

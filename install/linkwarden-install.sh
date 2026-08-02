@@ -19,7 +19,7 @@ $STD apt install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="corepack" setup_nodejs
 PG_VERSION="16" setup_postgresql
 RUST_CRATES="monolith" setup_rust
 PG_DB_NAME="linkwardendb" PG_DB_USER="linkwarden" setup_postgresql_db
@@ -44,7 +44,7 @@ if [[ -f package.json ]]; then
   fi
 fi
 if command -v corepack >/dev/null 2>&1; then
-  $STD corepack enable
+
   $STD corepack prepare "yarn@${yarn_ver}" --activate || true
 fi
 $STD yarn

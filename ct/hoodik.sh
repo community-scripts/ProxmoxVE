@@ -13,7 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,16 +36,11 @@ function update_script() {
     systemctl stop hoodik
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp /opt/hoodik/.env /opt/hoodik.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/hoodik/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "hoodik" "hudikhq/hoodik" "prebuild" "latest" "/opt/hoodik" "*x86_64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "hoodik" "hudikhq/hoodik" "prebuild" "latest" "/opt/hoodik" "*$(arch_resolve "x86_64" "arm64").tar.gz"
 
-    msg_info "Restoring Configuration"
-    cp /opt/hoodik.env.bak /opt/hoodik/.env
-    rm -f /opt/hoodik.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start hoodik

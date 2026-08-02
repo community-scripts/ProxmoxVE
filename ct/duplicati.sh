@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop duplicati
     msg_info "Stopped Service"
 
-    fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-x64-gui.deb"
+    fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-$(arch_resolve "x64" "arm64")-gui.deb"
 
     msg_info "Starting Service"
     systemctl start duplicati

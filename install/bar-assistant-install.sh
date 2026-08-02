@@ -73,6 +73,7 @@ $STD npm run build
 msg_ok "Installed Salt Rim"
 
 msg_info "Creating Service"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/barassistant.conf
 server {
     listen 80 default_server;
@@ -126,7 +127,7 @@ server {
     error_page 404 /index.php;
 
     location ~ ^/index\.php(/|$) {
-        fastcgi_pass unix:/var/run/php/php$PHPVER-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
         fastcgi_hide_header X-Powered-By;
@@ -148,9 +149,7 @@ server {
 }
 EOF
 
-ln -s /etc/nginx/sites-available/barassistant.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site barassistant.conf
 msg_ok "Created Service"
 
 motd_ssh

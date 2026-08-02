@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/mauriceboe/TREK
+# Source: https://github.com/liketrek/TREK
 
 APP="TREK"
 var_tags="${var_tags:-travel;planning;collaboration}"
@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,48 +32,81 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
-  if check_for_gh_release "trek" "mauriceboe/TREK"; then
+  if check_for_gh_release "trek" "liketrek/TREK"; then
+    MIGRATION=0
+    grep -qF "ExecStart=/usr/bin/node --import tsx src/index.ts" \
+      /etc/systemd/system/trek.service && MIGRATION=1
+
     msg_info "Stopping Service"
     systemctl stop trek
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/trek/server/.env /opt/trek.env.bak
-    mv /opt/trek/data /opt/trek-data.bak
-    mv /opt/trek/uploads /opt/trek-uploads.bak
-    msg_ok "Backed up Data"
+    ensure_dependencies "libkitinerary-bin"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "trek" "mauriceboe/TREK" "tarball"
+    create_backup /opt/trek/server/.env \
+      /opt/trek/data \
+      /opt/trek/uploads
 
-    msg_info "Building Client"
-    cd /opt/trek/client
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "trek" "liketrek/TREK" "tarball"
+
+    msg_info "Building TREK"
+    cd /opt/trek
     $STD npm ci
-    $STD npm run build
-    mkdir -p /opt/trek/server/public
-    cp -r /opt/trek/client/dist/* /opt/trek/server/public/
-    cp -r /opt/trek/client/public/fonts /opt/trek/server/public/fonts 2>/dev/null || true
-    msg_ok "Built Client"
+    $STD npm run build --workspace=shared
+    $STD npm run build --workspace=client
+    $STD npm run build --workspace=server
+    msg_ok "Built TREK"
 
-    msg_info "Installing Server Dependencies"
-    cd /opt/trek/server
-    $STD npm ci
-    msg_ok "Installed Server Dependencies"
+    msg_info "Setting up TREK Workspace"
+    rm -rf /opt/trek/server/public
+    mkdir -p /opt/trek/server/public/fonts
+    cp -a /opt/trek/client/dist/. /opt/trek/server/public/
+    cp -a /opt/trek/client/public/fonts/. /opt/trek/server/public/fonts/
 
-    msg_info "Restoring Data"
-    mv /opt/trek-data.bak /opt/trek/data
-    mv /opt/trek-uploads.bak /opt/trek/uploads
+    restore_backup
+
     rm -rf /opt/trek/server/data /opt/trek/server/uploads
     ln -s /opt/trek/data /opt/trek/server/data
     ln -s /opt/trek/uploads /opt/trek/server/uploads
-    cp /opt/trek.env.bak /opt/trek/server/.env
-    rm -f /opt/trek.env.bak
-    msg_ok "Restored Data"
+
+    rm -rf /opt/trek/node_modules
+    cd /opt/trek
+    $STD npm ci --workspace=server --omit=dev
+    msg_ok "Set up TREK Workspace"
+
+    if [[ "$MIGRATION" == "1" ]]; then
+      msg_info "Migrating TREK Service"
+      cat <<EOF >/etc/systemd/system/trek.service
+[Unit]
+Description=TREK Travel Planner
+Documentation=https://github.com/liketrek/TREK
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/trek/server
+EnvironmentFile=/opt/trek/server/.env
+Environment=XDG_CACHE_HOME=/tmp/trek-kf6-cache
+Environment=QT_QPA_PLATFORM=offscreen
+ExecStart=/usr/bin/node --require tsconfig-paths/register dist/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+      systemctl daemon-reload
+      msg_ok "Migrated TREK Service"
+    fi
 
     msg_info "Starting Service"
     systemctl start trek
     msg_ok "Started Service"
     msg_ok "Updated Successfully!"
   fi
+
   exit
 }
 

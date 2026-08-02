@@ -11,7 +11,6 @@
 source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/api.func) 2>/dev/null
 source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/vm-core.func) 2>/dev/null
 source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/cloud-init.func) 2>/dev/null || true
-load_functions
 
 # ==============================================================================
 # SCRIPT VARIABLES
@@ -21,6 +20,7 @@ APP_TYPE="vm"
 NSAPP="docker-vm"
 var_os="debian"
 var_version="13"
+ARCH=$(dpkg --print-architecture)
 
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
@@ -30,6 +30,9 @@ USE_CLOUD_INIT="no"
 OS_TYPE=""
 OS_VERSION=""
 THIN="discard=on,ssd=1,"
+var_arm64="yes"
+
+load_functions
 
 # ==============================================================================
 # ERROR HANDLING & CLEANUP
@@ -136,11 +139,16 @@ function default_settings() {
 
   VMID=$(get_valid_nextid)
   FORMAT=""
-  MACHINE=" -machine q35"
+  if [ "$ARCH" = "arm64" ]; then
+    MACHINE=""
+    CPU_TYPE=""
+  else
+    MACHINE=" -machine q35"
+    CPU_TYPE=" -cpu host"
+  fi
   DISK_CACHE=""
   DISK_SIZE="10G"
   HN="docker"
-  CPU_TYPE=" -cpu host"
   CORE_COUNT="2"
   RAM_SIZE="4096"
   BRG="vmbr0"
@@ -151,11 +159,15 @@ function default_settings() {
   METHOD="default"
 
   echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
-  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}Q35 (Modern)${CL}"
+  if [ "$ARCH" = "arm64" ]; then
+    echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}virt (ARM64)${CL}"
+  else
+    echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}Q35 (Modern)${CL}"
+  fi
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}${CL}"
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}None${CL}"
   echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}${HN}${CL}"
-  echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
+  echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}$([ "$ARCH" = "arm64" ] && echo "Default" || echo "Host")${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE}${CL}"
   echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}${BRG}${CL}"
@@ -197,7 +209,11 @@ function advanced_settings() {
   done
 
   # Machine Type
-  if MACH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "MACHINE TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 10 58 2 \
+  if [ "$ARCH" = "arm64" ]; then
+    FORMAT=""
+    MACHINE=""
+    echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}virt${CL}"
+  elif MACH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "MACHINE TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 10 58 2 \
     "q35" "Q35 (Modern, PCIe)" ON \
     "i440fx" "i440fx (Legacy, PCI)" OFF \
     3>&1 1>&2 2>&3); then
@@ -262,7 +278,10 @@ function advanced_settings() {
   fi
 
   # CPU Model
-  if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
+  if [ "$ARCH" = "arm64" ]; then
+    CPU_TYPE=""
+    echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Default${CL}"
+  elif CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
     "1" "Host (Recommended)" ON \
     "0" "KVM64" OFF \
     3>&1 1>&2 2>&3); then

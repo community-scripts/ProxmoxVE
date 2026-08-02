@@ -35,12 +35,10 @@ function update_script() {
     systemctl stop degoog
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration & Data"
-    [[ -f /opt/degoog/.env ]] && cp /opt/degoog/.env /opt/degoog.env.bak
-    [[ -d /opt/degoog/data ]] && mv /opt/degoog/data /opt/degoog_data_backup
-    msg_ok "Backed up Configuration & Data"
+    create_backup /opt/degoog/.env \
+      /opt/degoog/data
 
-    if ! command -v bun >/dev/null 2>&1; then
+    if [[ ! -x /root/.bun/bin/bun ]]; then
       msg_info "Installing Bun"
       export BUN_INSTALL="/root/.bun"
       curl -fsSL https://bun.sh/install | $STD bash
@@ -54,15 +52,16 @@ function update_script() {
     msg_ok "Updated Valkey"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "degoog" "fccview/degoog" "prebuild" "latest" "/opt/degoog" "degoog_*_prebuild.tar.gz"
+    fetch_and_deploy_gh_release "curl-impersonate" "lexiforest/curl-impersonate" "prebuild" "latest" "/usr/local/bin" "curl-impersonate-v*.$(uname -m)-linux-gnu.tar.gz"
 
-    msg_info "Restoring Configuration & Data"
-    [[ -f /opt/degoog.env.bak ]] && mv /opt/degoog.env.bak /opt/degoog/.env
-    [[ -d /opt/degoog_data_backup ]] && mv /opt/degoog_data_backup /opt/degoog/data
+    restore_backup
 
     if [[ -f /opt/degoog/.env ]]; then
-      grep -q "^DEGOOG_VALKEY_URL=" /opt/degoog/.env && sed -i "s|^DEGOOG_VALKEY_URL=.*|DEGOOG_VALKEY_URL=redis://valkey:6379|" /opt/degoog/.env || echo "DEGOOG_VALKEY_URL=redis://valkey:6379" >>/opt/degoog/.env
+      grep -q "^DEGOOG_VALKEY_URL=" /opt/degoog/.env && sed -i "s|^DEGOOG_VALKEY_URL=.*|DEGOOG_VALKEY_URL=redis://127.0.0.1:6379|" /opt/degoog/.env || echo "DEGOOG_VALKEY_URL=redis://127.0.0.1:6379" >>/opt/degoog/.env
       grep -q "^DEGOOG_CACHE_MAX_ENTRIES=" /opt/degoog/.env && sed -i "s|^DEGOOG_CACHE_MAX_ENTRIES=.*|DEGOOG_CACHE_MAX_ENTRIES=1000|" /opt/degoog/.env || echo "DEGOOG_CACHE_MAX_ENTRIES=1000" >>/opt/degoog/.env
       grep -q "^DEGOOG_CACHE_TTL_MS=" /opt/degoog/.env && sed -i "s|^DEGOOG_CACHE_TTL_MS=.*|DEGOOG_CACHE_TTL_MS=43200000|" /opt/degoog/.env || echo "DEGOOG_CACHE_TTL_MS=43200000" >>/opt/degoog/.env
+      grep -q "^# DEGOOG_SETTINGS_PASSWORDS" /opt/degoog/.env && sed -i "s|^# DEGOOG_SETTINGS_PASSWORDS=.*|DEGOOG_SETTINGS_PASSWORDS=$(openssl rand -hex 32)|" /opt/degoog/.env &&
+        msg_warn "Mandatory Settings Password created - check /opt/degoog/.env"
     fi
     msg_ok "Restored Configuration & Data"
 

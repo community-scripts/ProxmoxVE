@@ -122,9 +122,7 @@ server {
   }
 }
 EOF
-ln -sf /etc/nginx/sites-available/checkmate /etc/nginx/sites-enabled/checkmate
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site checkmate
 msg_ok "Configured Nginx Reverse Proxy"
 
 motd_ssh

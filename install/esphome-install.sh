@@ -14,7 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y git
+$STD apt install -y git \
+  libusb-1.0-0
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
@@ -26,8 +27,8 @@ cd /opt/esphome
 $STD uv venv --clear /opt/esphome/.venv
 $STD /opt/esphome/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/esphome/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/esphome/.venv/bin/python -m pip install esphome tornado esptool
-msg_ok "Setup and Installed ESPHome"
+$STD /opt/esphome/.venv/bin/python -m pip install esphome esphome-device-builder esptool
+msg_ok "Setup and Installed ESPHome Device Builder"
 
 msg_info "Linking esphome to /usr/local/bin"
 rm -f /usr/local/bin/esphome
@@ -36,13 +37,13 @@ msg_ok "Linked esphome binary"
 
 msg_info "Creating Service"
 mkdir -p /root/config
-cat <<EOF >/etc/systemd/system/esphomeDashboard.service
+cat <<EOF >/etc/systemd/system/esphome-device-builder.service
 [Unit]
-Description=ESPHome Dashboard
+Description=ESPHome Device Builder
 After=network.target
 
 [Service]
-ExecStart=/opt/esphome/.venv/bin/esphome dashboard /root/config/
+ExecStart=/opt/esphome/.venv/bin/esphome-device-builder /root/config/
 Restart=always
 User=root
 
@@ -50,7 +51,7 @@ User=root
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now esphomeDashboard
+systemctl enable -q --now esphome-device-builder
 msg_ok "Created Service"
 
 motd_ssh

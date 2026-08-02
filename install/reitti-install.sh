@@ -30,27 +30,30 @@ mv /opt/reitti/reitti-*.jar /opt/reitti/reitti.jar
 
 msg_info "Installing Nginx Tile Cache"
 mkdir -p /var/cache/nginx/tiles
-cat <<EOF >/etc/nginx/nginx.conf
+cat <<'NGINXEOF' >/etc/nginx/nginx.conf
 user www-data;
 
 events {
   worker_connections 1024;
 }
 http {
+  resolver 1.1.1.1 8.8.8.8 valid=30s ipv6=off;
   proxy_cache_path /var/cache/nginx/tiles levels=1:2 keys_zone=tiles:10m max_size=1g inactive=30d use_temp_path=off;
   server {
     listen 80;
-    location / {
-      proxy_pass https://tile.openstreetmap.org/;
-      proxy_set_header Host tile.openstreetmap.org;
+    location /custom/ {
+      set $upstream_url $http_x_reitti_upstream_url;
+      proxy_pass $upstream_url;
+      proxy_set_header Host $proxy_host;
       proxy_set_header User-Agent "Reitti/1.0";
       proxy_cache tiles;
+      proxy_cache_key $upstream_url;
       proxy_cache_valid 200 30d;
       proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
     }
   }
 }
-EOF
+NGINXEOF
 chown -R www-data:www-data /var/cache/nginx
 chmod -R 750 /var/cache/nginx
 systemctl restart nginx
@@ -71,6 +74,7 @@ server.compression.mime-types=text/plain,application/json
 logging.level.root=INFO
 logging.level.org.hibernate.engine.jdbc.spi.SqlExceptionHelper=FATAL
 logging.level.com.dedicatedcode.reitti=INFO
+logging.level.org.quartz.core.ErrorLogger=FATAL
 
 # Internationalization
 spring.messages.basename=messages
@@ -82,7 +86,7 @@ spring.messages.fallback-to-system-locale=false
 spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/$PG_DB_NAME
 spring.datasource.username=$PG_DB_USER
 spring.datasource.password=$PG_DB_PASS
-spring.datasource.hikari.maximum-pool-size=20
+spring.datasource.hikari.maximum-pool-size=30
 
 # Redis configuration
 spring.data.redis.host=127.0.0.1
@@ -92,20 +96,23 @@ spring.data.redis.password=
 spring.data.redis.database=0
 spring.cache.redis.key-prefix=
 
-spring.cache.cache-names=processed-visits,significant-places,users,magic-links,configurations,transport-mode-configs,avatarThumbnails,avatarData,user-settings
+spring.cache.cache-names=processed-visits,significant-places,users,magic-links,configurations,transport-mode-configs,avatarThumbnails,avatarData,user-settings,devices,mapStyles,mapStyleJson
 spring.cache.redis.time-to-live=1d
 
 # Upload configuration
 spring.servlet.multipart.max-file-size=5GB
 spring.servlet.multipart.max-request-size=5GB
+spring.servlet.multipart.resolve-lazily=true
 server.tomcat.max-part-count=100
+spring.mvc.async.request-timeout=600000
 
-# Rqueue configuration
-rqueue.web.enable=false
-rqueue.job.enabled=false
-rqueue.message.durability.in-terminal-state=0
-rqueue.key.prefix=\${spring.cache.redis.key-prefix}
-rqueue.message.converter.provider.class=com.dedicatedcode.reitti.config.RQueueCustomMessageConverter
+# Quartz Scheduler configuration
+spring.quartz.job-store-type=jdbc
+spring.quartz.jdbc.initialize-schema=never
+spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+spring.quartz.properties.org.quartz.jobStore.isClustered=false
+spring.quartz.properties.org.quartz.jobStore.tablePrefix=qrtz_
+spring.quartz.properties.org.quartz.threadPool.threadCount=5
 
 # Application-specific settings
 reitti.server.advertise-uri=
@@ -117,17 +124,24 @@ reitti.security.oidc.enabled=false
 reitti.security.oidc.registration.enabled=false
 
 reitti.import.batch-size=10000
-reitti.import.processing-idle-start-time=10
+reitti.import.grace-time-seconds=30
+reitti.import.staging.cleanup.cron=0 0 4 * * *
+
+reitti.batching.max-batch-size=100
+reitti.batching.max-wait-time=5
 
 reitti.geo-point-filter.max-speed-kmh=1000
 reitti.geo-point-filter.max-accuracy-meters=100
 reitti.geo-point-filter.history-lookback-hours=24
 reitti.geo-point-filter.window-size=50
 
-reitti.process-data.schedule=0 */10 * * * *
 reitti.process-data.refresh-views.schedule=0 0 4 * * *
 reitti.imports.schedule=0 5/10 * * * *
 reitti.imports.owntracks-recorder.schedule=\${reitti.imports.schedule}
+
+reitti.jobs.cleanup.cron=0 0 4 * * ?
+reitti.jobs.cleanup.max-age-hours=24
+reitti.db-janitor.schedule=0 0 4 * * ?
 
 # Geocoding service configuration
 reitti.geocoding.max-errors=10

@@ -12,7 +12,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -39,7 +39,7 @@ function update_script() {
       rm -f /opt/pulse/pulse
     fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-$(arch_resolve).tar.gz"
     ln -sf /opt/pulse/bin/pulse /usr/local/bin/pulse
     mkdir -p /etc/pulse
     chown pulse:pulse /etc/pulse

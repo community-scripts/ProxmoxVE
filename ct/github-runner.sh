@@ -13,7 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_nesting="${var_nesting:-1}"
 var_keyctl="${var_keyctl:-1}"
@@ -46,7 +46,7 @@ function update_script() {
     done
     msg_ok "Backed up configuration"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-x64-*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "actions-runner" "actions/runner" "prebuild" "latest" "/opt/actions-runner" "actions-runner-linux-$(arch_resolve "x64" "arm64")-*.tar.gz"
 
     msg_info "Restoring runner configuration"
     for f in .runner .credentials .credentials_rsaparams .env .path; do

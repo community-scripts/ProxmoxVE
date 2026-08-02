@@ -15,9 +15,16 @@ update_os
 
 setup_go
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
-mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data}
+if [[ "$(arch_resolve)" == "arm64" ]]; then
+  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/usr/local/bin" "meilisearch-linux-aarch64"
+else
+  fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
+fi
+mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data,data/plugins}
 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
+mkdir -p /opt/wanderer/source/db/data
+mkdir -p /opt/wanderer/source/search
+[[ -e /opt/wanderer/source/db/data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /opt/wanderer/source/db/data/plugins
 
 msg_info "Installing wanderer (patience)"
 cd /opt/wanderer/source/db
@@ -27,6 +34,12 @@ cd /opt/wanderer/source/web
 $STD npm ci
 $STD npm run build
 msg_ok "Installed wanderer"
+
+msg_info "Installing wanderer plugins"
+for plugin in hammerhead komoot strava; do
+  fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer/data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+done
+msg_ok "Installed wanderer plugins"
 
 msg_info "Creating Service"
 MEILI_KEY=$(openssl rand -hex 32)
@@ -50,7 +63,7 @@ cat <<EOF >/opt/wanderer/start.sh
 
 trap "kill 0" EXIT
 
-cd /opt/wanderer/source/search && meilisearch --experimental-dumpless-upgrade --master-key \$MEILI_MASTER_KEY &
+cd /opt/wanderer/source/search && meilisearch --upgrade-db --master-key \$MEILI_MASTER_KEY &
 sleep 1
 cd /opt/wanderer/source/db && ./pocketbase serve --http=\$PB_URL --dir=\$PB_DB_LOCATION &
 cd /opt/wanderer/source/web && node build &

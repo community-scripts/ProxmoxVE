@@ -12,7 +12,7 @@ var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -43,7 +43,7 @@ function update_script() {
     msg_info "Updating Open Archiver"
     cd /opt/openarchiver
     $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
-    $STD pnpm approve-builds --yes
+    $STD pnpm rebuild
     $STD pnpm run build:oss
     $STD pnpm db:migrate
     msg_ok "Updated Open Archiver"

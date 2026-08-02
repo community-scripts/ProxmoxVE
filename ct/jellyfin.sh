@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  if ! grep -qEi 'ubuntu' /etc/os-release; then
+  if ! grep -qEi 'ubuntu' /etc/os-release && [[ "$(arch_resolve)" == "amd64" ]]; then
     msg_info "Updating Intel Dependencies"
     rm -f ~/.intel-* || true
 
@@ -57,7 +57,7 @@ function update_script() {
   msg_info "Updating Jellyfin"
   ensure_dependencies libjemalloc2
   if [[ ! -f /usr/lib/libjemalloc.so ]]; then
-    ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
+    ln -sf "/usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/libjemalloc.so.2" /usr/lib/libjemalloc.so
   fi
   $STD apt -y upgrade
   $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server jellyfin-ffmpeg7

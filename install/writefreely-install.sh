@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 MARIADB_DB_NAME="writefreely" MARIADB_DB_USER="writefreely" setup_mariadb_db
-fetch_and_deploy_gh_release "writefreely" "writefreely/writefreely" "prebuild" "latest" "/opt/writefreely" "writefreely_*_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "writefreely" "writefreely/writefreely" "prebuild" "latest" "/opt/writefreely" "writefreely_*_linux_$(arch_resolve).tar.gz"
 
 msg_info "Setting up WriteFreely"
 cd /opt/writefreely

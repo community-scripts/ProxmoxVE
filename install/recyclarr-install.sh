@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y git
+$STD apt install -y git libicu-dev cron
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
+fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-$(arch_resolve "x64" "arm64").tar.xz"
 
 msg_info "Configuring Recyclarr"
 mkdir -p /root/.config/recyclarr/{configs,includes}

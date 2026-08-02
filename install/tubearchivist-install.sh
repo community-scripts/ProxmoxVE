@@ -31,7 +31,7 @@ msg_ok "Installed Dependencies"
 UV_PYTHON="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 
-fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-x86_64-unknown-linux-gnu.zip"
+fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.zip"
 
 msg_info "Installing ElasticSearch"
 setup_deb822_repo \
@@ -106,13 +106,13 @@ TZ=UTC
 PYTHONUNBUFFERED=1
 YTDLP_PLUGIN_DIRS=/opt/yt_plugins
 EOF
-{
-  echo "Tube Archivist Credentials"
-  echo "=========================="
-  echo "Username: admin"
-  echo "Password: ${TA_PASSWORD}"
-  echo "Elasticsearch Password: ${ES_PASSWORD}"
-} >~/tubearchivist.creds
+cat <<EOF >~/tubearchivist.creds
+Tube Archivist Credentials
+==========================
+Username: admin
+Password: ${TA_PASSWORD}
+Elasticsearch Password: ${ES_PASSWORD}
+EOF
 systemctl enable -q --now redis-server
 msg_ok "Set up Tube Archivist"
 

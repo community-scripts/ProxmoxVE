@@ -13,7 +13,11 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "qdrant" "qdrant/qdrant" "binary" "latest" "/usr/bin/qdrant"
+if [[ "$(arch_resolve)" == "arm64" ]]; then
+  fetch_and_deploy_gh_release "qdrant" "qdrant/qdrant" "prebuild" "latest" "/usr/bin" "qdrant-aarch64-unknown-linux-musl.tar.gz"
+else
+  fetch_and_deploy_gh_release "qdrant" "qdrant/qdrant" "binary" "latest" "/usr/bin/qdrant"
+fi
 
 msg_info "Creating Qdrant Configuration"
 mkdir -p /etc/qdrant

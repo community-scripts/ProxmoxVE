@@ -16,9 +16,10 @@ update_os
 RELEASE=$(curl -s https://api.github.com/repos/lejianwen/rustdesk-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 msg_info "Installing RustDesk Server v${RELEASE}"
 temp_file1=$(mktemp)
-curl -fsSL "https://github.com/lejianwen/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-linux-amd64.zip" -o "$temp_file1"
+ARCH=$(arch_resolve "amd64" "arm64v8")
+curl -fsSL "https://github.com/lejianwen/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-linux-${ARCH}.zip" -o "$temp_file1"
 $STD unzip "$temp_file1"
-mv amd64 /opt/rustdesk-server
+mv "$ARCH" /opt/rustdesk-server
 mkdir -p /root/.config/rustdesk
 cd /opt/rustdesk-server
 ./rustdesk-utils genkeypair >/tmp/rustdesk_keys.txt
@@ -33,18 +34,18 @@ msg_ok "Installed RustDesk Server v${RELEASE}"
 APIRELEASE=$(curl -s https://api.github.com/repos/lejianwen/rustdesk-api/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing RustDesk API v${APIRELEASE}"
 temp_file2=$(mktemp)
-curl -fsSL "https://github.com/lejianwen/rustdesk-api/releases/download/v${APIRELEASE}/linux-amd64.tar.gz" -o "$temp_file2"
+curl -fsSL "https://github.com/lejianwen/rustdesk-api/releases/download/v${APIRELEASE}/linux-$(arch_resolve).tar.gz" -o "$temp_file2"
 $STD tar zxvf "$temp_file2"
 mv release /opt/rustdesk-api
 cd /opt/rustdesk-api
 ADMINPASS=$(head -c 16 /dev/urandom | xxd -p -c 16)
 $STD ./apimain reset-admin-pwd "$ADMINPASS"
-{
-  echo "RustDesk WebUI"
-  echo ""
-  echo "Username: admin"
-  echo "Password: $ADMINPASS"
-} >>~/rustdesk.creds
+cat <<EOF >~/rustdesk.creds
+RustDesk WebUI
+
+Username: admin
+Password: $ADMINPASS
+EOF
 echo "${APIRELEASE}" >~/.rustdesk-api
 msg_ok "Installed RustDesk API v${APIRELEASE}"
 

@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +28,9 @@ function update_script() {
     msg_error "No ${APP} installation found!"
     exit
   fi
+
+  NODE_VERSION="24" NODE_MODULE="playactor" setup_nodejs
+
   if check_for_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt"; then
     msg_info "Stopping service"
     systemctl stop ps5-mqtt

@@ -19,8 +19,8 @@ msg_ok "Installed Dependencies"
 
 setup_deb822_repo \
   "sftpgo" \
-  "https://ftp.osuosl.org/pub/sftpgo/apt/gpg.key" \
-  "https://ftp.osuosl.org/pub/sftpgo/apt" \
+  "https://oss.sftpgo.com/apt/gpg.key" \
+  "https://oss.sftpgo.com/apt" \
   "trixie"
 
 msg_info "Installing SFTPGo"

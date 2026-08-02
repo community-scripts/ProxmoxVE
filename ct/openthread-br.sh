@@ -13,7 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-0}"
 var_tun="${var_tun:-yes}"
 
@@ -70,7 +70,9 @@ function update_script() {
     -DOTBR_BACKBONE_ROUTER=ON \
     -DOTBR_SYSTEMD_UNIT_DIR=/etc/systemd/system \
     -DOT_FIREWALL=ON \
+    -DOTBR_NAT64=ON \
     -DOT_POSIX_NAT64_CIDR="192.168.255.0/24" \
+    -DOTBR_DNS_UPSTREAM_QUERY=ON \
     ..
   $STD ninja
   $STD ninja install
@@ -100,6 +102,31 @@ EOF
   msg_info "Restoring Configuration"
   mv /etc/default/otbr-agent.bak /etc/default/otbr-agent
   msg_ok "Restored Configuration"
+
+  if [[ ! -f /etc/systemd/system/otbr-agent.service.d/10-otbr-post-start.conf ]]; then
+    msg_info "Configuring OpenThread Border Router post-start service"
+    cat <<'EOF' >/usr/local/bin/otbr-post-start.sh
+#!/bin/sh
+
+# OpenThread Border Router post-start script
+# Run custom commands for runtime configuration options
+
+# Wait for the otbr-agent service to be initialized
+#sleep 3
+
+# Configure routing and translation features
+#ot-ctl nat64 enable
+#ot-ctl dns server upstream enable
+EOF
+    chmod +x /usr/local/bin/otbr-post-start.sh
+    mkdir -p /etc/systemd/system/otbr-agent.service.d
+    cat <<'EOF' >/etc/systemd/system/otbr-agent.service.d/10-otbr-post-start.conf
+[Service]
+ExecStartPost=/usr/local/bin/otbr-post-start.sh
+EOF
+    systemctl daemon-reload
+    msg_ok "Configured OpenThread Border Router post-start service"
+  fi
 
   msg_info "Starting Services"
   systemctl start otbr-agent

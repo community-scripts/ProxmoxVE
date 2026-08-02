@@ -59,10 +59,10 @@ EOF
 systemctl enable -q --now nightscout
 msg_ok "Created Service"
 
-{
-  echo "Nightscout Credentials"
-  echo "API_SECRET: ${API_SECRET}"
-} >> ~/nightscout.creds
+cat <<EOF >~/nightscout.creds
+Nightscout Credentials
+API_SECRET: ${API_SECRET}
+EOF
 
 motd_ssh
 customize

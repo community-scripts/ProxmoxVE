@@ -12,7 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,7 +34,7 @@ function update_script() {
     systemctl stop speedtest_rs
     msg_ok "Services Stopped"
 
-    fetch_and_deploy_gh_release "librespeed-rust" "librespeed/speedtest-rust" "binary" "latest" "/opt/librespeed-rust" "librespeed-rs-x86_64-unknown-linux-gnu.deb"
+    fetch_and_deploy_gh_release "librespeed-rust" "librespeed/speedtest-rust" "binary" "latest" "/opt/librespeed-rust" "librespeed-rs-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.deb"
 
     msg_info "Starting Service"
     systemctl start speedtest_rs

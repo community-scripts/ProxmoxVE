@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v7.0.0"
+  RELEASE="v7.3.0"
   if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_info "Stopping services"
     systemctl stop opencloud opencloud-wopi
@@ -43,7 +43,7 @@ function update_script() {
     msg_ok "Updated packages"
 
     rm -f /usr/bin/{OpenCloud,opencloud}
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-amd64"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "${RELEASE}" "/usr/bin" "opencloud-*-linux-$(arch_resolve)"
     mv /usr/bin/OpenCloud /usr/bin/opencloud
 
     if ! grep -q 'POSIX_WATCH' /etc/opencloud/opencloud.env; then

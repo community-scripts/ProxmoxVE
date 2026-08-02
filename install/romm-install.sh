@@ -37,20 +37,21 @@ $STD apt install -y \
   redis-server \
   redis-tools \
   p7zip-full \
-  tzdata \
-  nginx
+  7zip-standalone \
+  libarchive-tools \
+  tzdata
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Nginx mod_zip module"
+msg_info "Installing Angie with mod_zip module"
 setup_deb822_repo \
-  "getpagespeed-extras" \
-  "https://extras.getpagespeed.com/deb-archive-keyring.gpg" \
-  "https://extras.getpagespeed.com/debian" \
+  "angie" \
+  "https://angie.software/keys/angie-signing.gpg" \
+  "https://download.angie.software/angie/debian/$(get_os_info version_id)" \
   "$(get_os_info codename)" \
   "main"
-$STD apt-get install -y nginx nginx-module-zip
-msg_ok "Installed Nginx mod_zip module"
-
+$STD apt-get install -y angie angie-module-zip
+sed -i '1i load_module modules/ngx_http_zip_module.so;' /etc/angie/angie.conf
+msg_ok "Installed Angie with mod_zip module"
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 setup_mariadb
@@ -126,11 +127,17 @@ EOF
 chmod 644 /var/lib/romm/config/config.yml
 msg_ok "Created configuration file"
 
-fetch_and_deploy_gh_release "RAHasher" "RetroAchievements/RALibretro" "prebuild" "latest" "/opt/RALibretro" "RAHasher-x64-Linux-*.zip"
-cp /opt/RALibretro/RAHasher /usr/bin/RAHasher
-chmod +x /usr/bin/RAHasher
+if [[ "$(arch_resolve)" != "arm64" ]]; then
+  fetch_and_deploy_gh_release "RAHasher" "RetroAchievements/RALibretro" "prebuild" "latest" "/opt/RALibretro" "RAHasher-x64-Linux-*.zip"
+  cp /opt/RALibretro/RAHasher /usr/bin/RAHasher
+  chmod +x /usr/bin/RAHasher
+else
+  msg_warn "RAHasher (RetroAchievements hashing) has no arm64 build; skipping. RA hash features will be unavailable."
+fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
+fetch_and_deploy_gh_release "ruffle" "ruffle-rs/ruffle" "prebuild" "latest" "/opt/romm/frontend/dist/assets/ruffle" "ruffle-*-web-selfhosted.zip"
+fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
 
 msg_info "Creating environment file"
 sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
@@ -156,6 +163,9 @@ ROMM_AUTH_SECRET_KEY=$AUTH_SECRET_KEY
 DISABLE_DOWNLOAD_ENDPOINT_AUTH=false
 DISABLE_CSRF_PROTECTION=false
 
+SCREENSCRAPER_DEV_ID=
+SCREENSCRAPER_DEV_PASSWORD=
+
 ENABLE_RESCAN_ON_FILESYSTEM_CHANGE=true
 RESCAN_ON_FILESYSTEM_CHANGE_DELAY=5
 
@@ -178,6 +188,18 @@ cd /opt/romm/backend
 $STD uv run alembic upgrade head
 msg_ok "Set up RomM Backend"
 
+if [[ -f /opt/romm/backend/utils/rom_patcher/package.json ]]; then
+  msg_info "Building ROM Patcher helper"
+  cd /opt/romm/backend/utils/rom_patcher
+  $STD npm install --ignore-scripts --no-audit --no-fund
+  if [[ -d node_modules/rom-patcher/rom-patcher-js ]]; then
+    rm -rf rom-patcher-js
+    cp -r node_modules/rom-patcher/rom-patcher-js ./rom-patcher-js
+  fi
+  rm -rf node_modules
+  msg_ok "Built ROM Patcher helper"
+fi
+
 msg_info "Setting up RomM Frontend"
 cd /opt/romm/frontend
 $STD npm install
@@ -192,8 +214,8 @@ ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
 ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
 msg_ok "Set up RomM Frontend"
 
-msg_info "Configuring Nginx"
-cat <<'EOF' >/etc/nginx/sites-available/romm
+msg_info "Configuring Angie"
+cat <<'EOF' >/etc/angie/http.d/romm.conf
 upstream romm_backend {
     server 127.0.0.1:5000;
 }
@@ -263,13 +285,11 @@ server {
 }
 EOF
 
-sed -i "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
-rm -f /etc/nginx/sites-enabled/default
-rm -f /etc/nginx/conf.d/default.conf
-ln -sf /etc/nginx/sites-available/romm /etc/nginx/sites-enabled/romm
-systemctl restart nginx
-systemctl enable -q --now nginx
-msg_ok "Configured Nginx"
+sed -i "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" /etc/angie/http.d/romm.conf
+rm -f /etc/angie/http.d/default.conf
+systemctl restart angie
+systemctl enable -q --now angie
+msg_ok "Configured Angie"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/romm-backend.service

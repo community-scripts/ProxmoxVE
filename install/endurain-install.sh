@@ -55,7 +55,7 @@ DB_HOST=localhost
 DATABASE_URL=postgresql+psycopg://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}
 
 BACKEND_DIR="/opt/endurain/backend/app"
-FRONTEND_DIR="/opt/endurain/frontend/app/dist"
+FRONTEND_DIR="/opt/endurain/frontend/dist"
 DATA_DIR="/opt/endurain_data/data"
 LOGS_DIR="/opt/endurain_data/logs"
 
@@ -69,10 +69,10 @@ EOF
 msg_ok "Setup Endurain"
 
 msg_info "Building Frontend"
-cd /opt/endurain/frontend/app
+cd /opt/endurain/frontend
 $STD npm ci --prefer-offline
 $STD npm run build
-cat <<EOF >/opt/endurain/frontend/app/dist/env.js
+cat <<EOF >/opt/endurain/frontend/dist/env.js
 window.env = {
   ENDURAIN_HOST: "${ENDURAIN_HOST}"
 }
@@ -81,14 +81,9 @@ msg_ok "Built Frontend"
 
 msg_info "Setting up Backend"
 cd /opt/endurain/backend
-$STD uv tool install poetry
-$STD uv tool update-shell
-export PATH="/root/.local/bin:$PATH"
-$STD poetry self add poetry-plugin-export
-$STD poetry export -f requirements.txt --output requirements.txt --without-hashes
-$STD uv venv --clear
-$STD uv pip install -r requirements.txt
-$STD uv pip install pytz
+UV_VERSION=$(grep -Po 'required-version\s*=\s*"\K[^"]+' pyproject.toml 2>/dev/null || echo "0.11.18")
+UV_VERSION="$UV_VERSION" setup_uv
+$STD uv sync --frozen --no-dev
 msg_ok "Setup Backend"
 
 msg_info "Creating Service"

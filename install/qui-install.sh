@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "qui" "autobrr/qui" "prebuild" "latest" "/usr/local/bin" "qui_*_linux_x86_64.tar.gz"
+fetch_and_deploy_gh_release "qui" "autobrr/qui" "prebuild" "latest" "/usr/local/bin" "qui_*_linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 chmod +x /usr/local/bin/qui
 ln -sf /usr/local/bin/qui /usr/bin/qui
 ln -sf /usr/local/bin/qui /opt/qui

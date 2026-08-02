@@ -38,13 +38,13 @@ $STD apt-get install -y twingate-connector
 msg_ok "Setup Twingate Connector"
 
 msg_info "Configure Twingate-Connector"
-{
-  echo "TWINGATE_NETWORK=${network}"
-  echo "TWINGATE_ACCESS_TOKEN=${access_token}"
-  echo "TWINGATE_REFRESH_TOKEN=${refresh_token}"
-  echo "TWINGATE_LABEL_HOSTNAME=$(hostname)"
-  echo "TWINGATE_LABEL_DEPLOYED_BY=proxmox"
-} >/etc/twingate/connector.conf
+cat <<EOF >/etc/twingate/connector.conf
+TWINGATE_NETWORK=${network}
+TWINGATE_ACCESS_TOKEN=${access_token}
+TWINGATE_REFRESH_TOKEN=${refresh_token}
+TWINGATE_LABEL_HOSTNAME=$(hostname)
+TWINGATE_LABEL_DEPLOYED_BY=proxmox
+EOF
 chmod 600 /etc/twingate/connector.conf
 msg_ok "Configured Twingate-Connector"
 

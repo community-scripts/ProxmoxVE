@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,21 +35,11 @@ function update_script() {
     systemctl stop nginx
     msg_ok "Stopped Service"
 
-    if [[ -f /opt/fladder/assets/config/config.json ]]; then
-      msg_info "Backing up configuration"
-      cp /opt/fladder/assets/config/config.json /tmp/fladder_config.json.bak
-      msg_ok "Configuration backed up"
-    fi
+    create_backup /opt/fladder/assets/config/config.json
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Fladder" "DonutWare/Fladder" "prebuild" "latest" "/opt/fladder" "Fladder-Web-*.zip"
 
-    if [[ -f /tmp/fladder_config.json.bak ]]; then
-      msg_info "Restoring configuration"
-      mkdir -p /opt/fladder/assets/config
-      cp /tmp/fladder_config.json.bak /opt/fladder/assets/config/config.json
-      rm -f /tmp/fladder_config.json.bak
-      msg_ok "Configuration restored"
-    fi
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start nginx

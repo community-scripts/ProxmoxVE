@@ -91,7 +91,7 @@ msg_ok "Installed Dependencies"
 
 setup_hwaccel
 
-export TARGETARCH="amd64"
+export TARGETARCH="$(arch_resolve)"
 export CCACHE_DIR=/root/.ccache
 export CCACHE_MAXSIZE=2G
 export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
@@ -110,7 +110,7 @@ export AUTOGRAPH_VERBOSITY=0
 export GLOG_minloglevel=3
 export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.1" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.2" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -122,7 +122,7 @@ msg_info "Building SQLite Extensions"
 $STD bash /opt/frigate/docker/main/build_sqlite_vec.sh
 msg_ok "Built SQLite Extensions"
 
-fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/usr/local/go2rtc/bin" "go2rtc_linux_amd64"
+fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/usr/local/go2rtc/bin" "go2rtc_linux_$(arch_resolve)"
 
 msg_info "Installing Tempio"
 sed -i 's|/rootfs/usr/local|/usr/local|g' /opt/frigate/docker/main/install_tempio.sh
@@ -290,7 +290,7 @@ detect:
 EOF
 
 if grep -q -o -m1 -E 'avx[^ ]*|sse4_2' /proc/cpuinfo && [[ -f /openvino-model/ssdlite_mobilenet_v2.xml ]] && [[ -f /openvino-model/coco_91cl_bkgr.txt ]]; then
-  cat <<EOF >>/config/config.yml
+  cat <<EOF >/config/config.yml
 ffmpeg:
   hwaccel_args: auto
 detectors:
@@ -306,7 +306,7 @@ model:
   labelmap_path: /openvino-model/coco_91cl_bkgr.txt
 EOF
 else
-  cat <<EOF >>/config/config.yml
+  cat <<EOF >/config/config.yml
 ffmpeg:
   hwaccel_args: auto
 model:

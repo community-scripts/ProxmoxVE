@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,30 +35,33 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    [[ -f /opt/matomo/config/config.ini.php ]] && cp /opt/matomo/config/config.ini.php /opt/matomo_config.bak
-    [[ -d /opt/matomo/misc/user ]] && cp -r /opt/matomo/misc/user /opt/matomo_user_backup
-    [[ -f /root/matomo.creds ]] && cp /root/matomo.creds /opt/matomo_db_creds.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/matomo/config/config.ini.php /opt/matomo/misc/user /root/matomo.creds
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "matomo" "matomo-org/matomo" "prebuild" "latest" "/opt/matomo" "matomo-*.zip"
 
-    msg_info "Restoring Data"
-    if [[ -f /opt/matomo_config.bak ]]; then
-      mkdir -p /opt/matomo/config
-      cp /opt/matomo_config.bak /opt/matomo/config/config.ini.php
+    msg_info "Setting up Matomo"
+    if [[ -d /opt/matomo/matomo ]]; then
+      rm -rf /opt/matomo/tmp "/opt/matomo/How to install Matomo.html"
+      find /opt/matomo/matomo -mindepth 1 -maxdepth 1 -exec mv -t /opt/matomo {} +
+      rm -rf /opt/matomo/matomo
     fi
-    if [[ -d /opt/matomo_user_backup ]]; then
-      mkdir -p /opt/matomo/misc/user
-      cp -r /opt/matomo_user_backup/. /opt/matomo/misc/user
-    fi
-    [[ -f /opt/matomo_db_creds.bak ]] && cp /opt/matomo_db_creds.bak /root/matomo.creds
-    rm -f /opt/matomo_config.bak /opt/matomo_db_creds.bak
-    rm -rf /opt/matomo_user_backup
+    mkdir -p /opt/matomo/tmp
+    chmod -R 755 /opt/matomo/tmp
+    msg_ok "Set up Matomo"
+
+    restore_backup
     chown -R www-data:www-data /opt/matomo
-    msg_ok "Restored Data"
+
+    if [[ -f /opt/matomo/console ]]; then
+      msg_info "Running Matomo database upgrade"
+      cd /opt/matomo
+      $STD runuser -u www-data -- php console core:update --no-interaction
+      msg_ok "Ran Matomo database upgrade"
+    fi
 
     msg_info "Starting Services"
+    PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+    systemctl restart "php${PHP_VER}-fpm"
     systemctl start caddy
     msg_ok "Started Services"
     msg_ok "Updated successfully!"

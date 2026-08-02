@@ -31,7 +31,7 @@ function update_script() {
   msg_info "Updating Deluge"
   ensure_dependencies python3-setuptools
   $STD apt update
-  $STD pip3 install deluge[all] --upgrade
+  $STD pip3 install deluge[all] "pyopenssl<25" --upgrade
   msg_ok "Updated Deluge"
   msg_ok "Updated successfully!"
   exit

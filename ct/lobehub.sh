@@ -12,7 +12,7 @@ var_ram="${var_ram:-10240}"
 var_disk="${var_disk:-15}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,16 +35,11 @@ function update_script() {
     systemctl stop lobehub
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/lobehub/.env /opt/lobehub.env.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/lobehub/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "lobehub" "lobehub/lobehub" "tarball"
 
-    msg_info "Restoring Configuration"
-    cp /opt/lobehub.env.bak /opt/lobehub/.env
-    rm -f /opt/lobehub.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Building Application"
     cd /opt/lobehub

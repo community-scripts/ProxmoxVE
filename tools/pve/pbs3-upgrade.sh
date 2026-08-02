@@ -105,7 +105,7 @@ EOF
   yes)
     msg_info "Enabling 'pbs-no-subscription' repository"
     cat <<EOF >/etc/apt/sources.list.d/pbs-install-repo.list
-deb https://download.proxmox.com/debian/pbs bookworm pbs-no-subscription
+deb http://download.proxmox.com/debian/pbs bookworm pbs-no-subscription
 EOF
     msg_ok "Enabled 'pbs-no-subscription' repository"
     ;;
@@ -174,5 +174,11 @@ while true; do
   *) echo "Please answer yes or no." ;;
   esac
 done
+
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "This upgrade script targets the amd64 Proxmox repositories and is not supported on ARM64."
+  exit 1
+fi
 
 start_routines

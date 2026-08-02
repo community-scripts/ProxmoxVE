@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,19 +35,11 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/solidtime/.env /opt/solidtime.env.bak
-    cp -r /opt/solidtime/storage /opt/solidtime_storage_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/solidtime/.env /opt/solidtime/storage
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "solidtime" "solidtime-io/solidtime" "tarball"
 
-    msg_info "Restoring Data"
-    cp /opt/solidtime.env.bak /opt/solidtime/.env
-    rm -f /opt/solidtime.env.bak
-    cp -r /opt/solidtime_storage_backup/. /opt/solidtime/storage
-    rm -rf /opt/solidtime_storage_backup
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Updating Application"
     cd /opt/solidtime

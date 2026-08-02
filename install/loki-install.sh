@@ -70,14 +70,6 @@ chown loki /etc/loki/config.yml
 systemctl enable -q --now loki
 msg_ok "Installed Loki"
 
-read -rp "Would you like to install Promtail? (y/N): " INSTALL_PROMTAIL
-if [[ "${INSTALL_PROMTAIL,,}" =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Promtail"
-  $STD apt install -y promtail
-  systemctl enable -q --now promtail
-  msg_ok "Installed Promtail"
-fi
-
 motd_ssh
 customize
 cleanup_lxc

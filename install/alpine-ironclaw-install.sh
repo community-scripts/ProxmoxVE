@@ -31,17 +31,17 @@ $STD su -s /bin/sh postgres -c "psql -c \"CREATE DATABASE ironclaw WITH OWNER ir
 $STD su -s /bin/sh postgres -c "psql -d ironclaw -c \"CREATE EXTENSION IF NOT EXISTS vector;\""
 msg_ok "Set up Database"
 
-fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "latest" "/usr/local/bin" \
+fetch_and_deploy_gh_release "ironclaw-bin" "nearai/ironclaw" "prebuild" "ironclaw-v0.29.1" "/usr/local/bin" \
   "ironclaw-$(uname -m)-unknown-linux-musl.tar.gz"
 chmod +x /usr/local/bin/ironclaw
 
 msg_info "Configuring Environment"
 GATEWAY_TOKEN=$(openssl rand -hex 32)
 mkdir -p /root/.ironclaw
-{
-    echo "Gateway-Token"
-    echo "Token: $GATEWAY_TOKEN"
-} >> /root/.ironclaw/gateway.creds
+cat <<EOF >/root/.ironclaw/gateway.creds
+Gateway-Token
+Token: $GATEWAY_TOKEN
+EOF
 
 mkdir -p /root/.ironclaw
 cat <<EOF >/root/.ironclaw/.env

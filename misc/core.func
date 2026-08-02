@@ -346,12 +346,39 @@ pve_check() {
 # - Provides link to ARM64-compatible scripts
 # ------------------------------------------------------------------------------
 arch_check() {
-  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
-    msg_error "This script will not work with PiMox (ARM architecture detected)."
-    msg_warn "Visit https://github.com/asylumexp/Proxmox for ARM64 support."
+  local arch
+  arch="$(dpkg --print-architecture)"
+  if [[ "$arch" != "amd64" && "$arch" != "arm64" ]]; then
+    msg_error "This script requires amd64 or arm64 (detected: $arch)."
     sleep 2
     exit 106
   fi
+  if [[ "$arch" == "arm64" && "${var_arm64:-}" != "yes" ]]; then
+    msg_error "This script does not yet support arm64."
+    sleep 2
+    exit 106
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# arch_resolve()
+#
+# - Selects an architecture-specific value while preserving amd64 defaults
+# - Usage: arch_resolve "amd64-value" "arm64-value"
+# - Defaults: amd64="amd64", arm64="arm64"
+# ------------------------------------------------------------------------------
+arch_resolve() {
+  local amd64_val="${1:-amd64}"
+  local arm64_val="${2:-arm64}"
+  local arch="${PCT_ARCH:-$(dpkg --print-architecture 2>/dev/null || uname -m)}"
+  case "$arch" in
+  amd64 | x86_64) echo "$amd64_val" ;;
+  arm64 | aarch64) echo "$arm64_val" ;;
+  *)
+    msg_error "Unsupported architecture: $arch"
+    return 106
+    ;;
+  esac
 }
 
 # ------------------------------------------------------------------------------
@@ -519,6 +546,12 @@ silent() {
   set +Eeuo pipefail
   trap - ERR
 
+  # Byte offset BEFORE the command runs - everything the log grows by is
+  # exactly this command's output (used for the .errinfo telemetry capture)
+  local start_bytes=0
+  [[ -f "$logfile" ]] && start_bytes=$(stat -c%s "$logfile" 2>/dev/null || echo 0)
+  [[ ! "$start_bytes" =~ ^[0-9]+$ ]] && start_bytes=0
+
   "$@" >>"$logfile" 2>&1
   local rc=$?
 
@@ -540,12 +573,43 @@ silent() {
     export _SILENT_FAILED_LINE="$caller_line"
     export _SILENT_FAILED_LOG="$logfile"
 
+    # ── Structured error capture (.errinfo) for telemetry ──
+    # Extract exactly THIS command's output (from the recorded byte offset),
+    # strip ANSI/progress noise, keep the last 60 lines. The host builds the
+    # telemetry error trace from this file (pulled from the container on
+    # failure). Self-contained - containers don't source api.func.
+    {
+      local flat_cmd
+      flat_cmd=$(printf '%s' "$cmd" | tr '\n' ' ' | head -c 300)
+      echo "EXIT_CODE=${rc}"
+      echo "LINE=${caller_line}"
+      echo "COMMAND=${flat_cmd}"
+      echo "--- OUTPUT ---"
+      if [[ -s "$logfile" ]]; then
+        local segment
+        segment=$(tail -c +"$((start_bytes + 1))" "$logfile" 2>/dev/null |
+          sed 's/\r$//' |
+          sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |
+          grep -avE '^(Get:|Hit:|Ign:|Fetched |Reading package lists|Reading state information|Building dependency tree|Selecting previously|Preparing to unpack|Unpacking |Processing triggers for|\(Reading database|[0-9]+%[[:space:]]*\[)' |
+          grep -avE '^[[:space:]]*$' |
+          tail -n 60)
+        # If the noise filter swallowed everything, fall back to the raw tail
+        if [[ -z "$segment" ]]; then
+          segment=$(tail -c +"$((start_bytes + 1))" "$logfile" 2>/dev/null |
+            sed 's/\r$//' | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' | tail -n 60)
+        fi
+        printf '%s' "$segment" | head -c 10240
+      fi
+    } >"${logfile}.errinfo" 2>/dev/null || true
+
     return "$rc"
   fi
 
   # Clear stale flags on success (prevents false positives if a previous
   # $STD cmd || true failed and a later non-silent command triggers error_handler)
   unset _SILENT_FAILED_RC _SILENT_FAILED_CMD _SILENT_FAILED_LINE _SILENT_FAILED_LOG 2>/dev/null || true
+  # Also drop a stale .errinfo from a previously tolerated failure ($STD cmd || true)
+  rm -f "${logfile}.errinfo" 2>/dev/null || true
 }
 
 # ------------------------------------------------------------------------------
@@ -941,6 +1005,53 @@ is_alpine() {
 is_verbose_mode() {
   local verbose="${VERBOSE:-${var_verbose:-no}}"
   [[ "$verbose" != "no" ]]
+}
+
+# ------------------------------------------------------------------------------
+# configure_http_proxy()
+#
+# - Applies var_http_proxy / var_http_no_proxy inside the container
+# - Persists proxy env for login shells, systemd, and package managers
+# - Skips APT proxy config when APT Cacher-NG is active
+# ------------------------------------------------------------------------------
+configure_http_proxy() {
+  local proxy="${HTTP_PROXY:-${http_proxy:-${var_http_proxy:-}}}"
+  local noproxy="${HTTP_NO_PROXY:-${no_proxy:-${var_http_no_proxy:-}}}"
+  [[ -z "$proxy" ]] && return 0
+  [[ -z "$noproxy" ]] && noproxy="localhost,127.0.0.1,.local"
+
+  msg_info "Configuring HTTP proxy"
+  cat >/etc/profile.d/90-http-proxy.sh <<EOF
+export http_proxy="$proxy"
+export https_proxy="$proxy"
+export HTTP_PROXY="$proxy"
+export HTTPS_PROXY="$proxy"
+export no_proxy="$noproxy"
+export NO_PROXY="$noproxy"
+EOF
+  chmod 644 /etc/profile.d/90-http-proxy.sh
+
+  if ! grep -q '^http_proxy=' /etc/environment 2>/dev/null; then
+    cat >>/etc/environment <<EOF
+http_proxy=$proxy
+https_proxy=$proxy
+HTTP_PROXY=$proxy
+HTTPS_PROXY=$proxy
+no_proxy=$noproxy
+NO_PROXY=$noproxy
+EOF
+  fi
+
+  if [[ "${CACHER:-}" != "yes" && -d /etc/apt/apt.conf.d ]]; then
+    cat >/etc/apt/apt.conf.d/95http-proxy <<EOF
+Acquire::http::Proxy "$proxy";
+Acquire::https::Proxy "$proxy";
+EOF
+  fi
+
+  export http_proxy="$proxy" https_proxy="$proxy" HTTP_PROXY="$proxy" HTTPS_PROXY="$proxy"
+  export no_proxy="$noproxy" NO_PROXY="$noproxy"
+  msg_ok "Configured HTTP proxy"
 }
 
 # ------------------------------------------------------------------------------
@@ -1714,6 +1825,38 @@ function get_lxc_ip() {
   export LOCAL_IP
 }
 
+# ------------------------------------------------------------------------------
+# ensure_whiptail()
+#
+# - Ensures whiptail is installed
+# - Some ARM64 systems will not have whiptail installed
+# - Exits with error message if installation fails
+# ------------------------------------------------------------------------------
+ensure_whiptail() {
+  command -v whiptail >/dev/null 2>&1 && return 0
+
+  msg_info "Installing whiptail"
+  apt_update_safe
+  $STD apt-get install -y whiptail || {
+    msg_error "Failed to install whiptail"
+    exit 100
+  }
+  msg_ok "Installed whiptail"
+}
+
+# ------------------------------------------------------------------------------
+# arm64_notice()
+#
+# - Shows a short warning when running scripts on ARM64 systems
+# ------------------------------------------------------------------------------
+arm64_notice() {
+  [[ "$(dpkg --print-architecture)" == "arm64" ]] || return 0
+
+  whiptail --backtitle "Proxmox VE Helper Scripts" \
+    --title "ARM64 SUPPORT" \
+    --ok-button "Continue" \
+    --msgbox "ARM64 support is in active development.\n\nSome scripts, packages, or application releases may not be fully tested or working yet." 10 68
+}
 # ==============================================================================
 # SIGNAL TRAPS
 # ==============================================================================

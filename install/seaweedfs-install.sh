@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y fuse3
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "seaweedfs" "seaweedfs/seaweedfs" "prebuild" "latest" "/opt/seaweedfs" "linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "seaweedfs" "seaweedfs/seaweedfs" "prebuild" "latest" "/opt/seaweedfs" "linux_$(arch_resolve).tar.gz"
 
 msg_info "Setting up SeaweedFS"
 mkdir -p /opt/seaweedfs-data

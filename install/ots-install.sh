@@ -19,7 +19,7 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "ots" "Luzifer/ots" "prebuild" "latest" "/opt/ots" "ots_linux_amd64.tgz"
+fetch_and_deploy_gh_release "ots" "Luzifer/ots" "prebuild" "latest" "/opt/ots" "ots_linux_$(arch_resolve).tgz"
 create_self_signed_cert
 
 msg_info "Setup OTS"
@@ -62,9 +62,7 @@ server {
 }
 EOF
 
-ln -s /etc/nginx/sites-available/ots.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site ots.conf
 msg_ok "Configured nginx"
 
 msg_info "Creating Services"

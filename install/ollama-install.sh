@@ -20,6 +20,7 @@ $STD apt install -y \
   zstd
 msg_ok "Installed Dependencies"
 
+if [[ "$(arch_resolve)" == "amd64" ]]; then
 msg_info "Setting up Intel® Repositories"
 mkdir -p /usr/share/keyrings
 curl -fsSL https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor -o /usr/share/keyrings/intel-graphics.gpg 2>/dev/null || true
@@ -60,12 +61,13 @@ msg_ok "Installed Intel® Level Zero"
 msg_info "Installing Intel® oneAPI Base Toolkit (Patience)"
 $STD apt install -y --no-install-recommends intel-basekit-2024.1
 msg_ok "Installed Intel® oneAPI Base Toolkit"
+fi
 
 msg_info "Installing Ollama (Patience)"
 OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
 BINDIR="/usr/local/bin"
 mkdir -p "$OLLAMA_INSTALL_DIR"
-if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-amd64.tar.zst"; then
+if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-$(arch_resolve).tar.zst"; then
   msg_error "Failed to download or deploy Ollama – check network connectivity and GitHub API availability"
   exit 250
 fi

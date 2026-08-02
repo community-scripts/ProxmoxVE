@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" setup_nodejs
+  NODE_VERSION="26" setup_nodejs
 
   if check_for_gh_tag "guacd" "apache/guacamole-server"; then
     msg_info "Stopping guacd"
@@ -143,20 +143,26 @@ EOF
     fi
     msg_ok "Migrated Configuration"
 
-    msg_info "Backing up Data"
-    cp -r /opt/termix/data /opt/termix_data_backup
-    cp -r /opt/termix/uploads /opt/termix_uploads_backup
-    msg_ok "Backed up Data"
+    create_backup /opt/termix/data /opt/termix/uploads
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
+
+    restore_backup
 
     msg_info "Recreating Directories"
     mkdir -p /opt/termix/html \
       /opt/termix/nginx \
       /opt/termix/nginx/logs \
       /opt/termix/nginx/cache \
-      /opt/termix/nginx/client_body
+      /opt/termix/nginx/client_body \
+      /opt/termix/db/data
     msg_ok "Recreated Directories"
+
+    if [[ -f /opt/termix/data/db.sqlite.encrypted && ! -f /opt/termix/db/data/db.sqlite.encrypted ]]; then
+      msg_info "Migrating Database to new layout"
+      cp -a /opt/termix/data/db.sqlite.encrypted /opt/termix/db/data/db.sqlite.encrypted
+      msg_ok "Migrated Database to new layout"
+    fi
 
     msg_info "Building Frontend"
     cd /opt/termix
@@ -169,6 +175,10 @@ EOF
     msg_info "Building Backend"
     $STD npm rebuild better-sqlite3 --force
     $STD npm run build:backend
+    if [[ ! -f /opt/termix/dist/backend/backend/starter.js ]]; then
+      msg_error "Backend build failed: /opt/termix/dist/backend/backend/starter.js was not created"
+      exit 1
+    fi
     msg_ok "Built Backend"
 
     msg_info "Setting up Production Dependencies"
@@ -176,12 +186,6 @@ EOF
     $STD npm rebuild better-sqlite3 bcryptjs --force
     $STD npm cache clean --force
     msg_ok "Set up Production Dependencies"
-
-    msg_info "Restoring Data"
-    cp -r /opt/termix_data_backup /opt/termix/data
-    cp -r /opt/termix_uploads_backup /opt/termix/uploads
-    rm -rf /opt/termix_data_backup /opt/termix_uploads_backup
-    msg_ok "Restored Data"
 
     msg_info "Updating Frontend Files"
     rm -rf /opt/termix/html/*
@@ -200,15 +204,31 @@ EOF
       cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
       curl -fsSL "https://raw.githubusercontent.com/Termix-SSH/Termix/main/docker/nginx.conf" -o /etc/nginx/nginx.conf
       sed -i '/^master_process/d' /etc/nginx/nginx.conf
-      sed -i 's|pid /tmp/nginx/nginx.pid;|pid /run/nginx.pid;|' /etc/nginx/nginx.conf
+      sed -i '/^pid \/app\/nginx/d' /etc/nginx/nginx.conf
       sed -i 's|error_log /tmp/nginx/error.log|error_log /var/log/nginx/error.log|' /etc/nginx/nginx.conf
       sed -i 's|access_log /tmp/nginx/access.log|access_log /var/log/nginx/access.log|' /etc/nginx/nginx.conf
       sed -i 's|/app/html|/opt/termix/html|g' /etc/nginx/nginx.conf
       sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
       sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
-
       rm -f /etc/systemd/system/nginx.service.d/pidfile.conf
       rm -f /etc/tmpfiles.d/nginx-termix.conf
+      
+      if [ ! -d /tmp/nginx ]; then
+        mkdir -p /tmp/nginx
+      fi
+
+      if [ ! -f /etc/tmpfiles.d/nginx-termix.conf ]; then
+        echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
+      fi
+
+      if [ ! -f /etc/systemd/system/nginx.service.d/pidfile.conf ]; then
+        mkdir -p /etc/systemd/system/nginx.service.d/
+        cat <<'EOF' >/etc/systemd/system/nginx.service.d/pidfile.conf
+[Service]
+PIDFile=/tmp/nginx/nginx.pid
+EOF
+      fi
+      
       systemctl daemon-reload
       nginx -t && systemctl restart nginx
       msg_ok "Updated Nginx Configuration"

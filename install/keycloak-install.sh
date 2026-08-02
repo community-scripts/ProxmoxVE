@@ -42,7 +42,7 @@ ExecStart=/opt/keycloak/bin/kc.sh start
 ExecStop=/opt/keycloak/bin/kc.sh stop
 Restart=always
 RestartSec=3
-Environment="JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64"
+Environment="JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-$(arch_resolve)"
 Environment="KC_DB=postgres"
 Environment="KC_DB_USERNAME=$DB_USER"
 Environment="KC_DB_PASSWORD=$DB_PASS"

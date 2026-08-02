@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_fuse="${var_fuse:-yes}"
 
@@ -36,7 +36,7 @@ function update_script() {
     systemctl stop seaweedfs
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "seaweedfs" "seaweedfs/seaweedfs" "prebuild" "latest" "/opt/seaweedfs" "linux_amd64.tar.gz"
+    fetch_and_deploy_gh_release "seaweedfs" "seaweedfs/seaweedfs" "prebuild" "latest" "/opt/seaweedfs" "linux_$(arch_resolve).tar.gz"
 
     msg_info "Starting Service"
     systemctl start seaweedfs

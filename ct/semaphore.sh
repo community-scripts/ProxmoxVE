@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -55,7 +55,7 @@ function update_script() {
     systemctl stop semaphore
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "latest" "/opt/semaphore" "semaphore_*_linux_amd64.deb"
+    fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "latest" "/opt/semaphore" "semaphore_*_linux_$(arch_resolve).deb"
 
     if [[ -f /opt/semaphore/semaphore_db.bolt ]]; then
       $STD semaphore migrate --from-boltdb /opt/semaphore/semaphore_db.bolt --config /opt/semaphore/config.json

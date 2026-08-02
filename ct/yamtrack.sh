@@ -13,7 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,21 +36,16 @@ function update_script() {
     systemctl stop yamtrack yamtrack-celery
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Data"
-    cp /opt/yamtrack/src/.env /opt/yamtrack_env.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/yamtrack/src/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "yamtrack" "FuzzyGrim/Yamtrack" "tarball"
+
+    restore_backup
 
     msg_info "Installing Python Dependencies"
     cd /opt/yamtrack
     $STD uv sync --locked
     msg_ok "Installed Python Dependencies"
-
-    msg_info "Restoring Data"
-    cp /opt/yamtrack_env.bak /opt/yamtrack/src/.env
-    rm -f /opt/yamtrack_env.bak
-    msg_ok "Restored Data"
 
     msg_info "Updating Yamtrack"
     cd /opt/yamtrack/src

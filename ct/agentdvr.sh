@@ -12,7 +12,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-0}"
 var_gpu="${var_gpu:-yes}"
 
@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0" | grep -o 'https://.*\.zip')
+  RELEASE=$(curl -fsSL "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=$(arch_resolve "Linux64" "LinuxARM64")&fromVersion=0" | grep -o 'https://.*\.zip')
   if [[ "${RELEASE}" != "$(cat ~/.agentdvr 2>/dev/null)" ]] || [[ ! -f ~/.agentdvr ]]; then
     msg_info "Stopping service"
     systemctl stop AgentDVR
@@ -39,10 +39,10 @@ function update_script() {
     msg_info "Updating AgentDVR"
     cd /opt/agentdvr/agent
     curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
-    $STD unzip -o Agent_Linux64*.zip
+    $STD unzip -o Agent_$(arch_resolve "Linux64" "LinuxARM64")*.zip
     chmod +x ./Agent
     echo $RELEASE >~/.agentdvr
-    rm -rf Agent_Linux64*.zip
+    rm -rf Agent_$(arch_resolve "Linux64" "LinuxARM64")*.zip
     msg_ok "Updated AgentDVR"
 
     msg_info "Starting service"

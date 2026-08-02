@@ -49,6 +49,10 @@ echo ""
 
 read -r -p "${TAB3}Select deployment type [1]: " DEPLOYMENT_TYPE
 DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:-1}"
+if [[ "$(arch_resolve)" == "arm64" && "$DEPLOYMENT_TYPE" == "2" ]]; then
+  msg_warn "FlareSolverr has no arm64 build; using Shelfmark's internal bypasser instead"
+  DEPLOYMENT_TYPE="1"
+fi
 
 case "$DEPLOYMENT_TYPE" in
 1)

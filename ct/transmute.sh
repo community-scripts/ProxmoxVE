@@ -12,7 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_arm64="${var_arm64:-no}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,22 +30,21 @@ function update_script() {
     exit
   fi
 
-  fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-x86_64.txz"
+  fetch_and_deploy_gh_release "calibre" "kovidgoyal/calibre" "prebuild" "latest" "/opt/calibre" "calibre-*-$(arch_resolve "x86_64" "arm64").txz"
   ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert
-  fetch_and_deploy_gh_release "drawio" "jgraph/drawio-desktop" "binary" "latest" "" "drawio-amd64-*.deb"
-  fetch_and_deploy_gh_release "pandoc" "jgm/pandoc" "binary" "latest" "" "pandoc-*-amd64.deb"
+  fetch_and_deploy_gh_release "drawio" "jgraph/drawio-desktop" "binary" "latest" "" "drawio-$(arch_resolve)-*.deb"
+  fetch_and_deploy_gh_release "pandoc" "jgm/pandoc" "binary" "latest" "" "pandoc-*-$(arch_resolve).deb"
 
   if check_for_gh_release "transmute" "transmute-app/transmute"; then
     msg_info "Stopping Service"
     systemctl stop transmute
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/transmute/backend/.env /opt/transmute.env.bak
-    cp -r /opt/transmute/data /opt/transmute_data_bak
-    msg_ok "Backed up Data"
+    create_backup /opt/transmute/backend/.env /opt/transmute/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball"
+
+    restore_backup
 
     msg_info "Updating Python Dependencies"
     cd /opt/transmute
@@ -59,12 +58,6 @@ function update_script() {
     $STD npm run build
     msg_ok "Rebuilt Frontend"
 
-    msg_info "Restoring Data"
-    cp /opt/transmute.env.bak /opt/transmute/backend/.env
-    cp -r /opt/transmute_data_bak/. /opt/transmute/data/
-    rm -f /opt/transmute.env.bak
-    rm -rf /opt/transmute_data_bak
-    msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl start transmute
