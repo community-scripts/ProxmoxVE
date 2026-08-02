@@ -25,8 +25,24 @@ $STD apt install -y \
   procps \
   vlc-bin \
   vlc-plugin-base \
-  streamlink
+  streamlink \
+  autoconf \
+  libtool \
+  libargtable2-dev \
+  libavformat-dev \
+  libsdl2-dev \
+  libswscale-dev
 msg_ok "Installed Dependencies"
+
+msg_info "Compiling Comskip"
+mkdir -p /opt/Comskip
+wget -qO- https://github.com/erikkaashoek/Comskip/archive/refs/heads/master.tar.gz | tar -xz -C /opt/Comskip --strip-components=1
+cd /opt/Comskip
+$STD ./autogen.sh
+$STD ./configure
+$STD make
+$STD make install
+msg_ok "Compiled and Installed Comskip"
 
 setup_uv
 NODE_VERSION="24" setup_nodejs

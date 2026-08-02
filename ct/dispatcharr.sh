@@ -104,7 +104,21 @@ EOF
     msg_ok "Migrated Nginx Configuration"
   fi
 
-  ensure_dependencies vlc-bin vlc-plugin-base
+  ensure_dependencies vlc-bin vlc-plugin-base build-essential autoconf libtool libargtable2-dev libavformat-dev libsdl2-dev libswscale-dev
+
+  if ! command -v comskip &> /dev/null; then
+    msg_info "Compiling Comskip"
+    if [[ ! -d "/opt/Comskip" ]]; then
+      mkdir -p /opt/Comskip
+      wget -qO- https://github.com/erikkaashoek/Comskip/archive/refs/heads/master.tar.gz | tar -xz -C /opt/Comskip --strip-components=1
+    fi
+    cd /opt/Comskip
+    $STD ./autogen.sh
+    $STD ./configure
+    $STD make
+    $STD make install
+    msg_ok "Compiled and Installed Comskip"
+  fi
 
   if check_for_gh_release "Dispatcharr" "Dispatcharr/Dispatcharr"; then
     msg_info "Stopping Services"
