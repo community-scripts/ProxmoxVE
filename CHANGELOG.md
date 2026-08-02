@@ -520,6 +520,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-02
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix for cross-seed node version regression [@TorinFrancis](https://github.com/TorinFrancis) ([#16209](https://github.com/community-scripts/ProxmoxVE/pull/16209))
+
 ## 2026-08-01
 
 ### 🚀 Updated Scripts
