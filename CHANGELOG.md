@@ -534,6 +534,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - add retry for uv - same as immich [@asylumexp](https://github.com/asylumexp) ([#16203](https://github.com/community-scripts/ProxmoxVE/pull/16203))
     - Fix for cross-seed node version regression [@TorinFrancis](https://github.com/TorinFrancis) ([#16209](https://github.com/community-scripts/ProxmoxVE/pull/16209))
 
+  - #### 🔧 Refactor
+
+    - chore: remove portainer setup from several scripts (moved to addon) [@MickLesk](https://github.com/MickLesk) ([#16201](https://github.com/community-scripts/ProxmoxVE/pull/16201))
+
 ## 2026-08-01
 
 ### 🚀 Updated Scripts
