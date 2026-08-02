@@ -87,6 +87,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -96,7 +99,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>July (25 entries)</h4></summary>
+<summary><h4>August (1 entries)</h4></summary>
+
+[View August 2026 Changelog](.github/changelogs/2026/08.md)
+
+</details>
+
+<details>
+<summary><h4>July (31 entries)</h4></summary>
 
 [View July 2026 Changelog](.github/changelogs/2026/07.md)
 
@@ -1108,156 +1118,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🐞 Bug Fixes
 
     - Removed deprecated parameter in Filebrowser Quantum configuration [@alpargatagazer](https://github.com/alpargatagazer) ([#15573](https://github.com/community-scripts/ProxmoxVE/pull/15573))
-
-## 2026-07-02
-
-### 🆕 New Scripts
-
-  - Rackula ([#15465](https://github.com/community-scripts/ProxmoxVE/pull/15465))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - typo: fix npm update to npm install for n8n [@MickLesk](https://github.com/MickLesk) ([#15545](https://github.com/community-scripts/ProxmoxVE/pull/15545))
-
-  - #### ✨ New Features
-
-    - Frigate: bump to v0.17.2 [@MickLesk](https://github.com/MickLesk) ([#15536](https://github.com/community-scripts/ProxmoxVE/pull/15536))
-
-  - #### 💥 Breaking Changes
-
-    - Revert "Immich v3.0.0" [@MickLesk](https://github.com/MickLesk) ([#15558](https://github.com/community-scripts/ProxmoxVE/pull/15558))
-    - Immich v3.0.0 [@vhsdream](https://github.com/vhsdream) ([#15153](https://github.com/community-scripts/ProxmoxVE/pull/15153))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - tools.func: configure pnpm to allow all build scripts for environments [@MickLesk](https://github.com/MickLesk) ([#15532](https://github.com/community-scripts/ProxmoxVE/pull/15532))
-
-  - #### ✨ New Features
-
-    - feat(build.func): add var_ignore_disable to bypass disabled-script guard [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#15544](https://github.com/community-scripts/ProxmoxVE/pull/15544))
-
-## 2026-07-01
-
-### 🆕 New Scripts
-
-  - iVentoy ([#15503](https://github.com/community-scripts/ProxmoxVE/pull/15503))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Stirling-PDF: patch libicudata execstack flag for LXC container compatibility [@MickLesk](https://github.com/MickLesk) ([#15531](https://github.com/community-scripts/ProxmoxVE/pull/15531))
-    - FlowiseAI: align install to use pnpm instead of npm to fix missing dependencies [@MickLesk](https://github.com/MickLesk) ([#15530](https://github.com/community-scripts/ProxmoxVE/pull/15530))
-    - Vaultwarden: handle version detection failure gracefully in update [@MickLesk](https://github.com/MickLesk) ([#15526](https://github.com/community-scripts/ProxmoxVE/pull/15526))
-    - homarr: fix: update-fail [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15512](https://github.com/community-scripts/ProxmoxVE/pull/15512))
-    - n8n: pin version to 2.27.5 [@tremor021](https://github.com/tremor021) ([#15516](https://github.com/community-scripts/ProxmoxVE/pull/15516))
-
-  - #### ✨ New Features
-
-    - [arm64] feat: iventory arm64 support [@asylumexp](https://github.com/asylumexp) ([#15521](https://github.com/community-scripts/ProxmoxVE/pull/15521))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - core: fix SDN vnet network parameter to use bridge instead of vnet [@MickLesk](https://github.com/MickLesk) ([#15527](https://github.com/community-scripts/ProxmoxVE/pull/15527))
-    - tools.func: use safe variable expansion in check_for_gh_release RETURN trap [@MickLesk](https://github.com/MickLesk) ([#15529](https://github.com/community-scripts/ProxmoxVE/pull/15529))
-
-## 2026-06-30
-
-### 🚀 Updated Scripts
-
-  - #### 🔧 Refactor
-
-    - Refactor: Use heredoc when creating env files and creds/other [@tremor021](https://github.com/tremor021) ([#15469](https://github.com/community-scripts/ProxmoxVE/pull/15469))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - [tools/pve/*.sh] https://download.proxmox.com -> http://download.proxmox.com (PVE8 Only) [@galeksandrp](https://github.com/galeksandrp) ([#15498](https://github.com/community-scripts/ProxmoxVE/pull/15498))
-
-## 2026-06-29
-
-### 🆕 New Scripts
-
-  - Koffan ([#15467](https://github.com/community-scripts/ProxmoxVE/pull/15467))
-- Etherpad ([#15468](https://github.com/community-scripts/ProxmoxVE/pull/15468))
-- Flame ([#15464](https://github.com/community-scripts/ProxmoxVE/pull/15464))
-
-### 🚀 Updated Scripts
-
-  - chore(ct): sync snapotter defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#15472](https://github.com/community-scripts/ProxmoxVE/pull/15472))
-
-  - #### 🐞 Bug Fixes
-
-    - feat: update nginx proxy manager to trixie [@asylumexp](https://github.com/asylumexp) ([#15457](https://github.com/community-scripts/ProxmoxVE/pull/15457))
-
-### 💾 Core
-
-  - #### ✨ New Features
-
-    - [tools.func]: add edit_yaml_config function [@tremor021](https://github.com/tremor021) ([#15484](https://github.com/community-scripts/ProxmoxVE/pull/15484))
-
-## 2026-06-28
-
-### 🚀 Updated Scripts
-
-  - #### 💥 Breaking Changes
-
-    - remove: promtail as EOL and other fixes [@asylumexp](https://github.com/asylumexp) ([#15455](https://github.com/community-scripts/ProxmoxVE/pull/15455))
-
-## 2026-06-27
-
-### 🆕 New Scripts
-
-  - tool: add disk-health tool (SMART + NVMe) [@MickLesk](https://github.com/MickLesk) ([#15417](https://github.com/community-scripts/ProxmoxVE/pull/15417))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Deluge openssl fix [@asylumexp](https://github.com/asylumexp) ([#15435](https://github.com/community-scripts/ProxmoxVE/pull/15435))
-    - fix command syntax in tunarr.sh [@asylumexp](https://github.com/asylumexp) ([#15434](https://github.com/community-scripts/ProxmoxVE/pull/15434))
-
-  - #### 🔧 Refactor
-
-    - Storyteller: bump Node.js version to Node 24 [@thinusn](https://github.com/thinusn) ([#15439](https://github.com/community-scripts/ProxmoxVE/pull/15439))
-
-### ❔ Uncategorized
-
-  - fix(endurain): replace Poetry/uv-pip backend setup with uv sync --frozen --no-dev [@Copilot](https://github.com/Copilot) ([#15429](https://github.com/community-scripts/ProxmoxVE/pull/15429))
-
-## 2026-06-26
-
-### 🚀 Updated Scripts
-
-  - Termix: Update Nginx configuration file paths [@xyzulu](https://github.com/xyzulu) ([#15397](https://github.com/community-scripts/ProxmoxVE/pull/15397))
-
-  - #### 🐞 Bug Fixes
-
-    - Docuseal: use real SECRET_KEY_BASE for db:migrate on update [@MickLesk](https://github.com/MickLesk) ([#15411](https://github.com/community-scripts/ProxmoxVE/pull/15411))
-    - bun: correct install for degoog [@MickLesk](https://github.com/MickLesk) ([#15412](https://github.com/community-scripts/ProxmoxVE/pull/15412))
-    - fix databasus update/install errors [@asylumexp](https://github.com/asylumexp) ([#15403](https://github.com/community-scripts/ProxmoxVE/pull/15403))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - tools.func: fix setup_docker - don't abort update on docker pull failure [@MickLesk](https://github.com/MickLesk) ([#15410](https://github.com/community-scripts/ProxmoxVE/pull/15410))
-    - fix(build.func): set /dev/kfd GID in fix_gpu_gids for AMD ROCm [@jamiej](https://github.com/jamiej) ([#15401](https://github.com/community-scripts/ProxmoxVE/pull/15401))
-    - fix alpine mktmp error [@asylumexp](https://github.com/asylumexp) ([#15398](https://github.com/community-scripts/ProxmoxVE/pull/15398))
-
-### 🧰 Tools
-
-  - #### 🔧 Refactor
-
-    - Refactor: reduce IP-Tag resource usage and clean up ShellCheck findings [@MickLesk](https://github.com/MickLesk) ([#15418](https://github.com/community-scripts/ProxmoxVE/pull/15418))
-    - QoL: kernel-clean: Validate kernel selection input [@MickLesk](https://github.com/MickLesk) ([#15414](https://github.com/community-scripts/ProxmoxVE/pull/15414))
-    - QoL: clean-lxcs exclude matching and set -e cancel handling [@MickLesk](https://github.com/MickLesk) ([#15413](https://github.com/community-scripts/ProxmoxVE/pull/15413))
-    - QoL: Harden microcode download/install in microcode and pbs-microcode [@MickLesk](https://github.com/MickLesk) ([#15415](https://github.com/community-scripts/ProxmoxVE/pull/15415))
-    - QoL: scaling-governor extend selection and guard missing cpufreq [@MickLesk](https://github.com/MickLesk) ([#15416](https://github.com/community-scripts/ProxmoxVE/pull/15416))
