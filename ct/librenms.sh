@@ -28,6 +28,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  
+  ensure_dependencies ipmitool
+  
   if check_for_gh_release "librenms" "librenms/librenms"; then
     msg_info "Stopping Services"
     systemctl stop php8.4-fpm librenms-scheduler.timer
