@@ -43,10 +43,10 @@ function update_script() {
 
     msg_info "Building Application"
     cd /opt/split-pro
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm build
     cp /opt/split-pro.env /opt/split-pro/.env
     rm -f /opt/split-pro.env
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm build
     ln -sf /opt/split-pro_data/uploads /opt/split-pro/uploads
     $STD pnpm exec prisma migrate deploy
     msg_ok "Built Application"
