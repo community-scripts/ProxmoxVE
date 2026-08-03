@@ -27,24 +27,12 @@ APP="Immich Public Proxy"
 APP_TYPE="addon"
 INSTALL_PATH="/opt/immich-proxy"
 CONFIG_PATH="/opt/immich-proxy/app"
+SERVICE_PATH="/etc/systemd/system/immich-proxy.service"
 DEFAULT_PORT=3000
 
 # Initialize all core functions (colors, formatting, icons, $STD mode)
 load_functions
-
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if [[ -f "/etc/alpine-release" ]]; then
-  msg_error "Alpine is not supported for ${APP}. Use Debian."
-  exit 238
-elif [[ -f "/etc/debian_version" ]]; then
-  OS="Debian"
-  SERVICE_PATH="/etc/systemd/system/immich-proxy.service"
-else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 238
-fi
+require_debian_like
 
 # ==============================================================================
 # UNINSTALL

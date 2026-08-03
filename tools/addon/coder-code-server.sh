@@ -26,14 +26,8 @@ ensure_usr_local_bin_persist
 get_lxc_ip
 IP="$LOCAL_IP"
 
-if command -v pveversion >/dev/null 2>&1; then
-  msg_error "Can't Install on Proxmox"
-  exit 1
-fi
-if [ -e /etc/alpine-release ]; then
-  msg_error "Can't Install on Alpine"
-  exit 1
-fi
+confirm_not_pve_host
+require_debian_like
 
 # ==============================================================================
 # UNINSTALL

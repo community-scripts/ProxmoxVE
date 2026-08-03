@@ -29,18 +29,7 @@ APP="homebrew"
 APP_TYPE="tools"
 INSTALL_PATH="/home/linuxbrew/.linuxbrew"
 
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if [[ -f "/etc/alpine-release" ]]; then
-  echo -e "${CROSS} Alpine is not supported by Homebrew. Exiting."
-  exit 1
-elif grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
-  OS="Debian"
-else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
-fi
+require_debian_like
 
 # ==============================================================================
 # UNINSTALL
