@@ -526,6 +526,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix restore env in split pro [@johanngrobe](https://github.com/johanngrobe) ([#16228](https://github.com/community-scripts/ProxmoxVE/pull/16228))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: read all interactive prompts from /dev/tty, drain leftover input on read failure (hotfix) [@MickLesk](https://github.com/MickLesk) ([#16235](https://github.com/community-scripts/ProxmoxVE/pull/16235))
+
 ## 2026-08-02
 
 ### 🆕 New Scripts
