@@ -20,6 +20,7 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "cronmaster" "
 set -Eeuo pipefail
 trap 'error_handler' ERR
 load_functions
+require_debian_like
 
 # ==============================================================================
 # CONFIGURATION
@@ -30,14 +31,6 @@ INSTALL_PATH="/opt/cronmaster"
 CONFIG_PATH="/opt/cronmaster/.env"
 SERVICE_PATH="/etc/systemd/system/cronmaster.service"
 DEFAULT_PORT=3000
-
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
-  echo -e "${CROSS} Unsupported OS detected. This script only supports Debian and Ubuntu."
-  exit 238
-fi
 
 # ==============================================================================
 # UNINSTALL

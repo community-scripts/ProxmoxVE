@@ -92,7 +92,7 @@ uninstall() {
 }
 
 header_info
-pve_check
+require_pve_host
 
 OPTIONS=(Install "Install ${APP} on Proxmox VE"
   Uninstall "Uninstall ${APP} from Proxmox VE")

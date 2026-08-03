@@ -22,11 +22,7 @@ trap 'error_handler' ERR
 load_functions
 
 header_info
-
-if ! command -v pveversion &>/dev/null; then
-  msg_error "This script must be run on the Proxmox VE host (not inside an LXC container)"
-  exit 232
-fi
+require_pve_host
 
 while true; do
   read -rp "This will add Tailscale to an existing LXC Container ONLY. Proceed (y/n)? " yn
@@ -67,7 +63,7 @@ grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.e
 
 msg_info "Installing Tailscale in CT $CTID"
 
-pct exec "$CTID" -- sh -c '
+pct exec "$CTID" -- bash -c '
 set -e
 
 # Detect OS inside container
@@ -135,16 +131,21 @@ else
     apt-get install -y curl >/dev/null
   fi
 
-  # Ensure keyrings directory exists
-  mkdir -p /usr/share/keyrings
+  # Reuse the shared repository helper instead of hand-rolling the sources entry
+  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  load_functions
 
-  curl -fsSL "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
-    | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+  # Drop the legacy keyring from the pre-deb822 layout
+  rm -f /usr/share/keyrings/tailscale-archive-keyring.gpg
 
-  echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VERSION_CODENAME} main" \
-    >/etc/apt/sources.list.d/tailscale.list
+  setup_deb822_repo \
+    "tailscale" \
+    "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
+    "https://pkgs.tailscale.com/stable/${ID}" \
+    "${VERSION_CODENAME}" \
+    "main"
 
-  apt-get update -qq
   apt-get install -y tailscale >/dev/null
 
   if [ -f /tmp/resolv.conf.backup ]; then

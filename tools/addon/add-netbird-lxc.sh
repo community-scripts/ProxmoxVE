@@ -23,6 +23,7 @@ trap 'error_handler' ERR
 load_functions
 
 header_info
+require_pve_host
 
 while true; do
   read -r -p "This will add NetBird to an existing LXC Container ONLY. Proceed(y/n)? " yn
@@ -79,15 +80,29 @@ EOF
 
 msg_info "Installing NetBird"
 pct exec "$CTID" -- bash -c '
+set -e
 if ! command -v curl &>/dev/null; then
-  apt update -qq
-  apt install -y curl >/dev/null
+  apt-get update -qq
+  apt-get install -y curl >/dev/null
 fi
-apt install -y ca-certificates gpg &>/dev/null
-curl -fsSL "https://pkgs.netbird.io/debian/public.key" | gpg --dearmor >/usr/share/keyrings/netbird-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main" >/etc/apt/sources.list.d/netbird.list
-apt update &>/dev/null
-apt install -y netbird-ui &>/dev/null
+apt-get install -y ca-certificates gpg &>/dev/null
+
+# Reuse the shared repository helper instead of hand-rolling the sources entry
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+load_functions
+
+# Drop the legacy keyring from the pre-deb822 layout
+rm -f /usr/share/keyrings/netbird-archive-keyring.gpg
+
+setup_deb822_repo \
+  "netbird" \
+  "https://pkgs.netbird.io/debian/public.key" \
+  "https://pkgs.netbird.io/debian" \
+  "stable" \
+  "main"
+
+apt-get install -y netbird-ui &>/dev/null
 if systemctl list-unit-files docker.service &>/dev/null; then
   mkdir -p /etc/systemd/system/netbird.service.d
   cat <<OVERRIDE >/etc/systemd/system/netbird.service.d/after-docker.conf

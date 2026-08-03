@@ -57,11 +57,13 @@ function cleanup_ctid() {
   fi
 }
 
+header_info
+require_pve_host
+
 # Stop Proxmox VE Monitor-All if running
 if systemctl is-active -q ping-instances.service; then
   systemctl stop ping-instances.service
 fi
-header_info
 msg_info "Loading"
 pveam update >/dev/null 2>&1
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templates" --yesno "This will allow for the creation of one of the many Template LXC Containers. Proceed?" 10 68

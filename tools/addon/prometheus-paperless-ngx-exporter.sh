@@ -15,6 +15,7 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "prometheus-pa
 set -Eeuo pipefail
 trap 'error_handler' ERR
 load_functions
+require_debian_like
 
 # ==============================================================================
 # CONFIGURATION
@@ -26,14 +27,6 @@ BINARY_PATH="/usr/bin/prometheus-paperless-exporter"
 CONFIG_PATH="/etc/prometheus-paperless-ngx-exporter/config.env"
 SERVICE_PATH="/etc/systemd/system/prometheus-paperless-ngx-exporter.service"
 AUTH_TOKEN_FILE="/etc/prometheus-paperless-ngx-exporter/paperless_auth_token_file"
-
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
-  echo -e "${CROSS} Unsupported OS detected. This script only supports Debian and Ubuntu."
-  exit 238
-fi
 
 # ==============================================================================
 # UNINSTALL
