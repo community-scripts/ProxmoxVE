@@ -68,25 +68,10 @@ function update() {
 }
 
 # ==============================================================================
-# CHECK DOCKER
-# ==============================================================================
-function check_docker() {
-  if ! command -v docker &>/dev/null; then
-    msg_error "Docker is not installed. This script requires an existing Docker LXC. Exiting."
-    exit 10
-  fi
-  if ! docker compose version &>/dev/null; then
-    msg_error "Docker Compose plugin is not available. Please install it before running this script. Exiting."
-    exit 10
-  fi
-  msg_ok "Docker $(docker --version | cut -d' ' -f3 | tr -d ',') and Docker Compose are available"
-}
-
-# ==============================================================================
 # INSTALL
 # ==============================================================================
 function install() {
-  check_docker
+  ensure_docker
 
   msg_info "Creating install directory"
   mkdir -p "$INSTALL_PATH"
@@ -163,6 +148,7 @@ if [[ "${type:-}" == "update" ]]; then
 fi
 
 header_info
+confirm_not_pve_host
 get_lxc_ip
 
 # Check if already installed
