@@ -19,7 +19,7 @@ $STD apt install -y \
   g++
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 create_self_signed_cert
 
 msg_info "Installing Actual Budget"
