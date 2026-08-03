@@ -564,12 +564,47 @@ ISO_NAME=$(basename "$FULL_URL")
 CACHE_DIR="/var/lib/vz/template/iso"
 CACHE_FILE="$CACHE_DIR/$ISO_NAME"
 
+# Verify an ISO against the checksum TrueNAS publishes alongside it.
+# The .sha256 sidecar holds a bare hash with no filename.
+# Args: $1=file $2=iso_url
+# Returns: 0 when verified or when no checksum is available, 1 on mismatch
+function verify_iso_checksum() {
+  local file="$1" url="$2"
+  local expected actual
+
+  expected=$(curl -fsSL --max-time 30 "${url}.sha256" 2>/dev/null | tr -d '[:space:]')
+
+  # An unreachable vendor or a changed layout must not break VM creation
+  [[ ! "$expected" =~ ^[0-9a-fA-F]{64}$ ]] && return 0
+
+  actual=$(sha256sum "$file" | awk '{print $1}')
+  [[ "$actual" == "$expected" ]]
+}
+
+if [[ -s "$CACHE_FILE" ]]; then
+  if verify_iso_checksum "$CACHE_FILE" "$FULL_URL"; then
+    msg_ok "Using cached image ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
+  else
+    msg_error "Cached ISO $(basename "$CACHE_FILE") failed checksum validation. Deleting and retrying download..."
+    rm -f "$CACHE_FILE"
+  fi
+fi
+
 if [[ ! -s "$CACHE_FILE" ]]; then
   msg_info "Retrieving the ISO for the TrueNAS Disk Image"
-  curl -f#SL -o "$CACHE_FILE" "$FULL_URL"
+  # Download to a temporary file so an interrupted transfer is never cached
+  if ! curl -f#SL -o "$CACHE_FILE.part" "$FULL_URL"; then
+    rm -f "$CACHE_FILE.part"
+    msg_error "Download failed: $FULL_URL"
+    exit 115
+  fi
+  if ! verify_iso_checksum "$CACHE_FILE.part" "$FULL_URL"; then
+    rm -f "$CACHE_FILE.part"
+    msg_error "Downloaded ISO failed checksum validation. Please try again later."
+    exit 115
+  fi
+  mv -f "$CACHE_FILE.part" "$CACHE_FILE"
   msg_ok "Downloaded ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
-else
-  msg_ok "Using cached image ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
 fi
 
 set -o pipefail
