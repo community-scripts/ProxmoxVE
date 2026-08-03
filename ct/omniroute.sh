@@ -43,6 +43,8 @@ function update_script() {
   fi
   msg_ok "New version available: ${LATEST}"
 
+  NODE_VERSION="26" setup_nodejs
+  
   msg_info "Stopping Service"
   systemctl stop omniroute
   msg_ok "Stopped Service"
