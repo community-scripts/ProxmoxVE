@@ -300,6 +300,72 @@ root_check() {
 }
 
 # ------------------------------------------------------------------------------
+# on_pve_host()
+#
+# - Returns 0 when executed on a Proxmox VE node, 1 otherwise
+# - Cheap probe used by the guards below; never exits on its own
+# ------------------------------------------------------------------------------
+on_pve_host() {
+  command -v pveversion &>/dev/null
+}
+
+# ------------------------------------------------------------------------------
+# require_pve_host()
+#
+# - Guard for tools that drive the node itself (pct/pveam/pvesm/pvesh/qm)
+# - Aborts when not on a PVE node, then validates the PVE version
+# ------------------------------------------------------------------------------
+require_pve_host() {
+  if ! on_pve_host; then
+    msg_error "${APP:-This script} must be run on the Proxmox VE host."
+    msg_error "Proxmox tooling (pct/pveam/pvesm/qm) is not available here."
+    exit 232
+  fi
+  pve_check
+}
+
+# ------------------------------------------------------------------------------
+# confirm_not_pve_host()
+#
+# - Guard for tools that belong inside an LXC/VM but would technically run
+#   on the node as well
+# - Warns and asks for confirmation instead of hard-failing
+# ------------------------------------------------------------------------------
+confirm_not_pve_host() {
+  on_pve_host || return 0
+
+  msg_error "Running on the Proxmox VE host is NOT recommended!"
+  msg_error "${APP:-This script} is meant to be executed inside an LXC container."
+  echo ""
+  echo -n "${TAB:-  }Continue anyway? (y/N): "
+  local confirm
+  read -r confirm
+  if [[ ! "${confirm,,}" =~ ^(y|yes)$ ]]; then
+    msg_warn "Aborted. Please run this inside an LXC container."
+    exit 0
+  fi
+  msg_warn "Proceeding on the Proxmox VE host at your own risk!"
+}
+
+# ------------------------------------------------------------------------------
+# require_debian_like()
+#
+# - Guard for addons that have no Alpine code path
+# - Aborts early instead of failing halfway through with apt/systemd errors
+# ------------------------------------------------------------------------------
+require_debian_like() {
+  if is_alpine; then
+    msg_error "${APP:-This script} does not support Alpine Linux."
+    msg_error "Please use a Debian or Ubuntu based LXC container."
+    exit 238
+  fi
+  if ! command -v apt-get &>/dev/null; then
+    msg_error "${APP:-This script} requires a Debian or Ubuntu based system."
+    exit 238
+  fi
+}
+
+# ------------------------------------------------------------------------------
 # pve_check()
 #
 # - Validates Proxmox VE version compatibility
@@ -308,6 +374,10 @@ root_check() {
 # ------------------------------------------------------------------------------
 pve_check() {
   local PVE_VER
+  if ! on_pve_host; then
+    msg_error "${APP:-This script} must be run on the Proxmox VE host."
+    exit 232
+  fi
   PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
 
   # Check for Proxmox VE 8.x: allow 8.0–8.9
