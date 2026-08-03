@@ -40,7 +40,7 @@ detect_codename() {
   CODENAME="${VERSION_CODENAME:-}"
   if [[ -z "$CODENAME" ]]; then
     msg_error "Could not detect Debian codename."
-    exit 71
+    exit 238
   fi
   echo "$CODENAME"
 }

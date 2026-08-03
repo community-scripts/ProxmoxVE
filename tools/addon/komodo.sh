@@ -150,7 +150,7 @@ function ensure_openssl() {
     $STD apt-get install -y openssl
   else
     msg_error "openssl is required but could not be installed automatically."
-    exit 10
+    exit 237
   fi
   msg_ok "Installed openssl"
 }

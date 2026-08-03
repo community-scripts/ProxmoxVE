@@ -134,7 +134,7 @@ function select_storage() {
     ;;
   *)
     msg_error "Invalid storage class."
-    exit 1
+    exit 112
     ;;
   esac
 
@@ -156,7 +156,7 @@ function select_storage() {
   if [ $((${#MENU[@]} / 3)) -eq 0 ]; then
     msg_warn "'$CONTENT_LABEL' needs to be selected for at least one storage location."
     msg_error "Unable to detect valid storage location."
-    exit 1
+    if [[ "$CONTENT" == "rootdir" ]]; then exit 119; else exit 120; fi
   elif [ $((${#MENU[@]} / 3)) -eq 1 ]; then
     printf ${MENU[0]}
   else
@@ -167,7 +167,7 @@ function select_storage() {
         16 $(($MSG_MAX_LENGTH + 23)) 6 \
         "${MENU[@]}" 3>&1 1>&2 2>&3) || {
         msg_error "Menu aborted."
-        exit 1
+        exit 254
       }
     done
     printf $STORAGE
@@ -186,7 +186,7 @@ msg_info "Using '$CONTAINER_STORAGE' for container storage."
 msg_info "Downloading LXC template (Patience)"
 pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null || {
   msg_error "A problem occured while downloading the LXC template."
-  exit 1
+  exit 222
 }
 msg_ok "Downloaded LXC template"
 
@@ -198,7 +198,7 @@ PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
 msg_info "Creating LXC container"
 pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} "${PCT_OPTIONS[@]}" >/dev/null || {
   msg_error "A problem occured while trying to create container."
-  exit 1
+  exit 209
 }
 msg_ok "Created LXC container"
 

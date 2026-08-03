@@ -96,7 +96,7 @@ EOF
   systemctl restart code-server@"$USER"
   if ! systemctl is-active --quiet code-server@"$USER"; then
     msg_error "code-server service failed to start."
-    exit 1
+    exit 150
   fi
   msg_ok "Installed ${APP}"
 

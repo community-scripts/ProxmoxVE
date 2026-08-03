@@ -75,7 +75,7 @@ function install() {
       msg_ok "Created user 'brew'"
     else
       msg_error "Cannot install Homebrew without a non-root user. Exiting."
-      exit 1
+      exit 254
     fi
   fi
   msg_ok "Detected User: $BREW_USER"
