@@ -524,6 +524,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Correction to link in Paperless-NGX update script [@jsspen](https://github.com/jsspen) ([#16241](https://github.com/community-scripts/ProxmoxVE/pull/16241))
     - fix restore env in split pro [@johanngrobe](https://github.com/johanngrobe) ([#16228](https://github.com/community-scripts/ProxmoxVE/pull/16228))
 
 ### 💾 Core
