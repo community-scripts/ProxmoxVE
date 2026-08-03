@@ -7,11 +7,12 @@
 
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  if [[ -f "/etc/alpine-release" ]]; then
-    apk -U add curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
   else
-    apt update >/dev/null 2>&1
-    apt install -y curl >/dev/null 2>&1
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
   fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
@@ -124,7 +125,7 @@ function install() {
   echo ""
 
   # Origin instance
-  echo -e "${YW}── Origin (Primary) Instance ──${CL}"
+  echo -e "${YW}â”€â”€ Origin (Primary) Instance â”€â”€${CL}"
   local origin_url origin_user origin_pass
   read -rp "  Origin URL (e.g., http://192.168.1.1): " origin_url
   origin_url="${origin_url:-http://192.168.1.1}"
@@ -138,7 +139,7 @@ function install() {
 
   # Replica instance
   echo ""
-  echo -e "${YW}── Replica Instance ──${CL}"
+  echo -e "${YW}â”€â”€ Replica Instance â”€â”€${CL}"
   local replica_url replica_user replica_pass
   read -rp "  Replica URL (e.g., http://192.168.1.2): " replica_url
   replica_url="${replica_url:-http://192.168.1.2}"

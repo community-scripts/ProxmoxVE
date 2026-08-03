@@ -11,6 +11,16 @@ INSTALL_PATH="/usr/local/bin/filebrowser"
 DB_PATH="/usr/local/community-scripts/filebrowser.db"
 DEFAULT_PORT=8080
 
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)

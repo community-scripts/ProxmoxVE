@@ -10,6 +10,16 @@ APP_TYPE="addon"
 INSTALL_DIR_DEBIAN="/var/www/html/phpMyAdmin"
 INSTALL_DIR_ALPINE="/usr/share/phpmyadmin"
 
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
@@ -115,7 +125,7 @@ function install_phpmyadmin() {
   LATEST_VERSION_RAW=$(get_latest_github_release "phpmyadmin/phpmyadmin" false) || true
   LATEST_VERSION=$(echo "$LATEST_VERSION_RAW" | sed -e 's/^RELEASE_//' -e 's/_/./g')
   if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not determine latest phpMyAdmin version from GitHub – falling back to 5.2.2"
+    msg_error "Could not determine latest phpMyAdmin version from GitHub â€“ falling back to 5.2.2"
     LATEST_VERSION="5.2.2"
   fi
   msg_ok "Latest version: $LATEST_VERSION"
@@ -221,7 +231,7 @@ function update_phpmyadmin() {
   LATEST_VERSION=$(echo "$LATEST_VERSION_RAW" | sed -e 's/^RELEASE_//' -e 's/_/./g')
 
   if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not determine latest phpMyAdmin version from GitHub – falling back to 5.2.2"
+    msg_error "Could not determine latest phpMyAdmin version from GitHub â€“ falling back to 5.2.2"
     LATEST_VERSION="5.2.2"
   fi
   msg_ok "Latest version: $LATEST_VERSION"

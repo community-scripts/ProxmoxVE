@@ -12,6 +12,16 @@ CONFIG_PATH="/usr/local/community-scripts/fq-config.yaml"
 DEFAULT_PORT=8080
 SRC_DIR="/"
 
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
@@ -32,7 +42,7 @@ IP="$LOCAL_IP"
 # Proxmox Host Warning
 if [[ -d "/etc/pve" ]]; then
   msg_warn "Running this addon directly on the Proxmox host is not recommended!"
-  msg_warn "Only the boot disk will be visible — passthrough drives will not be indexed."
+  msg_warn "Only the boot disk will be visible â€” passthrough drives will not be indexed."
   msg_warn "This causes incorrect disk usage stats and incomplete file browsing."
   msg_warn "Run this addon inside an LXC or VM instead and mount your drives there."
   echo ""
