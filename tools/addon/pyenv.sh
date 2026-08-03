@@ -21,6 +21,8 @@ trap 'error_handler' ERR
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
 
+header_info
+
 if command -v pveversion >/dev/null 2>&1; then
   msg_error "Can't Install on Proxmox "
   exit 1
