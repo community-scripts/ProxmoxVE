@@ -20,6 +20,7 @@ trap 'error_handler' ERR
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
+require_debian_like
 
 header_info
 

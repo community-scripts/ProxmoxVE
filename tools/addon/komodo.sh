@@ -6,8 +6,13 @@
 # Source: https://komo.do/ | Github: https://github.com/moghtech/komodo
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt-get update >/dev/null 2>&1 || apk update >/dev/null 2>&1
-  apt-get install -y curl >/dev/null 2>&1 || apk add --no-cache curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)

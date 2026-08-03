@@ -20,13 +20,10 @@ trap 'error_handler' ERR
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
+require_debian_like
 
 header_info
-
-if command -v pveversion >/dev/null 2>&1; then
-  msg_error "Can't Install on Proxmox"
-  exit 1
-fi
+confirm_not_pve_host
 
 while true; do
   echo -n "${TAB}This will Install ${APP}. Proceed (y/n)? "
