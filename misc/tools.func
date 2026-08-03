@@ -1466,7 +1466,7 @@ prompt_for_github_token() {
   fi
 
   local reply
-  read -rp "${TAB}Would you like to enter a GitHub Personal Access Token (PAT)? [y/N]: " reply
+  read -rp "${TAB}Would you like to enter a GitHub Personal Access Token (PAT)? [y/N]: " reply </dev/tty
   reply="${reply:-n}"
 
   if [[ ! "${reply,,}" =~ ^(y|yes)$ ]]; then
@@ -1475,7 +1475,7 @@ prompt_for_github_token() {
 
   local token
   while true; do
-    read -rp "${TAB}Enter your GitHub PAT: " token
+    read -rp "${TAB}Enter your GitHub PAT: " token </dev/tty
     # Trim leading/trailing whitespace
     token="$(echo "$token" | xargs)"
     if [[ -z "$token" ]]; then
@@ -3973,7 +3973,7 @@ _gh_scan_older_releases() {
       local use_fallback="y"
       if [[ -t 0 ]]; then
         msg_warn "Release ${skip_tag} has no matching asset. Previous release ${rel_tag} has a compatible asset."
-        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback || use_fallback="y"
+        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback </dev/tty || use_fallback="y"
         use_fallback="${use_fallback:-y}"
       fi
 
@@ -4796,7 +4796,7 @@ EOF
       for entry in "${compose_updates[@]}"; do
         IFS='|' read -r name image compose_workdir compose_service <<<"$entry"
         reply=""
-        if read -r -t 60 -p "${TAB3}Update ${name} (${image}) via Compose? <y/N> (auto-no in 60s): " reply; then
+        if read -r -t 60 -p "${TAB3}Update ${name} (${image}) via Compose? <y/N> (auto-no in 60s): " reply </dev/tty; then
           echo ""
         else
           echo ""
@@ -4814,7 +4814,7 @@ EOF
       for entry in "${standalone_updates[@]}"; do
         IFS='|' read -r name image <<<"$entry"
         reply=""
-        if read -r -t 60 -p "${TAB3}Pull new image for ${name} (${image})? <y/N> (auto-no in 60s): " reply; then
+        if read -r -t 60 -p "${TAB3}Pull new image for ${name} (${image})? <y/N> (auto-no in 60s): " reply </dev/tty; then
           echo ""
         else
           echo ""
@@ -5409,7 +5409,7 @@ setup_hwaccel() {
     # Read with 60 second timeout
     local selection=""
     echo -n "Select GPU(s) to configure (1-${gpu_count}, A=all) [timeout 60s, default=all]: "
-    if read -r -t 60 selection; then
+    if read -r -t 60 selection </dev/tty; then
       selection="${selection^^}" # uppercase
     else
       echo ""
@@ -5457,7 +5457,7 @@ setup_hwaccel() {
       echo ""
       msg_custom "🎮" "${GN}" "NVIDIA GPU passthrough detected"
       local nvidia_reply=""
-      read -r -t 60 -p "${TAB3}⚙️ Install NVIDIA driver libraries in the container? [Y/n] (auto-yes in 60s): " nvidia_reply || nvidia_reply=""
+      read -r -t 60 -p "${TAB3}⚙️ Install NVIDIA driver libraries in the container? [Y/n] (auto-yes in 60s): " nvidia_reply </dev/tty || nvidia_reply=""
       case "${nvidia_reply,,}" in
       n | no) install_nvidia_drivers="no" ;;
       *) install_nvidia_drivers="yes" ;;
@@ -9755,7 +9755,7 @@ _gl_scan_older_releases() {
       local use_fallback="y"
       if [[ -t 0 ]]; then
         msg_warn "Release ${skip_tag} has no matching asset. Previous release ${rel_tag} has a compatible asset."
-        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback || use_fallback="y"
+        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback </dev/tty || use_fallback="y"
         use_fallback="${use_fallback:-y}"
       fi
 

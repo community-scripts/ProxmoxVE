@@ -499,7 +499,7 @@ error_handler() {
 
       local response=""
       local read_rc
-      read -t 60 -r response
+      read -t 60 -r response </dev/tty
       read_rc=$?
       if [[ $read_rc -eq 0 ]]; then
         if [[ -z "$response" || "$response" =~ ^[Yy]$ ]]; then
@@ -543,6 +543,7 @@ error_handler() {
         # read itself failed (e.g. broken/closed stdin, I/O error) rather than
         # timing out - don't guess and destroy the container on a read we
         # couldn't actually capture; keep it since that's the reversible choice.
+        while read -r -t 0.1 -n 1 _ </dev/tty 2>/dev/null; do :; done
         echo ""
         if declare -f msg_error >/dev/null 2>&1; then
           msg_error "Could not read your response (stdin error) - keeping container ${CTID} for safety."

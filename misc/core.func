@@ -754,7 +754,7 @@ msg_info() {
     # Pause mode: Wait for Enter after each step
     if [[ "${DEV_MODE_PAUSE:-false}" == "true" ]]; then
       echo -en "\n${YWB}[PAUSE]${CL} Press Enter to continue..." >&2
-      read -r
+      read -r </dev/tty
     fi
     return
   fi
@@ -769,7 +769,7 @@ msg_info() {
   if [[ "${DEV_MODE_PAUSE:-false}" == "true" ]]; then
     stop_spinner
     echo -en "\n${YWB}[PAUSE]${CL} Press Enter to continue..." >&2
-    read -r
+    read -r </dev/tty
   fi
 }
 
@@ -1217,7 +1217,7 @@ prompt_confirm() {
   # Interactive prompt with timeout
   echo -en "${YW}${message} ${hint} (auto-${default} in ${timeout}s): ${CL}"
 
-  if read -t "$timeout" -r response; then
+  if read -t "$timeout" -r response </dev/tty; then
     # User provided input
     response="${response,,}" # lowercase
     case "$response" in
@@ -1310,7 +1310,7 @@ prompt_input() {
   # Interactive prompt with timeout
   echo -en "${YW}${message}${hint} (auto-default in ${timeout}s): ${CL}" >&2
 
-  if read -t "$timeout" -r response; then
+  if read -t "$timeout" -r response </dev/tty; then
     # User provided input (or pressed Enter for empty)
     if [[ -n "$response" ]]; then
       echo "$response"
@@ -1412,7 +1412,7 @@ prompt_input_required() {
 
     echo -en "${YW}${message} (required, timeout ${timeout}s): ${CL}" >&2
 
-    if read -t "$timeout" -r response; then
+    if read -t "$timeout" -r response </dev/tty; then
       if [[ -z "$response" ]]; then
         echo -e "${YW}This field is required. Please enter a value. (attempt ${attempts}/3)${CL}" >&2
       fi
@@ -1507,7 +1507,7 @@ prompt_select() {
   echo -en "${YW}Select [1-${num_options}] (auto-select ${default} in ${timeout}s): ${CL}" >&2
 
   local response
-  if read -t "$timeout" -r response; then
+  if read -t "$timeout" -r response </dev/tty; then
     if [[ -z "$response" ]]; then
       # Empty response, use default
       echo "${options[$((default - 1))]}"
@@ -1590,7 +1590,7 @@ prompt_password() {
   # Interactive prompt with timeout (silent input)
   echo -en "${YW}${message}${hint} (timeout ${timeout}s): ${CL}" >&2
 
-  if read -t "$timeout" -rs response; then
+  if read -t "$timeout" -rs response </dev/tty; then
     echo "" >&2 # Newline after hidden input
     if [[ -n "$response" ]]; then
       # Validate minimum length

@@ -3917,7 +3917,7 @@ run_addon_updates() {
     name="${a##*/update_}"
     printf 'Do you also want to update addon "%s"? (y/N) [60s]: ' "$name"
     ans=""
-    if read -r -t 60 ans; then :; else echo; fi
+    if read -r -t 60 ans </dev/tty; then :; else echo; fi
     case "${ans,,}" in
     y | yes)
       bash "$a" || msg_warn "Addon update for $name failed (rc=$?)"
@@ -5729,6 +5729,7 @@ EOF
       # read itself failed (e.g. broken/closed stdin, I/O error) rather than
       # timing out - don't guess and destroy the container on a read we
       # couldn't actually capture; keep it since that's the reversible choice.
+      while read -r -t 0.1 -n 1 _ </dev/tty 2>/dev/null; do :; done
       echo ""
       msg_error "Could not read your response (stdin error) - keeping container ${CTID} for safety."
       msg_error "Remove it manually if not needed: pct destroy ${CTID}"
