@@ -17,7 +17,11 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   git \
   unzip \
-  valkey
+  valkey \
+  python3 \
+  python3-lxml \
+  python3-babel \
+  python3-dateutil
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Bun"
