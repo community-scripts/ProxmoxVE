@@ -19,33 +19,21 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-netbird-l
 set -Eeuo pipefail
 trap 'error_handler' ERR
 
-function header_info {
-  clear
-  cat <<"EOF"
-    _   __     __  ____  _          __
-   / | / /__  / /_/ __ )(_)________/ /
-  /  |/ / _ \/ __/ __  / / ___/ __  / 
- / /|  /  __/ /_/ /_/ / / /  / /_/ / 
-/_/ |_/\___/\__/_____/_/_/   \__,_/  
-
-EOF
-}
-
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
 
 header_info
 
 while true; do
-  read -r -p "This will add NetBird to an existing LXC Container ONLY. Proceed(y/n)?" yn
+  read -r -p "This will add NetBird to an existing LXC Container ONLY. Proceed(y/n)? " yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*) exit 0 ;;
   *) echo "Please answer yes or no." ;;
   esac
 done
-header_info
-msg_info "Loading container list..."
+
+echo -e "Loading container list..."
 
 NODE=$(hostname)
 MSG_MAX_LENGTH=0
@@ -88,18 +76,18 @@ cat <<EOF >>"$CTID_CONFIG_PATH"
 lxc.cgroup2.devices.allow: c 10:200 rwm
 lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
 EOF
-header_info
+
 msg_info "Installing NetBird"
 pct exec "$CTID" -- bash -c '
 if ! command -v curl &>/dev/null; then
-  apt-get update -qq
-  apt-get install -y curl >/dev/null
+  apt update -qq
+  apt install -y curl >/dev/null
 fi
 apt install -y ca-certificates gpg &>/dev/null
 curl -fsSL "https://pkgs.netbird.io/debian/public.key" | gpg --dearmor >/usr/share/keyrings/netbird-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main" >/etc/apt/sources.list.d/netbird.list
-apt-get update &>/dev/null
-apt-get install -y netbird-ui &>/dev/null
+apt update &>/dev/null
+apt install -y netbird-ui &>/dev/null
 if systemctl list-unit-files docker.service &>/dev/null; then
   mkdir -p /etc/systemd/system/netbird.service.d
   cat <<OVERRIDE >/etc/systemd/system/netbird.service.d/after-docker.conf

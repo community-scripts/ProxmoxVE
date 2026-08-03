@@ -21,18 +21,6 @@ trap 'error_handler' ERR
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
 
-function header_info {
-  clear
-  cat <<"EOF"
-    _   __     __  ____        __
-   / | / /__  / /_/ __ \____ _/ /_____ _
-  /  |/ / _ \/ __/ / / / __ `/ __/ __ `/
- / /|  /  __/ /_/ /_/ / /_/ / /_/ /_/ /
-/_/ |_/\___/\__/_____/\__,_/\__/\__,_/
-
-EOF
-}
-
 detect_codename() {
   source /etc/os-release
   if [[ "$ID" != "debian" ]]; then
@@ -56,7 +44,6 @@ get_latest_repo_pkg() {
 }
 
 install() {
-  header_info
   while true; do
     read -r -p "Are you sure you want to install ${APP} on Proxmox VE host. Proceed(y/n)? " yn
     case $yn in
@@ -92,8 +79,6 @@ install() {
 }
 
 uninstall() {
-  header_info
-
   msg_info "Uninstalling ${APP}"
   systemctl stop netdata || true
   rm -rf /var/log/netdata /var/lib/netdata /var/cache/netdata /etc/netdata/go.d

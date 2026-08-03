@@ -13,17 +13,6 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "all-templates" "addon"
 
-function header_info {
-  clear
-  cat <<"EOF"
-   ___   ____  ______               __     __
-  / _ | / / / /_  __/__ __ _  ___  / /__ _/ /____ ___
- / __ |/ / /   / / / -_)  ' \/ _ \/ / _ `/ __/ -_|_-<
-/_/ |_/_/_/   /_/  \__/_/_/_/ .__/_/\_,_/\__/\__/___/
-                           /_/
-EOF
-}
-
 # Enable error handling; destroy any partially-created container before reporting the error
 set -Eeuo pipefail
 function _cleanup_on_error() {
@@ -172,7 +161,7 @@ function select_storage() {
     printf $STORAGE
   fi
 }
-header_info
+
 # Get template storage
 TEMPLATE_STORAGE=$(select_storage template)
 msg_info "Using '$TEMPLATE_STORAGE' for template storage."
@@ -238,7 +227,6 @@ if [[ -f /etc/systemd/system/ping-instances.service ]]; then
 fi
 
 # Success message
-header_info
 echo
 msg_ok "LXC container '$CTID' was successfully created, and its IP address is ${IP}."
 echo

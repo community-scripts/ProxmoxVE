@@ -21,17 +21,6 @@ trap 'error_handler' ERR
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
 
-function header_info {
-  clear
-  cat <<"EOF"
-  _      __    __         _
- | | /| / /__ / /  __ _  (_)__
- | |/ |/ / -_) _ \/  ' \/ / _ \
- |__/|__/\__/_.__/_/_/_/_/_//_/
-
-EOF
-}
-
 header_info
 
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} Installer" --yesno "This Will Install ${APP} on this LXC Container. Proceed?" 10 58

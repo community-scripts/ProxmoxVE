@@ -18,18 +18,6 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-tailscale
 set -Eeuo pipefail
 trap 'error_handler' ERR
 
-function header_info() {
-  clear
-  cat <<"EOF"
-  ______      _ __                __
- /_  __/___ _(_) /_____________ _/ /__
-  / / / __ `/ / / ___/ ___/ __ `/ / _ \
- / / / /_/ / / (__  ) /__/ /_/ / /  __/
-/_/  \__,_/_/_/____/\___/\__,_/_/\___/
-
-EOF
-}
-
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
 
@@ -49,7 +37,6 @@ while true; do
   esac
 done
 
-header_info
 msg_info "Loading container list..."
 
 NODE=$(hostname)
@@ -78,7 +65,6 @@ CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
 grep -q "lxc.cgroup2.devices.allow: c 10:200 rwm" "$CTID_CONFIG_PATH" || echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>"$CTID_CONFIG_PATH"
 grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file" >>"$CTID_CONFIG_PATH"
 
-header_info
 msg_info "Installing Tailscale in CT $CTID"
 
 pct exec "$CTID" -- sh -c '
