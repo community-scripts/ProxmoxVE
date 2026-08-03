@@ -18,7 +18,7 @@ $STD apt install -y gcc
 msg_ok "Installed Dependencies"
 
 setup_go
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
 
 msg_info "Setup Watcharr"
