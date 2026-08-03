@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="24" setup_nodejs
   RELEASE=$(get_latest_github_release "actualbudget/actual")
   if [[ -f /opt/actualbudget-data/config.json ]]; then
     if check_for_gh_release "actualbudget" "actualbudget/actual"; then
