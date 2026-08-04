@@ -24,6 +24,7 @@ fetch_and_deploy_gh_release "Heimdall" "linuxserver/Heimdall" "tarball"
 msg_info "Setting up Heimdall-Dashboard"
 cd /opt/Heimdall
 cp .env.example .env
+sed -i 's/^APP_ENV=.*/APP_ENV=production/' .env
 $STD php artisan key:generate
 msg_ok "Setup Heimdall-Dashboard"
 
