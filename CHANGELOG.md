@@ -526,12 +526,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Opencloud: Pin version to 7.4.0 [@vhsdream](https://github.com/vhsdream) ([#16257](https://github.com/community-scripts/ProxmoxVE/pull/16257))
-
   - #### 🐞 Bug Fixes
 
+    - fix(salt): write version cache to ~/.salt, not /~.salt [@TowyTowy](https://github.com/TowyTowy) ([#16265](https://github.com/community-scripts/ProxmoxVE/pull/16265))
     - AFFiNE: fix version and build type reported by the app itself [@MickLesk](https://github.com/MickLesk) ([#16251](https://github.com/community-scripts/ProxmoxVE/pull/16251))
     - Passbolt: fetch GPG key from Passbolt's own host instead of the flaky keyserver [@MickLesk](https://github.com/MickLesk) ([#16248](https://github.com/community-scripts/ProxmoxVE/pull/16248))
+
+  - #### ✨ New Features
+
+    - Opencloud: Pin version to 7.4.0 [@vhsdream](https://github.com/vhsdream) ([#16257](https://github.com/community-scripts/ProxmoxVE/pull/16257))
 
 ### 💾 Core
 
