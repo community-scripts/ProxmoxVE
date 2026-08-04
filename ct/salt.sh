@@ -36,7 +36,7 @@ function update_script() {
     sed -i "s/^\(Pin: version \).*/\1${RELEASE}/" /etc/apt/preferences.d/salt-pin-1001
     $STD apt update
     $STD apt upgrade -y
-    echo "${RELEASE}" >/~.salt
+    echo "${RELEASE}" >~/.salt
     msg_ok "Updated successfully!"
   fi
   exit
