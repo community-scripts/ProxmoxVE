@@ -13,8 +13,7 @@ setting_up_container
 network_check
 update_os
 
-ARCH=$(dpkg --print-architecture)
-fetch_and_deploy_gh_release "hister" "asciimoo/hister" "singlefile" "latest" "/usr/local/bin" "hister_*_linux_${ARCH}"
+fetch_and_deploy_gh_release "hister" "asciimoo/hister" "singlefile" "latest" "/usr/local/bin" "hister_*_linux_$(arch_resolve)"
 
 msg_info "Configuring Hister"
 mkdir -p /opt/hister/data /etc/hister
