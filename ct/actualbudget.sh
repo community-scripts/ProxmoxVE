@@ -39,7 +39,9 @@ function update_script() {
       msg_ok "Stopped Service"
 
       msg_info "Updating Actual Budget to ${RELEASE}"
+      $STD npm config set allow-scripts=bcrypt,better-sqlite3,argon2 --location=global
       $STD npm update -g @actual-app/sync-server
+      $STD npm rebuild -g
       echo "${RELEASE}" >~/.actualbudget
       msg_ok "Updated Actual Budget to ${RELEASE}"
 

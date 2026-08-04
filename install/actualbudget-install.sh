@@ -51,6 +51,7 @@ cat <<EOF >/opt/actualbudget-data/config.json
 EOF
 mkdir -p /opt/actualbudget
 cd /opt/actualbudget
+$STD npm config set allow-scripts=bcrypt,better-sqlite3,argon2 --location=global
 $STD npm install --location=global @actual-app/sync-server
 echo "${RELEASE}" >~/.actualbudget
 msg_ok "Installed Actual Budget"
