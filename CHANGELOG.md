@@ -529,6 +529,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Heimdall-Dashboard: run full composer install on update, force production env [@MickLesk](https://github.com/MickLesk) ([#16278](https://github.com/community-scripts/ProxmoxVE/pull/16278))
     - xyOps: rebuild xySat satellite during update [@MickLesk](https://github.com/MickLesk) ([#16279](https://github.com/community-scripts/ProxmoxVE/pull/16279))
     - HAOS: remove non-ASCII dash from CPU model dialog text [@MickLesk](https://github.com/MickLesk) ([#16276](https://github.com/community-scripts/ProxmoxVE/pull/16276))
     - fix: back up Termix db/data so the update stops destroying encryption keys [@LukeGus](https://github.com/LukeGus) ([#16275](https://github.com/community-scripts/ProxmoxVE/pull/16275))
