@@ -548,6 +548,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - tools.func: never delete ubuntu.sources (or other distro base sources) as orphaned [@MickLesk](https://github.com/MickLesk) ([#16250](https://github.com/community-scripts/ProxmoxVE/pull/16250))
     - tools.func: complete a stale/partial backup manifest instead of trusting it as-is [@MickLesk](https://github.com/MickLesk) ([#16252](https://github.com/community-scripts/ProxmoxVE/pull/16252))
 
+  - #### 🔧 Refactor
+
+    - Refactor: harmonize tools/addon and move boilerplate into core.func [@MickLesk](https://github.com/MickLesk) ([#16202](https://github.com/community-scripts/ProxmoxVE/pull/16202))
+
 ## 2026-08-03
 
 ### 🚀 Updated Scripts
