@@ -522,7 +522,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Obsidian-LiveSync ([#16233](https://github.com/community-scripts/ProxmoxVE/pull/16233))
+  - Hister ([#16259](https://github.com/community-scripts/ProxmoxVE/pull/16259))
+- Obsidian-LiveSync ([#16233](https://github.com/community-scripts/ProxmoxVE/pull/16233))
 
 ### 🚀 Updated Scripts
 
