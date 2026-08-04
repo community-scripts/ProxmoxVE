@@ -26,7 +26,7 @@ create_self_signed_cert
 
 setup_deb822_repo \
   "passbolt" \
-  "https://keys.openpgp.org/pks/lookup?op=get&options=mr&search=0x3D1A0346C8E1802F774AEF21DE8B853FC155581D" \
+  "https://download.passbolt.com/pub.key" \
   "https://download.passbolt.com/ce/debian" \
   "buster" \
   "stable"
