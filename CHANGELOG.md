@@ -522,14 +522,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Opencloud: Pin version to 7.4.0 [@vhsdream](https://github.com/vhsdream) ([#16257](https://github.com/community-scripts/ProxmoxVE/pull/16257))
+
   - #### 🐞 Bug Fixes
 
+    - AFFiNE: fix version and build type reported by the app itself [@MickLesk](https://github.com/MickLesk) ([#16251](https://github.com/community-scripts/ProxmoxVE/pull/16251))
     - Passbolt: fetch GPG key from Passbolt's own host instead of the flaky keyserver [@MickLesk](https://github.com/MickLesk) ([#16248](https://github.com/community-scripts/ProxmoxVE/pull/16248))
 
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
 
+    - tools.func: never delete ubuntu.sources (or other distro base sources) as orphaned [@MickLesk](https://github.com/MickLesk) ([#16250](https://github.com/community-scripts/ProxmoxVE/pull/16250))
     - tools.func: complete a stale/partial backup manifest instead of trusting it as-is [@MickLesk](https://github.com/MickLesk) ([#16252](https://github.com/community-scripts/ProxmoxVE/pull/16252))
 
 ## 2026-08-03
