@@ -2040,8 +2040,9 @@ cleanup_orphaned_sources() {
     local basename_file
     basename_file=$(basename "$sources_file")
 
-    # NEVER remove debian.sources - this is the standard Debian repository
-    if [[ "$basename_file" == "debian.sources" ]]; then
+    # NEVER remove the distro's own base sources file (debian.sources,
+    # ubuntu.sources, ...)
+    if [[ "$basename_file" == "$(get_os_info id).sources" ]]; then
       continue
     fi
 
@@ -2113,7 +2114,7 @@ ensure_apt_working() {
       # Step 4: More aggressive - remove all third-party sources
       msg_warn "APT update still failing, removing third-party sources"
       find /etc/apt/sources.list.d/ -type f \( -name "*.sources" -o -name "*.list" \) \
-        ! -name "debian.sources" -delete 2>/dev/null || true
+        ! -name "$(get_os_info id).sources" -delete 2>/dev/null || true
 
       # Final attempt
       if ! $STD apt update; then
