@@ -48,6 +48,13 @@ function update_script() {
     chmod 644 /opt/xyops/node_modules/useragent-ng/lib/regexps.js
     msg_ok "Rebuilt Application"
 
+    fetch_and_deploy_gh_release "xysat" "pixlcore/xysat" "tarball" "latest" "/opt/xyops/satellite"
+
+    msg_info "Building xySat Satellite"
+    cd /opt/xyops/satellite
+    $STD npm install
+    msg_ok "Built xySat Satellite"
+
     msg_info "Starting Service"
     systemctl start xyops
     msg_ok "Started Service"
