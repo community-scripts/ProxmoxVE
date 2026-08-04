@@ -529,6 +529,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: back up Termix db/data so the update stops destroying encryption keys [@LukeGus](https://github.com/LukeGus) ([#16275](https://github.com/community-scripts/ProxmoxVE/pull/16275))
     - passwordpusher: dynamically read Ruby version from .ruby-version file [@Copilot](https://github.com/Copilot) ([#16242](https://github.com/community-scripts/ProxmoxVE/pull/16242))
     - fix(salt): write version cache to ~/.salt, not /~.salt [@TowyTowy](https://github.com/TowyTowy) ([#16265](https://github.com/community-scripts/ProxmoxVE/pull/16265))
     - AFFiNE: fix version and build type reported by the app itself [@MickLesk](https://github.com/MickLesk) ([#16251](https://github.com/community-scripts/ProxmoxVE/pull/16251))
