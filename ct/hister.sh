@@ -35,8 +35,7 @@ function update_script() {
     systemctl stop hister
     msg_ok "Stopped Service"
 
-    ARCH=$(dpkg --print-architecture)
-    fetch_and_deploy_gh_release "hister" "asciimoo/hister" "singlefile" "latest" "/usr/local/bin" "hister_*_linux_${ARCH}"
+    fetch_and_deploy_gh_release "hister" "asciimoo/hister" "singlefile" "latest" "/usr/local/bin" "hister_*_linux_$(arch_resolve)"
 
     msg_info "Starting Service"
     systemctl start hister
