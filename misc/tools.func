@@ -1292,14 +1292,17 @@ create_temp_dir() {
 #   - Copies each given file/directory into a persistent store at
 #     /opt/<NSAPP>.backup, mirroring its absolute path inside the store, and
 #     records it in a manifest so restore_backup needs no arguments.
-#   - Idempotent: if a store from a previous (failed) run already exists, it is
-#     left untouched and no new backup is taken. This keeps the last-known-good
-#     data instead of overwriting it with now-partially-updated data on retry.
+#   - Idempotent per path: a path already recorded in the manifest (from this
+#     run or a previous failed one) is left untouched, keeping the
+#     last-known-good copy instead of overwriting it with now-partially-updated
+#     data on retry. Any requested path NOT yet in the manifest is backed up
+#     now and appended - so a manifest left incomplete by an interrupted prior
+#     run gets completed instead of silently missing paths on restore.
 #   - Missing source paths are skipped with a warning (not fatal).
 #   - Aborts the update on copy failure: if any file/dir cannot be backed up,
-#     the half-written store is removed and the script exits, so the update
-#     never runs against unprotected data (and a retry re-attempts a clean
-#     backup rather than skipping it).
+#     the script exits before the update runs against unprotected data (the
+#     paths already recorded are left in place, so a retry only redoes the one
+#     that failed).
 #
 # restore_backup
 #   - Copies every path recorded in the manifest back to its origin (replacing
@@ -1318,19 +1321,17 @@ create_backup() {
     return 0
   }
 
-  if [[ -f "$manifest" ]]; then
-    msg_ok "Existing backup found at ${store}, skipping backup"
-    return 0
+  if ! mkdir -p "$store" || ! touch "$manifest"; then
+    msg_error "Backup failed: could not create store at ${store} - aborting update"
+    exit 1
   fi
 
   msg_info "Backing up data"
-  if ! mkdir -p "$store" || ! : >"$manifest"; then
-    msg_error "Backup failed: could not create store at ${store} - aborting update"
-    rm -rf "$store"
-    exit 1
-  fi
   for path in "$@"; do
     path="${path%/}"
+    if grep -qxF "$path" "$manifest" 2>/dev/null; then
+      continue
+    fi
     if [[ ! -e "$path" ]]; then
       msg_warn "Skipping backup of '${path}' (not found)"
       continue
@@ -1338,7 +1339,6 @@ create_backup() {
     dest="${store}/files${path}"
     if ! mkdir -p "$(dirname "$dest")" || ! cp -a "$path" "$dest"; then
       msg_error "Backup of '${path}' failed - aborting update"
-      rm -rf "$store"
       exit 1
     fi
     echo "$path" >>"$manifest"
