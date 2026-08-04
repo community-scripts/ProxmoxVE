@@ -526,6 +526,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Passbolt: fetch GPG key from Passbolt's own host instead of the flaky keyserver [@MickLesk](https://github.com/MickLesk) ([#16248](https://github.com/community-scripts/ProxmoxVE/pull/16248))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: complete a stale/partial backup manifest instead of trusting it as-is [@MickLesk](https://github.com/MickLesk) ([#16252](https://github.com/community-scripts/ProxmoxVE/pull/16252))
+
 ## 2026-08-03
 
 ### 🚀 Updated Scripts
