@@ -520,6 +520,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-04
 
+### 🆕 New Scripts
+
+  - Obsidian-LiveSync ([#16233](https://github.com/community-scripts/ProxmoxVE/pull/16233))
+
 ### 🚀 Updated Scripts
 
   - Opencloud: Pin version to 7.4.0 [@vhsdream](https://github.com/vhsdream) ([#16257](https://github.com/community-scripts/ProxmoxVE/pull/16257))
