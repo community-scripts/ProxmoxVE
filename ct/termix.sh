@@ -112,14 +112,33 @@ EOF
     msg_ok "Stopped Termix"
 
     msg_info "Migrating Configuration"
-    if [[ ! -f /opt/termix/.env ]]; then
-      cat <<EOF >/opt/termix/.env
+    mkdir -p /opt/termix/db/data
+
+    if [[ -f /opt/termix/data/db.sqlite.encrypted && ! -f /opt/termix/db/data/db.sqlite.encrypted ]]; then
+      cp -a /opt/termix/data/db.sqlite.encrypted /opt/termix/db/data/db.sqlite.encrypted
+      [[ -f /opt/termix/data/db.sqlite.encrypted.meta ]] &&
+        cp -a /opt/termix/data/db.sqlite.encrypted.meta /opt/termix/db/data/db.sqlite.encrypted.meta
+      [[ -f /opt/termix/data/db.sqlite ]] &&
+        cp -a /opt/termix/data/db.sqlite /opt/termix/db/data/db.sqlite
+    fi
+
+    if [[ -f /opt/termix/data/.env && ! -f /opt/termix/db/data/.env ]]; then
+      cp -a /opt/termix/data/.env /opt/termix/db/data/.env
+    fi
+
+    for sub in ssl session_logs session_recordings acme-webroot certbot uploads; do
+      if [[ -d /opt/termix/data/$sub && ! -d /opt/termix/db/data/$sub ]]; then
+        cp -a "/opt/termix/data/$sub" "/opt/termix/db/data/$sub"
+      fi
+    done
+
+    cat <<EOF >/opt/termix/.env
 NODE_ENV=production
-DATA_DIR=/opt/termix/data
+DATA_DIR=/opt/termix/db/data
 GUACD_HOST=127.0.0.1
 GUACD_PORT=4822
 EOF
-    fi
+
     if ! grep -q "EnvironmentFile" /etc/systemd/system/termix.service 2>/dev/null; then
       cat <<EOF >/etc/systemd/system/termix.service
 [Unit]
@@ -143,7 +162,11 @@ EOF
     fi
     msg_ok "Migrated Configuration"
 
-    create_backup /opt/termix/data /opt/termix/uploads /opt/termix/.env
+    create_backup \
+      /opt/termix/db/data \
+      /opt/termix/data \
+      /opt/termix/uploads \
+      /opt/termix/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
 
@@ -158,10 +181,10 @@ EOF
       /opt/termix/db/data
     msg_ok "Recreated Directories"
 
-    if [[ -f /opt/termix/data/db.sqlite.encrypted && ! -f /opt/termix/db/data/db.sqlite.encrypted ]]; then
-      msg_info "Migrating Database to new layout"
-      cp -a /opt/termix/data/db.sqlite.encrypted /opt/termix/db/data/db.sqlite.encrypted
-      msg_ok "Migrated Database to new layout"
+    if [[ -f /opt/termix/db/data/db.sqlite.encrypted && ! -f /opt/termix/db/data/.env ]]; then
+      msg_error "Encrypted database restored without its keys (/opt/termix/db/data/.env is missing)"
+      msg_custom "🛟" "Restore the container from a backup and report this at https://github.com/community-scripts/ProxmoxVE/issues"
+      exit 1
     fi
 
     msg_info "Building Frontend"
@@ -237,7 +260,12 @@ EOF
     fi
 
     msg_info "Starting Termix"
-    systemctl start termix
+    systemctl daemon-reload
+    if ! systemctl start termix; then
+      msg_error "Termix failed to start"
+      journalctl -u termix -n 30 --no-pager || true
+      exit 1
+    fi
     msg_ok "Started Termix"
     msg_ok "Updated successfully!"
   fi
