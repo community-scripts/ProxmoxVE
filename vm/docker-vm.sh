@@ -491,71 +491,13 @@ fi
 # ==============================================================================
 # IMAGE DOWNLOAD
 # ==============================================================================
-
-# Locate the checksum file the vendor publishes next to the image.
-# Args: $1=image_url
-# Prints: "<algo> <sums_url>", or nothing when no checksums are published
-function get_checksum_source() {
-  local url="$1"
-  case "$url" in
-  *cloud.debian.org/*) echo "sha512sum ${url%/*}/SHA512SUMS" ;;
-  *cloud-images.ubuntu.com/*) echo "sha256sum ${url%/*}/SHA256SUMS" ;;
-  esac
-}
-
-# Verify an image against the vendor checksum.
-# Args: $1=file $2=image_url
-# Returns: 0 when verified or when no checksum is available, 1 on mismatch
-function verify_image_checksum() {
-  local file="$1" url="$2"
-  local algo sums_url expected actual
-
-  read -r algo sums_url <<<"$(get_checksum_source "$url")"
-  [[ -z "$algo" ]] && return 0
-
-  # Debian lists "<hash>  <file>", Ubuntu "<hash> *<file>"
-  expected=$(curl -fsSL --max-time 30 "$sums_url" 2>/dev/null |
-    awk -v f="$(basename "$url")" '$NF == f || $NF == "*" f {print $1; exit}')
-
-  # An unreachable vendor or a changed layout must not break VM creation
-  [[ -z "$expected" ]] && return 0
-
-  actual=$("$algo" "$file" | awk '{print $1}')
-  [[ "$actual" == "$expected" ]]
-}
-
 msg_info "Retrieving the URL for the ${OS_DISPLAY} Qcow2 Disk Image"
 URL=$(get_image_url)
 CACHE_DIR="/var/lib/vz/template/cache"
 CACHE_FILE="$CACHE_DIR/$(basename "$URL")"
-mkdir -p "$CACHE_DIR"
 msg_ok "${CL}${BL}${URL}${CL}"
 
-if [[ -s "$CACHE_FILE" ]]; then
-  if verify_image_checksum "$CACHE_FILE" "$URL"; then
-    msg_ok "Using cached image ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
-  else
-    msg_error "Cached image $(basename "$CACHE_FILE") failed checksum validation. Deleting and retrying download..."
-    rm -f "$CACHE_FILE"
-  fi
-fi
-
-if [[ ! -s "$CACHE_FILE" ]]; then
-  # Download to a temporary file so an interrupted transfer is never cached
-  if ! curl -f#SL -o "$CACHE_FILE.part" "$URL"; then
-    rm -f "$CACHE_FILE.part"
-    msg_error "Download failed: $URL"
-    exit 115
-  fi
-  echo -en "\e[1A\e[0K"
-  if ! verify_image_checksum "$CACHE_FILE.part" "$URL"; then
-    rm -f "$CACHE_FILE.part"
-    msg_error "Downloaded image failed checksum validation. Please try again later."
-    exit 115
-  fi
-  mv -f "$CACHE_FILE.part" "$CACHE_FILE"
-  msg_ok "Downloaded ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
-fi
+download_and_validate_image "$URL" "$CACHE_FILE"
 
 # ==============================================================================
 # STORAGE TYPE DETECTION
