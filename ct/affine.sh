@@ -81,6 +81,8 @@ TURBO
 
     export NODE_OPTIONS="--max-old-space-size=2048"
     $STD yarn install
+    $STD bash ./scripts/set-version.sh "$(cat ~/.affine_app)"
+    export BUILD_TYPE=stable
     $STD npm install -g typescript
 
     $STD yarn affine @affine/native build

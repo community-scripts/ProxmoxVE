@@ -24,7 +24,9 @@ generate_headers() {
 
     app_name=$(grep -oP '^APP="\K[^"]+' "$script" 2>/dev/null)
     if [[ -n "$app_name" ]]; then
-      output_file="${headers_dir}/$(basename "${script%.*}")"
+      # core.func/vm-core.func look the header up as "${APP,,}" without spaces,
+      # so the generated file has to be named after APP - not after the script.
+      output_file="${headers_dir}/$(echo "${app_name,,}" | tr -d ' ')"
       figlet_output=$(figlet -w 500 -f slant "$app_name")
       if [[ -n "$figlet_output" ]]; then
         echo "$figlet_output" >"$output_file"

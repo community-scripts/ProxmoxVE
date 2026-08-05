@@ -1292,14 +1292,17 @@ create_temp_dir() {
 #   - Copies each given file/directory into a persistent store at
 #     /opt/<NSAPP>.backup, mirroring its absolute path inside the store, and
 #     records it in a manifest so restore_backup needs no arguments.
-#   - Idempotent: if a store from a previous (failed) run already exists, it is
-#     left untouched and no new backup is taken. This keeps the last-known-good
-#     data instead of overwriting it with now-partially-updated data on retry.
+#   - Idempotent per path: a path already recorded in the manifest (from this
+#     run or a previous failed one) is left untouched, keeping the
+#     last-known-good copy instead of overwriting it with now-partially-updated
+#     data on retry. Any requested path NOT yet in the manifest is backed up
+#     now and appended - so a manifest left incomplete by an interrupted prior
+#     run gets completed instead of silently missing paths on restore.
 #   - Missing source paths are skipped with a warning (not fatal).
 #   - Aborts the update on copy failure: if any file/dir cannot be backed up,
-#     the half-written store is removed and the script exits, so the update
-#     never runs against unprotected data (and a retry re-attempts a clean
-#     backup rather than skipping it).
+#     the script exits before the update runs against unprotected data (the
+#     paths already recorded are left in place, so a retry only redoes the one
+#     that failed).
 #
 # restore_backup
 #   - Copies every path recorded in the manifest back to its origin (replacing
@@ -1318,19 +1321,17 @@ create_backup() {
     return 0
   }
 
-  if [[ -f "$manifest" ]]; then
-    msg_ok "Existing backup found at ${store}, skipping backup"
-    return 0
+  if ! mkdir -p "$store" || ! touch "$manifest"; then
+    msg_error "Backup failed: could not create store at ${store} - aborting update"
+    exit 1
   fi
 
   msg_info "Backing up data"
-  if ! mkdir -p "$store" || ! : >"$manifest"; then
-    msg_error "Backup failed: could not create store at ${store} - aborting update"
-    rm -rf "$store"
-    exit 1
-  fi
   for path in "$@"; do
     path="${path%/}"
+    if grep -qxF "$path" "$manifest" 2>/dev/null; then
+      continue
+    fi
     if [[ ! -e "$path" ]]; then
       msg_warn "Skipping backup of '${path}' (not found)"
       continue
@@ -1338,7 +1339,6 @@ create_backup() {
     dest="${store}/files${path}"
     if ! mkdir -p "$(dirname "$dest")" || ! cp -a "$path" "$dest"; then
       msg_error "Backup of '${path}' failed - aborting update"
-      rm -rf "$store"
       exit 1
     fi
     echo "$path" >>"$manifest"
@@ -1466,7 +1466,7 @@ prompt_for_github_token() {
   fi
 
   local reply
-  read -rp "${TAB}Would you like to enter a GitHub Personal Access Token (PAT)? [y/N]: " reply
+  read -rp "${TAB}Would you like to enter a GitHub Personal Access Token (PAT)? [y/N]: " reply </dev/tty
   reply="${reply:-n}"
 
   if [[ ! "${reply,,}" =~ ^(y|yes)$ ]]; then
@@ -1475,7 +1475,7 @@ prompt_for_github_token() {
 
   local token
   while true; do
-    read -rp "${TAB}Enter your GitHub PAT: " token
+    read -rp "${TAB}Enter your GitHub PAT: " token </dev/tty
     # Trim leading/trailing whitespace
     token="$(echo "$token" | xargs)"
     if [[ -z "$token" ]]; then
@@ -2040,8 +2040,9 @@ cleanup_orphaned_sources() {
     local basename_file
     basename_file=$(basename "$sources_file")
 
-    # NEVER remove debian.sources - this is the standard Debian repository
-    if [[ "$basename_file" == "debian.sources" ]]; then
+    # NEVER remove the distro's own base sources file (debian.sources,
+    # ubuntu.sources, ...)
+    if [[ "$basename_file" == "$(get_os_info id).sources" ]]; then
       continue
     fi
 
@@ -2113,7 +2114,7 @@ ensure_apt_working() {
       # Step 4: More aggressive - remove all third-party sources
       msg_warn "APT update still failing, removing third-party sources"
       find /etc/apt/sources.list.d/ -type f \( -name "*.sources" -o -name "*.list" \) \
-        ! -name "debian.sources" -delete 2>/dev/null || true
+        ! -name "$(get_os_info id).sources" -delete 2>/dev/null || true
 
       # Final attempt
       if ! $STD apt update; then
@@ -3973,7 +3974,7 @@ _gh_scan_older_releases() {
       local use_fallback="y"
       if [[ -t 0 ]]; then
         msg_warn "Release ${skip_tag} has no matching asset. Previous release ${rel_tag} has a compatible asset."
-        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback || use_fallback="y"
+        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback </dev/tty || use_fallback="y"
         use_fallback="${use_fallback:-y}"
       fi
 
@@ -4599,20 +4600,17 @@ setup_composer() {
 #   - By default uses distro repository (docker.io) for stability
 #   - Optionally uses official Docker repository for latest features
 #   - Detects and migrates old Docker installations
-#   - Optional: Installs/Updates Portainer CE
 #   - Updates running containers interactively
 #   - Cleans up legacy repository files
 #
 # Usage:
 #   setup_docker                              # Uses official Docker repo (recommended)
 #   USE_DOCKER_REPO=false setup_docker        # Uses distro docker.io package
-#   DOCKER_PORTAINER="true" setup_docker
 #   DOCKER_LOG_DRIVER="json-file" setup_docker
 #
 # Variables:
 #   USE_DOCKER_REPO        - Set to "false" to use distro docker.io package
 #                            (default: true, uses official Docker repository)
-#   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
 #   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
 #   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
 #
@@ -4623,16 +4621,62 @@ setup_composer() {
 #   - Interactive per-container update prompt (Y/N, 60 s auto-no)
 #   - Compose-managed containers: full restart via docker compose
 #   - Standalone containers: image pull only, no destructive stop/rm
-#   - Portainer installation and update support
+#   - Portainer is no longer managed here; use tools/addon/portainer.sh
 #   - Set DOCKER_NONINTERACTIVE=1 to skip interactive prompts (CI/unattended)
 # ------------------------------------------------------------------------------
 _docker_is_noninteractive() {
   [[ "${DOCKER_NONINTERACTIVE:-}" == "1" || "${DOCKER_NONINTERACTIVE:-}" == "true" || "${DOCKER_NONINTERACTIVE:-}" == "TRUE" ]] || [[ ! -t 0 ]]
 }
 
+# ------------------------------------------------------------------------------
+# ensure_docker()
+#
+# - Docker precondition for addon scripts that ship a compose stack
+# - Reuses an existing installation, otherwise offers to install Docker
+#   (Debian/Ubuntu via setup_docker, Alpine via apk)
+# - Aborts when the user declines or Compose is unavailable afterwards
+# ------------------------------------------------------------------------------
+ensure_docker() {
+  if command -v docker &>/dev/null; then
+    msg_ok "Docker $(docker --version | cut -d' ' -f3 | tr -d ',') is available"
+    if docker compose version &>/dev/null; then
+      msg_ok "Docker Compose is available"
+      return 0
+    fi
+    msg_error "Docker Compose plugin is not available. Please install it."
+    exit 237
+  fi
+
+  msg_warn "Docker is not installed."
+  echo -n "${TAB:-  }Install Docker now? (y/N): "
+  local install_docker_prompt
+  read -r install_docker_prompt
+  if [[ ! "${install_docker_prompt,,}" =~ ^(y|yes)$ ]]; then
+    msg_error "Docker is required for ${APP:-this script}. Exiting."
+    exit 254
+  fi
+
+  if is_alpine; then
+    msg_info "Installing Docker"
+    $STD apk add --no-cache docker docker-cli-compose
+    $STD rc-update add docker default
+    $STD rc-service docker start
+    msg_ok "Installed Docker"
+  else
+    setup_docker || {
+      msg_error "Docker installation failed."
+      exit 237
+    }
+  fi
+
+  if ! command -v docker &>/dev/null || ! docker compose version &>/dev/null; then
+    msg_error "Docker or the Compose plugin is still unavailable after installation."
+    exit 237
+  fi
+}
+
 setup_docker() {
   local docker_installed=false
-  local portainer_installed=false
   local USE_DOCKER_REPO="${USE_DOCKER_REPO:-true}"
 
   # Check if Docker is already installed
@@ -4640,12 +4684,6 @@ setup_docker() {
     docker_installed=true
     DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
     msg_info "Docker $DOCKER_CURRENT_VERSION detected"
-  fi
-
-  # Check if Portainer is running
-  if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^portainer$'; then
-    portainer_installed=true
-    msg_info "Portainer container detected"
   fi
 
   # Scenario 1: Use distro repository (opt-out via USE_DOCKER_REPO=false)
@@ -4761,54 +4799,6 @@ EOF
     systemctl enable -q --now docker
   fi
 
-  # Portainer Management (common for both modes)
-  if [[ "${DOCKER_PORTAINER:-}" == "true" ]]; then
-    if [ "$portainer_installed" = true ]; then
-      msg_info "Checking for Portainer updates"
-      PORTAINER_CURRENT=$(docker inspect portainer --format='{{.Config.Image}}' 2>/dev/null | cut -d':' -f2)
-      PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
-
-      if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
-        if _docker_is_noninteractive; then
-          msg_info "Skipping Portainer update prompt (non-interactive)"
-        else
-          read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
-          if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-            msg_info "Updating Portainer"
-            docker stop portainer
-            docker rm portainer
-            docker pull portainer/portainer-ce:latest
-            docker run -d \
-              -p 9000:9000 \
-              -p 9443:9443 \
-              --name=portainer \
-              --restart=always \
-              -v /var/run/docker.sock:/var/run/docker.sock \
-              -v portainer_data:/data \
-              portainer/portainer-ce:latest
-            msg_ok "Updated Portainer to $PORTAINER_LATEST"
-          fi
-        fi
-      else
-        msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
-      fi
-    else
-      msg_info "Installing Portainer"
-      docker volume create portainer_data
-      docker run -d \
-        -p 9000:9000 \
-        -p 9443:9443 \
-        --name=portainer \
-        --restart=always \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v portainer_data:/data \
-        portainer/portainer-ce:latest
-
-      LOCAL_IP=$(hostname -I | awk '{print $1}')
-      msg_ok "Installed Portainer (http://${LOCAL_IP}:9000)"
-    fi
-  fi
-
   # Container Update Check
   # - Skipped entirely when running unattended / non-interactive
   # - Compose-managed containers: offered via Y/N → docker compose pull + up -d
@@ -4824,7 +4814,7 @@ EOF
       name=$(echo "$line" | awk '{print $1}')
       image=$(echo "$line" | awk '{print $2}')
 
-      # Portainer containers are handled by the dedicated block above
+      # Portainer is managed by its own addon script, not this generic loop
       [[ "$name" == "portainer" || "$name" == "portainer_agent" ]] && continue
 
       current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
@@ -4854,7 +4844,7 @@ EOF
       for entry in "${compose_updates[@]}"; do
         IFS='|' read -r name image compose_workdir compose_service <<<"$entry"
         reply=""
-        if read -r -t 60 -p "${TAB3}Update ${name} (${image}) via Compose? <y/N> (auto-no in 60s): " reply; then
+        if read -r -t 60 -p "${TAB3}Update ${name} (${image}) via Compose? <y/N> (auto-no in 60s): " reply </dev/tty; then
           echo ""
         else
           echo ""
@@ -4872,7 +4862,7 @@ EOF
       for entry in "${standalone_updates[@]}"; do
         IFS='|' read -r name image <<<"$entry"
         reply=""
-        if read -r -t 60 -p "${TAB3}Pull new image for ${name} (${image})? <y/N> (auto-no in 60s): " reply; then
+        if read -r -t 60 -p "${TAB3}Pull new image for ${name} (${image})? <y/N> (auto-no in 60s): " reply </dev/tty; then
           echo ""
         else
           echo ""
@@ -5467,7 +5457,7 @@ setup_hwaccel() {
     # Read with 60 second timeout
     local selection=""
     echo -n "Select GPU(s) to configure (1-${gpu_count}, A=all) [timeout 60s, default=all]: "
-    if read -r -t 60 selection; then
+    if read -r -t 60 selection </dev/tty; then
       selection="${selection^^}" # uppercase
     else
       echo ""
@@ -5515,7 +5505,7 @@ setup_hwaccel() {
       echo ""
       msg_custom "🎮" "${GN}" "NVIDIA GPU passthrough detected"
       local nvidia_reply=""
-      read -r -t 60 -p "${TAB3}⚙️ Install NVIDIA driver libraries in the container? [Y/n] (auto-yes in 60s): " nvidia_reply || nvidia_reply=""
+      read -r -t 60 -p "${TAB3}⚙️ Install NVIDIA driver libraries in the container? [Y/n] (auto-yes in 60s): " nvidia_reply </dev/tty || nvidia_reply=""
       case "${nvidia_reply,,}" in
       n | no) install_nvidia_drivers="no" ;;
       *) install_nvidia_drivers="yes" ;;
@@ -9813,7 +9803,7 @@ _gl_scan_older_releases() {
       local use_fallback="y"
       if [[ -t 0 ]]; then
         msg_warn "Release ${skip_tag} has no matching asset. Previous release ${rel_tag} has a compatible asset."
-        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback || use_fallback="y"
+        read -rp "Use version ${rel_tag} instead? [Y/n] (auto-yes in 60s): " -t 60 use_fallback </dev/tty || use_fallback="y"
         use_fallback="${use_fallback:-y}"
       fi
 

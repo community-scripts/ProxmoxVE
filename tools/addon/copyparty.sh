@@ -7,8 +7,13 @@
 
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt-get update >/dev/null 2>&1
-  apt-get install -y curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -45,27 +50,12 @@ if [[ -f "/etc/alpine-release" ]]; then
   SERVICE_PATH="/etc/init.d/copyparty"
 elif grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
   OS="Debian"
-  PKG_MANAGER="apt-get install -y"
+  PKG_MANAGER="apt install -y"
   SERVICE_PATH="/etc/systemd/system/copyparty.service"
 else
   msg_error "Unsupported OS detected. Exiting."
   exit 238
 fi
-
-# ==============================================================================
-# HEADER
-# ==============================================================================
-function header_info() {
-  clear
-  cat <<"EOF"
-   ______                  ____             __
-  / ____/___  ____  __  __/ __ \____ ______/ /___  __
- / /   / __ \/ __ \/ / / / /_/ / __ `/ ___/ __/ / / /
-/ /___/ /_/ / /_/ / /_/ / ____/ /_/ / /  / /_/ /_/ /
-\____/\____/ .___/\__, /_/    \__,_/_/   \__/\__, /
-          /_/    /____/                     /____/
-EOF
-}
 
 # ==============================================================================
 # HELPER FUNCTIONS
@@ -173,9 +163,17 @@ function install() {
 
   msg_info "Installing dependencies"
   if [[ "$OS" == "Debian" ]]; then
-    $STD $PKG_MANAGER python3 python3-pil ffmpeg curl
+    $STD $PKG_MANAGER \
+      python3 \
+      python3-pil \
+      ffmpeg \
+      curl
   else
-    $STD $PKG_MANAGER python3 py3-pillow ffmpeg curl
+    $STD $PKG_MANAGER \
+      python3 \
+      py3-pillow \
+      ffmpeg \
+      curl
   fi
   msg_ok "Dependencies installed (with thumbnail support)"
 

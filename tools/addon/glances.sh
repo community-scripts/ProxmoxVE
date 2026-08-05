@@ -5,55 +5,47 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://nicolargo.github.io/glances/ | Github: https://github.com/nicolargo/glances
 
-function header_info {
-  clear
-  cat <<"EOF"
-   ________
-  / ____/ /___ _____  ________  _____
- / / __/ / __ `/ __ \/ ___/ _ \/ ___/
-/ /_/ / / /_/ / / / / /__/  __(__  )
-\____/_/\__,_/_/ /_/\___/\___/____/
-
-EOF
-}
-
 APP="Glances"
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-RD=$(echo "\033[01;31m")
-BL=$(echo "\033[36m")
-CL=$(echo "\033[m")
-CM="${GN}✔️${CL}"
-CROSS="${RD}✖️${CL}"
-INFO="${BL}ℹ️${CL}"
+APP_TYPE="addon"
 
-function msg_info() { echo -e "${INFO} ${YW}$1...${CL}"; }
-function msg_ok() { echo -e "${CM} ${GN}$1${CL}"; }
-function msg_error() { echo -e "${CROSS} ${RD}$1${CL}"; }
-
-# Telemetry
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "glances" "addon"
 
-get_lxc_ip() {
-  if command -v hostname >/dev/null 2>&1 && hostname -I 2>/dev/null; then
-    hostname -I | awk '{print $1}'
-  elif command -v ip >/dev/null 2>&1; then
-    ip -4 addr show scope global | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1
-  else
-    echo "127.0.0.1"
-  fi
-}
-IP=$(get_lxc_ip)
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
+
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+
+header_info
+get_lxc_ip
+IP="$LOCAL_IP"
 
 install_glances_debian() {
   msg_info "Installing dependencies"
-  apt-get update >/dev/null 2>&1
-  apt-get install -y gcc lm-sensors wireless-tools curl >/dev/null 2>&1
+  $STD apt update
+  $STD apt install -y \
+    gcc \
+    lm-sensors \
+    wireless-tools \
+    curl
   msg_ok "Installed dependencies"
 
   msg_info "Setting up Python + uv"
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   setup_uv PYTHON_VERSION="3.12"
   msg_ok "Setup Python + uv"
 
@@ -61,10 +53,10 @@ install_glances_debian() {
   cd /opt
   mkdir -p glances
   cd glances
-  uv venv --clear
+  $STD uv venv --clear
   source .venv/bin/activate >/dev/null 2>&1
-  uv pip install --upgrade pip wheel setuptools >/dev/null 2>&1
-  uv pip install "glances[web]" >/dev/null 2>&1
+  $STD uv pip install --upgrade pip wheel setuptools
+  $STD uv pip install "glances[web]"
   deactivate
   msg_ok "Installed $APP"
 
@@ -86,7 +78,7 @@ EOF
   systemctl enable -q --now glances
   msg_ok "Created systemd service"
 
-  echo -e "\n$APP is now running at: http://$IP:61208\n"
+  msg_ok "$APP is now running at: http://${IP}:61208"
 }
 
 # update on Debian/Ubuntu
@@ -98,7 +90,7 @@ update_glances_debian() {
   msg_info "Updating $APP"
   cd /opt/glances
   source .venv/bin/activate
-  uv pip install --upgrade "glances[web]" >/dev/null 2>&1
+  $STD uv pip install --upgrade "glances[web]"
   deactivate
   systemctl restart glances
   msg_ok "Updated successfully!"
@@ -116,14 +108,13 @@ uninstall_glances_debian() {
 # install on Alpine
 install_glances_alpine() {
   msg_info "Installing dependencies"
-  apk update >/dev/null 2>&1
+  $STD apk update
   $STD apk add --no-cache \
     gcc musl-dev linux-headers python3-dev \
-    python3 py3-pip py3-virtualenv lm-sensors wireless-tools curl >/dev/null 2>&1
+    python3 py3-pip py3-virtualenv lm-sensors wireless-tools curl
   msg_ok "Installed dependencies"
 
   msg_info "Setting up Python + uv"
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   setup_uv PYTHON_VERSION="3.12"
   msg_ok "Setup Python + uv"
 
@@ -131,10 +122,10 @@ install_glances_alpine() {
   cd /opt
   mkdir -p glances
   cd glances
-  uv venv --clear
+  $STD uv venv --clear
   source .venv/bin/activate
-  uv pip install --upgrade pip wheel setuptools >/dev/null 2>&1
-  uv pip install "glances[web]" >/dev/null 2>&1
+  $STD uv pip install --upgrade pip wheel setuptools
+  $STD uv pip install "glances[web]"
   deactivate
   msg_ok "Installed $APP"
 
@@ -165,7 +156,7 @@ update_glances_alpine() {
   msg_info "Updating $APP"
   cd /opt/glances
   source .venv/bin/activate
-  uv pip install --upgrade "glances[web]" >/dev/null 2>&1
+  $STD uv pip install --upgrade "glances[web]"
   deactivate
   rc-service glances restart
   msg_ok "Updated successfully!"

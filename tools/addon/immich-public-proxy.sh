@@ -7,8 +7,13 @@
 
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt-get update >/dev/null 2>&1
-  apt-get install -y curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -27,39 +32,12 @@ APP="Immich Public Proxy"
 APP_TYPE="addon"
 INSTALL_PATH="/opt/immich-proxy"
 CONFIG_PATH="/opt/immich-proxy/app"
+SERVICE_PATH="/etc/systemd/system/immich-proxy.service"
 DEFAULT_PORT=3000
 
 # Initialize all core functions (colors, formatting, icons, $STD mode)
 load_functions
-
-# ==============================================================================
-# HEADER
-# ==============================================================================
-function header_info {
-  clear
-  cat <<"EOF"
-    ____                    _      __          ____
-   /  _/___ ___  ____ ___  (_)____/ /_        / __ \_________  _  ____  __
-   / // __ `__ \/ __ `__ \/ / ___/ __ \______/ /_/ / ___/ __ \| |/_/ / / /
- _/ // / / / / / / / / / / / /__/ / / /_____/ ____/ /  / /_/ />  </ /_/ /
-/___/_/ /_/ /_/_/ /_/ /_/_/\___/_/ /_/     /_/   /_/   \____/_/|_|\__, /
-                                                                 /____/
-EOF
-}
-
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if [[ -f "/etc/alpine-release" ]]; then
-  msg_error "Alpine is not supported for ${APP}. Use Debian."
-  exit 238
-elif [[ -f "/etc/debian_version" ]]; then
-  OS="Debian"
-  SERVICE_PATH="/etc/systemd/system/immich-proxy.service"
-else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 238
-fi
+require_debian_like
 
 # ==============================================================================
 # UNINSTALL
@@ -83,19 +61,13 @@ function update() {
     systemctl stop immich-proxy.service &>/dev/null || true
     msg_ok "Stopped service"
 
-    msg_info "Backing up configuration"
-    cp "$CONFIG_PATH"/.env /tmp/ipp.env.bak 2>/dev/null || true
-    cp "$CONFIG_PATH"/config.json /tmp/ipp.config.json.bak 2>/dev/null || true
-    msg_ok "Backed up configuration"
+    BACKUP_DIR="/opt/immich-public-proxy_backup"
+    create_backup "$CONFIG_PATH"/.env "$CONFIG_PATH"/config.json
 
     NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "$INSTALL_PATH"
 
-    msg_info "Restoring configuration"
-    cp /tmp/ipp.env.bak "$CONFIG_PATH"/.env 2>/dev/null || true
-    cp /tmp/ipp.config.json.bak "$CONFIG_PATH"/config.json 2>/dev/null || true
-    rm -f /tmp/ipp.*.bak
-    msg_ok "Restored configuration"
+    restore_backup
 
     msg_info "Installing dependencies"
     cd "$CONFIG_PATH"

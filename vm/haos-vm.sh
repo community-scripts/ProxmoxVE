@@ -402,7 +402,7 @@ function advanced_settings() {
   fi
 
   if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose CPU Model" --cancel-button Exit-Script 10 58 2 \
-    "KVM64" "Default – safe for migration/compatibility" ON \
+    "KVM64" "Default - safe for migration/compatibility" ON \
     "Host" "Use host CPU features (faster, no migration)" OFF \
     3>&1 1>&2 2>&3); then
     case "$CPU_TYPE1" in

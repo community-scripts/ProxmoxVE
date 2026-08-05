@@ -38,6 +38,7 @@ function update_script() {
     create_backup /opt/passwordpusher/storage /opt/passwordpusher/.env.production
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "passwordpusher" "pglombardo/PasswordPusher" "tarball"
+    RUBY_VERSION="$(cat /opt/passwordpusher/.ruby-version)" RUBY_INSTALL_RAILS="false" setup_ruby
 
     msg_info "Installing Gem Dependencies"
     cd /opt/passwordpusher

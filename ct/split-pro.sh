@@ -35,18 +35,16 @@ function update_script() {
     systemctl stop split-pro
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp /opt/split-pro/.env /opt/split-pro.env
-    msg_ok "Backed up Data"
+    create_backup /opt/split-pro/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "split-pro" "oss-apps/split-pro" "tarball"
+
+    restore_backup
 
     msg_info "Building Application"
     cd /opt/split-pro
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
-    cp /opt/split-pro.env /opt/split-pro/.env
-    rm -f /opt/split-pro.env
     ln -sf /opt/split-pro_data/uploads /opt/split-pro/uploads
     $STD pnpm exec prisma migrate deploy
     msg_ok "Built Application"

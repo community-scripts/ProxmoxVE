@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 
 msg_info "Installing OmniRoute"
 $STD npm install -g omniroute@latest

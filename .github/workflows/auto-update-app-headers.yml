@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - "ct/**.sh"
+      - "tools/**.sh"
+      - "vm/**.sh"
   workflow_dispatch:
 
 jobs:

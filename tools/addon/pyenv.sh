@@ -5,77 +5,123 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://pyenv.run/ | Github: https://github.com/pyenv/pyenv
 
-set -e
-YW=$(echo "\033[33m")
-RD=$(echo "\033[01;31m")
-BL=$(echo "\033[36m")
-GN=$(echo "\033[1;92m")
-CL=$(echo "\033[m")
-CM="${GN}✓${CL}"
-CROSS="${RD}✗${CL}"
-BFR="\\r\\033[K"
-HOLD="-"
-function msg_info() {
-  local msg="$1"
-  echo -ne " ${HOLD} ${YW}${msg}..."
-}
+APP="pyenv"
+APP_TYPE="addon"
 
-function msg_ok() {
-  local msg="$1"
-  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
-}
-function msg_error() {
-  local msg="$1"
-  echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
-}
-
-# Telemetry
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pyenv" "addon"
 
-if command -v pveversion >/dev/null 2>&1; then
-  msg_error "Can't Install on Proxmox "
-  exit
-fi
-msg_info "Installing pyenv"
-apt-get install -y \
-  make \
-  build-essential \
-  libjpeg-dev \
-  libpcap-dev \
-  libssl-dev \
-  zlib1g-dev \
-  libbz2-dev \
-  libreadline-dev \
-  libsqlite3-dev \
-  autoconf \
-  git \
-  curl \
-  sudo \
-  llvm \
-  libncursesw5-dev \
-  xz-utils \
-  tk-dev \
-  libxml2-dev \
-  libxmlsec1-dev \
-  libffi-dev \
-  libopenjp2-7 \
-  libtiff5 \
-  libturbojpeg0-dev \
-  liblzma-dev &>/dev/null
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
 
-git clone https://github.com/pyenv/pyenv.git ~/.pyenv &>/dev/null
-set +e
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >>~/.bashrc
-echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >>~/.bashrc
-echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n eval "$(pyenv init --path)"\nfi' >>~/.bashrc
-msg_ok "Installed pyenv"
-. ~/.bashrc
-set -e
-msg_info "Installing Python 3.11.1"
-pyenv install 3.11.1 &>/dev/null
-pyenv global 3.11.1
-msg_ok "Installed Python 3.11.1"
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+require_debian_like
+
+header_info
+confirm_not_pve_host
+get_lxc_ip
+export PYENV_ROOT="${HOME}/.pyenv"
+
+msg_info "Installing dependencies"
+$STD apt update
+
+# Official Python build dependencies for Debian/Ubuntu
+# https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+PYENV_DEPS=(
+  build-essential
+  libssl-dev
+  zlib1g-dev
+  libbz2-dev
+  libreadline-dev
+  libsqlite3-dev
+  curl
+  git
+  xz-utils
+  tk-dev
+  libxml2-dev
+  libxmlsec1-dev
+  libffi-dev
+  liblzma-dev
+)
+
+# Extras for the optional Home Assistant / ESPHome installs below (Pillow et al.)
+PYENV_DEPS+=(make llvm libjpeg-dev libpcap-dev libopenjp2-7)
+
+# These were renamed between releases (libtiff5 is gone on Debian 13 / Ubuntu 24.04),
+# so take whichever variant the distro actually ships
+for candidates in "libncurses-dev libncursesw5-dev" "libtiff-dev libtiff5-dev" "libturbojpeg0-dev libturbojpeg-dev"; do
+  for pkg in $candidates; do
+    if apt-cache show "$pkg" &>/dev/null; then
+      PYENV_DEPS+=("$pkg")
+      break
+    fi
+  done
+done
+
+install_packages_with_retry "${PYENV_DEPS[@]}"
+msg_ok "Installed dependencies"
+
+# The upstream installer refuses to run when PYENV_ROOT already exists
+if [[ -d "$PYENV_ROOT" ]]; then
+  msg_ok "${APP} is already installed at ${PYENV_ROOT}"
+else
+  msg_info "Installing ${APP}"
+  # Official installer - also sets up the pyenv-doctor/update/virtualenv plugins
+  $STD bash <(curl -fsSL https://pyenv.run)
+  msg_ok "Installed ${APP}"
+fi
+
+# Shell setup per upstream docs. On Debian-based systems ~/.profile prepends the
+# per-user bin dirs *after* sourcing ~/.bashrc, so both files need the init call.
+msg_info "Configuring shell environment"
+for rc in "${HOME}/.bashrc" "${HOME}/.profile"; do
+  [[ -f "$rc" ]] || touch "$rc"
+  if ! grep -q 'PYENV_ROOT' "$rc"; then
+    cat >>"$rc" <<'EOF'
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - bash)"
+EOF
+  fi
+done
+msg_ok "Configured shell environment"
+
+# Activate pyenv for the remainder of this script
+export PATH="${PYENV_ROOT}/bin:$PATH"
+set +Eeuo pipefail
+eval "$(pyenv init - bash)"
+set -Eeuo pipefail
+
+# pyenv resolves a version prefix to the latest release in that line, so pinning
+# a patch level (the old 3.11.1) is neither needed nor portable across distros.
+#
+# 3.14 is the only series all three optional payloads below agree on:
+#   Home Assistant Core   >= 3.14.2
+#   ESPHome               >= 3.12.0, < 3.15
+#   python-matter-server  >= 3.12
+# (3.11 has been security-fix-only since 2024 and is EOL in 10/2027.)
+PYTHON_SERIES="3.14"
+msg_info "Installing Python ${PYTHON_SERIES} (latest patch release)"
+$STD pyenv install -s "$PYTHON_SERIES"
+pyenv global "$PYTHON_SERIES"
+msg_ok "Installed Python $(pyenv version-name)"
 read -r -p "Would you like to install Home Assistant Beta? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Home Assistant Beta"
@@ -95,13 +141,13 @@ EOF
   cd /srv/homeassistant
   python3 -m venv .
   source bin/activate
-  python3 -m pip install wheel &>/dev/null
-  pip3 install --upgrade pip &>/dev/null
-  pip3 install psycopg2-binary &>/dev/null
-  pip3 install --pre homeassistant &>/dev/null
+  $STD python3 -m pip install wheel
+  $STD pip3 install --upgrade pip
+  $STD pip3 install psycopg2-binary
+  $STD pip3 install --pre homeassistant
   systemctl enable homeassistant &>/dev/null
   msg_ok "Installed Home Assistant Beta"
-  echo -e " Go to $(hostname -I | awk '{print $1}'):8123"
+  echo -e " Go to ${LOCAL_IP}:8123"
   hass
 fi
 
@@ -112,9 +158,9 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   cd /srv/esphome
   python3 -m venv .
   source bin/activate
-  python3 -m pip install wheel &>/dev/null
-  pip3 install --upgrade pip &>/dev/null
-  pip3 install --pre esphome &>/dev/null
+  $STD python3 -m pip install wheel
+  $STD pip3 install --upgrade pip
+  $STD pip3 install --pre esphome
   cat <<EOF >/srv/esphome/start.sh
 #!/usr/bin/env bash
 
@@ -143,25 +189,26 @@ WantedBy=multi-user.target
 EOF
   systemctl enable --now esphomedashboard &>/dev/null
   msg_ok "Installed ESPHome Beta"
-  echo -e " Go to $(hostname -I | awk '{print $1}'):6052"
+  echo -e " Go to ${LOCAL_IP}:6052"
   exec $SHELL
 fi
 
 read -r -p "Would you like to install Matter-Server (Beta)? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Matter Server"
-  apt-get install -y \
+  $STD apt install -y \
     libcairo2-dev \
     libjpeg62-turbo-dev \
     libgirepository1.0-dev \
     libpango1.0-dev \
     libgif-dev \
-    g++ &>/dev/null
-  python3 -m pip install wheel
-  pip3 install --upgrade pip
-  pip install python-matter-server[server]
+    g++
+  $STD python3 -m pip install wheel
+  $STD pip3 install --upgrade pip
+  $STD pip install python-matter-server[server]
   msg_ok "Installed Matter Server"
   echo -e "Start server > python -m matter_server.server"
 fi
 msg_ok "\nFinished\n"
 exec $SHELL
+

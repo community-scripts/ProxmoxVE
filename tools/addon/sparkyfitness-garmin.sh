@@ -7,8 +7,13 @@
 
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt-get update >/dev/null 2>&1
-  apt-get install -y curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -20,6 +25,7 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "sparkyfitness
 set -Eeuo pipefail
 trap 'error_handler' ERR
 load_functions
+require_debian_like
 
 # ==============================================================================
 # CONFIGURATION
@@ -30,14 +36,6 @@ INSTALL_PATH="/opt/sparkyfitness-garmin"
 CONFIG_PATH="/etc/sparkyfitness-garmin/.env"
 SERVICE_PATH="/etc/systemd/system/sparkyfitness-garmin.service"
 DEFAULT_PORT=8000
-
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
-  echo -e "${CROSS} Unsupported OS detected. This script only supports Debian and Ubuntu."
-  exit 238
-fi
 
 # ==============================================================================
 # SparkyFitness LXC DETECTION

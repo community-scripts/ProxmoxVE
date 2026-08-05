@@ -15,11 +15,11 @@ update_os
 
 PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
-read -r -p "${TAB3}Would you like to add Portainer (UI)? <y/N> " prompt
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  DOCKER_PORTAINER="true" setup_docker
+setup_docker
+
+if prompt_confirm "${TAB3}Would you like to install Portainer (UI) via the community-scripts addon?" "n" 60; then
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)" <<<"y"
 else
-  setup_docker
   read -r -p "${TAB3}Would you like to install the Portainer Agent (for remote management)? <y/N> " prompt_agent
   if [[ ${prompt_agent,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"

@@ -30,6 +30,8 @@ function update_script() {
     exit 1
   fi
 
+  ensure_dependencies libatomic1
+
   RELEASE_JSON=$(curl -fsSL "https://api.bitfocus.io/v1/product/companion/packages?limit=20")
   PACKAGE_JSON=$(echo "$RELEASE_JSON" | jq -c \
     --arg target "linux-$(arch_resolve "tgz" "arm64-tgz")" \

@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="24" setup_nodejs
   RELEASE=$(get_latest_github_release "actualbudget/actual")
   if [[ -f /opt/actualbudget-data/config.json ]]; then
     if check_for_gh_release "actualbudget" "actualbudget/actual"; then
@@ -39,7 +39,9 @@ function update_script() {
       msg_ok "Stopped Service"
 
       msg_info "Updating Actual Budget to ${RELEASE}"
+      $STD npm config set allow-scripts=bcrypt,better-sqlite3,argon2 --location=global
       $STD npm update -g @actual-app/sync-server
+      $STD npm rebuild -g
       echo "${RELEASE}" >~/.actualbudget
       msg_ok "Updated Actual Budget to ${RELEASE}"
 

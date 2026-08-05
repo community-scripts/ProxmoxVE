@@ -7,8 +7,13 @@
 
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt-get update >/dev/null 2>&1
-  apt-get install -y curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -27,39 +32,12 @@ APP="Jellystat"
 APP_TYPE="addon"
 INSTALL_PATH="/opt/jellystat"
 CONFIG_PATH="/opt/jellystat/.env"
+SERVICE_PATH="/etc/systemd/system/jellystat.service"
 DEFAULT_PORT=3000
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
-
-# ==============================================================================
-# HEADER
-# ==============================================================================
-function header_info {
-  clear
-  cat <<"EOF"
-       __     ____           __        __
-      / /__  / / /_  _______/ /_____ _/ /_
- __  / / _ \/ / / / / / ___/ __/ __ `/ __/
-/ /_/ /  __/ / / /_/ (__  ) /_/ /_/ / /_
-\____/\___/_/_/\__, /____/\__/\__,_/\__/
-              /____/
-EOF
-}
-
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if [[ -f "/etc/alpine-release" ]]; then
-  msg_error "Alpine is not supported for ${APP}. Use Debian/Ubuntu."
-  exit 238
-elif [[ -f "/etc/debian_version" ]]; then
-  OS="Debian"
-  SERVICE_PATH="/etc/systemd/system/jellystat.service"
-else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 238
-fi
+require_debian_like
 
 # ==============================================================================
 # UNINSTALL
@@ -102,16 +80,12 @@ function update() {
     systemctl stop jellystat.service &>/dev/null || true
     msg_ok "Stopped service"
 
-    msg_info "Backing up configuration"
-    cp "$CONFIG_PATH" /tmp/jellystat.env.bak 2>/dev/null || true
-    msg_ok "Backed up configuration"
+    BACKUP_DIR="/opt/jellystat_backup"
+    create_backup "$CONFIG_PATH"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jellystat" "CyferShepard/Jellystat" "tarball" "latest" "$INSTALL_PATH"
 
-    msg_info "Restoring configuration"
-    cp /tmp/jellystat.env.bak "$CONFIG_PATH" 2>/dev/null || true
-    rm -f /tmp/jellystat.env.bak
-    msg_ok "Restored configuration"
+    restore_backup
 
     msg_info "Installing dependencies"
     cd "$INSTALL_PATH"

@@ -518,15 +518,86 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
-## 2026-08-02
+## 2026-08-05
+
+### 🚀 Updated Scripts
+
+  - NextcloudPI: Bump to Debian Trixie & Tweak broken SSH [@MickLesk](https://github.com/MickLesk) ([#15957](https://github.com/community-scripts/ProxmoxVE/pull/15957))
+
+## 2026-08-04
+
+### 🆕 New Scripts
+
+  - Hister ([#16259](https://github.com/community-scripts/ProxmoxVE/pull/16259))
+- Obsidian-LiveSync ([#16233](https://github.com/community-scripts/ProxmoxVE/pull/16233))
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - Actual Budget: allow native module install scripts under npm 11 (Node24) [@MickLesk](https://github.com/MickLesk) ([#16277](https://github.com/community-scripts/ProxmoxVE/pull/16277))
+    - Heimdall-Dashboard: run full composer install on update, force production env [@MickLesk](https://github.com/MickLesk) ([#16278](https://github.com/community-scripts/ProxmoxVE/pull/16278))
+    - xyOps: rebuild xySat satellite during update [@MickLesk](https://github.com/MickLesk) ([#16279](https://github.com/community-scripts/ProxmoxVE/pull/16279))
+    - HAOS: remove non-ASCII dash from CPU model dialog text [@MickLesk](https://github.com/MickLesk) ([#16276](https://github.com/community-scripts/ProxmoxVE/pull/16276))
+    - fix: back up Termix db/data so the update stops destroying encryption keys [@LukeGus](https://github.com/LukeGus) ([#16275](https://github.com/community-scripts/ProxmoxVE/pull/16275))
+    - passwordpusher: dynamically read Ruby version from .ruby-version file [@Copilot](https://github.com/Copilot) ([#16242](https://github.com/community-scripts/ProxmoxVE/pull/16242))
+    - fix(salt): write version cache to ~/.salt, not /~.salt [@TowyTowy](https://github.com/TowyTowy) ([#16265](https://github.com/community-scripts/ProxmoxVE/pull/16265))
+    - AFFiNE: fix version and build type reported by the app itself [@MickLesk](https://github.com/MickLesk) ([#16251](https://github.com/community-scripts/ProxmoxVE/pull/16251))
+    - Passbolt: fetch GPG key from Passbolt's own host instead of the flaky keyserver [@MickLesk](https://github.com/MickLesk) ([#16248](https://github.com/community-scripts/ProxmoxVE/pull/16248))
+
+  - #### ✨ New Features
+
+    - Opencloud: Pin version to 7.4.0 [@vhsdream](https://github.com/vhsdream) ([#16257](https://github.com/community-scripts/ProxmoxVE/pull/16257))
+
+  - #### 🔧 Refactor
+
+    - Bump NodeJS Versions of several scripts [@MickLesk](https://github.com/MickLesk) ([#16230](https://github.com/community-scripts/ProxmoxVE/pull/16230))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: never delete ubuntu.sources (or other distro base sources) as orphaned [@MickLesk](https://github.com/MickLesk) ([#16250](https://github.com/community-scripts/ProxmoxVE/pull/16250))
+    - tools.func: complete a stale/partial backup manifest instead of trusting it as-is [@MickLesk](https://github.com/MickLesk) ([#16252](https://github.com/community-scripts/ProxmoxVE/pull/16252))
+
+  - #### 🔧 Refactor
+
+    - Refactor: harmonize tools/addon and move boilerplate into core.func [@MickLesk](https://github.com/MickLesk) ([#16202](https://github.com/community-scripts/ProxmoxVE/pull/16202))
+
+## 2026-08-03
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Correction to link in Paperless-NGX update script [@jsspen](https://github.com/jsspen) ([#16241](https://github.com/community-scripts/ProxmoxVE/pull/16241))
+    - fix restore env in split pro [@johanngrobe](https://github.com/johanngrobe) ([#16228](https://github.com/community-scripts/ProxmoxVE/pull/16228))
+
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: read all interactive prompts from /dev/tty, drain leftover input on read failure (hotfix) [@MickLesk](https://github.com/MickLesk) ([#16235](https://github.com/community-scripts/ProxmoxVE/pull/16235))
+
+## 2026-08-02
+
+### 🆕 New Scripts
+
+  - Portainer as Addon [@MickLesk](https://github.com/MickLesk) ([#16200](https://github.com/community-scripts/ProxmoxVE/pull/16200))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - LibreNMS: Ensure ipmitool dependency is installed [@tremor021](https://github.com/tremor021) ([#16219](https://github.com/community-scripts/ProxmoxVE/pull/16219))
+    - Bitfocus Companion: add libatomic1 dependency [@tremor021](https://github.com/tremor021) ([#16212](https://github.com/community-scripts/ProxmoxVE/pull/16212))
     - fix(dispatcharr): add recordings and dvr queues to celery worker [@eXistC](https://github.com/eXistC) ([#16204](https://github.com/community-scripts/ProxmoxVE/pull/16204))
     - add retry for uv - same as immich [@asylumexp](https://github.com/asylumexp) ([#16203](https://github.com/community-scripts/ProxmoxVE/pull/16203))
     - Fix for cross-seed node version regression [@TorinFrancis](https://github.com/TorinFrancis) ([#16209](https://github.com/community-scripts/ProxmoxVE/pull/16209))
+
+  - #### 🔧 Refactor
+
+    - chore: remove portainer setup from several scripts (moved to addon) [@MickLesk](https://github.com/MickLesk) ([#16201](https://github.com/community-scripts/ProxmoxVE/pull/16201))
 
 ## 2026-08-01
 

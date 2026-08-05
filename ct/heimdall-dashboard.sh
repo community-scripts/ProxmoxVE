@@ -46,8 +46,11 @@ function update_script() {
 
     msg_info "Updating Heimdall-Dashboard"
     cd /opt/Heimdall
+    sed -i 's/^APP_ENV=.*/APP_ENV=production/' .env
+    rm -f bootstrap/cache/*.php
     export COMPOSER_ALLOW_SUPERUSER=1
-    $STD composer dump-autoload
+    $STD composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+    $STD php artisan optimize:clear
     msg_ok "Updated Heimdall-Dashboard"
 
     msg_info "Restoring Data"

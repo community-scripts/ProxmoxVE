@@ -3917,7 +3917,7 @@ run_addon_updates() {
     name="${a##*/update_}"
     printf 'Do you also want to update addon "%s"? (y/N) [60s]: ' "$name"
     ans=""
-    if read -r -t 60 ans; then :; else echo; fi
+    if read -r -t 60 ans </dev/tty; then :; else echo; fi
     case "${ans,,}" in
     y | yes)
       bash "$a" || msg_warn "Addon update for $name failed (rc=$?)"
@@ -5200,15 +5200,11 @@ EOF
     # TSTP = Ctrl+Z, TTIN = bg read from tty, TTOU = bg write to tty (tostop)
     trap '' TSTP TTIN TTOU
 
-    # lxc-attach takes the controlling terminal while the install runs and does
-    # not hand it back, leaving us in a background process group. Reading from
-    # the terminal then returns EIO instead of blocking, because SIGTTIN is
-    # ignored above - so every recovery prompt fails before the user can answer.
-    # Redirecting to /dev/tty does not help: the rule applies to the terminal,
-    # not the file descriptor. Claim the foreground group back; SIGTTOU is
-    # ignored too, so tcsetpgrp() succeeds instead of stopping us. No-op when we
-    # already are in the foreground. perl is a hard dependency of Proxmox VE.
-    perl -e 'use POSIX; open(my $t, "+<", "/dev/tty") or exit 1; POSIX::tcsetpgrp(fileno($t), getpgrp()) or exit 1;' 2>/dev/null || true
+    # lxc-attach left us in a background process group - claim the terminal back
+    # before we print anything. Note this does NOT hold: the log collection
+    # below uses pct pull/exec, which take it away again, so every interactive
+    # prompt has to reclaim it again right before its read.
+    reclaim_tty
 
     msg_error "Installation failed in container ${CTID} (exit code: ${install_exit_code})"
 
@@ -5338,6 +5334,7 @@ EOF
       pct enter "$CTID"
       echo ""
       echo -en "${YW}Container ${CTID} still running. Remove now? (y/N): ${CL}"
+      reclaim_tty
       if read -r response </dev/tty && [[ "$response" =~ ^[Yy]$ ]]; then
         pct stop "$CTID" &>/dev/null || true
         pct destroy "$CTID" &>/dev/null || true
@@ -5497,6 +5494,7 @@ EOF
 
     local response=""
     local read_rc
+    reclaim_tty
     read -t 60 -r response </dev/tty
     read_rc=$?
     if [[ $read_rc -eq 0 ]]; then
@@ -5729,6 +5727,7 @@ EOF
       # read itself failed (e.g. broken/closed stdin, I/O error) rather than
       # timing out - don't guess and destroy the container on a read we
       # couldn't actually capture; keep it since that's the reversible choice.
+      while read -r -t 0.1 -n 1 _ </dev/tty 2>/dev/null; do :; done
       echo ""
       msg_error "Could not read your response (stdin error) - keeping container ${CTID} for safety."
       msg_error "Remove it manually if not needed: pct destroy ${CTID}"
@@ -5760,6 +5759,7 @@ destroy_lxc() {
   trap 'echo; msg_error "Aborted by user (SIGINT/SIGQUIT)"; return 130' INT QUIT
 
   local prompt
+  reclaim_tty
   if ! read -rp "Remove this Container? <y/N> " prompt </dev/tty; then
     # read returns non-zero on Ctrl-D/ESC
     msg_error "Aborted input (Ctrl-D/ESC)"

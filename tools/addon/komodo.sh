@@ -6,8 +6,13 @@
 # Source: https://komo.do/ | Github: https://github.com/moghtech/komodo
 if ! command -v curl &>/dev/null; then
   printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt-get update >/dev/null 2>&1 || apk update >/dev/null 2>&1
-  apt-get install -y curl >/dev/null 2>&1 || apk add --no-cache curl >/dev/null 2>&1
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -131,25 +136,7 @@ function update() {
 }
 
 # ==============================================================================
-# PROXMOX HOST CHECK
-# ==============================================================================
-function check_proxmox_host() {
-  if command -v pveversion &>/dev/null; then
-    msg_error "Running on the Proxmox host is NOT recommended!"
-    msg_error "This should be executed inside an LXC container."
-    echo ""
-    echo -n "${TAB}Continue anyway? (y/N): "
-    read -r confirm
-    if [[ ! "${confirm,,}" =~ ^(y|yes)$ ]]; then
-      msg_warn "Aborted. Please run this inside an LXC container."
-      exit 0
-    fi
-    msg_warn "Proceeding on Proxmox host at your own risk!"
-  fi
-}
-
-# ==============================================================================
-# CHECK / INSTALL DOCKER
+# DEPENDENCIES
 # ==============================================================================
 function ensure_openssl() {
   if command -v openssl &>/dev/null; then
@@ -163,53 +150,17 @@ function ensure_openssl() {
     $STD apt-get install -y openssl
   else
     msg_error "openssl is required but could not be installed automatically."
-    exit 10
+    exit 237
   fi
   msg_ok "Installed openssl"
-}
-
-function check_or_install_docker() {
-  if command -v docker &>/dev/null; then
-    msg_ok "Docker $(docker --version | cut -d' ' -f3 | tr -d ',') is available"
-    if docker compose version &>/dev/null; then
-      msg_ok "Docker Compose is available"
-    else
-      msg_error "Docker Compose plugin is not available. Please install it."
-      exit 10
-    fi
-    ensure_openssl
-    return
-  fi
-
-  msg_warn "Docker is not installed."
-  echo -n "${TAB}Install Docker now? (y/N): "
-  read -r install_docker_prompt
-  if [[ ! "${install_docker_prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_error "Docker is required for ${APP}. Exiting."
-    exit 10
-  fi
-
-  msg_info "Installing Docker"
-  if [[ -f /etc/alpine-release ]]; then
-    $STD apk add docker docker-cli-compose
-    $STD rc-service docker start
-    $STD rc-update add docker default
-  else
-    DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
-    mkdir -p "$(dirname "$DOCKER_CONFIG_PATH")"
-    echo -e '{\n  "log-driver": "journald"\n}' >"$DOCKER_CONFIG_PATH"
-    $STD sh <(curl -fsSL https://get.docker.com)
-  fi
-  msg_ok "Installed Docker"
-
-  ensure_openssl
 }
 
 # ==============================================================================
 # INSTALL
 # ==============================================================================
 function install() {
-  check_or_install_docker
+  ensure_docker
+  ensure_openssl
 
   echo -e "${TAB}Choose the database for Komodo:"
   echo -e "${TAB}  1) MongoDB (recommended)"
@@ -292,7 +243,7 @@ if [[ "${type:-}" == "update" ]]; then
 fi
 
 header_info
-check_proxmox_host
+confirm_not_pve_host
 get_lxc_ip
 
 # Declare variables used by find_compose_file

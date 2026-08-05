@@ -34,6 +34,8 @@ function update_script() {
     systemctl stop watcharr
     msg_ok "Stopped Service"
 
+    NODE_VERSION="24" setup_nodejs
+
     create_backup /opt/watcharr/server/data
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
     restore_backup

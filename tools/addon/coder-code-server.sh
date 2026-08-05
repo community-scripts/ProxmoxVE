@@ -5,62 +5,153 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://coder.com/ | Github: https://github.com/coder/code-server
 
-function header_info {
-  cat <<"EOF"
-   ______          __        _____                          
-  / ____/___  ____/ /__     / ___/___  ______   _____  _____
- / /   / __ \/ __  / _ \    \__ \/ _ \/ ___/ | / / _ \/ ___/
-/ /___/ /_/ / /_/ /  __/   ___/ /  __/ /   | |/ /  __/ /    
-\____/\____/\__,_/\___/   /____/\___/_/    |___/\___/_/     
- 
-EOF
-}
-IP=$(hostname -I | awk '{print $1}')
-YW=$(echo "\033[33m")
-BL=$(echo "\033[36m")
-RD=$(echo "\033[01;31m")
-BGN=$(echo "\033[4;92m")
-GN=$(echo "\033[1;92m")
-DGN=$(echo "\033[32m")
-CL=$(echo "\033[m")
-BFR="\\r\\033[K"
-HOLD="-"
-CM="${GN}✓${CL}"
-APP="Coder Code Server"
-hostname="$(hostname)"
-
-# Telemetry
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "coder-code-server" "addon"
 
-set -o errexit
-set -o errtrace
-set -o nounset
-set -o pipefail
-shopt -s expand_aliases
-alias die='EXIT=$? LINE=$LINENO error_exit'
-trap die ERR
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
 
-function error_exit() {
-  trap - ERR
-  local reason="Unknown failure occured."
-  local msg="${1:-$reason}"
-  local flag="${RD}‼ ERROR ${CL}$EXIT@$LINE"
-  echo -e "$flag $msg" 1>&2
-  exit "$EXIT"
-}
-clear
+APP="Coder Code Server"
+APP_TYPE="addon"
+
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+
 header_info
-if command -v pveversion >/dev/null 2>&1; then
-  echo -e "⚠️  Can't Install on Proxmox "
-  exit
+ensure_usr_local_bin_persist
+get_lxc_ip
+IP="$LOCAL_IP"
+
+confirm_not_pve_host
+require_debian_like
+
+# ==============================================================================
+# UNINSTALL
+# ==============================================================================
+function uninstall() {
+  msg_info "Uninstalling ${APP}"
+  systemctl disable --now code-server@"$USER" &>/dev/null || true
+  $STD apt remove -y code-server
+  rm -f "$HOME/.coder-code-server"
+  msg_ok "${APP} has been uninstalled"
+}
+
+# ==============================================================================
+# UPDATE
+# ==============================================================================
+function update() {
+  if check_for_gh_release "coder-code-server" "coder/code-server"; then
+    msg_info "Updating ${APP}"
+    fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_$(arch_resolve).deb"
+    systemctl restart code-server@"$USER"
+    msg_ok "Updated successfully!"
+    exit
+  fi
+}
+
+# ==============================================================================
+# INSTALL
+# ==============================================================================
+function install() {
+  msg_info "Installing Dependencies"
+  $STD apt update
+  $STD apt install -y \
+    curl \
+    git
+  msg_ok "Installed Dependencies"
+
+  msg_info "Installing ${APP}"
+  config_path="${HOME}/.config/code-server/config.yaml"
+  preexisting_config=false
+  if [ -f "$config_path" ]; then
+    preexisting_config=true
+  fi
+
+  fetch_and_deploy_gh_release "coder-code-server" "coder/code-server" "binary" "latest" "/opt/coder-code-server" "code-server_*_$(arch_resolve).deb"
+  mkdir -p "${HOME}/.config/code-server/"
+
+  if [ "$preexisting_config" = false ]; then
+    cat <<EOF >"$config_path"
+bind-addr: 0.0.0.0:8680
+auth: none
+password: 
+cert: false
+EOF
+  fi
+  systemctl enable -q --now code-server@"$USER"
+  systemctl restart code-server@"$USER"
+  if ! systemctl is-active --quiet code-server@"$USER"; then
+    msg_error "code-server service failed to start."
+    exit 150
+  fi
+  msg_ok "Installed ${APP}"
+
+  msg_info "Creating update script"
+  ensure_usr_local_bin_persist
+  cat <<'EOF' >/usr/local/bin/update_coder-code-server
+#!/usr/bin/env bash
+# Coder Code Server Update Script
+type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/coder-code-server.sh)"
+EOF
+  chmod +x /usr/local/bin/update_coder-code-server
+  msg_ok "Created update script (/usr/local/bin/update_coder-code-server)"
+
+  echo -e "${APP} should be reachable by going to the following URL.
+         ${BL}http://${IP}:8680${CL} \n"
+}
+
+# ==============================================================================
+# MAIN
+# ==============================================================================
+
+# Handle type=update (called from update script)
+if [[ "${type:-}" == "update" ]]; then
+  if command -v code-server &>/dev/null; then
+    update
+  else
+    msg_error "${APP} is not installed. Nothing to update."
+    exit 233
+  fi
+  exit 0
 fi
-if [ -e /etc/alpine-release ]; then
-  echo -e "⚠️  Can't Install on Alpine"
-  exit
+
+if [[ -d "$HOME" && -f "$HOME/.coder-code-server" ]] || command -v code-server &>/dev/null; then
+  msg_warn "${APP} is already installed."
+  echo -n "${TAB}Uninstall ${APP}? (y/N): "
+  read -r uninstall_prompt
+  if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+    uninstall
+    exit 0
+  fi
+
+  echo -n "${TAB}Update ${APP}? (y/N): "
+  read -r update_prompt
+  if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
+    update
+    exit 0
+  fi
+
+  msg_warn "No action selected. Exiting."
+  exit 0
 fi
+
 while true; do
-  read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
+  echo -n "${TAB}This will Install ${APP}. Proceed (y/n)? "
+  read -r yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*) exit ;;
@@ -68,53 +159,4 @@ while true; do
   esac
 done
 
-function msg_info() {
-  local msg="$1"
-  echo -ne " ${HOLD} ${YW}${msg}..."
-}
-
-function msg_ok() {
-  local msg="$1"
-  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
-}
-
-msg_info "Installing Dependencies"
-apt-get update &>/dev/null
-apt-get install -y curl &>/dev/null
-apt-get install -y git &>/dev/null
-msg_ok "Installed Dependencies"
-
-VERSION=$(curl -fsSL https://api.github.com/repos/coder/code-server/releases/latest |
-  grep "tag_name" |
-  awk '{print substr($2, 3, length($2)-4) }')
-
-msg_info "Installing Code-Server v${VERSION}"
-config_path="${HOME}/.config/code-server/config.yaml"
-preexisting_config=false
-
-if [ -f "$config_path" ]; then
-  preexisting_config=true
-fi
-
-curl -fOL https://github.com/coder/code-server/releases/download/v"$VERSION"/code-server_"${VERSION}"_amd64.deb &>/dev/null
-dpkg -i code-server_"${VERSION}"_amd64.deb &>/dev/null
-rm -rf code-server_"${VERSION}"_amd64.deb
-mkdir -p "${HOME}/.config/code-server/"
-
-if [ "$preexisting_config" = false ]; then
-cat <<EOF >"$config_path"
-bind-addr: 0.0.0.0:8680
-auth: none
-password: 
-cert: false
-EOF
-fi
-systemctl enable -q --now code-server@"$USER"
-systemctl restart code-server@"$USER"
-if ! systemctl is-active --quiet code-server@"$USER"; then
-  error_exit "code-server service failed to start."
-fi
-msg_ok "Installed Code-Server v${VERSION} on $hostname"
-
-echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://$IP:8680${CL} \n"
+install

@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y libusb-1.0-0
+$STD apt install -y \
+  libusb-1.0-0 \
+  libatomic1
 msg_ok "Installed Dependencies"
 
 msg_info "Fetching Latest Bitfocus Companion Release"

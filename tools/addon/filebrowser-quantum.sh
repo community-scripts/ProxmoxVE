@@ -5,55 +5,51 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/filebrowserspace/quantum
 
-function header_info() {
-  clear
-  cat <<"EOF"
-    _______ __     ____                                       ____                    __
-   / ____(_) /__  / __ )_________ _      __________  _____   / __ \__  ______ _____  / /___  ______ ___
-  / /_  / / / _ \/ __  / ___/ __ \ | /| / / ___/ _ \/ ___/  / / / / / / / __ `/ __ \/ __/ / / / __ `__ \
- / __/ / / /  __/ /_/ / /  / /_/ / |/ |/ (__  )  __/ /     / /_/ / /_/ / /_/ / / / / /_/ /_/ / / / / / /
-/_/   /_/_/\___/_____/_/   \____/|__/|__/____/\___/_/      \___\_\__,_/\__,_/_/ /_/\__/\__,_/_/ /_/ /_/
-
-EOF
-}
-
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-RD=$(echo "\033[01;31m")
-BL=$(echo "\033[36m")
-CL=$(echo "\033[m")
-CM="${GN}✔️${CL}"
-CROSS="${RD}✖️${CL}"
-INFO="${BL}ℹ️${CL}"
-
 APP="FileBrowser Quantum"
+APP_TYPE="addon"
 INSTALL_PATH="/usr/local/bin/filebrowser"
 CONFIG_PATH="/usr/local/community-scripts/fq-config.yaml"
 DEFAULT_PORT=8080
 SRC_DIR="/"
-TMP_BIN="/tmp/filebrowser.$$"
 
-# Telemetry
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "filebrowser-quantum" "addon"
 
-# Get primary IP
-IFACE=$(ip -4 route | awk '/default/ {print $5; exit}')
-IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1)
-[[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
-[[ -z "$IP" ]] && IP="127.0.0.1"
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
+
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+
+header_info
+get_lxc_ip
+IP="$LOCAL_IP"
 
 # Proxmox Host Warning
 if [[ -d "/etc/pve" ]]; then
-  echo -e "${RD}⚠️  Warning: Running this addon directly on the Proxmox host is not recommended!${CL}"
-  echo -e "${YW}   Only the boot disk will be visible — passthrough drives will not be indexed.${CL}"
-  echo -e "${YW}   This causes incorrect disk usage stats and incomplete file browsing.${CL}"
-  echo -e "${YW}   Run this addon inside an LXC or VM instead and mount your drives there.${CL}"
+  msg_warn "Running this addon directly on the Proxmox host is not recommended!"
+  msg_warn "Only the boot disk will be visible â€” passthrough drives will not be indexed."
+  msg_warn "This causes incorrect disk usage stats and incomplete file browsing."
+  msg_warn "Run this addon inside an LXC or VM instead and mount your drives there."
   echo ""
-  echo -n "Continue anyway on the Proxmox host? (y/N): "
+  echo -n "${TAB}Continue anyway on the Proxmox host? (y/N): "
   read -r host_confirm
   if [[ ! "${host_confirm,,}" =~ ^(y|yes)$ ]]; then
-    echo -e "${YW}Aborted.${CL}"
+    msg_error "Aborted."
     exit 0
   fi
 fi
@@ -66,17 +62,11 @@ if [[ -f "/etc/alpine-release" ]]; then
 elif [[ -f "/etc/debian_version" ]]; then
   OS="Debian"
   SERVICE_PATH="/etc/systemd/system/filebrowser.service"
-  PKG_MANAGER="apt-get install -y"
+  PKG_MANAGER="apt install -y"
 else
-  echo -e "${CROSS} Unsupported OS detected. Exiting."
+  msg_error "Unsupported OS detected. Exiting."
   exit 238
 fi
-
-header_info
-
-function msg_info() { echo -e "${INFO} ${YW}$1...${CL}"; }
-function msg_ok() { echo -e "${CM} ${GN}$1${CL}"; }
-function msg_error() { echo -e "${CROSS} ${RD}$1${CL}"; }
 
 # Detect legacy FileBrowser installation
 LEGACY_DB="/usr/local/community-scripts/filebrowser.db"
@@ -85,80 +75,82 @@ LEGACY_SERVICE_DEB="/etc/systemd/system/filebrowser.service"
 LEGACY_SERVICE_ALP="/etc/init.d/filebrowser"
 
 if [[ -f "$LEGACY_DB" || -f "$LEGACY_BIN" && ! -f "$CONFIG_PATH" ]]; then
-  echo -e "${YW}⚠️ Detected legacy FileBrowser installation.${CL}"
-  echo -n "Uninstall legacy FileBrowser and continue with Quantum install? (y/n): "
+  msg_warn "Detected legacy FileBrowser installation."
+  echo -n "${TAB}Uninstall legacy FileBrowser and continue with Quantum install? (y/n): "
   read -r remove_legacy
   if [[ "${remove_legacy,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Uninstalling legacy FileBrowser"
     if [[ -f "$LEGACY_SERVICE_DEB" ]]; then
-      systemctl disable --now filebrowser.service &>/dev/null
+      systemctl disable --now filebrowser.service &>/dev/null || true
       rm -f "$LEGACY_SERVICE_DEB"
     elif [[ -f "$LEGACY_SERVICE_ALP" ]]; then
-      rc-service filebrowser stop &>/dev/null
-      rc-update del filebrowser &>/dev/null
+      rc-service filebrowser stop &>/dev/null || true
+      rc-update del filebrowser &>/dev/null || true
       rm -f "$LEGACY_SERVICE_ALP"
     fi
     rm -f "$LEGACY_BIN" "$LEGACY_DB"
     msg_ok "Legacy FileBrowser removed"
   else
-    echo -e "${YW}❌ Installation aborted by user.${CL}"
+    msg_error "Installation aborted by user."
     exit 0
   fi
 fi
 
 # Existing installation
 if [[ -f "$INSTALL_PATH" ]]; then
-  echo -e "${YW}⚠️ ${APP} is already installed.${CL}"
-  echo -n "Uninstall ${APP}? (y/N): "
+  msg_warn "${APP} is already installed."
+  echo -n "${TAB}Uninstall ${APP}? (y/N): "
   read -r uninstall_prompt
   if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Uninstalling ${APP}"
     if [[ "$OS" == "Debian" ]]; then
-      systemctl disable --now filebrowser.service &>/dev/null
+      systemctl disable --now filebrowser.service &>/dev/null || true
       rm -f "$SERVICE_PATH"
     else
-      rc-service filebrowser stop &>/dev/null
-      rc-update del filebrowser &>/dev/null
+      rc-service filebrowser stop &>/dev/null || true
+      rc-update del filebrowser &>/dev/null || true
       rm -f "$SERVICE_PATH"
     fi
-    rm -f "$INSTALL_PATH" "$CONFIG_PATH"
+    rm -f "$INSTALL_PATH" "$CONFIG_PATH" "$HOME/.filebrowser-quantum"
     msg_ok "${APP} has been uninstalled."
     exit 0
   fi
 
-  echo -n "Update ${APP}? (y/N): "
+  echo -n "${TAB}Update ${APP}? (y/N): "
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_info "Updating ${APP}"
-    if ! command -v curl &>/dev/null; then $PKG_MANAGER curl &>/dev/null; fi
-    curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
-    chmod +x "$TMP_BIN"
-    mv -f "$TMP_BIN" /usr/local/bin/filebrowser
-    msg_ok "Updated ${APP}"
+    if check_for_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser"; then
+      msg_info "Updating ${APP}"
+      if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi
+      fetch_and_deploy_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser" "singlefile" "latest" "/usr/local/bin" "linux-$(arch_resolve)-filebrowser"
+      mv -f /usr/local/bin/filebrowser-quantum "$INSTALL_PATH"
+      msg_ok "Updated ${APP}"
+    fi
     exit 0
   else
-    echo -e "${YW}⚠️ Update skipped. Exiting.${CL}"
+    msg_warn "Update skipped. Exiting."
     exit 0
   fi
 fi
 
-echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
-echo -n "Enter port number (Default: ${DEFAULT_PORT}): "
+msg_warn "${APP} is not installed."
+echo -n "${TAB}Enter port number (Default: ${DEFAULT_PORT}): "
 read -r PORT
 PORT=${PORT:-$DEFAULT_PORT}
 
-echo -n "Install ${APP}? (y/n): "
+echo -n "${TAB}Install ${APP}? (y/n): "
 read -r install_prompt
 if ! [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
-  echo -e "${YW}⚠️ Installation skipped. Exiting.${CL}"
+  msg_warn "Installation skipped. Exiting."
   exit 0
 fi
 
 msg_info "Installing ${APP} on ${OS}"
-$PKG_MANAGER curl ffmpeg &>/dev/null
-curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
-chmod +x "$TMP_BIN"
-mv -f "$TMP_BIN" /usr/local/bin/filebrowser
+$STD $PKG_MANAGER \
+  curl \
+  ffmpeg
+fetch_and_deploy_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser" "singlefile" "latest" "/usr/local/bin" "linux-$(arch_resolve)-filebrowser"
+mv -f /usr/local/bin/filebrowser-quantum "$INSTALL_PATH"
 msg_ok "Installed ${APP}"
 
 msg_info "Preparing configuration directory"
@@ -167,7 +159,7 @@ chown root:root /usr/local/community-scripts
 chmod 755 /usr/local/community-scripts
 msg_ok "Directory prepared"
 
-echo -n "Use No Authentication? (y/N): "
+echo -n "${TAB}Use No Authentication? (y/N): "
 read -r noauth_prompt
 
 # === YAML CONFIG GENERATION ===
@@ -251,9 +243,9 @@ depend() {
 }
 EOF
   chmod +x "$SERVICE_PATH"
-  rc-update add filebrowser default &>/dev/null
-  rc-service filebrowser start &>/dev/null
+  $STD rc-update add filebrowser default
+  $STD rc-service filebrowser start
 fi
 
 msg_ok "Service created successfully"
-echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:$PORT${CL}"
+msg_ok "${APP} is reachable at: ${BL}http://${IP}:${PORT}${CL}"

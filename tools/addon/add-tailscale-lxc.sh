@@ -5,35 +5,34 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://tailscale.com/ | Github: https://github.com/tailscale/tailscale
 
-set -Eeuo pipefail
-trap 'echo -e "\n[ERROR] in line $LINENO: exit code $?"' ERR
+APP="add-tailscale-lxc"
+APP_TYPE="addon"
 
-function header_info() {
-  clear
-  cat <<"EOF"
-  ______      _ __                __
- /_  __/___ _(_) /_____________ _/ /__
-  / / / __ `/ / / ___/ ___/ __ `/ / _ \
- / / / /_/ / / (__  ) /__/ /_/ / /  __/
-/_/  \__,_/_/_/____/\___/\__,_/_/\___/
-
-EOF
-}
-
-function msg_info() { echo -e " \e[1;36m➤\e[0m $1"; }
-function msg_ok() { echo -e " \e[1;32m✔\e[0m $1"; }
-function msg_error() { echo -e " \e[1;31m✖\e[0m $1"; }
-
-# Telemetry
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-tailscale-lxc" "addon"
 
-header_info
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
 
-if ! command -v pveversion &>/dev/null; then
-  msg_error "This script must be run on the Proxmox VE host (not inside an LXC container)"
-  exit 232
-fi
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+
+header_info
+require_pve_host
 
 while true; do
   read -rp "This will add Tailscale to an existing LXC Container ONLY. Proceed (y/n)? " yn
@@ -44,7 +43,6 @@ while true; do
   esac
 done
 
-header_info
 msg_info "Loading container list..."
 
 NODE=$(hostname)
@@ -73,10 +71,9 @@ CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
 grep -q "lxc.cgroup2.devices.allow: c 10:200 rwm" "$CTID_CONFIG_PATH" || echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>"$CTID_CONFIG_PATH"
 grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file" >>"$CTID_CONFIG_PATH"
 
-header_info
 msg_info "Installing Tailscale in CT $CTID"
 
-pct exec "$CTID" -- sh -c '
+pct exec "$CTID" -- bash -c '
 set -e
 
 # Detect OS inside container
@@ -144,16 +141,21 @@ else
     apt-get install -y curl >/dev/null
   fi
 
-  # Ensure keyrings directory exists
-  mkdir -p /usr/share/keyrings
+  # Reuse the shared repository helper instead of hand-rolling the sources entry
+  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  load_functions
 
-  curl -fsSL "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
-    | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+  # Drop the legacy keyring from the pre-deb822 layout
+  rm -f /usr/share/keyrings/tailscale-archive-keyring.gpg
 
-  echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VERSION_CODENAME} main" \
-    >/etc/apt/sources.list.d/tailscale.list
+  setup_deb822_repo \
+    "tailscale" \
+    "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
+    "https://pkgs.tailscale.com/stable/${ID}" \
+    "${VERSION_CODENAME}" \
+    "main"
 
-  apt-get update -qq
   apt-get install -y tailscale >/dev/null
 
   if [ -f /tmp/resolv.conf.backup ]; then
@@ -168,4 +170,4 @@ TAGS="${TAGS:+$TAGS; }tailscale"
 pct set "$CTID" -tags "$TAGS"
 
 msg_ok "Tailscale installed on CT $CTID"
-msg_info "Reboot the container, then run 'tailscale up' inside the container to activate."
+echo -e "${YW}Reboot the container${CL}, then run 'tailscale up' inside the container to activate."
