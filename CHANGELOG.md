@@ -518,6 +518,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-05
+
+### 🚀 Updated Scripts
+
+  - NextcloudPI: Bump to Debian Trixie & Tweak broken SSH [@MickLesk](https://github.com/MickLesk) ([#15957](https://github.com/community-scripts/ProxmoxVE/pull/15957))
+
 ## 2026-08-04
 
 ### 🆕 New Scripts
