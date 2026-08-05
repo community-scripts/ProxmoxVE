@@ -108,10 +108,9 @@ EOF
 
   if ! command -v comskip &> /dev/null; then
     msg_info "Compiling Comskip"
-    if [[ ! -d "/opt/Comskip" ]]; then
-      mkdir -p /opt/Comskip
-      wget -qO- https://github.com/erikkaashoek/Comskip/archive/refs/heads/master.tar.gz | tar -xz -C /opt/Comskip --strip-components=1
-    fi
+        if [[ ! -d "/opt/Comskip" ]]; then
+          fetch_and_deploy_from_url "https://github.com/erikkaashoek/Comskip/archive/refs/heads/master.tar.gz" "/opt/Comskip"
+        fi
     cd /opt/Comskip
     $STD ./autogen.sh
     $STD ./configure
