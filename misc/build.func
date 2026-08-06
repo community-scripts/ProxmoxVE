@@ -922,8 +922,10 @@ choose_and_set_storage_for_file() {
 _list_os_versions() {
   local ostype="${1:-}"
   [[ -n "$ostype" ]] || return 0
+  local arch
+  arch="$(dpkg --print-architecture 2>/dev/null || echo amd64)"
   pveam available -section system 2>/dev/null |
-    grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
+    grep -E "_${arch}\.(tar\.zst|tar\.xz|tar\.gz)$" |
     awk '{print $2}' |
     sed -nE "s/^${ostype}-([0-9]+(\.[0-9]+)?).*/\1/p" |
     sort -u -V || true
@@ -936,8 +938,10 @@ _list_os_versions() {
 _list_templates() {
   local search="${1:-}" pattern="${2:-}"
   [[ -n "$search" ]] || return 0
+  local arch
+  arch="$(dpkg --print-architecture 2>/dev/null || echo amd64)"
   pveam available -section system 2>/dev/null |
-    grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
+    grep -E "_${arch}\.(tar\.zst|tar\.xz|tar\.gz)$" |
     awk '{print $2}' |
     grep -E "^${search}.*${pattern}" |
     sort -t - -k 2 -V || true
@@ -6721,7 +6725,8 @@ create_lxc_container() {
     # Step 1: Check local templates first (instant)
     mapfile -t LOCAL_TEMPLATES < <(
       pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
-        awk -v search="${TEMPLATE_SEARCH}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
+        awk -v search="${TEMPLATE_SEARCH}" -v pattern="${TEMPLATE_PATTERN}" -v arch="${ARCH}" \
+          '$1 ~ search && $1 ~ pattern && $1 ~ ("_" arch "\\.(tar\\.zst|tar\\.xz|tar\\.gz)$") {print $1}' |
         sed 's|.*/||' | sort -t - -k 2 -V
     )
 
