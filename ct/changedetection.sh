@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Redirect the changedetection install script to our fork's fixed branch (EULA preseed fix).
+# build.func hardcodes the upstream install script URL, so we override curl to intercept it.
+_orig_curl() { command curl "$@"; }
+curl() {
+  if [[ "$*" == *"community-scripts/ProxmoxVE/main/install/changedetection-install"* ]]; then
+    _orig_curl -fsSL "https://raw.githubusercontent.com/austinpilz/ProxmoxVE/fix-changedetection-msttcorefonts-eula/install/changedetection-install.sh"
+  else
+    _orig_curl "$@"
+  fi
+}
+export -f curl _orig_curl
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
