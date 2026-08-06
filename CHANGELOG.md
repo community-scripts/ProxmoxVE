@@ -530,6 +530,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Vikunja: remove version pin, v2.5.0 fixes the systemd syscall filter crash [@MickLesk](https://github.com/MickLesk) ([#16300](https://github.com/community-scripts/ProxmoxVE/pull/16300))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - build.func: filter templates by host architecture during search [@MickLesk](https://github.com/MickLesk) ([#16302](https://github.com/community-scripts/ProxmoxVE/pull/16302))
+
 ## 2026-08-05
 
 ### 🚀 Updated Scripts
