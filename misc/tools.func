@@ -7732,13 +7732,7 @@ setup_nodejs() {
     fi
   fi
 
-  # npm >=11 skips native-module install/rebuild scripts (better-sqlite3, bcrypt,
-  # argon2, ...) unless each package is explicitly allowlisted, silently leaving
-  # native deps unbuilt. Bypass the policy globally instead of allowlisting
-  # per script.
-  local npm_major
-  npm_major=$(npm -v 2>/dev/null | cut -d. -f1)
-  if [[ "${npm_major:-0}" -ge 11 ]]; then
+  if [[ "$(npm -v 2>/dev/null | cut -d. -f1)" -ge 11 ]]; then
     $STD npm config set dangerously-allow-all-scripts true --location=global 2>/dev/null || true
   fi
 
