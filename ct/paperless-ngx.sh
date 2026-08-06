@@ -65,7 +65,7 @@ function update_script() {
       read -rp "Do you want to continue with the update? (y/N): " MIGRATE
       echo
       if [[ ! "$MIGRATE" =~ ^[Yy]$ ]]; then
-        msg_info "Update aborted. Decrypt all documents before upgrading to v3."
+        msg_custom "⚠️" "Update aborted. Decrypt all documents before upgrading to v3."
         exit 0
       fi
     fi
