@@ -2576,11 +2576,6 @@ _deploy_unpacked_archive() {
   local archive="$1" target="$2" workdir="$3"
   local filename="${archive##*/}"
 
-  mkdir -p "$target"
-  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${target:?}" -mindepth 1 -delete
-  fi
-
   if [[ "$filename" == *.zip ]]; then
     ensure_dependencies unzip
     unzip -q "$archive" -d "$workdir" || {
@@ -2607,38 +2602,44 @@ _deploy_unpacked_archive() {
     return 65
   fi
 
-  local top_entries inner_dir
+  local top_entries inner_dir source_dir
   top_entries=$(find "$workdir" -mindepth 1 -maxdepth 1)
   if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
     inner_dir="$top_entries"
-    shopt -s dotglob nullglob
-    if compgen -G "$inner_dir/*" >/dev/null; then
-      cp -r "$inner_dir"/* "$target/" || {
-        msg_error "Failed to copy contents from $inner_dir to $target"
-        shopt -u dotglob nullglob
-        return 252
-      }
-    else
-      msg_error "Inner directory is empty: $inner_dir"
-      shopt -u dotglob nullglob
-      return 252
-    fi
-    shopt -u dotglob nullglob
+    source_dir="$inner_dir"
   else
-    shopt -s dotglob nullglob
-    if compgen -G "$workdir/*" >/dev/null; then
-      cp -r "$workdir"/* "$target/" || {
-        msg_error "Failed to copy contents to $target"
-        shopt -u dotglob nullglob
-        return 252
-      }
+    source_dir="$workdir"
+  fi
+
+  shopt -s dotglob nullglob
+  if ! compgen -G "$source_dir/*" >/dev/null; then
+    if [[ -n "$inner_dir" ]]; then
+      msg_error "Inner directory is empty: $inner_dir"
     else
       msg_error "Unpacked archive is empty"
-      shopt -u dotglob nullglob
-      return 252
     fi
     shopt -u dotglob nullglob
+    return 252
   fi
+
+  # <target> is only touched once the payload is known good. Wiping earlier left
+  # CLEAN_INSTALL callers with an empty target directory whenever the download
+  # was truncated, the archive was unreadable, or it unpacked to nothing.
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    find "${target:?}" -mindepth 1 -delete
+  fi
+
+  if ! cp -r "$source_dir"/* "$target/"; then
+    if [[ -n "$inner_dir" ]]; then
+      msg_error "Failed to copy contents from $inner_dir to $target"
+    else
+      msg_error "Failed to copy contents to $target"
+    fi
+    shopt -u dotglob nullglob
+    return 252
+  fi
+  shopt -u dotglob nullglob
   return 0
 }
 
