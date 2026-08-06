@@ -46,8 +46,7 @@ function update_script() {
     [[ "$CONFIRM2" =~ ^[yY]$ ]] || exit 0
   fi
 
-  RELEASE="v2.3.0"
-  if check_for_gh_release "vikunja" "go-vikunja/vikunja" "${RELEASE}" "v2.4.0 is killed at startup by the systemd SystemCallFilter shipped in the .deb (upstream go-vikunja/vikunja#3252); pinned until a fixed release is out"; then
+  if check_for_gh_release "vikunja" "go-vikunja/vikunja"; then
     echo
     msg_warn "The package update may include config file changes."
     echo -e "${TAB}${YW}How do you want to handle /etc/vikunja/config.yml?${CL}"
@@ -66,7 +65,7 @@ function update_script() {
     systemctl stop vikunja
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary" "${RELEASE}" "" "vikunja-*-$(arch_resolve "x86_64" "aarch64").deb"
+    fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary" "latest" "" "vikunja-*-$(arch_resolve "x86_64" "aarch64").deb"
     $STD systemctl daemon-reload
 
     msg_info "Starting Service"
