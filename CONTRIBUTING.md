@@ -118,7 +118,7 @@ var_admin_user="${var_admin_user:-admin}"
 ```
 
 Name them `var_<something>`, the same namespace the container variables use.
-`install/forgejo-runner-install.sh` and `install/pangolin-install.sh` both
+`install/forgejo-runner-install.sh`, `install/pangolin-install.sh`, and `install/docker-install.sh` all
 follow this.
 
 The variable also has to be exported from `ct/<app>.sh`, or it never reaches
