@@ -27,9 +27,18 @@ fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VER
 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_$(arch_resolve)"
 fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_$(arch_resolve).tar.gz"
 
-read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " pango_url
+# Read the variable first and prompt only when it is unset, so the install can
+# be supplied up front. Same convention as install/forgejo-runner-install.sh.
+pango_url="${var_pangolin_url:-}"
+if [[ -z "$pango_url" ]]; then
+  read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " pango_url
+fi
 [[ "$pango_url" != https://* && "$pango_url" != http://* ]] && pango_url="https://${pango_url}"
-read -rp "${TAB3}Enter your email address: " pango_email
+
+pango_email="${var_pangolin_email:-}"
+if [[ -z "$pango_email" ]]; then
+  read -rp "${TAB3}Enter your email address: " pango_email
+fi
 
 msg_info "Setup Pangolin"
 SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)

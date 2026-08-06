@@ -17,6 +17,9 @@ var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_tun="${var_tun:-1}"
 
+export var_pangolin_url="${var_pangolin_url:-}"
+export var_pangolin_email="${var_pangolin_email:-}"
+
 header_info "$APP"
 variables
 color

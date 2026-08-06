@@ -118,8 +118,16 @@ var_admin_user="${var_admin_user:-admin}"
 ```
 
 Name them `var_<something>`, the same namespace the container variables use.
-`install/forgejo-runner-install.sh` and `install/docker-install.sh` both follow
-this.
+`install/forgejo-runner-install.sh` and `install/pangolin-install.sh` both
+follow this.
+
+The variable also has to be exported from `ct/<app>.sh`, or it never reaches
+the container — `lxc-attach` carries the caller's environment, but only for
+what was actually exported:
+
+```bash
+export var_admin_user="${var_admin_user:-}"
+```
 
 Declare them on the script's PocketBase record in `app_vars` so the website's
 generator can offer them as fields:

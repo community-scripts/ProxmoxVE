@@ -18,6 +18,7 @@ var_nesting="${var_nesting:-1}"
 var_keyctl="${var_keyctl:-1}"
 
 export var_forgejo_instance="${var_forgejo_instance:-}"
+export var_forgejo_runner_uuid="${var_forgejo_runner_uuid:-}"
 export var_forgejo_runner_token="${var_forgejo_runner_token:-}"
 export var_runner_labels="${var_runner_labels:-}"
 
@@ -62,6 +63,10 @@ function update_script() {
 if [[ -n "${mode:-}" ]]; then
   if [[ -z "${var_forgejo_instance:-}" ]]; then
     msg_error "var_forgejo_instance is required for unattended installs."
+    exit 1
+  fi
+  if [[ -z "${var_forgejo_runner_uuid:-}" ]]; then
+    msg_error "var_forgejo_runner_uuid is required for unattended installs."
     exit 1
   fi
   if [[ -z "${var_forgejo_runner_token:-}" ]]; then
