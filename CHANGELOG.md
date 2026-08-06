@@ -522,6 +522,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - paperless: change update abort message (endless spinner) [@MickLesk](https://github.com/MickLesk) ([#16299](https://github.com/community-scripts/ProxmoxVE/pull/16299))
+
   - #### ✨ New Features
 
     - Vikunja: remove version pin, v2.5.0 fixes the systemd syscall filter crash [@MickLesk](https://github.com/MickLesk) ([#16300](https://github.com/community-scripts/ProxmoxVE/pull/16300))
