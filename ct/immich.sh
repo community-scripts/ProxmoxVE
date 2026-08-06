@@ -214,7 +214,16 @@ EOF
     cd "$SRC_DIR"
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
     export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
-    $STD mise install
+    mise_ok=0
+    for i in 1 2 3; do
+      $STD mise install && {
+        mise_ok=1
+        break
+      }
+      msg_warn "mise install failed (attempt $i/3) - retrying"
+      sleep 5
+    done
+    [[ "$mise_ok" -eq 1 ]] || exit 1
     export PATH="$(mise bin-paths 2>/dev/null | tr '\n' ':')$PATH"
     if ! command -v extism-js >/dev/null 2>&1; then
       # extism-js ships as a bare gzip-compressed single binary (.gz) that
