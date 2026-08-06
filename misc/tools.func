@@ -4801,8 +4801,8 @@ EOF
 
   # Container Update Check
   # - Skipped entirely when running unattended / non-interactive
-  # - Compose-managed containers: offered via Y/N → docker compose pull + up -d
-  # - Standalone containers: offered via Y/N → image pull only (no stop/rm)
+  # - Lists containers with a newer image available and the command to update
+  #   them; does not pull/recreate anything itself
   if [ "$docker_installed" = true ] && ! _docker_is_noninteractive; then
     msg_info "Checking for container updates"
 
@@ -4840,41 +4840,14 @@ EOF
     if [[ ${#compose_updates[@]} -eq 0 && ${#standalone_updates[@]} -eq 0 ]]; then
       msg_ok "All containers are up-to-date"
     else
-      local reply
+      msg_warn "Updates available (not applied automatically):"
       for entry in "${compose_updates[@]}"; do
         IFS='|' read -r name image compose_workdir compose_service <<<"$entry"
-        reply=""
-        if read -r -t 60 -p "${TAB3}Update ${name} (${image}) via Compose? <y/N> (auto-no in 60s): " reply </dev/tty; then
-          echo ""
-        else
-          echo ""
-        fi
-        if [[ "${reply,,}" =~ ^(y|yes)$ ]]; then
-          msg_info "Updating $name"
-          if (cd "$compose_workdir" && $STD docker compose pull "$compose_service" && $STD docker compose up -d "$compose_service"); then
-            msg_ok "Updated $name"
-          else
-            msg_warn "Could not update $name — try manually in $compose_workdir"
-          fi
-        fi
+        echo -e "${TAB3}${name} (${image}) — update via: cd ${compose_workdir} && docker compose pull ${compose_service} && docker compose up -d ${compose_service}"
       done
-
       for entry in "${standalone_updates[@]}"; do
         IFS='|' read -r name image <<<"$entry"
-        reply=""
-        if read -r -t 60 -p "${TAB3}Pull new image for ${name} (${image})? <y/N> (auto-no in 60s): " reply </dev/tty; then
-          echo ""
-        else
-          echo ""
-        fi
-        if [[ "${reply,,}" =~ ^(y|yes)$ ]]; then
-          msg_info "Pulling new image for $name"
-          if $STD docker pull "$image"; then
-            msg_ok "New image available for $name — recreate the container to apply the update"
-          else
-            msg_warn "Failed to pull image for $name"
-          fi
-        fi
+        echo -e "${TAB3}${name} (${image}) — update via: docker pull ${image} && docker restart ${name}"
       done
     fi
   fi

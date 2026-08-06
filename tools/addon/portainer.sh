@@ -150,6 +150,9 @@ fi
 header_info
 get_lxc_ip
 
+check_docker
+check_existing_container
+
 # Check if already installed
 if [[ -f "$COMPOSE_FILE" ]]; then
   msg_warn "${APP} is already installed."

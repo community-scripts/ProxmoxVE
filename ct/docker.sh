@@ -42,20 +42,6 @@ function update_script() {
     echo -e "${TAB}${TAB}${GN}bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)\"${CL}"
   fi
 
-  if docker ps -a --format '{{.Names}}' | grep -q '^portainer_agent$'; then
-    msg_info "Updating Portainer Agent"
-    $STD docker pull portainer/agent:latest
-    $STD docker stop portainer_agent
-    $STD docker rm portainer_agent
-    $STD docker run -d \
-      -p 9001:9001 \
-      --name=portainer_agent \
-      --restart=always \
-      -v /var/run/docker.sock:/var/run/docker.sock \
-      -v /var/lib/docker/volumes:/var/lib/docker/volumes \
-      portainer/agent
-    msg_ok "Updated Portainer Agent"
-  fi
   msg_ok "Updated successfully!"
   exit
 }
