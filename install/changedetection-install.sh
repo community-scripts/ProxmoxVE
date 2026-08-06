@@ -74,6 +74,7 @@ $STD npm prune production --prefix /opt/browserless
 msg_ok "Installed Browserless & Playwright"
 
 msg_info "Installing Font Packages"
+echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
 $STD apt-get install -y \
   fontconfig \
   libfontconfig1 \
