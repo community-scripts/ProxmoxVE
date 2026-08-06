@@ -50,6 +50,22 @@ function uninstall() {
 }
 
 # ==============================================================================
+# UPDATE SCRIPT HELPER
+# ==============================================================================
+function ensure_update_script() {
+  [[ -f /usr/local/bin/update_portainer ]] && return 0
+
+  msg_info "Creating update script"
+  cat <<'UPDATEEOF' >/usr/local/bin/update_portainer
+#!/usr/bin/env bash
+# Portainer Update Script
+type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)"
+UPDATEEOF
+  chmod +x /usr/local/bin/update_portainer
+  msg_ok "Created update script (/usr/local/bin/update_portainer)"
+}
+
+# ==============================================================================
 # UPDATE
 # ==============================================================================
 function update() {
@@ -61,6 +77,8 @@ function update() {
   msg_info "Restarting ${APP}"
   $STD docker compose up -d --remove-orphans
   msg_ok "Restarted ${APP}"
+
+  ensure_update_script
 
   msg_ok "Updated successfully"
   exit
@@ -115,15 +133,7 @@ function install() {
   $STD docker compose up -d
   msg_ok "Started ${APP}"
 
-  # Create update script
-  msg_info "Creating update script"
-  cat <<'UPDATEEOF' >/usr/local/bin/update_portainer
-#!/usr/bin/env bash
-# Portainer Update Script
-type=update bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)"
-UPDATEEOF
-  chmod +x /usr/local/bin/update_portainer
-  msg_ok "Created update script (/usr/local/bin/update_portainer)"
+  ensure_update_script
 
   echo ""
   msg_ok "${APP} is reachable at: ${BL}https://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
