@@ -925,7 +925,7 @@ _list_os_versions() {
   local arch
   arch="$(dpkg --print-architecture 2>/dev/null || echo amd64)"
   pveam available -section system 2>/dev/null |
-    grep -E "_${arch}\.(tar\.zst|tar\.xz|tar\.gz)$" |
+    grep -E "_${arch}\.(tar\.zst|tar\.xz|tar\.gz)([[:space:]]|$)" |
     awk '{print $2}' |
     sed -nE "s/^${ostype}-([0-9]+(\.[0-9]+)?).*/\1/p" |
     sort -u -V || true
@@ -941,7 +941,7 @@ _list_templates() {
   local arch
   arch="$(dpkg --print-architecture 2>/dev/null || echo amd64)"
   pveam available -section system 2>/dev/null |
-    grep -E "_${arch}\.(tar\.zst|tar\.xz|tar\.gz)$" |
+    grep -E "_${arch}\.(tar\.zst|tar\.xz|tar\.gz)([[:space:]]|$)" |
     awk '{print $2}' |
     grep -E "^${search}.*${pattern}" |
     sort -t - -k 2 -V || true
