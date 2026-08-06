@@ -17,11 +17,24 @@ PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
 setup_docker
 
-if prompt_confirm "${TAB3}Would you like to install Portainer (UI) via the community-scripts addon?" "n" 60; then
+# Every choice below can be supplied up front so the install runs unattended.
+# Same convention as install/forgejo-runner-install.sh: read the variable, and
+# only ask when it was not set.
+if [[ -z "${var_portainer:-}" ]]; then
+  if prompt_confirm "${TAB3}Would you like to install Portainer (UI) via the community-scripts addon?" "n" 60; then
+    var_portainer="yes"
+  else
+    var_portainer="no"
+  fi
+fi
+
+if [[ "${var_portainer:-}" =~ ^([yY]|[yY][eE][sS])$ ]]; then
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)" <<<"y"
 else
-  read -r -p "${TAB3}Would you like to install the Portainer Agent (for remote management)? <y/N> " prompt_agent
-  if [[ ${prompt_agent,,} =~ ^(y|yes)$ ]]; then
+  if [[ -z "${var_portainer_agent:-}" ]]; then
+    read -r -p "${TAB3}Would you like to install the Portainer Agent (for remote management)? <y/N> " var_portainer_agent
+  fi
+  if [[ "${var_portainer_agent:-}" =~ ^([yY]|[yY][eE][sS])$ ]]; then
     msg_info "Installing Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"
     $STD docker run -d \
       -p 9001:9001 \
@@ -34,12 +47,14 @@ else
   fi
 fi
 
-read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
-case "${socket_choice,,}" in
-l)
+if [[ -z "${var_docker_socket:-}" ]]; then
+  read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " var_docker_socket
+fi
+case "${var_docker_socket:-}" in
+l | L | local | Local)
   socket="tcp://127.0.0.1:2375"
   ;;
-a)
+a | A | all | All)
   socket="tcp://0.0.0.0:2375"
   ;;
 *)
