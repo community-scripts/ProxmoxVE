@@ -522,7 +522,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Orb ([#16329](https://github.com/community-scripts/ProxmoxVE/pull/16329))
+  - NetworkOptimizer ([#16328](https://github.com/community-scripts/ProxmoxVE/pull/16328))
+- Orb ([#16329](https://github.com/community-scripts/ProxmoxVE/pull/16329))
 
 ### 🚀 Updated Scripts
 
