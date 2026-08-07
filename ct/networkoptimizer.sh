@@ -35,9 +35,7 @@ function update_script() {
     systemctl stop networkoptimizer
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration"
-    cp /opt/networkoptimizer/networkoptimizer.env /opt/networkoptimizer.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/networkoptimizer/networkoptimizer.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "networkoptimizer" "Ozark-Connect/NetworkOptimizer" "tarball"
 
