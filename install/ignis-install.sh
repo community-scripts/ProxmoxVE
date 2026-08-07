@@ -31,7 +31,7 @@ $STD npm install -g @electron/asar
 msg_ok "Built Ignis"
 
 msg_info "Downloading Obsidian Web Assets"
-mkdir -p /opt/ignis_data/obsidian-app /opt/ignis_data/vaults /opt/ignis_data/data
+mkdir -p /opt/ignis_data/{obsidian-app,vaults,data}
 OBSIDIAN_VERSION=$(grep -oP 'OBSIDIAN_VERSION=\K[0-9.]+' /opt/ignis/apps/ignis-server/Dockerfile | head -n1)
 [[ -z "$OBSIDIAN_VERSION" ]] && OBSIDIAN_VERSION="1.12.7"
 curl -fsSL -o /tmp/obsidian.asar.gz "https://github.com/obsidianmd/obsidian-releases/releases/download/v${OBSIDIAN_VERSION}/obsidian-${OBSIDIAN_VERSION}.asar.gz"
