@@ -50,10 +50,7 @@ function update_script() {
     CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $STD go build -trimpath -ldflags "-s -w" -o /opt/networkoptimizer/publish/tools/uwnspeedtest-linux-arm64 .
     msg_ok "Rebuilt NetworkOptimizer"
 
-    msg_info "Restoring Configuration"
-    cp /opt/networkoptimizer.env.bak /opt/networkoptimizer/networkoptimizer.env
-    rm -f /opt/networkoptimizer.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start networkoptimizer
