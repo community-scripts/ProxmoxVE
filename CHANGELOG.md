@@ -522,6 +522,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - changedetection: remove msttcorefonts to fix install hang [@austinpilz](https://github.com/austinpilz) ([#16319](https://github.com/community-scripts/ProxmoxVE/pull/16319))
+
   - #### 🔧 Refactor
 
     - core: extend new vars and pocketbase values [@MickLesk](https://github.com/MickLesk) ([#16313](https://github.com/community-scripts/ProxmoxVE/pull/16313))
