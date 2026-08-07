@@ -520,6 +520,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-07
 
+### 🆕 New Scripts
+
+  - Orb ([#16329](https://github.com/community-scripts/ProxmoxVE/pull/16329))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
