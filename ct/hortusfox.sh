@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: MickLesk (CanbiZ)
+# Author: MickLesk (CanbiZ) | Co-Author: Tom Frenzel (tomfrenzel)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/danielbrendel/hortusfox-web
 
@@ -34,29 +34,56 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Backing up current HortusFox installation"
-    cd /opt
-    mv /opt/hortusfox/ /opt/hortusfox-backup
-    msg_ok "Backed up current HortusFox installation"
+    cd /opt/hortusfox
+    if [[ ! -s app/migrations/migrations.list ]]; then
+      msg_info "Rebuilding HortusFox migration history"
+      local database_tables
+      database_tables="$(mariadb -u root -D hortusfox -NBe "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE();")"
+      : >app/migrations/migrations.list
+      local migration migration_file table_name
+      for migration in app/migrations/*.php; do
+        migration_file="${migration##*/}"
+        table_name="${migration_file%.php}"
+        if [[ "$migration_file" == "VersionModel.php" ]] || grep -Fxq "$table_name" <<<"$database_tables"; then
+          php -r 'echo hash("sha512", $argv[1]), PHP_EOL;' -- "$migration_file" >>app/migrations/migrations.list
+        fi
+      done
+      msg_ok "Rebuilt HortusFox migration history"
+    fi
+    if [[ ! -f app/migrations/verhist.json && -f ~/.hortusfox ]]; then
+      printf '["%s"]\n' "$(<~/.hortusfox)" >app/migrations/verhist.json
+    fi
+
+    create_backup \
+      /opt/hortusfox/.env \
+      /opt/hortusfox/app/migrations/migrations.list \
+      /opt/hortusfox/app/migrations/verhist.json \
+      /opt/hortusfox/public/img \
+      /opt/hortusfox/public/attachments \
+      /opt/hortusfox/public/backup \
+      /opt/hortusfox/public/exports \
+      /opt/hortusfox/public/snd \
+      /opt/hortusfox/public/themes
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web" "tarball"
+    restore_backup
 
     msg_info "Updating HortusFox"
     cd /opt/hortusfox
-    cp /opt/hortusfox-backup/.env /opt/hortusfox/.env
-    cp -a /opt/hortusfox-backup/public/img/. /opt/hortusfox/public/img/
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --optimize-autoloader
+    $STD php asatru migrate:list
     $STD php asatru migrate:upgrade
-    $STD php asatru plants:attributes
     $STD php asatru calendar:classes
+    $STD php asatru plants:attributes
+    $STD php asatru aquashell:config
     chown -R www-data:www-data /opt/hortusfox
-    rm -r /opt/hortusfox-backup
     msg_ok "Updated HortusFox"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
+
     msg_ok "Updated successfully!"
   fi
   exit
