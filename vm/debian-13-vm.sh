@@ -578,6 +578,13 @@ fi
 
 msg_ok "Customized image"
 
+msg_info "Expanding root filesystem to ${DISK_SIZE}"
+GROWN_FILE=$(mktemp --suffix=.qcow2)
+qemu-img create -f qcow2 "$GROWN_FILE" "$DISK_SIZE" >/dev/null
+virt-resize --quiet --expand /dev/sda1 "$WORK_FILE" "$GROWN_FILE" >/dev/null
+mv -f "$GROWN_FILE" "$WORK_FILE"
+msg_ok "Expanded root filesystem to ${DISK_SIZE}"
+
 STORAGE_TYPE=$(pvesm status -storage "$STORAGE" | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
 nfs | dir)
@@ -659,13 +666,6 @@ DESCRIPTION=$(
 EOF
 )
 qm set $VMID -description "$DESCRIPTION" >/dev/null
-if [ -n "$DISK_SIZE" ]; then
-  msg_info "Resizing disk to $DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
-else
-  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
-fi
 
 msg_ok "Created a Debian 13 VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then

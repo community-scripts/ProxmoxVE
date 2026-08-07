@@ -519,6 +519,20 @@ echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
+if ! command -v virt-resize &>/dev/null; then
+  msg_info "Installing libguestfs-tools"
+  apt-get update >/dev/null 2>&1
+  apt-get install -y libguestfs-tools >/dev/null 2>&1
+  msg_ok "Installed libguestfs-tools"
+fi
+
+msg_info "Expanding root filesystem to ${DISK_SIZE}"
+GROWN_FILE=$(mktemp --suffix=.qcow2)
+qemu-img create -f qcow2 "$GROWN_FILE" "$DISK_SIZE" >/dev/null
+virt-resize --quiet --expand /dev/sda1 "$FILE" "$GROWN_FILE" >/dev/null
+mv -f "$GROWN_FILE" "$FILE"
+msg_ok "Expanded root filesystem to ${DISK_SIZE}"
+
 STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
 nfs | dir)
@@ -596,13 +610,6 @@ DESCRIPTION=$(
 EOF
 )
 qm set "$VMID" -description "$DESCRIPTION" >/dev/null
-if [ -n "$DISK_SIZE" ]; then
-  msg_info "Resizing disk to $DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
-else
-  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
-fi
 
 msg_ok "Created a Debian 12 VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
