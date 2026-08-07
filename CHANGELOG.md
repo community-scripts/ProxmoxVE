@@ -518,6 +518,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-07
+
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - core: extend new vars and pocketbase values [@MickLesk](https://github.com/MickLesk) ([#16313](https://github.com/community-scripts/ProxmoxVE/pull/16313))
+
 ## 2026-08-06
 
 ### 🚀 Updated Scripts
