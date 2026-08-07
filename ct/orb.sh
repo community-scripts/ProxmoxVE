@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$(dirname "${BASH_SOURCE[0]}")/../misc/build.func" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: angusmaul
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -30,7 +30,7 @@ function update_script() {
     exit 233
   fi
 
-  msg_info "Updating $APP LXC"
+  msg_info "Updating Orb"
   $STD apt update
   $STD apt install -y --only-upgrade orb
   msg_ok "Updated successfully!"
