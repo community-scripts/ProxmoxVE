@@ -524,6 +524,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: retry mise install on transient npm download failures [@MickLesk](https://github.com/MickLesk) ([#16301](https://github.com/community-scripts/ProxmoxVE/pull/16301))
     - changedetection: remove msttcorefonts to fix install hang [@austinpilz](https://github.com/austinpilz) ([#16319](https://github.com/community-scripts/ProxmoxVE/pull/16319))
 
   - #### 🔧 Refactor
