@@ -25,7 +25,7 @@ $STD apt install -y orb
 msg_ok "Installed Orb"
 
 msg_info "Enabling Service"
-$STD systemctl enable --now orb
+systemctl enable -q --now orb
 msg_ok "Enabled Service"
 
 motd_ssh
