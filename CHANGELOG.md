@@ -518,6 +518,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-08
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core - setup_nodejs: bypass npm allowScripts policy globally on npm >=11 [@MickLesk](https://github.com/MickLesk) ([#16280](https://github.com/community-scripts/ProxmoxVE/pull/16280))
+
 ## 2026-08-07
 
 ### 🆕 New Scripts
