@@ -44,6 +44,7 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gl_release "Crafty-Controller" "crafty-controller/crafty-4" "tarball" "latest" "/opt/crafty-controller/crafty/crafty-4"
 
+    chown -R crafty:crafty /opt/crafty-controller
     restore_backup
 
     msg_info "Updating TemurinJDK"
@@ -53,7 +54,6 @@ function update_script() {
     msg_ok "Updated TemurinJDK"
 
     msg_info "Updating Python dependencies"
-    chown -R crafty:crafty /opt/crafty-controller
     cd /opt/crafty-controller/crafty/crafty-4
     $STD sudo -u crafty bash -c '
       source /opt/crafty-controller/crafty/.venv/bin/activate
