@@ -66,7 +66,7 @@ for i in {1..15}; do
   fi
   sleep 2
 done
-$STD mariadb -u webtrees -p"${MARIADB_DB_PASS}" -h 127.0.0.1 webtrees -e "SHOW TABLES LIKE 'wt_user';" | grep -q wt_user
+mariadb -u webtrees -p"${MARIADB_DB_PASS}" -h 127.0.0.1 webtrees -e "SHOW TABLES LIKE 'wt_user';" | grep -q wt_user
 msg_ok "Initialized Webtrees database schema"
 $STD sudo -u www-data php /opt/webtrees/index.php user Admin \
   --create \
