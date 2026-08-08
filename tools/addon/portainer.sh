@@ -27,6 +27,10 @@ APP_TYPE="addon"
 INSTALL_PATH="/opt/portainer"
 COMPOSE_FILE="${INSTALL_PATH}/compose.yaml"
 DEFAULT_PORT=9443
+PORTAINER_IMAGE=""
+COMPOSE_WORKDIR=""
+COMPOSE_SERVICE=""
+COMPOSE_CONFIG_FILES=""
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
@@ -66,17 +70,166 @@ UPDATEEOF
 }
 
 # ==============================================================================
-# UPDATE
+# DETECT EXISTING INSTALLATION
 # ==============================================================================
-function update() {
+function detect_portainer() {
+  PORTAINER_IMAGE=""
+  COMPOSE_WORKDIR=""
+  COMPOSE_SERVICE=""
+  COMPOSE_CONFIG_FILES=""
+
+  if ! docker container inspect portainer &>/dev/null; then
+    return 0
+  fi
+
+  PORTAINER_IMAGE=$(docker inspect portainer --format '{{.Config.Image}}')
+  if [[ ! "$PORTAINER_IMAGE" =~ (^|/)portainer-(ce|ee)(:|@) ]]; then
+    msg_error "A container named 'portainer' exists but does not use an official Portainer CE or BE image."
+    exit 10
+  fi
+
+  COMPOSE_WORKDIR=$(docker inspect portainer --format '{{index .Config.Labels "com.docker.compose.project.working_dir"}}' 2>/dev/null || true)
+  COMPOSE_SERVICE=$(docker inspect portainer --format '{{index .Config.Labels "com.docker.compose.service"}}' 2>/dev/null || true)
+  COMPOSE_CONFIG_FILES=$(docker inspect portainer --format '{{index .Config.Labels "com.docker.compose.project.config_files"}}' 2>/dev/null || true)
+  if [[ "$COMPOSE_WORKDIR" == "<no value>" ]]; then
+    COMPOSE_WORKDIR=""
+  fi
+  if [[ "$COMPOSE_SERVICE" == "<no value>" ]]; then
+    COMPOSE_SERVICE=""
+  fi
+  if [[ "$COMPOSE_CONFIG_FILES" == "<no value>" ]]; then
+    COMPOSE_CONFIG_FILES=""
+  fi
+  return 0
+}
+
+# ==============================================================================
+# UPDATE COMPOSE INSTALLATION
+# ==============================================================================
+function update_compose() {
+  local workdir="$1"
+  local service="$2"
+  local config_files="$3"
+  local config
+  local -a configs=()
+  local -a compose_args=()
+
+  if [[ -n "$config_files" ]]; then
+    IFS=',' read -ra configs <<<"$config_files"
+    for config in "${configs[@]}"; do
+      compose_args+=(--file "$config")
+    done
+  fi
+
   msg_info "Pulling latest ${APP} image"
-  cd "$INSTALL_PATH"
-  $STD docker compose pull
+  if [[ -n "$service" ]]; then
+    (cd "$workdir" && $STD docker compose "${compose_args[@]}" pull "$service")
+  else
+    (cd "$workdir" && $STD docker compose pull)
+  fi
   msg_ok "Pulled latest image"
 
   msg_info "Restarting ${APP}"
-  $STD docker compose up -d --remove-orphans
+  if [[ -n "$service" ]]; then
+    (cd "$workdir" && $STD docker compose "${compose_args[@]}" up -d "$service")
+  else
+    (cd "$workdir" && $STD docker compose up -d --remove-orphans)
+  fi
   msg_ok "Restarted ${APP}"
+}
+
+# ==============================================================================
+# UPDATE STANDALONE INSTALLATION
+# ==============================================================================
+function update_standalone() {
+  local old_image_id latest_image_id restart_name restart_max network_mode container_port host_ip host_port source destination mode writable
+  local was_running privileged user
+  local -a run_args=(-d --name portainer)
+  local -a command=()
+
+  old_image_id=$(docker inspect portainer --format '{{.Image}}')
+  was_running=$(docker inspect portainer --format '{{.State.Running}}')
+  restart_name=$(docker inspect portainer --format '{{.HostConfig.RestartPolicy.Name}}')
+  restart_max=$(docker inspect portainer --format '{{.HostConfig.RestartPolicy.MaximumRetryCount}}')
+  network_mode=$(docker inspect portainer --format '{{.HostConfig.NetworkMode}}')
+  privileged=$(docker inspect portainer --format '{{.HostConfig.Privileged}}')
+  user=$(docker inspect portainer --format '{{.Config.User}}')
+
+  if [[ -n "$restart_name" && "$restart_name" != "no" ]]; then
+    if [[ "$restart_name" == "on-failure" && "$restart_max" -gt 0 ]]; then
+      run_args+=(--restart "${restart_name}:${restart_max}")
+    else
+      run_args+=(--restart "$restart_name")
+    fi
+  fi
+  [[ "$network_mode" != "default" ]] && run_args+=(--network "$network_mode")
+  [[ "$privileged" == "true" ]] && run_args+=(--privileged)
+  [[ -n "$user" ]] && run_args+=(--user "$user")
+
+  while IFS='|' read -r container_port host_ip host_port; do
+    [[ -z "$container_port" || -z "$host_port" ]] && continue
+    [[ "$host_ip" == *:* ]] && host_ip="[${host_ip}]"
+    if [[ -n "$host_ip" && "$host_ip" != "0.0.0.0" ]]; then
+      run_args+=(-p "${host_ip}:${host_port}:${container_port}")
+    else
+      run_args+=(-p "${host_port}:${container_port}")
+    fi
+  done < <(docker inspect portainer --format '{{range $port, $bindings := .HostConfig.PortBindings}}{{range $bindings}}{{printf "%s|%s|%s\n" $port .HostIp .HostPort}}{{end}}{{end}}')
+
+  while IFS='|' read -r source destination mode writable; do
+    [[ -z "$source" || -z "$destination" ]] && continue
+    if [[ "$writable" == "false" ]]; then
+      mode="${mode:+${mode},}ro"
+    fi
+    run_args+=(-v "${source}:${destination}${mode:+:${mode}}")
+  done < <(docker inspect portainer --format '{{range .Mounts}}{{if eq .Type "volume"}}{{.Name}}{{else}}{{.Source}}{{end}}|{{.Destination}}|{{.Mode}}|{{.RW}}{{println}}{{end}}')
+
+  while IFS= read -r environment; do
+    [[ -n "$environment" ]] && run_args+=(-e "$environment")
+  done < <(docker inspect portainer --format '{{range .Config.Env}}{{println .}}{{end}}')
+
+  while IFS= read -r argument; do
+    [[ -n "$argument" ]] && command+=("$argument")
+  done < <(docker inspect portainer --format '{{range .Config.Cmd}}{{println .}}{{end}}')
+
+  msg_info "Pulling latest ${APP} image"
+  $STD docker pull "$PORTAINER_IMAGE"
+  latest_image_id=$(docker image inspect "$PORTAINER_IMAGE" --format '{{.Id}}')
+  msg_ok "Pulled latest image"
+
+  if [[ "$old_image_id" == "$latest_image_id" ]]; then
+    msg_ok "${APP} is already up to date"
+    return 0
+  fi
+
+  msg_info "Recreating ${APP}"
+  [[ "$was_running" == "true" ]] && $STD docker stop portainer
+  $STD docker rm portainer
+  if ! $STD docker run "${run_args[@]}" "$PORTAINER_IMAGE" "${command[@]}"; then
+    msg_warn "Update failed, restoring the previous ${APP} image"
+    docker rm -f portainer &>/dev/null || true
+    if $STD docker run "${run_args[@]}" "$old_image_id" "${command[@]}"; then
+      [[ "$was_running" != "true" ]] && $STD docker stop portainer
+      msg_error "Failed to update ${APP}; restored the previous container."
+    else
+      msg_error "Failed to update or restore ${APP}."
+    fi
+    exit 10
+  fi
+  msg_ok "Recreated ${APP}"
+}
+
+# ==============================================================================
+# UPDATE
+# ==============================================================================
+function update() {
+  if [[ -f "$COMPOSE_FILE" ]]; then
+    update_compose "$INSTALL_PATH" "" ""
+  elif [[ -n "$COMPOSE_WORKDIR" && -n "$COMPOSE_SERVICE" && -d "$COMPOSE_WORKDIR" ]]; then
+    update_compose "$COMPOSE_WORKDIR" "$COMPOSE_SERVICE" "$COMPOSE_CONFIG_FILES"
+  else
+    update_standalone
+  fi
 
   ensure_update_script
 
@@ -100,25 +253,15 @@ function check_docker() {
 }
 
 # ==============================================================================
-# CHECK EXISTING CONTAINER
-# ==============================================================================
-function check_existing_container() {
-  # Guards against clobbering a Portainer container not managed by this addon
-  # (e.g. Business/Enterprise Edition installed manually or via the legacy docker.sh flow)
-  if docker ps -a --format '{{.Names}}' | grep -q '^portainer$'; then
-    msg_error "A container named 'portainer' already exists but is not managed by this addon."
-    msg_error "This may be a Portainer Business/Enterprise Edition install or a manual setup."
-    msg_error "Remove/rename that container first, or manage it manually. Exiting."
-    exit 10
-  fi
-}
-
-# ==============================================================================
 # INSTALL
 # ==============================================================================
 function install() {
   check_docker
-  check_existing_container
+  detect_portainer
+  if [[ -n "$PORTAINER_IMAGE" ]]; then
+    msg_error "${APP} is already installed."
+    exit 10
+  fi
 
   msg_info "Creating install directory"
   mkdir -p "$INSTALL_PATH"
@@ -148,7 +291,9 @@ function install() {
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
   header_info
-  if [[ -f "$COMPOSE_FILE" ]]; then
+  check_docker
+  detect_portainer
+  if [[ -f "$COMPOSE_FILE" || -n "$PORTAINER_IMAGE" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
@@ -161,18 +306,20 @@ header_info
 get_lxc_ip
 
 check_docker
-check_existing_container
+detect_portainer
 
 # Check if already installed
-if [[ -f "$COMPOSE_FILE" ]]; then
+if [[ -f "$COMPOSE_FILE" || -n "$PORTAINER_IMAGE" ]]; then
   msg_warn "${APP} is already installed."
   echo ""
 
-  echo -n "${TAB}Uninstall ${APP}? (y/N): "
-  read -r uninstall_prompt
-  if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
-    uninstall
-    exit 0
+  if [[ -f "$COMPOSE_FILE" ]]; then
+    echo -n "${TAB}Uninstall ${APP}? (y/N): "
+    read -r uninstall_prompt
+    if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+      uninstall
+      exit 0
+    fi
   fi
 
   echo -n "${TAB}Update ${APP}? (y/N): "
