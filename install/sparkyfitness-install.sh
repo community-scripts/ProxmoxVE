@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y nginx
+$STD apt install -y git nginx
 msg_ok "Installed Dependencies"
 
 PG_VERSION="18" setup_postgresql
