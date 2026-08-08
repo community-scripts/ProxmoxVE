@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Apache CouchDB"
-ERLANG_COOKIE=$(openssl rand -base64 32)
+# hex so the cookie is alphanumeric and never needs quoting in Erlang vm.args;
+# base64 output can contain +/= which breaks -setcookie parsing (#16360)
+ERLANG_COOKIE=$(openssl rand -hex 32)
 ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
 debconf-set-selections <<<"couchdb couchdb/cookie string $ERLANG_COOKIE"
 debconf-set-selections <<<"couchdb couchdb/mode select standalone"
