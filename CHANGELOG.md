@@ -527,6 +527,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix: CouchDB Erlang cookie breaks vm.args (use hex) [@fudianchn](https://github.com/fudianchn) ([#16361](https://github.com/community-scripts/ProxmoxVE/pull/16361))
     - SparkyFitness: Install Git for frontend builds [@MickLesk](https://github.com/MickLesk) ([#16352](https://github.com/community-scripts/ProxmoxVE/pull/16352))
     - Byparr: Use invisible-playwright browser setup [@MickLesk](https://github.com/MickLesk) ([#16353](https://github.com/community-scripts/ProxmoxVE/pull/16353))
     - Crafty Controller: Restore ownership after updates [@MickLesk](https://github.com/MickLesk) ([#16354](https://github.com/community-scripts/ProxmoxVE/pull/16354))
