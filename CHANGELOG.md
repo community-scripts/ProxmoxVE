@@ -90,6 +90,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -99,7 +102,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>August (1 entries)</h4></summary>
+<summary><h4>August (8 entries)</h4></summary>
 
 [View August 2026 Changelog](.github/changelogs/2026/08.md)
 
@@ -1167,93 +1170,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Adapt to new artifact filename format for pocket id [@wollew](https://github.com/wollew) ([#15689](https://github.com/community-scripts/ProxmoxVE/pull/15689))
     - Fireshare: Fix for install and upgrade to v1.7.3 [@tremor021](https://github.com/tremor021) ([#15673](https://github.com/community-scripts/ProxmoxVE/pull/15673))
     - Endurain: Fix update procedure [@tremor021](https://github.com/tremor021) ([#15674](https://github.com/community-scripts/ProxmoxVE/pull/15674))
-
-## 2026-07-09
-
-### 🚀 Updated Scripts
-
-  - fix(pihole): repair Unbound DNS-over-TLS (DoT) forwarding config [@TowyTowy](https://github.com/TowyTowy) ([#15654](https://github.com/community-scripts/ProxmoxVE/pull/15654))
-
-## 2026-07-08
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Opencloud: Bump version to 7.2.1 [@vhsdream](https://github.com/vhsdream) ([#15655](https://github.com/community-scripts/ProxmoxVE/pull/15655))
-    - BabyBuddy: Harden update script [@MickLesk](https://github.com/MickLesk) ([#15642](https://github.com/community-scripts/ProxmoxVE/pull/15642))
-
-## 2026-07-07
-
-### 🆕 New Scripts
-
-  - Forgejo-Runner ([#15046](https://github.com/community-scripts/ProxmoxVE/pull/15046))
-
-## 2026-07-06
-
-### 🚀 Updated Scripts
-
-  - Fix alignment in various ct end messages [@tremor021](https://github.com/tremor021) ([#15632](https://github.com/community-scripts/ProxmoxVE/pull/15632))
-- Immich: Update libvips to 8.18.4 [@vhsdream](https://github.com/vhsdream) ([#15619](https://github.com/community-scripts/ProxmoxVE/pull/15619))
-
-  - #### 🐞 Bug Fixes
-
-    - Wizarr: Build JS and CSS static assets [@vhsdream](https://github.com/vhsdream) ([#15634](https://github.com/community-scripts/ProxmoxVE/pull/15634))
-    - RustDesk Server: Update URL format in rustdeskserver.sh [@tremor021](https://github.com/tremor021) ([#15626](https://github.com/community-scripts/ProxmoxVE/pull/15626))
-    - attempt to port docker-vm to support arm64 [@asylumexp](https://github.com/asylumexp) ([#15611](https://github.com/community-scripts/ProxmoxVE/pull/15611))
-    - fix(plane): don't clobber global app var, breaking /usr/bin/update [@asylumexp](https://github.com/asylumexp) ([#15612](https://github.com/community-scripts/ProxmoxVE/pull/15612))
-
-  - #### 🔧 Refactor
-
-    - cliproxyapi: point setup message at /management.html [@austinpilz](https://github.com/austinpilz) ([#15628](https://github.com/community-scripts/ProxmoxVE/pull/15628))
-
-### 🗑️ Deleted Scripts
-
-  - Remove: FlowiseAI [@MickLesk](https://github.com/MickLesk) ([#15624](https://github.com/community-scripts/ProxmoxVE/pull/15624))
-
-## 2026-07-05
-
-### 🆕 New Scripts
-
-  - excalidash ([#15604](https://github.com/community-scripts/ProxmoxVE/pull/15604))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix: homarr: cli [@CrazyWolf13](https://github.com/CrazyWolf13) ([#15603](https://github.com/community-scripts/ProxmoxVE/pull/15603))
-    - immich: vacuum smart_search/face_search before VectorChord bump [@irishpadres](https://github.com/irishpadres) ([#15607](https://github.com/community-scripts/ProxmoxVE/pull/15607))
-
-## 2026-07-04
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Element Synapse: Fix heredoc syntax in elementsynapse-install.sh [@tremor021](https://github.com/tremor021) ([#15594](https://github.com/community-scripts/ProxmoxVE/pull/15594))
-    - Twenty: Fix backup restore [@tremor021](https://github.com/tremor021) ([#15586](https://github.com/community-scripts/ProxmoxVE/pull/15586))
-    - fix(endurain): update frontend dist path after upstream restructure [@joaovitoriasilva](https://github.com/joaovitoriasilva) ([#15590](https://github.com/community-scripts/ProxmoxVE/pull/15590))
-
-## 2026-07-03
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Immich: handle mise monorepo_root rename correctly | bump to 3.0.1 [@MickLesk](https://github.com/MickLesk) ([#15557](https://github.com/community-scripts/ProxmoxVE/pull/15557))
-
-  - #### ✨ New Features
-
-    - Opencloud: bump to v7.2.0 [@vhsdream](https://github.com/vhsdream) ([#15575](https://github.com/community-scripts/ProxmoxVE/pull/15575))
-
-### 💾 Core
-
-  - #### 🔧 Refactor
-
-    - tools.func: fix corepack/pnpm install flow in setup_nodejs [@MickLesk](https://github.com/MickLesk) ([#15579](https://github.com/community-scripts/ProxmoxVE/pull/15579))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - Removed deprecated parameter in Filebrowser Quantum configuration [@alpargatagazer](https://github.com/alpargatagazer) ([#15573](https://github.com/community-scripts/ProxmoxVE/pull/15573))
