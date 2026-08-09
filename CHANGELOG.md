@@ -523,6 +523,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-09
 
+### 📚 Documentation
+
+  - github: update Star History links and image sources [@MickLesk](https://github.com/MickLesk) ([#16367](https://github.com/community-scripts/ProxmoxVE/pull/16367))
+
 ## 2026-08-08
 
 ### 🆕 New Scripts
