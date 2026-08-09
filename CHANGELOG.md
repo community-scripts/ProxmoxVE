@@ -534,6 +534,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Webtrees: Fix schema check in silent mode [@MickLesk](https://github.com/MickLesk) ([#16355](https://github.com/community-scripts/ProxmoxVE/pull/16355))
     - SigNoz: Allow legacy metadata schema on ClickHouse 26 [@MickLesk](https://github.com/MickLesk) ([#16356](https://github.com/community-scripts/ProxmoxVE/pull/16356))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - Portainer: Update existing CE and BE installations [@MickLesk](https://github.com/MickLesk) ([#16357](https://github.com/community-scripts/ProxmoxVE/pull/16357))
+
 ### 📚 Documentation
 
   - github: update Star History links and image sources [@MickLesk](https://github.com/MickLesk) ([#16367](https://github.com/community-scripts/ProxmoxVE/pull/16367))
