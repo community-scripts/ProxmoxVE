@@ -525,7 +525,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - TeslaMate ([#16385](https://github.com/community-scripts/ProxmoxVE/pull/16385))
+  - GitLab ([#16386](https://github.com/community-scripts/ProxmoxVE/pull/16386))
+- TeslaMate ([#16385](https://github.com/community-scripts/ProxmoxVE/pull/16385))
 - tor-snowflake ([#15684](https://github.com/community-scripts/ProxmoxVE/pull/15684))
 
 ### 🧰 Tools
