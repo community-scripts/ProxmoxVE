@@ -521,6 +521,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-10
+
+### 🧰 Tools
+
+  - post-pdm-install ([#16368](https://github.com/community-scripts/ProxmoxVE/pull/16368))
+
 ## 2026-08-09
 
 ### 🚀 Updated Scripts
