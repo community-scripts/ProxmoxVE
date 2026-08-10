@@ -50,21 +50,17 @@ function update_script() {
     cp -a /opt/pelican-panel/.env /opt/backup
     mkdir -p /opt/backup/storage/app/
     cp -a /opt/pelican-panel/storage/app/public /opt/backup/storage/app/
-    
+
     SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1>/dev/null 2>&1 && echo "true" || echo "false")
     $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/backup
-    
+
     find /opt/pelican-panel -mindepth 1 -maxdepth 1 ! -name 'backup' ! -name 'plugins' -exec rm -rf {} +
-    
+
     fetch_and_deploy_gh_release "pelican-panel" "pelican-dev/panel" "prebuild" "latest" "/opt/pelican-panel" "panel.tar.gz"
 
     msg_info "Updating Pelican Panel"
     cp -a /opt/backup/.env /opt/pelican-panel/
     $SQLITE_INSTALL && mv /opt/backup/*.sqlite /opt/pelican-panel/database/
-    if ! grep -qE '^DB_CONNECTION=(mysql|mariadb|pgsql)' /opt/pelican-panel/.env 2>/dev/null; then
-      mkdir -p /opt/pelican-panel/database
-      [[ -f /opt/pelican-panel/database/database.sqlite ]] || touch /opt/pelican-panel/database/database.sqlite
-    fi
     cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
 
     $STD composer install --no-dev --optimize-autoloader --no-interaction
