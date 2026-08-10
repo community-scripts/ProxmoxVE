@@ -523,6 +523,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-10
 
+### 🆕 New Scripts
+
+  - tor-snowflake ([#15684](https://github.com/community-scripts/ProxmoxVE/pull/15684))
+
 ### 🧰 Tools
 
   - post-pdm-install ([#16368](https://github.com/community-scripts/ProxmoxVE/pull/16368))
