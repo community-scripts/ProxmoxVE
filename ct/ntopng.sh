@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$(dirname "${BASH_SOURCE[0]}")/../misc/build.func" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -30,10 +30,10 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating ntopng"
   $STD apt update
   $STD apt install -y ntopng
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated ntopng"
 
   msg_info "Restarting Service"
   systemctl restart ntopng
