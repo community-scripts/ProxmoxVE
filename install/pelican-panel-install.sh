@@ -25,6 +25,8 @@ fetch_and_deploy_gh_release "pelican-panel" "pelican-dev/panel" "prebuild" "late
 
 msg_info "Installing Pelican Panel"
 cd /opt/pelican-panel
+mkdir -p /opt/pelican-panel/database
+touch /opt/pelican-panel/database/database.sqlite
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan p:environment:setup
 $STD php artisan p:environment:queue-service --no-interaction

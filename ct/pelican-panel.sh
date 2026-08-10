@@ -61,6 +61,10 @@ function update_script() {
     msg_info "Updating Pelican Panel"
     cp -a /opt/backup/.env /opt/pelican-panel/
     $SQLITE_INSTALL && mv /opt/backup/*.sqlite /opt/pelican-panel/database/
+    if ! grep -qE '^DB_CONNECTION=(mysql|mariadb|pgsql)' /opt/pelican-panel/.env 2>/dev/null; then
+      mkdir -p /opt/pelican-panel/database
+      [[ -f /opt/pelican-panel/database/database.sqlite ]] || touch /opt/pelican-panel/database/database.sqlite
+    fi
     cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
 
     $STD composer install --no-dev --optimize-autoloader --no-interaction
