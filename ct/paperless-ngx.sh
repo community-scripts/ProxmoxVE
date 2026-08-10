@@ -166,6 +166,8 @@ function update_script() {
       msg_info "Updating Paperless-ngx"
       if ((BRIDGE_UPDATE == 0)); then
         sed -i 's|^ExecStart=.*|ExecStart=uv run -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
+        grep -q "document_index reindex" /etc/systemd/system/paperless-webserver.service ||
+          sed -i '/^ExecStart=/i ExecStartPre=uv run -- python manage.py document_index reindex --if-needed --no-progress-bar' /etc/systemd/system/paperless-webserver.service
         $STD systemctl daemon-reload
       fi
       cd /opt/paperless
