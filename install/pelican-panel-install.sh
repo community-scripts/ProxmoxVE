@@ -20,7 +20,9 @@ msg_ok "Installed Dependencies"
 PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
 setup_composer
 setup_mariadb
-MARIADB_DB_NAME="panel" MARIADB_DB_USER="pelican" setup_mariadb_db
+MARIADB_DB_NAME="panel"
+MARIADB_DB_USER="pelican"
+setup_mariadb_db
 fetch_and_deploy_gh_release "pelican-panel" "pelican-dev/panel" "prebuild" "latest" "/opt/pelican-panel" "panel.tar.gz"
 
 msg_info "Installing Pelican Panel"
