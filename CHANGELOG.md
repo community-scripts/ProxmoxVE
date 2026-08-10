@@ -529,6 +529,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - TeslaMate ([#16385](https://github.com/community-scripts/ProxmoxVE/pull/16385))
 - tor-snowflake ([#15684](https://github.com/community-scripts/ProxmoxVE/pull/15684))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - ErsatzTV: update ffmpeg to 8.1 version [@MickLesk](https://github.com/MickLesk) ([#16383](https://github.com/community-scripts/ProxmoxVE/pull/16383))
+
 ### 🧰 Tools
 
   - post-pdm-install ([#16368](https://github.com/community-scripts/ProxmoxVE/pull/16368))
