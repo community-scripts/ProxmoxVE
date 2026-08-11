@@ -527,6 +527,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - paperless-ngx: reindex Tantivy search index on webserver start [@MickLesk](https://github.com/MickLesk) ([#16395](https://github.com/community-scripts/ProxmoxVE/pull/16395))
     - karakeep: pin Node.js to 22 LTS, avoid Node 24.19 better-sqlite3 crash [@MickLesk](https://github.com/MickLesk) ([#16396](https://github.com/community-scripts/ProxmoxVE/pull/16396))
 
 ### 🧰 Tools
