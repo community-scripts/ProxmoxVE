@@ -52,7 +52,7 @@ cat <<EOF >/etc/apache2/sites-available/koillection.conf
     ServerName koillection
     DocumentRoot /opt/koillection/public
     SetEnv APP_RUNTIME "Symfony\\Component\\Runtime\\SymfonyRuntime"
-    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=\$1
     <Directory /opt/koillection/public>
         Options Indexes FollowSymLinks
         AllowOverride All
