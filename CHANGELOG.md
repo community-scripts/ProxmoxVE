@@ -525,6 +525,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Update source URL for Reactive Resume [@MickLesk](https://github.com/MickLesk) ([#16407](https://github.com/community-scripts/ProxmoxVE/pull/16407))
+
   - #### 🐞 Bug Fixes
 
     - paperless-ngx: reindex Tantivy search index on webserver start [@MickLesk](https://github.com/MickLesk) ([#16395](https://github.com/community-scripts/ProxmoxVE/pull/16395))
