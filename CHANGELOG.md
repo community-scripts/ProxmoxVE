@@ -521,6 +521,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-11
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - karakeep: pin Node.js to 22 LTS, avoid Node 24.19 better-sqlite3 crash [@MickLesk](https://github.com/MickLesk) ([#16396](https://github.com/community-scripts/ProxmoxVE/pull/16396))
+
 ## 2026-08-10
 
 ### 🆕 New Scripts
