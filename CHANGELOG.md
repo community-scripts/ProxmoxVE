@@ -529,6 +529,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - karakeep: pin Node.js to 22 LTS, avoid Node 24.19 better-sqlite3 crash [@MickLesk](https://github.com/MickLesk) ([#16396](https://github.com/community-scripts/ProxmoxVE/pull/16396))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - fix(add-tailscale-lxc): stop spinner before whiptail menu [@halcycon](https://github.com/halcycon) ([#16402](https://github.com/community-scripts/ProxmoxVE/pull/16402))
+
 ## 2026-08-10
 
 ### 🆕 New Scripts
