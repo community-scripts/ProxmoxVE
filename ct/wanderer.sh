@@ -38,6 +38,7 @@ function update_script() {
     systemctl stop wanderer-web
     rm -f /opt/wanderer/start.sh
     rm -rf /opt/wanderer/source/search
+    rm -f /root/.meilisearch
 
     cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 [Unit]
