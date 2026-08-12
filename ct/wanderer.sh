@@ -25,17 +25,72 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /opt/wanderer/start.sh ]]; then
+  if [[ ! -d /opt/wanderer/source ]]; then
     msg_error "No wanderer Installation Found!"
     exit
   fi
 
+  # Migrate legacy single-service installs (start.sh running meilisearch+pocketbase+web
+  # under one wanderer-web unit) to separate wanderer-pocketbase/wanderer-web services
+  # backed by meilisearch.service.
+  if [[ -f /opt/wanderer/start.sh ]]; then
+    msg_info "Migrating wanderer services"
+    systemctl stop wanderer-web
+    rm -f /opt/wanderer/start.sh
+    rm -rf /opt/wanderer/source/search
+
+    cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
+[Unit]
+Description=wanderer PocketBase
+Wants=network.target
+After=network.target
+StartLimitIntervalSec=10
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/wanderer/source/db
+EnvironmentFile=/opt/wanderer/.env
+ExecStart=/opt/wanderer/source/db/pocketbase serve --http=\${PB_URL} --dir=\${PB_DB_LOCATION}
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    cat <<EOF >/etc/systemd/system/wanderer-web.service
+[Unit]
+Description=wanderer
+Wants=network.target meilisearch.service wanderer-pocketbase.service
+After=network.target meilisearch.service wanderer-pocketbase.service
+StartLimitIntervalSec=10
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/wanderer/source/web
+EnvironmentFile=/opt/wanderer/.env
+ExecStart=/usr/bin/node build
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl enable -q wanderer-pocketbase
+    msg_ok "Migrated wanderer services"
+  fi
+
+MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
+
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
     msg_info "Stopping service"
-    systemctl stop wanderer-web
+    systemctl stop wanderer-web wanderer-pocketbase
     msg_ok "Stopped service"
 
-    create_backup /opt/wanderer/source/search
+    create_backup /opt/wanderer/source
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
     restore_backup
 
@@ -59,20 +114,6 @@ function update_script() {
     systemctl start wanderer-web
     msg_ok "Started service"
     msg_ok "Update Successful"
-  fi
-  if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-    msg_info "Stopping service"
-    systemctl stop wanderer-web
-    msg_ok "Stopped service"
-
-    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
-    grep -q -- '--experimental-dumpless-upgrade' /opt/wanderer/start.sh || sed -i 's|meilisearch --master-key|meilisearch --experimental-dumpless-upgrade --master-key|' /opt/wanderer/start.sh
-
-    msg_info "Starting service"
-    systemctl start wanderer-web
-    msg_ok "Started service"
-    msg_ok "Update Successful"
-  fi
   exit
 }
 
