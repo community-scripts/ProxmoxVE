@@ -34,12 +34,13 @@ function update_script() {
     systemctl stop convertx
     msg_info "Stopped Service"
 
-    ensure_dependencies libreoffice-writer dasel graphicsmagick libemail-outlook-message-perl libheif-examples libjxl-tools pipx python3-pip resvg
+    ensure_dependencies libreoffice-writer dasel graphicsmagick libemail-outlook-message-perl libheif-examples libjxl-tools resvg
 
     if ! command -v markitdown &>/dev/null; then
+      setup_uv
       msg_info "Installing markitdown"
-      export PIPX_BIN_DIR=/usr/local/bin
-      $STD pipx install "markitdown[all]"
+      export UV_TOOL_BIN_DIR=/usr/local/bin
+      $STD uv tool install "markitdown[all]"
       msg_ok "Installed markitdown"
     fi
 

@@ -35,11 +35,9 @@ $STD apt install -y \
   lmodern \
   mupdf-tools \
   pandoc \
-  pipx \
   poppler-utils \
   potrace \
   python3-numpy \
-  python3-pip \
   resvg \
   texlive \
   texlive-fonts-recommended \
@@ -48,13 +46,13 @@ $STD apt install -y \
   texlive-xetex
 msg_ok "Installed Dependencies"
 
+setup_uv
+
 msg_info "Installing markitdown"
-export PIPX_BIN_DIR=/usr/local/bin
-$STD pipx install "markitdown[all]"
+export UV_TOOL_BIN_DIR=/usr/local/bin
+$STD uv tool install "markitdown[all]"
 msg_ok "Installed markitdown"
 
-# Pinned to match ConvertX's own Dockerfile - vtracer's "latest" release is now
-# for an unrelated desktop app and may drop these CLI binaries.
 fetch_and_deploy_gh_release "vtracer" "visioncortex/vtracer" "prebuild" "0.6.4" "/usr/local/bin" "vtracer-$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
 
 NODE_VERSION="22" NODE_MODULE="bun" setup_nodejs
