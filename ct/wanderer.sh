@@ -36,9 +36,27 @@ function update_script() {
   if [[ -f /opt/wanderer/start.sh ]]; then
     msg_info "Migrating wanderer services"
     systemctl stop wanderer-web
+    if [[ -f /opt/wanderer/source/search/meilisearch ]]; then
+      MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
+      if [[ "$(arch_resolve)" == "arm64" ]]; then
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/opt/wanderer/source/search" "meilisearch-linux-aarch64"
+      else
+        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
+      fi
+      /opt/wanderer/source/search/meilisearch --upgrade-db --master-key "$MEILI_MASTER_KEY_VAL" --db-path /opt/wanderer/data/meili_data --http-addr 127.0.0.1:17700 &
+      MEILI_MIGRATE_PID=$!
+      for i in {1..60}; do
+        curl -sf "http://127.0.0.1:17700/health" &>/dev/null && break
+        sleep 2
+      done
+      kill "$MEILI_MIGRATE_PID" 2>/dev/null
+      wait "$MEILI_MIGRATE_PID" 2>/dev/null
+      cache_installed_version "meilisearch" "$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+      rm -f /usr/bin/meilisearch
+    fi
+
     rm -f /opt/wanderer/start.sh
     rm -rf /opt/wanderer/source/search
-    rm -f /usr/bin/meilisearch
 
     cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 [Unit]
