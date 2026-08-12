@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  if [[ -f /opt/wanderer/source/search/meilisearch ]]; then
+  if [[ -d /opt/wanderer/source/search ]]; then
     msg_info "Migrating Meilisearch"
     systemctl stop wanderer-web 2>/dev/null
 
