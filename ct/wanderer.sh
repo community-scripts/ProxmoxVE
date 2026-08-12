@@ -31,7 +31,7 @@ function update_script() {
   fi
 
   if [[ ! -f /etc/systemd/system/meilisearch.service ]]; then
-    msg_info "Migrating Meilisearch"
+    msg_info "Migrating MeiliSearch"
     systemctl stop wanderer-web 2>/dev/null
 
     MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
@@ -45,8 +45,33 @@ function update_script() {
     kill "$MEILI_MIGRATE_PID" 2>/dev/null
     wait "$MEILI_MIGRATE_PID" 2>/dev/null || true
 
-    rm -f /usr/bin/meilisearch /etc/meilisearch.toml
     rm -rf /opt/wanderer/source/search
+
+    cat <<EOF >/etc/meilisearch.toml
+env = "production"
+master_key = "$MEILI_MASTER_KEY_VAL"
+db_path = "/opt/wanderer/data/meili_data"
+dump_dir = "/var/lib/meilisearch/dumps"
+snapshot_dir = "/var/lib/meilisearch/snapshots"
+no_analytics = true
+http_addr = "127.0.0.1:7700"
+EOF
+    mkdir -p /var/lib/meilisearch/dumps /var/lib/meilisearch/snapshots
+
+    cat <<EOF >/etc/systemd/system/meilisearch.service
+[Unit]
+Description=Meilisearch
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/meilisearch --config-file-path /etc/meilisearch.toml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl enable -q --now meilisearch
 
     sed -i \
       -e "s|^MEILI_HTTP_ADDR=.*|MEILI_HTTP_ADDR=127.0.0.1:7700|" \
