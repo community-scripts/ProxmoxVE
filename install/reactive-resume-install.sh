@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream | Rewrite: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://rxresume.org | Github: https://github.com/amruthpillai/reactive-resume
+# Source: https://rxresu.me/ | Github: https://github.com/amruthpillai/reactive-resume
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -39,7 +39,6 @@ msg_ok "Built Reactive Resume"
 
 msg_info "Configuring Reactive Resume"
 AUTH_SECRET=$(openssl rand -hex 32)
-
 cat <<EOF >/opt/reactive-resume/.env
 # Reactive Resume v5 Configuration
 NODE_ENV=production

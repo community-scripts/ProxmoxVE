@@ -35,22 +35,34 @@ function update_script() {
     systemctl stop pulse*.service
     msg_ok "Stopped Services"
 
-    if [[ -f /opt/pulse/pulse ]]; then
-      rm -f /opt/pulse/pulse
+    if ! CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-$(arch_resolve).tar.gz"; then
+      msg_error "Download or deployment failed - check network connectivity and GitHub API availability"
+      if systemctl start pulse 2>/dev/null || systemctl start pulse-backend 2>/dev/null; then
+        msg_ok "Restarted the previously installed ${APP}"
+      else
+        msg_error "${APP} could not be restarted - reinstall it or restore the container from a backup"
+      fi
+      exit 250
     fi
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-$(arch_resolve).tar.gz"
     ln -sf /opt/pulse/bin/pulse /usr/local/bin/pulse
     mkdir -p /etc/pulse
     chown pulse:pulse /etc/pulse
     chown -R pulse:pulse /opt/pulse
     chmod 700 /etc/pulse
+    UNIT_WAS_ENABLED=0
     if [[ -f "$SERVICE_PATH"/pulse-backend.service ]]; then
+      if [[ $(systemctl is-enabled pulse-backend) == enabled ]]; then
+        UNIT_WAS_ENABLED=1
+      fi
+      systemctl disable -q pulse-backend.service 2>/dev/null || true
       mv "$SERVICE_PATH"/pulse-backend.service "$SERVICE_PATH"/pulse.service
     fi
     sed -i -e 's|pulse/pulse|pulse/bin/pulse|' \
       -e 's/^Environment="API.*$//' "$SERVICE_PATH"/pulse.service
     systemctl daemon-reload
+    if [[ "$UNIT_WAS_ENABLED" == "1" ]]; then
+      systemctl enable -q pulse
+    fi
     if grep -q 'pulse-home:/bin/bash' /etc/passwd; then
       usermod -s /usr/sbin/nologin pulse
     fi

@@ -34,6 +34,7 @@ function update_script() {
 
     msg_info "Updating $APP LXC"
     $STD git -C /opt/LazyLibrarian pull origin master
+    $STD pip install --break-system-packages /opt/LazyLibrarian
     msg_ok "Updated $APP LXC"
 
     msg_info "Starting LazyLibrarian"

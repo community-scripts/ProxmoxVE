@@ -27,6 +27,7 @@ msg_info "Installing Pelican Panel"
 cd /opt/pelican-panel
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan p:environment:setup
+echo "yes" | $STD php artisan p:environment:database --driver mariadb --host localhost --port 3306 --database "$MARIADB_DB_NAME" --username "$MARIADB_DB_USER" --password "$MARIADB_DB_PASS"
 $STD php artisan p:environment:queue-service --no-interaction
 echo "* * * * * php /opt/pelican-panel/artisan schedule:run >> /dev/null 2>&1" | crontab -u www-data -
 chown -R www-data:www-data /opt/pelican-panel

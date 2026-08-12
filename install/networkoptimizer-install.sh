@@ -35,6 +35,9 @@ RID="linux-x64"
 [[ "$(dpkg --print-architecture)" == "arm64" ]] && RID="linux-arm64"
 cd /opt/networkoptimizer
 export MinVerVersionOverride="$(cat ~/.networkoptimizer)"
+export MSBUILDDISABLENODEREUSE=1
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_SYSTEM_NET_DISABLEIPV6=1
 $STD dotnet publish src/NetworkOptimizer.Web -c Release -r "$RID" --self-contained -o /opt/networkoptimizer/publish
 chmod +x /opt/networkoptimizer/publish/NetworkOptimizer.Web
 msg_ok "Built NetworkOptimizer"

@@ -28,21 +28,23 @@ fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
 
 msg_info "Configuring Outline (Patience)"
 SECRET_KEY="$(openssl rand -hex 32)"
+UTILS_SECRET="$(openssl rand -hex 32)"
 cd /opt/outline
 cp .env.sample .env
 export NODE_ENV=development
-sed -i 's/NODE_ENV=production/NODE_ENV=development/g' /opt/outline/.env
-sed -i "s/generate_a_new_key/${SECRET_KEY}/g" /opt/outline/.env
-sed -i "s/user:pass@postgres/${PG_DB_USER}:${PG_DB_PASS}@localhost/g" /opt/outline/.env
-sed -i 's/redis:6379/localhost:6379/g' /opt/outline/.env
-sed -i "5s#URL=#URL=http://${LOCAL_IP}#g" /opt/outline/.env
-sed -i 's/FORCE_HTTPS=true/FORCE_HTTPS=false/g' /opt/outline/.env
+sed -i "s#^NODE_ENV=.*#NODE_ENV=development#" /opt/outline/.env
+sed -i "s#^SECRET_KEY=.*#SECRET_KEY=${SECRET_KEY}#" /opt/outline/.env
+sed -i "s#^UTILS_SECRET=.*#UTILS_SECRET=${UTILS_SECRET}#" /opt/outline/.env
+sed -i "s#^DATABASE_URL=.*#DATABASE_URL=postgres://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}#" /opt/outline/.env
+sed -i "s#^REDIS_URL=.*#REDIS_URL=redis://localhost:6379#" /opt/outline/.env
+sed -i "s#^URL=.*#URL=http://${LOCAL_IP}#" /opt/outline/.env
+sed -i "s#^FORCE_HTTPS=.*#FORCE_HTTPS=false#" /opt/outline/.env
 export NODE_OPTIONS="--max-old-space-size=3584"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
 $STD yarn install --immutable
 export NODE_ENV=production
-sed -i 's/NODE_ENV=development/NODE_ENV=production/g' /opt/outline/.env
+sed -i "s#^NODE_ENV=.*#NODE_ENV=production#" /opt/outline/.env
 $STD yarn build
 msg_ok "Configured Outline"
 

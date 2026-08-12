@@ -521,19 +521,53 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
-## 2026-08-11
+## 2026-08-12
+
+### 🆕 New Scripts
+
+  - Stalwart ([#16388](https://github.com/community-scripts/ProxmoxVE/pull/16388))
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - networkoptimizer: mitigate dotnet publish hang in LXC [@MickLesk](https://github.com/MickLesk) ([#16436](https://github.com/community-scripts/ProxmoxVE/pull/16436))
+    - lazylibrarian: reinstall deps after git pull on update [@MickLesk](https://github.com/MickLesk) ([#16435](https://github.com/community-scripts/ProxmoxVE/pull/16435))
+    - wanderer: fix deprecated meilisearch upgrade flag [@MickLesk](https://github.com/MickLesk) ([#16434](https://github.com/community-scripts/ProxmoxVE/pull/16434))
+    - calibre-web: fix release asset filename pattern [@MickLesk](https://github.com/MickLesk) ([#16433](https://github.com/community-scripts/ProxmoxVE/pull/16433))
+    - fix(stirling-pdf): unoserver installed into the venv, and login mode truncates .env [@angusmaul](https://github.com/angusmaul) ([#16439](https://github.com/community-scripts/ProxmoxVE/pull/16439))
+    - fix(pulse): keep the container recoverable when an update fails [@rcourtman](https://github.com/rcourtman) ([#16311](https://github.com/community-scripts/ProxmoxVE/pull/16311))
+
+  - #### 🔧 Refactor
+
+    - ConvertX: add some new dependencies [@MickLesk](https://github.com/MickLesk) ([#16437](https://github.com/community-scripts/ProxmoxVE/pull/16437))
+
+## 2026-08-11
+
+### 🚀 Updated Scripts
+
+  - Update source URL for Reactive Resume [@MickLesk](https://github.com/MickLesk) ([#16407](https://github.com/community-scripts/ProxmoxVE/pull/16407))
+
+  - #### 🐞 Bug Fixes
+
+    - Pelican-Panel: add php artisan p:environment:database [@MickLesk](https://github.com/MickLesk) ([#16397](https://github.com/community-scripts/ProxmoxVE/pull/16397))
+    - outline: fix URL sed matching wrong line in .env.sample // refactor .env generation [@MickLesk](https://github.com/MickLesk) ([#16408](https://github.com/community-scripts/ProxmoxVE/pull/16408))
+    - paperless-ngx: reindex Tantivy search index on webserver start [@MickLesk](https://github.com/MickLesk) ([#16395](https://github.com/community-scripts/ProxmoxVE/pull/16395))
     - karakeep: pin Node.js to 22 LTS, avoid Node 24.19 better-sqlite3 crash [@MickLesk](https://github.com/MickLesk) ([#16396](https://github.com/community-scripts/ProxmoxVE/pull/16396))
+
+  - #### ✨ New Features
+
+    - Open WebUI: add optional OpenTelemetry package install [@irishpadres](https://github.com/irishpadres) ([#16415](https://github.com/community-scripts/ProxmoxVE/pull/16415))
 
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
 
     - fix(add-tailscale-lxc): stop spinner before whiptail menu [@halcycon](https://github.com/halcycon) ([#16402](https://github.com/community-scripts/ProxmoxVE/pull/16402))
+
+  - #### 🔧 Refactor
+
+    - arcane: fix projects/builds dir ownership for non-root container UID [@MickLesk](https://github.com/MickLesk) ([#16411](https://github.com/community-scripts/ProxmoxVE/pull/16411))
 
 ## 2026-08-10
 

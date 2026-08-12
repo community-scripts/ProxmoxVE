@@ -36,21 +36,22 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/networkoptimizer/networkoptimizer.env
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "networkoptimizer" "Ozark-Connect/NetworkOptimizer" "tarball"
+    restore_backup
 
     msg_info "Rebuilding NetworkOptimizer"
     RID="linux-x64"
     [[ "$(dpkg --print-architecture)" == "arm64" ]] && RID="linux-arm64"
     cd /opt/networkoptimizer
+    export MSBUILDDISABLENODEREUSE=1
+    export DOTNET_CLI_TELEMETRY_OPTOUT=1
+    export DOTNET_SYSTEM_NET_DISABLEIPV6=1
     $STD dotnet publish src/NetworkOptimizer.Web -c Release -r "$RID" --self-contained -o /opt/networkoptimizer/publish
     chmod +x /opt/networkoptimizer/publish/NetworkOptimizer.Web
     mkdir -p /opt/networkoptimizer/publish/tools
     cd /opt/networkoptimizer/src/uwnspeedtest
     CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $STD go build -trimpath -ldflags "-s -w" -o /opt/networkoptimizer/publish/tools/uwnspeedtest-linux-arm64 .
     msg_ok "Rebuilt NetworkOptimizer"
-
-    restore_backup
 
     msg_info "Starting Service"
     systemctl start networkoptimizer
