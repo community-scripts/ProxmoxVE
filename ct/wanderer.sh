@@ -35,8 +35,8 @@ function update_script() {
     systemctl stop wanderer-web 2>/dev/null
 
     MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
-    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest"
-    /usr/bin/meilisearch --upgrade-db --master-key "$MEILI_MASTER_KEY_VAL" --db-path /opt/wanderer/data/meili_data --http-addr 127.0.0.1:17700 >/dev/null 2>&1 &
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
+    (cd /opt/wanderer/source/search && meilisearch --upgrade-db --master-key "$MEILI_MASTER_KEY_VAL" --db-path /opt/wanderer/data/meili_data --http-addr 127.0.0.1:17700 >/dev/null 2>&1) &
     MEILI_MIGRATE_PID=$!
     for i in {1..60}; do
       curl -sf "http://127.0.0.1:17700/health" &>/dev/null && break
