@@ -84,11 +84,12 @@ EOF
     msg_ok "Migrated wanderer services"
   fi
 
-MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
+MEILI_HOST=$(grep -oP '^MEILI_HTTP_ADDR=\K.*' /opt/wanderer/.env)
+MEILISEARCH_BIND="${MEILI_HOST:-127.0.0.1:7700}" MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
 
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
     msg_info "Stopping service"
-    systemctl stop wanderer-web wanderer-pocketbase
+    systemctl stop wanderer-web
     msg_ok "Stopped service"
 
     create_backup /opt/wanderer/source
