@@ -41,8 +41,8 @@ POCKETBASE_KEY=$(openssl rand -hex 16)
 
 cat <<EOF >/opt/wanderer/.env
 ORIGIN=http://${LOCAL_IP}:3000
-MEILI_HTTP_ADDR=${LOCAL_IP}:7700
-MEILI_URL=http://${LOCAL_IP}:7700
+MEILI_HTTP_ADDR=127.0.0.1:7700
+MEILI_URL=http://127.0.0.1:7700
 MEILI_MASTER_KEY=${MEILISEARCH_MASTER_KEY}
 PB_URL=${LOCAL_IP}:8090
 PUBLIC_POCKETBASE_URL=http://${LOCAL_IP}:8090
@@ -87,6 +87,7 @@ cat <<EOF >/etc/systemd/system/wanderer-web.service
 Description=wanderer
 Wants=network.target meilisearch.service wanderer-pocketbase.service
 After=network.target meilisearch.service wanderer-pocketbase.service
+PartOf=meilisearch.service wanderer-pocketbase.service
 StartLimitIntervalSec=10
 StartLimitBurst=5
 

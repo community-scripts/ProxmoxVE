@@ -64,6 +64,7 @@ EOF
 Description=wanderer
 Wants=network.target meilisearch.service wanderer-pocketbase.service
 After=network.target meilisearch.service wanderer-pocketbase.service
+PartOf=meilisearch.service wanderer-pocketbase.service
 StartLimitIntervalSec=10
 StartLimitBurst=5
 
@@ -111,9 +112,10 @@ MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
     msg_ok "Updated wanderer"
 
     msg_info "Starting service"
-    systemctl start wanderer-web
+    systemctl start wanderer-pocketbase wanderer-web
     msg_ok "Started service"
     msg_ok "Update Successful"
+  fi
   exit
 }
 
