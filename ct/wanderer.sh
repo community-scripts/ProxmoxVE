@@ -131,7 +131,7 @@ EOF
     msg_ok "Migrated wanderer services"
   fi
 
-MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
+  setup_meilisearch
 
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
     msg_info "Stopping service"
