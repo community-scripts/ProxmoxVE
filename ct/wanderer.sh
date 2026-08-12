@@ -30,31 +30,36 @@ function update_script() {
     exit
   fi
 
-  # Migrate legacy single-service installs (start.sh running meilisearch+pocketbase+web
-  # under one wanderer-web unit) to separate wanderer-pocketbase/wanderer-web services
-  # backed by meilisearch.service.
+  if [[ -f /opt/wanderer/source/search/meilisearch ]] && [[ ! -f /usr/bin/meilisearch ]]; then
+    msg_info "Migrating Meilisearch"
+    systemctl stop wanderer-web 2>/dev/null
+
+    MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
+    if [[ "$(arch_resolve)" == "arm64" ]]; then
+      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/opt/wanderer/source/search" "meilisearch-linux-aarch64"
+    else
+      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
+    fi
+    /opt/wanderer/source/search/meilisearch --upgrade-db --master-key "$MEILI_MASTER_KEY_VAL" --db-path /opt/wanderer/data/meili_data --http-addr 127.0.0.1:17700 &
+    MEILI_MIGRATE_PID=$!
+    for i in {1..60}; do
+      curl -sf "http://127.0.0.1:17700/health" &>/dev/null && break
+      sleep 2
+    done
+    kill "$MEILI_MIGRATE_PID" 2>/dev/null
+    wait "$MEILI_MIGRATE_PID" 2>/dev/null
+    rm -rf /opt/wanderer/source/search
+    rm -f /usr/bin/meilisearch
+    sed -i \
+      -e "s|^MEILI_HTTP_ADDR=.*|MEILI_HTTP_ADDR=127.0.0.1:7700|" \
+      -e "s|^MEILI_URL=.*|MEILI_URL=http://127.0.0.1:7700|" \
+      /opt/wanderer/.env
+    msg_ok "Migrated Meilisearch"
+  fi
+
   if [[ -f /opt/wanderer/start.sh ]]; then
     msg_info "Migrating wanderer services"
     systemctl stop wanderer-web
-    if [[ -f /opt/wanderer/source/search/meilisearch ]]; then
-      MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
-      if [[ "$(arch_resolve)" == "arm64" ]]; then
-        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/opt/wanderer/source/search" "meilisearch-linux-aarch64"
-      else
-        fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
-      fi
-      /opt/wanderer/source/search/meilisearch --upgrade-db --master-key "$MEILI_MASTER_KEY_VAL" --db-path /opt/wanderer/data/meili_data --http-addr 127.0.0.1:17700 &
-      MEILI_MIGRATE_PID=$!
-      for i in {1..60}; do
-        curl -sf "http://127.0.0.1:17700/health" &>/dev/null && break
-        sleep 2
-      done
-      kill "$MEILI_MIGRATE_PID" 2>/dev/null
-      wait "$MEILI_MIGRATE_PID" 2>/dev/null
-      cache_installed_version "meilisearch" "$(/usr/bin/meilisearch --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
-      rm -f /usr/bin/meilisearch
-    fi
-
     rm -f /opt/wanderer/start.sh
     rm -rf /opt/wanderer/source/search
 
@@ -103,8 +108,7 @@ EOF
     msg_ok "Migrated wanderer services"
   fi
 
-MEILI_HOST=$(grep -oP '^MEILI_HTTP_ADDR=\K.*' /opt/wanderer/.env)
-MEILISEARCH_BIND="${MEILI_HOST:-127.0.0.1:7700}" MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
+MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
 
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
     msg_info "Stopping service"
