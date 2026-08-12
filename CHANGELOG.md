@@ -538,6 +538,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(stirling-pdf): unoserver installed into the venv, and login mode truncates .env [@angusmaul](https://github.com/angusmaul) ([#16439](https://github.com/community-scripts/ProxmoxVE/pull/16439))
     - fix(pulse): keep the container recoverable when an update fails [@rcourtman](https://github.com/rcourtman) ([#16311](https://github.com/community-scripts/ProxmoxVE/pull/16311))
 
+  - #### 🔧 Refactor
+
+    - ConvertX: add some new dependencies [@MickLesk](https://github.com/MickLesk) ([#16437](https://github.com/community-scripts/ProxmoxVE/pull/16437))
+
 ## 2026-08-11
 
 ### 🚀 Updated Scripts
