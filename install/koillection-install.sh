@@ -38,7 +38,7 @@ export APP_RUNTIME='Symfony\Component\Runtime\SymfonyRuntime'
 $STD composer install --no-dev -o --no-interaction --classmap-authoritative
 $STD php bin/console doctrine:migrations:migrate --no-interaction
 $STD php bin/console app:translations:dump
-$STD php bin/console lexik:jwt:generate-keypair
+$STD php bin/console lexik:jwt:generate-keypair --skip-if-exists
 cd assets/
 $STD yarn install
 $STD yarn build
