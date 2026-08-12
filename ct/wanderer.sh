@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop wanderer-web
 
     rm -rf /opt/wanderer/source/search
-
+    MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
     cat <<EOF >/etc/meilisearch.toml
 env = "production"
 master_key = "$MEILI_MASTER_KEY_VAL"
@@ -148,7 +148,7 @@ EOF
     msg_ok "Updated wanderer"
 
     msg_info "Starting service"
-    systemctl start wanderer-pocketbase wanderer-web
+    systemctl start wanderer-web
     msg_ok "Started service"
     msg_ok "Update Successful"
   fi
