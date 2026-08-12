@@ -30,17 +30,13 @@ function update_script() {
     exit
   fi
 
-  if [[ -d /opt/wanderer/source/search ]]; then
+  if [[ ! -f /etc/systemd/system/meilisearch.service ]]; then
     msg_info "Migrating Meilisearch"
     systemctl stop wanderer-web 2>/dev/null
 
     MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
-    if [[ "$(arch_resolve)" == "arm64" ]]; then
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "singlefile" "latest" "/opt/wanderer/source/search" "meilisearch-linux-aarch64"
-    else
-      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
-    fi
-    /opt/wanderer/source/search/meilisearch --upgrade-db --master-key "$MEILI_MASTER_KEY_VAL" --db-path /opt/wanderer/data/meili_data --http-addr 127.0.0.1:17700 &
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest"
+    /usr/bin/meilisearch --upgrade-db --master-key "$MEILI_MASTER_KEY_VAL" --db-path /opt/wanderer/data/meili_data --http-addr 127.0.0.1:17700 &
     MEILI_MIGRATE_PID=$!
     for i in {1..60}; do
       curl -sf "http://127.0.0.1:17700/health" &>/dev/null && break
@@ -48,8 +44,10 @@ function update_script() {
     done
     kill "$MEILI_MIGRATE_PID" 2>/dev/null
     wait "$MEILI_MIGRATE_PID" 2>/dev/null
+
+    rm -f /usr/bin/meilisearch /etc/meilisearch.toml
     rm -rf /opt/wanderer/source/search
-    rm -f /usr/bin/meilisearch
+
     sed -i \
       -e "s|^MEILI_HTTP_ADDR=.*|MEILI_HTTP_ADDR=127.0.0.1:7700|" \
       -e "s|^MEILI_URL=.*|MEILI_URL=http://127.0.0.1:7700|" \
