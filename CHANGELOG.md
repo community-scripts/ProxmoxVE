@@ -523,6 +523,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-12
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(pulse): keep the container recoverable when an update fails [@rcourtman](https://github.com/rcourtman) ([#16311](https://github.com/community-scripts/ProxmoxVE/pull/16311))
+
 ## 2026-08-11
 
 ### 🚀 Updated Scripts
