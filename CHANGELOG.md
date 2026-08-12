@@ -523,6 +523,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-12
 
+### 🆕 New Scripts
+
+  - Stalwart ([#16388](https://github.com/community-scripts/ProxmoxVE/pull/16388))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
