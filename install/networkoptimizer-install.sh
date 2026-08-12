@@ -35,9 +35,6 @@ RID="linux-x64"
 [[ "$(dpkg --print-architecture)" == "arm64" ]] && RID="linux-arm64"
 cd /opt/networkoptimizer
 export MinVerVersionOverride="$(cat ~/.networkoptimizer)"
-# MSBuild's persistent worker nodes can deadlock in unprivileged LXC, and a
-# flaky IPv6 path can stall NuGet restore for minutes per package - both look
-# like an indefinite hang. Neither costs anything for a one-shot publish.
 export MSBUILDDISABLENODEREUSE=1
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SYSTEM_NET_DISABLEIPV6=1
