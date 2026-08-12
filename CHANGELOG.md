@@ -531,6 +531,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - networkoptimizer: mitigate dotnet publish hang in LXC [@MickLesk](https://github.com/MickLesk) ([#16436](https://github.com/community-scripts/ProxmoxVE/pull/16436))
+    - lazylibrarian: reinstall deps after git pull on update [@MickLesk](https://github.com/MickLesk) ([#16435](https://github.com/community-scripts/ProxmoxVE/pull/16435))
     - wanderer: fix deprecated meilisearch upgrade flag [@MickLesk](https://github.com/MickLesk) ([#16434](https://github.com/community-scripts/ProxmoxVE/pull/16434))
     - calibre-web: fix release asset filename pattern [@MickLesk](https://github.com/MickLesk) ([#16433](https://github.com/community-scripts/ProxmoxVE/pull/16433))
     - fix(stirling-pdf): unoserver installed into the venv, and login mode truncates .env [@angusmaul](https://github.com/angusmaul) ([#16439](https://github.com/community-scripts/ProxmoxVE/pull/16439))
