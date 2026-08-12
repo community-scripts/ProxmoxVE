@@ -38,7 +38,7 @@ function update_script() {
     create_backup /opt/calibre-web/app.db \
       /opt/calibre-web/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibre-web*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibreweb*.tar.gz"
     setup_uv
 
     msg_info "Installing Dependencies"
