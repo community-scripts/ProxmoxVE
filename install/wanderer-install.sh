@@ -67,6 +67,7 @@ cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 Description=wanderer PocketBase
 Wants=network.target
 After=network.target
+PartOf=wanderer-web.service
 StartLimitIntervalSec=10
 StartLimitBurst=5
 
@@ -87,7 +88,6 @@ cat <<EOF >/etc/systemd/system/wanderer-web.service
 Description=wanderer
 Wants=network.target meilisearch.service wanderer-pocketbase.service
 After=network.target meilisearch.service wanderer-pocketbase.service
-PartOf=meilisearch.service wanderer-pocketbase.service
 StartLimitIntervalSec=10
 StartLimitBurst=5
 

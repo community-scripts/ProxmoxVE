@@ -80,6 +80,7 @@ EOF
 Description=wanderer PocketBase
 Wants=network.target
 After=network.target
+PartOf=wanderer-web.service
 StartLimitIntervalSec=10
 StartLimitBurst=5
 
@@ -100,7 +101,6 @@ EOF
 Description=wanderer
 Wants=network.target meilisearch.service wanderer-pocketbase.service
 After=network.target meilisearch.service wanderer-pocketbase.service
-PartOf=meilisearch.service wanderer-pocketbase.service
 StartLimitIntervalSec=10
 StartLimitBurst=5
 
