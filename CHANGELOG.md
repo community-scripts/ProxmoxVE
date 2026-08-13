@@ -531,6 +531,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(reitti): enable SNI for tile cache [@kylemd](https://github.com/kylemd) ([#16463](https://github.com/community-scripts/ProxmoxVE/pull/16463))
     - [wanderer] refactor [@johanngrobe](https://github.com/johanngrobe) ([#16448](https://github.com/community-scripts/ProxmoxVE/pull/16448))
 
   - #### ✨ New Features
