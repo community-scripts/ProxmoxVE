@@ -529,6 +529,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - [wanderer] refactor [@johanngrobe](https://github.com/johanngrobe) ([#16448](https://github.com/community-scripts/ProxmoxVE/pull/16448))
+
   - #### ✨ New Features
 
     - feat: Update koillection-install.sh to support API usage [@Crazy-Duck](https://github.com/Crazy-Duck) ([#16425](https://github.com/community-scripts/ProxmoxVE/pull/16425))
