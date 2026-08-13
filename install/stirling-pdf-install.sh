@@ -132,27 +132,12 @@ $STD fc-cache -fv
 msg_ok "Font Cache Updated"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/libreoffice-listener.service
-[Unit]
-Description=LibreOffice Headless Listener Service
-After=network.target
-
-[Service]
-Type=simple
-User=root
-Group=root
-ExecStart=/usr/lib/libreoffice/program/soffice --headless --invisible --nodefault --nofirststartwizard --nolockcheck --nologo --accept="socket,host=127.0.0.1,port=2002;urp;StarOffice.ComponentContext"
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
+# unoserver starts and supervises its own LibreOffice on UNO port 2002, so a separate
+# listener on that port only collides with it. Do not reintroduce one.
 cat <<EOF >/etc/systemd/system/stirlingpdf.service
 [Unit]
 Description=Stirling-PDF service
-After=syslog.target network.target libreoffice-listener.service
-Requires=libreoffice-listener.service
+After=syslog.target network.target unoserver.service
 
 [Service]
 SuccessExitStatus=143
@@ -173,8 +158,7 @@ EOF
 cat <<EOF >/etc/systemd/system/unoserver.service
 [Unit]
 Description=UnoServer RPC Interface
-After=libreoffice-listener.service
-Requires=libreoffice-listener.service
+After=network.target
 
 [Service]
 Type=simple
@@ -186,9 +170,8 @@ EnvironmentFile=/opt/Stirling-PDF/.env
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now libreoffice-listener
-systemctl enable -q --now stirlingpdf
 systemctl enable -q --now unoserver
+systemctl enable -q --now stirlingpdf
 msg_ok "Created Service"
 
 motd_ssh
