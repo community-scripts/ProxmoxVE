@@ -527,6 +527,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - SuggestArr ([#16449](https://github.com/community-scripts/ProxmoxVE/pull/16449))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - feat: Update koillection-install.sh to support API usage [@Crazy-Duck](https://github.com/Crazy-Duck) ([#16425](https://github.com/community-scripts/ProxmoxVE/pull/16425))
+
 ## 2026-08-12
 
 ### 🆕 New Scripts
