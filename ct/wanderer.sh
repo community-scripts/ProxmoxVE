@@ -66,8 +66,11 @@ EOF
       -e "s|^MEILI_HTTP_ADDR=.*|MEILI_HTTP_ADDR=127.0.0.1:7700|" \
       -e "s|^MEILI_URL=.*|MEILI_URL=http://127.0.0.1:7700|" \
       /opt/wanderer/.env
+
     msg_ok "Migrated Meilisearch"
   fi
+
+  setup_meilisearch
 
   if [[ -f /opt/wanderer/start.sh ]]; then
     msg_info "Migrating wanderer services"
@@ -117,10 +120,9 @@ WantedBy=multi-user.target
 EOF
     systemctl daemon-reload
     systemctl enable -q wanderer-pocketbase
+    systemctl start wanderer-web
     msg_ok "Migrated wanderer services"
   fi
-
-  setup_meilisearch
 
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
     msg_info "Stopping service"
