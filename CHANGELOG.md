@@ -531,6 +531,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(stirling-pdf): LibreOffice listener collides with unoserver on UNO port 2002, burning a core [@angusmaul](https://github.com/angusmaul) ([#16460](https://github.com/community-scripts/ProxmoxVE/pull/16460))
     - fix(reitti): enable SNI for tile cache [@kylemd](https://github.com/kylemd) ([#16463](https://github.com/community-scripts/ProxmoxVE/pull/16463))
     - [wanderer] refactor [@johanngrobe](https://github.com/johanngrobe) ([#16448](https://github.com/community-scripts/ProxmoxVE/pull/16448))
 
