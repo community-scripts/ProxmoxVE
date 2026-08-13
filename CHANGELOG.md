@@ -521,6 +521,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-13
+
+### 🆕 New Scripts
+
+  - SuggestArr ([#16449](https://github.com/community-scripts/ProxmoxVE/pull/16449))
+
 ## 2026-08-12
 
 ### 🆕 New Scripts
