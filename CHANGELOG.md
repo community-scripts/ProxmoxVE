@@ -543,6 +543,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Homepage v2.0 [@vhsdream](https://github.com/vhsdream) ([#16500](https://github.com/community-scripts/ProxmoxVE/pull/16500))
 
+  - #### 🔧 Refactor
+
+    - paperless-ngx: run services with uv --no-sync to avoid startup network dependency [@MickLesk](https://github.com/MickLesk) ([#16479](https://github.com/community-scripts/ProxmoxVE/pull/16479))
+
 ## 2026-08-13
 
 ### 🆕 New Scripts
