@@ -60,6 +60,7 @@ REDIS_PORT=6379
 # OIDC_ENFORCE_HTTPS=true
 
 AGENT_BINARIES_DIR=/opt/patchmon/agents
+SSG_CONTENT_DIR=/opt/patchmon/ssg-content
 EOF
 msg_ok "Configured PatchMon"
 
@@ -84,6 +85,18 @@ for arch in "${AGENT_NAME[@]}"; do
   [[ "${arch}" != *.exe ]] && chmod 755 "/opt/patchmon/agents/patchmon-agent-${arch}"
 done
 msg_ok "Fetched PatchMon agent binaries"
+
+msg_info "Fetching SCAP Security Guide content"
+SSG_DIR="/opt/patchmon/ssg-content"
+mkdir -p "$SSG_DIR"
+SSG_RELEASE=$(get_latest_github_release "ComplianceAsCode/content") || SSG_RELEASE=""
+if [[ -n "$SSG_RELEASE" ]] && curl -fsSL "https://github.com/ComplianceAsCode/content/releases/download/v${SSG_RELEASE}/scap-security-guide-${SSG_RELEASE}.tar.gz" |
+  tar -xz -C "$SSG_DIR" --strip-components=1 --wildcards '*/ssg-*-ds.xml'; then
+  echo "$SSG_RELEASE" >"$SSG_DIR/.ssg-version"
+  msg_ok "Fetched SCAP Security Guide content (v${SSG_RELEASE})"
+else
+  msg_warn "Could not fetch SCAP Security Guide content; it will be fetched on the next update"
+fi
 
 msg_info "Creating service"
 cat <<EOF >/etc/systemd/system/patchmon-server.service

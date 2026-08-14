@@ -9,7 +9,7 @@ APP="PatchMon"
 var_tags="${var_tags:-monitoring}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
-var_disk="${var_disk:-4}"
+var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
@@ -28,6 +28,24 @@ function update_script() {
   if [[ ! -d "/opt/patchmon" ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  msg_info "Checking SCAP Security Guide content"
+  SSG_DIR="/opt/patchmon/ssg-content"
+  SSG_LATEST=$(get_latest_github_release "ComplianceAsCode/content") || SSG_LATEST=""
+  SSG_CURRENT=$(cat "$SSG_DIR/.ssg-version" 2>/dev/null || echo "")
+  if [[ -n "$SSG_LATEST" && "$SSG_LATEST" != "$SSG_CURRENT" ]]; then
+    rm -rf "$SSG_DIR"
+    mkdir -p "$SSG_DIR"
+    if curl -fsSL "https://github.com/ComplianceAsCode/content/releases/download/v${SSG_LATEST}/scap-security-guide-${SSG_LATEST}.tar.gz" |
+      tar -xz -C "$SSG_DIR" --strip-components=1 --wildcards '*/ssg-*-ds.xml'; then
+      echo "$SSG_LATEST" >"$SSG_DIR/.ssg-version"
+      msg_ok "Updated SCAP Security Guide content (v${SSG_LATEST})"
+    else
+      msg_warn "Could not update SCAP Security Guide content"
+    fi
+  else
+    msg_ok "SCAP Security Guide content is current"
   fi
 
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
