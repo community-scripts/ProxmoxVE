@@ -15,24 +15,24 @@ update_os
 
 setup_go
 NODE_VERSION="22" setup_nodejs
-mkdir -p /opt/wanderer/{source,data/pb_data,data/meili_data,data/plugins}
-MEILISEARCH_DB_PATH="/opt/wanderer/data/meili_data" setup_meilisearch
-fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest" "/opt/wanderer/source"
-mkdir -p /opt/wanderer/source/db/data
-[[ -e /opt/wanderer/source/db/data/plugins ]] || ln -sfn /opt/wanderer/data/plugins /opt/wanderer/source/db/data/plugins
+mkdir -p /opt/{wanderer,wanderer_data/pb_data,wanderer_data/meili_data,wanderer_data/plugins}
+MEILISEARCH_DB_PATH="/opt/wanderer_data/meili_data" setup_meilisearch
+fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest"
+mkdir -p /opt/wanderer/db/data
+[[ -e /opt/wanderer/db/data/plugins ]] || ln -sfn /opt/wanderer_data/plugins /opt/wanderer/db/data/plugins
 
 msg_info "Installing wanderer (patience)"
-cd /opt/wanderer/source/db
+cd /opt/wanderer/db
 $STD go mod tidy
 $STD go build
-cd /opt/wanderer/source/web
+cd /opt/wanderer/web
 $STD npm ci
 $STD npm run build
 msg_ok "Installed wanderer"
 
 msg_info "Installing wanderer plugins"
 for plugin in hammerhead komoot strava; do
-  fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer/data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+  fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer_data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
 done
 msg_ok "Installed wanderer plugins"
 
@@ -48,8 +48,8 @@ PB_URL=${LOCAL_IP}:8090
 PUBLIC_POCKETBASE_URL=http://${LOCAL_IP}:8090
 PUBLIC_VALHALLA_URL=https://valhalla1.openstreetmap.de
 POCKETBASE_ENCRYPTION_KEY=${POCKETBASE_KEY}
-PB_DB_LOCATION=/opt/wanderer/data/pb_data
-MEILI_DB_PATH=/opt/wanderer/data/meili_data
+PB_DB_LOCATION=/opt/wanderer_data/pb_data
+MEILI_DB_PATH=/opt/wanderer_data/meili_data
 EOF
 
 cat <<'EOF' >/usr/local/bin/wanderer-pb
@@ -57,7 +57,7 @@ cat <<'EOF' >/usr/local/bin/wanderer-pb
 set -a
 source /opt/wanderer/.env
 set +a
-cd /opt/wanderer/source/db
+cd /opt/wanderer/db
 exec ./pocketbase "$@" --dir="$PB_DB_LOCATION"
 EOF
 chmod +x /usr/local/bin/wanderer-pb
@@ -73,9 +73,9 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/wanderer/source/db
+WorkingDirectory=/opt/wanderer/db
 EnvironmentFile=/opt/wanderer/.env
-ExecStart=/opt/wanderer/source/db/pocketbase serve --http=\${PB_URL} --dir=\${PB_DB_LOCATION}
+ExecStart=/opt/wanderer/db/pocketbase serve --http=\${PB_URL} --dir=\${PB_DB_LOCATION}
 Restart=always
 RestartSec=1
 
@@ -93,7 +93,7 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/wanderer/source/web
+WorkingDirectory=/opt/wanderer/web
 EnvironmentFile=/opt/wanderer/.env
 ExecStart=/usr/bin/node build
 Restart=always
