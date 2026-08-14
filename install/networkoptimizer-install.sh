@@ -45,9 +45,7 @@ msg_ok "Built NetworkOptimizer"
 msg_info "Building Speed Test Binaries"
 mkdir -p /opt/networkoptimizer/publish/tools
 cd /opt/networkoptimizer/src/uwnspeedtest
-# UniFi gateways are always arm64, so the gateway binary is built for arm64
 CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $STD go build -trimpath -ldflags "-s -w" -o /opt/networkoptimizer/publish/tools/uwnspeedtest-linux-arm64 .
-# The "Run Test from Server" binary must match the container architecture
 SERVER_ARCH="$(arch_resolve)"
 if [[ "$SERVER_ARCH" != "arm64" ]]; then
   CGO_ENABLED=0 GOOS=linux GOARCH="$SERVER_ARCH" $STD go build -trimpath -ldflags "-s -w" -o "/opt/networkoptimizer/publish/tools/uwnspeedtest-linux-${SERVER_ARCH}" .
