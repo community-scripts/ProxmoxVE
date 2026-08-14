@@ -541,6 +541,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - projectsend: rewrite for 2.0.0 (Laravel, nginx, MariaDB) [@MickLesk](https://github.com/MickLesk) ([#16477](https://github.com/community-scripts/ProxmoxVE/pull/16477))
     - Homepage v2.0 [@vhsdream](https://github.com/vhsdream) ([#16500](https://github.com/community-scripts/ProxmoxVE/pull/16500))
 
   - #### 🔧 Refactor
