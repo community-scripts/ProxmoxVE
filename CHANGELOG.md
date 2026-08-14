@@ -534,6 +534,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - calibre-web: install as package for 0.6.27's src-layout restructure [@MickLesk](https://github.com/MickLesk) ([#16480](https://github.com/community-scripts/ProxmoxVE/pull/16480))
     - Wanderer: Refactor of Services / Installation / Paths [@johanngrobe](https://github.com/johanngrobe) ([#16487](https://github.com/community-scripts/ProxmoxVE/pull/16487))
     - pelican-panel: set APP_URL to container IP [@MickLesk](https://github.com/MickLesk) ([#16488](https://github.com/community-scripts/ProxmoxVE/pull/16488))
     - fix(ampache): update to PHP 8.5 asset, auto-upgrade PHP on update [@CervezaStallone](https://github.com/CervezaStallone) ([#16484](https://github.com/community-scripts/ProxmoxVE/pull/16484))
