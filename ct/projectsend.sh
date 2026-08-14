@@ -28,27 +28,37 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  setup_mariadb
+
+  if [[ -f /opt/projectsend/includes/sys.config.php ]]; then
+    msg_error "This container runs ProjectSend Legacy (pre-2.0)."
+    msg_error "2.0 is a new application, not an update - there is no in-place upgrade."
+    msg_error "Set up a fresh ProjectSend container and use projectsend/v1-migration-tool to bring your data across."
+    exit
+  fi
 
   if check_for_gh_release "projectsend" "projectsend/projectsend"; then
-    msg_info "Stopping Service"
-    systemctl stop apache2
-    msg_ok "Stopped Service"
+    msg_info "Stopping Services"
+    systemctl stop nginx projectsend-worker
+    msg_ok "Stopped Services"
 
-    php_ver=$(php -v | head -n 1 | awk '{print $2}')
-    if [[ ! $php_ver == "8.4"* ]]; then
-      PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
-    fi
+    create_backup /opt/projectsend/.env /opt/projectsend/storage/app/files
 
-    mv /opt/projectsend/includes/sys.config.php /opt/sys.config.php
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-r*.zip"
-    mv /opt/sys.config.php /opt/projectsend/includes/sys.config.php
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend"
+
+    restore_backup
+
+    msg_info "Updating ProjectSend"
+    cd /opt/projectsend
     chown -R www-data:www-data /opt/projectsend
-    chmod -R 775 /opt/projectsend
+    chmod -R 775 /opt/projectsend/storage /opt/projectsend/bootstrap/cache
+    $STD sudo -u www-data php artisan migrate --force
+    $STD sudo -u www-data php artisan projectsend:ensure-roles
+    $STD sudo -u www-data php artisan optimize:clear
+    msg_ok "Updated ProjectSend"
 
-    msg_info "Starting Service"
-    systemctl start apache2
-    msg_ok "Started Service"
+    msg_info "Starting Services"
+    systemctl start nginx projectsend-worker
+    msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
   exit
@@ -61,4 +71,5 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}/install for the initial setup${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Admin credentials saved to ~/projectsend.creds${CL}"
