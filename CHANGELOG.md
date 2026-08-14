@@ -525,7 +525,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - GoDoxy ([#16470](https://github.com/community-scripts/ProxmoxVE/pull/16470))
+  - RSS-Bridge ([#16471](https://github.com/community-scripts/ProxmoxVE/pull/16471))
+- GoDoxy ([#16470](https://github.com/community-scripts/ProxmoxVE/pull/16470))
 - Mumble ([#16474](https://github.com/community-scripts/ProxmoxVE/pull/16474))
 - Fleet ([#16472](https://github.com/community-scripts/ProxmoxVE/pull/16472))
 - Newt ([#16473](https://github.com/community-scripts/ProxmoxVE/pull/16473))
@@ -546,6 +547,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: PowerDNS move poweradmin database outside the web root [@MickLesk](https://github.com/MickLesk) ([#16476](https://github.com/community-scripts/ProxmoxVE/pull/16476))
     - paperless-ngx: run services with uv --no-sync to avoid startup network dependency [@MickLesk](https://github.com/MickLesk) ([#16479](https://github.com/community-scripts/ProxmoxVE/pull/16479))
 
 ## 2026-08-13
