@@ -30,8 +30,6 @@ function update_script() {
     exit
   fi
 
-  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ssg-content" "ComplianceAsCode/content" "prebuild" "latest" "/opt/patchmon/ssg-content" "scap-security-guide-*.tar.gz"
-
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
     msg_info "Stopping Service"
     systemctl stop patchmon-server
@@ -78,6 +76,7 @@ EOF
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-$(arch_resolve)"
     mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ssg-content" "ComplianceAsCode/content" "prebuild" "latest" "/opt/patchmon/ssg-content" "scap-security-guide-*.tar.gz"
 
     restore_backup
 
