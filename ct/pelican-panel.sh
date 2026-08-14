@@ -60,6 +60,7 @@ function update_script() {
 
     msg_info "Updating Pelican Panel"
     cp -a /opt/backup/.env /opt/pelican-panel/
+    grep -q "^APP_URL=http://panel.test$" /opt/pelican-panel/.env && sed -i "s|^APP_URL=.*|APP_URL=http://${LOCAL_IP}|" /opt/pelican-panel/.env
     $SQLITE_INSTALL && mv /opt/backup/*.sqlite /opt/pelican-panel/database/
     cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
 
