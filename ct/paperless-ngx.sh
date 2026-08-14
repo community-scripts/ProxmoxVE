@@ -165,7 +165,7 @@ function update_script() {
 
       msg_info "Updating Paperless-ngx"
       if ((BRIDGE_UPDATE == 0)); then
-        sed -i 's|^ExecStart=.*|ExecStart=uv run -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
+        sed -i 's|^ExecStart=.*|ExecStart=uv run --no-sync -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
         grep -q "document_index reindex" /etc/systemd/system/paperless-webserver.service ||
           sed -i '/^ExecStart=/i ExecStartPre=uv run -- python manage.py document_index reindex --if-needed --no-progress-bar' /etc/systemd/system/paperless-webserver.service
         $STD systemctl daemon-reload
@@ -207,10 +207,10 @@ function update_script() {
       msg_ok "Backup completed to $BACKUP_DIR"
 
       declare -A PATCHES=(
-        ["paperless-consumer.service"]="ExecStart=uv run -- python manage.py document_consumer"
-        ["paperless-scheduler.service"]="ExecStart=uv run -- celery --app paperless beat --loglevel INFO"
-        ["paperless-task-queue.service"]="ExecStart=uv run -- celery --app paperless worker --loglevel INFO"
-        ["paperless-webserver.service"]="ExecStart=uv run -- granian --interface asgi --ws \"paperless.asgi:application\""
+        ["paperless-consumer.service"]="ExecStart=uv run --no-sync -- python manage.py document_consumer"
+        ["paperless-scheduler.service"]="ExecStart=uv run --no-sync -- celery --app paperless beat --loglevel INFO"
+        ["paperless-task-queue.service"]="ExecStart=uv run --no-sync -- celery --app paperless worker --loglevel INFO"
+        ["paperless-webserver.service"]="ExecStart=uv run --no-sync -- granian --interface asgi --ws \"paperless.asgi:application\""
       )
 
       for svc in "${!PATCHES[@]}"; do
