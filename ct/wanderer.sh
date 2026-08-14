@@ -99,7 +99,7 @@ EOF
       -e "s|^MEILI_DB_PATH=.*|MEILI_DB_PATH=/opt/wanderer_data/meili_data|" \
       /opt/wanderer/.env
     sed -i "s|^db_path =.*|db_path = \"/opt/wanderer_data/meili_data\"|" /etc/meilisearch.toml
-    [[ -f /usr/local/bin/wanderer-pb ]] && sed -i "s|/opt/wanderer/source/db|/opt/wanderer/db|" /usr/local/bin/wanderer-pb
+    rm -f /usr/local/bin/wanderer-pb
 
     cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 [Unit]

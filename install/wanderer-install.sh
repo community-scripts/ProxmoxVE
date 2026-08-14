@@ -52,16 +52,6 @@ PB_DB_LOCATION=/opt/wanderer_data/pb_data
 MEILI_DB_PATH=/opt/wanderer_data/meili_data
 EOF
 
-cat <<'EOF' >/usr/local/bin/wanderer-pb
-#!/usr/bin/env bash
-set -a
-source /opt/wanderer/.env
-set +a
-cd /opt/wanderer/db
-exec ./pocketbase "$@" --dir="$PB_DB_LOCATION"
-EOF
-chmod +x /usr/local/bin/wanderer-pb
-
 cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 [Unit]
 Description=wanderer PocketBase
