@@ -45,8 +45,11 @@ function update_script() {
     cd /opt/calibre-web
     $STD uv venv --clear /opt/calibre-web/.venv
     $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir --upgrade pip setuptools wheel
-    $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir -r requirements.txt
+    $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir .
     msg_ok "Installed Dependencies"
+
+    sed -i 's|^ExecStart=.*|ExecStart=/opt/calibre-web/.venv/bin/cps|' /etc/systemd/system/calibre-web.service
+    $STD systemctl daemon-reload
 
     restore_backup
 

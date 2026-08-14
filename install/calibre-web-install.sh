@@ -39,7 +39,7 @@ msg_info "Installing Python Dependencies"
 cd /opt/calibre-web
 $STD uv venv
 $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir --upgrade pip setuptools wheel
-$STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir -r requirements.txt
+$STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir .
 msg_ok "Installed Python Dependencies"
 
 msg_info "Creating Service"
@@ -54,7 +54,7 @@ Type=simple
 User=root
 Environment="QTWEBENGINE_CHROMIUM_FLAGS=--no-sandbox"
 WorkingDirectory=/opt/calibre-web
-ExecStart=/opt/calibre-web/.venv/bin/python /opt/calibre-web/cps.py
+ExecStart=/opt/calibre-web/.venv/bin/cps
 Restart=on-failure
 RestartSec=5
 
