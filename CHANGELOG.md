@@ -525,7 +525,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Newt ([#16473](https://github.com/community-scripts/ProxmoxVE/pull/16473))
+  - Fleet ([#16472](https://github.com/community-scripts/ProxmoxVE/pull/16472))
+- Newt ([#16473](https://github.com/community-scripts/ProxmoxVE/pull/16473))
 
 ### 🚀 Updated Scripts
 
