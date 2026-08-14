@@ -521,6 +521,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-14
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(ampache): update to PHP 8.5 asset, auto-upgrade PHP on update [@CervezaStallone](https://github.com/CervezaStallone) ([#16484](https://github.com/community-scripts/ProxmoxVE/pull/16484))
+
 ## 2026-08-13
 
 ### 🆕 New Scripts
