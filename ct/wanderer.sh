@@ -90,7 +90,9 @@ EOF
     [[ -d /opt/wanderer/source ]] && cp -r /opt/wanderer/source/. /opt/wanderer/
     rm -rf /opt/wanderer/source
 
-    [[ -e /opt/wanderer/db/data/plugins ]] || ln -sfn /opt/wanderer_data/plugins /opt/wanderer/db/data/plugins
+    if [[ -d /opt/wanderer/db/data ]]; then
+      [[ -e /opt/wanderer/db/data/plugins ]] || ln -sfn /opt/wanderer_data/plugins /opt/wanderer/db/data/plugins
+    fi
 
     sed -i \
       -e "s|^PB_DB_LOCATION=.*|PB_DB_LOCATION=/opt/wanderer_data/pb_data|" \
