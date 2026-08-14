@@ -78,7 +78,7 @@ EOF
 
   if [[ -f /opt/wanderer/start.sh || -d /opt/wanderer/source ]]; then
     msg_info "Migrating wanderer services"
-    systemctl stop wanderer-web wanderer-pocketbase
+    systemctl stop wanderer-web
     rm -f /opt/wanderer/start.sh
 
     mkdir -p /opt/wanderer_data
