@@ -33,20 +33,13 @@ function update_script() {
   msg_info "Checking SCAP Security Guide content"
   SSG_DIR="/opt/patchmon/ssg-content"
   SSG_LATEST=$(get_latest_github_release "ComplianceAsCode/content") || SSG_LATEST=""
-  SSG_CURRENT=$(cat "$SSG_DIR/.ssg-version" 2>/dev/null || echo "")
-  if [[ -n "$SSG_LATEST" && "$SSG_LATEST" != "$SSG_CURRENT" ]]; then
-    rm -rf "$SSG_DIR"
-    mkdir -p "$SSG_DIR"
-    if curl -fsSL "https://github.com/ComplianceAsCode/content/releases/download/v${SSG_LATEST}/scap-security-guide-${SSG_LATEST}.tar.gz" |
-      tar -xz -C "$SSG_DIR" --strip-components=1 --wildcards '*/ssg-*-ds.xml'; then
-      echo "$SSG_LATEST" >"$SSG_DIR/.ssg-version"
-      msg_ok "Updated SCAP Security Guide content (v${SSG_LATEST})"
-    else
-      msg_warn "Could not update SCAP Security Guide content"
-    fi
-  else
-    msg_ok "SCAP Security Guide content is current"
+  if [[ -n "$SSG_LATEST" && "$SSG_LATEST" != "$(cat "$SSG_DIR/.ssg-version" 2>/dev/null)" ]]; then
+    rm -rf "$SSG_DIR" && mkdir -p "$SSG_DIR"
+    curl -fsSL "https://github.com/ComplianceAsCode/content/releases/download/v${SSG_LATEST}/scap-security-guide-${SSG_LATEST}.tar.gz" |
+      tar -xz -C "$SSG_DIR" --strip-components=1 --wildcards '*/ssg-*-ds.xml' &&
+      echo "$SSG_LATEST" >"$SSG_DIR/.ssg-version" || msg_warn "Could not update SCAP Security Guide content"
   fi
+  msg_ok "SCAP Security Guide content checked"
 
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
     msg_info "Stopping Service"
