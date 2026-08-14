@@ -30,13 +30,26 @@ function update_script() {
     exit
   fi
 
+  if [[ -f /opt/poweradmin/powerdns.db ]]; then
+    msg_info "Moving PowerDNS database out of the web root"
+    systemctl stop pdns apache2
+    mkdir -p /var/lib/powerdns
+    mv /opt/poweradmin/powerdns.db /var/lib/powerdns/powerdns.db
+    sed -i 's#/opt/poweradmin/powerdns.db#/var/lib/powerdns/powerdns.db#' \
+      /etc/powerdns/pdns.d/gsqlite3.conf /opt/poweradmin/config/settings.php
+    chown pdns:pdns /var/lib/powerdns/powerdns.db
+    chmod 664 /var/lib/powerdns/powerdns.db
+    systemctl start pdns apache2
+    msg_ok "Moved PowerDNS database out of the web root"
+  fi
+
   msg_info "Updating PowerDNS"
   $STD apt update
   $STD apt install -y --only-upgrade pdns-server pdns-backend-sqlite3
   msg_ok "Updated PowerDNS"
 
   if check_for_gh_release "poweradmin" "poweradmin/poweradmin"; then
-    create_backup /opt/poweradmin/config/settings.php /opt/poweradmin/powerdns.db
+    create_backup /opt/poweradmin/config/settings.php
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "poweradmin" "poweradmin/poweradmin" "tarball"
 
@@ -46,8 +59,6 @@ function update_script() {
     rm -rf /opt/poweradmin/install
     chown -R www-data:pdns /opt/poweradmin
     chmod 775 /opt/poweradmin
-    chown pdns:pdns /opt/poweradmin/powerdns.db
-    chmod 664 /opt/poweradmin/powerdns.db
     msg_ok "Updated Poweradmin"
 
     msg_info "Restarting Services"
