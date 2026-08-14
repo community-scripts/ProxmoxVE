@@ -546,6 +546,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: PowerDNS move poweradmin database outside the web root [@MickLesk](https://github.com/MickLesk) ([#16476](https://github.com/community-scripts/ProxmoxVE/pull/16476))
     - paperless-ngx: run services with uv --no-sync to avoid startup network dependency [@MickLesk](https://github.com/MickLesk) ([#16479](https://github.com/community-scripts/ProxmoxVE/pull/16479))
 
 ## 2026-08-13
