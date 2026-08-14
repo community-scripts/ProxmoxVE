@@ -9,7 +9,7 @@ APP="PatchMon"
 var_tags="${var_tags:-monitoring}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
-var_disk="${var_disk:-6}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
@@ -30,16 +30,7 @@ function update_script() {
     exit
   fi
 
-  msg_info "Checking SCAP Security Guide content"
-  SSG_DIR="/opt/patchmon/ssg-content"
-  SSG_LATEST=$(get_latest_github_release "ComplianceAsCode/content") || SSG_LATEST=""
-  if [[ -n "$SSG_LATEST" && "$SSG_LATEST" != "$(cat "$SSG_DIR/.ssg-version" 2>/dev/null)" ]]; then
-    rm -rf "$SSG_DIR" && mkdir -p "$SSG_DIR"
-    curl -fsSL "https://github.com/ComplianceAsCode/content/releases/download/v${SSG_LATEST}/scap-security-guide-${SSG_LATEST}.tar.gz" |
-      tar -xz -C "$SSG_DIR" --strip-components=1 --wildcards '*/ssg-*-ds.xml' &&
-      echo "$SSG_LATEST" >"$SSG_DIR/.ssg-version" || msg_warn "Could not update SCAP Security Guide content"
-  fi
-  msg_ok "SCAP Security Guide content checked"
+  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ssg-content" "ComplianceAsCode/content" "prebuild" "latest" "/opt/patchmon/ssg-content" "scap-security-guide-*.tar.gz"
 
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
     msg_info "Stopping Service"
