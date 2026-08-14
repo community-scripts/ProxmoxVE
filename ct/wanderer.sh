@@ -36,7 +36,7 @@ function update_script() {
 
     rm -rf /opt/wanderer/source/search
     mkdir -p /opt/wanderer_data
-    [[ -d /opt/wanderer/data/meili_data ]] && cp -a /opt/wanderer/data/meili_data /opt/wanderer_data/
+    [[ -d /opt/wanderer/data/meili_data ]] && cp -r --preserve=mode,ownership,timestamps /opt/wanderer/data/meili_data /opt/wanderer_data/
     mkdir -p /opt/wanderer_data/meili_data
     rm -rf /opt/wanderer/data/meili_data
     MEILI_MASTER_KEY_VAL=$(grep -oP '^MEILI_MASTER_KEY=\K.*' /opt/wanderer/.env)
@@ -82,12 +82,12 @@ EOF
     rm -f /opt/wanderer/start.sh
 
     mkdir -p /opt/wanderer_data
-    [[ -d /opt/wanderer/data/pb_data ]] && cp -a /opt/wanderer/data/pb_data /opt/wanderer_data/
-    [[ -d /opt/wanderer/data/plugins ]] && cp -a /opt/wanderer/data/plugins /opt/wanderer_data/
+    [[ -d /opt/wanderer/data/pb_data ]] && cp -r --preserve=mode,ownership,timestamps /opt/wanderer/data/pb_data /opt/wanderer_data/
+    [[ -d /opt/wanderer/data/plugins ]] && cp -r --preserve=mode,ownership,timestamps /opt/wanderer/data/plugins /opt/wanderer_data/
     mkdir -p /opt/wanderer_data/{pb_data,plugins}
     rm -rf /opt/wanderer/data
 
-    [[ -d /opt/wanderer/source ]] && cp -a /opt/wanderer/source/. /opt/wanderer/
+    [[ -d /opt/wanderer/source ]] && cp -r --preserve=mode,ownership,timestamps /opt/wanderer/source/. /opt/wanderer/
     rm -rf /opt/wanderer/source
 
     [[ -e /opt/wanderer/db/data/plugins ]] || ln -sfn /opt/wanderer_data/plugins /opt/wanderer/db/data/plugins
