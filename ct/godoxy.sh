@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-# Engine comes from community-scripts/core; this repo only ships the scripts.
-# A local core checkout wins (COMMUNITY_SCRIPTS_CORE_DIR, else a sibling ../core),
-# so a fork or branch of core can be tested without editing this file.
-_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
-source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: MickLesk (CanbiZ)
-# Co-Authors: yusing
+# Author: MickLesk (CanbiZ) | Co-Authors: yusing
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/yusing/godoxy
 
@@ -47,8 +42,7 @@ function update_script() {
       /etc/godoxy.env \
       /etc/ssl/godoxy
 
-    fetch_and_deploy_gh_release "godoxy" "yusing/godoxy" "singlefile" "latest" "/opt/godoxy" "godoxy-linux-$(arch_resolve)"
-
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "godoxy" "yusing/godoxy" "singlefile" "latest" "/opt/godoxy" "godoxy-linux-$(arch_resolve)"
     restore_backup
 
     msg_info "Starting Service"
