@@ -42,11 +42,17 @@ $STD dotnet publish src/NetworkOptimizer.Web -c Release -r "$RID" --self-contain
 chmod +x /opt/networkoptimizer/publish/NetworkOptimizer.Web
 msg_ok "Built NetworkOptimizer"
 
-msg_info "Building Gateway Speed Test Binary"
+msg_info "Building Speed Test Binaries"
 mkdir -p /opt/networkoptimizer/publish/tools
 cd /opt/networkoptimizer/src/uwnspeedtest
+# UniFi gateways are always arm64, so the gateway binary is built for arm64
 CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $STD go build -trimpath -ldflags "-s -w" -o /opt/networkoptimizer/publish/tools/uwnspeedtest-linux-arm64 .
-msg_ok "Built Gateway Speed Test Binary"
+# The "Run Test from Server" binary must match the container architecture
+SERVER_ARCH="$(arch_resolve)"
+if [[ "$SERVER_ARCH" != "arm64" ]]; then
+  CGO_ENABLED=0 GOOS=linux GOARCH="$SERVER_ARCH" $STD go build -trimpath -ldflags "-s -w" -o "/opt/networkoptimizer/publish/tools/uwnspeedtest-linux-${SERVER_ARCH}" .
+fi
+msg_ok "Built Speed Test Binaries"
 
 msg_info "Configuring NetworkOptimizer"
 cat <<EOF >/opt/networkoptimizer/networkoptimizer.env
