@@ -47,6 +47,7 @@ HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000
 # HOMEPAGE_OIDC_SCOPE=openid email profile
 # HOMEPAGE_OIDC_NAME=
 EOF
+chmod 600 /opt/homepage/.env
 msg_ok "Installed Homepage"
 
 msg_info "Creating Service"

@@ -56,7 +56,7 @@ function update_script() {
     export NEXT_TELEMETRY_DISABLED=1
     $STD pnpm build
     BACKUP_DIR=/opt/homepage-assets.backup restore_backup
-    if grep -q 'AUTH' /opt/homepage/.env; then
+    if ! grep -q 'AUTH' /opt/homepage/.env; then
       msg_info "Updating .env"
       cp /opt/homepage/.env /opt/homepage/env.bak
       cat <<EOF >>/opt/homepage/.env
@@ -74,6 +74,8 @@ function update_script() {
 # HOMEPAGE_OIDC_NAME=
 EOF
       msg_ok "Updated .env"
+      rm /opt/homepage/env.bak
+      chmod 600 /opt/homepage/.env
     fi
     msg_ok "Updated Homepage"
 
