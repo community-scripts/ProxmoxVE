@@ -2528,9 +2528,9 @@ _download_source_tarball() {
 # directory). Extracts <tarball_path> into <workdir>, then copies the contents
 # of that top-level directory into <target>.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
-#     up config dotfiles like .env via create_backup and call restore_backup
-#     BEFORE any build step that sources them).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included, mount
+#     points preserved — back up config dotfiles like .env via create_backup
+#     and call restore_backup BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and is responsible for its
 #     cleanup (typically via a RETURN trap on its tmpdir).
 #   - cp failures are non-fatal here, matching the previous inline behavior.
@@ -2568,9 +2568,9 @@ _deploy_source_tarball() {
 # a single top-level directory, that directory is stripped (its contents land
 # directly in <target>); otherwise the archive contents are copied as-is.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
-#     up config dotfiles like .env via create_backup and call restore_backup
-#     BEFORE any build step that sources them).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included, mount
+#     points preserved — back up config dotfiles like .env via create_backup
+#     and call restore_backup BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and cleans it up.
 #
 # Returns: 0 on success, 65 on unsupported format, 251 on extraction failure,
