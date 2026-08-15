@@ -523,6 +523,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-15
 
+### 🆕 New Scripts
+
+  - ntopng ([#16387](https://github.com/community-scripts/ProxmoxVE/pull/16387))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
