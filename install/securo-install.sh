@@ -156,9 +156,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/securo.conf /etc/nginx/sites-enabled/securo.conf
-rm -f /etc/nginx/sites-enabled/default
-systemctl restart nginx
+nginx_enable_site securo.conf
 msg_ok "Configured Nginx"
 
 motd_ssh
