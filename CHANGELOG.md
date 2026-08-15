@@ -521,6 +521,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-15
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - PatchMon: add ssg-content [@MickLesk](https://github.com/MickLesk) ([#16481](https://github.com/community-scripts/ProxmoxVE/pull/16481))
+
 ## 2026-08-14
 
 ### 🆕 New Scripts
