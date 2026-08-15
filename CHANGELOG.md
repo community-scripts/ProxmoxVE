@@ -525,6 +525,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - AdventureLog: remove pnpm build-allowlist override causing pnpm 10.33 conflict [@MickLesk](https://github.com/MickLesk) ([#16478](https://github.com/community-scripts/ProxmoxVE/pull/16478))
+
   - #### ✨ New Features
 
     - PatchMon: add ssg-content [@MickLesk](https://github.com/MickLesk) ([#16481](https://github.com/community-scripts/ProxmoxVE/pull/16481))
