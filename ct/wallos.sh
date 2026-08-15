@@ -48,12 +48,15 @@ function update_script() {
     chown -R www-data:www-data /opt/wallos
     chmod -R 755 /opt/wallos
     mkdir -p /var/log/cron
-    $STD curl http://localhost/endpoints/db/migrate.php
     msg_ok "Configured Wallos"
 
     msg_info "Reload Apache2"
     systemctl reload apache2
     msg_ok "Apache2 Reloaded"
+
+    msg_info "Running Database Migration"
+    $STD curl http://localhost/endpoints/db/migrate.php
+    msg_ok "Ran Database Migration"
     msg_ok "Updated successfully!"
   fi
   exit
