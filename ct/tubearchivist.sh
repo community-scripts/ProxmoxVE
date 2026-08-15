@@ -64,7 +64,6 @@ function update_script() {
     sed -i 's|^TA_APP_DIR=/opt/tubearchivist$|TA_APP_DIR=/opt/tubearchivist/backend|' /opt/tubearchivist/.env
     sed -i 's|^TA_CACHE_DIR=/opt/tubearchivist/cache$|TA_CACHE_DIR=/cache|' /opt/tubearchivist/.env
     sed -i 's|^TA_MEDIA_DIR=/opt/tubearchivist/media$|TA_MEDIA_DIR=/youtube|' /opt/tubearchivist/.env
-
     ln -sfn /opt/tubearchivist/cache /cache
     # /youtube may already be a user-managed Proxmox bind mount. Only create the symlink if nothing is there
     if [[ ! -e /youtube ]]; then
@@ -72,9 +71,7 @@ function update_script() {
       ln -sfn /opt/tubearchivist/media /youtube
     elif ! mountpoint -q /youtube && [[ ! -L /youtube ]]; then
       msg_error "/youtube exists but is neither a mount nor a symlink - check manually"
-    fi
-    
-    
+    fi   
     ln -sf /opt/tubearchivist/.env /opt/tubearchivist/backend/.env
     msg_ok "Restored Configuration"
 
