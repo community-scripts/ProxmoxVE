@@ -13,14 +13,10 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Adding ntop Repository"
-curl -fsSL "https://packages.ntop.org/apt-stable/$(get_os_info codename)/all/apt-ntop-stable.deb" -o /tmp/apt-ntop-stable.deb
-$STD apt install -y /tmp/apt-ntop-stable.deb
-rm -f /tmp/apt-ntop-stable.deb
-$STD apt update
-msg_ok "Added ntop Repository"
+fetch_and_deploy_from_url "https://packages.ntop.org/apt-stable/$(get_os_info codename)/all/apt-ntop-stable.deb" ""
 
 msg_info "Installing ntopng"
+$STD apt update
 $STD apt install -y ntopng
 msg_ok "Installed ntopng"
 
