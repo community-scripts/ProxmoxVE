@@ -51,14 +51,8 @@ function update_script() {
     mkdir -p /opt/tubearchivist/backend/static
     cp -r /opt/tubearchivist/frontend/dist/* /opt/tubearchivist/backend/static/
     cp /opt/tubearchivist/docker_assets/backend_start.py /opt/tubearchivist/backend/
-
     rm -rf /opt/tubearchivist/.venv
     $STD uv venv /opt/tubearchivist/.venv --python 3.13
-    if [[ ! -x /opt/tubearchivist/.venv/bin/python ]]; then
-      msg_error "Failed to create Python virtual environment"
-      exit 1
-    fi
-    
     $STD uv pip install --python /opt/tubearchivist/.venv/bin/python -r /opt/tubearchivist/backend/requirements.txt
     if [[ -f /opt/tubearchivist/backend/requirements.plugins.txt ]]; then
       mkdir -p /opt/yt_plugins/bgutil
