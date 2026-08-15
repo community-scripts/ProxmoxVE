@@ -42,11 +42,12 @@ $STD dotnet publish src/NetworkOptimizer.Web -c Release -r "$RID" --self-contain
 chmod +x /opt/networkoptimizer/publish/NetworkOptimizer.Web
 msg_ok "Built NetworkOptimizer"
 
-msg_info "Building Gateway Speed Test Binary"
+msg_info "Building Speed Test Binaries"
 mkdir -p /opt/networkoptimizer/publish/tools
 cd /opt/networkoptimizer/src/uwnspeedtest
 CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $STD go build -trimpath -ldflags "-s -w" -o /opt/networkoptimizer/publish/tools/uwnspeedtest-linux-arm64 .
-msg_ok "Built Gateway Speed Test Binary"
+[[ "$(arch_resolve)" != "arm64" ]] && CGO_ENABLED=0 GOOS=linux GOARCH="$(arch_resolve)" $STD go build -trimpath -ldflags "-s -w" -o "/opt/networkoptimizer/publish/tools/uwnspeedtest-linux-$(arch_resolve)" .
+msg_ok "Built Speed Test Binaries"
 
 msg_info "Configuring NetworkOptimizer"
 cat <<EOF >/opt/networkoptimizer/networkoptimizer.env
