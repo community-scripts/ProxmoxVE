@@ -525,7 +525,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - ntopng ([#16387](https://github.com/community-scripts/ProxmoxVE/pull/16387))
+  - Securo ([#16518](https://github.com/community-scripts/ProxmoxVE/pull/16518))
+- ntopng ([#16387](https://github.com/community-scripts/ProxmoxVE/pull/16387))
 
 ### 🚀 Updated Scripts
 
