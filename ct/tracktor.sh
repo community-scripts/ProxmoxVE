@@ -41,7 +41,6 @@ function update_script() {
     if ! grep -qxF 'BODY_SIZE_LIMIT=Infinity' /opt/tracktor.env; then
       rm /opt/tracktor.env
     cat <<EOF >/opt/tracktor.env
-cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
 # Set this to the path of the database file. Default - ./tracktor.db
 DB_PATH=/opt/tracktor-data/tracktor.db
@@ -67,13 +66,13 @@ EOF
     fi
     msg_ok "Corrected Services"
 
-    NODE_VERSION="24" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
     msg_info "Updating tracktor"
     cd /opt/tracktor
-    $STD npm install
-    $STD npm run build
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm run build
     msg_ok "Updated tracktor"
 
     msg_info "Starting Service"
