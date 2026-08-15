@@ -38,25 +38,14 @@ function update_script() {
     systemctl stop shelfmark
     msg_ok "Stopped Service(s)"
 
-    # chromium.service (headless, port 9222) was never used: Shelfmark's internal bypasser
-    # launches its own browser on a random port. With DOCKERMODE enabled below it is also
-    # killed by Shelfmark's orphan-process reaper on every bypass, then respawned by systemd.
-    if [[ -f /etc/systemd/system/chromium.service ]]; then
-      msg_info "Removing unused chromium service"
-      systemctl disable -q --now chromium
-      rm -f /etc/systemd/system/chromium.service
-      systemctl daemon-reload
-      msg_ok "Removed unused chromium service"
-    fi
-
-    # Shelfmark is served by the gunicorn gevent worker; without DOCKERMODE it runs the bypass
-    # browser in-process, where the CDP connection never completes and every bypass fails with
-    # "Pure CDP browser startup timed out after 45s". Internal bypasser only.
     if [[ $(sed -n '/_BYPASS=/s/[^=]*=//p' /etc/shelfmark/.env) == "true" ]] &&
       [[ $(sed -n '/BYPASSER=/s/[^=]*=//p' /etc/shelfmark/.env) == "false" ]]; then
-      msg_info "Isolating the bypasser from the gevent worker"
+      msg_info "Updating internal bypasser configuration"
+      systemctl disable -q --now chromium 2>/dev/null || true
+      rm -f /etc/systemd/system/chromium.service
+      systemctl daemon-reload
       sed -i '/DOCKERMODE=/s/false/true/' /etc/shelfmark/.env
-      msg_ok "Isolated the bypasser from the gevent worker"
+      msg_ok "Updated internal bypasser configuration"
     fi
 
     [[ -f /etc/systemd/system/flaresolverr.service ]] && if check_for_gh_release "flaresolverr" "Flaresolverr/Flaresolverr"; then

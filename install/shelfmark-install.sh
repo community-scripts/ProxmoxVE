@@ -116,10 +116,6 @@ else
     chromium-common \
     chromium \
     python3-tk
-  # DOCKERMODE gates whether Shelfmark runs the bypass browser in a helper process
-  # isolated from gunicorn/gevent. We serve Shelfmark with the gevent worker, so without
-  # it the CDP browser starts inside the monkey-patched loop and every bypass fails with
-  # "Pure CDP browser startup timed out after 45s".
   sed -i '/DOCKERMODE=/s/false/true/' /etc/shelfmark/.env
   msg_ok "Installed internal bypasser dependencies"
 fi
