@@ -16,7 +16,7 @@ update_os
 msg_warn "WARNING: This script will run an external installer from a third-party source (https://swizzin.ltd/)."
 msg_warn "The following code is NOT maintained or audited by our repository."
 msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
-msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  https://s5n.sh"
+msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  https://raw.githubusercontent.com/swizzin/swizzin/master/setup.sh"
 echo
 read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
 if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
