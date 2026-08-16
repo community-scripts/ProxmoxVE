@@ -532,6 +532,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Remove: Swizzin [@MickLesk](https://github.com/MickLesk) ([#16535](https://github.com/community-scripts/ProxmoxVE/pull/16535))
 - Remove: NocoDB [@MickLesk](https://github.com/MickLesk) ([#16533](https://github.com/community-scripts/ProxmoxVE/pull/16533))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: skip mount points during backup and clean installs [@MickLesk](https://github.com/MickLesk) ([#16532](https://github.com/community-scripts/ProxmoxVE/pull/16532))
+
 ## 2026-08-15
 
 ### 🆕 New Scripts
