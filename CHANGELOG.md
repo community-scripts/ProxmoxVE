@@ -528,6 +528,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - wallos: run db migration after apache reload on update [@MickLesk](https://github.com/MickLesk) ([#16528](https://github.com/community-scripts/ProxmoxVE/pull/16528))
+
   - #### 🔧 Refactor
 
     - networkoptimizer: also build uwnspeedtest binary for server arch [@MickLesk](https://github.com/MickLesk) ([#16531](https://github.com/community-scripts/ProxmoxVE/pull/16531))
