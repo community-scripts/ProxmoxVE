@@ -526,6 +526,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-16
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - networkoptimizer: also build uwnspeedtest binary for server arch [@MickLesk](https://github.com/MickLesk) ([#16531](https://github.com/community-scripts/ProxmoxVE/pull/16531))
+
 ### 🗑️ Deleted Scripts
 
   - Remove: Jeedom [@MickLesk](https://github.com/MickLesk) ([#16536](https://github.com/community-scripts/ProxmoxVE/pull/16536))
