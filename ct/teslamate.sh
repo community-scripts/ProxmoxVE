@@ -35,6 +35,16 @@ function update_script() {
     systemctl stop teslamate
     msg_ok "Stopped Service"
 
+    if [[ ! -d /opt/elixir ]]; then
+      msg_info "Migrating to newer Elixir (required by TeslaMate)"
+      $STD apt remove -y elixir
+      fetch_and_deploy_gh_release "elixir" "elixir-lang/elixir" "prebuild" "latest" "/opt/elixir" "elixir-otp-27.zip"
+      for bin in elixir elixirc iex mix; do
+        ln -sf "/opt/elixir/bin/$bin" "/usr/local/bin/$bin"
+      done
+      msg_ok "Migrated to newer Elixir"
+    fi
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "teslamate" "teslamate-org/teslamate" "tarball"
 
     msg_info "Building TeslaMate (Patience)"
