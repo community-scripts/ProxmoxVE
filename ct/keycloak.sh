@@ -28,6 +28,14 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if grep -q '^ExecStop=/opt/keycloak/bin/kc.sh stop$' /etc/systemd/system/keycloak.service 2>/dev/null; then
+    msg_info "Correcting Service"
+    sed -i '/^ExecStop=\/opt\/keycloak\/bin\/kc.sh stop$/d' /etc/systemd/system/keycloak.service
+    systemctl daemon-reload
+    msg_ok "Corrected Service"
+  fi
+
   if check_for_gh_release "keycloak_app" "keycloak/keycloak"; then
     msg_info "Stopping Service"
     systemctl stop keycloak
