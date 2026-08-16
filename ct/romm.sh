@@ -36,6 +36,35 @@ function update_script() {
     msg_ok "Installed Archive Tools"
   fi
 
+  # Legacy installs (pre-Angie) run stock nginx without mod_zip. RomM streams
+  # multi-file games as a zip via that module; without it the mod_zip manifest
+  # is served verbatim, so downloads arrive as a text file named .zip.
+  if [[ -f /etc/nginx/sites-available/romm && ! -f /usr/lib/nginx/modules/ngx_http_zip_module.so ]]; then
+    msg_info "Building missing nginx mod_zip module"
+    NGINX_VERSION="$(nginx -v 2>&1 | sed -n 's|.*nginx/\([0-9.]*\).*|\1|p')"
+    $STD apt-get install -y build-essential libpcre2-dev zlib1g-dev libssl-dev git
+    TMP_BUILD="$(mktemp -d)"
+    cd "$TMP_BUILD"
+    $STD git clone --depth 1 https://github.com/evanmiller/mod_zip.git
+    curl -fsSL "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -o nginx.tar.gz
+    $STD tar xzf nginx.tar.gz
+    cd "nginx-${NGINX_VERSION}"
+    $STD ./configure --with-compat --add-dynamic-module=../mod_zip
+    $STD make modules
+    mkdir -p /usr/lib/nginx/modules
+    install -m 644 objs/ngx_http_zip_module.so /usr/lib/nginx/modules/
+    grep -q 'ngx_http_zip_module' /etc/nginx/nginx.conf ||
+      sed -i '1i load_module modules/ngx_http_zip_module.so;' /etc/nginx/nginx.conf
+    cd /
+    rm -rf "$TMP_BUILD"
+    if nginx -t &>/dev/null; then
+      systemctl restart nginx
+      msg_ok "Built missing nginx mod_zip module"
+    else
+      msg_error "nginx config test failed after adding mod_zip - not restarting nginx"
+    fi
+  fi
+
   NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_release "romm" "rommapp/romm"; then
