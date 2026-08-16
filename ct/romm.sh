@@ -36,33 +36,27 @@ function update_script() {
     msg_ok "Installed Archive Tools"
   fi
 
-  # Legacy installs (pre-Angie) run stock nginx without mod_zip. RomM streams
-  # multi-file games as a zip via that module; without it the mod_zip manifest
-  # is served verbatim, so downloads arrive as a text file named .zip.
-  if [[ -f /etc/nginx/sites-available/romm && ! -f /usr/lib/nginx/modules/ngx_http_zip_module.so ]]; then
-    msg_info "Building missing nginx mod_zip module"
-    NGINX_VERSION="$(nginx -v 2>&1 | sed -n 's|.*nginx/\([0-9.]*\).*|\1|p')"
-    $STD apt install -y build-essential libpcre2-dev zlib1g-dev libssl-dev git
-    TMP_BUILD="$(mktemp -d)"
-    cd "$TMP_BUILD"
-    $STD git clone --depth 1 https://github.com/evanmiller/mod_zip.git
-    curl -fsSL "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -o nginx.tar.gz
-    $STD tar xzf nginx.tar.gz
-    cd "nginx-${NGINX_VERSION}"
-    $STD ./configure --with-compat --add-dynamic-module=../mod_zip
-    $STD make modules
-    mkdir -p /usr/lib/nginx/modules
-    install -m 644 objs/ngx_http_zip_module.so /usr/lib/nginx/modules/
-    grep -q 'ngx_http_zip_module' /etc/nginx/nginx.conf ||
-      sed -i '1i load_module modules/ngx_http_zip_module.so;' /etc/nginx/nginx.conf
-    cd /
-    rm -rf "$TMP_BUILD"
-    if nginx -t &>/dev/null; then
-      systemctl restart nginx
-      msg_ok "Built missing nginx mod_zip module"
-    else
-      msg_error "nginx config test failed after adding mod_zip - not restarting nginx"
-    fi
+  # Installs predating the Angie migration run stock nginx without mod_zip. RomM
+  # streams multi-file games as a zip through that module, so without it the
+  # mod_zip manifest is served verbatim as a text file named .zip. Move these
+  # installs to Angie so they match current ones.
+  if [[ -f /etc/nginx/sites-available/romm && ! -f /etc/angie/http.d/romm.conf ]]; then
+    msg_info "Migrating from nginx to Angie"
+    setup_deb822_repo \
+      "angie" \
+      "https://angie.software/keys/angie-signing.gpg" \
+      "https://download.angie.software/angie/debian/$(get_os_info version_id)" \
+      "$(get_os_info codename)" \
+      "main"
+    systemctl disable -q --now nginx
+    $STD apt install -y angie angie-module-zip
+    grep -q 'ngx_http_zip_module' /etc/angie/angie.conf ||
+      sed -i '1i load_module modules/ngx_http_zip_module.so;' /etc/angie/angie.conf
+    mkdir -p /etc/angie/http.d
+    mv /etc/nginx/sites-available/romm /etc/angie/http.d/romm.conf
+    rm -f /etc/angie/http.d/default.conf
+    systemctl enable -q --now angie
+    msg_ok "Migrated from nginx to Angie"
   fi
 
   NODE_VERSION="24" setup_nodejs
