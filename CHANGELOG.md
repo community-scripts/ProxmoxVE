@@ -528,7 +528,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🗑️ Deleted Scripts
 
-  - Remove: Swizzin [@MickLesk](https://github.com/MickLesk) ([#16535](https://github.com/community-scripts/ProxmoxVE/pull/16535))
+  - Remove: Jeedom [@MickLesk](https://github.com/MickLesk) ([#16536](https://github.com/community-scripts/ProxmoxVE/pull/16536))
+- Remove: Swizzin [@MickLesk](https://github.com/MickLesk) ([#16535](https://github.com/community-scripts/ProxmoxVE/pull/16535))
 - Remove: NocoDB [@MickLesk](https://github.com/MickLesk) ([#16533](https://github.com/community-scripts/ProxmoxVE/pull/16533))
 
 ## 2026-08-15
