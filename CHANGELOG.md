@@ -530,6 +530,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tracktor: build with pnpm using upstream's frozen lockfile [@MickLesk](https://github.com/MickLesk) ([#16530](https://github.com/community-scripts/ProxmoxVE/pull/16530))
     - wallos: run db migration after apache reload on update [@MickLesk](https://github.com/MickLesk) ([#16528](https://github.com/community-scripts/ProxmoxVE/pull/16528))
 
   - #### 🔧 Refactor
