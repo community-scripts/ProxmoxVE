@@ -42,7 +42,7 @@ function update_script() {
   if [[ -f /etc/nginx/sites-available/romm && ! -f /usr/lib/nginx/modules/ngx_http_zip_module.so ]]; then
     msg_info "Building missing nginx mod_zip module"
     NGINX_VERSION="$(nginx -v 2>&1 | sed -n 's|.*nginx/\([0-9.]*\).*|\1|p')"
-    $STD apt-get install -y build-essential libpcre2-dev zlib1g-dev libssl-dev git
+    $STD apt install -y build-essential libpcre2-dev zlib1g-dev libssl-dev git
     TMP_BUILD="$(mktemp -d)"
     cd "$TMP_BUILD"
     $STD git clone --depth 1 https://github.com/evanmiller/mod_zip.git
