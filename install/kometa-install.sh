@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt install -y git
+msg_ok "Installed Dependencies"
+
 PYTHON_VERSION="3.13" setup_uv
 fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
 
