@@ -549,6 +549,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: skip mount points during backup and clean installs [@MickLesk](https://github.com/MickLesk) ([#16532](https://github.com/community-scripts/ProxmoxVE/pull/16532))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - cronmaster: back up scripts, data and snippets folders on update [@MickLesk](https://github.com/MickLesk) ([#16529](https://github.com/community-scripts/ProxmoxVE/pull/16529))
+
 ## 2026-08-15
 
 ### 🆕 New Scripts
