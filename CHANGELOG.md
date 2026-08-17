@@ -524,6 +524,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-17
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix romm: deploy EmulatorJS and Ruffle after the frontend build [@angusmaul](https://github.com/angusmaul) ([#16571](https://github.com/community-scripts/ProxmoxVE/pull/16571))
+
 ## 2026-08-16
 
 ### 🚀 Updated Scripts
