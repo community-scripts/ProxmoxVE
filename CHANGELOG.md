@@ -537,6 +537,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - patchmon: fetch only SCAP datastream XMLs [@MickLesk](https://github.com/MickLesk) ([#16565](https://github.com/community-scripts/ProxmoxVE/pull/16565))
     - teslamate: use precompiled Elixir [@MickLesk](https://github.com/MickLesk) ([#16561](https://github.com/community-scripts/ProxmoxVE/pull/16561))
 
 ## 2026-08-16
