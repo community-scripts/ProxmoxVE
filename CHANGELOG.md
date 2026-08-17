@@ -530,9 +530,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - keycloak: remove invalid ExecStop, kc.sh has no stop subcommand [@MickLesk](https://github.com/MickLesk) ([#16563](https://github.com/community-scripts/ProxmoxVE/pull/16563))
     - Pin ownfoil release to version 2.3.0 [@MickLesk](https://github.com/MickLesk) ([#16574](https://github.com/community-scripts/ProxmoxVE/pull/16574))
     - kometa: add git, needed by requirements.txt's git dependency [@MickLesk](https://github.com/MickLesk) ([#16562](https://github.com/community-scripts/ProxmoxVE/pull/16562))
     - fix romm: deploy EmulatorJS and Ruffle after the frontend build [@angusmaul](https://github.com/angusmaul) ([#16571](https://github.com/community-scripts/ProxmoxVE/pull/16571))
+
+  - #### 🔧 Refactor
+
+    - teslamate: use precompiled Elixir [@MickLesk](https://github.com/MickLesk) ([#16561](https://github.com/community-scripts/ProxmoxVE/pull/16561))
 
 ## 2026-08-16
 
