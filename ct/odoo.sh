@@ -36,6 +36,13 @@ function update_script() {
     rm -f /opt/python3-lxml-html-clean.deb
   fi
 
+  if dpkg -s wkhtmltopdf &>/dev/null; then
+    systemctl stop odoo
+    $STD apt remove --purge -y wkhtmltopdf
+    fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
+    systemctl start odoo
+  fi
+
   RELEASE=$(curl -fsSL https://nightly.odoo.com/ | grep -oE 'href="[0-9]+\.[0-9]+/nightly"' | head -n1 | cut -d'"' -f2 | cut -d/ -f1)
   LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
     grep -oP "odoo_${RELEASE}\.\d+_all\.deb" |
