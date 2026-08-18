@@ -99,6 +99,8 @@ EOF
   msg_info "Starting gatus"
   $STD service gatus start
   msg_ok "Started gatus"
+
+  rm -f "$temp_file"
 }
 
 run_os_setup

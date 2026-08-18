@@ -124,6 +124,8 @@ EOF
   $STD service rustdesk-server-hbbr start
   $STD service rustdesk-api start
   msg_ok "Started RustDesk Server"
+
+  rm -f "$temp_file1" "$temp_file2"
 }
 
 run_os_setup

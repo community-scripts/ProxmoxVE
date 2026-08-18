@@ -133,6 +133,8 @@ EOF
   msg_info "Starting bitmagnet"
   $STD service bitmagnet start
   msg_ok "Started bitmagnet"
+
+  rm -f "$temp_file"
 }
 
 run_os_setup

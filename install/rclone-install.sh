@@ -96,6 +96,8 @@ EOF
   msg_info "Starting rclone"
   $STD service rclone start
   msg_ok "Started rclone"
+
+  rm -rf "$temp_file"
 }
 
 run_os_setup

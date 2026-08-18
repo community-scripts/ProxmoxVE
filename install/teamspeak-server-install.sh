@@ -95,6 +95,8 @@ EOF
   msg_info "Starting TeamSpeak Server"
   $STD service teamspeak start
   msg_ok "Started TeamSpeak Server"
+
+  rm -r ts3server.tar.bz* LICENSE* CHANGELOG doc serverquerydocs tsdns redist
 }
 
 run_os_setup
