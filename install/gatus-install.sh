@@ -33,20 +33,20 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/gatus.service
-  [Unit]
-  Description=gatus Service
-  After=network.target
+[Unit]
+Description=gatus Service
+After=network.target
 
-  [Service]
-  Type=simple
-  User=root
-  WorkingDirectory=/opt/gatus
-  ExecStart=/opt/gatus/gatus
-  Restart=always
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/gatus
+ExecStart=/opt/gatus/gatus
+Restart=always
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now gatus
   msg_ok "Created Service"
 }
@@ -75,23 +75,23 @@ setup_alpine() {
 
   msg_info "Enabling gatus Service"
   cat <<EOF >/etc/init.d/gatus
-  #!/sbin/openrc-run
-  description="gatus Service"
-  directory="/opt/gatus"
-  command="/opt/gatus/gatus"
-  command_args=""
-  command_background="true"
-  command_user="root"
-  pidfile="/var/run/gatus.pid"
+#!/sbin/openrc-run
+description="gatus Service"
+directory="/opt/gatus"
+command="/opt/gatus/gatus"
+command_args=""
+command_background="true"
+command_user="root"
+pidfile="/var/run/gatus.pid"
 
-  export GATUS_CONFIG_PATH=""
-  export GATUS_LOG_LEVEL="INFO"
-  export PORT="8080"
+export GATUS_CONFIG_PATH=""
+export GATUS_LOG_LEVEL="INFO"
+export PORT="8080"
 
-  depend() {
-      use net
-  }
-  EOF
+depend() {
+    use net
+}
+EOF
   chmod +x /etc/init.d/gatus
   $STD rc-update add gatus default
   msg_ok "Enabled gatus Service"

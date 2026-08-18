@@ -18,25 +18,25 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/AdGuardHome.service
-  [Unit]
-  Description=AdGuard Home: Network-level blocker
-  ConditionFileIsExecutable=/opt/AdGuardHome/AdGuardHome
-  After=syslog.target network-online.target
+[Unit]
+Description=AdGuard Home: Network-level blocker
+ConditionFileIsExecutable=/opt/AdGuardHome/AdGuardHome
+After=syslog.target network-online.target
 
-  [Service]
-  StartLimitInterval=5
-  StartLimitBurst=10
-  ExecStart=/opt/AdGuardHome/AdGuardHome "-s" "run"
-  WorkingDirectory=/opt/AdGuardHome
-  StandardOutput=file:/var/log/AdGuardHome.out
-  StandardError=file:/var/log/AdGuardHome.err
-  Restart=always
-  RestartSec=10
-  EnvironmentFile=-/etc/sysconfig/AdGuardHome
+[Service]
+StartLimitInterval=5
+StartLimitBurst=10
+ExecStart=/opt/AdGuardHome/AdGuardHome "-s" "run"
+WorkingDirectory=/opt/AdGuardHome
+StandardOutput=file:/var/log/AdGuardHome.out
+StandardError=file:/var/log/AdGuardHome.err
+Restart=always
+RestartSec=10
+EnvironmentFile=-/etc/sysconfig/AdGuardHome
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now AdGuardHome
   msg_ok "Created Service"
 }
@@ -54,13 +54,13 @@ setup_alpine() {
 
   msg_info "Creating AdGuard Home Service"
   cat <<EOF >/etc/init.d/adguardhome
-  #!/sbin/openrc-run
-  name="AdGuardHome"
-  description="AdGuard Home Service"
-  command="/opt/AdGuardHome/AdGuardHome"
-  command_background="yes"
-  pidfile="/run/adguardhome.pid"
-  EOF
+#!/sbin/openrc-run
+name="AdGuardHome"
+description="AdGuard Home Service"
+command="/opt/AdGuardHome/AdGuardHome"
+command_background="yes"
+pidfile="/run/adguardhome.pid"
+EOF
   $STD chmod +x /etc/init.d/adguardhome
   msg_ok "Created AdGuard Home Service"
 

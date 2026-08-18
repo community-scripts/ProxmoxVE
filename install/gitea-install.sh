@@ -36,35 +36,35 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/gitea.service
-  [Unit]
-  Description=Gitea (Git with a cup of tea)
-  After=syslog.target
-  After=network.target
+[Unit]
+Description=Gitea (Git with a cup of tea)
+After=syslog.target
+After=network.target
 
-  [Service]
-  # Uncomment notify and watchdog if you want to use them
-  # Uncomment the next line if you have repos with lots of files and get a HTTP 500 error because of that
-  # LimitNOFILE=524288:524288
-  RestartSec=2s
-  Type=simple
-  #Type=notify
-  User=gitea
-  Group=gitea
-  #The mount point we added to the container
-  WorkingDirectory=/var/lib/gitea
-  #Create directory in /run
-  RuntimeDirectory=gitea
-  ExecStart=/usr/local/bin/gitea web --config /etc/gitea/app.ini
-  Restart=always
-  Environment=USER=gitea HOME=/var/lib/gitea/data GITEA_WORK_DIR=/var/lib/gitea
-  #WatchdogSec=30s
-  #Capabilities to bind to low-numbered ports
-  #CapabilityBoundingSet=CAP_NET_BIND_SERVICE
-  #AmbientCapabilities=CAP_NET_BIND_SERVICE
+[Service]
+# Uncomment notify and watchdog if you want to use them
+# Uncomment the next line if you have repos with lots of files and get a HTTP 500 error because of that
+# LimitNOFILE=524288:524288
+RestartSec=2s
+Type=simple
+#Type=notify
+User=gitea
+Group=gitea
+#The mount point we added to the container
+WorkingDirectory=/var/lib/gitea
+#Create directory in /run
+RuntimeDirectory=gitea
+ExecStart=/usr/local/bin/gitea web --config /etc/gitea/app.ini
+Restart=always
+Environment=USER=gitea HOME=/var/lib/gitea/data GITEA_WORK_DIR=/var/lib/gitea
+#WatchdogSec=30s
+#Capabilities to bind to low-numbered ports
+#CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+#AmbientCapabilities=CAP_NET_BIND_SERVICE
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now gitea
   msg_ok "Created Service"
 }

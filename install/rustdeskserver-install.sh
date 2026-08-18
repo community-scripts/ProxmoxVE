@@ -52,65 +52,65 @@ setup_alpine() {
   ADMINPASS=$(head -c 16 /dev/urandom | xxd -p -c 16)
   $STD ./apimain reset-admin-pwd "$ADMINPASS"
   cat <<EOF >~/rustdesk.creds
-  RustDesk WebUI
+RustDesk WebUI
 
-  Username: admin
-  Password: $ADMINPASS
-  EOF
+Username: admin
+Password: $ADMINPASS
+EOF
   echo "${APIRELEASE}" >~/.rustdesk-api
   msg_ok "Installed RustDesk API v${APIRELEASE}"
 
   msg_info "Enabling RustDesk Server Services"
   cat <<EOF >/etc/init.d/rustdesk-server-hbbs
-  #!/sbin/openrc-run
-  description="RustDesk HBBS Service"
-  directory="/opt/rustdesk-server"
-  command="/opt/rustdesk-server/hbbs"
-  command_args=""
-  command_background="true"
-  command_user="root"
-  pidfile="/var/run/rustdesk-server-hbbs.pid"
-  output_log="/var/log/rustdesk-hbbs.log"
-  error_log="/var/log/rustdesk-hbbs.err"
+#!/sbin/openrc-run
+description="RustDesk HBBS Service"
+directory="/opt/rustdesk-server"
+command="/opt/rustdesk-server/hbbs"
+command_args=""
+command_background="true"
+command_user="root"
+pidfile="/var/run/rustdesk-server-hbbs.pid"
+output_log="/var/log/rustdesk-hbbs.log"
+error_log="/var/log/rustdesk-hbbs.err"
 
-  depend() {
-      use net
-  }
-  EOF
+depend() {
+    use net
+}
+EOF
 
   cat <<EOF >/etc/init.d/rustdesk-server-hbbr
-  #!/sbin/openrc-run
-  description="RustDesk HBBR Service"
-  directory="/opt/rustdesk-server"
-  command="/opt/rustdesk-server/hbbr"
-  command_args=""
-  command_background="true"
-  command_user="root"
-  pidfile="/var/run/rustdesk-server-hbbr.pid"
-  output_log="/var/log/rustdesk-hbbr.log"
-  error_log="/var/log/rustdesk-hbbr.err"
+#!/sbin/openrc-run
+description="RustDesk HBBR Service"
+directory="/opt/rustdesk-server"
+command="/opt/rustdesk-server/hbbr"
+command_args=""
+command_background="true"
+command_user="root"
+pidfile="/var/run/rustdesk-server-hbbr.pid"
+output_log="/var/log/rustdesk-hbbr.log"
+error_log="/var/log/rustdesk-hbbr.err"
 
-  depend() {
-      use net
-  }
-  EOF
+depend() {
+    use net
+}
+EOF
 
   cat <<EOF >/etc/init.d/rustdesk-api
-  #!/sbin/openrc-run
-  description="RustDesk API Service"
-  directory="/opt/rustdesk-api"
-  command="/opt/rustdesk-api/apimain"
-  command_args=""
-  command_background="true"
-  command_user="root"
-  pidfile="/var/run/rustdesk-api.pid"
-  output_log="/var/log/rustdesk-api.log"
-  error_log="/var/log/rustdesk-api.err"
+#!/sbin/openrc-run
+description="RustDesk API Service"
+directory="/opt/rustdesk-api"
+command="/opt/rustdesk-api/apimain"
+command_args=""
+command_background="true"
+command_user="root"
+pidfile="/var/run/rustdesk-api.pid"
+output_log="/var/log/rustdesk-api.log"
+error_log="/var/log/rustdesk-api.err"
 
-  depend() {
-      use net
-  }
-  EOF
+depend() {
+    use net
+}
+EOF
   chmod +x /etc/init.d/rustdesk-server-hbbs
   chmod +x /etc/init.d/rustdesk-server-hbbr
   chmod +x /etc/init.d/rustdesk-api

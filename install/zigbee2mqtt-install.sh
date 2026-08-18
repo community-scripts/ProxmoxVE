@@ -33,22 +33,22 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/zigbee2mqtt.service
-  [Unit]
-  Description=zigbee2mqtt
-  After=network.target
+[Unit]
+Description=zigbee2mqtt
+After=network.target
 
-  [Service]
-  Environment=NODE_ENV=production
-  ExecStart=/usr/bin/pnpm start
-  WorkingDirectory=/opt/zigbee2mqtt
-  StandardOutput=inherit
-  StandardError=inherit
-  Restart=always
-  User=root
+[Service]
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/pnpm start
+WorkingDirectory=/opt/zigbee2mqtt
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now zigbee2mqtt
   msg_ok "Created Service"
 }

@@ -47,14 +47,14 @@ setup_deb_based() {
 
   msg_info "Configuring Vaultwarden"
   cat <<EOF >/opt/vaultwarden/.env
-  ADMIN_TOKEN=''
-  ROCKET_ADDRESS=0.0.0.0
-  ROCKET_TLS='{certs="/opt/vaultwarden/ssl-cert-snakeoil.pem",key="/opt/vaultwarden/ssl-cert-snakeoil.key"}'
-  DATA_FOLDER=/opt/vaultwarden/data
-  DATABASE_MAX_CONNS=10
-  WEB_VAULT_FOLDER=/opt/vaultwarden/web-vault
-  WEB_VAULT_ENABLED=true
-  EOF
+ADMIN_TOKEN=''
+ROCKET_ADDRESS=0.0.0.0
+ROCKET_TLS='{certs="/opt/vaultwarden/ssl-cert-snakeoil.pem",key="/opt/vaultwarden/ssl-cert-snakeoil.key"}'
+DATA_FOLDER=/opt/vaultwarden/data
+DATABASE_MAX_CONNS=10
+WEB_VAULT_FOLDER=/opt/vaultwarden/web-vault
+WEB_VAULT_ENABLED=true
+EOF
   mv /etc/ssl/certs/ssl-cert-snakeoil.pem /opt/vaultwarden/
   mv /etc/ssl/private/ssl-cert-snakeoil.key /opt/vaultwarden/
 
@@ -67,37 +67,37 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/vaultwarden.service
-  [Unit]
-  Description=Bitwarden Server (Powered by Vaultwarden)
-  Documentation=https://github.com/dani-garcia/vaultwarden
-  After=network.target
+[Unit]
+Description=Bitwarden Server (Powered by Vaultwarden)
+Documentation=https://github.com/dani-garcia/vaultwarden
+After=network.target
 
-  [Service]
-  User=vaultwarden
-  Group=vaultwarden
-  EnvironmentFile=-/opt/vaultwarden/.env
-  ExecStart=/opt/vaultwarden/bin/vaultwarden
-  LimitNOFILE=65535
-  LimitNPROC=4096
-  PrivateTmp=true
-  PrivateDevices=true
-  ProtectHome=true
-  ProtectSystem=strict
-  DevicePolicy=closed
-  ProtectControlGroups=yes
-  ProtectKernelModules=yes
-  ProtectKernelTunables=yes
-  RestrictNamespaces=yes
-  RestrictRealtime=yes
-  MemoryDenyWriteExecute=yes
-  LockPersonality=yes
-  WorkingDirectory=/opt/vaultwarden
-  ReadWriteDirectories=/opt/vaultwarden/data
-  AmbientCapabilities=CAP_NET_BIND_SERVICE
+[Service]
+User=vaultwarden
+Group=vaultwarden
+EnvironmentFile=-/opt/vaultwarden/.env
+ExecStart=/opt/vaultwarden/bin/vaultwarden
+LimitNOFILE=65535
+LimitNPROC=4096
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ProtectSystem=strict
+DevicePolicy=closed
+ProtectControlGroups=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+MemoryDenyWriteExecute=yes
+LockPersonality=yes
+WorkingDirectory=/opt/vaultwarden
+ReadWriteDirectories=/opt/vaultwarden/data
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now vaultwarden
   msg_ok "Created Service"
 }

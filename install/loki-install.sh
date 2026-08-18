@@ -26,47 +26,47 @@ setup_deb_based() {
   mkdir -p /var/lib/loki/{chunks,boltdb-shipper-active,boltdb-shipper-cache}
   chown -R loki /var/lib/loki
   cat <<EOF >/etc/loki/config.yml
-  auth_enabled: false
+auth_enabled: false
 
-  server:
-    http_listen_port: 3100
-    log_level: info
+server:
+  http_listen_port: 3100
+  log_level: info
 
-  common:
-    instance_addr: 127.0.0.1
-    path_prefix: /var/lib/loki
-    storage:
-      filesystem:
-        chunks_directory: /var/lib/loki/chunks
-        rules_directory: /var/lib/loki/rules
-    replication_factor: 1
-    ring:
-      kvstore:
-        store: inmemory
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /var/lib/loki
+  storage:
+    filesystem:
+      chunks_directory: /var/lib/loki/chunks
+      rules_directory: /var/lib/loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
 
-  schema_config:
-    configs:
-      - from: 2020-10-24
-        store: tsdb
-        object_store: filesystem
-        schema: v13
-        index:
-          prefix: index_
-          period: 24h
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
 
-  query_range:
-    results_cache:
-      cache:
-        embedded_cache:
-          enabled: true
-          max_size_mb: 100
+query_range:
+  results_cache:
+    cache:
+      embedded_cache:
+        enabled: true
+        max_size_mb: 100
 
-  limits_config:
-    metric_aggregation_enabled: true
+limits_config:
+  metric_aggregation_enabled: true
 
-  ruler:
-    alertmanager_url: http://localhost:9093
-  EOF
+ruler:
+  alertmanager_url: http://localhost:9093
+EOF
   chown loki /etc/loki/config.yml
   systemctl enable -q --now loki
   msg_ok "Installed Loki"
@@ -81,47 +81,47 @@ setup_alpine() {
   mkdir -p /var/log/loki
   chown -R loki:grafana /var/log/loki
   cat <<EOF >/etc/loki/loki-local-config.yaml
-  auth_enabled: false
+auth_enabled: false
 
-  server:
-    http_listen_port: 3100
-    log_level: info
+server:
+  http_listen_port: 3100
+  log_level: info
 
-  common:
-    instance_addr: 127.0.0.1
-    path_prefix: /var/lib/loki
-    storage:
-      filesystem:
-        chunks_directory: /var/lib/loki/chunks
-        rules_directory: /var/lib/loki/rules
-    replication_factor: 1
-    ring:
-      kvstore:
-        store: inmemory
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /var/lib/loki
+  storage:
+    filesystem:
+      chunks_directory: /var/lib/loki/chunks
+      rules_directory: /var/lib/loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
 
-  schema_config:
-    configs:
-      - from: 2020-10-24
-        store: tsdb
-        object_store: filesystem
-        schema: v13
-        index:
-          prefix: index_
-          period: 24h
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
 
-  query_range:
-    results_cache:
-      cache:
-        embedded_cache:
-          enabled: true
-          max_size_mb: 100
+query_range:
+  results_cache:
+    cache:
+      embedded_cache:
+        enabled: true
+        max_size_mb: 100
 
-  limits_config:
-    metric_aggregation_enabled: true
+limits_config:
+  metric_aggregation_enabled: true
 
-  ruler:
-    alertmanager_url: http://localhost:9093
-  EOF
+ruler:
+  alertmanager_url: http://localhost:9093
+EOF
   chown loki:grafana /etc/loki/loki-local-config.yaml
   chmod 644 /etc/loki/loki-local-config.yaml
   echo "output_log=\"\${output_log:-/var/log/loki/output.log}\"" >> /etc/init.d/loki

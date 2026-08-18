@@ -27,24 +27,24 @@ setup_deb_based() {
 
   msg_info "Creating service"
   cat <<EOF >/etc/systemd/system/teamspeak-server.service
-  [Unit]
-  Description=TeamSpeak3 Server
-  Wants=network-online.target
-  After=network.target
+[Unit]
+Description=TeamSpeak3 Server
+Wants=network-online.target
+After=network.target
 
-  [Service]
-  WorkingDirectory=/opt/teamspeak-server
-  User=root
-  Type=forking
-  ExecStart=/opt/teamspeak-server/ts3server_startscript.sh start
-  ExecStop=/opt/teamspeak-server/ts3server_startscript.sh stop
-  ExecReload=/opt/teamspeak-server/ts3server_startscript.sh restart
-  Restart=always
-  RestartSec=15
+[Service]
+WorkingDirectory=/opt/teamspeak-server
+User=root
+Type=forking
+ExecStart=/opt/teamspeak-server/ts3server_startscript.sh start
+ExecStop=/opt/teamspeak-server/ts3server_startscript.sh stop
+ExecReload=/opt/teamspeak-server/ts3server_startscript.sh restart
+Restart=always
+RestartSec=15
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now teamspeak-server
   msg_ok "Created service"
 }
@@ -71,23 +71,23 @@ setup_alpine() {
 
   msg_info "Enabling TeamSpeak Server Service"
   cat <<EOF >/etc/init.d/teamspeak
-  #!/sbin/openrc-run
+#!/sbin/openrc-run
 
-  name="TeamSpeak Server"
-  description="TeamSpeak 3 Server"
-  command="/opt/teamspeak-server/ts3server_startscript.sh"
-  command_args="start"
-  output_log="/var/log/teamspeak.out.log"
-  error_log="/var/log/teamspeak.err.log"
-  command_background=true
-  pidfile="/run/teamspeak-server.pid"
-  directory="/opt/teamspeak-server"
+name="TeamSpeak Server"
+description="TeamSpeak 3 Server"
+command="/opt/teamspeak-server/ts3server_startscript.sh"
+command_args="start"
+output_log="/var/log/teamspeak.out.log"
+error_log="/var/log/teamspeak.err.log"
+command_background=true
+pidfile="/run/teamspeak-server.pid"
+directory="/opt/teamspeak-server"
 
-  depend() {
-      need net
-      use dns
-  }
-  EOF
+depend() {
+    need net
+    use dns
+}
+EOF
   chmod +x /etc/init.d/teamspeak
   $STD rc-update add teamspeak default
   msg_ok "Enabled TeamSpeak Server Service"

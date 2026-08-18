@@ -26,35 +26,35 @@ setup_deb_based() {
   PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
   USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
   cat <<EOF >/opt/tinyauth/credentials.txt
-  Tinyauth Credentials
-  Username: tinyauth
-  Password: ${PASS}
-  EOF
+Tinyauth Credentials
+Username: tinyauth
+Password: ${PASS}
+EOF
   msg_ok "Set up Tinyauth"
 
   read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
 
   msg_info "Creating Service"
   cat <<EOF >/opt/tinyauth/.env
-  TINYAUTH_DATABASE_PATH=/opt/tinyauth/database.db
-  TINYAUTH_AUTH_USERS='${USER}'
-  TINYAUTH_APPURL=${app_url}
-  EOF
+TINYAUTH_DATABASE_PATH=/opt/tinyauth/database.db
+TINYAUTH_AUTH_USERS='${USER}'
+TINYAUTH_APPURL=${app_url}
+EOF
   cat <<EOF >/etc/systemd/system/tinyauth.service
-  [Unit]
-  Description=Tinyauth Service
-  After=network.target
+[Unit]
+Description=Tinyauth Service
+After=network.target
 
-  [Service]
-  Type=simple
-  EnvironmentFile=/opt/tinyauth/.env
-  ExecStart=/opt/tinyauth/tinyauth
-  WorkingDirectory=/opt/tinyauth
-  Restart=on-failure
+[Service]
+Type=simple
+EnvironmentFile=/opt/tinyauth/.env
+ExecStart=/opt/tinyauth/tinyauth
+WorkingDirectory=/opt/tinyauth
+Restart=on-failure
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now tinyauth
   msg_ok "Created Service"
 }
@@ -73,41 +73,41 @@ setup_alpine() {
   USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
 
   cat <<EOF >/opt/tinyauth/credentials.txt
-  Tinyauth Credentials
-  Username: tinyauth
-  Password: ${PASS}
-  EOF
+Tinyauth Credentials
+Username: tinyauth
+Password: ${PASS}
+EOF
   echo "${RELEASE}" >~/.tinyauth
   msg_ok "Installed Tinyauth"
 
   read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
 
   cat <<EOF >/opt/tinyauth/.env
-  TINYAUTH_DATABASE_PATH=/opt/tinyauth/database.db
-  TINYAUTH_AUTH_USERS='${USER}'
-  TINYAUTH_APPURL=${app_url}
-  EOF
+TINYAUTH_DATABASE_PATH=/opt/tinyauth/database.db
+TINYAUTH_AUTH_USERS='${USER}'
+TINYAUTH_APPURL=${app_url}
+EOF
 
   msg_info "Creating Service"
   cat <<'EOF' >/etc/init.d/tinyauth
-  #!/sbin/openrc-run
-  description="Tinyauth Service"
+#!/sbin/openrc-run
+description="Tinyauth Service"
 
-  set -a
-  ENV_FILE="/opt/tinyauth/.env"
-  [ -f "$ENV_FILE" ] && . "$ENV_FILE"
-  set +a
+set -a
+ENV_FILE="/opt/tinyauth/.env"
+[ -f "$ENV_FILE" ] && . "$ENV_FILE"
+set +a
 
-  command="/opt/tinyauth/tinyauth"
-  directory="/opt/tinyauth"
-  command_user="root"
-  command_background="true"
-  pidfile="/var/run/tinyauth.pid"
+command="/opt/tinyauth/tinyauth"
+directory="/opt/tinyauth"
+command_user="root"
+command_background="true"
+pidfile="/var/run/tinyauth.pid"
 
-  depend() {
-      use net
-  }
-  EOF
+depend() {
+    use net
+}
+EOF
   chmod +x /etc/init.d/tinyauth
   $STD rc-update add tinyauth default
   msg_ok "Enabled Tinyauth Service"

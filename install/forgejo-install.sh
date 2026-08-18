@@ -35,22 +35,22 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/forgejo.service
-  [Unit]
-  Description=Forgejo
-  After=syslog.target
-  After=network.target
-  [Service]
-  RestartSec=2s
-  Type=simple
-  User=git
-  Group=git
-  WorkingDirectory=/var/lib/forgejo/ 
-  ExecStart=/usr/local/bin/forgejo web --config /etc/forgejo/app.ini
-  Restart=always
-  Environment=USER=git HOME=/home/git FORGEJO_WORK_DIR=/var/lib/forgejo
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Unit]
+Description=Forgejo
+After=syslog.target
+After=network.target
+[Service]
+RestartSec=2s
+Type=simple
+User=git
+Group=git
+WorkingDirectory=/var/lib/forgejo/ 
+ExecStart=/usr/local/bin/forgejo web --config /etc/forgejo/app.ini
+Restart=always
+Environment=USER=git HOME=/home/git FORGEJO_WORK_DIR=/var/lib/forgejo
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now forgejo
   msg_ok "Created Service"
 }

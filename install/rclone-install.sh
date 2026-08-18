@@ -25,28 +25,28 @@ setup_deb_based() {
   RCLONE_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
   $STD htpasswd -cb -B /opt/login.pwd admin "$RCLONE_PASSWORD"
   cat <<EOF >~/rclone.creds
-  rclone-Credentials
-  rclone User Name: admin
-  rclone Password: $RCLONE_PASSWORD
-  EOF
+rclone-Credentials
+rclone User Name: admin
+rclone Password: $RCLONE_PASSWORD
+EOF
   msg_ok "Installed rclone"
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/rclone-web.service
-  [Unit]
-  Description=Rclone Web GUI
-  After=network-online.target
+[Unit]
+Description=Rclone Web GUI
+After=network-online.target
 
-  [Service]
-  Type=simple
-  User=root
-  WorkingDirectory=/opt/rclone
-  ExecStart=/opt/rclone/rclone rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-addr :3000 --rc-htpasswd /opt/login.pwd
-  Restart=on-failure
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/rclone
+ExecStart=/opt/rclone/rclone rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-addr :3000 --rc-htpasswd /opt/login.pwd
+Restart=on-failure
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now rclone-web
   msg_ok "Created Service"
 }
@@ -67,28 +67,28 @@ setup_alpine() {
   RCLONE_PASSWORD=$(head -c 16 /dev/urandom | xxd -p -c 16)
   $STD htpasswd -cb -B /opt/login.pwd admin "$RCLONE_PASSWORD"
   cat <<EOF >~/rclone.creds
-  rclone-Credentials
-  rclone User Name: admin
-  rclone Password: $RCLONE_PASSWORD
-  EOF
+rclone-Credentials
+rclone User Name: admin
+rclone Password: $RCLONE_PASSWORD
+EOF
   echo "${RELEASE}" >/opt/rclone_version.txt
   rm -f "$temp_file"
   msg_ok "Installed rclone"
 
   msg_info "Enabling rclone Service"
   cat <<EOF >/etc/init.d/rclone
-  #!/sbin/openrc-run
-  description="rclone Service"
-  command="/opt/rclone/rclone"
-  command_args="rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-addr :3000 --rc-htpasswd /opt/login.pwd"
-  command_background="true"
-  command_user="root"
-  pidfile="/var/run/rclone.pid"
+#!/sbin/openrc-run
+description="rclone Service"
+command="/opt/rclone/rclone"
+command_args="rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-addr :3000 --rc-htpasswd /opt/login.pwd"
+command_background="true"
+command_user="root"
+pidfile="/var/run/rclone.pid"
 
-  depend() {
-      use net
-  }
-  EOF
+depend() {
+    use net
+}
+EOF
   chmod +x /etc/init.d/rclone
   $STD rc-update add rclone default
   msg_ok "Enabled rclone Service"

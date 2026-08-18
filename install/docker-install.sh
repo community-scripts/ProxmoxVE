@@ -57,10 +57,10 @@ setup_deb_based() {
 
     mkdir -p /etc/systemd/system/docker.service.d
     cat <<EOF >/etc/systemd/system/docker.service.d/override.conf
-  [Service]
-  ExecStart=
-  ExecStart=$(command -v dockerd || echo /usr/sbin/dockerd)
-  EOF
+[Service]
+ExecStart=
+ExecStart=$(command -v dockerd || echo /usr/sbin/dockerd)
+EOF
 
     $STD systemctl daemon-reexec
     $STD systemctl daemon-reload

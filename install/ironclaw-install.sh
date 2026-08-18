@@ -32,21 +32,21 @@ setup_deb_based() {
   GATEWAY_TOKEN=$(openssl rand -hex 32)
   mkdir -p /root/.ironclaw
   cat <<EOF >/root/.ironclaw/gateway.creds
-  Gateway-Token
-  Token: $GATEWAY_TOKEN
-  EOF
+Gateway-Token
+Token: $GATEWAY_TOKEN
+EOF
 
   mkdir -p /root/.ironclaw
   cat <<EOF >/root/.ironclaw/.env
-  DATABASE_BACKEND=postgres
-  DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}?sslmode=disable
-  GATEWAY_ENABLED=true
-  GATEWAY_HOST=0.0.0.0
-  GATEWAY_PORT=3000
-  GATEWAY_AUTH_TOKEN=${GATEWAY_TOKEN}
-  CLI_ENABLED=false
-  RUST_LOG=ironclaw=info,tower_http=info
-  EOF
+DATABASE_BACKEND=postgres
+DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}?sslmode=disable
+GATEWAY_ENABLED=true
+GATEWAY_HOST=0.0.0.0
+GATEWAY_PORT=3000
+GATEWAY_AUTH_TOKEN=${GATEWAY_TOKEN}
+CLI_ENABLED=false
+RUST_LOG=ironclaw=info,tower_http=info
+EOF
   chmod 600 /root/.ironclaw/.env
   msg_ok "Configured Environment"
 
@@ -67,19 +67,19 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/ironclaw.service
-  [Unit]
-  Description=IronClaw AI Agent
-  After=network.target postgresql.service
+[Unit]
+Description=IronClaw AI Agent
+After=network.target postgresql.service
 
-  [Service]
-  Type=simple
-  ExecStart=/usr/bin/dbus-run-session /usr/local/bin/ironclaw run
-  Restart=on-failure
-  RestartSec=5
+[Service]
+Type=simple
+ExecStart=/usr/bin/dbus-run-session /usr/local/bin/ironclaw run
+Restart=on-failure
+RestartSec=5
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q ironclaw
   msg_ok "Created Service"
 }
@@ -111,21 +111,21 @@ setup_alpine() {
   GATEWAY_TOKEN=$(openssl rand -hex 32)
   mkdir -p /root/.ironclaw
   cat <<EOF >/root/.ironclaw/gateway.creds
-  Gateway-Token
-  Token: $GATEWAY_TOKEN
-  EOF
+Gateway-Token
+Token: $GATEWAY_TOKEN
+EOF
 
   mkdir -p /root/.ironclaw
   cat <<EOF >/root/.ironclaw/.env
-  DATABASE_BACKEND=postgres
-  DATABASE_URL=postgresql://ironclaw:${PG_PASS}@localhost:5432/ironclaw?sslmode=disable
-  GATEWAY_ENABLED=true
-  GATEWAY_HOST=0.0.0.0
-  GATEWAY_PORT=3000
-  GATEWAY_AUTH_TOKEN=${GATEWAY_TOKEN}
-  CLI_ENABLED=false
-  RUST_LOG=ironclaw=info,tower_http=info
-  EOF
+DATABASE_BACKEND=postgres
+DATABASE_URL=postgresql://ironclaw:${PG_PASS}@localhost:5432/ironclaw?sslmode=disable
+GATEWAY_ENABLED=true
+GATEWAY_HOST=0.0.0.0
+GATEWAY_PORT=3000
+GATEWAY_AUTH_TOKEN=${GATEWAY_TOKEN}
+CLI_ENABLED=false
+RUST_LOG=ironclaw=info,tower_http=info
+EOF
   chmod 600 /root/.ironclaw/.env
   msg_ok "Configured Environment"
 
@@ -146,21 +146,21 @@ setup_alpine() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/init.d/ironclaw
-  #!/sbin/openrc-run
+#!/sbin/openrc-run
 
-  name="IronClaw"
-  description="IronClaw AI Agent"
-  command="/usr/bin/dbus-run-session"
-  command_args="/usr/local/bin/ironclaw"
-  command_background=true
-  pidfile="/run/ironclaw.pid"
-  directory="/root"
-  supervise_daemon_args="--env-file /root/.ironclaw/.env"
+name="IronClaw"
+description="IronClaw AI Agent"
+command="/usr/bin/dbus-run-session"
+command_args="/usr/local/bin/ironclaw"
+command_background=true
+pidfile="/run/ironclaw.pid"
+directory="/root"
+supervise_daemon_args="--env-file /root/.ironclaw/.env"
 
-  depend() {
-    need net postgresql
-  }
-  EOF
+depend() {
+  need net postgresql
+}
+EOF
   chmod +x /etc/init.d/ironclaw
   $STD rc-update add ironclaw default
   msg_ok "Created Service"

@@ -46,33 +46,33 @@ setup_alpine() {
   msg_info "Installing Caddy"
   $STD apk add --no-cache caddy caddy-openrc
   cat <<EOF >/etc/caddy/Caddyfile
-  :80 {
-          # Set this path to your site's directory.
-          root * /var/www/html
+:80 {
+        # Set this path to your site's directory.
+        root * /var/www/html
 
-          # Enable the static file server.
-          file_server
+        # Enable the static file server.
+        file_server
 
-          # Another common task is to set up a reverse proxy:
-          # reverse_proxy localhost:8080
+        # Another common task is to set up a reverse proxy:
+        # reverse_proxy localhost:8080
 
-          # Or serve a PHP site through php-fpm:
-          # php_fastcgi localhost:9000
-  }
-  EOF
+        # Or serve a PHP site through php-fpm:
+        # php_fastcgi localhost:9000
+}
+EOF
   mkdir -p /var/www/html
   cat <<EOF >/var/www/html/index.html
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>Caddy works!</title>
-    </head>
-    <body>
-      <h1>Hello Caddy!</h1>
-      <p>For more information, refer to the Caddy <a href="https://caddyserver.com/docs/">documentation</a><p>
-    </body>
-  </html>
-  EOF
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Caddy works!</title>
+  </head>
+  <body>
+    <h1>Hello Caddy!</h1>
+    <p>For more information, refer to the Caddy <a href="https://caddyserver.com/docs/">documentation</a><p>
+  </body>
+</html>
+EOF
   msg_ok "Installed Caddy"
 
   read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt

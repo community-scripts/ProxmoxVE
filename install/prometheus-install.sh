@@ -24,24 +24,24 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<'EOF' >/etc/systemd/system/prometheus.service
-  [Unit]
-  Description=Prometheus
-  Wants=network-online.target
-  After=network-online.target
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
 
-  [Service]
-  User=root
-  Restart=always
-  Type=simple
-  ExecStart=/usr/local/bin/prometheus \
-      --config.file=/etc/prometheus/prometheus.yml \
-      --storage.tsdb.path=/var/lib/prometheus/ \
-      --web.listen-address=0.0.0.0:9090
-  ExecReload=/bin/kill -HUP $MAINPID
+[Service]
+User=root
+Restart=always
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/var/lib/prometheus/ \
+    --web.listen-address=0.0.0.0:9090
+ExecReload=/bin/kill -HUP $MAINPID
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now prometheus
   msg_ok "Created Service"
 }

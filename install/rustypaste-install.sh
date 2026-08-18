@@ -24,18 +24,18 @@ setup_deb_based() {
 
   msg_info "Creating Service"
   cat <<EOF >/etc/systemd/system/rustypaste.service
-  [Unit]
-  Description=rustypaste Service
-  After=network.target
+[Unit]
+Description=rustypaste Service
+After=network.target
 
-  [Service]
-  WorkingDirectory=/opt/rustypaste
-  ExecStart=/opt/rustypaste/rustypaste
-  Restart=always
+[Service]
+WorkingDirectory=/opt/rustypaste
+ExecStart=/opt/rustypaste/rustypaste
+Restart=always
 
-  [Install]
-  WantedBy=multi-user.target
-  EOF
+[Install]
+WantedBy=multi-user.target
+EOF
   systemctl enable -q --now rustypaste
   msg_ok "Created Service"
 }
@@ -52,27 +52,27 @@ setup_alpine() {
 
   msg_info "Creating Service"
   cat <<'EOF' >/etc/init.d/rustypaste
-  #!/sbin/openrc-run
+#!/sbin/openrc-run
 
-  name="rustypaste"
-  description="RustyPaste - A minimal file upload/pastebin service"
-  command="/usr/bin/rustypaste"
-  command_args=""
-  command_user="root"
-  command_background=true
-  pidfile="/run/${RC_SVCNAME}.pid"
-  directory="/var/lib/rustypaste"
+name="rustypaste"
+description="RustyPaste - A minimal file upload/pastebin service"
+command="/usr/bin/rustypaste"
+command_args=""
+command_user="root"
+command_background=true
+pidfile="/run/${RC_SVCNAME}.pid"
+directory="/var/lib/rustypaste"
 
-  depend() {
-      need net
-      after firewall
-  }
+depend() {
+    need net
+    after firewall
+}
 
-  start_pre() {
-      export CONFIG=/etc/rustypaste/config.toml
-      checkpath --directory --owner root:root --mode 0755 /var/lib/rustypaste
-  }
-  EOF
+start_pre() {
+    export CONFIG=/etc/rustypaste/config.toml
+    checkpath --directory --owner root:root --mode 0755 /var/lib/rustypaste
+}
+EOF
   chmod +x /etc/init.d/rustypaste
   $STD rc-update add rustypaste default
   $STD rc-service rustypaste start
