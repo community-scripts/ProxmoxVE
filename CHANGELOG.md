@@ -524,6 +524,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-18
+
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Breaking Change: Migrate all "Alpine" Scripts to Normal CT's  [@MickLesk](https://github.com/MickLesk) ([#16587](https://github.com/community-scripts/ProxmoxVE/pull/16587))
+
 ## 2026-08-17
 
 ### 🚀 Updated Scripts
