@@ -528,6 +528,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - odoo: use patched wkhtmltopdf build [@MickLesk](https://github.com/MickLesk) ([#16590](https://github.com/community-scripts/ProxmoxVE/pull/16590))
+
   - #### 💥 Breaking Changes
 
     - Breaking Change: Migrate all "Alpine" Scripts to Normal CT's  [@MickLesk](https://github.com/MickLesk) ([#16587](https://github.com/community-scripts/ProxmoxVE/pull/16587))
