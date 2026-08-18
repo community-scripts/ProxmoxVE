@@ -19,11 +19,11 @@ if [[ -z "${var_os:-}" ]] && command -v pveversion >/dev/null 2>&1; then
 fi
 
 if [[ "${var_os:-}" == "alpine" ]]; then
-  var_ram="${var_ram:-512}"
+  var_ram="${var_ram:-2048}"
   var_disk="${var_disk:-3}"
   var_version="${var_version:-3.24}"
 else
-  var_ram="${var_ram:-512}"
+  var_ram="${var_ram:-2048}"
   var_disk="${var_disk:-4}"
   var_version="${var_version:-13}"
 fi
