@@ -530,6 +530,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - romm: add missing /decode and /cache Angie locations for multi-file downloads [@MickLesk](https://github.com/MickLesk) ([#16589](https://github.com/community-scripts/ProxmoxVE/pull/16589))
     - odoo: use patched wkhtmltopdf build [@MickLesk](https://github.com/MickLesk) ([#16590](https://github.com/community-scripts/ProxmoxVE/pull/16590))
 
   - #### 💥 Breaking Changes
