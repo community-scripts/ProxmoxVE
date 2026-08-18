@@ -81,7 +81,113 @@ function update_script() {
     ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
     ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
     if [[ -f /etc/angie/http.d/romm.conf ]]; then
-      sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/angie/http.d/romm.conf
+      if ! grep -q "js_content decode.decodeBase64" /etc/angie/http.d/romm.conf; then
+        msg_info "Adding missing /decode and /cache locations to Angie config"
+        dpkg -l angie-module-njs &>/dev/null || $STD apt-get install -y angie-module-njs
+        grep -q "ngx_http_js_module.so" /etc/angie/angie.conf || sed -i '1i load_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
+        mkdir -p /etc/angie/js "${ROMM_BASE}/cache"
+        cat <<'JSEOF' >/etc/angie/js/decode.js
+// Decode a Base64 encoded string received as a query parameter named 'value',
+// and return the decoded value in the response body.
+function decodeBase64(r) {
+  var encodedValue = r.args.value;
+
+  if (!encodedValue) {
+    r.return(400, "Missing 'value' query parameter");
+    return;
+  }
+
+  try {
+    // Use Buffer to return raw bytes — atob() returns a JS string which r.return()
+    // would re-encode as UTF-8, corrupting any non-ASCII bytes (e.g. in filenames
+    // like "Pokémon") and causing CRC mismatches in the mod_zip manifest.
+    r.return(200, Buffer.from(encodedValue, 'base64'));
+  } catch (e) {
+    r.return(400, "Invalid Base64 encoding");
+  }
+}
+
+export default { decodeBase64 };
+JSEOF
+        cat <<EOF >/etc/angie/http.d/romm.conf
+js_import /etc/angie/js/decode.js;
+
+upstream romm_backend {
+    server 127.0.0.1:5000;
+}
+
+map \$http_upgrade \$connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+server {
+    listen 80;
+    server_name _;
+    root /opt/romm/frontend/dist;
+    client_max_body_size 0;
+
+    location / {
+        try_files \$uri \$uri/ /index.html;
+    }
+
+    location /assets {
+        alias /opt/romm/frontend/dist/assets;
+        try_files \$uri \$uri/ =404;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location ~ ^/rom/.*/ejs\$ {
+        add_header Cross-Origin-Embedder-Policy "require-corp";
+        add_header Cross-Origin-Opener-Policy "same-origin";
+        try_files \$uri /index.html;
+    }
+
+    location /api {
+        proxy_pass http://romm_backend;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+
+    location ~ ^/(ws|netplay) {
+        proxy_pass http://romm_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection \$connection_upgrade;
+        proxy_set_header Host \$host;
+        proxy_read_timeout 86400;
+    }
+
+    location = /openapi.json {
+        proxy_pass http://romm_backend;
+    }
+
+    location /library/ {
+        internal;
+        alias ${ROMM_BASE}/library/;
+    }
+
+    location /cache/ {
+        internal;
+        alias ${ROMM_BASE}/cache/;
+    }
+
+    location /decode {
+        internal;
+        js_content decode.decodeBase64;
+    }
+}
+EOF
+        msg_ok "Added /decode and /cache locations"
+      else
+        sed -i -e "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" \
+          -e "s|alias .*/cache/;|alias ${ROMM_BASE}/cache/;|" /etc/angie/http.d/romm.conf
+      fi
       systemctl reload angie
     elif [[ -f /etc/nginx/sites-available/romm ]]; then
       sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
