@@ -14,7 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
+echo "iperf3 iperf3/start_daemon boolean false" | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive $STD apt install -y \
   git \
   sshpass \
   iperf3
