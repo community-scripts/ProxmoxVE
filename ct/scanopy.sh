@@ -53,7 +53,7 @@ function update_script() {
 
     msg_info "Building Scanopy Server (patience)"
     cd /opt/scanopy/backend
-    $STD cargo build --release --bin server --bin generate-fixtures
+    CARGO_BUILD_JOBS="$(get_parallel_jobs)" $STD cargo build --release --bin server --bin generate-fixtures
     $STD ./target/release/generate-fixtures --output-dir /opt/scanopy/ui/src/lib/data
     mv ./target/release/server /usr/bin/scanopy-server
     msg_ok "Built Scanopy Server"
