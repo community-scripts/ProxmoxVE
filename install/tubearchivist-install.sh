@@ -25,13 +25,27 @@ $STD apt install -y \
   libsasl2-dev \
   libssl-dev \
   sqlite3 \
-  ffmpeg
+  ffmpeg \
+  libcairo2-dev \
+  libpango1.0-dev \
+  libjpeg-dev \
+  libgif-dev \
+  librsvg2-dev \
+  pkg-config
 msg_ok "Installed Dependencies"
 
 UV_PYTHON="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 
 fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.zip"
+
+fetch_and_deploy_gh_release "bgutil-ytdlp-pot-provider" "Brainicism/bgutil-ytdlp-pot-provider" "tarball"
+
+msg_info "Building BgUtil POT Provider Server"
+cd /opt/bgutil-ytdlp-pot-provider/server
+$STD npm ci
+$STD npx tsc
+msg_ok "Built BgUtil POT Provider Server"
 
 msg_info "Installing ElasticSearch"
 setup_deb822_repo \
@@ -115,6 +129,10 @@ Elasticsearch Password: ${ES_PASSWORD}
 EOF
 systemctl enable -q --now redis-server
 msg_ok "Set up Tube Archivist"
+
+msg_info "Installing yt-dlp Nightly"
+$STD uv pip install --python /opt/tubearchivist/.venv/bin/python -U --prerelease allow "yt-dlp[default]"
+msg_ok "Installed yt-dlp Nightly"
 
 msg_info "Configuring Nginx"
 sed -i 's/^user www-data;$/user root;/' /etc/nginx/nginx.conf
@@ -230,10 +248,26 @@ exec $PYTHON backend_start.py
 RUNEOF
 chmod +x /opt/tubearchivist/backend/run.sh
 ln -sf /opt/tubearchivist/.env /opt/tubearchivist/backend/.env
+cat <<EOF >/etc/systemd/system/bgutil-provider.service
+[Unit]
+Description=BgUtil YT-DLP POT Provider
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/bgutil-ytdlp-pot-provider/server
+ExecStart=/usr/bin/node build/main.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat <<EOF >/etc/systemd/system/tubearchivist.service
 [Unit]
 Description=Tube Archivist Backend
-After=network.target elasticsearch.service redis-server.service
+After=network.target elasticsearch.service redis-server.service bgutil-provider.service
 
 [Service]
 Type=simple
@@ -286,7 +320,7 @@ RuntimeMaxSec=3600
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now tubearchivist tubearchivist-celery tubearchivist-beat
+systemctl enable -q --now bgutil-provider tubearchivist tubearchivist-celery tubearchivist-beat
 msg_ok "Created Services"
 
 motd_ssh
