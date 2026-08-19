@@ -524,6 +524,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-19
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Increase default RAM allocation for Gatus [@rmpratt1](https://github.com/rmpratt1) ([#16601](https://github.com/community-scripts/ProxmoxVE/pull/16601))
+
 ## 2026-08-18
 
 ### 🚀 Updated Scripts
