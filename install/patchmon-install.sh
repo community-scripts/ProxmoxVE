@@ -86,7 +86,13 @@ for arch in "${AGENT_NAME[@]}"; do
 done
 msg_ok "Fetched PatchMon agent binaries"
 
-fetch_and_deploy_gh_release "ssg-content" "ComplianceAsCode/content" "prebuild" "latest" "/opt/patchmon/ssg-content" "scap-security-guide-*.tar.gz"
+msg_info "Fetching SCAP Content"
+RELEASE=$(get_latest_github_release "ComplianceAsCode/content")
+curl_with_retry "https://github.com/ComplianceAsCode/content/releases/download/v${RELEASE}/scap-security-guide-${RELEASE}.tar.gz" "/tmp/ssg.tar.gz"
+mkdir -p /opt/patchmon/ssg-content
+tar -xzf /tmp/ssg.tar.gz -C /opt/patchmon/ssg-content --strip-components=1 --wildcards '*/ssg-*-ds.xml'
+rm -f /tmp/ssg.tar.gz
+msg_ok "Fetched SCAP Content"
 
 msg_info "Creating service"
 cat <<EOF >/etc/systemd/system/patchmon-server.service

@@ -13,13 +13,13 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
 msg_info "Configuring Tracktor"
 cd /opt/tracktor
-$STD npm install
-$STD npm run build
+$STD pnpm install --frozen-lockfile
+$STD pnpm run build
 mkdir -p /opt/tracktor-data/{uploads,logs}
 cat <<EOF >/opt/tracktor.env
 NODE_ENV=production

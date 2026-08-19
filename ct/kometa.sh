@@ -39,6 +39,7 @@ function update_script() {
     cp /opt/kometa/config/config.yml /opt
     msg_ok "Backup completed"
 
+    ensure_dependencies git
     PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa" "tarball"
 

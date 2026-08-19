@@ -51,6 +51,7 @@ function update_script() {
     mkdir -p /opt/networkoptimizer/publish/tools
     cd /opt/networkoptimizer/src/uwnspeedtest
     CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $STD go build -trimpath -ldflags "-s -w" -o /opt/networkoptimizer/publish/tools/uwnspeedtest-linux-arm64 .
+    [[ "$(arch_resolve)" != "arm64" ]] && CGO_ENABLED=0 GOOS=linux GOARCH="$(arch_resolve)" $STD go build -trimpath -ldflags "-s -w" -o "/opt/networkoptimizer/publish/tools/uwnspeedtest-linux-$(arch_resolve)" .
     msg_ok "Rebuilt NetworkOptimizer"
 
     msg_info "Starting Service"

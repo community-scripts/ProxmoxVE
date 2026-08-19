@@ -1336,6 +1336,10 @@ create_backup() {
       msg_warn "Skipping backup of '${path}' (not found)"
       continue
     fi
+    if mountpoint -q "$path" 2>/dev/null; then
+      msg_warn "Skipping backup of '${path}' (is a mount point)"
+      continue
+    fi
     dest="${store}/files${path}"
     if ! mkdir -p "$(dirname "$dest")" || ! cp -a "$path" "$dest"; then
       msg_error "Backup of '${path}' failed - aborting update"
@@ -2524,9 +2528,9 @@ _download_source_tarball() {
 # directory). Extracts <tarball_path> into <workdir>, then copies the contents
 # of that top-level directory into <target>.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
-#     up config dotfiles like .env via create_backup and call restore_backup
-#     BEFORE any build step that sources them).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included, mount
+#     points preserved — back up config dotfiles like .env via create_backup
+#     and call restore_backup BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and is responsible for its
 #     cleanup (typically via a RETURN trap on its tmpdir).
 #   - cp failures are non-fatal here, matching the previous inline behavior.
@@ -2538,7 +2542,7 @@ _deploy_source_tarball() {
 
   mkdir -p "$target"
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${target:?}" -mindepth 1 -delete
+    find "${target:?}" -mindepth 1 \( -type d -exec mountpoint -q {} \; -prune \) -o -print0 | xargs -0 rm -rf --
   fi
 
   tar --no-same-owner -xzf "$tarball" -C "$workdir" || {
@@ -2564,9 +2568,9 @@ _deploy_source_tarball() {
 # a single top-level directory, that directory is stripped (its contents land
 # directly in <target>); otherwise the archive contents are copied as-is.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
-#     up config dotfiles like .env via create_backup and call restore_backup
-#     BEFORE any build step that sources them).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included, mount
+#     points preserved — back up config dotfiles like .env via create_backup
+#     and call restore_backup BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and cleans it up.
 #
 # Returns: 0 on success, 65 on unsupported format, 251 on extraction failure,
@@ -2627,7 +2631,7 @@ _deploy_unpacked_archive() {
   # was truncated, the archive was unreadable, or it unpacked to nothing.
   mkdir -p "$target"
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${target:?}" -mindepth 1 -delete
+    find "${target:?}" -mindepth 1 \( -type d -exec mountpoint -q {} \; -prune \) -o -print0 | xargs -0 rm -rf --
   fi
 
   if ! cp -r "$source_dir"/* "$target/"; then
@@ -9368,7 +9372,7 @@ fetch_and_deploy_from_url() {
   mkdir -p "$directory"
 
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${directory:?}" -mindepth 1 -delete
+    find "${directory:?}" -mindepth 1 \( -type d -exec mountpoint -q {} \; -prune \) -o -print0 | xargs -0 rm -rf --
   fi
 
   local unpack_tmp

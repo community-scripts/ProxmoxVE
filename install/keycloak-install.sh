@@ -39,7 +39,6 @@ Type=idle
 User=root
 WorkingDirectory=/opt/keycloak
 ExecStart=/opt/keycloak/bin/kc.sh start
-ExecStop=/opt/keycloak/bin/kc.sh stop
 Restart=always
 RestartSec=3
 Environment="JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-$(arch_resolve)"

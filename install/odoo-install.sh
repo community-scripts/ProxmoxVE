@@ -14,10 +14,12 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y python3-lxml wkhtmltopdf
+$STD apt install -y python3-lxml
 curl -fsSL --proto '=https' "https://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
 $STD dpkg -i /opt/python3-lxml-html-clean.deb
 msg_ok "Installed Dependencies"
+
+fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
 
 PG_VERSION="18" setup_postgresql
 

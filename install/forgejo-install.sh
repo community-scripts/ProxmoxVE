@@ -13,27 +13,28 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-    git \
-    git-lfs
-msg_ok "Installed Dependencies"
+setup_deb_based() {
+  msg_info "Installing Dependencies"
+  $STD apt install -y \
+      git \
+      git-lfs
+  msg_ok "Installed Dependencies"
 
-fetch_and_deploy_codeberg_release "forgejo" "forgejo/forgejo" "singlefile" "latest" "/opt/forgejo" "forgejo-*-linux-$(arch_resolve)"
-ln -sf /opt/forgejo/forgejo /usr/local/bin/forgejo
+  fetch_and_deploy_codeberg_release "forgejo" "forgejo/forgejo" "singlefile" "latest" "/opt/forgejo" "forgejo-*-linux-$(arch_resolve)"
+  ln -sf /opt/forgejo/forgejo /usr/local/bin/forgejo
 
-msg_info "Setting up Forgejo"
-$STD adduser --system --shell /bin/bash --gecos 'Git Version Control' --group --disabled-password --home /home/git git
-mkdir /var/lib/forgejo
-chown git:git /var/lib/forgejo
-chmod 750 /var/lib/forgejo
-mkdir /etc/forgejo
-chown root:git /etc/forgejo
-chmod 770 /etc/forgejo
-msg_ok "Setup Forgejo"
+  msg_info "Setting up Forgejo"
+  $STD adduser --system --shell /bin/bash --gecos 'Git Version Control' --group --disabled-password --home /home/git git
+  mkdir /var/lib/forgejo
+  chown git:git /var/lib/forgejo
+  chmod 750 /var/lib/forgejo
+  mkdir /etc/forgejo
+  chown root:git /etc/forgejo
+  chmod 770 /etc/forgejo
+  msg_ok "Setup Forgejo"
 
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/forgejo.service
+  msg_info "Creating Service"
+  cat <<EOF >/etc/systemd/system/forgejo.service
 [Unit]
 Description=Forgejo
 After=syslog.target
@@ -50,8 +51,25 @@ Environment=USER=git HOME=/home/git FORGEJO_WORK_DIR=/var/lib/forgejo
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now forgejo
-msg_ok "Created Service"
+  systemctl enable -q --now forgejo
+  msg_ok "Created Service"
+}
+
+setup_alpine() {
+  msg_info "Installing Forgejo"
+  $STD apk add --no-cache forgejo
+  msg_ok "Installed Forgejo"
+
+  msg_info "Enabling Forgejo Service"
+  $STD rc-update add forgejo default
+  msg_ok "Enabled Forgejo Service"
+
+  msg_info "Starting Forgejo"
+  $STD service forgejo start
+  msg_ok "Started Forgejo"
+}
+
+run_os_setup
 
 motd_ssh
 customize

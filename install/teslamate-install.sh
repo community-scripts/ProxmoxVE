@@ -19,13 +19,17 @@ $STD apt install -y \
   erlang \
   erlang-dev \
   erlang-syntax-tools \
-  elixir \
   mosquitto \
   locales
 sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen
 $STD locale-gen
 systemctl enable -q --now mosquitto
 msg_ok "Installed Dependencies"
+
+fetch_and_deploy_gh_release "elixir" "elixir-lang/elixir" "prebuild" "latest" "/opt/elixir" "elixir-otp-27.zip"
+for bin in elixir elixirc iex mix; do
+  ln -sf "/opt/elixir/bin/$bin" "/usr/local/bin/$bin"
+done
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="teslamate" PG_DB_USER="teslamate" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db

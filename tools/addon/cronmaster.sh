@@ -61,7 +61,7 @@ function update() {
     msg_ok "Stopped service"
 
     BACKUP_DIR="/opt/cronmaster_backup"
-    create_backup "$CONFIG_PATH"
+    create_backup "$CONFIG_PATH" "$INSTALL_PATH/scripts" "$INSTALL_PATH/data" "$INSTALL_PATH/snippets"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cronmaster" "fccview/cronmaster" "prebuild" "latest" "$INSTALL_PATH" "cronmaster_*_prebuild.tar.gz"
 
