@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
-# Engine comes from community-scripts/core; this repo only ships the scripts.
-# A local core checkout wins (COMMUNITY_SCRIPTS_CORE_DIR, else a sibling ../core),
-# so a fork or branch of core can be tested without editing this file.
-_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
-source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Joost van den Berg
 # License: MIT | https://github.com/montagneid/ProxmoxVED/raw/main/LICENSE
@@ -31,12 +27,11 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-
-    msg_info "Updating ${APP} LXC"
+    msg_info "Updating LXC"
     $STD apt update
     $STD apt upgrade -y
-    msg_ok "Updated ${APP} LXC"
-
+    msg_ok "Updated LXC"
+    
     msg_info "Updating Umbraco Templates"
     $STD dotnet new update
     msg_ok "Updated Umbraco Templates"
