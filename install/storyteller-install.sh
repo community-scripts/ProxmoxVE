@@ -34,7 +34,7 @@ msg_info "Setting up Storyteller"
 cd /opt/storyteller
 
 $STD corepack yarn install --network-timeout 600000
-$STD gcc -g -fPIC -rdynamic -shared web/sqlite/uuid.c -o web/sqlite/uuid.c.so
+$STD gcc -g -fPIC -rdynamic -shared applications/web/sqlite/uuid.c -o applications/web/sqlite/uuid.c.so
 STORYTELLER_SECRET_KEY=$(openssl rand -base64 32)
 cat <<EOF >/opt/storyteller/.env
 STORYTELLER_SECRET_KEY=${STORYTELLER_SECRET_KEY}
@@ -60,17 +60,17 @@ export NODE_ENV=production
 export NEXT_TELEMETRY_DISABLED=1
 export SQLITE_NATIVE_BINDING=/opt/storyteller/node_modules/better-sqlite3/build/Release/better_sqlite3.node
 $STD corepack yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
-mkdir -p /opt/storyteller/web/.next/standalone/web/.next/static
-cp -rT /opt/storyteller/web/.next/static /opt/storyteller/web/.next/standalone/web/.next/static
-if [[ -d /opt/storyteller/web/public ]]; then
-  mkdir -p /opt/storyteller/web/.next/standalone/web/public
-  cp -rT /opt/storyteller/web/public /opt/storyteller/web/.next/standalone/web/public
+mkdir -p /opt/storyteller/applications/web/.next/standalone/applications/web/.next/static
+cp -rT /opt/storyteller/applications/web/.next/static /opt/storyteller/applications/web/.next/standalone/applications/web/.next/static
+if [[ -d /opt/storyteller/applications/web/public ]]; then
+  mkdir -p /opt/storyteller/applications/web/.next/standalone/applications/web/public
+  cp -rT /opt/storyteller/applications/web/public /opt/storyteller/applications/web/.next/standalone/applications/web/public
 fi
-mkdir -p /opt/storyteller/web/.next/standalone/web/migrations
-cp -rT /opt/storyteller/web/migrations /opt/storyteller/web/.next/standalone/web/migrations
-mkdir -p /opt/storyteller/web/.next/standalone/web/sqlite
-cp -rT /opt/storyteller/web/sqlite /opt/storyteller/web/.next/standalone/web/sqlite
-ln -sf /opt/storyteller/.env /opt/storyteller/web/.next/standalone/web/.env
+mkdir -p /opt/storyteller/applications/web/.next/standalone/applications/web/migrations
+cp -rT /opt/storyteller/applications/web/migrations /opt/storyteller/applications/web/.next/standalone/applications/web/migrations
+mkdir -p /opt/storyteller/applications/web/.next/standalone/applications/web/sqlite
+cp -rT /opt/storyteller/applications/web/sqlite /opt/storyteller/applications/web/.next/standalone/applications/web/sqlite
+ln -sf /opt/storyteller/.env /opt/storyteller/applications/web/.next/standalone/applications/web/.env
 msg_ok "Built Storyteller"
 
 msg_info "Creating Service"
@@ -82,7 +82,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/opt/storyteller/web/.next/standalone/web
+WorkingDirectory=/opt/storyteller/applications/web/.next/standalone/applications/web
 EnvironmentFile=/opt/storyteller/.env
 ExecStart=/usr/bin/node --enable-source-maps server.js
 Restart=on-failure
