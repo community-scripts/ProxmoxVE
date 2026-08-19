@@ -530,6 +530,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - VictoriaMetrics: use github_api_call for release lookups so GITHUB_TOKEN is honored [@angusmaul](https://github.com/angusmaul) ([#16607](https://github.com/community-scripts/ProxmoxVE/pull/16607))
     - Increase default RAM allocation for Gatus [@rmpratt1](https://github.com/rmpratt1) ([#16601](https://github.com/community-scripts/ProxmoxVE/pull/16601))
 
 ## 2026-08-18
