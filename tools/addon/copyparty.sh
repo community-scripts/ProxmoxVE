@@ -38,7 +38,6 @@ LOG_PATH="/var/log/copyparty"
 DATA_PATH="/var/lib/copyparty"
 SVC_USER="copyparty"
 SVC_GROUP="copyparty"
-SRC_URL="https://github.com/9001/copyparty/releases/latest/download/copyparty-sfx.py"
 DEFAULT_PORT=3923
 
 # ==============================================================================
@@ -115,11 +114,8 @@ function update() {
     fi
     msg_ok "Stopped service"
 
-    msg_info "Updating ${APP}"
-    curl -fsSL "$SRC_URL" -o "$BIN_PATH"
-    chmod +x "$BIN_PATH"
+    USE_ORIGINAL_FILENAME=true fetch_and_deploy_gh_release "copyparty-sfx.py" "9001/copyparty" "singlefile" "latest" "/usr/local/bin" "copyparty-sfx.py"
     chown "$SVC_USER:$SVC_GROUP" "$BIN_PATH"
-    msg_ok "Updated ${APP}"
 
     msg_info "Starting service"
     if [[ "$OS" == "Alpine" ]]; then
@@ -186,11 +182,8 @@ function install() {
     chown "$SVC_USER:$SVC_GROUP" "$DATA_PATH"
   fi
 
-  msg_info "Downloading ${APP}"
-  curl -fsSL "$SRC_URL" -o "$BIN_PATH"
-  chmod +x "$BIN_PATH"
+  USE_ORIGINAL_FILENAME=true fetch_and_deploy_gh_release "copyparty-sfx.py" "9001/copyparty" "singlefile" "latest" "/usr/local/bin" "copyparty-sfx.py"
   chown "$SVC_USER:$SVC_GROUP" "$BIN_PATH"
-  msg_ok "Downloaded to ${BIN_PATH}"
 
   msg_info "Creating configuration"
   cat <<EOF >"$CONF_PATH"
