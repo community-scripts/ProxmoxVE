@@ -25,7 +25,7 @@ PG_DB_NAME="baikal_db" PG_DB_USER="baikal_user" PG_DB_PASS="$(openssl rand -base
 
 msg_info "Configuring Baikal"
 cd /opt/baikal
-$STD composer install
+$STD composer install || { msg_warn "composer.lock doesn't match composer.json (known upstream packaging issue) - regenerating"; $STD composer update; }
 cat <<EOF >/opt/baikal/config/baikal.yaml
 database:
     backend: pgsql

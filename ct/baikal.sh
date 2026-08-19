@@ -46,7 +46,7 @@ function update_script() {
 
     msg_info "Configuring Baikal"
     cd /opt/baikal
-    $STD composer install
+    $STD composer install || { msg_warn "composer.lock doesn't match composer.json (known upstream packaging issue) - regenerating"; $STD composer update; }
     msg_ok "Configured Baikal"
 
     msg_info "Starting Service"
