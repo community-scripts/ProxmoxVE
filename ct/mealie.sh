@@ -75,6 +75,7 @@ STARTEOF
     cd /opt/mealie/frontend
     $STD yarn install --prefer-offline --frozen-lockfile --non-interactive --production=false --network-timeout 1000000
     $STD yarn generate
+    $STD yarn cache clean
     msg_ok "Built Frontend"
 
     msg_info "Copying Built Frontend"
