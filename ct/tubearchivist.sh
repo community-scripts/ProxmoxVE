@@ -32,6 +32,7 @@ function update_script() {
 
   if [[ ! -f /etc/systemd/system/bgutil-provider.service ]]; then
     msg_info "Adding BgUtil POT Provider"
+    ensure_dependencies ffmpeg libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev pkg-config
     fetch_and_deploy_gh_release "bgutil-ytdlp-pot-provider" "Brainicism/bgutil-ytdlp-pot-provider" "tarball"
     cd /opt/bgutil-ytdlp-pot-provider/server
     $STD npm ci
