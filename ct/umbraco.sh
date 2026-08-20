@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: Joost van den Berg
+# Author: Joost van den Berg (montagneId)
 # License: MIT | https://github.com/montagneid/ProxmoxVED/raw/main/LICENSE
 # Source: https://github.com/umbraco/Umbraco-CMS
 
