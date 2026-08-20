@@ -13,46 +13,106 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
-setup_mariadb
-MARIADB_DB_NAME="projectsend" MARIADB_DB_USER="projectsend" setup_mariadb_db
-fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-r*.zip"
+msg_info "Installing Dependencies"
+$STD apt install -y nginx
+msg_ok "Installed Dependencies"
 
-msg_info "Installing ProjectSend"
-mv /opt/projectsend/includes/sys.config.sample.php /opt/projectsend/includes/sys.config.php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="ldap,pcntl" setup_php
+setup_mariadb
+MARIADB_DB_NAME="projectsend"
+MARIADB_DB_USER="projectsend"
+setup_mariadb_db
+fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-*.zip"
+
+msg_info "Configuring ProjectSend"
+cd /opt/projectsend
+cp .env.example .env
+ADMIN_EMAIL="admin@example.com"
+ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+sed -i \
+  -e "s|^APP_ENV=.*|APP_ENV=production|" \
+  -e "s|^APP_DEBUG=.*|APP_DEBUG=false|" \
+  -e "s|^APP_URL=.*|APP_URL=http://${LOCAL_IP}|" \
+  -e "s|^DB_HOST=.*|DB_HOST=localhost|" \
+  -e "s|^DB_DATABASE=.*|DB_DATABASE=${MARIADB_DB_NAME}|" \
+  -e "s|^DB_USERNAME=.*|DB_USERNAME=${MARIADB_DB_USER}|" \
+  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=${MARIADB_DB_PASS}|" \
+  -e "s|^SESSION_DRIVER=.*|SESSION_DRIVER=database|" \
+  -e "s|^CACHE_STORE=.*|CACHE_STORE=database|" \
+  -e "s|^QUEUE_CONNECTION=.*|QUEUE_CONNECTION=database|" \
+  .env
 chown -R www-data:www-data /opt/projectsend
-chmod -R 775 /opt/projectsend
-chmod 644 /opt/projectsend/includes/sys.config.php
-sed -i -e "s/\(define('DB_NAME', \).*/\1'$MARIADB_DB_NAME');/" \
-  -e "s/\(define('DB_USER', \).*/\1'$MARIADB_DB_USER');/" \
-  -e "s/\(define('DB_PASSWORD', \).*/\1'$MARIADB_DB_PASS');/" \
-  /opt/projectsend/includes/sys.config.php
-sed -i -e "s/^\(memory_limit = \).*/\1 256M/" \
-  -e "s/^\(post_max_size = \).*/\1 256M/" \
-  -e "s/^\(upload_max_filesize = \).*/\1 256M/" \
-  -e "s/^\(max_execution_time = \).*/\1 300/" \
-  /etc/php/8.4/apache2/php.ini
-msg_ok "Installed projectsend"
+chmod -R 775 /opt/projectsend/storage /opt/projectsend/bootstrap/cache
+$STD sudo -u www-data php artisan key:generate --force --no-interaction
+$STD sudo -u www-data php artisan migrate --force
+$STD sudo -u www-data php artisan storage:link --force
+$STD sudo -u www-data php artisan projectsend:ensure-roles
+$STD sudo -u www-data php artisan projectsend:admin --if-none \
+  --name="Administrator" \
+  --email="${ADMIN_EMAIL}" \
+  --password="${ADMIN_PASSWORD}"
+cat <<EOF >~/projectsend.creds
+ProjectSend Credentials
+Admin Email: ${ADMIN_EMAIL}
+Admin Password: ${ADMIN_PASSWORD}
+EOF
+msg_ok "Configured ProjectSend"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/apache2/sites-available/projectsend.conf
-<VirtualHost *:80>
-    ServerName projectsend
-    DocumentRoot /opt/projectsend
-    <Directory /opt/projectsend>
-        Options FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
+PHP_SOCK=$(get_php_fpm_socket)
+cat <<EOF >/etc/nginx/sites-available/projectsend.conf
+server {
+    listen 80 default_server;
+    server_name _;
+    root /opt/projectsend/public;
+    index index.php;
 
-    ErrorLog /var/log/apache2/projectsend_error.log
-    CustomLog /var/log/apache2/projectsend_access.log combined
-</VirtualHost>
+    client_max_body_size 100m;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    location /protected-files/ {
+        internal;
+        alias /opt/projectsend/storage/app/files/;
+    }
+
+    location ~ \.php\$ {
+        try_files \$uri =404;
+        fastcgi_pass unix:${PHP_SOCK};
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_buffer_size 32k;
+        fastcgi_buffers 8 32k;
+    }
+
+    location ~ /\.(?!well-known) {
+        deny all;
+    }
+}
 EOF
-$STD a2ensite projectsend
-$STD a2enmod rewrite
-$STD a2dissite 000-default.conf
-$STD systemctl reload apache2
+nginx_enable_site projectsend.conf
+
+cat <<EOF >/etc/systemd/system/projectsend-worker.service
+[Unit]
+Description=ProjectSend queue worker
+After=network.target mariadb.service
+
+[Service]
+User=www-data
+Group=www-data
+Restart=always
+WorkingDirectory=/opt/projectsend
+ExecStart=/usr/bin/php artisan queue:work --tries=3 --backoff=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now projectsend-worker
+
+echo "* * * * * cd /opt/projectsend && php artisan schedule:run >> /dev/null 2>&1" | crontab -u www-data -
 msg_ok "Created Service"
 
 motd_ssh

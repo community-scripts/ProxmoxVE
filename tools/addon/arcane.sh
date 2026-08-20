@@ -59,6 +59,8 @@ function uninstall() {
 # UPDATE
 # ==============================================================================
 function update() {
+  chown -R 65532:65532 /etc/arcane/projects /etc/arcane/builds 2>/dev/null || true
+
   msg_info "Pulling latest ${APP} image"
   cd "$INSTALL_PATH"
   $STD docker compose pull
@@ -83,14 +85,24 @@ function install() {
   msg_ok "Created ${INSTALL_PATH}"
 
   # Generate secrets and config values
-  local ENCRYPTION_KEY JWT_SECRET PROJ_DIR
+  local ENCRYPTION_KEY JWT_SECRET PROJ_DIR BUILDS_DIR
   ENCRYPTION_KEY=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c32)
   JWT_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c32)
   PROJ_DIR="/etc/arcane/projects"
+  BUILDS_DIR="/etc/arcane/builds"
 
+  # Arcane drops root and runs as UID/GID 65532 by default (Dockerfile default,
+  # see backend/pkg/libarcane/startup/runtime_identity.go), so bind-mounted
+  # host directories must be owned by that UID or the container can't write to them.
   msg_info "Creating stacks directory"
   mkdir -p "$PROJ_DIR"
+  chown -R 65532:65532 "$PROJ_DIR"
   msg_ok "Created ${PROJ_DIR}"
+
+  msg_info "Creating builds directory"
+  mkdir -p "$BUILDS_DIR"
+  chown -R 65532:65532 "$BUILDS_DIR"
+  msg_ok "Created ${BUILDS_DIR}"
 
   msg_info "Downloading Docker Compose file"
   curl -fsSL "https://raw.githubusercontent.com/getarcaneapp/arcane/refs/heads/main/docker/examples/compose.basic.yaml" -o "$COMPOSE_FILE"
@@ -103,6 +115,7 @@ function install() {
 
   msg_info "Configuring compose and env files"
   sed -i '/^[[:space:]]*#/!s|/host/path/to/projects|'"$PROJ_DIR"'|g' "$COMPOSE_FILE"
+  sed -i '/^[[:space:]]*#/!s|/host/path/to/builds|'"$BUILDS_DIR"'|g' "$COMPOSE_FILE"
   sed -i '/^[[:space:]]*#/!s|ENCRYPTION_KEY=.*|ENCRYPTION_KEY='"$ENCRYPTION_KEY"'|g' "$COMPOSE_FILE"
   sed -i '/^[[:space:]]*#/!s|JWT_SECRET=.*|JWT_SECRET='"$JWT_SECRET"'|g' "$COMPOSE_FILE"
   sed -i '/^[[:space:]]*#/!s|APP_URL=.*|APP_URL=http://localhost:'"$DEFAULT_PORT"'|g' "$ENV_FILE"

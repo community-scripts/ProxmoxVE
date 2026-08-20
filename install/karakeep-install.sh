@@ -31,8 +31,9 @@ setup_meilisearch
 
 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep" "tarball"
 cd /opt/karakeep
+# Node 24.19.x crashes better-sqlite3 on cleanup (karakeep-app/karakeep#2989); stay on 22 LTS until upstream reverts.
 MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
-NODE_VERSION="24" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
 msg_info "Installing external JavaScript Extension for yt-dlp"
 $STD pip install -U yt-dlp-ejs --break-system-packages

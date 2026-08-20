@@ -103,6 +103,9 @@ cat <<EOF >/etc/clickhouse-server/config.d/cluster.xml
         <shard>01</shard>
         <replica>01</replica>
     </macros>
+    <merge_tree>
+      <allow_dimensions_outside_sorting_key>1</allow_dimensions_outside_sorting_key>
+    </merge_tree>
 </clickhouse>
 EOF
 systemctl enable -q --now clickhouse-server

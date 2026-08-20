@@ -9,7 +9,7 @@ APP="PatchMon"
 var_tags="${var_tags:-monitoring}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
-var_disk="${var_disk:-4}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
@@ -76,6 +76,15 @@ EOF
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-$(arch_resolve)"
     mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
+
+    msg_info "Updating SCAP Content"
+    RELEASE=$(get_latest_github_release "ComplianceAsCode/content")
+    curl_with_retry "https://github.com/ComplianceAsCode/content/releases/download/v${RELEASE}/scap-security-guide-${RELEASE}.tar.gz" "/tmp/ssg.tar.gz"
+    mkdir -p /opt/patchmon/ssg-content
+    find /opt/patchmon/ssg-content -mindepth 1 -delete
+    tar -xzf /tmp/ssg.tar.gz -C /opt/patchmon/ssg-content --strip-components=1 --wildcards '*/ssg-*-ds.xml'
+    rm -f /tmp/ssg.tar.gz
+    msg_ok "Updated SCAP Content"
 
     restore_backup
 

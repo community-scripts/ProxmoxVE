@@ -39,7 +39,15 @@ function update_script() {
       /opt/ampache/public/play/.htaccess \
       /opt/ampache/advanced-config
 
-    fetch_and_deploy_gh_release "Ampache" "ampache/ampache" "prebuild" "latest" "/opt/ampache" "ampache-*_all_php8.4.zip"
+    if ! dpkg -l 2>/dev/null | grep -q "libapache2-mod-php8.5"; then
+      PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
+      sed -i -e 's/upload_max_filesize = .*/upload_max_filesize = 100M/' \
+        -e 's/post_max_size = .*/post_max_size = 100M/' \
+        -e 's/max_execution_time = .*/max_execution_time = 600/' \
+        -e 's/memory_limit = .*/memory_limit = 512M/' /etc/php/8.5/apache2/php.ini
+    fi
+
+    fetch_and_deploy_gh_release "Ampache" "ampache/ampache" "prebuild" "latest" "/opt/ampache" "ampache-*_all_php8.5.zip"
 
     restore_backup
     chmod 664 /opt/ampache/public/rest/.htaccess /opt/ampache/public/play/.htaccess

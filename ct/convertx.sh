@@ -34,7 +34,19 @@ function update_script() {
     systemctl stop convertx
     msg_info "Stopped Service"
 
-    ensure_dependencies libreoffice-writer
+    ensure_dependencies libreoffice-writer dasel graphicsmagick libemail-outlook-message-perl libheif-examples libjxl-tools resvg
+
+    if ! command -v markitdown &>/dev/null; then
+      setup_uv
+      msg_info "Installing markitdown"
+      export UV_TOOL_BIN_DIR=/usr/local/bin
+      $STD uv tool install "markitdown[all]"
+      msg_ok "Installed markitdown"
+    fi
+
+    if ! command -v vtracer &>/dev/null; then
+      fetch_and_deploy_gh_release "vtracer" "visioncortex/vtracer" "prebuild" "0.6.4" "/usr/local/bin" "vtracer-$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
+    fi
 
     create_backup /opt/convertx/data
 

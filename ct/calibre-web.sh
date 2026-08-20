@@ -38,15 +38,18 @@ function update_script() {
     create_backup /opt/calibre-web/app.db \
       /opt/calibre-web/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibre-web*.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibreweb*.tar.gz"
     setup_uv
 
     msg_info "Installing Dependencies"
     cd /opt/calibre-web
     $STD uv venv --clear /opt/calibre-web/.venv
     $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir --upgrade pip setuptools wheel
-    $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir -r requirements.txt
+    $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir .
     msg_ok "Installed Dependencies"
+
+    sed -i 's|^ExecStart=.*|ExecStart=/opt/calibre-web/.venv/bin/cps|' /etc/systemd/system/calibre-web.service
+    $STD systemctl daemon-reload
 
     restore_backup
 

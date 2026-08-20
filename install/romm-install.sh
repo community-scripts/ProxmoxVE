@@ -42,16 +42,40 @@ $STD apt install -y \
   tzdata
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Angie with mod_zip module"
+msg_info "Installing Angie with mod_zip and njs modules"
 setup_deb822_repo \
   "angie" \
   "https://angie.software/keys/angie-signing.gpg" \
   "https://download.angie.software/angie/debian/$(get_os_info version_id)" \
   "$(get_os_info codename)" \
   "main"
-$STD apt-get install -y angie angie-module-zip
-sed -i '1i load_module modules/ngx_http_zip_module.so;' /etc/angie/angie.conf
-msg_ok "Installed Angie with mod_zip module"
+$STD apt-get install -y angie angie-module-zip angie-module-njs
+sed -i '1i load_module modules/ngx_http_zip_module.so;\nload_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
+mkdir -p /etc/angie/js
+cat <<'EOF' >/etc/angie/js/decode.js
+// Decode a Base64 encoded string received as a query parameter named 'value',
+// and return the decoded value in the response body.
+function decodeBase64(r) {
+  var encodedValue = r.args.value;
+
+  if (!encodedValue) {
+    r.return(400, "Missing 'value' query parameter");
+    return;
+  }
+
+  try {
+    // Use Buffer to return raw bytes — atob() returns a JS string which r.return()
+    // would re-encode as UTF-8, corrupting any non-ASCII bytes (e.g. in filenames
+    // like "Pokémon") and causing CRC mismatches in the mod_zip manifest.
+    r.return(200, Buffer.from(encodedValue, 'base64'));
+  } catch (e) {
+    r.return(400, "Invalid Base64 encoding");
+  }
+}
+
+export default { decodeBase64 };
+EOF
+msg_ok "Installed Angie with mod_zip and njs modules"
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 setup_mariadb
@@ -63,7 +87,8 @@ mkdir -p /opt/romm \
   /var/lib/romm/resources \
   /var/lib/romm/assets/{saves,states,screenshots} \
   /var/lib/romm/library/roms \
-  /var/lib/romm/library/bios
+  /var/lib/romm/library/bios \
+  /var/lib/romm/cache
 msg_ok "Created directories"
 
 msg_info "Creating configuration file"
@@ -136,8 +161,6 @@ else
 fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
-fetch_and_deploy_gh_release "ruffle" "ruffle-rs/ruffle" "prebuild" "latest" "/opt/romm/frontend/dist/assets/ruffle" "ruffle-*-web-selfhosted.zip"
-fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
 
 msg_info "Creating environment file"
 sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
@@ -214,8 +237,13 @@ ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
 ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
 msg_ok "Set up RomM Frontend"
 
+fetch_and_deploy_gh_release "ruffle" "ruffle-rs/ruffle" "prebuild" "latest" "/opt/romm/frontend/dist/assets/ruffle" "ruffle-*-web-selfhosted.zip"
+fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
+
 msg_info "Configuring Angie"
 cat <<'EOF' >/etc/angie/http.d/romm.conf
+js_import /etc/angie/js/decode.js;
+
 upstream romm_backend {
     server 127.0.0.1:5000;
 }
@@ -282,10 +310,24 @@ server {
         internal;
         alias /var/lib/romm/library/;
     }
+
+    # Internally redirect cached zip file requests (Range-resumable downloads)
+    location /cache/ {
+        internal;
+        alias /var/lib/romm/cache/;
+    }
+
+    # Internal decoding endpoint, used by mod_zip to decode base64-encoded
+    # multi-file manifest entries (e.g. the generated .m3u for multi-disc games)
+    location /decode {
+        internal;
+        js_content decode.decodeBase64;
+    }
 }
 EOF
 
-sed -i "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" /etc/angie/http.d/romm.conf
+sed -i -e "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" \
+  -e "s|alias /var/lib/romm/cache/;|alias ${ROMM_BASE}/cache/;|" /etc/angie/http.d/romm.conf
 rm -f /etc/angie/http.d/default.conf
 systemctl restart angie
 systemctl enable -q --now angie

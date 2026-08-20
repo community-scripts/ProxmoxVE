@@ -1336,6 +1336,10 @@ create_backup() {
       msg_warn "Skipping backup of '${path}' (not found)"
       continue
     fi
+    if mountpoint -q "$path" 2>/dev/null; then
+      msg_warn "Skipping backup of '${path}' (is a mount point)"
+      continue
+    fi
     dest="${store}/files${path}"
     if ! mkdir -p "$(dirname "$dest")" || ! cp -a "$path" "$dest"; then
       msg_error "Backup of '${path}' failed - aborting update"
@@ -2524,9 +2528,9 @@ _download_source_tarball() {
 # directory). Extracts <tarball_path> into <workdir>, then copies the contents
 # of that top-level directory into <target>.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
-#     up config dotfiles like .env via create_backup and call restore_backup
-#     BEFORE any build step that sources them).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included, mount
+#     points preserved — back up config dotfiles like .env via create_backup
+#     and call restore_backup BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and is responsible for its
 #     cleanup (typically via a RETURN trap on its tmpdir).
 #   - cp failures are non-fatal here, matching the previous inline behavior.
@@ -2538,7 +2542,7 @@ _deploy_source_tarball() {
 
   mkdir -p "$target"
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${target:?}" -mindepth 1 -delete
+    find "${target:?}" -mindepth 1 \( -type d -exec mountpoint -q {} \; -prune \) -o -print0 | xargs -0 rm -rf --
   fi
 
   tar --no-same-owner -xzf "$tarball" -C "$workdir" || {
@@ -2564,9 +2568,9 @@ _deploy_source_tarball() {
 # a single top-level directory, that directory is stripped (its contents land
 # directly in <target>); otherwise the archive contents are copied as-is.
 #
-#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included — back
-#     up config dotfiles like .env via create_backup and call restore_backup
-#     BEFORE any build step that sources them).
+#   - Honors CLEAN_INSTALL=1 (wipes <target> first, dotfiles included, mount
+#     points preserved — back up config dotfiles like .env via create_backup
+#     and call restore_backup BEFORE any build step that sources them).
 #   - Does NOT own <workdir>: the caller creates it and cleans it up.
 #
 # Returns: 0 on success, 65 on unsupported format, 251 on extraction failure,
@@ -2575,11 +2579,6 @@ _deploy_source_tarball() {
 _deploy_unpacked_archive() {
   local archive="$1" target="$2" workdir="$3"
   local filename="${archive##*/}"
-
-  mkdir -p "$target"
-  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${target:?}" -mindepth 1 -delete
-  fi
 
   if [[ "$filename" == *.zip ]]; then
     ensure_dependencies unzip
@@ -2607,38 +2606,44 @@ _deploy_unpacked_archive() {
     return 65
   fi
 
-  local top_entries inner_dir
+  local top_entries inner_dir source_dir
   top_entries=$(find "$workdir" -mindepth 1 -maxdepth 1)
   if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
     inner_dir="$top_entries"
-    shopt -s dotglob nullglob
-    if compgen -G "$inner_dir/*" >/dev/null; then
-      cp -r "$inner_dir"/* "$target/" || {
-        msg_error "Failed to copy contents from $inner_dir to $target"
-        shopt -u dotglob nullglob
-        return 252
-      }
-    else
-      msg_error "Inner directory is empty: $inner_dir"
-      shopt -u dotglob nullglob
-      return 252
-    fi
-    shopt -u dotglob nullglob
+    source_dir="$inner_dir"
   else
-    shopt -s dotglob nullglob
-    if compgen -G "$workdir/*" >/dev/null; then
-      cp -r "$workdir"/* "$target/" || {
-        msg_error "Failed to copy contents to $target"
-        shopt -u dotglob nullglob
-        return 252
-      }
+    source_dir="$workdir"
+  fi
+
+  shopt -s dotglob nullglob
+  if ! compgen -G "$source_dir/*" >/dev/null; then
+    if [[ -n "$inner_dir" ]]; then
+      msg_error "Inner directory is empty: $inner_dir"
     else
       msg_error "Unpacked archive is empty"
-      shopt -u dotglob nullglob
-      return 252
     fi
     shopt -u dotglob nullglob
+    return 252
   fi
+
+  # <target> is only touched once the payload is known good. Wiping earlier left
+  # CLEAN_INSTALL callers with an empty target directory whenever the download
+  # was truncated, the archive was unreadable, or it unpacked to nothing.
+  mkdir -p "$target"
+  if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+    find "${target:?}" -mindepth 1 \( -type d -exec mountpoint -q {} \; -prune \) -o -print0 | xargs -0 rm -rf --
+  fi
+
+  if ! cp -r "$source_dir"/* "$target/"; then
+    if [[ -n "$inner_dir" ]]; then
+      msg_error "Failed to copy contents from $inner_dir to $target"
+    else
+      msg_error "Failed to copy contents to $target"
+    fi
+    shopt -u dotglob nullglob
+    return 252
+  fi
+  shopt -u dotglob nullglob
   return 0
 }
 
@@ -4801,8 +4806,8 @@ EOF
 
   # Container Update Check
   # - Skipped entirely when running unattended / non-interactive
-  # - Compose-managed containers: offered via Y/N → docker compose pull + up -d
-  # - Standalone containers: offered via Y/N → image pull only (no stop/rm)
+  # - Lists containers with a newer image available and the command to update
+  #   them; does not pull/recreate anything itself
   if [ "$docker_installed" = true ] && ! _docker_is_noninteractive; then
     msg_info "Checking for container updates"
 
@@ -4840,41 +4845,14 @@ EOF
     if [[ ${#compose_updates[@]} -eq 0 && ${#standalone_updates[@]} -eq 0 ]]; then
       msg_ok "All containers are up-to-date"
     else
-      local reply
+      msg_warn "Updates available (not applied automatically):"
       for entry in "${compose_updates[@]}"; do
         IFS='|' read -r name image compose_workdir compose_service <<<"$entry"
-        reply=""
-        if read -r -t 60 -p "${TAB3}Update ${name} (${image}) via Compose? <y/N> (auto-no in 60s): " reply </dev/tty; then
-          echo ""
-        else
-          echo ""
-        fi
-        if [[ "${reply,,}" =~ ^(y|yes)$ ]]; then
-          msg_info "Updating $name"
-          if (cd "$compose_workdir" && $STD docker compose pull "$compose_service" && $STD docker compose up -d "$compose_service"); then
-            msg_ok "Updated $name"
-          else
-            msg_warn "Could not update $name — try manually in $compose_workdir"
-          fi
-        fi
+        echo -e "${TAB3}${name} (${image}) — update via: cd ${compose_workdir} && docker compose pull ${compose_service} && docker compose up -d ${compose_service}"
       done
-
       for entry in "${standalone_updates[@]}"; do
         IFS='|' read -r name image <<<"$entry"
-        reply=""
-        if read -r -t 60 -p "${TAB3}Pull new image for ${name} (${image})? <y/N> (auto-no in 60s): " reply </dev/tty; then
-          echo ""
-        else
-          echo ""
-        fi
-        if [[ "${reply,,}" =~ ^(y|yes)$ ]]; then
-          msg_info "Pulling new image for $name"
-          if $STD docker pull "$image"; then
-            msg_ok "New image available for $name — recreate the container to apply the update"
-          else
-            msg_warn "Failed to pull image for $name"
-          fi
-        fi
+        echo -e "${TAB3}${name} (${image}) — update via: docker pull ${image} && docker restart ${name}"
       done
     fi
   fi
@@ -7732,6 +7710,10 @@ setup_nodejs() {
     fi
   fi
 
+  if [[ "$(npm -v 2>/dev/null | cut -d. -f1)" -ge 11 ]]; then
+    $STD npm config set dangerously-allow-all-scripts true --location=global 2>/dev/null || true
+  fi
+
   # Set a safe default heap limit for Node.js builds if not explicitly provided.
   # Priority:
   #   1) NODE_OPTIONS (caller/user override)
@@ -9390,7 +9372,7 @@ fetch_and_deploy_from_url() {
   mkdir -p "$directory"
 
   if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
-    find "${directory:?}" -mindepth 1 -delete
+    find "${directory:?}" -mindepth 1 \( -type d -exec mountpoint -q {} \; -prune \) -o -print0 | xargs -0 rm -rf --
   fi
 
   local unpack_tmp

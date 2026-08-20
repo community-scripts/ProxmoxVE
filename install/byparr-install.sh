@@ -58,7 +58,7 @@ fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr" "tarball" "latest"
 msg_info "Configuring Byparr"
 cd /opt/Byparr
 $STD uv sync --link-mode copy
-$STD uv run camoufox fetch
+$STD uv run python -m invisible_playwright fetch
 msg_ok "Configured Byparr"
 
 msg_info "Creating Service"

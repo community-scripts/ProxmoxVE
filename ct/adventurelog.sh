@@ -60,7 +60,6 @@ function update_script() {
     $STD .venv/bin/python -m manage migrate
 
     cd /opt/adventurelog/frontend
-    grep -q "^dangerouslyAllowAllBuilds:" ./pnpm-workspace.yaml 2>/dev/null || echo "dangerouslyAllowAllBuilds: true" >>./pnpm-workspace.yaml
     $STD pnpm i
     $STD pnpm build
     msg_ok "Updated AdventureLog"

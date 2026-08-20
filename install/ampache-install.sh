@@ -27,11 +27,11 @@ $STD apt install -y \
   libvpx-dev
 msg_ok "Installed dependencies"
 
-PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
 setup_mariadb
 MARIADB_DB_USER="ampache" MARIADB_DB_NAME="ampache" setup_mariadb_db
 
-fetch_and_deploy_gh_release "ampache" "ampache/ampache" "prebuild" "latest" "/opt/ampache" "ampache-*_all_php8.4.zip"
+fetch_and_deploy_gh_release "ampache" "ampache/ampache" "prebuild" "latest" "/opt/ampache" "ampache-*_all_php8.5.zip"
 
 msg_info "Setting up Ampache"
 rm -rf /var/www/html
@@ -58,7 +58,7 @@ msg_info "Configuring PHP"
 sed -i -e 's/upload_max_filesize = .*/upload_max_filesize = 100M/' \
   -e 's/post_max_size = .*/post_max_size = 100M/' \
   -e 's/max_execution_time = .*/max_execution_time = 600/' \
-  -e 's/memory_limit = .*/memory_limit = 512M/' /etc/php/8.4/apache2/php.ini
+  -e 's/memory_limit = .*/memory_limit = 512M/' /etc/php/8.5/apache2/php.ini
 $STD a2enmod rewrite
 $STD systemctl restart apache2
 msg_ok "Configured PHP"

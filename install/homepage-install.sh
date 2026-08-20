@@ -25,14 +25,29 @@ msg_info "Installing Homepage (Patience)"
 mkdir -p /opt/homepage/config
 cd /opt/homepage
 cp /opt/homepage/src/skeleton/* /opt/homepage/config
-echo 'onlyBuiltDependencies=*' >> .npmrc
+echo 'onlyBuiltDependencies=*' >>.npmrc
 $STD pnpm install
 export NEXT_PUBLIC_VERSION="v$RELEASE"
 export NEXT_PUBLIC_REVISION="source"
 export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | jq -r '.published_at')
 export NEXT_TELEMETRY_DISABLED=1
 $STD pnpm build
-echo "HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000" >/opt/homepage/.env
+cat <<EOF >/opt/homepage/.env
+HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000
+## Optional Authentication
+# HOMEPAGE_AUTH_ENABLED=true
+# HOMEPAGE_AUTH_SECRET="$(openssl rand -base64 32)"
+# HOMEPAGE_EXTERNAL_URL=<your-external-url>
+## Uncomment below and use strong, unique password for password login
+# HOMEPAGE_AUTH_PASSWORD=
+## Uncomment and fill in below for OIDC login
+# HOMEPAGE_OIDC_ISSUER=
+# HOMEPAGE_OIDC_CLIENT_ID=
+# HOMEPAGE_OIDC_CLIENT_SECRET=
+# HOMEPAGE_OIDC_SCOPE=openid email profile
+# HOMEPAGE_OIDC_NAME=
+EOF
+chmod 600 /opt/homepage/.env
 msg_ok "Installed Homepage"
 
 msg_info "Creating Service"

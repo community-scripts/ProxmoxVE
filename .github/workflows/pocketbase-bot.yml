@@ -323,9 +323,10 @@ jobs:
               '/pocketbase <slug> method remove <type>\n' +
               '```\n' +
               'Method fields: `cpu` `ram` `hdd` `os` `version` `config_path` `script`\n\n' +
-              '**Editable fields:** `name` `description` `logo` `documentation` `website` `project_url` `github` ' +
+              '**Editable fields:** `name` `description` `logo` `documentation` `website` `project_url` `repository` ' +
               '`config_path` `port` `default_user` `default_passwd` ' +
-              '`updateable` `privileged` `has_arm` `is_dev` ' +
+              '`updateable` `privileged` `is_dev` ' +
+              '`architectures` (amd64,arm64) `platforms` (pve,incus) ' +
               '`is_disabled` `disable_message` `is_deleted` `deleted_message`';
 
             if (!withoutCmd) {
@@ -504,7 +505,8 @@ jobs:
               out.push('- **Port:** ' + (record.port != null ? '`' + record.port + '`' : '—'));
               out.push('- **Updateable:** ' + (record.updateable ? 'Yes' : 'No'));
               out.push('- **Privileged:** ' + (record.privileged ? 'Yes' : 'No'));
-              out.push('- **ARM:** ' + (record.has_arm ? 'Yes' : 'No'));
+              out.push('- **Architectures:** ' + ((record.architectures || []).join(', ') || 'amd64'));
+              out.push('- **Platforms:** ' + ((record.platforms || []).join(', ') || 'pve'));
               if (record.is_dev) out.push('- **Dev:** Yes');
               if (record.is_disabled) out.push('- **Disabled:** Yes' + (record.disable_message ? ' — ' + record.disable_message : ''));
               if (record.is_deleted) out.push('- **Deleted:** Yes' + (record.deleted_message ? ' — ' + record.deleted_message : ''));
@@ -838,7 +840,7 @@ jobs:
               const fieldName = setMatch[1].toLowerCase();
               const SET_ALLOWED = {
                 name: 'string', description: 'string', logo: 'string',
-                documentation: 'string', website: 'string', project_url: 'string', github: 'string',
+                documentation: 'string', website: 'string', project_url: 'string', repository: 'string',
                 config_path: 'string', disable_message: 'string', deleted_message: 'string'
               };
               if (!SET_ALLOWED[fieldName]) {
@@ -888,7 +890,7 @@ jobs:
                 documentation:    'string',
                 website:          'string',
                 project_url:      'string',
-                github:           'string',
+                repository:       'string',
                 config_path:      'string',
                 tags:             'string',
                 port:             'number',
@@ -897,7 +899,8 @@ jobs:
                 unprivileged:     'number',
                 updateable:       'boolean',
                 privileged:       'boolean',
-                has_arm:          'boolean',
+                architectures:    'select_list',
+                platforms:        'select_list',
                 is_dev:           'boolean',
                 is_disabled:      'boolean',
                 disable_message:  'string',
@@ -924,6 +927,10 @@ jobs:
               }
 
               // Cast values to correct types
+              const SELECT_VALUES = {
+                architectures: ['amd64', 'arm64'],
+                platforms: ['pve', 'incus'],
+              };
               const payload = {};
               for (const [key, rawVal] of Object.entries(parsedFields)) {
                 const type = ALLOWED_FIELDS[key];
@@ -943,6 +950,18 @@ jobs:
                     process.exit(0);
                   }
                   payload[key] = n;
+                } else if (type === 'select_list') {
+                  // architectures/platforms are multi-selects over a closed set,
+                  // so an unknown value is rejected rather than stored.
+                  const allowed = SELECT_VALUES[key] || [];
+                  const values = rawVal.split(',').map(function (v) { return v.trim(); }).filter(Boolean);
+                  const bad = values.filter(function (v) { return allowed.indexOf(v) === -1; });
+                  if (bad.length > 0) {
+                    await addReaction('-1');
+                    await postComment('❌ **PocketBase Bot**: `' + key + '` accepts ' + allowed.join(', ') + ' — got: `' + bad.join(', ') + '`');
+                    process.exit(0);
+                  }
+                  payload[key] = values;
                 } else if (type === 'nullable_string') {
                   payload[key] = rawVal === '' ? null : rawVal;
                 } else {

@@ -39,15 +39,15 @@ function update_script() {
 
     create_backup /opt/homepage/.env /opt/homepage/config
     BACKUP_DIR=/opt/homepage-assets.backup create_backup /opt/homepage/public/images /opt/homepage/public/icons
-    
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
-    
+
     restore_backup
 
     msg_info "Updating Homepage (Patience)"
     RELEASE=$(get_latest_github_release "gethomepage/homepage")
     cd /opt/homepage
-    echo 'onlyBuiltDependencies=*' >> .npmrc
+    echo 'onlyBuiltDependencies=*' >>.npmrc
     $STD pnpm install
     $STD pnpm update --no-save caniuse-lite
     export NEXT_PUBLIC_VERSION="v$RELEASE"
@@ -56,6 +56,27 @@ function update_script() {
     export NEXT_TELEMETRY_DISABLED=1
     $STD pnpm build
     BACKUP_DIR=/opt/homepage-assets.backup restore_backup
+    if ! grep -q 'AUTH' /opt/homepage/.env; then
+      msg_info "Updating .env"
+      cp /opt/homepage/.env /opt/homepage/env.bak
+      cat <<EOF >>/opt/homepage/.env
+## Optional Authentication
+# HOMEPAGE_AUTH_ENABLED=true
+# HOMEPAGE_AUTH_SECRET="$(openssl rand -base64 32)"
+# HOMEPAGE_EXTERNAL_URL=<your-external-url>
+## Uncomment below and use strong, unique password for password login
+# HOMEPAGE_AUTH_PASSWORD=
+## Uncomment and fill in below for OIDC login
+# HOMEPAGE_OIDC_ISSUER=
+# HOMEPAGE_OIDC_CLIENT_ID=
+# HOMEPAGE_OIDC_CLIENT_SECRET=
+# HOMEPAGE_OIDC_SCOPE=openid email profile
+# HOMEPAGE_OIDC_NAME=
+EOF
+      msg_ok "Updated .env"
+      rm /opt/homepage/env.bak
+      chmod 600 /opt/homepage/.env
+    fi
     msg_ok "Updated Homepage"
 
     msg_info "Starting service"

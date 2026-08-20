@@ -48,6 +48,7 @@ $STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" "$SITE_SET
 $STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" "$SITE_SETTINGS"
 $STD yarn install --prefer-offline --frozen-lockfile --non-interactive --production=false --network-timeout 1000000
 $STD yarn generate
+$STD yarn cache clean
 msg_ok "Built Frontend"
 
 msg_info "Copying Built Frontend"

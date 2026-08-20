@@ -57,6 +57,7 @@ while read -r line; do
   CTID_MENU+=("$TAG" "$ITEM" "OFF")
 done < <(pct list | awk 'NR>1')
 
+stop_spinner
 CTID=""
 while [[ -z "${CTID}" ]]; do
   CTID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --radiolist \

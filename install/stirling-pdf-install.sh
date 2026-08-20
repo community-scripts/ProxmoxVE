@@ -34,7 +34,11 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.12" setup_uv
 JAVA_VERSION="25" setup_java
 
-read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response
+if ! read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response; then
+  # No interactive stdin (EOF): fall back to the no-login install instead of
+  # silently selecting login, which the -z test below would otherwise do.
+  response="n"
+fi
 response=${response,,} # Convert to lowercase
 login_mode="false"
 if [[ "$response" == "y" || "$response" == "yes" || -z "$response" ]]; then
@@ -72,7 +76,10 @@ $STD uv pip install \
   pillow \
   pdf2image
 $STD apt install -y python3-uno python3-pip
-$STD pip3 install --break-system-packages --timeout=120 unoserver
+# Install unoserver for the system Python, not the venv activated above: `uno` is
+# provided by python3-uno for /usr/bin/python3 only, and unoserver.service expects
+# /usr/local/bin/unoserver. A bare `pip3` here resolves to the venv's pip.
+$STD /usr/bin/python3 -m pip install --break-system-packages --timeout=120 unoserver
 ln -sf /opt/.venv/bin/python3 /usr/local/bin/python3
 ln -sf /opt/.venv/bin/pip /usr/local/bin/pip
 msg_ok "Installed Python Dependencies"
@@ -104,7 +111,7 @@ PATH=/opt/.venv/bin:/usr/lib/libreoffice/program:/usr/local/sbin:/usr/local/bin:
 EOF
 
 if [[ "$login_mode" == "true" ]]; then
-  cat <<EOF >/opt/Stirling-PDF/.env
+  cat <<EOF >>/opt/Stirling-PDF/.env
 # activate Login
 DISABLE_ADDITIONAL_FEATURES=false
 SECURITY_ENABLELOGIN=true
@@ -125,27 +132,12 @@ $STD fc-cache -fv
 msg_ok "Font Cache Updated"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/libreoffice-listener.service
-[Unit]
-Description=LibreOffice Headless Listener Service
-After=network.target
-
-[Service]
-Type=simple
-User=root
-Group=root
-ExecStart=/usr/lib/libreoffice/program/soffice --headless --invisible --nodefault --nofirststartwizard --nolockcheck --nologo --accept="socket,host=127.0.0.1,port=2002;urp;StarOffice.ComponentContext"
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
+# unoserver starts and supervises its own LibreOffice on UNO port 2002, so a separate
+# listener on that port only collides with it. Do not reintroduce one.
 cat <<EOF >/etc/systemd/system/stirlingpdf.service
 [Unit]
 Description=Stirling-PDF service
-After=syslog.target network.target libreoffice-listener.service
-Requires=libreoffice-listener.service
+After=syslog.target network.target unoserver.service
 
 [Service]
 SuccessExitStatus=143
@@ -166,8 +158,7 @@ EOF
 cat <<EOF >/etc/systemd/system/unoserver.service
 [Unit]
 Description=UnoServer RPC Interface
-After=libreoffice-listener.service
-Requires=libreoffice-listener.service
+After=network.target
 
 [Service]
 Type=simple
@@ -179,9 +170,8 @@ EnvironmentFile=/opt/Stirling-PDF/.env
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now libreoffice-listener
-systemctl enable -q --now stirlingpdf
 systemctl enable -q --now unoserver
+systemctl enable -q --now stirlingpdf
 msg_ok "Created Service"
 
 motd_ssh

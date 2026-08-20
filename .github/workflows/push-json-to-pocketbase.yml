@@ -179,7 +179,19 @@ jobs:
             if (resolvedType) payload.type = resolvedType;
             var resolvedCats = (data.categories || []).map(function(n) { return categoryNameToPbId[categoryIdToName[n]]; }).filter(Boolean);
             if (resolvedCats.length) payload.categories = resolvedCats;
-            if (data.has_arm !== undefined) payload.has_arm = data.has_arm === true || data.has_arm === 'true';
+            // architectures replaces has_arm: a boolean could say "also ARM" but
+            // not "ARM only" or "amd64 only". A record written before the field
+            // existed is read through the old key so nothing silently drops.
+            if (Array.isArray(data.architectures)) {
+              payload.architectures = data.architectures.filter(function (a) { return a === 'amd64' || a === 'arm64'; });
+            } else if (data.has_arm !== undefined) {
+              payload.architectures = (data.has_arm === true || data.has_arm === 'true') ? ['amd64', 'arm64'] : ['amd64'];
+            }
+            if (Array.isArray(data.platforms)) {
+              payload.platforms = data.platforms.filter(function (p) { return p === 'pve' || p === 'incus'; });
+            }
+            if (Array.isArray(data.app_vars)) payload.app_vars = data.app_vars;
+            if (data.repository !== undefined) payload.repository = data.repository;
             if (data.version !== undefined) payload.version = data.version;
             if (data.changelog !== undefined) payload.changelog = data.changelog;
             if (data.screenshots !== undefined) payload.screenshots = data.screenshots;

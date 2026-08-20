@@ -20,10 +20,15 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   assimp-utils \
   calibre \
+  dasel \
   dcraw \
   dvisvgm \
   ffmpeg \
+  graphicsmagick \
   inkscape \
+  libemail-outlook-message-perl \
+  libheif-examples \
+  libjxl-tools \
   libreoffice-writer \
   libva2 \
   libvips-tools \
@@ -33,12 +38,22 @@ $STD apt install -y \
   poppler-utils \
   potrace \
   python3-numpy \
+  resvg \
   texlive \
   texlive-fonts-recommended \
   texlive-latex-extra \
   texlive-latex-recommended \
   texlive-xetex
 msg_ok "Installed Dependencies"
+
+setup_uv
+
+msg_info "Installing markitdown"
+export UV_TOOL_BIN_DIR=/usr/local/bin
+$STD uv tool install "markitdown[all]"
+msg_ok "Installed markitdown"
+
+fetch_and_deploy_gh_release "vtracer" "visioncortex/vtracer" "prebuild" "0.6.4" "/usr/local/bin" "vtracer-$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.gz"
 
 NODE_VERSION="22" NODE_MODULE="bun" setup_nodejs
 fetch_and_deploy_gh_release "ConvertX" "C4illin/ConvertX" "tarball" "latest" "/opt/convertx"

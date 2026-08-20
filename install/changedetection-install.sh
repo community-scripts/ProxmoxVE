@@ -83,7 +83,6 @@ $STD apt-get install -y \
   fonts-kacst fonts-liberation \
   fonts-noto-cjk \
   fonts-noto-color-emoji \
-  msttcorefonts \
   fonts-roboto \
   fonts-thai-tlwg \
   fonts-wqy-zenhei

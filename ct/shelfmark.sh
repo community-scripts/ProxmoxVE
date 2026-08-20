@@ -36,8 +36,17 @@ function update_script() {
   if check_for_gh_release "shelfmark" "calibrain/shelfmark"; then
     msg_info "Stopping Service(s)"
     systemctl stop shelfmark
-    [[ -f /etc/systemd/system/chromium.service ]] && systemctl stop chromium
     msg_ok "Stopped Service(s)"
+
+    if [[ $(sed -n '/_BYPASS=/s/[^=]*=//p' /etc/shelfmark/.env) == "true" ]] &&
+      [[ $(sed -n '/BYPASSER=/s/[^=]*=//p' /etc/shelfmark/.env) == "false" ]]; then
+      msg_info "Updating internal bypasser configuration"
+      systemctl disable -q --now chromium 2>/dev/null || true
+      rm -f /etc/systemd/system/chromium.service
+      systemctl daemon-reload
+      sed -i '/DOCKERMODE=/s/false/true/' /etc/shelfmark/.env
+      msg_ok "Updated internal bypasser configuration"
+    fi
 
     [[ -f /etc/systemd/system/flaresolverr.service ]] && if check_for_gh_release "flaresolverr" "Flaresolverr/Flaresolverr"; then
       msg_info "Stopping FlareSolverr service"
@@ -79,7 +88,6 @@ function update_script() {
 
     msg_info "Starting Service(s)"
     systemctl start shelfmark
-    [[ -f /etc/systemd/system/chromium.service ]] && systemctl start chromium
     msg_ok "Started Service(s)"
     msg_ok "Updated successfully!"
   fi

@@ -47,7 +47,7 @@ function update_script() {
     systemctl stop ersatzTV
     msg_ok "Stopped ErsatzTV"
 
-    fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-$(arch_resolve "linux64" "linuxarm64")-gpl-7.1.tar.xz"
+    fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-$(arch_resolve "linux64" "linuxarm64")-gpl-8.1.tar.xz"
 
     msg_info "Set ErsatzTV-ffmpeg links"
     chmod +x /opt/ErsatzTV-ffmpeg/bin/*

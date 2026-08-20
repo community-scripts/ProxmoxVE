@@ -35,7 +35,10 @@ function update_script() {
     systemctl stop tubearchivist tubearchivist-celery tubearchivist-beat
     msg_ok "Stopped Services"
 
-    create_backup /opt/tubearchivist/.env
+    create_backup \
+      /opt/tubearchivist/.env \
+      /opt/tubearchivist/cache \
+      /opt/tubearchivist/backend/run.sh
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tubearchivist" "tubearchivist/tubearchivist" "tarball"
 
@@ -48,6 +51,8 @@ function update_script() {
     mkdir -p /opt/tubearchivist/backend/static
     cp -r /opt/tubearchivist/frontend/dist/* /opt/tubearchivist/backend/static/
     cp /opt/tubearchivist/docker_assets/backend_start.py /opt/tubearchivist/backend/
+    rm -rf /opt/tubearchivist/.venv
+    $STD uv venv /opt/tubearchivist/.venv --python 3.13
     $STD uv pip install --python /opt/tubearchivist/.venv/bin/python -r /opt/tubearchivist/backend/requirements.txt
     if [[ -f /opt/tubearchivist/backend/requirements.plugins.txt ]]; then
       mkdir -p /opt/yt_plugins/bgutil
@@ -59,8 +64,14 @@ function update_script() {
     sed -i 's|^TA_APP_DIR=/opt/tubearchivist$|TA_APP_DIR=/opt/tubearchivist/backend|' /opt/tubearchivist/.env
     sed -i 's|^TA_CACHE_DIR=/opt/tubearchivist/cache$|TA_CACHE_DIR=/cache|' /opt/tubearchivist/.env
     sed -i 's|^TA_MEDIA_DIR=/opt/tubearchivist/media$|TA_MEDIA_DIR=/youtube|' /opt/tubearchivist/.env
-    ln -sf /opt/tubearchivist/cache /cache
-    ln -sf /opt/tubearchivist/media /youtube
+    ln -sfn /opt/tubearchivist/cache /cache
+    # /youtube may already be a user-managed Proxmox bind mount. Only create the symlink if nothing is there
+    if [[ ! -e /youtube ]]; then
+      mkdir -p /opt/tubearchivist/media
+      ln -sfn /opt/tubearchivist/media /youtube
+    elif ! mountpoint -q /youtube && [[ ! -L /youtube ]]; then
+      msg_error "/youtube exists but is neither a mount nor a symlink - check manually"
+    fi   
     ln -sf /opt/tubearchivist/.env /opt/tubearchivist/backend/.env
     msg_ok "Restored Configuration"
 

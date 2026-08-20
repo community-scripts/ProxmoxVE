@@ -24,10 +24,15 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   exit 10
 fi
 
-# msg_info "Switching SSH to classic (non-socket-activated) mode"
-# systemctl disable --now ssh.socket &>/dev/null || true
-# systemctl enable --now ssh &>/dev/null || true
-# msg_ok "Switched SSH to classic mode"
+msg_info "Making ssh.service reloads behave like restarts"
+mkdir -p /etc/systemd/system/ssh.service.d
+cat <<'EOF' >/etc/systemd/system/ssh.service.d/reload-as-restart.conf
+[Service]
+ExecReload=
+ExecReload=/usr/bin/systemd-run --no-block --quiet /bin/systemctl restart ssh.service
+EOF
+systemctl daemon-reload
+msg_ok "Made ssh.service reloads behave like restarts"
 
 msg_info "Installing NextCloudPi (Patience)"
 $STD bash <(curl -fsSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh)

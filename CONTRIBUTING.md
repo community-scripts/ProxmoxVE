@@ -103,6 +103,55 @@ Key rules at a glance:
 - Quote all variables: `"$VAR"` not `$VAR`
 - Use lowercase variable names
 - Do not hardcode credentials or sensitive values
+- Never prompt without an escape hatch — see below
+
+### Answering a prompt up front
+
+An install script that only asks cannot be deployed unattended. Read the
+variable first and prompt only when it is unset:
+
+```bash
+if [[ -z "${var_admin_user:-}" ]]; then
+  read -r -p "${TAB3}Admin username: " var_admin_user
+fi
+var_admin_user="${var_admin_user:-admin}"
+```
+
+Name them `var_<something>`, the same namespace the container variables use.
+`install/forgejo-runner-install.sh`, `install/pangolin-install.sh`, and `install/docker-install.sh` all
+follow this.
+
+The variable also has to be exported from `ct/<app>.sh`, or it never reaches
+the container — `lxc-attach` carries the caller's environment, but only for
+what was actually exported:
+
+```bash
+export var_admin_user="${var_admin_user:-}"
+```
+
+Declare them on the script's PocketBase record in `app_vars` so the website's
+generator can offer them as fields:
+
+```json
+"app_vars": [
+  {
+    "name": "var_admin_user",
+    "label": "Admin Username",
+    "type": "text",
+    "default": "admin"
+  },
+  {
+    "name": "var_admin_pass",
+    "label": "Admin Password",
+    "type": "password",
+    "secret": true
+  }
+]
+```
+
+`type` is one of `text`, `password`, `number`, `boolean` (`yes`/`no`) or
+`select` (with `options`). Mark anything credential-like `secret` — the
+generator keeps those out of shareable links and out of the on-screen summary.
 
 Full standards and examples: **[community-scripts.org/docs/contribution](https://community-scripts.org/docs/contribution)**
 
@@ -123,8 +172,19 @@ dev_mode="trace,keep" bash -c "$(curl -fsSL https://raw.githubusercontent.com/co
 | `pause`      | Pauses execution at key points before customization          |
 | `breakpoint` | Drops to a shell at hardcoded `breakpoint` calls in scripts  |
 | `logs`       | Saves detailed build logs to `/var/log/community-scripts/`   |
-| `dryrun`     | Bypasses actual container creation (limited support)         |
 | `motd`       | Forces an update of the Message of the Day                   |
+| `net`        | Logs every engine fetch: HTTP status, duration and URL       |
+| `timing`     | Times each step and lists the slowest ones at the end        |
+
+Any flag also prints the resolved context first — where the engine came from,
+both roots and URLs, the app, platform and versions — and repaints the greens
+red, so a dev run is never mistaken for a normal install.
+
+Setting `dev_mode` without naming a flag (`dev_mode=`, `=1`, `=ask`) opens a
+picker before the install menu.
+
+`dryrun` was removed: it only intercepted the `silent()` wrapper, so `pct
+create` still ran and the container was still built.
 
 ---
 

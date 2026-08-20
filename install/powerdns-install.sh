@@ -40,24 +40,25 @@ $STD apt install -y \
   pdns-backend-sqlite3
 sed -i 's/^launch=$/# launch=/' /etc/powerdns/pdns.conf
 rm -f /etc/powerdns/pdns.d/bind.conf
+mkdir -p /var/lib/powerdns
 cat <<EOF >/etc/powerdns/pdns.d/gsqlite3.conf
 launch=gsqlite3
-gsqlite3-database=/opt/poweradmin/powerdns.db
+gsqlite3-database=/var/lib/powerdns/powerdns.db
 EOF
 msg_ok "Setup PowerDNS"
 
 fetch_and_deploy_gh_release "poweradmin" "poweradmin/poweradmin" "tarball"
 
 msg_info "Setting up Poweradmin"
-sqlite3 /opt/poweradmin/powerdns.db </opt/poweradmin/sql/poweradmin-sqlite-db-structure.sql
-sqlite3 /opt/poweradmin/powerdns.db </opt/poweradmin/sql/pdns/49/schema.sqlite3.sql
+sqlite3 /var/lib/powerdns/powerdns.db </opt/poweradmin/sql/poweradmin-sqlite-db-structure.sql
+sqlite3 /var/lib/powerdns/powerdns.db </opt/poweradmin/sql/pdns/49/schema.sqlite3.sql
 PA_ADMIN_USERNAME="admin"
 PA_ADMIN_EMAIL="admin@example.com"
 PA_ADMIN_FULLNAME="Administrator"
 PA_ADMIN_PASSWORD=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
 PA_SESSION_KEY=$(openssl rand -base64 75 | tr -dc 'A-Za-z0-9^@#!(){}[]%_\-+=~' | head -c 50)
 PASSWORD_HASH=$(php -r "echo password_hash(\$argv[1], PASSWORD_DEFAULT);" -- "${PA_ADMIN_PASSWORD}" 2>/dev/null)
-sqlite3 /opt/poweradmin/powerdns.db "INSERT INTO users (username, password, fullname, email, description, perm_templ, active, use_ldap) \
+sqlite3 /var/lib/powerdns/powerdns.db "INSERT INTO users (username, password, fullname, email, description, perm_templ, active, use_ldap) \
   VALUES ('$(escape_sql "${PA_ADMIN_USERNAME}")', '$(escape_sql "${PASSWORD_HASH}")', '$(escape_sql "${PA_ADMIN_FULLNAME}")', \
   '$(escape_sql "${PA_ADMIN_EMAIL}")', 'System Administrator', 1, 1, 0);"
 
@@ -81,7 +82,7 @@ return [
      */
     'database' => [
         'type' => 'sqlite',
-        'file' => '/opt/poweradmin/powerdns.db',
+        'file' => '/var/lib/powerdns/powerdns.db',
     ],
 
     /**
@@ -133,8 +134,8 @@ EOF
 $STD a2enmod rewrite headers
 chown -R www-data:pdns /opt/poweradmin
 chmod 775 /opt/poweradmin
-chown pdns:pdns /opt/poweradmin/powerdns.db
-chmod 664 /opt/poweradmin/powerdns.db
+chown pdns:pdns /var/lib/powerdns/powerdns.db
+chmod 664 /var/lib/powerdns/powerdns.db
 usermod -aG pdns www-data
 $STD systemctl restart pdns apache2
 msg_ok "Created Service"

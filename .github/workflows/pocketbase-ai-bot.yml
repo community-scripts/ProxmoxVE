@@ -314,11 +314,16 @@ jobs:
             // ── Allow-lists (mirror the slash bot) ─────────────────────────────
             const ALLOWED_FIELDS = {
               name: 'string', description: 'string', logo: 'string', documentation: 'string',
-              website: 'string', project_url: 'string', github: 'string', config_path: 'string',
+              website: 'string', project_url: 'string', repository: 'string', config_path: 'string',
               tags: 'string', port: 'number', default_user: 'nullable_string', default_passwd: 'nullable_string',
-              unprivileged: 'number', updateable: 'boolean', privileged: 'boolean', has_arm: 'boolean',
+              unprivileged: 'number', updateable: 'boolean', privileged: 'boolean',
+              architectures: 'select_list', platforms: 'select_list',
               is_dev: 'boolean', is_disabled: 'boolean', disable_message: 'string',
               is_deleted: 'boolean', deleted_message: 'string'
+            };
+            const SELECT_VALUES = {
+              architectures: ['amd64', 'arm64'],
+              platforms: ['pve', 'incus'],
             };
             const FIELD_TO_CT_VAR = { tags: 'var_tags', unprivileged: 'var_unprivileged' };
             const RESOURCE_KEYS = { cpu: 'number', ram: 'number', hdd: 'number', os: 'string', version: 'string' };
@@ -338,6 +343,17 @@ jobs:
                 const n = parseInt(rawVal, 10);
                 if (isNaN(n)) return { error: '`' + key + '` must be a number' };
                 return { value: n };
+              }
+              if (type === 'select_list') {
+                // architectures/platforms are multi-selects over a closed set,
+                // so an unknown value is rejected rather than stored. The model
+                // may hand back an array or a comma-separated string.
+                const allowed = SELECT_VALUES[key] || [];
+                const raw = Array.isArray(rawVal) ? rawVal : String(rawVal == null ? '' : rawVal).split(',');
+                const values = raw.map(function (v) { return String(v).trim(); }).filter(Boolean);
+                const bad = values.filter(function (v) { return allowed.indexOf(v) === -1; });
+                if (bad.length > 0) return { error: '`' + key + '` accepts ' + allowed.join(', ') + ' — got: ' + bad.join(', ') };
+                return { value: values };
               }
               if (type === 'nullable_string') return { value: rawVal === '' || rawVal == null ? null : String(rawVal) };
               return { value: String(rawVal) };
