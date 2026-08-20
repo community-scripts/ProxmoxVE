@@ -540,6 +540,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - scanopy: limit cargo build parallelism to prevent OOM kill [@MickLesk](https://github.com/MickLesk) ([#16623](https://github.com/community-scripts/ProxmoxVE/pull/16623))
     - baikal: fall back to composer update when lock doesn't match [@MickLesk](https://github.com/MickLesk) ([#16625](https://github.com/community-scripts/ProxmoxVE/pull/16625))
 
+  - #### 💥 Breaking Changes
+
+    - update: various script to debian 13 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#16525](https://github.com/community-scripts/ProxmoxVE/pull/16525))
+
 ### 🧰 Tools
 
   - #### 🔧 Refactor
