@@ -24,7 +24,7 @@ Components: main
 Signed-By: /usr/share/keyrings/openziti.gpg
 EOF
 $STD apt update
-$STD apt install -y openziti-controller openziti-console
+$STD apt install -y openziti-controller openziti-console </dev/null
 msg_ok "Installed openziti"
 
 read -r -p "${TAB3}Would you like to go through the auto configuration now? <y/N>" prompt
