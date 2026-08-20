@@ -530,6 +530,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Umbraco ([#16621](https://github.com/community-scripts/ProxmoxVE/pull/16621))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - baikal: fall back to composer update when lock doesn't match [@MickLesk](https://github.com/MickLesk) ([#16625](https://github.com/community-scripts/ProxmoxVE/pull/16625))
+
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - copyparty: use fetch_and_deploy_gh_release for version tracking [@MickLesk](https://github.com/MickLesk) ([#16624](https://github.com/community-scripts/ProxmoxVE/pull/16624))
+
 ## 2026-08-19
 
 ### 🚀 Updated Scripts
