@@ -524,6 +524,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-20
+
+### 🆕 New Scripts
+
+  - Umbraco ([#16621](https://github.com/community-scripts/ProxmoxVE/pull/16621))
+
 ## 2026-08-19
 
 ### 🚀 Updated Scripts
