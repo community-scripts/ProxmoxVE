@@ -40,7 +40,7 @@ EOF
 $STD a2ensite wallos.conf
 $STD a2dissite 000-default.conf
 $STD systemctl restart apache2
-$STD curl http://localhost/endpoints/db/migrate.php
+$STD sudo -u www-data php /opt/wallos/endpoints/db/migrate.php
 msg_ok "Installed Wallos"
 
 msg_info "Setting up Crontabs"

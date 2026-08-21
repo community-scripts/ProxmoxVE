@@ -55,7 +55,8 @@ function update_script() {
     msg_ok "Apache2 Reloaded"
 
     msg_info "Running Database Migration"
-    $STD curl http://localhost/endpoints/db/migrate.php
+    cd /opt/wallos
+    $STD sudo -u www-data php /opt/wallos/endpoints/db/migrate.php
     msg_ok "Ran Database Migration"
     msg_ok "Updated successfully!"
   fi
