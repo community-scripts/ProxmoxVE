@@ -183,19 +183,14 @@ SOURCE_DIR=${STAGING_DIR}/image-source
 $STD git clone -b main "$BASE_REPO" "$BASE_DIR"
 mkdir -p "$SOURCE_DIR"
 
-msg_info "(1/5) Compiling libjxl"
+msg_info "(1/6) Compiling libjxl"
 cd "$STAGING_DIR"
 SOURCE=${SOURCE_DIR}/libjxl
-JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
-JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-LIBJXL_REVISION="332feb17d17311c748445f7ee75c4fb55cc38530"
-# : "${LIBJXL_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libjxl.json)}"
+LIBJXL_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)"
 $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBJXL_REVISION"
 $STD git submodule update --init --recursive --depth 1 --recommend-shallow
-$STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-empty-dht-marker.patch
-$STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-icc-warning.patch
 mkdir build
 cd build
 $STD cmake \
@@ -203,15 +198,60 @@ $STD cmake \
   -DBUILD_TESTING=OFF \
   -DJPEGXL_ENABLE_DOXYGEN=OFF \
   -DJPEGXL_ENABLE_MANPAGES=OFF \
-  -DJPEGXL_ENABLE_PLUGIN_GIMP210=OFF \
   -DJPEGXL_ENABLE_BENCHMARK=OFF \
   -DJPEGXL_ENABLE_EXAMPLES=OFF \
   -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
   -DJPEGXL_FORCE_SYSTEM_HWY=ON \
-  -DJPEGXL_ENABLE_JPEGLI=ON \
-  -DJPEGXL_ENABLE_JPEGLI_LIBJPEG=ON \
-  -DJPEGXL_INSTALL_JPEGLI_LIBJPEG=ON \
+  -DJPEGXL_ENABLE_HWY_AVX3=ON \
+  -DJPEGXL_ENABLE_HWY_AVX3_ZEN4=ON \
+  -DJPEGXL_ENABLE_HWY_SVE=OFF \
+  -DJPEGXL_ENABLE_HWY_SVE2=OFF \
+  -DJPEGXL_ENABLE_HWY_SVE2_128=ON \
   -DJPEGXL_ENABLE_PLUGINS=ON \
+  ..
+$STD cmake --build . -- -j"$(nproc)"
+$STD cmake --install .
+ldconfig /usr/local/lib
+$STD make clean
+cd "$STAGING_DIR"
+rm -rf "$SOURCE"/{build,third_party}
+msg_ok "(1/6) Compiled libjxl"
+
+msg_info "(2/6) Compiling jpegli"
+SOURCE=${SOURCE_DIR}/jpegli
+JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
+JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
+JPEGLI_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/jpegli.json)"
+$STD git clone https://github.com/google/jpegli.git "$SOURCE"
+cd "$SOURCE"
+$STD git reset --hard "$JPEGLI_REVISION"
+$STD git submodule update --init --depth 1 --recommend-shallow third_party/libjpeg-turbo
+$STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-empty-dht-marker.patch
+$STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-icc-warning.patch
+mkdir build
+cd build
+$STD cmake \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DBUILD_TESTING=OFF \
+  -DJPEGLI_ENABLE_DOXYGEN=OFF \
+  -DJPEGLI_ENABLE_MANPAGES=OFF \
+  -DJPEGLI_ENABLE_BENCHMARK=OFF \
+  -DJPEGLI_ENABLE_TOOLS=OFF \
+  -DJPEGLI_ENABLE_DEVTOOLS=OFF \
+  -DJPEGLI_ENABLE_FUZZERS=OFF \
+  -DJPEGLI_ENABLE_JNI=OFF \
+  -DJPEGLI_ENABLE_OPENEXR=OFF \
+  -DJPEGLI_ENABLE_SJPEG=OFF \
+  -DJPEGLI_ENABLE_SKCMS=OFF \
+  -DJPEGLI_FORCE_SYSTEM_HWY=ON \
+  -DJPEGLI_FORCE_SYSTEM_LCMS2=ON \
+  -DJPEGLI_ENABLE_JPEGLI_LIBJPEG=ON \
+  -DJPEGLI_INSTALL_JPEGLI_LIBJPEG=ON \
+  -DJPEGLI_ENABLE_HWY_AVX3=ON \
+  -DJPEGLI_ENABLE_HWY_AVX3_ZEN4=ON \
+  -DJPEGLI_ENABLE_HWY_SVE=OFF \
+  -DJPEGLI_ENABLE_HWY_SVE2=OFF \
+  -DJPEGLI_ENABLE_HWY_SVE2_128=ON \
   -DJPEGLI_LIBJPEG_LIBRARY_SOVERSION="$JPEGLI_LIBJPEG_LIBRARY_SOVERSION" \
   -DJPEGLI_LIBJPEG_LIBRARY_VERSION="$JPEGLI_LIBJPEG_LIBRARY_VERSION" \
   -DLIBJPEG_TURBO_VERSION_NUMBER=2001005 \
@@ -222,9 +262,9 @@ ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/{build,third_party}
-msg_ok "(1/5) Compiled libjxl"
+msg_ok "(2/6) Compiled jpegli"
 
-msg_info "(2/5) Compiling libheif"
+msg_info "(3/6) Compiling libheif"
 SOURCE=${SOURCE_DIR}/libheif
 LIBHEIF_REVISION="62f1b8c76ed4d8305071fdacbe74ef9717bacac5"
 # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
@@ -248,9 +288,9 @@ ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
-msg_ok "(2/5) Compiled libheif"
+msg_ok "(3/6) Compiled libheif"
 
-msg_info "(3/5) Compiling libraw"
+msg_info "(4/6) Compiling libraw"
 SOURCE=${SOURCE_DIR}/libraw
 LIBRAW_REVISION="b860248a89d9082b8e0a1e202e516f46af9adb29"
 # : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
@@ -264,9 +304,9 @@ $STD make install
 ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
-msg_ok "(3/5) Compiled libraw"
+msg_ok "(4/6) Compiled libraw"
 
-msg_info "(4/5) Compiling imagemagick"
+msg_info "(5/6) Compiling imagemagick"
 SOURCE=$SOURCE_DIR/imagemagick
 : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
 $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
@@ -278,11 +318,11 @@ $STD make install
 ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
-msg_ok "(4/5) Compiled imagemagick"
+msg_ok "(5/6) Compiled imagemagick"
 
-msg_info "(5/5) Compiling libvips"
+msg_info "(6/6) Compiling libvips"
 SOURCE=$SOURCE_DIR/libvips
-LIBVIPS_REVISION="e01a4797cabe77d457fdfa7d776b7a7e7ca6d6a7"
+LIBVIPS_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)"
 $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBVIPS_REVISION"
@@ -293,9 +333,10 @@ $STD ninja install
 ldconfig /usr/local/lib
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
-msg_ok "(5/5) Compiled libvips"
+msg_ok "(6/6) Compiled libvips"
 cat <<EOF >~/.immich_library_revisions
 imagemagick: $IMAGEMAGICK_REVISION
+jpegli: $JPEGLI_REVISION
 libheif: $LIBHEIF_REVISION
 libjxl: $LIBJXL_REVISION
 libraw: $LIBRAW_REVISION

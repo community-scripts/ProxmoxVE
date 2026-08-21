@@ -100,7 +100,7 @@ EOF
     fi
   fi
   if [[ -f ~/.immich_library_revisions ]]; then
-    libraries=("libjxl" "libheif" "libraw" "imagemagick" "libvips")
+    libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
     cd "$BASE_DIR"
     msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
     $STD git pull
@@ -382,10 +382,7 @@ PY
 
 function compile_libjxl() {
   SOURCE=${SOURCE_DIR}/libjxl
-  JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
-  JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-  LIBJXL_REVISION="332feb17d17311c748445f7ee75c4fb55cc38530"
-  # : "${LIBJXL_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)}"
+  LIBJXL_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)"
   if [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libjxl"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
@@ -393,8 +390,6 @@ function compile_libjxl() {
     cd "$SOURCE"
     $STD git reset --hard "$LIBJXL_REVISION"
     $STD git submodule update --init --recursive --depth 1 --recommend-shallow
-    $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-empty-dht-marker.patch
-    $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-icc-warning.patch
     mkdir build
     cd build
     $STD cmake \
@@ -402,15 +397,66 @@ function compile_libjxl() {
       -DBUILD_TESTING=OFF \
       -DJPEGXL_ENABLE_DOXYGEN=OFF \
       -DJPEGXL_ENABLE_MANPAGES=OFF \
-      -DJPEGXL_ENABLE_PLUGIN_GIMP210=OFF \
       -DJPEGXL_ENABLE_BENCHMARK=OFF \
       -DJPEGXL_ENABLE_EXAMPLES=OFF \
       -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
       -DJPEGXL_FORCE_SYSTEM_HWY=ON \
-      -DJPEGXL_ENABLE_JPEGLI=ON \
-      -DJPEGXL_ENABLE_JPEGLI_LIBJPEG=ON \
-      -DJPEGXL_INSTALL_JPEGLI_LIBJPEG=ON \
+      -DJPEGXL_ENABLE_HWY_AVX3=ON \
+      -DJPEGXL_ENABLE_HWY_AVX3_ZEN4=ON \
+      -DJPEGXL_ENABLE_HWY_SVE=OFF \
+      -DJPEGXL_ENABLE_HWY_SVE2=OFF \
+      -DJPEGXL_ENABLE_HWY_SVE2_128=ON \
       -DJPEGXL_ENABLE_PLUGINS=ON \
+      ..
+    $STD cmake --build . -- -j"$(nproc)"
+    $STD cmake --install .
+    ldconfig /usr/local/lib
+    $STD make clean
+    cd "$STAGING_DIR"
+    rm -rf "$SOURCE"/{build,third_party}
+    sed -i "s/libjxl: .*$/libjxl: $LIBJXL_REVISION/" ~/.immich_library_revisions
+    msg_ok "Recompiled libjxl"
+  fi
+}
+
+function compile_jpegli() {
+  SOURCE=${SOURCE_DIR}/jpegli
+  JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
+  JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
+  JPEGLI_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/jpegli.json)"
+  if [[ "$JPEGLI_REVISION" != "$(grep 'jpegli' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+    msg_info "Recompiling jpegli"
+    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
+    $STD git clone https://github.com/google/jpegli.git "$SOURCE"
+    cd "$SOURCE"
+    $STD git reset --hard "$JPEGLI_REVISION"
+    $STD git submodule update --init --depth 1 --recommend-shallow third_party/libjpeg-turbo
+    $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-empty-dht-marker.patch
+    $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-icc-warning.patch
+    mkdir build
+    cd build
+    $STD cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_TESTING=OFF \
+      -DJPEGLI_ENABLE_DOXYGEN=OFF \
+      -DJPEGLI_ENABLE_MANPAGES=OFF \
+      -DJPEGLI_ENABLE_BENCHMARK=OFF \
+      -DJPEGLI_ENABLE_TOOLS=OFF \
+      -DJPEGLI_ENABLE_DEVTOOLS=OFF \
+      -DJPEGLI_ENABLE_FUZZERS=OFF \
+      -DJPEGLI_ENABLE_JNI=OFF \
+      -DJPEGLI_ENABLE_OPENEXR=OFF \
+      -DJPEGLI_ENABLE_SJPEG=OFF \
+      -DJPEGLI_ENABLE_SKCMS=OFF \
+      -DJPEGLI_FORCE_SYSTEM_HWY=ON \
+      -DJPEGLI_FORCE_SYSTEM_LCMS2=ON \
+      -DJPEGLI_ENABLE_JPEGLI_LIBJPEG=ON \
+      -DJPEGLI_INSTALL_JPEGLI_LIBJPEG=ON \
+      -DJPEGLI_ENABLE_HWY_AVX3=ON \
+      -DJPEGLI_ENABLE_HWY_AVX3_ZEN4=ON \
+      -DJPEGLI_ENABLE_HWY_SVE=OFF \
+      -DJPEGLI_ENABLE_HWY_SVE2=OFF \
+      -DJPEGLI_ENABLE_HWY_SVE2_128=ON \
       -DJPEGLI_LIBJPEG_LIBRARY_SOVERSION="$JPEGLI_LIBJPEG_LIBRARY_SOVERSION" \
       -DJPEGLI_LIBJPEG_LIBRARY_VERSION="$JPEGLI_LIBJPEG_LIBRARY_VERSION" \
       -DLIBJPEG_TURBO_VERSION_NUMBER=2001005 \
@@ -421,8 +467,8 @@ function compile_libjxl() {
     $STD make clean
     cd "$STAGING_DIR"
     rm -rf "$SOURCE"/{build,third_party}
-    sed -i "s/libjxl: .*$/libjxl: $LIBJXL_REVISION/" ~/.immich_library_revisions
-    msg_ok "Recompiled libjxl"
+    sed -i "s/jpegli: .*$/jpegli: $JPEGLI_REVISION/" ~/.immich_library_revisions
+    msg_ok "Recompiled jpegli"
   fi
 }
 
@@ -504,7 +550,7 @@ function compile_imagemagick() {
 
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
-  LIBVIPS_REVISION="e01a4797cabe77d457fdfa7d776b7a7e7ca6d6a7"
+  LIBVIPS_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)"
   if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
