@@ -530,6 +530,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - bookorbit: bump default RAM to prevent tsc OOM segfault during nest build [@MickLesk](https://github.com/MickLesk) ([#16649](https://github.com/community-scripts/ProxmoxVE/pull/16649))
     - immich: split jpegli into its own build step, resolve library revisions dynamically [@MickLesk](https://github.com/MickLesk) ([#16656](https://github.com/community-scripts/ProxmoxVE/pull/16656))
     - tdarr: make unzip non-interactive to prevent hang [@MickLesk](https://github.com/MickLesk) ([#16648](https://github.com/community-scripts/ProxmoxVE/pull/16648))
     - immich: fix jpegli patch path after upstream base-images split jpegli from libjxl [@MickLesk](https://github.com/MickLesk) ([#16647](https://github.com/community-scripts/ProxmoxVE/pull/16647))
