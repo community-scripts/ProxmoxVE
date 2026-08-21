@@ -29,16 +29,16 @@ $STD apt install -y \
   libvips-dev \
   libheif1 \
   redis-server \
-  fontconfig
+  fontconfig \
+  musl
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="docuseal" PG_DB_USER="docuseal" setup_postgresql_db
 
-msg_info "Downloading Fonts and PDFium"
+msg_info "Downloading Fonts"
 mkdir -p /opt/fonts /usr/share/fonts/noto
-ARCH=$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')
 curl -fsSL -o /opt/fonts/GoNotoKurrent-Regular.ttf \
   https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
 curl -fsSL -o /opt/fonts/GoNotoKurrent-Bold.ttf \
@@ -48,12 +48,15 @@ curl -fsSL -o /opt/fonts/DancingScript-Regular.otf \
 ln -sf /opt/fonts/GoNotoKurrent-Regular.ttf /usr/share/fonts/noto/
 ln -sf /opt/fonts/GoNotoKurrent-Bold.ttf /usr/share/fonts/noto/
 $STD fc-cache -f
-curl -fsSL -o /tmp/pdfium.tgz \
-  "https://github.com/bblanchon/pdfium-binaries/releases/latest/download/pdfium-linux-${ARCH}.tgz"
-mkdir -p /tmp/pdfium && tar -xzf /tmp/pdfium.tgz -C /tmp/pdfium
-cp /tmp/pdfium/lib/libpdfium.so /usr/lib/libpdfium.so
-rm -rf /tmp/pdfium /tmp/pdfium.tgz
-msg_ok "Downloaded Fonts and PDFium"
+msg_ok "Downloaded Fonts"
+
+fetch_and_deploy_gh_release "pdfium" "docusealco/pdfium-binaries" "prebuild" "latest" "/opt/pdfium" "pdfium-musl-$(arch_resolve "x86_64" "aarch64").zip"
+
+msg_info "Installing PDFium"
+install -m 644 /opt/pdfium/lib/libpdfium.so /usr/lib/libpdfium.so
+echo "/usr/lib/$(arch_resolve "x86_64" "aarch64")-linux-musl" >/etc/ld.so.conf.d/musl.conf
+ldconfig
+msg_ok "Installed PDFium"
 
 fetch_and_deploy_gh_release "docuseal" "docusealco/docuseal" "tarball"
 

@@ -30,6 +30,18 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies musl
+  [[ -f /opt/pdfium/lib/libpdfium.so ]] || rm -f "$HOME/.pdfium"
+  fetch_and_deploy_gh_release "pdfium" "docusealco/pdfium-binaries" "prebuild" "latest" "/opt/pdfium" "pdfium-musl-$(arch_resolve "x86_64" "aarch64").zip"
+  if ! cmp -s /opt/pdfium/lib/libpdfium.so /usr/lib/libpdfium.so; then
+    msg_info "Updating PDFium"
+    install -m 644 /opt/pdfium/lib/libpdfium.so /usr/lib/libpdfium.so
+    echo "/usr/lib/$(arch_resolve "x86_64" "aarch64")-linux-musl" >/etc/ld.so.conf.d/musl.conf
+    ldconfig
+    systemctl restart docuseal docuseal-sidekiq
+    msg_ok "Updated PDFium"
+  fi
+
   if check_for_gh_release "docuseal" "docusealco/docuseal"; then
     msg_info "Stopping Services"
     systemctl stop docuseal docuseal-sidekiq
