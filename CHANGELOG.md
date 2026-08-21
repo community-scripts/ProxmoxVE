@@ -530,6 +530,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - wallos: fix: migrations [@CrazyWolf13](https://github.com/CrazyWolf13) ([#16666](https://github.com/community-scripts/ProxmoxVE/pull/16666))
     - barassistant: fix: compatibility with v6 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#16665](https://github.com/community-scripts/ProxmoxVE/pull/16665))
     - Immichframe: remove settings.yaml UUID placeholder [@MickLesk](https://github.com/MickLesk) ([#16660](https://github.com/community-scripts/ProxmoxVE/pull/16660))
     - openziti-controller: redirect stdin from /dev/null to skip postinst's interactive bootstrap prompt [@MickLesk](https://github.com/MickLesk) ([#16650](https://github.com/community-scripts/ProxmoxVE/pull/16650))
