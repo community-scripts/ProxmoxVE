@@ -25,7 +25,7 @@ msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="pdo-sqlite" setup_php
 setup_composer
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="bun" setup_nodejs
 setup_meilisearch
 fetch_and_deploy_gh_release "bar-assistant" "karlomikus/bar-assistant" "tarball" "latest" "/opt/bar-assistant"
 fetch_and_deploy_gh_release "vue-salt-rim" "karlomikus/vue-salt-rim" "tarball" "latest" "/opt/vue-salt-rim"
@@ -68,8 +68,8 @@ window.srConfig = {}
 window.srConfig.API_URL = "http://${LOCAL_IP}/bar"
 window.srConfig.MEILISEARCH_URL = "http://${LOCAL_IP}/search"
 EOF
-$STD npm install
-$STD npm run build
+$STD bun install
+$STD bun run build
 msg_ok "Installed Salt Rim"
 
 msg_info "Creating Service"
