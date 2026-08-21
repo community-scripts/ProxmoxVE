@@ -54,6 +54,7 @@ cp -r build/* /opt/immichframe/wwwroot
 rm -rf /tmp/immichframe
 mkdir -p /opt/immichframe/Config
 curl -fsSL "https://raw.githubusercontent.com/immichFrame/ImmichFrame/main/docker/Settings.example.yml" -o /opt/immichframe/Config/Settings.yml
+sed -i '/^[[:space:]]*- UUID[[:space:]]*$/d' /opt/immichframe/Config/Settings.yml
 useradd -r -s /sbin/nologin -d /opt/immichframe -M immichframe
 chown -R immichframe:immichframe /opt/immichframe
 msg_ok "Setup ImmichFrame"
