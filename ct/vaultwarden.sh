@@ -9,7 +9,6 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 
 APP="Vaultwarden"
 var_tags="${var_tags:-password-manager}"
-var_cpu="${var_cpu:-4}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 if [[ -z "${var_os:-}" ]] && command -v pveversion >/dev/null 2>&1; then
@@ -19,10 +18,12 @@ if [[ -z "${var_os:-}" ]] && command -v pveversion >/dev/null 2>&1; then
 fi
 
 if [[ "${var_os:-}" == "alpine" ]]; then
+  var_cpu="${var_cpu:-1}"
   var_ram="${var_ram:-256}"
   var_disk="${var_disk:-1}"
   var_version="${var_version:-3.24}"
 else
+  var_cpu="${var_cpu:-4}"
   var_ram="${var_ram:-6144}"
   var_disk="${var_disk:-20}"
   var_version="${var_version:-13}"
