@@ -1003,8 +1003,10 @@ get_lxc_ips() {
         fi
     fi
     
-    # Method 3: Direct container command to get ALL IPs if previous methods failed
-    if [[ -z "$ips" ]]; then
+    # Method 3: Merge live IPv4 addresses from running containers.
+    # Earlier methods can find only the primary net0/eth0 address; this probe
+    # also discovers Docker bridges, Tailscale, and other guest interfaces.
+    if [[ "${STATUS_CACHE[lxc_${vmid}]:-}" == "running" ]]; then
         local container_ips=$(timeout 5s pct exec "$vmid" -- ip -4 addr show 2>/dev/null | grep -oE 'inet ([0-9]{1,3}\.){3}[0-9]{1,3}' | awk '{print $2}' | grep -v '127.0.0.1')
         if [[ -n "$container_ips" ]]; then
             while IFS= read -r ip; do
