@@ -524,6 +524,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-22
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - docuseal: use DocuSeal's patched PDFium build to fix service start [@MickLesk](https://github.com/MickLesk) ([#16673](https://github.com/community-scripts/ProxmoxVE/pull/16673))
+
 ## 2026-08-21
 
 ### 🚀 Updated Scripts
