@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y pass
+$STD apt install -y pass dbus-x11
 msg_ok "Installed Dependencies"
 
 msg_info "Creating Service User"
