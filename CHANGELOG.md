@@ -536,6 +536,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - docuseal: use DocuSeal's patched PDFium build to fix service start [@MickLesk](https://github.com/MickLesk) ([#16673](https://github.com/community-scripts/ProxmoxVE/pull/16673))
 
+  - #### ✨ New Features
+
+    - update authentik to 2026.8.0 [@thieneret](https://github.com/thieneret) ([#16674](https://github.com/community-scripts/ProxmoxVE/pull/16674))
+
 ## 2026-08-21
 
 ### 🚀 Updated Scripts
