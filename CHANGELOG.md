@@ -529,6 +529,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-23
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Set default ProxmoxVE raw URL in PVE-UPS & fix var_cpu sorting  [@MickLesk](https://github.com/MickLesk) ([#16689](https://github.com/community-scripts/ProxmoxVE/pull/16689))
+
 ## 2026-08-22
 
 ### 🆕 New Scripts
