@@ -35,11 +35,15 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt/apache-tika
-    curl -fsSL -o tika-server-standard-${RELEASE}.jar "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar"
-    mv --force tika-server-standard.jar tika-server-standard-prev-version.jar
-    mv tika-server-standard-${RELEASE}.jar tika-server-standard.jar
-    rm -rf /opt/apache-tika/tika-server-standard-prev-version.jar
+    # As of 4.0.0, upstream ships tika-server-standard as a zip instead of a
+    # standalone jar: tika-server-standard-<version>.jar inside it is a thin
+    # launcher whose manifest Class-Path depends on a sibling lib/ (and
+    # plugins/) directory that has to move in lockstep with it.
+    # fetch_and_deploy_from_url handles the zip/tar/deb extraction itself;
+    # CLEAN_INSTALL=1 replaces the whole directory instead of leaving the
+    # previous version's lib/ jars mixed in with the new ones.
+    CLEAN_INSTALL=1 fetch_and_deploy_from_url "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.zip" /opt/apache-tika
+    mv "/opt/apache-tika/tika-server-standard-${RELEASE}.jar" /opt/apache-tika/tika-server-standard.jar
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 

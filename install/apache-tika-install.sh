@@ -35,11 +35,14 @@ msg_ok "Installed Dependencies"
 JAVA_VERSION="21" setup_java
 
 msg_info "Installing Apache Tika"
-mkdir -p /opt/apache-tika
-cd /opt/apache-tika
 RELEASE="$(curl -fsSL https://dlcdn.apache.org/tika/ | grep -oP '(?<=href=")[0-9]+\.[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1)"
-curl -fsSL "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar" -o tika-server-standard-${RELEASE}.jar
-mv tika-server-standard-${RELEASE}.jar tika-server-standard.jar
+# As of 4.0.0, upstream ships tika-server-standard as a zip instead of a
+# standalone jar: tika-server-standard-<version>.jar inside it is a thin
+# launcher whose manifest Class-Path depends on a sibling lib/ (and
+# plugins/) directory that has to be deployed alongside it -
+# fetch_and_deploy_from_url handles that extraction.
+fetch_and_deploy_from_url "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.zip" /opt/apache-tika
+mv "/opt/apache-tika/tika-server-standard-${RELEASE}.jar" /opt/apache-tika/tika-server-standard.jar
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Apache Tika"
 
