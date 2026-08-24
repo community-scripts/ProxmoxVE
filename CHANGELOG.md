@@ -529,6 +529,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-24
 
+### 🆕 New Scripts
+
+  - RockyLinux ([#16718](https://github.com/community-scripts/ProxmoxVE/pull/16718))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
