@@ -38,8 +38,17 @@ msg_info "Installing Apache Tika"
 mkdir -p /opt/apache-tika
 cd /opt/apache-tika
 RELEASE="$(curl -fsSL https://dlcdn.apache.org/tika/ | grep -oP '(?<=href=")[0-9]+\.[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1)"
-curl -fsSL "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar" -o tika-server-standard-${RELEASE}.jar
-mv tika-server-standard-${RELEASE}.jar tika-server-standard.jar
+# As of 4.0.0, upstream ships tika-server-standard as a zip instead of a
+# standalone jar: tika-server-standard-<version>.jar inside it is a thin
+# launcher whose manifest Class-Path depends on a sibling lib/ (and
+# plugins/) directory, so the whole archive has to be extracted together
+# rather than just downloading one jar file.
+TMP_DIR=$(mktemp -d)
+curl -fsSL -o "${TMP_DIR}/tika-server-standard-${RELEASE}.zip" "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.zip"
+unzip -oq "${TMP_DIR}/tika-server-standard-${RELEASE}.zip" -d "${TMP_DIR}/extracted"
+cp -r "${TMP_DIR}/extracted/." /opt/apache-tika/
+mv "/opt/apache-tika/tika-server-standard-${RELEASE}.jar" /opt/apache-tika/tika-server-standard.jar
+rm -rf "${TMP_DIR}"
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Apache Tika"
 

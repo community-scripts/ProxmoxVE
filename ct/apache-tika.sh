@@ -35,11 +35,20 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt/apache-tika
-    curl -fsSL -o tika-server-standard-${RELEASE}.jar "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar"
-    mv --force tika-server-standard.jar tika-server-standard-prev-version.jar
-    mv tika-server-standard-${RELEASE}.jar tika-server-standard.jar
-    rm -rf /opt/apache-tika/tika-server-standard-prev-version.jar
+    # As of 4.0.0, upstream ships tika-server-standard as a zip instead of a
+    # standalone jar: tika-server-standard-<version>.jar inside it is a thin
+    # launcher whose manifest Class-Path depends on a sibling lib/ (and
+    # plugins/) directory, so the whole archive has to be extracted together
+    # rather than just downloading one jar file.
+    ensure_dependencies unzip
+    TMP_DIR=$(mktemp -d)
+    curl -fsSL -o "${TMP_DIR}/tika-server-standard-${RELEASE}.zip" "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.zip"
+    unzip -oq "${TMP_DIR}/tika-server-standard-${RELEASE}.zip" -d "${TMP_DIR}/extracted"
+    rm -f /opt/apache-tika/tika-server-standard.jar
+    rm -rf /opt/apache-tika/lib /opt/apache-tika/plugins
+    cp -r "${TMP_DIR}/extracted/." /opt/apache-tika/
+    mv "/opt/apache-tika/tika-server-standard-${RELEASE}.jar" /opt/apache-tika/tika-server-standard.jar
+    rm -rf "${TMP_DIR}"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 
