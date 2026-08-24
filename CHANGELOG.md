@@ -539,6 +539,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Add setup_mongodb back in Omada [@lucacome](https://github.com/lucacome) ([#16736](https://github.com/community-scripts/ProxmoxVE/pull/16736))
     - fireshare: source fireshare.env during update [@MickLesk](https://github.com/MickLesk) ([#16706](https://github.com/community-scripts/ProxmoxVE/pull/16706))
     - netbox: serve on plain HTTP too, port 80 forced HTTPS redirect broke reverse proxies [@MickLesk](https://github.com/MickLesk) ([#16707](https://github.com/community-scripts/ProxmoxVE/pull/16707))
     - FileFlows: Fix Download URL [@MickLesk](https://github.com/MickLesk) ([#16708](https://github.com/community-scripts/ProxmoxVE/pull/16708))
