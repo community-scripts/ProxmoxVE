@@ -57,11 +57,9 @@ function update_script() {
     $STD .venv/bin/python -m pip install --upgrade --break-system-packages pip
     $STD .venv/bin/python -m pip install --no-cache-dir --break-system-packages --ignore-installed app/server
     cp .venv/bin/fireshare /usr/local/bin/fireshare
-    export FLASK_APP="/opt/fireshare/app/server/fireshare:create_app()"
-    export DATA_DIRECTORY=/opt/fireshare-data
-    export IMAGE_DIRECTORY=/opt/fireshare-images
-    export VIDEO_DIRECTORY=/opt/fireshare-videos
-    export PROCESSED_DIRECTORY=/opt/fireshare-processed
+    set -a
+    source /opt/fireshare/fireshare.env
+    set +a
     $STD uv run flask db upgrade
     cd /opt/fireshare/app/client
     $STD npm install
