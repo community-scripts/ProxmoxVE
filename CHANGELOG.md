@@ -533,6 +533,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - FileFlows: Fix Download URL [@MickLesk](https://github.com/MickLesk) ([#16708](https://github.com/community-scripts/ProxmoxVE/pull/16708))
     - Gitea: fix git-over-SSH auth, group-writable home dir tripped sshd StrictModes [@MickLesk](https://github.com/MickLesk) ([#16710](https://github.com/community-scripts/ProxmoxVE/pull/16710))
 
 ### 🧰 Tools
