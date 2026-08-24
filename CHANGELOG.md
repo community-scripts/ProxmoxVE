@@ -535,6 +535,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Gitea: fix git-over-SSH auth, group-writable home dir tripped sshd StrictModes [@MickLesk](https://github.com/MickLesk) ([#16710](https://github.com/community-scripts/ProxmoxVE/pull/16710))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - post-pve/pbs-install: fix component_exists_in_sources matching substrings of hyphenated tokens [@MickLesk](https://github.com/MickLesk) ([#16709](https://github.com/community-scripts/ProxmoxVE/pull/16709))
+
 ## 2026-08-23
 
 ### 🚀 Updated Scripts
