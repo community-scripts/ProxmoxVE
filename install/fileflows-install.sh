@@ -39,7 +39,7 @@ else
 fi
 msg_ok "Installed ASP.NET Core Runtime"
 
-fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
+fetch_and_deploy_from_url "https://fileflows.com/downloads/ff-latest.tar.xz" "/opt/fileflows"
 
 $STD ln -svf /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 $STD ln -svf /usr/bin/ffprobe /usr/local/bin/ffprobe

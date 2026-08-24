@@ -101,7 +101,7 @@ function update_script() {
   fi
   msg_ok "Ensured ASP.NET Core Runtime"
 
-  fetch_and_deploy_from_url "https://fileflows.com/downloads/zip" "/opt/fileflows"
+  fetch_and_deploy_from_url "https://fileflows.com/downloads/ff-latest.tar.xz" "/opt/fileflows"
 
   msg_info "Starting Service"
   systemctl --all start 'fileflows*'
