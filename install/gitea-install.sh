@@ -30,7 +30,10 @@ setup_deb_based() {
   chown -R gitea:gitea /var/lib/gitea/
   chmod -R 750 /var/lib/gitea/
   chown root:gitea /etc/gitea
-  chmod 770 /etc/gitea
+  # sshd's StrictModes rejects pubkey auth if authorized_keys or any parent dir up to
+  # $HOME is group-writable - 770 here silently broke git-over-SSH (falls back to
+  # password auth, which fails since the gitea user has no password).
+  chmod 750 /etc/gitea
   sudo -u gitea ln -s /var/lib/gitea/data/.ssh/ /etc/gitea/.ssh
   msg_ok "Configured Gitea"
 
