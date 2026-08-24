@@ -1208,10 +1208,12 @@ base_settings() {
 # - Used by default_var_settings and app defaults loading
 # - Only loads whitelisted var_* keys
 # - Optional force parameter to override existing values (for app defaults)
+# - Optional protected list preserves genuinely user-exported var_* values
 # ------------------------------------------------------------------------------
 load_vars_file() {
   local file="$1"
-  local force="${2:-no}" # If "yes", override existing variables
+  local force="${2:-no}"      # If "yes", override existing variables
+  local protected="${3:-}"    # space-separated var_* keys the user genuinely exported before this file loaded; never overwritten
   [ -f "$file" ] || return 0
   msg_info "Loading defaults from ${file}"
 
@@ -1228,6 +1230,13 @@ load_vars_file() {
   _is_whitelisted() {
     local k="$1" w
     for w in "${VAR_WHITELIST[@]}"; do [ "$k" = "$w" ] && return 0; done
+    return 1
+  }
+
+  # Protected check helper (genuinely user-exported vars, see $protected above)
+  _is_protected() {
+    local k="$1" p
+    for p in $protected; do [ "$k" = "$p" ] && return 0; done
     return 1
   }
 
@@ -1435,8 +1444,18 @@ load_vars_file() {
         esac
       fi
 
-      # Set variable: force mode overrides existing, otherwise only set if empty
+      # Set variable: force mode overrides existing, otherwise only set if empty.
+      # Exception: var_cpu/var_ram/var_disk are always applied here (unless the
+      # user genuinely exported them beforehand, per $protected) even though the
+      # app script already declared its own baseline for them - base_settings()
+      # reconciles the final floor against APP_DEFAULT_* afterward, so this file
+      # must be allowed to raise them instead of being silently blocked by the
+      # app's own pre-set value.
       if [[ "$force" == "yes" ]]; then
+        export "${var_key}=${var_val}"
+      elif _is_protected "$var_key"; then
+        :
+      elif [[ "$var_key" == "var_cpu" || "$var_key" == "var_ram" || "$var_key" == "var_disk" ]]; then
         export "${var_key}=${var_val}"
       else
         [[ -z "${!var_key+x}" ]] && export "${var_key}=${var_val}"
@@ -1597,7 +1616,7 @@ EOF
     msg_error "default.vars not found after ensure step"
     return 252
   }
-  load_vars_file "$dv"
+  load_vars_file "$dv" "no" "${!_HARD_ENV[*]}"
 
   # 3) Map var_verbose → VERBOSE
   if [[ -n "${var_verbose:-}" ]]; then
