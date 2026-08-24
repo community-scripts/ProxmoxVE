@@ -60,9 +60,6 @@ $STD /opt/netbox/upgrade.sh
 ln -s /opt/netbox/contrib/netbox-housekeeping.sh /etc/cron.daily/netbox-housekeeping
 
 $STD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/netbox.key -out /etc/ssl/certs/netbox.crt -subj "/C=US/O=NetBox/OU=Certificate/CN=localhost"
-# Upstream's contrib/apache.conf redirects all port-80 traffic to HTTPS, which breaks
-# reverse proxies that talk plain HTTP to the backend (they get a redirect instead of
-# content). Serve NetBox directly on 80 too; 443 stays available for direct HTTPS access.
 cat <<EOF >/etc/apache2/sites-available/netbox.conf
 <VirtualHost *:80>
     ProxyPreserveHost On
