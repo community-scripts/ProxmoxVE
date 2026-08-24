@@ -1,0 +1,54 @@
+{
+  "name": "Apache Airflow",
+  "slug": "airflow",
+  "categories": [
+    19
+  ],
+  "date_created": "2026-05-10",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "architectures": [
+    "amd64"
+  ],
+  "platforms": [
+    "pve"
+  ],
+  "interface_port": 8080,
+  "documentation": "https://airflow.apache.org/docs/",
+  "website": "https://airflow.apache.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/apache.webp",
+  "description": "Apache Airflow is an open-source platform for developing, scheduling, and monitoring batch-oriented workflows. It uses Python to author DAGs (Directed Acyclic Graphs) that represent workflows, and provides a rich web UI for managing and observing pipelines.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/apache-airflow.sh",
+      "config_path": "/opt/airflow/.env",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 16,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "The initial admin password is randomly generated and stored in /opt/airflow/.env (AIRFLOW_ADMIN_PASSWORD).",
+      "type": "info"
+    },
+    {
+      "text": "Place your DAG files in /opt/airflow/dags/. The scheduler will pick them up automatically.",
+      "type": "info"
+    },
+    {
+      "text": "This installs Airflow with LocalExecutor. For distributed task execution, configure CeleryExecutor manually.",
+      "type": "info"
+    }
+  ]
+}
