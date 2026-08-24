@@ -529,6 +529,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-24
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Gitea: fix git-over-SSH auth, group-writable home dir tripped sshd StrictModes [@MickLesk](https://github.com/MickLesk) ([#16710](https://github.com/community-scripts/ProxmoxVE/pull/16710))
+
 ## 2026-08-23
 
 ### 🚀 Updated Scripts
