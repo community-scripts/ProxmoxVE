@@ -531,7 +531,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - RockyLinux ([#16718](https://github.com/community-scripts/ProxmoxVE/pull/16718))
+  - AirTrail ([#16713](https://github.com/community-scripts/ProxmoxVE/pull/16713))
+- RockyLinux ([#16718](https://github.com/community-scripts/ProxmoxVE/pull/16718))
 
 ### 🚀 Updated Scripts
 
