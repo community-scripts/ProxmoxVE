@@ -36,11 +36,6 @@ JAVA_VERSION="21" setup_java
 
 msg_info "Installing Apache Tika"
 RELEASE="$(curl -fsSL https://dlcdn.apache.org/tika/ | grep -oP '(?<=href=")[0-9]+\.[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1)"
-# As of 4.0.0, upstream ships tika-server-standard as a zip instead of a
-# standalone jar: tika-server-standard-<version>.jar inside it is a thin
-# launcher whose manifest Class-Path depends on a sibling lib/ (and
-# plugins/) directory that has to be deployed alongside it -
-# fetch_and_deploy_from_url handles that extraction.
 fetch_and_deploy_from_url "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.zip" /opt/apache-tika
 mv "/opt/apache-tika/tika-server-standard-${RELEASE}.jar" /opt/apache-tika/tika-server-standard.jar
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
