@@ -533,6 +533,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix Firecrawl install: add ccache dependency for koffi native build [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16746](https://github.com/community-scripts/ProxmoxVE/pull/16746))
     - excalidash: Fix broken Update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16747](https://github.com/community-scripts/ProxmoxVE/pull/16747))
 
   - #### 💥 Breaking Changes
