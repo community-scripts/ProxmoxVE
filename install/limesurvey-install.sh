@@ -60,6 +60,7 @@ cat <<EOF >/etc/apache2/sites-enabled/000-default.conf
 EOF
 chown -R www-data:www-data "/opt/limesurvey"
 chmod -R 750 "/opt/limesurvey"
+$STD a2enmod rewrite
 systemctl reload apache2
 rm -rf "$temp_file"
 msg_ok "Set up LimeSurvey"
