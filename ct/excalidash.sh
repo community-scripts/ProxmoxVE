@@ -47,11 +47,11 @@ function update_script() {
     msg_ok "Configured Database Provider"
 
     msg_info "Rebuilding Application"
-    $STD npm ci
+    $STD npm ci --include=dev
     $STD npx prisma generate
     $STD npx tsc
     cd /opt/excalidash/frontend
-    $STD npm ci
+    $STD npm ci --include=dev
     $STD npm run build
     cp -r /opt/excalidash/frontend/dist/. /var/www/excalidash/
     msg_ok "Rebuilt Application"
