@@ -531,7 +531,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Maintainerr ([#16716](https://github.com/community-scripts/ProxmoxVE/pull/16716))
+  - Budget-Board ([#16714](https://github.com/community-scripts/ProxmoxVE/pull/16714))
+- Maintainerr ([#16716](https://github.com/community-scripts/ProxmoxVE/pull/16716))
 - pyLoad ([#16717](https://github.com/community-scripts/ProxmoxVE/pull/16717))
 
 ### 🚀 Updated Scripts
