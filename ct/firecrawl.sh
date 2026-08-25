@@ -30,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  ensure_dependencies build-essential
+  ensure_dependencies build-essential ccache
 
   if check_for_gh_release "firecrawl" "firecrawl/firecrawl"; then
     msg_info "Stopping Services"
