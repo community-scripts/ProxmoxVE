@@ -38,8 +38,8 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/data /opt/maintainerr/.env
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/maintainerr"
+    restore_backup
 
     msg_info "Rebuilding Maintainerr (Patience)"
     cd /opt/maintainerr
@@ -55,15 +55,12 @@ function update_script() {
     find apps/server/dist/ui -type f -not -path '*/node_modules/*' -print0 | xargs -0 sed -i "s,/__PATH_PREFIX__,,g"
     $STD yarn workspaces focus --all --production
     rm -rf /opt/maintainerr/.yarn/cache /opt/maintainerr/.turbo /opt/maintainerr/apps/ui
-    $STD apt autoremove -y
-    msg_ok "Rebuilt Maintainerr"
-
-    restore_backup
     sed -i '/^npm_package_version=/d;/^VERSION_TAG=/d' /opt/maintainerr/.env
     {
       echo "VERSION_TAG=stable"
       echo "npm_package_version=$(cat ~/.maintainerr)"
     } >>/opt/maintainerr/.env
+    msg_ok "Rebuilt Maintainerr"
 
     msg_info "Starting Service"
     systemctl start maintainerr
