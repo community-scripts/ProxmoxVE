@@ -41,13 +41,9 @@ $STD yarn turbo build --concurrency=1
 cp -r apps/ui/dist apps/server/dist/ui
 cp -r apps/server/assets apps/server/dist/assets
 find apps/server/dist/ui -type f -not -path '*/node_modules/*' -print0 | xargs -0 sed -i "s,/__PATH_PREFIX__,,g"
-msg_ok "Built Maintainerr"
-
-msg_info "Reclaiming Disk Space"
 $STD yarn workspaces focus --all --production
 rm -rf /opt/maintainerr/.yarn/cache /opt/maintainerr/.turbo /opt/maintainerr/apps/ui
-$STD apt autoremove -y
-msg_ok "Reclaimed Disk Space"
+msg_ok "Built Maintainerr"
 
 msg_info "Configuring Environment"
 mkdir -p /opt/data/logs
