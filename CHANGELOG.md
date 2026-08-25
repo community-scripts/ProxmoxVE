@@ -533,6 +533,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(apache-tika): handle upstream's switch from jar to zip distribution [@Munza2020](https://github.com/Munza2020) ([#16726](https://github.com/community-scripts/ProxmoxVE/pull/16726))
     - Fix Firecrawl install: add ccache dependency for koffi native build [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16746](https://github.com/community-scripts/ProxmoxVE/pull/16746))
     - excalidash: Fix broken Update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16747](https://github.com/community-scripts/ProxmoxVE/pull/16747))
 
