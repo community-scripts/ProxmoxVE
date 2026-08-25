@@ -527,6 +527,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-25
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - excalidash: Fix broken Update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16747](https://github.com/community-scripts/ProxmoxVE/pull/16747))
+
 ## 2026-08-24
 
 ### 🆕 New Scripts
