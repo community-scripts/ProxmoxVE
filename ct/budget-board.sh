@@ -37,16 +37,11 @@ function update_script() {
     systemctl stop budget-board
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -r /opt/budget-board/budget-board.env /opt/budget-board.env.bak
-    msg_ok "Backed up Data"
+    create_backup /opt/budget-board/budget-board.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "budget-board" "teelur/budget-board" "tarball"
 
-    msg_info "Restoring Configuration"
-    cp -r /opt/budget-board.env.bak /opt/budget-board/budget-board.env
-    rm -f /opt/budget-board.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Rebuilding Backend"
     cd /opt/budget-board/server
@@ -65,7 +60,7 @@ function update_script() {
 
     msg_info "Starting Service"
     systemctl start budget-board
-    systemctl reload nginx
+    nginx_enable_site budget-board.conf
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi

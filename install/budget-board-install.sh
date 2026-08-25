@@ -119,9 +119,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/budget-board.conf /etc/nginx/sites-enabled/budget-board.conf
-rm -f /etc/nginx/sites-enabled/default
-systemctl reload nginx
+nginx_enable_site budget-board.conf
 msg_ok "Created services"
 
 motd_ssh
