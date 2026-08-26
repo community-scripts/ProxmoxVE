@@ -9335,9 +9335,6 @@ fetch_and_deploy_from_url() {
   if [[ "$file_desc" =~ gzip.*compressed|gzip\ compressed\ data ]]; then
     archive_type="tar"
   elif [[ "$file_desc" =~ XZ\ compressed\ data ]]; then
-    # tar -xf auto-detects the compression codec from content, so a bare
-    # .tar.xz (which `file` reports as just "XZ compressed data" without
-    # mentioning tar) is extracted the same way as any other tar archive.
     archive_type="tar"
   elif [[ "$file_desc" =~ Zip.*archive|ZIP\ archive ]]; then
     archive_type="zip"
