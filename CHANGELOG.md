@@ -531,7 +531,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Directus ([#16779](https://github.com/community-scripts/ProxmoxVE/pull/16779))
+  - openSUSE ([#16776](https://github.com/community-scripts/ProxmoxVE/pull/16776))
+- Directus ([#16779](https://github.com/community-scripts/ProxmoxVE/pull/16779))
 - HAProxy ([#16760](https://github.com/community-scripts/ProxmoxVE/pull/16760))
 
 ### 📂 Github
