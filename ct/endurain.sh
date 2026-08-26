@@ -52,6 +52,12 @@ function update_script() {
 
     restore_backup
 
+    # Existing installs may still have the pre-7e15a4b FRONTEND_DIR path restored
+    # from backup; migrate only that exact legacy value, never a custom path.
+    if grep -qxF 'FRONTEND_DIR="/opt/endurain/frontend/app/dist"' /opt/endurain/.env; then
+      sed -i 's|^FRONTEND_DIR="/opt/endurain/frontend/app/dist"$|FRONTEND_DIR="/opt/endurain/frontend/dist"|' /opt/endurain/.env
+    fi
+
     msg_info "Updating Backend"
     cd /opt/endurain/backend
     UV_VERSION=$(grep -Po 'required-version\s*=\s*"\K[^"]+' pyproject.toml 2>/dev/null || echo "0.11.18")
