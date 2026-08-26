@@ -531,7 +531,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - HAProxy ([#16760](https://github.com/community-scripts/ProxmoxVE/pull/16760))
+  - Directus ([#16779](https://github.com/community-scripts/ProxmoxVE/pull/16779))
+- HAProxy ([#16760](https://github.com/community-scripts/ProxmoxVE/pull/16760))
+
+### 📂 Github
+
+  - github: teach the PocketBase bot every field [@MickLesk](https://github.com/MickLesk) ([#16781](https://github.com/community-scripts/ProxmoxVE/pull/16781))
 
 ## 2026-08-25
 
