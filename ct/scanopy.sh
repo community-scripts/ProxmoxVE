@@ -42,22 +42,12 @@ function update_script() {
 
     restore_backup
 
-    ensure_dependencies pkg-config libssl-dev
-    TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
-    RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
-
     if ! grep -q "PUBLIC_URL" /opt/scanopy/.env; then
       sed -i "\|_PATH=|a\\scanopy_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
     fi
     sed -i 's|_TARGET=.*$|_URL=http://127.0.0.1:60072|' /opt/scanopy/.env
 
     fetch_and_deploy_gh_release "scanopy-server" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
-
-    msg_info "Generating UI Fixtures (patience)"
-    cd /opt/scanopy/backend
-    CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 CARGO_BUILD_JOBS="$(get_parallel_jobs)" $STD cargo build --release --bin generate-fixtures
-    $STD ./target/release/generate-fixtures --output-dir /opt/scanopy/ui/src/lib/data
-    msg_ok "Generated UI Fixtures"
 
     msg_info "Creating frontend UI"
     export PUBLIC_SERVER_HOSTNAME=default
