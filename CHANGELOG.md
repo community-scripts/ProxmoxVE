@@ -545,6 +545,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tools.func: recognize bare XZ-compressed tarballs in fetch_and_deploy* [@MickLesk](https://github.com/MickLesk) ([#16796](https://github.com/community-scripts/ProxmoxVE/pull/16796))
     - tools.func: fix mongodb version comparison, guard apt purge against removing dependents [@MickLesk](https://github.com/MickLesk) ([#16795](https://github.com/community-scripts/ProxmoxVE/pull/16795))
 
 ### 📂 Github
