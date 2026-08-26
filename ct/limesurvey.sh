@@ -28,8 +28,6 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  # mod_rewrite is required by the shipped .htaccess (for upgrades from older versions)
   if [[ ! -L /etc/apache2/mods-enabled/rewrite.load ]]; then
     msg_info "Enabling Apache mod_rewrite"
     $STD a2enmod rewrite
