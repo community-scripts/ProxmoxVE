@@ -545,6 +545,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [Fix]: LimeSurvey - enable Apache mod_rewrite [@jonathan8devs](https://github.com/jonathan8devs) ([#16767](https://github.com/community-scripts/ProxmoxVE/pull/16767))
     - endurain: migrate legacy FRONTEND_DIR path on update [@MickLesk](https://github.com/MickLesk) ([#16794](https://github.com/community-scripts/ProxmoxVE/pull/16794))
 
 ### 💾 Core
