@@ -33,6 +33,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          # Screenshot attaching is delegated to the frontend, which owns the
+          # fetching and validation. Without this the subcommand says so rather
+          # than failing halfway.
+          SCREENSHOT_IMPORT_SECRET: ${{ secrets.SCREENSHOT_IMPORT_SECRET }}
         run: |
           node << 'ENDSCRIPT'
           (async function () {
@@ -330,7 +334,14 @@ jobs:
               '`updateable` `privileged` `is_dev` `has_arm` ' +
               '`architectures` (amd64,arm64) `platforms` (pve,incus) ' +
               '`execute_in` (pve,lxc,pbs,vm,pmg,pdm) `categories` (names or ids) ' +
-              '`is_disabled` `disable_message` `is_deleted` `deleted_message`';
+              '`type` (ct, vm, addon, …) ' +
+              '`is_disabled` `disable_message` `is_deleted` `deleted_message`\n\n' +
+              '**Screenshots:**\n' +
+              '```\n' +
+              '/pocketbase <slug> screenshot https://example.com/one.png https://example.com/two.png\n' +
+              '```\n\n' +
+              '`slug` is deliberately not editable: it is the URL, the JSON filename and the\n' +
+              'ct/<slug>.sh path all at once, so renaming it is a migration rather than an edit.';
 
             if (!withoutCmd) {
               await addReaction('-1');
@@ -493,6 +504,7 @@ jobs:
             const noteMatch   = rest.match(/^note\s+(list|add|edit|remove)\b/i);
             const methodMatch = rest.match(/^method\b/i);
             const setMatch    = rest.match(/^set\s+(\S+)/i);
+            const shotMatch   = rest.match(/^screenshots?\s+(.+)$/i);
 
             if (infoMatch) {
               // ── INFO SUBCOMMAND ──────────────────────────────────────────────
@@ -537,6 +549,44 @@ jobs:
 
               await addReaction('+1');
               await postComment(out.join('\n'));
+
+            } else if (shotMatch) {
+              // ── SCREENSHOT SUBCOMMAND ────────────────────────────────────────
+              // Delegated to the frontend rather than reimplemented here: it
+              // already fetches the URL, checks the content type and size, and
+              // attaches the file to PocketBase. Doing that a second time in a
+              // workflow would be a second set of bugs.
+              const shotUrls = shotMatch[1].split(/[\s,]+/).map(function (u) { return u.trim(); }).filter(Boolean);
+              const bad = shotUrls.filter(function (u) { return !/^https?:\/\//i.test(u); });
+              if (bad.length > 0) {
+                await addReaction('-1');
+                await postComment('❌ **PocketBase Bot**: not a URL: `' + bad.join('`, `') + '`');
+                process.exit(0);
+              }
+              const frontendUrl = process.env.FRONTEND_URL;
+              const shotSecret = process.env.SCREENSHOT_IMPORT_SECRET;
+              if (!frontendUrl || !shotSecret) {
+                await addReaction('-1');
+                await postComment('❌ **PocketBase Bot**: screenshot import is not configured (FRONTEND_URL / SCREENSHOT_IMPORT_SECRET).');
+                process.exit(1);
+              }
+              const shotRes = await request(frontendUrl.replace(/\/$/, '') + '/api/screenshots', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug: slug, secret: shotSecret, urls: shotUrls })
+              });
+              if (!shotRes.ok) {
+                await addReaction('-1');
+                await postComment('❌ **PocketBase Bot**: screenshot import failed:\n```\n' + shotRes.body + '\n```');
+                process.exit(1);
+              }
+              await revalidate(slug);
+              await addReaction('+1');
+              await postComment(
+                '✅ **PocketBase Bot**: attached ' + shotUrls.length + ' screenshot' + (shotUrls.length === 1 ? '' : 's') +
+                ' to **`' + slug + '`**\n\n' + shotUrls.map(function (u) { return '- ' + u; }).join('\n') +
+                '\n\n*Executed by @' + actor + '*'
+              );
 
             } else if (noteMatch) {
               // ── NOTE SUBCOMMAND ──────────────────────────────────────────────
@@ -926,6 +976,7 @@ jobs:
                 execute_in:       'select_list',
                 has_arm:          'boolean',
                 categories:       'relation_list',
+                type:             'relation_single',
                 is_dev:           'boolean',
                 is_disabled:      'boolean',
                 disable_message:  'string',
@@ -1033,6 +1084,31 @@ jobs:
                     process.exit(0);
                   }
                   payload[key] = resolved;
+                } else if (type === 'relation_single') {
+                  // type points at one z_ref_script_types record. People write
+                  // "ct" or "vm", not a 15-character id.
+                  const typeRes = await request(apiBase + '/collections/z_ref_script_types/records?perPage=200&fields=id,type', {
+                    headers: { 'Authorization': token }
+                  });
+                  if (!typeRes.ok) {
+                    await addReaction('-1');
+                    await postComment('❌ **PocketBase Bot**: could not read `z_ref_script_types` to resolve `' + key + '`.');
+                    process.exit(1);
+                  }
+                  const types = JSON.parse(typeRes.body).items || [];
+                  const wantType = rawVal.trim().toLowerCase();
+                  const hit = types.find(function (t) {
+                    return t.id === rawVal.trim() || String(t.type).toLowerCase() === wantType;
+                  });
+                  if (!hit) {
+                    await addReaction('-1');
+                    await postComment(
+                      '❌ **PocketBase Bot**: unknown type `' + rawVal + '`\n\n' +
+                      '**Available:** `' + types.map(function (t) { return t.type; }).sort().join('`, `') + '`'
+                    );
+                    process.exit(0);
+                  }
+                  payload[key] = hit.id;
                 } else if (type === 'nullable_string') {
                   payload[key] = rawVal === '' ? null : rawVal;
                 } else {
