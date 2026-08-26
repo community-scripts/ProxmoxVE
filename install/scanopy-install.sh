@@ -27,12 +27,17 @@ fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "tarball" "latest" "/opt
 TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
 RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
-msg_info "Building Scanopy Server (patience)"
+fetch_and_deploy_gh_release "scanopy-server" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
+
+msg_info "Generating UI Fixtures (patience)"
 cd /opt/scanopy/backend
-CARGO_BUILD_JOBS="$(get_parallel_jobs)" $STD cargo build --release --bin server --bin generate-fixtures
+# Server binary is prebuilt above; generate-fixtures is a throwaway build-time
+# tool with no prebuilt release, but shares the crate's release profile
+# (lto + codegen-units=1) that caused the OOM, so relax it here - its own
+# binary size/speed doesn't matter, only the fixture JSON it emits.
+CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 CARGO_BUILD_JOBS="$(get_parallel_jobs)" $STD cargo build --release --bin generate-fixtures
 $STD ./target/release/generate-fixtures --output-dir /opt/scanopy/ui/src/lib/data
-mv ./target/release/server /usr/bin/scanopy-server
-msg_ok "Built Scanopy Server"
+msg_ok "Generated UI Fixtures"
 
 msg_info "Creating frontend UI"
 export PUBLIC_SERVER_HOSTNAME=default
