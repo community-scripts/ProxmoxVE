@@ -43,4 +43,4 @@ build_container
 description
 
 msg_ok "Completed successfully!\n"
-msg_custom "${GN}${APP} setup has been successfully initialized!"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
