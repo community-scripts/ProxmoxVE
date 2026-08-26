@@ -52,8 +52,6 @@ function update_script() {
 
     restore_backup
 
-    # Existing installs may still have the pre-7e15a4b FRONTEND_DIR path restored
-    # from backup; migrate only that exact legacy value, never a custom path.
     if grep -qxF 'FRONTEND_DIR="/opt/endurain/frontend/app/dist"' /opt/endurain/.env; then
       sed -i 's|^FRONTEND_DIR="/opt/endurain/frontend/app/dist"$|FRONTEND_DIR="/opt/endurain/frontend/dist"|' /opt/endurain/.env
     fi
