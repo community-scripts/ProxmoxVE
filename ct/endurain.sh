@@ -35,20 +35,16 @@ function update_script() {
     msg_ok "Stopped Service"
 
     NODE_VERSION="24" setup_nodejs
-
     create_backup /opt/endurain/.env /opt/endurain/frontend/dist/env.js
     CLEAN_INSTALL=1 fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
 
-    msg_info "Preparing Update"
+    msg_info "Updating Endurain Frontend"
     cd /opt/endurain
     rm -rf /opt/endurain/{docs,example.env,screenshot_01.png} /opt/endurain/docker* /opt/endurain/*.yml
-    msg_ok "Prepared Update"
-
-    msg_info "Updating Frontend"
     cd /opt/endurain/frontend
     $STD npm ci
     $STD npm run build
-    msg_ok "Updated Frontend"
+    msg_ok "Updated Endurain Frontend"
 
     restore_backup
 
@@ -56,12 +52,12 @@ function update_script() {
       sed -i 's|^FRONTEND_DIR="/opt/endurain/frontend/app/dist"$|FRONTEND_DIR="/opt/endurain/frontend/dist"|' /opt/endurain/.env
     fi
 
-    msg_info "Updating Backend"
+    msg_info "Updating Endurain Backend"
     cd /opt/endurain/backend
     UV_VERSION=$(grep -Po 'required-version\s*=\s*"\K[^"]+' pyproject.toml 2>/dev/null || echo "0.11.18")
     UV_VERSION="$UV_VERSION" setup_uv
     $STD uv sync --frozen --no-dev
-    msg_ok "Backend Updated"
+    msg_ok "Endurain Backend Updated"
 
     msg_info "Starting Service"
     systemctl start endurain
