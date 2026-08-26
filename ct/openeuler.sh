@@ -8,7 +8,6 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.openeuler.org/
 
-
 APP="openEuler"
 var_tags="${var_tags:-os}"
 var_cpu="${var_cpu:-1}"
