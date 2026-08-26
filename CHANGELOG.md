@@ -541,6 +541,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Directus ([#16779](https://github.com/community-scripts/ProxmoxVE/pull/16779))
 - HAProxy ([#16760](https://github.com/community-scripts/ProxmoxVE/pull/16760))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - endurain: migrate legacy FRONTEND_DIR path on update [@MickLesk](https://github.com/MickLesk) ([#16794](https://github.com/community-scripts/ProxmoxVE/pull/16794))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
