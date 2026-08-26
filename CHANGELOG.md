@@ -541,6 +541,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Directus ([#16779](https://github.com/community-scripts/ProxmoxVE/pull/16779))
 - HAProxy ([#16760](https://github.com/community-scripts/ProxmoxVE/pull/16760))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools.func: fix mongodb version comparison, guard apt purge against removing dependents [@MickLesk](https://github.com/MickLesk) ([#16795](https://github.com/community-scripts/ProxmoxVE/pull/16795))
+
 ### 📂 Github
 
   - github: teach the PocketBase bot every field [@MickLesk](https://github.com/MickLesk) ([#16781](https://github.com/community-scripts/ProxmoxVE/pull/16781))
