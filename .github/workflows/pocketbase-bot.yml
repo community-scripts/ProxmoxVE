@@ -323,10 +323,13 @@ jobs:
               '/pocketbase <slug> method remove <type>\n' +
               '```\n' +
               'Method fields: `cpu` `ram` `hdd` `os` `version` `config_path` `script`\n\n' +
+              '`cpu` `ram` `hdd` `os` `version` also work without `method` — they go to the\n' +
+              'default install method, e.g. `/pocketbase <slug> hdd=25`\n\n' +
               '**Editable fields:** `name` `description` `logo` `documentation` `website` `project_url` `repository` ' +
               '`config_path` `port` `default_user` `default_passwd` ' +
-              '`updateable` `privileged` `is_dev` ' +
+              '`updateable` `privileged` `is_dev` `has_arm` ' +
               '`architectures` (amd64,arm64) `platforms` (pve,incus) ' +
+              '`execute_in` (pve,lxc,pbs,vm,pmg,pdm) `categories` (names or ids) ' +
               '`is_disabled` `disable_message` `is_deleted` `deleted_message`';
 
             if (!withoutCmd) {
@@ -838,15 +841,20 @@ jobs:
             } else if (setMatch) {
               // ── SET SUBCOMMAND (value from code block) ───────────────────────
               const fieldName = setMatch[1].toLowerCase();
+              // app_vars is a JSON column, so it rides the code-block path like
+              // the long text fields - but its content is parsed, not stored
+              // verbatim, or PocketBase ends up with a string where an object
+              // belongs and every reader has to guess.
               const SET_ALLOWED = {
                 name: 'string', description: 'string', logo: 'string',
                 documentation: 'string', website: 'string', project_url: 'string', repository: 'string',
-                config_path: 'string', disable_message: 'string', deleted_message: 'string'
+                config_path: 'string', disable_message: 'string', deleted_message: 'string',
+                app_vars: 'json'
               };
               if (!SET_ALLOWED[fieldName]) {
                 await addReaction('-1');
                 await postComment(
-                  '❌ **PocketBase Bot**: `set` only supports text fields.\n\n' +
+                  '❌ **PocketBase Bot**: `set` only supports text and JSON fields.\n\n' +
                   '**Allowed:** `' + Object.keys(SET_ALLOWED).join('`, `') + '`\n\n' +
                   'For boolean/number fields use `field=value` syntax instead.'
                 );
@@ -861,7 +869,21 @@ jobs:
                 process.exit(0);
               }
               const setPayload = {};
-              setPayload[fieldName] = codeBlockValue;
+              if (SET_ALLOWED[fieldName] === 'json') {
+                let parsedJson;
+                try {
+                  parsedJson = JSON.parse(codeBlockValue);
+                } catch (e) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: `' + fieldName + '` must be valid JSON.\n\n```\n' + e.message + '\n```'
+                  );
+                  process.exit(0);
+                }
+                setPayload[fieldName] = parsedJson;
+              } else {
+                setPayload[fieldName] = codeBlockValue;
+              }
               const setPatchRes = await request(recordsUrl + '/' + record.id, {
                 method: 'PATCH',
                 headers: { 'Authorization': token, 'Content-Type': 'application/json' },
@@ -901,6 +923,9 @@ jobs:
                 privileged:       'boolean',
                 architectures:    'select_list',
                 platforms:        'select_list',
+                execute_in:       'select_list',
+                has_arm:          'boolean',
+                categories:       'relation_list',
                 is_dev:           'boolean',
                 is_disabled:      'boolean',
                 disable_message:  'string',
@@ -910,7 +935,18 @@ jobs:
 
               const parsedFields = parseKVPairs(rest);
 
-              const unknownFields = Object.keys(parsedFields).filter(function (f) { return !ALLOWED_FIELDS[f]; });
+              // cpu/ram/hdd/os/version live inside install_methods, not on the
+              // record itself. "/pocketbase immich hdd=25" is how people ask for
+              // it, so route those keys there instead of rejecting them as
+              // unknown fields. Everything else stays a plain record field.
+              const TOP_RESOURCE_KEYS = { cpu: 'number', ram: 'number', hdd: 'number', os: 'string', version: 'string' };
+              const resourceFields = {};
+              const scriptFields = {};
+              for (const [rk, rv] of Object.entries(parsedFields)) {
+                if (TOP_RESOURCE_KEYS[rk]) resourceFields[rk] = rv; else scriptFields[rk] = rv;
+              }
+
+              const unknownFields = Object.keys(scriptFields).filter(function (f) { return !ALLOWED_FIELDS[f]; });
               if (unknownFields.length > 0) {
                 await addReaction('-1');
                 await postComment(
@@ -930,9 +966,10 @@ jobs:
               const SELECT_VALUES = {
                 architectures: ['amd64', 'arm64'],
                 platforms: ['pve', 'incus'],
+                execute_in: ['pve', 'lxc', 'pbs', 'vm', 'pmg', 'pdm'],
               };
               const payload = {};
-              for (const [key, rawVal] of Object.entries(parsedFields)) {
+              for (const [key, rawVal] of Object.entries(scriptFields)) {
                 const type = ALLOWED_FIELDS[key];
                 if (type === 'boolean') {
                   if (rawVal === 'true') payload[key] = true;
@@ -962,11 +999,81 @@ jobs:
                     process.exit(0);
                   }
                   payload[key] = values;
+                } else if (type === 'relation_list') {
+                  // categories is a relation, so the stored value is a list of
+                  // record ids. People write category names, so resolve them —
+                  // and accept ids too, which is what a copy out of the
+                  // PocketBase UI gives you.
+                  const wanted = rawVal.split(',').map(function (v) { return v.trim(); }).filter(Boolean);
+                  const catRes = await request(apiBase + '/collections/script_categories/records?perPage=500&fields=id,name', {
+                    headers: { 'Authorization': token }
+                  });
+                  if (!catRes.ok) {
+                    await addReaction('-1');
+                    await postComment('❌ **PocketBase Bot**: could not read `script_categories` to resolve `' + key + '`.');
+                    process.exit(1);
+                  }
+                  const cats = JSON.parse(catRes.body).items || [];
+                  const byName = {};
+                  const ids = {};
+                  cats.forEach(function (c) { byName[String(c.name).toLowerCase()] = c.id; ids[c.id] = true; });
+                  const resolved = [];
+                  const unknownCats = [];
+                  wanted.forEach(function (w) {
+                    if (ids[w]) { resolved.push(w); return; }
+                    const id = byName[w.toLowerCase()];
+                    if (id) resolved.push(id); else unknownCats.push(w);
+                  });
+                  if (unknownCats.length > 0) {
+                    await addReaction('-1');
+                    await postComment(
+                      '❌ **PocketBase Bot**: unknown ' + key + ': `' + unknownCats.join('`, `') + '`\n\n' +
+                      '**Available:** `' + cats.map(function (c) { return c.name; }).sort().join('`, `') + '`'
+                    );
+                    process.exit(0);
+                  }
+                  payload[key] = resolved;
                 } else if (type === 'nullable_string') {
                   payload[key] = rawVal === '' ? null : rawVal;
                 } else {
                   payload[key] = rawVal;
                 }
+              }
+
+              // Resources go into install_methods. Which method: the only one if
+              // there is only one, otherwise the non-Alpine default — and the
+              // reply says which, so nobody has to guess where 25 GB landed.
+              const resourceKeys = Object.keys(resourceFields);
+              let resourceTargetType = null;
+              if (resourceKeys.length > 0) {
+                const methodsArr = readJsonBlob(record.install_methods) || [];
+                if (methodsArr.length === 0) {
+                  await addReaction('-1');
+                  await postComment(
+                    '❌ **PocketBase Bot**: `' + slug + '` has no install methods, so there is nowhere to put `' +
+                    resourceKeys.join('`, `') + '`.\n\nAdd one first: `/pocketbase ' + slug + ' method add default cpu=2 ram=2048 hdd=8`'
+                  );
+                  process.exit(0);
+                }
+                let target = methodsArr.find(function (m) {
+                  return String(m.type || '').toLowerCase() !== 'alpine';
+                }) || methodsArr[0];
+                resourceTargetType = target.type || 'default';
+                if (!target.resources) target.resources = {};
+                for (const [rk, rv] of Object.entries(resourceFields)) {
+                  if (TOP_RESOURCE_KEYS[rk] === 'number') {
+                    const n = parseInt(rv, 10);
+                    if (isNaN(n)) {
+                      await addReaction('-1');
+                      await postComment('❌ **PocketBase Bot**: `' + rk + '` must be a number, got: `' + rv + '`');
+                      process.exit(0);
+                    }
+                    target.resources[rk] = n;
+                  } else {
+                    target.resources[rk] = rv;
+                  }
+                }
+                payload.install_methods = methodsArr;
               }
 
               const patchRes = await request(recordsUrl + '/' + record.id, {
@@ -981,9 +1088,15 @@ jobs:
               }
               await revalidate(slug);
               const FIELD_TO_CT_VAR = { tags: 'var_tags', unprivileged: 'var_unprivileged' };
+              const RESOURCE_CT_VAR = { cpu: 'var_cpu', ram: 'var_ram', hdd: 'var_disk', os: 'var_os', version: 'var_version' };
               const fieldCtChanges = {};
               for (const [k, v] of Object.entries(payload)) {
                 if (FIELD_TO_CT_VAR[k]) fieldCtChanges[FIELD_TO_CT_VAR[k]] = v;
+              }
+              // Resources belong in the CT script too, exactly as the `method`
+              // path syncs them - otherwise PocketBase and ct/<slug>.sh drift.
+              for (const [k, v] of Object.entries(resourceFields)) {
+                if (RESOURCE_CT_VAR[k]) fieldCtChanges[RESOURCE_CT_VAR[k]] = v;
               }
               let fieldCtSync = null;
               try {
@@ -992,8 +1105,14 @@ jobs:
                 fieldCtSync = { status: 'skipped', reason: 'CT sync failed: ' + e.message };
               }
               await addReaction('+1');
+              // install_methods is skipped here: dumping the whole array as JSON
+              // buries the one number that actually changed.
               const changesLines = Object.entries(payload)
+                .filter(function (e) { return e[0] !== 'install_methods'; })
                 .map(function ([k, v]) { return '- `' + k + '` → `' + JSON.stringify(v) + '`'; })
+                .concat(Object.entries(resourceFields).map(function ([k, v]) {
+                  return '- `' + k + '` → `' + v + '` *(install method `' + resourceTargetType + '`)*';
+                }))
                 .join('\n');
               await postComment(
                 '✅ **PocketBase Bot**: Updated **`' + slug + '`** successfully!\n\n' +
