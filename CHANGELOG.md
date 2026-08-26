@@ -531,7 +531,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Fedora ([#16770](https://github.com/community-scripts/ProxmoxVE/pull/16770))
+  - CentOS ([#16772](https://github.com/community-scripts/ProxmoxVE/pull/16772))
+- AlmaLinux ([#16771](https://github.com/community-scripts/ProxmoxVE/pull/16771))
+- Fedora ([#16770](https://github.com/community-scripts/ProxmoxVE/pull/16770))
 - Devuan ([#16773](https://github.com/community-scripts/ProxmoxVE/pull/16773))
 - OpenEuler ([#16774](https://github.com/community-scripts/ProxmoxVE/pull/16774))
 - Gentoo ([#16775](https://github.com/community-scripts/ProxmoxVE/pull/16775))
