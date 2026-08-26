@@ -527,6 +527,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-26
+
+### 🆕 New Scripts
+
+  - HAProxy ([#16760](https://github.com/community-scripts/ProxmoxVE/pull/16760))
+
 ## 2026-08-25
 
 ### 🆕 New Scripts
