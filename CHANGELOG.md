@@ -538,6 +538,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - excalidash: Add a sed to switch to the correct DB Provider [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16814](https://github.com/community-scripts/ProxmoxVE/pull/16814))
     - fix(stirling-pdf): remove broken ExecStop using %n [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16813](https://github.com/community-scripts/ProxmoxVE/pull/16813))
 
 ### 🧰 Tools
