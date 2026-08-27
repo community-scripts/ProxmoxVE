@@ -534,6 +534,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Seanime ([#16777](https://github.com/community-scripts/ProxmoxVE/pull/16777))
 - Yopass ([#16778](https://github.com/community-scripts/ProxmoxVE/pull/16778))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(stirling-pdf): remove broken ExecStop using %n [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16813](https://github.com/community-scripts/ProxmoxVE/pull/16813))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
