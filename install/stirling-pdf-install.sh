@@ -147,7 +147,6 @@ Group=root
 EnvironmentFile=/opt/Stirling-PDF/.env
 WorkingDirectory=/opt/Stirling-PDF
 ExecStart=/usr/bin/java -jar Stirling-PDF.jar
-ExecStop=/bin/kill -15 %n
 Restart=always
 RestartSec=10
 
