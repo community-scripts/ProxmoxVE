@@ -534,6 +534,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Seanime ([#16777](https://github.com/community-scripts/ProxmoxVE/pull/16777))
 - Yopass ([#16778](https://github.com/community-scripts/ProxmoxVE/pull/16778))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Fix: Incorporate the new update functions to prevent a empty grep on … [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16809](https://github.com/community-scripts/ProxmoxVE/pull/16809))
+
 ## 2026-08-26
 
 ### 🆕 New Scripts
