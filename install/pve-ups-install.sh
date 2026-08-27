@@ -27,7 +27,7 @@ install -d -o pveusv -g pveusv -m 0750 \
   /var/lib/pve-usv/updates
 chown -R pveusv:pveusv /opt/pve-usv
 cd /opt/pve-usv
-$STD uv venv --clear venv
+$STD uv venv --clear --seed venv
 $STD uv pip install --python venv/bin/python .
 chmod 0755 deploy/pve-usv-agent.sh
 msg_ok "Set up Application"
