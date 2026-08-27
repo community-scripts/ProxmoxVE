@@ -173,7 +173,15 @@ function detect_service() {
     rm -rf "$tmpdir"
     return 1
   fi
-  service=$(grep -oE '/ct/[a-zA-Z0-9._-]+\.sh' "$update_file" 2>/dev/null | head -n1 | sed 's|.*/ct/||; s|\.sh$||')
+
+  # New-style entrypoint (write_update_entrypoint in core.func) carries the app
+  # name in an export; its only /ct/ reference is the literal, unexpanded
+  # "/ct/${UPDATE_SCRIPT_NAME}.sh" fallback, which the legacy grep below cannot
+  # match. Prefer the explicit export, then fall back to the old literal path.
+  service=$(sed -n -E 's/^[[:space:]]*export[[:space:]]+UPDATE_SCRIPT_NAME=["'"'"']?([a-zA-Z0-9._-]+).*/\1/p' "$update_file" | head -n1)
+  [[ -z "$service" ]] && service=$(sed -n -E 's/^[[:space:]]*export[[:space:]]+SCRIPT_SLUG=["'"'"']?([a-zA-Z0-9._-]+).*/\1/p' "$update_file" | head -n1)
+  [[ -z "$service" ]] && service=$(grep -oE '/ct/[a-zA-Z0-9._-]+\.sh' "$update_file" 2>/dev/null | head -n1 | sed 's|.*/ct/||; s|\.sh$||')
+
   rm -rf "$tmpdir"
 }
 
