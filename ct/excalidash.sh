@@ -42,6 +42,7 @@ function update_script() {
     msg_info "Configuring Database Provider (${DATABASE_PROVIDER:-sqlite})"
     cd /opt/excalidash/backend
     sed -i '/datasource db {/,/}/ s/provider = env("[^"]*")/provider = "'"${DATABASE_PROVIDER:-sqlite}"'"/' prisma/schema.prisma
+    sed -i '/datasource db {/,/}/ s/provider = "[^"]*"/provider = "'"${DATABASE_PROVIDER:-sqlite}"'"/' prisma/schema.prisma
     mv prisma/migrations/"${DATABASE_PROVIDER:-sqlite}"/* prisma/migrations/
     rm -rf prisma/migrations/postgresql prisma/migrations/sqlite
     msg_ok "Configured Database Provider"
