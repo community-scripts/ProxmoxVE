@@ -527,6 +527,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-27
+
+### 🆕 New Scripts
+
+  - Yopass ([#16778](https://github.com/community-scripts/ProxmoxVE/pull/16778))
+
 ## 2026-08-26
 
 ### 🆕 New Scripts
