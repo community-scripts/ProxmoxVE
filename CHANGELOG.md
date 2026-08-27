@@ -531,7 +531,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Yopass ([#16778](https://github.com/community-scripts/ProxmoxVE/pull/16778))
+  - Seanime ([#16777](https://github.com/community-scripts/ProxmoxVE/pull/16777))
+- Yopass ([#16778](https://github.com/community-scripts/ProxmoxVE/pull/16778))
 
 ## 2026-08-26
 
