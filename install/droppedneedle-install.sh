@@ -45,7 +45,7 @@ WorkingDirectory=/opt/droppedneedle/backend
 Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
 Environment=PORT=8688
 # Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>
-ExecStart=/opt/droppedneedle/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8688 --loop uvloop --http httptools --workers 1
+ExecStart=/opt/droppedneedle/venv/bin/python -m maintenance.automatic_upgrade --start-target
 Restart=on-failure
 RestartSec=5
 
