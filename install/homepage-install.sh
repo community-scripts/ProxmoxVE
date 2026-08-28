@@ -63,6 +63,7 @@ Restart=always
 RestartSec=1
 User=root
 WorkingDirectory=/opt/homepage/
+Environment=CI=true
 ExecStart=pnpm start
 
 [Install]
