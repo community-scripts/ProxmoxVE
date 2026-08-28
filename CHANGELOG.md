@@ -533,6 +533,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - droppedneedle: launch via automatic_upgrade orchestrator [@MickLesk](https://github.com/MickLesk) ([#16834](https://github.com/community-scripts/ProxmoxVE/pull/16834))
     - calibre-web: point cps at explicit db path, src-layout package has no default anymore [@MickLesk](https://github.com/MickLesk) ([#16832](https://github.com/community-scripts/ProxmoxVE/pull/16832))
     - podman: pull portainer images before systemd unit start to avoid start timeout [@MickLesk](https://github.com/MickLesk) ([#16831](https://github.com/community-scripts/ProxmoxVE/pull/16831))
     - gitea: make gitea own its home dir instead of toggling group perms [@MickLesk](https://github.com/MickLesk) ([#16830](https://github.com/community-scripts/ProxmoxVE/pull/16830))
