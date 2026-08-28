@@ -57,6 +57,18 @@ function update_script() {
 
     restore_backup
 
+    mkdir -p /opt/calibre-web-library
+    if [[ -f /opt/calibre-web/data/metadata.db && ! -f /opt/calibre-web-library/metadata.db ]]; then
+      msg_info "Migrating Calibre Library to its own directory"
+      find /opt/calibre-web/data -mindepth 1 -maxdepth 1 ! -name app.db ! -name .calibre-web -exec mv -t /opt/calibre-web-library -- {} +
+      msg_ok "Migrated Calibre Library"
+    fi
+    if [[ ! -f /opt/calibre-web-library/metadata.db ]]; then
+      msg_info "Creating Empty Calibre Library"
+      $STD calibredb list --with-library /opt/calibre-web-library
+      msg_ok "Created Empty Calibre Library"
+    fi
+
     msg_info "Starting Service"
     systemctl start calibre-web
     msg_ok "Started Service"

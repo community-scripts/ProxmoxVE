@@ -42,8 +42,14 @@ $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir --
 $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir .
 msg_ok "Installed Python Dependencies"
 
+mkdir -p /opt/calibre-web/data /opt/calibre-web-library
+if [[ ! -f /opt/calibre-web-library/metadata.db ]]; then
+  msg_info "Creating Empty Calibre Library"
+  $STD calibredb list --with-library /opt/calibre-web-library
+  msg_ok "Created Empty Calibre Library"
+fi
+
 msg_info "Creating Service"
-mkdir -p /opt/calibre-web/data
 cat <<EOF >/etc/systemd/system/calibre-web.service
 [Unit]
 Description=Calibre-Web Service
