@@ -1,0 +1,179 @@
+name: PR test command
+
+# A reviewer should not have to work out which URL exercises a pull request.
+# The engine and the scripts resolve independently, so pointing
+# COMMUNITY_SCRIPTS_URL at this PR's branch runs the changed ct/ and install/
+# scripts against the production engine. This posts that command, filled in.
+#
+# Only for scripts that already bootstrap from community-scripts/core: the older
+# one-liner ignores COMMUNITY_SCRIPTS_URL entirely, so a command built for it
+# would quietly install main and look like it passed.
+#
+# pull_request_target, so the comment can be posted on PRs from forks -- which is
+# most of them. Nothing from the pull request is checked out or executed here.
+# The file list, the branch name and the bootstrap line all come from the API,
+# the branch name is pattern-checked before it reaches the comment, and the body
+# is assembled in JavaScript, so no attacker-controlled string reaches a shell.
+
+on:
+  pull_request_target:
+    branches: ["main"]
+    types: [opened, synchronize, reopened]
+    paths:
+      - "ct/**"
+      - "install/**"
+
+jobs:
+  comment:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: self-hosted
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const MARKER = '<!-- pr-test-command -->';
+            const MAX_APPS = 10;
+
+            const pr = context.payload.pull_request;
+            const head = pr.head.repo;            // null when the fork is gone
+            if (!head) return;
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Git allows backticks in a ref name, and this one ends up inside a
+            // fenced block. Anything outside the ordinary set is not worth
+            // rendering, so bail rather than escape.
+            const ref = pr.head.ref;
+            if (!/^[A-Za-z0-9._\/-]+$/.test(ref)) return;
+            const base = `https://raw.githubusercontent.com/${head.full_name}/${ref}`;
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: pr.number, per_page: 100,
+            });
+
+            // ct/foo.sh and install/foo-install.sh are the same app. A removed
+            // file has nothing left to run.
+            const apps = new Map();               // slug -> {ct, install}
+            for (const f of files) {
+              if (f.status === 'removed') continue;
+              let m = f.filename.match(/^ct\/([a-z0-9][a-z0-9._-]*)\.sh$/);
+              if (m) { apps.set(m[1], { ...apps.get(m[1]), ct: true }); continue; }
+              m = f.filename.match(/^install\/([a-z0-9][a-z0-9._-]*)-install\.sh$/);
+              if (m) apps.set(m[1], { ...apps.get(m[1]), install: true });
+            }
+            if (apps.size === 0) return;
+
+            // Read the ct script at the PR head to see which engine it loads.
+            // Read only -- it is never sourced or run.
+            async function bootstrapOf(slug) {
+              try {
+                const res = await github.rest.repos.getContent({
+                  owner: head.owner.login, repo: head.name,
+                  path: `ct/${slug}.sh`, ref: pr.head.sha,
+                });
+                if (!res.data.content) return 'unknown';
+                const text = Buffer.from(res.data.content, 'base64').toString('utf8');
+                const firstLines = text.split('\n').slice(0, 12).join('\n');
+                return /_cs_boot=/.test(firstLines) ? 'core' : 'legacy';
+              } catch (e) {
+                return e.status === 404 ? 'missing' : 'unknown';
+              }
+            }
+
+            const ready = [], legacy = [], missing = [];
+            for (const slug of [...apps.keys()].sort()) {
+              const kind = await bootstrapOf(slug);
+              if (kind === 'core') ready.push(slug);
+              else if (kind === 'legacy') legacy.push(slug);
+              else if (kind === 'missing') missing.push(slug);
+            }
+
+            const lines = [MARKER];
+
+            if (ready.length > 0) {
+              const shown = ready.slice(0, MAX_APPS);
+              lines.push(
+                '### Try this branch',
+                '',
+                'The engine and the scripts resolve independently, so this runs the changed',
+                '`ct/` and `install/` scripts against the **production** engine:',
+                '',
+              );
+              for (const slug of shown) {
+                lines.push(
+                  '```bash',
+                  `export COMMUNITY_SCRIPTS_URL=${base}`,
+                  `bash -c "$(curl -fsSL "$COMMUNITY_SCRIPTS_URL/ct/${slug}.sh")"`,
+                  '```',
+                  '',
+                );
+              }
+              if (ready.length > shown.length) {
+                lines.push(
+                  `${ready.length - shown.length} more script(s) changed; same command, different slug.`,
+                  '',
+                );
+              }
+              lines.push(
+                'Both lines are needed. Each script pins `_CS_DEFAULT_URL` to `main`, and that',
+                'pin is what fills `COMMUNITY_SCRIPTS_URL` when the variable is unset — so',
+                'curling the branch URL on its own gives you the `ct/` script from this PR and',
+                'the `install/` script from `main`. Frequently the one you meant to test.',
+                '',
+                'The same command works on an Incus host: the engine detects the platform and',
+                'loads the matching backend, while the scripts still come from this branch.',
+                '',
+                '<details><summary>Useful while testing</summary>',
+                '',
+                '`dev_mode=net` logs every fetch with status and URL, which is the quickest way',
+                'to confirm the branch is really being used. `dev_mode=keep` stops a failed',
+                'build from deleting the container along with the evidence.',
+                '',
+                '```bash',
+                `export COMMUNITY_SCRIPTS_URL=${base}`,
+                `dev_mode=net,keep bash -c "$(curl -fsSL "$COMMUNITY_SCRIPTS_URL/ct/${shown[0]}.sh")"`,
+                '```',
+                '</details>',
+              );
+            }
+
+            if (legacy.length > 0) {
+              lines.push(
+                '',
+                ready.length > 0 ? '---' : '### Not testable this way yet',
+                '',
+                `\`${legacy.join('`, `')}\` still uses the older one-liner bootstrap, which`,
+                'resolves everything from `ProxmoxVE/main` and ignores `COMMUNITY_SCRIPTS_URL`.',
+                'There is no way to point it at this branch — test it from a checkout on the',
+                'host instead, or migrate the script to the `_cs_boot` bootstrap first.',
+              );
+            }
+
+            if (missing.length > 0) {
+              lines.push(
+                '',
+                `No \`ct/\` script found for \`${missing.join('`, `')}\`, so there is nothing to`,
+                'run. If the install script was renamed, its `ct/` counterpart needs the same',
+                'name.',
+              );
+            }
+
+            if (lines.length === 1) return;   // marker only, nothing worth saying
+            const body = lines.join('\n');
+
+            // Update in place rather than posting again on every push.
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: pr.number, per_page: 100,
+            });
+            const mine = comments.find(c => c.body.includes(MARKER));
+            if (mine) {
+              if (mine.body !== body) {
+                await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+              }
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body });
+            }
