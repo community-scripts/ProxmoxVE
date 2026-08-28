@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: mikolaj92
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -35,8 +37,7 @@ function update_script() {
     systemctl stop calibre-web
     msg_ok "Stopped Service"
 
-    create_backup /opt/calibre-web/app.db \
-      /opt/calibre-web/data
+    create_backup /opt/calibre-web/data
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Calibre-Web" "janeczku/calibre-web" "prebuild" "latest" "/opt/calibre-web" "calibreweb*.tar.gz"
     setup_uv
@@ -48,7 +49,10 @@ function update_script() {
     $STD uv pip install --python /opt/calibre-web/.venv/bin/python --no-cache-dir .
     msg_ok "Installed Dependencies"
 
-    sed -i 's|^ExecStart=.*|ExecStart=/opt/calibre-web/.venv/bin/cps|' /etc/systemd/system/calibre-web.service
+    sed -i 's|^ExecStart=.*|ExecStart=/opt/calibre-web/.venv/bin/cps -p /opt/calibre-web/data/app.db|' /etc/systemd/system/calibre-web.service
+    if ! grep -q '^Environment=HOME=' /etc/systemd/system/calibre-web.service; then
+      sed -i '/^ExecStart=/i Environment=HOME=/opt/calibre-web/data' /etc/systemd/system/calibre-web.service
+    fi
     $STD systemctl daemon-reload
 
     restore_backup

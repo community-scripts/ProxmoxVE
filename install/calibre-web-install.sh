@@ -53,8 +53,9 @@ After=network.target
 Type=simple
 User=root
 Environment="QTWEBENGINE_CHROMIUM_FLAGS=--no-sandbox"
+Environment=HOME=/opt/calibre-web/data
 WorkingDirectory=/opt/calibre-web
-ExecStart=/opt/calibre-web/.venv/bin/cps
+ExecStart=/opt/calibre-web/.venv/bin/cps -p /opt/calibre-web/data/app.db
 Restart=on-failure
 RestartSec=5
 
