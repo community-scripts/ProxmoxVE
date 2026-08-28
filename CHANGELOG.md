@@ -527,6 +527,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-28
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - pve-ups: fix: add pip binary  [@CrazyWolf13](https://github.com/CrazyWolf13) ([#16820](https://github.com/community-scripts/ProxmoxVE/pull/16820))
+
 ## 2026-08-27
 
 ### 🆕 New Scripts
