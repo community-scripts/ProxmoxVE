@@ -51,6 +51,7 @@ read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
+  $STD podman pull docker.io/portainer/portainer-ce:latest
   cat <<EOF >/etc/containers/systemd/portainer.container
 [Unit]
 Description=Portainer Container
@@ -77,6 +78,7 @@ else
   read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
+    $STD podman pull docker.io/portainer/agent:latest
     cat <<EOF >/etc/containers/systemd/portainer-agent.container
 [Unit]
 Description=Portainer Agent Container
