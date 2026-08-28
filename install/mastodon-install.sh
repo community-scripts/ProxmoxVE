@@ -48,12 +48,12 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="mastodon_production" PG_DB_USER="mastodon" PG_DB_SKIP_ALTER_ROLE="true" setup_postgresql_db
 $STD sudo -u postgres psql -c "ALTER USER mastodon CREATEDB;"
 
-RUBY_VERSION="4.0.5" RUBY_INSTALL_RAILS="false" setup_ruby
-export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
-
 fetch_and_deploy_gh_release "mastodon" "mastodon/mastodon" "tarball"
 sed -i "s/config.force_ssl = true/config.force_ssl = ENV.fetch('LOCAL_HTTPS', 'false') == 'true'/" /opt/mastodon/config/environments/production.rb
 sed -i "s/https = Rails.env.production? || ENV\['LOCAL_HTTPS'\] == 'true'/https = ENV.fetch('LOCAL_HTTPS', 'false') == 'true'/" /opt/mastodon/config/initializers/1_hosts.rb
+
+RUBY_VERSION="$(cat /opt/mastodon/.ruby-version)" RUBY_INSTALL_RAILS="false" setup_ruby
+export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 
 msg_info "Installing Ruby Dependencies"
 cd /opt/mastodon
