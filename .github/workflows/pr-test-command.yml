@@ -1,19 +1,11 @@
 name: PR test command
 
-# A reviewer should not have to work out which URL exercises a pull request.
-# The engine and the scripts resolve independently, so pointing
-# COMMUNITY_SCRIPTS_URL at this PR's branch runs the changed ct/ and install/
-# scripts against the production engine. This posts that command, filled in.
+# Posts a ready-to-run test command for reviewers.
+# It uses this PR’s script branch with the production engine, since both resolve
+# independently. Only scripts using community-scripts/core are supported.
 #
-# Only for scripts that already bootstrap from community-scripts/core: the older
-# one-liner ignores COMMUNITY_SCRIPTS_URL entirely, so a command built for it
-# would quietly install main and look like it passed.
-#
-# pull_request_target, so the comment can be posted on PRs from forks -- which is
-# most of them. Nothing from the pull request is checked out or executed here.
-# The file list, the branch name and the bootstrap line all come from the API,
-# the branch name is pattern-checked before it reaches the comment, and the body
-# is assembled in JavaScript, so no attacker-controlled string reaches a shell.
+# pull_request_target allows comments on fork PRs. No PR code is checked out or
+# executed; API inputs are validated and the comment is assembled in JavaScript.
 
 on:
   pull_request_target:
