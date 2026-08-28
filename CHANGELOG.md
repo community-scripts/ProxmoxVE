@@ -533,6 +533,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - homepage: set CI=true so pnpm can self-heal node_modules without a TTY [@MickLesk](https://github.com/MickLesk) ([#16841](https://github.com/community-scripts/ProxmoxVE/pull/16841))
     - droppedneedle: launch via automatic_upgrade orchestrator [@MickLesk](https://github.com/MickLesk) ([#16834](https://github.com/community-scripts/ProxmoxVE/pull/16834))
     - calibre-web: point cps at explicit db path, src-layout package has no default anymore [@MickLesk](https://github.com/MickLesk) ([#16832](https://github.com/community-scripts/ProxmoxVE/pull/16832))
     - podman: pull portainer images before systemd unit start to avoid start timeout [@MickLesk](https://github.com/MickLesk) ([#16831](https://github.com/community-scripts/ProxmoxVE/pull/16831))
