@@ -401,14 +401,19 @@ function advanced_settings() {
     exit-script
   fi
 
-  if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose CPU Model" --cancel-button Exit-Script 10 58 2 \
+  if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose CPU Model" --cancel-button Exit-Script 12 74 3 \
     "KVM64" "Default - safe for migration/compatibility" ON \
+    "x86-64-v2-AES" "Wider feature set, needed by newer HA releases (PVE 8+, host CPU 2010+)" OFF \
     "Host" "Use host CPU features (faster, no migration)" OFF \
     3>&1 1>&2 2>&3); then
     case "$CPU_TYPE1" in
     Host)
       echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
       CPU_TYPE=" -cpu host"
+      ;;
+    x86-64-v2-AES)
+      echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}x86-64-v2-AES${CL}"
+      CPU_TYPE=" -cpu x86-64-v2-AES"
       ;;
     *)
       echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
