@@ -527,6 +527,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-29
+
+### 📚 Documentation
+
+  - github action: post the command that tests a ct/ or install/ change [@MickLesk](https://github.com/MickLesk) ([#16833](https://github.com/community-scripts/ProxmoxVE/pull/16833))
+
 ## 2026-08-28
 
 ### 🚀 Updated Scripts
