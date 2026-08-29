@@ -4,6 +4,11 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  # Fired by community-scripts/core when an engine pull request is merged, so a
+  # change there does not wait for the next push here. Optional: engine PRs are
+  # collected on every run regardless, this only decides how soon.
+  repository_dispatch:
+    types: [core-pr-merged]
 
 jobs:
   update-changelog-pull-request:
@@ -205,6 +210,77 @@ jobs:
                   }
                 }
 
+              }
+
+              // ── Engine pull requests ────────────────────────────────────────
+              // The engine lives in community-scripts/core, so its changes never
+              // show up in this repository's PR list -- and a fix there reaches
+              // every script here. The "💾 Core" category already existed for
+              // ProxmoxVE PRs labelled `core`; engine PRs land in the same place.
+              try {
+                const { data: corePulls } = await github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: "core",
+                  base: "main",
+                  state: "closed",
+                  sort: "updated",
+                  direction: "desc",
+                  per_page: 100,
+                });
+
+                const coreCategory = categorizedPRs.find(category =>
+                  category.title.includes("Core") || category.labels.includes("core"));
+
+                // core carries GitHub's default label set, and most of its pull
+                // requests carry none at all, so map what maps and let the rest
+                // sit directly under the category.
+                const coreLabelAliases = {
+                  bug: "bugfix",
+                  bugfix: "bugfix",
+                  enhancement: "feature",
+                  feature: "feature",
+                  refactor: "refactor",
+                  "breaking change": "breaking change",
+                };
+                const corePriority = ["breaking change", "bugfix", "feature", "refactor"];
+
+                for (const pr of corePulls) {
+                  if (!pr.merged_at) continue;
+                  if (new Date(pr.merged_at) <= latestDateInChangelog) continue;
+
+                  const rawLabels = pr.labels.map(label => label.name.toLowerCase());
+                  if (rawLabels.some(l => ["invalid", "wontdo", "wontfix", "duplicate"].includes(l))) continue;
+
+                  if (!coreCategory) {
+                    console.log(`No Core category configured; skipping core#${pr.number}`);
+                    continue;
+                  }
+
+                  // core#N rather than #N: a bare number reads as a pull request
+                  // in this repository, so the link would lead somewhere other
+                  // than the text promises.
+                  const coreNote = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([core#${pr.number}](${pr.html_url}))`;
+
+                  const mapped = rawLabels.map(l => coreLabelAliases[l]).filter(Boolean);
+                  let placed = false;
+                  if (coreCategory.subCategories && coreCategory.subCategories.length > 0) {
+                    for (const priorityLabel of corePriority) {
+                      if (!mapped.includes(priorityLabel)) continue;
+                      const subCategory = coreCategory.subCategories.find(sub =>
+                        sub.labels.includes(priorityLabel));
+                      if (subCategory) {
+                        subCategory.notes.push(coreNote);
+                        placed = true;
+                        break;
+                      }
+                    }
+                  }
+                  if (!placed) coreCategory.notes.push(coreNote);
+                }
+              } catch (error) {
+                // The engine repository being unreachable must not cost this
+                // repository its changelog.
+                console.error(`Could not read core pull requests: ${error}`);
               }
 
               return categorizedPRs;
