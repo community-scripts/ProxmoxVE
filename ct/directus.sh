@@ -41,6 +41,8 @@ function update_script() {
       /opt/directus/uploads \
       /opt/directus/extensions
 
+    ensure_dependencies build-essential
+
     msg_info "Updating Directus"
     cd /opt/directus
     $STD npm install --omit=dev "directus@${CHECK_UPDATE_RELEASE#v}"
