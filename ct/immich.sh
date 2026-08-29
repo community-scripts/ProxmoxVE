@@ -117,7 +117,7 @@ EOF
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
       cd /opt/immich/app/bin
-      $STD ./immich-admin enable-maintenance-mode
+      $STD ./immich-admin enable-maintenance-mode || true
       export MAINT_MODE=1
       $STD cd -
       msg_ok "Enabled Maintenance Mode"
