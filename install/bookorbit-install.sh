@@ -81,6 +81,7 @@ Requires=postgresql.service
 [Service]
 Type=simple
 User=root
+TimeoutStartSec=infinity
 WorkingDirectory=/opt/bookorbit/server
 EnvironmentFile=/opt/bookorbit/.env
 ExecStartPre=/usr/bin/node /opt/bookorbit/server/dist/scripts/migrate.js
