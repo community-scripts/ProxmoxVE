@@ -23,7 +23,7 @@ setup_deb_based() {
   NODE_VERSION="22" setup_nodejs
 
   msg_info "Installing Node-Red"
-  $STD npm install -g --unsafe-perm node-red
+  $STD npm install -g node-red
   echo "journalctl -f -n 100 -u nodered -o cat" >/usr/bin/node-red-log
   chmod +x /usr/bin/node-red-log
   echo "systemctl stop nodered" >/usr/bin/node-red-stop
@@ -71,7 +71,7 @@ setup_alpine() {
   msg_ok "Created Node-RED User"
 
   msg_info "Installing Node-RED"
-  $STD npm install -g --unsafe-perm node-red
+  $STD npm install -g node-red
   msg_ok "Installed Node-RED"
 
   msg_info "Creating /home/nodered"

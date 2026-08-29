@@ -49,7 +49,7 @@ update_deb_based() {
     msg_ok "Stopped Service"
 
     msg_info "Updating Node-Red"
-    $STD npm install -g --unsafe-perm node-red
+    $STD npm install -g node-red
     msg_ok "Updated Node-Red"
 
     msg_info "Starting Service"
@@ -106,7 +106,7 @@ update_alpine() {
   msg_ok "Updated Node.js and npm"
 
   msg_info "Updating Node-RED"
-  $STD npm install -g --unsafe-perm node-red
+  $STD npm install -g node-red
   msg_ok "Updated Node-RED"
 
   msg_info "Restarting Node-RED"
