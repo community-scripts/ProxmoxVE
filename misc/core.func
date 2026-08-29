@@ -10,10 +10,6 @@
 # including colors, formatting, validation checks, message output, and
 # execution helpers used throughout the Community-Scripts ecosystem.
 #
-# Usage:
-#   source <(curl -fsSL https://git.community-scripts.org/.../core.func)
-#   load_functions
-#
 # ==============================================================================
 
 [[ -n "${_CORE_FUNC_LOADED:-}" ]] && return
