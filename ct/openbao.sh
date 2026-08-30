@@ -38,13 +38,11 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /etc/openbao
-
     DPKG_FORCE_CONFOLD=1 fetch_and_deploy_gh_release "openbao" "openbao/openbao" "binary" "latest" "/opt/openbao" "openbao_*_linux_$(arch_resolve).deb"
-
     restore_backup
-    systemctl daemon-reload
 
     msg_info "Starting Service"
+    $STD systemctl daemon-reload
     systemctl start openbao
     msg_ok "Started Service"
     for _ in {1..15}; do
@@ -68,6 +66,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8200${CL}"
-echo -e "${INFO}${YW} Credentials:${CL}"
-echo -e "${TAB}${DGN}Root Token: ${BGN}$(pct exec "$CTID" -- sed -n 's/^BAO_ROOT_TOKEN=//p' /etc/openbao/openbao.env)${CL}"
-echo -e "${TAB}${DGN}Unseal Key: ${BGN}$(pct exec "$CTID" -- sed -n 's/^BAO_UNSEAL_KEY=//p' /etc/openbao/openbao.env)${CL}"
