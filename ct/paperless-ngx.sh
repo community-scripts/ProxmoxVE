@@ -175,6 +175,30 @@ function update_script() {
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
+      # Workaround for paperless-ngx/paperless-ngx#13854:
+      # 0001_squashed.py in 3.x contains nested squashed-migration names in its
+      # replaces list that crash Django's graph builder when upgrading from 2.x.
+      # The individual migrations are already listed — remove the redundant duplicates.
+      msg_info "Applying migration graph workaround (paperless-ngx#13854)"
+      local _squash_refs=(
+        "0004_auto_20160114_1844_squashed_0011_auto_20160303_1929"
+        "0015_add_insensitive_to_match_squashed_0018_auto_20170715_1712"
+        "1006_auto_20201208_2209_squashed_1011_auto_20210101_2340"
+        "1016_auto_20210317_1351_squashed_1020_merge_20220518_1839"
+        "1022_paperlesstask_squashed_1036_alter_savedviewfilterrule_rule_type"
+        "1045_alter_customfieldinstance_value_monetary_squashed_1049_document_deleted_at_document_restored_at"
+        "0001_initial_squashed_0009_mailrule_assign_tags"
+        "0011_remove_mailrule_assign_tag_squashed_0024_alter_mailrule_name_and_more"
+      )
+      for _ref in "${_squash_refs[@]}"; do
+        sed -i "/${_ref}/d" /opt/paperless/src/documents/migrations/0001_squashed.py 2>/dev/null || true
+        sed -i "/${_ref}/d" /opt/paperless/src/paperless_mail/migrations/0001_squashed.py 2>/dev/null || true
+      done
+      sed -i "/django_celery_results.*0011_taskresult_periodic_task_name/d" \
+        /opt/paperless/src/documents/migrations/1022_paperlesstask_squashed_1036_alter_savedviewfilterrule_rule_type.py 2>/dev/null || true
+      sed -i "/django_celery_results.*0011_taskresult_periodic_task_name/d" \
+        /opt/paperless/src/documents/migrations/1026_transition_to_celery.py 2>/dev/null || true
+      msg_ok "Applied migration graph workaround"
       $STD uv run -- python manage.py migrate
       msg_ok "Updated Paperless-ngx"
 
