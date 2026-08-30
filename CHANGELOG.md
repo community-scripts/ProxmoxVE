@@ -534,7 +534,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Defguard ([#16871](https://github.com/community-scripts/ProxmoxVE/pull/16871))
+  - Super-Productivity ([#16870](https://github.com/community-scripts/ProxmoxVE/pull/16870))
+- Defguard ([#16871](https://github.com/community-scripts/ProxmoxVE/pull/16871))
 - OpenBao ([#16872](https://github.com/community-scripts/ProxmoxVE/pull/16872))
 
 ### 🚀 Updated Scripts
