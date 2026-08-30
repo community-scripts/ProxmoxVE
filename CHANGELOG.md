@@ -534,7 +534,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Super-Productivity ([#16870](https://github.com/community-scripts/ProxmoxVE/pull/16870))
+  - SolidInvoice ([#16869](https://github.com/community-scripts/ProxmoxVE/pull/16869))
+- Super-Productivity ([#16870](https://github.com/community-scripts/ProxmoxVE/pull/16870))
 - Defguard ([#16871](https://github.com/community-scripts/ProxmoxVE/pull/16871))
 - OpenBao ([#16872](https://github.com/community-scripts/ProxmoxVE/pull/16872))
 
