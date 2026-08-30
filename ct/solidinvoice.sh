@@ -14,7 +14,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-#var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,15 +33,15 @@ function update_script() {
   fi
 
   if check_for_gh_release "solidinvoice" "SolidInvoice/SolidInvoice"; then
-    msg_info "Stopping ${APP} Service"
+    msg_info "Stopping Service"
     systemctl stop solidinvoice
-    msg_ok "Stopped ${APP} Service"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "solidinvoice" "SolidInvoice/SolidInvoice" "singlefile" "latest" "/usr/bin" "solidinvoice-linux-$(arch_resolve)"
 
-    msg_info "Starting ${APP} Service"
+    msg_info "Starting Service"
     systemctl start solidinvoice
-    msg_ok "Started ${APP} Service"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit
