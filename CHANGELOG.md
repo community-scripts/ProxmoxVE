@@ -532,6 +532,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-30
 
+### 🆕 New Scripts
+
+  - OpenBao ([#16872](https://github.com/community-scripts/ProxmoxVE/pull/16872))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
