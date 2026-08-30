@@ -532,6 +532,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-30
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - general: remove gitea links overall  [@MickLesk](https://github.com/MickLesk) ([#16863](https://github.com/community-scripts/ProxmoxVE/pull/16863))
+
 ## 2026-08-29
 
 ### 📚 Documentation
