@@ -14,7 +14,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-#var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,10 +32,10 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating Defguard"
   $STD apt update
   $STD apt install -y defguard defguard-proxy
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated Defguard"
 
   msg_info "Restarting Services"
   systemctl restart defguard defguard-proxy
@@ -52,6 +52,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:8000${CL}"
-echo -e "${INFO}${YW}In the setup wizard, enter this as the Edge address:${CL}"
-echo -e "${TAB}${DEFAULT}${BGN}127.0.0.1:50051${CL}"
-echo -e "${INFO}${YW}The generated admin password is in /etc/defguard/core.conf${CL}"
