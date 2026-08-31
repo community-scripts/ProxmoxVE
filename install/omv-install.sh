@@ -14,9 +14,9 @@ network_check
 update_os
 
 msg_info "Installing OpenMediaVault (Patience)"
-curl -fsSL "https://packages.openmediavault.org/public/archive.key" | gpg --dearmor >"/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg"
+curl -fsSL "https://openmediavault.github.io/packages/archive.key" | gpg --dearmor >"/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg"
 cat <<EOF >/etc/apt/sources.list.d/openmediavault.list
-deb [signed-by=/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg] http://packages.openmediavault.org/public sandworm main
+deb [signed-by=/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg] https://openmediavault.github.io/packages sandworm main
 EOF
 
 export LANG=C.UTF-8
