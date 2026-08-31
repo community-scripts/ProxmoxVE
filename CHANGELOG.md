@@ -541,6 +541,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - immich: tolerate enable-maintenance-mode crash, same as disable-maintenance-mode [@MickLesk](https://github.com/MickLesk) ([#16866](https://github.com/community-scripts/ProxmoxVE/pull/16866))
     - move the hardware-accelerated scripts onto new core [@MickLesk](https://github.com/MickLesk) ([#16864](https://github.com/community-scripts/ProxmoxVE/pull/16864))
     - ntopng: use ntop.org's documented apt repo per Debian codename, not always apt-stable [@MickLesk](https://github.com/MickLesk) ([#16862](https://github.com/community-scripts/ProxmoxVE/pull/16862))
     - Refactor: OpenGist [@MickLesk](https://github.com/MickLesk) ([#16861](https://github.com/community-scripts/ProxmoxVE/pull/16861))
