@@ -530,6 +530,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-08-31
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - directus: add build-essential dependency [@MickLesk](https://github.com/MickLesk) ([#16858](https://github.com/community-scripts/ProxmoxVE/pull/16858))
+
 ## 2026-08-30
 
 ### 🆕 New Scripts
