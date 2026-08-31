@@ -536,6 +536,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - bookorbit: raise service start timeout, migration can exceed systemd default [@MickLesk](https://github.com/MickLesk) ([#16860](https://github.com/community-scripts/ProxmoxVE/pull/16860))
     - node-red: remove --unsafe-perm flag [@MickLesk](https://github.com/MickLesk) ([#16859](https://github.com/community-scripts/ProxmoxVE/pull/16859))
     - directus: add build-essential dependency [@MickLesk](https://github.com/MickLesk) ([#16858](https://github.com/community-scripts/ProxmoxVE/pull/16858))
 
@@ -545,6 +546,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - gatus: pin Go toolchain to gatus's own go.mod version [@MickLesk](https://github.com/MickLesk) ([#16893](https://github.com/community-scripts/ProxmoxVE/pull/16893))
     - immich: tolerate enable-maintenance-mode crash, same as disable-maintenance-mode [@MickLesk](https://github.com/MickLesk) ([#16866](https://github.com/community-scripts/ProxmoxVE/pull/16866))
     - move the hardware-accelerated scripts onto new core [@MickLesk](https://github.com/MickLesk) ([#16864](https://github.com/community-scripts/ProxmoxVE/pull/16864))
     - ntopng: use ntop.org's documented apt repo per Debian codename, not always apt-stable [@MickLesk](https://github.com/MickLesk) ([#16862](https://github.com/community-scripts/ProxmoxVE/pull/16862))
@@ -552,7 +554,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Lift the settings summary and the mode fork into vm-core [@MickLesk](https://github.com/MickLesk) ([core#12](https://github.com/community-scripts/core/pull/12))
+  - Ask ProxmoxVE to refresh its changelog on merge [@MickLesk](https://github.com/MickLesk) ([core#11](https://github.com/community-scripts/core/pull/11))
+- Refactor VM script settings and fix load_functions errors [@MickLesk](https://github.com/MickLesk) ([core#13](https://github.com/community-scripts/core/pull/13))
+- Lift the settings summary and the mode fork into vm-core [@MickLesk](https://github.com/MickLesk) ([core#12](https://github.com/community-scripts/core/pull/12))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - filebrowser-quantum: strip removed disableIndexing key on update, restart service [@MickLesk](https://github.com/MickLesk) ([#16892](https://github.com/community-scripts/ProxmoxVE/pull/16892))
 
 ### 📚 Documentation
 
