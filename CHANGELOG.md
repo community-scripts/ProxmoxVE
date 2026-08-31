@@ -539,6 +539,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - node-red: remove --unsafe-perm flag [@MickLesk](https://github.com/MickLesk) ([#16859](https://github.com/community-scripts/ProxmoxVE/pull/16859))
     - directus: add build-essential dependency [@MickLesk](https://github.com/MickLesk) ([#16858](https://github.com/community-scripts/ProxmoxVE/pull/16858))
 
+  - #### ✨ New Features
+
+    - haos-vm: add optional x86-64-v2-AES CPU option, future HA numpy builds need it [@MickLesk](https://github.com/MickLesk) ([#16868](https://github.com/community-scripts/ProxmoxVE/pull/16868))
+
   - #### 🔧 Refactor
 
     - immich: tolerate enable-maintenance-mode crash, same as disable-maintenance-mode [@MickLesk](https://github.com/MickLesk) ([#16866](https://github.com/community-scripts/ProxmoxVE/pull/16866))
