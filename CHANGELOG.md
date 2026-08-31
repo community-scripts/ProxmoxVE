@@ -538,10 +538,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - yuvomi/aurral: bump NODE_VERSION [@MickLesk](https://github.com/MickLesk) ([#16914](https://github.com/community-scripts/ProxmoxVE/pull/16914))
-
   - #### 🐞 Bug Fixes
 
+    - openwebui: add UV_HTTP_TIMEOUT and retry loop to prevent uv install hangs [@MickLesk](https://github.com/MickLesk) ([#16917](https://github.com/community-scripts/ProxmoxVE/pull/16917))
     - bambuddy: force asyncio loop, uvloop breaks camera proxy handlers [@MickLesk](https://github.com/MickLesk) ([#16904](https://github.com/community-scripts/ProxmoxVE/pull/16904))
     - bookorbit: raise service start timeout, migration can exceed systemd default [@MickLesk](https://github.com/MickLesk) ([#16860](https://github.com/community-scripts/ProxmoxVE/pull/16860))
     - node-red: remove --unsafe-perm flag [@MickLesk](https://github.com/MickLesk) ([#16859](https://github.com/community-scripts/ProxmoxVE/pull/16859))
@@ -553,6 +552,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - omv: migrate to new package repo host (packages.openmediavault.org) is dead [@MickLesk](https://github.com/MickLesk) ([#16918](https://github.com/community-scripts/ProxmoxVE/pull/16918))
+    - yuvomi/aurral: bump NODE_VERSION [@MickLesk](https://github.com/MickLesk) ([#16914](https://github.com/community-scripts/ProxmoxVE/pull/16914))
     - vaultwarden: relax cargo release profile via env vars to avoid build OOM [@MickLesk](https://github.com/MickLesk) ([#16915](https://github.com/community-scripts/ProxmoxVE/pull/16915))
     - kima-hub/maintainerr/planka/spliit: bump NODE_VERSION [@MickLesk](https://github.com/MickLesk) ([#16905](https://github.com/community-scripts/ProxmoxVE/pull/16905))
     - gatus: pin Go toolchain to gatus's own go.mod version [@MickLesk](https://github.com/MickLesk) ([#16893](https://github.com/community-scripts/ProxmoxVE/pull/16893))
