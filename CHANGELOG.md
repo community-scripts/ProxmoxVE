@@ -538,6 +538,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - yuvomi/aurral: bump NODE_VERSION [@MickLesk](https://github.com/MickLesk) ([#16914](https://github.com/community-scripts/ProxmoxVE/pull/16914))
+
   - #### 🐞 Bug Fixes
 
     - bambuddy: force asyncio loop, uvloop breaks camera proxy handlers [@MickLesk](https://github.com/MickLesk) ([#16904](https://github.com/community-scripts/ProxmoxVE/pull/16904))
