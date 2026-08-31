@@ -49,11 +49,13 @@ function update_script() {
   fi
 
   msg_info "Setting up Jellyfin Repository"
+  JELLYFIN_REPO_URL="https://repo.jellyfin.org/$(get_os_info id)"
+  JELLYFIN_SUITE="$(get_fallback_suite "$(get_os_info id)" "$(get_os_info codename)" "$JELLYFIN_REPO_URL")"
   setup_deb822_repo \
     "jellyfin" \
     "https://repo.jellyfin.org/jellyfin_team.gpg.key" \
-    "https://repo.jellyfin.org/$(get_os_info id)" \
-    "$(get_os_info codename)"
+    "$JELLYFIN_REPO_URL" \
+    "$JELLYFIN_SUITE"
   msg_ok "Set up Jellyfin Repository"
 
   msg_info "Updating Jellyfin"
