@@ -541,6 +541,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - ntopng: use ntop.org's documented apt repo per Debian codename, not always apt-stable [@MickLesk](https://github.com/MickLesk) ([#16862](https://github.com/community-scripts/ProxmoxVE/pull/16862))
     - Refactor: OpenGist [@MickLesk](https://github.com/MickLesk) ([#16861](https://github.com/community-scripts/ProxmoxVE/pull/16861))
 
 ## 2026-08-30
