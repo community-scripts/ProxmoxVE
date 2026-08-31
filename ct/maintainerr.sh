@@ -40,6 +40,7 @@ function update_script() {
     create_backup /opt/data /opt/maintainerr/.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "maintainerr" "Maintainerr/Maintainerr" "tarball" "latest" "/opt/maintainerr"
     restore_backup
+    NODE_VERSION="26" setup_nodejs
 
     msg_info "Rebuilding Maintainerr (Patience)"
     cd /opt/maintainerr

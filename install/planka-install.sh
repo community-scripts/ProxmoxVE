@@ -20,7 +20,7 @@ $STD apt install -y \
   python3-venv
 msg_ok "Installed dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 PG_VERSION="16" setup_postgresql
 
 msg_info "Setting up PostgreSQL Database"
