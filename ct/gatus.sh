@@ -45,6 +45,7 @@ update_deb_based() {
 
     mv /opt/gatus/config/config.yaml /opt
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gatus" "TwiN/gatus" "tarball"
+    GO_VERSION="$(grep -m1 '^go ' /opt/gatus/go.mod | awk '{print $2}')" setup_go
 
     msg_info "Updating Gatus"
     cd /opt/gatus
@@ -66,27 +67,20 @@ update_alpine() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/TwiN/gatus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [ "${RELEASE}" != "$(cat /opt/gatus_version.txt)" ] || [ ! -f /opt/gatus_version.txt ]; then
-    msg_info "Updating ${APP} LXC"
+  if check_for_gh_release "gatus" "TwiN/gatus"; then
+    msg_info "Updating ${APP}"
     $STD apk -U upgrade
     $STD service gatus stop
     mv /opt/gatus/config/config.yaml /opt
-    rm -rf /opt/gatus/*
-    temp_file=$(mktemp)
-    curl -fsSL "https://github.com/TwiN/gatus/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-    tar zxf "$temp_file" --strip-components=1 -C /opt/gatus
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gatus" "TwiN/gatus" "tarball"
     cd /opt/gatus
+    $STD go get golang.org/x/net@v0.55.0
     $STD go mod tidy
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
     setcap CAP_NET_RAW+ep gatus
     mv /opt/config.yaml config
-    rm -f "$temp_file"
-    echo "${RELEASE}" >/opt/gatus_version.txt
     $STD service gatus start
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
 }
 
