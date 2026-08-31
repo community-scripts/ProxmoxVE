@@ -38,6 +38,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "aurral" "lklynet/aurral" "tarball"
+    NODE_VERSION="26" setup_nodejs
 
     msg_info "Updating Aurral"
     cd /opt/aurral
