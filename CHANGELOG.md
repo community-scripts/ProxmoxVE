@@ -532,6 +532,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-08-31
 
+### 🆕 New Scripts
+
+  - Aurral ([#16908](https://github.com/community-scripts/ProxmoxVE/pull/16908))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
@@ -554,8 +558,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Ask ProxmoxVE to refresh its changelog on merge [@MickLesk](https://github.com/MickLesk) ([core#11](https://github.com/community-scripts/core/pull/11))
-- Refactor VM script settings and fix load_functions errors [@MickLesk](https://github.com/MickLesk) ([core#13](https://github.com/community-scripts/core/pull/13))
+  - Refactor VM script settings and fix load_functions errors [@MickLesk](https://github.com/MickLesk) ([core#13](https://github.com/community-scripts/core/pull/13))
+- Ask ProxmoxVE to refresh its changelog on merge [@MickLesk](https://github.com/MickLesk) ([core#11](https://github.com/community-scripts/core/pull/11))
 - Lift the settings summary and the mode fork into vm-core [@MickLesk](https://github.com/MickLesk) ([core#12](https://github.com/community-scripts/core/pull/12))
 
 ### 🧰 Tools
