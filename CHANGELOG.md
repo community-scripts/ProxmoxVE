@@ -546,6 +546,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - ntopng: use ntop.org's documented apt repo per Debian codename, not always apt-stable [@MickLesk](https://github.com/MickLesk) ([#16862](https://github.com/community-scripts/ProxmoxVE/pull/16862))
     - Refactor: OpenGist [@MickLesk](https://github.com/MickLesk) ([#16861](https://github.com/community-scripts/ProxmoxVE/pull/16861))
 
+### 💾 Core
+
+  - Lift the settings summary and the mode fork into vm-core [@MickLesk](https://github.com/MickLesk) ([core#12](https://github.com/community-scripts/core/pull/12))
+
+### 📚 Documentation
+
+  - Include engine pull requests in the changelog [@MickLesk](https://github.com/MickLesk) ([#16867](https://github.com/community-scripts/ProxmoxVE/pull/16867))
+
 ## 2026-08-30
 
 ### 🆕 New Scripts
