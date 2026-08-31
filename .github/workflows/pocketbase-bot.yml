@@ -19,8 +19,8 @@ jobs:
     steps:
       - name: Execute PocketBase bot command
         env:
-          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
-          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
+          POCKETBASE_URL: ${{ vars.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ vars.POCKETBASE_COLLECTION }}
           POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
           POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
           COMMENT_BODY: ${{ github.event.comment.body }}
@@ -31,12 +31,12 @@ jobs:
           ACTOR: ${{ github.event.comment.user.login }}
           ACTOR_ASSOCIATION: ${{ github.event.comment.author_association }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
-          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          FRONTEND_URL: ${{ vars.FRONTEND_URL }}
+          REVALIDATE_SECRET: ${{ secrets.FRONTEND_INGEST_SECRET }}
           # Screenshot attaching is delegated to the frontend, which owns the
           # fetching and validation. Without this the subcommand says so rather
           # than failing halfway.
-          SCREENSHOT_IMPORT_SECRET: ${{ secrets.SCREENSHOT_IMPORT_SECRET }}
+          SCREENSHOT_IMPORT_SECRET: ${{ secrets.FRONTEND_INGEST_SECRET }}
         run: |
           node << 'ENDSCRIPT'
           (async function () {

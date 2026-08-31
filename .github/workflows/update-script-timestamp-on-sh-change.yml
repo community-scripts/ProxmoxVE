@@ -69,8 +69,8 @@ jobs:
       - name: Update script timestamps in PocketBase
         if: steps.slugs.outputs.count != '0'
         env:
-          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
-          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
+          POCKETBASE_URL: ${{ vars.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ vars.POCKETBASE_COLLECTION }}
           POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
           POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
           COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}

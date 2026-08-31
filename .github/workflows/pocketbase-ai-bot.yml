@@ -28,26 +28,26 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.PB_BOT_APP_ID }}
-          private-key: ${{ secrets.PB_BOT_APP_PRIVATE_KEY }}
+          app-id: ${{ vars.GHAPP_PBBOT_ID }}
+          private-key: ${{ secrets.GHAPP_PBBOT_PRIVATE_KEY }}
 
       - name: Run PocketBase AI bot
         env:
           # GitHub REST as the bot identity
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
-          PB_BOT_APP_ID: ${{ secrets.PB_BOT_APP_ID }}
+          PB_BOT_APP_ID: ${{ vars.GHAPP_PBBOT_ID }}
           # GitHub Models inference uses the built-in token (needs models: read)
           MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Built-in token for git/PR ops (CT-defaults sync), mirroring the slash bot
           GH_DEFAULT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AI_MODEL: openai/gpt-4o
           # PocketBase
-          POCKETBASE_URL: ${{ secrets.POCKETBASE_URL }}
-          POCKETBASE_COLLECTION: ${{ secrets.POCKETBASE_COLLECTION }}
+          POCKETBASE_URL: ${{ vars.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ vars.POCKETBASE_COLLECTION }}
           POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
           POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
-          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
-          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          FRONTEND_URL: ${{ vars.FRONTEND_URL }}
+          REVALIDATE_SECRET: ${{ secrets.FRONTEND_INGEST_SECRET }}
           # Event context
           COMMENT_BODY: ${{ github.event.comment.body }}
           COMMENT_ID: ${{ github.event.comment.id }}

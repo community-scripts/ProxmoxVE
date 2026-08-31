@@ -33,8 +33,8 @@ jobs:
     steps:
       - name: Notify site of breaking change
         env:
-          INGEST_SECRET: ${{ secrets.BREAKING_CHANGE_INGEST_SECRET }}
-          SITE_URL: ${{ secrets.FRONTEND_URL || vars.SITE_URL || 'https://community-scripts.org' }}
+          INGEST_SECRET: ${{ secrets.FRONTEND_ADVISORY_SECRET }}
+          SITE_URL: ${{ vars.FRONTEND_URL || 'https://community-scripts.org' }}
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
