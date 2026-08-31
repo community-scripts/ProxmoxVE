@@ -52,7 +52,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/bambuddy
-ExecStart=/opt/bambuddy/.venv/bin/uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+ExecStart=/opt/bambuddy/.venv/bin/uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --loop asyncio
 Restart=on-failure
 RestartSec=5
 

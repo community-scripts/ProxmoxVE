@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Adrian-RDA
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -61,6 +63,11 @@ function update_script() {
     msg_ok "Rebuilt Frontend"
 
     restore_backup
+
+    if ! grep -q -- '--loop asyncio' /etc/systemd/system/bambuddy.service; then
+      sed -i 's|^ExecStart=.*|ExecStart=/opt/bambuddy/.venv/bin/uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --loop asyncio|' /etc/systemd/system/bambuddy.service
+      systemctl daemon-reload
+    fi
 
     msg_info "Starting Service"
     systemctl start bambuddy
