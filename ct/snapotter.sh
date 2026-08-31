@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -86,6 +88,13 @@ EOF
     msg_info "Updating SnapOtter"
     $STD uv python install 3.11
     $STD uv venv --seed --python 3.11 /opt/snapotter_data/ai/venv
+    if [[ "$(arch_resolve)" == "arm64" ]]; then
+      $STD uv pip install --python /opt/snapotter_data/ai/venv/bin/python \
+        numpy==1.26.4 Pillow==12.3.0 opencv-python-headless==4.10.0.84 fonttools \
+        'huggingface-hub[hf_xet,hf_transfer]==0.36.2'
+    else
+      msg_warn "SnapOtter AI Features have no working CPU-only bundle for amd64 upstream (published bundle is Python 3.12/GPU-CUDA only). Use the official Docker image instead: https://docs.snapotter.com"
+    fi
     ln -sfn /opt/snapotter /app
     msg_ok "Updated SnapOtter"
 

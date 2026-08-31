@@ -34,7 +34,12 @@ $STD apt install -y \
   python3 \
   python3-dev \
   gcc \
-  g++
+  g++ \
+  libavif-bin \
+  libavif-dev \
+  libopencv-dev \
+  python3-opencv \
+  libgles2
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.11" setup_uv
@@ -59,11 +64,13 @@ msg_info "Setting up Python Environment"
 mkdir -p /opt/snapotter_data/ai/models/rembg
 $STD uv python install 3.11
 $STD uv venv --seed --python 3.11 /opt/snapotter_data/ai/venv
-#if [[ -f /opt/snapotter/packages/ai/python/requirements.txt ]]; then
-#  $STD uv pip install \
-#    --python /opt/snapotter_data/ai/venv/bin/python \
-#    -r /opt/snapotter/packages/ai/python/requirements.txt
-#fi
+if [[ "$(arch_resolve)" == "arm64" ]]; then
+  $STD uv pip install --python /opt/snapotter_data/ai/venv/bin/python \
+    numpy==1.26.4 Pillow==12.3.0 opencv-python-headless==4.10.0.84 fonttools \
+    'huggingface-hub[hf_xet,hf_transfer]==0.36.2'
+else
+  msg_warn "SnapOtter AI Features have no working CPU-only bundle for amd64 upstream (published bundle is Python 3.12/GPU-CUDA only). Use the official Docker image instead: https://docs.snapotter.com"
+fi
 ln -sfn /opt/snapotter /app
 msg_ok "Set up Python Environment"
 
