@@ -32,7 +32,7 @@ setup_deb_based() {
   cd /tmp/vaultwarden-src
   VW_VERSION=$(get_latest_github_release "dani-garcia/vaultwarden")
   export VW_VERSION
-  $STD cargo build --features "sqlite,mysql,postgresql" --release
+  CARGO_BUILD_JOBS="$(get_parallel_jobs)" CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 $STD cargo build --features "sqlite,mysql,postgresql" --release
   msg_ok "Built Vaultwarden"
 
   msg_info "Setting up Vaultwarden"
