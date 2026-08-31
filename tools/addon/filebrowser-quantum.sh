@@ -124,6 +124,14 @@ if [[ -f "$INSTALL_PATH" ]]; then
       if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi
       fetch_and_deploy_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser" "singlefile" "latest" "/usr/local/bin" "linux-$(arch_resolve)-filebrowser"
       mv -f /usr/local/bin/filebrowser-quantum "$INSTALL_PATH"
+      if [[ -f "$CONFIG_PATH" ]]; then
+        sed -i '/^\s*disableIndexing:/d' "$CONFIG_PATH"
+      fi
+      if [[ "$OS" == "Debian" ]]; then
+        systemctl restart filebrowser.service
+      else
+        rc-service filebrowser restart
+      fi
       msg_ok "Updated ${APP}"
     fi
     exit 0
