@@ -33,8 +33,14 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop teddycloud
     msg_ok "Stopped Service"
-
-    create_backup /opt/teddycloud/certs /opt/teddycloud/config /opt/teddycloud/data
+    
+    create_backup \
+    /opt/teddycloud/certs \
+    /opt/teddycloud/config \
+    /opt/teddycloud/data/content \
+    /opt/teddycloud/data/library \
+    /opt/teddycloud/data/firmware \
+    /opt/teddycloud/data/cache
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "teddycloud" "toniebox-reverse-engineering/teddycloud" "prebuild" "latest" "/opt/teddycloud" "teddycloud.amd64.release*.zip"
 
