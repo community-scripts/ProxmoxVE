@@ -538,6 +538,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - jellyfin: verify repo suite via fallback chain and use ensure_dependencies for clearer apt failures [@MickLesk](https://github.com/MickLesk) ([#16916](https://github.com/community-scripts/ProxmoxVE/pull/16916))
 
+### 💾 Core
+
+  - Silence npm's update notice so the real error stays visible [@MickLesk](https://github.com/MickLesk) ([core#16](https://github.com/community-scripts/core/pull/16))
+
 ## 2026-08-31
 
 ### 🆕 New Scripts
