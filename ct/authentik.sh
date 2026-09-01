@@ -50,7 +50,7 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.8.0"
+  AUTHENTIK_VERSION="version/2026.8.1"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
   XMLSEC_VERSION="1.3.12"
 
@@ -84,6 +84,16 @@ function update_script() {
       systemctl stop authentik-radius
     fi
     msg_ok "Stopped Services"
+
+    if [[ ! -d /opt/authentik-data/blueprints ]]; then
+      msg_info "Moving blueprints to presistent directory"
+      cp -r /opt/authentik/blueprints /opt/authentik-data/
+      rm -r /opt/authentik/blueprints
+      chown -R authentik:authentik /opt/authentik-data
+      yq -i ".blueprints_dir = \"/opt/authentik-data/blueprints\"" /etc/authentik/config.yml
+      msg_ok "blueprints moved to presistent directory"
+      msg_warn "The blueprints provided by authentik are always overwritten when updated! Only manually created custom blueprints remain unchanged between updates."
+    fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 
@@ -143,21 +153,39 @@ function update_script() {
     chown -R authentik:authentik /opt/authentik
     msg_ok "Updated python server"
 
-	  msg_info "Updating Worker and Server config"
-    cat <<EOF >>/etc/default/authentik-server
+    cp -r /opt/authentik/blueprints /opt/authentik-data/
+    rm -r /opt/authentik/blueprints
+    chown -R authentik:authentik /opt/authentik-data
+    
+    if [[ $MAJOR == 2026 && $MINOR -lt 8 ]]; then
+	    msg_info "Updating Worker and Server config"
+      cat <<EOF >>/etc/default/authentik-server
 RUST_BACKTRACE=full
 EOF
-    cat <<EOF >>/etc/default/authentik-worker
+      cat <<EOF >>/etc/default/authentik-worker
 RUST_BACKTRACE=full
 EOF
+      msg_ok "Updated Worker and Server config!"
+
+      msg_info "Updating services"
+	    sed -i "s|ExecStart=/opt/authentik/authentik-server|ExecStart=/opt/authentik/bin/authentik server|g" /etc/systemd/system/authentik-server.service
+	    sed -i "s|ExecStart=/opt/authentik/authentik-worker worker|ExecStart=/opt/authentik/bin/authentik worker|g" /etc/systemd/system/authentik-worker.service
+	    sed -i "s|ExecStart=/opt/authentik/ldap|ExecStart=/opt/authentik/bin/ldap|g" /etc/systemd/system/authentik-ldap.service
+	    sed -i "s|ExecStart=/opt/authentik/radius|ExecStart=/opt/authentik/bin/radius|g" /etc/systemd/system/authentik-radius.service
+	    sed -i "s|ExecStart=/opt/authentik/rac|ExecStart=/opt/authentik/bin/rac|g" /etc/systemd/system/authentik-rac.service
+      systemctl daemon-reload
+      msg_ok "Updated services"
+    fi
+
+    msg_ok "Updated Worker and Server config!"
+    sed -i "s|/dev/shm$|/dev/shm/authentik-server|g" /etc/default/authentik-server
+	  sed -i "s|/dev/shm$|/dev/shm/authentik-worker|g" /etc/default/authentik-worker
     msg_ok "Updated Worker and Server config!"
 
     msg_info "Updating services"
-	  sed -i "s|ExecStart=/opt/authentik/authentik-server|ExecStart=/opt/authentik/bin/authentik server|g" /etc/systemd/system/authentik-server.service
-	  sed -i "s|ExecStart=/opt/authentik/authentik-worker worker|ExecStart=/opt/authentik/bin/authentik worker|g" /etc/systemd/system/authentik-worker.service
-	  sed -i "s|ExecStart=/opt/authentik/ldap|ExecStart=/opt/authentik/bin/ldap|g" /etc/systemd/system/authentik-ldap.service
-	  sed -i "s|ExecStart=/opt/authentik/radius|ExecStart=/opt/authentik/bin/radius|g" /etc/systemd/system/authentik-radius.service
-	  sed -i "s|ExecStart=/opt/authentik/rac|ExecStart=/opt/authentik/bin/rac|g" /etc/systemd/system/authentik-rac.service
+    sed -i 's/authentik Go Server (API Gateway)/authentik Server/g' /etc/systemd/system/authentik-server.service
+	  sed -i '/ExecStart=/i ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-server.service
+    sed -i '/ExecStart=/i ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-worker.service
     systemctl daemon-reload
     msg_ok "Updated services"
 
@@ -198,8 +226,9 @@ done
 $STD pct exec "$CTID" -- bash -c "mkdir -p /opt/authentik-data/{certs,media,geoip,templates}; \
   cp /opt/authentik/tests/GeoLite2-ASN-Test.mmdb /opt/authentik-data/geoip/GeoLite2-ASN.mmdb; \
   cp /opt/authentik/tests/GeoLite2-City-Test.mmdb /opt/authentik-data/geoip/GeoLite2-City.mmdb; \
-  chown authentik:authentik /opt/authentik-data; \
-  chown -R authentik:authentik /opt/authentik-data/{certs,media,geoip,templates}"
+  cp -r /opt/authentik/blueprints /opt/authentik-data/; \
+  rm -r /opt/authentik/blueprints; \
+  chown -R authentik:authentik /opt/authentik-data"
 msg_ok "Attached data storage volume"
 
 msg_info "Starting Services"

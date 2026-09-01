@@ -59,7 +59,7 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 XMLSEC_VERSION="1.3.12"
-AUTHENTIK_VERSION="version/2026.8.0"
+AUTHENTIK_VERSION="version/2026.8.1"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
@@ -146,7 +146,7 @@ yq -i ".secret_key = \"$(openssl rand -base64 128 | tr -dc 'a-zA-Z0-9' | head -c
 yq -i ".postgresql.password = \"${PG_DB_PASS}\"" /etc/authentik/config.yml
 yq -i ".events.context_processors.geoip = \"/opt/authentik-data/geoip/GeoLite2-City.mmdb\"" /etc/authentik/config.yml
 yq -i ".events.context_processors.asn = \"/opt/authentik-data/geoip/GeoLite2-ASN.mmdb\"" /etc/authentik/config.yml
-yq -i ".blueprints_dir = \"/opt/authentik/blueprints\"" /etc/authentik/config.yml
+yq -i ".blueprints_dir = \"/opt/authentik-data/blueprints\"" /etc/authentik/config.yml
 yq -i ".cert_discovery_dir = \"/opt/authentik-data/certs\"" /etc/authentik/config.yml
 yq -i ".email.template_dir = \"/opt/authentik-data/templates\"" /etc/authentik/config.yml
 yq -i ".storage.file.path = \"/opt/authentik-data\"" /etc/authentik/config.yml
@@ -154,7 +154,7 @@ yq -i ".disable_startup_analytics = \"true\"" /etc/authentik/config.yml
 $STD useradd -U -s /usr/sbin/nologin -r -M -d /opt/authentik authentik
 chown -R authentik:authentik /opt/authentik
 cat <<EOF >/etc/default/authentik-server
-TMPDIR=/dev/shm/
+TMPDIR=/dev/shm/authentik-server
 UV_LINK_MODE=copy
 UV_PYTHON_DOWNLOADS=0
 UV_NATIVE_TLS=1
@@ -170,7 +170,7 @@ AUTHENTIK_LISTEN__HTTPS="[::]:9443"
 AUTHENTIK_LISTEN__METRICS="[::]:9300"
 EOF
 cat <<EOF >/etc/default/authentik-worker
-TMPDIR=/dev/shm/
+TMPDIR=/dev/shm/authentik-worker
 UV_LINK_MODE=copy
 UV_PYTHON_DOWNLOADS=0
 UV_NATIVE_TLS=1
@@ -214,6 +214,7 @@ User=authentik
 Group=authentik
 EnvironmentFile=/etc/default/authentik-server
 ExecStartPre=/usr/bin/mkdir -p "\${PROMETHEUS_MULTIPROC_DIR}"
+ExecStartPre=/usr/bin/mkdir -p "\${TMPDIR}"
 ExecStart=/opt/authentik/bin/authentik server
 WorkingDirectory=/opt/authentik/
 Restart=always
@@ -234,6 +235,7 @@ Group=authentik
 Type=simple
 EnvironmentFile=/etc/default/authentik-worker
 ExecStartPre=/usr/bin/mkdir -p "\${PROMETHEUS_MULTIPROC_DIR}"
+ExecStartPre=/usr/bin/mkdir -p "\${TMPDIR}"
 ExecStart=/opt/authentik/bin/authentik worker
 WorkingDirectory=/opt/authentik
 Restart=always
