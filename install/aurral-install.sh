@@ -22,7 +22,7 @@ $STD apt install -y \
   fonts-dejavu-core
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="26" setup_nodejs
+NODE_VERSION="22" setup_nodejs
 
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "yt-dlp"
 fetch_and_deploy_gh_release "aurral" "lklynet/aurral" "tarball"
