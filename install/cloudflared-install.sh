@@ -14,6 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Cloudflared"
+cleanup_old_repo_files "cloudflared"
 setup_deb822_repo \
   "cloudflared" \
   "https://pkg.cloudflare.com/cloudflare-main.gpg" \
