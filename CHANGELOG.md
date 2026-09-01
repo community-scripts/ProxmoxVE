@@ -540,7 +540,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Report the exit code the engine actually saw [@MickLesk](https://github.com/MickLesk) ([core#17](https://github.com/community-scripts/core/pull/17))
+  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#15](https://github.com/community-scripts/core/pull/15))
+- Report the exit code the engine actually saw [@MickLesk](https://github.com/MickLesk) ([core#17](https://github.com/community-scripts/core/pull/17))
 - Silence npm's update notice so the real error stays visible [@MickLesk](https://github.com/MickLesk) ([core#16](https://github.com/community-scripts/core/pull/16))
 
 ## 2026-08-31
