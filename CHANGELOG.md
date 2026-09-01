@@ -530,6 +530,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-01
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - jellyfin: verify repo suite via fallback chain and use ensure_dependencies for clearer apt failures [@MickLesk](https://github.com/MickLesk) ([#16916](https://github.com/community-scripts/ProxmoxVE/pull/16916))
+
 ## 2026-08-31
 
 ### 🆕 New Scripts
