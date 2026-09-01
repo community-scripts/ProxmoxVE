@@ -538,6 +538,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - jellyfin: verify repo suite via fallback chain and use ensure_dependencies for clearer apt failures [@MickLesk](https://github.com/MickLesk) ([#16916](https://github.com/community-scripts/ProxmoxVE/pull/16916))
 
+  - #### 🔧 Refactor
+
+    - Move the next 25 scripts onto the core engine [@MickLesk](https://github.com/MickLesk) ([#16934](https://github.com/community-scripts/ProxmoxVE/pull/16934))
+
 ### 💾 Core
 
   - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#15](https://github.com/community-scripts/core/pull/15))
