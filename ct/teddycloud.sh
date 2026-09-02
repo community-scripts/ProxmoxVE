@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Dominik Siebel (dsiebel)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -33,8 +35,14 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop teddycloud
     msg_ok "Stopped Service"
-
-    create_backup /opt/teddycloud/certs /opt/teddycloud/config /opt/teddycloud/data
+    
+    create_backup \
+    /opt/teddycloud/certs \
+    /opt/teddycloud/config \
+    /opt/teddycloud/data/content \
+    /opt/teddycloud/data/library \
+    /opt/teddycloud/data/firmware \
+    /opt/teddycloud/data/cache
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "teddycloud" "toniebox-reverse-engineering/teddycloud" "prebuild" "latest" "/opt/teddycloud" "teddycloud.amd64.release*.zip"
 

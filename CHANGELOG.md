@@ -530,6 +530,37 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-02
+
+### 🆕 New Scripts
+
+  - OwnTracks-Recorder ([#16967](https://github.com/community-scripts/ProxmoxVE/pull/16967))
+- PeerTube ([#16966](https://github.com/community-scripts/ProxmoxVE/pull/16966))
+- Kaneo ([#16965](https://github.com/community-scripts/ProxmoxVE/pull/16965))
+- JDownloader ([#16964](https://github.com/community-scripts/ProxmoxVE/pull/16964))
+- ReadMeABook ([#16963](https://github.com/community-scripts/ProxmoxVE/pull/16963))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Enhance backup process in teddycloud.sh [@MickLesk](https://github.com/MickLesk) ([#16946](https://github.com/community-scripts/ProxmoxVE/pull/16946))
+    - mealie: copy Nuxt generate output and use pnpm when lockfile is present [@mjhuff](https://github.com/mjhuff) ([#16938](https://github.com/community-scripts/ProxmoxVE/pull/16938))
+    - OpenThread-BR: Clean build directory before update [@tomfrenzel](https://github.com/tomfrenzel) ([#16949](https://github.com/community-scripts/ProxmoxVE/pull/16949))
+
+  - #### 🔧 Refactor
+
+    - Scripts: use shared core bootstrap for final 114 Script Batch [@MickLesk](https://github.com/MickLesk) ([#16953](https://github.com/community-scripts/ProxmoxVE/pull/16953))
+    - Scripts: use shared core bootstrap for next 115 Script Batch [@MickLesk](https://github.com/MickLesk) ([#16952](https://github.com/community-scripts/ProxmoxVE/pull/16952))
+    - Scripts: use shared core bootstrap for next 115 Script Batch [@MickLesk](https://github.com/MickLesk) ([#16951](https://github.com/community-scripts/ProxmoxVE/pull/16951))
+    - Scripts: use shared core bootstrap for next 100 Script Batch [@MickLesk](https://github.com/MickLesk) ([#16950](https://github.com/community-scripts/ProxmoxVE/pull/16950))
+
+### 💾 Core
+
+  - setup_meilisearch: generate a 32-byte master key [@MickLesk](https://github.com/MickLesk) ([core#20](https://github.com/community-scripts/core/pull/20))
+- setup_meilisearch: generate a 32-byte master key [@MickLesk](https://github.com/MickLesk) ([core#19](https://github.com/community-scripts/core/pull/19))
+- setup_nodejs: restore the npm allowScripts bypass lost in the migration [@MickLesk](https://github.com/MickLesk) ([core#18](https://github.com/community-scripts/core/pull/18))
+
 ## 2026-09-01
 
 ### 🆕 New Scripts
