@@ -126,10 +126,7 @@ server {
   }
 }
 EOF
-ln -sf /etc/nginx/sites-available/kaneo /etc/nginx/sites-enabled/kaneo
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl reload nginx
+nginx_enable_site kaneo
 msg_ok "Configured Nginx"
 
 motd_ssh
