@@ -538,6 +538,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenThread-BR: Clean build directory before update [@tomfrenzel](https://github.com/tomfrenzel) ([#16949](https://github.com/community-scripts/ProxmoxVE/pull/16949))
 
+  - #### 🔧 Refactor
+
+    - Scripts: use shared core bootstrap for next 100 Script Batch [@MickLesk](https://github.com/MickLesk) ([#16950](https://github.com/community-scripts/ProxmoxVE/pull/16950))
+
 ## 2026-09-01
 
 ### 🆕 New Scripts
