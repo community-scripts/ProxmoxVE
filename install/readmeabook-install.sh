@@ -53,6 +53,13 @@ set +a
 $STD npx prisma generate
 $STD npx prisma db push --skip-generate --accept-data-loss
 $STD npm run build
+if [[ -f /opt/readmeabook/.next/standalone/server.js ]]; then
+  cp -r /opt/readmeabook/.next/static /opt/readmeabook/.next/standalone/.next/static
+  [[ -d /opt/readmeabook/public ]] && cp -r /opt/readmeabook/public /opt/readmeabook/.next/standalone/public
+  START_CMD="/usr/bin/node /opt/readmeabook/.next/standalone/server.js"
+else
+  START_CMD="/usr/bin/npm run start"
+fi
 msg_ok "Built ReadMeABook"
 
 msg_info "Creating Service"
@@ -67,7 +74,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/readmeabook
 EnvironmentFile=/opt/readmeabook/.env
-ExecStart=/usr/bin/npm run start
+ExecStart=${START_CMD}
 Restart=on-failure
 RestartSec=10
 

@@ -52,6 +52,10 @@ function update_script() {
     $STD npx prisma generate
     $STD npx prisma db push --skip-generate --accept-data-loss
     $STD npm run build
+    if [[ -f /opt/readmeabook/.next/standalone/server.js ]]; then
+      cp -r /opt/readmeabook/.next/static /opt/readmeabook/.next/standalone/.next/static
+      [[ -d /opt/readmeabook/public ]] && cp -r /opt/readmeabook/public /opt/readmeabook/.next/standalone/public
+    fi
     msg_ok "Built ReadMeABook"
 
     msg_info "Starting Service"
