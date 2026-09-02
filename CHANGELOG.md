@@ -534,7 +534,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Kaneo ([#16965](https://github.com/community-scripts/ProxmoxVE/pull/16965))
+  - PeerTube ([#16966](https://github.com/community-scripts/ProxmoxVE/pull/16966))
+- Kaneo ([#16965](https://github.com/community-scripts/ProxmoxVE/pull/16965))
 - JDownloader ([#16964](https://github.com/community-scripts/ProxmoxVE/pull/16964))
 - ReadMeABook ([#16963](https://github.com/community-scripts/ProxmoxVE/pull/16963))
 
