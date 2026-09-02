@@ -532,6 +532,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-02
 
+### 🆕 New Scripts
+
+  - JDownloader ([#16964](https://github.com/community-scripts/ProxmoxVE/pull/16964))
+- ReadMeABook ([#16963](https://github.com/community-scripts/ProxmoxVE/pull/16963))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
