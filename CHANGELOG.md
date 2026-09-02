@@ -530,6 +530,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-02
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - OpenThread-BR: Clean build directory before update [@tomfrenzel](https://github.com/tomfrenzel) ([#16949](https://github.com/community-scripts/ProxmoxVE/pull/16949))
+
 ## 2026-09-01
 
 ### 🆕 New Scripts
