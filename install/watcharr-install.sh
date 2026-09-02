@@ -17,9 +17,9 @@ msg_info "Installing Dependencies"
 $STD apt install -y gcc
 msg_ok "Installed Dependencies"
 
-setup_go
 NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/watcharr/server/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Setup Watcharr"
 cd /opt/watcharr

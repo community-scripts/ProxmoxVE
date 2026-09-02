@@ -44,7 +44,6 @@ function update_script() {
   msg_ok "Update dependencies"
 
   NODE_VERSION="26" NODE_MODULE=pnpm@11 setup_nodejs
-  setup_go
   $STD uv cache clean
   UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.7" setup_uv
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
@@ -86,6 +85,7 @@ function update_script() {
     msg_ok "Stopped Services"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
+    GO_VERSION="$(grep -m1 '^go ' /opt/authentik/go.mod | awk '{print $2}')" setup_go
 
     msg_info "Configuring rust"
     cd /opt/authentik

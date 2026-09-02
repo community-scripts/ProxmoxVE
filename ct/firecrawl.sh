@@ -42,6 +42,7 @@ function update_script() {
     create_backup /opt/firecrawl/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "firecrawl" "firecrawl/firecrawl" "tarball" "latest" "/opt/firecrawl"
+    GO_VERSION="$(grep -m1 '^go ' /opt/firecrawl/apps/api/sharedLibs/go-html-to-md/go.mod | awk '{print $2}')" setup_go
 
     restore_backup
 

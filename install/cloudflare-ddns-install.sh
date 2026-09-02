@@ -51,8 +51,8 @@ while true; do
 done
 msg_ok "Configured Application"
 
-setup_go
 fetch_and_deploy_gh_release "cloudflare-ddns" "favonia/cloudflare-ddns" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/cloudflare-ddns/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building ${APPLICATION}"
 cd /opt/cloudflare-ddns

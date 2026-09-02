@@ -27,9 +27,9 @@ setup_deb822_repo \
 $STD apt install -y dotnet-sdk-10.0
 msg_ok "Installed Dependencies"
 
-setup_go
 
 fetch_and_deploy_gh_release "networkoptimizer" "Ozark-Connect/NetworkOptimizer" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/networkoptimizer/src/uwnspeedtest/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building NetworkOptimizer"
 RID="linux-x64"

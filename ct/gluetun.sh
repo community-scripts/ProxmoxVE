@@ -39,6 +39,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gluetun" "qdm12/gluetun" "tarball"
+    GO_VERSION="$(grep -m1 '^go ' /opt/gluetun/go.mod | awk '{print $2}')" setup_go
 
     msg_info "Building Gluetun"
     cd /opt/gluetun

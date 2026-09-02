@@ -44,6 +44,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 GITLAB_URL="https://gitlab.torproject.org" fetch_and_deploy_gl_release "tor-snowflake" "tpo/anti-censorship/pluggable-transports/snowflake" "tarball"
+    GO_VERSION="$(grep -m1 '^go ' /opt/tor-snowflake/proxy/go.mod | awk '{print $2}')" setup_go
 
     msg_info "Building Snowflake"
     cd /opt/tor-snowflake/proxy

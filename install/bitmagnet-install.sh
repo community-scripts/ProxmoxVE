@@ -23,9 +23,9 @@ setup_deb_based() {
 
   PG_VERSION="16" setup_postgresql
   PG_DB_NAME="bitmagnet" PG_DB_USER="bitmagnet" setup_postgresql_db
-  setup_go
 
   fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
+  GO_VERSION="$(grep -m1 '^go ' /opt/bitmagnet/go.mod | awk '{print $2}')" setup_go
   RELEASE=$(cat ~/.bitmagnet)
 
   msg_info "Configuring bitmagnet"

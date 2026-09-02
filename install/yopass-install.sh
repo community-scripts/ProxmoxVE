@@ -18,10 +18,10 @@ $STD apt install -y redis-server
 systemctl enable -q --now redis-server
 msg_ok "Installed Dependencies"
 
-setup_go
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
 fetch_and_deploy_gh_release "yopass" "jhaals/yopass" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/yopass/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building Yopass"
 cd /opt/yopass
