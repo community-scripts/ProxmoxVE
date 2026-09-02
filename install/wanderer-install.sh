@@ -13,13 +13,14 @@ setting_up_container
 network_check
 update_os
 
-setup_go
 NODE_VERSION="22" setup_nodejs
 mkdir -p /opt/{wanderer,wanderer_data/pb_data,wanderer_data/meili_data,wanderer_data/plugins}
 MEILISEARCH_DB_PATH="/opt/wanderer_data/meili_data" setup_meilisearch
 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest"
 mkdir -p /opt/wanderer/db/data
 [[ -e /opt/wanderer/db/data/plugins ]] || ln -sfn /opt/wanderer_data/plugins /opt/wanderer/db/data/plugins
+
+GO_VERSION="$(grep -m1 '^go ' /opt/wanderer/db/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Installing wanderer (patience)"
 cd /opt/wanderer/db

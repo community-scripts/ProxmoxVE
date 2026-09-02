@@ -158,6 +158,8 @@ EOF
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wanderer" "open-wanderer/wanderer" "tarball" "latest"
     restore_backup
 
+    GO_VERSION="$(grep -m1 '^go ' /opt/wanderer/db/go.mod | awk '{print $2}')" setup_go
+
     msg_info "Updating wanderer"
     cd /opt/wanderer/db
     $STD go mod tidy
