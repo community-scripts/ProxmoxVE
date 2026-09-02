@@ -536,6 +536,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - mealie: copy Nuxt generate output and use pnpm when lockfile is present [@mjhuff](https://github.com/mjhuff) ([#16938](https://github.com/community-scripts/ProxmoxVE/pull/16938))
     - OpenThread-BR: Clean build directory before update [@tomfrenzel](https://github.com/tomfrenzel) ([#16949](https://github.com/community-scripts/ProxmoxVE/pull/16949))
 
   - #### 🔧 Refactor
