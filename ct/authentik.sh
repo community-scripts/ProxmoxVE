@@ -158,29 +158,29 @@ function update_script() {
     chown -R authentik:authentik /opt/authentik-data
     
     if [[ $MAJOR == 2026 && $MINOR -lt 8 ]]; then
-	    msg_info "Updating Worker and Server config"
+	    msg_info "Updating Worker and Server config (from $MAJOR.$MINOR)"
       cat <<EOF >>/etc/default/authentik-server
 RUST_BACKTRACE=full
 EOF
       cat <<EOF >>/etc/default/authentik-worker
 RUST_BACKTRACE=full
 EOF
-      msg_ok "Updated Worker and Server config!"
+      msg_ok "Updated Worker and Server config (from $MAJOR.$MINOR)"
 
-      msg_info "Updating services"
+      msg_info "Updating services (from $MAJOR.$MINOR)"
 	    sed -i "s|ExecStart=/opt/authentik/authentik-server|ExecStart=/opt/authentik/bin/authentik server|g" /etc/systemd/system/authentik-server.service
 	    sed -i "s|ExecStart=/opt/authentik/authentik-worker worker|ExecStart=/opt/authentik/bin/authentik worker|g" /etc/systemd/system/authentik-worker.service
 	    sed -i "s|ExecStart=/opt/authentik/ldap|ExecStart=/opt/authentik/bin/ldap|g" /etc/systemd/system/authentik-ldap.service
 	    sed -i "s|ExecStart=/opt/authentik/radius|ExecStart=/opt/authentik/bin/radius|g" /etc/systemd/system/authentik-radius.service
 	    sed -i "s|ExecStart=/opt/authentik/rac|ExecStart=/opt/authentik/bin/rac|g" /etc/systemd/system/authentik-rac.service
       systemctl daemon-reload
-      msg_ok "Updated services"
+      msg_ok "Updated services (from $MAJOR.$MINOR)"
     fi
 
-    msg_ok "Updated Worker and Server config!"
+    msg_info "Updating Worker and Server config"
     sed -i "s|/dev/shm$|/dev/shm/authentik-server|g" /etc/default/authentik-server
 	  sed -i "s|/dev/shm$|/dev/shm/authentik-worker|g" /etc/default/authentik-worker
-    msg_ok "Updated Worker and Server config!"
+    msg_ok "Updated Worker and Server config"
 
     msg_info "Updating services"
     sed -i 's/authentik Go Server (API Gateway)/authentik Server/g' /etc/systemd/system/authentik-server.service
