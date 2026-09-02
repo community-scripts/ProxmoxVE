@@ -22,7 +22,6 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
-setup_go
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
 msg_info "Installing Database Clients"
@@ -52,6 +51,7 @@ done
 msg_ok "Installed Database Clients"
 
 fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest" "/opt/databasus"
+GO_VERSION="$(grep -m1 '^go ' /opt/databasus/backend/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building Databasus (Patience)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0

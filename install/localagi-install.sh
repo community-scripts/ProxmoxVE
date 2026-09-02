@@ -19,7 +19,6 @@ $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
-setup_go
 
 msg_info "Installing Bun"
 export BUN_INSTALL="/root/.bun"
@@ -29,6 +28,7 @@ ln -sf /root/.bun/bin/bunx /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
 fetch_and_deploy_gh_release "localagi" "mudler/LocalAGI" "tarball" "latest" "/opt/localagi"
+GO_VERSION="$(grep -m1 '^go ' /opt/localagi/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Configuring LocalAGI"
 mkdir -p /opt/localagi/pool

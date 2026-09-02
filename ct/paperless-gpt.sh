@@ -41,6 +41,7 @@ function update_script() {
     fi
 
     fetch_and_deploy_gh_release "paperless-gpt" "icereed/paperless-gpt" "tarball"
+    GO_VERSION="$(grep -m1 '^go ' /opt/paperless-gpt/go.mod | awk '{print $2}')" setup_go
 
     msg_info "Updating Paperless-GPT"
     cd /opt/paperless-gpt/web-app

@@ -48,9 +48,9 @@ $STD apt install -y \
 msg_ok "Installed Build Dependencies"
 
 NODE_VERSION="22" setup_nodejs
-setup_go
 
 fetch_and_deploy_gh_release "neko" "m1k1o/neko" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/neko/server/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building Client"
 cd /opt/neko/client

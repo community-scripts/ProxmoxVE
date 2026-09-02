@@ -17,8 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
-setup_go
 fetch_and_deploy_gh_release "koffan" "PanSalut/Koffan" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/koffan/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building Koffan"
 cd /opt/koffan

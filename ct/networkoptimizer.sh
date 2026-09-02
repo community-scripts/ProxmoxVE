@@ -39,6 +39,7 @@ function update_script() {
 
     create_backup /opt/networkoptimizer/networkoptimizer.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "networkoptimizer" "Ozark-Connect/NetworkOptimizer" "tarball"
+    GO_VERSION="$(grep -m1 '^go ' /opt/networkoptimizer/src/uwnspeedtest/go.mod | awk '{print $2}')" setup_go
     restore_backup
 
     msg_info "Rebuilding NetworkOptimizer"

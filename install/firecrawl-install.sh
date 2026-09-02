@@ -28,11 +28,11 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@11.4.0" setup_nodejs
-setup_go
 RUST_PROFILE="minimal" setup_rust
 PG_VERSION="17" PG_MODULES="cron" setup_postgresql
 
 fetch_and_deploy_gh_release "firecrawl" "firecrawl/firecrawl" "tarball" "latest" "/opt/firecrawl"
+GO_VERSION="$(grep -m1 '^go ' /opt/firecrawl/apps/api/sharedLibs/go-html-to-md/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Configuring FDB"
 FDB_VERSION="$(awk -F= '/^ARG FDB_VERSION=/{print $2; exit}' /opt/firecrawl/apps/api/Dockerfile)"

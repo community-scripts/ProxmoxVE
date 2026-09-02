@@ -23,8 +23,8 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
-setup_go
 fetch_and_deploy_gh_release "paperless-gpt" "icereed/paperless-gpt" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/paperless-gpt/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Setup Paperless-GPT"
 cd /opt/paperless-gpt/web-app

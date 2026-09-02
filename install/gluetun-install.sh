@@ -26,9 +26,9 @@ $STD update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
 ln -sf /usr/sbin/openvpn /usr/sbin/openvpn2.6
 msg_ok "Configured iptables"
 
-setup_go
 
 fetch_and_deploy_gh_release "gluetun" "qdm12/gluetun" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/gluetun/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building Gluetun"
 cd /opt/gluetun
