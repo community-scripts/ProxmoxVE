@@ -58,7 +58,10 @@ function update_script() {
     msg_ok "Deployed GitHub release OpenThread-BR (${CHECK_UPDATE_RELEASE#v})"
 
   msg_info "Rebuilding OpenThread Border Router (Patience)"
-  cd /opt/ot-br-posix/build
+  cd /opt/ot-br-posix
+  rm -rf build
+  mkdir build
+  cd build
   $STD cmake -GNinja \
     -DBUILD_TESTING=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr \
