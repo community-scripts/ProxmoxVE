@@ -214,7 +214,7 @@ msg_ok "Set up RomM Backend"
 if [[ -f /opt/romm/backend/utils/rom_patcher/package.json ]]; then
   msg_info "Building ROM Patcher helper"
   cd /opt/romm/backend/utils/rom_patcher
-  $STD npm install --ignore-scripts --no-audit --no-fund
+  $STD npm install --ignore-scripts --no-audit --no-fund --allow-git=all
   if [[ -d node_modules/rom-patcher/rom-patcher-js ]]; then
     rm -rf rom-patcher-js
     cp -r node_modules/rom-patcher/rom-patcher-js ./rom-patcher-js
