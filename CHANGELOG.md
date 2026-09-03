@@ -534,6 +534,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Immich: bump libheif and libraw [@vhsdream](https://github.com/vhsdream) ([#16996](https://github.com/community-scripts/ProxmoxVE/pull/16996))
+
   - #### 🐞 Bug Fixes
 
     - romm: allow git-based npm dependency for rom-patcher under npm v12 [@MickLesk](https://github.com/MickLesk) ([#16990](https://github.com/community-scripts/ProxmoxVE/pull/16990))
