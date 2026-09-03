@@ -88,7 +88,7 @@ function update_script() {
       msg_info "Moving blueprints to presistent directory"
       cp -r /opt/authentik/blueprints /opt/authentik-data/
       rm -r /opt/authentik/blueprints
-      chown -R authentik:authentik /opt/authentik-data
+      chown -Rf authentik:authentik /opt/authentik-data
       yq -i ".blueprints_dir = \"/opt/authentik-data/blueprints\"" /etc/authentik/config.yml
       msg_ok "blueprints moved to presistent directory"
       msg_warn "The blueprints provided by authentik are always overwritten when updated! Only manually created custom blueprints remain unchanged between updates."
@@ -155,7 +155,7 @@ function update_script() {
 
     cp -r /opt/authentik/blueprints /opt/authentik-data/
     rm -r /opt/authentik/blueprints
-    chown -R authentik:authentik /opt/authentik-data
+    chown -Rf authentik:authentik /opt/authentik-data
     
     if [[ $MAJOR == 2026 && $MINOR -lt 8 ]]; then
 	    msg_info "Updating Worker and Server config (from $MAJOR.$MINOR)"
@@ -228,7 +228,7 @@ $STD pct exec "$CTID" -- bash -c "mkdir -p /opt/authentik-data/{certs,media,geoi
   cp /opt/authentik/tests/GeoLite2-City-Test.mmdb /opt/authentik-data/geoip/GeoLite2-City.mmdb; \
   cp -r /opt/authentik/blueprints /opt/authentik-data/; \
   rm -r /opt/authentik/blueprints; \
-  chown -R authentik:authentik /opt/authentik-data"
+  chown -Rf authentik:authentik /opt/authentik-data"
 msg_ok "Attached data storage volume"
 
 msg_info "Starting Services"
