@@ -28,6 +28,11 @@ touch /var/www/html/data/database/poznote.db
 chown -R www-data:www-data /var/www/html
 msg_ok "Deployed Poznote"
 
+msg_info "Running Poznote Initialization"
+chmod +x /opt/poznote/init.sh
+/opt/poznote/init.sh
+msg_ok "Initialized Poznote Data Directory"
+
 msg_info "Configuring Nginx"
 PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/poznote

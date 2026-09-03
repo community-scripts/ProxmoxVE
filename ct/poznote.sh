@@ -46,6 +46,11 @@ function update_script() {
 
     restore_backup
 
+    msg_info "Running Poznote Initialization"
+    chmod +x /opt/poznote/init.sh
+    /opt/poznote/init.sh
+    msg_ok "Initialized Poznote Data Directory"
+
     msg_info "Starting Service"
     systemctl start nginx
     msg_ok "Started Service"
