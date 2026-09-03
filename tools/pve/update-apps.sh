@@ -155,11 +155,27 @@ function sanitize_service_name() {
   return 0
 }
 
-function validate_service_script() {
+function script_exists() {
   local name="$1"
   sanitize_service_name "$name" || return 1
   curl -fsSL --max-time 10 -o /dev/null \
     "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${name}.sh" 2>/dev/null
+}
+
+# A container keeps the slug it was built with, so a renamed ct/ script leaves it
+# pointing at a name that no longer exists. Try the successors, but only accept one
+# that is really there -- guessing wrong would run a foreign app's updater.
+function resolve_service_script() {
+  local n="$1" c
+  script_exists "$n" && { printf '%s' "$n"; return 0; }
+  for c in "${n#alpine-}" "$(printf '%s' "$n" | sed -E 's/-v[0-9]+$//')"; do
+    [[ -n "$c" && "$c" != "$n" ]] || continue
+    script_exists "$c" && { printf '%s' "$c"; return 0; }
+  done
+  case "$n" in
+  pbs) script_exists proxmox-backup-server && { printf '%s' proxmox-backup-server; return 0; } ;;
+  esac
+  return 1
 }
 
 function detect_service() {
@@ -484,11 +500,17 @@ for container in $CHOICE; do
     continue
   fi
 
-  if ! validate_service_script "${service}"; then
+  resolved_service="$(resolve_service_script "${service}")"
+  if [ -z "${resolved_service}" ]; then
     echo -e "${RD}[ERROR]${CL} Service '${service}' does not resolve to ct/${service}.sh"
     log_result "$container" "${service}" "ERROR" "No matching ct/${service}.sh script found"
     log_write "Container $container: ERROR — ct/${service}.sh not found"
     continue
+  fi
+  if [ "${resolved_service}" != "${service}" ]; then
+    echo -e "${BL}[INFO]${CL} Script was renamed: ${service} -> ${GN}${resolved_service}${CL}"
+    log_write "Container $container: slug ${service} resolved to ${resolved_service}"
+    service="${resolved_service}"
   fi
 
   echo -e "${BL}[INFO]${CL} Detected service: ${GN}${service}${CL}"
