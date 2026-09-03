@@ -153,6 +153,42 @@ EOF
 nginx_enable_site poznote
 msg_ok "Configured Nginx"
 
+msg_info "Creating Background Worker Services"
+cat <<EOF >/etc/systemd/system/poznote-reminder-worker.service
+[Unit]
+Description=Poznote Reminder Email Worker
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+Restart=always
+ExecStart=/usr/bin/php /var/www/html/workers/reminder-email-worker.php
+WorkingDirectory=/var/www/html
+
+[Install]
+WantedBy=multi-user.target
+EOF
+cat <<EOF >/etc/systemd/system/poznote-s3-backup-worker.service
+[Unit]
+Description=Poznote S3 Backup Worker
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+Restart=always
+ExecStart=/usr/bin/php /var/www/html/workers/s3-backup-worker.php
+WorkingDirectory=/var/www/html
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now poznote-reminder-worker poznote-s3-backup-worker
+msg_ok "Created Background Worker Services"
+
 motd_ssh
 customize
 cleanup_lxc

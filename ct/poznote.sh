@@ -33,6 +33,7 @@ function update_script() {
   if check_for_gh_release "poznote" "timothepoznanski/poznote"; then
     msg_info "Stopping Service"
     systemctl stop nginx
+    systemctl stop poznote-reminder-worker poznote-s3-backup-worker 2>/dev/null || true
     msg_ok "Stopped Service"
 
     create_backup /var/www/html/data
@@ -53,6 +54,9 @@ function update_script() {
 
     msg_info "Starting Service"
     systemctl start nginx
+    if [[ -f /etc/systemd/system/poznote-reminder-worker.service ]]; then
+      systemctl start poznote-reminder-worker poznote-s3-backup-worker
+    fi
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
