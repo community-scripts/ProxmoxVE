@@ -31,13 +31,65 @@ msg_ok "Deployed Poznote"
 msg_info "Configuring Nginx"
 PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/poznote
+# The Excalidraw editor must keep its window.opener relationship with
+# libraries.excalidraw.com so "Add to Excalidraw" can hand the chosen library
+# back to the already-open editor tab; COOP same-origin would sever it.
+map \$uri \$poznote_coop {
+    default                  "same-origin";
+    /excalidraw_editor.php   "unsafe-none";
+}
+
 server {
     listen 8040;
     root /var/www/html;
     index index.php index.html;
 
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_types text/css application/javascript text/javascript application/json
+               image/svg+xml application/manifest+json font/ttf font/otf;
+
+    location ~* \.webmanifest$ {
+        default_type application/manifest+json;
+        try_files \$uri =404;
+    }
+
+    client_max_body_size 800M;
+
+    location /api/v1 {
+        try_files \$uri \$uri/ /api/v1/index.php?\$query_string;
+    }
+
+    location = /api/health {
+        rewrite ^ /api_health.php last;
+    }
+
+    location = /api/info {
+        rewrite ^ /api_health.php last;
+    }
+
     location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
+        try_files \$uri \$uri/ @poznote_public;
+    }
+
+    location @poznote_public {
+        rewrite ^/folder/([^/]+)/?$ /public_folder.php?token=\$1 last;
+        rewrite ^/workspace/([^/]+)/?$ /public_note.php?token=\$1 last;
+        rewrite ^/([^/]+)/?$ /public_slug.php?slug=\$1 last;
+    }
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Cross-Origin-Opener-Policy \$poznote_coop always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+
+    location ~* ^/data/.*\.(php[0-9]?|phtml|phar|pht)$ {
+        deny all;
     }
 
     location ~ \.php$ {
@@ -45,10 +97,51 @@ server {
         fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT \$document_root;
+        fastcgi_param PATH_INFO \$fastcgi_path_info;
+
+        fastcgi_param HTTP_X_FORWARDED_FOR \$http_x_forwarded_for;
+        fastcgi_param HTTP_X_FORWARDED_PROTO \$http_x_forwarded_proto;
+        fastcgi_param HTTP_X_FORWARDED_HOST \$http_x_forwarded_host;
+        fastcgi_param HTTP_X_FORWARDED_PORT \$http_x_forwarded_port;
+        fastcgi_param HTTP_X_REAL_IP \$http_x_real_ip;
+        fastcgi_param HTTPS \$https if_not_empty;
+
+        # Not raised to Docker's 600s: with #344 open, a stuck sync/backup
+        # holds the PHP session lock, and this timeout is what currently
+        # bounds the hang to ~60s. Revisit once #344 releases the lock
+        # before sync runs.
     }
 
-    location ~ /\.ht {
+    location ~ /\. {
         deny all;
+    }
+
+    location ~ ^/data/users/[0-9]+/backgrounds/ {
+        try_files \$uri =404;
+    }
+
+    location ~ ^/data/css/[A-Za-z0-9._-]+\.css$ {
+        try_files \$uri =404;
+    }
+
+    location ~ ^/(data|config)/ {
+        deny all;
+    }
+
+    location ~* ^/pwa/poznote(-[0-9]+)?\.png$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Cross-Origin-Resource-Policy "cross-origin" always;
+        try_files \$uri =404;
+    }
+
+    location ~* \.(?:js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|otf|eot|webp|webmanifest)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Cross-Origin-Resource-Policy "same-origin" always;
+        try_files \$uri =404;
     }
 }
 EOF
