@@ -536,6 +536,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - romm: allow git-based npm dependency for rom-patcher under npm v12 [@MickLesk](https://github.com/MickLesk) ([#16990](https://github.com/community-scripts/ProxmoxVE/pull/16990))
     - Pin Go to the version each project declares in go.mod [@MickLesk](https://github.com/MickLesk) ([#16976](https://github.com/community-scripts/ProxmoxVE/pull/16976))
     - Authentik update 2026.8.1 [@thieneret](https://github.com/thieneret) ([#16980](https://github.com/community-scripts/ProxmoxVE/pull/16980))
 
