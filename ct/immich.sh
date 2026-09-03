@@ -112,7 +112,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="v3.1.0"
+  RELEASE="v3.2.0"
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     if [[ $(cat ~/.immich) > "2.5.1" ]]; then
       msg_info "Enabling Maintenance Mode"
@@ -187,11 +187,10 @@ EOF
     msg_info "Updating Immich web and microservices"
     cd "$SRC_DIR"/server
     # server build
-    export SHARP_IGNORE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
-    unset SHARP_IGNORE_GLOBAL_LIBVIPS
-    export SHARP_FORCE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter immich --prod --no-optional deploy "$APP_DIR"
+    export SHARP_FORCE_GLOBAL_LIBVIPS=true
+    $STD pnpm --dir "$APP_DIR/node_modules/sharp" exec npm run build
 
     # Patch helmet.json: disable upgrade-insecure-requests for HTTP access
     if [[ -f "$APP_DIR/helmet.json" ]]; then
@@ -205,7 +204,6 @@ EOF
     cd "$SRC_DIR"
     echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
     unset SHARP_FORCE_GLOBAL_LIBVIPS
-    export SHARP_IGNORE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
     $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
     cp -a web/build "$APP_DIR"/www

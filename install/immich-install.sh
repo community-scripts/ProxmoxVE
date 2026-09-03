@@ -353,7 +353,7 @@ ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.1.0" "$SRC_DIR"
+fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.2.0" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
@@ -370,11 +370,10 @@ export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
 
 # server build
-export SHARP_IGNORE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
-unset SHARP_IGNORE_GLOBAL_LIBVIPS
-export SHARP_FORCE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter immich --prod --no-optional deploy "$APP_DIR"
+export SHARP_FORCE_GLOBAL_LIBVIPS=true
+$STD pnpm --dir "$APP_DIR/node_modules/sharp" exec npm run build
 
 # Patch helmet.json: disable upgrade-insecure-requests for HTTP access
 if [[ -f "$APP_DIR/helmet.json" ]]; then
@@ -388,7 +387,6 @@ sed -i "s|^start|${APP_DIR}/bin/start|" "$APP_DIR"/bin/immich-admin
 cd "$SRC_DIR"
 echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
 unset SHARP_FORCE_GLOBAL_LIBVIPS
-export SHARP_IGNORE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter @immich/sdk --filter immich-web --filter @immich/cli build
 $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 cp -a web/build "$APP_DIR"/www
