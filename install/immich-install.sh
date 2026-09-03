@@ -266,7 +266,7 @@ msg_ok "(2/6) Compiled jpegli"
 
 msg_info "(3/6) Compiling libheif"
 SOURCE=${SOURCE_DIR}/libheif
-LIBHEIF_REVISION="62f1b8c76ed4d8305071fdacbe74ef9717bacac5"
+LIBHEIF_REVISION="ac1cb05c39008f01525c991ff8b88f84ddf70fd2"
 # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
 $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
 cd "$SOURCE"
@@ -292,7 +292,7 @@ msg_ok "(3/6) Compiled libheif"
 
 msg_info "(4/6) Compiling libraw"
 SOURCE=${SOURCE_DIR}/libraw
-LIBRAW_REVISION="b860248a89d9082b8e0a1e202e516f46af9adb29"
+LIBRAW_REVISION="e419de08001de28ae6988ecb22df47e52b9c5eaa"
 # : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
 $STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
 cd "$SOURCE"

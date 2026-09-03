@@ -477,7 +477,7 @@ function compile_jpegli() {
 function compile_libheif() {
   SOURCE=${SOURCE_DIR}/libheif
   ensure_dependencies libaom-dev
-  LIBHEIF_REVISION="62f1b8c76ed4d8305071fdacbe74ef9717bacac5"
+  LIBHEIF_REVISION="ac1cb05c39008f01525c991ff8b88f84ddf70fd2"
   # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"
   if [[ "${update:-}" ]] || [[ "$LIBHEIF_REVISION" != "$(grep 'libheif' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libheif"
@@ -509,7 +509,7 @@ function compile_libheif() {
 
 function compile_libraw() {
   SOURCE=${SOURCE_DIR}/libraw
-  LIBRAW_REVISION="b860248a89d9082b8e0a1e202e516f46af9adb29"
+  LIBRAW_REVISION="e419de08001de28ae6988ecb22df47e52b9c5eaa"
   # : "${LIBRAW_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libraw.json)}"
   if [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libraw"
