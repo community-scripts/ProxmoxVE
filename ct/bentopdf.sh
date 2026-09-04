@@ -44,7 +44,7 @@ function update_script() {
 
     msg_info "Configuring BentoPDF"
     cd /opt/bentopdf
-    $STD npm ci --no-audit --no-fund
+    $STD npm ci --no-audit --no-fund --allow-remote=all
     export NODE_OPTIONS="--max-old-space-size=3072"
     export SIMPLE_MODE=true
     export VITE_USE_CDN=true
