@@ -45,7 +45,7 @@ SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
 BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
 cd /opt/pangolin
 mkdir -p /opt/pangolin/config/{traefik,db,letsencrypt,logs}
-$STD npm ci
+$STD npm ci --allow-remote=all
 $STD npm run set:pg
 $STD npm run set:oss
 rm -rf server/private

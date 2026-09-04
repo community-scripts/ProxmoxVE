@@ -63,7 +63,7 @@ function update_script() {
 
     msg_info "Updating Pangolin"
     cd /opt/pangolin
-    $STD npm ci
+    $STD npm ci --allow-remote=all
     $STD npm run set:pg
     $STD npm run set:oss
     rm -rf server/private
