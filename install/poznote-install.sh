@@ -111,10 +111,10 @@ server {
         fastcgi_param HTTP_X_REAL_IP \$http_x_real_ip;
         fastcgi_param HTTPS \$https if_not_empty;
 
-        # Not raised to Docker's 600s: with #344 open, a stuck sync/backup
-        # holds the PHP session lock, and this timeout is what currently
-        # bounds the hang to ~60s. Revisit once #344 releases the lock
-        # before sync runs.
+        # fastcgi_read_timeout 600;
+        # fastcgi_send_timeout 600;
+        # Left at nginx's 60s default, not Docker's 600s:
+        # a stalled git-sync request can hold the PHP session lock, otherwise
     }
 
     location ~ /\. {
