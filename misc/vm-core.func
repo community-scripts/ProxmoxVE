@@ -1100,6 +1100,95 @@ check_hostname_conflict() {
   fi
 }
 
+# ------------------------------------------------------------------------------
+# get_checksum_source - Locates the checksum a vendor publishes for an image
+#
+# Args: $1=image_url
+# Prints: "<algo> <checksum_url> <style>", or nothing when none is published
+#   style "sums" - a SHA256SUMS/SHA512SUMS listing next to the image
+#   style "bare" - a sidecar holding only the hash
+# ------------------------------------------------------------------------------
+get_checksum_source() {
+  local url="$1"
+  case "$url" in
+  *cloud.debian.org/*) echo "sha512sum ${url%/*}/SHA512SUMS sums" ;;
+  *cloud-images.ubuntu.com/*) echo "sha256sum ${url%/*}/SHA256SUMS sums" ;;
+  *download.truenas.com/*) echo "sha256sum ${url}.sha256 bare" ;;
+  esac
+}
+
+# ------------------------------------------------------------------------------
+# verify_image_checksum - Verifies a file against its vendor checksum
+#
+# Verification is best-effort by design: an unreachable checksum file, a changed
+# vendor layout, or an image absent from the listing are all treated as
+# unverifiable and allowed through, so a vendor reorganising their mirror cannot
+# break VM creation. Only a definite mismatch fails.
+#
+# Args: $1=file $2=source_url
+# Returns: 0 verified or unverifiable, 1 on mismatch
+# ------------------------------------------------------------------------------
+verify_image_checksum() {
+  local file="$1" url="$2"
+  local algo sums_url style expected actual
+
+  read -r algo sums_url style <<<"$(get_checksum_source "$url")"
+  [[ -z "$algo" ]] && return 0
+
+  if [[ "$style" == "bare" ]]; then
+    expected=$(curl -fsSL --max-time 30 "$sums_url" 2>/dev/null | tr -d '[:space:]')
+  else
+    # Debian lists "<hash>  <file>", Ubuntu "<hash> *<file>"
+    expected=$(curl -fsSL --max-time 30 "$sums_url" 2>/dev/null |
+      awk -v f="$(basename "$url")" '$NF == f || $NF == "*" f {print $1; exit}')
+  fi
+
+  [[ "$expected" =~ ^([0-9a-fA-F]{64}|[0-9a-fA-F]{128})$ ]] || return 0
+
+  actual=$("$algo" "$file" | awk '{print $1}')
+  [[ "$actual" == "$expected" ]]
+}
+
+# ------------------------------------------------------------------------------
+# download_and_validate_image - Downloads a disk image or ISO and validates it
+#
+# Reuses a cached copy only when it still matches the vendor checksum, and
+# downloads through a temporary file so an interrupted transfer is never left
+# at the cache path.
+#
+# Args: $1=url $2=cache_file
+# ------------------------------------------------------------------------------
+download_and_validate_image() {
+  local url="$1" file="$2"
+
+  mkdir -p "$(dirname "$file")"
+
+  if [[ -s "$file" ]]; then
+    if verify_image_checksum "$file" "$url"; then
+      msg_ok "Using cached image ${CL}${BL}$(basename "$file")${CL}"
+      return 0
+    fi
+    msg_error "Cached image $(basename "$file") failed checksum validation. Deleting and retrying download..."
+    rm -f "$file"
+  fi
+
+  if ! curl -f#SL -o "$file.part" "$url"; then
+    rm -f "$file.part"
+    msg_error "Download failed: $url"
+    exit 115
+  fi
+  echo -en "\e[1A\e[0K"
+
+  if ! verify_image_checksum "$file.part" "$url"; then
+    rm -f "$file.part"
+    msg_error "Downloaded image failed checksum validation. Please try again later."
+    exit 115
+  fi
+
+  mv -f "$file.part" "$file"
+  msg_ok "Downloaded ${CL}${BL}$(basename "$file")${CL}"
+}
+
 set_description() {
   local description_title="${APP:-${NSAPP} VM}"
 
