@@ -30,7 +30,7 @@ msg_ok "Deployed Poznote"
 
 msg_info "Running Poznote Initialization"
 chmod +x /opt/poznote/init.sh
-/opt/poznote/init.sh
+$STD /opt/poznote/init.sh
 msg_ok "Initialized Poznote Data Directory"
 
 msg_info "Configuring Nginx"

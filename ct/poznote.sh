@@ -49,7 +49,7 @@ function update_script() {
 
     msg_info "Running Poznote Initialization"
     chmod +x /opt/poznote/init.sh
-    /opt/poznote/init.sh
+    $STD /opt/poznote/init.sh
     msg_ok "Initialized Poznote Data Directory"
 
     msg_info "Updating Nginx Configuration"
@@ -216,11 +216,9 @@ EOF
       msg_ok "Created S3 Backup Worker Service"
     fi
 
-    systemctl enable -q poznote-reminder-worker poznote-s3-backup-worker
-
     msg_info "Starting Service"
     systemctl start nginx
-    systemctl start poznote-reminder-worker poznote-s3-backup-worker
+    systemctl enable -q --now poznote-reminder-worker poznote-s3-backup-worker
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
