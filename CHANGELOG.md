@@ -536,6 +536,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix/poznote - 1st party Docker parity [@lucas-at-3x-eye](https://github.com/lucas-at-3x-eye) ([#17011](https://github.com/community-scripts/ProxmoxVE/pull/17011))
     - fix-update-authentik-2026.8.1 [@thieneret](https://github.com/thieneret) ([#16999](https://github.com/community-scripts/ProxmoxVE/pull/16999))
 
 ### 💾 Core
