@@ -538,6 +538,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix-update-authentik-2026.8.1 [@thieneret](https://github.com/thieneret) ([#16999](https://github.com/community-scripts/ProxmoxVE/pull/16999))
 
+### 💾 Core
+
+  - setup_go: resolve bare major.minor versions to the latest patch release [@MickLesk](https://github.com/MickLesk) ([core#24](https://github.com/community-scripts/core/pull/24))
+
 ## 2026-09-03
 
 ### 🚀 Updated Scripts
