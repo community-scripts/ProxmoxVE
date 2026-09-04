@@ -51,7 +51,7 @@ function update_script() {
 
     msg_info "Updating CryptPad"
     cd /opt/cryptpad
-    $STD npm ci
+    $STD npm ci --allow-git=all
     $STD npm run install:components
     if [ -f "/opt/cryptpad/install-onlyoffice.sh" ]; then
       $STD bash /opt/cryptpad/install-onlyoffice.sh --accept-license

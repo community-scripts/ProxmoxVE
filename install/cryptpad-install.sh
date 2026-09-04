@@ -24,7 +24,7 @@ fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
 msg_info "Setup CryptPad"
 cd /opt/cryptpad
-$STD npm ci
+$STD npm ci --allow-git=all
 $STD npm run install:components
 if [[ "$onlyoffice" =~ ^[Yy]$ ]]; then
   $STD bash -c "./install-onlyoffice.sh --accept-license"
