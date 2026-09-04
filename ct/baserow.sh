@@ -48,7 +48,7 @@ function update_script() {
 
     msg_info "Rebuilding Frontend"
     cd /opt/baserow/web-frontend
-    $STD npm install
+    $STD npm install --allow-remote=all
     $STD npm run build
     msg_ok "Rebuilt Frontend"
 
