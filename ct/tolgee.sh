@@ -37,6 +37,8 @@ function update_script() {
     systemctl stop tolgee
     msg_ok "Stopped Service"
 
+    JAVA_VERSION="25" setup_java
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tolgee" "tolgee/tolgee-platform" "singlefile" "latest" "/opt/tolgee" "tolgee-*.jar"
     find /opt/tolgee -maxdepth 1 -type f -name 'tolgee-*.jar' -exec mv {} /opt/tolgee/tolgee.jar \;
 

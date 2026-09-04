@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-JAVA_VERSION="21" setup_java
+JAVA_VERSION="25" setup_java
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="tolgee" PG_DB_USER="tolgee" setup_postgresql_db
 
