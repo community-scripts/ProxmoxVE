@@ -61,9 +61,9 @@ else
     read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
   done
   cd /opt/fileflows/Agent
-  before_units="$(systemctl list-unit-files 'fileflows*' --no-legend 2>/dev/null | awk '{print $1}' | sort)"
+  before_units="$(systemctl list-unit-files 'fileflows*' --no-legend 2>/dev/null | awk '{print $1}' | sort || true)"
   $STD dotnet FileFlows.Agent.dll --server "$server_url" --systemd install --root true
-  after_units="$(systemctl list-unit-files 'fileflows*' --no-legend 2>/dev/null | awk '{print $1}' | sort)"
+  after_units="$(systemctl list-unit-files 'fileflows*' --no-legend 2>/dev/null | awk '{print $1}' | sort || true)"
   agent_unit="$(comm -13 <(echo "$before_units") <(echo "$after_units") | head -n1)"
   if [[ -n "$agent_unit" ]]; then
     systemctl enable -q --now "$agent_unit"
