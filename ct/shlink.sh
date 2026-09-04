@@ -61,7 +61,12 @@ function update_script() {
 
   if [[ -d /opt/shlink-web-client ]]; then
     if check_for_gh_release "shlink-web-client" "shlinkio/shlink-web-client"; then
+      create_backup /opt/shlink-web-client/servers.json
+
       CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shlink-web-client" "shlinkio/shlink-web-client" "prebuild" "latest" "/opt/shlink-web-client" "shlink-web-client_*_dist.zip"
+
+      restore_backup
+
       msg_ok "Updated Web Client"
     fi
   fi
