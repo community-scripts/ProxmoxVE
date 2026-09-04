@@ -55,6 +55,7 @@ if [[ "$install_server" =~ ^[Ss]$ ]]; then
   msg_ok "Installed FileFlows Server"
 else
   msg_info "Installing FileFlows Node"
+  stop_spinner
   read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
   while [[ -z "${server_url// /}" ]]; do
     read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
