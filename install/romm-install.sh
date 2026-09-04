@@ -161,6 +161,7 @@ else
 fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
+echo "__version__ = \"$(cat ~/.romm)\"" >/opt/romm/backend/__version__.py
 
 msg_info "Creating environment file"
 sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
