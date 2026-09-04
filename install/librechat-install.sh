@@ -25,7 +25,7 @@ fetch_and_deploy_gh_release "rag-api" "danny-avila/rag_api" "tarball"
 
 msg_info "Installing LibreChat Dependencies"
 cd /opt/librechat
-$STD npm ci
+$STD npm ci --allow-remote=all
 msg_ok "Installed LibreChat Dependencies"
 
 msg_info "Building Frontend"

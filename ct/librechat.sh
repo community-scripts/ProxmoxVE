@@ -45,7 +45,7 @@ function update_script() {
 
     msg_info "Installing Dependencies"
     cd /opt/librechat
-    $STD npm ci
+    $STD npm ci --allow-remote=all
     msg_ok "Installed Dependencies"
 
     msg_info "Building Frontend"
