@@ -178,7 +178,7 @@ EOF
     fi
 
     msg_info "Updating Worker and Server config"
-    sed -i "s|/dev/shm$|/dev/shm/authentik-server|g" /etc/default/authentik-server
+    sed -i "s|/dev/shm\/\?$|/dev/shm/authentik-server|g" /etc/default/authentik-server
 	  sed -i "s|/dev/shm\/\?$|/dev/shm/authentik-worker|g" /etc/default/authentik-worker
     msg_ok "Updated Worker and Server config"
 
