@@ -543,6 +543,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor FileFlows: Stop Spinner before read -rp / Switch from "Node" to "Agent"  [@MickLesk](https://github.com/MickLesk) ([#17007](https://github.com/community-scripts/ProxmoxVE/pull/17007))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - update-apps: follow renamed ct/ scripts instead of erroring out [@MickLesk](https://github.com/MickLesk) ([#16991](https://github.com/community-scripts/ProxmoxVE/pull/16991))
+
 ## 2026-09-04
 
 ### 🚀 Updated Scripts
