@@ -549,7 +549,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - implement exponential backoff for curl retries in _cs_curl_retry function [@MickLesk](https://github.com/MickLesk) ([core#26](https://github.com/community-scripts/core/pull/26))
+  - Use Proxmox for a template before reaching for linuxcontainers.org [@MickLesk](https://github.com/MickLesk) ([core#23](https://github.com/community-scripts/core/pull/23))
+- implement exponential backoff for curl retries in _cs_curl_retry function [@MickLesk](https://github.com/MickLesk) ([core#26](https://github.com/community-scripts/core/pull/26))
 
 ### 🧰 Tools
 
