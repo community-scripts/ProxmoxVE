@@ -530,6 +530,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-05
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - romm: write real version into backend/__version__.py placeholder [@MickLesk](https://github.com/MickLesk) ([#17009](https://github.com/community-scripts/ProxmoxVE/pull/17009))
+
 ## 2026-09-04
 
 ### 🚀 Updated Scripts
