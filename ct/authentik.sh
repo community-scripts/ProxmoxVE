@@ -88,7 +88,7 @@ function update_script() {
       msg_info "Moving blueprints to presistent directory"
       cp -r /opt/authentik/blueprints /opt/authentik-data/
       rm -r /opt/authentik/blueprints
-      chown -Rf authentik:authentik /opt/authentik-data/blueprints
+      $STD find /opt/authentik-data -path '*/lost+found' -prune -o -exec chown authentik:authentik {} +
       yq -i ".blueprints_dir = \"/opt/authentik-data/blueprints\"" /etc/authentik/config.yml
       msg_ok "blueprints moved to presistent directory"
       msg_warn "The blueprints provided by authentik are always overwritten when updated! Only manually created custom blueprints remain unchanged between updates."
