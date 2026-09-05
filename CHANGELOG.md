@@ -547,6 +547,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor FileFlows: Stop Spinner before read -rp / Switch from "Node" to "Agent"  [@MickLesk](https://github.com/MickLesk) ([#17007](https://github.com/community-scripts/ProxmoxVE/pull/17007))
 
+### 💾 Core
+
+  - implement exponential backoff for curl retries in _cs_curl_retry function [@MickLesk](https://github.com/MickLesk) ([core#26](https://github.com/community-scripts/core/pull/26))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
