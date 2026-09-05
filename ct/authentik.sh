@@ -228,7 +228,7 @@ $STD pct exec "$CTID" -- bash -c "mkdir -p /opt/authentik-data/{certs,media,geoi
   cp /opt/authentik/tests/GeoLite2-City-Test.mmdb /opt/authentik-data/geoip/GeoLite2-City.mmdb; \
   cp -r /opt/authentik/blueprints /opt/authentik-data/; \
   rm -r /opt/authentik/blueprints; \
-  chown -Rf authentik:authentik /opt/authentik-data/blueprints"
+  find /opt/authentik-data -path '*/lost+found' -prune -o -exec chown authentik:authentik {} +"
 msg_ok "Attached data storage volume"
 
 msg_info "Starting Services"
