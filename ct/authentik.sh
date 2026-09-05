@@ -155,7 +155,7 @@ function update_script() {
 
     cp -r /opt/authentik/blueprints /opt/authentik-data/
     rm -r /opt/authentik/blueprints
-    chown -Rf authentik:authentik /opt/authentik-data/blueprints
+    $STD find /opt/authentik-data -path '*/lost+found' -prune -o -exec chown authentik:authentik {} +
 
     if [[ $MAJOR == 2026 && $MINOR -lt 8 ]]; then
 	    msg_info "Updating Worker and Server config (from $MAJOR.$MINOR)"
