@@ -536,6 +536,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - snapotter: seed AI venv base packages on arm64, warn amd64 has no working CPU bundle [@MickLesk](https://github.com/MickLesk) ([#16903](https://github.com/community-scripts/ProxmoxVE/pull/16903))
     - tolgee: bump required JDK from 21 to 25 [@MickLesk](https://github.com/MickLesk) ([#17005](https://github.com/community-scripts/ProxmoxVE/pull/17005))
     - romm: write real version into backend/__version__.py placeholder [@MickLesk](https://github.com/MickLesk) ([#17009](https://github.com/community-scripts/ProxmoxVE/pull/17009))
 
