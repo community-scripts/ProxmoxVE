@@ -31,8 +31,8 @@ Environment=IVENTOY_API_ALL=1
 Environment=IVENTOY_AUTO_RUN=1
 Environment=LIBRARY_PATH=/opt/iventoy/lib/lin64
 Environment=LD_LIBRARY_PATH=/opt/iventoy/lib/lin64
-ExecStart=/bin/sh /opt/iventoy/iventoy.sh -R start
-ExecStop=/bin/sh /opt/iventoy/iventoy.sh stop
+ExecStart=/bin/bash /opt/iventoy/iventoy.sh -R start
+ExecStop=/bin/bash /opt/iventoy/iventoy.sh stop
 Restart=on-failure
 RestartSec=5
 
