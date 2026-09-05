@@ -538,6 +538,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - romm: write real version into backend/__version__.py placeholder [@MickLesk](https://github.com/MickLesk) ([#17009](https://github.com/community-scripts/ProxmoxVE/pull/17009))
 
+  - #### 🔧 Refactor
+
+    - Refactor FileFlows: Stop Spinner before read -rp / Switch from "Node" to "Agent"  [@MickLesk](https://github.com/MickLesk) ([#17007](https://github.com/community-scripts/ProxmoxVE/pull/17007))
+
 ## 2026-09-04
 
 ### 🚀 Updated Scripts
