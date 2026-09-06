@@ -54,6 +54,7 @@ function update_script() {
     cp -rp ${BACKUP_DIR}/extensions/ /opt/sonarqube/extensions/
     cp -p ${BACKUP_DIR}/conf/sonar.properties /opt/sonarqube/conf/sonar.properties
     rm -rf ${BACKUP_DIR}
+    chmod +x /opt/sonarqube/bin/linux-x86-64/sonar.sh
     chown -R sonarqube:sonarqube /opt/sonarqube
     msg_ok "Restored Backup"
 
