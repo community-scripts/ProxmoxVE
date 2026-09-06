@@ -542,6 +542,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-06
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix Sonarqube update script to add +x on sonar.sh [@jarihu](https://github.com/jarihu) ([#17056](https://github.com/community-scripts/ProxmoxVE/pull/17056))
+
 ## 2026-09-05
 
 ### 🚀 Updated Scripts
