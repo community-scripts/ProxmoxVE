@@ -544,7 +544,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Journiv ([#17092](https://github.com/community-scripts/ProxmoxVE/pull/17092))
+  - Matter-Hub ([#17093](https://github.com/community-scripts/ProxmoxVE/pull/17093))
+- Journiv ([#17092](https://github.com/community-scripts/ProxmoxVE/pull/17092))
 
 ### 🚀 Updated Scripts
 
