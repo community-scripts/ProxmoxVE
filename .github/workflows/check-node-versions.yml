@@ -497,12 +497,15 @@ jobs:
           PR_EOF
             )
 
+            # The label goes on at creation, not in a second call: it is what
+            # exempts the PR from the template check, and that check runs on
+            # "opened" — a label added a moment later can arrive too late.
             if url=$(gh pr create \
               --title "${slug}: bump Node.js from ${our} to ${upstream}" \
               --body "$body" \
               --base main \
-              --head "$branch" 2>/dev/null); then
-              gh pr edit "$url" --add-label "automated pr" >/dev/null 2>&1 || true
+              --head "$branch" \
+              --label "automated pr" 2>/dev/null); then
               printf '%s|open|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
             else
               printf '%s|failed||\n' "$slug" >>/tmp/drift_prs.txt
