@@ -14,7 +14,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-#var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -50,9 +50,8 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/onetimesecret/.env
-
+    
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "onetimesecret" "onetimesecret/onetimesecret" "tarball"
-
     RUBY_VERSION=$(tr -d ' \n' </opt/onetimesecret/.ruby-version 2>/dev/null)
     RUBY_VERSION="${RUBY_VERSION:-3.4.10}" setup_ruby
 
@@ -100,5 +99,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}${DISPLAY_SCHEME}://${DISPLAY_HOST}${CL}"
-echo -e "${INFO}${YW} Configure hostname, TLS, and SMTP settings in:${CL}"
-echo -e "${TAB}${BGN}/opt/onetimesecret/.env${CL}"
