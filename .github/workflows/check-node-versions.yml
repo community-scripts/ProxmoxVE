@@ -7,8 +7,9 @@ on:
     - cron: "0 6 * * 1"
 
 permissions:
-  contents: read
+  contents: write
   issues: write
+  pull-requests: write
 
 jobs:
   check-node-versions:
@@ -390,6 +391,129 @@ jobs:
 
           cat /tmp/drift_report.md
 
+      # One PR per script, not one for all of them: the bumps are judged
+      # individually (an app can be deliberately held back while the next is a
+      # safe follow), and a combined PR is blocked by its worst member.
+      - name: Open a pull request per drifting script
+        if: steps.check.outputs.drift_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          : >/tmp/drift_prs.txt
+
+          while IFS='|' read -r slug our upstream hint repo; do
+            [[ -z "$slug" ]] && continue
+
+            # "dynamic" and "unset" have no literal to rewrite, and a missing
+            # upstream major is nothing to rewrite it to.
+            if [[ ! "$our" =~ ^[0-9]+$ || ! "$upstream" =~ ^[0-9]+$ ]]; then
+              printf '%s|manual||\n' "$slug" >>/tmp/drift_prs.txt
+              continue
+            fi
+
+            # The branch name carries the exact bump, so the PR for it answers
+            # the question on its own: open means it is waiting for a review,
+            # closed means someone said no to this bump. A later upstream
+            # release changes the name and gets its own PR.
+            branch="node-drift/${slug}-${our}-to-${upstream}"
+
+            existing=$(gh pr list --head "$branch" --state all \
+              --json number,state,url,labels --jq '.[0] // empty' 2>/dev/null || echo "")
+
+            if [[ -n "$existing" ]]; then
+              state=$(jq -r '.state' <<<"$existing")
+              url=$(jq -r '.url' <<<"$existing")
+              stale=$(jq -r '[.labels[]?.name] | index("stale") // empty' <<<"$existing")
+
+              case "$state" in
+              OPEN)
+                printf '%s|open|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                continue
+                ;;
+              MERGED)
+                printf '%s|merged|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                continue
+                ;;
+              *)
+                # The stale bot only closes what a human labelled "stale", so
+                # that close carries no verdict on the bump — reopen the case.
+                # A close without it is a decision, and it stands.
+                if [[ -z "$stale" ]]; then
+                  printf '%s|declined|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                  continue
+                fi
+                git push origin --delete "$branch" >/dev/null 2>&1 || true
+                ;;
+              esac
+            fi
+
+            git checkout -q -B "$branch"
+
+            changed=()
+            for f in "install/${slug}-install.sh" "ct/${slug}.sh"; do
+              [[ -f "$f" ]] || continue
+              if grep -qE "NODE_VERSION=\"?${our}\"?" "$f"; then
+                sed -i -E "s/(NODE_VERSION=)\"?${our}\"?/\1\"${upstream}\"/g" "$f"
+                changed+=("$f")
+              fi
+            done
+
+            if [[ ${#changed[@]} -eq 0 ]]; then
+              printf '%s|manual||\n' "$slug" >>/tmp/drift_prs.txt
+              git checkout -q main
+              continue
+            fi
+
+            git add "${changed[@]}"
+            git commit -q -m "${slug}: bump Node.js from ${our} to ${upstream}"
+
+            if ! git push -q -u origin "$branch" 2>/dev/null; then
+              printf '%s|failed||\n' "$slug" >>/tmp/drift_prs.txt
+              git checkout -q main
+              continue
+            fi
+
+            # The test command is written here rather than left to
+            # pr-test-command.yml: a PR opened with GITHUB_TOKEN does not start
+            # another workflow, so that comment would never arrive.
+            body=$(cat <<PR_EOF
+          \`${slug}\` pins Node **${our}**, upstream indicates **${upstream}** (${hint}) — [upstream repo](https://github.com/${repo}).
+
+          Opened automatically by the weekly Node.js version drift check. **Nothing here has been tested.** Run it against a host before merging:
+
+          \`\`\`bash
+          export COMMUNITY_SCRIPTS_URL=https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${branch}
+          bash -c "\$(curl -fsSL "\$COMMUNITY_SCRIPTS_URL/ct/${slug}.sh")"
+          \`\`\`
+
+          Both lines are needed — each script pins \`_CS_DEFAULT_URL\` to \`main\`, and that pin is what fills \`COMMUNITY_SCRIPTS_URL\` when it is unset.
+
+          If the bump is wrong — upstream ships a newer Node than the app needs, or this script is deliberately held back — **close this PR**. It gets recorded on the drift report and this exact bump is not proposed again.
+          PR_EOF
+            )
+
+            if url=$(gh pr create \
+              --title "${slug}: bump Node.js from ${our} to ${upstream}" \
+              --body "$body" \
+              --base main \
+              --head "$branch" 2>/dev/null); then
+              gh pr edit "$url" --add-label "automated pr" >/dev/null 2>&1 || true
+              printf '%s|open|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+            else
+              printf '%s|failed||\n' "$slug" >>/tmp/drift_prs.txt
+            fi
+
+            git checkout -q main
+          done </tmp/drift_scripts.txt
+
+          echo "Pull request status per script:"
+          cat /tmp/drift_prs.txt
+
       - name: Create or update summary issue
         if: steps.check.outputs.drift_count != '0'
         env:
@@ -403,11 +527,31 @@ jobs:
           TOTAL="${{ steps.check.outputs.total }}"
           CHECKED="${{ steps.check.outputs.checked }}"
 
-          # Build checklist from drift data
+          # Build checklist from drift data. Each item carries the state of its
+          # own PR, so the list tracks itself instead of relying on someone
+          # ticking a box that the next run would overwrite anyway.
           CHECKLIST=""
           while IFS='|' read -r slug our_version upstream_major upstream_hint repo; do
             [[ -z "$slug" ]] && continue
-            CHECKLIST+="- [ ] **\`${slug}\`** — ours: \`${our_version}\` → upstream: \`${upstream_major}\` (${upstream_hint}) — [repo](https://github.com/${repo})"$'\n'
+
+            pr_state=""
+            pr_url=""
+            if [[ -f /tmp/drift_prs.txt ]]; then
+              pr_line=$(grep -m1 "^${slug}|" /tmp/drift_prs.txt || echo "")
+              pr_state=$(cut -d'|' -f2 <<<"$pr_line")
+              pr_url=$(cut -d'|' -f3 <<<"$pr_line")
+            fi
+
+            case "$pr_state" in
+            open)     mark="- [ ]"; note="— ${pr_url}" ;;
+            declined) mark="- [x]"; note="— declined in ${pr_url}, not proposed again" ;;
+            merged)   mark="- [x]"; note="— merged in ${pr_url}" ;;
+            manual)   mark="- [ ]"; note="— needs a manual change (no fixed \`NODE_VERSION\` to rewrite)" ;;
+            failed)   mark="- [ ]"; note="— could not open a PR automatically" ;;
+            *)        mark="- [ ]"; note="" ;;
+            esac
+
+            CHECKLIST+="${mark} **\`${slug}\`** — ours: \`${our_version}\` → upstream: \`${upstream_major}\` (${upstream_hint}) — [repo](https://github.com/${repo}) ${note}"$'\n'
           done < /tmp/drift_scripts.txt
 
           # Build full report table
@@ -424,11 +568,12 @@ jobs:
 
           ### How to resolve
 
-          1. Check upstream Dockerfile / package.json to confirm the required Node.js version
-          2. Test the script with the new Node version
-          3. Update \`NODE_VERSION\` in \`install/<slug>-install.sh\`
-          4. Update \`NODE_VERSION\` in \`ct/<slug>.sh\` (update section) if applicable
-          5. Check off the item above once done
+          Each item above has its own pull request with the bump already applied and a ready-to-run test command in the description.
+
+          1. Check the upstream Dockerfile / package.json to confirm the required Node.js version
+          2. Run the test command from the PR against a host
+          3. Merge the PR if it works — the item disappears from this list on the next run
+          4. Close the PR if the bump is wrong: the script stays as it is and this exact bump is never proposed again
 
           <details>
           <summary>Full report</summary>
