@@ -544,7 +544,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Matter-Hub ([#17093](https://github.com/community-scripts/ProxmoxVE/pull/17093))
+  - Chatwoot ([#17095](https://github.com/community-scripts/ProxmoxVE/pull/17095))
+- whisparr-eros ([#17094](https://github.com/community-scripts/ProxmoxVE/pull/17094))
+- Matter-Hub ([#17093](https://github.com/community-scripts/ProxmoxVE/pull/17093))
 - Journiv ([#17092](https://github.com/community-scripts/ProxmoxVE/pull/17092))
 
 ### 🚀 Updated Scripts
