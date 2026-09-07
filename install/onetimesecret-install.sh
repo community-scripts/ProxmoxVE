@@ -38,11 +38,9 @@ fetch_and_deploy_gh_release "onetimesecret" "onetimesecret/onetimesecret" "tarba
 
 RUBY_VERSION=$(tr -d ' \n' </opt/onetimesecret/.ruby-version 2>/dev/null)
 RUBY_VERSION="${RUBY_VERSION:-3.4.10}" setup_ruby
-
 PNPM_VERSION=$(sed -n 's/.*"packageManager": "pnpm@\([^"]*\)".*/\1/p' /opt/onetimesecret/package.json)
 NODE_VERSION=$(tr -d ' \n' </opt/onetimesecret/.nvmrc 2>/dev/null)
 NODE_VERSION="${NODE_VERSION:-25}" NODE_MODULE="pnpm@${PNPM_VERSION:-11.1.2}" setup_nodejs
-
 HOST_VALUE="${OTS_HOST:-$LOCAL_IP}"
 SSL_VALUE="${OTS_SSL:-false}"
 case "${SSL_VALUE,,}" in
