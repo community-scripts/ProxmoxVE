@@ -22,7 +22,7 @@ PG_DB_NAME="kaneo" PG_DB_USER="kaneo" setup_postgresql_db
 fetch_and_deploy_gh_release "kaneo" "usekaneo/kaneo" "tarball"
 
 PNPM_VERSION=$(sed -n 's/.*"packageManager": "pnpm@\([^"+]*\).*/\1/p' /opt/kaneo/package.json)
-NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION:-10.32.1}" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION:-10.32.1}" setup_nodejs
 
 msg_info "Configuring Kaneo"
 cat <<EOF >/opt/kaneo/.env
