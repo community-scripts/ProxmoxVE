@@ -558,6 +558,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - heimdall: set up PHP 8.4 on update, keep only the database, run migrations [@MickLesk](https://github.com/MickLesk) ([#17067](https://github.com/community-scripts/ProxmoxVE/pull/17067))
 
+### 📂 Github
+
+  - github: Open per-script Node bump PRs [@MickLesk](https://github.com/MickLesk) ([#17065](https://github.com/community-scripts/ProxmoxVE/pull/17065))
+
 ## 2026-09-06
 
 ### 🚀 Updated Scripts
