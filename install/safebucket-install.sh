@@ -17,8 +17,7 @@ ARCH=$(arch_resolve)
 GARAGE_ARCH=$(arch_resolve "x86_64-unknown-linux-musl" "aarch64-unknown-linux-musl")
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  awscli
+$STD apt install -y awscli
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Garage"
