@@ -37,12 +37,9 @@ function update_script() {
     sleep 1
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -R /opt/Heimdall/database database-backup
-    cp -R /opt/Heimdall/public public-backup
-    sleep 1
-    msg_ok "Backed up Data"
+    create_backup /opt/Heimdall/database/app.sqlite
 
+    PHP_VERSION="8.4" PHP_FPM="YES" setup_php
     setup_composer
     fetch_and_deploy_gh_release "Heimdall" "linuxserver/Heimdall" "tarball"
 
@@ -52,20 +49,15 @@ function update_script() {
     rm -f bootstrap/cache/*.php
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-    $STD php artisan optimize:clear
     msg_ok "Updated Heimdall-Dashboard"
 
-    msg_info "Restoring Data"
-    cd ~
-    cp -R database-backup/* /opt/Heimdall/database
-    cp -R public-backup/* /opt/Heimdall/public
-    sleep 1
-    msg_ok "Restored Data"
+    restore_backup
 
-    msg_info "Cleaning Up"
-    rm -rf {public-backup,database-backup}
-    sleep 1
-    msg_ok "Cleaned Up"
+    msg_info "Migrating Database"
+    cd /opt/Heimdall
+    $STD php artisan migrate --force
+    $STD php artisan optimize:clear
+    msg_ok "Migrated Database"
 
     msg_info "Starting Service"
     systemctl start heimdall.service
