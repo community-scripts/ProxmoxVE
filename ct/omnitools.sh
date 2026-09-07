@@ -41,7 +41,7 @@ function update_script() {
     cd /opt/omnitools
     export HUSKY=0
     $STD npm pkg delete scripts.prepare
-    $STD npm ci
+    $STD npm ci --allow-remote=all
     $STD npm run build
     msg_ok "Built OmniTools"
 
