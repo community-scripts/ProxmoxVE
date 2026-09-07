@@ -15,7 +15,7 @@ update_os
 
 fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes" "tarball"
 USE_UVX="YES" setup_uv
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Setting up Flatnotes"
 cd /opt/flatnotes
