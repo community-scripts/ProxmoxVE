@@ -23,6 +23,7 @@ fetch_and_deploy_gh_release "omnitools" "iib0011/omni-tools" "tarball"
 msg_info "Building OmniTools"
 cd /opt/omnitools
 export HUSKY=0
+$STD npm pkg delete scripts.prepare
 $STD npm ci
 $STD npm run build
 msg_ok "Built OmniTools"
