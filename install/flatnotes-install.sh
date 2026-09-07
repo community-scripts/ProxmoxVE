@@ -14,17 +14,14 @@ network_check
 update_os
 
 fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes" "tarball"
-USE_UVX="YES" setup_uv
-NODE_VERSION="22" setup_nodejs
+PYTHON_VERSION="3.13" setup_uv
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Setting up Flatnotes"
 cd /opt/flatnotes
-sed -i 's/^name = ""$/name = "flatnotes"/' pyproject.toml
-$STD /usr/local/bin/uvx migrate-to-uv
-$STD /usr/local/bin/uv sync
+$STD uv sync --locked --no-dev
 mkdir -p /opt/flatnotes/data
-cd /opt/flatnotes/client
-$STD npm install
+$STD npm ci
 $STD npm run build
 
 cat <<EOF >/opt/flatnotes/.env
