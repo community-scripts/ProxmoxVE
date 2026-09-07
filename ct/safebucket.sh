@@ -14,7 +14,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-#var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -41,9 +41,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/safebucket/config.yaml /opt/safebucket/data/
-
     fetch_and_deploy_gh_release "safebucket" "safebucket/safebucket" "singlefile" "latest" "/opt/safebucket" "safebucket-linux-${ARCH}"
-
     restore_backup
 
     msg_info "Configuring Safebucket"
