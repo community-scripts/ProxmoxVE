@@ -40,7 +40,7 @@ function update_script() {
 
     msg_info "Updating Nightscout"
     cd /opt/nightscout
-    $STD npm install
+    $STD npm install --allow-remote=all
     msg_ok "Updated Nightscout"
 
     msg_info "Starting Service"

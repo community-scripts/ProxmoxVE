@@ -24,7 +24,7 @@ NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "nightscout" "nightscout/cgm-remote-monitor" "tarball"
 
 msg_info "Installing Nightscout"
-$STD npm install --prefix /opt/nightscout
+$STD npm install --prefix /opt/nightscout --allow-remote=all
 msg_ok "Installed Nightscout"
 
 msg_info "Creating Service"
