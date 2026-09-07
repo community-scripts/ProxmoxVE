@@ -550,6 +550,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - mediamtx: keep mediamtx.yml across updates [@MickLesk](https://github.com/MickLesk) ([#17069](https://github.com/community-scripts/ProxmoxVE/pull/17069))
     - omnitools: allow remote action while npm ci [@MickLesk](https://github.com/MickLesk) ([#17070](https://github.com/community-scripts/ProxmoxVE/pull/17070))
 
+  - #### ✨ New Features
+
+    - netboot-xyz: add Secure Boot and Legacy assets [@MickLesk](https://github.com/MickLesk) ([#17066](https://github.com/community-scripts/ProxmoxVE/pull/17066))
+
   - #### 🔧 Refactor
 
     - heimdall: set up PHP 8.4 on update, keep only the database, run migrations [@MickLesk](https://github.com/MickLesk) ([#17067](https://github.com/community-scripts/ProxmoxVE/pull/17067))
