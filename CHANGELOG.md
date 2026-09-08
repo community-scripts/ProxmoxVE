@@ -555,7 +555,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#28](https://github.com/community-scripts/core/pull/28))
+  - Treat a cut-short forge response as a failure, not as HTTP 200 [@MickLesk](https://github.com/MickLesk) ([core#31](https://github.com/community-scripts/core/pull/31))
+- Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#28](https://github.com/community-scripts/core/pull/28))
 - cloud-init: drop the "configure in Proxmox UI" hint [@MickLesk](https://github.com/MickLesk) ([core#30](https://github.com/community-scripts/core/pull/30))
 - Survive an empty /usr/bin/update instead of aborting the run [@MickLesk](https://github.com/MickLesk) ([core#29](https://github.com/community-scripts/core/pull/29))
 
