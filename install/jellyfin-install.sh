@@ -33,7 +33,7 @@ setup_deb822_repo \
 msg_ok "Set up Jellyfin Repository"
 
 msg_info "Installing Jellyfin"
-ensure_dependencies jellyfin jellyfin-ffmpeg7
+ensure_dependencies jellyfin jellyfin-ffmpeg8
 ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 msg_ok "Installed Jellyfin"
