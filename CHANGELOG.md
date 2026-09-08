@@ -540,6 +540,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-08
+
+### 💾 Core
+
+  - Survive an empty /usr/bin/update instead of aborting the run [@MickLesk](https://github.com/MickLesk) ([core#29](https://github.com/community-scripts/core/pull/29))
+
 ## 2026-09-07
 
 ### 🆕 New Scripts
