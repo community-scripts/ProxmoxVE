@@ -544,7 +544,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Stash ([#17106](https://github.com/community-scripts/ProxmoxVE/pull/17106))
+  - Decypharr ([#17108](https://github.com/community-scripts/ProxmoxVE/pull/17108))
+- Stash ([#17106](https://github.com/community-scripts/ProxmoxVE/pull/17106))
 
 ### 🚀 Updated Scripts
 
