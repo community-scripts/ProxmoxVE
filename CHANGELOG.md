@@ -542,6 +542,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-08
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update Jellyfin FFmpeg dependency to version 8 [@MickLesk](https://github.com/MickLesk) ([#17109](https://github.com/community-scripts/ProxmoxVE/pull/17109))
+
 ### 💾 Core
 
   - Survive an empty /usr/bin/update instead of aborting the run [@MickLesk](https://github.com/MickLesk) ([core#29](https://github.com/community-scripts/core/pull/29))
