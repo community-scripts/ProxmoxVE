@@ -33,15 +33,12 @@ function update_script() {
   fi
 
   if check_for_gh_release "safebucket" "safebucket/safebucket"; then
-    local ARCH
-    ARCH=$(arch_resolve)
-
     msg_info "Stopping Service"
     systemctl stop safebucket
     msg_ok "Stopped Service"
 
     create_backup /opt/safebucket/config.yaml /opt/safebucket/data/
-    fetch_and_deploy_gh_release "safebucket" "safebucket/safebucket" "singlefile" "latest" "/opt/safebucket" "safebucket-linux-${ARCH}"
+    fetch_and_deploy_gh_release "safebucket" "safebucket/safebucket" "singlefile" "latest" "/opt/safebucket" "safebucket-linux-$(arch_resolve)"
     restore_backup
 
     msg_info "Configuring Safebucket"
@@ -53,7 +50,6 @@ function update_script() {
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
-  cleanup_lxc
   exit
 }
 
