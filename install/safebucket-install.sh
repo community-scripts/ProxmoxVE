@@ -13,22 +13,18 @@ setting_up_container
 network_check
 update_os
 
-ARCH=$(arch_resolve)
-GARAGE_ARCH=$(arch_resolve "x86_64-unknown-linux-musl" "aarch64-unknown-linux-musl")
-
 msg_info "Installing Dependencies"
 $STD apt install -y awscli
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Garage"
 useradd --system --no-create-home --shell /usr/sbin/nologin garage 2>/dev/null || true
-GARAGE_VERSION=$(curl -fsSL https://api.github.com/repos/deuxfleurs-org/garage/tags |
-  jq -r '.[].name | select(test("^v[0-9]+\\.[0-9]+\\.[0-9]+$"))' | sort -V | tail -n1)
+GARAGE_VERSION=$(get_latest_gh_tag "deuxfleurs-org/garage" "v")
 if [[ -z "$GARAGE_VERSION" ]]; then
   msg_error "Could not determine latest stable Garage version"
   exit 1
 fi
-curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GARAGE_VERSION}/${GARAGE_ARCH}/garage" -o /usr/local/bin/garage
+curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GARAGE_VERSION}/$(arch_resolve "x86_64-unknown-linux-musl" "aarch64-unknown-linux-musl")/garage" -o /usr/local/bin/garage
 chmod +x /usr/local/bin/garage
 mkdir -p /opt/garage/{data,meta}
 RPC_SECRET=$(openssl rand -hex 32)
@@ -114,9 +110,7 @@ else
 fi
 unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION
 
-msg_info "Installing Safebucket"
-fetch_and_deploy_gh_release "safebucket" "safebucket/safebucket" "singlefile" "latest" "/opt/safebucket" "safebucket-linux-${ARCH}"
-msg_ok "Installed Safebucket"
+fetch_and_deploy_gh_release "safebucket" "safebucket/safebucket" "singlefile" "latest" "/opt/safebucket" "safebucket-linux-$(arch_resolve)"
 
 msg_info "Configuring Safebucket"
 useradd --system --no-create-home --shell /usr/sbin/nologin safebucket 2>/dev/null || true
