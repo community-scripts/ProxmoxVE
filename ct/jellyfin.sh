@@ -64,7 +64,7 @@ function update_script() {
     ln -sf "/usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/libjemalloc.so.2" /usr/lib/libjemalloc.so
   fi
   $STD apt -y upgrade
-  $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server jellyfin-ffmpeg7
+  $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server jellyfin-ffmpeg8
   ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
   ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
   msg_ok "Updated Jellyfin"
