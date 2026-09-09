@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   nginx \
-  ffmpeg \
   exiftran \
   libimage-exiftool-perl
 msg_ok "Installed Dependencies"
@@ -24,6 +23,7 @@ msg_ok "Installed Dependencies"
 PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="bcmath,curl,exif,gd,imagick,intl,mbstring,mysql,xml,zip" PHP_UPLOAD_MAX_FILESIZE="512M" PHP_POST_MAX_SIZE="512M" PHP_MAX_EXECUTION_TIME="600" setup_php
 setup_composer
 setup_mariadb
+setup_ffmpeg
 MARIADB_DB_NAME="chevereto" MARIADB_DB_USER="chevereto" setup_mariadb_db
 
 fetch_and_deploy_gh_release "chevereto" "chevereto/chevereto" "tarball"
