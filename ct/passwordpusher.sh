@@ -40,6 +40,9 @@ function update_script() {
     create_backup /opt/passwordpusher/storage /opt/passwordpusher/.env.production
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "passwordpusher" "pglombardo/PasswordPusher" "tarball"
+
+    restore_backup
+
     RUBY_VERSION="$(cat /opt/passwordpusher/.ruby-version)" RUBY_INSTALL_RAILS="false" setup_ruby
 
     msg_info "Installing Gem Dependencies"
@@ -61,8 +64,6 @@ function update_script() {
     msg_info "Precompiling Assets"
     RAILS_ENV=production SECRET_KEY_BASE_DUMMY=1 $STD bundle exec rails assets:precompile
     msg_ok "Precompiled Assets"
-
-    restore_backup
 
     msg_info "Starting Service"
     systemctl start passwordpusher
