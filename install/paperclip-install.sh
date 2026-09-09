@@ -23,6 +23,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="paperclip" PG_DB_USER="paperclip" setup_postgresql_db
+setup_rust
 
 fetch_and_deploy_gh_release "paperclip-ai" "paperclipai/paperclip" "tarball"
 

@@ -43,6 +43,8 @@ function update_script() {
 
     restore_backup
 
+    setup_rust
+
     msg_info "Rebuilding Paperclip"
     cd /opt/paperclip-ai
     export HUSKY=0
