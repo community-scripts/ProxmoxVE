@@ -52,6 +52,10 @@ function update_script() {
     set -a; source /etc/default/hermes; set +a
     /home/hermes/.local/bin/hermes update --yes
   '
+  mapfile -t root_gateway_pids < <(ps -eo user=,pid=,args= | awk '$1 == "root" && $0 ~ /\/home\/hermes\/\.hermes\/hermes-agent\/venv\/bin\/python -m hermes_cli\.main gateway run --replace$/ { print $2 }')
+  if ((${#root_gateway_pids[@]})); then
+    kill -TERM "${root_gateway_pids[@]}"
+  fi
   chown -R hermes:hermes /home/hermes
   msg_ok "Updated Hermes Agent"
 
