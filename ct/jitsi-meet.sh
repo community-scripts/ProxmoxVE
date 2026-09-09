@@ -17,6 +17,14 @@ var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
+# Optional public setup, read by the install script (all empty = LAN-only install as before).
+# Without the export they never reach the container.
+export var_jitsi_domain="${var_jitsi_domain:-}"
+export var_jitsi_le_email="${var_jitsi_le_email:-}"
+export var_jitsi_public_ip="${var_jitsi_public_ip:-}"
+export var_jitsi_admin_user="${var_jitsi_admin_user:-}"
+export var_jitsi_admin_pass="${var_jitsi_admin_pass:-}"
+
 header_info "$APP"
 variables
 color
@@ -50,4 +58,7 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}https://${IP}${CL}"
+echo -e "${GATEWAY}${BGN}https://${var_jitsi_domain:-$IP}${CL}"
+if [[ -n "${var_jitsi_domain}" ]]; then
+  echo -e "${INFO}${YW}Forward TCP 80/443 and UDP 10000 to the container. Secure-domain credentials (if enabled) are in ~/jitsi-meet.creds inside the container.${CL}"
+fi
