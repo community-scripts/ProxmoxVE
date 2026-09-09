@@ -550,6 +550,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - vm: drop the discussions link from the summary [@MickLesk](https://github.com/MickLesk) ([#17117](https://github.com/community-scripts/ProxmoxVE/pull/17117))
 
+  - #### 🐞 Bug Fixes
+
+    - fix(hermesagent): stop spurious root gateway after update [@steveonjava](https://github.com/steveonjava) ([#17126](https://github.com/community-scripts/ProxmoxVE/pull/17126))
+
 ## 2026-09-08
 
 ### 🆕 New Scripts
