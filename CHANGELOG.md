@@ -546,6 +546,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Lingarr ([#17130](https://github.com/community-scripts/ProxmoxVE/pull/17130))
 
+### 🚀 Updated Scripts
+
+  - vm: drop the discussions link from the summary [@MickLesk](https://github.com/MickLesk) ([#17117](https://github.com/community-scripts/ProxmoxVE/pull/17117))
+
 ## 2026-09-08
 
 ### 🆕 New Scripts
