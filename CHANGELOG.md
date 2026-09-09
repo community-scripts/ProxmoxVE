@@ -540,6 +540,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-09
+
+### 🆕 New Scripts
+
+  - Lingarr ([#17130](https://github.com/community-scripts/ProxmoxVE/pull/17130))
+
 ## 2026-09-08
 
 ### 🆕 New Scripts
