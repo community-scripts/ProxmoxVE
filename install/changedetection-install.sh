@@ -62,6 +62,7 @@ mkdir /opt/browserless
 $STD /opt/changedetection/.venv/bin/python -m pip install playwright
 $STD git clone https://github.com/browserless/chrome /opt/browserless
 $STD npm ci --include=optional --include=dev --prefix /opt/browserless
+$STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
 $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
