@@ -40,7 +40,7 @@ CM="${TAB}✔️${TAB}${CL}"
 
 # Telemetry
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
-declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "lxc-delete" "pve"
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "guest-delete" "pve"
 
 GUEST_LOG=$(mktemp)
 trap 'rm -f "$GUEST_LOG"' EXIT
