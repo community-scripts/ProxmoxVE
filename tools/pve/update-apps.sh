@@ -178,14 +178,9 @@ function resolve_service_script() {
   return 1
 }
 
-# git.community-scripts.org was a Gitea mirror of the same repositories and has
-# been shut down, but containers built against it still carry it in
-# /usr/bin/update. The newer entrypoint repairs itself through the update helper;
-# the older one pulls ct/<app>.sh from the dead host directly and never gets that
-# far, so it has to be rewritten from here. Two plain substitutions rather than
-# one with a backreference: the host, then the /raw/<kind>/ segment Gitea puts
-# before the ref. Owner, repo and ref are never touched, so a fork stays on its
-# own fork.
+# The retired Gitea mirror. The old entrypoint pulls ct/<app>.sh straight from
+# it and never reaches the update helper that would repair itself, so rewrite it
+# here. Only host and /raw/<kind>/ change; owner, repo and ref are kept.
 function repair_update_url() {
   local container="$1"
   pct exec "$container" -- sh -c '
@@ -512,8 +507,7 @@ for container in $CHOICE; do
     sleep 5
   fi
 
-  #0.5) Containers built against the retired Gitea mirror cannot update at all
-  #     until the base URL is rewritten, so do that before anything reads it.
+  #0.5) Rewrite a retired Gitea base before anything reads it.
   repair_update_url "$container"
 
   #1) Detect service using the service name in the update command
