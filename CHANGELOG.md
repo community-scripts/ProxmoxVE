@@ -546,6 +546,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(solidtime): prevent composer install from hanging on root prompt [@supersoju](https://github.com/supersoju) ([#17146](https://github.com/community-scripts/ProxmoxVE/pull/17146))
     - fix(hermesagent): wait for root gateway cleanup [@steveonjava](https://github.com/steveonjava) ([#17147](https://github.com/community-scripts/ProxmoxVE/pull/17147))
 
 ## 2026-09-09
