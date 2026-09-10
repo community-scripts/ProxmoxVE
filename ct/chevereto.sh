@@ -33,8 +33,10 @@ function update_script() {
   fi
 
   if check_for_gh_release "chevereto" "chevereto/chevereto"; then
+    PHP_FPM_SERVICE="$(basename "$(get_php_fpm_socket)" .sock)"
+
     msg_info "Stopping Services"
-    systemctl stop nginx php8.3-fpm
+    systemctl stop nginx "$PHP_FPM_SERVICE"
     msg_ok "Stopped Services"
 
     create_backup /opt/chevereto/app/env.php \
@@ -54,7 +56,7 @@ function update_script() {
     msg_ok "Updated Chevereto"
 
     msg_info "Starting Services"
-    systemctl start php8.3-fpm nginx
+    systemctl start "$PHP_FPM_SERVICE" nginx
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi

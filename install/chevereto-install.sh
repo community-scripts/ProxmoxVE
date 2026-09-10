@@ -20,7 +20,8 @@ $STD apt install -y \
   libimage-exiftool-perl
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="bcmath,curl,exif,gd,imagick,intl,mbstring,mysql,xml,zip" PHP_UPLOAD_MAX_FILESIZE="512M" PHP_POST_MAX_SIZE="512M" PHP_MAX_EXECUTION_TIME="600" setup_php
+PHP_VERSION="8.3"
+PHP_FPM="YES" PHP_MODULE="bcmath,curl,exif,gd,imagick,intl,mbstring,mysql,xml,zip" PHP_UPLOAD_MAX_FILESIZE="512M" PHP_POST_MAX_SIZE="512M" PHP_MAX_EXECUTION_TIME="600" setup_php
 setup_composer
 setup_mariadb
 setup_ffmpeg
@@ -79,7 +80,7 @@ server {
 
     location = /index.php {
         include fastcgi_params;
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:__PHP_FPM_SOCK__;
         fastcgi_param SCRIPT_FILENAME $document_root/index.php;
         fastcgi_read_timeout 600;
     }
@@ -97,11 +98,9 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/chevereto /etc/nginx/sites-enabled/chevereto
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl enable -q --now php8.3-fpm
-systemctl reload nginx
+sed -i "s|__PHP_FPM_SOCK__|$(get_php_fpm_socket)|" /etc/nginx/sites-available/chevereto
+systemctl enable -q --now "php${PHP_VERSION}-fpm"
+nginx_enable_site chevereto
 msg_ok "Configured Nginx"
 
 motd_ssh
