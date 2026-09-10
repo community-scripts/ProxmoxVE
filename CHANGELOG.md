@@ -553,6 +553,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(solidtime): prevent composer install from hanging on root prompt [@supersoju](https://github.com/supersoju) ([#17146](https://github.com/community-scripts/ProxmoxVE/pull/17146))
     - fix(hermesagent): wait for root gateway cleanup [@steveonjava](https://github.com/steveonjava) ([#17147](https://github.com/community-scripts/ProxmoxVE/pull/17147))
 
+### 💾 Core
+
+  - core.func: fall back to a usable HOME when the shell has none [@MickLesk](https://github.com/MickLesk) ([core#32](https://github.com/community-scripts/core/pull/32))
+
 ## 2026-09-09
 
 ### 🆕 New Scripts
