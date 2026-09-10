@@ -37,16 +37,13 @@ function update_script() {
     systemctl stop portabase portabase-tusd
     msg_ok "Stopped Services"
 
-    msg_info "Backing up Configuration"
-    cp /opt/portabase/.env /opt/portabase.env.bak
-    msg_ok "Backed up Configuration"
+    create_backup /opt/portabase/.env
+
+    NODE_VERSION="22" NODE_MODULE="pnpm@11.8.0" setup_nodejs
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "portabase" "Portabase/portabase" "tarball"
 
-    msg_info "Restoring Configuration"
-    cp /opt/portabase.env.bak /opt/portabase/.env
-    rm -f /opt/portabase.env.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Building Portabase"
     cd /opt/portabase

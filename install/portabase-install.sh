@@ -25,14 +25,15 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="portabase" PG_DB_USER="portabase" setup_postgresql_db
 
 fetch_and_deploy_gh_release "portabase" "Portabase/portabase" "tarball"
-fetch_and_deploy_gh_release "tusd" "tus/tusd" "prebuild" "latest" "/opt/tusd" "tusd_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "tusd" "tus/tusd" "prebuild" "latest" "/opt/tusd" "tusd_linux_$(arch_resolve).tar.gz"
 
 msg_info "Configuring Portabase"
 mkdir -p /opt/portabase-data/uploads/tmp
-mv -f /opt/tusd/tusd_linux_amd64/tusd /opt/tusd/tusd
-rm -rf /opt/tusd/tusd_linux_amd64
+mv -f "/opt/tusd/tusd_linux_$(arch_resolve)/tusd" /opt/tusd/tusd
+rm -rf "/opt/tusd/tusd_linux_$(arch_resolve)"
 chmod +x /opt/tusd/tusd
 PROJECT_SECRET=$(openssl rand -hex 32)
+ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'A-Za-z0-9' | head -c 16)
 cat <<EOF >/opt/portabase/.env
 LOG_LEVEL=info
 DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}
@@ -43,12 +44,17 @@ TRUSTED_DOMAINS=http://${LOCAL_IP}:3000
 PRIVATE_PATH=/opt/portabase-data
 AUTH_DEFAULT_USER_NAME=Portabase Admin
 AUTH_DEFAULT_USER=admin@example.com
-AUTH_DEFAULT_PASSWORD=Portabase123!
+AUTH_DEFAULT_PASSWORD=${ADMIN_PASSWORD}
 AUTH_EMAIL_PASSWORD_ENABLED=true
 AUTH_SIGNUP_ENABLED=true
 RETENTION_CRON=0 7 * * *
 TUSD_BEHIND_PROXY=true
 TELEMETRY=false
+EOF
+cat <<EOF >~/portabase.creds
+Portabase Admin
+Username: admin@example.com
+Password: ${ADMIN_PASSWORD}
 EOF
 msg_ok "Configured Portabase"
 
@@ -105,7 +111,7 @@ systemctl enable -q --now portabase-tusd portabase
 msg_ok "Created Services"
 
 msg_info "Configuring Nginx"
-cat <<'EOF' >/etc/nginx/conf.d/portabase.conf
+cat <<'EOF' >/etc/nginx/sites-available/portabase
 map $http_x_forwarded_proto $forwarded_proto {
     default $scheme;
     "~*^\s*(https?)\s*(?:,|$)" $1;
@@ -149,8 +155,7 @@ server {
     }
 }
 EOF
-rm -f /etc/nginx/sites-enabled/default
-systemctl restart nginx
+nginx_enable_site portabase
 msg_ok "Configured Nginx"
 
 motd_ssh
