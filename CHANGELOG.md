@@ -544,7 +544,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Portabase ([#17111](https://github.com/community-scripts/ProxmoxVE/pull/17111))
+  - Chevereto ([#17131](https://github.com/community-scripts/ProxmoxVE/pull/17131))
+- Portabase ([#17111](https://github.com/community-scripts/ProxmoxVE/pull/17111))
 - Logseq ([#17112](https://github.com/community-scripts/ProxmoxVE/pull/17112))
 - Safebucket ([#17096](https://github.com/community-scripts/ProxmoxVE/pull/17096))
 
