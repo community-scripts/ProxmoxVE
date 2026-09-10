@@ -555,7 +555,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - core.func: fall back to a usable HOME when the shell has none [@MickLesk](https://github.com/MickLesk) ([core#32](https://github.com/community-scripts/core/pull/32))
+  - Rewrite the dead Gitea base onto GitHub instead of failing the update [@MickLesk](https://github.com/MickLesk) ([core#33](https://github.com/community-scripts/core/pull/33))
+- core.func: fall back to a usable HOME when the shell has none [@MickLesk](https://github.com/MickLesk) ([core#32](https://github.com/community-scripts/core/pull/32))
 
 ## 2026-09-09
 
