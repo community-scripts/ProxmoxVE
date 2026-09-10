@@ -130,11 +130,7 @@ server {
   }
 }
 EOF
-ln -sf /etc/nginx/sites-available/onetimesecret /etc/nginx/sites-enabled/onetimesecret
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl enable -q --now nginx
-systemctl reload nginx
+nginx_enable_site onetimesecret
 msg_ok "Configured Nginx"
 
 motd_ssh
