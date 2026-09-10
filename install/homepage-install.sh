@@ -64,7 +64,7 @@ RestartSec=1
 User=root
 WorkingDirectory=/opt/homepage/
 Environment=CI=true
-ExecStart=pnpm start
+ExecStart=/opt/homepage/node_modules/.bin/next start
 
 [Install]
 WantedBy=multi-user.target

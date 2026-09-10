@@ -83,6 +83,10 @@ EOF
       sed -i '/^ExecStart=/i Environment=CI=true' /etc/systemd/system/homepage.service
       systemctl daemon-reload
     fi
+    if grep -q '^ExecStart=pnpm start' /etc/systemd/system/homepage.service; then
+      sed -i 's|^ExecStart=pnpm start$|ExecStart=/opt/homepage/node_modules/.bin/next start|' /etc/systemd/system/homepage.service
+      systemctl daemon-reload
+    fi
     msg_ok "Updated Homepage"
 
     msg_info "Starting service"
