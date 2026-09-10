@@ -14,6 +14,9 @@ Fixes #
 - [ ] **Tested thoroughly** – Changes work as expected.
 - [ ] **No security risks** – No hardcoded secrets, unnecessary privilege escalations, or permission issues.
 
+**Tested on:** <!-- e.g. PVE 9.2 / Debian 13 / fresh install + update. Write "not tested" if you could not run it. -->
+
+
 ---
 
 ## 🤖 AI Assistance (**X** in brackets)

@@ -28,7 +28,6 @@ body:
       label: 🔎 Did you run the script with verbose mode enabled?
       description: "Required for debugging any script issue. A verbose log is mandatory."
       options:
-        - ""
         - "Yes, verbose mode was enabled and the output is included below"
         - "No (this issue will likely be closed automatically)"
     validations:
@@ -50,6 +49,32 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: issue_phase
+    attributes:
+      label: 🕒 When does the issue occur?
+      options:
+        - "Initial creation / installation"
+        - "Update of an existing container"
+        - "While the application is running"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: execution_context
+    attributes:
+      label: 🖱️ Where did you run the command?
+      description: "The shell matters — the Proxmox web console starts without some environment variables that a normal login shell sets."
+      options:
+        - "Proxmox web UI → node → Shell"
+        - "Proxmox web UI → LXC → Console"
+        - "SSH into the Proxmox host"
+        - "SSH into the container"
+        - "pct enter from the host"
+        - "Other / not listed"
+    validations:
+      required: true
+
   - type: checkboxes
     validations:
       required: true
@@ -68,14 +93,23 @@ body:
     attributes:
       label: 🖥️ Which Linux distribution are you using?
       options:
-        - 
         - Alpine
-        - Debian 11
         - Debian 12
         - Debian 13
+        - Devuan 5
         - Ubuntu 22.04
         - Ubuntu 24.04
-        - Ubuntu 24.10
+        - Ubuntu 25.04
+        - AlmaLinux 9
+        - AlmaLinux 10
+        - Rocky Linux 9
+        - Rocky Linux 10
+        - CentOS Stream 9
+        - Fedora 42
+        - openSUSE 15
+        - openEuler 25
+        - Gentoo
+        - Other / not listed
     validations:
       required: true
 
@@ -85,16 +119,27 @@ body:
       label: 🧱 Is this Proxmox host running arm64?
       description: "Run `dpkg --print-architecture` on your Proxmox host if unsure."
       options:
-        - ""
         - "No"
         - "Yes"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: pve_major
+    attributes:
+      label: 📈 Which Proxmox VE release are you on?
+      options:
+        - "Proxmox VE 9"
+        - "Proxmox VE 8"
+        - "Proxmox VE 7 or older (end of life)"
     validations:
       required: true
 
   - type: input
     id: pve_version
     attributes:
-      label: 📈 Which Proxmox version are you on?
+      label: 🔢 Exact Proxmox version and kernel
+      description: "Both matter — several issues turned out to be kernel-specific."
       placeholder: "run pveversion in your PVE node console"
     validations:
       required: true
