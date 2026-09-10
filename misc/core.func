@@ -15,6 +15,15 @@
 [[ -n "${_CORE_FUNC_LOADED:-}" ]] && return
 _CORE_FUNC_LOADED=1
 
+# The shell behind the Proxmox web UI (xterm.js) starts without HOME. Every
+# version file and toolchain here is resolved beneath it, and under `set -u` the
+# first expansion aborts the script instead of falling back. Anchor it once so
+# the ~40 expansions downstream do not each need a guard.
+if [[ -z "${HOME:-}" ]]; then
+  HOME="$(getent passwd "$(id -u)" 2>/dev/null | cut -d: -f6)"
+  export HOME="${HOME:-/root}"
+fi
+
 # ==============================================================================
 # SECTION 1: INITIALIZATION & SETUP
 # ==============================================================================
