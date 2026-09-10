@@ -25,12 +25,12 @@ $STD apt install -y \
   librsvg2-dev
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 JAVA_VERSION="21" setup_java
 
 msg_info "Installing Clojure CLI"
 cd /tmp
-curl -fsSL -o linux-install.sh https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh
+curl_download "linux-install.sh" "https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh"
 $STD bash linux-install.sh
 rm -f linux-install.sh
 msg_ok "Installed Clojure CLI"
@@ -42,7 +42,6 @@ cd /opt/logseq
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export NODE_OPTIONS="--max-old-space-size=4096"
 export JAVA_TOOL_OPTIONS="-Xmx4g"
-$STD npm install --global corepack@latest
 $STD corepack enable
 $STD pnpm install --config.network-timeout=240000
 $STD pnpm release
@@ -53,7 +52,7 @@ create_self_signed_cert "logseq"
 msg_ok "Generated Self-Signed Certificate"
 
 msg_info "Configuring Nginx"
-cat <<'EOF' >/etc/nginx/sites-available/logseq.conf
+cat <<'EOF' >/etc/nginx/sites-available/logseq
 server {
     listen 80 default_server;
     server_name _;
@@ -79,9 +78,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/logseq.conf /etc/nginx/sites-enabled/logseq.conf
-rm -f /etc/nginx/sites-enabled/default
-systemctl restart nginx
+nginx_enable_site logseq
 msg_ok "Configured Nginx"
 
 motd_ssh

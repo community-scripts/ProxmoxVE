@@ -33,6 +33,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "logseq" "logseq/logseq"; then
+    NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+    JAVA_VERSION="21" setup_java
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "logseq" "logseq/logseq" "tarball"
 
     msg_info "Building Logseq Web App (Patience)"
