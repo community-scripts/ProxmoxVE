@@ -548,6 +548,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - changedetection: fix: pin browserless [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17163](https://github.com/community-scripts/ProxmoxVE/pull/17163))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - update-apps: rewrite the retired Gitea base in every container before updating it [@MickLesk](https://github.com/MickLesk) ([#17156](https://github.com/community-scripts/ProxmoxVE/pull/17156))
+
 ### 📚 Documentation
 
   - issue template: add PVE release, execution context and phase; refresh distro list / pve versions [@MickLesk](https://github.com/MickLesk) ([#17160](https://github.com/community-scripts/ProxmoxVE/pull/17160))
