@@ -542,6 +542,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-11
 
+### 🆕 New Scripts
+
+  - OneTimeSecret ([#17097](https://github.com/community-scripts/ProxmoxVE/pull/17097))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
