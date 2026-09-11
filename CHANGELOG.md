@@ -549,6 +549,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - homepage: run next directly instead of through pnpm [@MickLesk](https://github.com/MickLesk) ([#17155](https://github.com/community-scripts/ProxmoxVE/pull/17155))
     - changedetection: fix: pin browserless [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17163](https://github.com/community-scripts/ProxmoxVE/pull/17163))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core.func: fall back to a usable HOME when the shell has none [@MickLesk](https://github.com/MickLesk) ([#17154](https://github.com/community-scripts/ProxmoxVE/pull/17154))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
