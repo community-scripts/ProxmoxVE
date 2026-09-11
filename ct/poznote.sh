@@ -68,7 +68,7 @@ map \$uri \$poznote_coop {
 
 server {
     listen 8040;
-    root /var/www/html;
+    root /var/www/html/public;
     index index.php index.html;
 
     gzip on;
@@ -144,10 +144,12 @@ server {
     }
 
     location ~ ^/data/users/[0-9]+/backgrounds/ {
+        root /var/www/html;
         try_files \$uri =404;
     }
 
     location ~ ^/data/css/[A-Za-z0-9._-]+\.css$ {
+        root /var/www/html;
         try_files \$uri =404;
     }
 
