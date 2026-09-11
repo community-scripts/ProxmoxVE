@@ -58,7 +58,7 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 XMLSEC_VERSION="1.3.12"
-AUTHENTIK_VERSION="version/2026.8.1"
+AUTHENTIK_VERSION="version/2026.8.2"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 GO_VERSION="$(grep -m1 '^go ' /opt/authentik/go.mod | awk '{print $2}')" setup_go

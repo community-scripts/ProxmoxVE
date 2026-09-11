@@ -49,7 +49,7 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.8.1"
+  AUTHENTIK_VERSION="version/2026.8.2"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
   XMLSEC_VERSION="1.3.12"
 
@@ -184,8 +184,12 @@ EOF
 
     msg_info "Updating services"
     sed -i 's/authentik Go Server (API Gateway)/authentik Server/g' /etc/systemd/system/authentik-server.service
-	  sed -i '/ExecStart=/i ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-server.service
-    sed -i '/ExecStart=/i ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-worker.service
+    if ! grep -qF -- 'ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-server.service; then
+	    sed -i '/ExecStart=/i ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-server.service
+    fi
+    if ! grep -qF -- 'ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-worker.service; then
+      sed -i '/ExecStart=/i ExecStartPre=/usr/bin/mkdir -p "${TMPDIR}"' /etc/systemd/system/authentik-worker.service
+    fi
     systemctl daemon-reload
     msg_ok "Updated services"
 
@@ -224,8 +228,8 @@ for i in {1..10}; do
   sleep 1
 done
 $STD pct exec "$CTID" -- bash -c "mkdir -p /opt/authentik-data/{certs,media,geoip,templates}; \
-  cp /opt/authentik/tests/GeoLite2-ASN-Test.mmdb /opt/authentik-data/geoip/GeoLite2-ASN.mmdb; \
-  cp /opt/authentik/tests/GeoLite2-City-Test.mmdb /opt/authentik-data/geoip/GeoLite2-City.mmdb; \
+  cp /opt/authentik/tests/geoip/GeoLite2-ASN-Test.mmdb /opt/authentik-data/geoip/GeoLite2-ASN.mmdb; \
+  cp /opt/authentik/tests/geoip/GeoLite2-City-Test.mmdb /opt/authentik-data/geoip/GeoLite2-City.mmdb; \
   cp -r /opt/authentik/blueprints /opt/authentik-data/; \
   rm -r /opt/authentik/blueprints; \
   find /opt/authentik-data -path '*/lost+found' -prune -o -exec chown authentik:authentik {} +"
