@@ -546,6 +546,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - paperclip: install the rust toolchain needed by the runner build [@MickLesk](https://github.com/MickLesk) ([#17142](https://github.com/community-scripts/ProxmoxVE/pull/17142))
     - homepage: run next directly instead of through pnpm [@MickLesk](https://github.com/MickLesk) ([#17155](https://github.com/community-scripts/ProxmoxVE/pull/17155))
     - changedetection: fix: pin browserless [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17163](https://github.com/community-scripts/ProxmoxVE/pull/17163))
 
