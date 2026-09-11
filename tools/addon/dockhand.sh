@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# community-scripts ORG | Dockhand Addon Installer
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
-# License: MIT
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Finsys/dockhand
 
 if command -v curl >/dev/null 2>&1; then
