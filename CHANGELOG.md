@@ -548,6 +548,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - changedetection: fix: pin browserless [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17163](https://github.com/community-scripts/ProxmoxVE/pull/17163))
 
+### 📚 Documentation
+
+  - issue template: add PVE release, execution context and phase; refresh distro list / pve versions [@MickLesk](https://github.com/MickLesk) ([#17160](https://github.com/community-scripts/ProxmoxVE/pull/17160))
+
 ## 2026-09-10
 
 ### 🆕 New Scripts
