@@ -544,7 +544,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - OneTimeSecret ([#17097](https://github.com/community-scripts/ProxmoxVE/pull/17097))
+  - Lemonade-Server ([#17190](https://github.com/community-scripts/ProxmoxVE/pull/17190))
+- OneTimeSecret ([#17097](https://github.com/community-scripts/ProxmoxVE/pull/17097))
 
 ### 🚀 Updated Scripts
 
