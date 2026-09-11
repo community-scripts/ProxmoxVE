@@ -68,7 +68,10 @@ map \$uri \$poznote_coop {
 
 server {
     listen 8040;
-    root /var/www/html;
+    # Only /var/www/html/public is web-reachable. The library PHP
+    # (functions.php, db_connect.php, auth.php, GitSync.php, ...) lives one
+    # level up in /var/www/html and cannot be requested by URL at all.
+    root /var/www/html/public;
     index index.php index.html;
 
     gzip on;
@@ -144,10 +147,13 @@ server {
     }
 
     location ~ ^/data/users/[0-9]+/backgrounds/ {
+        # The data volume is mounted at /var/www/html/data, outside the docroot.
+        root /var/www/html;
         try_files \$uri =404;
     }
 
     location ~ ^/data/css/[A-Za-z0-9._-]+\.css$ {
+        root /var/www/html;
         try_files \$uri =404;
     }
 
