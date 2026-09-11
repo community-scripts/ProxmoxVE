@@ -540,6 +540,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-11
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - changedetection: fix: pin browserless [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17163](https://github.com/community-scripts/ProxmoxVE/pull/17163))
+
 ## 2026-09-10
 
 ### 🆕 New Scripts
