@@ -14,7 +14,7 @@ var_ram="${var_ram:-8192}"
 var_disk="${var_disk:-80}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-#var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
