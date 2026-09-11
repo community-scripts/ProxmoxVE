@@ -563,6 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🧰 Tools
 
+  - Dockhand ([#17191](https://github.com/community-scripts/ProxmoxVE/pull/17191))
+
   - #### 🐞 Bug Fixes
 
     - update-apps: rewrite the retired Gitea base in every container before updating it [@MickLesk](https://github.com/MickLesk) ([#17156](https://github.com/community-scripts/ProxmoxVE/pull/17156))
