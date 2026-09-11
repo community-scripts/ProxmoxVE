@@ -561,6 +561,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - update-apps: rewrite the retired Gitea base in every container before updating it [@MickLesk](https://github.com/MickLesk) ([#17156](https://github.com/community-scripts/ProxmoxVE/pull/17156))
 
+  - #### 🔧 Refactor
+
+    - Rename lxc-delete.sh to guest-delete.sh [@MickLesk](https://github.com/MickLesk) ([#17152](https://github.com/community-scripts/ProxmoxVE/pull/17152))
+
 ### 📚 Documentation
 
   - issue template: add PVE release, execution context and phase; refresh distro list / pve versions [@MickLesk](https://github.com/MickLesk) ([#17160](https://github.com/community-scripts/ProxmoxVE/pull/17160))
