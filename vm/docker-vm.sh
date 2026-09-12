@@ -8,7 +8,7 @@
 # Docker VM - Creates a Docker-ready Virtual Machine
 # ==============================================================================
 
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVED/main}"
+COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}"
 source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/pve/vm-core.func")
 load_functions
 
@@ -49,9 +49,10 @@ function select_os() {
   if [[ "${VM_UNATTENDED:-0}" == "1" ]]; then
     OS_CHOICE="${VM_OS_VERSION:-debian13}"
   elif ! OS_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT OS" --radiolist \
-    "Choose Operating System for Docker VM" 14 68 4 \
+    "Choose Operating System for Docker VM" 15 68 5 \
     "debian13" "Debian 13 (Trixie) - Latest" ON \
     "debian12" "Debian 12 (Bookworm) - Stable" OFF \
+    "ubuntu2604" "Ubuntu 26.04 LTS (Resolute)" OFF \
     "ubuntu2404" "Ubuntu 24.04 LTS (Noble)" OFF \
     "ubuntu2204" "Ubuntu 22.04 LTS (Jammy)" OFF \
     3>&1 1>&2 2>&3); then
@@ -71,6 +72,12 @@ function select_os() {
     OS_CODENAME="bookworm"
     OS_DISPLAY="Debian 12 (Bookworm)"
     ;;
+  ubuntu2604)
+    OS_TYPE="ubuntu"
+    OS_VERSION="26.04"
+    OS_CODENAME="resolute"
+    OS_DISPLAY="Ubuntu 26.04 LTS"
+    ;;
   ubuntu2404)
     OS_TYPE="ubuntu"
     OS_VERSION="24.04"
@@ -84,7 +91,7 @@ function select_os() {
     OS_DISPLAY="Ubuntu 22.04 LTS"
     ;;
   *)
-    msg_error "Unsupported OS '${OS_CHOICE}' (expected debian13, debian12, ubuntu2404 or ubuntu2204)"
+    msg_error "Unsupported OS '${OS_CHOICE}' (expected debian13, debian12, ubuntu2604, ubuntu2404 or ubuntu2204)"
     exit 1
     ;;
   esac
