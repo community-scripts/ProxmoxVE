@@ -542,6 +542,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-12
 
+### 🆕 New Scripts
+
+  - gotenberg ([#17205](https://github.com/community-scripts/ProxmoxVE/pull/17205))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
