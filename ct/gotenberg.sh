@@ -39,6 +39,8 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gotenberg" "gotenberg/gotenberg" "tarball" "latest" "/opt/gotenberg"
 
+    GO_VERSION="$(awk '$1=="go"{print $2}' /opt/gotenberg/go.mod | cut -d. -f1,2)" setup_go
+
     msg_info "Building gotenberg (Patience)"
     cd /opt/gotenberg
     export CGO_ENABLED=0
