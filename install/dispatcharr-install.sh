@@ -34,21 +34,20 @@ $STD apt install -y \
   libswscale-dev
 msg_ok "Installed Dependencies"
 
+setup_uv
+NODE_VERSION="24" setup_nodejs
+PG_VERSION="16" setup_postgresql
+PG_DB_NAME="dispatcharr_db" PG_DB_USER="dispatcharr_usr" setup_postgresql_db
+fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
+fetch_and_deploy_gh_release "Comskip" "erikkaashoek/Comskip" "tarball"
+
 msg_info "Compiling Comskip"
-mkdir -p /opt/Comskip
-wget -qO- https://github.com/erikkaashoek/Comskip/archive/refs/heads/master.tar.gz | tar -xz -C /opt/Comskip --strip-components=1
 cd /opt/Comskip
 $STD ./autogen.sh
 $STD ./configure
 $STD make
 $STD make install
 msg_ok "Compiled and Installed Comskip"
-
-setup_uv
-NODE_VERSION="24" setup_nodejs
-PG_VERSION="16" setup_postgresql
-PG_DB_NAME="dispatcharr_db" PG_DB_USER="dispatcharr_usr" setup_postgresql_db
-fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 
 msg_info "Installing Python Dependencies with uv"
 cd /opt/dispatcharr
