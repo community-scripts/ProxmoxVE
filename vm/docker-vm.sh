@@ -495,16 +495,9 @@ msg_info "Retrieving the URL for the ${OS_DISPLAY} Qcow2 Disk Image"
 URL=$(get_image_url)
 CACHE_DIR="/var/lib/vz/template/cache"
 CACHE_FILE="$CACHE_DIR/$(basename "$URL")"
-mkdir -p "$CACHE_DIR"
 msg_ok "${CL}${BL}${URL}${CL}"
 
-if [[ ! -s "$CACHE_FILE" ]]; then
-  curl -f#SL -o "$CACHE_FILE" "$URL"
-  echo -en "\e[1A\e[0K"
-  msg_ok "Downloaded ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
-else
-  msg_ok "Using cached image ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
-fi
+download_and_validate_image "$URL" "$CACHE_FILE"
 
 # ==============================================================================
 # STORAGE TYPE DETECTION
