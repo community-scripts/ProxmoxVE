@@ -36,8 +36,6 @@ $STD apt install -y \
   fonts-noto-core
 msg_ok "Installed Dependencies"
 
-GO_VERSION="1.27" setup_go
-
 fetch_and_deploy_gh_release "pdfcpu" "pdfcpu/pdfcpu" "prebuild" "latest" "/opt/pdfcpu" "pdfcpu_*_Linux_$(arch_resolve "x86_64" "arm64").tar.xz"
 ln -sf "$(find /opt/pdfcpu -type f -name pdfcpu | head -n1)" /usr/local/bin/pdfcpu
 
@@ -48,6 +46,8 @@ chmod +x /usr/local/bin/unoconverter
 msg_ok "Installed unoconverter"
 
 fetch_and_deploy_gh_release "gotenberg" "gotenberg/gotenberg" "tarball" "latest" "/opt/gotenberg"
+
+GO_VERSION="$(awk '$1=="go"{print $2}' /opt/gotenberg/go.mod | cut -d. -f1,2)" setup_go
 
 msg_info "Building Gotenberg (Patience)"
 cd /opt/gotenberg
