@@ -33,15 +33,43 @@ function update_script() {
 
   if check_for_gh_release "iventoy" "ventoy/PXE"; then
     msg_info "Stopping iVentoy"
-    $STD /opt/iventoy/iventoy.sh stop
+    systemctl stop iventoy
     msg_ok "Stopped iVentoy"
 
-    create_backup /opt/iventoy/data /opt/iventoy/iso
+    # Only preserve user state; data/iventoy.dat must match the new executable.
+    create_backup /opt/iventoy/data/config.dat /opt/iventoy/iso /opt/iventoy/user
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "iventoy" "ventoy/PXE" "prebuild" "latest" "/opt/iventoy" "iventoy-*-linux-$(arch_resolve x86_64-free arm64-trial).tar.gz"
     restore_backup
 
+    # Migrate existing services that invoke the Bash launcher with sh.
+    mkdir -p /etc/systemd/system/iventoy.service.d
+    cat <<EOF >/etc/systemd/system/iventoy.service.d/launcher.conf
+[Service]
+ExecStart=
+ExecStart=/bin/bash /opt/iventoy/iventoy.sh -R start
+ExecStop=
+ExecStop=/bin/bash /opt/iventoy/iventoy.sh stop
+PIDFile=/run/iventoy.pid
+RestartSec=5
+EOF
+    systemctl daemon-reload
+
     msg_info "Starting iVentoy"
-    $STD /opt/iventoy/iventoy.sh -R start
+    systemctl reset-failed iventoy
+    systemctl start iventoy
+    # The launcher can return success before the daemon fails initialization.
+    local i ready=0
+    for ((i = 0; i < 90; i++)); do
+      if systemctl is-active --quiet iventoy && curl -fsS --max-time 2 "${IVENTOY_HEALTH_URL:-http://127.0.0.1:26000/}" >/dev/null 2>&1; then
+        ready=1
+        break
+      fi
+      sleep 2
+    done
+    if [[ "$ready" -ne 1 ]]; then
+      msg_error "iVentoy did not become ready; check journalctl -u iventoy and /opt/iventoy/log/log.txt"
+      exit 1
+    fi
     msg_ok "Started iVentoy"
     msg_ok "Updated Successfully"
   fi
