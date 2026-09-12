@@ -33,24 +33,24 @@ function update_script() {
   fi
 
   if check_for_gh_release "gotenberg" "gotenberg/gotenberg"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop gotenberg
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gotenberg" "gotenberg/gotenberg" "tarball" "latest" "/opt/gotenberg"
 
-    msg_info "Building ${APP} (Patience)"
+    msg_info "Building gotenberg (Patience)"
     cd /opt/gotenberg
     export CGO_ENABLED=0
     $STD go mod download
     $STD go build -o /usr/local/bin/gotenberg \
       -ldflags "-s -w -X 'github.com/gotenberg/gotenberg/v8/cmd.Version=$(cat ~/.gotenberg)'" \
       cmd/gotenberg/main.go
-    msg_ok "Built ${APP}"
+    msg_ok "Built gotenberg"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start gotenberg
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully!"
   fi
   exit
