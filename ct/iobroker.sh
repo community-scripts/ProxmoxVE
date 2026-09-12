@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="26" NPM_VERSION="11" setup_nodejs
+  NODE_VERSION="24" setup_nodejs
 
   msg_info "Updating ${APP} LXC"
   $STD apt update
