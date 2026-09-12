@@ -550,6 +550,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - poznote: serve from src/public docroot [@MickLesk](https://github.com/MickLesk) ([#17187](https://github.com/community-scripts/ProxmoxVE/pull/17187))
     - calibre-web: use calibreweb release identifier to avoid version file collision [@MickLesk](https://github.com/MickLesk) ([#17186](https://github.com/community-scripts/ProxmoxVE/pull/17186))
 
 ## 2026-09-11
