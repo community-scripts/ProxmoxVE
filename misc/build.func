@@ -4128,6 +4128,65 @@ check_container_os_guard() {
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# apt_conffile_guard_begin()
+#
+# - Makes the upgrade inside update_script non-interactive for dpkg conffiles
+# - Without this, a conffile the operator edited raises dpkg's "modified since
+#   installation" prompt. update_script has no tty, so dpkg exits with
+#   "end of file on stdin at conffile prompt", the package is left half
+#   configured (iU), and apt returns 100 - which aborts every other pending
+#   package on the container, not just the one being updated
+# - DEBIAN_FRONTEND does not cover this: the prompt comes from dpkg, not debconf
+# - Scoped to the update run only. apt_conffile_guard_end() removes the drop-in
+#   again, so an operator's own later apt calls are unaffected
+# ------------------------------------------------------------------------------
+CS_APT_CONF_DROPIN="/etc/apt/apt.conf.d/99-community-scripts-conffile"
+
+apt_conffile_guard_begin() {
+  command -v apt-get >/dev/null 2>&1 || return 0
+  [[ -d /etc/apt/apt.conf.d ]] || return 0
+
+  rm -f "$CS_APT_CONF_DROPIN"
+  cat >"$CS_APT_CONF_DROPIN" <<'EOF'
+// Added by community-scripts for the duration of an update run.
+// Keeps locally modified configuration files instead of prompting, because
+// update_script runs without a tty and dpkg would otherwise abort the upgrade.
+Dpkg::Options {
+  "--force-confdef";
+  "--force-confold";
+};
+EOF
+
+  CS_CONFFILE_BEFORE="$(_cs_list_pending_conffiles)"
+}
+
+# ------------------------------------------------------------------------------
+# apt_conffile_guard_end()
+#
+# - Removes the drop-in written by apt_conffile_guard_begin()
+# - Reports any conffile where upstream shipped a change that was not applied,
+#   so keeping the local file stays visible instead of silently diverging
+# ------------------------------------------------------------------------------
+apt_conffile_guard_end() {
+  command -v apt-get >/dev/null 2>&1 || return 0
+  rm -f "$CS_APT_CONF_DROPIN"
+
+  local after new
+  after="$(_cs_list_pending_conffiles)"
+  new="$(comm -13 <(printf '%s\n' "$CS_CONFFILE_BEFORE") <(printf '%s\n' "$after") 2>/dev/null)"
+  [[ -z "$new" ]] && return 0
+
+  msg_warn "Kept your version of these config files; upstream shipped changes alongside them:"
+  while IFS= read -r f; do
+    [[ -n "$f" ]] && msg_warn "  ${f%.dpkg-*} (new upstream version: $f)"
+  done <<<"$new"
+}
+
+_cs_list_pending_conffiles() {
+  find /etc \( -name '*.dpkg-dist' -o -name '*.dpkg-new' \) -type f 2>/dev/null | sort
+}
+
 start() {
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
@@ -4141,7 +4200,9 @@ start() {
     get_lxc_ip
     runtime_script_status_guard update || return 0
     check_container_os_guard || return 0
+    apt_conffile_guard_begin
     update_script
+    apt_conffile_guard_end
     run_addon_updates
     update_motd_ip
     cleanup_lxc
@@ -4153,7 +4214,9 @@ start() {
     get_lxc_ip
     runtime_script_status_guard update || return 0
     check_container_os_guard || return 0
+    apt_conffile_guard_begin
     update_script
+    apt_conffile_guard_end
     run_addon_updates
     update_motd_ip
     cleanup_lxc
@@ -4184,7 +4247,9 @@ start() {
     get_lxc_ip
     runtime_script_status_guard update || return 0
     check_container_os_guard || return 0
+    apt_conffile_guard_begin
     update_script
+    apt_conffile_guard_end
     run_addon_updates
     update_motd_ip
     cleanup_lxc
