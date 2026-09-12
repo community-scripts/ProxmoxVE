@@ -92,7 +92,7 @@ EOF
     sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE#v}/" /etc/karakeep/karakeep.env
     # Node 24.19.x crashes better-sqlite3 on cleanup (karakeep-app/karakeep#2989); stay on 22 LTS until upstream reverts.
     MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
-    NODE_VERSION="22" NODE_MODULE="corepack,pnpm@${MODULE_VERSION}" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="corepack,pnpm@${MODULE_VERSION}" setup_nodejs
     setup_meilisearch
 
     msg_info "Updating Karakeep"
