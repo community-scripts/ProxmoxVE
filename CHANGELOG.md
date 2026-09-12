@@ -559,6 +559,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - feat(jitsi-meet): optional public setup (FQDN, Let's Encrypt, NAT, secure domain) [@klanghans](https://github.com/klanghans) ([#17132](https://github.com/community-scripts/ProxmoxVE/pull/17132))
 
+### 💾 Core
+
+  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#36](https://github.com/community-scripts/core/pull/36))
+
 ## 2026-09-11
 
 ### 🆕 New Scripts
