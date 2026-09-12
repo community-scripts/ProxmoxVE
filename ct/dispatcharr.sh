@@ -107,10 +107,8 @@ EOF
   ensure_dependencies vlc-bin vlc-plugin-base build-essential autoconf libtool libargtable2-dev libavformat-dev libsdl2-dev libswscale-dev
 
   if ! command -v comskip &> /dev/null; then
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Comskip" "erikkaashoek/Comskip" "tarball"
     msg_info "Compiling Comskip"
-        if [[ ! -d "/opt/Comskip" ]]; then
-          fetch_and_deploy_from_url "https://github.com/erikkaashoek/Comskip/archive/refs/heads/master.tar.gz" "/opt/Comskip"
-        fi
     cd /opt/Comskip
     $STD ./autogen.sh
     $STD ./configure
