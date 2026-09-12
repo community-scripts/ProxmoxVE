@@ -48,6 +48,12 @@ function update_script() {
       cmd/gotenberg/main.go
     msg_ok "Built gotenberg"
 
+    msg_info "Updating unoconverter"
+    UNOCONVERTER_VERSION=$(get_latest_github_release "gotenberg/unoconverter" "false")
+    download_file "https://raw.githubusercontent.com/gotenberg/unoconverter/${UNOCONVERTER_VERSION}/unoconv" /usr/local/bin/unoconverter
+    chmod +x /usr/local/bin/unoconverter
+    msg_ok "Updated unoconverter"
+
     msg_info "Starting Service"
     systemctl start gotenberg
     msg_ok "Started Service"
