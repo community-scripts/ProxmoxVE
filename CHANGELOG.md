@@ -561,7 +561,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#36](https://github.com/community-scripts/core/pull/36))
+  - VM's: show the selected CPU model instead of doubling it [@MickLesk](https://github.com/MickLesk) ([core#37](https://github.com/community-scripts/core/pull/37))
+- Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#36](https://github.com/community-scripts/core/pull/36))
 
 ## 2026-09-11
 
