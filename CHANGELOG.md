@@ -544,7 +544,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - gotenberg ([#17205](https://github.com/community-scripts/ProxmoxVE/pull/17205))
+  - Hammer ([#17189](https://github.com/community-scripts/ProxmoxVE/pull/17189))
+- gotenberg ([#17205](https://github.com/community-scripts/ProxmoxVE/pull/17205))
 
 ### 🚀 Updated Scripts
 
