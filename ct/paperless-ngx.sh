@@ -169,9 +169,13 @@ function update_script() {
       if ((BRIDGE_UPDATE == 0)); then
         sed -i 's|^ExecStart=.*|ExecStart=uv run --no-sync -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"|' /etc/systemd/system/paperless-webserver.service
         grep -q "document_index reindex" /etc/systemd/system/paperless-webserver.service ||
-          sed -i '/^ExecStart=/i ExecStartPre=uv run -- python manage.py document_index reindex --if-needed --no-progress-bar' /etc/systemd/system/paperless-webserver.service
-        $STD systemctl daemon-reload
+          sed -i '/^ExecStart=/i ExecStartPre=uv run --no-sync -- python manage.py document_index reindex --if-needed --no-progress-bar' /etc/systemd/system/paperless-webserver.service
       fi
+      for svc in consumer scheduler task-queue webserver; do
+        unit="/etc/systemd/system/paperless-${svc}.service"
+        [[ -f "$unit" ]] && sed -i 's|uv run -- |uv run --no-sync -- |g' "$unit"
+      done
+      $STD systemctl daemon-reload
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src

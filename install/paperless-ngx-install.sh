@@ -151,7 +151,7 @@ Requires=redis.service
 
 [Service]
 WorkingDirectory=/opt/paperless/src
-#ExecStartPre=uv run -- python manage.py document_index reindex --if-needed --no-progress-bar
+#ExecStartPre=uv run --no-sync -- python manage.py document_index reindex --if-needed --no-progress-bar
 ExecStart=uv run --no-sync -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"
 Environment=GRANIAN_HOST=::
 Environment=GRANIAN_PORT=8000
