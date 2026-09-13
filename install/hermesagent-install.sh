@@ -86,7 +86,7 @@ EnvironmentFile=/etc/default/hermes
 Restart=on-failure
 RestartSec=5
 ProtectProc=invisible
-ProcSubset=pid
+ProcSubset=all
 
 [Install]
 WantedBy=multi-user.target
