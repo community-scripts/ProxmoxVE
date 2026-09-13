@@ -545,6 +545,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-13
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Downgrade iobroker to Node 24 [@Copilot](https://github.com/Copilot) ([#17229](https://github.com/community-scripts/ProxmoxVE/pull/17229))
+
 ## 2026-09-12
 
 ### 🆕 New Scripts
