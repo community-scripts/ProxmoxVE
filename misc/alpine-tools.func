@@ -8,6 +8,7 @@
 # ------------------------------
 lower() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]'; }
 has() { command -v "$1" >/dev/null 2>&1; }
+version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
 
 need_tool() {
   # usage: need_tool curl jq unzip ...
@@ -109,13 +110,19 @@ check_for_gh_release() {
     return 0
   fi
 
-  if [ "$release" != "$current" ] || [ ! -f "$current_file" ]; then
+  if [ ! -f "$current_file" ] || [ -z "$current" ]; then
     CHECK_UPDATE_RELEASE="$release"
-    msg_info "New release available: v$release (current: v${current:-none})"
+    msg_info "New release available: v$release (current: none)"
     return 0
   fi
 
-  msg_ok "$app is up to date (v$release)"
+  if [ "$release" != "$current" ] && version_gt "$release" "$current"; then
+    CHECK_UPDATE_RELEASE="$release"
+    msg_info "New release available: v$release (current: v$current)"
+    return 0
+  fi
+
+  msg_ok "$app is up to date (v$current)"
   return 1
 }
 
