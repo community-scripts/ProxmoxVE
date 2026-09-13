@@ -3212,13 +3212,17 @@ check_for_gh_release() {
   fi
 
   # No pinning → use latest
-  if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
+  if should_upgrade "$current" "$latest_clean"; then
     CHECK_UPDATE_RELEASE="$latest_raw"
     msg_ok "Update available: ${app} ${current:-not installed} → ${latest_clean}"
     return 0
   fi
 
-  msg_ok "No update available: ${app} (${latest_clean})"
+  if [[ -n "$current" && "$current" != "$latest_clean" ]]; then
+    msg_ok "No update available: ${app} (${current}) - upstream 'latest' release (${latest_clean}) is not newer, likely a backport on an older branch"
+  else
+    msg_ok "No update available: ${app} (${current:-$latest_clean})"
+  fi
   return 1
 }
 # ------------------------------------------------------------------------------
@@ -4042,6 +4046,7 @@ fetch_and_deploy_gh_release() {
   local repo="$2"
   local mode="${3:-tarball}" # tarball | binary | prebuild | singlefile
   local version="${var_appversion:-${4:-latest}}"
+  local requested_version="$version"
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
   local tag_prefix="${7:-}"
@@ -4159,6 +4164,11 @@ fetch_and_deploy_gh_release() {
 
   if [[ "$current_version" == "$version" ]]; then
     $STD msg_ok "$app is already up-to-date (v$version)"
+    return 0
+  fi
+
+  if [[ "$requested_version" == "latest" && -n "$current_version" ]] && ! should_upgrade "$current_version" "$version"; then
+    msg_warn "$app: upstream 'latest' release (v$version) is not newer than installed v$current_version - skipping (likely a backport on an older branch)"
     return 0
   fi
 
