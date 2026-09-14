@@ -38,6 +38,15 @@ function update_script() {
 
     fetch_and_deploy_gh_release "navidrome" "navidrome/navidrome" "binary"
 
+    # The upstream postinstall only chowns the cache directory itself, and only
+    # on the very first install, so root-owned subdirectories survive upgrades
+    # and the service can no longer write its artwork there.
+    if id -u navidrome >/dev/null 2>&1; then
+      msg_info "Fixing Data Folder Ownership"
+      chown -R navidrome:navidrome /var/lib/navidrome
+      msg_ok "Fixed Data Folder Ownership"
+    fi
+
     msg_info "Starting Services"
     systemctl start navidrome
     msg_ok "Started Services"

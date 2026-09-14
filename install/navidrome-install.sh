@@ -19,6 +19,10 @@ msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "navidrome" "navidrome/navidrome" "binary"
 
+if id -u navidrome >/dev/null 2>&1; then
+  chown -R navidrome:navidrome /var/lib/navidrome
+fi
+
 msg_info "Starting Navidrome"
 systemctl enable -q --now navidrome
 msg_ok "Started Navidrome"
