@@ -545,6 +545,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-14
 
+### 🆕 New Scripts
+
+  - Borg-UI ([#17258](https://github.com/community-scripts/ProxmoxVE/pull/17258))
+
 ### 🚀 Updated Scripts
 
   - SparkyFitness: substitute NGINX_RATE_LIMIT in nginx config [@RafBorrelli](https://github.com/RafBorrelli) ([#17256](https://github.com/community-scripts/ProxmoxVE/pull/17256))
