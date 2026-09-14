@@ -45,6 +45,8 @@ add() {
 excluded_instances=("$@")
 echo "Excluded instances: ${excluded_instances[@]}"
 
+value_of() { sed -n "s/^$1:[[:space:]]*//p" <<<"$config" | head -n1; }
+
 while true; do
 
   for instance in $(pct list | awk 'NR>1 {print $1}'; qm list | awk 'NR>1 {print $1}'); do
@@ -59,21 +61,21 @@ while true; do
     if [ -r "/etc/pve/lxc/$instance.conf" ]; then
       type="ct"
       config_file="/etc/pve/lxc/$instance.conf"
-    else
+    elif [ -r "/etc/pve/qemu-server/$instance.conf" ]; then
       type="vm"
       config_file="/etc/pve/qemu-server/$instance.conf"
+    else
+      echo "Skipping $instance because its config is no longer readable"
+      continue
     fi
     config=$(sed '/^\[/,$d' "$config_file")
 
-    # Skip templates and onboot-disabled
-    if grep -q "onboot: 0" <<<"$config" || ! grep -q "onboot" <<<"$config"; then
-      onboot="true"
-    else
-      onboot="false"
-    fi
-    template=$(grep -q "^template:" <<<"$config" && echo "true" || echo "false")
+    # Both are booleans that Proxmox also writes as 0, so the value decides and
+    # not the presence of the key.
+    [ "$(value_of onboot)" = "1" ] && onboot="true" || onboot="false"
+    [ "$(value_of template)" = "1" ] && template="true" || template="false"
 
-    if [ "$onboot" == "true" ]; then
+    if [ "$onboot" != "true" ]; then
       echo "Skipping $instance because it is set not to boot"
       continue
     elif [ "$template" == "true" ]; then
@@ -81,34 +83,40 @@ while true; do
       continue
     fi
 
-    # Check for mon-restart tag
-    has_tag=$(grep -q "tags:.*mon-restart" <<<"$config" && echo "true" || echo "false")
-    if [ "$has_tag" != "true" ]; then
+    # Tags are semicolon separated, so match a whole entry instead of a
+    # substring of a longer tag such as mon-restart-disabled.
+    tags=";$(value_of tags | tr -d '[:space:]');"
+    if [[ "$tags" != *";mon-restart;"* ]]; then
       echo "Skipping $instance because it does not have 'mon-restart' tag"
       continue
     fi
 
     # Responsiveness check and restart if needed
     if [ "$type" == "vm" ]; then
-      # Check if guest agent responds
-      if qm guest cmd $instance ping >/dev/null 2>&1; then
+      if ! qm status "$instance" 2>/dev/null | grep -q "status: running"; then
+        echo "$(date): VM $instance is not running, starting..."
+        qm start "$instance" >/dev/null 2>&1
+      elif qm guest cmd "$instance" ping >/dev/null 2>&1; then
         echo "VM $instance is responsive via guest agent"
       else
         echo "$(date): VM $instance is not responding to agent ping, restarting..."
-        if qm status $instance | grep -q "status: running"; then
-          qm stop $instance >/dev/null 2>&1
-          sleep 5
-        fi
-        qm start $instance >/dev/null 2>&1
+        qm stop "$instance" >/dev/null 2>&1
+        sleep 5
+        qm start "$instance" >/dev/null 2>&1
       fi
     else
-      # Container: get IP and ping
-      IP=$(pct exec $instance ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
-      if ! ping -c 1 $IP >/dev/null 2>&1; then
+      if ! pct status "$instance" 2>/dev/null | grep -q "status: running"; then
+        echo "$(date): CT $instance is not running, starting..."
+        pct start "$instance" >/dev/null 2>&1
+        continue
+      fi
+      # Not every container names its interface eth0.
+      IP=$(pct exec "$instance" -- ip -4 -o addr show scope global 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -n1)
+      if [ -z "$IP" ] || ! ping -c 1 -W 2 "$IP" >/dev/null 2>&1; then
         echo "$(date): CT $instance is not responding, restarting..."
-        pct stop $instance >/dev/null 2>&1
+        pct stop "$instance" >/dev/null 2>&1
         sleep 5
-        pct start $instance >/dev/null 2>&1
+        pct start "$instance" >/dev/null 2>&1
       else
         echo "CT $instance is responsive"
       fi
@@ -124,23 +132,18 @@ EOF
   touch /var/log/ping-instances.log
   chmod +x /usr/local/bin/ping-instances.sh
 
-  cat <<EOF >/etc/systemd/system/ping-instances.timer
-[Unit]
-Description=Delay ping-instances.service by 5 minutes
-
-[Timer]
-OnBootSec=300
-OnUnitActiveSec=300
-
-[Install]
-WantedBy=timers.target
-EOF
+  # The service loops with its own five minute sleep, so the timer that earlier
+  # versions installed could only ever start a unit that was already running.
+  if [[ -f /etc/systemd/system/ping-instances.timer ]]; then
+    systemctl disable -q --now ping-instances.timer 2>/dev/null || true
+    rm -f /etc/systemd/system/ping-instances.timer
+  fi
 
   cat <<EOF >/etc/systemd/system/ping-instances.service
 [Unit]
 Description=Ping instances every 5 minutes and restart if necessary
-After=ping-instances.timer
-Requires=ping-instances.timer
+After=pve-cluster.service
+Wants=pve-cluster.service
 
 [Service]
 Type=simple
@@ -158,7 +161,6 @@ WantedBy=multi-user.target
 EOF
 
   systemctl daemon-reload
-  systemctl enable -q --now ping-instances.timer
   systemctl enable -q --now ping-instances.service
   clear
   echo -e "\n Monitor All installed."
@@ -167,7 +169,7 @@ EOF
 }
 
 remove() {
-  systemctl disable -q --now ping-instances.timer
+  systemctl disable -q --now ping-instances.timer 2>/dev/null || true
   systemctl disable -q --now ping-instances.service
   rm -f /etc/systemd/system/ping-instances.service
   rm -f /etc/systemd/system/ping-instances.timer
