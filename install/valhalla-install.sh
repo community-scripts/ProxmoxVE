@@ -60,7 +60,7 @@ msg_ok "Installed Dependencies"
 
 PRIME_SERVER_RELEASE=$(get_latest_github_release "kevinkreiser/prime_server" "false")
 msg_info "Building prime_server ${PRIME_SERVER_RELEASE} (Patience)"
-git clone --recurse-submodules --depth 1 --branch "$PRIME_SERVER_RELEASE" https://github.com/kevinkreiser/prime_server /tmp/prime_server
+$STD git clone --recurse-submodules --depth 1 --branch "$PRIME_SERVER_RELEASE" https://github.com/kevinkreiser/prime_server /tmp/prime_server
 cd /tmp/prime_server
 $STD ./autogen.sh
 $STD ./configure
@@ -74,7 +74,7 @@ msg_ok "Built prime_server"
 RELEASE=$(get_latest_github_release "valhalla/valhalla" "false")
 msg_info "Cloning Valhalla ${RELEASE} (Patience)"
 mkdir -p /opt/valhalla
-git clone --recurse-submodules --depth 1 --branch "$RELEASE" https://github.com/valhalla/valhalla.git /opt/valhalla
+$STD git clone --recurse-submodules --depth 1 --branch "$RELEASE" https://github.com/valhalla/valhalla.git /opt/valhalla
 msg_ok "Cloned Valhalla ${RELEASE}"
 
 msg_info "Compiling Valhalla ${RELEASE} (this takes 20-45+ minutes, be patient)"
