@@ -547,6 +547,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - SparkyFitness: substitute NGINX_RATE_LIMIT in nginx config [@RafBorrelli](https://github.com/RafBorrelli) ([#17256](https://github.com/community-scripts/ProxmoxVE/pull/17256))
+
   - #### 🐞 Bug Fixes
 
     - spliit: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17250](https://github.com/community-scripts/ProxmoxVE/pull/17250))
