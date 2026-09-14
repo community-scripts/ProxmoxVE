@@ -67,6 +67,7 @@ function update_script() {
       -e 's|${SPARKY_FITNESS_SERVER_PORT}|3010|g' \
       -e "s|\${SPARKY_FITNESS_FRONTEND_URL}|${FRONTEND_URL}|g" \
       -e 's|${NGINX_LISTEN_PORT}|80|g' \
+      -e 's|${NGINX_RATE_LIMIT}|5r/s|g' \
       -e 's|${NGINX_ACCESS_LOG}|/var/log/nginx/sparkyfitness.access.log|g' \
       -e 's|${NGINX_ERROR_LOG}|/var/log/nginx/sparkyfitness.error.log|g' \
       -e 's|root /usr/share/nginx/html;|root /var/www/sparkyfitness;|g' \
