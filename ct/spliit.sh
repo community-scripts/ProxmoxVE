@@ -42,7 +42,7 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "spliit" "spliit-app/spliit" "tarball"
 
     restore_backup
-    NODE_VERSION="24" setup_nodejs
+    NODE_VERSION="26" setup_nodejs
 
     msg_info "Building Application"
     cd /opt/spliit
