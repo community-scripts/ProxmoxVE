@@ -9,8 +9,8 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 
 APP="Valhalla"
 var_tags="${var_tags:-mapping;routing}"
-var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-8192}"
+var_cpu="${var_cpu:-6}"
+var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-24}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -41,7 +41,7 @@ function update_script() {
 
     msg_info "Building prime_server ${RELEASE} (Patience)"
     rm -rf /tmp/prime_server
-    git clone --recurse-submodules --depth 1 --branch "$RELEASE" https://github.com/kevinkreiser/prime_server /tmp/prime_server
+    $STD git clone --recurse-submodules --depth 1 --branch "$RELEASE" https://github.com/kevinkreiser/prime_server /tmp/prime_server
     cd /tmp/prime_server
     $STD ./autogen.sh
     $STD ./configure
@@ -67,7 +67,7 @@ function update_script() {
 
     msg_info "Fetching Valhalla ${RELEASE} (Patience)"
     rm -rf /opt/valhalla
-    git clone --recurse-submodules --depth 1 --branch "$RELEASE" https://github.com/valhalla/valhalla.git /opt/valhalla
+    $STD git clone --recurse-submodules --depth 1 --branch "$RELEASE" https://github.com/valhalla/valhalla.git /opt/valhalla
     msg_ok "Fetched Valhalla ${RELEASE}"
 
     msg_info "Compiling Valhalla ${RELEASE} (this takes 20-45+ minutes, be patient)"
