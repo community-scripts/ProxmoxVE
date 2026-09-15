@@ -110,7 +110,7 @@ export AUTOGRAPH_VERBOSITY=0
 export GLOG_minloglevel=3
 export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.17.2" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.18.0" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -122,7 +122,18 @@ msg_info "Building SQLite Extensions"
 $STD bash /opt/frigate/docker/main/build_sqlite_vec.sh
 msg_ok "Built SQLite Extensions"
 
-fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/usr/local/go2rtc/bin" "go2rtc_linux_$(arch_resolve)"
+if [[ "$(arch_resolve)" == "amd64" ]]; then
+  msg_info "Building Intel Media Driver (Patience)"
+  $STD bash /opt/frigate/docker/main/build_intel_media_driver.sh
+  cp -a /rootfs/. /
+  rm -rf /rootfs
+  rm -f /etc/apt/sources.list.d/intel-gpu-jammy.list /usr/share/keyrings/intel-graphics.gpg
+  $STD apt update
+  ldconfig
+  msg_ok "Built Intel Media Driver"
+fi
+
+fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "v1.9.14" "/usr/local/go2rtc/bin" "go2rtc_linux_$(arch_resolve)"
 
 msg_info "Installing Tempio"
 sed -i 's|/rootfs/usr/local|/usr/local|g' /opt/frigate/docker/main/install_tempio.sh
@@ -194,17 +205,7 @@ if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
   mkdir -p /openvino-model
   cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
   cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
-  OV_LABELS=$(python3 -c "import omz_tools; import os; print(os.path.join(omz_tools.__path__[0], 'data/dataset_classes/coco_91cl_bkgr.txt'))" 2>/dev/null)
-  if [[ -n "$OV_LABELS" && -f "$OV_LABELS" ]]; then
-    ln -sf "$OV_LABELS" /openvino-model/coco_91cl_bkgr.txt
-  else
-    OV_LABELS=$(find /usr/local/lib -name "coco_91cl_bkgr.txt" 2>/dev/null | head -1)
-    if [[ -n "$OV_LABELS" ]]; then
-      ln -sf "$OV_LABELS" /openvino-model/coco_91cl_bkgr.txt
-    else
-      curl_with_retry "https://raw.githubusercontent.com/openvinotoolkit/open_model_zoo/master/data/dataset_classes/coco_91cl_bkgr.txt" "/openvino-model/coco_91cl_bkgr.txt"
-    fi
-  fi
+  curl_with_retry "https://raw.githubusercontent.com/openvinotoolkit/open_model_zoo/master/data/dataset_classes/coco_91cl_bkgr.txt" "/openvino-model/coco_91cl_bkgr.txt"
   sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
   msg_ok "Built OpenVino Model"
 else
@@ -251,8 +252,8 @@ curl_download "/media/frigate/person-bicycle-car-detection.mp4" "https://github.
 echo "tmpfs   /tmp/cache      tmpfs   defaults        0       0" >>/etc/fstab
 
 cat <<EOF >/etc/frigate.env
-DEFAULT_FFMPEG_VERSION="7.0"
-INCLUDED_FFMPEG_VERSIONS="7.0:5.0"
+DEFAULT_FFMPEG_VERSION="8.0"
+INCLUDED_FFMPEG_VERSIONS="8.0:7.0:5.0"
 NVIDIA_VISIBLE_DEVICES=all
 NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
 TOKENIZERS_PARALLELISM=true
