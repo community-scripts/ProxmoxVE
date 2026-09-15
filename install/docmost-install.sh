@@ -48,6 +48,7 @@ sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z
   -e "s|^STORAGE_DRIVER=azure|#STORAGE_DRIVER=azure|" \
   /opt/docmost/.env
 export NODE_OPTIONS="--max-old-space-size=2048"
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 $STD pnpm install
 $STD pnpm build
 msg_ok "Configured Docmost"
