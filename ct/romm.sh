@@ -191,10 +191,29 @@ EOF
         sed -i -e "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" \
           -e "s|alias .*/cache/;|alias ${ROMM_BASE}/cache/;|" /etc/angie/http.d/romm.conf
       fi
+      cat <<'SYNCEOF' >/usr/local/bin/romm-sync-angie-paths
+#!/usr/bin/env bash
+base="$(grep -m1 '^ROMM_BASE_PATH=' /opt/romm/.env 2>/dev/null | cut -d= -f2)"
+base="${base:-/var/lib/romm}"
+[[ -f /etc/angie/http.d/romm.conf ]] || exit 0
+sed -i -e "s|alias .*/library/;|alias ${base}/library/;|" \
+  -e "s|alias .*/cache/;|alias ${base}/cache/;|" /etc/angie/http.d/romm.conf
+SYNCEOF
+      chmod +x /usr/local/bin/romm-sync-angie-paths
+      mkdir -p /etc/systemd/system/angie.service.d
+      cat <<'DROPEOF' >/etc/systemd/system/angie.service.d/romm-paths.conf
+[Service]
+ExecStartPre=/usr/local/bin/romm-sync-angie-paths
+DROPEOF
+      systemctl daemon-reload
       systemctl reload angie
     elif [[ -f /etc/nginx/sites-available/romm ]]; then
       sed -i "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" /etc/nginx/sites-available/romm
       nginx_enable_site romm
+    fi
+    if [[ -f /etc/systemd/system/romm-watcher.service ]]; then
+      sed -i "s|\(watcher\.py' \).*|\1\${ROMM_BASE_PATH}/library|" /etc/systemd/system/romm-watcher.service
+      systemctl daemon-reload
     fi
     msg_ok "Updated ROMM"
 

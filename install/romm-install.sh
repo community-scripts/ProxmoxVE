@@ -327,8 +327,22 @@ server {
 }
 EOF
 
-sed -i -e "s|alias /var/lib/romm/library/;|alias ${ROMM_BASE}/library/;|" \
-  -e "s|alias /var/lib/romm/cache/;|alias ${ROMM_BASE}/cache/;|" /etc/angie/http.d/romm.conf
+cat <<'SYNCEOF' >/usr/local/bin/romm-sync-angie-paths
+#!/usr/bin/env bash
+base="$(grep -m1 '^ROMM_BASE_PATH=' /opt/romm/.env 2>/dev/null | cut -d= -f2)"
+base="${base:-/var/lib/romm}"
+[[ -f /etc/angie/http.d/romm.conf ]] || exit 0
+sed -i -e "s|alias .*/library/;|alias ${base}/library/;|" \
+  -e "s|alias .*/cache/;|alias ${base}/cache/;|" /etc/angie/http.d/romm.conf
+SYNCEOF
+chmod +x /usr/local/bin/romm-sync-angie-paths
+mkdir -p /etc/systemd/system/angie.service.d
+cat <<'EOF' >/etc/systemd/system/angie.service.d/romm-paths.conf
+[Service]
+ExecStartPre=/usr/local/bin/romm-sync-angie-paths
+EOF
+systemctl daemon-reload
+/usr/local/bin/romm-sync-angie-paths
 rm -f /etc/angie/http.d/default.conf
 systemctl restart angie
 systemctl enable -q --now angie
@@ -405,7 +419,7 @@ Type=simple
 WorkingDirectory=/opt/romm/backend
 EnvironmentFile=/opt/romm/.env
 Environment="PYTHONPATH=/opt/romm/backend"
-ExecStart=/opt/romm/.venv/bin/watchfiles --target-type command '/opt/romm/.venv/bin/python watcher.py' /var/lib/romm/library
+ExecStart=/opt/romm/.venv/bin/watchfiles --target-type command '/opt/romm/.venv/bin/python watcher.py' \${ROMM_BASE_PATH}/library
 Restart=on-failure
 RestartSec=5
 
