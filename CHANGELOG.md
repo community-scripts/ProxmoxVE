@@ -552,6 +552,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - tracearr: copy packages/emails into the deploy tree [@connorgallopo](https://github.com/connorgallopo) ([#17268](https://github.com/community-scripts/ProxmoxVE/pull/17268))
     - Immich: Pin to v3.2.1 [@vhsdream](https://github.com/vhsdream) ([#17264](https://github.com/community-scripts/ProxmoxVE/pull/17264))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - Refactor: monitor-all (decide on flag values, not on key presence) [@MickLesk](https://github.com/MickLesk) ([#17261](https://github.com/community-scripts/ProxmoxVE/pull/17261))
+
 ## 2026-09-14
 
 ### 🆕 New Scripts
