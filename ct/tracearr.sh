@@ -124,7 +124,7 @@ EOF
     $STD pnpm turbo telemetry disable
     $STD pnpm turbo run build --no-daemon --filter=@tracearr/shared --filter=@tracearr/server --filter=@tracearr/web
     rm -rf /opt/tracearr
-    mkdir -p /opt/tracearr/{packages/shared,apps/server,apps/web,apps/server/src/db}
+    mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db}
     cp -rf package.json /opt/tracearr/
     cp -rf pnpm-workspace.yaml /opt/tracearr/
     cp -rf pnpm-lock.yaml /opt/tracearr/
@@ -134,6 +134,8 @@ EOF
     cp -rf apps/web/dist /opt/tracearr/apps/web/dist
     cp -rf packages/shared/package.json /opt/tracearr/packages/shared/
     cp -rf packages/shared/dist /opt/tracearr/packages/shared/dist
+    cp -rf packages/emails/package.json /opt/tracearr/packages/emails/
+    cp -rf packages/emails/dist /opt/tracearr/packages/emails/dist
     cp -rf apps/server/src/db/migrations /opt/tracearr/apps/server/src/db/migrations
     cp -rf data /opt/tracearr/data
     mkdir -p /opt/tracearr/data/image-cache
