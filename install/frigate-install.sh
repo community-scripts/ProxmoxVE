@@ -269,6 +269,23 @@ GLOG_minloglevel=3
 GLOG_logtostderr=0
 EOF
 
+if grep -q -o -m1 -E 'avx[^ ]*|sse4_2' /proc/cpuinfo && [[ -f /openvino-model/ssdlite_mobilenet_v2.xml ]] && [[ -f /openvino-model/coco_91cl_bkgr.txt ]]; then
+  DETECTOR_CONFIG="detectors:
+  detector01:
+    type: openvino
+    device: AUTO
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt"
+else
+  DETECTOR_CONFIG="model:
+  path: /models/cpu_model.tflite"
+fi
+
 cat <<EOF >/config/config.yml
 mqtt:
   enabled: false
@@ -290,28 +307,8 @@ detect:
   enabled: false
 ffmpeg:
   hwaccel_args: auto
+${DETECTOR_CONFIG}
 EOF
-
-if grep -q -o -m1 -E 'avx[^ ]*|sse4_2' /proc/cpuinfo && [[ -f /openvino-model/ssdlite_mobilenet_v2.xml ]] && [[ -f /openvino-model/coco_91cl_bkgr.txt ]]; then
-  cat <<EOF >>/config/config.yml
-detectors:
-  detector01:
-    type: openvino
-    device: AUTO
-model:
-  width: 300
-  height: 300
-  input_tensor: nhwc
-  input_pixel_format: bgr
-  path: /openvino-model/ssdlite_mobilenet_v2.xml
-  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
-EOF
-else
-  cat <<EOF >>/config/config.yml
-model:
-  path: /models/cpu_model.tflite
-EOF
-fi
 msg_ok "Configured Frigate"
 
 msg_info "Creating Services"
