@@ -38,6 +38,9 @@ function update_script() {
 
     fetch_and_deploy_gh_release "navidrome" "navidrome/navidrome" "binary"
 
+    find /var/lib/navidrome/cache /var/lib/navidrome/artwork /var/lib/navidrome/plugins \
+      -maxdepth 0 -type d -user root -exec chown -h navidrome:navidrome {} + 2>/dev/null || true
+
     msg_info "Starting Services"
     systemctl start navidrome
     msg_ok "Started Services"
