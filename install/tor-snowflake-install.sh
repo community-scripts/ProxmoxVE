@@ -16,7 +16,8 @@ update_os
 
 msg_info "Building Snowflake"
 GITLAB_URL="https://gitlab.torproject.org" fetch_and_deploy_gl_release "tor-snowflake" "tpo/anti-censorship/pluggable-transports/snowflake" "tarball"
-GO_VERSION="$(grep -m1 '^go ' /opt/tor-snowflake/proxy/go.mod | awk '{print $2}')" setup_go
+GO_VERSION="$(awk '/^go /{print $2; exit}' /opt/tor-snowflake/go.mod 2>/dev/null || true)"
+GO_VERSION="${GO_VERSION:-latest}" setup_go
 cd /opt/tor-snowflake/proxy
 $STD go build -o snowflake-proxy .
 msg_ok "Built Snowflake Proxy"
