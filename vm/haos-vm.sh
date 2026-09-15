@@ -64,7 +64,10 @@ function default_settings() {
 
 function advanced_settings() {
   METHOD="advanced"
-  if vm_dialog radiolist "Homeassistant OS Version" --cancel-button Exit-Script "Choose Version" 10 58 3 \n    "$stable" "Stable  " ON \n    "$beta" "Beta  " OFF \n    "$dev" "Dev  " OFF; then
+  if vm_dialog radiolist "Homeassistant OS Version" --cancel-button Exit-Script "Choose Version" 10 58 3 \
+    "$stable" "Stable  " ON \
+    "$beta" "Beta  " OFF \
+    "$dev" "Dev  " OFF; then
     BRANCH="$VM_DIALOG_RESULT"
     var_version="${BRANCH}"
     echo -e "${DGN}Using HAOS Version: ${BGN}$BRANCH${CL}"
@@ -157,18 +160,8 @@ vm_resize_disk
 set_description
 msg_ok "Created Homeassistant OS VM ${CL}${BL}(${HN})"
 
-if [[ "${VM_UNATTENDED:-0}" == "1" ]]; then
-  KEEP_IMAGE="${VM_KEEP_IMAGE:-yes}"
-elif vm_dialog yesno "Image Cache" \
-  "Keep downloaded Home Assistant OS image for future VMs?\n\nFile: $CACHE_FILE" 10 70; then
-  KEEP_IMAGE="yes"
-else
-  KEEP_IMAGE="no"
-fi
-
-if [[ "$KEEP_IMAGE" == "yes" ]]; then
-  msg_ok "Keeping cached image"
-else
+# vm_fetch_image --cache keeps it, as it does for every other VM script.
+if [[ "${VM_KEEP_IMAGE:-yes}" != "yes" ]]; then
   rm -f "$CACHE_FILE"
   msg_ok "Deleted cached image"
 fi
