@@ -549,6 +549,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tracearr: copy packages/emails into the deploy tree [@connorgallopo](https://github.com/connorgallopo) ([#17268](https://github.com/community-scripts/ProxmoxVE/pull/17268))
     - Immich: Pin to v3.2.1 [@vhsdream](https://github.com/vhsdream) ([#17264](https://github.com/community-scripts/ProxmoxVE/pull/17264))
 
 ## 2026-09-14
