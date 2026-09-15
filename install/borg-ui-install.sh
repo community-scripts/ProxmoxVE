@@ -28,7 +28,8 @@ $STD apt install -y \
   fuse3 \
   rsync \
   sshfs \
-  openssh-client
+  openssh-client \
+  sshpass
 msg_ok "Installed Dependencies"
 
 UV_PYTHON="3.12" setup_uv
