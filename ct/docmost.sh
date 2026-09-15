@@ -57,6 +57,7 @@ function update_script() {
 
     msg_info "Configuring Docmost"
     cd /opt/docmost
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     $STD pnpm install --force
     $STD pnpm build
     msg_ok "Configured Docmost"
