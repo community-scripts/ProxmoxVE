@@ -564,7 +564,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Install the Intel driver dependency before the .deb that needs it [@MickLesk](https://github.com/MickLesk) ([core#42](https://github.com/community-scripts/core/pull/42))
+  - Read the IGC version compute-runtime pins, instead of taking the newest [@MickLesk](https://github.com/MickLesk) ([core#43](https://github.com/community-scripts/core/pull/43))
+- Install the Intel driver dependency before the .deb that needs it [@MickLesk](https://github.com/MickLesk) ([core#42](https://github.com/community-scripts/core/pull/42))
 
 ## 2026-09-15
 
