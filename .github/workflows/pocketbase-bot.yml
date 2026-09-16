@@ -335,7 +335,10 @@ jobs:
               '`architectures` (amd64,arm64) `platforms` (pve,incus) ' +
               '`execute_in` (pve,lxc,pbs,vm,pmg,pdm) `categories` (names or ids) ' +
               '`type` (ct, vm, addon, …) ' +
-              '`is_disabled` `disable_message` `is_deleted` `deleted_message`\n\n' +
+              '`is_disabled` `disable_message` `is_deleted` `deleted_message` ' +
+              '`pin_reason` `last_update_commit`\n\n' +
+              'The `var_` names from the ct scripts work too: `var_cpu` `var_ram` `var_disk`\n' +
+              '`var_os` `var_version` `var_port` `var_tags` `var_unprivileged`\n\n' +
               '**Screenshots:**\n' +
               '```\n' +
               '/pocketbase <slug> screenshot https://example.com/one.png https://example.com/two.png\n' +
@@ -399,6 +402,14 @@ jobs:
 
             // ── Shared helpers ─────────────────────────────────────────────────
 
+            // The ct scripts name these var_cpu/var_ram/var_disk, and that is what
+            // people type. Accept them for the PocketBase keys.
+            const KEY_ALIASES = {
+              var_cpu: 'cpu', var_ram: 'ram', var_disk: 'hdd', var_hdd: 'hdd',
+              var_os: 'os', var_version: 'version', var_unprivileged: 'unprivileged',
+              var_port: 'port', var_tags: 'tags', disk: 'hdd', memory: 'ram',
+            };
+
             // Key=value parser: handles unquoted and "quoted" values
             function parseKVPairs(str) {
               const fields = {};
@@ -426,7 +437,7 @@ jobs:
                   while (pos < str.length && !/\s/.test(str[pos])) pos++;
                   value = str.substring(valStart, pos);
                 }
-                fields[key] = value;
+                fields[KEY_ALIASES[key.toLowerCase()] || key] = value;
               }
               return fields;
             }
@@ -982,6 +993,8 @@ jobs:
                 disable_message:  'string',
                 is_deleted:       'boolean',
                 deleted_message:  'string',
+                pin_reason:       'string',
+                last_update_commit: 'string',
               };
 
               const parsedFields = parseKVPairs(rest);
