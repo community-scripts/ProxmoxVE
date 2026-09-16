@@ -562,6 +562,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: TrueNAS VM (core / improve functions / performance) [@MickLesk](https://github.com/MickLesk) ([#17277](https://github.com/community-scripts/ProxmoxVE/pull/17277))
 
+### 💾 Core
+
+  - Install the Intel driver dependency before the .deb that needs it [@MickLesk](https://github.com/MickLesk) ([core#42](https://github.com/community-scripts/core/pull/42))
+
 ## 2026-09-15
 
 ### 🆕 New Scripts
