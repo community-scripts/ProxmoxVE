@@ -549,8 +549,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - navidrome: repair root-owned data folders left by 0.61.x [@MickLesk](https://github.com/MickLesk) ([#17275](https://github.com/community-scripts/ProxmoxVE/pull/17275))
     - tor-snowflake: read the Go version from the module root [@MickLesk](https://github.com/MickLesk) ([#17276](https://github.com/community-scripts/ProxmoxVE/pull/17276))
     - docmost: stop corepack asking for confirmation during the build [@MickLesk](https://github.com/MickLesk) ([#17282](https://github.com/community-scripts/ProxmoxVE/pull/17282))
+
+  - #### ✨ New Features
+
+    - Refactor: HomeAssistant-OS (core / improve functions / performance) [@MickLesk](https://github.com/MickLesk) ([#17281](https://github.com/community-scripts/ProxmoxVE/pull/17281))
 
   - #### 🔧 Refactor
 
