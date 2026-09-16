@@ -549,6 +549,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Dispatcharr: Bump to 4G RAM [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17302](https://github.com/community-scripts/ProxmoxVE/pull/17302))
     - navidrome: repair root-owned data folders left by 0.61.x [@MickLesk](https://github.com/MickLesk) ([#17275](https://github.com/community-scripts/ProxmoxVE/pull/17275))
     - tor-snowflake: read the Go version from the module root [@MickLesk](https://github.com/MickLesk) ([#17276](https://github.com/community-scripts/ProxmoxVE/pull/17276))
     - docmost: stop corepack asking for confirmation during the build [@MickLesk](https://github.com/MickLesk) ([#17282](https://github.com/community-scripts/ProxmoxVE/pull/17282))
