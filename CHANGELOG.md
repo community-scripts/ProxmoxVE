@@ -568,6 +568,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Read the IGC version compute-runtime pins, instead of taking the newest [@MickLesk](https://github.com/MickLesk) ([core#43](https://github.com/community-scripts/core/pull/43))
 - Install the Intel driver dependency before the .deb that needs it [@MickLesk](https://github.com/MickLesk) ([core#42](https://github.com/community-scripts/core/pull/42))
 
+### 📚 Documentation
+
+  - pocketbase-bot: accept the var_ names and two missing fields [@MickLesk](https://github.com/MickLesk) ([#17305](https://github.com/community-scripts/ProxmoxVE/pull/17305))
+
 ## 2026-09-15
 
 ### 🆕 New Scripts
