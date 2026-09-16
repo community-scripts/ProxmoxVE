@@ -26,6 +26,7 @@ jobs:
           COMMENT_BODY: ${{ github.event.comment.body }}
           COMMENT_ID: ${{ github.event.comment.id }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          IS_PR_COMMENT: ${{ github.event.issue.pull_request && 'true' || 'false' }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
           ACTOR: ${{ github.event.comment.user.login }}
@@ -84,6 +85,7 @@ jobs:
             const owner = process.env.REPO_OWNER;
             const repo = process.env.REPO_NAME;
             const issueNumber = parseInt(process.env.ISSUE_NUMBER, 10);
+            const isPrComment = process.env.IS_PR_COMMENT === 'true';
             const commentId = parseInt(process.env.COMMENT_ID, 10);
             const actor = process.env.ACTOR;
 
@@ -216,11 +218,22 @@ jobs:
 
               const prTitle = 'chore(ct): sync ' + slugValue + ' defaults with PocketBase';
               const prBody =
-                '## Summary\n' +
-                '- Sync default CT variables for `' + slugValue + '` after `/pocketbase` update.\n' +
-                '- Updated vars: `' + updateResult.updatedVars.join('`, `') + '`.\n\n' +
-                '## Source\n' +
-                '- Triggered by @' + actor + ' via PocketBase bot.\n';
+                '## ✍️ Description\n\n' +
+                'Sync of the default CT variables for `' + slugValue + '` after a `/pocketbase` update by @' + actor + '.\n\n' +
+                'Updated: `' + updateResult.updatedVars.join('`, `') + '`\n\n' +
+                '## 🔗 Related Issue\n\n' +
+                (isPrComment ? 'Triggered from #' : 'Fixes #') + issueNumber + '\n\n' +
+                '## ✅ Prerequisites (**X** in brackets)\n\n' +
+                '- [x] **Self-review completed** – Code follows project standards.\n' +
+                '- [ ] **Tested thoroughly** – Changes work as expected.\n' +
+                '- [x] **No security risks** – No hardcoded secrets, unnecessary privilege escalations, or permission issues.\n\n' +
+                '**Tested on:** not tested — generated from the PocketBase record, only `var_` defaults changed.\n\n' +
+                '---\n\n' +
+                '## 🤖 AI Assistance (**X** in brackets)\n\n' +
+                '- [x] **No AI used** – Scripts were written without AI assistance.\n\n' +
+                '---\n\n' +
+                '## 🛠️ Type of Change (**X** in brackets)\n\n' +
+                '- [x] 🌍 **Website update** – Changes to script metadata (PocketBase/website data).\n';
               const createPrRes = await ghRequest('/repos/' + owner + '/' + repo + '/pulls', 'POST', {
                 title: prTitle,
                 body: prBody,
