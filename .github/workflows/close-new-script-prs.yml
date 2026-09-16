@@ -28,6 +28,7 @@ jobs:
             const allowedBots = [
               "push-app-to-main[bot]",
               "push-app-to-main",
+              "community-scripts-pr-app[bot]",
               "community-scripts-pr-app"
             ];
 
@@ -62,7 +63,9 @@ jobs:
                 per_page: 100,
               });
               hasAddedScriptFile = files.some(
-                f => f.status === "added" && scriptPrefixes.some(p => f.filename.startsWith(p))
+                f => f.status === "added" &&
+                     !f.filename.includes("/headers/") &&
+                     scriptPrefixes.some(p => f.filename.startsWith(p))
               );
             } catch (error) {
               core.warning(`Could not list files for PR #${prNumber}: ${error.message}`);

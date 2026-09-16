@@ -8,7 +8,12 @@
         "turnkey/**",
         "vm/**"
       ],
-      "excludeGlobs": []
+      "excludeGlobs": [
+        "**/headers/**",
+        "ct/headers/**",
+        "tools/headers/**",
+        "vm/headers/**"
+      ]
     }
   ],
   "update script": [
@@ -41,7 +46,12 @@
       "includeGlobs": [
         "vm/**"
       ],
-      "excludeGlobs": []
+      "excludeGlobs": [
+        "**/headers/**",
+        "ct/headers/**",
+        "tools/headers/**",
+        "vm/headers/**"
+      ]
     }
   ],
   "tools": [
