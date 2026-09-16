@@ -555,6 +555,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Frigate: Bump to 0.18.0 [@MickLesk](https://github.com/MickLesk) ([#17273](https://github.com/community-scripts/ProxmoxVE/pull/17273))
     - Refactor: HomeAssistant-OS (core / improve functions / performance) [@MickLesk](https://github.com/MickLesk) ([#17281](https://github.com/community-scripts/ProxmoxVE/pull/17281))
 
   - #### 🔧 Refactor
