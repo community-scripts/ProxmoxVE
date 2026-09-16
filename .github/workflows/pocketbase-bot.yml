@@ -233,7 +233,7 @@ jobs:
                 '- [x] **No AI used** – Scripts were written without AI assistance.\n\n' +
                 '---\n\n' +
                 '## 🛠️ Type of Change (**X** in brackets)\n\n' +
-                '- [x] 🌍 **Website update** – Changes to script metadata (PocketBase/website data).\n';
+                '- [x] 🐞 **Bug fix** – Resolves an issue without breaking functionality.\n';
               const createPrRes = await ghRequest('/repos/' + owner + '/' + repo + '/pulls', 'POST', {
                 title: prTitle,
                 body: prBody,
