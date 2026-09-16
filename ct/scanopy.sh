@@ -32,42 +32,25 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "Scanopy" "scanopy/scanopy"; then
+  if check_for_gh_release "scanopy-server" "scanopy/scanopy"; then
     msg_info "Stopping services"
     systemctl stop scanopy-server
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl stop scanopy-daemon
     msg_ok "Stopped services"
 
-    create_backup /opt/scanopy/.env /opt/scanopy/oidc.toml
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
-
-    restore_backup
-
-    ensure_dependencies pkg-config libssl-dev
-    TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
-    RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
-
     if ! grep -q "PUBLIC_URL" /opt/scanopy/.env; then
-      sed -i "\|_PATH=|a\\scanopy_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
+      sed -i "\|_PATH=|a\\SCANOPY_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
     fi
     sed -i 's|_TARGET=.*$|_URL=http://127.0.0.1:60072|' /opt/scanopy/.env
+    sed -i '/^SCANOPY_WEB_EXTERNAL_PATH=/d' /opt/scanopy/.env
+    sed -i 's|^WorkingDirectory=/opt/scanopy/backend$|WorkingDirectory=/opt/scanopy|' /etc/systemd/system/scanopy-server.service
+    systemctl daemon-reload
+
+    cp -f /usr/bin/scanopy-server /usr/bin/scanopy-server.bak 2>/dev/null || true
 
     fetch_and_deploy_gh_release "scanopy-server" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
 
-    msg_info "Generating UI Fixtures (patience)"
-    cd /opt/scanopy/backend
-    CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 CARGO_BUILD_JOBS="$(get_parallel_jobs)" $STD cargo build --release --bin generate-fixtures
-    $STD ./target/release/generate-fixtures --output-dir /opt/scanopy/ui/src/lib/data
-    msg_ok "Generated UI Fixtures"
-
-    msg_info "Creating frontend UI"
-    export PUBLIC_SERVER_HOSTNAME=default
-    export PUBLIC_SERVER_PORT=""
-    cd /opt/scanopy/ui
-    $STD npm ci --no-fund --no-audit
-    $STD npm run build
-    msg_ok "Created frontend UI"
+    rm -rf /opt/scanopy/backend /opt/scanopy/ui
 
     if [[ -f /etc/systemd/system/scanopy-daemon.service ]]; then
       fetch_and_deploy_gh_release "Scanopy Daemon" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-$(arch_resolve)"
@@ -82,6 +65,22 @@ function update_script() {
 
     msg_info "Starting services"
     systemctl start scanopy-server
+    healthy=0
+    for _ in {1..30}; do
+      if curl -fsS -o /dev/null http://127.0.0.1:60072/api/health 2>/dev/null; then
+        healthy=1
+        break
+      fi
+      sleep 2
+    done
+    if [[ "$healthy" -ne 1 ]]; then
+      systemctl stop scanopy-server
+      [[ -f /usr/bin/scanopy-server.bak ]] && mv -f /usr/bin/scanopy-server.bak /usr/bin/scanopy-server
+      systemctl start scanopy-server
+      msg_error "New server did not answer /api/health, restored the previous binary"
+      exit 1
+    fi
+    rm -f /usr/bin/scanopy-server.bak
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl start scanopy-daemon
     msg_ok "Updated successfully!"
   fi

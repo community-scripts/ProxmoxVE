@@ -13,41 +13,16 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-  build-essential \
-  libssl-dev \
-  pkg-config
-msg_ok "Installed Dependencies"
-
 PG_VERSION=17 setup_postgresql
-NODE_VERSION="24" setup_nodejs
 PG_DB_NAME="scanopy_db" PG_DB_USER="scanopy" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
-fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
-TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
-RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
 fetch_and_deploy_gh_release "scanopy-server" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
 
-msg_info "Generating UI Fixtures (patience)"
-cd /opt/scanopy/backend
-CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 CARGO_BUILD_JOBS="$(get_parallel_jobs)" $STD cargo build --release --bin generate-fixtures
-$STD ./target/release/generate-fixtures --output-dir /opt/scanopy/ui/src/lib/data
-msg_ok "Generated UI Fixtures"
-
-msg_info "Creating frontend UI"
-export PUBLIC_SERVER_HOSTNAME=default
-export PUBLIC_SERVER_PORT=""
-cd /opt/scanopy/ui
-$STD npm ci --no-fund --no-audit
-$STD npm run build
-msg_ok "Created frontend UI"
-
 msg_info "Configuring server for first-run"
+mkdir -p /opt/scanopy
 cat <<EOF >/opt/scanopy/.env
 ### - SERVER
 SCANOPY_DATABASE_URL=postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME
-SCANOPY_WEB_EXTERNAL_PATH="/opt/scanopy/ui/build"
 SCANOPY_PUBLIC_URL=http://${LOCAL_IP}:60072
 SCANOPY_SERVER_PORT=60072
 SCANOPY_LOG_LEVEL=info
@@ -82,7 +57,7 @@ After=network.target postgresql.service
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/scanopy/backend
+WorkingDirectory=/opt/scanopy
 EnvironmentFile=/opt/scanopy/.env
 ExecStart=/usr/bin/scanopy-server
 Restart=always
