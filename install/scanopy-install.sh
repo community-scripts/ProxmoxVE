@@ -15,10 +15,9 @@ update_os
 
 PG_VERSION=17 setup_postgresql
 PG_DB_NAME="scanopy_db" PG_DB_USER="scanopy" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
+fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
 
-fetch_and_deploy_gh_release "scanopy-server" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
-
-msg_info "Configuring server for first-run"
+msg_info "Configuring Scanopy"
 mkdir -p /opt/scanopy
 cat <<EOF >/opt/scanopy/.env
 ### - SERVER
@@ -49,7 +48,9 @@ SCANOPY_HEARTBEAT_INTERVAL=30
 
 ### - see https://github.com/scanopy/scanopy/blob/main/docs/CONFIGURATION.md for more options
 EOF
+msg_ok "Configured Scanopy"
 
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/scanopy-server.service
 [Unit]
 Description=Scanopy Network Discovery Server
@@ -68,43 +69,8 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now scanopy-server
-
-# Creating short script to configure scanopy-daemon
-# cat <<EOF >~/configure_daemon.sh
-# #!/usr/bin/env bash
-#
-# echo "Auto-configuring integrated daemon..."
-#
-# NETWORK_ID="\$(sudo -u postgres psql -1 -t -d "${PG_DB_NAME}" -c 'SELECT id FROM networks;')"
-# API_KEY="\$(sudo -u postgres psql -1 -t -d "${PG_DB_NAME}" -c 'SELECT key FROM api_keys;')"
-#
-# cat <<END >/etc/systemd/system/scanopy-daemon.service
-# [Unit]
-# Description=Scanopy Network Discovery Daemon
-# After=network-online.target
-# Wants=network-online.target
-#
-# [Service]
-# Type=simple
-# User=root
-# ExecStart=/usr/bin/scanopy-daemon --server-url http://127.0.0.1:60072 --network-id \${NETWORK_ID} --daemon-api-key \${API_KEY} --mode push
-# Restart=always
-# RestartSec=10
-# StandardOutput=journal
-# StandardError=journal
-#
-# [Install]
-# WantedBy=multi-user.target
-# END
-#
-# systemctl enable -q --now scanopy-daemon
-# echo "Scanopy daemon configured and running"
-#
-# EOF
-# chmod +x ~/configure_daemon.sh
-msg_ok "Scanopy server running - please create an account, daemon API key and daemon in the Scanopy UI."
+msg_ok "Created Service"
 
 motd_ssh
 customize
