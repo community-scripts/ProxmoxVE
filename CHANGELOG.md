@@ -554,11 +554,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - changedetection: update: various fixes [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17331](https://github.com/community-scripts/ProxmoxVE/pull/17331))
     - sparkyfitness: run the Better Auth migration during the update [@MickLesk](https://github.com/MickLesk) ([#17318](https://github.com/community-scripts/ProxmoxVE/pull/17318))
     - poznote: follow init.sh into docker/ [@MickLesk](https://github.com/MickLesk) ([#17316](https://github.com/community-scripts/ProxmoxVE/pull/17316))
 
   - #### ✨ New Features
 
+    - romm: make the library paths follow ROMM_BASE_PATH [@MickLesk](https://github.com/MickLesk) ([#17279](https://github.com/community-scripts/ProxmoxVE/pull/17279))
     - Debian-VM: Refactor | Support Debian 11, 12, 13 [@MickLesk](https://github.com/MickLesk) ([#17325](https://github.com/community-scripts/ProxmoxVE/pull/17325))
 
 ### 💾 Core
