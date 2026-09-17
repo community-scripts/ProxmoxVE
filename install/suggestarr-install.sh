@@ -38,7 +38,9 @@ $STD uv pip install --python /opt/suggestarr/.venv -r /opt/suggestarr/api_servic
 msg_ok "Set up Python Environment"
 
 msg_info "Configuring SuggestArr"
-mkdir -p /opt/suggestarr_data
+mkdir -p /opt/suggestarr_data /opt/suggestarr/config
+rm -rf /opt/suggestarr/config/config_files
+ln -sfn /opt/suggestarr_data /opt/suggestarr/config/config_files
 cat <<EOF >/opt/suggestarr.env
 SUGGESTARR_PORT=5000
 LOG_LEVEL=info

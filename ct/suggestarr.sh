@@ -37,7 +37,18 @@ function update_script() {
     systemctl stop suggestarr
     msg_ok "Stopped Service"
 
+    mkdir -p /opt/suggestarr_data
+    if [[ -d /opt/suggestarr/config/config_files && ! -L /opt/suggestarr/config/config_files ]]; then
+      msg_info "Migrating Configuration"
+      cp -an /opt/suggestarr/config/config_files/. /opt/suggestarr_data/ 2>/dev/null || true
+      msg_ok "Migrated Configuration to /opt/suggestarr_data"
+    fi
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "suggestarr" "giuseppe99barchetta/SuggestArr" "tarball"
+
+    mkdir -p /opt/suggestarr/config
+    rm -rf /opt/suggestarr/config/config_files
+    ln -sfn /opt/suggestarr_data /opt/suggestarr/config/config_files
 
     msg_info "Building Frontend"
     cd /opt/suggestarr/client
