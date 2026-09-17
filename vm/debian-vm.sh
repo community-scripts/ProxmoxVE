@@ -113,10 +113,11 @@ post_to_api_vm
 
 vm_select_storage "$HN"
 msg_info "Retrieving the URL for the ${APP} Qcow2 Disk Image"
+DEBIAN_ARCH="$(vm_arch_resolve amd64 arm64)"
 if [ "$USE_CLOUD_INIT" == "yes" ]; then
-  URL="https://cloud.debian.org/images/cloud/${DEBIAN_CODENAME}/latest/debian-${var_version}-genericcloud-amd64.qcow2"
+  URL="https://cloud.debian.org/images/cloud/${DEBIAN_CODENAME}/latest/debian-${var_version}-genericcloud-${DEBIAN_ARCH}.qcow2"
 else
-  URL="https://cloud.debian.org/images/cloud/${DEBIAN_CODENAME}/latest/debian-${var_version}-nocloud-amd64.qcow2"
+  URL="https://cloud.debian.org/images/cloud/${DEBIAN_CODENAME}/latest/debian-${var_version}-nocloud-${DEBIAN_ARCH}.qcow2"
 fi
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
@@ -166,7 +167,7 @@ done
 msg_info "Creating a ${APP} VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags community-script,debian${var_version} -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
-pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
+vm_alloc_efi_disk "$DISK0"
 qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
 # No cloudinit drive here: setup_cloud_init attaches it, and attaching it twice
 # fails the second qm set, which takes the whole run down under errexit.
