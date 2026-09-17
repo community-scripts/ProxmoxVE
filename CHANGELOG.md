@@ -556,6 +556,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - sparkyfitness: run the Better Auth migration during the update [@MickLesk](https://github.com/MickLesk) ([#17318](https://github.com/community-scripts/ProxmoxVE/pull/17318))
     - poznote: follow init.sh into docker/ [@MickLesk](https://github.com/MickLesk) ([#17316](https://github.com/community-scripts/ProxmoxVE/pull/17316))
 
+  - #### ✨ New Features
+
+    - Debian-VM: Refactor | Support Debian 11, 12, 13 [@MickLesk](https://github.com/MickLesk) ([#17325](https://github.com/community-scripts/ProxmoxVE/pull/17325))
+
 ### 💾 Core
 
   - Ask before replacing a cached image that no longer matches [@MickLesk](https://github.com/MickLesk) ([core#44](https://github.com/community-scripts/core/pull/44))
