@@ -50,8 +50,10 @@ function update_script() {
     restore_backup
 
     msg_info "Running Poznote Initialization"
-    chmod +x /opt/poznote/init.sh
-    $STD /opt/poznote/init.sh
+    POZNOTE_INIT=/opt/poznote/docker/init.sh
+    [[ -f "$POZNOTE_INIT" ]] || POZNOTE_INIT=/opt/poznote/init.sh
+    chmod +x "$POZNOTE_INIT"
+    $STD "$POZNOTE_INIT"
     msg_ok "Initialized Poznote Data Directory"
 
     msg_info "Updating Nginx Configuration"
