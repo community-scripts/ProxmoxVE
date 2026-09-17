@@ -547,7 +547,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Allstarlink ([#17321](https://github.com/community-scripts/ProxmoxVE/pull/17321))
+  - Alpine-VM ([#17324](https://github.com/community-scripts/ProxmoxVE/pull/17324))
+- Allstarlink ([#17321](https://github.com/community-scripts/ProxmoxVE/pull/17321))
 
 ### 🚀 Updated Scripts
 
