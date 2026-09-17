@@ -60,6 +60,11 @@ chown -R immichframe:immichframe /opt/immichframe
 msg_ok "Setup ImmichFrame"
 
 msg_info "Creating Service"
+ADMIN_PASSWORD=$(openssl rand -hex 16)
+{
+  echo "ImmichFrame Admin User: admin"
+  echo "ImmichFrame Admin Password: $ADMIN_PASSWORD"
+} >>~/immichframe.creds
 cat <<EOF >/etc/systemd/system/immichframe.service
 [Unit]
 Description=ImmichFrame Digital Photo Frame
@@ -74,6 +79,7 @@ ExecStart=/usr/bin/dotnet /opt/immichframe/ImmichFrame.WebApi.dll
 Environment=ASPNETCORE_URLS=http://0.0.0.0:8080
 Environment=ASPNETCORE_ENVIRONMENT=Production
 Environment=DOTNET_CONTENTROOT=/opt/immichframe
+Environment=IMMICHFRAME_ADMIN_PASSWORD=$ADMIN_PASSWORD
 Restart=always
 RestartSec=5
 StandardOutput=journal

@@ -79,6 +79,17 @@ function update_script() {
     restore_backup
     chown -R immichframe:immichframe /opt/immichframe
 
+    if ! grep -q '^Environment=IMMICHFRAME_ADMIN_PASSWORD=' /etc/systemd/system/immichframe.service; then
+      msg_info "Setting Admin Password"
+      ADMIN_PASSWORD=$(openssl rand -hex 16)
+      sed -i "/^Environment=DOTNET_CONTENTROOT=/a Environment=IMMICHFRAME_ADMIN_PASSWORD=${ADMIN_PASSWORD}" /etc/systemd/system/immichframe.service
+      {
+        echo "ImmichFrame Admin User: admin"
+        echo "ImmichFrame Admin Password: $ADMIN_PASSWORD"
+      } >>~/immichframe.creds
+      systemctl daemon-reload
+      msg_ok "Set Admin Password (see ~/immichframe.creds)"
+    fi
 
     msg_info "Starting Service"
     systemctl start immichframe
