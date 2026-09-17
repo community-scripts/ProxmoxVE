@@ -70,7 +70,7 @@ Requires=postgresql.service
 Type=simple
 WorkingDirectory=/opt/sparkyfitness/SparkyFitnessServer
 EnvironmentFile=/etc/sparkyfitness/.env
-ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx SparkyFitnessServer.js
+ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx index.ts
 Restart=always
 RestartSec=5
 

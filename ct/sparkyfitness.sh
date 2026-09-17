@@ -52,19 +52,6 @@ function update_script() {
     $STD pnpm install
     msg_ok "Updated Sparky Fitness Backend"
 
-    if [[ -f /opt/sparkyfitness/SparkyFitnessServer/auth.ts ]]; then
-      msg_info "Applying Better Auth Migrations"
-      cd /opt/sparkyfitness/SparkyFitnessServer
-      set -a
-      source /etc/sparkyfitness/.env
-      set +a
-      if $STD npx --yes @better-auth/cli migrate --config auth.ts -y; then
-        msg_ok "Applied Better Auth Migrations"
-      else
-        msg_warn "Better Auth migration failed - sign-in may report a schema mismatch until it is run by hand"
-      fi
-    fi
-
     msg_info "Updating Sparky Fitness Frontend (Patience)"
     cd /opt/sparkyfitness
     $STD pnpm install
@@ -99,7 +86,7 @@ function update_script() {
   Type=simple
   WorkingDirectory=/opt/sparkyfitness/SparkyFitnessServer
   EnvironmentFile=/etc/sparkyfitness/.env
-  ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx SparkyFitnessServer.js
+  ExecStart=/opt/sparkyfitness/SparkyFitnessServer/node_modules/.bin/tsx index.ts
   Restart=always
   RestartSec=5
 
