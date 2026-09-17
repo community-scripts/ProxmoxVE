@@ -38,8 +38,19 @@ $STD apt-get install -y \
   qpdf \
   xdg-utils \
   xvfb \
-  ca-certificates
+  ca-certificates \
+  locales \
+  poppler-utils \
+  file
 msg_ok "Installed Dependencies"
+
+msg_info "Generating Locales"
+for l in cs_CZ de_DE en_GB en_US es_ES fr_FR id_ID it_IT ja_JP ko_KR \
+  pl_PL pt_BR ru_RU tr_TR uk_UA zh_CN zh_TW; do
+  sed -i "s/^# *${l}.UTF-8 UTF-8/${l}.UTF-8 UTF-8/" /etc/locale.gen
+done
+$STD locale-gen
+msg_ok "Generated Locales"
 
 PYTHON_VERSION="3.13" setup_uv
 
@@ -54,6 +65,7 @@ $STD /opt/changedetection/.venv/bin/python -m pip install changedetection.io
 cat <<EOF >/opt/changedetection/.env
 WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
 PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
+LC_ALL=en_US.UTF-8
 EOF
 msg_ok "Installed Change Detection"
 

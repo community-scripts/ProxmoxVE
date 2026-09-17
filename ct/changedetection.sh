@@ -32,7 +32,18 @@ function update_script() {
     exit
   fi
 
-  ensure_dependencies libjpeg-dev
+  ensure_dependencies libjpeg-dev poppler-utils file locales
+
+  msg_info "Generating Locales"
+  for l in cs_CZ de_DE en_GB en_US es_ES fr_FR id_ID it_IT ja_JP ko_KR \
+    pl_PL pt_BR ru_RU tr_TR uk_UA zh_CN zh_TW; do
+    sed -i "s/^# *${l}.UTF-8 UTF-8/${l}.UTF-8 UTF-8/" /etc/locale.gen
+  done
+  $STD locale-gen
+  if ! grep -q "^LC_ALL=" /opt/changedetection/.env 2>/dev/null; then
+    echo "LC_ALL=en_US.UTF-8" >>/opt/changedetection/.env
+  fi
+  msg_ok "Generated Locales"
 
   NODE_VERSION="24" setup_nodejs
 
@@ -69,7 +80,6 @@ function update_script() {
     $STD git -C /opt/browserless/ reset --hard origin/main
     $STD npm update --prefix /opt/browserless
     $STD npm ci --include=optional --include=dev --prefix /opt/browserless
-    $STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps
     # Update Chrome separately, as it has to be done with the force option. Otherwise the installation of other browsers will not be done if Chrome is already installed.
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome
