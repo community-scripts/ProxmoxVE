@@ -27,13 +27,15 @@ function update_script() {
     check_container_storage
     check_container_resources
 
-    if par2 --version | grep -q "par2cmdline-turbo"; then
-        fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-$(arch_resolve).zip"
-    fi
-
     if [[ ! -d /opt/sabnzbd ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
+    fi
+
+    if par2 --version 2>/dev/null | grep -q "par2cmdline-turbo"; then
+        if ! fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-$(arch_resolve).zip"; then
+            msg_warn "Could not update par2cmdline-turbo, keeping the installed version"
+        fi
     fi
     if check_for_gh_release "sabnzbd-org" "sabnzbd/sabnzbd"; then
         PYTHON_VERSION="3.13" setup_uv
