@@ -8,7 +8,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 # Source: https://pangolin.net/ | Github: https://github.com/fosrl/pangolin
 
 APP="Pangolin"
-PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.21.0}"
+PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.23.0}"
 var_tags="${var_tags:-proxy}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
