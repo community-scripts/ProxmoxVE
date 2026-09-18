@@ -10,8 +10,8 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 
 APP="OxiCloud"
 var_tags="${var_tags:-files;documents}"
-var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-6144}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -33,42 +33,17 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="26" setup_nodejs
-
   if check_for_gh_release "OxiCloud" "DioCrafts/OxiCloud"; then
     msg_info "Stopping OxiCloud"
     systemctl stop oxicloud
     msg_ok "Stopped OxiCloud"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OxiCloud" "DioCrafts/OxiCloud" "tarball" "latest" "/opt/oxicloud"
-    TOOLCHAIN="$(grep -oP 'FROM\s+rust:\K[0-9]+\.[0-9]+(\.[0-9]+)?' /opt/oxicloud/Dockerfile | head -1)"
-    RUST_TOOLCHAIN="${TOOLCHAIN:-stable}" setup_rust
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "OxiCloud" "DioCrafts/OxiCloud" "prebuild" "latest" "/opt/oxicloud" "oxicloud-*-$(arch_resolve x86_64 aarch64)-unknown-linux-musl.tar.gz"
 
-    msg_info "Building Frontend SPA"
-    cd /opt/oxicloud/frontend
-    $STD npm ci
-    $STD npm run build
-    msg_ok "Built Frontend SPA"
-
-    msg_info "Updating OxiCloud (Patience)"
-    set -a
-    source /etc/oxicloud/.env
-    set +a
-    cd /opt/oxicloud
-    export DATABASE_URL
-    export RUSTFLAGS="-C target-cpu=native"
-    RAM_MB=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
-    CARGO_JOBS=$((RAM_MB / 2560))
-    [[ $CARGO_JOBS -lt 1 ]] && CARGO_JOBS=1
-    [[ $CARGO_JOBS -gt $(nproc) ]] && CARGO_JOBS=$(nproc)
-    $STD cargo build --release -j "$CARGO_JOBS" --bin oxicloud --bin migrate-nfc-filenames
-    mv target/release/oxicloud /usr/local/bin/oxicloud
-    mv target/release/migrate-nfc-filenames /usr/local/bin/migrate-nfc-filenames
-    chmod +x /usr/local/bin/oxicloud /usr/local/bin/migrate-nfc-filenames
-    rm -f /usr/bin/oxicloud
-    rm -rf /opt/oxicloud/static
-    mv /opt/oxicloud/static-dist /opt/oxicloud/static
-    rm -rf /opt/oxicloud/target /opt/oxicloud/frontend/node_modules
+    msg_info "Updating OxiCloud"
+    install -m 755 /opt/oxicloud/oxicloud /usr/local/bin/oxicloud
+    rm -f /usr/local/bin/migrate-nfc-filenames /usr/bin/oxicloud
+    sed -i 's|^OXICLOUD_STATIC_PATH=|#OXICLOUD_STATIC_PATH=|' /etc/oxicloud/.env
     msg_ok "Updated OxiCloud"
 
     msg_info "Starting OxiCloud"
