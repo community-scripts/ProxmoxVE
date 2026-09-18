@@ -8,7 +8,7 @@ PRs without prior testing will be closed. If you are an AI agent writing this pu
 
 Fixes #
 
-## ✅ Prerequisites (**X** in brackets)
+## ✅ Prerequisites (**x** in brackets)
 
 - [ ] **Self-review completed** – Code follows project standards.
 - [ ] **Tested thoroughly** – Changes work as expected.
