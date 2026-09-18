@@ -33,6 +33,8 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies ffmpeg
+
   if check_for_gh_release "OxiCloud" "DioCrafts/OxiCloud"; then
     msg_info "Stopping OxiCloud"
     systemctl stop oxicloud
