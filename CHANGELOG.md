@@ -573,6 +573,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#46](https://github.com/community-scripts/core/pull/46))
 - github api: retry a 200 that is not a usable release payload [@MickLesk](https://github.com/MickLesk) ([core#45](https://github.com/community-scripts/core/pull/45))
 
+### 📚 Documentation
+
+  - chore: fix PR template help [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17364](https://github.com/community-scripts/ProxmoxVE/pull/17364))
+
 ## 2026-09-17
 
 ### 🆕 New Scripts
