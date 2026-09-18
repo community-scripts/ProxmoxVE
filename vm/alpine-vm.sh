@@ -34,6 +34,10 @@ pushd "$TEMP_DIR" >/dev/null
 
 vm_preflight
 
+# The cloud image sets no password, so the only question is which credentials.
+CLOUDINIT_REQUIRED=1
+vm_prompt_cloud_init "alpine"
+
 function default_settings() {
   VMID=$(get_valid_nextid)
   vm_apply_machine_type "q35"
@@ -49,7 +53,7 @@ function default_settings() {
   MTU=""
   START_VM="yes"
   METHOD="default"
-  USE_CLOUD_INIT="yes"
+  echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}${USE_CLOUD_INIT}${CL}"
   vm_echo_default_settings
 }
 
@@ -67,7 +71,6 @@ function advanced_settings() {
   vm_prompt_mac "$GEN_MAC"
   vm_prompt_vlan
   vm_prompt_mtu
-  vm_prompt_cloud_init "alpine"
   vm_prompt_verbose "no"
   vm_prompt_start_vm "yes"
 
