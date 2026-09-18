@@ -553,6 +553,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - alpine-vm: ask for the Cloud-Init credentials [@MickLesk](https://github.com/MickLesk) ([#17355](https://github.com/community-scripts/ProxmoxVE/pull/17355))
     - suggestarr: keep the data where the app actually reads it [@MickLesk](https://github.com/MickLesk) ([#17317](https://github.com/community-scripts/ProxmoxVE/pull/17317))
     - immichframe: set the admin password the new admin UI requires [@MickLesk](https://github.com/MickLesk) ([#17315](https://github.com/community-scripts/ProxmoxVE/pull/17315))
 
