@@ -43,13 +43,13 @@ Fixes #
 
 ## 💥 Breaking Change Advisory (only if you checked "Breaking change")
 
-If this PR changes existing behaviour in a way that may require action before an
+<!-- If this PR changes existing behaviour in a way that may require action before an
 update, add a `breaking-change` advisory block to this PR body. The website and
 the in-container update guard read it to tell operators exactly what to expect,
 what to do first, and — with `action: block` — to stop an update until it's
 handled. Every field is optional; the advisory auto-expires 30 days after merge.
 
-Copy the block out of the comment below, fill it in, and paste it here:
+Copy the block out of the comment below, fill it in, and paste it here: -->
 
 <!--
 ```breaking-change
