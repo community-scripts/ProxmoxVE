@@ -32,7 +32,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "scanopy-server" "scanopy/scanopy"; then
+  if check_for_gh_release "Scanopy" "scanopy/scanopy"; then
     msg_info "Stopping services"
     systemctl stop scanopy-server
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl stop scanopy-daemon
@@ -48,7 +48,7 @@ function update_script() {
 
     cp -f /usr/bin/scanopy-server /usr/bin/scanopy-server.bak 2>/dev/null || true
 
-    fetch_and_deploy_gh_release "scanopy-server" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
+    fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
 
     rm -rf /opt/scanopy/backend /opt/scanopy/ui
 
