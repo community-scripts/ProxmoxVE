@@ -61,10 +61,10 @@ msg_ok "Setup ImmichFrame"
 
 msg_info "Creating Service"
 ADMIN_PASSWORD=$(openssl rand -hex 16)
-{
-  echo "ImmichFrame Admin User: admin"
-  echo "ImmichFrame Admin Password: $ADMIN_PASSWORD"
-} >>~/immichframe.creds
+cat <<EOF >~/immichframe.creds
+ImmichFrame Admin User: admin
+ImmichFrame Admin Password: $ADMIN_PASSWORD
+EOF
 cat <<EOF >/etc/systemd/system/immichframe.service
 [Unit]
 Description=ImmichFrame Digital Photo Frame
