@@ -566,7 +566,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#46](https://github.com/community-scripts/core/pull/46))
+  - Stop a modified conffile from aborting the whole update [@MickLesk](https://github.com/MickLesk) ([core#47](https://github.com/community-scripts/core/pull/47))
+- Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#46](https://github.com/community-scripts/core/pull/46))
 - github api: retry a 200 that is not a usable release payload [@MickLesk](https://github.com/MickLesk) ([core#45](https://github.com/community-scripts/core/pull/45))
 
 ## 2026-09-17
