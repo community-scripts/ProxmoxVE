@@ -15,7 +15,7 @@ update_os
 
 PG_VERSION=17 setup_postgresql
 PG_DB_NAME="scanopy_db" PG_DB_USER="scanopy" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
-fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
+fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
 
 msg_info "Configuring Scanopy"
 mkdir -p /opt/scanopy
