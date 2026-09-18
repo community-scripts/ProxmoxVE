@@ -552,6 +552,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - suggestarr: keep the data where the app actually reads it [@MickLesk](https://github.com/MickLesk) ([#17317](https://github.com/community-scripts/ProxmoxVE/pull/17317))
     - immichframe: set the admin password the new admin UI requires [@MickLesk](https://github.com/MickLesk) ([#17315](https://github.com/community-scripts/ProxmoxVE/pull/17315))
 
+  - #### ✨ New Features
+
+    - pangolin: Bump to 1.23.0 [@MickLesk](https://github.com/MickLesk) ([#17343](https://github.com/community-scripts/ProxmoxVE/pull/17343))
+
   - #### 🔧 Refactor
 
     - Refactor: Oxicloud [@MickLesk](https://github.com/MickLesk) ([#17338](https://github.com/community-scripts/ProxmoxVE/pull/17338))
