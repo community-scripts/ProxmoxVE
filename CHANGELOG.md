@@ -545,6 +545,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-18
 
+### 🆕 New Scripts
+
+  - Almalinux-VM ([#17349](https://github.com/community-scripts/ProxmoxVE/pull/17349))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
