@@ -53,10 +53,10 @@ function update_script() {
     msg_info "Updating Domain Monitor"
     cd /opt/domain-monitor
     $STD composer install
-    chown -R www-data:www-data /opt/domain-monitor
     msg_ok "Updated Domain Monitor"
 
     restore_backup
+    chown -R www-data:www-data /opt/domain-monitor
 
     msg_info "Restarting Services"
     systemctl start apache2

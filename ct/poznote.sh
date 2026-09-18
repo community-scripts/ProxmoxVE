@@ -44,10 +44,10 @@ function update_script() {
 
     msg_info "Deploying New Version"
     cp -r /opt/poznote/src/. /var/www/html/
-    chown -R www-data:www-data /var/www/html
     msg_ok "Deployed New Version"
 
     restore_backup
+    chown -R www-data:www-data /var/www/html
 
     msg_info "Running Poznote Initialization"
     POZNOTE_INIT=/opt/poznote/docker/init.sh

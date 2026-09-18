@@ -87,10 +87,10 @@ function update_script() {
     mkdir -p /opt/databasus/ui/build
     cp -r /opt/databasus/frontend/dist/* /opt/databasus/ui/build/
     cp -r /opt/databasus/backend/migrations /opt/databasus/
-    chown -R postgres:postgres /opt/databasus
     msg_ok "Updated Databasus"
 
     restore_backup
+    chown -R postgres:postgres /opt/databasus
 
     if ! grep -q "EnvironmentFile=/.env" /etc/systemd/system/databasus.service; then
       msg_info "Updating Service"
