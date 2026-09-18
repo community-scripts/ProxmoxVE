@@ -38,6 +38,10 @@ function update_script() {
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl stop scanopy-daemon
     msg_ok "Stopped services"
 
+    cp -f /usr/bin/scanopy-server /usr/bin/scanopy-server.bak 2>/dev/null || true
+    cp -f /opt/scanopy/.env /opt/scanopy/.env.bak
+    cp -f /etc/systemd/system/scanopy-server.service /etc/systemd/system/scanopy-server.service.bak
+
     if ! grep -q "PUBLIC_URL" /opt/scanopy/.env; then
       sed -i "\|_PATH=|a\\SCANOPY_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/scanopy/.env
     fi
@@ -46,11 +50,8 @@ function update_script() {
     sed -i 's|^WorkingDirectory=/opt/scanopy/backend$|WorkingDirectory=/opt/scanopy|' /etc/systemd/system/scanopy-server.service
     systemctl daemon-reload
 
-    cp -f /usr/bin/scanopy-server /usr/bin/scanopy-server.bak 2>/dev/null || true
-
     fetch_and_deploy_gh_release "Scanopy" "scanopy/scanopy" "singlefile" "latest" "/usr/bin" "scanopy-server-linux-$(arch_resolve)"
-
-    rm -rf /opt/scanopy/backend /opt/scanopy/ui
+    mv -f /usr/bin/Scanopy /usr/bin/scanopy-server
 
     if [[ -f /etc/systemd/system/scanopy-daemon.service ]]; then
       fetch_and_deploy_gh_release "Scanopy Daemon" "scanopy/scanopy" "singlefile" "latest" "/usr/local/bin" "scanopy-daemon-linux-$(arch_resolve)"
@@ -76,11 +77,15 @@ function update_script() {
     if [[ "$healthy" -ne 1 ]]; then
       systemctl stop scanopy-server
       [[ -f /usr/bin/scanopy-server.bak ]] && mv -f /usr/bin/scanopy-server.bak /usr/bin/scanopy-server
+      mv -f /opt/scanopy/.env.bak /opt/scanopy/.env
+      mv -f /etc/systemd/system/scanopy-server.service.bak /etc/systemd/system/scanopy-server.service
+      systemctl daemon-reload
       systemctl start scanopy-server
-      msg_error "New server did not answer /api/health, restored the previous binary"
+      msg_error "New server did not answer /api/health, restored the previous version"
       exit 1
     fi
-    rm -f /usr/bin/scanopy-server.bak
+    rm -rf /opt/scanopy/backend /opt/scanopy/ui
+    rm -f /usr/bin/scanopy-server.bak /opt/scanopy/.env.bak /etc/systemd/system/scanopy-server.service.bak
     [[ -f /etc/systemd/system/scanopy-daemon.service ]] && systemctl start scanopy-daemon
     msg_ok "Updated successfully!"
   fi
