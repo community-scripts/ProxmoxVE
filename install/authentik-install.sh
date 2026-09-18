@@ -50,7 +50,7 @@ $STD apt install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="26" NODE_MODULE=pnpm@11 setup_nodejs
+NODE_VERSION="26" NODE_MODULE=pnpm@12 setup_nodejs
 setup_yq
 RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
 UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.7" setup_uv
@@ -58,7 +58,7 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 XMLSEC_VERSION="1.3.12"
-AUTHENTIK_VERSION="version/2026.8.2"
+AUTHENTIK_VERSION="version/2026.8.3"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 GO_VERSION="$(grep -m1 '^go ' /opt/authentik/go.mod | awk '{print $2}')" setup_go
@@ -82,7 +82,7 @@ msg_ok "Configured rust"
 msg_info "Setting up web"
 export NODE_ENV="production"
 cd /opt/authentik
-$STD node ./scripts/node/lint-runtime.mjs ./web
+$STD node ./scripts/node/lint-runtime.ts ./web
 cd /opt/authentik/web
 $STD pnpm install --frozen-lockfile
 $STD pnpm run build
