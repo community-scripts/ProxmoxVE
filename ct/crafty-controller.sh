@@ -46,8 +46,8 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gl_release "Crafty-Controller" "crafty-controller/crafty-4" "tarball" "latest" "/opt/crafty-controller/crafty/crafty-4"
 
-    chown -R crafty:crafty /opt/crafty-controller
     restore_backup
+    chown -R crafty:crafty /opt/crafty-controller
 
     msg_info "Updating TemurinJDK"
     setup_java
