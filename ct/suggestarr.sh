@@ -40,7 +40,7 @@ function update_script() {
     mkdir -p /opt/suggestarr_data
     if [[ -d /opt/suggestarr/config/config_files && ! -L /opt/suggestarr/config/config_files ]]; then
       msg_info "Migrating Configuration"
-      cp -an /opt/suggestarr/config/config_files/. /opt/suggestarr_data/ 2>/dev/null || true
+      cp -an /opt/suggestarr/config/config_files/. /opt/suggestarr_data/
       msg_ok "Migrated Configuration to /opt/suggestarr_data"
     fi
 
