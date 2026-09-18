@@ -545,6 +545,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-18
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - immichframe: set the admin password the new admin UI requires [@MickLesk](https://github.com/MickLesk) ([#17315](https://github.com/community-scripts/ProxmoxVE/pull/17315))
+
+  - #### 🔧 Refactor
+
+    - Refactor: Oxicloud [@MickLesk](https://github.com/MickLesk) ([#17338](https://github.com/community-scripts/ProxmoxVE/pull/17338))
+
 ### 💾 Core
 
   - github api: retry a 200 that is not a usable release payload [@MickLesk](https://github.com/MickLesk) ([core#45](https://github.com/community-scripts/core/pull/45))
