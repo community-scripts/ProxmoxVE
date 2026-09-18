@@ -553,6 +553,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - update authentik to 2026.8.3 [@thieneret](https://github.com/thieneret) ([#17366](https://github.com/community-scripts/ProxmoxVE/pull/17366))
     - crafty-controller: chown after restore_backup so restored data keeps ownership [@MickLesk](https://github.com/MickLesk) ([#17348](https://github.com/community-scripts/ProxmoxVE/pull/17348))
     - databasus, domain-monitor, poznote: chown after restore_backup so restored data keeps its owner [@MickLesk](https://github.com/MickLesk) ([#17350](https://github.com/community-scripts/ProxmoxVE/pull/17350))
     - alpine-vm: ask for the Cloud-Init credentials [@MickLesk](https://github.com/MickLesk) ([#17355](https://github.com/community-scripts/ProxmoxVE/pull/17355))
