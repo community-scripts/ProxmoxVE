@@ -76,10 +76,11 @@ if systemctl is-active -q ping-instances.service; then
 fi
 msg_info "Loading"
 pveam update >/dev/null 2>&1
+msg_ok "Loaded"
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templates" --yesno "This will allow for the creation of one of the many Template LXC Containers. Proceed?" 10 68
 TEMPLATE_MENU=()
 MSG_MAX_LENGTH=0
-while read -r TAG ITEM; do
+while read -r TAG ITEM _; do
   OFFSET=2
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET
   TEMPLATE_MENU+=("$ITEM" "$TAG " "OFF")
@@ -176,15 +177,15 @@ function select_storage() {
 
 # Get template storage
 TEMPLATE_STORAGE=$(select_storage template)
-msg_info "Using '$TEMPLATE_STORAGE' for template storage."
+msg_ok "Using '$TEMPLATE_STORAGE' for template storage."
 
 # Get container storage
 CONTAINER_STORAGE=$(select_storage container)
-msg_info "Using '$CONTAINER_STORAGE' for container storage."
+msg_ok "Using '$CONTAINER_STORAGE' for container storage."
 
 # Download template
 msg_info "Downloading LXC template (Patience)"
-pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null || {
+pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null || {
   msg_error "A problem occured while downloading the LXC template."
   exit 222
 }
