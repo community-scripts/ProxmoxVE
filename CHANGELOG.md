@@ -543,6 +543,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-19
+
+### 🆕 New Scripts
+
+  - Ubuntu-VM: AIO | new core | performance | remove old wrappers [@MickLesk](https://github.com/MickLesk) ([#17354](https://github.com/community-scripts/ProxmoxVE/pull/17354))
+
 ## 2026-09-18
 
 ### 🆕 New Scripts
