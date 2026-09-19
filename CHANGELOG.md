@@ -549,6 +549,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Ubuntu-VM: AIO | new core | performance | remove old wrappers [@MickLesk](https://github.com/MickLesk) ([#17354](https://github.com/community-scripts/ProxmoxVE/pull/17354))
 
+### ❔ Uncategorized
+
+  - chore(ct): sync immichframe defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17373](https://github.com/community-scripts/ProxmoxVE/pull/17373))
+
 ## 2026-09-18
 
 ### 🆕 New Scripts
