@@ -22,7 +22,9 @@ generate_headers() {
   for script in "${file_list[@]}"; do
     [[ -f "$script" ]] || continue
 
-    app_name=$(grep -oP '^APP="\K[^"]+' "$script" 2>/dev/null)
+    # First APP= only: some vm scripts set it again later with ${var_version},
+    # and two matches would become a file name containing a newline.
+    app_name=$(grep -oP '^APP="\K[^"]+' "$script" 2>/dev/null | head -n1)
     if [[ -n "$app_name" ]]; then
       # core.func/vm-core.func look the header up as "${APP,,}" without spaces,
       # so the generated file has to be named after APP - not after the script.
