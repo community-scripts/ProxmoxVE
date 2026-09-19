@@ -48,7 +48,7 @@ function update_script() {
   msg_ok "Stopped Services"
 
   msg_info "Updating Hermes Agent"
-  $STD setsid --wait bash -c '
+  $STD setsid --wait su - hermes -c '
     set -a; source /etc/default/hermes; set +a
     /home/hermes/.local/bin/hermes update --yes
   '
