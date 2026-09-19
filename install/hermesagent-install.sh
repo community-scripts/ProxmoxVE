@@ -91,7 +91,7 @@ ProcSubset=pid
 WantedBy=default.target
 EOF
 chown -R hermes:hermes /home/hermes/.config
-systemctl --user --machine=hermes@.host enable -q --now hermes-dashboard
+su - hermes -c 'systemctl --user enable -q --now hermes-dashboard'
 msg_ok "Created Dashboard Service"
 
 msg_info "Creating Setup Helper"
