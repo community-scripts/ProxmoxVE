@@ -33,7 +33,10 @@ mv -f "/opt/tusd/tusd_linux_$(arch_resolve)/tusd" /opt/tusd/tusd
 rm -rf "/opt/tusd/tusd_linux_$(arch_resolve)"
 chmod +x /opt/tusd/tusd
 PROJECT_SECRET=$(openssl rand -hex 32)
-ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'A-Za-z0-9' | head -c 16)
+ADMIN_PASSWORD=""
+until [[ "$ADMIN_PASSWORD" =~ [a-z] && "$ADMIN_PASSWORD" =~ [A-Z] && "$ADMIN_PASSWORD" =~ [0-9] && "$ADMIN_PASSWORD" =~ [^a-zA-Z0-9] ]]; do
+  ADMIN_PASSWORD=$(head -c 256 /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9@%+=_-' | head -c 16)
+done
 cat <<EOF >/opt/portabase/.env
 LOG_LEVEL=info
 DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}
