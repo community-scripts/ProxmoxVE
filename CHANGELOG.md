@@ -550,6 +550,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - qBit-Manage ([#17377](https://github.com/community-scripts/ProxmoxVE/pull/17377))
 - Ubuntu-VM: AIO | new core | performance | remove old wrappers [@MickLesk](https://github.com/MickLesk) ([#17354](https://github.com/community-scripts/ProxmoxVE/pull/17354))
 
+### 💾 Core
+
+  - Fall back to the unversioned banner slug [@MickLesk](https://github.com/MickLesk) ([core#48](https://github.com/community-scripts/core/pull/48))
+
 ### ❔ Uncategorized
 
   - chore(ct): sync immichframe defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17373](https://github.com/community-scripts/ProxmoxVE/pull/17373))
