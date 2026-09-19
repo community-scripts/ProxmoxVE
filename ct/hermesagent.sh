@@ -44,7 +44,7 @@ function update_script() {
   fi
 
   msg_info "Stopping Services"
-  systemctl stop hermes-dashboard
+  systemctl --user hermes --machine=hermes@.host stop hermes-dashboard
   msg_ok "Stopped Services"
 
   msg_info "Updating Hermes Agent"
@@ -66,7 +66,7 @@ function update_script() {
   msg_ok "Updated Hermes Agent"
 
   msg_info "Starting Services"
-  systemctl start hermes-dashboard
+  systemctl --user hermes --machine=hermes@.host start hermes-dashboard
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
   exit
