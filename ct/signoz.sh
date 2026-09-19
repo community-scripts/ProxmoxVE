@@ -31,6 +31,31 @@ function update_script() {
     exit
   fi
 
+  if [[ ! -f /var/lib/clickhouse/user_scripts/histogramQuantile ]]; then
+    fetch_and_deploy_gh_release "histogram-quantile" "SigNoz/signoz" "prebuild" "histogram-quantile/v0.0.1" "/opt/histogram-quantile" "histogram-quantile_linux_$(arch_resolve).tar.gz"
+
+    msg_info "Adding ClickHouse histogramQuantile Function"
+    mkdir -p /var/lib/clickhouse/user_scripts
+    install -m 755 -o clickhouse -g clickhouse /opt/histogram-quantile/histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
+    cat <<EOF >/etc/clickhouse-server/histogram_quantile_function.yaml
+functions:
+  name: histogramQuantile
+  type: executable
+  format: CSV
+  command: ./histogramQuantile
+  return_type: Float64
+  argument:
+    - name: buckets
+      type: Array(Float64)
+    - name: counts
+      type: Array(Float64)
+    - name: quantile
+      type: Float64
+EOF
+    systemctl restart clickhouse-server
+    msg_ok "Added ClickHouse histogramQuantile Function"
+  fi
+
   if check_for_gh_release "signoz" "SigNoz/signoz"; then
     msg_info "Stopping Services"
     systemctl stop signoz
