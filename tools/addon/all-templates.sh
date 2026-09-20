@@ -74,9 +74,7 @@ require_pve_host
 if systemctl is-active -q ping-instances.service; then
   systemctl stop ping-instances.service
 fi
-msg_info "Loading"
-pveam update >/dev/null 2>&1
-msg_ok "Loaded"
+$STD pveam update
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templates" --yesno "This will allow for the creation of one of the many Template LXC Containers. Proceed?" 10 68
 TEMPLATE_MENU=()
 MSG_MAX_LENGTH=0
@@ -99,9 +97,9 @@ PASS="$(openssl rand -base64 8)"
 # Get valid Container ID
 CTID=$(pvesh get /cluster/nextid)
 if ! validate_container_id "$CTID"; then
-  msg_warn "Container ID $CTID is already in use."
+  REQUESTED_CTID="$CTID"
   CTID=$(get_valid_container_id "$CTID")
-  msg_info "Using next available ID: $CTID"
+  msg_warn "Container ID $REQUESTED_CTID is already in use, using $CTID instead."
 fi
 
 PCT_OPTIONS="
@@ -185,7 +183,7 @@ msg_ok "Using '$CONTAINER_STORAGE' for container storage."
 
 # Download template
 msg_info "Downloading LXC template (Patience)"
-pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null || {
+$STD pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" || {
   msg_error "A problem occured while downloading the LXC template."
   exit 222
 }
@@ -197,7 +195,7 @@ PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
 
 # Create LXC
 msg_info "Creating LXC container"
-pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} "${PCT_OPTIONS[@]}" >/dev/null || {
+$STD pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} "${PCT_OPTIONS[@]}" || {
   msg_error "A problem occured while trying to create container."
   exit 209
 }
