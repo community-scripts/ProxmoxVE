@@ -548,6 +548,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-20
 
+### 🆕 New Scripts
+
+  - Your-Spotify ([#17376](https://github.com/community-scripts/ProxmoxVE/pull/17376))
+
 ## 2026-09-19
 
 ### 🆕 New Scripts
