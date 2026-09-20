@@ -230,6 +230,18 @@ function update_script() {
               sed -i '/^\[Service\]/a Environment=GRANIAN_PORT=8000' "$path"
             grep -q "^Environment=GRANIAN_WORKERS=" "$path" ||
               sed -i '/^\[Service\]/a Environment=GRANIAN_WORKERS=1' "$path"
+            # Older installs fronted gunicorn with a systemd socket-activation
+            # unit (paperless-webserver.socket, port 80). granian doesn't
+            # consume a systemd-passed socket fd, so leaving that unit in
+            # place after this migration causes a silent outage: granian
+            # binds its own listener on GRANIAN_PORT while the old socket's
+            # port-80 connection queue never gets accept()ed by anything.
+            sed -i '/^Requires=paperless-webserver.socket$/d' "$path"
+            if systemctl list-unit-files paperless-webserver.socket &>/dev/null; then
+              systemctl disable --now paperless-webserver.socket &>/dev/null || true
+              rm -f /etc/systemd/system/paperless-webserver.socket
+              msg_ok "Removed leftover paperless-webserver.socket (superseded by GRANIAN_PORT)"
+            fi
           fi
           msg_ok "Patched $svc"
         else
