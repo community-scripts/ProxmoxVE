@@ -564,7 +564,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - github-api: take the release the maintainer marked as latest [@MickLesk](https://github.com/MickLesk) ([core#55](https://github.com/community-scripts/core/pull/55))
+  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#56](https://github.com/community-scripts/core/pull/56))
+- github-api: take the release the maintainer marked as latest [@MickLesk](https://github.com/MickLesk) ([core#55](https://github.com/community-scripts/core/pull/55))
 - general: prune old Rust toolchains [@MickLesk](https://github.com/MickLesk) ([core#52](https://github.com/community-scripts/core/pull/52))
 - Ask when the preselected storage cannot hold the content [@MickLesk](https://github.com/MickLesk) ([core#51](https://github.com/community-scripts/core/pull/51))
 
