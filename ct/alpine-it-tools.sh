@@ -40,6 +40,7 @@ function update_script() {
     cp -r /tmp/dist/* /usr/share/nginx/html
     rm -rf /tmp/dist
     rm -f it-tools.zip
+    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
