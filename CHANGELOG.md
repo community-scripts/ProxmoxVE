@@ -552,6 +552,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(portabase): meet the default admin password rules [@maksimtech](https://github.com/maksimtech) ([#17384](https://github.com/community-scripts/ProxmoxVE/pull/17384))
     - truenas-vm: strip the G before the storage allocation [@MickLesk](https://github.com/MickLesk) ([#17407](https://github.com/community-scripts/ProxmoxVE/pull/17407))
     - Librenms - Fix local snmpd community string setup [@dopch](https://github.com/dopch) ([#17363](https://github.com/community-scripts/ProxmoxVE/pull/17363))
     - fix(iventoy): preserve release data and migrate legacy service launchers [@Msprg](https://github.com/Msprg) ([#17161](https://github.com/community-scripts/ProxmoxVE/pull/17161))
