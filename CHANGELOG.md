@@ -554,6 +554,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - xyops: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17398](https://github.com/community-scripts/ProxmoxVE/pull/17398))
 
+### 💾 Core
+
+  - Ask when the preselected storage cannot hold the content [@MickLesk](https://github.com/MickLesk) ([core#51](https://github.com/community-scripts/core/pull/51))
+
 ## 2026-09-20
 
 ### 🆕 New Scripts
