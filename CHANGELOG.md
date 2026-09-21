@@ -556,7 +556,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Ask when the preselected storage cannot hold the content [@MickLesk](https://github.com/MickLesk) ([core#51](https://github.com/community-scripts/core/pull/51))
+  - general: prune old Rust toolchains [@MickLesk](https://github.com/MickLesk) ([core#52](https://github.com/community-scripts/core/pull/52))
+- Ask when the preselected storage cannot hold the content [@MickLesk](https://github.com/MickLesk) ([core#51](https://github.com/community-scripts/core/pull/51))
 
 ## 2026-09-20
 
