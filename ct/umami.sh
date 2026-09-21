@@ -40,6 +40,9 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
     restore_backup
 
+    PNPM_VERSION=$(jq -r '.engines.pnpm // "latest"' /opt/umami/package.json)
+    NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+
     msg_info "Updating Umami"
     cd /opt/umami
     $STD pnpm install
