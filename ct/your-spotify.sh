@@ -74,3 +74,6 @@ echo -e "${INFO}${YW}Spotify rejects plain http redirect URIs on a LAN address.$
 echo -e "${INFO}${YW}Put this behind a TLS reverse proxy and register:${CL}"
 echo -e "${TAB}${DEFAULT}${BGN}https://your.domain/oauth/spotify/callback${CL}"
 echo -e "${INFO}${YW}Then set API_ENDPOINT to that https URL and rerun the update.${CL}"
+echo -e "${INFO}${YW}Known issue in 1.20.0: the Settings page stays blank.${CL}"
+echo -e "${TAB}${DEFAULT}Fixed upstream but not yet released - see${CL}"
+echo -e "${TAB}${DEFAULT}${BGN}https://github.com/Yooooomi/your_spotify/issues/617${CL}"
