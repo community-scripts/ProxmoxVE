@@ -53,6 +53,7 @@ function update_script() {
     create_backup /opt/metube/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "metube" "alexta69/metube" "tarball" "latest"
+    UV_PROJECT_DIR="/opt/metube" setup_uv
 
     restore_backup
 

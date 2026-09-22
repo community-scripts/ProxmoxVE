@@ -40,6 +40,7 @@ function update_script() {
     create_backup /opt/beaverhabits/.user
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "beaverhabits" "daya0576/beaverhabits" "tarball"
+    PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/beaverhabits" setup_uv
 
     msg_info "Syncing Dependencies"
     cd /opt/beaverhabits

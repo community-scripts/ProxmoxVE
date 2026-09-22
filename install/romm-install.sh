@@ -76,7 +76,6 @@ function decodeBase64(r) {
 export default { decodeBase64 };
 EOF
 msg_ok "Installed Angie with mod_zip and njs modules"
-PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 setup_mariadb
 MARIADB_DB_NAME="romm" MARIADB_DB_USER="romm" setup_mariadb_db
@@ -161,6 +160,7 @@ else
 fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
+PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/romm" setup_uv
 echo "__version__ = \"$(cat ~/.romm)\"" >/opt/romm/backend/__version__.py
 
 msg_info "Creating environment file"

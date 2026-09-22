@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-UV_PYTHON="3.13" setup_uv
+PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="25" setup_nodejs
 setup_ffmpeg
 setup_gs

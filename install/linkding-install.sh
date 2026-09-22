@@ -26,8 +26,8 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
-setup_uv
 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
+UV_PROJECT_DIR="/opt/linkding" setup_uv
 
 msg_info "Building Frontend"
 cd /opt/linkding

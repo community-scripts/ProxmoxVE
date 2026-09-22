@@ -13,9 +13,8 @@ setting_up_container
 network_check
 update_os
 
-setup_uv
-
 fetch_and_deploy_gh_release "notediscovery" "gamosoft/NoteDiscovery" "tarball"
+UV_PROJECT_DIR="/opt/notediscovery" setup_uv
 
 msg_info "Installing Dependencies"
 cd /opt/notediscovery

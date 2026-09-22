@@ -40,6 +40,7 @@ function update_script() {
     msg_ok "Stopped Services"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "yubal" "guillevc/yubal" "tarball" "latest" "/opt/yubal"
+    PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/yubal" setup_uv
 
     msg_info "Building Frontend"
     cd /opt/yubal/web

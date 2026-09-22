@@ -41,6 +41,7 @@ function update_script() {
     create_backup /opt/yamtrack/src/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "yamtrack" "FuzzyGrim/Yamtrack" "tarball"
+    PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/yamtrack" setup_uv
 
     restore_backup
 

@@ -13,9 +13,8 @@ setting_up_container
 network_check
 update_os
 
-PYTHON_VERSION="3.14" setup_uv
-
 fetch_and_deploy_gh_release "beaverhabits" "daya0576/beaverhabits" "tarball"
+PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/beaverhabits" setup_uv
 
 msg_info "Installing Dependencies"
 cd /opt/beaverhabits

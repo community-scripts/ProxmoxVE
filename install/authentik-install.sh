@@ -53,7 +53,6 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="26" NODE_MODULE=pnpm@12 setup_nodejs
 setup_yq
 RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
-UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.7" setup_uv
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
@@ -63,6 +62,7 @@ fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 GO_VERSION="$(grep -m1 '^go ' /opt/authentik/go.mod | awk '{print $2}')" setup_go
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
+UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.7" UV_PROJECT_DIR="/opt/authentik" setup_uv
 
 msg_info "Setting up xmlsec"
 cd /opt/xmlsec

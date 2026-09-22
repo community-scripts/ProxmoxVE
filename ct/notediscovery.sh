@@ -40,6 +40,7 @@ function update_script() {
     create_backup /opt/notediscovery/data /opt/notediscovery/config.yaml
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "notediscovery" "gamosoft/NoteDiscovery" "tarball"
+    UV_PROJECT_DIR="/opt/notediscovery" setup_uv
 
     msg_info "Syncing Dependencies"
     cd /opt/notediscovery

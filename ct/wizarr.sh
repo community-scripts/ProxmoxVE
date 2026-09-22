@@ -32,8 +32,6 @@ function update_script() {
     exit
   fi
 
-  setup_uv
-
   if check_for_gh_release "wizarr" "wizarrrr/wizarr"; then
     msg_info "Stopping Service"
     systemctl stop wizarr
@@ -46,6 +44,7 @@ function update_script() {
     msg_ok "Backup Created"
 
     fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr" "tarball"
+    UV_PROJECT_DIR="/opt/wizarr" setup_uv
 
     msg_info "Updating Wizarr"
     cd /opt/wizarr

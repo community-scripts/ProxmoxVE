@@ -38,10 +38,10 @@ function update_script() {
 
     create_backup /opt/flatnotes/.env /opt/flatnotes/data
 
-    PYTHON_VERSION="3.13" setup_uv
     NODE_VERSION="24" setup_nodejs
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes" "tarball"
+    PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/flatnotes" setup_uv
 
     restore_backup
 

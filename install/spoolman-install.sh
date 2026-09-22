@@ -22,6 +22,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+UV_PROJECT_DIR="/opt/spoolman" setup_uv
 PYTHON_VERSION="3.14" setup_uv
 
 msg_info "Setting up Spoolman"

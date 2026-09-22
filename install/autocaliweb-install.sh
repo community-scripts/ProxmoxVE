@@ -54,9 +54,8 @@ $STD /opt/calibre/calibre_postinstall
 CALIBRE_VERSION=$(cat ~/.calibre)
 msg_ok "Installed Calibre"
 
-setup_uv
-
 fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+setup_uv $INSTALL_DIR
 
 msg_info "Configuring Autocaliweb"
 INSTALL_DIR="/opt/autocaliweb"

@@ -25,7 +25,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="audiomuse" PG_DB_USER="audiomuse" setup_postgresql_db
-UV_PYTHON="3.12" setup_uv
+PYTHON_VERSION="3.12" setup_uv
 setup_hwaccel
 
 fetch_and_deploy_gh_release "audiomuse-ai" "NeptuneHub/AudioMuse-AI" "tarball"

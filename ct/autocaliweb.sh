@@ -31,8 +31,6 @@ function update_script() {
     exit
   fi
 
-  setup_uv
-
   RELEASE=$(get_latest_codeberg_release "gelbphoenix/autocaliweb")
   if check_for_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb"; then
     msg_info "Stopping Services"
@@ -43,6 +41,7 @@ function update_script() {
     export VIRTUAL_ENV="${INSTALL_DIR}/venv"
     $STD tar -cf ~/autocaliweb_bkp.tar "$INSTALL_DIR"/{metadata_change_logs,dirs.json,.env,scripts/ingest_watcher.sh,scripts/auto_zipper_wrapper.sh,scripts/metadata_change_detector_wrapper.sh}
     fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+    setup_uv $INSTALL_DIR
     
     msg_info "Updating Autocaliweb"
     cd "$INSTALL_DIR" 

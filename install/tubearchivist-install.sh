@@ -34,7 +34,7 @@ $STD apt install -y \
   pkg-config
 msg_ok "Installed Dependencies"
 
-UV_PYTHON="3.13" setup_uv
+PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 
 fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.zip"

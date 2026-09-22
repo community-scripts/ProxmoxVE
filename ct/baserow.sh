@@ -39,6 +39,7 @@ function update_script() {
 
     create_backup /opt/baserow/.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "baserow" "baserow/baserow" "tarball"
+    UV_PROJECT_DIR="/opt/baserow/backend" setup_uv
     restore_backup
 
     msg_info "Configuring Baserow"

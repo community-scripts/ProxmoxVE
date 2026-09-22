@@ -40,6 +40,7 @@ function update_script() {
     create_backup /opt/linkding/data /opt/linkding/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
+    UV_PROJECT_DIR="/opt/linkding" setup_uv
 
     restore_backup
     ln -sf /usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/mod_icu.so /opt/linkding/libicu.so

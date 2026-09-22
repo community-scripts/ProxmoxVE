@@ -51,6 +51,7 @@ function update_script() {
       /opt/romm/frontend/dist/assets/ruffle
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball" "latest" "/opt/romm"
+    PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/romm" setup_uv
     echo "__version__ = \"$(cat ~/.romm)\"" >/opt/romm/backend/__version__.py
 
     find /opt/romm/backend/alembic/versions -maxdepth 1 -type f -name '1.*.py' -delete 2>/dev/null || true

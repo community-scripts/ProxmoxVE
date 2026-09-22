@@ -23,7 +23,7 @@ $STD apt install -y \
   iproute2
 msg_ok "Installed Dependencies"
 
-UV_PYTHON="3.12" setup_uv
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Setting up Matter Server"
 mkdir -p /opt/matter-server/data/credentials

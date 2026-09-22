@@ -31,8 +31,6 @@ function update_script() {
     exit
   fi
 
-  PYTHON_VERSION="3.14" setup_uv
-
   if check_for_gh_release "spoolman" "Donkie/Spoolman"; then
     msg_info "Stopping Service"
     systemctl stop spoolman
@@ -41,6 +39,7 @@ function update_script() {
     create_backup /opt/spoolman/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+    PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/spoolman" setup_uv
 
     restore_backup
 

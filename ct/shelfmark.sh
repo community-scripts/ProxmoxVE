@@ -33,7 +33,6 @@ function update_script() {
   fi
 
   NODE_VERSION="24" setup_nodejs
-  PYTHON_VERSION="3.14" setup_uv
 
   if check_for_gh_release "shelfmark" "calibrain/shelfmark"; then
     msg_info "Stopping Service(s)"
@@ -68,6 +67,7 @@ function update_script() {
       $STD apt remove -y chromium-driver
     fi
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shelfmark" "calibrain/shelfmark" "tarball" "latest" "/opt/shelfmark"
+    PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/shelfmark" setup_uv
     restore_backup
     RELEASE_VERSION=$(cat "$HOME/.shelfmark")
 

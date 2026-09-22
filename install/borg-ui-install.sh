@@ -32,7 +32,7 @@ $STD apt install -y \
   sshpass
 msg_ok "Installed Dependencies"
 
-UV_PYTHON="3.12" setup_uv
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" setup_nodejs
 
 fetch_and_deploy_gh_release "borg-ui" "karanhudia/borg-ui" "tarball"

@@ -44,6 +44,7 @@ NODE_VERSION=24 setup_nodejs
 PYTHON_VERSION=3.14 setup_uv
 
 fetch_and_deploy_gh_release "fireshare" "ShaneIsrael/fireshare" "tarball"
+UV_PROJECT_DIR="/opt/fireshare" setup_uv
 
 msg_info "Compiling SVT-AV1 (Patience)"
 cd /tmp

@@ -22,7 +22,7 @@ $STD apt install -y \
   python3-dev
 msg_ok "Installed Dependencies"
 
-UV_PYTHON="3.12" setup_uv
+PYTHON_VERSION="3.12" setup_uv
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="airflow" PG_DB_USER="airflow" setup_postgresql_db
 

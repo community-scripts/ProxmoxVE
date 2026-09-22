@@ -38,6 +38,7 @@ function update_script() {
     msg_ok "Stopped Services"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "journiv" "journiv/journiv-app" "tarball"
+    UV_PROJECT_DIR="/opt/journiv" setup_uv
 
     msg_info "Updating Python Environment"
     cd /opt/journiv

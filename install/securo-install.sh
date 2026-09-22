@@ -24,7 +24,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 PG_DB_NAME="securo" PG_DB_USER="securo" PG_DB_EXTENSIONS="vector" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs
-UV_PYTHON="3.12" setup_uv
+PYTHON_VERSION="3.12" setup_uv
 
 fetch_and_deploy_gh_release "securo" "securo-finance/securo" "tarball"
 

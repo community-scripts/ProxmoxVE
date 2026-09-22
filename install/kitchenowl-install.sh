@@ -38,10 +38,10 @@ $STD apt install -y \
   libicu-dev
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.14" setup_uv
 fetch_and_deploy_gh_release "kitchenowl" "TomBursch/kitchenowl" "tarball" "latest" "/opt/kitchenowl"
 rm -rf /opt/kitchenowl/web
 fetch_and_deploy_gh_release "kitchenowl-web" "TomBursch/kitchenowl" "prebuild" "latest" "/opt/kitchenowl/web" "kitchenowl_Web.tar.gz"
+PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/kitchenowl/backend" setup_uv
 
 msg_info "Setting up KitchenOwl"
 cd /opt/kitchenowl/backend

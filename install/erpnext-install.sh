@@ -36,7 +36,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
-UV_PYTHON="3.14" setup_uv
+PYTHON_VERSION="3.14" setup_uv
 setup_mariadb
 
 msg_info "Configuring MariaDB for ERPNext"

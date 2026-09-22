@@ -39,6 +39,7 @@ function update_script() {
 
     create_backup /opt/fireshare/fireshare.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fireshare" "ShaneIsrael/fireshare" "tarball"
+    UV_PROJECT_DIR="/opt/fireshare" setup_uv
     restore_backup
     rm -f /usr/local/bin/fireshare
 

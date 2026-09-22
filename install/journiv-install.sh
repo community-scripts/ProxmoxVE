@@ -30,9 +30,9 @@ msg_ok "Installed Dependencies"
 setup_ffmpeg
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="journiv" PG_DB_USER="journiv" setup_postgresql_db
-UV_PYTHON="3.12" setup_uv
 
 fetch_and_deploy_gh_release "journiv" "journiv/journiv-app" "tarball"
+PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/journiv" setup_uv
 
 msg_info "Setting up Python Environment"
 cd /opt/journiv

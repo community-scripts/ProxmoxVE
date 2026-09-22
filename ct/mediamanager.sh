@@ -31,14 +31,13 @@ function update_script() {
     exit
   fi
 
-  setup_uv
-
   if check_for_gh_release "mediamanager" "maxdorninger/MediaManager"; then
     msg_info "Stopping Service"
     systemctl stop mediamanager
     msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "MediaManager" "maxdorninger/MediaManager" "tarball" "latest" "/opt/mediamanager"
+    UV_PROJECT_DIR="/opt/mediamanager" setup_uv
     msg_info "Updating MediaManager"
     MM_DIR="/opt/mm"
     export CONFIG_DIR="${MM_DIR}/config"

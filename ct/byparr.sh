@@ -37,6 +37,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr" "tarball" "latest"
+    UV_PROJECT_DIR="/opt/Byparr" setup_uv
 
     if ! dpkg -l | grep -q ffmpeg; then
       msg_info "Installing dependencies"

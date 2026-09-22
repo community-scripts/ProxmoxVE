@@ -34,12 +34,12 @@ $STD apt install -y \
   libswscale-dev
 msg_ok "Installed Dependencies"
 
-setup_uv
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="dispatcharr_db" PG_DB_USER="dispatcharr_usr" setup_postgresql_db
 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
 fetch_and_deploy_gh_release "Comskip" "erikkaashoek/Comskip" "tarball"
+UV_PROJECT_DIR="/opt/dispatcharr" setup_uv
 
 msg_info "Compiling Comskip"
 cd /opt/Comskip

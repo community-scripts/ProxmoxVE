@@ -32,7 +32,6 @@ function update_script() {
     exit
   fi
 
-  setup_uv
   NODE_VERSION="24" setup_nodejs
   if [[ -f "/etc/nginx/sites-available/dispatcharr.conf" ]] && ! grep -q "real_forwarded_proto" "/etc/nginx/sites-available/dispatcharr.conf"; then
     msg_info "Migrating Nginx Configuration"
@@ -146,6 +145,7 @@ EOF
     msg_ok "Backup created: $BACKUP_FILE"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
+    UV_PROJECT_DIR="/opt/dispatcharr" setup_uv
 
     restore_backup
 

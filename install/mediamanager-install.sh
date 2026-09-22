@@ -20,7 +20,6 @@ fi
 
 setup_yq
 NODE_VERSION="24" setup_nodejs
-setup_uv
 PG_VERSION="17" setup_postgresql
 
 msg_info "Setting up PostgreSQL"
@@ -39,6 +38,7 @@ EOF
 msg_ok "Set up PostgreSQL"
 
 fetch_and_deploy_gh_release "MediaManager" "maxdorninger/MediaManager" "tarball" "latest" "/opt/mediamanager"
+UV_PROJECT_DIR="/opt/mediamanager" setup_uv
 
 msg_info "Configuring MediaManager"
 MM_DIR="/opt/mm"
