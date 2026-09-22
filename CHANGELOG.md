@@ -556,9 +556,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(alpine-it-tools): write the version file after a successful update [@Houtek](https://github.com/Houtek) ([#17421](https://github.com/community-scripts/ProxmoxVE/pull/17421))
     - Umami: Align pnpm with engines.pnpm on update [@ReneNulschDE](https://github.com/ReneNulschDE) ([#17404](https://github.com/community-scripts/ProxmoxVE/pull/17404))
 
+  - #### 🔧 Refactor
+
+    - several scripts: let uv see the project before syncing it | refactor some scripts that use uv [@MickLesk](https://github.com/MickLesk) ([#17436](https://github.com/community-scripts/ProxmoxVE/pull/17436))
+
 ### 💾 Core
 
-  - fix(motd): repair legacy 00_lxc-details.sh header and dead color placeholders [@BadFlo](https://github.com/BadFlo) ([core#53](https://github.com/community-scripts/core/pull/53))
+  - setup_uv: honour a project's required-version pin [@MickLesk](https://github.com/MickLesk) ([core#58](https://github.com/community-scripts/core/pull/58))
+- fix(motd): repair legacy 00_lxc-details.sh header and dead color placeholders [@BadFlo](https://github.com/BadFlo) ([core#53](https://github.com/community-scripts/core/pull/53))
 - meilisearch: take the raw binary, not the .deb [@MickLesk](https://github.com/MickLesk) ([core#57](https://github.com/community-scripts/core/pull/57))
 
 ### 📚 Documentation
