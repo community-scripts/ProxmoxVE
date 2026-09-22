@@ -558,7 +558,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - meilisearch: take the raw binary, not the .deb [@MickLesk](https://github.com/MickLesk) ([core#57](https://github.com/community-scripts/core/pull/57))
+  - fix(motd): repair legacy 00_lxc-details.sh header and dead color placeholders [@BadFlo](https://github.com/BadFlo) ([core#53](https://github.com/community-scripts/core/pull/53))
+- meilisearch: take the raw binary, not the .deb [@MickLesk](https://github.com/MickLesk) ([core#57](https://github.com/community-scripts/core/pull/57))
+
+### 📚 Documentation
+
+  - github: Stop generating header filenames with a newline in them [@MickLesk](https://github.com/MickLesk) ([#17435](https://github.com/community-scripts/ProxmoxVE/pull/17435))
 
 ## 2026-09-21
 
