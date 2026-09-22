@@ -556,6 +556,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(alpine-it-tools): write the version file after a successful update [@Houtek](https://github.com/Houtek) ([#17421](https://github.com/community-scripts/ProxmoxVE/pull/17421))
     - Umami: Align pnpm with engines.pnpm on update [@ReneNulschDE](https://github.com/ReneNulschDE) ([#17404](https://github.com/community-scripts/ProxmoxVE/pull/17404))
 
+### 💾 Core
+
+  - meilisearch: take the raw binary, not the .deb [@MickLesk](https://github.com/MickLesk) ([core#57](https://github.com/community-scripts/core/pull/57))
+
 ## 2026-09-21
 
 ### 🆕 New Scripts
