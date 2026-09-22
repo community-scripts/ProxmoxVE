@@ -105,9 +105,7 @@ EOF
     libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
     cd "$BASE_DIR"
     msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
-    # Containers built before these landed in the install list have none of
-    # them, and the recompile below fails on the first missing header.
-    $STD apt install -y liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev
+    ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev
     $STD git pull
     for library in "${libraries[@]}"; do
       compile_"$library"
@@ -195,8 +193,6 @@ EOF
     export SHARP_FORCE_GLOBAL_LIBVIPS=true
     $STD pnpm --dir "$APP_DIR/node_modules/sharp" exec npm run build
 
-    # The rm -rf above took the geodata symlink with it. Without it the app
-    # finds no reverse-geocoding data and the web UI never comes up.
     ln -sfn "$GEO_DIR" "$APP_DIR/geodata"
 
     # Patch helmet.json: disable upgrade-insecure-requests for HTTP access
