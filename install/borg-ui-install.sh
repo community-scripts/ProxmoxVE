@@ -111,7 +111,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/borg-ui
 EnvironmentFile=/opt/borg-ui/.env
-ExecStart=/opt/borg-ui/.venv/bin/gunicorn app.main:app --bind 0.0.0.0:8081 --workers 2 --worker-class uvicorn.workers.UvicornWorker --timeout 300
+ExecStart=/opt/borg-ui/.venv/bin/gunicorn app.main:app --bind 0.0.0.0:8081 --workers 1 --worker-class uvicorn.workers.UvicornWorker --timeout 300
 Restart=on-failure
 RestartSec=5
 

@@ -32,6 +32,14 @@ function update_script() {
     exit
   fi
 
+  if grep -q -- '--workers 2' /etc/systemd/system/borg-ui.service 2>/dev/null; then
+    msg_info "Reducing Service to a single worker"
+    sed -i 's/--workers 2/--workers 1/' /etc/systemd/system/borg-ui.service
+    systemctl daemon-reload
+    systemctl try-restart borg-ui
+    msg_ok "Reduced Service to a single worker"
+  fi
+
   if check_for_gh_release "borg-ui" "karanhudia/borg-ui"; then
     msg_info "Stopping Service"
     systemctl stop borg-ui
