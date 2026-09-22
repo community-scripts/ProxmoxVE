@@ -552,6 +552,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(invoiceshelf): re-link storage during update [@owenvoke](https://github.com/owenvoke) ([#17431](https://github.com/community-scripts/ProxmoxVE/pull/17431))
     - fix(alpine-it-tools): write the version file after a successful update [@Houtek](https://github.com/Houtek) ([#17421](https://github.com/community-scripts/ProxmoxVE/pull/17421))
     - Umami: Align pnpm with engines.pnpm on update [@ReneNulschDE](https://github.com/ReneNulschDE) ([#17404](https://github.com/community-scripts/ProxmoxVE/pull/17404))
 
