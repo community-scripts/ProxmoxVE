@@ -54,6 +54,7 @@ function update_script() {
       $STD pnpm run build
     fi
     $STD php artisan migrate --force
+    $STD php artisan storage:link
     $STD php artisan optimize:clear
     chown -R www-data:www-data /opt/invoiceshelf
     msg_ok "Updated Application"
