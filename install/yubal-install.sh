@@ -41,7 +41,7 @@ mkdir -p /opt/yubal \
 msg_ok "Created directories"
 
 fetch_and_deploy_gh_release "yubal" "guillevc/yubal" "tarball" "latest" "/opt/yubal"
-UV_VERSION="0.7.19" PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/yubal" setup_uv
+PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/yubal" setup_uv
 
 msg_info "Building Frontend"
 cd /opt/yubal/web
