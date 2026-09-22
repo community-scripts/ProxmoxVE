@@ -570,6 +570,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - github: Stop generating header filenames with a newline in them [@MickLesk](https://github.com/MickLesk) ([#17435](https://github.com/community-scripts/ProxmoxVE/pull/17435))
 
+### ❔ Uncategorized
+
+  - chore(ct): sync cloudflare-ddns defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17446](https://github.com/community-scripts/ProxmoxVE/pull/17446))
+
 ## 2026-09-21
 
 ### 🆕 New Scripts
