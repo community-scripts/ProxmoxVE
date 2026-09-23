@@ -550,9 +550,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Stop discarding cloud-init error messages | report failed image steps and restore tty1 autologin without cloud-init [@MickLesk](https://github.com/MickLesk) ([core#62](https://github.com/community-scripts/core/pull/62))
-- VM-Core: stop discarding cloud-init error messages [@MickLesk](https://github.com/MickLesk) ([core#60](https://github.com/community-scripts/core/pull/60))
+  - Decide console autologin from the image, not USE_CLOUD_INIT [@MickLesk](https://github.com/MickLesk) ([core#63](https://github.com/community-scripts/core/pull/63))
 - tools: raise pnpm/yarn fetch timeout and lower network concurrency [@MickLesk](https://github.com/MickLesk) ([core#59](https://github.com/community-scripts/core/pull/59))
+- Stop discarding cloud-init error messages | report failed image steps and restore tty1 autologin without cloud-init [@MickLesk](https://github.com/MickLesk) ([core#62](https://github.com/community-scripts/core/pull/62))
+- VM-Core: stop discarding cloud-init error messages [@MickLesk](https://github.com/MickLesk) ([core#60](https://github.com/community-scripts/core/pull/60))
 
 ## 2026-09-22
 
