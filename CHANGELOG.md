@@ -563,7 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - core: give RHEL-family containers an ostype PVE accepts [@MickLesk](https://github.com/MickLesk) ([core#67](https://github.com/community-scripts/core/pull/67))
+  - stop a partial find from aborting the caller under pipefail [@MickLesk](https://github.com/MickLesk) ([core#68](https://github.com/community-scripts/core/pull/68))
+- core: give RHEL-family containers an ostype PVE accepts [@MickLesk](https://github.com/MickLesk) ([core#67](https://github.com/community-scripts/core/pull/67))
 - core: do not abort on a failed apt update [@MickLesk](https://github.com/MickLesk) ([core#66](https://github.com/community-scripts/core/pull/66))
 - VM's: report a finished VM as done, not aborted [@MickLesk](https://github.com/MickLesk) ([core#65](https://github.com/community-scripts/core/pull/65))
 - VM-Core: decide console autologin from the image, not USE_CLOUD_INIT [@MickLesk](https://github.com/MickLesk) ([core#63](https://github.com/community-scripts/core/pull/63))
