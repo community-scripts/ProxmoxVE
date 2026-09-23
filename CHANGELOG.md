@@ -546,6 +546,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-23
+
+### 💾 Core
+
+  - tools: raise pnpm/yarn fetch timeout and lower network concurrency [@MickLesk](https://github.com/MickLesk) ([core#59](https://github.com/community-scripts/core/pull/59))
+
 ## 2026-09-22
 
 ### 🚀 Updated Scripts
