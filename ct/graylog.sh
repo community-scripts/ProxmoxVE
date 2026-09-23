@@ -43,17 +43,17 @@ function update_script() {
     MONGO_VERSION="8.2" setup_mongodb
 
     msg_info "Updating Graylog"
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade -y
     curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-7.0-repository_latest.deb" -o "graylog-7.0-repository_latest.deb"
     $STD dpkg -i graylog-7.0-repository_latest.deb
-    $STD apt update
+    apt_update_safe
     ensure_dependencies graylog-server graylog-datanode
     rm -f graylog-7.0-repository_latest.deb
     msg_ok "Updated Graylog"
   elif dpkg --compare-versions "$CURRENT_VERSION" ge "7.0"; then
     msg_info "Updating Graylog"
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade -y
     msg_ok "Updated Graylog"
   fi

@@ -24,7 +24,7 @@ bookworm | trixie)
 esac
 
 msg_info "Installing ntopng"
-$STD apt update
+apt_update_safe
 $STD apt install -y ntopng
 msg_ok "Installed ntopng"
 

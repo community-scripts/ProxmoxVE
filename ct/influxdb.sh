@@ -32,7 +32,7 @@ function update_script() {
   fi
   
   msg_info "Updating InfluxDB"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated InfluxDB"
   msg_ok "Updated successfully!"

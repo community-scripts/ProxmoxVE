@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating Aria2"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated Aria2"
   msg_ok "Updated successfully!"

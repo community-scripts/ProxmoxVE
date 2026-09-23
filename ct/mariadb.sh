@@ -40,7 +40,7 @@ update_deb_based() {
   fi
   setup_mariadb
   msg_info "Updating ${APP} LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated successfully!"
 }

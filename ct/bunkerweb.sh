@@ -39,7 +39,7 @@ Package: bunkerweb
 Pin: version ${RELEASE}
 Pin-Priority: 1001
 EOF
-    $STD apt update
+    apt_update_safe
     $STD apt-mark unhold bunkerweb nginx
     $STD apt install -y --allow-downgrades bunkerweb="${RELEASE}"
     msg_ok "Updated BunkerWeb"

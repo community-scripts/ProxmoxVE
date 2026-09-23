@@ -40,7 +40,7 @@ function update_script() {
       "main"
   fi
   msg_info "Updating evcc LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt --only-upgrade install -y evcc
   msg_ok "Updated successfully!"
   exit

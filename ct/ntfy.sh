@@ -54,7 +54,7 @@ update_deb_based() {
   fi
 
   msg_info "Updating ntfy"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated ntfy"
   msg_ok "Updated successfully!"

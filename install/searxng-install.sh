@@ -20,7 +20,7 @@ URIs: http://deb.debian.org/debian
 Suites: trixie-backports
 Components: main
 EOF
-$STD apt update
+apt_update_safe
 $STD apt install -y \
   python3-dev python3-babel python3-venv python-is-python3 \
   uwsgi uwsgi-plugin-python3 \

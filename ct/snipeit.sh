@@ -50,7 +50,7 @@ function update_script() {
     setup_composer
 
     msg_info "Updating Snipe-IT"
-    $STD apt update
+    apt_update_safe
     $STD apt -y upgrade
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
     cp -r /opt/snipe-it-backup/public/uploads/. /opt/snipe-it/public/uploads/

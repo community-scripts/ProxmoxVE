@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating Unbound"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated Unbound"
   msg_ok "Updated successfully!"

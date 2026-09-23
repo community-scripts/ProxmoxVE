@@ -36,7 +36,7 @@ function update_script() {
   if check_for_gh_release "salt" "saltstack/salt"; then
     msg_info "Updating Salt"
     sed -i "s/^\(Pin: version \).*/\1${RELEASE}/" /etc/apt/preferences.d/salt-pin-1001
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade -y
     echo "${RELEASE}" >~/.salt
     msg_ok "Updated successfully!"

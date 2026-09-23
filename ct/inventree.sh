@@ -38,7 +38,7 @@ function update_script() {
   fi
 
   msg_info "Updating InvenTree"
-  $STD apt update
+  apt_update_safe
   $STD apt install --only-upgrade inventree -y
   msg_ok "Updated InvenTree"
   msg_ok "Updated successfully!"

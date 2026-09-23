@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating Orb"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y --only-upgrade orb
   msg_ok "Updated successfully!"
   exit

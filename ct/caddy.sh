@@ -40,7 +40,7 @@ update_deb_based() {
   fi
 
   msg_info "Updating Caddy LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Caddy LXC"
 

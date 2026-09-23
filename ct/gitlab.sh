@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating GitLab (Patience)"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y gitlab-ce
   msg_ok "Updated GitLab"
 

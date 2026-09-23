@@ -50,7 +50,7 @@ URIs: https://www.collaboraoffice.com/repos/CollaboraOnline/CODE-deb
 Suites: ./
 Signed-By: /etc/apt/keyrings/collaboraonline-release-keyring.gpg
 EOF
-$STD apt-get update
+apt_update_safe
 $STD apt-get install -y coolwsd code-brand
 systemctl stop coolwsd
 mkdir -p /etc/systemd/system/coolwsd.service.d

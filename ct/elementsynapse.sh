@@ -34,7 +34,7 @@ function update_script() {
   NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
   msg_info "Updating LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated LXC"
 

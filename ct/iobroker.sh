@@ -34,7 +34,7 @@ function update_script() {
   NODE_VERSION="24" NPM_VERSION="11" setup_nodejs
 
   msg_info "Updating ${APP} LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated successfully!"
   exit

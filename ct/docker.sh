@@ -36,7 +36,7 @@ catch_errors
 
 update_deb_based() {
   msg_info "Updating base system"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Base system updated"
 

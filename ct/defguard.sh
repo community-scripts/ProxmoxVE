@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating Defguard"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y defguard defguard-proxy
   msg_ok "Updated Defguard"
 

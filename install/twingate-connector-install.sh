@@ -30,7 +30,7 @@ done
 msg_info "Setup Twingate Repository"
 curl -fsSL "https://packages.twingate.com/apt/gpg.key" | gpg --dearmor -o /usr/share/keyrings/twingate-connector-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/twingate-connector-keyring.gpg] https://packages.twingate.com/apt/ /" >/etc/apt/sources.list.d/twingate.list
-$STD apt-get update
+apt_update_safe
 msg_ok "Setup Twingate Repository"
 
 msg_info "Setup Twingate Connector"

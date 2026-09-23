@@ -29,7 +29,7 @@ function update_script() {
   check_container_resources
 
   msg_info "Updating Container OS"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Container OS"
 

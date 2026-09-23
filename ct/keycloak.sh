@@ -44,7 +44,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Updating packages"
-    $STD apt-get update
+    apt_update_safe
     $STD apt-get -y upgrade
     msg_ok "Updated packages"
 

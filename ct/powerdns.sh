@@ -46,7 +46,7 @@ function update_script() {
   fi
 
   msg_info "Updating PowerDNS"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y --only-upgrade pdns-server pdns-backend-sqlite3
   msg_ok "Updated PowerDNS"
 

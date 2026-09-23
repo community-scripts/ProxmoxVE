@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating ${APP}"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y haproxy
   msg_ok "Updated ${APP}"
 

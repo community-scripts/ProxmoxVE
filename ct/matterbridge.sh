@@ -30,7 +30,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   NODE_VERSION="24" NODE_MODULE="matterbridge" setup_nodejs
   msg_ok "Updated successfully!"

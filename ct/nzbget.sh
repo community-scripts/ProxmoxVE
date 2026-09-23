@@ -41,7 +41,7 @@ function update_script() {
   fi
 
   msg_info "Updating NZBGet"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated NZBGet"
   msg_ok "Updated successfully!"

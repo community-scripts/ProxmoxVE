@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating step-ca and step-cli"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y step-ca step-cli
 
   # Patch for making $STD happy (/usr/bin/step is a symlink to /usr/bin/step-cli)

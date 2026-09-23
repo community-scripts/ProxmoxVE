@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Adding Kiwix PPA"
 add-apt-repository -y ppa:kiwixteam/release >>"$(get_active_logfile)" 2>&1
-$STD apt update
+apt_update_safe
 msg_ok "Added Kiwix PPA"
 
 msg_info "Installing Kiwix-Tools"

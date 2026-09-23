@@ -46,7 +46,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing Mattermost"
 curl -fsSL -o /usr/share/keyrings/mattermost-archive-keyring.gpg https://deb.packages.mattermost.com/pubkey.gpg
 sh -c 'curl -fsSL https://deb.packages.mattermost.com/repo-setup.sh | sudo bash -s mattermost' >/dev/null
-$STD apt update
+apt_update_safe
 $STD apt install -y mattermost
 $STD install -C -m 600 -o mattermost -g mattermost /opt/mattermost/config/config.defaults.json /opt/mattermost/config/config.json
 sed -i -e "/DataSource/c\   \"DataSource\": \"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?sslmode=disable&connect_timeout=10\"," \

@@ -32,7 +32,7 @@ function update_script() {
   fi
 
   msg_info "Updating OpenProject"
-  $STD apt update
+  apt_update_safe
   $STD apt install --only-upgrade -y openproject
   msg_ok "Updated OpenProject"
   msg_ok "Updated successfully!"

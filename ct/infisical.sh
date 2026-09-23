@@ -42,7 +42,7 @@ function update_script() {
   msg_ok "Created backup"
 
   msg_info "Updating Infisical"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y infisical-core
   $STD infisical-ctl reconfigure
   msg_ok "Updated Infisical"

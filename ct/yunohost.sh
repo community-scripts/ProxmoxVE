@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating OS"
-  $STD apt-get update
+  apt_update_safe
   $STD apt-get -y upgrade
   msg_ok "Updated OS"
 

@@ -23,7 +23,7 @@ Suites: jammy
 Components: main
 Signed-By: /usr/share/keyrings/openziti.gpg
 EOF
-$STD apt update
+apt_update_safe
 $STD apt install -y ziti-edge-tunnel
 sed -i '0,/^ExecStart/ { /^ExecStart/ { n; s|^ExecStart.*|ExecStart=/opt/openziti/bin/ziti-edge-tunnel run-host --verbose=${ZITI_VERBOSE} --identity-dir=${ZITI_IDENTITY_DIR}| } }' /usr/lib/systemd/system/ziti-edge-tunnel.service
 systemctl daemon-reload

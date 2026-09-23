@@ -39,7 +39,7 @@ function update_script() {
     msg_ok "Stopped services"
 
     msg_info "Updating packages"
-    $STD apt-get update
+    apt_update_safe
     $STD apt-get dist-upgrade -y
     ensure_dependencies "inotify-tools"
     msg_ok "Updated packages"

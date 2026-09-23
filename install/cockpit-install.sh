@@ -25,7 +25,7 @@ Enabled: yes
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
 
-$STD apt update
+apt_update_safe
 $STD apt install -t ${CODENAME}-backports cockpit cracklib-runtime --no-install-recommends -y
 sed -i "s/root//g" /etc/cockpit/disallowed-users
 msg_ok "Installed Cockpit"

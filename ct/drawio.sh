@@ -37,7 +37,7 @@ function update_script() {
     msg_ok "Service stopped"
 
     msg_info "Updating Debian LXC"
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade -y
     msg_ok "Updated Debian LXC"
 

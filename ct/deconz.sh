@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating deCONZ"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated deCONZ"
   msg_ok "Updated successfully!"

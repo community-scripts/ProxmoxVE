@@ -26,7 +26,7 @@ Suites: trixie
 Components: non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
-$STD apt update
+apt_update_safe
 $STD apt install -y unrar
 rm /etc/apt/sources.list.d/non-free.sources
 msg_ok "Installed Dependencies"

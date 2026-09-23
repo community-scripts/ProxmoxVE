@@ -32,7 +32,7 @@ function update_script() {
   fi
 
   msg_info "Updating Proxmox-Mail-Gateway"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Proxmox-Mail-Gateway"
   msg_ok "Updated successfully!"

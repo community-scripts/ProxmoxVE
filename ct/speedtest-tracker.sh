@@ -43,7 +43,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Updating Speedtest CLI"
-    $STD apt update
+    apt_update_safe
     $STD apt --only-upgrade install -y speedtest
     msg_ok "Updated Speedtest CLI"
 

@@ -39,7 +39,7 @@ function update_script() {
   create_backup /var/lib/couchdb /opt/couchdb/etc/local.d/obsidian-livesync.ini /opt/obsidian-livesync/.env
 
   msg_info "Updating Container OS"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Container OS"
 

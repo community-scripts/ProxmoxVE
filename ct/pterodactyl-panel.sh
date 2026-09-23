@@ -45,7 +45,7 @@ Suites: $(lsb_release -sc)
 Components: main
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
 EOF
-    $STD apt update
+    apt_update_safe
     $STD apt remove -y php"${CURRENT_PHP//./}"*
     $STD apt install -y \
       php8.4 \

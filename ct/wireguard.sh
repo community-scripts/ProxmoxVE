@@ -42,7 +42,7 @@ update_deb_based() {
   ensure_dependencies git
 
   msg_info "Updating LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   if [[ -d /etc/wgdashboard ]]; then
     sleep 2

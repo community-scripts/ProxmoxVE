@@ -37,7 +37,7 @@ function update_script() {
   msg_ok "Stopped Service"
 
   msg_info "Updating LXC packages"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated LXC packages"
 

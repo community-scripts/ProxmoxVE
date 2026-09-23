@@ -32,7 +32,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating Tdarr"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   rm -rf /opt/tdarr/Tdarr_Updater
   cd /opt/tdarr

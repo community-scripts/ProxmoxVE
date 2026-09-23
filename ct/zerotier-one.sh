@@ -37,7 +37,7 @@ function update_script() {
   msg_ok "Stopping Service"
 
   msg_info "Updating Zerotier-One"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Zerotier-One"
 

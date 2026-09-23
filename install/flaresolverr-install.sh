@@ -26,7 +26,7 @@ setup_deb822_repo \
   "https://dl.google.com/linux/linux_signing_key.pub" \
   "https://dl.google.com/linux/chrome/deb/" \
   "stable"
-$STD apt update
+apt_update_safe
 $STD apt install -y google-chrome-stable
 # remove google-chrome.list added by google-chrome-stable
 if [ -f /etc/apt/sources.list.d/google-chrome.list ]; then

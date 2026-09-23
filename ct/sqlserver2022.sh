@@ -32,7 +32,7 @@ function update_script() {
     fi
     msg_info "Updating SQL Server 2022"
     rm -f /etc/profile.d/debuginfod.sh /etc/profile.d/debuginfod.csh
-    $STD apt update
+    apt_update_safe
     $STD apt -y upgrade
     msg_ok "Updated successfully!"
     exit

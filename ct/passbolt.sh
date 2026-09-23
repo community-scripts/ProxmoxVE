@@ -32,7 +32,7 @@ function update_script() {
   fi
   setup_mariadb
   msg_info "Updating $APP LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated $APP LXC"
   exit

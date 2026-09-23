@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating Twingate Connector"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y --only-upgrade twingate-connector
   $STD systemctl restart twingate-connector
   msg_ok "Updated successfully!"

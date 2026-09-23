@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get update
+apt_update_safe
 $STD apt-get install -y \
   ssh \
   software-properties-common

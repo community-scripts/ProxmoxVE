@@ -31,7 +31,7 @@ Components: main
 Architectures: $(arch_resolve)
 Signed-By: /usr/share/keyrings/clickhouse-keyring.gpg
 EOF
-$STD apt update
+apt_update_safe
 export DEBIAN_FRONTEND=noninteractive
 $STD apt install -y clickhouse-server clickhouse-client
 msg_ok "Setup ClickHouse"

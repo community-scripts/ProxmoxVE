@@ -40,7 +40,7 @@ function update_script() {
     create_backup /etc/mumble/mumble-server.ini /var/lib/mumble-server/mumble-server.sqlite
 
     msg_info "Updating Mumble"
-    $STD apt update
+    apt_update_safe
     $STD apt install -y mumble-server
     cat <<EOF >~/.mumble
 $(get_latest_github_release "mumble-voip/mumble")

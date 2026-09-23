@@ -29,7 +29,7 @@ Suites: trixie
 Components: non-free 
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
-$STD apt update
+apt_update_safe
 $STD apt install -y unrar
 msg_ok "Setup Unrar"
 

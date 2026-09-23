@@ -63,7 +63,7 @@ EOF
     fi
 
     msg_info "Updating Nodejs"
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade nodejs -y
     msg_ok "Updated Nodejs"
 

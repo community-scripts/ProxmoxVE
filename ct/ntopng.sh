@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating ntopng"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y ntopng
   msg_ok "Updated ntopng"
 

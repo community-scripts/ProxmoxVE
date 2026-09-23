@@ -19,7 +19,7 @@ msg_info "Setup Graylog Data Node"
 PASSWORD_SECRET=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-7.0-repository_latest.deb" -o "graylog-7.0-repository_latest.deb"
 $STD dpkg -i graylog-7.0-repository_latest.deb
-$STD apt-get update
+apt_update_safe
 $STD apt-get install graylog-datanode -y
 sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/datanode/datanode.conf
 systemctl enable -q --now graylog-datanode

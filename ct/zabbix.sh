@@ -85,7 +85,7 @@ function update_script() {
   curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
   $STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
   rm -rf /tmp/zabbix-release_*.deb
-  $STD apt update
+  apt_update_safe
 
   $STD apt install --only-upgrade zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
 

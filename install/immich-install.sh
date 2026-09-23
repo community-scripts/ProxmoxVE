@@ -125,7 +125,7 @@ msg_ok "Dependencies Installed"
 msg_info "Installing Mise"
 curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
 echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
-$STD apt update
+apt_update_safe
 $STD apt install -y mise
 msg_ok "Installed Mise"
 
@@ -150,7 +150,7 @@ Package: *
 Pin:release a=testing
 Pin-Priority: 450
 EOF
-$STD apt update
+apt_update_safe
 msg_ok "Configured Debian Testing repo"
 msg_info "Installing packages from Debian Testing repo"
 $STD apt install -t testing --no-install-recommends -yqq libmimalloc3 libde265-dev

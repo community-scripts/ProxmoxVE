@@ -40,7 +40,7 @@ Suites: all
 Components: main
 Signed-By: /usr/share/keyrings/oneapi-archive-keyring.gpg
 EOF
-$STD apt update
+apt_update_safe
 msg_ok "Set up Intel® Repositories"
 
 msg_info "Installing Intel® Level Zero"

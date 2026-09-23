@@ -33,7 +33,7 @@ function update_script() {
   fi
   setup_mariadb
   if check_for_gh_release "2fauth" "Bubka/2FAuth"; then
-    $STD apt update
+    apt_update_safe
     $STD apt -y upgrade
 
     msg_info "Creating Backup"

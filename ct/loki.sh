@@ -51,7 +51,7 @@ update_deb_based() {
     msg_ok "Stopped Loki"
 
     msg_info "Updating Loki"
-    $STD apt update
+    apt_update_safe
     $STD apt install -y --only-upgrade loki
     msg_ok "Updated Loki"
 

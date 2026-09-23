@@ -79,7 +79,7 @@ function update_script() {
   fi
 
   msg_info "Updating Plex Media Server"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y plexmediaserver
   msg_ok "Updated Plex Media Server"
 

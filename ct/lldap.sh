@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating lldap"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y lldap
   msg_ok "Updated lldap"
   msg_ok "Updated successfully!"

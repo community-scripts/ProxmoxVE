@@ -36,7 +36,7 @@ function update_script() {
   msg_ok "Stopped Service"
 
   msg_info "Updating Telegraf"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y telegraf
   msg_ok "Updated Telegraf"
 

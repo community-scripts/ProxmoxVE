@@ -35,7 +35,7 @@ function update_script() {
   CURRENT=$(dpkg-query -W -f='${Version}' kiwix-tools 2>/dev/null)
 
   msg_info "Updating Package Index"
-  $STD apt update
+  apt_update_safe
   msg_ok "Updated Package Index"
 
   CANDIDATE=$(apt-cache policy kiwix-tools | awk '/Candidate:/{print $2}')

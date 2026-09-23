@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating ddclient"
-  $STD apt update
+  apt_update_safe
   $STD apt install --only-upgrade -y ddclient
   $STD systemctl restart ddclient
   msg_ok "Updated ddclient"

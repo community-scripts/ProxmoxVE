@@ -39,7 +39,7 @@ $STD apt install -y ffmpeg v4l-utils
 msg_ok "Installed FFmpeg"
 
 msg_info "Installing MotionEye"
-$STD apt update
+apt_update_safe
 $STD pip install git+https://github.com/motioneye-project/motioneye.git@dev
 mkdir -p /etc/motioneye
 chown -R root:root /etc/motioneye

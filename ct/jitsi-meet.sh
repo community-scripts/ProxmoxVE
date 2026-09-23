@@ -41,7 +41,7 @@ function update_script() {
   fi
 
   msg_info "Updating Jitsi Meet"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y --only-upgrade \
     jitsi-meet \
     jicofo \

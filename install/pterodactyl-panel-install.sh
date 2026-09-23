@@ -34,7 +34,7 @@ Suites: $(lsb_release -sc)
 Components: main
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
 EOF
-$STD apt update
+apt_update_safe
 msg_ok "Added PHP Repository"
 
 msg_info "Installing PHP"

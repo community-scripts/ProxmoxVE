@@ -40,7 +40,7 @@ update_deb_based() {
     exit
   fi
   msg_info "Updating Transmission"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated Transmission"
   msg_ok "Updated successfully!"

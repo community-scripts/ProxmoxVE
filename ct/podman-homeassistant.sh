@@ -38,7 +38,7 @@ function update_script() {
 
   if [ "$UPD" == "1" ]; then
     msg_info "Updating ${APP} LXC"
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade -y
     msg_ok "Updated successfully!"
 
@@ -59,7 +59,7 @@ function update_script() {
   fi
   if [ "$UPD" == "2" ]; then
     msg_info "Installing Home Assistant Community Store (HACS)"
-    $STD apt update
+    apt_update_safe
     cd /var/lib/containers/storage/volumes/hass_config/_data
     $STD bash <(curl -fsSL https://get.hacs.xyz)
     msg_ok "Installed Home Assistant Community Store (HACS)"

@@ -49,7 +49,7 @@ update_deb_based() {
   fi
 
   msg_info "Updating Grafana LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt --only-upgrade install -y grafana
   msg_ok "Updated successfully!"
 }

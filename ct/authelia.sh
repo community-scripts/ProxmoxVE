@@ -34,7 +34,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "authelia" "authelia/authelia"; then
-    $STD apt update
+    apt_update_safe
     $STD apt -y upgrade
     fetch_and_deploy_gh_release "authelia" "authelia/authelia" "binary"
     msg_ok "Updated successfully!"

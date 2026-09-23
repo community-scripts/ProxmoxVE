@@ -34,7 +34,7 @@ function update_script() {
   setup_mariadb
 
   msg_info "Updating ITSM-NG"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   chown -R www-data:www-data /var/lib/itsm-ng
   mkdir -p /usr/share/itsm-ng/css/palettes

@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating TasmoAdmin"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated TasmoAdmin"
   msg_ok "Updated successfully!"

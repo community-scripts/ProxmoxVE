@@ -46,7 +46,7 @@ Components: ${RELEASE_REPO}
 Signed-By: /usr/share/keyrings/mysql.gpg
 EOF
 fi
-$STD apt update
+apt_update_safe
 export DEBIAN_FRONTEND=noninteractive
 $STD apt install -y \
   mysql-community-client \

@@ -56,7 +56,7 @@ Pin:release a=testing
 Pin-Priority: 450
 EOF
     [[ -f /etc/apt/preferences.d/immich ]] && rm /etc/apt/preferences.d/immich
-    $STD apt update
+    apt_update_safe
     msg_ok "Added Debian Testing repo"
   fi
 

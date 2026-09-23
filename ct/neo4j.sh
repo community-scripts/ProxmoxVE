@@ -33,7 +33,7 @@ function update_script() {
   JAVA_VERSION="21" setup_java
 
   msg_info "Updating ${APP}"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated successfully!"
   exit

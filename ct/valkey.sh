@@ -39,7 +39,7 @@ update_deb_based() {
       exit
   fi
   msg_info "Updating Valkey LXC"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated Valkey LXC"
   msg_ok "Updated successfully!"

@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Stopped Service"
 
     msg_info "Updating Container"
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade -y
     msg_ok "Updated Container"
 

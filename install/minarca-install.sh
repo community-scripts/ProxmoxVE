@@ -30,7 +30,7 @@ Components: main
 Architectures: amd64
 Signed-By: /usr/share/keyrings/minarca-keyring.gpg
 EOF
-$STD apt update
+apt_update_safe
 $STD apt install -y minarca-server
 msg_ok "Installed Minarca"
 

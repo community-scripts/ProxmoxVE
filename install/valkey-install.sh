@@ -15,7 +15,7 @@ update_os
 
 setup_deb_based() {
   msg_info "Installing Valkey"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y valkey openssl
   sed -i 's/^bind .*/bind 0.0.0.0/' /etc/valkey/valkey.conf
 

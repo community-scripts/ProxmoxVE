@@ -38,7 +38,7 @@ function update_script() {
   "trixie"
   
   msg_info "Updating SFTPGo"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated SFTPGo"
   msg_ok "Updated successfully!"

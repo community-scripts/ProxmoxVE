@@ -36,7 +36,7 @@ function update_script() {
   msg_ok "Stopped Service"
 
   msg_info "Updating Zammad"
-  $STD apt update
+  apt_update_safe
   $STD apt-mark hold zammad
   $STD apt upgrade -y
   $STD apt-mark unhold zammad

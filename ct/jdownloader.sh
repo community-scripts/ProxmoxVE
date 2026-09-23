@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating Container OS"
-  $STD apt update
+  apt_update_safe
   $STD apt -y upgrade
   msg_ok "Updated Container OS"
 

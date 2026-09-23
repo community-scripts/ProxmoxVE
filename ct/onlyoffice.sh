@@ -33,7 +33,7 @@ function update_script() {
   fi
 
   msg_info "Updating OnlyOffice Document Server"
-  $STD apt update
+  apt_update_safe
   $STD apt -y --only-upgrade install onlyoffice-documentserver
   msg_ok "Updated OnlyOffice Document Server"
 

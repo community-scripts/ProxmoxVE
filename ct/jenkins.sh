@@ -34,7 +34,7 @@ function update_script() {
   JAVA_VERSION="21" setup_java
 
   msg_info "Updating Jenkins"
-  $STD apt update
+  apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Jenkins"
   msg_ok "Updated successfully!"

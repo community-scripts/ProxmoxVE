@@ -54,7 +54,7 @@ Suites: squeeze
 Components: main
 Signed-By: /usr/share/keyrings/onlyoffice.gpg
 EOF
-  $STD apt update
+  apt_update_safe
   msg_ok "GPG Key Added"
 else
   msg_error "Failed to download or verify GPG key from $KEY_URL"
