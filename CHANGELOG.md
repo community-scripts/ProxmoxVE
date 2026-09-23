@@ -555,6 +555,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Run Borg-UI with a single gunicorn worker [@MickLesk](https://github.com/MickLesk) ([#17445](https://github.com/community-scripts/ProxmoxVE/pull/17445))
     - immich: keep geodata linked and the build deps present on update [@MickLesk](https://github.com/MickLesk) ([#17438](https://github.com/community-scripts/ProxmoxVE/pull/17438))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Scanopy [@MickLesk](https://github.com/MickLesk) ([#16797](https://github.com/community-scripts/ProxmoxVE/pull/16797))
+
 ### 💾 Core
 
   - VM's: report a finished VM as done, not aborted [@MickLesk](https://github.com/MickLesk) ([core#65](https://github.com/community-scripts/core/pull/65))
