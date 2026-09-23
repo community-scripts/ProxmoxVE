@@ -550,7 +550,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - tools: raise pnpm/yarn fetch timeout and lower network concurrency [@MickLesk](https://github.com/MickLesk) ([core#59](https://github.com/community-scripts/core/pull/59))
+  - VM-Core: stop discarding cloud-init error messages [@MickLesk](https://github.com/MickLesk) ([core#60](https://github.com/community-scripts/core/pull/60))
+- tools: raise pnpm/yarn fetch timeout and lower network concurrency [@MickLesk](https://github.com/MickLesk) ([core#59](https://github.com/community-scripts/core/pull/59))
 
 ## 2026-09-22
 
