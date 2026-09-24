@@ -65,6 +65,7 @@ msg_info "Building Frontend"
 cd /opt/journiv/frontend
 $STD npm ci
 $STD npm run build
+cd /opt/journiv
 msg_ok "Built Frontend"
 
 msg_info "Initializing Database"

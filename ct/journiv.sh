@@ -50,6 +50,7 @@ function update_script() {
     cd /opt/journiv/frontend
     $STD npm ci
     $STD npm run build
+    cd /opt/journiv
     msg_ok "Built Frontend"
 
     grep -q '^ALLOW_INSECURE_COOKIE_AUTH_OVER_HTTP=' /opt/journiv.env ||
