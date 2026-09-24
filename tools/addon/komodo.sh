@@ -221,7 +221,7 @@ function install() {
   echo -e "  User    : admin"
   echo -e "  Password: ${ADMIN_PASSWORD}"
   echo ""
-  msg_info "Credentials saved to ~/komodo.creds"
+  msg_ok "Credentials saved to ~/komodo.creds"
 }
 
 # ==============================================================================
