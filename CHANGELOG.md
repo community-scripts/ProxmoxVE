@@ -555,6 +555,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Declare the RomM filesystem structure required since 5.3.0 [@MickLesk](https://github.com/MickLesk) ([#17480](https://github.com/community-scripts/ProxmoxVE/pull/17480))
     - general: use apt_update_safe instead of aborting on a failed apt update [@MickLesk](https://github.com/MickLesk) ([#17462](https://github.com/community-scripts/ProxmoxVE/pull/17462))
 
+  - #### 🔧 Refactor
+
+    - Journiv: Serve Node Frontend and add HTTP Auth .env [@MickLesk](https://github.com/MickLesk) ([#17479](https://github.com/community-scripts/ProxmoxVE/pull/17479))
+
 ### 💾 Core
 
   - core: accept an off-subnet gateway for /31 and /32 [@MickLesk](https://github.com/MickLesk) ([core#70](https://github.com/community-scripts/core/pull/70))
