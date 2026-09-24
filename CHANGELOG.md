@@ -554,6 +554,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - general: use apt_update_safe instead of aborting on a failed apt update [@MickLesk](https://github.com/MickLesk) ([#17462](https://github.com/community-scripts/ProxmoxVE/pull/17462))
 
+### 💾 Core
+
+  - core: accept an off-subnet gateway for /31 and /32 [@MickLesk](https://github.com/MickLesk) ([core#70](https://github.com/community-scripts/core/pull/70))
+
 ## 2026-09-23
 
 ### 🚀 Updated Scripts
