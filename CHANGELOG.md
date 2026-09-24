@@ -546,6 +546,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-24
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - general: use apt_update_safe instead of aborting on a failed apt update [@MickLesk](https://github.com/MickLesk) ([#17462](https://github.com/community-scripts/ProxmoxVE/pull/17462))
+
 ## 2026-09-23
 
 ### 🚀 Updated Scripts
