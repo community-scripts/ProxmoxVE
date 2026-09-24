@@ -36,7 +36,7 @@ function update_script() {
 
   msg_warn "⚠️  ${APP} has been migrated to an addon script."
   echo ""
-  msg_info "This is a one-time migration. After this, you can update ${APP} anytime with:"
+  msg_custom "ℹ️" "${YW}" "This is a one-time migration. After this, you can update ${APP} anytime with:"
   echo -e "${TAB}${TAB}${GN}update_komodo${CL}  or  ${GN}bash <(curl -fsSL ${ADDON_SCRIPT})${CL}"
   echo ""
   read -r -p "${TAB}Migrate update function now? [y/N]: " CONFIRM
