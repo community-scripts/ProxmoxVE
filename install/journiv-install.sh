@@ -53,6 +53,8 @@ EXPORT_DIR=/opt/journiv_data/exports
 IMPORT_TEMP_DIR=/opt/journiv_data/imports/temp
 DOMAIN_NAME=${LOCAL_IP}
 DOMAIN_SCHEME=http
+# Journiv refuses to start on plain HTTP without this.
+ALLOW_INSECURE_COOKIE_AUTH_OVER_HTTP=true
 PYTHONPATH=/opt/journiv
 EOF
 chmod 600 /opt/journiv.env
