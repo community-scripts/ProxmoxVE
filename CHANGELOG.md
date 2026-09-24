@@ -552,6 +552,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Declare the RomM filesystem structure required since 5.3.0 [@MickLesk](https://github.com/MickLesk) ([#17480](https://github.com/community-scripts/ProxmoxVE/pull/17480))
     - general: use apt_update_safe instead of aborting on a failed apt update [@MickLesk](https://github.com/MickLesk) ([#17462](https://github.com/community-scripts/ProxmoxVE/pull/17462))
 
 ### 💾 Core
