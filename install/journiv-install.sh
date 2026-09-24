@@ -60,6 +60,13 @@ EOF
 chmod 600 /opt/journiv.env
 msg_ok "Configured Journiv"
 
+NODE_VERSION="24" setup_nodejs
+msg_info "Building Frontend"
+cd /opt/journiv/frontend
+$STD npm ci
+$STD npm run build
+msg_ok "Built Frontend"
+
 msg_info "Initializing Database"
 set -a
 source /opt/journiv.env
