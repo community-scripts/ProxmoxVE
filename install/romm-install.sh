@@ -117,9 +117,11 @@ cat <<'EOF' >/var/lib/romm/config/config.yml
 #     gc: ngc
 #     ps1: psx
 
-# The folder name where your roms are located (relative to library path)
-# filesystem:
-#   roms_folder: 'roms'
+# Required since 5.3.0: RomM refuses to start without an explicit structure.
+filesystem:
+  structure:
+    default: "roms/{platform}/{game}"
+    firmware: "bios/{platform}"
 
 # scan:
 #   priority:

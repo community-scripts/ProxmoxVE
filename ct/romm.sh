@@ -218,6 +218,18 @@ DROPEOF
     fi
     msg_ok "Updated ROMM"
 
+    # 5.3.0 refuses to start without filesystem.structure and dropped
+    # roms_folder/firmware_folder. A custom layout cannot be inferred.
+    ROMM_CFG=/var/lib/romm/config/config.yml
+    if [[ -f "$ROMM_CFG" ]] && ! grep -qE '^[[:space:]]*structure:' "$ROMM_CFG"; then
+      if grep -qE '^[[:space:]]*(roms_folder|firmware_folder):' "$ROMM_CFG"; then
+        msg_warn "RomM 5.3.0 removed roms_folder/firmware_folder - replace them with filesystem.structure in ${ROMM_CFG}"
+      else
+        printf '\nfilesystem:\n  structure:\n    default: "roms/{platform}/{game}"\n    firmware: "bios/{platform}"\n' >>"$ROMM_CFG"
+        msg_ok "Added filesystem.structure to ${ROMM_CFG}"
+      fi
+    fi
+
     msg_info "Starting Services"
     systemctl start romm-backend romm-worker romm-scheduler romm-watcher
     msg_ok "Started Services"
