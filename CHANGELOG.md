@@ -548,6 +548,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-25
 
+### 🆕 New Scripts
+
+  - RustFS ([#17499](https://github.com/community-scripts/ProxmoxVE/pull/17499))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
