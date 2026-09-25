@@ -57,8 +57,13 @@ $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox config --set "BASE_U
 msg_ok "Initialized ArchiveBox"
 
 msg_info "Installing Extractors"
-$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install
-msg_ok "Installed Extractors"
+# One unreachable extractor must not sink the install: @postlight/parser pulls a git
+# dependency that npm refuses, and readability covers the same job.
+if $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install; then
+  msg_ok "Installed Extractors"
+else
+  msg_warn "Some extractors stayed unavailable - ArchiveBox runs without them"
+fi
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/archivebox.service

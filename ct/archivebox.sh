@@ -83,7 +83,9 @@ EOF
   ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
   cd /opt/archivebox/data
   $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
-  $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install
+  # npm refuses the git dependency behind @postlight/parser, so treat extractors as optional.
+  $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install ||
+    msg_warn "Some extractors stayed unavailable - ArchiveBox runs without them"
   msg_ok "Updated ArchiveBox"
 
   msg_info "Starting Service"
