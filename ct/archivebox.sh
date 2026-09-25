@@ -13,7 +13,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
@@ -31,20 +31,28 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
-  export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"
-  PYTHON_VERSION="3.13" setup_uv
+  NODE_VERSION="22" setup_nodejs
+  setup_uv
 
-  ensure_dependencies chromium
+  ensure_dependencies chromium ripgrep tesseract-ocr tesseract-ocr-eng imagemagick ffmpeg unzip wget
 
   msg_info "Stopping Service"
   systemctl stop archivebox
   msg_ok "Stopped Service"
 
-  # Earlier installs used the system interpreter, which caps ArchiveBox at 0.7.4.
+  # Earlier installs used python3.11, which caps ArchiveBox at 0.7.4.
   if [[ ! -x /opt/archivebox/venv/bin/archivebox ]]; then
     msg_info "Moving ArchiveBox to its own Python 3.13 environment"
-    $STD uv venv --python 3.13 /opt/archivebox/venv
+    # The distro interpreter first: a uv-managed one lands where the service user cannot exec it.
+    local py="/usr/bin/python3.13"
+    if [[ ! -x "$py" ]]; then
+      ensure_dependencies python3.13 || true
+    fi
+    if [[ ! -x "$py" ]]; then
+      $STD uv python install --install-dir /opt/archivebox/python 3.13
+      py="$(UV_PYTHON_INSTALL_DIR=/opt/archivebox/python uv python find 3.13)"
+    fi
+    $STD uv venv --python "$py" /opt/archivebox/venv
     # Keep whatever port this container already answers on, or a reverse proxy in front
     # of it would silently stop resolving.
     local port
@@ -69,13 +77,13 @@ EOF
   fi
 
   msg_info "Updating ArchiveBox"
-  $STD uv pip install --python /opt/archivebox/venv/bin/python --upgrade archivebox playwright
-  $STD /opt/archivebox/venv/bin/playwright install-deps chromium
-  chown -R archivebox:archivebox /opt/archivebox/python /opt/archivebox/venv
+  $STD uv pip install --python /opt/archivebox/venv/bin/python --upgrade archivebox
+  chown -R archivebox:archivebox /opt/archivebox
   # Without this a shell still reaches the old 0.7.4 entry point against a 0.9 collection.
   ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
   cd /opt/archivebox/data
   $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
+  $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install
   msg_ok "Updated ArchiveBox"
 
   msg_info "Starting Service"

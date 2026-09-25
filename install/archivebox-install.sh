@@ -14,29 +14,34 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
+# ArchiveBox resolves these through its env provider, so it never has to reach for apt itself.
 $STD apt-get install -y \
   git \
-  libssl-dev \
-  libldap2-dev \
-  libsasl2-dev \
   procps \
   dnsutils \
+  chromium \
   ripgrep \
-  chromium
+  tesseract-ocr \
+  tesseract-ocr-eng \
+  imagemagick \
+  ffmpeg \
+  unzip \
+  wget \
+  python3.13
 msg_ok "Installed Dependencies"
 
+# No NODE_MODULE: 0.9 pulls single-file and readability itself, and postlight-parser is gone.
 NODE_VERSION="22" setup_nodejs
-UV_PYTHON_INSTALL_DIR="/opt/archivebox/python" PYTHON_VERSION="3.13" setup_uv
+setup_uv
 
 msg_info "Installing ArchiveBox"
-mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
+mkdir -p /opt/archivebox/data
 $STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
-$STD uv venv --python 3.13 /opt/archivebox/venv
-$STD uv pip install --python /opt/archivebox/venv/bin/python archivebox playwright
-$STD /opt/archivebox/venv/bin/playwright install-deps chromium
+# The distro interpreter: a uv-managed one lands where the service user cannot execute it.
+$STD uv venv --python /usr/bin/python3.13 /opt/archivebox/venv
+$STD uv pip install --python /opt/archivebox/venv/bin/python archivebox
 ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
 chown -R archivebox:archivebox /opt/archivebox
-chmod -R 755 /opt/archivebox/data
 msg_ok "Installed ArchiveBox"
 
 msg_info "Initializing ArchiveBox"
@@ -47,7 +52,13 @@ $STD sudo -u archivebox env \
   DJANGO_SUPERUSER_EMAIL=admin@archivebox.local \
   DJANGO_SUPERUSER_PASSWORD=community-scripts.org \
   /opt/archivebox/venv/bin/archivebox manage createsuperuser --noinput
+# Without a pinned canonical URL the admin greets every visitor with a red banner.
+$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox config --set "BASE_URL=http://$(get_ip):5797"
 msg_ok "Initialized ArchiveBox"
+
+msg_info "Installing Extractors"
+$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install
+msg_ok "Installed Extractors"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/archivebox.service
