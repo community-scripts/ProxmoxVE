@@ -14,7 +14,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-#var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
+#var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,12 +32,12 @@ function update_script() {
     exit
   fi
 
-  if GH_INCLUDE_PRERELEASE=1 check_for_gh_release "rustfs" "rustfs/rustfs"; then
+  if check_for_gh_release "rustfs" "rustfs/rustfs"; then
     msg_info "Stopping Service"
     systemctl stop rustfs
     msg_ok "Stopped Service"
 
-    GH_INCLUDE_PRERELEASE=1 CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rustfs" "rustfs/rustfs" "prebuild" "latest" "/opt/rustfs" "rustfs-linux-$(arch_resolve x86_64 aarch64)-gnu-*.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rustfs" "rustfs/rustfs" "prebuild" "latest" "/opt/rustfs" "rustfs-linux-$(arch_resolve x86_64 aarch64)-gnu-*.zip"
     chmod +x /opt/rustfs/rustfs
 
     msg_info "Starting Service"
