@@ -49,9 +49,14 @@ function update_script() {
     msg_ok "Built Ignis"
 
     msg_info "Checking Obsidian Web Assets"
-    OBSIDIAN_VERSION=$(grep -oP 'OBSIDIAN_VERSION=\K[0-9.]+' /opt/ignis/apps/ignis-server/Dockerfile | head -n1)
-    [[ -z "$OBSIDIAN_VERSION" ]] && OBSIDIAN_VERSION="$(cat /opt/ignis_data/obsidian.version 2>/dev/null)"
-    if [[ -n "$OBSIDIAN_VERSION" && "$OBSIDIAN_VERSION" != "$(cat /opt/ignis_data/obsidian.version 2>/dev/null)" ]]; then
+    # From the release tag (0.8.13+obsidian.1.13.7): upstream renamed the Dockerfile variable.
+    OBSIDIAN_VERSION=""
+    [[ "${IGNIS_BUILD:-}" == *obsidian.* ]] && OBSIDIAN_VERSION="${IGNIS_BUILD##*obsidian.}"
+    if [[ ! "$OBSIDIAN_VERSION" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+      OBSIDIAN_VERSION="$(grep -ohP '(OBSIDIAN_VERSION|IGNIS_OBSIDIAN_PIN)=\K[0-9.]+' /opt/ignis/apps/ignis-server/Dockerfile 2>/dev/null | head -n1 || true)"
+    fi
+    [[ "$OBSIDIAN_VERSION" =~ ^[0-9]+(\.[0-9]+)+$ ]] || msg_warn "Could not determine the paired Obsidian version - keeping the installed assets"
+    if [[ "$OBSIDIAN_VERSION" =~ ^[0-9]+(\.[0-9]+)+$ && "$OBSIDIAN_VERSION" != "$(cat /opt/ignis_data/obsidian.version 2>/dev/null)" ]]; then
       rm -rf /opt/ignis_data/obsidian-app
       mkdir -p /opt/ignis_data/obsidian-app
       curl -fsSL -o /tmp/obsidian.asar.gz "https://github.com/obsidianmd/obsidian-releases/releases/download/v${OBSIDIAN_VERSION}/obsidian-${OBSIDIAN_VERSION}.asar.gz"

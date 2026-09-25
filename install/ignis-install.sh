@@ -32,8 +32,16 @@ msg_ok "Built Ignis"
 
 msg_info "Downloading Obsidian Web Assets"
 mkdir -p /opt/ignis_data/{obsidian-app,vaults,data}
-OBSIDIAN_VERSION=$(grep -oP 'OBSIDIAN_VERSION=\K[0-9.]+' /opt/ignis/apps/ignis-server/Dockerfile | head -n1)
-[[ -z "$OBSIDIAN_VERSION" ]] && OBSIDIAN_VERSION="1.12.7"
+# From the release tag (0.8.13+obsidian.1.13.7): upstream renamed the Dockerfile variable.
+OBSIDIAN_VERSION=""
+[[ "${IGNIS_BUILD:-}" == *obsidian.* ]] && OBSIDIAN_VERSION="${IGNIS_BUILD##*obsidian.}"
+if [[ ! "$OBSIDIAN_VERSION" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+  OBSIDIAN_VERSION="$(grep -ohP '(OBSIDIAN_VERSION|IGNIS_OBSIDIAN_PIN)=\K[0-9.]+' /opt/ignis/apps/ignis-server/Dockerfile 2>/dev/null | head -n1 || true)"
+fi
+if [[ ! "$OBSIDIAN_VERSION" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+  msg_error "Could not determine which Obsidian version this Ignis build pairs with"
+  exit 1
+fi
 curl -fsSL -o /tmp/obsidian.asar.gz "https://github.com/obsidianmd/obsidian-releases/releases/download/v${OBSIDIAN_VERSION}/obsidian-${OBSIDIAN_VERSION}.asar.gz"
 gunzip -f /tmp/obsidian.asar.gz
 $STD asar extract /tmp/obsidian.asar /opt/ignis_data/obsidian-app
