@@ -554,6 +554,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Ignis: take the Obsidian version from release tag [@MickLesk](https://github.com/MickLesk) ([#17503](https://github.com/community-scripts/ProxmoxVE/pull/17503))
+
   - #### 🔧 Refactor
 
     - Refactor: Umbrel OS VM [@MickLesk](https://github.com/MickLesk) ([#17505](https://github.com/community-scripts/ProxmoxVE/pull/17505))
