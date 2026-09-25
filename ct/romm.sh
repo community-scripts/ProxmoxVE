@@ -40,9 +40,25 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
+  # RomM 5.3.0 replaced rq-scheduler with `rq cron` and moved scans to their own queue
+  if grep -q rqscheduler /etc/systemd/system/romm-scheduler.service 2>/dev/null; then
+    msg_info "Migrating RQ services"
+    sed -i -e '/RQ_REDIS_/d' \
+      -e 's|^ExecStart=.*|ExecStart=/opt/romm/.venv/bin/rq cron --path /opt/romm/backend --url redis://127.0.0.1:6379/0 tasks.cron_config|' \
+      /etc/systemd/system/romm-scheduler.service
+    sed -i 's|bin/rq worker --path|bin/rq worker --with-scheduler --path|' /etc/systemd/system/romm-worker.service
+    sed -e 's|^Description=.*|Description=RomM RQ Scan Worker|' \
+      -e 's|^ExecStart=.*|ExecStart=/opt/romm/.venv/bin/rq worker --with-scheduler --path /opt/romm/backend --url redis://127.0.0.1:6379/0 scans|' \
+      /etc/systemd/system/romm-worker.service >/etc/systemd/system/romm-scan-worker.service
+    systemctl daemon-reload
+    systemctl enable -q --now romm-scan-worker
+    systemctl restart romm-worker romm-scheduler
+    msg_ok "Migrated RQ services"
+  fi
+
   if check_for_gh_release "romm" "rommapp/romm"; then
     msg_info "Stopping Services"
-    systemctl stop romm-backend romm-worker romm-scheduler romm-watcher
+    systemctl stop romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
     msg_ok "Stopped Services"
 
     create_backup /opt/romm/.env
@@ -231,14 +247,14 @@ DROPEOF
     fi
 
     msg_info "Starting Services"
-    systemctl start romm-backend romm-worker romm-scheduler romm-watcher
+    systemctl start romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
     msg_ok "Started Services"
     msg_ok "Updated successfully"
   fi
 
   if check_for_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "v4.2.3"; then
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
-    systemctl restart romm-backend romm-worker romm-scheduler romm-watcher
+    systemctl restart romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
     msg_ok "Updated EmulatorJS successfully"
   fi
   exit

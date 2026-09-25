@@ -381,7 +381,26 @@ Type=simple
 WorkingDirectory=/opt/romm/backend
 EnvironmentFile=/opt/romm/.env
 Environment="PYTHONPATH=/opt/romm/backend"
-ExecStart=/opt/romm/.venv/bin/rq worker --path /opt/romm/backend --url redis://127.0.0.1:6379/0 high default low
+ExecStart=/opt/romm/.venv/bin/rq worker --with-scheduler --path /opt/romm/backend --url redis://127.0.0.1:6379/0 high default low
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF >/etc/systemd/system/romm-scan-worker.service
+[Unit]
+Description=RomM RQ Scan Worker
+After=network.target mariadb.service redis-server.service romm-backend.service
+Requires=mariadb.service redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/romm/backend
+EnvironmentFile=/opt/romm/.env
+Environment="PYTHONPATH=/opt/romm/backend"
+ExecStart=/opt/romm/.venv/bin/rq worker --with-scheduler --path /opt/romm/backend --url redis://127.0.0.1:6379/0 scans
 Restart=on-failure
 RestartSec=5
 
@@ -400,9 +419,7 @@ Type=simple
 WorkingDirectory=/opt/romm/backend
 EnvironmentFile=/opt/romm/.env
 Environment="PYTHONPATH=/opt/romm/backend"
-Environment="RQ_REDIS_HOST=127.0.0.1"
-Environment="RQ_REDIS_PORT=6379"
-ExecStart=/opt/romm/.venv/bin/rqscheduler --path /opt/romm/backend
+ExecStart=/opt/romm/.venv/bin/rq cron --path /opt/romm/backend --url redis://127.0.0.1:6379/0 tasks.cron_config
 Restart=on-failure
 RestartSec=5
 
@@ -429,7 +446,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now romm-backend romm-worker romm-scheduler romm-watcher
+systemctl enable -q --now romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
 msg_ok "Created Services"
 
 motd_ssh
