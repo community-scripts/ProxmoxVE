@@ -48,8 +48,8 @@ msg_info "Initializing ArchiveBox"
 cd /opt/archivebox/data
 $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
 $STD sudo -u archivebox env \
-  DJANGO_SUPERUSER_USERNAME=admin \
-  DJANGO_SUPERUSER_EMAIL=admin@archivebox.local \
+  DJANGO_SUPERUSER_USERNAME=archivebox \
+  DJANGO_SUPERUSER_EMAIL=archivebox@archivebox.local \
   DJANGO_SUPERUSER_PASSWORD=community-scripts.org \
   /opt/archivebox/venv/bin/archivebox manage createsuperuser --noinput
 # Without a pinned canonical URL the admin greets every visitor with a red banner.
