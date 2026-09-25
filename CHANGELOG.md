@@ -550,7 +550,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - incus: do not let an install script block on an invisible prompt [@MickLesk](https://github.com/MickLesk) ([core#71](https://github.com/community-scripts/core/pull/71))
+  - tel: report progress from installs only, not updates [@MickLesk](https://github.com/MickLesk) ([core#72](https://github.com/community-scripts/core/pull/72))
+- incus: do not let an install script block on an invisible prompt [@MickLesk](https://github.com/MickLesk) ([core#71](https://github.com/community-scripts/core/pull/71))
 
 ## 2026-09-24
 
