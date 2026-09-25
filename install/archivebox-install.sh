@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   git \
-  expect \
   libssl-dev \
   libldap2-dev \
   libsasl2-dev \
@@ -26,50 +25,32 @@ $STD apt-get install -y \
   chromium
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python Dependencies"
-$STD apt-get install -y \
-  python3-ldap \
-  python3-msgpack \
-  python3-regex
-msg_ok "Installed Python Dependencies"
-
 NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
+# ArchiveBox drops privileges on import, so its interpreter may not sit in root's home.
+export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"
 PYTHON_VERSION="3.13" setup_uv
-
-msg_info "Installing Playwright"
-$STD uv pip install playwright --system --break-system-packages
-$STD playwright install-deps chromium
-msg_ok "Installed Playwright"
 
 msg_info "Installing ArchiveBox"
 mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
 $STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
-chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
+# A venv, not --system: the system interpreter is 3.11 and silently caps us at 0.7.4.
+$STD uv venv --python 3.13 /opt/archivebox/venv
+$STD uv pip install --python /opt/archivebox/venv/bin/python archivebox playwright
+$STD /opt/archivebox/venv/bin/playwright install-deps chromium
+ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
+chown -R archivebox:archivebox /opt/archivebox
 chmod -R 755 /opt/archivebox/data
-$STD uv pip install archivebox --system --break-system-packages
-cd /opt/archivebox/data
-expect <<EOF
-set timeout -1
-log_user 0
-
-spawn sudo -u archivebox playwright install chromium
-spawn sudo -u archivebox archivebox setup
-
-expect "Username"
-send "\r"
-
-expect "Email address"
-send "\r"
-
-expect "Password"
-send "community-scripts.org\r"
-
-expect "Password (again)"
-send "community-scripts.org\r"
-
-expect eof
-EOF
 msg_ok "Installed ArchiveBox"
+
+msg_info "Initializing ArchiveBox"
+cd /opt/archivebox/data
+$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
+$STD sudo -u archivebox env \
+  DJANGO_SUPERUSER_USERNAME=admin \
+  DJANGO_SUPERUSER_EMAIL=admin@archivebox.local \
+  DJANGO_SUPERUSER_PASSWORD=community-scripts.org \
+  /opt/archivebox/venv/bin/archivebox manage createsuperuser --noinput
+msg_ok "Initialized ArchiveBox"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/archivebox.service
@@ -80,7 +61,7 @@ After=network.target
 [Service]
 User=archivebox
 WorkingDirectory=/opt/archivebox/data
-ExecStart=/usr/local/bin/archivebox server 0.0.0.0:8000
+ExecStart=/opt/archivebox/venv/bin/archivebox server 0.0.0.0:5797
 Restart=always
 
 [Install]
