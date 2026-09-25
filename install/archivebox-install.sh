@@ -14,62 +14,56 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
+# ArchiveBox resolves these through its env provider, so it never has to reach for apt itself.
 $STD apt-get install -y \
   git \
-  expect \
-  libssl-dev \
-  libldap2-dev \
-  libsasl2-dev \
   procps \
   dnsutils \
+  chromium \
   ripgrep \
-  chromium
+  tesseract-ocr \
+  tesseract-ocr-eng \
+  imagemagick \
+  ffmpeg \
+  unzip \
+  wget \
+  python3.13
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python Dependencies"
-$STD apt-get install -y \
-  python3-ldap \
-  python3-msgpack \
-  python3-regex
-msg_ok "Installed Python Dependencies"
-
-NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
-PYTHON_VERSION="3.13" setup_uv
-
-msg_info "Installing Playwright"
-$STD uv pip install playwright --system --break-system-packages
-$STD playwright install-deps chromium
-msg_ok "Installed Playwright"
+# No NODE_MODULE: 0.9 pulls single-file and readability itself, and postlight-parser is gone.
+NODE_VERSION="22" setup_nodejs
+setup_uv
 
 msg_info "Installing ArchiveBox"
-mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
+mkdir -p /opt/archivebox/data
 $STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
-chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
-chmod -R 755 /opt/archivebox/data
-$STD uv pip install archivebox --system --break-system-packages
-cd /opt/archivebox/data
-expect <<EOF
-set timeout -1
-log_user 0
-
-spawn sudo -u archivebox playwright install chromium
-spawn sudo -u archivebox archivebox setup
-
-expect "Username"
-send "\r"
-
-expect "Email address"
-send "\r"
-
-expect "Password"
-send "community-scripts.org\r"
-
-expect "Password (again)"
-send "community-scripts.org\r"
-
-expect eof
-EOF
+# The distro interpreter: a uv-managed one lands where the service user cannot execute it.
+$STD uv venv --python /usr/bin/python3.13 /opt/archivebox/venv
+$STD uv pip install --python /opt/archivebox/venv/bin/python archivebox
+ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
+chown -R archivebox:archivebox /opt/archivebox
 msg_ok "Installed ArchiveBox"
+
+msg_info "Initializing ArchiveBox"
+cd /opt/archivebox/data
+$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
+$STD sudo -u archivebox env \
+  DJANGO_SUPERUSER_USERNAME=archivebox \
+  DJANGO_SUPERUSER_EMAIL=archivebox@archivebox.local \
+  DJANGO_SUPERUSER_PASSWORD=community-scripts.org \
+  /opt/archivebox/venv/bin/archivebox manage createsuperuser --noinput
+# Without a pinned canonical URL the admin greets every visitor with a red banner.
+$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox config --set "BASE_URL=http://$(get_ip):5797"
+msg_ok "Initialized ArchiveBox"
+
+msg_info "Installing Extractors"
+# One unreachable extractor must not sink the install: @postlight/parser pulls a git
+# dependency that npm refuses, and readability covers the same job.
+if $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install; then
+  msg_ok "Installed Extractors"
+else
+  msg_warn "Some extractors stayed unavailable - ArchiveBox runs without them"
+fi
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/archivebox.service
@@ -80,7 +74,7 @@ After=network.target
 [Service]
 User=archivebox
 WorkingDirectory=/opt/archivebox/data
-ExecStart=/usr/local/bin/archivebox server 0.0.0.0:8000
+ExecStart=/opt/archivebox/venv/bin/archivebox server 0.0.0.0:5797
 Restart=always
 
 [Install]

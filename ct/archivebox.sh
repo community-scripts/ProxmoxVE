@@ -13,7 +13,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
@@ -31,24 +31,61 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
-  PYTHON_VERSION="3.13" setup_uv
+  NODE_VERSION="22" setup_nodejs
+  setup_uv
 
-  ensure_dependencies chromium
+  ensure_dependencies chromium ripgrep tesseract-ocr tesseract-ocr-eng imagemagick ffmpeg unzip wget
 
   msg_info "Stopping Service"
   systemctl stop archivebox
   msg_ok "Stopped Service"
 
-  msg_info "Upgrading Playwright"
-  $STD uv pip install playwright --system --break-system-packages
-  $STD playwright install-deps chromium
-  msg_ok "Upgraded Playwright"
+  # Earlier installs used python3.11, which caps ArchiveBox at 0.7.4.
+  if [[ ! -x /opt/archivebox/venv/bin/archivebox ]]; then
+    msg_info "Moving ArchiveBox to its own Python 3.13 environment"
+    # The distro interpreter first: a uv-managed one lands where the service user cannot exec it.
+    local py="/usr/bin/python3.13"
+    if [[ ! -x "$py" ]]; then
+      ensure_dependencies python3.13 || true
+    fi
+    if [[ ! -x "$py" ]]; then
+      $STD uv python install --install-dir /opt/archivebox/python 3.13
+      py="$(UV_PYTHON_INSTALL_DIR=/opt/archivebox/python uv python find 3.13)"
+    fi
+    $STD uv venv --python "$py" /opt/archivebox/venv
+    # Keep whatever port this container already answers on, or a reverse proxy in front
+    # of it would silently stop resolving.
+    local port
+    port="$(awk -F: '/^ExecStart=/ {print $NF}' /etc/systemd/system/archivebox.service 2>/dev/null)"
+    [[ "$port" =~ ^[0-9]+$ ]] || port=5797
+    cat <<EOF >/etc/systemd/system/archivebox.service
+[Unit]
+Description=ArchiveBox Server
+After=network.target
+
+[Service]
+User=archivebox
+WorkingDirectory=/opt/archivebox/data
+ExecStart=/opt/archivebox/venv/bin/archivebox server 0.0.0.0:${port}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    msg_ok "Moved ArchiveBox to its own Python 3.13 environment (port ${port})"
+  fi
 
   msg_info "Updating ArchiveBox"
+  $STD uv pip install --python /opt/archivebox/venv/bin/python --upgrade archivebox
+  chown -R archivebox:archivebox /opt/archivebox
+  # Without this a shell still reaches the old 0.7.4 entry point against a 0.9 collection.
+  ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
   cd /opt/archivebox/data
-  $STD uv pip install --system --break-system-packages --upgrade --no-reinstall archivebox
-  sudo -u archivebox archivebox init
+  $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
+  # npm refuses the git dependency behind @postlight/parser, so treat extractors as optional.
+  $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox install ||
+    msg_warn "Some extractors stayed unavailable - ArchiveBox runs without them"
   msg_ok "Updated ArchiveBox"
 
   msg_info "Starting Service"
@@ -65,4 +102,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:8000/admin/login${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5797/admin/${CL}"
