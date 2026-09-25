@@ -556,6 +556,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Umbrel OS VM [@MickLesk](https://github.com/MickLesk) ([#17505](https://github.com/community-scripts/ProxmoxVE/pull/17505))
     - Docker-LXC: remove Portainer installation from install [@MickLesk](https://github.com/MickLesk) ([#17493](https://github.com/community-scripts/ProxmoxVE/pull/17493))
 
 ### 💾 Core
