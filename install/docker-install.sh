@@ -14,27 +14,7 @@ network_check
 update_os
 
 setup_deb_based() {
-  PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
-
   setup_docker
-
-  if prompt_confirm "${TAB3}Would you like to install Portainer (UI) via the community-scripts addon?" "n" 60; then
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)" <<<"y"
-  else
-    read -r -p "${TAB3}Would you like to install the Portainer Agent (for remote management)? <y/N> " prompt_agent
-    if [[ ${prompt_agent,,} =~ ^(y|yes)$ ]]; then
-      msg_info "Installing Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"
-      $STD docker run -d \
-        -p 9001:9001 \
-        --name portainer_agent \
-        --restart=always \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v /var/lib/docker/volumes:/var/lib/docker/volumes \
-        portainer/agent
-      msg_ok "Installed Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"
-    fi
-  fi
-
   read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
   case "${socket_choice,,}" in
   l)
@@ -89,8 +69,6 @@ setup_alpine() {
     curl -fsSL https://api.github.com/repos/"$1"/releases/latest | grep '"tag_name":' | cut -d'"' -f4
   }
   DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
-  PORTAINER_AGENT_LATEST_VERSION=$(get_latest_release "portainer/agent")
-
   read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
@@ -100,24 +78,6 @@ setup_alpine() {
     chmod +x "$DOCKER_CONFIG"/cli-plugins/docker-compose
     msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
   fi
-
-  if prompt_confirm "${TAB3}Would you like to install Portainer (UI) via the community-scripts addon?" "n" 60; then
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)" <<<"y"
-  else
-    read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
-    if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-      msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
-      $STD docker run -d \
-        -p 9001:9001 \
-        --name portainer_agent \
-        --restart=always \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v /var/lib/docker/volumes:/var/lib/docker/volumes \
-        portainer/agent
-      msg_ok "Installed Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"
-    fi
-  fi
-
   read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Exposing Docker TCP socket"
@@ -129,7 +89,6 @@ setup_alpine() {
 }
 
 run_os_setup
-
 motd_ssh
 customize
 cleanup_lxc
