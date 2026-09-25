@@ -25,15 +25,12 @@ $STD apt-get install -y \
   chromium
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
-# ArchiveBox drops privileges on import, so its interpreter may not sit in root's home.
-export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"
-PYTHON_VERSION="3.13" setup_uv
+NODE_VERSION="22" setup_nodejs
+UV_PYTHON_INSTALL_DIR="/opt/archivebox/python" PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Installing ArchiveBox"
 mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
 $STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
-# A venv, not --system: the system interpreter is 3.11 and silently caps us at 0.7.4.
 $STD uv venv --python 3.13 /opt/archivebox/venv
 $STD uv pip install --python /opt/archivebox/venv/bin/python archivebox playwright
 $STD /opt/archivebox/venv/bin/playwright install-deps chromium
