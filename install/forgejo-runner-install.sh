@@ -15,12 +15,12 @@ update_os
 setup_yq
 
 if [[ -z "${var_forgejo_instance:-}" ]]; then
-  read -r -p "${TAB3}Forgejo Instance URL (e.g. https://codeberg.org): " var_forgejo_instance
+  read -r -p "${TAB3}Forgejo Instance URL (e.g. https://codeberg.org): " var_forgejo_instance || var_forgejo_instance=""
   var_forgejo_instance="${var_forgejo_instance:-https://codeberg.org}"
 fi
 
 if [[ -z "${var_forgejo_runner_uuid:-}" ]]; then
-  read -r -p "${TAB3}Forgejo Runner UUID: " var_forgejo_runner_uuid
+  read -r -p "${TAB3}Forgejo Runner UUID: " var_forgejo_runner_uuid || var_forgejo_runner_uuid=""
 fi
 
 if [[ -z "${var_forgejo_runner_uuid:-}" ]]; then
@@ -29,7 +29,7 @@ if [[ -z "${var_forgejo_runner_uuid:-}" ]]; then
 fi
 
 if [[ -z "${var_forgejo_runner_token:-}" ]]; then
-  read -r -p "${TAB3}Forgejo Runner Token: " var_forgejo_runner_token
+  read -r -p "${TAB3}Forgejo Runner Token: " var_forgejo_runner_token || var_forgejo_runner_token=""
 fi
 
 if [[ -z "${var_forgejo_runner_token:-}" ]]; then
@@ -39,7 +39,7 @@ fi
 
 DEFAULT_RUNNER_LABELS="linux-amd64:docker://node:22-bookworm"
 if [[ -z "${var_runner_labels:-}" ]]; then
-  read -r -p "${TAB3}Additional runner labels (comma-separated, or leave blank for default only): " var_runner_labels
+  read -r -p "${TAB3}Additional runner labels (comma-separated, or leave blank for default only): " var_runner_labels || var_runner_labels=""
 fi
 if [[ -n "${var_runner_labels:-}" ]]; then
   RUNNER_LABELS="${DEFAULT_RUNNER_LABELS},${var_runner_labels}"

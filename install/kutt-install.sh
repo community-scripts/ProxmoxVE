@@ -32,7 +32,7 @@ EOF
   msg_ok "Configured Caddy"
   ;;
 e)
-  read -r -p "${TAB3}Enter the hostname you want to use for Kutt (eg. kutt.example.com): " custom_host
+  read -r -p "${TAB3}Enter the hostname you want to use for Kutt (eg. kutt.example.com): " custom_host || custom_host=""
   if [[ "$custom_host" ]]; then
     DEFAULT_HOST="$custom_host"
   fi

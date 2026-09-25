@@ -32,7 +32,7 @@ Password: ${PASS}
 EOF
   msg_ok "Set up Tinyauth"
 
-  read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
+  read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url || app_url=""
 
   msg_info "Creating Service"
   cat <<EOF >/opt/tinyauth/.env
@@ -80,7 +80,7 @@ EOF
   echo "${RELEASE}" >~/.tinyauth
   msg_ok "Installed Tinyauth"
 
-  read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
+  read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url || app_url=""
 
   cat <<EOF >/opt/tinyauth/.env
 TINYAUTH_DATABASE_PATH=/opt/tinyauth/database.db

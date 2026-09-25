@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}Which Tomcat version would you like to install? (9, 10.1, 11): " version
+read -r -p "${TAB3}Which Tomcat version would you like to install? (9, 10.1, 11): " version || version=""
 case $version in
 9)
   TOMCAT_VERSION="9"

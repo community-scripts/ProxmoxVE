@@ -14,7 +14,7 @@ network_check
 update_os
 
 setup_deb_based() {
-  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18): " ver
+  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18): " ver || ver=""
   [[ $ver =~ ^(15|16|17|18)$ ]] || {
     echo "Invalid version"
     exit 64
@@ -124,7 +124,7 @@ EOF
   systemctl restart postgresql
   msg_ok "Installed PostgreSQL"
 
-  read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt || prompt=""
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer"
     $STD apt install -y adminer
@@ -135,7 +135,7 @@ EOF
 }
 
 setup_alpine() {
-  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17): " ver
+  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17): " ver || ver=""
   [[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 64; }
 
   msg_info "Installing PostgreSQL ${ver}"
@@ -158,7 +158,7 @@ setup_alpine() {
   $STD rc-service postgresql restart
   msg_ok "Configured and Restarted PostgreSQL"
 
-  read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
+  read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt || prompt=""
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer and dependencies"
     $STD apk add --no-cache \

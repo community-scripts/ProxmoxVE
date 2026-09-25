@@ -18,7 +18,7 @@ msg_warn "The following code is NOT maintained or audited by our repository."
 msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
 msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  https://install.pi-hole.net"
 echo
-read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
+read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM || CONFIRM=""
 if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   msg_error "Aborted by user. No changes have been made."
   exit 10
@@ -65,9 +65,9 @@ $STD pihole-FTL --config ntp.sync.interval 0
 systemctl restart pihole-FTL.service
 msg_ok "Installed Pi-hole"
 
-read -r -p "${TAB3}Would you like to add Unbound? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Unbound? <y/N> " prompt || prompt=""
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  read -r -p "${TAB3}Unbound is configured as a recursive DNS server by default, would you like it to be configured as a forwarding DNS server (using DNS-over-TLS (DoT)) instead? <y/N> " prompt
+  read -r -p "${TAB3}Unbound is configured as a recursive DNS server by default, would you like it to be configured as a forwarding DNS server (using DNS-over-TLS (DoT)) instead? <y/N> " prompt || prompt=""
   msg_info "Installing Unbound"
   mkdir -p /etc/unbound/unbound.conf.d
   cat <<EOF >/etc/unbound/unbound.conf.d/pi-hole.conf

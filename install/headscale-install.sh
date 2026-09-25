@@ -15,7 +15,7 @@ update_os
 
 fetch_and_deploy_gh_release "headscale" "juanfont/headscale" "binary"
 
-read -r -p "${TAB3}Would you like to add headscale-admin UI? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add headscale-admin UI? <y/N> " prompt || prompt=""
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   fetch_and_deploy_gh_release "headscale-admin" "GoodiesHQ/headscale-admin" "prebuild" "latest" "/opt/headscale-admin" "admin.zip"
 

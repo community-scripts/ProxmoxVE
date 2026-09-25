@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
+read -r -p "${TAB3}What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url || public_url=""
 fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id_linux_$(arch_resolve)"
 
 msg_info "Configuring Pocket ID"

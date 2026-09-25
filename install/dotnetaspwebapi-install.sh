@@ -27,7 +27,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 var_project_name="default"
-read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
+read -r -p "${TAB3}Type the assembly name of the project: " var_project_name || var_project_name=""
 
 msg_info "Setting up FTP Server"
 useradd ftpuser

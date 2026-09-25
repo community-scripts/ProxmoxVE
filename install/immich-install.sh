@@ -24,7 +24,7 @@ if lscpu | grep -q 'GenuineIntel'; then
   echo " 2) **NEW** Intel OpenVINO CPU or iGPU"
   echo ""
 
-  read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE
+  read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE || ML_TYPE=""
   ML_TYPE="${ML_TYPE:-1}"
   if [[ "$ML_TYPE" == "2" ]]; then
     touch ~/.openvino

@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}Enter the email address of your first admin user: " admin_email
+read -r -p "${TAB3}Enter the email address of your first admin user: " admin_email || admin_email=""
 if [[ "$admin_email" ]]; then
   EMAIL="$admin_email"
 fi

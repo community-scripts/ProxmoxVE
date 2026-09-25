@@ -30,7 +30,7 @@ setup_deb_based() {
   $STD apt install -y caddy
   msg_ok "Installed Caddy"
 
-  read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt || prompt=""
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     setup_go
     fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "binary"
@@ -75,7 +75,7 @@ EOF
 EOF
   msg_ok "Installed Caddy"
 
-  read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt || prompt=""
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     GO_VERSION="$(curl -fsSL https://go.dev/VERSION?m=text | head -1 | cut -c3-)" setup_go
     msg_info "Setup xCaddy"

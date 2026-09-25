@@ -47,7 +47,7 @@ echo " 3) Use an existing Flaresolverr/Byparr LXC"
 echo " 4) Disable captcha bypassing altogether (not recommended)"
 echo ""
 
-read -r -p "${TAB3}Select deployment type [1]: " DEPLOYMENT_TYPE
+read -r -p "${TAB3}Select deployment type [1]: " DEPLOYMENT_TYPE || DEPLOYMENT_TYPE=""
 DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:-1}"
 if [[ "$(arch_resolve)" == "arm64" && "$DEPLOYMENT_TYPE" == "2" ]]; then
   msg_warn "FlareSolverr has no arm64 build; using Shelfmark's internal bypasser instead"
@@ -69,7 +69,7 @@ case "$DEPLOYMENT_TYPE" in
   echo "Example: http://flaresoverr.homelab.lan:8191 or"
   echo "http://192.168.10.99:8191"
   echo ""
-  read -r -p "FlareSolverr/Byparr URL: " BYPASSER_URL
+  read -r -p "FlareSolverr/Byparr URL: " BYPASSER_URL || BYPASSER_URL=""
 
   if [[ -z "$BYPASSER_URL" ]]; then
     msg_warn "No Flaresolverr/Byparr URL provided. Falling back to Shelfmark's internal bypasser."

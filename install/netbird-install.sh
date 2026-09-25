@@ -36,7 +36,7 @@ echo " 1) NetBird Managed (default) - Use NetBird's managed service"
 echo " 2) Self-Hosted - Use your own NetBird management server"
 echo ""
 
-read -r -p "${TAB3}Select deployment type [1]: " DEPLOYMENT_TYPE
+read -r -p "${TAB3}Select deployment type [1]: " DEPLOYMENT_TYPE || DEPLOYMENT_TYPE=""
 DEPLOYMENT_TYPE="${DEPLOYMENT_TYPE:-1}"
 
 NETBIRD_MGMT_URL=""
@@ -51,7 +51,7 @@ case "$DEPLOYMENT_TYPE" in
     echo "Enter your NetBird management server URL."
     echo "Example: https://management.example.com"
     echo ""
-    read -r -p "Management URL: " NETBIRD_MGMT_URL
+    read -r -p "Management URL: " NETBIRD_MGMT_URL || NETBIRD_MGMT_URL=""
 
     if [[ -z "$NETBIRD_MGMT_URL" ]]; then
       msg_warn "No management URL provided. Run 'netbird up --management-url <url>' to connect."
@@ -81,7 +81,7 @@ else
 fi
 echo ""
 
-read -r -p "Select authentication method [1]: " AUTH_METHOD
+read -r -p "Select authentication method [1]: " AUTH_METHOD || AUTH_METHOD=""
 AUTH_METHOD="${AUTH_METHOD:-1}"
 
 if [[ "$DEPLOYMENT_TYPE" == "1" ]]; then
@@ -90,7 +90,7 @@ if [[ "$DEPLOYMENT_TYPE" == "1" ]]; then
       echo ""
       echo "Enter your NetBird setup key from the NetBird dashboard."
       echo ""
-      read -r -p "Setup key: " NETBIRD_SETUP_KEY
+      read -r -p "Setup key: " NETBIRD_SETUP_KEY || NETBIRD_SETUP_KEY=""
       echo ""
 
       if [[ -z "$NETBIRD_SETUP_KEY" ]]; then
@@ -136,7 +136,7 @@ else
       echo ""
       echo "Enter your NetBird setup key from the NetBird dashboard."
       echo ""
-      read -r -p "Setup key: " NETBIRD_SETUP_KEY
+      read -r -p "Setup key: " NETBIRD_SETUP_KEY || NETBIRD_SETUP_KEY=""
       echo ""
 
       if [[ -z "$NETBIRD_SETUP_KEY" ]]; then

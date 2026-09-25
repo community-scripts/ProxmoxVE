@@ -21,7 +21,7 @@ setup_deb_based() {
   sed -i 's/^bind-address/#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
   msg_ok "Setup MariaDB"
 
-  read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt || prompt=""
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing phpMyAdmin"
     $STD apt install -y \
@@ -58,7 +58,7 @@ setup_alpine() {
   $STD rc-service mariadb start
   msg_ok "MariaDB Configured"
 
-  read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
+  read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt || prompt=""
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer and dependencies"
     $STD apk add --no-cache \

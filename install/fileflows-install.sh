@@ -45,9 +45,9 @@ $STD ln -svf /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 $STD ln -svf /usr/bin/ffprobe /usr/local/bin/ffprobe
 $STD rm -rf /opt/fileflows/Server/runtimes/win-*
 
-read -r -p "${TAB3}Do you want to install FileFlows Server or Agent? (S/A): " install_server
+read -r -p "${TAB3}Do you want to install FileFlows Server or Agent? (S/A): " install_server || install_server=""
 
-if [[ "$install_server" =~ ^[Ss]$ ]]; then
+if [[ -z "$install_server" || "$install_server" =~ ^[Ss]$ ]]; then
   msg_info "Installing FileFlows Server"
   cd /opt/fileflows/Server
   $STD dotnet FileFlows.Server.dll --systemd install --root true
@@ -56,9 +56,12 @@ if [[ "$install_server" =~ ^[Ss]$ ]]; then
 else
   msg_info "Installing FileFlows Agent"
   stop_spinner
-  read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
+  read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url || server_url=""
   while [[ -z "${server_url// /}" ]]; do
-    read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
+    read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url || {
+      msg_error "FileFlows needs a server URL and this run has no input"
+      exit 1
+    }
   done
   cd /opt/fileflows/Agent
   before_units="$(systemctl list-unit-files 'fileflows*' --no-legend 2>/dev/null | awk '{print $1}' | sort || true)"

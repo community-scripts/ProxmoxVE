@@ -42,7 +42,7 @@ msg_ok "Fetched NPMplus"
 
 attempts=0
 while true; do
-  read -r -p "${TAB3}Enter your TZ Identifier (e.g., Europe/Berlin): " TZ_INPUT
+  read -r -p "${TAB3}Enter your TZ Identifier (e.g., Europe/Berlin): " TZ_INPUT || TZ_INPUT=""
   if validate_tz "$TZ_INPUT"; then
     break
   fi
@@ -55,7 +55,7 @@ while true; do
   fi
 done
 
-read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT
+read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT || ACME_EMAIL_INPUT=""
 
 yq -i "
   .services.npmplus.environment |=

@@ -28,9 +28,9 @@ mkdir -p config/assets
 cp config/config.yml.template config/config.yml
 msg_ok "Setup Kometa"
 
-read -r -p "${TAB3}Enter your TMDb API key: " TMDBKEY
-read -r -p "${TAB3}Enter your Plex URL: " PLEXURL
-read -r -p "${TAB3}Enter your Plex token: " PLEXTOKEN
+read -r -p "${TAB3}Enter your TMDb API key: " TMDBKEY || TMDBKEY=""
+read -r -p "${TAB3}Enter your Plex URL: " PLEXURL || PLEXURL=""
+read -r -p "${TAB3}Enter your Plex token: " PLEXTOKEN || PLEXTOKEN=""
 sed -i '/^plex:/,/^[^ ]/{s|  url:.*|  url: '"$PLEXURL"'|}' /opt/kometa/config/config.yml
 sed -i '/^plex:/,/^[^ ]/{s|  token:.*|  token: '"$PLEXTOKEN"'|}' /opt/kometa/config/config.yml
 sed -i '/^tmdb:/,/^[^ ]/{s|  apikey:.*|  apikey: '"$TMDBKEY"'|}' /opt/kometa/config/config.yml

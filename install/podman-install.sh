@@ -47,7 +47,7 @@ msg_ok "Installed Podman"
 
 mkdir -p /etc/containers/systemd
 
-read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt || prompt=""
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
@@ -75,7 +75,7 @@ EOF
   $STD systemctl start portainer
   msg_ok "Installed Portainer $PORTAINER_LATEST_VERSION"
 else
-  read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt || prompt=""
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
     $STD podman pull docker.io/portainer/agent:latest

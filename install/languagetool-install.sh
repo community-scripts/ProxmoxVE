@@ -34,7 +34,7 @@ max_attempts=3
 attempt=0
 
 while [[ $attempt -lt $max_attempts ]]; do
-  read -r -p "${TAB3}Enter language code (en, de, es, fr, nl) to download ngrams or press ENTER to skip: " lang_code
+  read -r -p "${TAB3}Enter language code (en, de, es, fr, nl) to download ngrams or press ENTER to skip: " lang_code || lang_code=""
 
   if [[ -z "$lang_code" ]]; then
     break

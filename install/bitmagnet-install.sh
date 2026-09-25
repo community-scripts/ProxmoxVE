@@ -34,7 +34,7 @@ setup_deb_based() {
   chmod +x bitmagnet
   msg_ok "Configured bitmagnet"
 
-  read -r -p "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey
+  read -r -p "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey || tmdbapikey=""
 
   cat <<EOF >/etc/bitmagnet.env
 POSTGRES_HOST=localhost

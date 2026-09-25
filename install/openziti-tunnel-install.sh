@@ -29,7 +29,7 @@ sed -i '0,/^ExecStart/ { /^ExecStart/ { n; s|^ExecStart.*|ExecStart=/opt/openzit
 systemctl daemon-reload
 msg_ok "Installed openziti"
 
-read -r -p "${TAB3}Please paste an identity enrollment token(JTW)" prompt
+read -r -p "${TAB3}Please paste an identity enrollment token(JTW)" prompt || prompt=""
 if [[ ${prompt} ]]; then
   msg_info "Adding identity"
   echo "${prompt}" >/opt/openziti/etc/identities/identity.jwt

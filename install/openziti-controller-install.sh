@@ -27,17 +27,17 @@ apt_update_safe
 $STD apt install -y openziti-controller openziti-console </dev/null
 msg_ok "Installed openziti"
 
-read -r -p "${TAB3}Would you like to go through the auto configuration now? <y/N>" prompt
+read -r -p "${TAB3}Would you like to go through the auto configuration now? <y/N>" prompt || prompt=""
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   GEN_FQDN="controller.${LOCAL_IP}.sslip.io"
-  read -r -p "${TAB3}Please enter the controller FQDN [${GEN_FQDN}]: " ZITI_CTRL_ADVERTISED_ADDRESS
+  read -r -p "${TAB3}Please enter the controller FQDN [${GEN_FQDN}]: " ZITI_CTRL_ADVERTISED_ADDRESS || ZITI_CTRL_ADVERTISED_ADDRESS=""
   ZITI_CTRL_ADVERTISED_ADDRESS=${ZITI_CTRL_ADVERTISED_ADDRESS:-$GEN_FQDN}
-  read -r -p "${TAB3}Please enter the controller port [1280]: " ZITI_CTRL_ADVERTISED_PORT
+  read -r -p "${TAB3}Please enter the controller port [1280]: " ZITI_CTRL_ADVERTISED_PORT || ZITI_CTRL_ADVERTISED_PORT=""
   ZITI_CTRL_ADVERTISED_PORT=${ZITI_CTRL_ADVERTISED_PORT:-1280}
-  read -r -p "${TAB3}Please enter the controller admin user [admin]: " ZITI_USER
+  read -r -p "${TAB3}Please enter the controller admin user [admin]: " ZITI_USER || ZITI_USER=""
   ZITI_USER=${ZITI_USER:-admin}
   GEN_PWD=$(head -c128 /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9!@#$%^*_+~' | cut -c 1-12)
-  read -r -p "${TAB3}Please enter the controller admin password [${GEN_PWD}]:" ZITI_PWD
+  read -r -p "${TAB3}Please enter the controller admin password [${GEN_PWD}]:" ZITI_PWD || ZITI_PWD=""
   ZITI_PWD=${ZITI_PWD:-$GEN_PWD}
   CONFIG_FILE="/opt/openziti/etc/controller/bootstrap.env"
   sed -i "s|^ZITI_CTRL_ADVERTISED_ADDRESS=.*|ZITI_CTRL_ADVERTISED_ADDRESS='${ZITI_CTRL_ADVERTISED_ADDRESS}'|" "$CONFIG_FILE"

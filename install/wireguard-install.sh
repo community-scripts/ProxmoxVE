@@ -24,7 +24,7 @@ setup_deb_based() {
   $STD netfilter-persistent reload
   msg_ok "Installed WireGuard"
 
-  read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt || prompt=""
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     git clone -q https://github.com/WGDashboard/WGDashboard.git /etc/wgdashboard
 

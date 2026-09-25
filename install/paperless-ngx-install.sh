@@ -163,7 +163,7 @@ EOF
 systemctl enable -q --now paperless-webserver paperless-scheduler paperless-task-queue paperless-consumer
 msg_ok "Created Services"
 
-read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt || prompt=""
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   setup_adminer
 fi

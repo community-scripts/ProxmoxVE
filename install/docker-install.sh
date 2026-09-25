@@ -21,7 +21,7 @@ setup_deb_based() {
   if prompt_confirm "${TAB3}Would you like to install Portainer (UI) via the community-scripts addon?" "n" 60; then
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)" <<<"y"
   else
-    read -r -p "${TAB3}Would you like to install the Portainer Agent (for remote management)? <y/N> " prompt_agent
+    read -r -p "${TAB3}Would you like to install the Portainer Agent (for remote management)? <y/N> " prompt_agent || prompt_agent=""
     if [[ ${prompt_agent,,} =~ ^(y|yes)$ ]]; then
       msg_info "Installing Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"
       $STD docker run -d \
@@ -35,7 +35,7 @@ setup_deb_based() {
     fi
   fi
 
-  read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
+  read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice || socket_choice=""
   case "${socket_choice,,}" in
   l)
     socket="tcp://127.0.0.1:2375"
@@ -91,7 +91,7 @@ setup_alpine() {
   DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
   PORTAINER_AGENT_LATEST_VERSION=$(get_latest_release "portainer/agent")
 
-  read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt || prompt=""
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
     DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
@@ -104,7 +104,7 @@ setup_alpine() {
   if prompt_confirm "${TAB3}Would you like to install Portainer (UI) via the community-scripts addon?" "n" 60; then
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)" <<<"y"
   else
-    read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
+    read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt || prompt=""
     if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
       msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
       $STD docker run -d \
@@ -118,7 +118,7 @@ setup_alpine() {
     fi
   fi
 
-  read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt || prompt=""
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Exposing Docker TCP socket"
     $STD mkdir -p /etc/docker
