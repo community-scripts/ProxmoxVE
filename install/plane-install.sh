@@ -43,34 +43,61 @@ $STD rabbitmqctl add_user plane "${RABBITMQ_PASS}"
 $STD rabbitmqctl set_permissions -p plane plane ".*" ".*" ".*"
 msg_ok "Configured RabbitMQ"
 
-msg_info "Installing MinIO"
-curl -fsSL https://dl.min.io/server/minio/release/linux-$(arch_resolve)/minio -o /usr/local/bin/minio
-chmod +x /usr/local/bin/minio
-mkdir -p /opt/minio/data
-MINIO_ACCESS_KEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
-MINIO_SECRET_KEY=$(openssl rand -base64 36 | tr -dc 'a-zA-Z0-9' | head -c32)
-cat <<EOF >/etc/default/minio
-MINIO_ROOT_USER="${MINIO_ACCESS_KEY}"
-MINIO_ROOT_PASSWORD="${MINIO_SECRET_KEY}"
-MINIO_VOLUMES="/opt/minio/data"
+msg_info "Installing Garage"
+ensure_dependencies jq
+GARAGE_RELEASE=$(curl -fsSL https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
+curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GARAGE_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
+chmod +x /usr/local/bin/garage
+mkdir -p /var/lib/garage/{data,meta,snapshots}
+S3_ACCESS_KEY="GK$(openssl rand -hex 16)"
+S3_SECRET_KEY=$(openssl rand -hex 32)
+GARAGE_RPC_SECRET=$(openssl rand -hex 32)
+cat <<EOF >/etc/garage.toml
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+replication_factor = 1
+
+rpc_bind_addr = "127.0.0.1:3901"
+rpc_public_addr = "127.0.0.1:3901"
+rpc_secret = "${GARAGE_RPC_SECRET}"
+
+[s3_api]
+s3_region = "us-east-1"
+api_bind_addr = "127.0.0.1:3900"
 EOF
-cat <<EOF >/etc/systemd/system/minio.service
+cat <<EOF >/etc/default/garage
+GARAGE_DEFAULT_ACCESS_KEY=${S3_ACCESS_KEY}
+GARAGE_DEFAULT_SECRET_KEY=${S3_SECRET_KEY}
+GARAGE_DEFAULT_BUCKET=uploads
+EOF
+cat <<EOF >/etc/systemd/system/garage.service
 [Unit]
-Description=MinIO Object Storage
-After=network.target
+Description=Garage Object Storage
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
-EnvironmentFile=/etc/default/minio
-ExecStart=/usr/local/bin/minio server \$MINIO_VOLUMES --console-address ":9090"
+EnvironmentFile=/etc/default/garage
+ExecStart=/usr/local/bin/garage -c /etc/garage.toml server --single-node --default-bucket
 Restart=on-failure
 RestartSec=5
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now minio
-msg_ok "Installed MinIO"
+systemctl enable -q --now garage
+for i in {1..30}; do
+    curl -s -o /dev/null "http://127.0.0.1:3900" && break
+    if [[ $i -eq 30 ]]; then
+        msg_error "Garage did not become ready"
+        exit 1
+    fi
+    sleep 1
+done
+msg_ok "Installed Garage"
 
 fetch_and_deploy_gh_release "plane" "makeplane/plane" "tarball"
 
@@ -129,9 +156,9 @@ RABBITMQ_VHOST=plane
 AMQP_URL=amqp://plane:${RABBITMQ_PASS}@localhost:5672/plane
 
 AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
-AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
-AWS_S3_ENDPOINT_URL=http://localhost:9000
+AWS_ACCESS_KEY_ID=${S3_ACCESS_KEY}
+AWS_SECRET_ACCESS_KEY=${S3_SECRET_KEY}
+AWS_S3_ENDPOINT_URL=http://localhost:3900
 AWS_S3_BUCKET_NAME=uploads
 FILE_SIZE_LIMIT=104857600
 
@@ -175,17 +202,11 @@ $STD /opt/plane-venv/bin/python manage.py configure_instance
 $STD /opt/plane-venv/bin/python manage.py register_instance "${MACHINE_SIG}"
 msg_ok "Ran Database Migrations"
 
-msg_info "Creating Services and MinIO Bucket"
-curl -fsSL https://dl.min.io/client/mc/release/linux-$(arch_resolve)/mc -o /usr/local/bin/mcli
-chmod +x /usr/local/bin/mcli
-$STD /usr/local/bin/mcli alias set plane http://localhost:9000 "${MINIO_ACCESS_KEY}" "${MINIO_SECRET_KEY}"
-$STD /usr/local/bin/mcli mb plane/uploads --ignore-existing
-$STD /usr/local/bin/mcli anonymous set download plane/uploads
-
+msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/plane-api.service
 [Unit]
 Description=Plane API
-After=network.target postgresql.service redis-server.service rabbitmq-server.service minio.service
+After=network.target postgresql.service redis-server.service rabbitmq-server.service garage.service
 
 [Service]
 Type=simple
@@ -274,12 +295,12 @@ systemctl enable -q --now plane-api plane-worker plane-beat plane-live plane-spa
 cat <<EOF >~/plane.creds
 RabbitMQ User: plane
 RabbitMQ Password: ${RABBITMQ_PASS}
-MinIO Access Key: ${MINIO_ACCESS_KEY}
-MinIO Secret Key: ${MINIO_SECRET_KEY}
+S3 Access Key: ${S3_ACCESS_KEY}
+S3 Secret Key: ${S3_SECRET_KEY}
 Secret Key: ${SECRET_KEY}
 Config: /opt/plane/apps/api/.env
 EOF
-msg_ok "Created Services and MinIO Bucket"
+msg_ok "Created Services"
 
 msg_info "Configuring Nginx"
 cat <<'EOF' >/etc/nginx/sites-available/plane.conf
@@ -295,8 +316,8 @@ upstream plane-space {
     server 127.0.0.1:3002;
 }
 
-upstream plane-minio {
-    server 127.0.0.1:9000;
+upstream plane-garage {
+    server 127.0.0.1:3900;
 }
 
 server {
@@ -336,14 +357,14 @@ server {
     }
 
     location = /uploads {
-        proxy_pass http://plane-minio;
+        proxy_pass http://plane-garage;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
     location /uploads/ {
-        proxy_pass http://plane-minio;
+        proxy_pass http://plane-garage;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
