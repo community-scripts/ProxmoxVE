@@ -96,6 +96,9 @@ cp /opt/nginxproxymanager/docker/rootfs/etc/letsencrypt.ini /etc/letsencrypt.ini
 cp /opt/nginxproxymanager/docker/rootfs/etc/logrotate.d/nginx-proxy-manager /etc/logrotate.d/nginx-proxy-manager
 ln -sf /etc/nginx/nginx.conf /etc/nginx/conf/nginx.conf
 rm -f /etc/nginx/conf.d/dev.conf
+if [[ -f /etc/nginx/conf.d/production.conf.template ]]; then
+  sed 's/{{NPM_ADMIN_PORT}}/81/g' /etc/nginx/conf.d/production.conf.template >/etc/nginx/conf.d/production.conf
+fi
 
 mkdir -p /tmp/nginx/body \
   /run/nginx \

@@ -118,8 +118,16 @@ EOF
       $STD "$CERTBOT_PYTHON" -m ensurepip --upgrade
     fi
     $STD "$CERTBOT_PYTHON" -m pip install --upgrade pip setuptools wheel
+    find /opt/certbot/lib/python3*/site-packages -maxdepth 1 -name '*.dist-info' -type d ! -exec test -e '{}/RECORD' ';' -exec rm -rf '{}' + 2>/dev/null || true
     $STD "$CERTBOT_PYTHON" -m pip install --upgrade certbot certbot-dns-cloudflare
     msg_ok "Updated Certbot"
+  fi
+
+  if [[ -f /etc/nginx/conf.d/production.conf.template && ! -f /etc/nginx/conf.d/production.conf ]]; then
+    msg_info "Restoring Admin Interface"
+    sed 's/{{NPM_ADMIN_PORT}}/81/g' /etc/nginx/conf.d/production.conf.template >/etc/nginx/conf.d/production.conf
+    systemctl restart openresty
+    msg_ok "Restored Admin Interface"
   fi
 
   if check_for_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager"; then
@@ -159,6 +167,10 @@ EOF
     cp /opt/nginxproxymanager/docker/rootfs/etc/logrotate.d/nginx-proxy-manager /etc/logrotate.d/nginx-proxy-manager
     ln -sf /etc/nginx/nginx.conf /etc/nginx/conf/nginx.conf
     rm -f /etc/nginx/conf.d/dev.conf
+    if [[ -f /etc/nginx/conf.d/production.conf.template ]]; then
+      ADMIN_PORT=$(grep -oP '^\s*listen\s+\K[0-9]+(?=\s+default)' /etc/nginx/conf.d/production.conf 2>/dev/null | head -n1 || true)
+      sed "s/{{NPM_ADMIN_PORT}}/${ADMIN_PORT:-81}/g" /etc/nginx/conf.d/production.conf.template >/etc/nginx/conf.d/production.conf
+    fi
 
     mkdir -p /tmp/nginx/body \
       /run/nginx \
