@@ -39,6 +39,7 @@ function update_script() {
   create_backup /home/steam/.config/Epic/FactoryGame/Saved
 
   msg_info "Updating Satisfactory"
+  $STD runuser -u steam -- /opt/steamcmd/steamcmd.sh +login anonymous +quit || true
   if $STD runuser -u steam -- /opt/steamcmd/steamcmd.sh \
     +force_install_dir /opt/satisfactory/server \
     +login anonymous \
