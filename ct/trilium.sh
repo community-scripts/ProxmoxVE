@@ -30,7 +30,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "Trilium" "TriliumNext/Trilium"; then
+  if check_for_gh_release "Trilium" "TriliumNext/Trilium" "" "" "v"; then
     if [[ -d /opt/trilium/db ]]; then
       DB_PATH="/opt/trilium/db"
       DB_RESTORE_PATH="/opt/trilium/db"
@@ -53,7 +53,7 @@ function update_script() {
     rm -rf /opt/trilium
     msg_ok "Backed up Database"
 
-    fetch_and_deploy_gh_release "Trilium" "TriliumNext/Trilium" "prebuild" "latest" "/opt/trilium" "TriliumNotes-Server-*linux-$(arch_resolve "x64" "arm64").tar.xz"
+    fetch_and_deploy_gh_release "Trilium" "TriliumNext/Trilium" "prebuild" "latest" "/opt/trilium" "TriliumNotes-Server-*linux-$(arch_resolve "x64" "arm64").tar.xz" "v"
 
     msg_info "Restoring Database"
     mkdir -p "$(dirname "${DB_RESTORE_PATH}")"
