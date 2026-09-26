@@ -550,6 +550,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - romm: run rq cron and a scans worker for RomM 5.3 [@davidbb](https://github.com/davidbb) ([#17502](https://github.com/community-scripts/ProxmoxVE/pull/17502))
+
   - #### 💥 Breaking Changes
 
     - Semaphore: fix BoltDB migration by pinning 2.18.30 [@MickLesk](https://github.com/MickLesk) ([#17439](https://github.com/community-scripts/ProxmoxVE/pull/17439))
