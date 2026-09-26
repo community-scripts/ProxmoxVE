@@ -561,6 +561,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Semaphore: fix BoltDB migration by pinning 2.18.30 [@MickLesk](https://github.com/MickLesk) ([#17439](https://github.com/community-scripts/ProxmoxVE/pull/17439))
 
+### 💾 Core
+
+  - Keep a dash-led bridge comment out of whiptail's options [@MickLesk](https://github.com/MickLesk) ([core#74](https://github.com/community-scripts/core/pull/74))
+
 ## 2026-09-25
 
 ### 🆕 New Scripts
