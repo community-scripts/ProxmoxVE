@@ -41,6 +41,7 @@ function update_script() {
 
     AUDIOMUSE_BACKEND="$(cat /opt/audiomuse-ai_data/.backend 2>/dev/null || echo cpu)"
     REQ_COMMON="common.txt"
+    PY_VERSION="3.12"
     case "$AUDIOMUSE_BACKEND" in
     gpu)
       REQ_ACCEL="gpu.txt"
@@ -49,6 +50,7 @@ function update_script() {
     cpu-noavx2)
       REQ_COMMON="common-noavx2.txt"
       REQ_ACCEL="cpu-noavx2.txt"
+      PY_VERSION="3.11"
       ;;
     *)
       REQ_ACCEL="cpu.txt"
@@ -57,7 +59,7 @@ function update_script() {
 
     msg_info "Updating Python Environment (${AUDIOMUSE_BACKEND})"
     cd /opt/audiomuse-ai
-    $STD uv venv --seed --python 3.12 /opt/audiomuse-ai/.venv
+    $STD uv venv --seed --python "$PY_VERSION" /opt/audiomuse-ai/.venv
     $STD uv pip install --python /opt/audiomuse-ai/.venv \
       -r "/opt/audiomuse-ai/requirements/${REQ_COMMON}" \
       -r "/opt/audiomuse-ai/requirements/${REQ_ACCEL}"
