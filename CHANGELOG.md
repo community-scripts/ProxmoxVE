@@ -546,6 +546,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-26
+
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Semaphore: fix BoltDB migration by pinning 2.18.30 [@MickLesk](https://github.com/MickLesk) ([#17439](https://github.com/community-scripts/ProxmoxVE/pull/17439))
+
 ## 2026-09-25
 
 ### 🆕 New Scripts
