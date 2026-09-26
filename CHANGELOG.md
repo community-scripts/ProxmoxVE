@@ -552,6 +552,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - NginxProxyManager: generate admin config and repair certbot's venv on update [@MickLesk](https://github.com/MickLesk) ([#17523](https://github.com/community-scripts/ProxmoxVE/pull/17523))
     - Komodo: add KOMODO_HOST | fix broken spinner [@MickLesk](https://github.com/MickLesk) ([#17481](https://github.com/community-scripts/ProxmoxVE/pull/17481))
     - romm: run rq cron and a scans worker for RomM 5.3 [@davidbb](https://github.com/davidbb) ([#17502](https://github.com/community-scripts/ProxmoxVE/pull/17502))
 
