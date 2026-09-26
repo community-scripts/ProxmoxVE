@@ -230,6 +230,13 @@ function update_script() {
               sed -i '/^\[Service\]/a Environment=GRANIAN_PORT=8000' "$path"
             grep -q "^Environment=GRANIAN_WORKERS=" "$path" ||
               sed -i '/^\[Service\]/a Environment=GRANIAN_WORKERS=1' "$path"
+            # granian ignores a systemd socket fd; a leftover unit here is a silent outage, not a no-op.
+            sed -i '/^Requires=paperless-webserver.socket$/d' "$path"
+            if systemctl list-unit-files paperless-webserver.socket &>/dev/null; then
+              systemctl disable --now paperless-webserver.socket &>/dev/null || true
+              rm -f /etc/systemd/system/paperless-webserver.socket
+              msg_ok "Removed leftover paperless-webserver.socket (superseded by GRANIAN_PORT)"
+            fi
           fi
           msg_ok "Patched $svc"
         else
