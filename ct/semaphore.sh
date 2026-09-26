@@ -63,11 +63,18 @@ function update_script() {
     fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "v2.18.30" "/opt/semaphore" "semaphore_*_linux_$(arch_resolve).deb"
 
     msg_info "Migrating BoltDB to SQLite"
-    if ! $STD semaphore migrate --from-boltdb /opt/semaphore/semaphore_db.bolt --config /opt/semaphore/config.json; then
+    if [[ -f /opt/semaphore/database.sqlite ]]; then
+      mkdir -p /opt/semaphore/sqlite.bak
+      mv /opt/semaphore/database.sqlite* /opt/semaphore/sqlite.bak/
+    fi
+    sed '/"dialect": "sqlite",/a\  "apps": {"ansible": {}, "terraform": {}, "tofu": {}, "terragrunt": {}, "bash": {}, "powershell": {}, "python": {}, "pulumi": {}},' \
+      /opt/semaphore/config.json >/opt/semaphore/migrate.json
+    if ! $STD semaphore migrate --from-boltdb /opt/semaphore/semaphore_db.bolt --config /opt/semaphore/migrate.json; then
       msg_error "Migration failed - semaphore_db.bolt was kept, run the update again to retry"
       exit 1
     fi
-    rm -f /opt/semaphore/semaphore_db.bolt
+    rm -f /opt/semaphore/migrate.json
+    mv /opt/semaphore/semaphore_db.bolt /opt/semaphore/semaphore_db.bolt.bak
     msg_ok "Migrated BoltDB to SQLite"
     migrated=1
   fi
