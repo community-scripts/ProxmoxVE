@@ -46,6 +46,9 @@ function update_script() {
     msg_info "Building Application"
     cd /opt/lobehub
     export NODE_OPTIONS="--max-old-space-size=8192"
+    if grep -qE '"@lobehub/ui": "\^5\.4[0-9]\.' package.json; then
+      sed -i "/^overrides:/a\  '@lobehub/ui': ~5.49.1" pnpm-workspace.yaml
+    fi
     $STD pnpm install
     $STD pnpm run build:docker
     unset NODE_OPTIONS
