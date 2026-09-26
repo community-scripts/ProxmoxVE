@@ -80,7 +80,7 @@ $STD mkdir -p /opt/manyfold_data
 msg_ok "Configured Manyfold"
 
 msg_info "Installing Manyfold"
-chown -R manyfold:manyfold {/home/manyfold,/opt/manyfold}
+chown -R manyfold:manyfold {/home/manyfold,/opt/manyfold,/opt/manyfold_data}
 chmod +x /opt/manyfold/user_setup.sh
 
 $STD sudo -u manyfold bash /opt/manyfold/user_setup.sh
