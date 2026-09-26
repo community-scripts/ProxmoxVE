@@ -199,6 +199,7 @@ function install() {
   sed -i "s/^KOMODO_INIT_ADMIN_PASSWORD=changeme/KOMODO_INIT_ADMIN_PASSWORD=${ADMIN_PASSWORD}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_WEBHOOK_SECRET=.*/KOMODO_WEBHOOK_SECRET=${WEBHOOK_SECRET}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_JWT_SECRET=.*/KOMODO_JWT_SECRET=${JWT_SECRET}/" "$COMPOSE_ENV"
+  sed -i "s|^KOMODO_HOST=.*|KOMODO_HOST=http://${LOCAL_IP}:${DEFAULT_PORT}|" "$COMPOSE_ENV"
   msg_ok "Configured environment"
 
   msg_info "Starting ${APP}"
@@ -214,14 +215,23 @@ function install() {
   } >>~/komodo.creds
 
   echo ""
-  msg_ok "${APP} is reachable at: ${BL}http://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
+  msg_info "Waiting for ${APP} to answer"
+  for _ in $(seq 1 60); do
+    curl -fsS --max-time 3 "http://127.0.0.1:${DEFAULT_PORT}" >/dev/null 2>&1 && break
+    sleep 3
+  done
+  if curl -fsS --max-time 3 "http://127.0.0.1:${DEFAULT_PORT}" >/dev/null 2>&1; then
+    msg_ok "${APP} is reachable at: ${BL}http://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
+  else
+    msg_error "${APP} did not come up - check: docker logs komodo-core-1"
+  fi
   echo ""
   echo -e "  Komodo Credentials"
   echo -e "  =================="
   echo -e "  User    : admin"
   echo -e "  Password: ${ADMIN_PASSWORD}"
   echo ""
-  msg_info "Credentials saved to ~/komodo.creds"
+  msg_ok "Credentials saved to ~/komodo.creds"
 }
 
 # ==============================================================================
