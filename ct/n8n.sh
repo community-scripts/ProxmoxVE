@@ -48,6 +48,8 @@ EOF
   fi
 
   $STD npm install -g n8n@latest
+  $STD npm cache clean --force
+  find /tmp -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
   systemctl restart n8n
   msg_ok "Updated n8n"
   msg_ok "Updated successfully!"
