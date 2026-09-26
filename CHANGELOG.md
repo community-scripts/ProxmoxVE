@@ -552,6 +552,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Manyfold: make /opt/manyfold_data writable for the manyfold user [@sergstepanenko](https://github.com/sergstepanenko) ([#17534](https://github.com/community-scripts/ProxmoxVE/pull/17534))
     - steamcmd: update itself before installing Satisfactory [@MickLesk](https://github.com/MickLesk) ([#17526](https://github.com/community-scripts/ProxmoxVE/pull/17526))
     - AudioMuse-AI: build noavx2 environment on Python 3.11 [@MickLesk](https://github.com/MickLesk) ([#17528](https://github.com/community-scripts/ProxmoxVE/pull/17528))
     - LobeHub: pin lobehub/ui at 5.49 while LobeHub's stable release needs it [@MickLesk](https://github.com/MickLesk) ([#17531](https://github.com/community-scripts/ProxmoxVE/pull/17531))
