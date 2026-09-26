@@ -552,6 +552,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Komodo: add KOMODO_HOST | fix broken spinner [@MickLesk](https://github.com/MickLesk) ([#17481](https://github.com/community-scripts/ProxmoxVE/pull/17481))
     - romm: run rq cron and a scans worker for RomM 5.3 [@davidbb](https://github.com/davidbb) ([#17502](https://github.com/community-scripts/ProxmoxVE/pull/17502))
 
   - #### 💥 Breaking Changes
