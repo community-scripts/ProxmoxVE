@@ -555,6 +555,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Tracearr: fetch map tiles on install/update [@durzo](https://github.com/durzo) ([#17544](https://github.com/community-scripts/ProxmoxVE/pull/17544))
     - fix(autocaliweb): define INSTALL_DIR before first use [@bobartlett](https://github.com/bobartlett) ([#17545](https://github.com/community-scripts/ProxmoxVE/pull/17545))
 
 ## 2026-09-26
