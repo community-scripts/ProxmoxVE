@@ -14,6 +14,26 @@ update_os
 
 fetch_and_deploy_gh_release "openbao" "openbao/openbao" "binary" "latest" "/opt/openbao" "openbao_*_linux_$(arch_resolve).deb"
 
+msg_info "Configuring OpenBao"
+cat <<EOF >/etc/openbao/openbao.hcl
+ui = true
+
+storage "raft" {
+  path    = "/opt/openbao/data"
+  node_id = "openbao"
+}
+
+listener "tcp" {
+  address       = "0.0.0.0:8200"
+  tls_cert_file = "/opt/openbao/tls/tls.crt"
+  tls_key_file  = "/opt/openbao/tls/tls.key"
+}
+
+api_addr     = "https://${LOCAL_IP}:8200"
+cluster_addr = "https://${LOCAL_IP}:8201"
+EOF
+msg_ok "Configured OpenBao"
+
 msg_info "Configuring CLI Environment"
 cat <<EOF >/etc/profile.d/openbao.sh
 export BAO_ADDR=https://127.0.0.1:8200
