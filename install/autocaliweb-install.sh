@@ -54,11 +54,11 @@ $STD /opt/calibre/calibre_postinstall
 CALIBRE_VERSION=$(cat ~/.calibre)
 msg_ok "Installed Calibre"
 
+INSTALL_DIR="/opt/autocaliweb"
 fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
 setup_uv $INSTALL_DIR
 
 msg_info "Configuring Autocaliweb"
-INSTALL_DIR="/opt/autocaliweb"
 CONFIG_DIR="/etc/autocaliweb"
 CALIBRE_LIB_DIR="/opt/calibre-library"
 INGEST_DIR="/opt/acw-book-ingest"
