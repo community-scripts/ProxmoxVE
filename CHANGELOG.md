@@ -111,6 +111,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -120,7 +123,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>September (19 entries)</h4></summary>
+<summary><h4>September (26 entries)</h4></summary>
 
 [View September 2026 Changelog](.github/changelogs/2026/09.md)
 
@@ -1212,138 +1215,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Calibre-Web database creation [@MickLesk](https://github.com/MickLesk) ([#16842](https://github.com/community-scripts/ProxmoxVE/pull/16842))
     - mastodon: read .ruby-version dynamically instead of hardcoding 4.0.5 [@MickLesk](https://github.com/MickLesk) ([#16829](https://github.com/community-scripts/ProxmoxVE/pull/16829))
-
-## 2026-08-27
-
-### 🆕 New Scripts
-
-  - Seanime ([#16777](https://github.com/community-scripts/ProxmoxVE/pull/16777))
-- Yopass ([#16778](https://github.com/community-scripts/ProxmoxVE/pull/16778))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - excalidash: Add a sed to switch to the correct DB Provider [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16814](https://github.com/community-scripts/ProxmoxVE/pull/16814))
-    - fix(stirling-pdf): remove broken ExecStop using %n [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16813](https://github.com/community-scripts/ProxmoxVE/pull/16813))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - Fix: Incorporate the new update functions to prevent a empty grep on … [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16809](https://github.com/community-scripts/ProxmoxVE/pull/16809))
-
-## 2026-08-26
-
-### 🆕 New Scripts
-
-  - CentOS ([#16772](https://github.com/community-scripts/ProxmoxVE/pull/16772))
-- AlmaLinux ([#16771](https://github.com/community-scripts/ProxmoxVE/pull/16771))
-- Fedora ([#16770](https://github.com/community-scripts/ProxmoxVE/pull/16770))
-- Devuan ([#16773](https://github.com/community-scripts/ProxmoxVE/pull/16773))
-- OpenEuler ([#16774](https://github.com/community-scripts/ProxmoxVE/pull/16774))
-- Gentoo ([#16775](https://github.com/community-scripts/ProxmoxVE/pull/16775))
-- openSUSE ([#16776](https://github.com/community-scripts/ProxmoxVE/pull/16776))
-- Directus ([#16779](https://github.com/community-scripts/ProxmoxVE/pull/16779))
-- HAProxy ([#16760](https://github.com/community-scripts/ProxmoxVE/pull/16760))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - [Fix]: LimeSurvey - enable Apache mod_rewrite [@jonathan8devs](https://github.com/jonathan8devs) ([#16767](https://github.com/community-scripts/ProxmoxVE/pull/16767))
-    - endurain: migrate legacy FRONTEND_DIR path on update [@MickLesk](https://github.com/MickLesk) ([#16794](https://github.com/community-scripts/ProxmoxVE/pull/16794))
-
-### 💾 Core
-
-  - #### 🐞 Bug Fixes
-
-    - tools.func: recognize bare XZ-compressed tarballs in fetch_and_deploy* [@MickLesk](https://github.com/MickLesk) ([#16796](https://github.com/community-scripts/ProxmoxVE/pull/16796))
-    - tools.func: fix mongodb version comparison, guard apt purge against removing dependents [@MickLesk](https://github.com/MickLesk) ([#16795](https://github.com/community-scripts/ProxmoxVE/pull/16795))
-
-### 📂 Github
-
-  - github: teach the PocketBase bot every field [@MickLesk](https://github.com/MickLesk) ([#16781](https://github.com/community-scripts/ProxmoxVE/pull/16781))
-
-## 2026-08-25
-
-### 🆕 New Scripts
-
-  - Budget-Board ([#16714](https://github.com/community-scripts/ProxmoxVE/pull/16714))
-- Maintainerr ([#16716](https://github.com/community-scripts/ProxmoxVE/pull/16716))
-- pyLoad ([#16717](https://github.com/community-scripts/ProxmoxVE/pull/16717))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix(apache-tika): handle upstream's switch from jar to zip distribution [@Munza2020](https://github.com/Munza2020) ([#16726](https://github.com/community-scripts/ProxmoxVE/pull/16726))
-    - Fix Firecrawl install: add ccache dependency for koffi native build [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16746](https://github.com/community-scripts/ProxmoxVE/pull/16746))
-    - excalidash: Fix broken Update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#16747](https://github.com/community-scripts/ProxmoxVE/pull/16747))
-
-  - #### 💥 Breaking Changes
-
-    - Migrate the (remaining) Top 25 scripts to the new core engine [@MickLesk](https://github.com/MickLesk) ([#16749](https://github.com/community-scripts/ProxmoxVE/pull/16749))
-
-## 2026-08-24
-
-### 🆕 New Scripts
-
-  - ArchLinux ([#16715](https://github.com/community-scripts/ProxmoxVE/pull/16715))
-- AirTrail ([#16713](https://github.com/community-scripts/ProxmoxVE/pull/16713))
-- RockyLinux ([#16718](https://github.com/community-scripts/ProxmoxVE/pull/16718))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Add setup_mongodb back in Omada [@lucacome](https://github.com/lucacome) ([#16736](https://github.com/community-scripts/ProxmoxVE/pull/16736))
-    - fireshare: source fireshare.env during update [@MickLesk](https://github.com/MickLesk) ([#16706](https://github.com/community-scripts/ProxmoxVE/pull/16706))
-    - netbox: serve on plain HTTP too, port 80 forced HTTPS redirect broke reverse proxies [@MickLesk](https://github.com/MickLesk) ([#16707](https://github.com/community-scripts/ProxmoxVE/pull/16707))
-    - FileFlows: Fix Download URL [@MickLesk](https://github.com/MickLesk) ([#16708](https://github.com/community-scripts/ProxmoxVE/pull/16708))
-    - Gitea: fix git-over-SSH auth, group-writable home dir tripped sshd StrictModes [@MickLesk](https://github.com/MickLesk) ([#16710](https://github.com/community-scripts/ProxmoxVE/pull/16710))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - post-pve/pbs-install: fix component_exists_in_sources matching substrings of hyphenated tokens [@MickLesk](https://github.com/MickLesk) ([#16709](https://github.com/community-scripts/ProxmoxVE/pull/16709))
-
-## 2026-08-23
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Set default ProxmoxVE raw URL in PVE-UPS & fix var_cpu sorting  [@MickLesk](https://github.com/MickLesk) ([#16689](https://github.com/community-scripts/ProxmoxVE/pull/16689))
-
-## 2026-08-22
-
-### 🆕 New Scripts
-
-  - pve-ups ([#16670](https://github.com/community-scripts/ProxmoxVE/pull/16670))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - docuseal: use DocuSeal's patched PDFium build to fix service start [@MickLesk](https://github.com/MickLesk) ([#16673](https://github.com/community-scripts/ProxmoxVE/pull/16673))
-
-  - #### ✨ New Features
-
-    - update authentik to 2026.8.0 [@thieneret](https://github.com/thieneret) ([#16674](https://github.com/community-scripts/ProxmoxVE/pull/16674))
-
-## 2026-08-21
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - wallos: fix: migrations [@CrazyWolf13](https://github.com/CrazyWolf13) ([#16666](https://github.com/community-scripts/ProxmoxVE/pull/16666))
-    - barassistant: fix: compatibility with v6 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#16665](https://github.com/community-scripts/ProxmoxVE/pull/16665))
-    - Immichframe: remove settings.yaml UUID placeholder [@MickLesk](https://github.com/MickLesk) ([#16660](https://github.com/community-scripts/ProxmoxVE/pull/16660))
-    - openziti-controller: redirect stdin from /dev/null to skip postinst's interactive bootstrap prompt [@MickLesk](https://github.com/MickLesk) ([#16650](https://github.com/community-scripts/ProxmoxVE/pull/16650))
-    - bookorbit: bump default RAM to prevent tsc OOM segfault during nest build [@MickLesk](https://github.com/MickLesk) ([#16649](https://github.com/community-scripts/ProxmoxVE/pull/16649))
-    - immich: split jpegli into its own build step, resolve library revisions dynamically [@MickLesk](https://github.com/MickLesk) ([#16656](https://github.com/community-scripts/ProxmoxVE/pull/16656))
-    - tdarr: make unzip non-interactive to prevent hang [@MickLesk](https://github.com/MickLesk) ([#16648](https://github.com/community-scripts/ProxmoxVE/pull/16648))
-    - immich: fix jpegli patch path after upstream base-images split jpegli from libjxl [@MickLesk](https://github.com/MickLesk) ([#16647](https://github.com/community-scripts/ProxmoxVE/pull/16647))
