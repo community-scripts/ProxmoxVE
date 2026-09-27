@@ -67,6 +67,7 @@ cd /opt/tracearr.build
 $STD pnpm install --frozen-lockfile --force
 $STD pnpm turbo telemetry disable
 $STD pnpm turbo run build --no-daemon --filter=@tracearr/shared --filter=@tracearr/server --filter=@tracearr/web
+$STD ./scripts/fetch-basemap.sh
 mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db}
 cp -rf package.json /opt/tracearr/
 cp -rf pnpm-workspace.yaml /opt/tracearr/
