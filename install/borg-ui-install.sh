@@ -111,7 +111,8 @@ Type=simple
 User=root
 WorkingDirectory=/opt/borg-ui
 EnvironmentFile=/opt/borg-ui/.env
-ExecStart=/opt/borg-ui/.venv/bin/gunicorn app.main:app --bind 0.0.0.0:8081 --workers 1 --worker-class uvicorn.workers.UvicornWorker --timeout 300
+Environment=BORG_UI_VENV=/opt/borg-ui/.venv
+ExecStart=/bin/bash /opt/borg-ui/packaging/native/start.sh
 Restart=on-failure
 RestartSec=5
 

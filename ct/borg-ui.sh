@@ -32,15 +32,9 @@ function update_script() {
     exit
   fi
 
-  if grep -q -- '--workers 2' /etc/systemd/system/borg-ui.service 2>/dev/null; then
-    msg_info "Reducing Service to a single worker"
-    sed -i 's/--workers 2/--workers 1/' /etc/systemd/system/borg-ui.service
-    systemctl daemon-reload
-    systemctl try-restart borg-ui
-    msg_ok "Reduced Service to a single worker"
-  fi
-
+  local changed=0
   if check_for_gh_release "borg-ui" "karanhudia/borg-ui"; then
+    changed=1
     msg_info "Stopping Service"
     systemctl stop borg-ui
     msg_ok "Stopped Service"
@@ -110,9 +104,37 @@ function update_script() {
     $STD uv venv --python "$BORG_PYTHON" /opt/borg-ui/.venv
     $STD uv pip install --python /opt/borg-ui/.venv -r requirements.txt
     msg_ok "Updated Python Environment"
+  fi
 
+  if [[ -f /opt/borg-ui/packaging/native/start.sh ]] && ! grep -q 'packaging/native/start.sh' /etc/systemd/system/borg-ui.service; then
+    msg_info "Switching Service to the upstream start script"
+    cat <<EOF >/etc/systemd/system/borg-ui.service
+[Unit]
+Description=Borg-UI
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/borg-ui
+EnvironmentFile=/opt/borg-ui/.env
+Environment=BORG_UI_VENV=/opt/borg-ui/.venv
+ExecStart=/bin/bash /opt/borg-ui/packaging/native/start.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    msg_ok "Switched Service to the upstream start script"
+    changed=1
+  fi
+
+  if [[ "$changed" == 1 ]]; then
     msg_info "Starting Service"
-    systemctl start borg-ui
+    systemctl restart borg-ui
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
