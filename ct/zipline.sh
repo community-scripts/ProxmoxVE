@@ -39,7 +39,7 @@ function update_script() {
 
     mkdir -p /opt/zipline-uploads
     if [ -d /opt/zipline/uploads ] && [ "$(ls -A /opt/zipline/uploads)" ]; then
-      cp -R /opt/zipline/uploads/* /opt/zipline-uploads/
+      cp -R /opt/zipline/uploads/. /opt/zipline-uploads/
     fi
     cp /opt/zipline/.env /opt/
     rm -R /opt/zipline
