@@ -62,12 +62,14 @@ function update_script() {
 
     msg_info "Refreshing Nginx Config"
     FRONTEND_URL=$(grep -oP '^SPARKY_FITNESS_FRONTEND_URL=\K.*' /etc/sparkyfitness/.env)
+    NGINX_RESOLVER=$(awk '$1=="nameserver" {ns=$2; sub(/%.*/, "", ns); printf "%s%s", sep, (ns ~ /:/ ? "[" ns "]" : ns); sep=" "}' /etc/resolv.conf)
     sed \
       -e 's|${SPARKY_FITNESS_SERVER_HOST}|127.0.0.1|g' \
       -e 's|${SPARKY_FITNESS_SERVER_PORT}|3010|g' \
       -e "s|\${SPARKY_FITNESS_FRONTEND_URL}|${FRONTEND_URL}|g" \
       -e 's|${NGINX_LISTEN_PORT}|80|g' \
       -e 's|${NGINX_RATE_LIMIT}|5r/s|g' \
+      -e "s|\${NGINX_RESOLVER}|${NGINX_RESOLVER:-127.0.0.1}|g" \
       -e 's|${NGINX_ACCESS_LOG}|/var/log/nginx/sparkyfitness.access.log|g' \
       -e 's|${NGINX_ERROR_LOG}|/var/log/nginx/sparkyfitness.error.log|g' \
       -e 's|root /usr/share/nginx/html;|root /var/www/sparkyfitness;|g' \
