@@ -101,8 +101,10 @@ server {
 
     client_max_body_size 20M;
 
-    location /static/ {
-        alias /opt/linkding/static/;
+    location ~ ^/static/(.*)$ {
+        root /opt/linkding;
+        try_files /static/$1 /data/favicons/$1 /data/previews/$1 =404;
+        add_header Content-Security-Policy "sandbox";
         expires 30d;
     }
 

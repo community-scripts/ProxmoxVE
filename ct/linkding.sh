@@ -32,6 +32,16 @@ function update_script() {
     exit
   fi
 
+  if grep -q 'alias /opt/linkding/static/;' /etc/nginx/sites-available/linkding 2>/dev/null; then
+    msg_info "Serving Favicons and Preview Images"
+    sed -i \
+      -e 's|location /static/ {|location ~ ^/static/(.*)$ {|' \
+      -e 's|alias /opt/linkding/static/;|root /opt/linkding;\n        try_files /static/$1 /data/favicons/$1 /data/previews/$1 =404;\n        add_header Content-Security-Policy "sandbox";|' \
+      /etc/nginx/sites-available/linkding
+    $STD systemctl reload nginx
+    msg_ok "Serving Favicons and Preview Images"
+  fi
+
   if check_for_gh_release "linkding" "sissbruecker/linkding"; then
     msg_info "Stopping Services"
     systemctl stop nginx linkding linkding-tasks
