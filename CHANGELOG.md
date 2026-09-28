@@ -549,6 +549,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-28
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - linkding: serve favicons and preview images [@MickLesk](https://github.com/MickLesk) ([#17557](https://github.com/community-scripts/ProxmoxVE/pull/17557))
+    - SparkyFitness: Fill in the nginx resolver 1.7.3 added [@MickLesk](https://github.com/MickLesk) ([#17556](https://github.com/community-scripts/ProxmoxVE/pull/17556))
+
 ## 2026-09-27
 
 ### 🚀 Updated Scripts
