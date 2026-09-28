@@ -266,6 +266,7 @@ Group=${SERVICE_GROUP}
 WorkingDirectory=${INSTALL_DIR}
 Environment=CALIBRE_DBPATH=${CONFIG_DIR}
 Environment=HOME=${CONFIG_DIR}
+EnvironmentFile=${INSTALL_DIR}/.env
 ExecStart=/bin/bash ${SCRIPTS_DIR}/ingest_watcher.sh
 Restart=always
 StandardOutput=journal
@@ -285,6 +286,7 @@ User=${SERVICE_USER}
 Group=${SERVICE_GROUP}
 WorkingDirectory=${INSTALL_DIR}
 Environment=CALIBRE_DBPATH=${CONFIG_DIR}
+EnvironmentFile=${INSTALL_DIR}/.env
 ExecStart=${SCRIPTS_DIR}/auto_zipper_wrapper.sh
 Restart=always
 StandardOutput=journal
@@ -303,6 +305,7 @@ After=network.target
 User=${SERVICE_USER}
 Group=${SERVICE_GROUP}
 WorkingDirectory=${INSTALL_DIR}
+EnvironmentFile=${INSTALL_DIR}/.env
 ExecStart=/bin/bash ${SCRIPTS_DIR}/metadata_change_detector_wrapper.sh
 Restart=always
 StandardOutput=journal
