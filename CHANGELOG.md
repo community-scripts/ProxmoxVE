@@ -557,6 +557,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Zipline: Change cp command [@Mraedis](https://github.com/Mraedis) ([#17559](https://github.com/community-scripts/ProxmoxVE/pull/17559))
     - Borg-UI: start through upstream's start.sh so migrations run [@MickLesk](https://github.com/MickLesk) ([#17563](https://github.com/community-scripts/ProxmoxVE/pull/17563))
     - linkding: serve favicons and preview images [@MickLesk](https://github.com/MickLesk) ([#17557](https://github.com/community-scripts/ProxmoxVE/pull/17557))
     - SparkyFitness: Fill in the nginx resolver 1.7.3 added [@MickLesk](https://github.com/MickLesk) ([#17556](https://github.com/community-scripts/ProxmoxVE/pull/17556))
