@@ -553,6 +553,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Immich: Pin version to 3.2.4 [@vhsdream](https://github.com/vhsdream) ([#17564](https://github.com/community-scripts/ProxmoxVE/pull/17564))
+
   - #### 🐞 Bug Fixes
 
     - linkding: serve favicons and preview images [@MickLesk](https://github.com/MickLesk) ([#17557](https://github.com/community-scripts/ProxmoxVE/pull/17557))
