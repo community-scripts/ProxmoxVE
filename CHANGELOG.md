@@ -557,6 +557,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(autocaliweb): wire .env into all service units, not just autocali… [@bobartlett](https://github.com/bobartlett) ([#17561](https://github.com/community-scripts/ProxmoxVE/pull/17561))
     - Zipline: Change cp command [@Mraedis](https://github.com/Mraedis) ([#17559](https://github.com/community-scripts/ProxmoxVE/pull/17559))
     - Borg-UI: start through upstream's start.sh so migrations run [@MickLesk](https://github.com/MickLesk) ([#17563](https://github.com/community-scripts/ProxmoxVE/pull/17563))
     - linkding: serve favicons and preview images [@MickLesk](https://github.com/MickLesk) ([#17557](https://github.com/community-scripts/ProxmoxVE/pull/17557))
