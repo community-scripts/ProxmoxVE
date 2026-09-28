@@ -43,9 +43,10 @@ $STD rabbitmqctl add_user plane "${RABBITMQ_PASS}"
 $STD rabbitmqctl set_permissions -p plane plane ".*" ".*" ".*"
 msg_ok "Configured RabbitMQ"
 
-msg_info "Installing MinIO"
-curl -fsSL https://dl.min.io/server/minio/release/linux-$(arch_resolve)/minio -o /usr/local/bin/minio
-chmod +x /usr/local/bin/minio
+fetch_and_deploy_gh_release "silo" "pgsty/silo" "prebuild" "latest" "/opt/silo" "silo_*_linux_$(arch_resolve).tar.gz"
+fetch_and_deploy_gh_release "mcli" "pgsty/mc" "prebuild" "latest" "/opt/mcli" "mcli_*_linux_$(arch_resolve).tar.gz"
+
+msg_info "Configuring Silo"
 mkdir -p /opt/minio/data
 MINIO_ACCESS_KEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 MINIO_SECRET_KEY=$(openssl rand -base64 36 | tr -dc 'a-zA-Z0-9' | head -c32)
@@ -56,13 +57,13 @@ MINIO_VOLUMES="/opt/minio/data"
 EOF
 cat <<EOF >/etc/systemd/system/minio.service
 [Unit]
-Description=MinIO Object Storage
+Description=Silo Object Storage
 After=network.target
 
 [Service]
 Type=simple
 EnvironmentFile=/etc/default/minio
-ExecStart=/usr/local/bin/minio server \$MINIO_VOLUMES --console-address ":9090"
+ExecStart=/opt/silo/silo server \$MINIO_VOLUMES --console-address ":9090"
 Restart=on-failure
 RestartSec=5
 
@@ -70,7 +71,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now minio
-msg_ok "Installed MinIO"
+msg_ok "Configured Silo"
 
 fetch_and_deploy_gh_release "plane" "makeplane/plane" "tarball"
 
@@ -175,12 +176,10 @@ $STD /opt/plane-venv/bin/python manage.py configure_instance
 $STD /opt/plane-venv/bin/python manage.py register_instance "${MACHINE_SIG}"
 msg_ok "Ran Database Migrations"
 
-msg_info "Creating Services and MinIO Bucket"
-curl -fsSL https://dl.min.io/client/mc/release/linux-$(arch_resolve)/mc -o /usr/local/bin/mcli
-chmod +x /usr/local/bin/mcli
-$STD /usr/local/bin/mcli alias set plane http://localhost:9000 "${MINIO_ACCESS_KEY}" "${MINIO_SECRET_KEY}"
-$STD /usr/local/bin/mcli mb plane/uploads --ignore-existing
-$STD /usr/local/bin/mcli anonymous set download plane/uploads
+msg_info "Creating Services and Bucket"
+$STD /opt/mcli/mcli alias set plane http://localhost:9000 "${MINIO_ACCESS_KEY}" "${MINIO_SECRET_KEY}"
+$STD /opt/mcli/mcli mb plane/uploads --ignore-existing
+$STD /opt/mcli/mcli anonymous set download plane/uploads
 
 cat <<EOF >/etc/systemd/system/plane-api.service
 [Unit]
@@ -279,7 +278,7 @@ MinIO Secret Key: ${MINIO_SECRET_KEY}
 Secret Key: ${SECRET_KEY}
 Config: /opt/plane/apps/api/.env
 EOF
-msg_ok "Created Services and MinIO Bucket"
+msg_ok "Created Services and Bucket"
 
 msg_info "Configuring Nginx"
 cat <<'EOF' >/etc/nginx/sites-available/plane.conf
