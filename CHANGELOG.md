@@ -564,6 +564,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Drop the scripts base pin from every ct/ script [@MickLesk](https://github.com/MickLesk) ([#17585](https://github.com/community-scripts/ProxmoxVE/pull/17585))
     - odoo: move to Debian 13 and stay on the installed major on update [@MickLesk](https://github.com/MickLesk) ([#17581](https://github.com/community-scripts/ProxmoxVE/pull/17581))
     - manyfold: use upstream f3d for headless renders on amd64 [@MickLesk](https://github.com/MickLesk) ([#17583](https://github.com/community-scripts/ProxmoxVE/pull/17583))
 
@@ -581,7 +582,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📂 Github
 
-  - Remove the PocketBase AI bot [@MickLesk](https://github.com/MickLesk) ([#17591](https://github.com/community-scripts/ProxmoxVE/pull/17591))
+  - Post a test command for vm/, tools/ and turnkey/ changes too [@MickLesk](https://github.com/MickLesk) ([#17587](https://github.com/community-scripts/ProxmoxVE/pull/17587))
+- Remove the PocketBase AI bot [@MickLesk](https://github.com/MickLesk) ([#17591](https://github.com/community-scripts/ProxmoxVE/pull/17591))
 
 ## 2026-09-28
 
