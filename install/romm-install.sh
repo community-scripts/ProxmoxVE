@@ -167,7 +167,6 @@ echo "__version__ = \"$(cat ~/.romm)\"" >/opt/romm/backend/__version__.py
 
 msg_info "Creating environment file"
 sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
-# Redis' default policy rewrites the whole dump every few minutes on an idle RomM (rommapp/romm#3983)
 echo 'save 3600 1' >>/etc/redis/redis.conf
 systemctl restart redis-server
 systemctl enable -q --now redis-server
