@@ -74,12 +74,15 @@ require_pve_host
 if systemctl is-active -q ping-instances.service; then
   systemctl stop ping-instances.service
 fi
-msg_info "Loading"
+msg_info "Updating template list"
 pveam update >/dev/null 2>&1
+msg_ok "Updated template list"
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templates" --yesno "This will allow for the creation of one of the many Template LXC Containers. Proceed?" 10 68
 TEMPLATE_MENU=()
 MSG_MAX_LENGTH=0
-while read -r TAG ITEM; do
+HOST_ARCH=$(dpkg --print-architecture)
+while read -r TAG ITEM ARCH; do
+  [[ -n "$ARCH" && "$ARCH" != "unknown" && "$ARCH" != "$HOST_ARCH" ]] && continue
   OFFSET=2
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET
   TEMPLATE_MENU+=("$ITEM" "$TAG " "OFF")
@@ -100,7 +103,7 @@ CTID=$(pvesh get /cluster/nextid)
 if ! validate_container_id "$CTID"; then
   msg_warn "Container ID $CTID is already in use."
   CTID=$(get_valid_container_id "$CTID")
-  msg_info "Using next available ID: $CTID"
+  msg_ok "Using next available ID: $CTID"
 fi
 
 PCT_OPTIONS="
@@ -176,15 +179,15 @@ function select_storage() {
 
 # Get template storage
 TEMPLATE_STORAGE=$(select_storage template)
-msg_info "Using '$TEMPLATE_STORAGE' for template storage."
+msg_ok "Using '$TEMPLATE_STORAGE' for template storage."
 
 # Get container storage
 CONTAINER_STORAGE=$(select_storage container)
-msg_info "Using '$CONTAINER_STORAGE' for container storage."
+msg_ok "Using '$CONTAINER_STORAGE' for container storage."
 
 # Download template
 msg_info "Downloading LXC template (Patience)"
-pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null || {
+pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null || {
   msg_error "A problem occured while downloading the LXC template."
   exit 222
 }
