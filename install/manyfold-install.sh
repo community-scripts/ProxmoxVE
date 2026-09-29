@@ -15,14 +15,22 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  f3d \
   git \
   libarchive-dev \
   libassimp-dev \
+  libegl1 \
   libmariadb-dev \
+  libx11-6 \
   nginx \
   redis-server
 msg_ok "Installed Dependencies"
+
+if [[ "$(arch_resolve)" == "amd64" ]]; then
+  fetch_and_deploy_gh_release "f3d" "f3d-app/f3d" "prebuild" "latest" "/opt/f3d" "F3D-*-Linux-x86_64.tar.gz"
+  ln -sf /opt/f3d/bin/f3d /usr/local/bin/f3d
+else
+  $STD apt install -y f3d
+fi
 
 setup_imagemagick
 PG_VERSION="16" setup_postgresql

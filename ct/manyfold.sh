@@ -32,8 +32,19 @@ function update_script() {
   fi
 
   NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
-  ensure_dependencies f3d
-  
+  if [[ "$(arch_resolve)" == "amd64" ]]; then
+    if check_for_gh_release "f3d" "f3d-app/f3d"; then
+      $STD apt install -y libegl1 libx11-6
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "f3d" "f3d-app/f3d" "prebuild" "latest" "/opt/f3d" "F3D-*-Linux-x86_64.tar.gz"
+      ln -sf /opt/f3d/bin/f3d /usr/local/bin/f3d
+      if dpkg -s f3d &>/dev/null; then
+        $STD apt purge -y f3d
+      fi
+    fi
+  else
+    ensure_dependencies f3d
+  fi
+
   if check_for_gh_release "manyfold" "manyfold3d/manyfold"; then
     msg_info "Stopping Services"
     systemctl stop manyfold.target manyfold-rails.1 manyfold-default_worker.1 manyfold-performance_worker.1
