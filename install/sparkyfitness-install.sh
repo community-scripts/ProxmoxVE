@@ -26,7 +26,7 @@ PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/packa
 NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Configuring Sparky Fitness"
-mkdir -p "/etc/sparkyfitness" "/var/lib/sparkyfitness/uploads" "/var/lib/sparkyfitness/backup" "/var/www/sparkyfitness"
+mkdir -p "/etc/sparkyfitness" "/var/www/sparkyfitness"
 cp "/opt/sparkyfitness/docker/.env.example" "/etc/sparkyfitness/.env"
 sed \
   -i \
@@ -43,8 +43,6 @@ sed \
   -e "s|^GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" \
   -e "s|^SPARKY_FITNESS_API_ENCRYPTION_KEY=.*|SPARKY_FITNESS_API_ENCRYPTION_KEY=$(openssl rand -hex 32)|" \
   -e "s|^BETTER_AUTH_SECRET=.*|BETTER_AUTH_SECRET=$(openssl rand -hex 32)|" \
-  -e "s|^# SPARKY_FITNESS_CUSTOM_BACKUP_DIRECTORY=.*|SPARKY_FITNESS_CUSTOM_BACKUP_DIRECTORY=/var/lib/sparkyfitness/backup|" \
-  -e "s|^# SPARKY_FITNESS_CUSTOM_UPLOADS_DIRECTORY=.*|SPARKY_FITNESS_CUSTOM_UPLOADS_DIRECTORY=/var/lib/sparkyfitness/uploads|" \
   "/etc/sparkyfitness/.env"
 msg_ok "Configured Sparky Fitness"
 
