@@ -559,6 +559,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tianji: raise the Node heap for the static build on install [@MickLesk](https://github.com/MickLesk) ([#17582](https://github.com/community-scripts/ProxmoxVE/pull/17582))
     - fix(romm): snapshot Redis hourly like the upstream image [@DenislavDenev](https://github.com/DenislavDenev) ([#17562](https://github.com/community-scripts/ProxmoxVE/pull/17562))
     - checkmate: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17554](https://github.com/community-scripts/ProxmoxVE/pull/17554))
 
@@ -582,7 +583,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📂 Github
 
-  - Post a test command for vm/, tools/ and turnkey/ changes too [@MickLesk](https://github.com/MickLesk) ([#17587](https://github.com/community-scripts/ProxmoxVE/pull/17587))
+  - Skip automated core pull requests in the changelog [@MickLesk](https://github.com/MickLesk) ([#17589](https://github.com/community-scripts/ProxmoxVE/pull/17589))
+- Post a test command for vm/, tools/ and turnkey/ changes too [@MickLesk](https://github.com/MickLesk) ([#17587](https://github.com/community-scripts/ProxmoxVE/pull/17587))
 - Remove the PocketBase AI bot [@MickLesk](https://github.com/MickLesk) ([#17591](https://github.com/community-scripts/ProxmoxVE/pull/17591))
 
 ## 2026-09-28
