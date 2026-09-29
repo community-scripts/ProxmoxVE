@@ -56,7 +56,6 @@ function update_script() {
     msg_ok "Migrated RQ services"
   fi
 
-  # Redis' default policy rewrites the whole dump every few minutes on an idle RomM (rommapp/romm#3983)
   if ! grep -q '^save ' /etc/redis/redis.conf; then
     msg_info "Reducing Redis snapshot frequency"
     echo 'save 3600 1' >>/etc/redis/redis.conf
