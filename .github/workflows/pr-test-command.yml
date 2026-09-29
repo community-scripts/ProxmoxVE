@@ -111,10 +111,9 @@ jobs:
                 );
               }
               lines.push(
-                'Both lines are needed. Each script pins `_CS_DEFAULT_URL` to `main`, and that',
-                'pin is what fills `COMMUNITY_SCRIPTS_URL` when the variable is unset — so',
-                'curling the branch URL on its own gives you the `ct/` script from this PR and',
-                'the `install/` script from `main`. Frequently the one you meant to test.',
+                'Both lines are needed. Without `COMMUNITY_SCRIPTS_URL` the engine falls back to',
+                '`main`, so curling the branch URL on its own gives you the `ct/` script from',
+                'this PR and the `install/` script from `main`. Frequently the one you meant to test.',
                 '',
                 'The same command works on an Incus host: the engine detects the platform and',
                 'loads the matching backend, while the scripts still come from this branch.',
