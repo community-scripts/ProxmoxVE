@@ -559,6 +559,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(romm): snapshot Redis hourly like the upstream image [@DenislavDenev](https://github.com/DenislavDenev) ([#17562](https://github.com/community-scripts/ProxmoxVE/pull/17562))
     - checkmate: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17554](https://github.com/community-scripts/ProxmoxVE/pull/17554))
 
 ### 💾 Core
