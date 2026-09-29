@@ -13,12 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y python3-lxml
-curl -fsSL --proto '=https' "https://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
-$STD dpkg -i /opt/python3-lxml-html-clean.deb
-msg_ok "Installed Dependencies"
-
 fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
 
 PG_VERSION="18" setup_postgresql
@@ -61,7 +55,6 @@ sed -i \
   /etc/odoo/odoo.conf
 $STD sudo -u odoo odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init
 rm -f /opt/odoo.deb
-rm -f /opt/python3-lxml-html-clean.deb
 echo "${LATEST_VERSION}" >/opt/${APPLICATION}_version.txt
 msg_ok "Configured Odoo"
 
