@@ -559,6 +559,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(kaneo): build with Vite+ instead of Turbo [@tinsever](https://github.com/tinsever) ([#17599](https://github.com/community-scripts/ProxmoxVE/pull/17599))
     - tianji: raise the Node heap for the static build on install [@MickLesk](https://github.com/MickLesk) ([#17582](https://github.com/community-scripts/ProxmoxVE/pull/17582))
     - fix(romm): snapshot Redis hourly like the upstream image [@DenislavDenev](https://github.com/DenislavDenev) ([#17562](https://github.com/community-scripts/ProxmoxVE/pull/17562))
     - checkmate: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17554](https://github.com/community-scripts/ProxmoxVE/pull/17554))
@@ -571,9 +572,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#77](https://github.com/community-scripts/core/pull/77))
-- Default the scripts base to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([core#76](https://github.com/community-scripts/core/pull/76))
-- Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#75](https://github.com/community-scripts/core/pull/75))
+  - Default the scripts base to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([core#76](https://github.com/community-scripts/core/pull/76))
 
 ### 🧰 Tools
 
