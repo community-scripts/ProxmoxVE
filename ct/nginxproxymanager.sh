@@ -60,7 +60,7 @@ function update_script() {
   if grep -qE 'VERSION_ID="1[3-9]"' /etc/os-release 2>/dev/null; then
     pcre_pkg="libpcre2-dev"
   fi
-  $STD apt install -y build-essential "$pcre_pkg" libssl-dev zlib1g-dev
+  $STD apt install -y build-essential "$pcre_pkg" libssl-dev zlib1g-dev python3-dev
 
   OPENRESTY_VERSION="1.29.2.5"
   if [[ "$(cat ~/.openresty 2>/dev/null)" != "$OPENRESTY_VERSION" ]]; then
@@ -234,15 +234,17 @@ EOF
     sed -i 's/"client": "sqlite3"/"client": "better-sqlite3"/' /app/config/production.json
     cd /app
     $STD yarn install --network-timeout 600000
+    # Explicitly rebuild better-sqlite3 from source to prevent native binding crashes on Node 22 updates
+    $STD npm rebuild better-sqlite3 --build-from-source || $STD yarn rebuild better-sqlite3 --update-binary
     msg_ok "Initialized Backend"
 
     msg_info "Starting Services"
     if [ -f /opt/certbot/bin/certbot ]; then
-    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+      CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
     elif command -v certbot &>/dev/null; then
-    CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+      CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
     else
-    CERTBOT_VER="2.0.0"
+      CERTBOT_VER="2.0.0"
     fi
     if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
       sed -i "s|Environment=CERTBOT_VERSION=.*|Environment=CERTBOT_VERSION=${CERTBOT_VER}|" /lib/systemd/system/npm.service
