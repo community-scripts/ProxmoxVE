@@ -564,7 +564,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Default the scripts base to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([core#76](https://github.com/community-scripts/core/pull/76))
+  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#77](https://github.com/community-scripts/core/pull/77))
+- Default the scripts base to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([core#76](https://github.com/community-scripts/core/pull/76))
 - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#75](https://github.com/community-scripts/core/pull/75))
 
 ## 2026-09-28
