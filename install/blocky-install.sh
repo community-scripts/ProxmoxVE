@@ -67,11 +67,16 @@ msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/blocky.service
 [Unit]
 Description=Blocky
-After=network.target
+After=network-online.target
+Wants=network-online.target
+
 [Service]
 User=root
 WorkingDirectory=/opt/blocky
+Restart=on-failure
+RestartSec=5
 ExecStart=/opt/blocky/./blocky --config config.yml
+
 [Install]
 WantedBy=multi-user.target
 EOF
