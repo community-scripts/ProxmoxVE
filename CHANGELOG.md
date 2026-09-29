@@ -557,6 +557,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - checkmate: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17554](https://github.com/community-scripts/ProxmoxVE/pull/17554))
 
+### 💾 Core
+
+  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#75](https://github.com/community-scripts/core/pull/75))
+
 ## 2026-09-28
 
 ### 🚀 Updated Scripts
