@@ -249,7 +249,7 @@ jobs:
                   if (new Date(pr.merged_at) <= latestDateInChangelog) continue;
 
                   const rawLabels = pr.labels.map(label => label.name.toLowerCase());
-                  if (rawLabels.some(l => ["invalid", "wontdo", "wontfix", "duplicate"].includes(l))) continue;
+                  if (rawLabels.some(l => ["invalid", "wontdo", "wontfix", "duplicate", process.env.AUTOMATED_PR_LABEL].includes(l))) continue;
 
                   if (!coreCategory) {
                     console.log(`No Core category configured; skipping core#${pr.number}`);
