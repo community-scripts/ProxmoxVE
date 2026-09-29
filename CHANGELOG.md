@@ -572,6 +572,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Default the scripts base to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([core#76](https://github.com/community-scripts/core/pull/76))
 - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#75](https://github.com/community-scripts/core/pull/75))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - all-templates: handle the arch column of pveam available [@MickLesk](https://github.com/MickLesk) ([#17579](https://github.com/community-scripts/ProxmoxVE/pull/17579))
+
 ## 2026-09-28
 
 ### 🚀 Updated Scripts
