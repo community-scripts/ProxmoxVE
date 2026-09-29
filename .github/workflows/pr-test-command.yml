@@ -2,7 +2,8 @@ name: PR test command
 
 # Posts a ready-to-run test command for reviewers.
 # It uses this PR’s script branch with the production engine, since both resolve
-# independently. Only scripts using community-scripts/core are supported.
+# independently. ct/ scripts need community-scripts/core; vm/, tools/ and
+# turnkey/ scripts run straight from the branch.
 #
 # pull_request_target allows comments on fork PRs. No PR code is checked out or
 # executed; API inputs are validated and the comment is assembled in JavaScript.
@@ -14,6 +15,9 @@ on:
     paths:
       - "ct/**"
       - "install/**"
+      - "vm/**"
+      - "tools/**"
+      - "turnkey/**"
 
 jobs:
   comment:
@@ -50,14 +54,43 @@ jobs:
             // ct/foo.sh and install/foo-install.sh are the same app. A removed
             // file has nothing left to run.
             const apps = new Map();               // slug -> {ct, install}
+            const others = [];
             for (const f of files) {
               if (f.status === 'removed') continue;
               let m = f.filename.match(/^ct\/([a-z0-9][a-z0-9._-]*)\.sh$/);
               if (m) { apps.set(m[1], { ...apps.get(m[1]), ct: true }); continue; }
               m = f.filename.match(/^install\/([a-z0-9][a-z0-9._-]*)-install\.sh$/);
-              if (m) apps.set(m[1], { ...apps.get(m[1]), install: true });
+              if (m) { apps.set(m[1], { ...apps.get(m[1]), install: true }); continue; }
+              if (/^(vm|tools|turnkey)\/[A-Za-z0-9._\/-]+\.sh$/.test(f.filename)) others.push(f.filename);
             }
-            if (apps.size === 0) return;
+            if (apps.size === 0 && others.length === 0) return;
+            others.sort();
+
+            // Where a tool runs is read from the script itself; it is never run.
+            const HOST = /(^|[\s;&|(`$])(pct|qm|pveam|pvesm|pvesh|pveversion)\s/m;
+            async function runsOn(path) {
+              if (path.startsWith('vm/')) return 'pve';
+              const appliance = (path.split('/').pop().match(/(?:^|-)(pbs|pmg|pdm)(?=[0-9-]|\.sh$)/) || [])[1];
+              if (path.startsWith('tools/pve/')) return appliance || 'pve';
+              let text = '';
+              try {
+                const res = await github.rest.repos.getContent({
+                  owner: head.owner.login, repo: head.name, path, ref: pr.head.sha,
+                });
+                text = Buffer.from(res.data.content || '', 'base64').toString('utf8');
+              } catch (e) {}
+              if (HOST.test(text.replace(/^\s*#.*$/gm, '').replace(/command -v \S+/g, ''))) return 'pve';
+              if (appliance) return appliance;
+              return path.startsWith('tools/addon/') ? 'guest' : 'unknown';
+            }
+            const WHERE = {
+              pve: 'in the Proxmox VE shell',
+              guest: 'inside the LXC or VM that should get it',
+              pbs: 'in the Proxmox Backup Server shell',
+              pmg: 'in the Proxmox Mail Gateway shell',
+              pdm: 'in the Proxmox Datacenter Manager shell',
+              unknown: 'wherever the script is meant to run',
+            };
 
             // Read the ct script at the PR head to see which engine it loads.
             // Read only -- it is never sourced or run.
@@ -111,10 +144,9 @@ jobs:
                 );
               }
               lines.push(
-                'Both lines are needed. Each script pins `_CS_DEFAULT_URL` to `main`, and that',
-                'pin is what fills `COMMUNITY_SCRIPTS_URL` when the variable is unset — so',
-                'curling the branch URL on its own gives you the `ct/` script from this PR and',
-                'the `install/` script from `main`. Frequently the one you meant to test.',
+                'Both lines are needed. Without `COMMUNITY_SCRIPTS_URL` the engine falls back to',
+                '`main`, so curling the branch URL on its own gives you the `ct/` script from',
+                'this PR and the `install/` script from `main`. Frequently the one you meant to test.',
                 '',
                 'The same command works on an Incus host: the engine detects the platform and',
                 'loads the matching backend, while the scripts still come from this branch.',
@@ -130,6 +162,30 @@ jobs:
                 `dev_mode=net,keep bash -c "$(curl -fsSL "$COMMUNITY_SCRIPTS_URL/ct/${shown[0]}.sh")"`,
                 '```',
                 '</details>',
+              );
+            }
+
+            if (others.length > 0) {
+              const shown = others.slice(0, MAX_APPS);
+              lines.push(...(ready.length > 0 ? ['', '---', ''] : ['### Try this branch', '']));
+              for (const path of shown) {
+                lines.push(
+                  `\`${path}\`, run ${WHERE[await runsOn(path)]}:`,
+                  '```bash',
+                  `bash -c "$(curl -fsSL "${base}/${path}")"`,
+                  '```',
+                  '',
+                );
+              }
+              if (others.length > shown.length) {
+                lines.push(
+                  `${others.length - shown.length} more script(s) changed; same command, different path.`,
+                  '',
+                );
+              }
+              lines.push(
+                'Only the script itself comes from this branch. Whatever it loads, the engine',
+                'or the `misc/` helpers, still comes from `main`.',
               );
             }
 
