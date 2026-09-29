@@ -564,6 +564,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - odoo: move to Debian 13 and stay on the installed major on update [@MickLesk](https://github.com/MickLesk) ([#17581](https://github.com/community-scripts/ProxmoxVE/pull/17581))
     - manyfold: use upstream f3d for headless renders on amd64 [@MickLesk](https://github.com/MickLesk) ([#17583](https://github.com/community-scripts/ProxmoxVE/pull/17583))
 
 ### 💾 Core
