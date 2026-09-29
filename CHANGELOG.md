@@ -551,6 +551,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-29
 
+### 🆕 New Scripts
+
+  - Anki Sync Server ([#17416](https://github.com/community-scripts/ProxmoxVE/pull/17416))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
