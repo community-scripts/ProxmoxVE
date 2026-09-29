@@ -579,6 +579,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - all-templates: handle the arch column of pveam available [@MickLesk](https://github.com/MickLesk) ([#17579](https://github.com/community-scripts/ProxmoxVE/pull/17579))
 
+### 📂 Github
+
+  - Remove the PocketBase AI bot [@MickLesk](https://github.com/MickLesk) ([#17591](https://github.com/community-scripts/ProxmoxVE/pull/17591))
+
 ## 2026-09-28
 
 ### 🚀 Updated Scripts
