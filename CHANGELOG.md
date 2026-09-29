@@ -549,6 +549,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-29
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - checkmate: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17554](https://github.com/community-scripts/ProxmoxVE/pull/17554))
+
 ## 2026-09-28
 
 ### 🚀 Updated Scripts
