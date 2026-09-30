@@ -560,7 +560,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - download_gpg_key: make dearmored keyrings world-readable [@MickLesk](https://github.com/MickLesk) ([core#79](https://github.com/community-scripts/core/pull/79))
+  - vm: autologin on the serial console for images without cloud-init [@MickLesk](https://github.com/MickLesk) ([core#80](https://github.com/community-scripts/core/pull/80))
+- download_gpg_key: make dearmored keyrings world-readable [@MickLesk](https://github.com/MickLesk) ([core#79](https://github.com/community-scripts/core/pull/79))
 
 ## 2026-09-29
 
