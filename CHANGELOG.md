@@ -555,6 +555,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(blocky): restart on failure and wait for network-online [@haplo](https://github.com/haplo) ([#17601](https://github.com/community-scripts/ProxmoxVE/pull/17601))
     - SparkyFitness: update sed replacement [@tomfrenzel](https://github.com/tomfrenzel) ([#17604](https://github.com/community-scripts/ProxmoxVE/pull/17604))
 
 ## 2026-09-29
