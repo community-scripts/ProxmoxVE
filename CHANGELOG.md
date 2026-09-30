@@ -551,6 +551,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-09-30
 
+### 🆕 New Scripts
+
+  - SIlo ([#17614](https://github.com/community-scripts/ProxmoxVE/pull/17614))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
