@@ -24,22 +24,8 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 
-msg_info "Setting up database"
-DB_NAME=glpi_db
-DB_USER=glpi
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
-$STD mariadb -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-cat <<EOF >~/glpi_db.creds
-GLPI Database Credentials
-Database: $DB_NAME
-Username: $DB_USER
-Password: $DB_PASS
-EOF
-msg_ok "Set up database"
+MARIADB_DB_NAME="glpi_db" MARIADB_DB_USER="glpi" MARIADB_DB_EXTRA_GRANTS="GRANT SELECT ON \`mysql\`.\`time_zone_name\`" MARIADB_DB_CREDS_FILE="$HOME/glpi_db.creds" setup_mariadb_db
 
 msg_info "Installing GLPi"
 cd /opt
@@ -85,9 +71,9 @@ msg_ok "Configured Downstream file"
 msg_info "Configuring GLPI Database"
 $STD /usr/bin/php /opt/glpi/bin/console db:install \
   --db-host=localhost \
-  --db-name=$DB_NAME \
-  --db-user=$DB_USER \
-  --db-password=$DB_PASS \
+  --db-name=glpi_db \
+  --db-user=glpi \
+  --db-password=$MARIADB_DB_PASS \
   --default-language=en_US \
   --no-interaction \
   --allow-superuser \

@@ -45,20 +45,7 @@ $STD apt install -y \
   libapache2-mod-php8.4
 msg_ok "Installed PHP"
 
-msg_info "Setting up MariaDB"
-DB_NAME=panel
-DB_USER=pterodactyl
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-cat <<EOF >~/pterodactyl-panel.creds
-pterodactyl Panel-Credentials
-pterodactyl Panel Database User: $DB_USER
-pterodactyl Panel Database Password: $DB_PASS
-pterodactyl Panel Database Name: $DB_NAME
-EOF
-msg_ok "Set up MariaDB"
+MARIADB_DB_NAME="panel" MARIADB_DB_USER="pterodactyl" MARIADB_DB_CREDS_FILE="$HOME/pterodactyl-panel.creds" setup_mariadb_db
 
 read -p "${TAB3}Provide an email address for admin login, this should be a valid email address: " ADMIN_EMAIL
 read -p "${TAB3}Enter your First Name: " NAME_FIRST
@@ -75,14 +62,14 @@ ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
 $STD php artisan p:environment:setup --no-interaction --author "$ADMIN_EMAIL" --url "http://$LOCAL_IP"
-$STD php artisan p:environment:database --no-interaction --database $DB_NAME --username $DB_USER --password "$DB_PASS"
+$STD php artisan p:environment:database --no-interaction --database panel --username pterodactyl --password "$MARIADB_DB_PASS"
 $STD php artisan migrate --seed --force --no-interaction
 $STD php artisan p:user:make --no-interaction --admin=1 --email "$ADMIN_EMAIL" --password "$ADMIN_PASS" --name-first "$NAME_FIRST" --name-last "$NAME_LAST" --username "admin"
 echo "* * * * * php /opt/pterodactyl-panel/artisan schedule:run >> /dev/null 2>&1" | crontab -u www-data -
 chown -R www-data:www-data /opt/pterodactyl-panel/*
 chmod -R 755 /opt/pterodactyl-panel/storage/* /opt/pterodactyl-panel/bootstrap/cache/
 ln -s /opt/pterodactyl-panel /var/www/pterodactyl
-cat <<EOF >~/pterodactyl-panel.creds
+cat <<EOF >>~/pterodactyl-panel.creds
 
 pterodactyl Admin Username: admin
 pterodactyl Admin Email: $ADMIN_EMAIL

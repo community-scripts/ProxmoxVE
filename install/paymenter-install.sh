@@ -27,28 +27,18 @@ setup_composer
 fetch_and_deploy_gh_release "paymenter" "paymenter/paymenter" "prebuild" "latest" "/opt/paymenter" "paymenter.tar.gz"
 chmod -R 755 /opt/paymenter/storage/* /opt/paymenter/bootstrap/cache/
 
-msg_info "Setting up database"
-DB_NAME=paymenter
-DB_USER=paymenter
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
-cat <<EOF >~/paymenter_db.creds
-Paymenter Database Credentials
-Database: $DB_NAME
-Username: $DB_USER
-Password: $DB_PASS
-EOF
+MARIADB_DB_NAME="paymenter" MARIADB_DB_USER="paymenter" MARIADB_DB_CREDS_FILE="$HOME/paymenter_db.creds" setup_mariadb_db
+
+msg_info "Setting up database"
 cd /opt/paymenter
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
 $STD php artisan storage:link
-sed -i "s/^DB_DATABASE=.*/DB_DATABASE=${DB_NAME}/" .env
-sed -i "s/^DB_USERNAME=.*/DB_USERNAME=${DB_USER}/" .env
-sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${DB_PASS}/" .env
+sed -i "s/^DB_DATABASE=.*/DB_DATABASE=paymenter/" .env
+sed -i "s/^DB_USERNAME=.*/DB_USERNAME=paymenter/" .env
+sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${MARIADB_DB_PASS}/" .env
 $STD php artisan migrate --force --seed
 msg_ok "Set up database"
 

@@ -25,21 +25,8 @@ setup_mariadb
 PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 setup_composer
 
-msg_info "Setting up database"
-DB_NAME=kimai_db
-DB_USER=kimai
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-$STD mariadb -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-cat <<EOF >~/kimai.creds
-Kimai-Credentials
-Kimai Database User: $DB_USER
-Kimai Database Password: $DB_PASS
-Kimai Database Name: $DB_NAME
-EOF
-msg_ok "Set up database"
+MARIADB_DB_NAME="kimai_db" MARIADB_DB_USER="kimai" setup_mariadb_db
 
 fetch_and_deploy_gh_release "kimai" "kimai/kimai" "tarball"
 
@@ -50,7 +37,7 @@ echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc
 source ~/.bashrc
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 cp .env.dist .env
-sed -i "/^DATABASE_URL=.*/c\DATABASE_URL=mysql://$DB_USER:$DB_PASS@127.0.0.1:3306/$DB_NAME?charset=utf8mb4&serverVersion=mariadb-$MYSQL_VERSION" /opt/kimai/.env
+sed -i "/^DATABASE_URL=.*/c\DATABASE_URL=mysql://kimai:$MARIADB_DB_PASS@127.0.0.1:3306/kimai_db?charset=utf8mb4&serverVersion=mariadb-$MYSQL_VERSION" /opt/kimai/.env
 sed -i "s|^APP_SECRET=.*|APP_SECRET=$APP_SECRET|" /opt/kimai/.env
 $STD bin/console kimai:install -n
 $STD expect <<EOF
