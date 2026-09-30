@@ -218,6 +218,8 @@ EOF
 #!/usr/bin/env bash
 base="$(grep -m1 '^ROMM_BASE_PATH=' /opt/romm/.env 2>/dev/null | cut -d= -f2)"
 base="${base:-/var/lib/romm}"
+ln -sfn "${base}/resources" /opt/romm/frontend/dist/assets/romm/resources
+ln -sfn "${base}/assets" /opt/romm/frontend/dist/assets/romm/assets
 [[ -f /etc/angie/http.d/romm.conf ]] || exit 0
 sed -i -e "s|alias .*/library/;|alias ${base}/library/;|" \
   -e "s|alias .*/cache/;|alias ${base}/cache/;|" /etc/angie/http.d/romm.conf
