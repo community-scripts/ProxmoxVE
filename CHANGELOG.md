@@ -549,6 +549,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-09-30
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - SparkyFitness: update sed replacement [@tomfrenzel](https://github.com/tomfrenzel) ([#17604](https://github.com/community-scripts/ProxmoxVE/pull/17604))
+
 ## 2026-09-29
 
 ### 🆕 New Scripts
