@@ -558,6 +558,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(blocky): restart on failure and wait for network-online [@haplo](https://github.com/haplo) ([#17601](https://github.com/community-scripts/ProxmoxVE/pull/17601))
     - SparkyFitness: update sed replacement [@tomfrenzel](https://github.com/tomfrenzel) ([#17604](https://github.com/community-scripts/ProxmoxVE/pull/17604))
 
+### 💾 Core
+
+  - download_gpg_key: make dearmored keyrings world-readable [@MickLesk](https://github.com/MickLesk) ([core#79](https://github.com/community-scripts/core/pull/79))
+
 ## 2026-09-29
 
 ### 🆕 New Scripts
