@@ -45,8 +45,6 @@ msg_ok "Installed IT-Tools"
 motd_ssh
 customize
 
-msg_info "Cleaning up"
 rm -rf /tmp/dist
 rm -f it-tools.zip
-$STD apk cache clean
-msg_ok "Cleaned"
+cleanup_lxc

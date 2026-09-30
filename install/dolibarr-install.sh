@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   php-imap \
   debconf-utils
 msg_ok "Installed Dependencies"
@@ -36,7 +36,7 @@ RELEASE=$(curl -fsSL "$BASE" | grep -oP '(?<=/Dolibarr%20installer%20for%20Debia
 FILE=$(curl -fsSL "${BASE}${RELEASE}/" | grep -oP 'dolibarr_[^"]+_all.deb' | head -n1)
 curl -fsSL "https://altushost-swe.dl.sourceforge.net/project/dolibarr/Dolibarr%20installer%20for%20Debian-Ubuntu%20(DoliDeb)/${RELEASE}/${FILE}?viasf=1" -o ""$FILE""
 echo "dolibarr dolibarr/reconfigure-webserver multiselect apache2" | debconf-set-selections
-$STD apt-get install ./$FILE -y
+$STD apt install ./$FILE -y
 $STD apt install -f
 rm -rf ~/$FILE
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"

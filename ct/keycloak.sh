@@ -44,7 +44,7 @@ function update_script() {
 
     msg_info "Updating packages"
     apt_update_safe
-    $STD apt-get -y upgrade
+    $STD apt -y upgrade
     msg_ok "Updated packages"
 
     msg_info "Backup old Keycloak"

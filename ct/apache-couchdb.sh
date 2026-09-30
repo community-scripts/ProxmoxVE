@@ -31,7 +31,7 @@ function update_script() {
   fi
   msg_info "Updating Apache CouchDB"
   apt_update_safe
-  $STD apt-get install -y --only-upgrade couchdb
+  $STD apt install -y --only-upgrade couchdb
   msg_ok "Updated Apache CouchDB"
   msg_ok "Updated successfully!"
   exit

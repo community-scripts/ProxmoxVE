@@ -39,7 +39,7 @@ setup_deb822_repo \
   "https://packages.microsoft.com/ubuntu/22.04/prod" \
   "jammy" \
   "main"
-$STD apt-get install -y \
+$STD apt install -y \
   mssql-tools18 \
   unixodbc-dev
 echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >>~/.bash_profile

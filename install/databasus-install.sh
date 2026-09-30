@@ -159,7 +159,6 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl daemon-reload
 $STD systemctl enable -q --now databasus
 msg_ok "Created Databasus Service"
 

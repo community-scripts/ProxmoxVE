@@ -30,7 +30,7 @@ setup_deb_based() {
 
   if [[ -n "$socket" ]]; then
     msg_info "Enabling Docker TCP socket on $socket"
-    $STD apt-get install -y jq
+    $STD apt install -y jq
 
     tmpfile=$(mktemp)
     jq --arg sock "$socket" '. + { "hosts": ["unix:///var/run/docker.sock", $sock] }' /etc/docker/daemon.json >"$tmpfile" && mv "$tmpfile" /etc/docker/daemon.json

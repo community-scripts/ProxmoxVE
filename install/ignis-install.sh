@@ -111,9 +111,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/ignis.conf /etc/nginx/sites-enabled/ignis.conf
-rm -f /etc/nginx/sites-enabled/default
-systemctl restart nginx
+nginx_enable_site ignis.conf
 msg_ok "Configured Nginx"
 
 motd_ssh

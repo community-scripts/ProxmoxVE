@@ -82,7 +82,7 @@ GRAMPS_PLUGINS_DIR="/opt/gramps-web/data/gramps/gramps${GRAMPS_VERSION}/plugins"
 mkdir -p "$GRAMPS_PLUGINS_DIR"
 
 msg_info "Installing Gramps Addons (gramps${GRAMPS_VERSION})"
-$STD wget -q https://github.com/gramps-project/addons/archive/refs/heads/master.zip -O /tmp/gramps-addons.zip
+curl -fsSL -o /tmp/gramps-addons.zip https://github.com/gramps-project/addons/archive/refs/heads/master.zip
 for addon in FilterRules JSON; do
   unzip -p /tmp/gramps-addons.zip "addons-master/gramps${GRAMPS_VERSION}/download/${addon}.addon.tgz" | \
     tar -xz -C "$GRAMPS_PLUGINS_DIR"

@@ -109,7 +109,7 @@ function update_script() {
     if [[ -f /etc/angie/http.d/romm.conf ]]; then
       if ! grep -q "js_content decode.decodeBase64" /etc/angie/http.d/romm.conf; then
         msg_info "Adding missing /decode and /cache locations to Angie config"
-        dpkg -l angie-module-njs &>/dev/null || $STD apt-get install -y angie-module-njs
+        dpkg -l angie-module-njs &>/dev/null || $STD apt install -y angie-module-njs
         grep -q "ngx_http_js_module.so" /etc/angie/angie.conf || sed -i '1i load_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
         mkdir -p /etc/angie/js "${ROMM_BASE}/cache"
         cat <<'JSEOF' >/etc/angie/js/decode.js

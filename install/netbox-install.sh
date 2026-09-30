@@ -111,7 +111,6 @@ systemctl restart apache2
 
 mv /opt/netbox/contrib/gunicorn.py /opt/netbox/gunicorn.py
 mv /opt/netbox/contrib/*.service /etc/systemd/system/
-systemctl daemon-reload
 systemctl enable -q --now netbox netbox-rq
 echo -e "Netbox Secret: \e[32m$SECRET_KEY\e[0m" >>~/netbox.creds
 msg_ok "Configured NetBox"

@@ -34,7 +34,7 @@ apt_update_safe
 msg_ok "Setup Twingate Repository"
 
 msg_info "Setup Twingate Connector"
-$STD apt-get install -y twingate-connector
+$STD apt install -y twingate-connector
 msg_ok "Setup Twingate Connector"
 
 msg_info "Configure Twingate-Connector"

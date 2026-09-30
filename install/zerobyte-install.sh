@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 echo "davfs2 davfs2/suid_file boolean false" | debconf-set-selections
-$STD apt-get install -y \
+$STD apt install -y \
   bzip2 \
   fuse3 \
   git \

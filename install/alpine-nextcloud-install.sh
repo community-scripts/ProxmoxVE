@@ -194,3 +194,4 @@ msg_ok "Finished Nextcloud Setup-Wizard"
 
 motd_ssh
 customize
+cleanup_lxc

@@ -15,12 +15,12 @@ update_os
 
 msg_info "Installing Dependencies"
 apt_update_safe
-$STD apt-get install -y \
+$STD apt install -y \
   ssh \
   software-properties-common
 
 $STD add-apt-repository -y ppa:dotnet/backports
-$STD apt-get install -y \
+$STD apt install -y \
   dotnet-sdk-9.0 \
   vsftpd \
   nginx

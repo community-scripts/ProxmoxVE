@@ -49,7 +49,7 @@ setup_deb822_repo \
   "https://download.angie.software/angie/debian/$(get_os_info version_id)" \
   "$(get_os_info codename)" \
   "main"
-$STD apt-get install -y angie angie-module-zip angie-module-njs
+$STD apt install -y angie angie-module-zip angie-module-njs
 sed -i '1i load_module modules/ngx_http_zip_module.so;\nload_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
 mkdir -p /etc/angie/js
 cat <<'EOF' >/etc/angie/js/decode.js

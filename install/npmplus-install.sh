@@ -86,3 +86,4 @@ msg_ok "Builded and started NPMplus"
 
 motd_ssh
 customize
+cleanup_lxc

@@ -35,7 +35,6 @@ export SPRING_DATASOURCE_PASSWORD=${PG_DB_PASS}
 # Specify partitioning size for timestamp key-value storage. Allowed values: DAYS, MONTHS, YEARS, INDEFINITE.
 export SQL_POSTGRES_TS_KV_PARTITIONING=MONTHS
 EOF
-systemctl daemon-reload
 msg_ok "Configured ThingsBoard"
 
 msg_info "Running ThingsBoard Installation Script"

@@ -51,7 +51,7 @@ Suites: ./
 Signed-By: /etc/apt/keyrings/collaboraonline-release-keyring.gpg
 EOF
 apt_update_safe
-$STD apt-get install -y coolwsd code-brand
+$STD apt install -y coolwsd code-brand
 systemctl stop coolwsd
 mkdir -p /etc/systemd/system/coolwsd.service.d
 cat <<EOF >/etc/systemd/system/coolwsd.service.d/override.conf

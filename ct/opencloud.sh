@@ -39,7 +39,7 @@ function update_script() {
 
     msg_info "Updating packages"
     apt_update_safe
-    $STD apt-get dist-upgrade -y
+    $STD apt dist-upgrade -y
     ensure_dependencies "inotify-tools"
     msg_ok "Updated packages"
 
