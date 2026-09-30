@@ -553,7 +553,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - SIlo ([#17614](https://github.com/community-scripts/ProxmoxVE/pull/17614))
+  - Shoko ([#17617](https://github.com/community-scripts/ProxmoxVE/pull/17617))
+- SIlo ([#17614](https://github.com/community-scripts/ProxmoxVE/pull/17614))
 
 ### 🚀 Updated Scripts
 
