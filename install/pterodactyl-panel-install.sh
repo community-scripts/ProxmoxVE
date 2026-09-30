@@ -64,12 +64,10 @@ read -p "${TAB3}Provide an email address for admin login, this should be a valid
 read -p "${TAB3}Enter your First Name: " NAME_FIRST
 read -p "${TAB3}Enter your Last Name: " NAME_LAST
 
+fetch_and_deploy_gh_release "pterodactyl-panel" "pterodactyl/panel" "prebuild" "latest" "/opt/pterodactyl-panel" "panel.tar.gz"
+
 msg_info "Installing pterodactyl Panel"
-RELEASE=$(curl -fsSL https://api.github.com/repos/pterodactyl/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-mkdir /opt/pterodactyl-panel
 cd /opt/pterodactyl-panel
-curl -fsSL "https://github.com/pterodactyl/panel/releases/download/v${RELEASE}/panel.tar.gz" -o "panel.tar.gz"
-tar -xzf "panel.tar.gz"
 cp .env.example .env
 ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD composer install --no-dev --optimize-autoloader --no-interaction
@@ -88,9 +86,7 @@ pterodactyl Admin Username: admin
 pterodactyl Admin Email: $ADMIN_EMAIL
 pterodactyl Admin Password: $ADMIN_PASS
 EOF
-rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
 rm -rf "/tmp/debsuryorg-archive-keyring.deb"
-echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed pterodactyl Panel"
 
 msg_info "Creating Service"

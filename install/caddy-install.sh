@@ -78,12 +78,10 @@ EOF
   read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     GO_VERSION="$(curl -fsSL https://go.dev/VERSION?m=text | head -1 | cut -c3-)" setup_go
+    fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "prebuild" "latest" "/opt/xcaddy" "xcaddy_*_linux_$(arch_resolve).tar.gz"
+    ln -sf /opt/xcaddy/xcaddy /usr/local/bin/xcaddy
     msg_info "Setup xCaddy"
     cd /opt
-    RELEASE=$(curl -fsSL https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    curl -fsSL "https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${RELEASE:1}_linux_amd64.tar.gz" -o "xcaddy_${RELEASE:1}_linux_amd64.tar.gz"
-    $STD tar xzf xcaddy_"${RELEASE:1}"_linux_amd64.tar.gz -C /usr/local/bin xcaddy
-    rm -rf /opt/xcaddy*
     $STD xcaddy build
     msg_ok "Setup xCaddy"
   fi

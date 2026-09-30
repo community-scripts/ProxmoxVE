@@ -17,15 +17,10 @@ msg_info "Installing dependencies"
 $STD apt install -y zstd
 msg_ok "Installed dependencies"
 
-msg_info "Installing Wastebin"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/matze/wastebin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.zst" -o "$temp_file"
-tar -xf "$temp_file"
-mkdir -p /opt/wastebin
-mv wastebin* /opt/wastebin/
-chmod +x /opt/wastebin/wastebin
-chmod +x /opt/wastebin/wastebin-ctl
+fetch_and_deploy_gh_release "wastebin" "matze/wastebin" "prebuild" "latest" "/opt/wastebin" "wastebin_*_$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.zst"
+chmod +x /opt/wastebin/wastebin /opt/wastebin/wastebin-ctl
+
+msg_info "Configuring Wastebin"
 
 mkdir -p /opt/wastebin-data
 cat <<EOF >/opt/wastebin-data/.env
@@ -35,10 +30,7 @@ WASTEBIN_HTTP_TIMEOUT=30
 WASTEBIN_SIGNING_KEY=$(openssl rand -hex 32)
 WASTEBIN_PASTE_EXPIRATIONS=0,600,3600=d,86400,604800,2419200,29030400
 EOF
-rm -f "$temp_file"
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-
-msg_ok "Installed Wastebin"
+msg_ok "Configured Wastebin"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/wastebin.service

@@ -65,10 +65,7 @@ setup_alpine() {
   $STD rc-update add docker default
   msg_ok "Installed Docker"
 
-  get_latest_release() {
-    curl -fsSL https://api.github.com/repos/"$1"/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-  }
-  DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
+  DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_github_release "docker/compose" false)
   read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"

@@ -25,10 +25,7 @@ $STD apk add docker
 $STD rc-service docker start
 $STD rc-update add docker default
 
-get_latest_release() {
-  curl -fsSL https://api.github.com/repos/$1/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-}
-DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
+DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_github_release "docker/compose" false)
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 mkdir -p $DOCKER_CONFIG/cli-plugins
 curl -fsSL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_LATEST_VERSION/docker-compose-linux-$(arch_resolve "x86_64" "aarch64") -o ~/.docker/cli-plugins/docker-compose

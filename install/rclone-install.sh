@@ -57,12 +57,9 @@ setup_alpine() {
     apache2-utils fuse3
   msg_ok "Installed dependencies"
 
-  msg_info "Installing rclone"
-  temp_file=$(mktemp)
-  mkdir -p /opt/rclone
-  RELEASE=$(curl -s https://api.github.com/repos/rclone/rclone/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  curl -fsSL "https://github.com/rclone/rclone/releases/download/v${RELEASE}/rclone-v${RELEASE}-linux-$(arch_resolve).zip" -o "$temp_file"
-  $STD unzip -j "$temp_file" '*/**' -d /opt/rclone
+  fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone*linux-$(arch_resolve).zip"
+
+  msg_info "Configuring rclone"
   cd /opt/rclone
   RCLONE_PASSWORD=$(head -c 16 /dev/urandom | xxd -p -c 16)
   $STD htpasswd -cb -B /opt/login.pwd admin "$RCLONE_PASSWORD"
@@ -71,9 +68,7 @@ rclone-Credentials
 rclone User Name: admin
 rclone Password: $RCLONE_PASSWORD
 EOF
-  echo "${RELEASE}" >/opt/rclone_version.txt
-  rm -f "$temp_file"
-  msg_ok "Installed rclone"
+  msg_ok "Configured rclone"
 
   msg_info "Enabling rclone Service"
   cat <<EOF >/etc/init.d/rclone
@@ -96,8 +91,6 @@ EOF
   msg_info "Starting rclone"
   $STD service rclone start
   msg_ok "Started rclone"
-
-  rm -rf "$temp_file"
 }
 
 run_os_setup

@@ -26,13 +26,10 @@ curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/pla
 $STD python3 get-platformio.py
 msg_ok "Setup Platformio"
 
+fetch_and_deploy_gh_release "tasmocompiler" "benzino77/tasmocompiler" "tarball"
+
 msg_info "Setup TasmoCompiler"
 mkdir /tmp/Tasmota
-RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl_download "/tmp/v${RELEASE}.tar.gz" "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz"
-cd /tmp
-tar xzf /tmp/v${RELEASE}.tar.gz
-mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
 cd /opt/tasmocompiler
 $STD yarn install
 export NODE_OPTIONS=--openssl-legacy-provider
@@ -42,8 +39,6 @@ mkdir -p /usr/local/bin
 ln -s ~/.platformio/penv/bin/platformio /usr/local/bin/platformio
 ln -s ~/.platformio/penv/bin/pio /usr/local/bin/pio
 ln -s ~/.platformio/penv/bin/piodebuggdb /usr/local/bin/piodebuggdb
-rm -f /tmp/v${RELEASE}.tar.gz
-echo "${RELEASE}" >"/opt/tasmocompiler_version.txt"
 msg_ok "Setup TasmoCompiler"
 
 msg_info "Creating Service"

@@ -30,11 +30,11 @@ function update_script() {
     exit
   fi
   ensure_dependencies zstd
-  RELEASE=$(curl -fsSL https://api.github.com/repos/matze/wastebin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  # Dirty-Fix 03/2025 for missing APP_version.txt on old installations, set to pre-latest release
+  if [[ -f /opt/${APP}_version.txt ]]; then
+    mv /opt/"${APP}_version.txt" ~/.wastebin
+  fi
   msg_info "Running Migration"
-  if [[ ! -f /opt/${APP}_version.txt ]]; then
-    echo "2.7.1" >/opt/${APP}_version.txt
+  if [[ ! -f /opt/wastebin-data/.env ]]; then
     mkdir -p /opt/wastebin-data
     cat <<EOF >/opt/wastebin-data/.env
 WASTEBIN_DATABASE_PATH=/opt/wastebin-data/wastebin.db
@@ -60,28 +60,18 @@ EOF
     systemctl daemon-reload
   fi
   msg_ok "Migration Done"
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if check_for_gh_release "wastebin" "matze/wastebin"; then
     msg_info "Stopping Wastebin"
     systemctl stop wastebin
     msg_ok "Wastebin Stopped"
 
-    msg_info "Updating Wastebin"
-    temp_file=$(mktemp)
-    curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.zst" -o "$temp_file"
-    tar -xf "$temp_file"
-    cp -f wastebin* /opt/wastebin/
-    chmod +x /opt/wastebin/wastebin
-    chmod +x /opt/wastebin/wastebin-ctl
-    rm -f "$temp_file"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated Wastebin"
+    fetch_and_deploy_gh_release "wastebin" "matze/wastebin" "prebuild" "latest" "/opt/wastebin" "wastebin_*_$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl.tar.zst"
+    chmod +x /opt/wastebin/wastebin /opt/wastebin/wastebin-ctl
 
     msg_info "Starting Wastebin"
     systemctl start wastebin
     msg_ok "Started Wastebin"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

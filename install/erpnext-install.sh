@@ -51,12 +51,7 @@ EOF
 $STD systemctl restart mariadb
 msg_ok "Configured MariaDB for ERPNext"
 
-msg_info "Installing wkhtmltopdf"
-WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_$(arch_resolve).deb"
-$STD curl -fsSL -o /tmp/wkhtmltox.deb "$WKHTMLTOPDF_URL"
-$STD apt install -y /tmp/wkhtmltox.deb
-rm -f /tmp/wkhtmltox.deb
-msg_ok "Installed wkhtmltopdf"
+fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
 
 msg_info "Installing Frappe Bench"
 useradd -m -s /bin/bash frappe

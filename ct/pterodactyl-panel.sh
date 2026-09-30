@@ -54,19 +54,22 @@ EOF
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/pterodactyl/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ -f /opt/${APP}_version.txt ]]; then
+    mv /opt/"${APP}_version.txt" ~/.pterodactyl-panel
+  fi
+
+  if check_for_gh_release "pterodactyl-panel" "pterodactyl/panel"; then
     msg_info "Stopping Service"
     cd /opt/pterodactyl-panel
     $STD php artisan down
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cp -r /opt/pterodactyl-panel/.env /opt/
-    rm -rf * .*
-    curl -fsSL "https://github.com/pterodactyl/panel/releases/download/v${RELEASE}/panel.tar.gz" -o $(basename "https://github.com/pterodactyl/panel/releases/download/v${RELEASE}/panel.tar.gz")
-    tar -xzf "panel.tar.gz"
-    mv /opt/.env /opt/pterodactyl-panel/
+    create_backup /opt/pterodactyl-panel/.env
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pterodactyl-panel" "pterodactyl/panel" "prebuild" "latest" "/opt/pterodactyl-panel" "panel.tar.gz"
+    restore_backup
+
+    msg_info "Updating ${APP}"
+    cd /opt/pterodactyl-panel
     $STD composer install --no-dev --optimize-autoloader --no-interaction
     $STD php artisan view:clear
     $STD php artisan config:clear
@@ -74,17 +77,13 @@ EOF
     chown -R www-data:www-data /opt/pterodactyl-panel/*
     chmod -R 755 /opt/pterodactyl-panel/storage /opt/pterodactyl-panel/bootstrap/cache/
     ln -s /opt/pterodactyl-panel /var/www/pterodactyl
-    rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated ${APP}"
 
     msg_info "Starting Service"
     $STD php artisan queue:restart
     $STD php artisan up
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

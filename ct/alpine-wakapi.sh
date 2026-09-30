@@ -29,8 +29,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -s https://api.github.com/repos/muety/wakapi/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [ "${RELEASE}" != "$(cat ~/.wakapi 2>/dev/null)" ] || [ ! -f ~/.wakapi ]; then
+  if check_for_gh_release "wakapi" "muety/wakapi"; then
     msg_info "Stopping Wakapi Service"
     $STD rc-service wakapi stop
     msg_ok "Stopped Wakapi Service"
@@ -39,26 +38,14 @@ function update_script() {
     $STD apk -U upgrade
     msg_ok "Updated Wakapi LXC"
 
-    msg_info "Creating backup"
-    mkdir -p /opt/wakapi-backup
-    cp /opt/wakapi/config.yml /opt/wakapi/wakapi_db.db /opt/wakapi-backup/
-    msg_ok "Created backup"
-
+    create_backup /opt/wakapi/config.yml /opt/wakapi/wakapi_db.db
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wakapi" "muety/wakapi" "prebuild" "latest" "/opt/wakapi" "wakapi_linux_$(arch_resolve).zip"
-
-    msg_info "Configuring Wakapi"
-    cd /opt/wakapi
-    cp /opt/wakapi-backup/config.yml /opt/wakapi/
-    cp /opt/wakapi-backup/wakapi_db.db /opt/wakapi/
-    rm -rf /opt/wakapi-backup
-    msg_ok "Configured Wakapi"
+    restore_backup
 
     msg_info "Starting Service"
     $STD rc-service wakapi start
     msg_ok "Started Service"
     msg_ok "Updated successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit 0
 }

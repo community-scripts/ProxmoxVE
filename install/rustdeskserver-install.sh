@@ -24,13 +24,9 @@ setup_deb_based() {
 }
 
 setup_alpine() {
-  RELEASE=$(curl -s https://api.github.com/repos/lejianwen/rustdesk-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  msg_info "Installing RustDesk Server v${RELEASE}"
-  temp_file1=$(mktemp)
-  ARCH=$(arch_resolve "amd64" "arm64v8")
-  curl -fsSL "https://github.com/lejianwen/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-linux-${ARCH}.zip" -o "$temp_file1"
-  $STD unzip "$temp_file1"
-  mv "$ARCH" /opt/rustdesk-server
+  fetch_and_deploy_gh_release "rustdesk-server" "lejianwen/rustdesk-server" "prebuild" "latest" "/opt/rustdesk-server" "rustdesk-server-linux-$(arch_resolve "amd64" "arm64v8").zip"
+
+  msg_info "Configuring RustDesk Server"
   mkdir -p /root/.config/rustdesk
   cd /opt/rustdesk-server
   ./rustdesk-utils genkeypair >/tmp/rustdesk_keys.txt
@@ -39,15 +35,11 @@ setup_alpine() {
   chmod 600 /root/.config/rustdesk/id_ed25519
   chmod 644 /root/.config/rustdesk/id_ed25519.pub
   rm /tmp/rustdesk_keys.txt
-  echo "${RELEASE}" >~/.rustdesk-server
-  msg_ok "Installed RustDesk Server v${RELEASE}"
+  msg_ok "Configured RustDesk Server"
 
-  APIRELEASE=$(curl -s https://api.github.com/repos/lejianwen/rustdesk-api/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  msg_info "Installing RustDesk API v${APIRELEASE}"
-  temp_file2=$(mktemp)
-  curl -fsSL "https://github.com/lejianwen/rustdesk-api/releases/download/v${APIRELEASE}/linux-$(arch_resolve).tar.gz" -o "$temp_file2"
-  $STD tar zxvf "$temp_file2"
-  mv release /opt/rustdesk-api
+  fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "prebuild" "latest" "/opt/rustdesk-api" "linux-$(arch_resolve).tar.gz"
+
+  msg_info "Configuring RustDesk API"
   cd /opt/rustdesk-api
   ADMINPASS=$(head -c 16 /dev/urandom | xxd -p -c 16)
   $STD ./apimain reset-admin-pwd "$ADMINPASS"
@@ -57,8 +49,7 @@ RustDesk WebUI
 Username: admin
 Password: $ADMINPASS
 EOF
-  echo "${APIRELEASE}" >~/.rustdesk-api
-  msg_ok "Installed RustDesk API v${APIRELEASE}"
+  msg_ok "Configured RustDesk API"
 
   msg_info "Enabling RustDesk Server Services"
   cat <<EOF >/etc/init.d/rustdesk-server-hbbs
@@ -124,8 +115,6 @@ EOF
   $STD service rustdesk-server-hbbr start
   $STD service rustdesk-api start
   msg_ok "Started RustDesk Server"
-
-  rm -f "$temp_file1" "$temp_file2"
 }
 
 run_os_setup

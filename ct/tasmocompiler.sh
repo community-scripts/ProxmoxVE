@@ -29,34 +29,29 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ -f /opt/${APP}_version.txt ]]; then
+    mv /opt/"${APP}_version.txt" ~/.tasmocompiler
+  fi
+
+  if check_for_gh_release "tasmocompiler" "benzino77/tasmocompiler"; then
     msg_info "Stopping Service"
     systemctl stop tasmocompiler
     msg_ok "Stopped Service"
 
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tasmocompiler" "benzino77/tasmocompiler" "tarball"
+
     msg_info "Updating TasmoCompiler"
-    cd /opt
-    rm -rf /opt/tasmocompiler
-    RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    curl -fsSL "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz")
-    tar xzf v${RELEASE}.tar.gz
-    mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
     cd /opt/tasmocompiler
     $STD yarn install
     export NODE_OPTIONS=--openssl-legacy-provider
     $STD npm i
     $STD yarn build
-    rm -r "/opt/v${RELEASE}.tar.gz"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated TasmoCompiler"
 
     msg_info "Starting Service"
     systemctl start tasmocompiler
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
