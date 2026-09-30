@@ -20,8 +20,7 @@ msg_info "Installing Scraparr"
 cd /opt/scraparr
 $STD uv venv --clear /opt/scraparr/.venv
 $STD /opt/scraparr/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/scraparr/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/scraparr/.venv/bin/python -m pip install -r /opt/scraparr/src/scraparr/requirements.txt
+$STD uv pip install --python /opt/scraparr/.venv/bin/python -r /opt/scraparr/src/scraparr/requirements.txt
 chmod -R 755 /opt/scraparr
 mkdir -p /scraparr/config
 mv /opt/scraparr/config.yaml /scraparr/config/config.yaml

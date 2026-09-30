@@ -45,13 +45,12 @@ function update_script() {
     cd /opt/prometheus-pve-exporter
     $STD uv venv --clear "$PVE_VENV_PATH"
     $STD "$PVE_VENV_PATH/bin/python" -m ensurepip --upgrade
-    $STD "$PVE_VENV_PATH/bin/python" -m pip install --upgrade pip
-    $STD "$PVE_VENV_PATH/bin/python" -m pip install prometheus-pve-exporter
+    $STD uv pip install --python "$PVE_VENV_PATH/bin/python" prometheus-pve-exporter
     msg_ok "Migrated to uv/venv"
   else
     msg_info "Updating Prometheus Proxmox VE Exporter"
     PYTHON_VERSION="3.12" setup_uv
-    $STD "$PVE_VENV_PATH/bin/python" -m pip install --upgrade prometheus-pve-exporter
+    $STD uv pip install --python "$PVE_VENV_PATH/bin/python" --upgrade prometheus-pve-exporter
     msg_ok "Updated Prometheus Proxmox VE Exporter"
   fi
   local service_file="/etc/systemd/system/prometheus-pve-exporter.service"

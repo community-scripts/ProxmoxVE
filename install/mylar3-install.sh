@@ -32,8 +32,7 @@ msg_info "Installing Mylar3"
 mkdir -p /opt/mylar3-data
 $STD uv venv --clear /opt/mylar3/.venv
 $STD /opt/mylar3/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/mylar3/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/mylar3/.venv/bin/python -m pip install --no-cache-dir -r /opt/mylar3/requirements.txt
+$STD uv pip install --python /opt/mylar3/.venv/bin/python --no-cache -r /opt/mylar3/requirements.txt
 msg_ok "Installed Mylar3"
 
 msg_info "Creating Service"

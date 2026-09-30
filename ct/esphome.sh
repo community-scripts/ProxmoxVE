@@ -48,13 +48,12 @@ function update_script() {
     cd /opt/esphome
     $STD uv venv --clear "$VENV_PATH"
     $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
-    $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
-    $STD "$VENV_PATH/bin/python" -m pip install esphome esphome-device-builder esptool
+    $STD uv pip install --python "$VENV_PATH/bin/python" esphome esphome-device-builder esptool
     msg_ok "Migrated to uv/venv"
   else
     msg_info "Updating ESPHome Device Builder"
     PYTHON_VERSION="3.12" setup_uv
-    $STD "$VENV_PATH/bin/python" -m pip install --upgrade esphome esphome-device-builder esptool
+    $STD uv pip install --python "$VENV_PATH/bin/python" --upgrade esphome esphome-device-builder esptool
     msg_ok "Updated ESPHome Device Builder"
   fi
 

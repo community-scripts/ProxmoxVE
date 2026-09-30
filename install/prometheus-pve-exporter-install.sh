@@ -21,8 +21,7 @@ cd /opt/prometheus-pve-exporter
 
 $STD uv venv --clear /opt/prometheus-pve-exporter/.venv
 $STD /opt/prometheus-pve-exporter/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install prometheus-pve-exporter
+$STD uv pip install --python /opt/prometheus-pve-exporter/.venv/bin/python prometheus-pve-exporter
 cat <<EOF >/opt/prometheus-pve-exporter/pve.yml
 default:
     user: prometheus@pve

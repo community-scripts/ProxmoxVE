@@ -56,12 +56,11 @@ function update_script() {
     rm -rf "$VENV_PATH"
     $STD uv venv --clear "$VENV_PATH"
     $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
-    $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
-    $STD "$VENV_PATH/bin/python" -m pip install changedetection.io playwright
+    $STD uv pip install --python "$VENV_PATH/bin/python" changedetection.io playwright
     msg_ok "Migrated to uv/venv"
   else
     msg_info "Updating ${APP}"
-    $STD "$VENV_PATH/bin/python" -m pip install --upgrade changedetection.io playwright
+    $STD uv pip install --python "$VENV_PATH/bin/python" --upgrade changedetection.io playwright
     msg_ok "Updated ${APP}"
   fi
 

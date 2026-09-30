@@ -60,8 +60,7 @@ msg_info "Installing Change Detection"
 mkdir -p /opt/changedetection
 $STD uv venv --clear /opt/changedetection/.venv
 $STD /opt/changedetection/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/changedetection/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/changedetection/.venv/bin/python -m pip install changedetection.io
+$STD uv pip install --python /opt/changedetection/.venv/bin/python changedetection.io
 cat <<EOF >/opt/changedetection/.env
 WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
 PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
@@ -71,7 +70,7 @@ msg_ok "Installed Change Detection"
 
 msg_info "Installing Browserless & Playwright"
 mkdir /opt/browserless
-$STD /opt/changedetection/.venv/bin/python -m pip install playwright
+$STD uv pip install --python /opt/changedetection/.venv/bin/python playwright
 $STD git clone https://github.com/browserless/chrome /opt/browserless
 $STD npm ci --include=optional --include=dev --prefix /opt/browserless
 $STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless

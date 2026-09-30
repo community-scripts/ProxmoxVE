@@ -60,9 +60,8 @@ cd /opt/adventurelog/backend/server
 mkdir -p /opt/adventurelog/backend/server/media
 $STD uv venv --clear /opt/adventurelog/backend/server/.venv
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install -r requirements.txt
-$STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install 'djangorestframework<3.15'
+$STD uv pip install --python /opt/adventurelog/backend/server/.venv/bin/python -r requirements.txt
+$STD uv pip install --python /opt/adventurelog/backend/server/.venv/bin/python 'djangorestframework<3.15'
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage collectstatic --noinput
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage migrate
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage download-countries

@@ -56,8 +56,7 @@ function update_script() {
     cd /opt/fireshare
     $STD uv venv --clear
     $STD .venv/bin/python -m ensurepip --upgrade
-    $STD .venv/bin/python -m pip install --upgrade --break-system-packages pip
-    $STD .venv/bin/python -m pip install --no-cache-dir --break-system-packages --ignore-installed app/server
+    $STD uv pip install --python .venv/bin/python --no-cache --reinstall app/server
     cp .venv/bin/fireshare /usr/local/bin/fireshare
     set -a
     source /opt/fireshare/fireshare.env

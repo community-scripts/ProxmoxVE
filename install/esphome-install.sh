@@ -26,8 +26,7 @@ mkdir -p /root/config
 cd /opt/esphome
 $STD uv venv --clear /opt/esphome/.venv
 $STD /opt/esphome/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/esphome/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/esphome/.venv/bin/python -m pip install esphome esphome-device-builder esptool
+$STD uv pip install --python /opt/esphome/.venv/bin/python esphome esphome-device-builder esptool
 msg_ok "Setup and Installed ESPHome Device Builder"
 
 msg_info "Linking esphome to /usr/local/bin"

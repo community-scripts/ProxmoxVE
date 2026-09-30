@@ -98,7 +98,6 @@ mkdir -p /opt/fireshare-{data,videos,images,processed}
 cd /opt/fireshare
 $STD uv venv
 $STD .venv/bin/python -m ensurepip --upgrade
-$STD .venv/bin/python -m pip install --upgrade --break-system-packages pip
 ln -sf /usr/local/bin/ffmpeg /usr/bin/ffmpeg
 ln -sf /usr/local/bin/ffprobe /usr/bin/ffprobe
 echo "/usr/local/lib" >/etc/ld.so.conf.d/usr-local.conf
@@ -106,7 +105,7 @@ echo "/usr/local/cuda/lib64" >>/etc/ld.so.conf.d/usr-local.conf
 echo "/usr/local/nvidia/lib" >>/etc/ld.so.conf.d/nvidia.conf
 echo "/usr/local/nvidia/lib64" >>/etc/ld.so.conf.d/nvidia.conf
 ldconfig
-$STD .venv/bin/python -m pip install --no-cache-dir --break-system-packages --ignore-installed app/server
+$STD uv pip install --python .venv/bin/python --no-cache --reinstall app/server
 cp .venv/bin/fireshare /usr/local/bin/fireshare
 export FLASK_APP="/opt/fireshare/app/server/fireshare:create_app()"
 export DATA_DIRECTORY=/opt/fireshare-data

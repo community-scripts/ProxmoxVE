@@ -38,13 +38,12 @@ function update_script() {
     cd "$INSTALL_DIR"
     $STD uv venv --clear .venv
     $STD "$VENV_PYTHON" -m ensurepip --upgrade
-    $STD "$VENV_PYTHON" -m pip install --upgrade pip
-    $STD "$VENV_PYTHON" -m pip install jupyter
+    $STD uv pip install --python "$VENV_PYTHON" jupyter
     msg_ok "Migrated to uv and installed Jupyter"
   else
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating Jupyter"
-    $STD "$VENV_PYTHON" -m pip install --upgrade pip
-    $STD "$VENV_PYTHON" -m pip install --upgrade jupyter
+    $STD uv pip install --python "$VENV_PYTHON" --upgrade jupyter
     msg_ok "Jupyter updated"
   fi
 
