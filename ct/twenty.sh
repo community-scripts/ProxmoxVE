@@ -60,8 +60,9 @@ function update_script() {
     msg_info "Running Database Migrations"
     cd /opt/twenty/packages/twenty-server
     set -a && source /opt/twenty/.env && set +a
-    $STD npx ts-node ./scripts/setup-db.ts
-    $STD npx -y typeorm migration:run -d dist/database/typeorm/core/core.datasource
+    $STD yarn command:prod cache:flush || true
+    $STD yarn command:prod upgrade
+    $STD yarn command:prod cache:flush || true
     msg_ok "Ran Database Migrations"
 
     msg_info "Starting Services"
