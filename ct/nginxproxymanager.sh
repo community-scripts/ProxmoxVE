@@ -245,9 +245,9 @@ EOF
 
     msg_info "Starting Services"
     if [ -f /opt/certbot/bin/certbot ]; then
-    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>/dev/null | awk '{print $NF; exit}' || true)
+    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '/^certbot [0-9]/{print $2; exit}' || true)
     elif command -v certbot &>/dev/null; then
-    CERTBOT_VER=$(certbot --version 2>/dev/null | awk '{print $NF; exit}' || true)
+    CERTBOT_VER=$(certbot --version 2>&1 | awk '/^certbot [0-9]/{print $2; exit}' || true)
     fi
     [[ "${CERTBOT_VER:-}" =~ ^[0-9][0-9.]*$ ]] || CERTBOT_VER="2.0.0"
     if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
