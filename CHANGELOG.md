@@ -560,6 +560,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - feat(glance): add alpine os [@skilletfun](https://github.com/skilletfun) ([#17605](https://github.com/community-scripts/ProxmoxVE/pull/17605))
     - feat(blocky): add alpine os [@skilletfun](https://github.com/skilletfun) ([#17637](https://github.com/community-scripts/ProxmoxVE/pull/17637))
 
   - #### 🔧 Refactor
