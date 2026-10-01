@@ -551,6 +551,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-01
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - teslamate: build from the elixir directory since 4.3.0 [@MickLesk](https://github.com/MickLesk) ([#17612](https://github.com/community-scripts/ProxmoxVE/pull/17612))
+
+  - #### 🔧 Refactor
+
+    - several scripts: use setup_postgresql_db / setup_mariadb_db instead of hand-written SQL [@MickLesk](https://github.com/MickLesk) ([#17622](https://github.com/community-scripts/ProxmoxVE/pull/17622))
+
 ## 2026-09-30
 
 ### 🆕 New Scripts
