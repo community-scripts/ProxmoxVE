@@ -555,6 +555,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - romm: keep the asset links in sync with ROMM_BASE_PATH [@MickLesk](https://github.com/MickLesk) ([#17610](https://github.com/community-scripts/ProxmoxVE/pull/17610))
     - teslamate: build from the elixir directory since 4.3.0 [@MickLesk](https://github.com/MickLesk) ([#17612](https://github.com/community-scripts/ProxmoxVE/pull/17612))
 
   - #### 🔧 Refactor
