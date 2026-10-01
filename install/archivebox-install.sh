@@ -16,60 +16,40 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   git \
-  expect \
-  libssl-dev \
-  libldap2-dev \
-  libsasl2-dev \
   procps \
   dnsutils \
-  ripgrep \
-  chromium
+  python3.13
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python Dependencies"
-$STD apt-get install -y \
-  python3-ldap \
-  python3-msgpack \
-  python3-regex
-msg_ok "Installed Python Dependencies"
-
-NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
-PYTHON_VERSION="3.13" setup_uv
-
-msg_info "Installing Playwright"
-$STD uv pip install playwright --system --break-system-packages
-$STD playwright install-deps chromium
-msg_ok "Installed Playwright"
+setup_uv
 
 msg_info "Installing ArchiveBox"
-mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
+mkdir -p /opt/archivebox/data
 $STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
-chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
-chmod -R 755 /opt/archivebox/data
-$STD uv pip install archivebox --system --break-system-packages
-cd /opt/archivebox/data
-expect <<EOF
-set timeout -1
-log_user 0
-
-spawn sudo -u archivebox playwright install chromium
-spawn sudo -u archivebox archivebox setup
-
-expect "Username"
-send "\r"
-
-expect "Email address"
-send "\r"
-
-expect "Password"
-send "community-scripts.org\r"
-
-expect "Password (again)"
-send "community-scripts.org\r"
-
-expect eof
-EOF
+$STD uv venv --python /usr/bin/python3.13 /opt/archivebox/venv
+$STD uv pip install --python /opt/archivebox/venv/bin/python archivebox
+ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
+mkdir -p /home/archivebox/.config
+chown -R archivebox:archivebox /opt/archivebox /home/archivebox
 msg_ok "Installed ArchiveBox"
+
+msg_info "Initializing ArchiveBox"
+cd /opt/archivebox/data
+$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
+$STD sudo -u archivebox env \
+  DJANGO_SUPERUSER_USERNAME=archivebox \
+  DJANGO_SUPERUSER_EMAIL=archivebox@archivebox.local \
+  DJANGO_SUPERUSER_PASSWORD=community-scripts.org \
+  /opt/archivebox/venv/bin/archivebox manage createsuperuser --noinput
+$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox config --set "BASE_URL=http://$(get_ip):5797" MERCURY_ENABLED=False
+msg_ok "Initialized ArchiveBox"
+
+msg_info "Installing Extractors (Patience)"
+AB_RUNTIME="/tmp/archivebox-runtime-$(id -u archivebox)"
+install -d -m 700 -o archivebox -g archivebox "$AB_RUNTIME"
+$STD env HOME=/home/archivebox USER=archivebox LOGNAME=archivebox XDG_CONFIG_HOME=/home/archivebox/.config XDG_RUNTIME_DIR="$AB_RUNTIME" \
+  /opt/archivebox/venv/bin/archivebox install
+msg_ok "Installed Extractors"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/archivebox.service
@@ -80,7 +60,8 @@ After=network.target
 [Service]
 User=archivebox
 WorkingDirectory=/opt/archivebox/data
-ExecStart=/usr/local/bin/archivebox server 0.0.0.0:8000
+ExecStartPre=/opt/archivebox/venv/bin/archivebox init
+ExecStart=/opt/archivebox/venv/bin/archivebox server 0.0.0.0:5797
 Restart=always
 
 [Install]
