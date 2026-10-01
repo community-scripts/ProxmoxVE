@@ -65,7 +65,9 @@ EOF
       msg_ok "Stopped services"
     fi
 
+    create_backup /opt/sure/storage
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Sure" "we-promise/sure" "tarball" "latest" "/opt/sure"
+    restore_backup
     RUBY_VERSION="$(cat /opt/sure/.ruby-version)" RUBY_INSTALL_RAILS=false HOME=/root setup_ruby
 
     msg_info "Updating Sure"
