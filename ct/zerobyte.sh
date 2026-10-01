@@ -44,6 +44,10 @@ function update_script() {
 
     restore_backup
 
+    msg_info "Updating Bun"
+    $STD bun upgrade
+    msg_ok "Updated Bun"
+
     msg_info "Building Zerobyte"
     export NODE_OPTIONS="--max-old-space-size=3072"
     cd /opt/zerobyte
