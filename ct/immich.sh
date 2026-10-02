@@ -262,7 +262,6 @@ EOF
     chown immich:immich "${UPLOAD_DIR:-$INSTALL_DIR/upload}" 2>/dev/null || true
     chown immich:immich ./uv.lock
     export VIRTUAL_ENV="${ML_DIR}"/ml-venv
-    export UV_HTTP_TIMEOUT=300
     if [[ -f ~/.openvino ]]; then
       ML_PYTHON="python3.13"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"

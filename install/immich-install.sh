@@ -430,7 +430,6 @@ chown immich:immich "$INSTALL_DIR"
 find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
 chown immich:immich "$UPLOAD_DIR" 2>/dev/null || true
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
-export UV_HTTP_TIMEOUT=300
 if [[ -f ~/.openvino ]]; then
   ML_PYTHON="python3.13"
   msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"

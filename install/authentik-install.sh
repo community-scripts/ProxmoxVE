@@ -124,7 +124,6 @@ export UV_NO_BINARY_PACKAGE="cryptography lxml python-kadmin-rs xmlsec"
 export UV_COMPILE_BYTECODE="1"
 export UV_LINK_MODE="copy"
 export UV_NATIVE_TLS="1"
-export UV_HTTP_TIMEOUT="300"
 export UV_PYTHON_INSTALL_DIR="/usr/local/bin"
 cd /opt/authentik
 for attempt in 1 2 3; do
