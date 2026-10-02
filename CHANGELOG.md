@@ -549,6 +549,20 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-02
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - sure: keep Active Storage uploads across updates [@MickLesk](https://github.com/MickLesk) ([#17648](https://github.com/community-scripts/ProxmoxVE/pull/17648))
+    - twenty: run upstreams upgrade command instead of the removed setup-db.ts [@MickLesk](https://github.com/MickLesk) ([#17647](https://github.com/community-scripts/ProxmoxVE/pull/17647))
+
+  - #### 🔧 Refactor
+
+    - NPM: Refactor / Fix npm openresty user and certbot version [@MickLesk](https://github.com/MickLesk) ([#17649](https://github.com/community-scripts/ProxmoxVE/pull/17649))
+    - several scripts: use the release helpers instead of hand-rolled version checks and downloads [@MickLesk](https://github.com/MickLesk) ([#17625](https://github.com/community-scripts/ProxmoxVE/pull/17625))
+
 ## 2026-10-01
 
 ### 🚀 Updated Scripts
