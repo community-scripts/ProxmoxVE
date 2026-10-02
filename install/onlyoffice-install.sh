@@ -50,7 +50,7 @@ rm -f "$TMP_KEY_CONTENT"
 
 msg_info "Preconfiguring ONLYOFFICE Debconf Settings"
 RMQ_USER=onlyoffice_rmq
-RMQ_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+RMQ_PASS=$(random_password 13)
 JWT_SECRET=$(openssl rand -hex 16)
 $STD rabbitmqctl add_user $RMQ_USER $RMQ_PASS
 $STD rabbitmqctl set_permissions -p / $RMQ_USER ".*" ".*" ".*"

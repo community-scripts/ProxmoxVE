@@ -86,8 +86,8 @@ function install() {
 
   # Generate secrets and config values
   local ENCRYPTION_KEY JWT_SECRET PROJ_DIR BUILDS_DIR
-  ENCRYPTION_KEY=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c32)
-  JWT_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c32)
+  ENCRYPTION_KEY=$(random_password 32)
+  JWT_SECRET=$(random_password 32)
   PROJ_DIR="/etc/arcane/projects"
   BUILDS_DIR="/etc/arcane/builds"
 

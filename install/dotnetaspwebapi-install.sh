@@ -31,7 +31,7 @@ read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
 
 msg_info "Setting up FTP Server"
 useradd ftpuser
-FTP_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+FTP_PASS=$(random_password 13)
 usermod --password $(echo ${FTP_PASS} | openssl passwd -1 -stdin) ftpuser
 mkdir -p /var/www/html
 usermod -d /var/www/html ftp

@@ -41,7 +41,7 @@ if [[ -z "$pango_email" ]]; then
 fi
 
 msg_info "Setup Pangolin"
-SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
+SECRET_KEY=$(random_password 32)
 BADGER_VERSION=$(get_latest_github_release "fosrl/badger" "false")
 cd /opt/pangolin
 mkdir -p /opt/pangolin/config/{traefik,db,letsencrypt,logs}

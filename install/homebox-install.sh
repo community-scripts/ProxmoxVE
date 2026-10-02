@@ -18,7 +18,7 @@ fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "lates
 
 msg_info "Configuring Homebox"
 chmod +x /opt/homebox/homebox
-AUTH_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+AUTH_KEY="$(random_password 32)"
 cat <<EOF >/opt/homebox/.env
 # For possible environment variables check here: https://homebox.software/en/configure-homebox
 HBOX_MODE=production

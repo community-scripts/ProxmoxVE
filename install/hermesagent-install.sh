@@ -57,7 +57,7 @@ git config --system --add safe.directory /home/hermes/.hermes/hermes-agent 2>/de
 msg_ok "Installed Hermes Agent"
 
 msg_info "Configuring API Server"
-API_SERVER_KEY=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)
+API_SERVER_KEY=$(random_password 32)
 mkdir -p /home/hermes/.hermes
 cat <<EOF >/home/hermes/.hermes/.env
 API_SERVER_ENABLED=true

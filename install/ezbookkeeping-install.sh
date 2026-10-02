@@ -17,7 +17,7 @@ fetch_and_deploy_gh_release "ezbookkeeping" "mayswind/ezbookkeeping" "prebuild" 
 create_self_signed_cert
 
 msg_info "Configuring ezBookkeeping"
-SECRET_KEY=$(openssl rand -base64 64 | tr -dc 'a-zA-Z0-9' | head -c50)
+SECRET_KEY=$(random_password 50)
 sed -i "s/enable_gzip = false/enable_gzip = true/" /opt/ezbookkeeping/conf/ezbookkeeping.ini
 sed -i "s/protocol = http/protocol = https/" /opt/ezbookkeeping/conf/ezbookkeeping.ini
 sed -i "s/http_port = 8080/http_port = 443/" /opt/ezbookkeeping/conf/ezbookkeeping.ini

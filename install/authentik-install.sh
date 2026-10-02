@@ -142,7 +142,7 @@ msg_ok "Setup python server"
 msg_info "Creating authentik config"
 mkdir -p /etc/authentik
 mv /opt/authentik/authentik/lib/default.yml /etc/authentik/config.yml
-yq -i ".secret_key = \"$(openssl rand -base64 128 | tr -dc 'a-zA-Z0-9' | head -c64)\"" /etc/authentik/config.yml
+yq -i ".secret_key = \"$(random_password 64)\"" /etc/authentik/config.yml
 yq -i ".postgresql.password = \"${PG_DB_PASS}\"" /etc/authentik/config.yml
 yq -i ".events.context_processors.geoip = \"/opt/authentik-data/geoip/GeoLite2-City.mmdb\"" /etc/authentik/config.yml
 yq -i ".events.context_processors.asn = \"/opt/authentik-data/geoip/GeoLite2-ASN.mmdb\"" /etc/authentik/config.yml

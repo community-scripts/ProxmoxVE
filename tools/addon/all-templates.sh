@@ -96,7 +96,7 @@ TEMPLATE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templat
 
 # Setup script environment
 NAME=$(echo "$TEMPLATE" | grep -oE '^[^-]+-[^-]+')
-PASS="$(openssl rand -base64 8)"
+PASS="$(random_password 16)"
 
 # Get valid Container ID
 CTID=$(pvesh get /cluster/nextid)

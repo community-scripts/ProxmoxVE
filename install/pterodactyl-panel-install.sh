@@ -56,7 +56,7 @@ fetch_and_deploy_gh_release "pterodactyl-panel" "pterodactyl/panel" "prebuild" "
 msg_info "Installing pterodactyl Panel"
 cd /opt/pterodactyl-panel
 cp .env.example .env
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMIN_PASS=$(random_password 13)
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
 $STD php artisan p:environment:setup --no-interaction --author "$ADMIN_EMAIL" --url "http://$LOCAL_IP"

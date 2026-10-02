@@ -89,7 +89,7 @@ function install() {
   fetch_and_deploy_gh_release "cronmaster" "fccview/cronmaster" "prebuild" "latest" "$INSTALL_PATH" "cronmaster_*_prebuild.tar.gz"
 
   local AUTH_PASS
-  AUTH_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+  AUTH_PASS="$(random_password 13)"
 
   msg_info "Creating configuration"
   cat <<EOF >"$CONFIG_PATH"

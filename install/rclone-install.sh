@@ -22,7 +22,7 @@ setup_deb_based() {
 
   msg_info "Installing rclone"
   cd /opt/rclone
-  RCLONE_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+  RCLONE_PASSWORD=$(random_password 13)
   $STD htpasswd -cb -B /opt/login.pwd admin "$RCLONE_PASSWORD"
   cat <<EOF >~/rclone.creds
 rclone-Credentials

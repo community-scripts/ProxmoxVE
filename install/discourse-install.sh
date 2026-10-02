@@ -33,7 +33,7 @@ NODE_VERSION="24" setup_nodejs
 RUBY_VERSION="3.4.4" setup_ruby
 
 msg_info "Configuring PostgreSQL for Discourse"
-DISCOURSE_DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+DISCOURSE_DB_PASS=$(random_password 13)
 PG_HBA=$(find /etc/postgresql -name pg_hba.conf 2>/dev/null | head -n1)
 sed -i 's/^local\s\+all\s\+all\s\+peer$/local   all             all                                     md5/' "$PG_HBA"
 $STD systemctl restart postgresql
@@ -97,7 +97,7 @@ $STD bundle exec rails db:seed
 msg_ok "Set Up Database"
 
 msg_info "Creating Admin Account"
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
+ADMIN_PASS=$(random_password 16)
 $STD bundle exec rails runner "
 user = User.new(email: 'admin@discourse.local', username: 'admin', password: '${ADMIN_PASS}')
 user.active = true

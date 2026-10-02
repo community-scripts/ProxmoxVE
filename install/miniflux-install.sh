@@ -19,7 +19,7 @@ fetch_and_deploy_gh_release "miniflux" "miniflux/v2" "binary" "latest"
 
 msg_info "Configuring Miniflux"
 ADMIN_NAME=admin
-ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)"
+ADMIN_PASS="$(random_password 13)"
 cat <<EOF >/etc/miniflux.conf
 # See https://miniflux.app/docs/configuration.html
 DATABASE_URL=user=$PG_DB_USER password=$PG_DB_PASS dbname=$PG_DB_NAME sslmode=disable

@@ -32,7 +32,7 @@ fi
 fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden" "tarball"
 
 msg_info "Installing Linkwarden (Patience)"
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+SECRET_KEY="$(random_password 32)"
 echo "Linkwarden Secret: $SECRET_KEY" >>"${HOME}/linkwarden.creds"
 cd /opt/linkwarden
 yarn_ver="4.12.0"

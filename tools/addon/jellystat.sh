@@ -137,7 +137,7 @@ function install() {
     echo ""
   else
     # Generate new password
-    DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
+    DB_PASS=$(random_password 16)
 
     # Check if user exists, create if not
     if sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='${DB_USER}'" 2>/dev/null | grep -q 1; then
@@ -187,7 +187,7 @@ function install() {
 
   # Generate JWT Secret
   local JWT_SECRET
-  JWT_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c32)
+  JWT_SECRET=$(random_password 32)
 
   # Force fresh download by removing version cache
   rm -f "$HOME/.jellystat"

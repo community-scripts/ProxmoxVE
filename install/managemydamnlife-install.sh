@@ -32,7 +32,7 @@ sed -i -e 's|db|localhost|' \
   -e 's|5433|3306|' \
   -e 's|DB_DIALECT=postgres|DB_DIALECT=mysql|' \
   -e "s|sample_install_mmdm|mmdl|" \
-  -e "s|=PASSWORD|=$(openssl rand -base64 40 | tr -dc 'a-zA-Z0-9' | head -c40)|" \
+  -e "s|=PASSWORD|=$(random_password 40)|" \
   /opt/mmdl/.env
 cd /opt/mmdl
 export NEXT_TELEMETRY_DISABLED=1

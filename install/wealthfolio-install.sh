@@ -26,7 +26,7 @@ msg_ok "Installed Wealthfolio"
 msg_info "Configuring Wealthfolio"
 mkdir -p /opt/wealthfolio_data
 SECRET_KEY=$(openssl rand -base64 32)
-WF_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-16)
+WF_PASSWORD=$(random_password 16)
 WF_PASSWORD_HASH=$(echo -n "$WF_PASSWORD" | argon2 "$(openssl rand -base64 16)" -id -e)
 cat <<EOF >/opt/wealthfolio/.env
 WF_LISTEN_ADDR=0.0.0.0:8080

@@ -58,7 +58,7 @@ msg_ok "Setup Splunk Enterprise v${RELEASE}"
 
 msg_info "Creating Splunk admin user"
 ADMIN_USER="admin"
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMIN_PASS=$(random_password 13)
 cat <<EOF >~/splunk.creds
 Splunk-Credentials
 Username: $ADMIN_USER

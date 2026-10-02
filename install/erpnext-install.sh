@@ -61,8 +61,8 @@ $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv tool insta
 msg_ok "Installed Frappe Bench"
 
 msg_info "Initializing Frappe Bench"
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-DB_ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMIN_PASS=$(random_password 13)
+DB_ROOT_PASS=$(random_password 13)
 mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASS}'; FLUSH PRIVILEGES;"
 $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv python install 3.14'
 $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-16 --python "$(uv python find 3.14)" frappe-bench'

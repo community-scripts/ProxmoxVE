@@ -19,7 +19,7 @@ chmod +x /opt/rustfs/rustfs
 
 msg_info "Configuring RustFS"
 RUSTFS_ACCESS_KEY=$(openssl rand -hex 8)
-RUSTFS_SECRET_KEY=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32)
+RUSTFS_SECRET_KEY=$(random_password 32)
 cat <<EOF >/etc/default/rustfs
 RUSTFS_ACCESS_KEY=${RUSTFS_ACCESS_KEY}
 RUSTFS_SECRET_KEY=${RUSTFS_SECRET_KEY}

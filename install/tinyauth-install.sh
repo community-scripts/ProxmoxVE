@@ -23,7 +23,7 @@ setup_deb_based() {
   fetch_and_deploy_gh_release "tinyauth" "steveiliop56/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-$(arch_resolve)"
 
   msg_info "Setting up Tinyauth"
-  PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
+  PASS=$(random_password 8)
   USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
   cat <<EOF >/opt/tinyauth/credentials.txt
 Tinyauth Credentials
@@ -67,7 +67,7 @@ setup_alpine() {
   fetch_and_deploy_gh_release "tinyauth" "tinyauthapp/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-$(arch_resolve)"
 
   msg_info "Configuring Tinyauth"
-  PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
+  PASS=$(random_password 8)
   USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
 
   cat <<EOF >/opt/tinyauth/credentials.txt

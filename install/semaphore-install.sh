@@ -27,7 +27,7 @@ cd /opt/semaphore
 SEM_HASH=$(openssl rand -base64 32)
 SEM_ENCRYPTION=$(openssl rand -base64 32)
 SEM_KEY=$(openssl rand -base64 32)
-SEM_PW=$(openssl rand -base64 12)
+SEM_PW=$(random_password 16)
 cat <<EOF >/opt/semaphore/config.json
 {
   "sqlite": {

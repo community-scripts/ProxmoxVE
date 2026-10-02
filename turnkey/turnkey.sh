@@ -224,7 +224,7 @@ TEMPLATE="${TURNKEY_TEMPLATES[$selected]}"
 turnkey="${selected%-*}"
 
 # Generate random password
-PASS="$(openssl rand -base64 8)"
+PASS="$(random_password 16)"
 
 # Prompt for Container ID
 NEXT_ID=$(pvesh get /cluster/nextid 2>/dev/null || echo 100)

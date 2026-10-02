@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="openproject" PG_DB_USER="openproject" setup_postgresql_db
-API_KEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+API_KEY=$(random_password 13)
 echo "OpenProject API Key: $API_KEY" >>~/openproject.creds
 fetch_and_deploy_gh_release "jemalloc" "jemalloc/jemalloc" "tarball"
 

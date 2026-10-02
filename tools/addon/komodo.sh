@@ -189,10 +189,10 @@ function install() {
   msg_info "Configuring environment"
   curl -fsSL "https://raw.githubusercontent.com/moghtech/komodo/main/compose/compose.env" -o "$COMPOSE_ENV"
 
-  DB_PASSWORD=$(openssl rand -base64 16 | tr -d '/+=')
-  ADMIN_PASSWORD=$(openssl rand -base64 8 | tr -d '/+=')
-  WEBHOOK_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
-  JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
+  DB_PASSWORD=$(random_password 21)
+  ADMIN_PASSWORD=$(random_password 16)
+  WEBHOOK_SECRET=$(random_password 32)
+  JWT_SECRET=$(random_password 32)
 
   sed -i "s/^KOMODO_DATABASE_USERNAME=.*/KOMODO_DATABASE_USERNAME=komodo_admin/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_DATABASE_PASSWORD=.*/KOMODO_DATABASE_PASSWORD=${DB_PASSWORD}/" "$COMPOSE_ENV"

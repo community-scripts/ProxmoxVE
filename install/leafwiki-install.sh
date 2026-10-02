@@ -19,7 +19,7 @@ msg_info "Configuring LeafWiki"
 mkdir -p /opt/leafwiki/data
 mkdir -p /etc/leafwiki
 JWT_SECRET=$(openssl rand -hex 32)
-ADMIN_PASS=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9' | head -c12)
+ADMIN_PASS=$(random_password 12)
 cat <<EOF >/etc/leafwiki/.env
 LEAFWIKI_DATA_DIR=/opt/leafwiki/data
 LEAFWIKI_HOST=0.0.0.0

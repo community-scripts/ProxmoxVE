@@ -149,7 +149,7 @@ EOF
 
     msg_info "Updating Dispatcharr Backend"
     if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
-      DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+      DJANGO_SECRET=$(random_password 50)
       echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >>/opt/dispatcharr/.env
     fi
 
