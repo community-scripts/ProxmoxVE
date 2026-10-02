@@ -555,6 +555,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - zerobyte: upgrade Bun on update [@MickLesk](https://github.com/MickLesk) ([#17646](https://github.com/community-scripts/ProxmoxVE/pull/17646))
     - sure: keep Active Storage uploads across updates [@MickLesk](https://github.com/MickLesk) ([#17648](https://github.com/community-scripts/ProxmoxVE/pull/17648))
     - twenty: run upstreams upgrade command instead of the removed setup-db.ts [@MickLesk](https://github.com/MickLesk) ([#17647](https://github.com/community-scripts/ProxmoxVE/pull/17647))
 
