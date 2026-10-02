@@ -36,9 +36,9 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    create_backup /opt/solidtime/.env /opt/solidtime/storage
+    create_backup /opt/solidtime/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "solidtime" "solidtime-io/solidtime" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="storage" fetch_and_deploy_gh_release "solidtime" "solidtime-io/solidtime" "tarball"
 
     restore_backup
 

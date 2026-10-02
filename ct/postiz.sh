@@ -37,10 +37,9 @@ function update_script() {
     systemctl stop postiz-orchestrator postiz-frontend postiz-backend
     msg_ok "Stopped Services"
 
-    create_backup /opt/postiz/.env \
-      /opt/postiz/uploads
+    create_backup /opt/postiz/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "postiz" "gitroomhq/postiz-app" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="uploads" fetch_and_deploy_gh_release "postiz" "gitroomhq/postiz-app" "tarball"
 
     restore_backup
 

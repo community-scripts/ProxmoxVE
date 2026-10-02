@@ -35,16 +35,9 @@ function update_script() {
     systemctl stop cryptpad
     msg_ok "Stopped Service"
 
-    create_backup /opt/cryptpad/config/config.js \
-      /opt/cryptpad/blob \
-      /opt/cryptpad/block \
-      /opt/cryptpad/customize \
-      /opt/cryptpad/data \
-      /opt/cryptpad/datastore \
-      /opt/cryptpad/www/common/onlyoffice/dist \
-      /opt/cryptpad/onlyoffice-conf
+    create_backup /opt/cryptpad/config/config.js /opt/cryptpad/www/common/onlyoffice/dist
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="blob block customize data datastore onlyoffice-conf" fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
     restore_backup
 

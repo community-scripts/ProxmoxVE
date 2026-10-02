@@ -42,9 +42,9 @@ function update_script() {
     NODE_VERSION="22" setup_nodejs
     PG_VERSION="17" setup_postgresql
 
-    create_backup /opt/investbrain/.env /opt/investbrain/storage
+    create_backup /opt/investbrain/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Investbrain" "investbrainapp/investbrain" "tarball" "latest" "/opt/investbrain"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="storage" fetch_and_deploy_gh_release "Investbrain" "investbrainapp/investbrain" "tarball" "latest" "/opt/investbrain"
 
     restore_backup
 

@@ -38,9 +38,9 @@ function update_script() {
     systemctl stop grist
     msg_ok "Stopped Service"
 
-    create_backup /opt/grist/.env /opt/grist/docs /opt/grist/grist-sessions.db /opt/grist/landing.db
+    create_backup /opt/grist/.env /opt/grist/grist-sessions.db /opt/grist/landing.db
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="docs" fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
 
     restore_backup
 

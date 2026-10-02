@@ -36,9 +36,8 @@ function update_script() {
     systemctl stop flame
     msg_ok "Stopped Service"
 
-    create_backup /opt/flame/.env \
-      /opt/flame/data
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flame" "pawelmalak/flame" "tarball"
+    create_backup /opt/flame/.env
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "flame" "pawelmalak/flame" "tarball"
     restore_backup
 
     msg_info "Rebuilding Application"
