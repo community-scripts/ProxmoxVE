@@ -138,6 +138,7 @@ sed -E -i 's/"node-sass" *: *"([^"]*)"/"sass": "\1"/g' package.json
 $STD yarn install --network-timeout 600000
 $STD yarn locale-compile
 $STD yarn build
+$STD yarn cache clean
 cp -r /opt/nginxproxymanager/frontend/dist/* /app/frontend
 cp -r /opt/nginxproxymanager/frontend/public/images/* /app/frontend/images
 msg_ok "Built Frontend"
@@ -162,6 +163,7 @@ EOF
 fi
 cd /app
 $STD yarn install --network-timeout 600000
+$STD yarn cache clean
 msg_ok "Initialized Backend"
 
 msg_info "Creating Service"
