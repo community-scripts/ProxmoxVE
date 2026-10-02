@@ -564,6 +564,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - NPM: Refactor / Fix npm openresty user and certbot version [@MickLesk](https://github.com/MickLesk) ([#17649](https://github.com/community-scripts/ProxmoxVE/pull/17649))
     - several scripts: use the release helpers instead of hand-rolled version checks and downloads [@MickLesk](https://github.com/MickLesk) ([#17625](https://github.com/community-scripts/ProxmoxVE/pull/17625))
 
+### 💾 Core
+
+  - QoL: message blocks, clean-install keep list, password helper, network limits [@MickLesk](https://github.com/MickLesk) ([core#61](https://github.com/community-scripts/core/pull/61))
+
 ## 2026-10-01
 
 ### 🚀 Updated Scripts
