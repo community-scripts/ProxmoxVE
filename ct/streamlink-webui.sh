@@ -34,7 +34,7 @@ function update_script() {
   if check_for_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"; then
     msg_info "Stopping Service"
     systemctl stop streamlink-webui
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     setup_uv

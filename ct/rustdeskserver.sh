@@ -45,7 +45,7 @@ update_deb_based() {
     if [[ -f /lib/systemd/system/rustdesk-api.service ]]; then
       systemctl stop rustdesk-api
     fi
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "rustdesk-hbbr" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbr*$(arch_resolve).deb"
     fetch_and_deploy_gh_release "rustdesk-hbbs" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbs*$(arch_resolve).deb"

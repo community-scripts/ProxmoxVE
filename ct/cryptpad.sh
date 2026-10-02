@@ -33,7 +33,7 @@ function update_script() {
   if check_for_gh_release "cryptpad" "cryptpad/cryptpad"; then
     msg_info "Stopping Service"
     systemctl stop cryptpad
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     create_backup /opt/cryptpad/config/config.js \
       /opt/cryptpad/blob \

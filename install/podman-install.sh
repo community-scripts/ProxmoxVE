@@ -16,7 +16,7 @@ update_os
 PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
 PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
-if $STD mount | grep 'on / type zfs' >null && echo "ZFS"; then
+if $STD mount | grep 'on / type zfs' >/dev/null && echo "ZFS"; then
   msg_info "Enabling ZFS support."
   mkdir -p /etc/containers
   cat <<'EOF' >/usr/local/bin/overlayzfsmount
@@ -37,6 +37,7 @@ mount_program = "/usr/local/bin/overlayzfsmount"
 [storage.options.overlay]
 mountopt = "nodev"
 EOF
+  msg_ok "Enabled ZFS support"
 fi
 
 msg_info "Installing Podman"

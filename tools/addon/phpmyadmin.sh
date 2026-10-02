@@ -141,6 +141,7 @@ function install_phpmyadmin() {
   mkdir -p "$INSTALL_DIR"
   tar xf "$tarball" --strip-components=1 -C "$INSTALL_DIR"
   rm -f "$tarball"
+  msg_ok "Downloaded phpMyAdmin ${LATEST_VERSION}"
 }
 
 function configure_phpmyadmin() {
@@ -210,12 +211,12 @@ function uninstall_phpmyadmin() {
     $STD rc-service lighttpd stop
     $STD rc-service php-fpm stop
   fi
+  msg_ok "Stopped Webserver"
 
   msg_info "Removing phpMyAdmin directory"
   rm -rf "$INSTALL_DIR"
 
   if [[ "$OS" == "Alpine" ]]; then
-    msg_info "Removing Lighttpd config"
     rm -f /etc/lighttpd/lighttpd.conf
     $STD rc-service php-fpm restart
     $STD rc-service lighttpd restart

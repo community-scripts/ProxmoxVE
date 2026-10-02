@@ -654,12 +654,11 @@ for container in $CHOICE; do
       log_write "Container $container ($service): FAILED — no backup found for restore"
       exit 235
     fi
-    msg_info "Restoring from: $BACKUP_ENTRY"
     pct restore $container "$BACKUP_ENTRY" --storage $LXC_STORAGE --force >/dev/null 2>&1
     restorestatus=$?
     if [ $restorestatus -eq 0 ]; then
       pct start $container
-      msg_ok "Container $container successfully restored from backup"
+      msg_ok "Container $container restored from ${BACKUP_ENTRY}"
       log_result "$container" "$service" "RESTORED" "Update failed (exit $exit_code) — restored from backup"
       log_write "Container $container ($service): RESTORED from $BACKUP_ENTRY"
     else

@@ -33,7 +33,7 @@ function update_script() {
   if check_for_gh_release "cloudreve" "cloudreve/cloudreve"; then
     msg_info "Stopping Service"
     systemctl stop cloudreve
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "cloudreve" "cloudreve/cloudreve" "prebuild" "latest" "/opt/cloudreve" "*linux_$(arch_resolve).tar.gz"
 

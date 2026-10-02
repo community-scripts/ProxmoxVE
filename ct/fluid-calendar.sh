@@ -37,7 +37,7 @@ function update_script() {
   if check_for_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"; then
     msg_info "Stopping Service"
     systemctl stop fluid-calendar
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     create_backup /opt/fluid-calendar/.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar" "tarball"

@@ -93,7 +93,7 @@ chown searxng:searxng /etc/searxng/settings.yml
 chmod 640 /etc/searxng/settings.yml
 msg_ok "Configured settings"
 
-msg_info "Set up web services"
+msg_info "Setting up web services"
 cat <<EOF >/etc/systemd/system/searxng.service
 [Unit]
 Description=SearXNG service

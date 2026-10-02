@@ -33,7 +33,7 @@ function update_script() {
     if check_for_gh_release "metabase" "metabase/metabase"; then
         msg_info "Stopping Service"
         systemctl stop metabase
-        msg_info "Stopped Service"
+        msg_ok "Stopped Service"
 
         msg_info "Creating backup"
         mv /opt/metabase/.env /opt

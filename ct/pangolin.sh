@@ -52,7 +52,7 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop pangolin
     systemctl stop gerbil
-    msg_info "Service stopped"
+    msg_ok "Stopped Service"
 
     DB_URL=$(sed -n 's/.*connection_string: "\(.*\)".*/\1/p' /opt/pangolin/config/config.yml)
     create_backup /opt/pangolin/config

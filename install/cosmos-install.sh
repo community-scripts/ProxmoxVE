@@ -55,7 +55,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable -q --now cosmos
-msg_info "Created Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize

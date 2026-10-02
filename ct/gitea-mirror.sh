@@ -50,10 +50,10 @@ function update_script() {
     echo ""
     read -r -p "Final confirmation - proceed? (y/N): " CONFIRM2
     if [[ ! "$CONFIRM2" =~ ^[Yy]$ ]]; then
-      msg_info "Update cancelled. Please backup your configuration before proceeding."
+      msg_warn "Update cancelled. Please backup your configuration before proceeding."
       exit 0
     fi
-    msg_info "Proceeding with version $APP_VERSION update. All configuration will be cleared as warned."
+    msg_warn "Proceeding with version $APP_VERSION update. All configuration will be cleared as warned."
     rm -rf /opt/gitea-mirror
   fi
 

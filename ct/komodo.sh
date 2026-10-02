@@ -66,7 +66,7 @@ MIGRATION_EOF
   ln -sf /usr/bin/update /usr/bin/update_komodo 2>/dev/null || true
   msg_ok "Migration complete"
 
-  msg_info "Running addon update"
+  echo -e "${INFO}${YW}Running addon update${CL}"
   type=update bash <(curl -fsSL "${ADDON_SCRIPT}")
   exit
 }

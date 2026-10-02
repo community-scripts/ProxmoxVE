@@ -34,7 +34,7 @@ function update_script() {
   if check_for_gh_release "plant-it" "MDeLuise/plant-it" "${RELEASE}" "last version that includes the web frontend"; then
     msg_info "Stopping Service"
     systemctl stop plant-it
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "${RELEASE}" "/opt/plant-it/backend" "server.jar"
     fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "${RELEASE}" "/opt/plant-it/frontend" "client.tar.gz"

@@ -56,8 +56,7 @@ while read -r line; do
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
   CTID_MENU+=("$TAG" "$ITEM" "OFF")
 done < <(pct list | awk 'NR>1')
-
-stop_spinner
+msg_ok "Loaded container list"
 CTID=""
 while [[ -z "${CTID}" ]]; do
   CTID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --radiolist \

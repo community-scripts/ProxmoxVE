@@ -70,7 +70,6 @@ if [[ "$LXC_STATUS" != "running" ]]; then
   msg_info "Container $CTID is not running. Starting it now..."
   pct start "$CTID"
   while [[ "$(pct status "$CTID" | awk '{print $2}')" != "running" ]]; do
-    msg_info "Waiting for the container to start..."
     sleep 2
   done
   msg_ok "Container $CTID is now running."

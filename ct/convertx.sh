@@ -33,7 +33,7 @@ function update_script() {
   if check_for_gh_release "ConvertX" "C4illin/ConvertX"; then
     msg_info "Stopping Service"
     systemctl stop convertx
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     ensure_dependencies libreoffice-writer dasel graphicsmagick libemail-outlook-message-perl libheif-examples libjxl-tools resvg
 

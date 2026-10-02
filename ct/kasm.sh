@@ -52,7 +52,7 @@ function update_script() {
     msg_error "Unable to detect latest Kasm release URL."
     exit 250
   fi
-  msg_info "Checked for new version"
+  msg_ok "Checked for new version"
 
   msg_info "Removing outdated docker-compose plugin"
   [ -f ~/.docker/cli-plugins/docker-compose ] && rm -rf ~/.docker/cli-plugins/docker-compose
