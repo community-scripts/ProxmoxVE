@@ -551,6 +551,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-03
 
+### 🆕 New Scripts
+
+  - Keeper.sh ([#17659](https://github.com/community-scripts/ProxmoxVE/pull/17659))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
