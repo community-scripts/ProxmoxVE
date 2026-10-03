@@ -553,6 +553,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - fix(nginxproxymanager): clean yarn cache after builds to prevent disk growth [@PsycoStea](https://github.com/PsycoStea) ([#17653](https://github.com/community-scripts/ProxmoxVE/pull/17653))
+
   - #### 🔧 Refactor
 
     - Refactor/core qol adoption [@MickLesk](https://github.com/MickLesk) ([#17655](https://github.com/community-scripts/ProxmoxVE/pull/17655))
