@@ -559,6 +559,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - hermesagent: download the installer before running it [@MickLesk](https://github.com/MickLesk) ([#17666](https://github.com/community-scripts/ProxmoxVE/pull/17666))
+    - frigate: raise the Node heap for the web build [@MickLesk](https://github.com/MickLesk) ([#17667](https://github.com/community-scripts/ProxmoxVE/pull/17667))
     - Tracearr: workaround for failing map tiles download and data preservation [@durzo](https://github.com/durzo) ([#17661](https://github.com/community-scripts/ProxmoxVE/pull/17661))
     - fix(nginxproxymanager): clean yarn cache after builds to prevent disk growth [@PsycoStea](https://github.com/PsycoStea) ([#17653](https://github.com/community-scripts/ProxmoxVE/pull/17653))
 
