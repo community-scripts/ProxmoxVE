@@ -549,6 +549,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-03
+
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor/core qol adoption [@MickLesk](https://github.com/MickLesk) ([#17655](https://github.com/community-scripts/ProxmoxVE/pull/17655))
+
 ## 2026-10-02
 
 ### 🚀 Updated Scripts
