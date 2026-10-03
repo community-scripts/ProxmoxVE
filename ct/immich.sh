@@ -65,12 +65,14 @@ EOF
     msg_ok "Installed/upgraded Testing repo packages"
   fi
 
-  if [[ ! -f /etc/apt/sources.list.d/mise.list ]]; then
-    msg_info "Installing Mise"
-    curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
-    ensure_dependencies mise
-    msg_ok "Installed Mise"
+  if [[ -f /etc/apt/sources.list.d/mise.list ]]; then
+    msg_info "Moving Mise to the GitHub release"
+    $STD apt purge -y mise
+    rm -f /etc/apt/sources.list.d/mise.list /etc/apt/keyrings/mise-archive-keyring.pub
+    msg_ok "Removed the Mise APT repository"
+  fi
+  if check_for_gh_release "mise" "jdx/mise"; then
+    fetch_and_deploy_gh_release "mise" "jdx/mise" "singlefile" "latest" "/usr/local/bin" "mise-v*-linux-$(arch_resolve "x64" "arm64")"
   fi
 
   STAGING_DIR=/opt/staging
