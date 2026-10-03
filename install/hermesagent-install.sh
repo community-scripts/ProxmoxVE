@@ -45,11 +45,13 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 fi
 
 msg_info "Installing Hermes Agent"
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh -o /tmp/hermes-install.sh
 $STD setsid --wait bash -c '
   set -a; source /etc/default/hermes; set +a
   export npm_config_yes=true
-  bash <(curl -fsSL https://hermes-agent.nousresearch.com/install.sh) --skip-setup --hermes-home /home/hermes/.hermes --dir /home/hermes/.hermes/hermes-agent
+  bash /tmp/hermes-install.sh --skip-setup --hermes-home /home/hermes/.hermes --dir /home/hermes/.hermes/hermes-agent
 '
+rm -f /tmp/hermes-install.sh
 chown -R hermes:hermes /home/hermes
 chmod 750 /home/hermes
 chmod 700 /home/hermes/.hermes
