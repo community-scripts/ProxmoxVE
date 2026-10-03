@@ -67,6 +67,9 @@ cd /opt/tracearr.build
 $STD pnpm install --frozen-lockfile --force
 $STD pnpm turbo telemetry disable
 $STD pnpm turbo run build --no-daemon --filter=@tracearr/shared --filter=@tracearr/server --filter=@tracearr/web
+if BASEMAP_BUILD=$(curl -fsSL https://build-metadata.protomaps.dev/builds.json | jq -r 'map(.key) | sort | last | rtrimstr(".pmtiles")'); then
+  sed -i "s/^BUILD=.*/BUILD=${BASEMAP_BUILD}/" scripts/fetch-basemap.sh
+fi
 $STD ./scripts/fetch-basemap.sh || msg_warn "Basemap download failed, the map will show without base tiles"
 mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db}
 cp -rf package.json /opt/tracearr/

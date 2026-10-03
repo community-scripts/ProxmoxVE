@@ -122,6 +122,9 @@ EOF
     $STD pnpm install --frozen-lockfile --force
     $STD pnpm turbo telemetry disable
     $STD pnpm turbo run build --no-daemon --filter=@tracearr/shared --filter=@tracearr/server --filter=@tracearr/web
+    if BASEMAP_BUILD=$(curl -fsSL https://build-metadata.protomaps.dev/builds.json | jq -r 'map(.key) | sort | last | rtrimstr(".pmtiles")'); then
+      sed -i "s/^BUILD=.*/BUILD=${BASEMAP_BUILD}/" scripts/fetch-basemap.sh
+    fi
     $STD ./scripts/fetch-basemap.sh || msg_warn "Basemap download failed, keeping the existing map"
     [[ -d /opt/tracearr/data ]] && mv /opt/tracearr/data /opt/tracearr.data
     rm -rf /opt/tracearr
