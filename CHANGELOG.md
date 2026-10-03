@@ -559,11 +559,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Tracearr: workaround for failing map tiles download and data preservation [@durzo](https://github.com/durzo) ([#17661](https://github.com/community-scripts/ProxmoxVE/pull/17661))
     - fix(nginxproxymanager): clean yarn cache after builds to prevent disk growth [@PsycoStea](https://github.com/PsycoStea) ([#17653](https://github.com/community-scripts/ProxmoxVE/pull/17653))
 
   - #### 🔧 Refactor
 
-    - Refactor/core qol adoption [@MickLesk](https://github.com/MickLesk) ([#17655](https://github.com/community-scripts/ProxmoxVE/pull/17655))
+    - Several Scripts: refactor msg_ blocks, generate passwords with helper, add CLEAN_INSTALL_KEEP  [@MickLesk](https://github.com/MickLesk) ([#17655](https://github.com/community-scripts/ProxmoxVE/pull/17655))
 
 ## 2026-10-02
 
