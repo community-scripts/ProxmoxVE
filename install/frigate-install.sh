@@ -236,7 +236,7 @@ $STD bash /opt/frigate/.devcontainer/initialize.sh
 $STD make version
 cd /opt/frigate/web
 $STD npm install
-$STD npm run build
+NODE_OPTIONS="--max-old-space-size=4096" $STD npm run build
 mv /opt/frigate/web/dist/BASE_PATH/monacoeditorwork/* /opt/frigate/web/dist/assets/
 rm -rf /opt/frigate/web/dist/BASE_PATH
 cp -r /opt/frigate/web/dist/* /opt/frigate/web/
