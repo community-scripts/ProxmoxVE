@@ -561,6 +561,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-04
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - immich: read the Intel runtime from the pinned release [@MickLesk](https://github.com/MickLesk) ([#17677](https://github.com/community-scripts/ProxmoxVE/pull/17677))
+
 ### 💾 Core
 
   - better explain unsupported version & upgrade path for pve [@MickLesk](https://github.com/MickLesk) ([core#86](https://github.com/community-scripts/core/pull/86))
