@@ -13,6 +13,7 @@ setting_up_container
 network_check
 update_os
 
+RELEASE="v3.2.4"
 if lscpu | grep -q 'GenuineIntel'; then
   echo ""
   echo ""
@@ -33,11 +34,11 @@ if lscpu | grep -q 'GenuineIntel'; then
       msg_info "Installing Intel OpenVINO dependencies"
       tmp_dir=$(mktemp -d)
       $STD pushd "$tmp_dir"
-      curl_with_retry "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/machine-learning/Dockerfile" "Dockerfile"
-      readarray -t INTEL_URLS < <(
-        sed -n "/intel-[igc|opencl]/p" ./Dockerfile | awk '{print $3}'
-        sed -n "/libigdgmm12/p" ./Dockerfile | awk '{print $3}'
-      )
+      INTEL_SRC="https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/machine-learning"
+      curl -fsSL "${INTEL_SRC}/scripts/install-intel-runtime.sh" -o ./intel-runtime 2>/dev/null ||
+        curl_with_retry "${INTEL_SRC}/Dockerfile" "./intel-runtime"
+      readarray -t INTEL_URLS < <(grep -oE 'https://github\.com/intel/[^[:space:]]+\.deb' ./intel-runtime)
+      rm -f ./intel-runtime
       for url in "${INTEL_URLS[@]}"; do
         curl_with_retry "$url" "$(basename "$url")"
       done
@@ -353,7 +354,7 @@ ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "v3.2.4" "$SRC_DIR"
+fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
