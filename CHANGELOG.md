@@ -561,6 +561,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-04
 
+### 💾 Core
+
+  - Find the default Rust toolchain in current rustup output [@MickLesk](https://github.com/MickLesk) ([core#88](https://github.com/community-scripts/core/pull/88))
+
 ## 2026-10-03
 
 ### 🆕 New Scripts
