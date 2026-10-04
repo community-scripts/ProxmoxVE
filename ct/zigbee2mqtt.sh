@@ -50,7 +50,7 @@ update_deb_based() {
     mkdir -p /opt/backups
     BACKUP_VERSION="$(<"$HOME/.zigbee2mqtt")"
     BACKUP_FILE="/opt/backups/${APP}_backup_${BACKUP_VERSION}.tar.zst"
-    $STD tar -cf - -C /opt zigbee2mqtt | zstd -q -o "$BACKUP_FILE"
+    tar -cf - -C /opt zigbee2mqtt | $STD zstd -q -o "$BACKUP_FILE"
     ls -t /opt/backups/${APP}_backup_*.tar.zst 2>/dev/null | tail -n +6 | xargs -r rm -f
     msg_ok "Backup Created (${BACKUP_VERSION})"
 
