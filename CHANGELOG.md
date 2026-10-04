@@ -563,7 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Quote PostgreSQL identifiers and drop spaces from the creds file name [@MickLesk](https://github.com/MickLesk) ([core#89](https://github.com/community-scripts/core/pull/89))
+  - better explain unsupported version & upgrade path for pve [@MickLesk](https://github.com/MickLesk) ([core#86](https://github.com/community-scripts/core/pull/86))
+- Quote PostgreSQL identifiers and drop spaces from the creds file name [@MickLesk](https://github.com/MickLesk) ([core#89](https://github.com/community-scripts/core/pull/89))
 - Find the default Rust toolchain in current rustup output [@MickLesk](https://github.com/MickLesk) ([core#88](https://github.com/community-scripts/core/pull/88))
 
 ## 2026-10-03
