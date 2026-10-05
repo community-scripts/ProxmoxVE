@@ -568,6 +568,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - wikijs: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17689](https://github.com/community-scripts/ProxmoxVE/pull/17689))
     - jotty: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17688](https://github.com/community-scripts/ProxmoxVE/pull/17688))
 
+### 💾 Core
+
+  - Rename "ProxmoxVED"-Links to "DevScripts" [@MickLesk](https://github.com/MickLesk) ([core#91](https://github.com/community-scripts/core/pull/91))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
