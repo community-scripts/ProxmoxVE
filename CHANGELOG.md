@@ -563,6 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Point to DevScripts, the renamed ProxmoxVED [@MickLesk](https://github.com/MickLesk) ([#17694](https://github.com/community-scripts/ProxmoxVE/pull/17694))
+
   - #### 🐞 Bug Fixes
 
     - wikijs: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17689](https://github.com/community-scripts/ProxmoxVE/pull/17689))
