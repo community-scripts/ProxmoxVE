@@ -559,6 +559,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-05
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - monitor-all: read container IPs from the host side [@jasonobrien](https://github.com/jasonobrien) ([#17686](https://github.com/community-scripts/ProxmoxVE/pull/17686))
+
 ## 2026-10-04
 
 ### 🚀 Updated Scripts
