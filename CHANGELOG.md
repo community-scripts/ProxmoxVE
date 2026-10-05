@@ -574,7 +574,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Retry template downloads that pveam reports as done but are not [@MickLesk](https://github.com/MickLesk) ([core#94](https://github.com/community-scripts/core/pull/94))
+  - Check container settings before pct create rejects them [@MickLesk](https://github.com/MickLesk) ([core#96](https://github.com/community-scripts/core/pull/96))
+- PVE: Smart Diagnosis - say why a container would not start [@MickLesk](https://github.com/MickLesk) ([core#95](https://github.com/community-scripts/core/pull/95))
+- Retry template downloads that pveam reports as done but are not [@MickLesk](https://github.com/MickLesk) ([core#94](https://github.com/community-scripts/core/pull/94))
 - Check the OS release against pve-container before creating anything [@MickLesk](https://github.com/MickLesk) ([core#93](https://github.com/community-scripts/core/pull/93))
 - Rename "ProxmoxVED"-Links to "DevScripts" [@MickLesk](https://github.com/MickLesk) ([core#91](https://github.com/community-scripts/core/pull/91))
 
