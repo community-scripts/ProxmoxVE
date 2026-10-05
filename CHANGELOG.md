@@ -567,6 +567,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - wanderer: set the proxy secret and install plugins in their own directories [@MickLesk](https://github.com/MickLesk) ([#17698](https://github.com/community-scripts/ProxmoxVE/pull/17698))
     - discourse: serve stylesheets and repair the update [@MickLesk](https://github.com/MickLesk) ([#17697](https://github.com/community-scripts/ProxmoxVE/pull/17697))
     - wikijs: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17689](https://github.com/community-scripts/ProxmoxVE/pull/17689))
     - jotty: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17688](https://github.com/community-scripts/ProxmoxVE/pull/17688))
