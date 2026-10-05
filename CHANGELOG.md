@@ -574,7 +574,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Check the OS release against pve-container before creating anything [@MickLesk](https://github.com/MickLesk) ([core#93](https://github.com/community-scripts/core/pull/93))
+  - Retry template downloads that pveam reports as done but are not [@MickLesk](https://github.com/MickLesk) ([core#94](https://github.com/community-scripts/core/pull/94))
+- Check the OS release against pve-container before creating anything [@MickLesk](https://github.com/MickLesk) ([core#93](https://github.com/community-scripts/core/pull/93))
 - Rename "ProxmoxVED"-Links to "DevScripts" [@MickLesk](https://github.com/MickLesk) ([core#91](https://github.com/community-scripts/core/pull/91))
 
 ### 🧰 Tools
