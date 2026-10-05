@@ -574,7 +574,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Check container settings before pct create rejects them [@MickLesk](https://github.com/MickLesk) ([core#96](https://github.com/community-scripts/core/pull/96))
+  - Read releases from github.com when the API is rate limited, resume stalled downloads [@MickLesk](https://github.com/MickLesk) ([core#99](https://github.com/community-scripts/core/pull/99))
+- Check for template and container storage before the settings menu [@MickLesk](https://github.com/MickLesk) ([core#98](https://github.com/community-scripts/core/pull/98))
+- Check /etc/pve before the settings menu [@MickLesk](https://github.com/MickLesk) ([core#97](https://github.com/community-scripts/core/pull/97))
+- Check container settings before pct create rejects them [@MickLesk](https://github.com/MickLesk) ([core#96](https://github.com/community-scripts/core/pull/96))
 - PVE: Smart Diagnosis - say why a container would not start [@MickLesk](https://github.com/MickLesk) ([core#95](https://github.com/community-scripts/core/pull/95))
 - Retry template downloads that pveam reports as done but are not [@MickLesk](https://github.com/MickLesk) ([core#94](https://github.com/community-scripts/core/pull/94))
 - Check the OS release against pve-container before creating anything [@MickLesk](https://github.com/MickLesk) ([core#93](https://github.com/community-scripts/core/pull/93))
