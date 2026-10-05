@@ -561,6 +561,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-05
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - jotty: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17688](https://github.com/community-scripts/ProxmoxVE/pull/17688))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
