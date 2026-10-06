@@ -567,7 +567,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Incus: pass the full install environment into Incus containers (quoted) [@MickLesk](https://github.com/MickLesk) ([core#107](https://github.com/community-scripts/core/pull/107))
+  - Incus: Fuse always in unprivileged Containers, attach TUN only when container lacks it [@MickLesk](https://github.com/MickLesk) ([core#108](https://github.com/community-scripts/core/pull/108))
+- Incus: pass the full install environment into Incus containers (quoted) [@MickLesk](https://github.com/MickLesk) ([core#107](https://github.com/community-scripts/core/pull/107))
 - Incus: set the hostname with sh, so it works before bash is installed [@MickLesk](https://github.com/MickLesk) ([core#102](https://github.com/community-scripts/core/pull/102))
 - Incus: accept mode=generated [@MickLesk](https://github.com/MickLesk) ([core#106](https://github.com/community-scripts/core/pull/106))
 - Incus: Wait for the network on Alpine OS too [@MickLesk](https://github.com/MickLesk) ([core#105](https://github.com/community-scripts/core/pull/105))
