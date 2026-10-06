@@ -565,6 +565,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Pricebuddy ([#17708](https://github.com/community-scripts/ProxmoxVE/pull/17708))
 
+### 💾 Core
+
+  - Incus: reserve a plain address on Incus, leave the gateway to the network [@MickLesk](https://github.com/MickLesk) ([core#101](https://github.com/community-scripts/core/pull/101))
+
 ## 2026-10-05
 
 ### 🚀 Updated Scripts
