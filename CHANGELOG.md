@@ -569,13 +569,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Incus: read storage names from .vars files  [@MickLesk](https://github.com/MickLesk) ([core#110](https://github.com/community-scripts/core/pull/110))
 - Incus: show the spinner inside containers again [@MickLesk](https://github.com/MickLesk) ([core#109](https://github.com/community-scripts/core/pull/109))
-- Incus: Fuse always in unprivileged Containers, attach TUN only when container lacks it [@MickLesk](https://github.com/MickLesk) ([core#108](https://github.com/community-scripts/core/pull/108))
-- Incus: pass the full install environment into Incus containers (quoted) [@MickLesk](https://github.com/MickLesk) ([core#107](https://github.com/community-scripts/core/pull/107))
 - Incus: set the hostname with sh, so it works before bash is installed [@MickLesk](https://github.com/MickLesk) ([core#102](https://github.com/community-scripts/core/pull/102))
-- Incus: accept mode=generated [@MickLesk](https://github.com/MickLesk) ([core#106](https://github.com/community-scripts/core/pull/106))
+- Incus: reserve a plain address on Incus, leave the gateway to the network [@MickLesk](https://github.com/MickLesk) ([core#101](https://github.com/community-scripts/core/pull/101))
 - Incus: Wait for the network on Alpine OS too [@MickLesk](https://github.com/MickLesk) ([core#105](https://github.com/community-scripts/core/pull/105))
 - Incus: do not fail the build when hostname -I is missing [@MickLesk](https://github.com/MickLesk) ([core#103](https://github.com/community-scripts/core/pull/103))
-- Incus: reserve a plain address on Incus, leave the gateway to the network [@MickLesk](https://github.com/MickLesk) ([core#101](https://github.com/community-scripts/core/pull/101))
+- Incus: Fuse always in unprivileged Containers, attach TUN only when container lacks it [@MickLesk](https://github.com/MickLesk) ([core#108](https://github.com/community-scripts/core/pull/108))
+- Incus: accept mode=generated [@MickLesk](https://github.com/MickLesk) ([core#106](https://github.com/community-scripts/core/pull/106))
+- Incus: pass the full install environment into Incus containers (quoted) [@MickLesk](https://github.com/MickLesk) ([core#107](https://github.com/community-scripts/core/pull/107))
 
 ## 2026-10-05
 
