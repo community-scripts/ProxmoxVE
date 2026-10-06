@@ -31,6 +31,20 @@ function update_script() {
     exit
   fi
 
+  if ! grep -q "@private" /etc/caddy/Caddyfile; then
+    msg_info "Blocking direct access to webtrees data"
+    cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak
+    sed -i '\|root \* /opt/webtrees|a\    @private path /app/* /data/* /modules_v4/* /resources/* /vendor/* /.*\n    respond @private 403' /etc/caddy/Caddyfile
+    if grep -q "@private" /etc/caddy/Caddyfile && caddy validate --config /etc/caddy/Caddyfile &>/dev/null; then
+      rm -f /etc/caddy/Caddyfile.bak
+      systemctl reload-or-restart caddy
+      msg_ok "Blocked direct access to webtrees data"
+    else
+      mv /etc/caddy/Caddyfile.bak /etc/caddy/Caddyfile
+      msg_warn "Could not patch /etc/caddy/Caddyfile - deny /data/ there by hand"
+    fi
+  fi
+
   if check_for_gh_release "webtrees" "fisharebest/webtrees"; then
     msg_info "Stopping Service"
     PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')

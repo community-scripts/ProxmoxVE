@@ -36,6 +36,9 @@ PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/caddy/Caddyfile
 :80 {
     root * /opt/webtrees
+    # Caddy ignores data/.htaccess; media must go through webtrees so its privacy rules apply.
+    @private path /app/* /data/* /modules_v4/* /resources/* /vendor/* /.*
+    respond @private 403
     php_fastcgi unix/${PHP_SOCK}
     file_server
     encode gzip
