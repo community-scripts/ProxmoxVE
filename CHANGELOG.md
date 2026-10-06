@@ -567,7 +567,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Incus: set the hostname with sh, so it works before bash is installed [@MickLesk](https://github.com/MickLesk) ([core#102](https://github.com/community-scripts/core/pull/102))
+  - Incus: pass the full install environment into Incus containers (quoted) [@MickLesk](https://github.com/MickLesk) ([core#107](https://github.com/community-scripts/core/pull/107))
+- Incus: set the hostname with sh, so it works before bash is installed [@MickLesk](https://github.com/MickLesk) ([core#102](https://github.com/community-scripts/core/pull/102))
 - Incus: accept mode=generated [@MickLesk](https://github.com/MickLesk) ([core#106](https://github.com/community-scripts/core/pull/106))
 - Incus: Wait for the network on Alpine OS too [@MickLesk](https://github.com/MickLesk) ([core#105](https://github.com/community-scripts/core/pull/105))
 - Incus: do not fail the build when hostname -I is missing [@MickLesk](https://github.com/MickLesk) ([core#103](https://github.com/community-scripts/core/pull/103))
