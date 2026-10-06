@@ -559,6 +559,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-06
+
+### 🆕 New Scripts
+
+  - Pricebuddy ([#17708](https://github.com/community-scripts/ProxmoxVE/pull/17708))
+
 ## 2026-10-05
 
 ### 🚀 Updated Scripts
