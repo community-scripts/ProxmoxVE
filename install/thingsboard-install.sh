@@ -20,7 +20,7 @@ $STD apt install -y \
   fonts-dejavu-core
 msg_ok "Installed Dependencies"
 
-JAVA_VERSION="17" setup_java
+JAVA_VERSION="25" setup_java
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="thingsboard_db" PG_DB_USER="thingsboard" setup_postgresql_db
 fetch_and_deploy_gh_release "thingsboard" "thingsboard/thingsboard" "binary" "latest" "/tmp" "thingsboard-*.deb"
