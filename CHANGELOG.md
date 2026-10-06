@@ -573,7 +573,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Incus: Pass the app's var_* settings into Incus containers  [@MickLesk](https://github.com/MickLesk) ([core#112](https://github.com/community-scripts/core/pull/112))
+  - Incus: check the architecture on Incus hosts too [@MickLesk](https://github.com/MickLesk) ([core#113](https://github.com/community-scripts/core/pull/113))
+- Incus: Pass the app's var_* settings into Incus containers  [@MickLesk](https://github.com/MickLesk) ([core#112](https://github.com/community-scripts/core/pull/112))
 - Incus: stub storage_content_check on Incus [@MickLesk](https://github.com/MickLesk) ([core#104](https://github.com/community-scripts/core/pull/104))
 - Incus: map Proxmox template versions to Incus image names [@MickLesk](https://github.com/MickLesk) ([core#111](https://github.com/community-scripts/core/pull/111))
 - Incus: read storage names from .vars files  [@MickLesk](https://github.com/MickLesk) ([core#110](https://github.com/community-scripts/core/pull/110))
