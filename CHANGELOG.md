@@ -565,6 +565,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Pricebuddy ([#17708](https://github.com/community-scripts/ProxmoxVE/pull/17708))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Webtrees: stop serving data/ and the source folders directly [@MickLesk](https://github.com/MickLesk) ([#17724](https://github.com/community-scripts/ProxmoxVE/pull/17724))
+
 ### 💾 Core
 
   - Incus: map Proxmox template versions to Incus image names [@MickLesk](https://github.com/MickLesk) ([core#111](https://github.com/community-scripts/core/pull/111))
