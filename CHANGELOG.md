@@ -567,7 +567,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Incus: reserve a plain address on Incus, leave the gateway to the network [@MickLesk](https://github.com/MickLesk) ([core#101](https://github.com/community-scripts/core/pull/101))
+  - Incus: accept mode=generated [@MickLesk](https://github.com/MickLesk) ([core#106](https://github.com/community-scripts/core/pull/106))
+- Incus: Wait for the network on Alpine OS too [@MickLesk](https://github.com/MickLesk) ([core#105](https://github.com/community-scripts/core/pull/105))
+- Incus: do not fail the build when hostname -I is missing [@MickLesk](https://github.com/MickLesk) ([core#103](https://github.com/community-scripts/core/pull/103))
+- Incus: reserve a plain address on Incus, leave the gateway to the network [@MickLesk](https://github.com/MickLesk) ([core#101](https://github.com/community-scripts/core/pull/101))
 
 ## 2026-10-05
 
