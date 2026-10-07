@@ -96,9 +96,8 @@ URL="https://download.umbrel.com/release/${UMBREL_RELEASE}/umbrelos-amd64-usb-in
 # The upstream file name is the same for every release, so the version goes into
 # the cached name -- otherwise the cache serves 1.7.4 to someone asking for 2.0.
 ISO_NAME="umbrelos-${UMBREL_RELEASE}-amd64-usb-installer.iso"
-CACHE_DIR="/var/lib/vz/template/iso"
-CACHE_FILE="${CACHE_DIR}/${ISO_NAME}"
-mkdir -p "$CACHE_DIR"
+vm_select_iso_storage "$ISO_NAME" "$HN"
+CACHE_FILE="$ISO_PATH"
 msg_ok "${CL}${BL}${URL}${CL}"
 
 # download.umbrel.com answers 307 for any name at all, so a redirect proves
@@ -114,7 +113,7 @@ qm create "$VMID"${MACHINE} -bios ovmf -agent enabled=1 -tablet 0 -localtime 1 $
   -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci \
   -efidisk0 "${STORAGE}:1,efitype=4m,pre-enrolled-keys=0" \
   -scsi0 "${STORAGE}:${DISK_SIZE%G},${DISK_CACHE:-}${THIN%,}" \
-  -cdrom "local:iso/${ISO_NAME}" -boot order='scsi0;ide2' >/dev/null
+  -cdrom "$ISO_VOLUME" -boot order='scsi0;ide2' >/dev/null
 
 set_description
 msg_ok "Created a Umbrel OS VM ${CL}${BL}(${HN})"

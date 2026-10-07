@@ -25,7 +25,7 @@ fetch_and_deploy_gh_release "yourls" "YOURLS/YOURLS" "tarball"
 
 msg_info "Configuring YOURLS"
 COOKIEKEY=$(openssl rand -hex 24)
-YOURLS_PASS=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9' | cut -c1-16)
+YOURLS_PASS=$(random_password 16)
 cat <<EOF >/opt/yourls/user/config.php
 <?php
 define( 'YOURLS_DB_USER', '${MARIADB_DB_USER}' );

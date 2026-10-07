@@ -21,7 +21,7 @@ PG_VERSION="16" setup_postgresql
 PHP_APACHE="YES" PHP_VERSION="8.3" setup_php
 setup_composer
 fetch_and_deploy_gh_release "baikal" "sabre-io/Baikal" "tarball"
-PG_DB_NAME="baikal_db" PG_DB_USER="baikal_user" PG_DB_PASS="$(openssl rand -base64 12)" setup_postgresql_db
+PG_DB_NAME="baikal_db" PG_DB_USER="baikal_user" PG_DB_PASS="$(random_password 16)" setup_postgresql_db
 
 msg_info "Configuring Baikal"
 cd /opt/baikal

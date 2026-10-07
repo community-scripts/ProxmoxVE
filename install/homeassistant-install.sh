@@ -26,11 +26,7 @@ msg_info "Installing runlike"
 $STD pip install runlike
 msg_ok "Installed runlike"
 
-get_latest_release() {
-  curl -fsSL https://api.github.com/repos/$1/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-}
-
-CORE_LATEST_VERSION=$(get_latest_release "home-assistant/core")
+CORE_LATEST_VERSION=$(get_latest_github_release "home-assistant/core")
 
 setup_docker
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/portainer.sh)" <<<"y"

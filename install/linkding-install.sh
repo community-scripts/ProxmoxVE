@@ -42,7 +42,7 @@ touch bookmarks/settings/custom.py
 $STD uv sync --no-dev --frozen
 $STD uv pip install gunicorn
 mkdir -p data/{favicons,previews,assets}
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+ADMIN_PASS=$(random_password 13)
 cat <<EOF >/opt/linkding/.env
 LD_SUPERUSER_NAME=admin
 LD_SUPERUSER_PASSWORD=${ADMIN_PASS}

@@ -35,7 +35,7 @@ function update_script() {
   if check_for_gh_release "domain-locker" "Lissy93/domain-locker"; then
     msg_info "Stopping Service"
     systemctl stop domain-locker
-    msg_info "Service stopped"
+    msg_ok "Stopped Service"
 
     PG_VERSION="17" setup_postgresql
     NODE_VERSION="22" setup_nodejs
@@ -51,7 +51,7 @@ function update_script() {
     source /opt/domain-locker.env
     set +a
     $STD npm run build
-    msg_info "Built Domain-Locker"
+    msg_ok "Built Domain-Locker"
 
     msg_info "Restarting Services"
     systemctl start domain-locker

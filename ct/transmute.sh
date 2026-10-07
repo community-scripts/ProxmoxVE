@@ -41,9 +41,9 @@ function update_script() {
     systemctl stop transmute
     msg_ok "Stopped Service"
 
-    create_backup /opt/transmute/backend/.env /opt/transmute/data
+    create_backup /opt/transmute/backend/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "transmute" "transmute-app/transmute" "tarball"
 
     restore_backup
 

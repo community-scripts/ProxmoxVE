@@ -129,6 +129,13 @@ EOF
     msg_ok "Restored Admin Interface"
   fi
 
+  if grep -q '^user npm' /usr/local/openresty/nginx/conf/nginx.conf 2>/dev/null; then
+    msg_info "Repairing OpenResty config"
+    sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
+    systemctl restart openresty
+    msg_ok "Repaired OpenResty config"
+  fi
+
   if check_for_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager"; then
     msg_info "Stopping Services"
     systemctl stop openresty
@@ -165,6 +172,7 @@ EOF
     cp /opt/nginxproxymanager/docker/rootfs/etc/letsencrypt.ini /etc/letsencrypt.ini
     cp /opt/nginxproxymanager/docker/rootfs/etc/logrotate.d/nginx-proxy-manager /etc/logrotate.d/nginx-proxy-manager
     ln -sf /etc/nginx/nginx.conf /etc/nginx/conf/nginx.conf
+    sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     rm -f /etc/nginx/conf.d/dev.conf
     if [[ -f /etc/nginx/conf.d/production.conf.template ]]; then
       ADMIN_PORT=$(grep -oP '^\s*listen\s+\K[0-9]+(?=\s+default)' /etc/nginx/conf.d/production.conf 2>/dev/null | head -n1 || true)
@@ -208,6 +216,7 @@ EOF
     $STD yarn install --network-timeout 600000
     $STD yarn locale-compile
     $STD yarn build
+    $STD yarn cache clean
     cp -r /opt/nginxproxymanager/frontend/dist/* /app/frontend
     cp -r /opt/nginxproxymanager/frontend/public/images/* /app/frontend/images
     msg_ok "Built Frontend"
@@ -233,22 +242,21 @@ EOF
     sed -i 's/"client": "sqlite3"/"client": "better-sqlite3"/' /app/config/production.json
     cd /app
     $STD yarn install --network-timeout 600000
+    $STD yarn cache clean
     msg_ok "Initialized Backend"
 
     msg_info "Starting Services"
     if [ -f /opt/certbot/bin/certbot ]; then
-    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
+    CERTBOT_VER=$(/opt/certbot/bin/certbot --version 2>&1 | awk '/^certbot [0-9]/{print $2; exit}' || true)
     elif command -v certbot &>/dev/null; then
-    CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $NF}' || echo "0.0.0")
-    else
-    CERTBOT_VER="2.0.0"
+    CERTBOT_VER=$(certbot --version 2>&1 | awk '/^certbot [0-9]/{print $2; exit}' || true)
     fi
+    [[ "${CERTBOT_VER:-}" =~ ^[0-9][0-9.]*$ ]] || CERTBOT_VER="2.0.0"
     if grep -q "Environment=CERTBOT_VERSION" /lib/systemd/system/npm.service; then
       sed -i "s|Environment=CERTBOT_VERSION=.*|Environment=CERTBOT_VERSION=${CERTBOT_VER}|" /lib/systemd/system/npm.service
     else
       sed -i "/Environment=NODE_ENV=production/a Environment=CERTBOT_VERSION=${CERTBOT_VER}" /lib/systemd/system/npm.service
     fi
-    sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
     sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
     if [ -n "$(command -v node)" ]; then
       sed -i -E "s|^ExecStart=.*/node index\.js|ExecStart=$(command -v node) index.js|" /lib/systemd/system/npm.service

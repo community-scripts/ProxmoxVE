@@ -31,10 +31,10 @@ EOF
 msg_ok "Installed Dependencies"
 
 PG_VERSION=16 setup_postgresql
-PG_DB_NAME="healthchecks_db" PG_DB_USER="hc_user" PG_DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13) setup_postgresql_db
+PG_DB_NAME="healthchecks_db" PG_DB_USER="hc_user" PG_DB_PASS=$(random_password 13) setup_postgresql_db
 
 msg_info "Setup Keys (Admin / Secret)"
-SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+SECRET_KEY="$(random_password 32)"
 ADMIN_EMAIL="admin@community-scripts.org"
 ADMIN_PASSWORD="$PG_DB_PASS"
 cat <<EOF >~/healthchecks.creds

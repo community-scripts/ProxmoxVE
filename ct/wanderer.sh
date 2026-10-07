@@ -148,6 +148,23 @@ EOF
     msg_ok "Migrated wanderer services"
   fi
 
+  if ! grep -q '^POCKETBASE_PROXY_SECRET=' /opt/wanderer/.env; then
+    msg_info "Adding POCKETBASE_PROXY_SECRET"
+    echo "POCKETBASE_PROXY_SECRET=$(openssl rand -hex 32)" >>/opt/wanderer/.env
+    systemctl restart wanderer-web
+    msg_ok "Added POCKETBASE_PROXY_SECRET"
+  fi
+
+  if [[ -f /opt/wanderer_data/plugins/plugin.json ]]; then
+    msg_info "Reinstalling wanderer plugins, one directory each"
+    find /opt/wanderer_data/plugins -maxdepth 1 -type f -delete
+    for plugin in hammerhead komoot strava; do
+      rm -f ~/.wanderer-plugin-${plugin}
+      fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer_data/plugins/${plugin}" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+    done
+    msg_ok "Reinstalled wanderer plugins"
+  fi
+
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
     msg_info "Stopping service"
     systemctl stop wanderer-web
@@ -170,7 +187,7 @@ EOF
     [[ -e /opt/wanderer/db/data/plugins ]] || ln -sfn /opt/wanderer_data/plugins /opt/wanderer/db/data/plugins
     msg_info "Installing wanderer plugins"
     for plugin in hammerhead komoot strava; do
-      fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "${CHECK_UPDATE_RELEASE:-latest}" "/opt/wanderer_data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+      fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "${CHECK_UPDATE_RELEASE:-latest}" "/opt/wanderer_data/plugins/${plugin}" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
     done
     msg_ok "Installed wanderer plugins"
     msg_ok "Updated wanderer"

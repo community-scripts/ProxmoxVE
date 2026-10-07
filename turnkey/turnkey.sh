@@ -4,9 +4,9 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 # Source shared libraries
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
 load_functions
 catch_errors
 
@@ -224,7 +224,7 @@ TEMPLATE="${TURNKEY_TEMPLATES[$selected]}"
 turnkey="${selected%-*}"
 
 # Generate random password
-PASS="$(openssl rand -base64 8)"
+PASS="$(random_password 16)"
 
 # Prompt for Container ID
 NEXT_ID=$(pvesh get /cluster/nextid 2>/dev/null || echo 100)

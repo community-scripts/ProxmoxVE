@@ -36,7 +36,7 @@ function update_script() {
   if check_for_gh_release "excalidraw" "excalidraw/excalidraw"; then
     msg_info "Stopping Service"
     systemctl stop excalidraw
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw" "tarball"
 

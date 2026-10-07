@@ -38,7 +38,7 @@ function update_script() {
 
     create_backup /opt/jotty/.env /opt/jotty/data /opt/jotty/config
 
-    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "latest" "/opt/jotty" "jotty_*_prebuild.tar.gz"
 
     restore_backup

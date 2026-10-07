@@ -16,18 +16,18 @@ update_os
 MONGO_VERSION="8.2" setup_mongodb
 
 msg_info "Setup Graylog Data Node"
-PASSWORD_SECRET=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
+PASSWORD_SECRET=$(random_password 16)
 curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-7.0-repository_latest.deb" -o "graylog-7.0-repository_latest.deb"
 $STD dpkg -i graylog-7.0-repository_latest.deb
 apt_update_safe
-$STD apt-get install graylog-datanode -y
+$STD apt install graylog-datanode -y
 sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/datanode/datanode.conf
 systemctl enable -q --now graylog-datanode
 msg_ok "Setup Graylog Data Node"
 
 msg_info "Setup ${APPLICATION}"
-$STD apt-get install graylog-server
-ROOT_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
+$STD apt install graylog-server
+ROOT_PASSWORD=$(random_password 16)
 cat <<EOF >~/graylog.creds
 ${APPLICATION} Credentials
 Admin User: admin

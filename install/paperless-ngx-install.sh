@@ -54,7 +54,7 @@ rm -rf /opt/paperless/docker
 $STD uv sync --all-extras
 mkdir -p /opt/paperless_data/{consume,data,media,trash}
 mkdir -p /opt/paperless/static
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+SECRET_KEY="$(random_password 32)"
 cat <<EOF >~/paperless-ngx.creds
 
 Paperless-ngx Secret Key: $SECRET_KEY

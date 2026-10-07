@@ -126,7 +126,7 @@ jobs:
                     try {
                       const { data: relatedIssues } = await github.rest.issues.listForRepo({
                         owner: context.repo.owner,
-                        repo: "ProxmoxVED",
+                        repo: "DevScripts",
                         state: "all",
                         labels: ["Started Migration To ProxmoxVE"]
                       });

@@ -50,7 +50,7 @@ function update_script() {
     [ -d /opt/.data ] && mv /opt/.data /opt/homebox/.data
 
     if ! grep -q "HBOX_AUTH_API_KEY_PEPPER" /opt/homebox/.env; then
-      AUTH_KEY=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)
+      AUTH_KEY=$(random_password 32)
       echo "HBOX_AUTH_API_KEY_PEPPER=${AUTH_KEY}" >>/opt/homebox/.env
     fi
 

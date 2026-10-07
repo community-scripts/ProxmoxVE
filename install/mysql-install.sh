@@ -54,7 +54,7 @@ $STD apt install -y \
 msg_ok "Installed MySQL"
 
 msg_info "Configure MySQL Server"
-ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+ADMIN_PASS="$(random_password 13)"
 $STD mysql -uroot -p"$ADMIN_PASS" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH $RELEASE_AUTH BY '$ADMIN_PASS'; FLUSH PRIVILEGES;"
 echo "" >~/mysql.creds
 echo -e "MySQL user: root" >>~/mysql.creds

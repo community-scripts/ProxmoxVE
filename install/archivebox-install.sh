@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   expect \
   libssl-dev \
@@ -27,7 +27,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   python3-ldap \
   python3-msgpack \
   python3-regex

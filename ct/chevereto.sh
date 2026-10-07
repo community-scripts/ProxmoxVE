@@ -38,11 +38,9 @@ function update_script() {
     systemctl stop nginx "$PHP_FPM_SERVICE"
     msg_ok "Stopped Services"
 
-    create_backup /opt/chevereto/app/env.php \
-      /opt/chevereto/images \
-      /opt/chevereto/content
+    create_backup /opt/chevereto/app/env.php /opt/chevereto/content
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "chevereto" "chevereto/chevereto" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="images" fetch_and_deploy_gh_release "chevereto" "chevereto/chevereto" "tarball"
 
     restore_backup
 

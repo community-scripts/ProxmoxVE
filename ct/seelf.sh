@@ -33,7 +33,7 @@ function update_script() {
   if check_for_gh_release "seelf" "YuukanOO/seelf"; then
     msg_info "Stopping Service"
     systemctl stop seelf
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     msg_info "Updating seelf"
     cd /opt/seelf 

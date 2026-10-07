@@ -18,7 +18,7 @@ fetch_and_deploy_gh_release "silo" "pgsty/silo" "binary"
 msg_info "Configuring Silo"
 mkdir -p /opt/silo_data
 chown silo:silo /opt/silo_data
-SILO_ROOT_PASSWORD=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
+SILO_ROOT_PASSWORD=$(random_password 32)
 cat <<EOF >/etc/default/silo
 MINIO_VOLUMES="/opt/silo_data"
 MINIO_OPTS="--console-address :9001"

@@ -38,9 +38,9 @@ function update_script() {
     systemctl stop docmost
     msg_ok "Stopped Service"
 
-    create_backup /opt/docmost/.env /opt/docmost/data
+    create_backup /opt/docmost/.env
     
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
 
     restore_backup
 

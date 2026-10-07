@@ -42,7 +42,7 @@ function update_script() {
   if check_for_gh_release "domain-monitor" "Hosteroid/domain-monitor"; then
     msg_info "Stopping Service"
     systemctl stop apache2
-    msg_info "Service stopped"
+    msg_ok "Stopped Service"
 
     create_backup /opt/domain-monitor/.env
 

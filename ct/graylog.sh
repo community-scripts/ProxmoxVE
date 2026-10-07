@@ -34,7 +34,7 @@ function update_script() {
   msg_info "Stopping Service"
   systemctl stop graylog-datanode
   systemctl stop graylog-server
-  msg_info "Stopped Service"
+  msg_ok "Stopped Service"
 
   CURRENT_VERSION=$(apt list --installed 2>/dev/null | grep graylog-server | grep -oP '\d+\.\d+\.\d+')
 

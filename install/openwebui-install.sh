@@ -46,7 +46,6 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
 fi
 
 msg_info "Installing Open WebUI"
-export UV_HTTP_TIMEOUT=300
 for attempt in $(seq 1 3); do
   $STD uv tool install --python 3.12 --constraint <(echo "numba>=0.60") "${OTEL_ARGS[@]}" open-webui[all] && break
   [[ $attempt -lt 3 ]] && msg_warn "Open WebUI install attempt $attempt failed, retrying..." && sleep 10

@@ -115,7 +115,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
 systemctl enable -q --now chromium-printer.service reactive-resume.service
 msg_ok "Created Services"
 

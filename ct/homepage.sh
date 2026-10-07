@@ -38,10 +38,10 @@ function update_script() {
     systemctl stop homepage
     msg_ok "Stopped service"
 
-    create_backup /opt/homepage/.env /opt/homepage/config
+    create_backup /opt/homepage/.env
     BACKUP_DIR=/opt/homepage-assets.backup create_backup /opt/homepage/public/images /opt/homepage/public/icons
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="config" fetch_and_deploy_gh_release "homepage" "gethomepage/homepage" "tarball"
 
     restore_backup
 

@@ -55,18 +55,13 @@ function update_script() {
       printf '["%s"]\n' "$(<~/.hortusfox)" >app/migrations/verhist.json
     fi
 
-    create_backup \
-      /opt/hortusfox/.env \
+    create_backup /opt/hortusfox/.env \
       /opt/hortusfox/app/migrations/migrations.list \
       /opt/hortusfox/app/migrations/verhist.json \
       /opt/hortusfox/public/img \
-      /opt/hortusfox/public/attachments \
-      /opt/hortusfox/public/backup \
-      /opt/hortusfox/public/exports \
-      /opt/hortusfox/public/snd \
       /opt/hortusfox/public/themes
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="public/attachments public/backup public/exports public/snd" fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web" "tarball"
     restore_backup
 
     msg_info "Updating HortusFox"

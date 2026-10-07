@@ -36,11 +36,7 @@ function update_script() {
     systemctl stop ownfoil
     msg_ok "Stopped Service"
 
-    create_backup /opt/ownfoil/app/config
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ownfoil" "a1ex4/ownfoil" "tarball" "${RELEASE}"
-
-    restore_backup
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="app/config" fetch_and_deploy_gh_release "ownfoil" "a1ex4/ownfoil" "tarball" "${RELEASE}"
 
     msg_info "Installing Dependencies"
     cd /opt/ownfoil

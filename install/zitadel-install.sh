@@ -22,9 +22,9 @@ PG_VERSION="17" setup_postgresql
 msg_info "Installing Postgresql"
 DB_NAME="zitadel"
 DB_USER="zitadel"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+DB_PASS=$(random_password 13)
 DB_ADMIN_USER="root"
-DB_ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+DB_ADMIN_PASS=$(random_password 13)
 systemctl start postgresql
 $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE USER $DB_ADMIN_USER WITH PASSWORD '$DB_ADMIN_PASS' SUPERUSER;"
@@ -44,7 +44,7 @@ fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/us
 msg_info "Setting up Zitadel Environments"
 mkdir -p /opt/zitadel
 echo "/opt/zitadel/config.yaml" >"/opt/zitadel/.config"
-head -c 32 < <(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9') >"/opt/zitadel/.masterkey"
+random_password 32 >"/opt/zitadel/.masterkey"
 cat <<EOF >~/zitadel.creds
 Config location: $(cat "/opt/zitadel/.config")
 Masterkey: $(cat "/opt/zitadel/.masterkey")

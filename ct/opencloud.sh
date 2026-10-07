@@ -31,15 +31,16 @@ function update_script() {
     exit
   fi
 
-  RELEASE="v7.4.0"
+  RELEASE="v8.1.0"
   if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
+    OLD_VERSION="$(cat ~/.opencloud 2>/dev/null)"
     msg_info "Stopping services"
     systemctl stop opencloud opencloud-wopi
     msg_ok "Stopped services"
 
     msg_info "Updating packages"
     apt_update_safe
-    $STD apt-get dist-upgrade -y
+    $STD apt dist-upgrade -y
     ensure_dependencies "inotify-tools"
     msg_ok "Updated packages"
 
@@ -70,6 +71,34 @@ function update_script() {
     msg_info "Starting services"
     systemctl start opencloud opencloud-wopi
     msg_ok "Started services"
+
+    if [[ -z "$OLD_VERSION" || "${OLD_VERSION#v}" =~ ^[0-7]\. ]]; then
+      # The index CLI cancels the rebuild when interrupted, so it runs as its own unit and the
+      # update only waits for it. Restart covers a search service that is still starting.
+      msg_info "Rebuilding search index (safe to interrupt, it continues in the background)"
+      REINDEX_START="$(date '+%Y-%m-%d %H:%M:%S')"
+      systemctl reset-failed opencloud-reindex &>/dev/null || true
+      $STD systemd-run --unit=opencloud-reindex --uid=opencloud --gid=opencloud \
+        -p EnvironmentFile=/etc/opencloud/opencloud.env -p Restart=on-failure -p RestartSec=15 \
+        -p StartLimitIntervalSec=900 -p StartLimitBurst=20 \
+        /usr/bin/opencloud search index --all-spaces --force-rescan --insecure
+      while [[ "$(systemctl show -p ActiveState --value opencloud-reindex)" =~ ^(active|activating)$ ]]; do
+        sleep 10
+      done
+      if [[ "$(systemctl show -p ActiveState --value opencloud-reindex)" == "failed" ]]; then
+        msg_ok "Stopped waiting for the search index rebuild"
+        msg_warn "The rebuild did not complete, see: journalctl -u opencloud-reindex"
+        msg_warn "Retry with: systemctl reset-failed opencloud-reindex; systemd-run --unit=opencloud-reindex \
+          --uid=opencloud --gid=opencloud -p EnvironmentFile=/etc/opencloud/opencloud.env \
+          /usr/bin/opencloud search index --all-spaces --force-rescan --insecure"
+      else
+        msg_ok "Rebuilt search index"
+        if journalctl -u opencloud-reindex --since "$REINDEX_START" --no-pager | grep -qE '/[0-9]+ ERROR'; then
+          msg_warn "Some spaces could not be indexed, see: journalctl -u opencloud-reindex"
+        fi
+        msg_warn "Once search finds older files, remove the old index: rm -rf /var/lib/opencloud/search/bleve"
+      fi
+    fi
     msg_ok "Updated successfully"
   fi
   exit

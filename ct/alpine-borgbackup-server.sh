@@ -48,9 +48,7 @@ function update_script() {
       exit
     fi
 
-    msg_info "Setting up SSH Public Key for backup user"
-
-    msg_info "Please paste your SSH public key (e.g., ssh-rsa AAAAB3... user@host): \n"
+    echo -e "${INFO}${YW}Please paste your SSH public key (e.g., ssh-rsa AAAAB3... user@host):${CL}"
     read -p "Key: " SSH_PUBLIC_KEY
     echo
 

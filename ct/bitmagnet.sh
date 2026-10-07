@@ -75,8 +75,7 @@ update_deb_based() {
 
     msg_info "Configuring Bitmagnet"
     cd /opt/bitmagnet
-    VREL=v$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
+    $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=v$(cat ~/.bitmagnet)"
     chmod +x bitmagnet
     msg_ok "Configured Bitmagnet"
 
@@ -92,8 +91,10 @@ update_alpine() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [ "${RELEASE}" != "$(cat /opt/bitmagnet_version.txt)" ] || [ ! -f /opt/bitmagnet_version.txt ]; then
+  if [[ -f /opt/bitmagnet_version.txt ]]; then
+    mv /opt/bitmagnet_version.txt ~/.bitmagnet
+  fi
+  if check_for_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"; then
     msg_info "Backing up database"
     rm -f /tmp/backup.sql
     $STD sudo -u postgres pg_dump \
@@ -119,27 +120,25 @@ update_alpine() {
     mv /tmp/backup.sql /opt/
     msg_ok "Database backed up"
 
-    msg_info "Updating ${APP} from $(cat /opt/bitmagnet_version.txt) to ${RELEASE}"
+    msg_info "Stopping Service"
     $STD apk -U upgrade
     $STD service bitmagnet stop
-    [ -f /opt/bitmagnet/.env ] && cp /opt/bitmagnet/.env /opt/
-    [ -f /opt/bitmagnet/config.yml ] && cp /opt/bitmagnet/config.yml /opt/
-    rm -rf /opt/bitmagnet/*
-    temp_file=$(mktemp)
-    curl -fsSL "https://github.com/bitmagnet-io/bitmagnet/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-    tar zxf "$temp_file" --strip-components=1 -C /opt/bitmagnet
+    msg_ok "Stopped Service"
+
+    create_backup /opt/bitmagnet/.env /opt/bitmagnet/config.yml
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
+    restore_backup
+
+    msg_info "Building ${APP}"
     cd /opt/bitmagnet
-    VREL=v$RELEASE
-    $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
+    $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=v$(cat ~/.bitmagnet)"
     chmod +x bitmagnet
-    [ -f "/opt/.env" ] && cp "/opt/.env" /opt/bitmagnet/
-    [ -f "/opt/config.yml" ] && cp "/opt/config.yml" /opt/bitmagnet/
-    rm -f "$temp_file"
-    echo "${RELEASE}" >/opt/bitmagnet_version.txt
+    msg_ok "Built ${APP}"
+
+    msg_info "Starting Service"
     $STD service bitmagnet start
+    msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
 }
 

@@ -58,7 +58,7 @@ systemctl enable -q --now elasticsearch
 msg_ok "Set up Elasticsearch"
 
 msg_info "Configuring Database"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+DB_PASS=$(random_password 13)
 $STD mariadb -u root -e "CREATE USER 'minthcm'@'localhost' IDENTIFIED BY '${DB_PASS}';"
 $STD mariadb -u root -e "GRANT ALL ON *.* TO 'minthcm'@'localhost'; FLUSH PRIVILEGES;"
 sed -i "s/^DB_HOST=.*/DB_HOST=localhost/" /var/www/script/.env

@@ -98,8 +98,8 @@ if [[ -f /opt/tubearchivist/backend/requirements.plugins.txt ]]; then
   mkdir -p /opt/yt_plugins/bgutil
   $STD uv pip install --python /opt/tubearchivist/.venv/bin/python --target /opt/yt_plugins/bgutil -r /opt/tubearchivist/backend/requirements.plugins.txt
 fi
-TA_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-ES_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+TA_PASSWORD=$(random_password 13)
+ES_PASSWORD=$(random_password 13)
 mkdir -p /opt/tubearchivist/{cache,media}
 ln -sf /opt/tubearchivist/cache /cache
 ln -sf /opt/tubearchivist/media /youtube

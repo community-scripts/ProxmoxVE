@@ -137,7 +137,6 @@ EOF
       set +o allexport
       if [[ -n "$POSTGRES_DB" ]] && [[ -n "$POSTGRES_USER" ]] && [[ -n "$POSTGRES_PASSWORD" ]]; then
         PGPASSWORD=$POSTGRES_PASSWORD pg_dump -U "$POSTGRES_USER" -h "${POSTGRES_HOST:-localhost}" -p "${POSTGRES_PORT:-5432}" "$POSTGRES_DB" >/tmp/dispatcharr_db_$(date +%F).sql
-        msg_info "Database backup created"
       fi
     fi
     $STD tar -czf "$BACKUP_FILE" -C /opt dispatcharr /tmp/dispatcharr_db_*.sql
@@ -150,7 +149,7 @@ EOF
 
     msg_info "Updating Dispatcharr Backend"
     if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
-      DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+      DJANGO_SECRET=$(random_password 50)
       echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >>/opt/dispatcharr/.env
     fi
 

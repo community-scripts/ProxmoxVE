@@ -36,9 +36,9 @@ function update_script() {
     systemctl stop airtrail
     msg_ok "Stopped Service"
 
-    create_backup /opt/airtrail/.env /opt/airtrail/uploads
+    create_backup /opt/airtrail/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "airtrail" "johanohly/AirTrail" "tarball" "latest" "/opt/airtrail"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="uploads" fetch_and_deploy_gh_release "airtrail" "johanohly/AirTrail" "tarball" "latest" "/opt/airtrail"
 
     restore_backup
 

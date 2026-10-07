@@ -23,7 +23,7 @@ setup_deb_based() {
   fetch_and_deploy_gh_release "tinyauth" "steveiliop56/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-$(arch_resolve)"
 
   msg_info "Setting up Tinyauth"
-  PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
+  PASS=$(random_password 8)
   USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
   cat <<EOF >/opt/tinyauth/credentials.txt
 Tinyauth Credentials
@@ -64,12 +64,10 @@ setup_alpine() {
   $STD apk add --no-cache openssl apache2-utils
   msg_ok "Installed Dependencies"
 
-  msg_info "Installing Tinyauth"
-  mkdir -p /opt/tinyauth
-  RELEASE=$(curl -s https://api.github.com/repos/tinyauthapp/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-$(arch_resolve)" -o /opt/tinyauth/tinyauth
-  chmod +x /opt/tinyauth/tinyauth
-  PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
+  fetch_and_deploy_gh_release "tinyauth" "tinyauthapp/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-$(arch_resolve)"
+
+  msg_info "Configuring Tinyauth"
+  PASS=$(random_password 8)
   USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
 
   cat <<EOF >/opt/tinyauth/credentials.txt
@@ -77,8 +75,7 @@ Tinyauth Credentials
 Username: tinyauth
 Password: ${PASS}
 EOF
-  echo "${RELEASE}" >~/.tinyauth
-  msg_ok "Installed Tinyauth"
+  msg_ok "Configured Tinyauth"
 
   read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
 

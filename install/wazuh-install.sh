@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-RELEASE=$(curl -fsSL https://api.github.com/repos/wazuh/wazuh/releases/latest | grep '"tag_name"' | awk -F '"' '{print substr($4, 2, length($2)-4)}')
+RELEASE=$(get_latest_github_release "wazuh/wazuh" | cut -d. -f1,2)
 
 msg_warn "WARNING: This script will run an external installer from a third-party source (https://wazuh.com/)."
 msg_warn "The following code is NOT maintained or audited by our repository."

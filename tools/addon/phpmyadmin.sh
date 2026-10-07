@@ -20,10 +20,10 @@ if ! command -v curl &>/dev/null; then
     apt-get install -y curl >/dev/null 2>&1
   fi
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "phpmyadmin" "addon"
 
 # Enable error handling
@@ -141,6 +141,7 @@ function install_phpmyadmin() {
   mkdir -p "$INSTALL_DIR"
   tar xf "$tarball" --strip-components=1 -C "$INSTALL_DIR"
   rm -f "$tarball"
+  msg_ok "Downloaded phpMyAdmin ${LATEST_VERSION}"
 }
 
 function configure_phpmyadmin() {
@@ -210,12 +211,12 @@ function uninstall_phpmyadmin() {
     $STD rc-service lighttpd stop
     $STD rc-service php-fpm stop
   fi
+  msg_ok "Stopped Webserver"
 
   msg_info "Removing phpMyAdmin directory"
   rm -rf "$INSTALL_DIR"
 
   if [[ "$OS" == "Alpine" ]]; then
-    msg_info "Removing Lighttpd config"
     rm -f /etc/lighttpd/lighttpd.conf
     $STD rc-service php-fpm restart
     $STD rc-service lighttpd restart

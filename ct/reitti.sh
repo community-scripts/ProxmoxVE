@@ -44,8 +44,8 @@ function update_script() {
     msg_info "Migrating to v4: Removing RabbitMQ"
     systemctl stop rabbitmq-server
     systemctl disable rabbitmq-server
-    $STD apt-get purge -y rabbitmq-server erlang-base
-    $STD apt-get autoremove -y
+    $STD apt purge -y rabbitmq-server erlang-base
+    $STD apt autoremove -y
     msg_ok "Removed RabbitMQ"
   fi
 

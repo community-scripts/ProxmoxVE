@@ -26,9 +26,9 @@ NODE_VERSION="22" setup_nodejs
 
 msg_info "Configuring MongoDB"
 MONGO_ADMIN_USER="admin"
-MONGO_ADMIN_PWD="$(openssl rand -base64 18 | cut -c1-13)"
+MONGO_ADMIN_PWD="$(random_password 13)"
 NODEBB_USER="nodebb"
-NODEBB_PWD="$(openssl rand -base64 18 | cut -c1-13)"
+NODEBB_PWD="$(random_password 13)"
 MONGO_CONNECTION_STRING="mongodb://${NODEBB_USER}:${NODEBB_PWD}@localhost:27017/nodebb"
 NODEBB_SECRET=$(uuidgen)
 cat <<EOF >~/nodebb.creds

@@ -46,7 +46,7 @@ set -a
 source /opt/domain-locker.env
 set +a
 $STD npm run build
-msg_info "Built Domain-Locker"
+msg_ok "Built Domain-Locker"
 
 msg_info "Building Database schema"
 export PGPASSWORD="$DL_PG_PASSWORD"
@@ -69,7 +69,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now domain-locker
-msg_info "Created Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize

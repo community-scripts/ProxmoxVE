@@ -36,9 +36,9 @@ function update_script() {
     systemctl stop nametag
     msg_ok "Stopped Service"
 
-    create_backup /opt/nametag/.env /opt/nametag/data
+    create_backup /opt/nametag/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/opt/nametag"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/opt/nametag"
 
     restore_backup
 

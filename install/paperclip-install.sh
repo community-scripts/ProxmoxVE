@@ -46,8 +46,21 @@ msg_info "Configuring Paperclip"
 PAPERCLIP_HOME="/opt/paperclip-data"
 PAPERCLIP_CONFIG="${PAPERCLIP_HOME}/instances/default/config.json"
 
-mkdir -p /opt/paperclip-data
-mkdir -p /root/.claude /root/.codex
+PAPERCLIP_USER="${var_paperclip_user:-paperclip}"
+# Claude Code refuses --dangerously-skip-permissions as root, so run as a dedicated user
+if [[ "$PAPERCLIP_USER" == "root" || ! "$PAPERCLIP_USER" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]]; then
+  msg_error "Invalid var_paperclip_user '${PAPERCLIP_USER}' (must be a non-root lowercase Linux username)"
+  exit 1
+fi
+PAPERCLIP_USER_HOME="/home/${PAPERCLIP_USER}"
+id -u "$PAPERCLIP_USER" &>/dev/null || useradd -m -d "$PAPERCLIP_USER_HOME" -s /bin/bash "$PAPERCLIP_USER"
+if [[ -n "${var_paperclip_pass:-}" ]]; then
+  printf '%s:%s\n' "$PAPERCLIP_USER" "$var_paperclip_pass" | chpasswd
+else
+  passwd -l "$PAPERCLIP_USER" &>/dev/null
+fi
+unset var_paperclip_pass
+mkdir -p /opt/paperclip-data "${PAPERCLIP_USER_HOME}/.claude" "${PAPERCLIP_USER_HOME}/.codex"
 BETTER_AUTH_SECRET=$(openssl rand -hex 32)
 cat <<EOF >/opt/paperclip-ai/.env
 DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@127.0.0.1:5432/${PG_DB_NAME}
@@ -62,11 +75,13 @@ PAPERCLIP_DEPLOYMENT_EXPOSURE=private
 PAPERCLIP_PUBLIC_URL=http://${LOCAL_IP}:3100
 BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
 EOF
+chmod 600 /opt/paperclip-ai/.env
+chown -R "${PAPERCLIP_USER}:${PAPERCLIP_USER}" /opt/paperclip-ai /opt/paperclip-data "$PAPERCLIP_USER_HOME"
 msg_ok "Configured Paperclip"
 
 msg_info "Running Database Migrations"
 set -a && source /opt/paperclip-ai/.env && set +a
-$STD pnpm db:migrate
+$STD runuser -u "$PAPERCLIP_USER" -- env HOME="$PAPERCLIP_USER_HOME" pnpm db:migrate
 msg_ok "Ran Database Migrations"
 
 msg_info "Bootstrapping Paperclip"
@@ -77,7 +92,8 @@ for PAPERCLIP_ONBOARD_CMD in \
   "pnpm paperclipai onboard --yes --bind lan" \
   "pnpm paperclipai onboard --yes"; do
   rm -f "$PAPERCLIP_ONBOARD_LOG"
-  setsid env \
+  setsid runuser -u "$PAPERCLIP_USER" -- env \
+    HOME="$PAPERCLIP_USER_HOME" \
     PAPERCLIP_HOME="$PAPERCLIP_HOME" \
     PAPERCLIP_CONFIG="$PAPERCLIP_CONFIG" \
     bash -c 'cd /opt/paperclip-ai && exec "$@"' _ $PAPERCLIP_ONBOARD_CMD \
@@ -100,7 +116,7 @@ for PAPERCLIP_ONBOARD_CMD in \
   if ! grep -q "unknown option '--bind'" "$PAPERCLIP_ONBOARD_LOG"; then
     break
   fi
-  msg_info "Retrying Paperclip Onboarding"
+  msg_warn "Retrying Paperclip Onboarding"
 done
 
 if [[ ! -f "$PAPERCLIP_CONFIG" ]]; then
@@ -109,7 +125,8 @@ if [[ ! -f "$PAPERCLIP_CONFIG" ]]; then
 fi
 
 if grep -q 'authenticated' $PAPERCLIP_CONFIG; then
-  pnpm paperclipai auth bootstrap-ceo >"$PAPERCLIP_BOOTSTRAP_LOG" 2>&1 || true
+  chown "${PAPERCLIP_USER}:${PAPERCLIP_USER}" /opt/paperclip-ai
+  runuser -u "$PAPERCLIP_USER" -- env HOME="$PAPERCLIP_USER_HOME" bash -c 'cd /opt/paperclip-ai && pnpm paperclipai auth bootstrap-ceo' >"$PAPERCLIP_BOOTSTRAP_LOG" 2>&1 || true
   PAPERCLIP_INVITE_URL=$(awk -F'Invite URL: ' '/Invite URL:/ {print $2; exit}' "$PAPERCLIP_BOOTSTRAP_LOG")
   PAPERCLIP_INVITE_EXPIRY=$(awk -F'Expires: ' '/Expires:/ {print $2; exit}' "$PAPERCLIP_BOOTSTRAP_LOG")
   if [[ -n "$PAPERCLIP_INVITE_URL" ]]; then
@@ -127,10 +144,11 @@ EOF
     msg_warn "Paperclip authenticated mode is enabled, but no CEO invite was generated automatically"
   fi
 else
-  msg_info "Paperclip Bootstrapped in Local Trusted Mode"
+  msg_ok "Running in local trusted mode"
 fi
 rm -f "$PAPERCLIP_ONBOARD_LOG" "$PAPERCLIP_BOOTSTRAP_LOG"
 msg_ok "Bootstrapped Paperclip"
+echo -e "${INFO}${YW} Authenticate Claude Code and Codex as the service user: ${BGN}su - ${PAPERCLIP_USER}${CL}"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/paperclip.service
@@ -141,12 +159,13 @@ Requires=postgresql.service
 
 [Service]
 Type=simple
-User=root
+User=${PAPERCLIP_USER}
+Group=${PAPERCLIP_USER}
 WorkingDirectory=/opt/paperclip-ai
 EnvironmentFile=/opt/paperclip-ai/.env
-Environment=HOME=/root
-Environment=CODEX_HOME=/root/.codex
-Environment=PATH=/root/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=HOME=${PAPERCLIP_USER_HOME}
+Environment=CODEX_HOME=${PAPERCLIP_USER_HOME}/.codex
+Environment=PATH=${PAPERCLIP_USER_HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin
 Environment=DISABLE_AUTOUPDATER=1
 ExecStart=/usr/bin/env pnpm paperclipai run
 Restart=on-failure

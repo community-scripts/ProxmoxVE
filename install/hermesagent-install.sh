@@ -45,11 +45,13 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 fi
 
 msg_info "Installing Hermes Agent"
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh -o /tmp/hermes-install.sh
 $STD setsid --wait bash -c '
   set -a; source /etc/default/hermes; set +a
   export npm_config_yes=true
-  bash <(curl -fsSL https://hermes-agent.nousresearch.com/install.sh) --skip-setup --hermes-home /home/hermes/.hermes --dir /home/hermes/.hermes/hermes-agent
+  bash /tmp/hermes-install.sh --skip-setup --hermes-home /home/hermes/.hermes --dir /home/hermes/.hermes/hermes-agent
 '
+rm -f /tmp/hermes-install.sh
 chown -R hermes:hermes /home/hermes
 chmod 750 /home/hermes
 chmod 700 /home/hermes/.hermes
@@ -57,7 +59,7 @@ git config --system --add safe.directory /home/hermes/.hermes/hermes-agent 2>/de
 msg_ok "Installed Hermes Agent"
 
 msg_info "Configuring API Server"
-API_SERVER_KEY=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)
+API_SERVER_KEY=$(random_password 32)
 mkdir -p /home/hermes/.hermes
 cat <<EOF >/home/hermes/.hermes/.env
 API_SERVER_ENABLED=true

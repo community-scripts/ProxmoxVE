@@ -19,7 +19,7 @@ msg_info "Setup hev-socks5-server"
 mkdir -p /etc/hev-socks5-server
 download_file "https://raw.githubusercontent.com/heiher/hev-socks5-server/refs/heads/main/conf/main.yml" "/etc/hev-socks5-server/main.yml"
 sed -i 's/^#auth:/auth:/; s/^# file: conf\/auth.txt/  file: \/root\/hev.creds/'  /etc/hev-socks5-server/main.yml
-PASSWORD=$(openssl rand -base64 16)
+PASSWORD=$(random_password 21)
 echo "admin $PASSWORD 0" >/root/hev.creds
 msg_ok "Setup hev-socks5-server"
 

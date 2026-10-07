@@ -29,20 +29,13 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/sharevb/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
-  if [ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ] || [ ! -f /opt/${APP}_version.txt ]; then
-    msg_info "Updating ${APP} LXC"
-    curl -fsSL "https://github.com/sharevb/it-tools/releases/download/${RELEASE}/it-tools-${RELEASE#v}.zip" -o it-tools.zip
-    mkdir -p /usr/share/nginx/html
-    rm -rf /usr/share/nginx/html/*
-    $STD unzip it-tools.zip -d /tmp
-    cp -r /tmp/dist/* /usr/share/nginx/html
-    rm -rf /tmp/dist
-    rm -f it-tools.zip
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+  if [[ -f /opt/${APP}_version.txt ]]; then
+    mv /opt/"${APP}_version.txt" ~/.it-tools
+  fi
+
+  if check_for_gh_release "it-tools" "sharevb/it-tools"; then
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "it-tools" "sharevb/it-tools" "prebuild" "latest" "/usr/share/nginx/html" "it-tools-*.zip"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit 0
 }

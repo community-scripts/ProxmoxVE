@@ -37,8 +37,8 @@ function update_script() {
     systemctl stop php8.4-fpm librenms-scheduler.timer
     msg_ok "Stopped Services"
 
-    create_backup /opt/librenms/.env /opt/librenms/config.php /opt/librenms/rrd
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
+    create_backup /opt/librenms/.env /opt/librenms/config.php
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="rrd" fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
     restore_backup
 
     msg_info "Updating LibreNMS"

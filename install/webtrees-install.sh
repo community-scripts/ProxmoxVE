@@ -36,6 +36,9 @@ PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/caddy/Caddyfile
 :80 {
     root * /opt/webtrees
+    # Caddy ignores data/.htaccess; media must go through webtrees so its privacy rules apply.
+    @private path /app/* /data/* /modules_v4/* /resources/* /vendor/* /.*
+    respond @private 403
     php_fastcgi unix/${PHP_SOCK}
     file_server
     encode gzip
@@ -50,7 +53,7 @@ msg_info "Automating Webtrees Setup"
 cd /opt/webtrees
 mkdir -p /opt/webtrees/data
 chown -R www-data:www-data /opt/webtrees/data
-WT_ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c15)
+WT_ADMIN_PASS=$(random_password 15)
 $STD sudo -u www-data php /opt/webtrees/index.php config-ini \
   --dbhost=127.0.0.1 \
   --dbport=3306 \

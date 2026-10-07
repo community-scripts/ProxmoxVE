@@ -62,8 +62,7 @@ update_alpine() {
   $STD apk -U upgrade
   msg_ok "Updated packages"
 
-  RELEASE=$(curl -s https://api.github.com/repos/tinyauthapp/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [ "${RELEASE}" != "$(cat ~/.tinyauth 2>/dev/null)" ] || [ ! -f ~/.tinyauth ]; then
+  if check_for_gh_release "tinyauth" "tinyauthapp/tinyauth"; then
     msg_info "Stopping Service"
     $STD service tinyauth stop
     msg_ok "Service Stopped"
@@ -82,19 +81,12 @@ update_alpine() {
       msg_ok "Migrated .env to v5 format"
     fi
 
-    msg_info "Updating Tinyauth"
-    rm -f /opt/tinyauth/tinyauth
-    curl -fsSL "https://github.com/tinyauthapp/tinyauth/releases/download/v${RELEASE}/tinyauth-$(arch_resolve)" -o /opt/tinyauth/tinyauth
-    chmod +x /opt/tinyauth/tinyauth
-    echo "${RELEASE}" >~/.tinyauth
-    msg_ok "Updated Tinyauth"
+    fetch_and_deploy_gh_release "tinyauth" "tinyauthapp/tinyauth" "singlefile" "latest" "/opt/tinyauth" "tinyauth-$(arch_resolve)"
 
     msg_info "Restarting Tinyauth"
     $STD service tinyauth start
     msg_ok "Restarted Tinyauth"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
 }
 

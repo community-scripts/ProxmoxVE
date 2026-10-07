@@ -37,7 +37,7 @@ PG_VERSION="16" setup_postgresql
 PG_DB_NAME="plane" PG_DB_USER="plane" setup_postgresql_db
 
 msg_info "Configuring RabbitMQ"
-RABBITMQ_PASS=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c16)
+RABBITMQ_PASS=$(random_password 16)
 $STD rabbitmqctl add_vhost plane
 $STD rabbitmqctl add_user plane "${RABBITMQ_PASS}"
 $STD rabbitmqctl set_permissions -p plane plane ".*" ".*" ".*"
@@ -48,8 +48,8 @@ fetch_and_deploy_gh_release "silo_mcli" "pgsty/mc" "prebuild" "latest" "/opt/mcl
 
 msg_info "Configuring Silo"
 mkdir -p /opt/minio/data
-MINIO_ACCESS_KEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
-MINIO_SECRET_KEY=$(openssl rand -base64 36 | tr -dc 'a-zA-Z0-9' | head -c32)
+MINIO_ACCESS_KEY=$(random_password 16)
+MINIO_SECRET_KEY=$(random_password 32)
 cat <<EOF >/etc/default/minio
 MINIO_ROOT_USER="${MINIO_ACCESS_KEY}"
 MINIO_ROOT_PASSWORD="${MINIO_SECRET_KEY}"
@@ -268,7 +268,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
 systemctl enable -q --now plane-api plane-worker plane-beat plane-live plane-space
 cat <<EOF >~/plane.creds
 RabbitMQ User: plane

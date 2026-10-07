@@ -34,7 +34,7 @@ function update_script() {
   if check_for_gh_release "livebook" "livebook-dev/livebook"; then
     msg_info "Stopping Service"
     systemctl stop livebook
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     msg_info "Updating Container"
     apt_update_safe
@@ -47,10 +47,11 @@ function update_script() {
     $STD mix escript.install hex livebook --force
 
     chown -R livebook:livebook /opt/livebook /data
+    msg_ok "Updated Livebook"
 
     msg_info "Starting Service"
     systemctl start livebook
-    msg_info "Started Service"
+    msg_ok "Started Service"
 
     msg_ok "Updated successfully!"
   fi

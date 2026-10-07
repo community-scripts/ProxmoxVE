@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y libicu-dev
+$STD apt install -y libicu-dev
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.Linux$(arch_resolve "AMDx64" "ARM64").tar.gz"

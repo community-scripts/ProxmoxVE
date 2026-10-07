@@ -35,7 +35,7 @@ function update_script() {
   if check_for_gh_release "PeaNUT" "Brandawg93/PeaNUT"; then
     msg_info "Stopping Service"
     systemctl stop peanut
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PeaNUT" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 

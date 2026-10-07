@@ -116,7 +116,7 @@ msg_info "Configuring Safebucket"
 useradd --system --no-create-home --shell /usr/sbin/nologin safebucket 2>/dev/null || true
 mkdir -p /opt/safebucket/data/{notifications,activity}
 TOKEN_SECRET=$(openssl rand -base64 32)
-MFA_KEY=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-32)
+MFA_KEY=$(random_password 32)
 ADMIN_PASSWORD=$(openssl rand -hex 12)
 cat <<EOF >/opt/safebucket/config.yaml
 app:

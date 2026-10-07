@@ -34,7 +34,7 @@ function update_script() {
   if check_for_gh_release "stylus" "mmastrac/stylus"; then
     msg_info "Stopping Service"
     systemctl stop stylus
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "stylus" "mmastrac/stylus" "singlefile" "latest" "/usr/bin/" "*_linux_$(arch_resolve)"
 

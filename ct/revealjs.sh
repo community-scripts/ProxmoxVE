@@ -33,7 +33,7 @@ function update_script() {
   if check_for_gh_release "revealjs" "hakimel/reveal.js"; then
     msg_info "Stopping Service"
     systemctl stop revealjs
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     cp /opt/revealjs/index.html /opt
     fetch_and_deploy_gh_release "revealjs" "hakimel/reveal.js" "tarball"

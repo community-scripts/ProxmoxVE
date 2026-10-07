@@ -38,9 +38,9 @@ function update_script() {
     systemctl stop soulsync
     msg_ok "Stopped Service"
 
-    create_backup /opt/soulsync/config /opt/soulsync/data
+    create_backup /opt/soulsync/config
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
 
     restore_backup
 

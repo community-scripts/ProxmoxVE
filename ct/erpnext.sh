@@ -47,7 +47,7 @@ function update_script() {
     msg_ok "Backup created"
 
     msg_info "Installing Dependencies"
-    $STD apt-get install -y pkg-config
+    $STD apt install -y pkg-config
     $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"; cd /opt/frappe-bench && uv python install 3.14'
     msg_ok "Installed Dependencies"
 

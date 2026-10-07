@@ -58,7 +58,7 @@ function update_script() {
 
     msg_info "Updating Python Environment (${AUDIOMUSE_BACKEND})"
     cd /opt/audiomuse-ai
-    $STD uv venv --seed --python "$PY_VERSION" /opt/audiomuse-ai/.venv
+    $STD uv venv --clear --seed --python "$PY_VERSION" /opt/audiomuse-ai/.venv
     $STD uv pip install --python /opt/audiomuse-ai/.venv \
       -r "/opt/audiomuse-ai/requirements/${REQ_COMMON}" \
       -r "/opt/audiomuse-ai/requirements/${REQ_ACCEL}"

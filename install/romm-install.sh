@@ -49,7 +49,7 @@ setup_deb822_repo \
   "https://download.angie.software/angie/debian/$(get_os_info version_id)" \
   "$(get_os_info codename)" \
   "main"
-$STD apt-get install -y angie angie-module-zip angie-module-njs
+$STD apt install -y angie angie-module-zip angie-module-njs
 sed -i '1i load_module modules/ngx_http_zip_module.so;\nload_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
 mkdir -p /etc/angie/js
 cat <<'EOF' >/etc/angie/js/decode.js
@@ -334,6 +334,8 @@ cat <<'SYNCEOF' >/usr/local/bin/romm-sync-angie-paths
 #!/usr/bin/env bash
 base="$(grep -m1 '^ROMM_BASE_PATH=' /opt/romm/.env 2>/dev/null | cut -d= -f2)"
 base="${base:-/var/lib/romm}"
+ln -sfn "${base}/resources" /opt/romm/frontend/dist/assets/romm/resources
+ln -sfn "${base}/assets" /opt/romm/frontend/dist/assets/romm/assets
 [[ -f /etc/angie/http.d/romm.conf ]] || exit 0
 sed -i -e "s|alias .*/library/;|alias ${base}/library/;|" \
   -e "s|alias .*/cache/;|alias ${base}/cache/;|" /etc/angie/http.d/romm.conf
