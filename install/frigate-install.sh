@@ -41,7 +41,7 @@ Components: main contrib
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
   mv /etc/apt/sources.list /etc/apt/sources.list.bak
-  $STD apt update
+  apt_update_safe
 fi
 msg_ok "Converted APT sources"
 
@@ -128,7 +128,7 @@ if [[ "$(arch_resolve)" == "amd64" ]]; then
   cp -a /rootfs/. /
   rm -rf /rootfs
   rm -f /etc/apt/sources.list.d/intel-gpu-jammy.list /usr/share/keyrings/intel-graphics.gpg
-  $STD apt update
+  apt_update_safe
   ldconfig
   msg_ok "Built Intel Media Driver"
 fi
@@ -236,7 +236,7 @@ $STD bash /opt/frigate/.devcontainer/initialize.sh
 $STD make version
 cd /opt/frigate/web
 $STD npm install
-$STD npm run build
+NODE_OPTIONS="--max-old-space-size=4096" $STD npm run build
 mv /opt/frigate/web/dist/BASE_PATH/monacoeditorwork/* /opt/frigate/web/dist/assets/
 rm -rf /opt/frigate/web/dist/BASE_PATH
 cp -r /opt/frigate/web/dist/* /opt/frigate/web/

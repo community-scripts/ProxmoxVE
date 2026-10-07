@@ -122,7 +122,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
 systemctl enable -q --now snapotter
 msg_ok "Created Service"
 

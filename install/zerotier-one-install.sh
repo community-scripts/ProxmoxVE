@@ -37,7 +37,7 @@ msg_ok "Setup Zerotier-One"
 
 msg_info "Setting up UI"
 if [[ "$(arch_resolve)" == "arm64" ]]; then
-  $STD apt-get install -y build-essential python3 openssl
+  $STD apt install -y build-essential python3 openssl
   NODE_VERSION="20" setup_nodejs
   curl -fsSL "https://github.com/key-networks/ztncui/archive/refs/heads/master.tar.gz" -o /tmp/ztncui.tar.gz
   $STD tar -xzf /tmp/ztncui.tar.gz -C /tmp
@@ -68,7 +68,6 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-  systemctl daemon-reload
   systemctl enable -q ztncui
 else
   curl -O https://s3-us-west-1.amazonaws.com/key-networks/deb/ztncui/1/x86_64/ztncui_0.8.14_amd64.deb

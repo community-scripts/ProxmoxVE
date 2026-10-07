@@ -12,7 +12,7 @@ jobs:
     if: github.event.pull_request.merged == true && github.repository == 'community-scripts/ProxmoxVE'
     runs-on: self-hosted
     env:
-      DEV_REPO: community-scripts/ProxmoxVED
+      DEV_REPO: community-scripts/DevScripts
 
     steps:
       - name: Checkout target repo (merge commit)
@@ -60,7 +60,7 @@ jobs:
           echo "count=$(printf '%s' "$slugs" | wc -w | tr -d '[:space:]')" >> "$GITHUB_OUTPUT"
           echo "Slugs in this PR: ${slugs:-<none>}"
 
-      - name: Resolve the matching ProxmoxVED issue
+      - name: Resolve the matching DevScripts issue
         id: find_issue
         shell: bash
         env:
@@ -71,7 +71,7 @@ jobs:
           # creates, so migration PRs carry an exact back-reference. Guessing from
           # titles or file names is never needed for them.
           matched=$(printf '%s' "$PR_BODY" \
-            | grep -oE 'community-scripts/ProxmoxVED#[0-9]+' \
+            | grep -oE 'community-scripts/(ProxmoxVED|DevScripts)#[0-9]+' \
             | sed 's/.*#//' || true)
 
           if [ -n "$matched" ]; then
@@ -96,7 +96,7 @@ jobs:
                   [ -n "$row" ] || continue
                   num=$(printf '%s' "$row" | jq -r '.number')
 
-                  # Same slug derivation the ProxmoxVED workflows use, so both
+                  # Same slug derivation the DevScripts workflows use, so both
                   # sides agree on what "alpine-cinny" means.
                   name=$(printf '%s' "$row" | jq -r '.body // ""' \
                     | sed -n '/^###[[:space:]]*Name of the Script/,/^###/p' \
@@ -124,7 +124,7 @@ jobs:
           echo "issue_numbers=$matched" >> "$GITHUB_OUTPUT"
           echo "Closing: ${matched:-<none>}"
 
-      - name: Comment on and close matching ProxmoxVED issues
+      - name: Comment on and close matching DevScripts issues
         if: steps.find_issue.outputs.issue_numbers != ''
         shell: bash
         env:

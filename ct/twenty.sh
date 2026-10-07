@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 
@@ -61,8 +60,9 @@ function update_script() {
     msg_info "Running Database Migrations"
     cd /opt/twenty/packages/twenty-server
     set -a && source /opt/twenty/.env && set +a
-    $STD npx ts-node ./scripts/setup-db.ts
-    $STD npx -y typeorm migration:run -d dist/database/typeorm/core/core.datasource
+    $STD yarn command:prod cache:flush || true
+    $STD yarn command:prod upgrade
+    $STD yarn command:prod cache:flush || true
     msg_ok "Ran Database Migrations"
 
     msg_info "Starting Services"

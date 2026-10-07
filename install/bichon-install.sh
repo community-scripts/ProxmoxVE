@@ -28,7 +28,7 @@ fi
 
 msg_info "Setting up Bichon"
 mkdir -p /opt/bichon-data
-BICHON_ENC_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-32)
+BICHON_ENC_PASSWORD=$(random_password 32)
 
 cat <<EOF >/opt/bichon/bichon.env
 BICHON_ROOT_DIR=/opt/bichon-data

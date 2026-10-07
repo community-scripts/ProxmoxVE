@@ -81,7 +81,7 @@ function default_settings() {
   VMID=$(get_valid_nextid)
   ISO_DEFAULT="latest stable"
   vm_apply_machine_type "q35"
-  DISK_SIZE="16"
+  DISK_SIZE="16G"
   DISK_CACHE=""
   HN="truenas"
   CPU_TYPE=" -cpu host"
@@ -161,7 +161,7 @@ msg_info "Creating TrueNAS VM shell"
 qm create "$VMID"${MACHINE} -bios ovmf -agent enabled=1 -tablet 0 -localtime 1${CPU_TYPE} \
   -cores "$CORE_COUNT" -memory "$RAM_SIZE" -balloon 0 -name "$HN" -tags community-script \
   -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 \
-  -efidisk0 $STORAGE:1,efitype=4m,pre-enrolled-keys=0 -sata0 $STORAGE:$DISK_SIZE,ssd=1 \
+  -efidisk0 $STORAGE:1,efitype=4m,pre-enrolled-keys=0 -sata0 ${STORAGE}:${DISK_SIZE%G},ssd=1 \
   -scsihw virtio-scsi-single -cdrom local:iso/$ISO_NAME -boot order='sata0;ide2' -vga virtio >/dev/null
 msg_ok "Created VM shell"
 

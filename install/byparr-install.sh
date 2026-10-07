@@ -52,8 +52,8 @@ $STD apt -y install --no-install-recommends \
   fonts-tlwg-loma-otf
 msg_ok "Installed Dependencies"
 
-setup_uv
 fetch_and_deploy_gh_release "Byparr" "ThePhaseless/Byparr" "tarball" "latest"
+UV_PROJECT_DIR="/opt/Byparr" setup_uv
 
 msg_info "Configuring Byparr"
 cd /opt/Byparr

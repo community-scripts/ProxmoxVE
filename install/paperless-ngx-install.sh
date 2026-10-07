@@ -45,8 +45,8 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="18" setup_postgresql
 PG_DB_NAME="paperlessdb" PG_DB_USER="paperless" setup_postgresql_db
-PYTHON_VERSION="3.13" setup_uv
 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/paperless" setup_uv
 
 msg_info "Setup Paperless-ngx"
 cd /opt/paperless
@@ -54,7 +54,7 @@ rm -rf /opt/paperless/docker
 $STD uv sync --all-extras
 mkdir -p /opt/paperless_data/{consume,data,media,trash}
 mkdir -p /opt/paperless/static
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+SECRET_KEY="$(random_password 32)"
 cat <<EOF >~/paperless-ngx.creds
 
 Paperless-ngx Secret Key: $SECRET_KEY

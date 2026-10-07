@@ -26,8 +26,8 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
-setup_uv
 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
+UV_PROJECT_DIR="/opt/linkding" setup_uv
 
 msg_info "Building Frontend"
 cd /opt/linkding
@@ -42,7 +42,7 @@ touch bookmarks/settings/custom.py
 $STD uv sync --no-dev --frozen
 $STD uv pip install gunicorn
 mkdir -p data/{favicons,previews,assets}
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+ADMIN_PASS=$(random_password 13)
 cat <<EOF >/opt/linkding/.env
 LD_SUPERUSER_NAME=admin
 LD_SUPERUSER_PASSWORD=${ADMIN_PASS}
@@ -101,8 +101,10 @@ server {
 
     client_max_body_size 20M;
 
-    location /static/ {
-        alias /opt/linkding/static/;
+    location ~ ^/static/(.*)$ {
+        root /opt/linkding;
+        try_files /static/$1 /data/favicons/$1 /data/previews/$1 =404;
+        add_header Content-Security-Policy "sandbox";
         expires 30d;
     }
 

@@ -23,7 +23,7 @@ Suites: debian
 Components: main
 Signed-By: /usr/share/keyrings/openziti.gpg
 EOF
-$STD apt update
+apt_update_safe
 $STD apt install -y openziti-controller openziti-console </dev/null
 msg_ok "Installed openziti"
 

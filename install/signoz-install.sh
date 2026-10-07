@@ -31,10 +31,32 @@ Components: main
 Architectures: $(arch_resolve)
 Signed-By: /usr/share/keyrings/clickhouse-keyring.gpg
 EOF
-$STD apt update
+apt_update_safe
 export DEBIAN_FRONTEND=noninteractive
 $STD apt install -y clickhouse-server clickhouse-client
 msg_ok "Setup ClickHouse"
+
+fetch_and_deploy_gh_release "histogram-quantile" "SigNoz/signoz" "prebuild" "histogram-quantile/v0.0.1" "/opt/histogram-quantile" "histogram-quantile_linux_$(arch_resolve).tar.gz"
+
+msg_info "Setting up ClickHouse histogramQuantile Function"
+mkdir -p /var/lib/clickhouse/user_scripts
+install -m 755 -o clickhouse -g clickhouse /opt/histogram-quantile/histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
+cat <<EOF >/etc/clickhouse-server/histogram_quantile_function.yaml
+functions:
+  name: histogramQuantile
+  type: executable
+  format: CSV
+  command: ./histogramQuantile
+  return_type: Float64
+  argument:
+    - name: buckets
+      type: Array(Float64)
+    - name: counts
+      type: Array(Float64)
+    - name: quantile
+      type: Float64
+EOF
+msg_ok "Setup ClickHouse histogramQuantile Function"
 
 msg_info "Setting up Zookeeper"
 ZOOURL=$(curl -fsSL https://dlcdn.apache.org/zookeeper/current/ | grep -o 'apache-zookeeper-[0-9.]\+-bin\.tar\.gz' | head -n1)

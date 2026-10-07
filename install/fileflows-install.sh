@@ -54,12 +54,11 @@ if [[ "$install_server" =~ ^[Ss]$ ]]; then
   systemctl enable -q --now fileflows
   msg_ok "Installed FileFlows Server"
 else
-  msg_info "Installing FileFlows Agent"
-  stop_spinner
   read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
   while [[ -z "${server_url// /}" ]]; do
     read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
   done
+  msg_info "Installing FileFlows Agent"
   cd /opt/fileflows/Agent
   before_units="$(systemctl list-unit-files 'fileflows*' --no-legend 2>/dev/null | awk '{print $1}' | sort || true)"
   $STD dotnet FileFlows.Agent.dll --server "$server_url" --systemd install --root true

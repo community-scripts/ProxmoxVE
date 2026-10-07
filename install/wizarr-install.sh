@@ -17,10 +17,10 @@ msg_info "Installing Dependencies"
 $STD apt install -y sqlite3
 msg_ok "Installed Dependencies"
 
-setup_uv
 NODE_VERSION="22" setup_nodejs
 
 fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr" "tarball"
+UV_PROJECT_DIR="/opt/wizarr" setup_uv
 
 msg_info "Configure Wizarr"
 cd /opt/wizarr

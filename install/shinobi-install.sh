@@ -16,16 +16,16 @@ update_os
 setup_hwaccel
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y make zip net-tools git
-$STD apt-get install -y gcc g++ cmake
-$STD apt-get install -y ca-certificates
+$STD apt install -y make zip net-tools git
+$STD apt install -y gcc g++ cmake
+$STD apt install -y ca-certificates
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 setup_mariadb
 
 msg_info "Installing FFMPEG"
-$STD apt-get install -y ffmpeg
+$STD apt install -y ffmpeg
 msg_ok "Installed FFMPEG"
 
 msg_info "Cloning Shinobi"

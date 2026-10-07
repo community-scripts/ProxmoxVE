@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -32,6 +31,16 @@ function update_script() {
     exit
   fi
 
+  if grep -q 'alias /opt/linkding/static/;' /etc/nginx/sites-available/linkding 2>/dev/null; then
+    msg_info "Serving Favicons and Preview Images"
+    sed -i \
+      -e 's|location /static/ {|location ~ ^/static/(.*)$ {|' \
+      -e 's|alias /opt/linkding/static/;|root /opt/linkding;\n        try_files /static/$1 /data/favicons/$1 /data/previews/$1 =404;\n        add_header Content-Security-Policy "sandbox";|' \
+      /etc/nginx/sites-available/linkding
+    $STD systemctl reload nginx
+    msg_ok "Serving Favicons and Preview Images"
+  fi
+
   if check_for_gh_release "linkding" "sissbruecker/linkding"; then
     msg_info "Stopping Services"
     systemctl stop nginx linkding linkding-tasks
@@ -40,6 +49,7 @@ function update_script() {
     create_backup /opt/linkding/data /opt/linkding/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
+    UV_PROJECT_DIR="/opt/linkding" setup_uv
 
     restore_backup
     ln -sf /usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/mod_icu.so /opt/linkding/libicu.so

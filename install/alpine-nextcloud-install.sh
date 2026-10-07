@@ -37,8 +37,8 @@ msg_ok "Installed PHP/Redis"
 msg_info "Installing MySQL Database"
 DB_NAME=nextcloud
 DB_USER=nextcloud
-DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+DB_PASS="$(random_password 13)"
+ADMIN_PASS="$(random_password 13)"
 echo "" >>~/nextcloud.creds
 echo -e "MySQL Admin Password: \e[32m$ADMIN_PASS\e[0m" >>~/nextcloud.creds
 echo -e "Nextcloud Database Username: \e[32m$DB_USER\e[0m" >>~/nextcloud.creds
@@ -194,3 +194,4 @@ msg_ok "Finished Nextcloud Setup-Wizard"
 
 motd_ssh
 customize
+cleanup_lxc

@@ -60,18 +60,16 @@ if [[ -n "$lang_code" ]]; then
     filename=$(curl -fsSL https://languagetool.org/download/ngram-data/ | grep -oP "ngrams-${lang_code}-[0-9]+\.zip" | sort -uV | tail -n1)
 
     if [[ -n "$filename" ]]; then
-      msg_info "Downloading $filename"
       download_file "https://languagetool.org/download/ngram-data/${filename}" "/tmp/${filename}"
 
       mkdir -p /opt/ngrams
-      msg_info "Extracting $lang_code ngrams to /opt/ngrams"
       unzip -q "/tmp/${filename}" -d /opt/ngrams
       rm "/tmp/${filename}"
 
       ngram_dir="/opt/ngrams"
       msg_ok "Installed $lang_code ngrams"
     else
-      msg_info "No ngram file found for ${lang_code}"
+      msg_warn "No ngram file found for ${lang_code}"
     fi
   else
     msg_error "Invalid language code: $lang_code"

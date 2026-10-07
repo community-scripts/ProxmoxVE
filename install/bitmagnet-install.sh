@@ -90,20 +90,14 @@ setup_alpine() {
   $STD rc-service postgresql start
   msg_ok "Installed PostreSQL"
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet" "tarball"
 
-  msg_info "Installing bitmagnet v${RELEASE}"
-  mkdir -p /opt/bitmagnet
-  temp_file=$(mktemp)
-  curl -fsSL "https://github.com/bitmagnet-io/bitmagnet/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-  tar zxf "$temp_file" --strip-components=1 -C /opt/bitmagnet
+  msg_info "Building bitmagnet"
   cd /opt/bitmagnet
-  VREL=v$RELEASE
-  $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
+  $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=v$(cat ~/.bitmagnet)"
   chmod +x bitmagnet
   $STD su - postgres -c "psql -c 'CREATE DATABASE bitmagnet;'"
-  echo "${RELEASE}" >/opt/bitmagnet_version.txt
-  msg_ok "Installed bitmagnet v${RELEASE}"
+  msg_ok "Built bitmagnet"
 
   read -rp "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey
 
@@ -133,8 +127,6 @@ EOF
   msg_info "Starting bitmagnet"
   $STD service bitmagnet start
   msg_ok "Started bitmagnet"
-
-  rm -f "$temp_file"
 }
 
 run_os_setup

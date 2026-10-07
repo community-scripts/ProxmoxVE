@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -46,7 +45,7 @@ update_deb_based() {
     if [[ -f /lib/systemd/system/rustdesk-api.service ]]; then
       systemctl stop rustdesk-api
     fi
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "rustdesk-hbbr" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbr*$(arch_resolve).deb"
     fetch_and_deploy_gh_release "rustdesk-hbbs" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbs*$(arch_resolve).deb"
@@ -67,41 +66,30 @@ update_alpine() {
     exit
   fi
 
-  APIRELEASE=$(curl -s https://api.github.com/repos/lejianwen/rustdesk-api/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  RELEASE=$(curl -s https://api.github.com/repos/lejianwen/rustdesk-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [ "${RELEASE}" != "$(cat ~/.rustdesk-server 2>/dev/null)" ] || [ ! -f ~/.rustdesk-server ]; then
-    msg_info "Updating RustDesk Server to v${RELEASE}"
+  if check_for_gh_release "rustdesk-server" "lejianwen/rustdesk-server"; then
+    msg_info "Stopping RustDesk Server"
     $STD apk -U upgrade
     $STD service rustdesk-server-hbbs stop
     $STD service rustdesk-server-hbbr stop
-    temp_file1=$(mktemp)
-    ARCH=$(arch_resolve "amd64" "arm64v8")
-    curl -fsSL "https://github.com/lejianwen/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-linux-${ARCH}.zip" -o "$temp_file1"
-    $STD unzip "$temp_file1"
-    cp -r "$ARCH"/* /opt/rustdesk-server/
-    echo "${RELEASE}" >~/.rustdesk-server
+    msg_ok "Stopped RustDesk Server"
+
+    fetch_and_deploy_gh_release "rustdesk-server" "lejianwen/rustdesk-server" "prebuild" "latest" "/opt/rustdesk-server" "rustdesk-server-linux-$(arch_resolve "amd64" "arm64v8").zip"
+
+    msg_info "Starting RustDesk Server"
     $STD service rustdesk-server-hbbs start
     $STD service rustdesk-server-hbbr start
-    rm -rf "$ARCH"
-    rm -f "$temp_file1"
-    msg_ok "Updated RustDesk Server"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Started RustDesk Server"
   fi
-  if [ "${APIRELEASE}" != "$(cat ~/.rustdesk-api)" ] || [ ! -f ~/.rustdesk-api ]; then
-    msg_info "Updating RustDesk API to v${APIRELEASE}"
+  if check_for_gh_release "rustdesk-api" "lejianwen/rustdesk-api"; then
+    msg_info "Stopping RustDesk API"
     $STD service rustdesk-api stop
-    temp_file2=$(mktemp)
-    curl -fsSL "https://github.com/lejianwen/rustdesk-api/releases/download/v${APIRELEASE}/linux-$(arch_resolve).tar.gz" -o "$temp_file2"
-    $STD tar zxvf "$temp_file2"
-    cp -r release/* /opt/rustdesk-api
-    echo "${APIRELEASE}" >~/.rustdesk-api
+    msg_ok "Stopped RustDesk API"
+
+    fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "prebuild" "latest" "/opt/rustdesk-api" "linux-$(arch_resolve).tar.gz"
+
+    msg_info "Starting RustDesk API"
     $STD service rustdesk-api start
-    rm -rf release
-    rm -f "$temp_file2"
-    msg_ok "Updated RustDesk API"
-  else
-    msg_ok "No update required. RustDesk API is already at v${APIRELEASE}"
+    msg_ok "Started RustDesk API"
   fi
   msg_ok "Updated successfully!"
 }

@@ -34,7 +34,7 @@ msg_ok "Installed GUI Dependencies"
 
 msg_info "Downloading JDownloader"
 mkdir -p /opt/jdownloader
-$STD wget -O /opt/jdownloader/JDownloader.jar https://installer.jdownloader.org/JDownloader.jar
+curl -fsSL -o /opt/jdownloader/JDownloader.jar https://installer.jdownloader.org/JDownloader.jar
 msg_ok "Downloaded JDownloader"
 
 msg_info "Installing JDownloader (Patience)"
@@ -194,7 +194,6 @@ EOF
 msg_ok "Created Services"
 
 msg_info "Starting Services"
-systemctl daemon-reload
 systemctl enable -q --now xvfb
 sleep 2
 systemctl enable -q --now openbox

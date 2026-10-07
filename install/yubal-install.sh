@@ -30,8 +30,6 @@ ln -sf /opt/bun/bin/bun /usr/local/bin/bun
 ln -sf /opt/bun/bin/bunx /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
-UV_VERSION="0.7.19" PYTHON_VERSION="3.12" setup_uv
-
 msg_info "Installing Deno"
 $STD sh -c "curl -fsSL https://deno.land/install.sh | DENO_INSTALL=/usr/local sh -s -- -y"
 msg_ok "Installed Deno"
@@ -43,6 +41,7 @@ mkdir -p /opt/yubal \
 msg_ok "Created directories"
 
 fetch_and_deploy_gh_release "yubal" "guillevc/yubal" "tarball" "latest" "/opt/yubal"
+PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/yubal" setup_uv
 
 msg_info "Building Frontend"
 cd /opt/yubal/web

@@ -15,11 +15,11 @@ update_os
 
 setup_deb_based() {
   msg_info "Installing Valkey"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y valkey openssl
   sed -i 's/^bind .*/bind 0.0.0.0/' /etc/valkey/valkey.conf
 
-  PASS="$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | head -c32)"
+  PASS="$(random_password 32)"
   echo "requirepass $PASS" >>/etc/valkey/valkey.conf
   echo "$PASS" >~/valkey.creds
   chmod 600 ~/valkey.creds
@@ -80,7 +80,7 @@ setup_alpine() {
   $STD apk add valkey valkey-openrc valkey-cli
   sed -i 's/^bind .*/bind 0.0.0.0/' /etc/valkey/valkey.conf
 
-  PASS="$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c32)"
+  PASS="$(random_password 32)"
   echo "requirepass $PASS" >>/etc/valkey/valkey.conf
   echo "$PASS" >~/valkey.creds
   chmod 600 ~/valkey.creds

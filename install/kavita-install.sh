@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y libicu-dev
+$STD apt install -y libicu-dev
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "Kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-$(arch_resolve "x64" "arm64").tar.gz"

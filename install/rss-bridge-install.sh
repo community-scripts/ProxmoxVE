@@ -55,7 +55,6 @@ EOF
   cat <<EOF >>/etc/php/${PHP_VER}/fpm/pool.d/www.conf
 env[CURL_IMPERSONATE] = chrome142
 EOF
-  $STD systemctl daemon-reload
   safe_service_restart php${PHP_VER}-fpm
   msg_ok "Enabled curl-impersonate for PHP-FPM"
 fi

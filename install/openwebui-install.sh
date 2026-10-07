@@ -46,7 +46,6 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
 fi
 
 msg_info "Installing Open WebUI"
-export UV_HTTP_TIMEOUT=300
 for attempt in $(seq 1 3); do
   $STD uv tool install --python 3.12 --constraint <(echo "numba>=0.60") "${OTEL_ARGS[@]}" open-webui[all] && break
   [[ $attempt -lt 3 ]] && msg_warn "Open WebUI install attempt $attempt failed, retrying..." && sleep 10
@@ -75,7 +74,7 @@ Suites: all
 Components: main
 Signed-By: /usr/share/keyrings/oneapi-archive-keyring.gpg
 EOF
-  $STD apt update
+  apt_update_safe
   msg_ok "Set up Intel® Repositories"
 
   msg_info "Installing Intel® Level Zero"

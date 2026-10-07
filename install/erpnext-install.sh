@@ -36,7 +36,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
-UV_PYTHON="3.14" setup_uv
+PYTHON_VERSION="3.14" setup_uv
 setup_mariadb
 
 msg_info "Configuring MariaDB for ERPNext"
@@ -51,12 +51,7 @@ EOF
 $STD systemctl restart mariadb
 msg_ok "Configured MariaDB for ERPNext"
 
-msg_info "Installing wkhtmltopdf"
-WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_$(arch_resolve).deb"
-$STD curl -fsSL -o /tmp/wkhtmltox.deb "$WKHTMLTOPDF_URL"
-$STD apt install -y /tmp/wkhtmltox.deb
-rm -f /tmp/wkhtmltox.deb
-msg_ok "Installed wkhtmltopdf"
+fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
 
 msg_info "Installing Frappe Bench"
 useradd -m -s /bin/bash frappe
@@ -66,8 +61,8 @@ $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv tool insta
 msg_ok "Installed Frappe Bench"
 
 msg_info "Initializing Frappe Bench"
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-DB_ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMIN_PASS=$(random_password 13)
+DB_ROOT_PASS=$(random_password 13)
 mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASS}'; FLUSH PRIVILEGES;"
 $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv python install 3.14'
 $STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-16 --python "$(uv python find 3.14)" frappe-bench'

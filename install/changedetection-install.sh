@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   build-essential \
   dumb-init \
@@ -85,7 +85,7 @@ $STD npm prune production --prefix /opt/browserless
 msg_ok "Installed Browserless & Playwright"
 
 msg_info "Installing Font Packages"
-$STD apt-get install -y \
+$STD apt install -y \
   fontconfig \
   libfontconfig1 \
   fonts-freefont-ttf \
@@ -100,7 +100,7 @@ $STD apt-get install -y \
 msg_ok "Installed Font Packages"
 
 msg_info "Installing X11 Packages"
-$STD apt-get install -y \
+$STD apt install -y \
   libx11-6 \
   libx11-xcb1 \
   libxcb1 \

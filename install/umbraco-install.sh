@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Joost van den Berg (montagneId)
-# License: MIT | https://github.com/montagneid/ProxmoxVED/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/umbraco/Umbraco-CMS
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
@@ -40,7 +40,7 @@ msg_ok "Umbraco templates installed and project created"
 
 msg_info "Configuring database connection and unattended setup"
 cd /var/www/html/$var_project_name
-UMBRACO_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+UMBRACO_PASS=$(random_password 13)
 jq --arg umbracopass "$UMBRACO_PASS" '. + {
   "ConnectionStrings": {
     "umbracoDbDSN": "Data Source=|DataDirectory|/Umbraco.sqlite.db;Cache=Shared;Foreign Keys=True;Pooling=True",
@@ -141,7 +141,7 @@ msg_ok "Umbraco published successfully to /var/www/html/$var_project_name-publis
 
 msg_info "Setting up FTP Server"
 useradd ftpuser
-FTP_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+FTP_PASS=$(random_password 13)
 usermod --password $(echo ${FTP_PASS} | openssl passwd -1 -stdin) ftpuser
 mkdir -p /var/www/html
 usermod -d /var/www/html ftp

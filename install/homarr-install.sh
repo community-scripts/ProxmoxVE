@@ -79,7 +79,6 @@ ExecStart=/opt/homarr/run.sh
 WantedBy=multi-user.target
 EOF
 chmod +x /opt/homarr/run.sh
-systemctl daemon-reload
 systemctl enable -q --now redis-server
 systemctl enable -q --now homarr
 systemctl disable -q --now nginx

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -50,14 +49,14 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "teslamate" "teslamate-org/teslamate" "tarball"
 
     msg_info "Building TeslaMate (Patience)"
-    cd /opt/teslamate
+    cd /opt/teslamate/elixir
     export MIX_ENV=prod
     $STD mix local.hex --force
     $STD mix local.rebar --force
     $STD mix deps.get --only prod
     $STD npm install --prefix ./assets
     $STD npm run deploy --prefix ./assets
-    $STD mix do phx.digest, release --overwrite
+    $STD mix do phx.digest, release --overwrite --path /opt/teslamate/_build/prod/rel/teslamate
     msg_ok "Built TeslaMate"
 
     msg_info "Starting Service"

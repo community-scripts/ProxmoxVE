@@ -20,7 +20,7 @@ $STD apt install -y \
   tesseract-ocr
 msg_ok "Installed Dependencies"
 
-UV_PYTHON="3.13" setup_uv
+PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Setting up pyLoad"
 mkdir -p /opt/pyload_data/{userdir,downloads}

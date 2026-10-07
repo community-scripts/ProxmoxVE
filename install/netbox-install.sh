@@ -111,14 +111,13 @@ systemctl restart apache2
 
 mv /opt/netbox/contrib/gunicorn.py /opt/netbox/gunicorn.py
 mv /opt/netbox/contrib/*.service /etc/systemd/system/
-systemctl daemon-reload
 systemctl enable -q --now netbox netbox-rq
 echo -e "Netbox Secret: \e[32m$SECRET_KEY\e[0m" >>~/netbox.creds
 msg_ok "Configured NetBox"
 
 msg_info "Setting up Django Admin"
 DJANGO_USER=Admin
-DJANGO_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+DJANGO_PASS=$(random_password 13)
 
 source /opt/netbox/venv/bin/activate
 $STD python3 /opt/netbox/netbox/manage.py shell <<EOF

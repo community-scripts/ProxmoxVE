@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -35,7 +34,7 @@ function update_script() {
   if check_for_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"; then
     msg_info "Stopping Service"
     systemctl stop streamlink-webui
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     setup_uv

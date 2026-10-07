@@ -22,7 +22,7 @@ EOF
 export LANG=C.UTF-8
 export DEBIAN_FRONTEND=noninteractive
 export APT_LISTCHANGES_FRONTEND=none
-$STD apt update
+apt_update_safe
 apt -y --auto-remove --show-upgraded --allow-downgrades --allow-change-held-packages --no-install-recommends --option DPkg::Options::="--force-confdef" --option DPkg::Options::="--force-confold" install openmediavault-keyring openmediavault &>/dev/null
 omv-confdbadm populate &>/dev/null
 msg_ok "Installed OpenMediaVault"

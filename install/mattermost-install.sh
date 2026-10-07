@@ -26,30 +26,15 @@ fi
 
 PG_VERSION="16" setup_postgresql
 
-msg_info "Setting up PostgreSQL"
-DB_NAME=mattermost
-DB_USER=mmuser
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
-$STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
-$STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
-$STD sudo -u postgres psql -c "GRANT USAGE, CREATE ON SCHEMA PUBLIC TO $DB_USER;"
-cat <<EOF >~/mattermost.creds
-Mattermost Credentials
-Database User: $DB_USER
-Database Password: $DB_PASS
-Database Name: $DB_NAME
-EOF
-msg_ok "Set up PostgreSQL"
+PG_DB_NAME="mattermost" PG_DB_USER="mmuser" setup_postgresql_db
 
 msg_info "Installing Mattermost"
 curl -fsSL -o /usr/share/keyrings/mattermost-archive-keyring.gpg https://deb.packages.mattermost.com/pubkey.gpg
 sh -c 'curl -fsSL https://deb.packages.mattermost.com/repo-setup.sh | sudo bash -s mattermost' >/dev/null
-$STD apt update
+apt_update_safe
 $STD apt install -y mattermost
 $STD install -C -m 600 -o mattermost -g mattermost /opt/mattermost/config/config.defaults.json /opt/mattermost/config/config.json
-sed -i -e "/DataSource/c\   \"DataSource\": \"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?sslmode=disable&connect_timeout=10\"," \
+sed -i -e "/DataSource/c\   \"DataSource\": \"postgres://mmuser:$PG_DB_PASS@localhost:5432/mattermost?sslmode=disable&connect_timeout=10\"," \
   -e "/SiteURL/c\   \"SiteURL\": \"http://$LOCAL_IP:8065\"," /opt/mattermost/config/config.json
 systemctl enable -q --now mattermost
 msg_ok "Installed Mattermost"

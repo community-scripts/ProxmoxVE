@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -123,6 +122,8 @@ EOF
     $STD pnpm install --frozen-lockfile --force
     $STD pnpm turbo telemetry disable
     $STD pnpm turbo run build --no-daemon --filter=@tracearr/shared --filter=@tracearr/server --filter=@tracearr/web
+    $STD ./scripts/fetch-basemap.sh || msg_warn "Basemap download failed, keeping the existing map"
+    [[ -d /opt/tracearr/data ]] && mv /opt/tracearr/data /opt/tracearr.data
     rm -rf /opt/tracearr
     mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db}
     cp -rf package.json /opt/tracearr/
@@ -137,7 +138,9 @@ EOF
     cp -rf packages/emails/package.json /opt/tracearr/packages/emails/
     cp -rf packages/emails/dist /opt/tracearr/packages/emails/dist
     cp -rf apps/server/src/db/migrations /opt/tracearr/apps/server/src/db/migrations
-    cp -rf data /opt/tracearr/data
+    [[ -d /opt/tracearr.data ]] && mv /opt/tracearr.data /opt/tracearr/data
+    mkdir -p /opt/tracearr/data
+    cp -rf data/. /opt/tracearr/data/
     mkdir -p /opt/tracearr/data/image-cache
     rm -rf /opt/tracearr.build
     cd /opt/tracearr

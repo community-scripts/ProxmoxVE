@@ -69,7 +69,6 @@ chmod +x /usr/local/bin/forgejo-runner
 echo "${RUNNER_VERSION}" >~/.forgejo-runner
 msg_ok "Installed Forgejo Runner"
 
-msg_info "Registering Forgejo Runner"
 export DOCKER_HOST="unix:///run/podman/podman.sock"
 
 msg_info "Generating Forgejo Runner Configuration"

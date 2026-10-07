@@ -491,7 +491,7 @@ jobs:
           bash -c "\$(curl -fsSL "\$COMMUNITY_SCRIPTS_URL/ct/${slug}.sh")"
           \`\`\`
 
-          Both lines are needed — each script pins \`_CS_DEFAULT_URL\` to \`main\`, and that pin is what fills \`COMMUNITY_SCRIPTS_URL\` when it is unset.
+          Both lines are needed — without \`COMMUNITY_SCRIPTS_URL\` the engine takes the \`install/\` script from \`main\`.
 
           If the bump is wrong — upstream ships a newer Node than the app needs, or this script is deliberately held back — **close this PR**. It gets recorded on the drift report and this exact bump is not proposed again.
           PR_EOF

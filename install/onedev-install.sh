@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 JAVA_VERSION="21" setup_java
 
 msg_info "Installing OneDev"
-RELEASE=$(curl -fsSL https://api.github.com/repos/theonedev/onedev/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+RELEASE=$(get_latest_github_release "theonedev/onedev" false)
 cd /opt
 curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -o onedev-latest.tar.gz
 tar -xzf onedev-latest.tar.gz

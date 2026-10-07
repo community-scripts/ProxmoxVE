@@ -100,7 +100,7 @@ for PAPERCLIP_ONBOARD_CMD in \
   if ! grep -q "unknown option '--bind'" "$PAPERCLIP_ONBOARD_LOG"; then
     break
   fi
-  msg_info "Retrying Paperclip Onboarding"
+  msg_warn "Retrying Paperclip Onboarding"
 done
 
 if [[ ! -f "$PAPERCLIP_CONFIG" ]]; then
@@ -127,7 +127,7 @@ EOF
     msg_warn "Paperclip authenticated mode is enabled, but no CEO invite was generated automatically"
   fi
 else
-  msg_info "Paperclip Bootstrapped in Local Trusted Mode"
+  msg_ok "Running in local trusted mode"
 fi
 rm -f "$PAPERCLIP_ONBOARD_LOG" "$PAPERCLIP_BOOTSTRAP_LOG"
 msg_ok "Bootstrapped Paperclip"

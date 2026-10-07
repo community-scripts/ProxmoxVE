@@ -10,9 +10,7 @@
       ],
       "excludeGlobs": [
         "**/headers/**",
-        "ct/headers/**",
-        "tools/headers/**",
-        "vm/headers/**"
+        "tools/headers/**"
       ]
     }
   ],
@@ -48,9 +46,7 @@
       ],
       "excludeGlobs": [
         "**/headers/**",
-        "ct/headers/**",
-        "tools/headers/**",
-        "vm/headers/**"
+        "tools/headers/**"
       ]
     }
   ],

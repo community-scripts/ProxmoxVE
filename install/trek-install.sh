@@ -55,7 +55,7 @@ msg_ok "Set up TREK Workspace"
 msg_info "Configuring TREK"
 ENCRYPTION_KEY=$(openssl rand -hex 32)
 ADMIN_EMAIL="admin@trek.local"
-ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'A-Za-z0-9' | head -c 16)
+ADMIN_PASSWORD=$(random_password 16)
 cat <<EOF >/opt/trek/server/.env
 NODE_ENV=production
 HOST=0.0.0.0

@@ -22,7 +22,7 @@ $STD apt install -y \
   python3-dev
 msg_ok "Installed Dependencies"
 
-UV_PYTHON="3.12" setup_uv
+PYTHON_VERSION="3.12" setup_uv
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="airflow" PG_DB_USER="airflow" setup_postgresql_db
 
@@ -40,7 +40,7 @@ msg_ok "Installed Apache Airflow"
 msg_info "Configuring Application"
 FERNET_KEY=$(/opt/airflow/.venv/bin/python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
 SECRET_KEY=$(openssl rand -hex 32)
-ADMIN_PASS=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9' | cut -c1-12)
+ADMIN_PASS=$(random_password 12)
 cat <<EOF >/opt/airflow/.env
 AIRFLOW_HOME=/opt/airflow
 AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}

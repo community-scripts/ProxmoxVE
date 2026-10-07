@@ -20,25 +20,12 @@ fi
 
 setup_yq
 NODE_VERSION="24" setup_nodejs
-setup_uv
 PG_VERSION="17" setup_postgresql
 
-msg_info "Setting up PostgreSQL"
-DB_NAME="mm_db"
-DB_USER="mm_user"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-cat <<EOF >~/mediamanager.creds
-MediaManager Credentials
-MediaManager Database User: $DB_USER
-MediaManager Database Password: $DB_PASS
-MediaManager Database Name: $DB_NAME
-EOF
-msg_ok "Set up PostgreSQL"
+PG_DB_NAME="mm_db" PG_DB_USER="mm_user" setup_postgresql_db
 
 fetch_and_deploy_gh_release "MediaManager" "maxdorninger/MediaManager" "tarball" "latest" "/opt/mediamanager"
+UV_PROJECT_DIR="/opt/mediamanager" setup_uv
 
 msg_info "Configuring MediaManager"
 MM_DIR="/opt/mm"
@@ -65,9 +52,9 @@ SECRET="$(openssl rand -hex 32)"
 sed -e "s/localhost:8/$LOCAL_IP:8/g" \
   -e "s|/data/|$MEDIA_DIR/|g" \
   -e 's/"db"/"localhost"/' \
-  -e "s/user = \"MediaManager\"/user = \"$DB_USER\"/" \
-  -e "s/password = \"MediaManager\"/password = \"$DB_PASS\"/" \
-  -e "s/dbname = \"MediaManager\"/dbname = \"$DB_NAME\"/" \
+  -e "s/user = \"MediaManager\"/user = \"mm_user\"/" \
+  -e "s/password = \"MediaManager\"/password = \"$PG_DB_PASS\"/" \
+  -e "s/dbname = \"MediaManager\"/dbname = \"mm_db\"/" \
   -e "/^token_secret/s/=.*/= \"$SECRET\"/" \
   -e "s/admin@example.com/$EMAIL/" \
   -e '/^admin_emails/s/, .*/]/' \

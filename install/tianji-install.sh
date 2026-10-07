@@ -33,6 +33,7 @@ echo "Tianji Secret: $TIANJI_SECRET" >>~/tianji.creds
 msg_info "Setting up Tianji"
 cd /opt/tianji
 $STD pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile
+export NODE_OPTIONS="--max_old_space_size=4096"
 $STD pnpm build:static
 $STD pnpm install --filter @tianji/server... --config.dedupe-peer-dependents=false
 mkdir -p ./src/server/public

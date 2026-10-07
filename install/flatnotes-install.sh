@@ -14,6 +14,7 @@ network_check
 update_os
 
 fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes" "tarball"
+UV_PROJECT_DIR="/opt/flatnotes" setup_uv
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 

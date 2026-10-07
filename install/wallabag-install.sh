@@ -29,7 +29,7 @@ fetch_and_deploy_gh_release "wallabag" "wallabag/wallabag" "prebuild" "latest" "
 
 msg_info "Configuring Wallabag"
 cd /opt/wallabag
-SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+SECRET_KEY="$(random_password 32)"
 cat <<EOF >/opt/wallabag/app/config/parameters.yml
 parameters:
     database_driver: pdo_mysql

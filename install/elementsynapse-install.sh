@@ -40,7 +40,7 @@ rm -f /usr/sbin/policy-rc.d
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
 sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
 SECRET=$(openssl rand -hex 32)
-ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+ADMIN_PASS="$(random_password 13)"
 echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
 echo "registration_shared_secret: ${SECRET}" >>/etc/matrix-synapse/homeserver.yaml
 

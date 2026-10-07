@@ -24,8 +24,8 @@ fi
 
 msg_info "Configuring VersityGW"
 mkdir -p /opt/versitygw-data
-ACCESS_KEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-20)
-SECRET_KEY=$(openssl rand -base64 36 | tr -dc 'a-zA-Z0-9' | cut -c1-40)
+ACCESS_KEY=$(random_password 20)
+SECRET_KEY=$(random_password 40)
 
 cat <<EOF >/etc/versitygw.d/gateway.conf
 VGW_BACKEND=posix

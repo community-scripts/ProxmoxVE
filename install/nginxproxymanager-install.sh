@@ -96,6 +96,9 @@ cp /opt/nginxproxymanager/docker/rootfs/etc/letsencrypt.ini /etc/letsencrypt.ini
 cp /opt/nginxproxymanager/docker/rootfs/etc/logrotate.d/nginx-proxy-manager /etc/logrotate.d/nginx-proxy-manager
 ln -sf /etc/nginx/nginx.conf /etc/nginx/conf/nginx.conf
 rm -f /etc/nginx/conf.d/dev.conf
+if [[ -f /etc/nginx/conf.d/production.conf.template ]]; then
+  sed 's/{{NPM_ADMIN_PORT}}/81/g' /etc/nginx/conf.d/production.conf.template >/etc/nginx/conf.d/production.conf
+fi
 
 mkdir -p /tmp/nginx/body \
   /run/nginx \
@@ -135,6 +138,7 @@ sed -E -i 's/"node-sass" *: *"([^"]*)"/"sass": "\1"/g' package.json
 $STD yarn install --network-timeout 600000
 $STD yarn locale-compile
 $STD yarn build
+$STD yarn cache clean
 cp -r /opt/nginxproxymanager/frontend/dist/* /app/frontend
 cp -r /opt/nginxproxymanager/frontend/public/images/* /app/frontend/images
 msg_ok "Built Frontend"
@@ -159,6 +163,7 @@ EOF
 fi
 cd /app
 $STD yarn install --network-timeout 600000
+$STD yarn cache clean
 msg_ok "Initialized Backend"
 
 msg_info "Creating Service"

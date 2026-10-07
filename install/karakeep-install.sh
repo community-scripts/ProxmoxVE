@@ -66,7 +66,7 @@ EOF
 chmod +x /usr/bin/karakeep
 
 export DATA_DIR=/opt/karakeep_data
-karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)
+karakeep_SECRET=$(random_password 24)
 mkdir -p /etc/karakeep
 cat <<EOF >/etc/karakeep/karakeep.env
 SERVER_VERSION="$(sed 's/^v//' ~/.karakeep)"

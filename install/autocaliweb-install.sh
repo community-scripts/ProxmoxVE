@@ -54,12 +54,11 @@ $STD /opt/calibre/calibre_postinstall
 CALIBRE_VERSION=$(cat ~/.calibre)
 msg_ok "Installed Calibre"
 
-setup_uv
-
+INSTALL_DIR="/opt/autocaliweb"
 fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+setup_uv $INSTALL_DIR
 
 msg_info "Configuring Autocaliweb"
-INSTALL_DIR="/opt/autocaliweb"
 CONFIG_DIR="/etc/autocaliweb"
 CALIBRE_LIB_DIR="/opt/calibre-library"
 INGEST_DIR="/opt/acw-book-ingest"
@@ -267,6 +266,7 @@ Group=${SERVICE_GROUP}
 WorkingDirectory=${INSTALL_DIR}
 Environment=CALIBRE_DBPATH=${CONFIG_DIR}
 Environment=HOME=${CONFIG_DIR}
+EnvironmentFile=${INSTALL_DIR}/.env
 ExecStart=/bin/bash ${SCRIPTS_DIR}/ingest_watcher.sh
 Restart=always
 StandardOutput=journal
@@ -286,6 +286,7 @@ User=${SERVICE_USER}
 Group=${SERVICE_GROUP}
 WorkingDirectory=${INSTALL_DIR}
 Environment=CALIBRE_DBPATH=${CONFIG_DIR}
+EnvironmentFile=${INSTALL_DIR}/.env
 ExecStart=${SCRIPTS_DIR}/auto_zipper_wrapper.sh
 Restart=always
 StandardOutput=journal
@@ -304,6 +305,7 @@ After=network.target
 User=${SERVICE_USER}
 Group=${SERVICE_GROUP}
 WorkingDirectory=${INSTALL_DIR}
+EnvironmentFile=${INSTALL_DIR}/.env
 ExecStart=/bin/bash ${SCRIPTS_DIR}/metadata_change_detector_wrapper.sh
 Restart=always
 StandardOutput=journal

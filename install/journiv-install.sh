@@ -30,9 +30,9 @@ msg_ok "Installed Dependencies"
 setup_ffmpeg
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="journiv" PG_DB_USER="journiv" setup_postgresql_db
-UV_PYTHON="3.12" setup_uv
 
 fetch_and_deploy_gh_release "journiv" "journiv/journiv-app" "tarball"
+PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/journiv" setup_uv
 
 msg_info "Setting up Python Environment"
 cd /opt/journiv
@@ -53,10 +53,20 @@ EXPORT_DIR=/opt/journiv_data/exports
 IMPORT_TEMP_DIR=/opt/journiv_data/imports/temp
 DOMAIN_NAME=${LOCAL_IP}
 DOMAIN_SCHEME=http
+# Journiv refuses to start on plain HTTP without this.
+ALLOW_INSECURE_COOKIE_AUTH_OVER_HTTP=true
 PYTHONPATH=/opt/journiv
 EOF
 chmod 600 /opt/journiv.env
 msg_ok "Configured Journiv"
+
+NODE_VERSION="24" setup_nodejs
+msg_info "Building Frontend"
+cd /opt/journiv/frontend
+$STD npm ci
+$STD npm run build
+cd /opt/journiv
+msg_ok "Built Frontend"
 
 msg_info "Initializing Database"
 set -a

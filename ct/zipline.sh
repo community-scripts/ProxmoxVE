@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -39,7 +38,7 @@ function update_script() {
 
     mkdir -p /opt/zipline-uploads
     if [ -d /opt/zipline/uploads ] && [ "$(ls -A /opt/zipline/uploads)" ]; then
-      cp -R /opt/zipline/uploads/* /opt/zipline-uploads/
+      cp -R /opt/zipline/uploads/. /opt/zipline-uploads/
     fi
     cp /opt/zipline/.env /opt/
     rm -R /opt/zipline

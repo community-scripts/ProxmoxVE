@@ -33,9 +33,9 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 PG_DB_NAME="baserow" PG_DB_USER="baserow" setup_postgresql_db
 NODE_VERSION="24" setup_nodejs
-setup_uv
 
 fetch_and_deploy_gh_release "baserow" "baserow/baserow" "tarball"
+UV_PROJECT_DIR="/opt/baserow/backend" setup_uv
 
 msg_info "Installing Backend Dependencies"
 cd /opt/baserow/backend
@@ -50,7 +50,7 @@ NODE_OPTIONS="--max-old-space-size=4096" $STD npm run build
 msg_ok "Built Frontend"
 
 msg_info "Configuring Baserow"
-SECRET_KEY=$(openssl rand -base64 64 | tr -dc 'a-zA-Z0-9' | head -c50)
+SECRET_KEY=$(random_password 50)
 cat <<EOF >/opt/baserow/.env
 DATABASE_HOST=localhost
 DATABASE_PORT=5432

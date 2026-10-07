@@ -34,7 +34,7 @@ msg_info "Configuring PHP"
 PHPVER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "\n";')
 sed -i.bak -E 's/^\s*;?\s*ffi\.enable\s*=.*/ffi.enable=true/' /etc/php/${PHPVER}/fpm/php.ini
 $STD systemctl reload php${PHPVER}-fpm
-msg_info "configured PHP"
+msg_ok "Configured PHP"
 
 msg_info "Installing Bar Assistant"
 cd /opt/bar-assistant

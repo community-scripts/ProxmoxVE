@@ -121,9 +121,9 @@ else
 fi
 
 NODE_VERSION="24" setup_nodejs
-PYTHON_VERSION="3.14" setup_uv
 
 fetch_and_deploy_gh_release "shelfmark" "calibrain/shelfmark" "tarball" "latest" "/opt/shelfmark"
+PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/shelfmark" setup_uv
 RELEASE_VERSION=$(cat "$HOME/.shelfmark")
 
 msg_info "Building Shelfmark frontend"

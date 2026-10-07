@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   gdal-bin \
   tesseract-ocr \
   tesseract-ocr-eng \
@@ -24,7 +24,7 @@ $STD apt-get install -y \
   tesseract-ocr-deu
 
 $STD echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
-$STD apt-get install -y \
+$STD apt install -y \
   xfonts-utils \
   fonts-freefont-ttf \
   fonts-liberation \

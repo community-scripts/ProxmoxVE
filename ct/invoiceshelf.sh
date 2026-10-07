@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -37,9 +36,9 @@ function update_script() {
     systemctl stop caddy
     msg_ok "Stopped Services"
 
-    create_backup /opt/invoiceshelf/.env /opt/invoiceshelf/storage
+    create_backup /opt/invoiceshelf/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "invoiceshelf" "InvoiceShelf/InvoiceShelf" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="storage" fetch_and_deploy_gh_release "invoiceshelf" "InvoiceShelf/InvoiceShelf" "tarball"
 
     restore_backup
 
@@ -54,6 +53,7 @@ function update_script() {
       $STD pnpm run build
     fi
     $STD php artisan migrate --force
+    $STD php artisan storage:link
     $STD php artisan optimize:clear
     chown -R www-data:www-data /opt/invoiceshelf
     msg_ok "Updated Application"

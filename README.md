@@ -93,7 +93,7 @@ This project runs on community contributions. Whether you want to write new scri
 
 | I want to…                            | Go here                                                                                           |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Add a **new** script                  | [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) — new scripts are tested here first |
+| Add a **new** script                  | [DevScripts](https://github.com/community-scripts/DevScripts) — new scripts are tested here first |
 | Fix or improve an **existing** script | [Contributing Guidelines](CONTRIBUTING.md) — open a PR in this repo                               |
 | Report a bug or broken script         | [Issues](https://github.com/community-scripts/ProxmoxVE/issues)                                   |
 | Request a new script or feature       | [Discussions](https://github.com/community-scripts/ProxmoxVE/discussions)                         |
@@ -102,7 +102,7 @@ This project runs on community contributions. Whether you want to write new scri
 
 ### Before you open a PR
 
-- **New scripts go to [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED), not here.** PRs with new scripts opened directly against this repo will be closed.
+- **New scripts go to [DevScripts](https://github.com/community-scripts/DevScripts), not here.** PRs with new scripts opened directly against this repo will be closed.
 - Bug fixes and improvements to existing scripts belong in this repo — read the [Contributing Guidelines](CONTRIBUTING.md) first.
 - Keep PRs focused. One fix or feature per PR.
 - Document what your script installs and any non-obvious decisions in the corresponding JSON metadata file.

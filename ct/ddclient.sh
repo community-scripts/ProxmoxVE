@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 
@@ -33,7 +32,7 @@ function update_script() {
   fi
 
   msg_info "Updating ddclient"
-  $STD apt update
+  apt_update_safe
   $STD apt install --only-upgrade -y ddclient
   $STD systemctl restart ddclient
   msg_ok "Updated ddclient"

@@ -22,7 +22,7 @@ $STD apt install -y \
   fonts-dejavu-core
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "yt-dlp"
 fetch_and_deploy_gh_release "aurral" "lklynet/aurral" "tarball"
@@ -32,6 +32,9 @@ cd /opt/aurral
 export VITE_APP_VERSION="$(cat ~/.aurral)"
 export VITE_GITHUB_REPO="lklynet/aurral"
 export VITE_RELEASE_CHANNEL="stable"
+# aurral's .npmrc sets engine-strict=true and pins an exact node patch (e.g. 26.8.x),
+# which NodeSource can't match since it only ships the latest patch per major.
+export npm_config_engine_strict=false
 $STD npm ci --workspace frontend --include-workspace-root=false
 $STD npm run build --workspace frontend
 $STD npm ci --workspace backend --omit=dev --include=optional --include-workspace-root=false

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -46,6 +45,9 @@ function update_script() {
     msg_info "Building Application"
     cd /opt/lobehub
     export NODE_OPTIONS="--max-old-space-size=8192"
+    if grep -qE '"@lobehub/ui": "\^5\.4[0-9]\.' package.json; then
+      sed -i "/^overrides:/a\  '@lobehub/ui': ~5.49.1" pnpm-workspace.yaml
+    fi
     $STD pnpm install
     $STD pnpm run build:docker
     unset NODE_OPTIONS

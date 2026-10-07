@@ -19,7 +19,7 @@ JAVA_VERSION="21" setup_java
 msg_info "Installing Neo4j (patience)"
 curl -fsSL "https://debian.neo4j.com/neotechnology.gpg.key" | gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable latest' >/etc/apt/sources.list.d/neo4j.list
-$STD apt update
+apt_update_safe
 $STD apt install -y neo4j
 sed -i '/server.default_listen_address/s/^#//' /etc/neo4j/neo4j.conf
 systemctl enable -q --now neo4j

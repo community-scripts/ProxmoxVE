@@ -63,7 +63,7 @@ cd /opt/convertx
 mkdir -p data
 $STD bun install
 
-JWT_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
+JWT_SECRET=$(random_password 32)
 cat <<EOF >/opt/convertx/.env
 JWT_SECRET=$JWT_SECRET
 HTTP_ALLOWED=true

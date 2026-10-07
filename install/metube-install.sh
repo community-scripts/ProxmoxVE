@@ -22,7 +22,6 @@ $STD apt install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 
 msg_info "Installing Deno"
@@ -34,6 +33,7 @@ curl -fsSL https://deno.land/install.sh | $STD sh -s -- -y
 msg_ok "Installed Deno"
 
 fetch_and_deploy_gh_release "metube" "alexta69/metube" "tarball" "latest"
+PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/metube" setup_uv
 
 msg_info "Installing MeTube"
 cd /opt/metube/ui
