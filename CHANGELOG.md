@@ -578,6 +578,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Pangolin: Unpin Release, stable enough, Bump to latest [@MickLesk](https://github.com/MickLesk) ([#17740](https://github.com/community-scripts/ProxmoxVE/pull/17740))
+    - Refactor: Archlinux-VM [@MickLesk](https://github.com/MickLesk) ([#17741](https://github.com/community-scripts/ProxmoxVE/pull/17741))
     - Refactor: MikroTik RouterOS [@MickLesk](https://github.com/MickLesk) ([#17748](https://github.com/community-scripts/ProxmoxVE/pull/17748))
 
 ### 💾 Core
