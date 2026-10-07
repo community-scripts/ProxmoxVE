@@ -333,6 +333,10 @@ EOF
       sed -i -e '$a\' "$INSTALL_DIR"/.env
       echo "IMMICH_HELMET_FILE=true" >>"$INSTALL_DIR"/.env
     fi
+    if ! grep -q 'MODEL_REVISION' "$INSTALL_DIR"/.env; then
+      sed -i -e '$a\' "$INSTALL_DIR"/.env
+      echo "MACHINE_LEARNING_MODEL_REVISION=v2" >>"$INSTALL_DIR"/.env
+    fi
 
     if grep -q 'ExecStart=/usr/bin/node' /etc/systemd/system/immich-web.service; then
       sed -i '/^EnvironmentFile=/d' /etc/systemd/system/immich-web.service
