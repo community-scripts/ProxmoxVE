@@ -561,6 +561,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-07
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Thingsboard: update Java version from 17 to 25 [@CerberusStyle](https://github.com/CerberusStyle) ([#17733](https://github.com/community-scripts/ProxmoxVE/pull/17733))
+
 ### 💾 Core
 
   - Keep setup_nodejs alive when the caller's directory is gone [@MickLesk](https://github.com/MickLesk) ([core#114](https://github.com/community-scripts/core/pull/114))
