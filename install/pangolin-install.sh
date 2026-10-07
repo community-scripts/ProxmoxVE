@@ -22,13 +22,10 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="pangolin" PG_DB_USER="pangolin" setup_postgresql_db
-PANGOLIN_VERSION="${PANGOLIN_VERSION:-1.23.0}"
-fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball" "$PANGOLIN_VERSION"
+fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_$(arch_resolve)"
 fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_$(arch_resolve).tar.gz"
 
-# Read the variable first and prompt only when it is unset, so the install can
-# be supplied up front. Same convention as install/forgejo-runner-install.sh.
 pango_url="${var_pangolin_url:-}"
 if [[ -z "$pango_url" ]]; then
   read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " pango_url
