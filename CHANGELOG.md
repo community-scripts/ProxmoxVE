@@ -565,6 +565,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - paperclip: run as a dedicated non-root user so Claude Code can skip permissions [@samvandenbossche](https://github.com/samvandenbossche) ([#17707](https://github.com/community-scripts/ProxmoxVE/pull/17707))
     - Thingsboard: update Java version from 17 to 25 [@CerberusStyle](https://github.com/CerberusStyle) ([#17733](https://github.com/community-scripts/ProxmoxVE/pull/17733))
 
   - #### 💥 Breaking Changes
