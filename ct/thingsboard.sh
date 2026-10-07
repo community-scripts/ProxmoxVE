@@ -30,6 +30,7 @@ function update_script() {
     exit
   fi
 
+  JAVA_VERSION="25" setup_java
   if check_for_gh_release "thingsboard" "thingsboard/thingsboard"; then
     msg_info "Stopping Service"
     systemctl stop thingsboard
