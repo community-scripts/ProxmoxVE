@@ -573,6 +573,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - paperclip: run as a dedicated non-root user so Claude Code can skip permissions [@samvandenbossche](https://github.com/samvandenbossche) ([#17707](https://github.com/community-scripts/ProxmoxVE/pull/17707))
     - Thingsboard: update Java version from 17 to 25 [@CerberusStyle](https://github.com/CerberusStyle) ([#17733](https://github.com/community-scripts/ProxmoxVE/pull/17733))
 
+  - #### ✨ New Features
+
+    - Immich: Pin to v3.3.0 [@vhsdream](https://github.com/vhsdream) ([#17759](https://github.com/community-scripts/ProxmoxVE/pull/17759))
+
   - #### 💥 Breaking Changes
 
     - OpenCloud: bump to v8.1.0, rebuild search index on upgrade [@SimKaiLong](https://github.com/SimKaiLong) ([#17710](https://github.com/community-scripts/ProxmoxVE/pull/17710))
