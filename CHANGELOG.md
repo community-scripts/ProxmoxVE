@@ -569,6 +569,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - AudioMuse-AI: replace the venv on update without asking [@MickLesk](https://github.com/MickLesk) ([#17738](https://github.com/community-scripts/ProxmoxVE/pull/17738))
     - paperclip: run as a dedicated non-root user so Claude Code can skip permissions [@samvandenbossche](https://github.com/samvandenbossche) ([#17707](https://github.com/community-scripts/ProxmoxVE/pull/17707))
     - Thingsboard: update Java version from 17 to 25 [@CerberusStyle](https://github.com/CerberusStyle) ([#17733](https://github.com/community-scripts/ProxmoxVE/pull/17733))
 
