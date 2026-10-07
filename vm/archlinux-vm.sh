@@ -87,8 +87,8 @@ vm_select_storage "$HN"
 msg_info "Retrieving the URL for the Arch Linux .iso File"
 URL=https://geo.mirror.pkgbuild.com/iso/latest/archlinux-x86_64.iso
 FILENAME="archlinux-x86_64.iso"
-CACHE_FILE="/var/lib/vz/template/iso/${FILENAME}"
-mkdir -p "$(dirname "$CACHE_FILE")"
+vm_select_iso_storage "$FILENAME" "$HN"
+CACHE_FILE="$ISO_PATH"
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 vm_fetch_image "$URL" "$CACHE_FILE" --cache --min-bytes $((100 * 1024 * 1024)) || exit 115
@@ -97,10 +97,12 @@ msg_info "Creating a Arch Linux VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 
+# The ISO is the installer, not the system: an empty disk takes scsi0 and wins
+# the boot order as soon as something is on it.
 qm set $VMID \
   -efidisk0 ${STORAGE}:0,efitype=4m \
   -scsi0 ${STORAGE}:${DISK_SIZE%G},${DISK_CACHE}${THIN%,} \
-  -cdrom local:iso/${FILENAME} \
+  -cdrom "$ISO_VOLUME" \
   -boot order='scsi0;ide2' \
   -serial0 socket >/dev/null
 set_description
