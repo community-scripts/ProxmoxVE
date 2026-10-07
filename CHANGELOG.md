@@ -561,6 +561,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-07
 
+### 🆕 New Scripts
+
+  - Fedora VM ([#17747](https://github.com/community-scripts/ProxmoxVE/pull/17747))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
