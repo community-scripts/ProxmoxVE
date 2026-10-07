@@ -576,6 +576,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenCloud: bump to v8.1.0, rebuild search index on upgrade [@SimKaiLong](https://github.com/SimKaiLong) ([#17710](https://github.com/community-scripts/ProxmoxVE/pull/17710))
 
+  - #### 🔧 Refactor
+
+    - Refactor: MikroTik RouterOS [@MickLesk](https://github.com/MickLesk) ([#17748](https://github.com/community-scripts/ProxmoxVE/pull/17748))
+
 ### 💾 Core
 
   - Fix Fedora and BLS cloud image console setup [@MickLesk](https://github.com/MickLesk) ([core#116](https://github.com/community-scripts/core/pull/116))
