@@ -559,6 +559,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-07
+
+### 💾 Core
+
+  - Keep setup_nodejs alive when the caller's directory is gone [@MickLesk](https://github.com/MickLesk) ([core#114](https://github.com/community-scripts/core/pull/114))
+
 ## 2026-10-06
 
 ### 🆕 New Scripts
