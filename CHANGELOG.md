@@ -572,6 +572,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Homarr: replace the musl better-sqlite3 that v2.3.0 ships for Debian [@MickLesk](https://github.com/MickLesk) ([#17789](https://github.com/community-scripts/ProxmoxVE/pull/17789))
     - CLIProxyAPI: keep plugins and data across updates [@MickLesk](https://github.com/MickLesk) ([#17790](https://github.com/community-scripts/ProxmoxVE/pull/17790))
     - Kima-Hub: install the Python services into a uv venv [@MickLesk](https://github.com/MickLesk) ([#17791](https://github.com/community-scripts/ProxmoxVE/pull/17791))
 
