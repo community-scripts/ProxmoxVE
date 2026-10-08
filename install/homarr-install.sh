@@ -25,6 +25,18 @@ NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/
 setup_nodejs
 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-$(arch_resolve).tar.gz"
 
+# v2.3.0's Debian build ships a musl better-sqlite3 (homarr-labs/homarr#7097).
+mapfile -t MUSL_MODULES < <(find /opt/homarr -name better_sqlite3.node -exec grep -aqE "ld-musl|libc\.musl" {} \; -print)
+if ((${#MUSL_MODULES[@]})); then
+  msg_info "Replacing musl better-sqlite3 build"
+  BSQ_VERSION=$(jq -r .version /opt/homarr/node_modules/better-sqlite3/package.json)
+  curl_with_retry "https://github.com/WiseLibs/better-sqlite3/releases/download/v${BSQ_VERSION}/better-sqlite3-v${BSQ_VERSION}-node-v$(node -p process.versions.modules)-linux-$(arch_resolve "x64" "arm64").tar.gz" /tmp/better-sqlite3.tar.gz
+  tar -xzf /tmp/better-sqlite3.tar.gz -C /tmp build/Release/better_sqlite3.node
+  for module in "${MUSL_MODULES[@]}"; do cp /tmp/build/Release/better_sqlite3.node "$module"; done
+  rm -rf /tmp/better-sqlite3.tar.gz /tmp/build
+  msg_ok "Replaced musl better-sqlite3 build"
+fi
+
 msg_info "Installing Homarr"
 mkdir -p /opt/homarr_db
 touch /opt/homarr_db/db.sqlite
