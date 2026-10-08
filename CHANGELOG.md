@@ -580,7 +580,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Take the ISO storage from the disk pool when it can hold ISOs [@MickLesk](https://github.com/MickLesk) ([core#122](https://github.com/community-scripts/core/pull/122))
+  - Tolerate a missing datacenter.cfg in vm_keyboard_default [@MickLesk](https://github.com/MickLesk) ([core#124](https://github.com/community-scripts/core/pull/124))
+- Take the ISO storage from the disk pool when it can hold ISOs [@MickLesk](https://github.com/MickLesk) ([core#122](https://github.com/community-scripts/core/pull/122))
 - Shared VM helpers: disk import, releases, checksums, first boot, IP by MAC [@MickLesk](https://github.com/MickLesk) ([core#117](https://github.com/community-scripts/core/pull/117))
 - tools: forge truncated release list [@MickLesk](https://github.com/MickLesk) ([core#118](https://github.com/community-scripts/core/pull/118))
 - Remember a kept cached image until the upstream changes [@MickLesk](https://github.com/MickLesk) ([core#119](https://github.com/community-scripts/core/pull/119))
