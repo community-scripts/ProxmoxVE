@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
@@ -740,8 +740,8 @@ for i in {0,1}; do
 done
 
 msg_info "Creating a OPNsense VM"
-qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
-  -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
+qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE -balloon 0 \
+  -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC,firewall=0,queues=$CORE_COUNT$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 
 # Retry pvesm alloc on transient zfs_request "got timeout" errors (#14127)
 alloc_attempt=1
@@ -802,7 +802,7 @@ qm set $VMID -description "$DESCRIPTION" >/dev/null
 
 msg_info "Bridge interfaces are being added."
 qm set $VMID \
-  -net0 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} 2>/dev/null
+  -net0 virtio,bridge=${BRG},macaddr=${MAC},firewall=0,queues=${CORE_COUNT}${VLAN}${MTU} 2>/dev/null
 msg_ok "Bridge interfaces have been successfully added."
 
 msg_ok "Created a OPNsense VM ${CL}${BL}(${HN})"
@@ -816,7 +816,7 @@ send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/
 if [ -n "$WAN_BRG" ]; then
   msg_info "Adding WAN interface"
   qm set $VMID \
-    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
+    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC},firewall=0,queues=${CORE_COUNT} &>/dev/null
   msg_ok "WAN interface added"
   sleep 5 # Brief pause after adding network interface
 fi
