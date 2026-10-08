@@ -33,7 +33,12 @@ PNPM_VERSION=$(jq -r '.packageManager | ltrimstr("pnpm@")' /opt/bookorbit/packag
 
 $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
 $STD pnpm install --frozen-lockfile
-$STD pnpm --filter client run build-only
+# vite's bundler (rolldown) crashes at random on some builds, rolldown#10860.
+for attempt in 1 2 3; do
+  $STD pnpm --filter client run build-only && break
+  [[ $attempt -eq 3 ]] && { msg_error "Client build failed three times"; exit 1; }
+  msg_warn "Client build failed (attempt $attempt), retrying"
+done
 $STD pnpm --filter server run build
 cp -r /opt/bookorbit/client/dist /opt/bookorbit/server/public
 mkdir -p /opt/bookorbit/server/migrations
