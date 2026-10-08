@@ -576,6 +576,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: OpenWrt VM [@MickLesk](https://github.com/MickLesk) ([#17774](https://github.com/community-scripts/ProxmoxVE/pull/17774))
     - Refactor: Ubuntu VM [@MickLesk](https://github.com/MickLesk) ([#17776](https://github.com/community-scripts/ProxmoxVE/pull/17776))
 
 ### 💾 Core
