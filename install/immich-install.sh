@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-RELEASE="v3.2.4"
+RELEASE="v3.3.0"
 if lscpu | grep -q 'GenuineIntel'; then
   echo ""
   echo ""
@@ -537,6 +537,7 @@ MACHINE_LEARNING_CACHE_FOLDER=${INSTALL_DIR}/cache
 ## - inference speed while reducing accuracy
 ## - Default is FP32
 # MACHINE_LEARNING_OPENVINO_PRECISION=FP16
+MACHINE_LEARNING_MODEL_REVISION=v2
 
 IMMICH_MEDIA_LOCATION=${UPLOAD_DIR}
 EOF
