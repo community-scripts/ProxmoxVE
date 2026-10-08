@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -8,48 +7,50 @@ COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.co
 source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/pve/vm-core.func")
 load_functions
 
-GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
-RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
-METHOD=""
 APP="UniFi OS Server"
 APP_TYPE="vm"
 NSAPP="unifi-os-server-vm"
-var_os="-"
-var_version="-"
+var_os="debian"
+var_version="13"
+GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
+RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
+METHOD=""
 CLOUDINIT_REQUIRED=1
 OS_TYPE=""
 OS_VERSION=""
 OS_CODENAME=""
 OS_DISPLAY=""
-
-HA=$(echo "\033[1;34m")
-
 THIN="discard=on,ssd=1,"
 
 header_info
 echo -e "\n Loading..."
 
 set -Eeuo pipefail
+shopt -s inherit_errexit
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
-trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
+trap 'post_update_to_api "failed" "130"' SIGINT
+trap 'post_update_to_api "failed" "143"' SIGTERM
+trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
 
 vm_require_arch amd64
 
 TEMP_DIR=$(mktemp -d)
-pushd $TEMP_DIR >/dev/null
+pushd "$TEMP_DIR" >/dev/null
+
+vm_preflight
+vm_require_tools curl jq virt-customize
 
 function select_os() {
   if [[ -n "${1:-}" ]]; then
     OS_CHOICE="$1"
   elif [[ "${VM_UNATTENDED:-0}" == "1" ]]; then
     OS_CHOICE="${VM_OS_VERSION:-debian13}"
-  elif ! OS_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT OS" --radiolist \
-    "Choose Operating System for UniFi OS VM" 12 68 2 \
+  elif vm_dialog radiolist "SELECT OS" "Choose Operating System for UniFi OS VM" 12 68 2 \
     "debian13" "Debian 13 (Trixie) - Latest" ON \
-    "ubuntu2404" "Ubuntu 24.04 LTS (Noble)" OFF \
-    3>&1 1>&2 2>&3); then
+    "ubuntu2404" "Ubuntu 24.04 LTS (Noble)" OFF; then
+    OS_CHOICE="$VM_DIALOG_RESULT"
+  else
     exit_script
   fi
 
@@ -59,12 +60,16 @@ function select_os() {
     OS_VERSION="13"
     OS_CODENAME="trixie"
     OS_DISPLAY="Debian 13 (Trixie)"
+    var_os="debian"
+    var_version="13"
     ;;
   ubuntu2404)
     OS_TYPE="ubuntu"
     OS_VERSION="24.04"
     OS_CODENAME="noble"
     OS_DISPLAY="Ubuntu 24.04 LTS"
+    var_os="ubuntu"
+    var_version="24.04"
     ;;
   *)
     msg_error "Unsupported OS '${OS_CHOICE}' (expected debian13 or ubuntu2404)"
@@ -75,7 +80,7 @@ function select_os() {
 
 function get_image_url() {
   local arch
-  arch=$(dpkg --print-architecture)
+  arch=$(vm_arch_resolve amd64 arm64)
   case $OS_TYPE in
   debian)
     # Always use Cloud-Init variant for UniFi OS
@@ -90,7 +95,7 @@ function get_image_url() {
 
 function default_settings() {
   vm_apply_machine_type "q35"
-  select_os "${VM_OS_VERSION:-debian13}"
+  select_os "${VM_OS_VERSION:-}"
 
   # Set defaults for other settings
   VMID=$(get_valid_nextid)
@@ -124,6 +129,7 @@ function advanced_settings() {
   vm_prompt_mac "$GEN_MAC"
   vm_prompt_vlan
   vm_prompt_mtu
+  vm_prompt_keyboard
   vm_prompt_verbose "no"
   vm_prompt_start_vm "yes"
 
@@ -136,7 +142,7 @@ function advanced_settings() {
   fi
 }
 
-vm_preflight
+vm_start_script "Use Default Settings?\n\nDefaults:\n• 2 CPU Cores\n• 6 GB RAM\n• 32 GB Disk\n• Cloud-Init enabled" 14 58
 
 if [[ "${VM_UNATTENDED:-0}" == "1" ]]; then
   CLOUDINIT_PASSWORD="${CLOUDINIT_PASSWORD:-${VM_ROOT_PASSWORD:-}}"
@@ -164,7 +170,6 @@ if [[ "${VM_UNATTENDED:-0}" == "1" && -n "${VM_SSH_KEYS:-}" && -z "${CLOUDINIT_S
   fi
 fi
 
-vm_start_script "Use Default Settings?\n\nDefaults:\n• 2 CPU Cores\n• 6 GB RAM\n• 32 GB Disk\n• Cloud-Init enabled" 14 58
 post_to_api_vm
 
 msg_info "Checking system resources"
@@ -196,13 +201,6 @@ vm_select_storage "$HN"
 
 # Fetch latest UniFi OS Server version and download URL
 msg_info "Fetching latest UniFi OS Server version"
-
-# Install jq if not available
-if ! command -v jq &>/dev/null; then
-  msg_info "Installing jq for JSON parsing"
-  $STD apt-get update
-  $STD apt-get install -y jq
-fi
 
 # Download firmware list from Ubiquiti API
 API_URL="https://fw-update.ui.com/api/firmware-latest"
@@ -245,8 +243,7 @@ msg_ok "${CL}${BL}${URL}${CL}"
 CACHE_FILE="$(vm_image_cache_path "$URL")"
 vm_fetch_image "$URL" "$CACHE_FILE" --cache --min-bytes $((100 * 1024 * 1024)) || exit 115
 FILE="$(basename "$CACHE_FILE")"
-# Work on a copy: virt-customize below rewrites the image,
-# which would poison the cache for every later VM.
+# Work on a copy: image preparation rewrites the image, which would poison the cache for every later VM.
 cp -f "$CACHE_FILE" "$FILE"
 
 # Resize the imported disk with vm_resize_disk; Cloud-Init grows the actual root
@@ -258,14 +255,14 @@ curl -fsSL "${UOS_URL}" -o "unifi-os-server.bin"
 chmod +x "unifi-os-server.bin"
 msg_ok "Downloaded UniFi OS Server installer"
 
-# --- Pre-install packages and setup first-boot installer via virt-customize ---
+# --- Pre-install packages and setup first-boot installer ---
 msg_info "Customizing disk image (installing packages, staging installer)"
 
 # Create the first-boot installer script
-FIRSTBOOT_SCRIPT=$(mktemp)
+FIRSTBOOT_SCRIPT="$TEMP_DIR/unifi-os-firstboot.sh"
 cat >"$FIRSTBOOT_SCRIPT" <<'FBEOF'
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env bash
+set -Eeuo pipefail
 LOG="/var/log/unifi-os-install.log"
 exec > >(tee -a "$LOG") 2>&1
 echo "[$(date)] Starting UniFi OS Server first-boot setup..."
@@ -346,73 +343,42 @@ else
   exit 1
 fi
 
-# Disable this service after successful run
-systemctl disable unifi-os-firstboot.service
 echo "[$(date)] First-boot setup complete"
 FBEOF
 
-# Create the systemd service unit file
-FIRSTBOOT_SVC=$(mktemp)
-cat >"$FIRSTBOOT_SVC" <<'SVCEOF'
-[Unit]
-Description=UniFi OS Server First Boot Installer
-After=network-online.target cloud-final.service qemu-guest-agent.service
-Wants=network-online.target cloud-final.service qemu-guest-agent.service
-ConditionPathExists=/opt/unifi-os-server.bin
-
-[Service]
-Type=oneshot
-ExecStart=/opt/unifi-os-firstboot.sh
-RemainAfterExit=yes
-StandardOutput=journal+console
-
-[Install]
-# cloud-final runs after multi-user.target; using that target here would cycle.
-WantedBy=cloud-init.target
-SVCEOF
-
 vm_prepare_cloud_image "$FILE" "$HN"
 
-virt-customize -a "${FILE}" \
+vm_customize "UniFi OS installer" "$FILE" \
   --upload "unifi-os-server.bin:/opt/unifi-os-server.bin" \
   --chmod 0755:/opt/unifi-os-server.bin \
-  --upload "$FIRSTBOOT_SCRIPT:/opt/unifi-os-firstboot.sh" \
-  --chmod 0755:/opt/unifi-os-firstboot.sh \
-  --upload "$FIRSTBOOT_SVC:/etc/systemd/system/unifi-os-firstboot.service" \
-  --run-command "systemctl enable unifi-os-firstboot.service" \
-  --run-command "systemctl enable ssh" \
-  2>&1 | while read -r line; do echo -ne "${BFR}${TAB}${YW}${HOLD}${line}${HOLD}"; done
+  --run-command "systemctl enable ssh" || exit 1
 
-rm -f "$FIRSTBOOT_SCRIPT" "$FIRSTBOOT_SVC" "unifi-os-server.bin"
+vm_firstboot_unit "$FILE" "unifi-os-firstboot" "$FIRSTBOOT_SCRIPT" \
+  --description "UniFi OS Server First Boot Installer" \
+  --after qemu-guest-agent.service \
+  --requires-path /opt/unifi-os-server.bin \
+  --cloud-init yes || exit 1
+
+rm -f "$FIRSTBOOT_SCRIPT" "unifi-os-server.bin"
 msg_ok "Disk image customized (UniFi OS ${UOS_VERSION} staged for first-boot install)"
 
+vm_claim_vmid
 msg_info "Creating UniFi OS VM"
-qm create "$VMID" -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf \
+qm create "$VMID" -agent 1${MACHINE} -tablet 0 -bios ovmf \
   ${CPU_TYPE} -cores "$CORE_COUNT" -memory "$RAM_SIZE" \
   -name "$HN" -tags community-script \
   -net0 virtio,bridge="$BRG",macaddr="$MAC""$VLAN""$MTU" \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
-
-IMPORT_OUT="$(qm importdisk "$VMID" "$FILE" "$STORAGE" --format "$DISK_IMPORT_FORMAT" 2>&1)"
-DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk '\([^']\+\)'.*/\1/p")"
-
-if [[ -z "$DISK_REF" ]]; then
-  DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$1 ~ ("vm-"id"-disk-") {print $1}' | sort | tail -n1)"
-fi
-if [[ -z "$DISK_REF" ]]; then
-  msg_error "Unable to determine imported UniFi OS VM disk reference"
-  printf '%s\n' "$IMPORT_OUT" >&2
-  exit 1
-fi
+vm_mark_created
+vm_import_disk "$VMID" "$FILE" "$STORAGE" "$DISK_IMPORT_FORMAT"
 
 qm set "$VMID" \
   -efidisk0 "${STORAGE}:0,efitype=4m" \
-  -scsi0 "${DISK_REF},${DISK_CACHE}size=${DISK_SIZE}" \
+  -scsi0 "${VM_IMPORTED_DISK},${DISK_CACHE}size=${DISK_SIZE}" \
   -boot order=scsi0 -serial0 socket >/dev/null
 vm_resize_disk
 qm set "$VMID" --agent enabled=1 >/dev/null
 
-vm_mark_created
 vm_provision "$VMID"
 # Core currently suppresses SSH-key write errors; keep them fatal for this VM.
 if [[ -n "${CLOUDINIT_SSH_KEYS:-}" ]]; then
@@ -422,74 +388,49 @@ fi
 set_description
 
 msg_ok "Created a UniFi OS VM ${CL}${BL}(${HN})"
-msg_info "Operating System: ${OS_DISPLAY}"
-msg_info "Cloud-Init: ${USE_CLOUD_INIT}"
 
 VM_IP=""
 UNIFI_READY=""
+FIRSTBOOT_DONE=""
 if [ "$START_VM" == "yes" ]; then
-  msg_info "Starting UniFi OS VM"
-  $STD qm start $VMID
-  msg_ok "Started UniFi OS VM"
+  vm_start_vm "UniFi OS VM"
+  vm_wait_for_ip 360 || true
 
-  msg_info "Waiting for VM IP via the preinstalled guest agent"
-  if VM_IP=$(get_vm_ip "$VMID" 360); then
-    if GUEST_INTERFACES=$(qm guest cmd "$VMID" network-get-interfaces 2>"$TEMP_DIR/guest-agent.log") &&
-      VM_IP=$(jq -er --arg mac "$MAC" '
-        [.[] | select((.["hardware-address"] // "" | ascii_downcase) == ($mac | ascii_downcase))
-         | .["ip-addresses"][]? | select(.["ip-address-type"] == "ipv4")
-         | .["ip-address"] | select(startswith("127.") or startswith("169.254.") | not)]
-        | first // empty
-      ' <<<"$GUEST_INTERFACES" 2>"$TEMP_DIR/guest-agent.log"); then
-      msg_ok "Guest agent responding — VM IP: ${VM_IP}"
-    else
-      VM_IP=""
-      msg_warn "Guest agent did not report a usable IPv4 address for the VM network interface (${MAC})"
-      if [[ -s "$TEMP_DIR/guest-agent.log" ]]; then
-        msg_warn "Guest agent query: $(tail -n 1 "$TEMP_DIR/guest-agent.log")"
-      fi
-      msg_warn "Check DHCP/static IP settings and ip -4 addr in the VM console"
-    fi
+  if [[ -n "${VM_FIRSTBOOT_MARKER:-}" ]] && vm_guest_exec "$VMID" 10 test -f "$VM_FIRSTBOOT_MARKER" >/dev/null; then
+    FIRSTBOOT_DONE="yes"
   else
-    msg_warn "VM started, but no IP was reported by the guest agent"
-    if ! qm guest cmd "$VMID" network-get-interfaces >/dev/null 2>"$TEMP_DIR/guest-agent.log"; then
-      msg_warn "Guest agent query failed: $(tail -n 1 "$TEMP_DIR/guest-agent.log")"
-    fi
-    msg_warn "Check the VM console: ip -4 addr; systemctl status qemu-guest-agent"
+    msg_warn "UniFi OS first-boot installation has not completed yet"
   fi
 
-  # Wait for UniFi OS to be ready on port 11443
-  if [ -n "$VM_IP" ]; then
-    msg_info "Waiting for UniFi OS to start on https://${VM_IP}:11443 (may take several minutes)"
-    for i in {1..60}; do
-      if curl -fsSk --max-time 3 "https://${VM_IP}:11443" -o /dev/null &>/dev/null; then
-        UNIFI_READY="yes"
-        break
-      fi
-      printf "\r${TAB}${YW}${HOLD}Waiting for UniFi OS to start on https://${VM_IP}:11443 (may take several minutes) [%ds]${HOLD}" "$((i * 5))"
-      sleep 5
-    done
-
-    if [ -n "$UNIFI_READY" ]; then
-      msg_ok "UniFi OS is up at https://${VM_IP}:11443"
-    else
-      msg_warn "UniFi OS is not ready; first-boot installation may still be running or may have failed"
-    fi
+  if [[ -n "${VM_IP:-}" ]] && vm_wait_http "https://${VM_IP}:11443" 300 --insecure; then
+    UNIFI_READY="yes"
+    msg_ok "UniFi OS is up at https://${VM_IP}:11443"
+  elif [[ -n "${VM_IP:-}" ]]; then
+    msg_warn "UniFi OS is not ready; first-boot installation may still be running or may have failed"
   fi
-
 else
   msg_info "Start VM ${VMID} to run the UniFi OS first-boot installation"
 fi
 
-echo ""
-echo -e "${TAB}${GATEWAY}${BOLD}${GN}UniFi OS Server VM created!${CL}"
-echo -e "${TAB}${INFO}Web interface (after installation): https://${VM_IP:-<VM-IP>}:11443"
-echo -e "${TAB}${INFO}Console login: ${CLOUDINIT_USER:-root}"
-echo -e "${TAB}${INFO}Cloud-Init credentials: ${CLOUDINIT_CRED_FILE}"
-if [[ "$UNIFI_READY" != "yes" ]]; then
-  echo -e "${TAB}${INFO}In the VM: journalctl -u cloud-final -u unifi-os-firstboot.service"
-  echo -e "${TAB}${INFO}Install log: /var/log/unifi-os-install.log"
+vm_print_summary \
+  "Operating System=${OS_DISPLAY}" \
+  "UniFi OS Version=${UOS_VERSION}" \
+  "Web Interface=https://${VM_IP:-<VM-IP>}:11443" \
+  "Console Login=${CLOUDINIT_USER:-root}"
+
+if [[ "$UNIFI_READY" == "yes" ]]; then
+  vm_next_steps \
+    "Open https://${VM_IP}:11443 and complete UniFi OS setup."
+  FINISH_MESSAGE="UniFi OS Server VM is ready."
+else
+  vm_next_steps \
+    "Wait for first-boot installation to complete in the VM: journalctl -u unifi-os-firstboot.service" \
+    "Follow progress in /var/log/unifi-os-install.log inside the VM." \
+    "Open https://${VM_IP:-<VM-IP>}:11443 after the installer finishes."
+  if [[ "$FIRSTBOOT_DONE" == "yes" ]]; then
+    FINISH_MESSAGE="VM provisioning completed; UniFi OS is installed, but web readiness was not confirmed yet."
+  else
+    FINISH_MESSAGE="VM provisioning completed; UniFi OS installation continues in the VM on first boot."
+  fi
 fi
-echo ""
-post_update_to_api "done" "none"
-msg_ok "VM provisioning completed.\n"
+vm_finish "$FINISH_MESSAGE"
