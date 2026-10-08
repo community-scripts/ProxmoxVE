@@ -20,15 +20,14 @@ $STD apt install -y \
   openssl \
   ffmpeg \
   python3 \
-  python3-pip \
   python3-dev \
-  python3-numpy \
   redis-server
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 PG_DB_NAME="kima" PG_DB_USER="kima" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 NODE_VERSION="24" setup_nodejs
+PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Configuring Redis"
 systemctl enable -q --now redis-server
@@ -37,8 +36,8 @@ msg_ok "Configured Redis"
 fetch_and_deploy_gh_release "kima-hub" "Chevron7Locked/kima-hub" "tarball"
 
 msg_info "Installing Python Dependencies"
-export PIP_BREAK_SYSTEM_PACKAGES=1
-$STD pip3 install --no-cache-dir \
+$STD uv venv --python 3.13 /opt/kima-hub/venv
+$STD uv pip install --no-cache --python /opt/kima-hub/venv \
   tensorflow \
   essentia-tensorflow \
   redis \
@@ -174,7 +173,7 @@ Environment=BATCH_SIZE=10
 Environment=SLEEP_INTERVAL=5
 Environment=NUM_WORKERS=2
 Environment=THREADS_PER_WORKER=1
-ExecStart=/usr/bin/python3 /opt/kima-hub/services/audio-analyzer/analyzer.py
+ExecStart=/opt/kima-hub/venv/bin/python /opt/kima-hub/services/audio-analyzer/analyzer.py
 Restart=on-failure
 RestartSec=10
 
@@ -197,7 +196,7 @@ Environment=BACKEND_URL=http://localhost:3006
 Environment=MUSIC_PATH=/music
 Environment=SLEEP_INTERVAL=5
 Environment=NUM_WORKERS=1
-ExecStart=/usr/bin/python3 /opt/kima-hub/services/audio-analyzer-clap/analyzer.py
+ExecStart=/opt/kima-hub/venv/bin/python /opt/kima-hub/services/audio-analyzer-clap/analyzer.py
 Restart=on-failure
 RestartSec=10
 
