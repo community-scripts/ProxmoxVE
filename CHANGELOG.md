@@ -570,12 +570,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Revert "Immich: Pin to v3.3.0" [@MickLesk](https://github.com/MickLesk) ([#17767](https://github.com/community-scripts/ProxmoxVE/pull/17767))
 
+  - #### 🐞 Bug Fixes
+
+    - CLIProxyAPI: keep plugins and data across updates [@MickLesk](https://github.com/MickLesk) ([#17790](https://github.com/community-scripts/ProxmoxVE/pull/17790))
+    - Kima-Hub: install the Python services into a uv venv [@MickLesk](https://github.com/MickLesk) ([#17791](https://github.com/community-scripts/ProxmoxVE/pull/17791))
+
   - #### ✨ New Features
 
     - Immich: Pin to 3.3.0 / Update ML Python to 3.13 [@MickLesk](https://github.com/MickLesk) ([#17770](https://github.com/community-scripts/ProxmoxVE/pull/17770))
 
   - #### 🔧 Refactor
 
+    - Refactor: OPNsense VM [@MickLesk](https://github.com/MickLesk) ([#17785](https://github.com/community-scripts/ProxmoxVE/pull/17785))
+    - Refactor: Nextcloud VM (Turnkey) [@MickLesk](https://github.com/MickLesk) ([#17787](https://github.com/community-scripts/ProxmoxVE/pull/17787))
     - Refactor: OpenWrt VM [@MickLesk](https://github.com/MickLesk) ([#17774](https://github.com/community-scripts/ProxmoxVE/pull/17774))
     - Refactor: Ubuntu VM [@MickLesk](https://github.com/MickLesk) ([#17776](https://github.com/community-scripts/ProxmoxVE/pull/17776))
 
