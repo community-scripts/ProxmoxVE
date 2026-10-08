@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2026 tteck
-# Author: tteck (tteckster) | Jon Spriggs (jontheniceguy) | MickLesk (CanbiZ)
+# Author: tteck (tteckster) | Jon Spriggs (jontheniceguy) | MickLesk (CanbiZ) 
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Based on work from https://i12bretro.github.io/tutorials/0405.html
 
 COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/DevScripts/main}"
 source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/pve/vm-core.func")
