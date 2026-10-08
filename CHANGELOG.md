@@ -563,7 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - ZimaOS VM ([#17778](https://github.com/community-scripts/ProxmoxVE/pull/17778))
+  - Unifi-OS-Server VM ([#17752](https://github.com/community-scripts/ProxmoxVE/pull/17752))
+- ZimaOS VM ([#17778](https://github.com/community-scripts/ProxmoxVE/pull/17778))
 
 ### 🚀 Updated Scripts
 
