@@ -567,7 +567,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Choose the VM keyboard layout and carry the host's timezone into prepared images [@MickLesk](https://github.com/MickLesk) ([core#120](https://github.com/community-scripts/core/pull/120))
+  - VM's: run first-boot units without debconf dialogs [@MickLesk](https://github.com/MickLesk) ([core#121](https://github.com/community-scripts/core/pull/121))
+- Choose the VM keyboard layout and carry the host's timezone into prepared images [@MickLesk](https://github.com/MickLesk) ([core#120](https://github.com/community-scripts/core/pull/120))
 - Remember a kept cached image until the upstream changes [@MickLesk](https://github.com/MickLesk) ([core#119](https://github.com/community-scripts/core/pull/119))
 - tools: forge truncated release list [@MickLesk](https://github.com/MickLesk) ([core#118](https://github.com/community-scripts/core/pull/118))
 - Shared VM helpers: disk import, releases, checksums, first boot, IP by MAC [@MickLesk](https://github.com/MickLesk) ([core#117](https://github.com/community-scripts/core/pull/117))
