@@ -565,6 +565,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Revert "Immich: Pin to v3.3.0" [@MickLesk](https://github.com/MickLesk) ([#17767](https://github.com/community-scripts/ProxmoxVE/pull/17767))
 
+### 💾 Core
+
+  - Shared VM helpers: disk import, releases, checksums, first boot, IP by MAC [@MickLesk](https://github.com/MickLesk) ([core#117](https://github.com/community-scripts/core/pull/117))
+
 ## 2026-10-07
 
 ### 🆕 New Scripts
