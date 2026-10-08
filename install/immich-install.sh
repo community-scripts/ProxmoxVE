@@ -447,7 +447,7 @@ if [[ -f ~/.openvino ]]; then
   patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
   msg_ok "Installed Intel OpenVINO machine-learning"
 else
-  ML_PYTHON="python3.11"
+  ML_PYTHON="python3.13"
   msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
   for attempt in $(seq 1 3); do
     $STD sudo --preserve-env=VIRTUAL_ENV -Pnu immich uv python install "${ML_PYTHON}" && break
