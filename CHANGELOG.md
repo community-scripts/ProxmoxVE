@@ -561,6 +561,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-08
 
+### 🆕 New Scripts
+
+  - ZimaOS VM ([#17778](https://github.com/community-scripts/ProxmoxVE/pull/17778))
+
 ### 🚀 Updated Scripts
 
   - Revert "Immich: Pin to v3.3.0" [@MickLesk](https://github.com/MickLesk) ([#17767](https://github.com/community-scripts/ProxmoxVE/pull/17767))
