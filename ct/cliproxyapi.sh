@@ -39,7 +39,7 @@ function update_script() {
 
     create_backup /opt/cliproxyapi/config.yaml
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cliproxyapi" "router-for-me/CLIProxyAPI" "prebuild" "latest" "/opt/cliproxyapi" "CLIProxyAPI_*_linux_$(arch_resolve "amd64" "aarch64").tar.gz"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="plugins data" fetch_and_deploy_gh_release "cliproxyapi" "router-for-me/CLIProxyAPI" "prebuild" "latest" "/opt/cliproxyapi" "CLIProxyAPI_*_linux_$(arch_resolve "amd64" "aarch64").tar.gz"
 
     restore_backup
 
