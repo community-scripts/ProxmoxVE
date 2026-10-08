@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: michelroegl-brunner
@@ -273,6 +273,40 @@ function get_available_bridges() {
   ip -o link show type bridge 2>/dev/null | awk -F': ' '{print $2}' | sort
 }
 
+function guide_create_bridge() {
+  local brg_name="${1:-vmbr1}"
+  local guide_text="Only one network bridge was detected.\n\nOPNsense typically operates as a router/firewall with two interfaces (LAN and WAN), each attached to a separate Linux bridge (e.g., vmbr0 and vmbr1).\n\nTo create a second bridge:\n  1. Go to Proxmox VE Web UI -> Your Node -> System -> Network\n  2. Click 'Create' -> 'Linux Bridge'\n  3. Name it '${brg_name}' (assign a physical NIC or leave unassigned for internal routing)\n  4. Click 'Apply Configuration'\n\nAlternatively, you can create and bring up '${brg_name}' now automatically."
+
+  if whiptail --backtitle "Proxmox VE Helper Scripts" --title "WAN BRIDGE SETUP" --yesno "$guide_text\n\nWould you like this script to create '${brg_name}' now?" 20 72; then
+    if grep -q "iface ${brg_name} inet" /etc/network/interfaces 2>/dev/null; then
+      echo -e "${YW}${brg_name} already exists in /etc/network/interfaces, bringing up...${CL}"
+    else
+      echo -e "${DGN}Adding ${brg_name} to /etc/network/interfaces...${CL}"
+      cat <<EOF >>/etc/network/interfaces
+
+auto ${brg_name}
+iface ${brg_name} inet manual
+	bridge-ports none
+	bridge-stp off
+	bridge-fd 0
+EOF
+    fi
+    if command -v ifreload >/dev/null 2>&1; then
+      ifreload -a &>/dev/null || ifup ${brg_name} &>/dev/null || true
+    else
+      ifup ${brg_name} &>/dev/null || true
+    fi
+    if ip link show "${brg_name}" &>/dev/null; then
+      msg_ok "Created and activated bridge ${brg_name}"
+      return 0
+    else
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "BRIDGE CREATION FAILED" --msgbox "Could not automatically activate ${brg_name}.\nPlease configure a second bridge in Proxmox Network configuration." 10 65
+      return 1
+    fi
+  fi
+  return 1
+}
+
 function default_settings() {
   VMID=$(get_valid_nextid)
   FORMAT=",efitype=4m"
@@ -319,6 +353,16 @@ function default_settings() {
   # Determine available network modes based on bridge count
   local DEFAULT_WAN_BRG
   DEFAULT_WAN_BRG=$(echo "$AVAILABLE_BRIDGES" | grep -v "^${BRG}$" | head -n1 || true)
+
+  if [ "$BRIDGE_COUNT" -lt 2 ]; then
+    echo -e "${YW}No additional bridge available for WAN. Only '${BRG}' exists.${CL}"
+    echo -e "${YW}A second bridge (e.g. vmbr1) is needed for a dual-interface firewall setup.${CL}"
+    if guide_create_bridge "vmbr1"; then
+      AVAILABLE_BRIDGES=$(get_available_bridges)
+      BRIDGE_COUNT=$(echo "$AVAILABLE_BRIDGES" | wc -l)
+      DEFAULT_WAN_BRG=$(echo "$AVAILABLE_BRIDGES" | grep -v "^${BRG}$" | head -n1 || true)
+    fi
+  fi
 
   if [ "$BRIDGE_COUNT" -ge 2 ]; then
     # Multiple bridges available - offer dual or single mode
@@ -512,10 +556,23 @@ function advanced_settings() {
   local WAN_BRIDGES
   WAN_BRIDGES=$(get_available_bridges | grep -v "^${BRG}$" || true)
   if [ -z "$WAN_BRIDGES" ]; then
-    msg_error "No additional bridge available for WAN. Only '${BRG}' exists."
-    msg_error "Create a second bridge (e.g. vmbr1) in Proxmox network config first."
-    exit
+    echo -e "${YW}No additional bridge available for WAN. Only '${BRG}' exists.${CL}"
+    echo -e "${YW}A second bridge (e.g. vmbr1) is needed for a dual-interface firewall setup.${CL}"
+    if guide_create_bridge "vmbr1"; then
+      WAN_BRIDGES=$(get_available_bridges | grep -v "^${BRG}$" || true)
+    fi
   fi
+  if [ -z "$WAN_BRIDGES" ]; then
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SINGLE BRIDGE DETECTED" \
+      --yesno "No additional bridge available for WAN. Only '${BRG}' exists.\n\nCreate a second bridge (e.g. vmbr1) in Proxmox network config first for dual-interface firewall.\n\nWould you like to continue in Single Interface mode (no dedicated WAN bridge)?" 12 65); then
+      WAN_BRG=""
+      echo -e "${DGN}Continuing in Single Interface mode (no WAN bridge)${CL}"
+    else
+      msg_error "No additional bridge available for WAN. Only '${BRG}' exists."
+      msg_error "Create a second bridge (e.g. vmbr1) in Proxmox network config first."
+      exit
+    fi
+  else
   local WAN_MENU=()
   local first=true
   while IFS= read -r brg; do
@@ -572,8 +629,7 @@ function advanced_settings() {
         exit-script
       fi
     fi
-  else
-    exit-script
+  fi
   fi
   if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN MAC Address" 8 58 $GEN_MAC --title "LAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $MAC1 ]; then
@@ -740,8 +796,8 @@ for i in {0,1}; do
 done
 
 msg_info "Creating a OPNsense VM"
-qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
-  -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
+qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE -balloon 0 \
+  -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC,firewall=0,queues=$CORE_COUNT$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 
 # Retry pvesm alloc on transient zfs_request "got timeout" errors (#14127)
 alloc_attempt=1
@@ -802,7 +858,7 @@ qm set $VMID -description "$DESCRIPTION" >/dev/null
 
 msg_info "Bridge interfaces are being added."
 qm set $VMID \
-  -net0 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} 2>/dev/null
+  -net0 virtio,bridge=${BRG},macaddr=${MAC},firewall=0,queues=${CORE_COUNT}${VLAN}${MTU} 2>/dev/null
 msg_ok "Bridge interfaces have been successfully added."
 
 msg_ok "Created a OPNsense VM ${CL}${BL}(${HN})"
@@ -816,7 +872,7 @@ send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/
 if [ -n "$WAN_BRG" ]; then
   msg_info "Adding WAN interface"
   qm set $VMID \
-    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
+    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC},firewall=0,queues=${CORE_COUNT} &>/dev/null
   msg_ok "WAN interface added"
   sleep 5 # Brief pause after adding network interface
 fi

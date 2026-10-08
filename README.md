@@ -75,7 +75,7 @@ The repository covers a wide range of categories. A few examples:
 | --------------- | --------------------------------------------------- |
 | Home Automation | Home Assistant, Zigbee2MQTT, ESPHome, Node-RED      |
 | Media           | Jellyfin, Plex, Radarr, Sonarr, Immich              |
-| Networking      | AdGuard Home, Nginx Proxy Manager, Pi-hole, Traefik |
+| Networking      | AdGuard Home, Nginx Proxy Manager, Pi-hole, Traefik, [OPNsense](https://opnsenselab.com/posts/how-to-install-opnsense-on-proxmox/) |
 | Monitoring      | Grafana, Prometheus, Uptime Kuma, Netdata           |
 | Databases       | PostgreSQL, MariaDB, Redis, InfluxDB                |
 | Security        | Vaultwarden, CrowdSec, Authentik                    |
