@@ -559,6 +559,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-08
+
+### 🚀 Updated Scripts
+
+  - Revert "Immich: Pin to v3.3.0" [@MickLesk](https://github.com/MickLesk) ([#17767](https://github.com/community-scripts/ProxmoxVE/pull/17767))
+
 ## 2026-10-07
 
 ### 🆕 New Scripts
