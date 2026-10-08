@@ -347,25 +347,12 @@ EOF
     fi
 
     # MickLesk temporary patch for HEIC thumbnail gen
-    msg_info "Patching media.repository.js"
     MEDIA_REPO_JS="/opt/immich/app/dist/repositories/media.repository.js"
-    if [[ -f "$MEDIA_REPO_JS" ]]; then
-      python3 - <<'PY'
-from pathlib import Path
-p = Path('/opt/immich/app/dist/repositories/media.repository.js')
-s = p.read_text()
-old = "(0, sharp_1.default)(input).metadata()"
-new = "(0, sharp_1.default)(input, { unlimited: true, limitInputPixels: false }).metadata()"
-if new in s:
-    print('hotfix already there')
-elif old in s:
-    p.write_text(s.replace(old, new, 1))
-    print('hotfix applied')
-else:
-    print('pattern not found, skipped')
-PY
+    if grep -qF "(0, sharp_1.default)(input).metadata()" "$MEDIA_REPO_JS" 2>/dev/null; then
+      msg_info "Patching media.repository.js"
+      sed -i '0,/(0, sharp_1\.default)(input)\.metadata()/s//(0, sharp_1.default)(input, { unlimited: true, limitInputPixels: false }).metadata()/' "$MEDIA_REPO_JS"
+      msg_ok "Patched media.repository.js"
     fi
-    msg_ok "Patched media.repository.js"
 
     # chown excluding upload dir contents (may be a mount with restricted permissions)
     chown immich:immich "$INSTALL_DIR"
