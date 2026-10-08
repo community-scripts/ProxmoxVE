@@ -77,7 +77,7 @@ EOF
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
   cd /tmp
-  RELEASE="v3.3.0"
+  RELEASE="v3.2.4"
   if [[ -f ~/.intel_version ]]; then
     INTEL_SRC="https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/machine-learning"
     curl -fsSL "${INTEL_SRC}/scripts/install-intel-runtime.sh" -o ./intel-runtime 2>/dev/null ||
@@ -332,10 +332,6 @@ EOF
     if ! grep -q 'HELMET_FILE' "$INSTALL_DIR"/.env; then
       sed -i -e '$a\' "$INSTALL_DIR"/.env
       echo "IMMICH_HELMET_FILE=true" >>"$INSTALL_DIR"/.env
-    fi
-    if ! grep -q 'MODEL_REVISION' "$INSTALL_DIR"/.env; then
-      sed -i -e '$a\' "$INSTALL_DIR"/.env
-      echo "MACHINE_LEARNING_MODEL_REVISION=v2" >>"$INSTALL_DIR"/.env
     fi
 
     if grep -q 'ExecStart=/usr/bin/node' /etc/systemd/system/immich-web.service; then
