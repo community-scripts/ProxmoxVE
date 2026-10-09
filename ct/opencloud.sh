@@ -31,6 +31,15 @@ function update_script() {
     exit
   fi
 
+  # Collabora 26.04.4 ignores frame-ancestors in content_security_policy; outside the release
+  # check so installs already on the current release get it too
+  if [[ -f /etc/coolwsd/coolwsd.xml ]] && ! grep -q '<frame_ancestors[^>]*>[^<[:space:]]' /etc/coolwsd/coolwsd.xml; then
+    msg_info "Allowing OpenCloud to embed Collabora"
+    $STD sudo -u cool coolconfig set net.frame_ancestors "$(sed -n 's/^OC_URL=//p' /etc/opencloud/opencloud.env)"
+    systemctl restart coolwsd
+    msg_ok "Allowed OpenCloud to embed Collabora"
+  fi
+
   RELEASE="v8.1.0"
   if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     OLD_VERSION="$(cat ~/.opencloud 2>/dev/null)"

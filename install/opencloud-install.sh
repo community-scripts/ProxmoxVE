@@ -207,7 +207,7 @@ EOF
 $STD sudo -u cool coolconfig set ssl.enable false
 $STD sudo -u cool coolconfig set ssl.termination true
 $STD sudo -u cool coolconfig set ssl.ssl_verification true
-sed -i "s|-Policy\">|&frame-ancestors https://${OPENCLOUD_FQDN}|" /etc/coolwsd/coolwsd.xml
+$STD sudo -u cool coolconfig set net.frame_ancestors "https://${OPENCLOUD_FQDN}"
 useradd -r -M -s /usr/sbin/nologin opencloud
 chown -R opencloud:opencloud "$CONFIG_DIR" "$DATA_DIR"
 sudo -u opencloud opencloud init --config-path "$CONFIG_DIR" --insecure no
