@@ -563,7 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - LocalAI ([#17801](https://github.com/community-scripts/ProxmoxVE/pull/17801))
+  - FoldingAtHome ([#17799](https://github.com/community-scripts/ProxmoxVE/pull/17799))
+- LocalAI ([#17801](https://github.com/community-scripts/ProxmoxVE/pull/17801))
 - Tvheadend ([#17800](https://github.com/community-scripts/ProxmoxVE/pull/17800))
 
 ## 2026-10-08
