@@ -30,6 +30,14 @@ function update_script() {
     exit
   fi
 
+  if grep -q 'uv run -m radicale' /etc/systemd/system/radicale.service; then
+    msg_info "Enabling bcrypt/argon2 support"
+    sed -i 's|uv run -m radicale|uv run --extra bcrypt --extra argon2 -m radicale|' /etc/systemd/system/radicale.service
+    systemctl daemon-reload
+    systemctl restart radicale
+    msg_ok "Enabled bcrypt/argon2 support"
+  fi
+
   if check_for_gh_release "Radicale" "Kozea/Radicale"; then
     msg_info "Stopping service"
     systemctl stop radicale
@@ -41,7 +49,7 @@ function update_script() {
     if grep -q 'start.sh' /etc/systemd/system/radicale.service; then
       sed -i -e '/^Description/i[Unit]' \
         -e '\|^ExecStart|iWorkingDirectory=/opt/radicale' \
-        -e 's|^ExecStart=.*|ExecStart=/usr/local/bin/uv run -m radicale --config /etc/radicale/config|' /etc/systemd/system/radicale.service
+        -e 's|^ExecStart=.*|ExecStart=/usr/local/bin/uv run --extra bcrypt --extra argon2 -m radicale --config /etc/radicale/config|' /etc/systemd/system/radicale.service
       systemctl daemon-reload
     fi
     if [[ ! -f /etc/radicale/config ]]; then
