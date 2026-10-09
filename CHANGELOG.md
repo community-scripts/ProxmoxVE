@@ -559,6 +559,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-09
+
+### 🆕 New Scripts
+
+  - Tvheadend ([#17800](https://github.com/community-scripts/ProxmoxVE/pull/17800))
+
 ## 2026-10-08
 
 ### 🆕 New Scripts
