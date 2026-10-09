@@ -577,6 +577,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: survive an interrupted update and a failing ML build [@MickLesk](https://github.com/MickLesk) ([#17798](https://github.com/community-scripts/ProxmoxVE/pull/17798))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - FileBrowser Quantum: migrate the config and database to v2 [@MickLesk](https://github.com/MickLesk) ([#17815](https://github.com/community-scripts/ProxmoxVE/pull/17815))
+
 ## 2026-10-08
 
 ### 🆕 New Scripts
