@@ -109,6 +109,8 @@ Requires=redis.service
 [Service]
 WorkingDirectory=/opt/paperless/src
 ExecStart=uv run --no-sync -- celery --app paperless beat --loglevel INFO
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -123,6 +125,8 @@ After=postgresql.service
 [Service]
 WorkingDirectory=/opt/paperless/src
 ExecStart=uv run --no-sync -- celery --app paperless worker --loglevel INFO
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -137,6 +141,8 @@ Requires=redis.service
 WorkingDirectory=/opt/paperless/src
 ExecStartPre=/bin/sleep 2
 ExecStart=uv run --no-sync -- python manage.py document_consumer
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -153,6 +159,8 @@ Requires=redis.service
 WorkingDirectory=/opt/paperless/src
 #ExecStartPre=uv run --no-sync -- python manage.py document_index reindex --if-needed --no-progress-bar
 ExecStart=uv run --no-sync -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"
+Restart=on-failure
+RestartSec=5
 Environment=GRANIAN_HOST=::
 Environment=GRANIAN_PORT=8000
 Environment=GRANIAN_WORKERS=1
