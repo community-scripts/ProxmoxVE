@@ -13,13 +13,11 @@ var_ram="${var_ram:-8192}"
 var_disk="${var_disk:-30}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_gpu="${var_gpu:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
-# var_arm64 left unset: upstream ships a linux-arm64 asset, but this has never
-# been run on an arm64 host, so arch_check asks rather than claiming support.
 
-# Values the install script accepts up front - without the export they never
-# reach the container.
+# Values the install script accepts up front
 export var_auth="${var_auth:-no}"
 export var_api_key="${var_api_key:-}"
 export var_port="${var_port:-8080}"
@@ -44,8 +42,6 @@ function update_script() {
     systemctl stop localai
     msg_ok "Stopped Service"
 
-    # Models, backends and the env file live outside /opt/localai, so a clean
-    # install only ever replaces the binary.
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "localai" "mudler/LocalAI" "singlefile" "latest" "/opt/localai" "local-ai-v*-linux-$(arch_resolve amd64 arm64)"
 
     msg_info "Starting Service"
