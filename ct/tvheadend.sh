@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
-
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nicolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -14,8 +13,8 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_unprivileged="${var_unprivileged:-1}"
 #var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
+var_unprivileged="${var_unprivileged:-1}"
 
 export var_admin_user="${var_admin_user:-admin}"
 export var_admin_pass="${var_admin_pass:-$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)}"
@@ -35,10 +34,10 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating Tvheadend"
   $STD apt update
   $STD apt install -y tvheadend
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated Tvheadend"
 
   msg_info "Restarting Service"
   systemctl restart tvheadend
