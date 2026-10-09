@@ -35,8 +35,6 @@ function update_script() {
     exit
   fi
 
-  # Git tags sit in alpha/beta for months before reaching the public channel, so
-  # its latest.deb is the release; apt leaves it alone when already installed.
   fetch_and_deploy_from_url "https://download.foldingathome.org/releases/public/fah-client/$(arch_resolve "debian-10-64bit" "debian-stable-arm64")/release/latest.deb"
   msg_ok "Folding@home is at $(dpkg-query -W -f='${Version}' fah-client)"
   exit
