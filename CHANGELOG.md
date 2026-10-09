@@ -567,6 +567,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - LocalAI ([#17801](https://github.com/community-scripts/ProxmoxVE/pull/17801))
 - Tvheadend ([#17800](https://github.com/community-scripts/ProxmoxVE/pull/17800))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Immich: survive an interrupted update and a failing ML build [@MickLesk](https://github.com/MickLesk) ([#17798](https://github.com/community-scripts/ProxmoxVE/pull/17798))
+
 ## 2026-10-08
 
 ### 🆕 New Scripts
