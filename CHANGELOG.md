@@ -569,6 +569,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - OpenCloud: fix Collabora embedding with Collabora 26.04.4 [@SimKaiLong](https://github.com/SimKaiLong) ([#17810](https://github.com/community-scripts/ProxmoxVE/pull/17810))
+
   - #### 🔧 Refactor
 
     - Immich: survive an interrupted update and a failing ML build [@MickLesk](https://github.com/MickLesk) ([#17798](https://github.com/community-scripts/ProxmoxVE/pull/17798))
