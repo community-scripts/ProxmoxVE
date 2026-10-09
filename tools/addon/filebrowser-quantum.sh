@@ -96,6 +96,27 @@ if [[ -f "$LEGACY_DB" || -f "$LEGACY_BIN" && ! -f "$CONFIG_PATH" ]]; then
   fi
 fi
 
+# v2 rejects v1 config keys and imports the BoltDB on its first start
+migrate_v1_config() {
+  local dir="/usr/local/community-scripts" db=0
+  [[ -s "$dir/database.db" && ! -s "$dir/filebrowser.sqlite" ]] && db=1
+  ((db)) || grep -qE 'conditionals:|indexingIntervalMinutes:' "$CONFIG_PATH" || return 0
+  cp "$CONFIG_PATH" "${CONFIG_PATH}.v1.bak"
+  ((db)) && mv "$dir/database.db" "$dir/database.db.old"
+  awk -v db="$db" '
+    { match($0, /^ */); ind = RLENGTH }
+    /^[^ #]/ { top = $1 }
+    cond && ind > ci { print substr($0, 3); next }
+    { cond = 0 }
+    /^[[:space:]]*conditionals:[[:space:]]*$/ { cond = 1; ci = ind; next }
+    /^[[:space:]]*indexingIntervalMinutes:/ { next }
+    top == "server:" && /^  port:/ { port = $2; next }
+    { print }
+    /^server:/ && db { print "  database:"; print "    migrateFrom: \"database.db.old\"" }
+    END { if (port != "") { print "http:"; print "  port: " port } }
+  ' "${CONFIG_PATH}.v1.bak" >"$CONFIG_PATH"
+}
+
 # Existing installation
 if [[ -f "$INSTALL_PATH" ]]; then
   msg_warn "${APP} is already installed."
@@ -126,6 +147,7 @@ if [[ -f "$INSTALL_PATH" ]]; then
       mv -f /usr/local/bin/filebrowser-quantum "$INSTALL_PATH"
       if [[ -f "$CONFIG_PATH" ]]; then
         sed -i '/^\s*disableIndexing:/d' "$CONFIG_PATH"
+        migrate_v1_config
       fi
       if [[ "$OS" == "Debian" ]]; then
         systemctl restart filebrowser.service
@@ -173,22 +195,21 @@ read -r noauth_prompt
 # === YAML CONFIG GENERATION ===
 if [[ "${noauth_prompt,,}" =~ ^(y|yes)$ ]]; then
   cat <<EOF >"$CONFIG_PATH"
-server:
+http:
   port: $PORT
+server:
   sources:
     - path: "$SRC_DIR"
       name: "RootFS"
       config:
         denyByDefault: false
-        indexingIntervalMinutes: 240
-        conditionals:
-          rules:
-            - neverWatchPath: "/proc"
-            - neverWatchPath: "/sys"
-            - neverWatchPath: "/dev"
-            - neverWatchPath: "/run"
-            - neverWatchPath: "/tmp"
-            - neverWatchPath: "/lost+found"
+        rules:
+          - neverWatchPath: "/proc"
+          - neverWatchPath: "/sys"
+          - neverWatchPath: "/dev"
+          - neverWatchPath: "/run"
+          - neverWatchPath: "/tmp"
+          - neverWatchPath: "/lost+found"
 auth:
   methods:
     noauth: true
@@ -196,22 +217,21 @@ EOF
   msg_ok "Configured with no authentication"
 else
   cat <<EOF >"$CONFIG_PATH"
-server:
+http:
   port: $PORT
+server:
   sources:
     - path: "$SRC_DIR"
       name: "RootFS"
       config:
         denyByDefault: false
-        indexingIntervalMinutes: 240
-        conditionals:
-          rules:
-            - neverWatchPath: "/proc"
-            - neverWatchPath: "/sys"
-            - neverWatchPath: "/dev"
-            - neverWatchPath: "/run"
-            - neverWatchPath: "/tmp"
-            - neverWatchPath: "/lost+found"
+        rules:
+          - neverWatchPath: "/proc"
+          - neverWatchPath: "/sys"
+          - neverWatchPath: "/dev"
+          - neverWatchPath: "/run"
+          - neverWatchPath: "/tmp"
+          - neverWatchPath: "/lost+found"
 auth:
   adminUsername: admin
   adminPassword: community-scripts.org
