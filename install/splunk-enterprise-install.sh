@@ -84,11 +84,8 @@ msg_ok "Created Splunk admin user"
 
 msg_info "Starting Service"
 # First-time setup has to run as splunk. Starting the CLI as root is rejected
-# on 10.2+, and the default init script would launch splunkd as root at boot.
 $STD sudo -H -u splunk /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
 $STD sudo -H -u splunk /opt/splunk/bin/splunk stop --answer-yes --no-prompt
-# Writing the systemd unit requires root. User= and Group= in that unit keep
-# splunkd running as the splunk account.
 $STD /opt/splunk/bin/splunk enable boot-start \
     -systemd-managed 1 \
     -user splunk \
