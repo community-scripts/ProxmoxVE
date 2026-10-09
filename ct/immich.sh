@@ -353,6 +353,10 @@ EOF
       sed -i "s|^ExecStart=.*|ExecStart=${APP_DIR}/bin/start.sh|" /etc/systemd/system/immich-web.service
       systemctl daemon-reload
     fi
+    if grep -q "^ExecStart=${INSTALL_DIR}/ml_start.sh" /etc/systemd/system/immich-ml.service; then
+      sed -i "s|^ExecStart=.*|ExecStart=${ML_DIR}/ml_start.sh|" /etc/systemd/system/immich-ml.service
+      systemctl daemon-reload
+    fi
 
     # MickLesk temporary patch for HEIC thumbnail gen
     MEDIA_REPO_JS="/opt/immich/app/dist/repositories/media.repository.js"
@@ -374,6 +378,8 @@ EOF
       $STD cd -
       msg_ok "Disabled Maintenance Mode"
     fi
+    # A crash loop before the update leaves the units rate-limited, and restart would refuse.
+    systemctl reset-failed immich-ml immich-web 2>/dev/null || true
     if [[ "${ML_FAILED:-0}" == 1 ]]; then
       systemctl restart immich-web || true
       [[ -f /etc/systemd/system/immich-proxy.service ]] && systemctl restart immich-proxy
