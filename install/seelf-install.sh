@@ -19,14 +19,14 @@ $STD apt install -y \
   gcc
 msg_ok "Installed Dependencies"
 
-setup_go
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "seelf" "YuukanOO/seelf" "tarball"
+GO_VERSION="$(grep -m1 '^go ' /opt/seelf/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Setting up seelf. Patience"
 cd /opt/seelf
 $STD make build
-PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+PASS=$(random_password 13)
 mkdir -p /opt/seelf/data
 {
   echo "ADMIN_EMAIL=admin@example.com"

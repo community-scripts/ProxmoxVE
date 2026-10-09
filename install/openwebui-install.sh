@@ -16,19 +16,45 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   ffmpeg \
-  zstd
+  zstd \
+  build-essential \
+  libmariadb-dev
 msg_ok "Installed Dependencies"
 
 setup_hwaccel
 
 PYTHON_VERSION="3.12" setup_uv
 
+OTEL_ARGS=()
+read -r -p "${TAB3}Would you like to install OpenTelemetry instrumentation packages (requires manual .env configuration)? <y/N> " prompt
+if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  for pkg in \
+    opentelemetry-api \
+    opentelemetry-sdk \
+    opentelemetry-exporter-otlp \
+    opentelemetry-exporter-otlp-proto-http \
+    opentelemetry-instrumentation-fastapi \
+    opentelemetry-instrumentation-aiohttp-client \
+    opentelemetry-instrumentation-httpx \
+    opentelemetry-instrumentation-sqlalchemy \
+    opentelemetry-instrumentation-requests \
+    opentelemetry-instrumentation-logging \
+    opentelemetry-instrumentation-redis \
+    opentelemetry-instrumentation-system-metrics; do
+    OTEL_ARGS+=(--with "$pkg")
+  done
+fi
+
 msg_info "Installing Open WebUI"
-$STD uv tool install --python 3.12 open-webui[all]
+for attempt in $(seq 1 3); do
+  $STD uv tool install --python 3.12 --constraint <(echo "numba>=0.60") "${OTEL_ARGS[@]}" open-webui[all] && break
+  [[ $attempt -lt 3 ]] && msg_warn "Open WebUI install attempt $attempt failed, retrying..." && sleep 10
+done
 msg_ok "Installed Open WebUI"
 
 read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  if [[ "$(arch_resolve)" == "amd64" ]]; then
   msg_info "Setting up Intel® Repositories"
   mkdir -p /usr/share/keyrings
   curl -fsSL https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor -o /usr/share/keyrings/intel-graphics.gpg 2>/dev/null || true
@@ -48,7 +74,7 @@ Suites: all
 Components: main
 Signed-By: /usr/share/keyrings/oneapi-archive-keyring.gpg
 EOF
-  $STD apt update
+  apt_update_safe
   msg_ok "Set up Intel® Repositories"
 
   msg_info "Installing Intel® Level Zero"
@@ -69,13 +95,14 @@ EOF
   msg_info "Installing Intel® oneAPI Base Toolkit (Patience)"
   $STD apt install -y --no-install-recommends intel-basekit-2024.1 2>/dev/null || true
   msg_ok "Installed Intel® oneAPI Base Toolkit"
+  fi
 
   msg_info "Installing Ollama"
-  OLLAMA_RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
-  curl -fsSLO -C - https://github.com/ollama/ollama/releases/download/${OLLAMA_RELEASE}/ollama-linux-amd64.tar.zst
-  tar --zstd -C /usr -xf ollama-linux-amd64.tar.zst
-  rm -rf ollama-linux-amd64.tar.zst
-  cat <<EOF >/etc/systemd/system/ollama.service
+  if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama" "ollama-linux-$(arch_resolve).tar.zst"; then
+    msg_error "Failed to download or deploy Ollama – check network connectivity and GitHub API availability"
+  else
+    ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama
+    cat <<EOF >/etc/systemd/system/ollama.service
 [Unit]
 Description=Ollama Service
 After=network-online.target
@@ -91,9 +118,10 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 EOF
-  systemctl enable -q --now ollama
-  echo "ENABLE_OLLAMA_API=true" >/root/.env
-  msg_ok "Installed Ollama"
+    systemctl enable -q --now ollama
+    echo "ENABLE_OLLAMA_API=true" >/root/.env
+    msg_ok "Installed Ollama"
+  fi
 fi
 
 msg_info "Creating Service"

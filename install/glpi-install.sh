@@ -24,31 +24,10 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 
-msg_info "Setting up database"
-DB_NAME=glpi_db
-DB_USER=glpi
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
-$STD mariadb -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "GLPI Database Credentials"
-  echo "Database: $DB_NAME"
-  echo "Username: $DB_USER"
-  echo "Password: $DB_PASS"
-} >>~/glpi_db.creds
-msg_ok "Set up database"
+MARIADB_DB_NAME="glpi_db" MARIADB_DB_USER="glpi" MARIADB_DB_EXTRA_GRANTS="GRANT SELECT ON \`mysql\`.\`time_zone_name\`" MARIADB_DB_CREDS_FILE="$HOME/glpi_db.creds" setup_mariadb_db
 
-msg_info "Installing GLPi"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
-curl -fsSL "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz" -o $(basename "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz")
-$STD tar -xzvf glpi-${RELEASE}.tgz
-cd /opt/glpi
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed GLPi"
+fetch_and_deploy_gh_release "glpi" "glpi-project/glpi" "prebuild" "latest" "/opt/glpi" "glpi-*.tgz"
 
 msg_info "Setting Downstream file"
 cat <<EOF >/opt/glpi/inc/downstream.php
@@ -85,9 +64,9 @@ msg_ok "Configured Downstream file"
 msg_info "Configuring GLPI Database"
 $STD /usr/bin/php /opt/glpi/bin/console db:install \
   --db-host=localhost \
-  --db-name=$DB_NAME \
-  --db-user=$DB_USER \
-  --db-password=$DB_PASS \
+  --db-name=glpi_db \
+  --db-user=glpi \
+  --db-password=$MARIADB_DB_PASS \
   --default-language=en_US \
   --no-interaction \
   --allow-superuser \
@@ -133,11 +112,10 @@ $STD a2dissite 000-default.conf
 $STD a2enmod rewrite
 $STD a2ensite glpi.conf
 rm -rf /opt/glpi/install/install.php
-rm -rf /opt/glpi-${RELEASE}.tgz
 msg_ok "Setup Service"
 
 msg_info "Setup Cronjob"
-echo "* * * * * php /opt/glpi/front/cron.php" | crontab -
+echo "* * * * * php /opt/glpi/front/cron.php" | crontab -u www-data -
 msg_ok "Setup Cronjob"
 
 msg_info "Update PHP Params"

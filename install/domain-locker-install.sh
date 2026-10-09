@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing dependencies"
+$STD apt install -y whois
+msg_ok "Installed dependencies"
+
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="domainlocker_db" PG_DB_USER="domainlocker" setup_postgresql_db
 NODE_VERSION="22" setup_nodejs
@@ -42,7 +46,7 @@ set -a
 source /opt/domain-locker.env
 set +a
 $STD npm run build
-msg_info "Built Domain-Locker"
+msg_ok "Built Domain-Locker"
 
 msg_info "Building Database schema"
 export PGPASSWORD="$DL_PG_PASSWORD"
@@ -65,7 +69,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now domain-locker
-msg_info "Created Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize

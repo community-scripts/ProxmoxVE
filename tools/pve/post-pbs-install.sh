@@ -32,6 +32,10 @@ msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
 msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
 msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
 
+# Telemetry
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "post-pbs-install" "pve"
+
 # ---- helpers ----
 get_pbs_codename() {
   awk -F'=' '/^VERSION_CODENAME=/{print $2}' /etc/os-release
@@ -58,7 +62,22 @@ repo_state_list() {
 
 component_exists_in_sources() {
   local component="$1"
-  grep -h -E "^[^#]*Components:[^#]*\b${component}\b" /etc/apt/sources.list.d/*.sources 2>/dev/null | grep -q .
+  local line comp
+  while IFS= read -r line; do
+    line="${line#*Components:}"
+    for comp in $line; do
+      [[ "$comp" == "$component" ]] && return 0
+    done
+  done < <(grep -h -E "^[^#]*Components:" /etc/apt/sources.list.d/*.sources 2>/dev/null)
+  return 1
+}
+
+require_whiptail() {
+  if ! command -v whiptail >/dev/null 2>&1; then
+    msg_error "Missing dependency: whiptail"
+    echo -e "Install it first (e.g. apt update && apt install -y whiptail), then re-run this script."
+    exit 127
+  fi
 }
 
 # ---- main ----
@@ -79,19 +98,25 @@ main() {
 
   if command -v pveversion >/dev/null 2>&1; then
     echo -e "\n🛑  PVE Detected, Wrong Script!\n"
-    exit 1
+    exit 232
   fi
 
   local CODENAME
   CODENAME="$(get_pbs_codename)"
 
   case "$CODENAME" in
-  bookworm) start_routines_3 ;;
-  trixie) start_routines_4 ;;
+  bookworm)
+    require_whiptail
+    start_routines_3
+    ;;
+  trixie)
+    require_whiptail
+    start_routines_4
+    ;;
   *)
     msg_error "Unsupported Debian codename: $CODENAME"
     echo -e "Supported: bookworm (PBS 3.x) and trixie (PBS 4.x)"
-    exit 1
+    exit 105
     ;;
   esac
 }
@@ -108,14 +133,20 @@ start_routines_3() {
   yes)
     msg_info "Correcting Debian Sources"
     cat <<EOF >/etc/apt/sources.list
-deb http://deb.debian.org/debian ${VERSION} main contrib
-deb http://deb.debian.org/debian ${VERSION}-updates main contrib
-deb http://security.debian.org/debian-security ${VERSION}-security main contrib
+deb https://deb.debian.org/debian ${VERSION} main contrib
+deb https://deb.debian.org/debian ${VERSION}-updates main contrib
+deb https://security.debian.org/debian-security ${VERSION}-security main contrib
 EOF
     msg_ok "Corrected Debian Sources"
     ;;
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
+
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
+  fi
 
   # --- Enterprise repo ---
   read -r state file <<<"$(repo_state_list pbs-enterprise)"
@@ -170,7 +201,9 @@ start_routines_4() {
   yes)
     msg_info "Correcting Debian Sources (deb822)"
     rm -f /etc/apt/sources.list.d/*.list
-    sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
+    if [ -f /etc/apt/sources.list ]; then
+      sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list
+    fi
     cat >/etc/apt/sources.list.d/debian.sources <<EOF
 Types: deb
 URIs: http://deb.debian.org/debian/
@@ -188,6 +221,12 @@ EOF
     ;;
   no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
+
+  if [[ "$(dpkg --print-architecture 2>/dev/null)" == "arm64" ]]; then
+    msg_ok "ARM64 detected - skipping Proxmox repository setup"
+    post_routines_common
+    return
+  fi
 
   # --- Enterprise repo ---
   if component_exists_in_sources "pbs-enterprise"; then

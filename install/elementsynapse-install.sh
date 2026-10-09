@@ -14,45 +14,68 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  lsb-release \
+$STD apt install -y \
   apt-transport-https \
   debconf-utils
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
+echo "${TAB3}It is important to choose the name for your server before you install Synapse, because it cannot be changed later."
+echo "${TAB3}The server name determines the “domain” part of user-ids for users on your server: these will all be of the format @user:my.domain.name. It also determines how other matrix servers will reach yours for federation."
 read -p "${TAB3}Please enter the name for your server: " servername
 
 msg_info "Installing Element Synapse"
-curl -fsSL "https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg" -o "/usr/share/keyrings/matrix-org-archive-keyring.gpg"
-echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/matrix-org.list
-$STD apt-get update
+setup_deb822_repo "matrix-org" \
+  "https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg" \
+  "https://packages.matrix.org/debian/" \
+  "$(get_os_info codename)" \
+  "main"
 echo "matrix-synapse-py3 matrix-synapse/server-name string $servername" | debconf-set-selections
 echo "matrix-synapse-py3 matrix-synapse/report-stats boolean false" | debconf-set-selections
-$STD apt-get install matrix-synapse-py3 -y
-systemctl stop matrix-synapse
+echo "exit 101" >/usr/sbin/policy-rc.d
+chmod +x /usr/sbin/policy-rc.d
+$STD apt install matrix-synapse-py3 -y
+rm -f /usr/sbin/policy-rc.d
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
 sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
 SECRET=$(openssl rand -hex 32)
-ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+ADMIN_PASS="$(random_password 13)"
 echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
 echo "registration_shared_secret: ${SECRET}" >>/etc/matrix-synapse/homeserver.yaml
+
+cat <<EOF >>/etc/matrix-synapse/homeserver.yaml
+
+# MatrixRTC / Element Call configuration
+experimental_features:
+  msc3266_enabled: true
+  msc4222_enabled: true
+
+max_event_delay_duration: 24h
+
+rc_message:
+  per_second: 0.5
+  burst_count: 30
+
+rc_delayed_event_mgmt:
+  per_second: 1
+  burst_count: 20
+EOF
 systemctl enable -q --now matrix-synapse
 $STD register_new_matrix_user -a --user admin --password "$ADMIN_PASS" --config /etc/matrix-synapse/homeserver.yaml
-{
-  echo "Matrix-Credentials"
-  echo "Admin username: admin"
-  echo "Admin password: $ADMIN_PASS"
-} >>~/matrix.creds
+cat <<EOF >~/matrix.creds
+Matrix-Credentials
+Admin username: admin
+Admin password: $ADMIN_PASS
+EOF
 systemctl stop matrix-synapse
 sed -i '34d' /etc/matrix-synapse/homeserver.yaml
 systemctl start matrix-synapse
-temp_file=$(mktemp)
-mkdir -p /opt/synapse-admin
-RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
+msg_ok "Installed Element Synapse"
+
+fetch_and_deploy_gh_release "synapse-admin" "etkecc/synapse-admin" "tarball"
+
+msg_info "Installing Synapse-Admin"
 cd /opt/synapse-admin
 $STD yarn global add serve
 $STD yarn install --ignore-engines
@@ -60,7 +83,7 @@ $STD yarn build
 mv ./dist ../ &&
   rm -rf * &&
   mv ../dist ./
-msg_ok "Installed Element Synapse"
+msg_ok "Installed Synapse-Admin"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/synapse-admin.service

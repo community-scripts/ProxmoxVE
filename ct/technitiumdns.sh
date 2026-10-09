@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,8 +34,8 @@ function update_script() {
     systemctl daemon-reload
     systemctl enable -q --now technitium
   fi
-  if is_package_installed "aspnetcore-runtime-8.0"; then
-    $STD apt remove -y aspnetcore-runtime-8.0
+  if ! is_package_installed "aspnetcore-runtime-10.0"; then
+    $STD apt remove -y aspnetcore-runtime-8.0 aspnetcore-runtime-9.0 2>/dev/null || true
     [ -f /etc/apt/sources.list.d/microsoft-prod.list ] && rm -f /etc/apt/sources.list.d/microsoft-prod.list
     [ -f /usr/share/keyrings/microsoft-prod.gpg ] && rm -f /usr/share/keyrings/microsoft-prod.gpg
     setup_deb822_repo \
@@ -42,18 +44,14 @@ function update_script() {
       "https://packages.microsoft.com/debian/13/prod/" \
       "trixie" \
       "main"
-    $STD apt install -y aspnetcore-runtime-9.0
+    $STD apt install -y aspnetcore-runtime-10.0
   fi
 
   RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
-  if [[ ! -f ~/.technitium || ${RELEASE} != "$(cat ~/.technitium)" ]]; then
-    msg_info "Updating Technitium DNS"
-    curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
-    $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
-    rm -f /opt/DnsServerPortable.tar.gz
+  if [[ ! -f ~/.technitium || ${RELEASE} != "$(cat ~/.technitium 2>/dev/null)" ]]; then
+    fetch_and_deploy_from_url "https://download.technitium.com/dns/DnsServerPortable.tar.gz" /opt/technitium/dns
     echo "${RELEASE}" >~/.technitium
     systemctl restart technitium
-    msg_ok "Updated Technitium DNS"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  Technitium DNS is already at v${RELEASE}."
@@ -67,5 +65,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5380${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5380${CL}"

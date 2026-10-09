@@ -36,27 +36,43 @@ PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "ComfyUI" "comfyanonymous/ComfyUI" "tarball" "latest" "/opt/ComfyUI"
 
 msg_info "Python dependencies"
-$STD uv venv "/opt/ComfyUI/venv"
+$STD uv venv --clear "/opt/ComfyUI/venv"
+
 if [[ "${comfyui_gpu_type,,}" == "nvidia" ]]; then
+  pytorch_url="https://download.pytorch.org/whl/cu130"
+  if [[ -f "/opt/ComfyUI/README.md" ]]; then
+    extracted=$(grep -oP 'pip install.*?--extra-index-url\s+\Khttps://download\.pytorch\.org/whl/cu\d+' /opt/ComfyUI/README.md | head -1 || true)
+    [[ -n "$extracted" ]] && pytorch_url="$extracted"
+  fi
   $STD uv pip install \
     torch \
     torchvision \
     torchaudio \
-    --extra-index-url "https://download.pytorch.org/whl/cu128" \
+    --extra-index-url "$pytorch_url" \
     --python="/opt/ComfyUI/venv/bin/python"
 elif [[ "${comfyui_gpu_type,,}" == "amd" ]]; then
+  pytorch_url="https://download.pytorch.org/whl/rocm6.4"
+  if [[ -f "/opt/ComfyUI/README.md" ]]; then
+    extracted=$(grep -oP 'pip install.*?--index-url\s+\Khttps://download\.pytorch\.org/whl/rocm[\d.]+' /opt/ComfyUI/README.md | grep -v 'nightly' | head -1 || true)
+    [[ -n "$extracted" ]] && pytorch_url="$extracted"
+  fi
   $STD uv pip install \
     torch \
     torchvision \
     torchaudio \
-    --index-url "https://download.pytorch.org/whl/rocm6.3" \
+    --index-url "$pytorch_url" \
     --python="/opt/ComfyUI/venv/bin/python"
 elif [[ "${comfyui_gpu_type,,}" == "intel" ]]; then
+  pytorch_url="https://download.pytorch.org/whl/xpu"
+  if [[ -f "/opt/ComfyUI/README.md" ]]; then
+    extracted=$(grep -oP 'pip install.*?--index-url\s+\Khttps://download\.pytorch\.org/whl/xpu' /opt/ComfyUI/README.md | head -1 || true)
+    [[ -n "$extracted" ]] && pytorch_url="$extracted"
+  fi
   $STD uv pip install \
     torch \
     torchvision \
     torchaudio \
-    --index-url "https://download.pytorch.org/whl/xpu" \
+    --index-url "$pytorch_url" \
     --python="/opt/ComfyUI/venv/bin/python"
 fi
 $STD uv pip install -r "/opt/ComfyUI/requirements.txt" --python="/opt/ComfyUI/venv/bin/python"

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/gelbphoenix/autocaliweb
+# Source: https://codeberg.org/gelbphoenix/autocaliweb
 
 APP="Autocaliweb"
 var_tags="${var_tags:-ebooks}"
@@ -11,7 +12,8 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,10 +30,8 @@ function update_script() {
     exit
   fi
 
-  setup_uv
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/gelbphoenix/autocaliweb/releases/latest | jq '.tag_name' | sed 's/^"v//;s/"$//')
-  if check_for_gh_release "autocaliweb" "gelbphoenix/autocaliweb"; then
+  RELEASE=$(get_latest_codeberg_release "gelbphoenix/autocaliweb")
+  if check_for_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb"; then
     msg_info "Stopping Services"
     systemctl stop autocaliweb metadata-change-detector acw-ingest-service acw-auto-zipper
     msg_ok "Stopped Services"
@@ -39,11 +39,13 @@ function update_script() {
     INSTALL_DIR="/opt/autocaliweb"
     export VIRTUAL_ENV="${INSTALL_DIR}/venv"
     $STD tar -cf ~/autocaliweb_bkp.tar "$INSTALL_DIR"/{metadata_change_logs,dirs.json,.env,scripts/ingest_watcher.sh,scripts/auto_zipper_wrapper.sh,scripts/metadata_change_detector_wrapper.sh}
-    fetch_and_deploy_gh_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+    fetch_and_deploy_codeberg_release "autocaliweb" "gelbphoenix/autocaliweb" "tarball" "latest" "/opt/autocaliweb"
+    setup_uv $INSTALL_DIR
+    
     msg_info "Updating Autocaliweb"
     cd "$INSTALL_DIR" 
     if [[ ! -d "$VIRTUAL_ENV" ]]; then
-      $STD uv venv "$VIRTUAL_ENV"
+      $STD uv venv --clear "$VIRTUAL_ENV"
     fi
     $STD uv sync --all-extras --active
     cd "$INSTALL_DIR"/koreader/plugins 
@@ -56,7 +58,7 @@ function update_script() {
     mkdir -p "$INSTALL_DIR"/metadata_temp
     $STD tar -xf ~/autocaliweb_bkp.tar --directory /
     KEPUB_VERSION="$(/usr/bin/kepubify --version)"
-    CALIBRE_RELEASE="$(curl -s https://api.github.com/repos/kovidgoyal/calibre/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)"
+    CALIBRE_RELEASE="$(get_latest_github_release "kovidgoyal/calibre")"
     echo "${KEPUB_VERSION#v}" >"$INSTALL_DIR"/KEPUBIFY_RELEASE
     echo "${CALIBRE_RELEASE#v}" >/"$INSTALL_DIR"/CALIBRE_RELEASE
     sed 's/^/v/' ~/.autocaliweb >"$INSTALL_DIR"/ACW_RELEASE
@@ -79,5 +81,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8083${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8083${CL}"

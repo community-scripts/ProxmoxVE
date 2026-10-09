@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://openarchiver.com/
+# Source: https://openarchiver.com/ | Github: https://github.com/LogicLabs-OU/OpenArchiver
 
 APP="Open-Archiver"
 var_tags="${var_tags:-os}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +30,8 @@ function update_script() {
     exit
   fi
 
+  setup_meilisearch
+
   if check_for_gh_release "openarchiver" "LogicLabs-OU/OpenArchiver"; then
     msg_info "Stopping Services"
     systemctl stop openarchiver
@@ -40,6 +44,7 @@ function update_script() {
     msg_info "Updating Open Archiver"
     cd /opt/openarchiver
     $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
+    $STD pnpm rebuild
     $STD pnpm run build:oss
     $STD pnpm db:migrate
     msg_ok "Updated Open Archiver"
@@ -54,6 +59,7 @@ function update_script() {
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
+
   exit
 }
 
@@ -63,5 +69,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

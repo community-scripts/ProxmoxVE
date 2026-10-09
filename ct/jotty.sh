@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -7,11 +8,12 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 
 APP="jotty"
 var_tags="${var_tags:-tasks;notes}"
-var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-6}"
+var_cpu="${var_cpu:-1}"
+var_ram="${var_ram:-1024}"
+var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,62 +36,16 @@ function update_script() {
     systemctl stop jotty
     msg_ok "Stopped Service"
 
-    msg_info "Backing up configuration & data"
-    cd /opt/jotty
-    cp ./.env /opt/app.env
-    $STD tar -cf /opt/data_config.tar ./data ./config
-    msg_ok "Backed up configuration & data"
+    create_backup /opt/jotty/.env /opt/jotty/data /opt/jotty/config
 
-    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "tarball" "latest" "/opt/jotty"
+    NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "prebuild" "latest" "/opt/jotty" "jotty_*_prebuild.tar.gz"
 
-    msg_info "Updating jotty"
-    cd /opt/jotty
-    unset NODE_OPTIONS
-    export NODE_OPTIONS="--max-old-space-size=3072"
-    $STD yarn --frozen-lockfile
-    $STD yarn next telemetry disable
-    $STD yarn build
-
-    [ -d "public" ] && cp -r public .next/standalone/
-    [ -d "howto" ] && cp -r howto .next/standalone/
-    mkdir -p .next/standalone/.next
-    cp -r .next/static .next/standalone/.next/
-
-    mv .next/standalone /tmp/jotty_standalone
-    rm -rf ./* .next .git .gitignore .yarn
-    mv /tmp/jotty_standalone/* .
-    mv /tmp/jotty_standalone/.[!.]* . 2>/dev/null || true
-    rm -rf /tmp/jotty_standalone
-    msg_ok "Updated jotty"
-
-    msg_info "Restoring configuration & data"
-    mv /opt/app.env /opt/jotty/.env
-    $STD tar -xf /opt/data_config.tar
-    msg_ok "Restored configuration & data"
-
-    msg_info "Updating Service"
-    cat <<EOF >/etc/systemd/system/jotty.service
-[Unit]
-Description=jotty server
-After=network.target
-
-[Service]
-WorkingDirectory=/opt/jotty
-EnvironmentFile=/opt/jotty/.env
-ExecStart=/usr/bin/node server.js
-Restart=on-abnormal
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    systemctl daemon-reload
-    msg_ok "Updated Service"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start jotty
     msg_ok "Started Service"
-    rm /opt/data_config.tar
     msg_ok "Updated successfully!"
   fi
   exit
@@ -101,5 +57,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

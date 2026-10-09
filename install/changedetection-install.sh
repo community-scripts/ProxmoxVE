@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2026 tteck
-# Author: tteck (tteckster)
+# Author: tteck (tteckster) | Co-Author: CrazyWolf13, MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://changedetection.io/
+# Source: https://changedetection.io/ | Github: https://github.com/dgtlmoon/changedetection.io
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,11 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   build-essential \
   dumb-init \
-  gconf-service \
   libjpeg-dev \
   libatk-bridge2.0-0 \
   libasound2 \
@@ -29,8 +28,7 @@ $STD apt-get install -y \
   libexpat1 \
   libgbm-dev \
   libgbm1 \
-  libgconf-2-4 \
-  libgdk-pixbuf2.0-0 \
+  libgdk-pixbuf-2.0-0 \
   libglib2.0-0 \
   libgtk-3-0 \
   libnspr4 \
@@ -40,29 +38,43 @@ $STD apt-get install -y \
   qpdf \
   xdg-utils \
   xvfb \
-  ca-certificates
+  ca-certificates \
+  locales \
+  poppler-utils \
+  file
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
+msg_info "Generating Locales"
+for l in cs_CZ de_DE en_GB en_US es_ES fr_FR id_ID it_IT ja_JP ko_KR \
+  pl_PL pt_BR ru_RU tr_TR uk_UA zh_CN zh_TW; do
+  sed -i "s/^# *${l}.UTF-8 UTF-8/${l}.UTF-8 UTF-8/" /etc/locale.gen
+done
+$STD locale-gen
+msg_ok "Generated Locales"
+
+PYTHON_VERSION="3.13" setup_uv
 
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Change Detection"
-mkdir /opt/changedetection
-$STD pip3 install changedetection.io
+mkdir -p /opt/changedetection
+$STD uv venv --clear /opt/changedetection/.venv
+$STD /opt/changedetection/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/changedetection/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/changedetection/.venv/bin/python -m pip install changedetection.io
+cat <<EOF >/opt/changedetection/.env
+WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
+PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
+LC_ALL=en_US.UTF-8
+EOF
 msg_ok "Installed Change Detection"
 
 msg_info "Installing Browserless & Playwright"
 mkdir /opt/browserless
-$STD python3 -m pip install playwright
+$STD /opt/changedetection/.venv/bin/python -m pip install playwright
 $STD git clone https://github.com/browserless/chrome /opt/browserless
 $STD npm ci --include=optional --include=dev --prefix /opt/browserless
+$STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
 $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
@@ -73,23 +85,22 @@ $STD npm prune production --prefix /opt/browserless
 msg_ok "Installed Browserless & Playwright"
 
 msg_info "Installing Font Packages"
-$STD apt-get install -y \
+$STD apt install -y \
   fontconfig \
   libfontconfig1 \
   fonts-freefont-ttf \
   fonts-gfs-neohellenic \
   fonts-indic fonts-ipafont-gothic \
-  fonts-kacst fonts-liberation \
+  fonts-kacst-one fonts-liberation \
   fonts-noto-cjk \
   fonts-noto-color-emoji \
-  msttcorefonts \
   fonts-roboto \
   fonts-thai-tlwg \
   fonts-wqy-zenhei
 msg_ok "Installed Font Packages"
 
 msg_info "Installing X11 Packages"
-$STD apt-get install -y \
+$STD apt install -y \
   libx11-6 \
   libx11-xcb1 \
   libxcb1 \
@@ -112,12 +123,13 @@ Description=Change Detection
 After=network-online.target
 After=network.target browserless.service
 Wants=browserless.service
+
 [Service]
 Type=simple
+EnvironmentFile=/opt/changedetection/.env
 WorkingDirectory=/opt/changedetection
-Environment=WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
-Environment=PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
-ExecStart=changedetection.io -d /opt/changedetection -p 5000
+ExecStart=/opt/changedetection/.venv/bin/changedetection.io -d /opt/changedetection -p 5000
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -126,15 +138,16 @@ cat <<EOF >/etc/systemd/system/browserless.service
 [Unit]
 Description=browserless service
 After=network.target
+
 [Service]
 Environment=CONNECTION_TIMEOUT=60000
 WorkingDirectory=/opt/browserless
 ExecStart=/opt/browserless/scripts/start.sh
 SyslogIdentifier=browserless
+
 [Install]
 WantedBy=default.target
 EOF
-
 systemctl enable -q --now browserless
 systemctl enable -q --now changedetection
 msg_ok "Created Services"

@@ -25,7 +25,7 @@ case $version in
     ;;
   *)
     msg_error "Invalid JDK version selected. Please enter 8, 11, 17 or 21."
-    exit 1
+    exit 64
     ;;
   esac
   ;;
@@ -39,7 +39,7 @@ case $version in
     ;;
   *)
     msg_error "Invalid JDK version selected. Please enter 11, 17 or 21."
-    exit 1
+    exit 64
     ;;
   esac
   ;;
@@ -53,20 +53,20 @@ case $version in
     ;;
   *)
     msg_error "Invalid JDK version selected. Please enter 17 or 21."
-    exit 1
+    exit 64
     ;;
   esac
   ;;
 *)
   msg_error "Invalid Tomcat version selected. Please enter 9, 10.1 or 11."
-  exit 1
+  exit 64
   ;;
 esac
 
 msg_info "Installing Tomcat $TOMCAT_VERSION"
 LATEST_VERSION=$(curl -fsSL "https://dlcdn.apache.org/tomcat/tomcat-$TOMCAT_VERSION/" | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+(-M[0-9]+)?/' | sort -V | tail -n 1 | sed 's/\/$//; s/v//')
 TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-$TOMCAT_VERSION/v$LATEST_VERSION/bin/apache-tomcat-$LATEST_VERSION.tar.gz"
-curl -fsSL "$TOMCAT_URL" -o "/tmp/tomcat.tar.gz"
+curl_download "/tmp/tomcat.tar.gz" "$TOMCAT_URL"
 mkdir -p /opt/tomcat-$TOMCAT_VERSION
 tar --strip-components=1 -xzf /tmp/tomcat.tar.gz -C /opt/tomcat-$TOMCAT_VERSION
 chown -R root:root /opt/tomcat-$TOMCAT_VERSION
@@ -80,7 +80,7 @@ After=network.target
 Type=forking
 User=$(whoami)
 Group=$(whoami)
-Environment=JAVA_HOME=/usr/lib/jvm/temurin-${jdk_version}-jdk-amd64
+Environment=JAVA_HOME=/usr/lib/jvm/temurin-${jdk_version}-jdk-$(arch_resolve)
 Environment=CATALINA_HOME=/opt/tomcat-$TOMCAT_VERSION
 Environment=CATALINA_BASE=/opt/tomcat-$TOMCAT_VERSION
 Environment=CATALINA_PID=/opt/tomcat-$TOMCAT_VERSION/temp/tomcat.pid

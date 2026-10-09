@@ -3,32 +3,36 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://tailscale.com/ | Github: https://github.com/tailscale/tailscale
 
+APP="add-tailscale-lxc"
+APP_TYPE="addon"
+
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-tailscale-lxc" "addon"
+
+# Enable error handling
 set -Eeuo pipefail
-trap 'echo -e "\n[ERROR] in line $LINENO: exit code $?"' ERR
+trap 'error_handler' ERR
 
-function header_info() {
-  clear
-  cat <<"EOF"
-  ______      _ __                __
- /_  __/___ _(_) /_____________ _/ /__
-  / / / __ `/ / / ___/ ___/ __ `/ / _ \
- / / / /_/ / / (__  ) /__/ /_/ / /  __/
-/_/  \__,_/_/_/____/\___/\__,_/_/\___/
-
-EOF
-}
-
-function msg_info() { echo -e " \e[1;36m➤\e[0m $1"; }
-function msg_ok() { echo -e " \e[1;32m✔\e[0m $1"; }
-function msg_error() { echo -e " \e[1;31m✖\e[0m $1"; }
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
 
 header_info
-
-if ! command -v pveversion &>/dev/null; then
-  msg_error "This script must be run on the Proxmox VE host (not inside an LXC container)"
-  exit 1
-fi
+require_pve_host
 
 while true; do
   read -rp "This will add Tailscale to an existing LXC Container ONLY. Proceed (y/n)? " yn
@@ -39,7 +43,6 @@ while true; do
   esac
 done
 
-header_info
 msg_info "Loading container list..."
 
 NODE=$(hostname)
@@ -53,13 +56,13 @@ while read -r line; do
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
   CTID_MENU+=("$TAG" "$ITEM" "OFF")
 done < <(pct list | awk 'NR>1')
-
+msg_ok "Loaded container list"
 CTID=""
 while [[ -z "${CTID}" ]]; do
   CTID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --radiolist \
     "\nSelect a container to add Tailscale to:\n" \
     16 $((MSG_MAX_LENGTH + 23)) 6 \
-    "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || exit 1
+    "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || exit 0
 done
 
 CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
@@ -68,39 +71,97 @@ CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
 grep -q "lxc.cgroup2.devices.allow: c 10:200 rwm" "$CTID_CONFIG_PATH" || echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>"$CTID_CONFIG_PATH"
 grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file" >>"$CTID_CONFIG_PATH"
 
-header_info
 msg_info "Installing Tailscale in CT $CTID"
 
 pct exec "$CTID" -- bash -c '
 set -e
-export DEBIAN_FRONTEND=noninteractive
 
-ID=$(grep "^ID=" /etc/os-release | cut -d"=" -f2)
-VER=$(grep "^VERSION_CODENAME=" /etc/os-release | cut -d"=" -f2)
+# Detect OS inside container
+if [ -f /etc/alpine-release ]; then
+  # ── Alpine Linux ──
+  echo "[INFO] Alpine Linux detected, installing Tailscale via apk..."
 
-# fallback if DNS is poisoned or blocked
-ORIG_RESOLV="/etc/resolv.conf"
-BACKUP_RESOLV="/tmp/resolv.conf.backup"
+  # Enable community repo if not already enabled
+  if ! grep -q "^[^#].*community" /etc/apk/repositories 2>/dev/null; then
+    ALPINE_VERSION=$(cat /etc/alpine-release | cut -d. -f1,2)
+    echo "https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories
+  fi
 
-if ! dig +short pkgs.tailscale.com | grep -qvE "^127\.|^0\.0\.0\.0$"; then
-  echo "[INFO] DNS resolution for pkgs.tailscale.com failed (blocked or redirected)."
-  echo "[INFO] Temporarily overriding /etc/resolv.conf with Cloudflare DNS (1.1.1.1)"
-  cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
-  echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
-fi
+  apk update
+  apk add --no-cache tailscale
 
-curl -fsSL https://pkgs.tailscale.com/stable/${ID}/${VER}.noarmor.gpg \
-  | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+  # Enable and start Tailscale service
+  rc-update add tailscale default 2>/dev/null || true
+  rc-service tailscale start 2>/dev/null || true
 
-echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VER} main" \
-  >/etc/apt/sources.list.d/tailscale.list
+else
+  # ── Debian / Ubuntu ──
+  export DEBIAN_FRONTEND=noninteractive
 
-apt-get update -qq
-apt-get install -y tailscale >/dev/null
+  # Source os-release properly (handles quoted values)
+  . /etc/os-release
 
-if [[ -f /tmp/resolv.conf.backup ]]; then
-  echo "[INFO] Restoring original /etc/resolv.conf"
-  mv /tmp/resolv.conf.backup /etc/resolv.conf
+  # Fallback if DNS is poisoned or blocked
+  ORIG_RESOLV="/etc/resolv.conf"
+  BACKUP_RESOLV="/tmp/resolv.conf.backup"
+
+  # Check DNS resolution using multiple methods (dig may not be installed)
+  dns_check_failed=true
+  if command -v dig >/dev/null 2>&1; then
+    if dig +short pkgs.tailscale.com 2>/dev/null | grep -qvE "^127\.|^0\.0\.0\.0$|^$"; then
+      dns_check_failed=false
+    fi
+  elif command -v host >/dev/null 2>&1; then
+    if host pkgs.tailscale.com 2>/dev/null | grep -q "has address"; then
+      dns_check_failed=false
+    fi
+  elif command -v nslookup >/dev/null 2>&1; then
+    if nslookup pkgs.tailscale.com 2>/dev/null | grep -q "Address:"; then
+      dns_check_failed=false
+    fi
+  elif command -v getent >/dev/null 2>&1; then
+    if getent hosts pkgs.tailscale.com >/dev/null 2>&1; then
+      dns_check_failed=false
+    fi
+  else
+    # No DNS tools available, try curl directly and assume DNS works
+    dns_check_failed=false
+  fi
+
+  if $dns_check_failed; then
+    echo "[INFO] DNS resolution for pkgs.tailscale.com failed (blocked or redirected)."
+    echo "[INFO] Temporarily overriding /etc/resolv.conf with Cloudflare DNS (1.1.1.1)"
+    cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
+    echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
+  fi
+
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "[INFO] curl not found, installing..."
+    apt-get update -qq
+    apt-get install -y curl >/dev/null
+  fi
+
+  # Reuse the shared repository helper instead of hand-rolling the sources entry
+  source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+  source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+  load_functions
+
+  # Drop the legacy keyring from the pre-deb822 layout
+  rm -f /usr/share/keyrings/tailscale-archive-keyring.gpg
+
+  setup_deb822_repo \
+    "tailscale" \
+    "https://pkgs.tailscale.com/stable/${ID}/${VERSION_CODENAME}.noarmor.gpg" \
+    "https://pkgs.tailscale.com/stable/${ID}" \
+    "${VERSION_CODENAME}" \
+    "main"
+
+  apt-get install -y tailscale >/dev/null
+
+  if [ -f /tmp/resolv.conf.backup ]; then
+    echo "[INFO] Restoring original /etc/resolv.conf"
+    mv /tmp/resolv.conf.backup /etc/resolv.conf
+  fi
 fi
 '
 
@@ -109,4 +170,4 @@ TAGS="${TAGS:+$TAGS; }tailscale"
 pct set "$CTID" -tags "$TAGS"
 
 msg_ok "Tailscale installed on CT $CTID"
-msg_info "Reboot the container, then run 'tailscale up' inside the container to activate."
+echo -e "${YW}Reboot the container${CL}, then run 'tailscale up' inside the container to activate."

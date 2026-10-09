@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: kkroboth
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -11,7 +12,8 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
@@ -29,37 +31,83 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! [[ $(dpkg -s jq 2>/dev/null) ]]; then
-    $STD apt-get update
-    $STD apt-get install -y jq
-  fi
 
-  update_available=$(curl -fsSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' | jq .UpdateAvailable)
-  if [[ "${update_available}" == "true" ]]; then
-    msg_info "Stopping Service"
-    systemctl stop fileflows
-    msg_info "Stopped Service"
+  local proceed=false
 
-    msg_info "Creating Backup"
-    backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
-    tar -czf "$backup_filename" -C /opt/fileflows Data
-    msg_ok "Backup Created"
-
-    msg_info "Updating $APP to latest version"
-    temp_file=$(mktemp)
-    curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
-    $STD unzip -o -d /opt/fileflows "$temp_file"
-    rm -rf "$temp_file"
-    rm -rf "$backup_filename"
-    msg_ok "Updated $APP to latest version"
-
-    msg_info "Starting Service"
-    systemctl start fileflows
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
+  if systemctl list-unit-files 'fileflows.service' --no-legend 2>/dev/null | grep -q '^fileflows\.service'; then
+    tmp=$(mktemp)
+    http_code=$(curl -sSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' -o "$tmp" -w '%{http_code}' 2>/dev/null) || http_code="000"
+    if [[ "$http_code" == "200" ]]; then
+      update_available=$(jq -r '.UpdateAvailable // false' "$tmp" 2>/dev/null)
+      rm -f "$tmp"
+      if [[ "${update_available}" == "true" ]]; then
+        proceed=true
+      else
+        msg_ok "No update required. ${APP} is already at latest version"
+        exit
+      fi
+    else
+      rm -f "$tmp"
+      if [[ "$http_code" == "401" ]]; then
+        msg_warn "Could not check for updates: API returned 401 (security may be enabled)."
+      else
+        msg_warn "Could not check for updates: API unreachable (HTTP ${http_code})."
+      fi
+      if [[ "${FORCE_UPDATE:-}" == "1" ]]; then
+        proceed=true
+      else
+        read -r -p "${TAB3}Force update without version check? [y/N]: " CONFIRM
+        if [[ "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+          proceed=true
+        else
+          msg_error "Update aborted."
+          exit
+        fi
+      fi
+    fi
   else
-    msg_ok "No update required. ${APP} is already at latest version"
+    proceed=true
   fi
+
+  if [[ "$proceed" != "true" ]]; then
+    exit
+  fi
+
+  msg_info "Stopping Service"
+  systemctl --all stop 'fileflows*'
+  msg_ok "Stopped Service"
+
+  msg_info "Creating Backup"
+  ls /opt/*.tar.gz &>/dev/null && rm -f /opt/*.tar.gz
+  backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
+  tar -czf "$backup_filename" -C /opt/fileflows Data
+  msg_ok "Backup Created"
+
+  msg_info "Ensuring ASP.NET Core Runtime"
+  if [[ "$(arch_resolve)" == "arm64" ]]; then
+    if [[ ! -x /usr/lib/dotnet10/dotnet ]]; then
+      curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+      $STD bash /tmp/dotnet-install.sh --channel 10.0 --runtime aspnetcore --install-dir /usr/lib/dotnet10
+      ln -sf /usr/lib/dotnet10/dotnet /usr/bin/dotnet
+      rm -f /tmp/dotnet-install.sh
+    fi
+  elif ! is_package_installed "aspnetcore-runtime-10.0"; then
+    $STD apt remove -y aspnetcore-runtime-8.0 aspnetcore-runtime-9.0 2>/dev/null || true
+    setup_deb822_repo \
+      "microsoft" \
+      "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+      "https://packages.microsoft.com/debian/13/prod/" \
+      "trixie"
+    $STD apt install -y aspnetcore-runtime-10.0
+  fi
+  msg_ok "Ensured ASP.NET Core Runtime"
+
+  fetch_and_deploy_from_url "https://fileflows.com/downloads/ff-latest.tar.xz" "/opt/fileflows"
+
+  msg_info "Starting Service"
+  systemctl --all start 'fileflows*'
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
 
   exit
 }
@@ -70,5 +118,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:19200${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:19200${CL}"

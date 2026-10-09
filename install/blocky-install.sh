@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://0xerr0r.github.io/blocky
+# Source: https://0xerr0r.github.io/blocky | Github: https://github.com/0xERR0R/blocky
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,13 +13,14 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_x86_64.tar.gz"
+setup_deb_based() {
+  fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 
-msg_info "Configuring Blocky"
-if systemctl is-active systemd-resolved >/dev/null 2>&1; then
-  systemctl disable -q --now systemd-resolved
-fi
-cat <<EOF >/opt/blocky/config.yml
+  msg_info "Configuring Blocky"
+  if systemctl is-active systemd-resolved >/dev/null 2>&1; then
+    systemctl disable -q --now systemd-resolved
+  fi
+  cat <<EOF >/opt/blocky/config.yml
 # configuration documentation: https://0xerr0r.github.io/blocky/latest/configuration/
 
 upstreams:
@@ -61,22 +62,98 @@ log:
   # optional: Log level (one from trace, debug, info, warn, error). Default: info
   level: info
 EOF
-msg_ok "Configured Blocky"
+  msg_ok "Configured Blocky"
 
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/blocky.service
+  msg_info "Creating Service"
+  cat <<EOF >/etc/systemd/system/blocky.service
 [Unit]
 Description=Blocky
-After=network.target
+After=network-online.target
+Wants=network-online.target
+
 [Service]
 User=root
 WorkingDirectory=/opt/blocky
+Restart=on-failure
+RestartSec=5
 ExecStart=/opt/blocky/./blocky --config config.yml
+
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable -q --now blocky
-msg_ok "Created Service"
+  $STD systemctl enable -q --now blocky
+  msg_ok "Created Service"
+}
+
+setup_alpine() {
+  fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
+
+  msg_info "Configuring Blocky"
+  cat <<EOF >/opt/blocky/config.yml
+# configuration documentation: https://0xerr0r.github.io/blocky/latest/configuration/
+
+upstreams:
+  groups:
+    # these external DNS resolvers will be used. Blocky picks 2 random resolvers from the list for each query
+    # format for resolver: [net:]host:[port][/path]. net could be empty (default, shortcut for tcp+udp), tcp+udp, tcp, udp, tcp-tls or https (DoH). If port is empty, default port will be used (53 for udp and tcp, 853 for tcp-tls, 443 for https (Doh))
+    # this configuration is mandatory, please define at least one external DNS resolver
+    default:
+      # Cloudflare
+      - 1.1.1.1
+      # Quad9 DNS-over-TLS server (DoT)
+      - tcp-tls:dns.quad9.net
+
+# optional: use allow/denylists to block queries (for example ads, trackers, adult pages etc.)
+blocking:
+  # definition of denylist groups. Can be external link (http/https) or local file
+  denylists:
+    ads:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  # definition: which groups should be applied for which client
+  clientGroupsBlock:
+    # default will be used, if no special definition for a client name exists
+    default:
+      - ads
+
+# optional: write query information (question, answer, client, duration etc.) to daily csv file
+queryLog:
+  # optional one of: mysql, postgresql, csv, csv-client. If empty, log to console
+  type:
+
+# optional: use these DNS servers to resolve denylist urls and upstream DNS servers. It is useful if no system DNS resolver is configured, and/or to encrypt the bootstrap queries.
+bootstrapDns:
+  - upstream: tcp-tls:one.one.one.one
+    ips:
+      - 1.1.1.1
+
+# optional: logging configuration
+log:
+  # optional: Log level (one from trace, debug, info, warn, error). Default: info
+  level: info
+EOF
+  msg_ok "Configured Blocky"
+
+  msg_info "Creating Service"
+  cat <<EOF >/etc/init.d/blocky
+#!/sbin/openrc-run
+name="blocky"
+description="Blocky Daemon"
+command="/opt/blocky/blocky"
+command_args="--config /opt/blocky/config.yml"
+command_background="yes"
+pidfile="/run/blocky.pid"
+
+depend() {
+    need net
+}
+EOF
+  chmod +x /etc/init.d/blocky
+  $STD rc-update add blocky default
+  $STD rc-service blocky start
+  msg_ok "Created Service"
+}
+
+run_os_setup
 
 motd_ssh
 customize

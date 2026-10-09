@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,15 +37,18 @@ function update_script() {
     exit
   fi
 
-  if systemctl list-unit-files | grep -q zabbix-agent2.service; then
+  if systemctl cat zabbix-agent2.service &>/dev/null; then
     AGENT_SERVICE="zabbix-agent2"
-  else
+  elif systemctl cat zabbix-agent.service &>/dev/null; then
     AGENT_SERVICE="zabbix-agent"
+  else
+    AGENT_SERVICE=""
+    msg_warn "No Zabbix Agent service found, skipping agent actions"
   fi
 
   msg_info "Stopping Services"
   systemctl stop zabbix-server
-  systemctl stop "$AGENT_SERVICE"
+  [[ -n "$AGENT_SERVICE" ]] && systemctl stop "$AGENT_SERVICE"
   msg_ok "Stopped Services"
 
   read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
@@ -79,17 +84,17 @@ function update_script() {
   curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
   $STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
   rm -rf /tmp/zabbix-release_*.deb
-  $STD apt update
+  apt_update_safe
 
   $STD apt install --only-upgrade zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
 
-  if [ "$AGENT_SERVICE" = "zabbix-agent2" ]; then
+  if [[ "$AGENT_SERVICE" == "zabbix-agent2" ]]; then
     $STD apt install --only-upgrade zabbix-agent2 zabbix-agent2-plugin-postgresql
     if [ -f /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf ]; then
       sed -i 's|^Plugins.NVIDIA.System.Path=.*|# Plugins.NVIDIA.System.Path=/usr/libexec/zabbix/zabbix-agent2-plugin-nvidia-gpu|' \
         /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf
     fi
-  else
+  elif [[ "$AGENT_SERVICE" == "zabbix-agent" ]]; then
     $STD apt install --only-upgrade zabbix-agent
   fi
 
@@ -105,7 +110,7 @@ function update_script() {
 
   msg_info "Starting Services"
   systemctl start zabbix-server
-  systemctl start "$AGENT_SERVICE"
+  [[ -n "$AGENT_SERVICE" ]] && systemctl start "$AGENT_SERVICE"
   systemctl restart apache2
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
@@ -118,5 +123,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/zabbix${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}/zabbix${CL}"

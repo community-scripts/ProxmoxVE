@@ -15,10 +15,10 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt install -y \
-  build-essential \
-  redis-server \
-  expect \
-  ca-certificates
+    build-essential \
+    redis-server \
+    expect \
+    ca-certificates
 msg_ok "Installed Dependencies"
 
 setup_mongodb
@@ -26,19 +26,19 @@ NODE_VERSION="22" setup_nodejs
 
 msg_info "Configuring MongoDB"
 MONGO_ADMIN_USER="admin"
-MONGO_ADMIN_PWD="$(openssl rand -base64 18 | cut -c1-13)"
+MONGO_ADMIN_PWD="$(random_password 13)"
 NODEBB_USER="nodebb"
-NODEBB_PWD="$(openssl rand -base64 18 | cut -c1-13)"
+NODEBB_PWD="$(random_password 13)"
 MONGO_CONNECTION_STRING="mongodb://${NODEBB_USER}:${NODEBB_PWD}@localhost:27017/nodebb"
 NODEBB_SECRET=$(uuidgen)
-{
-  echo "NodeBB-Credentials"
-  echo "Mongo Database User: $MONGO_ADMIN_USER"
-  echo "Mongo Database Password: $MONGO_ADMIN_PWD"
-  echo "NodeBB User: $NODEBB_USER"
-  echo "NodeBB Password: $NODEBB_PWD"
-  echo "NodeBB Secret: $NODEBB_SECRET"
-} >>~/nodebb.creds
+cat <<EOF >~/nodebb.creds
+NodeBB-Credentials
+Mongo Database User: $MONGO_ADMIN_USER
+Mongo Database Password: $MONGO_ADMIN_PWD
+NodeBB User: $NODEBB_USER
+NodeBB Password: $NODEBB_PWD
+NodeBB Secret: $NODEBB_SECRET
+EOF
 
 $STD mongosh <<EOF
 use admin
@@ -91,16 +91,16 @@ expect "Format: mongodb://*" {
     send "$MONGO_CONNECTION_STRING\r"
 }
 expect "Administrator username" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect "Administrator email address" {
-    send "helper-scripts@local.com\r"
+    send "admin@community-scripts.org\r"
 }
 expect "Password" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect "Confirm Password" {
-    send "helper-scripts\r"
+    send "community-scripts\r"
 }
 expect eof
 EOF

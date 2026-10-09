@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://zipline.diced.sh/
+# Source: https://github.com/diced/zipline
 
 APP="Zipline"
 var_tags="${var_tags:-file;sharing}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 
   if check_for_gh_release "zipline" "diced/zipline"; then
     msg_info "Stopping Service"
@@ -36,7 +38,7 @@ function update_script() {
 
     mkdir -p /opt/zipline-uploads
     if [ -d /opt/zipline/uploads ] && [ "$(ls -A /opt/zipline/uploads)" ]; then
-      cp -R /opt/zipline/uploads/* /opt/zipline-uploads/
+      cp -R /opt/zipline/uploads/. /opt/zipline-uploads/
     fi
     cp /opt/zipline/.env /opt/
     rm -R /opt/zipline
@@ -63,5 +65,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

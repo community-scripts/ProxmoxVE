@@ -5,9 +5,21 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/bakito/adguardhome-sync
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "adguardhome-sync" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
@@ -26,28 +38,6 @@ DEFAULT_PORT=8080
 load_functions
 
 # ==============================================================================
-# HEADER
-# ==============================================================================
-function header_info {
-  clear
-  cat <<"EOF"
-    ___       __                          ____  __                        _____
-   /   | ____/ /___ ___  ______ __________/ / / / /___  ____ ___  ___     / ___/__  ______  _____
-  / /| |/ __  / __ `/ / / / __ `/ ___/ __  / /_/ / __ \/ __ `__ \/ _ \    \__ \/ / / / __ \/ ___/
- / ___ / /_/ / /_/ / /_/ / /_/ / /  / /_/ / __  / /_/ / / / / / /  __/   ___/ / /_/ / / / / /__
-/_/  |_\__,_/\__, /\__,_/\__,_/_/   \__,_/_/ /_/\____/_/ /_/ /_/\___/   /____/\__, /_/ /_/\___/
-            /____/                                                           /____/
-EOF
-}
-
-# ==============================================================================
-# HELPER FUNCTIONS
-# ==============================================================================
-get_ip() {
-  hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1"
-}
-
-# ==============================================================================
 # OS DETECTION
 # ==============================================================================
 if [[ -f "/etc/alpine-release" ]]; then
@@ -58,7 +48,17 @@ elif [[ -f "/etc/debian_version" ]]; then
   SERVICE_PATH="/etc/systemd/system/adguardhome-sync.service"
 else
   msg_error "Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
+fi
+
+# ==============================================================================
+# DEPENDENCY CHECK
+# ==============================================================================
+if ! command -v jq &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Installing jq \033[m' >&2
+  if [[ "$OS" == "Alpine" ]]; then
+    apk -U add jq >/dev/null 2>&1
+  fi
 fi
 
 # ==============================================================================
@@ -93,16 +93,12 @@ function update() {
     fi
     msg_ok "Stopped service"
 
-    msg_info "Backing up configuration"
-    cp "$CONFIG_PATH" /tmp/adguardhome-sync.yaml.bak 2>/dev/null || true
-    msg_ok "Backed up configuration"
+    BACKUP_DIR="/opt/adguardhome-sync_backup"
+    create_backup "$CONFIG_PATH"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_$(arch_resolve).tar.gz"
 
-    msg_info "Restoring configuration"
-    cp /tmp/adguardhome-sync.yaml.bak "$CONFIG_PATH" 2>/dev/null || true
-    rm -f /tmp/adguardhome-sync.yaml.bak
-    msg_ok "Restored configuration"
+    restore_backup
 
     msg_info "Starting service"
     if [[ "$OS" == "Alpine" ]]; then
@@ -120,10 +116,7 @@ function update() {
 # INSTALL
 # ==============================================================================
 function install() {
-  local ip
-  ip=$(get_ip)
-
-  fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_amd64.tar.gz"
+  fetch_and_deploy_gh_release "adguardhome-sync" "bakito/adguardhome-sync" "prebuild" "latest" "$INSTALL_PATH" "adguardhome-sync_*_linux_$(arch_resolve).tar.gz"
 
   # Gather configuration from user
   echo ""
@@ -132,7 +125,7 @@ function install() {
   echo ""
 
   # Origin instance
-  echo -e "${YW}── Origin (Primary) Instance ──${CL}"
+  echo -e "${YW}â”€â”€ Origin (Primary) Instance â”€â”€${CL}"
   local origin_url origin_user origin_pass
   read -rp "  Origin URL (e.g., http://192.168.1.1): " origin_url
   origin_url="${origin_url:-http://192.168.1.1}"
@@ -146,7 +139,7 @@ function install() {
 
   # Replica instance
   echo ""
-  echo -e "${YW}── Replica Instance ──${CL}"
+  echo -e "${YW}â”€â”€ Replica Instance â”€â”€${CL}"
   local replica_url replica_user replica_pass
   read -rp "  Replica URL (e.g., http://192.168.1.2): " replica_url
   replica_url="${replica_url:-http://192.168.1.2}"
@@ -272,7 +265,7 @@ UPDATEEOF
 
   echo ""
   msg_ok "${APP} installed successfully"
-  msg_ok "Web UI: ${BL}http://${ip}:${DEFAULT_PORT}${CL}"
+  msg_ok "Web UI: ${BL}http://${IP}:${DEFAULT_PORT}${CL}"
   msg_ok "Config: ${BL}${CONFIG_PATH}${CL}"
   echo ""
   msg_warn "Edit the config file to add your AdGuardHome instances!"
@@ -291,14 +284,15 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "${APP} is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi
 
 header_info
 
-IP=$(get_ip)
+get_lxc_ip
+IP="$LOCAL_IP"
 
 # Check if already installed
 if [[ -d "$INSTALL_PATH" && -f "$INSTALL_PATH/adguardhome-sync" ]]; then

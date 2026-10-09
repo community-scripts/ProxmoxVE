@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://zwave-js.github.io/zwave-js-ui/#/
+# Source: https://zwave-js.github.io/zwave-js-ui/#/ | Github: https://github.com/zwave-js/zwave-js-ui
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "zwave-js-ui" "zwave-js/zwave-js-ui" "prebuild" "latest" "/opt/zwave-js-ui" "zwave-js-ui*-linux.zip"
+fetch_and_deploy_gh_release "zwave-js-ui" "zwave-js/zwave-js-ui" "prebuild" "latest" "/opt/zwave-js-ui" "zwave-js-ui*-$(arch_resolve "linux" "linux-arm64").zip"
 
 msg_info "Configuring Z-Wave JS UI"
 mkdir -p /opt/zwave_store
@@ -33,7 +33,7 @@ After=network-online.target
 [Service]
 User=root
 WorkingDirectory=/opt/zwave-js-ui
-ExecStart=/opt/zwave-js-ui/zwave-js-ui-linux
+ExecStart=/opt/zwave-js-ui/$(arch_resolve "zwave-js-ui-linux" "zwave-js-ui")
 EnvironmentFile=/opt/.env
 
 [Install]

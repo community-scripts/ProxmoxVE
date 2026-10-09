@@ -16,16 +16,16 @@ update_os
 setup_hwaccel
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y make zip net-tools git
-$STD apt-get install -y gcc g++ cmake
-$STD apt-get install -y ca-certificates
+$STD apt install -y make zip net-tools git
+$STD apt install -y gcc g++ cmake
+$STD apt install -y ca-certificates
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 setup_mariadb
 
 msg_info "Installing FFMPEG"
-$STD apt-get install -y ffmpeg
+$STD apt install -y ffmpeg
 msg_ok "Installed FFMPEG"
 
 msg_info "Cloning Shinobi"
@@ -35,7 +35,7 @@ cd Shinobi
 gitVersionNumber=$(git rev-parse HEAD)
 theDateRightNow=$(date)
 touch version.json
-chmod 777 version.json
+chmod 644 version.json
 echo '{"Product" : "'"Shinobi"'" , "Branch" : "'"master"'" , "Version" : "'"$gitVersionNumber"'" , "Date" : "'"$theDateRightNow"'" , "Repository" : "'"https://gitlab.com/Shinobi-Systems/Shinobi.git"'"}' >version.json
 msg_ok "Cloned Shinobi"
 
@@ -54,7 +54,7 @@ cronKey=$(head -c 1024 </dev/urandom | sha256sum | awk '{print substr($1,1,29)}'
 sed -i -e 's/Shinobi/'"$cronKey"'/g' conf.json
 cp super.sample.json super.json
 $STD npm i npm -g
-$STD npm install --unsafe-perm
+$STD npm install
 $STD npm install pm2@latest -g
 chmod -R 755 .
 touch INSTALL/installed.txt

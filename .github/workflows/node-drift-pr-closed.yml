@@ -1,0 +1,55 @@
+name: Record closed Node.js drift PR
+
+# The drift check opens one PR per script and treats a closed one as a verdict:
+# that bump is not proposed again. That decision is invisible on the report
+# unless it is written there, so record it as a comment naming the script.
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  record:
+    if: >
+      github.repository == 'community-scripts/ProxmoxVE' &&
+      github.event.pull_request.merged == false &&
+      startsWith(github.event.pull_request.head.ref, 'node-drift/')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // node-drift/<slug>-<from>-to-<to>
+            const m = pr.head.ref.match(/^node-drift\/(.+)-(\d+)-to-(\d+)$/);
+            if (!m) return;
+            const [, slug, from, to] = m;
+
+            // A close by the stale bot is a lapsed review, not a decision on
+            // the bump, and the drift check reopens those. Saying "declined"
+            // here would contradict it.
+            const stale = pr.labels.some((l) => l.name === 'stale');
+
+            const issues = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: 'automated,dependencies', per_page: 100,
+            });
+            const issue = issues.data.find(
+              (i) => !i.pull_request && i.title === '[Automated] Node.js Version Drift Report',
+            );
+            if (!issue) return;
+
+            const body = stale
+              ? `\`${slug}\` — PR #${pr.number} (Node ${from} → ${to}) was closed as stale. `
+                + `No decision was recorded, so the next drift check opens it again.`
+              : `\`${slug}\` — PR #${pr.number} (Node ${from} → ${to}) was closed without merging. `
+                + `The script keeps Node ${from} and this bump will not be proposed again. `
+                + `If it was closed by mistake, reopen the PR.`;
+
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: issue.number, body,
+            });

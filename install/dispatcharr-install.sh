@@ -25,20 +25,35 @@ $STD apt install -y \
   procps \
   vlc-bin \
   vlc-plugin-base \
-  streamlink
+  streamlink \
+  autoconf \
+  libtool \
+  libargtable2-dev \
+  libavformat-dev \
+  libsdl2-dev \
+  libswscale-dev
 msg_ok "Installed Dependencies"
 
-setup_uv
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="dispatcharr_db" PG_DB_USER="dispatcharr_usr" setup_postgresql_db
 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr" "tarball"
+fetch_and_deploy_gh_release "Comskip" "erikkaashoek/Comskip" "tarball"
+UV_PROJECT_DIR="/opt/dispatcharr" setup_uv
+
+msg_info "Compiling Comskip"
+cd /opt/Comskip
+$STD ./autogen.sh
+$STD ./configure
+$STD make
+$STD make install
+msg_ok "Compiled and Installed Comskip"
 
 msg_info "Installing Python Dependencies with uv"
 cd /opt/dispatcharr
-$STD uv venv
-$STD uv pip install -r requirements.txt --index-strategy unsafe-best-match
-$STD uv pip install gunicorn gevent celery redis daphne
+$STD uv venv --clear
+$STD uv sync
+$STD uv pip install uwsgi gevent celery redis daphne
 msg_ok "Installed Python Dependencies"
 
 msg_info "Configuring Dispatcharr"
@@ -47,7 +62,7 @@ install -d -m 755 \
   /data/uploads/{m3us,epgs} \
   /data/{m3us,epgs}
 chown -R root:root /data
-DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+DJANGO_SECRET=$(random_password 50)
 export DATABASE_URL="postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}"
 export POSTGRES_DB=$PG_DB_NAME
 export POSTGRES_USER=$PG_DB_USER
@@ -66,12 +81,24 @@ CELERY_BROKER_URL=redis://localhost:6379/0
 DJANGO_SECRET_KEY=$DJANGO_SECRET
 EOF
 cd /opt/dispatcharr/frontend
-$STD npm install --legacy-peer-deps
+node -e "const p=require('./package.json');p.overrides=p.overrides||{};p.overrides['webworkify-webpack']='2.1.3';require('fs').writeFileSync('package.json',JSON.stringify(p,null,2));"
+rm -f package-lock.json
+$STD npm install --no-audit --progress=false
 $STD npm run build
 msg_ok "Configured Dispatcharr"
 
 msg_info "Configuring Nginx"
 cat <<EOF >/etc/nginx/sites-available/dispatcharr.conf
+map \$http_x_forwarded_proto \$real_forwarded_proto {
+    ""      \$scheme;
+    default \$http_x_forwarded_proto;
+}
+
+map \$http_x_forwarded_port \$real_forwarded_port {
+    ""      \$server_port;
+    default \$http_x_forwarded_port;
+}
+
 server {
     listen 9191;
     server_name _;
@@ -113,36 +140,48 @@ server {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
     }
 
-    # All other requests proxy to Gunicorn
+    # All other requests proxy to uWSGI
     location / {
-        include proxy_params;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$real_forwarded_proto;
+        proxy_set_header X-Forwarded-Port \$real_forwarded_port;
         proxy_pass http://127.0.0.1:5656;
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/dispatcharr.conf /etc/nginx/sites-enabled/dispatcharr.conf
-rm -f /etc/nginx/sites-enabled/default
-systemctl restart nginx
+nginx_enable_site dispatcharr.conf
 msg_ok "Configured Nginx"
 
 msg_info "Creating Services"
-cat <<EOF >/opt/dispatcharr/start-gunicorn.sh
+cat <<EOF >/opt/dispatcharr/start-uwsgi.sh
 #!/usr/bin/env bash
 cd /opt/dispatcharr
 set -a
 source .env
 set +a
-exec uv run gunicorn \\
+exec .venv/bin/uwsgi \\
+    --chdir=/opt/dispatcharr \\
+    --module=dispatcharr.wsgi:application \\
+    --master \\
     --workers=4 \\
-    --worker-class=gevent \\
-    --timeout=300 \\
-    --bind 0.0.0.0:5656 \\
-    dispatcharr.wsgi:application
+    --gevent=400 \\
+    --http=0.0.0.0:5656 \\
+    --http-keepalive=1 \\
+    --http-timeout=600 \\
+    --socket-timeout=600 \\
+    --buffer-size=65536 \\
+    --post-buffering=4096 \\
+    --lazy-apps \\
+    --thunder-lock \\
+    --die-on-term \\
+    --vacuum
 EOF
-chmod +x /opt/dispatcharr/start-gunicorn.sh
+chmod +x /opt/dispatcharr/start-uwsgi.sh
 
 cat <<EOF >/opt/dispatcharr/start-celery.sh
 #!/usr/bin/env bash
@@ -150,7 +189,7 @@ cd /opt/dispatcharr
 set -a
 source .env
 set +a
-exec uv run celery -A dispatcharr worker -l info -c 4
+exec uv run celery -A dispatcharr worker -l info -c 4 -Q celery,recordings,dvr,default
 EOF
 chmod +x /opt/dispatcharr/start-celery.sh
 
@@ -182,7 +221,7 @@ After=network.target postgresql.service redis-server.service
 [Service]
 Type=simple
 WorkingDirectory=/opt/dispatcharr
-ExecStart=/opt/dispatcharr/start-gunicorn.sh
+ExecStart=/opt/dispatcharr/start-uwsgi.sh
 Restart=on-failure
 RestartSec=10
 User=root

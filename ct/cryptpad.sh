@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -11,7 +12,8 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -31,24 +33,23 @@ function update_script() {
   if check_for_gh_release "cryptpad" "cryptpad/cryptpad"; then
     msg_info "Stopping Service"
     systemctl stop cryptpad
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
-    msg_info "Backing up configuration"
-    [ -f /opt/cryptpad/config/config.js ] && mv /opt/cryptpad/config/config.js /opt/
-    msg_ok "Backed up configuration"
+    create_backup /opt/cryptpad/config/config.js /opt/cryptpad/www/common/onlyoffice/dist
 
-    fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="blob block customize data datastore onlyoffice-conf" fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
-    msg_info "Updating CryptaPad"
+    restore_backup
+
+    msg_info "Updating CryptPad"
     cd /opt/cryptpad
-    $STD npm ci
+    $STD npm ci --allow-git=all
     $STD npm run install:components
+    if [ -f "/opt/cryptpad/install-onlyoffice.sh" ]; then
+      $STD bash /opt/cryptpad/install-onlyoffice.sh --accept-license
+    fi
     $STD npm run build
     msg_ok "Updated CryptaPad"
-
-    msg_info "Restoring configuration"
-    mv /opt/config.js /opt/cryptpad/config/
-    msg_ok "Configuration restored"
 
     msg_info "Starting Service"
     systemctl start cryptpad
@@ -64,5 +65,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

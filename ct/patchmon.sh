@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -9,9 +10,10 @@ APP="PatchMon"
 var_tags="${var_tags:-monitoring}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
-var_disk="${var_disk:-4}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,34 +31,85 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" setup_nodejs
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
     msg_info "Stopping Service"
     systemctl stop patchmon-server
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    cp /opt/patchmon/backend/.env /opt/backend.env
-    cp /opt/patchmon/frontend/.env /opt/frontend.env
-    msg_ok "Backup Created"
+    if [[ -d /opt/patchmon/backend ]]; then
+      msg_info "Legacy install detected - creating full backup, please wait..."
+      $STD tar czf ~/patchmon_legacy.tar.gz /opt/patchmon
+      cp /opt/patchmon/backend/.env /opt/legacy.env
+      msg_ok "Full backup saved in /root"
+      msg_info "Starting migration to PatchMon v2.x.x"
+      systemctl disable -q --now nginx
+      $STD npm cache clean --force
+      $STD apt autoremove --purge -y {nginx,nodejs}
+      if [[ -f /etc/apt/sources.list.d/nodesource.sources ]]; then
+        cp /etc/apt/sources.list.d/nodesource.sources /etc/apt/sources.list.d/nodesource.sources.bak
+        rm -f /etc/apt/sources.list.d/nodesource.sources
+      elif [[ -f /etc/apt/sources.list.d/nodesource.list ]]; then
+        cp /etc/apt/sources.list.d/nodesource.list /etc/apt/sources.list.d/nodesource.list.bak
+        rm -f /etc/apt/sources.list.d/nodesource.list
+      fi
+      rm -rf /opt/patchmon
+      mkdir -p /opt/patchmon/agents
+      cp /opt/legacy.env /opt/patchmon/.env
+      sed -i -e 's/^PORT=.*/PORT=3000/' \
+        -e 's/^NODE_/APP_/' \
+        -e '/^SERVER_*/d' \
+        -e '/^# API*/,+2d' /opt/patchmon/.env
+      cat <<EOF >/opt/patchmon/.env
+SESSION_SECRET=$(openssl rand -hex 64)
+AI_ENCRYPTION_KEY=$(openssl rand -hex 64)
+AGENT_BINARIES_DIR=/opt/patchmon/agents
+EOF
+      sed -i -e '\|Directory|s|/backend||' \
+        -e 's|^ExecStart=.*|ExecStart=/opt/patchmon/patchmon-server|' \
+        -e 's|^Environment=NODE_.*|EnvironmentFile=/opt/patchmon/.env|' \
+        /etc/systemd/system/patchmon-server.service
+      systemctl daemon-reload
+      rm /opt/legacy.env
+      msg_ok "Migration complete!"
+    fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
+    create_backup /opt/patchmon/.env
 
-    msg_info "Updating PatchMon"
-    cd /opt/patchmon
-    export NODE_ENV=production
-    $STD npm install --no-audit --no-fund --no-save --ignore-scripts
-    cd /opt/patchmon/backend
-    $STD npm install --no-audit --no-fund --no-save --ignore-scripts
-    cd /opt/patchmon/frontend
-    $STD npm install --include=dev --no-audit --no-fund --no-save --ignore-scripts
-    $STD npm run build
-    cd /opt/patchmon/backend
-    mv /opt/backend.env /opt/patchmon/backend/.env
-    mv /opt/frontend.env /opt/patchmon/frontend/.env
-    $STD npx prisma migrate deploy
-    $STD npx prisma generate
-    msg_ok "Updated PatchMon"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-$(arch_resolve)"
+    mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
+
+    msg_info "Updating SCAP Content"
+    RELEASE=$(get_latest_github_release "ComplianceAsCode/content")
+    curl_with_retry "https://github.com/ComplianceAsCode/content/releases/download/v${RELEASE}/scap-security-guide-${RELEASE}.tar.gz" "/tmp/ssg.tar.gz"
+    mkdir -p /opt/patchmon/ssg-content
+    find /opt/patchmon/ssg-content -mindepth 1 -delete
+    tar -xzf /tmp/ssg.tar.gz -C /opt/patchmon/ssg-content --strip-components=1 --wildcards '*/ssg-*-ds.xml'
+    rm -f /tmp/ssg.tar.gz
+    msg_ok "Updated SCAP Content"
+
+    restore_backup
+
+    msg_info "Fetching PatchMon agent binaries"
+    RELEASE=$(get_latest_github_release "PatchMon/PatchMon")
+    [[ ! -d /opt/patchmon/agents ]] && mkdir -p /opt/patchmon/agents
+    FILE_URL="https://github.com/PatchMon/PatchMon/releases/download/v${RELEASE}/patchmon-agent-"
+    AGENT_NAME=(
+      "linux-amd64"
+      "linux-arm64"
+      "linux-arm"
+      "linux-386"
+      "freebsd-amd64"
+      "freebsd-arm64"
+      "freebsd-arm"
+      "freebsd-386"
+      "windows-amd64.exe"
+      "windows-arm64.exe"
+    )
+    for arch in "${AGENT_NAME[@]}"; do
+      curl_with_retry "${FILE_URL}${arch}" "/opt/patchmon/agents/patchmon-agent-${arch}"
+      [[ "${arch}" != *.exe ]] && chmod 755 "/opt/patchmon/agents/patchmon-agent-${arch}"
+    done
+    msg_ok "Fetched PatchMon agent binaries"
 
     msg_info "Starting Service"
     systemctl start patchmon-server
@@ -72,5 +125,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

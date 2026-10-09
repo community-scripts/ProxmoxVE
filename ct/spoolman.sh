@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,17 +35,18 @@ function update_script() {
     systemctl stop spoolman
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    [ -d /opt/spoolman_bak ] && rm -rf /opt/spoolman_bak
-    mv /opt/spoolman /opt/spoolman_bak
-    msg_ok "Created Backup"
+    create_backup /opt/spoolman/.env
 
-    fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+    PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/spoolman" setup_uv
+
+    restore_backup
 
     msg_info "Updating Spoolman"
     cd /opt/spoolman
-    $STD pip3 install -r requirements.txt
-    cp /opt/spoolman_bak/.env /opt/spoolman
+    $STD uv sync --locked --no-install-project
+    $STD uv sync --locked
+    sed -i 's|^ExecStart=.*|ExecStart=/usr/bin/bash /opt/spoolman/scripts/start.sh|' /etc/systemd/system/spoolman.service
     msg_ok "Updated Spoolman"
 
     msg_info "Starting Service"
@@ -60,5 +63,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7912${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:7912${CL}"

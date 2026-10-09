@@ -42,7 +42,7 @@ fi
 
 curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
 $STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
-$STD apt update
+apt_update_safe
 $STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
 
 if [[ "$ZABBIX_VERSION" == "7.0" ]]; then

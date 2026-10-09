@@ -39,7 +39,7 @@ $STD apt install -y ffmpeg v4l-utils
 msg_ok "Installed FFmpeg"
 
 msg_info "Installing MotionEye"
-$STD apt update
+apt_update_safe
 $STD pip install git+https://github.com/motioneye-project/motioneye.git@dev
 mkdir -p /etc/motioneye
 chown -R root:root /etc/motioneye
@@ -50,6 +50,7 @@ msg_ok "Installed MotionEye"
 
 msg_info "Creating Service"
 curl -fsSL "https://raw.githubusercontent.com/motioneye-project/motioneye/dev/motioneye/extra/motioneye.systemd" -o "/etc/systemd/system/motioneye.service"
+sed -i 's/^User=.*/User=root/' /etc/systemd/system/motioneye.service
 systemctl enable -q --now motioneye
 msg_ok "Created Service"
 

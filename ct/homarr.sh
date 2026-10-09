@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://homarr.dev/
+# Source: https://github.com/homarr-labs/homarr
 
 APP="homarr"
 var_tags="${var_tags:-arr;dashboard}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-1024}"
+var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,6 +36,11 @@ function update_script() {
     systemctl stop redis-server
     msg_ok "Services Stopped"
 
+    if ! grep -q "source /opt/homarr.env" /usr/bin/homarr 2>/dev/null; then
+      echo $'#!/bin/bash\nset -a\nsource /opt/homarr.env\nset +a\ncd /opt/homarr/apps/cli && timeout 10 node ./cli.cjs "$@"' >/usr/bin/homarr
+      chmod +x /usr/bin/homarr
+    fi
+
     if ! { grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr/.env 2>/dev/null || grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr.env 2>/dev/null; }; then
       msg_info "Fixing old structure"
       systemctl disable -q --now nginx
@@ -50,22 +57,24 @@ function update_script() {
 ReadWritePaths=-/appdata/redis -/var/lib/redis -/var/log/redis -/var/run/redis -/etc/redis
 EOF
       systemctl daemon-reload
-      rm /opt/run_homarr.sh
+      rm -f /opt/run_homarr.sh
       msg_ok "Fixed old structure"
     fi
 
     msg_info "Updating Nodejs"
-    $STD apt update
+    apt_update_safe
     $STD apt upgrade nodejs -y
     msg_ok "Updated Nodejs"
 
     NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
     setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-$(arch_resolve).tar.gz"
 
     msg_info "Updating Homarr"
     cp /opt/homarr/redis.conf /etc/redis/redis.conf
-    rm /etc/nginx/nginx.conf
+    sed -i -e '$a\' /etc/redis/redis.conf
+    grep -q '^bind 127.0.0.1 -::1$' /etc/redis/redis.conf || echo "bind 127.0.0.1 -::1" >> /etc/redis/redis.conf
+    rm -f /etc/nginx/nginx.conf
     cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
     msg_ok "Updated Homarr"
 
@@ -76,6 +85,18 @@ EOF
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
+  # v2.3.0's Debian build ships a musl better-sqlite3 (homarr-labs/homarr#7097).
+  mapfile -t MUSL_MODULES < <(find /opt/homarr -name better_sqlite3.node -exec grep -aqE "ld-musl|libc\.musl" {} \; -print)
+  if ((${#MUSL_MODULES[@]})); then
+    msg_info "Replacing musl better-sqlite3 build"
+    BSQ_VERSION=$(jq -r .version /opt/homarr/node_modules/better-sqlite3/package.json)
+    curl_with_retry "https://github.com/WiseLibs/better-sqlite3/releases/download/v${BSQ_VERSION}/better-sqlite3-v${BSQ_VERSION}-node-v$(node -p process.versions.modules)-linux-$(arch_resolve "x64" "arm64").tar.gz" /tmp/better-sqlite3.tar.gz
+    tar -xzf /tmp/better-sqlite3.tar.gz -C /tmp build/Release/better_sqlite3.node
+    for module in "${MUSL_MODULES[@]}"; do cp /tmp/build/Release/better_sqlite3.node "$module"; done
+    rm -rf /tmp/better-sqlite3.tar.gz /tmp/build
+    systemctl restart homarr
+    msg_ok "Replaced musl better-sqlite3 build"
+  fi
   exit
 }
 
@@ -85,5 +106,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7575${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:7575${CL}"

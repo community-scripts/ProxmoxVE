@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://cloudreve.org/
+# Source: https://cloudreve.org/ | Github: https://github.com/cloudreve/cloudreve
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "cloudreve" "cloudreve/cloudreve" "prebuild" "latest" "/opt/cloudreve" "*linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "cloudreve" "cloudreve/cloudreve" "prebuild" "latest" "/opt/cloudreve" "*linux_$(arch_resolve).tar.gz"
 
 msg_info "Setup Service"
 cat <<EOF >/etc/systemd/system/cloudreve.service
@@ -30,7 +30,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now cloudreve
 msg_ok "Service Setup"
 

@@ -17,7 +17,7 @@ NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
 
 msg_info "Installing ByteStash"
-JWT_SECRET=$(openssl rand -base64 32 | tr -d '/+=')
+JWT_SECRET=$(random_password 42)
 cd /opt/bytestash/server
 $STD npm install
 cd /opt/bytestash/client

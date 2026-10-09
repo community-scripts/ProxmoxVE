@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-0}"
 var_gpu="${var_gpu:-yes}"
 
@@ -31,7 +33,7 @@ function update_script() {
   BASE_URL="https://updates.networkoptix.com/default/index.html"
   RELEASE=$(curl -fsSL "$BASE_URL" | grep -oP '(?<=<b>)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?=</b>)' | head -n 1)
   DETAIL_PAGE=$(curl -fsSL "$BASE_URL#note_$RELEASE")
-  DOWNLOAD_URL=$(echo "$DETAIL_PAGE" | grep -oP "https://updates.networkoptix.com/default/$RELEASE/linux/nxwitness-server-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-linux_x64\.deb" | head -n 1)
+  DOWNLOAD_URL=$(echo "$DETAIL_PAGE" | grep -oP "https://updates.networkoptix.com/default/$RELEASE/$(arch_resolve "linux" "arm")/nxwitness-server-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-linux_$(arch_resolve "x64" "arm64")\.deb" | head -n 1)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
     systemctl stop networkoptix-root-tool networkoptix-mediaserver
@@ -39,11 +41,11 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /tmp
-    curl -fsSL "$DOWNLOAD_URL" -o ""nxwitness-server-$RELEASE-linux_x64.deb""
+    curl -fsSL "$DOWNLOAD_URL" -o ""nxwitness-server-$RELEASE-linux_$(arch_resolve "x64" "arm64").deb""
     export DEBIAN_FRONTEND=noninteractive
     export DEBCONF_NOWARNINGS=yes
-    $STD dpkg -i nxwitness-server-$RELEASE-linux_x64.deb
-    rm -f /tmp/nxwitness-server-$RELEASE-linux_x64.deb
+    $STD dpkg -i nxwitness-server-$RELEASE-linux_$(arch_resolve "x64" "arm64").deb
+    rm -f /tmp/nxwitness-server-$RELEASE-linux_$(arch_resolve "x64" "arm64").deb
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
@@ -63,5 +65,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7001/${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:7001/${CL}"

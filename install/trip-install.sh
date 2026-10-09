@@ -30,7 +30,7 @@ msg_ok "Built Frontend"
 
 msg_info "Setting up Backend"
 cd /opt/trip/backend
-$STD uv venv /opt/trip/.venv
+$STD uv venv --clear /opt/trip/.venv
 $STD uv pip install --python /opt/trip/.venv/bin/python -r trip/requirements.txt
 msg_ok "Set up Backend"
 

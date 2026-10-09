@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://heimdall.site/
+# Source: https://heimdall.site/ | Github: https://github.com/linuxserver/Heimdall
 
 APP="Heimdall-Dashboard"
 var_tags="${var_tags:-dashboard}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,32 +36,27 @@ function update_script() {
     sleep 1
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Data"
-    cp -R /opt/Heimdall/database database-backup
-    cp -R /opt/Heimdall/public public-backup
-    sleep 1
-    msg_ok "Backed up Data"
+    create_backup /opt/Heimdall/database/app.sqlite
 
+    PHP_VERSION="8.4" PHP_FPM="YES" setup_php
     setup_composer
     fetch_and_deploy_gh_release "Heimdall" "linuxserver/Heimdall" "tarball"
 
     msg_info "Updating Heimdall-Dashboard"
     cd /opt/Heimdall
+    sed -i 's/^APP_ENV=.*/APP_ENV=production/' .env
+    rm -f bootstrap/cache/*.php
     export COMPOSER_ALLOW_SUPERUSER=1
-    $STD composer dump-autoload
+    $STD composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
     msg_ok "Updated Heimdall-Dashboard"
 
-    msg_info "Restoring Data"
-    cd ~
-    cp -R database-backup/* /opt/Heimdall/database
-    cp -R public-backup/* /opt/Heimdall/public
-    sleep 1
-    msg_ok "Restored Data"
+    restore_backup
 
-    msg_info "Cleaning Up"
-    rm -rf {public-backup,database-backup}
-    sleep 1
-    msg_ok "Cleaned Up"
+    msg_info "Migrating Database"
+    cd /opt/Heimdall
+    $STD php artisan migrate --force
+    $STD php artisan optimize:clear
+    msg_ok "Migrated Database"
 
     msg_info "Starting Service"
     systemctl start heimdall.service
@@ -76,5 +73,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7990${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:7990${CL}"

@@ -14,21 +14,21 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   libice6 \
   libsm6 \
   libfontconfig1
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-x64-gui.deb"
+fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-$(arch_resolve "x64" "arm64")-gui.deb"
 
 msg_info "Configuring duplicati"
-DECRYPTKEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-ADMINPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-{
-  echo "Admin password = ${ADMINPASS}"
-  echo "Database encryption key = ${DECRYPTKEY}"
-} >>~/duplicati.creds
+DECRYPTKEY=$(random_password 13)
+ADMINPASS=$(random_password 13)
+cat <<EOF >~/duplicati.creds
+Admin password = ${ADMINPASS}
+Database encryption key = ${DECRYPTKEY}
+EOF
 msg_ok "Configured duplicati"
 
 msg_info "Creating Service"

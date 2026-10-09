@@ -20,7 +20,7 @@ URIs: http://deb.debian.org/debian
 Suites: trixie-backports
 Components: main
 EOF
-$STD apt update
+apt_update_safe
 $STD apt install -y \
   python3-dev python3-babel python3-venv python-is-python3 \
   uwsgi uwsgi-plugin-python3 \
@@ -41,7 +41,7 @@ msg_info "Creating Python virtual environment"
 sudo -H -u searxng bash -c '
   python3 -m venv /usr/local/searxng/searx-pyenv &&
   . /usr/local/searxng/searx-pyenv/bin/activate &&
-  pip install -U pip setuptools wheel pyyaml lxml msgspec &&
+  pip install -U pip setuptools wheel pyyaml lxml msgspec typing_extensions &&
   pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
 '
 msg_ok "Python environment ready"
@@ -75,6 +75,9 @@ enabled_plugins:
 search:
   safe_search: 2
   autocomplete: 'google'
+  formats:
+    - html
+    - json
 engines:
   - name: google
     engine: google
@@ -90,7 +93,7 @@ chown searxng:searxng /etc/searxng/settings.yml
 chmod 640 /etc/searxng/settings.yml
 msg_ok "Configured settings"
 
-msg_info "Set up web services"
+msg_info "Setting up web services"
 cat <<EOF >/etc/systemd/system/searxng.service
 [Unit]
 Description=SearXNG service

@@ -22,7 +22,7 @@ fetch_and_deploy_gh_release "kapowarr" "Casvt/Kapowarr" "tarball"
 
 msg_info "Setup Kapowarr"
 cd /opt/kapowarr
-$STD uv venv .venv
+$STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install --upgrade pip
 $STD uv pip install --no-cache-dir -r requirements.txt

@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://https://cosmos-cloud.io/
+# Source: https://cosmos-cloud.io/ | Github: https://github.com/azukaar/Cosmos-Server
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -25,7 +25,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_docker
-fetch_and_deploy_gh_release "cosmos" "azukaar/Cosmos-Server" "prebuild" "latest" "/opt/cosmos" "cosmos-cloud-*-amd64.zip"
+fetch_and_deploy_gh_release "cosmos" "azukaar/Cosmos-Server" "prebuild" "latest" "/opt/cosmos" "cosmos-cloud-*-$(arch_resolve).zip"
 
 msg_info "Setting up Cosmos"
 cd /opt/cosmos
@@ -55,7 +55,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable -q --now cosmos
-msg_info "Created Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize

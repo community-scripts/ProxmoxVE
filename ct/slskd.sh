@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/slskd/slskd, https://soularr.net
+# Source: https://github.com/slskd/slskd/, https://github.com/mrusse/soularr
 
 APP="slskd"
 var_tags="${var_tags:-arr;p2p}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -24,49 +26,60 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d /opt/slskd ]] || [[ ! -d /opt/soularr ]]; then
-    msg_error "No ${APP} Installation Found!"
+  if [[ ! -d /opt/slskd ]]; then
+    msg_error "No Slskd Installation Found!"
     exit
   fi
 
-  RELEASE=$(curl -s https://api.github.com/repos/slskd/slskd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping Service"
-    systemctl stop slskd soularr.timer soularr.service
-    msg_info "Stopped Service"
+  if check_for_gh_release "Slskd" "slskd/slskd"; then
+    msg_info "Stopping Service(s)"
+    systemctl stop slskd
+    [[ -f /etc/systemd/system/soularr.service ]] && systemctl stop soularr.timer soularr.service
+    msg_ok "Stopped Service(s)"
 
-    msg_info "Updating $APP to v${RELEASE}"
-    tmp_file=$(mktemp)
-    curl -fsSL "https://github.com/slskd/slskd/releases/download/${RELEASE}/slskd-${RELEASE}-linux-x64.zip" -o $tmp_file
-    $STD unzip -oj $tmp_file slskd -d /opt/${APP}
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    create_backup /opt/slskd/config/slskd.yml
 
-    msg_info "Starting Service"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Slskd" "slskd/slskd" "prebuild" "latest" "/opt/slskd" "slskd-*-linux-$(arch_resolve "x64" "arm64").zip"
+
+    restore_backup
+
+    msg_info "Migrating config"
+    # Migrate 0.25.0 breaking config key renames
+    sed -i 's/^global:/transfers:/' /opt/slskd/config/slskd.yml
+    sed -i 's/^integration:/integrations:/' /opt/slskd/config/slskd.yml
+    msg_ok "Migrated config"
+
+    msg_info "Starting Service(s)"
     systemctl start slskd
-    msg_ok "Started Service"
-    rm -rf $tmp_file
-  else
-    msg_ok "No ${APP} update required. ${APP} is already at v${RELEASE}"
+    [[ -f /etc/systemd/system/soularr.service ]] && systemctl start soularr.timer
+    msg_ok "Started Service(s)"
+    msg_ok "Updated Slskd successfully!"
   fi
-  msg_info "Updating Soularr"
-  cp /opt/soularr/config.ini /opt/config.ini.bak
-  cp /opt/soularr/run.sh /opt/run.sh.bak
-  cd /tmp
-  rm -rf /opt/soularr
-  curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
-  $STD unzip main.zip
-  mv soularr-main /opt/soularr
-  cd /opt/soularr
-  $STD pip install -r requirements.txt
-  mv /opt/config.ini.bak /opt/soularr/config.ini
-  mv /opt/run.sh.bak /opt/soularr/run.sh
-  rm -rf /tmp/main.zip
-  msg_ok "Updated soularr"
+  [[ -d /opt/soularr ]] && if check_for_gh_release "Soularr" "mrusse/soularr"; then
+    if systemctl is-active soularr.timer >/dev/null; then
+      msg_info "Stopping Timer and Service"
+      systemctl stop soularr.timer soularr.service
+      msg_ok "Stopped Timer and Service"
+    fi
 
-  msg_info "Starting soularr timer"
-  systemctl start soularr.timer
-  msg_ok "Started soularr timer"
+    create_backup /opt/soularr/config.ini /opt/soularr/run.sh
+
+    PYTHON_VERSION="3.11" setup_uv
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Soularr" "mrusse/soularr" "tarball" "latest" "/opt/soularr"
+    restore_backup
+    msg_info "Updating Soularr"
+    cd /opt/soularr
+    $STD uv venv -c venv
+    $STD source venv/bin/activate
+    $STD uv pip install -r requirements.txt
+    deactivate
+    msg_ok "Updated Soularr"
+
+    msg_info "Starting Soularr Timer"
+    systemctl restart soularr.timer
+    msg_ok "Started Soularr Timer"
+    msg_ok "Updated Soularr successfully!"
+  fi
   exit
 }
 
@@ -76,5 +89,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5030${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5030${CL}"

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.kavitareader.com/
+# Source: https://www.kavitareader.com/ | Github: https://github.com/Kareadita/Kavita
 
 APP="Kavita"
 var_tags="${var_tags:-reader}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,7 +35,7 @@ function update_script() {
     systemctl stop kavita
     msg_ok "Service Stopped"
 
-    fetch_and_deploy_gh_release "kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-x64.tar.gz"
+    fetch_and_deploy_gh_release "kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-$(arch_resolve "x64" "arm64").tar.gz"
     chmod +x /opt/Kavita/Kavita && chown root:root /opt/Kavita/Kavita
 
     msg_info "Starting Service"
@@ -50,5 +52,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5000${CL}"

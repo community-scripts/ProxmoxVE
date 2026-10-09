@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://snipeitapp.com/
+# Source: https://snipeitapp.com/ | Github: https://github.com/grokability/snipe-it
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -19,12 +19,11 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" PHP_FPM="YES" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="ldap,soap,xsl" setup_php
 setup_composer
 fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
 setup_mariadb
 MARIADB_DB_NAME="snipeit_db" MARIADB_DB_USER="snipeit" setup_mariadb_db
-import_local_ip
 
 msg_info "Configuring Snipe-IT"
 cd /opt/snipe-it
@@ -41,6 +40,7 @@ $STD php artisan key:generate --force
 msg_ok "Configured Snipe-IT"
 
 msg_info "Creating Service"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/conf.d/snipeit.conf
 server {
         listen 80;
@@ -56,7 +56,7 @@ server {
         location ~ \.php\$ {
                 include fastcgi.conf;
                 include snippets/fastcgi-php.conf;
-                fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+                fastcgi_pass unix:${PHP_SOCK};
                 fastcgi_split_path_info ^(.+\.php)(/.+)\$;
                 fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                 include fastcgi_params;

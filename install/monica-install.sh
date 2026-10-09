@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.monicahq.com/
+# Source: https://www.monicahq.com/ | Github: https://github.com/monicahq/monica
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="dom,gmp,iconv,mysqli,pdo-mysql,redis,tokenizer" setup_php
+PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="mysqli,pdo-mysql" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="monica" MARIADB_DB_USER="monica" setup_mariadb_db
@@ -33,7 +33,7 @@ $STD yarn config set ignore-engines true
 $STD yarn install
 $STD yarn run production
 $STD php artisan key:generate
-$STD php artisan setup:production --email=admin@helper-scripts.com --password=helper-scripts.com --force
+$STD php artisan setup:production --email=admin@community-scripts.org --password=community-scripts.org --force
 chown -R www-data:www-data /opt/monica
 chmod -R 775 /opt/monica/storage
 echo "* * * * * root php /opt/monica/artisan schedule:run >> /dev/null 2>&1" >>/etc/crontab

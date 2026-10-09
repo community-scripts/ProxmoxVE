@@ -13,23 +13,10 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="imap,ldap,mysql" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="imap,ldap" setup_php
 setup_mariadb
 
-msg_info "Configuring MariaDB Database"
-DB_NAME=limesurvey_db
-DB_USER=limesurvey
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "LimeSurvey-Credentials"
-  echo "LimeSurvey Database User: $DB_USER"
-  echo "LimeSurvey Database Password: $DB_PASS"
-  echo "LimeSurvey Database Name: $DB_NAME"
-} >>~/limesurvey.creds
-msg_ok "Configured MariaDB Database"
+MARIADB_DB_NAME="limesurvey_db" MARIADB_DB_USER="limesurvey" setup_mariadb_db
 
 msg_info "Setting up LimeSurvey"
 temp_file=$(mktemp)
@@ -60,6 +47,7 @@ cat <<EOF >/etc/apache2/sites-enabled/000-default.conf
 EOF
 chown -R www-data:www-data "/opt/limesurvey"
 chmod -R 750 "/opt/limesurvey"
+$STD a2enmod rewrite
 systemctl reload apache2
 rm -rf "$temp_file"
 msg_ok "Set up LimeSurvey"

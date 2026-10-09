@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://wallabag.org/
+# Source: https://wallabag.org/ | Github: https://github.com/wallabag/wallabag
 
 APP="Wallabag"
 var_tags="${var_tags:-productivity;read-it-later}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,22 +30,20 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="24" setup_nodejs
   setup_mariadb
+  
   if check_for_gh_release "wallabag" "wallabag/wallabag"; then
     msg_info "Stopping Services"
     systemctl stop nginx php8.3-fpm
     msg_ok "Stopped Services"
 
-    msg_info "Creating Backup"
-    cp /opt/wallabag/app/config/parameters.yml /tmp/wallabag_parameters.yml.bak
-    msg_ok "Created Backup"
+    create_backup /opt/wallabag/app/config/parameters.yml
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wallabag" "wallabag/wallabag" "prebuild" "latest" "/opt/wallabag" "wallabag-*.tar.gz"
 
-    msg_info "Restoring Configuration"
-    cp /tmp/wallabag_parameters.yml.bak /opt/wallabag/app/config/parameters.yml
-    rm -f /tmp/wallabag_parameters.yml.bak
-    msg_ok "Restored Configuration"
+    restore_backup
 
     msg_info "Running Migrations"
     cd /opt/wallabag
@@ -67,5 +67,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000${CL}"

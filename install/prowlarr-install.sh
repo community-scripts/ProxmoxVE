@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://prowlarr.com/
+# Source: https://prowlarr.com/ | Github: https://github.com/Prowlarr/Prowlarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y sqlite3
+$STD apt install -y sqlite3 libicu-dev
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "prowlarr" "Prowlarr/Prowlarr" "prebuild" "latest" "/opt/Prowlarr" "Prowlarr.master*linux-core-x64.tar.gz"
+fetch_and_deploy_gh_release "prowlarr" "Prowlarr/Prowlarr" "prebuild" "latest" "/opt/Prowlarr" "Prowlarr.master*linux-core-$(arch_resolve "x64" "arm64").tar.gz"
 
 msg_info "Configuring Prowlarr"
 mkdir -p /var/lib/prowlarr/

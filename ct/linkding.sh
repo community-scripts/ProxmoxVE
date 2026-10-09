@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (MickLesk)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://linkding.link/ | Github: https://github.com/sissbruecker/linkding
+
+APP="linkding"
+var_tags="${var_tags:-bookmarks;management}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-1024}"
+var_disk="${var_disk:-4}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
+var_unprivileged="${var_unprivileged:-1}"
+
+header_info "$APP"
+variables
+color
+catch_errors
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -d /opt/linkding ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  if grep -q 'alias /opt/linkding/static/;' /etc/nginx/sites-available/linkding 2>/dev/null; then
+    msg_info "Serving Favicons and Preview Images"
+    sed -i \
+      -e 's|location /static/ {|location ~ ^/static/(.*)$ {|' \
+      -e 's|alias /opt/linkding/static/;|root /opt/linkding;\n        try_files /static/$1 /data/favicons/$1 /data/previews/$1 =404;\n        add_header Content-Security-Policy "sandbox";|' \
+      /etc/nginx/sites-available/linkding
+    $STD systemctl reload nginx
+    msg_ok "Serving Favicons and Preview Images"
+  fi
+
+  if check_for_gh_release "linkding" "sissbruecker/linkding"; then
+    msg_info "Stopping Services"
+    systemctl stop nginx linkding linkding-tasks
+    msg_ok "Stopped Services"
+
+    create_backup /opt/linkding/data /opt/linkding/.env
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "linkding" "sissbruecker/linkding" "tarball"
+    UV_PROJECT_DIR="/opt/linkding" setup_uv
+
+    restore_backup
+    ln -sf /usr/lib/$(arch_resolve "x86_64-linux-gnu" "aarch64-linux-gnu")/mod_icu.so /opt/linkding/libicu.so
+
+    msg_info "Updating LinkDing"
+    cd /opt/linkding
+    rm -f bookmarks/settings/dev.py
+    touch bookmarks/settings/custom.py
+    $STD npm ci
+    $STD npm run build
+    $STD uv sync --no-dev --frozen
+    $STD uv pip install gunicorn
+    set -a && source /opt/linkding/.env && set +a
+    $STD /opt/linkding/.venv/bin/python manage.py migrate
+    $STD /opt/linkding/.venv/bin/python manage.py collectstatic --no-input
+    msg_ok "Updated LinkDing"
+
+    msg_info "Starting Services"
+    systemctl start nginx linkding linkding-tasks
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
+  fi
+  exit
+}
+
+start
+build_container
+description
+
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:9090${CL}"

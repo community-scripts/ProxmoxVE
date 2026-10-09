@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,7 +37,7 @@ function update_script() {
   if [[ "$CURRENT_PHP" != "8.4" ]]; then
     msg_info "Migrating PHP $CURRENT_PHP to 8.4"
     $STD apt remove -y php"${CURRENT_PHP//./}"*
-    PHP_VERSION="8.4" PHP_MODULE="mysql,sqlite3" PHP_APACHE="YES" PHP_FPM="YES" setup_php
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
 
@@ -45,15 +47,24 @@ function update_script() {
     $STD php artisan down
     msg_ok "Stopped Service"
 
-    cp -r /opt/pelican-panel/.env /opt/
+    mkdir -p /opt/backup
+    cp -a /opt/pelican-panel/.env /opt/backup
+    mkdir -p /opt/backup/storage/app/
+    cp -a /opt/pelican-panel/storage/app/public /opt/backup/storage/app/
+
     SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1>/dev/null 2>&1 && echo "true" || echo "false")
-    $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/
-    rm -rf * .*
+    $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/backup
+
+    find /opt/pelican-panel -mindepth 1 -maxdepth 1 ! -name 'backup' ! -name 'plugins' -exec rm -rf {} +
+
     fetch_and_deploy_gh_release "pelican-panel" "pelican-dev/panel" "prebuild" "latest" "/opt/pelican-panel" "panel.tar.gz"
 
     msg_info "Updating Pelican Panel"
-    mv /opt/.env /opt/pelican-panel/
-    $SQLITE_INSTALL && mv /opt/*.sqlite /opt/pelican-panel/database/
+    cp -a /opt/backup/.env /opt/pelican-panel/
+    grep -q "^APP_URL=http://panel.test$" /opt/pelican-panel/.env && sed -i "s|^APP_URL=.*|APP_URL=http://${LOCAL_IP}|" /opt/pelican-panel/.env
+    $SQLITE_INSTALL && mv /opt/backup/*.sqlite /opt/pelican-panel/database/
+    cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
+
     $STD composer install --no-dev --optimize-autoloader --no-interaction
     $STD php artisan p:environment:setup
     $STD php artisan view:clear
@@ -79,5 +90,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/installer${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}/installer${CL}"

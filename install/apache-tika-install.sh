@@ -14,8 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  software-properties-common \
+$STD apt install -y \
   gdal-bin \
   tesseract-ocr \
   tesseract-ocr-eng \
@@ -25,7 +24,7 @@ $STD apt-get install -y \
   tesseract-ocr-deu
 
 $STD echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
-$STD apt-get install -y \
+$STD apt install -y \
   xfonts-utils \
   fonts-freefont-ttf \
   fonts-liberation \
@@ -33,17 +32,12 @@ $STD apt-get install -y \
   cabextract
 msg_ok "Installed Dependencies"
 
-msg_info "Setup OpenJDK"
-$STD apt-get install -y \
-  openjdk-17-jre-headless
-msg_ok "Setup OpenJDK"
+JAVA_VERSION="21" setup_java
 
 msg_info "Installing Apache Tika"
-mkdir -p /opt/apache-tika
-cd /opt/apache-tika
 RELEASE="$(curl -fsSL https://dlcdn.apache.org/tika/ | grep -oP '(?<=href=")[0-9]+\.[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1)"
-curl -fsSL "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar" -o tika-server-standard-${RELEASE}.jar
-mv tika-server-standard-${RELEASE}.jar tika-server-standard.jar
+fetch_and_deploy_from_url "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.zip" /opt/apache-tika
+mv "/opt/apache-tika/tika-server-standard-${RELEASE}.jar" /opt/apache-tika/tika-server-standard.jar
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Apache Tika"
 

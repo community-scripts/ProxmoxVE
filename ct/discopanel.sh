@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
-# Author: DragoQC
+# Author: DragoQC | Co-Author: nickheyer
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://discopanel.app/
+# Source: https://discopanel.app/ | Github: https://github.com/nickheyer/discopanel
 
 APP="DiscoPanel"
 var_tags="${var_tags:-gaming}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-15}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,33 +38,12 @@ function update_script() {
     systemctl stop discopanel
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    mkdir -p /opt/discopanel_backup_temp
-    cp -r /opt/discopanel/data/discopanel.db \
-      /opt/discopanel/data/.recovery_key \
-      /opt/discopanel_backup_temp/
-    if [[ -d /opt/discopanel/data/servers ]]; then
-      cp -r /opt/discopanel/data/servers /opt/discopanel_backup_temp/
-    fi
-    msg_ok "Created Backup"
+    create_backup /opt/discopanel/data/discopanel.db
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "tarball" "latest" "/opt/discopanel"
+    fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "prebuild" "latest" "/opt/discopanel" "discopanel-linux-$(arch_resolve).tar.gz"
+    ln -sf /opt/discopanel/discopanel-linux-$(arch_resolve) /opt/discopanel/discopanel
 
-    msg_info "Setting up DiscoPanel"
-    cd /opt/discopanel 
-    $STD make gen
-    cd /opt/discopanel/web/discopanel 
-    $STD npm install
-    $STD npm run build
-    cd /opt/discopanel 
-    $STD go build -o discopanel cmd/discopanel/main.go
-    msg_ok "Setup DiscoPanel"
-
-    msg_info "Restoring Data"
-    mkdir -p /opt/discopanel/data
-    cp -a /opt/discopanel_backup_temp/. /opt/discopanel/data/
-    rm -rf /opt/discopanel_backup_temp
-    msg_ok "Restored Data"
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start discopanel
@@ -78,5 +59,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

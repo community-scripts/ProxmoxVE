@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Kristian Skov
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-22.04}"
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-0}"
 
 header_info "$APP"
@@ -27,8 +29,9 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Updating ${APP} LXC"
-    $STD apt update
+    msg_info "Updating SQL Server 2022"
+    rm -f /etc/profile.d/debuginfod.sh /etc/profile.d/debuginfod.csh
+    apt_update_safe
     $STD apt -y upgrade
     msg_ok "Updated successfully!"
     exit
@@ -40,5 +43,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following IP:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}${IP}:1433${CL}"
+echo -e "${INFO}${YW}Access it using the following IP:${CL}"
+echo -e "${GATEWAY}${BGN}${IP}:1433${CL}"

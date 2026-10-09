@@ -1,0 +1,457 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ) | DevelopmentCats | AlphaLawless
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://romm.app | Github: https://github.com/rommapp/romm
+
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
+setting_up_container
+network_check
+update_os
+
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  acl \
+  git \
+  build-essential \
+  libssl-dev \
+  libffi-dev \
+  libmagic-dev \
+  python3-dev \
+  python3-pip \
+  python3-venv \
+  libmariadb3 \
+  libmariadb-dev \
+  libpq-dev \
+  libbz2-dev \
+  libreadline-dev \
+  libsqlite3-dev \
+  zlib1g-dev \
+  liblzma-dev \
+  libncurses5-dev \
+  libncursesw5-dev \
+  redis-server \
+  redis-tools \
+  p7zip-full \
+  7zip-standalone \
+  libarchive-tools \
+  tzdata
+msg_ok "Installed Dependencies"
+
+msg_info "Installing Angie with mod_zip and njs modules"
+setup_deb822_repo \
+  "angie" \
+  "https://angie.software/keys/angie-signing.gpg" \
+  "https://download.angie.software/angie/debian/$(get_os_info version_id)" \
+  "$(get_os_info codename)" \
+  "main"
+$STD apt install -y angie angie-module-zip angie-module-njs
+sed -i '1i load_module modules/ngx_http_zip_module.so;\nload_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
+mkdir -p /etc/angie/js
+cat <<'EOF' >/etc/angie/js/decode.js
+// Decode a Base64 encoded string received as a query parameter named 'value',
+// and return the decoded value in the response body.
+function decodeBase64(r) {
+  var encodedValue = r.args.value;
+
+  if (!encodedValue) {
+    r.return(400, "Missing 'value' query parameter");
+    return;
+  }
+
+  try {
+    // Use Buffer to return raw bytes — atob() returns a JS string which r.return()
+    // would re-encode as UTF-8, corrupting any non-ASCII bytes (e.g. in filenames
+    // like "Pokémon") and causing CRC mismatches in the mod_zip manifest.
+    r.return(200, Buffer.from(encodedValue, 'base64'));
+  } catch (e) {
+    r.return(400, "Invalid Base64 encoding");
+  }
+}
+
+export default { decodeBase64 };
+EOF
+msg_ok "Installed Angie with mod_zip and njs modules"
+NODE_VERSION="24" setup_nodejs
+setup_mariadb
+MARIADB_DB_NAME="romm" MARIADB_DB_USER="romm" setup_mariadb_db
+
+msg_info "Creating directories"
+mkdir -p /opt/romm \
+  /var/lib/romm/config \
+  /var/lib/romm/resources \
+  /var/lib/romm/assets/{saves,states,screenshots} \
+  /var/lib/romm/library/roms \
+  /var/lib/romm/library/bios \
+  /var/lib/romm/cache
+msg_ok "Created directories"
+
+msg_info "Creating configuration file"
+cat <<'EOF' >/var/lib/romm/config/config.yml
+# RomM Configuration File
+# Documentation: https://docs.romm.app/latest/Getting-Started/Configuration-File/
+# Only uncomment the lines you want to use/modify
+
+# exclude:
+#   platforms:
+#     - excluded_folder_a
+#   roms:
+#     single_file:
+#       extensions:
+#         - xml
+#         - txt
+#       names:
+#         - '._*'
+#         - '*.nfo'
+#     multi_file:
+#       names:
+#         - downloaded_media
+#         - media
+
+# system:
+#   platforms:
+#     gc: ngc
+#     ps1: psx
+
+# Required since 5.3.0: RomM refuses to start without an explicit structure.
+filesystem:
+  structure:
+    default: "roms/{platform}/{game}"
+    firmware: "bios/{platform}"
+
+# scan:
+#   priority:
+#     metadata:
+#       - "igdb"
+#       - "moby"
+#       - "ss"
+#       - "ra"
+#     artwork:
+#       - "igdb"
+#       - "moby"
+#       - "ss"
+#     region:
+#       - "us"
+#       - "eu"
+#       - "jp"
+#     language:
+#       - "en"
+#   media:
+#     - box2d
+#     - box3d
+#     - screenshot
+#     - manual
+
+# emulatorjs:
+#   debug: false
+#   cache_limit: null
+EOF
+chmod 644 /var/lib/romm/config/config.yml
+msg_ok "Created configuration file"
+
+if [[ "$(arch_resolve)" != "arm64" ]]; then
+  fetch_and_deploy_gh_release "RAHasher" "RetroAchievements/RALibretro" "prebuild" "latest" "/opt/RALibretro" "RAHasher-x64-Linux-*.zip"
+  cp /opt/RALibretro/RAHasher /usr/bin/RAHasher
+  chmod +x /usr/bin/RAHasher
+else
+  msg_warn "RAHasher (RetroAchievements hashing) has no arm64 build; skipping. RA hash features will be unavailable."
+fi
+
+fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
+PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/romm" setup_uv
+echo "__version__ = \"$(cat ~/.romm)\"" >/opt/romm/backend/__version__.py
+
+msg_info "Creating environment file"
+sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
+echo 'save 3600 1' >>/etc/redis/redis.conf
+systemctl restart redis-server
+systemctl enable -q --now redis-server
+AUTH_SECRET_KEY=$(openssl rand -hex 32)
+
+cat <<EOF >/opt/romm/.env
+ROMM_BASE_PATH=/var/lib/romm
+ROMM_CONFIG_PATH=/var/lib/romm/config/config.yml
+WEB_CONCURRENCY=4
+
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=$MARIADB_DB_NAME
+DB_USER=$MARIADB_DB_USER
+DB_PASSWD=$MARIADB_DB_PASS
+
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+
+ROMM_AUTH_SECRET_KEY=$AUTH_SECRET_KEY
+DISABLE_DOWNLOAD_ENDPOINT_AUTH=false
+DISABLE_CSRF_PROTECTION=false
+
+SCREENSCRAPER_DEV_ID=
+SCREENSCRAPER_DEV_PASSWORD=
+
+ENABLE_RESCAN_ON_FILESYSTEM_CHANGE=true
+RESCAN_ON_FILESYSTEM_CHANGE_DELAY=5
+
+ENABLE_SCHEDULED_RESCAN=true
+SCHEDULED_RESCAN_CRON=0 3 * * *
+ENABLE_SCHEDULED_UPDATE_SWITCH_TITLEDB=true
+SCHEDULED_UPDATE_SWITCH_TITLEDB_CRON=0 4 * * *
+
+LOGLEVEL=INFO
+EOF
+
+chmod 600 /opt/romm/.env
+msg_ok "Created environment file"
+
+msg_info "Setting up RomM Backend"
+cd /opt/romm
+export UV_CONCURRENT_DOWNLOADS=1
+$STD uv sync --all-extras
+cd /opt/romm/backend
+$STD uv run alembic upgrade head
+msg_ok "Set up RomM Backend"
+
+if [[ -f /opt/romm/backend/utils/rom_patcher/package.json ]]; then
+  msg_info "Building ROM Patcher helper"
+  cd /opt/romm/backend/utils/rom_patcher
+  $STD npm install --ignore-scripts --no-audit --no-fund --allow-git=all
+  if [[ -d node_modules/rom-patcher/rom-patcher-js ]]; then
+    rm -rf rom-patcher-js
+    cp -r node_modules/rom-patcher/rom-patcher-js ./rom-patcher-js
+  fi
+  rm -rf node_modules
+  msg_ok "Built ROM Patcher helper"
+fi
+
+msg_info "Setting up RomM Frontend"
+cd /opt/romm/frontend
+$STD npm install
+$STD npm run build
+
+cp -rf /opt/romm/frontend/assets/* /opt/romm/frontend/dist/assets/
+
+mkdir -p /opt/romm/frontend/dist/assets/romm
+ROMM_BASE=$(grep '^ROMM_BASE_PATH=' /opt/romm/.env | cut -d'=' -f2)
+ROMM_BASE=${ROMM_BASE:-/var/lib/romm}
+ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
+ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
+msg_ok "Set up RomM Frontend"
+
+fetch_and_deploy_gh_release "ruffle" "ruffle-rs/ruffle" "prebuild" "latest" "/opt/romm/frontend/dist/assets/ruffle" "ruffle-*-web-selfhosted.zip"
+fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
+
+msg_info "Configuring Angie"
+cat <<'EOF' >/etc/angie/http.d/romm.conf
+js_import /etc/angie/js/decode.js;
+
+upstream romm_backend {
+    server 127.0.0.1:5000;
+}
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+server {
+    listen 80;
+    server_name _;
+    root /opt/romm/frontend/dist;
+    client_max_body_size 0;
+
+    # Frontend SPA
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Static assets
+    location /assets {
+        alias /opt/romm/frontend/dist/assets;
+        try_files $uri $uri/ =404;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # EmulatorJS player - requires COOP/COEP headers for SharedArrayBuffer
+    location ~ ^/rom/.*/ejs$ {
+        add_header Cross-Origin-Embedder-Policy "require-corp";
+        add_header Cross-Origin-Opener-Policy "same-origin";
+        try_files $uri /index.html;
+    }
+
+    # Backend API
+    location /api {
+        proxy_pass http://romm_backend;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # WebSocket and Netplay
+    location ~ ^/(ws|netplay) {
+        proxy_pass http://romm_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_read_timeout 86400;
+    }
+
+    # OpenAPI docs
+    location = /openapi.json {
+        proxy_pass http://romm_backend;
+    }
+
+    # Internal library file serving
+    location /library/ {
+        internal;
+        alias /var/lib/romm/library/;
+    }
+
+    # Internally redirect cached zip file requests (Range-resumable downloads)
+    location /cache/ {
+        internal;
+        alias /var/lib/romm/cache/;
+    }
+
+    # Internal decoding endpoint, used by mod_zip to decode base64-encoded
+    # multi-file manifest entries (e.g. the generated .m3u for multi-disc games)
+    location /decode {
+        internal;
+        js_content decode.decodeBase64;
+    }
+}
+EOF
+
+cat <<'SYNCEOF' >/usr/local/bin/romm-sync-angie-paths
+#!/usr/bin/env bash
+base="$(grep -m1 '^ROMM_BASE_PATH=' /opt/romm/.env 2>/dev/null | cut -d= -f2)"
+base="${base:-/var/lib/romm}"
+ln -sfn "${base}/resources" /opt/romm/frontend/dist/assets/romm/resources
+ln -sfn "${base}/assets" /opt/romm/frontend/dist/assets/romm/assets
+[[ -f /etc/angie/http.d/romm.conf ]] || exit 0
+sed -i -e "s|alias .*/library/;|alias ${base}/library/;|" \
+  -e "s|alias .*/cache/;|alias ${base}/cache/;|" /etc/angie/http.d/romm.conf
+SYNCEOF
+chmod +x /usr/local/bin/romm-sync-angie-paths
+mkdir -p /etc/systemd/system/angie.service.d
+cat <<'EOF' >/etc/systemd/system/angie.service.d/romm-paths.conf
+[Service]
+ExecStartPre=/usr/local/bin/romm-sync-angie-paths
+EOF
+systemctl daemon-reload
+/usr/local/bin/romm-sync-angie-paths
+rm -f /etc/angie/http.d/default.conf
+systemctl restart angie
+systemctl enable -q --now angie
+msg_ok "Configured Angie"
+
+msg_info "Creating Services"
+cat <<EOF >/etc/systemd/system/romm-backend.service
+[Unit]
+Description=RomM Backend
+After=network.target mariadb.service redis-server.service
+Requires=mariadb.service redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/romm/backend
+EnvironmentFile=/opt/romm/.env
+Environment="PYTHONPATH=/opt/romm"
+ExecStart=/opt/romm/.venv/bin/python main.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF >/etc/systemd/system/romm-worker.service
+[Unit]
+Description=RomM RQ Worker
+After=network.target mariadb.service redis-server.service romm-backend.service
+Requires=mariadb.service redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/romm/backend
+EnvironmentFile=/opt/romm/.env
+Environment="PYTHONPATH=/opt/romm/backend"
+ExecStart=/opt/romm/.venv/bin/rq worker --with-scheduler --path /opt/romm/backend --url redis://127.0.0.1:6379/0 high default low
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF >/etc/systemd/system/romm-scan-worker.service
+[Unit]
+Description=RomM RQ Scan Worker
+After=network.target mariadb.service redis-server.service romm-backend.service
+Requires=mariadb.service redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/romm/backend
+EnvironmentFile=/opt/romm/.env
+Environment="PYTHONPATH=/opt/romm/backend"
+ExecStart=/opt/romm/.venv/bin/rq worker --with-scheduler --path /opt/romm/backend --url redis://127.0.0.1:6379/0 scans
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF >/etc/systemd/system/romm-scheduler.service
+[Unit]
+Description=RomM RQ Scheduler
+After=network.target mariadb.service redis-server.service romm-backend.service
+Requires=mariadb.service redis-server.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/romm/backend
+EnvironmentFile=/opt/romm/.env
+Environment="PYTHONPATH=/opt/romm/backend"
+ExecStart=/opt/romm/.venv/bin/rq cron --path /opt/romm/backend --url redis://127.0.0.1:6379/0 tasks.cron_config
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat <<EOF >/etc/systemd/system/romm-watcher.service
+[Unit]
+Description=RomM Filesystem Watcher
+After=network.target romm-backend.service
+Requires=romm-backend.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/romm/backend
+EnvironmentFile=/opt/romm/.env
+Environment="PYTHONPATH=/opt/romm/backend"
+ExecStart=/opt/romm/.venv/bin/watchfiles --target-type command '/opt/romm/.venv/bin/python watcher.py' \${ROMM_BASE_PATH}/library
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable -q --now romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
+msg_ok "Created Services"
+
+motd_ssh
+customize
+cleanup_lxc

@@ -20,32 +20,19 @@ msg_ok "Installed dependencies"
 NODE_VERSION="22" setup_nodejs
 setup_mariadb
 
-msg_info "Setting up Database"
-DB_NAME="mmdl"
-DB_USER="mmdl"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED by '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "Manage My Damn Life Credentials"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
-} >>~/mmdl.creds
-msg_ok "Set up Database"
+MARIADB_DB_NAME="mmdl" MARIADB_DB_USER="mmdl" MARIADB_DB_CREDS_FILE="$HOME/mmdl.creds" setup_mariadb_db
 
 fetch_and_deploy_gh_release "mmdl" "intri-in/manage-my-damn-life-nextjs" "tarball"
 
 msg_info "Configuring ${APPLICATION}"
 cp /opt/mmdl/sample.env.local /opt/mmdl/.env
 sed -i -e 's|db|localhost|' \
-  -e "s|myuser|${DB_USER}|" \
-  -e "s|mypassword|${DB_PASS}|" \
+  -e "s|myuser|mmdl|" \
+  -e "s|mypassword|${MARIADB_DB_PASS}|" \
   -e 's|5433|3306|' \
   -e 's|DB_DIALECT=postgres|DB_DIALECT=mysql|' \
-  -e "s|sample_install_mmdm|${DB_NAME}|" \
-  -e "s|=PASSWORD|=$(openssl rand -base64 40 | tr -dc 'a-zA-Z0-9' | head -c40)|" \
+  -e "s|sample_install_mmdm|mmdl|" \
+  -e "s|=PASSWORD|=$(random_password 40)|" \
   /opt/mmdl/.env
 cd /opt/mmdl
 export NEXT_TELEMETRY_DISABLED=1

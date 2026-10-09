@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.qbittorrent.org/
+# Source: https://www.qbittorrent.org/ | Github: https://github.com/qbittorrent/qBittorrent
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "x86_64-qbittorrent-nox"
+fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "$(arch_resolve "x86_64" "aarch64")-qbittorrent-nox"
 
 msg_info "Setup qBittorrent-nox"
 mv /opt/qbittorrent/qbittorrent /opt/qbittorrent/qbittorrent-nox
@@ -27,6 +27,9 @@ WebUI\Password_PBKDF2="@ByteArray(amjeuVrF3xRbgzqWQmes5A==:XK3/Ra9jUmqUc4RwzCtrh
 WebUI\Port=8090
 WebUI\UseUPnP=false
 WebUI\Username=admin
+
+[Network]
+PortForwardingEnabled=false
 EOF
 msg_ok "Setup qBittorrent-nox"
 

@@ -24,6 +24,12 @@ msg_ok "Set up Hyperion repository"
 
 msg_info "Installing Hyperion"
 $STD apt install -y hyperion
+mkdir -p /etc/systemd/system/hyperion@.service.d
+cat <<EOF >/etc/systemd/system/hyperion@.service.d/override.conf
+[Unit]
+Requisite=
+EOF
+systemctl daemon-reload
 systemctl enable -q --now hyperion@root
 msg_ok "Installed Hyperion"
 

@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://signoz.io/
+# Source: https://signoz.io/ | Github: https://github.com/SigNoz/signoz
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -28,13 +28,35 @@ Types: deb
 URIs: https://packages.clickhouse.com/deb
 Suites: stable
 Components: main
-Architectures: amd64
+Architectures: $(arch_resolve)
 Signed-By: /usr/share/keyrings/clickhouse-keyring.gpg
 EOF
-$STD apt update
+apt_update_safe
 export DEBIAN_FRONTEND=noninteractive
 $STD apt install -y clickhouse-server clickhouse-client
 msg_ok "Setup ClickHouse"
+
+fetch_and_deploy_gh_release "histogram-quantile" "SigNoz/signoz" "prebuild" "histogram-quantile/v0.0.1" "/opt/histogram-quantile" "histogram-quantile_linux_$(arch_resolve).tar.gz"
+
+msg_info "Setting up ClickHouse histogramQuantile Function"
+mkdir -p /var/lib/clickhouse/user_scripts
+install -m 755 -o clickhouse -g clickhouse /opt/histogram-quantile/histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
+cat <<EOF >/etc/clickhouse-server/histogram_quantile_function.yaml
+functions:
+  name: histogramQuantile
+  type: executable
+  format: CSV
+  command: ./histogramQuantile
+  return_type: Float64
+  argument:
+    - name: buckets
+      type: Array(Float64)
+    - name: counts
+      type: Array(Float64)
+    - name: quantile
+      type: Float64
+EOF
+msg_ok "Setup ClickHouse histogramQuantile Function"
 
 msg_info "Setting up Zookeeper"
 ZOOURL=$(curl -fsSL https://dlcdn.apache.org/zookeeper/current/ | grep -o 'apache-zookeeper-[0-9.]\+-bin\.tar\.gz' | head -n1)
@@ -103,12 +125,15 @@ cat <<EOF >/etc/clickhouse-server/config.d/cluster.xml
         <shard>01</shard>
         <replica>01</replica>
     </macros>
+    <merge_tree>
+      <allow_dimensions_outside_sorting_key>1</allow_dimensions_outside_sorting_key>
+    </merge_tree>
 </clickhouse>
 EOF
 systemctl enable -q --now clickhouse-server
 msg_ok "Configured ClickHouse"
 
-fetch_and_deploy_gh_release "signoz-schema-migrator" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-schema-migrator" "signoz-schema-migrator_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "signoz-schema-migrator" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-schema-migrator" "signoz-schema-migrator_linux_$(arch_resolve).tar.gz"
 
 msg_info "Running ClickHouse migrations"
 cd /opt/signoz-schema-migrator/bin
@@ -116,7 +141,7 @@ $STD ./signoz-schema-migrator sync --dsn="tcp://localhost:9000?password=" --repl
 $STD ./signoz-schema-migrator async --dsn="tcp://localhost:9000?password=" --replication=true --up=
 msg_ok "ClickHouse Migrations Completed"
 
-fetch_and_deploy_gh_release "signoz" "SigNoz/signoz" "prebuild" "latest" "/opt/signoz" "signoz-community_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "signoz" "SigNoz/signoz" "prebuild" "latest" "/opt/signoz" "signoz-community_linux_$(arch_resolve).tar.gz"
 
 msg_info "Setting up SigNoz"
 mkdir -p /var/lib/signoz
@@ -153,7 +178,7 @@ EOF
 systemctl enable -q --now signoz
 msg_ok "Setup Signoz"
 
-fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-otel-collector" "signoz-otel-collector_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-otel-collector" "signoz-otel-collector_linux_$(arch_resolve).tar.gz"
 
 msg_info "Setting up SigNoz OTel Collector"
 mkdir -p /var/lib/signoz-otel-collector

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: finkerle
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -11,6 +12,7 @@ var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,11 +34,13 @@ function update_script() {
     systemctl stop configarr-task.timer
     msg_ok "Stopped Service"
 
-    mkdir -p /opt/backup/
-    mv /opt/configarr/{config.yml,secrets.yml,.env} /opt/backup/
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
-    mv /opt/backup/{config.yml,secrets.yml,.env} /opt/configarr/
-    rm -rf /opt/backup
+    create_backup /opt/configarr/config.yml \
+      /opt/configarr/secrets.yml \
+      /opt/configarr/.env
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-$(arch_resolve "x64" "arm64").tar.xz"
+
+    restore_backup
 
     msg_info "Starting Service"
     systemctl start configarr-task.timer
@@ -52,5 +56,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL (no web-ui):${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8989${CL}"
+echo -e "${INFO}${YW}Access it using the following URL (no web-ui):${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8989${CL}"

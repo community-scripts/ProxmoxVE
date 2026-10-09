@@ -14,11 +14,11 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="ziplinedb" PG_DB_USER="zipline" setup_postgresql_db
 fetch_and_deploy_gh_release "zipline" "diced/zipline" "tarball"
-SECRET_KEY="$(openssl rand -base64 42 | tr -dc 'a-zA-Z0-9')"
+SECRET_KEY="$(random_password 56)"
 echo "Zipline Secret Key: ${SECRET_KEY}" >>~/zipline.creds
 
 msg_info "Installing Zipline (Patience)"

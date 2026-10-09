@@ -13,9 +13,10 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-amd64.zip"
+fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-$(arch_resolve).zip"
 
 msg_info "Creating Service"
+mkdir -p /etc/cleanuparr /var/log/cleanuparr
 cat <<EOF >/etc/systemd/system/cleanuparr.service
 [Unit]
 Description=Cleanuparr Daemon
@@ -29,7 +30,8 @@ ExecStart=/opt/cleanuparr/Cleanuparr
 Restart=on-failure
 RestartSec=5
 Environment="PORT=11011"
-Environment="CONFIG_DIR=/opt/cleanuparr/config"
+Environment="CLEANUPARR_CONFIG_PATH=/etc/cleanuparr"
+Environment="CLEANUPARR_LOGS_PATH=/var/log/cleanuparr"
 
 [Install]
 WantedBy=multi-user.target

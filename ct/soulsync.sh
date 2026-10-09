@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/Nezreka/SoulSync
+
+APP="SoulSync"
+var_tags="${var_tags:-music;automation;media}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-2048}"
+var_disk="${var_disk:-8}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
+var_unprivileged="${var_unprivileged:-1}"
+
+header_info "$APP"
+variables
+color
+catch_errors
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -f ~/.soulsync ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  NODE_VERSION="24" setup_nodejs
+
+  if check_for_gh_release "soulsync" "Nezreka/SoulSync"; then
+    msg_info "Stopping Service"
+    systemctl stop soulsync
+    msg_ok "Stopped Service"
+
+    create_backup /opt/soulsync/config
+
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
+
+    restore_backup
+
+    msg_info "Updating Python Dependencies"
+    cd /opt/soulsync
+    $STD uv venv --clear /opt/soulsync/.venv --python 3.11
+    $STD uv pip install -r requirements.txt
+    msg_ok "Updated Python Dependencies"
+
+    msg_info "Building WebUI"
+    cd /opt/soulsync/webui
+    $STD npm ci
+    $STD npm run build
+    msg_ok "Built WebUI"
+
+    msg_info "Starting Service"
+    systemctl start soulsync
+    msg_ok "Started Service"
+    msg_ok "Updated ${APP}"
+  fi
+  exit
+}
+
+start
+build_container
+description
+
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8008${CL}"

@@ -14,8 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y chromium
-$STD apt-get install -y xvfb
+$STD apt install -y \
+  chromium \
+  xvfb
 msg_ok "Installed Dependencies"
 
 msg_warn "WARNING: This script will run an external installer from a third-party source (https://getchannels.com)."
@@ -34,7 +35,6 @@ setup_hwaccel
 msg_info "Installing Channels DVR Server (Patience)"
 cd /opt
 $STD bash <(curl -fsSL https://getchannels.com/dvr/setup.sh)
-sed -i -e 's/^sgx:x:104:$/render:x:104:root/' -e 's/^render:x:106:root$/sgx:x:106:/' /etc/group
 msg_ok "Installed Channels DVR Server"
 
 motd_ssh

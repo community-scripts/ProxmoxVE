@@ -25,11 +25,11 @@ if useradd -r -m -d /opt/pulse-home -s /usr/sbin/nologin pulse; then
   msg_ok "Created User"
 else
   msg_error "User creation failed"
-  exit 1
+  exit 71
 fi
 
 mkdir -p /etc/pulse
-fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-$(arch_resolve).tar.gz"
 ln -sf /opt/pulse/bin/pulse /usr/local/bin/pulse
 chown -R pulse:pulse /etc/pulse /opt/pulse
 msg_ok "Installed Pulse"

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: johanngrobe
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/joaovitoriasilva/endurain
+# Source: https://codeberg.org/endurain-project/endurain
 
 APP="Endurain"
 var_tags="${var_tags:-sport;social-media}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -26,44 +28,37 @@ function update_script() {
 
   if [[ ! -d /opt/endurain ]]; then
     msg_error "No ${APP} installation found!"
-    exit 1
+    exit 233
   fi
-  if check_for_gh_release "endurain" "endurain-project/endurain"; then
+  if check_for_codeberg_release "endurain" "endurain-project/endurain"; then
     msg_info "Stopping Service"
     systemctl stop endurain
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    cp /opt/endurain/.env /opt/endurain.env
-    cp /opt/endurain/frontend/app/dist/env.js /opt/endurain.env.js
-    msg_ok "Created Backup"
+    NODE_VERSION="24" setup_nodejs
+    create_backup /opt/endurain/.env /opt/endurain/frontend/dist/env.js
+    CLEAN_INSTALL=1 fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
-
-    msg_info "Preparing Update"
+    msg_info "Updating Endurain Frontend"
     cd /opt/endurain
-    rm -rf \
-      /opt/endurain/{docs,example.env,screenshot_01.png} \
-      /opt/endurain/docker* \
-      /opt/endurain/*.yml
-    cp /opt/endurain.env /opt/endurain/.env
-    rm /opt/endurain.env
-    msg_ok "Prepared Update"
-
-    msg_info "Updating Frontend"
-    cd /opt/endurain/frontend/app
+    rm -rf /opt/endurain/{docs,example.env,screenshot_01.png} /opt/endurain/docker* /opt/endurain/*.yml
+    cd /opt/endurain/frontend
     $STD npm ci
     $STD npm run build
-    cp /opt/endurain.env.js /opt/endurain/frontend/app/dist/env.js
-    rm /opt/endurain.env.js
-    msg_ok "Updated Frontend"
+    msg_ok "Updated Endurain Frontend"
 
-    msg_info "Updating Backend"
+    restore_backup
+
+    if grep -qxF 'FRONTEND_DIR="/opt/endurain/frontend/app/dist"' /opt/endurain/.env; then
+      sed -i 's|^FRONTEND_DIR="/opt/endurain/frontend/app/dist"$|FRONTEND_DIR="/opt/endurain/frontend/dist"|' /opt/endurain/.env
+    fi
+
+    msg_info "Updating Endurain Backend"
     cd /opt/endurain/backend
-    $STD poetry export -f requirements.txt --output requirements.txt --without-hashes
-    $STD uv venv
-    $STD uv pip install -r requirements.txt
-    msg_ok "Backend Updated"
+    UV_VERSION=$(grep -Po 'required-version\s*=\s*"\K[^"]+' pyproject.toml 2>/dev/null || echo "0.11.18")
+    UV_VERSION="$UV_VERSION" setup_uv
+    $STD uv sync --frozen --no-dev
+    msg_ok "Endurain Backend Updated"
 
     msg_info "Starting Service"
     systemctl start endurain
@@ -79,5 +74,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

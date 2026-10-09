@@ -16,13 +16,13 @@ update_os
 if [[ "${CTTYPE:-1}" != "0" ]]; then
   msg_error "UniFi OS Server requires a privileged LXC container."
   msg_error "Recreate the container with unprivileged=0."
-  exit 1
+  exit 10
 fi
 
 if [[ ! -e /dev/net/tun ]]; then
   msg_error "Missing /dev/net/tun in container."
   msg_error "Enable TUN/TAP (var_tun=yes) or add /dev/net/tun passthrough."
-  exit 1
+  exit 236
 fi
 
 msg_info "Installing dependencies"
@@ -48,12 +48,13 @@ TEMP_JSON="$(mktemp)"
 if ! curl -fsSL "$API_URL" -o "$TEMP_JSON"; then
   rm -f "$TEMP_JSON"
   msg_error "Failed to fetch data from Ubiquiti API"
-  exit 1
+  exit 250
 fi
-LATEST=$(jq -r '
+PLATFORM="linux-$(arch_resolve "x64" "arm64")"
+LATEST=$(jq -r --arg platform "$PLATFORM" '
   ._embedded.firmware
   | map(select(.product == "unifi-os-server"))
-  | map(select(.platform == "linux-x64"))
+  | map(select(.platform == $platform))
   | sort_by(.version_major, .version_minor, .version_patch)
   | last
 ' "$TEMP_JSON")
@@ -62,7 +63,7 @@ UOS_URL=$(echo "$LATEST" | jq -r '._links.data.href')
 rm -f "$TEMP_JSON"
 if [[ -z "$UOS_URL" || -z "$UOS_VERSION" || "$UOS_URL" == "null" ]]; then
   msg_error "Failed to parse UniFi OS Server version or download URL"
-  exit 1
+  exit 250
 fi
 msg_ok "Found UniFi OS Server ${UOS_VERSION}"
 

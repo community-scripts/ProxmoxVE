@@ -5,14 +5,27 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/xperimental/nextcloud-exporter
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "nextcloud-exporter" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
 load_functions
+require_debian_like
 
 # ==============================================================================
 # CONFIGURATION
@@ -23,14 +36,6 @@ APP_TYPE="tools"
 BINARY_PATH="/usr/bin/nextcloud-exporter"
 CONFIG_PATH="/etc/nextcloud-exporter.env"
 SERVICE_PATH="/etc/systemd/system/nextcloud-exporter.service"
-
-# ==============================================================================
-# OS DETECTION
-# ==============================================================================
-if ! grep -qE 'ID=debian|ID=ubuntu' /etc/os-release 2>/dev/null; then
-  echo -e "${CROSS} Unsupported OS detected. This script only supports Debian and Ubuntu."
-  exit 1
-fi
 
 # ==============================================================================
 # UNINSTALL
@@ -155,7 +160,7 @@ UPDATEEOF
 # ==============================================================================
 header_info
 ensure_usr_local_bin_persist
-import_local_ip
+get_lxc_ip
 
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
@@ -163,7 +168,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "Nextcloud-Exporter is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

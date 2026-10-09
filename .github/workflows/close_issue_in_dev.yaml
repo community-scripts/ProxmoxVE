@@ -3,63 +3,258 @@ on:
   pull_request:
     types:
       - closed
+
+permissions:
+  contents: read
+
 jobs:
   close_issue:
     if: github.event.pull_request.merged == true && github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: ubuntu-latest
-    
+    runs-on: self-hosted
+    env:
+      DEV_REPO: community-scripts/DevScripts
+
     steps:
-      - name: Checkout target repo (main)
-        uses: actions/checkout@v4
+      - name: Checkout target repo (merge commit)
+        uses: actions/checkout@v7
         with:
           repository: community-scripts/ProxmoxVE
-          ref: main
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract and Process PR Title
-        id: extract_title
-        run: |
-          title=$(echo "${{ github.event.pull_request.title }}" | sed 's/^New Script://g' | tr '[:upper:]' '[:lower:]' | sed 's/ //g' | sed 's/-//g')
-          echo "Processed Title: $title"
-          echo "title=$title" >> $GITHUB_ENV
-
-      - name: Search for Issues with Similar Titles
-        id: find_issue
+      - name: Collect script slugs from the merged PR
+        id: get_slugs
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          issues=$(gh issue list --repo community-scripts/ProxmoxVED --json number,title --jq '.[] | {number, title}')
-          
-          best_match_score=0
-          best_match_number=0
-          
-          for issue in $(echo "$issues" | jq -r '. | @base64'); do
-            _jq() {
-              echo ${issue} | base64 --decode | jq -r ${1}
-            }
+          slugs=""
+          while IFS= read -r path; do
+            [ -n "$path" ] || continue
+            [ -f "$path" ] || continue
 
-            issue_title=$(_jq '.title' | tr '[:upper:]' '[:lower:]' | sed 's/ //g' | sed 's/-//g')
-            issue_number=$(_jq '.number')
+            case "$path" in
+              frontend/public/json/*.json)
+                s=$(jq -r '.slug // empty' "$path" 2>/dev/null || true)
+                ;;
+              install/*.sh)
+                s=$(basename "$path" .sh)
+                s="${s%-install}"
+                ;;
+              ct/*.sh|tools/*.sh|turnkey/*.sh|vm/*.sh)
+                s=$(basename "$path" .sh)
+                ;;
+              *)
+                s=""
+                ;;
+            esac
 
-            match_score=$(echo "$title" | grep -o "$issue_title" | wc -l)
-            
-            if [ "$match_score" -gt "$best_match_score" ]; then
-              best_match_score=$match_score
-              best_match_number=$issue_number
+            if [ -n "$s" ]; then
+              slugs="$slugs $s"
             fi
-          done
+          done < <(gh pr view "$PR_NUMBER" --repo community-scripts/ProxmoxVE --json files --jq '.files[].path')
 
-          if [ "$best_match_number" != "0" ]; then
-            echo "issue_number=$best_match_number" >> $GITHUB_ENV
+          slugs=$(printf '%s\n' $slugs | sed '/^$/d' | sort -u | tr '\n' ' ' | xargs || true)
+          printf '%s' "$slugs" > pocketbase_slugs.txt
+          echo "count=$(printf '%s' "$slugs" | wc -w | tr -d '[:space:]')" >> "$GITHUB_OUTPUT"
+          echo "Slugs in this PR: ${slugs:-<none>}"
+
+      - name: Resolve the matching DevScripts issue
+        id: find_issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # move-to-main-repo.yaml stamps the source issue into the PR body it
+          # creates, so migration PRs carry an exact back-reference. Guessing from
+          # titles or file names is never needed for them.
+          matched=$(printf '%s' "$PR_BODY" \
+            | grep -oE 'community-scripts/(ProxmoxVED|DevScripts)#[0-9]+' \
+            | sed 's/.*#//' || true)
+
+          if [ -n "$matched" ]; then
+            echo "Back-reference in PR body -> issue(s): $(printf '%s' "$matched" | tr '\n' ' ')"
           else
-            echo "No matching issue found."
-            exit 0
+            slugs=$(cat pocketbase_slugs.txt)
+            if [ -z "$slugs" ]; then
+              echo "No back-reference and no script slugs — nothing to close."
+            else
+              # Hand-made PR: fall back to an exact slug match, and only against
+              # issues a maintainer already put into migration. A substring match
+              # here would close unrelated issues that merely mention the app.
+              issues=$(gh issue list --repo "$DEV_REPO" --state open --limit 500 \
+                --json number,title,body,labels \
+                | jq -c '[.[] | select([.labels[].name]
+                    | any(. == "Started Migration To ProxmoxVE" or . == "Migration To ProxmoxVE"))]')
+
+              echo "Migration candidates in $DEV_REPO: $(printf '%s' "$issues" | jq 'length')"
+
+              for slug in $slugs; do
+                while IFS= read -r row; do
+                  [ -n "$row" ] || continue
+                  num=$(printf '%s' "$row" | jq -r '.number')
+
+                  # Same slug derivation the DevScripts workflows use, so both
+                  # sides agree on what "alpine-cinny" means.
+                  name=$(printf '%s' "$row" | jq -r '.body // ""' \
+                    | sed -n '/^###[[:space:]]*Name of the Script/,/^###/p' \
+                    | sed '1d;/^###/d;/^[[:space:]]*$/d' | head -n1)
+                  [ -n "$name" ] || name=$(printf '%s' "$row" | jq -r '.title')
+                  issue_slug=$(printf '%s' "$name" | tr -d '\r' | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]\+/-/g')
+
+                  if [ "$issue_slug" = "$slug" ]; then
+                    echo "Exact slug match: $slug -> #$num"
+                    matched="$matched $num"
+                  fi
+                done < <(printf '%s' "$issues" | jq -c '.[]')
+              done
+            fi
           fi
 
-      - name: Comment on the Best-Matching Issue and Close It
-        if: env.issue_number != ''
+          matched=$(printf '%s\n' $matched | sed '/^$/d' | sort -un | tr '\n' ' ' | xargs || true)
+          count=$(printf '%s' "$matched" | wc -w | tr -d '[:space:]')
+
+          if [ "$count" -gt 3 ]; then
+            echo "::error::Refusing to close $count issues for a single PR ($matched) — matching is wrong."
+            exit 1
+          fi
+
+          echo "issue_numbers=$matched" >> "$GITHUB_OUTPUT"
+          echo "Closing: ${matched:-<none>}"
+
+      - name: Comment on and close matching DevScripts issues
+        if: steps.find_issue.outputs.issue_numbers != ''
+        shell: bash
         env:
-          GH_TOKEN: ${{ secrets.PAT_MICHEL }}
+          GH_TOKEN: ${{ secrets.GH_CROSS_REPO_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ISSUE_NUMBERS: ${{ steps.find_issue.outputs.issue_numbers }}
         run: |
-          gh issue comment $issue_number --repo community-scripts/ProxmoxVED --body "Merged with #${{ github.event.pull_request.number }} in ProxmoxVE"
-          gh issue close $issue_number --repo community-scripts/ProxmoxVED
+          for issue_number in $ISSUE_NUMBERS; do
+            state=$(gh issue view "$issue_number" --repo "$DEV_REPO" --json state --jq '.state' 2>/dev/null || echo "MISSING")
+            if [ "$state" != "OPEN" ]; then
+              echo "Skipping #$issue_number (state: $state)"
+              continue
+            fi
+            echo "Closing $DEV_REPO#$issue_number"
+            gh issue comment "$issue_number" --repo "$DEV_REPO" \
+              --body "Merged with #${PR_NUMBER} in ProxmoxVE"
+            gh issue close "$issue_number" --repo "$DEV_REPO"
+          done
+
+      - name: Set is_dev to false in PocketBase
+        if: steps.get_slugs.outputs.count != '0'
+        env:
+          POCKETBASE_URL: ${{ vars.POCKETBASE_URL }}
+          POCKETBASE_COLLECTION: ${{ vars.POCKETBASE_COLLECTION }}
+          POCKETBASE_ADMIN_EMAIL: ${{ secrets.POCKETBASE_ADMIN_EMAIL }}
+          POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
+          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+        run: |
+          node << 'ENDSCRIPT'
+          (async function() {
+            const fs = require('fs');
+            const https = require('https');
+            const http = require('http');
+            const url = require('url');
+
+            function request(fullUrl, opts, redirectsLeft) {
+              if (redirectsLeft === undefined) redirectsLeft = 5;
+              return new Promise(function(resolve, reject) {
+                const u = url.parse(fullUrl);
+                const isHttps = u.protocol === 'https:';
+                const body = opts.body;
+                const options = {
+                  hostname: u.hostname,
+                  port: u.port || (isHttps ? 443 : 80),
+                  path: u.path,
+                  method: opts.method || 'GET',
+                  headers: opts.headers || {}
+                };
+                if (body) options.headers['Content-Length'] = Buffer.byteLength(body);
+                const lib = isHttps ? https : http;
+                const req = lib.request(options, function(res) {
+                  // Follow redirects (301/302/307/308)
+                  if ([301, 302, 307, 308].indexOf(res.statusCode) !== -1 && res.headers.location && redirectsLeft > 0) {
+                    res.resume();
+                    const nextUrl = url.resolve(fullUrl, res.headers.location);
+                    // For 301/302, browsers historically downgrade to GET; preserve method for 307/308.
+                    const nextOpts = Object.assign({}, opts);
+                    if (res.statusCode === 301 || res.statusCode === 302) {
+                      nextOpts.method = 'GET';
+                      delete nextOpts.body;
+                    }
+                    resolve(request(nextUrl, nextOpts, redirectsLeft - 1));
+                    return;
+                  }
+                  let data = '';
+                  res.on('data', function(chunk) { data += chunk; });
+                  res.on('end', function() {
+                    resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, statusCode: res.statusCode, body: data });
+                  });
+                });
+                req.on('error', reject);
+                if (body) req.write(body);
+                req.end();
+              });
+            }
+
+            const raw = process.env.POCKETBASE_URL.replace(/\/$/, '');
+            const apiBase = /\/api$/i.test(raw) ? raw : raw + '/api';
+            const coll = process.env.POCKETBASE_COLLECTION;
+            const slugsText = fs.readFileSync('pocketbase_slugs.txt', 'utf8').trim();
+            const slugs = slugsText ? slugsText.split(/\s+/).filter(Boolean) : [];
+            if (slugs.length === 0) {
+              console.log('No slugs to update.');
+              return;
+            }
+
+            const authUrl = apiBase + '/collections/users/auth-with-password';
+            const authBody = JSON.stringify({
+              identity: process.env.POCKETBASE_ADMIN_EMAIL,
+              password: process.env.POCKETBASE_ADMIN_PASSWORD
+            });
+            const authRes = await request(authUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: authBody
+            });
+            if (!authRes.ok) {
+              throw new Error('Auth failed: ' + authRes.body);
+            }
+            const token = JSON.parse(authRes.body).token;
+            const recordsUrl = apiBase + '/collections/' + encodeURIComponent(coll) + '/records';
+            const prUrl = process.env.PR_URL || '';
+
+            for (const slug of slugs) {
+              const filter = "(slug='" + slug.replace(/'/g, "''") + "')";
+              const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1', {
+                headers: { 'Authorization': token }
+              });
+              const list = JSON.parse(listRes.body);
+              const record = list.items && list.items[0];
+              if (!record) {
+                console.log('Slug not in DB, skipping: ' + slug);
+                continue;
+              }
+              const patchRes = await request(recordsUrl + '/' + record.id, {
+                method: 'PATCH',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  name: record.name || record.slug,
+                  last_update_commit: prUrl,
+                  is_dev: false
+                })
+              });
+              if (!patchRes.ok) {
+                console.warn('PATCH failed for slug ' + slug + ': ' + patchRes.body);
+                continue;
+              }
+              console.log('Set is_dev=false for slug: ' + slug);
+            }
+            console.log('Done.');
+          })().catch(e => { console.error(e); process.exit(1); });
+          ENDSCRIPT
+        shell: bash

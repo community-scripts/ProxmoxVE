@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: ksad (enirys31)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://garethgeorge.github.io/backrest/
+# Source: https://garethgeorge.github.io/backrest/ | Github: https://github.com/garethgeorge/backrest
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "backrest" "garethgeorge/backrest" "prebuild" "latest" "/opt/backrest/bin" "backrest_Linux_x86_64.tar.gz"
+fetch_and_deploy_gh_release "backrest" "garethgeorge/backrest" "prebuild" "latest" "/opt/backrest/bin" "backrest_Linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/opt/backrest/.env

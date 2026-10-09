@@ -26,14 +26,14 @@ PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
 PG_DB_NAME="adventurelog_db" PG_DB_USER="adventurelog_user" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
+
 fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog" "tarball"
-import_local_ip
 
 msg_info "Installing AdventureLog (Patience)"
-SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+SECRET_KEY="$(random_password 32)"
 echo "AdventureLog Secret: $SECRET_KEY" >>~/adventurelog.creds
 DJANGO_ADMIN_USER="djangoadmin"
-DJANGO_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
+DJANGO_ADMIN_PASS="$(random_password 13)"
 cat <<EOF >/opt/adventurelog/backend/server/.env
 PGHOST='localhost'
 PGDATABASE='${PG_DB_NAME}'
@@ -58,10 +58,11 @@ DISABLE_REGISTRATION=False
 EOF
 cd /opt/adventurelog/backend/server
 mkdir -p /opt/adventurelog/backend/server/media
-$STD uv venv /opt/adventurelog/backend/server/.venv
+$STD uv venv --clear /opt/adventurelog/backend/server/.venv
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install -r requirements.txt
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install 'djangorestframework<3.15'
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage collectstatic --noinput
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage migrate
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m manage download-countries
@@ -85,12 +86,11 @@ user.is_superuser = True
 user.is_staff = True
 user.save()
 EOF
-{
-  echo ""
-  echo "Django-Credentials"
-  echo "Django Admin User: $DJANGO_ADMIN_USER"
-  echo "Django Admin Password: $DJANGO_ADMIN_PASS"
-} >>~/adventurelog.creds
+cat <<EOF >~/adventurelog.creds
+Django-Credentials
+Django Admin User: $DJANGO_ADMIN_USER
+Django Admin Password: $DJANGO_ADMIN_PASS
+EOF
 msg_ok "Setup Django Admin"
 
 msg_info "Creating Service"

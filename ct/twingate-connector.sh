@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: twingate-andrewb
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,9 +31,9 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
-  $STD apt update
-  $STD apt install -yq twingate-connector
+  msg_info "Updating Twingate Connector"
+  apt_update_safe
+  $STD apt install -y --only-upgrade twingate-connector
   $STD systemctl restart twingate-connector
   msg_ok "Updated successfully!"
   exit

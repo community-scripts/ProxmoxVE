@@ -19,7 +19,7 @@ $STD apt install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="playactor" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="playactor" setup_nodejs
 fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
 
 msg_info "Configuring PS5-MQTT"

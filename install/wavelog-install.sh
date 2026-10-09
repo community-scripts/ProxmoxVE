@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" PHP_MAX_EXECUTION_TIME="600" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MAX_EXECUTION_TIME="600" setup_php
 setup_mariadb
 MARIADB_DB_NAME="wavelog" MARIADB_DB_USER="waveloguser" setup_mariadb_db
 fetch_and_deploy_gh_release "wavelog" "wavelog/wavelog" "tarball"

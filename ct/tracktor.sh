@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tracktor.bytedge.in/
+# Source: https://tracktor.bytedge.in | Github: https://github.com/javedh-dev/tracktor
 
 APP="tracktor"
 var_tags="${var_tags:-car;monitoring}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -40,7 +42,6 @@ function update_script() {
     if ! grep -qxF 'BODY_SIZE_LIMIT=Infinity' /opt/tracktor.env; then
       rm /opt/tracktor.env
     cat <<EOF >/opt/tracktor.env
-cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
 # Set this to the path of the database file. Default - ./tracktor.db
 DB_PATH=/opt/tracktor-data/tracktor.db
@@ -66,13 +67,13 @@ EOF
     fi
     msg_ok "Corrected Services"
 
-    NODE_VERSION="24" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
     msg_info "Updating tracktor"
     cd /opt/tracktor
-    $STD npm install
-    $STD npm run build
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm run build
     msg_ok "Updated tracktor"
 
     msg_info "Starting Service"
@@ -89,5 +90,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"

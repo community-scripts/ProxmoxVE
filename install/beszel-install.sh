@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michelle Zitzerman (Sinofage)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://beszel.dev/
+# Source: https://beszel.dev/ | Github: https://github.com/henrygd/beszel
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "beszel" "henrygd/beszel" "prebuild" "latest" "/opt/beszel" "beszel_linux_amd64.tar.gz"
+fetch_and_deploy_gh_release "beszel" "henrygd/beszel" "prebuild" "latest" "/opt/beszel" "beszel_linux_$(arch_resolve).tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/beszel-hub.service

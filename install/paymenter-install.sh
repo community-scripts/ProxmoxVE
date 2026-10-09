@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.paymenter.org
+# Source: https://www.paymenter.org | Github: https://github.com/paymenter/paymenter
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -15,39 +15,30 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  git \
-  nginx \
-  redis-server
+    git \
+    nginx \
+    redis-server \
+    cron
 msg_ok "Installed Dependencies"
 
 setup_mariadb
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="common,mysql,redis" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" setup_php
 setup_composer
 fetch_and_deploy_gh_release "paymenter" "paymenter/paymenter" "prebuild" "latest" "/opt/paymenter" "paymenter.tar.gz"
 chmod -R 755 /opt/paymenter/storage/* /opt/paymenter/bootstrap/cache/
 
-msg_info "Setting up database"
-DB_NAME=paymenter
-DB_USER=paymenter
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
-{
-  echo "Paymenter Database Credentials"
-  echo "Database: $DB_NAME"
-  echo "Username: $DB_USER"
-  echo "Password: $DB_PASS"
-} >>~/paymenter_db.creds
+MARIADB_DB_NAME="paymenter" MARIADB_DB_USER="paymenter" MARIADB_DB_CREDS_FILE="$HOME/paymenter_db.creds" setup_mariadb_db
+
+msg_info "Setting up database"
 cd /opt/paymenter
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
 $STD php artisan storage:link
-sed -i "s/^DB_DATABASE=.*/DB_DATABASE=${DB_NAME}/" .env
-sed -i "s/^DB_USERNAME=.*/DB_USERNAME=${DB_USER}/" .env
-sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${DB_PASS}/" .env
+sed -i "s/^DB_DATABASE=.*/DB_DATABASE=paymenter/" .env
+sed -i "s/^DB_USERNAME=.*/DB_USERNAME=paymenter/" .env
+sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${MARIADB_DB_PASS}/" .env
 $STD php artisan migrate --force --seed
 msg_ok "Set up database"
 
@@ -56,6 +47,7 @@ $STD php artisan app:user:create paymenter admin admin@paymenter.org paymenter 1
 msg_ok "Created Admin User"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/paymenter.conf
 server {
     listen 80;
@@ -71,7 +63,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
@@ -81,9 +73,7 @@ server {
     }
 }
 EOF
-ln -s /etc/nginx/sites-available/paymenter.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+nginx_enable_site paymenter.conf
 chown -R www-data:www-data /opt/paymenter/*
 msg_ok "Configured Nginx"
 

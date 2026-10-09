@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://koel.dev/
+# Source: https://koel.dev/ | Github: https://github.com/koel/koel
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -21,10 +21,9 @@ $STD apt install -y \
   locales
 msg_ok "Installed Dependencies"
 
-import_local_ip
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="koel" PG_DB_USER="koel" setup_postgresql_db
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="bz2,exif,imagick,pgsql,sqlite3" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" setup_php
 NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 setup_composer
 
@@ -130,6 +129,7 @@ $STD systemctl restart php8.4-fpm
 msg_ok "Tuned PHP-FPM"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<'EOF' >/etc/nginx/sites-available/koel
 server {
     listen 80;
@@ -157,7 +157,7 @@ server {
 
     location ~ \.php$ {
         try_files $uri $uri/ /index.php?$args;
-        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+        fastcgi_pass unix:__PHP_SOCK__;
         fastcgi_index index.php;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_intercept_errors on;
@@ -172,9 +172,8 @@ server {
     }
 }
 EOF
-rm -f /etc/nginx/sites-enabled/default
-ln -sf /etc/nginx/sites-available/koel /etc/nginx/sites-enabled/koel
-$STD systemctl reload nginx
+sed -i "s|__PHP_SOCK__|${PHP_SOCK}|" /etc/nginx/sites-available/koel
+nginx_enable_site koel
 msg_ok "Configured Nginx"
 
 msg_info "Setting up Cron Job"

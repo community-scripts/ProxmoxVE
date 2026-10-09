@@ -16,9 +16,9 @@ update_os
 msg_info "Installing Dependencies"
 setup_deb822_repo \
   "microsoft" \
-  "https://packages.microsoft.com/keys/microsoft.asc" \
-  "https://packages.microsoft.com/debian/12/prod/" \
-  "bookworm" \
+  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+  "https://packages.microsoft.com/debian/13/prod/" \
+  "trixie" \
   "main"
 $STD apt install -y \
   dotnet-sdk-8.0 \
@@ -26,68 +26,6 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "UmlautAdaptarr" "PCJones/Umlautadaptarr" "prebuild" "latest" "/opt/UmlautAdaptarr" "linux-x64.zip"
-
-msg_info "Setting up UmlautAdaptarr"
-cat <<EOF >/opt/UmlautAdaptarr/appsettings.json
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    },
-    "Console": {
-      "TimestampFormat": "yyyy-MM-dd HH:mm:ss::"
-    }
-  },
-  "AllowedHosts": "*",
-  "Kestrel": {
-    "Endpoints": {
-      "Http": {
-        "Url": "http://[::]:5005"
-      }
-    }
-  },
-  "Settings": {
-    "UserAgent": "UmlautAdaptarr/1.0",
-    "UmlautAdaptarrApiHost": "https://umlautadaptarr.pcjones.de/api/v1",
-    "IndexerRequestsCacheDurationInMinutes": 12
-  },
-  "Sonarr": [
-    {
-      "Enabled": false,
-      "Name": "Sonarr",
-      "Host": "http://192.168.1.100:8989",
-      "ApiKey": "dein_sonarr_api_key"
-    }
-  ],
-  "Radarr": [
-    {
-      "Enabled": false,
-      "Name": "Radarr",
-      "Host": "http://192.168.1.101:7878",
-      "ApiKey": "dein_radarr_api_key"
-    }
-  ],
-  "Lidarr": [
-  {
-    "Enabled": false,
-    "Host": "http://192.168.1.102:8686",
-    "ApiKey": "dein_lidarr_api_key"
-  },
- ],
-  "Readarr": [
-  {
-    "Enabled": false,
-    "Host": "http://192.168.1.103:8787",
-    "ApiKey": "dein_readarr_api_key"
-  },
- ],
-  "IpLeakTest": {
-    "Enabled": false
-  }
-}
-EOF
-msg_ok "Setup UmlautAdaptarr"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/umlautadaptarr.service

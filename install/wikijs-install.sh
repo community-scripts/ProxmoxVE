@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://js.wiki/
+# Source: https://js.wiki/ | Github: https://github.com/requarks/wiki
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn,node-gyp" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="yarn,node-gyp" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="wiki" PG_DB_USER="wikijs_user" PG_DB_EXTENSIONS="pg_trgm" setup_postgresql_db
 fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"

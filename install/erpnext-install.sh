@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/frappe/erpnext
+
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
+setting_up_container
+network_check
+update_os
+
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  git \
+  build-essential \
+  python3-dev \
+  libffi-dev \
+  libssl-dev \
+  redis-server \
+  nginx \
+  supervisor \
+  fail2ban \
+  xvfb \
+  libfontconfig1 \
+  libxrender1 \
+  fontconfig \
+  libjpeg-dev \
+  libmariadb-dev \
+  python3-pip \
+  pkg-config \
+  cron
+msg_ok "Installed Dependencies"
+
+NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+PYTHON_VERSION="3.14" setup_uv
+setup_mariadb
+
+msg_info "Configuring MariaDB for ERPNext"
+cat <<EOF >/etc/mysql/mariadb.conf.d/50-erpnext.cnf
+[mysqld]
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+
+[client]
+default-character-set=utf8mb4
+EOF
+$STD systemctl restart mariadb
+msg_ok "Configured MariaDB for ERPNext"
+
+fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
+
+msg_info "Installing Frappe Bench"
+useradd -m -s /bin/bash frappe
+chown frappe:frappe /opt
+echo "frappe ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/frappe
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv tool install frappe-bench'
+msg_ok "Installed Frappe Bench"
+
+msg_info "Initializing Frappe Bench"
+ADMIN_PASS=$(random_password 13)
+DB_ROOT_PASS=$(random_password 13)
+mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASS}'; FLUSH PRIVILEGES;"
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv python install 3.14'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt && bench init --frappe-branch version-16 --python "$(uv python find 3.14)" frappe-bench'
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; cd /opt/frappe-bench && bench get-app erpnext --branch version-16'
+
+msg_info "Starting Redis Services for Site Setup"
+$STD sudo -u frappe bash -c 'redis-server /opt/frappe-bench/config/redis_queue.conf --daemonize yes'
+$STD sudo -u frappe bash -c 'redis-server /opt/frappe-bench/config/redis_cache.conf --daemonize yes'
+sleep 3
+msg_ok "Started Redis Services for Site Setup"
+
+$STD sudo -u frappe bash -c "export PATH=\"\$HOME/.local/bin:\$PATH\"; cd /opt/frappe-bench && bench new-site site1.local --db-root-username root --db-root-password \"$DB_ROOT_PASS\" --admin-password \"$ADMIN_PASS\" --install-app erpnext --set-default"
+msg_ok "Initialized Frappe Bench"
+
+msg_info "Configuring ERPNext"
+cat <<EOF >/opt/frappe-bench/.env
+ADMIN_PASSWORD=${ADMIN_PASS}
+DB_ROOT_PASSWORD=${DB_ROOT_PASS}
+SITE_NAME=site1.local
+EOF
+cat <<EOF >~/erpnext.creds
+ERPNext Credentials
+==================
+Admin Username: Administrator
+Admin Password: ${ADMIN_PASS}
+DB Root Password: ${DB_ROOT_PASS}
+Site Name: site1.local
+EOF
+$STD systemctl enable --now redis-server
+msg_ok "Configured ERPNext"
+
+msg_info "Setting up Production"
+BENCH_PY="/home/frappe/.local/share/uv/tools/frappe-bench/bin/python"
+$STD sudo -u frappe bash -c "curl -fsSL https://bootstrap.pypa.io/get-pip.py | \"${BENCH_PY}\""
+$STD sudo -u frappe bash -c 'export PATH="$HOME/.local/bin:$PATH"; uv tool install ansible'
+ln -sf /home/frappe/.local/bin/ansible* /usr/local/bin/
+$STD bash -c 'export PATH="/home/frappe/.local/bin:$PATH"; cd /opt/frappe-bench && bench setup production frappe --yes'
+ln -sf /opt/frappe-bench/config/supervisor.conf /etc/supervisor/conf.d/frappe-bench.conf
+$STD supervisorctl reread
+$STD supervisorctl update
+$STD systemctl enable --now supervisor
+msg_ok "Set up Production"
+
+motd_ssh
+customize
+cleanup_lxc

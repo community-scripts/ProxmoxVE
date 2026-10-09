@@ -23,7 +23,19 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
 setup_nodejs
-fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-amd64.tar.gz"
+fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-debian-$(arch_resolve).tar.gz"
+
+# v2.3.0's Debian build ships a musl better-sqlite3 (homarr-labs/homarr#7097).
+mapfile -t MUSL_MODULES < <(find /opt/homarr -name better_sqlite3.node -exec grep -aqE "ld-musl|libc\.musl" {} \; -print)
+if ((${#MUSL_MODULES[@]})); then
+  msg_info "Replacing musl better-sqlite3 build"
+  BSQ_VERSION=$(jq -r .version /opt/homarr/node_modules/better-sqlite3/package.json)
+  curl_with_retry "https://github.com/WiseLibs/better-sqlite3/releases/download/v${BSQ_VERSION}/better-sqlite3-v${BSQ_VERSION}-node-v$(node -p process.versions.modules)-linux-$(arch_resolve "x64" "arm64").tar.gz" /tmp/better-sqlite3.tar.gz
+  tar -xzf /tmp/better-sqlite3.tar.gz -C /tmp build/Release/better_sqlite3.node
+  for module in "${MUSL_MODULES[@]}"; do cp /tmp/build/Release/better_sqlite3.node "$module"; done
+  rm -rf /tmp/better-sqlite3.tar.gz /tmp/build
+  msg_ok "Replaced musl better-sqlite3 build"
+fi
 
 msg_info "Installing Homarr"
 mkdir -p /opt/homarr_db
@@ -47,10 +59,12 @@ mkdir -p /appdata/redis
 chown -R redis:redis /appdata/redis
 chmod 744 /appdata/redis
 cp /opt/homarr/redis.conf /etc/redis/redis.conf
-rm /etc/nginx/nginx.conf
+sed -i -e '$a\' /etc/redis/redis.conf
+grep -q '^bind 127.0.0.1 -::1$' /etc/redis/redis.conf || echo "bind 127.0.0.1 -::1" >>/etc/redis/redis.conf
+rm -f /etc/nginx/nginx.conf
 mkdir -p /etc/nginx/templates
 cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
-echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' >/usr/bin/homarr
+echo $'#!/bin/bash\nset -a\nsource /opt/homarr.env\nset +a\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' >/usr/bin/homarr
 chmod +x /usr/bin/homarr
 msg_ok "Copied config files"
 
@@ -77,10 +91,9 @@ ExecStart=/opt/homarr/run.sh
 WantedBy=multi-user.target
 EOF
 chmod +x /opt/homarr/run.sh
-systemctl daemon-reload
 systemctl enable -q --now redis-server
 systemctl enable -q --now homarr
-systemctl disable -q --now nginx 
+systemctl disable -q --now nginx
 msg_ok "Created Services"
 
 motd_ssh

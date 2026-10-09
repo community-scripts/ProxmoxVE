@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://gotify.net/
+# Source: https://gotify.net/ | Github: https://github.com/gotify/server
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,8 +13,8 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-amd64.zip"
-chmod +x /opt/gotify/gotify-linux-amd64
+fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-$(arch_resolve).zip"
+chmod +x /opt/gotify/gotify-linux-$(arch_resolve)
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/gotify.service
@@ -27,7 +27,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/gotify
-ExecStart=/opt/gotify/./gotify-linux-amd64
+ExecStart=/opt/gotify/gotify-linux-$(arch_resolve) serve
 Restart=always
 RestartSec=3
 

@@ -21,7 +21,7 @@ setup_deb822_repo \
   "https://dl.evcc.io/public/evcc/stable/deb/debian/" \
   "$(get_os_info codename)" \
   "main"
-$STD apt update
+apt_update_safe
 msg_ok "evcc Repository setup sucessfully"
 
 msg_info "Installing evcc"

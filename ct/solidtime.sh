@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.solidtime.io/
+
+APP="SolidTime"
+var_tags="${var_tags:-time-tracking;productivity;business}"
+var_cpu="${var_cpu:-4}"
+var_ram="${var_ram:-4096}"
+var_disk="${var_disk:-8}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
+var_unprivileged="${var_unprivileged:-1}"
+
+header_info "$APP"
+variables
+color
+catch_errors
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -d /opt/solidtime ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  if check_for_gh_release "solidtime" "solidtime-io/solidtime"; then
+    msg_info "Stopping Services"
+    systemctl stop caddy
+    msg_ok "Stopped Services"
+
+    create_backup /opt/solidtime/.env
+
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="storage" fetch_and_deploy_gh_release "solidtime" "solidtime-io/solidtime" "tarball"
+
+    restore_backup
+
+    msg_info "Updating Application"
+    cd /opt/solidtime
+    COMPOSER_ALLOW_SUPERUSER=1 $STD composer install --no-dev --optimize-autoloader
+    $STD npm install
+    $STD npm run build
+    $STD php artisan migrate --force
+    $STD php artisan optimize:clear
+    chown -R www-data:www-data /opt/solidtime
+    msg_ok "Updated Application"
+
+    msg_info "Starting Services"
+    systemctl start caddy
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
+  fi
+  exit
+}
+
+start
+build_container
+description
+
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}HTTPS is not enabled by default (use domain + reverse proxy/TLS if needed).${CL}"

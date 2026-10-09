@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://prometheus.io/
+# Source: https://prometheus.io/ | Github: https://github.com/prometheus/prometheus
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,16 +13,17 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "prometheus" "prometheus/prometheus" "prebuild" "latest" "/usr/local/bin" "*linux-amd64.tar.gz"
+setup_deb_based() {
+  fetch_and_deploy_gh_release "prometheus" "prometheus/prometheus" "prebuild" "latest" "/usr/local/bin" "*linux-$(arch_resolve).tar.gz"
 
-msg_info "Installing Prometheus"
-mkdir -p /etc/prometheus
-mkdir -p /var/lib/prometheus
-mv /usr/local/bin/prometheus.yml /etc/prometheus/prometheus.yml
-msg_ok "Installed Prometheus"
+  msg_info "Installing Prometheus"
+  mkdir -p /etc/prometheus
+  mkdir -p /var/lib/prometheus
+  mv /usr/local/bin/prometheus.yml /etc/prometheus/prometheus.yml
+  msg_ok "Installed Prometheus"
 
-msg_info "Creating Service"
-cat <<'EOF' >/etc/systemd/system/prometheus.service
+  msg_info "Creating Service"
+  cat <<'EOF' >/etc/systemd/system/prometheus.service
 [Unit]
 Description=Prometheus
 Wants=network-online.target
@@ -36,13 +37,30 @@ ExecStart=/usr/local/bin/prometheus \
     --config.file=/etc/prometheus/prometheus.yml \
     --storage.tsdb.path=/var/lib/prometheus/ \
     --web.listen-address=0.0.0.0:9090
-ExecReload=/bin/kill -HUP \$MAINPID
+ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now prometheus
-msg_ok "Created Service"
+  systemctl enable -q --now prometheus
+  msg_ok "Created Service"
+}
+
+setup_alpine() {
+  msg_info "Installing Prometheus"
+  $STD apk add --no-cache prometheus
+  msg_ok "Installed Prometheus"
+
+  msg_info "Enabling Prometheus Service"
+  $STD rc-update add prometheus default
+  msg_ok "Enabled Prometheus Service"
+
+  msg_info "Starting Prometheus"
+  $STD service prometheus start
+  msg_ok "Started Prometheus"
+}
+
+run_os_setup
 
 motd_ssh
 customize

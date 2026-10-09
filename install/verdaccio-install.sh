@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: BrynnJKnight
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://verdaccio.org/
+# Source: https://verdaccio.org/ | Github: https://github.com/verdaccio/verdaccio
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="verdaccio" setup_nodejs
 
 msg_info "Configuring Verdaccio"
 mkdir -p /opt/verdaccio/config

@@ -4,6 +4,11 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  # Fired by community-scripts/core when an engine pull request is merged, so a
+  # change there does not wait for the next push here. Optional: engine PRs are
+  # collected on every run regardless, this only decides how soon.
+  repository_dispatch:
+    types: [core-pr-merged]
 
 jobs:
   update-changelog-pull-request:
@@ -19,20 +24,20 @@ jobs:
     steps:
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          app-id: ${{ vars.GHAPP_PR_ID }}
+          private-key: ${{ secrets.GHAPP_PR_PRIVATE_KEY }}
 
       - name: Generate a token for PR approval and merge
         id: generate-token-merge
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.APP_ID_APPROVE_AND_MERGE }}
-          private-key: ${{ secrets.APP_KEY_APPROVE_AND_MERGE }}
+          app-id: ${{ vars.GHAPP_MERGEBOT_ID }}
+          private-key: ${{ secrets.GHAPP_MERGEBOT_PRIVATE_KEY }}
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -53,7 +58,7 @@ jobs:
 
       - name: Get categorized pull requests
         id: get-categorized-prs
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             async function main() {
@@ -121,7 +126,7 @@ jobs:
                     try {
                       const { data: relatedIssues } = await github.rest.issues.listForRepo({
                         owner: context.repo.owner,
-                        repo: "ProxmoxVED",
+                        repo: "DevScripts",
                         state: "all",
                         labels: ["Started Migration To ProxmoxVE"]
                       });
@@ -207,13 +212,84 @@ jobs:
 
               }
 
+              // ── Engine pull requests ────────────────────────────────────────
+              // The engine lives in community-scripts/core, so its changes never
+              // show up in this repository's PR list -- and a fix there reaches
+              // every script here. The "💾 Core" category already existed for
+              // ProxmoxVE PRs labelled `core`; engine PRs land in the same place.
+              try {
+                const { data: corePulls } = await github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: "core",
+                  base: "main",
+                  state: "closed",
+                  sort: "updated",
+                  direction: "desc",
+                  per_page: 100,
+                });
+
+                const coreCategory = categorizedPRs.find(category =>
+                  category.title.includes("Core") || category.labels.includes("core"));
+
+                // core carries GitHub's default label set, and most of its pull
+                // requests carry none at all, so map what maps and let the rest
+                // sit directly under the category.
+                const coreLabelAliases = {
+                  bug: "bugfix",
+                  bugfix: "bugfix",
+                  enhancement: "feature",
+                  feature: "feature",
+                  refactor: "refactor",
+                  "breaking change": "breaking change",
+                };
+                const corePriority = ["breaking change", "bugfix", "feature", "refactor"];
+
+                for (const pr of corePulls) {
+                  if (!pr.merged_at) continue;
+                  if (new Date(pr.merged_at) <= latestDateInChangelog) continue;
+
+                  const rawLabels = pr.labels.map(label => label.name.toLowerCase());
+                  if (rawLabels.some(l => ["invalid", "wontdo", "wontfix", "duplicate", process.env.AUTOMATED_PR_LABEL].includes(l))) continue;
+
+                  if (!coreCategory) {
+                    console.log(`No Core category configured; skipping core#${pr.number}`);
+                    continue;
+                  }
+
+                  // core#N rather than #N: a bare number reads as a pull request
+                  // in this repository, so the link would lead somewhere other
+                  // than the text promises.
+                  const coreNote = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([core#${pr.number}](${pr.html_url}))`;
+
+                  const mapped = rawLabels.map(l => coreLabelAliases[l]).filter(Boolean);
+                  let placed = false;
+                  if (coreCategory.subCategories && coreCategory.subCategories.length > 0) {
+                    for (const priorityLabel of corePriority) {
+                      if (!mapped.includes(priorityLabel)) continue;
+                      const subCategory = coreCategory.subCategories.find(sub =>
+                        sub.labels.includes(priorityLabel));
+                      if (subCategory) {
+                        subCategory.notes.push(coreNote);
+                        placed = true;
+                        break;
+                      }
+                    }
+                  }
+                  if (!placed) coreCategory.notes.push(coreNote);
+                }
+              } catch (error) {
+                // The engine repository being unreachable must not cost this
+                // repository its changelog.
+                console.error(`Could not read core pull requests: ${error}`);
+              }
+
               return categorizedPRs;
             }
 
             return await main();
 
       - name: Update CHANGELOG.md
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs').promises;

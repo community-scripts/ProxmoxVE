@@ -14,195 +14,100 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  build-essential \
-  nginx \
-  redis-server
+$STD apt install -y redis-server
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="patchmon_db" PG_DB_USER="patchmon_usr" setup_postgresql_db
-fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
-import_local_ip
+
+RELEASE="v2.0.2"
+fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "singlefile" "latest" "/opt/patchmon" "patchmon-server-linux-$(arch_resolve)"
+mv /opt/patchmon/PatchMon /opt/patchmon/patchmon-server
 
 msg_info "Configuring PatchMon"
-cd /opt/patchmon
-export NODE_ENV=production
-$STD npm install --no-audit --no-fund --no-save --ignore-scripts
-cd /opt/patchmon/backend
-$STD npm install --no-audit --no-fund --no-save --ignore-scripts
-cd /opt/patchmon/frontend
-$STD npm install --include=dev --no-audit --no-fund --no-save --ignore-scripts
-$STD npm run build
-JWT_SECRET="$(openssl rand -base64 64 | tr -d "=+/" | cut -c1-50)"
-cat <<EOF >/opt/patchmon/backend/.env
-# Database Configuration
+cat <<EOF >/opt/patchmon/.env
 DATABASE_URL="postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME"
-PY_THRESHOLD=3M_DB_CONN_MAX_ATTEMPTS=30
-PM_DB_CONN_WAIT_INTERVAL=2
+JWT_SECRET="$(openssl rand -hex 64)"
+SESSION_SECRET="$(openssl rand -hex 64)"
+AI_ENCRYPTION_KEY="$(openssl rand -hex 64)"
+CORS_ORIGIN=http://${LOCAL_IP}:3000
+PORT=3000
+APP_ENV=production
 
-# JWT Configuration
-JWT_SECRET="$JWT_SECRET"
-JWT_EXPIRES_IN=1h
-JWT_REFRESH_EXPIRES_IN=7d
-
-# Server Configuration
-PORT=3399
-NODE_ENV=production
-
-# API Configuration
-API_VERSION=v1
-
-# CORS Configuration
-CORS_ORIGIN="http://$LOCAL_IP"
-
-# Session Configuration
-SESSION_INACTIVITY_TIMEOUT_MINUTES=30
-
-# User Configuration
-DEFAULT_USER_ROLE=user
-
-# Rate Limiting (times in milliseconds)
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX=5000
-AUTH_RATE_LIMIT_WINDOW_MS=600000
-AUTH_RATE_LIMIT_MAX=500
-AGENT_RATE_LIMIT_WINDOW_MS=60000
-AGENT_RATE_LIMIT_MAX=1000
-
-# Redis Configuration
+# Redis
 REDIS_HOST=localhost
 REDIS_PORT=6379
 
-# Logging
-LOG_LEVEL=info
-ENABLE_LOGGING=true
+## OIDC / SSO (when OIDC_ENABLED=true, issuer/client/secret/redirect required)
+# OIDC_ENABLED=false
+# OIDC_ISSUER_URL=
+# OIDC_CLIENT_ID=
+# OIDC_CLIENT_SECRET=
+# OIDC_REDIRECT_URI=
+# OIDC_SCOPES=openid email profile groups
+# OIDC_AUTO_CREATE_USERS=false
+# OIDC_DEFAULT_ROLE=user
+# OIDC_DISABLE_LOCAL_AUTH=false
+# OIDC_BUTTON_TEXT=Login with SSO
+# OIDC_SESSION_TTL=600
+# OIDC_POST_LOGOUT_URI=
+# OIDC_SYNC_ROLES=false
+# OIDC_ADMIN_GROUP=
+# OIDC_SUPERADMIN_GROUP=
+# OIDC_HOST_MANAGER_GROUP=
+# OIDC_READONLY_GROUP=
+# OIDC_USER_GROUP=
+# OIDC_ENFORCE_HTTPS=true
 
-# TFA Configuration
-TFA_REMEMBER_ME_EXPIRES_IN=30d
-TFA_MAX_REMEMBER_SESSIONS=5
-TFA_SUSPICIOUS_ACTIVITY_THRESHOLD=3
+AGENT_BINARIES_DIR=/opt/patchmon/agents
+SSG_CONTENT_DIR=/opt/patchmon/ssg-content
 EOF
-
-cat <<EOF >/opt/patchmon/frontend/.env
-VITE_API_URL=http://$LOCAL_IP/api/v1
-VITE_APP_NAME=PatchMon
-VITE_APP_VERSION=1.3.0
-EOF
-
-cd /opt/patchmon/backend
-$STD npx prisma migrate deploy
-$STD npx prisma generate
 msg_ok "Configured PatchMon"
 
-msg_info "Configuring Nginx"
-cat <<EOF >/etc/nginx/sites-available/patchmon.conf
-map \$http_x_forwarded_proto \$proxy_corrected_scheme {
-    default    \$scheme; # Fallback to Nginx's actual connection scheme if no X-Forwarded-Proto header was set
-    https      https;   # If X-Forwarded-Proto is 'https', use 'https'
-    http       http;    # If X-Forwarded-Proto is 'http', use 'http'
-}
+msg_info "Fetching PatchMon agent binaries"
+RELEASE=$(get_latest_github_release "PatchMon/PatchMon")
+mkdir -p /opt/patchmon/agents
+FILE_URL="https://github.com/PatchMon/PatchMon/releases/download/v${RELEASE}/patchmon-agent-"
+AGENT_NAME=(
+  "linux-amd64"
+  "linux-arm64"
+  "linux-arm"
+  "linux-386"
+  "freebsd-amd64"
+  "freebsd-arm64"
+  "freebsd-arm"
+  "freebsd-386"
+  "windows-amd64.exe"
+  "windows-arm64.exe"
+)
+for arch in "${AGENT_NAME[@]}"; do
+  curl_with_retry "${FILE_URL}${arch}" "/opt/patchmon/agents/patchmon-agent-${arch}"
+  [[ "${arch}" != *.exe ]] && chmod 755 "/opt/patchmon/agents/patchmon-agent-${arch}"
+done
+msg_ok "Fetched PatchMon agent binaries"
 
-server {
-    # Listen on both IPv4 and IPv6 (with all hostnames)
-    listen 80;
-    listen [::]:80;
-
-    # Security headers
-    add_header X-Frame-Options DENY always;
-    add_header X-Content-Type-Options nosniff always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
-    # Frontend
-    location / {
-        root /opt/patchmon/frontend/dist;
-        try_files \$uri \$uri/ /index.html;
-    }
-
-    # Bull Board proxy
-    location /bullboard {
-        proxy_pass http://127.0.0.1:3399;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$proxy_corrected_scheme;
-        proxy_set_header X-Forwarded-Host \$host;
-        proxy_set_header Cookie \$http_cookie;
-        proxy_cache_bypass \$http_upgrade;
-        proxy_read_timeout 300s;
-        proxy_connect_timeout 75s;
- 
-        # Enable cookie passthrough
-        proxy_pass_header Set-Cookie;
-        proxy_cookie_path / /;
- 
-        # Preserve original client IP
-        proxy_set_header X-Original-Forwarded-For \$http_x_forwarded_for;
-        if (\$request_method = 'OPTIONS') {
-            return 204;
-        }
-    }
-
-    # API proxy
-    location /api/ {
-        proxy_pass http://127.0.0.1:3399;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$proxy_corrected_scheme;
-        proxy_cache_bypass \$http_upgrade;
-        proxy_read_timeout 300s;
-        proxy_connect_timeout 75s;
- 
-        # Preserve original client IP
-        proxy_set_header X-Original-Forwarded-For \$http_x_forwarded_for;
-        if (\$request_method = 'OPTIONS') {
-            return 204;
-        }
-    }
-
-    # Static assets caching (exclude Bull Board assets)
-    location ~* ^/(?!bullboard).*\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        root /opt/patchmon/frontend/dist;
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
- 
-    # Health check endpoint
-    location /health {
-        proxy_pass http://127.0.0.1:3399/health;
-        access_log off;
-    }
-}
-EOF
-ln -sf /etc/nginx/sites-available/patchmon.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD nginx -t
-systemctl restart nginx
-msg_ok "Configured Nginx"
+msg_info "Fetching SCAP Content"
+RELEASE=$(get_latest_github_release "ComplianceAsCode/content")
+curl_with_retry "https://github.com/ComplianceAsCode/content/releases/download/v${RELEASE}/scap-security-guide-${RELEASE}.tar.gz" "/tmp/ssg.tar.gz"
+mkdir -p /opt/patchmon/ssg-content
+tar -xzf /tmp/ssg.tar.gz -C /opt/patchmon/ssg-content --strip-components=1 --wildcards '*/ssg-*-ds.xml'
+rm -f /tmp/ssg.tar.gz
+msg_ok "Fetched SCAP Content"
 
 msg_info "Creating service"
 cat <<EOF >/etc/systemd/system/patchmon-server.service
 [Unit]
-Description=PatchMon Service
+Description=PatchMon Server
 After=network.target postgresql.service
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/patchmon/backend
-ExecStart=/usr/bin/node src/server.js
+WorkingDirectory=/opt/patchmon
+ExecStart=/opt/patchmon/patchmon-server
 Restart=always
 RestartSec=10
-Environment=NODE_ENV=production
 Environment=PATH=/usr/bin:/usr/local/bin
+EnvironmentFile=/opt/patchmon/.env
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
@@ -214,57 +119,6 @@ WantedBy=multi-user.target
 EOF
 systemctl enable -q --now patchmon-server
 msg_ok "Created and started service"
-
-msg_info "Updating settings"
-cat <<EOF >/opt/patchmon/backend/update-settings.js
-const { PrismaClient } = require('@prisma/client');
-const { v4: uuidv4 } = require('uuid');
-const prisma = new PrismaClient();
-
-async function updateSettings() {
-  try {
-    const existingSettings = await prisma.settings.findFirst();
-
-    const settingsData = {
-      id: uuidv4(),
-      server_url: 'http://$LOCAL_IP',
-      server_protocol: 'http',
-      server_host: '$LOCAL_IP',
-      server_port: 3399,
-      update_interval: 60,
-      auto_update: true,
-      signup_enabled: false,
-      ignore_ssl_self_signed: false,
-      updated_at: new Date()
-    };
-
-  if (existingSettings) {
-    // Update existing settings
-    await prisma.settings.update({
-      where: { id: existingSettings.id },
-      data: settingsData
-    });
-  } else {
-    // Create new settings record
-    await prisma.settings.create({
-      data: settingsData
-    });
-  }
-
-  console.log('✅ Database settings updated successfully');
-  } catch (error) {
-    console.error('❌ Error updating settings:', error.message);
-    process.exit(1);
-  } finally {
-    await prisma.\$disconnect();
-  }
-}
-
-updateSettings();
-EOF
-cd /opt/patchmon/backend
-$STD node update-settings.js
-msg_ok "Settings updated successfully"
 
 motd_ssh
 customize

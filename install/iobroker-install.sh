@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.iobroker.net/#en/intro
+# Source: https://www.iobroker.net/#en/intro | Github: https://github.com/ioBroker/ioBroker.js-controller
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -28,7 +28,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   exit 10
 fi
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" NPM_VERSION="11" setup_nodejs
 
 msg_info "Installing ioBroker (Patience)"
 $STD bash <(curl -fsSL https://iobroker.net/install.sh)

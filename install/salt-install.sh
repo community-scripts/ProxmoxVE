@@ -29,7 +29,7 @@ Pin: version ${RELEASE}
 Pin-Priority: 1001
 EOF
 $STD apt install -y salt-master
-echo "${RELEASE}" >/~.salt
+echo "${RELEASE}" >~/.salt
 msg_ok "Installed Salt"
 
 motd_ssh

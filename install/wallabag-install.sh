@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://wallabag.org/
+# Source: https://wallabag.org/ | Github: https://github.com/wallabag/wallabag
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -20,17 +20,16 @@ $STD apt install -y \
   imagemagick
 msg_ok "Installed Dependencies"
 
-import_local_ip
 setup_mariadb
 MARIADB_DB_NAME="wallabag" MARIADB_DB_USER="wallabag" setup_mariadb_db
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="bcmath,bz2,curl,gd,imagick,intl,mbstring,mysql,redis,tidy,xml,zip" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="tidy" setup_php
 setup_composer
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "wallabag" "wallabag/wallabag" "prebuild" "latest" "/opt/wallabag" "wallabag-*.tar.gz"
 
 msg_info "Configuring Wallabag"
 cd /opt/wallabag
-SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+SECRET_KEY="$(random_password 32)"
 cat <<EOF >/opt/wallabag/app/config/parameters.yml
 parameters:
     database_driver: pdo_mysql
@@ -94,6 +93,7 @@ chmod -R 755 /opt/wallabag/{var,web/assets}
 msg_ok "Installed Wallabag"
 
 msg_info "Configuring Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<'EOF' >/etc/nginx/sites-available/wallabag
 server {
     listen 8000;
@@ -111,7 +111,7 @@ server {
     }
 
     location ~ ^/app\.php(/|$) {
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:__PHP_SOCK__;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
@@ -132,9 +132,8 @@ server {
 }
 EOF
 
-ln -sf /etc/nginx/sites-available/wallabag /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+sed -i "s|__PHP_SOCK__|${PHP_SOCK}|" /etc/nginx/sites-available/wallabag
+nginx_enable_site wallabag
 msg_ok "Configured Nginx"
 
 msg_info "Enabling Services"

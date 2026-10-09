@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Stroopwafe1
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://leantime.io
+# Source: https://leantime.io | Github: https://github.com/Leantime/leantime
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" PHP_FPM="YES" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
 setup_mariadb
 MARIADB_DB_NAME="leantime" MARIADB_DB_USER="leantime" setup_mariadb_db
 fetch_and_deploy_gh_release "leantime" "Leantime/leantime" "prebuild" "latest" "/opt/leantime" Leantime*.tar.gz
@@ -46,7 +46,7 @@ mv "/opt/leantime/config/sample.env" "/opt/leantime/config/.env"
 sed -i -e "s|^LEAN_DB_DATABASE.*|LEAN_DB_DATABASE = '$MARIADB_DB_NAME'|" \
   -e "s|^LEAN_DB_USER.*|LEAN_DB_USER = '$MARIADB_DB_USER'|" \
   -e "s|^LEAN_DB_PASSWORD.*|LEAN_DB_PASSWORD = '$MARIADB_DB_PASS'|" \
-  -e "s|^LEAN_SESSION_PASSWORD.*|LEAN_SESSION_PASSWORD = '$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)'|" \
+  -e "s|^LEAN_SESSION_PASSWORD.*|LEAN_SESSION_PASSWORD = '$(random_password 13)'|" \
   "/opt/leantime/config/.env"
 $STD a2enmod -q proxy_fcgi setenvif rewrite
 $STD a2enconf -q "php8.4-fpm"

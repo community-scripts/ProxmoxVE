@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://joplinapp.org/
+# Source: https://joplinapp.org/ | Github: https://github.com/laurent22/joplin
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -21,23 +21,24 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="joplin" PG_DB_USER="joplin" setup_postgresql_db
-NODE_VERSION=24 NODE_MODULE="yarn,npm,pm2" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="yarn,npm,pm2" setup_nodejs
 mkdir -p /opt/pm2
 export PM2_HOME=/opt/pm2
 $STD pm2 install pm2-logrotate
 $STD pm2 set pm2-logrotate:max_size 100MB
 $STD pm2 set pm2-logrotate:retain 5
 $STD pm2 set pm2-logrotate:compress tr
+
 fetch_and_deploy_gh_release "joplin-server" "laurent22/joplin" "tarball"
-import_local_ip
 
 msg_info "Setting up Joplin Server (Patience)"
 cd /opt/joplin-server
 sed -i "/onenote-converter/d" packages/lib/package.json
 $STD yarn config set --home enableTelemetry 0
 export BUILD_SEQUENCIAL=1
-$STD yarn install --inline-builds
-
+$STD yarn workspaces focus @joplin/server
+$STD yarn workspaces foreach -R --topological-dev --from @joplin/server run build
+$STD yarn workspaces foreach -R --topological-dev --from @joplin/server run tsc
 cat <<EOF >/opt/joplin-server/.env
 PM2_HOME=/opt/pm2
 NODE_ENV=production

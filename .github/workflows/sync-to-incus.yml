@@ -1,0 +1,56 @@
+name: Sync ct/install to Incus
+
+# When a ct/*.sh or install/*.sh file changes on main, trigger the Incus repo's
+# own sync workflow immediately instead of waiting for its daily 04:00 cron.
+#
+# The actual mirroring + transformation lives in community-scripts/Incus
+# (.github/workflows/sync-scripts.yml): it rewrites each script's bootstrap line
+# to load the engine from community-scripts/core (ProxmoxVE's misc/build.func is
+# a monolith with no Incus backend), so a plain 1:1 copy would break every Incus
+# script. We therefore only fire a repository_dispatch and let that single
+# source of truth do the work (and auto-approve + merge its own PR).
+#
+# Auth: the "push-app-to-main" GitHub App (vars.GHAPP_SYNC_ID /
+# secrets.GHAPP_SYNC_PRIVATE_KEY), scoped to community-scripts/Incus. It has
+# contents:write, which repository_dispatch requires (community-scripts-pr-app
+# only has pull_requests:write, so it cannot dispatch). The app must be
+# installed on the Incus repo.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "ct/**.sh"
+      - "install/**.sh"
+  workflow_dispatch:
+
+concurrency:
+  group: sync-to-incus
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token (dispatch to Incus)
+        id: token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.GHAPP_SYNC_ID }}
+          private-key: ${{ secrets.GHAPP_SYNC_PRIVATE_KEY }}
+          owner: community-scripts
+          repositories: Incus
+
+      - name: Trigger Incus sync workflow
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          echo "Dispatching proxmoxve-scripts-changed to community-scripts/Incus (from ${SOURCE_SHA})"
+          gh api repos/community-scripts/Incus/dispatches \
+            -X POST \
+            -f "event_type=proxmoxve-scripts-changed" \
+            -F "client_payload[sha]=${SOURCE_SHA}"

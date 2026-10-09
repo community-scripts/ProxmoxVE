@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 setup_hwaccel
 
 msg_info "Installing Unmanic"
-$STD pip3 install unmanic
+$STD pip3 install --break-system-packages unmanic
 msg_ok "Installed Unmanic"
 
 msg_info "Creating Service"

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: lucasfell
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://ghostfol.io/
+# Source: https://ghostfol.io/ | Github: https://github.com/ghostfolio/ghostfolio
 
 APP="Ghostfolio"
 var_tags="${var_tags:-finance;investment}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -40,13 +42,16 @@ function update_script() {
       --exclude="ghostfolio/node_modules" \
       --exclude="ghostfolio/dist" \
       ghostfolio
-    mv /opt/ghostfolio/.env /opt/env.backup
     msg_ok "Backup Created"
+
+    create_backup /opt/ghostfolio/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ghostfolio" "ghostfolio/ghostfolio" "tarball" "latest" "/opt/ghostfolio"
 
+    restore_backup
+
     msg_info "Updating Ghostfolio"
-    mv /opt/env.backup /opt/ghostfolio/.env
+    sed -i -E '/^DATABASE_URL=/ s/[?&]sslmode=prefer//g' /opt/ghostfolio/.env
     cd /opt/ghostfolio
     $STD npm ci
     $STD npm run build:production
@@ -67,5 +72,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3333${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3333${CL}"

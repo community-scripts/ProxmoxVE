@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: | MIT https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -51,7 +53,7 @@ function update_script() {
     exit
   fi
 
-  JAVA_VERSION="11" setup_java
+  JAVA_VERSION="17" setup_java
 
   msg_info "Stopping Services"
   systemctl stop guacd tomcat
@@ -89,10 +91,9 @@ function update_script() {
     # Auth JDBC follows server version
     msg_info "Updating Guacamole Auth JDBC"
     rm -f /etc/guacamole/extensions/guacamole-auth-jdbc-mysql-*.jar
-    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-jdbc-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-jdbc.tar.gz"
+    curl_download "/tmp/guacamole-auth-jdbc.tar.gz" "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-jdbc-${LATEST_SERVER}.tar.gz"
     $STD tar -xf /tmp/guacamole-auth-jdbc.tar.gz -C /tmp
     mv /tmp/guacamole-auth-jdbc-"${LATEST_SERVER}"/mysql/guacamole-auth-jdbc-mysql-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
-    rm -rf /tmp/guacamole-auth-jdbc*
     echo "${LATEST_SERVER}" >~/.guacamole_auth_jdbc
     msg_ok "Updated Guacamole Auth JDBC"
   else
@@ -102,7 +103,7 @@ function update_script() {
   # Update Guacamole Client
   if [[ "$CURRENT_CLIENT" != "$LATEST_CLIENT" ]]; then
     msg_info "Updating Guacamole Client (${CURRENT_CLIENT} → ${LATEST_CLIENT})"
-    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_CLIENT}/binary/guacamole-${LATEST_CLIENT}.war" -o "/opt/apache-guacamole/tomcat9/webapps/guacamole.war"
+    curl_download "/opt/apache-guacamole/tomcat9/webapps/guacamole.war" "https://downloads.apache.org/guacamole/${LATEST_CLIENT}/binary/guacamole-${LATEST_CLIENT}.war"
     echo "${LATEST_CLIENT}" >~/.guacamole_client
     msg_ok "Updated Guacamole Client"
   else
@@ -112,7 +113,7 @@ function update_script() {
   # Update MySQL Connector
   if [[ "$CURRENT_MYSQL_CONNECTOR" != "$LATEST_MYSQL_CONNECTOR" ]]; then
     msg_info "Updating MySQL Connector (${CURRENT_MYSQL_CONNECTOR} → ${LATEST_MYSQL_CONNECTOR})"
-    curl -fsSL "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/${LATEST_MYSQL_CONNECTOR}/mysql-connector-j-${LATEST_MYSQL_CONNECTOR}.jar" -o "/etc/guacamole/lib/mysql-connector-j.jar"
+    curl_download "/etc/guacamole/lib/mysql-connector-j.jar" "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/${LATEST_MYSQL_CONNECTOR}/mysql-connector-j-${LATEST_MYSQL_CONNECTOR}.jar"
     echo "${LATEST_MYSQL_CONNECTOR}" >~/.guacamole_mysql_connector
     msg_ok "Updated MySQL Connector"
   else
@@ -140,15 +141,16 @@ function update_script() {
         fi
       done
     fi
+    rm -rf /tmp/guacamole-auth-jdbc*
     msg_ok "MySQL Schema updated"
   fi
 
   # Check and upgrade optional extensions
   # TOTP Extension
-  if [[ -f /etc/guacamole/extensions/guacamole-auth-totp-*.jar ]]; then
+  if compgen -G "/etc/guacamole/extensions/guacamole-auth-totp-*.jar" >/dev/null; then
     msg_info "Updating TOTP Extension"
     rm -f /etc/guacamole/extensions/guacamole-auth-totp-*.jar
-    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-totp-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-totp.tar.gz"
+    curl_download "/tmp/guacamole-auth-totp.tar.gz" "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-totp-${LATEST_SERVER}.tar.gz"
     $STD tar -xf /tmp/guacamole-auth-totp.tar.gz -C /tmp
     mv /tmp/guacamole-auth-totp-"${LATEST_SERVER}"/guacamole-auth-totp-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
     chmod 664 /etc/guacamole/extensions/guacamole-auth-totp-"${LATEST_SERVER}".jar
@@ -157,10 +159,10 @@ function update_script() {
   fi
 
   # DUO Extension
-  if [[ -f /etc/guacamole/extensions/guacamole-auth-duo-*.jar ]]; then
+  if compgen -G "/etc/guacamole/extensions/guacamole-auth-duo-*.jar" >/dev/null; then
     msg_info "Updating DUO Extension"
     rm -f /etc/guacamole/extensions/guacamole-auth-duo-*.jar
-    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-duo-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-duo.tar.gz"
+    curl_download "/tmp/guacamole-auth-duo.tar.gz" "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-duo-${LATEST_SERVER}.tar.gz"
     $STD tar -xf /tmp/guacamole-auth-duo.tar.gz -C /tmp
     mv /tmp/guacamole-auth-duo-"${LATEST_SERVER}"/guacamole-auth-duo-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
     chmod 664 /etc/guacamole/extensions/guacamole-auth-duo-"${LATEST_SERVER}".jar
@@ -169,10 +171,10 @@ function update_script() {
   fi
 
   # LDAP Extension
-  if [[ -f /etc/guacamole/extensions/guacamole-auth-ldap-*.jar ]]; then
+  if compgen -G "/etc/guacamole/extensions/guacamole-auth-ldap-*.jar" >/dev/null; then
     msg_info "Updating LDAP Extension"
     rm -f /etc/guacamole/extensions/guacamole-auth-ldap-*.jar
-    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-ldap-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-ldap.tar.gz"
+    curl_download "/tmp/guacamole-auth-ldap.tar.gz" "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-ldap-${LATEST_SERVER}.tar.gz"
     $STD tar -xf /tmp/guacamole-auth-ldap.tar.gz -C /tmp
     mv /tmp/guacamole-auth-ldap-"${LATEST_SERVER}"/guacamole-auth-ldap-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
     chmod 664 /etc/guacamole/extensions/guacamole-auth-ldap-"${LATEST_SERVER}".jar
@@ -181,10 +183,10 @@ function update_script() {
   fi
 
   # Quick Connect Extension
-  if [[ -f /etc/guacamole/extensions/guacamole-auth-quickconnect-*.jar ]]; then
+  if compgen -G "/etc/guacamole/extensions/guacamole-auth-quickconnect-*.jar" >/dev/null; then
     msg_info "Updating Quick Connect Extension"
     rm -f /etc/guacamole/extensions/guacamole-auth-quickconnect-*.jar
-    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-quickconnect-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-auth-quickconnect.tar.gz"
+    curl_download "/tmp/guacamole-auth-quickconnect.tar.gz" "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-auth-quickconnect-${LATEST_SERVER}.tar.gz"
     $STD tar -xf /tmp/guacamole-auth-quickconnect.tar.gz -C /tmp
     mv /tmp/guacamole-auth-quickconnect-"${LATEST_SERVER}"/guacamole-auth-quickconnect-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
     chmod 664 /etc/guacamole/extensions/guacamole-auth-quickconnect-"${LATEST_SERVER}".jar
@@ -193,10 +195,10 @@ function update_script() {
   fi
 
   # History Recording Storage Extension
-  if [[ -f /etc/guacamole/extensions/guacamole-history-recording-storage-*.jar ]]; then
+  if compgen -G "/etc/guacamole/extensions/guacamole-history-recording-storage-*.jar" >/dev/null; then
     msg_info "Updating History Recording Storage Extension"
     rm -f /etc/guacamole/extensions/guacamole-history-recording-storage-*.jar
-    curl -fsSL "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-history-recording-storage-${LATEST_SERVER}.tar.gz" -o "/tmp/guacamole-history-recording-storage.tar.gz"
+    curl_download "/tmp/guacamole-history-recording-storage.tar.gz" "https://downloads.apache.org/guacamole/${LATEST_SERVER}/binary/guacamole-history-recording-storage-${LATEST_SERVER}.tar.gz"
     $STD tar -xf /tmp/guacamole-history-recording-storage.tar.gz -C /tmp
     mv /tmp/guacamole-history-recording-storage-"${LATEST_SERVER}"/guacamole-history-recording-storage-"${LATEST_SERVER}".jar /etc/guacamole/extensions/
     chmod 664 /etc/guacamole/extensions/guacamole-history-recording-storage-"${LATEST_SERVER}".jar
@@ -226,5 +228,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080/guacamole${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080/guacamole${CL}"

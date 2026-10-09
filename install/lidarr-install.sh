@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://lidarr.audio/
+# Source: https://lidarr.audio/ | Github: https://github.com/Lidarr/Lidarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -17,10 +17,11 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   sqlite3 \
   libchromaprint-tools \
+  libicu-dev \
   mediainfo
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "lidarr" "Lidarr/Lidarr" "prebuild" "latest" "/opt/Lidarr" "Lidarr.master*linux-core-x64.tar.gz"
+fetch_and_deploy_gh_release "lidarr" "Lidarr/Lidarr" "prebuild" "latest" "/opt/Lidarr" "Lidarr.master*linux-core-$(arch_resolve "x64" "arm64").tar.gz"
 
 msg_info "Configuring Lidarr"
 mkdir -p /var/lib/lidarr/

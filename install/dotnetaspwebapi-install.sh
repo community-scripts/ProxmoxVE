@@ -14,13 +14,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get update
-$STD apt-get install -y \
+apt_update_safe
+$STD apt install -y \
   ssh \
   software-properties-common
 
 $STD add-apt-repository -y ppa:dotnet/backports
-$STD apt-get install -y \
+$STD apt install -y \
   dotnet-sdk-9.0 \
   vsftpd \
   nginx
@@ -31,7 +31,7 @@ read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
 
 msg_info "Setting up FTP Server"
 useradd ftpuser
-FTP_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+FTP_PASS=$(random_password 13)
 usermod --password $(echo ${FTP_PASS} | openssl passwd -1 -stdin) ftpuser
 mkdir -p /var/www/html
 usermod -d /var/www/html ftp
@@ -43,11 +43,11 @@ sed -i "s|#chroot_local_user=YES|chroot_local_user=NO|g" /etc/vsftpd.conf
 
 systemctl restart -q vsftpd.service
 
-{
-  echo "FTP-Credentials"
-  echo "Username: ftpuser"
-  echo "Password: $FTP_PASS"
-} >>~/ftp.creds
+cat <<EOF >~/ftp.creds
+FTP-Credentials
+Username: ftpuser
+Password: $FTP_PASS
+EOF
 
 msg_ok "FTP server setup completed"
 

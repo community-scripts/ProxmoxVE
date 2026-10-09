@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.kavitareader.com/
+# Source: https://www.kavitareader.com/ | Github: https://github.com/Kareadita/Kavita
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,7 +13,11 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "Kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-x64.tar.gz"
+msg_info "Installing Dependencies"
+$STD apt install -y libicu-dev
+msg_ok "Installed Dependencies"
+
+fetch_and_deploy_gh_release "Kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-$(arch_resolve "x64" "arm64").tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/kavita.service

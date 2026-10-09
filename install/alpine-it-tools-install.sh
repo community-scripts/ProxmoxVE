@@ -19,12 +19,9 @@ $STD apk add --no-cache \
   python3
 msg_ok "Installed Dependencies"
 
-msg_info "Installing IT-Tools"
-RELEASE=$(curl -fsSL https://api.github.com/repos/sharevb/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
-curl -fsSL "https://github.com/sharevb/it-tools/releases/download/${RELEASE}/it-tools-${RELEASE#v}.zip" -o it-tools.zip
-mkdir -p /usr/share/nginx/html
-$STD unzip it-tools.zip -d /tmp/
-mv /tmp/dist/* /usr/share/nginx/html
+fetch_and_deploy_gh_release "it-tools" "sharevb/it-tools" "prebuild" "latest" "/usr/share/nginx/html" "it-tools-*.zip"
+
+msg_info "Configuring IT-Tools"
 cat <<'EOF' >/etc/nginx/http.d/default.conf
 server {
   listen 80;
@@ -39,14 +36,11 @@ server {
 EOF
 $STD rc-update add nginx default
 $STD rc-service nginx start
-echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
-msg_ok "Installed IT-Tools"
+msg_ok "Configured IT-Tools"
 
 motd_ssh
 customize
 
-msg_info "Cleaning up"
 rm -rf /tmp/dist
 rm -f it-tools.zip
-$STD apk cache clean
-msg_ok "Cleaned"
+cleanup_lxc

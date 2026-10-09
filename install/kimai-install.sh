@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.kimai.org/
+# Source: https://www.kimai.org/ | Github: https://github.com/kimai/kimai
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -22,43 +22,32 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_mariadb
-PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
 setup_composer
 
-msg_info "Setting up database"
-DB_NAME=kimai_db
-DB_USER=kimai
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-$STD mariadb -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "Kimai-Credentials"
-  echo "Kimai Database User: $DB_USER"
-  echo "Kimai Database Password: $DB_PASS"
-  echo "Kimai Database Name: $DB_NAME"
-} >>~/kimai.creds
-msg_ok "Set up database"
+MARIADB_DB_NAME="kimai_db" MARIADB_DB_USER="kimai" setup_mariadb_db
 
 fetch_and_deploy_gh_release "kimai" "kimai/kimai" "tarball"
 
 msg_info "Setup Kimai"
+APP_SECRET=$(openssl rand -hex 48)
 cd /opt/kimai
 echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc
 source ~/.bashrc
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 cp .env.dist .env
-sed -i "/^DATABASE_URL=/c\DATABASE_URL=mysql://$DB_USER:$DB_PASS@127.0.0.1:3306/$DB_NAME?charset=utf8mb4&serverVersion=mariadb-$MYSQL_VERSION" /opt/kimai/.env
+sed -i "/^DATABASE_URL=.*/c\DATABASE_URL=mysql://kimai:$MARIADB_DB_PASS@127.0.0.1:3306/kimai_db?charset=utf8mb4&serverVersion=mariadb-$MYSQL_VERSION" /opt/kimai/.env
+sed -i "s|^APP_SECRET=.*|APP_SECRET=$APP_SECRET|" /opt/kimai/.env
 $STD bin/console kimai:install -n
 $STD expect <<EOF
 set timeout -1
 log_user 0
 
-spawn bin/console kimai:user:create admin admin@helper-scripts.com ROLE_SUPER_ADMIN
+spawn bin/console kimai:user:create admin admin@community-scripts.org ROLE_SUPER_ADMIN
 
 expect "Please enter the password:"
-send "helper-scripts.com\r"
+send "community-scripts.org\r"
 
 expect eof
 EOF

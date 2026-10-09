@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://n8n.io/
+# Source: https://n8n.io/ | Github: https://github.com/n8n-io/n8n
 
 APP="n8n"
 var_tags="${var_tags:-automation}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,23 +29,26 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  ensure_dependencies build-essential python3-setuptools graphicsmagick
+  NODE_VERSION="24" setup_nodejs
+
+  msg_info "Updating n8n"
   if [ ! -f /opt/n8n.env ]; then
     sed -i 's|^Environment="N8N_SECURE_COOKIE=false"$|EnvironmentFile=/opt/n8n.env|' /etc/systemd/system/n8n.service
-    HOST_IP=$(hostname -I | awk '{print $1}')
     mkdir -p /opt
     cat <<EOF >/opt/n8n.env
 N8N_SECURE_COOKIE=false
 N8N_PORT=5678
 N8N_PROTOCOL=http
-N8N_HOST=$HOST_IP
+N8N_HOST=$LOCAL_IP
 EOF
+    systemctl daemon-reload
   fi
-  NODE_VERSION="22" setup_nodejs
 
-  msg_info "Updating ${APP} LXC"
-  rm -rf /usr/lib/node_modules/.n8n-* /usr/lib/node_modules/n8n
-  $STD npm install -g n8n --force
+  $STD npm install -g n8n@latest
   systemctl restart n8n
+  msg_ok "Updated n8n"
   msg_ok "Updated successfully!"
   exit
 }
@@ -54,5 +59,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5678${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5678${CL}"

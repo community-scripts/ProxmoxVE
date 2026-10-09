@@ -1,0 +1,58 @@
+name: Notify breaking change
+
+# When a PR labelled "breaking change" is merged, tell the Helper-Scripts site
+# so it can show a temporary advisory on the affected scripts. The site pulls
+# the PR itself and re-verifies it is merged + labelled, so this workflow only
+# has to hand over the PR number.
+#
+# Requires one repo secret:
+#   BREAKING_CHANGE_INGEST_SECRET  — must match the value the site runs with.
+# Site URL is taken from the existing FRONTEND_URL secret, then an optional
+# SITE_URL variable, then a hard default.
+#
+# pull_request_target (not pull_request) so the run has access to the secret
+# even for fork PRs. It is safe here: the job never checks out or runs PR code —
+# it only forwards the number after the PR has merged.
+
+on:
+  pull_request_target:
+    # closed  -> fires on the merge itself
+    # labeled -> fires if the label is added to an already-merged PR
+    types: [closed, labeled]
+
+concurrency:
+  group: notify-breaking-change-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: >-
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'breaking change')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify site of breaking change
+        env:
+          INGEST_SECRET: ${{ secrets.FRONTEND_ADVISORY_SECRET }}
+          SITE_URL: ${{ vars.FRONTEND_URL || 'https://community-scripts.org' }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [ -z "${INGEST_SECRET:-}" ]; then
+            echo "::error::BREAKING_CHANGE_INGEST_SECRET secret is not set."
+            exit 1
+          fi
+          url="${SITE_URL%/}/api/breaking-changes/ingest"
+          echo "Notifying $url for PR #${PR}"
+          status="$(curl -sS -o response.json -w '%{http_code}' \
+            -X POST "$url" \
+            -H "Authorization: Bearer ${INGEST_SECRET}" \
+            -H "Content-Type: application/json" \
+            -d "{\"pr\": ${PR}}")"
+          echo "HTTP $status"
+          cat response.json || true
+          echo
+          if [ "$status" != "200" ]; then
+            echo "::error::ingest endpoint returned HTTP $status"
+            exit 1
+          fi

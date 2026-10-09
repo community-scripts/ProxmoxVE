@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-7}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,30 +32,57 @@ function update_script() {
 
   NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
 
-  if check_for_gh_release "peanut" "Brandawg93/PeaNUT"; then
+  if check_for_gh_release "PeaNUT" "Brandawg93/PeaNUT"; then
     msg_info "Stopping Service"
     systemctl stop peanut
-    msg_info "Stopped Service"
+    msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PeaNUT" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
     if ! grep -q '/opt/peanut/entrypoint.mjs' /etc/systemd/system/peanut.service; then
       msg_info "Fixing entrypoint"
       cd /opt/peanut
-      ln -sf .next/standalone/server.js server.js
       sed -i 's|/opt/peanut/.next/standalone/server.js|/opt/peanut/entrypoint.mjs|' /etc/systemd/system/peanut.service
       systemctl daemon-reload
       msg_ok "Fixed entrypoint"
     fi
 
-    msg_info "Updating Peanut"
+    if [[ ! -f /etc/peanut/peanut.env ]]; then
+      msg_info "Migrating service to EnvironmentFile"
+      mkdir -p /etc/peanut
+      cat <<EOF >/etc/peanut/peanut.env
+NODE_ENV=production
+
+#WEB_HOST=0.0.0.0
+#WEB_PORT=8080
+#NUT_HOST=localhost
+#NUT_PORT=3493
+
+# Disable auth entirely:
+#AUTH_DISABLED=true
+
+# Bootstrap initial account on first start (ignored afterwards):
+#WEB_USERNAME=admin
+#WEB_PASSWORD=changeme
+EOF
+      chmod 600 /etc/peanut/peanut.env
+      sed -i '/^Environment=/d' /etc/systemd/system/peanut.service
+      if ! grep -q '^EnvironmentFile=/etc/peanut/peanut.env' /etc/systemd/system/peanut.service; then
+        sed -i '/^Type=simple/a EnvironmentFile=/etc/peanut/peanut.env' /etc/systemd/system/peanut.service
+      fi
+      systemctl daemon-reload
+      msg_ok "Migrated to /etc/peanut/peanut.env"
+    fi
+
+    msg_info "Updating PeaNUT"
     cd /opt/peanut
     $STD pnpm i
     $STD pnpm run build:local
     cp -r .next/static .next/standalone/.next/
     mkdir -p /opt/peanut/.next/standalone/config
     ln -sf /etc/peanut/settings.yml /opt/peanut/.next/standalone/config/settings.yml
-    msg_ok "Updated Peanut"
+    ln -sf .next/standalone/server.js server.js
+    msg_ok "Updated PeaNUT"
 
     msg_info "Starting Service"
     systemctl start peanut
@@ -69,5 +98,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

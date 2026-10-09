@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://autobrr.com/
+# Source: https://autobrr.com/ | Github: https://github.com/autobrr/autobrr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -13,11 +13,11 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/usr/local/bin" "autobrr_*_linux_x86_64.tar.gz"
+fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/usr/local/bin" "autobrr_*_linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 
 msg_info "Configuring Autobrr"
 mkdir -p /root/.config/autobrr
-cat <<EOF >>/root/.config/autobrr/config.toml
+cat <<EOF >/root/.config/autobrr/config.toml
 # https://autobrr.com/configuration/autobrr
 host = "0.0.0.0"
 port = 7474

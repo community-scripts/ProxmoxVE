@@ -14,10 +14,12 @@ setting_up_container
 network_check
 update_os
 
+setup_nonfree
+
 msg_info "Installing Dependencies"
 $STD apt install -y \
   par2 \
-  unrar-free
+  unrar
 msg_ok "Installed Dependencies"
 
 msg_info "Installing NZBGet"
@@ -27,7 +29,6 @@ setup_deb822_repo \
   "https://nzbgetcom.github.io/deb" \
   "stable"
 $STD apt install -y nzbget
-sed -i "s|UnrarCmd=unrar|UnrarCmd=unrar-free|g" /var/lib/nzbget/nzbget.conf
 sed -i "s|SevenZipCmd=7zz|SevenZipCmd=7z|g" /var/lib/nzbget/nzbget.conf
 systemctl restart nzbget
 msg_ok "Installed NZBGet"

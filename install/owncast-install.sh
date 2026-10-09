@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://owncast.online/
+# Source: https://owncast.online/ | Github: https://github.com/owncast/owncast
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -19,7 +19,7 @@ msg_info "Installing Dependencies (Patience)"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "owncast" "owncast/owncast" "prebuild" "latest" "/opt/owncast" "owncast*linux-64bit.zip"
+fetch_and_deploy_gh_release "owncast" "owncast/owncast" "prebuild" "latest" "/opt/owncast" "owncast*linux-$(arch_resolve "64bit" "arm64").zip"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/owncast.service

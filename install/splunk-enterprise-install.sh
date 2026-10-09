@@ -27,18 +27,18 @@ while true; do
     echo -e "${TAB3}Do you accept the Splunk General Terms? (y/N): \c"
     read -r response
     case $response in
-        [Yy]|[Yy][Ee][Ss])
-            msg_ok "Terms accepted. Proceeding with installation..."
-            break
-            ;;
-        [Nn]|[Nn][Oo]|"")
-            msg_error "Terms not accepted. Installation cannot proceed."
-            msg_error "Please review the terms and run the script again if you wish to proceed."
-            exit 1
-            ;;
-        *)
-            msg_error "Invalid response. Please enter 'y' for yes or 'n' for no."
-            ;;
+    [Yy] | [Yy][Ee][Ss])
+        msg_ok "Terms accepted. Proceeding with installation..."
+        break
+        ;;
+    [Nn] | [Nn][Oo] | "")
+        msg_error "Terms not accepted. Installation cannot proceed."
+        msg_error "Please review the terms and run the script again if you wish to proceed."
+        exit 254
+        ;;
+    *)
+        msg_error "Invalid response. Please enter 'y' for yes or 'n' for no."
+        ;;
     esac
 done
 
@@ -47,7 +47,7 @@ DOWNLOAD_URL=$(curl -s "https://www.splunk.com/en_us/download/splunk-enterprise.
 RELEASE=$(echo "$DOWNLOAD_URL" | sed 's|.*/releases/\([^/]*\)/.*|\1|')
 $STD curl -fsSL -o "splunk-enterprise.tgz" "$DOWNLOAD_URL" || {
     msg_error "Failed to download Splunk Enterprise from the provided link."
-    exit 1
+    exit 250
 }
 $STD tar -xzf "splunk-enterprise.tgz" -C /opt
 rm -f "splunk-enterprise.tgz"
@@ -58,14 +58,14 @@ msg_ok "Setup Splunk Enterprise v${RELEASE}"
 
 msg_info "Creating Splunk admin user"
 ADMIN_USER="admin"
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-{
-    echo "Splunk-Credentials"
-    echo "Username: $ADMIN_USER"
-    echo "Password: $ADMIN_PASS"
-} >> ~/splunk.creds
+ADMIN_PASS=$(random_password 13)
+cat <<EOF >~/splunk.creds
+Splunk-Credentials
+Username: $ADMIN_USER
+Password: $ADMIN_PASS
+EOF
 
-cat << EOF > "/opt/splunk/etc/system/local/user-seed.conf"
+cat <<EOF >"/opt/splunk/etc/system/local/user-seed.conf"
 [user_info]
 USERNAME = $ADMIN_USER
 PASSWORD = $ADMIN_PASS

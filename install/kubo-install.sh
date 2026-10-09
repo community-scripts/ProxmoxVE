@@ -14,15 +14,15 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "kubo" "ipfs/kubo" "prebuild" "latest" "/usr/local/kubo" "kubo*linux-amd64.tar.gz"
+fetch_and_deploy_gh_release "kubo" "ipfs/kubo" "prebuild" "latest" "/usr/local/kubo" "kubo*linux-$(arch_resolve).tar.gz"
 
 msg_info "Configuring IPFS"
+export HOME="${HOME:-/root}"
 $STD ln -s /usr/local/kubo/ipfs /usr/local/bin/ipfs
 $STD ipfs init
 ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001
 ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/8080
-LXCIP=$(hostname -I | awk '{print $1}')
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"http://${LXCIP}:5001\", \"http://localhost:3000\", \"http://127.0.0.1:5001\", \"https://webui.ipfs.io\", \"http://0.0.0.0:5001\"]"
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"http://${LOCAL_IP}:5001\", \"http://localhost:3000\", \"http://127.0.0.1:5001\", \"https://webui.ipfs.io\", \"http://0.0.0.0:5001\"]"
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST"]'
 msg_ok "Configured IPFS"
 

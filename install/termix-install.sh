@@ -19,11 +19,43 @@ $STD apt install -y \
   python3 \
   nginx \
   openssl \
-  gettext-base
+  gettext-base \
+  libcairo2-dev \
+  libjpeg62-turbo-dev \
+  libpng-dev \
+  libtool-bin \
+  uuid-dev \
+  libvncserver-dev \
+  freerdp3-dev \
+  libssh2-1-dev \
+  libtelnet-dev \
+  libwebsockets-dev \
+  libpulse-dev \
+  libvorbis-dev \
+  libwebp-dev \
+  libssl-dev \
+  libpango1.0-dev \
+  libswscale-dev \
+  libavcodec-dev \
+  libavutil-dev \
+  libavformat-dev
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"
+msg_info "Building Guacamole Server (guacd)"
+fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "latest" "/opt/guacamole-server"
+cd /opt/guacamole-server
+export CPPFLAGS="-Wno-error=deprecated-declarations"
+$STD autoreconf -fi
+$STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
+$STD make
+$STD make install
+$STD ldconfig
+cd /opt
+rm -rf /opt/guacamole-server
+msg_ok "Built Guacamole Server (guacd)"
+
+NODE_VERSION="26" setup_nodejs
+fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
 
 msg_info "Building Frontend"
 cd /opt/termix
@@ -53,7 +85,8 @@ mkdir -p /opt/termix/data \
   /opt/termix/nginx \
   /opt/termix/nginx/logs \
   /opt/termix/nginx/cache \
-  /opt/termix/nginx/client_body
+  /opt/termix/nginx/client_body \
+  /opt/termix/db/data
 
 cp -r /opt/termix/dist/* /opt/termix/html/ 2>/dev/null || true
 cp -r /opt/termix/src/locales /opt/termix/html/locales 2>/dev/null || true
@@ -61,188 +94,68 @@ cp -r /opt/termix/public/fonts /opt/termix/html/fonts 2>/dev/null || true
 msg_ok "Set up Directories"
 
 msg_info "Configuring Nginx"
-cat <<'EOF' >/etc/nginx/sites-available/termix.conf
-error_log /opt/termix/nginx/logs/error.log warn;
+curl -fsSL "https://raw.githubusercontent.com/Termix-SSH/Termix/main/docker/nginx.conf" -o /etc/nginx/nginx.conf
+sed -i '/^master_process/d' /etc/nginx/nginx.conf
+sed -i '/^pid \/app\/nginx/d' /etc/nginx/nginx.conf
+sed -i 's|/app/html|/opt/termix/html|g' /etc/nginx/nginx.conf
+sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
+sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
 
-events {
-    worker_connections 1024;
-}
-
-http {
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-    access_log /opt/termix/nginx/logs/access.log;
-
-    client_body_temp_path /opt/termix/nginx/client_body;
-    proxy_temp_path /opt/termix/nginx/proxy_temp;
-
-    sendfile on;
-    keepalive_timeout 65;
-    client_header_timeout 300s;
-
-    server {
-        listen 80;
-        server_name _;
-
-        add_header X-Content-Type-Options nosniff always;
-        add_header X-XSS-Protection "1; mode=block" always;
-
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-            root /opt/termix/html;
-            expires 1y;
-            add_header Cache-Control "public, immutable";
-            try_files $uri =404;
-        }
-
-        location / {
-            root /opt/termix/html;
-            index index.html;
-            try_files $uri $uri/ /index.html;
-        }
-
-        location ~ ^/users(/.*)?$ {
-            proxy_pass http://127.0.0.1:30001;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-
-        location ~ ^/(version|releases|alerts|rbac|credentials|snippets|terminal|encryption)(/.*)?$ {
-            proxy_pass http://127.0.0.1:30001;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-
-        location ~ ^/(database|db)(/.*)?$ {
-            client_max_body_size 5G;
-            client_body_timeout 300s;
-            proxy_pass http://127.0.0.1:30001;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_connect_timeout 60s;
-            proxy_send_timeout 300s;
-            proxy_read_timeout 300s;
-            proxy_request_buffering off;
-            proxy_buffering off;
-        }
-
-        location /ssh/ {
-            proxy_pass http://127.0.0.1:30001;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        location /ssh/websocket/ {
-            proxy_pass http://127.0.0.1:30002/;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_read_timeout 86400s;
-            proxy_send_timeout 86400s;
-            proxy_buffering off;
-            proxy_request_buffering off;
-        }
-
-        location /ssh/tunnel/ {
-            proxy_pass http://127.0.0.1:30003;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        location /ssh/file_manager/ssh/ {
-            client_max_body_size 5G;
-            client_body_timeout 300s;
-            proxy_pass http://127.0.0.1:30004;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_connect_timeout 60s;
-            proxy_send_timeout 300s;
-            proxy_read_timeout 300s;
-            proxy_request_buffering off;
-            proxy_buffering off;
-        }
-
-        location ~ ^/ssh/file_manager/(recent|pinned|shortcuts)$ {
-            proxy_pass http://127.0.0.1:30001;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        location /health {
-            proxy_pass http://127.0.0.1:30001;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-        }
-
-        location ~ ^/(status|metrics)(/.*)?$ {
-            proxy_pass http://127.0.0.1:30005;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        location ~ ^/(uptime|activity)(/.*)?$ {
-            proxy_pass http://127.0.0.1:30006;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        location ^~ /docker/console/ {
-            proxy_pass http://127.0.0.1:30008/;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
-            proxy_read_timeout 86400s;
-            proxy_send_timeout 86400s;
-            proxy_buffering off;
-            proxy_request_buffering off;
-        }
-
-        location ~ ^/docker(/.*)?$ {
-            proxy_pass http://127.0.0.1:30007;
-            proxy_http_version 1.1;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_connect_timeout 60s;
-            proxy_send_timeout 300s;
-            proxy_read_timeout 300s;
-        }
-    }
-}
+mkdir -p /tmp/nginx
+echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
+mkdir -p /etc/systemd/system/nginx.service.d/
+cat >/etc/systemd/system/nginx.service.d/pidfile.conf <<EOF
+[Service]
+PIDFile=/tmp/nginx/nginx.pid
 EOF
+systemctl daemon-reload
 rm -f /etc/nginx/sites-enabled/default
-rm -f /etc/nginx/nginx.conf
-ln -sf /etc/nginx/sites-available/termix.conf /etc/nginx/nginx.conf
-systemctl reload nginx
+nginx -t
+systemctl enable nginx
+systemctl restart nginx
 msg_ok "Configured Nginx"
 
 msg_info "Creating Service"
+mkdir -p /etc/guacamole
+cat <<EOF >/etc/guacamole/guacd.conf
+[server]
+bind_host = 127.0.0.1
+bind_port = 4822
+EOF
+
+cat <<EOF >/opt/termix/.env
+NODE_ENV=production
+DATA_DIR=/opt/termix/db/data
+GUACD_HOST=127.0.0.1
+GUACD_PORT=4822
+EOF
+
+cat <<EOF >/etc/systemd/system/guacd.service
+[Unit]
+Description=Guacamole Proxy Daemon (guacd)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/guacd -f -b 127.0.0.1 -l 4822
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat <<EOF >/etc/systemd/system/termix.service
 [Unit]
 Description=Termix Backend
-After=network.target
+After=network.target guacd.service
+Wants=guacd.service
 
 [Service]
 Type=simple
 User=root
 WorkingDirectory=/opt/termix
-Environment=NODE_ENV=production
-Environment=DATA_DIR=/opt/termix/data
+EnvironmentFile=/opt/termix/.env
 ExecStart=/usr/bin/node /opt/termix/dist/backend/backend/starter.js
 Restart=on-failure
 RestartSec=5
@@ -250,7 +163,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now termix
+systemctl enable -q --now guacd termix
 msg_ok "Created Service"
 
 motd_ssh

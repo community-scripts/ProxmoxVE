@@ -32,6 +32,10 @@ msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
 msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
 msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
 
+# Telemetry
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pbs4-upgrade" "pve"
+
 start_routines() {
   header_info
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 3 BACKUP" --menu \
@@ -46,6 +50,19 @@ start_routines() {
   no) msg_error "Selected no to Backup" ;;
   esac
 
+  # --- Update Current PBS 3 System ---
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 3 UPDATE" --menu \
+    "\nUpdate current PBS 3 (Bookworm) packages before upgrade?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
+  case $CHOICE in
+  yes)
+    msg_info "Updating current PBS 3 packages"
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
+    msg_ok "Updated current PBS 3 packages"
+    ;;
+  no) msg_error "Skipped updating current packages" ;;
+  esac
+
   # --- Debian 13 Sources ---
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 4 SOURCES" --menu \
     "Switch to Debian 13 (Trixie) sources for PBS 4?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
@@ -53,7 +70,9 @@ start_routines() {
   yes)
     msg_info "Switching to Debian 13 (Trixie) Sources"
     rm -f /etc/apt/sources.list.d/*.list
-    sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
+    if [ -f /etc/apt/sources.list ]; then
+      sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list
+    fi
     cat >/etc/apt/sources.list.d/debian.sources <<EOF
 Types: deb
 URIs: http://deb.debian.org/debian
@@ -179,5 +198,11 @@ while true; do
   *) echo "Please answer yes or no." ;;
   esac
 done
+
+if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
+  header_info
+  msg_error "This upgrade script targets the amd64 Proxmox repositories and is not supported on ARM64."
+  exit 1
+fi
 
 start_routines

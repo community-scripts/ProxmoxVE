@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Nícolas Pastorello (opastorello)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://privatebin.info/
+# Source: https://privatebin.info/ | Github: https://github.com/PrivateBin/PrivateBin
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -15,11 +15,11 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-    nginx \
-    openssl
+  nginx \
+  openssl
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.2" PHP_MODULE="common,fpm" setup_php
+PHP_VERSION="8.2" PHP_FPM="YES" setup_php
 create_self_signed_cert
 fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
 
@@ -37,6 +37,7 @@ systemctl restart php8.2-fpm
 msg_ok "Configured PHP"
 
 msg_info "Configuring Universal Nginx"
+PHP_SOCK=$(get_php_fpm_socket)
 cat <<EOF >/etc/nginx/sites-available/privatebin.conf
 server {
     listen 80 default_server;
@@ -60,7 +61,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
@@ -75,9 +76,7 @@ server {
     add_header X-XSS-Protection "1; mode=block";
 }
 EOF
-ln -s /etc/nginx/sites-available/privatebin.conf /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-systemctl reload nginx
+nginx_enable_site privatebin.conf
 msg_ok "Nginx Configured"
 
 motd_ssh

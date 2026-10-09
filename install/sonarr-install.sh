@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://sonarr.tv/
+# Source: https://sonarr.tv/ | Github: https://github.com/Sonarr/Sonarr
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y sqlite3
+$STD apt install -y sqlite3 libicu-dev
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-x64.tar.gz"
+fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-$(arch_resolve "x64" "arm64").tar.gz"
 mkdir -p /var/lib/sonarr/
 chmod 775 /var/lib/sonarr/
 

@@ -13,15 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Docker"
-DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
-mkdir -p "$(dirname $DOCKER_CONFIG_PATH)"
-echo -e '{\n  "log-driver": "journald"\n}' >"$DOCKER_CONFIG_PATH"
-$STD sh <(curl -fsSL https://get.docker.com)
-systemctl enable -q --now docker
-msg_ok "Installed Docker"
+setup_docker
 
-fetch_and_deploy_gh_release "wings" "pelican-dev/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_amd64"
+fetch_and_deploy_gh_release "wings" "pelican-dev/wings" "singlefile" "latest" "/usr/local/bin" "wings_linux_$(arch_resolve)"
 mkdir -p /etc/pelican /var/run/wings
 
 msg_info "Creating Service"

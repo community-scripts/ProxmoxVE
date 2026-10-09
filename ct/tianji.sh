@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tianji.msgbyte.com/
+# Source: https://github.com/msgbyte/tianji
 
 APP="Tianji"
 var_tags="${var_tags:-monitoring}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,12 +37,11 @@ function update_script() {
     systemctl stop tianji
     msg_ok "Stopped Service"
 
-    msg_info "Backing up data"
-    cp /opt/tianji/src/server/.env /opt/.env
-    mv /opt/tianji /opt/tianji_bak
-    msg_ok "Backed up data"
+    create_backup /opt/tianji/src/server/.env
 
-    fetch_and_deploy_gh_release "tianji" "msgbyte/tianji" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tianji" "msgbyte/tianji" "tarball"
+
+    restore_backup
 
     msg_info "Updating Tianji"
     cd /opt/tianji
@@ -51,10 +52,8 @@ function update_script() {
     mkdir -p ./src/server/public
     cp -r ./geo ./src/server/public
     $STD pnpm build:server
-    mv /opt/.env /opt/tianji/src/server/.env
     cd src/server
     $STD pnpm db:migrate:apply
-    rm -rf /opt/tianji_bak
     rm -rf /opt/tianji/src/client
     rm -rf /opt/tianji/website
     rm -rf /opt/tianji/reporter
@@ -78,5 +77,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:12345${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:12345${CL}"

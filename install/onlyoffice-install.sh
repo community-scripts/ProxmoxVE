@@ -21,22 +21,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
 
-msg_info "Setup Database"
-DB_NAME=onlyoffice
-DB_USER=onlyoffice_user
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-{
-  echo "ONLYOFFICE-Credentials"
-  echo "ONLYOFFICE Database User: $DB_USER"
-  echo "ONLYOFFICE Database Password: $DB_PASS"
-  echo "ONLYOFFICE Database Name: $DB_NAME"
-} >>~/onlyoffice.creds
-msg_ok "Set up Database"
+PG_DB_NAME="onlyoffice" PG_DB_USER="onlyoffice_user" setup_postgresql_db
 
 msg_info "Adding ONLYOFFICE GPG Key"
 GPG_TMP="/tmp/onlyoffice.gpg"
@@ -54,43 +39,40 @@ Suites: squeeze
 Components: main
 Signed-By: /usr/share/keyrings/onlyoffice.gpg
 EOF
-  $STD apt update
+  apt_update_safe
   msg_ok "GPG Key Added"
 else
   msg_error "Failed to download or verify GPG key from $KEY_URL"
   [[ -f "$TMP_KEY_CONTENT" ]] && rm -f "$TMP_KEY_CONTENT"
-  exit 1
+  exit 250
 fi
 rm -f "$TMP_KEY_CONTENT"
 
 msg_info "Preconfiguring ONLYOFFICE Debconf Settings"
 RMQ_USER=onlyoffice_rmq
-RMQ_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+RMQ_PASS=$(random_password 13)
 JWT_SECRET=$(openssl rand -hex 16)
 $STD rabbitmqctl add_user $RMQ_USER $RMQ_PASS
 $STD rabbitmqctl set_permissions -p / $RMQ_USER ".*" ".*" ".*"
 $STD rabbitmqctl set_user_tags $RMQ_USER administrator
 
 echo onlyoffice-documentserver onlyoffice/db-host string localhost | debconf-set-selections
-echo onlyoffice-documentserver onlyoffice/db-user string $DB_USER | debconf-set-selections
-echo onlyoffice-documentserver onlyoffice/db-pwd password $DB_PASS | debconf-set-selections
-echo onlyoffice-documentserver onlyoffice/db-name string $DB_NAME | debconf-set-selections
+echo onlyoffice-documentserver onlyoffice/db-user string onlyoffice_user | debconf-set-selections
+echo onlyoffice-documentserver onlyoffice/db-pwd password $PG_DB_PASS | debconf-set-selections
+echo onlyoffice-documentserver onlyoffice/db-name string onlyoffice | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/rabbitmq-host string localhost | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/rabbitmq-user string $RMQ_USER | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/rabbitmq-pwd password $RMQ_PASS | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-enabled boolean true | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-secret password $JWT_SECRET | debconf-set-selections
 
-echo "RabbitMQ User: $RMQ_USER" >>~/onlyoffice.creds
-echo "RabbitMQ Password: $RMQ_PASS" >>~/onlyoffice.creds
-echo "JWT Secret: $JWT_SECRET" >>~/onlyoffice.creds
-{
-  echo ""
-  echo "ONLYOFFICE RabbitMQ Credentials"
-  echo "User: $RMQ_USER"
-  echo "Password: $RMQ_PASS"
-  echo "Secret: $JWT_SECRET"
-} >>~/onlyoffice.creds
+cat <<EOF >>~/onlyoffice.creds
+
+ONLYOFFICE RabbitMQ Credentials
+User: $RMQ_USER
+Password: $RMQ_PASS
+Secret: $JWT_SECRET
+EOF
 msg_ok "Debconf Preconfiguration Done"
 
 msg_info "Installing ttf-mscorefonts-installer"

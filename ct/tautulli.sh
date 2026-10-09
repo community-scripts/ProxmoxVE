@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://tautulli.com/
+# Source: https://tautulli.com/ | Github: https://github.com/Tautulli/Tautulli
 
 APP="Tautulli"
 var_tags="${var_tags:-media}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,11 +29,37 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating Tautulli"
-  $STD apt update
-  $STD apt upgrade -y
-  msg_ok "Updated Tautulli"
-  msg_ok "Updated successfully!"
+
+  if check_for_gh_release "Tautulli" "Tautulli/Tautulli"; then
+    PYTHON_VERSION="3.13" setup_uv
+
+    msg_info "Stopping Service"
+    systemctl stop tautulli
+    msg_ok "Stopped Service"
+
+    create_backup /opt/Tautulli/config.ini /opt/Tautulli/tautulli.db
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Tautulli" "Tautulli/Tautulli" "tarball"
+
+    restore_backup
+
+    msg_info "Updating Tautulli"
+    cd /opt/Tautulli
+    TAUTULLI_VERSION=$(get_latest_github_release "Tautulli/Tautulli" "false")
+    echo "${TAUTULLI_VERSION}" >/opt/Tautulli/version.txt
+    echo "master" >/opt/Tautulli/branch.txt
+    $STD uv venv -c
+    $STD source /opt/Tautulli/.venv/bin/activate
+    $STD uv pip install -r requirements.txt
+    $STD uv pip install pyopenssl
+    $STD uv pip install "setuptools<81"
+    msg_ok "Updated Tautulli"
+
+    msg_info "Starting Service"
+    systemctl start tautulli
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
   exit
 }
 
@@ -41,5 +69,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8181${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8181${CL}"

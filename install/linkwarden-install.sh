@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://linkwarden.app/
+# Source: https://linkwarden.app/ | Github: https://github.com/linkwarden/linkwarden
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -19,7 +19,7 @@ $STD apt install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="corepack" setup_nodejs
 PG_VERSION="16" setup_postgresql
 RUST_CRATES="monolith" setup_rust
 PG_DB_NAME="linkwardendb" PG_DB_USER="linkwarden" setup_postgresql_db
@@ -32,7 +32,7 @@ fi
 fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden" "tarball"
 
 msg_info "Installing Linkwarden (Patience)"
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+SECRET_KEY="$(random_password 32)"
 echo "Linkwarden Secret: $SECRET_KEY" >>"${HOME}/linkwarden.creds"
 cd /opt/linkwarden
 yarn_ver="4.12.0"
@@ -44,16 +44,15 @@ if [[ -f package.json ]]; then
   fi
 fi
 if command -v corepack >/dev/null 2>&1; then
-  $STD corepack enable
+
   $STD corepack prepare "yarn@${yarn_ver}" --activate || true
 fi
 $STD yarn
 $STD npx playwright install-deps
 $STD npx playwright install
-IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >/opt/linkwarden/.env
 NEXTAUTH_SECRET=${SECRET_KEY}
-NEXTAUTH_URL=http://${IP}:3000
+NEXTAUTH_URL=http://${LOCAL_IP}:3000
 DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}
 EOF
 $STD yarn prisma:generate

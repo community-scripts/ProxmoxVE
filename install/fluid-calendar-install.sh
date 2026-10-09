@@ -14,16 +14,18 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y zip
+$STD apt install -y \
+  build-essential \
+  zip
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="fluiddb" PG_DB_USER="fluiduser" setup_postgresql_db
-NODE_VERSION="20" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar" "tarball"
 
 msg_info "Configuring fluid-calendar"
-NEXTAUTH_SECRET="$(openssl rand -base64 44 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+NEXTAUTH_SECRET="$(random_password 32)"
 echo "NextAuth Secret: $NEXTAUTH_SECRET" >>~/$APPLICATION.creds
 cat <<EOF >/opt/fluid-calendar/.env
 DATABASE_URL="postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}"

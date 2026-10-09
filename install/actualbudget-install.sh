@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://actualbudget.org/
+# Source: https://actualbudget.org/ | Github: https://github.com/actualbudget/actual
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -19,7 +19,7 @@ $STD apt install -y \
   g++
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 create_self_signed_cert
 
 msg_info "Installing Actual Budget"
@@ -51,6 +51,7 @@ cat <<EOF >/opt/actualbudget-data/config.json
 EOF
 mkdir -p /opt/actualbudget
 cd /opt/actualbudget
+$STD npm config set allow-scripts=bcrypt,better-sqlite3,argon2 --location=global
 $STD npm install --location=global @actual-app/sync-server
 echo "${RELEASE}" >~/.actualbudget
 msg_ok "Installed Actual Budget"

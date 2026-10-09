@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2026 tteck
-# Authors: tteck (tteckster)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+# Copyright (c) 2021-2026 community-scripts ORG
+# Authors: MickLesk (CanbiZ) | Co-Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://frigate.video/
+# Source: https://frigate.video/ | Github: https://github.com/blakeblackshear/frigate
 
 APP="Frigate"
 var_tags="${var_tags:-nvr}"
-var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-20}"
+var_cpu="${var_cpu:-8}"
+var_ram="${var_ram:-6144}"
+var_disk="${var_disk:-25}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-11}"
+var_version="${var_version:-12}"
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-0}"
 var_gpu="${var_gpu:-yes}"
 
@@ -21,15 +23,15 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
-  if [[ ! -f /etc/systemd/system/frigate.service ]]; then
-    msg_error "No ${APP} Installation Found!"
+    header_info
+    check_container_storage
+    check_container_resources
+    if [[ ! -f /etc/systemd/system/frigate.service ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+    msg_error "To update Frigate, create a new container and transfer your configuration."
     exit
-  fi
-  msg_error "To update Frigate, create a new container and transfer your configuration."
-  exit
 }
 
 start
@@ -38,5 +40,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5000${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:5000${CL}"

@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apt-transport-https \
   xvfb
 msg_ok "Installed Dependencies"
@@ -26,10 +26,12 @@ setup_deb822_repo \
   "https://dl.google.com/linux/linux_signing_key.pub" \
   "https://dl.google.com/linux/chrome/deb/" \
   "stable"
-$STD apt update
+apt_update_safe
 $STD apt install -y google-chrome-stable
 # remove google-chrome.list added by google-chrome-stable
-rm /etc/apt/sources.list.d/google-chrome.list
+if [ -f /etc/apt/sources.list.d/google-chrome.list ]; then
+  rm /etc/apt/sources.list.d/google-chrome.list
+fi
 msg_ok "Installed Chrome"
 
 fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"

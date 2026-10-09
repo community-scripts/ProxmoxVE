@@ -14,8 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Apache CouchDB"
-ERLANG_COOKIE=$(openssl rand -base64 32)
-ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+ERLANG_COOKIE=$(openssl rand -hex 32)
+ADMIN_PASS="$(random_password 13)"
 debconf-set-selections <<<"couchdb couchdb/cookie string $ERLANG_COOKIE"
 debconf-set-selections <<<"couchdb couchdb/mode select standalone"
 debconf-set-selections <<<"couchdb couchdb/bindaddress string 0.0.0.0"
@@ -28,11 +28,11 @@ setup_deb822_repo \
   "$(get_os_info codename)" \
   "main"
 $STD apt install -y couchdb
-{
-  echo "CouchDB Credentials"
-  echo "CouchDB Erlang Cookie: $ERLANG_COOKIE"
-  echo "CouchDB Admin Password: $ADMIN_PASS"
-} >>~/couchdb.creds
+cat <<EOF >~/couchdb.creds
+CouchDB Credentials
+CouchDB Erlang Cookie: $ERLANG_COOKIE
+CouchDB Admin Password: $ADMIN_PASS
+EOF
 msg_ok "Installed Apache CouchDB"
 
 motd_ssh

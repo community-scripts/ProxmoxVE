@@ -5,9 +5,21 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/martabal/qbittorrent-exporter
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "qbittorrent-exporter" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
@@ -34,7 +46,7 @@ elif grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
   SERVICE_PATH="/etc/systemd/system/qbittorrent-exporter.service"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 # ==============================================================================
@@ -61,6 +73,24 @@ function uninstall() {
 # ==============================================================================
 function update() {
   if check_for_gh_release "qbittorrent-exporter" "martabal/qbittorrent-exporter"; then
+    if [[ "$(printf '%s\n' "2.0.0" "$CHECK_UPDATE_RELEASE" | sort -V | tail -n1)" == "$CHECK_UPDATE_RELEASE" ]] && \
+       ! grep -q "QBITTORRENT_API_KEY" "$CONFIG_PATH" 2>/dev/null; then
+      echo ""
+      msg_warn "Version 2.0.0 introduces a breaking change: username/password login has been replaced by an API key."
+      echo -e "${TAB3}${INFO} You must create an API key in qBittorrent under Tools > Options > Web UI > API key"
+      echo ""
+      echo -n "${TAB3}Enter your qBittorrent API key (or press Enter to abort): "
+      read -r QBITTORRENT_API_KEY
+      if [[ -z "$QBITTORRENT_API_KEY" ]]; then
+        msg_warn "No API key provided. Update aborted."
+        exit 0
+      fi
+      sed -i '/^QBITTORRENT_USERNAME=/d' "$CONFIG_PATH"
+      sed -i '/^QBITTORRENT_PASSWORD=/d' "$CONFIG_PATH"
+      echo "QBITTORRENT_API_KEY=\"${QBITTORRENT_API_KEY}\"" >>"$CONFIG_PATH"
+      msg_ok "API key saved to configuration"
+    fi
+
     msg_info "Stopping service"
     if [[ "$OS" == "Alpine" ]]; then
       rc-service qbittorrent-exporter stop &>/dev/null
@@ -93,10 +123,9 @@ function update() {
 # INSTALL
 # ==============================================================================
 function install() {
-  read -erp "Enter URL of qBittorrent, example: (http://127.0.0.1:8080): " QBITTORRENT_BASE_URL
-  read -erp "Enter qBittorrent username: " QBITTORRENT_USERNAME
-  read -rsp "Enter qBittorrent password: " QBITTORRENT_PASSWORD
-  printf "\n"
+  read -erp "${TAB3}Enter URL of qBittorrent, example: (http://127.0.0.1:8080): " QBITTORRENT_BASE_URL
+  echo -e "${TAB3}${INFO} Create an API key in qBittorrent under Tools > Options > Web UI > API key"
+  read -erp "${TAB3}Enter qBittorrent API key: " QBITTORRENT_API_KEY
 
   fetch_and_deploy_gh_release "qbittorrent-exporter" "martabal/qbittorrent-exporter" "tarball" "latest"
   setup_go
@@ -109,8 +138,7 @@ function install() {
   cat <<EOF >"$CONFIG_PATH"
 # https://github.com/martabal/qbittorrent-exporter?tab=readme-ov-file#parameters
 QBITTORRENT_BASE_URL="${QBITTORRENT_BASE_URL}"
-QBITTORRENT_USERNAME="${QBITTORRENT_USERNAME}"
-QBITTORRENT_PASSWORD="${QBITTORRENT_PASSWORD}"
+QBITTORRENT_API_KEY="${QBITTORRENT_API_KEY}"
 EOF
   msg_ok "Created configuration"
 
@@ -185,7 +213,7 @@ UPDATEEOF
 # ==============================================================================
 header_info
 ensure_usr_local_bin_persist
-import_local_ip
+get_lxc_ip
 
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
@@ -193,7 +221,7 @@ if [[ "${type:-}" == "update" ]]; then
     update
   else
     msg_error "qBittorrent-Exporter is not installed. Nothing to update."
-    exit 1
+    exit 233
   fi
   exit 0
 fi

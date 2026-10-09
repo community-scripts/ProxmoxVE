@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://docmost.com/
+# Source: https://docmost.com/ | Github: https://github.com/docmost/docmost
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -19,24 +19,36 @@ $STD apt install -y \
   make
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/docmost/docmost/main/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/docmost/docmost/main/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="docmost_db" PG_DB_USER="docmost_user" setup_postgresql_db
-import_local_ip
 fetch_and_deploy_gh_release "docmost" "docmost/docmost" "tarball"
 
 msg_info "Configuring Docmost (Patience)"
 cd /opt/docmost
+
+# Fix: Docmost EE (audit logs etc.) lives in a git submodule that is NOT
+# included in GitHub tarballs.  The community NoopAuditService exists but
+# is only exported by CoreModule – child modules such as UserModule cannot
+# resolve it.  Making CoreModule @Global() exposes the token app-wide.
+if [[ ! -f /opt/docmost/apps/server/src/ee/ee.module.ts ]] &&
+  ! grep -q '@Global()' /opt/docmost/apps/server/src/core/core.module.ts 2>/dev/null; then
+  sed -i '/^  Module,$/a\  Global,' /opt/docmost/apps/server/src/core/core.module.ts
+  sed -i '/^@Module({$/i @Global()' /opt/docmost/apps/server/src/core/core.module.ts
+fi
+
 mv .env.example .env
 mkdir data
-sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)|" \
+sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(random_password 32)|" \
   -e "s|DATABASE_URL=.*|DATABASE_URL=\"postgres://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME?schema=public\"|" \
   -e "s|FILE_UPLOAD_SIZE_LIMIT=.*|FILE_UPLOAD_SIZE_LIMIT=50mb|" \
   -e "s|DRAWIO_URL=.*|DRAWIO_URL=https://embed.diagrams.net|" \
   -e "s|DISABLE_TELEMETRY=.*|DISABLE_TELEMETRY=true|" \
   -e "s|APP_URL=.*|APP_URL=http://$LOCAL_IP:3000|" \
+  -e "s|^STORAGE_DRIVER=azure|#STORAGE_DRIVER=azure|" \
   /opt/docmost/.env
 export NODE_OPTIONS="--max-old-space-size=2048"
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 $STD pnpm install
 $STD pnpm build
 msg_ok "Configured Docmost"

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.keycloak.org/
+# Source: https://github.com/keycloak/keycloak
 
 APP="Keycloak"
 var_tags="${var_tags:-access-management}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,14 +29,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if grep -q '^ExecStop=/opt/keycloak/bin/kc.sh stop$' /etc/systemd/system/keycloak.service 2>/dev/null; then
+    msg_info "Correcting Service"
+    sed -i '/^ExecStop=\/opt\/keycloak\/bin\/kc.sh stop$/d' /etc/systemd/system/keycloak.service
+    systemctl daemon-reload
+    msg_ok "Corrected Service"
+  fi
+
   if check_for_gh_release "keycloak_app" "keycloak/keycloak"; then
     msg_info "Stopping Service"
     systemctl stop keycloak
     msg_ok "Stopped Service"
 
     msg_info "Updating packages"
-    $STD apt-get update
-    $STD apt-get -y upgrade
+    apt_update_safe
+    $STD apt -y upgrade
     msg_ok "Updated packages"
 
     msg_info "Backup old Keycloak"
@@ -66,5 +76,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080/admin${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080/admin${CL}"

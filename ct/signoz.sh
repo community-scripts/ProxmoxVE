@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://signoz.io/
+# Source: https://signoz.io/ | Github: https://github.com/SigNoz/signoz
 
 APP="SigNoz"
 var_tags="${var_tags:-notes}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,15 +30,40 @@ function update_script() {
     exit
   fi
 
+  if [[ ! -f /var/lib/clickhouse/user_scripts/histogramQuantile ]]; then
+    fetch_and_deploy_gh_release "histogram-quantile" "SigNoz/signoz" "prebuild" "histogram-quantile/v0.0.1" "/opt/histogram-quantile" "histogram-quantile_linux_$(arch_resolve).tar.gz"
+
+    msg_info "Adding ClickHouse histogramQuantile Function"
+    mkdir -p /var/lib/clickhouse/user_scripts
+    install -m 755 -o clickhouse -g clickhouse /opt/histogram-quantile/histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
+    cat <<EOF >/etc/clickhouse-server/histogram_quantile_function.yaml
+functions:
+  name: histogramQuantile
+  type: executable
+  format: CSV
+  command: ./histogramQuantile
+  return_type: Float64
+  argument:
+    - name: buckets
+      type: Array(Float64)
+    - name: counts
+      type: Array(Float64)
+    - name: quantile
+      type: Float64
+EOF
+    systemctl restart clickhouse-server
+    msg_ok "Added ClickHouse histogramQuantile Function"
+  fi
+
   if check_for_gh_release "signoz" "SigNoz/signoz"; then
     msg_info "Stopping Services"
     systemctl stop signoz
     systemctl stop signoz-otel-collector
     msg_ok "Stopped Services"
 
-    fetch_and_deploy_gh_release "signoz" "SigNoz/signoz" "prebuild" "latest" "/opt/signoz" "signoz-community_linux_amd64.tar.gz"
-    fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-otel-collector" "signoz-otel-collector_linux_amd64.tar.gz"
-    fetch_and_deploy_gh_release "signoz-schema-migrator" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-schema-migrator" "signoz-schema-migrator_linux_amd64.tar.gz"
+    fetch_and_deploy_gh_release "signoz" "SigNoz/signoz" "prebuild" "latest" "/opt/signoz" "signoz-community_linux_$(arch_resolve).tar.gz"
+    fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-otel-collector" "signoz-otel-collector_linux_$(arch_resolve).tar.gz"
+    fetch_and_deploy_gh_release "signoz-schema-migrator" "SigNoz/signoz-otel-collector" "prebuild" "latest" "/opt/signoz-schema-migrator" "signoz-schema-migrator_linux_$(arch_resolve).tar.gz"
 
     msg_info "Updating SigNoz"
     cd /opt/signoz-schema-migrator/bin 
@@ -59,5 +86,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

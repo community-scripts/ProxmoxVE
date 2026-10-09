@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/lobehub/lobehub
+
+APP="LobeHub"
+var_tags="${var_tags:-ai;chat}"
+var_cpu="${var_cpu:-6}"
+var_ram="${var_ram:-10240}"
+var_disk="${var_disk:-15}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
+var_unprivileged="${var_unprivileged:-1}"
+
+header_info "$APP"
+variables
+color
+catch_errors
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -d /opt/lobehub ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  if check_for_gh_release "lobehub" "lobehub/lobehub"; then
+    msg_info "Stopping Services"
+    systemctl stop lobehub
+    msg_ok "Stopped Services"
+
+    create_backup /opt/lobehub/.env
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "lobehub" "lobehub/lobehub" "tarball"
+
+    restore_backup
+
+    msg_info "Building Application"
+    cd /opt/lobehub
+    export NODE_OPTIONS="--max-old-space-size=8192"
+    if grep -qE '"@lobehub/ui": "\^5\.4[0-9]\.' package.json; then
+      sed -i "/^overrides:/a\  '@lobehub/ui': ~5.49.1" pnpm-workspace.yaml
+    fi
+    $STD pnpm install
+    $STD pnpm run build:docker
+    unset NODE_OPTIONS
+    msg_ok "Built Application"
+
+    msg_info "Setting Up Standalone"
+    cp -r /opt/lobehub/.next/static /opt/lobehub/.next/standalone/.next/static
+    cp -r /opt/lobehub/public /opt/lobehub/.next/standalone/public
+    cp -r /opt/lobehub/scripts/migrateServerDB/* /opt/lobehub/.next/standalone/
+    cp -r /opt/lobehub/packages/database/migrations /opt/lobehub/.next/standalone/migrations
+    msg_ok "Set Up Standalone"
+
+    msg_info "Running Database Migrations"
+    cd /opt/lobehub
+    set -a && source /opt/lobehub/.env && set +a
+    $STD node /opt/lobehub/.next/standalone/docker.cjs
+    msg_ok "Ran Database Migrations"
+
+    msg_info "Starting Services"
+    systemctl start lobehub
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
+  fi
+  exit
+}
+
+start
+build_container
+description
+
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3210${CL}"

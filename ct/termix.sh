@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,16 +31,158 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="26" setup_nodejs
+
+  if check_for_gh_tag "guacd" "apache/guacamole-server"; then
+    msg_info "Stopping guacd"
+    systemctl stop guacd 2>/dev/null || true
+    msg_ok "Stopped guacd"
+
+    ensure_dependencies \
+      libcairo2-dev \
+      libjpeg62-turbo-dev \
+      libpng-dev \
+      libtool-bin \
+      uuid-dev \
+      libvncserver-dev \
+      freerdp3-dev \
+      libssh2-1-dev \
+      libtelnet-dev \
+      libwebsockets-dev \
+      libpulse-dev \
+      libvorbis-dev \
+      libwebp-dev \
+      libssl-dev \
+      libpango1.0-dev \
+      libswscale-dev \
+      libavcodec-dev \
+      libavutil-dev \
+      libavformat-dev
+
+    msg_info "Updating Guacamole Server (guacd)"
+    fetch_and_deploy_gh_tag "guacd" "apache/guacamole-server" "${CHECK_UPDATE_RELEASE}" "/opt/guacamole-server"
+    cd /opt/guacamole-server
+    export CPPFLAGS="-Wno-error=deprecated-declarations"
+    $STD autoreconf -fi
+    $STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
+    $STD make
+    $STD make install
+    $STD ldconfig
+    cd /opt
+    rm -rf /opt/guacamole-server
+    msg_ok "Updated Guacamole Server (guacd) to ${CHECK_UPDATE_RELEASE}"
+
+    if [[ ! -f /etc/guacamole/guacd.conf ]]; then
+      mkdir -p /etc/guacamole
+      cat <<EOF >/etc/guacamole/guacd.conf
+[server]
+bind_host = 127.0.0.1
+bind_port = 4822
+EOF
+    fi
+
+    if [[ ! -f /etc/systemd/system/guacd.service ]] || grep -q "Type=forking" /etc/systemd/system/guacd.service 2>/dev/null; then
+      cat <<EOF >/etc/systemd/system/guacd.service
+[Unit]
+Description=Guacamole Proxy Daemon (guacd)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/guacd -f -b 127.0.0.1 -l 4822
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    fi
+
+    if ! grep -q "guacd.service" /etc/systemd/system/termix.service 2>/dev/null; then
+      sed -i '/^After=network.target/s/$/ guacd.service/' /etc/systemd/system/termix.service
+      sed -i '/^\[Unit\]/a Wants=guacd.service' /etc/systemd/system/termix.service
+    fi
+
+    systemctl daemon-reload
+    systemctl enable -q --now guacd
+  fi
+
   if check_for_gh_release "termix" "Termix-SSH/Termix"; then
-    msg_info "Stopping Service"
+    msg_info "Stopping Termix"
     systemctl stop termix
-    msg_ok "Stopped Service"
+    msg_ok "Stopped Termix"
 
-    msg_info "Backing up Data"
-    cp -r /opt/termix/data /opt/termix_data_backup
-    msg_ok "Backed up Data"
+    msg_info "Migrating Configuration"
+    mkdir -p /opt/termix/db/data
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix"
+    if [[ -f /opt/termix/data/db.sqlite.encrypted && ! -f /opt/termix/db/data/db.sqlite.encrypted ]]; then
+      cp -a /opt/termix/data/db.sqlite.encrypted /opt/termix/db/data/db.sqlite.encrypted
+      [[ -f /opt/termix/data/db.sqlite.encrypted.meta ]] &&
+        cp -a /opt/termix/data/db.sqlite.encrypted.meta /opt/termix/db/data/db.sqlite.encrypted.meta
+      [[ -f /opt/termix/data/db.sqlite ]] &&
+        cp -a /opt/termix/data/db.sqlite /opt/termix/db/data/db.sqlite
+    fi
+
+    if [[ -f /opt/termix/data/.env && ! -f /opt/termix/db/data/.env ]]; then
+      cp -a /opt/termix/data/.env /opt/termix/db/data/.env
+    fi
+
+    for sub in ssl session_logs session_recordings acme-webroot certbot uploads; do
+      if [[ -d /opt/termix/data/$sub && ! -d /opt/termix/db/data/$sub ]]; then
+        cp -a "/opt/termix/data/$sub" "/opt/termix/db/data/$sub"
+      fi
+    done
+
+    cat <<EOF >/opt/termix/.env
+NODE_ENV=production
+DATA_DIR=/opt/termix/db/data
+GUACD_HOST=127.0.0.1
+GUACD_PORT=4822
+EOF
+
+    if ! grep -q "EnvironmentFile" /etc/systemd/system/termix.service 2>/dev/null; then
+      cat <<EOF >/etc/systemd/system/termix.service
+[Unit]
+Description=Termix Backend
+After=network.target guacd.service
+Wants=guacd.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/termix
+EnvironmentFile=/opt/termix/.env
+ExecStart=/usr/bin/node /opt/termix/dist/backend/backend/starter.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+      systemctl daemon-reload
+    fi
+    msg_ok "Migrated Configuration"
+
+    create_backup /opt/termix/.env
+
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="db/data data uploads" fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
+
+    restore_backup
+
+    msg_info "Recreating Directories"
+    mkdir -p /opt/termix/html \
+      /opt/termix/nginx \
+      /opt/termix/nginx/logs \
+      /opt/termix/nginx/cache \
+      /opt/termix/nginx/client_body \
+      /opt/termix/db/data
+    msg_ok "Recreated Directories"
+
+    if [[ -f /opt/termix/db/data/db.sqlite.encrypted && ! -f /opt/termix/db/data/.env ]]; then
+      msg_error "Encrypted database restored without its keys (/opt/termix/db/data/.env is missing)"
+      msg_custom "🛟" "Restore the container from a backup and report this at https://github.com/community-scripts/ProxmoxVE/issues"
+      exit 1
+    fi
 
     msg_info "Building Frontend"
     cd /opt/termix
@@ -51,6 +195,10 @@ function update_script() {
     msg_info "Building Backend"
     $STD npm rebuild better-sqlite3 --force
     $STD npm run build:backend
+    if [[ ! -f /opt/termix/dist/backend/backend/starter.js ]]; then
+      msg_error "Backend build failed: /opt/termix/dist/backend/backend/starter.js was not created"
+      exit 1
+    fi
     msg_ok "Built Backend"
 
     msg_info "Setting up Production Dependencies"
@@ -59,12 +207,6 @@ function update_script() {
     $STD npm cache clean --force
     msg_ok "Set up Production Dependencies"
 
-    msg_info "Restoring Data"
-    mkdir -p /opt/termix/data
-    cp -r /opt/termix_data_backup/. /opt/termix/data
-    rm -rf /opt/termix_data_backup
-    msg_ok "Restored Data"
-
     msg_info "Updating Frontend Files"
     rm -rf /opt/termix/html/*
     cp -r /opt/termix/dist/* /opt/termix/html/ 2>/dev/null || true
@@ -72,9 +214,56 @@ function update_script() {
     cp -r /opt/termix/public/fonts /opt/termix/html/fonts 2>/dev/null || true
     msg_ok "Updated Frontend Files"
 
-    msg_info "Starting Service"
-    systemctl start termix
-    msg_ok "Started Service"
+    msg_warn "The Nginx configuration may need to be updated for new features to work."
+    msg_custom "💾" "Your current config will be backed up to nginx.conf.bak"
+    msg_custom "⚠️ " "Note: Custom modifications (reverse proxy, SSL) will be overwritten!"
+    echo ""
+    read -rp "${TAB3}Update Nginx configuration? [Y/n]: " REPLY
+    if [[ "${REPLY,,}" =~ ^(y|yes|)$ ]]; then
+      msg_info "Updating Nginx Configuration"
+      cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+      curl -fsSL "https://raw.githubusercontent.com/Termix-SSH/Termix/main/docker/nginx.conf" -o /etc/nginx/nginx.conf
+      sed -i '/^master_process/d' /etc/nginx/nginx.conf
+      sed -i '/^pid \/app\/nginx/d' /etc/nginx/nginx.conf
+      sed -i 's|error_log /tmp/nginx/error.log|error_log /var/log/nginx/error.log|' /etc/nginx/nginx.conf
+      sed -i 's|access_log /tmp/nginx/access.log|access_log /var/log/nginx/access.log|' /etc/nginx/nginx.conf
+      sed -i 's|/app/html|/opt/termix/html|g' /etc/nginx/nginx.conf
+      sed -i 's|/app/nginx|/opt/termix/nginx|g' /etc/nginx/nginx.conf
+      sed -i 's|listen ${PORT};|listen 80;|g' /etc/nginx/nginx.conf
+      rm -f /etc/systemd/system/nginx.service.d/pidfile.conf
+      rm -f /etc/tmpfiles.d/nginx-termix.conf
+      
+      if [ ! -d /tmp/nginx ]; then
+        mkdir -p /tmp/nginx
+      fi
+
+      if [ ! -f /etc/tmpfiles.d/nginx-termix.conf ]; then
+        echo "d /tmp/nginx 0755 nobody nogroup -" >/etc/tmpfiles.d/nginx-termix.conf
+      fi
+
+      if [ ! -f /etc/systemd/system/nginx.service.d/pidfile.conf ]; then
+        mkdir -p /etc/systemd/system/nginx.service.d/
+        cat <<'EOF' >/etc/systemd/system/nginx.service.d/pidfile.conf
+[Service]
+PIDFile=/tmp/nginx/nginx.pid
+EOF
+      fi
+      
+      systemctl daemon-reload
+      nginx -t && systemctl restart nginx
+      msg_ok "Updated Nginx Configuration"
+    else
+      msg_warn "Nginx configuration not updated. If Termix doesn't work, restore from backup or update manually."
+    fi
+
+    msg_info "Starting Termix"
+    systemctl daemon-reload
+    if ! systemctl start termix; then
+      msg_error "Termix failed to start"
+      journalctl -u termix -n 30 --no-pager || true
+      exit 1
+    fi
+    msg_ok "Started Termix"
     msg_ok "Updated successfully!"
   fi
   exit
@@ -86,5 +275,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

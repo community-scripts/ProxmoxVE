@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 tteck
 # Author: tteck
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://archivebox.io/
+# Source: https://archivebox.io/ | Github: https://github.com/ArchiveBox/ArchiveBox
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   expect \
   libssl-dev \
@@ -27,7 +27,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   python3-ldap \
   python3-msgpack \
   python3-regex
@@ -37,7 +37,7 @@ NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" 
 PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Installing Playwright"
-$STD uv pip install playwright --system
+$STD uv pip install playwright --system --break-system-packages
 $STD playwright install-deps chromium
 msg_ok "Installed Playwright"
 
@@ -46,7 +46,7 @@ mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
 $STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
 chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
 chmod -R 755 /opt/archivebox/data
-$STD uv pip install archivebox --system
+$STD uv pip install archivebox --system --break-system-packages
 cd /opt/archivebox/data
 expect <<EOF
 set timeout -1
@@ -62,10 +62,10 @@ expect "Email address"
 send "\r"
 
 expect "Password"
-send "helper-scripts.com\r"
+send "community-scripts.org\r"
 
 expect "Password (again)"
-send "helper-scripts.com\r"
+send "community-scripts.org\r"
 
 expect eof
 EOF

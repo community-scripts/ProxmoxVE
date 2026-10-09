@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://invoiceshelf.com/
+
+APP="InvoiceShelf"
+var_tags="${var_tags:-invoicing;finance;business}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-1024}"
+var_disk="${var_disk:-4}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
+var_unprivileged="${var_unprivileged:-1}"
+
+header_info "$APP"
+variables
+color
+catch_errors
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -d /opt/invoiceshelf ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  if check_for_gh_release "invoiceshelf" "InvoiceShelf/InvoiceShelf"; then
+    msg_info "Stopping Services"
+    systemctl stop caddy
+    msg_ok "Stopped Services"
+
+    create_backup /opt/invoiceshelf/.env
+
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="storage" fetch_and_deploy_gh_release "invoiceshelf" "InvoiceShelf/InvoiceShelf" "tarball"
+
+    restore_backup
+
+    msg_info "Updating Application"
+    cd /opt/invoiceshelf
+    $STD composer install --no-dev --optimize-autoloader
+    if command -v corepack >/dev/null 2>&1; then
+      $STD corepack pnpm install
+      $STD corepack pnpm run build
+    else
+      $STD pnpm install
+      $STD pnpm run build
+    fi
+    $STD php artisan migrate --force
+    $STD php artisan storage:link
+    $STD php artisan optimize:clear
+    chown -R www-data:www-data /opt/invoiceshelf
+    msg_ok "Updated Application"
+
+    msg_info "Starting Services"
+    systemctl start caddy
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
+  fi
+  exit
+}
+
+start
+build_container
+description
+
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"

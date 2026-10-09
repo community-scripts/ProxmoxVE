@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: luismco
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-no}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,32 +35,21 @@ function update_script() {
     systemctl stop flatnotes
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Configuration and Data"
-    cp /opt/flatnotes/.env /opt/flatnotes.env
-    cp -r /opt/flatnotes/data /opt/flatnotes_data_backup
-    msg_ok "Backed up Configuration and Data"
+    create_backup /opt/flatnotes/.env /opt/flatnotes/data
 
-    fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes"
+    NODE_VERSION="24" setup_nodejs
 
-    msg_info "Updating Frontend"
-    cd /opt/flatnotes/client
-    $STD npm install
-    $STD npm run build
-    msg_ok "Updated Frontend"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "flatnotes" "dullage/flatnotes" "tarball"
+    PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/flatnotes" setup_uv
 
-    msg_info "Updating Backend"
+    restore_backup
+
+    msg_info "Updating Flatnotes"
     cd /opt/flatnotes
-    rm -f uv.lock
-    $STD /usr/local/bin/uvx migrate-to-uv
-    $STD /usr/local/bin/uv sync
-    msg_ok "Updated Backend"
-
-    msg_info "Restoring Configuration and Data"
-    cp /opt/flatnotes.env /opt/flatnotes/.env
-    cp -r /opt/flatnotes_data_backup/. /opt/flatnotes/data
-    rm -f /opt/flatnotes.env
-    rm -r /opt/flatnotes_data_backup
-    msg_ok "Restored Configuration and Data"
+    $STD uv sync --locked --no-dev
+    $STD npm ci
+    $STD npm run build
+    msg_ok "Updated Flatnotes"
 
     msg_info "Starting Service"
     systemctl start flatnotes
@@ -74,6 +65,6 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"
 

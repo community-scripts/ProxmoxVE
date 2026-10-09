@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://sabnzbd.org/
+# Source: https://sabnzbd.org/ | Github: https://github.com/sabnzbd/sabnzbd
 
 APP="SABnzbd"
 var_tags="${var_tags:-downloader}"
@@ -12,6 +13,7 @@ var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -25,7 +27,7 @@ function update_script() {
     check_container_resources
 
     if par2 --version | grep -q "par2cmdline-turbo"; then
-        fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-amd64.zip"
+        fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-$(arch_resolve).zip"
     fi
 
     if [[ ! -d /opt/sabnzbd ]]; then
@@ -41,7 +43,7 @@ function update_script() {
         # Always ensure venv exists
         if [[ ! -d /opt/sabnzbd/venv ]]; then
             msg_info "Migrating SABnzbd to uv virtual environment"
-            $STD uv venv /opt/sabnzbd/venv
+            $STD uv venv --clear /opt/sabnzbd/venv
             msg_ok "Created uv venv at /opt/sabnzbd/venv"
         fi
 
@@ -66,5 +68,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7777${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:7777${CL}"

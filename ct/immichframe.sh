@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: Thiago Canozzo Lahr (tclahr)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/immichFrame/ImmichFrame
+
+APP="ImmichFrame"
+var_tags="${var_tags:-photos;slideshow}"
+var_cpu="${var_cpu:-1}"
+var_ram="${var_ram:-2048}"
+var_disk="${var_disk:-8}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
+var_arm64="${var_arm64:-yes}"
+var_unprivileged="${var_unprivileged:-1}"
+
+header_info "$APP"
+variables
+color
+catch_errors
+
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -d /opt/immichframe ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  if ! dotnet --list-sdks 2>/dev/null | grep -q '^8\.'; then
+    msg_info "Installing .NET SDK 8.0"
+    if [[ "$(arch_resolve)" == "arm64" ]]; then
+      curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+      $STD bash /tmp/dotnet-install.sh --channel 8.0 --install-dir /usr/lib/dotnet8
+      ln -sf /usr/lib/dotnet8/dotnet /usr/bin/dotnet
+      rm -f /tmp/dotnet-install.sh
+    else
+      setup_deb822_repo \
+        "microsoft" \
+        "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+        "https://packages.microsoft.com/debian/13/prod/" \
+        "trixie" \
+        "main"
+      $STD apt install -y dotnet-sdk-8.0
+    fi
+    msg_ok "Installed .NET SDK 8.0"
+  fi
+
+  if check_for_gh_release "immichframe" "immichFrame/ImmichFrame"; then
+    msg_info "Stopping Service"
+    systemctl stop immichframe
+    msg_ok "Stopped Service"
+
+    create_backup /opt/immichframe/Config
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "immichframe" "immichFrame/ImmichFrame" "tarball" "latest" "/tmp/immichframe"
+
+    msg_info "Setting up ImmichFrame"
+    cd /tmp/immichframe
+    $STD dotnet publish ImmichFrame.WebApi/ImmichFrame.WebApi.csproj \
+      --configuration Release \
+      --runtime "$(arch_resolve "linux-x64" "linux-arm64")" \
+      --self-contained false \
+      --output /opt/immichframe
+
+    cd /tmp/immichframe/immichFrame.Web
+    $STD npm ci --silent
+    $STD npm run build
+    rm -rf /opt/immichframe/wwwroot/*
+    cp -r build/* /opt/immichframe/wwwroot
+    rm -rf /tmp/immichframe
+    msg_ok "Setup ImmichFrame"
+
+    restore_backup
+    chown -R immichframe:immichframe /opt/immichframe
+
+    if ! grep -q '^Environment=IMMICHFRAME_ADMIN_PASSWORD=' /etc/systemd/system/immichframe.service; then
+      msg_info "Setting Admin Password"
+      ADMIN_PASSWORD=$(openssl rand -hex 16)
+      sed -i "/^Environment=DOTNET_CONTENTROOT=/a Environment=IMMICHFRAME_ADMIN_PASSWORD=${ADMIN_PASSWORD}" /etc/systemd/system/immichframe.service
+      cat <<EOF >>~/immichframe.creds
+ImmichFrame Admin User: admin
+ImmichFrame Admin Password: $ADMIN_PASSWORD
+EOF
+      systemctl daemon-reload
+      msg_ok "Set Admin Password (see ~/immichframe.creds)"
+    fi
+
+    msg_info "Starting Service"
+    systemctl start immichframe
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  fi
+  exit
+}
+
+start
+build_container
+description
+
+msg_ok "Completed successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"

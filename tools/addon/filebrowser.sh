@@ -3,144 +3,151 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-
-function header_info {
-    clear
-    cat <<"EOF"
-    _______ __     ____
-   / ____(_) /__  / __ )_________ _      __________  _____
-  / /_  / / / _ \/ __  / ___/ __ \ | /| / / ___/ _ \/ ___/
- / __/ / / /  __/ /_/ / /  / /_/ / |/ |/ (__  )  __/ /
-/_/   /_/_/\___/_____/_/   \____/|__/|__/____/\___/_/
-EOF
-}
-
-YW=$(echo "\033[33m")
-GN=$(echo "\033[1;92m")
-RD=$(echo "\033[01;31m")
-BL=$(echo "\033[36m")
-CL=$(echo "\033[m")
-CM="${GN}✔️${CL}"
-CROSS="${RD}✖️${CL}"
-INFO="${BL}ℹ️${CL}"
+# Source: https://filebrowser.org/ | Github: https://github.com/filebrowser/filebrowser
 
 APP="FileBrowser"
+APP_TYPE="addon"
 INSTALL_PATH="/usr/local/bin/filebrowser"
 DB_PATH="/usr/local/community-scripts/filebrowser.db"
 DEFAULT_PORT=8080
 
-# Get first non-loopback IP & Detect primary network interface dynamically
-IFACE=$(ip -4 route | awk '/default/ {print $5; exit}')
-IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1)
+if ! command -v curl &>/dev/null; then
+  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
+  if [[ -f /etc/alpine-release ]]; then
+    apk update >/dev/null 2>&1
+    apk add --no-cache curl >/dev/null 2>&1
+  else
+    apt-get update >/dev/null 2>&1
+    apt-get install -y curl >/dev/null 2>&1
+  fi
+fi
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
+declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "filebrowser" "addon"
 
-[[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
-[[ -z "$IP" ]] && IP="127.0.0.1"
+# Enable error handling
+set -Eeuo pipefail
+trap 'error_handler' ERR
+
+# Initialize all core functions (colors, formatting, icons, STD mode)
+load_functions
+
+header_info
+get_lxc_ip
+IP="$LOCAL_IP"
+
+# Proxmox Host Warning
+if [[ -d "/etc/pve" ]]; then
+  msg_warn "Running this addon directly on the Proxmox host is not recommended!"
+  msg_warn "Only the boot disk will be visible — passthrough drives will not be indexed."
+  msg_warn "This causes incorrect disk usage stats and incomplete file browsing."
+  msg_warn "Run this addon inside an LXC or VM instead and mount your drives there."
+  echo ""
+  echo -n "${TAB}Continue anyway on the Proxmox host? (y/N): "
+  read -r host_confirm
+  if [[ ! "${host_confirm,,}" =~ ^(y|yes)$ ]]; then
+    msg_error "Aborted."
+    exit 0
+  fi
+fi
 
 # Detect OS
 if [[ -f "/etc/alpine-release" ]]; then
-    OS="Alpine"
-    SERVICE_PATH="/etc/init.d/filebrowser"
-    PKG_MANAGER="apk add --no-cache"
+  OS="Alpine"
+  SERVICE_PATH="/etc/init.d/filebrowser"
+  PKG_MANAGER="apk add --no-cache"
 elif [[ -f "/etc/debian_version" ]]; then
-    OS="Debian"
-    SERVICE_PATH="/etc/systemd/system/filebrowser.service"
-    PKG_MANAGER="apt-get install -y"
+  OS="Debian"
+  SERVICE_PATH="/etc/systemd/system/filebrowser.service"
+  PKG_MANAGER="apt install -y"
 else
-    echo -e "${CROSS} Unsupported OS detected. Exiting."
-    exit 1
+  msg_error "Unsupported OS detected. Exiting."
+  exit 238
 fi
-
-header_info
-
-function msg_info() {
-    local msg="$1"
-    echo -e "${INFO} ${YW}${msg}...${CL}"
-}
-
-function msg_ok() {
-    local msg="$1"
-    echo -e "${CM} ${GN}${msg}${CL}"
-}
-
-function msg_error() {
-    local msg="$1"
-    echo -e "${CROSS} ${RD}${msg}${CL}"
-}
 
 if [ -f "$INSTALL_PATH" ]; then
-    echo -e "${YW}⚠️ ${APP} is already installed.${CL}"
-    read -r -p "Would you like to uninstall ${APP}? (y/N): " uninstall_prompt
-    if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
-        msg_info "Uninstalling ${APP}"
-        if [[ "$OS" == "Debian" ]]; then
-            systemctl disable --now filebrowser.service &>/dev/null
-            rm -f "$SERVICE_PATH"
-        else
-            rc-service filebrowser stop &>/dev/null
-            rc-update del filebrowser &>/dev/null
-            rm -f "$SERVICE_PATH"
-        fi
-        rm -f "$INSTALL_PATH" "$DB_PATH"
-        msg_ok "${APP} has been uninstalled."
-        exit 0
-    fi
-
-    read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
-    if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
-        msg_info "Updating ${APP}"
-        curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
-        chmod +x "$INSTALL_PATH"
-        msg_ok "Updated ${APP}"
-        exit 0
+  msg_warn "${APP} is already installed."
+  read -r -p "Would you like to uninstall ${APP}? (y/N): " uninstall_prompt
+  if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+    msg_info "Uninstalling ${APP}"
+    if [[ "$OS" == "Debian" ]]; then
+      systemctl disable --now filebrowser.service &>/dev/null || true
+      rm -f "$SERVICE_PATH"
     else
-        echo -e "${YW}⚠️ Update skipped. Exiting.${CL}"
-        exit 0
+      rc-service filebrowser stop &>/dev/null || true
+      rc-update del filebrowser &>/dev/null || true
+      rm -f "$SERVICE_PATH"
     fi
+    rm -f "$INSTALL_PATH" "$DB_PATH" "$HOME/.filebrowser"
+    msg_ok "${APP} has been uninstalled."
+    exit 0
+  fi
+
+  read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
+  if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
+    if check_for_gh_release "filebrowser" "filebrowser/filebrowser"; then
+      msg_info "Updating ${APP}"
+      fetch_and_deploy_gh_release "filebrowser" "filebrowser/filebrowser" "prebuild" "latest" "/opt/filebrowser-dist" "linux-$(arch_resolve)-filebrowser.tar.gz"
+      install -m 755 /opt/filebrowser-dist/filebrowser "$INSTALL_PATH"
+      rm -rf /opt/filebrowser-dist
+      msg_ok "Updated ${APP}"
+    fi
+    exit 0
+  else
+    msg_warn "Update skipped. Exiting."
+    exit 0
+  fi
 fi
 
-echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
+msg_warn "${APP} is not installed."
 read -r -p "Enter port number (Default: ${DEFAULT_PORT}): " PORT
 PORT=${PORT:-$DEFAULT_PORT}
 
 read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_info "Installing ${APP} on ${OS}"
-    $PKG_MANAGER wget tar curl &>/dev/null
-    curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
-    chmod +x "$INSTALL_PATH"
-    msg_ok "Installed ${APP}"
+  msg_info "Installing ${APP} on ${OS}"
+  $STD $PKG_MANAGER \
+    tar \
+    curl
+  fetch_and_deploy_gh_release "filebrowser" "filebrowser/filebrowser" "prebuild" "latest" "/opt/filebrowser-dist" "linux-$(arch_resolve)-filebrowser.tar.gz"
+  install -m 755 /opt/filebrowser-dist/filebrowser "$INSTALL_PATH"
+  rm -rf /opt/filebrowser-dist
+  msg_ok "Installed ${APP}"
 
-    msg_info "Creating FileBrowser directory"
-    mkdir -p /usr/local/community-scripts
-    chown root:root /usr/local/community-scripts
-    chmod 755 /usr/local/community-scripts
-    touch "$DB_PATH"
-    chown root:root "$DB_PATH"
-    chmod 644 "$DB_PATH"
-    msg_ok "Directory created successfully"
+  msg_info "Creating FileBrowser directory"
+  mkdir -p /usr/local/community-scripts
+  chown root:root /usr/local/community-scripts
+  chmod 755 /usr/local/community-scripts
+  touch "$DB_PATH"
+  chown root:root "$DB_PATH"
+  chmod 644 "$DB_PATH"
+  msg_ok "Directory created successfully"
 
-    read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
-    if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
-        msg_info "Configuring No Authentication"
-        cd /usr/local/community-scripts
-        filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser config init --auth.method=noauth &>/dev/null
-        filebrowser config set --auth.method=noauth &>/dev/null
-        filebrowser users add ID 1 --perm.admin &>/dev/null
-        msg_ok "No Authentication configured"
-    else
-        msg_info "Setting up default authentication"
-        cd /usr/local/community-scripts
-        filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser users add admin helper-scripts.com --perm.admin --database "$DB_PATH" &>/dev/null
-        msg_ok "Default authentication configured (admin:helper-scripts.com)"
+  read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
+  if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
+    msg_info "Configuring No Authentication"
+    cd /usr/local/community-scripts
+    $STD filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser config set --auth.method=noauth --database "$DB_PATH"
+    if ! filebrowser users update 1 --perm.admin --database "$DB_PATH" &>/dev/null; then
+      $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
     fi
+    msg_ok "No Authentication configured"
+  else
+    msg_info "Setting up default authentication"
+    cd /usr/local/community-scripts
+    $STD filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
+    $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
+    msg_ok "Default authentication configured (admin:community-scripts.org)"
+  fi
 
-    msg_info "Creating service"
-    if [[ "$OS" == "Debian" ]]; then
-        cat <<EOF >"$SERVICE_PATH"
+  msg_info "Creating service"
+  if [[ "$OS" == "Debian" ]]; then
+    cat <<EOF >"$SERVICE_PATH"
 [Unit]
 Description=Filebrowser
 After=network-online.target
@@ -156,9 +163,9 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-        systemctl enable -q --now filebrowser
-    else
-        cat <<EOF >"$SERVICE_PATH"
+    systemctl enable -q --now filebrowser
+  else
+    cat <<EOF >"$SERVICE_PATH"
 #!/sbin/openrc-run
 
 command="/usr/local/bin/filebrowser"
@@ -171,14 +178,14 @@ depend() {
     need net
 }
 EOF
-        chmod +x "$SERVICE_PATH"
-        rc-update add filebrowser default &>/dev/null
-        rc-service filebrowser start &>/dev/null
-    fi
-    msg_ok "Service created successfully"
+    chmod +x "$SERVICE_PATH"
+    $STD rc-update add filebrowser default
+    $STD rc-service filebrowser start
+  fi
+  msg_ok "Service created successfully"
 
-    echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:$PORT${CL}"
+  msg_ok "${APP} is reachable at: ${BL}http://${IP}:${PORT}${CL}"
 else
-    echo -e "${YW}⚠️ Installation skipped. Exiting.${CL}"
-    exit 0
+  msg_warn "Installation skipped. Exiting."
+  exit 0
 fi

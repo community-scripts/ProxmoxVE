@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+_cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
+source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,6 +13,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
+var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,18 +38,22 @@ function update_script() {
     systemctl stop uwsgi
     msg_ok "Services Stopped"
 
+    create_backup /opt/babybuddy/babybuddy/settings/production.py
+
     msg_info "Cleaning old files"
-    cp /opt/babybuddy/babybuddy/settings/production.py /tmp/production.py.bak
-    find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf {} +
+    cd /opt/babybuddy || exit
+    find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf -- {} +
     msg_ok "Cleaned old files"
 
     fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy" "tarball"
+    restore_backup
 
     msg_info "Updating ${APP}"
     cd /opt/babybuddy
-    mv /tmp/production.py.bak /opt/babybuddy/babybuddy/settings/production.py
     source .venv/bin/activate
     $STD uv pip install -r requirements.txt
+    export DJANGO_SETTINGS_MODULE=babybuddy.settings.production
+    $STD python manage.py makemigrations
     $STD python manage.py migrate
     msg_ok "Updated ${APP}"
 
@@ -71,5 +77,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}${CL}"
