@@ -563,7 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Tvheadend ([#17800](https://github.com/community-scripts/ProxmoxVE/pull/17800))
+  - LocalAI ([#17801](https://github.com/community-scripts/ProxmoxVE/pull/17801))
+- Tvheadend ([#17800](https://github.com/community-scripts/ProxmoxVE/pull/17800))
 
 ## 2026-10-08
 
