@@ -115,7 +115,10 @@ EOF
   fi
 
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
-    if [[ $(cat ~/.immich) > "2.5.1" ]]; then
+    msg_warn "The update takes 5-15 minutes, do not interrupt it"
+    PREV_IMMICH="$(cat ~/.immich)"
+    # An interrupted update leaves app/ empty, so there may be no immich-admin to call.
+    if [[ "$PREV_IMMICH" > "2.5.1" && -x /opt/immich/app/bin/immich-admin ]]; then
       msg_info "Enabling Maintenance Mode"
       cd /opt/immich/app/bin
       $STD ./immich-admin enable-maintenance-mode || true
@@ -273,12 +276,14 @@ EOF
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating Intel OpenVINO machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
-        [[ $attempt -eq 3 ]] && { msg_error "uv sync failed three times, the machine-learning environment was not built"; exit 1; }
-        msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        [[ $attempt -eq 3 ]] && { ML_FAILED=1; break; }
+        # Parallel fetches can trip DNS rate limits (AdGuard, Pi-hole); retry one at a time.
+        export UV_CONCURRENT_DOWNLOADS=1 UV_CONCURRENT_BUILDS=1 UV_CONCURRENT_INSTALLS=1
+        msg_warn "uv sync attempt $attempt failed, retrying one download at a time..." && sleep 10
       done
-      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
-      msg_ok "Updated Intel OpenVINO machine-learning"
+      [[ "${ML_FAILED:-0}" == 1 ]] || patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.13/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-313-$(arch_resolve "x86_64" "aarch64")-linux-gnu.so"
+      [[ "${ML_FAILED:-0}" == 1 ]] || msg_ok "Updated Intel OpenVINO machine-learning"
     else
       ML_PYTHON="python3.13"
       msg_info "Pre-installing Python ${ML_PYTHON} for machine-learning"
@@ -289,12 +294,15 @@ EOF
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT -Pnu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
-        [[ $attempt -eq 3 ]] && { msg_error "uv sync failed three times, the machine-learning environment was not built"; exit 1; }
-        msg_warn "uv sync attempt $attempt failed, retrying..." && sleep 10
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        [[ $attempt -eq 3 ]] && { ML_FAILED=1; break; }
+        # Parallel fetches can trip DNS rate limits (AdGuard, Pi-hole); retry one at a time.
+        export UV_CONCURRENT_DOWNLOADS=1 UV_CONCURRENT_BUILDS=1 UV_CONCURRENT_INSTALLS=1
+        msg_warn "uv sync attempt $attempt failed, retrying one download at a time..." && sleep 10
       done
-      msg_ok "Updated machine-learning"
+      [[ "${ML_FAILED:-0}" == 1 ]] || msg_ok "Updated machine-learning"
     fi
+    [[ "${ML_FAILED:-0}" == 1 ]] && msg_warn "uv sync failed three times, machine learning was not updated"
     cd "$SRC_DIR"
     cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
     [[ -f "$INSTALL_DIR"/ml_start.sh ]] && mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
@@ -365,6 +373,13 @@ EOF
       unset MAINT_MODE
       $STD cd -
       msg_ok "Disabled Maintenance Mode"
+    fi
+    if [[ "${ML_FAILED:-0}" == 1 ]]; then
+      systemctl restart immich-web || true
+      [[ -f /etc/systemd/system/immich-proxy.service ]] && systemctl restart immich-proxy
+      echo "$PREV_IMMICH" >~/.immich
+      msg_error "Immich runs, but without machine learning (see the uv output above). Run update again to retry."
+      exit 1
     fi
     systemctl restart immich-ml immich-web
     [[ -f /etc/systemd/system/immich-proxy.service ]] && systemctl restart immich-proxy
