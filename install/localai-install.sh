@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-var_port="${var_port:-8080}"
-var_auth="${var_auth:-no}"
-var_api_key="${var_api_key:-}"
-
 msg_info "Installing Dependencies"
 $STD apt install -y \
   libgomp1 \
@@ -24,10 +20,9 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 setup_hwaccel
-
-# The account system stores users, roles and sessions in SQLite by default, but
-# that needs a CGO build (-tags auth) which upstream does not ship in the release
-# binary. PostgreSQL is the supported alternative and needs no CGO.
+var_port="${var_port:-8080}"
+var_auth="${var_auth:-no}"
+var_api_key="${var_api_key:-}"
 if [[ "$var_auth" == "yes" ]]; then
   setup_postgresql
   PG_DB_NAME="localai" PG_DB_USER="localai" setup_postgresql_db
@@ -36,8 +31,6 @@ fi
 fetch_and_deploy_gh_release "localai" "mudler/LocalAI" "singlefile" "latest" "/opt/localai" "local-ai-v*-linux-$(arch_resolve amd64 arm64)"
 
 msg_info "Configuring LocalAI"
-# Models, backends and the auth database are kept outside /opt/localai so an
-# update can replace the binary without touching any of them.
 mkdir -p /opt/localai_data/models /opt/localai_data/backends
 cat <<EOF >/opt/localai.env
 LOCALAI_ADDRESS=0.0.0.0:${var_port}
