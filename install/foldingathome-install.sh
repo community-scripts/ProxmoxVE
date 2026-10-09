@@ -24,8 +24,6 @@ if [[ ${#var_fah_machine_name} -gt 64 || "$var_fah_machine_name" == *[\<\>\;\&\'
   var_fah_machine_name=$(hostname)
 fi
 
-# Written before the package: its postinst keeps an existing config.xml and
-# starts the client with it.
 msg_info "Configuring Folding@home"
 mkdir -p /etc/fah-client
 cat <<EOF >/etc/fah-client/config.xml
