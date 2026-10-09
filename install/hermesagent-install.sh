@@ -71,7 +71,8 @@ chmod 600 /home/hermes/.hermes/.env
 msg_ok "Configured API Server"
 
 msg_info "Creating Dashboard Service"
-cat <<EOF >/etc/systemd/system/hermes-dashboard.service
+mkdir -p /home/hermes/.config/systemd/user
+cat <<EOF >/home/hermes/.config/systemd/user/hermes-dashboard.service
 [Unit]
 Description=Hermes Agent Web Dashboard
 After=network-online.target
@@ -79,8 +80,6 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=hermes
-Group=hermes
 UMask=0077
 WorkingDirectory=/home/hermes
 ExecStart=/home/hermes/.local/bin/hermes dashboard --host 127.0.0.1 --port 9119 --no-open
@@ -91,9 +90,10 @@ ProtectProc=invisible
 ProcSubset=pid
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 EOF
-systemctl enable -q --now hermes-dashboard
+chown -R hermes:hermes /home/hermes/.config
+su - hermes -c 'systemctl --user enable -q --now hermes-dashboard'
 msg_ok "Created Dashboard Service"
 
 msg_info "Creating Setup Helper"
