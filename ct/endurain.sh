@@ -30,7 +30,7 @@ function update_script() {
     msg_error "No ${APP} installation found!"
     exit 233
   fi
-  if check_for_codeberg_release "endurain" "endurain-project/endurain"; then
+  if check_for_gh_release "endurain" "endurain-project/endurain"; then
     msg_info "Stopping Service"
     systemctl stop endurain
     msg_ok "Stopped Service"
