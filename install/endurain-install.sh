@@ -21,7 +21,7 @@ PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
 PG_DB_NAME="enduraindb" PG_DB_USER="endurain" setup_postgresql_db
-fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
+fetch_and_deploy_gh_release "endurain" "endurain-project/endurain"
 
 msg_info "Setting up Endurain"
 cd /opt/endurain
