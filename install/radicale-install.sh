@@ -58,7 +58,7 @@ Requires=network.target
 
 [Service]
 WorkingDirectory=/opt/radicale
-ExecStart=/usr/local/bin/uv run -m radicale --config /etc/radicale/config
+ExecStart=/usr/local/bin/uv run --extra bcrypt --extra argon2 -m radicale --config /etc/radicale/config
 Restart=on-failure
 # User=radicale
 # Deny other users access to the calendar data
