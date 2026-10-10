@@ -37,7 +37,7 @@ function update_script() {
 
     NODE_VERSION="24" setup_nodejs
     create_backup /opt/endurain/.env /opt/endurain/frontend/dist/env.js
-    CLEAN_INSTALL=1 fetch_and_deploy_codeberg_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "endurain" "endurain-project/endurain"
 
     msg_info "Updating Endurain Frontend"
     cd /opt/endurain
