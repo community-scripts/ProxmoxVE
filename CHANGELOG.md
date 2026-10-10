@@ -570,6 +570,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: download countryInfo.txt into the geodata directory on update [@claytonfaria](https://github.com/claytonfaria) ([#17823](https://github.com/community-scripts/ProxmoxVE/pull/17823))
     - paperclip: keep root and skip /opt/paperclip-data chown when PAPERCLIP_HOME is custom [@austinpilz](https://github.com/austinpilz) ([#17825](https://github.com/community-scripts/ProxmoxVE/pull/17825))
 
 ## 2026-10-09
