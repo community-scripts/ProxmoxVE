@@ -563,7 +563,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - CertMate ([#17803](https://github.com/community-scripts/ProxmoxVE/pull/17803))
+  - Weblate ([#17837](https://github.com/community-scripts/ProxmoxVE/pull/17837))
+- CertMate ([#17803](https://github.com/community-scripts/ProxmoxVE/pull/17803))
 - AnythingLLM ([#17802](https://github.com/community-scripts/ProxmoxVE/pull/17802))
 
 ### 🚀 Updated Scripts
