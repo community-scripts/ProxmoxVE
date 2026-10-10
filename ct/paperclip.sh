@@ -63,7 +63,13 @@ function update_script() {
 
     # Claude Code refuses --dangerously-skip-permissions as root; migrate existing installs to a dedicated user
     PAPERCLIP_USER=$(sed -n 's/^User=//p' /etc/systemd/system/paperclip.service)
-    if [[ -z "$PAPERCLIP_USER" || "$PAPERCLIP_USER" == "root" ]]; then
+    PAPERCLIP_HOME=$(sed -n 's/^PAPERCLIP_HOME=//p' /opt/paperclip-ai/.env)
+    PAPERCLIP_HOME="${PAPERCLIP_HOME:-/opt/paperclip-data}"
+    if [[ -z "$PAPERCLIP_USER" || "$PAPERCLIP_USER" == "root" ]] && [[ "$PAPERCLIP_HOME" != "/opt/paperclip-data" ]]; then
+      # A custom data dir (e.g. an NFS bind mount) may only be reachable by root; don't move the service off root
+      msg_warn "PAPERCLIP_HOME is ${PAPERCLIP_HOME}; keeping the service user as root"
+      PAPERCLIP_USER=root
+    elif [[ -z "$PAPERCLIP_USER" || "$PAPERCLIP_USER" == "root" ]]; then
       PAPERCLIP_USER="${var_paperclip_user:-paperclip}"
       if [[ "$PAPERCLIP_USER" == "root" || ! "$PAPERCLIP_USER" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]]; then
         msg_error "Invalid var_paperclip_user '${PAPERCLIP_USER}' (must be a non-root lowercase Linux username)"
@@ -85,7 +91,10 @@ function update_script() {
     fi
     PAPERCLIP_USER_HOME=$(getent passwd "$PAPERCLIP_USER" | cut -d: -f6)
     chmod 600 /opt/paperclip-ai/.env
-    chown -R "${PAPERCLIP_USER}:${PAPERCLIP_USER}" /opt/paperclip-ai /opt/paperclip-data "$PAPERCLIP_USER_HOME"
+    chown -R "${PAPERCLIP_USER}:${PAPERCLIP_USER}" /opt/paperclip-ai "$PAPERCLIP_USER_HOME"
+    if [[ "$PAPERCLIP_HOME" == "/opt/paperclip-data" && -d /opt/paperclip-data ]]; then
+      chown -R "${PAPERCLIP_USER}:${PAPERCLIP_USER}" /opt/paperclip-data
+    fi
 
     msg_info "Running Database Migrations"
     set -a && source /opt/paperclip-ai/.env && set +a
