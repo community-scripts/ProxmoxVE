@@ -559,6 +559,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-10
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - paperclip: keep root and skip /opt/paperclip-data chown when PAPERCLIP_HOME is custom [@austinpilz](https://github.com/austinpilz) ([#17825](https://github.com/community-scripts/ProxmoxVE/pull/17825))
+
 ## 2026-10-09
 
 ### 🆕 New Scripts
