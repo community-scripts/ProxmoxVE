@@ -71,6 +71,41 @@ EOF
 
     restore_backup
 
+    if grep -q '^TA_BACKEND_PORT=' /opt/tubearchivist/.env 2>/dev/null; then
+      msg_info "Migrating to v0.6.0 (dropping Nginx)"
+      systemctl disable -q --now nginx
+      $STD apt autoremove --purge -y nginx
+      sed -i 's/^TA_BACKEND_PORT=.*/TA_PORT=8000/' /opt/tubearchivist/.env
+      cat <<'RUNEOF' >/opt/tubearchivist/backend/run.sh
+#!/bin/bash
+set -e
+cd /opt/tubearchivist/backend
+set -a
+source /opt/tubearchivist/.env
+set +a
+PYTHON=/opt/tubearchivist/.venv/bin/python
+
+echo "Waiting for ElasticSearch..."
+for i in $(seq 1 30); do
+  if curl -sf http://localhost:9200/_cluster/health >/dev/null 2>&1; then
+    break
+  fi
+  sleep 2
+done
+
+$PYTHON manage.py ta_stop_on_error
+$PYTHON manage.py migrate
+$PYTHON manage.py collectstatic --noinput -c
+$PYTHON manage.py ta_envcheck
+$PYTHON manage.py ta_connection
+$PYTHON manage.py ta_startup
+
+exec $PYTHON backend_start.py
+RUNEOF
+      chmod +x /opt/tubearchivist/backend/run.sh
+      msg_ok "Migrated to v0.6.0 (dropping Nginx)"
+    fi
+
     msg_info "Rebuilding Tube Archivist"
     cd /opt/tubearchivist/frontend
     $STD npm install
@@ -113,7 +148,6 @@ EOF
 
     msg_info "Starting Services"
     systemctl start bgutil-provider tubearchivist tubearchivist-celery tubearchivist-beat
-    systemctl reload nginx
     msg_ok "Started Services"
     msg_ok "Updated successfully!"
   fi
