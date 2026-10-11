@@ -28,7 +28,7 @@ else
   var_version="${var_version:-13}"
 fi
 # Only exported variables reach the install through lxc-attach.
-export var_docker_tcp_socket="${var_docker_tcp_socket:-}"
+export var_docker_socket="${var_docker_socket:-}"
 export var_docker_compose="${var_docker_compose:-}"
 export var_docker_lxcfs="${var_docker_lxcfs:-}"
 

@@ -15,8 +15,8 @@ update_os
 
 setup_deb_based() {
   setup_docker
-  if [[ -n "${var_docker_tcp_socket:-}" ]]; then
-    socket_choice="$var_docker_tcp_socket"
+  if [[ -n "${var_docker_socket:-}" ]]; then
+    socket_choice="$var_docker_socket"
   else
     read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
   fi
@@ -83,8 +83,8 @@ setup_alpine() {
     chmod +x "$DOCKER_CONFIG"/cli-plugins/docker-compose
     msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
   fi
-  if [[ -n "${var_docker_tcp_socket:-}" ]]; then
-    prompt="$var_docker_tcp_socket"
+  if [[ -n "${var_docker_socket:-}" ]]; then
+    prompt="$var_docker_socket"
   else
     read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt
   fi
