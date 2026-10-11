@@ -106,7 +106,7 @@ EOF
     libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
     cd "$BASE_DIR"
     msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
-    ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev
+    ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev
     $STD git pull
     for library in "${libraries[@]}"; do
       compile_"$library"
@@ -565,7 +565,9 @@ function compile_imagemagick() {
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
   LIBVIPS_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)"
-  if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+  # Builds made before libopenjp2-7-dev was installed lack JPEG 2000
+  if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]] ||
+    [[ "$(vips -l foreign 2>/dev/null)" != *jp2kload* ]]; then
     msg_info "Recompiling libvips"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
     $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
