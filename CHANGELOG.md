@@ -572,7 +572,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Fix/incus attach fuse [@MickLesk](https://github.com/MickLesk) ([core#127](https://github.com/community-scripts/core/pull/127))
+  - Resolve a uv required-version range to the newest release inside it [@MickLesk](https://github.com/MickLesk) ([core#126](https://github.com/community-scripts/core/pull/126))
+- Incus: fix ENABLE_FUSE / TUN vars [@MickLesk](https://github.com/MickLesk) ([core#127](https://github.com/community-scripts/core/pull/127))
 
 ## 2026-10-10
 
