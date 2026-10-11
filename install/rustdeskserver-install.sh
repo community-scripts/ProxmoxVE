@@ -42,17 +42,19 @@ write_creds() {
     msg_error "hbbs did not create ${key_file}"
     exit 1
   fi
-  {
-    echo "RustDesk Server"
-    echo "ID Server: ${LOCAL_IP}"
-    echo "Key: $(<"$key_file")"
-    if ((INSTALL_API)); then
-      echo ""
-      echo "RustDesk API Web UI: http://${LOCAL_IP}:21114/_admin/"
-      echo "Username: admin"
-      echo "Password: ${API_PASS}"
-    fi
-  } >~/rustdesk.creds
+  cat <<EOF >~/rustdesk.creds
+RustDesk Server
+ID Server: ${LOCAL_IP}
+Key: $(<"$key_file")
+EOF
+  if ((INSTALL_API)); then
+    cat <<EOF >>~/rustdesk.creds
+
+RustDesk API Web UI: http://${LOCAL_IP}:21114/_admin/
+Username: admin
+Password: ${API_PASS}
+EOF
+  fi
 }
 
 setup_deb_based() {
