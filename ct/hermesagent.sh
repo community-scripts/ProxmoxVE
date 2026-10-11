@@ -51,9 +51,6 @@ function update_script() {
     set -a; source /etc/default/hermes; set +a
     /home/hermes/.local/bin/hermes update --yes
   '
-  # hermes update relaunches the gateway as root (#17123). Match the module and
-  # the home path, not the interpreter: upstream moved from the venv python to a
-  # bundled one run through runpy and the old pattern matched nothing (#17843).
   mapfile -t root_gateway_pids < <(ps -eo user=,pid=,args= | awk '$1 == "root" && /\/home\/hermes\/\.hermes\// && /hermes_cli[.]main/ && / gateway run --replace$/ { print $2 }')
   if ((${#root_gateway_pids[@]})); then
     kill -TERM "${root_gateway_pids[@]}"
