@@ -51,8 +51,10 @@ function update_script() {
     set -a; source /etc/default/hermes; set +a
     /home/hermes/.local/bin/hermes update --yes
   '
-  # See https://github.com/community-scripts/ProxmoxVE/issues/17123
-  mapfile -t root_gateway_pids < <(ps -eo user=,pid=,args= | awk '$1 == "root" && $0 ~ /\/home\/hermes\/\.hermes\/hermes-agent\/venv\/bin\/python -m hermes_cli\.main gateway run --replace$/ { print $2 }')
+  # hermes update relaunches the gateway as root (#17123). Match the module and
+  # the home path, not the interpreter: upstream moved from the venv python to a
+  # bundled one run through runpy and the old pattern matched nothing (#17843).
+  mapfile -t root_gateway_pids < <(ps -eo user=,pid=,args= | awk '$1 == "root" && /\/home\/hermes\/\.hermes\// && /hermes_cli[.]main/ && / gateway run --replace$/ { print $2 }')
   if ((${#root_gateway_pids[@]})); then
     kill -TERM "${root_gateway_pids[@]}"
     for pid in "${root_gateway_pids[@]}"; do
@@ -61,7 +63,14 @@ function update_script() {
       done
     done
   fi
-  chown -R hermes:hermes /home/hermes
+  if ps -eo user=,args= | awk '$1 == "root" && /\/home\/hermes\/\.hermes\// { found = 1 } END { exit !found }'; then
+    msg_warn "A root-owned Hermes process is still running; it may keep writing root-owned files"
+  fi
+  # A writer racing chown makes files vanish between readdir and chown; one retry covers it.
+  if ! chown -R hermes:hermes /home/hermes 2>/dev/null; then
+    sleep 1
+    chown -R hermes:hermes /home/hermes || msg_warn "Could not take ownership of everything under /home/hermes"
+  fi
   msg_ok "Updated Hermes Agent"
 
   msg_info "Starting Services"
