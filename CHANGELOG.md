@@ -582,6 +582,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - QoL: Confirm third-party installers through confirm_external_installer [@MickLesk](https://github.com/MickLesk) ([#17857](https://github.com/community-scripts/ProxmoxVE/pull/17857))
     - docker: take the lxcfs toggle, TCP socket and Compose choice from app variables [@MickLesk](https://github.com/MickLesk) ([#17850](https://github.com/community-scripts/ProxmoxVE/pull/17850))
 
+  - #### 🔧 Refactor
+
+    - RustDesk Server: run the official server, make the web UI optional [@MickLesk](https://github.com/MickLesk) ([#17854](https://github.com/community-scripts/ProxmoxVE/pull/17854))
+    - Caddy: install the .deb from GitHub instead of the Cloudsmith repo [@MickLesk](https://github.com/MickLesk) ([#17862](https://github.com/community-scripts/ProxmoxVE/pull/17862))
+
 ### 💾 Core
 
   - Add confirm_external_installer [@MickLesk](https://github.com/MickLesk) ([core#130](https://github.com/community-scripts/core/pull/130))
