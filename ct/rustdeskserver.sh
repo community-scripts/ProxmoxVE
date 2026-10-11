@@ -11,6 +11,7 @@ var_tags="${var_tags:-remote-desktop}"
 var_cpu="${var_cpu:-1}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
+export var_rustdesk_api="${var_rustdesk_api:-}"
 if [[ -z "${var_os:-}" ]] && command -v pveversion >/dev/null 2>&1; then
   var_os=$(msg_menu "Choose the container OS" \
     "debian" "Debian 13" \

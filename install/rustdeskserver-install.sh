@@ -13,9 +13,13 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}Would you like to add the RustDesk API web UI (lejianwen/rustdesk-api, unmaintained since 09/2025)? <y/N> " prompt
+if [[ -n "${var_rustdesk_api:-}" ]]; then
+  prompt="$var_rustdesk_api"
+else
+  read -r -p "${TAB3}Would you like to add the RustDesk API web UI (lejianwen/rustdesk-api, unmaintained since 09/2025)? <y/N> " prompt
+fi
 INSTALL_API=0
-[[ "${prompt,,}" =~ ^(y|yes)$ ]] && INSTALL_API=1
+[[ "${prompt,,}" =~ ^(y|yes|true)$ ]] && INSTALL_API=1
 API_PASS="$(random_password 16)"
 
 # rustdesk-api hands these to clients; its shipped defaults point at 192.168.1.66
