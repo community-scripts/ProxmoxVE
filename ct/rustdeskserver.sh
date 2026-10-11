@@ -38,25 +38,32 @@ update_deb_based() {
     exit
   fi
 
-  if check_for_gh_release "rustdesk-hbbs" "lejianwen/rustdesk-server"; then
-    msg_info "Stopping Service"
-    systemctl stop rustdesk-hbbr
-    systemctl stop rustdesk-hbbs
-    if [[ -f /lib/systemd/system/rustdesk-api.service ]]; then
-      systemctl stop rustdesk-api
-    fi
-    msg_ok "Stopped Service"
+  if check_for_gh_release "rustdesk-hbbs" "rustdesk/rustdesk-server"; then
+    msg_info "Stopping RustDesk Server"
+    systemctl stop rustdesk-hbbr rustdesk-hbbs
+    msg_ok "Stopped RustDesk Server"
 
-    fetch_and_deploy_gh_release "rustdesk-hbbr" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbr*$(arch_resolve).deb"
-    fetch_and_deploy_gh_release "rustdesk-hbbs" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbs*$(arch_resolve).deb"
-    fetch_and_deploy_gh_release "rustdesk-utils" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-utils*$(arch_resolve).deb"
+    fetch_and_deploy_gh_release "rustdesk-hbbr" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbr*$(arch_resolve).deb"
+    fetch_and_deploy_gh_release "rustdesk-hbbs" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbs*$(arch_resolve).deb"
+    fetch_and_deploy_gh_release "rustdesk-utils" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-utils*$(arch_resolve).deb"
+
+    msg_info "Starting RustDesk Server"
+    systemctl start rustdesk-hbbs rustdesk-hbbr
+    msg_ok "Started RustDesk Server"
+    msg_ok "Updated RustDesk Server"
+  fi
+
+  if [[ -f /lib/systemd/system/rustdesk-api.service ]] && check_for_gh_release "rustdesk-api" "lejianwen/rustdesk-api"; then
+    msg_info "Stopping RustDesk API"
+    systemctl stop rustdesk-api
+    msg_ok "Stopped RustDesk API"
+
     fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "binary" "latest" "/opt/rustdesk" "rustdesk-api-server*$(arch_resolve).deb"
 
-    msg_info "Starting services"
-    systemctl start -q rustdesk-*
-    msg_ok "Services started"
-
-    msg_ok "Updated successfully!"
+    msg_info "Starting RustDesk API"
+    systemctl start rustdesk-api
+    msg_ok "Started RustDesk API"
+    msg_ok "Updated RustDesk API"
   fi
 }
 
@@ -66,21 +73,26 @@ update_alpine() {
     exit
   fi
 
-  if check_for_gh_release "rustdesk-server" "lejianwen/rustdesk-server"; then
+  msg_info "Updating Alpine Packages"
+  $STD apk -U upgrade
+  msg_ok "Updated Alpine Packages"
+
+  if check_for_gh_release "rustdesk-server" "rustdesk/rustdesk-server"; then
     msg_info "Stopping RustDesk Server"
-    $STD apk -U upgrade
     $STD service rustdesk-server-hbbs stop
     $STD service rustdesk-server-hbbr stop
     msg_ok "Stopped RustDesk Server"
 
-    fetch_and_deploy_gh_release "rustdesk-server" "lejianwen/rustdesk-server" "prebuild" "latest" "/opt/rustdesk-server" "rustdesk-server-linux-$(arch_resolve "amd64" "arm64v8").zip"
+    fetch_and_deploy_gh_release "rustdesk-server" "rustdesk/rustdesk-server" "prebuild" "latest" "/opt/rustdesk-server" "rustdesk-server-linux-$(arch_resolve "amd64" "arm64v8").zip"
 
     msg_info "Starting RustDesk Server"
     $STD service rustdesk-server-hbbs start
     $STD service rustdesk-server-hbbr start
     msg_ok "Started RustDesk Server"
+    msg_ok "Updated RustDesk Server"
   fi
-  if check_for_gh_release "rustdesk-api" "lejianwen/rustdesk-api"; then
+
+  if [[ -x /opt/rustdesk-api/apimain ]] && check_for_gh_release "rustdesk-api" "lejianwen/rustdesk-api"; then
     msg_info "Stopping RustDesk API"
     $STD service rustdesk-api stop
     msg_ok "Stopped RustDesk API"
@@ -90,8 +102,8 @@ update_alpine() {
     msg_info "Starting RustDesk API"
     $STD service rustdesk-api start
     msg_ok "Started RustDesk API"
+    msg_ok "Updated RustDesk API"
   fi
-  msg_ok "Updated successfully!"
 }
 
 function update_script() {
@@ -107,5 +119,7 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:21114${CL}"
+echo -e "${INFO}${YW}Set this as ID server in the RustDesk client, the key is in ~/rustdesk.creds:${CL}"
+echo -e "${GATEWAY}${BGN}${IP}${CL}"
+echo -e "${INFO}${YW}Web UI, if selected during setup:${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:21114/_admin/${CL}"

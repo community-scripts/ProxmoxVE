@@ -13,108 +13,120 @@ setting_up_container
 network_check
 update_os
 
+read -r -p "${TAB3}Would you like to add the RustDesk API web UI (lejianwen/rustdesk-api, unmaintained since 09/2025)? <y/N> " prompt
+INSTALL_API=0
+[[ "${prompt,,}" =~ ^(y|yes)$ ]] && INSTALL_API=1
+API_PASS="$(random_password 16)"
+
+# rustdesk-api hands these to clients; its shipped defaults point at 192.168.1.66
+api_env() {
+  printf '%s\n' \
+    "RUSTDESK_API_RUSTDESK_ID_SERVER=${LOCAL_IP}:21116" \
+    "RUSTDESK_API_RUSTDESK_RELAY_SERVER=${LOCAL_IP}:21117" \
+    "RUSTDESK_API_RUSTDESK_API_SERVER=http://${LOCAL_IP}:21114" \
+    "RUSTDESK_API_RUSTDESK_KEY_FILE=$1"
+}
+
+# hbbs creates its key pair in its working directory on first start
+write_creds() {
+  local key_file="$1"
+  for _ in $(seq 1 30); do
+    [[ -s "$key_file" ]] && break
+    sleep 1
+  done
+  if [[ ! -s "$key_file" ]]; then
+    msg_error "hbbs did not create ${key_file}"
+    exit 1
+  fi
+  {
+    echo "RustDesk Server"
+    echo "ID Server: ${LOCAL_IP}"
+    echo "Key: $(<"$key_file")"
+    if ((INSTALL_API)); then
+      echo ""
+      echo "RustDesk API Web UI: http://${LOCAL_IP}:21114/_admin/"
+      echo "Username: admin"
+      echo "Password: ${API_PASS}"
+    fi
+  } >~/rustdesk.creds
+}
+
 setup_deb_based() {
-  fetch_and_deploy_gh_release "rustdesk-hbbr" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbr*$(arch_resolve).deb"
-  fetch_and_deploy_gh_release "rustdesk-hbbs" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbs*$(arch_resolve).deb"
-  fetch_and_deploy_gh_release "rustdesk-utils" "lejianwen/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-utils*$(arch_resolve).deb"
-  fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "binary" "latest" "/opt/rustdesk" "rustdesk-api-server*$(arch_resolve).deb"
-  systemctl enable -q --now rustdesk-hbbr
-  systemctl enable -q --now rustdesk-hbbs
-  systemctl enable -q --now rustdesk-api
+  fetch_and_deploy_gh_release "rustdesk-hbbr" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbr*$(arch_resolve).deb"
+  fetch_and_deploy_gh_release "rustdesk-hbbs" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbs*$(arch_resolve).deb"
+  fetch_and_deploy_gh_release "rustdesk-utils" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-utils*$(arch_resolve).deb"
+  systemctl enable -q --now rustdesk-hbbs rustdesk-hbbr
+  write_creds /var/lib/rustdesk-server/id_ed25519.pub
+
+  if ((INSTALL_API)); then
+    fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "binary" "latest" "/opt/rustdesk" "rustdesk-api-server*$(arch_resolve).deb"
+    msg_info "Configuring RustDesk API"
+    mkdir -p /etc/systemd/system/rustdesk-api.service.d
+    {
+      echo "[Service]"
+      api_env /var/lib/rustdesk-server/id_ed25519.pub | sed 's/^/Environment=/'
+    } >/etc/systemd/system/rustdesk-api.service.d/override.conf
+    systemctl daemon-reload
+    systemctl stop rustdesk-api
+    cd /var/lib/rustdesk-api
+    $STD rustdesk-api reset-admin-pwd "$API_PASS"
+    systemctl enable -q --now rustdesk-api
+    msg_ok "Configured RustDesk API"
+  fi
 }
 
 setup_alpine() {
-  fetch_and_deploy_gh_release "rustdesk-server" "lejianwen/rustdesk-server" "prebuild" "latest" "/opt/rustdesk-server" "rustdesk-server-linux-$(arch_resolve "amd64" "arm64v8").zip"
+  fetch_and_deploy_gh_release "rustdesk-server" "rustdesk/rustdesk-server" "prebuild" "latest" "/opt/rustdesk-server" "rustdesk-server-linux-$(arch_resolve "amd64" "arm64v8").zip"
 
-  msg_info "Configuring RustDesk Server"
-  mkdir -p /root/.config/rustdesk
-  cd /opt/rustdesk-server
-  ./rustdesk-utils genkeypair >/tmp/rustdesk_keys.txt
-  grep "Public Key" /tmp/rustdesk_keys.txt | awk '{print $3}' >/root/.config/rustdesk/id_ed25519.pub
-  grep "Secret Key" /tmp/rustdesk_keys.txt | awk '{print $3}' >/root/.config/rustdesk/id_ed25519
-  chmod 600 /root/.config/rustdesk/id_ed25519
-  chmod 644 /root/.config/rustdesk/id_ed25519.pub
-  rm /tmp/rustdesk_keys.txt
-  msg_ok "Configured RustDesk Server"
-
-  fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "prebuild" "latest" "/opt/rustdesk-api" "linux-$(arch_resolve).tar.gz"
-
-  msg_info "Configuring RustDesk API"
-  cd /opt/rustdesk-api
-  ADMINPASS=$(head -c 16 /dev/urandom | xxd -p -c 16)
-  $STD ./apimain reset-admin-pwd "$ADMINPASS"
-  cat <<EOF >~/rustdesk.creds
-RustDesk WebUI
-
-Username: admin
-Password: $ADMINPASS
-EOF
-  msg_ok "Configured RustDesk API"
-
-  msg_info "Enabling RustDesk Server Services"
-  cat <<EOF >/etc/init.d/rustdesk-server-hbbs
+  msg_info "Creating RustDesk Server Services"
+  for svc in hbbs hbbr; do
+    cat <<EOF >"/etc/init.d/rustdesk-server-${svc}"
 #!/sbin/openrc-run
-description="RustDesk HBBS Service"
+description="RustDesk ${svc^^} Service"
 directory="/opt/rustdesk-server"
-command="/opt/rustdesk-server/hbbs"
-command_args=""
+command="/opt/rustdesk-server/${svc}"
 command_background="true"
-command_user="root"
-pidfile="/var/run/rustdesk-server-hbbs.pid"
-output_log="/var/log/rustdesk-hbbs.log"
-error_log="/var/log/rustdesk-hbbs.err"
+pidfile="/var/run/rustdesk-server-${svc}.pid"
+output_log="/var/log/rustdesk-${svc}.log"
+error_log="/var/log/rustdesk-${svc}.err"
 
 depend() {
     use net
 }
 EOF
+    chmod +x "/etc/init.d/rustdesk-server-${svc}"
+    $STD rc-update add "rustdesk-server-${svc}" default
+    $STD service "rustdesk-server-${svc}" start
+  done
+  msg_ok "Created RustDesk Server Services"
+  write_creds /opt/rustdesk-server/id_ed25519.pub
 
-  cat <<EOF >/etc/init.d/rustdesk-server-hbbr
-#!/sbin/openrc-run
-description="RustDesk HBBR Service"
-directory="/opt/rustdesk-server"
-command="/opt/rustdesk-server/hbbr"
-command_args=""
-command_background="true"
-command_user="root"
-pidfile="/var/run/rustdesk-server-hbbr.pid"
-output_log="/var/log/rustdesk-hbbr.log"
-error_log="/var/log/rustdesk-hbbr.err"
-
-depend() {
-    use net
-}
-EOF
-
-  cat <<EOF >/etc/init.d/rustdesk-api
+  if ((INSTALL_API)); then
+    fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "prebuild" "latest" "/opt/rustdesk-api" "linux-$(arch_resolve).tar.gz"
+    msg_info "Configuring RustDesk API"
+    api_env /opt/rustdesk-server/id_ed25519.pub | sed 's/^/export /' >/etc/conf.d/rustdesk-api
+    cd /opt/rustdesk-api
+    $STD ./apimain reset-admin-pwd "$API_PASS"
+    cat <<EOF >/etc/init.d/rustdesk-api
 #!/sbin/openrc-run
 description="RustDesk API Service"
 directory="/opt/rustdesk-api"
 command="/opt/rustdesk-api/apimain"
-command_args=""
 command_background="true"
-command_user="root"
 pidfile="/var/run/rustdesk-api.pid"
 output_log="/var/log/rustdesk-api.log"
 error_log="/var/log/rustdesk-api.err"
 
 depend() {
     use net
+    after rustdesk-server-hbbs
 }
 EOF
-  chmod +x /etc/init.d/rustdesk-server-hbbs
-  chmod +x /etc/init.d/rustdesk-server-hbbr
-  chmod +x /etc/init.d/rustdesk-api
-  $STD rc-update add rustdesk-server-hbbs default
-  $STD rc-update add rustdesk-server-hbbr default
-  $STD rc-update add rustdesk-api default
-  msg_ok "Enabled RustDesk Server Services"
-
-  msg_info "Starting RustDesk Server"
-  $STD service rustdesk-server-hbbs start
-  $STD service rustdesk-server-hbbr start
-  $STD service rustdesk-api start
-  msg_ok "Started RustDesk Server"
+    chmod +x /etc/init.d/rustdesk-api
+    $STD rc-update add rustdesk-api default
+    $STD service rustdesk-api start
+    msg_ok "Configured RustDesk API"
+  fi
 }
 
 run_os_setup
