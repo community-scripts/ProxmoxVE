@@ -572,6 +572,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: build libvips with JPEG 2000 support [@MickLesk](https://github.com/MickLesk) ([#17864](https://github.com/community-scripts/ProxmoxVE/pull/17864))
     - hermesagent: match the relaunched root gateway regardless of interpreter [@MickLesk](https://github.com/MickLesk) ([#17847](https://github.com/community-scripts/ProxmoxVE/pull/17847))
     - Radicale: install the bcrypt and argon2 extras [@MickLesk](https://github.com/MickLesk) ([#17813](https://github.com/community-scripts/ProxmoxVE/pull/17813))
     - fix(zigbee2mqtt): preserve backup stream and prevent filename collisions [@petermnt](https://github.com/petermnt) ([#17751](https://github.com/community-scripts/ProxmoxVE/pull/17751))
