@@ -62,16 +62,7 @@ function update_script() {
     msg_info "Updating Kasm"
     cd /tmp
 
-    msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
-    msg_warn "The following code is NOT maintained or audited by our repository."
-    msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
-    msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  upgrade.sh inside tar.gz $KASM_URL"
-    echo
-    read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
-    if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-      msg_error "Aborted by user. No changes have been made."
-      exit 10
-    fi
+    confirm_external_installer "https://www.kasmweb.com/" "upgrade.sh inside tar.gz $KASM_URL"
     curl_download "/tmp/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
     tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
     chmod +x /tmp/kasm_release/install.sh

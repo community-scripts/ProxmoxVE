@@ -33,16 +33,7 @@ NODE_OPTIONS=${NODE_OPTIONS}
 EOF
 msg_ok "Configured Service Environment"
 
-msg_warn "WARNING: This script will run an external installer from a third-party source (https://hermes-agent.nousresearch.com/)."
-msg_warn "The following code is NOT maintained or audited by our repository."
-msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
-msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  https://hermes-agent.nousresearch.com/install.sh"
-echo
-read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
-if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  msg_error "Aborted by user. No changes have been made."
-  exit 10
-fi
+confirm_external_installer "https://hermes-agent.nousresearch.com/" "https://hermes-agent.nousresearch.com/install.sh"
 
 msg_info "Installing Hermes Agent"
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh -o /tmp/hermes-install.sh
