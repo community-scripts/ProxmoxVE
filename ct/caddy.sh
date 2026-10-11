@@ -38,10 +38,18 @@ update_deb_based() {
     exit
   fi
 
+  # The Cloudsmith repo keeps running out of quota (402); the same .deb ships with each GitHub release
+  cleanup_old_repo_files "caddy"
   msg_info "Updating Caddy LXC"
   apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Caddy LXC"
+
+  [[ -f ~/.caddy ]] || dpkg-query -W -f='${Version}' caddy >~/.caddy 2>/dev/null || true
+  if check_for_gh_release "caddy" "caddyserver/caddy"; then
+    DPKG_FORCE_CONFOLD=1 fetch_and_deploy_gh_release "caddy" "caddyserver/caddy" "binary" "latest" "/opt/caddy" "caddy_*_linux_$(arch_resolve).deb"
+    systemctl restart caddy
+  fi
 
   if command -v xcaddy >/dev/null 2>&1; then
     if check_for_gh_release "xcaddy" "caddyserver/xcaddy"; then

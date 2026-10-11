@@ -14,21 +14,8 @@ network_check
 update_os
 
 setup_deb_based() {
-  msg_info "Installing Dependencies"
-  $STD apt install -y \
-    debian-keyring \
-    debian-archive-keyring \
-    apt-transport-https
-  msg_ok "Installed Dependencies"
-
-  msg_info "Installing Caddy"
-  setup_deb822_repo \
-    "caddy" \
-    "https://dl.cloudsmith.io/public/caddy/stable/gpg.key" \
-    "https://dl.cloudsmith.io/public/caddy/stable/deb/debian" \
-    "any-version"
-  $STD apt install -y caddy
-  msg_ok "Installed Caddy"
+  fetch_and_deploy_gh_release "caddy" "caddyserver/caddy" "binary" "latest" "/opt/caddy" "caddy_*_linux_$(arch_resolve).deb"
+  systemctl enable -q --now caddy
 
   prompt="${var_caddy_xcaddy:-}"
   [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
