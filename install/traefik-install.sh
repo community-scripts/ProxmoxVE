@@ -105,8 +105,9 @@ setup_alpine() {
   $STD apk add traefik --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
   msg_ok "Installed Traefik"
 
-  read -p "${TAB3}Enable Traefik WebUI (Port 8080)? [y/N]: " enable_webui
-  if [[ "$enable_webui" =~ ^[Yy]$ ]]; then
+  enable_webui="${var_traefik_webui:-}"
+  [[ -n "$enable_webui" ]] || read -p "${TAB3}Enable Traefik WebUI (Port 8080)? [y/N]: " enable_webui
+  if [[ "${enable_webui,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Configuring Traefik WebUI"
     sed -i 's/localhost//g' /etc/traefik/traefik.yaml
     msg_ok "Configured Traefik WebUI"

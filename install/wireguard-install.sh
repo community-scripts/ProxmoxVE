@@ -24,7 +24,8 @@ setup_deb_based() {
   $STD netfilter-persistent reload
   msg_ok "Installed WireGuard"
 
-  read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt
+  prompt="${var_wireguard_wgdashboard:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     git clone -q https://github.com/WGDashboard/WGDashboard.git /etc/wgdashboard
 
@@ -109,8 +110,9 @@ EOF
   $STD sysctl -p /etc/sysctl.conf
   msg_ok "Installed WireGuard"
 
-  read -rp "${TAB3}Do you want to install WGDashboard? (y/N): " INSTALL_WGD
-  if [[ "$INSTALL_WGD" =~ ^[Yy]$ ]]; then
+  INSTALL_WGD="${var_wireguard_wgdashboard:-}"
+  [[ -n "$INSTALL_WGD" ]] || read -rp "${TAB3}Do you want to install WGDashboard? (y/N): " INSTALL_WGD
+  if [[ "${INSTALL_WGD,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing additional dependencies for WGDashboard"
     $STD apk add --no-cache \
       python3 \

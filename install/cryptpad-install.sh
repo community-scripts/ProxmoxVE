@@ -19,14 +19,15 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 
-read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
+onlyoffice="${var_cryptpad_onlyoffice:-}"
+[[ -n "$onlyoffice" ]] || read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
 msg_info "Setup CryptPad"
 cd /opt/cryptpad
 $STD npm ci --allow-git=all
 $STD npm run install:components
-if [[ "$onlyoffice" =~ ^[Yy]$ ]]; then
+if [[ "${onlyoffice,,}" =~ ^(y|yes)$ ]]; then
   $STD bash -c "./install-onlyoffice.sh --accept-license"
 fi
 cp config/config.example.js config/config.js

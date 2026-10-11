@@ -124,7 +124,8 @@ EOF
   systemctl restart postgresql
   msg_ok "Installed PostgreSQL"
 
-  read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+  prompt="${var_postgresql_adminer:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer"
     $STD apt install -y adminer
@@ -158,7 +159,8 @@ setup_alpine() {
   $STD rc-service postgresql restart
   msg_ok "Configured and Restarted PostgreSQL"
 
-  read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
+  prompt="${var_postgresql_adminer:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer and dependencies"
     $STD apk add --no-cache \

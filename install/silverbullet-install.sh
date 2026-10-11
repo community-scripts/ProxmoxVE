@@ -17,7 +17,8 @@ fetch_and_deploy_gh_release "silverbullet" "silverbulletmd/silverbullet" "prebui
 mkdir -p /opt/silverbullet/space
 
 RUNTIME_API_ENV=""
-read -rp "${TAB3}Enable Silverbullet Runtime API? Requires Chromium (~700MB). Uses ~200MB extra RAM. (y/N): " runtime_api_prompt
+runtime_api_prompt="${var_silverbullet_runtime_api:-}"
+[[ -n "$runtime_api_prompt" ]] || read -rp "${TAB3}Enable Silverbullet Runtime API? Requires Chromium (~700MB). Uses ~200MB extra RAM. (y/N): " runtime_api_prompt
 if [[ "${runtime_api_prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Chromium for Runtime API"
   $STD apt install -y chromium

@@ -34,7 +34,8 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.12" setup_uv
 JAVA_VERSION="25" setup_java
 
-if ! read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response; then
+response="${var_stirling_pdf_login:-}"
+if [[ -z "$response" ]] && ! read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response; then
   # No interactive stdin (EOF): fall back to the no-login install instead of
   # silently selecting login, which the -z test below would otherwise do.
   response="n"

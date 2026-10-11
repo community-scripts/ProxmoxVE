@@ -31,7 +31,10 @@ sed -i "s/root//g" /etc/cockpit/disallowed-users
 msg_ok "Installed Cockpit"
 
 # 45Drives only publishes amd64 packages
-[[ "$(arch_resolve)" == "arm64" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator  <y/N> " prompt
+if [[ "$(arch_resolve)" != "arm64" ]]; then
+  prompt="${var_cockpit_45drives:-}"
+  [[ -n "$prompt" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator  <y/N> " prompt
+fi
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing 45Drives' cockpit extensions"
   setup_deb822_repo "45drives" \

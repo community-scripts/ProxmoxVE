@@ -50,7 +50,8 @@ else
 fi
 msg_ok "Installed InfluxDB"
 
-read -r -p "${TAB3}Would you like to add Telegraf? <y/N> " prompt
+prompt="${var_influxdb_telegraf:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Telegraf? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Telegraf"
   $STD apt install -y telegraf

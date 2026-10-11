@@ -24,7 +24,8 @@ cd /opt/bytestash/client
 $STD npm install
 msg_ok "Installed ByteStash"
 
-read -rp "${TAB3}Do you want to allow registration of multiple accounts? [y/n]: " allowreg
+allowreg="${var_bytestash_registration:-}"
+[[ -n "$allowreg" ]] || read -rp "${TAB3}Do you want to allow registration of multiple accounts? [y/n]: " allowreg
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/bytestash-backend.service
@@ -42,7 +43,7 @@ Environment=JWT_SECRET=$JWT_SECRET
 WantedBy=multi-user.target
 EOF
 
-if [[ "$allowreg" =~ ^[Yy]$ ]]; then
+if [[ "${allowreg,,}" =~ ^(y|yes)$ ]]; then
   sed -i '8i\Environment=ALLOW_NEW_ACCOUNTS=true' /etc/systemd/system/bytestash-backend.service
 fi
 
