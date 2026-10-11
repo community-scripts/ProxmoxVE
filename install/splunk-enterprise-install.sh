@@ -51,8 +51,6 @@ $STD curl -fsSL -o "splunk-enterprise.tgz" "$DOWNLOAD_URL" || {
 }
 $STD tar -xzf "splunk-enterprise.tgz" -C /opt
 rm -f "splunk-enterprise.tgz"
-# Splunk Enterprise 10.2 and later will not start as root. The OS account
-# must exist before the first start, and it must own $SPLUNK_HOME.
 $STD addgroup --system splunk
 $STD adduser --system --home /opt/splunk --shell /bin/bash --ingroup splunk --no-create-home splunk
 chown -R splunk:splunk /opt/splunk
@@ -83,12 +81,8 @@ chown splunk:splunk /opt/splunk/etc/splunk-launch.conf
 msg_ok "Created Splunk admin user"
 
 msg_info "Starting Service"
-# First-time setup has to run as splunk. Starting the CLI as root is rejected
-# on 10.2+, and the default init script would launch splunkd as root at boot.
 $STD sudo -H -u splunk /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
 $STD sudo -H -u splunk /opt/splunk/bin/splunk stop --answer-yes --no-prompt
-# Writing the systemd unit requires root. User= and Group= in that unit keep
-# splunkd running as the splunk account.
 $STD /opt/splunk/bin/splunk enable boot-start \
     -systemd-managed 1 \
     -user splunk \
@@ -98,11 +92,7 @@ $STD /opt/splunk/bin/splunk enable boot-start \
     --no-prompt
 chown -R splunk:splunk /opt/splunk
 $STD systemctl daemon-reload
-if [[ -f /etc/systemd/system/Splunkd.service ]]; then
-    $STD systemctl enable --now Splunkd
-else
-    $STD systemctl enable --now splunkd
-fi
+$STD systemctl enable --now Splunkd
 msg_ok "Started Service"
 
 motd_ssh
