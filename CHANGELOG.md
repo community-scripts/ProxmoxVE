@@ -578,6 +578,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - QoL: let var_* answer the optional add-on prompts [@MickLesk](https://github.com/MickLesk) ([#17858](https://github.com/community-scripts/ProxmoxVE/pull/17858))
     - QoL: Confirm third-party installers through confirm_external_installer [@MickLesk](https://github.com/MickLesk) ([#17857](https://github.com/community-scripts/ProxmoxVE/pull/17857))
     - docker: take the lxcfs toggle, TCP socket and Compose choice from app variables [@MickLesk](https://github.com/MickLesk) ([#17850](https://github.com/community-scripts/ProxmoxVE/pull/17850))
 
