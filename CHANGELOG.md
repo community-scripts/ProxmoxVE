@@ -564,6 +564,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-11
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(zigbee2mqtt): preserve backup stream and prevent filename collisions [@petermnt](https://github.com/petermnt) ([#17751](https://github.com/community-scripts/ProxmoxVE/pull/17751))
+
 ## 2026-10-10
 
 ### 🆕 New Scripts
