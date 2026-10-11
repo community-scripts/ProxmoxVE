@@ -123,12 +123,7 @@ if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
 fi
 msg_ok "Dependencies Installed"
 
-msg_info "Installing Mise"
-curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
-apt_update_safe
-$STD apt install -y mise
-msg_ok "Installed Mise"
+fetch_and_deploy_gh_release "mise" "jdx/mise" "singlefile" "latest" "/usr/local/bin" "mise-v*-linux-$(arch_resolve "x64" "arm64")"
 
 msg_info "Configuring Debian Testing Repo"
 if [[ -f /etc/apt/sources.list.d/debian.sources ]]; then
