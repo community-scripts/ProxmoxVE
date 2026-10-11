@@ -582,7 +582,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - setup_docker: make LXC resource limits visible to nested containers [@andrebrait](https://github.com/andrebrait) ([core#9](https://github.com/community-scripts/core/pull/9))
+  - Add confirm_external_installer [@MickLesk](https://github.com/MickLesk) ([core#130](https://github.com/community-scripts/core/pull/130))
+- setup_docker: make LXC resource limits visible to nested containers [@andrebrait](https://github.com/andrebrait) ([core#9](https://github.com/community-scripts/core/pull/9))
 - Incus: fix ENABLE_FUSE / TUN vars [@MickLesk](https://github.com/MickLesk) ([core#127](https://github.com/community-scripts/core/pull/127))
 - Resolve a uv required-version range to the newest release inside it [@MickLesk](https://github.com/MickLesk) ([core#126](https://github.com/community-scripts/core/pull/126))
 - Upgrade MongoDB in place when an app package depends on it [@MickLesk](https://github.com/MickLesk) ([core#128](https://github.com/community-scripts/core/pull/128))
