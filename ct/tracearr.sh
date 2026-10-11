@@ -145,6 +145,7 @@ EOF
     rm -rf /opt/tracearr.build
     cd /opt/tracearr
     $STD pnpm install --prod --frozen-lockfile --ignore-scripts
+    rm -rf "$(pnpm store path)"
     $STD chown -R tracearr:tracearr /opt/tracearr
     msg_ok "Built Tracearr"
 
