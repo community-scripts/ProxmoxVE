@@ -38,7 +38,6 @@ update_deb_based() {
     exit
   fi
 
-  # The Cloudsmith repo keeps running out of quota (402); the same .deb ships with each GitHub release
   cleanup_old_repo_files "caddy"
   msg_info "Updating Caddy LXC"
   apt_update_safe
