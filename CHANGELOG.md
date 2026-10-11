@@ -568,6 +568,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Radicale: install the bcrypt and argon2 extras [@MickLesk](https://github.com/MickLesk) ([#17813](https://github.com/community-scripts/ProxmoxVE/pull/17813))
     - fix(zigbee2mqtt): preserve backup stream and prevent filename collisions [@petermnt](https://github.com/petermnt) ([#17751](https://github.com/community-scripts/ProxmoxVE/pull/17751))
 
   - #### ✨ New Features
