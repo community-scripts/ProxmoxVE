@@ -572,6 +572,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - chore(ct): sync wazuh defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17889](https://github.com/community-scripts/ProxmoxVE/pull/17889))
     - Wanderer: bring back the wanderer-pb wrapper [@MickLesk](https://github.com/MickLesk) ([#17874](https://github.com/community-scripts/ProxmoxVE/pull/17874))
     - Tracearr: install only the server's production dependencies [@MickLesk](https://github.com/MickLesk) ([#17873](https://github.com/community-scripts/ProxmoxVE/pull/17873))
     - Paperless-ngx: QoL restart crashed services | patch regex [@MickLesk](https://github.com/MickLesk) ([#17812](https://github.com/community-scripts/ProxmoxVE/pull/17812))
@@ -586,10 +587,6 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### ✨ New Features
 
     - Immich Public Proxy: optional visitor upload service (v4 Release) [@MickLesk](https://github.com/MickLesk) ([#17875](https://github.com/community-scripts/ProxmoxVE/pull/17875))
-
-### ❔ Uncategorized
-
-  - chore(ct): sync wazuh defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17889](https://github.com/community-scripts/ProxmoxVE/pull/17889))
 
 ## 2026-10-11
 
