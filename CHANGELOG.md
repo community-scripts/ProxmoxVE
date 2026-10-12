@@ -564,6 +564,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-12
 
+### 🆕 New Scripts
+
+  - WatchState ([#17881](https://github.com/community-scripts/ProxmoxVE/pull/17881))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
