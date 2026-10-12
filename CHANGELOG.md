@@ -580,7 +580,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - gh: curl_download: wait between attempts [@MickLesk](https://github.com/MickLesk) ([core#131](https://github.com/community-scripts/core/pull/131))
+  - Order pre-release labels when comparing versions [@MickLesk](https://github.com/MickLesk) ([core#132](https://github.com/community-scripts/core/pull/132))
+- gh: curl_download: wait between attempts [@MickLesk](https://github.com/MickLesk) ([core#131](https://github.com/community-scripts/core/pull/131))
 
 ### 🧰 Tools
 
