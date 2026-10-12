@@ -268,8 +268,7 @@ msg_ok "(2/6) Compiled jpegli"
 
 msg_info "(3/6) Compiling libheif"
 SOURCE=${SOURCE_DIR}/libheif
-LIBHEIF_REVISION="ac1cb05c39008f01525c991ff8b88f84ddf70fd2"
-# : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
+LIBHEIF_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)"
 $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBHEIF_REVISION"
