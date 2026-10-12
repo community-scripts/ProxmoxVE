@@ -31,7 +31,6 @@ function update_script() {
     exit
   fi
 
-  # the old master-YYYYMMDD-<sha> releases outrank the v* tags in the version sort
   if check_for_gh_release "watchstate" "arabcoders/watchstate" "" "" "v"; then
     msg_info "Stopping WatchState"
     systemctl stop watchstate-worker php8.5-fpm
@@ -45,7 +44,6 @@ function update_script() {
 
     msg_info "Building WatchState"
     cd /opt/watchstate
-    # the Redis cache (routes, event listeners) is namespaced by this version, so a release left at dev-master keeps serving the old one
     sed -i "s/'version' => 'dev-master'/'version' => 'v$(cat ~/.watchstate)'/" config/config.php
     $STD composer install --no-dev --optimize-autoloader --no-interaction
     cd /opt/watchstate/frontend
@@ -77,4 +75,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:8080${CL}"
-echo -e "${INFO}${YW}The first visitor creates the system user - open the URL right away${CL}"
