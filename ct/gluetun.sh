@@ -32,7 +32,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "gluetun" "qdm12/gluetun"; then
+  if check_for_gh_release "gluetun" "passteque/gluetun"; then
     msg_info "Stopping Service"
     systemctl stop gluetun
     msg_ok "Stopped Service"
