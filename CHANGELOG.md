@@ -577,6 +577,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Paperless-ngx: QoL restart crashed services | patch regex [@MickLesk](https://github.com/MickLesk) ([#17812](https://github.com/community-scripts/ProxmoxVE/pull/17812))
     - Splunk Enterprise: start the service as the splunk user [@rcastley](https://github.com/rcastley) ([#17816](https://github.com/community-scripts/ProxmoxVE/pull/17816))
 
+### 💾 Core
+
+  - gh: curl_download: wait between attempts [@MickLesk](https://github.com/MickLesk) ([core#131](https://github.com/community-scripts/core/pull/131))
+
 ### 🧰 Tools
 
   - #### ✨ New Features
