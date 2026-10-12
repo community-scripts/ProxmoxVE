@@ -100,7 +100,6 @@ EOF
       -e "s|^MEILI_DB_PATH=.*|MEILI_DB_PATH=/opt/wanderer_data/meili_data|" \
       /opt/wanderer/.env
     sed -i "s|^db_path =.*|db_path = \"/opt/wanderer_data/meili_data\"|" /etc/meilisearch.toml
-    rm -f /usr/local/bin/wanderer-pb
 
     cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 [Unit]
@@ -154,6 +153,16 @@ EOF
     systemctl restart wanderer-web
     msg_ok "Added POCKETBASE_PROXY_SECRET"
   fi
+
+  cat <<'EOF' >/usr/local/bin/wanderer-pb
+#!/usr/bin/env bash
+set -a
+source /opt/wanderer/.env
+set +a
+cd /opt/wanderer/db
+exec ./pocketbase "$@" --dir="$PB_DB_LOCATION"
+EOF
+  chmod +x /usr/local/bin/wanderer-pb
 
   if [[ -f /opt/wanderer_data/plugins/plugin.json ]]; then
     msg_info "Reinstalling wanderer plugins, one directory each"
