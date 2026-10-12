@@ -33,7 +33,9 @@ APP_TYPE="addon"
 INSTALL_PATH="/opt/immich-proxy"
 CONFIG_PATH="/opt/immich-proxy/app"
 SERVICE_PATH="/etc/systemd/system/immich-proxy.service"
+UPLOAD_SERVICE_PATH="/etc/systemd/system/immich-proxy-upload.service"
 DEFAULT_PORT=3000
+UPLOAD_PORT=3001
 
 # Initialize all core functions (colors, formatting, icons, $STD mode)
 load_functions
@@ -44,8 +46,8 @@ require_debian_like
 # ==============================================================================
 function uninstall() {
   msg_info "Uninstalling ${APP}"
-  systemctl disable --now immich-proxy.service &>/dev/null || true
-  rm -f "$SERVICE_PATH"
+  systemctl disable --now immich-proxy.service immich-proxy-upload.service &>/dev/null || true
+  rm -f "$SERVICE_PATH" "$UPLOAD_SERVICE_PATH"
   rm -rf "$INSTALL_PATH"
   rm -f "/usr/local/bin/update_immich-public-proxy"
   rm -f "$HOME/.immichpublicproxy"
@@ -58,32 +60,33 @@ function uninstall() {
 function update() {
   if check_for_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy"; then
     msg_info "Stopping service"
-    systemctl stop immich-proxy.service &>/dev/null || true
+    systemctl stop immich-proxy.service immich-proxy-upload.service &>/dev/null || true
     msg_ok "Stopped service"
 
     BACKUP_DIR="/opt/immich-public-proxy_backup"
     create_backup "$CONFIG_PATH"/.env "$CONFIG_PATH"/config.json
+    if [[ -f "$UPLOAD_SERVICE_PATH" ]]; then
+      create_backup "$INSTALL_PATH"/upload-app/config.json
+    fi
 
     NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "$INSTALL_PATH"
 
     restore_backup
-
-    msg_info "Installing dependencies"
-    cd "$CONFIG_PATH"
-    $STD npm ci
-    msg_ok "Installed dependencies"
-
-    msg_info "Building ${APP}"
-    $STD npm run build
-    msg_ok "Built ${APP}"
+    build_app
 
     msg_info "Updating service"
     create_service
+    if [[ -f "$UPLOAD_SERVICE_PATH" ]]; then
+      create_upload_service
+    fi
     msg_ok "Updated service"
 
     msg_info "Starting service"
     systemctl start immich-proxy
+    if [[ -f "$UPLOAD_SERVICE_PATH" ]]; then
+      systemctl start immich-proxy-upload
+    fi
     msg_ok "Started service"
     msg_ok "Updated successfully"
     exit
@@ -111,6 +114,55 @@ EOF
   systemctl daemon-reload
 }
 
+# The workspace root builds shared, app and upload-app together
+function build_app() {
+  msg_info "Installing dependencies"
+  cd "$INSTALL_PATH"
+  $STD npm ci
+  msg_ok "Installed dependencies"
+
+  msg_info "Building ${APP}"
+  $STD npm run build
+  msg_ok "Built ${APP}"
+}
+
+# env sets the port after EnvironmentFile, so an IPP_PORT in .env cannot clash with IPP
+function create_upload_service() {
+  cat <<EOF >"$UPLOAD_SERVICE_PATH"
+[Unit]
+Description=Immich Public Proxy visitor uploads
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=${INSTALL_PATH}/upload-app
+EnvironmentFile=${CONFIG_PATH}/.env
+ExecStart=/usr/bin/env IPP_PORT=${UPLOAD_PORT} /usr/bin/node ${INSTALL_PATH}/upload-app/dist/index.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+}
+
+function enable_uploads() {
+  if [[ ! -d "$INSTALL_PATH"/upload-app ]]; then
+    msg_error "Visitor uploads need ${APP} 4.0 or newer. Update first."
+    exit 1
+  fi
+  if [[ ! -f "$INSTALL_PATH"/upload-app/dist/index.js ]]; then
+    build_app
+  fi
+  msg_info "Enabling visitor uploads"
+  create_upload_service
+  systemctl enable -q --now immich-proxy-upload
+  msg_ok "Enabled visitor uploads on port ${UPLOAD_PORT}"
+  msg_warn "Route /upload/* on your reverse proxy to http://${LOCAL_IP}:${UPLOAD_PORT} and turn on 'Allow public user to upload' for the share in Immich"
+}
+
 # ==============================================================================
 # INSTALL
 # ==============================================================================
@@ -120,15 +172,7 @@ function install() {
   # Force fresh download by removing version cache
   rm -f "$HOME/.immichpublicproxy"
   fetch_and_deploy_gh_release "Immich Public Proxy" "alangrainger/immich-public-proxy" "tarball" "latest" "$INSTALL_PATH"
-
-  msg_info "Installing dependencies"
-  cd "$CONFIG_PATH"
-  $STD npm ci
-  msg_ok "Installed dependencies"
-
-  msg_info "Building ${APP}"
-  $STD npm run build
-  msg_ok "Built ${APP}"
+  build_app
 
   MAX_ATTEMPTS=3
   attempt=0
@@ -175,6 +219,12 @@ EOF
   create_service
   systemctl enable -q --now immich-proxy
   msg_ok "Created and started service"
+
+  prompt="${var_ipp_uploads:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Enable visitor uploads (second service on port ${UPLOAD_PORT})? <y/N> " prompt
+  if [[ "${prompt,,}" =~ ^(y|yes|true)$ ]]; then
+    enable_uploads
+  fi
 
   # Create update script (simple wrapper that calls this addon with type=update)
   msg_info "Creating update script"
@@ -228,6 +278,15 @@ if [[ -d "$INSTALL_PATH" && -f "$SERVICE_PATH" ]]; then
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     update
     exit 0
+  fi
+
+  if [[ ! -f "$UPLOAD_SERVICE_PATH" ]]; then
+    echo -n "${TAB}Enable visitor uploads (second service on port ${UPLOAD_PORT})? (y/N): "
+    read -r upload_prompt
+    if [[ "${upload_prompt,,}" =~ ^(y|yes)$ ]]; then
+      enable_uploads
+      exit 0
+    fi
   fi
 
   msg_warn "No action selected. Exiting."
