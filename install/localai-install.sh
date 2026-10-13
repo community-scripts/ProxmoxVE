@@ -39,6 +39,12 @@ LOCALAI_MODELS_PATH=/opt/localai_data/models
 LOCALAI_BACKENDS_PATH=/opt/localai_data/backends
 LOCALAI_LOG_LEVEL=info
 EOF
+# LocalAI picks the backend variant from the GPU it sees in sysfs, which is the
+# host's card even when no driver was installed in here, and a CUDA/ROCm/SYCL
+# backend then never starts. Pin the CPU variants unless a runtime is present.
+if ! ldconfig -p 2>/dev/null | grep -qE 'libcuda[.]so|libamdhip64[.]so|libze_intel_gpu[.]so|libze_loader[.]so'; then
+  echo "LOCALAI_FORCE_META_BACKEND_CAPABILITY=default" >>/opt/localai.env
+fi
 # LocalAI refuses to start on a wildcard bind with nothing to identify callers,
 # and binding the wildcard is what makes the container reachable at all.
 if [[ "$var_auth" == "yes" ]]; then
