@@ -39,7 +39,7 @@ function update_script() {
 
     msg_info "Updating OneDev"
     cd /opt
-    curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -o onedev-latest.tar.gz
+    curl -fsSL "https://code.onedev.io/onedev/server/~sites/public/onedev-latest.tar.gz" -o onedev-latest.tar.gz
     tar -xzf onedev-latest.tar.gz
     $STD /opt/onedev-latest/bin/upgrade.sh /opt/onedev
     rm -rf /opt/onedev-latest

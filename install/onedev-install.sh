@@ -24,7 +24,7 @@ JAVA_VERSION="21" setup_java
 msg_info "Installing OneDev"
 RELEASE=$(get_latest_github_release "theonedev/onedev" false)
 cd /opt
-curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -o onedev-latest.tar.gz
+curl -fsSL "https://code.onedev.io/onedev/server/~sites/public/onedev-latest.tar.gz" -o onedev-latest.tar.gz
 tar -xzf onedev-latest.tar.gz
 mv /opt/onedev-latest /opt/onedev
 $STD /opt/onedev/bin/server.sh install
