@@ -568,6 +568,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix URL for downloading OneDev latest release [@ryansully](https://github.com/ryansully) ([#17915](https://github.com/community-scripts/ProxmoxVE/pull/17915))
     - LocalAI: pin the CPU backends when the container has no GPU runtime [@MickLesk](https://github.com/MickLesk) ([#17909](https://github.com/community-scripts/ProxmoxVE/pull/17909))
     - [Gluetun] Update GitHub repository source install and update. [@CerberusStyle](https://github.com/CerberusStyle) ([#17899](https://github.com/community-scripts/ProxmoxVE/pull/17899))
     - Immich: Bump to 3.3.1 and restore (failed) geodata/countryInfo.txt on update  [@MickLesk](https://github.com/MickLesk) ([#17894](https://github.com/community-scripts/ProxmoxVE/pull/17894))
