@@ -572,6 +572,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Immich: Bump to 3.3.1 and restore (failed) geodata/countryInfo.txt on update  [@MickLesk](https://github.com/MickLesk) ([#17894](https://github.com/community-scripts/ProxmoxVE/pull/17894))
     - WikiJS: use v2 Repo until v3 is stable [@MickLesk](https://github.com/MickLesk) ([#17895](https://github.com/community-scripts/ProxmoxVE/pull/17895))
 
+  - #### 💥 Breaking Changes
+
+    - zammad: Debian 13, new apt repo, Elasticsearch 8 [@durzo](https://github.com/durzo) ([#17836](https://github.com/community-scripts/ProxmoxVE/pull/17836))
+
 ## 2026-10-12
 
 ### 🆕 New Scripts
