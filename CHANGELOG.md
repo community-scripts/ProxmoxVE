@@ -576,6 +576,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - zammad: Debian 13, new apt repo, Elasticsearch 8 [@durzo](https://github.com/durzo) ([#17836](https://github.com/community-scripts/ProxmoxVE/pull/17836))
 
+### 💾 Core
+
+  - Keep the version key parseable by jq 1.6 [@MickLesk](https://github.com/MickLesk) ([core#134](https://github.com/community-scripts/core/pull/134))
+
 ## 2026-10-12
 
 ### 🆕 New Scripts
