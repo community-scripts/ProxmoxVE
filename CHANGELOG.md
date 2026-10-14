@@ -562,6 +562,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-14
+
+### 💾 Core
+
+  - github: say why a forge could not be reached instead of 'connection failed' [@MickLesk](https://github.com/MickLesk) ([core#136](https://github.com/community-scripts/core/pull/136))
+
 ## 2026-10-13
 
 ### 🚀 Updated Scripts
