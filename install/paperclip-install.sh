@@ -31,7 +31,10 @@ msg_info "Building Paperclip"
 cd /opt/paperclip-ai
 export HUSKY=0
 export NODE_OPTIONS="--max-old-space-size=8192"
-$STD pnpm install --frozen-lockfile
+if ! $STD pnpm install --frozen-lockfile; then
+  msg_warn "Paperclip lockfile is out of sync; retrying without frozen lockfile"
+  $STD pnpm install --no-frozen-lockfile
+fi
 $STD pnpm build
 unset NODE_OPTIONS
 msg_ok "Built Paperclip"
