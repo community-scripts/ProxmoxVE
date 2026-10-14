@@ -566,7 +566,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Refresh the NodeSource key before a same-major Node.js update [@MickLesk](https://github.com/MickLesk) ([core#137](https://github.com/community-scripts/core/pull/137))
+  - Install jq before the release lookup and show what a non-JSON answer was [@MickLesk](https://github.com/MickLesk) ([core#138](https://github.com/community-scripts/core/pull/138))
+- Refresh the NodeSource key before a same-major Node.js update [@MickLesk](https://github.com/MickLesk) ([core#137](https://github.com/community-scripts/core/pull/137))
 - github: say why a forge could not be reached instead of 'connection failed' [@MickLesk](https://github.com/MickLesk) ([core#136](https://github.com/community-scripts/core/pull/136))
 
 ## 2026-10-13
