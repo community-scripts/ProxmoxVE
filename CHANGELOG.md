@@ -570,6 +570,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Paperclip: fall back to a non-frozen install when the release lockfile is stale [@MickLesk](https://github.com/MickLesk) ([#17922](https://github.com/community-scripts/ProxmoxVE/pull/17922))
 
+  - #### 🔧 Refactor
+
+    - Immich: rebuild the image libraries when the revision record is missing [@MickLesk](https://github.com/MickLesk) ([#17919](https://github.com/community-scripts/ProxmoxVE/pull/17919))
+
 ### 💾 Core
 
   - Show what the failing command printed, and keep verbose output in the log [@MickLesk](https://github.com/MickLesk) ([core#139](https://github.com/community-scripts/core/pull/139))
