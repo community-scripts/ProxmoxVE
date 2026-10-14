@@ -102,17 +102,21 @@ EOF
       msg_ok "Updated Intel OpenVINO dependencies"
     fi
   fi
-  if [[ -f ~/.immich_library_revisions ]]; then
-    libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
-    cd "$BASE_DIR"
-    msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
-    ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev
-    $STD git pull
-    for library in "${libraries[@]}"; do
-      compile_"$library"
-    done
-    msg_ok "Image-processing libraries up to date"
+  # Without the revision file the refresh was skipped and sharp failed on an old libvips (#17914).
+  if [[ ! -f ~/.immich_library_revisions ]]; then
+    msg_warn "No record of the compiled image-processing libraries, rebuilding all of them"
+    printf '%s: unknown\n' imagemagick jpegli libheif libjxl libraw libvips >~/.immich_library_revisions
   fi
+  [[ -d "$BASE_DIR/.git" ]] || $STD git clone -b main https://github.com/immich-app/base-images "$BASE_DIR"
+  libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
+  cd "$BASE_DIR"
+  msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
+  ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev
+  $STD git pull
+  for library in "${libraries[@]}"; do
+    compile_"$library"
+  done
+  msg_ok "Image-processing libraries up to date"
 
   # 3.3.0 reads geodata/countryInfo.txt; the update before #17823 saved it into app/ instead.
   if [[ -d /opt/immich/geodata && ! -s /opt/immich/geodata/countryInfo.txt ]]; then
