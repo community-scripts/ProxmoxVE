@@ -566,7 +566,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - github: say why a forge could not be reached instead of 'connection failed' [@MickLesk](https://github.com/MickLesk) ([core#136](https://github.com/community-scripts/core/pull/136))
+  - Refresh the NodeSource key before a same-major Node.js update [@MickLesk](https://github.com/MickLesk) ([core#137](https://github.com/community-scripts/core/pull/137))
+- github: say why a forge could not be reached instead of 'connection failed' [@MickLesk](https://github.com/MickLesk) ([core#136](https://github.com/community-scripts/core/pull/136))
 
 ## 2026-10-13
 
