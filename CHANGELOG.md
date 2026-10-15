@@ -568,6 +568,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Bytestash: modify backup process | Update Resources [@MickLesk](https://github.com/MickLesk) ([#17935](https://github.com/community-scripts/ProxmoxVE/pull/17935))
     - Zabbix: Add '-y' flag to apt install commands [@MickLesk](https://github.com/MickLesk) ([#17933](https://github.com/community-scripts/ProxmoxVE/pull/17933))
     - karakeep: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17087](https://github.com/community-scripts/ProxmoxVE/pull/17087))
 
