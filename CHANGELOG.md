@@ -574,7 +574,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Stop calling exit 1 "Operation not permitted" at several steps [@MickLesk](https://github.com/MickLesk) ([core#140](https://github.com/community-scripts/core/pull/140))
+  - Keep VM release lookups working without system.func [@MickLesk](https://github.com/MickLesk) ([core#144](https://github.com/community-scripts/core/pull/144))
+- Stop calling exit 1 "Operation not permitted" at several steps [@MickLesk](https://github.com/MickLesk) ([core#140](https://github.com/community-scripts/core/pull/140))
 
 ## 2026-10-14
 
