@@ -25,7 +25,10 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /etc/systemd/system/onedev.service ]]; then
+  # Installs from before 16.9.0 keep their onedev.service; newer ones get onedev.server.service
+  SERVICE="onedev.server"
+  [[ -f /etc/systemd/system/onedev.service ]] && SERVICE="onedev"
+  if [[ ! -f "/etc/systemd/system/${SERVICE}.service" ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -34,7 +37,7 @@ function update_script() {
     JAVA_VERSION="21" setup_java
 
     msg_info "Stopping Service"
-    systemctl stop onedev
+    systemctl stop "$SERVICE"
     msg_ok "Stopped Service"
 
     msg_info "Updating OneDev"
@@ -48,7 +51,7 @@ function update_script() {
     msg_ok "Updated OneDev"
 
     msg_info "Starting Service"
-    systemctl start onedev
+    systemctl start "$SERVICE"
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
     exit

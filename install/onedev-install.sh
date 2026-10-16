@@ -28,7 +28,7 @@ curl -fsSL "https://code.onedev.io/onedev/server/~sites/public/onedev-latest.tar
 tar -xzf onedev-latest.tar.gz
 mv /opt/onedev-latest /opt/onedev
 $STD /opt/onedev/bin/server.sh install
-systemctl start onedev
+systemctl start onedev.server
 rm -rf /opt/onedev-latest.tar.gz
 echo "${RELEASE}" >~/.onedev
 msg_ok "Installed OneDev"
