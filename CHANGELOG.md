@@ -562,6 +562,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-16
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - ReadMeABook: start the scheduler with the service [@MickLesk](https://github.com/MickLesk) ([#17950](https://github.com/community-scripts/ProxmoxVE/pull/17950))
+
 ## 2026-10-15
 
 ### 🚀 Updated Scripts
