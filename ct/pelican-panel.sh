@@ -66,7 +66,8 @@ function update_script() {
     cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
 
     $STD composer install --no-dev --optimize-autoloader --no-interaction
-    $STD php artisan p:environment:setup
+    PANEL_URL="$(sed -n 's/^APP_URL=//p' /opt/pelican-panel/.env | tr -d "\"'")"
+    $STD php artisan p:environment:setup --url="$PANEL_URL"
     $STD php artisan view:clear
     $STD php artisan config:clear
     $STD php artisan filament:optimize
