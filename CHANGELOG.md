@@ -566,7 +566,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - openGym ([#17960](https://github.com/community-scripts/ProxmoxVE/pull/17960))
+  - Downtify ([#17959](https://github.com/community-scripts/ProxmoxVE/pull/17959))
+- openGym ([#17960](https://github.com/community-scripts/ProxmoxVE/pull/17960))
 
 ### 🚀 Updated Scripts
 
