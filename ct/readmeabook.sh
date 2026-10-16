@@ -31,6 +31,28 @@ function update_script() {
     exit
   fi
 
+  if ! grep -q '^ExecStartPost=-/usr/local/bin/readmeabook-init$' /etc/systemd/system/readmeabook.service; then
+    msg_info "Starting the scheduler with the service"
+    cat <<'EOF' >/usr/local/bin/readmeabook-init
+#!/usr/bin/env bash
+# Upstream's image calls /api/init after every start: it creates the scheduled jobs and starts the scheduler
+url="http://127.0.0.1:${PORT:-3030}"
+for _ in $(seq 1 60); do curl -sf -o /dev/null "$url/api/health" && break; sleep 1; done
+for _ in $(seq 1 30); do [[ "$(redis-cli ping 2>/dev/null)" == PONG ]] && break; sleep 1; done
+for attempt in 1 2 3 4 5; do
+  curl -sf -o /dev/null "$url/api/init" && exit 0
+  sleep "$attempt"
+done
+echo "ReadMeABook did not answer /api/init, scheduled jobs will not run" >&2
+exit 1
+EOF
+    chmod +x /usr/local/bin/readmeabook-init
+    sed -i '/^ExecStart=/a ExecStartPost=-/usr/local/bin/readmeabook-init\nTimeoutStartSec=180' /etc/systemd/system/readmeabook.service
+    systemctl daemon-reload
+    systemctl restart readmeabook
+    msg_ok "Started the scheduler with the service"
+  fi
+
   if check_for_gh_release "readmeabook" "kikootwo/ReadMeABook"; then
     msg_info "Stopping Service"
     systemctl stop readmeabook
