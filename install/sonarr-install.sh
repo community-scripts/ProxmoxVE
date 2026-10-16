@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y sqlite3 libicu-dev
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-$(arch_resolve "x64" "arm64").tar.gz"
+fetch_and_deploy_gh_release "Sonarr" "Sonarr/Sonarr" "prebuild" "latest" "/opt/Sonarr" "Sonarr.main.*.linux-$(arch_resolve "x64" "arm64").tar.gz" "v4."
 mkdir -p /var/lib/sonarr/
 chmod 775 /var/lib/sonarr/
 
