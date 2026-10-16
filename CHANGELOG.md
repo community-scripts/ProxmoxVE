@@ -577,6 +577,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - OneDev: use the onedev.server unit of 16.9 [@MickLesk](https://github.com/MickLesk) ([#17949](https://github.com/community-scripts/ProxmoxVE/pull/17949))
     - ReadMeABook: start the scheduler with the service [@MickLesk](https://github.com/MickLesk) ([#17950](https://github.com/community-scripts/ProxmoxVE/pull/17950))
 
+### 💾 Core
+
+  - Clean up after installs and updates again [@MickLesk](https://github.com/MickLesk) ([core#147](https://github.com/community-scripts/core/pull/147))
+- Fix apt_conffile_report exiting 1 when uutils comm sees locale-sorted input [@BadFlo](https://github.com/BadFlo) ([core#146](https://github.com/community-scripts/core/pull/146))
+
 ## 2026-10-15
 
 ### 🚀 Updated Scripts
