@@ -562,6 +562,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-17
+
+### 🆕 New Scripts
+
+  - Norish ([#17964](https://github.com/community-scripts/ProxmoxVE/pull/17964))
+
 ## 2026-10-16
 
 ### 🆕 New Scripts
