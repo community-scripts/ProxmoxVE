@@ -571,6 +571,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Youtarr ([#17962](https://github.com/community-scripts/ProxmoxVE/pull/17962))
 - Norish ([#17964](https://github.com/community-scripts/ProxmoxVE/pull/17964))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Sonarr: stay on the newest v4 (pin) [@MickLesk](https://github.com/MickLesk) ([#17958](https://github.com/community-scripts/ProxmoxVE/pull/17958))
+
 ## 2026-10-16
 
 ### 🆕 New Scripts
