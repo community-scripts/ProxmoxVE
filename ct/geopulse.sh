@@ -10,7 +10,7 @@ APP="GeoPulse"
 var_tags="${var_tags:-location;tracking;gps}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-8}"
+var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
@@ -32,6 +32,16 @@ function update_script() {
   fi
 
   if check_for_gh_release "geopulse-backend" "tess1o/geopulse"; then
+    msg_info "Backing Up Database"
+    mkdir -p /var/lib/geopulse/dumps
+    DB_NAME="$(grep -oP '^GEOPULSE_POSTGRES_DB=\K.*' /etc/geopulse/geopulse.env 2>/dev/null)"
+    DB_NAME="${DB_NAME:-geopulse}"
+    if sudo -u postgres pg_dump -Fc "${DB_NAME}" >"/var/lib/geopulse/dumps/${DB_NAME}-pre-update-$(date +%Y%m%d%H%M%S).dump" 2>/dev/null; then
+      msg_ok "Backed Up Database"
+    else
+      msg_warn "Database backup failed, continuing anyway"
+    fi
+
     msg_info "Stopping Service"
     systemctl stop geopulse-backend
     msg_ok "Stopped Service"
@@ -51,7 +61,48 @@ function update_script() {
     fi
 
     fetch_and_deploy_gh_release "geopulse-backend" "tess1o/geopulse" "singlefile" "latest" "/opt/geopulse/backend" "${BINARY_PATTERN}"
-    fetch_and_deploy_gh_release "geopulse-frontend" "tess1o/geopulse" "prebuild" "latest" "/var/www/geopulse" "geopulse-frontend-*.tar.gz"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="avatars" fetch_and_deploy_gh_release "geopulse-frontend" "tess1o/geopulse" "prebuild" "latest" "/var/www/geopulse" "geopulse-frontend-*.tar.gz"
+
+    if [[ -f /etc/geopulse/geopulse.env ]] && grep -q "GEOPULSE_JWT_" /etc/geopulse/geopulse.env 2>/dev/null; then
+      msg_info "Removing Unused JWT Keys"
+      sed -i '/^GEOPULSE_JWT_PRIVATE_KEY_LOCATION=/d;/^GEOPULSE_JWT_PUBLIC_KEY_LOCATION=/d' /etc/geopulse/geopulse.env
+      rm -f /opt/geopulse/keys/jwt-private-key.pem /opt/geopulse/keys/jwt-public-key.pem
+      msg_ok "Removed Unused JWT Keys"
+    fi
+
+    if [[ -f /etc/nginx/sites-available/geopulse.conf ]] && ! grep -q '\.mjs\$' /etc/nginx/sites-available/geopulse.conf; then
+      msg_info "Configuring Nginx for .mjs Assets"
+      cp /etc/nginx/sites-available/geopulse.conf /etc/nginx/sites-available/geopulse.conf.pre-mjs.bak
+
+      ANCHOR_LINE="$(grep -n '    add_header Cache-Control "public, max-age=31536000";' /etc/nginx/sites-available/geopulse.conf.pre-mjs.bak | head -1 | cut -d: -f1)"
+
+      if [[ -n "$ANCHOR_LINE" ]]; then
+        INSERT_LINE=$((ANCHOR_LINE + 1))
+        {
+          head -n "$INSERT_LINE" /etc/nginx/sites-available/geopulse.conf.pre-mjs.bak
+          cat <<'MJSBLOCK'
+
+    location ~* ^/(?!osm/).*\.mjs$ {
+        types {
+            application/javascript mjs;
+        }
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000";
+    }
+MJSBLOCK
+          tail -n "+$((INSERT_LINE + 1))" /etc/nginx/sites-available/geopulse.conf.pre-mjs.bak
+        } >/etc/nginx/sites-available/geopulse.conf
+      fi
+
+      if [[ -n "$ANCHOR_LINE" ]] && grep -q '\.mjs\$' /etc/nginx/sites-available/geopulse.conf && nginx -t >/dev/null 2>&1; then
+        systemctl reload nginx
+        msg_ok "Configured Nginx for .mjs Assets"
+      else
+        cp /etc/nginx/sites-available/geopulse.conf.pre-mjs.bak /etc/nginx/sites-available/geopulse.conf
+        nginx -t >/dev/null 2>&1 && systemctl reload nginx
+        msg_warn "Could not automatically add the .mjs nginx block (customized config?) - add it manually, see the GeoPulse 2.0.0 upgrade notes"
+      fi
+    fi
 
     msg_info "Starting Service"
     systemctl start geopulse-backend
