@@ -23,7 +23,6 @@ PYTHON_VERSION="3.14" setup_uv
 
 fetch_and_deploy_gh_release "norish" "norish-recipes/norish" "tarball"
 NODE_VERSION="22" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /opt/norish/package.json)" setup_nodejs
-# Norish pins the Obscura build its URL imports are tested against
 fetch_and_deploy_gh_release "obscura" "h4ckf0r0day/obscura" "prebuild" "v$(sed -n 's/^OBSCURA_VERSION=//p' /opt/norish/docker/obscura/pin.env)" "/opt/obscura" "obscura-$(arch_resolve "x86_64" "aarch64")-linux-stealth.tar.gz"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "$(arch_resolve "yt-dlp_linux" "yt-dlp_linux_aarch64")"
 
