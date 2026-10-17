@@ -566,7 +566,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Norish ([#17964](https://github.com/community-scripts/ProxmoxVE/pull/17964))
+  - Listenarr ([#17963](https://github.com/community-scripts/ProxmoxVE/pull/17963))
+- Youtarr ([#17962](https://github.com/community-scripts/ProxmoxVE/pull/17962))
+- Norish ([#17964](https://github.com/community-scripts/ProxmoxVE/pull/17964))
 
 ## 2026-10-16
 
