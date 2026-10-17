@@ -44,7 +44,6 @@ function update_script() {
     $STD npm ci --legacy-peer-deps --ignore-scripts
     $STD npm run build:icons
     $STD npx prisma generate
-    # the type check in next build runs out of heap at 2 GB
     NODE_OPTIONS="--max-old-space-size=4608" $STD npm run build
     msg_ok "Built ProxCenter"
 
