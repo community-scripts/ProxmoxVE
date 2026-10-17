@@ -17,7 +17,6 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
   git \
-  nginx \
   redis-server \
   atomicparsley \
   python3-dev \
@@ -107,7 +106,7 @@ cat <<EOF >/opt/tubearchivist/.env
 TA_HOST=http://${LOCAL_IP}:8000
 TA_USERNAME=admin
 TA_PASSWORD=${TA_PASSWORD}
-TA_BACKEND_PORT=8080
+TA_PORT=8000
 TA_APP_DIR=/opt/tubearchivist/backend
 TA_CACHE_DIR=/cache
 TA_MEDIA_DIR=/youtube
@@ -133,92 +132,6 @@ msg_info "Installing yt-dlp Nightly"
 $STD uv pip install --python /opt/tubearchivist/.venv/bin/python -U --prerelease allow "yt-dlp[default]"
 msg_ok "Installed yt-dlp Nightly"
 
-msg_info "Configuring Nginx"
-sed -i 's/^user www-data;$/user root;/' /etc/nginx/nginx.conf
-cat <<'EOF' >/etc/nginx/sites-available/default
-server {
-    listen 8000;
-
-    location = /_auth {
-        internal;
-        proxy_pass http://localhost:8080/api/ping/;
-        proxy_pass_request_body off;
-        proxy_set_header Content-Length "";
-        proxy_set_header Host $http_host;
-        proxy_set_header Cookie $http_cookie;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-
-    location /cache/videos/ {
-        auth_request /_auth;
-        alias /cache/videos/;
-    }
-
-    location /cache/channels/ {
-        auth_request /_auth;
-        alias /cache/channels/;
-    }
-
-    location /cache/playlists/ {
-        auth_request /_auth;
-        alias /cache/playlists/;
-    }
-
-    location /media/ {
-        auth_request /_auth;
-        alias /youtube/;
-        types {
-            text/vtt vtt;
-        }
-    }
-
-    location /youtube/ {
-        auth_request /_auth;
-        alias /youtube/;
-        types {
-            video/mp4 mp4;
-        }
-    }
-
-    location /api {
-        include proxy_params;
-        proxy_pass http://localhost:8080;
-    }
-
-    location /admin {
-        include proxy_params;
-        proxy_pass http://localhost:8080;
-    }
-
-    location /static/ {
-        alias /opt/tubearchivist/backend/staticfiles/;
-    }
-
-    root /opt/tubearchivist/backend/static;
-    index index.html;
-
-    location ~* ^/(?!static/|cache/).*\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff2?)$ {
-        try_files $uri $uri/ /index.html =404;
-    }
-
-    location = /index.html {
-        add_header Cache-Control "no-store, no-cache, must-revalidate";
-        add_header Pragma "no-cache";
-        expires 0;
-    }
-
-    location / {
-        add_header Cache-Control "no-store, no-cache, must-revalidate";
-        add_header Pragma "no-cache";
-        expires 0;
-        try_files $uri $uri/ /index.html =404;
-    }
-}
-EOF
-systemctl enable -q nginx
-systemctl restart nginx
-msg_ok "Configured Nginx"
-
 msg_info "Creating Services"
 cat <<'RUNEOF' >/opt/tubearchivist/backend/run.sh
 #!/bin/bash
@@ -237,6 +150,7 @@ for i in $(seq 1 30); do
   sleep 2
 done
 
+$PYTHON manage.py ta_stop_on_error
 $PYTHON manage.py migrate
 $PYTHON manage.py collectstatic --noinput -c
 $PYTHON manage.py ta_envcheck
