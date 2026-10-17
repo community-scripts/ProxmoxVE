@@ -44,7 +44,6 @@ msg_ok "Built Youtarr"
 
 msg_info "Configuring Youtarr"
 mkdir -p /opt/youtarr_data/config /opt/youtarr_data/videos
-# config/ is hard-wired next to the app and, with DATA_PATH set, also holds images/ and jobs/ - one symlink keeps all state out of the update wipe
 mv /opt/youtarr/config/config.example.json /opt/youtarr/server/
 rm -rf /opt/youtarr/config
 ln -sfn /opt/youtarr_data/config /opt/youtarr/config
