@@ -21,7 +21,6 @@ GH_INCLUDE_PRERELEASE=1 fetch_and_deploy_gh_release "listenarr" "Listenarrs/List
 
 msg_info "Configuring Listenarr"
 mkdir -p /opt/listenarr_data
-# LISTENARR_CONTENT_ROOT moves config/ and also the web root, which stays in the app dir
 ln -s /opt/listenarr/wwwroot /opt/listenarr_data/wwwroot
 msg_ok "Configured Listenarr"
 
