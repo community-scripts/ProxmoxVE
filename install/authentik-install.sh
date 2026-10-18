@@ -50,7 +50,7 @@ $STD apt install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="26" NODE_MODULE=pnpm@11.20.0 setup_nodejs
+NODE_VERSION="26" NODE_MODULE=pnpm@12 setup_nodejs
 setup_yq
 RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
 PG_VERSION="17" setup_postgresql
