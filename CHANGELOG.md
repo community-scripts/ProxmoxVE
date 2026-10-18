@@ -580,7 +580,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Silence apt's script warning in $STD [@MickLesk](https://github.com/MickLesk) ([core#150](https://github.com/community-scripts/core/pull/150))
+  - Let get_current_ip reach its IPv6 fallback [@MickLesk](https://github.com/MickLesk) ([core#151](https://github.com/community-scripts/core/pull/151))
+- Drop apt autoclean before apt clean [@MickLesk](https://github.com/MickLesk) ([core#152](https://github.com/community-scripts/core/pull/152))
+- Silence apt's script warning in $STD [@MickLesk](https://github.com/MickLesk) ([core#150](https://github.com/community-scripts/core/pull/150))
 
 ## 2026-10-17
 
