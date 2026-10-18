@@ -50,7 +50,10 @@ function update_script() {
     cd /opt/paperclip-ai
     export HUSKY=0
     export NODE_OPTIONS="--max-old-space-size=8192"
-    $STD pnpm install --frozen-lockfile
+    $STD pnpm install --frozen-lockfile || {
+      msg_warn "The lockfile of this release is out of date, resolving dependencies without it"
+      $STD pnpm install --no-frozen-lockfile
+    }
     $STD pnpm build
     unset NODE_OPTIONS
     msg_ok "Rebuilt Paperclip"

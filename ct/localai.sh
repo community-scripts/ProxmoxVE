@@ -37,6 +37,15 @@ function update_script() {
     exit
   fi
 
+  # Older installs have no CPU pin; on a host with a GPU but no driver in the
+  # container every model then ends in "backend not found".
+  if ! grep -q '^LOCALAI_FORCE_META_BACKEND_CAPABILITY=' /opt/localai.env 2>/dev/null &&
+    ! ldconfig -p 2>/dev/null | grep -qE 'libcuda[.]so|libamdhip64[.]so|libze_intel_gpu[.]so|libze_loader[.]so'; then
+    echo "LOCALAI_FORCE_META_BACKEND_CAPABILITY=default" >>/opt/localai.env
+    systemctl restart localai
+    msg_ok "Pinned LocalAI to the CPU backends (no GPU runtime in the container)"
+  fi
+
   if check_for_gh_release "localai" "mudler/LocalAI"; then
     msg_info "Stopping Service"
     systemctl stop localai

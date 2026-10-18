@@ -31,7 +31,11 @@ msg_info "Building Paperclip"
 cd /opt/paperclip-ai
 export HUSKY=0
 export NODE_OPTIONS="--max-old-space-size=8192"
-$STD pnpm install --frozen-lockfile
+# Upstream tags ship with a stale pnpm-lock.yaml now and then (paperclipai/paperclip#13923).
+$STD pnpm install --frozen-lockfile || {
+  msg_warn "The lockfile of this release is out of date, resolving dependencies without it"
+  $STD pnpm install --no-frozen-lockfile
+}
 $STD pnpm build
 unset NODE_OPTIONS
 msg_ok "Built Paperclip"

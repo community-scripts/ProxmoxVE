@@ -77,7 +77,7 @@ EOF
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
   cd /tmp
-  RELEASE="v3.3.0"
+  RELEASE="v3.3.1"
   if [[ -f ~/.intel_version ]]; then
     INTEL_SRC="https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/machine-learning"
     curl -fsSL "${INTEL_SRC}/scripts/install-intel-runtime.sh" -o ./intel-runtime 2>/dev/null ||
@@ -102,16 +102,33 @@ EOF
       msg_ok "Updated Intel OpenVINO dependencies"
     fi
   fi
-  if [[ -f ~/.immich_library_revisions ]]; then
-    libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
-    cd "$BASE_DIR"
-    msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
-    ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev
-    $STD git pull
-    for library in "${libraries[@]}"; do
-      compile_"$library"
-    done
-    msg_ok "Image-processing libraries up to date"
+  # Without the revision file the refresh was skipped and sharp failed on an old libvips (#17914).
+  if [[ ! -f ~/.immich_library_revisions ]]; then
+    msg_warn "No record of the compiled image-processing libraries, rebuilding all of them"
+    printf '%s: unknown\n' imagemagick jpegli libheif libjxl libraw libvips >~/.immich_library_revisions
+  fi
+  [[ -d "$BASE_DIR/.git" ]] || $STD git clone -b main https://github.com/immich-app/base-images "$BASE_DIR"
+  libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
+  cd "$BASE_DIR"
+  msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
+  ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev
+  $STD git pull
+  for library in "${libraries[@]}"; do
+    compile_"$library"
+  done
+  msg_ok "Image-processing libraries up to date"
+
+  # 3.3.0 reads geodata/countryInfo.txt; the update before #17823 saved it into app/ instead.
+  if [[ -d /opt/immich/geodata && ! -s /opt/immich/geodata/countryInfo.txt ]]; then
+    msg_info "Restoring geodata/countryInfo.txt"
+    if [[ -s /opt/immich/app/countryInfo.txt ]]; then
+      mv /opt/immich/app/countryInfo.txt /opt/immich/geodata/countryInfo.txt
+    else
+      curl_with_retry "https://download.geonames.org/export/dump/countryInfo.txt" /opt/immich/geodata/countryInfo.txt
+    fi
+    chown immich:immich /opt/immich/geodata/countryInfo.txt
+    systemctl restart immich-web
+    msg_ok "Restored geodata/countryInfo.txt"
   fi
 
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
@@ -489,8 +506,7 @@ function compile_jpegli() {
 function compile_libheif() {
   SOURCE=${SOURCE_DIR}/libheif
   ensure_dependencies libaom-dev
-  LIBHEIF_REVISION="ac1cb05c39008f01525c991ff8b88f84ddf70fd2"
-  # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"
+  LIBHEIF_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)"
   if [[ "${update:-}" ]] || [[ "$LIBHEIF_REVISION" != "$(grep 'libheif' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libheif"
     [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"

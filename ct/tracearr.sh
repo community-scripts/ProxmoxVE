@@ -125,7 +125,7 @@ EOF
     $STD ./scripts/fetch-basemap.sh || msg_warn "Basemap download failed, keeping the existing map"
     [[ -d /opt/tracearr/data ]] && mv /opt/tracearr/data /opt/tracearr.data
     rm -rf /opt/tracearr
-    mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db}
+    mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db,assets}
     cp -rf package.json /opt/tracearr/
     cp -rf pnpm-workspace.yaml /opt/tracearr/
     cp -rf pnpm-lock.yaml /opt/tracearr/
@@ -138,13 +138,14 @@ EOF
     cp -rf packages/emails/package.json /opt/tracearr/packages/emails/
     cp -rf packages/emails/dist /opt/tracearr/packages/emails/dist
     cp -rf apps/server/src/db/migrations /opt/tracearr/apps/server/src/db/migrations
+    cp -f assets/logo.png /opt/tracearr/assets/
     [[ -d /opt/tracearr.data ]] && mv /opt/tracearr.data /opt/tracearr/data
     mkdir -p /opt/tracearr/data
     cp -rf data/. /opt/tracearr/data/
     mkdir -p /opt/tracearr/data/image-cache
     rm -rf /opt/tracearr.build
     cd /opt/tracearr
-    $STD pnpm install --prod --frozen-lockfile --ignore-scripts
+    $STD pnpm install --prod --frozen-lockfile --ignore-scripts --filter @tracearr/server...
     rm -rf "$(pnpm store path)"
     $STD chown -R tracearr:tracearr /opt/tracearr
     msg_ok "Built Tracearr"

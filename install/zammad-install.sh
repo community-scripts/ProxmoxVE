@@ -16,29 +16,31 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   git \
-  nginx \
-  apt-transport-https
+  nginx
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Elasticsearch"
 setup_deb822_repo \
   "elasticsearch" \
   "https://artifacts.elastic.co/GPG-KEY-elasticsearch" \
-  "https://artifacts.elastic.co/packages/7.x/apt" \
+  "https://artifacts.elastic.co/packages/8.x/apt" \
   "stable" \
   "main"
-$STD apt install -y elasticsearch
-sed -i 's/^#\{0,2\} *-Xms[0-9]*g.*/-Xms2g/' /etc/elasticsearch/jvm.options
-sed -i 's/^#\{0,2\} *-Xmx[0-9]*g.*/-Xmx2g/' /etc/elasticsearch/jvm.options
+ES_JAVA_OPTS="-Xms1g -Xmx1g" $STD apt install -y elasticsearch
+cat <<EOF >/etc/elasticsearch/jvm.options.d/heap.options
+-Xms2g
+-Xmx2g
+EOF
 cat <<EOF >/etc/elasticsearch/elasticsearch.yml
 path.data: /var/lib/elasticsearch
 path.logs: /var/log/elasticsearch
 discovery.type: single-node
 network.host: 127.0.0.1
 xpack.security.enabled: false
+xpack.security.transport.ssl.enabled: false
+xpack.security.http.ssl.enabled: false
 bootstrap.memory_lock: false
 EOF
-$STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
 systemctl daemon-reload
 systemctl enable -q elasticsearch
 systemctl restart -q elasticsearch
@@ -53,8 +55,8 @@ msg_ok "Setup Elasticsearch"
 msg_info "Installing Zammad"
 setup_deb822_repo \
   "zammad" \
-  "https://dl.packager.io/srv/zammad/zammad/key" \
-  "https://dl.packager.io/srv/deb/zammad/zammad/stable/debian" \
+  "https://go.packager.io/srv/deb/zammad/zammad/gpg-key.asc" \
+  "https://go.packager.io/srv/deb/zammad/zammad/stable/debian" \
   "$(get_os_info version_id)" \
   "main"
 $STD apt install -y zammad

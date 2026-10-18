@@ -9,8 +9,8 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="ByteStash"
 var_tags="${var_tags:-code}"
 var_disk="${var_disk:-4}"
-var_cpu="${var_cpu:-1}"
-var_ram="${var_ram:-1024}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
@@ -35,9 +35,8 @@ function update_script() {
     systemctl stop bytestash-backend bytestash-frontend
     msg_ok "Services Stopped"
 
-    [[ -d /opt/bytestash/data ]] && create_backup /opt/bytestash/data
     [[ -d /opt/data ]] && create_backup /opt/data
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash" "tarball"
     restore_backup
 
     msg_info "Configuring ByteStash"
@@ -50,7 +49,6 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start bytestash-backend bytestash-frontend
     msg_ok "Started Services"
-
     msg_ok "Updated successfully!"
   fi
   exit
