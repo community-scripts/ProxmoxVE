@@ -571,6 +571,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Tracearr: drop the pnpm store after the update build [@gioxx](https://github.com/gioxx) ([#17869](https://github.com/community-scripts/ProxmoxVE/pull/17869))
     - vaultwarden: build before stopping the service [@mazelado](https://github.com/mazelado) ([#17983](https://github.com/community-scripts/ProxmoxVE/pull/17983))
 
   - #### 💥 Breaking Changes
