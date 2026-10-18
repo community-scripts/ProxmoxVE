@@ -571,6 +571,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Donetick: create selfhosted.yaml from the example [@MickLesk](https://github.com/MickLesk) ([#17992](https://github.com/community-scripts/ProxmoxVE/pull/17992))
     - Wiki.js: only back up db.sqlite on SQLite installs [@MickLesk](https://github.com/MickLesk) ([#17993](https://github.com/community-scripts/ProxmoxVE/pull/17993))
     - FlareSolverr: pass Chrome an en-US Accept-Language [@MickLesk](https://github.com/MickLesk) ([#17995](https://github.com/community-scripts/ProxmoxVE/pull/17995))
     - 2FAuth: install the locked dependencies [@MickLesk](https://github.com/MickLesk) ([#17996](https://github.com/community-scripts/ProxmoxVE/pull/17996))
