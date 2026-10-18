@@ -578,6 +578,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: geopulse 2.0.0 upgrade support (nginx .mjs, pg18, jwt cleanup) [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17978](https://github.com/community-scripts/ProxmoxVE/pull/17978))
 
+### 💾 Core
+
+  - Silence apt's script warning in $STD [@MickLesk](https://github.com/MickLesk) ([core#150](https://github.com/community-scripts/core/pull/150))
+
 ## 2026-10-17
 
 ### 🆕 New Scripts
