@@ -42,12 +42,12 @@ function update_script() {
   ensure_dependencies crossbuild-essential-$(arch_resolve) gcc-$(arch_resolve "x86-64" "aarch64")-linux-gnu cmake clang libunwind-18-dev
   msg_ok "Update dependencies"
 
-  NODE_VERSION="26" NODE_MODULE=pnpm@12 setup_nodejs
+  NODE_VERSION="26" NODE_MODULE=pnpm@11.20.0 setup_nodejs
   $STD uv cache clean
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.8.3"
+  AUTHENTIK_VERSION="version/2026.8.4"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
   XMLSEC_VERSION="1.3.12"
 
