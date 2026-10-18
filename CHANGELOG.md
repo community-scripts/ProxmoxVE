@@ -569,6 +569,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - vaultwarden: build before stopping the service [@mazelado](https://github.com/mazelado) ([#17983](https://github.com/community-scripts/ProxmoxVE/pull/17983))
+
   - #### 💥 Breaking Changes
 
     - fix: geopulse 2.0.0 upgrade support (nginx .mjs, pg18, jwt cleanup) [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17978](https://github.com/community-scripts/ProxmoxVE/pull/17978))
