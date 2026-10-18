@@ -571,11 +571,22 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Donetick: create selfhosted.yaml from the example [@MickLesk](https://github.com/MickLesk) ([#17992](https://github.com/community-scripts/ProxmoxVE/pull/17992))
+    - Wiki.js: only back up db.sqlite on SQLite installs [@MickLesk](https://github.com/MickLesk) ([#17993](https://github.com/community-scripts/ProxmoxVE/pull/17993))
+    - FlareSolverr: pass Chrome an en-US Accept-Language [@MickLesk](https://github.com/MickLesk) ([#17995](https://github.com/community-scripts/ProxmoxVE/pull/17995))
+    - 2FAuth: install the locked dependencies [@MickLesk](https://github.com/MickLesk) ([#17996](https://github.com/community-scripts/ProxmoxVE/pull/17996))
+    - Tracearr: drop the pnpm store after the update build [@gioxx](https://github.com/gioxx) ([#17869](https://github.com/community-scripts/ProxmoxVE/pull/17869))
     - vaultwarden: build before stopping the service [@mazelado](https://github.com/mazelado) ([#17983](https://github.com/community-scripts/ProxmoxVE/pull/17983))
 
   - #### 💥 Breaking Changes
 
     - fix: geopulse 2.0.0 upgrade support (nginx .mjs, pg18, jwt cleanup) [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17978](https://github.com/community-scripts/ProxmoxVE/pull/17978))
+
+### 💾 Core
+
+  - Let get_current_ip reach its IPv6 fallback [@MickLesk](https://github.com/MickLesk) ([core#151](https://github.com/community-scripts/core/pull/151))
+- Drop apt autoclean before apt clean [@MickLesk](https://github.com/MickLesk) ([core#152](https://github.com/community-scripts/core/pull/152))
+- Silence apt's script warning in $STD [@MickLesk](https://github.com/MickLesk) ([core#150](https://github.com/community-scripts/core/pull/150))
 
 ## 2026-10-17
 
