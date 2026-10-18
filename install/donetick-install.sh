@@ -21,6 +21,7 @@ fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "
 
 msg_info "Setup Donetick"
 cd /opt/donetick
+[[ -f config/selfhosted.yaml ]] || cp config/selfhosted.yaml.example config/selfhosted.yaml
 TOKEN=$(openssl rand -hex 16)
 sed -i -e "s/change_this_to_a_secure_random_string_32_characters_long/${TOKEN}/g" config/selfhosted.yaml
 msg_ok "Setup Donetick"
