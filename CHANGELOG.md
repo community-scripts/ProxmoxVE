@@ -567,6 +567,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-18
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - fix: geopulse 2.0.0 upgrade support (nginx .mjs, pg18, jwt cleanup) [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17978](https://github.com/community-scripts/ProxmoxVE/pull/17978))
+
 ## 2026-10-17
 
 ### 🆕 New Scripts
