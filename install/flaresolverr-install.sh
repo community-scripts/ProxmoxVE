@@ -48,6 +48,7 @@ RestartSec=5
 Type=simple
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
+Environment="LANG=en-US"
 WorkingDirectory=/opt/flaresolverr
 ExecStart=/opt/flaresolverr/flaresolverr
 TimeoutStopSec=30
