@@ -37,7 +37,18 @@ update_deb_based() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_error "Adguard Home can only be updated via the user interface."
+  msg_info "Stopping Service"
+  systemctl stop AdGuardHome
+  msg_ok "Stopped Service"
+
+  msg_info "Updating AdGuard Home"
+  $STD /opt/AdGuardHome/AdGuardHome --update
+  msg_ok "Updated AdGuard Home"
+
+  msg_info "Starting Service"
+  systemctl start AdGuardHome
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
 }
 
 update_alpine() {
