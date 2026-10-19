@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt install -y ca-certificates lsof
+$STD apt install -y ca-certificates
 msg_ok "Installed Dependecies"
 
 PG_VERSION="17" setup_postgresql
@@ -114,13 +114,12 @@ NoNewPrivileges=true
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now zitadel
+systemctl enable -q zitadel
 msg_ok "Created Services"
 
 msg_info "Zitadel initial setup"
-zitadel start-from-init --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml &>/dev/null &
-sleep 60
-kill $(lsof -i | awk '/zitadel/ {print $2}' | head -n1)
+$STD zitadel init --config /opt/zitadel/config.yaml
+$STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml
 useradd zitadel
 msg_ok "Zitadel initialized"
 
