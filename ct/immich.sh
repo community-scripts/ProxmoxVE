@@ -103,10 +103,10 @@ EOF
     fi
   fi
   # Without the revision file the refresh was skipped and sharp failed on an old libvips (#17914).
-  if [[ ! -f ~/.immich_library_revisions ]]; then
-    msg_warn "No record of the compiled image-processing libraries, rebuilding all of them"
-    printf '%s: unknown\n' imagemagick jpegli libheif libjxl libraw libvips >~/.immich_library_revisions
-  fi
+  [[ -f ~/.immich_library_revisions ]] || msg_warn "No record of the compiled image-processing libraries, rebuilding all of them"
+  for lib in imagemagick jpegli libheif libjxl libraw libvips; do
+    grep -q "^${lib}:" ~/.immich_library_revisions 2>/dev/null || echo "${lib}: unknown" >>~/.immich_library_revisions
+  done
   [[ -d "$BASE_DIR/.git" ]] || $STD git clone -b main https://github.com/immich-app/base-images "$BASE_DIR"
   libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
   cd "$BASE_DIR"
