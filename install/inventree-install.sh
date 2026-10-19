@@ -16,8 +16,8 @@ update_os
 msg_info "Setting up InvenTree Repository"
 setup_deb822_repo \
   "inventree" \
-  "https://dl.packager.io/srv/inventree/InvenTree/key" \
-  "https://dl.packager.io/srv/deb/inventree/InvenTree/stable/$(get_os_info id)" \
+  "https://go.packager.io/srv/deb/inventree/InvenTree/gpg-key.asc" \
+  "https://go.packager.io/srv/deb/inventree/InvenTree/stable/$(get_os_info id)" \
   "$(get_os_info version)" \
   "main"
 msg_ok "Set up InvenTree Repository"

@@ -31,9 +31,29 @@ function update_script() {
     exit
   fi
 
-  if ! grep -qE "^ID=(ubuntu)$" /etc/os-release; then
-    msg_error "Unsupported OS. InvenTree requires Ubuntu (20.04/22.04/24.04)."
+  if ! grep -qE "^ID=(ubuntu|debian)$" /etc/os-release; then
+    msg_error "Unsupported OS. InvenTree requires Ubuntu or Debian."
     exit
+  fi
+
+  # dl.packager.io is frozen at 1.5.1 and its SHA1-bound key fails on Debian 13;
+  # go.packager.io only carries current builds for these releases
+  if grep -qs "dl.packager.io" /etc/apt/sources.list.d/inventree*; then
+    case "$(get_os_info id)/$(get_os_info version)" in
+    ubuntu/24.04 | ubuntu/26.04 | debian/13)
+      msg_info "Migrating InvenTree Repository"
+      setup_deb822_repo \
+        "inventree" \
+        "https://go.packager.io/srv/deb/inventree/InvenTree/gpg-key.asc" \
+        "https://go.packager.io/srv/deb/inventree/InvenTree/stable/$(get_os_info id)" \
+        "$(get_os_info version)" \
+        "main"
+      msg_ok "Migrated InvenTree Repository"
+      ;;
+    *)
+      msg_warn "InvenTree only publishes updates for Ubuntu 24.04/26.04 and Debian 13; staying on the frozen repository"
+      ;;
+    esac
   fi
 
   msg_info "Updating InvenTree"
