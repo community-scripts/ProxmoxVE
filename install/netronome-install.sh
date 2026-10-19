@@ -28,10 +28,8 @@ fetch_and_deploy_gh_release "netronome" "autobrr/netronome" "binary" "latest" ""
 msg_info "Configuring Netronome"
 mkdir -p /opt/netronome_data /root/.config
 $STD netronome generate-config --config /opt/netronome_data/config.toml
-# generate-config only listens on all interfaces when it detects a container
 sed -i 's/^host = "127.0.0.1"$/host = "0.0.0.0"/' /opt/netronome_data/config.toml
 chmod 600 /opt/netronome_data/config.toml
-# create-user and change-password read ~/.config/netronome unless given --config
 ln -s /opt/netronome_data /root/.config/netronome
 msg_ok "Configured Netronome"
 
