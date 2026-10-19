@@ -567,6 +567,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-19
 
+### 🆕 New Scripts
+
+  - Netronome ([#18011](https://github.com/community-scripts/ProxmoxVE/pull/18011))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
