@@ -569,7 +569,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Netronome ([#18011](https://github.com/community-scripts/ProxmoxVE/pull/18011))
+  - Calagopus ([#18012](https://github.com/community-scripts/ProxmoxVE/pull/18012))
+- Netronome ([#18011](https://github.com/community-scripts/ProxmoxVE/pull/18011))
 
 ### 🚀 Updated Scripts
 
