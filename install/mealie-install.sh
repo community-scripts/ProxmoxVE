@@ -108,7 +108,6 @@ BASE_URL=http://${LOCAL_IP}:9000
 # REVERSE_PROXY_AUTH_SECRET_HEADER=X-Mealie-Reverse-Proxy-Secret
 EOF
 msg_ok "Wrote Environment File"
-msg_warn "Reverse proxy auth is available but disabled. To enable it, edit the REVERSE_PROXY_AUTH_* lines in /opt/mealie/mealie.env and run: systemctl restart mealie. Only use it behind a trusted proxy and set REVERSE_PROXY_AUTH_SECRET. Docs: https://docs.mealie.io/documentation/getting-started/installation/backend-config/#reverse-proxy-auth"
 
 msg_info "Creating Start Script"
 cat <<'EOF' >/opt/mealie/start.sh
