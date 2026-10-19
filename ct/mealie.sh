@@ -59,7 +59,7 @@ STARTEOF
     fi
     chmod +x /opt/mealie/start.sh
     if ! grep -q "REVERSE_PROXY_AUTH_ENABLED" /opt/mealie/mealie.env; then
-      cat <<'ENVEOF' >>/opt/mealie/mealie.env
+      cat <<EOF >>/opt/mealie/mealie.env
 
 # Reverse proxy auth (Mealie v3.29.0+). Disabled by default.
 # To enable: set REVERSE_PROXY_AUTH_ENABLED=true, set a secret, then restart mealie.
@@ -68,7 +68,7 @@ STARTEOF
 # REVERSE_PROXY_AUTH_SIGNUP_ENABLED=false
 # REVERSE_PROXY_AUTH_SECRET=
 # REVERSE_PROXY_AUTH_SECRET_HEADER=X-Mealie-Reverse-Proxy-Secret
-ENVEOF
+EOF
     fi
     msg_ok "Configuration restored"
 
