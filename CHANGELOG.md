@@ -571,6 +571,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - immich: record library revisions when the line is missing [@mazelado](https://github.com/mazelado) ([#17990](https://github.com/community-scripts/ProxmoxVE/pull/17990))
     - Update authentik 2026.8.4 [@thieneret](https://github.com/thieneret) ([#18004](https://github.com/community-scripts/ProxmoxVE/pull/18004))
 
 ## 2026-10-18
