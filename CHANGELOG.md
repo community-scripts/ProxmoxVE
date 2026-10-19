@@ -565,6 +565,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-19
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update authentik 2026.8.4 [@thieneret](https://github.com/thieneret) ([#18004](https://github.com/community-scripts/ProxmoxVE/pull/18004))
+
 ## 2026-10-18
 
 ### 🚀 Updated Scripts
