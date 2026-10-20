@@ -111,7 +111,7 @@ EOF
 systemctl enable -q --now zitadel
 msg_ok "Created Service"
 
-if [[ "$var_zitadel_login" == "v2" ]]; then
+if [[ "$var_zitadel_login" != "v1" ]]; then
   NODE_VERSION="24" setup_nodejs
   fetch_and_deploy_gh_release "zitadel-login" "zitadel/zitadel" "prebuild" "latest" "/opt/zitadel-login" "zitadel-login.tar.gz"
 
