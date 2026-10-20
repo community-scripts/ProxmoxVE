@@ -58,7 +58,9 @@ function update_script() {
 
   msg_info "Updating InvenTree"
   apt_update_safe
-  $STD apt install --only-upgrade inventree -y
+  # postinst loops forever unless its parent chain reaches PID 1 (not the case under pct exec)
+  $STD systemd-run --wait --pipe --quiet --collect --setenv=DEBIAN_FRONTEND=noninteractive \
+    apt-get install --only-upgrade -y inventree
   msg_ok "Updated InvenTree"
   msg_ok "Updated successfully!"
   exit
