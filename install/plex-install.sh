@@ -11,6 +11,14 @@ verb_ip6
 catch_errors
 setting_up_container
 network_check
+
+if systemctl is-active --quiet rsyslog 2>/dev/null; then
+  msg_info "Disabling redundant rsyslog service"
+  systemctl disable --now -q rsyslog syslog.socket 2>/dev/null || true
+  systemctl mask -q rsyslog 2>/dev/null || true
+  msg_ok "Disabled redundant rsyslog service"
+fi
+
 update_os
 
 msg_info "Setting Up Plex Media Server Repository"
