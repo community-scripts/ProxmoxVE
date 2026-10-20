@@ -571,6 +571,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: Pin version to 3.3.4 [@vhsdream](https://github.com/vhsdream) ([#18036](https://github.com/community-scripts/ProxmoxVE/pull/18036))
     - InvenTree: run apt under systemd so postinst can finish [@MickLesk](https://github.com/MickLesk) ([#18029](https://github.com/community-scripts/ProxmoxVE/pull/18029))
     - Profilarr: pass the deno pin as the version [@MickLesk](https://github.com/MickLesk) ([#18025](https://github.com/community-scripts/ProxmoxVE/pull/18025))
     - Silo: keep the version file out of ~/.silo [@MickLesk](https://github.com/MickLesk) ([#18030](https://github.com/community-scripts/ProxmoxVE/pull/18030))
