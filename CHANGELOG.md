@@ -571,6 +571,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - InvenTree: move to go.packager.io [@MickLesk](https://github.com/MickLesk) ([#18015](https://github.com/community-scripts/ProxmoxVE/pull/18015))
     - Zitadel: run init and setup in the foreground [@MickLesk](https://github.com/MickLesk) ([#18016](https://github.com/community-scripts/ProxmoxVE/pull/18016))
 
 ## 2026-10-19
