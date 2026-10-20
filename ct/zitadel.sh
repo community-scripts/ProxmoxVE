@@ -18,8 +18,8 @@ var_unprivileged="${var_unprivileged:-1}"
 
 if [[ -z "${var_zitadel_login:-}" ]] && command -v pveversion >/dev/null 2>&1; then
   var_zitadel_login=$(msg_menu "Choose the Zitadel login UI" \
-    "v2" "Login V2 (Zitadel's default for new instances)" \
-    "v1" "Login V1 (classic login built into the API)")
+    "v2" "Login V2, Zitadel's default (HTTPS, self-signed certificate)" \
+    "v1" "Login V1, the classic login built into the API (HTTP)")
 fi
 export var_zitadel_login="${var_zitadel_login:-v2}"
 
