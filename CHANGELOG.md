@@ -571,9 +571,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Profilarr: pass the deno pin as the version [@MickLesk](https://github.com/MickLesk) ([#18025](https://github.com/community-scripts/ProxmoxVE/pull/18025))
     - Silo: keep the version file out of ~/.silo [@MickLesk](https://github.com/MickLesk) ([#18030](https://github.com/community-scripts/ProxmoxVE/pull/18030))
     - InvenTree: move to go.packager.io [@MickLesk](https://github.com/MickLesk) ([#18015](https://github.com/community-scripts/ProxmoxVE/pull/18015))
     - Zitadel: run init and setup in the foreground [@MickLesk](https://github.com/MickLesk) ([#18016](https://github.com/community-scripts/ProxmoxVE/pull/18016))
+
+  - #### 🔧 Refactor
+
+    - Refactor: OpenWebUI (remove numba pin)  [@MickLesk](https://github.com/MickLesk) ([#18026](https://github.com/community-scripts/ProxmoxVE/pull/18026))
 
 ### 💾 Core
 
