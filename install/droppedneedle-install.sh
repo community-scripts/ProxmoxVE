@@ -44,6 +44,7 @@ User=root
 WorkingDirectory=/opt/droppedneedle/backend
 Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
 Environment=PORT=8688
+Environment=COMMIT_TAG=v$(<~/.droppedneedle)
 # Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>
 ExecStart=/opt/droppedneedle/venv/bin/python -m maintenance.automatic_upgrade --start-target
 Restart=on-failure
