@@ -63,6 +63,8 @@ After=network.target
 [Service]
 Type=simple
 EnvironmentFile=/etc/default/minio
+# Silo keeps its config in ~/.silo, where /root/.silo is the release version file
+Environment=HOME=/opt/minio
 ExecStart=/opt/silo/silo server \$MINIO_VOLUMES --console-address ":9090"
 Restart=on-failure
 RestartSec=5
