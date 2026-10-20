@@ -16,10 +16,22 @@ var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
+if [[ -z "${var_zitadel_login:-}" ]] && command -v pveversion >/dev/null 2>&1; then
+  var_zitadel_login=$(msg_menu "Choose the Zitadel login UI" \
+    "v2" "Login V2 (Zitadel's default for new instances)" \
+    "v1" "Login V1 (classic login built into the API)")
+fi
+export var_zitadel_login="${var_zitadel_login:-v2}"
+
 header_info "$APP"
 variables
 color
 catch_errors
+
+if [[ ! "${var_zitadel_login}" =~ ^v[12]$ ]]; then
+  msg_error "var_zitadel_login must be v1 or v2"
+  exit 1
+fi
 
 function update_script() {
   header_info
@@ -31,20 +43,29 @@ function update_script() {
   fi
 
   if check_for_gh_release "zitadel" "zitadel/zitadel"; then
-    msg_info "Stopping Service"
+    msg_info "Stopping Zitadel"
+    if [[ -f /etc/systemd/system/zitadel-login.service ]]; then
+      systemctl stop zitadel-login
+    fi
     systemctl stop zitadel
-    msg_ok "Stopped Service"
+    msg_ok "Stopped Zitadel"
 
-    rm -f /usr/local/bin/zitadel
-    fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-$(arch_resolve).tar.gz"
+    fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "${CHECK_UPDATE_RELEASE}" "/usr/local/bin" "zitadel-linux-$(arch_resolve).tar.gz"
+    if [[ -f /etc/systemd/system/zitadel-login.service ]]; then
+      NODE_VERSION="24" setup_nodejs
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "zitadel-login" "zitadel/zitadel" "prebuild" "${CHECK_UPDATE_RELEASE}" "/opt/zitadel-login" "zitadel-login.tar.gz"
+    fi
 
-    msg_info "Updating Zitadel"
+    msg_info "Migrating Zitadel Database"
     $STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml --init-projections=true
-    msg_ok "Updated Zitadel"
+    msg_ok "Migrated Zitadel Database"
 
-    msg_info "Starting Service"
+    msg_info "Starting Zitadel"
     systemctl start zitadel
-    msg_ok "Started Service"
+    if [[ -f /etc/systemd/system/zitadel-login.service ]]; then
+      systemctl start zitadel-login
+    fi
+    msg_ok "Started Zitadel"
     msg_ok "Updated successfully!"
   fi
   exit
@@ -57,4 +78,9 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:8080/ui/console${CL}"
+if [[ "${var_zitadel_login}" == "v1" ]]; then
+  echo -e "${GATEWAY}${BGN}http://${IP}:8080/ui/console${CL}"
+else
+  echo -e "${GATEWAY}${BGN}https://${IP}:8080/ui/console${CL}"
+fi
+echo -e "${INFO}${YW}Admin credentials: ~/zitadel.creds (inside the container)${CL}"
