@@ -77,6 +77,14 @@ function update_script() {
     msg_ok "Removed legacy plexupdate"
   fi
 
+  # Disable redundant rsyslog to prevent AppArmor sendmsg denials on /run/systemd/journal/dev-log
+  if systemctl is-active --quiet rsyslog 2>/dev/null; then
+    msg_info "Disabling redundant rsyslog service"
+    systemctl disable --now -q rsyslog syslog.socket 2>/dev/null || true
+    systemctl mask -q rsyslog 2>/dev/null || true
+    msg_ok "Disabled redundant rsyslog service"
+  fi
+
   msg_info "Updating Plex Media Server"
   apt_update_safe
   $STD apt install -y plexmediaserver
