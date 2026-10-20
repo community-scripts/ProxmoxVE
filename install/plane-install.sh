@@ -43,7 +43,7 @@ $STD rabbitmqctl add_user plane "${RABBITMQ_PASS}"
 $STD rabbitmqctl set_permissions -p plane plane ".*" ".*" ".*"
 msg_ok "Configured RabbitMQ"
 
-fetch_and_deploy_gh_release "silo" "pgsty/silo" "prebuild" "latest" "/opt/silo" "silo_*_linux_$(arch_resolve).tar.gz"
+fetch_and_deploy_gh_release "silo_s3" "pgsty/silo" "prebuild" "latest" "/opt/silo" "silo_*_linux_$(arch_resolve).tar.gz"
 fetch_and_deploy_gh_release "silo_mcli" "pgsty/mc" "prebuild" "latest" "/opt/mcli" "mcli_*_linux_$(arch_resolve).tar.gz"
 
 msg_info "Configuring Silo"
@@ -63,8 +63,6 @@ After=network.target
 [Service]
 Type=simple
 EnvironmentFile=/etc/default/minio
-# Silo keeps its config in ~/.silo, where /root/.silo is the release version file
-Environment=HOME=/opt/minio
 ExecStart=/opt/silo/silo server \$MINIO_VOLUMES --console-address ":9090"
 Restart=on-failure
 RestartSec=5
