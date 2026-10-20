@@ -53,7 +53,6 @@ for attempt in 1 2; do
   msg_warn "Open WebUI install attempt $attempt failed, retrying..."
   sleep 10
 done
-# The last attempt runs under the error trap, so a failure shows uv's output (#18020).
 ((installed)) || $STD uv tool install --python 3.12 "${OTEL_ARGS[@]}" open-webui[all]
 msg_ok "Installed Open WebUI"
 
