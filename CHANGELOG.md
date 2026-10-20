@@ -576,6 +576,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - InvenTree: move to go.packager.io [@MickLesk](https://github.com/MickLesk) ([#18015](https://github.com/community-scripts/ProxmoxVE/pull/18015))
     - Zitadel: run init and setup in the foreground [@MickLesk](https://github.com/MickLesk) ([#18016](https://github.com/community-scripts/ProxmoxVE/pull/18016))
 
+  - #### ✨ New Features
+
+    - Zitadel: Support v1 and v2 Login [@MickLesk](https://github.com/MickLesk) ([#18031](https://github.com/community-scripts/ProxmoxVE/pull/18031))
+
   - #### 🔧 Refactor
 
     - Refactor: OpenWebUI (remove numba pin)  [@MickLesk](https://github.com/MickLesk) ([#18026](https://github.com/community-scripts/ProxmoxVE/pull/18026))
