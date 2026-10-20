@@ -565,6 +565,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-20
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Zitadel: run init and setup in the foreground [@MickLesk](https://github.com/MickLesk) ([#18016](https://github.com/community-scripts/ProxmoxVE/pull/18016))
+
 ## 2026-10-19
 
 ### 🆕 New Scripts
