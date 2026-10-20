@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "silo" "pgsty/silo" "binary"
+fetch_and_deploy_gh_release "silo_s3" "pgsty/silo" "binary"
 
 msg_info "Configuring Silo"
 mkdir -p /opt/silo_data

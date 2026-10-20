@@ -31,12 +31,13 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "silo" "pgsty/silo"; then
+  [[ -f ~/.silo ]] && mv ~/.silo ~/.silo_s3
+  if check_for_gh_release "silo_s3" "pgsty/silo"; then
     msg_info "Stopping Silo"
     systemctl stop silo
     msg_ok "Stopped Silo"
 
-    DPKG_FORCE_CONFOLD=1 fetch_and_deploy_gh_release "silo" "pgsty/silo" "binary"
+    DPKG_FORCE_CONFOLD=1 fetch_and_deploy_gh_release "silo_s3" "pgsty/silo" "binary"
 
     msg_info "Starting Silo"
     systemctl start silo
