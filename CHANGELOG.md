@@ -575,7 +575,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Redo an update whose run did not finish after the deploy [@MickLesk](https://github.com/MickLesk) ([core#155](https://github.com/community-scripts/core/pull/155))
+  - Keep the version an update started from across a redo [@MickLesk](https://github.com/MickLesk) ([core#156](https://github.com/community-scripts/core/pull/156))
+- Redo an update whose run did not finish after the deploy [@MickLesk](https://github.com/MickLesk) ([core#155](https://github.com/community-scripts/core/pull/155))
 
 ## 2026-10-20
 
