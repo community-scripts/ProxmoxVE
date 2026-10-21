@@ -46,23 +46,38 @@ function update_script() {
     msg_warn "No Zabbix Agent service found, skipping agent actions"
   fi
 
+  # An unattended run must never be asked, and must never change series on its own:
+  # minor/patch updates within the installed series stay automatic, a series change stays manual.
+  ZABBIX_SERIES="$(dpkg-query -W -f='${Version}' zabbix-release 2>/dev/null || true)"
+  ZABBIX_SERIES="${ZABBIX_SERIES#*:}"
+  ZABBIX_SERIES="${ZABBIX_SERIES%%[!0-9.]*}"
+
+  if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+    if [[ ! "$ZABBIX_SERIES" =~ ^[0-9]+\.[0-9]+$ ]]; then
+      msg_warn "Could not detect the installed Zabbix series - skipping update, requires an interactive run"
+      exit 75
+    fi
+    ZABBIX_VERSION="$ZABBIX_SERIES"
+    msg_warn "Unattended update: staying on Zabbix ${ZABBIX_VERSION}"
+  else
+    read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
+    ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
+    case "$ZABBIX_CHOICE" in
+    1) ZABBIX_VERSION="7.0" ;;
+    2) ZABBIX_VERSION="7.4" ;;
+    3) ZABBIX_VERSION=$(curl -fsSL https://repo.zabbix.com/zabbix/ |
+      grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1) ;;
+    *)
+      ZABBIX_VERSION="7.4"
+      echo "Invalid choice. Defaulting to 7.4."
+      ;;
+    esac
+  fi
+
   msg_info "Stopping Services"
   systemctl stop zabbix-server
   [[ -n "$AGENT_SERVICE" ]] && systemctl stop "$AGENT_SERVICE"
   msg_ok "Stopped Services"
-
-  read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
-  ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
-  case "$ZABBIX_CHOICE" in
-  1) ZABBIX_VERSION="7.0" ;;
-  2) ZABBIX_VERSION="7.4" ;;
-  3) ZABBIX_VERSION=$(curl -fsSL https://repo.zabbix.com/zabbix/ |
-    grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1) ;;
-  *)
-    ZABBIX_VERSION="7.4"
-    echo "Invalid choice. Defaulting to 7.4."
-    ;;
-  esac
 
   msg_info "Updating Zabbix to $ZABBIX_VERSION"
   mkdir -p /opt/zabbix-backup/
