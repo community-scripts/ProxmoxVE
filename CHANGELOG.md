@@ -571,6 +571,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: bump release version to v3.3.5 (CVE) [@CerberusStyle](https://github.com/CerberusStyle) ([#18057](https://github.com/community-scripts/ProxmoxVE/pull/18057))
     - DroppedNeedle: pass release version to the app via COMMIT_TAG [@MickLesk](https://github.com/MickLesk) ([#18042](https://github.com/community-scripts/ProxmoxVE/pull/18042))
 
 ### 💾 Core
