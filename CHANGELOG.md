@@ -565,6 +565,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-21
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - DroppedNeedle: pass release version to the app via COMMIT_TAG [@MickLesk](https://github.com/MickLesk) ([#18042](https://github.com/community-scripts/ProxmoxVE/pull/18042))
+
 ## 2026-10-20
 
 ### 🚀 Updated Scripts
