@@ -143,6 +143,9 @@ EOF
     msg_ok "Stopped Services"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nginxproxymanager" "NginxProxyManager/nginx-proxy-manager" "tarball" "${CHECK_UPDATE_RELEASE}" "/opt/nginxproxymanager"
+    # Only record the new version once the build has finished, so an interrupted update is retried
+    NPM_VERSION=$(<~/.nginxproxymanager)
+    rm -f ~/.nginxproxymanager
 
     msg_info "Cleaning old files"
     $STD rm -rf /app \
@@ -265,6 +268,7 @@ EOF
     systemctl enable -q --now openresty
     systemctl enable -q --now npm
     msg_ok "Started Services"
+    echo "${NPM_VERSION}" >~/.nginxproxymanager
     msg_ok "Updated successfully!"
   fi
   exit
