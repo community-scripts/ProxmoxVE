@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-RELEASE="v3.3.4"
+RELEASE="v3.3.5"
 if lscpu | grep -q 'GenuineIntel'; then
   echo ""
   echo ""
