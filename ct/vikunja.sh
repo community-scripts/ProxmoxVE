@@ -36,6 +36,10 @@ function update_script() {
     msg_warn "This requires MANUAL config changes in /etc/vikunja/config.yml."
     msg_warn "See: https://vikunja.io/changelog/whats-new-in-vikunja-1.0.0/#config-changes"
 
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      msg_warn "Vikunja 1.0 config migration detected - skipping update, requires an interactive run"
+      exit 75
+    fi
     read -rp "Continue with update? (y to proceed): " -t 30 CONFIRM1 || exit 254
     [[ "$CONFIRM1" =~ ^[yY]$ ]] || exit 0
 
@@ -60,7 +64,11 @@ function update_script() {
     echo -e "${TAB}${YW}How do you want to handle /etc/vikunja/config.yml?${CL}"
     echo -e "${TAB}  1) Keep your current config"
     echo -e "${TAB}  2) Install the new package maintainer's config"
-    read -rp "  Choose [1/2] (default: 1): " -t 60 CONFIG_CHOICE || CONFIG_CHOICE="1"
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      CONFIG_CHOICE="1"
+    else
+      read -rp "  Choose [1/2] (default: 1): " -t 60 CONFIG_CHOICE || CONFIG_CHOICE="1"
+    fi
     [[ -z "$CONFIG_CHOICE" ]] && CONFIG_CHOICE="1"
 
     if [[ "$CONFIG_CHOICE" == "2" ]]; then
