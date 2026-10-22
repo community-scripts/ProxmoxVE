@@ -573,6 +573,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Zabbix: keep unattended updates on the installed series [@florianpunz](https://github.com/florianpunz) ([#18051](https://github.com/community-scripts/ProxmoxVE/pull/18051))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Cryptpad [@MickLesk](https://github.com/MickLesk) ([#18065](https://github.com/community-scripts/ProxmoxVE/pull/18065))
+
 ### 💾 Core
 
   - Deploy the release again when an update is redone [@MickLesk](https://github.com/MickLesk) ([core#158](https://github.com/community-scripts/core/pull/158))
