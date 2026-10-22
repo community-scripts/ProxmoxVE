@@ -46,12 +46,9 @@ function update_script() {
     msg_warn "No Zabbix Agent service found, skipping agent actions"
   fi
 
-  # An unattended run must never be asked, and must never change series on its own:
-  # minor/patch updates within the installed series stay automatic, a series change stays manual.
   ZABBIX_SERIES="$(dpkg-query -W -f='${Version}' zabbix-release 2>/dev/null || true)"
   ZABBIX_SERIES="${ZABBIX_SERIES#*:}"
   ZABBIX_SERIES="${ZABBIX_SERIES%%[!0-9.]*}"
-
   if [[ "${PHS_SILENT:-0}" == "1" ]]; then
     if [[ ! "$ZABBIX_SERIES" =~ ^[0-9]+\.[0-9]+$ ]]; then
       msg_warn "Could not detect the installed Zabbix series - skipping update, requires an interactive run"
