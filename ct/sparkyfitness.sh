@@ -9,7 +9,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="SparkyFitness"
 var_tags="${var_tags:-health;fitness}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-7}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
