@@ -573,6 +573,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Zabbix: keep unattended updates on the installed series [@florianpunz](https://github.com/florianpunz) ([#18051](https://github.com/community-scripts/ProxmoxVE/pull/18051))
 
+### 💾 Core
+
+  - Deploy the release again when an update is redone [@MickLesk](https://github.com/MickLesk) ([core#158](https://github.com/community-scripts/core/pull/158))
+
 ### ❔ Uncategorized
 
   - chore(ct): sync sparkyfitness defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18061](https://github.com/community-scripts/ProxmoxVE/pull/18061))
