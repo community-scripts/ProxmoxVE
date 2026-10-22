@@ -579,7 +579,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Deploy the release again when an update is redone [@MickLesk](https://github.com/MickLesk) ([core#158](https://github.com/community-scripts/core/pull/158))
+  - Incus: drive a remote Incus server from the client's default remote [@MickLesk](https://github.com/MickLesk) ([core#154](https://github.com/community-scripts/core/pull/154))
+- Deploy the release again when an update is redone [@MickLesk](https://github.com/MickLesk) ([core#158](https://github.com/community-scripts/core/pull/158))
 
 ### ❔ Uncategorized
 
