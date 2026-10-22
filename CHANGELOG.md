@@ -565,6 +565,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-22
+
+### ❔ Uncategorized
+
+  - chore(ct): sync sparkyfitness defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18061](https://github.com/community-scripts/ProxmoxVE/pull/18061))
+
 ## 2026-10-21
 
 ### 🚀 Updated Scripts
