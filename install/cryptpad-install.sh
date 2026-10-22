@@ -28,11 +28,15 @@ cd /opt/cryptpad
 $STD npm ci --allow-git=all
 $STD npm run install:components
 if [[ "${onlyoffice,,}" =~ ^(y|yes)$ ]]; then
-  $STD bash -c "./install-onlyoffice.sh --accept-license"
+  $STD bash -c "./install-office.sh --accept-license"
 fi
 cp config/config.example.js config/config.js
-sed -i "51s/localhost/${LOCAL_IP}/g" /opt/cryptpad/config/config.js
-sed -i "80s#//httpAddress: 'localhost'#httpAddress: '0.0.0.0'#g" /opt/cryptpad/config/config.js
+cp config/infra.example.js config/infra.js
+sed -i \
+  -e "s|origin: \"http://localhost:3000\"|origin: \"http://${LOCAL_IP}:3000\"|" \
+  -e "s|sandboxOrigin: \"http://localhost:3001\"|sandboxOrigin: \"http://${LOCAL_IP}:3001\"|" \
+  -e "s|httpHost: \"localhost\"|httpHost: \"0.0.0.0\"|" \
+  config/infra.js
 $STD npm run build
 msg_ok "Setup CryptPad"
 

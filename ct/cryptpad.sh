@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop cryptpad
     msg_ok "Stopped Service"
 
-    create_backup /opt/cryptpad/config/config.js /opt/cryptpad/www/common/onlyoffice/dist
+    create_backup /opt/cryptpad/config/config.js /opt/cryptpad/config/infra.js /opt/cryptpad/www/common/onlyoffice/dist
 
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="blob block customize data datastore onlyoffice-conf" fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
@@ -45,8 +45,30 @@ function update_script() {
     cd /opt/cryptpad
     $STD npm ci --allow-git=all
     $STD npm run install:components
-    if [ -f "/opt/cryptpad/install-onlyoffice.sh" ]; then
-      $STD bash /opt/cryptpad/install-onlyoffice.sh --accept-license
+    if [[ -d /opt/cryptpad/www/common/onlyoffice/dist ]]; then
+      $STD bash /opt/cryptpad/install-office.sh --accept-license
+    fi
+    if [[ ! -f /opt/cryptpad/config/infra.js ]]; then
+      # 2026.10.0 reads the network settings from infra.js and no longer derives the sandbox origin
+      node - <<'EOF'
+const c = require("/opt/cryptpad/config/config.js");
+const i = require("/opt/cryptpad/config/infra.example.js");
+const port = c.httpPort || i.public.httpPort;
+const safePort = c.httpSafePort || port + 1;
+const origin = (c.httpUnsafeOrigin || i.public.origin).replace(/\/+$/, "");
+const sandbox = new URL(origin);
+sandbox.port = safePort;
+Object.assign(i.public, {
+  origin,
+  sandboxOrigin: (c.httpSafeOrigin || sandbox.origin).replace(/\/+$/, ""),
+  httpHost: c.httpAddress || i.public.httpHost,
+  httpPort: port,
+  httpSafePort: safePort,
+  externalWebsocketURL: c.externalWebsocketURL,
+  fileHost: c.fileHost,
+});
+require("fs").writeFileSync("/opt/cryptpad/config/infra.js", "module.exports = " + JSON.stringify(i, null, 4) + ";\n");
+EOF
     fi
     $STD npm run build
     msg_ok "Updated CryptaPad"
