@@ -569,7 +569,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - vm-core: let vm_timezone_default survive a host without /etc/timezone [@MickLesk](https://github.com/MickLesk) ([core#159](https://github.com/community-scripts/core/pull/159))
+  - lxc-updater: skip the resource check when the container cannot read its RAM [@MickLesk](https://github.com/MickLesk) ([core#160](https://github.com/community-scripts/core/pull/160))
+- vm-core: let vm_timezone_default survive a host without /etc/timezone [@MickLesk](https://github.com/MickLesk) ([core#159](https://github.com/community-scripts/core/pull/159))
 
 ## 2026-10-22
 
