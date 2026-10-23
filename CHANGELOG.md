@@ -574,6 +574,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - proxcenter: skip the type check and lower the build heap [@MickLesk](https://github.com/MickLesk) ([#18090](https://github.com/community-scripts/ProxmoxVE/pull/18090))
+    - hermesagent: retry the installer download, fall back to GitHub [@MickLesk](https://github.com/MickLesk) ([#18091](https://github.com/community-scripts/ProxmoxVE/pull/18091))
     - zabbix: use the arm64 repository for 7.0 [@MickLesk](https://github.com/MickLesk) ([#18089](https://github.com/community-scripts/ProxmoxVE/pull/18089))
     - kasm: survive a failed release lookup and answer the installer with flags [@MickLesk](https://github.com/MickLesk) ([#18092](https://github.com/community-scripts/ProxmoxVE/pull/18092))
 
