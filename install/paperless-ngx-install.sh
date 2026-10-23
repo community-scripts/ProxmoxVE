@@ -172,7 +172,7 @@ systemctl enable -q --now paperless-webserver paperless-scheduler paperless-task
 msg_ok "Created Services"
 
 prompt="${var_paperless_ngx_adminer:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   setup_adminer
 fi

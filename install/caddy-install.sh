@@ -18,7 +18,7 @@ setup_deb_based() {
   systemctl enable -q --now caddy
 
   prompt="${var_caddy_xcaddy:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt || true
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     setup_go
     fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "binary"
@@ -64,7 +64,7 @@ EOF
   msg_ok "Installed Caddy"
 
   prompt="${var_caddy_xcaddy:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt || true
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     GO_VERSION="$(curl -fsSL https://go.dev/VERSION?m=text | head -1 | cut -c3-)" setup_go
     fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "prebuild" "latest" "/opt/xcaddy" "xcaddy_*_linux_$(arch_resolve).tar.gz"

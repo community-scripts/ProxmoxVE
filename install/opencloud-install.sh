@@ -17,19 +17,23 @@ MAX_ATTEMPTS=3
 servers=("opencloud" "collabora" "wopi")
 attempt=0
 for server in "${servers[@]}"; do
+  fqdn_var="var_opencloud_${server}_fqdn"
+  fqdn="${!fqdn_var:-}"
   until ((attempt >= MAX_ATTEMPTS)); do
     attempt=$((attempt + 1))
-    read -rp "${TAB3}Enter the FQDN of your ${server^} server (ATTEMPT $attempt/$MAX_ATTEMPTS) (eg $server.domain.tld): " fqdn
+    [[ -n "$fqdn" ]] || read -rp "${TAB3}Enter the FQDN of your ${server^} server (ATTEMPT $attempt/$MAX_ATTEMPTS) (eg $server.domain.tld): " fqdn || { msg_error "No ${server^} FQDN given; set ${fqdn_var} or answer the prompt"; exit 64; }
     if [[ -z "$fqdn" ]]; then
       msg_warn "Domain cannot be empty!"
     elif [[ "$fqdn" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
       msg_warn "IP address not allowed! Please use a FQDN"
+      fqdn=""
     elif [[ "$fqdn" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$ ]]; then
       export ${server^^}_FQDN="$fqdn"
       attempt=0
       break
     else
       msg_warn "Invalid domain format!"
+      fqdn=""
     fi
   done
   if ((attempt >= MAX_ATTEMPTS)); then

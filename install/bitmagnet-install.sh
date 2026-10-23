@@ -34,7 +34,8 @@ setup_deb_based() {
   chmod +x bitmagnet
   msg_ok "Configured bitmagnet"
 
-  read -r -p "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey
+  tmdbapikey="${var_bitmagnet_tmdb_api_key:-}"
+  [[ -n "$tmdbapikey" ]] || read -r -p "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey || true
 
   cat <<EOF >/etc/bitmagnet.env
 POSTGRES_HOST=localhost
@@ -99,7 +100,8 @@ setup_alpine() {
   $STD su - postgres -c "psql -c 'CREATE DATABASE bitmagnet;'"
   msg_ok "Built bitmagnet"
 
-  read -rp "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey
+  tmdbapikey="${var_bitmagnet_tmdb_api_key:-}"
+  [[ -n "$tmdbapikey" ]] || read -rp "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey || true
 
   msg_info "Enabling bitmagnet Service"
   cat <<EOF >/etc/init.d/bitmagnet

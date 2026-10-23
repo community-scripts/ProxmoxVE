@@ -17,7 +17,7 @@ fetch_and_deploy_gh_release "versitygw" "versity/versitygw" "binary"
 
 WEBUI_CONF=""
 webui_prompt="${var_versitygw_webgui:-}"
-[[ -n "$webui_prompt" ]] || read -rp "Would you like to enable the VersityGW WebGUI (Beta)? (y/N): " webui_prompt
+[[ -n "$webui_prompt" ]] || read -rp "Would you like to enable the VersityGW WebGUI (Beta)? (y/N): " webui_prompt || true
 if [[ "${webui_prompt,,}" =~ ^(y|yes)$ ]]; then
   WEBUI_CONF="\nVGW_WEBUI_PORT=:7071\nVGW_WEBUI_NO_TLS=true"
   msg_ok "WebGUI will be enabled on port 7071"

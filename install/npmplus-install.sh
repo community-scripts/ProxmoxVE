@@ -38,12 +38,14 @@ curl -fsSL "https://raw.githubusercontent.com/ZoeyVid/NPMplus/refs/heads/develop
 msg_ok "Fetched NPMplus"
 
 attempts=0
+TZ_INPUT="${var_npmplus_tz:-}"
 while true; do
-  read -r -p "${TAB3}Enter your TZ Identifier (e.g., Europe/Berlin): " TZ_INPUT
+  [[ -n "$TZ_INPUT" ]] || read -r -p "${TAB3}Enter your TZ Identifier (e.g., Europe/Berlin): " TZ_INPUT || { msg_error "No TZ identifier given; set var_npmplus_tz or answer the prompt"; exit 64; }
   if validate_tz "$TZ_INPUT"; then
     break
   fi
   msg_error "Invalid timezone! Please enter a valid TZ identifier."
+  TZ_INPUT=""
 
   attempts=$((attempts + 1))
   if [[ "$attempts" -ge 3 ]]; then
@@ -52,7 +54,9 @@ while true; do
   fi
 done
 
-read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT
+ACME_EMAIL_INPUT="${var_npmplus_acme_email:-}"
+[[ -n "$ACME_EMAIL_INPUT" ]] || read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT || true
+[[ -n "$ACME_EMAIL_INPUT" ]] || { msg_error "No ACME e-mail given; set var_npmplus_acme_email or answer the prompt"; exit 64; }
 
 yq -i "
   .services.npmplus.environment |=

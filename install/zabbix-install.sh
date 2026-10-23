@@ -16,7 +16,8 @@ update_os
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="zabbixdb" PG_DB_USER="zabbix" setup_postgresql_db
 
-read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
+ZABBIX_CHOICE="${var_zabbix_version:-}"
+[[ -n "$ZABBIX_CHOICE" ]] || read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE || true
 ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
 case "$ZABBIX_CHOICE" in
 1) ZABBIX_VERSION="7.0" ;;
@@ -59,8 +60,9 @@ sed -i "s/^DBUser=.*/DBUser=$PG_DB_USER/" /etc/zabbix/zabbix_server.conf
 sed -i "s/^# DBPassword=.*/DBPassword=$PG_DB_PASS/" /etc/zabbix/zabbix_server.conf
 msg_ok "Installed Zabbix $ZABBIX_VERSION"
 
+AGENT_CHOICE="${var_zabbix_agent:-}"
 while true; do
-  read -rp "Which agent do you want to install? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE
+  [[ -n "$AGENT_CHOICE" ]] || read -rp "Which agent do you want to install? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE || AGENT_CHOICE="1"
   case "$AGENT_CHOICE" in
   2)
     AGENT_PKG="zabbix-agent2"
@@ -72,6 +74,7 @@ while true; do
     ;;
   *)
     echo "Invalid choice. Please enter 1 or 2."
+    AGENT_CHOICE=""
     ;;
   esac
 done
@@ -81,7 +84,8 @@ if [ "$AGENT_PKG" = "zabbix-agent2" ]; then
   echo "Choose plugins for Zabbix Agent2:"
   echo "1) PostgreSQL only (default, recommended)"
   echo "2) All plugins (may cause issues)"
-  read -rp "Choose option [1-2]: " PLUGIN_CHOICE
+  PLUGIN_CHOICE="${var_zabbix_plugins:-}"
+  [[ -n "$PLUGIN_CHOICE" ]] || read -rp "Choose option [1-2]: " PLUGIN_CHOICE || true
 
   case "$PLUGIN_CHOICE" in
   2)

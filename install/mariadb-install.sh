@@ -22,7 +22,7 @@ setup_deb_based() {
   msg_ok "Setup MariaDB"
 
   prompt="${var_mariadb_phpmyadmin:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing phpMyAdmin"
     $STD apt install -y \
@@ -60,7 +60,7 @@ setup_alpine() {
   msg_ok "MariaDB Configured"
 
   prompt="${var_mariadb_adminer:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer and dependencies"
     $STD apk add --no-cache \

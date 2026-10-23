@@ -28,7 +28,7 @@ fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" 
 fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "$victoriametrics_release" "/opt/victoriametrics" "$vmutils_filename"
 
 prompt="${var_victoriametrics_logs:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add VictoriaLogs? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add VictoriaLogs? <y/N> " prompt || true
 
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   vl_release_json="$(mktemp)"

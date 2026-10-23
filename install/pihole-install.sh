@@ -57,10 +57,10 @@ systemctl restart pihole-FTL.service
 msg_ok "Installed Pi-hole"
 
 prompt="${var_pihole_unbound:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Unbound? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Unbound? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   prompt="${var_pihole_unbound_dot:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Unbound is configured as a recursive DNS server by default, would you like it to be configured as a forwarding DNS server (using DNS-over-TLS (DoT)) instead? <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Unbound is configured as a recursive DNS server by default, would you like it to be configured as a forwarding DNS server (using DNS-over-TLS (DoT)) instead? <y/N> " prompt || true
   msg_info "Installing Unbound"
   mkdir -p /etc/unbound/unbound.conf.d
   cat <<EOF >/etc/unbound/unbound.conf.d/pi-hole.conf

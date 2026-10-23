@@ -18,7 +18,7 @@ $STD apt install -y aria2
 msg_ok "Installed Aria2"
 
 prompt="${var_aria2_ariang:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add AriaNG? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add AriaNG? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Dependencies"
   $STD apt install -y nginx

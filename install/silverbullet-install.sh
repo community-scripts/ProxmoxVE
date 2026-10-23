@@ -18,7 +18,7 @@ mkdir -p /opt/silverbullet/space
 
 RUNTIME_API_ENV=""
 runtime_api_prompt="${var_silverbullet_runtime_api:-}"
-[[ -n "$runtime_api_prompt" ]] || read -rp "${TAB3}Enable Silverbullet Runtime API? Requires Chromium (~700MB). Uses ~200MB extra RAM. (y/N): " runtime_api_prompt
+[[ -n "$runtime_api_prompt" ]] || read -rp "${TAB3}Enable Silverbullet Runtime API? Requires Chromium (~700MB). Uses ~200MB extra RAM. (y/N): " runtime_api_prompt || true
 if [[ "${runtime_api_prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Chromium for Runtime API"
   $STD apt install -y chromium

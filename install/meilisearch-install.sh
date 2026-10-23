@@ -16,7 +16,7 @@ update_os
 MEILISEARCH_BIND="0.0.0.0:7700" setup_meilisearch
 
 prompt="${var_meilisearch_ui:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Do you want add meilisearch-ui? [y/n]: " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Do you want add meilisearch-ui? [y/n]: " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
   fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"

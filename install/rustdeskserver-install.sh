@@ -13,11 +13,8 @@ setting_up_container
 network_check
 update_os
 
-if [[ -n "${var_rustdesk_api:-}" ]]; then
-  prompt="$var_rustdesk_api"
-else
-  read -r -p "${TAB3}Would you like to add the RustDesk API web UI (lejianwen/rustdesk-api, unmaintained since 09/2025)? <y/N> " prompt
-fi
+prompt="${var_rustdesk_api:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add the RustDesk API web UI (lejianwen/rustdesk-api, unmaintained since 09/2025)? <y/N> " prompt || true
 INSTALL_API=0
 [[ "${prompt,,}" =~ ^(y|yes|true)$ ]] && INSTALL_API=1
 API_PASS="$(random_password 16)"

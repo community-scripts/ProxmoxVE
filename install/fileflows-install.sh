@@ -45,7 +45,8 @@ $STD ln -svf /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 $STD ln -svf /usr/bin/ffprobe /usr/local/bin/ffprobe
 $STD rm -rf /opt/fileflows/Server/runtimes/win-*
 
-read -r -p "${TAB3}Do you want to install FileFlows Server or Agent? (S/A): " install_server
+install_server="${var_fileflows_mode:-}"
+[[ -n "$install_server" ]] || read -r -p "${TAB3}Do you want to install FileFlows Server or Agent? (S/A): " install_server || true
 
 if [[ "$install_server" =~ ^[Ss]$ ]]; then
   msg_info "Installing FileFlows Server"
@@ -54,9 +55,10 @@ if [[ "$install_server" =~ ^[Ss]$ ]]; then
   systemctl enable -q --now fileflows
   msg_ok "Installed FileFlows Server"
 else
-  read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
+  server_url="${var_fileflows_server_url:-}"
+  [[ -n "$server_url" ]] || read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url || true
   while [[ -z "${server_url// /}" ]]; do
-    read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url
+    read -r -p "${TAB3}Enter FileFlows Server URL (e.g. http://192.168.1.10:19200): " server_url || { msg_error "No FileFlows Server URL given; set var_fileflows_server_url or answer the prompt"; exit 64; }
   done
   msg_info "Installing FileFlows Agent"
   cd /opt/fileflows/Agent

@@ -27,7 +27,7 @@ PYTHON_VERSION="3.12" setup_uv
 
 OTEL_ARGS=()
 prompt="${var_openwebui_otel:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install OpenTelemetry instrumentation packages (requires manual .env configuration)? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install OpenTelemetry instrumentation packages (requires manual .env configuration)? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   for pkg in \
     opentelemetry-api \
@@ -57,7 +57,7 @@ done
 msg_ok "Installed Open WebUI"
 
 prompt="${var_openwebui_ollama:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   if [[ "$(arch_resolve)" == "amd64" ]]; then
   msg_info "Setting up Intel® Repositories"

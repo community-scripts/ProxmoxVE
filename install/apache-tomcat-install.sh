@@ -13,12 +13,14 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}Which Tomcat version would you like to install? (9, 10.1, 11): " version
+version="${var_apache_tomcat_version:-}"
+[[ -n "$version" ]] || read -r -p "${TAB3}Which Tomcat version would you like to install? (9, 10.1, 11): " version || true
+jdk_version="${var_apache_tomcat_jdk_version:-}"
 case $version in
 9)
   TOMCAT_VERSION="9"
   echo "Which LTS Java version would you like to use? (8, 11, 17, 21): "
-  read -r jdk_version
+  [[ -n "$jdk_version" ]] || read -r jdk_version || true
   case $jdk_version in
   8 | 11 | 17 | 21)
     JAVA_VERSION="$jdk_version" setup_java
@@ -32,7 +34,7 @@ case $version in
 10 | 10.1)
   TOMCAT_VERSION="10"
   echo "Which LTS Java version would you like to use? (11, 17, 21): "
-  read -r jdk_version
+  [[ -n "$jdk_version" ]] || read -r jdk_version || true
   case $jdk_version in
   11 | 17 | 21)
     JAVA_VERSION="$jdk_version" setup_java
@@ -46,7 +48,7 @@ case $version in
 11)
   TOMCAT_VERSION="11"
   echo "Which LTS Java version would you like to use? (17, 21): "
-  read -r jdk_version
+  [[ -n "$jdk_version" ]] || read -r jdk_version || true
   case $jdk_version in
   17 | 21)
     JAVA_VERSION="$jdk_version" setup_java

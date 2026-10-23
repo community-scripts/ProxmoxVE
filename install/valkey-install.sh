@@ -37,10 +37,10 @@ setup_deb_based() {
 
   echo
   prompt="${var_valkey_tls:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Enable TLS for Valkey (Sentinel mode does not supported)? [y/N]: " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Enable TLS for Valkey (Sentinel mode does not supported)? [y/N]: " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
       tls_only="${var_valkey_tls_only:-}"
-      [[ -n "$tls_only" ]] || read -r -p "${TAB3}Use TLS-only mode (disable TCP port 6379)? [y/N]: " tls_only
+      [[ -n "$tls_only" ]] || read -r -p "${TAB3}Use TLS-only mode (disable TCP port 6379)? [y/N]: " tls_only || true
       msg_info "Configuring TLS for Valkey..."
 
       create_self_signed_cert "Valkey"

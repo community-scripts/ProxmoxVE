@@ -13,7 +13,9 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
+public_url="${var_pocketid_url:-}"
+[[ -n "$public_url" ]] || read -r -p "${TAB3}What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url || true
+[[ -n "$public_url" ]] || { msg_error "No public URL given; set var_pocketid_url or answer the prompt"; exit 64; }
 fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id_linux_$(arch_resolve)"
 
 msg_info "Configuring Pocket ID"

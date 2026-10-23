@@ -26,8 +26,9 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-var_project_name="default"
-read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
+var_project_name="${var_project_name:-}"
+[[ -n "$var_project_name" ]] || read -r -p "${TAB3}Type the assembly name of the project: " var_project_name || true
+[[ -n "$var_project_name" ]] || { msg_error "No assembly name given; set var_project_name or answer the prompt"; exit 64; }
 
 msg_info "Setting up FTP Server"
 useradd ftpuser

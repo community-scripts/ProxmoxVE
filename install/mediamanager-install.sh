@@ -13,7 +13,9 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "${TAB3}Enter the email address of your first admin user: " admin_email
+admin_email="${var_mediamanager_admin_email:-}"
+[[ -n "$admin_email" ]] || read -r -p "${TAB3}Enter the email address of your first admin user: " admin_email || true
+[[ -n "$admin_email" ]] || { msg_error "No admin e-mail given; set var_mediamanager_admin_email or answer the prompt"; exit 64; }
 if [[ "$admin_email" ]]; then
   EMAIL="$admin_email"
 fi

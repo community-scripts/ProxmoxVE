@@ -37,7 +37,7 @@ sed -i \
 msg_ok "Configured Slskd"
 
 soularr="${var_slskd_soularr:-}"
-[[ -n "$soularr" ]] || read -rp "${TAB3}Do you want to install Soularr? y/N " soularr
+[[ -n "$soularr" ]] || read -rp "${TAB3}Do you want to install Soularr? y/N " soularr || true
 if [[ ${soularr,,} =~ ^(y|yes)$ ]]; then
   PYTHON_VERSION="3.11" setup_uv
   fetch_and_deploy_gh_release "Soularr" "mrusse/soularr" "tarball" "latest" "/opt/soularr"

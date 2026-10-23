@@ -25,7 +25,7 @@ RUST_CRATES="monolith" setup_rust
 PG_DB_NAME="linkwardendb" PG_DB_USER="linkwarden" setup_postgresql_db
 
 prompt="${var_linkwarden_adminer:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   setup_adminer
 fi

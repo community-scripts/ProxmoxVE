@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" setup_nodejs
 
 onlyoffice="${var_cryptpad_onlyoffice:-}"
-[[ -n "$onlyoffice" ]] || read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
+[[ -n "$onlyoffice" ]] || read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice || true
 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
 msg_info "Setup CryptPad"

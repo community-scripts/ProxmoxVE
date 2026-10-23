@@ -15,11 +15,8 @@ update_os
 
 setup_deb_based() {
   setup_docker
-  if [[ -n "${var_docker_socket:-}" ]]; then
-    socket_choice="$var_docker_socket"
-  else
-    read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
-  fi
+  socket_choice="${var_docker_socket:-}"
+  [[ -n "$socket_choice" ]] || read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice || true
   case "${socket_choice,,}" in
   l | local)
     socket="tcp://127.0.0.1:2375"
@@ -70,11 +67,8 @@ setup_alpine() {
   msg_ok "Installed Docker"
 
   DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_github_release "docker/compose" false)
-  if [[ -n "${var_docker_compose:-}" ]]; then
-    prompt="$var_docker_compose"
-  else
-    read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt
-  fi
+  prompt="${var_docker_compose:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt || true
   if [[ "${prompt,,}" =~ ^(y|yes|true)$ ]]; then
     msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
     DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
@@ -83,11 +77,8 @@ setup_alpine() {
     chmod +x "$DOCKER_CONFIG"/cli-plugins/docker-compose
     msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
   fi
-  if [[ -n "${var_docker_socket:-}" ]]; then
-    prompt="$var_docker_socket"
-  else
-    read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt
-  fi
+  prompt="${var_docker_socket:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt || true
   case "${prompt,,}" in
   y | yes | a | all) socket="tcp://0.0.0.0:2375" ;;
   l | local) socket="tcp://127.0.0.1:2375" ;;

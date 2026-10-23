@@ -33,7 +33,7 @@ msg_ok "Installed Cockpit"
 # 45Drives only publishes amd64 packages
 if [[ "$(arch_resolve)" != "arm64" ]]; then
   prompt="${var_cockpit_45drives:-}"
-  [[ -n "$prompt" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator  <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator  <y/N> " prompt || true
 fi
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing 45Drives' cockpit extensions"

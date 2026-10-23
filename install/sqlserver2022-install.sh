@@ -46,7 +46,8 @@ echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >>~/.bash_profile
 source ~/.bash_profile
 msg_ok "Installed SQL Server Tools"
 
-read -r -p "${TAB3}Do you want to run the SQL server setup now? (Later is also possible) <y/N>" prompt
+prompt="${var_sqlserver2022_setup_now:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Do you want to run the SQL server setup now? (Later is also possible) <y/N>" prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   /opt/mssql/bin/mssql-conf setup
 else

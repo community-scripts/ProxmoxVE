@@ -39,7 +39,7 @@ echo "$LATEST_VERSION" >~/.emqx
 msg_ok "Installed EMQX"
 
 prompt="${var_emqx_disable_mq:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to disable the EMQX MQ feature? (reduces disk/CPU usage) <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to disable the EMQX MQ feature? (reduces disk/CPU usage) <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Disabling EMQX MQ feature"
   mkdir -p /etc/emqx

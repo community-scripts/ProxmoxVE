@@ -29,12 +29,12 @@ rm -f /tmp/LanguageTool-stable.zip
 msg_ok "Setup LanguageTool"
 
 ngram_dir=""
-lang_code=""
+lang_code="${var_languagetool_ngram_lang:-}"
 max_attempts=3
 attempt=0
 
 while [[ $attempt -lt $max_attempts ]]; do
-  read -r -p "${TAB3}Enter language code (en, de, es, fr, nl) to download ngrams or press ENTER to skip: " lang_code
+  [[ -n "$lang_code" ]] || read -r -p "${TAB3}Enter language code (en, de, es, fr, nl) to download ngrams or press ENTER to skip: " lang_code || lang_code=""
 
   if [[ -z "$lang_code" ]]; then
     break
@@ -43,11 +43,11 @@ while [[ $attempt -lt $max_attempts ]]; do
   if [[ "$lang_code" =~ [[:space:]] ]]; then
     ((attempt++))
     remaining=$((max_attempts - attempt))
+    lang_code=""
     if [[ $remaining -gt 0 ]]; then
       msg_error "Please enter only ONE language code. You have $remaining attempt(s) remaining."
     else
       msg_error "Maximum attempts reached. Continuing without ngrams."
-      lang_code=""
     fi
     continue
   fi

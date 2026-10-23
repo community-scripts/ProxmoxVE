@@ -14,17 +14,17 @@ network_check
 update_os
 
 install -d -m 0700 /etc/twingate
-access_token=""
-refresh_token=""
-network=""
+access_token="${var_twingate_connector_access_token:-}"
+refresh_token="${var_twingate_connector_refresh_token:-}"
+network="${var_twingate_connector_network:-}"
 while [[ -z "$access_token" ]]; do
-  read -rp "${TAB3}Please enter your access token: " access_token
+  read -rp "${TAB3}Please enter your access token: " access_token || { msg_error "No access token given; set var_twingate_connector_access_token or answer the prompt"; exit 64; }
 done
 while [[ -z "$refresh_token" ]]; do
-  read -rp "${TAB3}Please enter your refresh token: " refresh_token
+  read -rp "${TAB3}Please enter your refresh token: " refresh_token || { msg_error "No refresh token given; set var_twingate_connector_refresh_token or answer the prompt"; exit 64; }
 done
 while [[ -z "$network" ]]; do
-  read -rp "${TAB3}Please enter your network name: " network
+  read -rp "${TAB3}Please enter your network name: " network || { msg_error "No network name given; set var_twingate_connector_network or answer the prompt"; exit 64; }
 done
 
 msg_info "Setup Twingate Repository"

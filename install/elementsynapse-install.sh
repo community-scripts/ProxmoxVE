@@ -23,7 +23,9 @@ NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
 echo "${TAB3}It is important to choose the name for your server before you install Synapse, because it cannot be changed later."
 echo "${TAB3}The server name determines the “domain” part of user-ids for users on your server: these will all be of the format @user:my.domain.name. It also determines how other matrix servers will reach yours for federation."
-read -p "${TAB3}Please enter the name for your server: " servername
+servername="${var_elementsynapse_server_name:-}"
+[[ -n "$servername" ]] || read -r -p "${TAB3}Please enter the name for your server: " servername || true
+[[ -n "$servername" ]] || { msg_error "No server name given; set var_elementsynapse_server_name or answer the prompt"; exit 64; }
 
 msg_info "Installing Element Synapse"
 setup_deb822_repo "matrix-org" \

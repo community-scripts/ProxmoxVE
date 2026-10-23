@@ -51,8 +51,10 @@ echo -e ""
 msg_custom "🪙" "$YW" "CoinGecko API keys are optional but provide better cryptocurrency data."
 msg_custom "🪙" "$YW" "You can skip this and add them later by editing /opt/ghostfolio/.env"
 echo -e ""
-read -rp "${TAB3}CoinGecko Demo API key (press Enter to skip): " COINGECKO_DEMO_KEY
-read -rp "${TAB3}CoinGecko Pro API key (press Enter to skip): " COINGECKO_PRO_KEY
+COINGECKO_DEMO_KEY="${var_ghostfolio_coingecko_demo_key:-}"
+[[ -n "$COINGECKO_DEMO_KEY" ]] || read -rp "${TAB3}CoinGecko Demo API key (press Enter to skip): " COINGECKO_DEMO_KEY || true
+COINGECKO_PRO_KEY="${var_ghostfolio_coingecko_pro_key:-}"
+[[ -n "$COINGECKO_PRO_KEY" ]] || read -rp "${TAB3}CoinGecko Pro API key (press Enter to skip): " COINGECKO_PRO_KEY || true
 
 msg_info "Setting up Environment"
 cat <<EOF >/opt/ghostfolio/.env

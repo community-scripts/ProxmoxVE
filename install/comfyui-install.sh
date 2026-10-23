@@ -17,7 +17,8 @@ setup_hwaccel
 echo
 echo "${TAB3}Choose the GPU type for ComfyUI:"
 echo "${TAB3}[1]-None  [2]-NVIDIA  [3]-AMD  [4]-Intel"
-read -rp "${TAB3}Enter your choice [1-4] (default: 1): " gpu_choice
+gpu_choice="${var_comfyui_gpu_type:-}"
+[[ -n "$gpu_choice" ]] || read -rp "${TAB3}Enter your choice [1-4] (default: 1): " gpu_choice || true
 gpu_choice=${gpu_choice:-1}
 case "$gpu_choice" in
 1) comfyui_gpu_type="none" ;;

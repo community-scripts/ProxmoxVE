@@ -27,15 +27,13 @@ fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/
 fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_$(arch_resolve).tar.gz"
 
 pango_url="${var_pangolin_url:-}"
-if [[ -z "$pango_url" ]]; then
-  read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " pango_url
-fi
+[[ -n "$pango_url" ]] || read -rp "${TAB3}Enter your Pangolin URL (ex: https://pangolin.example.com): " pango_url || true
+[[ -n "$pango_url" ]] || { msg_error "No Pangolin URL given; set var_pangolin_url or answer the prompt"; exit 64; }
 [[ "$pango_url" != https://* && "$pango_url" != http://* ]] && pango_url="https://${pango_url}"
 
 pango_email="${var_pangolin_email:-}"
-if [[ -z "$pango_email" ]]; then
-  read -rp "${TAB3}Enter your email address: " pango_email
-fi
+[[ -n "$pango_email" ]] || read -rp "${TAB3}Enter your email address: " pango_email || true
+[[ -n "$pango_email" ]] || { msg_error "No email address given; set var_pangolin_email or answer the prompt"; exit 64; }
 
 msg_info "Setup Pangolin"
 SECRET_KEY=$(random_password 32)

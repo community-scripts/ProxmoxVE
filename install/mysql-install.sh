@@ -21,7 +21,8 @@ msg_ok "Installed Dependencies"
 
 RELEASE_REPO="mysql-8.0"
 RELEASE_AUTH="mysql_native_password"
-read -r -p "${TAB3}Would you like to install the MySQL 8.4 LTS release instead of MySQL 8.0 (bug fix track; EOL April-2026)? <y/N> " prompt
+prompt="${var_mysql_lts:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install the MySQL 8.4 LTS release instead of MySQL 8.0 (bug fix track; EOL April-2026)? <y/N> " prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   RELEASE_REPO="mysql-8.4-lts"
   RELEASE_AUTH="caching_sha2_password"
@@ -61,7 +62,8 @@ echo -e "MySQL user: root" >>~/mysql.creds
 echo -e "MySQL password: $ADMIN_PASS" >>~/mysql.creds
 msg_ok "MySQL Server configured"
 
-read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt
+prompt="${var_mysql_phpmyadmin:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/phpmyadmin.sh)"
 fi

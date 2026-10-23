@@ -25,7 +25,7 @@ setup_deb_based() {
   msg_ok "Installed WireGuard"
 
   prompt="${var_wireguard_wgdashboard:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt || true
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     git clone -q https://github.com/WGDashboard/WGDashboard.git /etc/wgdashboard
 
@@ -111,7 +111,7 @@ EOF
   msg_ok "Installed WireGuard"
 
   INSTALL_WGD="${var_wireguard_wgdashboard:-}"
-  [[ -n "$INSTALL_WGD" ]] || read -rp "${TAB3}Do you want to install WGDashboard? (y/N): " INSTALL_WGD
+  [[ -n "$INSTALL_WGD" ]] || read -rp "${TAB3}Do you want to install WGDashboard? (y/N): " INSTALL_WGD || true
   if [[ "${INSTALL_WGD,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing additional dependencies for WGDashboard"
     $STD apk add --no-cache \

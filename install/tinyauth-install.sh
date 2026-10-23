@@ -32,7 +32,9 @@ Password: ${PASS}
 EOF
   msg_ok "Set up Tinyauth"
 
-  read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
+  app_url="${var_tinyauth_app_url:-}"
+  [[ -n "$app_url" ]] || read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url || true
+  [[ -n "$app_url" ]] || { msg_error "No Tinyauth app URL given; set var_tinyauth_app_url or answer the prompt"; exit 64; }
 
   msg_info "Creating Service"
   cat <<EOF >/opt/tinyauth/.env
@@ -77,7 +79,9 @@ Password: ${PASS}
 EOF
   msg_ok "Configured Tinyauth"
 
-  read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
+  app_url="${var_tinyauth_app_url:-}"
+  [[ -n "$app_url" ]] || read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url || true
+  [[ -n "$app_url" ]] || { msg_error "No Tinyauth app URL given; set var_tinyauth_app_url or answer the prompt"; exit 64; }
 
   cat <<EOF >/opt/tinyauth/.env
 TINYAUTH_DATABASE_PATH=/opt/tinyauth/database.db

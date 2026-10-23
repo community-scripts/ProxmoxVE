@@ -49,7 +49,7 @@ msg_ok "Installed Podman"
 mkdir -p /etc/containers/systemd
 
 prompt="${var_podman_portainer:-}"
-[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
@@ -78,7 +78,7 @@ EOF
   msg_ok "Installed Portainer $PORTAINER_LATEST_VERSION"
 else
   prompt="${var_podman_portainer_agent:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
     $STD podman pull docker.io/portainer/agent:latest

@@ -47,9 +47,15 @@ msg_ok "Installed PHP"
 
 MARIADB_DB_NAME="panel" MARIADB_DB_USER="pterodactyl" MARIADB_DB_CREDS_FILE="$HOME/pterodactyl-panel.creds" setup_mariadb_db
 
-read -p "${TAB3}Provide an email address for admin login, this should be a valid email address: " ADMIN_EMAIL
-read -p "${TAB3}Enter your First Name: " NAME_FIRST
-read -p "${TAB3}Enter your Last Name: " NAME_LAST
+ADMIN_EMAIL="${var_pterodactyl_panel_admin_email:-}"
+[[ -n "$ADMIN_EMAIL" ]] || read -r -p "${TAB3}Provide an email address for admin login, this should be a valid email address: " ADMIN_EMAIL || true
+[[ -n "$ADMIN_EMAIL" ]] || { msg_error "No admin email given; set var_pterodactyl_panel_admin_email or answer the prompt"; exit 64; }
+NAME_FIRST="${var_pterodactyl_panel_first_name:-}"
+[[ -n "$NAME_FIRST" ]] || read -r -p "${TAB3}Enter your First Name: " NAME_FIRST || true
+[[ -n "$NAME_FIRST" ]] || { msg_error "No first name given; set var_pterodactyl_panel_first_name or answer the prompt"; exit 64; }
+NAME_LAST="${var_pterodactyl_panel_last_name:-}"
+[[ -n "$NAME_LAST" ]] || read -r -p "${TAB3}Enter your Last Name: " NAME_LAST || true
+[[ -n "$NAME_LAST" ]] || { msg_error "No last name given; set var_pterodactyl_panel_last_name or answer the prompt"; exit 64; }
 
 fetch_and_deploy_gh_release "pterodactyl-panel" "pterodactyl/panel" "prebuild" "latest" "/opt/pterodactyl-panel" "panel.tar.gz"
 
