@@ -567,6 +567,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-23
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: pimox-haos-vm [@MickLesk](https://github.com/MickLesk) ([#18077](https://github.com/community-scripts/ProxmoxVE/pull/18077))
+
 ### 💾 Core
 
   - Telemetry: explain and categorize by the command that failed [@MickLesk](https://github.com/MickLesk) ([core#166](https://github.com/community-scripts/core/pull/166))
