@@ -579,6 +579,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - zabbix: use the arm64 repository for 7.0 [@MickLesk](https://github.com/MickLesk) ([#18089](https://github.com/community-scripts/ProxmoxVE/pull/18089))
     - kasm: survive a failed release lookup and answer the installer with flags [@MickLesk](https://github.com/MickLesk) ([#18092](https://github.com/community-scripts/ProxmoxVE/pull/18092))
 
+  - #### ✨ New Features
+
+    - InvoiceShelf: run the Laravel scheduler [@MickLesk](https://github.com/MickLesk) ([#18079](https://github.com/community-scripts/ProxmoxVE/pull/18079))
+
   - #### 🔧 Refactor
 
     - podman-homeassistant: require Debian 13 [@MickLesk](https://github.com/MickLesk) ([#18095](https://github.com/community-scripts/ProxmoxVE/pull/18095))
