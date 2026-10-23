@@ -13,6 +13,11 @@ setting_up_container
 network_check
 update_os
 
+if is_debian && [[ "$(get_os_version_major)" -lt 13 ]]; then
+  msg_error "Podman Home Assistant needs Debian 13: its Quadlet units require Podman 4.4 or newer."
+  exit 238
+fi
+
 PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
 PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
