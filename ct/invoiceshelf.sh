@@ -31,6 +31,14 @@ function update_script() {
     exit
   fi
 
+  if [[ ! -f /etc/cron.d/invoiceshelf ]]; then
+    msg_info "Adding the Laravel scheduler"
+    cat <<'EOF' >/etc/cron.d/invoiceshelf
+* * * * * www-data cd /opt/invoiceshelf && php artisan schedule:run >> /dev/null 2>&1
+EOF
+    msg_ok "Added the Laravel scheduler"
+  fi
+
   if check_for_gh_release "invoiceshelf" "InvoiceShelf/InvoiceShelf"; then
     msg_info "Stopping Services"
     systemctl stop caddy
